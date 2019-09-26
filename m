@@ -2,67 +2,61 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35951C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E3FC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10C7F222C8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAB35222C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:20:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QPr6feej"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbfIZPSm (ORCPT
+        id S1727263AbfIZPUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 11:18:42 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41061 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbfIZPSm (ORCPT
+        Thu, 26 Sep 2019 11:20:37 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54296 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfIZPUh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 11:18:42 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q7so2017698pfh.8
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 08:18:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HFotGe95HLJfwkokoN/khRbJ8JvtfvSFbv98TWWG2uY=;
-        b=fTT13j+HZvBMImjLuc8VyhRvbAejkrXM+LtKu1zULuIWrp4ZvboJz7/kpifHKCVdr1
-         FR6Iw1UkngxCfBFaVrtnTst769ZrXW6zRBwyw+h/vsGuMFx9plbG5tcn/ygLKCCBz+Nm
-         9WevNHrZPZxMDYK5wsM1/wI6cW6uLjVK9SNTXlGVS1Tqjoe7PsvIEFk8gVfIT9ZQwux8
-         bop51JxEoQ2FC5NxjH2F9lMxFFBZCxHBtc3delZnHTqoPaFiroR9/RQTA/ibVTxTH9Lo
-         nEfctaIH9PVf2qS+7xudLdOTDML2dO8jP1HX26QBbp8de3tjOYIHQL82cPCQjjImdN6v
-         t2GQ==
-X-Gm-Message-State: APjAAAW8K0b3fRk9G+/mxR8fkZCemDIaJeTzDYEnLo+twyyPcJ81X9Ay
-        KjULYSS/xKvFDWzqBu8Vl+RQuRdWCG8=
-X-Google-Smtp-Source: APXvYqxjYxJUGAyF37dN0py+JrHVSkXKfpIzTS4hWU3diBfwqA4kD8YUZnpC0FRTGRNgIPEI7FTfQQ==
-X-Received: by 2002:a63:590:: with SMTP id 138mr3882761pgf.78.1569511120829;
-        Thu, 26 Sep 2019 08:18:40 -0700 (PDT)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id a11sm3501075pfo.165.2019.09.26.08.18.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Sep 2019 08:18:39 -0700 (PDT)
-Subject: Re: [PATCH] async: Let kfree() out of the critical area of the lock
-To:     dsterba@suse.cz, Yunfeng Ye <yeyunfeng@huawei.com>,
-        bhelgaas@google.com, "tglx@linutronix.de" <tglx@linutronix.de>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        sakari.ailus@linux.intel.com,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        David Sterba <dsterba@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <216356b1-38c1-8477-c4e8-03f497dd6ac8@huawei.com>
- <f49df2d42d7e97b61a5e26ff4d89ede5fbe37a35.camel@linux.intel.com>
- <e59af8ae-bacb-2e7e-dd53-ea283960d40e@huawei.com>
- <20190926110648.GM2751@suse.cz>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <e339db78-413c-446a-8e07-40e6e1ad4a31@acm.org>
-Date:   Thu, 26 Sep 2019 08:18:38 -0700
+        Thu, 26 Sep 2019 11:20:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=yLzCCbA1xxgfSSaN55ak3+kri+HafX9octEvTxgZHQ4=; b=QPr6feejBrc5AYDFCfltGGA9g
+        MOBKVaJNT8g359mo5ovvj7SADpWggwaleaynmHTmIYrP0Dvoza9azT1TCvicyZuy9cv5sANCwT5W3
+        FF2mFDgv3fPhc3hN6hocoT+L4rJuD25u1PZbE61MAfmTXHNk8R0mjCVermC1hgulxsQNBhNEldsMD
+        gh4TwP/rzW80LblNU6jyYPgNR+2MnxFo+EM6EDSKKJdOEXsKzFiYZ3MsDbGNPX2nYvsefFcRJhyB3
+        ZBi7dDMANOsy7GNmE1geqRK3jmUBJTtd4fcii6HYFMX87s2QXBhODXtm8z67ADOVa6PpQGLnU6pDf
+        OrGBGwJzA==;
+Received: from [2601:1c0:6280:3f0::9a1f]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iDVZF-00039v-NT; Thu, 26 Sep 2019 15:20:29 +0000
+Subject: Re: [RFC PATCH] x86/doc/boot_protocol: Correct the description of
+ "reloc"
+To:     hpa@zytor.com, Cao jin <caoj.fnst@cn.fujitsu.com>,
+        Ingo Molnar <mingo@kernel.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, corbet@lwn.net
+References: <20190926042116.17929-1-caoj.fnst@cn.fujitsu.com>
+ <20190926060139.GA100481@gmail.com>
+ <faabfe47-ba3e-5a92-af65-dc26e8e2ecb9@cn.fujitsu.com>
+ <3073CD01-65C5-4BEC-B2FC-F76DD0E70D73@zytor.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <f7a1d739-94ae-f6d3-efdb-9748e5e03f82@infradead.org>
+Date:   Thu, 26 Sep 2019 08:20:28 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190926110648.GM2751@suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <3073CD01-65C5-4BEC-B2FC-F76DD0E70D73@zytor.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,15 +64,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/26/19 4:06 AM, David Sterba wrote:
-> On Thu, Sep 26, 2019 at 03:58:36PM +0800, Yunfeng Ye wrote:
->> The async_lock is big global lock, I think it's good to put kfree() outside
->> to keep the critical area as short as possible.
+On 9/26/19 12:58 AM, hpa@zytor.com wrote:
+> On September 26, 2019 12:55:51 AM PDT, Cao jin <caoj.fnst@cn.fujitsu.com> wrote:
+>> On 9/26/19 2:01 PM, Ingo Molnar wrote:
+>>> * Cao jin <caoj.fnst@cn.fujitsu.com> wrote:
+>>>
+>>>> The fields marked with (reloc) actually are not dedicated for
+>> writing,
+>>>> but communicating info for relocatable kernel with boot loaders. For
+>>>> example:
+>>>>
+>>>>     ============    ============
+>>>>     Field name:     pref_address
+>>>>     Type:           read (reloc)
+>>>>     Offset/size:    0x258/8
+>>>>     Protocol:       2.10+
+>>>>     ============    ============
+>>>>
+>>>>     ============    ========================
+>>>>     Field name:     code32_start
+>>>>     Type:           modify (optional, reloc)
+>>>>     Offset/size:    0x214/4
+>>>>     Protocol:       2.00+
+>>>>     ============    ========================
+>>>>
+>>>> Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
+>>>> ---
+>>>> Unless I have incorrect non-native understanding for "fill in", I
+>> think
+>>>> this is inaccurate.
+>>>>
+>>>>  Documentation/x86/boot.rst | 2 +-
+>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/Documentation/x86/boot.rst b/Documentation/x86/boot.rst
+>>>> index 08a2f100c0e6..a611bf04492d 100644
+>>>> --- a/Documentation/x86/boot.rst
+>>>> +++ b/Documentation/x86/boot.rst
+>>>> @@ -243,7 +243,7 @@ bootloader ("modify").
+>>>>  
+>>>>  All general purpose boot loaders should write the fields marked
+>>>>  (obligatory).  Boot loaders who want to load the kernel at a
+>>>> -nonstandard address should fill in the fields marked (reloc); other
+>>>> +nonstandard address should consult with the fields marked (reloc);
+>> other
+>>>>  boot loaders can ignore those fields.
+>>>>  
+>>>>  The byte order of all fields is littleendian (this is x86, after
+>> all.)
+>>>
+>>> Well, this documentation is written from the point of view of a 
+>>> *bootloader*, not the kernel. So the 'fill in' says that the
+>> bootloader 
+>>> should write those fields - which is correct, right?
+>>>
+>>
+>> Take pref_address or relocatable_kernel for example, they have type:
+>> read (reloc), does boot loader need to write them? I don't see grub
+>> does
+>> this at least.
 > 
-> Agreed, kfree is not always cheap. We had patches in btrfs moving kfree
-> out of critical section(s) after causing softlockups due to increased lock
-> contention.
+> Read means the boot later reads them.
 
-The above would be a great addition for the commit description. Anyway:
+is that          boot loader ??
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+
+-- 
+~Randy
