@@ -2,162 +2,83 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 388A4C352A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBCAC352AA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC9821D6C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:43:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569512621;
-	bh=eq5GWqqM/XWad7VLW5dwSNljeBKO2SuN/sIqi/BTjQU=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=sbD3w6kdO9kVJaRvGtt77IA85k4eRaJ+jFLK4WaoDOIOzDm2CMk1+Rd5hhHM8XjkU
-	 Teo/lmVBiB4JdnCQGcnnCsyW7qOcEPnzLssJIU/KGhef70mfP8hg1BDTBx7NksR2kN
-	 GSpOJe2v9wFqQ6KG66WxwCrJ6vDfoRv9Yuef53BY=
+	by mail.kernel.org (Postfix) with ESMTP id A30C121D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:44:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727283AbfIZPnk (ORCPT
+        id S1727329AbfIZPoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 11:43:40 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34892 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727147AbfIZPnk (ORCPT
+        Thu, 26 Sep 2019 11:44:08 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:40931 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726984AbfIZPoH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 11:43:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
-        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=NBX57sFuKjtBPrTUHJDkACSKpkdPcWpMh+F7o309LqY=; b=NK94D5gglxhUnieF+ULb4HAgJ
-        7HJbyFcemE0CxlzR+ocU+JMc8FkGQgGcz5Jdycvg8A+S+ehEYOXjsABNn5grKNMOOyfL3LsvCDtKr
-        bSt3lnfH6zED57Fv6RgQZ+J0U5s2qTOv5hYipNg51VSesJuTrejFrPCH237scsZ8LyoQQ=;
-Received: from [12.157.10.118] (helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1iDVvY-0003yj-U8; Thu, 26 Sep 2019 15:43:33 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 5A75AD02CFF; Thu, 26 Sep 2019 16:43:31 +0100 (BST)
-Date:   Thu, 26 Sep 2019 08:43:31 -0700
-From:   Mark Brown <broonie@kernel.org>
-To:     Sam Ravnborg <sam@ravnborg.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Carlo Caione <carlo@caione.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the amlogic tree with the FIXME tree
-Message-ID: <20190926154331.GX2036@sirena.org.uk>
+        Thu, 26 Sep 2019 11:44:07 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 6B2BD3C0579;
+        Thu, 26 Sep 2019 17:44:05 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id vE5FwvmGo7cr; Thu, 26 Sep 2019 17:43:59 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 6FF253C04C0;
+        Thu, 26 Sep 2019 17:43:59 +0200 (CEST)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Thu, 26 Sep
+ 2019 17:43:58 +0200
+Date:   Thu, 26 Sep 2019 17:43:56 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
+CC:     <fweisbec@gmail.com>, <tglx@linutronix.de>, <mingo@kernel.org>,
+        <peterz@infradead.org>, <linux-renesas-soc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH V3 1/1] tick: broadcast-hrtimer: Fix a race in bc_set_next
+Message-ID: <20190926154356.GA29221@vmlxhi-102.adit-jv.com>
+References: <alpine.DEB.2.21.1909261144250.5528@nanos.tec.linutronix.de>
+ <20190926135101.12102-1-balasubramani_vivekanandan@mentor.com>
+ <20190926135101.12102-2-balasubramani_vivekanandan@mentor.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="x735uyZ2C9eR7U1j"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-X-Cookie: Be careful!  UGLY strikes 9 out of 10!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190926135101.12102-2-balasubramani_vivekanandan@mentor.com>
+User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
+X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Sep 26, 2019 at 03:51:01PM +0200, Balasubramani Vivekanandan wrote:
+> When a cpu requests broadcasting, before starting the tick broadcast
+> hrtimer, bc_set_next() checks if the timer callback (bc_handler) is
+> active using hrtimer_try_to_cancel(). But hrtimer_try_to_cancel() does
+> not provide the required synchronization when the callback is active on
+> other core.
 
---x735uyZ2C9eR7U1j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[..]
 
-Hi all,
+> diff --git a/kernel/time/tick-broadcast-hrtimer.c b/kernel/time/tick-broadcast-hrtimer.c
+> index c1f5bb590b5e..f070f9734792 100644
+> --- a/kernel/time/tick-broadcast-hrtimer.c
+> +++ b/kernel/time/tick-broadcast-hrtimer.c
 
-Today's linux-next merge of the amlogic tree got a conflict in:
+[..]
 
-  drivers/gpu/drm/meson/meson_drv.c
+FWIW, the patch seems to fix the very first commit adding hrtimer
+broadcast, i.e. v3.15-rc1 commit 5d1638acb9f62f ("tick: Introduce
+hrtimer based broadcast"), so maybe adding a Fixes: tag could be
+relevant/beneficial for the stable trees?
 
-between commit:
-
-  66620f48cb59440 ("drm/meson: drop use of drmP.h")
-
-=66rom Linus' tree and commit:
-
-  e478e0ba4ffec31 ("drm/meson: enable runtime PM")
-
-=66rom the amlogic tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
-diff --cc drivers/gpu/drm/meson/meson_drv.c
-index a24f8dec5adc9,256b6a0e9c6b2..0000000000000
---- a/drivers/gpu/drm/meson/meson_drv.c
-+++ b/drivers/gpu/drm/meson/meson_drv.c
-@@@ -8,30 -8,36 +8,31 @@@
-   *     Jasper St. Pierre <jstpierre@mecheye.net>
-   */
- =20
- -#include <linux/kernel.h>
- -#include <linux/module.h>
- -#include <linux/mutex.h>
- -#include <linux/platform_device.h>
-  #include <linux/component.h>
- +#include <linux/module.h>
-  #include <linux/of_graph.h>
- +#include <linux/platform_device.h>
-+ #include <linux/pm_runtime.h>
- +#include <linux/soc/amlogic/meson-canvas.h>
- =20
- -#include <drm/drmP.h>
- -#include <drm/drm_atomic.h>
-  #include <drm/drm_atomic_helper.h>
- -#include <drm/drm_fb_cma_helper.h>
- +#include <drm/drm_drv.h>
-  #include <drm/drm_fb_helper.h>
- -#include <drm/drm_flip_work.h>
-  #include <drm/drm_gem_cma_helper.h>
-  #include <drm/drm_gem_framebuffer_helper.h>
- -#include <drm/drm_plane_helper.h>
- +#include <drm/drm_irq.h>
- +#include <drm/drm_modeset_helper_vtables.h>
-  #include <drm/drm_probe_helper.h>
- -#include <drm/drm_rect.h>
- +#include <drm/drm_vblank.h>
- =20
- +#include "meson_crtc.h"
-  #include "meson_drv.h"
- -#include "meson_plane.h"
-  #include "meson_overlay.h"
- -#include "meson_crtc.h"
- +#include "meson_plane.h"
- +#include "meson_registers.h"
-  #include "meson_venc_cvbs.h"
- -
- -#include "meson_vpp.h"
-  #include "meson_viu.h"
- -#include "meson_venc.h"
- -#include "meson_registers.h"
- +#include "meson_vpp.h"
- =20
-  #define DRIVER_NAME "meson"
-  #define DRIVER_DESC "Amlogic Meson DRM driver"
-
---x735uyZ2C9eR7U1j
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2M3KIACgkQJNaLcl1U
-h9Bn0Qf/Z4VcbgndgnTVp4VmQHNoU+SpAW+zTuVy9ep2jQIy4XpcNT3rjTkldgJV
-WqqsbGJou1kEojyzB/8P5hD5XCtgLHsUwhjSkNy94gUF1kCrqpXGCNrLYmRBliua
-E5nddB8eDlmV01cHcjrZmbxTLlAJkjHF/BJEOFOGpFC0aBRbOOpt/eTZpaiU4JS5
-qEK4elVM68ZAqEGpcZ6cHuEx9mO8z8UorSwK7ryzIhYdddfIV45GcPEfehyhsJCi
-+SAeUuGtMbAu+PEUwBL4Z5VViamuVCq46tEB5fIAL8XoRb86AwqCQt+hi9QPc6Pu
-1qvehBkFePpbGbBGdAaHjpzrJGBixA==
-=wTNs
------END PGP SIGNATURE-----
-
---x735uyZ2C9eR7U1j--
+-- 
+Best Regards,
+Eugeniu
