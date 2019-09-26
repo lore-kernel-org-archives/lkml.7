@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD292C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F19E5C352AB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 855A9222C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE393222CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:56:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NeoCDK86"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h2sveAYX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbfIZR4Z (ORCPT
+        id S1728099AbfIZR43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 13:56:25 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39209 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728022AbfIZR4X (ORCPT
+        Thu, 26 Sep 2019 13:56:29 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44098 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728062AbfIZR40 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 13:56:23 -0400
-Received: by mail-pg1-f196.google.com with SMTP id o10so1957522pgs.6
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 10:56:23 -0700 (PDT)
+        Thu, 26 Sep 2019 13:56:26 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q21so2232553pfn.11
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 10:56:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ct25FYY49pcH025DailB6pbS1DlS4bIVNf04cXZx2wM=;
-        b=NeoCDK86mT/W24oE5rtmJouGfsbTTEGkoSxTx4KF4CSxjsSlvFZN3J9odBOQnvlXiP
-         iUyNYZOgnvxnrzhYkrDgkrU0+SzkX/L29uWuoGEThELn/fWhiKJEA65hwXsy3koRBZjm
-         4+HnR9f+RjX0Rbvz5f8d8QfWgEFoMfVNcSBHQ=
+        bh=VC2Bmzao7X0NkgB6osdHVMHoKcEQeokPuBQAULnAMEE=;
+        b=h2sveAYX3uA/1NDTnSYWWuXYSvlUdaG9aZQBAwdGYVfIjBluySKMZUfy4JB27+8iWL
+         C5EhSq87+nJcT0+Ca5wU/iDaeZ8WX6J4clDqF0ZuuVgUhEVA94tdvnWHwFA9bIVlx1cM
+         a7693de5zHrwGE51wsBB+Q6I0Q3aQ5nxWanDE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=ct25FYY49pcH025DailB6pbS1DlS4bIVNf04cXZx2wM=;
-        b=siNvgB/hNzSK61IBgErSdPiPakkHwnwKFZLkbLer52BL5UEA+zcfe8cEfa0nQIJgpV
-         q47OFBhlyRlQj3cm6VK56ATg6J4RUBBm4iU+mn/Aso4JWySb/dEXGTYrvVbqnklcmexQ
-         QLmMNc48W8lqc7CM/q4wgYEhOJFVDWqWsokheIxSBlEGK1BJWq76RDPLLXeXVkb1sXLb
-         onbsRLTMam2CYg96zScC/Dg+fTBUwrJvl1c+0dDPx1kIVYl30o6hoINuzyd0ox9FMwtl
-         iN1MJtvtHGDycPW7xXCabSopq0kzovQy8XAxfEDpB0zqioS7Khu7jS1nUpybcZPzryDZ
-         N4ag==
-X-Gm-Message-State: APjAAAX5xyB63l/b6tuczZkf5wiyz9ixO/szKR3eZlB/a7IZNES9I/qX
-        WAIf1hbCB7/EWRejyTdh5XY9+A==
-X-Google-Smtp-Source: APXvYqwCE1BZTT9Hh90UUQnKWrAcK2jHTYm7yifQDk8oKb7icUZpadcMBDqMvGH5nif/lmL5cmzvdg==
-X-Received: by 2002:a63:186:: with SMTP id 128mr4612810pgb.157.1569520583020;
-        Thu, 26 Sep 2019 10:56:23 -0700 (PDT)
+        bh=VC2Bmzao7X0NkgB6osdHVMHoKcEQeokPuBQAULnAMEE=;
+        b=XpOzs1ixaho54V9NObLPmajMf0CWOKZjXKnctcGerIOjaAjsvfLJmIG9RQ9dlDF7cx
+         hLXEGEmHslwuL0973LNIFvPPdogdtcfBEic76+P0Z1/4Z5E+nQoVVywBbjT0XN1GtprM
+         0v38z4l1i1pzxpId8TR4rf9bqQKxOHMtdtYDnvicly7OW78/3+wkRcqOM9/h8e7rro5G
+         DAT9qWkqjDVwjMSJGFHBCeAz0cldpmTrn0bTvdqWa/M0xK5Ik6QveztmMoGaH6WkjcCD
+         ZYlEMyoIioOaRXu2TQqFFlAgLwBisImzoyWf3s3QlYz+hIyct+Q30DP5WkVdCZ8dr4no
+         MRkA==
+X-Gm-Message-State: APjAAAW+vmVGSxv+5YagYQ15df6HvSD9nfwWMfWfUxIBLN9AZCGH87H8
+        fINZr7nFalAjlx2jO3iFUsfMfA==
+X-Google-Smtp-Source: APXvYqx3URWQo+sO/EQWcmMSlPHXmNqT24byGxyOnAx9g17jDBjE8+LmBjBEIagBFZrOvidoBf5ZYw==
+X-Received: by 2002:a63:5005:: with SMTP id e5mr4869136pgb.442.1569520585037;
+        Thu, 26 Sep 2019 10:56:25 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e10sm4090474pfh.77.2019.09.26.10.56.18
+        by smtp.gmail.com with ESMTPSA id z3sm5610456pjd.25.2019.09.26.10.56.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 26 Sep 2019 10:56:21 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -68,9 +68,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org,
         linux-xtensa@linux-xtensa.org, x86@kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 06/29] s390: Move RO_DATA into "text" PT_LOAD Program Header
-Date:   Thu, 26 Sep 2019 10:55:39 -0700
-Message-Id: <20190926175602.33098-7-keescook@chromium.org>
+Subject: [PATCH 05/29] ia64: Rename PT_LOAD identifier "code" to "text"
+Date:   Thu, 26 Sep 2019 10:55:38 -0700
+Message-Id: <20190926175602.33098-6-keescook@chromium.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190926175602.33098-1-keescook@chromium.org>
 References: <20190926175602.33098-1-keescook@chromium.org>
@@ -79,38 +79,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for moving NOTES into RO_DATA, this moves RO_DATA back
-into the "text" PT_LOAD Program Header, as done with other
-architectures. The "data" PT_LOAD now starts with the writable data
-section.
+In preparation for moving NOTES into RO_DATA, this renames the linker
+script internal identifier for the PT_LOAD Program Header from "code"
+to "text" to match other architectures.
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/s390/kernel/vmlinux.lds.S | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/ia64/kernel/vmlinux.lds.S | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/arch/s390/kernel/vmlinux.lds.S b/arch/s390/kernel/vmlinux.lds.S
-index 7e0eb4020917..13294fef473e 100644
---- a/arch/s390/kernel/vmlinux.lds.S
-+++ b/arch/s390/kernel/vmlinux.lds.S
-@@ -52,7 +52,7 @@ SECTIONS
+diff --git a/arch/ia64/kernel/vmlinux.lds.S b/arch/ia64/kernel/vmlinux.lds.S
+index 0da58cf8e213..c1067992fcd1 100644
+--- a/arch/ia64/kernel/vmlinux.lds.S
++++ b/arch/ia64/kernel/vmlinux.lds.S
+@@ -13,7 +13,7 @@ ENTRY(phys_start)
+ jiffies = jiffies_64;
  
- 	NOTES :text :note
+ PHDRS {
+-	code   PT_LOAD;
++	text   PT_LOAD;
+ 	percpu PT_LOAD;
+ 	data   PT_LOAD;
+ 	note   PT_NOTE;
+@@ -36,7 +36,7 @@ SECTIONS {
+ 	phys_start = _start - LOAD_OFFSET;
  
--	.dummy : { *(.dummy) } :data
-+	.dummy : { *(.dummy) } :text
+ 	code : {
+-	} :code
++	} :text
+ 	. = KERNEL_START;
  
- 	RO_DATA_SECTION(PAGE_SIZE)
+ 	_text = .;
+@@ -68,9 +68,9 @@ SECTIONS {
+ 	/*
+ 	 * Read-only data
+ 	 */
+-	NOTES :code :note       /* put .notes in text and mark in PT_NOTE  */
++	NOTES :text :note       /* put .notes in text and mark in PT_NOTE  */
+ 	code_continues : {
+-	} : code               /* switch back to regular program...  */
++	} :text                /* switch back to regular program...  */
  
-@@ -64,7 +64,7 @@ SECTIONS
- 	.data..ro_after_init : {
- 		 *(.data..ro_after_init)
- 		JUMP_TABLE_DATA
--	}
-+	} :data
  	EXCEPTION_TABLE(16)
- 	. = ALIGN(PAGE_SIZE);
- 	__end_ro_after_init = .;
+ 
+@@ -102,9 +102,9 @@ SECTIONS {
+ 		__start_unwind = .;
+ 		*(.IA_64.unwind*)
+ 		__end_unwind = .;
+-	} :code :unwind
++	} :text :unwind
+ 	code_continues2 : {
+-	} : code
++	} :text
+ 
+ 	RODATA
+ 
+@@ -224,7 +224,7 @@ SECTIONS {
+ 	_end = .;
+ 
+ 	code : {
+-	} :code
++	} :text
+ 
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
 -- 
 2.17.1
 
