@@ -2,155 +2,129 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA77C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E31C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C159222C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 885A1222C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:11:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="HDnWCsyW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730036AbfIZJKh (ORCPT
+        id S1730146AbfIZJLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 05:10:37 -0400
-Received: from krieglstein.org ([188.68.35.71]:34120 "EHLO krieglstein.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbfIZJKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 05:10:36 -0400
-Received: from dabox.localnet (gateway.hbm.com [213.157.30.2])
-        by krieglstein.org (Postfix) with ESMTPSA id B297D401B1;
-        Thu, 26 Sep 2019 11:10:34 +0200 (CEST)
-From:   Tim Sander <tim@krieglstein.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Dinh Nguyen <dinguyen@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Richard Weinberger <richard@nod.at>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Brian Norris <computersforpeace@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Subject: Re: mtd raw nand denali.c broken for Intel/Altera Cyclone V
-Date:   Thu, 26 Sep 2019 11:10:34 +0200
-Message-ID: <23083624.r2bJSIadJk@dabox>
-Organization: Sander and Lightning
-In-Reply-To: <CAK7LNARCPwqY+YmUzsHkABpshzzS3tC=fDgp4vZjVgBwS+LKJw@mail.gmail.com>
-References: <5143724.5TqzkYX0oI@dabox> <9bb2fb0e-a9e7-c389-f9b7-42367485ff83@kernel.org> <CAK7LNARCPwqY+YmUzsHkABpshzzS3tC=fDgp4vZjVgBwS+LKJw@mail.gmail.com>
+        Thu, 26 Sep 2019 05:11:16 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50283 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbfIZJLQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 05:11:16 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 5so1818545wmg.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 02:11:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NvlClry7u7XrfGIVsfJ+TjM0+OzUnx/9VnLu9RuXPxE=;
+        b=HDnWCsyWuMRI0mLG/7gMEhhik8MvA1Tz46EzqLquUWfr7VTeW5joimm4bIwU9cZf7x
+         L2VDgW4g/sueve9OFN9PyHt3W64X5i3q1Nq5T49n5uCkqcdM4Ra20F5v7YHJvmmqlwCZ
+         op5sXml/au4o6Wb0aNR6PrBohasuofJRqa6a0Y1cIAVQx330TxKpDkc9N2c7b0+WdvGf
+         bOZRD4jxBlUNm0NZB5J14U04KQDbJ7BF78dXLJuUsDitR8Z6Nvatkse9ar8ufN031aB6
+         4YfePqfcxlCQIptELuPS0j/J85XKiszJWJDbBKdiMpMi6SceOS2hjcj5Ym2D/3wE7aIW
+         jpWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NvlClry7u7XrfGIVsfJ+TjM0+OzUnx/9VnLu9RuXPxE=;
+        b=NCwT5+VBsm87G0JbJp4Gr05dy0IGudnLwzpGcvuVJOaIjAsvCW9bxuK21V7jxduagb
+         fBTo4xSPqRJbV4ihRKPHJTovkfh0dP1lWQdyL1cdgoWfRhOcRC9fHjseKgf8o5sPB/X9
+         SAAnzgMmjykxGRuvY4zN+1q/xwlqjFBEasUBZXU7wpPgoqEXMhvnDXeXiyLHjsbgWaKf
+         ucZeyfF+insSNfvUpZuMK91u4TC1g+JuGGpGibGjnO+lv5ouQ3y6G3R4YKk/1OefLcd7
+         ZIkOm/9AVERvBlvKMH+ulW84/KyCMoequHrPAcgcJeeQVojv1XZixfjIGZZajux69XwX
+         p6Kw==
+X-Gm-Message-State: APjAAAWVl3YyO4ikhSC3psj3jRZcyDSlfXjk/739ElOP0Wr8MpjNQpIf
+        eplTsaFacrAqX7TV8hEUNdF/6PAsBFc=
+X-Google-Smtp-Source: APXvYqzt9vQs2kwjHGDHTQIwhxjlF5ljsO+4VEFVjJaJ4vavi9pJr7B9bYNgMlw5HFGexb3OXZKeKA==
+X-Received: by 2002:a1c:4d0d:: with SMTP id o13mr2144290wmh.19.1569489073735;
+        Thu, 26 Sep 2019 02:11:13 -0700 (PDT)
+Received: from flashheart.burtonini.com (35.106.2.81.in-addr.arpa. [81.2.106.35])
+        by smtp.gmail.com with ESMTPSA id a10sm1886935wrm.52.2019.09.26.02.11.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Sep 2019 02:11:12 -0700 (PDT)
+From:   Ross Burton <ross.burton@intel.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        bruce.ashfield@gmail.com
+Subject: [PATCH] arch/x86/boot: use prefix map to avoid embedded paths
+Date:   Thu, 26 Sep 2019 10:11:04 +0100
+Message-Id: <20190926091104.3762-1-ross.burton@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi 
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
 
-Am Mittwoch, 11. September 2019, 04:37:46 CEST schrieb Masahiro Yamada:
-> Hi Dinh,
-> 
-> On Wed, Sep 11, 2019 at 12:22 AM Dinh Nguyen <dinguyen@kernel.org> wrote:
-> > On 9/10/19 8:48 AM, Tim Sander wrote:
-> > > Hi
-> > > 
-> > > I have noticed that my SPF records where not in place after moving the
-> > > server, so it seems the mail didn't go to the mailing list. Hopefully
-> > > that's fixed now.> > 
-> > > Am Dienstag, 10. September 2019, 09:16:37 CEST schrieb Masahiro Yamada:
-> > >> On Fri, Sep 6, 2019 at 9:39 PM Tim Sander <tim@krieglstein.org> wrote:
-> > >>> Hi
-> > >>> 
-> > >>> I have noticed that there multiple breakages piling up for the denali
-> > >>> nand
-> > >>> driver on the Intel/Altera Cyclone V. Unfortunately i had no time to
-> > >>> track
-> > >>> the mainline kernel closely. So the breakage seems to pile up. I am a
-> > >>> little disapointed that Intel is not on the lookout that the kernel
-> > >>> works
-> > >>> on the chips they are selling. I was really happy about the state of
-> > >>> the
-> > >>> platform before concerning mainline support.
-> > >>> 
-> > >>> The failure starts with kernel 4.19 or stable kernel release 4.18.19.
-> > >>> The
-> > >>> commit is ba4a1b62a2d742df9e9c607ac53b3bf33496508f.
-> > >> 
-> > >> Just for clarification, this corresponds to
-> > >> 0d55c668b218a1db68b5044bce4de74e1bd0f0c8 upstream.
-> > >> 
-> > >>> The problem here is that
-> > >>> our platform works with a zero in the SPARE_AREA_SKIP_BYTES register.
-> > >> 
-> > >> Please clarify the scope of "our platform".
-> > >> (Only you, or your company, or every individual using this chip?)
-> > > 
-> > > The company i work for uses this chip as a base for multiple products.
-> > > 
-> > >> First, SPARE_AREA_SKIP_BYTES is not the property of the hardware.
-> > >> Rather, it is about the OOB layout, in other words, this parameter
-> > >> is defined by software.
-> > >> 
-> > >> For example, U-Boot supports the Denali NAND driver.
-> > >> The SPARE_AREA_SKIP_BYTES is a user-configurable parameter:
-> > >> https://github.com/u-boot/u-boot/blob/v2019.10-rc3/drivers/mtd/nand/raw
-> > >> /Kcon fig#L112
-I am using barebox for booting. I looked at the code and found a comment in 
-denali_hw_init: 
-         * tell driver how many bit controller will skip before
-         * writing ECC code in OOB, this register may be already
-         * set by firmware. So we read this value out.
-         * if this value is 0, just let it be.
+It was observed that the kernel embeds the path in the x86 boot
+artifacts.
 
-I have checked the barebox code and the denali register SPARE_AREA_SKIP_BYTES 
-(offset 0x230) is read only once on booting. I have not found any occurrence of 
-the register being set by barebox. So i would concur as the value is zero in 
-my case that the boot ROM seems not to set the value. The code in barebox is 
-mostly imported from linux in 2015 which is before the reorganization which 
-happened on the linux side later on.
+From https://bugzilla.yoctoproject.org/show_bug.cgi?id=13458:
 
-> > >> 
-> > >> 
-> > >> Your platform works with a zero in the SPARE_AREA_SKIP_BYTES register
-> > >> because the NAND chip on the board was initialized with a zero
-> > >> set to the SPARE_AREA_SKIP_BYTES register.
-> > >> 
-> > >> If the NAND chip had been initialized with 8
-> > >> set to the SPARE_AREA_SKIP_BYTES register, it would have
-> > >> been working with 8 to the SPARE_AREA_SKIP_BYTES.
-> > >> 
-> > >> The Boot ROM is the only (semi-)software that is unconfigurable by
-> > >> users,
-> > >> so the value of SPARE_AREA_SKIP_BYTES should be aligned with
-> > >> the boot ROM.
-> > >> I recommend you to check the spec of the boot ROM.
-> > > 
-> > > We boot from NOR flash. That's why i didn't see a problem booting
-> > > probably.
-> > > 
-> > >> (The maintainer of the platform, Dihn is CC'ed,
-> > >> so I hope he will jump in)
-> > > 
-> > > Yes i hope so too.
-> > 
-> > I don't have access to a NAND device at the moment. I'll try to find one
-> > and debug.
-I have hardware available to me, so i would be happy to test any ideas/
-guesses.
+[
+   If you turn on the buildpaths QA test, or try a reproducible build, you
+   discover that the kernel image contains build paths.
 
-> Dinh,
-> Do you have answers for the following questions?
-> 
-> 
-> - Does the SOCFPGA boot ROM support the NAND boot mode?
-> 
-> - If so, which value does it use for SPARE_AREA_SKIP_BYTES?
+   $ strings bzImage-5.0.19-yocto-standard |grep tmp/
+   out of pgt_buf in
+   /data/poky-tmp/reproducible/tmp/work-shared/qemux86-64/kernel-source/arch/x86/boot/compressed/kaslr_64.c!?
 
-Best regards
-Tim
+   But what's this in the top-level Makefile:
 
+   $ git grep prefix-map
+   Makefile:KBUILD_CFLAGS  += $(call
+   cc-option,-fmacro-prefix-map=$(srctree)/=)
 
+   So the __FILE__ shouldn't be using the full path.  However
+   arch/x86/boot/compressed/Makefile has this:
 
+   KBUILD_CFLAGS := -m$(BITS) -O2
+
+   So that clears KBUILD_FLAGS, removing the -fmacro-prefix-map option.
+]
+
+Other architectures do not clear the flags, but instead prune before
+adding boot or specific options. There's no obvious reason why x86 isn't
+doing the same thing (pruning vs clearing) and no build or boot issues
+have been observed.
+
+So we make x86 can do the same thing, and we no longer have embedded paths.
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+---
+ arch/x86/boot/compressed/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 6b84afdd7538..b246f18c5857 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -38,6 +38,7 @@ KBUILD_CFLAGS += $(call cc-option,-fno-stack-protector)
+ KBUILD_CFLAGS += $(call cc-disable-warning, address-of-packed-member)
+ KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
+ KBUILD_CFLAGS += -Wno-pointer-sign
++KBUILD_CFLAGS += $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
+ 
+ KBUILD_AFLAGS  := $(KBUILD_CFLAGS) -D__ASSEMBLY__
+ GCOV_PROFILE := n
+-- 
+2.20.1
 
