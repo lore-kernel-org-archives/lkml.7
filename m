@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F461C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3977C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E2BF222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE77D222CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:35:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569458144;
-	bh=jWkifgEpIEt72jA43Jf1GYM9/fhUkSsFyMQKDlfKTGs=;
+	s=default; t=1569458146;
+	bh=3E6QcXTvI2xA2Efi0bCJdKtaOWE89o+L7sAwgHUvjQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oXsCCq5bzr0iUKDUDYYcy4P3K1GjaFQ9XfwHLtY3EI4gihIjTEAS3qdYKL8jaV98+
-	 mpfFXcUg8SqQW64Hd0wcczX8ga4yej4AgaUsF36MzAecFYGFAA8k20umnkMZWXhYee
-	 8vaYFRP3dA3h8XDFOT0uQvx46Gbtq8Sd/sMNczGo=
+	b=w6GeF8sCnnY4cGWE5ffBA6NTsDli5y6/kYxZTAPf8moCoOMzDjoJuSUF3n8C4UflM
+	 Pi9cf7JJUmXG+u8CRNkbrTmHcsCTFSM9KhLohHEe4PyV+SfM4D4ByGTZ/0122egfGq
+	 nkZdMrSIy998zZ6nK8jTz2R2n9MXUSDDdeYaEakc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389938AbfIZAfm (ORCPT
+        id S2389785AbfIZAfp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 20:35:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38418 "EHLO mail.kernel.org"
+        Wed, 25 Sep 2019 20:35:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389864AbfIZAfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 20:35:38 -0400
+        id S2389915AbfIZAfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 20:35:42 -0400
 Received: from quaco.localdomain (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDD00222C3;
-        Thu, 26 Sep 2019 00:35:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58608222C6;
+        Thu, 26 Sep 2019 00:35:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569458137;
-        bh=jWkifgEpIEt72jA43Jf1GYM9/fhUkSsFyMQKDlfKTGs=;
+        s=default; t=1569458141;
+        bh=3E6QcXTvI2xA2Efi0bCJdKtaOWE89o+L7sAwgHUvjQY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hzO7He6kFXvsSFdooVrQuac54FUvz9WlCvVwOlE+Q48KEoY6HX1TTBo0o3g4qYJ6h
-         2MAs95UOFASnCflgKcvAaS/c4HOb3phFeWJWFYfc9WZq09dRcKq0RUEieq3KYrZQOq
-         EFaa/k5xRjKDfDdTThXvXqF1kigRo98PoavsOAZ8=
+        b=ultaIe/Dp5hL52kyja0FAxjpMmTaf0Sm0TVvepmk/HurNijk0zoPeolsTAPrj1yUs
+         IIuV4rjQK3ZgxyJpmYinh4nNDfsvgkKhnFFHHIjz+z2WUX4SsLSr4D8jSJLW9Qzvsx
+         DFbp3tWRh7zcsn0igRfWNv/haZvaYLZlKcsHOEvU=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -49,9 +49,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Michael Petlan <mpetlan@redhat.com>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 44/66] libperf: Add perf_evlist__id_add() function
-Date:   Wed, 25 Sep 2019 21:32:22 -0300
-Message-Id: <20190926003244.13962-45-acme@kernel.org>
+Subject: [PATCH 45/66] libperf: Add perf_evlist__id_add_fd() function
+Date:   Wed, 25 Sep 2019 21:32:23 -0300
+Message-Id: <20190926003244.13962-46-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190926003244.13962-1-acme@kernel.org>
 References: <20190926003244.13962-1-acme@kernel.org>
@@ -64,170 +64,190 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Add the perf_evlist__id_add() function to libperf as an internal
-function.  We already have the 'heads' member in 'struct perf_evlist'.
+Add the perf_evlist__id_add_fd() function to libperf as an internal
+function.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Link: http://lore.kernel.org/lkml/20190913132355.21634-31-jolsa@kernel.org
+Link: http://lore.kernel.org/lkml/20190913132355.21634-32-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/evlist.c                  | 26 ++++++++++++++++++++++++
- tools/perf/lib/include/internal/evlist.h |  4 ++++
- tools/perf/tests/event_update.c          |  2 +-
- tools/perf/util/evlist.c                 | 22 +-------------------
- tools/perf/util/evlist.h                 |  2 --
- tools/perf/util/header.c                 |  4 ++--
- 6 files changed, 34 insertions(+), 26 deletions(-)
+ tools/perf/lib/evlist.c                  | 44 ++++++++++++++++++++++++
+ tools/perf/lib/include/internal/evlist.h |  4 +++
+ tools/perf/util/evlist.c                 | 43 +----------------------
+ tools/perf/util/evlist.h                 |  4 ---
+ tools/perf/util/evsel.c                  |  2 +-
+ 5 files changed, 50 insertions(+), 47 deletions(-)
 
 diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
-index ae861bf38976..a29ee8a746d9 100644
+index a29ee8a746d9..3a16dd0c044f 100644
 --- a/tools/perf/lib/evlist.c
 +++ b/tools/perf/lib/evlist.c
-@@ -1,9 +1,12 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <perf/evlist.h>
- #include <perf/evsel.h>
-+#include <linux/bitops.h>
+@@ -4,11 +4,14 @@
+ #include <linux/bitops.h>
  #include <linux/list.h>
-+#include <linux/hash.h>
+ #include <linux/hash.h>
++#include <sys/ioctl.h>
  #include <internal/evlist.h>
  #include <internal/evsel.h>
-+#include <internal/xyarray.h>
+ #include <internal/xyarray.h>
  #include <linux/zalloc.h>
  #include <stdlib.h>
++#include <errno.h>
++#include <unistd.h>
  #include <perf/cpumap.h>
-@@ -168,3 +171,26 @@ u64 perf_evlist__read_format(struct perf_evlist *evlist)
+ #include <perf/threadmap.h>
  
- 	return first->attr.read_format;
+@@ -194,3 +197,44 @@ void perf_evlist__id_add(struct perf_evlist *evlist,
+ 	perf_evlist__id_hash(evlist, evsel, cpu, thread, id);
+ 	evsel->id[evsel->ids++] = id;
  }
 +
-+#define SID(e, x, y) xyarray__entry(e->sample_id, x, y)
-+
-+static void perf_evlist__id_hash(struct perf_evlist *evlist,
-+				 struct perf_evsel *evsel,
-+				 int cpu, int thread, u64 id)
++int perf_evlist__id_add_fd(struct perf_evlist *evlist,
++			   struct perf_evsel *evsel,
++			   int cpu, int thread, int fd)
 +{
-+	int hash;
-+	struct perf_sample_id *sid = SID(evsel, cpu, thread);
++	u64 read_data[4] = { 0, };
++	int id_idx = 1; /* The first entry is the counter value */
++	u64 id;
++	int ret;
 +
-+	sid->id = id;
-+	sid->evsel = evsel;
-+	hash = hash_64(sid->id, PERF_EVLIST__HLIST_BITS);
-+	hlist_add_head(&sid->node, &evlist->heads[hash]);
-+}
++	ret = ioctl(fd, PERF_EVENT_IOC_ID, &id);
++	if (!ret)
++		goto add;
 +
-+void perf_evlist__id_add(struct perf_evlist *evlist,
-+			 struct perf_evsel *evsel,
-+			 int cpu, int thread, u64 id)
-+{
-+	perf_evlist__id_hash(evlist, evsel, cpu, thread, id);
-+	evsel->id[evsel->ids++] = id;
++	if (errno != ENOTTY)
++		return -1;
++
++	/* Legacy way to get event id.. All hail to old kernels! */
++
++	/*
++	 * This way does not work with group format read, so bail
++	 * out in that case.
++	 */
++	if (perf_evlist__read_format(evlist) & PERF_FORMAT_GROUP)
++		return -1;
++
++	if (!(evsel->attr.read_format & PERF_FORMAT_ID) ||
++	    read(fd, &read_data, sizeof(read_data)) == -1)
++		return -1;
++
++	if (evsel->attr.read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
++		++id_idx;
++	if (evsel->attr.read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
++		++id_idx;
++
++	id = read_data[id_idx];
++
++add:
++	perf_evlist__id_add(evlist, evsel, cpu, thread, id);
++	return 0;
 +}
 diff --git a/tools/perf/lib/include/internal/evlist.h b/tools/perf/lib/include/internal/evlist.h
-index 63516fe14f4c..649406f717bc 100644
+index 649406f717bc..7d64185cfabd 100644
 --- a/tools/perf/lib/include/internal/evlist.h
 +++ b/tools/perf/lib/include/internal/evlist.h
-@@ -68,4 +68,8 @@ static inline struct perf_evsel *perf_evlist__last(struct perf_evlist *evlist)
+@@ -72,4 +72,8 @@ void perf_evlist__id_add(struct perf_evlist *evlist,
+ 			 struct perf_evsel *evsel,
+ 			 int cpu, int thread, u64 id);
  
- u64 perf_evlist__read_format(struct perf_evlist *evlist);
- 
-+void perf_evlist__id_add(struct perf_evlist *evlist,
-+			 struct perf_evsel *evsel,
-+			 int cpu, int thread, u64 id);
++int perf_evlist__id_add_fd(struct perf_evlist *evlist,
++			   struct perf_evsel *evsel,
++			   int cpu, int thread, int fd);
 +
  #endif /* __LIBPERF_INTERNAL_EVLIST_H */
-diff --git a/tools/perf/tests/event_update.c b/tools/perf/tests/event_update.c
-index cd6cae8e5137..c727379cf20e 100644
---- a/tools/perf/tests/event_update.c
-+++ b/tools/perf/tests/event_update.c
-@@ -97,7 +97,7 @@ int test__event_update(struct test *test __maybe_unused, int subtest __maybe_unu
- 	TEST_ASSERT_VAL("failed to allocate ids",
- 			!perf_evsel__alloc_id(&evsel->core, 1, 1));
- 
--	perf_evlist__id_add(evlist, evsel, 0, 0, 123);
-+	perf_evlist__id_add(&evlist->core, &evsel->core, 0, 0, 123);
- 
- 	evsel->unit = strdup("KRAVA");
- 
 diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index bc788192493f..f2863b4c61d7 100644
+index f2863b4c61d7..a37eccf65eae 100644
 --- a/tools/perf/util/evlist.c
 +++ b/tools/perf/util/evlist.c
-@@ -461,26 +461,6 @@ int perf_evlist__poll(struct evlist *evlist, int timeout)
+@@ -461,47 +461,6 @@ int perf_evlist__poll(struct evlist *evlist, int timeout)
  	return fdarray__poll(&evlist->core.pollfd, timeout);
  }
  
--static void perf_evlist__id_hash(struct evlist *evlist,
--				 struct evsel *evsel,
--				 int cpu, int thread, u64 id)
+-int perf_evlist__id_add_fd(struct evlist *evlist,
+-			   struct evsel *evsel,
+-			   int cpu, int thread, int fd)
 -{
--	int hash;
--	struct perf_sample_id *sid = SID(evsel, cpu, thread);
+-	u64 read_data[4] = { 0, };
+-	int id_idx = 1; /* The first entry is the counter value */
+-	u64 id;
+-	int ret;
 -
--	sid->id = id;
--	sid->evsel = &evsel->core;
--	hash = hash_64(sid->id, PERF_EVLIST__HLIST_BITS);
--	hlist_add_head(&sid->node, &evlist->core.heads[hash]);
+-	ret = ioctl(fd, PERF_EVENT_IOC_ID, &id);
+-	if (!ret)
+-		goto add;
+-
+-	if (errno != ENOTTY)
+-		return -1;
+-
+-	/* Legacy way to get event id.. All hail to old kernels! */
+-
+-	/*
+-	 * This way does not work with group format read, so bail
+-	 * out in that case.
+-	 */
+-	if (perf_evlist__read_format(&evlist->core) & PERF_FORMAT_GROUP)
+-		return -1;
+-
+-	if (!(evsel->core.attr.read_format & PERF_FORMAT_ID) ||
+-	    read(fd, &read_data, sizeof(read_data)) == -1)
+-		return -1;
+-
+-	if (evsel->core.attr.read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
+-		++id_idx;
+-	if (evsel->core.attr.read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
+-		++id_idx;
+-
+-	id = read_data[id_idx];
+-
+- add:
+-	perf_evlist__id_add(&evlist->core, &evsel->core, cpu, thread, id);
+-	return 0;
 -}
 -
--void perf_evlist__id_add(struct evlist *evlist, struct evsel *evsel,
--			 int cpu, int thread, u64 id)
--{
--	perf_evlist__id_hash(evlist, evsel, cpu, thread, id);
--	evsel->core.id[evsel->core.ids++] = id;
--}
--
- int perf_evlist__id_add_fd(struct evlist *evlist,
- 			   struct evsel *evsel,
- 			   int cpu, int thread, int fd)
-@@ -518,7 +498,7 @@ int perf_evlist__id_add_fd(struct evlist *evlist,
- 	id = read_data[id_idx];
+ static void perf_evlist__set_sid_idx(struct evlist *evlist,
+ 				     struct evsel *evsel, int idx, int cpu,
+ 				     int thread)
+@@ -776,7 +735,7 @@ static int evlist__mmap_per_evsel(struct evlist *evlist, int idx,
+ 		}
  
-  add:
--	perf_evlist__id_add(evlist, evsel, cpu, thread, id);
-+	perf_evlist__id_add(&evlist->core, &evsel->core, cpu, thread, id);
- 	return 0;
- }
- 
+ 		if (evsel->core.attr.read_format & PERF_FORMAT_ID) {
+-			if (perf_evlist__id_add_fd(evlist, evsel, cpu, thread,
++			if (perf_evlist__id_add_fd(&evlist->core, &evsel->core, cpu, thread,
+ 						   fd) < 0)
+ 				return -1;
+ 			perf_evlist__set_sid_idx(evlist, evsel, idx, cpu,
 diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 3f89d9913a30..eb35b4b1d86f 100644
+index eb35b4b1d86f..80b3361613e5 100644
 --- a/tools/perf/util/evlist.h
 +++ b/tools/perf/util/evlist.h
-@@ -141,8 +141,6 @@ struct evsel *
+@@ -141,10 +141,6 @@ struct evsel *
  perf_evlist__find_tracepoint_by_name(struct evlist *evlist,
  				     const char *name);
  
--void perf_evlist__id_add(struct evlist *evlist, struct evsel *evsel,
--			 int cpu, int thread, u64 id);
- int perf_evlist__id_add_fd(struct evlist *evlist,
- 			   struct evsel *evsel,
- 			   int cpu, int thread, int fd);
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index fc5eac41e102..02602bc8cabf 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -3618,7 +3618,7 @@ int perf_session__read_header(struct perf_session *session)
- 			if (perf_header__getbuffer64(header, fd, &f_id, sizeof(f_id)))
- 				goto out_errno;
+-int perf_evlist__id_add_fd(struct evlist *evlist,
+-			   struct evsel *evsel,
+-			   int cpu, int thread, int fd);
+-
+ int perf_evlist__add_pollfd(struct evlist *evlist, int fd);
+ int perf_evlist__alloc_pollfd(struct evlist *evlist);
+ int perf_evlist__filter_pollfd(struct evlist *evlist, short revents_and_mask);
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index a4a492f11849..9c284d2adcea 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2662,7 +2662,7 @@ static int store_evsel_ids(struct evsel *evsel, struct evlist *evlist)
+ 		     thread++) {
+ 			int fd = FD(evsel, cpu, thread);
  
--			perf_evlist__id_add(session->evlist, evsel, 0, j, f_id);
-+			perf_evlist__id_add(&session->evlist->core, &evsel->core, 0, j, f_id);
+-			if (perf_evlist__id_add_fd(evlist, evsel,
++			if (perf_evlist__id_add_fd(&evlist->core, &evsel->core,
+ 						   cpu, thread, fd) < 0)
+ 				return -1;
  		}
- 
- 		lseek(fd, tmp, SEEK_SET);
-@@ -3754,7 +3754,7 @@ int perf_event__process_attr(struct perf_tool *tool __maybe_unused,
- 		return -ENOMEM;
- 
- 	for (i = 0; i < n_ids; i++) {
--		perf_evlist__id_add(evlist, evsel, 0, i, event->attr.id[i]);
-+		perf_evlist__id_add(&evlist->core, &evsel->core, 0, i, event->attr.id[i]);
- 	}
- 
- 	return 0;
 -- 
 2.21.0
 
