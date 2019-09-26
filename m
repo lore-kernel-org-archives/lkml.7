@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 019BCC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57313C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0890222CF
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FCEE222D1
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:56:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KPMZBnze"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h2p8CR6C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728213AbfIZR4f (ORCPT
+        id S1728239AbfIZR4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 13:56:35 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42726 "EHLO
+        Thu, 26 Sep 2019 13:56:39 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43411 "EHLO
         mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728160AbfIZR4c (ORCPT
+        with ESMTP id S1728215AbfIZR4g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 13:56:32 -0400
-Received: by mail-pg1-f196.google.com with SMTP id z12so1946938pgp.9
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 10:56:32 -0700 (PDT)
+        Thu, 26 Sep 2019 13:56:36 -0400
+Received: by mail-pg1-f196.google.com with SMTP id v27so1941419pgk.10
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 10:56:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=HjFHv9xxIhK5RJeBiuSF34CW9EFCi2H1cUI0osZb25Q=;
-        b=KPMZBnze/A/QVrsTLF2KGN3ebdUhyckFs45P2jOghM70xqivIFR9hfivXkVt5CbeNY
-         IE1kSylnyZRNl8HDUTfbWj8AKjNJnMw62zdeR5tu6VCLH496t+W13oMohTiMGaZ6p79Z
-         3c4uLS8nqL5lvrbWSW4400GI1UZ1nPH1jjAIE=
+        bh=0o22aj+Q2fPal3OzyLNHtFtEJCV1jKXrih1rnY9ZOvQ=;
+        b=h2p8CR6CTCVG0EcWBzFZk9M7pS5/grZV7SzSB6Fp/b72sOhC+rJHHanRbr647L3D5O
+         3PK+ZsRgr4yUne37ilhSCOXRu+oA9brL1Q3zUBwCc+GNAanTNZBOlRbFkU/6xiHKWXKz
+         z9Lk6mr7quDbn6Iv5uFqVP/gtakRm/cG9s24k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=HjFHv9xxIhK5RJeBiuSF34CW9EFCi2H1cUI0osZb25Q=;
-        b=NqoKUgdBNJie9iOfmGxGhHFZMcvBzZKXaFBgYM5wKyfRya/T7SJTbEWzWvoT7OZB8E
-         W40InC6/gZ9Wklqf4ZM4Kk2DrJsjg8zwRR5amVl33bRXHw5NuvRx5vg0kPGxNg8IBZFv
-         wi0CP4XEV48b0gd09EAooPIjDC0ctL+PHjrHlSEZSn7dyFUpIevrPZ5hGIgHBf4nklBz
-         iLl7SgqVLBJxrFabc3HnnRl/t7mtxnkdrUIVW7tH4ewWoyiFG8beeTSZ0rAEXjHJg87E
-         Pp1/QT2p6gvf3Cy3Hgu/6pifV3xaPF1gmAnKl7f0iRQT/WA3gF4AxXrVA5opx6fla7EJ
-         +FyQ==
-X-Gm-Message-State: APjAAAX8Yi5k+ITivjTM9ehn9dYJ6PnkZ2SEnwkH5ndlF8aoGNcdI8Cv
-        LnxtIEGQDvlQ7bbskZRxpuBlFw==
-X-Google-Smtp-Source: APXvYqyFMbRLlIoK6p9J6QIn/93x5dhozlYQ0YGx3wABZc+vZZjpU1J4N8nao/7zNkR46rXeo7ym8w==
-X-Received: by 2002:a62:19c7:: with SMTP id 190mr5160181pfz.105.1569520591920;
-        Thu, 26 Sep 2019 10:56:31 -0700 (PDT)
+        bh=0o22aj+Q2fPal3OzyLNHtFtEJCV1jKXrih1rnY9ZOvQ=;
+        b=B5+NAsHdBq9EgEI/APKHO1cZDxByw7nvTpk3CedSrsdq+FPlF0FNJhVlY11BokyJ2c
+         WduXpmAEyDjFWPpt6z8CYggy8lHstI4l3O92ZpYevXvJ9lHxD//TyE94tEDXIRqNhXU0
+         lGf9R8F+bTKMsmHXfYf3SLyQMDvrKLV9M0lVpjHXUBZXJ2od1PiDOp77YYdy781T1Ea+
+         m52GoV+VlV5rNlsVNgCAEZoDZyl8bKoLXt8MDWq5ahddcKgPerggXk3R6vJ0BdOAkZcj
+         +ai63r2smYX3kdY4P7a3xqoEPnRF8+HegsKrkkx1JwnjFTK5ADn3to+k2QJLC9WEWKA9
+         dDjQ==
+X-Gm-Message-State: APjAAAVEpdJiuUh+V5aR34CdseqF8eUuldI7jMYiO+fDH4YUh8wvrYFh
+        AcYeLOTdUVMtv9hcJp5d1XQKjA==
+X-Google-Smtp-Source: APXvYqy6S7VpAjQkHoN68ZupzJjzmnjjpPcZsaZVMPIKEdbkFn7g1SNyoioq3hB1BxaJQAQsFZhPUg==
+X-Received: by 2002:a62:7a88:: with SMTP id v130mr5261721pfc.184.1569520595802;
+        Thu, 26 Sep 2019 10:56:35 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f89sm3068052pje.20.2019.09.26.10.56.24
+        by smtp.gmail.com with ESMTPSA id t68sm6742712pgt.61.2019.09.26.10.56.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 26 Sep 2019 10:56:30 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -68,9 +68,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org,
         linux-xtensa@linux-xtensa.org, x86@kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 20/29] h8300: Move EXCEPTION_TABLE to RO_DATA segment
-Date:   Thu, 26 Sep 2019 10:55:53 -0700
-Message-Id: <20190926175602.33098-21-keescook@chromium.org>
+Subject: [PATCH 26/29] x86/mm: Remove redundant &s on addresses
+Date:   Thu, 26 Sep 2019 10:55:59 -0700
+Message-Id: <20190926175602.33098-27-keescook@chromium.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190926175602.33098-1-keescook@chromium.org>
 References: <20190926175602.33098-1-keescook@chromium.org>
@@ -79,33 +79,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The EXCEPTION_TABLE is read-only, so collapse it into RO_DATA.
+The &s on addresses are redundant and are better removed to match all
+the other similar functions.
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/h8300/kernel/vmlinux.lds.S | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/mm/init_64.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/h8300/kernel/vmlinux.lds.S b/arch/h8300/kernel/vmlinux.lds.S
-index 2ac7bdcd2fe0..aba90398b774 100644
---- a/arch/h8300/kernel/vmlinux.lds.S
-+++ b/arch/h8300/kernel/vmlinux.lds.S
-@@ -1,4 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+
-+#define RO_DATA_EXCEPTION_TABLE_ALIGN	16
-+
- #include <asm-generic/vmlinux.lds.h>
- #include <asm/page.h>
- #include <asm/thread_info.h>
-@@ -37,7 +40,6 @@ SECTIONS
- #endif
- 	_etext = . ;
- 	}
--	EXCEPTION_TABLE(16)
- 	RO_DATA(4)
- 	ROMEND = .;
- #if defined(CONFIG_ROMKERNEL)
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index 26299e9ce6da..e67ddca8b7a8 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -1300,9 +1300,9 @@ void mark_rodata_ro(void)
+ {
+ 	unsigned long start = PFN_ALIGN(_text);
+ 	unsigned long rodata_start = PFN_ALIGN(__start_rodata);
+-	unsigned long end = (unsigned long) &__end_rodata_hpage_align;
+-	unsigned long text_end = PFN_ALIGN(&_etext);
+-	unsigned long rodata_end = PFN_ALIGN(&__end_rodata);
++	unsigned long end = (unsigned long)__end_rodata_hpage_align;
++	unsigned long text_end = PFN_ALIGN(_etext);
++	unsigned long rodata_end = PFN_ALIGN(__end_rodata);
+ 	unsigned long all_end;
+ 
+ 	printk(KERN_INFO "Write protecting the kernel read-only data: %luk\n",
 -- 
 2.17.1
 
