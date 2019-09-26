@@ -2,542 +2,122 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D22F5C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 20:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA049C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 20:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AC5722459
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 20:06:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569528391;
-	bh=mfGWzeXMFXTddSagf4OD3s6sElMZXnviy+SdS2zflzM=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=MEBUIblkUSJpAmdFcuO1drrjtze91IM19gN6PrxuJrt6sA0qgjIcrP4g8gmCxSItO
-	 doAF7vmRWt9Mh7TmIyrQvl2Bbxzn+wzVx11P8e3ZkqrJ1472WfvOgf3yv02VNkiW+V
-	 nYFlAXBi8/HOHx+s92Xl9u/KVAcaEQO9XFtHxAhE=
+	by mail.kernel.org (Postfix) with ESMTP id 8E0BC21A4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 20:09:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="gcmPxCth"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbfIZUGa (ORCPT
+        id S1728676AbfIZUJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 16:06:30 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42496 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727816AbfIZUG3 (ORCPT
+        Thu, 26 Sep 2019 16:09:24 -0400
+Received: from pio-pvt-msa1.bahnhof.se ([79.136.2.40]:56792 "EHLO
+        pio-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727826AbfIZUJX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 16:06:29 -0400
-Received: by mail-wr1-f66.google.com with SMTP id n14so170364wrw.9
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 13:06:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=UTo2wDxE4/959KYc46KYGF78CcMt+trbgbHCs5GtSmQ=;
-        b=HhckFTMXZLQ5/vSiSsW7sUG0Wr6TR49WqjoQRg6z/Ls1SAnvTLIT4QGpnzHedgHUPw
-         zPOb6vGx3R+d5oveLcwDoffN0vWOWXMCpNyrJqQDrzCWkf1acRIjOlJ2/oQHcg5ygcNS
-         O3RVgoVoJg55cUwXq0PD9PR26TNR6dfbHKsvB4xne5GrNc7gMPsMKIpzW2AxsdWSwqOZ
-         Gp+rQiWHj9+JkB+KET6J8NZ55wtUb86wxTBhOS4H1t0xXH/C+QiZ+ENHH0PVbEpsAtw0
-         //mjjMsc2afso/J7qWIQdKFxq2FS1sdccEPoSaCvit5qwWPXKPe55TDX/GiUwNwf838q
-         gF8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=UTo2wDxE4/959KYc46KYGF78CcMt+trbgbHCs5GtSmQ=;
-        b=R79jkzu4RcG2kiw+tfwbuwsRXBMoUluApKA5eYRE7G7Ke2lKjveauQ4kEjkOa2ERkM
-         76LKF1mYSVbr2GARkduwcjEukYjayzsgkHTXH4CQFXvzs/RHejFYHwcLx2mvtvRY4fPT
-         hX3W01WNC795A/7HeQpqrJx2q0aFGnDcd2n40UKy1xOB0BRTJGym0ypV5G8BcD090poE
-         7b8/QDP2zLrUfsOyQ6GZiK/PmCcuuFLg5ljh9AodgbK2nGfhW4CEiBrWVSwpY8RS927m
-         r3CKOxaY35DFaCe/y2THZZQs0BhOnyOyQQ2Mg/e6k58XFqlziBCO40qWCEncv4n66AJb
-         Tfxg==
-X-Gm-Message-State: APjAAAUEoAGTfatE7AgIQrnso/1oeBj8j/oLHe5Kz1I4BNO5JqZctZna
-        2g84u0y5v5KHBGkFGbc+ZTw=
-X-Google-Smtp-Source: APXvYqzKLdPn/DSuDHhyq4TdevR9tcmAABJsGnyyIQ/KTjmUipzzI+AgXe0Rvf9cITOCHeyY02w5AA==
-X-Received: by 2002:adf:f406:: with SMTP id g6mr137452wro.325.1569528386039;
-        Thu, 26 Sep 2019 13:06:26 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id r7sm212336wrx.87.2019.09.26.13.06.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Sep 2019 13:06:25 -0700 (PDT)
-Date:   Thu, 26 Sep 2019 22:06:22 +0200
-From:   Ingo Molnar <mingo@kernel.org>
+        Thu, 26 Sep 2019 16:09:23 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 5175C3F486;
+        Thu, 26 Sep 2019 22:09:21 +0200 (CEST)
+Authentication-Results: pio-pvt-msa1.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b="gcmPxCth";
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa1.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id qHKroFvcWLXm; Thu, 26 Sep 2019 22:09:20 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 460793F31C;
+        Thu, 26 Sep 2019 22:09:14 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 7413A3601AA;
+        Thu, 26 Sep 2019 22:09:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1569528554; bh=3l8scdJAPzeKA98DGCU5rWJe1BLj1pdf1s3/XvaFYIM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=gcmPxCth95u3iGJfWJgByzgw5oVdwb+RepRSGLIODhe5//VGMSDj32YlGikCTRRhj
+         lVpHXYknWBI43AymxkHDLUi1mox2Nt6EnuRk9fUVfg55a8znxCBTiiMHdAkL9XbI6z
+         ftWhUKod23N7nvDRnZ/2dpoh8BqzWhIE2uw3siGA=
+Subject: Re: Ack to merge through DRM? WAS Re: [PATCH v2 1/5] mm: Add
+ write-protect and clean utilities for address space ranges
 To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@infradead.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux-MM <linux-mm@kvack.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [GIT PULL] perf updates
-Message-ID: <20190926200622.GA127468@gmail.com>
+        Matthew Wilcox <willy@infradead.org>
+References: <20190926115548.44000-1-thomas_os@shipmail.org>
+ <20190926115548.44000-2-thomas_os@shipmail.org>
+ <85e31bcf-d3c8-2fcf-e659-2c9f82ebedc7@shipmail.org>
+ <CAHk-=wifjLeeMEtMPytiMAKiWkqPorjf1P4PbB3dj17Y3Jcqag@mail.gmail.com>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <a48a93d2-03e9-40d3-3b4c-a301632d3121@shipmail.org>
+Date:   Thu, 26 Sep 2019 22:09:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHk-=wifjLeeMEtMPytiMAKiWkqPorjf1P4PbB3dj17Y3Jcqag@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+Hi,
 
-Please pull the latest perf-urgent-for-linus git tree from:
+On 9/26/19 9:19 PM, Linus Torvalds wrote:
+> On Thu, Sep 26, 2019 at 5:03 AM Thomas Hellström (VMware)
+> <thomas_os@shipmail.org> wrote:
+>> I wonder if I can get an ack from an mm maintainer to merge this through
+>> DRM along with the vmwgfx patches? Andrew? Matthew?
+> It would have helped to actually point to the patch itself, instead of
+> just quoting the commit message.
+>
+> Looks like this:
+>
+>       https://lore.kernel.org/lkml/20190926115548.44000-2-thomas_os@shipmail.org/
+>
+> but why is the code in question not just using the regular page
+> walkers. The commit log shows no explanation of what's so special
+> about this?
+>
+> Is the only reason the locking magic? Because if that's the reason,
+> then afaik we already have a function for that: it's
+> __walk_page_range().
+>
+> Yes, it's static right now, but that's imho not a reason to duplicate
+> all the walking (badly).
+>
+> Is there some other magic reason that isn't documented?
+>
+>                Linus
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-for-linus
+There is a discussion around this subject in
 
-   # HEAD: 26acf400d2dcc72c7e713e1f55db47ad92010cc2 perf unwind: Fix libunwind build failure on i386 systems
+https://lore.kernel.org/lkml/20190926115548.44000-1-thomas_os@shipmail.org/
 
-The only kernel change is comment typo fixes, the rest is mostly tooling 
-fixes, but also new vendor event additions and updates, a bigger 
-libperf/libtraceevent library and a header files reorganization that came 
-in a bit late.
+The main point is that there is an assert in pud_trans_huge_lock() that 
+the mmap_sem is held, and we don't have it. Presumably we should be able 
+to get away with the i_mmap_lock, but in addition I would have had to 
+include the walk_as_pte_range() as the walk::pmd_entry anyway, so the 
+amount of duplicated page walk code isn't that big.
 
- Thanks,
+That said, if people are OK with me modifying the assert in 
+pud_trans_huge_lock() and make __walk_page_range non-static, it should 
+probably be possible to make it work, yes.
 
-	Ingo
-
------------------->
-Andi Kleen (2):
-      perf stat: Fix free memory access / memory leaks in metrics
-      perf evlist: Fix access of freed id arrays
-
-Anju T Sudhakar (3):
-      perf kvm: Move kvm-stat header file from conditional inclusion to common include section
-      perf kvm: Add arch neutral function to choose event for perf kvm record
-      perf kvm stat: Set 'trace_cycles' as default event for 'perf kvm record' in powerpc
-
-Arnaldo Carvalho de Melo (36):
-      perf jvmti: Link against tools/lib/string.o to have weak strlcpy()
-      perf tools: Remove needless builtin.h include directives
-      perf debug: No need to include ui/util.h
-      perf tools: Remove debug.h from places where it is not needed
-      perf tools: Remove util.h from where it is not needed
-      perf probe: Add missing build-id.h header.
-      perf symbols: Add missing dso.h header
-      perf env: Remove needless cpumap.h header
-      perf event: Move perf_event__synthesize* to event.h
-      perf stat: Move perf_stat_synthesize_config() to event.h
-      perf callchain: Remove needless event.h include
-      perf python: Remove debug.h
-      perf hist: Add missing 'struct branch_stack' forward declaration
-      perf annotate: Add missing machine.h include directive
-      perf sched: Add missing event.h include directive
-      perf auxtrace: Add missing 'struct perf_sample' forward declaration
-      perf tools: Move event synthesizing routines to separate header
-      perf memswap: Adopt 'struct u64_swap' from evsel.h
-      perf tools: Move event synthesizing routines to separate .c file
-      tools headers uapi: Sync prctl.h with the kernel sources
-      tools uapi asm-generic: Sync unistd.h with the kernel sources
-      tools arch x86 uapi: Synch asm/unistd.h with the kernel sources
-      tools arch x86: Sync asm/cpufeatures.h with the kernel sources
-      perf record: Move restricted maps check to after a possible fallback to not collect kernel samples
-      perf evlist: Adopt backwards ring buffer state enum
-      libperf: Add missing 'struct xyarray' forward declaration
-      perf tools: No need to include internal/lib.h from util/util.h
-      libperf: Use sys/types.h to get ssize_t, not unistd.h
-      perf copyfile: Move copyfile routines to separate files
-      perf evsel: Remove need for symbol_conf in evsel_fprintf.c
-      perf evsel: Introduce evsel_fprintf.h
-      perf evlist: Remove unused perf_evlist__fprintf() method
-      perf evsel: Move config terms to a separate header
-      perf tools: Replace needless mmap.h with what is needed, event.h
-      perf parser: Remove needless include directives
-      perf unwind: Fix libunwind build failure on i386 systems
-
-Colin Ian King (1):
-      perf test: Fix spelling mistake "allos" -> "allocate"
-
-James Clark (1):
-      perf tools: Add PMU event JSON files for ARM Cortex-A76 and, Neoverse N1.
-
-Jiri Olsa (43):
-      perf python: Add missing python/perf.so dependency for libperf
-      perf tests: Add libperf automated test for 'make -C tools/perf build-test'
-      libperf: Add missing event.h file to install rule
-      libperf: Adopt perf_cpu_map__max() function
-      perf tests: Fix static build test
-      perf tools: Fix segfault in cpu_cache_level__read()
-      tools: Add missing stdio.h include to asm/bug.h header
-      perf tools: Rename 'struct perf_mmap' to 'struct mmap'
-      perf tools: Rename perf_evlist__mmap() to evlist__mmap()
-      perf tools: Rename perf_evlist__munmap() to evlist__munmap()
-      perf tools: Rename perf_evlist__alloc_mmap() to evlist__alloc_mmap()
-      perf tools: Rename perf_evlist__exit() to evlist__exit()
-      perf tools: Rename perf_evlist__purge() to evlist__purge()
-      libperf: Link libapi.a in libperf.so
-      libperf: Add perf_mmap struct
-      libperf: Add 'mask' to struct perf_mmap
-      libperf: Add 'fd' to struct perf_mmap
-      libperf: Add 'cpu' to struct perf_mmap
-      libperf: Add 'refcnt' to struct perf_mmap
-      libperf: Add prev/start/end to struct perf_mmap
-      libperf: Add 'overwrite' to 'struct perf_mmap'
-      libperf: Add 'event_copy' to 'struct perf_mmap'
-      libperf: Add 'flush' to 'struct perf_mmap'
-      libperf: Move 'system_wide' from 'struct evsel' to 'struct perf_evsel'
-      libperf: Move 'nr_mmaps' from 'struct evlist' to 'struct perf_evlist'
-      libperf: Move 'mmap_len' from 'struct evlist' to 'struct perf_evlist'
-      libperf: Move 'pollfd' from 'struct evlist' to 'struct perf_evlist'
-      libperf: Move 'sample_id' from 'struct evsel' to 'struct perf_evsel'
-      libperf: Move 'id' from 'struct evsel' to 'struct perf_evsel'
-      libperf: Move 'ids' from 'struct evsel' to 'struct perf_evsel'
-      libperf: Move 'heads' from 'struct evlist' to 'struct perf_evlist'
-      libperf: Add perf_evsel__alloc_id/perf_evsel__free_id functions
-      libperf: Add perf_evlist__first()/last() functions
-      libperf: Add perf_evlist__read_format() function
-      libperf: Add perf_evlist__id_add() function
-      libperf: Add perf_evlist__id_add_fd() function
-      libperf: Move 'page_size' global variable to libperf
-      libperf: Add libperf dependency for tests targets
-      libperf: Merge libperf_set_print() into libperf_init()
-      libperf: Add libperf_init() call to the tests
-      libperf: Add perf_evlist__alloc_pollfd() function
-      libperf: Add perf_evlist__add_pollfd() function
-      libperf: Add perf_evlist__poll() function
-
-Kim Phillips (4):
-      perf vendor events amd: Add L3 cache events for Family 17h
-      perf vendor events amd: Remove redundant '['
-      perf vendor events: Minor fixes to the README
-      perf list: Allow plurals for metric, metricgroup
-
-Mamatha Inamdar (2):
-      perf session: Return error code for perf_session__new() function on failure
-      perf vendor events: Remove P8 HW events which are not supported
-
-Masami Hiramatsu (2):
-      perf probe: Skip same probe address for a given line
-      perf probe: Fix to clear tev->nargs in clear_probe_trace_event()
-
-Roy Ben Shlomo (1):
-      perf/core: Fix several typos in comments
-
-Sakari Ailus (1):
-      tools lib traceevent: Convert remaining %p[fF] users to %p[sS]
-
-Srikar Dronamraju (2):
-      perf stat: Reset previous counts on repeat with interval
-      perf stat: Fix a segmentation fault when using repeat forever
-
-Stephane Eranian (1):
-      perf record: Fix priv level with branch sampling for paranoid=2
-
-Steven Rostedt (VMware) (1):
-      libtraceevent: Round up in tep_print_event() time precision
-
-Thomas Richter (2):
-      perf jvmti: Include JVMTI support for s390
-      perf build: Add detection of java-11-openjdk-devel package
-
-Tzvetomir Stoyanov (2):
-      libtraceevent: Man pages for libtraceevent event print related API
-      libtraceevent: Man pages for tep plugins APIs
-
-Tzvetomir Stoyanov (VMware) (4):
-      libtraceevent: Man pages fix, rename tep_ref_get() to tep_get_ref()
-      libtraceevent: Man pages fix, changes in event printing APIs
-      libtraceevent: Add tep_get_event() in event-parse.h
-      libtraceevent: Move traceevent plugins in its own subdirectory
+Thanks,
+Thomas
 
 
- kernel/events/core.c                               |    6 +-
- tools/arch/x86/include/asm/cpufeatures.h           |    3 +
- tools/arch/x86/include/uapi/asm/unistd.h           |    2 +-
- tools/include/asm/bug.h                            |    1 +
- tools/include/uapi/asm-generic/unistd.h            |    2 +-
- tools/include/uapi/linux/prctl.h                   |    7 +-
- tools/lib/traceevent/Build                         |   11 -
- .../Documentation/libtraceevent-event_print.txt    |  130 ++
- .../Documentation/libtraceevent-func_apis.txt      |   10 +-
- .../Documentation/libtraceevent-handle.txt         |    8 +-
- .../Documentation/libtraceevent-plugins.txt        |   99 +
- .../lib/traceevent/Documentation/libtraceevent.txt |   15 +-
- tools/lib/traceevent/Makefile                      |   94 +-
- tools/lib/traceevent/event-parse.c                 |   22 +-
- tools/lib/traceevent/event-parse.h                 |    2 +
- tools/lib/traceevent/plugins/Build                 |   10 +
- tools/lib/traceevent/plugins/Makefile              |  222 +++
- .../lib/traceevent/{ => plugins}/plugin_cfg80211.c |    0
- .../lib/traceevent/{ => plugins}/plugin_function.c |    0
- .../lib/traceevent/{ => plugins}/plugin_hrtimer.c  |    0
- tools/lib/traceevent/{ => plugins}/plugin_jbd2.c   |    0
- tools/lib/traceevent/{ => plugins}/plugin_kmem.c   |    0
- tools/lib/traceevent/{ => plugins}/plugin_kvm.c    |    0
- .../lib/traceevent/{ => plugins}/plugin_mac80211.c |    0
- .../traceevent/{ => plugins}/plugin_sched_switch.c |    0
- tools/lib/traceevent/{ => plugins}/plugin_scsi.c   |    0
- tools/lib/traceevent/{ => plugins}/plugin_xen.c    |    0
- tools/perf/Makefile.config                         |    2 +-
- tools/perf/Makefile.perf                           |    6 +-
- tools/perf/arch/arm/util/cs-etm.c                  |    7 +-
- tools/perf/arch/arm64/util/arm-spe.c               |    6 +-
- tools/perf/arch/arm64/util/dwarf-regs.c            |    1 -
- tools/perf/arch/arm64/util/header.c                |    4 +-
- tools/perf/arch/arm64/util/unwind-libunwind.c      |    2 +-
- tools/perf/arch/powerpc/util/dwarf-regs.c          |    1 -
- tools/perf/arch/powerpc/util/header.c              |    1 -
- tools/perf/arch/powerpc/util/kvm-stat.c            |   45 +
- tools/perf/arch/powerpc/util/skip-callchain-idx.c  |    1 +
- tools/perf/arch/powerpc/util/sym-handling.c        |    1 -
- tools/perf/arch/s390/Makefile                      |    1 +
- tools/perf/arch/s390/util/auxtrace.c               |    1 +
- tools/perf/arch/s390/util/machine.c                |    2 +-
- tools/perf/arch/x86/tests/intel-cqm.c              |    6 +-
- tools/perf/arch/x86/tests/perf-time-to-tsc.c       |   12 +-
- tools/perf/arch/x86/tests/rdpmc.c                  |    2 +-
- tools/perf/arch/x86/util/archinsn.c                |    1 +
- tools/perf/arch/x86/util/event.c                   |    2 +
- tools/perf/arch/x86/util/intel-bts.c               |    9 +-
- tools/perf/arch/x86/util/intel-pt.c                |   17 +-
- tools/perf/arch/x86/util/machine.c                 |    3 +-
- tools/perf/arch/x86/util/tsc.c                     |    2 +
- tools/perf/arch/x86/util/unwind-libunwind.c        |    2 +-
- tools/perf/bench/epoll-ctl.c                       |    2 +-
- tools/perf/bench/epoll-wait.c                      |    2 +-
- tools/perf/bench/futex-hash.c                      |    2 +-
- tools/perf/bench/futex-lock-pi.c                   |    2 +-
- tools/perf/bench/futex-requeue.c                   |    2 +-
- tools/perf/bench/futex-wake-parallel.c             |    3 +-
- tools/perf/bench/futex-wake.c                      |    2 +-
- tools/perf/bench/numa.c                            |    1 -
- tools/perf/bench/sched-messaging.c                 |    2 -
- tools/perf/bench/sched-pipe.c                      |    2 -
- tools/perf/builtin-annotate.c                      |    6 +-
- tools/perf/builtin-buildid-cache.c                 |    5 +-
- tools/perf/builtin-buildid-list.c                  |    5 +-
- tools/perf/builtin-c2c.c                           |    7 +-
- tools/perf/builtin-config.c                        |    1 -
- tools/perf/builtin-diff.c                          |    9 +-
- tools/perf/builtin-evlist.c                        |    8 +-
- tools/perf/builtin-inject.c                        |    6 +-
- tools/perf/builtin-kmem.c                          |    5 +-
- tools/perf/builtin-kvm.c                           |   37 +-
- tools/perf/builtin-list.c                          |    4 +-
- tools/perf/builtin-lock.c                          |    5 +-
- tools/perf/builtin-mem.c                           |    5 +-
- tools/perf/builtin-record.c                        |  117 +-
- tools/perf/builtin-report.c                        |    6 +-
- tools/perf/builtin-sched.c                         |   17 +-
- tools/perf/builtin-script.c                        |   20 +-
- tools/perf/builtin-stat.c                          |   41 +-
- tools/perf/builtin-timechart.c                     |    5 +-
- tools/perf/builtin-top.c                           |   28 +-
- tools/perf/builtin-trace.c                         |   22 +-
- tools/perf/jvmti/Build                             |    9 +
- tools/perf/lib/Makefile                            |   36 +-
- tools/perf/lib/core.c                              |   13 +-
- tools/perf/lib/cpumap.c                            |   12 +
- tools/perf/lib/evlist.c                            |  124 ++
- tools/perf/lib/evsel.c                             |   30 +
- tools/perf/lib/include/internal/evlist.h           |   33 +
- tools/perf/lib/include/internal/evsel.h            |   33 +
- tools/perf/lib/include/internal/lib.h              |    4 +-
- tools/perf/lib/include/internal/mmap.h             |   32 +
- tools/perf/lib/include/perf/core.h                 |    2 +-
- tools/perf/lib/include/perf/cpumap.h               |    1 +
- tools/perf/lib/include/perf/evlist.h               |    1 +
- tools/perf/lib/lib.c                               |    2 +
- tools/perf/lib/libperf.map                         |    4 +-
- tools/perf/lib/tests/test-cpumap.c                 |   10 +
- tools/perf/lib/tests/test-evlist.c                 |   10 +
- tools/perf/lib/tests/test-evsel.c                  |   10 +
- tools/perf/lib/tests/test-threadmap.c              |   10 +
- tools/perf/perf.c                                  |   13 +-
- tools/perf/pmu-events/README                       |   22 +-
- .../arch/arm64/arm/cortex-a76-n1/branch.json       |   14 +
- .../arch/arm64/arm/cortex-a76-n1/bus.json          |   24 +
- .../arch/arm64/arm/cortex-a76-n1/cache.json        |  207 +++
- .../arch/arm64/arm/cortex-a76-n1/exception.json    |   52 +
- .../arch/arm64/arm/cortex-a76-n1/instruction.json  |  108 ++
- .../arch/arm64/arm/cortex-a76-n1/memory.json       |   23 +
- .../arch/arm64/arm/cortex-a76-n1/other.json        |    7 +
- .../arch/arm64/arm/cortex-a76-n1/pipeline.json     |   14 +
- tools/perf/pmu-events/arch/arm64/mapfile.csv       |    2 +
- .../perf/pmu-events/arch/powerpc/power8/other.json |   24 -
- .../perf/pmu-events/arch/x86/amdfam17h/cache.json  |   42 +
- tools/perf/pmu-events/arch/x86/amdfam17h/core.json |    2 +-
- tools/perf/pmu-events/jevents.c                    |    1 +
- tools/perf/tests/backward-ring-buffer.c            |   11 +-
- tools/perf/tests/bitmap.c                          |    2 +-
- tools/perf/tests/bpf.c                             |    9 +-
- tools/perf/tests/clang.c                           |    2 -
- tools/perf/tests/code-reading.c                    |   13 +-
- tools/perf/tests/cpumap.c                          |    1 +
- tools/perf/tests/dso-data.c                        |    1 -
- tools/perf/tests/dwarf-unwind.c                    |    1 +
- tools/perf/tests/event-times.c                     |   15 +-
- tools/perf/tests/event_update.c                    |   10 +-
- tools/perf/tests/evsel-roundtrip-name.c            |    2 +-
- tools/perf/tests/hists_common.c                    |    2 +
- tools/perf/tests/hists_cumulate.c                  |    2 +-
- tools/perf/tests/hists_link.c                      |    5 +-
- tools/perf/tests/hists_output.c                    |    2 +-
- tools/perf/tests/keep-tracking.c                   |   14 +-
- tools/perf/tests/llvm.c                            |    1 -
- tools/perf/tests/make                              |    8 +-
- tools/perf/tests/mem2node.c                        |    2 +-
- tools/perf/tests/mmap-basic.c                      |    8 +-
- tools/perf/tests/mmap-thread-lookup.c              |    4 +-
- tools/perf/tests/openat-syscall-all-cpus.c         |    5 +-
- tools/perf/tests/openat-syscall-tp-fields.c        |   11 +-
- tools/perf/tests/parse-events.c                    |  117 +-
- tools/perf/tests/parse-no-sample-id-all.c          |    2 -
- tools/perf/tests/perf-hooks.c                      |    1 -
- tools/perf/tests/perf-record.c                     |   13 +-
- tools/perf/tests/pmu.c                             |    1 -
- tools/perf/tests/sample-parsing.c                  |    2 +-
- tools/perf/tests/sdt.c                             |    1 +
- tools/perf/tests/stat.c                            |    1 +
- tools/perf/tests/sw-clock.c                        |    5 +-
- tools/perf/tests/switch-tracking.c                 |   30 +-
- tools/perf/tests/task-exit.c                       |   11 +-
- tools/perf/tests/thread-map.c                      |    1 +
- tools/perf/tests/topology.c                        |    7 +-
- tools/perf/tests/vmlinux-kallsyms.c                |    2 +-
- tools/perf/ui/browser.c                            |    1 -
- tools/perf/ui/browsers/annotate.c                  |    1 -
- tools/perf/ui/browsers/header.c                    |    1 -
- tools/perf/ui/browsers/hists.c                     |    6 +-
- tools/perf/ui/browsers/map.c                       |    1 -
- tools/perf/ui/browsers/res_sample.c                |    2 +-
- tools/perf/ui/browsers/scripts.c                   |    3 +-
- tools/perf/ui/gtk/helpline.c                       |    1 -
- tools/perf/ui/gtk/hists.c                          |    1 +
- tools/perf/ui/gtk/progress.c                       |    1 -
- tools/perf/ui/gtk/setup.c                          |    3 +-
- tools/perf/ui/gtk/util.c                           |    1 -
- tools/perf/ui/helpline.c                           |    2 -
- tools/perf/ui/hist.c                               |    1 -
- tools/perf/ui/setup.c                              |    2 +-
- tools/perf/ui/stdio/hist.c                         |    1 +
- tools/perf/ui/tui/helpline.c                       |    1 -
- tools/perf/ui/tui/setup.c                          |    2 +-
- tools/perf/ui/tui/util.c                           |    1 -
- tools/perf/util/Build                              |    3 +
- tools/perf/util/annotate.c                         |    3 +-
- tools/perf/util/arm-spe.c                          |    1 -
- tools/perf/util/auxtrace.c                         |   12 +-
- tools/perf/util/auxtrace.h                         |   26 +-
- tools/perf/util/bpf-event.c                        |    1 +
- tools/perf/util/bpf-event.h                        |   15 +-
- tools/perf/util/bpf-loader.c                       |    2 +-
- tools/perf/util/branch.c                           |    2 -
- tools/perf/util/branch.h                           |    9 +-
- tools/perf/util/build-id.c                         |    3 +-
- tools/perf/util/callchain.c                        |    1 +
- tools/perf/util/callchain.h                        |    5 +-
- tools/perf/util/cloexec.c                          |    2 +-
- tools/perf/util/copyfile.c                         |  144 ++
- tools/perf/util/copyfile.h                         |   16 +
- tools/perf/util/cs-etm-decoder/cs-etm-decoder.c    |    1 -
- tools/perf/util/cs-etm.c                           |    4 +-
- tools/perf/util/data-convert-bt.c                  |    5 +-
- tools/perf/util/data.c                             |    3 +-
- tools/perf/util/debug.c                            |    1 -
- tools/perf/util/debug.h                            |    2 +-
- tools/perf/util/demangle-java.c                    |    1 -
- tools/perf/util/demangle-rust.c                    |    1 -
- tools/perf/util/dwarf-regs.c                       |    1 -
- tools/perf/util/env.h                              |    3 +-
- tools/perf/util/event.c                            | 1109 +-----------
- tools/perf/util/event.h                            |   77 +-
- tools/perf/util/evlist.c                           |  295 +--
- tools/perf/util/evlist.h                           |   81 +-
- tools/perf/util/evsel.c                            |  484 +----
- tools/perf/util/evsel.h                            |  126 +-
- tools/perf/util/evsel_config.h                     |   50 +
- tools/perf/util/evsel_fprintf.c                    |   16 +-
- tools/perf/util/evsel_fprintf.h                    |   50 +
- tools/perf/util/genelf.h                           |    3 +
- tools/perf/util/header.c                           |  424 +----
- tools/perf/util/header.h                           |   60 +-
- tools/perf/util/hist.h                             |    1 +
- tools/perf/util/intel-bts.c                        |    6 +-
- tools/perf/util/intel-pt.c                         |   11 +-
- tools/perf/util/jitdump.c                          |    4 +-
- tools/perf/util/kvm-stat.h                         |    4 +
- tools/perf/util/libunwind/arm64.c                  |    1 -
- tools/perf/util/libunwind/x86_32.c                 |    1 -
- tools/perf/util/llvm-utils.c                       |    1 +
- tools/perf/util/lzma.c                             |    2 +-
- tools/perf/util/machine.c                          |   16 +-
- tools/perf/util/machine.h                          |   15 -
- tools/perf/util/memswap.h                          |    7 +
- tools/perf/util/mmap.c                             |  185 +-
- tools/perf/util/mmap.h                             |   77 +-
- tools/perf/util/namespaces.c                       |   18 +
- tools/perf/util/namespaces.h                       |    2 +
- tools/perf/util/parse-events.c                     |    9 +-
- tools/perf/util/parse-events.y                     |    4 +-
- tools/perf/util/perf-hooks.c                       |    1 -
- tools/perf/util/perf_event_attr_fprintf.c          |  148 ++
- tools/perf/util/pmu.c                              |    1 -
- tools/perf/util/probe-event.c                      |    1 +
- tools/perf/util/probe-file.c                       |    1 +
- tools/perf/util/probe-finder.c                     |   19 +
- tools/perf/util/python-ext-sources                 |    1 +
- tools/perf/util/python.c                           |   28 +-
- tools/perf/util/record.c                           |    8 +-
- tools/perf/util/rwsem.c                            |    1 +
- tools/perf/util/s390-cpumsf.c                      |    1 -
- tools/perf/util/s390-sample-raw.c                  |    1 -
- .../util/scripting-engines/trace-event-python.c    |    2 -
- tools/perf/util/session.c                          |   92 +-
- tools/perf/util/session.h                          |    5 -
- tools/perf/util/sort.c                             |    2 +-
- tools/perf/util/srccode.c                          |    2 +-
- tools/perf/util/stat-shadow.c                      |    4 +-
- tools/perf/util/stat.c                             |   62 +-
- tools/perf/util/stat.h                             |    9 +-
- tools/perf/util/svghelper.c                        |    2 +-
- tools/perf/util/symbol-elf.c                       |    5 +-
- tools/perf/util/symbol-minimal.c                   |    3 +-
- tools/perf/util/symbol.c                           |    2 +-
- tools/perf/util/synthetic-events.c                 | 1884 ++++++++++++++++++++
- tools/perf/util/synthetic-events.h                 |  103 ++
- tools/perf/util/target.c                           |    2 -
- tools/perf/util/top.c                              |    3 +-
- tools/perf/util/trace-event-info.c                 |    2 +-
- tools/perf/util/trace-event-read.c                 |    1 -
- tools/perf/util/trace-event.c                      |    1 -
- tools/perf/util/tsc.h                              |   14 +-
- tools/perf/util/unwind-libdw.c                     |    1 -
- tools/perf/util/unwind-libunwind-local.c           |    1 -
- tools/perf/util/usage.c                            |    1 -
- tools/perf/util/util.c                             |  136 --
- tools/perf/util/util.h                             |    8 -
- tools/perf/util/vdso.c                             |    2 +-
- tools/perf/util/zlib.c                             |    4 +-
- 268 files changed, 4801 insertions(+), 3617 deletions(-)
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-event_print.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-plugins.txt
- create mode 100644 tools/lib/traceevent/plugins/Build
- create mode 100644 tools/lib/traceevent/plugins/Makefile
- rename tools/lib/traceevent/{ => plugins}/plugin_cfg80211.c (100%)
- rename tools/lib/traceevent/{ => plugins}/plugin_function.c (100%)
- rename tools/lib/traceevent/{ => plugins}/plugin_hrtimer.c (100%)
- rename tools/lib/traceevent/{ => plugins}/plugin_jbd2.c (100%)
- rename tools/lib/traceevent/{ => plugins}/plugin_kmem.c (100%)
- rename tools/lib/traceevent/{ => plugins}/plugin_kvm.c (100%)
- rename tools/lib/traceevent/{ => plugins}/plugin_mac80211.c (100%)
- rename tools/lib/traceevent/{ => plugins}/plugin_sched_switch.c (100%)
- rename tools/lib/traceevent/{ => plugins}/plugin_scsi.c (100%)
- rename tools/lib/traceevent/{ => plugins}/plugin_xen.c (100%)
- create mode 100644 tools/perf/lib/include/internal/mmap.h
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a76-n1/branch.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a76-n1/bus.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a76-n1/cache.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a76-n1/exception.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a76-n1/instruction.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a76-n1/memory.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a76-n1/other.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a76-n1/pipeline.json
- create mode 100644 tools/perf/util/copyfile.c
- create mode 100644 tools/perf/util/copyfile.h
- create mode 100644 tools/perf/util/evsel_config.h
- create mode 100644 tools/perf/util/evsel_fprintf.h
- create mode 100644 tools/perf/util/perf_event_attr_fprintf.c
- create mode 100644 tools/perf/util/synthetic-events.c
- create mode 100644 tools/perf/util/synthetic-events.h
