@@ -2,240 +2,240 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F79C352AA
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4BCC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4AA5222CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08F0221D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:13:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PaBbwOTB"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ZcCl2iuL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727586AbfIZRLE (ORCPT
+        id S1727638AbfIZRNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 13:11:04 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34077 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727505AbfIZRLE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 13:11:04 -0400
-Received: by mail-pl1-f194.google.com with SMTP id k7so1584430pll.1
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 10:11:03 -0700 (PDT)
+        Thu, 26 Sep 2019 13:13:16 -0400
+Received: from mail-eopbgr700046.outbound.protection.outlook.com ([40.107.70.46]:45665
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727579AbfIZRNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 13:13:15 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=V48EXvfhikkrpGThPlYO3Jh2YkXrj97CSyuUoil8Bh3DOF9cncpRZdqnuMZNz2qXRmHMiBpNb0jtXNtSzTYzqOuDTxOmmiuXZcQKIgOEqWk24p/FBNS79irkTjmpYLp2jWiBSD/KjL4HZRIYLLCFnQeZM75hOJzhi9kSAUsGPQ39pLHLn1IlGt3aPY2acykHoTVOlaZRTFErbiC/FWyqAPv2Rn1S3qtyFOBxoyN11X8uQul2Cnk1/ktrp7OgU6RW0c7lrgNZKCouuGivQ2wJ2RVYcU5jGg8hCzAsho/C/js9+PYkLx3DsiAjsHtYs4pzG35V0GOs8CYldzBLMQ5qnw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Wzv2Q5UibzpSsbZVFYQxjk7e9nbSQK3xHV4ljxRg1Vk=;
+ b=j3AQ9GApBWUUB7LNw5IpawqvzG2k7u5G2fUtofasW11RLvzyjZePXsatnG3h58qASH0wk2jRN/ynpPKn34M3PdYsd2Va9OVRRKH/Z2uvCAD96DDDqlYfVh72rENgUvOQZTqXgC18doOiIP2waAA/F1z2sj2TDWLZk2SFpFwZ1nDgCka5G4dgoj9O50/VnKyPr7VFJc8Yjliu4kiRIW7aWwCw6gA6fq8xRlXGXyFT/tg2Xq8Z0PihrY5BnlZAPqyAjJ+ejp+Wb2uYJyMGKD6FiyWboKNHArgYm+heDnyD9exf444glVhlfLpElp0ePugMEGKvtSp5vYCf6835vtQibw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=y/PHP4OLdI45zIHPb8f9yOnc6gu1H47DcMn0ixy9Yf8=;
-        b=PaBbwOTBVXkwCUFb6hkHfM2jTnsh6F2gQ4gVRZ1ldgfnElSkhjIiNiBhnAlH1Sutvn
-         jbKLybsQEGovmfxORO/UbX39eiDaaSPWUsZx1flJ+8D5CwytzW4pxzC0TxjRv2rK6oga
-         3ilJRbaq7RO5QVS8QglrlisubgfLi66p9HYLQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=y/PHP4OLdI45zIHPb8f9yOnc6gu1H47DcMn0ixy9Yf8=;
-        b=J44CoujU0Sdof0OeN4oRGzX7UwKC78/ktm3WTKgq3VpPc6OaQDldjKCn4wXl2b6+gZ
-         gZ4Wr6r51N4x0+/AMYZqiJymEKA+0f2Ns+hoLecS8dLzrI/4eMtBLyNS0iwgrsSKvB7o
-         w2v/TrqOUfM6nYCcatPnFPw14YYxv2gnRVhN3GU9h4gldUmpkz27wfV8W5Eh4kTzYk/q
-         BxFBaDfJ2AMZhfTMvJeZIGqhJXuc9y8Ek0hIZt35Cn2+ah+7A2yvbuioduPgWNHYJeMF
-         TRgzVCp6Fq4B5rcDMqwpePGTVueKWigO62andsFh7eknL7AnZA6g2OQYxPJVh09Yxd9Y
-         h/Mw==
-X-Gm-Message-State: APjAAAUP2I6Ztk5Zc0ViE8SlqnIudbjvjsyKcGRU3TPG/Vcu8w+fW721
-        MygrhTLpr3YMnExps8ID2DoRhg==
-X-Google-Smtp-Source: APXvYqxuSq/HWvt5bQoH3kWw9vWoOiWZGtdZkJlHWZR6QXtChqn2FUztl8LioG/WG6g+8FXOf4KYtw==
-X-Received: by 2002:a17:902:aa4a:: with SMTP id c10mr4838234plr.340.1569517863376;
-        Thu, 26 Sep 2019 10:11:03 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id z20sm2509355pjn.12.2019.09.26.10.11.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Sep 2019 10:11:02 -0700 (PDT)
-Date:   Thu, 26 Sep 2019 10:11:00 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Ben Dooks <ben.dooks@codethink.co.uk>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-tegra-owner@vger.kernel.org
-Subject: Re: [PATCH 1/2] devfreq: Rename devfreq_update_status() to
- devfreq_update_stats() and viceversa
-Message-ID: <20190926171100.GQ133864@google.com>
-References: <20190925184314.30251-1-mka@chromium.org>
- <3015d1aec68ca2b35a263d61bf13077e@codethink.co.uk>
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Wzv2Q5UibzpSsbZVFYQxjk7e9nbSQK3xHV4ljxRg1Vk=;
+ b=ZcCl2iuLzL1bFkO91bERuQnzH/279zag0sxw2degvoY5XvdR+yV353VjyCKIs/BuOhyl2pLWfryqpP7j6MPzm3yLDj2jPQywd3qFMxLKUE7Le1laCzsYIsMLag+RyzSBfRN827iK41i7y1E9HCM1iRQUqJ9P34d42j62MXudnSg=
+Received: from CY4PR12MB1446.namprd12.prod.outlook.com (10.172.72.19) by
+ CY4PR12MB1909.namprd12.prod.outlook.com (10.175.80.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.23; Thu, 26 Sep 2019 17:13:12 +0000
+Received: from CY4PR12MB1446.namprd12.prod.outlook.com
+ ([fe80::1dbd:eba0:5fcf:c9f3]) by CY4PR12MB1446.namprd12.prod.outlook.com
+ ([fe80::1dbd:eba0:5fcf:c9f3%6]) with mapi id 15.20.2284.028; Thu, 26 Sep 2019
+ 17:13:12 +0000
+From:   "Grodzovsky, Andrey" <Andrey.Grodzovsky@amd.com>
+To:     Steven Price <steven.price@arm.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>
+CC:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        Nayan Deshmukh <nayan26deshmukh@gmail.com>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v4] drm: Don't free jobs in wait_event_interruptible()
+Thread-Topic: [PATCH v4] drm: Don't free jobs in wait_event_interruptible()
+Thread-Index: AQHVdHUKP1r0Rq5tqEO46l3IKyYg76c+EUmAgAACcYD//8QBgIAARjuAgAAUdoA=
+Date:   Thu, 26 Sep 2019 17:13:12 +0000
+Message-ID: <785a9474-48d9-aac7-edeb-649403007999@amd.com>
+References: <20190926141630.14258-1-steven.price@arm.com>
+ <b457a269-4aa9-7e3b-283e-b4920455e396@amd.com>
+ <48214f02-e853-015f-55cc-397c7b06cb5d@arm.com>
+ <b4713fe7-80d4-4706-206e-f4786a70e70b@amd.com>
+ <d13b3648-c7a5-1ef9-20c4-c327b15f1e4a@arm.com>
+In-Reply-To: <d13b3648-c7a5-1ef9-20c4-c327b15f1e4a@arm.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YT1PR01CA0021.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::34)
+ To CY4PR12MB1446.namprd12.prod.outlook.com (2603:10b6:910:10::19)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Andrey.Grodzovsky@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.55.251]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f88f74f4-358c-427a-0ca7-08d742a4cf76
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:CY4PR12MB1909;
+x-ms-traffictypediagnostic: CY4PR12MB1909:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR12MB1909859CD7336E2CEDBEFE46EA860@CY4PR12MB1909.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:826;
+x-forefront-prvs: 0172F0EF77
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(346002)(396003)(136003)(39860400002)(199004)(189003)(6486002)(386003)(3846002)(478600001)(102836004)(71190400001)(71200400001)(6506007)(6116002)(76176011)(26005)(53546011)(256004)(81166006)(81156014)(14444005)(54906003)(316002)(110136005)(2906002)(5660300002)(476003)(186003)(52116002)(11346002)(446003)(2616005)(99286004)(486006)(305945005)(8936002)(25786009)(66946007)(64756008)(6512007)(6306002)(66446008)(66556008)(6436002)(66476007)(966005)(36756003)(8676002)(31686004)(7736002)(14454004)(6246003)(4326008)(6636002)(66066001)(86362001)(31696002)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1909;H:CY4PR12MB1446.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: FsxNouSIhIrySXLuGyjMQaafz3RTIm6dmVpc738DGJgHMUDFChckcFBUn9PQXD8Vzqdit/Mc2uuVQy+hyza3cY4T/13umgUgnZK2nvdgHSEXgA+zXwCBU8T5xQJU0Ah8N8poU6moFij/dZXLxix4l7S4ryNdhrY22j6FzeSo+uX44tL1lkdnqULJnhGg7uJJEG8hLuFuzAMDAMGobhrVfe9LQotP6CAh9oTxaw+I/Fk4tHGdc1SuSr0jvp3Ey08bBEmM++WvpryOb7dvOJQ+lFslIwDRt1z0XO7Gk5PfQ2NjdtMDcNAJGtA537v7IXpgV5WQyaic6AdZvDyapgMSPnfaQQO3f6iKRB1YS0aMv6x5eLCWETl5k+8gi1K8jWMG7iJJfgl4SJfwMkv+9+p998mxtZbgMbjI/djmXgpVaZmaDjlHu9oVdRFxuFO9lwrBo3NpV9Gd9JcmuAD9kP//EA==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <29E182F3111DED4DA4CDA26B37408157@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <3015d1aec68ca2b35a263d61bf13077e@codethink.co.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f88f74f4-358c-427a-0ca7-08d742a4cf76
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Sep 2019 17:13:12.2482
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: PRQQwPrITOJiZGjwJVJIwQZxxD4Ifyqe1brajvPzlccQKV/ukLh+gTnlOd/Aq1tGMA3bruyurmUce3dldsBNjQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1909
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 08:21:51AM +0100, Ben Dooks wrote:
-> /
-> 
-> On 2019-09-25 19:43, Matthias Kaehlcke wrote:
-> > devfreq has two functions with very similar names,
-> > devfreq_update_status()
-> > and devfreq_update_stats(). _update_status() currently updates
-> > frequency transitions statistics, while _update_stats() retrieves the
-> > device 'status'. The function names are inversed with respect to what
-> > the functions are actually doing, rename devfreq_update_status() to
-> > devfreq_update_stats() and viceversa.
-> 
-> Wouldn't having devfreq_get_stats() be a better name for this if it
-> is retrieving the stats?
-
-struct devfreq_dev_status is a bit ambiguous. It contains 'stat' fields
-like 'total_time' and 'busy_time', but also 'current_frequency' which is
-more a 'status'. Given the name of the struct and the name of the hook
-profile->get_dev_status I'm inclined to refer to it as 'status', also to
-disambiguate it from the transition stats.
-
-That said I'd welcome a name that's easier to differantiate from the other
-devfreq_update_stat* function, like devfreq_update_status() or
-devfreq_refresh_status().
-
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > ---
-> > We could also rename the current devfreq_update_stats() to
-> > devfreq_refresh_status() to make it easier to distinguish it from
-> > devfreq_update_stats().
-> > ---
-> >  drivers/devfreq/devfreq.c                 | 12 ++++++------
-> >  drivers/devfreq/governor.h                |  4 ++--
-> >  drivers/devfreq/governor_passive.c        |  2 +-
-> >  drivers/devfreq/governor_simpleondemand.c |  2 +-
-> >  drivers/devfreq/tegra30-devfreq.c         |  2 +-
-> >  5 files changed, 11 insertions(+), 11 deletions(-)
-> > 
-> > diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-> > index 446490c9d635..fb4318d59aa9 100644
-> > --- a/drivers/devfreq/devfreq.c
-> > +++ b/drivers/devfreq/devfreq.c
-> > @@ -151,11 +151,11 @@ static int set_freq_table(struct devfreq *devfreq)
-> >  }
-> > 
-> >  /**
-> > - * devfreq_update_status() - Update statistics of devfreq behavior
-> > + * devfreq_update_stats() - Update statistics of devfreq behavior
-> >   * @devfreq:	the devfreq instance
-> >   * @freq:	the update target frequency
-> >   */
-> > -int devfreq_update_status(struct devfreq *devfreq, unsigned long freq)
-> > +int devfreq_update_stats(struct devfreq *devfreq, unsigned long freq)
-> >  {
-> >  	int lev, prev_lev, ret = 0;
-> >  	unsigned long cur_time;
-> > @@ -191,7 +191,7 @@ int devfreq_update_status(struct devfreq *devfreq,
-> > unsigned long freq)
-> >  	devfreq->last_stat_updated = cur_time;
-> >  	return ret;
-> >  }
-> > -EXPORT_SYMBOL(devfreq_update_status);
-> > +EXPORT_SYMBOL(devfreq_update_stats);
-> > 
-> >  /**
-> >   * find_devfreq_governor() - find devfreq governor from name
-> > @@ -311,7 +311,7 @@ static int devfreq_set_target(struct devfreq
-> > *devfreq, unsigned long new_freq,
-> >  	freqs.new = new_freq;
-> >  	devfreq_notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
-> > 
-> > -	if (devfreq_update_status(devfreq, new_freq))
-> > +	if (devfreq_update_stats(devfreq, new_freq))
-> >  		dev_err(&devfreq->dev,
-> >  			"Couldn't update frequency transition information.\n");
-> > 
-> > @@ -450,7 +450,7 @@ void devfreq_monitor_suspend(struct devfreq
-> > *devfreq)
-> >  		return;
-> >  	}
-> > 
-> > -	devfreq_update_status(devfreq, devfreq->previous_freq);
-> > +	devfreq_update_stats(devfreq, devfreq->previous_freq);
-> >  	devfreq->stop_polling = true;
-> >  	mutex_unlock(&devfreq->lock);
-> >  	cancel_delayed_work_sync(&devfreq->work);
-> > @@ -1398,7 +1398,7 @@ static ssize_t trans_stat_show(struct device *dev,
-> >  	unsigned int max_state = devfreq->profile->max_state;
-> > 
-> >  	if (!devfreq->stop_polling &&
-> > -			devfreq_update_status(devfreq, devfreq->previous_freq))
-> > +			devfreq_update_stats(devfreq, devfreq->previous_freq))
-> >  		return 0;
-> >  	if (max_state == 0)
-> >  		return sprintf(buf, "Not Supported.\n");
-> > diff --git a/drivers/devfreq/governor.h b/drivers/devfreq/governor.h
-> > index bbe5ff9fcecf..e11f447be2b5 100644
-> > --- a/drivers/devfreq/governor.h
-> > +++ b/drivers/devfreq/governor.h
-> > @@ -64,9 +64,9 @@ extern void devfreq_interval_update(struct devfreq
-> > *devfreq,
-> >  extern int devfreq_add_governor(struct devfreq_governor *governor);
-> >  extern int devfreq_remove_governor(struct devfreq_governor *governor);
-> > 
-> > -extern int devfreq_update_status(struct devfreq *devfreq, unsigned long
-> > freq);
-> > +extern int devfreq_update_stats(struct devfreq *devfreq, unsigned long
-> > freq);
-> > 
-> > -static inline int devfreq_update_stats(struct devfreq *df)
-> > +static inline int devfreq_update_status(struct devfreq *df)
-> >  {
-> >  	return df->profile->get_dev_status(df->dev.parent, &df->last_status);
-> >  }
-> > diff --git a/drivers/devfreq/governor_passive.c
-> > b/drivers/devfreq/governor_passive.c
-> > index be6eeab9c814..1c746b96d3db 100644
-> > --- a/drivers/devfreq/governor_passive.c
-> > +++ b/drivers/devfreq/governor_passive.c
-> > @@ -110,7 +110,7 @@ static int update_devfreq_passive(struct devfreq
-> > *devfreq, unsigned long freq)
-> >  		goto out;
-> > 
-> >  	if (devfreq->profile->freq_table
-> > -		&& (devfreq_update_status(devfreq, freq)))
-> > +		&& (devfreq_update_stats(devfreq, freq)))
-> >  		dev_err(&devfreq->dev,
-> >  			"Couldn't update frequency transition information.\n");
-> > 
-> > diff --git a/drivers/devfreq/governor_simpleondemand.c
-> > b/drivers/devfreq/governor_simpleondemand.c
-> > index 3d809f228619..2cbf26bdcfd6 100644
-> > --- a/drivers/devfreq/governor_simpleondemand.c
-> > +++ b/drivers/devfreq/governor_simpleondemand.c
-> > @@ -25,7 +25,7 @@ static int devfreq_simple_ondemand_func(struct devfreq
-> > *df,
-> >  	unsigned int dfso_downdifferential = DFSO_DOWNDIFFERENCTIAL;
-> >  	struct devfreq_simple_ondemand_data *data = df->data;
-> > 
-> > -	err = devfreq_update_stats(df);
-> > +	err = devfreq_update_status(df);
-> >  	if (err)
-> >  		return err;
-> > 
-> > diff --git a/drivers/devfreq/tegra30-devfreq.c
-> > b/drivers/devfreq/tegra30-devfreq.c
-> > index a6ba75f4106d..536273a811fe 100644
-> > --- a/drivers/devfreq/tegra30-devfreq.c
-> > +++ b/drivers/devfreq/tegra30-devfreq.c
-> > @@ -526,7 +526,7 @@ static int tegra_governor_get_target(struct
-> > devfreq *devfreq,
-> >  	unsigned int i;
-> >  	int err;
-> > 
-> > -	err = devfreq_update_stats(devfreq);
-> > +	err = devfreq_update_status(devfreq);
-> >  	if (err)
-> >  		return err;
+DQpPbiA5LzI2LzE5IDExOjU5IEFNLCBTdGV2ZW4gUHJpY2Ugd3JvdGU6DQo+IE9uIDI2LzA5LzIw
+MTkgMTY6NDgsIEdyb2R6b3Zza3ksIEFuZHJleSB3cm90ZToNCj4+IE9uIDkvMjYvMTkgMTE6MjMg
+QU0sIFN0ZXZlbiBQcmljZSB3cm90ZToNCj4+PiBPbiAyNi8wOS8yMDE5IDE2OjE0LCBHcm9kem92
+c2t5LCBBbmRyZXkgd3JvdGU6DQo+Pj4+IE9uIDkvMjYvMTkgMTA6MTYgQU0sIFN0ZXZlbiBQcmlj
+ZSB3cm90ZToNCj4+Pj4+IGRybV9zY2hlZF9jbGVhbnVwX2pvYnMoKSBhdHRlbXB0cyB0byBmcmVl
+IGZpbmlzaGVkIGpvYnMsIGhvd2V2ZXIgYmVjYXVzZQ0KPj4+Pj4gaXQgaXMgY2FsbGVkIGFzIHRo
+ZSBjb25kaXRpb24gb2Ygd2FpdF9ldmVudF9pbnRlcnJ1cHRpYmxlKCkgaXQgbXVzdCBub3QNCj4+
+Pj4+IHNsZWVwLiBVbmZvcnR1YW50bHkgc29tZSBmcmVlIGNhbGxiYWNrcyAobm90aWJseSBmb3Ig
+UGFuZnJvc3QpIGRvIHNsZWVwLg0KPj4+Pj4NCj4+Pj4+IEluc3RlYWQgbGV0J3MgcmVuYW1lIGRy
+bV9zY2hlZF9jbGVhbnVwX2pvYnMoKSB0bw0KPj4+Pj4gZHJtX3NjaGVkX2dldF9jbGVhbnVwX2pv
+YigpIGFuZCBzaW1wbHkgcmV0dXJuIGEgam9iIGZvciBwcm9jZXNzaW5nIGlmDQo+Pj4+PiB0aGVy
+ZSBpcyBvbmUuIFRoZSBjYWxsZXIgY2FuIHRoZW4gY2FsbCB0aGUgZnJlZV9qb2IoKSBjYWxsYmFj
+ayBvdXRzaWRlDQo+Pj4+PiB0aGUgd2FpdF9ldmVudF9pbnRlcnJ1cHRpYmxlKCkgd2hlcmUgc2xl
+ZXBpbmcgaXMgcG9zc2libGUgYmVmb3JlDQo+Pj4+PiByZS1jaGVja2luZyBhbmQgcmV0dXJuaW5n
+IHRvIHNsZWVwIGlmIG5lY2Vzc2FyeS4NCj4+Pj4+DQo+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBTdGV2
+ZW4gUHJpY2UgPHN0ZXZlbi5wcmljZUBhcm0uY29tPg0KPj4+Pj4gLS0tDQo+Pj4+PiBDaGFuZ2Vz
+IGZyb20gdjM6DQo+Pj4+PiAgICAgKiBkcm1fc2NoZWRfbWFpbigpIHJlLWFybXMgdGhlIHRpbWVv
+dXQgZm9yIHRoZSBuZXh0IGpvYiBhZnRlciBjYWxsaW5nDQo+Pj4+PiAgICAgICBmcmVlX2pvYigp
+DQo+Pj4+Pg0KPj4+Pj4gICAgIGRyaXZlcnMvZ3B1L2RybS9zY2hlZHVsZXIvc2NoZWRfbWFpbi5j
+IHwgNDUgKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0NCj4+Pj4+ICAgICAxIGZpbGUgY2hhbmdl
+ZCwgMjYgaW5zZXJ0aW9ucygrKSwgMTkgZGVsZXRpb25zKC0pDQo+Pj4+Pg0KPj4+Pj4gZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9zY2hlZHVsZXIvc2NoZWRfbWFpbi5jIGIvZHJpdmVycy9n
+cHUvZHJtL3NjaGVkdWxlci9zY2hlZF9tYWluLmMNCj4+Pj4+IGluZGV4IDlhMGVlNzRkODJkYy4u
+MTQ4NDY4NDQ3YmE5IDEwMDY0NA0KPj4+Pj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3NjaGVkdWxl
+ci9zY2hlZF9tYWluLmMNCj4+Pj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9zY2hlZHVsZXIvc2No
+ZWRfbWFpbi5jDQo+Pj4+PiBAQCAtNjIyLDQzICs2MjIsNDEgQEAgc3RhdGljIHZvaWQgZHJtX3Nj
+aGVkX3Byb2Nlc3Nfam9iKHN0cnVjdCBkbWFfZmVuY2UgKmYsIHN0cnVjdCBkbWFfZmVuY2VfY2Ig
+KmNiKQ0KPj4+Pj4gICAgIH0NCj4+Pj4+ICAgICANCj4+Pj4+ICAgICAvKioNCj4+Pj4+IC0gKiBk
+cm1fc2NoZWRfY2xlYW51cF9qb2JzIC0gZGVzdHJveSBmaW5pc2hlZCBqb2JzDQo+Pj4+PiArICog
+ZHJtX3NjaGVkX2dldF9jbGVhbnVwX2pvYiAtIGZldGNoIHRoZSBuZXh0IGZpbmlzaGVkIGpvYiB0
+byBiZSBkZXN0cm95ZWQNCj4+Pj4+ICAgICAgKg0KPj4+Pj4gICAgICAqIEBzY2hlZDogc2NoZWR1
+bGVyIGluc3RhbmNlDQo+Pj4+PiAgICAgICoNCj4+Pj4+IC0gKiBSZW1vdmUgYWxsIGZpbmlzaGVk
+IGpvYnMgZnJvbSB0aGUgbWlycm9yIGxpc3QgYW5kIGRlc3Ryb3kgdGhlbS4NCj4+Pj4+ICsgKiBS
+ZXR1cm5zIHRoZSBuZXh0IGZpbmlzaGVkIGpvYiBmcm9tIHRoZSBtaXJyb3IgbGlzdCAoaWYgdGhl
+cmUgaXMgb25lKQ0KPj4+Pj4gKyAqIHJlYWR5IGZvciBpdCB0byBiZSBkZXN0cm95ZWQuDQo+Pj4+
+PiAgICAgICovDQo+Pj4+PiAtc3RhdGljIHZvaWQgZHJtX3NjaGVkX2NsZWFudXBfam9icyhzdHJ1
+Y3QgZHJtX2dwdV9zY2hlZHVsZXIgKnNjaGVkKQ0KPj4+Pj4gK3N0YXRpYyBzdHJ1Y3QgZHJtX3Nj
+aGVkX2pvYiAqDQo+Pj4+PiArZHJtX3NjaGVkX2dldF9jbGVhbnVwX2pvYihzdHJ1Y3QgZHJtX2dw
+dV9zY2hlZHVsZXIgKnNjaGVkKQ0KPj4+Pj4gICAgIHsNCj4+Pj4+ICsJc3RydWN0IGRybV9zY2hl
+ZF9qb2IgKmpvYiA9IE5VTEw7DQo+Pj4+PiAgICAgCXVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+Pj4+
+PiAgICAgDQo+Pj4+PiAgICAgCS8qIERvbid0IGRlc3Ryb3kgam9icyB3aGlsZSB0aGUgdGltZW91
+dCB3b3JrZXIgaXMgcnVubmluZyAqLw0KPj4+Pj4gICAgIAlpZiAoc2NoZWQtPnRpbWVvdXQgIT0g
+TUFYX1NDSEVEVUxFX1RJTUVPVVQgJiYNCj4+Pj4+ICAgICAJICAgICFjYW5jZWxfZGVsYXllZF93
+b3JrKCZzY2hlZC0+d29ya190ZHIpKQ0KPj4+Pj4gLQkJcmV0dXJuOw0KPj4+Pj4gLQ0KPj4+Pj4g
+KwkJcmV0dXJuIE5VTEw7DQo+Pj4+PiAgICAgDQo+Pj4+PiAtCXdoaWxlICghbGlzdF9lbXB0eSgm
+c2NoZWQtPnJpbmdfbWlycm9yX2xpc3QpKSB7DQo+Pj4+PiAtCQlzdHJ1Y3QgZHJtX3NjaGVkX2pv
+YiAqam9iOw0KPj4+Pj4gKwlzcGluX2xvY2tfaXJxc2F2ZSgmc2NoZWQtPmpvYl9saXN0X2xvY2ss
+IGZsYWdzKTsNCj4+Pj4+ICAgICANCj4+Pj4+IC0JCWpvYiA9IGxpc3RfZmlyc3RfZW50cnkoJnNj
+aGVkLT5yaW5nX21pcnJvcl9saXN0LA0KPj4+Pj4gKwlqb2IgPSBsaXN0X2ZpcnN0X2VudHJ5X29y
+X251bGwoJnNjaGVkLT5yaW5nX21pcnJvcl9saXN0LA0KPj4+Pj4gICAgIAkJCQkgICAgICAgc3Ry
+dWN0IGRybV9zY2hlZF9qb2IsIG5vZGUpOw0KPj4+Pj4gLQkJaWYgKCFkbWFfZmVuY2VfaXNfc2ln
+bmFsZWQoJmpvYi0+c19mZW5jZS0+ZmluaXNoZWQpKQ0KPj4+Pj4gLQkJCWJyZWFrOw0KPj4+Pj4g
+ICAgIA0KPj4+Pj4gLQkJc3Bpbl9sb2NrX2lycXNhdmUoJnNjaGVkLT5qb2JfbGlzdF9sb2NrLCBm
+bGFncyk7DQo+Pj4+PiArCWlmIChqb2IgJiYgZG1hX2ZlbmNlX2lzX3NpZ25hbGVkKCZqb2ItPnNf
+ZmVuY2UtPmZpbmlzaGVkKSkgew0KPj4+Pj4gICAgIAkJLyogcmVtb3ZlIGpvYiBmcm9tIHJpbmdf
+bWlycm9yX2xpc3QgKi8NCj4+Pj4+ICAgICAJCWxpc3RfZGVsX2luaXQoJmpvYi0+bm9kZSk7DQo+
+Pj4+PiAtCQlzcGluX3VubG9ja19pcnFyZXN0b3JlKCZzY2hlZC0+am9iX2xpc3RfbG9jaywgZmxh
+Z3MpOw0KPj4+Pj4gLQ0KPj4+Pj4gLQkJc2NoZWQtPm9wcy0+ZnJlZV9qb2Ioam9iKTsNCj4+Pj4+
+ICsJfSBlbHNlIHsNCj4+Pj4+ICsJCWpvYiA9IE5VTEw7DQo+Pj4+PiArCQkvKiBxdWV1ZSB0aW1l
+b3V0IGZvciBuZXh0IGpvYiAqLw0KPj4+Pj4gKwkJZHJtX3NjaGVkX3N0YXJ0X3RpbWVvdXQoc2No
+ZWQpOw0KPj4+Pj4gICAgIAl9DQo+Pj4+PiAgICAgDQo+Pj4+PiAtCS8qIHF1ZXVlIHRpbWVvdXQg
+Zm9yIG5leHQgam9iICovDQo+Pj4+PiAtCXNwaW5fbG9ja19pcnFzYXZlKCZzY2hlZC0+am9iX2xp
+c3RfbG9jaywgZmxhZ3MpOw0KPj4+Pj4gLQlkcm1fc2NoZWRfc3RhcnRfdGltZW91dChzY2hlZCk7
+DQo+Pj4+PiAgICAgCXNwaW5fdW5sb2NrX2lycXJlc3RvcmUoJnNjaGVkLT5qb2JfbGlzdF9sb2Nr
+LCBmbGFncyk7DQo+Pj4+PiAgICAgDQo+Pj4+PiArCXJldHVybiBqb2I7DQo+Pj4+PiAgICAgfQ0K
+Pj4+Pj4gICAgIA0KPj4+Pj4gICAgIC8qKg0KPj4+Pj4gQEAgLTY5OCwxMiArNjk2LDIxIEBAIHN0
+YXRpYyBpbnQgZHJtX3NjaGVkX21haW4odm9pZCAqcGFyYW0pDQo+Pj4+PiAgICAgCQlzdHJ1Y3Qg
+ZHJtX3NjaGVkX2ZlbmNlICpzX2ZlbmNlOw0KPj4+Pj4gICAgIAkJc3RydWN0IGRybV9zY2hlZF9q
+b2IgKnNjaGVkX2pvYjsNCj4+Pj4+ICAgICAJCXN0cnVjdCBkbWFfZmVuY2UgKmZlbmNlOw0KPj4+
+Pj4gKwkJc3RydWN0IGRybV9zY2hlZF9qb2IgKmNsZWFudXBfam9iID0gTlVMTDsNCj4+Pj4+ICAg
+ICANCj4+Pj4+ICAgICAJCXdhaXRfZXZlbnRfaW50ZXJydXB0aWJsZShzY2hlZC0+d2FrZV91cF93
+b3JrZXIsDQo+Pj4+PiAtCQkJCQkgKGRybV9zY2hlZF9jbGVhbnVwX2pvYnMoc2NoZWQpLA0KPj4+
+Pj4gKwkJCQkJIChjbGVhbnVwX2pvYiA9IGRybV9zY2hlZF9nZXRfY2xlYW51cF9qb2Ioc2NoZWQp
+KSB8fA0KPj4+Pj4gICAgIAkJCQkJICghZHJtX3NjaGVkX2Jsb2NrZWQoc2NoZWQpICYmDQo+Pj4+
+PiAgICAgCQkJCQkgIChlbnRpdHkgPSBkcm1fc2NoZWRfc2VsZWN0X2VudGl0eShzY2hlZCkpKSB8
+fA0KPj4+Pj4gLQkJCQkJIGt0aHJlYWRfc2hvdWxkX3N0b3AoKSkpOw0KPj4+Pj4gKwkJCQkJIGt0
+aHJlYWRfc2hvdWxkX3N0b3AoKSk7DQo+Pj4+PiArDQo+Pj4+PiArCQl3aGlsZSAoY2xlYW51cF9q
+b2IpIHsNCj4+Pj4+ICsJCQlzY2hlZC0+b3BzLT5mcmVlX2pvYihjbGVhbnVwX2pvYik7DQo+Pj4+
+PiArCQkJLyogcXVldWUgdGltZW91dCBmb3IgbmV4dCBqb2IgKi8NCj4+Pj4+ICsJCQlkcm1fc2No
+ZWRfc3RhcnRfdGltZW91dChzY2hlZCk7DQo+Pj4+PiArDQo+Pj4+PiArCQkJY2xlYW51cF9qb2Ig
+PSBkcm1fc2NoZWRfZ2V0X2NsZWFudXBfam9iKHNjaGVkKTsNCj4+Pj4+ICsJCX0NCj4+Pj4gV2h5
+IGRybV9zY2hlZF9zdGFydF90aW1lb3V0IGlzIGNhbGxlZCBib3RoIGhlcmUgYW5kIGluc2lkZQ0K
+Pj4+PiBkcm1fc2NoZWRfZ2V0X2NsZWFudXBfam9iID8gQW5kIGFsc28gd2h5IGNhbGwgaXQgbXVs
+dGlwbGUgdGltZXMgaW4gdGhlDQo+Pj4+IGxvb3AgaW5zdGVhZCBvZiBvbmx5IG9uY2UgYWZ0ZXIg
+dGhlIGxvb3AgaXMgZG9uZcKgID8NCj4+PiBDaHJpc3RpYW4gcG9pbnRlZCBvdXQgdG8gYmUgdGhh
+dCB0aGUgZmlyc3QgdGhpbmcNCj4+PiBkcm1fc2NoZWRfZ2V0X2NsZWFudXBfam9iIGRvZXMgaXMg
+Y2FsbCBjYW5jZWxfZGVsYXllZF93b3JrKCksIGFuZCBpZg0KPj4+IHRoYXQgcmV0dXJucyBmYWxz
+ZSB0aGVuIGl0IGJhaWxzIG91dCB3aXRoIGEgTlVMTCByZXR1cm4uIFNvIHRvIGFjdHVhbGx5DQo+
+Pj4gZ2V0IGFub3RoZXIgam9iIChpZiBvbmUgZXhpc3RzKSB0aGUgdGltZW91dCBoYXMgdG8gYmUg
+cmVzdGFydGVkLg0KPj4NCj4+IEZvciB0aGlzIGNhc2Ugd2hlcmUgdGltZW91dCB3b3JrIGFscmVh
+ZHkgaW4gcHJvZ3Jlc3Mgbm90ZSB0aGF0DQo+PiBkcm1fc2NoZWRfam9iX3RpbWVkb3V0IHJlc3Rh
+cnRzIHRoZSB0aW1lb3V0IGluIGl0J3MgZW5kIHNvIGl0IHNob3VsZCBiZQ0KPj4gb2sgdG8gcmVz
+dGFydCB0aGUgdGltZW91dCB1bmNvbmRpdGlvbmFsbHkgaW5zaWRlDQo+PiBkcm1fc2NoZWRfZ2V0
+X2NsZWFudXBfam9iIGFzIGl0IHdhcyBkb25lIGJlZm9yZS4NCj4gSSBtYXkgaGF2ZSBtaXNpbnRl
+cnByZXRlZCBDaHJpc3RpYW5bMV0sIGJ1dCBJIGludGVycHJldGVkIHRoZSBiZWxvdyBhcw0KPiBt
+ZWFuaW5nIHRoYXQgaGUnZCBwcmVmZXIgdGhlIGNhbGxlciAoZHJtX3NjaGVkX21haW4oKSkgdG8g
+aGFuZGxlIHRoZQ0KPiBkcm1fc2NoZWRfc3RhcnRfdGltZW91dCgpIGluIHRoaXMgY2FzZToNCj4N
+Cj4gT24gMjYvMDkvMjAxOSAxNDo1MCwgS29lbmlnLCBDaHJpc3RpYW4gd3JvdGU6DQo+Pj4gQWx0
+ZXJuYXRpdmVseSB0aGUgY2FsbGVyIGNvdWxkIG1hbnVhbGx5IHJlLWFybSB0aGUgdGltZW91dCBh
+ZnRlcg0KPj4+IGhhbmRsaW5nIHRoZSBqb2IgZnJlZS4NCj4+IEkgZG9uJ3Qgc2VlIGFueXRoaW5n
+IHRoYXQgY291bGQgZ28gd3JvbmcgaW1tZWRpYXRlbHksIGJ1dCB0aGF0IGlzDQo+PiBwcm9iYWJs
+eSB0aGUgY2xlYW5lciBhcHByb2FjaC4NCj4gWzFdDQo+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3Jn
+L2xrbWwvZDliMjNlZjgtZjc4NC0wYmNlLWMzNGEtZmEwMjAwMmRiMWVhQGFtZC5jb20vDQo+DQo+
+IEkgd2Fzbid0IGVudGlyZWx5IHN1cmUgaWYgaXQgd2FzIHNhZmUgdG8gbGVhdmUgdGhlIHRpbWVv
+dXQgcnVubmluZyB3aGlsZQ0KPiB0aGUgam9iIGZyZWUgd2FzIGdvaW5nIG9uIHdoaWNoIHdvdWxk
+IGJlIHRoZSBjYXNlIGlmDQo+IGRybV9zY2hlZF9nZXRfY2xlYW51cF9qb2IoKSByZS1hcm1lZCB1
+bmNvbmRpdGlvbmFsbHkuDQo+DQo+Pj4gSXQncyBhbHNvIG5lY2Vzc2FyeSB0byByZXN0YXJ0IHRo
+ZSB0aW1lb3V0IGluIHRoZSBjYXNlIHdoZXJlIHRoZSByZXR1cm4NCj4+PiBpcyBOVUxMIHdoaWNo
+IGlzIGhhbmRsZWQgaW4gdGhlIGZ1bmN0aW9uIGl0c2VsZi4NCj4+Pg0KPj4+IFRCSCBJJ20gbm90
+IHN1cmUgd2hldGhlciB0aGlzIHdoaWxlIGxvb3AgaXMgd29ydGggaXQgLSBpdCBtYXkgYmUgYmV0
+dGVyDQo+Pj4gdG8gcmVwbGFjZSBpdCB3aXRoIHNpbXBseToNCj4+Pg0KPj4+IAlpZiAoY2xlYW51
+cF9qb2IpIHsNCj4+PiAJCXNjaGVkLT5vcHMtPmZyZWVfam9iKGNsZWFudXBfam9iKTsNCj4+PiAJ
+CS8qIHF1ZXVlIHRpbWVvdXQgZm9yIG5leHQgam9iICovDQo+Pj4gCQlkcm1fc2NoZWRfc3RhcnRf
+dGltZW91dChzY2hlZCk7DQo+Pj4gCX0NCj4+Pg0KPj4+IFRoZSBvdXRlciBsb29wIHdvdWxkIHRo
+ZW4gaGFuZGxlIHRoZSBuZXh0IGNhbGwgdG8NCj4+PiBkcm1fc2NoZWRfZ2V0X2NsZWFudXBfam9i
+KCkgYXMgbmVjZXNzYXJ5Lg0KPj4NCj4+IFdoYXQgb3V0ZXIgbG9vcCA/DQo+IFRoZXJlJ3MgYSBs
+b29wIHJvdW5kIHRoZSBjb2RlIGluIGRybV9zY2hlZF9tYWluKCk6DQo+DQo+IAl3aGlsZSAoIWt0
+aHJlYWRfc2hvdWxkX3N0b3AoKSkgew0KPiAJCVsuLi5dDQo+IAkJd2FpdF9ldmVudF9pbnRlcnJ1
+cHRpYmxlKC4uLikNCj4NCj4gCQl3aGlsZSAoY2xlYW51cF9qb2IpIHsuLi59DQo+DQo+IAkJaWYg
+KCFlbnRpdHkpDQo+IAkJCWNvbnRpbnVlOw0KPg0KPiAJCVsuLi5dDQo+IAl9DQo+DQo+IFNvIGFm
+dGVyIGhhbmRsaW5nIHRoZSBjbGVhbnVwX2pvYiBjYXNlLCB0aGUgb3V0ZXIgbG9vcCB3aWxsIGxv
+b3AgYmFjaw0KPiByb3VuZCB0byB0aGUgd2FpdF9ldmVudF9pbnRlcnJ1cHRpYmxlKCkgY2FsbC4g
+T25lIG90aGVyIGNvbmNlcm4gaXMNCj4gd2hldGhlciBpdCdzIHBvc3NpYmxlIGZvciB0aGUgdGhy
+ZWFkIHRvIGJlIHNpZ25hbGxlZCB0byBzdG9wIGJlZm9yZSB0aGUNCj4gY2xlYW4gdXAgaGFzIGJl
+ZW4gY29tcGxldGVkLiBUaGUgd2hpbGUgbG9vcCBJIGFkZGVkIGVuc3VyZXMgdGhhdCBhbGwNCj4g
+am9icyBhcmUgYWN0dWFsbHkgY2xlYW5lZCB1cCBiZWZvcmUga3RocmVhZF9zaG91bGRfc3RvcCgp
+IGlzIGNoZWNrZWQuDQo+DQo+IFN0ZXZlDQoNCg0KWWVzLCBzZWVtcyB0byBtZSBvbmx5IHRoZSBp
+bm5lciB3aGlsZSBsb29wIHdpbGwgZ3VhcmFudGVlIHByb3BlciBmcmVlIG9mIA0KYWxsIHNpZ25h
+bGVkIGpvYnMgaW4gbWlyb3JyIGxpc3QgaWYgdGhlIHRocmVhZCBpcyBzdG9wcGVkLg0KDQpBbmRy
+ZXkNCg0K
