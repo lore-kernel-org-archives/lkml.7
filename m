@@ -2,164 +2,128 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 341F4C352A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 20:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07077C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 20:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 060C82245A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 20:51:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE97121D7C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 20:55:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KfUP2SE/"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="iT1TWL+4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728878AbfIZUvP (ORCPT
+        id S1728864AbfIZUzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 16:51:15 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:46571 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728836AbfIZUvO (ORCPT
+        Thu, 26 Sep 2019 16:55:50 -0400
+Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:46424 "EHLO
+        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727948AbfIZUzu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 16:51:14 -0400
-Received: by mail-qk1-f194.google.com with SMTP id 201so171419qkd.13
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 13:51:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UFXRrFau2iJzsurfLrZlI44R9YQ5W58lJvvcXaxbZxI=;
-        b=KfUP2SE/YczAT4JhpCDujik7WoLJGyfqT3XGtzKI3SNB9DXBFNzL5mRonozZ1n2YQP
-         LJr2eSJSaF5hXp3ti/nJwV7A5FTVzR7PfNvyyF6wpTOQaAg3HkdZCJJSZraM5Ec8+pzT
-         whmvG1e7OsMifGARMfI3T70qIMuG5fdAVlS+o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UFXRrFau2iJzsurfLrZlI44R9YQ5W58lJvvcXaxbZxI=;
-        b=jSZ0ak8JZYlILXkV0naKzXHEbBkM2SHmpzhghoc2BAb5mSQaa6chMOo9g5EbFmp0Ae
-         v8IVsTjXEwgiC5SKyDQ5FPHBhejZFrErTn+PbQKdgi+T1UI9Yr+eJA8SNCVG+m/O+qm8
-         EUkLPjyTKRjswQkXN40STa+qnlAQei6F8Q78dIz7LCMREoTJLcqF13ZlUuqCtJ9zt9On
-         7pyrk7llGfn/2qsxU9xmRuN+36hJ5fe5H3haFh6CEux/Dg2a6RdZabWWJwP3PbXi7+9O
-         zccGk7OxHLc18BscQ4y2503mf+XdEG9j95K169QNUIeXwldr7GSVmwwPOF/Gar17Gb8I
-         Angg==
-X-Gm-Message-State: APjAAAVgtKGv6yIkKwZjg6wCyLhTo/I1P6VWkhSSi/A+OVqw303l7Y+D
-        d5RmMR3G9Cdr/2JiNFSqyP6SfXJ61CSRk1eBu8TIxg==
-X-Google-Smtp-Source: APXvYqyOH46/TFqgHUrRLcD+R2H/hvTOilF7SBW1cOWfI7cZ6m4E2KFuCxu8bdmVWQs6LfcrJZg983Bh2DYShcIK4bE=
-X-Received: by 2002:a37:498f:: with SMTP id w137mr855825qka.419.1569531073398;
- Thu, 26 Sep 2019 13:51:13 -0700 (PDT)
+        Thu, 26 Sep 2019 16:55:50 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id C92533FBDF;
+        Thu, 26 Sep 2019 22:55:48 +0200 (CEST)
+Authentication-Results: ste-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=iT1TWL+4;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
+        dkim=pass (1024-bit key) header.d=shipmail.org
+Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id mCc1skLxnFSs; Thu, 26 Sep 2019 22:55:47 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 15C263FA6C;
+        Thu, 26 Sep 2019 22:55:46 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 787EE3601AA;
+        Thu, 26 Sep 2019 22:55:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1569531346; bh=QDCzJnIw2NcRoyWGnCmx01s2V3PezimSel1iXciq1+Q=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=iT1TWL+4cqBnl+TNn7Xu1wTe3naZCoTfhaRKoWLUMNnSy2L+J9vU1YCwN0qUQPOuP
+         r+dn5uLvaChhSo65zGrWGCe6lzIgxh61AHJB3PMZIEFdAnGaU4iOhdTHNI0IH6cmKW
+         PFKNh8UtHSPx96Nd6WgYKQT/5JT0kFZfuLoaAK50=
+Subject: Re: Ack to merge through DRM? WAS Re: [PATCH v2 1/5] mm: Add
+ write-protect and clean utilities for address space ranges
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>
+References: <20190926115548.44000-1-thomas_os@shipmail.org>
+ <20190926115548.44000-2-thomas_os@shipmail.org>
+ <85e31bcf-d3c8-2fcf-e659-2c9f82ebedc7@shipmail.org>
+ <CAHk-=wifjLeeMEtMPytiMAKiWkqPorjf1P4PbB3dj17Y3Jcqag@mail.gmail.com>
+ <a48a93d2-03e9-40d3-3b4c-a301632d3121@shipmail.org>
+ <CAHk-=whwN+CvaorsmczZRwFhSV+1x98xg-zajVD1qKmN=9JhBQ@mail.gmail.com>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <c58cdb3d-4f5e-7bfc-06b3-58c27676d101@shipmail.org>
+Date:   Thu, 26 Sep 2019 22:55:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <CANFp7mX=THOVk-4TgSSscgtm598txqesDZYKE2sFtEVNHjN+-g@mail.gmail.com>
- <Pine.LNX.4.44L0.1909181442330.1507-100000@iolanthe.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.1909181442330.1507-100000@iolanthe.rowland.org>
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Date:   Thu, 26 Sep 2019 13:51:02 -0700
-Message-ID: <CANFp7mWj8V=Hyo7b0xisYVde2dC9Ju0Rc+ituftnjcqXMuD5GA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Reset realtek bluetooth devices during user suspend
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     linux-bluetooth@vger.kernel.org, linux-usb@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Hui Peng <benquike@gmail.com>, linux-pm@vger.kernel.org,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Len Brown <len.brown@intel.com>,
-        Mathias Payer <mathias.payer@nebelwelt.net>,
-        Dmitry Torokhov <dtor@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mans Rullgard <mans@mansr.com>, Pavel Machek <pavel@ucw.cz>,
-        YueHaibing <yuehaibing@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAHk-=whwN+CvaorsmczZRwFhSV+1x98xg-zajVD1qKmN=9JhBQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 11:51 AM Alan Stern <stern@rowland.harvard.edu> wrote:
+On 9/26/19 10:16 PM, Linus Torvalds wrote:
+> On Thu, Sep 26, 2019 at 1:09 PM Thomas Hellström (VMware)
+> <thomas_os@shipmail.org> wrote:
+>> That said, if people are OK with me modifying the assert in
+>> pud_trans_huge_lock() and make __walk_page_range non-static, it should
+>> probably be possible to make it work, yes.
+> I don't think you need to modify that assert at all.
 >
-> On Wed, 18 Sep 2019, Abhishek Pandit-Subedi wrote:
+> That thing only exists when there's a "pud_entry" op in the walker,
+> and then you absolutely need to have that mmap_lock.
 >
-> > Sorry, last reply went out with HTML. Re-sending in plain text.
-> >
-> > On Wed, Sep 18, 2019 at 7:23 AM Alan Stern <stern@rowland.harvard.edu> wrote:
-> > >
-> > > On Tue, 17 Sep 2019, Abhishek Pandit-Subedi wrote:
-> > >
-> > > > On a Realtek USB bluetooth device, I wanted a simple and consistent way
-> > > > to put the device in reset during suspend (2 reasons: to save power and
-> > > > disable BT as a wakeup source). Resetting it in the suspend callback
-> > > > causes a detach and the resume callback is not called. Hence the changes
-> > > > in this series to do the reset in suspend_noirq.
-> > >
-> > > What about people who _want_ BT to be a wakeup source?
-> >
-> > When BT is enabled as a wakeup source, there is no reset.
-> >
-> > > Why does putting the device in reset save power?  That is, a suspended
-> > > device is very strictly limited in the amount of current it's allowed
-> > > to draw from the USB bus; why should it draw significantly less when it
-> > > is reset?
-> >
-> > I don't know that it's significantly less (only that it's OFF). My
-> > greater motivation is to make sure the bluetooth chip isn't
-> > accumulating events while the host is turned off. Sorry, I should have
-> > made that more clear in the cover letter.
-> >
-> > When the host is off, it continues to accumulate events for the host
-> > to process (packets from connected devices, LE advertisements, etc).
-> > At some point, the firmware buffers fill up and no more events can be
-> > stored. When the host is resumed later on, the firmware is in a bad
-> > state and doesn't respond. I had originally just reset in ->resume but
-> > then connected wireless devices wouldn't disconnect from the BT either
-> > and I had trouble getting them to reconnect.
-> >
-> > >
-> > > > I looked into using PERSIST and reset on resume but those seem mainly
-> > > > for misbehaving devices that reset themselves.
-> > >
-> > > They are, but that doesn't mean you can't use them for other things
-> > > too.
-> > >
-> > > > This patch series has been tested with Realtek BT hardware as well as
-> > > > Intel BT (test procedure = disable as wake source, user suspend and
-> > > > observe a detach + reattach on resume).
-> > >
-> > > This series really seems like overkill for a single kind of device.
-> > >
-> > > Is there any way to turn off the device's BT radio during suspend (if
-> > > wakeup is disabled) and then turn it back on during resume?  Wouldn't
-> > > that accomplish what you want just as well?
-> >
-> > Probably (but I couldn't find a way to do that).
->
-> There's no way to turn off the device's BT radio?  Then what happens
-> when the user turns off Bluetooth from the wireless control panel?
+> As far as I can tell, you fundamentally only ever work on a pte level
+> in your address space walker already and actually have a WARN_ON() on
+> the pud_huge thing, so no pud entry can possibly apply.
 
-It looks like bluez invokes hci_dev_do_close. This gracefully clears
-any packets in flight, clears any pending actions and disables the
-device as a wakeup source (which for Realtek allows it to enter global
-suspend). This is approximately what I was trying to achieve.
+Well, we're working on supporting huge puds and pmds in the graphics 
+VMAs, although in the write-notify cases we're looking at here, we would 
+probably want to split them down to PTE level. But if we would want to 
+extend that or if we would want to make this interface general, we'd 
+probably want to support also a pud_entry callback.
 
-> >  I want to prevent
-> > bluetooth from waking up the host and to reliably be in a good state
-> > when the host resumes. The reset logic I implemented causes the hci
-> > device to disappear and reappear, which userspace seems to handle
-> > gracefully.
+Looking at zap_pud_range() which when called from unmap_mapping_pages() 
+uses identical locking (no mmap_sem), it seems we should be able to get 
+away with i_mmap_lock(), making sure the whole page table doesn't 
+disappear under us. So it's not clear to me why the mmap_sem is strictly 
+needed here. Better to sort those restrictions out now rather than when 
+huge entries start appearing.
+
 >
-> Have you tried out the persist/reset-on-resume approach?
+> So no, the assert in pud_trans_huge_lock() does not seem to be a
+> reason not to just use the existing page table walkers.
 >
-> Alan Stern
+> And once you get rid of the walking, what is left? Just the "iterate
+> over the inode mappings" part. Which could just be done in
+> mm/pagewalk.c, and then you don't even need to remove the static.
 >
+> So making it be just another walking in pagewalk.c would seem to be
+> the simplest model.
+>
+> Call it "walk_page_mapping()". And talk extensively about how the
+> locking differs a lot from the usual "walk_page_vma()" things.
 
-I think I'll abandon this patch series. The general sentiment seems to
-be "don't do this" and it looks like closing the hci device is better
-in my case.
+Sure. Can do that.
 
-Thanks for the feedback and pointing me this way.
+Thanks,
 
-Abhishek
+Thomas
+
+
