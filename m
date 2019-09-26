@@ -2,61 +2,52 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C74A9C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 02:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 420B3C4360D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 02:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FED8222C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 02:52:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D182222BD
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 02:52:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbfIZCwC (ORCPT
+        id S1728134AbfIZCwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 22:52:02 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:56076 "EHLO inva021.nxp.com"
+        Wed, 25 Sep 2019 22:52:04 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:56130 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725768AbfIZCwC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 22:52:02 -0400
+        id S1726825AbfIZCwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 22:52:03 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id AA44D2004DD;
-        Thu, 26 Sep 2019 04:51:59 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C0A502004E3;
+        Thu, 26 Sep 2019 04:52:01 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 173CF200049;
-        Thu, 26 Sep 2019 04:51:55 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2F2DC2001DC;
+        Thu, 26 Sep 2019 04:51:57 +0200 (CEST)
 Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 2A031402D5;
-        Thu, 26 Sep 2019 10:51:49 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 41E45402DE;
+        Thu, 26 Sep 2019 10:51:51 +0800 (SGT)
 From:   Biwen Li <biwen.li@nxp.com>
 To:     leoyang.li@nxp.com, shawnguo@kernel.org, robh+dt@kernel.org,
         mark.rutland@arm.com, ran.wang_1@nxp.com
 Cc:     linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
-Subject: [v4,1/3] soc: fsl: handle RCPM errata A-008646 on SoC LS1021A
-Date:   Thu, 26 Sep 2019 10:41:16 +0800
-Message-Id: <20190926024118.15931-1-biwen.li@nxp.com>
+Subject: [v4,3/3] Documentation: dt: binding: fsl: Add 'fsl,ippdexpcr1-alt-addr' property
+Date:   Thu, 26 Sep 2019 10:41:18 +0800
+Message-Id: <20190926024118.15931-3-biwen.li@nxp.com>
 X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20190926024118.15931-1-biwen.li@nxp.com>
+References: <20190926024118.15931-1-biwen.li@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Description:
-	- Reading configuration register RCPM_IPPDEXPCR1
-	  always return zero
-
-Workaround:
-	- Save register RCPM_IPPDEXPCR1's value to
-	  register SCFG_SPARECR8.(uboot's psci also
-	  need reading value from the register SCFG_SPARECR8
-	  to set register RCPM_IPPDEXPCR1)
-
-Impact:
-	- FlexTimer module will cannot wakeup system in
-	  deep sleep on SoC LS1021A
+The 'fsl,ippdexpcr1-alt-addr' property is used to handle an errata A-008646
+on LS1021A
 
 Signed-off-by: Biwen Li <biwen.li@nxp.com>
 ---
@@ -65,74 +56,54 @@ Change in v4:
 	  fsl,ippdexpcr-alt-addr -> fsl,ippdexpcr1-alt-addr
 
 Change in v3:
-	- update commit message
 	- rename property name
 	  fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
 
 Change in v2:
-	- fix stype problems
+	- update desc of the property 'fsl,rcpm-scfg'
 
- drivers/soc/fsl/rcpm.c | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ .../devicetree/bindings/soc/fsl/rcpm.txt      | 21 +++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/drivers/soc/fsl/rcpm.c b/drivers/soc/fsl/rcpm.c
-index 82c0ad5e663e..9a29c482fc2e 100644
---- a/drivers/soc/fsl/rcpm.c
-+++ b/drivers/soc/fsl/rcpm.c
-@@ -13,6 +13,8 @@
- #include <linux/slab.h>
- #include <linux/suspend.h>
- #include <linux/kernel.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/syscon.h>
+diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+index 5a33619d881d..751a7655b694 100644
+--- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
++++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+@@ -34,6 +34,13 @@ Chassis Version		Example Chips
+ Optional properties:
+  - little-endian : RCPM register block is Little Endian. Without it RCPM
+    will be Big Endian (default case).
++ - fsl,ippdexpcr1-alt-addr : The property is related to a hardware issue
++   on SoC LS1021A and only needed on SoC LS1021A.
++   Must include 1 + 2 entries.
++   The first entry must be a link to the SCFG device node.
++   The non-first entry must be offset of registers of SCFG.
++   The second and third entry compose an alt offset address
++   for IPPDEXPCR1(SCFG_SPARECR8)
  
- #define RCPM_WAKEUP_CELL_MAX_SIZE	7
+ Example:
+ The RCPM node for T4240:
+@@ -43,6 +50,20 @@ The RCPM node for T4240:
+ 		#fsl,rcpm-wakeup-cells = <2>;
+ 	};
  
-@@ -29,6 +31,9 @@ static int rcpm_pm_prepare(struct device *dev)
- 	struct rcpm		*rcpm;
- 	u32 value[RCPM_WAKEUP_CELL_MAX_SIZE + 1], tmp;
- 	int i, ret, idx;
-+	struct regmap *scfg_addr_regmap = NULL;
-+	u32 reg_offset[RCPM_WAKEUP_CELL_MAX_SIZE + 1];
-+	u32 reg_value = 0;
- 
- 	rcpm = dev_get_drvdata(dev);
- 	if (!rcpm)
-@@ -63,6 +68,34 @@ static int rcpm_pm_prepare(struct device *dev)
- 					tmp |= value[i + 1];
- 					iowrite32be(tmp, rcpm->ippdexpcr_base + i * 4);
- 				}
-+				/* Workaround of errata A-008646 on SoC LS1021A:
-+				 * There is a bug of register ippdexpcr1.
-+				 * Reading configuration register RCPM_IPPDEXPCR1
-+				 * always return zero. So save ippdexpcr1's value
-+				 * to register SCFG_SPARECR8.And the value of
-+				 * ippdexpcr1 will be read from SCFG_SPARECR8.
-+				 */
-+				scfg_addr_regmap = syscon_regmap_lookup_by_phandle(np,
-+										   "fsl,ippdexpcr1-alt-addr");
-+				if (scfg_addr_regmap && (1 == i)) {
-+					if (of_property_read_u32_array(dev->of_node,
-+					    "fsl,ippdexpcr1-alt-addr",
-+					    reg_offset,
-+					    1 + sizeof(u64)/sizeof(u32))) {
-+						scfg_addr_regmap = NULL;
-+						continue;
-+					}
-+					/* Read value from register SCFG_SPARECR8 */
-+					regmap_read(scfg_addr_regmap,
-+						    (u32)(((u64)(reg_offset[1] << (sizeof(u32) * 8) |
-+						    reg_offset[2])) & 0xffffffff),
-+						    &reg_value);
-+					/* Write value to register SCFG_SPARECR8 */
-+					regmap_write(scfg_addr_regmap,
-+						     (u32)(((u64)(reg_offset[1] << (sizeof(u32) * 8) |
-+						     reg_offset[2])) & 0xffffffff),
-+						     tmp | reg_value);
-+				}
- 			}
- 		}
- 	} while (ws = wakeup_source_get_next(ws));
++The RCPM node for LS1021A:
++	rcpm: rcpm@1ee2140 {
++		compatible = "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-2.1+";
++		reg = <0x0 0x1ee2140 0x0 0x8>;
++		#fsl,rcpm-wakeup-cells = <2>;
++
++		/*
++		 * The second and third entry compose an alt offset
++		 * address for IPPDEXPCR1(SCFG_SPARECR8)
++		 */
++		fsl,ippdexpcr1-alt-addr = <&scfg 0x0 0x51c>;
++	};
++
++
+ * Freescale RCPM Wakeup Source Device Tree Bindings
+ -------------------------------------------
+ Required fsl,rcpm-wakeup property should be added to a device node if the device
 -- 
 2.17.1
 
