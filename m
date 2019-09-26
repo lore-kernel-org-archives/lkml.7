@@ -2,170 +2,114 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE20FC432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D65C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8868D222BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EA89222C5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:59:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729998AbfIZI67 (ORCPT
+        id S1729949AbfIZI67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 26 Sep 2019 04:58:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59278 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729039AbfIZI67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 04:58:59 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A619DAC68;
-        Thu, 26 Sep 2019 08:58:56 +0000 (UTC)
-Date:   Thu, 26 Sep 2019 10:58:55 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        linux-kernel@vger.kernel.org
-Subject: Re: Regression in dbdda842fe96 ("printk: Add console owner and
- waiter logic to load balance console writes") [Was: Regression in
- fd5f7cde1b85 ("...")]
-Message-ID: <20190926085855.debu7t46s7kgb26p@pathway.suse.cz>
-References: <20190917141034.gvjg7bgylqbbxyv7@pengutronix.de>
- <20190918013032.GA2895@jagdpanzerIV>
- <20190918071158.rtw45jch2roa2wum@pengutronix.de>
- <20190918075252.GA30808@jagdpanzerIV>
+Received: from mx1.redhat.com ([209.132.183.28]:55076 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729060AbfIZI66 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 04:58:58 -0400
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9ED665859E
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 08:58:58 +0000 (UTC)
+Received: by mail-pf1-f198.google.com with SMTP id z13so1281298pfr.15
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 01:58:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=L9VfLVOKM8R9jc1z9s5TsnK21zyB5Qwdz7pgoArH7ZU=;
+        b=FRw1iMBhwxI9rXPjyC0mckE0jlJIUdjPrjhKe8yBg1kXYTEUwfibaHMUmjgVFYIxiW
+         5iiXnHUg7imxbaL0RIDXjs8js5Dg8LRtWdCB6MSyViz18Iqh6t9bEqY2FofSlov3QeKi
+         67YyjWsLb5sZ+ChfZ62WVYaDcIuf11n8HxByHk9xf1y27Wr5k5nGi0t8/XR8U2G5rfmY
+         2fjJzi+NMitaDUPtz2TGNtqz9uJikODpToBmMNH3UDy+BSefukIFsB3I32qKQ6Ibi4u2
+         g4AOduUHWe1mZKmsts3GLfWD4BOErhPJ6XuDxVJyq/xBgFtzGsaDWDt6o/IG4B4C+9GG
+         4Jaw==
+X-Gm-Message-State: APjAAAU3iK/T/7IcKA5eSUB5ZPW+GwL+3FwSNLfEI8ImCT06ehIijEAB
+        5a7EGQxHm4bWgXZIijGQSKA913zCIzgZdNt7a46V2xcPKQ/SEXUtAOoDLcLEfm/IWCkY3VfvZGm
+        MoG3avvgfAqrV8nvmYi7tu5hj
+X-Received: by 2002:a17:90a:1090:: with SMTP id c16mr2409837pja.132.1569488338077;
+        Thu, 26 Sep 2019 01:58:58 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzhaZZThluUL2F/LQPkfZtnZIdTa4Wg7MLC8P+1p0q6ib/uQgwy0h20Y+B1DooAZuLsy2ZgwA==
+X-Received: by 2002:a17:90a:1090:: with SMTP id c16mr2409814pja.132.1569488337664;
+        Thu, 26 Sep 2019 01:58:57 -0700 (PDT)
+Received: from xz-x1 ([114.250.102.230])
+        by smtp.gmail.com with ESMTPSA id b24sm1341257pgs.15.2019.09.26.01.58.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Sep 2019 01:58:56 -0700 (PDT)
+Date:   Thu, 26 Sep 2019 16:58:49 +0800
+From:   Peter Xu <peterx@redhat.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Maya Gokhale <gokhale2@llnl.gov>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Martin Cracauer <cracauer@cons.org>,
+        Marty McFadden <mcfadden8@llnl.gov>, Shaohua Li <shli@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Denis Plotnikov <dplotnikov@virtuozzo.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH v4 05/10] mm: Return faster for non-fatal signals in user
+ mode faults
+Message-ID: <20190926085849.GA3077@xz-x1>
+References: <20190923042523.10027-1-peterx@redhat.com>
+ <20190923042523.10027-6-peterx@redhat.com>
+ <CAHk-=wiNGtUaXtRv1wniw3hfxFnU7SO7ZuisFSVg0btvROcW6w@mail.gmail.com>
+ <20190924024721.GD28074@xz-x1>
+ <20190924025447.GE1855@bombadil.infradead.org>
+ <20190924031908.GF28074@xz-x1>
+ <20190924154518.GG1855@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190918075252.GA30808@jagdpanzerIV>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <20190924154518.GG1855@bombadil.infradead.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2019-09-18 16:52:52, Sergey Senozhatsky wrote:
-> On (09/18/19 09:11), Uwe Kleine-König wrote:
-> > I rechecked and indeed fd5f7cde1b85's parent has the problem, too, so I
-> > did a mistake during my bisection :-|
-> > 
-> > Redoing the bisection (a bit quicker this time) points to
-> > 
-> > dbdda842fe96 ("printk: Add console owner and waiter logic to load balance console writes")
-> > 
-> > Sorry for the confusion.
+On Tue, Sep 24, 2019 at 08:45:18AM -0700, Matthew Wilcox wrote:
+
+[...]
+
+> Oh, and while you're looking at the callers of handle_mm_fault(), a
+> lot of them don't check conditions in the right order.  x86, at least,
+> handles FAULT_RETRY before handling FAULT_ERROR, which is clearly wrong.
 > 
-> No worries!
-> 
-> [..]
-> > > So I'd say that lockdep is correct, but there are several hacks which
-> > > prevent actual deadlock.
->
-> The basic idea is to handle sysrq out of port->lock.
+> Kirill and I recently discussed it here:
+> https://lore.kernel.org/linux-mm/20190911152338.gqqgxrmqycodfocb@box/T/
 
-Great idea!
+Is there any existing path in master that we can get VM_FAULT_RETRY
+returned with any existing VM_FAULT_ERROR bit?  It seems to me that
+above link is the first one that is going to introduce such case?
 
-> I didn't test it all (not even sure if it compiles).
-> 
-> ---
->  drivers/tty/serial/imx.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
-> index 87c58f9f6390..f0dd807b52df 100644
-> --- a/drivers/tty/serial/imx.c
-> +++ b/drivers/tty/serial/imx.c
-> @@ -731,9 +731,9 @@ static irqreturn_t imx_uart_rxint(int irq, void *dev_id)
->  	struct imx_port *sport = dev_id;
->  	unsigned int rx, flg, ignored = 0;
->  	struct tty_port *port = &sport->port.state->port;
-> +	unsigned long flags;
->  
-> -	spin_lock(&sport->port.lock);
-> -
-> +	uart_port_lock_irqsave(&sport->port, flags);
+If so, I'm uncertain now on whether I should have one patch to handle
+the ERROR case first as you suggested with this series, because
+otherwise that patch won't explain itself without a real benefit...
 
-uart_port_lock_irqsave() does not exist. Instead the current users
-do:
+Thanks,
 
-     spin_lock_irqsave(&port->lock, flags);
-
->  	while (imx_uart_readl(sport, USR2) & USR2_RDR) {
->  		u32 usr2;
->  
-> @@ -749,8 +749,8 @@ static irqreturn_t imx_uart_rxint(int irq, void *dev_id)
->  				continue;
->  		}
->  
-> -		if (uart_handle_sysrq_char(&sport->port, (unsigned char)rx))
-> -			continue;
-> +		if (uart_prepare_sysrq_char(&sport->port, (unsigned char)rx))
-> +			break;
->  
->  		if (unlikely(rx & URXD_ERR)) {
->  			if (rx & URXD_BRK)
-> @@ -792,7 +792,7 @@ static irqreturn_t imx_uart_rxint(int irq, void *dev_id)
->  	}
->  
->  out:
-> -	spin_unlock(&sport->port.lock);
-> +	uart_unlock_and_check_sysrq(&sport->port, flags);
-
-This API has been introduced for exactly this reason. See the commit
-6e1935819db0c91ce4a5af ("serial: core: Allow processing sysrq at port
-unlock time").
-
-I like this approach. It allows to remove hacks with locks.
-
-Well, Sergey's patch is nice example that the API is a bit confusing.
-I would either make it symmetric and make a variant without saving
-irq flags:
-
-    uart_lock(port);
-    uart_unlock_and_handle_sysrq(port);
-
-    uart_lock_irqsave(port, flags);
-    uart_unlock_irqrestore_and_handle_sysrq(port);
-
-Or I would keep the locking as is and add some API
-just for the sysrq handling:
-
-
-   int uart_store_sysrq_char(struct uart_port *port, unsigned int ch);
-   unsigned int uart_get_sysrq_char(struct uart_port *port);
-
-And use it the following way:
-
-	int handle_irq()
-	{
-		unsined int sysrq, sysrq_ch;
-
-		spin_lock(&port->lock);
-		[...]
-			sysrq = uart_store_sysrq_char(port, ch);
-			if (!sysrq)
-				[...]
-		[...]
-
-	out:
-		sysrq_ch = uart_get_sysrq_char(port);
-		spin_unlock(&port->lock);
-
-		if (sysrq_ch)
-			handle_sysrq(sysrq_ch);
-	}
-
-I prefer the 2nd option. It is more code. But it is more
-self explanatory.
-
-What do you think?
-
-Best Regards,
-Petr
+-- 
+Peter Xu
