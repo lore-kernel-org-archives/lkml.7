@@ -2,167 +2,155 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E14C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D95C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54405222C5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F3A02146E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:59:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbfIZH7T (ORCPT
+        id S1728137AbfIZH7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 03:59:19 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:49499 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727578AbfIZH7T (ORCPT
+        Thu, 26 Sep 2019 03:59:48 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:54771 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727701AbfIZH7r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 03:59:19 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iDOgF-0004ax-0i; Thu, 26 Sep 2019 09:59:15 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iDOgE-0006lM-8C; Thu, 26 Sep 2019 09:59:14 +0200
-Date:   Thu, 26 Sep 2019 09:59:14 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, aisheng.dong@nxp.com, leonard.crestez@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH] firmware: imx: Skip return value check for some special
- SCU firmware APIs
-Message-ID: <20190926075914.i7tsd3cbpitrqe4q@pengutronix.de>
-References: <1569406066-16626-1-git-send-email-Anson.Huang@nxp.com>
+        Thu, 26 Sep 2019 03:59:47 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 46f6lh06K4z1rQYn;
+        Thu, 26 Sep 2019 09:59:43 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 46f6lg6YKtz1qqkL;
+        Thu, 26 Sep 2019 09:59:43 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id 0ZxA9ZV_k4tv; Thu, 26 Sep 2019 09:59:42 +0200 (CEST)
+X-Auth-Info: HfnPDiM+3Ll2KMuyM8YcqLFRGVX3LUDByNYxi9mVV+w=
+Received: from jawa (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Thu, 26 Sep 2019 09:59:42 +0200 (CEST)
+Date:   Thu, 26 Sep 2019 09:59:41 +0200
+From:   Lukasz Majewski <lukma@denx.de>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 1/2] spi: Add call to spi_slave_abort() function when
+ spidev driver is released
+Message-ID: <20190926095941.0615f335@jawa>
+In-Reply-To: <CAMuHMdXseZppE74D8XW=5ZWNNNLXZFLTSiqqe_qoZ8C1rAFQSg@mail.gmail.com>
+References: <20190924110547.14770-1-lukma@denx.de>
+        <20190924110547.14770-2-lukma@denx.de>
+        <CAMuHMdXseZppE74D8XW=5ZWNNNLXZFLTSiqqe_qoZ8C1rAFQSg@mail.gmail.com>
+Organization: denx.de
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1569406066-16626-1-git-send-email-Anson.Huang@nxp.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:53:40 up 131 days, 14:11, 85 users,  load average: 0.03, 0.21,
- 0.16
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/5s0ODXtpIoabspOUcWPgLRh"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+--Sig_/5s0ODXtpIoabspOUcWPgLRh
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 19-09-25 18:07, Anson Huang wrote:
-> The SCU firmware does NOT always have return value stored in message
-> header's function element even the API has response data, those special
-> APIs are defined as void function in SCU firmware, so they should be
-> treated as return success always.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> 	- This patch is based on the patch of https://patchwork.kernel.org/patch/11129553/
-> ---
->  drivers/firmware/imx/imx-scu.c | 34 ++++++++++++++++++++++++++++++++--
->  1 file changed, 32 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-scu.c
-> index 869be7a..ced5b12 100644
-> --- a/drivers/firmware/imx/imx-scu.c
-> +++ b/drivers/firmware/imx/imx-scu.c
-> @@ -78,6 +78,11 @@ static int imx_sc_linux_errmap[IMX_SC_ERR_LAST] = {
->  	-EIO,	 /* IMX_SC_ERR_FAIL */
->  };
->  
-> +static const struct imx_sc_rpc_msg whitelist[] = {
-> +	{ .svc = IMX_SC_RPC_SVC_MISC, .func = IMX_SC_MISC_FUNC_UNIQUE_ID },
-> +	{ .svc = IMX_SC_RPC_SVC_MISC, .func = IMX_SC_MISC_FUNC_GET_BUTTON_STATUS },
-> +};
+Hi Geert,
 
-Is this going to be extended in the near future? I see some upcoming
-problems here if someone uses a different scu-fw<->kernel combination as
-nxp would suggest.
+> Hi Lukasz,
+>=20
+> On Thu, Sep 26, 2019 at 3:33 AM Lukasz Majewski <lukma@denx.de> wrote:
+> > This change is necessary for spidev devices (e.g. /dev/spidev3.0)
+> > working in the slave mode (like NXP's dspi driver for Vybrid SoC).
+> >
+> > When SPI HW works in this mode - the master is responsible for
+> > providing CS and CLK signals. However, when some fault happens -
+> > like for example distortion on SPI lines - the SPI Linux driver
+> > needs a chance to recover from this abnormal situation and prepare
+> > itself for next (correct) transmission.
+> >
+> > This change doesn't pose any threat on drivers working in master
+> > mode as spi_slave_abort() function checks if SPI slave mode is
+> > supported.
+> >
+> > Signed-off-by: Lukasz Majewski <lukma@denx.de> =20
+>=20
+> Thanks for your patch!
+>=20
+> Yesterday I saw this appear on spi/for-next, but I couldn't find the
+> email in my mbox.  Today it has arrived. Looks like gmail had some
+> troubles ("Delivered after 138401 seconds", ugh).
 
-Regards,
-  Marco
+I've already sent v2 of this patch, as Intel Linux test setup spot the
+error with lack of #define guards.
 
-> +
->  static struct imx_sc_ipc *imx_sc_ipc_handle;
->  
->  static inline int imx_sc_to_linux_errno(int errno)
-> @@ -157,11 +162,24 @@ static int imx_scu_ipc_write(struct imx_sc_ipc *sc_ipc, void *msg)
->  	return 0;
->  }
->  
-> +static bool imx_scu_call_skip_return_value_check(uint8_t svc, uint8_t func)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(whitelist); i++)
-> +		if (svc == whitelist[i].svc &&
-> +			func == whitelist[i].func)
-> +			return true;
-> +
-> +	return false;
-> +}
-> +
->  /*
->   * RPC command/response
->   */
->  int imx_scu_call_rpc(struct imx_sc_ipc *sc_ipc, void *msg, bool have_resp)
->  {
-> +	uint8_t saved_svc, saved_func;
->  	struct imx_sc_rpc_msg *hdr;
->  	int ret;
->  
-> @@ -171,8 +189,11 @@ int imx_scu_call_rpc(struct imx_sc_ipc *sc_ipc, void *msg, bool have_resp)
->  	mutex_lock(&sc_ipc->lock);
->  	reinit_completion(&sc_ipc->done);
->  
-> -	if (have_resp)
-> +	if (have_resp) {
->  		sc_ipc->msg = msg;
-> +		saved_svc = ((struct imx_sc_rpc_msg *)msg)->svc;
-> +		saved_func = ((struct imx_sc_rpc_msg *)msg)->func;
-> +	}
->  	sc_ipc->count = 0;
->  	ret = imx_scu_ipc_write(sc_ipc, msg);
->  	if (ret < 0) {
-> @@ -190,7 +211,16 @@ int imx_scu_call_rpc(struct imx_sc_ipc *sc_ipc, void *msg, bool have_resp)
->  
->  		/* response status is stored in hdr->func field */
->  		hdr = msg;
-> -		ret = hdr->func;
-> +		/*
-> +		 * Some special SCU firmware APIs do NOT have return value
-> +		 * in hdr->func, but they do have response data, those special
-> +		 * APIs are defined as void function in SCU firmware, so they
-> +		 * should be treated as return success always.
-> +		 */
-> +		if (!imx_scu_call_skip_return_value_check(saved_svc, saved_func))
-> +			ret = hdr->func;
-> +		else
-> +			ret = 0;
->  	}
->  
->  out:
-> -- 
-> 2.7.4
-> 
-> 
-> 
+>=20
+> > --- a/drivers/spi/spidev.c
+> > +++ b/drivers/spi/spidev.c
+> > @@ -627,6 +627,7 @@ static int spidev_release(struct inode *inode,
+> > struct file *filp) if (dofree)
+> >                         kfree(spidev);
+> >         }
+> > +       spi_slave_abort(spidev->spi); =20
+>=20
+> Looks good to me.  Just wondering if this should be done for the last
+> user only, i.e. in the "if" block above, like resetting speed_hz?
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+I also thought about this. However, from my use case the user must end
+the transmission with CTRL+C on his user space program, which in turn
+communicate via SPI with /dev/spidev3.0.
+
+There might be many (potential) programs using the /dev/spidev3.0 at the
+same time, so the usage count may be not one.
+
+For the above reason I've moved it outside the above if().
+
+>=20
+> >         mutex_unlock(&device_list_lock);
+> >
+> >         return 0; =20
+>=20
+> Gr{oetje,eeting}s,
+>=20
+>                         Geert
+>=20
+
+
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/5s0ODXtpIoabspOUcWPgLRh
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl2Mb+0ACgkQAR8vZIA0
+zr18ogf+Nkm6YALkd0PZS43sKVKplV00GjN15f39tfe1iYqHDzToQk2HTKQgJYFJ
+q713F216HIdJTpNDTpc+EZkMARIlPAAse5HphE0WIUUk41ZW6Gi038tJtzrgJFRF
+xkgQSVPFy3mIfheTBenYzYgvF0CKCDl0hOScBsmXoYQ4A6doQXZoniENZp1f3ybc
+vb+ruj9PjepQyp/jHjYO7KiQC9nPY+azM3qkp8AHkYXY9iN3SnIrFg5hqCE2zSnZ
+NyCgt+380i6WlXpLua0oxvp5ypxSbufWFkKjIo0mjU67A/cgWe1WUZWCIkrG+J+y
+Y/g3fKvcaeW6LwWO5Jc67yBQ3HQm2g==
+=cdef
+-----END PGP SIGNATURE-----
+
+--Sig_/5s0ODXtpIoabspOUcWPgLRh--
