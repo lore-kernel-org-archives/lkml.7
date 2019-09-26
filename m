@@ -2,101 +2,85 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7EDCC432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA80C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB4FA222BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46F6D222BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:59:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ysoft.com header.i=@ysoft.com header.b="Fe0DtrL6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PBXgeThn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730059AbfIZI7m (ORCPT
+        id S1730021AbfIZI7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 26 Sep 2019 04:59:42 -0400
-Received: from uho.ysoft.cz ([81.19.3.130]:33270 "EHLO uho.ysoft.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728506AbfIZI7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+Received: from mail-vk1-f172.google.com ([209.85.221.172]:45449 "EHLO
+        mail-vk1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728513AbfIZI7l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 26 Sep 2019 04:59:41 -0400
-Received: from iota-build.ysoft.local (unknown [10.1.5.151])
-        by uho.ysoft.cz (Postfix) with ESMTP id 83C1CA45FC;
-        Thu, 26 Sep 2019 10:59:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ysoft.com;
-        s=20160406-ysoft-com; t=1569488379;
-        bh=S+zR6hT69uMuvtLUzS5eVjfUv4JCt+CS0cXeaaqRO1w=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Fe0DtrL6V6h2VapmNghlv7JdhcyF4p+Gg0QjoPcZTzi/uqa0CN/OB1DNiftMbzxgL
-         n1m26wj1eobVRfoRujC1C+YMR+84R61XhbQ0UNqTxcxW/WGxJY7F69oLtonDqzLq/0
-         VvykzCe1RLiIBQiQ7aCdSzvDRxIiguUw1IR4iFHY=
-From:   =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
-Subject: [PATCH net] net: dsa: qca8k: Use up to 7 ports for all operations
-Date:   Thu, 26 Sep 2019 10:59:17 +0200
-Message-Id: <1569488357-31415-1-git-send-email-michal.vokac@ysoft.com>
-X-Mailer: git-send-email 2.1.4
+Received: by mail-vk1-f172.google.com with SMTP id u192so268515vkb.12;
+        Thu, 26 Sep 2019 01:59:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=McEd+9On6Ntx8uhur1Wb/vqGSrpb24pxGWS+he4c3dc=;
+        b=PBXgeThnxaBmraGe6V0ZwMr8fTL5d8VmALJ0Y0a32M6SrQHkkb3eXPFSh35COWIMbd
+         FVariCpAX7oDGFB0Z+Op9rNWXSsBhc0xn5hTuabGh+qysToiGXP29dmk93Pj0AT23cd+
+         ZidnfBs+uhTridtSGVP6zzS6eXL0tN71sCEPf7GiRnr8mJqHPohR0umLeCJ8KDzipbIz
+         8h/U/RXgumD91lULVFAT1IvH+zZvNDBydu5K3oc6VAfDRT7dvUuS2eFZr/AO0bMDKcOO
+         PzvZ+gOoEx0rILjKAC7KnPtikmaKfdtsvGtI6rkBGSYiDbZKq0nWKzY1IA8bqFTQqdW2
+         uq9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=McEd+9On6Ntx8uhur1Wb/vqGSrpb24pxGWS+he4c3dc=;
+        b=Y3G6mQuQLFKlGIg3V/PxFTj6k0PN6gb4A22o0dNEWHM4XwosCcpUxoKBQdrLRxdbSH
+         NB6gyx2KZMDtqCNKux2iMPkMdFwYBi5wXs84lNrAyAHO3orxISc17tHja6TXTl8DQAXz
+         riToh6FMRdhJBIci8r/OC86MudWpw/zzx5sxWUqbDelN1srdfJtkHeuAU/vI3gOEOiT4
+         CNvnHmoEA7xaK73qg59zdyNDnrS+PDnegseivgM+rks8AhpOF9Ax1y+NLpHYJ/6QY9k1
+         nNYPNI+L9BmJNx4QLBzzbBpn+LT+oW6BvbHdpD1suGxDNdZbpTGdafLXIQVkYnQbWOQG
+         7Tvw==
+X-Gm-Message-State: APjAAAWboYQaxOBuo6+2sgave+oi6zc5xah4nl1ES32Vv2l+QUh1aitx
+        7EleB16rtLfNVnJBgCZbUbhV1PNSoXYQMSBfew==
+X-Google-Smtp-Source: APXvYqwK5OosKBQKb50Qxpn3riVd+PUNGSJtSyR6hJPTzTSDWVl84TiaMN7gzS7u6vdCaw+QFN4BzNaYBBOvUfoKa6k=
+X-Received: by 2002:a1f:dc41:: with SMTP id t62mr1079220vkg.5.1569488380538;
+ Thu, 26 Sep 2019 01:59:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190909184446.9049-1-rsalvaterra@gmail.com> <C9B9ED17-F82B-4F25-996E-C1880AC49E1B@holtmann.org>
+In-Reply-To: <C9B9ED17-F82B-4F25-996E-C1880AC49E1B@holtmann.org>
+From:   Rui Salvaterra <rsalvaterra@gmail.com>
+Date:   Thu, 26 Sep 2019 09:59:29 +0100
+Message-ID: <CALjTZvZPDTdKGQExSwo9QL3KL9+t99NLdDnZjEOrnWMUBEpwSg@mail.gmail.com>
+Subject: Re: [PATCHv2] Bluetooth: trivial: tidy up printk message output from btrtl.
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The QCA8K family supports up to 7 ports. So use the existing
-QCA8K_NUM_PORTS define to allocate the switch structure and limit all
-operations with the switch ports.
+Hi, Marcel,
 
-This was not an issue until commit 0394a63acfe2 ("net: dsa: enable and
-disable all ports") disabled all unused ports. Since the unused ports 7-11
-are outside of the correct register range on this switch some registers
-were rewritten with invalid content.
+On Thu, 26 Sep 2019 at 07:34, Marcel Holtmann <marcel@holtmann.org> wrote:
+>
+> Hi Rui,
 
-Fixes: 6b93fb46480a ("net-next: dsa: add new driver for qca8xxx family")
-Fixes: a0c02161ecfc ("net: dsa: variable number of ports")
-Fixes: 0394a63acfe2 ("net: dsa: enable and disable all ports")
-Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
----
-I am not sure which of the fixes tags should be used but this definetelly
-fixes something..
+[patch snipped]
 
-IMHO the 0394a63acfe2 ("net: dsa: enable and disable all ports") did not
-cause the issue but made it visible.
+> I have some similar patch in my tree. Can you check what is still missing and send a new version. Thanks.
 
- drivers/net/dsa/qca8k.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Yeah, from a cursory look at your tree, it seems about the same as
+mine. I'll take a deeper look later on (can't access the laptops to
+test, ATM) and send a patch with any missing stuff, if needed.
 
-diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
-index 16f15c93a102..bbeeb8618c80 100644
---- a/drivers/net/dsa/qca8k.c
-+++ b/drivers/net/dsa/qca8k.c
-@@ -705,7 +705,7 @@ qca8k_setup(struct dsa_switch *ds)
- 		    BIT(0) << QCA8K_GLOBAL_FW_CTRL1_UC_DP_S);
- 
- 	/* Setup connection between CPU port & user ports */
--	for (i = 0; i < DSA_MAX_PORTS; i++) {
-+	for (i = 0; i < QCA8K_NUM_PORTS; i++) {
- 		/* CPU port gets connected to all user ports of the switch */
- 		if (dsa_is_cpu_port(ds, i)) {
- 			qca8k_rmw(priv, QCA8K_PORT_LOOKUP_CTRL(QCA8K_CPU_PORT),
-@@ -1074,7 +1074,7 @@ qca8k_sw_probe(struct mdio_device *mdiodev)
- 	if (id != QCA8K_ID_QCA8337)
- 		return -ENODEV;
- 
--	priv->ds = dsa_switch_alloc(&mdiodev->dev, DSA_MAX_PORTS);
-+	priv->ds = dsa_switch_alloc(&mdiodev->dev, QCA8K_NUM_PORTS);
- 	if (!priv->ds)
- 		return -ENOMEM;
- 
--- 
-2.1.4
-
+Thanks,
+Rui
