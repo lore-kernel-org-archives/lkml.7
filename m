@@ -2,158 +2,144 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF94C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A36AAC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F497222C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75CF1222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:57:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="N6BslChf"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mLB6ESXn";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="D9NbvxsS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbfIZM5K (ORCPT
+        id S1726882AbfIZM5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 08:57:10 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:57890 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbfIZM5K (ORCPT
+        Thu, 26 Sep 2019 08:57:38 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:42540 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbfIZM5i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 08:57:10 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8QChmox126209;
-        Thu, 26 Sep 2019 12:55:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=wgbB1gckrWIlucivgg+XWAxQa+UFNwnWecELwTVQsJU=;
- b=N6BslChfal8kgvrGAJzkingykcTMlYd1NcnZtth2N9VL1pVIsYFPTg8RxUNyS8GkypHp
- RIyEmIxN54gm6CDxe5GH2oXeEGs/kpwq+JTy+0F/D6RG98QJIdO1avYWfgJ1XHhmeE4O
- wHt8UUyepcfChmtz7nDidi/6x3pnMZXLRNhakCJNxGZ3SSn6FsBjsaTjruKs0A1z4EE2
- izAq6Qs34SNH9yreZ4uVraPfEHO+dnR3VfsJr+k5XwnMTYDUvmMtbNsZkc/0F14eyEUg
- To6gmai5KsPD07idBfG1x3xnzwJiNv7Q0GWMhqnOuToXaRbTCrwazCGEsuhrUJ7DDQpn Vg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2v5btqbhjc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Sep 2019 12:55:57 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8QChr1D098396;
-        Thu, 26 Sep 2019 12:55:56 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2v8w5ka3gj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Sep 2019 12:55:56 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8QCtooO015468;
-        Thu, 26 Sep 2019 12:55:51 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 26 Sep 2019 05:55:50 -0700
-Date:   Thu, 26 Sep 2019 15:55:38 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>
-Cc:     Alexander.Deucher@amd.com,
-        Vijendar Mukunda <vijendar.mukunda@amd.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Maruthi Bayyavarapu <maruthi.bayyavarapu@amd.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 5/5] ASoC: amd: ACP powergating should be done by
- controller
-Message-ID: <20190926125538.GF29696@kadam>
-References: <1569539290-756-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
- <1569539290-756-5-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+        Thu, 26 Sep 2019 08:57:38 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 2FB196013C; Thu, 26 Sep 2019 12:57:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1569502657;
+        bh=XWJZ29qmhxdNsiEDSm4SmSSi0jFoSNnwAiHHPXLLh2Y=;
+        h=From:To:Cc:Subject:Date:From;
+        b=mLB6ESXn5HOGoQJpWnkUNKljeiPsPpPl3NccJNM/AzT+s3HiWv6rLKb6SW7bOkS/y
+         7phhZGnQTWOBIDMnfZuEch3ctdHzjkquzSpvpdujKdKjt/CuXYEIMSlJgftGWOaDa7
+         UUiH3QeRFAppqn+8sfcWE8ua3k+aWHv7XFpSYwEA=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8BCEA6016D;
+        Thu, 26 Sep 2019 12:57:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1569502656;
+        bh=XWJZ29qmhxdNsiEDSm4SmSSi0jFoSNnwAiHHPXLLh2Y=;
+        h=From:To:Cc:Subject:Date:From;
+        b=D9NbvxsSKCAUttzEPFtiHP/pDAp13i96vTF4YoqbpiefOXmOlUVy5B2N8GFsnbtG3
+         8QxL3fDQ99lzgCCNEcVdZCFHVen9+bWeslAV53BKLcD44oz6bNSdtxq24yP9JmdEEM
+         wC7YiqglQ+nktugLTWVmPWcerDsEqTnAW3sWj0LA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8BCEA6016D
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     David Miller <davem@davemloft.net>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: pull-request: wireless-drivers 2019-09-26
+Date:   Thu, 26 Sep 2019 15:57:33 +0300
+Message-ID: <8736gj5i6a.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1569539290-756-5-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9391 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909260121
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9391 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909260121
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 04:37:39AM +0530, Ravulapati Vishnu vardhan rao wrote:
-> +static int acp3x_power_on(void __iomem *acp3x_base)
-> +{
-> +	u32 val;
-> +	u32 timeout = 0;
-> +	int ret = 0;
-> +
-> +	val = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
-> +	if (val) {
+Hi Dave,
 
-Flip this around.
+here's a pull request to net tree for v5.4. Please let me know if there
+are any problems.
 
-	if (!val)
-		return 0;
-
-> +		if (!((val & ACP_PGFSM_STATUS_MASK) ==
-> +				ACP_POWER_ON_IN_PROGRESS))
-
-Use != insead of !(foo == bar).
-
-	if ((val & ACP_PGFSM_STATUS_MASK) != ACP_POWER_ON_IN_PROGRESS)
-
-> +			rv_writel(ACP_PGFSM_CNTL_POWER_ON_MASK,
-> +				acp3x_base + mmACP_PGFSM_CONTROL);
-> +		while (true) {
-> +			val  = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
-> +			if (!val)
-> +				break;
-
-return 0;
+Kalle
 
 
+The following changes since commit 280ceaed79f18db930c0cc8bb21f6493490bf29c:
 
-> +			udelay(1);
-> +			if (timeout > 500) {
+  usbnet: sanity checking of packet sizes and device mtu (2019-09-19 13:27:11 +0200)
 
-if (timeout++ > 500) {
+are available in the git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers.git tags/wireless-drivers-for-davem-2019-09-26
 
-> +				pr_err("ACP is Not Powered ON\n");
+for you to fetch changes up to 2b481835cf4e7384b80d7762074b32a45b792d99:
 
-We print two error messages.  :/
+  wil6210: use after free in wil_netif_rx_any() (2019-09-25 09:12:20 +0300)
 
+----------------------------------------------------------------
+wireless-drivers fixes for 5.4
 
-> +				ret = -ETIMEDOUT;
+First set of fixes for 5.4 sent during the merge window. Most are
+regressions fixes but the mt7615 problem has been since it was merged.
 
-return -ETIMOUT;
+iwlwifi
 
-> +				break;
-> +			}
-> +			timeout++;
-> +		}
-> +		if (ret) {
-> +			pr_err("ACP is not powered on status:%d\n", ret);
-> +			return ret;
-> +		}
-> +	}
-> +	return ret;
-> +}
+* fix a build regression related CONFIG_THERMAL
 
-regards,
-dan carpenter
+* avoid using GEO_TX_POWER_LIMIT command on certain firmware versions
+
+rtw88
+
+* fixes for skb leaks
+
+zd1211rw
+
+* fix a compiler warning on 32 bit
+
+mt76
+
+* fix the firmware paths for mt7615 to match with linux-firmware
+
+wil6210
+
+* fix use of skb after free
+
+----------------------------------------------------------------
+Dan Carpenter (1):
+      wil6210: use after free in wil_netif_rx_any()
+
+Geert Uytterhoeven (1):
+      zd1211rw: zd_usb: Use "%zu" to format size_t
+
+Johannes Berg (1):
+      iwlwifi: mvm: fix build w/o CONFIG_THERMAL
+
+Lorenzo Bianconi (1):
+      mt76: mt7615: fix mt7615 firmware path definitions
+
+Luca Coelho (1):
+      iwlwifi: fw: don't send GEO_TX_POWER_LIMIT command to FW version 36
+
+Yan-Hsuan Chuang (3):
+      rtw88: pci: extract skbs free routine for trx rings
+      rtw88: pci: release tx skbs DMAed when stop
+      rtw88: configure firmware after HCI started
+
+ drivers/net/wireless/ath/wil6210/txrx.c            |  2 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/fw.c        |  8 ++--
+ drivers/net/wireless/intel/iwlwifi/mvm/tt.c        |  9 +++-
+ drivers/net/wireless/mediatek/mt76/mt7615/mcu.c    | 11 ++---
+ drivers/net/wireless/mediatek/mt76/mt7615/mt7615.h |  6 +--
+ drivers/net/wireless/realtek/rtw88/mac.c           |  3 --
+ drivers/net/wireless/realtek/rtw88/main.c          |  4 ++
+ drivers/net/wireless/realtek/rtw88/pci.c           | 48 +++++++++++++++++-----
+ drivers/net/wireless/zydas/zd1211rw/zd_usb.c       |  2 +-
+ 9 files changed, 63 insertions(+), 30 deletions(-)
