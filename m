@@ -2,123 +2,253 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CFDDC432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0D7C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A89E21A4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:47:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5042521A4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:47:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731498AbfIZHr0 (ORCPT
+        id S1731596AbfIZHr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 03:47:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:41236 "EHLO foss.arm.com"
+        Thu, 26 Sep 2019 03:47:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:61538 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbfIZHr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 03:47:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C81B1000;
-        Thu, 26 Sep 2019 00:47:25 -0700 (PDT)
-Received: from iMac.local (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 80B8F3F836;
-        Thu, 26 Sep 2019 00:47:24 -0700 (PDT)
-Date:   Thu, 26 Sep 2019 08:47:18 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] arm64: Allow disabling of the compat vDSO
-Message-ID: <20190926074717.GA26802@iMac.local>
-References: <20190925130926.50674-1-catalin.marinas@arm.com>
- <CAKwvOdn2Sf7aAt0zqUUqGY6nXg-C3be7An9amy4tfiNr_8ERJw@mail.gmail.com>
- <20190925170838.GK7042@arrakis.emea.arm.com>
- <a7e06b86-facd-21de-c47c-246d0da8d80d@arm.com>
+        id S1729886AbfIZHrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 03:47:55 -0400
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id F2C2D7BDA1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 07:47:54 +0000 (UTC)
+Received: by mail-wr1-f72.google.com with SMTP id z17so574023wru.13
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 00:47:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=N2DZb0BJXpZgcpAahgI3rSwj96ykbSLsI5Vmg6oXhCM=;
+        b=QjtmLv+U7U+mmxEHgMSgoLH5lMbQntR9eLNSfriJj/I4IyiDWQIRfGV/t61cKUyyww
+         uxpwO1KhMDMBjzSnfOHJhD/OEHSpH1psCNSlAuJYM5BpCIFvlX2Ey2TsJzvJzcAVr8hY
+         iTzV3XAkY9N85B9JEDMIrCQM2YQWKYI1FeVAwOemL0F5ngudo0kBlM1Yc+Rl3+ZMtPqp
+         UrNlozsN5HKDgngc3sqxtlaTXJZS/HgU7VqWm513rkblkWtf0tco6P7uPSJMw6ZXECd8
+         Z4zeO/8KzOIQxnBoBm9/QQFypw3dKfkBBO99vLO8FUWsEcpUAga3vvykoDbX9nGWjbOg
+         8wvQ==
+X-Gm-Message-State: APjAAAXIUAeSQ1OtnWBI6K7ubT0hIpjrLphdNYa2t9n9EiCnwjsl144M
+        XGUvrSTWj28Lf7T0/BAKi5wWAcgWoiT/WnZt1gGLa65/bBXI3VnpxvrJC+dE40pw9WNHo95Qmd5
+        Rh+17YP9kFv7Fcpw24ZeyV588
+X-Received: by 2002:a5d:4c48:: with SMTP id n8mr1704068wrt.192.1569484073625;
+        Thu, 26 Sep 2019 00:47:53 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzBHt91YivEK0i/YWPbwqxZI+CfJHbdKfyUlCW3lfvnleM1OckVhOwguQ/vgIrujXG4TLOX2g==
+X-Received: by 2002:a5d:4c48:: with SMTP id n8mr1704043wrt.192.1569484073321;
+        Thu, 26 Sep 2019 00:47:53 -0700 (PDT)
+Received: from steredhat.homenet.telecomitalia.it (host174-200-dynamic.52-79-r.retail.telecomitalia.it. [79.52.200.174])
+        by smtp.gmail.com with ESMTPSA id b7sm1269406wrj.28.2019.09.26.00.47.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Sep 2019 00:47:52 -0700 (PDT)
+Date:   Thu, 26 Sep 2019 09:47:49 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     "davem@davemloft.net" <davem@davemloft.net>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "stefanha@redhat.com" <stefanha@redhat.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "deepa.kernel@gmail.com" <deepa.kernel@gmail.com>,
+        "ytht.net@gmail.com" <ytht.net@gmail.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "jhansen@vmware.com" <jhansen@vmware.com>
+Subject: Re: [PATCH net v2] vsock: Fix a lockdep warning in __vsock_release()
+Message-ID: <20190926074749.sltehhkcgfduu7n2@steredhat.homenet.telecomitalia.it>
+References: <1569460241-57800-1-git-send-email-decui@microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a7e06b86-facd-21de-c47c-246d0da8d80d@arm.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <1569460241-57800-1-git-send-email-decui@microsoft.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 01:06:50AM +0100, Vincenzo Frascino wrote:
-> On 9/25/19 6:08 PM, Catalin Marinas wrote:
-> > On Wed, Sep 25, 2019 at 09:53:16AM -0700, Nick Desaulniers wrote:
-> >> On Wed, Sep 25, 2019 at 6:09 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> >>> Suggestions for future improvements of the compat vDSO handling:
-> >>>
-> >>> - replace the CROSS_COMPILE_COMPAT prefix with a full COMPATCC; maybe
-> >>>   check that it indeed produces 32-bit code
+Hi Dexuan,
+
+On Thu, Sep 26, 2019 at 01:11:27AM +0000, Dexuan Cui wrote:
+> Lockdep is unhappy if two locks from the same class are held.
 > 
-> CROSS_COMPILE_COMPAT is called like this for symmetry with CROSS_COMPILE.
-
-Actually, what gets in the way is the CONFIG_CROSS_COMPILE_COMPAT_VDSO.
-We can keep CROSS_COMPILE_COMPAT together with COMPATCC initialised to
-$(CROSS_COMPILE_COMPAT)gcc. When we will be able to build the compat
-vDSO with clang, we just pass COMPATCC=clang on the make line and the
-kernel Makefile will figure out the --target option from
-CROSS_COMPILE_COMPAT (see how CLANG_FLAGS is handled).
-
-If we stick only to env variables or make cmd line (without Kconfig) for
-the compiler name, we can add a COMPATCC_IS_CLANG in the Kconfig
-directly and simply not allow the enabling the COMPAT_VDSO if we don't
-have the right compiler. This saves us warnings during build.
-
-> >>> - check whether COMPATCC is clang or not rather than CC_IS_CLANG, which
-> >>>   only checks the native compiler
-> >>
-> >> When cross compiling, IIUC CC_IS_CLANG is referring to CC which is the
-> >> cross compiler, which is different than HOSTCC which is the host
-> >> compiler.  HOSTCC is used mostly for things in scripts/ while CC is
-> >> used to compile a majority of the kernel in a cross compile.
-> > 
-> > We need the third compiler here for the compat vDSO (at least with gcc),
-> > COMPATCC. I'm tempted to just drop the CONFIG_CROSS_COMPILE_COMPAT_VDSO
-> > altogether and only rely on a COMPATCC. This way we can add
-> > COMPATCC_IS_CLANG etc. in the Kconfig checks directly.
-> > 
-> > If clang can build both 32 and 64-bit with the same binary (just
-> > different options), we could maybe have COMPATCC default to CC and add a
-> > check on whether COMPATCC generates 32-bit binaries.
+> Fix the below warning for hyperv and virtio sockets (vmci socket code
+> doesn't have the issue) by using lock_sock_nested() when __vsock_release()
+> is called recursively:
 > 
-> clang requires the --target option for specifying the 32bit triple.
-> Basically $(TRIPLE)-gcc is equivalent to gcc --target $(TRIPLE).
-> We need a configuration option to encode this.
-
-Since we don't have a CONFIG_* option for the cross-compiler prefix, we
-shouldn't have one for the compat compiler either. If you want to build
-the compat vDSO with clang, just pass COMPATCC=clang together with
-CROSS_COMPILE_COMPAT. We can add Kconfig checks to actually verify that
-COMPATCC generates 32-bit binaries (e.g. COMPATCC_CAN_LINK32).
-
-> >>> - clean up the headers includes; vDSO should not include kernel-only
-> >>>   headers that may even contain code patched at run-time
-> >>
-> >> This is a big one; Clang validates the inline asm constraints for
-> >> extended inline assembly, GCC does not for dead code.  So Clang chokes
-> >> on the inclusion of arm64 headers using extended inline assembly when
-> >> being compiled for arm-linux-gnueabi.
-> > 
-> > Whether clang or gcc, I'd like this fixed anyway. At some point we may
-> > inadvertently rely on some code which is patched at boot time for the
-> > kernel code but not for the vDSO.
+> ============================================
+> WARNING: possible recursive locking detected
+> 5.3.0+ #1 Not tainted
+> --------------------------------------------
+> server/1795 is trying to acquire lock:
+> ffff8880c5158990 (sk_lock-AF_VSOCK){+.+.}, at: hvs_release+0x10/0x120 [hv_sock]
 > 
-> Do we have any code of this kind in header files?
+> but task is already holding lock:
+> ffff8880c5158150 (sk_lock-AF_VSOCK){+.+.}, at: __vsock_release+0x2e/0xf0 [vsock]
 > 
-> The vDSO library uses only a subset of the headers (mainly Macros) hence all the
-> unused symbols should be compiled out. Is your concern only theoretical or do
-> you have an example on where this could be happening?
+> other info that might help us debug this:
+>  Possible unsafe locking scenario:
+> 
+>        CPU0
+>        ----
+>   lock(sk_lock-AF_VSOCK);
+>   lock(sk_lock-AF_VSOCK);
+> 
+>  *** DEADLOCK ***
+> 
+>  May be due to missing lock nesting notation
+> 
+> 2 locks held by server/1795:
+>  #0: ffff8880c5d05ff8 (&sb->s_type->i_mutex_key#10){+.+.}, at: __sock_release+0x2d/0xa0
+>  #1: ffff8880c5158150 (sk_lock-AF_VSOCK){+.+.}, at: __vsock_release+0x2e/0xf0 [vsock]
+> 
+> stack backtrace:
+> CPU: 5 PID: 1795 Comm: server Not tainted 5.3.0+ #1
+> Call Trace:
+>  dump_stack+0x67/0x90
+>  __lock_acquire.cold.67+0xd2/0x20b
+>  lock_acquire+0xb5/0x1c0
+>  lock_sock_nested+0x6d/0x90
+>  hvs_release+0x10/0x120 [hv_sock]
+>  __vsock_release+0x24/0xf0 [vsock]
+>  __vsock_release+0xa0/0xf0 [vsock]
+>  vsock_release+0x12/0x30 [vsock]
+>  __sock_release+0x37/0xa0
+>  sock_close+0x14/0x20
+>  __fput+0xc1/0x250
+>  task_work_run+0x98/0xc0
+>  do_exit+0x344/0xc60
+>  do_group_exit+0x47/0xb0
+>  get_signal+0x15c/0xc50
+>  do_signal+0x30/0x720
+>  exit_to_usermode_loop+0x50/0xa0
+>  do_syscall_64+0x24e/0x270
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x7f4184e85f31
+> 
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> ---
+> 
+> NOTE: I only tested the code on Hyper-V. I can not test the code for
+> virtio socket, as I don't have a KVM host. :-( Sorry.
+> 
+> @Stefan, @Stefano: please review & test the patch for virtio socket,
+> and let me know if the patch breaks anything. Thanks!
 
-At the moment it's rather theoretical.
+Comment below, I'll test it ASAP!
 
--- 
-Catalin
+> 
+> Changes in v2:
+>   Avoid the duplication of code in v1: https://lkml.org/lkml/2019/8/19/1361
+>   Also fix virtio socket code.
+> 
+>  net/vmw_vsock/af_vsock.c                | 19 +++++++++++++++----
+>  net/vmw_vsock/hyperv_transport.c        |  2 +-
+>  net/vmw_vsock/virtio_transport_common.c |  2 +-
+>  3 files changed, 17 insertions(+), 6 deletions(-)
+> 
+> diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+> index ab47bf3ab66e..dbae4373cbab 100644
+> --- a/net/vmw_vsock/af_vsock.c
+> +++ b/net/vmw_vsock/af_vsock.c
+> @@ -638,8 +638,10 @@ struct sock *__vsock_create(struct net *net,
+>  }
+>  EXPORT_SYMBOL_GPL(__vsock_create);
+>  
+> -static void __vsock_release(struct sock *sk)
+> +static void __vsock_release(struct sock *sk, int level)
+>  {
+> +	WARN_ON(level != 1 && level != 2);
+> +
+>  	if (sk) {
+>  		struct sk_buff *skb;
+>  		struct sock *pending;
+> @@ -648,9 +650,18 @@ static void __vsock_release(struct sock *sk)
+>  		vsk = vsock_sk(sk);
+>  		pending = NULL;	/* Compiler warning. */
+>  
+> +		/* The release call is supposed to use lock_sock_nested()
+> +		 * rather than lock_sock(), if a sock lock should be acquired.
+> +		 */
+>  		transport->release(vsk);
+>  
+> -		lock_sock(sk);
+> +		/* When "level" is 2, use the nested version to avoid the
+> +		 * warning "possible recursive locking detected".
+> +		 */
+> +		if (level == 1)
+> +			lock_sock(sk);
+
+Since lock_sock() calls lock_sock_nested(sk, 0), could we use directly
+lock_sock_nested(sk, level) with level = 0 in vsock_release() and
+level = SINGLE_DEPTH_NESTING here in the while loop?
+
+> +		else
+> +			lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
+>  		sock_orphan(sk);
+>  		sk->sk_shutdown = SHUTDOWN_MASK;
+>  
+> @@ -659,7 +670,7 @@ static void __vsock_release(struct sock *sk)
+>  
+>  		/* Clean up any sockets that never were accepted. */
+>  		while ((pending = vsock_dequeue_accept(sk)) != NULL) {
+> -			__vsock_release(pending);
+> +			__vsock_release(pending, 2);
+>  			sock_put(pending);
+>  		}
+>  
+> @@ -708,7 +719,7 @@ EXPORT_SYMBOL_GPL(vsock_stream_has_space);
+>  
+>  static int vsock_release(struct socket *sock)
+>  {
+> -	__vsock_release(sock->sk);
+> +	__vsock_release(sock->sk, 1);
+>  	sock->sk = NULL;
+>  	sock->state = SS_FREE;
+>  
+> diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
+> index 261521d286d6..c443db7af8d4 100644
+> --- a/net/vmw_vsock/hyperv_transport.c
+> +++ b/net/vmw_vsock/hyperv_transport.c
+> @@ -559,7 +559,7 @@ static void hvs_release(struct vsock_sock *vsk)
+>  	struct sock *sk = sk_vsock(vsk);
+>  	bool remove_sock;
+>  
+> -	lock_sock(sk);
+> +	lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
+>  	remove_sock = hvs_close_lock_held(vsk);
+>  	release_sock(sk);
+>  	if (remove_sock)
+> diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+> index 5bb70c692b1e..a666ef8fc54e 100644
+> --- a/net/vmw_vsock/virtio_transport_common.c
+> +++ b/net/vmw_vsock/virtio_transport_common.c
+> @@ -820,7 +820,7 @@ void virtio_transport_release(struct vsock_sock *vsk)
+>  	struct sock *sk = &vsk->sk;
+>  	bool remove_sock = true;
+>  
+> -	lock_sock(sk);
+> +	lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
+>  	if (sk->sk_type == SOCK_STREAM)
+>  		remove_sock = virtio_transport_close(vsk);
+>  
+
+Thanks,
+Stefano
