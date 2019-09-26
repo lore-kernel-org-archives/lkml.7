@@ -2,141 +2,193 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 211BFC352A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 22:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AC5C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 22:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E69942075D
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 22:21:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569536464;
-	bh=p8wLa6uW7p0Dd8Mjn3PyYe848vVWjWwHSzfbvqPoeNA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=oklF4u3LqMrWCPXTKmpAtg0DeZhRxDcYiiOjlSyqdMXcUSAzs2WSLQ1CLh5m/+/iW
-	 pFBphEdNhCCe4ePBIM/Zt0SUopMxoyK0PXG6XSmQsz3Giboyz/+XmTAFoPEOwUqUT0
-	 gh6zwthEJ56AR6lnw49Nfk5BdM5cmxpE0mKIwWpc=
+	by mail.kernel.org (Postfix) with ESMTP id 8DBB92075D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 22:27:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sruffell-net.20150623.gappssmtp.com header.i=@sruffell-net.20150623.gappssmtp.com header.b="DJbXmdHq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbfIZWVD (ORCPT
+        id S1727968AbfIZWZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 18:21:03 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:34544 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbfIZWVC (ORCPT
+        Thu, 26 Sep 2019 18:25:16 -0400
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:36510 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727381AbfIZWZQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 18:21:02 -0400
-Received: by mail-lf1-f65.google.com with SMTP id r22so392337lfm.1
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 15:21:01 -0700 (PDT)
+        Thu, 26 Sep 2019 18:25:16 -0400
+Received: by mail-yb1-f196.google.com with SMTP id p23so1401807yba.3
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 15:25:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ge4WC49pngiICthc1WDcavUjVJbMBv50VLzrcwA4/hc=;
-        b=F0LSxC3wcSztazbG0uwCTRtKvGqprF/KA5I/kBqM8nEjAxsHAszHBhkaAnVSswq05I
-         IPDhtPkVd/mlH10svz+m4SxGzJUZb8x7FqMDs4M8P0ZJ8e08izgtmsrZi+eLmVZ7fgoV
-         8FC65G/EFwknPF5qvRjXEHu47uk9C2Rj8l8IE=
+        d=sruffell-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=edRQoE0qo3Vju2FjZHUikDVE4Hgnyy4ct+4trIoQN8A=;
+        b=DJbXmdHqf/oQZgftq5qa4criW+0nMSKyAQ477zDg+1bIbfqHCaYzn1oBkR8ZzZT3KV
+         GpzB51DKIAb/lGRzf97ADzF8iXdk+vQfdpdeSkb0gUyloWagOXdGhRsUMuW82nAY2TLI
+         Amiedz1q4zkcSqjV/WXCRphlWiG0KupEJzDg2wUyRxwAHU8M2YmOlFZRxo9yzRKsZlDi
+         xUtwrOUAMJ27M/g5QxX809v+XovpVLiU7DX8L5kgo4bJb9BveBArVNFvQk656iBn7C4Q
+         1tcJCLI9IS6/gWEZ4ld54EiTG1OPJFFIz1C659IdZ6Feob98PGwxGLaVHxdXynWVqWzv
+         NiPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ge4WC49pngiICthc1WDcavUjVJbMBv50VLzrcwA4/hc=;
-        b=q9FqO5FDR4SHXkNK6sAkg08gkQzCYGsdpdeq2Ae28rzs+CMv3Zoh2jKhpXgZDmWNzK
-         OxQ9PjWMEK4ji/4cpK+EY0rKcRjVrWAd8CCG2sPgm7vOv6SAZ90AXzLO8s0WlNI/dRDX
-         EdGLNRj9jiyIn5I66tquZka57+iTDG8OqHcutFczDhxz0cU8wkT8Wvhzwv/vMNOFE1kC
-         sV+NwGtFcB0eb3Kv+E7bBB2VWbSFCweSshlfgY1/VDeDuv95bnfaIdPYbLK94jOTrcg2
-         2tnCT5uFyxSuKy94HWCtczsJSvy2c9R/cXxOgokyw5+TTjvX96nykkxN0GqC1Q5XMH+5
-         JUhQ==
-X-Gm-Message-State: APjAAAVeOQAlzuT1DWejQB3cLLNVFIBeMUGsKAa4me82T2k0mwf+zgV7
-        TJxDtTTcneCgByTLd2KlPZB4XLy+Hmw=
-X-Google-Smtp-Source: APXvYqzaob7xHtjaQ1yidDQ2n9Ubcm1TjnTC6PtR4L4e1edwuJgqZa5Rkwc2DBPzifo/YiyKdbeV1w==
-X-Received: by 2002:a19:f711:: with SMTP id z17mr499631lfe.58.1569536460062;
-        Thu, 26 Sep 2019 15:21:00 -0700 (PDT)
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
-        by smtp.gmail.com with ESMTPSA id a8sm89532ljf.47.2019.09.26.15.20.58
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Sep 2019 15:20:59 -0700 (PDT)
-Received: by mail-lf1-f47.google.com with SMTP id w67so380886lff.4
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 15:20:58 -0700 (PDT)
-X-Received: by 2002:a19:741a:: with SMTP id v26mr487782lfe.79.1569536458354;
- Thu, 26 Sep 2019 15:20:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190926115548.44000-1-thomas_os@shipmail.org>
- <20190926115548.44000-2-thomas_os@shipmail.org> <85e31bcf-d3c8-2fcf-e659-2c9f82ebedc7@shipmail.org>
- <CAHk-=wifjLeeMEtMPytiMAKiWkqPorjf1P4PbB3dj17Y3Jcqag@mail.gmail.com>
- <a48a93d2-03e9-40d3-3b4c-a301632d3121@shipmail.org> <CAHk-=whwN+CvaorsmczZRwFhSV+1x98xg-zajVD1qKmN=9JhBQ@mail.gmail.com>
- <c58cdb3d-4f5e-7bfc-06b3-58c27676d101@shipmail.org>
-In-Reply-To: <c58cdb3d-4f5e-7bfc-06b3-58c27676d101@shipmail.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 26 Sep 2019 15:20:42 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh_+Co=T8wG8vb5akMP=7H4BN=Qpq6PsKh8rcmT8MCV+Q@mail.gmail.com>
-Message-ID: <CAHk-=wh_+Co=T8wG8vb5akMP=7H4BN=Qpq6PsKh8rcmT8MCV+Q@mail.gmail.com>
-Subject: Re: Ack to merge through DRM? WAS Re: [PATCH v2 1/5] mm: Add
- write-protect and clean utilities for address space ranges
-To:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=edRQoE0qo3Vju2FjZHUikDVE4Hgnyy4ct+4trIoQN8A=;
+        b=iRoWSVFaF6DUvrAZXwW3dFc2mPc84WKZwd+ORB1WOM3RmCIgqtvDs7Ad5aNBlUyxib
+         DAhZwXkEh4OPP01zemK/8zda5lvruJbRMCmMbbygWjuPjyppkTeUiQEfcGWfXsMFX40h
+         WoKtpkroCAAhv7jjBcB0ucjEMXsAhCswBlQ+4iVDThbIrvl4BjDbnsH36aArdtJshWYD
+         X1Lv/RD5QJhYoFf+f+KUgnn1g7UqxCY9e9xoSs9ik9YIdb62Z89jk28K7HH9bynZWSYd
+         QTanjU29dIAcam5ApqWf2ZhDShKYREhTCxDDYN2tLYKzvL43wT7wx5+ZCadv+nXyqo/+
+         6e6g==
+X-Gm-Message-State: APjAAAVb7++PySm29jGUKog3mD9A6vdasoT0eq+o4dYi1x78CRRZBamj
+        2jGB1XyqvigpqOT5J3C8BUcx6hJ8lgWF
+X-Google-Smtp-Source: APXvYqzeuqw6VtM+KJGIqC2RGPrkjwniSJpt+4JSPvMCFPK0xX12la9mjDYU5fIUtvhV6WKF/VslMQ==
+X-Received: by 2002:a25:8e0c:: with SMTP id p12mr3725527ybl.254.1569536714942;
+        Thu, 26 Sep 2019 15:25:14 -0700 (PDT)
+Received: from sruffell-newdesktop.sruffell.internal ([136.53.91.217])
+        by smtp.gmail.com with ESMTPSA id s1sm139525ywa.67.2019.09.26.15.25.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Sep 2019 15:25:14 -0700 (PDT)
+From:   Shaun Ruffell <sruffell@sruffell.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     Shaun Ruffell <sruffell@sruffell.net>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Maennich <maennich@google.com>,
+        Jessica Yu <jeyu@kernel.org>
+Subject: [PATCH] modpost: Copy namespace string into 'struct symbol'
+Date:   Thu, 26 Sep 2019 17:24:46 -0500
+Message-Id: <20190926222446.30510-1-sruffell@sruffell.net>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190906103235.197072-5-maennich@google.com>
+References: <20190906103235.197072-5-maennich@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 1:55 PM Thomas Hellstr=C3=B6m (VMware)
-<thomas_os@shipmail.org> wrote:
->
-> Well, we're working on supporting huge puds and pmds in the graphics
-> VMAs, although in the write-notify cases we're looking at here, we would
-> probably want to split them down to PTE level.
+When building an out-of-tree module I was receiving many warnings from
+modpost like:
 
-Well, that's what the existing walker code does if you don't have that
-"pud_entry()" callback.
+  WARNING: module dahdi_vpmadt032_loader uses symbol __kmalloc from namespace ts/dahdi-linux/drivers/dahdi/dahdi-version.o: ..., but does not import it.
+  WARNING: module dahdi_vpmadt032_loader uses symbol vpmadtreg_register from namespace linux/drivers/dahdi/dahdi-version.o: ..., but does not import it.
+  WARNING: module dahdi_vpmadt032_loader uses symbol param_ops_int from namespace ahdi-linux/drivers/dahdi/dahdi-version.o: ..., but does not import it.
+  WARNING: module dahdi_vpmadt032_loader uses symbol __init_waitqueue_head from namespace ux/drivers/dahdi/dahdi-version.o: ..., but does not import it.
+  ...
 
-That said, I assume you would *not* want to do that if the huge
-pud/pmd is already clean and read-only, but just continue.
+The fundamental issue appears to be that read_dump() is passing a
+pointer to a statically allocated buffer for the namespace which is
+reused as the file is parsed.
 
-So you may want to have a special pud_entry() that handles that case.
-Eventually. Maybe. Although honestly, if you're doing dirty tracking,
-I doubt it makes much sense to use largepages.
+This change makes it so that 'struct symbol' holds a copy of the
+namespace string in the same way that it holds a copy of the symbol
+string. Because a copy is being made, handle_modversion can now free the
+temporary copy
 
-> Looking at zap_pud_range() which when called from unmap_mapping_pages()
-> uses identical locking (no mmap_sem), it seems we should be able to get
-> away with i_mmap_lock(), making sure the whole page table doesn't
-> disappear under us. So it's not clear to me why the mmap_sem is strictly
-> needed here. Better to sort those restrictions out now rather than when
-> huge entries start appearing.
+Fixes: cb9b55d21fe0 ("modpost: add support for symbol namespaces")
+Cc: Martijn Coenen <maco@android.com>
+Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Matthias Maennich <maennich@google.com>
+Cc: Jessica Yu <jeyu@kernel.org>
+Signed-off-by: Shaun Ruffell <sruffell@sruffell.net>
+---
 
-zap_pud_range()actually does have that
+Hi,
 
-               VM_BUG_ON_VMA(!rwsem_is_locked(&tlb->mm->mmap_sem), vma);
+I didn't test that this change works with the namespaces, or investigate why
+read_dump() is only called first while building out-of-tree modules, but it does
+seem correct to me for the symbol to own the memory backing the namespace
+string.
 
-exactly for the case where it might have to split the pud entry.
+I also realize I'm jumping the gun a bit by testing against master before
+5.4-rc1 is tagged.
 
-Zapping the whole thing it does do without the assert.
+Shaun
 
-I'm not going to swear the mmap_sem is absolutely required, since a
-shared vma should be stable due to the i_mmap_lock, but splitting the
-hugepage really is a fairly big deal.
+ scripts/mod/modpost.c | 31 +++++++++++++++++++++++++++++--
+ 1 file changed, 29 insertions(+), 2 deletions(-)
 
-It can't happen if you zap the *whole* mapping, but it can happen if
-you have a start/end range. Like you do.
+diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+index 3961941e8e7a..349832ead200 100644
+--- a/scripts/mod/modpost.c
++++ b/scripts/mod/modpost.c
+@@ -364,6 +364,24 @@ static const char *sym_extract_namespace(const char **symname)
+ 	return NULL;
+ }
+ 
++static const char *dup_namespace(const char *namespace)
++{
++	if (!namespace || (namespace[0] == '\0'))
++		return NULL;
++	return NOFAIL(strdup(namespace));
++}
++
++static bool is_equal(const char *n1, const char *n2)
++{
++	if (n1 && !n2)
++		return false;
++	if (!n1 && n2)
++		return false;
++	if (!n1 && !n2)
++		return true;
++	return strcmp(n1, n2) == 0;
++}
++
+ /**
+  * Add an exported symbol - it may have already been added without a
+  * CRC, in this case just update the CRC
+@@ -375,7 +393,7 @@ static struct symbol *sym_add_exported(const char *name, const char *namespace,
+ 
+ 	if (!s) {
+ 		s = new_symbol(name, mod, export);
+-		s->namespace = namespace;
++		s->namespace = dup_namespace(namespace);
+ 	} else {
+ 		if (!s->preloaded) {
+ 			warn("%s: '%s' exported twice. Previous export was in %s%s\n",
+@@ -384,6 +402,12 @@ static struct symbol *sym_add_exported(const char *name, const char *namespace,
+ 		} else {
+ 			/* In case Module.symvers was out of date */
+ 			s->module = mod;
++
++			/* In case the namespace was out of date */
++			if (!is_equal(s->namespace, namespace)) {
++				free((char *)s->namespace);
++				s->namespace = dup_namespace(namespace);
++			}
+ 		}
+ 	}
+ 	s->preloaded = 0;
+@@ -672,7 +696,6 @@ static void handle_modversions(struct module *mod, struct elf_info *info,
+ 	unsigned int crc;
+ 	enum export export;
+ 	bool is_crc = false;
+-	const char *name, *namespace;
+ 
+ 	if ((!is_vmlinux(mod->name) || mod->is_dot_o) &&
+ 	    strstarts(symname, "__ksymtab"))
+@@ -744,9 +767,13 @@ static void handle_modversions(struct module *mod, struct elf_info *info,
+ 	default:
+ 		/* All exported symbols */
+ 		if (strstarts(symname, "__ksymtab_")) {
++			const char *name, *namespace;
++
+ 			name = symname + strlen("__ksymtab_");
+ 			namespace = sym_extract_namespace(&name);
+ 			sym_add_exported(name, namespace, mod, export);
++			if (namespace)
++				free((char *)name);
+ 		}
+ 		if (strcmp(symname, "init_module") == 0)
+ 			mod->has_init = 1;
+-- 
+2.17.1
 
-Also, in general it's probably not a great idea to look at
-zap_page_range() (and copy_page_range()) for ideas.
-
-They are kind of special, since they tend to be used for fundamental
-whole-address-space operations (ie fork/exit) and so as a result they
-get to do special things that a normal page walker generally shouldn't
-do.
-
-It's why they've never gotten translated to use the generic walker code.
-
-           Linus
