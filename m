@@ -2,224 +2,500 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD9D9C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF795C47E48
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94C22207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 732BF2146E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:47:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EorMSEvE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfIZLoF (ORCPT
+        id S1726102AbfIZLrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 07:44:05 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:43867 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbfIZLoE (ORCPT
+        Thu, 26 Sep 2019 07:47:00 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:54164 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725784AbfIZLrA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 07:44:04 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iDSBf-0001Os-K8; Thu, 26 Sep 2019 13:43:55 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iDSBe-0005y7-FA; Thu, 26 Sep 2019 13:43:54 +0200
-Date:   Thu, 26 Sep 2019 13:43:54 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc:     Support Opensource <Support.Opensource@diasemi.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/5] dt-bindings: mfd: da9062: add regulator voltage
- selection documentation
-Message-ID: <20190926114354.qvv2rs7mc4xh6lkp@pengutronix.de>
-References: <20190917124246.11732-1-m.felsch@pengutronix.de>
- <20190917124246.11732-3-m.felsch@pengutronix.de>
- <AM5PR1001MB0994ABEF9C32BFB7BEA099B680840@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <20190925155151.75uaxfiiei3i23tz@pengutronix.de>
- <AM5PR1001MB09941810C3AE97110DD82E0F80870@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <20190926080956.a3k2z4gf3n6m3n4s@pengutronix.de>
- <AM5PR1001MB09944C0F9A4F547BF9E175CF80860@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+        Thu, 26 Sep 2019 07:47:00 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8QBktDJ019202;
+        Thu, 26 Sep 2019 06:46:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569498415;
+        bh=YTm21gUfdR5Lb9TFj8+JVfJGVQEtERNPDJM+z6T+kdg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=EorMSEvEC+mFYwMKDEe9FqBJRyp5VXorxWFVg/DVEIj+YZ+D4LDC0MR3FgcuMEN8i
+         XBEy3pMA8PFoWkc3l4b6EVF4cgZW8y2kGycOUxWECI3xdlE39eVLDn4KDHpNVDaqrf
+         pjUaFMD3Ii5j+RFfLnnoASSg+qBRl3/iikGLy7nQ=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8QBktZ1031582;
+        Thu, 26 Sep 2019 06:46:55 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 26
+ Sep 2019 06:46:47 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 26 Sep 2019 06:46:47 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8QBks00093371;
+        Thu, 26 Sep 2019 06:46:54 -0500
+Subject: Re: [PATCH v9 05/15] leds: multicolor: Introduce a multicolor class
+ definition
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190925174616.3714-1-dmurphy@ti.com>
+ <20190925174616.3714-6-dmurphy@ti.com>
+ <918ff939-8b6c-af35-ef08-0f13937d2fed@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <4f23cd99-23a5-5185-dd42-d6d29c48f566@ti.com>
+Date:   Thu, 26 Sep 2019 06:52:15 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM5PR1001MB09944C0F9A4F547BF9E175CF80860@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 13:32:59 up 131 days, 17:51, 85 users,  load average: 0.13, 0.10,
- 0.04
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <918ff939-8b6c-af35-ef08-0f13937d2fed@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-09-26 10:17, Adam Thomson wrote:
-> On 26 September 2019 09:10, Marco Felsch wrote:
-> 
-> > On 19-09-25 16:18, Adam Thomson wrote:
-> > > On 25 September 2019 16:52, Marco Felsch wrote:
-> > >
-> > > > Hi Adam,
-> > > >
-> > > > On 19-09-24 09:23, Adam Thomson wrote:
-> > > > > On 17 September 2019 13:43, Marco Felsch wrote:
-> > > > >
-> > > > > > Add the documentation which describe the voltage selection gpio
-> > support.
-> > > > > > This property can be applied to each subnode within the 'regulators'
-> > > > > > node so each regulator can be configured differently.
-> > > > > >
-> > > > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > > > > > ---
-> > > > > >  Documentation/devicetree/bindings/mfd/da9062.txt | 9 +++++++++
-> > > > > >  1 file changed, 9 insertions(+)
-> > > > > >
-> > > > > > diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt
-> > > > > > b/Documentation/devicetree/bindings/mfd/da9062.txt
-> > > > > > index edca653a5777..9d9820d8177d 100644
-> > > > > > --- a/Documentation/devicetree/bindings/mfd/da9062.txt
-> > > > > > +++ b/Documentation/devicetree/bindings/mfd/da9062.txt
-> > > > > > @@ -66,6 +66,15 @@ Sub-nodes:
-> > > > > >    details of individual regulator device can be found in:
-> > > > > >    Documentation/devicetree/bindings/regulator/regulator.txt
-> > > > > >
-> > > > > > +  Optional regulator device-specific properties:
-> > > > > > +  - dlg,vsel-sense-gpios : The GPIO reference which should be used by
-> > the
-> > > > > > +    regulator to switch the voltage between active/suspend voltage
-> > settings.
-> > > > If
-> > > > > > +    the signal is active the active-settings are applied else the suspend
-> > > > > > +    settings are applied. Attention: Sharing the same gpio for other
-> > purposes
-> > > > > > +    or across multiple regulators is possible but the gpio settings must be
-> > the
-> > > > > > +    same. Also the gpio phandle must refer to to the dlg,da9062-gpio
-> > device
-> > > > > > +    other gpios are not allowed and make no sense.
-> > > > > > +
-> > > > >
-> > > > > Should we not use the binding names that are defined in 'gpio-
-> > regulator.yaml'
-> > > > as
-> > > > > these seem to be generic and would probably serve the purpose here?
-> > > >
-> > > > Hm.. as the description says:
-> > > >
-> > > > 8<--------------------------------------------------
-> > > > gpios:
-> > > >    description: Array of one or more GPIO pins used to select the
-> > > >    regulator voltage/current listed in "states".
-> > > > 8<--------------------------------------------------
-> > > >
-> > > > But we don't have a "states" property and we can't select between
-> > > > voltage or current.
-> > >
-> > > Yes I think I was at cross purposes when I made this remark. The bindings there
-> > > describe the GPOs that are used to enable/disable and set voltage/current for
-> > > regulators and the supported voltage/current levels that can be configured in
-> > > this manner. What you're describing is the GPI for DA9061/2. If you look at
-> > > GPIO handling in existing regulator drivers I believe they all deal with external
-> > > GPOs that are configured to enable/disable and set voltage/current limits
-> > rather
-> > > than the GPI on the PMIC itself. That's why I'm thinking that the configurations
-> > > you're doing here should actually be in a pinctrl or GPIO driver.
-> > 
-> > That's true, the common gpio bindings are from the view of the
-> > processor, e.g. which gpio must the processor drive to enable/switch the
-> > regualtor. So one reasone more to use a non-common binding.
-> > 
-> > Please take a look on my other comment I made :) I don't use the
-> > gpio-alternative function. I use it as an input.
-> 
-> I know in the datasheet this isn't marked as an alternate function specifically
-> but to me having regulator control by the chip's own GPI is an alternative
-> function for that GPIO pin, in the same way a specific pin can be used for
-> SYS_EN or Watchdog control. It's a dedicated purpose rather than being a normal
-> GPI.
+Jacek
 
-Nope, SYS_EN or Watchdog is a special/alternate function and not a
-normal input.
+On 9/25/19 4:12 PM, Jacek Anaszewski wrote:
+> Dan,
+>
+> On 9/25/19 7:46 PM, Dan Murphy wrote:
+>> Introduce a multicolor class that groups colored LEDs
+>> within a LED node.
+>>
+>> The multi color class groups monochrome LEDs and allows controlling two
+>> aspects of the final combined color: hue and lightness. The former is
+>> controlled via <color>_intensity files and the latter is controlled
+>> via brightness file.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   drivers/leds/Kconfig                 |  10 ++
+>>   drivers/leds/Makefile                |   1 +
+>>   drivers/leds/led-class-multicolor.c  | 220 +++++++++++++++++++++++++++
+>>   include/linux/led-class-multicolor.h |  74 +++++++++
+>>   4 files changed, 305 insertions(+)
+>>   create mode 100644 drivers/leds/led-class-multicolor.c
+>>   create mode 100644 include/linux/led-class-multicolor.h
+>>
+>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+>> index 6e7703fd03d0..cfb1ebb6517f 100644
+>> --- a/drivers/leds/Kconfig
+>> +++ b/drivers/leds/Kconfig
+>> @@ -30,6 +30,16 @@ config LEDS_CLASS_FLASH
+>>   	  for the flash related features of a LED device. It can be built
+>>   	  as a module.
+>>   
+>> +config LEDS_CLASS_MULTI_COLOR
+>> +	tristate "LED Mulit Color LED Class Support"
+>> +	depends on LEDS_CLASS
+>> +	help
+>> +	  This option enables the multicolor LED sysfs class in /sys/class/leds.
+>> +	  It wraps LED class and adds multicolor LED specific sysfs attributes
+>> +	  and kernel internal API to it. You'll need this to provide support
+>> +	  for multicolor LEDs that are grouped together. This class is not
+>> +	  intended for single color LEDs. It can be built as a module.
+>> +
+>>   config LEDS_BRIGHTNESS_HW_CHANGED
+>>   	bool "LED Class brightness_hw_changed attribute support"
+>>   	depends on LEDS_CLASS
+>> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+>> index 2da39e896ce8..841038cfe35b 100644
+>> --- a/drivers/leds/Makefile
+>> +++ b/drivers/leds/Makefile
+>> @@ -4,6 +4,7 @@
+>>   obj-$(CONFIG_NEW_LEDS)			+= led-core.o
+>>   obj-$(CONFIG_LEDS_CLASS)		+= led-class.o
+>>   obj-$(CONFIG_LEDS_CLASS_FLASH)		+= led-class-flash.o
+>> +obj-$(CONFIG_LEDS_CLASS_MULTI_COLOR)	+= led-class-multicolor.o
+>>   obj-$(CONFIG_LEDS_TRIGGERS)		+= led-triggers.o
+>>   
+>>   # LED Platform Drivers
+>> diff --git a/drivers/leds/led-class-multicolor.c b/drivers/leds/led-class-multicolor.c
+>> new file mode 100644
+>> index 000000000000..25371bd9a860
+>> --- /dev/null
+>> +++ b/drivers/leds/led-class-multicolor.c
+>> @@ -0,0 +1,220 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +// LED Multi Color class interface
+>> +// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
+>> +
+>> +#include <linux/device.h>
+>> +#include <linux/init.h>
+>> +#include <linux/led-class-multicolor.h>
+>> +#include <linux/module.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/uaccess.h>
+>> +
+>> +#include "leds.h"
+>> +
+>> +#define INTENSITY_NAME		"_intensity"
+>> +#define MAX_INTENSITY_NAME	"_max_intensity"
+>> +
+>> +void led_mc_calc_brightness(struct led_classdev_mc *mcled_cdev,
+>> +			    enum led_brightness brightness,
+>> +			    int brightness_val[])
+>> +{
+>> +	struct led_mc_color_entry *priv;
+>> +	int i = 0;
+>> +
+>> +	list_for_each_entry(priv, &mcled_cdev->color_list, list) {
+> I think we should have some way to let the caller know exact mapping
+> of brightness_val to color_id. Possibly LED mc core should provide
+> a helper to get color_id by color entry index.
 
-> See the following as an example of what I'm suggesting:
-> 
-> https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindings/pinctrl/pinctrl-palmas.txt
-> 
-> You could then pass the pinctrl information to the regulator driver and use
-> that rather than having device specific bindings for this. That's at least my
-> current interpretation of this anyway.
+Why would we need that?
 
-For me pinctrl decides which function should be assigned to a pin. So in
-our case this would be:
-  - alternate
-  - gpo
-  - gpi
 
-In our use-case it is a gpi..
+>
+> But this remark is actually more relevant to the place of calling.
+> I'll try to propose something there.
+>
+> And regarding brightness_val name - how about:
+>
+> s/brightness_val/brightness_component/ ?
 
-An other reason why pinctrl seems not be the right solution is that the
-regulator must be configured to use this gpi. This decision can't be
-made globally because each regulator can be configured differently.. For
-me its just a local gpio.
+component does not make sense to me in this context.  Actually 
+brightness_val
 
-Regards,
-  Marco
+does not make sense either since it is an adjusted intensity and 
+brightness is passed in in the second arg
 
-> > 
-> > Regards,
-> >   Marco
-> > 
-> > 
-> > > I'd be interested in hearing Mark's view on this though as he has far more
-> > > experience in this area than I do.
-> > >
-> > > >
-> > > > Regards,
-> > > >   Marco
-> > > >
-> > > > > >  - rtc : This node defines settings required for the Real-Time Clock
-> > associated
-> > > > > >    with the DA9062. There are currently no entries in this binding, however
-> > > > > >    compatible = "dlg,da9062-rtc" should be added if a node is created.
-> > > > > > --
-> > > > > > 2.20.1
-> > > > >
-> > > > >
-> > > >
-> > > > --
-> > > > Pengutronix e.K.                           |                             |
-> > > > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> > > > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> > > > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-> > >
-> > 
-> > --
-> > Pengutronix e.K.                           |                             |
-> > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-> 
+I think intensity_values make more sense.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+>
+>
+>> +		brightness_val[i] = brightness *
+>> +				    priv->intensity / priv->max_intensity;
+>> +		i++;
+>> +	}
+>> +}
+>> +EXPORT_SYMBOL_GPL(led_mc_calc_brightness);
+>> +
+>> +static ssize_t intensity_store(struct device *dev,
+>> +				struct device_attribute *intensity_attr,
+>> +				const char *buf, size_t size)
+>> +{
+>> +	struct led_mc_color_entry *priv = container_of(intensity_attr,
+>> +						    struct led_mc_color_entry,
+>> +						      intensity_attr);
+>> +	struct led_classdev *led_cdev = priv->mcled_cdev->led_cdev;
+>> +	unsigned long value;
+>> +	ssize_t ret;
+>> +
+>> +	mutex_lock(&led_cdev->led_access);
+>> +
+>> +	ret = kstrtoul(buf, 10, &value);
+>> +	if (ret)
+>> +		goto unlock;
+>> +
+>> +	if (value > priv->max_intensity) {
+>> +		ret = -EINVAL;
+>> +		goto unlock;
+>> +	}
+>> +
+>> +	priv->intensity = value;
+>> +	ret = size;
+>> +
+>> +unlock:
+>> +	mutex_unlock(&led_cdev->led_access);
+>> +	return ret;
+>> +}
+>> +
+>> +static ssize_t intensity_show(struct device *dev,
+>> +			      struct device_attribute *intensity_attr,
+>> +			      char *buf)
+>> +{
+>> +	struct led_mc_color_entry *priv = container_of(intensity_attr,
+>> +						    struct led_mc_color_entry,
+>> +						      intensity_attr);
+>> +
+>> +	return sprintf(buf, "%d\n", priv->intensity);
+>> +}
+>> +
+>> +static ssize_t max_intensity_show(struct device *dev,
+>> +				   struct device_attribute *max_intensity_attr,
+>> +				   char *buf)
+>> +{
+>> +	struct led_mc_color_entry *priv = container_of(max_intensity_attr,
+>> +						    struct led_mc_color_entry,
+>> +						      max_intensity_attr);
+>> +
+>> +	return sprintf(buf, "%d\n", priv->max_intensity);
+>> +}
+>> +
+>> +static struct attribute *led_color_attrs[] = {
+>> +	NULL,
+>> +};
+>> +
+>> +static struct attribute_group led_color_group = {
+>> +	.name = "colors",
+>> +	.attrs = led_color_attrs,
+>> +};
+>> +
+>> +static int led_multicolor_init_color(struct led_classdev_mc *mcled_cdev,
+>> +				     int color_id, int color_index)
+>> +{
+>> +	struct led_classdev *led_cdev = mcled_cdev->led_cdev;
+>> +	struct led_mc_color_entry *mc_priv;
+>> +	char *intensity_file_name;
+>> +	char *max_intensity_file_name;
+>> +	size_t len;
+>> +	int ret;
+>> +
+>> +	mc_priv = devm_kzalloc(led_cdev->dev, sizeof(*mc_priv), GFP_KERNEL);
+>> +	if (!mc_priv)
+>> +		return -ENOMEM;
+>> +
+>> +	mc_priv->led_color_id = color_id;
+>> +	mc_priv->mcled_cdev = mcled_cdev;
+>> +
+>> +	sysfs_attr_init(&mc_priv->intensity_attr.attr);
+>> +	len = strlen(led_colors[color_id]) + strlen(INTENSITY_NAME) + 1;
+>> +	intensity_file_name = kzalloc(len, GFP_KERNEL);
+>> +	if (!intensity_file_name)
+>> +		return -ENOMEM;
+>> +
+>> +	snprintf(intensity_file_name, len, "%s%s",
+>> +		 led_colors[color_id], INTENSITY_NAME);
+>> +	mc_priv->intensity_attr.attr.name = intensity_file_name;
+>> +	mc_priv->intensity_attr.attr.mode = 644;
+> Proper octal value should begin with 0.
+> But please use combinations of dedicated S_I* definitions
+> from include/uapi/linux/stat.h.
+
+Using the S_I* causes checkpatch warnings
+
+WARNING: Symbolic permissions 'S_IRUGO' are not preferred. Consider 
+using octal permissions '0444'.
+#139: FILE: drivers/leds/led-class-multicolor.c:139:
++    mc_priv->max_intensity_attr.attr.mode = S_IRUGO;
+
+>
+>> +	mc_priv->intensity_attr.store = intensity_store;
+>> +	mc_priv->intensity_attr.show = intensity_show;
+>> +	ret = sysfs_add_file_to_group(&led_cdev->dev->kobj,
+>> +				      &mc_priv->intensity_attr.attr,
+>> +				      led_color_group.name);
+>> +	if (ret)
+>> +		goto intensity_err_out;
+>> +
+>> +	sysfs_attr_init(&mc_priv->max_intensity_attr.attr);
+>> +	len = strlen(led_colors[color_id]) + strlen(MAX_INTENSITY_NAME) + 1;
+>> +	max_intensity_file_name = kzalloc(len, GFP_KERNEL);
+>> +	if (!max_intensity_file_name) {
+>> +		ret = -ENOMEM;
+>> +		goto intensity_err_out;
+>> +	}
+>> +
+>> +	snprintf(max_intensity_file_name, len, "%s%s",
+>> +		 led_colors[color_id], MAX_INTENSITY_NAME);
+>> +	mc_priv->max_intensity_attr.attr.name = max_intensity_file_name;
+>> +	mc_priv->max_intensity_attr.attr.mode = 444;
+>> +	mc_priv->max_intensity_attr.show = max_intensity_show;
+>> +	ret = sysfs_add_file_to_group(&led_cdev->dev->kobj,
+>> +				      &mc_priv->max_intensity_attr.attr,
+>> +				      led_color_group.name);
+>> +	if (ret)
+>> +		goto max_intensity_err_out;
+>> +
+>> +	mc_priv->max_intensity = LED_FULL;
+>> +	list_add_tail(&mc_priv->list, &mcled_cdev->color_list);
+>> +
+>> +max_intensity_err_out:
+>> +	kfree(max_intensity_file_name);
+>> +intensity_err_out:
+>> +	kfree(intensity_file_name);
+>> +	return ret;
+>> +}
+>> +
+>> +static int led_multicolor_init_color_dir(struct led_classdev_mc *mcled_cdev)
+>> +{
+>> +	struct led_classdev *led_cdev = mcled_cdev->led_cdev;
+>> +	int ret;
+>> +	int i, color_index = 0;
+>> +
+>> +	ret = sysfs_create_group(&led_cdev->dev->kobj, &led_color_group);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	for (i = 0; i < LED_COLOR_ID_MAX; i++) {
+>> +		if (test_bit(i, &mcled_cdev->available_colors)) {
+>> +			ret = led_multicolor_init_color(mcled_cdev, i,
+>> +							color_index);
+> color_index is now unused AFAICS.
+
+Ack
+
+>
+>> +			if (ret)
+>> +				break;
+>> +
+>> +			color_index++;
+>> +		}
+>> +	}
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +int led_classdev_multicolor_register_ext(struct device *parent,
+>> +				     struct led_classdev_mc *mcled_cdev,
+>> +				     struct led_init_data *init_data)
+>> +{
+>> +	struct led_classdev *led_cdev;
+>> +	int ret;
+>> +
+>> +	if (!mcled_cdev)
+>> +		return -EINVAL;
+>> +
+>> +	led_cdev = mcled_cdev->led_cdev;
+>> +	INIT_LIST_HEAD(&mcled_cdev->color_list);
+>> +
+>> +	/* Register led class device */
+>> +	ret = led_classdev_register_ext(parent, led_cdev, init_data);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return led_multicolor_init_color_dir(mcled_cdev);
+>> +}
+>> +EXPORT_SYMBOL_GPL(led_classdev_multicolor_register_ext);
+> Why devm_* versions are missing now?
+
+I was using the led-class-flash.c as an example and that class does not 
+have the devm_* versions either.
+
+Tried to make the 2 child classes look the same.
+
+If they are missing from the led-class-flash code then that needs to be 
+fixed as well.
+
+>
+>> +
+>> +void led_classdev_multicolor_unregister(struct led_classdev_mc *mcled_cdev)
+>> +{
+>> +	struct led_mc_color_entry *priv, *next;
+>> +
+>> +	if (!mcled_cdev)
+>> +		return;
+>> +
+>> +	list_for_each_entry_safe(priv, next, &mcled_cdev->color_list, list)
+>> +		list_del(&priv->list);
+>> +
+>> +	sysfs_remove_group(&mcled_cdev->led_cdev->dev->kobj, &led_color_group);
+>> +	led_classdev_unregister(mcled_cdev->led_cdev);
+>> +}
+>> +EXPORT_SYMBOL_GPL(led_classdev_multicolor_unregister);
+>> +
+>> +MODULE_AUTHOR("Dan Murphy <dmurphy@ti.com>");
+>> +MODULE_DESCRIPTION("Multi Color LED class interface");
+>> +MODULE_LICENSE("GPL v2");
+>> diff --git a/include/linux/led-class-multicolor.h b/include/linux/led-class-multicolor.h
+>> new file mode 100644
+>> index 000000000000..280ba5a614b4
+>> --- /dev/null
+>> +++ b/include/linux/led-class-multicolor.h
+>> @@ -0,0 +1,74 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/* LED Multicolor class interface
+>> + * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
+>> + */
+>> +
+>> +#ifndef __LINUX_MULTICOLOR_LEDS_H_INCLUDED
+>> +#define __LINUX_MULTICOLOR_LEDS_H_INCLUDED
+>> +
+>> +#include <linux/leds.h>
+>> +#include <dt-bindings/leds/common.h>
+>> +
+>> +struct led_classdev_mc;
+>> +
+>> +struct led_mc_color_entry {
+>> +	struct led_classdev_mc *mcled_cdev;
+>> +
+>> +	struct device_attribute max_intensity_attr;
+>> +	struct device_attribute intensity_attr;
+>> +
+>> +	enum led_brightness max_intensity;
+>> +	enum led_brightness intensity;
+>> +
+>> +	struct list_head list;
+>> +
+>> +	int led_color_id;
+>> +};
+>> +
+>> +struct led_classdev_mc {
+>> +	/* led class device */
+>> +	struct led_classdev *led_cdev;
+>> +	struct list_head color_list;
+>> +
+>> +	unsigned long available_colors;
+>> +	int num_leds;
+>> +};
+>> +
+>> +static inline struct led_classdev_mc *lcdev_to_mccdev(
+>> +						struct led_classdev *lcdev)
+>> +{
+>> +	return container_of(lcdev, struct led_classdev_mc, led_cdev);
+>> +}
+>> +
+>> +/**
+>> + * led_classdev_multicolor_register_ext - register a new object of led_classdev
+>> + *				      class with support for multicolor LEDs
+>> + * @parent: the multicolor LED to register
+>> + * @mcled_cdev: the led_classdev_mc structure for this device
+>> + * @init_data: the LED class Multi color device initialization data
+>> + *
+>> + * Returns: 0 on success or negative error value on failure
+>> + */
+>> +int led_classdev_multicolor_register_ext(struct device *parent,
+>> +					    struct led_classdev_mc *mcled_cdev,
+>> +					    struct led_init_data *init_data);
+>> +
+>> +#define led_classdev_multicolor_register(parent, mcled_cdev)		\
+>> +	led_classdev_multicolor_register_ext(parent, mcled_cdev, NULL)
+> Please turn it into inline.
+
+Again same statement as above on the led-class-flash.  This is how this 
+is defined there.
+
+If that is not correct in the flash class then that needs to be fixed as 
+well.
+
+Dan
+
+>
+>> +
+>> +/**
+>> + * led_classdev_multicolor_unregister - unregisters an object of led_classdev
+>> + *					class with support for multicolor LEDs
+>> + * @mcled_cdev: the multicolor LED to unregister
+>> + *
+>> + * Unregister a previously registered via led_classdev_multicolor_register
+>> + * object
+>> + */
+>> +void led_classdev_multicolor_unregister(struct led_classdev_mc *mcled_cdev);
+>> +
+>> +/* Calculate brightness for the monochrome LED cluster */
+>> +void led_mc_calc_brightness(struct led_classdev_mc *mcled_cdev,
+>> +			    enum led_brightness brightness,
+>> +			    int brightness_val[]);
+>> +
+>> +#endif	/* __LINUX_MULTICOLOR_LEDS_H_INCLUDED */
+>>
