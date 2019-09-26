@@ -2,122 +2,105 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DACDCC352AB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68828C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B27F4222C7
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CCFF222C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:18:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dZKovGgb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KqkKqLFn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbfIZRRe (ORCPT
+        id S1727721AbfIZRSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 13:17:34 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:39160 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfIZRRd (ORCPT
+        Thu, 26 Sep 2019 13:18:32 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36925 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfIZRSb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 13:17:33 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w144so2779019oia.6;
-        Thu, 26 Sep 2019 10:17:32 -0700 (PDT)
+        Thu, 26 Sep 2019 13:18:31 -0400
+Received: by mail-wr1-f68.google.com with SMTP id i1so3676001wro.4;
+        Thu, 26 Sep 2019 10:18:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6iIyaUzF9v02p9F3h71C8x4tDacLmA6BNo4c1Ew2pJs=;
-        b=dZKovGgbdsd2S4YW1nmKU9AKCVrY3PrOkZC0M14UJMIpQ+qRDzwZPmVIIFqq0Xk+eR
-         4A95WaKJNw7EkpSPAYO/chkQFTbxnnTdC/9OHpPyt6nLSLZizpfd3UUROSkisuLJh6ij
-         hrJIkannXvZfTi9lJ2zi+c1d0WRsgEKhxPMxV7gcTOf/ZVatEEO1rPohku5TLrJWADSy
-         WZPR2APPq6hmVliPnTZ2jpXV/sR/u3+4Aw9uH0yzz44tvF5vCdCszeaP22atjbBH20tz
-         lSQQsQIDzDR592IF0apV8xXcxtRp6DmoBq0YXt0BmRzR5n5QI+f3DMQ9C5XLmGqVyHKc
-         17mw==
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=G8ATWpvsPeQhyAU95P46GVmGRpo0pkchWBreGDYzCWE=;
+        b=KqkKqLFnIu9dqQ5CM5kJFw3B/WnvfuWZO2qxHridDqPjzx5ATenOPpny39CvD294pE
+         THmQ8q0FvnlmLc6fyCoZFF06RK+z9TUIvlDUlEVNzo+9wcFWmiB/m1axYi4otWr/WvW5
+         lGhXov7yRw+RTBnT/lnOCmJVEEFrssn7TzLWiV/efE/G42MsHMStGbvQYkFb2hHSqkPM
+         tm/MysLFkpLP1YfcNCyzSJFRZM77b01U0KFk63v0Z++nGCr0yfT4Wk05WQKaHuTWiCyu
+         Jg3mqVVKb0pX0RlWsVaYTdmjcnFy7ee/wqA0A45X7ODJtHir/gCkdVvVA0q0Hag018OC
+         /SPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6iIyaUzF9v02p9F3h71C8x4tDacLmA6BNo4c1Ew2pJs=;
-        b=MJvuC0CkFKYxh7nTOzAiibo0AV1UdNgPkpv2xoWaNH09QCK6NKU+aPeDbIODsLVNr6
-         ZjgcARPd34zhArOKyL3G0UZWNDGbnEI16hRQd7kdGBkeyLLTLLrWWVV2gkwDhy6Afo/y
-         32I0BiLaH1moQIRrOPtojzb0nWVYPOhyIfEieOvTwfLUOeun/Etqrkd+W6FMMbFEeI9r
-         +ka9ZOALQYsVbLyoaZgUqMRHJG8V4aBC+ikKQOBMQtqCZdEanps5mQelmRnYNHD4XcrA
-         sBk6AIKPLzsgo2ewFn/B6Xqd2FM3BXuIHqi65AGs7BBRSiJqNAjM8MR9BbZtklFR6DhG
-         81VQ==
-X-Gm-Message-State: APjAAAXFLNPFcbVuejwililDx/HWbQEYqWtSzfATpQ5uUYlKoCsNPx5t
-        zTZ93YNwcu9aydjB7SBuyfOynDLM
-X-Google-Smtp-Source: APXvYqyMW3KcJHL1VGgFwmaSAlmnyTk+9Zx0q0T+8icx9Z83JVR+fdqIHjILb+MW+p+dEDxgp9V2WQ==
-X-Received: by 2002:aca:b256:: with SMTP id b83mr3379404oif.120.1569518252353;
-        Thu, 26 Sep 2019 10:17:32 -0700 (PDT)
-Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id l19sm788637oie.22.2019.09.26.10.17.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Sep 2019 10:17:31 -0700 (PDT)
-Subject: Re: [PATCH] staging: rtl8188eu: fix HighestRate check in
- odm_ARFBRefresh_8188E()
-To:     Denis Efremov <efremov@linux.com>, devel@driverdev.osuosl.org
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Straube <straube.linux@gmail.com>,
-        stable@vger.kernel.org
-References: <20190926073138.12109-1-efremov@linux.com>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <24dbe004-2afe-97e6-b281-3b7109034dd9@lwfinger.net>
-Date:   Thu, 26 Sep 2019 12:17:30 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
-MIME-Version: 1.0
-In-Reply-To: <20190926073138.12109-1-efremov@linux.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=G8ATWpvsPeQhyAU95P46GVmGRpo0pkchWBreGDYzCWE=;
+        b=F6npoADVEQlMgzAir25gh+XTQ2Kta5HTtYmD2UcA7lIfoy38HzH1pkkqbKOUcLJHMg
+         NyTBONeIZ0s0VnCuMNPacuf9c6FMMe6yGe3ltHFESvs/wzW3jz88CJL813n6ZimPOqQe
+         hCAawew3anDbqa9tXUiuGvXViLwRvZoTazPCNyrfBd79sk03TVaCv3xPRc6AOo8dmA6S
+         hDIdW5FiXw6nyGA2niWwNLVYkunWWOhcDb8yUJkxK+BRfY575RtQcTKlYuIBc13PMWxj
+         0qNu1qrmOK+ZDZAeHJw5cojBnIdnWGxn7PUI+6ja18iVUShNk8rcBuWIu6uyL2RTx+TZ
+         IVkA==
+X-Gm-Message-State: APjAAAXPItwEvKB0hOv9TkZlt0AA0Zk4gfR+I3lWiwBgFTU+AQ5vAAl2
+        sC5FtJOFOT3grDZCCZPtIUVFr0Z1
+X-Google-Smtp-Source: APXvYqzmD5sjDJT/FzC/PxkKE9HLYAtS9TV5ircrgPv0vUA1Kjo6epfRGl/PyrlV7UFo+q17PiktvQ==
+X-Received: by 2002:a5d:6ace:: with SMTP id u14mr4147987wrw.385.1569518309013;
+        Thu, 26 Sep 2019 10:18:29 -0700 (PDT)
+Received: from 640k.localdomain.com ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id v4sm4792782wrg.56.2019.09.26.10.18.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 26 Sep 2019 10:18:28 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Junaid Shahid <junaids@google.com>
+Subject: [PATCH 0/3] KVM: MMU: fix nested guest live migration with PML
+Date:   Thu, 26 Sep 2019 19:18:23 +0200
+Message-Id: <1569518306-46567-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/26/19 2:31 AM, Denis Efremov wrote:
-> It's incorrect to compare HighestRate with 0x0b twice in the following
-> manner "if (HighestRate > 0x0b) ... else if (HighestRate > 0x0b) ...". The
-> "else if" branch is constantly false. The second comparision should be
-> with 0x03 according to the max_rate_idx in ODM_RAInfo_Init().
-> 
-> Cc: Larry Finger <Larry.Finger@lwfinger.net>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Michael Straube <straube.linux@gmail.com>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
->   drivers/staging/rtl8188eu/hal/hal8188e_rate_adaptive.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/rtl8188eu/hal/hal8188e_rate_adaptive.c b/drivers/staging/rtl8188eu/hal/hal8188e_rate_adaptive.c
-> index 9ddd51685063..5792f491b59a 100644
-> --- a/drivers/staging/rtl8188eu/hal/hal8188e_rate_adaptive.c
-> +++ b/drivers/staging/rtl8188eu/hal/hal8188e_rate_adaptive.c
-> @@ -409,7 +409,7 @@ static int odm_ARFBRefresh_8188E(struct odm_dm_struct *dm_odm, struct odm_ra_inf
->   		pRaInfo->PTModeSS = 3;
->   	else if (pRaInfo->HighestRate > 0x0b)
->   		pRaInfo->PTModeSS = 2;
-> -	else if (pRaInfo->HighestRate > 0x0b)
-> +	else if (pRaInfo->HighestRate > 0x03)
->   		pRaInfo->PTModeSS = 1;
->   	else
->   		pRaInfo->PTModeSS = 0;
-> 
+Shadow paging is fundamentally incompatible with the page-modification
+log, because the GPAs in the log come from the wrong memory map.
+In particular, for the EPT page-modification log, the GPAs in the log come
+from L2 rather than L1.  (If there was a non-EPT page-modification log,
+we couldn't use it for shadow paging because it would log GVAs rather
+than GPAs).
 
-I agree that the original code is wrong; however, I prefer that changes that 
-alter the execution should be tested. I see no evidence that such testing has 
-been done. It probably does not matter because a highest rate between 3 and 0xb 
-means 802.11g is in use, and that may no longer be a real-world situation.
+Therefore, we need to rely on write protection to record dirty pages.
+This has the side effect of bypassing PML, since writes now result in an
+EPT violation vmexit.
 
-With any future patches, you need to indicate if testing has been done.
+This turns out to be a surprisingly small patch---the testcase is what's
+guilty of the scary diffstat.  But that is because the KVM MMU code is
+absurdly clever, so a very close review is appreciated.
 
-Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
+Paolo
 
-Larry
+Paolo Bonzini (3):
+  KVM: x86: assign two bits to track SPTE kinds
+  KVM: x86: fix nested guest live migration with PML
+  selftests: kvm: add test for dirty logging inside nested guests
+
+ arch/x86/include/asm/kvm_host.h                    |   7 -
+ arch/x86/kvm/mmu.c                                 |  58 ++++--
+ tools/testing/selftests/kvm/Makefile               |   1 +
+ .../selftests/kvm/include/x86_64/processor.h       |   3 +
+ tools/testing/selftests/kvm/include/x86_64/vmx.h   |  14 ++
+ tools/testing/selftests/kvm/lib/kvm_util.c         |   2 +-
+ .../testing/selftests/kvm/lib/kvm_util_internal.h  |   3 +
+ tools/testing/selftests/kvm/lib/x86_64/vmx.c       | 201 ++++++++++++++++++++-
+ .../selftests/kvm/x86_64/vmx_dirty_log_test.c      | 156 ++++++++++++++++
+ 9 files changed, 424 insertions(+), 21 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/x86_64/vmx_dirty_log_test.c
+
+-- 
+1.8.3.1
 
