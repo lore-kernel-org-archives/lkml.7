@@ -2,107 +2,173 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 164A6C47E48
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FA5C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E14F6207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CC1E207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:31:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ib2W1W9s"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aSr1crur"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbfIZLbc (ORCPT
+        id S1726728AbfIZLbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 07:31:32 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:38330 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726554AbfIZLb1 (ORCPT
+        Thu, 26 Sep 2019 07:31:40 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:51098 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726626AbfIZLbg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 07:31:27 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8QBTNkQ110404;
-        Thu, 26 Sep 2019 11:31:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=W65Qj1spfIW0T5TXpC/L2KW0atWcCOLy480ZPUWtihc=;
- b=ib2W1W9sZq8A+/3X5IVog69x/N+0IZaTe6/7kVLPhek2eY3dc43wjUJvlTYEYCk6taY1
- /slRc/8UUovk8L1yAveIRhcUY4zObH43ZLuqMWeLEElFYCqUV0wIAmnbDO9HRimKK+K6
- oox6Jofub77uyWP6zDnToY2nxd5F+5sPhBNd+fqOdVIDrz+1TRSHgnp87PK9SDCiUeRZ
- 37nL9FVncyOA6BCkM/IuUYyPHlCtRYRYhcXAymhtHZA7eyzbS6Zu2uVzSif064FpCZoP
- 7A5CbqTp12eYvte2HLBoEJrvDi6rqy78OmRY+IibuSOhY5i3VEYXQLLXgbNFTi60EvAs 4g== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2v5cgraxv9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Sep 2019 11:31:09 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8QBTGE0156616;
-        Thu, 26 Sep 2019 11:31:09 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2v8tpjwtuc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Sep 2019 11:31:08 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8QBV8Lc028193;
-        Thu, 26 Sep 2019 11:31:08 GMT
-Received: from [192.168.14.112] (/79.179.213.143)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 26 Sep 2019 04:31:07 -0700
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Subject: Re: [PATCH] KVM: nVMX: cleanup and fix host 64-bit mode checks
-From:   Liran Alon <liran.alon@oracle.com>
-In-Reply-To: <1569429286-35157-1-git-send-email-pbonzini@redhat.com>
-Date:   Thu, 26 Sep 2019 14:31:04 +0300
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <63797A78-1645-4A7E-970B-62C9A580B71B@oracle.com>
-References: <1569429286-35157-1-git-send-email-pbonzini@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-X-Mailer: Apple Mail (2.3445.4.7)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9391 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=837
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909260110
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9391 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=919 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909260110
+        Thu, 26 Sep 2019 07:31:36 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8QBVSTg042549;
+        Thu, 26 Sep 2019 06:31:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569497488;
+        bh=1e8ivCO58tj7yZejWhSGbZsRTueBDWvOfW2EVwnBC3Q=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=aSr1crurHpCeKMcKQZ6Nr1XEwhEcc3DrJreug0mfK1CjEbnz7kpLw4Agjb4TpXGFz
+         +XH+MgnEK6uobK9IZjU+ZhcQmMZddX/s45fmhkuRFa90hT7VoMm3wI/g1htT+HBgJy
+         VheE6HftQsOyl0VgN/Vzi2sXNMSwoak4/1cdgwJQ=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8QBVSRa092144
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 26 Sep 2019 06:31:28 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 26
+ Sep 2019 06:31:20 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 26 Sep 2019 06:31:28 -0500
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8QBUTk6069017;
+        Thu, 26 Sep 2019 06:31:24 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Mark Rutland <mark.rutland@arm.com>, <kishon@ti.com>,
+        <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-ntb@googlegroups.com>
+Subject: [RFC PATCH 13/21] PCI: endpoint: Add pci_epc_ops to map MSI irq
+Date:   Thu, 26 Sep 2019 16:59:25 +0530
+Message-ID: <20190926112933.8922-14-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190926112933.8922-1-kishon@ti.com>
+References: <20190926112933.8922-1-kishon@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add pci_epc_ops to map physical address to MSI address and return MSI
+data. The physical address is an address in the outbound region. This is
+required to implement doorbell functionality of NTB (non transparent
+bridge) wherein EPC on either side of the interface (primary and
+secondary) can directly write to the physical address (in outbound
+region) of the other interface to ring doorbell using MSI.
 
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ drivers/pci/endpoint/pci-epc-core.c | 40 +++++++++++++++++++++++++++++
+ include/linux/pci-epc.h             |  7 +++++
+ 2 files changed, 47 insertions(+)
 
-> On 25 Sep 2019, at 19:34, Paolo Bonzini <pbonzini@redhat.com> wrote:
->=20
-> KVM was incorrectly checking vmcs12->host_ia32_efer even if the "load
-> IA32_EFER" exit control was reset.  Also, some checks were not using
-> the new CC macro for tracing.
->=20
-> Cleanup everything so that the vCPU's 64-bit mode is determined
-> directly from EFER_LMA and the VMCS checks are based on that, which
-> matches section 26.2.4 of the SDM.
->=20
-> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> Cc: Jim Mattson <jmattson@google.com>
-> Cc: Krish Sadhukhan <krish.sadhukhan@oracle.com>
-> Fixes: 5845038c111db27902bc220a4f70070fe945871c
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> =E2=80=94
-
-Reviewed-by: Liran Alon <liran.alon@oracle.com>
-
+diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+index 42085fcc746d..797e5d323998 100644
+--- a/drivers/pci/endpoint/pci-epc-core.c
++++ b/drivers/pci/endpoint/pci-epc-core.c
+@@ -363,6 +363,46 @@ int pci_epc_raise_irq(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ }
+ EXPORT_SYMBOL_GPL(pci_epc_raise_irq);
+ 
++/**
++ * pci_epc_map_msi_irq() - Map physical address to MSI address and return
++ *                         MSI data
++ * @epc: the EPC device which has the MSI capability
++ * @func_no: the physical endpoint function number in the EPC device
++ * @vfunc_no: the virtual endpoint function number in the physical function
++ * @phys_addr: the physical address of the outbound region
++ * @interrupt_num: the MSI interrupt number
++ * @entry_size: Size of Outbound address region for each interrupt
++ * @msi_data: the data that should be written in order to raise MSI interrupt
++ *            with interrupt number as 'interrupt num'
++ *
++ * Invoke to map physical address to MSI address and return MSI data. The
++ * physical address should be an address in the outbound region. This is
++ * required to implement doorbell functionality of NTB wherein EPC on either
++ * side of the interface (primary and secondary) can directly write to the
++ * physical address (in outbound region) of the other interface to ring
++ * doorbell.
++ */
++int pci_epc_map_msi_irq(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
++			phys_addr_t phys_addr, u8 interrupt_num, u32 entry_size,
++			u32 *msi_data)
++{
++	int ret;
++
++	if (IS_ERR_OR_NULL(epc))
++		return -EINVAL;
++
++	if (!epc->ops->map_msi_irq)
++		return -EINVAL;
++
++	mutex_lock(&epc->lock);
++	ret = epc->ops->map_msi_irq(epc, func_no, vfunc_no, phys_addr,
++				    interrupt_num, entry_size, msi_data);
++	mutex_unlock(&epc->lock);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(pci_epc_map_msi_irq);
++
+ /**
+  * pci_epc_get_msi() - get the number of MSI interrupt numbers allocated
+  * @epc: the EPC device to which MSI interrupts was requested
+diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+index 91d5cbaabc8f..0632a4d4714d 100644
+--- a/include/linux/pci-epc.h
++++ b/include/linux/pci-epc.h
+@@ -57,6 +57,7 @@ pci_epc_interface_string(enum pci_epc_interface_type type)
+  * @get_msix: ops to get the number of MSI-X interrupts allocated by the RC
+  *	     from the MSI-X capability register
+  * @raise_irq: ops to raise a legacy, MSI or MSI-X interrupt
++ * @map_msi_irq: ops to map physical address to MSI address and return MSI data
+  * @start: ops to start the PCI link
+  * @stop: ops to stop the PCI link
+  * @owner: the module owner containing the ops
+@@ -85,6 +86,9 @@ struct pci_epc_ops {
+ 	int	(*get_msix)(struct pci_epc *epc, u8 func_no, u8 vfunc_no);
+ 	int	(*raise_irq)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 			     enum pci_epc_irq_type type, u16 interrupt_num);
++	int	(*map_msi_irq)(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
++			       phys_addr_t phys_addr, u8 interrupt_num,
++			       u32 entry_size, u32 *msi_data);
+ 	int	(*start)(struct pci_epc *epc);
+ 	void	(*stop)(struct pci_epc *epc);
+ 	const struct pci_epc_features* (*get_features)(struct pci_epc *epc,
+@@ -212,6 +216,9 @@ int pci_epc_get_msi(struct pci_epc *epc, u8 func_no, u8 vfunc_no);
+ int pci_epc_set_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 		     u16 interrupts);
+ int pci_epc_get_msix(struct pci_epc *epc, u8 func_no, u8 vfunc_no);
++int pci_epc_map_msi_irq(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
++			phys_addr_t phys_addr, u8 interrupt_num,
++			u32 entry_size, u32 *msi_data);
+ int pci_epc_raise_irq(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+ 		      enum pci_epc_irq_type type, u16 interrupt_num);
+ int pci_epc_start(struct pci_epc *epc);
+-- 
+2.17.1
 
