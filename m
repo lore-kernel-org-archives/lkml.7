@@ -2,112 +2,110 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D7FC432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9DFC432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0F51207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:42:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Ps5n17nT"
+	by mail.kernel.org (Postfix) with ESMTP id 59F33207FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:42:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726225AbfIZLmM (ORCPT
+        id S1726374AbfIZLmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 07:42:12 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53569 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbfIZLmL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 07:42:11 -0400
-Received: by mail-wm1-f66.google.com with SMTP id i16so2369974wmd.3
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 04:42:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xonFLYW+K9R2/V+E4nxIJtaZUYsUbdcdHfLF2kKtcoo=;
-        b=Ps5n17nT4qWciZsC9oJ6IGnJHFHbWG4ZlXnBU/vo5CoFtTTcFz1daOUpKD/ipU4JTw
-         ihs76iwMZ80RxUQMFVHFi5rvs5M1rcujs9NFUDyQiF6XVkF7SXmgG5B5WQ8wviB0n/0h
-         viAE+GuDsrSXXAsyoxOa/u6wTXedWKEzGWG5iTpCje/HyXMDQP1QKsdJjeT8SaTNVvM9
-         i5p1PVAP4pUIcDVmmC2qPUG+ZcG/GbmHpma7NTM9SxfdP5B5FUU7xlF/mHrARsTiCPop
-         zVz4CSRj4Q1mP/877rHOBVyN5jMUa4ylMJrwXwyxxRAIiR9nZ+CFHeifrJsIveeE+ygL
-         45Qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xonFLYW+K9R2/V+E4nxIJtaZUYsUbdcdHfLF2kKtcoo=;
-        b=KUcaiqKCbb39nKe4LGwf45b/4Y4sX2HPLG2Nf8lmEji8v1sFtGTI7PYAf+VquQk4hT
-         8c3g/OiDS0ArQgmIOABIjBHaaE+pQsdFaRpE/9vhsn8yJrIOg1eoOoo9t6Eis1POmGO6
-         R2x33VYkmsaDruSA5I1RP8q8h4leaRCC+yIWJM1y4X+BiQxxaDtkFfHAhoBik6JqJD6P
-         hZ9K7c91rnXKYEr2UZLYLGv7IfM3urMQhZ9anzvp3PvWR3I2lHegittqxZwnm94kDpnr
-         qISDG76tyaJsXiwkX31oa4ljn9eczqGyGvtLEYKdZulFflilBHx5R0025vRUtHEaRToC
-         P0jQ==
-X-Gm-Message-State: APjAAAVkrUCHB/Wv1JIRhtxHew+A9IGVsTb4uozyMBWYt9a5kN7A9iDI
-        OOGMG52MEYhci+jZFfVZ1aWNVnPbeN8WaRkG
-X-Google-Smtp-Source: APXvYqxnyNJu0dpuhkbD8V2MUn3DG+U46V6RIU4ma0y5/B8D4fyvBCvbpFOmizCk0WSq3Se6YEHEdw==
-X-Received: by 2002:a1c:1981:: with SMTP id 123mr2593496wmz.88.1569498129864;
-        Thu, 26 Sep 2019 04:42:09 -0700 (PDT)
-Received: from [192.168.1.145] ([65.39.69.237])
-        by smtp.gmail.com with ESMTPSA id s12sm5719744wra.82.2019.09.26.04.42.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 26 Sep 2019 04:42:09 -0700 (PDT)
-Subject: Re: [PATCH][next] io_uring: ensure variable ret is initialized to
- zero
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Colin King <colin.king@canonical.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190926095012.31826-1-colin.king@canonical.com>
- <3aa821ea-3041-fb56-2458-ec643963c511@kernel.dk>
- <20190926113329.GE27389@kadam>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <04262621-68fd-a4bb-ab0c-83954c03fbb0@kernel.dk>
-Date:   Thu, 26 Sep 2019 13:42:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190926113329.GE27389@kadam>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 26 Sep 2019 07:42:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:47040 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725784AbfIZLmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 07:42:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 97FA5142F;
+        Thu, 26 Sep 2019 04:42:23 -0700 (PDT)
+Received: from entos-d05.shanghai.arm.com (entos-d05.shanghai.arm.com [10.169.40.35])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0C9173F67D;
+        Thu, 26 Sep 2019 04:42:18 -0700 (PDT)
+From:   Jianyong Wu <jianyong.wu@arm.com>
+To:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
+        tglx@linutronix.de, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, maz@kernel.org,
+        richardcochran@gmail.com, Mark.Rutland@arm.com,
+        Will.Deacon@arm.com, suzuki.poulose@arm.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        Steve.Capper@arm.com, Kaly.Xin@arm.com, justin.he@arm.com,
+        jianyong.wu@arm.com, nd@arm.com
+Subject: [RFC PATCH v4 0/6] Enable ptp_kvm for arm64
+Date:   Thu, 26 Sep 2019 19:42:07 +0800
+Message-Id: <20190926114212.5322-1-jianyong.wu@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/26/19 1:33 PM, Dan Carpenter wrote:
-> On Thu, Sep 26, 2019 at 11:56:30AM +0200, Jens Axboe wrote:
->> On 9/26/19 11:50 AM, Colin King wrote:
->>> From: Colin Ian King <colin.king@canonical.com>
->>>
->>> In the case where sig is NULL the error variable ret is not initialized
->>> and may contain a garbage value on the final checks to see if ret is
->>> -ERESTARTSYS.  Best to initialize ret to zero before the do loop to
->>> ensure the ret does not accidentially contain -ERESTARTSYS before the
->>> loop.
->>
->> Oops, weird it didn't complain. I've folded in this fix, as that commit
->> isn't upstream yet. Thanks!
-> 
-> There is a bug in GCC where at certain optimization levels, instead of
-> complaining, it initializes it to zero.
+kvm ptp targets to provide high precision time sync between guest
+and host in virtualization environment. This patch enable kvm ptp
+for arm64.
+This patch set base on [1][2][3]
 
-That's awfully nice of it ;-)
+change log:
+from v3 to v4:
+        (1) fix clocksource of ptp_kvm to arch_sys_counter.
+        (2) move kvm_arch_ptp_get_clock_fn into arm_arch_timer.c
+        (3) subtract cntvoff before return cycles from host.
+        (4) use ktime_get_snapshot instead of getnstimeofday and
+get_current_counterval to return time and counter value.
+        (5) split ktime and counter into two 32-bit block respectively
+to avoid Y2038-safe issue.
+        (6) set time compensation to device time as half of the delay of hvc call.
+        (7) add ARM_ARCH_TIMER as dependency of ptp_kvm for
+arm64.
+from v2 to v3:
+        (1) fix some issues in commit log.
+        (2) add some receivers in send list.
+from v1 to v2:
+        (1) move arch-specific code from arch/ to driver/ptp/
+        (2) offer mechanism to inform userspace if ptp_kvm service is
+available.
+        (3) separate ptp_kvm code for arm64 into hypervisor part and
+guest part.
+        (4) add API to expose monotonic clock and counter value.
+        (5) refine code: remove no necessary part and reconsitution.
 
-Tried with -O0 and still didn't complain for me.
+[1]https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/
+commit/?h=kvm/hvc&id=125ea89e4a21e2fc5235410f966a996a1a7148bf
+[2]https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/
+commit/?h=kvm/hvc&id=464f5a1741e5959c3e4d2be1966ae0093b4dce06
+[3]https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/
+commit/?h=kvm/hvc&id=6597490e005d0eeca8ed8c1c1d7b4318ee014681
 
-$ gcc --version
-gcc (Ubuntu 9.1.0-2ubuntu2~18.04) 9.1.0
+Jianyong Wu (5):
+  psci: Export psci_ops.conduit symbol as modules will use it.
+  ptp: Reorganize ptp_kvm modules to make it arch-independent.
+  psci: Add hvc call service for ptp_kvm.
+  ptp: arm64: Enable ptp_kvm for arm64
+  kvm: arm64: Add capability check extension for ptp_kvm
 
-Tried gcc 5/6/7/8 as well. Might have to go look at what code it's
-generating.
+ drivers/clocksource/arm_arch_timer.c | 28 +++++++++
+ drivers/firmware/psci/psci.c         |  6 ++
+ drivers/ptp/Kconfig                  |  2 +-
+ drivers/ptp/Makefile                 |  1 +
+ drivers/ptp/{ptp_kvm.c => kvm_ptp.c} | 79 +++++++------------------
+ drivers/ptp/ptp_kvm_arm64.c          | 73 +++++++++++++++++++++++
+ drivers/ptp/ptp_kvm_x86.c            | 87 ++++++++++++++++++++++++++++
+ include/asm-generic/ptp_kvm.h        | 12 ++++
+ include/linux/arm-smccc.h            | 14 ++++-
+ include/linux/psci.h                 |  1 +
+ include/uapi/linux/kvm.h             |  1 +
+ virt/kvm/arm/arm.c                   |  1 +
+ virt/kvm/arm/psci.c                  | 18 ++++++
+ 13 files changed, 262 insertions(+), 61 deletions(-)
+ rename drivers/ptp/{ptp_kvm.c => kvm_ptp.c} (63%)
+ create mode 100644 drivers/ptp/ptp_kvm_arm64.c
+ create mode 100644 drivers/ptp/ptp_kvm_x86.c
+ create mode 100644 include/asm-generic/ptp_kvm.h
 
 -- 
-Jens Axboe
+2.17.1
 
