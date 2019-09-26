@@ -2,115 +2,308 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F9EC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 14:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C792C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 14:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A23CE21D56
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 14:44:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oj/pt86Q"
+	by mail.kernel.org (Postfix) with ESMTP id 0FF92222C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 14:46:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbfIZOo5 (ORCPT
+        id S1727208AbfIZOqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 10:44:57 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:36804 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbfIZOo4 (ORCPT
+        Thu, 26 Sep 2019 10:46:52 -0400
+Received: from charlotte.tuxdriver.com ([70.61.120.58]:35738 "EHLO
+        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725820AbfIZOqv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 10:44:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=iO8czRiAGMFSXvLsHxj2FyMjV9e4r3Dcesn6W8xWfKI=; b=oj/pt86QBEN1ErPbIbuM8NDbZ
-        mmazJ1uvIflsbirPfKsUdNsv55NuChyEh5YjgtVNyGjbIj+MsfOfLiRLI95PmBigeaA0UK/uia8iz
-        5PC+W94Y73vbaAw9YN6xcmm1uMeMfVDNkzTYCwf31ujiRuw2ePKWrpxRVptcjXJtMTXryVliUyVnc
-        hJVxy270Gp+QH5sQIIH/LWTfXayvb0xmHe8jz7LzZDTP+VtIzhqRmux617CVvmh8hr4gBUAfQ9aDk
-        wbNK80PbPIq1ZNjq+SqxDNqSBX0yhr98ZnBCyOs2t3YwScMkJYrakP/lQjZmVfBLKeCoI5aRV62wJ
-        oHcDyO5VQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iDV0m-00071b-R7; Thu, 26 Sep 2019 14:44:53 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1516D302A71;
-        Thu, 26 Sep 2019 16:44:04 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7683520138CCE; Thu, 26 Sep 2019 16:44:50 +0200 (CEST)
-Date:   Thu, 26 Sep 2019 16:44:50 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        linux-kernel@vger.kernel.org, jolsa@redhat.com
-Subject: Re: [PATCH v1 4/6] perf: Allow using AUX data in perf samples
-Message-ID: <20190926144450.GC4519@hirez.programming.kicks-ass.net>
-References: <20180612075117.65420-1-alexander.shishkin@linux.intel.com>
- <20180612075117.65420-5-alexander.shishkin@linux.intel.com>
- <20180614202022.GC12217@hirez.programming.kicks-ass.net>
- <20180619104725.bqvs7uwzhb4ihyxy@um.fi.intel.com>
- <20180621201632.GE27616@hirez.programming.kicks-ass.net>
- <87lfw234ew.fsf@ashishki-desk.ger.corp.intel.com>
+        Thu, 26 Sep 2019 10:46:51 -0400
+Received: from cpe-2606-a000-111b-43ee-0-0-0-115f.dyn6.twc.com ([2606:a000:111b:43ee::115f] helo=localhost)
+        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
+        (Exim 4.63)
+        (envelope-from <nhorman@tuxdriver.com>)
+        id 1iDV2R-0002Jk-6y; Thu, 26 Sep 2019 10:46:42 -0400
+Date:   Thu, 26 Sep 2019 10:46:29 -0400
+From:   Neil Horman <nhorman@tuxdriver.com>
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
+        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
+        eparis@parisplace.org, serge@hallyn.com, ebiederm@xmission.com,
+        dwalsh@redhat.com, mpatel@redhat.com
+Subject: Re: [PATCH ghak90 V7 04/21] audit: convert to contid list to check
+ for orch/engine ownership
+Message-ID: <20190926144629.GB7235@hmswarspite.think-freely.org>
+References: <cover.1568834524.git.rgb@redhat.com>
+ <6fb4e270bfafef3d0477a06b0365fdcc5a5305b5.1568834524.git.rgb@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87lfw234ew.fsf@ashishki-desk.ger.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <6fb4e270bfafef3d0477a06b0365fdcc5a5305b5.1568834524.git.rgb@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 03:32:39PM +0300, Alexander Shishkin wrote:
-> The other problem is sampling SW events, that would require a ctx->lock
-> to prevent racing with event_function_call()s from other cpus, resulting
-> in somewhat cringy "if (!in_nmi()) raw_spin_lock(...)", but I don't have
-> better idea as to how to handle that.
+On Wed, Sep 18, 2019 at 09:22:21PM -0400, Richard Guy Briggs wrote:
+> Store the audit container identifier in a refcounted kernel object that
+> is added to the master list of audit container identifiers.  This will
+> allow multiple container orchestrators/engines to work on the same
+> machine without danger of inadvertantly re-using an existing identifier.
+> It will also allow an orchestrator to inject a process into an existing
+> container by checking if the original container owner is the one
+> injecting the task.  A hash table list is used to optimize searches.
+> 
+> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> ---
+>  include/linux/audit.h | 26 ++++++++++++++--
+>  kernel/audit.c        | 86 ++++++++++++++++++++++++++++++++++++++++++++++++---
+>  kernel/audit.h        |  8 +++++
+>  3 files changed, 112 insertions(+), 8 deletions(-)
+> 
+> diff --git a/include/linux/audit.h b/include/linux/audit.h
+> index f2e3b81f2942..e317807cdd3e 100644
+> --- a/include/linux/audit.h
+> +++ b/include/linux/audit.h
+> @@ -95,10 +95,18 @@ struct audit_ntp_data {
+>  struct audit_ntp_data {};
+>  #endif
+>  
+> +struct audit_cont {
+> +	struct list_head	list;
+> +	u64			id;
+> +	struct task_struct	*owner;
+> +	refcount_t              refcount;
+> +	struct rcu_head         rcu;
+> +};
+> +
+>  struct audit_task_info {
+>  	kuid_t			loginuid;
+>  	unsigned int		sessionid;
+> -	u64			contid;
+> +	struct audit_cont	*cont;
+>  #ifdef CONFIG_AUDITSYSCALL
+>  	struct audit_context	*ctx;
+>  #endif
+> @@ -203,11 +211,15 @@ static inline unsigned int audit_get_sessionid(struct task_struct *tsk)
+>  
+>  static inline u64 audit_get_contid(struct task_struct *tsk)
+>  {
+> -	if (!tsk->audit)
+> +	if (!tsk->audit || !tsk->audit->cont)
+>  		return AUDIT_CID_UNSET;
+> -	return tsk->audit->contid;
+> +	return tsk->audit->cont->id;
+>  }
+>  
+> +extern struct audit_cont *audit_cont(struct task_struct *tsk);
+> +
+> +extern void audit_cont_put(struct audit_cont *cont);
+> +
+I see that you manual increment this refcount at various call sites, why
+no corresponding audit_contid_hold function?
 
-> +int perf_pmu_aux_sample_output(struct perf_event *event,
-> +			       struct perf_output_handle *handle,
-> +			       unsigned long size)
+Neil
+
+>  extern u32 audit_enabled;
+>  
+>  extern int audit_signal_info(int sig, struct task_struct *t);
+> @@ -277,6 +289,14 @@ static inline u64 audit_get_contid(struct task_struct *tsk)
+>  	return AUDIT_CID_UNSET;
+>  }
+>  
+> +static inline struct audit_cont *audit_cont(struct task_struct *tsk)
 > +{
-> +	unsigned long flags;
-> +	int ret;
-> +
-> +	/*
-> +	 * NMI vs IRQ
-> +	 *
-> +	 * Normal ->start()/->stop() callbacks run in IRQ mode in scheduler
-> +	 * paths. If we start calling them in NMI context, they may race with
-> +	 * the IRQ ones, that is, for example, re-starting an event that's just
-> +	 * been stopped.
-> +	 */
-> +	if (!in_nmi())
-> +		raw_spin_lock_irqsave(&event->ctx->lock, flags);
-> +
-> +	ret = event->pmu->snapshot_aux(event, handle, size);
-> +
-> +	if (!in_nmi())
-> +		raw_spin_unlock_irqrestore(&event->ctx->lock, flags);
-> +
-> +	return ret;
+> +	return NULL;
 > +}
-
-I'm confused... would not something like:
-
-	unsigned long flags;
-
-	local_irq_save(flags);
-	ret = event->pmu->snapshot_aux(...);
-	local_irq_restore(flags);
-
-	return ret;
-
-Be sufficient? By disabling IRQs we already hold off remote
-event_function_call()s.
-
-Or am I misunderstanding the race here?
+> +
+> +static inline void audit_cont_put(struct audit_cont *cont)
+> +{ }
+> +
+>  #define audit_enabled AUDIT_OFF
+>  
+>  static inline int audit_signal_info(int sig, struct task_struct *t)
+> diff --git a/kernel/audit.c b/kernel/audit.c
+> index a36ea57cbb61..ea0899130cc1 100644
+> --- a/kernel/audit.c
+> +++ b/kernel/audit.c
+> @@ -137,6 +137,8 @@ struct audit_net {
+>  
+>  /* Hash for inode-based rules */
+>  struct list_head audit_inode_hash[AUDIT_INODE_BUCKETS];
+> +/* Hash for contid-based rules */
+> +struct list_head audit_contid_hash[AUDIT_CONTID_BUCKETS];
+>  
+>  static struct kmem_cache *audit_buffer_cache;
+>  
+> @@ -204,6 +206,8 @@ struct audit_reply {
+>  
+>  static struct kmem_cache *audit_task_cache;
+>  
+> +static DEFINE_SPINLOCK(audit_contid_list_lock);
+> +
+>  void __init audit_task_init(void)
+>  {
+>  	audit_task_cache = kmem_cache_create("audit_task",
+> @@ -231,7 +235,9 @@ int audit_alloc(struct task_struct *tsk)
+>  	}
+>  	info->loginuid = audit_get_loginuid(current);
+>  	info->sessionid = audit_get_sessionid(current);
+> -	info->contid = audit_get_contid(current);
+> +	info->cont = audit_cont(current);
+> +	if (info->cont)
+> +		refcount_inc(&info->cont->refcount);
+>  	tsk->audit = info;
+>  
+>  	ret = audit_alloc_syscall(tsk);
+> @@ -246,7 +252,7 @@ int audit_alloc(struct task_struct *tsk)
+>  struct audit_task_info init_struct_audit = {
+>  	.loginuid = INVALID_UID,
+>  	.sessionid = AUDIT_SID_UNSET,
+> -	.contid = AUDIT_CID_UNSET,
+> +	.cont = NULL,
+>  #ifdef CONFIG_AUDITSYSCALL
+>  	.ctx = NULL,
+>  #endif
+> @@ -266,6 +272,9 @@ void audit_free(struct task_struct *tsk)
+>  	/* Freeing the audit_task_info struct must be performed after
+>  	 * audit_log_exit() due to need for loginuid and sessionid.
+>  	 */
+> +	spin_lock(&audit_contid_list_lock); 
+> +	audit_cont_put(tsk->audit->cont);
+> +	spin_unlock(&audit_contid_list_lock); 
+>  	info = tsk->audit;
+>  	tsk->audit = NULL;
+>  	kmem_cache_free(audit_task_cache, info);
+> @@ -1657,6 +1666,9 @@ static int __init audit_init(void)
+>  	for (i = 0; i < AUDIT_INODE_BUCKETS; i++)
+>  		INIT_LIST_HEAD(&audit_inode_hash[i]);
+>  
+> +	for (i = 0; i < AUDIT_CONTID_BUCKETS; i++)
+> +		INIT_LIST_HEAD(&audit_contid_hash[i]);
+> +
+>  	mutex_init(&audit_cmd_mutex.lock);
+>  	audit_cmd_mutex.owner = NULL;
+>  
+> @@ -2356,6 +2368,32 @@ int audit_signal_info(int sig, struct task_struct *t)
+>  	return audit_signal_info_syscall(t);
+>  }
+>  
+> +struct audit_cont *audit_cont(struct task_struct *tsk)
+> +{
+> +	if (!tsk->audit || !tsk->audit->cont)
+> +		return NULL;
+> +	return tsk->audit->cont;
+> +}
+> +
+> +/* audit_contid_list_lock must be held by caller */
+> +void audit_cont_put(struct audit_cont *cont)
+> +{
+> +	if (!cont)
+> +		return;
+> +	if (refcount_dec_and_test(&cont->refcount)) {
+> +		put_task_struct(cont->owner);
+> +		list_del_rcu(&cont->list);
+> +		kfree_rcu(cont, rcu);
+> +	}
+> +}
+> +
+> +static struct task_struct *audit_cont_owner(struct task_struct *tsk)
+> +{
+> +	if (tsk->audit && tsk->audit->cont)
+> +		return tsk->audit->cont->owner;
+> +	return NULL;
+> +}
+> +
+>  /*
+>   * audit_set_contid - set current task's audit contid
+>   * @task: target task
+> @@ -2382,9 +2420,12 @@ int audit_set_contid(struct task_struct *task, u64 contid)
+>  	}
+>  	oldcontid = audit_get_contid(task);
+>  	read_lock(&tasklist_lock);
+> -	/* Don't allow the audit containerid to be unset */
+> +	/* Don't allow the contid to be unset */
+>  	if (!audit_contid_valid(contid))
+>  		rc = -EINVAL;
+> +	/* Don't allow the contid to be set to the same value again */
+> +	else if (contid == oldcontid) {
+> +		rc = -EADDRINUSE;
+>  	/* if we don't have caps, reject */
+>  	else if (!capable(CAP_AUDIT_CONTROL))
+>  		rc = -EPERM;
+> @@ -2397,8 +2438,43 @@ int audit_set_contid(struct task_struct *task, u64 contid)
+>  	else if (audit_contid_set(task))
+>  		rc = -ECHILD;
+>  	read_unlock(&tasklist_lock);
+> -	if (!rc)
+> -		task->audit->contid = contid;
+> +	if (!rc) {
+> +		struct audit_cont *oldcont = audit_cont(task);
+> +		struct audit_cont *cont = NULL;
+> +		struct audit_cont *newcont = NULL;
+> +		int h = audit_hash_contid(contid);
+> +
+> +		spin_lock(&audit_contid_list_lock);
+> +		list_for_each_entry_rcu(cont, &audit_contid_hash[h], list)
+> +			if (cont->id == contid) {
+> +				/* task injection to existing container */
+> +				if (current == cont->owner) {
+> +					refcount_inc(&cont->refcount);
+> +					newcont = cont;
+> +				} else {
+> +					rc = -ENOTUNIQ;
+> +					goto conterror;
+> +				}
+> +			}
+> +		if (!newcont) {
+> +			newcont = kmalloc(sizeof(struct audit_cont), GFP_ATOMIC);
+> +			if (newcont) {
+> +				INIT_LIST_HEAD(&newcont->list);
+> +				newcont->id = contid;
+> +				get_task_struct(current);
+> +				newcont->owner = current;
+> +				refcount_set(&newcont->refcount, 1);
+> +				list_add_rcu(&newcont->list, &audit_contid_hash[h]);
+> +			} else {
+> +				rc = -ENOMEM;
+> +				goto conterror;
+> +			}
+> +		}
+> +		task->audit->cont = newcont;
+> +		audit_cont_put(oldcont);
+> +conterror:
+> +		spin_unlock(&audit_contid_list_lock);
+> +	}
+>  	task_unlock(task);
+>  
+>  	if (!audit_enabled)
+> diff --git a/kernel/audit.h b/kernel/audit.h
+> index 16bd03b88e0d..e4a31aa92dfe 100644
+> --- a/kernel/audit.h
+> +++ b/kernel/audit.h
+> @@ -211,6 +211,14 @@ static inline int audit_hash_ino(u32 ino)
+>  	return (ino & (AUDIT_INODE_BUCKETS-1));
+>  }
+>  
+> +#define AUDIT_CONTID_BUCKETS	32
+> +extern struct list_head audit_contid_hash[AUDIT_CONTID_BUCKETS];
+> +
+> +static inline int audit_hash_contid(u64 contid)
+> +{
+> +	return (contid & (AUDIT_CONTID_BUCKETS-1));
+> +}
+> +
+>  /* Indicates that audit should log the full pathname. */
+>  #define AUDIT_NAME_FULL -1
+>  
+> -- 
+> 1.8.3.1
+> 
+> 
