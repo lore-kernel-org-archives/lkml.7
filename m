@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7A3C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A444C4360D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E566F21D7B
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F66E21D6C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:34:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569458044;
-	bh=OvJeXun5fRBWDo1+HOVLHwGApQ8t/l9RaqARGX0fIzs=;
+	s=default; t=1569458047;
+	bh=Lb/QpzW+HecqAC1shjrO+OUhwo+OcE8yZmivo2wC58o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GEJfFqWCowHPhOBu4q3EPe0z5KFdt45XKcljVnI+G787gS/y85GUC3JzEarxj3lWJ
-	 QvRxO0+kQ76tEUaGC8kAZe99bngkObaCOXzdVerdMfbcAcMJpe+WFmrh0Pz+tMi8Lp
-	 XGVDMjUMXGf7wZ26gl2zzYSO0KA1vYnJFWfyvDyo=
+	b=KbmPVtFR2KJXoCh6yyueZAyQZ9MAIyUGTOrNmAx4UBYehNFJgl+zGk154pg0KV0Al
+	 AyyIQUXmecvlBnxtyC0YonSAoBGI3cMNZf4exAZRmiJCtChFOGLAuHGfacDWw6rHpe
+	 usxN+TJ7RxW+JMivub7KWDEguNsv7D4IuNa8LUG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388273AbfIZAeD (ORCPT
+        id S2388314AbfIZAeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 20:34:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36608 "EHLO mail.kernel.org"
+        Wed, 25 Sep 2019 20:34:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388236AbfIZAeB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 20:34:01 -0400
+        id S2388263AbfIZAeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 20:34:04 -0400
 Received: from quaco.localdomain (unknown [179.97.35.50])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73671222C2;
-        Thu, 26 Sep 2019 00:33:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DCFD222C5;
+        Thu, 26 Sep 2019 00:33:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569458039;
-        bh=OvJeXun5fRBWDo1+HOVLHwGApQ8t/l9RaqARGX0fIzs=;
+        s=default; t=1569458042;
+        bh=Lb/QpzW+HecqAC1shjrO+OUhwo+OcE8yZmivo2wC58o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1cA2bmYY5MxJf0zQYhjk3SKFR9Nw27LuOTm7xKoMNcyYp/yb3udffIAywNNqHi7Ap
-         lEgqRIT+e8AqnYZrT6R9pXqpKeyDGhuf2FX59ooQu36ab31Ec76l1F/B1sosDfSyLu
-         MIMrbFQCgjkebyCl8cFt0TW77gXo6udB5ULwK/XQ=
+        b=E5i2/tiRIhTUEY3em/gAwmBeOYC+JifM+KwKYAXbe0xKEWh/Ij4IkZsI7v71xmt3f
+         CGDi8HZatJzDVzm5ntPW/LTAdPhgOnHJYem9lNARhZJYNd3R3DdK6Z3lojnyJZP6TH
+         gp2qkRdmPQ0xSeDyn2oo1JpaZatO3YiN0jVLzV2U=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -49,9 +49,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Michael Petlan <mpetlan@redhat.com>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 15/66] perf tools: Rename 'struct perf_mmap' to 'struct mmap'
-Date:   Wed, 25 Sep 2019 21:31:53 -0300
-Message-Id: <20190926003244.13962-16-acme@kernel.org>
+Subject: [PATCH 16/66] perf tools: Rename perf_evlist__mmap() to evlist__mmap()
+Date:   Wed, 25 Sep 2019 21:31:54 -0300
+Message-Id: <20190926003244.13962-17-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190926003244.13962-1-acme@kernel.org>
 References: <20190926003244.13962-1-acme@kernel.org>
@@ -64,825 +64,434 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Rename 'struct perf_evlist' to 'struct evlist', so we don't have a name
-clash when we add 'struct perf_mmap' to libperf.
+Rename perf_evlist__mmap() to evlist__mmap(), so we don't have a name
+clash when we add perf_evlist__mmap() in libperf.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Link: http://lore.kernel.org/lkml/20190913132355.21634-4-jolsa@kernel.org
+Link: http://lore.kernel.org/lkml/20190913132355.21634-5-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
  tools/perf/arch/x86/tests/perf-time-to-tsc.c |  2 +-
  tools/perf/builtin-kvm.c                     |  2 +-
- tools/perf/builtin-record.c                  | 34 ++++++------
+ tools/perf/builtin-record.c                  |  6 ++--
  tools/perf/builtin-top.c                     |  2 +-
  tools/perf/builtin-trace.c                   |  2 +-
- tools/perf/tests/backward-ring-buffer.c      |  2 +-
- tools/perf/tests/bpf.c                       |  2 +-
- tools/perf/tests/code-reading.c              |  2 +-
+ tools/perf/tests/backward-ring-buffer.c      |  4 +--
+ tools/perf/tests/bpf.c                       |  4 +--
+ tools/perf/tests/code-reading.c              |  4 +--
  tools/perf/tests/keep-tracking.c             |  2 +-
  tools/perf/tests/mmap-basic.c                |  2 +-
- tools/perf/tests/openat-syscall-tp-fields.c  |  2 +-
- tools/perf/tests/perf-record.c               |  2 +-
+ tools/perf/tests/openat-syscall-tp-fields.c  |  4 +--
+ tools/perf/tests/perf-record.c               |  4 +--
  tools/perf/tests/sw-clock.c                  |  2 +-
- tools/perf/tests/switch-tracking.c           |  2 +-
+ tools/perf/tests/switch-tracking.c           |  4 +--
  tools/perf/tests/task-exit.c                 |  2 +-
- tools/perf/util/auxtrace.c                   |  6 +--
- tools/perf/util/auxtrace.h                   |  8 +--
- tools/perf/util/evlist.c                     | 14 ++---
- tools/perf/util/evlist.h                     |  4 +-
- tools/perf/util/mmap.c                       | 54 ++++++++++----------
- tools/perf/util/mmap.h                       | 32 ++++++------
- tools/perf/util/python.c                     |  6 +--
- 22 files changed, 93 insertions(+), 93 deletions(-)
+ tools/perf/util/evlist.c                     | 30 ++++++++++----------
+ tools/perf/util/evlist.h                     |  8 +++---
+ tools/perf/util/python.c                     |  2 +-
+ 18 files changed, 43 insertions(+), 43 deletions(-)
 
 diff --git a/tools/perf/arch/x86/tests/perf-time-to-tsc.c b/tools/perf/arch/x86/tests/perf-time-to-tsc.c
-index 0a4570b340fa..c83abb1ed0ff 100644
+index c83abb1ed0ff..42ae47525a76 100644
 --- a/tools/perf/arch/x86/tests/perf-time-to-tsc.c
 +++ b/tools/perf/arch/x86/tests/perf-time-to-tsc.c
-@@ -65,7 +65,7 @@ int test__perf_time_to_tsc(struct test *test __maybe_unused, int subtest __maybe
- 	union perf_event *event;
- 	u64 test_tsc, comm1_tsc, comm2_tsc;
- 	u64 test_time, comm1_time = 0, comm2_time = 0;
--	struct perf_mmap *md;
-+	struct mmap *md;
+@@ -90,7 +90,7 @@ int test__perf_time_to_tsc(struct test *test __maybe_unused, int subtest __maybe
  
- 	threads = thread_map__new(-1, getpid(), UINT_MAX);
- 	CHECK_NOT_NULL__(threads);
+ 	CHECK__(evlist__open(evlist));
+ 
+-	CHECK__(perf_evlist__mmap(evlist, UINT_MAX));
++	CHECK__(evlist__mmap(evlist, UINT_MAX));
+ 
+ 	pc = evlist->mmap[0].base;
+ 	ret = perf_read_tsc_conversion(pc, &tc);
 diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index c4b22e1b0a40..7354b77e9137 100644
+index 7354b77e9137..72debb7bd20d 100644
 --- a/tools/perf/builtin-kvm.c
 +++ b/tools/perf/builtin-kvm.c
-@@ -750,7 +750,7 @@ static s64 perf_kvm__mmap_read_idx(struct perf_kvm_stat *kvm, int idx,
- {
- 	struct evlist *evlist = kvm->evlist;
- 	union perf_event *event;
--	struct perf_mmap *md;
-+	struct mmap *md;
- 	u64 timestamp;
- 	s64 n = 0;
- 	int err;
+@@ -1060,7 +1060,7 @@ static int kvm_live_open_events(struct perf_kvm_stat *kvm)
+ 		goto out;
+ 	}
+ 
+-	if (perf_evlist__mmap(evlist, kvm->opts.mmap_pages) < 0) {
++	if (evlist__mmap(evlist, kvm->opts.mmap_pages) < 0) {
+ 		ui__error("Failed to mmap the events: %s\n",
+ 			  str_error_r(errno, sbuf, sizeof(sbuf)));
+ 		evlist__close(evlist);
 diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 1e1f97139f16..1528fb686f96 100644
+index 1528fb686f96..093d9ab5633e 100644
 --- a/tools/perf/builtin-record.c
 +++ b/tools/perf/builtin-record.c
-@@ -119,7 +119,7 @@ static bool switch_output_time(struct record *rec)
- 	       trigger_is_ready(&switch_output_trigger);
- }
+@@ -439,7 +439,7 @@ static int record__mmap_flush_parse(const struct option *opt,
+ 	if (!opts->mmap_flush)
+ 		opts->mmap_flush = MMAP_FLUSH_DEFAULT;
  
--static int record__write(struct record *rec, struct perf_mmap *map __maybe_unused,
-+static int record__write(struct record *rec, struct mmap *map __maybe_unused,
- 			 void *bf, size_t size)
+-	flush_max = perf_evlist__mmap_size(opts->mmap_pages);
++	flush_max = evlist__mmap_size(opts->mmap_pages);
+ 	flush_max /= 4;
+ 	if (opts->mmap_flush > flush_max)
+ 		opts->mmap_flush = flush_max;
+@@ -707,7 +707,7 @@ static int record__mmap_evlist(struct record *rec,
+ 	if (opts->affinity != PERF_AFFINITY_SYS)
+ 		cpu__setup_cpunode_map();
+ 
+-	if (perf_evlist__mmap_ex(evlist, opts->mmap_pages,
++	if (evlist__mmap_ex(evlist, opts->mmap_pages,
+ 				 opts->auxtrace_mmap_pages,
+ 				 opts->auxtrace_snapshot_mode,
+ 				 opts->nr_cblocks, opts->affinity,
+@@ -1980,7 +1980,7 @@ static int record__parse_mmap_pages(const struct option *opt,
+ 
+ static void switch_output_size_warn(struct record *rec)
  {
- 	struct perf_data_file *file = &rec->session->data->file;
-@@ -168,7 +168,7 @@ static int record__aio_write(struct aiocb *cblock, int trace_fd,
- 	return rc;
- }
+-	u64 wakeup_size = perf_evlist__mmap_size(rec->opts.mmap_pages);
++	u64 wakeup_size = evlist__mmap_size(rec->opts.mmap_pages);
+ 	struct switch_output *s = &rec->switch_output;
  
--static int record__aio_complete(struct perf_mmap *md, struct aiocb *cblock)
-+static int record__aio_complete(struct mmap *md, struct aiocb *cblock)
- {
- 	void *rem_buf;
- 	off_t rem_off;
-@@ -214,7 +214,7 @@ static int record__aio_complete(struct perf_mmap *md, struct aiocb *cblock)
- 	return rc;
- }
- 
--static int record__aio_sync(struct perf_mmap *md, bool sync_all)
-+static int record__aio_sync(struct mmap *md, bool sync_all)
- {
- 	struct aiocb **aiocb = md->aio.aiocb;
- 	struct aiocb *cblocks = md->aio.cblocks;
-@@ -255,7 +255,7 @@ struct record_aio {
- 	size_t		size;
- };
- 
--static int record__aio_pushfn(struct perf_mmap *map, void *to, void *buf, size_t size)
-+static int record__aio_pushfn(struct mmap *map, void *to, void *buf, size_t size)
- {
- 	struct record_aio *aio = to;
- 
-@@ -300,7 +300,7 @@ static int record__aio_pushfn(struct perf_mmap *map, void *to, void *buf, size_t
- 	return size;
- }
- 
--static int record__aio_push(struct record *rec, struct perf_mmap *map, off_t *off)
-+static int record__aio_push(struct record *rec, struct mmap *map, off_t *off)
- {
- 	int ret, idx;
- 	int trace_fd = rec->session->data->file.fd;
-@@ -351,13 +351,13 @@ static void record__aio_mmap_read_sync(struct record *rec)
- {
- 	int i;
- 	struct evlist *evlist = rec->evlist;
--	struct perf_mmap *maps = evlist->mmap;
-+	struct mmap *maps = evlist->mmap;
- 
- 	if (!record__aio_enabled(rec))
- 		return;
- 
- 	for (i = 0; i < evlist->nr_mmaps; i++) {
--		struct perf_mmap *map = &maps[i];
-+		struct mmap *map = &maps[i];
- 
- 		if (map->base)
- 			record__aio_sync(map, true);
-@@ -387,7 +387,7 @@ static int record__aio_parse(const struct option *opt,
- #else /* HAVE_AIO_SUPPORT */
- static int nr_cblocks_max = 0;
- 
--static int record__aio_push(struct record *rec __maybe_unused, struct perf_mmap *map __maybe_unused,
-+static int record__aio_push(struct record *rec __maybe_unused, struct mmap *map __maybe_unused,
- 			    off_t *off __maybe_unused)
- {
- 	return -1;
-@@ -482,7 +482,7 @@ static int process_synthesized_event(struct perf_tool *tool,
- 	return record__write(rec, NULL, event, event->header.size);
- }
- 
--static int record__pushfn(struct perf_mmap *map, void *to, void *bf, size_t size)
-+static int record__pushfn(struct mmap *map, void *to, void *bf, size_t size)
- {
- 	struct record *rec = to;
- 
-@@ -527,7 +527,7 @@ static void record__sig_exit(void)
- #ifdef HAVE_AUXTRACE_SUPPORT
- 
- static int record__process_auxtrace(struct perf_tool *tool,
--				    struct perf_mmap *map,
-+				    struct mmap *map,
- 				    union perf_event *event, void *data1,
- 				    size_t len1, void *data2, size_t len2)
- {
-@@ -565,7 +565,7 @@ static int record__process_auxtrace(struct perf_tool *tool,
- }
- 
- static int record__auxtrace_mmap_read(struct record *rec,
--				      struct perf_mmap *map)
-+				      struct mmap *map)
- {
- 	int ret;
- 
-@@ -581,7 +581,7 @@ static int record__auxtrace_mmap_read(struct record *rec,
- }
- 
- static int record__auxtrace_mmap_read_snapshot(struct record *rec,
--					       struct perf_mmap *map)
-+					       struct mmap *map)
- {
- 	int ret;
- 
-@@ -603,7 +603,7 @@ static int record__auxtrace_read_snapshot_all(struct record *rec)
- 	int rc = 0;
- 
- 	for (i = 0; i < rec->evlist->nr_mmaps; i++) {
--		struct perf_mmap *map = &rec->evlist->mmap[i];
-+		struct mmap *map = &rec->evlist->mmap[i];
- 
- 		if (!map->auxtrace_mmap.base)
- 			continue;
-@@ -668,7 +668,7 @@ static int record__auxtrace_init(struct record *rec)
- 
- static inline
- int record__auxtrace_mmap_read(struct record *rec __maybe_unused,
--			       struct perf_mmap *map __maybe_unused)
-+			       struct mmap *map __maybe_unused)
- {
- 	return 0;
- }
-@@ -901,7 +901,7 @@ static struct perf_event_header finished_round_event = {
- 	.type = PERF_RECORD_FINISHED_ROUND,
- };
- 
--static void record__adjust_affinity(struct record *rec, struct perf_mmap *map)
-+static void record__adjust_affinity(struct record *rec, struct mmap *map)
- {
- 	if (rec->opts.affinity != PERF_AFFINITY_SYS &&
- 	    !CPU_EQUAL(&rec->affinity_mask, &map->affinity_mask)) {
-@@ -948,7 +948,7 @@ static int record__mmap_read_evlist(struct record *rec, struct evlist *evlist,
- 	u64 bytes_written = rec->bytes_written;
- 	int i;
- 	int rc = 0;
--	struct perf_mmap *maps;
-+	struct mmap *maps;
- 	int trace_fd = rec->data.file.fd;
- 	off_t off = 0;
- 
-@@ -967,7 +967,7 @@ static int record__mmap_read_evlist(struct record *rec, struct evlist *evlist,
- 
- 	for (i = 0; i < evlist->nr_mmaps; i++) {
- 		u64 flush = 0;
--		struct perf_mmap *map = &maps[i];
-+		struct mmap *map = &maps[i];
- 
- 		if (map->base) {
- 			record__adjust_affinity(rec, map);
+ 	wakeup_size /= 2;
 diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 8da3c939e6b0..834a927107c4 100644
+index 834a927107c4..771b3ff47dc3 100644
 --- a/tools/perf/builtin-top.c
 +++ b/tools/perf/builtin-top.c
-@@ -863,7 +863,7 @@ static void perf_top__mmap_read_idx(struct perf_top *top, int idx)
- {
- 	struct record_opts *opts = &top->record_opts;
- 	struct evlist *evlist = top->evlist;
--	struct perf_mmap *md;
-+	struct mmap *md;
- 	union perf_event *event;
+@@ -1042,7 +1042,7 @@ static int perf_top__start_counters(struct perf_top *top)
+ 		}
+ 	}
  
- 	md = opts->overwrite ? &evlist->overwrite_mmap[idx] : &evlist->mmap[idx];
+-	if (perf_evlist__mmap(evlist, opts->mmap_pages) < 0) {
++	if (evlist__mmap(evlist, opts->mmap_pages) < 0) {
+ 		ui__error("Failed to mmap with %d (%s)\n",
+ 			    errno, str_error_r(errno, msg, sizeof(msg)));
+ 		goto out_err;
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index a292658b4232..2f853870d68d 100644
+index 2f853870d68d..ff989351567d 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -3444,7 +3444,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+@@ -3409,7 +3409,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 	if (trace->dump.map)
+ 		bpf_map__fprintf(trace->dump.map, trace->output);
  
- 	for (i = 0; i < evlist->nr_mmaps; i++) {
- 		union perf_event *event;
--		struct perf_mmap *md;
-+		struct mmap *md;
+-	err = perf_evlist__mmap(evlist, trace->opts.mmap_pages);
++	err = evlist__mmap(evlist, trace->opts.mmap_pages);
+ 	if (err < 0)
+ 		goto out_error_mmap;
  
- 		md = &evlist->mmap[i];
- 		if (perf_mmap__read_init(md) < 0)
 diff --git a/tools/perf/tests/backward-ring-buffer.c b/tools/perf/tests/backward-ring-buffer.c
-index a637a4a90760..0a046096e6f4 100644
+index 0a046096e6f4..f1eb7e9c1d7d 100644
 --- a/tools/perf/tests/backward-ring-buffer.c
 +++ b/tools/perf/tests/backward-ring-buffer.c
-@@ -33,7 +33,7 @@ static int count_samples(struct evlist *evlist, int *sample_count,
- 	int i;
+@@ -63,9 +63,9 @@ static int do_test(struct evlist *evlist, int mmap_pages,
+ 	int err;
+ 	char sbuf[STRERR_BUFSIZE];
  
- 	for (i = 0; i < evlist->nr_mmaps; i++) {
--		struct perf_mmap *map = &evlist->overwrite_mmap[i];
-+		struct mmap *map = &evlist->overwrite_mmap[i];
- 		union perf_event *event;
- 
- 		perf_mmap__read_init(map);
+-	err = perf_evlist__mmap(evlist, mmap_pages);
++	err = evlist__mmap(evlist, mmap_pages);
+ 	if (err < 0) {
+-		pr_debug("perf_evlist__mmap: %s\n",
++		pr_debug("evlist__mmap: %s\n",
+ 			 str_error_r(errno, sbuf, sizeof(sbuf)));
+ 		return TEST_FAIL;
+ 	}
 diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
-index fc102e4f403e..cf9776aceb82 100644
+index cf9776aceb82..964731915498 100644
 --- a/tools/perf/tests/bpf.c
 +++ b/tools/perf/tests/bpf.c
-@@ -180,7 +180,7 @@ static int do_test(struct bpf_object *obj, int (*func)(void),
+@@ -167,9 +167,9 @@ static int do_test(struct bpf_object *obj, int (*func)(void),
+ 		goto out_delete_evlist;
+ 	}
  
- 	for (i = 0; i < evlist->nr_mmaps; i++) {
- 		union perf_event *event;
--		struct perf_mmap *md;
-+		struct mmap *md;
- 
- 		md = &evlist->mmap[i];
- 		if (perf_mmap__read_init(md) < 0)
+-	err = perf_evlist__mmap(evlist, opts.mmap_pages);
++	err = evlist__mmap(evlist, opts.mmap_pages);
+ 	if (err < 0) {
+-		pr_debug("perf_evlist__mmap: %s\n",
++		pr_debug("evlist__mmap: %s\n",
+ 			 str_error_r(errno, sbuf, sizeof(sbuf)));
+ 		goto out_delete_evlist;
+ 	}
 diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
-index fd02c1f1d976..df96cbb9ffe5 100644
+index df96cbb9ffe5..413783b69006 100644
 --- a/tools/perf/tests/code-reading.c
 +++ b/tools/perf/tests/code-reading.c
-@@ -419,7 +419,7 @@ static int process_events(struct machine *machine, struct evlist *evlist,
- 			  struct state *state)
- {
- 	union perf_event *event;
--	struct perf_mmap *md;
-+	struct mmap *md;
- 	int i, ret;
+@@ -685,9 +685,9 @@ static int do_test_code_reading(bool try_kcore)
+ 		break;
+ 	}
  
- 	for (i = 0; i < evlist->nr_mmaps; i++) {
+-	ret = perf_evlist__mmap(evlist, UINT_MAX);
++	ret = evlist__mmap(evlist, UINT_MAX);
+ 	if (ret < 0) {
+-		pr_debug("perf_evlist__mmap failed\n");
++		pr_debug("evlist__mmap failed\n");
+ 		goto out_put;
+ 	}
+ 
 diff --git a/tools/perf/tests/keep-tracking.c b/tools/perf/tests/keep-tracking.c
-index df0fd5a44e04..67a87f507bbd 100644
+index 67a87f507bbd..8e2ec5f72042 100644
 --- a/tools/perf/tests/keep-tracking.c
 +++ b/tools/perf/tests/keep-tracking.c
-@@ -31,7 +31,7 @@
- static int find_comm(struct evlist *evlist, const char *comm)
- {
- 	union perf_event *event;
--	struct perf_mmap *md;
-+	struct mmap *md;
- 	int i, found;
+@@ -104,7 +104,7 @@ int test__keep_tracking(struct test *test __maybe_unused, int subtest __maybe_un
+ 		goto out_err;
+ 	}
  
- 	found = 0;
+-	CHECK__(perf_evlist__mmap(evlist, UINT_MAX));
++	CHECK__(evlist__mmap(evlist, UINT_MAX));
+ 
+ 	/*
+ 	 * First, test that a 'comm' event can be found when the event is
 diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
-index 042757629e90..accca3d78fa3 100644
+index accca3d78fa3..4d42e455feb7 100644
 --- a/tools/perf/tests/mmap-basic.c
 +++ b/tools/perf/tests/mmap-basic.c
-@@ -42,7 +42,7 @@ int test__basic_mmap(struct test *test __maybe_unused, int subtest __maybe_unuse
- 		     expected_nr_events[nsyscalls], i, j;
- 	struct evsel *evsels[nsyscalls], *evsel;
- 	char sbuf[STRERR_BUFSIZE];
--	struct perf_mmap *md;
-+	struct mmap *md;
+@@ -99,7 +99,7 @@ int test__basic_mmap(struct test *test __maybe_unused, int subtest __maybe_unuse
+ 		expected_nr_events[i] = 1 + rand() % 127;
+ 	}
  
- 	threads = thread_map__new(-1, getpid(), UINT_MAX);
- 	if (threads == NULL) {
+-	if (perf_evlist__mmap(evlist, 128) < 0) {
++	if (evlist__mmap(evlist, 128) < 0) {
+ 		pr_debug("failed to mmap events: %d (%s)\n", errno,
+ 			 str_error_r(errno, sbuf, sizeof(sbuf)));
+ 		goto out_delete_evlist;
 diff --git a/tools/perf/tests/openat-syscall-tp-fields.c b/tools/perf/tests/openat-syscall-tp-fields.c
-index b71167b43dda..e5ef74d4e925 100644
+index e5ef74d4e925..5c2576174ae9 100644
 --- a/tools/perf/tests/openat-syscall-tp-fields.c
 +++ b/tools/perf/tests/openat-syscall-tp-fields.c
-@@ -88,7 +88,7 @@ int test__syscall_openat_tp_fields(struct test *test __maybe_unused, int subtest
+@@ -69,9 +69,9 @@ int test__syscall_openat_tp_fields(struct test *test __maybe_unused, int subtest
+ 		goto out_delete_evlist;
+ 	}
  
- 		for (i = 0; i < evlist->nr_mmaps; i++) {
- 			union perf_event *event;
--			struct perf_mmap *md;
-+			struct mmap *md;
- 
- 			md = &evlist->mmap[i];
- 			if (perf_mmap__read_init(md) < 0)
+-	err = perf_evlist__mmap(evlist, UINT_MAX);
++	err = evlist__mmap(evlist, UINT_MAX);
+ 	if (err < 0) {
+-		pr_debug("perf_evlist__mmap: %s\n",
++		pr_debug("evlist__mmap: %s\n",
+ 			 str_error_r(errno, sbuf, sizeof(sbuf)));
+ 		goto out_delete_evlist;
+ 	}
 diff --git a/tools/perf/tests/perf-record.c b/tools/perf/tests/perf-record.c
-index e1b42292cf7f..49d2d4c5956d 100644
+index 49d2d4c5956d..669fd88e7f30 100644
 --- a/tools/perf/tests/perf-record.c
 +++ b/tools/perf/tests/perf-record.c
-@@ -166,7 +166,7 @@ int test__PERF_RECORD(struct test *test __maybe_unused, int subtest __maybe_unus
- 
- 		for (i = 0; i < evlist->nr_mmaps; i++) {
- 			union perf_event *event;
--			struct perf_mmap *md;
-+			struct mmap *md;
- 
- 			md = &evlist->mmap[i];
- 			if (perf_mmap__read_init(md) < 0)
+@@ -143,9 +143,9 @@ int test__PERF_RECORD(struct test *test __maybe_unused, int subtest __maybe_unus
+ 	 * fds in the same CPU to be injected in the same mmap ring buffer
+ 	 * (using ioctl(PERF_EVENT_IOC_SET_OUTPUT)).
+ 	 */
+-	err = perf_evlist__mmap(evlist, opts.mmap_pages);
++	err = evlist__mmap(evlist, opts.mmap_pages);
+ 	if (err < 0) {
+-		pr_debug("perf_evlist__mmap: %s\n",
++		pr_debug("evlist__mmap: %s\n",
+ 			 str_error_r(errno, sbuf, sizeof(sbuf)));
+ 		goto out_delete_evlist;
+ 	}
 diff --git a/tools/perf/tests/sw-clock.c b/tools/perf/tests/sw-clock.c
-index 97694a040986..7abe0b6aabb7 100644
+index 7abe0b6aabb7..fbff60815be8 100644
 --- a/tools/perf/tests/sw-clock.c
 +++ b/tools/perf/tests/sw-clock.c
-@@ -42,7 +42,7 @@ static int __test__sw_clock_freq(enum perf_sw_ids clock_id)
- 	};
- 	struct perf_cpu_map *cpus;
- 	struct perf_thread_map *threads;
--	struct perf_mmap *md;
-+	struct mmap *md;
+@@ -82,7 +82,7 @@ static int __test__sw_clock_freq(enum perf_sw_ids clock_id)
+ 		goto out_delete_evlist;
+ 	}
  
- 	attr.sample_freq = 500;
- 
+-	err = perf_evlist__mmap(evlist, 128);
++	err = evlist__mmap(evlist, 128);
+ 	if (err < 0) {
+ 		pr_debug("failed to mmap event: %d (%s)\n", errno,
+ 			 str_error_r(errno, sbuf, sizeof(sbuf)));
 diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/switch-tracking.c
-index 3fb1ff7b8a2f..e7888ddd69a3 100644
+index e7888ddd69a3..c92e287e0f53 100644
 --- a/tools/perf/tests/switch-tracking.c
 +++ b/tools/perf/tests/switch-tracking.c
-@@ -263,7 +263,7 @@ static int process_events(struct evlist *evlist,
- 	unsigned pos, cnt = 0;
- 	LIST_HEAD(events);
- 	struct event_node *events_array, *node;
--	struct perf_mmap *md;
-+	struct mmap *md;
- 	int i, ret;
+@@ -460,9 +460,9 @@ int test__switch_tracking(struct test *test __maybe_unused, int subtest __maybe_
+ 		goto out;
+ 	}
  
- 	for (i = 0; i < evlist->nr_mmaps; i++) {
+-	err = perf_evlist__mmap(evlist, UINT_MAX);
++	err = evlist__mmap(evlist, UINT_MAX);
+ 	if (err) {
+-		pr_debug("perf_evlist__mmap failed!\n");
++		pr_debug("evlist__mmap failed!\n");
+ 		goto out_err;
+ 	}
+ 
 diff --git a/tools/perf/tests/task-exit.c b/tools/perf/tests/task-exit.c
-index 088c7708b03a..cff99707cc9d 100644
+index cff99707cc9d..718838b5e724 100644
 --- a/tools/perf/tests/task-exit.c
 +++ b/tools/perf/tests/task-exit.c
-@@ -51,7 +51,7 @@ int test__task_exit(struct test *test __maybe_unused, int subtest __maybe_unused
- 	char sbuf[STRERR_BUFSIZE];
- 	struct perf_cpu_map *cpus;
- 	struct perf_thread_map *threads;
--	struct perf_mmap *md;
-+	struct mmap *md;
+@@ -106,7 +106,7 @@ int test__task_exit(struct test *test __maybe_unused, int subtest __maybe_unused
+ 		goto out_delete_evlist;
+ 	}
  
- 	signal(SIGCHLD, sig_handler);
- 
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index 0e8c89cf7cad..1d22ffd972ac 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -1228,7 +1228,7 @@ int perf_event__process_auxtrace_error(struct perf_session *session,
- 	return 0;
- }
- 
--static int __auxtrace_mmap__read(struct perf_mmap *map,
-+static int __auxtrace_mmap__read(struct mmap *map,
- 				 struct auxtrace_record *itr,
- 				 struct perf_tool *tool, process_auxtrace_t fn,
- 				 bool snapshot, size_t snapshot_size)
-@@ -1339,13 +1339,13 @@ static int __auxtrace_mmap__read(struct perf_mmap *map,
- 	return 1;
- }
- 
--int auxtrace_mmap__read(struct perf_mmap *map, struct auxtrace_record *itr,
-+int auxtrace_mmap__read(struct mmap *map, struct auxtrace_record *itr,
- 			struct perf_tool *tool, process_auxtrace_t fn)
- {
- 	return __auxtrace_mmap__read(map, itr, tool, fn, false, 0);
- }
- 
--int auxtrace_mmap__read_snapshot(struct perf_mmap *map,
-+int auxtrace_mmap__read_snapshot(struct mmap *map,
- 				 struct auxtrace_record *itr,
- 				 struct perf_tool *tool, process_auxtrace_t fn,
- 				 size_t snapshot_size)
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index b110aec1da4d..f201f36bc35f 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -22,7 +22,7 @@ union perf_event;
- struct perf_session;
- struct evlist;
- struct perf_tool;
--struct perf_mmap;
-+struct mmap;
- struct perf_sample;
- struct option;
- struct record_opts;
-@@ -445,14 +445,14 @@ void auxtrace_mmap_params__set_idx(struct auxtrace_mmap_params *mp,
- 				   bool per_cpu);
- 
- typedef int (*process_auxtrace_t)(struct perf_tool *tool,
--				  struct perf_mmap *map,
-+				  struct mmap *map,
- 				  union perf_event *event, void *data1,
- 				  size_t len1, void *data2, size_t len2);
- 
--int auxtrace_mmap__read(struct perf_mmap *map, struct auxtrace_record *itr,
-+int auxtrace_mmap__read(struct mmap *map, struct auxtrace_record *itr,
- 			struct perf_tool *tool, process_auxtrace_t fn);
- 
--int auxtrace_mmap__read_snapshot(struct perf_mmap *map,
-+int auxtrace_mmap__read_snapshot(struct mmap *map,
- 				 struct auxtrace_record *itr,
- 				 struct perf_tool *tool, process_auxtrace_t fn,
- 				 size_t snapshot_size);
+-	if (perf_evlist__mmap(evlist, 128) < 0) {
++	if (evlist__mmap(evlist, 128) < 0) {
+ 		pr_debug("failed to mmap events: %d (%s)\n", errno,
+ 			 str_error_r(errno, sbuf, sizeof(sbuf)));
+ 		goto out_delete_evlist;
 diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index ea9517d506d8..ceab9fb7f7f9 100644
+index ceab9fb7f7f9..e8afe4fdc1b2 100644
 --- a/tools/perf/util/evlist.c
 +++ b/tools/perf/util/evlist.c
-@@ -423,7 +423,7 @@ int perf_evlist__alloc_pollfd(struct evlist *evlist)
+@@ -732,7 +732,7 @@ perf_evlist__should_poll(struct evlist *evlist __maybe_unused,
+ 	return true;
  }
  
- static int __perf_evlist__add_pollfd(struct evlist *evlist, int fd,
--				     struct perf_mmap *map, short revent)
-+				     struct mmap *map, short revent)
+-static int perf_evlist__mmap_per_evsel(struct evlist *evlist, int idx,
++static int evlist__mmap_per_evsel(struct evlist *evlist, int idx,
+ 				       struct mmap_params *mp, int cpu_idx,
+ 				       int thread, int *_output, int *_output_overwrite)
  {
- 	int pos = fdarray__add(&evlist->pollfd, fd, revent | POLLERR | POLLHUP);
- 	/*
-@@ -447,7 +447,7 @@ int perf_evlist__add_pollfd(struct evlist *evlist, int fd)
- static void perf_evlist__munmap_filtered(struct fdarray *fda, int fd,
- 					 void *arg __maybe_unused)
- {
--	struct perf_mmap *map = fda->priv[fd].ptr;
-+	struct mmap *map = fda->priv[fd].ptr;
- 
- 	if (map)
- 		perf_mmap__put(map);
-@@ -693,16 +693,16 @@ void perf_evlist__munmap(struct evlist *evlist)
- 	zfree(&evlist->overwrite_mmap);
+@@ -810,7 +810,7 @@ static int perf_evlist__mmap_per_evsel(struct evlist *evlist, int idx,
+ 	return 0;
  }
  
--static struct perf_mmap *perf_evlist__alloc_mmap(struct evlist *evlist,
-+static struct mmap *perf_evlist__alloc_mmap(struct evlist *evlist,
- 						 bool overwrite)
+-static int perf_evlist__mmap_per_cpu(struct evlist *evlist,
++static int evlist__mmap_per_cpu(struct evlist *evlist,
+ 				     struct mmap_params *mp)
  {
- 	int i;
--	struct perf_mmap *map;
-+	struct mmap *map;
+ 	int cpu, thread;
+@@ -826,7 +826,7 @@ static int perf_evlist__mmap_per_cpu(struct evlist *evlist,
+ 					      true);
  
- 	evlist->nr_mmaps = perf_cpu_map__nr(evlist->core.cpus);
- 	if (perf_cpu_map__empty(evlist->core.cpus))
- 		evlist->nr_mmaps = perf_thread_map__nr(evlist->core.threads);
--	map = zalloc(evlist->nr_mmaps * sizeof(struct perf_mmap));
-+	map = zalloc(evlist->nr_mmaps * sizeof(struct mmap));
- 	if (!map)
- 		return NULL;
+ 		for (thread = 0; thread < nr_threads; thread++) {
+-			if (perf_evlist__mmap_per_evsel(evlist, cpu, mp, cpu,
++			if (evlist__mmap_per_evsel(evlist, cpu, mp, cpu,
+ 							thread, &output, &output_overwrite))
+ 				goto out_unmap;
+ 		}
+@@ -839,7 +839,7 @@ static int perf_evlist__mmap_per_cpu(struct evlist *evlist,
+ 	return -1;
+ }
  
-@@ -741,7 +741,7 @@ static int perf_evlist__mmap_per_evsel(struct evlist *evlist, int idx,
- 	int evlist_cpu = cpu_map__cpu(evlist->core.cpus, cpu_idx);
+-static int perf_evlist__mmap_per_thread(struct evlist *evlist,
++static int evlist__mmap_per_thread(struct evlist *evlist,
+ 					struct mmap_params *mp)
+ {
+ 	int thread;
+@@ -853,7 +853,7 @@ static int perf_evlist__mmap_per_thread(struct evlist *evlist,
+ 		auxtrace_mmap_params__set_idx(&mp->auxtrace_mp, evlist, thread,
+ 					      false);
  
- 	evlist__for_each_entry(evlist, evsel) {
--		struct perf_mmap *maps = evlist->mmap;
-+		struct mmap *maps = evlist->mmap;
- 		int *output = _output;
- 		int fd;
- 		int cpu;
-@@ -1847,7 +1847,7 @@ static void *perf_evlist__poll_thread(void *arg)
- 			perf_evlist__poll(evlist, 1000);
+-		if (perf_evlist__mmap_per_evsel(evlist, thread, mp, 0, thread,
++		if (evlist__mmap_per_evsel(evlist, thread, mp, 0, thread,
+ 						&output, &output_overwrite))
+ 			goto out_unmap;
+ 	}
+@@ -888,7 +888,7 @@ unsigned long perf_event_mlock_kb_in_pages(void)
+ 	return pages;
+ }
  
- 		for (i = 0; i < evlist->nr_mmaps; i++) {
--			struct perf_mmap *map = &evlist->mmap[i];
-+			struct mmap *map = &evlist->mmap[i];
- 			union perf_event *event;
+-size_t perf_evlist__mmap_size(unsigned long pages)
++size_t evlist__mmap_size(unsigned long pages)
+ {
+ 	if (pages == UINT_MAX)
+ 		pages = perf_event_mlock_kb_in_pages();
+@@ -971,7 +971,7 @@ int perf_evlist__parse_mmap_pages(const struct option *opt, const char *str,
+ }
  
- 			if (perf_mmap__read_init(map))
+ /**
+- * perf_evlist__mmap_ex - Create mmaps to receive events.
++ * evlist__mmap_ex - Create mmaps to receive events.
+  * @evlist: list of events
+  * @pages: map length in pages
+  * @overwrite: overwrite older events?
+@@ -979,7 +979,7 @@ int perf_evlist__parse_mmap_pages(const struct option *opt, const char *str,
+  * @auxtrace_overwrite - overwrite older auxtrace data?
+  *
+  * If @overwrite is %false the user needs to signal event consumption using
+- * perf_mmap__write_tail().  Using perf_evlist__mmap_read() does this
++ * perf_mmap__write_tail().  Using evlist__mmap_read() does this
+  * automatically.
+  *
+  * Similarly, if @auxtrace_overwrite is %false the user needs to signal data
+@@ -987,7 +987,7 @@ int perf_evlist__parse_mmap_pages(const struct option *opt, const char *str,
+  *
+  * Return: %0 on success, negative error code otherwise.
+  */
+-int perf_evlist__mmap_ex(struct evlist *evlist, unsigned int pages,
++int evlist__mmap_ex(struct evlist *evlist, unsigned int pages,
+ 			 unsigned int auxtrace_pages,
+ 			 bool auxtrace_overwrite, int nr_cblocks, int affinity, int flush,
+ 			 int comp_level)
+@@ -1011,7 +1011,7 @@ int perf_evlist__mmap_ex(struct evlist *evlist, unsigned int pages,
+ 	if (evlist->pollfd.entries == NULL && perf_evlist__alloc_pollfd(evlist) < 0)
+ 		return -ENOMEM;
+ 
+-	evlist->mmap_len = perf_evlist__mmap_size(pages);
++	evlist->mmap_len = evlist__mmap_size(pages);
+ 	pr_debug("mmap size %zuB\n", evlist->mmap_len);
+ 	mp.mask = evlist->mmap_len - page_size - 1;
+ 
+@@ -1026,14 +1026,14 @@ int perf_evlist__mmap_ex(struct evlist *evlist, unsigned int pages,
+ 	}
+ 
+ 	if (perf_cpu_map__empty(cpus))
+-		return perf_evlist__mmap_per_thread(evlist, &mp);
++		return evlist__mmap_per_thread(evlist, &mp);
+ 
+-	return perf_evlist__mmap_per_cpu(evlist, &mp);
++	return evlist__mmap_per_cpu(evlist, &mp);
+ }
+ 
+-int perf_evlist__mmap(struct evlist *evlist, unsigned int pages)
++int evlist__mmap(struct evlist *evlist, unsigned int pages)
+ {
+-	return perf_evlist__mmap_ex(evlist, pages, 0, false, 0, PERF_AFFINITY_SYS, 1, 0);
++	return evlist__mmap_ex(evlist, pages, 0, false, 0, PERF_AFFINITY_SYS, 1, 0);
+ }
+ 
+ int perf_evlist__create_maps(struct evlist *evlist, struct target *target)
+@@ -1889,7 +1889,7 @@ int perf_evlist__start_sb_thread(struct evlist *evlist,
+ 			goto out_delete_evlist;
+ 	}
+ 
+-	if (perf_evlist__mmap(evlist, UINT_MAX))
++	if (evlist__mmap(evlist, UINT_MAX))
+ 		goto out_delete_evlist;
+ 
+ 	evlist__for_each_entry(evlist, counter) {
 diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index a55f0f2546e5..129786361572 100644
+index 129786361572..aaf06182c1b8 100644
 --- a/tools/perf/util/evlist.h
 +++ b/tools/perf/util/evlist.h
-@@ -39,8 +39,8 @@ struct evlist {
- 		pid_t	pid;
- 	} workload;
- 	struct fdarray	 pollfd;
--	struct perf_mmap *mmap;
--	struct perf_mmap *overwrite_mmap;
-+	struct mmap *mmap;
-+	struct mmap *overwrite_mmap;
- 	struct evsel *selected;
- 	struct events_stats stats;
- 	struct perf_env	*env;
-diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index 33c5b5495482..f3b7c8b0fa90 100644
---- a/tools/perf/util/mmap.c
-+++ b/tools/perf/util/mmap.c
-@@ -22,13 +22,13 @@
- #include "../perf.h"
- #include "util.h" /* page_size */
+@@ -139,7 +139,7 @@ struct perf_sample_id *perf_evlist__id2sid(struct evlist *evlist, u64 id);
  
--size_t perf_mmap__mmap_len(struct perf_mmap *map)
-+size_t perf_mmap__mmap_len(struct mmap *map)
- {
- 	return map->mask + 1 + page_size;
- }
+ void perf_evlist__toggle_bkw_mmap(struct evlist *evlist, enum bkw_mmap_state state);
  
- /* When check_messup is true, 'end' must points to a good entry */
--static union perf_event *perf_mmap__read(struct perf_mmap *map,
-+static union perf_event *perf_mmap__read(struct mmap *map,
- 					 u64 *startp, u64 end)
- {
- 	unsigned char *data = map->base + page_size;
-@@ -82,7 +82,7 @@ static union perf_event *perf_mmap__read(struct perf_mmap *map,
-  * }
-  * perf_mmap__read_done()
-  */
--union perf_event *perf_mmap__read_event(struct perf_mmap *map)
-+union perf_event *perf_mmap__read_event(struct mmap *map)
- {
- 	union perf_event *event;
+-void perf_evlist__mmap_consume(struct evlist *evlist, int idx);
++void evlist__mmap_consume(struct evlist *evlist, int idx);
  
-@@ -104,17 +104,17 @@ union perf_event *perf_mmap__read_event(struct perf_mmap *map)
- 	return event;
- }
+ int evlist__open(struct evlist *evlist);
+ void evlist__close(struct evlist *evlist);
+@@ -170,14 +170,14 @@ int perf_evlist__parse_mmap_pages(const struct option *opt,
  
--static bool perf_mmap__empty(struct perf_mmap *map)
-+static bool perf_mmap__empty(struct mmap *map)
- {
- 	return perf_mmap__read_head(map) == map->prev && !map->auxtrace_mmap.base;
- }
+ unsigned long perf_event_mlock_kb_in_pages(void);
  
--void perf_mmap__get(struct perf_mmap *map)
-+void perf_mmap__get(struct mmap *map)
- {
- 	refcount_inc(&map->refcnt);
- }
+-int perf_evlist__mmap_ex(struct evlist *evlist, unsigned int pages,
++int evlist__mmap_ex(struct evlist *evlist, unsigned int pages,
+ 			 unsigned int auxtrace_pages,
+ 			 bool auxtrace_overwrite, int nr_cblocks,
+ 			 int affinity, int flush, int comp_level);
+-int perf_evlist__mmap(struct evlist *evlist, unsigned int pages);
++int evlist__mmap(struct evlist *evlist, unsigned int pages);
+ void perf_evlist__munmap(struct evlist *evlist);
  
--void perf_mmap__put(struct perf_mmap *map)
-+void perf_mmap__put(struct mmap *map)
- {
- 	BUG_ON(map->base && refcount_read(&map->refcnt) == 0);
+-size_t perf_evlist__mmap_size(unsigned long pages);
++size_t evlist__mmap_size(unsigned long pages);
  
-@@ -122,7 +122,7 @@ void perf_mmap__put(struct perf_mmap *map)
- 		perf_mmap__munmap(map);
- }
- 
--void perf_mmap__consume(struct perf_mmap *map)
-+void perf_mmap__consume(struct mmap *map)
- {
- 	if (!map->overwrite) {
- 		u64 old = map->prev;
-@@ -161,13 +161,13 @@ void __weak auxtrace_mmap_params__set_idx(struct auxtrace_mmap_params *mp __mayb
- }
- 
- #ifdef HAVE_AIO_SUPPORT
--static int perf_mmap__aio_enabled(struct perf_mmap *map)
-+static int perf_mmap__aio_enabled(struct mmap *map)
- {
- 	return map->aio.nr_cblocks > 0;
- }
- 
- #ifdef HAVE_LIBNUMA_SUPPORT
--static int perf_mmap__aio_alloc(struct perf_mmap *map, int idx)
-+static int perf_mmap__aio_alloc(struct mmap *map, int idx)
- {
- 	map->aio.data[idx] = mmap(NULL, perf_mmap__mmap_len(map), PROT_READ|PROT_WRITE,
- 				  MAP_PRIVATE|MAP_ANONYMOUS, 0, 0);
-@@ -179,7 +179,7 @@ static int perf_mmap__aio_alloc(struct perf_mmap *map, int idx)
- 	return 0;
- }
- 
--static void perf_mmap__aio_free(struct perf_mmap *map, int idx)
-+static void perf_mmap__aio_free(struct mmap *map, int idx)
- {
- 	if (map->aio.data[idx]) {
- 		munmap(map->aio.data[idx], perf_mmap__mmap_len(map));
-@@ -187,7 +187,7 @@ static void perf_mmap__aio_free(struct perf_mmap *map, int idx)
- 	}
- }
- 
--static int perf_mmap__aio_bind(struct perf_mmap *map, int idx, int cpu, int affinity)
-+static int perf_mmap__aio_bind(struct mmap *map, int idx, int cpu, int affinity)
- {
- 	void *data;
- 	size_t mmap_len;
-@@ -207,7 +207,7 @@ static int perf_mmap__aio_bind(struct perf_mmap *map, int idx, int cpu, int affi
- 	return 0;
- }
- #else /* !HAVE_LIBNUMA_SUPPORT */
--static int perf_mmap__aio_alloc(struct perf_mmap *map, int idx)
-+static int perf_mmap__aio_alloc(struct mmap *map, int idx)
- {
- 	map->aio.data[idx] = malloc(perf_mmap__mmap_len(map));
- 	if (map->aio.data[idx] == NULL)
-@@ -216,19 +216,19 @@ static int perf_mmap__aio_alloc(struct perf_mmap *map, int idx)
- 	return 0;
- }
- 
--static void perf_mmap__aio_free(struct perf_mmap *map, int idx)
-+static void perf_mmap__aio_free(struct mmap *map, int idx)
- {
- 	zfree(&(map->aio.data[idx]));
- }
- 
--static int perf_mmap__aio_bind(struct perf_mmap *map __maybe_unused, int idx __maybe_unused,
-+static int perf_mmap__aio_bind(struct mmap *map __maybe_unused, int idx __maybe_unused,
- 		int cpu __maybe_unused, int affinity __maybe_unused)
- {
- 	return 0;
- }
- #endif
- 
--static int perf_mmap__aio_mmap(struct perf_mmap *map, struct mmap_params *mp)
-+static int perf_mmap__aio_mmap(struct mmap *map, struct mmap_params *mp)
- {
- 	int delta_max, i, prio, ret;
- 
-@@ -282,7 +282,7 @@ static int perf_mmap__aio_mmap(struct perf_mmap *map, struct mmap_params *mp)
- 	return 0;
- }
- 
--static void perf_mmap__aio_munmap(struct perf_mmap *map)
-+static void perf_mmap__aio_munmap(struct mmap *map)
- {
- 	int i;
- 
-@@ -294,23 +294,23 @@ static void perf_mmap__aio_munmap(struct perf_mmap *map)
- 	zfree(&map->aio.aiocb);
- }
- #else /* !HAVE_AIO_SUPPORT */
--static int perf_mmap__aio_enabled(struct perf_mmap *map __maybe_unused)
-+static int perf_mmap__aio_enabled(struct mmap *map __maybe_unused)
- {
- 	return 0;
- }
- 
--static int perf_mmap__aio_mmap(struct perf_mmap *map __maybe_unused,
-+static int perf_mmap__aio_mmap(struct mmap *map __maybe_unused,
- 			       struct mmap_params *mp __maybe_unused)
- {
- 	return 0;
- }
- 
--static void perf_mmap__aio_munmap(struct perf_mmap *map __maybe_unused)
-+static void perf_mmap__aio_munmap(struct mmap *map __maybe_unused)
- {
- }
- #endif
- 
--void perf_mmap__munmap(struct perf_mmap *map)
-+void perf_mmap__munmap(struct mmap *map)
- {
- 	perf_mmap__aio_munmap(map);
- 	if (map->data != NULL) {
-@@ -343,7 +343,7 @@ static void build_node_mask(int node, cpu_set_t *mask)
- 	}
- }
- 
--static void perf_mmap__setup_affinity_mask(struct perf_mmap *map, struct mmap_params *mp)
-+static void perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap_params *mp)
- {
- 	CPU_ZERO(&map->affinity_mask);
- 	if (mp->affinity == PERF_AFFINITY_NODE && cpu__max_node() > 1)
-@@ -352,7 +352,7 @@ static void perf_mmap__setup_affinity_mask(struct perf_mmap *map, struct mmap_pa
- 		CPU_SET(map->cpu, &map->affinity_mask);
- }
- 
--int perf_mmap__mmap(struct perf_mmap *map, struct mmap_params *mp, int fd, int cpu)
-+int perf_mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, int cpu)
- {
- 	/*
- 	 * The last one will be done at perf_mmap__consume(), so that we
-@@ -440,7 +440,7 @@ static int overwrite_rb_find_range(void *buf, int mask, u64 *start, u64 *end)
- /*
-  * Report the start and end of the available data in ringbuffer
-  */
--static int __perf_mmap__read_init(struct perf_mmap *md)
-+static int __perf_mmap__read_init(struct mmap *md)
- {
- 	u64 head = perf_mmap__read_head(md);
- 	u64 old = md->prev;
-@@ -474,7 +474,7 @@ static int __perf_mmap__read_init(struct perf_mmap *md)
- 	return 0;
- }
- 
--int perf_mmap__read_init(struct perf_mmap *map)
-+int perf_mmap__read_init(struct mmap *map)
- {
- 	/*
- 	 * Check if event was unmapped due to a POLLHUP/POLLERR.
-@@ -485,8 +485,8 @@ int perf_mmap__read_init(struct perf_mmap *map)
- 	return __perf_mmap__read_init(map);
- }
- 
--int perf_mmap__push(struct perf_mmap *md, void *to,
--		    int push(struct perf_mmap *map, void *to, void *buf, size_t size))
-+int perf_mmap__push(struct mmap *md, void *to,
-+		    int push(struct mmap *map, void *to, void *buf, size_t size))
- {
- 	u64 head = perf_mmap__read_head(md);
- 	unsigned char *data = md->base + page_size;
-@@ -532,7 +532,7 @@ int perf_mmap__push(struct perf_mmap *md, void *to,
-  * The last perf_mmap__read() will set tail to map->prev.
-  * Need to correct the map->prev to head which is the end of next read.
-  */
--void perf_mmap__read_done(struct perf_mmap *map)
-+void perf_mmap__read_done(struct mmap *map)
- {
- 	/*
- 	 * Check if event was unmapped due to a POLLHUP/POLLERR.
-diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
-index 3857a49e8f96..01524608a984 100644
---- a/tools/perf/util/mmap.h
-+++ b/tools/perf/util/mmap.h
-@@ -15,11 +15,11 @@
- 
- struct aiocb;
- /**
-- * struct perf_mmap - perf's ring buffer mmap details
-+ * struct mmap - perf's ring buffer mmap details
-  *
-  * @refcnt - e.g. code using PERF_EVENT_IOC_SET_OUTPUT to share this
-  */
--struct perf_mmap {
-+struct mmap {
- 	void		 *base;
- 	int		 mask;
- 	int		 fd;
-@@ -78,33 +78,33 @@ struct mmap_params {
- 	struct auxtrace_mmap_params auxtrace_mp;
- };
- 
--int perf_mmap__mmap(struct perf_mmap *map, struct mmap_params *mp, int fd, int cpu);
--void perf_mmap__munmap(struct perf_mmap *map);
-+int perf_mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, int cpu);
-+void perf_mmap__munmap(struct mmap *map);
- 
--void perf_mmap__get(struct perf_mmap *map);
--void perf_mmap__put(struct perf_mmap *map);
-+void perf_mmap__get(struct mmap *map);
-+void perf_mmap__put(struct mmap *map);
- 
--void perf_mmap__consume(struct perf_mmap *map);
-+void perf_mmap__consume(struct mmap *map);
- 
--static inline u64 perf_mmap__read_head(struct perf_mmap *mm)
-+static inline u64 perf_mmap__read_head(struct mmap *mm)
- {
- 	return ring_buffer_read_head(mm->base);
- }
- 
--static inline void perf_mmap__write_tail(struct perf_mmap *md, u64 tail)
-+static inline void perf_mmap__write_tail(struct mmap *md, u64 tail)
- {
- 	ring_buffer_write_tail(md->base, tail);
- }
- 
--union perf_event *perf_mmap__read_forward(struct perf_mmap *map);
-+union perf_event *perf_mmap__read_forward(struct mmap *map);
- 
--union perf_event *perf_mmap__read_event(struct perf_mmap *map);
-+union perf_event *perf_mmap__read_event(struct mmap *map);
- 
--int perf_mmap__push(struct perf_mmap *md, void *to,
--		    int push(struct perf_mmap *map, void *to, void *buf, size_t size));
-+int perf_mmap__push(struct mmap *md, void *to,
-+		    int push(struct mmap *map, void *to, void *buf, size_t size));
- 
--size_t perf_mmap__mmap_len(struct perf_mmap *map);
-+size_t perf_mmap__mmap_len(struct mmap *map);
- 
--int perf_mmap__read_init(struct perf_mmap *md);
--void perf_mmap__read_done(struct perf_mmap *map);
-+int perf_mmap__read_init(struct mmap *md);
-+void perf_mmap__read_done(struct mmap *map);
- #endif /*__PERF_MMAP_H */
+ void evlist__disable(struct evlist *evlist);
+ void evlist__enable(struct evlist *evlist);
 diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 0ba19dd75510..1e1247cffea8 100644
+index 1e1247cffea8..b102d174b868 100644
 --- a/tools/perf/util/python.c
 +++ b/tools/perf/util/python.c
-@@ -984,12 +984,12 @@ static PyObject *pyrf_evlist__add(struct pyrf_evlist *pevlist,
- 	return Py_BuildValue("i", evlist->core.nr_entries);
- }
+@@ -899,7 +899,7 @@ static PyObject *pyrf_evlist__mmap(struct pyrf_evlist *pevlist,
+ 					 &pages, &overwrite))
+ 		return NULL;
  
--static struct perf_mmap *get_md(struct evlist *evlist, int cpu)
-+static struct mmap *get_md(struct evlist *evlist, int cpu)
- {
- 	int i;
- 
- 	for (i = 0; i < evlist->nr_mmaps; i++) {
--		struct perf_mmap *md = &evlist->mmap[i];
-+		struct mmap *md = &evlist->mmap[i];
- 
- 		if (md->cpu == cpu)
- 			return md;
-@@ -1005,7 +1005,7 @@ static PyObject *pyrf_evlist__read_on_cpu(struct pyrf_evlist *pevlist,
- 	union perf_event *event;
- 	int sample_id_all = 1, cpu;
- 	static char *kwlist[] = { "cpu", "sample_id_all", NULL };
--	struct perf_mmap *md;
-+	struct mmap *md;
- 	int err;
- 
- 	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "i|i", kwlist,
+-	if (perf_evlist__mmap(evlist, pages) < 0) {
++	if (evlist__mmap(evlist, pages) < 0) {
+ 		PyErr_SetFromErrno(PyExc_OSError);
+ 		return NULL;
+ 	}
 -- 
 2.21.0
 
