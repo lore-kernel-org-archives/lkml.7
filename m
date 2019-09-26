@@ -2,77 +2,119 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF500C4360D
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE5AC432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C58FA222C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:38:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569483499;
-	bh=fvMaG7c6ziT5mjJObFGHSE6HA7R03z59F8NNiOvwKJQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=m92qQKN4g+ETHOp2idvsIoQzpo9B0BhZ8I1JjM1yhadtnV6MelsqDzRT/FVlRqmoM
-	 supFMDVNwP9XI77MHZghlSb4vTEVruNVDhBnAYuJFbej8GDyd9csa2hjCDnQDv6yf8
-	 a1iVQYBFOQ70aEIwr1yvIyIoDsNCVgNFOixRN7ac=
+	by mail.kernel.org (Postfix) with ESMTP id C12B3222C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:39:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m6Yje2WD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730464AbfIZHiS (ORCPT
+        id S1730538AbfIZHjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 03:38:18 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37074 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728263AbfIZHiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 03:38:18 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C65DEAFE8;
-        Thu, 26 Sep 2019 07:38:16 +0000 (UTC)
-Date:   Thu, 26 Sep 2019 09:38:16 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Qian Cai <cai@lca.pw>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v1] mm/memory_hotplug: Don't take the cpu_hotplug_lock
-Message-ID: <20190926073816.GC20255@dhcp22.suse.cz>
-References: <1569337401.5576.217.camel@lca.pw>
- <20190924151147.GB23050@dhcp22.suse.cz>
- <1569351244.5576.219.camel@lca.pw>
- <2f8c8099-8de0-eccc-2056-a79d2f97fbf7@redhat.com>
- <1569427262.5576.225.camel@lca.pw>
- <20190925174809.GM23050@dhcp22.suse.cz>
- <1569435659.5576.227.camel@lca.pw>
- <92bce3d4-0a3e-e157-529d-35aafbc30f3b@redhat.com>
- <1569443568.5576.231.camel@lca.pw>
- <17ba6fc6-72ce-992b-7cc4-812acbdedbeb@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <17ba6fc6-72ce-992b-7cc4-812acbdedbeb@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 26 Sep 2019 03:39:44 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33438 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728263AbfIZHjo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 03:39:44 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q10so1355257pfl.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 00:39:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=HzGUkaoGcW3mdUmJnqxtLb5+t2i8FwmzFVNwvPd0PPg=;
+        b=m6Yje2WDv15asqStTscydbt0qRWRZ6Bd7CHEuPniujA0FAiEHBYuYu1baqtdLuM52t
+         Xcm1dzwW/CRhroaEjMApnsvEKgF9nvYLIStzepqWGa8miuWs6aqvwBRgXw1Tz9OSHY2z
+         10tjXskx5HzSkIAz82Wh9E20UXjc1+6Lla+vN//8rTwtQlfKovJYgtfVOY6RKf7+PNSD
+         +8x9OtXOK+8Kx/cUTzZa7Vz1jqNZRv8pTBE42UvVl11TImOC8+lkfMFP9Oyt89gnsVrn
+         w+ojblxcInKrM7ZqMYpUIL5QJsjIwyGPHw7h3HfmlXO1/kd6t5xq1ezLCWUhjfKLsfGu
+         qENg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HzGUkaoGcW3mdUmJnqxtLb5+t2i8FwmzFVNwvPd0PPg=;
+        b=J4I3bdfbyKNQyz142JyL67xAApbnuqQqPtvy7VI1hHN/SXwu+wqL+NNwI+gXwgMiMA
+         IPRy46NEoHwRek6zfcgcOeHY2CMgf02WLCa9XYrzeVVlDjLx3aPODBz0ft6KMkUxkhvZ
+         dNeVdRxvTjo3/UvWtJTPdksZUxoBMveoD6YzfmE7qqYVTVbABGMf/Nn/C9NwpqqlTE46
+         MF3A7qYgLqFK5kcv562iGnlrLVuZxmsVKL8vcblE7cLcwfq9ZGR8Ws22BiYAKTL4IpRQ
+         WIw3uxUoSXVSvgtlnbEXf5Qxn+on38ekwdBk91+77HYx+BQIbFNT3NDPJujPh+MulGbF
+         W6NA==
+X-Gm-Message-State: APjAAAWusIpp15Bro22JIKnY6fryYSx+t2BhESchPrySwu+pmbGGoHst
+        FxzAVt7awGP9xia6TpsjcqE=
+X-Google-Smtp-Source: APXvYqxfyaPfSeYrkecMjySLxZ/eEs3VKQY0c+5Rbj9H35ViN9RC2gqgO5x/VsuVxvnW6VnFtFgMjw==
+X-Received: by 2002:a65:6799:: with SMTP id e25mr2099914pgr.271.1569483583803;
+        Thu, 26 Sep 2019 00:39:43 -0700 (PDT)
+Received: from bj04616pcu.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id a8sm2608699pfa.182.2019.09.26.00.39.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 26 Sep 2019 00:39:42 -0700 (PDT)
+From:   Candle Sun <candlesea@gmail.com>
+To:     will@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Candle Sun <candle.sun@unisoc.com>,
+        Nianfu Bai <nianfu.bai@unisoc.com>
+Subject: [RESEND PATCH] ARM/hw_breakpoint: add ARMv8.1/ARMv8.2 debug architecutre versions support in enable_monitor_mode()
+Date:   Thu, 26 Sep 2019 15:38:28 +0800
+Message-Id: <1569483508-18768-1-git-send-email-candlesea@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 26-09-19 09:26:13, David Hildenbrand wrote:
-[...]
-> I'd like to hear what Michal thinks. If we do want the cpu hotplug lock,
-> we can at least restrict it to the call paths (e.g., online_pages())
-> where the lock is really needed and document that.
+From: Candle Sun <candle.sun@unisoc.com>
 
-Completely agreed. Conflating cpu and memory hotplug locks was a bad
-decision. If there are places which need both they should better use
-both lock explicitly.
+When ARMv8.1/ARMv8.2 cores are used in AArch32 mode,
+arch_hw_breakpoint_init() in arch/arm/kernel/hw_breakpoint.c will be used.
 
-Now, the reality might turn out more complicated due to locks nesting
-but hiding the cpu lock into the mem hotplug is just not fixing that.
+From ARMv8 specification, different debug architecture versions defined:
+* 0110 ARMv8, v8 Debug architecture.
+* 0111 ARMv8.1, v8 Debug architecture, with Virtualization Host Extensions.
+* 1000 ARMv8.2, v8.2 Debug architecture.
+
+So missing ARMv8.1/ARMv8.2 cases will cause enable_monitor_mode() function
+returns -ENODEV, and arch_hw_breakpoint_init() will fail.
+
+Signed-off-by: Candle Sun <candle.sun@unisoc.com>
+Signed-off-by: Nianfu Bai <nianfu.bai@unisoc.com>
+---
+ arch/arm/include/asm/hw_breakpoint.h | 2 ++
+ arch/arm/kernel/hw_breakpoint.c      | 2 ++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/arch/arm/include/asm/hw_breakpoint.h b/arch/arm/include/asm/hw_breakpoint.h
+index ac54c06..9137ef6 100644
+--- a/arch/arm/include/asm/hw_breakpoint.h
++++ b/arch/arm/include/asm/hw_breakpoint.h
+@@ -53,6 +53,8 @@ static inline void decode_ctrl_reg(u32 reg,
+ #define ARM_DEBUG_ARCH_V7_MM	4
+ #define ARM_DEBUG_ARCH_V7_1	5
+ #define ARM_DEBUG_ARCH_V8	6
++#define ARM_DEBUG_ARCH_V8_1	7
++#define ARM_DEBUG_ARCH_V8_2	8
+ 
+ /* Breakpoint */
+ #define ARM_BREAKPOINT_EXECUTE	0
+diff --git a/arch/arm/kernel/hw_breakpoint.c b/arch/arm/kernel/hw_breakpoint.c
+index b0c195e..cb99612 100644
+--- a/arch/arm/kernel/hw_breakpoint.c
++++ b/arch/arm/kernel/hw_breakpoint.c
+@@ -246,6 +246,8 @@ static int enable_monitor_mode(void)
+ 	case ARM_DEBUG_ARCH_V7_ECP14:
+ 	case ARM_DEBUG_ARCH_V7_1:
+ 	case ARM_DEBUG_ARCH_V8:
++	case ARM_DEBUG_ARCH_V8_1:
++	case ARM_DEBUG_ARCH_V8_2:
+ 		ARM_DBG_WRITE(c0, c2, 2, (dscr | ARM_DSCR_MDBGEN));
+ 		isb();
+ 		break;
 -- 
-Michal Hocko
-SUSE Labs
+2.7.4
+
