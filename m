@@ -2,70 +2,137 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C28C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 02:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F667C4360D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 03:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB71222BD
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 02:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14DEB222C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 03:25:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="lF/KeIrN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733176AbfIZC7p (ORCPT
+        id S1733309AbfIZDZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 22:59:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43888 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728722AbfIZC7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 22:59:44 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8182D307D985;
-        Thu, 26 Sep 2019 02:59:44 +0000 (UTC)
-Received: from treble (ovpn-120-76.rdu2.redhat.com [10.10.120.76])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E920B600C8;
-        Thu, 26 Sep 2019 02:59:42 +0000 (UTC)
-Date:   Wed, 25 Sep 2019 21:59:40 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: Re: [RFC patch 10/15] x86/entry: Move irq tracing to C code
-Message-ID: <20190926025940.hima423t2yfhh6h4@treble>
-References: <20190919150314.054351477@linutronix.de>
- <20190919150809.446771597@linutronix.de>
+        Wed, 25 Sep 2019 23:25:27 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:38035 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727409AbfIZDZ0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 23:25:26 -0400
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x8Q3PHOj027377;
+        Thu, 26 Sep 2019 12:25:18 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x8Q3PHOj027377
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1569468318;
+        bh=Xc9AZqmoajha0VuwXoxsUg6PKLg6RASYXKitm94bwH0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=lF/KeIrNoNCRlUtTOKLABr7qQmVAQVYvc38q5JRKYJZaKCRcNGrQbai4cnnXfEFxa
+         J1StlIBDt7cnuw03QeSezEMcA5D7qcPjRFC6xAnVssbkqI8dlq7zk0OTsaZXTvy6BT
+         XrFvMPBAaHlSws1XY08LxNcZw2W7SrBjMV/BwzwYHYbcEnGg09DJZBWcvAIAAwum+2
+         Mm/L8fB65v+vvF5J4pAdQ4aiu0fU00rQRcclWlzkEjW/TRVCvYqyzbW58qp9R/aTN4
+         qK6kKQidCkzddSTESeZ2E6P7Vcoe9O6j88uYc7cw/jGDfEZBKsXoxlsRZgd/ZbXsu8
+         6v5vorpoxxtGw==
+X-Nifty-SrcIP: [209.85.221.173]
+Received: by mail-vk1-f173.google.com with SMTP id j21so129632vki.11;
+        Wed, 25 Sep 2019 20:25:18 -0700 (PDT)
+X-Gm-Message-State: APjAAAXuV7G0Ft5eDNOXNOwecnA/weAxudu0AiARNqulSTsyCx5DCvjS
+        Rs2B38kLJNSKDL10L2Z25asdBQ24bWE9OvdtYL8=
+X-Google-Smtp-Source: APXvYqzT2N9dXQezYT/CGbUaF6nq6YPuz5Z6u/5wSx5Q/hagShT1nbR/LFTHK50Pho6GqFvdOXK9LmvQbbsCTZEUrss=
+X-Received: by 2002:ac5:cc63:: with SMTP id w3mr605734vkm.34.1569468317002;
+ Wed, 25 Sep 2019 20:25:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190919150809.446771597@linutronix.de>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 26 Sep 2019 02:59:44 +0000 (UTC)
+References: <cover.1569452305.git.skhan@linuxfoundation.org> <b3c50f4c726df521039f57295b53349227f629d9.1569452305.git.skhan@linuxfoundation.org>
+In-Reply-To: <b3c50f4c726df521039f57295b53349227f629d9.1569452305.git.skhan@linuxfoundation.org>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 26 Sep 2019 12:24:41 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATCFF9ERTwtPnnbMLGv++NJ_5zXxB0=NWHdSGrYADj3ug@mail.gmail.com>
+Message-ID: <CAK7LNATCFF9ERTwtPnnbMLGv++NJ_5zXxB0=NWHdSGrYADj3ug@mail.gmail.com>
+Subject: Re: [PATCH 2/2] selftests: Add kselftest_install target to main Makefile
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        "Cc: Shuah Khan" <shuah@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 05:03:24PM +0200, Thomas Gleixner wrote:
->  ENTRY(error_exit)
-> -	UNWIND_HINT_REGS
->  	DISABLE_INTERRUPTS(CLBR_ANY)
->  	TRACE_IRQS_OFF
-> +	UNWIND_HINT_REGS
->  	testb	$3, CS(%rsp)
->  	jz	retint_kernel
->  	jmp	retint_user
+Hi Shuah,
 
-I don't think this UNWIND_HINT_REGS needs to be moved?
+
+
+On Thu, Sep 26, 2019 at 8:05 AM Shuah Khan <skhan@linuxfoundation.org> wrote:
+>
+> Add kselftest_install target to install tests from the top level
+> Makefile. This is to simplify kselftest use-cases for CI and
+> distributions where build and test systems are different.
+>
+> This change addresses requests from developers and testers to add
+> support for installing kselftest from the main Makefile.
+>
+> In addition, make the install directory the same when install is
+> run using "make kselftest_install" or by running kselftest_install.sh.
+> Also fix the INSTALL_PATH variable conflict between main Makefile.
+>
+> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+
+So, if these two patches were applied, we would see the following:
+
+
+PHONY += kselftest_build
+kselftest_build:
+        $(Q)$(MAKE) -C $(srctree)/tools/testing/selftests all
+
+PHONY += kselftest
+kselftest:
+        $(Q)$(MAKE) -C $(srctree)/tools/testing/selftests run_tests
+
+PHONY += kselftest_install
+kselftest_install:
+        $(Q)$(MAKE) -C $(srctree)/tools/testing/selftests install
+
+PHONY += kselftest-clean
+kselftest-clean:
+        $(Q)$(MAKE) -C $(srctree)/tools/testing/selftests clean
+
+
+I do not want to see this endless crap addition just for
+changing the working directory to $(srctree)/tools/testing/selftests
+
+
+
+Why don't you use pattern rule?
+Those will be reduced into the two rules.
+
+
+
+PHONY += kselftest
+kselftest:
+        $(Q)$(MAKE) -C $(srctree)/tools/testing/selftests run_tests
+
+kselftest-%: FORCE
+        $(Q)$(MAKE) -C $(srctree)/tools/testing/selftests $*
+
+
+
+This also avoids your inconsistency about
+"kselftest-" vs "kselftest_".
+
+
+Given the existing "kselftest-clean" and "kselftest-merge",
+"kselftest_build" and "kselftest_install"
+(using an underscore instead of n hyphen)
+would add needless confusion.
+
 
 -- 
-Josh
+Best Regards
+Masahiro Yamada
