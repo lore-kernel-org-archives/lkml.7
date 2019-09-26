@@ -2,132 +2,104 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E3FC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88BD7C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAB35222C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:20:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QPr6feej"
+	by mail.kernel.org (Postfix) with ESMTP id 5979021D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:20:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569511245;
+	bh=CkcTAd4S96JpD35jbvDi6z+phIXmR7MSa7e/rGtaKb4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=slY91+LvX7QMUdWiKrIAADZx4E/+c6cJgP4nhIncIFBKUYqDo7ZiFJbos3sZxAUJG
+	 ZcW4D1uZb3N00my5CQGOQao36KqsjHJh0fuZLzZ9LibH5K6hOlZkCHdSDHwPy6FDwl
+	 mvtbko1xp79/UZuaXgo73Q8aKq2A4at/qlJJQ2y8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbfIZPUh (ORCPT
+        id S1727312AbfIZPUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 11:20:37 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54296 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfIZPUh (ORCPT
+        Thu, 26 Sep 2019 11:20:44 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52854 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfIZPUo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 11:20:37 -0400
+        Thu, 26 Sep 2019 11:20:44 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=yLzCCbA1xxgfSSaN55ak3+kri+HafX9octEvTxgZHQ4=; b=QPr6feejBrc5AYDFCfltGGA9g
-        MOBKVaJNT8g359mo5ovvj7SADpWggwaleaynmHTmIYrP0Dvoza9azT1TCvicyZuy9cv5sANCwT5W3
-        FF2mFDgv3fPhc3hN6hocoT+L4rJuD25u1PZbE61MAfmTXHNk8R0mjCVermC1hgulxsQNBhNEldsMD
-        gh4TwP/rzW80LblNU6jyYPgNR+2MnxFo+EM6EDSKKJdOEXsKzFiYZ3MsDbGNPX2nYvsefFcRJhyB3
-        ZBi7dDMANOsy7GNmE1geqRK3jmUBJTtd4fcii6HYFMX87s2QXBhODXtm8z67ADOVa6PpQGLnU6pDf
-        OrGBGwJzA==;
-Received: from [2601:1c0:6280:3f0::9a1f]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iDVZF-00039v-NT; Thu, 26 Sep 2019 15:20:29 +0000
-Subject: Re: [RFC PATCH] x86/doc/boot_protocol: Correct the description of
- "reloc"
-To:     hpa@zytor.com, Cao jin <caoj.fnst@cn.fujitsu.com>,
-        Ingo Molnar <mingo@kernel.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, corbet@lwn.net
-References: <20190926042116.17929-1-caoj.fnst@cn.fujitsu.com>
- <20190926060139.GA100481@gmail.com>
- <faabfe47-ba3e-5a92-af65-dc26e8e2ecb9@cn.fujitsu.com>
- <3073CD01-65C5-4BEC-B2FC-F76DD0E70D73@zytor.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <f7a1d739-94ae-f6d3-efdb-9748e5e03f82@infradead.org>
-Date:   Thu, 26 Sep 2019 08:20:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+         bh=CkcTAd4S96JpD35jbvDi6z+phIXmR7MSa7e/rGtaKb4=; b=kx7Cbp6SHnYTy5/8mkX9LsA03
+        zoLd51jZwr4WSGElOynTrJjN7UAfjOJb3xbJMGIADPIs0hzoOzgssneeHyqelOdmdoaEtGmrPIvYq
+        ylLR4W40pJuq0fW3zMz/i3G5SijHk9mWGGUAZD4FaiyO3147Mk3+wf1Ir569uYWdbEtMM=;
+Received: from [12.157.10.118] (helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1iDVYn-0003uG-8U; Thu, 26 Sep 2019 15:20:01 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id A5E6DD02CFF; Thu, 26 Sep 2019 16:19:59 +0100 (BST)
+Date:   Thu, 26 Sep 2019 08:19:59 -0700
+From:   Mark Brown <broonie@kernel.org>
+To:     Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>
+Cc:     Alexander.Deucher@amd.com, Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        Maruthi Srinivas Bayyavarapu <Maruthi.Bayyavarapu@amd.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ASoC: amd: Missing Initialization of IRQFLAGS
+Message-ID: <20190926151959.GV2036@sirena.org.uk>
+References: <1569542689-25512-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <3073CD01-65C5-4BEC-B2FC-F76DD0E70D73@zytor.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="L0pirLHWQnJmYWnZ"
+Content-Disposition: inline
+In-Reply-To: <1569542689-25512-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+X-Cookie: Be careful!  UGLY strikes 9 out of 10!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/26/19 12:58 AM, hpa@zytor.com wrote:
-> On September 26, 2019 12:55:51 AM PDT, Cao jin <caoj.fnst@cn.fujitsu.com> wrote:
->> On 9/26/19 2:01 PM, Ingo Molnar wrote:
->>> * Cao jin <caoj.fnst@cn.fujitsu.com> wrote:
->>>
->>>> The fields marked with (reloc) actually are not dedicated for
->> writing,
->>>> but communicating info for relocatable kernel with boot loaders. For
->>>> example:
->>>>
->>>>     ============    ============
->>>>     Field name:     pref_address
->>>>     Type:           read (reloc)
->>>>     Offset/size:    0x258/8
->>>>     Protocol:       2.10+
->>>>     ============    ============
->>>>
->>>>     ============    ========================
->>>>     Field name:     code32_start
->>>>     Type:           modify (optional, reloc)
->>>>     Offset/size:    0x214/4
->>>>     Protocol:       2.00+
->>>>     ============    ========================
->>>>
->>>> Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
->>>> ---
->>>> Unless I have incorrect non-native understanding for "fill in", I
->> think
->>>> this is inaccurate.
->>>>
->>>>  Documentation/x86/boot.rst | 2 +-
->>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/Documentation/x86/boot.rst b/Documentation/x86/boot.rst
->>>> index 08a2f100c0e6..a611bf04492d 100644
->>>> --- a/Documentation/x86/boot.rst
->>>> +++ b/Documentation/x86/boot.rst
->>>> @@ -243,7 +243,7 @@ bootloader ("modify").
->>>>  
->>>>  All general purpose boot loaders should write the fields marked
->>>>  (obligatory).  Boot loaders who want to load the kernel at a
->>>> -nonstandard address should fill in the fields marked (reloc); other
->>>> +nonstandard address should consult with the fields marked (reloc);
->> other
->>>>  boot loaders can ignore those fields.
->>>>  
->>>>  The byte order of all fields is littleendian (this is x86, after
->> all.)
->>>
->>> Well, this documentation is written from the point of view of a 
->>> *bootloader*, not the kernel. So the 'fill in' says that the
->> bootloader 
->>> should write those fields - which is correct, right?
->>>
->>
->> Take pref_address or relocatable_kernel for example, they have type:
->> read (reloc), does boot loader need to write them? I don't see grub
->> does
->> this at least.
-> 
-> Read means the boot later reads them.
 
-is that          boot loader ??
+--L0pirLHWQnJmYWnZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Sep 27, 2019 at 05:34:47AM +0530, Ravulapati Vishnu vardhan rao wro=
+te:
+> Fix for missing initialization of IRQFLAGS in
+> ACP-PCI driver and Missing Macro of ACP3x_DEVS.
+>=20
+> Follow up to IDb33df346
 
--- 
-~Randy
+What is "IDb33df346"?
+
+--L0pirLHWQnJmYWnZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2M1x4ACgkQJNaLcl1U
+h9CzMQf8CW7bKL6E1DaPRcJ+5j/bmPxewThu9xmDy3QUSp98vzdVj2nsqQTwrE/n
+2khiq4zkCK1f8ocT0C92+DNHMQN+1jUoMHSPDP4ZSiIBAIIGIbGJOilcvIx5TGEp
+ZiHGBfXILiDBqeqnxX0wJ40RCgidP7gbGUUoliWt69KKIBYhuzlm7Rg0rWr/Zy0o
+nPRZVY978qNnIDmIgKl6vMaRCPpwibYJl3XGls+Xg8ek4gUbfDYNY0fnK2J3wLTW
+Hg1525ARow6o7PbjaGkqxlf7jilKlPYvClqWPU/qC5tdVG55HMxKsX191vV0iKTe
+/TP/nMEQm1qvryDg0TKCyUKMVD6YGA==
+=G7K2
+-----END PGP SIGNATURE-----
+
+--L0pirLHWQnJmYWnZ--
