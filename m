@@ -2,128 +2,134 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC66C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 377CFC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F344A206E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:17:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="g72/cgbU"
+	by mail.kernel.org (Postfix) with ESMTP id 1826C206E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 07:19:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbfIZHRe (ORCPT
+        id S1728560AbfIZHTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 03:17:34 -0400
-Received: from mail-eopbgr130057.outbound.protection.outlook.com ([40.107.13.57]:52409
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728268AbfIZHRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 03:17:33 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RN0SEmiZLgmGa+FJ+ERsNtuRcNiFvEYeqdGddvIqA65tuf/oVQbZDRhu2aGjx6hkRIrjNe4ybER5ekPC6mAncl98qo2/zoPQvcNw57fIcNzLX2MWnYDxkREs6QsLs8Jw/y+6CHLZOQFvLfl/1TnKPndbhgKrHONbS0g9TntbSxsqTd2JawLkwpuArDboGGnftNQoMn+U3U4JEbC9DN66/KlOa0WQFVUpYRBdLJu4mVaeGVCHOUK7GmCn/lDqwx0X89Ldgfg8BgLdLY04a4M09R9cdyKzSJgegi92hZp1DcOGfreQBCWC4dFxC7C9arKxP5FglrvxHqm9LYu6AiJcWg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Usdii16aeL1V+iQtTRqfMYkpBPQOeTr4oZM0QgcsS24=;
- b=mSMl2d4yqsenMxZwE9SEZ76BRJCrUR88AAl2E+2KHrVY6QuDXG9I1GPCM1xxnw50CnGmphPEsuiNUAigZ3t/8/V+ayXE6WGqozl8y3W+1g6it5EXXYSU0ZLiRowRO6SHGgqiF036dP9UHnrH8Bxr8TCzTr6CUhJtg0KcI84L/6RxoXDYPsm2a5tkPw9NQbNtYBFOKG7cdVmXF+POiDRrX7Bhy4aMoSEQhF1d5A09W6ZdDIi3M3UecJDhC7mhEIHcmnIZz3DeI4QmzXqPE822YKKxJydwrC9P7Ic+04W6t6cfbX/rlqR/+w1SVLk4kL+zvtFEfJDmZa9XGGdfRtXT/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Usdii16aeL1V+iQtTRqfMYkpBPQOeTr4oZM0QgcsS24=;
- b=g72/cgbUiYQV69UsPJ/MbiKg7eO5nB2TxV2mfLvoF67+hBWQmQruTpr28HYxLzCoJq/hEJFXZeUCBuyC5942oZQw0dI26sFP1iK70656vA65tKKqd13vXnq520ssS+ddQdpESkGcL0YTsXMITLk7Ty7xRRjSM6IVG1dHKW2lVlg=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB2749.eurprd04.prod.outlook.com (10.175.23.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.22; Thu, 26 Sep 2019 07:17:28 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::b84e:b20f:138a:63e9]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::b84e:b20f:138a:63e9%7]) with mapi id 15.20.2284.023; Thu, 26 Sep 2019
- 07:17:28 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Thu, 26 Sep 2019 03:19:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46968 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728240AbfIZHTw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 03:19:52 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 27D622106;
+        Thu, 26 Sep 2019 07:19:52 +0000 (UTC)
+Received: from [10.36.117.15] (ovpn-117-15.ams2.redhat.com [10.36.117.15])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6C9E5608C0;
+        Thu, 26 Sep 2019 07:19:50 +0000 (UTC)
+Subject: Re: [PATCH] hv_balloon: Add the support of hibernation
+To:     Dexuan Cui <decui@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH] crypto: caam - use mapped_{src,dst}_nents for descriptor
-Thread-Topic: [PATCH] crypto: caam - use mapped_{src,dst}_nents for descriptor
-Thread-Index: AQHVc6HU9i9GulTWykOrXicA04oXkw==
-Date:   Thu, 26 Sep 2019 07:17:28 +0000
-Message-ID: <VI1PR0402MB348551336691838632965ADA98860@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <1569416676-21810-1-git-send-email-iuliana.prodan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fe0bb9f6-bce5-472d-db0a-08d7425196e6
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB2749;
-x-ms-traffictypediagnostic: VI1PR0402MB2749:|VI1PR0402MB2749:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB2749815B2A34A78ABDC6805198860@VI1PR0402MB2749.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1775;
-x-forefront-prvs: 0172F0EF77
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(366004)(376002)(396003)(136003)(199004)(189003)(102836004)(476003)(478600001)(53546011)(66946007)(6506007)(66446008)(486006)(3846002)(186003)(66476007)(66556008)(71200400001)(71190400001)(64756008)(14454004)(44832011)(316002)(26005)(25786009)(99286004)(2906002)(76116006)(14444005)(256004)(446003)(6116002)(91956017)(110136005)(5660300002)(66066001)(55016002)(86362001)(54906003)(6436002)(76176011)(4744005)(9686003)(52536014)(229853002)(8676002)(81166006)(7696005)(81156014)(8936002)(4326008)(6246003)(33656002)(305945005)(6636002)(74316002)(7736002)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2749;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 9TjyIB1ybIcVzEQ6q2rMpfyAq+fA5Tdkgi+EIUMy7/G+/o2xVD1Zmqz2a47F7nEUaFOymd5OPwvLFlOd725R5A4gdcs1+EFgGov2wr3whVadsBRKIGyCKlEdkn2M62o8mHdgle82tBLvfdyRIGHIAigLErHxSwGkrpoaF95xICrJc6Q6qgz16PbtYA6N8LGoAgBzX1saCRgA26USzK4arQhtBdl6vTOXqdEYyP2o7W1Ro/pr3MNirW5SuACRG0s68gf68rX44mmX4biZwr5NDU7alI5vIThJKrpKEGDZvBXLE1LqlzdhA8Y9bPWkFTE8Z6I14os4DXWlNI3/irlIuUWq2E1h9uXHREop1jkM3Vl1YIIkQxz4T1rF2PZEe4S2WInsgw8XPxPe890JRqPcOBhZ7mD4u2f1YKsTIOFfFgo=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Michael Kelley <mikelley@microsoft.com>
+References: <1568245010-66879-1-git-send-email-decui@microsoft.com>
+ <42de5835-8faa-2047-0f77-db51dd57b036@redhat.com>
+ <PU1P153MB0169E922DF7A5A43C7026D82BFB00@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <7d218fd5-76d9-f5fa-548a-76fe5dfab230@redhat.com>
+ <PU1P153MB01691EC455AAF37BC6AF26DDBFB30@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <ef6f8554-8324-a4d8-4549-759495e482b7@redhat.com>
+ <PU1P153MB01699AB87526B16F7AB94045BFB20@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <PU1P153MB0169B05143A68A56740669AFBF870@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <2134429f-dc6d-06e0-9e4b-9028f62f6666@redhat.com>
+Date:   Thu, 26 Sep 2019 09:19:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fe0bb9f6-bce5-472d-db0a-08d7425196e6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Sep 2019 07:17:28.6171
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6nHszJG2elqD06cBE+I634zlZfZCD7RR0T0Q3BrX23ZQEJ7i1eHGgMheZQX/JX2wghiDh1Bti8WU1c04gB50bQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2749
+In-Reply-To: <PU1P153MB0169B05143A68A56740669AFBF870@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Thu, 26 Sep 2019 07:19:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/25/2019 4:04 PM, Iuliana Prodan wrote:=0A=
-> @@ -428,17 +433,18 @@ static int set_rsa_priv_f1_pdb(struct akcipher_requ=
-est *req,=0A=
->  		return -ENOMEM;=0A=
->  	}=0A=
->  =0A=
-> -	if (edesc->src_nents > 1) {=0A=
-> +	if (edesc->mapped_src_nents > 1) {=0A=
->  		pdb->sgf |=3D RSA_PRIV_PDB_SGF_G;=0A=
->  		pdb->g_dma =3D edesc->sec4_sg_dma;=0A=
-> -		sec4_sg_index +=3D edesc->src_nents;=0A=
-> +		sec4_sg_index +=3D edesc->mapped_src_nents;=0A=
-> +=0A=
->  	} else {=0A=
->  		struct caam_rsa_req_ctx *req_ctx =3D akcipher_request_ctx(req);=0A=
->  =0A=
->  		pdb->g_dma =3D sg_dma_address(req_ctx->fixup_src);=0A=
->  	}=0A=
->  =0A=
-> -	if (edesc->dst_nents > 1) {=0A=
-> +	if (edesc->mapped_dst_nents > 1) {=0A=
->  		pdb->sgf |=3D RSA_PRIV_PDB_SGF_F;=0A=
->  		pdb->f_dma =3D edesc->sec4_sg_dma +=0A=
->  			     sec4_sg_index * sizeof(struct sec4_sg_entry);=0A=
-AFAICS there are a few other places besides set_rsa_priv_f1_pdb=0A=
-that should be updated:=0A=
-	set_rsa_pub_pdb=0A=
-	set_rsa_priv_f2_pdb=0A=
-	set_rsa_priv_f3_pdb=0A=
-=0A=
-Horia=0A=
+On 25.09.19 22:03, Dexuan Cui wrote:
+>> From: linux-hyperv-owner@vger.kernel.org
+>>  [... snipped ...]
+>>> Anyhow, just some comments from my side :) I can see how Windows Server
+>>> worked around that issue right now by just XOR'ing both features.
+>>>
+>>> David / dhildenb
+>>
+>> Thanks for sharing your thoughts!
+>>
+>> -- Dexuan
+> 
+> Hi David,
+> If my explanation sounds good to you, can I have an Acked-by from you? 
+> 
+
+I do ACK the approach but not the patch in it's current state. I don't
+like the ifdefs - once you can get rid of the ifdefery - e.g., after the
+prerequisite is upstream - you can add my
+
+Acked-by: David Hildenbrand <david@redhat.com>
+
+-- 
+
+Thanks,
+
+David / dhildenb
