@@ -2,170 +2,236 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31489C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 04:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CC4C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 04:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03E432146E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 04:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A49D42146E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 04:45:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G8y3gKmw"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="OiTXVR4B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732037AbfIZEm6 (ORCPT
+        id S2389573AbfIZEpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 00:42:58 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42892 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfIZEm5 (ORCPT
+        Thu, 26 Sep 2019 00:45:30 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35192 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733042AbfIZEp3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 00:42:57 -0400
-Received: by mail-io1-f68.google.com with SMTP id n197so2950059iod.9
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 21:42:57 -0700 (PDT)
+        Thu, 26 Sep 2019 00:45:29 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 205so1047161pfw.2
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 21:45:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=OFA5Uz5BCNq/MfwnbLzI5wj5RSqOhUTcf5ZFKST8Ysc=;
-        b=G8y3gKmwchxeBHsPxLv2M7F8LxqYDpNRcEbzbe7SRU/i9dDi/U+0VW6ODvf8b4f2yq
-         JrShp8aBM55VlFtxiBc+tBHa+GLdnJwcrHMic49pdkJya0U3WKfDfHf/egSde+9D+U6P
-         BMSzyayB+kChdm2pL4hf/yFw4Iq2f1BYRprUpdDltmcqfRMVCEIQ42dlfG2W9HTEUXDV
-         oKtuuqC7WrKvU2XRxI+ThTahHE21Rb7TwsVCBRbae6pf3AwygmYUvo4Nsq/miX9Iaalc
-         mSLtaSVp/4wRCCBrIESWH9aS5TaKHBiOvJJbGF7Wjzej59+TDFAbmsp/k30/RPc72XFb
-         vGNg==
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=AgVSoBdBuwz8ttD0kFQ6CIjiHAq68ghhdDV9wOUejaY=;
+        b=OiTXVR4B1o2pOs7KqlBHQYX7ornZRtLbYUU8YEpMGbwPXi4XhdKTDMxZyEJNqYs7oy
+         xGe3UlLXMsic0T3CWpRKgQxz016mcUB8C1/J8sRgV5Oth5AT9KKo30/G2tahoWKEcFg0
+         3ju5icuFYDhEOwyqW9Uth1X6B0p03RkOy2Q0E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=OFA5Uz5BCNq/MfwnbLzI5wj5RSqOhUTcf5ZFKST8Ysc=;
-        b=TZb8m0kxf74a0UsR34LplIqWB51SzN2TMqlTM9WADF85mxJ6jgqIWOwcfWb0F+JTMe
-         79SEQ7MzeY9V0BD8dpmefrHmsGXaG5ZO0cjrPR2u9N3MKT7IdCM86dZEhTqHRdhPwaBH
-         doL8e34QcmnuRolrPx9vPXHaiF00VTsBaKAtLF3XgWLqqvFp8I+2ctPfqUDs/kUYHq9R
-         j7p5n11NKcRsm3EIcPgK+8DxGi6NGMmmbmYhSda53hWV4i3X5qdHhcL1S6+7L4eCSQ5x
-         n5FEXxQ4nYUSAyAad5wZgAGU9dGO3AVRVZ/VdCM8qKcpG2gOA4wXfIl6eLzsZDwkR+TC
-         oGzQ==
-X-Gm-Message-State: APjAAAU4rCB/ZeMRDgi/oL3666WxohoBO25dERcmgQhn1AqFuNzziAnT
-        C51ncaO2tyyFZz3xCFE/gDr9BZ+lvEQsk3zDSB4=
-X-Google-Smtp-Source: APXvYqyACWFEunMEyJ8CWeVZ1hfAko7oIMA7AR5qY8h393gn0f166rL2znmZpDm2RUirSuslv5CxJQppcWg8eRAzOVk=
-X-Received: by 2002:a02:7009:: with SMTP id f9mr1897459jac.81.1569472976794;
- Wed, 25 Sep 2019 21:42:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <1568817522-8754-1-git-send-email-laoar.shao@gmail.com>
- <1568817522-8754-2-git-send-email-laoar.shao@gmail.com> <456c8216-a9f4-6821-e688-744e93df826f@suse.de>
-In-Reply-To: <456c8216-a9f4-6821-e688-744e93df826f@suse.de>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Thu, 26 Sep 2019 12:42:20 +0800
-Message-ID: <CALOAHbCho+SjpfaWrKFAoK-2CKMaqc4dyevk5kC-qenHgnHS5A@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf script python: integrate page reclaim analyze script
-To:     Tony Jones <tonyj@suse.de>,
-        Mel Gorman <mgorman@techsingularity.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>, acme@kernel.org,
-        namhyung@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-        jolsa@redhat.com, mingo@redhat.com, Linux MM <linux-mm@kvack.org>,
-        Florian Schmidt <florian.schmidt@nutanix.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=AgVSoBdBuwz8ttD0kFQ6CIjiHAq68ghhdDV9wOUejaY=;
+        b=hTZzJJlOFuMlduTaklZnfNA7m4JQ6Gptb5P4njTYqEDB8i1Wx6DgYs8hHtcuJ8ociD
+         knRiwl4NE9KOfXGf5c7Xx++y0b9JzmJ0ENoFaHZRFvg8YA/8OKg+eDk/BPLsqCtiscwn
+         HyZY6Q45nmsY0OcBALSR9RztNxHtT9u9OeB5bVAkK2yE9n1BKzrb6FOvyBw4pJYKWS1L
+         028M5Sazg+wFoeaxK1zBWWeHKTceZLPNFBXG9HOr5auSjejsrSbDWwLfVxjPh6GK8pyG
+         mMdr3EP0FaGJJNabQNrRRyztMyyFTBU7WIbnqEvN6b+HEDH/lXOj78WmH0hM66ETrAza
+         N33A==
+X-Gm-Message-State: APjAAAXT1FkqSXOb2mmpQAOprD0KLlWx28/33PMko7LaviIxFnhC7e+4
+        wusghFP7rhoWxA2FWJajUWVYaQ==
+X-Google-Smtp-Source: APXvYqxkqfsnJpIsRMbHhwkj15JKg3rXFJ4n65LmGPra8tigHv5ktEOANW/n/zppBpKeinnePrXpLg==
+X-Received: by 2002:a63:3f49:: with SMTP id m70mr1433832pga.186.1569473128092;
+        Wed, 25 Sep 2019 21:45:28 -0700 (PDT)
+Received: from rayagonda.dhcp.broadcom.net ([192.19.234.250])
+        by smtp.gmail.com with ESMTPSA id z22sm623526pgf.10.2019.09.25.21.45.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 25 Sep 2019 21:45:27 -0700 (PDT)
+From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+To:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Michael Cheng <ccheng@broadcom.com>,
+        Shreesha Rajashekar <shreesha.rajashekar@broadcom.com>,
+        Lori Hikichi <lori.hikichi@broadcom.com>,
+        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Icarus Chau <icarus.chau@broadcom.com>,
+        Ray Jui <ray.jui@broadcom.com>,
+        Shivaraj Shetty <sshetty1@broadcom.com>
+Subject: [PATCH v2 1/1] i2c: iproc: Add i2c repeated start capability
+Date:   Thu, 26 Sep 2019 10:10:08 +0530
+Message-Id: <1569472808-15284-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 9:56 AM Tony Jones <tonyj@suse.de> wrote:
->
-> On 9/18/19 7:38 AM, Yafang Shao wrote:
-> > A new perf script page-reclaim is introduced in this patch. This new sc=
-ript
-> > is used to report the page reclaim details. The possible usage of this
-> > script is as bellow,
-> > - identify latency spike caused by direct reclaim
-> > - whehter the latency spike is relevant with pageout
-> > - why is page reclaim requested, i.e. whether it is because of memory
-> >   fragmentation
-> > - page reclaim efficiency
-> > etc
-> > In the future we may also enhance it to analyze the memcg reclaim.
-> >
-> > Bellow is how to use this script,
-> >     # Record, one of the following
-> >     $ perf record -e 'vmscan:mm_vmscan_*' ./workload
-> >     $ perf script record page-reclaim
-> >
-> >     # Report
-> >     $ perf script report page-reclaim
-> >
-> >     # Report per process latency
-> >     $ perf script report page-reclaim -- -p
->
->
-> I tested it with global-dhp__pagereclaim-performance from mmtests and got=
- what appears to be reasonable results and the output looks correct and use=
-ful.  However I'm not a vm expert so I can't comment further.  Hopefully so=
-meone on linux-mm can give more specific feedback.
->
+From: Lori Hikichi <lori.hikichi@broadcom.com>
 
-+ Mel
+Enable handling of i2c repeated start. The current code
+handles a multi msg i2c transfer as separate i2c bus
+transactions. This change will now handle this case
+using the i2c repeated start protocol. The number of msgs
+in a transfer is limited to two, and must be a write
+followed by a read.
 
-Hi Mel,
+Signed-off-by: Lori Hikichi <lori.hikichi@broadcom.com>
+Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Signed-off-by: Icarus Chau <icarus.chau@broadcom.com>
+Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+Signed-off-by: Shivaraj Shetty <sshetty1@broadcom.com>
+---
+changes from v1:
+ - Address code review comment from Wolfram Sang
 
-This is motivated by
-Documentation/trace/postprocess/trace-vmscan-postprocess.pl created by
-you.
-Could you pls. help take a look ?
+ drivers/i2c/busses/i2c-bcm-iproc.c | 63 ++++++++++++++++++++++++++++++--------
+ 1 file changed, 50 insertions(+), 13 deletions(-)
 
-Thanks
-Yafang
+diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
+index d7fd76b..e478db7 100644
+--- a/drivers/i2c/busses/i2c-bcm-iproc.c
++++ b/drivers/i2c/busses/i2c-bcm-iproc.c
+@@ -81,6 +81,7 @@
+ #define M_CMD_PROTOCOL_MASK          0xf
+ #define M_CMD_PROTOCOL_BLK_WR        0x7
+ #define M_CMD_PROTOCOL_BLK_RD        0x8
++#define M_CMD_PROTOCOL_PROCESS       0xa
+ #define M_CMD_PEC_SHIFT              8
+ #define M_CMD_RD_CNT_SHIFT           0
+ #define M_CMD_RD_CNT_MASK            0xff
+@@ -675,13 +676,20 @@ static int bcm_iproc_i2c_xfer_wait(struct bcm_iproc_i2c_dev *iproc_i2c,
+ 	return 0;
+ }
+ 
+-static int bcm_iproc_i2c_xfer_single_msg(struct bcm_iproc_i2c_dev *iproc_i2c,
+-					 struct i2c_msg *msg)
++/*
++ * If 'process_call' is true, then this is a multi-msg transfer that requires
++ * a repeated start between the messages.
++ * More specifically, it must be a write (reg) followed by a read (data).
++ * The i2c quirks are set to enforce this rule.
++ */
++static int bcm_iproc_i2c_xfer_internal(struct bcm_iproc_i2c_dev *iproc_i2c,
++					struct i2c_msg *msgs, bool process_call)
+ {
+ 	int i;
+ 	u8 addr;
+ 	u32 val, tmp, val_intr_en;
+ 	unsigned int tx_bytes;
++	struct i2c_msg *msg = &msgs[0];
+ 
+ 	/* check if bus is busy */
+ 	if (!!(iproc_i2c_rd_reg(iproc_i2c,
+@@ -707,14 +715,29 @@ static int bcm_iproc_i2c_xfer_single_msg(struct bcm_iproc_i2c_dev *iproc_i2c,
+ 			val = msg->buf[i];
+ 
+ 			/* mark the last byte */
+-			if (i == msg->len - 1)
+-				val |= BIT(M_TX_WR_STATUS_SHIFT);
++			if (!process_call && (i == msg->len - 1))
++				val |= 1 << M_TX_WR_STATUS_SHIFT;
+ 
+ 			iproc_i2c_wr_reg(iproc_i2c, M_TX_OFFSET, val);
+ 		}
+ 		iproc_i2c->tx_bytes = tx_bytes;
+ 	}
+ 
++	/* Process the read message if this is process call */
++	if (process_call) {
++		msg++;
++		iproc_i2c->msg = msg;  /* point to second msg */
++
++		/*
++		 * The last byte to be sent out should be a slave
++		 * address with read operation
++		 */
++		addr = i2c_8bit_addr_from_msg(msg);
++		/* mark it the last byte out */
++		val = addr | (1 << M_TX_WR_STATUS_SHIFT);
++		iproc_i2c_wr_reg(iproc_i2c, M_TX_OFFSET, val);
++	}
++
+ 	/* mark as incomplete before starting the transaction */
+ 	if (iproc_i2c->irq)
+ 		reinit_completion(&iproc_i2c->done);
+@@ -733,7 +756,7 @@ static int bcm_iproc_i2c_xfer_single_msg(struct bcm_iproc_i2c_dev *iproc_i2c,
+ 	 * underrun interrupt, which will be triggerred when the TX FIFO is
+ 	 * empty. When that happens we can then pump more data into the FIFO
+ 	 */
+-	if (!(msg->flags & I2C_M_RD) &&
++	if (!process_call && !(msg->flags & I2C_M_RD) &&
+ 	    msg->len > iproc_i2c->tx_bytes)
+ 		val_intr_en |= BIT(IE_M_TX_UNDERRUN_SHIFT);
+ 
+@@ -743,6 +766,8 @@ static int bcm_iproc_i2c_xfer_single_msg(struct bcm_iproc_i2c_dev *iproc_i2c,
+ 	 */
+ 	val = BIT(M_CMD_START_BUSY_SHIFT);
+ 	if (msg->flags & I2C_M_RD) {
++		u32 protocol;
++
+ 		iproc_i2c->rx_bytes = 0;
+ 		if (msg->len > M_RX_FIFO_MAX_THLD_VALUE)
+ 			iproc_i2c->thld_bytes = M_RX_FIFO_THLD_VALUE;
+@@ -758,7 +783,10 @@ static int bcm_iproc_i2c_xfer_single_msg(struct bcm_iproc_i2c_dev *iproc_i2c,
+ 		/* enable the RX threshold interrupt */
+ 		val_intr_en |= BIT(IE_M_RX_THLD_SHIFT);
+ 
+-		val |= (M_CMD_PROTOCOL_BLK_RD << M_CMD_PROTOCOL_SHIFT) |
++		protocol = process_call ?
++				M_CMD_PROTOCOL_PROCESS : M_CMD_PROTOCOL_BLK_RD;
++
++		val |= (protocol << M_CMD_PROTOCOL_SHIFT) |
+ 		       (msg->len << M_CMD_RD_CNT_SHIFT);
+ 	} else {
+ 		val |= (M_CMD_PROTOCOL_BLK_WR << M_CMD_PROTOCOL_SHIFT);
+@@ -774,17 +802,24 @@ static int bcm_iproc_i2c_xfer(struct i2c_adapter *adapter,
+ 			      struct i2c_msg msgs[], int num)
+ {
+ 	struct bcm_iproc_i2c_dev *iproc_i2c = i2c_get_adapdata(adapter);
+-	int ret, i;
++	bool process_call = false;
++	int ret;
+ 
+-	/* go through all messages */
+-	for (i = 0; i < num; i++) {
+-		ret = bcm_iproc_i2c_xfer_single_msg(iproc_i2c, &msgs[i]);
+-		if (ret) {
+-			dev_dbg(iproc_i2c->device, "xfer failed\n");
+-			return ret;
++	if (num == 2) {
++		/* Repeated start, use process call */
++		process_call = true;
++		if (msgs[1].flags & I2C_M_NOSTART) {
++			dev_err(iproc_i2c->device, "Invalid repeated start\n");
++			return -EOPNOTSUPP;
+ 		}
+ 	}
+ 
++	ret = bcm_iproc_i2c_xfer_internal(iproc_i2c, msgs, process_call);
++	if (ret) {
++		dev_dbg(iproc_i2c->device, "xfer failed\n");
++		return ret;
++	}
++
+ 	return num;
+ }
+ 
+@@ -806,6 +841,8 @@ static uint32_t bcm_iproc_i2c_functionality(struct i2c_adapter *adap)
+ };
+ 
+ static struct i2c_adapter_quirks bcm_iproc_i2c_quirks = {
++	.flags = I2C_AQ_COMB_WRITE_THEN_READ,
++	.max_comb_1st_msg_len = M_TX_RX_FIFO_SIZE,
+ 	.max_read_len = M_RX_MAX_READ_LEN,
+ };
+ 
+-- 
+1.9.1
 
-> There is one issue with Python3,  see below.  I didn't test with Python2.
->
-> >
-> > +     @classmethod
-> > +     def shrink_inactive(cls, pid, scanned, reclaimed, flags):
-> > +             event =3D cls.events.get(pid)
-> > +             if event and event.tracing():
-> > +                     # RECLAIM_WB_ANON 0x1
-> > +                     # RECLAIM_WB_FILE 0x2
-> > +                     _type =3D (flags & 0x2) >> 1
-> > +                     event.process_lru(lru[_type], scanned, reclaimed)
-> > +
-> > +     @classmethod
-> > +     def writepage(cls, pid, flags):
-> > +             event =3D cls.events.get(pid)
-> > +             if event and event.tracing():
-> > +                     # RECLAIM_WB_ANON 0x1
-> > +                     # RECLAIM_WB_FILE 0x2
-> > +                     # RECLAIM_WB_SYNC 0x4
-> > +                     # RECLAIM_WB_ASYNC 0x8
-> > +                     _type =3D (flags & 0x2) >> 1
-> > +                     _io =3D (flags & 0x4) >> 2
-> > +
-> > +                     event.process_writepage(lru[_type], sync_io[_io])
-> > +
-> > +        @classmethod
->
-> Space indentation on line above.  For python3 this results in:
->
->   File "tools/perf/scripts/python/page-reclaim.py", line 217
->     @classmethod
->                ^
-> TabError: inconsistent use of tabs and spaces in indentation
->
-> > +     def iterate_proc(cls):
-> > +             if show_opt !=3D Show.DEFAULT:
-> > +                     print("\nPer process latency (ms):")
-> > +                     print_proc_latency(latency_metric, 'pid', '[comm]=
-')
-> > +
-> > +                     if show_opt =3D=3D Show.VERBOSE:
-> > +                             print("%20s  %s" % ('timestamp','latency(=
-ns)'))
->
->
-> Thanks
->
-> Tony
->
