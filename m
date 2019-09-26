@@ -2,124 +2,88 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42072C352A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 861B0C352A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 281FD217F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:44:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5658D217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:44:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="AhsW8TrD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728578AbfIZSof (ORCPT
+        id S1728603AbfIZSov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 14:44:35 -0400
-Received: from mail.steuer-voss.de ([85.183.69.95]:33348 "EHLO
-        mail.steuer-voss.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728492AbfIZSof (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 14:44:35 -0400
-X-Virus-Scanned: Debian amavisd-new at mail.steuer-voss.de
-Received: by mail.steuer-voss.de (Postfix, from userid 1000)
-        id 979AE4D586; Thu, 26 Sep 2019 20:44:33 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.steuer-voss.de (Postfix) with ESMTP id 95F9D4D574;
-        Thu, 26 Sep 2019 20:44:33 +0200 (CEST)
-Date:   Thu, 26 Sep 2019 20:44:33 +0200 (CEST)
-From:   Nikolaus Voss <nv@vosn.de>
-X-X-Sender: nv@fox.voss.local
-To:     "Schmauss, Erik" <erik.schmauss@intel.com>
-cc:     "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Moore, Robert" <robert.moore@intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "devel@acpica.org" <devel@acpica.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] ACPICA: make acpi_load_table() return table index
-In-Reply-To: <CF6A88132359CE47947DB4C6E1709ED53C6481F2@ORSMSX122.amr.corp.intel.com>
-Message-ID: <alpine.DEB.2.20.1909262043380.13592@fox.voss.local>
-References: <20190906174605.GY2680@smile.fi.intel.com> <20190912080742.24642-1-nikolaus.voss@loewensteinmedical.de> <CF6A88132359CE47947DB4C6E1709ED53C6481B1@ORSMSX122.amr.corp.intel.com> <20190926163528.GH32742@smile.fi.intel.com>
- <CF6A88132359CE47947DB4C6E1709ED53C6481F2@ORSMSX122.amr.corp.intel.com>
-User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
+        Thu, 26 Sep 2019 14:44:51 -0400
+Received: from mail.z3ntu.xyz ([128.199.32.197]:41790 "EHLO mail.z3ntu.xyz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728192AbfIZSov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 14:44:51 -0400
+Received: from localhost.localdomain (80-110-106-143.cgn.dynamic.surfer.at [80.110.106.143])
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id EB3FDC1432;
+        Thu, 26 Sep 2019 18:44:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1569523489; bh=TtCFp66H0BRdliV0MDGqy9XsOfbrryGZJzyXlR1T3/k=;
+        h=From:To:Cc:Subject:Date;
+        b=AhsW8TrDVbuJ0VHaUpnEMSmpUfG2mjqVP3pcjYroAro4Zq/vRQ7C5GYaUWs/wZaUz
+         zSChIOGOPb15HQ74jnEKCyreY8H69vSH/FMN8H4hMNkcbo5KGO4cWF+9DRtZ4OGxGr
+         RaEZoKZHIDlKYduz+3/3bi6TbJpMgcRmzSiCFC7w=
+From:   Luca Weiss <luca@z3ntu.xyz>
+Cc:     Luca Weiss <luca@z3ntu.xyz>, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] ARM: dts: msm8974-FP2: Drop unused card-detect pin
+Date:   Thu, 26 Sep 2019 20:44:34 +0200
+Message-Id: <20190926184436.1078314-1-luca@z3ntu.xyz>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 26 Sep 2019, Schmauss, Erik wrote:
->> -----Original Message-----
->> From: linux-acpi-owner@vger.kernel.org <linux-acpi-owner@vger.kernel.org>
->> On Behalf Of Shevchenko, Andriy
->> Sent: Thursday, September 26, 2019 9:35 AM
->> To: Schmauss, Erik <erik.schmauss@intel.com>
->> Cc: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>; Rafael J. Wysocki
->> <rjw@rjwysocki.net>; Moore, Robert <robert.moore@intel.com>; Len Brown
->> <lenb@kernel.org>; Jacek Anaszewski <jacek.anaszewski@gmail.com>; Pavel
->> Machek <pavel@ucw.cz>; Dan Murphy <dmurphy@ti.com>; linux-
->> acpi@vger.kernel.org; devel@acpica.org; linux-kernel@vger.kernel.org;
->> nv@vosn.de
->> Subject: Re: [PATCH] ACPICA: make acpi_load_table() return table index
->>
->> On Thu, Sep 26, 2019 at 07:09:05PM +0300, Schmauss, Erik wrote:
->>>> -----Original Message-----
->>>> From: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
->>>> Sent: Thursday, September 12, 2019 1:08 AM
->>>> To: Shevchenko, Andriy <andriy.shevchenko@intel.com>; Schmauss, Erik
->>>> <erik.schmauss@intel.com>; Rafael J. Wysocki <rjw@rjwysocki.net>;
->>>> Moore, Robert <robert.moore@intel.com>
->>>> Cc: Len Brown <lenb@kernel.org>; Jacek Anaszewski
->>>> <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan
->>>> Murphy <dmurphy@ti.com>; linux-acpi@vger.kernel.org;
->>>> devel@acpica.org; linux- kernel@vger.kernel.org; nv@vosn.de;
->>>> Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
->>>> Subject: [PATCH] ACPICA: make acpi_load_table() return table index
->>>>
->>> Hi Nikolaus,
->>>
->>>> For unloading an ACPI table, it is necessary to provide the index of the table.
->>>> The method intended for dynamically loading or hotplug addition of
->>>> tables, acpi_load_table(), should provide this information via an
->>>> optional pointer to the loaded table index.
->>>
->>> We'll take this patch for ACPICA upstream
->>
->> Erik,
->>
-> Hi Andy,
->
->> how about to have also counterpart to acpi_load_table() which will do what it's
->> done now in acpi_configfs.c via acpi_tb_*() API?
->
-> I should have given more details. We decided to add this extra parameter 
-> in AcpiLoadTable and we're going to create an AcpiUnloadTable function 
-> that will take table index to unload the table (basically the 
-> acpi_tb_unload..). Once we do this, you can use table indices with 
-> AcpiUnloadTable and AcpiLoadTable.
+The gpio is not used for SD card detection on the FP2.
 
-that's even better news.
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+---
+ arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
 
-Rafael, shall I prepare anything?
-
-Niko
-
->
-> Erik
->>
->> Because it's kinda strange to call acpi_load_table*() and acpi_tb_*() in the
->> same module.
->>
->> --
->> With Best Regards,
->> Andy Shevchenko
->>
->
-
+diff --git a/arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts b/arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts
+index bf402ae39226..2869be16bc6e 100644
+--- a/arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts
++++ b/arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts
+@@ -272,14 +272,6 @@
+ 			};
+ 		};
+ 
+-		sdhc2_cd_pin_a: sdhc2-cd-pin-active {
+-			pins = "gpio62";
+-			function = "gpio";
+-
+-			drive-strength = <2>;
+-			bias-disable;
+-		};
+-
+ 		sdhc2_pin_a: sdhc2-pin-active {
+ 			clk {
+ 				pins = "sdc2_clk";
+@@ -317,7 +309,7 @@
+ 		bus-width = <4>;
+ 
+ 		pinctrl-names = "default";
+-		pinctrl-0 = <&sdhc2_pin_a>, <&sdhc2_cd_pin_a>;
++		pinctrl-0 = <&sdhc2_pin_a>;
+ 	};
+ 
+ 	usb@f9a55000 {
 -- 
-Nikolaus Voss - Aastwiete 4 - 22880 Wedel
+2.23.0
 
