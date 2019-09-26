@@ -2,99 +2,164 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB6F0C352A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 20:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 341F4C352A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 20:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF4D02146E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 20:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 060C82245A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 20:51:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="JD7JeQsA"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KfUP2SE/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728887AbfIZUqc (ORCPT
+        id S1728878AbfIZUvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 16:46:32 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38952 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728816AbfIZUqb (ORCPT
+        Thu, 26 Sep 2019 16:51:15 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:46571 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728836AbfIZUvO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 16:46:31 -0400
-Received: by mail-pg1-f195.google.com with SMTP id o10so2171961pgs.6
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 13:46:31 -0700 (PDT)
+        Thu, 26 Sep 2019 16:51:14 -0400
+Received: by mail-qk1-f194.google.com with SMTP id 201so171419qkd.13
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 13:51:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=5A93QbhcJ9OxEL8d529nmFDwwgHPcXf7jnflqd7ri+Q=;
-        b=JD7JeQsALzOQnI/4qgjCyDszf1kSiggpL1jpjmpP0ZrOIuc+rH3npuK/vS6qQ+APdk
-         DOxSlr0vPjLBh+8bgundu2vrbnLYxdK8cJ9A6n+FIHz1xHDLi0z+VJdL82dvLTGdo8zF
-         HduM+63/IdGaaCFE3qZPWGsNkoTiLLi6WDvI4TVwW4s2I2xZ5uUu+xDZXrPM1SCBrSno
-         243VhgJkvY50yMHStaZPEVf1H+Otom59J+UCdTgAuVfnoDnn2+GtT1dZFqBM3z7sWZnu
-         I935JuXgwOAV/a1Cyl2iPYd9RP8KwljZunUy8mZqpja4Q9GsaO0IKxZjvyjVaxIis/71
-         qQ2g==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UFXRrFau2iJzsurfLrZlI44R9YQ5W58lJvvcXaxbZxI=;
+        b=KfUP2SE/YczAT4JhpCDujik7WoLJGyfqT3XGtzKI3SNB9DXBFNzL5mRonozZ1n2YQP
+         LJr2eSJSaF5hXp3ti/nJwV7A5FTVzR7PfNvyyF6wpTOQaAg3HkdZCJJSZraM5Ec8+pzT
+         whmvG1e7OsMifGARMfI3T70qIMuG5fdAVlS+o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=5A93QbhcJ9OxEL8d529nmFDwwgHPcXf7jnflqd7ri+Q=;
-        b=W4pZn6whi/tw88IatvtSqAjY2C0Tb6DmJQ8BUELYeEfJ4FFd6UQ3eoAffqRX9sFCZT
-         eKilO0fnr3x3I1vkg+ZQHjBvmRv5gdHxj1nVNq0qsDeZ+nyhscjZG9r2JtynSgHgWiwH
-         xwKazv47Ee0CCmNy66WCkIY/nkh5L8nxEeaZbIT5a1/KtUFLL78c+qoe6kG1MGw79vME
-         ciei2n/yqZvvO0dKP1AQhK8QMAfbVRk5TvkQ3Y4QEGnTkXzLwPMVvSd1l7/eGudnkPWQ
-         1PDIHmyENbY4bEAtP1hSxys+foIimGwwYYPvLZeUGI6CHtLo1WIJbRk0tDeUoPZiMYwP
-         0EJw==
-X-Gm-Message-State: APjAAAVpou6vYgOgH/D1fqADhP0N6zJbRTM+OkKcgr4svOlJ6gnQvXND
-        xLLOXgWlMyrrRXg/gb/3v8M7qQ==
-X-Google-Smtp-Source: APXvYqzG2OOdfG5XCHclCet9YXaUJwXijZtrIpDdndqleeF+PAsM0A80TkkzpTkrpdeInKpWjGPpIg==
-X-Received: by 2002:aa7:9a48:: with SMTP id x8mr415038pfj.201.1569530790856;
-        Thu, 26 Sep 2019 13:46:30 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id 195sm169718pfz.103.2019.09.26.13.46.30
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 26 Sep 2019 13:46:30 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>, sboyd@kernel.org,
-        jbrunet@baylibre.com, mturquette@baylibre.com
-Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH RFC 0/2] clk: meson: g12a: handle clock hw changes while in suspend
-In-Reply-To: <20190919102518.25126-1-narmstrong@baylibre.com>
-References: <20190919102518.25126-1-narmstrong@baylibre.com>
-Date:   Thu, 26 Sep 2019 13:46:29 -0700
-Message-ID: <7htv8ykcpm.fsf@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UFXRrFau2iJzsurfLrZlI44R9YQ5W58lJvvcXaxbZxI=;
+        b=jSZ0ak8JZYlILXkV0naKzXHEbBkM2SHmpzhghoc2BAb5mSQaa6chMOo9g5EbFmp0Ae
+         v8IVsTjXEwgiC5SKyDQ5FPHBhejZFrErTn+PbQKdgi+T1UI9Yr+eJA8SNCVG+m/O+qm8
+         EUkLPjyTKRjswQkXN40STa+qnlAQei6F8Q78dIz7LCMREoTJLcqF13ZlUuqCtJ9zt9On
+         7pyrk7llGfn/2qsxU9xmRuN+36hJ5fe5H3haFh6CEux/Dg2a6RdZabWWJwP3PbXi7+9O
+         zccGk7OxHLc18BscQ4y2503mf+XdEG9j95K169QNUIeXwldr7GSVmwwPOF/Gar17Gb8I
+         Angg==
+X-Gm-Message-State: APjAAAVgtKGv6yIkKwZjg6wCyLhTo/I1P6VWkhSSi/A+OVqw303l7Y+D
+        d5RmMR3G9Cdr/2JiNFSqyP6SfXJ61CSRk1eBu8TIxg==
+X-Google-Smtp-Source: APXvYqyOH46/TFqgHUrRLcD+R2H/hvTOilF7SBW1cOWfI7cZ6m4E2KFuCxu8bdmVWQs6LfcrJZg983Bh2DYShcIK4bE=
+X-Received: by 2002:a37:498f:: with SMTP id w137mr855825qka.419.1569531073398;
+ Thu, 26 Sep 2019 13:51:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <CANFp7mX=THOVk-4TgSSscgtm598txqesDZYKE2sFtEVNHjN+-g@mail.gmail.com>
+ <Pine.LNX.4.44L0.1909181442330.1507-100000@iolanthe.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1909181442330.1507-100000@iolanthe.rowland.org>
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Date:   Thu, 26 Sep 2019 13:51:02 -0700
+Message-ID: <CANFp7mWj8V=Hyo7b0xisYVde2dC9Ju0Rc+ituftnjcqXMuD5GA@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Reset realtek bluetooth devices during user suspend
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     linux-bluetooth@vger.kernel.org, linux-usb@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Hui Peng <benquike@gmail.com>, linux-pm@vger.kernel.org,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Len Brown <len.brown@intel.com>,
+        Mathias Payer <mathias.payer@nebelwelt.net>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mans Rullgard <mans@mansr.com>, Pavel Machek <pavel@ucw.cz>,
+        YueHaibing <yuehaibing@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
-
-> This serie aime to support when the suspend/resume firmware alters the
-> clock tree, leading to an incorrect representation of the clock tree
-> after a resume from suspend-to-mem.
+On Wed, Sep 18, 2019 at 11:51 AM Alan Stern <stern@rowland.harvard.edu> wrote:
 >
-> For the Amlogic G12A/G12B/SM1 case, the SCPI firmware handling suspend
-> alters the CPU clock tree in various ways.
+> On Wed, 18 Sep 2019, Abhishek Pandit-Subedi wrote:
 >
-> Since we know which part of the tree is possibly altered, we introduce here
-> the clk_invalidate_rate() function that will rebuild the tree from the
-> hardware registers in case parents and dividers have changed.
+> > Sorry, last reply went out with HTML. Re-sending in plain text.
+> >
+> > On Wed, Sep 18, 2019 at 7:23 AM Alan Stern <stern@rowland.harvard.edu> wrote:
+> > >
+> > > On Tue, 17 Sep 2019, Abhishek Pandit-Subedi wrote:
+> > >
+> > > > On a Realtek USB bluetooth device, I wanted a simple and consistent way
+> > > > to put the device in reset during suspend (2 reasons: to save power and
+> > > > disable BT as a wakeup source). Resetting it in the suspend callback
+> > > > causes a detach and the resume callback is not called. Hence the changes
+> > > > in this series to do the reset in suspend_noirq.
+> > >
+> > > What about people who _want_ BT to be a wakeup source?
+> >
+> > When BT is enabled as a wakeup source, there is no reset.
+> >
+> > > Why does putting the device in reset save power?  That is, a suspended
+> > > device is very strictly limited in the amount of current it's allowed
+> > > to draw from the USB bus; why should it draw significantly less when it
+> > > is reset?
+> >
+> > I don't know that it's significantly less (only that it's OFF). My
+> > greater motivation is to make sure the bluetooth chip isn't
+> > accumulating events while the host is turned off. Sorry, I should have
+> > made that more clear in the cover letter.
+> >
+> > When the host is off, it continues to accumulate events for the host
+> > to process (packets from connected devices, LE advertisements, etc).
+> > At some point, the firmware buffers fill up and no more events can be
+> > stored. When the host is resumed later on, the firmware is in a bad
+> > state and doesn't respond. I had originally just reset in ->resume but
+> > then connected wireless devices wouldn't disconnect from the BT either
+> > and I had trouble getting them to reconnect.
+> >
+> > >
+> > > > I looked into using PERSIST and reset on resume but those seem mainly
+> > > > for misbehaving devices that reset themselves.
+> > >
+> > > They are, but that doesn't mean you can't use them for other things
+> > > too.
+> > >
+> > > > This patch series has been tested with Realtek BT hardware as well as
+> > > > Intel BT (test procedure = disable as wake source, user suspend and
+> > > > observe a detach + reattach on resume).
+> > >
+> > > This series really seems like overkill for a single kind of device.
+> > >
+> > > Is there any way to turn off the device's BT radio during suspend (if
+> > > wakeup is disabled) and then turn it back on during resume?  Wouldn't
+> > > that accomplish what you want just as well?
+> >
+> > Probably (but I couldn't find a way to do that).
 >
-> Finally we call clk_invalidate_rate() from a new resume callback to refresh
-> the CPU clock tree after a resume.
+> There's no way to turn off the device's BT radio?  Then what happens
+> when the user turns off Bluetooth from the wireless control panel?
+
+It looks like bluez invokes hci_dev_do_close. This gracefully clears
+any packets in flight, clears any pending actions and disables the
+device as a wakeup source (which for Realtek allows it to enter global
+suspend). This is approximately what I was trying to achieve.
+
+> >  I want to prevent
+> > bluetooth from waking up the host and to reliably be in a good state
+> > when the host resumes. The reset logic I implemented causes the hci
+> > device to disappear and reappear, which userspace seems to handle
+> > gracefully.
 >
-> With the clock tree refreshed, CCF can now handle the new clock tree
-> configuration and avoid crashing the system on further DVFS set_rates.
+> Have you tried out the persist/reset-on-resume approach?
+>
+> Alan Stern
+>
 
-For clarification, does this series work without the other proposed
-fixes[1]?  or is this dependent on that?
+I think I'll abandon this patch series. The general sentiment seems to
+be "don't do this" and it looks like closing the hci device is better
+in my case.
 
-Kevin
+Thanks for the feedback and pointing me this way.
 
-[1] https://lore.kernel.org/linux-amlogic/20190919093627.21245-1-narmstrong@baylibre.com/
+Abhishek
