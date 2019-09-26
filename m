@@ -2,151 +2,148 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0076DC432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D5AC4360D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5EA521D6C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:37:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569458270;
-	bh=bYfnhoHSHJtFHSlZlQg30EsLlcvJOcVH4otXAOlUTqE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OdwTi3T7vtsP4m3AIYd242qkljLOqZUMhh90lVhlcFp6x/a6vax4E+5HeKFAC5zce
-	 4I7VTiWoVTXfUY7yol7yqDoysHY24NFM0KCLh3gzCIEIj/yp+Oa8ovuNJItB/a3YgJ
-	 gLDivJl9NeZFMLFWTXYQNTCabl7kRIXQQv0PL/TE=
+	by mail.kernel.org (Postfix) with ESMTP id E0418217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 00:39:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SRkhwVFd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389185AbfIZAfE (ORCPT
+        id S1729202AbfIZAjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 20:35:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37772 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389146AbfIZAfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 20:35:03 -0400
-Received: from quaco.localdomain (unknown [179.97.35.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CFC821D7B;
-        Thu, 26 Sep 2019 00:34:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569458102;
-        bh=bYfnhoHSHJtFHSlZlQg30EsLlcvJOcVH4otXAOlUTqE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z2A13pKp6z1oTqjv3NgARmhD+vap/ho8vqHdsuofO+E8UkW6UC9OVaBnsW+r8ksux
-         sKhBdZh1c+WeGwCYJbqEI2Xl24uZMRKb8HeXCUnOjiy/em2/NJq0B03j5y8tfI0b+9
-         jwWr7muy/eeZv0IHtV3FnANo36VEidkobqNaIz0g=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 34/66] libperf: Move 'mmap_len' from 'struct evlist' to 'struct perf_evlist'
-Date:   Wed, 25 Sep 2019 21:32:12 -0300
-Message-Id: <20190926003244.13962-35-acme@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190926003244.13962-1-acme@kernel.org>
-References: <20190926003244.13962-1-acme@kernel.org>
+        Wed, 25 Sep 2019 20:39:37 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:38140 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727899AbfIZAjh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 20:39:37 -0400
+Received: by mail-qk1-f193.google.com with SMTP id u186so365888qkc.5
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 17:39:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8eElvPCoM/FfEnn5Y4ueHDwedd4HgZwZRPzixoGrG8Y=;
+        b=SRkhwVFdVzU6Xd8hDe1fjb+pbOsZaE2zoac5LpFpNUAq5387VnUQYu66P9pKspY4QS
+         tyx/JCI8DmzLJyHnqqsJ4cys0kdlwdoTZUjr6txj2JT0y671xbzHCXGyc44Fp1J/VQwx
+         qP76nOzMumdSVfW0J+k14XJdC3gtD8dYXnqgc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8eElvPCoM/FfEnn5Y4ueHDwedd4HgZwZRPzixoGrG8Y=;
+        b=fcdMh4fmVqpgOZ0ddtUhksFXN4/40MZOFdRlteerPTn/qvE4Z51CFp8uw3/Mof7DO1
+         AtCMOTDpXvZdyBC/Tabc8ebCcIeizJDWIpyZA+NuZQDhOY1gYCGuXdtwbei/M3pFzNrg
+         bKEoKiCtucwphjmFvYYEt30rG+qLsti/ljivUx65usEn2auiYA714+5QDsq5rtp1CQkK
+         YwnbQH/N1D+lKNi/L5gv/W2oOBw+LXCqM3bHAXBCjjzs4sTzvXJ+ZkRDGQR6StlGBlrk
+         t6w/bWWYbawEY+NjFxMOUVM5oZ6eD7Yf/zxJjXfgU6HmaNEvKsuw3zVSwC/5nDGVEGmb
+         fr3g==
+X-Gm-Message-State: APjAAAXzAqfFeooWmK5nHFjQkH8VFckZylLzEbIonXouFntR0/DDSJMe
+        wjItsg5FdDZCJC078lYnxsBjNwgJNw+5SpGsNXk3Jg==
+X-Google-Smtp-Source: APXvYqysEFiOA5JsgMZ41RNUUxUa7Or5sDYleM9GT9IE+iSk5HjBjZ/LqeLOrwmBKEcZCtSL7jmzfEV43UKJ/AQUUqU=
+X-Received: by 2002:a37:dcc1:: with SMTP id v184mr805620qki.258.1569458376178;
+ Wed, 25 Sep 2019 17:39:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190924024958.GA229906@dtor-ws> <20190924082143.GS2680@smile.fi.intel.com>
+In-Reply-To: <20190924082143.GS2680@smile.fi.intel.com>
+From:   Alex Levin <levinale@chromium.org>
+Date:   Wed, 25 Sep 2019 17:39:25 -0700
+Message-ID: <CAPBFDX+Bjd7CZg2ZqBANJ6=pb9SA7bnpxOo=Lv4BS1CJUytEmQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: cherryview: restore Strago DMI workaround for
+ all versions
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+On Tue, Sep 24, 2019 at 1:21 AM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Mon, Sep 23, 2019 at 07:49:58PM -0700, Dmitry Torokhov wrote:
+> > This is essentially a revert of:
+> >
+> > e3f72b749da2 pinctrl: cherryview: fix Strago DMI workaround
+> > 86c5dd6860a6 pinctrl: cherryview: limit Strago DMI workarounds to version 1.0
+> >
+> > because even with 1.1 versions of BIOS there are some pins that are
+> > configured as interrupts but not claimed by any driver, and they
+> > sometimes fire up and result in interrupt storms that cause touchpad
+> > stop functioning and other issues.
+> >
+> > Given that we are unlikely to qualify another firmware version for a
+> > while it is better to keep the workaround active on all Strago boards.
+>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Moving 'mmap_len' from 'struct evlist' to 'struct perf_evlist' it will
-be used in following patches.
+Tested-by: Alex Levin <levinale@chromium.org>
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Link: http://lore.kernel.org/lkml/20190913132355.21634-22-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-record.c              |  2 +-
- tools/perf/lib/include/internal/evlist.h |  1 +
- tools/perf/util/evlist.c                 | 10 +++++-----
- tools/perf/util/evlist.h                 |  1 -
- 4 files changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 8577bf33a556..94997144547d 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1412,7 +1412,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		err = -1;
- 		goto out_child;
- 	}
--	session->header.env.comp_mmap_len = session->evlist->mmap_len;
-+	session->header.env.comp_mmap_len = session->evlist->core.mmap_len;
- 
- 	err = bpf__apply_obj_config();
- 	if (err) {
-diff --git a/tools/perf/lib/include/internal/evlist.h b/tools/perf/lib/include/internal/evlist.h
-index 035c1e1cc324..01b813616440 100644
---- a/tools/perf/lib/include/internal/evlist.h
-+++ b/tools/perf/lib/include/internal/evlist.h
-@@ -14,6 +14,7 @@ struct perf_evlist {
- 	struct perf_cpu_map	*cpus;
- 	struct perf_thread_map	*threads;
- 	int			 nr_mmaps;
-+	size_t			 mmap_len;
- };
- 
- /**
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index d147834fbe60..4d8cde099e10 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1012,11 +1012,11 @@ int evlist__mmap_ex(struct evlist *evlist, unsigned int pages,
- 	if (evlist->pollfd.entries == NULL && perf_evlist__alloc_pollfd(evlist) < 0)
- 		return -ENOMEM;
- 
--	evlist->mmap_len = evlist__mmap_size(pages);
--	pr_debug("mmap size %zuB\n", evlist->mmap_len);
--	mp.mask = evlist->mmap_len - page_size - 1;
-+	evlist->core.mmap_len = evlist__mmap_size(pages);
-+	pr_debug("mmap size %zuB\n", evlist->core.mmap_len);
-+	mp.mask = evlist->core.mmap_len - page_size - 1;
- 
--	auxtrace_mmap_params__init(&mp.auxtrace_mp, evlist->mmap_len,
-+	auxtrace_mmap_params__init(&mp.auxtrace_mp, evlist->core.mmap_len,
- 				   auxtrace_pages, auxtrace_overwrite);
- 
- 	evlist__for_each_entry(evlist, evsel) {
-@@ -1600,7 +1600,7 @@ int perf_evlist__strerror_open(struct evlist *evlist,
- int perf_evlist__strerror_mmap(struct evlist *evlist, int err, char *buf, size_t size)
- {
- 	char sbuf[STRERR_BUFSIZE], *emsg = str_error_r(err, sbuf, sizeof(sbuf));
--	int pages_attempted = evlist->mmap_len / 1024, pages_max_per_user, printed = 0;
-+	int pages_attempted = evlist->core.mmap_len / 1024, pages_max_per_user, printed = 0;
- 
- 	switch (err) {
- 	case EPERM:
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 816b72a2b1e5..765cee8bced1 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -56,7 +56,6 @@ struct evlist {
- 	struct hlist_head heads[PERF_EVLIST__HLIST_SIZE];
- 	int		 nr_groups;
- 	bool		 enabled;
--	size_t		 mmap_len;
- 	int		 id_pos;
- 	int		 is_pos;
- 	u64		 combined_sample_type;
--- 
-2.21.0
-
+>
+> >
+> > Reported-by: Alex Levin <levinale@chromium.org>
+> > Fixes: 86c5dd6860a6 ("pinctrl: cherryview: limit Strago DMI workarounds to version 1.0")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > ---
+> >  drivers/pinctrl/intel/pinctrl-cherryview.c | 4 ----
+> >  1 file changed, 4 deletions(-)
+> >
+> > diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
+> > index 03ec7a5d9d0b..bf049d1bbb87 100644
+> > --- a/drivers/pinctrl/intel/pinctrl-cherryview.c
+> > +++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
+> > @@ -1513,7 +1513,6 @@ static const struct dmi_system_id chv_no_valid_mask[] = {
+> >               .matches = {
+> >                       DMI_MATCH(DMI_SYS_VENDOR, "GOOGLE"),
+> >                       DMI_MATCH(DMI_PRODUCT_FAMILY, "Intel_Strago"),
+> > -                     DMI_MATCH(DMI_PRODUCT_VERSION, "1.0"),
+> >               },
+> >       },
+> >       {
+> > @@ -1521,7 +1520,6 @@ static const struct dmi_system_id chv_no_valid_mask[] = {
+> >               .matches = {
+> >                       DMI_MATCH(DMI_SYS_VENDOR, "HP"),
+> >                       DMI_MATCH(DMI_PRODUCT_NAME, "Setzer"),
+> > -                     DMI_MATCH(DMI_PRODUCT_VERSION, "1.0"),
+> >               },
+> >       },
+> >       {
+> > @@ -1529,7 +1527,6 @@ static const struct dmi_system_id chv_no_valid_mask[] = {
+> >               .matches = {
+> >                       DMI_MATCH(DMI_SYS_VENDOR, "GOOGLE"),
+> >                       DMI_MATCH(DMI_PRODUCT_NAME, "Cyan"),
+> > -                     DMI_MATCH(DMI_PRODUCT_VERSION, "1.0"),
+> >               },
+> >       },
+> >       {
+> > @@ -1537,7 +1534,6 @@ static const struct dmi_system_id chv_no_valid_mask[] = {
+> >               .matches = {
+> >                       DMI_MATCH(DMI_SYS_VENDOR, "GOOGLE"),
+> >                       DMI_MATCH(DMI_PRODUCT_NAME, "Celes"),
+> > -                     DMI_MATCH(DMI_PRODUCT_VERSION, "1.0"),
+> >               },
+> >       },
+> >       {}
+> > --
+> > 2.23.0.351.gc4317032e6-goog
+> >
+> >
+> > --
+> > Dmitry
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
