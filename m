@@ -2,206 +2,126 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B19C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4ADAC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D149F222CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6348222C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:50:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="jcH8AASk"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="MD/lsc1P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbfIZPsj (ORCPT
+        id S1727342AbfIZPuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 11:48:39 -0400
-Received: from mail-eopbgr710061.outbound.protection.outlook.com ([40.107.71.61]:44672
-        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726029AbfIZPsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 11:48:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fBqB/QmTXqaxxhTyUzhp31N2sPfSyjWfcFRCzZsFgpazCwcABB0ZAjfSDUBJZFKq8VQ/e9r+mwD9Z1/ksaZvEPqq5IRwsmjj6XFPirBVYY2wbwnXykFH+3/JvuATP8I9FCIMmMg/vaIX5P1t6ALo/SgmXHZLbROrEZ9UgDWGU8gRmqqwg1LGLEkdyCrrmYLNw0/fv6ZRHjDa+EwA3B4DAMAWP8V4XZLywJti9qjEf6LOiRo5xvo2K+34Dntgr/8pFTEVOKEFc9cAxZMg5aqFBO8UEJdzLQf5cNCOrChhY1rxH3b4kM6CFBjJ550/fTXwfPyEswULp98FAw3rYaVLeg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C5pPE662d4cYkVBtb1S/px23Au+Mfs7jlkYgwse5cec=;
- b=PtuFLFgw8eMkXqaaJ8pow49Hg3vxxbBS83cxKuLMxZC0SCh45XwRgxOHsqPnvwoAdi6ex0K7RGcQ1q+0PlgwLSIj4CmWrbILj1LlUu7jVi4bGbZPZee2odxGVyv882CrnyXx16Uh6gGdT0cynYGR9VtoY6hRzGy+UE32M4AWtSw5Q3enK1tZMq/jOfqXiCM4zZ+WgIKww/PteEXf4Y8oalofcSWqYKK8sHdrTkqFuCqB+RPoAoVMPSdWyUHZxnoGysZKv/LprPjuKBbgVfQs/9NjQdbuUe9vf9vMjVo3AD5Mxj4QbQlFnM3K27jQcEcHfm/r5GNu2PN5Nz87Uz+mhg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Thu, 26 Sep 2019 11:50:22 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44822 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727147AbfIZPuW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 11:50:22 -0400
+Received: by mail-lj1-f196.google.com with SMTP id m13so2680533ljj.11
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 08:50:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C5pPE662d4cYkVBtb1S/px23Au+Mfs7jlkYgwse5cec=;
- b=jcH8AASk3Xv4grS+4q3U/Gsw4z4xUipErRapTm3L4i8r/ogkUVoOgNxJXi9VybPzVvyw3Dz2vxQsmnzuVw8El+nT44VeXv4adQFNKu1GhJTZjWlZw6+zNAJ5luK6oCCcxssnYEhLa7cI2AcZFRpGvocIQlSDCo0DXvbHhS4XOPc=
-Received: from CY4PR12MB1446.namprd12.prod.outlook.com (10.172.72.19) by
- CY4PR12MB1910.namprd12.prod.outlook.com (10.175.82.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.20; Thu, 26 Sep 2019 15:48:35 +0000
-Received: from CY4PR12MB1446.namprd12.prod.outlook.com
- ([fe80::1dbd:eba0:5fcf:c9f3]) by CY4PR12MB1446.namprd12.prod.outlook.com
- ([fe80::1dbd:eba0:5fcf:c9f3%6]) with mapi id 15.20.2284.028; Thu, 26 Sep 2019
- 15:48:35 +0000
-From:   "Grodzovsky, Andrey" <Andrey.Grodzovsky@amd.com>
-To:     Steven Price <steven.price@arm.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>
-CC:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        Nayan Deshmukh <nayan26deshmukh@gmail.com>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v4] drm: Don't free jobs in wait_event_interruptible()
-Thread-Topic: [PATCH v4] drm: Don't free jobs in wait_event_interruptible()
-Thread-Index: AQHVdHUKP1r0Rq5tqEO46l3IKyYg76c+EUmAgAACcYCAAAcPgA==
-Date:   Thu, 26 Sep 2019 15:48:35 +0000
-Message-ID: <b4713fe7-80d4-4706-206e-f4786a70e70b@amd.com>
-References: <20190926141630.14258-1-steven.price@arm.com>
- <b457a269-4aa9-7e3b-283e-b4920455e396@amd.com>
- <48214f02-e853-015f-55cc-397c7b06cb5d@arm.com>
-In-Reply-To: <48214f02-e853-015f-55cc-397c7b06cb5d@arm.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YTOPR0101CA0014.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b00:15::27) To CY4PR12MB1446.namprd12.prod.outlook.com
- (2603:10b6:910:10::19)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Andrey.Grodzovsky@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.55.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 75324949-7c2b-48fd-7cf3-08d74298fd77
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CY4PR12MB1910;
-x-ms-traffictypediagnostic: CY4PR12MB1910:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR12MB19100D76DF580FB61449B5ACEA860@CY4PR12MB1910.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:336;
-x-forefront-prvs: 0172F0EF77
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(39860400002)(366004)(376002)(136003)(189003)(199004)(5660300002)(229853002)(31686004)(110136005)(6486002)(86362001)(6436002)(76176011)(31696002)(478600001)(14454004)(52116002)(66066001)(71190400001)(25786009)(71200400001)(99286004)(6512007)(11346002)(446003)(14444005)(256004)(6506007)(386003)(53546011)(4326008)(66946007)(66476007)(66556008)(64756008)(66446008)(102836004)(6246003)(81166006)(26005)(81156014)(186003)(486006)(2616005)(36756003)(8676002)(2906002)(54906003)(476003)(6636002)(8936002)(6116002)(3846002)(305945005)(316002)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1910;H:CY4PR12MB1446.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: WDQyDyFRn+tcPiCu1u+SC7xV7HXvaaXPppE2cpRfE9ryan0t3nUAPhvFRyRX68tdWujxcagthy6GBY7UGzgcsZt6E6sBlqR/jij8WquvJdGUBgohuXoxHdQdqpgiX4vBBUiiDX//U1+U/MVaxCXrOpxoYu2sN700VLCDPRhadKs5XPpkG9cCvXqw+VYNWWWhfvsRtn4e4HRZkrZ5qaVou9pMbLEWBot76mq4oSZveOqT+sxyI4os0dqv0uUIA+iMfqMcbC5xRllt+29pN6UXuPDY5JX7KbPLXf2/cE9L6jXLr3tRDS3lDXKmVCORZqF1NaEB0w/vi1yTcgq1BqWG6clbJGRJuBEx5RoJm3miLG/ZoVNhkBZdKJ6No8FdL+FV5HP+pXo56wEGCHTeJAs3L081TVpaXQOsypE4yePq100=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B851821273F18340A7914BB96BB68EA8@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KC2Nd1YvSxVp+ypAR2gexRbTcYIPCDvOfmcETC4TvmY=;
+        b=MD/lsc1PmexES60c5rwL/OcBjrXwSz+Zd/Dyiw/BmhqrVGdAPVejWwpWFQZCxnohBY
+         sKYYSS7tPVopGEri512NtdRXaUfp7jscCaKwH2AQ5qLtTH6twvJCi3MTYUnuxv8BvoCC
+         +daFYXmUTObudzykh3SlU6XWdXdXFfXFAo7x+0wszhIsJ+763FC5SCikMynoiMKhlcOc
+         MPgqEn3P6uPJxR1dCT6z24WKbo8twiPXl5Qps05rbju6prC3YWZe2/qSm8ZVOOR+voDU
+         AT1glNxlOWUPILa45m4wCMjQpzTb8PR1MLnMTAkcRXF2tqKzRjr88Qy5sSJ0fdEGZYSn
+         ubpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KC2Nd1YvSxVp+ypAR2gexRbTcYIPCDvOfmcETC4TvmY=;
+        b=GY1gxJXoDTRApYFP6dByez27w5I1vB/5oZyMuKNIijVDYwWv68mdrsWtl186grVr5O
+         B2GxQiAvEoWMv0H/lcj3lJF5HS5Zwcm8FKQCwX4rdIRk7wZF41tzCO87hdHX6SVFGzMb
+         6uPFNGypq/xci0gISsOWhFaTHcj1ic0qQ0i+Xs5tbrOzroSOPz1gpk1+hfJ3Hmf5MAFH
+         LMJFnpvKtsVTQx3o2JdEmRVrrF3lPTlDs10Ii8wB7st9v1yZzGZp/KUTJ9Ll7fKtgUmi
+         czf7UZSI8ZE8Fw8zmNBglQ77XNaDtG77Mzlp+8HTjPZugyMKt/oD6l0qOKy8Qa132f/R
+         r0FA==
+X-Gm-Message-State: APjAAAULUhj4lfhc5j4fV2hVmUR+Vv07XMGwnLCNw2iNW/xJ8GeJUo77
+        5fQn5Xkz9xXMM/B3FfYZNCeJi3L8HEy9R1HZP+sJ
+X-Google-Smtp-Source: APXvYqwKu4fciwYEt6TOg/srlHAm83IQFpaVp2G+beVrOZfwuEzktvoUMGhPu3LUbb6KCfuBRjg4qp7vZ/wj1k2Hq7o=
+X-Received: by 2002:a2e:9b5a:: with SMTP id o26mr3112055ljj.158.1569513018927;
+ Thu, 26 Sep 2019 08:50:18 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 75324949-7c2b-48fd-7cf3-08d74298fd77
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Sep 2019 15:48:35.3252
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qrTqUQC3Sd9/McVlX12zSCPqrS2LAfKeW07+3za5+iXoXL57tGymI3zlzCe/9YfXCbjfDvzx+bOoXtMKOt/TYA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1910
+References: <20190923155041.GA14807@codemonkey.org.uk> <CAHC9VhTyz7fd+iQaymVXUGFe3ZA5Z_WkJeY_snDYiZ9GP6gCOA@mail.gmail.com>
+ <20190923210021.5vfc2fo4wopennj5@madcap2.tricolour.ca> <CAHC9VhQPvS7mfmeomRLJ+SyXk=tZprSJQ9Ays3qr=+rqd=L16Q@mail.gmail.com>
+ <20190924135046.kkt5hntbjpcampwr@madcap2.tricolour.ca> <CAHC9VhTJ53OSpNDLHMMrv65NFv7MK1XQt1zXPwd7nnAPo3rG0Q@mail.gmail.com>
+In-Reply-To: <CAHC9VhTJ53OSpNDLHMMrv65NFv7MK1XQt1zXPwd7nnAPo3rG0Q@mail.gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Thu, 26 Sep 2019 11:50:07 -0400
+Message-ID: <CAHC9VhR+iWur_0T06=Y0Cxn6HG16NOLUiNo3yyyNo_6bkCNFXQ@mail.gmail.com>
+Subject: Re: ntp audit spew.
+To:     Dave Jones <davej@codemonkey.org.uk>
+Cc:     linux-audit@redhat.com, Richard Guy Briggs <rgb@redhat.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiA5LzI2LzE5IDExOjIzIEFNLCBTdGV2ZW4gUHJpY2Ugd3JvdGU6DQo+IE9uIDI2LzA5LzIw
-MTkgMTY6MTQsIEdyb2R6b3Zza3ksIEFuZHJleSB3cm90ZToNCj4+IE9uIDkvMjYvMTkgMTA6MTYg
-QU0sIFN0ZXZlbiBQcmljZSB3cm90ZToNCj4+PiBkcm1fc2NoZWRfY2xlYW51cF9qb2JzKCkgYXR0
-ZW1wdHMgdG8gZnJlZSBmaW5pc2hlZCBqb2JzLCBob3dldmVyIGJlY2F1c2UNCj4+PiBpdCBpcyBj
-YWxsZWQgYXMgdGhlIGNvbmRpdGlvbiBvZiB3YWl0X2V2ZW50X2ludGVycnVwdGlibGUoKSBpdCBt
-dXN0IG5vdA0KPj4+IHNsZWVwLiBVbmZvcnR1YW50bHkgc29tZSBmcmVlIGNhbGxiYWNrcyAobm90
-aWJseSBmb3IgUGFuZnJvc3QpIGRvIHNsZWVwLg0KPj4+DQo+Pj4gSW5zdGVhZCBsZXQncyByZW5h
-bWUgZHJtX3NjaGVkX2NsZWFudXBfam9icygpIHRvDQo+Pj4gZHJtX3NjaGVkX2dldF9jbGVhbnVw
-X2pvYigpIGFuZCBzaW1wbHkgcmV0dXJuIGEgam9iIGZvciBwcm9jZXNzaW5nIGlmDQo+Pj4gdGhl
-cmUgaXMgb25lLiBUaGUgY2FsbGVyIGNhbiB0aGVuIGNhbGwgdGhlIGZyZWVfam9iKCkgY2FsbGJh
-Y2sgb3V0c2lkZQ0KPj4+IHRoZSB3YWl0X2V2ZW50X2ludGVycnVwdGlibGUoKSB3aGVyZSBzbGVl
-cGluZyBpcyBwb3NzaWJsZSBiZWZvcmUNCj4+PiByZS1jaGVja2luZyBhbmQgcmV0dXJuaW5nIHRv
-IHNsZWVwIGlmIG5lY2Vzc2FyeS4NCj4+Pg0KPj4+IFNpZ25lZC1vZmYtYnk6IFN0ZXZlbiBQcmlj
-ZSA8c3RldmVuLnByaWNlQGFybS5jb20+DQo+Pj4gLS0tDQo+Pj4gQ2hhbmdlcyBmcm9tIHYzOg0K
-Pj4+ICAgICogZHJtX3NjaGVkX21haW4oKSByZS1hcm1zIHRoZSB0aW1lb3V0IGZvciB0aGUgbmV4
-dCBqb2IgYWZ0ZXIgY2FsbGluZw0KPj4+ICAgICAgZnJlZV9qb2IoKQ0KPj4+DQo+Pj4gICAgZHJp
-dmVycy9ncHUvZHJtL3NjaGVkdWxlci9zY2hlZF9tYWluLmMgfCA0NSArKysrKysrKysrKysrKyst
-LS0tLS0tLS0tLQ0KPj4+ICAgIDEgZmlsZSBjaGFuZ2VkLCAyNiBpbnNlcnRpb25zKCspLCAxOSBk
-ZWxldGlvbnMoLSkNCj4+Pg0KPj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vc2NoZWR1
-bGVyL3NjaGVkX21haW4uYyBiL2RyaXZlcnMvZ3B1L2RybS9zY2hlZHVsZXIvc2NoZWRfbWFpbi5j
-DQo+Pj4gaW5kZXggOWEwZWU3NGQ4MmRjLi4xNDg0Njg0NDdiYTkgMTAwNjQ0DQo+Pj4gLS0tIGEv
-ZHJpdmVycy9ncHUvZHJtL3NjaGVkdWxlci9zY2hlZF9tYWluLmMNCj4+PiArKysgYi9kcml2ZXJz
-L2dwdS9kcm0vc2NoZWR1bGVyL3NjaGVkX21haW4uYw0KPj4+IEBAIC02MjIsNDMgKzYyMiw0MSBA
-QCBzdGF0aWMgdm9pZCBkcm1fc2NoZWRfcHJvY2Vzc19qb2Ioc3RydWN0IGRtYV9mZW5jZSAqZiwg
-c3RydWN0IGRtYV9mZW5jZV9jYiAqY2IpDQo+Pj4gICAgfQ0KPj4+ICAgIA0KPj4+ICAgIC8qKg0K
-Pj4+IC0gKiBkcm1fc2NoZWRfY2xlYW51cF9qb2JzIC0gZGVzdHJveSBmaW5pc2hlZCBqb2JzDQo+
-Pj4gKyAqIGRybV9zY2hlZF9nZXRfY2xlYW51cF9qb2IgLSBmZXRjaCB0aGUgbmV4dCBmaW5pc2hl
-ZCBqb2IgdG8gYmUgZGVzdHJveWVkDQo+Pj4gICAgICoNCj4+PiAgICAgKiBAc2NoZWQ6IHNjaGVk
-dWxlciBpbnN0YW5jZQ0KPj4+ICAgICAqDQo+Pj4gLSAqIFJlbW92ZSBhbGwgZmluaXNoZWQgam9i
-cyBmcm9tIHRoZSBtaXJyb3IgbGlzdCBhbmQgZGVzdHJveSB0aGVtLg0KPj4+ICsgKiBSZXR1cm5z
-IHRoZSBuZXh0IGZpbmlzaGVkIGpvYiBmcm9tIHRoZSBtaXJyb3IgbGlzdCAoaWYgdGhlcmUgaXMg
-b25lKQ0KPj4+ICsgKiByZWFkeSBmb3IgaXQgdG8gYmUgZGVzdHJveWVkLg0KPj4+ICAgICAqLw0K
-Pj4+IC1zdGF0aWMgdm9pZCBkcm1fc2NoZWRfY2xlYW51cF9qb2JzKHN0cnVjdCBkcm1fZ3B1X3Nj
-aGVkdWxlciAqc2NoZWQpDQo+Pj4gK3N0YXRpYyBzdHJ1Y3QgZHJtX3NjaGVkX2pvYiAqDQo+Pj4g
-K2RybV9zY2hlZF9nZXRfY2xlYW51cF9qb2Ioc3RydWN0IGRybV9ncHVfc2NoZWR1bGVyICpzY2hl
-ZCkNCj4+PiAgICB7DQo+Pj4gKwlzdHJ1Y3QgZHJtX3NjaGVkX2pvYiAqam9iID0gTlVMTDsNCj4+
-PiAgICAJdW5zaWduZWQgbG9uZyBmbGFnczsNCj4+PiAgICANCj4+PiAgICAJLyogRG9uJ3QgZGVz
-dHJveSBqb2JzIHdoaWxlIHRoZSB0aW1lb3V0IHdvcmtlciBpcyBydW5uaW5nICovDQo+Pj4gICAg
-CWlmIChzY2hlZC0+dGltZW91dCAhPSBNQVhfU0NIRURVTEVfVElNRU9VVCAmJg0KPj4+ICAgIAkg
-ICAgIWNhbmNlbF9kZWxheWVkX3dvcmsoJnNjaGVkLT53b3JrX3RkcikpDQo+Pj4gLQkJcmV0dXJu
-Ow0KPj4+IC0NCj4+PiArCQlyZXR1cm4gTlVMTDsNCj4+PiAgICANCj4+PiAtCXdoaWxlICghbGlz
-dF9lbXB0eSgmc2NoZWQtPnJpbmdfbWlycm9yX2xpc3QpKSB7DQo+Pj4gLQkJc3RydWN0IGRybV9z
-Y2hlZF9qb2IgKmpvYjsNCj4+PiArCXNwaW5fbG9ja19pcnFzYXZlKCZzY2hlZC0+am9iX2xpc3Rf
-bG9jaywgZmxhZ3MpOw0KPj4+ICAgIA0KPj4+IC0JCWpvYiA9IGxpc3RfZmlyc3RfZW50cnkoJnNj
-aGVkLT5yaW5nX21pcnJvcl9saXN0LA0KPj4+ICsJam9iID0gbGlzdF9maXJzdF9lbnRyeV9vcl9u
-dWxsKCZzY2hlZC0+cmluZ19taXJyb3JfbGlzdCwNCj4+PiAgICAJCQkJICAgICAgIHN0cnVjdCBk
-cm1fc2NoZWRfam9iLCBub2RlKTsNCj4+PiAtCQlpZiAoIWRtYV9mZW5jZV9pc19zaWduYWxlZCgm
-am9iLT5zX2ZlbmNlLT5maW5pc2hlZCkpDQo+Pj4gLQkJCWJyZWFrOw0KPj4+ICAgIA0KPj4+IC0J
-CXNwaW5fbG9ja19pcnFzYXZlKCZzY2hlZC0+am9iX2xpc3RfbG9jaywgZmxhZ3MpOw0KPj4+ICsJ
-aWYgKGpvYiAmJiBkbWFfZmVuY2VfaXNfc2lnbmFsZWQoJmpvYi0+c19mZW5jZS0+ZmluaXNoZWQp
-KSB7DQo+Pj4gICAgCQkvKiByZW1vdmUgam9iIGZyb20gcmluZ19taXJyb3JfbGlzdCAqLw0KPj4+
-ICAgIAkJbGlzdF9kZWxfaW5pdCgmam9iLT5ub2RlKTsNCj4+PiAtCQlzcGluX3VubG9ja19pcnFy
-ZXN0b3JlKCZzY2hlZC0+am9iX2xpc3RfbG9jaywgZmxhZ3MpOw0KPj4+IC0NCj4+PiAtCQlzY2hl
-ZC0+b3BzLT5mcmVlX2pvYihqb2IpOw0KPj4+ICsJfSBlbHNlIHsNCj4+PiArCQlqb2IgPSBOVUxM
-Ow0KPj4+ICsJCS8qIHF1ZXVlIHRpbWVvdXQgZm9yIG5leHQgam9iICovDQo+Pj4gKwkJZHJtX3Nj
-aGVkX3N0YXJ0X3RpbWVvdXQoc2NoZWQpOw0KPj4+ICAgIAl9DQo+Pj4gICAgDQo+Pj4gLQkvKiBx
-dWV1ZSB0aW1lb3V0IGZvciBuZXh0IGpvYiAqLw0KPj4+IC0Jc3Bpbl9sb2NrX2lycXNhdmUoJnNj
-aGVkLT5qb2JfbGlzdF9sb2NrLCBmbGFncyk7DQo+Pj4gLQlkcm1fc2NoZWRfc3RhcnRfdGltZW91
-dChzY2hlZCk7DQo+Pj4gICAgCXNwaW5fdW5sb2NrX2lycXJlc3RvcmUoJnNjaGVkLT5qb2JfbGlz
-dF9sb2NrLCBmbGFncyk7DQo+Pj4gICAgDQo+Pj4gKwlyZXR1cm4gam9iOw0KPj4+ICAgIH0NCj4+
-PiAgICANCj4+PiAgICAvKioNCj4+PiBAQCAtNjk4LDEyICs2OTYsMjEgQEAgc3RhdGljIGludCBk
-cm1fc2NoZWRfbWFpbih2b2lkICpwYXJhbSkNCj4+PiAgICAJCXN0cnVjdCBkcm1fc2NoZWRfZmVu
-Y2UgKnNfZmVuY2U7DQo+Pj4gICAgCQlzdHJ1Y3QgZHJtX3NjaGVkX2pvYiAqc2NoZWRfam9iOw0K
-Pj4+ICAgIAkJc3RydWN0IGRtYV9mZW5jZSAqZmVuY2U7DQo+Pj4gKwkJc3RydWN0IGRybV9zY2hl
-ZF9qb2IgKmNsZWFudXBfam9iID0gTlVMTDsNCj4+PiAgICANCj4+PiAgICAJCXdhaXRfZXZlbnRf
-aW50ZXJydXB0aWJsZShzY2hlZC0+d2FrZV91cF93b3JrZXIsDQo+Pj4gLQkJCQkJIChkcm1fc2No
-ZWRfY2xlYW51cF9qb2JzKHNjaGVkKSwNCj4+PiArCQkJCQkgKGNsZWFudXBfam9iID0gZHJtX3Nj
-aGVkX2dldF9jbGVhbnVwX2pvYihzY2hlZCkpIHx8DQo+Pj4gICAgCQkJCQkgKCFkcm1fc2NoZWRf
-YmxvY2tlZChzY2hlZCkgJiYNCj4+PiAgICAJCQkJCSAgKGVudGl0eSA9IGRybV9zY2hlZF9zZWxl
-Y3RfZW50aXR5KHNjaGVkKSkpIHx8DQo+Pj4gLQkJCQkJIGt0aHJlYWRfc2hvdWxkX3N0b3AoKSkp
-Ow0KPj4+ICsJCQkJCSBrdGhyZWFkX3Nob3VsZF9zdG9wKCkpOw0KPj4+ICsNCj4+PiArCQl3aGls
-ZSAoY2xlYW51cF9qb2IpIHsNCj4+PiArCQkJc2NoZWQtPm9wcy0+ZnJlZV9qb2IoY2xlYW51cF9q
-b2IpOw0KPj4+ICsJCQkvKiBxdWV1ZSB0aW1lb3V0IGZvciBuZXh0IGpvYiAqLw0KPj4+ICsJCQlk
-cm1fc2NoZWRfc3RhcnRfdGltZW91dChzY2hlZCk7DQo+Pj4gKw0KPj4+ICsJCQljbGVhbnVwX2pv
-YiA9IGRybV9zY2hlZF9nZXRfY2xlYW51cF9qb2Ioc2NoZWQpOw0KPj4+ICsJCX0NCj4+DQo+PiBX
-aHkgZHJtX3NjaGVkX3N0YXJ0X3RpbWVvdXQgaXMgY2FsbGVkIGJvdGggaGVyZSBhbmQgaW5zaWRl
-DQo+PiBkcm1fc2NoZWRfZ2V0X2NsZWFudXBfam9iID8gQW5kIGFsc28gd2h5IGNhbGwgaXQgbXVs
-dGlwbGUgdGltZXMgaW4gdGhlDQo+PiBsb29wIGluc3RlYWQgb2Ygb25seSBvbmNlIGFmdGVyIHRo
-ZSBsb29wIGlzIGRvbmXCoCA/DQo+IENocmlzdGlhbiBwb2ludGVkIG91dCB0byBiZSB0aGF0IHRo
-ZSBmaXJzdCB0aGluZw0KPiBkcm1fc2NoZWRfZ2V0X2NsZWFudXBfam9iIGRvZXMgaXMgY2FsbCBj
-YW5jZWxfZGVsYXllZF93b3JrKCksIGFuZCBpZg0KPiB0aGF0IHJldHVybnMgZmFsc2UgdGhlbiBp
-dCBiYWlscyBvdXQgd2l0aCBhIE5VTEwgcmV0dXJuLiBTbyB0byBhY3R1YWxseQ0KPiBnZXQgYW5v
-dGhlciBqb2IgKGlmIG9uZSBleGlzdHMpIHRoZSB0aW1lb3V0IGhhcyB0byBiZSByZXN0YXJ0ZWQu
-DQoNCg0KRm9yIHRoaXMgY2FzZSB3aGVyZSB0aW1lb3V0IHdvcmsgYWxyZWFkeSBpbiBwcm9ncmVz
-cyBub3RlIHRoYXQgDQpkcm1fc2NoZWRfam9iX3RpbWVkb3V0IHJlc3RhcnRzIHRoZSB0aW1lb3V0
-IGluIGl0J3MgZW5kIHNvIGl0IHNob3VsZCBiZSANCm9rIHRvIHJlc3RhcnQgdGhlIHRpbWVvdXQg
-dW5jb25kaXRpb25hbGx5IGluc2lkZSANCmRybV9zY2hlZF9nZXRfY2xlYW51cF9qb2IgYXMgaXQg
-d2FzIGRvbmUgYmVmb3JlLg0KDQoNCj4NCj4gSXQncyBhbHNvIG5lY2Vzc2FyeSB0byByZXN0YXJ0
-IHRoZSB0aW1lb3V0IGluIHRoZSBjYXNlIHdoZXJlIHRoZSByZXR1cm4NCj4gaXMgTlVMTCB3aGlj
-aCBpcyBoYW5kbGVkIGluIHRoZSBmdW5jdGlvbiBpdHNlbGYuDQo+DQo+IFRCSCBJJ20gbm90IHN1
-cmUgd2hldGhlciB0aGlzIHdoaWxlIGxvb3AgaXMgd29ydGggaXQgLSBpdCBtYXkgYmUgYmV0dGVy
-DQo+IHRvIHJlcGxhY2UgaXQgd2l0aCBzaW1wbHk6DQo+DQo+IAlpZiAoY2xlYW51cF9qb2IpIHsN
-Cj4gCQlzY2hlZC0+b3BzLT5mcmVlX2pvYihjbGVhbnVwX2pvYik7DQo+IAkJLyogcXVldWUgdGlt
-ZW91dCBmb3IgbmV4dCBqb2IgKi8NCj4gCQlkcm1fc2NoZWRfc3RhcnRfdGltZW91dChzY2hlZCk7
-DQo+IAl9DQo+DQo+IFRoZSBvdXRlciBsb29wIHdvdWxkIHRoZW4gaGFuZGxlIHRoZSBuZXh0IGNh
-bGwgdG8NCj4gZHJtX3NjaGVkX2dldF9jbGVhbnVwX2pvYigpIGFzIG5lY2Vzc2FyeS4NCg0KDQpX
-aGF0IG91dGVyIGxvb3AgPw0KDQpBbmRyZXkNCg0KPg0KPiBTdGV2ZQ0K
+On Tue, Sep 24, 2019 at 1:05 PM Paul Moore <paul@paul-moore.com> wrote:
+> On Tue, Sep 24, 2019 at 9:50 AM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > On 2019-09-23 23:01, Paul Moore wrote:
+> > > On Mon, Sep 23, 2019 at 5:00 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > > On 2019-09-23 12:14, Paul Moore wrote:
+> > > > > On Mon, Sep 23, 2019 at 11:50 AM Dave Jones <davej@codemonkey.org.uk> wrote:
+> > > > > >
+> > > > > > I have some hosts that are constantly spewing audit messages like so:
+> > > > > >
+> > > > > > [46897.591182] audit: type=1333 audit(1569250288.663:220): op=offset old=2543677901372 new=2980866217213
+> > > > > > [46897.591184] audit: type=1333 audit(1569250288.663:221): op=freq old=-2443166611284 new=-2436281764244
+> > > >
+> > > > Odd.  It appears these two above should have the same serial number and
+> > > > should be accompanied by a syscall record.  It appears that it has no
+> > > > context to update to connect the two records.  Is it possible it is not
+> > > > being called in a task context?  If that were the case though, I'd
+> > > > expect audit_dummy_context() to return 1...
+> > >
+> > > Yeah, I'm a little confused with these messages too.  As you pointed
+> > > out, the different serial numbers imply that the audit_context is NULL
+> > > and if the audit_context is NULL I would have expected it to fail the
+> > > audit_dummy_context() check in audit_ntp_log().  I'm looking at this
+> > > with tired eyes at the moment, so I'm likely missing something, but I
+> > > just don't see it right now ...
+> > >
+> > > What is even more confusing is that I don't see this issue on my test systems.
+> > >
+> > > > Checking audit_enabled should not be necessary but might fix the
+> > > > problem, but still not explain why we're getting these records.
+> > >
+> > > I'd like to understand why this is happening before we start changing the code.
+> >
+> > Absolutely.
+> >
+> > This looks like a similar issue to the AUDIT_NETFILTER_CFG issue where
+> > we get a lone record unconnected to a syscall when one of the netfilter
+> > table initialization (ipv4 filter) is linked into the kernel rather than
+> > compiled as a module, so it is run in kernel context at boot rather than
+> > in user context as a module load later.  This is why I ask if it is
+> > being run by a kernel thread rather than a user task, perhaps using a
+> > syscall function call internally.
+>
+> I don't see where in the code that could happen, but I agree that it
+> looks like it; maybe I'm just missing a code path somewhere.
+>
+> Is anyone else seeing these records?  Granted my audit test systems
+> are running chrony, not ntp, but the syscalls/behaviors should be
+> similar and I can't seem to recreate this.
+
+Dave, can you provide any additional information on the systems where
+you are seeing this?  Kernel, userspace, distro, relevant configs,
+etc.
+
+-- 
+paul moore
+www.paul-moore.com
