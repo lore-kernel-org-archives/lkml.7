@@ -2,92 +2,134 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD84C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E09FCC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C56E21A4A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB35E21A4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 18:12:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Qt9XVWsV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728324AbfIZSMD (ORCPT
+        id S1728364AbfIZSM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 14:12:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49888 "EHLO mx1.redhat.com"
+        Thu, 26 Sep 2019 14:12:27 -0400
+Received: from mout.web.de ([212.227.15.14]:57493 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727944AbfIZSMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 14:12:03 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 05E9510C0954;
-        Thu, 26 Sep 2019 18:12:03 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C72271001B05;
-        Thu, 26 Sep 2019 18:12:01 +0000 (UTC)
-Subject: Re: [PATCH] ipc/sem: Fix race between to-be-woken task and waker
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mathieu Malaterre <malat@debian.org>,
-        Davidlohr Bueso <dave@stgolabs.net>, manfred@colorfullife.com
-References: <20190920155402.28996-1-longman@redhat.com>
- <20190926093410.GJ4553@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <d16e4d82-8c5a-0663-8c00-32f4750f8a21@redhat.com>
-Date:   Thu, 26 Sep 2019 14:12:01 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1727944AbfIZSM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 14:12:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1569521506;
+        bh=xoKMDy6TPxmJvn8dQIo3SWVQLdurBya+ryEIo3zC7n0=;
+        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
+        b=Qt9XVWsVp0x/bk7xQjP58+qPqufrkTEd4IxvdRmVN0lIVvuh9o8s+qO1sfTuYSjKg
+         xIp6OCQVpOIK4o/MhTUr9i/a0Ngsi3Q1SUnx1lNTnDNlDc8jF31MRMYlArEDjrQcsL
+         9VFpXq67iKKkTbi3L2Azc6rkfhmi6baBBGlttEJs=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.135.81.241]) by smtp.web.de (mrweb002
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MPp0k-1iITvU1iQU-0052DX; Thu, 26
+ Sep 2019 20:11:46 +0200
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Larry Finger <Larry.Finger@lwfinger.net>
+References: <20190925205858.30216-1-efremov@linux.com>
+Subject: Re: rtlwifi: Remove excessive check in _rtl_ps_inactive_ps()
+To:     Denis Efremov <efremov@linux.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Ping-Ke Shih <pkshih@realtek.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <f99ca489-723c-0c2f-4241-e03c785a4a8d@web.de>
+Date:   Thu, 26 Sep 2019 20:11:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20190926093410.GJ4553@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190925205858.30216-1-efremov@linux.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Thu, 26 Sep 2019 18:12:03 +0000 (UTC)
+X-Provags-ID: V03:K1:GNAjcmt2VkBpwn1IivuBbkFB2WNicyo6Jj8jytp6yFHTYVAo2mH
+ 0qBAtB2OLvyj7n1BgJMJpqtWzsotBJOI4tUoe5F0kkKgLwBaWWg9jcbbnb+tpULpeSoqLz3
+ QJG376zu4dFkAzvYd9W67gaInbuaVDSO1FtlYQx20QqKNWXmelZMt38HZXDAlOUjKa/1a3Z
+ VNX3f3gFC22eJHFdGM9LA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xmELudbMPn4=:ghSyyEK4o2hwyjI42WuPfZ
+ UkZkWeTk9jcdSSj1YkjikGRRdBJDQCIpmMUYYL7X4NypI6gtGu0ofI+O4S4UfBwsZO/qkRwcB
+ S0dm8Pw15iQE+AH33TEdZIkZEyUDGzystyjy7wTRcfjfoNGMpteUwkt+qMSRIpMS8XpRm0WW+
+ bRQwoRWHbcMlN0mSUMPaPOPKyvMc6bd3PO0qgvu4SW4Q85Q8RoECPlSDqSA8ReqXRU6/LS9iC
+ d03IV7gn/aNwv9tHyQjJLL5vAtSdYT8Blzh1cnKrvt9G+0rakxyykmAyJ+hxQG3hqlYdPSSJ2
+ zr5QHgZI/I6aovIRdi8AevSoFCryWcwl+O/b+iSKCU4mLWEAQMtOCAaEcKDRmhvrZK3xuurrY
+ 4gWN8AHE+CIHJeFXKNVxCFyCzSZuxN/pKBzNFs8aDZxgBVULFhVSgAYDKwpNqxbpohJxPIjDY
+ h8PTIQb+JtV8+1sqi40gXRUvD+Dw514Vznpvb9niQcQ9BLrwq7QERnym3TNz+UDSiv0ZZHPSl
+ LXf8Wcq5TmFJ8DrPRw/1EOd9WbrWNRkZiA66sNsHmbz3G+l5Zzpf67jnYYfHzF7G3atYQdIQc
+ GTuCdSJc43U+wQmbGV5AfXA+UtgedTwfTyNE6/7QTI+/yHR/R18wJQQB1sWtHf7RSHz9eRYOE
+ grLmNbFHxSuxBRJfyYyETTyT1CY3Fi1GYw8BgOuSFkiSotMmdGoVUyPN1WFBMH8LRoupKtyl1
+ /0utMt9zYg7R8p8TwA0kpYl7hnozFclD2LSw5YxXdPvWgfNXoGJunn/QKqoUNCzmWWGNyM9C1
+ ZTrTI36oHTcSITXlSGBlKwB14sMPB0/eKCSclbQDns9yi6H8qUyzDX3dlxGimBb3BPq2nat2H
+ /ZpetaOByBYRA18pgMkgE8NhWNgF42HU+FlKQq4mCv0dKJ/kASD96LbuD/dc4liPUsdA7RY9j
+ RrrCxNx0kliqkWeCbREfoPW3Vd17PGVR4upxSiGhWdaBH7q7YcnJDzfhgffv6008tbacN1eL1
+ WeihM4ux+dybDSawyI2doHSJs7qbtn4sPAkMTjr3HYRNN1Z/voh3JjH5moxHe4ZVZrSEcalLd
+ F1vgZy5LHLONufLNbCVk5GEip3ntETW7FilJfnpp3b1x/GWAY/7Qkda8u083Yp4dTAY9IfvCv
+ R5sD5LS9sVnWukW6vhW/b3zC71u6ykJlhEzvCiOAM41xWVa6xLGsgk34sgQg1WLqjBfHoZkEB
+ OmI3pyggw+U/dTekIxNDJOuyHI8y19GNqe7SWqpol1foI0pz/4y9hAgXswg0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/26/19 5:34 AM, Peter Zijlstra wrote:
-> On Fri, Sep 20, 2019 at 11:54:02AM -0400, Waiman Long wrote:
->> While looking at a customr bug report about potential missed wakeup in
->> the system V semaphore code, I spot a potential problem.  The fact that
->> semaphore waiter stays in TASK_RUNNING state while checking queue status
->> may lead to missed wakeup if a spurious wakeup happens in the right
->> moment as try_to_wake_up() will do nothing if the task state isn't right.
->>
->> To eliminate this possibility, the task state is now reset to
->> TASK_INTERRUPTIBLE immediately after wakeup before checking the queue
->> status. This should eliminate the race condition on the interaction
->> between the queue status and the task state and fix the potential missed
->> wakeup problem.
-> Bah, this code always makes my head hurt.
->
-> Yes, AFAICT the pattern it uses has been broken since 0a2b9d4c7967,
-> since that removed doing the actual wakeup from under the sem_lock(),
-> which is what it relies on.
+> +++ b/drivers/net/wireless/realtek/rtlwifi/ps.c
+> @@ -161,8 +161,7 @@  static void _rtl_ps_inactive_ps(struct ieee80211_hw *hw)
+>  	if (ppsc->inactive_pwrstate == ERFON &&
+>  	    rtlhal->interface == INTF_PCI) {
+>  		if ((ppsc->reg_rfps_level & RT_RF_OFF_LEVL_ASPM) &&
 
-After having a second look at the code again, I probably misread the
-code the first time around. In the sleeping path, there is a check of
-queue.status and setting of task state both under the sem lock in the
-sleeping path. So as long as setting of queue status is under lock, they
-should synchronize properly.
+Can it make sense to reduce the nesting level for these condition checks
+besides the suggested deletion of duplicate source code?
 
-It looks like queue status setting is under lock, but I can't use
-lockdep to confirm that as the locking can be done by either the array
-lock or in one of the spinlocks in the array. Are you aware of a way of
-doing that?
-
-Anyway, I do think we need to add some comment to clarify the situation
-to avoid future confusion.
-
-Cheers,
-Longman
-
+Regards,
+Markus
