@@ -2,102 +2,115 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC749C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 14:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F9EC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 14:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 948A5222C7
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 14:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A23CE21D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 14:44:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dQW1+e7V"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oj/pt86Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfIZOnw (ORCPT
+        id S1727176AbfIZOo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 10:43:52 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46666 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725804AbfIZOnw (ORCPT
+        Thu, 26 Sep 2019 10:44:57 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:36804 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725820AbfIZOo4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 10:43:52 -0400
-Received: by mail-pg1-f196.google.com with SMTP id a3so1661807pgm.13;
-        Thu, 26 Sep 2019 07:43:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jNdgPZH4pEjhG+dTnjeGV8hSbsj0xVEU/isgoWCCkII=;
-        b=dQW1+e7VzNNFdh1fXvomKhMTUOjvWawf0uQGeUnUtKJb6HbpQF7MflsS7b6N4Xj0ZN
-         EI1eoz8OzxEOCTQQ645XK7Im9AakdQuZyq5dffRMT70IWT0jhjWwafKOAnnGWOCCHKzb
-         poIldBKbn6Cx23JIqMvK8ZW78+YWmauMPQjeu7gOr6nHK2NUgC8eYCgTZ6sMeGkfF17z
-         Kw4uRxOeH/9qm/xcixg4jGvsquhXovfTPJYyS3GBVY2xSteKKo9M+5VfLZ3DNWnDVOK3
-         GC7nGuxt2zeQSwDd30W113r7wqISl/eNS7hRgf8ZbXi0RKA2aMoid6ToImjSvZG3ntxD
-         CHLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jNdgPZH4pEjhG+dTnjeGV8hSbsj0xVEU/isgoWCCkII=;
-        b=kM9TfisvBtrYohj23jLDpkHUJYXqvRckoPo+pmw7ZSKAbO70CkQKwKffttafdHaCWr
-         5yKGYkbLJsWVFZS18rBW4d6urLWQnQ2CtR6cvhCFWHFxRxG3zOq8Sx326o+Z6IhQZBIo
-         wtxsW75olE0C7JAHNb5geDK07nzHB3FEIcgqNic1TUR0TTct0cU2eL16gwjWT5Vk3ukL
-         WQUUk0mAvA1vwcSw1z9lDbWjvarNxL28tlF/L0EvQ1iXIASTMM9To30yRBkDltRBSOlS
-         0X8yJ1+4mdyvdQvTiPXCmB8Li7mgl/5JoR4m6FZS7HXdlSryMnMiHBm/y5Jevt4l3Dig
-         MLmQ==
-X-Gm-Message-State: APjAAAWiHXcBuDvr0UuXx9hF/ogy9vWVl2eeCY6bJs5Vimmjyn4jIbOf
-        xiOY3wdj/qDUt1gxGG8cl9Wj5+STuaU=
-X-Google-Smtp-Source: APXvYqyNjb36i3ndCum2uolyoO0lv4ZL9MLFFRzDxCbrHgcWQ9EciECYsZ6GFrTBVdgaRCNUVAN/sg==
-X-Received: by 2002:a65:4782:: with SMTP id e2mr3491673pgs.402.1569509031156;
-        Thu, 26 Sep 2019 07:43:51 -0700 (PDT)
-Received: from [172.27.227.146] ([216.129.126.118])
-        by smtp.googlemail.com with ESMTPSA id 16sm2761383pfn.35.2019.09.26.07.43.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 26 Sep 2019 07:43:50 -0700 (PDT)
-Subject: Re: [PATCH v2] ipv6: do not free rt if FIB_LOOKUP_NOREF is set on
- suppress rule
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, davem@davemloft.net,
-        weiwan@google.com
-Cc:     stable@vger.kernel.org
-References: <20190924.145257.2013712373872209531.davem@davemloft.net>
- <20190924140128.19394-1-Jason@zx2c4.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <22ee9da6-6bc4-7f6f-d19d-1d492bfe8e7e@gmail.com>
-Date:   Thu, 26 Sep 2019 08:43:47 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
+        Thu, 26 Sep 2019 10:44:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=iO8czRiAGMFSXvLsHxj2FyMjV9e4r3Dcesn6W8xWfKI=; b=oj/pt86QBEN1ErPbIbuM8NDbZ
+        mmazJ1uvIflsbirPfKsUdNsv55NuChyEh5YjgtVNyGjbIj+MsfOfLiRLI95PmBigeaA0UK/uia8iz
+        5PC+W94Y73vbaAw9YN6xcmm1uMeMfVDNkzTYCwf31ujiRuw2ePKWrpxRVptcjXJtMTXryVliUyVnc
+        hJVxy270Gp+QH5sQIIH/LWTfXayvb0xmHe8jz7LzZDTP+VtIzhqRmux617CVvmh8hr4gBUAfQ9aDk
+        wbNK80PbPIq1ZNjq+SqxDNqSBX0yhr98ZnBCyOs2t3YwScMkJYrakP/lQjZmVfBLKeCoI5aRV62wJ
+        oHcDyO5VQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iDV0m-00071b-R7; Thu, 26 Sep 2019 14:44:53 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1516D302A71;
+        Thu, 26 Sep 2019 16:44:04 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7683520138CCE; Thu, 26 Sep 2019 16:44:50 +0200 (CEST)
+Date:   Thu, 26 Sep 2019 16:44:50 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        linux-kernel@vger.kernel.org, jolsa@redhat.com
+Subject: Re: [PATCH v1 4/6] perf: Allow using AUX data in perf samples
+Message-ID: <20190926144450.GC4519@hirez.programming.kicks-ass.net>
+References: <20180612075117.65420-1-alexander.shishkin@linux.intel.com>
+ <20180612075117.65420-5-alexander.shishkin@linux.intel.com>
+ <20180614202022.GC12217@hirez.programming.kicks-ass.net>
+ <20180619104725.bqvs7uwzhb4ihyxy@um.fi.intel.com>
+ <20180621201632.GE27616@hirez.programming.kicks-ass.net>
+ <87lfw234ew.fsf@ashishki-desk.ger.corp.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190924140128.19394-1-Jason@zx2c4.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87lfw234ew.fsf@ashishki-desk.ger.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/24/19 8:01 AM, Jason A. Donenfeld wrote:
-> Commit 7d9e5f422150 removed references from certain dsts, but accounting
-> for this never translated down into the fib6 suppression code. This bug
-> was triggered by WireGuard users who use wg-quick(8), which uses the
-> "suppress-prefix" directive to ip-rule(8) for routing all of their
-> internet traffic without routing loops. The test case added here
-> causes the reference underflow by causing packets to evaluate a suppress
-> rule.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 7d9e5f422150 ("ipv6: convert major tx path to use RT6_LOOKUP_F_DST_NOREF")
-> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> ---
->  net/ipv6/fib6_rules.c                    |  3 ++-
->  tools/testing/selftests/net/fib_tests.sh | 17 ++++++++++++++++-
->  2 files changed, 18 insertions(+), 2 deletions(-)
+On Fri, Aug 09, 2019 at 03:32:39PM +0300, Alexander Shishkin wrote:
+> The other problem is sampling SW events, that would require a ctx->lock
+> to prevent racing with event_function_call()s from other cpus, resulting
+> in somewhat cringy "if (!in_nmi()) raw_spin_lock(...)", but I don't have
+> better idea as to how to handle that.
 
-Thanks for adding the test case.
+> +int perf_pmu_aux_sample_output(struct perf_event *event,
+> +			       struct perf_output_handle *handle,
+> +			       unsigned long size)
+> +{
+> +	unsigned long flags;
+> +	int ret;
+> +
+> +	/*
+> +	 * NMI vs IRQ
+> +	 *
+> +	 * Normal ->start()/->stop() callbacks run in IRQ mode in scheduler
+> +	 * paths. If we start calling them in NMI context, they may race with
+> +	 * the IRQ ones, that is, for example, re-starting an event that's just
+> +	 * been stopped.
+> +	 */
+> +	if (!in_nmi())
+> +		raw_spin_lock_irqsave(&event->ctx->lock, flags);
+> +
+> +	ret = event->pmu->snapshot_aux(event, handle, size);
+> +
+> +	if (!in_nmi())
+> +		raw_spin_unlock_irqrestore(&event->ctx->lock, flags);
+> +
+> +	return ret;
+> +}
 
-Reviewed-by: David Ahern <dsahern@gmail.com>
+I'm confused... would not something like:
+
+	unsigned long flags;
+
+	local_irq_save(flags);
+	ret = event->pmu->snapshot_aux(...);
+	local_irq_restore(flags);
+
+	return ret;
+
+Be sufficient? By disabling IRQs we already hold off remote
+event_function_call()s.
+
+Or am I misunderstanding the race here?
