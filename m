@@ -2,125 +2,447 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 667BFC352AA
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB528C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47B01222C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BF8421655
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:41:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbfIZMh5 (ORCPT
+        id S1726516AbfIZMlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 08:37:57 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23192 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726170AbfIZMh5 (ORCPT
+        Thu, 26 Sep 2019 08:41:11 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:56211 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbfIZMlL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 08:37:57 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8QCam5v103987
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 08:37:54 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v8tjx94xy-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 08:37:54 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Thu, 26 Sep 2019 13:37:51 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 26 Sep 2019 13:37:48 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8QCblR030081378
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Sep 2019 12:37:47 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2DB7C5204F;
-        Thu, 26 Sep 2019 12:37:47 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.110])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id B682D5204E;
-        Thu, 26 Sep 2019 12:37:46 +0000 (GMT)
-Date:   Thu, 26 Sep 2019 14:37:45 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: Re: [RFC PATCH 1/3] dma-mapping: make overriding GFP_* flags arch
- customizable
-In-Reply-To: <20190923152117.GA2767@lst.de>
-References: <20190923123418.22695-1-pasic@linux.ibm.com>
-        <20190923123418.22695-2-pasic@linux.ibm.com>
-        <20190923152117.GA2767@lst.de>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Thu, 26 Sep 2019 08:41:11 -0400
+Received: from [65.39.69.237] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iDT4d-0002OS-0P; Thu, 26 Sep 2019 12:40:43 +0000
+Date:   Thu, 26 Sep 2019 14:40:42 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] lib: introduce copy_struct_from_user() helper
+Message-ID: <20190926124041.3y2xoknaw4nmwnrl@wittgenstein>
+References: <20190925230332.18690-1-cyphar@cyphar.com>
+ <20190925230332.18690-2-cyphar@cyphar.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19092612-0020-0000-0000-00000371F6A1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19092612-0021-0000-0000-000021C7C21D
-Message-Id: <20190926143745.68bdd082.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-26_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909260119
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190925230332.18690-2-cyphar@cyphar.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 23 Sep 2019 17:21:17 +0200
-Christoph Hellwig <hch@lst.de> wrote:
-
-> On Mon, Sep 23, 2019 at 02:34:16PM +0200, Halil Pasic wrote:
-> > Before commit 57bf5a8963f8 ("dma-mapping: clear harmful GFP_* flags in
-> > common code") tweaking the client code supplied GFP_* flags used to be
-> > an issue handled in the architecture specific code. The commit message
-> > suggests, that fixing the client code would actually be a better way
-> > of dealing with this.
-> > 
-> > On s390 common I/O devices are generally capable of using the full 64
-> > bit address space for DMA I/O, but some chunks of the DMA memory need to
-> > be 31 bit addressable (in physical address space) because the
-> > instructions involved mandate it. Before switching to DMA API this used
-> > to be a non-issue, we used to allocate those chunks from ZONE_DMA.
-> > Currently our only option with the DMA API is to restrict the devices to
-> > (via dma_mask and dma_mask_coherent) to 31 bit, which is sub-optimal.
-> > 
-> > Thus s390 we would benefit form having control over what flags are
-> > dropped.
+On Thu, Sep 26, 2019 at 01:03:29AM +0200, Aleksa Sarai wrote:
+> A common pattern for syscall extensions is increasing the size of a
+> struct passed from userspace, such that the zero-value of the new fields
+> result in the old kernel behaviour (allowing for a mix of userspace and
+> kernel vintages to operate on one another in most cases).
 > 
-> No way, sorry.  You need to express that using a dma mask instead of
-> overloading the GFP flags.
+> While this interface exists for communication in both directions, only
+> one interface is straightforward to have reasonable semantics for
+> (userspace passing a struct to the kernel). For kernel returns to
+> userspace, what the correct semantics are (whether there should be an
+> error if userspace is unaware of a new extension) is very
+> syscall-dependent and thus probably cannot be unified between syscalls
+> (a good example of this problem is [1]).
+> 
+> Previously there was no common lib/ function that implemented
+> the necessary extension-checking semantics (and different syscalls
+> implemented them slightly differently or incompletely[2]). Future
+> patches replace common uses of this pattern to make use of
+> copy_struct_from_user().
+> 
+> Some in-kernel selftests that insure that the handling of alignment and
+> various byte patterns are all handled identically to memchr_inv() usage.
+> 
+> [1]: commit 1251201c0d34 ("sched/core: Fix uclamp ABI bug, clean up and
+>      robustify sched_read_attr() ABI logic and code")
+> 
+> [2]: For instance {sched_setattr,perf_event_open,clone3}(2) all do do
+>      similar checks to copy_struct_from_user() while rt_sigprocmask(2)
+>      always rejects differently-sized struct arguments.
+> 
+> Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+> ---
+>  include/linux/bitops.h  |   7 +++
+>  include/linux/uaccess.h |   4 ++
+>  lib/strnlen_user.c      |   8 +--
+>  lib/test_user_copy.c    |  59 ++++++++++++++++++---
+>  lib/usercopy.c          | 115 ++++++++++++++++++++++++++++++++++++++++
+>  5 files changed, 180 insertions(+), 13 deletions(-)
+> 
+> diff --git a/include/linux/bitops.h b/include/linux/bitops.h
+> index cf074bce3eb3..a23f4c054768 100644
+> --- a/include/linux/bitops.h
+> +++ b/include/linux/bitops.h
+> @@ -4,6 +4,13 @@
+>  #include <asm/types.h>
+>  #include <linux/bits.h>
+>  
+> +/* Set bits in the first 'n' bytes when loaded from memory */
+> +#ifdef __LITTLE_ENDIAN
+> +#  define aligned_byte_mask(n) ((1ul << 8*(n))-1)
+> +#else
+> +#  define aligned_byte_mask(n) (~0xfful << (BITS_PER_LONG - 8 - 8*(n)))
+> +#endif
 
-Thanks for your feedback and sorry for the delay. Can you help me figure
-out how can I express that using a dma mask? 
+Nti: The style in bitops.h suggestes this should be:
 
-IMHO what you ask from me is frankly impossible.
++/* Set bits in the first 'n' bytes when loaded from memory */
++#ifdef __LITTLE_ENDIAN
++#  define aligned_byte_mask(n) ((1UL << 8*(n))-1)
++#else
++#  define aligned_byte_mask(n) (~0xffUL << (BITS_PER_LONG - 8 - 8*(n)))
++#endif
 
-What I need is the ability to ask for  (considering the physical
-address) 31 bit addressable DMA memory if the chunk is supposed to host
-control-type data that needs to be 31 bit addressable because that is
-how the architecture is, without affecting the normal data-path. So
-normally 64 bit mask is fine but occasionally (control) we would need
-a 31 bit mask.
+Using UL also makes 0xffUL clearer.
 
-Regards,
-Halil
+> +
+>  #define BITS_PER_TYPE(type) (sizeof(type) * BITS_PER_BYTE)
+>  #define BITS_TO_LONGS(nr)	DIV_ROUND_UP(nr, BITS_PER_TYPE(long))
+>  
+> diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+> index 34a038563d97..824569e309e4 100644
+> --- a/include/linux/uaccess.h
+> +++ b/include/linux/uaccess.h
+> @@ -230,6 +230,10 @@ static inline unsigned long __copy_from_user_inatomic_nocache(void *to,
+>  
+>  #endif		/* ARCH_HAS_NOCACHE_UACCESS */
+>  
+> +extern int is_zeroed_user(const void __user *from, size_t count);
+> +extern int copy_struct_from_user(void *dst, size_t ksize,
+> +				 const void __user *src, size_t usize);
+> +
+>  /*
+>   * probe_kernel_read(): safely attempt to read from a location
+>   * @dst: pointer to the buffer that shall take the data
+> diff --git a/lib/strnlen_user.c b/lib/strnlen_user.c
+> index 7f2db3fe311f..39d588aaa8cd 100644
+> --- a/lib/strnlen_user.c
+> +++ b/lib/strnlen_user.c
+> @@ -2,16 +2,10 @@
+>  #include <linux/kernel.h>
+>  #include <linux/export.h>
+>  #include <linux/uaccess.h>
+> +#include <linux/bitops.h>
+>  
+>  #include <asm/word-at-a-time.h>
+>  
+> -/* Set bits in the first 'n' bytes when loaded from memory */
+> -#ifdef __LITTLE_ENDIAN
+> -#  define aligned_byte_mask(n) ((1ul << 8*(n))-1)
+> -#else
+> -#  define aligned_byte_mask(n) (~0xfful << (BITS_PER_LONG - 8 - 8*(n)))
+> -#endif
+> -
+>  /*
+>   * Do a strnlen, return length of string *with* final '\0'.
+>   * 'count' is the user-supplied count, while 'max' is the
+> diff --git a/lib/test_user_copy.c b/lib/test_user_copy.c
+> index 67bcd5dfd847..f7cde3845ccc 100644
+> --- a/lib/test_user_copy.c
+> +++ b/lib/test_user_copy.c
+> @@ -31,14 +31,58 @@
+>  # define TEST_U64
+>  #endif
+>  
+> -#define test(condition, msg)		\
+> -({					\
+> -	int cond = (condition);		\
+> -	if (cond)			\
+> -		pr_warn("%s\n", msg);	\
+> -	cond;				\
+> +#define test(condition, msg, ...)					\
+> +({									\
+> +	int cond = (condition);						\
+> +	if (cond)							\
+> +		pr_warn("[%d] " msg "\n", __LINE__, ##__VA_ARGS__);	\
+> +	cond;								\
+>  })
+>  
+> +static int test_is_zeroed_user(char *kmem, char __user *umem, size_t size)
+> +{
+> +	int ret = 0;
+> +	size_t start, end, i;
+> +	size_t zero_start = size / 4;
+> +	size_t zero_end = size - zero_start;
+> +
+> +	/*
+> +	 * We conduct a series of is_zeroed_user() tests on a block of memory
+> +	 * with the following byte-pattern (trying every possible [start,end]
+> +	 * pair):
+> +	 *
+> +	 *   [ 00 ff 00 ff ... 00 00 00 00 ... ff 00 ff 00 ]
+> +	 *
+> +	 * And we verify that is_zeroed_user() acts identically to memchr_inv().
+> +	 */
+> +
+> +	for (i = 0; i < zero_start; i += 2)
+> +		kmem[i] = 0x00;
+> +	for (i = 1; i < zero_start; i += 2)
+> +		kmem[i] = 0xff;
+> +
+> +	for (i = zero_end; i < size; i += 2)
+> +		kmem[i] = 0xff;
+> +	for (i = zero_end + 1; i < size; i += 2)
+> +		kmem[i] = 0x00;
+> +
+> +	ret |= test(copy_to_user(umem, kmem, size),
+> +		    "legitimate copy_to_user failed");
+> +
+> +	for (start = 0; start <= size; start++) {
+> +		for (end = start; end <= size; end++) {
+> +			int retval = is_zeroed_user(umem + start, end - start);
+> +			int expected = memchr_inv(kmem + start, 0, end - start) == NULL;
+> +
+> +			ret |= test(retval != expected,
+> +				    "is_zeroed_user(=%d) != memchr_inv(=%d) mismatch (start=%lu, end=%lu)",
+> +				    retval, expected, start, end);
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  static int __init test_user_copy_init(void)
+>  {
+>  	int ret = 0;
+> @@ -106,6 +150,9 @@ static int __init test_user_copy_init(void)
+>  #endif
+>  #undef test_legit
+>  
+> +	/* Test usage of is_zeroed_user(). */
+> +	ret |= test_is_zeroed_user(kmem, usermem, PAGE_SIZE);
+> +
+>  	/*
+>  	 * Invalid usage: none of these copies should succeed.
+>  	 */
+> diff --git a/lib/usercopy.c b/lib/usercopy.c
+> index c2bfbcaeb3dc..f795cf0946ad 100644
+> --- a/lib/usercopy.c
+> +++ b/lib/usercopy.c
+> @@ -1,5 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <linux/uaccess.h>
+> +#include <linux/bitops.h>
+>  
+>  /* out-of-line parts */
+>  
+> @@ -31,3 +32,117 @@ unsigned long _copy_to_user(void __user *to, const void *from, unsigned long n)
+>  }
+>  EXPORT_SYMBOL(_copy_to_user);
+>  #endif
+> +
+> +/**
+> + * is_zeroed_user: check if a userspace buffer is full of zeros
+> + * @from:  Source address, in userspace.
+> + * @size: Size of buffer.
+> + *
+> + * This is effectively shorthand for "memchr_inv(from, 0, size) == NULL" for
+> + * userspace addresses. If there are non-zero bytes present then false is
+> + * returned, otherwise true is returned.
+> + *
+> + * Returns:
+> + *  * -EFAULT: access to userspace failed.
+> + */
+> +int is_zeroed_user(const void __user *from, size_t size)
 
+See my bool vs int comment from yesterday and [1] for a suggestion.
+
+> +{
+> +	unsigned long val;
+> +	uintptr_t align = (uintptr_t) from % sizeof(unsigned long);
+> +
+> +	if (unlikely(!size))
+> +		return true;
+> +
+> +	from -= align;
+> +	size += align;
+> +
+> +	if (!user_access_begin(from, size))
+> +		return -EFAULT;
+> +
+> +	unsafe_get_user(val, (unsigned long __user *) from, err_fault);
+> +	if (align)
+> +		val &= ~aligned_byte_mask(align);
+> +
+> +	while (size > sizeof(unsigned long)) {
+> +		if (unlikely(val))
+> +			goto done;
+> +
+> +		from += sizeof(unsigned long);
+> +		size -= sizeof(unsigned long);
+> +
+> +		unsafe_get_user(val, (unsigned long __user *) from, err_fault);
+> +	}
+> +
+> +	if (size < sizeof(unsigned long))
+> +		val &= aligned_byte_mask(size);
+> +
+> +done:
+> +	user_access_end();
+> +	return (val == 0);
+> +err_fault:
+> +	user_access_end();
+> +	return -EFAULT;
+> +}
+> +EXPORT_SYMBOL(is_zeroed_user);
+
+
+> +
+> +/**
+> + * copy_struct_from_user: copy a struct from userspace
+> + * @dst:   Destination address, in kernel space. This buffer must be @ksize
+> + *         bytes long.
+> + * @ksize: Size of @dst struct.
+> + * @src:   Source address, in userspace.
+> + * @usize: (Alleged) size of @src struct.
+> + *
+> + * Copies a struct from userspace to kernel space, in a way that guarantees
+> + * backwards-compatibility for struct syscall arguments (as long as future
+> + * struct extensions are made such that all new fields are *appended* to the
+> + * old struct, and zeroed-out new fields have the same meaning as the old
+> + * struct).
+> + *
+> + * @ksize is just sizeof(*dst), and @usize should've been passed by userspace.
+> + * The recommended usage is something like the following:
+> + *
+> + *   SYSCALL_DEFINE2(foobar, const struct foo __user *, uarg, size_t, usize)
+> + *   {
+> + *      int err;
+> + *      struct foo karg = {};
+> + *
+> + *      err = copy_struct_from_user(&karg, sizeof(karg), uarg, size);
+> + *      if (err)
+> + *        return err;
+> + *
+> + *      // ...
+> + *   }
+> + *
+> + * There are three cases to consider:
+> + *  * If @usize == @ksize, then it's copied verbatim.
+> + *  * If @usize < @ksize, then the userspace has passed an old struct to a
+> + *    newer kernel. The rest of the trailing bytes in @dst (@ksize - @usize)
+> + *    are to be zero-filled.
+> + *  * If @usize > @ksize, then the userspace has passed a new struct to an
+> + *    older kernel. The trailing bytes unknown to the kernel (@usize - @ksize)
+> + *    are checked to ensure they are zeroed, otherwise -E2BIG is returned.
+> + *
+> + * Returns (in all cases, some data may have been copied):
+> + *  * -E2BIG:  (@usize > @ksize) and there are non-zero trailing bytes in @src.
+> + *  * -EFAULT: access to userspace failed.
+> + */
+> +int copy_struct_from_user(void *dst, size_t ksize,
+> +			  const void __user *src, size_t usize)
+> +{
+> +	size_t size = min(ksize, usize);
+> +	size_t rest = max(ksize, usize) - size;
+> +
+> +	/* Deal with trailing bytes. */
+> +	if (usize < ksize) {
+> +		memset(dst + size, 0, rest);
+> +	} else if (usize > ksize) {
+> +		int ret = is_zeroed_user(src + size, rest);
+> +		if (ret <= 0)
+> +			return ret ?: -E2BIG;
+> +	}
+> +	/* Copy the interoperable parts of the struct. */
+> +	if (copy_from_user(dst, src, size))
+> +		return -EFAULT;
+> +	return 0;
+> +}
+> -- 
+> 2.23.0
+> 
+
+[1]: How about:
+
+/**
+ * <sensible documentation>
+ * 
+ * Returns 1, if the user buffer is zeroed, 0 if it is not, and a
+ * negative error code otherwise.
+ * 
+ */
+int memuser_zero(const void __user *from, size_t size)
+{
+	unsigned long val;
+	uintptr_t align = (uintptr_t) from % sizeof(unsigned long);
+
+	if (unlikely(size == 0))
+		return 1;
+
+	from -= align;
+	size += align;
+
+	if (!user_access_begin(from, size))
+		return -EFAULT;
+
+	unsafe_get_user(val, (unsigned long __user *) from, err_fault);
+	if (align)
+		val &= ~aligned_byte_mask(align);
+
+	while (size > sizeof(unsigned long)) {
+		if (unlikely(val))
+			goto err_fault;
+
+		from += sizeof(unsigned long);
+		size -= sizeof(unsigned long);
+
+		unsafe_get_user(val, (unsigned long __user *) from, err_fault);
+	}
+
+	if (size < sizeof(unsigned long))
+		val &= aligned_byte_mask(size);
+
+done:
+	user_access_end();
+	return (val == 0);
+err_fault:
+	user_access_end();
+	return -EFAULT;
+}
+
+int copy_struct_from_user(void *dst, size_t ksize,
+			  const void __user *src, size_t usize)
+{
+	size_t size = min(ksize, usize);
+	size_t rest = max(ksize, usize) - size;
+
+	/* Deal with trailing bytes. */
+	if (usize < ksize) {
+		memset(dst + size, 0, rest);
+	} else if ((usize > ksize) {
+ 		int ret = memuser_zero(src + size, rest);
+		if (ret < 0) /* we failed to check the user memory somehow */
+			return ret;
+		if (ret == 0) /* some of the memory was non-zero */
+			return -E2BIG;
+	}
+
+	/* Copy the interoperable parts of the struct. */
+	if (copy_from_user(dst, src, size))
+		return -EFAULT;
+	return 0;
+}
