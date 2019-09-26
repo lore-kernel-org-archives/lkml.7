@@ -2,122 +2,184 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB35C352A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA08C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F03B222CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E48222CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:48:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="cuc8RfZ7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbfIZRr5 (ORCPT
+        id S1727916AbfIZRsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 13:47:57 -0400
-Received: from mga09.intel.com ([134.134.136.24]:54146 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727794AbfIZRr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 13:47:57 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Sep 2019 10:47:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,552,1559545200"; 
-   d="scan'208";a="203907123"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Sep 2019 10:47:51 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1iDXrp-00027m-Na; Thu, 26 Sep 2019 20:47:49 +0300
-Date:   Thu, 26 Sep 2019 20:47:49 +0300
-From:   "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
-To:     "Schmauss, Erik" <erik.schmauss@intel.com>
-Cc:     Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Moore, Robert" <robert.moore@intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "devel@acpica.org" <devel@acpica.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "nv@vosn.de" <nv@vosn.de>
-Subject: Re: [PATCH] ACPICA: make acpi_load_table() return table index
-Message-ID: <20190926174749.GI32742@smile.fi.intel.com>
-References: <20190906174605.GY2680@smile.fi.intel.com>
- <20190912080742.24642-1-nikolaus.voss@loewensteinmedical.de>
- <CF6A88132359CE47947DB4C6E1709ED53C6481B1@ORSMSX122.amr.corp.intel.com>
- <20190926163528.GH32742@smile.fi.intel.com>
- <CF6A88132359CE47947DB4C6E1709ED53C6481F2@ORSMSX122.amr.corp.intel.com>
+        Thu, 26 Sep 2019 13:48:19 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:39331 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727815AbfIZRsT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 13:48:19 -0400
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x8QHmBPP030832
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 02:48:12 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x8QHmBPP030832
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1569520092;
+        bh=O/3lc5NI2+HTDOKBuiDDovL4QSK3am/i4ySfMl7dV0A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cuc8RfZ7eOrITuFrtaGBnyXwvFbJC/XgEFt4UqST5808qvuO9xYbfzYz/jPg/dXf2
+         NHWnUGXKemvhXLnv+QmnEP8ZWoWexEc1cTZYPR9wf1Y7tihTlcS8u8pmTkkOdb9gHT
+         P14CUcC9UBDQ/wx09AdgfnTLzhwzU0l6QVGDkXBLvfn7pmOQ9qWDYx5Nh7KtGhT7XL
+         1DPryaReb2UTxbKLqQQNZR2FWPs+b5Yt1C10USWi25kxVPSiPt8JJTZ2KikbEbTkNd
+         Vr/xryNrBa0Ycdl2inAroUVrI/0gfnASKvDIIiwe6GbH0kzn2hZwGAMfyxZuxHfNyC
+         dZWXFP0PavA4g==
+X-Nifty-SrcIP: [209.85.221.175]
+Received: by mail-vk1-f175.google.com with SMTP id s196so630242vkb.9
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 10:48:12 -0700 (PDT)
+X-Gm-Message-State: APjAAAWrYF46u44g4vggrcnAIomqo467nZxtfc2ErR1Z8SwovDktdkee
+        QTS39Z0RnGU6JOKO+4CNBtH/faeQFHJ3pyCv5K8=
+X-Google-Smtp-Source: APXvYqyKDb4O1m0NCpQ83XqihTfjIwe3LgMZ/uy80TSe3ewI/LLeo8lILs6lrecpqt3ifYrDDGEuzguIDM6vEWGged8=
+X-Received: by 2002:a1f:60c2:: with SMTP id u185mr2427968vkb.0.1569520090783;
+ Thu, 26 Sep 2019 10:48:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CF6A88132359CE47947DB4C6E1709ED53C6481F2@ORSMSX122.amr.corp.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <5143724.5TqzkYX0oI@dabox> <9bb2fb0e-a9e7-c389-f9b7-42367485ff83@kernel.org>
+ <CAK7LNARCPwqY+YmUzsHkABpshzzS3tC=fDgp4vZjVgBwS+LKJw@mail.gmail.com> <23083624.r2bJSIadJk@dabox>
+In-Reply-To: <23083624.r2bJSIadJk@dabox>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 27 Sep 2019 02:47:33 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASG+b03NDhrenB9yfvgYDVpYSnb2vSCu_-DB8dh70boMg@mail.gmail.com>
+Message-ID: <CAK7LNASG+b03NDhrenB9yfvgYDVpYSnb2vSCu_-DB8dh70boMg@mail.gmail.com>
+Subject: Re: mtd raw nand denali.c broken for Intel/Altera Cyclone V
+To:     Tim Sander <tim@krieglstein.org>
+Cc:     Dinh Nguyen <dinguyen@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Richard Weinberger <richard@nod.at>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Brian Norris <computersforpeace@gmail.com>,
+        David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 07:51:00PM +0300, Schmauss, Erik wrote:
-> > -----Original Message-----
-> > From: linux-acpi-owner@vger.kernel.org <linux-acpi-owner@vger.kernel.org>
-> > On Behalf Of Shevchenko, Andriy
-> > Sent: Thursday, September 26, 2019 9:35 AM
-> > To: Schmauss, Erik <erik.schmauss@intel.com>
-> > Cc: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>; Rafael J. Wysocki
-> > <rjw@rjwysocki.net>; Moore, Robert <robert.moore@intel.com>; Len Brown
-> > <lenb@kernel.org>; Jacek Anaszewski <jacek.anaszewski@gmail.com>; Pavel
-> > Machek <pavel@ucw.cz>; Dan Murphy <dmurphy@ti.com>; linux-
-> > acpi@vger.kernel.org; devel@acpica.org; linux-kernel@vger.kernel.org;
-> > nv@vosn.de
-> > Subject: Re: [PATCH] ACPICA: make acpi_load_table() return table index
-> > 
-> > On Thu, Sep 26, 2019 at 07:09:05PM +0300, Schmauss, Erik wrote:
-> > > > -----Original Message-----
-> > > > From: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
-> > > > Sent: Thursday, September 12, 2019 1:08 AM
-> > > > To: Shevchenko, Andriy <andriy.shevchenko@intel.com>; Schmauss, Erik
-> > > > <erik.schmauss@intel.com>; Rafael J. Wysocki <rjw@rjwysocki.net>;
-> > > > Moore, Robert <robert.moore@intel.com>
-> > > > Cc: Len Brown <lenb@kernel.org>; Jacek Anaszewski
-> > > > <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan
-> > > > Murphy <dmurphy@ti.com>; linux-acpi@vger.kernel.org;
-> > > > devel@acpica.org; linux- kernel@vger.kernel.org; nv@vosn.de;
-> > > > Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
-> > > > Subject: [PATCH] ACPICA: make acpi_load_table() return table index
+Hi Tim,
+
+On Thu, Sep 26, 2019 at 6:10 PM Tim Sander <tim@krieglstein.org> wrote:
+>
+> Hi
+>
+> Am Mittwoch, 11. September 2019, 04:37:46 CEST schrieb Masahiro Yamada:
+> > Hi Dinh,
+> >
+> > On Wed, Sep 11, 2019 at 12:22 AM Dinh Nguyen <dinguyen@kernel.org> wrote:
+> > > On 9/10/19 8:48 AM, Tim Sander wrote:
+> > > > Hi
 > > > >
-> > > Hi Nikolaus,
+> > > > I have noticed that my SPF records where not in place after moving the
+> > > > server, so it seems the mail didn't go to the mailing list. Hopefully
+> > > > that's fixed now.> >
+> > > > Am Dienstag, 10. September 2019, 09:16:37 CEST schrieb Masahiro Yamada:
+> > > >> On Fri, Sep 6, 2019 at 9:39 PM Tim Sander <tim@krieglstein.org> wrote:
+> > > >>> Hi
+> > > >>>
+> > > >>> I have noticed that there multiple breakages piling up for the denali
+> > > >>> nand
+> > > >>> driver on the Intel/Altera Cyclone V. Unfortunately i had no time to
+> > > >>> track
+> > > >>> the mainline kernel closely. So the breakage seems to pile up. I am a
+> > > >>> little disapointed that Intel is not on the lookout that the kernel
+> > > >>> works
+> > > >>> on the chips they are selling. I was really happy about the state of
+> > > >>> the
+> > > >>> platform before concerning mainline support.
+> > > >>>
+> > > >>> The failure starts with kernel 4.19 or stable kernel release 4.18.19.
+> > > >>> The
+> > > >>> commit is ba4a1b62a2d742df9e9c607ac53b3bf33496508f.
+> > > >>
+> > > >> Just for clarification, this corresponds to
+> > > >> 0d55c668b218a1db68b5044bce4de74e1bd0f0c8 upstream.
+> > > >>
+> > > >>> The problem here is that
+> > > >>> our platform works with a zero in the SPARE_AREA_SKIP_BYTES register.
+> > > >>
+> > > >> Please clarify the scope of "our platform".
+> > > >> (Only you, or your company, or every individual using this chip?)
+> > > >
+> > > > The company i work for uses this chip as a base for multiple products.
+> > > >
+> > > >> First, SPARE_AREA_SKIP_BYTES is not the property of the hardware.
+> > > >> Rather, it is about the OOB layout, in other words, this parameter
+> > > >> is defined by software.
+> > > >>
+> > > >> For example, U-Boot supports the Denali NAND driver.
+> > > >> The SPARE_AREA_SKIP_BYTES is a user-configurable parameter:
+> > > >> https://github.com/u-boot/u-boot/blob/v2019.10-rc3/drivers/mtd/nand/raw
+> > > >> /Kcon fig#L112
+> I am using barebox for booting. I looked at the code and found a comment in
+> denali_hw_init:
+>          * tell driver how many bit controller will skip before
+>          * writing ECC code in OOB, this register may be already
+>          * set by firmware. So we read this value out.
+>          * if this value is 0, just let it be.
+>
+> I have checked the barebox code and the denali register SPARE_AREA_SKIP_BYTES
+> (offset 0x230) is read only once on booting. I have not found any occurrence of
+> the register being set by barebox. So i would concur as the value is zero in
+> my case that the boot ROM seems not to set the value. The code in barebox is
+> mostly imported from linux in 2015 which is before the reorganization which
+> happened on the linux side later on.
+>
+> > > >>
+> > > >>
+> > > >> Your platform works with a zero in the SPARE_AREA_SKIP_BYTES register
+> > > >> because the NAND chip on the board was initialized with a zero
+> > > >> set to the SPARE_AREA_SKIP_BYTES register.
+> > > >>
+> > > >> If the NAND chip had been initialized with 8
+> > > >> set to the SPARE_AREA_SKIP_BYTES register, it would have
+> > > >> been working with 8 to the SPARE_AREA_SKIP_BYTES.
+> > > >>
+> > > >> The Boot ROM is the only (semi-)software that is unconfigurable by
+> > > >> users,
+> > > >> so the value of SPARE_AREA_SKIP_BYTES should be aligned with
+> > > >> the boot ROM.
+> > > >> I recommend you to check the spec of the boot ROM.
+> > > >
+> > > > We boot from NOR flash. That's why i didn't see a problem booting
+> > > > probably.
+> > > >
+> > > >> (The maintainer of the platform, Dihn is CC'ed,
+> > > >> so I hope he will jump in)
+> > > >
+> > > > Yes i hope so too.
 > > >
-> > > > For unloading an ACPI table, it is necessary to provide the index of the table.
-> > > > The method intended for dynamically loading or hotplug addition of
-> > > > tables, acpi_load_table(), should provide this information via an
-> > > > optional pointer to the loaded table index.
-> > >
-> > > We'll take this patch for ACPICA upstream
-> > 
-> > Erik,
-> > 
-> Hi Andy,
-> 
-> > how about to have also counterpart to acpi_load_table() which will do what it's
-> > done now in acpi_configfs.c via acpi_tb_*() API?
-> 
-> I should have given more details. We decided to add this extra parameter in AcpiLoadTable and
-> we're going to create an AcpiUnloadTable function that will take table index to unload the table (basically the acpi_tb_unload..).
-> Once we do this, you can use table indices with AcpiUnloadTable and AcpiLoadTable.
+> > > I don't have access to a NAND device at the moment. I'll try to find one
+> > > and debug.
+> I have hardware available to me, so i would be happy to test any ideas/
+> guesses.
 
-Sounds like what we discussed with Nikolaus earlier [1].
-Thanks!
 
-[1]: https://lore.kernel.org/linux-acpi/20190924120734.GT2680@smile.fi.intel.com/
+You previously mentioned,
+"We boot from NOR flash. That's why i didn't see a problem booting probably."
+
+
+Could you try the NAND device as the boot source?
+
+- Flash the boot image into the NAND device,
+  changing the value for SPARE_AREA_SKIP_BYTES.
+ -  Please find out the appropriate value for SPARE_AREA_SKIP_BYTES
+    for booting successfully.
+
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Best Regards
+Masahiro Yamada
