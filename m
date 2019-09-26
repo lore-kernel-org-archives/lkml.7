@@ -2,278 +2,454 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8546BC4360D
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 05:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 200A6C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 05:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 332C3222C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 05:54:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="SMgulXPA"
+	by mail.kernel.org (Postfix) with ESMTP id C99D5222C5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 05:55:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569477314;
+	bh=tDlYGBkIaU83EkpOlGSJfx03C5+vC+iV06yqHuQa8Q4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XOoCSJWi8iuYSv8PCy3QbwlporHR3rLlT4d04Q9u8XAb72IvbEkA2aE90lxiR9x3p
+	 k0euFMpaWGfimgm6S8xOyDupM+TJqfQK3YOKNi0jjnQ7lin4sWNABjw59NsYx9wTx+
+	 IW8bp919Yg8+du/QhZhZJXDXiay6xP6sYiLN1NHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392502AbfIZFyi (ORCPT
+        id S2392524AbfIZFzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 01:54:38 -0400
-Received: from mail-eopbgr760070.outbound.protection.outlook.com ([40.107.76.70]:8708
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387630AbfIZFyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 01:54:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AUT7ExYB+Vk7sja428zaBomkaH9NZV+/F8pjJok2kn8zKYwCVn5imcnPYlF8jc6XBr2cBAU3cwVOVip9eeYzbT9a7KZOjLjooOxKm2Qj51JwxpxcIQSClMA2wkrY8zZ4qI+V01UWU/Yjqt1AHZhBMciyEekSq4gYPzeZMINWaOOVPWe4Yz7Esf6ApZYyis8rVRY1crGLSjJi0xIyIItVLSd6zmEBvMDXKOTThWjlwnruB5sbvxJvVIaxM55vBusmr6oqPQ8RZvuuREQBJv0hjmn6j2uJS8z3NcVA3b824jw8WwwbzvpiKfmIDgZBGGap0hbkAs1vf8F/IIaSAdax+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0zWfdk0aV2ULAx+zJ0E6TFSmDruM2D+9qAwgqqzoHKI=;
- b=h6MGwsdujgK4XLvStyoL0QqgwyBk1E8WPyTeZeKo94v9fxcFz5sX9u2iyG6aJRyQEFMzn+UjbHJRwcebBuxYgFkQzZI1wISnu9thNzw9KZadThBS0IpFFVv6DCudwh/pqvH2EwQWU0d5DlhYtVOPA0oRWVSrZXfV9t+WfdkQK1VoxhI1QudRWtFtRGv1XwTma8Jw5VoFKQKGn/50frYwZ15Ewd6u7uwFxCcxBYuV3BQDZ1+5uOHBxnET/YGEWeJFiNGF5fOp6luk1qX/hUP8pnROHWVNd/Wpp/ko3KI5Y7Ja7s3nTcbgELM1VgYbUsnzmQJfqrZijTirUli74Uc4+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
+        Thu, 26 Sep 2019 01:55:13 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39562 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728905AbfIZFzM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 01:55:12 -0400
+Received: by mail-wm1-f65.google.com with SMTP id v17so1080107wml.4;
+        Wed, 25 Sep 2019 22:55:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0zWfdk0aV2ULAx+zJ0E6TFSmDruM2D+9qAwgqqzoHKI=;
- b=SMgulXPA+UKzErf11ItVEwbKsTbFlcpc0M3MNvZZDZFlSZhvcckdZxQdCG9qPqbvmwUvjLM8pW7QGHKyRbG+n10eSN6eul/kNZO4OZ0ASFfXovF3sCEHqcgJvH5/OJ2+OTP/JR6CXhL7Lsp6Dmw5zPzSudGPXwkoCr6bJZg3Fhw=
-Received: from CH2PR02MB7000.namprd02.prod.outlook.com (20.180.9.216) by
- CH2PR02MB6856.namprd02.prod.outlook.com (20.180.7.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.20; Thu, 26 Sep 2019 05:52:55 +0000
-Received: from CH2PR02MB7000.namprd02.prod.outlook.com
- ([fe80::3515:e3a7:8799:73bd]) by CH2PR02MB7000.namprd02.prod.outlook.com
- ([fe80::3515:e3a7:8799:73bd%2]) with mapi id 15.20.2305.017; Thu, 26 Sep 2019
- 05:52:55 +0000
-From:   Radhey Shyam Pandey <radheys@xilinx.com>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        Michal Simek <michals@xilinx.com>,
-        "nick.graumann@gmail.com" <nick.graumann@gmail.com>,
-        "andrea.merello@gmail.com" <andrea.merello@gmail.com>,
-        Appana Durga Kedareswara Rao <appanad@xilinx.com>,
-        "mcgrof@kernel.org" <mcgrof@kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH -next 3/8] dmaengine: xilinx_dma: Introduce
- xilinx_dma_get_residue
-Thread-Topic: [PATCH -next 3/8] dmaengine: xilinx_dma: Introduce
- xilinx_dma_get_residue
-Thread-Index: AQHVZAhKDg4F4xU8mE+kGY5hxnspoac9ALWAgACRLOA=
-Date:   Thu, 26 Sep 2019 05:52:55 +0000
-Message-ID: <CH2PR02MB70008CE8600D98753BE1CC97C7860@CH2PR02MB7000.namprd02.prod.outlook.com>
-References: <1567701424-25658-1-git-send-email-radhey.shyam.pandey@xilinx.com>
- <1567701424-25658-4-git-send-email-radhey.shyam.pandey@xilinx.com>
- <20190925210123.GL3824@vkoul-mobl>
-In-Reply-To: <20190925210123.GL3824@vkoul-mobl>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=radheys@xilinx.com; 
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bf54f24c-2e18-4356-564a-08d74245c6da
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CH2PR02MB6856;
-x-ms-traffictypediagnostic: CH2PR02MB6856:|CH2PR02MB6856:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR02MB6856EEA1ABF3BCA25B170CADC7860@CH2PR02MB6856.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 0172F0EF77
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(136003)(346002)(396003)(366004)(13464003)(199004)(189003)(76094002)(7736002)(305945005)(8936002)(74316002)(86362001)(33656002)(14444005)(256004)(6916009)(229853002)(6436002)(66066001)(3846002)(9686003)(55016002)(2906002)(6246003)(4326008)(99286004)(102836004)(186003)(7696005)(76176011)(53546011)(486006)(476003)(11346002)(66476007)(66556008)(64756008)(66446008)(76116006)(66946007)(446003)(6116002)(52536014)(5660300002)(81156014)(81166006)(8676002)(6506007)(26005)(25786009)(478600001)(54906003)(316002)(71190400001)(71200400001)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6856;H:CH2PR02MB7000.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: EKYayfp+PMTDfX5rVcRO2hwHHmQwZL8pCu7Z+oN5p1q8yx6t2Ymj/JZhvop+SpsVgBx5cBYXc0rkjqBZJw9+5YVD0ZyawkiJToZqKq6ibwXbYg8ho3ByfyOOJhLS2cVFQvuxusnP3Af1/3uVNd6CqXWzEXRKpZOFC6dcqptX6BU0cxWb+5/FVVFEviRDyD4H68lamjjTdifU759YmVs5DDF6oqHWMQ7W+n6XlYWqAYEnxW0Kl2FITyBflRR1JPvrjtPKAqdF1SDN943+51mYU2Ae/9dRfxhIm8l2iuBO2NXXu1VsFwtmdEfVImUMqzFHnMoW0MGqJ4j+Ec7TUv6fxVuI+/7cOchO1vhTxgkhmniX5e3hVo5EqQbxp2P+nYclunnkFUACU+K53ade6RrR01Y8qKQqbKY++2MNZrMNpu0=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+mMJZMdBkvIlUhPGzBAC0HehyywGmhL7BqFt1+P3ozs=;
+        b=Ru7fshSR5shkABKdc6d6sC6cXvE8gUtT7o4Bht3pSLVx3c2JXSIUdPtk+aRw6duUSz
+         vfdPyXVEfhWIKyQIkAhO2Z1Yi3oS6xknBeUptK/j6Xhly9mlM8yEmA7OnIypmR/S1R88
+         v4HV9fYX4P8zzVAgUpVynjwOMQBs/UP6Ib5IlnG0KY8DIgrvwlcsDLU1PFXUw8cQUTJH
+         p2zVC9bjPuE0CRXRugwi/D35h/DQiZ+AYwhNlFEMpaOuYdHsARRlBymuI/A2+sAsVXup
+         f57UivZiV6iT1a0E9vTo3Z4gssEUMRpXsQEbVZQVcRWK1StoMuiZ2HDT775sM+UFmdaC
+         hDLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+mMJZMdBkvIlUhPGzBAC0HehyywGmhL7BqFt1+P3ozs=;
+        b=j/FbFgx5ZSvc2NyKF+e2Ky9/+6o8h+szXS7Aedd2RwIjqMMEnsSaRTxX3wD0PWXnK9
+         EctbsPC9Du6vAdwrl1t7rRFY9lKYv558nyMbLELNEJuDeaQoRmJyIhIM6S8JhPRhxnw4
+         yiPiCYp763WZwNhQ84W2cteMxF+4p8jVwqgnRxRFYVNtsp2intG1Gh8jFLLPZCWbV8gJ
+         EnV/zbCjPt4lt7PfmBbM030AFNLd8GecCjB/GqNUrOZK+AJOEG9AQ08//JkvNmcX/2B0
+         supB6FiYeVnCpgFhLj1xcJOaEEbDE3iR8RTCLfvSambmTH6ZYlAAgLyJH88wm8fZVMHo
+         vxdA==
+X-Gm-Message-State: APjAAAWCuf+3z8DiUco42kWR2wRMZzxuKWoCiVDohd+hen4YJDqowNIS
+        6TF/eiWdL1wrG/F7EagDE2E=
+X-Google-Smtp-Source: APXvYqzRhQJg6nLzP+rDtzdeyxM4dgwGuE/0xeWrEjctDBz/FS7DTt9Cz0OGiOK42pCBzRDFNSdKVg==
+X-Received: by 2002:a7b:c3c6:: with SMTP id t6mr1386751wmj.5.1569477308035;
+        Wed, 25 Sep 2019 22:55:08 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id d9sm2834917wrf.62.2019.09.25.22.55.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Sep 2019 22:55:07 -0700 (PDT)
+Date:   Thu, 26 Sep 2019 07:55:05 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>,
+        Andreas Krebbel <krebbel@linux.ibm.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [GIT PULL] perf/core improvements and fixes
+Message-ID: <20190926055505.GA80831@gmail.com>
+References: <20190926003244.13962-1-acme@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bf54f24c-2e18-4356-564a-08d74245c6da
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Sep 2019 05:52:55.1267
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JECvYZ6cfKU3T88qHeEsS900EcWC3b0SwiGYe0yybq95E4Wb1XjvFZ1RlX6Utj5B2Mdw0/Gl+s8SIHBWpFHuyg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6856
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190926003244.13962-1-acme@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Vinod Koul <vkoul@kernel.org>
-> Sent: Thursday, September 26, 2019 2:31 AM
-> To: Radhey Shyam Pandey <radheys@xilinx.com>
-> Cc: dan.j.williams@intel.com; Michal Simek <michals@xilinx.com>;
-> nick.graumann@gmail.com; andrea.merello@gmail.com; Appana Durga
-> Kedareswara Rao <appanad@xilinx.com>; mcgrof@kernel.org;
-> dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH -next 3/8] dmaengine: xilinx_dma: Introduce
-> xilinx_dma_get_residue
->=20
-> On 05-09-19, 22:06, Radhey Shyam Pandey wrote:
-> > From: Nicholas Graumann <nick.graumann@gmail.com>
-> >
-> > Introduce a function that can calculate residues for IPs that support i=
-t:
-> > AXI DMA and CDMA.
-> >
-> > Signed-off-by: Nicholas Graumann <nick.graumann@gmail.com>
-> > Signed-off-by: Radhey Shyam Pandey
-> <radhey.shyam.pandey@xilinx.com>
-> > ---
-> >  drivers/dma/xilinx/xilinx_dma.c | 75
-> > ++++++++++++++++++++++++++++++-----------
-> >  1 file changed, 56 insertions(+), 19 deletions(-)
-> >
-> > diff --git a/drivers/dma/xilinx/xilinx_dma.c
-> > b/drivers/dma/xilinx/xilinx_dma.c index 9909bfb..4094adb 100644
-> > --- a/drivers/dma/xilinx/xilinx_dma.c
-> > +++ b/drivers/dma/xilinx/xilinx_dma.c
-> > @@ -787,6 +787,51 @@ static void xilinx_dma_free_chan_resources(struct
-> > dma_chan *dchan)  }
-> >
-> >  /**
-> > + * xilinx_dma_get_residue - Compute residue for a given descriptor
-> > + * @chan: Driver specific dma channel
-> > + * @desc: dma transaction descriptor
-> > + *
-> > + * Return: The number of residue bytes for the descriptor.
-> > + */
-> > +static u32 xilinx_dma_get_residue(struct xilinx_dma_chan *chan,
-> > +				  struct xilinx_dma_tx_descriptor *desc) {
-> > +	struct xilinx_cdma_tx_segment *cdma_seg;
-> > +	struct xilinx_axidma_tx_segment *axidma_seg;
-> > +	struct xilinx_cdma_desc_hw *cdma_hw;
-> > +	struct xilinx_axidma_desc_hw *axidma_hw;
-> > +	struct list_head *entry;
-> > +	u32 residue =3D 0;
-> > +
-> > +	/**
->=20
-> it should be:
->         /*
->          * comment...
->=20
-Thanks for pointing it out. I will fix it in v2.
 
-> > +	 * VDMA and simple mode do not support residue reporting, so the
-> > +	 * residue field will always be 0.
-> > +	 */
-> > +	if (chan->xdev->dma_config->dmatype =3D=3D XDMA_TYPE_VDMA ||
-> !chan->has_sg)
-> > +		return residue;
->=20
-> why not check this in status callback?
-Assuming we mean to move vdma and non-sg check to xilinx_dma_tx_status.
-Just a thought- Keeping this check in xilinx_dma_get_residue provides
-an abstraction and caller can simply call this func with knowing about
-IP config specific residue calculation. Considering this point does it
-looks ok ?=20
->=20
-> > +
-> > +	list_for_each(entry, &desc->segments) {
-> > +		if (chan->xdev->dma_config->dmatype =3D=3D
-> XDMA_TYPE_CDMA) {
-> > +			cdma_seg =3D list_entry(entry,
-> > +					      struct xilinx_cdma_tx_segment,
-> > +					      node);
-> > +			cdma_hw =3D &cdma_seg->hw;
-> > +			residue +=3D (cdma_hw->control - cdma_hw->status)
-> &
-> > +				   chan->xdev->max_buffer_len;
-> > +		} else {
-> > +			axidma_seg =3D list_entry(entry,
-> > +						struct
-> xilinx_axidma_tx_segment,
-> > +						node);
-> > +			axidma_hw =3D &axidma_seg->hw;
-> > +			residue +=3D (axidma_hw->control - axidma_hw-
-> >status) &
-> > +				   chan->xdev->max_buffer_len;
-> > +		}
-> > +	}
-> > +
-> > +	return residue;
-> > +}
-> > +
-> > +/**
-> >   * xilinx_dma_chan_handle_cyclic - Cyclic dma callback
-> >   * @chan: Driver specific dma channel
-> >   * @desc: dma transaction descriptor
-> > @@ -995,33 +1040,22 @@ static enum dma_status
-> > xilinx_dma_tx_status(struct dma_chan *dchan,  {
-> >  	struct xilinx_dma_chan *chan =3D to_xilinx_chan(dchan);
-> >  	struct xilinx_dma_tx_descriptor *desc;
-> > -	struct xilinx_axidma_tx_segment *segment;
-> > -	struct xilinx_axidma_desc_hw *hw;
-> >  	enum dma_status ret;
-> >  	unsigned long flags;
-> > -	u32 residue =3D 0;
-> >
-> >  	ret =3D dma_cookie_status(dchan, cookie, txstate);
-> >  	if (ret =3D=3D DMA_COMPLETE || !txstate)
-> >  		return ret;
-> >
-> > -	if (chan->xdev->dma_config->dmatype =3D=3D XDMA_TYPE_AXIDMA) {
-> > -		spin_lock_irqsave(&chan->lock, flags);
-> > +	spin_lock_irqsave(&chan->lock, flags);
-> >
-> > -		desc =3D list_last_entry(&chan->active_list,
-> > -				       struct xilinx_dma_tx_descriptor, node);
-> > -		if (chan->has_sg) {
-> > -			list_for_each_entry(segment, &desc->segments,
-> node) {
-> > -				hw =3D &segment->hw;
-> > -				residue +=3D (hw->control - hw->status) &
-> > -					   chan->xdev->max_buffer_len;
-> > -			}
-> > -		}
-> > -		spin_unlock_irqrestore(&chan->lock, flags);
-> > +	desc =3D list_last_entry(&chan->active_list,
-> > +			       struct xilinx_dma_tx_descriptor, node);
-> > +	chan->residue =3D xilinx_dma_get_residue(chan, desc);
-> >
-> > -		chan->residue =3D residue;
-> > -		dma_set_residue(txstate, chan->residue);
-> > -	}
-> > +	spin_unlock_irqrestore(&chan->lock, flags);
-> > +
-> > +	dma_set_residue(txstate, chan->residue);
-> >
-> >  	return ret;
-> >  }
-> > @@ -2701,12 +2735,15 @@ static int xilinx_dma_probe(struct
-> platform_device *pdev)
-> >  					  xilinx_dma_prep_dma_cyclic;
-> >  		xdev->common.device_prep_interleaved_dma =3D
-> >  					xilinx_dma_prep_interleaved;
-> > -		/* Residue calculation is supported by only AXI DMA */
-> > +		/* Residue calculation is supported by only AXI DMA and
-> CDMA */
-> >  		xdev->common.residue_granularity =3D
-> >
-> DMA_RESIDUE_GRANULARITY_SEGMENT;
-> >  	} else if (xdev->dma_config->dmatype =3D=3D XDMA_TYPE_CDMA) {
-> >  		dma_cap_set(DMA_MEMCPY, xdev->common.cap_mask);
-> >  		xdev->common.device_prep_dma_memcpy =3D
-> xilinx_cdma_prep_memcpy;
-> > +		/* Residue calculation is supported by only AXI DMA and
-> CDMA */
-> > +		xdev->common.residue_granularity =3D
-> > +
-> 	DMA_RESIDUE_GRANULARITY_SEGMENT;
-> >  	} else {
-> >  		xdev->common.device_prep_interleaved_dma =3D
-> >  				xilinx_vdma_dma_prep_interleaved;
-> > --
-> > 2.7.4
->=20
-> --
-> ~Vinod
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+
+> Hi Ingo/Thomas,
+> 
+> 	Please consider pulling,
+> 
+> Best regards,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit 2b32769700f857a8e608a8ee24080833889965b9:
+> 
+>   Merge tag 'perf-urgent-for-mingo-5.4-20190921' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2019-09-22 12:45:11 +0200)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.5-20190925
+> 
+> for you to fetch changes up to d6840d87b2d148e19e244ad2b44d28ba07f437a0:
+> 
+>   perf parser: Remove needless include directives (2019-09-25 16:26:41 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/core improvements and fixes:
+> 
+> perf record:
+> 
+>   Stephane Eranian:
+> 
+>   - Fix priv level with branch sampling for paranoid=2, i.e. the kernel checks
+>     if perf_event_attr_attr.exclude_hv is set in addition to .exclude_kernel,
+>     so reset both to zero.
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Don't warn about not being able to read kernel maps (kallsyms, etc) when
+>     kernel samples aren't being collected.
+> 
+> perf list:
+> 
+>   Kim Phillips:
+> 
+>   - Allow plurals for metric, metricgroup., i.e.:
+> 
+>     $ perf list metrics
+> 
+>     was showing nothing, which is very confusing, make it work like:
+> 
+>     $ perf stat metric
+> 
+> perf stat:
+> 
+>   Andi Kleen:
+> 
+>   - Free memory access/leaks detected via valgrind, related to metrics.
+> 
+> Libraries:
+> 
+> libperf:
+> 
+>   Jiri Olsa:
+> 
+>   - Move more stuff from tools/perf, this time a first stab at moving perf_mmap
+>     methods.
+> 
+> libtracevent:
+> 
+>   Steven Rostedt (VMware):
+> 
+>   - Round up in tep_print_event() time precision.
+> 
+>   Tzvetomir Stoyanov (VMware):
+> 
+>   - Man pages for event print and related and plugins APIs.
+> 
+>   - Move traceevent plugins in its own subdirectory.
+> 
+> Feature detection:
+> 
+>   Thomas Richter:
+> 
+>   - Add detection of java-11-openjdk-devel package, in addition to the older
+>     versions supported.
+> 
+> Architecture specific:
+> 
+> S/390:
+> 
+>   Thomas Richter (2):
+> 
+>   - Include JVMTI support for s390
+> 
+> Vendor events:
+> 
+> AMD:
+> 
+>   Kim Phillips:
+> 
+>   - Add L3 cache events for Family 17h.
+> 
+>   - Remove redundant '['.
+> 
+> PowerPC:
+> 
+>   Mamatha Inamdar:
+> 
+>   - Remove P8 HW events which are not supported.
+> 
+> Cleanups:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Remove needless headers, add needed ones, move things around to reduce the
+>     headers dependency tree, speeding up builds by not doing needless compiles
+>     when unrelated stuff gets changed.
+> 
+>   - Ditch unused code that was dragging headers.
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Andi Kleen (2):
+>       perf stat: Fix free memory access / memory leaks in metrics
+>       perf evlist: Fix access of freed id arrays
+> 
+> Arnaldo Carvalho de Melo (12):
+>       perf record: Move restricted maps check to after a possible fallback to not collect kernel samples
+>       perf evlist: Adopt backwards ring buffer state enum
+>       libperf: Add missing 'struct xyarray' forward declaration
+>       perf tools: No need to include internal/lib.h from util/util.h
+>       libperf: Use sys/types.h to get ssize_t, not unistd.h
+>       perf copyfile: Move copyfile routines to separate files
+>       perf evsel: Remove need for symbol_conf in evsel_fprintf.c
+>       perf evsel: Introduce evsel_fprintf.h
+>       perf evlist: Remove unused perf_evlist__fprintf() method
+>       perf evsel: Move config terms to a separate header
+>       perf tools: Replace needless mmap.h with what is needed, event.h
+>       perf parser: Remove needless include directives
+> 
+> Jiri Olsa (37):
+>       tools: Add missing stdio.h include to asm/bug.h header
+>       perf tools: Rename 'struct perf_mmap' to 'struct mmap'
+>       perf tools: Rename perf_evlist__mmap() to evlist__mmap()
+>       perf tools: Rename perf_evlist__munmap() to evlist__munmap()
+>       perf tools: Rename perf_evlist__alloc_mmap() to evlist__alloc_mmap()
+>       perf tools: Rename perf_evlist__exit() to evlist__exit()
+>       perf tools: Rename perf_evlist__purge() to evlist__purge()
+>       libperf: Link libapi.a in libperf.so
+>       libperf: Add perf_mmap struct
+>       libperf: Add 'mask' to struct perf_mmap
+>       libperf: Add 'fd' to struct perf_mmap
+>       libperf: Add 'cpu' to struct perf_mmap
+>       libperf: Add 'refcnt' to struct perf_mmap
+>       libperf: Add prev/start/end to struct perf_mmap
+>       libperf: Add 'overwrite' to 'struct perf_mmap'
+>       libperf: Add 'event_copy' to 'struct perf_mmap'
+>       libperf: Add 'flush' to 'struct perf_mmap'
+>       libperf: Move 'system_wide' from 'struct evsel' to 'struct perf_evsel'
+>       libperf: Move 'nr_mmaps' from 'struct evlist' to 'struct perf_evlist'
+>       libperf: Move 'mmap_len' from 'struct evlist' to 'struct perf_evlist'
+>       libperf: Move 'pollfd' from 'struct evlist' to 'struct perf_evlist'
+>       libperf: Move 'sample_id' from 'struct evsel' to 'struct perf_evsel'
+>       libperf: Move 'id' from 'struct evsel' to 'struct perf_evsel'
+>       libperf: Move 'ids' from 'struct evsel' to 'struct perf_evsel'
+>       libperf: Move 'heads' from 'struct evlist' to 'struct perf_evlist'
+>       libperf: Add perf_evsel__alloc_id/perf_evsel__free_id functions
+>       libperf: Add perf_evlist__first()/last() functions
+>       libperf: Add perf_evlist__read_format() function
+>       libperf: Add perf_evlist__id_add() function
+>       libperf: Add perf_evlist__id_add_fd() function
+>       libperf: Move 'page_size' global variable to libperf
+>       libperf: Add libperf dependency for tests targets
+>       libperf: Merge libperf_set_print() into libperf_init()
+>       libperf: Add libperf_init() call to the tests
+>       libperf: Add perf_evlist__alloc_pollfd() function
+>       libperf: Add perf_evlist__add_pollfd() function
+>       libperf: Add perf_evlist__poll() function
+> 
+> Kim Phillips (4):
+>       perf vendor events amd: Add L3 cache events for Family 17h
+>       perf vendor events amd: Remove redundant '['
+>       perf vendor events: Minor fixes to the README
+>       perf list: Allow plurals for metric, metricgroup
+> 
+> Mamatha Inamdar (1):
+>       perf vendor events: Remove P8 HW events which are not supported
+> 
+> Stephane Eranian (1):
+>       perf record: Fix priv level with branch sampling for paranoid=2
+> 
+> Steven Rostedt (VMware) (1):
+>       libtraceevent: Round up in tep_print_event() time precision
+> 
+> Thomas Richter (2):
+>       perf jvmti: Include JVMTI support for s390
+>       perf build: Add detection of java-11-openjdk-devel package
+> 
+> Tzvetomir Stoyanov (2):
+>       libtraceevent: Man pages for libtraceevent event print related API
+>       libtraceevent: Man pages for tep plugins APIs
+> 
+> Tzvetomir Stoyanov (VMware) (4):
+>       libtraceevent: Man pages fix, rename tep_ref_get() to tep_get_ref()
+>       libtraceevent: Man pages fix, changes in event printing APIs
+>       libtraceevent: Add tep_get_event() in event-parse.h
+>       libtraceevent: Move traceevent plugins in its own subdirectory
+> 
+>  tools/include/asm/bug.h                            |   1 +
+>  tools/lib/traceevent/Build                         |  11 -
+>  .../Documentation/libtraceevent-event_print.txt    | 130 +++++++++
+>  .../Documentation/libtraceevent-handle.txt         |   8 +-
+>  .../Documentation/libtraceevent-plugins.txt        |  99 +++++++
+>  .../lib/traceevent/Documentation/libtraceevent.txt |  15 +-
+>  tools/lib/traceevent/Makefile                      |  94 ++-----
+>  tools/lib/traceevent/event-parse.c                 |   4 +-
+>  tools/lib/traceevent/event-parse.h                 |   2 +
+>  tools/lib/traceevent/plugins/Build                 |  10 +
+>  tools/lib/traceevent/plugins/Makefile              | 222 ++++++++++++++++
+>  .../lib/traceevent/{ => plugins}/plugin_cfg80211.c |   0
+>  .../lib/traceevent/{ => plugins}/plugin_function.c |   0
+>  .../lib/traceevent/{ => plugins}/plugin_hrtimer.c  |   0
+>  tools/lib/traceevent/{ => plugins}/plugin_jbd2.c   |   0
+>  tools/lib/traceevent/{ => plugins}/plugin_kmem.c   |   0
+>  tools/lib/traceevent/{ => plugins}/plugin_kvm.c    |   0
+>  .../lib/traceevent/{ => plugins}/plugin_mac80211.c |   0
+>  .../traceevent/{ => plugins}/plugin_sched_switch.c |   0
+>  tools/lib/traceevent/{ => plugins}/plugin_scsi.c   |   0
+>  tools/lib/traceevent/{ => plugins}/plugin_xen.c    |   0
+>  tools/perf/Makefile.config                         |   2 +-
+>  tools/perf/Makefile.perf                           |   4 +-
+>  tools/perf/arch/arm/util/cs-etm.c                  |   7 +-
+>  tools/perf/arch/arm64/util/arm-spe.c               |   6 +-
+>  tools/perf/arch/s390/Makefile                      |   1 +
+>  tools/perf/arch/s390/util/auxtrace.c               |   1 +
+>  tools/perf/arch/s390/util/machine.c                |   2 +-
+>  tools/perf/arch/x86/tests/intel-cqm.c              |   5 +-
+>  tools/perf/arch/x86/tests/perf-time-to-tsc.c       |  11 +-
+>  tools/perf/arch/x86/tests/rdpmc.c                  |   2 +-
+>  tools/perf/arch/x86/util/intel-bts.c               |   9 +-
+>  tools/perf/arch/x86/util/intel-pt.c                |  17 +-
+>  tools/perf/arch/x86/util/machine.c                 |   2 +-
+>  tools/perf/builtin-evlist.c                        |   1 +
+>  tools/perf/builtin-kvm.c                           |  13 +-
+>  tools/perf/builtin-list.c                          |   4 +-
+>  tools/perf/builtin-record.c                        | 102 +++----
+>  tools/perf/builtin-sched.c                         |   3 +-
+>  tools/perf/builtin-script.c                        |  11 +-
+>  tools/perf/builtin-stat.c                          |   6 +-
+>  tools/perf/builtin-top.c                           |  22 +-
+>  tools/perf/builtin-trace.c                         |  17 +-
+>  tools/perf/lib/Makefile                            |  35 ++-
+>  tools/perf/lib/core.c                              |  13 +-
+>  tools/perf/lib/evlist.c                            | 124 +++++++++
+>  tools/perf/lib/evsel.c                             |  30 +++
+>  tools/perf/lib/include/internal/evlist.h           |  33 +++
+>  tools/perf/lib/include/internal/evsel.h            |  33 +++
+>  tools/perf/lib/include/internal/lib.h              |   4 +-
+>  tools/perf/lib/include/internal/mmap.h             |  32 +++
+>  tools/perf/lib/include/perf/core.h                 |   2 +-
+>  tools/perf/lib/include/perf/evlist.h               |   1 +
+>  tools/perf/lib/lib.c                               |   2 +
+>  tools/perf/lib/libperf.map                         |   3 +-
+>  tools/perf/lib/tests/test-cpumap.c                 |  10 +
+>  tools/perf/lib/tests/test-evlist.c                 |  10 +
+>  tools/perf/lib/tests/test-evsel.c                  |  10 +
+>  tools/perf/lib/tests/test-threadmap.c              |  10 +
+>  tools/perf/perf.c                                  |  13 +-
+>  tools/perf/pmu-events/README                       |  22 +-
+>  .../perf/pmu-events/arch/powerpc/power8/other.json |  24 --
+>  .../perf/pmu-events/arch/x86/amdfam17h/cache.json  |  42 +++
+>  tools/perf/pmu-events/arch/x86/amdfam17h/core.json |   2 +-
+>  tools/perf/pmu-events/jevents.c                    |   1 +
+>  tools/perf/tests/backward-ring-buffer.c            |  11 +-
+>  tools/perf/tests/bpf.c                             |   9 +-
+>  tools/perf/tests/code-reading.c                    |  11 +-
+>  tools/perf/tests/event-times.c                     |  14 +-
+>  tools/perf/tests/event_update.c                    |   6 +-
+>  tools/perf/tests/evsel-roundtrip-name.c            |   2 +-
+>  tools/perf/tests/hists_cumulate.c                  |   2 +-
+>  tools/perf/tests/hists_link.c                      |   5 +-
+>  tools/perf/tests/hists_output.c                    |   2 +-
+>  tools/perf/tests/keep-tracking.c                   |  11 +-
+>  tools/perf/tests/mmap-basic.c                      |   5 +-
+>  tools/perf/tests/mmap-thread-lookup.c              |   2 +-
+>  tools/perf/tests/openat-syscall-tp-fields.c        |  11 +-
+>  tools/perf/tests/parse-events.c                    | 116 ++++----
+>  tools/perf/tests/perf-record.c                     |  13 +-
+>  tools/perf/tests/sdt.c                             |   1 +
+>  tools/perf/tests/sw-clock.c                        |   5 +-
+>  tools/perf/tests/switch-tracking.c                 |  29 +-
+>  tools/perf/tests/task-exit.c                       |   9 +-
+>  tools/perf/tests/vmlinux-kallsyms.c                |   2 +-
+>  tools/perf/ui/browsers/hists.c                     |   6 +-
+>  tools/perf/ui/gtk/hists.c                          |   1 +
+>  tools/perf/util/Build                              |   2 +
+>  tools/perf/util/annotate.c                         |   1 +
+>  tools/perf/util/auxtrace.c                         |   8 +-
+>  tools/perf/util/auxtrace.h                         |   8 +-
+>  tools/perf/util/bpf-loader.c                       |   2 +-
+>  tools/perf/util/build-id.c                         |   3 +-
+>  tools/perf/util/copyfile.c                         | 144 ++++++++++
+>  tools/perf/util/copyfile.h                         |  16 ++
+>  tools/perf/util/cs-etm.c                           |   2 +-
+>  tools/perf/util/evlist.c                           | 295 ++++++---------------
+>  tools/perf/util/evlist.h                           |  81 +++---
+>  tools/perf/util/evsel.c                            | 204 ++------------
+>  tools/perf/util/evsel.h                            | 121 +--------
+>  tools/perf/util/evsel_config.h                     |  50 ++++
+>  tools/perf/util/evsel_fprintf.c                    |  15 +-
+>  tools/perf/util/evsel_fprintf.h                    |  50 ++++
+>  tools/perf/util/genelf.h                           |   3 +
+>  tools/perf/util/header.c                           |  29 +-
+>  tools/perf/util/intel-bts.c                        |   4 +-
+>  tools/perf/util/intel-pt.c                         |  10 +-
+>  tools/perf/util/jitdump.c                          |   2 +-
+>  tools/perf/util/machine.c                          |   1 +
+>  tools/perf/util/mmap.c                             | 185 ++++++-------
+>  tools/perf/util/mmap.h                             |  77 ++----
+>  tools/perf/util/parse-events.c                     |   8 +-
+>  tools/perf/util/parse-events.y                     |   4 +-
+>  tools/perf/util/perf_event_attr_fprintf.c          | 148 +++++++++++
+>  tools/perf/util/python-ext-sources                 |   1 +
+>  tools/perf/util/python.c                           |  24 +-
+>  tools/perf/util/record.c                           |   6 +-
+>  tools/perf/util/session.c                          |   5 +-
+>  tools/perf/util/sort.c                             |   2 +-
+>  tools/perf/util/srccode.c                          |   2 +-
+>  tools/perf/util/stat-shadow.c                      |   4 +-
+>  tools/perf/util/stat.c                             |   2 +-
+>  tools/perf/util/symbol-elf.c                       |   2 +-
+>  tools/perf/util/synthetic-events.c                 |  20 +-
+>  tools/perf/util/top.c                              |   2 +-
+>  tools/perf/util/trace-event-info.c                 |   2 +-
+>  tools/perf/util/util.c                             | 136 ----------
+>  tools/perf/util/util.h                             |   8 -
+>  128 files changed, 1941 insertions(+), 1321 deletions(-)
+>  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-event_print.txt
+>  create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-plugins.txt
+>  create mode 100644 tools/lib/traceevent/plugins/Build
+>  create mode 100644 tools/lib/traceevent/plugins/Makefile
+>  rename tools/lib/traceevent/{ => plugins}/plugin_cfg80211.c (100%)
+>  rename tools/lib/traceevent/{ => plugins}/plugin_function.c (100%)
+>  rename tools/lib/traceevent/{ => plugins}/plugin_hrtimer.c (100%)
+>  rename tools/lib/traceevent/{ => plugins}/plugin_jbd2.c (100%)
+>  rename tools/lib/traceevent/{ => plugins}/plugin_kmem.c (100%)
+>  rename tools/lib/traceevent/{ => plugins}/plugin_kvm.c (100%)
+>  rename tools/lib/traceevent/{ => plugins}/plugin_mac80211.c (100%)
+>  rename tools/lib/traceevent/{ => plugins}/plugin_sched_switch.c (100%)
+>  rename tools/lib/traceevent/{ => plugins}/plugin_scsi.c (100%)
+>  rename tools/lib/traceevent/{ => plugins}/plugin_xen.c (100%)
+>  create mode 100644 tools/perf/lib/include/internal/mmap.h
+>  create mode 100644 tools/perf/util/copyfile.c
+>  create mode 100644 tools/perf/util/copyfile.h
+>  create mode 100644 tools/perf/util/evsel_config.h
+>  create mode 100644 tools/perf/util/evsel_fprintf.h
+>  create mode 100644 tools/perf/util/perf_event_attr_fprintf.c
+
+Pulled, thanks a lot Arnaldo!
+
+	Ingo
