@@ -2,115 +2,147 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A51DC47E48
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BB5C47E48
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5C2D2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58769208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:03:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="FPTUu1yg"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aT9/PTX8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726273AbfIZMD0 (ORCPT
+        id S1726371AbfIZMDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 08:03:26 -0400
-Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:42318 "EHLO
-        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfIZMDZ (ORCPT
+        Thu, 26 Sep 2019 08:03:31 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:53406 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfIZMDb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 08:03:25 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 7CA553F5D5;
-        Thu, 26 Sep 2019 14:03:23 +0200 (CEST)
-Authentication-Results: ste-pvt-msa2.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=FPTUu1yg;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
-        dkim=pass (1024-bit key) header.d=shipmail.org
-Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
-        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Ki1CKtPzyZxv; Thu, 26 Sep 2019 14:03:20 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 06B6E3F234;
-        Thu, 26 Sep 2019 14:03:19 +0200 (CEST)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id BD293360311;
-        Thu, 26 Sep 2019 14:03:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1569499399; bh=DBvNfkxnIXmlXQ6kopNE8+KbXVhg4FkNygEe8p6ktTI=;
-        h=Subject:From:To:References:Cc:Date:In-Reply-To:From;
-        b=FPTUu1ygkAdtznT+rTStt02Vx5rZ4tXicv+4o1vN/kqhsRcZFdwmjZKWWCOG/7dBP
-         VmbWEkLDh6EA8v6nrUzR7e7sXiUcgYjowzQXLT0wJUe9g0uI2v4Ie682IF1HDvGu1N
-         3I3x4TVh79sEl0EOse91dMG5/aZkvEqj9hjq04+M=
-Subject: Ack to merge through DRM? WAS Re: [PATCH v2 1/5] mm: Add
- write-protect and clean utilities for address space ranges
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-To:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>
-References: <20190926115548.44000-1-thomas_os@shipmail.org>
- <20190926115548.44000-2-thomas_os@shipmail.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>
-Organization: VMware Inc.
-Message-ID: <85e31bcf-d3c8-2fcf-e659-2c9f82ebedc7@shipmail.org>
-Date:   Thu, 26 Sep 2019 14:03:19 +0200
+        Thu, 26 Sep 2019 08:03:31 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8QC3H3v033447;
+        Thu, 26 Sep 2019 07:03:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569499397;
+        bh=2CPazhH8rWKmhbyLUwHo9If8lNYXMNPeJh6UIDfWy94=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=aT9/PTX8kU0VWFi3jjgddPnnyvXN6d/flO8aJplJZDATQvfp8R2DP6RX9ZtANXsk6
+         9bIvU91cT9MIScq+bJA5Qev1lbzpIYP3PyAIUVvPyBf6BIYs/ZFM7Ah6SbIE1ESb0U
+         MLzEqgCUbJRi6ZrUNKF3uYryHUu50NuajHYZ4t1s=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8QC3Hkh049921;
+        Thu, 26 Sep 2019 07:03:17 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 26
+ Sep 2019 07:03:08 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 26 Sep 2019 07:03:08 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8QC3Fl2074434;
+        Thu, 26 Sep 2019 07:03:15 -0500
+Subject: Re: [PATCH v9 01/15] leds: multicolor: Add sysfs interface definition
+To:     Pavel Machek <pavel@ucw.cz>
+CC:     <jacek.anaszewski@gmail.com>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linus.walleij@linaro.org>,
+        <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Tony Lindgren <tony@atomide.com>,
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>
+References: <20190925174616.3714-1-dmurphy@ti.com>
+ <20190925174616.3714-2-dmurphy@ti.com> <20190926111043.GA9310@amd>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <92ae6985-d4fb-7570-3ac6-ebabcf3ab5ed@ti.com>
+Date:   Thu, 26 Sep 2019 07:08:36 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190926115548.44000-2-thomas_os@shipmail.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190926111043.GA9310@amd>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/26/19 1:55 PM, Thomas Hellström (VMware) wrote:
-> From: Thomas Hellstrom <thellstrom@vmware.com>
+Pavel
+
+On 9/26/19 6:10 AM, Pavel Machek wrote:
+> Hi!
 >
-> Add two utilities to a) write-protect and b) clean all ptes pointing into
-> a range of an address space.
-> The utilities are intended to aid in tracking dirty pages (either
-> driver-allocated system memory or pci device memory).
-> The write-protect utility should be used in conjunction with
-> page_mkwrite() and pfn_mkwrite() to trigger write page-faults on page
-> accesses. Typically one would want to use this on sparse accesses into
-> large memory regions. The clean utility should be used to utilize
-> hardware dirtying functionality and avoid the overhead of page-faults,
-> typically on large accesses into small memory regions.
+>> diff --git a/Documentation/leds/leds-class-multicolor.rst b/Documentation/leds/leds-class-multicolor.rst
+>> new file mode 100644
+>> index 000000000000..87a1588d7619
+>> --- /dev/null
+>> +++ b/Documentation/leds/leds-class-multicolor.rst
+>> @@ -0,0 +1,96 @@
+>> +====================================
+>> +Multi Color LED handling under Linux
+>> +====================================
+>> +
+>> +Description
+>> +===========
+>> +The multi color class groups monochrome LEDs and allows controlling two
+>> +aspects of the final combined color: hue and lightness. The former is
+>> +controlled via <color>_intensity files and the latter is controlled
+>> +via brightness file.
+>> +
+>> +For more details on hue and lightness notions please refer to
+>> +https://en.wikipedia.org/wiki/CIECAM02.
+>> +
+>> +Note that intensity files only cache the written value and the actual
+>> +change of hardware state occurs upon writing brightness file. This
+>> +allows for changing many factors of the perceived color in a virtually
+>> +unnoticeable way for the human observer.
+> So unlike previous versions, userspace will need to write 4 files
+> instead of one in the common case.
+
+Request was made here in v5 of the patchset
+
+https://lore.kernel.org/patchwork/patch/1126685/
+
+
 >
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Rik van Riel <riel@surriel.com>
-> Cc: Minchan Kim <minchan@kernel.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Huang Ying <ying.huang@intel.com>
-> Cc: Souptick Joarder <jrdr.linux@gmail.com>
-> Cc: "Jérôme Glisse" <jglisse@redhat.com>
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
+>> +Directory Layout Example
+>> +========================
+>> +root:/sys/class/leds/rgb:grouped_leds# ls -lR colors/
+>> +-rw-rwxr-- 1 root root 4096 Jul 7 03:10 red_max_intensity
+>> +--w--wx-w- 1 root root 4096 Jul 7 03:10 red_intensity
+>> +-rw-rwxr-- 1 root root 4096 Jul 7 03:10 green_max_intensity
+>> +--w--wx-w- 1 root root 4096 Jul 7 03:10 green_intensity
+>> +-rw-rwxr-- 1 root root 4096 Jul 7 03:10 blue_max_intensity
+>> +--w--wx-w- 1 root root 4096 Jul 7 03:10 blue_intensity
+> Permissions are way off here.
+Yes Jacek made a comment in the code about octals.
 >
-> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-> Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
-> ---
+>> +A user first writes the color LED brightness file with the brightness level that
+>> +is necessary to achieve a blueish violet output from the RGB LED group.
+>> +
+>> +echo 138 > /sys/class/leds/rgb:grouped_leds/red_intensity
+>> +echo 43 > /sys/class/leds/rgb:grouped_leds/green_intensity
+>> +echo 226 > /sys/class/leds/rgb:grouped_leds/blue_intensity
+> No, you can't tell what kind of color this will result in.
 
-Hi!
+I tested this combination on two devices (LP5523 and LP50xx) and it was 
+a blueish violet.
 
-I wonder if I can get an ack from an mm maintainer to merge this through 
-DRM along with the vmwgfx patches? Andrew? Matthew?
+> Will you be on ELCE/OSS in Lyon?
 
-Thanks,
-Thomas
+Unfortunately no.
 
+Dan
 
-
+>
+> Best regards,
+> 									Pavel
+>
