@@ -4,199 +4,127 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB254C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 746A2C47E48
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFD32222C5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 538CA222BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:43:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728950AbfIZJli (ORCPT
+        id S1727786AbfIZJn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 05:41:38 -0400
-Received: from foss.arm.com ([217.140.110.172]:43662 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728278AbfIZJle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 05:41:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B89F1000;
-        Thu, 26 Sep 2019 02:41:33 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 416943F67D;
-        Thu, 26 Sep 2019 02:41:32 -0700 (PDT)
-Subject: Re: [PATCH] drm: Don't free jobs in wait_event_interruptible()
-To:     "Grodzovsky, Andrey" <Andrey.Grodzovsky@amd.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>
-Cc:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        Nayan Deshmukh <nayan26deshmukh@gmail.com>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-References: <20190925151404.23222-1-steven.price@arm.com>
- <cc0b260c-059d-7f55-288e-c48f30eb84e3@amd.com>
- <078332cf-ef58-5f76-5c49-8034435f7bea@arm.com>
- <da04cf92-f4c7-e896-5070-4d2a9be273aa@amd.com>
- <e160d9ec-5ae3-9003-b38c-3027bce736f4@amd.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <14479a04-d4a2-9c55-7cbf-010d3111fa0b@arm.com>
-Date:   Thu, 26 Sep 2019 10:41:31 +0100
+        Thu, 26 Sep 2019 05:43:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43746 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725911AbfIZJn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 05:43:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F246AACA4;
+        Thu, 26 Sep 2019 09:43:24 +0000 (UTC)
+Subject: Re: [PATCH] scsi: qla2xxx: Remove WARN_ON_ONCE in
+ qla2x00_status_cont_entry()
+To:     Daniel Wagner <dwagner@suse.de>, qla2xxx-upstream@qlogic.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bart Van Assche <bvanassche@acm.org>
+References: <20190926074637.77721-1-dwagner@suse.de>
+From:   Hannes Reinecke <hare@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
+ 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
+ azzYF4VRJsdl+d0MCaSy8mUh
+Message-ID: <f9db33a2-a1cb-5917-aa81-04a5d1f388db@suse.de>
+Date:   Thu, 26 Sep 2019 11:43:24 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <e160d9ec-5ae3-9003-b38c-3027bce736f4@amd.com>
+In-Reply-To: <20190926074637.77721-1-dwagner@suse.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/09/2019 21:09, Grodzovsky, Andrey wrote:
+On 9/26/19 9:46 AM, Daniel Wagner wrote:
+> Commit 88263208dd23 ("scsi: qla2xxx: Complain if sp->done() is not
+> called from the completion path") introduced the WARN_ON_ONCE in
+> qla2x00_status_cont_entry(). The assumption was that there is only one
+> status continuations element. According to the firmware documentation
+> it is possible that multiple status continuations are emitted by the
+> firmware.
 > 
-> On 9/25/19 12:07 PM, Andrey Grodzovsky wrote:
->> On 9/25/19 12:00 PM, Steven Price wrote:
->>
->>> On 25/09/2019 16:56, Grodzovsky, Andrey wrote:
->>>> On 9/25/19 11:14 AM, Steven Price wrote:
->>>>
->>>>> drm_sched_cleanup_jobs() attempts to free finished jobs, however 
->>>>> because
->>>>> it is called as the condition of wait_event_interruptible() it must 
->>>>> not
->>>>> sleep. Unfortunately some free callbacks (notably for Panfrost) do 
->>>>> sleep.
->>>>>
->>>>> Instead let's rename drm_sched_cleanup_jobs() to
->>>>> drm_sched_get_cleanup_job() and simply return a job for processing if
->>>>> there is one. The caller can then call the free_job() callback outside
->>>>> the wait_event_interruptible() where sleeping is possible before
->>>>> re-checking and returning to sleep if necessary.
->>>>>
->>>>> Signed-off-by: Steven Price <steven.price@arm.com>
->>>>> ---
->>>>>    drivers/gpu/drm/scheduler/sched_main.c | 44 
->>>>> ++++++++++++++------------
->>>>>    1 file changed, 24 insertions(+), 20 deletions(-)
->>>>>
->>>>> diff --git a/drivers/gpu/drm/scheduler/sched_main.c 
->>>>> b/drivers/gpu/drm/scheduler/sched_main.c
->>>>> index 9a0ee74d82dc..0ed4aaa4e6d1 100644
->>>>> --- a/drivers/gpu/drm/scheduler/sched_main.c
->>>>> +++ b/drivers/gpu/drm/scheduler/sched_main.c
->>>>> @@ -622,43 +622,41 @@ static void drm_sched_process_job(struct 
->>>>> dma_fence *f, struct dma_fence_cb *cb)
->>>>>    }
->>>>>       /**
->>>>> - * drm_sched_cleanup_jobs - destroy finished jobs
->>>>> + * drm_sched_get_cleanup_job - fetch the next finished job to be 
->>>>> destroyed
->>>>>     *
->>>>>     * @sched: scheduler instance
->>>>>     *
->>>>> - * Remove all finished jobs from the mirror list and destroy them.
->>>>> + * Returns the next finished job from the mirror list (if there is 
->>>>> one)
->>>>> + * ready for it to be destroyed.
->>>>>     */
->>>>> -static void drm_sched_cleanup_jobs(struct drm_gpu_scheduler *sched)
->>>>> +static struct drm_sched_job *
->>>>> +drm_sched_get_cleanup_job(struct drm_gpu_scheduler *sched)
->>>>>    {
->>>>> +    struct drm_sched_job *job = NULL;
->>>>>        unsigned long flags;
->>>>>           /* Don't destroy jobs while the timeout worker is running */
->>>>>        if (sched->timeout != MAX_SCHEDULE_TIMEOUT &&
->>>>>            !cancel_delayed_work(&sched->work_tdr))
->>>>> -        return;
->>>>> -
->>>>> -
->>>>> -    while (!list_empty(&sched->ring_mirror_list)) {
->>>>> -        struct drm_sched_job *job;
->>>>> +        return NULL;
->>>>>    -        job = list_first_entry(&sched->ring_mirror_list,
->>>>> +    job = list_first_entry_or_null(&sched->ring_mirror_list,
->>>>>                           struct drm_sched_job, node);
->>>>> -        if (!dma_fence_is_signaled(&job->s_fence->finished))
->>>>> -            break;
->>>>>    -        spin_lock_irqsave(&sched->job_list_lock, flags);
->>>>> +    spin_lock_irqsave(&sched->job_list_lock, flags);
->>>>> +
->>>>> +    if (job && dma_fence_is_signaled(&job->s_fence->finished)) {
->>>>>            /* remove job from ring_mirror_list */
->>>>>            list_del_init(&job->node);
->>>>> - spin_unlock_irqrestore(&sched->job_list_lock, flags);
->>>>> -
->>>>> -        sched->ops->free_job(job);
->>>>> +    } else {
->>>>> +        job = NULL;
->>>>> +        /* queue timeout for next job */
->>>>> +        drm_sched_start_timeout(sched);
->>>>>        }
->>>>>    -    /* queue timeout for next job */
->>>>> -    spin_lock_irqsave(&sched->job_list_lock, flags);
->>>>> -    drm_sched_start_timeout(sched);
->>>>>        spin_unlock_irqrestore(&sched->job_list_lock, flags);
->>>>>    +    return job;
->>>>>    }
->>>>>       /**
->>>>> @@ -698,12 +696,18 @@ static int drm_sched_main(void *param)
->>>>>            struct drm_sched_fence *s_fence;
->>>>>            struct drm_sched_job *sched_job;
->>>>>            struct dma_fence *fence;
->>>>> +        struct drm_sched_job *cleanup_job = NULL;
->>>>> wait_event_interruptible(sched->wake_up_worker,
->>>>> -                     (drm_sched_cleanup_jobs(sched),
->>>>> +                     (cleanup_job = 
->>>>> drm_sched_get_cleanup_job(sched)) ||
->>>>>                         (!drm_sched_blocked(sched) &&
->>>>>                          (entity = drm_sched_select_entity(sched))) ||
->>>>> -                     kthread_should_stop()));
->>>>> +                     kthread_should_stop());
->>>>
->>>> Can't we just call drm_sched_cleanup_jobs right here, remove all the
->>>> conditions in wait_event_interruptible (make it always true) and after
->>>> drm_sched_cleanup_jobs is called test for all those conditions and
->>>> return to sleep if they evaluate to false ? drm_sched_cleanup_jobs is
->>>> called unconditionally inside wait_event_interruptible anyway... 
->>>> This is
->>>> more of a question to Christian.
->>> Christian may know better than me, but I think those conditions need to
->>> be in wait_event_interruptible() to avoid race conditions. If we simply
->>> replace all the conditions with a literal "true" then
->>> wait_event_interruptible() will never actually sleep.
->>>
->>> Steve
->>
->> Yes you right, it won't work as I missed that condition is evaluated 
->> as first step in wait_event_interruptible before it sleeps.
->>
->> Andrey
+> Cc: Bart Van Assche <bvanassche@acm.org>
+> Signed-off-by: Daniel Wagner <dwagner@suse.de>
+> ---
+>  drivers/scsi/qla2xxx/qla_isr.c | 2 --
+>  1 file changed, 2 deletions(-)
 > 
-> Another idea  - what about still just relocating drm_sched_cleanup_jobs 
-> to after wait_event_interruptible and also call it in drm_sched_fini so  
-> for the case when it will not be called from drm_sched_main due to 
-> conditions not evaluating to true  it eventually be called last time 
-> from drm_sched_fini. I mean - the refactor looks ok to me but the code 
-> becomes  somewhat confusing this way to grasp.
+> diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
+> index 4c26630c1c3e..009fd5a33fcd 100644
+> --- a/drivers/scsi/qla2xxx/qla_isr.c
+> +++ b/drivers/scsi/qla2xxx/qla_isr.c
+> @@ -2837,8 +2837,6 @@ qla2x00_status_cont_entry(struct rsp_que *rsp, sts_cont_entry_t *pkt)
+>  	if (sense_len == 0) {
+>  		rsp->status_srb = NULL;
+>  		sp->done(sp, cp->result);
+> -	} else {
+> -		WARN_ON_ONCE(true);
+>  	}
+>  }
+>  
 > 
-> Andrey
+Not that I can speak for firmware documentation, but:
+Reviewed-by: Hannes Reinecke <hare@suse.com>
 
-That sounds similar to my first stab at this[1]. However Christian
-pointed out that it is necessary to also free jobs even if there isn't a
-new one to be scheduled. Otherwise it ends up with the jobs lying around
-until something kicks it.
+Cheers,
 
-There is also the aspect of queueing the timeout for the next job - this
-is the part that I don't actually understand, but removing it from the
-wait_event_interruptible() invariable seems to cause problems. Hence
-this approach which avoids changing this behaviour. But I welcome input
-from anyone who understands this timeout mechanism!
-
-Steve
-
-[1]
-https://lists.freedesktop.org/archives/dri-devel/2019-September/235346.html
+Hannes
+-- 
+Dr. Hannes Reinecke		      Teamlead Storage & Networking
+hare@suse.de			                  +49 911 74053 688
+SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 247165 (AG München), GF: Felix Imendörffer
