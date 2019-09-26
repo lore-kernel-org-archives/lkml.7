@@ -2,192 +2,123 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A21C2C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A9DC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75CD321D56
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1BBB21D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 17:56:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R+pwT6b5"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KfnDRarT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbfIZRxQ (ORCPT
+        id S1728018AbfIZR4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 13:53:16 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40872 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727502AbfIZRxP (ORCPT
+        Thu, 26 Sep 2019 13:56:22 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36098 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727754AbfIZR4V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 13:53:15 -0400
-Received: by mail-ot1-f68.google.com with SMTP id y39so2780548ota.7;
-        Thu, 26 Sep 2019 10:53:14 -0700 (PDT)
+        Thu, 26 Sep 2019 13:56:21 -0400
+Received: by mail-pl1-f196.google.com with SMTP id f19so1631079plr.3
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 10:56:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=l4hVPvXuA1yUfCTMAa2qM1WXIm4IGNEgGvOx69kn5iQ=;
-        b=R+pwT6b5a5j4MI1LUBnBz+75gDMAVK7FAbaw4LQgbnbk3qbI8f7fNZYdiX8kaiXozr
-         APqQI9wPwrOWmh5TBuBPtQiyZQSh8/w8k00TrD/+uEhJIhyZxrsWB1BkTN42hrKMEQqS
-         V07EM/H827soR7Evyna+E7IwEg6lc80tPOe7ds0CLNk9PTaBR34vzkHGNgRAWoWIGopN
-         oFVyZoyByZL2y3yGqMUTcKkc+iozoEQl1ynqgKJwQhZ1isuHVT3MvlzjCNtV40VPFfo2
-         n52tH3k47fv8tR7u5grfe1yrgoIgtRe5VW7Y4wxpc/KEOmyyhdk16wIZTaR8vBxgRNHl
-         j4Rg==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=tfsXsrL5x37ZSQucWl8Bh6EyFQTE0kRi9peGDqUDYWM=;
+        b=KfnDRarTGgWf60O4C9cF+YzTjYXp+pSkpdzWR7YKNXHXP7TAfTSHAkqA4UoYNAcWUP
+         NDUbjKE6AWe2+D+wOTvvlqXbdNAJZsnyYEgw38E2fXR/V8EEz3Xj/vyRfzrhH+es6//f
+         V34BpcFgVde9WGbqi6+RYmyV1MCa8QFUww3V8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=l4hVPvXuA1yUfCTMAa2qM1WXIm4IGNEgGvOx69kn5iQ=;
-        b=Vyv/L7CsQIDOCaYKNXR/dfXdvG9qojog2218JMeSWGmE45cwOGv/1vGDlaQZwQVL+J
-         GnLfdc3tZT20zc3seHac8M61rNTr+i4/p9C/PahJCT8P3Diny+5MywBLfoMklZdaY95N
-         AF7elvxz9fQgR6JAeFWEBozzVVjRR9t+s9fCItoF13aO54y/j+wdgKBMaKnRioP+nDm3
-         osFHcYDe0qC6eidv06IeHPzmJAcizBp8/o/omdeVAAoSv6nsHricrrVaSImTFAMIqt/y
-         PFY4qmD+RyFkLQ6PICIZ2aC5unxxWPfNvy36bInz+iUaA/okivf1HV+8xc9O2vnHGVMT
-         qUkQ==
-X-Gm-Message-State: APjAAAVFWhOqg+wVxYKEoL1q74cieKfOsaDkVa9aOIA8aFofi1l46UdH
-        //nCdTdDogwXw1gfpA2V2B0oLS8G
-X-Google-Smtp-Source: APXvYqyGGz+8L/6FHfyVFOKmPZvgQvzYKIeL1mfG62VHuz4RAlTKBD+Sm4duhnF/eEGxdihGtHTNUQ==
-X-Received: by 2002:a05:6830:1c5:: with SMTP id r5mr3603353ota.325.1569520394453;
-        Thu, 26 Sep 2019 10:53:14 -0700 (PDT)
-Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id x6sm891889ote.69.2019.09.26.10.53.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Sep 2019 10:53:14 -0700 (PDT)
-Subject: Re: [PATCH v2] staging: rtl8188eu: remove dead code/vestigial
- do..while loop
-To:     Connor Kuehl <connor.kuehl@canonical.com>,
-        gregkh@linuxfoundation.org, straube.linux@gmail.com,
-        devel@driverdev.osuosl.org, dan.carpenter@oracle.com
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20190924142819.5243-1-connor.kuehl@canonical.com>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <2f275661-5945-9e27-95a4-a82584756f2e@lwfinger.net>
-Date:   Thu, 26 Sep 2019 12:53:13 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
-MIME-Version: 1.0
-In-Reply-To: <20190924142819.5243-1-connor.kuehl@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=tfsXsrL5x37ZSQucWl8Bh6EyFQTE0kRi9peGDqUDYWM=;
+        b=Y47ClnOJUcOcubHYxJlfUvp0OyP/IXrDCMJxSg9roojroFAuQJ/nOnj7eXKQuDfPFA
+         5YSTnwWhlocM7P5dKjZqfHYoszzs3NcRKtxLAi4/TR9ZI1Tb/EMh+Nut2lNbwqJzESBm
+         B2h3dU0N68ijbmkd9SnGE2dsniVtAhOfWBU7ovEkrTZjNmgQyVNt1P8y/4BeoEehvrsE
+         HZqoVlH6lyUkALtHBREYU/nickzwzd/RW8JjFQw6YjeGVWzQDD7IPtM1YptskBaWGvf1
+         NZjWgILdIYQifOdykJ29/rcSW1Y0tCsTdjFCB5XYlLUFaHjC4HEUvCvtk9XTs62w6a7D
+         QAbQ==
+X-Gm-Message-State: APjAAAW+alnkXfNZfECG0BEHV2IkwDaRPbO/F5s+OU0uFUAVbByj3Z4N
+        R0GDS5DodsFDftRS6WGsAQh7lQ==
+X-Google-Smtp-Source: APXvYqxNefsDmg9i8vv1ozpPK1xitEq/TEjXZ0cxntHJv7Z/K7QxcGEiK4QwS+/LuR6Pbs4fqhuAog==
+X-Received: by 2002:a17:902:9a92:: with SMTP id w18mr5189269plp.201.1569520580043;
+        Thu, 26 Sep 2019 10:56:20 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id f15sm2984785pfd.141.2019.09.26.10.56.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Sep 2019 10:56:17 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-c6x-dev@linux-c6x.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 04/29] alpha: Rename PT_LOAD identifier "kernel" to "text"
+Date:   Thu, 26 Sep 2019 10:55:37 -0700
+Message-Id: <20190926175602.33098-5-keescook@chromium.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190926175602.33098-1-keescook@chromium.org>
+References: <20190926175602.33098-1-keescook@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/24/19 9:28 AM, Connor Kuehl wrote:
-> The local variable 'bcmd_down' is always set to true almost immediately
-> before the do-while's condition is checked. As a result, !bcmd_down
-> evaluates to false which short circuits the logical AND operator meaning
-> that the second operand is never reached and is therefore dead code.
-> 
-> Furthermore, the do..while loop may be removed since it will always only
-> execute once because 'bcmd_down' is always set to true, so the
-> !bcmd_down evaluates to false and the loop exits immediately after the
-> first pass.
-> 
-> Fix this by removing the loop and its condition variables 'bcmd_down'
-> and 'retry_cnts'
-> 
-> While we're in there, also fix some checkpatch.pl suggestions regarding
-> spaces around arithmetic operators like '+'
-> 
-> Addresses-Coverity: ("Logically dead code")
-> 
-> Signed-off-by: Connor Kuehl <connor.kuehl@canonical.com>
-> ---
-> v1 -> v2:
->   - remove the loop and its condition variable bcmd_down
->   - address some non-invasive checkpatch.pl suggestions as a result of
->     deleting the loop
-> 
->   drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c | 55 +++++++++-----------
->   1 file changed, 24 insertions(+), 31 deletions(-)
-> 
-> diff --git a/drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c b/drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c
-> index 47352f210c0b..7646167a0b36 100644
-> --- a/drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c
-> +++ b/drivers/staging/rtl8188eu/hal/rtl8188e_cmd.c
-> @@ -47,8 +47,6 @@ static u8 _is_fw_read_cmd_down(struct adapter *adapt, u8 msgbox_num)
->   ******************************************/
->   static s32 FillH2CCmd_88E(struct adapter *adapt, u8 ElementID, u32 CmdLen, u8 *pCmdBuffer)
->   {
-> -	u8 bcmd_down = false;
-> -	s32 retry_cnts = 100;
->   	u8 h2c_box_num;
->   	u32 msgbox_addr;
->   	u32 msgbox_ex_addr;
-> @@ -71,39 +69,34 @@ static s32 FillH2CCmd_88E(struct adapter *adapt, u8 ElementID, u32 CmdLen, u8 *p
->   		goto exit;
->   
->   	/* pay attention to if  race condition happened in  H2C cmd setting. */
-> -	do {
-> -		h2c_box_num = adapt->HalData->LastHMEBoxNum;
-> -
-> -		if (!_is_fw_read_cmd_down(adapt, h2c_box_num)) {
-> -			DBG_88E(" fw read cmd failed...\n");
-> -			goto exit;
-> -		}
-> -
-> -		*(u8 *)(&h2c_cmd) = ElementID;
-> -
-> -		if (CmdLen <= 3) {
-> -			memcpy((u8 *)(&h2c_cmd)+1, pCmdBuffer, CmdLen);
-> -		} else {
-> -			memcpy((u8 *)(&h2c_cmd)+1, pCmdBuffer, 3);
-> -			ext_cmd_len = CmdLen-3;
-> -			memcpy((u8 *)(&h2c_cmd_ex), pCmdBuffer+3, ext_cmd_len);
-> +	h2c_box_num = adapt->HalData->LastHMEBoxNum;
->   
-> -			/* Write Ext command */
-> -			msgbox_ex_addr = REG_HMEBOX_EXT_0 + (h2c_box_num * RTL88E_EX_MESSAGE_BOX_SIZE);
-> -			for (cmd_idx = 0; cmd_idx < ext_cmd_len; cmd_idx++)
-> -				usb_write8(adapt, msgbox_ex_addr+cmd_idx, *((u8 *)(&h2c_cmd_ex)+cmd_idx));
-> -		}
-> -		/*  Write command */
-> -		msgbox_addr = REG_HMEBOX_0 + (h2c_box_num * RTL88E_MESSAGE_BOX_SIZE);
-> -		for (cmd_idx = 0; cmd_idx < RTL88E_MESSAGE_BOX_SIZE; cmd_idx++)
-> -			usb_write8(adapt, msgbox_addr+cmd_idx, *((u8 *)(&h2c_cmd)+cmd_idx));
-> +	if (!_is_fw_read_cmd_down(adapt, h2c_box_num)) {
-> +		DBG_88E(" fw read cmd failed...\n");
-> +		goto exit;
-> +	}
->   
-> -		bcmd_down = true;
-> +	*(u8 *)(&h2c_cmd) = ElementID;
->   
-> -		adapt->HalData->LastHMEBoxNum =
-> -			(h2c_box_num+1) % RTL88E_MAX_H2C_BOX_NUMS;
-> +	if (CmdLen <= 3) {
-> +		memcpy((u8 *)(&h2c_cmd) + 1, pCmdBuffer, CmdLen);
-> +	} else {
-> +		memcpy((u8 *)(&h2c_cmd) + 1, pCmdBuffer, 3);
-> +		ext_cmd_len = CmdLen - 3;
-> +		memcpy((u8 *)(&h2c_cmd_ex), pCmdBuffer + 3, ext_cmd_len);
-> +
-> +		/* Write Ext command */
-> +		msgbox_ex_addr = REG_HMEBOX_EXT_0 + (h2c_box_num * RTL88E_EX_MESSAGE_BOX_SIZE);
-> +		for (cmd_idx = 0; cmd_idx < ext_cmd_len; cmd_idx++)
-> +			usb_write8(adapt, msgbox_ex_addr + cmd_idx, *((u8 *)(&h2c_cmd_ex) + cmd_idx));
-> +	}
-> +	/*  Write command */
-> +	msgbox_addr = REG_HMEBOX_0 + (h2c_box_num * RTL88E_MESSAGE_BOX_SIZE);
-> +	for (cmd_idx = 0; cmd_idx < RTL88E_MESSAGE_BOX_SIZE; cmd_idx++)
-> +		usb_write8(adapt, msgbox_addr + cmd_idx, *((u8 *)(&h2c_cmd) + cmd_idx));
->   
-> -	} while ((!bcmd_down) && (retry_cnts--));
-> +	adapt->HalData->LastHMEBoxNum =
-> +		(h2c_box_num + 1) % RTL88E_MAX_H2C_BOX_NUMS;
->   
->   	ret = _SUCCESS;
+In preparation for moving NOTES into RO_DATA, this renames the linker
+script internal identifier for the PT_LOAD Program Header from "kernel"
+to "text" to match other architectures.
 
-Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ arch/alpha/kernel/vmlinux.lds.S | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Thanks,
-
-Larry
+diff --git a/arch/alpha/kernel/vmlinux.lds.S b/arch/alpha/kernel/vmlinux.lds.S
+index c4b5ceceab52..781090cacc96 100644
+--- a/arch/alpha/kernel/vmlinux.lds.S
++++ b/arch/alpha/kernel/vmlinux.lds.S
+@@ -8,7 +8,7 @@
+ OUTPUT_FORMAT("elf64-alpha")
+ OUTPUT_ARCH(alpha)
+ ENTRY(__start)
+-PHDRS { kernel PT_LOAD; note PT_NOTE; }
++PHDRS { text PT_LOAD; note PT_NOTE; }
+ jiffies = jiffies_64;
+ SECTIONS
+ {
+@@ -27,14 +27,14 @@ SECTIONS
+ 		LOCK_TEXT
+ 		*(.fixup)
+ 		*(.gnu.warning)
+-	} :kernel
++	} :text
+ 	swapper_pg_dir = SWAPPER_PGD;
+ 	_etext = .;	/* End of text section */
+ 
+-	NOTES :kernel :note
++	NOTES :text :note
+ 	.dummy : {
+ 		*(.dummy)
+-	} :kernel
++	} :text
+ 
+ 	RODATA
+ 	EXCEPTION_TABLE(16)
+-- 
+2.17.1
 
