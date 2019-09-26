@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF433C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D651DC432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2BC120872
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9C6A20872
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:23:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="ZC9kY2bI"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="u/3he9Ee"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbfIZKXB (ORCPT
+        id S1726725AbfIZKXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 06:23:01 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:36661 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbfIZKXB (ORCPT
+        Thu, 26 Sep 2019 06:23:38 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:42345 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbfIZKXi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 06:23:01 -0400
-Received: by mail-ed1-f66.google.com with SMTP id h2so1481985edn.3
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 03:23:00 -0700 (PDT)
+        Thu, 26 Sep 2019 06:23:38 -0400
+Received: by mail-ed1-f68.google.com with SMTP id y91so1457228ede.9
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 03:23:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=deEz9tMzonqfhnmc0RaDlD4PfMHCEzCyrmdaULw9mu4=;
-        b=ZC9kY2bIAj3PD5PJpJIp+G2bQjXBow7fayeVI60CMCgz84TVlaspcDrzF6FlxEActH
-         4+PrlhH1Mo28OkVBrqg7wJoa04qfDdRGX6v4CSAUBCkKBJg7zIQOnBGlhbdv7gVFuDmv
-         ckt62sXlHJSr+NLxgH5WQKBRxYVT2TbpPJjXvmiM0X1LpES077b3cmPh6jPKN0zGAfX+
-         m1BcPvuaUKqvf5t68rNCkigPqIqsyevgAxWMPOPyGSXHNKQHVesR+1SMh3o48LOJyQTh
-         amGxMYHfspXV79URGnAc3XBrLtZdUzvQB+ew5kxUKcbwNVPTpVfFNvHDwDPIeuMSAvV6
-         fhow==
+        bh=9nVK/nJtOcV+sZhmR12a3Q1eiclcyZVkWGk+yvC3nOQ=;
+        b=u/3he9EefTJa3RjrVyPZ2G2QCe6PmWaeWyzhIveVMIZtZtAO5bBrHnDfG2cBvW0ZrX
+         9ss9GzL1jj9vFbjiYEIsUPhnoKQ7MA/ZqAgsHgwgrl9Ahz1OTd65OJUPGBOb3CdI/tpT
+         DjjtFnGk+MliapAVoTVrwWZZq5kVjrTAf+9IyVPpXuCFhsIK8d9qlWAGRdrOGMI2VBk1
+         mJh7IzSatm3XKDxGxrpVEf/tj1uJDEvFtO5OndhbLCxcNFfXCRcGWNe48WwZjHgmMi6I
+         tHBFtY8lV+tDJhmCFSwIP15z5L04WersVH4ML/DcTZu7848qnMSxJ54WhBaOTt24Dywv
+         n0HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=deEz9tMzonqfhnmc0RaDlD4PfMHCEzCyrmdaULw9mu4=;
-        b=ZIcs0z6whpGrOwKfEvJE7HfpWEz2V4ySkZZWCxW5iU3XV+pxiityGgaGBcCa/RaH61
-         p5J5ssZ7NtIp8nFyz6+Su6IGT/IxfJgt1wDBoU4j2YIzrDn79vqpomVqIyY4qmp5I5Eq
-         dgQ6YQY38u5IMcsaqia3CEStQAzooBBGPxh2xK7u3LwBT7DFpBCSgmvI14+nuaDslA58
-         TqAc6zda8IX0Q5+EDnpJdhnRg0XZ5OM9Z2ZK42ev6Rk57ZFUAgw4bM4UFbDEtJjIFwDZ
-         qAchYwb4LF4p/7goBDmmPr0BKX5jbFIRjbqj88aLWcS8Q8DWlGSGj6kpLHYznknLWgCy
-         CUew==
-X-Gm-Message-State: APjAAAXL7T5Owc6K8RH+BmjwsMj4tF64eDFRvVnvCh7vUq5MdxBnEwQR
-        wIp30QW7Tz49mgNTSJXLBGejG9Ou5vjMIg==
-X-Google-Smtp-Source: APXvYqzgrBN9LzGt7OMtWxFWdQ0krLOmmmrWMSfD3BC85BRF3kICNTLqrR4sqvUXoiZEcwE6u6CA1g==
-X-Received: by 2002:a50:9a05:: with SMTP id o5mr2737318edb.44.1569493379879;
-        Thu, 26 Sep 2019 03:22:59 -0700 (PDT)
+        bh=9nVK/nJtOcV+sZhmR12a3Q1eiclcyZVkWGk+yvC3nOQ=;
+        b=Pmu7t9gOrc4iKyBS6gmZLG4f5jph6gy3e7vjvTjWT81ypTX5NEHBIsbUQYfzd4Yeq0
+         xzv2+/2HWpMpKKsd925c8U/67KY58JQWonb0jW+EXK7cw95cyOyUD5bsaKCu6day9Z36
+         U9i8OxckvGPKc/jt/c2Qm/AmJlib2z+z6cd4NTf9xzMmWmkX2lTlSvvM41M9G8HbCP+D
+         vKgOeStPu2TUhXSRpJjbWheltqy6UXF8hCsDWeMr/LzoMKA0ma2JUu7CYw49px14O8Wt
+         KJ9ymkNvC02um9VOMG2GlbrWuaflB7eoLPm9j7WVAzkMAd/MLrXeKgkTFRWBlVpoqfKm
+         Xlaw==
+X-Gm-Message-State: APjAAAUJ4q9qili4BjMZN25LLbJMIRRcQMLgj90lBc6mpuR/Khp/v46p
+        WMMSIBtpa2OoZ6cuS/zqGOhpyg==
+X-Google-Smtp-Source: APXvYqxqSbxOcExsIqaMDT4Qk3/4chkCM7iICimZba8auPxPatB84xL4JNs81Aqc0zPrAs6Gw8a4dw==
+X-Received: by 2002:a17:906:6848:: with SMTP id a8mr2413780ejs.104.1569493416937;
+        Thu, 26 Sep 2019 03:23:36 -0700 (PDT)
 Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id jp14sm184567ejb.60.2019.09.26.03.22.58
+        by smtp.gmail.com with ESMTPSA id e44sm384559ede.34.2019.09.26.03.23.36
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 26 Sep 2019 03:22:59 -0700 (PDT)
+        Thu, 26 Sep 2019 03:23:36 -0700 (PDT)
 Received: by box.localdomain (Postfix, from userid 1000)
-        id ED4591004E0; Thu, 26 Sep 2019 13:23:01 +0300 (+03)
-Date:   Thu, 26 Sep 2019 13:23:01 +0300
+        id 2CFF31004E0; Thu, 26 Sep 2019 13:23:39 +0300 (+03)
+Date:   Thu, 26 Sep 2019 13:23:39 +0300
 From:   "Kirill A. Shutemov" <kirill@shutemov.name>
 To:     Steve Wahl <steve.wahl@hpe.com>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
@@ -72,56 +72,27 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Dave Hansen <dave.hansen@intel.com>,
         Baoquan He <bhe@redhat.com>, russ.anderson@hpe.com,
         dimitri.sivanich@hpe.com, mike.travis@hpe.com
-Subject: Re: [PATCH v3 1/2] x86/boot/64: Make level2_kernel_pgt pages invalid
- outside kernel area.
-Message-ID: <20190926102301.u6fn4b7l7aevnlbq@box>
+Subject: Re: [PATCH v3 2/2] x86/boot/64: round memory hole size up to next
+ PMD page.
+Message-ID: <20190926102339.owzlugs6sro6rodn@box>
 References: <cover.1569358538.git.steve.wahl@hpe.com>
- <9c011ee51b081534a7a15065b1681d200298b530.1569358539.git.steve.wahl@hpe.com>
+ <df4f49f05c0c27f108234eb93db5c613d09ea62e.1569358539.git.steve.wahl@hpe.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9c011ee51b081534a7a15065b1681d200298b530.1569358539.git.steve.wahl@hpe.com>
+In-Reply-To: <df4f49f05c0c27f108234eb93db5c613d09ea62e.1569358539.git.steve.wahl@hpe.com>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 04:03:55PM -0500, Steve Wahl wrote:
-> Our hardware (UV aka Superdome Flex) has address ranges marked
-> reserved by the BIOS. Access to these ranges is caught as an error,
-> causing the BIOS to halt the system.
-> 
-> Initial page tables mapped a large range of physical addresses that
-> were not checked against the list of BIOS reserved addresses, and
-> sometimes included reserved addresses in part of the mapped range.
-> Including the reserved range in the map allowed processor speculative
-> accesses to the reserved range, triggering a BIOS halt.
-> 
-> Used early in booting, the page table level2_kernel_pgt addresses 1
-> GiB divided into 2 MiB pages, and it was set up to linearly map a full
-> 1 GiB of physical addresses that included the physical address range
-> of the kernel image, as chosen by KASLR.  But this also included a
-> large range of unused addresses on either side of the kernel image.
-> And unlike the kernel image's physical address range, this extra
-> mapped space was not checked against the BIOS tables of usable RAM
-> addresses.  So there were times when the addresses chosen by KASLR
-> would result in processor accessible mappings of BIOS reserved
-> physical addresses.
-> 
-> The kernel code did not directly access any of this extra mapped
-> space, but having it mapped allowed the processor to issue speculative
-> accesses into reserved memory, causing system halts.
-> 
-> This was encountered somewhat rarely on a normal system boot, and much
-> more often when starting the crash kernel if "crashkernel=512M,high"
-> was specified on the command line (this heavily restricts the physical
-> address of the crash kernel, in our case usually within 1 GiB of
-> reserved space).
-> 
-> The solution is to invalidate the pages of this table outside the
-> kernel image's space before the page table is activated.  This patch
-> has been validated to fix this problem on our hardware.
+On Tue, Sep 24, 2019 at 04:04:31PM -0500, Steve Wahl wrote:
+> The kernel image map is created using PMD pages, which can include
+> some extra space beyond what's actually needed.  Round the size of the
+> memory hole we search for up to the next PMD boundary, to be certain
+> all of the space to be mapped is usable RAM and includes no reserved
+> areas.
 > 
 > Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
 > Cc: stable@vger.kernel.org
