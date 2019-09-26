@@ -2,220 +2,161 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DEFC352A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 13:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 199D6C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 13:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CE89207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 13:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E962D207FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 13:52:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbfIZNvZ (ORCPT
+        id S1727092AbfIZNwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 09:51:25 -0400
-Received: from esa1.mentor.iphmx.com ([68.232.129.153]:55410 "EHLO
-        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbfIZNvZ (ORCPT
+        Thu, 26 Sep 2019 09:52:11 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39470 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726666AbfIZNwL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 09:51:25 -0400
-IronPort-SDR: H/CpLf6B6RrM9/c/UnrR9RPXSJCagK3mAxFDVQFlgIxPMHqcGFEjJ7bMoXcIe1jEH6f5Wte9aS
- VWfPmE8MGVyQ3uJrUjnx1YoeMHHDYB/9SPBrC/NC9DmCbbeb222ypB51xCnAq2baAJmm6fi6Du
- WNj+itsuiVSGEr1UfFhK6NvE6a9BOQm5aE3reutK28bfmrm8rlAKzIBw2rz6IGVHdRojP/U4ku
- bkwmXgAjtSHCLJY4Al1yMm21pi0ZIvUKdmhVv5hN5BZgzd8DQFKxGA82knuyuF6cWd02ayQRtp
- K1c=
-X-IronPort-AV: E=Sophos;i="5.64,552,1559548800"; 
-   d="scan'208";a="43527459"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa1.mentor.iphmx.com with ESMTP; 26 Sep 2019 05:51:24 -0800
-IronPort-SDR: g8IfhtlMsb+bCUzaayMGKyrbczKaCiaLHFFiTgLW3eR1Q99J3lChR3MmZaGd9Nk98lGTbjLO7y
- tygZjHTdG+FN2R2UFpCZqk+ZIqOiQ2OSEnESx0CTYQKC7IJw815r0yhHdlGgq2fpgPYTkr4xFY
- X6x/26OJSbHjYs5E76vA4Xp3kHK1HGd2BCpwSf2+P4v5pQUFRbo5Y7E/0yrTegr9hRh54To1+T
- t82fYI+/5h0+A8FNo4k3H4mrxPpBylbeJLyvYItUsqqcc4enfdYv74/jPuJ2Rxfpl9Wr/d57o5
- CFM=
-From:   Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
-To:     <fweisbec@gmail.com>, <tglx@linutronix.de>, <mingo@kernel.org>,
-        <peterz@infradead.org>
-CC:     <balasubramani_vivekanandan@mentor.com>, <erosca@de.adit-jv.com>,
-        <linux-renesas-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH V3 1/1] tick: broadcast-hrtimer: Fix a race in bc_set_next
-Date:   Thu, 26 Sep 2019 15:51:01 +0200
-Message-ID: <20190926135101.12102-2-balasubramani_vivekanandan@mentor.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190926135101.12102-1-balasubramani_vivekanandan@mentor.com>
-References: <alpine.DEB.2.21.1909261144250.5528@nanos.tec.linutronix.de>
- <20190926135101.12102-1-balasubramani_vivekanandan@mentor.com>
+        Thu, 26 Sep 2019 09:52:11 -0400
+Received: by mail-ot1-f66.google.com with SMTP id s22so2048668otr.6;
+        Thu, 26 Sep 2019 06:52:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/mVhT/fXwK9lB2n80OuetyQRidyOwg4W8y9aVMt/9yY=;
+        b=T31Y4Trtl5YsroOIzGjrknOkrsIRcmIng311J120dwWiTDERgxSiwARc07mnPwFzaz
+         gAxuYyNvqRtLfvxR3u51Qwld0XJLDOsED6xuTzYth9JZVZeht18k0+dMjfvhJiKN0LNT
+         223kCp3EJP0el3Q0BbeyKGKAKWwC7gBd1n89BDWSObh25HLIDD9V9Nia0jaqe8DbuarR
+         q3J6VsOSWQco571Vl+0XywU+0ygNIKbDTVq1MwZoifEuQDFswjaUtNffrFjMF0y5gUrI
+         HG48qa4qgq7A7TV48MSv3me7FWUjojhnyp8QRr/Afd3JOUHszWQcXX1t40PyoI4gBvgk
+         Fa8w==
+X-Gm-Message-State: APjAAAViZE4WhzNRIcs0538qsZV0/xR1aRKI4ecrIIPTsvfaoNWckKjz
+        vpfroFwg50jvUztPzlX+XkTEVS6kp/GTeQAcWAQ=
+X-Google-Smtp-Source: APXvYqzj2GMNN3LlcvftbJA6RAIarnbhjfcDFzrgx89fRtcWh5AzVjkbYRHUi1dlmK5bSvY9OUzTpWiHuaaVhuAp0Jw=
+X-Received: by 2002:a9d:5a06:: with SMTP id v6mr479841oth.250.1569505930027;
+ Thu, 26 Sep 2019 06:52:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: SVR-IES-MBX-09.mgc.mentorg.com (139.181.222.9) To
- svr-ies-mbx-02.mgc.mentorg.com (139.181.222.2)
+References: <f4db4595-7673-f2ae-4222-cbb9c2d771f9@canonical.com>
+ <20190926121438.655f1f10@jawa> <CAMuHMdVBrKnA3TJnOEG0G0FVKf7VwQUvLzkmJc7DAX4kvHYWYQ@mail.gmail.com>
+ <20190926144342.327a3c66@jawa>
+In-Reply-To: <20190926144342.327a3c66@jawa>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 26 Sep 2019 15:51:58 +0200
+Message-ID: <CAMuHMdXm+vUB4iRTsTq64Kg2KC2p7AA1TwFgjc7FuCeiS9EG=Q@mail.gmail.com>
+Subject: Re: spi: Add call to spi_slave_abort() function when spidev driver is released
+To:     Lukasz Majewski <lukma@denx.de>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a cpu requests broadcasting, before starting the tick broadcast
-hrtimer, bc_set_next() checks if the timer callback (bc_handler) is
-active using hrtimer_try_to_cancel(). But hrtimer_try_to_cancel() does
-not provide the required synchronization when the callback is active on
-other core.
-The callback could have already executed
-tick_handle_oneshot_broadcast() and could have also returned. But still
-there is a small time window where the hrtimer_try_to_cancel() returns
--1. In that case bc_set_next() returns without doing anything, but the
-next_event of the tick broadcast clock device is already set to a
-timeout value.
+Hi Lukasz,
 
-In the race condition diagram below, CPU #1 is running the timer
-callback and CPU #2 is entering idle state and so calls bc_set_next().
+On Thu, Sep 26, 2019 at 2:49 PM Lukasz Majewski <lukma@denx.de> wrote:
+> > On Thu, Sep 26, 2019 at 12:14 PM Lukasz Majewski <lukma@denx.de>
+> > wrote:
+> > > > Static analysis with Coverity has detected an potential
+> > > > dereference of a free'd object with commit:
+> > > >
+> > > > commit 9f918a728cf86b2757b6a7025e1f46824bfe3155
+> > > > Author: Lukasz Majewski <lukma@denx.de>
+> > > > Date:   Wed Sep 25 11:11:42 2019 +0200
+> > > >
+> > > >     spi: Add call to spi_slave_abort() function when spidev
+> > > > driver is released
 
-In the worst case, the next_event will contain an expiry time, but the
-hrtimer will not be started which happens when the racing callback
-returns HRTIMER_NORESTART. The hrtimer might never recover if all
-further requests from the CPUs to subscribe to tick broadcast have
-timeout greater than the next_event of tick broadcast clock device. This
-leads to cascading of failures and finally noticed as rcu stall
-warnings
+> > > > The call to spi_slave_abort() on spidev is reading an earlier
+> > > > kfree'd spidev.
+> > >
+> > > Thanks for spotting this issue - indeed there is a possibility to
+> > > use spidev after being kfree'd.
+> >
+> > Worse, this makes me realize spidev->spi may be a NULL pointer, which
+> > will be dereferenced by spi_slave_abort(), so caching it before the
+> > call to kfree() won't work.
+>
+> The patch as it is now can be fixed as follows:
+>
+> static int spidev_release(struct inode *inode, struct file *filp)
+> {
+>         struct spidev_data      *spidev;
+>
+>         mutex_lock(&device_list_lock);
+>         spidev = filp->private_data;
+>         filp->private_data = NULL;
+>
+> #ifdef CONFIG_SPI_SLAVE
+>         if (spidev->spi)
+>                 spi_slave_abort(spidev->spi);
+> #endif
+>
+>         /* last close? */
+>         spidev->users--;
+>         if (!spidev->users) {
+>                 int dofree;
+>
+>                 /* free buffers */
+>
+>                 spin_lock_irq(&spidev->spi_lock);
+>                 if (spidev->spi)
+>                         spidev->speed_hz = spidev->spi->max_speed_hz;
+>
+>                 /* ... after we unbound from the underlying device? */
+>                 //
+>                 // [*]
+>                 //
+>                 dofree = (spidev->spi == NULL);
+>                 spin_unlock_irq(&spidev->spi_lock);
+>
+>                 if (dofree)
+>                         kfree(spidev);
+>         }
+>
+>         mutex_unlock(&device_list_lock);
+>
+>         return 0;
+> }
+>
+> The question is if we shall call the spi_slave_abort() when cleaning up
+> spi after releasing last reference, or each time release callback is
+> called ?
 
-Here is a depiction of the race condition
+TBH, I don't know.  Is it realistic that there are multiple opens?
 
-CPU #1 (Running timer callback)                   CPU #2 (Enter idle
-                                                  and subscribe to
-                                                  tick broadcast)
----------------------                             ---------------------
+> > > However, Geert (CC'ed) had some questions about placement of this
+> > > function call, so I will wait with providing fix until he replies.
+> >
+> > Seems like this needs more thought...
+>
+> Could you be more specific?
+>
+> Do you mean to move the spi_slave_abort() call just before dofree
+> evaluation ? ([*]).
 
-__run_hrtimer()                                   tick_broadcast_enter()
+That means the abort is called only for the last user.
+And only if the underlying device still exists.  Which means that if it has
+disappeared (how can that happen? spidev unbind?), the slave was never
+aborted.  Non-spidev slaves can do the abort in their .remove() callbacks
+(at least my two sample slave drivers do).
+So probably we need some explicit slave abort in the unbind case too?
 
-  bc_handler()                                      __tick_broadcast_oneshot_control()
+The more I think about it, the more things I see that can go wrong...
 
-    tick_handle_oneshot_broadcast()
+Gr{oetje,eeting}s,
 
-      raw_spin_lock(&tick_broadcast_lock);
+                        Geert
 
-      dev->next_event = KTIME_MAX;                  //wait for tick_broadcast_lock
-      //next_event for tick broadcast clock
-      set to KTIME_MAX since no other cores
-      subscribed to tick broadcasting
-
-      raw_spin_unlock(&tick_broadcast_lock);
-
-    if (dev->next_event == KTIME_MAX)
-      return HRTIMER_NORESTART
-    // callback function exits without
-       restarting the hrtimer                      //tick_broadcast_lock acquired
-                                                   raw_spin_lock(&tick_broadcast_lock);
-
-                                                   tick_broadcast_set_event()
-
-                                                     clockevents_program_event()
-
-                                                       dev->next_event = expires;
-
-                                                       bc_set_next()
-
-                                                         hrtimer_try_to_cancel()
-                                                         //returns -1 since the timer
-                                                         callback is active. Exits without
-                                                         restarting the timer
-  cpu_base->running = NULL;
-
-The comment that hrtimer cannot be armed from within the callback is
-wrong. It is fine to start the hrtimer from within the callback. Also it
-is safe to start the hrtimer from the enter/exit idle code while the
-broadcast handler is active. The enter/exit idle code and the broadcast
-handler are synchronized using tick_broadcast_lock. So there is no need
-for the existing try to cancel logic. All this can be removed which will
-eliminate the race condition as well.
-
-Originally-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
----
- kernel/time/tick-broadcast-hrtimer.c | 58 ++++++++++++----------------
- 1 file changed, 25 insertions(+), 33 deletions(-)
-
-diff --git a/kernel/time/tick-broadcast-hrtimer.c b/kernel/time/tick-broadcast-hrtimer.c
-index c1f5bb590b5e..f070f9734792 100644
---- a/kernel/time/tick-broadcast-hrtimer.c
-+++ b/kernel/time/tick-broadcast-hrtimer.c
-@@ -42,39 +42,35 @@ static int bc_shutdown(struct clock_event_device *evt)
-  */
- static int bc_set_next(ktime_t expires, struct clock_event_device *bc)
- {
--	int bc_moved;
- 	/*
--	 * We try to cancel the timer first. If the callback is on
--	 * flight on some other cpu then we let it handle it. If we
--	 * were able to cancel the timer nothing can rearm it as we
--	 * own broadcast_lock.
-+	 * This is called either from enter/exit idle code or from the
-+	 * broadcast handler. In all cases tick_broadcast_lock is held.
- 	 *
--	 * However we can also be called from the event handler of
--	 * ce_broadcast_hrtimer itself when it expires. We cannot
--	 * restart the timer because we are in the callback, but we
--	 * can set the expiry time and let the callback return
--	 * HRTIMER_RESTART.
-+	 * hrtimer_cancel() cannot be called here neither from the
-+	 * broadcast handler nor from the enter/exit idle code. The idle
-+	 * code can run into the problem described in bc_shutdown() and the
-+	 * broadcast handler cannot wait for itself to complete for obvious
-+	 * reasons.
- 	 *
--	 * Since we are in the idle loop at this point and because
--	 * hrtimer_{start/cancel} functions call into tracing,
--	 * calls to these functions must be bound within RCU_NONIDLE.
-+	 * Each caller tries to arm the hrtimer on its own CPU, but if the
-+	 * handler is currently running hrtimer_start() does not move
-+	 * it. It keeps it on the CPU on which it is assigned at the
-+	 * moment.
- 	 */
--	RCU_NONIDLE(
--		{
--			bc_moved = hrtimer_try_to_cancel(&bctimer) >= 0;
--			if (bc_moved) {
--				hrtimer_start(&bctimer, expires,
--					      HRTIMER_MODE_ABS_PINNED_HARD);
--			}
--		}
--	);
--
--	if (bc_moved) {
--		/* Bind the "device" to the cpu */
--		bc->bound_on = smp_processor_id();
--	} else if (bc->bound_on == smp_processor_id()) {
--		hrtimer_set_expires(&bctimer, expires);
--	}
-+	RCU_NONIDLE( {
-+		hrtimer_start(&bctimer, expires, HRTIMER_MODE_ABS_PINNED_HARD);
-+		/*
-+		 * The core tick broadcast mode expects bc->bound_on to be set
-+		 * correctly to prevent a CPU which has the broadcast hrtimer
-+		 * armed from going deep idle.
-+		 *
-+		 * As tick_broadcast_lock is held, nothing can change the cpu
-+		 * base which was just established in hrtimer_start() above. So
-+		 * the below access is safe even without holding the hrtimer
-+		 * base lock.
-+		 */
-+		bc->bound_on = bctimer.base->cpu_base->cpu;
-+	} );
- 	return 0;
- }
- 
-@@ -100,10 +96,6 @@ static enum hrtimer_restart bc_handler(struct hrtimer *t)
- {
- 	ce_broadcast_hrtimer.event_handler(&ce_broadcast_hrtimer);
- 
--	if (clockevent_state_oneshot(&ce_broadcast_hrtimer))
--		if (ce_broadcast_hrtimer.next_event != KTIME_MAX)
--			return HRTIMER_RESTART;
--
- 	return HRTIMER_NORESTART;
- }
- 
 -- 
-2.17.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
