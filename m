@@ -2,84 +2,99 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CB0C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9613C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D02B222CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7F6B222BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 08:41:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729256AbfIZIlZ (ORCPT
+        id S1729501AbfIZIlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 04:41:25 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2787 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726925AbfIZIlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 04:41:25 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 48A8CE50F4E61526E17C;
-        Thu, 26 Sep 2019 16:41:20 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Thu, 26 Sep 2019
- 16:41:18 +0800
-To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        <bvanassche@acm.org>, <bhelgaas@google.com>, <dsterba@suse.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        <sakari.ailus@linux.intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-Subject: [PATCH] async: Using current_work() to implement current_is_async()
-Message-ID: <395617ec-ef92-c20f-d5c1-550b47a07f6d@huawei.com>
-Date:   Thu, 26 Sep 2019 16:40:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 26 Sep 2019 04:41:35 -0400
+Received: from sauhun.de ([88.99.104.3]:37168 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726925AbfIZIlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 04:41:35 -0400
+Received: from localhost (unknown [65.39.69.237])
+        by pokefinder.org (Postfix) with ESMTPSA id 5B2052C01EC;
+        Thu, 26 Sep 2019 10:41:30 +0200 (CEST)
+Date:   Thu, 26 Sep 2019 10:41:27 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-i2c@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Rosin <peda@axentia.se>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PULL REQUEST] i2c for 5.4
+Message-ID: <20190926084127.GA1862@kunai>
+References: <20190924193054.GA2215@kunai>
+ <CAHk-=wi1WroG_uZ44au_KdEcujkCvcwz+d05EDR_=6vHb8xQaw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="EeQfGwPcQSOJBaQU"
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wi1WroG_uZ44au_KdEcujkCvcwz+d05EDR_=6vHb8xQaw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-current_is_async() can be implemented using current_work(), it's better
-not to be aware of the workqueue's internal information.
 
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
----
- kernel/async.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+--EeQfGwPcQSOJBaQU
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/kernel/async.c b/kernel/async.c
-index 1de270d..a849f98 100644
---- a/kernel/async.c
-+++ b/kernel/async.c
-@@ -53,8 +53,6 @@ asynchronous and synchronous parts of the kernel.
- #include <linux/slab.h>
- #include <linux/workqueue.h>
+Hi Linus,
 
--#include "workqueue_internal.h"
--
- static async_cookie_t next_cookie = 1;
+> > - new driver for ICY, an Amiga Zorro card :)
+>=20
+> Christ. Will that thing _never_ die?
 
- #define MAX_WORK		32768
-@@ -327,8 +325,8 @@ EXPORT_SYMBOL_GPL(async_synchronize_cookie);
-  */
- bool current_is_async(void)
- {
--	struct worker *worker = current_wq_worker();
-+	struct work_struct *work = current_work();
+Well, a couple of happy users there...
 
--	return worker && worker->current_func == async_run_entry_fn;
-+	return work && work->func == async_run_entry_fn;
- }
- EXPORT_SYMBOL_GPL(current_is_async);
--- 
-2.7.4
+> I don't know what the proper mutt incantation is to make it join the
+> modern world, but I'm sure one exists, and then your emails would get
+> names right too. Even if they are some funky Swedish ones with =C3=A5=C3=
+=A4=C3=B6.
 
+Sorry, my template for pull-requests had bogus header overriding the
+default utf-8 of my config. I fixed it now. Thanks for pointing it out.
+
+> (And no, don't use Latin1 - it may cover Swedish and German etc, but
+> you really want to go with proper utf-8 and be able to handle true
+> complex character sets, not just the Western European ones).
+
+Heh, no need to convince me, I am all for utf-8!
+
+Regards,
+
+   Wolfram
+
+
+--EeQfGwPcQSOJBaQU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl2MebcACgkQFA3kzBSg
+KbbPew/8C5Cg7gXflRpP7sT2XwDafwFNolQzyA1KoTi1TGR6+5p8iQvo8fGy76dr
+/iXIa97HPKpr/QQvdp6hYAG6/DNgByOf5FrbYv+5IQ3zOwOhdAEi6Jz0hZ/SCKTI
+V26eryi6oiDX1SpSY0pFo6mODxP9wAb3vC/omiPEFhNHz4bA+6ljdehWb31c9J/r
+wk+CbKlXoEdB1BhgSfuLpu/wemCBDu1cW3hFoBXRnIlKipHyDIpQukop9jwH+zxg
+lCN32U+LRm+h+6GuMzQ88RjaD7BTIHINijTsgZywrsZlC5sERjCgU9nNVSEhMqfU
+QqY57I3Y+nPC6gh0jt5mE5a8QvOcbTLJ+ClvGiDLq0A0a2x2SWrpkPN1B0HCWxfB
+8W0517CtbH6NgG1o54fbqOtSWhWmiDOu4/4uWM9qwEBvvPwJFROVCIproO4rKde8
+dude8sgYNIK9nuh+u+H/irYcTk9t4xPsiRt2YhC/iWJ/0I8XUQeBN18wC1fk+lP2
+HixvCV42/Y8OwdlWqDHo5WWlnYRKo4xqKSZLzz5BtUri/U84LnDcQNoT/XKtytzM
+33qbZaMm6QMbHBpkz3+kx6NUTXHgzgqSkLP7bmXkGOktErCni7fVKMXMXOwWy9JO
+U0jZoBogEVXTEIZpVLVAYPIPsYLytT3GDFoVr/hhQJ14kSeZtg0=
+=V5uj
+-----END PGP SIGNATURE-----
+
+--EeQfGwPcQSOJBaQU--
