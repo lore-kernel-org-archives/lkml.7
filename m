@@ -2,152 +2,125 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07CDAC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 667BFC352AA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7EFC207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:31:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47B01222C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:37:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfIZMbm (ORCPT
+        id S1726403AbfIZMh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 08:31:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:48346 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbfIZMbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 08:31:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3CD48142F;
-        Thu, 26 Sep 2019 05:31:41 -0700 (PDT)
-Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D8B983F67D;
-        Thu, 26 Sep 2019 05:31:39 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Cc:     Steven Price <steven.price@arm.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
-        Nayan Deshmukh <nayan26deshmukh@gmail.com>,
-        Sharat Masetty <smasetty@codeaurora.org>
-Subject: [PATCH v3] drm: Don't free jobs in wait_event_interruptible()
-Date:   Thu, 26 Sep 2019 13:31:34 +0100
-Message-Id: <20190926123134.4947-1-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 26 Sep 2019 08:37:57 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23192 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726170AbfIZMh5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 08:37:57 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8QCam5v103987
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 08:37:54 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v8tjx94xy-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 08:37:54 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Thu, 26 Sep 2019 13:37:51 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 26 Sep 2019 13:37:48 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8QCblR030081378
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Sep 2019 12:37:47 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2DB7C5204F;
+        Thu, 26 Sep 2019 12:37:47 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.110])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id B682D5204E;
+        Thu, 26 Sep 2019 12:37:46 +0000 (GMT)
+Date:   Thu, 26 Sep 2019 14:37:45 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Subject: Re: [RFC PATCH 1/3] dma-mapping: make overriding GFP_* flags arch
+ customizable
+In-Reply-To: <20190923152117.GA2767@lst.de>
+References: <20190923123418.22695-1-pasic@linux.ibm.com>
+        <20190923123418.22695-2-pasic@linux.ibm.com>
+        <20190923152117.GA2767@lst.de>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19092612-0020-0000-0000-00000371F6A1
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19092612-0021-0000-0000-000021C7C21D
+Message-Id: <20190926143745.68bdd082.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-26_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909260119
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drm_sched_cleanup_jobs() attempts to free finished jobs, however because
-it is called as the condition of wait_event_interruptible() it must not
-sleep. Unfortuantly some free callbacks (notibly for Panfrost) do sleep.
+On Mon, 23 Sep 2019 17:21:17 +0200
+Christoph Hellwig <hch@lst.de> wrote:
 
-Instead let's rename drm_sched_cleanup_jobs() to
-drm_sched_get_cleanup_job() and simply return a job for processing if
-there is one. The caller can then call the free_job() callback outside
-the wait_event_interruptible() where sleeping is possible before
-re-checking and returning to sleep if necessary.
+> On Mon, Sep 23, 2019 at 02:34:16PM +0200, Halil Pasic wrote:
+> > Before commit 57bf5a8963f8 ("dma-mapping: clear harmful GFP_* flags in
+> > common code") tweaking the client code supplied GFP_* flags used to be
+> > an issue handled in the architecture specific code. The commit message
+> > suggests, that fixing the client code would actually be a better way
+> > of dealing with this.
+> > 
+> > On s390 common I/O devices are generally capable of using the full 64
+> > bit address space for DMA I/O, but some chunks of the DMA memory need to
+> > be 31 bit addressable (in physical address space) because the
+> > instructions involved mandate it. Before switching to DMA API this used
+> > to be a non-issue, we used to allocate those chunks from ZONE_DMA.
+> > Currently our only option with the DMA API is to restrict the devices to
+> > (via dma_mask and dma_mask_coherent) to 31 bit, which is sub-optimal.
+> > 
+> > Thus s390 we would benefit form having control over what flags are
+> > dropped.
+> 
+> No way, sorry.  You need to express that using a dma mask instead of
+> overloading the GFP flags.
 
-Signed-off-by: Steven Price <steven.price@arm.com>
----
+Thanks for your feedback and sorry for the delay. Can you help me figure
+out how can I express that using a dma mask? 
 
-Changes from v2:
- * Actually move list_first_entry_or_null() within the lock
+IMHO what you ask from me is frankly impossible.
 
- drivers/gpu/drm/scheduler/sched_main.c | 42 ++++++++++++++------------
- 1 file changed, 23 insertions(+), 19 deletions(-)
+What I need is the ability to ask for  (considering the physical
+address) 31 bit addressable DMA memory if the chunk is supposed to host
+control-type data that needs to be 31 bit addressable because that is
+how the architecture is, without affecting the normal data-path. So
+normally 64 bit mask is fine but occasionally (control) we would need
+a 31 bit mask.
 
-diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
-index 9a0ee74d82dc..e4bd792f2b29 100644
---- a/drivers/gpu/drm/scheduler/sched_main.c
-+++ b/drivers/gpu/drm/scheduler/sched_main.c
-@@ -622,43 +622,41 @@ static void drm_sched_process_job(struct dma_fence *f, struct dma_fence_cb *cb)
- }
- 
- /**
-- * drm_sched_cleanup_jobs - destroy finished jobs
-+ * drm_sched_get_cleanup_job - fetch the next finished job to be destroyed
-  *
-  * @sched: scheduler instance
-  *
-- * Remove all finished jobs from the mirror list and destroy them.
-+ * Returns the next finished job from the mirror list (if there is one)
-+ * ready for it to be destroyed.
-  */
--static void drm_sched_cleanup_jobs(struct drm_gpu_scheduler *sched)
-+static struct drm_sched_job *
-+drm_sched_get_cleanup_job(struct drm_gpu_scheduler *sched)
- {
-+	struct drm_sched_job *job = NULL;
- 	unsigned long flags;
- 
- 	/* Don't destroy jobs while the timeout worker is running */
- 	if (sched->timeout != MAX_SCHEDULE_TIMEOUT &&
- 	    !cancel_delayed_work(&sched->work_tdr))
--		return;
--
-+		return NULL;
- 
--	while (!list_empty(&sched->ring_mirror_list)) {
--		struct drm_sched_job *job;
-+	spin_lock_irqsave(&sched->job_list_lock, flags);
- 
--		job = list_first_entry(&sched->ring_mirror_list,
-+	job = list_first_entry_or_null(&sched->ring_mirror_list,
- 				       struct drm_sched_job, node);
--		if (!dma_fence_is_signaled(&job->s_fence->finished))
--			break;
- 
--		spin_lock_irqsave(&sched->job_list_lock, flags);
-+	if (job && dma_fence_is_signaled(&job->s_fence->finished)) {
- 		/* remove job from ring_mirror_list */
- 		list_del_init(&job->node);
--		spin_unlock_irqrestore(&sched->job_list_lock, flags);
--
--		sched->ops->free_job(job);
-+	} else {
-+		job = NULL;
-+		/* queue timeout for next job */
-+		drm_sched_start_timeout(sched);
- 	}
- 
--	/* queue timeout for next job */
--	spin_lock_irqsave(&sched->job_list_lock, flags);
--	drm_sched_start_timeout(sched);
- 	spin_unlock_irqrestore(&sched->job_list_lock, flags);
- 
-+	return job;
- }
- 
- /**
-@@ -698,12 +696,18 @@ static int drm_sched_main(void *param)
- 		struct drm_sched_fence *s_fence;
- 		struct drm_sched_job *sched_job;
- 		struct dma_fence *fence;
-+		struct drm_sched_job *cleanup_job = NULL;
- 
- 		wait_event_interruptible(sched->wake_up_worker,
--					 (drm_sched_cleanup_jobs(sched),
-+					 (cleanup_job = drm_sched_get_cleanup_job(sched)) ||
- 					 (!drm_sched_blocked(sched) &&
- 					  (entity = drm_sched_select_entity(sched))) ||
--					 kthread_should_stop()));
-+					 kthread_should_stop());
-+
-+		while (cleanup_job) {
-+			sched->ops->free_job(cleanup_job);
-+			cleanup_job = drm_sched_get_cleanup_job(sched);
-+		}
- 
- 		if (!entity)
- 			continue;
--- 
-2.20.1
+Regards,
+Halil
 
