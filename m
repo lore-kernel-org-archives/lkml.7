@@ -2,168 +2,112 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A56C352AB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 16:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34457C352A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 16:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9AE6222C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 16:29:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C35621D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 16:30:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=pensando.io header.i=@pensando.io header.b="y3h5OT0U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727479AbfIZQ3E (ORCPT
+        id S1727507AbfIZQaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 12:29:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:54360 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726029AbfIZQ3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 12:29:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E80F028;
-        Thu, 26 Sep 2019 09:29:02 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 926123F534;
-        Thu, 26 Sep 2019 09:29:01 -0700 (PDT)
-Date:   Thu, 26 Sep 2019 17:28:56 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [PATCH 4/4] PCI: hv: Change pci_protocol_version to per-hbus
-Message-ID: <20190926162856.GA7827@e121166-lin.cambridge.arm.com>
-References: <1568245086-70601-1-git-send-email-decui@microsoft.com>
- <1568245086-70601-5-git-send-email-decui@microsoft.com>
+        Thu, 26 Sep 2019 12:30:02 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40747 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727480AbfIZQaB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 12:30:01 -0400
+Received: by mail-pl1-f193.google.com with SMTP id d22so1528496pll.7
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 09:30:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pensando.io; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=iUBOjyHfuR7bXfhhUiHsxfKRvIQzrO86xTAr8Ifre0Q=;
+        b=y3h5OT0UmQqXJi0n0rBvqkcTo+13EdxQBhESuHKUhhUdt4HIIcVQewbszw7316Jbj3
+         B26hOzlkXv8XsgeN5pGs7wsfUu35kRVDjdfbd80Cz2QkLIg0M3MsvsJVJdd9QD5RXeiy
+         6UEhQ9sxyZ6zQojKZM8g8YSAiU0HmfS6EeGLmm2G3M5zDUXby8glVotg/+s3ve95UAlT
+         DAQ0U/ntgxEnEPfGxe+68Qz99D7tUdj8cjDtGb+44i81+8OKBcckxrd+3wvZeL0MsCVS
+         GUydrXVlNXeNeT9yD3EB7dKB2lMU1zF3uY6+lKZ9hv2ld2NLoMT31L6wdQwnvoc03z5L
+         JHDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=iUBOjyHfuR7bXfhhUiHsxfKRvIQzrO86xTAr8Ifre0Q=;
+        b=bKXw7apWbw/7gT+0dl1tn51FRPkOZENwWBHPnC6E5848M7iAQhAMbCc6o6Ol2FCKx4
+         GuQffLM9frk7kHJhs/ZokloCh5UElPATi0Cn1QDx6HmrlVA5F3MpDm7MFSU1H4nA2G45
+         3/OEkRyo98iD/+MVn5ywdRpiinMfazO0Gay6ihakTTTONbai2LRwtBUtg19u12nJ4ZRn
+         cb5SrkRlqFkmqhOakK2vBLx8npjR2hIFhnsMPHTR/jkiuYj3ewGORSZeT3a142jsCHPS
+         dwHb4D2q7ytpsnaYYr7eCiD49ASHUPlCZZ823D4NdU72At6cMi4u/Fr1L3i9Pf8d7+Pu
+         UWPQ==
+X-Gm-Message-State: APjAAAXKs178zh1vLb3oeO5s+sD/kSTGHE6JSYZPAuU0zxn8beebSqCi
+        S/2FDgpMp7UD/K5S+FKwFQ10wg==
+X-Google-Smtp-Source: APXvYqzWSovEndvhpUlPPG2KWsLiHc/5J0wB0jU8KW7kk3lkOzlRWdHFYbFHIpUg2H8EkpfjsR5P5g==
+X-Received: by 2002:a17:902:8a88:: with SMTP id p8mr4822043plo.152.1569515400373;
+        Thu, 26 Sep 2019 09:30:00 -0700 (PDT)
+Received: from Shannons-MacBook-Pro.local (static-50-53-47-17.bvtn.or.frontiernet.net. [50.53.47.17])
+        by smtp.gmail.com with ESMTPSA id e127sm3547209pfe.37.2019.09.26.09.29.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 26 Sep 2019 09:29:59 -0700 (PDT)
+Subject: Re: [PATCH 1/3] docs: fix some broken references
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        corbet@lwn.net
+Cc:     Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Pensando Drivers <drivers@pensando.io>,
+        Steve French <sfrench@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-mips@vger.kernel.org, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-riscv@lists.infradead.org
+References: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
+From:   Shannon Nelson <snelson@pensando.io>
+Message-ID: <81dc41d5-606a-7638-1d11-4fe53e9c2a7f@pensando.io>
+Date:   Thu, 26 Sep 2019 09:29:56 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1568245086-70601-5-git-send-email-decui@microsoft.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 11:38:23PM +0000, Dexuan Cui wrote:
-> A VM can have multiple hbus. It looks incorrect for the second hbus's
-> hv_pci_protocol_negotiation() to set the global variable
-> 'pci_protocol_version' (which was set by the first hbus), even if the
-> same value is written.
-> 
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 22 ++++++++++------------
->  1 file changed, 10 insertions(+), 12 deletions(-)
+On 9/24/19 6:01 AM, Mauro Carvalho Chehab wrote:
+> There are a number of documentation files that got moved or
+> renamed. update their references.
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-This is a fix that seems unrelated to the rest of the series.
+>   drivers/net/ethernet/pensando/ionic/ionic_if.h            | 4 ++--
 
-AFAICS the version also affects code paths in the driver, which
-means that in case you have busses with different versions the
-current code is wrong in this respect.
+Acked-by: Shannon Nelson <snelson@pensando.io>
 
-You have to capture this concept in the commit log, it reads as
-an optional change but it looks like a potential bug.
-
-Lorenzo
-
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 2655df2..55730c5 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -76,11 +76,6 @@ enum pci_protocol_version_t {
->  	PCI_PROTOCOL_VERSION_1_1,
->  };
->  
-> -/*
-> - * Protocol version negotiated by hv_pci_protocol_negotiation().
-> - */
-> -static enum pci_protocol_version_t pci_protocol_version;
-> -
->  #define PCI_CONFIG_MMIO_LENGTH	0x2000
->  #define CFG_PAGE_OFFSET 0x1000
->  #define CFG_PAGE_SIZE (PCI_CONFIG_MMIO_LENGTH - CFG_PAGE_OFFSET)
-> @@ -429,6 +424,8 @@ enum hv_pcibus_state {
->  
->  struct hv_pcibus_device {
->  	struct pci_sysdata sysdata;
-> +	/* Protocol version negotiated with the host */
-> +	enum pci_protocol_version_t protocol_version;
->  	enum hv_pcibus_state state;
->  	refcount_t remove_lock;
->  	struct hv_device *hdev;
-> @@ -942,7 +939,7 @@ static void hv_irq_unmask(struct irq_data *data)
->  	 * negative effect (yet?).
->  	 */
->  
-> -	if (pci_protocol_version >= PCI_PROTOCOL_VERSION_1_2) {
-> +	if (hbus->protocol_version >= PCI_PROTOCOL_VERSION_1_2) {
->  		/*
->  		 * PCI_PROTOCOL_VERSION_1_2 supports the VP_SET version of the
->  		 * HVCALL_RETARGET_INTERRUPT hypercall, which also coincides
-> @@ -1112,7 +1109,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
->  	ctxt.pci_pkt.completion_func = hv_pci_compose_compl;
->  	ctxt.pci_pkt.compl_ctxt = &comp;
->  
-> -	switch (pci_protocol_version) {
-> +	switch (hbus->protocol_version) {
->  	case PCI_PROTOCOL_VERSION_1_1:
->  		size = hv_compose_msi_req_v1(&ctxt.int_pkts.v1,
->  					dest,
-> @@ -2116,6 +2113,7 @@ static int hv_pci_protocol_negotiation(struct hv_device *hdev,
->  				       enum pci_protocol_version_t version[],
->  				       int num_version)
->  {
-> +	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
->  	struct pci_version_request *version_req;
->  	struct hv_pci_compl comp_pkt;
->  	struct pci_packet *pkt;
-> @@ -2155,10 +2153,10 @@ static int hv_pci_protocol_negotiation(struct hv_device *hdev,
->  		}
->  
->  		if (comp_pkt.completion_status >= 0) {
-> -			pci_protocol_version = version[i];
-> +			hbus->protocol_version = version[i];
->  			dev_info(&hdev->device,
->  				"PCI VMBus probing: Using version %#x\n",
-> -				pci_protocol_version);
-> +				hbus->protocol_version);
->  			goto exit;
->  		}
->  
-> @@ -2442,7 +2440,7 @@ static int hv_send_resources_allocated(struct hv_device *hdev)
->  	u32 wslot;
->  	int ret;
->  
-> -	size_res = (pci_protocol_version < PCI_PROTOCOL_VERSION_1_2)
-> +	size_res = (hbus->protocol_version < PCI_PROTOCOL_VERSION_1_2)
->  			? sizeof(*res_assigned) : sizeof(*res_assigned2);
->  
->  	pkt = kmalloc(sizeof(*pkt) + size_res, GFP_KERNEL);
-> @@ -2461,7 +2459,7 @@ static int hv_send_resources_allocated(struct hv_device *hdev)
->  		pkt->completion_func = hv_pci_generic_compl;
->  		pkt->compl_ctxt = &comp_pkt;
->  
-> -		if (pci_protocol_version < PCI_PROTOCOL_VERSION_1_2) {
-> +		if (hbus->protocol_version < PCI_PROTOCOL_VERSION_1_2) {
->  			res_assigned =
->  				(struct pci_resources_assigned *)&pkt->message;
->  			res_assigned->message_type.type =
-> @@ -2812,7 +2810,7 @@ static int hv_pci_resume(struct hv_device *hdev)
->  		return ret;
->  
->  	/* Only use the version that was in use before hibernation. */
-> -	version[0] = pci_protocol_version;
-> +	version[0] = hbus->protocol_version;
->  	ret = hv_pci_protocol_negotiation(hdev, version, 1);
->  	if (ret)
->  		goto out;
-> -- 
-> 1.8.3.1
-> 
