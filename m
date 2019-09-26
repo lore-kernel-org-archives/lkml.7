@@ -2,98 +2,134 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C05C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB458C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 071142053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:34:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iJN0hGEa"
+	by mail.kernel.org (Postfix) with ESMTP id 89114207E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 10:44:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726392AbfIZKek (ORCPT
+        id S1725865AbfIZKoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 06:34:40 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34888 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726045AbfIZKej (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 06:34:39 -0400
-Received: by mail-oi1-f195.google.com with SMTP id x3so1654100oig.2;
-        Thu, 26 Sep 2019 03:34:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VXeaVOM54zatWXZ5qzke97zx1OY9L8LMNKUJXVt61MY=;
-        b=iJN0hGEaZGRHJ14GvmbCNXnDrCoeeLx4fe97E/cpDmg6w2uGQYVipwWQqDd53JIdM+
-         vs9jAiYVoa75JSlvm8LX50eorTh3fuKVoZQK9146Km+UNiu1sP1TYrwX/adpvXOoRzeC
-         uV6qbVwBxWTTzt2DCMgXDc+m2Ct4L2+UkEOXjM2Gi06p3iU4lLDv0mQFwnDWcKttohpI
-         0zvZa+xcT0Wj9KCR65w8hezyt5Zk3VH4oeDSe0/cIxM+T1NlG6+1etqtmijjV4BIGZfy
-         jQy+Qa7Sy4KIOXDPrGWq+f9eSxOc6uvLgl5k37XtJop+H/Ir53uQGHN9ILVFmCQZm5FE
-         WccA==
+        Thu, 26 Sep 2019 06:44:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:32952 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725806AbfIZKoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 06:44:20 -0400
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E7C2AC056808
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 10:44:19 +0000 (UTC)
+Received: by mail-wm1-f71.google.com with SMTP id m16so854987wmg.8
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 03:44:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VXeaVOM54zatWXZ5qzke97zx1OY9L8LMNKUJXVt61MY=;
-        b=dqgWtOaUEaYmCDrUusk20S3VYFHIElT3iJvz2MmFzeVQ/jvbqmz8d1C+sYbQ40ZSFi
-         R5XKaZSne5EjtFH+5X7cP1NGtzWvHZphzJX/lVrFBl+eTvn1qjFVbeZ2Tku0+v5Zeg1X
-         7fqFstUYBBOuhJDUdCmj0CBO1YLxYPgWoPHEW+XJmBJ+QEDO4yFosad+GVKazYbFkR5J
-         YzzM5a1/SlM4EnkZAgwVsdCz28bqev5FUmB04tXhBilKTMs7yTjCT9Evij+o3/WYrW3V
-         VusQGfOyht+Efbb11079yOkMgsse8ePjNn9wSEIRRghWOrJ9LATYd5rlZb+CbBPVq1+g
-         bU7A==
-X-Gm-Message-State: APjAAAXNZl9d7gdjkmL4lEaxs4ve4abNwlQ9UPTwboJ6jIx7MkuLYfrI
-        3VMVnJkPqjximAj3paNe9n8Dp3LEL+WtwEwc+Ag=
-X-Google-Smtp-Source: APXvYqycDnwsock1UK2R5fmGlztj1V/5cvdqMfIleUEMrrjwaZhtHzAXaI7ImgqJE70hAfx6Lg8pEcoOlHvbMKtQJ8E=
-X-Received: by 2002:a05:6808:8da:: with SMTP id k26mr2063957oij.5.1569494079433;
- Thu, 26 Sep 2019 03:34:39 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=Riw/2Ux9OsHBDm8paJcZzsJiBRoPakD2IyewC8/qlH0=;
+        b=Mco0TBV9DX/7E10CumnZrhfv8bS76zwzIi/K8vk6uaNLhCcGnkDcoK1ckoCFqZSFiD
+         n6edbWmkC+vGpNAi+6YHRt/E8p3ZBFy6aeyXS8jK09JGFSwDL799AFqtqB6owqkpwR0S
+         xX+twSYZRYMCfW0Oufg7DjeT3XpEKQe3epAtpiEdJY1T2q4lk4DaPQfHM0GjpsLSh01/
+         hi4SSZ51bWkOYGKxjacnpBHIoys4ywUuBgz8aYD83jj18zoP02iHd07WcJUujxw/P0oO
+         V8boV7TFGt1CfI7aNpg68+0TQygmEMNLEkL4npry+t/Cc22YvPfqrkPJxdstxOaryozF
+         w+aQ==
+X-Gm-Message-State: APjAAAWfQrNwiPAz6aHH0gK8v0uwSrXdBeK6NSwag4UJnyVJRzEAaXzZ
+        ivzTc8+PutxVN53vrKBTGIa/fvidobeDL6A8rYcDH2LZHT+UBj7VKCdPGkV0JkBek//CoxePCHf
+        sj65nUdj8xt4PzJg6MVFAQUlK
+X-Received: by 2002:adf:f8cf:: with SMTP id f15mr2319309wrq.292.1569494658664;
+        Thu, 26 Sep 2019 03:44:18 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxr5GEjW6ka0m4Lpc1OF+XdjpU3XZQ6+sKdP/4G5PYjuXWwBJlGoNZuBr1r4uMLP1CN0JDCCQ==
+X-Received: by 2002:adf:f8cf:: with SMTP id f15mr2319287wrq.292.1569494658461;
+        Thu, 26 Sep 2019 03:44:18 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id q19sm3835597wra.89.2019.09.26.03.44.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Sep 2019 03:44:17 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     "linux-arch\@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "arnd\@arndb.de" <arnd@arndb.de>, "bp\@alien8.de" <bp@alien8.de>,
+        "daniel.lezcano\@linaro.org" <daniel.lezcano@linaro.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "hpa\@zytor.com" <hpa@zytor.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mingo\@redhat.com" <mingo@redhat.com>,
+        "sashal\@kernel.org" <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "tglx\@linutronix.de" <tglx@linutronix.de>,
+        "x86\@kernel.org" <x86@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>
+Subject: Re: [PATCH v5 1/3] x86/hyper-v: Suspend/resume the hypercall page for hibernation
+In-Reply-To: <1567723581-29088-2-git-send-email-decui@microsoft.com>
+References: <1567723581-29088-1-git-send-email-decui@microsoft.com> <1567723581-29088-2-git-send-email-decui@microsoft.com>
+Date:   Thu, 26 Sep 2019 12:44:16 +0200
+Message-ID: <87ef0372wv.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-References: <1569459243-21950-1-git-send-email-wanpengli@tencent.com> <ea06c6bb-c6ff-ef34-55ca-c58cb77ed39e@redhat.com>
-In-Reply-To: <ea06c6bb-c6ff-ef34-55ca-c58cb77ed39e@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Thu, 26 Sep 2019 18:34:26 +0800
-Message-ID: <CANRm+CySCXpn=CUnfUYf+r4aAFOOVscryLQqDnYhTstb4Hv=Hw@mail.gmail.com>
-Subject: Re: [PATCH v2] KVM: LAPIC: Loose fluctuation filter for auto tune lapic_timer_advance_ns
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 26 Sep 2019 at 18:25, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 26/09/19 02:54, Wanpeng Li wrote:
-> > -#define LAPIC_TIMER_ADVANCE_ADJUST_MIN 100
-> > -#define LAPIC_TIMER_ADVANCE_ADJUST_MAX 5000
-> > -#define LAPIC_TIMER_ADVANCE_ADJUST_INIT 1000
-> > +#define LAPIC_TIMER_ADVANCE_EXPIRE_MIN       100
-> > +#define LAPIC_TIMER_ADVANCE_EXPIRE_MAX       10000
-> > +#define LAPIC_TIMER_ADVANCE_NS_INIT  1000
-> > +#define LAPIC_TIMER_ADVANCE_NS_MAX     5000
->
-> I think the old #define value is good.  What about:
->
-> -#define LAPIC_TIMER_ADVANCE_ADJUST_MIN 100
-> -#define LAPIC_TIMER_ADVANCE_ADJUST_MAX 5000
-> -#define LAPIC_TIMER_ADVANCE_ADJUST_INIT 1000
-> +#define LAPIC_TIMER_ADVANCE_ADJUST_MIN 100     /* clock cycles */
-> +#define LAPIC_TIMER_ADVANCE_ADJUST_MAX 10000   /* clock cycles */
-> +#define LAPIC_TIMER_ADVANCE_NS_INIT    1000
-> +#define LAPIC_TIMER_ADVANCE_NS_MAX     5000
+Dexuan Cui <decui@microsoft.com> writes:
 
-Looks good, I guess you can update the patch during apply. :)
+> This is needed for hibernation, e.g. when we resume the old kernel, we need
+> to disable the "current" kernel's hypercall page and then resume the old
+> kernel's.
+>
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> ---
+>  arch/x86/hyperv/hv_init.c | 33 +++++++++++++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>
+> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> index 866dfb3..037b0f3 100644
+> --- a/arch/x86/hyperv/hv_init.c
+> +++ b/arch/x86/hyperv/hv_init.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/hyperv.h>
+>  #include <linux/slab.h>
+>  #include <linux/cpuhotplug.h>
+> +#include <linux/syscore_ops.h>
+>  #include <clocksource/hyperv_timer.h>
+>  
+>  void *hv_hypercall_pg;
+> @@ -223,6 +224,34 @@ static int __init hv_pci_init(void)
+>  	return 1;
+>  }
+>  
+> +static int hv_suspend(void)
+> +{
+> +	union hv_x64_msr_hypercall_contents hypercall_msr;
+> +
+> +	/* Reset the hypercall page */
+> +	rdmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
+> +	hypercall_msr.enable = 0;
+> +	wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
+> +
 
-    Wanpeng
+(trying to think out loud, not sure there's a real issue):
+
+When PV IPIs (or PV TLB flush) are enabled we do the following checks:
+
+	if (!hv_hypercall_pg)
+		return false;
+
+or
+        if (!hv_hypercall_pg)
+                goto do_native;
+
+which will pass as we're not invalidating the pointer. Can we actually
+be sure that the kernel will never try to send an IPI/do TLB flush
+before we resume?
+
+-- 
+Vitaly
