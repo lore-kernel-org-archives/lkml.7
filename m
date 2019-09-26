@@ -2,93 +2,102 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B098C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 14:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AE0C352AA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 14:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D82B8222CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 14:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9DA7222C7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 14:22:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbfIZOVW (ORCPT
+        id S1727166AbfIZOWm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 10:21:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44312 "EHLO mx1.redhat.com"
+        Thu, 26 Sep 2019 10:22:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50864 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726500AbfIZOVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 10:21:21 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        id S1726500AbfIZOWl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 10:22:41 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 63B3410CC207;
-        Thu, 26 Sep 2019 14:21:21 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-125-72.rdu2.redhat.com [10.10.125.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D1A1360C44;
-        Thu, 26 Sep 2019 14:21:19 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH] jffs2: Fix mounting under new mount API
-From:   David Howells <dhowells@redhat.com>
-To:     dwmw2@infradead.org, richard@nod.at
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-mtd@lists.infradead.org,
-        dhowells@redhat.com, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 26 Sep 2019 15:21:18 +0100
-Message-ID: <156950767876.30879.17024491763471689960.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        by mx1.redhat.com (Postfix) with ESMTPS id 7BACA30089A1;
+        Thu, 26 Sep 2019 14:22:41 +0000 (UTC)
+Received: from localhost (unknown [10.40.205.151])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 10C1E5D6B0;
+        Thu, 26 Sep 2019 14:22:40 +0000 (UTC)
+From:   Max Reitz <mreitz@redhat.com>
+To:     linux-xfs@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Max Reitz <mreitz@redhat.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Brian Foster <bfoster@redhat.com>
+Subject: [PATCH] xfs: Fix tail rounding in xfs_alloc_file_space()
+Date:   Thu, 26 Sep 2019 16:22:38 +0200
+Message-Id: <20190926142238.26973-1-mreitz@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Thu, 26 Sep 2019 14:21:21 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 26 Sep 2019 14:22:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mounting of jffs2 is broken due to the changes from the new mount API
-because it specifies a "source" operation, but then doesn't actually
-process it.  But because it specified it, it doesn't return -ENOPARAM and
-the caller doesn't process it either and the source gets lost.
+To ensure that all blocks touched by the range [offset, offset + count)
+are allocated, we need to calculate the block count from the difference
+of the range end (rounded up) and the range start (rounded down).
 
-Fix this by simply removing the source parameter from jffs2 and letting the
-VFS deal with it in the default manner.
+Before this patch, we just round up the byte count, which may lead to
+unaligned ranges not being fully allocated:
 
-To test it, enable CONFIG_MTD_MTDRAM and allow the default size and erase
-block size parameters, then try and mount the /dev/mtdblock<N> file that
-that creates as jffs2.  No need to initialise it.
+$ touch test_file
+$ block_size=$(stat -fc '%S' test_file)
+$ fallocate -o $((block_size / 2)) -l $block_size test_file
+$ xfs_bmap test_file
+test_file:
+        0: [0..7]: 1396264..1396271
+        1: [8..15]: hole
 
-Fixes: ec10a24f10c8 ("vfs: Convert jffs2 to use the new mount API")
-Reported-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: David Woodhouse <dwmw2@infradead.org>
-cc: Richard Weinberger <richard@nod.at>
-cc: linux-mtd@lists.infradead.org
+There should not be a hole there.  Instead, the first two blocks should
+be fully allocated.
+
+With this patch applied, the result is something like this:
+
+$ touch test_file
+$ block_size=$(stat -fc '%S' test_file)
+$ fallocate -o $((block_size / 2)) -l $block_size test_file
+$ xfs_bmap test_file
+test_file:
+        0: [0..15]: 11024..11039
+
+Signed-off-by: Max Reitz <mreitz@redhat.com>
 ---
+ fs/xfs/xfs_bmap_util.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
- fs/jffs2/super.c |    2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/fs/jffs2/super.c b/fs/jffs2/super.c
-index cbe70637c117..0e6406c4f362 100644
---- a/fs/jffs2/super.c
-+++ b/fs/jffs2/super.c
-@@ -163,13 +163,11 @@ static const struct export_operations jffs2_export_ops = {
-  * Opt_rp_size: size of reserved pool in KiB
-  */
- enum {
--	Opt_source,
- 	Opt_override_compr,
- 	Opt_rp_size,
- };
+diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
+index 0910cb75b65d..4f443703065e 100644
+--- a/fs/xfs/xfs_bmap_util.c
++++ b/fs/xfs/xfs_bmap_util.c
+@@ -864,6 +864,7 @@ xfs_alloc_file_space(
+ 	xfs_filblks_t		allocatesize_fsb;
+ 	xfs_extlen_t		extsz, temp;
+ 	xfs_fileoff_t		startoffset_fsb;
++	xfs_fileoff_t		endoffset_fsb;
+ 	int			nimaps;
+ 	int			quota_flag;
+ 	int			rt;
+@@ -891,7 +892,8 @@ xfs_alloc_file_space(
+ 	imapp = &imaps[0];
+ 	nimaps = 1;
+ 	startoffset_fsb	= XFS_B_TO_FSBT(mp, offset);
+-	allocatesize_fsb = XFS_B_TO_FSB(mp, count);
++	endoffset_fsb = XFS_B_TO_FSB(mp, offset + count);
++	allocatesize_fsb = endoffset_fsb - startoffset_fsb;
  
- static const struct fs_parameter_spec jffs2_param_specs[] = {
--	fsparam_string	("source",	Opt_source),
- 	fsparam_enum	("compr",	Opt_override_compr),
- 	fsparam_u32	("rp_size",	Opt_rp_size),
- 	{}
+ 	/*
+ 	 * Allocate file space until done or until there is an error
+-- 
+2.23.0
 
