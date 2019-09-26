@@ -2,203 +2,139 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B3AC352AB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E766FC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEDA22086A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6D7E222C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 19:18:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=netapp.onmicrosoft.com header.i=@netapp.onmicrosoft.com header.b="Jvz7EnfA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="P0R/t7oz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728553AbfIZTNg (ORCPT
+        id S1728612AbfIZTSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 15:13:36 -0400
-Received: from mail-eopbgr760077.outbound.protection.outlook.com ([40.107.76.77]:8755
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727707AbfIZTNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 15:13:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fH93NVy43rUS8McgHUFpVolHQ2YozPUxXdruiI8NRfeLmEVghskgA/iZ7QpZWdmuJ8WxsUDSrXgsZw3NsR9RwMQ9JIA4RoPxEF01oAxisWOFQPspZP8nH8BcdZ775XB4G+In09KjkL7cfjUxJKiJ7xZXl6Xa158G+PN5B/Gg9MVg4qxYVe7djm9oZQM9eEDH6P2LMgJYB5ztklUhXipOS1LZqJUgnIJRKU+e5KOK/P9xkW1oPjFR3u0vklU3Uo5fiq5nD5rp9twYldpnq06RsGNF5BRixoATgpR32zm8m32XfiZV+zVH7vXnANK95A8tJqzO9+vFcmpOMGaoa2cJ7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6hh2Sm4XaahRh9kB0ApVbpzhT2Ziuv4c5vCxr5w6js0=;
- b=oYRH+2K2Q9OMrq9jPsgQ2ComG+vnoc7aAHCzyyd9UUSUGiWXzuabmOwOSlf5+DGtZcGNLqlhmy7lRBQc15tnFsnUxHKMxtkbqa7mt4ngtmc56IGEORQ77TEoNoKebBJeIVRL2Gs4sH0vTufdEti/RsCpVO7qo6cS+m8Haa6+AqNnKdIX2wwSOEiV9sa1OG7FCfZM5ARrz9iwajw/6jjfalqIwv0VUlIMiImI+wJOqHJrJbIfmBwcsgWAQhLBtVTj86lHtSkGJ7NxPen5s1jdTyGR4TGoIO4bdBZ5ODomgUkWudhMs2I9mS1hXJlwENmsu6EjcYY6gqGQV8zeiDuxDA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=netapp.com; dmarc=pass action=none header.from=netapp.com;
- dkim=pass header.d=netapp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=netapp.onmicrosoft.com; s=selector2-netapp-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6hh2Sm4XaahRh9kB0ApVbpzhT2Ziuv4c5vCxr5w6js0=;
- b=Jvz7EnfARN5nsEJHVRVKmGrUImkNH6X2oyqQ32kLOdYPLHdh/0TBZNVuWWQ4S2hIj0cbl43PixCyBbOBifqUZV4zb63pcvp1GzsAiT399WtAAx4/0u7nSMppGC8qtO1aQRsmqIsPoewaL/4eUASRAxcTu82sQ7QOq7QNk3Gjudk=
-Received: from DM6PR06MB6059.namprd06.prod.outlook.com (20.178.27.212) by
- DM6PR06MB5802.namprd06.prod.outlook.com (20.179.161.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.23; Thu, 26 Sep 2019 19:13:31 +0000
-Received: from DM6PR06MB6059.namprd06.prod.outlook.com
- ([fe80::253b:ba8d:133c:6b88]) by DM6PR06MB6059.namprd06.prod.outlook.com
- ([fe80::253b:ba8d:133c:6b88%5]) with mapi id 15.20.2284.023; Thu, 26 Sep 2019
- 19:13:31 +0000
-From:   "Schumaker, Anna" <Anna.Schumaker@netapp.com>
-To:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] Please pull NFS Client updates for Linux 5.4
-Thread-Topic: [GIT PULL] Please pull NFS Client updates for Linux 5.4
-Thread-Index: AQHVdJ5759zQbDxVq0qzZCixHBhXNw==
-Date:   Thu, 26 Sep 2019 19:13:30 +0000
-Message-ID: <8448ef6bd5fa881b3114ca30d2e71730ef357e4f.camel@netapp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.0 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anna.Schumaker@netapp.com; 
-x-originating-ip: [23.28.75.121]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 30c597a4-966e-4549-e635-08d742b59e82
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR06MB5802;
-x-ms-traffictypediagnostic: DM6PR06MB5802:
-x-microsoft-antispam-prvs: <DM6PR06MB580270ADF498A000736A065DF8860@DM6PR06MB5802.namprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:311;
-x-forefront-prvs: 0172F0EF77
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(346002)(376002)(366004)(39860400002)(199004)(189003)(6436002)(1730700003)(81166006)(58126008)(99286004)(26005)(5660300002)(186003)(4326008)(7736002)(25786009)(305945005)(6506007)(102836004)(478600001)(14444005)(86362001)(256004)(54906003)(6916009)(71190400001)(71200400001)(91956017)(76116006)(66556008)(66476007)(2616005)(66946007)(64756008)(15650500001)(6512007)(486006)(66066001)(2351001)(14454004)(6486002)(36756003)(8936002)(316002)(5640700003)(6116002)(476003)(66446008)(81156014)(2906002)(8676002)(118296001)(3846002)(2501003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR06MB5802;H:DM6PR06MB6059.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: netapp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: QNL5cYdqo4njx9qLgPFq/gdOMwh5twvlNbQPDNSqLaQVPVhiZSAhbSr05hF+ZN6tYPznGZmlJg2JEvlpYqJK/h/2Aald7NwCd9GJ4S+kdX3qtqdQ1IOO+58A8ef8jqurkbSbYkBpxwh6to5VMdk8cvUtTkKEci5GkSfly3TGmG0h1hXe591mlVMfhoTHiMZgq/hPb7wSbwSbaGza2ML17aDhVxoPSrRQ9qJ9Ebcddzf0gOBf+iCE7a1R/7PRukl51UQY5RH0VdYTLz+kYFCATvB6Ta5reYgYQ9Cd9XC+Ktu5Up8kuIOQGzUWwf1zZsfGEePfCgHBt8PrLRx2Jdo5vT+ZpWP6UMkp6Y1rVpBPJpPzDotJFem2VXikXX3MyMKXaTaZX4vMrlZeKoF1rqk1o7Lp8vE6axzgC+SOdvLKCmk=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <66234C1B24BB7547A9C5E58F2EB23C46@namprd06.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 26 Sep 2019 15:18:35 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:45247 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727707AbfIZTSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 15:18:34 -0400
+Received: from [IPv6:2601:646:8600:3281:4da0:b184:256:e0c2] ([IPv6:2601:646:8600:3281:4da0:b184:256:e0c2])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x8QJHgn33777378
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
+        Thu, 26 Sep 2019 12:17:46 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com x8QJHgn33777378
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019091901; t=1569525469;
+        bh=dFgBGB2t/s3m/j16Yd8URWTzLh2KumFreidqW7BxHNw=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=P0R/t7ozLnHE6wVpBckyAY993oU5lUABEV0lN7/ohmxn1YD2JIMFXaS4j6q3z3Hm0
+         omwNxekyYweckRuTrpmvB7gxoeRUTfwxpymoMWXOLZEktce39KnIwdwuLBS7g/Ajhd
+         piqwHxUOItfrACG5GHO+g9xOFGHavh3naPj1IWGncZ1XfT+ixR4TvKW0Djtj7WtFwL
+         pX169iFAgY2kPfVzKdCMNsU4mXE4i88q+A1s3LLgh+2Ot8TvhHk3QvVkfpAeuuckHc
+         yffrqkViQuPck9rCbLr+sKb4vZS3NLRjCQl7DwK41v2hXGcyXlS+UBse8wNN7bnW4b
+         5F/YRpHMR5rUQ==
+Date:   Thu, 26 Sep 2019 12:17:34 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <f7a1d739-94ae-f6d3-efdb-9748e5e03f82@infradead.org>
+References: <20190926042116.17929-1-caoj.fnst@cn.fujitsu.com> <20190926060139.GA100481@gmail.com> <faabfe47-ba3e-5a92-af65-dc26e8e2ecb9@cn.fujitsu.com> <3073CD01-65C5-4BEC-B2FC-F76DD0E70D73@zytor.com> <f7a1d739-94ae-f6d3-efdb-9748e5e03f82@infradead.org>
 MIME-Version: 1.0
-X-OriginatorOrg: netapp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 30c597a4-966e-4549-e635-08d742b59e82
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Sep 2019 19:13:31.0158
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4b0911a0-929b-4715-944b-c03745165b3a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nwM0ku1jYh49Nwu114AYTvPB6IpYIYgk1JRvzG9BmLJmhpoynLGXBPFvPFqauD4csY7navLXPWcm5OwKe3yXdQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR06MB5802
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [RFC PATCH] x86/doc/boot_protocol: Correct the description of "reloc"
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Cao jin <caoj.fnst@cn.fujitsu.com>,
+        Ingo Molnar <mingo@kernel.org>
+CC:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, corbet@lwn.net
+From:   hpa@zytor.com
+Message-ID: <4CCDD087-62A6-4524-AD3E-6A6FD2D70FE7@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTGludXMsDQoNClRoZSBmb2xsb3dpbmcgY2hhbmdlcyBzaW5jZSBjb21taXQgZDFhYmFlYjNi
-ZTdiNWZhNmQ3YTFmYmJkMmUxNGUzMzEwMDA1YzRjMToNCg0KICBMaW51eCA1LjMtcmM1ICgyMDE5
-LTA4LTE4IDE0OjMxOjA4IC0wNzAwKQ0KDQphcmUgYXZhaWxhYmxlIGluIHRoZSBHaXQgcmVwb3Np
-dG9yeSBhdDoNCg0KICBnaXQ6Ly9naXQubGludXgtbmZzLm9yZy9wcm9qZWN0cy9hbm5hL2xpbnV4
-LW5mcy5naXQgdGFncy9uZnMtZm9yLTUuNC0xDQoNCmZvciB5b3UgdG8gZmV0Y2ggY2hhbmdlcyB1
-cCB0byBhOGZkMGZlZWNhMzVjYjhmOWRkZDk1MDE5MWY0YWViNzc3ZjUyZjg5Og0KDQogIHBORlMv
-ZmlsZWxheW91dDogZW5hYmxlIExBWU9VVEdFVCBvbiBPUEVOICgyMDE5LTA5LTI0IDE2OjI4OjM4
-IC0wNDAwKQ0KDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tDQpTdGFibGUgYnVnZml4ZXM6DQotIERlcXVldWUgdGhlIHJlcXVl
-c3QgZnJvbSB0aGUgcmVjZWl2ZSBxdWV1ZSB3aGlsZSB3ZSdyZSByZS1lbmNvZGluZyAjIHY0LjIw
-Kw0KLSBGaXggYnVmZmVyIGhhbmRsaW5nIG9mIEdTUyBNSUMgd2l0aG91dCBzbGFjayAjIDUuMQ0K
-DQpGZWF0dXJlczoNCi0gSW5jcmVhc2UgeHBydHJkbWEgbWF4aW11bSB0cmFuc3BvcnQgaGVhZGVy
-IGFuZCBzbG90IHRhYmxlIHNpemVzDQotIEFkZCBzdXBwb3J0IGZvciBuZnM0X2NhbGxfc3luYygp
-IGNhbGxzIHVzaW5nIGEgY3VzdG9tIHJwY190YXNrX3N0cnVjdA0KLSBPcHRpbWl6ZSB0aGUgZGVm
-YXVsdCByZWFkYWhlYWQgc2l6ZQ0KLSBFbmFibGUgcE5GUyBmaWxlbGF5b3V0IExBWU9VVEdFVCBv
-biBPUEVODQoNCk90aGVyIGJ1Z2ZpeGVzIGFuZCBjbGVhbnVwczoNCi0gRml4IHBvc3NpYmxlIG51
-bGwtcG9pbnRlciBkZXJlZmVyZW5jZXMgYW5kIG1lbW9yeSBsZWFrcw0KLSBWYXJpb3VzIE5GUyBv
-dmVyIFJETUEgY2xlYW51cHMNCi0gVmFyaW91cyBORlMgb3ZlciBSRE1BIGNvbW1lbnQgdXBkYXRl
-cw0KLSBEb24ndCByZWNlaXZlIFRDUCBkYXRhIGludG8gYSByZXNldCByZXF1ZXN0IGJ1ZmZlcg0K
-LSBEb24ndCB0cnkgdG8gcGFyc2UgaW5jb21wbGV0ZSBSUEMgbWVzc2FnZXMNCi0gRml4IGNvbmdl
-c3Rpb24gd2luZG93IHJhY2Ugd2l0aCBkaXNjb25uZWN0DQotIENsZWFuIHVwIHBORlMgcmV0dXJu
-LW9uLWNsb3NlIGVycm9yIGhhbmRsaW5nDQotIEZpeGVzIGZvciBORlM0RVJSX09MRF9TVEFURUlE
-IGhhbmRsaW5nDQoNClRoYW5rcywNCkFubmENCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCkFubmEgU2NodW1ha2VyICg2KToN
-CiAgICAgIE5GUzogQWRkIGFuIG5mczRfY2FsbF9zeW5jX2N1c3RvbSgpIGZ1bmN0aW9uDQogICAg
-ICBORlM6IEhhdmUgbmZzNF9wcm9jX3NldGNsaWVudGlkKCkgY2FsbCBuZnM0X2NhbGxfc3luY19j
-dXN0b20oKQ0KICAgICAgTkZTOiBIYXZlIF9uZnM0X3Byb2Nfc2VjaW5mbygpIGNhbGwgbmZzNF9j
-YWxsX3N5bmNfY3VzdG9tKCkNCiAgICAgIE5GUzogSGF2ZSBuZnM0MV9wcm9jX3JlY2xhaW1fY29t
-cGxldGUoKSBjYWxsIG5mczRfY2FsbF9zeW5jX2N1c3RvbSgpDQogICAgICBORlM6IEhhdmUgbmZz
-NDFfcHJvY19zZWNpbmZvX25vX25hbWUoKSBjYWxsIG5mczRfY2FsbF9zeW5jX2N1c3RvbSgpDQog
-ICAgICBORlM6IEhhdmUgbmZzNF9wcm9jX2dldF9sZWFzZV90aW1lKCkgY2FsbCBuZnM0X2NhbGxf
-c3luY19jdXN0b20oKQ0KDQpCZW5qYW1pbiBDb2RkaW5ndG9uICg1KToNCiAgICAgIFNVTlJQQzog
-Rml4IGJ1ZmZlciBoYW5kbGluZyBvZiBHU1MgTUlDIHdpdGhvdXQgc2xhY2sNCiAgICAgIFNVTlJQ
-QzogUmVuYW1lIHhkcl9idWZfcmVhZF9uZXRvYmogdG8geGRyX2J1Zl9yZWFkX21pYw0KICAgICAg
-TkZTOiBSZWZhY3RvciBuZnNfaW5zdGFudGlhdGUoKSBmb3IgZGVudHJ5IHJlZmVyZW5jaW5nIGNh
-bGxlcnMNCiAgICAgIE5GU3YzOiB1c2UgbmZzX2FkZF9vcl9vYnRhaW4oKSB0byBjcmVhdGUgYW5k
-IHJlZmVyZW5jZSBpbm9kZXMNCiAgICAgIE5GUzogcmVtb3ZlIHVudXNlZCBjaGVjayBmb3IgbmVn
-YXRpdmUgZGVudHJ5DQoNCkNodWNrIExldmVyICgyNSk6DQogICAgICBTVU5SUEM6IFJlbW92ZSBy
-cGNfd2FrZV91cF9xdWV1ZWRfdGFza19vbl93cSgpDQogICAgICBTVU5SUEM6IElubGluZSB4ZHJf
-Y29tbWl0X2VuY29kZQ0KICAgICAgeHBydHJkbWE6IFJlZnJlc2ggdGhlIGRvY3VtZW50aW5nIGNv
-bW1lbnQgaW4gZnJ3cl9vcHMuYw0KICAgICAgeHBydHJkbWE6IFVwZGF0ZSBvYnNvbGV0ZSBjb21t
-ZW50DQogICAgICB4cHJ0cmRtYTogRml4IGNhbGN1bGF0aW9uIG9mIHJpX21heF9zZWdzIGFnYWlu
-DQogICAgICB4cHJ0cmRtYTogQm9vc3QgbWF4aW11bSB0cmFuc3BvcnQgaGVhZGVyIHNpemUNCiAg
-ICAgIHhwcnRyZG1hOiBCb29zdCBjbGllbnQncyBtYXggc2xvdCB0YWJsZSBzaXplIHRvIG1hdGNo
-IExpbnV4IHNlcnZlcg0KICAgICAgeHBydHJkbWE6IFJlbmFtZSBDUUUgZmllbGQgaW4gUmVjZWl2
-ZSB0cmFjZSBwb2ludHMNCiAgICAgIHhwcnRyZG1hOiBSZW5hbWUgcnBjcmRtYV9idWZmZXI6OnJi
-X2FsbA0KICAgICAgeHBydHJkbWE6IFRvZ2dsZSBYUFJUX0NPTkdFU1RFRCBpbiB4cHJ0cmRtYSdz
-IHNsb3QgbWV0aG9kcw0KICAgICAgeHBydHJkbWE6IFNpbXBsaWZ5IHJwY3JkbWFfbXJfcG9wDQog
-ICAgICB4cHJ0cmRtYTogQ29tYmluZSBycGNyZG1hX21yX3B1dCBhbmQgcnBjcmRtYV9tcl91bm1h
-cF9hbmRfcHV0DQogICAgICB4cHJ0cmRtYTogTW92ZSBycGNyZG1hX21yX2dldCBvdXQgb2YgZnJ3
-cl9tYXANCiAgICAgIHhwcnRyZG1hOiBFbnN1cmUgY3JlYXRpbmcgYW4gTVIgZG9lcyBub3QgdHJp
-Z2dlciBGUyB3cml0ZWJhY2sNCiAgICAgIHhwcnRyZG1hOiBDYWNoZSBmcmVlIE1ScyBpbiBlYWNo
-IHJwY3JkbWFfcmVxDQogICAgICB4cHJ0cmRtYTogUmVtb3ZlIHJwY3JkbWFfYnVmZmVyOjpyYl9t
-cmxvY2sNCiAgICAgIHhwcnRyZG1hOiBVc2UgYW4gbGxpc3QgdG8gbWFuYWdlIGZyZWUgcnBjcmRt
-YV9yZXBzDQogICAgICB4cHJ0cmRtYTogQ2xlYW4gdXAgeHBydF9yZG1hX3NldF9jb25uZWN0X3Rp
-bWVvdXQoKQ0KICAgICAgeHBydHJkbWE6IEZpeCBiY19tYXhfc2xvdHMgcmV0dXJuIHZhbHVlDQog
-ICAgICB4cHJ0cmRtYTogSW5saW5lIFhEUiBjaHVuayBlbmNvZGVyIGZ1bmN0aW9ucw0KICAgICAg
-eHBydHJkbWE6IE9wdGltaXplIHJwY3JkbWFfcG9zdF9yZWN2cygpDQogICAgICB4cHJ0cmRtYTog
-UmVjeWNsZSBNUnMgYWZ0ZXIgZGlzY29ubmVjdA0KICAgICAgeHBydHJkbWE6IENsZWFyIHhwcnQt
-PnJlZXN0YWJsaXNoX3RpbWVvdXQgb24gY2xvc2UNCiAgICAgIHhwcnRyZG1hOiBTZW5kIFF1ZXVl
-IHNpemUgZ3Jvd3MgYWZ0ZXIgYSByZWNvbm5lY3QNCiAgICAgIFNVTlJQQzogRml4IGNvbmdlc3Rp
-b24gd2luZG93IHJhY2Ugd2l0aCBkaXNjb25uZWN0DQoNCkppYS1KdSBCYWkgKDEpOg0KICAgICAg
-ZnM6IG5mczogRml4IHBvc3NpYmxlIG51bGwtcG9pbnRlciBkZXJlZmVyZW5jZXMgaW4gZW5jb2Rl
-X2F0dHJzKCkNCg0KT2xnYSBLb3JuaWV2c2thaWEgKDEpOg0KICAgICAgcE5GUy9maWxlbGF5b3V0
-OiBlbmFibGUgTEFZT1VUR0VUIG9uIE9QRU4NCg0KVHJvbmQgTXlrbGVidXN0ICgxNCk6DQogICAg
-ICBTVU5SUEM6IERlcXVldWUgdGhlIHJlcXVlc3QgZnJvbSB0aGUgcmVjZWl2ZSBxdWV1ZSB3aGls
-ZSB3ZSdyZSByZS1lbmNvZGluZw0KICAgICAgU1VOUlBDOiBEb24ndCByZWNlaXZlIFRDUCBkYXRh
-IGludG8gYSByZXF1ZXN0IGJ1ZmZlciB0aGF0IGhhcyBiZWVuIHJlc2V0DQogICAgICBTVU5SUEM6
-IFJQQyBsZXZlbCBlcnJvcnMgc2hvdWxkIGFsd2F5cyBzZXQgdGFzay0+dGtfcnBjX3N0YXR1cw0K
-ICAgICAgU1VOUlBDOiBEb24ndCB0cnkgdG8gcGFyc2UgaW5jb21wbGV0ZSBSUEMgbWVzc2FnZXMN
-CiAgICAgIHBORlM6IEVuc3VyZSB3ZSBkbyBjbGVhciB0aGUgcmV0dXJuLW9uLWNsb3NlIGxheW91
-dCBzdGF0ZWlkIG9uIGZhdGFsIGVycm9ycw0KICAgICAgTkZTdjQ6IENsZWFuIHVwIHBORlMgcmV0
-dXJuLW9uLWNsb3NlIGVycm9yIGhhbmRsaW5nDQogICAgICBORlN2NDogSGFuZGxlIE5GUzRFUlJf
-REVMQVkgY29ycmVjdGx5IGluIHJldHVybi1vbi1jbG9zZQ0KICAgICAgTkZTdjQ6IEhhbmRsZSBS
-UEMgbGV2ZWwgZXJyb3JzIGluIExBWU9VVFJFVFVSTg0KICAgICAgTkZTdjQ6IEFkZCBhIGhlbHBl
-ciB0byBpbmNyZW1lbnQgc3RhdGVpZCBzZXFpZHMNCiAgICAgIHBORlM6IEhhbmRsZSBORlM0RVJS
-X09MRF9TVEFURUlEIG9uIGxheW91dHJldHVybiBieSBidW1waW5nIHRoZSBzdGF0ZSBzZXFpZA0K
-ICAgICAgTkZTdjQ6IEZpeCBPUEVOX0RPV05HUkFERSBlcnJvciBoYW5kbGluZw0KICAgICAgTkZT
-djQ6IEhhbmRsZSBORlM0RVJSX09MRF9TVEFURUlEIGluIENMT1NFL09QRU5fRE9XTkdSQURFDQog
-ICAgICBORlN2NDogSGFuZGxlIE5GUzRFUlJfT0xEX1NUQVRFSUQgaW4gTE9DS1UNCiAgICAgIE5G
-UzogT3B0aW1pc2UgdGhlIGRlZmF1bHQgcmVhZGFoZWFkIHNpemUNCg0KV2Vud2VuIFdhbmcgKDEp
-Og0KICAgICAgTkZTdjQ6IEZpeCBhIG1lbW9yeSBsZWFrIGJ1Zw0KDQogZnMvbmZzL2Rpci5jICAg
-ICAgICAgICAgICAgICAgICAgIHwgIDQxICsrKy0tDQogZnMvbmZzL2ZpbGVsYXlvdXQvZmlsZWxh
-eW91dC5jICAgIHwgICAxICsNCiBmcy9uZnMvaW50ZXJuYWwuaCAgICAgICAgICAgICAgICAgfCAg
-IDggLQ0KIGZzL25mcy9uZnMzcHJvYy5jICAgICAgICAgICAgICAgICB8ICA0NSArKysrLS0NCiBm
-cy9uZnMvbmZzNF9mcy5oICAgICAgICAgICAgICAgICAgfCAgMTEgKy0NCiBmcy9uZnMvbmZzNHBy
-b2MuYyAgICAgICAgICAgICAgICAgfCAzMTUgKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0t
-LS0tLS0tLS0NCiBmcy9uZnMvbmZzNHN0YXRlLmMgICAgICAgICAgICAgICAgfCAgMjIgKy0tDQog
-ZnMvbmZzL25mczR4ZHIuYyAgICAgICAgICAgICAgICAgIHwgICAyICstDQogZnMvbmZzL3BuZnMu
-YyAgICAgICAgICAgICAgICAgICAgIHwgIDcxICsrKysrKysrLQ0KIGZzL25mcy9wbmZzLmggICAg
-ICAgICAgICAgICAgICAgICB8ICAxNyArLQ0KIGZzL25mcy9zdXBlci5jICAgICAgICAgICAgICAg
-ICAgICB8ICAgOSArLQ0KIGluY2x1ZGUvbGludXgvbmZzX2ZzLmggICAgICAgICAgICB8ICAgMyAr
-DQogaW5jbHVkZS9saW51eC9zdW5ycGMvc2NoZWQuaCAgICAgIHwgICAzIC0NCiBpbmNsdWRlL2xp
-bnV4L3N1bnJwYy94ZHIuaCAgICAgICAgfCAgIDIgKy0NCiBpbmNsdWRlL2xpbnV4L3N1bnJwYy94
-cHJ0LmggICAgICAgfCAgIDEgKw0KIGluY2x1ZGUvbGludXgvc3VucnBjL3hwcnRyZG1hLmggICB8
-ICAgNCArLQ0KIGluY2x1ZGUvdHJhY2UvZXZlbnRzL3JwY3JkbWEuaCAgICB8ICA4OCArKysrKysr
-KystLQ0KIG5ldC9zdW5ycGMvYXV0aF9nc3MvYXV0aF9nc3MuYyAgICB8ICAgMiArLQ0KIG5ldC9z
-dW5ycGMvY2xudC5jICAgICAgICAgICAgICAgICB8ICAyNiArKystDQogbmV0L3N1bnJwYy9zY2hl
-ZC5jICAgICAgICAgICAgICAgIHwgIDMyICstLS0NCiBuZXQvc3VucnBjL3hkci5jICAgICAgICAg
-ICAgICAgICAgfCAgNjUgKysrKystLS0NCiBuZXQvc3VucnBjL3hwcnQuYyAgICAgICAgICAgICAg
-ICAgfCAgNjEgKysrKystLS0NCiBuZXQvc3VucnBjL3hwcnRyZG1hL2JhY2tjaGFubmVsLmMgfCAg
-IDQgKy0NCiBuZXQvc3VucnBjL3hwcnRyZG1hL2Zyd3Jfb3BzLmMgICAgfCAxNjYgKysrKysrKysr
-LS0tLS0tLS0tLS0NCiBuZXQvc3VucnBjL3hwcnRyZG1hL3JwY19yZG1hLmMgICAgfCAgNzEgKysr
-KysrLS0tDQogbmV0L3N1bnJwYy94cHJ0cmRtYS90cmFuc3BvcnQuYyAgIHwgIDE1ICstDQogbmV0
-L3N1bnJwYy94cHJ0cmRtYS92ZXJicy5jICAgICAgIHwgMjYzICsrKysrKysrKysrKysrLS0tLS0t
-LS0tLS0tLS0tLS0NCiBuZXQvc3VucnBjL3hwcnRyZG1hL3hwcnRfcmRtYS5oICAgfCAgNTkgKysr
-Ky0tLQ0KIG5ldC9zdW5ycGMveHBydHNvY2suYyAgICAgICAgICAgICB8ICAgOCArLQ0KIDI5IGZp
-bGVzIGNoYW5nZWQsIDgzNSBpbnNlcnRpb25zKCspLCA1ODAgZGVsZXRpb25zKC0pDQo=
+On September 26, 2019 8:20:28 AM PDT, Randy Dunlap <rdunlap@infradead=2Eorg=
+> wrote:
+>On 9/26/19 12:58 AM, hpa@zytor=2Ecom wrote:
+>> On September 26, 2019 12:55:51 AM PDT, Cao jin
+><caoj=2Efnst@cn=2Efujitsu=2Ecom> wrote:
+>>> On 9/26/19 2:01 PM, Ingo Molnar wrote:
+>>>> * Cao jin <caoj=2Efnst@cn=2Efujitsu=2Ecom> wrote:
+>>>>
+>>>>> The fields marked with (reloc) actually are not dedicated for
+>>> writing,
+>>>>> but communicating info for relocatable kernel with boot loaders=2E
+>For
+>>>>> example:
+>>>>>
+>>>>>     =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+>>>>>     Field name:     pref_address
+>>>>>     Type:           read (reloc)
+>>>>>     Offset/size:    0x258/8
+>>>>>     Protocol:       2=2E10+
+>>>>>     =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+>>>>>
+>>>>>     =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>>>>     Field name:     code32_start
+>>>>>     Type:           modify (optional, reloc)
+>>>>>     Offset/size:    0x214/4
+>>>>>     Protocol:       2=2E00+
+>>>>>     =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>>>>
+>>>>> Signed-off-by: Cao jin <caoj=2Efnst@cn=2Efujitsu=2Ecom>
+>>>>> ---
+>>>>> Unless I have incorrect non-native understanding for "fill in", I
+>>> think
+>>>>> this is inaccurate=2E
+>>>>>
+>>>>>  Documentation/x86/boot=2Erst | 2 +-
+>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/Documentation/x86/boot=2Erst
+>b/Documentation/x86/boot=2Erst
+>>>>> index 08a2f100c0e6=2E=2Ea611bf04492d 100644
+>>>>> --- a/Documentation/x86/boot=2Erst
+>>>>> +++ b/Documentation/x86/boot=2Erst
+>>>>> @@ -243,7 +243,7 @@ bootloader ("modify")=2E
+>>>>> =20
+>>>>>  All general purpose boot loaders should write the fields marked
+>>>>>  (obligatory)=2E  Boot loaders who want to load the kernel at a
+>>>>> -nonstandard address should fill in the fields marked (reloc);
+>other
+>>>>> +nonstandard address should consult with the fields marked
+>(reloc);
+>>> other
+>>>>>  boot loaders can ignore those fields=2E
+>>>>> =20
+>>>>>  The byte order of all fields is littleendian (this is x86, after
+>>> all=2E)
+>>>>
+>>>> Well, this documentation is written from the point of view of a=20
+>>>> *bootloader*, not the kernel=2E So the 'fill in' says that the
+>>> bootloader=20
+>>>> should write those fields - which is correct, right?
+>>>>
+>>>
+>>> Take pref_address or relocatable_kernel for example, they have type:
+>>> read (reloc), does boot loader need to write them? I don't see grub
+>>> does
+>>> this at least=2E
+>>=20
+>> Read means the boot later reads them=2E
+>
+>is that          boot loader ??
+
+Yes, stupid autocorrect=2E
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
