@@ -2,94 +2,226 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 611EFC432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED572C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 376B42053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB40C222C7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:58:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="pr38dFCh"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BPly+uU9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbfIZJ4g (ORCPT
+        id S1726971AbfIZJ6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 05:56:36 -0400
-Received: from mail-wr1-f43.google.com ([209.85.221.43]:40842 "EHLO
-        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbfIZJ4f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 05:56:35 -0400
-Received: by mail-wr1-f43.google.com with SMTP id l3so1966613wru.7
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 02:56:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NlkCdkYLYBl+V4BvoMR13p0f1FLvtBmZG+HZB0KZ5U8=;
-        b=pr38dFChJ7xwA2a6C9o4qVwmjfhPb1k812KgLstdGSVS9FFPygT7/MfveuO33kz9Hz
-         1fzNLsyzPXlda0tm4Bnrd1IXFLsLQSCnZIxOaEdzYSUlR79hiXTol9kvnPwNoGRE3uzV
-         TGDmcp6hQbgRqX/5LpuuasGLu6H4HvnczCHkdGszujGo333A4wxgWCawqm9fcX6TlXcx
-         5BIUCVB2TVUYMridf4NU46JgU8ZXTnoZ6VX7hGX1GdMKa+djmP+2rawMzpNWCVTr3n2L
-         C5G+ET1FbcNCmH8AJVZyiB1BEgVOwaUwrM7rkPIORgnmJr9GyTIiABrQ8AAr79re6/oI
-         bssA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NlkCdkYLYBl+V4BvoMR13p0f1FLvtBmZG+HZB0KZ5U8=;
-        b=AagOb7D3OSJdShdcH38Whi064CVhUL4rTGnWCaPKDnzD+7bei1t+yIVe5NdnsFc3AX
-         +C5tODeZCWK8GmQoLTeH/qpJSY5PtRKDeg8aXIYiNjvwWBXrtnRlwdlyq/+diHmQS9GX
-         1otJZxadQFyJNcP4TFmMXvqWohMH4x9MnWbqeM5RgTtPfPJfwc2+a7ZRse4vrwrGzU9Z
-         NBSG2RhqmLLEvlR9vIiGYbKau5x1qn+7qkqTq3GpGXmbKMVRMKoPrTcn9f4/3x5iZMgR
-         OIvVdfKgW5eR8xvNfHqDD0aeQgw6IUalQWm6uFCg3BS2TbkSI4rLHgevASwk0fPmJhIg
-         A6Xg==
-X-Gm-Message-State: APjAAAXVlrv+Bjs3pWqDFKhwTMV94ATCEilMFwiI4dSkAdVNRnwSkM7a
-        5LzviSLF5qDVl0zU+hKAiEU7JBB11UrcN3ei
-X-Google-Smtp-Source: APXvYqzVa3ZvYbsWCQUozmOJ+3w5ZbZpyvYMC9oEdXrxIBNKEFzLtY0AvOnHWQcLiFYhQZX+3BIu/A==
-X-Received: by 2002:a5d:4251:: with SMTP id s17mr2336613wrr.126.1569491791600;
-        Thu, 26 Sep 2019 02:56:31 -0700 (PDT)
-Received: from [192.168.1.145] ([65.39.69.237])
-        by smtp.gmail.com with ESMTPSA id z12sm2645832wmf.27.2019.09.26.02.56.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 26 Sep 2019 02:56:30 -0700 (PDT)
-Subject: Re: [PATCH][next] io_uring: ensure variable ret is initialized to
- zero
-To:     Colin King <colin.king@canonical.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190926095012.31826-1-colin.king@canonical.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <3aa821ea-3041-fb56-2458-ec643963c511@kernel.dk>
-Date:   Thu, 26 Sep 2019 11:56:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190926095012.31826-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8
+        Thu, 26 Sep 2019 05:58:14 -0400
+Received: from mail-eopbgr140040.outbound.protection.outlook.com ([40.107.14.40]:53670
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726970AbfIZJ6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 05:58:14 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QAwviciHbdrz2B/nWgsQPUcK6xcK/v/YEqEsvIb4HuRo4SdgKNYb5k88e9WLyMbPMZfJuPU/UyFuSrWtg+5ca6NjHQBEhZYjfws4R0RRUxx2s5vtxitTNSXERGJtiOL7Bhj7GZOcScRXVI6CoiPBnG6m/ROjQ/JjItejUu9utxzwN78rLQd2fIWF+v7GDQAEt/bJzxdSOHwLXIC4dRGkTTveUaicmVq7KEcrC4J1XZjzFb9aKHXwJBFa1SQyei5AZ6Ykf+oTh6il5poJTHhRU1+X5PnapXUgSoaS2wRDDCorl98HNQcrsJUwP90XI+86ei67v587h7SdkcAvigqdWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ABe97go+nZCRTI2LKCBRF/WxA3lWz/ryjkHGSZWQAfQ=;
+ b=lx9DlK0MSnLx8rDfxZmtoGEJl+MSnl79pKUL7wnGBT8xj8wqJuAQo4ssKkCov6AC0+F1/yMqa2sKVplG/voes1w1HONW2LWZ9A8+YB9moCNUUiViCqWc0PdM+mKT1Knf7q3Nd2Wt4OQG3Nq2SaseHKzZ224EHNgAHDZPPjqmrNZ3T8ESt+IclyjreiwFyMEjHpkNom5oJ8lf9By0ObWq13BjoKLROEmOtTKolL8lidl0T5Y64Pavf2AQ8h4SWZ8T7nS5HWqjPGy661FeFl5Dqu9s2M56oCeikA5Rq/XPCTrQSgpQSHDeSNU8P6U1A4oHr5lbEIgrLY1HCuy9FHBGoQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ABe97go+nZCRTI2LKCBRF/WxA3lWz/ryjkHGSZWQAfQ=;
+ b=BPly+uU99jIVJeKeykRe0uOHnw+jLK348PRn716v9DMfewcudP81A0dmt+IasFYsJ0jy2SmTJXCwhBzl1elzXxvL9Wk7T3ZUDMZKRWatc4uOLetsfk6Nm/DAglB8BsPQP+RcOgOsdzs4DyPOX9UbxiQ19zvV+wo3IvXnHNkil9E=
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
+ DB7PR04MB5404.eurprd04.prod.outlook.com (20.178.107.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.15; Thu, 26 Sep 2019 09:58:09 +0000
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::4427:96f2:f651:6dfa]) by DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::4427:96f2:f651:6dfa%5]) with mapi id 15.20.2284.023; Thu, 26 Sep 2019
+ 09:58:09 +0000
+From:   Biwen Li <biwen.li@nxp.com>
+To:     Biwen Li <biwen.li@nxp.com>, Leo Li <leoyang.li@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Ran Wang <ran.wang_1@nxp.com>
+CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [v4,1/3] soc: fsl: handle RCPM errata A-008646 on SoC LS1021A
+Thread-Topic: [v4,1/3] soc: fsl: handle RCPM errata A-008646 on SoC LS1021A
+Thread-Index: AQHVdBVe5geLyFI8uEOyK3tYbajH66c9uVxw
+Date:   Thu, 26 Sep 2019 09:58:09 +0000
+Message-ID: <DB7PR04MB4490A0282C3D6173D900B7D98F860@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <20190926024118.15931-1-biwen.li@nxp.com>
+In-Reply-To: <20190926024118.15931-1-biwen.li@nxp.com>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=biwen.li@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 305c31e6-d44d-44ba-91cb-08d74268097e
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: DB7PR04MB5404:|DB7PR04MB5404:
+x-ms-exchange-purlcount: 8
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB5404BD0757F44A0E42D5737D8F860@DB7PR04MB5404.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:800;
+x-forefront-prvs: 0172F0EF77
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(136003)(366004)(346002)(376002)(53754006)(199004)(189003)(99286004)(8936002)(14454004)(3846002)(66946007)(6116002)(6636002)(256004)(86362001)(55016002)(9686003)(6306002)(6436002)(33656002)(229853002)(25786009)(52536014)(14444005)(66446008)(4326008)(74316002)(2906002)(76116006)(76176011)(305945005)(7736002)(2501003)(66476007)(66556008)(64756008)(110136005)(54906003)(316002)(7696005)(6246003)(5660300002)(66066001)(81156014)(26005)(186003)(476003)(44832011)(6506007)(11346002)(446003)(102836004)(486006)(966005)(8676002)(71200400001)(71190400001)(81166006)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5404;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: CB9KgWpshHa9BiKeyjCZHGSsrD3ZrNArNPWjN+NW0DEaJoVmo9mjIQASptDAp4Z5mh7IrBMmULk9V6chnxg5OJ43vtAVMFDf75ATVPAvuj/A2tT5/eQFfbJQGK3LQQTk1Y/SLmq9JZ8IjN+BYE/LYjcRngqnHSzmtnM0ZmfjPgcrPBh30DJuoApE95Y/YF0HMaZsNUjLEgW2kEdJ15LLYYhi6xEsIMXAKjmcU41N3WzjtvIX3w0hjhi0xLP9TGdg0VstUMm0xRgZvGzRWJNR5fpR1LvwZqYzkMCD0dOh54dIihMR0pOMU503OxY5ppTVS165xfPp3rG8rU4pSxidRaZ9xFhwf/p6WB3GnfZ+rT0jxo7wc8Fer+3rZI75nDkkhfUBYrMzcyzY9uQ99I7ap0s8dsVlshgQq0O7iMdGIFs/kuF/u3oq6UzVnsMAtLmSQcZ5Ukgooy1A/ucD4Ne2SQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 305c31e6-d44d-44ba-91cb-08d74268097e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Sep 2019 09:58:09.7767
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZwBfh/a11Ylh4CqA7KaijNTAp8NlBjrZKfqrnlXbMvVjGzZjY0Zr0U4hUsKlN4ggbcWEAPNRF4Vyb89/EeY5JQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5404
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/26/19 11:50 AM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> In the case where sig is NULL the error variable ret is not initialized
-> and may contain a garbage value on the final checks to see if ret is
-> -ERESTARTSYS.  Best to initialize ret to zero before the do loop to
-> ensure the ret does not accidentially contain -ERESTARTSYS before the
-> loop.
+Hi all,
+the linux patch depended by RCPM driver,FlexTimer driver and FlexTimer dts,=
+ need apply these patches as follows:
 
-Oops, weird it didn't complain. I've folded in this fix, as that commit
-isn't upstream yet. Thanks!
+1. RCPM driver:
 
--- 
-Jens Axboe
+https://patchwork.kernel.org/series/162731/mbox/ (https://patchwork.kernel.=
+org/patch/11105279/)
+
+2. FlexTimer dts:
+
+https://lore.kernel.org/patchwork/series/405653/mbox/ (https://lore.kernel.=
+org/patchwork/patch/1112493/)
+
+3. FlexTimer driver:
+
+https://patchwork.ozlabs.org/series/124718/mbox/ (https://patchwork.ozlabs.=
+org/patch/1145999/)
+
+https://patchwork.ozlabs.org/series/126942/mbox/ (https://patchwork.ozlabs.=
+org/patch/1152085/)
+
+4. Adjust drivers/soc/fsl/Makefile:
+
+   remove the line 'obj-y +=3D ftm_alarm.o' in drivers/soc/fsl/Makefile to =
+resolve a compilation error
+
+> Description:
+> 	- Reading configuration register RCPM_IPPDEXPCR1
+> 	  always return zero
+>=20
+> Workaround:
+> 	- Save register RCPM_IPPDEXPCR1's value to
+> 	  register SCFG_SPARECR8.(uboot's psci also
+> 	  need reading value from the register SCFG_SPARECR8
+> 	  to set register RCPM_IPPDEXPCR1)
+>=20
+> Impact:
+> 	- FlexTimer module will cannot wakeup system in
+> 	  deep sleep on SoC LS1021A
+>=20
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> ---
+> Change in v4:
+> 	- rename property name
+> 	  fsl,ippdexpcr-alt-addr -> fsl,ippdexpcr1-alt-addr
+>=20
+> Change in v3:
+> 	- update commit message
+> 	- rename property name
+> 	  fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
+>=20
+> Change in v2:
+> 	- fix stype problems
+>=20
+>  drivers/soc/fsl/rcpm.c | 33 +++++++++++++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>=20
+> diff --git a/drivers/soc/fsl/rcpm.c b/drivers/soc/fsl/rcpm.c index
+> 82c0ad5e663e..9a29c482fc2e 100644
+> --- a/drivers/soc/fsl/rcpm.c
+> +++ b/drivers/soc/fsl/rcpm.c
+> @@ -13,6 +13,8 @@
+>  #include <linux/slab.h>
+>  #include <linux/suspend.h>
+>  #include <linux/kernel.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/syscon.h>
+>=20
+>  #define RCPM_WAKEUP_CELL_MAX_SIZE	7
+>=20
+> @@ -29,6 +31,9 @@ static int rcpm_pm_prepare(struct device *dev)
+>  	struct rcpm		*rcpm;
+>  	u32 value[RCPM_WAKEUP_CELL_MAX_SIZE + 1], tmp;
+>  	int i, ret, idx;
+> +	struct regmap *scfg_addr_regmap =3D NULL;
+> +	u32 reg_offset[RCPM_WAKEUP_CELL_MAX_SIZE + 1];
+> +	u32 reg_value =3D 0;
+>=20
+>  	rcpm =3D dev_get_drvdata(dev);
+>  	if (!rcpm)
+> @@ -63,6 +68,34 @@ static int rcpm_pm_prepare(struct device *dev)
+>  					tmp |=3D value[i + 1];
+>  					iowrite32be(tmp, rcpm->ippdexpcr_base + i * 4);
+>  				}
+> +				/* Workaround of errata A-008646 on SoC LS1021A:
+> +				 * There is a bug of register ippdexpcr1.
+> +				 * Reading configuration register RCPM_IPPDEXPCR1
+> +				 * always return zero. So save ippdexpcr1's value
+> +				 * to register SCFG_SPARECR8.And the value of
+> +				 * ippdexpcr1 will be read from SCFG_SPARECR8.
+> +				 */
+> +				scfg_addr_regmap =3D
+> syscon_regmap_lookup_by_phandle(np,
+> +
+> "fsl,ippdexpcr1-alt-addr");
+> +				if (scfg_addr_regmap && (1 =3D=3D i)) {
+> +					if (of_property_read_u32_array(dev->of_node,
+> +					    "fsl,ippdexpcr1-alt-addr",
+> +					    reg_offset,
+> +					    1 + sizeof(u64)/sizeof(u32))) {
+> +						scfg_addr_regmap =3D NULL;
+> +						continue;
+> +					}
+> +					/* Read value from register SCFG_SPARECR8 */
+> +					regmap_read(scfg_addr_regmap,
+> +						    (u32)(((u64)(reg_offset[1] << (sizeof(u32) *
+> 8) |
+> +						    reg_offset[2])) & 0xffffffff),
+> +						    &reg_value);
+> +					/* Write value to register SCFG_SPARECR8 */
+> +					regmap_write(scfg_addr_regmap,
+> +						     (u32)(((u64)(reg_offset[1] << (sizeof(u32) *
+> 8) |
+> +						     reg_offset[2])) & 0xffffffff),
+> +						     tmp | reg_value);
+> +				}
+>  			}
+>  		}
+>  	} while (ws =3D wakeup_source_get_next(ws));
+> --
+> 2.17.1
 
