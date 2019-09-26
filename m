@@ -2,131 +2,152 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 513F5C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 04:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD57C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 04:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2095E222BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 04:53:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="R4GUGaMR"
+	by mail.kernel.org (Postfix) with ESMTP id A44AE222BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 04:54:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391673AbfIZExU (ORCPT
+        id S2391838AbfIZEyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 00:53:20 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35741 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728905AbfIZExU (ORCPT
+        Thu, 26 Sep 2019 00:54:43 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49882 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728905AbfIZEyn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 00:53:20 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 205so1058160pfw.2
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 21:53:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=AvvT6+5x9aQmxunKipMFtPcZ23KRsANwO+K/Uacrnq0=;
-        b=R4GUGaMRIj8MyOeHz41O/SibI8vBjS8+jMvH0FKIqubgiyuS2YgSh55EnhJYBhJlAI
-         3zzJrML+SB2ILjFGyDhL0dmrn+BwWSkCc5UtKVCjzD7ti7QIe1jfNzSQTdBTa1iB/DH/
-         K6Lpy3E5itPFVuFDx/xGNinAex4jYjobSEdjDz6fQIK/mUxOTq8wY3+7yQtWujhmzTGi
-         zn3cNhoRClSTQIbRrkKYs4FR4gBNdRsTrGNNYrdAkwFgiQQxrhbgh7c1USkKTimi8AAi
-         LdwpLDIr6BTq2VpleuIiQwCbE0ZgRg67rP3wVEU/pbBnnXLWqfbRAPyo76WaWv2YU8u5
-         ySOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=AvvT6+5x9aQmxunKipMFtPcZ23KRsANwO+K/Uacrnq0=;
-        b=exDxTXar53EcPiEKxQ8cFmq1kemO3LJWJuUSll0xBa7DVgWRem2D09e6JL7lRtZAFO
-         UYv1GfmnWoLAfVmLYJoZbOKOtM98Y/TmVSjUdBsXIeHSAt7bp5XLSYQH3+sYlEEHixMw
-         rbmJg6t1v3rHRLKUWU6d6AGWCRKkr3EBHNQDbnTeQkX6GmMmLHVJUsV16DtfA5D2qyg+
-         e1kBVGw15QtUw97g/LkwIVKN0EyZYTyo5kv4zdD3yKY1tpbA00mFNoRF4L/MTNzqO7T2
-         uURo+KDkSjCPapBEvv51qgdvjJ/445A9lSemHLKlqVvP0jmlr7FgKuJeE9YA/78/k7ko
-         qJGQ==
-X-Gm-Message-State: APjAAAWCgDZx2qwjIQGcj4oWvs/lchvjj7WtNVCamoiOz1RVYbOWr5pR
-        jlu1hE8c+1rhLW5r2QnW30QSZQ==
-X-Google-Smtp-Source: APXvYqyHtXpA7TOjdAcCykvqAmfvyMsfymVvHG2bTz2l4CZubCgE29mxR2M7yEBP7gKFs8JcjyeOsQ==
-X-Received: by 2002:a62:53c7:: with SMTP id h190mr1515668pfb.208.1569473599130;
-        Wed, 25 Sep 2019 21:53:19 -0700 (PDT)
-Received: from cakuba.netronome.com (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
-        by smtp.gmail.com with ESMTPSA id n21sm697029pjo.21.2019.09.25.21.53.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2019 21:53:18 -0700 (PDT)
-Date:   Wed, 25 Sep 2019 21:53:14 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        "David S. Miller" <davem@davemloft.net>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        John Hurley <john.hurley@netronome.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        oss-drivers@netronome.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] net: flow_offload: fix memory leak in
- nfp_abm_u32_knode_replace
-Message-ID: <20190925215314.10cf291d@cakuba.netronome.com>
-In-Reply-To: <20190926022240.3789-1-navid.emamdoost@gmail.com>
-References: <20190925182846.69a261e8@cakuba.netronome.com>
-        <20190926022240.3789-1-navid.emamdoost@gmail.com>
-Organization: Netronome Systems, Ltd.
+        Thu, 26 Sep 2019 00:54:43 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8Q4qPHS097718
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 00:54:40 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2v8mgxmjug-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 00:54:40 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Thu, 26 Sep 2019 05:54:38 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 26 Sep 2019 05:54:33 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8Q4s5U331850816
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Sep 2019 04:54:05 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C10EF11C04C;
+        Thu, 26 Sep 2019 04:54:32 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6C32411C04A;
+        Thu, 26 Sep 2019 04:54:32 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 26 Sep 2019 04:54:32 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id A90D9A00D3;
+        Thu, 26 Sep 2019 14:54:30 +1000 (AEST)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     alastair@d-silva.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/6] powerpc: convert cache asm to C
+Date:   Thu, 26 Sep 2019 14:54:06 +1000
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19092604-4275-0000-0000-0000036B467E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19092604-4276-0000-0000-0000387DC39E
+Message-Id: <20190926045419.22827-1-alastair@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-26_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909260048
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 25 Sep 2019 21:22:35 -0500, Navid Emamdoost wrote:
-> In nfp_abm_u32_knode_replace if the allocation for match fails it should
-> go to the error handling instead of returning.
-> 
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> ---
-> Changes in v2:
-> 	- Reused err variable for erorr value returning.
+From: Alastair D'Silva <alastair@d-silva.org>
 
-Thanks, there's another goto up top. And I think subject prefix could
-be "nfp: abm:", perhaps?
+This series addresses a few issues discovered in how we flush caches:
+1. Flushes were truncated at 4GB, so larger flushes were incorrect.
+2. Flushing the dcache in arch_add_memory was unnecessary
 
->  drivers/net/ethernet/netronome/nfp/abm/cls.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/netronome/nfp/abm/cls.c b/drivers/net/ethernet/netronome/nfp/abm/cls.c
-> index 23ebddfb9532..b0cb9d201f7d 100644
-> --- a/drivers/net/ethernet/netronome/nfp/abm/cls.c
-> +++ b/drivers/net/ethernet/netronome/nfp/abm/cls.c
-> @@ -198,14 +198,18 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
->  		if ((iter->val & cmask) == (val & cmask) &&
->  		    iter->band != knode->res->classid) {
->  			NL_SET_ERR_MSG_MOD(extack, "conflict with already offloaded filter");
-> +			err = -EOPNOTSUPP;
->  			goto err_delete;
->  		}
->  	}
->  
->  	if (!match) {
->  		match = kzalloc(sizeof(*match), GFP_KERNEL);
-> -		if (!match)
-> -			return -ENOMEM;
-> +		if (!match) {
-> +			err = -ENOMEM;
-> +			goto err_delete;
-> +		}
-> +
->  		list_add(&match->list, &alink->dscp_map);
->  	}
->  	match->handle = knode->handle;
-> @@ -221,7 +225,7 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
->  
->  err_delete:
->  	nfp_abm_u32_knode_delete(alink, knode);
-> -	return -EOPNOTSUPP;
-> +	return err;
->  }
->  
->  static int nfp_abm_setup_tc_block_cb(enum tc_setup_type type,
+This series also converts much of the cache assembler to C, with the
+aim of making it easier to maintain.
+
+Changelog:
+ V4:
+     - Split out VDSO patch
+     - Pass/cast the correct types in 'powerpc: Convert
+       flush_icache_range & friends to C'
+ V3:
+     - factor out chunking loop
+     - Replace __asm__ __volatile__ with asm volatile
+     - Replace flush_coherent_icache_or_return macro with
+       flush_coherent_icache function
+     - factor our invalidate_icache_range
+     - Replace code duplicating clean_dcache_range() in
+       __flush_dcache_icache() with a call to clean_dcache_range()
+     - Remove redundant #ifdef CONFIG_44x
+     - Fix preprocessor logic:
+         #if !defined(CONFIG_PPC_8xx) & !defined(CONFIG_PPC64)
+     - Added loop(1|2) to earlyclobbers in flush_dcache_icache_phys
+     - Drop "Remove extern" patch
+     - Replace 32 bit shifts in 64 bit VDSO with 64 bit ones
+ V2:
+     - Replace C implementation of flush_dcache_icache_phys() with
+       inline assembler authored by Christophe Leroy
+     - Add memory clobbers for iccci implementation
+     - Give __flush_dcache_icache a real implementation, it can't
+       just be a wrapper around flush_icache_range()
+     - Remove PPC64_CACHES from misc_64.S
+     - Replace code duplicating clean_dcache_range() in
+       flush_icache_range() with a call to clean_dcache_range()
+     - Replace #ifdef CONFIG_44x with IS_ENABLED(...) in
+       flush_icache_cange()
+     - Use 1GB chunks instead of 16GB in arch_*_memory
+
+
+Alastair D'Silva (6):
+  powerpc: Allow flush_icache_range to work across ranges >4GB
+  powerpc: Allow 64bit VDSO __kernel_sync_dicache to work across ranges
+    >4GB
+  powerpc: define helpers to get L1 icache sizes
+  powerpc: Convert flush_icache_range & friends to C
+  powerpc: Chunk calls to flush_dcache_range in arch_*_memory
+  powerpc: Don't flush caches when adding memory
+
+ arch/powerpc/include/asm/cache.h        |  55 +++++---
+ arch/powerpc/include/asm/cacheflush.h   |  36 +++--
+ arch/powerpc/kernel/misc_32.S           | 117 ----------------
+ arch/powerpc/kernel/misc_64.S           | 102 --------------
+ arch/powerpc/kernel/vdso64/cacheflush.S |   4 +-
+ arch/powerpc/mm/mem.c                   | 176 +++++++++++++++++++++++-
+ 6 files changed, 228 insertions(+), 262 deletions(-)
+
+-- 
+2.21.0
 
