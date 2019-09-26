@@ -2,110 +2,69 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD18C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 21:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F9FC352AC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 21:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24AA7222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 21:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 099452245D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 21:44:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569534264;
+	bh=95lnWYTghHkknIGrqA3CpYvmc6veRK2JhKnP5lh+Vbw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=kTlOS2REE8Wr7QBOACkRN+6+ywuAN0jt5AAsn9e0VDuViC6qm6Nvdkl/rNr3qU52T
+	 9To4fOpjOhw5EZsA6Ppzw8RZ/3CJHB2gtIIHlyJfxQIMKRf5lIQsZzSV7sEElbVOta
+	 dLvlxyencZYOS4QaBqKFIWNW2Ze9RRZsbV4jqSgE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727610AbfIZVoN (ORCPT
+        id S1727953AbfIZVoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 17:44:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:60766 "EHLO foss.arm.com"
+        Thu, 26 Sep 2019 17:44:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725909AbfIZVn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 17:43:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A1AAC1570;
-        Thu, 26 Sep 2019 14:43:57 -0700 (PDT)
-Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 840F63F739;
-        Thu, 26 Sep 2019 14:43:56 -0700 (PDT)
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     vincenzo.frascino@arm.com, ard.biesheuvel@linaro.org,
-        ndesaulniers@google.com, catalin.marinas@arm.com, will@kernel.org,
-        tglx@linutronix.de
-Subject: [PATCH v3 2/5] arm64: vdso32: Detect binutils support for dmb ishld
-Date:   Thu, 26 Sep 2019 22:43:39 +0100
-Message-Id: <20190926214342.34608-3-vincenzo.frascino@arm.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190926214342.34608-1-vincenzo.frascino@arm.com>
-References: <20190920142738.qlsjwguc6bpnez63@willie-the-truck>
- <20190926214342.34608-1-vincenzo.frascino@arm.com>
+        id S1725909AbfIZVoX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 17:44:23 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47C51222C2;
+        Thu, 26 Sep 2019 21:44:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569534262;
+        bh=95lnWYTghHkknIGrqA3CpYvmc6veRK2JhKnP5lh+Vbw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=asCa1xXlo1wJ09Dg1cbDBdJWb9moKWdDUS8lyLWf4a0ruoSefX/7KzIvR3yVHno3S
+         2UJxv5UhRRNoxkA3JBoud8shJ4WyCTQVsOEzzxANGT0vlUX8veUMBY7cm3O1fNoq8i
+         YYoQlSFapDgdexfIGlEcbrKaO3vNhSPYlkyPF79g=
+Date:   Thu, 26 Sep 2019 16:44:12 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Megha Dey <megha.dey@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-pci@vger.kernel.org, maz@kernel.org, rafael@kernel.org,
+        gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com,
+        alex.williamson@redhat.com, jgg@mellanox.com, ashok.raj@intel.com,
+        megha.dey@intel.com, jacob.jun.pan@intel.com,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Sanjay Kumar <sanjay.k.kumar@intel.com>
+Subject: Re: [RFC V1 6/7] ims-msi: Add APIs to allocate/free IMS interrupts
+Message-ID: <20190926214412.GA197619@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1568338328-22458-7-git-send-email-megha.dey@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As reported by Will Deacon, older versions of binutils that do not
-support certain types of memory barriers can cause build failure of the
-vdso32 library.
+On Thu, Sep 12, 2019 at 06:32:07PM -0700, Megha Dey wrote:
+> This patch introduces APIs to allocate and free IMS interrupts.
 
-Add a compilation time mechanism that detects if binutils supports those
-instructions and configure the kernel accordingly.
+> +int __dev_ims_alloc_irqs(struct device *dev, int nvec,
+> +			 struct dev_ims_ops *ops,
+> +			 struct irq_affinity *affd)
 
-Cc: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
----
- arch/arm64/include/asm/vdso/compat_barrier.h | 2 +-
- arch/arm64/kernel/vdso32/Makefile            | 9 +++++++++
- 2 files changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/include/asm/vdso/compat_barrier.h b/arch/arm64/include/asm/vdso/compat_barrier.h
-index fb60a88b5ed4..3fd8fd6d8fc2 100644
---- a/arch/arm64/include/asm/vdso/compat_barrier.h
-+++ b/arch/arm64/include/asm/vdso/compat_barrier.h
-@@ -20,7 +20,7 @@
- 
- #define dmb(option) __asm__ __volatile__ ("dmb " #option : : : "memory")
- 
--#if __LINUX_ARM_ARCH__ >= 8
-+#if __LINUX_ARM_ARCH__ >= 8 && defined(CONFIG_AS_DMB_ISHLD)
- #define aarch32_smp_mb()	dmb(ish)
- #define aarch32_smp_rmb()	dmb(ishld)
- #define aarch32_smp_wmb()	dmb(ishst)
-diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
-index 19e0d3115ffe..77aa61340374 100644
---- a/arch/arm64/kernel/vdso32/Makefile
-+++ b/arch/arm64/kernel/vdso32/Makefile
-@@ -15,6 +15,8 @@ cc32-disable-warning = $(call try-run,\
- 	$(COMPATCC) -W$(strip $(1)) -c -x c /dev/null -o "$$TMP",-Wno-$(strip $(1)))
- cc32-ldoption = $(call try-run,\
-         $(COMPATCC) $(1) -nostdlib -x c /dev/null -o "$$TMP",$(1),$(2))
-+cc32-as-instr = $(call try-run,\
-+	printf "%b\n" "$(1)" | $(COMPATCC) $(VDSO_AFLAGS) -c -x assembler -o "$$TMP" -,$(2),$(3))
- 
- # We cannot use the global flags to compile the vDSO files, the main reason
- # being that the 32-bit compiler may be older than the main (64-bit) compiler
-@@ -53,6 +55,7 @@ endif
- VDSO_CAFLAGS += -fPIC -fno-builtin -fno-stack-protector
- VDSO_CAFLAGS += -DDISABLE_BRANCH_PROFILING
- 
-+
- # Try to compile for ARMv8. If the compiler is too old and doesn't support it,
- # fall back to v7. There is no easy way to check for what architecture the code
- # is being compiled, so define a macro specifying that (see arch/arm/Makefile).
-@@ -89,6 +92,12 @@ VDSO_CFLAGS += -Wno-int-to-pointer-cast
- VDSO_AFLAGS := $(VDSO_CAFLAGS)
- VDSO_AFLAGS += -D__ASSEMBLY__
- 
-+# Check for binutils support for dmb ishld
-+dmbinstr := $(call cc32-as-instr,dmb ishld,-DCONFIG_AS_DMB_ISHLD=1)
-+
-+VDSO_CFLAGS += $(dmbinstr)
-+VDSO_AFLAGS += $(dmbinstr)
-+
- VDSO_LDFLAGS := $(VDSO_CPPFLAGS)
- # From arm vDSO Makefile
- VDSO_LDFLAGS += -Wl,-Bsymbolic -Wl,--no-undefined -Wl,-soname=linux-vdso.so.1
--- 
-2.23.0
-
+Should be static?  The only reference is in this file.
