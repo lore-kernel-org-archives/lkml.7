@@ -2,129 +2,195 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 746A2C47E48
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D099FC432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 538CA222BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AFF0222BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:43:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gbJ2K+Ne"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbfIZJn1 (ORCPT
+        id S1728776AbfIZJnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 05:43:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43746 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725911AbfIZJn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 05:43:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id F246AACA4;
-        Thu, 26 Sep 2019 09:43:24 +0000 (UTC)
-Subject: Re: [PATCH] scsi: qla2xxx: Remove WARN_ON_ONCE in
- qla2x00_status_cont_entry()
-To:     Daniel Wagner <dwagner@suse.de>, qla2xxx-upstream@qlogic.com
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bart Van Assche <bvanassche@acm.org>
-References: <20190926074637.77721-1-dwagner@suse.de>
-From:   Hannes Reinecke <hare@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
- 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
- azzYF4VRJsdl+d0MCaSy8mUh
-Message-ID: <f9db33a2-a1cb-5917-aa81-04a5d1f388db@suse.de>
-Date:   Thu, 26 Sep 2019 11:43:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 26 Sep 2019 05:43:33 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37918 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726553AbfIZJnd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 05:43:33 -0400
+Received: by mail-lf1-f68.google.com with SMTP id u28so1191742lfc.5
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 02:43:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8yAXbi1kQL65EW9pnlFXhlULd5JRhvbLrJCWrVe1hoo=;
+        b=gbJ2K+Ne2p+hO4PyjXqNtD3JczKjoTHX8OneizOzA9MyAK5gP40dLfLd4u/zg1vx20
+         WIcSZ12sv/1+w0FWITvV6fe+N2kmDeI3v93ZW/qep1BFXcCIpMoKXgGj58XzPg9NW9HS
+         rN4Vk+yMRB/ZUj9heBIn51Xjk3Hzd0Z8pe7FJsccPYA6BYMtjJF+AG7QmhZfmfBGLToL
+         kIxCHEDJFtCjx8Epj1qwhW2squVrc6Zlx/rnYgZfrRt1R7eF6aJeGAUz7sr0Qxpu9n8K
+         VCuUiOpiKrA17/qGffqEGcrcobZMmM7+WNRFYAIIg0NRZwTiQ0Afis2UTYCjFOjmTYGP
+         a9wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8yAXbi1kQL65EW9pnlFXhlULd5JRhvbLrJCWrVe1hoo=;
+        b=kHM2Ue1XhTy2mcofCF5lialeCNohA1C5WDFPobrED2YSHWOUSB0TBNFcDyxbLZ151B
+         8UzaDJYoMIBN5TfRrw2riI/QHV+z8qfmTkVKGUwseiK/xwge7CnHikoWagCsW+qPNtLv
+         7GTcam1R1Xs9X814A7CK4LC5xoZfNPLoa2uxOpUa51N8M26OW8HtsWMlqosGVUtbq9sm
+         9DsEctT1Q2wi3CqwMcKrU7fCLq9Y2RzW1gHLJir7jKbihOBBUhZrzj3PQts7PM7oE+X1
+         USZxSRJPNm7TQ+oiioAy3jyornZS2xHKqryUUrm9B37I8qAqCXxyE3WaHxv1qAly6fWA
+         2yUQ==
+X-Gm-Message-State: APjAAAVYI6lymXnW29TbwRf9jDqK2fdmMxb6Sz2VPPrICMdjqwqDErID
+        pUU4W1996TOGP01p8524wymDTNcBvyIToy71H5r5KQ==
+X-Google-Smtp-Source: APXvYqwINsxTd+wz0PkojUGo4Tn1d8LEgRIu3BnKISBmJx8BD/HqiPolw3uGVNUJY9tKqt9rMwcBCB1YJhLlr2fFQv4=
+X-Received: by 2002:ac2:5983:: with SMTP id w3mr1543168lfn.121.1569491009569;
+ Thu, 26 Sep 2019 02:43:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190926074637.77721-1-dwagner@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <cover.1568864712.git.baolin.wang@linaro.org>
+In-Reply-To: <cover.1568864712.git.baolin.wang@linaro.org>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Thu, 26 Sep 2019 17:43:17 +0800
+Message-ID: <CAMz4kuKFYCcY_Wh4mntwoSNgk5=QQvkV7zC-RpAWgdJpM2-4HA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] Add MMC software queue support
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>, asutoshd@codeaurora.org
+Cc:     Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/26/19 9:46 AM, Daniel Wagner wrote:
-> Commit 88263208dd23 ("scsi: qla2xxx: Complain if sp->done() is not
-> called from the completion path") introduced the WARN_ON_ONCE in
-> qla2x00_status_cont_entry(). The assumption was that there is only one
-> status continuations element. According to the firmware documentation
-> it is possible that multiple status continuations are emitted by the
-> firmware.
-> 
-> Cc: Bart Van Assche <bvanassche@acm.org>
-> Signed-off-by: Daniel Wagner <dwagner@suse.de>
-> ---
->  drivers/scsi/qla2xxx/qla_isr.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
-> index 4c26630c1c3e..009fd5a33fcd 100644
-> --- a/drivers/scsi/qla2xxx/qla_isr.c
-> +++ b/drivers/scsi/qla2xxx/qla_isr.c
-> @@ -2837,8 +2837,6 @@ qla2x00_status_cont_entry(struct rsp_que *rsp, sts_cont_entry_t *pkt)
->  	if (sense_len == 0) {
->  		rsp->status_srb = NULL;
->  		sp->done(sp, cp->result);
-> -	} else {
-> -		WARN_ON_ONCE(true);
->  	}
->  }
->  
-> 
-Not that I can speak for firmware documentation, but:
-Reviewed-by: Hannes Reinecke <hare@suse.com>
+Hi Adrian and Ulf,
 
-Cheers,
+On Thu, 19 Sep 2019 at 13:59, Baolin Wang <baolin.wang@linaro.org> wrote:
+>
+> Hi All,
+>
+> Now the MMC read/write stack will always wait for previous request is
+> completed by mmc_blk_rw_wait(), before sending a new request to hardware,
+> or queue a work to complete request, that will bring context switching
+> overhead, especially for high I/O per second rates, to affect the IO
+> performance.
+>
+> Thus this patch set will introduce the MMC software command queue support
+> based on command queue engine's interfaces, and set the queue depth as 2,
+> that means we do not need wait for previous request is completed and can
+> queue 2 requests in flight. It is enough to let the irq handler always
+> trigger the next request without a context switch and then ask the blk_mq
+> layer for the next one to get queued, as well as avoiding a long latency.
+>
+> Moreover we can expand the MMC software queue interface to support
+> MMC packed request or packed command instead of adding new interfaces,
+> according to previosus discussion.
+>
+> Below are some comparison data with fio tool. The fio command I used
+> is like below with changing the '--rw' parameter and enabling the direct
+> IO flag to measure the actual hardware transfer speed in 4K block size.
+>
+> ./fio --filename=/dev/mmcblk0p30 --direct=1 --iodepth=20 --rw=read --bs=4K --size=512M --group_reporting --numjobs=20 --name=test_read
+>
+> My eMMC card working at HS400 Enhanced strobe mode:
+> [    2.229856] mmc0: new HS400 Enhanced strobe MMC card at address 0001
+> [    2.237566] mmcblk0: mmc0:0001 HBG4a2 29.1 GiB
+> [    2.242621] mmcblk0boot0: mmc0:0001 HBG4a2 partition 1 4.00 MiB
+> [    2.249110] mmcblk0boot1: mmc0:0001 HBG4a2 partition 2 4.00 MiB
+> [    2.255307] mmcblk0rpmb: mmc0:0001 HBG4a2 partition 3 4.00 MiB, chardev (248:0)
+>
+> 1. Without MMC software queue
+> I tested 3 times for each case and output a average speed.
+>
+> 1) Sequential read:
+> Speed: 28.9MiB/s, 26.4MiB/s, 30.9MiB/s
+> Average speed: 28.7MiB/s
+>
+> 2) Random read:
+> Speed: 18.2MiB/s, 8.9MiB/s, 15.8MiB/s
+> Average speed: 14.3MiB/s
+>
+> 3) Sequential write:
+> Speed: 21.1MiB/s, 27.9MiB/s, 25MiB/s
+> Average speed: 24.7MiB/s
+>
+> 4) Random write:
+> Speed: 21.5MiB/s, 18.1MiB/s, 18.1MiB/s
+> Average speed: 19.2MiB/s
+>
+> 2. With MMC software queue
+> I tested 3 times for each case and output a average speed.
+>
+> 1) Sequential read:
+> Speed: 44.1MiB/s, 42.3MiB/s, 44.4MiB/s
+> Average speed: 43.6MiB/s
+>
+> 2) Random read:
+> Speed: 30.6MiB/s, 30.9MiB/s, 30.5MiB/s
+> Average speed: 30.6MiB/s
+>
+> 3) Sequential write:
+> Speed: 44.1MiB/s, 45.9MiB/s, 44.2MiB/s
+> Average speed: 44.7MiB/s
+>
+> 4) Random write:
+> Speed: 45.1MiB/s, 43.3MiB/s, 42.4MiB/s
+> Average speed: 43.6MiB/s
+>
+> Form above data, we can see the MMC software queue can help to improve the
+> performance obviously.
+>
+> Any comments are welcome. Thanks a lot.
+>
+> Changes from v2:
+>  - Remove reference to 'struct cqhci_host' and 'struct cqhci_slot',
+>  instead adding 'struct sqhci_host', which is only used by software queue.
+>
+> Changes from v1:
+>  - Add request_done ops for sdhci_ops.
+>  - Replace virtual command queue with software queue for functions and
+>  variables.
+>  - Rename the software queue file and add sqhci.h header file.
 
-Hannes
+Do you have any comments for this patch set except the random config
+building issue that will be fixed in the next version? Thanks.
+
+>
+> Baolin Wang (3):
+>   mmc: Add MMC software queue support
+>   mmc: host: sdhci: Add request_done ops for struct sdhci_ops
+>   mmc: host: sdhci-sprd: Add software queue support
+>
+>  drivers/mmc/core/block.c      |   61 ++++++++
+>  drivers/mmc/core/mmc.c        |   13 +-
+>  drivers/mmc/core/queue.c      |   25 ++-
+>  drivers/mmc/host/Kconfig      |    9 ++
+>  drivers/mmc/host/Makefile     |    1 +
+>  drivers/mmc/host/sdhci-sprd.c |   26 ++++
+>  drivers/mmc/host/sdhci.c      |   12 +-
+>  drivers/mmc/host/sdhci.h      |    2 +
+>  drivers/mmc/host/sqhci.c      |  344 +++++++++++++++++++++++++++++++++++++++++
+>  drivers/mmc/host/sqhci.h      |   53 +++++++
+>  include/linux/mmc/host.h      |    3 +
+>  11 files changed, 537 insertions(+), 12 deletions(-)
+>  create mode 100644 drivers/mmc/host/sqhci.c
+>  create mode 100644 drivers/mmc/host/sqhci.h
+>
+> --
+> 1.7.9.5
+>
+
+
 -- 
-Dr. Hannes Reinecke		      Teamlead Storage & Networking
-hare@suse.de			                  +49 911 74053 688
-SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 247165 (AG München), GF: Felix Imendörffer
+Baolin Wang
+Best Regards
