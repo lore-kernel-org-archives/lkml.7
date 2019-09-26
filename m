@@ -2,66 +2,155 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FE8C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 21:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF96AC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 21:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12E04222C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 21:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2916222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 21:39:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569533989;
+	bh=nMraaXkp92nv8nId3AQRLSVZZFMz/TVwa4+9PKZAyx0=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=j4zahp5iagfJk8FBK8SNhBHKWQTIIzHmZ5ksWiL34G4xP8FMC4bAdoEjTsuaTLtfI
+	 BeLxglnMzjo3t9simzXnfAW1ssk9aIsWk+mVV0rlHuEwbxPQrl9KiTxHAwRe+vOx4K
+	 F3wD3/SCW4+4EXPAiw/INf99d0aA325J+wAlvQPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725991AbfIZVg5 (ORCPT
+        id S1726092AbfIZVjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 17:36:57 -0400
-Received: from varys.harry.pm ([206.189.117.216]:39136 "EHLO varys.harry.pm"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725280AbfIZVg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 17:36:56 -0400
-X-Greylist: delayed 382 seconds by postgrey-1.27 at vger.kernel.org; Thu, 26 Sep 2019 17:36:56 EDT
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by varys.harry.pm (Postfix) with ESMTPA id A262C68868;
-        Thu, 26 Sep 2019 21:30:32 +0000 (UTC)
-From:   Harry Jeffery <me@harry.pm>
-To:     linux-kernel@vger.kernel.org
-Cc:     Harry Jeffery <me@harry.pm>
-Subject: [PATCH] btree: Remove custom MAX macro
-Date:   Thu, 26 Sep 2019 22:34:05 +0100
-Message-Id: <20190926213405.91757-1-me@harry.pm>
+        Thu, 26 Sep 2019 17:39:48 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39298 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbfIZVjs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 17:39:48 -0400
+Received: by mail-pl1-f194.google.com with SMTP id s17so180169plp.6
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 14:39:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pV3FpOkzQQShFchCizZU5uBqu5oBWsYmqNuxn4zVKE0=;
+        b=nqTu9uRLhWdBwl+0m0XQX03hT0pvFXjsVpB4WJsqIN9PcUKdKFF232x51ONavywWGp
+         2cYBG2Lj70jxrSp/E3w0Mw6buSye+bxC7o0I48BzRqvVbXX5MrlrRRfmjxBLGHUZVdcl
+         H/a2heorecZIrCoRhxd55w0VMYLpECIXTP8pMyJIx0eUBNq5SzqhDOcSJJlLXoZjmLc/
+         3FVZCGil8XVwwz23Hmz/JzOIRNI4PD62gs973PKf7yQN8E7d8JwDBylNhByZiANCUEBO
+         W4JBu3YJ1nscCa7Cj7jhDLhFWmZP9VJ/v/o1RaAh1xM/SsxCKZWCoY2BkAZOoOJ8Idci
+         3Ygw==
+X-Gm-Message-State: APjAAAUuCFyLfRq/7qQ9nG5Tkg0JYjXTKDmIjCv3Bu9MZK67D2JjKYcq
+        DPCRJ51a2iId0A7s4TlFC2iG1g==
+X-Google-Smtp-Source: APXvYqy7KKyqlGOIFQNurRPuS4kxCwCBpKPXcUca5a9bY2uqtM2zEYAnQC8MtusRwyL7ipme3Xtx0w==
+X-Received: by 2002:a17:902:82cb:: with SMTP id u11mr729185plz.313.1569533987366;
+        Thu, 26 Sep 2019 14:39:47 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:3602:86ff:fef6:e86b? ([2601:646:c200:1ef2:3602:86ff:fef6:e86b])
+        by smtp.googlemail.com with ESMTPSA id v8sm9595132pje.6.2019.09.26.14.39.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Sep 2019 14:39:46 -0700 (PDT)
+Subject: Re: [PATCH v5 1/1] random: getrandom(2): warn on large CRNG waits,
+ introduce new flags
+To:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Florian Weimer <fweimer@redhat.com>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>
+References: <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914122500.GA1425@darwi-home-pc>
+ <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
+ <20190915052242.GG19710@mit.edu>
+ <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
+ <20190918211503.GA1808@darwi-home-pc> <20190918211713.GA2225@darwi-home-pc>
+ <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
+ <20190926204217.GA1366@pc> <20190926204425.GA2198@pc>
+From:   Andy Lutomirski <luto@kernel.org>
+Message-ID: <9a9715dc-e30b-24fb-a754-464449cafb2f@kernel.org>
+Date:   Thu, 26 Sep 2019 14:39:44 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++
-Authentication-Results: varys.harry.pm;
-        auth=pass smtp.auth=me@harry.pm smtp.mailfrom=me@harry.pm
+In-Reply-To: <20190926204425.GA2198@pc>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The btree implementation defines its own MAX macro, whilst also
-including kernel.h, which already defines a max macro. This removes the
-custom implementation in favour of the standard one provided in kernel.h
+On 9/26/19 1:44 PM, Ahmed S. Darwish wrote:
+> Since Linux v3.17, getrandom(2) has been created as a new and more
+> secure interface for pseudorandom data requests.  It attempted to
+> solve three problems, as compared to /dev/urandom:
+> 
+>    1. the need to access filesystem paths, which can fail, e.g. under a
+>       chroot
+> 
+>    2. the need to open a file descriptor, which can fail under file
+>       descriptor exhaustion attacks
+> 
+>    3. the possibility of getting not-so-random data from /dev/urandom,
+>       due to an incompletely initialized kernel entropy pool
+> 
+> To solve the third point, getrandom(2) was made to block until a
+> proper amount of entropy has been accumulated to initialize the CRNG
+> ChaCha20 cipher.  This made the system call have no guaranteed
+> upper-bound for its initial waiting time.
+> 
+> Thus when it was introduced at c6e9d6f38894 ("random: introduce
+> getrandom(2) system call"), it came with a clear warning: "Any
+> userspace program which uses this new functionality must take care to
+> assure that if it is used during the boot process, that it will not
+> cause the init scripts or other portions of the system startup to hang
+> indefinitely."
+> 
+> Unfortunately, due to multiple factors, including not having this
+> warning written in a scary-enough language in the manpages, and due to
+> glibc since v2.25 implementing a BSD-like getentropy(3) in terms of
+> getrandom(2), modern user-space is calling getrandom(2) in the boot
+> path everywhere (e.g. Qt, GDM, etc.)
+> 
+> Embedded Linux systems were first hit by this, and reports of embedded
+> systems "getting stuck at boot" began to be common.  Over time, the
+> issue began to even creep into consumer-level x86 laptops: mainstream
+> distributions, like Debian Buster, began to recommend installing
+> haveged as a duct-tape workaround... just to let the system boot.
+> 
+> Moreover, filesystem optimizations in EXT4 and XFS, e.g. b03755ad6f33
+> ("ext4: make __ext4_get_inode_loc plug"), which merged directory
+> lookup code inode table IO, and very fast systemd boots, further
+> exaggerated the problem by limiting interrupt-based entropy sources.
+> This led to large delays until the kernel's cryptographic random
+> number generator (CRNG) got initialized.
+> 
+> On a Thinkpad E480 x86 laptop and an ArchLinux user-space, the ext4
+> commit earlier mentioned reliably blocked the system on GDM boot.
+> Mitigate the problem, as a first step, in two ways:
+> 
+>    1. Issue a big WARN_ON when any process gets stuck on getrandom(2)
+>       for more than CONFIG_GETRANDOM_WAIT_THRESHOLD_SEC seconds.
+> 
+>    2. Introduce new getrandom(2) flags, with clear semantics that can
+>       hopefully guide user-space in doing the right thing.
+> 
+> Set CONFIG_GETRANDOM_WAIT_THRESHOLD_SEC to a heuristic 30-second
+> default value. System integrators and distribution builders are deeply
+> encouraged not to increase it much: during system boot, you either
+> have entropy, or you don't. And if you didn't have entropy, it will
+> stay like this forever, because if you had, you wouldn't have blocked
+> in the first place. It's an atomic "either/or" situation, with no
+> middle ground. Please think twice.
 
-Signed-off-by: Harry Jeffery <me@harry.pm>
----
- lib/btree.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/lib/btree.c b/lib/btree.c
-index b4cf08a5c267..4b5968b6167b 100644
---- a/lib/btree.c
-+++ b/lib/btree.c
-@@ -43,8 +43,7 @@
- #include <linux/slab.h>
- #include <linux/module.h>
- 
--#define MAX(a, b) ((a) > (b) ? (a) : (b))
--#define NODESIZE MAX(L1_CACHE_BYTES, 128)
-+#define NODESIZE max(L1_CACHE_BYTES, 128)
- 
- struct btree_geo {
- 	int keylen;
--- 
-2.23.0
-
+So what do we expect glibc's getentropy() to do?  If it just adds the 
+new flag to shut up the warning, we haven't really accomplished much.
