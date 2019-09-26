@@ -2,105 +2,99 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA6BC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 13:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B452C352AA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 13:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D871421655
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 13:17:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC05A222C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 13:22:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569504160;
+	bh=JlOP1kGevEu0HlBjrfll8q+bi2Y35ldskoM96/rBp9M=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=wNnh49fFCmSmczARCFk2/E4rmrgVIUWSp8ejbwDTtqPWfhAK10osayqyW0+ciuQtZ
+	 vNdQn83yfmbKNsVRK3Otu2fVQY3Mqm9ZwbBOdEO/I/8A0knQ1ttTLnCl3rONywlb/8
+	 vprUwoMy3sqwC2NkA1reRWUZziIjQygp57ts+iLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfIZNRa (ORCPT
+        id S1726853AbfIZNWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 09:17:30 -0400
-Received: from mga05.intel.com ([192.55.52.43]:28880 "EHLO mga05.intel.com"
+        Thu, 26 Sep 2019 09:22:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726106AbfIZNR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 09:17:29 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Sep 2019 06:17:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,552,1559545200"; 
-   d="scan'208";a="194124583"
-Received: from dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.73])
-  by orsmga006.jf.intel.com with ESMTP; 26 Sep 2019 06:17:26 -0700
-Date:   Thu, 26 Sep 2019 21:14:39 +0800
-From:   Tiwei Bie <tiwei.bie@intel.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     jasowang@redhat.com, alex.williamson@redhat.com,
-        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        lingshan.zhu@intel.com
-Subject: Re: [PATCH] vhost: introduce mdev based hardware backend
-Message-ID: <20190926131439.GA11652@___>
-References: <20190926045427.4973-1-tiwei.bie@intel.com>
- <20190926042156-mutt-send-email-mst@kernel.org>
+        id S1726500AbfIZNWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 09:22:39 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07E99217F4;
+        Thu, 26 Sep 2019 13:22:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569504158;
+        bh=JlOP1kGevEu0HlBjrfll8q+bi2Y35ldskoM96/rBp9M=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=i+Ari7usbBgAPUOIDJRwde8RHdnFat2FXgITMNGhjLMJ43N7rSm6RuFhmxCvutVn7
+         STtbHuKOtsCO7Us9nC16o/ICXS1Pa2lDa9HW0mXOI6v+jlWWvY1qIFlYPbvsL70hIT
+         TW3tOGFVZhLqC8IApuZzeAZyNdVl31k/4qELj2Rs=
+Date:   Thu, 26 Sep 2019 15:22:11 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+cc:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: RE: [PATCH] HID: hyperv: Add the support of hibernation
+In-Reply-To: <PU1P153MB01695CEE01D65E8CD5CFA4E9BF870@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+Message-ID: <nycvar.YFH.7.76.1909261521410.24354@cbobk.fhfr.pm>
+References: <1568244952-66716-1-git-send-email-decui@microsoft.com> <PU1P153MB01695CEE01D65E8CD5CFA4E9BF870@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190926042156-mutt-send-email-mst@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 04:35:18AM -0400, Michael S. Tsirkin wrote:
-> On Thu, Sep 26, 2019 at 12:54:27PM +0800, Tiwei Bie wrote:
-[...]
-> > diff --git a/include/uapi/linux/vhost.h b/include/uapi/linux/vhost.h
-> > index 40d028eed645..5afbc2f08fa3 100644
-> > --- a/include/uapi/linux/vhost.h
-> > +++ b/include/uapi/linux/vhost.h
-> > @@ -116,4 +116,12 @@
-> >  #define VHOST_VSOCK_SET_GUEST_CID	_IOW(VHOST_VIRTIO, 0x60, __u64)
-> >  #define VHOST_VSOCK_SET_RUNNING		_IOW(VHOST_VIRTIO, 0x61, int)
-> >  
-> > +/* VHOST_MDEV specific defines */
-> > +
-> > +#define VHOST_MDEV_SET_STATE	_IOW(VHOST_VIRTIO, 0x70, __u64)
-> > +
-> > +#define VHOST_MDEV_S_STOPPED	0
-> > +#define VHOST_MDEV_S_RUNNING	1
-> > +#define VHOST_MDEV_S_MAX	2
-> > +
-> >  #endif
+On Wed, 25 Sep 2019, Dexuan Cui wrote:
+
+> > We need mousevsc_pm_notify() to make sure the pm_wakeup_hard_event() 
+> > call does not prevent the system from entering hibernation: the 
+> > hibernation is a relatively long process, which can be aborted by the 
+> > call pm_wakeup_hard_event(), which is invoked upon mouse events.
+> > 
+> > Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> > ---
+> > 
+> > This patch is basically a pure Hyper-V specific change and it has a
+> > build dependency on the commit 271b2224d42f ("Drivers: hv: vmbus:
+> > Implement
+> > suspend/resume for VSC drivers for hibernation"), which is on Sasha Levin's
+> > Hyper-V tree's hyperv-next branch [ ... snipped ...]
+> > 
+> > I request this patch should go through Sasha's tree rather than the
+> > input subsystem's tree.
+> > 
+> > Hi Jiri, Benjamin, can you please Ack?
 > 
-> So assuming we have an underlying device that behaves like virtio:
+> Hi Jiri, Benjamin,
+> Can you please take a look at the patch?
 
-I think they are really good questions/suggestions. Thanks!
+Hi Dexuan,
 
-> 
-> 1. Should we use SET_STATUS maybe?
+I am planning to process it once 5.4 merge window is over and thus hid.git 
+is open again for 5.5 material.
 
-I like this idea. I will give it a try.
+Thanks,
 
-> 2. Do we want a reset ioctl?
+-- 
+Jiri Kosina
+SUSE Labs
 
-I think it is helpful. If we use SET_STATUS, maybe we
-can use it to support the reset.
-
-> 3. Do we want ability to enable rings individually?
-
-I will make it possible at least in the vhost layer.
-
-> 4. Does device need to limit max ring size?
-> 5. Does device need to limit max number of queues?
-
-I think so. It's helpful to have ioctls to report the max
-ring size and max number of queues.
-
-Thanks!
-Tiwei
-
-
-> 
-> -- 
-> MST
