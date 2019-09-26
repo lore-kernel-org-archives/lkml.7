@@ -2,129 +2,148 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3DD2C4360D
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 01:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B2AC432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 01:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC63E21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 01:28:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="MT974R0a"
+	by mail.kernel.org (Postfix) with ESMTP id 26F7F222BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 01:29:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389020AbfIZB2v (ORCPT
+        id S2389403AbfIZB3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 21:28:51 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42845 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbfIZB2u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 21:28:50 -0400
-Received: by mail-pg1-f195.google.com with SMTP id z12so453256pgp.9
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 18:28:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=j12YR8Sz7lqAWk3kVJllB0GpgeIbUZ8LPBlsVactf4o=;
-        b=MT974R0a+7BOZEwbuehQtp8dBN4m9x82wscvv6hWcyd5Vz/4vnx3Wk+7Gs6qtKLzBC
-         CxDEIKCBB+/MvaFjA0jVW2eWjbtY7fL5u0P6FfbLWSdG8HQUewhfMsft18SOo7RaGsL6
-         hJYxUcpEB1qLwaWv3s6Vir6AWd0Zx+k7VzGS49BPb+XV7EovyKrWxgtyvkM0HyHmskuP
-         swRXdYKd2XVAlvN+psnPqQuZh5c0n5ukyzBQnyy1opB0bBXw6LyKDrJXuJQvEAKYHLGB
-         t8y0EaKcQULXzpOZZ1FnfzhF0kRunBD6phEhpTKgWoIHSMxw6iREXSFyRvpJ8B4Gw3QL
-         WHvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=j12YR8Sz7lqAWk3kVJllB0GpgeIbUZ8LPBlsVactf4o=;
-        b=aq4RH2dbD9GY9t7xzxuV4p1Lp4d2LKjZfWVqYpzGdXfo5/bsWUaJei3ypbPMWiYzc/
-         IoQaykd2l6eQgR5oHHoMt0lH3UlJWQEfY939HVk9L3Gq4KY+faBNfSogIPmW+MhoAsbL
-         LyUl5uEI2BTRamDd/b0S0XwJPyiGTpzd3prSVQscejWEqzilQQ9RF/g/Q8lVglQ5Q6y+
-         SRVkfBArF5A4t15e/hJOj/HRh/OeLUfBUjXdJHD8xsArC7DitxDs/XAav47nI1+ncDbt
-         fEOVdBE+I/mxdgX41kQZGU4N8LSFxY7jWolg+p+WKNanMjO+UhZomE25QAZ162BU5IwA
-         rUcw==
-X-Gm-Message-State: APjAAAXvKP+tzRS3seJ46FpdNMwAxlEC8kA3X+RKLy9LFP/7KSl4dj85
-        5ngDSY7he9PSB7yDps2GmFPCXQ==
-X-Google-Smtp-Source: APXvYqxQITLNcTLpSM0rs0YOxV402EPnexB569vCYoV1pb+klZRhrOQFOyV97JvHUqc6+fXJsVTpTg==
-X-Received: by 2002:a62:1e82:: with SMTP id e124mr789701pfe.136.1569461330070;
-        Wed, 25 Sep 2019 18:28:50 -0700 (PDT)
-Received: from cakuba.netronome.com (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
-        by smtp.gmail.com with ESMTPSA id h4sm256255pfg.159.2019.09.25.18.28.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2019 18:28:49 -0700 (PDT)
-Date:   Wed, 25 Sep 2019 18:28:46 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        "David S. Miller" <davem@davemloft.net>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Colin Ian King <colin.king@canonical.com>,
-        oss-drivers@netronome.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: flow_offload: fix memory leak in
- nfp_abm_u32_knode_replace
-Message-ID: <20190925182846.69a261e8@cakuba.netronome.com>
-In-Reply-To: <20190925183457.32695-1-navid.emamdoost@gmail.com>
-References: <20190925183457.32695-1-navid.emamdoost@gmail.com>
-Organization: Netronome Systems, Ltd.
+        Wed, 25 Sep 2019 21:29:07 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:45156 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388786AbfIZB3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 21:29:06 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 69CD5C2D2E02629EA757;
+        Thu, 26 Sep 2019 09:29:05 +0800 (CST)
+Received: from [127.0.0.1] (10.133.217.137) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Thu, 26 Sep 2019
+ 09:29:00 +0800
+Subject: Re: [PATCH v2 3/3] platform/x86: intel_oaktrail: Use pr_warn instead
+ of pr_warning
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        "Andy Shevchenko" <andy@infradead.org>
+References: <CAHp75VdQES5oasGzi0JdnZAEL2AfCozHJaHBa9dpg1Ya_N17-A@mail.gmail.com>
+ <20190920111207.129106-1-wangkefeng.wang@huawei.com>
+ <20190920111207.129106-3-wangkefeng.wang@huawei.com>
+ <CAHp75VesyCCKqHKfa-L9gW7sufJZs2Tm60OgrgkY_H0ZcEuDYA@mail.gmail.com>
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+Message-ID: <627e842d-cd00-e370-643f-fcaa0222cad5@huawei.com>
+Date:   Thu, 26 Sep 2019 09:28:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CAHp75VesyCCKqHKfa-L9gW7sufJZs2Tm60OgrgkY_H0ZcEuDYA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.133.217.137]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 25 Sep 2019 13:34:46 -0500, Navid Emamdoost wrote:
-> In nfp_abm_u32_knode_replace if the allocation for match fails it should
-> go to the error handling instead of returning.
-> 
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> ---
->  drivers/net/ethernet/netronome/nfp/abm/cls.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/netronome/nfp/abm/cls.c b/drivers/net/ethernet/netronome/nfp/abm/cls.c
-> index 23ebddfb9532..32eaab99d96c 100644
-> --- a/drivers/net/ethernet/netronome/nfp/abm/cls.c
-> +++ b/drivers/net/ethernet/netronome/nfp/abm/cls.c
-> @@ -174,7 +174,7 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
->  	struct nfp_abm_u32_match *match = NULL, *iter;
->  	unsigned int tos_off;
->  	u8 mask, val;
-> -	int err;
-> +	int err, ret = -EOPNOTSUPP;
 
-You can use the err variable for the return. Please don't break the
-reverse christmas tree ordering. Please initialize the err variable 
-in the branch where failure occurred, not at the start of the function.
+On 2019/9/25 23:04, Andy Shevchenko wrote:
+> On Fri, Sep 20, 2019 at 1:55 PM Kefeng Wang <wangkefeng.wang@huawei.com> wrote:
+>> As said in commit f2c2cbcc35d4 ("powerpc: Use pr_warn instead of
+>> pr_warning"), removing pr_warning so all logging messages use a
+>> consistent <prefix>_warn style. Let's do it.
+>>
+> You have to send to proper mailing lists and people.
 
->  	if (!nfp_abm_u32_check_knode(alink->abm, knode, proto, extack))
->  		goto err_delete;
-> @@ -204,8 +204,11 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
->  
->  	if (!match) {
->  		match = kzalloc(sizeof(*match), GFP_KERNEL);
-> -		if (!match)
-> -			return -ENOMEM;
-> +		if (!match) {
-> +			ret = -ENOMEM;
-> +			goto err_delete;
-> +		}
-> +
->  		list_add(&match->list, &alink->dscp_map);
->  	}
->  	match->handle = knode->handle;
-> @@ -221,7 +224,7 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
->  
->  err_delete:
->  	nfp_abm_u32_knode_delete(alink, knode);
-> -	return -EOPNOTSUPP;
-> +	return ret;
->  }
->  
->  static int nfp_abm_setup_tc_block_cb(enum tc_setup_type type,
+Used get_maintainer.pl to find the people, and all already in the CC,  will add proper maillist into each patch.
+
+> Don't spam the rest!
+Not so clearly, should I not CC other people not in the list below?
+
+[wkf@localhost linux]$ ./scripts/get_maintainer.pl pr_warning/v3/0018-platform-x86-eeepc-laptop-Use-pr_warn-instead-of-pr_.patch
+Corentin Chary <corentin.chary@gmail.com> (maintainer:ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS DRIVERS)
+Darren Hart <dvhart@infradead.org> (odd fixer:X86 PLATFORM DRIVERS)
+Andy Shevchenko <andy@infradead.org> (odd fixer:X86 PLATFORM DRIVERS)
+acpi4asus-user@lists.sourceforge.net (open list:ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS DRIVERS)
+platform-driver-x86@vger.kernel.org (open list:ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS DRIVERS)
+linux-kernel@vger.kernel.org (open list)
+[wkf@localhost linux]$ ./scripts/get_maintainer.pl pr_warning/v3/0019-platform-x86-asus-laptop-Use-pr_warn-instead-of-pr_w.patch
+Corentin Chary <corentin.chary@gmail.com> (maintainer:ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS DRIVERS)
+Darren Hart <dvhart@infradead.org> (odd fixer:X86 PLATFORM DRIVERS)
+Andy Shevchenko <andy@infradead.org> (odd fixer:X86 PLATFORM DRIVERS)
+acpi4asus-user@lists.sourceforge.net (open list:ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS DRIVERS)
+platform-driver-x86@vger.kernel.org (open list:ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS DRIVERS)
+linux-kernel@vger.kernel.org (open list)
+[wkf@localhost linux]$ ./scripts/get_maintainer.pl pr_warning/v3/0020-platform-x86-intel_oaktrail-Use-pr_warn-instead-of-p.patch
+Darren Hart <dvhart@infradead.org> (odd fixer:X86 PLATFORM DRIVERS)
+Andy Shevchenko <andy@infradead.org> (odd fixer:X86 PLATFORM DRIVERS,commit_signer:2/2=100%,authored:2/2=100%,added_lines:9/9=100%,removed_lines:23/23=100%)
+platform-driver-x86@vger.kernel.org (open list:X86 PLATFORM DRIVERS)
+linux-kernel@vger.kernel.org (open list)
+
+>> Cc: Corentin Chary <corentin.chary@gmail.com>
+>> Cc: Darren Hart <dvhart@infradead.org>
+>> Cc: Andy Shevchenko <andy@infradead.org>
+>> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+>> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+>> ---
+>>  drivers/platform/x86/intel_oaktrail.c | 10 +++++-----
+>>  1 file changed, 5 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/intel_oaktrail.c b/drivers/platform/x86/intel_oaktrail.c
+>> index 3c0438ba385e..1a09a75bd16d 100644
+>> --- a/drivers/platform/x86/intel_oaktrail.c
+>> +++ b/drivers/platform/x86/intel_oaktrail.c
+>> @@ -243,7 +243,7 @@ static int oaktrail_backlight_init(void)
+>>
+>>         if (IS_ERR(bd)) {
+>>                 oaktrail_bl_device = NULL;
+>> -               pr_warning("Unable to register backlight device\n");
+>> +               pr_warn("Unable to register backlight device\n");
+>>                 return PTR_ERR(bd);
+>>         }
+>>
+>> @@ -313,20 +313,20 @@ static int __init oaktrail_init(void)
+>>
+>>         ret = platform_driver_register(&oaktrail_driver);
+>>         if (ret) {
+>> -               pr_warning("Unable to register platform driver\n");
+>> +               pr_warn("Unable to register platform driver\n");
+>>                 goto err_driver_reg;
+>>         }
+>>
+>>         oaktrail_device = platform_device_alloc(DRIVER_NAME, -1);
+>>         if (!oaktrail_device) {
+>> -               pr_warning("Unable to allocate platform device\n");
+>> +               pr_warn("Unable to allocate platform device\n");
+>>                 ret = -ENOMEM;
+>>                 goto err_device_alloc;
+>>         }
+>>
+>>         ret = platform_device_add(oaktrail_device);
+>>         if (ret) {
+>> -               pr_warning("Unable to add platform device\n");
+>> +               pr_warn("Unable to add platform device\n");
+>>                 goto err_device_add;
+>>         }
+>>
+>> @@ -338,7 +338,7 @@ static int __init oaktrail_init(void)
+>>
+>>         ret = oaktrail_rfkill_init();
+>>         if (ret) {
+>> -               pr_warning("Setup rfkill failed\n");
+>> +               pr_warn("Setup rfkill failed\n");
+>>                 goto err_rfkill;
+>>         }
+>>
+>> --
+>> 2.20.1
+>>
+>
 
