@@ -2,142 +2,241 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B51F6C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DB7C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CDC0222C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C786222C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:04:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="uDsSL2xT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Arp3uC+o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729418AbfIZJDF (ORCPT
+        id S1729544AbfIZJEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 05:03:05 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:16644 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbfIZJDF (ORCPT
+        Thu, 26 Sep 2019 05:04:40 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44253 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbfIZJEk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 05:03:05 -0400
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x8Q92r8Z002357;
-        Thu, 26 Sep 2019 18:02:54 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x8Q92r8Z002357
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1569488574;
-        bh=RPMMLIKhdvSN9Rtma03dGx5Z7enfjavMewQMgMSrVlI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=uDsSL2xTh9ZRIJgTmBe7HeabKc3vA6j0D4+zJoERBMKAUMBD5S1xn2VnKCOc5N5QB
-         pIanmIt8O6o6o0L6kPNHQCiQqOw5KQ/BYvopCQ2BjsFj4Rgkg7aOmd8IheFZDIR5GK
-         KAFaRtOMXLloTM603aQAltsX33Hm8bigv0SYt1P5GSkGVCbsf3f1mbFOP1sHw7EA90
-         2QzBwVvRKmcTvFepNB9XVyuHgk7CXzM9IgCwNAmrFgJgqQCinpgiuAJgZaCf5IKqhF
-         Wcl56BmZXMMBjfKuSln9cRhkwIELELirtifCFpCXJnil49TdwrFnuVE2GgblbAiF3Z
-         Lb25tDlWOxCKQ==
-X-Nifty-SrcIP: [209.85.217.51]
-Received: by mail-vs1-f51.google.com with SMTP id p13so1114661vso.0;
-        Thu, 26 Sep 2019 02:02:53 -0700 (PDT)
-X-Gm-Message-State: APjAAAVTNvYpAwHhQEEDDXbZ3zgDCJ6qAFF/QMQCq0o8hOytU2jTJyXL
-        mNbYNwrrcwIEURhY1p7ItN4OxlANH6qSELlBakA=
-X-Google-Smtp-Source: APXvYqy5iBFOCX/WHF+jZHk7THmjhiSCV29fsWMtosGODyxAlYHRE8PdDuNjX4/CL7sw1bBrkGAzm3+RVSoQyY3RUFg=
-X-Received: by 2002:a67:ec09:: with SMTP id d9mr1095111vso.215.1569488572806;
- Thu, 26 Sep 2019 02:02:52 -0700 (PDT)
+        Thu, 26 Sep 2019 05:04:40 -0400
+Received: by mail-wr1-f67.google.com with SMTP id i18so1474907wru.11;
+        Thu, 26 Sep 2019 02:04:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MxzDBXOVQhWsN01bv+jFsQXoBf3LnvBl8+L+Gv9bicg=;
+        b=Arp3uC+oRK9kO5jHyZoJZkasVpXc4QlrjLt4EPzG4UcDuAevgnt5Ad8JEuAfDifNh1
+         J5goeFNtOb7DAf7xU7hh+K0ZZLWMnny3N0MuBW7qvp4fQBTsAixLospbCkcmSLLyeB+b
+         PLwF6M2WyflDzN1RW+g9KvAIuVKv0Bbs2gR8Ja/l3JbFQFcIUrwwDo+vtqa1KE1w1QL5
+         bwuL2aKoP9hcjSXXfrzag7iKOmaPeU3om9TnMlvjZszOnkujNN2bDS/YpZrSO1ju8U6Y
+         OG2sJA/eCp1YIdAV86d0qm5MyxWo/ziz/zm1msLoF7bOTgx9+T98wZHqz1jLPs/IWesZ
+         Ck0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MxzDBXOVQhWsN01bv+jFsQXoBf3LnvBl8+L+Gv9bicg=;
+        b=seQtKf17LmHklSHXRU63nt+klv2sPXCj5pj8ek4ykiRYHNOwX+PrlE6Q6LQVbQPKjR
+         8pOJJ77toUiPh9JFeNtZXHxTT1AaXYmeS1jSImSBjoI6zDfw2dn4rgQQGqLjGPL8ol78
+         YPquLXp4NprnV8PVPRyC0455dDnhkZCxrhlnWQm39+SbysEm4gld+PzdTxw8EPbQeDxy
+         RJ84eNF4Vvb5Q+5rZwCdMr8SvxVAERdwQBg0kLkRE/jh8r0qNHs6UFPHSfIwk4qO+YdW
+         mg9u5mVrWxl4fRwiEEMBEwWAShg1PoP/jk6qwZ8TbpgQRN23dmv+uJldwP8F2k8L2Mne
+         k3Lw==
+X-Gm-Message-State: APjAAAXc9xlMNCVfkSurC6/FrxEGh0G6iFSw6DcxSN8MMwGI6+kPRahi
+        f2m7vWpeRGFY/u3vJej3wnpDppT+
+X-Google-Smtp-Source: APXvYqyoCHqtB58CK+5ItwbuBMjfPu1kS6bBM0yUUPWAyIepS6DHFrVUSytCbdwu/u8usyc3GihWDQ==
+X-Received: by 2002:adf:e605:: with SMTP id p5mr2116793wrm.105.1569488677714;
+        Thu, 26 Sep 2019 02:04:37 -0700 (PDT)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id d28sm2586320wrb.95.2019.09.26.02.04.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Sep 2019 02:04:36 -0700 (PDT)
+Date:   Thu, 26 Sep 2019 11:04:34 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Nagarjuna Kristam <nkristam@nvidia.com>
+Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com,
+        mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Patch V10 0/8] Tegra XUSB gadget driver support
+Message-ID: <20190926090434.GA3432@ulmo>
+References: <1569227152-3030-1-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
-References: <20190830034304.24259-1-yamada.masahiro@socionext.com> <CAMuHMdXHqQ4O-guETbi85XiJGQ+4EkPdPZf=o540N4rGJkoK4w@mail.gmail.com>
-In-Reply-To: <CAMuHMdXHqQ4O-guETbi85XiJGQ+4EkPdPZf=o540N4rGJkoK4w@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 26 Sep 2019 18:02:16 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAR1eHPhf0eBNDd8bNVAUhfKrob0EvxHvAQHa8mqPnMbzw@mail.gmail.com>
-Message-ID: <CAK7LNAR1eHPhf0eBNDd8bNVAUhfKrob0EvxHvAQHa8mqPnMbzw@mail.gmail.com>
-Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        noreply@ellerman.id.au
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="uAKRQypu60I7Lcqm"
+Content-Disposition: inline
+In-Reply-To: <1569227152-3030-1-git-send-email-nkristam@nvidia.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
 
-On Thu, Sep 26, 2019 at 5:54 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Yamada-san,
->
-> On Fri, Aug 30, 2019 at 5:44 AM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> > Commit 9012d011660e ("compiler: allow all arches to enable
-> > CONFIG_OPTIMIZE_INLINING") allowed all architectures to enable
-> > this option. A couple of build errors were reported by randconfig,
-> > but all of them have been ironed out.
-> >
-> > Towards the goal of removing CONFIG_OPTIMIZE_INLINING entirely
-> > (and it will simplify the 'inline' macro in compiler_types.h),
-> > this commit changes it to always-on option. Going forward, the
-> > compiler will always be allowed to not inline functions marked
-> > 'inline'.
-> >
-> > This is not a problem for x86 since it has been long used by
-> > arch/x86/configs/{x86_64,i386}_defconfig.
-> >
-> > I am keeping the config option just in case any problem crops up for
-> > other architectures.
-> >
-> > The code clean-up will be done after confirming this is solid.
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
->
-> This breaks compiling drivers/video/fbdev/c2p*, as the functions in
-> drivers/video/fbdev/c2p_core.h are no longer inlined, leading to calls
-> to the non-existent function c2p_unsupported(), as reported by KISSKB:
->
-> On Thu, Sep 26, 2019 at 5:02 AM <noreply@ellerman.id.au> wrote:
-> > FAILED linux-next/m68k-defconfig/m68k Thu Sep 26, 12:58
-> >
-> > http://kisskb.ellerman.id.au/kisskb/buildresult/13973194/
-> >
-> > Commit:   Add linux-next specific files for 20190925
-> >           d47175169c28eedd2cc2ab8c01f38764cb0269cc
-> > Compiler: m68k-linux-gcc (GCC) 4.6.3 / GNU ld (GNU Binutils) 2.22
-> >
-> > Possible errors
-> > ---------------
-> >
-> > c2p_planar.c:(.text+0xd6): undefined reference to `c2p_unsupported'
-> > c2p_planar.c:(.text+0x1dc): undefined reference to `c2p_unsupported'
-> > c2p_iplan2.c:(.text+0xc4): undefined reference to `c2p_unsupported'
-> > c2p_iplan2.c:(.text+0x150): undefined reference to `c2p_unsupported'
-> > make[1]: *** [Makefile:1074: vmlinux] Error 1
-> > make: *** [Makefile:179: sub-make] Error 2
->
-> I managed to reproduce this with gcc version 8.3.0 (Ubuntu
-> 8.3.0-6ubuntu1~18.04.1) , and bisected the failure to commit
-> 025f072e5823947c ("compiler: enable CONFIG_OPTIMIZE_INLINING forcibly") .
->
-> Marking the functions __always_inline instead of inline fixes that.
-> Shall I send a patch to do that?
+--uAKRQypu60I7Lcqm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Sep 23, 2019 at 01:55:44PM +0530, Nagarjuna Kristam wrote:
+> Patches 1-3 are phy driver changes to add support for device
+> mode.
+> Patches 4-7 are changes related to XUSB device mode
+> controller driver.
+> Patch 8 is to enable drivers for XUDC support in defconfig
+>=20
+> Test Steps(USB 2.0):
+> - Enable "USB Gadget precomposed configurations" in defconfig
+> - Build, flash and boot Jetson TX1
+> - Connect Jetson TX1 and Ubuntu device using USB A to Micro B
+>   cable
+> - After boot on Jetson TX1 terminal usb0 network device should be
+>   enumerated
+> - Assign static ip to usb0 on Jetson TX1 and corresponding net
+>   device on ubuntu
+> - Run ping test and transfer test(used scp) to check data transfer
+>   communication
+>=20
+> SS mode is verified by enabling Type A port as peripheral
+> ---
+> v10:
+> * Patches 1,2,4,5,7,8 - No changes.
+> * Patch 3 has braces added to one single line else condition.
+> * Patch 6 has update on compatible string as per suggestion from Chunfeng.
+> ---
+> v9:
+> * Patches 1,2,3,4,5 - No changes.
+> * Patch 6 has update on compatible string as per suggestion from Chunfeng.
+> * Patch 7 has comment fixes as suggested by Chunfeng.
+> * Patch 8 has CONFIG_USB_GPIO enabled as module additionally.
+> ---
+> v8:
+> * Patches 1,2,3,4,5,8 - No changes.
+> * Patch 6 has update on compatible string as per change done in [1].
+> * Patch 7 has issue fix, where device mode didnot got enabled after resume
+>   from suspend.
+> ---
+> v7:
+> * Patches 1,2,3,4,5,6,8 - No changes.
+> * Patch 7 - Comments from Balbi and Chunfun adrresed.
+>   Added COMPILE_TEST in Kconfig and updated dependencies.
+> ---
+> v6:
+> * Patches 1,2,3,7,8 - No changes.
+> * Patch 4,5,6 - Comments from Rob addressed, updated usb connector driver
+>   compatibility string.
+> ---
+> v5:
+> * Patches 1-3 - Commit subject updated as per inputs from Thierry.
+> * Patch 4 - Added reg-names used on Tegra210 in the bindings doc
+> * Enabled xudc driver as module instead of part of kernel in patch 8.
+> * Patched 5-8 - No changes.
+> ---
+> v4:
+> * patch 1 - no changes.
+> * corrected companion device search based on inputs from Thierry in patch=
+ 2.
+> * removed unneeded dev variable and corrected value read in
+>   tegra210_utmi_port_reset function in patch 3.
+> * dt binding doc and dtb files are corrected for alignments.
+>   Replaced extcon-usb-gpio with usb role switch.
+> * Added support for USB role switch instead of extcon-usb-gpio and other =
+minor
+>   comments as suggested by Chunfeng.
+> * Enabled xudc driver as module instead of part of kernel in patch 8.
+> ---
+> V3:
+> * Rebased patch 1 to top of tree.
+> * Fixed bug in patch 2, where xudc interrupts dont get generated if USB h=
+ost
+>   mode fails to probe. Moved fake port detection logic to generic xusb.c.=
+ fake
+>   usb port data is updated based on soc flag need_fake_usb3_port.
+> * Added extra lines whereever necessary to make code more readable in pat=
+ch 3
+>   and 7.
+> * dt binding doc is corrected for typos and extcon references. Also added
+>   details for clocks and removed xusb_ references to clock and power-doma=
+in
+>   names and accordingly patch 5 is updated.
+> * removed avdd-pll-utmip-supply in patch 6, as its now part of padctl dri=
+ver.
+> * Patch 8 has no changes.
+> ---
+> V2:
+> * Patches 1-3 are new patches in this series, which splits unified featur=
+es
+>   patch to speprated features and removes need of port-fake entry in DT.
+> * Patch 4 is re-arragend dt-bindings patch which incorporates previous
+>   patch comments to sort DT entries alphabetically, addresses name changes
+>   and PM domain details added.
+> * Patch 5-6 are re-arranged DT patches with major changes - sort entries
+>   alphabetically, and adds clock names.
+> * Patch 7 is UDC driver tegra XUSB device mode controller with major
+>   changes - remove un-used module params, lockinng for device_mode flag,
+>   moving un-needed info logs to debug level, making changes feature flag
+>   dependent rather than SOC based macros and other error handling in prob=
+e.
+> * Patch 8 has no changes.
+>=20
+> Nagarjuna Kristam (8):
+>   phy: tegra: xusb: Add XUSB dual mode support on Tegra210
+>   phy: tegra: xusb: Add usb3 port fake support on Tegra210
+>   phy: tegra: xusb: Add vbus override support on Tegra210
+>   dt-bindings: usb: Add NVIDIA Tegra XUSB device mode controller binding
+>   arm64: tegra: Add xudc node for Tegra210
+>   arm64: tegra: Enable xudc on Jetson TX1
+>   usb: gadget: Add UDC driver for tegra XUSB device mode controller
+>   arm64: defconfig: Enable tegra XUDC support
+>=20
+>  .../devicetree/bindings/usb/nvidia,tegra-xudc.txt  |  110 +
+>  arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     |   31 +-
+>  arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   19 +
+>  arch/arm64/configs/defconfig                       |    2 +
+>  drivers/phy/tegra/xusb-tegra210.c                  |  134 +-
+>  drivers/phy/tegra/xusb.c                           |   87 +
+>  drivers/phy/tegra/xusb.h                           |    4 +
+>  drivers/usb/gadget/udc/Kconfig                     |   11 +
+>  drivers/usb/gadget/udc/Makefile                    |    1 +
+>  drivers/usb/gadget/udc/tegra-xudc.c                | 3787 ++++++++++++++=
+++++++
+>  include/linux/phy/tegra/xusb.h                     |    4 +-
+>  11 files changed, 4186 insertions(+), 4 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra-xu=
+dc.txt
+>  create mode 100644 drivers/usb/gadget/udc/tegra-xudc.c
 
-Yes, please.
+Hi Felipe, Kishon,
 
-But you do not need to touch _transp() or comp().
-Only functions that call c2p_unsupported().
+since the DT bindings have been acked by Rob, I plan on applying the DTS
+changes of the above once v5.4-rc1 is release. Do you have any remaining
+concerns about the UDC or PHY patches, respectively?
 
+Thierry
 
-BTW, c2p_unsupported() can be replaced with BUILD_BUG().
-This will break the build earlier in case
-it cannot be optimized out.
+--uAKRQypu60I7Lcqm
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Best Regards
-Masahiro Yamada
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2Mfx8ACgkQ3SOs138+
+s6HJIxAAsf7S8QBJIk0ZSPmaCeEGHV6AE0bi7bHJecdS4ZZoyyjbsLf1YxblDgBm
+/UQrgTOJcIN82mAZNQBL+dgJK5LLiBdMFYPJPfD5R48dEWtXbmZzIAliFV9MJmJ7
+DfZXuu1tWKq2GqTJrI71AKcv6EfbWG81w/G5IZFoFhg0zDxLe4AkHct5NpnCI0On
+6vFMrxM0Z1qRkEDFP1nSCY1v/ci0Q3gEaNwvdP+H5FYwvjGBvNu501Yjj+xWj0AS
+iT8SX4OkeaN5aWbMHUNViNQP26ul04wePJXLgPYfOGLw5bvG4+cSbbUbk07IfYni
+KBPzoRwHV6r5xb1/fwE/dGrpLRrrA6RU7lKK0GBOoepBKQSIecLBR0dw6B4qSIov
+si/nSwOe3z3dWk8v3mWWjON7pI5My+Trf/oEjq3TCJRTp/OQIVrNz7WA6qcJT+TR
+hyrIweJ6w87eqtT9htRtye1S11KGphM2NklLPflSqymREjt1li5ESSJcUNuagz94
+ThXS8VQRI2ZIFpy7Vor32qdTIY0yzTwePZdRHMTg7osVj/EhucFZTTeDNdKF0UB1
+LxXGgPsOrRrSr7SewHVusPrYJ4GMVU6OmFyQOli48Hd60vlPBm7hbHJGBr6+m2S7
+g08c/clhteBDZYsMHMWTju4c2WWyd5NfxF+9CtP7msj8s8i/jg0=
+=m6Ln
+-----END PGP SIGNATURE-----
+
+--uAKRQypu60I7Lcqm--
