@@ -2,116 +2,143 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8575BC4360D
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 02:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8327C4360D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 02:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6641121655
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 02:01:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7939E222C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 02:04:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NugwTEW4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391527AbfIZCBZ (ORCPT
+        id S2391539AbfIZCEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Sep 2019 22:01:25 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2724 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727403AbfIZCBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Sep 2019 22:01:25 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 919A7CA8ED39B53B4CE1;
-        Thu, 26 Sep 2019 10:01:21 +0800 (CST)
-Received: from [127.0.0.1] (10.133.217.137) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Thu, 26 Sep 2019
- 10:01:17 +0800
-Subject: Re: [PATCH 30/32] tools lib bpf: Renaming pr_warning to pr_warn
-To:     Daniel Borkmann <daniel@iogearbox.net>,
-        Petr Mladek <pmladek@suse.com>
-CC:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Whitcroft <apw@canonical.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Martin KaFai Lau" <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        "Arnaldo Carvalho de Melo" <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190920062544.180997-1-wangkefeng.wang@huawei.com>
- <20190920062544.180997-31-wangkefeng.wang@huawei.com>
- <CAEf4BzbD98xeU2dSrXYkVi+mK=kuq+5DsroNDZwOzBGYbMH1-w@mail.gmail.com>
- <20190923082039.GA2530@pc-63.home>
- <20190923110306.hrgeqwo5ogd55vfo@pathway.suse.cz>
- <20190923133550.GA9880@pc-63.home>
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-Message-ID: <82fe3d04-2985-7844-31bb-269655c83873@huawei.com>
-Date:   Thu, 26 Sep 2019 10:01:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 25 Sep 2019 22:04:49 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:44466 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbfIZCEt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Sep 2019 22:04:49 -0400
+Received: by mail-lj1-f193.google.com with SMTP id m13so390986ljj.11
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Sep 2019 19:04:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iqIvO1/cRY3REy92QSmyBb/XxrlUuFl4iRm+RuLwMC8=;
+        b=NugwTEW4rRZD2qAs8X3uEZ9BKyuMoKS5D5w+bks29qqIEOGaOsBREORPdjhVUoUSHS
+         pCY5Zg4EuicvpuihX9HT7PHYEmZC2DqUaNcST/sR6rP1ZnwpB9enQycL0eMF+j8KBnDV
+         AykipfJVrJzJruuXcGTEw+f6u1BdZpk1ya///n1PUDPUqs1XB3ut//E53xuFSyGgrm5F
+         o+p1PLVFby++tHnOE8+sExz5w8i6tzlEmI+Mzht8sgheaKOQOu+NFM9JfKdRfzS8l4b3
+         66eImMyYdm0krsN9jV0ynhBYhcRldlEqLfcvHi/yfpKkeposa9FPnVT+eeQh+GNTlUzo
+         gf8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iqIvO1/cRY3REy92QSmyBb/XxrlUuFl4iRm+RuLwMC8=;
+        b=oHPSI4yGN/zww6Fkh2VQMXnCaB4rUslwbreVDdbQE8ZXediSBJ/8/sf55LveGPXGoO
+         /59v6GudRNYd8/toTsSadg5C8ex9F3RtY9C7LvZQ7jc42qhYxHi5w6XKmiK+VulVgR0J
+         3ToTBrPx/6AEp1UEY83MYCdMq8hzqqW9Qve7J1LtIpY2dXcwNJ8ZVeF+TapHazfdVMSu
+         p8n6SuOohxoFEt8NJPZB18rRGoXC9v18e4C1VPSrwtogLgXutttjHTM9VJkem3/4DCfp
+         sapGzQq35W8MyUJwNwd4BRd++9Xmqw6cEgAwoh6e83J1IsxK74SiXNlOGn4rxz0mxqvy
+         mltg==
+X-Gm-Message-State: APjAAAUi3L6ZTqvb7Haq7dzRbhmMQcKmb0Ck0BEDTBG17JV1pNoAI6nc
+        S9mrc1ntLx7GsEkq83+a3241eTuLfIzR/TU4ZmRs3Q==
+X-Google-Smtp-Source: APXvYqzr4GSxqb6AjtMPnutvvMqRRvOEPmaJrXJguS0rhSU/wUbzDgKSpgPMW4V3/Z8S7tqO6sLkZPfZV/pSy3857wU=
+X-Received: by 2002:a2e:a0c5:: with SMTP id f5mr795667ljm.114.1569463487576;
+ Wed, 25 Sep 2019 19:04:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190923133550.GA9880@pc-63.home>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.133.217.137]
-X-CFilter-Loop: Reflected
+References: <cover.1569405445.git.baolin.wang@linaro.org> <4ac2e84637ceaf5ec67cfc11ad58c489778693a8.1569405445.git.baolin.wang@linaro.org>
+ <87e81724-9f1a-8716-5b4f-f2aac6f25c5a@redhat.com>
+In-Reply-To: <87e81724-9f1a-8716-5b4f-f2aac6f25c5a@redhat.com>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Thu, 26 Sep 2019 10:04:35 +0800
+Message-ID: <CAMz4ku+1STvcpQ=WBVMdkAfcORiCxM4Q885eqWzNoUYMETM3Bg@mail.gmail.com>
+Subject: Re: [BACKPORT 4.14.y v3 1/3] locking/lockdep: Add debug_locks check
+ in __lock_downgrade()
+To:     Waiman Long <longman@redhat.com>
+Cc:     "# 3.4.x" <stable@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2019/9/23 21:35, Daniel Borkmann wrote:
-> On Mon, Sep 23, 2019 at 01:03:06PM +0200, Petr Mladek wrote:
->> On Mon 2019-09-23 10:20:39, Daniel Borkmann wrote:
->>> On Sun, Sep 22, 2019 at 02:07:21PM -0700, Andrii Nakryiko wrote:
->>>> On Fri, Sep 20, 2019 at 10:06 AM Kefeng Wang <wangkefeng.wang@huawei.com> wrote:
->>>>> For kernel logging macro, pr_warning is completely removed and
->>>>> replaced by pr_warn, using pr_warn in tools lib bpf for symmetry
->>>>> to kernel logging macro, then we could drop pr_warning in the
->>>>> whole linux code.
->>>>>
->>>>> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
->>>>> ---
->>>>>  tools/lib/bpf/btf.c             |  56 +--
->>>>>  tools/lib/bpf/btf_dump.c        |  20 +-
->>>>>  tools/lib/bpf/libbpf.c          | 652 ++++++++++++++++----------------
->>>>>  tools/lib/bpf/libbpf_internal.h |   2 +-
->>>>>  tools/lib/bpf/xsk.c             |   4 +-
->>>>>  5 files changed, 363 insertions(+), 371 deletions(-)
->>>> Thanks! This will allow to get rid of tons warnings from checkpatch.pl.
->>>>
->>>> Alexei, Daniel, can we take this through bpf-next tree once it's open?
->>> I'd be fine with that, in fact, it probably should be in order to avoid
->>> merge conflicts since pr_warn{ing}() is used all over the place in libbpf.
->> The entire patchset modifies many files all over the tree.
->> This is from https://lkml.kernel.org/r/20190920062544.180997-1-wangkefeng.wang@huawei.com
->>
->>     120 files changed, 882 insertions(+), 927 deletions(-)
->>
->> Would it make sense to push everything at the end of the merge window
->> or for 5.4-rc2 after master settles down?
-> If all over the tree it would probably make more sense for e.g. Andrew Morton to
-> pick it up if there are no other objections, and try to merge it during mentioned
-> time frame.
-
-Hi Andrew，could you pick them up if no objections, and I could resend all with comment fixed
-
-with better time frame(rc1 or rc2 ), is it OK？
-
-Thanks.
-
+On Wed, 25 Sep 2019 at 22:05, Waiman Long <longman@redhat.com> wrote:
 >
-> Thanks,
-> Daniel
+> On 9/25/19 6:01 AM, Baolin Wang wrote:
+> > From: Waiman Long <longman@redhat.com>
+> >
+> > [Upstream commit 513e1073d52e55b8024b4f238a48de7587c64ccf]
+> >
+> > Tetsuo Handa had reported he saw an incorrect "downgrading a read lock"
+> > warning right after a previous lockdep warning. It is likely that the
+> > previous warning turned off lock debugging causing the lockdep to have
+> > inconsistency states leading to the lock downgrade warning.
+> >
+> > Fix that by add a check for debug_locks at the beginning of
+> > __lock_downgrade().
+> >
+> > Reported-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+> > Reported-by: syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com
+> > Signed-off-by: Waiman Long <longman@redhat.com>
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> > Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Will Deacon <will.deacon@arm.com>
+> > Link: https://lkml.kernel.org/r/1547093005-26085-1-git-send-email-longman@redhat.com
+> > Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> > ---
+> >  kernel/locking/lockdep.c |    3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+> > index 565005a..5c370c6 100644
+> > --- a/kernel/locking/lockdep.c
+> > +++ b/kernel/locking/lockdep.c
+> > @@ -3650,6 +3650,9 @@ static int reacquire_held_locks(struct task_struct *curr, unsigned int depth,
+> >       unsigned int depth;
+> >       int i;
+> >
+> > +     if (unlikely(!debug_locks))
+> > +             return 0;
+> > +
+> >       depth = curr->lockdep_depth;
+> >       /*
+> >        * This function is about (re)setting the class of a held lock,
 >
-> .
->
+> Apparently, there are 2 such patches in the upstream kernel - commit
+> 513e1073d52e55b8024b4f238a48de7587c64ccf and
+> 71492580571467fb7177aade19c18ce7486267f5. These are probably caused by
+> the fact that there are 2 places in the code that can match the hunks.
+> Anyway, this looks like it is applying to the wrong function. It should
+> be applied to __lock_downgrade. Though it shouldn't harm if it is
+> applied to the wrong function.
 
+Ah, I noticed there are 2 commits with the same commit message, though
+513e1073d52e55b8024b4f238a48de7587c64ccf patch did not change the
+__lock_downgrade(), which is really confusing. This patch
+(513e1073d52e55b8024b4f238a48de7587c64ccf) did the right thing, and
+71492580571467fb7177aade19c18ce7486267f5 patch should be applied to
+__lock_downgrade.
+
+I'll backport commit 71492580571467fb7177aade19c18ce7486267f5 too in
+future. Thanks.
+
+-- 
+Baolin Wang
+Best Regards
