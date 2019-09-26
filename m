@@ -2,148 +2,270 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 743ACC352AB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 21:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F4DC352AB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 21:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4846D2245A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 21:47:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XRLT+ReD"
+	by mail.kernel.org (Postfix) with ESMTP id 45FCC22466
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 21:50:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569534610;
+	bh=K3tFRaZim/0rzD7B00rdwa//YJV1bFLBpNRwD33w/BA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=C3Ummbnirg6yPoXgywulNWoB+MXANRV8WMMT2iyh2Iw0SgQAKh893CVehQb294onI
+	 d+JXZwSZYafKS0o4f5L3kQCa7cKgyktSBekpyd9xGAZE9IyRxSkQZSUBRFJ0Xiayvf
+	 1b9RYmezDb3BUctkq8ZlWHFAVxhvXzcIGq78klYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfIZVr4 (ORCPT
+        id S1727831AbfIZVuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 17:47:56 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38459 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfIZVr4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 17:47:56 -0400
-Received: by mail-pf1-f194.google.com with SMTP id h195so270450pfe.5;
-        Thu, 26 Sep 2019 14:47:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6AGLv4CWuVuelWFvRQBEfZ9A0Ad8T6D5GdQVJKzqPh4=;
-        b=XRLT+ReDlTIRTYrAMObucH4IwHfcTygZSkBOF9wPdZWNgaNHD56Sg79F9VAMZqRi3o
-         aumhv6ZVW3PtuVXQczDN8UWeZUhGrQHyXLel0xpJqnQf2ExR0hbPAIa6hxUlfoMBYfeJ
-         Q+pwoXOWZhynsL0oM/DhRo9gVJN/eZGDaifGA/2fE2cYit9MUx/x/sheRICmHk5vNrrx
-         9uSRJ5H0wA+LJJGFIZhhjpYP9g2rrrmNcrphztjStIwF/mEvFRfJnLPmkeMCRHMqIlya
-         8XHsGxzClik9iSAo+ZMuCqxJoSgddBsJmNlLZhcN1Ht/hmWaP0LKlE6Ji7CdI4DWHwoy
-         GwFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6AGLv4CWuVuelWFvRQBEfZ9A0Ad8T6D5GdQVJKzqPh4=;
-        b=mzto+LCBZu3kgypja8EXxAjoSpu11SZM6FG65NWvJ5b1981wgSrXXXuLACHyY0L0i4
-         tDVnypbr8J7lG0iidNAK/FEuOTCYLrUYxwUt8AJiVmLWc5ZI4iGdu3ezlJzhkWk2nTcj
-         mMnzTR1ngf8Q8l/12mjNpZC5zm29aUPt6rR/99RT5r8/OjnNZn3kxkdv/g/jj4zymWMX
-         papW+Kl5UzpOE3dQkA1r+rK5kxsM5+LWVuvUSAj3n6X9caTL/W+deuhF6CC6iyTeqaJM
-         G+hIvH4Ny6CgeMAYPHD5aQgYyy7pAED0llqTtYkMfWqyUKVGLhlkgDctytqKS+7Cyc3H
-         ZSuA==
-X-Gm-Message-State: APjAAAUFpKNpV19W11ThtPO1POSPCNQjcA3eXzdbzZ1CbRUwA5FSWCfh
-        sntpMrgQYN1qjNglVIz3CeU=
-X-Google-Smtp-Source: APXvYqzGvXHvWOz50sJ2rqxHIoGNO24ksVFby3tHB9I9BJBonAzzipwGngYkWvKtuFbv+qlf3O6JOw==
-X-Received: by 2002:a62:3844:: with SMTP id f65mr108201pfa.142.1569534475392;
-        Thu, 26 Sep 2019 14:47:55 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
-        by smtp.gmail.com with ESMTPSA id g12sm223317pfb.97.2019.09.26.14.47.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Sep 2019 14:47:54 -0700 (PDT)
-Subject: Re: [RT PATCH 1/3] hrtimer: Use READ_ONCE to access timer->base in
- hrimer_grab_expiry_lock()
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Julien Grall <julien.grall@arm.com>,
-        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        maz@kernel.org, rostedt@goodmis.org
-References: <20190821092409.13225-1-julien.grall@arm.com>
- <20190821092409.13225-2-julien.grall@arm.com>
- <20190821134437.efc3cs55o7uatrpj@linutronix.de>
- <alpine.DEB.2.21.1908211549040.2223@nanos.tec.linutronix.de>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <4352c04c-b424-e73c-1de6-26bab2dc1579@gmail.com>
-Date:   Thu, 26 Sep 2019 14:47:53 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 26 Sep 2019 17:50:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37764 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727195AbfIZVuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 17:50:09 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 401CA20835;
+        Thu, 26 Sep 2019 21:50:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569534607;
+        bh=K3tFRaZim/0rzD7B00rdwa//YJV1bFLBpNRwD33w/BA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=eXFxwI8GglXUXi4gpjImbh3uLS66B9q4laYrmQWiorm76tZIPdS1Bj37qmbVOI1K3
+         pAwHROBvKe4bQqQEn9ex3Na9oMDvRIvtWcnNSycYTIh9KFpWhQdUhcAHp4m1TviCS9
+         hkEOpkRI+9sfHnwQJH/d6SQovJqdbs66A68EfNvs=
+Date:   Thu, 26 Sep 2019 16:50:05 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Megha Dey <megha.dey@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-pci@vger.kernel.org, maz@kernel.org, rafael@kernel.org,
+        gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com,
+        alex.williamson@redhat.com, jgg@mellanox.com, ashok.raj@intel.com,
+        megha.dey@intel.com, jacob.jun.pan@intel.com
+Subject: Re: [RFC V1 1/7] genirq/msi: Differentiate between various MSI based
+ interrupts
+Message-ID: <20190926215005.GA198183@google.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1908211549040.2223@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1568338328-22458-2-git-send-email-megha.dey@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 8/21/19 6:50 AM, Thomas Gleixner wrote:
-> On Wed, 21 Aug 2019, Sebastian Andrzej Siewior wrote:
+On Thu, Sep 12, 2019 at 06:32:02PM -0700, Megha Dey wrote:
+> Since a device can support both MSI-X and IMS interrupts simultaneously,
+> do away with is_msix and introduce a new enum msi_desc_tag to
+> differentiate between the various types of msi_descs.
 > 
->> On 2019-08-21 10:24:07 [+0100], Julien Grall wrote:
->>> The update to timer->base is protected by the base->cpu_base->lock().
->>> However, hrtimer_grab_expirty_lock() does not access it with the lock.
->>>
->>> So it would theorically be possible to have timer->base changed under
->>> our feet. We need to prevent the compiler to refetch timer->base so the
->>> check and the access is performed on the same base.
->>
->> It is not a problem if the timer's bases changes. We get here because we
->> want to help the timer to complete its callback.
->> The base can only change if the timer gets re-armed on another CPU which
->> means is completed callback. In every case we can cancel the timer on
->> the next iteration.
+> Signed-off-by: Megha Dey <megha.dey@linux.intel.com>
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# for drivers/pci/msi.c
+
+> ---
+>  arch/mips/pci/msi-xlp.c    |  2 +-
+>  arch/s390/pci/pci_irq.c    |  2 +-
+>  arch/x86/kernel/apic/msi.c |  2 +-
+>  arch/x86/pci/xen.c         |  2 +-
+>  drivers/pci/msi.c          | 19 ++++++++++---------
+>  include/linux/msi.h        | 11 ++++++++++-
+>  kernel/irq/msi.c           |  2 +-
+>  7 files changed, 25 insertions(+), 15 deletions(-)
 > 
-> It _IS_ a problem when the base changes and the compiler reloads
+> diff --git a/arch/mips/pci/msi-xlp.c b/arch/mips/pci/msi-xlp.c
+> index bb14335..0f06ad1 100644
+> --- a/arch/mips/pci/msi-xlp.c
+> +++ b/arch/mips/pci/msi-xlp.c
+> @@ -457,7 +457,7 @@ int arch_setup_msi_irq(struct pci_dev *dev, struct msi_desc *desc)
+>  	node = slot / 8;
+>  	lnkbase = nlm_get_pcie_base(node, link);
+>  
+> -	if (desc->msi_attrib.is_msix)
+> +	if (desc->tag == IRQ_MSI_TAG_MSIX)
+>  		return xlp_setup_msix(lnkbase, node, link, desc);
+>  	else
+>  		return xlp_setup_msi(lnkbase, node, link, desc);
+> diff --git a/arch/s390/pci/pci_irq.c b/arch/s390/pci/pci_irq.c
+> index d80616a..1938582 100644
+> --- a/arch/s390/pci/pci_irq.c
+> +++ b/arch/s390/pci/pci_irq.c
+> @@ -332,7 +332,7 @@ void arch_teardown_msi_irqs(struct pci_dev *pdev)
+>  	for_each_pci_msi_entry(msi, pdev) {
+>  		if (!msi->irq)
+>  			continue;
+> -		if (msi->msi_attrib.is_msix)
+> +		if (msi->tag == IRQ_MSI_TAG_MSIX)
+>  			__pci_msix_desc_mask_irq(msi, 1);
+>  		else
+>  			__pci_msi_desc_mask_irq(msi, 1, 1);
+> diff --git a/arch/x86/kernel/apic/msi.c b/arch/x86/kernel/apic/msi.c
+> index 7f75334..435bcda 100644
+> --- a/arch/x86/kernel/apic/msi.c
+> +++ b/arch/x86/kernel/apic/msi.c
+> @@ -98,7 +98,7 @@ int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
+>  
+>  	init_irq_alloc_info(arg, NULL);
+>  	arg->msi_dev = pdev;
+> -	if (desc->msi_attrib.is_msix) {
+> +	if (desc->tag == IRQ_MSI_TAG_MSIX) {
+>  		arg->type = X86_IRQ_ALLOC_TYPE_MSIX;
+>  	} else {
+>  		arg->type = X86_IRQ_ALLOC_TYPE_MSI;
+> diff --git a/arch/x86/pci/xen.c b/arch/x86/pci/xen.c
+> index 91220cc..5e850b8 100644
+> --- a/arch/x86/pci/xen.c
+> +++ b/arch/x86/pci/xen.c
+> @@ -382,7 +382,7 @@ static void xen_teardown_msi_irqs(struct pci_dev *dev)
+>  	struct msi_desc *msidesc;
+>  
+>  	msidesc = first_pci_msi_entry(dev);
+> -	if (msidesc->msi_attrib.is_msix)
+> +	if (msidesc->tag == IRQ_MSI_TAG_MSIX)
+>  		xen_pci_frontend_disable_msix(dev);
+>  	else
+>  		xen_pci_frontend_disable_msi(dev);
+> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+> index 0884bed..8a05416 100644
+> --- a/drivers/pci/msi.c
+> +++ b/drivers/pci/msi.c
+> @@ -235,7 +235,7 @@ static void msi_set_mask_bit(struct irq_data *data, u32 flag)
+>  {
+>  	struct msi_desc *desc = irq_data_get_msi_desc(data);
+>  
+> -	if (desc->msi_attrib.is_msix) {
+> +	if (desc->tag == IRQ_MSI_TAG_MSIX) {
+>  		msix_mask_irq(desc, flag);
+>  		readl(desc->mask_base);		/* Flush write to device */
+>  	} else {
+> @@ -278,7 +278,7 @@ void __pci_read_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
+>  
+>  	BUG_ON(dev->current_state != PCI_D0);
+>  
+> -	if (entry->msi_attrib.is_msix) {
+> +	if (entry->tag == IRQ_MSI_TAG_MSIX) {
+>  		void __iomem *base = pci_msix_desc_addr(entry);
+>  
+>  		if (!base) {
+> @@ -313,7 +313,7 @@ void __pci_write_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
+>  
+>  	if (dev->current_state != PCI_D0 || pci_dev_is_disconnected(dev)) {
+>  		/* Don't touch the hardware now */
+> -	} else if (entry->msi_attrib.is_msix) {
+> +	} else if (entry->tag == IRQ_MSI_TAG_MSIX) {
+>  		void __iomem *base = pci_msix_desc_addr(entry);
+>  
+>  		if (!base)
+> @@ -376,7 +376,7 @@ static void free_msi_irqs(struct pci_dev *dev)
+>  	pci_msi_teardown_msi_irqs(dev);
+>  
+>  	list_for_each_entry_safe(entry, tmp, msi_list, list) {
+> -		if (entry->msi_attrib.is_msix) {
+> +		if (entry->tag == IRQ_MSI_TAG_MSIX) {
+>  			if (list_is_last(&entry->list, msi_list))
+>  				iounmap(entry->mask_base);
+>  		}
+> @@ -471,7 +471,7 @@ static ssize_t msi_mode_show(struct device *dev, struct device_attribute *attr,
+>  	entry = irq_get_msi_desc(irq);
+>  	if (entry)
+>  		return sprintf(buf, "%s\n",
+> -				entry->msi_attrib.is_msix ? "msix" : "msi");
+> +			(entry->tag == IRQ_MSI_TAG_MSIX) ? "msix" : "msi");
+>  
+>  	return -ENODEV;
+>  }
+> @@ -570,7 +570,7 @@ msi_setup_entry(struct pci_dev *dev, int nvec, struct irq_affinity *affd)
+>  
+>  	pci_read_config_word(dev, dev->msi_cap + PCI_MSI_FLAGS, &control);
+>  
+> -	entry->msi_attrib.is_msix	= 0;
+> +	entry->tag			= IRQ_MSI_TAG_MSI;
+>  	entry->msi_attrib.is_64		= !!(control & PCI_MSI_FLAGS_64BIT);
+>  	entry->msi_attrib.is_virtual    = 0;
+>  	entry->msi_attrib.entry_nr	= 0;
+> @@ -714,7 +714,7 @@ static int msix_setup_entries(struct pci_dev *dev, void __iomem *base,
+>  			goto out;
+>  		}
+>  
+> -		entry->msi_attrib.is_msix	= 1;
+> +		entry->tag			= IRQ_MSI_TAG_MSIX;
+>  		entry->msi_attrib.is_64		= 1;
+>  		if (entries)
+>  			entry->msi_attrib.entry_nr = entries[i].entry;
+> @@ -1380,7 +1380,7 @@ irq_hw_number_t pci_msi_domain_calc_hwirq(struct pci_dev *dev,
+>  
+>  static inline bool pci_msi_desc_is_multi_msi(struct msi_desc *desc)
+>  {
+> -	return !desc->msi_attrib.is_msix && desc->nvec_used > 1;
+> +	return (desc->tag == IRQ_MSI_TAG_MSI) && desc->nvec_used > 1;
+>  }
+>  
+>  /**
+> @@ -1404,7 +1404,8 @@ int pci_msi_domain_check_cap(struct irq_domain *domain,
+>  	if (pci_msi_desc_is_multi_msi(desc) &&
+>  	    !(info->flags & MSI_FLAG_MULTI_PCI_MSI))
+>  		return 1;
+> -	else if (desc->msi_attrib.is_msix && !(info->flags & MSI_FLAG_PCI_MSIX))
+> +	else if ((desc->tag == IRQ_MSI_TAG_MSIX) &&
+> +					!(info->flags & MSI_FLAG_PCI_MSIX))
+>  		return -ENOTSUPP;
+>  
+>  	return 0;
+> diff --git a/include/linux/msi.h b/include/linux/msi.h
+> index 8ad679e..22591b6 100644
+> --- a/include/linux/msi.h
+> +++ b/include/linux/msi.h
+> @@ -55,6 +55,15 @@ struct ti_sci_inta_msi_desc {
+>  	u16	dev_index;
+>  };
+>  
+> +enum msi_desc_tags {
+> +	IRQ_MSI_TAG_MSI,
+> +	IRQ_MSI_TAG_MSIX,
+> +	IRQ_MSI_TAG_IMS,
+> +	IRQ_MSI_TAG_PLAT,
+> +	IRQ_MSI_TAG_FSL,
+> +	IRQ_MSI_TAG_SCI,
+> +};
+> +
+>  /**
+>   * struct msi_desc - Descriptor structure for MSI based interrupts
+>   * @list:	List head for management
+> @@ -90,6 +99,7 @@ struct msi_desc {
+>  	struct device			*dev;
+>  	struct msi_msg			msg;
+>  	struct irq_affinity_desc	*affinity;
+> +	enum msi_desc_tags		tag;
+>  #ifdef CONFIG_IRQ_MSI_IOMMU
+>  	const void			*iommu_cookie;
+>  #endif
+> @@ -102,7 +112,6 @@ struct msi_desc {
+>  		struct {
+>  			u32 masked;
+>  			struct {
+> -				u8	is_msix		: 1;
+>  				u8	multiple	: 3;
+>  				u8	multi_cap	: 3;
+>  				u8	maskbit		: 1;
+> diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+> index ad26fbc..0819395 100644
+> --- a/kernel/irq/msi.c
+> +++ b/kernel/irq/msi.c
+> @@ -384,7 +384,7 @@ static bool msi_check_reservation_mode(struct irq_domain *domain,
+>  	 * masking and MSI does so when the maskbit is set.
+>  	 */
+>  	desc = first_msi_entry(dev);
+> -	return desc->msi_attrib.is_msix || desc->msi_attrib.maskbit;
+> +	return (desc->tag == IRQ_MSI_TAG_MSIX) || desc->msi_attrib.maskbit;
+>  }
+>  
+>  /**
+> -- 
+> 2.7.4
 > 
->    CPU0	  	       	   	CPU1
->    base = timer->base;
-> 
->    lock(base->....);
-> 				switch base
-> 
->    reload
-> 	base = timer->base;
-> 
->    unlock(base->....);
-> 
-
-It seems we could hit a similar problem in lock_hrtimer_base()
-
- base = timer->base;
-
- if (likely(base != &migration_base)) {
-
-     <reload base : could point to &migration_base>
-
-     raw_spin_lock_irqsave(&base->cpu_base->lock, *flags);
-
-Probably not a big deal, since migration_base-cpu_base->lock can be locked just fine,
-(without lockdep complaining that the lock has not been initialized since we use raw_ variant),
-but this could cause unnecessary false sharing.
-
-
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index 0d4dc241c0fb498036c91a571e65cb00f5d19ba6..fa881c03e0a1a351186a8d8f798dd7471067a951 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -164,7 +164,7 @@ struct hrtimer_clock_base *lock_hrtimer_base(const struct hrtimer *timer,
- 	struct hrtimer_clock_base *base;
- 
- 	for (;;) {
--		base = timer->base;
-+		base = READ_ONCE(timer->base);
- 		if (likely(base != &migration_base)) {
- 			raw_spin_lock_irqsave(&base->cpu_base->lock, *flags);
- 			if (likely(base == timer->base))
-
-
