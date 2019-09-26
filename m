@@ -2,268 +2,93 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D97DFC432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92AD5C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B60592146E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 683AE217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 09:18:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="mRe5YO4G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730334AbfIZJRJ (ORCPT
+        id S1730372AbfIZJS6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 05:17:09 -0400
-Received: from mail-sh.amlogic.com ([58.32.228.43]:13802 "EHLO
-        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730255AbfIZJRI (ORCPT
+        Thu, 26 Sep 2019 05:18:58 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:39200 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730304AbfIZJS6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 05:17:08 -0400
-Received: from [10.18.29.226] (10.18.29.226) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 26 Sep
- 2019 17:17:06 +0800
-Subject: Re: [PATCH 2/3] soc: amlogic: Add support for Secure power domains
- controller
-To:     Kevin Hilman <khilman@baylibre.com>,
-        <linux-amlogic@lists.infradead.org>
-CC:     Zhiqiang Liang <zhiqiang.liang@amlogic.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-References: <1568895064-4116-1-git-send-email-jianxin.pan@amlogic.com>
- <1568895064-4116-3-git-send-email-jianxin.pan@amlogic.com>
- <7hh850t2wy.fsf@baylibre.com>
-From:   Jianxin Pan <jianxin.pan@amlogic.com>
-Message-ID: <3859c748-01f0-4dbd-05d6-20fff31edf11@amlogic.com>
-Date:   Thu, 26 Sep 2019 17:17:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 26 Sep 2019 05:18:58 -0400
+Received: by mail-ed1-f67.google.com with SMTP id a15so1300009edt.6
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 02:18:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CDj4POLTtLONQOD1mW6qh/tKEDe8bqQ8HYY1swpGKfE=;
+        b=mRe5YO4G8ZWDs72D7P3u6F7Lv6nP8HCGl/hZF9xGi0h/w5kli/ohalzTK3vhgQ85Ta
+         FmLjSKeXP8SLhWkG3reRO5UE0CYk07FGD7NH4qxlzBG4KSDgvKJwx9w2XnXnXzvOxWy0
+         umBDJ0hikAw8jYnaWU3eYfotpDrcN8tfSDlIYEcFLHUwjdkHFtPbCo87P1VYK5YxhIa6
+         5KfWua0WnJXtv2HkoUmo9vV1gIW1ZLWaTz5gvz2nINMwW2O7/NkdcHduKtJq9HO7jA+h
+         3n+loYyFVKGAwS8GJYJqjf9dQlffXr96tN/O/ZIt0AQ6eyCzubpL7Ie//tkLR4SWJbEA
+         KHWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CDj4POLTtLONQOD1mW6qh/tKEDe8bqQ8HYY1swpGKfE=;
+        b=aDv4rTkY+p5tLZFpe6O1vpkqmvf8j06oLSjifC5jxuMyn9K7DMaht2KW9uLc8GPKdu
+         Z2kpv3kxK+JpSpR/9wHaU6Gnx0aZ9kDYvW5RwD6qtP6uczCWQoNXzzzBggTrELmPcP+V
+         gKbJY/lQmb2EIlWz8G45vbkIhTjoqoK7avy2gHKV9P3qniu8wZO46ZohWK4+DculgjW+
+         6LXwof5O3yBJcQ/KFq1C8sqmYUABvhuiWmEsCmU6NRaCNWp0Nv24Tc3H1xFTC7aQLXAs
+         gg9j2qVBjMsfvJxz1vwkMoXc/sBjw82seRdMXb+BebgtFrCnsc4XxecrcVmHAOup+waV
+         d3Xw==
+X-Gm-Message-State: APjAAAULW+B+4LlK87rtJTSVQm/N+wbhLeR7xtCEeGb59EarBOGPVGkc
+        MSm/xzpSvxtgYLSHdZlsviaj8A==
+X-Google-Smtp-Source: APXvYqzgllIB6Jnz0BG7fCN17jh9uiP0bMTC7aGkz2PTwEuXyvrijxfgLibrCfQmbfgWv82zBzVvQQ==
+X-Received: by 2002:a17:906:79ca:: with SMTP id m10mr2114613ejo.292.1569489534839;
+        Thu, 26 Sep 2019 02:18:54 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id f21sm350556edt.52.2019.09.26.02.18.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 26 Sep 2019 02:18:54 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 3E923102322; Thu, 26 Sep 2019 12:18:55 +0300 (+03)
+Date:   Thu, 26 Sep 2019 12:18:55 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+        Qian Cai <cai@lca.pw>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@kernel.org>
+Subject: Re: [PATCH 3/3] mm, page_owner: rename flag indicating that page is
+ allocated
+Message-ID: <20190926091855.z3wuhk3mnzx57ljf@box>
+References: <20190925143056.25853-1-vbabka@suse.cz>
+ <20190925143056.25853-4-vbabka@suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <7hh850t2wy.fsf@baylibre.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.18.29.226]
-X-ClientProxiedBy: mail-sh.amlogic.com (10.18.11.5) To mail-sh.amlogic.com
- (10.18.11.5)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190925143056.25853-4-vbabka@suse.cz>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kevin,
+On Wed, Sep 25, 2019 at 04:30:52PM +0200, Vlastimil Babka wrote:
+> Commit 37389167a281 ("mm, page_owner: keep owner info when freeing the page")
+> has introduced a flag PAGE_EXT_OWNER_ACTIVE to indicate that page is tracked as
+> being allocated.  Kirril suggested naming it PAGE_EXT_OWNER_ALLOCED to make it
+		    ^ typo
 
-Thanks for your review. Please see my comments below.
+And PAGE_EXT_OWNER_ALLOCED is my typo. I meant PAGE_EXT_OWNER_ALLOCATED :P
 
-
-On 2019/9/26 6:41, Kevin Hilman wrote:
-> Hi Jianxin,
-> 
-> Jianxin Pan <jianxin.pan@amlogic.com> writes:
-> 
->> Add support for the Amlogic Secure Power controller. In A1/C1 series, power
->> control registers are in secure domain, and should be accessed by smc.
->>
->> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
->> Signed-off-by: Zhiqiang Liang <zhiqiang.liang@amlogic.com>
-> 
-> Thanks for the new power domain driver.
-> 
->> ---
->>  drivers/soc/amlogic/Kconfig             |  13 +++
->>  drivers/soc/amlogic/Makefile            |   1 +
->>  drivers/soc/amlogic/meson-secure-pwrc.c | 182 ++++++++++++++++++++++++++++++++
->>  3 files changed, 196 insertions(+)
->>  create mode 100644 drivers/soc/amlogic/meson-secure-pwrc.c
->>
->> diff --git a/drivers/soc/amlogic/Kconfig b/drivers/soc/amlogic/Kconfig
->> index bc2c912..6cb06e7 100644
->> --- a/drivers/soc/amlogic/Kconfig
->> +++ b/drivers/soc/amlogic/Kconfig
->> @@ -48,6 +48,19 @@ config MESON_EE_PM_DOMAINS
->>  	  Say yes to expose Amlogic Meson Everything-Else Power Domains as
->>  	  Generic Power Domains.
->>  
->> +config MESON_SECURE_PM_DOMAINS
->> +	bool "Amlogic Meson Secure Power Domains driver"
->> +	depends on ARCH_MESON || COMPILE_TEST
->> +	depends on PM && OF
->> +	depends on HAVE_ARM_SMCCC
->> +	default ARCH_MESON
->> +	select PM_GENERIC_DOMAINS
->> +	select PM_GENERIC_DOMAINS_OF
->> +	help
->> +	  Support for the power controller on Amlogic A1/C1 series.
->> +	  Say yes to expose Amlogic Meson Secure Power Domains as Generic
->> +	  Power Domains.
->> +
->>  config MESON_MX_SOCINFO
->>  	bool "Amlogic Meson MX SoC Information driver"
->>  	depends on ARCH_MESON || COMPILE_TEST
->> diff --git a/drivers/soc/amlogic/Makefile b/drivers/soc/amlogic/Makefile
->> index de79d044..7b8c5d3 100644
->> --- a/drivers/soc/amlogic/Makefile
->> +++ b/drivers/soc/amlogic/Makefile
->> @@ -5,3 +5,4 @@ obj-$(CONFIG_MESON_GX_SOCINFO) += meson-gx-socinfo.o
->>  obj-$(CONFIG_MESON_GX_PM_DOMAINS) += meson-gx-pwrc-vpu.o
->>  obj-$(CONFIG_MESON_MX_SOCINFO) += meson-mx-socinfo.o
->>  obj-$(CONFIG_MESON_EE_PM_DOMAINS) += meson-ee-pwrc.o
->> +obj-$(CONFIG_MESON_SECURE_PM_DOMAINS) += meson-secure-pwrc.o
->> diff --git a/drivers/soc/amlogic/meson-secure-pwrc.c b/drivers/soc/amlogic/meson-secure-pwrc.c
->> new file mode 100644
->> index 00000000..00c7232
->> --- /dev/null
->> +++ b/drivers/soc/amlogic/meson-secure-pwrc.c
->> @@ -0,0 +1,182 @@
->> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-[...]
->> +
->> +static bool pwrc_secure_get_power(struct meson_secure_pwrc_domain *pwrc_domain)
->> +{
->> +	struct arm_smccc_res res;
->> +
->> +	arm_smccc_smc(SMC_PWRC_GET, pwrc_domain->index, 0,
->> +		      0, 0, 0, 0, 0, &res);
->> +
->> +	return res.a0 & 0x1;
-> 
-> Please use a #define with a readable name for this mask.
-> The return type of this smc is bool. I will remove 0x1 mask in next version. 
-
-Another question about smc:
-In this driver, no share memory is needed, and I use arm_smccc_smc() directly.
-Should I add secure-monitor = <&sm> in dtb and use meson_sm_call() from sm driver instead? 
->> +}
-> 
-> What does the return value for this function mean?  Does true mean
-> "powered off" or "powered on">
-The return vaule for SMC_PWRC_GET :
-0 -> power on
-1 -> power off> See the rename I just did on the ee-pwrc driver:
-> https://lore.kernel.org/linux-amlogic/20190925213528.21515-2-khilman@kernel.org/
-> I will follow and rename to _is_off() in the next verson.
->> +static int meson_secure_pwrc_off(struct generic_pm_domain *domain)
->> +{
->> +	struct arm_smccc_res res;
->> +	struct meson_secure_pwrc_domain *pwrc_domain =
-[...]
->> +
->> +#define SEC_PD(__name, __flag)			\
->> +{						\
->> +	.name = #__name,			\
->> +	.index = PWRC_##__name##_ID,		\
->> +	.get_power = pwrc_secure_get_power,	\
->> +	.flags = __flag,			\
->> +}
->> +
->> +static struct meson_secure_pwrc_domain_desc a1_pwrc_domains[] = {
->> +	SEC_PD(DSPA,	0),
->> +	SEC_PD(DSPB,	0),
->> +	SEC_PD(UART,	GENPD_FLAG_ALWAYS_ON),
-> 
-> This flag should only be used for domains where there are no linux
-> drivers.
-> 
-> Rather than using this flag, you need to add a 'power-domain' property
-> to the uart driver in DT, and then update the meson_uart driver to use
-> the runtime PM API so that the domain is enabled whenever the UART is in
-> use.
-PM_UART Power domain is shared by uart, msr, jtag and cec.
-Uart should keep working in BL31, after kernel suspend and before kernel resume.
-> 
->> +	SEC_PD(DMC,	GENPD_FLAG_ALWAYS_ON),
-> 
-> Please explain the need for ALWAYS_ON.
-> 
-PM_DMC is used for DDR PHY ana/dig and DMC. 
-There is no linux drver for them, and it should be always on. 
-
-I will add comments for all these always on domains.
->> +	SEC_PD(I2C,	0),
->> +	SEC_PD(PSRAM,	0),
->> +	SEC_PD(ACODEC,	0),
->> +	SEC_PD(AUDIO,	0),
->> +	SEC_PD(OTP,	0),
->> +	SEC_PD(DMA,	0),
->> +	SEC_PD(SD_EMMC,	0),
->> +	SEC_PD(RAMA,	0),
->> +	SEC_PD(RAMB,	GENPD_FLAG_ALWAYS_ON),
-> 
-> Please explain the need for ALWAYS_ON.
-> 
-In A1, SRAMB is used for bl31 ATF. 
->> +	SEC_PD(IR,	0),
->> +	SEC_PD(SPICC,	0),
->> +	SEC_PD(SPIFC,	0),
->> +	SEC_PD(USB,	0),
->> +	SEC_PD(NIC,	GENPD_FLAG_ALWAYS_ON),
-> 
-> Please explain the need for ALWAYS_ON.
-> 
-PD_NIC is used for NIC400, and should keep on.
->> +	SEC_PD(PDMIN,	0),
->> +	SEC_PD(RSA,	0),
->> +};
->> +
->> +static int meson_secure_pwrc_probe(struct platform_device *pdev)
->> +{
->> +	const struct meson_secure_pwrc_domain_data *match;
->> +	struct meson_secure_pwrc *pwrc;
->> +	int i;
-[...]
->> +
->> +	return of_genpd_add_provider_onecell(pdev->dev.of_node, &pwrc->xlate);
->> +}
->> +
->> +static struct meson_secure_pwrc_domain_data meson_secure_a1_pwrc_data = {
->> +	.domains = a1_pwrc_domains,
->> +	.count = ARRAY_SIZE(a1_pwrc_domains),
->> +};
->> +
->> +static const struct of_device_id meson_secure_pwrc_match_table[] = {
->> +	{
->> +		.compatible = "amlogic,meson-a1-pwrc",
->> +		.data = &meson_secure_a1_pwrc_data,
->> +	},
->> +	{ }
-> 
-> as mentioned by Martin, please add the sentinel string here.  Helps for
-> readability.
-> 
-OK, I will fix it. Thank you.
->> +};
->> +
->> +static struct platform_driver meson_secure_pwrc_driver = {
->> +	.probe = meson_secure_pwrc_probe,
->> +	.driver = {
->> +		.name		= "meson_secure_pwrc",
->> +		.of_match_table	= meson_secure_pwrc_match_table,
->> +	},
->> +};
->> +
->> +static int meson_secure_pwrc_init(void)
->> +{
->> +	return platform_driver_register(&meson_secure_pwrc_driver);
->> +}
->> +arch_initcall_sync(meson_secure_pwrc_init);
-> 
-> Please use builtin_platform_driver() or explain in detail why the
-> initcall is needed.
-> 
-OK, I will use builtin_platform_driver instead.
-> Thanks,
-> 
-> Kevin
-> 
-> .
-> 
-
+-- 
+ Kirill A. Shutemov
