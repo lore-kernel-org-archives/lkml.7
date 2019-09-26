@@ -2,226 +2,88 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C90C352A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 23:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B63FC4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 23:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7857F207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 23:16:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HsC6hIg2"
+	by mail.kernel.org (Postfix) with ESMTP id 2942520835
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 23:22:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569540148;
+	bh=GQUyMjye5vxmGMIj00o9cH/mVKe1NcXqBa/0DfTtHrw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=b+RD8f7jyu01HUDQgOxa2dFtg8M8MAUNHNnq5HwIDQqrIORZtvPPMgvIzV6+aMWDb
+	 DnTobn5xqQsb1YAwgmD/NJyKvc0j26LO6lpFDQpBizJg6bMJHpcc2jtMOXxsbyaupu
+	 7QXGlsUkz3cEjpmD92QQcMkpldJvd/HM/SdMbS/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728706AbfIZXQz (ORCPT
+        id S1728922AbfIZXW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 19:16:55 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33468 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728254AbfIZXQz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 19:16:55 -0400
-Received: by mail-wr1-f65.google.com with SMTP id b9so624626wrs.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 16:16:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EjCi2EVKEO9MNaLzSFEPFOS+gH77W2l8Y4dxTk44W7g=;
-        b=HsC6hIg2jBQDPOwnYUdM++he3ysu/qvXKFyuQ6nYtzHS9bkuw5037MDlbXSpSMcczo
-         yQG0/JsOJUrwCxjqMuvc505Z29diKoJ45ReBJIZsL7e7Y6fmPZ4wWelBuPIibEXoHE6A
-         haEOPWBjloRXJ7WactVoXb/LahjqH7wQvv3uk8aVM5/vd3AMl09wFIHwxjTv8LQfcI4K
-         D+HRIIvSICJrNV+6un8jNUjMx55HmiDIAPPHhkik3lVMhHFlw321OzmnfHTxY3uVNTyF
-         LiVhZzSX+y539lY4A3b9t6CDyr3h6Ktkgsm6/M9EHNP8itmcl3Hfq6qKehRzJKhTrtso
-         daXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EjCi2EVKEO9MNaLzSFEPFOS+gH77W2l8Y4dxTk44W7g=;
-        b=IN2XKDq8+yilOrKD88eSL1zNK9fgCU3txzF7WhNKBudWQVNSng5q2vFFV5j81Kp8iH
-         Jgu1cjOLE+pwMcC6T2UHKYl0l05ckwZnbTrq1YF9wMVfrjO1se0viTIf1ByMa3REvjM/
-         v8dsAZ5e8YqkenNqDgL9xItwO5t855SMpEoZ+3GlqfUOc+MMMyDWEEF6U7JfSfftF+xD
-         rgGoWovcJA/opd/5zUy4ih0H1pijj1APhl1kDuuO3mzLQA0H1LdxJqwPWMNU70k0xvZi
-         /++Y6TGqyPTW6uIfy8UMz0UwUMKgEqnV2y6nNYmoaje0Rav1laEeZ0X81Z90E0WHCm6a
-         kwJQ==
-X-Gm-Message-State: APjAAAWQDOSrCgHReycn+CHFb+Sh3II13ClQR5Hh1s3lu2lIwIZebrR5
-        ym4t+culOx9VpDxuJgYl0so9Tw==
-X-Google-Smtp-Source: APXvYqzdx4pJgp/+Ml1Bkt9bsB1vDr2MP1XIHb71Z8dzF4eRLaWIkEDtTHvJAqj8sJ2bf2HNCfqMiA==
-X-Received: by 2002:a5d:6049:: with SMTP id j9mr615213wrt.213.1569539812909;
-        Thu, 26 Sep 2019 16:16:52 -0700 (PDT)
-Received: from [10.44.66.8] ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id c10sm582111wrf.58.2019.09.26.16.16.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 26 Sep 2019 16:16:52 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] dt-bindings: interconnect: Add OSM L3 DT bindings
-To:     Sibi Sankar <sibis@codeaurora.org>, robh+dt@kernel.org
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mark.rutland@arm.com,
-        evgreen@chromium.org, daidavid1@codeaurora.org,
-        saravanak@google.com
-References: <20190821091132.14994-1-sibis@codeaurora.org>
- <20190821091132.14994-2-sibis@codeaurora.org>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
- 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
- KEmKjLDvB0pePJkdTw==
-Message-ID: <53e76100-b7c9-1069-b571-b17271fe41c5@linaro.org>
-Date:   Thu, 26 Sep 2019 16:16:47 -0700
+        Thu, 26 Sep 2019 19:22:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39466 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728270AbfIZXW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 19:22:27 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E041207E0;
+        Thu, 26 Sep 2019 23:22:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569540146;
+        bh=GQUyMjye5vxmGMIj00o9cH/mVKe1NcXqBa/0DfTtHrw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lwe85V6TohEQw3nBBb9Bdqf+HrEz1OmN6GYeCI4L/QakpJQva0ND2s4ShvldrUl80
+         /uxq/DljbUWy73uB6bCvCcZXgo2OvbQ4+yiFr4ZEye2sXcnH2ZPUzwuzEym4AuHsaa
+         xn9dbAdK9tQycQVK6SlNYbuuWAyGi63AqRtoYHz8=
+Date:   Thu, 26 Sep 2019 19:22:25 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-integrity@vger.kernel.org,
+        Vadim Sukhomlinov <sukhomlinov@google.com>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] tpm: Fix TPM 1.2 Shutdown sequence to prevent future
+ TPM operations
+Message-ID: <20190926232225.GJ8171@sasha-vm>
+References: <20190925101532.31280-1-jarkko.sakkinen@linux.intel.com>
+ <20190925101532.31280-4-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190821091132.14994-2-sibis@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190925101532.31280-4-jarkko.sakkinen@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sibi,
+On Wed, Sep 25, 2019 at 01:15:32PM +0300, Jarkko Sakkinen wrote:
+>From: Vadim Sukhomlinov <sukhomlinov@google.com>
+>
+>commit db4d8cb9c9f2af71c4d087817160d866ed572cc9 upstream
+>
+>TPM 2.0 Shutdown involve sending TPM2_Shutdown to TPM chip and disabling
+>future TPM operations. TPM 1.2 behavior was different, future TPM
+>operations weren't disabled, causing rare issues. This patch ensures
+>that future TPM operations are disabled.
+>
+>Fixes: d1bd4a792d39 ("tpm: Issue a TPM2_Shutdown for TPM2 devices.")
+>Cc: stable@vger.kernel.org
+>Signed-off-by: Vadim Sukhomlinov <sukhomlinov@google.com>
+>[dianders: resolved merge conflicts with mainline]
+>Signed-off-by: Douglas Anderson <dianders@chromium.org>
+>Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+>Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-On 8/21/19 02:11, Sibi Sankar wrote:
-> Add bindings for Operating State Manager (OSM) L3 interconnect provider
-> on SDM845 SoCs.
-> 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  .../bindings/interconnect/qcom,osm-l3.yaml    | 56 +++++++++++++++++++
->  .../dt-bindings/interconnect/qcom,osm-l3.h    | 12 ++++
->  2 files changed, 68 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
->  create mode 100644 include/dt-bindings/interconnect/qcom,osm-l3.h
-> 
-> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml b/Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
-> new file mode 100644
-> index 0000000000000..dab2b6875ab27
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
-> @@ -0,0 +1,56 @@
-> +# SPDX-License-Identifier: BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/interconnect/qcom,osm-l3.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Operating State Manager (OSM) L3 Interconnect Provider
-> +
-> +maintainers:
-> +  - Sibi Sankar <sibis@codeaurora.org>
-> +
-> +description:
-> +  L3 cache bandwidth requirements on Qualcomm SoCs is serviced by the OSM.
-> +  The OSM L3 interconnect provider aggregates the L3 bandwidth requests
-> +  from CPU/GPU and relays it to the OSM.
-> +
-> +properties:
-> +  compatible:
-> +    const: "qcom,sdm845-osm-l3"
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: xo clock
-> +      - description: alternate clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: xo
-> +      - const: alternate
-> +
-> +  '#interconnect-cells':
-> +    const: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - '#interconnect-cells'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    osm_l3: interconnect@17d41000 {
-> +      compatible = "qcom,sdm845-osm-l3";
-> +      reg = <0x17d41000 0x1400>;
-> +
-> +      clocks = <&rpmhcc 0>, <&gcc 165>;
-> +      clock-names = "xo", "alternate";
-> +
-> +      #interconnect-cells = <1>;
-> +    };
+I've queued it up for 4.19 and 4.14, thanks!
 
-Are we going to do the bandwidth scaling from some cpufreq driver? Under which
-DT node will we put the "interconnects" property?
-
+--
 Thanks,
-Georgi
-
-> diff --git a/include/dt-bindings/interconnect/qcom,osm-l3.h b/include/dt-bindings/interconnect/qcom,osm-l3.h
-> new file mode 100644
-> index 0000000000000..54858ff7674d7
-> --- /dev/null
-> +++ b/include/dt-bindings/interconnect/qcom,osm-l3.h
-> @@ -0,0 +1,12 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2019 The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_OSM_L3_H
-> +#define __DT_BINDINGS_INTERCONNECT_QCOM_OSM_L3_H
-> +
-> +#define MASTER_OSM_L3_APPS	0
-> +#define SLAVE_OSM_L3		1
-> +
-> +#endif
-> 
+Sasha
