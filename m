@@ -2,77 +2,112 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C6AEC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 20:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF9CC352AB
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 20:35:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C4692245B
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 20:28:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 070A12245D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 20:35:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ea8zW5Q5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728781AbfIZU2V (ORCPT
+        id S1728801AbfIZUfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 16:28:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:59260 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727868AbfIZU2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 16:28:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3709F142F;
-        Thu, 26 Sep 2019 13:28:20 -0700 (PDT)
-Received: from [172.23.27.158] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E0CCE3F67D;
-        Thu, 26 Sep 2019 13:28:17 -0700 (PDT)
-Subject: Re: [PATCH v2 0/4] arm64: vdso32: Address various issues
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     ard.biesheuvel@linaro.org, ndesaulniers@google.com,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20190926133805.52348-1-vincenzo.frascino@arm.com>
- <20190926153123.GK9689@arrakis.emea.arm.com>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <fbc2efbd-b354-7f05-7d4e-600b21fcfff6@arm.com>
-Date:   Thu, 26 Sep 2019 21:29:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 26 Sep 2019 16:35:47 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:37930 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728755AbfIZUfr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 16:35:47 -0400
+Received: by mail-lf1-f65.google.com with SMTP id u28so203476lfc.5
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 13:35:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HerxThVT8ujE/Jr00Db0eehYsUrZnjs2sS0fus5u+5Y=;
+        b=ea8zW5Q5pLPNlbbjEYHy5MA0Qt+9ppilVVkjIiA0KBMOa0uONSOd8J9Z2/yLcmZMpH
+         Q/bZ02u0UKVHIRxfGCdwcoI3LUy+CxUEtCguH3PMzYRl/5ufSQO3CwqxokO5/y6jHAWU
+         46Cj6qKsKCx2JexISICIbz5jXjn5QZlULVLBf5g4CE1j+IO/kpUwATJZ4qNkCqeAcpGH
+         X1jaksbz0YohhVK/UTqDziXBXMiO2dyCRjFxmVKKvWiOnoTpoJHwMmVHJnlszehZye8Z
+         CeJrOG7gI9CDuUhK4JJ4gZYCUcv9VkeLTdC+spzb52TkEMNJsO/YNB3wjPbkkVLnGyDw
+         5unw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HerxThVT8ujE/Jr00Db0eehYsUrZnjs2sS0fus5u+5Y=;
+        b=C8EcEqHBTtiFR3ANP9nUnEYeSGvj8F5MlVyTDeKcwCDOvHMdDKSDKmIk0Kv2Qh3gOR
+         y/w4dCgxzawH/Z1NrhO+qwyByMJNSPDHmspdvzakJ8w/hbBZMoEDNWfjqesPbJTtIMPT
+         Xftw4XurLmMaOGkvJt4l82G7AkGSrzlm4NlDJqxEVAnbS5xy7+D1m13xKt4zReLfHeOe
+         fkL3Vo/Phb1z8wEazevi79NIbbVNH3AmOgKyiTOfz4VT87p0tAAhX2K3PzNkp3ACt1jK
+         oxI9+CuAKJz7l8ik+yB4zlVs6HQIsC/+XrZC+0FJk6hbIu+4jTH+uB5U1MHVMBo9Jeyn
+         8UGw==
+X-Gm-Message-State: APjAAAWNEdGs6yxudt7sIWAKV7C+4pewMePEZn1VKRmAtObY6Wh6OIap
+        nszm4AS/seb56cRA2GM6ukHX6GAmTQSY3WqVnbAJTA==
+X-Google-Smtp-Source: APXvYqxXovBWlN+vNe0WzjIx277ysSM4BAoh51kVziOHnD4dxzIrO+9uo50emy7bGVsFc/jHSFW9KUHw0RZnI6/p41o=
+X-Received: by 2002:a19:f247:: with SMTP id d7mr251060lfk.191.1569530143446;
+ Thu, 26 Sep 2019 13:35:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190926153123.GK9689@arrakis.emea.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CA+G9fYu0hkS+NdwX38DNTygV1A7eebvjZvWvFUTfL=f3_4m=Dw@mail.gmail.com>
+ <20190926173648.GA31477@kernel.org>
+In-Reply-To: <20190926173648.GA31477@kernel.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 27 Sep 2019 02:05:32 +0530
+Message-ID: <CA+G9fYt4fzmiFCsZXP+OC1joB=w5nkgn_MR++Yu61yWDWrh1yg@mail.gmail.com>
+Subject: Re: perf build failed on linux -next on i386 build
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/26/19 4:31 PM, Catalin Marinas wrote:
-> On Thu, Sep 26, 2019 at 02:38:01PM +0100, Vincenzo Frascino wrote:
->> this patch series is meant to address the various compilation issues you
->> reported about arm64 vdso32. (This time for real I hope ;))
->>
->> Please let me know if there is still something missing.
-> 
-> Apart from the diff I posted and some nitpicks, the series looks fine to
-> me. If you post an update, I'll ack it (and a tested-by).
-> 
-> In addition to this series I'd still prefer to have my Kconfig option to
-> disable the compat vDSO if something else fails in the future (at least
-> until we complete the headers clean-up). But I'm fine with a default y
-> and removing EXPERT.
+On Thu, 26 Sep 2019 at 23:06, Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
 >
+> Em Thu, Sep 26, 2019 at 10:59:41PM +0530, Naresh Kamboju escreveu:
+> > perf build failed on linux -next on i386 build
+> >
+> > build error:
+> > perf-in.o: In function `libunwind__x86_reg_id':
+> > tools/perf/util/libunwind/../../arch/x86/util/unwind-libunwind.c:109:
+> > undefined reference to `pr_err'
+> > tools/perf/util/libunwind/../../arch/x86/util/unwind-libunwind.c:109:
+> > undefined reference to `pr_err'
+>
+> Can you try with the following patch?
 
-It is fine by me, but may I ask to state in the commit message that the patch
-can be reverted once the we fix the headers issue? I would like to have symmetry
-in enabling vDSOs in between arm64 and compat once everything is fixed.
+Thanks for the patch.
+After applying this below patch build completes.
 
-> Thanks for the quick turnaround.
-> 
 
-No problem, it is my responsibility to fix the vDSOs on arm64 and compat if
-something breaks ;)
+>
+>
+> diff --git a/tools/perf/arch/x86/util/unwind-libunwind.c b/tools/perf/arch/x86/util/unwind-libunwind.c
+> index 05920e3edf7a..47357973b55b 100644
+> --- a/tools/perf/arch/x86/util/unwind-libunwind.c
+> +++ b/tools/perf/arch/x86/util/unwind-libunwind.c
+> @@ -1,11 +1,11 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>
+>  #include <errno.h>
+> +#include "../../util/debug.h"
+>  #ifndef REMOTE_UNWIND_LIBUNWIND
+>  #include <libunwind.h>
+>  #include "perf_regs.h"
+>  #include "../../util/unwind.h"
+> -#include "../../util/debug.h"
+>  #endif
+>
+>  #ifdef HAVE_ARCH_X86_64_SUPPORT
 
--- 
-Regards,
-Vincenzo
+- Naresh
