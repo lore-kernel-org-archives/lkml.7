@@ -2,134 +2,262 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88559C352AB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 16:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D323EC352AA
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 16:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A3012086A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 16:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 934B721A4A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 16:51:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dS/DPqHy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbfIZQvD convert rfc822-to-8bit (ORCPT
+        id S1727572AbfIZQvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 12:51:03 -0400
-Received: from mga09.intel.com ([134.134.136.24]:46443 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726029AbfIZQvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 12:51:03 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Sep 2019 09:51:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,552,1559545200"; 
-   d="scan'208";a="219466843"
-Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
-  by fmsmga002.fm.intel.com with ESMTP; 26 Sep 2019 09:51:01 -0700
-Received: from orsmsx154.amr.corp.intel.com (10.22.226.12) by
- ORSMSX109.amr.corp.intel.com (10.22.240.7) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 26 Sep 2019 09:51:00 -0700
-Received: from orsmsx122.amr.corp.intel.com ([169.254.11.236]) by
- ORSMSX154.amr.corp.intel.com ([169.254.11.180]) with mapi id 14.03.0439.000;
- Thu, 26 Sep 2019 09:51:00 -0700
-From:   "Schmauss, Erik" <erik.schmauss@intel.com>
-To:     "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
-CC:     Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Moore, Robert" <robert.moore@intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        "Pavel Machek" <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "devel@acpica.org" <devel@acpica.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "nv@vosn.de" <nv@vosn.de>
-Subject: RE: [PATCH] ACPICA: make acpi_load_table() return table index
-Thread-Topic: [PATCH] ACPICA: make acpi_load_table() return table index
-Thread-Index: AQHVaUE6PwWyj3qAlUyiJ16YhgOwE6c+NeMQgAB9wgD//42XEA==
-Date:   Thu, 26 Sep 2019 16:51:00 +0000
-Message-ID: <CF6A88132359CE47947DB4C6E1709ED53C6481F2@ORSMSX122.amr.corp.intel.com>
-References: <20190906174605.GY2680@smile.fi.intel.com>
- <20190912080742.24642-1-nikolaus.voss@loewensteinmedical.de>
- <CF6A88132359CE47947DB4C6E1709ED53C6481B1@ORSMSX122.amr.corp.intel.com>
- <20190926163528.GH32742@smile.fi.intel.com>
-In-Reply-To: <20190926163528.GH32742@smile.fi.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYTczMTQ5Y2QtNTJkOC00MjdkLTg3OWYtOWRmZjQzNDlmN2M1IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiVzNISmZaM3VHTmFkQ1l0b01LMzNHQVhkNVVXZFJYN3hTcFN2OE1lNnRtTXZCOFwvQWlITXhGOVhuREJyZ0g0WlYifQ==
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 26 Sep 2019 12:51:16 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35833 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfIZQvQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 12:51:16 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 205so2180388pfw.2
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 09:51:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=WzmNz7XRd5OiN6BFcznbPwBICwFGdE61Elyfk5RsfWY=;
+        b=dS/DPqHyZLMaS2lJxibjNycVbnf0mJgFgGg10uqrOf//mwnDXXhdArCuzNugEf8ShP
+         bGmmuAsYMCxyiI1B4NERevJu7nNWjjlPP6nqbCb74lo3iguhjhmY6M1btERTzmLHjyIj
+         57F+JI1l825F4d3JwlGCqUnReWmRX5rpGuWKo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=WzmNz7XRd5OiN6BFcznbPwBICwFGdE61Elyfk5RsfWY=;
+        b=Uc4PAlq31mkrXjixAUALsUQ8rEiZM9eFp68gmqU87V3/wdRgAcWaCUnJ5VyRfW8awG
+         F/jJOCVPT8TJPtcj1g8ysMabLZouGUZQeSfLVpCF514ft7IEt8saJRG2EDJC0W851/0K
+         rTCxP6vbX3XrsaUeQ5p4HNdG4wywfX/UA1lPnAYv/RCBUy3m6YiroF6cbdEf9gqgo2o9
+         cDtmSw075oJ1dMZ+NkE4oY8JUfpFGfd2t92wSZpcUUn8wVU5Az49Uap8JWt/REPDnK82
+         9o4xi+5E/P8TZYVCXPSlwdtqzbnUqy1NZgXbMEw/tHR0bn4vxWxIv6DP4EGZ2QrcjfDN
+         V5Hg==
+X-Gm-Message-State: APjAAAUL+mq699P2P6hRJw2bbRwF3EIvZCEJr/JOph3t6k090Ij5VOeN
+        K1lURFfPjJIGnnYLtpS35EWlig==
+X-Google-Smtp-Source: APXvYqzaMUF2LR6+lvtMW6Moq1c0qAzEitFFg2b2QE97EIYjBkRBo0Q7IIO5yCKcjUfwoT5ECrS8rg==
+X-Received: by 2002:a62:c141:: with SMTP id i62mr4807427pfg.64.1569516675649;
+        Thu, 26 Sep 2019 09:51:15 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id n6sm2380789pgp.12.2019.09.26.09.51.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Sep 2019 09:51:15 -0700 (PDT)
+Date:   Thu, 26 Sep 2019 09:51:13 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 1/2] devfreq: Rename devfreq_update_status() to
+ devfreq_update_stats() and viceversa
+Message-ID: <20190926165113.GP133864@google.com>
+References: <CGME20190925184505epcas2p3f8f4395f37df4b1fe33309393e8af4df@epcas2p3.samsung.com>
+ <20190925184314.30251-1-mka@chromium.org>
+ <3fb18474-b31e-bc7e-8b6a-660904a19443@samsung.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3fb18474-b31e-bc7e-8b6a-660904a19443@samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: linux-acpi-owner@vger.kernel.org <linux-acpi-owner@vger.kernel.org>
-> On Behalf Of Shevchenko, Andriy
-> Sent: Thursday, September 26, 2019 9:35 AM
-> To: Schmauss, Erik <erik.schmauss@intel.com>
-> Cc: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>; Rafael J. Wysocki
-> <rjw@rjwysocki.net>; Moore, Robert <robert.moore@intel.com>; Len Brown
-> <lenb@kernel.org>; Jacek Anaszewski <jacek.anaszewski@gmail.com>; Pavel
-> Machek <pavel@ucw.cz>; Dan Murphy <dmurphy@ti.com>; linux-
-> acpi@vger.kernel.org; devel@acpica.org; linux-kernel@vger.kernel.org;
-> nv@vosn.de
-> Subject: Re: [PATCH] ACPICA: make acpi_load_table() return table index
+On Thu, Sep 26, 2019 at 10:36:04AM +0900, Chanwoo Choi wrote:
+> Hi,
 > 
-> On Thu, Sep 26, 2019 at 07:09:05PM +0300, Schmauss, Erik wrote:
-> > > -----Original Message-----
-> > > From: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
-> > > Sent: Thursday, September 12, 2019 1:08 AM
-> > > To: Shevchenko, Andriy <andriy.shevchenko@intel.com>; Schmauss, Erik
-> > > <erik.schmauss@intel.com>; Rafael J. Wysocki <rjw@rjwysocki.net>;
-> > > Moore, Robert <robert.moore@intel.com>
-> > > Cc: Len Brown <lenb@kernel.org>; Jacek Anaszewski
-> > > <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan
-> > > Murphy <dmurphy@ti.com>; linux-acpi@vger.kernel.org;
-> > > devel@acpica.org; linux- kernel@vger.kernel.org; nv@vosn.de;
-> > > Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
-> > > Subject: [PATCH] ACPICA: make acpi_load_table() return table index
-> > >
-> > Hi Nikolaus,
-> >
-> > > For unloading an ACPI table, it is necessary to provide the index of the table.
-> > > The method intended for dynamically loading or hotplug addition of
-> > > tables, acpi_load_table(), should provide this information via an
-> > > optional pointer to the loaded table index.
-> >
-> > We'll take this patch for ACPICA upstream
-> 
-> Erik,
-> 
-Hi Andy,
+> I'm not sure that it is necessary. I think that it depends on
+> personal opinions.
 
-> how about to have also counterpart to acpi_load_table() which will do what it's
-> done now in acpi_configfs.c via acpi_tb_*() API?
+I disagree that this is about personal opinions. A function name should
+give clues about what a function is doing and not be misleading. Once
+these criteria are met personal opinions can come into play.
 
-I should have given more details. We decided to add this extra parameter in AcpiLoadTable and
-we're going to create an AcpiUnloadTable function that will take table index to unload the table (basically the acpi_tb_unload..).
-Once we do this, you can use table indices with AcpiUnloadTable and AcpiLoadTable.
+devfreq_update_status() updates statistics, not any status, hence the
+name neither indicates what the function is doing, and it is misleading,
+especially since there is another function dealing with the 'status'.
 
-Erik
-> 
-> Because it's kinda strange to call acpi_load_table*() and acpi_tb_*() in the
-> same module.
-> 
-> --
-> With Best Regards,
-> Andy Shevchenko
-> 
+devfreq_update_stats() updates the 'status' of the device, not any
+statistics/stats, as in the other case, the name doesn't indicate that
+and is misleading.
 
+If you still don't agree that the names are poor, could you please make
+an argument about why the current function names are good/ok, besides
+"that's how it's currently done"?
+
+> There are no correct answer perfectly.
+
+I agree that there is no one answer, but the current naming is clearly
+poor, and we should aim to improve it. Whether that involves swapping the
+function names or come up with new ones is a different question.
+
+> Also, after this changes, there are no any beneficial.
+> It touch the history rather than behavior improvement.
+
+You are focussing exclusively on functional improvements, and you are right
+that this patch doesn't change anything in functional terms.
+
+However I disagree that there are no benefits. Naming is important, ideally
+code should be self explanatory, which requires using proper function and
+variable names, misleading names are particularly bad. Keeping poor names
+for the sake of history sounds like a bad idea, please avoid getting attached
+to them. Fortunately internal kernel APIs can be changed, and the ones in
+question aren't widely used.
+
+> On 19. 9. 26. 오전 3:43, Matthias Kaehlcke wrote:
+> > devfreq has two functions with very similar names, devfreq_update_status()
+> > and devfreq_update_stats(). _update_status() currently updates
+> > frequency transitions statistics, while _update_stats() retrieves the
+> > device 'status'. The function names are inversed with respect to what
+> > the functions are actually doing, rename devfreq_update_status() to
+> > devfreq_update_stats() and viceversa.
+> > 
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > ---
+> > We could also rename the current devfreq_update_stats() to
+> > devfreq_refresh_status() to make it easier to distinguish it from
+> > devfreq_update_stats().
+> > ---
+> >  drivers/devfreq/devfreq.c                 | 12 ++++++------
+> >  drivers/devfreq/governor.h                |  4 ++--
+> >  drivers/devfreq/governor_passive.c        |  2 +-
+> >  drivers/devfreq/governor_simpleondemand.c |  2 +-
+> >  drivers/devfreq/tegra30-devfreq.c         |  2 +-
+> >  5 files changed, 11 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> > index 446490c9d635..fb4318d59aa9 100644
+> > --- a/drivers/devfreq/devfreq.c
+> > +++ b/drivers/devfreq/devfreq.c
+> > @@ -151,11 +151,11 @@ static int set_freq_table(struct devfreq *devfreq)
+> >  }
+> >  
+> >  /**
+> > - * devfreq_update_status() - Update statistics of devfreq behavior
+> > + * devfreq_update_stats() - Update statistics of devfreq behavior
+> >   * @devfreq:	the devfreq instance
+> >   * @freq:	the update target frequency
+> >   */
+> > -int devfreq_update_status(struct devfreq *devfreq, unsigned long freq)
+> > +int devfreq_update_stats(struct devfreq *devfreq, unsigned long freq)
+> >  {
+> >  	int lev, prev_lev, ret = 0;
+> >  	unsigned long cur_time;
+> > @@ -191,7 +191,7 @@ int devfreq_update_status(struct devfreq *devfreq, unsigned long freq)
+> >  	devfreq->last_stat_updated = cur_time;
+> >  	return ret;
+> >  }
+> > -EXPORT_SYMBOL(devfreq_update_status);
+> > +EXPORT_SYMBOL(devfreq_update_stats);
+> >  
+> >  /**
+> >   * find_devfreq_governor() - find devfreq governor from name
+> > @@ -311,7 +311,7 @@ static int devfreq_set_target(struct devfreq *devfreq, unsigned long new_freq,
+> >  	freqs.new = new_freq;
+> >  	devfreq_notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
+> >  
+> > -	if (devfreq_update_status(devfreq, new_freq))
+> > +	if (devfreq_update_stats(devfreq, new_freq))
+> >  		dev_err(&devfreq->dev,
+> >  			"Couldn't update frequency transition information.\n");
+> >  
+> > @@ -450,7 +450,7 @@ void devfreq_monitor_suspend(struct devfreq *devfreq)
+> >  		return;
+> >  	}
+> >  
+> > -	devfreq_update_status(devfreq, devfreq->previous_freq);
+> > +	devfreq_update_stats(devfreq, devfreq->previous_freq);
+> >  	devfreq->stop_polling = true;
+> >  	mutex_unlock(&devfreq->lock);
+> >  	cancel_delayed_work_sync(&devfreq->work);
+> > @@ -1398,7 +1398,7 @@ static ssize_t trans_stat_show(struct device *dev,
+> >  	unsigned int max_state = devfreq->profile->max_state;
+> >  
+> >  	if (!devfreq->stop_polling &&
+> > -			devfreq_update_status(devfreq, devfreq->previous_freq))
+> > +			devfreq_update_stats(devfreq, devfreq->previous_freq))
+> >  		return 0;
+> >  	if (max_state == 0)
+> >  		return sprintf(buf, "Not Supported.\n");
+> > diff --git a/drivers/devfreq/governor.h b/drivers/devfreq/governor.h
+> > index bbe5ff9fcecf..e11f447be2b5 100644
+> > --- a/drivers/devfreq/governor.h
+> > +++ b/drivers/devfreq/governor.h
+> > @@ -64,9 +64,9 @@ extern void devfreq_interval_update(struct devfreq *devfreq,
+> >  extern int devfreq_add_governor(struct devfreq_governor *governor);
+> >  extern int devfreq_remove_governor(struct devfreq_governor *governor);
+> >  
+> > -extern int devfreq_update_status(struct devfreq *devfreq, unsigned long freq);
+> > +extern int devfreq_update_stats(struct devfreq *devfreq, unsigned long freq);
+> >  
+> > -static inline int devfreq_update_stats(struct devfreq *df)
+> > +static inline int devfreq_update_status(struct devfreq *df)
+> >  {
+> >  	return df->profile->get_dev_status(df->dev.parent, &df->last_status);
+> >  }
+> > diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/governor_passive.c
+> > index be6eeab9c814..1c746b96d3db 100644
+> > --- a/drivers/devfreq/governor_passive.c
+> > +++ b/drivers/devfreq/governor_passive.c
+> > @@ -110,7 +110,7 @@ static int update_devfreq_passive(struct devfreq *devfreq, unsigned long freq)
+> >  		goto out;
+> >  
+> >  	if (devfreq->profile->freq_table
+> > -		&& (devfreq_update_status(devfreq, freq)))
+> > +		&& (devfreq_update_stats(devfreq, freq)))
+> >  		dev_err(&devfreq->dev,
+> >  			"Couldn't update frequency transition information.\n");
+> >  
+> > diff --git a/drivers/devfreq/governor_simpleondemand.c b/drivers/devfreq/governor_simpleondemand.c
+> > index 3d809f228619..2cbf26bdcfd6 100644
+> > --- a/drivers/devfreq/governor_simpleondemand.c
+> > +++ b/drivers/devfreq/governor_simpleondemand.c
+> > @@ -25,7 +25,7 @@ static int devfreq_simple_ondemand_func(struct devfreq *df,
+> >  	unsigned int dfso_downdifferential = DFSO_DOWNDIFFERENCTIAL;
+> >  	struct devfreq_simple_ondemand_data *data = df->data;
+> >  
+> > -	err = devfreq_update_stats(df);
+> > +	err = devfreq_update_status(df);
+> >  	if (err)
+> >  		return err;
+> >  
+> > diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+> > index a6ba75f4106d..536273a811fe 100644
+> > --- a/drivers/devfreq/tegra30-devfreq.c
+> > +++ b/drivers/devfreq/tegra30-devfreq.c
+> > @@ -526,7 +526,7 @@ static int tegra_governor_get_target(struct devfreq *devfreq,
+> >  	unsigned int i;
+> >  	int err;
+> >  
+> > -	err = devfreq_update_stats(devfreq);
+> > +	err = devfreq_update_status(devfreq);
+> >  	if (err)
+> >  		return err;
+> >  
+> > 
+> 
+> 
+> -- 
+> Best Regards,
+> Chanwoo Choi
+> Samsung Electronics
