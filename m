@@ -2,66 +2,93 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08323C432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E02A7C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D56D62053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B51192053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:05:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726250AbfIZMEr (ORCPT
+        id S1726437AbfIZMFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 08:04:47 -0400
-Received: from mga01.intel.com ([192.55.52.88]:26362 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbfIZMEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 08:04:46 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Sep 2019 05:04:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,551,1559545200"; 
-   d="scan'208";a="389584982"
-Received: from um.fi.intel.com (HELO localhost) ([10.237.72.57])
-  by fmsmga005.fm.intel.com with ESMTP; 26 Sep 2019 05:04:43 -0700
-From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        linux-kernel@vger.kernel.org, jolsa@redhat.com,
-        alexander.shishkin@linux.intel.com
-Subject: Re: [PATCH v1 4/6] perf: Allow using AUX data in perf samples
-In-Reply-To: <87lfw234ew.fsf@ashishki-desk.ger.corp.intel.com>
-References: <20180612075117.65420-1-alexander.shishkin@linux.intel.com> <20180612075117.65420-5-alexander.shishkin@linux.intel.com> <20180614202022.GC12217@hirez.programming.kicks-ass.net> <20180619104725.bqvs7uwzhb4ihyxy@um.fi.intel.com> <20180621201632.GE27616@hirez.programming.kicks-ass.net> <87lfw234ew.fsf@ashishki-desk.ger.corp.intel.com>
-Date:   Thu, 26 Sep 2019 15:04:43 +0300
-Message-ID: <87blv75kmc.fsf@ashishki-desk.ger.corp.intel.com>
+        Thu, 26 Sep 2019 08:05:00 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:51726 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfIZME7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 08:04:59 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1iDSVx-0000lJ-AK; Thu, 26 Sep 2019 14:04:53 +0200
+Message-ID: <8b36a751a3498415a6474940ed904dbd40e1f26b.camel@sipsolutions.net>
+Subject: Re: [PATCH RFC] cfg80211: add new command for reporting wiphy
+ crashes
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5@gmail.com>,
+        Jouni Malinen <j@w1.fi>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hostap@lists.infradead.org,
+        openwrt-devel@lists.openwrt.org
+Date:   Thu, 26 Sep 2019 14:04:52 +0200
+In-Reply-To: <09503390-91f0-3789-496a-6e9891156c5e@gmail.com> (sfid-20190926_140042_451511_E87E7FE4)
+References: <20190920133708.15313-1-zajec5@gmail.com>
+         <20190920140143.GA30514@w1.fi>
+         <4f6f37e5-802c-4504-3dcb-c4a640d138bd@milecki.pl>
+         <9ece533700be8237699881312a99cc91c6a71d36.camel@sipsolutions.net>
+         <09503390-91f0-3789-496a-6e9891156c5e@gmail.com>
+         (sfid-20190926_140042_451511_E87E7FE4)
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alexander Shishkin <alexander.shishkin@linux.intel.com> writes:
+On Thu, 2019-09-26 at 14:00 +0200, Rafał Miłecki wrote:
 
-> Peter Zijlstra <peterz@infradead.org> writes:
->
->> On Tue, Jun 19, 2018 at 01:47:25PM +0300, Alexander Shishkin wrote:
->>> Right, the SW stuff may then race with event_function_call() stuff. Hmm.
->>> For the HW stuff, I'm hoping that some kind of a sleight of hand may
->>> suffice. Let me think some more.
->>
->> I currently don't see how the SW driven snapshot can ever work, see my
->> comment on the last patch.
->
-> Yes, this should be solved by grouping, similarly PEBS->PT.
+> > You can't seriously be suggesting that the driver doesn't *have* enough
+> > information - everything passed through it :)
+> 
+> Precisely: it doesn't store (cache) enough info.
 
-Peter, do you have any thoughts/suggestions as to this RFC? Thanks!
+But nothing stops it (the driver) from doing so!
 
-Regards,
---
-Alex
+> In brcmfmac on .add_virtual_intf() we:
+> 1) Send request to the FullMAC firmware
+> 2) Wait for a reply
+> 3) On success we create interface
+> 4) We wake up .add_virtual_intf() handler
+> 
+> I'll need to find a way to skip step 3 in recovery path since interface
+> on host side already exists.
+
+Sure, we skip lots of things in all drivers, look at iwlwifi for example
+with IWL_MVM_STATUS_IN_HW_RESTART.
+
+> OK, so basically I need to work on caching setup data. Should I try
+> doing that at my selected driver level (brcmfmac)? Or should I focus on
+> generic solution (cfg80211) and consider offloading mac80211 if
+> possible?
+
+I think doing it generically will not work well, you have different code
+paths and different formats, different data that you need etc.
+
+Sometimes there's information cfg80211 doesn't even *have*, because the
+driver is responsible for things (e.g. elements). I guess you can try,
+but my gut feeling is that it'd simpler in the driver.
+
+Now you can argue that everything passes through cfg80211 so it must
+have enough data too (just like I'm arguing the driver certainly has
+enough data), but ... it seems to me the cfg80211 is usually more
+action-based, where the restore flow needs to keep the *state*, not
+replay the series of actions that happened.
+
+johannes
+
