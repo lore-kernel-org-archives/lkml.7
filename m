@@ -2,132 +2,224 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 409DFC432C2
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD9D9C432C2
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E810207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94C22207FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 11:44:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfIZLn3 (ORCPT
+        id S1726837AbfIZLoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 07:43:29 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44858 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbfIZLn3 (ORCPT
+        Thu, 26 Sep 2019 07:44:05 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:43867 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbfIZLoE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 07:43:29 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 21so1668439otj.11;
-        Thu, 26 Sep 2019 04:43:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4NJdVMhLCeR2qiK+ps5K2jQQOjDIRz/+T2QEFlJumLo=;
-        b=ID9IoPJJTSGf5si0CLomZFSVVrRwR+mdL0qANNE3/Batj1CZJiqlbl7ViKb7S1YmAk
-         Cp4J1i7oaVpKqmksPFEyjoPfo/ufSXidJtiT+KG+K1TfDIkaBbzKuC2f11Tfsw5caR6/
-         Lxv6WVUmchDpw7ztr785bfYMItHvVQyGult5jH12UMOzyxFgCYr32sBvj7X2g9xyWyzb
-         xU5NbiYGcT/7l6n2+lYBm1TVgByJv/X9AVZm+H7luChUScDpumgL3GXTj9CjR9gmYgO+
-         v6ydzZlF96RYc75sABGbNMa3k19JUrS91dLCV6eKlCUgVZHIKGhzufyNKAAHGUcLe5VE
-         jFcw==
-X-Gm-Message-State: APjAAAWAiQVGhlmdUOlCMuOxLlfmbmom7R1eR78/oIc8m9jVnmrgwwPo
-        b7CzxspEMssWShNIF+NnibKTNEzFF5aNwZXGVqvTSVQt
-X-Google-Smtp-Source: APXvYqwrzHBwDdOQwaGyp+5fyfQIfQ0z97+Qu0pah+x251meUloMW93t4iddIxB6GsMhyGbNpuoyECgs8nMgvL16kGA=
-X-Received: by 2002:a9d:193:: with SMTP id e19mr2139993ote.107.1569498208192;
- Thu, 26 Sep 2019 04:43:28 -0700 (PDT)
+        Thu, 26 Sep 2019 07:44:04 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iDSBf-0001Os-K8; Thu, 26 Sep 2019 13:43:55 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iDSBe-0005y7-FA; Thu, 26 Sep 2019 13:43:54 +0200
+Date:   Thu, 26 Sep 2019 13:43:54 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc:     Support Opensource <Support.Opensource@diasemi.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        Steve Twiss <stwiss.opensource@diasemi.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/5] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Message-ID: <20190926114354.qvv2rs7mc4xh6lkp@pengutronix.de>
+References: <20190917124246.11732-1-m.felsch@pengutronix.de>
+ <20190917124246.11732-3-m.felsch@pengutronix.de>
+ <AM5PR1001MB0994ABEF9C32BFB7BEA099B680840@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20190925155151.75uaxfiiei3i23tz@pengutronix.de>
+ <AM5PR1001MB09941810C3AE97110DD82E0F80870@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20190926080956.a3k2z4gf3n6m3n4s@pengutronix.de>
+ <AM5PR1001MB09944C0F9A4F547BF9E175CF80860@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-References: <20190926101312.32218-1-geert@linux-m68k.org> <CAK7LNATN5QyC+-_VRZm_ZysYd8Z8aWU0Ys0cTpU2GUdEdrXvPg@mail.gmail.com>
-In-Reply-To: <CAK7LNATN5QyC+-_VRZm_ZysYd8Z8aWU0Ys0cTpU2GUdEdrXvPg@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 26 Sep 2019 13:43:16 +0200
-Message-ID: <CAMuHMdU3T83z1iZ7O2-5eRkawdGm50Auw5o0K9+J5Q7+oev62g@mail.gmail.com>
-Subject: Re: [PATCH -next] fbdev: c2p: Fix link failure on non-inlining
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM5PR1001MB09944C0F9A4F547BF9E175CF80860@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 13:32:59 up 131 days, 17:51, 85 users,  load average: 0.13, 0.10,
+ 0.04
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yamada-san,
+On 19-09-26 10:17, Adam Thomson wrote:
+> On 26 September 2019 09:10, Marco Felsch wrote:
+> 
+> > On 19-09-25 16:18, Adam Thomson wrote:
+> > > On 25 September 2019 16:52, Marco Felsch wrote:
+> > >
+> > > > Hi Adam,
+> > > >
+> > > > On 19-09-24 09:23, Adam Thomson wrote:
+> > > > > On 17 September 2019 13:43, Marco Felsch wrote:
+> > > > >
+> > > > > > Add the documentation which describe the voltage selection gpio
+> > support.
+> > > > > > This property can be applied to each subnode within the 'regulators'
+> > > > > > node so each regulator can be configured differently.
+> > > > > >
+> > > > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > > > > > ---
+> > > > > >  Documentation/devicetree/bindings/mfd/da9062.txt | 9 +++++++++
+> > > > > >  1 file changed, 9 insertions(+)
+> > > > > >
+> > > > > > diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt
+> > > > > > b/Documentation/devicetree/bindings/mfd/da9062.txt
+> > > > > > index edca653a5777..9d9820d8177d 100644
+> > > > > > --- a/Documentation/devicetree/bindings/mfd/da9062.txt
+> > > > > > +++ b/Documentation/devicetree/bindings/mfd/da9062.txt
+> > > > > > @@ -66,6 +66,15 @@ Sub-nodes:
+> > > > > >    details of individual regulator device can be found in:
+> > > > > >    Documentation/devicetree/bindings/regulator/regulator.txt
+> > > > > >
+> > > > > > +  Optional regulator device-specific properties:
+> > > > > > +  - dlg,vsel-sense-gpios : The GPIO reference which should be used by
+> > the
+> > > > > > +    regulator to switch the voltage between active/suspend voltage
+> > settings.
+> > > > If
+> > > > > > +    the signal is active the active-settings are applied else the suspend
+> > > > > > +    settings are applied. Attention: Sharing the same gpio for other
+> > purposes
+> > > > > > +    or across multiple regulators is possible but the gpio settings must be
+> > the
+> > > > > > +    same. Also the gpio phandle must refer to to the dlg,da9062-gpio
+> > device
+> > > > > > +    other gpios are not allowed and make no sense.
+> > > > > > +
+> > > > >
+> > > > > Should we not use the binding names that are defined in 'gpio-
+> > regulator.yaml'
+> > > > as
+> > > > > these seem to be generic and would probably serve the purpose here?
+> > > >
+> > > > Hm.. as the description says:
+> > > >
+> > > > 8<--------------------------------------------------
+> > > > gpios:
+> > > >    description: Array of one or more GPIO pins used to select the
+> > > >    regulator voltage/current listed in "states".
+> > > > 8<--------------------------------------------------
+> > > >
+> > > > But we don't have a "states" property and we can't select between
+> > > > voltage or current.
+> > >
+> > > Yes I think I was at cross purposes when I made this remark. The bindings there
+> > > describe the GPOs that are used to enable/disable and set voltage/current for
+> > > regulators and the supported voltage/current levels that can be configured in
+> > > this manner. What you're describing is the GPI for DA9061/2. If you look at
+> > > GPIO handling in existing regulator drivers I believe they all deal with external
+> > > GPOs that are configured to enable/disable and set voltage/current limits
+> > rather
+> > > than the GPI on the PMIC itself. That's why I'm thinking that the configurations
+> > > you're doing here should actually be in a pinctrl or GPIO driver.
+> > 
+> > That's true, the common gpio bindings are from the view of the
+> > processor, e.g. which gpio must the processor drive to enable/switch the
+> > regualtor. So one reasone more to use a non-common binding.
+> > 
+> > Please take a look on my other comment I made :) I don't use the
+> > gpio-alternative function. I use it as an input.
+> 
+> I know in the datasheet this isn't marked as an alternate function specifically
+> but to me having regulator control by the chip's own GPI is an alternative
+> function for that GPIO pin, in the same way a specific pin can be used for
+> SYS_EN or Watchdog control. It's a dedicated purpose rather than being a normal
+> GPI.
 
-On Thu, Sep 26, 2019 at 12:45 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
-> On Thu, Sep 26, 2019 at 7:13 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > When the compiler decides not to inline the Chunky-to-Planar core
-> > functions, the build fails with:
-> >
-> >     c2p_planar.c:(.text+0xd6): undefined reference to `c2p_unsupported'
-> >     c2p_planar.c:(.text+0x1dc): undefined reference to `c2p_unsupported'
-> >     c2p_iplan2.c:(.text+0xc4): undefined reference to `c2p_unsupported'
-> >     c2p_iplan2.c:(.text+0x150): undefined reference to `c2p_unsupported'
-> >
-> > Fix this by marking the functions __always_inline.
-> >
-> > Reported-by: noreply@ellerman.id.au
-> > Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> > ---
-> > Fixes: 025f072e5823947c ("compiler: enable CONFIG_OPTIMIZE_INLINING forcibly")
-> >
-> > As this is a patch in akpm's tree, the commit ID in the Fixes tag is not
-> > stable.
->
-> BTW, that Fixes tag is incorrect.
->
-> Irrespective of 025f072e5823947c, you could manually enable
-> CONFIG_OPTIMIZE_INLINING from menuconfig etc.
+Nope, SYS_EN or Watchdog is a special/alternate function and not a
+normal input.
 
-Merely enabling that doesn't help.
-You also need CONFIG_CC_OPTIMIZE_FOR_SIZE=y, while the
-default is CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE=y.
-Which is why my all{mod,yes}config builds never caught that :-(
+> See the following as an example of what I'm suggesting:
+> 
+> https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindings/pinctrl/pinctrl-palmas.txt
+> 
+> You could then pass the pinctrl information to the regulator driver and use
+> that rather than having device specific bindings for this. That's at least my
+> current interpretation of this anyway.
 
-> So, this build error would have been found much earlier
-> if somebody had been running randconfig tests on m68k.
+For me pinctrl decides which function should be assigned to a pin. So in
+our case this would be:
+  - alternate
+  - gpo
+  - gpi
 
-It's been a while I did that...
+In our use-case it is a gpi..
 
-BTW, does randconfig randomize choices these days?
-I remember it didn't use to do that.
+An other reason why pinctrl seems not be the right solution is that the
+regulator must be configured to use this gpi. This decision can't be
+made globally because each regulator can be configured differently.. For
+me its just a local gpio.
 
-> It is impossible to detect this error on other architectures
-> because the driver config options are guarded by
-> 'depends on ATARI' or 'depends on AMIGA'.
->
-> The correct tag is:
->
-> Fixes: 9012d011660e ("compiler: allow all arches to enable
-> CONFIG_OPTIMIZE_INLINING")
->
-> The commit id is stable.
+Regards,
+  Marco
 
-Thanks, will update.
-
-> As an additional work,
-> depends on (AMIGA || COMPILE_TEST)
-> would be nice unless this driver contains m68k-specific code.
-
-The Amiga and Atari frame buffer drivers need <asm/{amiga,atari}hw.h>,
-and the Atari driver contains inline asm.
-
-The C2P code could be put behind its own Kconfig symbol, I guess.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+> > 
+> > Regards,
+> >   Marco
+> > 
+> > 
+> > > I'd be interested in hearing Mark's view on this though as he has far more
+> > > experience in this area than I do.
+> > >
+> > > >
+> > > > Regards,
+> > > >   Marco
+> > > >
+> > > > > >  - rtc : This node defines settings required for the Real-Time Clock
+> > associated
+> > > > > >    with the DA9062. There are currently no entries in this binding, however
+> > > > > >    compatible = "dlg,da9062-rtc" should be added if a node is created.
+> > > > > > --
+> > > > > > 2.20.1
+> > > > >
+> > > > >
+> > > >
+> > > > --
+> > > > Pengutronix e.K.                           |                             |
+> > > > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> > > > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> > > > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> > >
+> > 
+> > --
+> > Pengutronix e.K.                           |                             |
+> > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> 
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
