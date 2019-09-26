@@ -2,148 +2,140 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3433BC4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20404C352A8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B101207FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB76B222C7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 12:22:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569500535;
+	bh=ZnH73fOaO1Y3I9RyWygEgDYz3j1EciW/FLPokzOMFtk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nlhsA3IOo+kTu+fp1eb/kPwFmeSFms01q9lpLAnnPvMZR/03ofR3ZgUtAg67q4rv8
+	 bIwCFDyFBot87d8LGfbvD6Em58MSsZgTiDkVZ9Z6qd6rTlWIwE6LrZ72y1cwbGb7co
+	 2iFg7sKR0weWCJquZRD/s5rrcH47RN3sUzs6EKrc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726195AbfIZMUQ (ORCPT
+        id S1726347AbfIZMWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 08:20:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:48064 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725768AbfIZMUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 08:20:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 240B6142F;
-        Thu, 26 Sep 2019 05:20:15 -0700 (PDT)
-Received: from [10.37.12.151] (unknown [10.37.12.151])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BFDC43F67D;
-        Thu, 26 Sep 2019 05:20:13 -0700 (PDT)
-Subject: Re: [PATCH 1/4] arm64: vdso32: Introduce COMPAT_CC_IS_GCC
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     ard.biesheuvel@linaro.org, ndesaulniers@google.com,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20190920142738.qlsjwguc6bpnez63@willie-the-truck>
- <20190926060353.54894-1-vincenzo.frascino@arm.com>
- <20190926060353.54894-2-vincenzo.frascino@arm.com>
- <20190926080616.GB26802@iMac.local>
- <0ff3d5f4-11c9-4207-c6ab-2f8e9ee7de5e@arm.com>
-Message-ID: <ad90f9bb-aa39-615c-3ae5-bea394bd787c@arm.com>
-Date:   Thu, 26 Sep 2019 13:22:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 26 Sep 2019 08:22:14 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55872 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725768AbfIZMWO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 08:22:14 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DA408B11E;
+        Thu, 26 Sep 2019 12:22:10 +0000 (UTC)
+Date:   Thu, 26 Sep 2019 14:22:08 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     virtio-dev@lists.oasis-open.org, kvm list <kvm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-mm <linux-mm@kvack.org>, Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        linux-arm-kernel@lists.infradead.org,
+        Oscar Salvador <osalvador@suse.de>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Rik van Riel <riel@surriel.com>, lcapitulino@redhat.com,
+        "Wang, Wei W" <wei.w.wang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Subject: Re: [PATCH v10 0/6] mm / virtio: Provide support for unused page
+ reporting
+Message-ID: <20190926122208.GI20255@dhcp22.suse.cz>
+References: <20190918175109.23474.67039.stgit@localhost.localdomain>
+ <20190924142342.GX23050@dhcp22.suse.cz>
+ <CAKgT0UcYdA+LysVVO+8Beabsd-YBH+tNUKnQgaFmrZBW1xkFxA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <0ff3d5f4-11c9-4207-c6ab-2f8e9ee7de5e@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKgT0UcYdA+LysVVO+8Beabsd-YBH+tNUKnQgaFmrZBW1xkFxA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/26/19 11:56 AM, Vincenzo Frascino wrote:
-> On 9/26/19 9:06 AM, Catalin Marinas wrote:
->> On Thu, Sep 26, 2019 at 07:03:50AM +0100, Vincenzo Frascino wrote:
->>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->>> index 37c610963eee..afe8c948b493 100644
->>> --- a/arch/arm64/Kconfig
->>> +++ b/arch/arm64/Kconfig
->>> @@ -110,7 +110,7 @@ config ARM64
->>>  	select GENERIC_STRNLEN_USER
->>>  	select GENERIC_TIME_VSYSCALL
->>>  	select GENERIC_GETTIMEOFDAY
->>> -	select GENERIC_COMPAT_VDSO if (!CPU_BIG_ENDIAN && COMPAT)
->>> +	select GENERIC_COMPAT_VDSO if (!CPU_BIG_ENDIAN && COMPAT && COMPAT_CC_IS_GCC)
->>>  	select HANDLE_DOMAIN_IRQ
->>>  	select HARDIRQS_SW_RESEND
->>>  	select HAVE_PCI
->>> @@ -313,6 +313,9 @@ config KASAN_SHADOW_OFFSET
->>>  	default 0xeffffff900000000 if ARM64_VA_BITS_36 && KASAN_SW_TAGS
->>>  	default 0xffffffffffffffff
->>>  
->>> +config COMPAT_CC_IS_GCC
->>> +	def_bool $(success,$(CROSS_COMPILE_COMPAT)gcc --version | head -n 1 | grep -q arm)
->>
->> Nitpick: I prefer COMPATCC instead of COMPAT_CC for consistency with
->> HOSTCC.
->>
+On Tue 24-09-19 08:20:22, Alexander Duyck wrote:
+> On Tue, Sep 24, 2019 at 7:23 AM Michal Hocko <mhocko@kernel.org> wrote:
+> >
+> > On Wed 18-09-19 10:52:25, Alexander Duyck wrote:
+> > [...]
+> > > In order to try and keep the time needed to find a non-reported page to
+> > > a minimum we maintain a "reported_boundary" pointer. This pointer is used
+> > > by the get_unreported_pages iterator to determine at what point it should
+> > > resume searching for non-reported pages. In order to guarantee pages do
+> > > not get past the scan I have modified add_to_free_list_tail so that it
+> > > will not insert pages behind the reported_boundary.
+> > >
+> > > If another process needs to perform a massive manipulation of the free
+> > > list, such as compaction, it can either reset a given individual boundary
+> > > which will push the boundary back to the list_head, or it can clear the
+> > > bit indicating the zone is actively processing which will result in the
+> > > reporting process resetting all of the boundaries for a given zone.
+> >
+> > Is this any different from the previous version? The last review
+> > feedback (both from me and Mel) was that we are not happy to have an
+> > externally imposed constrains on how the page allocator is supposed to
+> > maintain its free lists.
 > 
-> Ok, will change this in v2.
+> The main change for v10 versus v9 is that I allow the page reporting
+> boundary to be overridden. Specifically there are two approaches that
+> can be taken.
 > 
->> Now, could we not generate a COMPATCC in the Makefile and use
->> $(COMPATCC) here instead of $(CROSS_COMPILE_COMPAT)gcc? It really
->> doesn't make sense to check that gcc is gcc.
->>
+> The first is to simply reset the iterator for whatever list is
+> updated. What this will do is reset the iterator back to list_head and
+> then you can do whatever you want with that specific list.
+
+OK, this is slightly better than pushing the allocator to the corner.
+The allocator really has to be under control of its data structures.
+I would still be happier if the allocator wouldn't really have to bother
+about somebody snooping its internal state to do its own thing. So
+please make sure to describe why and how much this really matters.
+ 
+> The other option is to simply clear the ZONE_PAGE_REPORTING_ACTIVE
+> bit. That will essentially notify the page reporting code that any/all
+> hints that were recorded have been discarded and that it needs to
+> start over.
 > 
-> All right, COMPATCC is already in the makefile, I will use it in here.
->
+> All I am trying to do with this approach is reduce the work. Without
+> doing this the code has to walk the entire free page list for the
+> higher orders every iteration and that will not be cheap.
 
-What you are proposing seems not possible because Kconfig runs first and then
-the arch Makefile, hence compatcc does not take effect on the Kconfig. I will
-post v2 with what I proposed, please feel free to comment if you have a better idea.
+How expensive this will be?
 
-arch/arm64/configs/defconfig:726:warning: symbol value 'm' invalid for
-REMOTEPROC
-#
-
-# configuration written to .config
-
-#
-
-make[1]: Leaving directory '/data1/Projects/LinuxKernel/linux-out'
-
-make[1]: Entering directory '/data1/Projects/LinuxKernel/linux-out'
-
-$COMPATCC is [arm-linux-gnueabihf-gcc]
-
-  GEN     Makefile
-
->> A next step would be to check that COMPATCC can actually generate 32-bit
->> objects. But it's not essential at this stage.
->>
+> Admittedly
+> it is a bit more invasive than the cut/splice logic used in compaction
+> which is taking the pages it has already processed and moving them to
+> the other end of the list. However, I have reduced things so that we
+> only really are limiting where add_to_free_list_tail can place pages,
+> and we are having to check/push back the boundaries if a reported page
+> is removed from a free_list.
 > 
-> We are already checking this making sure that arm is present in the triple (grep
-> -q arm).
+> > If this is really the only way to go forward then I would like to hear
+> > very convincing arguments about other approaches not being feasible.
+> > There are none in this cover letter unfortunately. This will be really a
+> > hard sell without them.
 > 
->>> diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
->>> index 84a3d502c5a5..34f53eb11878 100644
->>> --- a/arch/arm64/Makefile
->>> +++ b/arch/arm64/Makefile
->>> @@ -54,19 +54,8 @@ $(warning Detected assembler with broken .inst; disassembly will be unreliable)
->>>  endif
->>>  
->>>  ifeq ($(CONFIG_GENERIC_COMPAT_VDSO), y)
->>> -  CROSS_COMPILE_COMPAT ?= $(CONFIG_CROSS_COMPILE_COMPAT_VDSO:"%"=%)
->>> -
->>> -  ifeq ($(CONFIG_CC_IS_CLANG), y)
->>> -    $(warning CROSS_COMPILE_COMPAT is clang, the compat vDSO will not be built)
->>> -  else ifeq ($(strip $(CROSS_COMPILE_COMPAT)),)
->>> -    $(warning CROSS_COMPILE_COMPAT not defined or empty, the compat vDSO will not be built)
->>> -  else ifeq ($(shell which $(CROSS_COMPILE_COMPAT)gcc 2> /dev/null),)
->>> -    $(error $(CROSS_COMPILE_COMPAT)gcc not found, check CROSS_COMPILE_COMPAT)
->>> -  else
->>> -    export CROSS_COMPILE_COMPAT
->>> -    export CONFIG_COMPAT_VDSO := y
->>> -    compat_vdso := -DCONFIG_COMPAT_VDSO=1
->>> -  endif
->>> +  export CONFIG_COMPAT_VDSO := y
->>> +  compat_vdso := -DCONFIG_COMPAT_VDSO=1
->>>  endif
->>
->> Has CONFIG_CROSS_COMPILE_COMPAT_VDSO actually been removed from
->> lib/vdso/Kconfig? (I haven't checked the subsequent patches).
->>
-> 
+> So I had considered several different approaches.
 
+Thanks this is certainly useful and it would have been even more so if
+you gave some rough numbers to quantify how much overhead for different
+solutions we are talking about here.
 -- 
-Regards,
-Vincenzo
+Michal Hocko
+SUSE Labs
