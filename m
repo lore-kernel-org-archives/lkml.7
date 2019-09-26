@@ -2,143 +2,267 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6364C352AA
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 14:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E526C4360C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 14:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F1C321D80
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 14:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2230921D6C
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 14:59:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbfIZO6u (ORCPT
+        id S1727234AbfIZO7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 10:58:50 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53112 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725813AbfIZO6t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 10:58:49 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8QEr1eW167701
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 10:58:48 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v8w25x8yx-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 10:58:46 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
-        Thu, 26 Sep 2019 15:58:41 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 26 Sep 2019 15:58:37 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8QEwaLT41746886
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Sep 2019 14:58:36 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 261974C04A;
-        Thu, 26 Sep 2019 14:58:36 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E2AFE4C044;
-        Thu, 26 Sep 2019 14:58:35 +0000 (GMT)
-Received: from localhost (unknown [9.145.74.47])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 26 Sep 2019 14:58:35 +0000 (GMT)
-Date:   Thu, 26 Sep 2019 16:58:34 +0200
-From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [GIT PULL] s390 patches for the 5.4 merge window #2
+        Thu, 26 Sep 2019 10:59:48 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:45146 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725917AbfIZO7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 10:59:48 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 3F525EDEDF2B5DFC0E8C;
+        Thu, 26 Sep 2019 22:59:45 +0800 (CST)
+Received: from [127.0.0.1] (10.184.12.158) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Thu, 26 Sep 2019
+ 22:59:34 +0800
+Subject: Re: [PATCH 03/35] irqchip/gic-v3-its: Allow LPI invalidation via the
+ DirectLPI interface
+To:     Marc Zyngier <maz@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
+        <linux-kernel@vger.kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20190923182606.32100-1-maz@kernel.org>
+ <20190923182606.32100-4-maz@kernel.org>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <92ff82ca-ebcb-8f5f-5063-313f65bbc5e3@huawei.com>
+Date:   Thu, 26 Sep 2019 22:57:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
+ Thunderbird/64.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-X-TM-AS-GCONF: 00
-x-cbid: 19092614-0016-0000-0000-000002B1034E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19092614-0017-0000-0000-00003311D0FF
-Message-Id: <your-ad-here.call-01569509914-ext-6285@work.hours>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-26_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=923 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909260138
+In-Reply-To: <20190923182606.32100-4-maz@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.12.158]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Linus,
+Hi Marc,
 
-please pull the second round of s390 fixes and features for 5.4.
+I get one kernel panic with this patch on D05.
 
-Thank you,
-Vasily
+(I don't have the GICv4.1 board at the moment. I have to wait for the
+  appropriate HW to do more tests.)
 
-The following changes since commit d590284419b1d7cc2dc646e9bdde4da19061cf0f:
+On 2019/9/24 2:25, Marc Zyngier wrote:
+> We currently don't make much use of the DirectLPI feature, and it would
+> be beneficial to do this more, if only because it becomes a mandatory
+> feature for GICv4.1.
+> 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>   drivers/irqchip/irq-gic-v3-its.c | 51 +++++++++++++++++++++++---------
+>   1 file changed, 37 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> index 58cb233cf138..c94eb287393b 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -175,6 +175,12 @@ static DEFINE_IDA(its_vpeid_ida);
+>   #define gic_data_rdist_rd_base()	(gic_data_rdist()->rd_base)
+>   #define gic_data_rdist_vlpi_base()	(gic_data_rdist_rd_base() + SZ_128K)
+>   
+> +static inline u32 its_get_event_id(struct irq_data *d)
+> +{
+> +	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
+> +	return d->hwirq - its_dev->event_map.lpi_base;
+> +}
+> +
+>   static struct its_collection *dev_event_to_col(struct its_device *its_dev,
+>   					       u32 event)
+>   {
+> @@ -183,6 +189,13 @@ static struct its_collection *dev_event_to_col(struct its_device *its_dev,
+>   	return its->collections + its_dev->event_map.col_map[event];
+>   }
+>   
+> +static struct its_collection *irq_to_col(struct irq_data *d)
+> +{
+> +	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
+> +
+> +	return dev_event_to_col(its_dev, its_get_event_id(d));
+> +}
+> +
 
-  Merge tag 's390-5.4-1' of git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux (2019-09-17 14:04:43 -0700)
+irq_to_col uses device's event_map and col_map to get the target
+collection, yes it works well with device's LPI.
+But direct_lpi_inv also pass doorbells to it...
 
-are available in the Git repository at:
+We don't allocate doorbells for any devices, instead for each vPE.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.4-2
+And see below,
 
-for you to fetch changes up to ab5758848039de9a4b249d46e4ab591197eebaf2:
+>   static struct its_collection *valid_col(struct its_collection *col)
+>   {
+>   	if (WARN_ON_ONCE(col->target_address & GENMASK_ULL(15, 0)))
+> @@ -1031,12 +1044,6 @@ static void its_send_vinvall(struct its_node *its, struct its_vpe *vpe)
+>    * irqchip functions - assumes MSI, mostly.
+>    */
+>   
+> -static inline u32 its_get_event_id(struct irq_data *d)
+> -{
+> -	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
+> -	return d->hwirq - its_dev->event_map.lpi_base;
+> -}
+> -
+>   static void lpi_write_config(struct irq_data *d, u8 clr, u8 set)
+>   {
+>   	irq_hw_number_t hwirq;
+> @@ -1081,12 +1088,28 @@ static void wait_for_syncr(void __iomem *rdbase)
+>   		cpu_relax();
+>   }
+>   
+> +static void direct_lpi_inv(struct irq_data *d)
+> +{
+> +	struct its_collection *col;
+> +	void __iomem *rdbase;
+> +
+> +	/* Target the redistributor this LPI is currently routed to */
+> +	col = irq_to_col(d);
+> +	rdbase = per_cpu_ptr(gic_rdists->rdist, col->col_id)->rd_base;
+> +	gic_write_lpir(d->hwirq, rdbase + GICR_INVLPIR);
+> +
+> +	wait_for_syncr(rdbase);
+> +}
+> +
+>   static void lpi_update_config(struct irq_data *d, u8 clr, u8 set)
+>   {
+>   	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
+>   
+>   	lpi_write_config(d, clr, set);
+> -	its_send_inv(its_dev, its_get_event_id(d));
+> +	if (gic_rdists->has_direct_lpi && !irqd_is_forwarded_to_vcpu(d))
+> +		direct_lpi_inv(d);
+> +	else
+> +		its_send_inv(its_dev, its_get_event_id(d));
+>   }
+>   
+>   static void its_vlpi_set_doorbell(struct irq_data *d, bool enable)
+> @@ -2912,15 +2935,15 @@ static void its_vpe_send_cmd(struct its_vpe *vpe,
+>   
+>   static void its_vpe_send_inv(struct irq_data *d)
+>   {
+> -	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
+> -
+>   	if (gic_rdists->has_direct_lpi) {
+> -		void __iomem *rdbase;
+> -
+> -		rdbase = per_cpu_ptr(gic_rdists->rdist, vpe->col_idx)->rd_base;
+> -		gic_write_lpir(vpe->vpe_db_lpi, rdbase + GICR_INVLPIR);
+> -		wait_for_syncr(rdbase);
+> +		/*
+> +		 * Don't mess about. Generating the invalidation is easily
+> +		 * done by using the parent irq_data, just like below.
+> +		 */
+> +		direct_lpi_inv(d->parent_data);
 
-  s390/cio: exclude subchannels with no parent from pseudo check (2019-09-23 23:27:53 +0200)
+"GICv4-vpe"'s parent is "GICv3", not "ITS".  What do we expect with
+irq_data_get_irq_chip_data(parent's irq_data)?
 
-----------------------------------------------------------------
-s390 updates for the 5.4 merge window #2
+I noticed it when running this series on D05 (with GICv4.0 and DirectLPI
+support), panic call trace attached below.
+I think we really need a fix here.
 
- - Fix 3 kasan findings.
 
- - Add PERF_EVENT_IOC_PERIOD ioctl support.
+Thanks,
+zenghui
 
- - Add Crypto Express7S support and extend sysfs attributes for pkey.
+>   	} else {
+> +		struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
+> +
+>   		its_vpe_send_cmd(vpe, its_send_inv);
+>   	}
+>   }
+> 
 
- - Minor common I/O layer documentation corrections.
+---8<
 
-----------------------------------------------------------------
-Cornelia Huck (1):
-      s390/cio: fix intparm documentation
+[ 2046.193227] Unable to handle kernel paging request at virtual address 
+0000002045fa4d92
+[ 2046.201350] Mem abort info:
+[ 2046.204132]   ESR = 0x96000005
+[ 2046.207174]   Exception class = DABT (current EL), IL = 32 bits
+[ 2046.213081]   SET = 0, FnV = 0
+[ 2046.216123]   EA = 0, S1PTW = 0
+[ 2046.219251] Data abort info:
+[ 2046.222119]   ISV = 0, ISS = 0x00000005
+[ 2046.225942]   CM = 0, WnR = 0
+[ 2046.228898] user pgtable: 4k pages, 48-bit VAs, pgdp=0000001fa85d7000
+[ 2046.235326] [0000002045fa4d92] pgd=0000001fb185d003, pud=0000000000000000
+[ 2046.242103] Internal error: Oops: 96000005 [#1] PREEMPT SMP
+[ 2046.247664] Modules linked in: openvswitch nsh nf_conncount nf_nat 
+nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ebtable_filter ebtables 
+ip6table_filter ip6_tables iptable_filter sunrpc vfat fat aes_ce_blk 
+crypto_simd cryptd aesel vhost_net tun vhost tap ip_tables ext4 mbcache 
+jbd2 sd_mod marvell hisi_sas_v2_hw hisi_sas_main ipmi_si libsas 
+scsi_transport_sas hns_mdio hnae br_netfilter bridge dm_mod stp llc nvme 
+nvme_core xt_sctp sctp libcrc32c nbd
+[ 2046.307974] CPU: 3 PID: 15094 Comm: CPU 0/KVM Kdump: loaded Not 
+tainted 5.3.0gic-v4.1-devel+ #2
+[ 2046.316658] Hardware name: Huawei TaiShan 2280 /BC11SPCD, BIOS 1.58 
+10/29/2018
+[ 2046.323867] pstate: 60000085 (nZCv daIf -PAN -UAO)
+[ 2046.328646] pc : direct_lpi_inv+0x7c/0xe0
+[ 2046.332643] lr : its_vpe_send_inv.isra.24+0x50/0x60
+[ 2046.337508] sp : ffff000034cab780
+[ 2046.340810] x29: ffff000034cab780 x28: ffff000010e7c000
+[ 2046.346110] x27: 0000000000000002 x26: ffff0000113718c0
+[ 2046.351410] x25: ffff00001136f000 x24: ffff80af8a3f7420
+[ 2046.356710] x23: 0000000000000001 x22: 0000000000000001
+[ 2046.362010] x21: ffff80af95d96518 x20: ffff802fb78bf380
+[ 2046.367309] x19: ffff80af95d96548 x18: 0000000000000000
+[ 2046.372609] x17: 0000000000000000 x16: 0000000000000000
+[ 2046.377908] x15: 0000000000000000 x14: 0000000000000000
+[ 2046.383207] x13: 0000000000000000 x12: 0000000000000088
+[ 2046.388506] x11: 0000000000000002 x10: ffff00001156a000
+[ 2046.393805] x9 : 0000000000000000 x8 : ffff00001136f848
+[ 2046.399105] x7 : ffff00001018c6a8 x6 : 0000001fba060000
+[ 2046.404405] x5 : ffff000012c40000 x4 : 0000000045fa26c9
+[ 2046.409704] x3 : ffff801fbb429800 x2 : 00000000000026c9
+[ 2046.415004] x1 : ffff00001136f8a8 x0 : ffff000012163000
+[ 2046.420303] Call trace:
+[ 2046.422739]  direct_lpi_inv+0x7c/0xe0
+[ 2046.426388]  its_vpe_send_inv.isra.24+0x50/0x60
+[ 2046.430906]  its_vpe_unmask_irq+0x34/0x40
+[ 2046.434904]  unmask_irq.part.5+0x30/0x50
+[ 2046.438814]  irq_enable+0x78/0x98
+[ 2046.442116]  __irq_startup+0x88/0x90
+[ 2046.445680]  irq_startup+0x7c/0x140
+[ 2046.449156]  __enable_irq+0x80/0x90
+[ 2046.452632]  enable_irq+0x58/0xb0
+[ 2046.455934]  its_make_vpe_non_resident+0xf0/0x108
+[ 2046.460626]  vgic_v4_put+0x64/0x70
+[ 2046.464015]  kvm_arch_vcpu_blocking+0x34/0x68
+[ 2046.468360]  kvm_vcpu_block+0x50/0x598
+[ 2046.472097]  kvm_handle_wfx+0x118/0x3d8
+[ 2046.475920]  handle_exit+0x14c/0x1c8
+[ 2046.479484]  kvm_arch_vcpu_ioctl_run+0x338/0xab8
+[ 2046.484088]  kvm_vcpu_ioctl+0x3c8/0xa60
+[ 2046.487912]  do_vfs_ioctl+0xc4/0x7f0
+[ 2046.491475]  ksys_ioctl+0x8c/0xa0
+[ 2046.494778]  __arm64_sys_ioctl+0x28/0x38
+[ 2046.498689]  el0_svc_common.constprop.0+0x80/0x1b8
+[ 2046.503467]  el0_svc_handler+0x34/0x90
+[ 2046.507204]  el0_svc+0x8/0xc
+[ 2046.510076] Code: d0006f41 f940d865 9122a021 d000dee0 (786478c3)
+[ 2046.516158] ---[ end trace f6392171e61487dc ]---
+[ 2046.520763] Kernel panic - not syncing: Fatal exception
+[ 2046.525976] SMP: stopping secondary CPUs
+[ 2046.529913] Kernel Offset: disabled
+[ 2046.533391] CPU features: 0x0002,20006008
+[ 2046.537387] Memory Limit: none
 
-Harald Freudenberger (1):
-      s390/zcrypt: CEX7S exploitation support
-
-Ingo Franzki (1):
-      s390/pkey: Add sysfs attributes to emit AES CIPHER key blobs
-
-Thomas Richter (2):
-      s390/cpum_sf: Support ioctl PERF_EVENT_IOC_PERIOD
-      s390/cpumf: Remove mixed white space
-
-Vasily Gorbik (3):
-      s390/topology: avoid firing events before kobjs are created
-      s390/cio: avoid calling strlen on null pointer
-      s390/cio: exclude subchannels with no parent from pseudo check
-
- arch/s390/include/asm/cpu_mf.h      |  10 +--
- arch/s390/include/asm/perf_event.h  |   2 +
- arch/s390/include/uapi/asm/zcrypt.h |   4 +-
- arch/s390/kernel/perf_cpum_sf.c     | 165 +++++++++++++++++++++++++++---------
- arch/s390/kernel/topology.c         |   3 +-
- drivers/s390/cio/ccwgroup.c         |   2 +-
- drivers/s390/cio/css.c              |   2 +
- drivers/s390/cio/device_ops.c       |  23 +++--
- drivers/s390/crypto/ap_bus.c        |  12 +--
- drivers/s390/crypto/ap_bus.h        |   3 +-
- drivers/s390/crypto/pkey_api.c      | 113 ++++++++++++++++++++++++
- drivers/s390/crypto/vfio_ap_drv.c   |   2 +
- drivers/s390/crypto/zcrypt_api.h    |   3 +-
- drivers/s390/crypto/zcrypt_cex4.c   |  72 +++++++++++-----
- 14 files changed, 334 insertions(+), 82 deletions(-)
 
