@@ -2,183 +2,205 @@ Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D102DC352AB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2B1C352A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DF48222CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:36:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="v5EjcodX"
+	by mail.kernel.org (Postfix) with ESMTP id 9B99D21D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 15:36:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569512173;
+	bh=ncxPzpQz8BLxmfkZRs9G1Ix6IIyLzOR3M2H36B+FqsY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=W6kH460+HX/pVBjyi67jBM/dbjM3y01vi4S/kvXTwj0D9ZtAWHcjvfE6M9hjhnQ+w
+	 MRLhaWk68ceX5Zj8ZqEurQd0q+95rJFsdWn9x1KEqc7oEIdYnKz9LjqLY+SXTfAv+6
+	 d7fNenbxRNwfkNH3IS49BDw4Mypgg+rWom+dmreU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbfIZPgF (ORCPT
+        id S1727392AbfIZPgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 11:36:05 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:46504 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727238AbfIZPgF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 11:36:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=uAwy68EBZ+WrFk18SUph66dAQKMcbtYPjR8HT7qhx0U=; b=v5EjcodX+DDYtZVC73ZrRDKTv
-        Law3lHGDqKvv/DuA/ybW7hpqoyRp8b67l6kGkzqF5w3Cpl6OhMcwQ/d7PNXXOy4QdP19lD1Z/FAHY
-        7k04JuKGO9slt2XSKqRXjO4U2vSVUX5g4Jieq5ALG4E0frC/HksY3OlnURO2rzcmSqc7CJw8bInxf
-        t8qt/zPzhj2O6TOUHp0xEnZCSmVUc1kS9HfT8BOYcEYddyZUsPUw/vpO60OM3jFlAM0zU3ZTNebeS
-        2IJTX0Bmi+ZpgOk6/MDTXSGIr5z5k4L2mNfZcgvEbtXleqF5l7BxqwjnXjmfMxZp9cHtwJjFOzfvn
-        BP7LnGAqg==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:36844)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iDVo2-00072Q-Mf; Thu, 26 Sep 2019 16:35:46 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iDVny-0003K7-Va; Thu, 26 Sep 2019 16:35:42 +0100
-Date:   Thu, 26 Sep 2019 16:35:42 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Hui Song <hui.song_1@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v5] gpio/mpc8xxx: change irq handler from chained to
- normal
-Message-ID: <20190926153542.GE25745@shell.armlinux.org.uk>
-References: <20190916055817.43425-1-hui.song_1@nxp.com>
+        Thu, 26 Sep 2019 11:36:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56926 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727374AbfIZPgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 11:36:12 -0400
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B53E21D56;
+        Thu, 26 Sep 2019 15:36:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569512170;
+        bh=ncxPzpQz8BLxmfkZRs9G1Ix6IIyLzOR3M2H36B+FqsY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=fEL922CotjCRORMLKTbFZ4oOcDKY+QL4SzDHXhA20dsZO+6e1pGReHQw7W9/BbPZW
+         rvz5PZOFelZpPB+HrQwBgBftjTE6vW81RXnexQz1jnGAjVpyutY8UX1YY8LO6hmFpk
+         lFtpHbWHsHmu7cD8o8ucTCc1MDomh4AeENfIwoRc=
+Received: by mail-qt1-f172.google.com with SMTP id c21so3335207qtj.12;
+        Thu, 26 Sep 2019 08:36:10 -0700 (PDT)
+X-Gm-Message-State: APjAAAWPYiBhxtFIHKKBN/e7D8qc0tsXzcYCVYSUGhN7DYAIVARLDZFV
+        UU/W/qQCo656InJaVVlFW7dwKwxXsEXX2KkCLQ==
+X-Google-Smtp-Source: APXvYqxQOADsBfOqIVHdW6gFpIIfgYly8PGgVMOXjuhb+x2+qzmtAr9/o6x8BGzc6hLagaWPlkoyWp5WOx4+2A4cqz8=
+X-Received: by 2002:ac8:6915:: with SMTP id e21mr4520639qtr.224.1569512169600;
+ Thu, 26 Sep 2019 08:36:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190916055817.43425-1-hui.song_1@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CGME20190926125619eucas1p249ac149ef1e1a3eb975dae94b08cd7be@eucas1p2.samsung.com>
+ <20190926125614.10408-1-m.szyprowski@samsung.com> <20190926140315.GA16002@pi3>
+ <0d3831ae-e33d-774d-02f7-fba45a95d25c@samsung.com>
+In-Reply-To: <0d3831ae-e33d-774d-02f7-fba45a95d25c@samsung.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 26 Sep 2019 10:35:58 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqL4LZdkWkDkZdEpv4Sh840GywfHhLgmWjYCm9z+QPxrLg@mail.gmail.com>
+Message-ID: <CAL_JsqL4LZdkWkDkZdEpv4Sh840GywfHhLgmWjYCm9z+QPxrLg@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: gpu: Convert Samsung Image Scaler to dt-schema
+To:     Maciej Falkowski <m.falkowski@samsung.com>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        devicetree@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Inki Dae <inki.dae@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 01:58:17PM +0800, Hui Song wrote:
-> From: Song Hui <hui.song_1@nxp.com>
-> 
-> More than one gpio controllers can share one interrupt, change the
-> driver to request shared irq.
-> 
-> Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
-> Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-> Signed-off-by: Song Hui <hui.song_1@nxp.com>
+On Thu, Sep 26, 2019 at 9:47 AM Maciej Falkowski
+<m.falkowski@samsung.com> wrote:
+>
+>
+> On 9/26/19 4:03 PM, Krzysztof Kozlowski wrote:
+> > On Thu, Sep 26, 2019 at 02:56:14PM +0200, Marek Szyprowski wrote:
+> >> From: Maciej Falkowski <m.falkowski@samsung.com>
+> >>
+> >> Convert Samsung Image Scaler to newer dt-schema format.
+> >>
+> >> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+> >> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> >> ---
+> >> v2:
+> >> - Removed quotation marks from string in 'compatible' property
+> >> - Added if-then statement for 'clocks' and 'clock-names' property
+> >> - Added include directive to example
+> >> - Added GIC_SPI macro to example
+> >>
+> >> Best regards,
+> >> Maciej Falkowski
+> >> ---
+> >>   .../bindings/gpu/samsung-scaler.txt           | 27 -------
+> >>   .../bindings/gpu/samsung-scaler.yaml          | 71 +++++++++++++++++++
+> >>   2 files changed, 71 insertions(+), 27 deletions(-)
+> >>   delete mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.txt
+> >>   create mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/gpu/samsung-scaler.txt b/Documentation/devicetree/bindings/gpu/samsung-scaler.txt
+> >> deleted file mode 100644
+> >> index 9c3d98105dfd..000000000000
+> >> --- a/Documentation/devicetree/bindings/gpu/samsung-scaler.txt
+> >> +++ /dev/null
+> >> @@ -1,27 +0,0 @@
+> >> -* Samsung Exynos Image Scaler
+> >> -
+> >> -Required properties:
+> >> -  - compatible : value should be one of the following:
+> >> -    (a) "samsung,exynos5420-scaler" for Scaler IP in Exynos5420
+> >> -    (b) "samsung,exynos5433-scaler" for Scaler IP in Exynos5433
+> >> -
+> >> -  - reg : Physical base address of the IP registers and length of memory
+> >> -      mapped region.
+> >> -
+> >> -  - interrupts : Interrupt specifier for scaler interrupt, according to format
+> >> -             specific to interrupt parent.
+> >> -
+> >> -  - clocks : Clock specifier for scaler clock, according to generic clock
+> >> -         bindings. (See Documentation/devicetree/bindings/clock/exynos*.txt)
+> >> -
+> >> -  - clock-names : Names of clocks. For exynos scaler, it should be "mscl"
+> >> -              on 5420 and "pclk", "aclk" and "aclk_xiu" on 5433.
+> >> -
+> >> -Example:
+> >> -    scaler@12800000 {
+> >> -            compatible = "samsung,exynos5420-scaler";
+> >> -            reg = <0x12800000 0x1294>;
+> >> -            interrupts = <0 220 IRQ_TYPE_LEVEL_HIGH>;
+> >> -            clocks = <&clock CLK_MSCL0>;
+> >> -            clock-names = "mscl";
+> >> -    };
+> >> diff --git a/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml b/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
+> >> new file mode 100644
+> >> index 000000000000..af19930d052e
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
+> >> @@ -0,0 +1,71 @@
+> >> +# SPDX-License-Identifier: GPL-2.0
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: https://protect2.fireeye.com/url?k=1ffa720fd467d028.1ffbf940-9a5a550397b4da2b&u=http://devicetree.org/schemas/gpu/samsung-scaler.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: Samsung Exynos SoC Image Scaler
+> >> +
+> >> +maintainers:
+> >> +  - Inki Dae <inki.dae@samsung.com>
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    enum:
+> >> +      - samsung,exynos5420-scaler
+> >> +      - samsung,exynos5433-scaler
+> >> +
+> >> +  reg:
+> >> +    maxItems: 1
+> >> +
+> >> +  interrupts:
+> >> +    maxItems: 1
+> >> +
+>
+> Hi Krzysztof,
 
-While this will work, it will mess up userspace accounting of the
-number of interrupts per second in tools such as vmstat.  The reason
-is that for every GPIO interrupt, /proc/interrupts records the count
-against GIC interrupt 68 or 69, as well as the GPIO itself.  So, for
-every GPIO interrupt, the total number of interrupts that the system
-has seen increments by two.
+Please work on your quoting. Reply below what you are replying to.
 
-If we don't care about accurate interrupt statistics, then this is
-fine, but I think it should be mentioned in the commit message.
+>
+> By "Midgard" I assume that you referred to
+> 'Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml'.
+>
+> I think that 'clocks' and 'clock-names' properties before if statement
+> serve different purpose in this schema.
+> It totally has about 10 different compatibles grouped in five pairs.
+> Then schema declares for 'clocks' minItems as one and maxItems as two and
+> later it overrides this boundaries with if statement for particular
+> compatibles.
 
-> ---
-> Changes in v5:
-> 	- add traverse every bit function.
-> Changes in v4:
-> 	- convert 'pr_err' to 'dev_err'.
-> Changes in v3:
-> 	- update the patch description.
-> Changes in v2:
-> 	- delete the compatible of ls1088a.
->  drivers/gpio/gpio-mpc8xxx.c | 30 +++++++++++++++++++-----------
->  1 file changed, 19 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-> index 16a47de..3a06ca9 100644
-> --- a/drivers/gpio/gpio-mpc8xxx.c
-> +++ b/drivers/gpio/gpio-mpc8xxx.c
-> @@ -22,6 +22,7 @@
->  #include <linux/irq.h>
->  #include <linux/gpio/driver.h>
->  #include <linux/bitops.h>
-> +#include <linux/interrupt.h>
->  
->  #define MPC8XXX_GPIO_PINS	32
->  
-> @@ -127,20 +128,20 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
->  		return -ENXIO;
->  }
->  
-> -static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
-> +static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
->  {
-> -	struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
-> -	struct irq_chip *chip = irq_desc_get_chip(desc);
-> +	struct mpc8xxx_gpio_chip *mpc8xxx_gc = (struct mpc8xxx_gpio_chip *)data;
->  	struct gpio_chip *gc = &mpc8xxx_gc->gc;
->  	unsigned int mask;
-> +	int i;
->  
->  	mask = gc->read_reg(mpc8xxx_gc->regs + GPIO_IER)
->  		& gc->read_reg(mpc8xxx_gc->regs + GPIO_IMR);
-> -	if (mask)
-> +	for_each_set_bit(i, &mask, 32)
->  		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
-> -						     32 - ffs(mask)));
-> -	if (chip->irq_eoi)
-> -		chip->irq_eoi(&desc->irq_data);
-> +						     31 - i));
-> +
-> +	return IRQ_HANDLED;
->  }
->  
->  static void mpc8xxx_irq_unmask(struct irq_data *d)
-> @@ -388,8 +389,8 @@ static int mpc8xxx_probe(struct platform_device *pdev)
->  
->  	ret = gpiochip_add_data(gc, mpc8xxx_gc);
->  	if (ret) {
-> -		pr_err("%pOF: GPIO chip registration failed with status %d\n",
-> -		       np, ret);
-> +		dev_err(&pdev->dev, "%pOF: GPIO chip registration failed with status %d\n",
-> +			np, ret);
->  		goto err;
->  	}
->  
-> @@ -409,8 +410,15 @@ static int mpc8xxx_probe(struct platform_device *pdev)
->  	if (devtype->gpio_dir_in_init)
->  		devtype->gpio_dir_in_init(gc);
->  
-> -	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
-> -					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
-> +	ret = request_irq(mpc8xxx_gc->irqn, mpc8xxx_gpio_irq_cascade,
-> +			  IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade",
-> +			  mpc8xxx_gc);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "%s: failed to request_irq(%d), ret = %d\n",
-> +			np->full_name, mpc8xxx_gc->irqn, ret);
-> +		goto err;
-> +	}
-> +
->  	return 0;
->  err:
->  	iounmap(mpc8xxx_gc->regs);
-> -- 
-> 2.9.5
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+It's not an override, but an AND. So what's under 'properties' has to
+be the looser constraints than what is under an if/then schema.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+> Well, then clearly, the purpose is to declare boundaries for all of
+> pairs and
+> not to provide easy-to-find definition for this properties.
+>
+> In my schema I directly set boundaries per compatible with single
+> if-else statement.
+> I didn't know what to put before then as if statement is already
+> self-explanatory.
+>
+> Best regards,
+> Maciej Falkowski
+>
+> > I am repeating myself... leave the clocks and clock-names.
+> >
+> > "I think it is worth to leave the clocks and clock-names here (could be
+> > empty or with min/max values for number of items). This makes it easy to
+> > find the properties by humans.
+
+I agree.
+
+Let me put it another way. You need to add an 'additionalProperties:
+false' and (I think) to make that work you'll need them listed here.
+
+Rob
