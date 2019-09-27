@@ -2,316 +2,135 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D518AC388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA737C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AA1F217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:46:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569606406;
-	bh=WcEO23YAVLrDPnehWuLKxDFeVrU4c5TYJVFCM1t8jQ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EgW8dYAc2gCVxNrfoj/ygCL0bcBM+hNtR5TyojFYj8ehu+UOYyKPWXQPwmXwbbJ0L
-	 wlWfbBLdiMtjXAzTYP8VqLwRG/QFfCZy0r3nBw54WvWD7pBChmHJEhR5hMUuIEUeBt
-	 ZCl3141zjh5tgG3W4zkTjU1+09FvDtEXsevnYLOo=
+	by mail.kernel.org (Postfix) with ESMTP id 79532217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:48:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="eBCI9e2G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbfI0Rqp (ORCPT
+        id S1728000AbfI0RsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 13:46:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43382 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726321AbfI0Rqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 13:46:45 -0400
-Received: from localhost (unknown [62.119.166.9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F7E721655;
-        Fri, 27 Sep 2019 17:46:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569606404;
-        bh=WcEO23YAVLrDPnehWuLKxDFeVrU4c5TYJVFCM1t8jQ8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kRx8jVYqdIa1zqHhO+pROkGgDo7HpdPlsIiMSdj7/XnPznJuRtxt/SzkBH9j1HjZH
-         dJXKuvEiUuX1xK7OPHHvCWCfNuyI5nDPAvp7PPSGHUQMyKbkwegCs5HeAXbfNWa1TL
-         dQ0cLDy9TPsFtbFLkLH8PHT0+bwuUDw4oKKn498U=
-Date:   Fri, 27 Sep 2019 19:46:33 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Akinobu Mita <akinobu.mita@gmail.com>
-Cc:     linux-leds@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v2 1/1] leds: remove PAGE_SIZE limit of
- /sys/class/leds/<led>/trigger
-Message-ID: <20190927174633.GB1802011@kroah.com>
-References: <1568387004-3802-1-git-send-email-akinobu.mita@gmail.com>
- <1568387004-3802-2-git-send-email-akinobu.mita@gmail.com>
- <20190927063547.GA1786569@kroah.com>
- <CAC5umyjdM1+4nPg_6UaCjcpikESamdA_ZpmP4Xfjx7_-1f=+0A@mail.gmail.com>
+        Fri, 27 Sep 2019 13:48:10 -0400
+Received: from mail-eopbgr790078.outbound.protection.outlook.com ([40.107.79.78]:54624
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726594AbfI0RsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 13:48:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PKtE2uIMc9MO/5mQDQ2QlCWsOAhdPE60Kt5feqCXGjwekQ8HW2hXwLDdPSNH1z1SJStroiltkfhl1KSu5heIdxTRSHwLbQxELVTJoqM92x7l2BMGuqz5BizpiITSIYXQU8y9WoZmPjkDyp+5W1WuSI0T3/nRU0rGU4euW9WCQ70bx1vENI5fPUsVP6fbMOgsw1TR7gMlBqooUAZrouSOHNJA2huiBeLj6bZzF4ArgsDA2oAgnovTgOOHwwsEmeA1LdVQRO4zIp536Cdbbt+ogWXSK47QByEuv5E1na7dezDkIyIbxUnPxXvb4aAtWIAjyihAHkCR/hIJYY6FG8GyiQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dhIf6PIf4I+LJ/iS8PWnECjfmsw8Osoo+DdeE2vgPbw=;
+ b=bi/SHqqWnZjALhoS9K8785PjfSTLwGGlFDmOW9CF2IPQJNM5C5IUu+xbWUdRg/kZqOaVijTEOirowpGcsEdfH80i5BNb5Pu/ErHWjRGV7ee8pZOrnM1F7+ePS6ia7iqiu02OBo93AC6FG7SBhA6f+LXkF+9MmoqQe3aYwIC7VQ7hKeAHwaC5eA8khOgSvA5bjTCrf/2n1vpytVj1kyK/2CeuV0m9vbZA1iSN7AHOjQWf7YEfweWQXMa0Qd2qitxZxPq+ZG0vmsym12d7yqeqY5rnNohGWLmkGUl3OydT+s6KstSeXEtVgjmqoQ5p+urfuoF3xZ48Cw0IG389IqjGhQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dhIf6PIf4I+LJ/iS8PWnECjfmsw8Osoo+DdeE2vgPbw=;
+ b=eBCI9e2GCg5j+NIkCnjKA4CHOLQajEptyR6l6YyIApmy/ZZFnMhSlpc9FWX2MForcj0amBZ4q+ByIedNdki9KPwcrzXRG3trZnACTBZMOZPy/K6zU3Gw5D/1FQ+acosOliEZ2+0iALDsIJNG8rPeqDh9pJseJFcUhy3Z7DFtnls=
+Received: from CY4PR1201MB0230.namprd12.prod.outlook.com (10.172.79.7) by
+ CY4PR1201MB0181.namprd12.prod.outlook.com (10.172.79.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.26; Fri, 27 Sep 2019 17:48:06 +0000
+Received: from CY4PR1201MB0230.namprd12.prod.outlook.com
+ ([fe80::708e:c826:5b05:e3f0]) by CY4PR1201MB0230.namprd12.prod.outlook.com
+ ([fe80::708e:c826:5b05:e3f0%11]) with mapi id 15.20.2284.023; Fri, 27 Sep
+ 2019 17:48:06 +0000
+From:   Harry Wentland <hwentlan@amd.com>
+To:     Lyude Paul <lyude@redhat.com>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>
+CC:     "Wentland, Harry" <Harry.Wentland@amd.com>,
+        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Zuo, Jerry" <Jerry.Zuo@amd.com>, Thomas Lim <Thomas.Lim@amd.com>,
+        "Francis, David" <David.Francis@amd.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/6] drm/amdgpu/dm/mst: Don't create MST topology managers
+ for eDP ports
+Thread-Topic: [PATCH 1/6] drm/amdgpu/dm/mst: Don't create MST topology
+ managers for eDP ports
+Thread-Index: AQHVdL0B5kLUEjAc5UmzYJX4Fbcbl6c/zfGA
+Date:   Fri, 27 Sep 2019 17:48:06 +0000
+Message-ID: <2a1d5221-b801-44f9-c966-1163b8d67b3f@amd.com>
+References: <20190926225122.31455-1-lyude@redhat.com>
+ <20190926225122.31455-2-lyude@redhat.com>
+In-Reply-To: <20190926225122.31455-2-lyude@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [165.204.55.251]
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
+x-clientproxiedby: YT1PR01CA0011.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::24)
+ To CY4PR1201MB0230.namprd12.prod.outlook.com (2603:10b6:910:1e::7)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Harry.Wentland@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6828357a-1c99-488e-babf-08d74372da3b
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:CY4PR1201MB0181;
+x-ms-traffictypediagnostic: CY4PR1201MB0181:
+x-ld-processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR1201MB0181C9029F1B0473F8FA18368C810@CY4PR1201MB0181.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:346;
+x-forefront-prvs: 0173C6D4D5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(366004)(396003)(376002)(136003)(189003)(199004)(256004)(4744005)(66476007)(25786009)(31696002)(7736002)(6246003)(81166006)(66946007)(478600001)(6512007)(305945005)(66556008)(229853002)(6486002)(6436002)(14454004)(66066001)(81156014)(64756008)(66446008)(8676002)(65806001)(446003)(110136005)(4326008)(58126008)(54906003)(316002)(31686004)(2501003)(65956001)(2906002)(52116002)(486006)(476003)(2616005)(26005)(8936002)(76176011)(386003)(6506007)(102836004)(53546011)(6116002)(186003)(99286004)(3846002)(11346002)(36756003)(71200400001)(71190400001)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR1201MB0181;H:CY4PR1201MB0230.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 1b5n473n/vqWYPvfseyfi8IFRnIGN0By/ny7B7K2H/IedsEEPloBkcbBeLNOlxb/Un8qQWjb7Wuo58fJpt5rK29R0U4LDfOw6WE8tseTZswRc5c3uuFcPmal7xbHDeUfOJlUVGQV1jQOB1dA5Q67JNagenyifF7jcDOhOd1V2hnFeptKzTFzubeqKPSbB0fF6+y30yF8m8JeDbVLrOaOBlR8pijGhxv/iMWT2qCbJRhrPTy4rsv3iFrt7QMTtWB4+HyaZ0mDYsc6QcWMb1C2bkNXci/cd1ybJTNSwN/MsDFGl1ZUXmilh52D3I8rWYkewH2tyiPT8Vcah/GcFYfNflZjyo0OOuc2htzg+rLWeY+7ujc/mnCsqQo6HueJE5PZNaMwDHbjqdGwLY/DwwSRNhC25+kxfnOMQ93XdUuSv6w=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <97FEF00A2C6A6741909CDC28AD6A4DC8@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAC5umyjdM1+4nPg_6UaCjcpikESamdA_ZpmP4Xfjx7_-1f=+0A@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6828357a-1c99-488e-babf-08d74372da3b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Sep 2019 17:48:06.6953
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: eyh7jcfc7eI1Hqj+FoX6PoWCs6B7egPqmPVZaohyk/S2fz3Dzvo9KF7Yky7CtbVUu0xqHVW6YbYFM666Wh3STQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0181
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 28, 2019 at 01:47:21AM +0900, Akinobu Mita wrote:
-> 2019年9月27日(金) 15:39 Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
-> >
-> > On Sat, Sep 14, 2019 at 12:03:24AM +0900, Akinobu Mita wrote:
-> > > Reading /sys/class/leds/<led>/trigger returns all available LED triggers.
-> > > However, the size of this file is limited to PAGE_SIZE because of the
-> > > limitation for sysfs attribute.
-> > >
-> > > Enabling LED CPU trigger on systems with thousands of CPUs easily hits
-> > > PAGE_SIZE limit, and makes it impossible to see all available LED triggers
-> > > and which trigger is currently activated.
-> > >
-> > > We work around it here by converting /sys/class/leds/<led>/trigger to
-> > > binary attribute, which is not limited by length. This is _not_ good
-> > > design, do not copy it.
-> > >
-> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> > > Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> > > Cc: Pavel Machek <pavel@ucw.cz>
-> > > Cc: Dan Murphy <dmurphy@ti.com>
-> > > Acked-by: Pavel Machek <pavel@ucw.cz>
-> > > Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-> > > ---
-> > >  drivers/leds/led-class.c    |  8 ++--
-> > >  drivers/leds/led-triggers.c | 90 ++++++++++++++++++++++++++++++++++-----------
-> > >  drivers/leds/leds.h         |  6 +++
-> > >  include/linux/leds.h        |  5 ---
-> > >  4 files changed, 79 insertions(+), 30 deletions(-)
-> > >
-> > > diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-> > > index 4793e77..8b5a1d1 100644
-> > > --- a/drivers/leds/led-class.c
-> > > +++ b/drivers/leds/led-class.c
-> > > @@ -73,13 +73,13 @@ static ssize_t max_brightness_show(struct device *dev,
-> > >  static DEVICE_ATTR_RO(max_brightness);
-> > >
-> > >  #ifdef CONFIG_LEDS_TRIGGERS
-> > > -static DEVICE_ATTR(trigger, 0644, led_trigger_show, led_trigger_store);
-> > > -static struct attribute *led_trigger_attrs[] = {
-> > > -     &dev_attr_trigger.attr,
-> > > +static BIN_ATTR(trigger, 0644, led_trigger_read, led_trigger_write, 0);
-> > > +static struct bin_attribute *led_trigger_bin_attrs[] = {
-> > > +     &bin_attr_trigger,
-> > >       NULL,
-> > >  };
-> > >  static const struct attribute_group led_trigger_group = {
-> > > -     .attrs = led_trigger_attrs,
-> > > +     .bin_attrs = led_trigger_bin_attrs,
-> > >  };
-> > >  #endif
-> > >
-> > > diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
-> > > index 8d11a5e..ed5a311 100644
-> > > --- a/drivers/leds/led-triggers.c
-> > > +++ b/drivers/leds/led-triggers.c
-> > > @@ -16,6 +16,7 @@
-> > >  #include <linux/rwsem.h>
-> > >  #include <linux/leds.h>
-> > >  #include <linux/slab.h>
-> > > +#include <linux/mm.h>
-> > >  #include "leds.h"
-> > >
-> > >  /*
-> > > @@ -26,9 +27,11 @@ LIST_HEAD(trigger_list);
-> > >
-> > >   /* Used by LED Class */
-> > >
-> > > -ssize_t led_trigger_store(struct device *dev, struct device_attribute *attr,
-> > > -             const char *buf, size_t count)
-> > > +ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
-> > > +                       struct bin_attribute *bin_attr, char *buf,
-> > > +                       loff_t pos, size_t count)
-> > >  {
-> > > +     struct device *dev = kobj_to_dev(kobj);
-> > >       struct led_classdev *led_cdev = dev_get_drvdata(dev);
-> > >       struct led_trigger *trig;
-> > >       int ret = count;
-> > > @@ -64,39 +67,84 @@ ssize_t led_trigger_store(struct device *dev, struct device_attribute *attr,
-> > >       mutex_unlock(&led_cdev->led_access);
-> > >       return ret;
-> > >  }
-> > > -EXPORT_SYMBOL_GPL(led_trigger_store);
-> > > +EXPORT_SYMBOL_GPL(led_trigger_write);
-> > >
-> > > -ssize_t led_trigger_show(struct device *dev, struct device_attribute *attr,
-> > > -             char *buf)
-> > > +__printf(4, 5)
-> > > +static int led_trigger_snprintf(char *buf, size_t size, bool query,
-> > > +                             const char *fmt, ...)
-> > > +{
-> > > +     va_list args;
-> > > +     int i;
-> > > +
-> > > +     va_start(args, fmt);
-> > > +     if (query)
-> > > +             i = vsnprintf(NULL, 0, fmt, args);
-> > > +     else
-> > > +             i = vscnprintf(buf, size, fmt, args);
-> > > +     va_end(args);
-> > > +
-> > > +     return i;
-> > > +}
-> >
-> > You only call this in one place, why is it needed like this?  The "old"
-> > code open-coded this, what is this helping with here?
-> >
-> > And what does "query" mean here?  I have no idea how that variable
-> > matters, or what it does.  Why not just test if buf is NULL or not if
-> > you don't want to use it?
-> >
-> > Ah, you are trying to see how "long" the buffer is going to be.  That
-> > makes more sense, but just trigger off of the NULL buffer or not, making
-> > this a bit more "obvious" what you are doing and not tieing two
-> > parameters to each other (meaning one always reflects the other one).
-> 
-> We cannot simply replace the "query" by checking the buffer is NULL or not.
-> Because led_trigger_snprintf() is repeatedly called by led_trigger_format()
-> while increasing 'buf' and decreasing 'size' by the return value of
-> led_trigger_snprintf() every time.
-
-Odd, but ok, I'll trust you, this looks like very odd code :(
-
-> > > +static int led_trigger_format(char *buf, size_t size, bool query,
-> > > +                           struct led_classdev *led_cdev)
-> > >  {
-> > > -     struct led_classdev *led_cdev = dev_get_drvdata(dev);
-> > >       struct led_trigger *trig;
-> > > -     int len = 0;
-> > > +     int len = led_trigger_snprintf(buf, size, query, "%s",
-> > > +                                    led_cdev->trigger ? "none" : "[none]");
-> > > +
-> > > +     list_for_each_entry(trig, &trigger_list, next_trig) {
-> > > +             bool hit = led_cdev->trigger &&
-> > > +                     !strcmp(led_cdev->trigger->name, trig->name);
-> > > +
-> > > +             len += led_trigger_snprintf(buf + len, size - len, query,
-> > > +                                         " %s%s%s", hit ? "[" : "",
-> > > +                                         trig->name, hit ? "]" : "");
-> > > +     }
-> > > +
-> > > +     len += led_trigger_snprintf(buf + len, size - len, query, "\n");
-> > > +
-> > > +     return len;
-> > > +}
-> > > +
-> > > +/*
-> > > + * It was stupid to create 10000 cpu triggers, but we are stuck with it now.
-> > > + * Don't make that mistake again. We work around it here by creating binary
-> > > + * attribute, which is not limited by length. This is _not_ good design, do not
-> > > + * copy it.
-> > > + */
-> > > +ssize_t led_trigger_read(struct file *filp, struct kobject *kobj,
-> > > +                     struct bin_attribute *attr, char *buf,
-> > > +                     loff_t pos, size_t count)
-> > > +{
-> > > +     struct device *dev = kobj_to_dev(kobj);
-> > > +     struct led_classdev *led_cdev = dev_get_drvdata(dev);
-> > > +     void *data;
-> > > +     int len;
-> > >
-> > >       down_read(&triggers_list_lock);
-> > >       down_read(&led_cdev->trigger_lock);
-> > >
-> > > -     if (!led_cdev->trigger)
-> > > -             len += scnprintf(buf+len, PAGE_SIZE - len, "[none] ");
-> > > +     len = led_trigger_format(NULL, 0, true, led_cdev);
-> > > +     data = kvmalloc(len + 1, GFP_KERNEL);
-> >
-> > Why kvmalloc() and not just kmalloc()?  How big is this buffer you are
-> > expecting to have here?
-> 
-> The ledtrig-cpu supports upto 9999 cpus.  If all these cpus were available,
-> the buffer size would be 78,890 bytes.
-> (for i in `seq 0 9999`;do echo -n " cpu$i"; done | wc -c)
-> 
-> The intention of this kvmalloc() allocation is to avoid costly allocation
-> if possible.
-
-Ah, forgot it could get that big.
-
-> > > +     if (data)
-> > > +             len = led_trigger_format(data, len + 1, false, led_cdev);
-> > >       else
-> > > -             len += scnprintf(buf+len, PAGE_SIZE - len, "none ");
-> > > +             len = -ENOMEM;
-> > >
-> > > -     list_for_each_entry(trig, &trigger_list, next_trig) {
-> > > -             if (led_cdev->trigger && !strcmp(led_cdev->trigger->name,
-> > > -                                                     trig->name))
-> > > -                     len += scnprintf(buf+len, PAGE_SIZE - len, "[%s] ",
-> > > -                                      trig->name);
-> > > -             else
-> > > -                     len += scnprintf(buf+len, PAGE_SIZE - len, "%s ",
-> > > -                                      trig->name);
-> > > -     }
-> > >       up_read(&led_cdev->trigger_lock);
-> > >       up_read(&triggers_list_lock);
-> >
-> > Two locks?  Why not 3?  5?  How about just 1?  :)
-> 
-> I don't touch these locks in this patch :)
-> 
-> Locking both locks seems to be necessary to prevent someone from changing
-> trigger_list or led_cdev->trigger.
-
-Ok, it just looked odd to me.
-
-> > > -     len += scnprintf(len+buf, PAGE_SIZE - len, "\n");
-> > > +     if (len < 0)
-> > > +             return len;
-> >
-> > You just leaked data if led_trigger_format() returned an error :(
-> >
-> > Just return -ENOMEM above if !data, which makes this much simpler.
-> 
-> We are holding the two locks, so we need to release them before return.
-> Which one do you prefer?
-> 
->         ...
->         data = kvmalloc(len + 1, GFP_KERNEL);
->         if (data)
->                 len = led_trigger_format(data, len + 1, false, led_cdev);
->         else
->                 len = -ENOMEM;
-> 
->         up_read(&led_cdev->trigger_lock);
->         up_read(&triggers_list_lock);
-> 
->         if (len < 0)
->                 return len;
-> 
-> vs.
-> 
->         ...
->         data = kvmalloc(len + 1, GFP_KERNEL);
->         if (!data) {
->                 up_read(&led_cdev->trigger_lock);
->                 up_read(&triggers_list_lock);
->                 return -ENOMEM;
->         }
->         len = led_trigger_format(data, len + 1, false, led_cdev);
-> 
->         up_read(&led_cdev->trigger_lock);
->         up_read(&triggers_list_lock);
-
-I don't care, as long as you do not leak memory I'm happy :)
-
-thanks,
-
-greg k-h
+T24gMjAxOS0wOS0yNiA2OjUxIHAubS4sIEx5dWRlIFBhdWwgd3JvdGU6DQo+IFNpZ25lZC1vZmYt
+Ynk6IEx5dWRlIFBhdWwgPGx5dWRlQHJlZGhhdC5jb20+DQoNClJldmlld2VkLWJ5OiBIYXJyeSBX
+ZW50bGFuZCA8aGFycnkud2VudGxhbmRAYW1kLmNvbT4NCg0KSGFycnkNCg0KPiAtLS0NCj4gIGRy
+aXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9hbWRncHVfZG0vYW1kZ3B1X2RtX21zdF90eXBlcy5j
+IHwgNCArKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FtZC9kaXNwbGF5L2FtZGdwdV9kbS9hbWRncHVfZG1f
+bXN0X3R5cGVzLmMgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvYW1kZ3B1X2RtL2FtZGdw
+dV9kbV9tc3RfdHlwZXMuYw0KPiBpbmRleCA1ZWMxNGVmZDRkOGMuLjE4NWJmMGUyYmRhMiAxMDA2
+NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FtZC9kaXNwbGF5L2FtZGdwdV9kbS9hbWRncHVf
+ZG1fbXN0X3R5cGVzLmMNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2FtZC9kaXNwbGF5L2FtZGdw
+dV9kbS9hbWRncHVfZG1fbXN0X3R5cGVzLmMNCj4gQEAgLTQxNyw2ICs0MTcsMTAgQEAgdm9pZCBh
+bWRncHVfZG1faW5pdGlhbGl6ZV9kcF9jb25uZWN0b3Ioc3RydWN0IGFtZGdwdV9kaXNwbGF5X21h
+bmFnZXIgKmRtLA0KPiAgCWRybV9kcF9hdXhfcmVnaXN0ZXIoJmFjb25uZWN0b3ItPmRtX2RwX2F1
+eC5hdXgpOw0KPiAgCWRybV9kcF9jZWNfcmVnaXN0ZXJfY29ubmVjdG9yKCZhY29ubmVjdG9yLT5k
+bV9kcF9hdXguYXV4LA0KPiAgCQkJCSAgICAgICZhY29ubmVjdG9yLT5iYXNlKTsNCj4gKw0KPiAr
+CWlmIChhY29ubmVjdG9yLT5iYXNlLmNvbm5lY3Rvcl90eXBlID09IERSTV9NT0RFX0NPTk5FQ1RP
+Ul9lRFApDQo+ICsJCXJldHVybjsNCj4gKw0KPiAgCWFjb25uZWN0b3ItPm1zdF9tZ3IuY2JzID0g
+JmRtX21zdF9jYnM7DQo+ICAJZHJtX2RwX21zdF90b3BvbG9neV9tZ3JfaW5pdCgNCj4gIAkJJmFj
+b25uZWN0b3ItPm1zdF9tZ3IsDQo+IA0K
