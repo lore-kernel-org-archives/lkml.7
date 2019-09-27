@@ -2,149 +2,146 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41289C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B23A3C388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE4A21655
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:25:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="S9o1BssE"
+	by mail.kernel.org (Postfix) with ESMTP id 8AC5521655
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:26:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569608766;
+	bh=x/UIYEQwL6SSBf/v1qfn+5Y2erbWQyc0RtTT8mI06Ic=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=sCm9QNEt6KQlfhJoiTEKfygZXyg6cVev/fvOfOE5ezDUD2p7BLki2t4QsvMhFgfoV
+	 cWBRYF8/MCVNKBVnyNlmMfBX4APz8Sru94wnMhN7dbwLxjxaTPtnq+tteMg7xpNSmE
+	 m9EK3tIYgx7FWAJwOzXrVazNtbn1tFOMo/6gp0fE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbfI0SZR (ORCPT
+        id S1728165AbfI0S0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 14:25:17 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41272 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbfI0SZR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 14:25:17 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h7so4268303wrw.8
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 11:25:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=ILyYK/RyFSznwVzkPBcKhiT8HPwbfb9Jo/boI1cizIU=;
-        b=S9o1BssEg46wqpVTRWJVH0DuDQdCRBiTBnhb600zFmYBhAWiIfq3By9eUgU6SbMKd0
-         /pnnnBkVUSxgg5JjB9Ska3G7vmvzp1dmUHbhNedoqPE3K8ndqDP8U0qJqzjH12s4qy4u
-         8XqdZtvI5xHKroydSrGjBVqTHl5EOltqb3ioXGj1TH4DqwxK8NNo8X2uhHjpfTnDLVOW
-         n4aYTst7l9b0R4vgxGmlh972Y/TyRH5xy7ZhT/YCyHBCqqlyI0u6gnU+oqja1lwnRuZg
-         6+oRwQBY2XbCnJJK43B3G2n8OwxDIDBQRAIITZB6OJizVRy11WO7XfQUcRiZ6e6vPiK5
-         L1Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=ILyYK/RyFSznwVzkPBcKhiT8HPwbfb9Jo/boI1cizIU=;
-        b=fmTw7jmQ8bdWC2Nc0vWhXMeYDG3FPjWzRPfD3KC8U38Zv/twKkiJd/w1+nlauRpD/9
-         KiEH6WqgnB+K+5xGnCNmwe53n8r3grrkLeOHO2yH3gEXHirbRpcwzBArtK+bDkpvAdYF
-         K2eLsclkey1zfzzflPlr8oBXwHiEE+PjGCUgrXiDsI3ohobjMlADPxSGUpWF29Xf56J+
-         XiIg7MVxOZYNn7x2Ki6OBmHajh79srWxkGEqxJjUxVn2Nu7XrxXybRhLJk2hQuARwKqR
-         4B3KwKMuI1HL9qvWLMfAPtyeoVDqtLk5bTQNnWNz/RbeWgWFE8fukm8nUHQIJwe8JZO8
-         Kvsw==
-X-Gm-Message-State: APjAAAU8L8YneeI+okbreOeN+Y574N7ltqirlGbG59ynp3kIq+g1bgeR
-        IaWnP6DaNfxWgJYJpI7z7AqrXap3jv0=
-X-Google-Smtp-Source: APXvYqz6qVaFBt7XT3TUgHDF4YZhVzJCpdIiKfIOmy7VkWX76KlB8NIB36WxA7SH24DIw5NikJN4jA==
-X-Received: by 2002:adf:9c88:: with SMTP id d8mr4050027wre.364.1569608714352;
-        Fri, 27 Sep 2019 11:25:14 -0700 (PDT)
-Received: from localhost ([81.255.46.201])
-        by smtp.gmail.com with ESMTPSA id b7sm3500756wrj.28.2019.09.27.11.25.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2019 11:25:13 -0700 (PDT)
-Date:   Fri, 27 Sep 2019 11:25:13 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     torvalds@linux-foundation.org
-cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] RISC-V additional updates for v5.4-rc1
-Message-ID: <alpine.DEB.2.21.9999.1909271123370.17782@viisi.sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Fri, 27 Sep 2019 14:26:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34548 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726594AbfI0S0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 14:26:05 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79F3E217D7;
+        Fri, 27 Sep 2019 18:26:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569608764;
+        bh=x/UIYEQwL6SSBf/v1qfn+5Y2erbWQyc0RtTT8mI06Ic=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=M/IfmBf0RVUEtwWgaRQz7fvVevhqk/ue6ba5RxUQgucoHSoo1h+jGW87kpHNQVn75
+         UTXcrAKUxEXlPMjFmgzENG6lAmsQ8TNSOv0uu70/h9w2kwmaxcatYBG/qkYQOO0ZjW
+         MK7Xu+pBUTztPqE0fMHLkefNV+oct916eBmSDZ7I=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAMuHMdWqCQD+3dzn8orUjDcXn123VujNgPQz20hLOF3=F2BP5w@mail.gmail.com>
+References: <20190920145543.1732316-1-arnd@arndb.de> <20190920164545.68FFB20717@mail.kernel.org> <CAK8P3a2j6QG19i3YtRPh7qD4Zr5TiHmK_5=s9mSD2pHVmE99HA@mail.gmail.com> <20190920210622.51382205F4@mail.kernel.org> <CAMuHMdWqCQD+3dzn8orUjDcXn123VujNgPQz20hLOF3=F2BP5w@mail.gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Andy Gross <agross@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] mbox: qcom: avoid unused-variable warning
+User-Agent: alot/0.8.1
+Date:   Fri, 27 Sep 2019 11:26:03 -0700
+Message-Id: <20190927182604.79F3E217D7@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+Quoting Geert Uytterhoeven (2019-09-26 06:07:13)
+> Hi Stephen,
+>=20
+> On Fri, Sep 20, 2019 at 11:06 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > Quoting Arnd Bergmann (2019-09-20 12:27:50)
+> > > On Fri, Sep 20, 2019 at 6:45 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > > > > @@ -54,11 +60,6 @@ static int qcom_apcs_ipc_probe(struct platform=
+_device *pdev)
+> > > > >         void __iomem *base;
+> > > > >         unsigned long i;
+> > > > >         int ret;
+> > > > > -       const struct of_device_id apcs_clk_match_table[] =3D {
+> > > >
+> > > > Does marking it static here work too? It would be nice to limit the
+> > > > scope of this variable to this function instead of making it a glob=
+al.
+> > > > Also, it might be slightly smaller code size if that works.
+> > >
+> > > No, I just tried and the warning returned.
+>=20
+> It's there for the convenience for the user, so he doesn't have to add it
+> himself explicitly.
+>=20
+> > ("of/device: Nullify match table in of_match_device() for CONFIG_OF=3Dn=
+"),
+> > but it's been 5 years! Surely we can revert this change now that commit
+> > 219a7bc577e6 ("spi: rspi: Use of_device_get_match_data() helper") is
+> > merged.
+>=20
+> Right, the particular error case in the RSPI driver can no longer happen.
+>=20
+> Calling of_device_get_match_data() is the better solution anyway, as
+> that uses the match table stored in dev->driver->of_match_table, so
+> there's no need to pass the table explicitly, and conditionally.
+>=20
+> Hence...
+>=20
+> > --- a/drivers/leds/leds-pca9532.c
+> > +++ b/drivers/leds/leds-pca9532.c
+> > @@ -472,7 +472,7 @@ pca9532_of_populate_pdata(struct device *dev, struc=
+t device_node *np)
+> >         int i =3D 0;
+> >         const char *state;
+> >
+> > -       match =3D of_match_device(of_pca9532_leds_match, dev);
+> > +       match =3D of_match_device(of_match_ptr(of_pca9532_leds_match), =
+dev);
+> >         if (!match)
+> >                 return ERR_PTR(-ENODEV);
+>=20
+> Please convert to of_device_get_match_data() instead of adding
+> of_match_ptr() invocations...
 
-The following changes since commit b41dae061bbd722b9d7fa828f35d22035b218e18:
+How is this workable? I left it as of_match_device() because the value
+returned may be 0 for the enum and that looks the same as NULL.
 
-  Merge tag 'xfs-5.4-merge-7' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux (2019-09-18 18:32:43 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv/for-v5.4-rc1-b
-
-for you to fetch changes up to c82dd6d078a2bb29d41eda032bb96d05699a524d:
-
-  riscv: Avoid interrupts being erroneously enabled in handle_exception() (2019-09-20 08:42:34 -0700)
-
-----------------------------------------------------------------
-RISC-V additional updates for v5.4-rc1
-
-Some additional RISC-V updates for v5.4-rc1.  This includes one
-significant fix:
-
-- Prevent interrupts from being unconditionally re-enabled during
-  exception handling if they were disabled in the context in which the
-  exception occurred
-
-Also a few other fixes:
-
-- Fix a build error when sparse memory support is manually enabled
-
-- Prevent CPUs beyond CONFIG_NR_CPUS from being enabled in early boot
-
-And a few minor improvements:
-
-- DT improvements: in the FU540 SoC DT files, improve U-Boot
-  compatibility by adding an "ethernet0" alias, drop an unnecessary
-  property from the DT files, and add support for the PWM device
-
-- KVM preparation: add a KVM-related macro for future RISC-V KVM
-  support, and export some symbols required to build KVM support as
-  modules
-
-- defconfig additions: build more drivers by default for QEMU
-  configurations
-
-----------------------------------------------------------------
-Anup Patel (2):
-      RISC-V: Enable VIRTIO drivers in RV64 and RV32 defconfig
-      KVM: RISC-V: Add KVM_REG_RISCV for ONE_REG interface
-
-Atish Patra (1):
-      RISC-V: Export kernel symbols for kvm
-
-Bin Meng (2):
-      riscv: dts: sifive: Add ethernet0 to the aliases node
-      riscv: dts: sifive: Drop "clock-frequency" property of cpu nodes
-
-Greentime Hu (1):
-      RISC-V: Fix building error when CONFIG_SPARSEMEM_MANUAL=y
-
-Vincent Chen (1):
-      riscv: Avoid interrupts being erroneously enabled in handle_exception()
-
-Xiang Wang (1):
-      arch/riscv: disable excess harts before picking main boot hart
-
-Yash Shah (1):
-      riscv: dts: Add DT support for SiFive FU540 PWM driver
-
- arch/riscv/boot/dts/sifive/fu540-c000.dtsi         | 22 +++++++++++++++++---
- .../riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  8 ++++++++
- arch/riscv/configs/defconfig                       | 11 ++++++++++
- arch/riscv/configs/rv32_defconfig                  | 11 ++++++++++
- arch/riscv/include/asm/pgtable.h                   | 24 +++++++++++-----------
- arch/riscv/kernel/entry.S                          |  6 +++++-
- arch/riscv/kernel/head.S                           |  8 +++++---
- arch/riscv/kernel/smp.c                            |  1 +
- arch/riscv/kernel/time.c                           |  1 +
- include/uapi/linux/kvm.h                           |  1 +
- 10 files changed, 74 insertions(+), 19 deletions(-)
+>=20
+> > @@ -525,7 +525,7 @@ static int pca9532_probe(struct i2c_client *client,
+> >                         dev_err(&client->dev, "no platform data\n");
+> >                         return -EINVAL;
+> >                 }
+> > -               of_id =3D of_match_device(of_pca9532_leds_match,
+> > +               of_id =3D of_match_device(of_match_ptr(of_pca9532_leds_=
+match),
+>=20
+> Likewise.
+>=20
+> > --- a/sound/soc/jz4740/jz4740-i2s.c
+> > +++ b/sound/soc/jz4740/jz4740-i2s.c
+> > @@ -503,7 +503,7 @@ static int jz4740_i2s_dev_probe(struct platform_dev=
+ice *pdev)
+> >         if (!i2s)
+> >                 return -ENOMEM;
+> >
+> > -       match =3D of_match_device(jz4740_of_matches, &pdev->dev);
+> > +       match =3D of_match_device(of_match_ptr(jz4740_of_matches), &pde=
+v->dev);
+>=20
+> Given of_device_get_match_data() returns NULL, not an error code, even
+> this one could use of_device_get_match_data().
+>=20
