@@ -2,150 +2,160 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E63FC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 02:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4F4C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 02:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E24120835
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 02:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89730208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 02:08:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728499AbfI0CEA (ORCPT
+        id S1727962AbfI0CIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 22:04:00 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2729 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727794AbfI0CEA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 22:04:00 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 089539B626AC6B8ABFFF;
-        Fri, 27 Sep 2019 10:03:58 +0800 (CST)
-Received: from [127.0.0.1] (10.184.12.158) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Fri, 27 Sep 2019
- 10:03:48 +0800
-Subject: Re: [PATCH 10/35] irqchip/gic-v4.1: VPE table (aka GICR_VPROPBASER)
- allocation
-To:     Marc Zyngier <maz@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
-        <linux-kernel@vger.kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20190923182606.32100-1-maz@kernel.org>
- <20190923182606.32100-11-maz@kernel.org>
- <155660c2-7f30-e188-ca8d-c37fabea6d97@huawei.com>
- <6f4ccdfd-4b63-04cb-e7c0-f069e620127f@kernel.org>
- <14111988-74c9-12c3-1322-1580ff6ba11f@huawei.com>
- <c4d63ccd-b5b2-007f-6174-1a9d20f3669d@kernel.org>
- <5d915f55-785b-72f5-498b-8c17148dd3a9@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <99e561dc-fe3c-ff8f-7e28-8fc4b66d1209@huawei.com>
-Date:   Fri, 27 Sep 2019 10:01:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
- Thunderbird/64.0
+        Thu, 26 Sep 2019 22:08:55 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:5753 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727505AbfI0CIy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 22:08:54 -0400
+X-IronPort-AV: E=Sophos;i="5.64,553,1559491200"; 
+   d="scan'208";a="76089673"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 27 Sep 2019 10:08:53 +0800
+Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
+        by cn.fujitsu.com (Postfix) with ESMTP id 7C6EB4CE14E1;
+        Fri, 27 Sep 2019 10:08:51 +0800 (CST)
+Received: from [10.167.226.60] (10.167.226.60) by
+ G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ (TLS) id 14.3.439.0; Fri, 27 Sep 2019 10:08:53 +0800
+Subject: Re: [RFC PATCH] x86/doc/boot_protocol: Correct the description of
+ "reloc"
+To:     <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>
+CC:     <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <tglx@linutronix.de>,
+        <mingo@redhat.com>, <bp@alien8.de>, <corbet@lwn.net>
+References: <20190926042116.17929-1-caoj.fnst@cn.fujitsu.com>
+ <20190926060139.GA100481@gmail.com>
+ <faabfe47-ba3e-5a92-af65-dc26e8e2ecb9@cn.fujitsu.com>
+ <3073CD01-65C5-4BEC-B2FC-F76DD0E70D73@zytor.com>
+ <dff52431-ce54-7c64-b223-36f4491c53b0@cn.fujitsu.com>
+ <A44CE024-DEB0-476C-B71B-883307952F10@zytor.com>
+From:   Cao jin <caoj.fnst@cn.fujitsu.com>
+Message-ID: <2595d3db-4149-5764-c265-62af273fb3e5@cn.fujitsu.com>
+Date:   Fri, 27 Sep 2019 10:09:05 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <5d915f55-785b-72f5-498b-8c17148dd3a9@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <A44CE024-DEB0-476C-B71B-883307952F10@zytor.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.12.158]
-X-CFilter-Loop: Reflected
+X-Originating-IP: [10.167.226.60]
+X-yoursite-MailScanner-ID: 7C6EB4CE14E1.A86F1
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: caoj.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/27 0:27, Marc Zyngier wrote:
-> On 26/09/2019 16:57, Marc Zyngier wrote:
->> On 26/09/2019 16:19, Zenghui Yu wrote:
->>> Hi Marc,
->>>
->>> Two more questions below.
->>>
->>> On 2019/9/25 22:41, Marc Zyngier wrote:
->>>> On 25/09/2019 14:04, Zenghui Yu wrote:
->>>>> Hi Marc,
+On 9/27/19 3:18 AM, hpa@zytor.com wrote:
+> On September 26, 2019 1:20:02 AM PDT, Cao jin <caoj.fnst@cn.fujitsu.com> wrote:
+>> On 9/26/19 3:58 PM, hpa@zytor.com wrote:
+>>> On September 26, 2019 12:55:51 AM PDT, Cao jin
+>> <caoj.fnst@cn.fujitsu.com> wrote:
+>>>> On 9/26/19 2:01 PM, Ingo Molnar wrote:
+>>>>> * Cao jin <caoj.fnst@cn.fujitsu.com> wrote:
 >>>>>
->>>>> Some questions about this patch, mostly to confirm that I would
->>>>> understand things here correctly.
->>>>>
->>>>> On 2019/9/24 2:25, Marc Zyngier wrote:
->>>>>> GICv4.1 defines a new VPE table that is potentially shared between
->>>>>> both the ITSs and the redistributors, following complicated affinity
->>>>>> rules.
+>>>>>> The fields marked with (reloc) actually are not dedicated for
+>>>> writing,
+>>>>>> but communicating info for relocatable kernel with boot loaders.
+>> For
+>>>>>> example:
 >>>>>>
->>>>>> To make things more confusing, the programming of this table at
->>>>>> the redistributor level is reusing the GICv4.0 GICR_VPROPBASER register
->>>>>> for something completely different.
+>>>>>>     ============    ============
+>>>>>>     Field name:     pref_address
+>>>>>>     Type:           read (reloc)
+>>>>>>     Offset/size:    0x258/8
+>>>>>>     Protocol:       2.10+
+>>>>>>     ============    ============
 >>>>>>
->>>>>> The code flow is somewhat complexified by the need to respect the
->>>>>> affinities required by the HW, meaning that tables can either be
->>>>>> inherited from a previously discovered ITS or redistributor.
+>>>>>>     ============    ========================
+>>>>>>     Field name:     code32_start
+>>>>>>     Type:           modify (optional, reloc)
+>>>>>>     Offset/size:    0x214/4
+>>>>>>     Protocol:       2.00+
+>>>>>>     ============    ========================
 >>>>>>
->>>>>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>>>>>> Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
 >>>>>> ---
+>>>>>> Unless I have incorrect non-native understanding for "fill in", I
+>>>> think
+>>>>>> this is inaccurate.
+>>>>>>
+>>>>>>  Documentation/x86/boot.rst | 2 +-
+>>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/Documentation/x86/boot.rst
+>> b/Documentation/x86/boot.rst
+>>>>>> index 08a2f100c0e6..a611bf04492d 100644
+>>>>>> --- a/Documentation/x86/boot.rst
+>>>>>> +++ b/Documentation/x86/boot.rst
+>>>>>> @@ -243,7 +243,7 @@ bootloader ("modify").
+>>>>>>  
+>>>>>>  All general purpose boot loaders should write the fields marked
+>>>>>>  (obligatory).  Boot loaders who want to load the kernel at a
+>>>>>> -nonstandard address should fill in the fields marked (reloc);
+>> other
+>>>>>> +nonstandard address should consult with the fields marked
+>> (reloc);
+>>>> other
+>>>>>>  boot loaders can ignore those fields.
+>>>>>>  
+>>>>>>  The byte order of all fields is littleendian (this is x86, after
+>>>> all.)
 >>>>>
->>>>> [...]
+>>>>> Well, this documentation is written from the point of view of a 
+>>>>> *bootloader*, not the kernel. So the 'fill in' says that the
+>>>> bootloader 
+>>>>> should write those fields - which is correct, right?
 >>>>>
->>>>>> @@ -1962,6 +1965,65 @@ static bool its_parse_indirect_baser(struct its_node *its,
->>>>>>     	return indirect;
->>>>>>     }
->>>>>>     
->>>>>> +static u32 compute_common_aff(u64 val)
->>>>>> +{
->>>>>> +	u32 aff, clpiaff;
->>>>>> +
->>>>>> +	aff = FIELD_GET(GICR_TYPER_AFFINITY, val);
->>>>>> +	clpiaff = FIELD_GET(GICR_TYPER_COMMON_LPI_AFF, val);
->>>>>> +
->>>>>> +	return aff & ~(GENMASK(31, 0) >> (clpiaff * 8));
->>>>>> +}
->>>>>> +
->>>>>> +static u32 compute_its_aff(struct its_node *its)
->>>>>> +{
->>>>>> +	u64 val;
->>>>>> +	u32 svpet;
->>>>>> +
->>>>>> +	/*
->>>>>> +	 * Reencode the ITS SVPET and MPIDR as a GICR_TYPER, and compute
->>>>>> +	 * the resulting affinity. We then use that to see if this match
->>>>>> +	 * our own affinity.
->>>>>> +	 */
->>>>>> +	svpet = FIELD_GET(GITS_TYPER_SVPET, its->typer);
+>>>>
+>>>> Take pref_address or relocatable_kernel for example, they have type:
+>>>> read (reloc), does boot loader need to write them? I don't see grub
+>>>> does
+>>>> this at least.
 >>>
->>> The spec says, ITS does not share vPE table with Redistributors when
->>> SVPET==0.  It seems that we miss this rule and simply regard SVPET as
->>> GICR_TYPER_COMMON_LPI_AFF here.  Am I wrong?
->>
->> Correct. I missed the case where the ITS doesn't share anything. That's
->> pretty unlikely though (you loose all the benefit of v4.1, and I don't
->> really see how you'd make it work reliably).
-> 
-> Actually, this is already handled...
-> 
->>
+>>> Read means the boot later reads them.
 >>>
->>>>>> +	val  = FIELD_PREP(GICR_TYPER_COMMON_LPI_AFF, svpet);
->>>>>> +	val |= FIELD_PREP(GICR_TYPER_AFFINITY, its->mpidr);
->>>>>> +	return compute_common_aff(val);
->>>>>> +}
->>>>>> +
->>>>>> +static struct its_node *find_sibbling_its(struct its_node *cur_its)
->>>>>> +{
->>>>>> +	struct its_node *its;
->>>>>> +	u32 aff;
->>>>>> +
->>>>>> +	if (!FIELD_GET(GITS_TYPER_SVPET, cur_its->typer))
->>>>>> +		return NULL;
+>>
+>> Sorry I don't know what is going wrong in my mind. For me, if
+>> pref_address has "read (reloc)", base on the current document, it means
+>> boot loader will read it and also write it, which is conflicting. And
+>> the purpose of pref_address should just inform boot loader that kernel
+>> whats itself to be loaded at certain address, it don't want to be
+>> written.
 > 
-> ... here. If SVPET is 0, there is no sibling, and we'll allocate a VPE
-> table as usual.
+> read (reloc) means it is information for the boot loader to read, but that it can ignore it completely if it does not want to relocate the kernel.
+> 
 
-Yes, I see.  So we can safely encode the non-zero SVPET as
-COMMON_LPI_AFF in a GICR_TYPER when computing the affinity.
+so, "read (reloc)" also means boot loader can't write it, right?
 
+Please bear my verbiage, see protocol explanation for "(reloc)":
 
-Thanks,
-zenghui
+"Boot loaders who want to load the kernel at a nonstandard address
+should fill in the fields marked (reloc);"
+
+Doesn't the explanation means: if boot loaders want to relocate the
+kernel, they should write pref_address?
+
+And while pref_address actually just provide a suggestion to boot
+loader, loader could take it or not as you said, but won't write it.
+That is why I choose the word "consult with" instead of "fill in".
+-- 
+Sincerely,
+Cao jin
+
 
