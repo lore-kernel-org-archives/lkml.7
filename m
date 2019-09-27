@@ -2,146 +2,166 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B23A3C388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E6AC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AC5521655
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:26:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BD6B2190F
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:28:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569608766;
-	bh=x/UIYEQwL6SSBf/v1qfn+5Y2erbWQyc0RtTT8mI06Ic=;
-	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
-	b=sCm9QNEt6KQlfhJoiTEKfygZXyg6cVev/fvOfOE5ezDUD2p7BLki2t4QsvMhFgfoV
-	 cWBRYF8/MCVNKBVnyNlmMfBX4APz8Sru94wnMhN7dbwLxjxaTPtnq+tteMg7xpNSmE
-	 m9EK3tIYgx7FWAJwOzXrVazNtbn1tFOMo/6gp0fE=
+	s=default; t=1569608929;
+	bh=ymBPVLTzBliTXf2daBvQPYMYJ54ak9sUBbtCh+Ffipg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=o1Fu0EaULvG1wFfd/o6Xj5tGq8UcKXHFeC0l0BkYQ/kmK4YmitHmqYqwhGiY80vD+
+	 mfUi4/XrbsQnQgGKQYdZ4tK6XkHZbFqwF6cfwMGinvLPly4q/blnZX6bW3j4gaVGSe
+	 /G5QQjs1epNlhMEBVW8zDCxn3Qg/RkwWbyxQMjUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbfI0S0G (ORCPT
+        id S1727836AbfI0S2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 14:26:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34548 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726594AbfI0S0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 14:26:05 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79F3E217D7;
-        Fri, 27 Sep 2019 18:26:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569608764;
-        bh=x/UIYEQwL6SSBf/v1qfn+5Y2erbWQyc0RtTT8mI06Ic=;
-        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
-        b=M/IfmBf0RVUEtwWgaRQz7fvVevhqk/ue6ba5RxUQgucoHSoo1h+jGW87kpHNQVn75
-         UTXcrAKUxEXlPMjFmgzENG6lAmsQ8TNSOv0uu70/h9w2kwmaxcatYBG/qkYQOO0ZjW
-         MK7Xu+pBUTztPqE0fMHLkefNV+oct916eBmSDZ7I=
-Content-Type: text/plain; charset="utf-8"
+        Fri, 27 Sep 2019 14:28:48 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39442 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfI0S2s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 14:28:48 -0400
+Received: by mail-ot1-f66.google.com with SMTP id s22so3073043otr.6;
+        Fri, 27 Sep 2019 11:28:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qZoUc61rWZUABqYiFdYsTRbcGhf3P6ij4WXTBM/dESA=;
+        b=YY2nitP6xI1mEj6h/5J5s1wCE+JriZJQJ+xicQric47hXHGdw15gt5bQq8+bz4nEuY
+         p4pK5X/M3uHb6jSc61NXD/svAKwBYL+IP3Tl3bzyXKov4wPqeOkAm7NxqFIjHMBFFUP0
+         vvMFzIRt1FbeTsS7fg/dOrc1gSQ+l6aZ9yAjm+/ULpt21Aez/JzRHYWlhnrJu4PGMt68
+         mnFdl6kR1cwkoIZvJn1hor5Cg6/3iln0VRj0xNfDqS9uSMOJ5+YjWiABh1euGuJhHCSn
+         k0zHFLzyLraAeQhSa3/CwfMFTINUdVp2HK80U2PYwr3MKjMsPhsAWaFgDgj6H0Hb8ILf
+         wjhQ==
+X-Gm-Message-State: APjAAAUoK21WceFmWuRV9GVTwQDQeak6p0JDi6roPAgt8hrXHbz0reT1
+        qoI5dJiVX6XWhXY+N7SpGA==
+X-Google-Smtp-Source: APXvYqyQPejECmFGd11SGP7Xcg8Htf2DDNyXC9qmFAvQC7yFda9W92oheirhgtI3bl+Vjh4c4JzYUw==
+X-Received: by 2002:a9d:6a59:: with SMTP id h25mr4511188otn.324.1569608925282;
+        Fri, 27 Sep 2019 11:28:45 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id w20sm1127648otk.73.2019.09.27.11.28.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Sep 2019 11:28:44 -0700 (PDT)
+Date:   Fri, 27 Sep 2019 13:28:44 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Leo Li <leoyang.li@nxp.com>
+Cc:     Biwen Li <biwen.li@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Ran Wang <ran.wang_1@nxp.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [v3,3/3] Documentation: dt: binding: fsl: Add
+ 'fsl,ippdexpcr-alt-addr' property
+Message-ID: <20190927182844.GA5203@bogus>
+References: <20190924024548.4356-1-biwen.li@nxp.com>
+ <20190924024548.4356-3-biwen.li@nxp.com>
+ <AM0PR04MB667690EE76D327D0FC09F7818F840@AM0PR04MB6676.eurprd04.prod.outlook.com>
+ <DB7PR04MB449034C4BBAA89685A2130F78F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
+ <AM0PR04MB66762594DDFC6E5B00BD103C8F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
+ <DB7PR04MB4490FECDC76507AADC35948E8F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
+ <AM0PR04MB6676BD24B814C3D1D67CF9F88F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAMuHMdWqCQD+3dzn8orUjDcXn123VujNgPQz20hLOF3=F2BP5w@mail.gmail.com>
-References: <20190920145543.1732316-1-arnd@arndb.de> <20190920164545.68FFB20717@mail.kernel.org> <CAK8P3a2j6QG19i3YtRPh7qD4Zr5TiHmK_5=s9mSD2pHVmE99HA@mail.gmail.com> <20190920210622.51382205F4@mail.kernel.org> <CAMuHMdWqCQD+3dzn8orUjDcXn123VujNgPQz20hLOF3=F2BP5w@mail.gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Andy Gross <agross@kernel.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] mbox: qcom: avoid unused-variable warning
-User-Agent: alot/0.8.1
-Date:   Fri, 27 Sep 2019 11:26:03 -0700
-Message-Id: <20190927182604.79F3E217D7@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB6676BD24B814C3D1D67CF9F88F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Geert Uytterhoeven (2019-09-26 06:07:13)
-> Hi Stephen,
->=20
-> On Fri, Sep 20, 2019 at 11:06 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> > Quoting Arnd Bergmann (2019-09-20 12:27:50)
-> > > On Fri, Sep 20, 2019 at 6:45 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> > > > > @@ -54,11 +60,6 @@ static int qcom_apcs_ipc_probe(struct platform=
-_device *pdev)
-> > > > >         void __iomem *base;
-> > > > >         unsigned long i;
-> > > > >         int ret;
-> > > > > -       const struct of_device_id apcs_clk_match_table[] =3D {
-> > > >
-> > > > Does marking it static here work too? It would be nice to limit the
-> > > > scope of this variable to this function instead of making it a glob=
-al.
-> > > > Also, it might be slightly smaller code size if that works.
+On Wed, Sep 25, 2019 at 03:34:47AM +0000, Leo Li wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Biwen Li
+> > Sent: Tuesday, September 24, 2019 10:30 PM
+> > To: Leo Li <leoyang.li@nxp.com>; shawnguo@kernel.org;
+> > robh+dt@kernel.org; mark.rutland@arm.com; Ran Wang
+> > <ran.wang_1@nxp.com>
+> > Cc: linuxppc-dev@lists.ozlabs.org; linux-arm-kernel@lists.infradead.org;
+> > linux-kernel@vger.kernel.org; devicetree@vger.kernel.org
+> > Subject: RE: [v3,3/3] Documentation: dt: binding: fsl: Add 'fsl,ippdexpcr-alt-
+> > addr' property
+> > 
+> > > > > >
+> > > > > > The 'fsl,ippdexpcr-alt-addr' property is used to handle an
+> > > > > > errata
+> > > > > > A-008646 on LS1021A
+> > > > > >
+> > > > > > Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> > > > > > ---
+> > > > > > Change in v3:
+> > > > > > 	- rename property name
+> > > > > > 	  fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
+> > > > > >
+> > > > > > Change in v2:
+> > > > > > 	- update desc of the property 'fsl,rcpm-scfg'
+> > > > > >
+> > > > > >  Documentation/devicetree/bindings/soc/fsl/rcpm.txt | 14
+> > > > > > ++++++++++++++
+> > > > > >  1 file changed, 14 insertions(+)
+> > > > > >
+> > > > > > diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > > > > > b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > > > > > index 5a33619d881d..157dcf6da17c 100644
+> > > > > > --- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > > > > > +++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > > > > > @@ -34,6 +34,11 @@ Chassis Version		Example Chips
+> > > > > >  Optional properties:
+> > > > > >   - little-endian : RCPM register block is Little Endian. Without it RCPM
+> > > > > >     will be Big Endian (default case).
+> > > > > > + - fsl,ippdexpcr-alt-addr : Must add the property for SoC
+> > > > > > + LS1021A,
+> > > > >
+> > > > > You probably should mention this is related to a hardware issue on
+> > > > > LS1021a and only needed on LS1021a.
+> > > > Okay, got it, thanks, I will add this in v4.
+> > > > >
+> > > > > > +   Must include n + 1 entries (n = #fsl,rcpm-wakeup-cells, such as:
+> > > > > > +   #fsl,rcpm-wakeup-cells equal to 2, then must include 2 + 1 entries).
+> > > > >
+> > > > > #fsl,rcpm-wakeup-cells is the number of IPPDEXPCR registers on an SoC.
+> > > > > However you are defining an offset to scfg registers here.  Why
+> > > > > these two are related?  The length here should actually be related
+> > > > > to the #address-cells of the soc/.  But since this is only needed
+> > > > > for LS1021, you can
+> > > > just make it 3.
+> > > > I need set the value of IPPDEXPCR resgiters from ftm_alarm0 device
+> > > > node(fsl,rcpm-wakeup = <&rcpm 0x0 0x20000000>;
+> > > > 0x0 is a value for IPPDEXPCR0, 0x20000000 is a value for IPPDEXPCR1).
+> > > > But because of the hardware issue on LS1021A, I need store the value
+> > > > of IPPDEXPCR registers to an alt address. So I defining an offset to
+> > > > scfg registers, then RCPM driver get an abosolute address from
+> > > > offset, RCPM driver write the value of IPPDEXPCR registers to these
+> > > > abosolute addresses(backup the value of IPPDEXPCR registers).
 > > >
-> > > No, I just tried and the warning returned.
->=20
-> It's there for the convenience for the user, so he doesn't have to add it
-> himself explicitly.
->=20
-> > ("of/device: Nullify match table in of_match_device() for CONFIG_OF=3Dn=
-"),
-> > but it's been 5 years! Surely we can revert this change now that commit
-> > 219a7bc577e6 ("spi: rspi: Use of_device_get_match_data() helper") is
-> > merged.
->=20
-> Right, the particular error case in the RSPI driver can no longer happen.
->=20
-> Calling of_device_get_match_data() is the better solution anyway, as
-> that uses the match table stored in dev->driver->of_match_table, so
-> there's no need to pass the table explicitly, and conditionally.
->=20
-> Hence...
->=20
-> > --- a/drivers/leds/leds-pca9532.c
-> > +++ b/drivers/leds/leds-pca9532.c
-> > @@ -472,7 +472,7 @@ pca9532_of_populate_pdata(struct device *dev, struc=
-t device_node *np)
-> >         int i =3D 0;
-> >         const char *state;
-> >
-> > -       match =3D of_match_device(of_pca9532_leds_match, dev);
-> > +       match =3D of_match_device(of_match_ptr(of_pca9532_leds_match), =
-dev);
-> >         if (!match)
-> >                 return ERR_PTR(-ENODEV);
->=20
-> Please convert to of_device_get_match_data() instead of adding
-> of_match_ptr() invocations...
+> > > I understand what you are trying to do.  The problem is that the new
+> > > fsl,ippdexpcr-alt-addr property contains a phandle and an offset.  The
+> > > size of it shouldn't be related to #fsl,rcpm-wakeup-cells.
+> > You maybe like this: fsl,ippdexpcr-alt-addr = <&scfg 0x51c>;/*
+> > SCFG_SPARECR8 */
+> 
+> No.  The #address-cell for the soc/ is 2, so the offset to scfg 
+> should be 0x0 0x51c.  The total size should be 3, but it shouldn't be 
+> coming from #fsl,rcpm-wakeup-cells like you mentioned in the binding.
 
-How is this workable? I left it as of_match_device() because the value
-returned may be 0 for the enum and that looks the same as NULL.
+Um, no. #address-cells applies to reg and ranges, not some vendor 
+specific property. You can just define how many cells you need if that's 
+fixed. 
 
->=20
-> > @@ -525,7 +525,7 @@ static int pca9532_probe(struct i2c_client *client,
-> >                         dev_err(&client->dev, "no platform data\n");
-> >                         return -EINVAL;
-> >                 }
-> > -               of_id =3D of_match_device(of_pca9532_leds_match,
-> > +               of_id =3D of_match_device(of_match_ptr(of_pca9532_leds_=
-match),
->=20
-> Likewise.
->=20
-> > --- a/sound/soc/jz4740/jz4740-i2s.c
-> > +++ b/sound/soc/jz4740/jz4740-i2s.c
-> > @@ -503,7 +503,7 @@ static int jz4740_i2s_dev_probe(struct platform_dev=
-ice *pdev)
-> >         if (!i2s)
-> >                 return -ENOMEM;
-> >
-> > -       match =3D of_match_device(jz4740_of_matches, &pdev->dev);
-> > +       match =3D of_match_device(of_match_ptr(jz4740_of_matches), &pde=
-v->dev);
->=20
-> Given of_device_get_match_data() returns NULL, not an error code, even
-> this one could use of_device_get_match_data().
->=20
+However, I suggested doing this another way in the next version of this.
+
+Rob
