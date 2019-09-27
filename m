@@ -2,78 +2,144 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDAFC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB97C388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F79020872
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:08:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=preining.info header.i=@preining.info header.b="GTtV7HJc"
+	by mail.kernel.org (Postfix) with ESMTP id 965B421920
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:14:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569604463;
+	bh=LF0IMHE4bqVQswlHxRMJV7XMhyuPxtomyn5S/IQg3h4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iCAxv6cdgaCCGWOlQTAPCMrgM1agIy0/zy1ORyszikKsb8hFTBwTni1iGXTV9oHt6
+	 OgIa0Xta1e/79uAw/UKIg2OeD3wUq+XG2ZHmZKFwxdYRuB494tYrCIgFqIILwbYmKW
+	 eZvlFy+z7zK0wNljCRzL7gmn8XiPYnwNQFaalNaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbfI0RI5 (ORCPT
+        id S1727211AbfI0ROX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 13:08:57 -0400
-Received: from hz.preining.info ([95.216.25.247]:60308 "EHLO hz.preining.info"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726251AbfI0RI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 13:08:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=preining.info; s=201909; h=In-Reply-To:Content-Type:MIME-Version:References
-        :Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding
-        :Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=cXXJiq5YH8gtvqyF/dKyuBE39EX6k3QlWqRuTYG4LN4=; b=GTtV7HJcwRxqiMQYEqCe25dyLm
-        nfImC55+5DAxthMfmua70/mWPOPdVJYHYW12kSGjKAhEvLdsx3ZNrGC0vRcwHCovXeZHHETmd7vnv
-        9PO5tLucqiOFyOxLCqf8Ap3gtm5M9zh/0UCVTJZ7ljxVSNYqZBehN1zCud/Hl4QyE3w3Tt/pO4Ivz
-        5+ydlxs3illFTYdE/Swl4n/ZXRf2luE+0a5rSCLT7xMOAYt+MRBsumNNLAhv45aogHlW/KnG0hcBE
-        aArD9IqV77oBlNt61bwHK/V/uSkY0DLPJ6l/6IZ6pZqXFyio0a3g7jRPE03ZjZ00MrwiJoqmMFMRL
-        kKRyXLew==;
-Received: from tvk213002.tvk.ne.jp ([180.94.213.2] helo=burischnitzel.preining.info)
-        by hz.preining.info with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <norbert@preining.info>)
-        id 1iDtjf-0000rL-Ox; Fri, 27 Sep 2019 17:08:52 +0000
-Received: by burischnitzel.preining.info (Postfix, from userid 1000)
-        id 85C996971448; Sat, 28 Sep 2019 02:08:47 +0900 (JST)
-Date:   Sat, 28 Sep 2019 02:08:47 +0900
-From:   Norbert Preining <norbert@preining.info>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ilw@linux.intel.com
-Subject: Re: IWL AC 8260, kernel 5.3.*, many kernel WARNING
-Message-ID: <20190927170847.laa7kii66d72il7y@burischnitzel.preining.info>
-References: <20190927010452.b576njhcvgowasf3@burischnitzel.preining.info>
- <87blv5j4w1.fsf@tynnyri.adurom.net>
+        Fri, 27 Sep 2019 13:14:23 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:45641 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726385AbfI0ROW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 13:14:22 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 41so2847114oti.12;
+        Fri, 27 Sep 2019 10:14:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tD2ql8Ol3YdJ0O/cTPgB7oovPA/McdYPrrIyUtCvDio=;
+        b=kEr1RO4nzaWhC4Ulu4VI3BqNmADfIkP5xkNx9S6ziHmshWit8C284I3lNATXCa87Ow
+         PNPbk/6nDsgx5WhiQLfggNUO/2e8kmQhJzAQHvsVOsGnSiN6l0udlf91RI+cBjN6rd3t
+         Pg6GAoINaYiC85O1nAspgbdSk5k06wkPlWqhEL2dUZAeLCieWlFTHl1nOOOaTbYA5VLs
+         aw4UcwVEtIqZfllblLi/GVFSvtxYGGa4adqRnHoWgZuPXKk3Hk1/kNJlu4OTf0QImpZ2
+         KJ/6yoyonA/bzLK2uP4EXQz5pZzoP0He70E1AdKzh3I/E1OF4JH8o9Q6qTZiOsgGydeX
+         b32w==
+X-Gm-Message-State: APjAAAWs+ehsttCn6HX3gSN5ZJ17ccJnY/fGwjvMXpzKHoWcG7beZpvS
+        AyA4GFNE/iBMtq/Ktk8FvA==
+X-Google-Smtp-Source: APXvYqypL0vEhdlG4ePe2RIoOH0cqp7SRZ9d2fcberRcnUEis5/CkGDrnlNF5opn3EvvXltDKXa2Uw==
+X-Received: by 2002:a05:6830:15d7:: with SMTP id j23mr3871347otr.343.1569604461562;
+        Fri, 27 Sep 2019 10:14:21 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 21sm1750040oin.26.2019.09.27.10.14.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Sep 2019 10:14:21 -0700 (PDT)
+Date:   Fri, 27 Sep 2019 12:14:20 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Biwen Li <biwen.li@nxp.com>
+Cc:     leoyang.li@nxp.com, shawnguo@kernel.org, mark.rutland@arm.com,
+        ran.wang_1@nxp.com, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [v4,3/3] Documentation: dt: binding: fsl: Add
+ 'fsl,ippdexpcr1-alt-addr' property
+Message-ID: <20190927171420.GA28375@bogus>
+References: <20190926024118.15931-1-biwen.li@nxp.com>
+ <20190926024118.15931-3-biwen.li@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87blv5j4w1.fsf@tynnyri.adurom.net>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190926024118.15931-3-biwen.li@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Kalle,
+On Thu, Sep 26, 2019 at 10:41:18AM +0800, Biwen Li wrote:
+> The 'fsl,ippdexpcr1-alt-addr' property is used to handle an errata A-008646
+> on LS1021A
+> 
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> ---
+> Change in v4:
+> 	- rename property name
+> 	  fsl,ippdexpcr-alt-addr -> fsl,ippdexpcr1-alt-addr
+> 
+> Change in v3:
+> 	- rename property name
+> 	  fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
+> 
+> Change in v2:
+> 	- update desc of the property 'fsl,rcpm-scfg'
+> 
+>  .../devicetree/bindings/soc/fsl/rcpm.txt      | 21 +++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> index 5a33619d881d..751a7655b694 100644
+> --- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> +++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> @@ -34,6 +34,13 @@ Chassis Version		Example Chips
+>  Optional properties:
+>   - little-endian : RCPM register block is Little Endian. Without it RCPM
+>     will be Big Endian (default case).
+> + - fsl,ippdexpcr1-alt-addr : The property is related to a hardware issue
+> +   on SoC LS1021A and only needed on SoC LS1021A.
+> +   Must include 1 + 2 entries.
+> +   The first entry must be a link to the SCFG device node.
+> +   The non-first entry must be offset of registers of SCFG.
+> +   The second and third entry compose an alt offset address
+> +   for IPPDEXPCR1(SCFG_SPARECR8)
 
-On Fri, 27 Sep 2019, Kalle Valo wrote:
-> I'm guessing this should fix it:
-> https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers.git/commit/?id=fddbfeece9c7882cc47754c7da460fe427e3e85b
+If only on 1 SoC, can't all this be implied by "fsl,ls1021a-rcpm"?
 
-Yes, I can confirm that with this patch added on top of 5.3.1 I don't
-see the warnings anymore.
+Adding a property means you need both a new dtb and kernel to fix the 
+errata. Using the compatible string means you only need a new kernel.
 
-Thanks a lot
+>  
+>  Example:
+>  The RCPM node for T4240:
+> @@ -43,6 +50,20 @@ The RCPM node for T4240:
+>  		#fsl,rcpm-wakeup-cells = <2>;
+>  	};
+>  
+> +The RCPM node for LS1021A:
+> +	rcpm: rcpm@1ee2140 {
+> +		compatible = "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-2.1+";
 
-Norbert
+Both of these compatible strings aren't documented.
 
---
-PREINING Norbert                               http://www.preining.info
-Accelia Inc. + IFMGA ProGuide + TU Wien + JAIST + TeX Live + Debian Dev
-GPG: 0x860CDC13   fp: F7D8 A928 26E3 16A1 9FA0 ACF0 6CAC A448 860C DC13
+> +		reg = <0x0 0x1ee2140 0x0 0x8>;
+> +		#fsl,rcpm-wakeup-cells = <2>;
+> +
+> +		/*
+> +		 * The second and third entry compose an alt offset
+> +		 * address for IPPDEXPCR1(SCFG_SPARECR8)
+> +		 */
+> +		fsl,ippdexpcr1-alt-addr = <&scfg 0x0 0x51c>;
+> +	};
+> +
+> +
+>  * Freescale RCPM Wakeup Source Device Tree Bindings
+>  -------------------------------------------
+>  Required fsl,rcpm-wakeup property should be added to a device node if the device
+> -- 
+> 2.17.1
+> 
