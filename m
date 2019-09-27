@@ -2,99 +2,222 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5795C388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B38C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE41321906
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:56:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="nhxK6DBT"
+	by mail.kernel.org (Postfix) with ESMTP id BA69B2190F
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:59:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569596399;
+	bh=4ZeYZF5rfbOcG858xzs2UwUFuWnyzoDXLMnGJ65sEOI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=iOD+mhUbna37WvBAiYIs6Us8dvOlyb3Mj6LfsNLmRqofhhT96CWuxzrqf2bJpckGD
+	 JoCSSQmm1VeSJxucIY9NghaDQ0H3WY4wpTJPhPu/q+YHvdtC69qmxR0Rer6G2n3ms6
+	 4hVlDHguPeIvJ5hQeZtjUxTCNiFf5T6gSkqOyAIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727744AbfI0O4m (ORCPT
+        id S1727762AbfI0O77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 10:56:42 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:41904 "EHLO vps0.lunn.ch"
+        Fri, 27 Sep 2019 10:59:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726540AbfI0O4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 10:56:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=F0xnrmUjbrfwa3GpwQVGYBFuXq2e2mehUtxT3ModRTo=; b=nhxK6DBTvF+v06EKwJgrmAlsi7
-        JIwhI4VYfcrPNojHpc8+3Pt0aN7Lk5xpnJJDFhs33EhLD7yRs+BR5QG9L51JD0iKXDhBSy6YTcrRP
-        Krh4aOZqNKBNmvoGdG313jPmOLHKKyBBvYkC74GftuqTqshNXRZv8iEBTukdlds8psEo=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iDrfc-0002vq-L1; Fri, 27 Sep 2019 16:56:32 +0200
-Date:   Fri, 27 Sep 2019 16:56:32 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Vincent Cheng <vincent.cheng.xh@renesas.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "richardcochran@gmail.com" <richardcochran@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] ptp: Add a ptp clock driver for IDT ClockMatrix.
-Message-ID: <20190927145632.GI20927@lunn.ch>
-References: <1569556128-22212-1-git-send-email-vincent.cheng.xh@renesas.com>
- <1569556128-22212-2-git-send-email-vincent.cheng.xh@renesas.com>
- <20190927122518.GA25474@lunn.ch>
- <20190927141215.GA24424@renesas.com>
+        id S1726926AbfI0O77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 10:59:59 -0400
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6829621850;
+        Fri, 27 Sep 2019 14:59:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569596397;
+        bh=4ZeYZF5rfbOcG858xzs2UwUFuWnyzoDXLMnGJ65sEOI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=eOebfeeBI4f0mYoksJW1Y9n3kCLeskoOArGkJBt8tBWzHKTGpdq3YXxTW645sqMdO
+         DfBbu/KsaKFO0OEGtzThnSXQNYIhGWX+4Bt5+SCzTRm2nzvNLv56BYz9SG2trR4+9n
+         m4zEeAH1bnMU+V0A4RkoEu394mYdEGuT7dH3Kt3c=
+Received: by mail-lj1-f171.google.com with SMTP id m7so2836524lji.2;
+        Fri, 27 Sep 2019 07:59:57 -0700 (PDT)
+X-Gm-Message-State: APjAAAXn7iBCWhH/Jg/rqNtCIlPeUq++v5PE12xdSFUcG77F3rNEQYAQ
+        kXiWrN5//SBocpDJIUxRsmmIReu/L7YsGBk9WhE=
+X-Google-Smtp-Source: APXvYqyfR4W0pf9jJu2HbF52tES3d61o9HB32ILl9iSDh6Qefr/bZ3EwJ3A3TAx3XoN+Yim9v2KMdTelKqFcDQfA3zc=
+X-Received: by 2002:a2e:7c17:: with SMTP id x23mr3207763ljc.210.1569596395620;
+ Fri, 27 Sep 2019 07:59:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190927141215.GA24424@renesas.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <CGME20190927143314eucas1p2d419866cd740207426cd37cb6fdff468@eucas1p2.samsung.com>
+ <20190927143306.12133-1-m.szyprowski@samsung.com>
+In-Reply-To: <20190927143306.12133-1-m.szyprowski@samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Fri, 27 Sep 2019 16:59:44 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPdbDropa0iL6YP4Fb4aFSEXQ87thOk5mN+cSCU=i+ZwUw@mail.gmail.com>
+Message-ID: <CAJKOXPdbDropa0iL6YP4Fb4aFSEXQ87thOk5mN+cSCU=i+ZwUw@mail.gmail.com>
+Subject: Re: [PATCH v3] dt-bindings: gpu: Convert Samsung Image Scaler to dt-schema
+To:     Maciej Falkowski <m.falkowski@samsung.com>
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> >> +static void set_default_function_pointers(struct idtcm *idtcm)
-> >> +{
-> >> +	idtcm->_idtcm_gettime = _idtcm_gettime;
-> >> +	idtcm->_idtcm_settime = _idtcm_settime;
-> >> +	idtcm->_idtcm_rdwr = idtcm_rdwr;
-> >> +	idtcm->_sync_pll_output = sync_pll_output;
-> >> +}
-> >
-> >Why does this indirection? Are the SPI versions of the silicon?
-> 
-> The indirection is to enable us to replace those functions in
-> our unit tests with mocked functions.
+On Fri, 27 Sep 2019 at 16:33, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+>
+> From: Maciej Falkowski <m.falkowski@samsung.com>
+>
+> Convert Samsung Image Scaler to newer dt-schema format.
+>
+> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+> v3:
+> - Fixed description of 'clocks' property:
+> rather than 'mscl clock', 'pclk clock'
+> - Added empty line within if-else statement
+> - Added 'additionalProperties: false'
+> - Listed all missing 'properties' in properties scope
+>
+> Best regards,
+> Maciej Falkowski
+> ---
+>  .../bindings/gpu/samsung-scaler.txt           | 27 -------
+>  .../bindings/gpu/samsung-scaler.yaml          | 81 +++++++++++++++++++
+>  2 files changed, 81 insertions(+), 27 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/gpu/samsung-scaler.txt b/Documentation/devicetree/bindings/gpu/samsung-scaler.txt
+> deleted file mode 100644
+> index 9c3d98105dfd..000000000000
+> --- a/Documentation/devicetree/bindings/gpu/samsung-scaler.txt
+> +++ /dev/null
+> @@ -1,27 +0,0 @@
+> -* Samsung Exynos Image Scaler
+> -
+> -Required properties:
+> -  - compatible : value should be one of the following:
+> -       (a) "samsung,exynos5420-scaler" for Scaler IP in Exynos5420
+> -       (b) "samsung,exynos5433-scaler" for Scaler IP in Exynos5433
+> -
+> -  - reg : Physical base address of the IP registers and length of memory
+> -         mapped region.
+> -
+> -  - interrupts : Interrupt specifier for scaler interrupt, according to format
+> -                specific to interrupt parent.
+> -
+> -  - clocks : Clock specifier for scaler clock, according to generic clock
+> -            bindings. (See Documentation/devicetree/bindings/clock/exynos*.txt)
+> -
+> -  - clock-names : Names of clocks. For exynos scaler, it should be "mscl"
+> -                 on 5420 and "pclk", "aclk" and "aclk_xiu" on 5433.
+> -
+> -Example:
+> -       scaler@12800000 {
+> -               compatible = "samsung,exynos5420-scaler";
+> -               reg = <0x12800000 0x1294>;
+> -               interrupts = <0 220 IRQ_TYPE_LEVEL_HIGH>;
+> -               clocks = <&clock CLK_MSCL0>;
+> -               clock-names = "mscl";
+> -       };
+> diff --git a/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml b/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
+> new file mode 100644
+> index 000000000000..5317ac64426a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
+> @@ -0,0 +1,81 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpu/samsung-scaler.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung Exynos SoC Image Scaler
+> +
+> +maintainers:
+> +  - Inki Dae <inki.dae@samsung.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - samsung,exynos5420-scaler
+> +      - samsung,exynos5433-scaler
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks: {}
+> +  clock-names: {}
+> +  iommus: {}
+> +  power-domains: {}
+> +
+> +if:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        const: samsung,exynos5420-scaler
+> +
+> +then:
+> +  properties:
+> +    clocks:
+> +      items:
+> +        - description: mscl clock
+> +
+> +    clock-names:
+> +      items:
+> +        - const: mscl
+> +
+> +else:
+> +  properties:
+> +    clocks:
+> +      items:
+> +        - description: pclk clock
+> +        - description: aclk clock
+> +        - description: aclk_xiu clock
+> +
+> +    clock-names:
+> +      items:
+> +        - const: pclk
+> +        - const: aclk
+> +        - const: aclk_xiu
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/exynos5420.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    scaler@12800000 {
+> +        compatible = "samsung,exynos5420-scaler";
+> +        reg = <0x12800000 0x1294>;
+> +        interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>;
+> +        clocks = <&clock CLK_MSCL0>;
+> +        clock-names = "mscl";
+> +    };
+> +
+> +...
 
-Due to Spectra/meltdown etc, indirection is now expensive. But i guess
-the I2C operations are a lot more expensive.
+You have some left-overs at the end. With cleaning them:
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-But in general, we try to keep the code KISS. Have you tried other
-ways of doing this. Have your unit test framework implement
-i2c_transfer()?
- 
-> I read somewhere that I should leave a week between sending a
-> revised patch series.  Is this a good rule to follow?
-
-There are different 'timers'. One is how long to wait for review
-comments, and reposting when you don't receiver any comments. netdev
-for example is fast, a couple of days. Other subsystems, you need to
-wait two weeks. Another 'timer' is how often to post new versions. In
-general, never more than once per day. And the slower the subsystem is
-for making reviews, the longer you should wait for additional review
-comments.
-
-What also plays a role is that the merge window is currently open. So
-most subsystems won't accept patches at the moment. You need to wait
-until it closes before submitting patches you expect to be good enough
-to be accepted.
-
-   Andrew
-
-
-
+Best regards,
+Krzysztof
