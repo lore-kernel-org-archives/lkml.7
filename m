@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEAF0C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9C3C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5C6E2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:49:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E27DB21927
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:49:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Nm9BvF+i"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="d+3NVDBm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbfI0Htq (ORCPT
+        id S1726626AbfI0HtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 03:49:46 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:34688 "EHLO
+        Fri, 27 Sep 2019 03:49:12 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:49652 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726628AbfI0HtM (ORCPT
+        by vger.kernel.org with ESMTP id S1725842AbfI0HtM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 27 Sep 2019 03:49:12 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id DAF8CC0DD4;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id E6B9EC0CED;
         Fri, 27 Sep 2019 07:49:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1569570552; bh=4HYL1pfc0TYPaJ4P5PLnhQ03OR2L/vm8sjEKLBLrB04=;
+        t=1569570551; bh=F4S+1xHJRXUdoEUQwWWHucAMwa7NK06xIl14jQE+6AA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=Nm9BvF+icBU96Z9GmayCx5H+4tYOScnKTia+xJGfTgqb8HLEdkR2JvoTKFQjNGuSW
-         aBcDVaMY1c1YSGRI8ceV+bBmpzH9WwXostxGgS44X7hXVcjvYDXa4RZ4rr8HfkKw+X
-         2GJJiGLs5Q1vJtypdTnnEKMr2LQz5gyN77M0/ArrfpuH4QdVzOWWsSxyJWnhts82WO
-         0Z5m8I6LEqXmLIWResNEQL4+zdp4wtkuXcIfYUMJ7fI1d21tmn7B0TL7xJmj/rXL1K
-         I0Sp4NWeB4kBbvs8qNuVajVFuefa35f5lsRJeJjnbnYutNu+BVy++jectQg1COYhX+
-         yctlxiqe5Ufvg==
+        b=d+3NVDBmthx5/r2rl9HdMVeCCwn5NLeIznAGgbv6iBidsJ3QpXoEZU0j7V49eiMm8
+         KZ/9G9bAv6ncgk7xhQy85h2jVYmz4P9geoaOt0p7ijEsBArMaRE9c5YVAua6La/9la
+         VJuYgEFU6pmoI7s/jxNfnXpx65xrO8hDq6hJVHAATBQzc5ZzYjljUHovI2EGk7lbY8
+         aVPIfi94cirx/tEwJOg36bLhCg1ecZaQi6JcdSikbAw1k5s4wlcTpvUFEVYBINE3dF
+         7piZqikpZ6vnrnzypZ4Lt/2y8FkdAj/A1kh3K4Zj6Sd3pL77xhhFTk0qzR4IYQns3A
+         QfRk5+SIlCnQA==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 579C3A0078;
+        by mailhost.synopsys.com (Postfix) with ESMTP id 3E601A0065;
         Fri, 27 Sep 2019 07:49:09 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -52,9 +52,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net 3/8] net: stmmac: selftests: Always use max DMA size in Jumbo Test
-Date:   Fri, 27 Sep 2019 09:48:51 +0200
-Message-Id: <aafbe5bbc45dae9fcfb49b0a803581c5f24328e5.1569569778.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net 1/8] net: stmmac: xgmac: Not all Unicast addresses may be available
+Date:   Fri, 27 Sep 2019 09:48:49 +0200
+Message-Id: <754c7f12d08ccde54f12d32df099aee61956616b.1569569778.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1569569778.git.Jose.Abreu@synopsys.com>
 References: <cover.1569569778.git.Jose.Abreu@synopsys.com>
@@ -65,13 +65,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Although some XGMAC setups support frames larger than DMA size, some of
-them may not. As we can't know before-hand which ones support let's use
-the maximum DMA buffer size in the Jumbo Tests.
+Some setups may not have all Unicast addresses filters available. Let's
+check this before trying to setup filters.
 
-User can always reconfigure the MTU to achieve larger frames.
-
-Fixes: 427849e8c37f ("net: stmmac: selftests: Add Jumbo Frame tests")
+Fixes: 0efedbf11f07 ("net: stmmac: xgmac: Fix XGMAC selftests")
 Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
 ---
@@ -85,24 +82,22 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-index 5f66f6161629..cc76a42c7466 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-@@ -1564,10 +1564,6 @@ static int __stmmac_test_jumbo(struct stmmac_priv *priv, u16 queue)
- 	struct stmmac_packet_attrs attr = { };
- 	int size = priv->dma_buf_sz;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+index 2b277b2c586b..6d8ac2ef4fc2 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+@@ -472,7 +472,7 @@ static void dwxgmac2_set_filter(struct mac_device_info *hw,
+ 	dwxgmac2_set_mchash(ioaddr, mc_filter, mcbitslog2);
  
--	/* Only XGMAC has SW support for multiple RX descs in same packet */
--	if (priv->plat->has_xgmac)
--		size = priv->dev->max_mtu;
--
- 	attr.dst = priv->dev->dev_addr;
- 	attr.max_size = size - ETH_FCS_LEN;
- 	attr.queue_mapping = queue;
+ 	/* Handle multiple unicast addresses */
+-	if (netdev_uc_count(dev) > XGMAC_ADDR_MAX) {
++	if (netdev_uc_count(dev) > hw->unicast_filter_entries) {
+ 		value |= XGMAC_FILTER_PR;
+ 	} else {
+ 		struct netdev_hw_addr *ha;
 -- 
 2.7.4
 
