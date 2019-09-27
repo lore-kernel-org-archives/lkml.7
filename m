@@ -2,132 +2,115 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCF4C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29576C388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9517A205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F01E421927
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:48:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="HDfInl7c"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="n0Dr10Fc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbfI0PrS (ORCPT
+        id S1727974AbfI0PsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 11:47:18 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:29043 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727273AbfI0PrS (ORCPT
+        Fri, 27 Sep 2019 11:48:04 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:59552 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727585AbfI0PsE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 11:47:18 -0400
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x8RFl8pg012289;
-        Sat, 28 Sep 2019 00:47:09 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x8RFl8pg012289
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1569599229;
-        bh=0YR/Az+CB16U9fbkYCW2HvtbjzSrTM2QIFsD0wKaTiE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=HDfInl7cA/BLT0w+VA5sVcBeh+46do44mxSArJG/7nJkjBY1talPjvSivr+gNbFw0
-         h+zLJcAhELvueUsTwSmgtBWA6AALKq0P7uojTw9dasyC0SKTMs0RO90zcRRyOMxUxW
-         Ltyt4fG2MVw/BdcQ/bKsX6Avc+lie8ulJewGaxQWhVAZWtZDrcvwwRXOBAFFEU9w9N
-         5cE2tzB5q2Vksqi389idAC744BuF+sJLqMYHTkgz+6uA9cPA/t9vIO+h15u/jzeccX
-         jJL9sFnMsK24iuSnwtWAcABJi4A5QKgMkIIPptEkkysmfke30P/pz21d/Y1udrWyl1
-         MRjGijVjzEyIA==
-X-Nifty-SrcIP: [209.85.222.41]
-Received: by mail-ua1-f41.google.com with SMTP id b14so2079858uap.6;
-        Fri, 27 Sep 2019 08:47:09 -0700 (PDT)
-X-Gm-Message-State: APjAAAVNzheGWsnp7F2vT4F97567LH7KJMAitxzq0+FQPwC3E4GvoW+Y
-        h8ZX9XB15Lo9wpIwwF7cj31hZRoNfBA0nCRWnQw=
-X-Google-Smtp-Source: APXvYqwHMmMTACsPXv679DAxPCpVLapQs+iMVrZo9luuGhd1H/3f77vuQJP4S9/AVoVuGyx+pL3IL6Y+11QqrIaNJWc=
-X-Received: by 2002:ab0:6355:: with SMTP id f21mr3136372uap.40.1569599227984;
- Fri, 27 Sep 2019 08:47:07 -0700 (PDT)
+        Fri, 27 Sep 2019 11:48:04 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8RFlwsx028604;
+        Fri, 27 Sep 2019 10:47:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569599278;
+        bh=U37r5TojFgcS5DwKcw0E6Hys+tinXCxumASCFgqCX8M=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=n0Dr10Fc+4D7YJlreDJ02Ho/MKselqyZ6JuPychdRGigTx8dWWa2gK6i2fqY5dVQc
+         IUPJMUBCpnPe8DrSvyAnfIiHNm4vGE9zwJvOxkba71HzXwN4KHTMU/1RfIyWs0RCMF
+         vVrX5avWBICkiZbB3QrrbQqe4DGgEkXTJSC9ZWrM=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8RFlwN2037608
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 27 Sep 2019 10:47:58 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 27
+ Sep 2019 10:47:49 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 27 Sep 2019 10:47:49 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8RFltEh071020;
+        Fri, 27 Sep 2019 10:47:55 -0500
+Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to
+ dts
+To:     Tero Kristo <t-kristo@ti.com>, Adam Ford <aford173@gmail.com>
+CC:     Tony Lindgren <tony@atomide.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190510194229.20628-1-aford173@gmail.com>
+ <af325707-3e42-493d-e858-77878ef06138@ti.com>
+ <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
+ <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
+ <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
+ <845055e2-8182-de74-2077-629fdf50ac6c@ti.com>
+ <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
+ <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com>
+ <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
+ <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com>
+ <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com>
+Date:   Fri, 27 Sep 2019 18:47:54 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190922113436.10396-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190922113436.10396-1-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 28 Sep 2019 00:46:32 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARXA4MnDyYHLphYEqMfEbh=cMk0i=pzDRbEODTeM+cJ4Q@mail.gmail.com>
-Message-ID: <CAK7LNARXA4MnDyYHLphYEqMfEbh=cMk0i=pzDRbEODTeM+cJ4Q@mail.gmail.com>
-Subject: Re: [PATCH] sparc: vdso: fix build error of vdso32
-To:     "David S . Miller" <davem@davemloft.net>,
-        sparclinux <sparclinux@vger.kernel.org>
-Cc:     Anatoly Pugachev <matorola@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "ndesaulniers@google.com" <ndesaulniers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 22, 2019 at 8:36 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> Since commit 54b8ae66ae1a ("kbuild: change *FLAGS_<basetarget>.o to
-> take the path relative to $(obj)"), sparc allmodconfig fails to build
-> as follows:
->
->   CC      arch/sparc/vdso/vdso32/vclock_gettime.o
-> unrecognized e_machine 18 arch/sparc/vdso/vdso32/vclock_gettime.o
-> arch/sparc/vdso/vdso32/vclock_gettime.o: failed
->
-> The cause of the breakage is that -pg flag not being dropped.
->
-> The vdso32 files are located in the vdso32/ subdirectory, but I missed
-> to update the Makefile.
->
-> Fixes: 54b8ae66ae1a ("kbuild: change *FLAGS_<basetarget>.o to take the path relative to $(obj)")
-> Reported-by: Anatoly Pugachev <matorola@gmail.com>
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
->
+On 27/09/2019 18:37, Tero Kristo wrote:
 
+> If you can provide details about what clock framework / driver does 
+> wrong (sample clk_set_xyz call sequence, expected results via 
+> clk_get_xyz, and what fails), I can take a look at it. Just reporting 
+> arbitrary display driver issues I won't be able to debug at all (I don't 
+> have access to any of the displays, nor do I want to waste time 
+> debugging them without absolutely no knowledge whatsoever.)
 
-I am copy-pasting Tested-by from the reporter:
+I used your hack patches to allow changing rates via debugfs. And set 
+dss1_alwon_fck_3430es2 to 27000000 or 27870967. The end result was that 
+DSS gets some very high clock from dss1_alwon_fck_3430es2, as the frame 
+rate jumps to many hundreds fps.
 
-Tested-by: Anatoly Pugachev <matorola@gmail.com>
+So, these numbers are not real, but to give the idea what I saw. Running 
+first with 50 MHz, I can see, say, 40 fps. Then I set the clock to 30 
+MHz, and fps dropped to, say, 30fps, as expected with lower clock. Then 
+I set the clock to 27MHz (or the other one), expecting a bit lower fps, 
+but instead I saw hundreds of fps.
 
-It was given here:
+I don't know if there's any other way to observe the wrong clock rate 
+but have the dss enabled and running kmstest or similar. I can help you 
+set that up next week, should be trivial. You don't need a display for that.
 
-https://lkml.org/lkml/2019/9/25/197
-
-
-
-
->  arch/sparc/vdso/Makefile | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/sparc/vdso/Makefile b/arch/sparc/vdso/Makefile
-> index 324a23947585..399bc22b1cf8 100644
-> --- a/arch/sparc/vdso/Makefile
-> +++ b/arch/sparc/vdso/Makefile
-> @@ -67,12 +67,14 @@ $(vobjs): KBUILD_CFLAGS := $(filter-out $(GCC_PLUGINS_CFLAGS) $(SPARC_REG_CFLAGS
->  #
->  CFLAGS_REMOVE_vdso-note.o = -pg
->  CFLAGS_REMOVE_vclock_gettime.o = -pg
-> +CFLAGS_REMOVE_vdso32/vdso-note.o = -pg
-> +CFLAGS_REMOVE_vdso32/vclock_gettime.o = -pg
->
->  $(obj)/%.so: OBJCOPYFLAGS := -S
->  $(obj)/%.so: $(obj)/%.so.dbg FORCE
->         $(call if_changed,objcopy)
->
-> -CPPFLAGS_vdso32.lds = $(CPPFLAGS_vdso.lds)
-> +CPPFLAGS_vdso32/vdso32.lds = $(CPPFLAGS_vdso.lds)
->  VDSO_LDFLAGS_vdso32.lds = -m elf32_sparc -soname linux-gate.so.1
->
->  #This makes sure the $(obj) subdirectory exists even though vdso32/
-> --
-> 2.17.1
->
-
+  Tomi
 
 -- 
-Best Regards
-Masahiro Yamada
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
