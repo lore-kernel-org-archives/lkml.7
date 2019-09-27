@@ -4,124 +4,235 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D215EC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 23:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6901C388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 23:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEFE620863
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 23:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C80E20863
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 23:43:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbfI0Xme (ORCPT
+        id S1728712AbfI0XnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 19:42:34 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24652 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725815AbfI0Xmd (ORCPT
+        Fri, 27 Sep 2019 19:43:16 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:35327 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725306AbfI0XnQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 19:42:33 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8RNfiDU085571;
-        Fri, 27 Sep 2019 19:42:01 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v9umg8w8t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Sep 2019 19:42:01 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8RNg1hs085952;
-        Fri, 27 Sep 2019 19:42:01 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v9umg8w8j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Sep 2019 19:42:00 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8RNePAk030822;
-        Fri, 27 Sep 2019 23:41:59 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma03wdc.us.ibm.com with ESMTP id 2v5bg7v7pr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Sep 2019 23:41:59 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8RNfx7F37159414
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Sep 2019 23:41:59 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1332B112069;
-        Fri, 27 Sep 2019 23:41:59 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DCD9D112063;
-        Fri, 27 Sep 2019 23:41:03 +0000 (GMT)
-Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.18.235.58])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 27 Sep 2019 23:41:03 +0000 (GMT)
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org
-Cc:     Leonardo Bras <leonardo@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ganesh Goudar <ganeshgr@linux.ibm.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Keith Busch <keith.busch@intel.com>
-Subject: [PATCH v4 11/11] powerpc/mm/book3s64/pgtable: Uses counting method to skip serializing
-Date:   Fri, 27 Sep 2019 20:40:08 -0300
-Message-Id: <20190927234008.11513-12-leonardo@linux.ibm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190927234008.11513-1-leonardo@linux.ibm.com>
-References: <20190927234008.11513-1-leonardo@linux.ibm.com>
+        Fri, 27 Sep 2019 19:43:16 -0400
+Received: by mail-lf1-f67.google.com with SMTP id w6so3116459lfl.2;
+        Fri, 27 Sep 2019 16:43:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=c8uGLij7T5Lhd9NNM8IRpienFCfZLI1fF2YsMfwjMb0=;
+        b=nGEy3BShGtH9jG0mH+ZtDfICSzXbZwOQWP3jeLcW93g20Qkt/JnkUI6i/1tsHCXtQq
+         5mAoANpqa1BecDWxVjyr6VZkOS0xU69VvudDeerrU1SJlAjtkmfBqoIUNfOAdtffnEhE
+         muVvtwrXJZ7q+f+tGWt3q6xnFFSEFJlcmZlPS7sAYm2L92Hy9g9Q1tHwwOLte1K3e/KJ
+         qg+R2okbKGnfOEB4wF3h91EF9ey9x2YUhje6aSw/jaVb+sXU1Hzj+IbrdnOVCoISAv9c
+         bpCTkxGJVqijAc0U22vuNZ7U1So4HNUfhva14qO2qxIhHPiMl7k8XH9s0T4bIuk7ufse
+         LUUg==
+X-Gm-Message-State: APjAAAWaqLjk8krkp7T8bzcPm61xAYWxTdyPgbmKapb5dRQr/WVEYTiC
+        qEUt/KnkRFuDjUHlq94YDZNuey8rsTY=
+X-Google-Smtp-Source: APXvYqxaiyRdOlpBwWGF862QfV4eTAG1q+uwD8zL+weLda64/duQKMgTc/QRXQANLb7+8tTLId6QQQ==
+X-Received: by 2002:ac2:4c8f:: with SMTP id d15mr4785336lfl.74.1569627792625;
+        Fri, 27 Sep 2019 16:43:12 -0700 (PDT)
+Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.googlemail.com with ESMTPSA id b67sm788812ljf.5.2019.09.27.16.43.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Sep 2019 16:43:12 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Denis Efremov <efremov@linux.com>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        x86@kernel.org, linux-s390@vger.kernel.org,
+        linux-alpha@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH RESEND v3 01/26] PCI: Add define for the number of standard PCI BARs
+Date:   Sat, 28 Sep 2019 02:43:08 +0300
+Message-Id: <20190927234308.23935-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190916204158.6889-3-efremov@linux.com>
+References: <20190916204158.6889-3-efremov@linux.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-27_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=663 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909270206
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Skips slow part of serialize_against_pte_lookup if there is no running
-lockless pagetable walk.
+Code that iterates over all standard PCI BARs typically uses
+PCI_STD_RESOURCE_END. However, it requires the "unusual" loop condition
+"i <= PCI_STD_RESOURCE_END" rather than something more standard like
+"i < PCI_STD_NUM_BARS".
 
-Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+This patch adds the definition PCI_STD_NUM_BARS which is equivalent to
+"PCI_STD_RESOURCE_END + 1". To iterate through all possible BARs, loop
+conditions changed to the *number* of BARs "i < PCI_STD_NUM_BARS",
+instead of the index of the last valid BAR "i <= PCI_STD_RESOURCE_END"
+or PCI_ROM_RESOURCE. The magic constant (6) is also replaced with new
+define PCI_STD_NUM_BARS.
+
+Signed-off-by: Denis Efremov <efremov@linux.com>
 ---
- arch/powerpc/mm/book3s64/pgtable.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pci/pci-sysfs.c       |  4 ++--
+ drivers/pci/pci.c             | 13 +++++++------
+ drivers/pci/proc.c            |  4 ++--
+ drivers/pci/quirks.c          |  4 ++--
+ include/linux/pci.h           |  2 +-
+ include/uapi/linux/pci_regs.h |  1 +
+ 6 files changed, 15 insertions(+), 13 deletions(-)
 
-diff --git a/arch/powerpc/mm/book3s64/pgtable.c b/arch/powerpc/mm/book3s64/pgtable.c
-index 6ba6195bff1b..27966481f2a6 100644
---- a/arch/powerpc/mm/book3s64/pgtable.c
-+++ b/arch/powerpc/mm/book3s64/pgtable.c
-@@ -95,7 +95,8 @@ static void do_nothing(void *unused)
- void serialize_against_pte_lookup(struct mm_struct *mm)
+diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+index 965c72104150..3e26b8e03bd5 100644
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -1257,7 +1257,7 @@ static void pci_remove_resource_files(struct pci_dev *pdev)
  {
- 	smp_mb();
--	smp_call_function_many(mm_cpumask(mm), do_nothing, NULL, 1);
-+	if (running_lockless_pgtbl_walk(mm))
-+		smp_call_function_many(mm_cpumask(mm), do_nothing, NULL, 1);
- }
+ 	int i;
  
- /*
+-	for (i = 0; i < PCI_ROM_RESOURCE; i++) {
++	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+ 		struct bin_attribute *res_attr;
+ 
+ 		res_attr = pdev->res_attr[i];
+@@ -1328,7 +1328,7 @@ static int pci_create_resource_files(struct pci_dev *pdev)
+ 	int retval;
+ 
+ 	/* Expose the PCI resources from this device as files */
+-	for (i = 0; i < PCI_ROM_RESOURCE; i++) {
++	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+ 
+ 		/* skip empty resources */
+ 		if (!pci_resource_len(pdev, i))
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 1b27b5af3d55..7d543986026b 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -674,7 +674,7 @@ struct resource *pci_find_resource(struct pci_dev *dev, struct resource *res)
+ {
+ 	int i;
+ 
+-	for (i = 0; i < PCI_ROM_RESOURCE; i++) {
++	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+ 		struct resource *r = &dev->resource[i];
+ 
+ 		if (r->start && resource_contains(r, res))
+@@ -3768,7 +3768,7 @@ void pci_release_selected_regions(struct pci_dev *pdev, int bars)
+ {
+ 	int i;
+ 
+-	for (i = 0; i < 6; i++)
++	for (i = 0; i < PCI_STD_NUM_BARS; i++)
+ 		if (bars & (1 << i))
+ 			pci_release_region(pdev, i);
+ }
+@@ -3779,7 +3779,7 @@ static int __pci_request_selected_regions(struct pci_dev *pdev, int bars,
+ {
+ 	int i;
+ 
+-	for (i = 0; i < 6; i++)
++	for (i = 0; i < PCI_STD_NUM_BARS; i++)
+ 		if (bars & (1 << i))
+ 			if (__pci_request_region(pdev, i, res_name, excl))
+ 				goto err_out;
+@@ -3827,7 +3827,7 @@ EXPORT_SYMBOL(pci_request_selected_regions_exclusive);
+ 
+ void pci_release_regions(struct pci_dev *pdev)
+ {
+-	pci_release_selected_regions(pdev, (1 << 6) - 1);
++	pci_release_selected_regions(pdev, (1 << PCI_STD_NUM_BARS) - 1);
+ }
+ EXPORT_SYMBOL(pci_release_regions);
+ 
+@@ -3846,7 +3846,8 @@ EXPORT_SYMBOL(pci_release_regions);
+  */
+ int pci_request_regions(struct pci_dev *pdev, const char *res_name)
+ {
+-	return pci_request_selected_regions(pdev, ((1 << 6) - 1), res_name);
++	return pci_request_selected_regions(pdev,
++			((1 << PCI_STD_NUM_BARS) - 1), res_name);
+ }
+ EXPORT_SYMBOL(pci_request_regions);
+ 
+@@ -3868,7 +3869,7 @@ EXPORT_SYMBOL(pci_request_regions);
+ int pci_request_regions_exclusive(struct pci_dev *pdev, const char *res_name)
+ {
+ 	return pci_request_selected_regions_exclusive(pdev,
+-					((1 << 6) - 1), res_name);
++				((1 << PCI_STD_NUM_BARS) - 1), res_name);
+ }
+ EXPORT_SYMBOL(pci_request_regions_exclusive);
+ 
+diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
+index fe7fe678965b..cb61ec2c24e8 100644
+--- a/drivers/pci/proc.c
++++ b/drivers/pci/proc.c
+@@ -248,13 +248,13 @@ static int proc_bus_pci_mmap(struct file *file, struct vm_area_struct *vma)
+ 	}
+ 
+ 	/* Make sure the caller is mapping a real resource for this device */
+-	for (i = 0; i < PCI_ROM_RESOURCE; i++) {
++	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+ 		if (dev->resource[i].flags & res_bit &&
+ 		    pci_mmap_fits(dev, i, vma,  PCI_MMAP_PROCFS))
+ 			break;
+ 	}
+ 
+-	if (i >= PCI_ROM_RESOURCE)
++	if (i >= PCI_STD_NUM_BARS)
+ 		return -ENODEV;
+ 
+ 	if (fpriv->mmap_state == pci_mmap_mem &&
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 44c4ae1abd00..998454b0ae8d 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -475,7 +475,7 @@ static void quirk_extend_bar_to_page(struct pci_dev *dev)
+ {
+ 	int i;
+ 
+-	for (i = 0; i <= PCI_STD_RESOURCE_END; i++) {
++	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+ 		struct resource *r = &dev->resource[i];
+ 
+ 		if (r->flags & IORESOURCE_MEM && resource_size(r) < PAGE_SIZE) {
+@@ -1810,7 +1810,7 @@ static void quirk_alder_ioapic(struct pci_dev *pdev)
+ 	 * The next five BARs all seem to be rubbish, so just clean
+ 	 * them out.
+ 	 */
+-	for (i = 1; i < 6; i++)
++	for (i = 1; i < PCI_STD_NUM_BARS; i++)
+ 		memset(&pdev->resource[i], 0, sizeof(pdev->resource[i]));
+ }
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_EESSC,	quirk_alder_ioapic);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 82e4cd1b7ac3..cf7d16305243 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -76,7 +76,7 @@ enum pci_mmap_state {
+ enum {
+ 	/* #0-5: standard PCI resources */
+ 	PCI_STD_RESOURCES,
+-	PCI_STD_RESOURCE_END = 5,
++	PCI_STD_RESOURCE_END = PCI_STD_RESOURCES + PCI_STD_NUM_BARS - 1,
+ 
+ 	/* #6: expansion ROM resource */
+ 	PCI_ROM_RESOURCE,
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index f28e562d7ca8..68b571d491eb 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -34,6 +34,7 @@
+  * of which the first 64 bytes are standardized as follows:
+  */
+ #define PCI_STD_HEADER_SIZEOF	64
++#define PCI_STD_NUM_BARS	6	/* Number of standard BARs */
+ #define PCI_VENDOR_ID		0x00	/* 16 bits */
+ #define PCI_DEVICE_ID		0x02	/* 16 bits */
+ #define PCI_COMMAND		0x04	/* 16 bits */
 -- 
-2.20.1
+2.21.0
 
