@@ -7,55 +7,56 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D69C388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19919C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E83C21924
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF68A20872
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:45:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="btR3AXi8"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FdjSwUSH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728656AbfI0Spi (ORCPT
+        id S1728476AbfI0SpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 14:45:38 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:46754 "EHLO
+        Fri, 27 Sep 2019 14:45:19 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:46730 "EHLO
         fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728515AbfI0SpW (ORCPT
+        with ESMTP id S1726594AbfI0SpR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 14:45:22 -0400
+        Fri, 27 Sep 2019 14:45:17 -0400
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8RIjK60094646;
-        Fri, 27 Sep 2019 13:45:20 -0500
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8RIjGbg094624;
+        Fri, 27 Sep 2019 13:45:16 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569609920;
-        bh=r6LwEruPm5l4y2o3OnL1GB+d2mHbAkCg6/wyb8egeu8=;
+        s=ti-com-17Q1; t=1569609916;
+        bh=iTVrMjr1jpW2jGLDHpDluWhwBeMusQS6Cqz8cCy6Yzo=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=btR3AXi8A0NVJpXFWkNUtp/Jsg7c5FcFHhYM8x4mASraX60dX7RDWAHjPQVB48hH8
-         D6DnY/hqbqxr0l3BrkPmcb40ran9lxH2lWKluxpY5y+pvBrpqokWc5gWF1iXlABpBP
-         K/NMV40MJS+BBZpCR9G/zT1wItaLHpkuAjWZ/kWo=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8RIjKmY074980
+        b=FdjSwUSHWrJ3hkJDyxDauyRMGlEWaGXNjDq/6ckDzXIHyaJoKT3/8x7gAg8N7DRvc
+         tOBayG5d12WiB0zfxdM9DWySnU9bh+h3x0uZknt1fAvpas2JfPqU+gnITMWueQpE7+
+         Vv+1/soLwG1msSclO30iuJthmmr4XjSsdg2YfT00=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8RIjG6Z074937
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 27 Sep 2019 13:45:20 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 27
- Sep 2019 13:45:12 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
+        Fri, 27 Sep 2019 13:45:16 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE108.ent.ti.com
  (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 27
+ Sep 2019 13:45:07 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 27 Sep 2019 13:45:12 -0500
+ Frontend Transport; Fri, 27 Sep 2019 13:45:07 -0500
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8RIjEVa122194;
-        Fri, 27 Sep 2019 13:45:20 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8RIjEVW122194;
+        Fri, 27 Sep 2019 13:45:15 -0500
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>,
         Sakari Ailus <sakari.ailus@linux.intel.com>
 CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v4 5/8] media: dt-bindings: ov2659: add powerdown/reset-gpios optional property
-Date:   Fri, 27 Sep 2019 13:47:19 -0500
-Message-ID: <20190927184722.31989-6-bparrot@ti.com>
+        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>,
+        Jyri Sarha <jsarha@ti.com>
+Subject: [Patch v4 1/8] media: i2c: ov2659: Fix for image wrap-around in lower resolution
+Date:   Fri, 27 Sep 2019 13:47:15 -0500
+Message-ID: <20190927184722.31989-2-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190927184722.31989-1-bparrot@ti.com>
 References: <20190927184722.31989-1-bparrot@ti.com>
@@ -67,41 +68,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add powerdown-gpios and reset-gpios to the list of optional properties
-for the OV2659 camera sensor.
+Based on recently found sensor configuration examples, it was
+discovered that when scaling and binning are used for the lower
+resolutions (i.e. 640x480, 320x240) the read offset has to be
+increased otherwise the image appears to be wrapped around.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
 ---
- Documentation/devicetree/bindings/media/i2c/ov2659.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/media/i2c/ov2659.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov2659.txt b/Documentation/devicetree/bindings/media/i2c/ov2659.txt
-index cabc7d827dfb..92989a619f29 100644
---- a/Documentation/devicetree/bindings/media/i2c/ov2659.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/ov2659.txt
-@@ -12,6 +12,12 @@ Required Properties:
- - clock-names: should be "xvclk".
- - link-frequencies: target pixel clock frequency.
- 
-+Optional Properties:
-+- powerdown-gpios: reference to the GPIO connected to the pwdn pin, if any.
-+  Active high with internal pull down resistor.
-+- reset-gpios: reference to the GPIO connected to the resetb pin, if any.
-+  Active low with internal pull up resistor.
-+
- For further reading on port node refer to
- Documentation/devicetree/bindings/media/video-interfaces.txt.
- 
-@@ -27,6 +33,9 @@ Example:
- 			clocks = <&clk_ov2659 0>;
- 			clock-names = "xvclk";
- 
-+			powerdown-gpios = <&gpio6 14 GPIO_ACTIVE_HIGH>;
-+			reset-gpios = <&gpio6 15 GPIO_ACTIVE_LOW>;
-+
- 			port {
- 				ov2659_0: endpoint {
- 					remote-endpoint = <&vpfe_ep>;
+diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
+index f4ded0669ff9..17573257097d 100644
+--- a/drivers/media/i2c/ov2659.c
++++ b/drivers/media/i2c/ov2659.c
+@@ -661,7 +661,7 @@ static struct sensor_register ov2659_vga[] = {
+ 	{ REG_TIMING_HORIZ_FORMAT, 0x01 },
+ 	{ 0x370a, 0x52 },
+ 	{ REG_VFIFO_READ_START_H, 0x00 },
+-	{ REG_VFIFO_READ_START_L, 0x80 },
++	{ REG_VFIFO_READ_START_L, 0xa0 },
+ 	{ REG_ISP_CTRL02, 0x10 },
+ 	{ REG_NULL, 0x00 },
+ };
+@@ -709,7 +709,7 @@ static  struct sensor_register ov2659_qvga[] = {
+ 	{ REG_TIMING_HORIZ_FORMAT, 0x01 },
+ 	{ 0x370a, 0x52 },
+ 	{ REG_VFIFO_READ_START_H, 0x00 },
+-	{ REG_VFIFO_READ_START_L, 0x80 },
++	{ REG_VFIFO_READ_START_L, 0xa0 },
+ 	{ REG_ISP_CTRL02, 0x10 },
+ 	{ REG_NULL, 0x00 },
+ };
 -- 
 2.17.1
 
