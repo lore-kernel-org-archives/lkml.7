@@ -2,144 +2,122 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CFEC388F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 13:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F714C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 13:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BDBC217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 13:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D571B217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 13:41:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="IEzEKaX9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fy5j/qmg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727601AbfI0Nko (ORCPT
+        id S1727635AbfI0NlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 09:40:44 -0400
-Received: from mout.web.de ([212.227.15.4]:35825 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726540AbfI0Nko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 09:40:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1569591622;
-        bh=3bKu3XKjBorE1hHURqVppVHhwNs947LzWK/VrwyKmcw=;
-        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
-        b=IEzEKaX9VKoVEVlsYmUH14f62Gr22AV07ohdh5LSb4zyo8KPuVXz782qDXVtiw/IY
-         y+6r/88BUjAChtTw/X95M6j6qtBM4SMRpanL2ff1hQ2TI8ZKX7ueemK2LYhU26fBZF
-         1WDDA125DBc7tWvR9b55GogqNw/F24gEzjWP09v4=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.191.8]) by smtp.web.de (mrweb002
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lu5BO-1i3dxr3p94-011QOZ; Fri, 27
- Sep 2019 15:40:22 +0200
-Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen A McCamant <smccaman@umn.edu>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Samuel Mendoza-Jonas <sam@mendozajonas.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20190927031501.GF22969@cs-dulles.cs.umn.edu>
-Subject: Re: net/ncsi: prevent memory leak in ncsi_rsp_handler_gc
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>, netdev@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <2bee11b1-b6f9-8d5f-1e94-5ce9d2381d9a@web.de>
-Date:   Fri, 27 Sep 2019 15:40:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Fri, 27 Sep 2019 09:41:15 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53477 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbfI0NlO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 09:41:14 -0400
+Received: by mail-wm1-f65.google.com with SMTP id i16so6667634wmd.3
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 06:41:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hgnZlYVxe7nccl/AMGN96sUvuUJBPHkcwyTYZiuZshQ=;
+        b=Fy5j/qmgSJyd5tLd2E0Y0I0s9aR2rJOX18jYABdElAIytSroY2DHEGWmW/j4lQl/7v
+         BV8qyTbP3eT2rDYHKIYH4rUw+7ynj1SZW+f2+c/PtW+B2420sM6AvwYT80Q8f7NbUXSI
+         oss4WK0y9hAGXrGtV5kjOpIDh675S8dOWTH5k/5MiPYMVlIuppQbCfdInRGDwaYTfvPb
+         xUINeYpDP1TqXNgVLsAMW6pIX/k23rdz+Uf6/3bciD7dmL0P0jzF/Ce+KhzoU5vARPRO
+         Ri/fiVoygkeAXTmR/32zEyHI8Dh07iF5haiSg0bMWx3I4uqyNZtkCsnEFihizD8NizDY
+         jaoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hgnZlYVxe7nccl/AMGN96sUvuUJBPHkcwyTYZiuZshQ=;
+        b=pQTVH12XL6hCphMVK4s88nfzsfydNqXEa40Jo10m7TEQubedtYJvODbZEMvHXxMQSL
+         fv3+ZxK0WM2FY9z/8Y3E4Ha6r2LQgjX1tcHsGop0EUFFDONBHqv1qHQbpXGpeoGHjx/+
+         jIXSEHfMMUKaMiQdETqPPrlz/vAGwyaFbyz+4F+qdOeu0mADVELuCGgXj3NbD4YjPMy6
+         mxaicvDkzikR6Ap6rYjprhmfYT8hfaNyjzW/uExXHhaVeebCj1qlLLttH6R3PSDx2bYE
+         A6Y7b4nzDTb9WZG2aX/TNh6IXXY0aYHrzg2X/eQOQBNlLlCKuIEqShJsXOU1ZQB+jyuG
+         YSWQ==
+X-Gm-Message-State: APjAAAWTUOLV0p22O3VTOeT9q5e8JgrBCi2hocHdBknVnzw0tP2fURq7
+        5UDQa3eARMIx8O79fYWp6mebvQ==
+X-Google-Smtp-Source: APXvYqzZfdxZiASgKEvFOVVutuQt3UJ3zjs7fZoAAlxXaz5VadUxbevICIzD6S4z7DdpOnCOlJczLQ==
+X-Received: by 2002:a1c:a8cb:: with SMTP id r194mr4464907wme.156.1569591672626;
+        Fri, 27 Sep 2019 06:41:12 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
+        by smtp.gmail.com with ESMTPSA id t18sm6535777wmi.44.2019.09.27.06.41.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Sep 2019 06:41:11 -0700 (PDT)
+Date:   Fri, 27 Sep 2019 14:41:08 +0100
+From:   Matthias Maennich <maennich@google.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Jessica Yu <jeyu@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Martijn Coenen <maco@android.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Will Deacon <will@kernel.org>, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/7] module: various bug-fixes and clean-ups for module
+ namespace
+Message-ID: <20190927134108.GC187147@google.com>
+References: <20190927093603.9140-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-In-Reply-To: <20190927031501.GF22969@cs-dulles.cs.umn.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:y8wqielA7V+z/RhutSA5HTWx5Mhq4kD+x1oZNbLYL+/wJOMvUeF
- hsV4xRw55V0JS+2bEQxTInv6kyXFlv374xLnEjxjLzDTD7uM4OMyZ+jrZd+pUFGlqT7A5iz
- FUC37yQihaTTdt/d7xQCXKxOUJquB5IbzRo8iD26iu5EcPN7frqc/MJsyahPEWsjzQwrwZl
- VOgDv+J0V72dhphxjzR5w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:jmAEJVSXSkU=:K6OZyOKH2sH2FJUvqQpYFW
- dRH+UBAfRf8lRF2na7F8b31cnE7FGwNhZYnsK357WNxksKgwSBQ3uA2daqz0BEa0CxP46qaHU
- t9888GTtyY0VE1l8eYUQD0xQtjbSFi+DTUGSSofUXyU+FOHayNydrhSebr2nuPFRnlV1fu41Q
- a/bpaYF4VrQguW6/kIQP5F5twe4WI90tVe8zfq1JaJNe1QTuH/J5tcR/wll2+LGOxFGoHLYn0
- MFmnLRcaylQjZprJbf8kWAFRNr46gFUtGFKjxN7IwyK6JjRC7xkXpjX9mznrcMQsL2r4aVYgR
- ITIQSf3a9OjnoagEYUN+2a5biRY92tYazinWZNSQ550V9g0cjryWrpLIfgrkCRkBFASoiHYKR
- dGMTnz63DYS8lN+jqRIHzTXgniTkJG6VNkaPaahr8SD2XDa708AI6vE88gDAUOBv1VcNKg3kS
- aTsqXwsoVtS8afd+8OtUx6d4MAeSPJZIrejScn9psVzxX3h1FGI8eloSRPHi5g8dTcAz/ZUDu
- UcKdvmwjR3LVb/65jYv64OUOYLj47zqK6zasYKXeZBOAiLeNN3LopApyvrAHd90J9NkdoaecI
- 1Pa+Xd4YnIhpeF4Msyb2gbL7v5WEiapaKacewxdoMj9BFMMML28/lOgIRUEiKFB5qX4rk6seJ
- d814+EXrpHUevB2Q6+MODPXIxv4VVMbOrPkq5YjFXb09TAAPJWfOGGNHjgCCTQLIB+i387iF3
- rUP2Bdm2Xj7j5tQCy9twnqwy5AkUlmGUW+jBH1nhUlvsQzOA0lx9fSBLhFKhWBkG2J5q2JcW+
- 6UKyRwOccUYCD7YQ3MTJQPZIDqrGJ1+ULzia1zYPoM2q9PjnE8vLOjOr6lvItjpVPrIv42eWR
- pc68PvX4ZoywRtknyXn91Um/Bnvyj1kO6uxZ05vd+n+zvR0cqs3zMQzLYYpFEbxpFBQYOJYvB
- kjN8+F+zWbCp4BgeFo2C65itWtLg6d6zeTD8/dORO6tUGmj31eeMAPc6p/ypqbLQ60mnBxzE5
- FwAipkJuh7KOEIOWLz3d1td1bAuGJh4wnN8UC8e1kGZ+S5MqwfPoOY5YFfrQMg+WT8rJSjX7K
- neS43yApTP3/O+yT7R4uCE7g4yyQcY1Q9IWiGe1B/aGAOjbF0UYANwzJ6xYggQ8rVYvwRfrXU
- ycavDNdXBlgRtvH7S3uFobat2lznB+nTzXHw/Xm986rQ1X3ew1ARIIHZV9hrOtCB6UAPO/+Ml
- bRCLlLrc7vZZ8X0z+iKJ+OO9d5XGgJq/FA1jduMgalP0EcfT1fPTfd0FDpGhvfnm4WN63asFW
- vvdaoj1FctQeYJyp7iGFjHBgY8wPmaYMdiiA+yrzD5Q7ra1yDhyo6GXxhxFbE4ca4yKHI0PDZ
- H8RA9MUlQkv/h18zFbTRG7IFxgOJOA5sGzqdSCR60HZa7ZU0A/C6aZxAdRo0JMGZAeYTPRcyL
- +SE5zUO9kHvh4MsBdXu8PtGavRK/sL6qsSEylKDBYKKg99kcIG5+yeESd2gKkcYRLvUkZEsGt
- bp7ohMw6KABm54i9sNjB5NYfanpyvedDVsQF7Zu4oKK+T
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190927093603.9140-1-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > In ncsi_rsp_handler_gc if allocation for nc->vlan_filter.vids fails =
-the
-> > > allocated memory for nc->mac_filter.addrs should be released.
-=E2=80=A6
-> The problem is that just by traversing the code using tools
-> like ctags or elixir I couldn't find any caller to ncsi_rsp_handler_gc
-> that handles such errnos.
+On Fri, Sep 27, 2019 at 06:35:56PM +0900, Masahiro Yamada wrote:
+>
+>I was hit by some problems caused by the module namespace feature
+>that was merged recently. At least, the breakage of
+>external module builds is a fatal one. I just took a look at the code
+>closer, and I noticed some more issues and improvements.
+>
+>I hope these patches are mostly OK.
+>The 4th patch might have room for argument since it is a trade-off
+>of "cleaner implermentation" vs "code size".
+>
+Thanks Masahiro for taking the time to improve the implementation of the
+symbol namespaces. These are all good points that you addressed!
 
-Would you like to collaborate with higher level source code analysis tools=
-?
+For [04/07], I can work on this if you do not mind.
 
+Cheers,
+Matthias
 
-How do you think about to add the tag =E2=80=9CFixes=E2=80=9D here?
-
-Regards,
-Markus
+>
+>Masahiro Yamada (7):
+>  modpost: fix broken sym->namespace for external module builds
+>  module: swap the order of symbol.namespace
+>  module: rename __kstrtab_ns_* to __kstrtabns_* to avoid symbol
+>    conflict
+>  module: avoid code duplication in include/linux/export.h
+>  kbuild: fix build error of 'make nsdeps' in clean tree
+>  nsdeps: fix hashbang of scripts/nsdeps
+>  nsdeps: make generated patches independent of locale
+>
+> Makefile               |   2 +-
+> include/linux/export.h | 104 ++++++++++++++---------------------------
+> kernel/module.c        |   2 +-
+> scripts/mod/modpost.c  |  20 ++++----
+> scripts/nsdeps         |   4 +-
+> 5 files changed, 47 insertions(+), 85 deletions(-)
+>
+>-- 
+>2.17.1
+>
