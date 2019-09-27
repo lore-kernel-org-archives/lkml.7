@@ -2,130 +2,84 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CCCC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1116EC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F9FE2146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4FDB2146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:28:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l52EV2R5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Nr1+Uv61"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfI0I1J (ORCPT
+        id S1727073AbfI0I2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 04:27:09 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33283 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfI0I1J (ORCPT
+        Fri, 27 Sep 2019 04:28:07 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:37772 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbfI0I2G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 04:27:09 -0400
-Received: by mail-pl1-f195.google.com with SMTP id d22so796726pls.0;
-        Fri, 27 Sep 2019 01:27:08 -0700 (PDT)
+        Fri, 27 Sep 2019 04:28:06 -0400
+Received: by mail-pl1-f196.google.com with SMTP id u20so793804plq.4
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 01:28:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id;
-        bh=6FZld6NyLvsWL2o4u7zTXB1hPtoeXTwRo8zEqYJfiKE=;
-        b=l52EV2R5p6/wbHuZ7Du1+8xPCkXqUWWl864aST5vKDXKUTBIqq3H8Ft+uF3hmPZSlP
-         nswHPvtegQrcrpzU0b+0j0PTNrQtFPyXxSQYRZ2hqnKU81L4TkaiXkTH15wy17ggAKhG
-         A9Fkf4n9pAijobJf5+L6tupEp0mALV9v2yP2A+/uX3fJqvtZogTOa8pudagklRN8GSOH
-         dcmgS+bdUiaFitQDifUxzjJP5sgKvQPejcCLC+21NNg9bsqr5J6u0F/wqHn7/WitwGnC
-         mzmwDK83aQUp8neoaimuZoaMmPIjQ86l5+6i7a29NkCT1fGXkFT/Igg61ldxv4FfFeed
-         YXOg==
+        bh=NbFqGjxE2PnbU6z1Ec7WUi7n4X/b/Z/rHpPihB2LfiE=;
+        b=Nr1+Uv61tYBYR/gUeeunQBRJzDTbsfg0GWvMsad63gteY4RtQNSRpjeTGGNkFBUVd0
+         eh4r8/Lw0VLOg1PBeJieR+OzvTouP0Le87sDd7coeFfMNGA/m4uRaKtHUrDnpCDJJvXs
+         /r7TGahl1/9m5QxvOjdrjWlikA91e3ITT6tQ/3kE8LQa5pYBxZciKifLi4qH9xvMu3hz
+         lpBf0lZ7wph5QmxBqpdso9gt2IexvuFiNBU2YInsUjY57uDWZMWNOh3OA7fCjLkR585v
+         EgcvZXWKp777yZplzAiK7Vksf3N5viFUkOGC0LjBqfGPVZE7RrcAStM3v9FnrZ45OtYm
+         bkGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=6FZld6NyLvsWL2o4u7zTXB1hPtoeXTwRo8zEqYJfiKE=;
-        b=dDWiXhxs4zKIzSHAAM5r10l5H6XW+yy6nPMTuub4FPFCP4Z2PBxHmpTs//40HC0e0W
-         sJL8jeZ2H8NqgBggT6njJTRsUfumBxoe6rL3GGmQ5MFDtnA7qRdGvpS1iyUZjvm3ZVGu
-         DB4lptAgK03RDrR/AJD3kZetOTO5PpYg73ZIIXWqZ/QZbI/PsNOnwbBthuFZf+AnJdHk
-         C6pEocIZ+6bPgY1fH6ir6X2O3WUr3wHJGnix/+JCrPWBBNq2PI06j0+7LDo7mYWNws6s
-         4oX3RUtG6qAsRk53hnHdwdMGd16D9QTzdYC7nT8DRQnj33llhF9xYBk7NelUFSDCn36W
-         iUbg==
-X-Gm-Message-State: APjAAAVukFWyOUwrU0B+dfGyFgwAavi9Y59xLaKZijEJAbpIBaKpwxIe
-        aHivzULd2OqKGnkdVSvzzC6kBJbd
-X-Google-Smtp-Source: APXvYqwzQglXoBTLIXgWxvQEeHnO8e7mA5or1UPjqdtSwLWyYE0B3CH2DugF5ttzoumQoESutBZ4Fw==
-X-Received: by 2002:a17:902:d201:: with SMTP id t1mr3117240ply.337.1569572828338;
-        Fri, 27 Sep 2019 01:27:08 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id d24sm2168594pfn.86.2019.09.27.01.27.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 27 Sep 2019 01:27:07 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Marcelo Tosatti <mtosatti@redhat.com>
-Subject: [PATCH] KVM: Don't shrink/grow vCPU halt_poll_ns if host side polling is disabled
-Date:   Fri, 27 Sep 2019 16:27:02 +0800
-Message-Id: <1569572822-28942-1-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
+        bh=NbFqGjxE2PnbU6z1Ec7WUi7n4X/b/Z/rHpPihB2LfiE=;
+        b=Ns+Pb6LBTV36N/kjhV6tWz3QTOx48UmXYwpuQiGrulZgzs8luXKHYmABmP1yULP2yB
+         GJrkwGVKNsu5dUvpoC6HYLm3W6KXbxMSq2BlahzK4t9GSStKpLItMsMI46c29yRghG3S
+         a7E8Iwqy1XZNMmYrEdZWgxQ2DJ0sx+Z649Q/PIbAZrBuM5sSEmeKPtC7DL0UtXUlLeuZ
+         cIQFSr1m/GjGEBqwkwCT78o82zvIWtrt/cdecdxsoESrBP2i4wQ3g8T33RVPa2GBiA9t
+         1vk2cR2JyUbJJkDk/NkJG16do8ma+aTISUFI87fENMrGHb8TBg3dnI54mvAFctl1NuO2
+         CIIA==
+X-Gm-Message-State: APjAAAVdYP8JSxRJYR3TsLOXzqTsZLbcGO6BQQ7hmSBJwyYo1UmTk/Ye
+        OzGo8A01OoVaS7GsD+heSisbLg==
+X-Google-Smtp-Source: APXvYqwBR2/4d/E5sZqWUkMQbkc18m5T+0zVPlzOpWrkai8yINxJ1zE85vRfNhXyjmTVdE4u1KlrzQ==
+X-Received: by 2002:a17:902:d887:: with SMTP id b7mr3087377plz.297.1569572886073;
+        Fri, 27 Sep 2019 01:28:06 -0700 (PDT)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id 6sm2043521pfa.162.2019.09.27.01.28.02
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 27 Sep 2019 01:28:04 -0700 (PDT)
+From:   Baolin Wang <baolin.wang@linaro.org>
+To:     linus.walleij@linaro.org, ohad@wizery.com,
+        bjorn.andersson@linaro.org
+Cc:     baolin.wang@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] Optimize the u8500_hsem hwlock driver
+Date:   Fri, 27 Sep 2019 16:27:40 +0800
+Message-Id: <cover.1569572448.git.baolin.wang@linaro.org>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+This patch set did some Optimization with changing to use devm_xxx()
+APIs to simplify the code and make code more readable.
 
-Don't waste cycles to shrink/grow vCPU halt_poll_ns if host 
-side polling is disabled.
+Baolin Wang (3):
+  hwspinlock: u8500_hsem: Change to use
+    devm_platform_ioremap_resource()
+  hwspinlock: u8500_hsem: Use devm_kzalloc() to allocate memory
+  hwspinlock: u8500_hsem: Use devm_hwspin_lock_register() to register
+    hwlock controller
 
-Cc: Marcelo Tosatti <mtosatti@redhat.com>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- virt/kvm/kvm_main.c | 28 +++++++++++++++-------------
- 1 file changed, 15 insertions(+), 13 deletions(-)
+ drivers/hwspinlock/u8500_hsem.c |   46 +++++++++++----------------------------
+ 1 file changed, 13 insertions(+), 33 deletions(-)
 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index e6de315..b368be4 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -2359,20 +2359,22 @@ void kvm_vcpu_block(struct kvm_vcpu *vcpu)
- 	kvm_arch_vcpu_unblocking(vcpu);
- 	block_ns = ktime_to_ns(cur) - ktime_to_ns(start);
- 
--	if (!vcpu_valid_wakeup(vcpu))
--		shrink_halt_poll_ns(vcpu);
--	else if (halt_poll_ns) {
--		if (block_ns <= vcpu->halt_poll_ns)
--			;
--		/* we had a long block, shrink polling */
--		else if (vcpu->halt_poll_ns && block_ns > halt_poll_ns)
-+	if (!kvm_arch_no_poll(vcpu)) {
-+		if (!vcpu_valid_wakeup(vcpu))
- 			shrink_halt_poll_ns(vcpu);
--		/* we had a short halt and our poll time is too small */
--		else if (vcpu->halt_poll_ns < halt_poll_ns &&
--			block_ns < halt_poll_ns)
--			grow_halt_poll_ns(vcpu);
--	} else
--		vcpu->halt_poll_ns = 0;
-+		else if (halt_poll_ns) {
-+			if (block_ns <= vcpu->halt_poll_ns)
-+				;
-+			/* we had a long block, shrink polling */
-+			else if (vcpu->halt_poll_ns && block_ns > halt_poll_ns)
-+				shrink_halt_poll_ns(vcpu);
-+			/* we had a short halt and our poll time is too small */
-+			else if (vcpu->halt_poll_ns < halt_poll_ns &&
-+				block_ns < halt_poll_ns)
-+				grow_halt_poll_ns(vcpu);
-+		} else
-+			vcpu->halt_poll_ns = 0;
-+	}
- 
- 	trace_kvm_vcpu_wakeup(block_ns, waited, vcpu_valid_wakeup(vcpu));
- 	kvm_arch_vcpu_block_finish(vcpu);
 -- 
-2.7.4
+1.7.9.5
 
