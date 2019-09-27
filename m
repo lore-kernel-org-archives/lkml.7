@@ -2,182 +2,77 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD6EC352AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 00:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE4CC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 01:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE38521D56
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 00:55:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mWJcqqxG"
+	by mail.kernel.org (Postfix) with ESMTP id D41D620835
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 01:00:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727629AbfI0Azm (ORCPT
+        id S1727468AbfI0BAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 20:55:42 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:40535 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727450AbfI0Azl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 20:55:41 -0400
-Received: by mail-oi1-f193.google.com with SMTP id k9so3772694oib.7
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 17:55:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w6GtUWD65Sb2e3DNABoXgvvmVNvez3XhNPll/iTmngk=;
-        b=mWJcqqxG0yvWUhw/T7tKy9RfvCH7jcGWz8miRGuWvLmTwqKJ3ZfLN2t5FDY/5MGWhf
-         ksuRq1AECJHnDrA0xQt+a4UYEbD8UkzPJY+fqn/8NAyINpG17nBfdXvau2HnxCbKLB1Q
-         vf3nugrT7CDycCO9Lf4mLAu/WO/MIupOReMgVMjTF7NEWU6zQNqyxdetxF3YH28a1ZE7
-         /oE/UleTqIWRhPtcbsdoFfbHxLRkhc4HjmCAKBGLYDpgy3dSsWZK6MjWZWl9GC9MMWmC
-         drBPJKlLe2xE4nQfIjgf1D707tvSN6vOQoL8hN1DcuGOl6hhyjnrpkGzuysSkBASGQAo
-         R6gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w6GtUWD65Sb2e3DNABoXgvvmVNvez3XhNPll/iTmngk=;
-        b=nsq6MD4BZ77cQdk2K4INlXi5x4w6PTEt2JOSjA77ZDphypr8fZr6E3EZ70G4RE7wKd
-         STaPu9F9CGXsQs/TRwyqvPmHLbILHe167OxylHmoNqpPNSa6ODFU6MA7rv08zDJI3hME
-         BIOLgFMB0fhaNkQovzkvLihvZIvL8+5SRo61jwIY9G7RWKRZx0tRvPuTjAu2JWpHjuGA
-         Zmn5D868kI/c+tQA9fsKGjhrILc8epilgBXUT1P5g86AiUEWYUN89KaNNenx/kdY1+1E
-         LUWXZSrQdX73anivs/Ov+GfnAp/yrdtIfpyEFnbM4gic5xiRVsRLMCxQEU537bewDy7M
-         vacg==
-X-Gm-Message-State: APjAAAWAQ3ECJCLi7Vc9eBOolBKhc/7g3qqZCuocBNBq3214T5+I8xWH
-        sCD/q8ynKHZCdO8jztsZB/2pBdbgmiIZp0IXHnp4wQ==
-X-Google-Smtp-Source: APXvYqxaOUtFksyd5tFVpugObKeftAVgGeD3PicNGLqGrAfqoaEha1rcj49CSeZUiGTh6XZYzJwpS6/fjcHQVM057qs=
-X-Received: by 2002:aca:cf51:: with SMTP id f78mr5004751oig.8.1569545740466;
- Thu, 26 Sep 2019 17:55:40 -0700 (PDT)
+        Thu, 26 Sep 2019 21:00:50 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:33484 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725808AbfI0BAt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 21:00:49 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B1B241319645B0196D57;
+        Fri, 27 Sep 2019 09:00:47 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Fri, 27 Sep 2019
+ 09:00:44 +0800
+Subject: Re: [PATCH] async: Let kfree() out of the critical area of the lock
+To:     Bart Van Assche <bvanassche@acm.org>, <dsterba@suse.cz>,
+        <bhelgaas@google.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
+        "Alexander Duyck" <alexander.h.duyck@linux.intel.com>,
+        <sakari.ailus@linux.intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        David Sterba <dsterba@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <216356b1-38c1-8477-c4e8-03f497dd6ac8@huawei.com>
+ <f49df2d42d7e97b61a5e26ff4d89ede5fbe37a35.camel@linux.intel.com>
+ <e59af8ae-bacb-2e7e-dd53-ea283960d40e@huawei.com>
+ <20190926110648.GM2751@suse.cz>
+ <e339db78-413c-446a-8e07-40e6e1ad4a31@acm.org>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Message-ID: <cadede43-776e-449d-c6e5-c7f9c2c1acf2@huawei.com>
+Date:   Fri, 27 Sep 2019 09:00:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190919222421.27408-1-almasrymina@google.com>
- <3c73d2b7-f8d0-16bf-b0f0-86673c3e9ce3@oracle.com> <CAHS8izOj2AT4tX-+Hcb8LB2TOUKJDHScDtJ80u4M6OWpwktq0g@mail.gmail.com>
- <a8e9c533-1593-35ee-e65d-1f2fc2b0fb48@oracle.com> <CAHS8izPfKQA8qTndyzWSm9fR_xJ=X-xmE+4P4K+ZFdxrYNuLBA@mail.gmail.com>
- <alpine.DEB.2.21.1909261220150.39830@chino.kir.corp.google.com> <8f7db4f1-9c16-def5-79dc-d38d6b9d150e@oracle.com>
-In-Reply-To: <8f7db4f1-9c16-def5-79dc-d38d6b9d150e@oracle.com>
-From:   Mina Almasry <almasrymina@google.com>
-Date:   Thu, 26 Sep 2019 17:55:29 -0700
-Message-ID: <CAHS8izM3=ZDNukx5xhWmeJT+78Ekfff9J4s5Vqkqpx-DtH=C-A@mail.gmail.com>
-Subject: Re: [PATCH v5 0/7] hugetlb_cgroup: Add hugetlb_cgroup reservation limits
-To:     Mike Kravetz <mike.kravetz@oracle.com>, Tejun Heo <tj@kernel.org>
-Cc:     David Rientjes <rientjes@google.com>,
-        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>,
-        shuah <shuah@kernel.org>, Shakeel Butt <shakeelb@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        khalid.aziz@oracle.com, open list <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        cgroups@vger.kernel.org,
-        =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <e339db78-413c-446a-8e07-40e6e1ad4a31@acm.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.251.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 2:23 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
->
-> On 9/26/19 12:28 PM, David Rientjes wrote:
-> > On Tue, 24 Sep 2019, Mina Almasry wrote:
-> >
-> >>> I personally prefer the one counter approach only for the reason that it
-> >>> exposes less information about hugetlb reservations.  I was not around
-> >>> for the introduction of hugetlb reservations, but I have fixed several
-> >>> issues having to do with reservations.  IMO, reservations should be hidden
-> >>> from users as much as possible.  Others may disagree.
-> >>>
-> >>> I really hope that Aneesh will comment.  He added the existing hugetlb
-> >>> cgroup code.  I was not involved in that effort, but it looks like there
-> >>> might have been some thought given to reservations in early versions of
-> >>> that code.  It would be interesting to get his perspective.
-> >>>
-> >>> Changes included in patch 4 (disable region_add file_region coalescing)
-> >>> would be needed in a one counter approach as well, so I do plan to
-> >>> review those changes.
-> >>
-> >> OK, FWIW, the 1 counter approach should be sufficient for us, so I'm
-> >> not really opposed. David, maybe chime in if you see a problem here?
-> >> From the perspective of hiding reservations from the user as much as
-> >> possible, it is an improvement.
-> >>
-> >> I'm only wary about changing the behavior of the current and having
-> >> that regress applications. I'm hoping you and Aneesh can shed light on
-> >> this.
-> >>
-> >
-> > I think neither Aneesh nor myself are going to be able to provide a
-> > complete answer on the use of hugetlb cgroup today, anybody could be using
-> > it without our knowledge and that opens up the possibility that combining
-> > the limits would adversely affect a real system configuration.
->
-> I agree that nobody can provide complete information on hugetlb cgroup usage
-> today.  My interest was in anything Aneesh could remember about development
-> of the current cgroup code.  It 'appears' that the idea of including
-> reservations or mmap ranges was considered or at least discussed.  But, those
-> discussions happened more than 7 years old and my searches are not providing
-> a complete picture.  My hope was that Aneesh may remember those discussions.
->
-> > If that is a possibility, I think we need to do some due diligence and try
-> > to deprecate allocation limits if possible.  One of the benefits to
-> > separate limits is that we can make reasonable steps to deprecating the
-> > actual allocation limits, if possible: we could add warnings about the
-> > deprecation of allocation limits and see if anybody complains.
-> >
-> > That could take the form of two separate limits or a tunable in the root
-> > hugetlb cgroup that defines whether the limits are for allocation or
-> > reservation.
-> >
-> > Combining them in the first pass seems to be very risky and could cause
-> > pain for users that will not detect this during an rc cycle and will
-> > report the issue only when their distro gets it.  Then we are left with no
-> > alternative other than stable backports and the separation of the limits
-> > anyway.
->
-> I agree that changing behavior of the existing controller is too risky.
-> Such a change is likely to break someone.
 
-I'm glad we're converging on keeping the existing behavior unchanged.
 
-> The more I think about it, the
-> best way forward will be to retain the existing controller and create a
-> new controller that satisfies the new use cases.
+On 2019/9/26 23:18, Bart Van Assche wrote:
+> On 9/26/19 4:06 AM, David Sterba wrote:
+>> On Thu, Sep 26, 2019 at 03:58:36PM +0800, Yunfeng Ye wrote:
+>>> The async_lock is big global lock, I think it's good to put kfree() outside
+>>> to keep the critical area as short as possible.
+>>
+>> Agreed, kfree is not always cheap. We had patches in btrfs moving kfree
+>> out of critical section(s) after causing softlockups due to increased lock
+>> contention.
+> 
+> The above would be a great addition for the commit description. Anyway:
+> 
+ok, I will update the description, thanks.
 
-My guess is that a new controller needs to support cgroups-v2, which
-is fine. But can a new controller also support v1? Or is there a
-requirement that new controllers support *only* v2? I need whatever
-solution here to work on v1. Added Tejun to hopefully comment on this.
+> Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+> 
+> .
+> 
 
->The question remains as
-> to what that new controller will be.  Does it control reservations only?
-> Is it a combination of reservations and allocations?  If a combined
-> controller will work for new use cases, that would be my preference.  Of
-> course, I have not prototyped such a controller so there may be issues when
-> we get into the details.  For a reservation only or combined controller,
-> the region_* changes proposed by Mina would be used.
-
-Provided we keep the existing controller untouched, should the new
-controller track:
-
-1. only reservations, or
-2. both reservations and allocations for which no reservations exist
-(such as the MAP_NORESERVE case)?
-
-I like the 'both' approach. Seems to me a counter like that would work
-automatically regardless of whether the application is allocating
-hugetlb memory with NORESERVE or not. NORESERVE allocations cannot cut
-into reserved hugetlb pages, correct? If so, then applications that
-allocate with NORESERVE will get sigbused when they hit their limit,
-and applications that allocate without NORESERVE may get an error at
-mmap time but will always be within their limits while they access the
-mmap'd memory, correct? So the 'both' counter seems like a one size
-fits all.
-
-I think the only sticking point left is whether an added controller
-can support both cgroup-v2 and cgroup-v1. If I could get confirmation
-on that I'll provide a patchset.
-
-> --
-> Mike Kravetz
