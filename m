@@ -2,102 +2,122 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1325C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 03:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C50C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 03:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A706420835
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 03:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43B3320872
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 03:33:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O9bMdKw8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vEZ1bC2g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729082AbfI0DaH (ORCPT
+        id S1728980AbfI0DdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 23:30:07 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37252 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbfI0DaG (ORCPT
+        Thu, 26 Sep 2019 23:33:25 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44189 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727796AbfI0DdZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 23:30:06 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y5so711092pfo.4
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 20:30:05 -0700 (PDT)
+        Thu, 26 Sep 2019 23:33:25 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q21so696819pfn.11
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 20:33:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=3fUQ2wevxoVB9of7yE52sU9E/NILQiAovPtEjfDhHSI=;
-        b=O9bMdKw8cO5Q2wlyIDHcAUhYNbgKrh+mR8kF3DArk29wCYuc0N+J3CVrMKS1hjGqJe
-         cfx2wihV5CmxVYMWcpBqDg3wYYYnfONcnOthmS2ymzXwjWZb8SC59d8/y02jfFjMdcQI
-         rnn4HNNSvgyOXUmy+frN+luqQrpKGYKKeE5v5Hl8PupLPqHcLEUo0Ip1zA6LHsUZlBZ6
-         WVi6CTQwmrq+bAld5FeSH/xLRqR96x94t1ZtC7myJz46FcVQeSkDafn0HYQa958B5Mx6
-         bcFSjDnsCEWadfn4yEtZdp90b/PG0WDBCN6SiwN3OHMcR+UZifTjMohaIFMt09hCMF8i
-         hWXg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=sEqAKwH6i8dRuUDjuZdQGDMRFaWtJ7z76eqdeUKMFR4=;
+        b=vEZ1bC2gUnz6NoBfMDyxU9mxqyIb/A9GLsNodsnP6M2YVFdpkn/RgyXY/wut1e5Z+/
+         XvN0N7yXbIpFp8O478hZYTRFeOiuc/x+vk5ziQ7S8i4IKZa7uFJ4weGgJxfggn47bX7t
+         Cf+fkI9awLbvzBVGm1dNhlblm2J1Ffv8z/IvH6/hhWCFBZwk0VPGex6nYKnAcxK6TC8J
+         Lj1k7VxqydDx9ZpFCCOX4LJjuG4WQ3WxzinI3Cz+VnWTojik/Cx9uD1faOZK1QiDw6hc
+         7K5LdttHfaWvXbmoDi0MqFoQz4mZOoG7LsS6bUbvIiIct2exSC4W4neFLz+X+8nSEZdD
+         6Zmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=3fUQ2wevxoVB9of7yE52sU9E/NILQiAovPtEjfDhHSI=;
-        b=k1kgGPCV/kqe5hnaBR51d2XaeTUjWUrhD2GA38yPllEv4jJIlUBWc6oXEI1paDh249
-         1LIDpVzAqC32N4u4DNFJgHqd8JuR4NoX7Dr3aQn4uIF6iubyNpZCs/dUXhfE8Y65o2Ik
-         O4k8+PMxsBYZwVkeehzmPejG/WxlpXVABT6wX/WYwx6vTQVkKrUtOn6W8tAjdT7VLpbi
-         6pJy4uq5pvVA4/XCxeHq3j6I5xw93xsSPGCj/8tT1u84ZDpivux5m2JgFlZRo+T8oS+R
-         8xHX9qATStlvZ66VYrFNX7E/+Iq3g3dqb5hnlcmi9xtbSFoMsTHblA+kulHubeMhNQwb
-         QFfw==
-X-Gm-Message-State: APjAAAXdjRuj0pqFdqaikQtlwuW8RnASaDzTlxT7RaRKYAuEbNiUDXD/
-        2Vl+/HAclthpgo7Ql5uvBejQyA==
-X-Google-Smtp-Source: APXvYqxKLdRaPcT++pt/WrvbpfM7lnJxg+XwLfQhQzjCfkYtKVCt8f0XzxpgGcR03nk93tHTblJRfA==
-X-Received: by 2002:a63:cf4a:: with SMTP id b10mr6916116pgj.276.1569555003985;
-        Thu, 26 Sep 2019 20:30:03 -0700 (PDT)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id a11sm674857pfo.165.2019.09.26.20.30.00
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 26 Sep 2019 20:30:03 -0700 (PDT)
-From:   Baolin Wang <baolin.wang@linaro.org>
-To:     vkoul@kernel.org
-Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com,
-        dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, baolin.wang@linaro.org
-Subject: [PATCH] dmaengine: sprd: Change to use devm_platform_ioremap_resource()
-Date:   Fri, 27 Sep 2019 11:29:43 +0800
-Message-Id: <1af3efdac3b217203cace090c8947386854c0144.1569554639.git.baolin.wang@linaro.org>
-X-Mailer: git-send-email 1.7.9.5
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=sEqAKwH6i8dRuUDjuZdQGDMRFaWtJ7z76eqdeUKMFR4=;
+        b=i3+x+wiCrOb3aKAJYPWfajThOwgWuICuRGr5W11va4h6hyzIlR1kLgDAdrff+RYmE4
+         nDIQAKM0q8cK7U83DUNUFALnfC2TScCFSsimq+qIXf9H3c+xNrF3eIsCDHy+iCRVS3l3
+         3lHeefEpheijbFlgADFAEx+aJ40/xRjxQUwJN57/CPLOQemAO7Hxi1IV5ZD8FnkLJygy
+         Bcq82OkDtYHgIpKeAewJlon2quqYZbJPdZCILdbUnUkfmm3wx1fkBlZdWrMYESq2XsE1
+         ZbRQvcj/ygbNlNryHuySxj6whxVeJ8lh+x/N/mMhZ1PAehp89MuJRckBRi2HEuy6yzV+
+         6cpQ==
+X-Gm-Message-State: APjAAAVXXmrDEkqlN3u8y+egzTwSJP7tdfalyiJ+ach5TEX8PghsQnXt
+        P7WqoeMp+s63DdGn483iGP6fsRr5jOc=
+X-Google-Smtp-Source: APXvYqy0Qv0EyDA0NnBHthk4VEz7/BQ/G3vIfATAo52ucWn6ZvMJj8NWR56RcXl52UdCm2gSHOs7EQ==
+X-Received: by 2002:a17:90a:e008:: with SMTP id u8mr7532910pjy.46.1569555203984;
+        Thu, 26 Sep 2019 20:33:23 -0700 (PDT)
+Received: from Gentoo ([103.231.91.66])
+        by smtp.gmail.com with ESMTPSA id z12sm732004pfj.41.2019.09.26.20.33.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 26 Sep 2019 20:33:23 -0700 (PDT)
+Date:   Fri, 27 Sep 2019 09:03:10 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     LinuxKernel <linux-kernel@vger.kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Subject: Please reap out these dead link from the kernel doc
+Message-ID: <20190927033307.GA4536@Gentoo>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="LQksG6bCIzRHxTLp"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new helper that wraps the calls to platform_get_resource()
-and devm_ioremap_resource() together, which can simpify the code.
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
----
- drivers/dma/sprd-dma.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+--LQksG6bCIzRHxTLp
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-index a4a91f2..60d2c6b 100644
---- a/drivers/dma/sprd-dma.c
-+++ b/drivers/dma/sprd-dma.c
-@@ -1065,7 +1065,6 @@ static int sprd_dma_probe(struct platform_device *pdev)
- 	struct device_node *np = pdev->dev.of_node;
- 	struct sprd_dma_dev *sdev;
- 	struct sprd_dma_chn *dma_chn;
--	struct resource *res;
- 	u32 chn_count;
- 	int ret, i;
- 
-@@ -1111,8 +1110,7 @@ static int sprd_dma_probe(struct platform_device *pdev)
- 		dev_warn(&pdev->dev, "no interrupts for the dma controller\n");
- 	}
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	sdev->glb_base = devm_ioremap_resource(&pdev->dev, res);
-+	sdev->glb_base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(sdev->glb_base))
- 		return PTR_ERR(sdev->glb_base);
- 
--- 
-1.7.9.5
+ I am not sure who is handling this ...stumble over it ...please do the
+ needful
 
+ Here is url for your reference :
+
+https://www.kernel.org/doc/html/latest/process/email-clients.html
+
+ There are two external urls for mutt config , which are dead ...those are
+ :
+
+
+     http://dev.mutt.org/trac/wiki/UseCases/Gmail
+
+         http://dev.mutt.org/doc/manual.html
+
+Is this because Mutt move from trac to gitlab ...here :
+https://gitlab.com/muttmua/mutt
+
+Wildly guessing.=20
+
+Probably Jon or Kai ...I don't know ..sorry about taking names.
+
+Thanks,
+Bhaskar
+
+--LQksG6bCIzRHxTLp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl2Ngu8ACgkQsjqdtxFL
+KRU2EwgAo8AVbcXsOkFZAM8KXToMIbbpjLp8355xnQd+tSFCjwayeJ1tu16dVR+L
+qZLTEJQvHNHZfkuRE6W/k0gi/fagvRSRllfI3XJzNk1xgWaLbZXU7OEM/oxZhM86
+/noSgD8OQM3xb/I1I1/jMtYlWTJs5e8kCeUADimb10QOS3zSZDxqrFpHrrgyEJuQ
+xlnj4CuKpBks4IO2t/y+c2Z63dJzoj4h/otn1RnIZDaT9lF28dgRLDVycpZhgN+U
+DEn6H6X1KAkFeNYY2vDjbKJoXq15YYmkQHajCx4zjjVvDwkJxvGZ2rFnESSa3j/R
+wN7vx47VyMc3X+aHNrnlBM3etpJaLw==
+=IG75
+-----END PGP SIGNATURE-----
+
+--LQksG6bCIzRHxTLp--
