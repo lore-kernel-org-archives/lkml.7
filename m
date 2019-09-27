@@ -2,215 +2,87 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B853C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4A4C388F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1E48217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:36:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="P/6ZgT7L"
+	by mail.kernel.org (Postfix) with ESMTP id 3B74821906
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:40:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569609606;
+	bh=9OyxnTjQpqScF7V8SKV8Z2cLmG6H6O4h7uV6BJp5KGo=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=FM5WkD9hHCLFoWgpPGxdJmYXfeyp4mNUZfltaQYRJZzxB2PG9XU13iiyzD2h2acqp
+	 wE2Txt3ZQ9CVuxjDSvp6dQz2XNnVZOLsREBNMdod7jV9ER2t3XQSGxXOoHNQTtyjSg
+	 pQNSXocMYnlDkHinT23J2eKuUxysHiAHTiejU3QA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbfI0SgB (ORCPT
+        id S1728352AbfI0SkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 14:36:01 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:45558 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726988AbfI0Seo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 14:34:44 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8RIYg0L092317;
-        Fri, 27 Sep 2019 13:34:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569609282;
-        bh=3r3HUM2oj5amxxKF28hYYXRhTAqi/qLk68lalKawoL0=;
-        h=From:To:CC:Subject:Date;
-        b=P/6ZgT7LQ07FFEa5Hj47nERCYSE9k4Ebh21ZsOvkBO7EZrCRSxUMi6G0Nv0KmXpUy
-         RCodtRocfY4L6c3l2q2O98Rr870Y1o9UN/qX55vVVs2sxCklORnmdysboVKG+Qw/n1
-         WtxD9A1OXfUQQPdWQWCJT7zKP6knHXCxPVi4x+Rw=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8RIYgh8061104
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 27 Sep 2019 13:34:42 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 27
- Sep 2019 13:34:34 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 27 Sep 2019 13:34:34 -0500
-Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8RIYgbn073031;
-        Fri, 27 Sep 2019 13:34:42 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch 00/16] media: vpe: maintenance
-Date:   Fri, 27 Sep 2019 13:36:34 -0500
-Message-ID: <20190927183650.31345-1-bparrot@ti.com>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 27 Sep 2019 14:40:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43428 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728305AbfI0SkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 14:40:05 -0400
+Subject: Re: [GIT PULL REQUEST] watchdog - v5.4 Merge window
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569609604;
+        bh=9OyxnTjQpqScF7V8SKV8Z2cLmG6H6O4h7uV6BJp5KGo=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=YiLMLKzuSI48fx+Ejaw5a0opYY24rvGeOy/rZptuskg8ElYIEeYPjC2LzfbDaeNiN
+         PqbaiyA5U6ZUPaKPTkGnftfwmu6sbn32lOX9Ya/JHXD3UXiyX4yogLeN4FU0T2VCpo
+         3K+51QhUVa13aktAJjljA9ovxmaZahZHV3Ik7HDc=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190927071527.GA14507@www.linux-watchdog.org>
+References: <20190927071527.GA14507@www.linux-watchdog.org>
+X-PR-Tracked-List-Id: <linux-watchdog.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190927071527.GA14507@www.linux-watchdog.org>
+X-PR-Tracked-Remote: git://www.linux-watchdog.org/linux-watchdog.git
+ tags/linux-watchdog-5.4-rc1
+X-PR-Tracked-Commit-Id: ca2fc5efffde5a3827adfb0ab6a51b6f1c64d5ff
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 7bccb9f10c8f36ee791769b531ed4d28f6379aae
+Message-Id: <156960960460.11345.6537445889071016679.pr-tracker-bot@kernel.org>
+Date:   Fri, 27 Sep 2019 18:40:04 +0000
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jaret Cantu <jaret.cantu@timesys.com>,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Oliver Graute <oliver.graute@kococonnector.com>,
+        Ivan Mikhaylov <i.mikhaylov@yadro.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Ryan Chen <ryan_chen@aspeedtech.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This a collection of backlog patches I have been carrying for the VPE
-driver.
+The pull request you sent on Fri, 27 Sep 2019 09:15:27 +0200:
 
-It adds supports for SEQ_BT as well as NV21.
-And fixes a number of issues both through v4l2-compliance and normal
-usage.
+> git://www.linux-watchdog.org/linux-watchdog.git tags/linux-watchdog-5.4-rc1
 
-======================================
-v4l2-compliance SHA: 5b168dc8473911227890526bad26553d9e8ff81b, 32 bits
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/7bccb9f10c8f36ee791769b531ed4d28f6379aae
 
-Compliance test for vpe device /dev/video0:
-
-Driver Info:
-	Driver name      : vpe
-	Card type        : vpe
-	Bus info         : platform:vpe
-	Driver version   : 5.3.0
-	Capabilities     : 0x84204000
-		Video Memory-to-Memory Multiplanar
-		Streaming
-		Extended Pix Format
-		Device Capabilities
-	Device Caps      : 0x04204000
-		Video Memory-to-Memory Multiplanar
-		Streaming
-		Extended Pix Format
-
-Required ioctls:
-	test VIDIOC_QUERYCAP: OK
-
-Allow for multiple opens:
-	test second /dev/video0 open: OK
-	test VIDIOC_QUERYCAP: OK
-	test VIDIOC_G/S_PRIORITY: OK
-	test for unlimited opens: OK
-
-Debug ioctls:
-	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-	test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-	Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-	Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-	test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Control ioctls:
-	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-	test VIDIOC_QUERYCTRL: OK
-	test VIDIOC_G/S_CTRL: OK
-	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-	Standard Controls: 1 Private Controls: 1
-
-Format ioctls:
-	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-	test VIDIOC_G/S_PARM: OK (Not Supported)
-	test VIDIOC_G_FBUF: OK (Not Supported)
-	test VIDIOC_G_FMT: OK
-	test VIDIOC_TRY_FMT: OK
-	test VIDIOC_S_FMT: OK
-	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-	test Cropping: OK
-	test Composing: OK
-	test Scaling: OK
-
-Codec ioctls:
-	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls:
-		warn: v4l2-test-buffers.cpp(683): VIDIOC_CREATE_BUFS not supported
-		warn: v4l2-test-buffers.cpp(683): VIDIOC_CREATE_BUFS not supported
-	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-	test VIDIOC_EXPBUF: OK
-	test Requests: OK (Not Supported)
-
-Test input 0:
-
-Streaming ioctls:
-	test read/write: OK (Not Supported)
-	test blocking wait: OK
-	Video Capture Multiplanar: Captured 58 buffers    
-	test MMAP (no poll): OK
-	Video Capture Multiplanar: Captured 58 buffers    
-	test MMAP (select): OK
-	Video Capture Multiplanar: Captured 58 buffers    
-	test MMAP (epoll): OK
-	test USERPTR (no poll): OK (Not Supported)
-	test USERPTR (select): OK (Not Supported)
-	test DMABUF: Cannot test, specify --expbuf-device
-
-Total for vpe device /dev/video0: 51, Succeeded: 51, Failed: 0, Warnings: 2
-======================================
-
-Benoit Parrot (13):
-  media: ti-vpe: vpe: Fix Motion Vector vpdma stride
-  media: ti-vpe: vpe: Add missing null pointer checks
-  media: ti-vpe: vpe: Remove unnecessary use of container_of
-  media: ti-vpe: vpe: fix a v4l2-compliance failure causing a kernel
-    panic
-  media: ti-vpe: vpe: fix a v4l2-compliance warning about invalid pixel
-    format
-  media: ti-vpe: vpe: Make sure YUYV is set as default format
-  media: ti-vpe: vpe: fix a v4l2-compliance failure about invalid
-    sizeimage
-  media: ti-vpe: vpe: fix a v4l2-compliance failure about frame sequence
-    number
-  media: ti-vpe: vpe: ensure buffers are cleaned up properly in abort
-    cases
-  media: ti-vpe: vpdma: Use fixed type for address in descriptor
-  media: ti-vpe: Set the DMA mask and coherent mask
-  media: ti-vpe: vpe: fix v4l2_compliance issue related to xfer_func
-  media: ti-vpe: vpe: don't rely on colorspace member for conversion
-
-Nikhil Devshatwar (2):
-  media: ti-vpe: Add support for SEQ_BT
-  media: ti-vpe: Add support for NV21 format
-
-Ram Prasad (1):
-  media: ti-vpe: Set MAX height supported to 2048 pixels
-
- drivers/media/platform/ti-vpe/vpdma.c      |  11 +-
- drivers/media/platform/ti-vpe/vpdma.h      |   2 +
- drivers/media/platform/ti-vpe/vpdma_priv.h |   5 +-
- drivers/media/platform/ti-vpe/vpe.c        | 251 +++++++++++++++------
- 4 files changed, 192 insertions(+), 77 deletions(-)
+Thank you!
 
 -- 
-2.17.1
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
