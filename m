@@ -2,200 +2,110 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E3CC388F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B58C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9BDE207FF
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:34:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569605689;
-	bh=Fyim3eB2P/MKtc8ARJ6pexOsPtvD1yzbgXxlqGHh3Pw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=SN0IyH+NAiInzwBGNjHvOfcRsXSaRhFRfY5fk4I4scci6CDubGyCDDkcwD0a0CpXL
-	 aIf64boDcZhUluz4a2UxzvjsQWrGoDmqgiUS6+RAWJshBJ99yeCMiVDvAA6mj9S/aQ
-	 aDYANTdiB0R+/cCwNh4uHb+Yo+S2aK5zhQUtYAZo=
+	by mail.kernel.org (Postfix) with ESMTP id B583921655
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:42:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sy1Htyq5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbfI0Ret (ORCPT
+        id S1727235AbfI0Rmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 13:34:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38544 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726321AbfI0Ret (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 13:34:49 -0400
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B20A207FF;
-        Fri, 27 Sep 2019 17:34:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569605687;
-        bh=Fyim3eB2P/MKtc8ARJ6pexOsPtvD1yzbgXxlqGHh3Pw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=obEffdz8yTexCS+3w6Tbu5vFb9ftCXuoB/1H1PuFptHK43k0FHyMunlg4gU3+Qw3e
-         RJzU/YZ8cd8SbaeXMYVK6drAbU06VDVc83DvVQD0avDW3KGaLmmLmQP2KuVvH+/zJD
-         Erk3RxgVTLQWA4WvbjxjyBm7uZOPrVXKBLcE7p4E=
-Received: by mail-wm1-f53.google.com with SMTP id 3so6413571wmi.3;
-        Fri, 27 Sep 2019 10:34:47 -0700 (PDT)
-X-Gm-Message-State: APjAAAU1GpuX8yYMyKw0LTY7waf7To/VqD3Iurts9KPfqLKQ6xLfPUut
-        f4bsANe/9LvdV2EJ/3j5GZVkonflllL15e0CeMM=
-X-Google-Smtp-Source: APXvYqyr0Zs3NsHunvF0XaGy83lzuLz1ULO5iRaT/jCHEbEYSkm+ZeaTN0t+d5feoWVL1bm6ic5JNk8tdKGsKab44gw=
-X-Received: by 2002:a7b:cb8b:: with SMTP id m11mr8312308wmi.145.1569605685825;
- Fri, 27 Sep 2019 10:34:45 -0700 (PDT)
+        Fri, 27 Sep 2019 13:42:47 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:36695 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726294AbfI0Rmq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 13:42:46 -0400
+Received: by mail-lf1-f66.google.com with SMTP id x80so2549346lff.3;
+        Fri, 27 Sep 2019 10:42:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=R2dWFPB086+p8xJ/thjxb6g8VFmjwb9hHyVKeU6WZ/0=;
+        b=Sy1Htyq5XwwO9o5yPUeSrTq7Dh7gibf4TrUuEOuXgqrIeKy/zx6N84M0Fl98VqBhE6
+         724CVD4qRV7BymXYazp+pyZBZxXyyyKGWZvi8nRI2K8CC/ClKQvsD3WmOns1f/wsPx3K
+         6Y7bSANa18K1yRjHsaZ/l/HPIpGdss2SAKj6UBf7phbE8uJMQsuL4A3B6sC6YEcD9vpO
+         xmrl9MasDD+8SgnNaLuXe/HHQyGIF+u1wBGPKJ8lQHQHjRNzmw72qocRGWhlwKgJH6MV
+         WQJ2Cdzz4p5aCc5XacVTjoT41/RJ8ud/YGTIbq7ZOu4Pfd2ri74EiHHpXasNWQhcZsGu
+         jZIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=R2dWFPB086+p8xJ/thjxb6g8VFmjwb9hHyVKeU6WZ/0=;
+        b=Oh9gbse0Ah/jGVxEUyIELRqCRp56pO8DDRWd5jQXWGXMDy1gRZg4rGKDOO6KHh17oN
+         iPjwOkp7uPLlc1IIBdeVrNXXSM9xdLEEIageynbPOtv8Hft6Vb0X7k55zYDsXip2W9T0
+         XfpJozQNI2ckge5tlYITFPwCpz48Qin5ZfZYeY1hhEzTTeFQlSSCUgQcJ86QiPGS+sBI
+         RRZQSENoVcaj+WraQozfCApFiVQrjDRtUYeaLB319ycIcE5U12LQiz12RkVx9k1iFXFH
+         MZFyeWqBdBbZ6Dyax7d2qTmKDQ684onUTTSuS3P2WCqVMz3h8tzPF9MoKq1guAIs3Pje
+         K7FA==
+X-Gm-Message-State: APjAAAVQOmez5I7GBs5qY6sXXiqokqGfNAmo3kiX1/5mu+yux3bOVPVZ
+        vTNFf7AZ2jJ25bJ0GDU/lX2ogoNdHQlQvA==
+X-Google-Smtp-Source: APXvYqwGr8bV/GXzdC57sgkSs7LFXCZslMzPQlxL9Rrsc5AoXYXN3FwkcvWhOTriaNZpytJdaCRwiQ==
+X-Received: by 2002:ac2:50c5:: with SMTP id h5mr3557274lfm.105.1569606162813;
+        Fri, 27 Sep 2019 10:42:42 -0700 (PDT)
+Received: from huvuddator (132-228.soderhamn.com. [80.245.228.132])
+        by smtp.gmail.com with ESMTPSA id g27sm578026lja.33.2019.09.27.10.42.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Sep 2019 10:42:41 -0700 (PDT)
+Date:   Fri, 27 Sep 2019 19:42:32 +0200
+From:   Ulf Magnusson <ulfalizer@gmail.com>
+To:     linux-kbuild@vger.kernel.org, yamada.masahiro@socionext.com
+Cc:     airlied@linux.ie, daniel@ffwll.ch, noralf@tronnes.org,
+        sam@ravnborg.org, david@lechnology.com, hdegoede@redhat.com,
+        eric@anholt.net, tglx@linutronix.de,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/tiny: Kconfig: Remove always-y THERMAL dep. from
+ TINYDRM_REPAPER
+Message-ID: <20190927174218.GA32085@huvuddator>
 MIME-Version: 1.0
-References: <1569560532-1886-1-git-send-email-light.hsieh@mediatek.com> <1569560532-1886-2-git-send-email-light.hsieh@mediatek.com>
-In-Reply-To: <1569560532-1886-2-git-send-email-light.hsieh@mediatek.com>
-From:   Sean Wang <sean.wang@kernel.org>
-Date:   Fri, 27 Sep 2019 10:34:34 -0700
-X-Gmail-Original-Message-ID: <CAGp9LzoMcqD4bo9Brg9=DTeSNP0dJfDtRGadGWGxsX-vHSezQw@mail.gmail.com>
-Message-ID: <CAGp9LzoMcqD4bo9Brg9=DTeSNP0dJfDtRGadGWGxsX-vHSezQw@mail.gmail.com>
-Subject: Re: [PATCH v6 2/5] pinctrl: mediatek: Supporting driving setting
- without mapping current to register value
-To:     Light Hsieh <light.hsieh@mediatek.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, kuohong.wang@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Commit 554b3529fe01 ("thermal/drivers/core: Remove the module Kconfig's
+option") changed the type of THERMAL from tristate to bool, so
+THERMAL || !THERMAL is now always y. Remove the redundant dependency.
 
-On Thu, Sep 26, 2019 at 10:02 PM Light Hsieh <light.hsieh@mediatek.com> wrote:
->
-> Mediatek's smarphone project actual usage does need to know current value
+Discovered through Kconfiglib detecting a dependency loop. The C tools
+simplify the expression to y before running dependency loop detection,
+and so don't see it. Changing the type of THERMAL back to tristate makes
+the C tools detect the same loop.
 
-MediaTek
+Not sure if running dep. loop detection after simplification can be
+called a bug. Fixing this nit unbreaks Kconfiglib on the kernel at
+least.
 
-> (in mA) in procedure of finding the best driving setting.
-> The steps in the procedure is like as follow:
->
-> 1. set driving setting field in setting register as 0, measure waveform,
->    perform test, and etc.
-> 2. set driving setting field in setting register as 1, measure waveform,
->    perform test, and etc.
-> ...
-> n. set driving setting field in setting register as n-1, measure
->    waveform, perform test, and etc.
-> Check the results of steps 1~n and adopt the setting that get best result.
->
-> This procedure does need to know the mapping between current to register
-> value.
+Signed-off-by: Ulf Magnusson <ulfalizer@gmail.com>
+---
+ drivers/gpu/drm/tiny/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-you seem to use a hardware raw value instead of a human-readable value
-to adjust driving current, right?
+diff --git a/drivers/gpu/drm/tiny/Kconfig b/drivers/gpu/drm/tiny/Kconfig
+index 504763423d46..a46ac284dd5e 100644
+--- a/drivers/gpu/drm/tiny/Kconfig
++++ b/drivers/gpu/drm/tiny/Kconfig
+@@ -63,7 +63,6 @@ config TINYDRM_REPAPER
+ 	depends on DRM && SPI
+ 	select DRM_KMS_HELPER
+ 	select DRM_KMS_CMA_HELPER
+-	depends on THERMAL || !THERMAL
+ 	help
+ 	  DRM driver for the following Pervasive Displays panels:
+ 	  1.44" TFT EPD Panel (E1144CS021)
+-- 
+2.20.1
 
-> Therefore, setting driving without mapping current is more pratical for
-
-s/pratical/practical/
-
-> Mediatek's smartphone usage.
->
-
-MediaTek
-
-> ---
->  drivers/pinctrl/mediatek/pinctrl-mt6765.c        |  4 ++--
->  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 21 +++++++++++++++++++++
->  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h |  5 +++++
->  drivers/pinctrl/mediatek/pinctrl-paris.c         |  1 +
->  4 files changed, 29 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mt6765.c b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
-> index 32451e8..e024ebc 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mt6765.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
-> @@ -1077,8 +1077,8 @@
->         .bias_disable_get = mtk_pinconf_bias_disable_get,
->         .bias_set = mtk_pinconf_bias_set,
->         .bias_get = mtk_pinconf_bias_get,
-> -       .drive_set = mtk_pinconf_drive_set_rev1,
-> -       .drive_get = mtk_pinconf_drive_get_rev1,
-> +       .drive_set = mtk_pinconf_drive_set_direct_val,
-> +       .drive_get = mtk_pinconf_drive_get_direct_val,
-
-I'm preferred to name it to mtk_pinconf_drive_[get,set]_raw.
-
->         .adv_pull_get = mtk_pinconf_adv_pull_get,
->         .adv_pull_set = mtk_pinconf_adv_pull_set,
->  };
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> index 8077855..acfddf9 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> @@ -608,6 +608,27 @@ int mtk_pinconf_drive_get_rev1(struct mtk_pinctrl *hw,
->         return 0;
->  }
->
-> +/* Revision direct value */
-
-Remove the comment since that is straightforward.
-
-> +int mtk_pinconf_drive_set_direct_val(struct mtk_pinctrl *hw,
-> +                              const struct mtk_pin_desc *desc, u32 arg)
-> +{
-> +       int err;
-> +
-> +       err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV, arg);
-
-We can dot it simply by "return mtk_hw_set_value(hw, desc,
-PINCTRL_PIN_REG_DRV, arg);".
-
-> +
-> +       return err;
-> +}
-> +
-> +int mtk_pinconf_drive_get_direct_val(struct mtk_pinctrl *hw,
-> +                              const struct mtk_pin_desc *desc, int *val)
-> +{
-> +       int err;
-> +
-> +       err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV, val);
-> +
-
-Ditto as the above.
-
-> +       return err;
-> +}
-> +
->  int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
->                              const struct mtk_pin_desc *desc, bool pullup,
->                              u32 arg)
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> index 1b7da42..b3bada0 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> @@ -288,6 +288,11 @@ int mtk_pinconf_drive_set_rev1(struct mtk_pinctrl *hw,
->  int mtk_pinconf_drive_get_rev1(struct mtk_pinctrl *hw,
->                                const struct mtk_pin_desc *desc, int *val);
->
-> +int mtk_pinconf_drive_set_direct_val(struct mtk_pinctrl *hw,
-> +                              const struct mtk_pin_desc *desc, u32 arg);
-> +int mtk_pinconf_drive_get_direct_val(struct mtk_pinctrl *hw,
-> +                              const struct mtk_pin_desc *desc, int *val);
-> +
->  int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
->                              const struct mtk_pin_desc *desc, bool pullup,
->                              u32 arg);
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> index 3e13ae7..5217f76 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> @@ -970,3 +970,4 @@ static int mtk_paris_pinctrl_resume(struct device *device)
->         .suspend_noirq = mtk_paris_pinctrl_suspend,
->         .resume_noirq = mtk_paris_pinctrl_resume,
->  };
-> +
-
-Remove the unnecessary the change
-
-> --
-> 1.8.1.1.dirty
->
