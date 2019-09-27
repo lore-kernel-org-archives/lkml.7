@@ -2,121 +2,169 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59800C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 976DAC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C46121850
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:01:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A51621655
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:02:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="E43mdeAE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dr01MoRs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbfI0TBU (ORCPT
+        id S1726831AbfI0TCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 15:01:20 -0400
-Received: from sonic301-22.consmr.mail.gq1.yahoo.com ([98.137.64.148]:41366
-        "EHLO sonic301-22.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725980AbfI0TBS (ORCPT
+        Fri, 27 Sep 2019 15:02:49 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41387 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbfI0TCt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 15:01:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1569610877; bh=8boG8ajnLNdx3Q6HR+50f0OISCdkUqomEEROs7B0REM=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=E43mdeAEx8XIZE7dRNOmsNYstcUNfkuxB8V1FQ/PIwekMTUghEnkMPovA2mDaP41xYa1CbKoL0nOlZl7e2Kd1JwNHlhRpa7f8W3zLHNpNdFqCiihvp0YwCQGRqC9jwf0kZ2fJvjfwEi9cLnQqjkfGI3Z6XSzTikmwLaGmphzyg//KM7513OS23V/OCOAeFFylet4tZ21SGMsYvexbgIn4VWfgN61YHfWAMj1lElQHKXHnkLvpq3xjSlZu0NZl6fKcBN+VAnoPmHIeQla+++IdHZA59D5LY9uGIUxOFlHxnXbGLN3oDTaKuMCvde1nynso2JxYLo6LW645wlOUdFcQw==
-X-YMail-OSG: pCHr9iEVM1k9TM9TPDlnLRCducPSmmLZBpQP9qeUg82P59k1NfAqLn34kyVSgrL
- y9VznNFoFpFn71aXdRBp_40WB.CiCBEIYPdDUU4flDq6eZrVkbhQjxH9RpsoXbNF4oW8uNgTk8K6
- KPUj297axzgIIn5hoGRz9e5u4Iazl0eV.itFbhTUX0V1MFYbeuWVfPo4br9lqNsdfCuTAxcFPYDy
- WyCstAMyLUGMVAmVQDW66kQEJHMSo1AVC7CMbPkxWpfXHH1r4pefu0AyfjThb3Yw8nEAzjVBLpBh
- bMYY9AcQWuZTMeHqAkKPWSt0TL4.UZIqIQxoc5svVA55AhNHuFcU14wJ5zxiBwppH_X9DBFP2Rkn
- QKElhCWvmQ0_D097JIpdKIxXqpKa43.aWAUTIWVmij4ZxR9ZJhy8hbOoPFaJpqaVAbyWvpbDwFVm
- 62Vpm9aTZipxDFwNnEovTfyP09ZaulGTvcrgV9Yodrlm9Jp80MwYrs7i.OwV2WVbbLNWsS0.EcY7
- t65KmSSmdz0SGL0W5lUsuMjckRejcChAB.OFH1LlfpFAR1WldmZVl5nl0xUNPrQyjsh.VsHIJ4FB
- z62mjmNnbeQKVw_bdxMUvGeAKG7UIbcqRnSDqyJztYs6y.xU3JXwqVV1RcE3kdStKuO6n2_JhBmZ
- NrYqokMH6DHhQQmWRmEngjngzW1qUBQma.n5O6fQ5KTGZqoF7mjs8fT7ut0FhyCOA7q_Qy4V_dcE
- tOquODj96YyvHxgEKFN7.yghXNgpePYl5sPfmBtsZhPwv_4q.7.79DAwNG3xvQQD6J08Z6ksrf6b
- 5Bpw5yhYC6x5o4QNtBqDjED4g4dV5UDyUFOA.85u3ohyVsdWWB8XbPRtp_n9YjFPv5333lJ1A602
- MGGlRXrgRG9x9N7ec4KE_Xiq67lxg0xM47adrMMHxq8rZP_iIHj9CvBJk.fEj.pZBEHpjtvKLFr0
- 24hx7UBT0jvES4wFIBEpoYnsFGSTqexwbQhzzvV.UP3Dlr1fdoxc_JcTt58el3Y0HYRm4DtD.bGi
- xevgj4XkAuFt9Kh3tmys.ERqE.4IikUYVMrVLJruVNmpAIVD0kGigPgMtoxXAvXKnhVpY8yqiSAo
- _WREP_t0sRa9aWjF1R1t3Bc_97nndNkLAf8VMRFwYcjjyFkNSyYEAUDwjGzwYoVtAQSt.XI8c_Wg
- vfBquSiJtV2uScilya0toff9qisQEU2loe.L6lMv0XgnZiH1uzQGNUAev7Y7ZJV5I4dC8t5JWHBG
- 3Hmecs27pGGvLrVemAJQhn3eTaKpodm3_2jmXFq60dju4hwbnyjHXdsXb
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.gq1.yahoo.com with HTTP; Fri, 27 Sep 2019 19:01:17 +0000
-Received: by smtp413.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 41ea480fdb5c16ffe76a1010a62f6533;
-          Fri, 27 Sep 2019 19:01:14 +0000 (UTC)
-Date:   Sat, 28 Sep 2019 03:01:10 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-Cc:     Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-Subject: Re: [PATCH] f2fs: fix comment of f2fs_evict_inode
-Message-ID: <20190927190106.GA27964@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20190925093050.118921-1-yuchao0@huawei.com>
- <20190927183150.GA54001@jaegeuk-macbookpro.roam.corp.google.com>
+        Fri, 27 Sep 2019 15:02:49 -0400
+Received: by mail-io1-f68.google.com with SMTP id r26so19006021ioh.8;
+        Fri, 27 Sep 2019 12:02:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LO3JdAOU095h41fjVsuAsU+4Z0wmwAMdPedC2Thw3pg=;
+        b=dr01MoRs+YBUsJR2Yajv5Gvk1Uuzl8J/B0xZ7BtPxjvHMRUFzNHi1gn2IjV0wXHCzq
+         capi/qDYXysLutGkSjtANV/oT80eN4t3epMkMyFfb1YeeWmHa9B56XasKfDrBaj/UgsO
+         MRPgpvasw/M/Lmb03EZJA/kFsbdBVMfYO7psdw+1yHdvq6WIeA5iEWS1/Q21rJENUPAU
+         i8sw3SqRACaGNwbNZyxa3PEoYHDcCnP3XqMnzL7dbQwY6dcqx6TULVQxAbxzP5//qpyH
+         xtlvQ6qOQVSLV5vls0hohFudnvizuTxuk2TL5CkaybbkRGoPMAZj8BeQzWgp1aJOcIUM
+         OX6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LO3JdAOU095h41fjVsuAsU+4Z0wmwAMdPedC2Thw3pg=;
+        b=aVcn1pNPXx0wfzpuSZsYc2XbBP7Hx/ghHhuZHe0ia1XOAhOEtNPqgajsLO6Dvu5LfE
+         XPxGfOGXPULB/R9Hz6TuYvI8eRX3zvE1GsbZHt8WOPjzWOLecalb3Dnrb7hzHPgetRfA
+         K127GcwJR9xsR/P3YlVDTamIcn5p+mXESCmM4CuXfxoPPKUwZ3phLbMwIxfJg8U7cu5r
+         XA/gwtzXq+78LD+q2jOprecBvqEwNzQVKQ1aOYZHvQNI1s0iACteFUyatZcRL/cBl/h7
+         OCzEJPd8vohlU+e9sTMmZ+T2yYFJlNLx2vmzRDV4fh9aTDuWVtqH+TbX0f4EJysuEtvr
+         zXNw==
+X-Gm-Message-State: APjAAAVOqfqqT3sdRaPXHV9IMKEFynL91Coz7wkPQS1CNdlp3OcSPmqT
+        LxdLKNivVLlBYNpNkjxj39XIagKoGJPT039rlIk=
+X-Google-Smtp-Source: APXvYqwS6ado5j8H/MS9UQpgoe/UkE+sD6PlTwv5ZTRS/6e5bGEdAPsZ4ex2TIbFU5IYmkfVt2tiTgtyAQ59xYbnLxI=
+X-Received: by 2002:a02:7810:: with SMTP id p16mr9500549jac.55.1569610967624;
+ Fri, 27 Sep 2019 12:02:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190927183150.GA54001@jaegeuk-macbookpro.roam.corp.google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190925184239.22330-1-aford173@gmail.com> <20190925184239.22330-2-aford173@gmail.com>
+ <20190927185153.GA982@bogus>
+In-Reply-To: <20190927185153.GA982@bogus>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Fri, 27 Sep 2019 14:02:35 -0500
+Message-ID: <CAHCN7x+V_-PZjhC_1K1kU+fnQYwWM4br1PTPEBd4Kks=sR5K7g@mail.gmail.com>
+Subject: Re: [PATCH V3 2/3] dt-bindings: Add Logic PD Type 28 display panel
+To:     Rob Herring <robh@kernel.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jaegeuk,
-
-On Fri, Sep 27, 2019 at 11:31:50AM -0700, Jaegeuk Kim wrote:
-> Hi Chao,
-> 
-> On 09/25, Chao Yu wrote:
-> > evict() should be called once i_count is zero, rather than i_nlinke
-> > is zero.
-> > 
-> > Reported-by: Gao Xiang <gaoxiang25@huawei.com>
-> > Signed-off-by: Chao Yu <yuchao0@huawei.com>
+On Fri, Sep 27, 2019 at 1:51 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, Sep 25, 2019 at 01:42:37PM -0500, Adam Ford wrote:
+> > This patch adds documentation of device tree bindings for the WVGA panel
+> > Logic PD Type 28 display.
+> >
+> > Signed-off-by: Adam Ford <aford173@gmail.com>
 > > ---
-> >  fs/f2fs/inode.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-> > index db4fec30c30d..8262f4a483d3 100644
-> > --- a/fs/f2fs/inode.c
-> > +++ b/fs/f2fs/inode.c
-> > @@ -632,7 +632,7 @@ int f2fs_write_inode(struct inode *inode, struct writeback_control *wbc)
-> >  }
-> >  
-> >  /*
-> > - * Called at the last iput() if i_nlink is zero
-> 
-> I don't think this comment is wrong. You may be able to add on top of this.
+> > V3:  Correct build errors from 'make dt_binding_check'
+> > V2:  Use YAML instead of TXT for binding
+> >
+> > diff --git a/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml b/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml
+> > new file mode 100644
+> > index 000000000000..74ba650ea7a0
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml
+> > @@ -0,0 +1,31 @@
+> > +# SPDX-License-Identifier: (GPL-2.0+ OR X11)
+>
+> (GPL-2.0-only OR BSD-2-Clause) please.
+>
+> X11 is pretty much never right unless this is copyright X Consortium.
+>
 
-Actually I don't really care what this line means, but someone really
-told me that .evict_inode() is called on inode is finally removed
-because he saw this line.
+I copied the example from
+Documentation/devicetree/bindings/display/panel/ronbo,rb070d30.yaml
 
-In practice, I have no idea what the above line (especially the word i_nlink
-== 0) mainly emphasizes, just from some documentation (not even refer some code):
+Is there a better example I can use?  If what I did is wrong, then it
+seems like that board is wrong too.
 
-Documentation/filesystems/porting.rst
-326 **mandatory**
-327 
-328 ->clear_inode() and ->delete_inode() are gone; ->evict_inode() should
-329 be used instead.  It gets called whenever the inode is evicted, whether it has
-330 remaining links or not. 
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/display/panel/logicpd,type28.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Logic PD Type 28 4.3" WQVGA TFT LCD panel
+> > +
+> > +maintainers:
+> > +  - Adam Ford <aford173@gmail.com>
+> > +
+>
+> You need:
+>
+> allOf:
+>   - $ref: panel-common.yaml#
+>
+> > +properties:
+> > +  compatible:
+> > +    const: logicpd,type28
+> > +
+>
+> > +  power-supply:
+> > +    description: Regulator to provide the supply voltage
+> > +    maxItems: 1
+> > +
+> > +  enable-gpios:
+> > +    description: GPIO pin to enable or disable the panel
+> > +    maxItems: 1
+> > +
+> > +  backlight:
+> > +    description: Backlight used by the panel
+> > +    $ref: "/schemas/types.yaml#/definitions/phandle"
+>
+> These 3 are all defined in the common schema, so you just need 'true'
+> for the value to indicate they apply to this panel and to make
+> 'additionalProperties: false' happy.
 
-And it seems it's the same comment exists in ext2/ext4. But yes, it's up
-to you. However, it misleaded someone and I had to explain more about this.
+Sorry for my ignorance, but I am not familiar with the syntax here,
+nor do I understand what is required.  Since there aren't many display
+panels with yaml docs, I don't know what is expected and clearly the
+one I used as a template didn't do it right either.
 
-Thanks,
-Gao Xiang
+Is there a branch  where this stuff is located? I am just using the
+latest linux-stable branch.
 
-> 
-> > + * Called at the last iput() if i_count is zero
-> >   */
-> >  void f2fs_evict_inode(struct inode *inode)
-> >  {
-> > -- 
-> > 2.18.0.rc1
+>
+> > +
+> > +required:
+> > +  - compatible
+>
+> Are the rest really optional?
+
+From what I can tell, they are optional.  I am just adding some timing
+info to an already existing driver.  It's not my driver.
+
+
+>
+> > +
+> > +additionalProperties: false
+> > --
+> > 2.17.1
+> >
