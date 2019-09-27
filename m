@@ -2,45 +2,44 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 588B0C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13578C352AB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C21B207FF
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:49:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE2D52196E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:49:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="TbyfGYHb"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="DTGaxncy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbfI0HtO (ORCPT
+        id S1726808AbfI0HtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 27 Sep 2019 03:49:14 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:49706 "EHLO
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:49678 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726466AbfI0HtM (ORCPT
+        by vger.kernel.org with ESMTP id S1726163AbfI0HtM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 27 Sep 2019 03:49:12 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id E6836C0CEB;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id F3BD0C0CF0;
         Fri, 27 Sep 2019 07:49:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1569570551; bh=DIrBlnTN+2e2Xshklv4tKK7eG84iI4t6E5yVB8RhCTI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=TbyfGYHbgQ3HJIpcMCU0DuTvjctF2dD+oxBOgR41Dc9QXHduHayWgrcetyMpaAJc3
-         +s2JcvSLmvEHmaErSdISYqum5WE10GnK24d5a6749Vlpdmlqjz6GM0Qsr++R4G2bQu
-         Mr6KR6n7x+zcA5ZPpVERwA3zLf8dSsnlDsijNQDPrtDWoLADID4cLJszd5cko3nOWA
-         mgEhyFpIPdBWCYwbhacdh/BiNVRuqClBtNHNoo5y1GIKKAiDru/hEc8gqnIrGjO9YC
-         aziMasBmZWRnAs+vDRmKExB2mz3wTUQLHmvSaQRJciVQFuolhvzgPG/KbacRei75xs
-         cdxRQ45HA1e7A==
+        t=1569570551; bh=NNEVzMfiLaKkcrRUt6WrozEpdRe4qJSLs4dGyv8UEIQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=DTGaxncysylbblkg/YcAbZUcj6tWtc1lU2Mf/zM6sg+vWlxSMuOZqxKPsqDA0r6BV
+         7Ko2Nw+bAIrjhhpfbFRU80lni6uGVcFjwN9Wur6CX/yzRKiPVISmXUNnjRB4ZI3mhF
+         y8NCOCJZw41vrGzGfGhd8CYLcT2PpOc5/BVw6iSfD2Vu50iVBGI3QiFjVFdZLl8/gl
+         Bm6HRqSPQRcoOSF0gbu3wJJV1srvO7xQ8npJrNuWX8cQGm1WIkP8jy78oTm8zd3vtY
+         m+iZa4YuzEiC3w+za5LPTZUDoEYS2Kfl1KJ+UCle+aRHynhXC3e7g7d3vle0JA51yE
+         2JbDmrh0mb1nw==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 77EF9A0089;
-        Fri, 27 Sep 2019 07:49:09 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 5E285A005F;
+        Fri, 27 Sep 2019 07:49:08 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -52,25 +51,16 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net 6/8] net: stmmac: Do not stop PHY if WoL is enabled
-Date:   Fri, 27 Sep 2019 09:48:54 +0200
-Message-Id: <b230fca25c51e8f019307e01534e4fd5578b6367.1569569778.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net 0/8] net: stmmac: Fixes for -net
+Date:   Fri, 27 Sep 2019 09:48:48 +0200
+Message-Id: <cover.1569569778.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1569569778.git.Jose.Abreu@synopsys.com>
-References: <cover.1569569778.git.Jose.Abreu@synopsys.com>
-In-Reply-To: <cover.1569569778.git.Jose.Abreu@synopsys.com>
-References: <cover.1569569778.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If WoL is enabled we can't really stop the PHY, otherwise we will not
-receive the WoL packet. Fix this by telling phylink that only the MAC is
-down and only stop the PHY if WoL is not enabled.
-
-Fixes: 74371272f97f ("net: stmmac: Convert to phylink and remove phylib logic")
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Misc fixes for -net tree. More info in commit logs.
 
 ---
 Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
@@ -83,52 +73,25 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 31a237ec73bc..843d53e084b7 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -4718,9 +4718,7 @@ int stmmac_suspend(struct device *dev)
- 
- 	mutex_lock(&priv->lock);
- 
--	rtnl_lock();
--	phylink_stop(priv->phylink);
--	rtnl_unlock();
-+	phylink_mac_change(priv->phylink, false);
- 
- 	netif_device_detach(ndev);
- 	stmmac_stop_all_queues(priv);
-@@ -4735,6 +4733,10 @@ int stmmac_suspend(struct device *dev)
- 		stmmac_pmt(priv, priv->hw, priv->wolopts);
- 		priv->irq_wake = 1;
- 	} else {
-+		rtnl_lock();
-+		phylink_stop(priv->phylink);
-+		rtnl_unlock();
-+
- 		stmmac_mac_set(priv, priv->ioaddr, false);
- 		pinctrl_pm_select_sleep_state(priv->device);
- 		/* Disable clock in case of PWM is off */
-@@ -4825,9 +4827,13 @@ int stmmac_resume(struct device *dev)
- 
- 	stmmac_start_all_queues(priv);
- 
--	rtnl_lock();
--	phylink_start(priv->phylink);
--	rtnl_unlock();
-+	if (!device_may_wakeup(priv->device)) {
-+		rtnl_lock();
-+		phylink_start(priv->phylink);
-+		rtnl_unlock();
-+	}
-+
-+	phylink_mac_change(priv->phylink, true);
- 
- 	mutex_unlock(&priv->lock);
- 
+Jose Abreu (8):
+  net: stmmac: xgmac: Not all Unicast addresses may be available
+  net: stmmac: xgmac: Detect Hash Table size dinamically
+  net: stmmac: selftests: Always use max DMA size in Jumbo Test
+  net: stmmac: dwmac4: Always update the MAC Hash Filter
+  net: stmmac: Correctly take timestamp for PTPv2
+  net: stmmac: Do not stop PHY if WoL is enabled
+  net: stmmac: xgmac: Disable the Timestamp interrupt by default
+  net: stmmac: xgmac: Fix RSS not writing all Keys to HW
+
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c     | 13 +++++++------
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h        |  3 ++-
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c   |  4 ++--
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c    |  1 +
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c     | 19 +++++++++++++------
+ .../net/ethernet/stmicro/stmmac/stmmac_selftests.c    |  4 ----
+ 6 files changed, 25 insertions(+), 19 deletions(-)
+
 -- 
 2.7.4
 
