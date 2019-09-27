@@ -2,110 +2,246 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29990C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6D3C388F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00E4021924
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54A9B21D6C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:54:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbfI0VuP convert rfc822-to-8bit (ORCPT
+        id S1728236AbfI0VyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 17:50:15 -0400
-Received: from mga12.intel.com ([192.55.52.136]:46274 "EHLO mga12.intel.com"
+        Fri, 27 Sep 2019 17:54:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44038 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbfI0VuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 17:50:15 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Sep 2019 14:50:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,557,1559545200"; 
-   d="scan'208";a="390116625"
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by fmsmga005.fm.intel.com with ESMTP; 27 Sep 2019 14:50:15 -0700
-Received: from fmsmsx609.amr.corp.intel.com (10.18.126.89) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 27 Sep 2019 14:50:15 -0700
-Received: from fmsmsx609.amr.corp.intel.com (10.18.126.89) by
- fmsmsx609.amr.corp.intel.com (10.18.126.89) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 27 Sep 2019 14:50:14 -0700
-Received: from crsmsx103.amr.corp.intel.com (172.18.63.31) by
- fmsmsx609.amr.corp.intel.com (10.18.126.89) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Fri, 27 Sep 2019 14:50:14 -0700
-Received: from crsmsx102.amr.corp.intel.com ([169.254.2.63]) by
- CRSMSX103.amr.corp.intel.com ([169.254.4.218]) with mapi id 14.03.0439.000;
- Fri, 27 Sep 2019 15:50:12 -0600
-From:   "Bae, Chang Seok" <chang.seok.bae@intel.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Borislav Petkov" <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH v8 17/17] Documentation/x86/64: Add documentation for
- GS/FS addressing mode
-Thread-Topic: [PATCH v8 17/17] Documentation/x86/64: Add documentation for
- GS/FS addressing mode
-Thread-Index: AQHVaaXOiWvwyUABdEWVCmEO1Cb4fadAhXsAgAAG4IA=
-Date:   Fri, 27 Sep 2019 21:50:11 +0000
-Message-ID: <1273E528-944F-40B8-90C6-BAFE64ADB505@intel.com>
-References: <1568318818-4091-1-git-send-email-chang.seok.bae@intel.com>
- <1568318818-4091-18-git-send-email-chang.seok.bae@intel.com>
- <3942a0ed-2aa5-ff31-5f71-dcfa546e9def@infradead.org>
-In-Reply-To: <3942a0ed-2aa5-ff31-5f71-dcfa546e9def@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.144.155.235]
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <34BAFB4F141B5C4C87671386FEAD1850@intel.com>
-Content-Transfer-Encoding: 8BIT
+        id S1726036AbfI0VyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 17:54:03 -0400
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 90C5A126E
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 21:54:02 +0000 (UTC)
+Received: by mail-io1-f71.google.com with SMTP id z10so15309522ioj.1
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 14:54:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4g9/x5Yonb8KSkSOUCXWN9K/dMYoetchL0cN5h6+riE=;
+        b=syNS6ohoUUjicr+Zg0ISleN6YjZqVHybWd/rtfQtsneGlIZMBBAL6Q8s6VpvClp5eW
+         qwpSCRBcDqpEoolxMNmmp7p9ClH4GHudGOO9ge46C5gQ2NhE29g3G491XAePGHCsU1l/
+         AM7JVBwh3DHENfGXr3tOM9Mf1LT7swDYFBWOm2N2j33u3gWsfcCEvQKX2AjslJ2jtdz1
+         740AWCWGLDVkKO4xbK4VQB+SVyvTpGl1TgB/p/FIDW+xr3prnSaUY6IBnqxwBdZmiWAQ
+         ai9+S/zWZ4gXtMhRDzkoKvkiijuF7Za75bzPyxPfeEz7z3r8h3mBvaF1SiAp6fJb5jhk
+         2Mwg==
+X-Gm-Message-State: APjAAAWuWO5OKYZe9uLlmeEUbntZ+J2h/jc+sLhdJY1/QOJ46FUM1VJx
+        k2J14QMhA8W6BKVaPh8QtIjt4ZHMyv496Du6k/T9+T0aJC3vufI9ZGO6ZHS+QSh6AZYTxXxIc26
+        CUxJ+CWlq76DwJ+HV0OLTx64jQfKs7pqEe5Ek54SB
+X-Received: by 2002:a92:5e1b:: with SMTP id s27mr7514259ilb.178.1569621241800;
+        Fri, 27 Sep 2019 14:54:01 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqz+FeIbe9Og23DFexhulWIZdW3/wwq+ZxajFJ+W8nkrXsZiZVCo1n0yLYmOeTLRBlQJn8uY6Dgu15B7eU8kf88=
+X-Received: by 2002:a92:5e1b:: with SMTP id s27mr7514223ilb.178.1569621241424;
+ Fri, 27 Sep 2019 14:54:01 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190927144421.22608-1-kherbst@redhat.com> <20190927214252.GA65801@google.com>
+In-Reply-To: <20190927214252.GA65801@google.com>
+From:   Karol Herbst <kherbst@redhat.com>
+Date:   Fri, 27 Sep 2019 23:53:48 +0200
+Message-ID: <CACO55tuaY1jFXpJPeC9M4PoWEDyy547_tE8MpLaTDb+C+ffsbg@mail.gmail.com>
+Subject: Re: [RFC PATCH] pci: prevent putting pcie devices into lower device
+ states on certain intel bridges
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Lyude Paul <lyude@redhat.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Sep 27, 2019, at 14:25, Randy Dunlap <rdunlap@infradead.org> wrote:
-> 
-> Hi,
-> Some doc comments/fixes below...
-> 
-> On 9/12/19 1:06 PM, Chang S. Bae wrote:
->> From: Thomas Gleixner <tglx@linutronix.de>
->> 
+On Fri, Sep 27, 2019 at 11:42 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+cc Rafael, Mika, linux-pm]
+>
+> On Fri, Sep 27, 2019 at 04:44:21PM +0200, Karol Herbst wrote:
+> > Fixes runpm breakage mainly on Nvidia GPUs as they are not able to resume.
+>
+> I don't know what runpm is.  Some userspace utility?  Module
+> parameter?
+>
 
-[snip]
+runpm aka runtime powermanagement aka runtime_resume and runtime_suspend
 
->> +There exist two mechanisms to read and write the FS/FS base address:
-> 
->                                                    FS/GS
+> > Works perfectly with this workaround applied.
+> >
+> > RFC comment:
+> > We are quite sure that there is a higher amount of bridges affected by this,
+> > but I was only testing it on my own machine for now.
+> >
+> > I've stresstested runpm by doing 5000 runpm cycles with that patch applied
+> > and never saw it fail.
+> >
+> > I mainly wanted to get a discussion going on if that's a feasable workaround
+> > indeed or if we need something better.
+> >
+> > I am also sure, that the nouveau driver itself isn't at fault as I am able
+> > to reproduce the same issue by poking into some PCI registers on the PCIe
+> > bridge to put the GPU into D3cold as it's done in ACPI code.
+> >
+> > I've written a little python script to reproduce this issue without the need
+> > of loading nouveau:
+> > https://raw.githubusercontent.com/karolherbst/pci-stub-runpm/master/nv_runpm_bug_test.py
+>
+> Nice script, thanks for sharing it :)  I could learn a lot of useful
+> python by studying it.
+>
+> > Signed-off-by: Karol Herbst <kherbst@redhat.com>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Lyude Paul <lyude@redhat.com>
+> > Cc: linux-pci@vger.kernel.org
+> > Cc: dri-devel@lists.freedesktop.org
+> > Cc: nouveau@lists.freedesktop.org
+> > ---
+> >  drivers/pci/pci.c | 39 +++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 39 insertions(+)
+> >
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index 088fcdc8d2b4..9dbd29ced1ac 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -799,6 +799,42 @@ static inline bool platform_pci_bridge_d3(struct pci_dev *dev)
+> >       return pci_platform_pm ? pci_platform_pm->bridge_d3(dev) : false;
+> >  }
+> >
+> > +/*
+> > + * some intel bridges cause serious issues with runpm if the client device
+> > + * is put into D1/D2/D3hot before putting the client into D3cold via
+> > + * platform means (generally ACPI).
+>
+> You mention Nvidia GPUs above, but I guess the same issue may affect
+> other devices?  I would really like to chase this down to a more
+> specific issue, e.g., a hardware defect with erratum, an ACPI defect,
+> or a Linux defect.  Without the specifics, this is just a band-aid.
+>
 
-[snip]
+yep.. but we were trying to talk to Nvidia and Intel about it and had
+no luck getting anything out of them so far. We gave up on Nvidia,
+Intel is still pending.
 
->> + The arch_prctl(2) based mechanism is available on all 64bit CPUs and all
-> 
->                                                          64-bit
+> I don't see any relevant requirements in the _OFF description, but I
+> don't know much about ACPI power control.
+>
+> Your script allows several scenarios; I *guess* the one that causes
+> the problem is:
+>
+>   - write 3 (D3hot) to GPU PowerState (PCIE_PM_REG == 0x64, I assume
+>     PM Capability Control Register)
 
-[snip]
+correct
 
->> +	mov %reg, %gs:offset
->> \ No newline at end of file
-> oops.
+>   - write 3 (D3hot) to bridge PowerState (0x84, I assume PM Capability
+>     Control Register)
 
-Thanks. Let me include this in my v9 submission.
+correct, but this seems to be fine and doesn't fix the issue if that
+part is skipped
 
-Chang
+>   - run _OFF on the power resource for the bridge
+>
+> From your script I assume you do:
+>
+>   - run _ON on the power resource for the bridge
+>   - write 0 (D0) to the bridge PowerState
+>
+> You do *not* write the GPU PowerState (which we can't do if the GPU is
+> in D3cold).  Is there some assumption that it comes out of D3cold via
+> some other mechanism, e.g., is the _ON supposed to wake up the GPU?
+
+if the "link" is powered up again (via 0x248, 0xbc or 0xb0 on the GPU
+bridge or the ACPI _ON method) the GPU comes up in the D0 state and is
+fully operational, well besides the little issue we've got with the D3
+write. It can also be worked around by putting the PCIe link into 5.0
+and 8.0 mode, but that's not reliable enough as it fails it around 10%
+of all tries.
+
+>
+> What exactly is the serious issue?  I guess it's that the rescan
+> doesn't detect the GPU, which means it's not responding to config
+> accesses?  Is there any timing component here, e.g., maybe we're
+> missing some delay like the ones Mika is adding to the reset paths?
+>
+
+When I was checking up on some of the PCI registers of the bridge
+controller, the slot detection told me that there is no device
+recognized anymore. I don't know which register it was anymore, though
+I guess one could read it up in the SoC spec document by Intel.
+
+My guess is, that the bridge controller fails to detect the GPU being
+here or actively threw it of the bus or something. But a normal system
+suspend/resume cycle brings the GPU back online (doing a rescan via
+sysfs gets the device detected again)
+
+> > + *
+> > + * skipping this makes runpm work perfectly fine on such devices.
+> > + *
+> > + * As far as we know only skylake and kaby lake SoCs are affected.
+> > + */
+> > +static unsigned short intel_broken_d3_bridges[] = {
+> > +     /* kbl */
+> > +     0x1901,
+> > +};
+> > +
+> > +static inline bool intel_broken_pci_pm(struct pci_bus *bus)
+> > +{
+> > +     struct pci_dev *bridge;
+> > +     int i;
+> > +
+> > +     if (!bus || !bus->self)
+> > +             return false;
+> > +
+> > +     bridge = bus->self;
+> > +     if (bridge->vendor != PCI_VENDOR_ID_INTEL)
+> > +             return false;
+> > +
+> > +     for (i = 0; i < ARRAY_SIZE(intel_broken_d3_bridges); i++) {
+> > +             if (bridge->device == intel_broken_d3_bridges[i]) {
+> > +                     pci_err(bridge, "found broken intel bridge\n");
+>
+> If this ends up being a hardware defect, we should use a quirk to set
+> a bit in the pci_dev once, as we do for broken_intx_masking and
+> similar bits.
+
+okay, if you think this is the preferred way then I can change the
+patch accordingly.
+
+>
+> > +                     return true;
+> > +             }
+> > +     }
+> > +
+> > +     return false;
+> > +}
+> > +
+> >  /**
+> >   * pci_raw_set_power_state - Use PCI PM registers to set the power state of
+> >   *                        given PCI device
+> > @@ -827,6 +863,9 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
+> >       if (state < PCI_D0 || state > PCI_D3hot)
+> >               return -EINVAL;
+> >
+> > +     if (state != PCI_D0 && intel_broken_pci_pm(dev->bus))
+> > +             return 0;
+> > +
+> >       /*
+> >        * Validate current state:
+> >        * Can enter D0 from any state, but if we can only go deeper
+> > --
+> > 2.21.0
+> >
