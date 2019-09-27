@@ -2,153 +2,131 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78704C388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D112C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48FDB2190F
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D3D521906
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:26:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="q2Vwahk6"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="Js5q4lD+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbfI0MZZ (ORCPT
+        id S1727351AbfI0M0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 08:25:25 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:41588 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726203AbfI0MZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 08:25:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=2A637Ahb7qsdDwnyq8c53qGLerD/lC6vZKHQyGPDsL0=; b=q2Vwahk68ubauaodCKHiiqHyeQ
-        0ssEzYEvHW4NU+kyLDdS+sn4TEFHVlWLxa0Td6qFXJ8Nl41qkUw8WPjYPQOEXlEMd0X9UZS1Q1E9d
-        rcWAEVyl6Z/qiDhC4D3KyHhtARTLKsONPJ95Yuzz/A6JJB2wN2D71+PAsczB7MuRT/rs=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iDpJG-0001eM-BA; Fri, 27 Sep 2019 14:25:18 +0200
-Date:   Fri, 27 Sep 2019 14:25:18 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     vincent.cheng.xh@renesas.com
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, richardcochran@gmail.com,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] ptp: Add a ptp clock driver for IDT ClockMatrix.
-Message-ID: <20190927122518.GA25474@lunn.ch>
-References: <1569556128-22212-1-git-send-email-vincent.cheng.xh@renesas.com>
- <1569556128-22212-2-git-send-email-vincent.cheng.xh@renesas.com>
+        Fri, 27 Sep 2019 08:26:36 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:36977 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbfI0M0g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 08:26:36 -0400
+Received: by mail-ed1-f68.google.com with SMTP id r4so2171578edy.4
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 05:26:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=MLpaVux2E5Ma8rfAsYk3Q/0a9jF4YNQVNjLuUjERIwU=;
+        b=Js5q4lD+A5EtYma3P8PemetzNBMs7ohd2kxsZRV/XUHWHotVYaRs6vDe1pWcT7zE7J
+         54Hyer007sKbB3MNGI+y38bGmLRx7Nq7UkQO10kupTbe1Z8xWZAORHKu7jntTtMN4Yv6
+         IHTBdlDrR1iuNBsPF3XlddLM7fOWrvUnB0PPEvNnBnyPv/UqxhJpyG70UqtCxCoM8Jud
+         BB9LzNMy6kmbYjTU7r2uP4oO8nJw2StVOGWSNb9PvsWzmsuwG+mWIdbQKCnIPqqq1eO3
+         s6/c+36AJgA9/dM0ncR//xpZ7s1mJgkuVFDb6OJYucA/EOyBE4tGQRsc1ZPP6jjrxvvY
+         1UHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=MLpaVux2E5Ma8rfAsYk3Q/0a9jF4YNQVNjLuUjERIwU=;
+        b=qERL6NqV6Ulx6+S+7kBlYbI9M1N7AA+IQtf8MFOqK3dReaNNdniDYhaWtWpqbU+Dvi
+         Pt31zlbAyYRjbksZzBBBvYqUHOhBtzSvlfFXyQboLOAmXyKz/93qw8aF1KcqP2oMzU62
+         I9KAaff+FJGIwT0tK45gLaHQ2QaSMejs4cwDu0nGnDCwl3LkgqerZkZENeNyInytslge
+         KvNSN1YERHGzb9UzZ9EqL7wbkCFqbA/x5o9ZbBhw/CXUEGNX+Lf731AVY2N6ohHDMWWf
+         jP+AxH944QHDGtMKsfe37+6/q2ebE2IQ4Q8kQvGBM9NdFBkxfsswq6EMtG0tS/xm6+Oc
+         4Lvg==
+X-Gm-Message-State: APjAAAUp3ZQgFi+99TuZHHfbpxgMPqls8Mbaf/89oE4O/FHfmeSz1Ca1
+        nMafGtjMTQqezSYoxCVbvgm5Wg==
+X-Google-Smtp-Source: APXvYqzv9a01DzZigIrxklIuOXJfyd+toe/1RrwfEGr3f1/wzZbbNkfR0iv1STW7wTw/jLxvMFgK8g==
+X-Received: by 2002:a05:6402:2cb:: with SMTP id b11mr4179069edx.285.1569587194900;
+        Fri, 27 Sep 2019 05:26:34 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id j43sm500196eda.19.2019.09.27.05.26.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 27 Sep 2019 05:26:34 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 147A7101F61; Fri, 27 Sep 2019 15:26:38 +0300 (+03)
+Date:   Fri, 27 Sep 2019 15:26:38 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Thomas =?utf-8?Q?Hellstr=C3=B6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: Re: Ack to merge through DRM? WAS Re: [PATCH v2 1/5] mm: Add
+ write-protect and clean utilities for address space ranges
+Message-ID: <20190927122638.wtn5idrt4btir6be@box>
+References: <20190926115548.44000-1-thomas_os@shipmail.org>
+ <20190926115548.44000-2-thomas_os@shipmail.org>
+ <85e31bcf-d3c8-2fcf-e659-2c9f82ebedc7@shipmail.org>
+ <CAHk-=wifjLeeMEtMPytiMAKiWkqPorjf1P4PbB3dj17Y3Jcqag@mail.gmail.com>
+ <a48a93d2-03e9-40d3-3b4c-a301632d3121@shipmail.org>
+ <CAHk-=whwN+CvaorsmczZRwFhSV+1x98xg-zajVD1qKmN=9JhBQ@mail.gmail.com>
+ <c58cdb3d-4f5e-7bfc-06b3-58c27676d101@shipmail.org>
+ <CAHk-=wh_+Co=T8wG8vb5akMP=7H4BN=Qpq6PsKh8rcmT8MCV+Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1569556128-22212-2-git-send-email-vincent.cheng.xh@renesas.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=wh_+Co=T8wG8vb5akMP=7H4BN=Qpq6PsKh8rcmT8MCV+Q@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +static s32 idtcm_xfer(struct idtcm *idtcm,
-> +		      u8 regaddr,
-> +		      u8 *buf,
-> +		      u16 count,
-> +		      bool write)
-> +{
-> +	struct i2c_client *client = idtcm->client;
-> +	struct i2c_msg msg[2];
-> +	s32 cnt;
-> +
-> +	msg[0].addr = client->addr;
-> +	msg[0].flags = 0;
-> +	msg[0].len = 1;
-> +	msg[0].buf = &regaddr;
-> +
-> +	msg[1].addr = client->addr;
-> +	msg[1].flags = write ? 0 : I2C_M_RD;
-> +	msg[1].len = count;
-> +	msg[1].buf = buf;
-> +
-> +	cnt = i2c_transfer(client->adapter, msg, 2);
-> +
-> +	if (cnt < 0) {
-> +		dev_err(&client->dev, "i2c_transfer returned %d\n", cnt);
-> +		return cnt;
-> +	} else if (cnt != 2) {
-> +		dev_err(&client->dev,
-> +			"i2c_transfer sent only %d of %d messages\n", cnt, 2);
-> +		return -EIO;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static s32 idtcm_page_offset(struct idtcm *idtcm, u8 val)
-> +{
-> +	u8 buf[4];
-> +	s32 err;
+On Thu, Sep 26, 2019 at 03:20:42PM -0700, Linus Torvalds wrote:
+> On Thu, Sep 26, 2019 at 1:55 PM Thomas Hellström (VMware)
+> <thomas_os@shipmail.org> wrote:
+> >
+> > Well, we're working on supporting huge puds and pmds in the graphics
+> > VMAs, although in the write-notify cases we're looking at here, we would
+> > probably want to split them down to PTE level.
+> 
+> Well, that's what the existing walker code does if you don't have that
+> "pud_entry()" callback.
+> 
+> That said, I assume you would *not* want to do that if the huge
+> pud/pmd is already clean and read-only, but just continue.
+> 
+> So you may want to have a special pud_entry() that handles that case.
+> Eventually. Maybe. Although honestly, if you're doing dirty tracking,
+> I doubt it makes much sense to use largepages.
+> 
+> > Looking at zap_pud_range() which when called from unmap_mapping_pages()
+> > uses identical locking (no mmap_sem), it seems we should be able to get
+> > away with i_mmap_lock(), making sure the whole page table doesn't
+> > disappear under us. So it's not clear to me why the mmap_sem is strictly
+> > needed here. Better to sort those restrictions out now rather than when
+> > huge entries start appearing.
+> 
+> zap_pud_range()actually does have that
+> 
+>                VM_BUG_ON_VMA(!rwsem_is_locked(&tlb->mm->mmap_sem), vma);
 
-Hi Vincent
+The VM_BUG is a blind copy from PMD layer and it's bogus. i_mmap_lock()
+works fine for file mappings.
 
-All your functions return s32, rather than the usual int. err is an
-s32.  i2c_transfer() will return an int, which you then assign to an
-s32.  I've no idea, but maybe the static code checkers like smatch
-will complain about this, especially on 64 bit systems? I suspect on
-64 bit machines, the compiler will be generating worse code, masking
-registers? Maybe use int, not s32?
-
-> +static s32 set_pll_output_mask(struct idtcm *idtcm, u16 addr, u8 val)
-> +{
-> +	s32 err = 0;
-> +
-> +	switch (addr) {
-> +	case OUTPUT_MASK_PLL0_ADDR:
-> +		SET_U16_LSB(idtcm->channel[0].output_mask, val);
-> +		break;
-> +	case OUTPUT_MASK_PLL0_ADDR + 1:
-> +		SET_U16_MSB(idtcm->channel[0].output_mask, val);
-> +		break;
-> +	case OUTPUT_MASK_PLL1_ADDR:
-> +		SET_U16_LSB(idtcm->channel[1].output_mask, val);
-> +		break;
-> +	case OUTPUT_MASK_PLL1_ADDR + 1:
-> +		SET_U16_MSB(idtcm->channel[1].output_mask, val);
-> +		break;
-> +	case OUTPUT_MASK_PLL2_ADDR:
-> +		SET_U16_LSB(idtcm->channel[2].output_mask, val);
-> +		break;
-> +	case OUTPUT_MASK_PLL2_ADDR + 1:
-> +		SET_U16_MSB(idtcm->channel[2].output_mask, val);
-> +		break;
-> +	case OUTPUT_MASK_PLL3_ADDR:
-> +		SET_U16_LSB(idtcm->channel[3].output_mask, val);
-> +		break;
-> +	case OUTPUT_MASK_PLL3_ADDR + 1:
-> +		SET_U16_MSB(idtcm->channel[3].output_mask, val);
-> +		break;
-> +	default:
-> +		err = -1;
-
-EINVAL?
-
-> +		break;
-> +	}
-> +
-> +	return err;
-> +}
-
-> +static void set_default_function_pointers(struct idtcm *idtcm)
-> +{
-> +	idtcm->_idtcm_gettime = _idtcm_gettime;
-> +	idtcm->_idtcm_settime = _idtcm_settime;
-> +	idtcm->_idtcm_rdwr = idtcm_rdwr;
-> +	idtcm->_sync_pll_output = sync_pll_output;
-> +}
-
-Why does this indirection? Are the SPI versions of the silicon?
-
-    Andrew
+The PMD was intended for THP case at the time when there were only
+anon-THP. The check was relaxed and later dropped for file-THP on PMD
+level. It has to be dropped on PUD too. We don't have anon-THP on PUD
+level at all, only DAX played with them.
+ 
+-- 
+ Kirill A. Shutemov
