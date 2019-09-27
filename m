@@ -2,115 +2,242 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA8DC388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC301C388F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07B3120863
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:41:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569613286;
-	bh=r2HLKWu5wLRtm/i9i4jLwyp1AgFxK0jh5ydM8NUcVK4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ARHXla4qwb/rPAYz40FKMvdwf3DsXSwQZYlsIIrYUr03ivjDx6VwtSAH2opMFRp0t
-	 s9o8j+lOKjsam3I5fjJ5fnC63A/Y21p/qfIX++SLp6/h+cubEZeNe4HFnpYPbQCaWc
-	 BMST2H6mw5DLwtS9pQ4hQiLSW5MtuTbaWw4rocTI=
+	by mail.kernel.org (Postfix) with ESMTP id B3B0E21920
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:42:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vd7UFaaC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbfI0TlZ (ORCPT
+        id S1728171AbfI0TmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 15:41:25 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:32910 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727734AbfI0TlY (ORCPT
+        Fri, 27 Sep 2019 15:42:04 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:39550 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfI0TmE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 15:41:24 -0400
-Received: by mail-lj1-f195.google.com with SMTP id a22so3644137ljd.0
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 12:41:23 -0700 (PDT)
+        Fri, 27 Sep 2019 15:42:04 -0400
+Received: by mail-qt1-f193.google.com with SMTP id n7so8727321qtb.6
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 12:42:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RJBm3wIiTMlbTLXcMDkNDDL26nbs1uDfiv0ETeeEYjs=;
-        b=LeHqucnAee/LJ+EIK96m57dcj0RYG4Sq1r/U0YWxFvxLjIgEJn2YixNR4e9JVnma6W
-         VKwPzGZ5r77StAkDCv5si2HCYWY/ODZzp9MHmduXjdZ92v9zTmg6WzWymIOQkYfSWRu/
-         BprUHgbX5ryJrKBKijJz2olCNHAIiXNvec7VE=
+         :cc:content-transfer-encoding;
+        bh=GdzRgDBYfpDpx6nQGoKtzOVBfnyfeeybzCuIbLx6fB0=;
+        b=vd7UFaaCwZgwqj99f2MT2fg1i7UohnHUXSkw5kpwYYUuVyfF4NY7tXNUGXOUsiEO3P
+         shdnQNc5wxu1/O33dxfYRABCvuhgeW4T6LLI7tdyA07lQ47bZXE0aiwnmHVBazIp+3a7
+         iwOr3AAltu1Cestvony074R+ccYJqgPHN1Akym1g1Tf7rGXjIIh1JOa+SSnK7nW02eLY
+         h4qjRMGCsXcpObwDuRS5McCmDPPJD8LHAC/vLTRxYxqLydRfv0Yz8D7kq2v2blrRjCp9
+         J72ozpCexcuAdzPZbjlNJuPxLZc2LG5oyM/lDXxwWoJiX7bKdEC22v4kTrOHkXUDtTjp
+         Hhyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RJBm3wIiTMlbTLXcMDkNDDL26nbs1uDfiv0ETeeEYjs=;
-        b=BX9SWE0N1C5ty+zYsOd1gaoi+e9dLIRvCD/jjHboYd0XMqdgK0igdkyNUb7/owYm+o
-         n5+YG3S7g90SiP8Vq67VfK/Nu9gKW+AfYnSwrMt6xnmtWPv70G4RY36orD85/i4fYs47
-         9xzHHUpekiwwBlKA9YvCU5dUrx5VpqHzNMsaYV1ZUHPb0w6IjKXq4rSxB8jNE8yrRCgD
-         f3Q569axackqZdI9+3ClGYsOL6cMgQna1E0Wc2obkcXJrvGLka+39SEs6KIK9A/UzSe9
-         SVRs0QW32f7YQcVkjgG3dJPedsip1gQfZ+sV8iyFwJqCA/jUwyPoQFHl9SUBrSJD8BTi
-         JeuQ==
-X-Gm-Message-State: APjAAAXqCgndMFfWQ8t0l7voyAYSuBXVADuwHz3bQ0ZWHQuQz/Tgqu74
-        ehJVYholcNKd9HKE3shoOWhhZouCrVE=
-X-Google-Smtp-Source: APXvYqyL9wkm+rJWzNUHnm2GH4OxUdHUsgs/uNB01YUY5EgJ+sfmMwll5EGroKH7b5hIsOgtFVq5Rw==
-X-Received: by 2002:a2e:2e17:: with SMTP id u23mr4205120lju.26.1569613281813;
-        Fri, 27 Sep 2019 12:41:21 -0700 (PDT)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id i128sm626929lji.49.2019.09.27.12.41.20
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Sep 2019 12:41:21 -0700 (PDT)
-Received: by mail-lj1-f172.google.com with SMTP id y23so3589701lje.9
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 12:41:20 -0700 (PDT)
-X-Received: by 2002:a2e:2c02:: with SMTP id s2mr4224670ljs.156.1569613280372;
- Fri, 27 Sep 2019 12:41:20 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GdzRgDBYfpDpx6nQGoKtzOVBfnyfeeybzCuIbLx6fB0=;
+        b=fdQz4Un1/Ho4j9wcLNQDvBGXt5dQ3FiVML9VnMkMslM6wkBM51duKewhPigFo8aCfh
+         U5D6Mv7VKF9K8gFSr5Q11O1szsI+8ILBQJLXqYN+MNt+7euOlvsSB9y6FbZ6ve0fq+7z
+         GOP64zWypUVac3qcG4s/CqqeEkK7pyvfE0ATQ/bxQWi7v+gSOpW5Q1638qaX/0Svb9sh
+         DHeQlsxncJcI4uENuVVvnrJwKxbJFLYi7b6I4XoLpFvZHGXpKOlpryYRuEFQ1VP73u83
+         1W01UwnBuBzPZ94glzM/dOqsnjWpzQUaLVo9IOlLpUeXxZGaku2Md1AYZ1HezC6oqDnv
+         ntPQ==
+X-Gm-Message-State: APjAAAXet5xotA7bSQImb69tnqpKxaP9MD+dX/QOjZSOJeGTfNmwqqlU
+        OqFyejJ5A1I00bpJaUSg6uE6/imYDpUc6m3Ie1BT7Rd4NlypFA==
+X-Google-Smtp-Source: APXvYqzqpcwN1/R5qfSA7dnHPXsglqSOVgIT6kFMUwfYvP8xw2g7HmTutaLnVS58EaBwe1aQG/qkZ5GWj85+rzJ42MA=
+X-Received: by 2002:ac8:7646:: with SMTP id i6mr12175862qtr.50.1569613322867;
+ Fri, 27 Sep 2019 12:42:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <a9e8e68f34139d5a9abb7f8b7d3fe64ff82c6d96.camel@intel.com>
- <CAHk-=whua2XSTLd3gtqVHfq5HtGnjhRUv7vA6SUfkbVUebqWJQ@mail.gmail.com> <64d13484950cab570e5f2691d7cdeca292882d95.camel@redhat.com>
-In-Reply-To: <64d13484950cab570e5f2691d7cdeca292882d95.camel@redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 27 Sep 2019 12:41:04 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whwYbKX1AqnOvcdT7T2GofRQqnb6xEJJ6+==ZZN1eEYQA@mail.gmail.com>
-Message-ID: <CAHk-=whwYbKX1AqnOvcdT7T2GofRQqnb6xEJJ6+==ZZN1eEYQA@mail.gmail.com>
-Subject: Re: [GIT PULL] Thermal management updates for v5.4-rc1
-To:     Doug Ledford <dledford@redhat.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
+References: <20190927034338.15813-1-walter-zh.wu@mediatek.com>
+ <CACT4Y+Zxz+R=qQxSMoipXoLjRqyApD3O0eYpK0nyrfGHE4NNPw@mail.gmail.com> <1569594142.9045.24.camel@mtksdccf07>
+In-Reply-To: <1569594142.9045.24.camel@mtksdccf07>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 27 Sep 2019 21:41:51 +0200
+Message-ID: <CACT4Y+YuAxhKtL7ho7jpVAPkjG-JcGyczMXmw8qae2iaZjTh_w@mail.gmail.com>
+Subject: Re: [PATCH] kasan: fix the missing underflow in memmove and memcpy
+ with CONFIG_KASAN_GENERIC=y
+To:     Walter Wu <walter-zh.wu@mediatek.com>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        wsd_upstream <wsd_upstream@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 12:29 PM Doug Ledford <dledford@redhat.com> wrote:
+On Fri, Sep 27, 2019 at 4:22 PM Walter Wu <walter-zh.wu@mediatek.com> wrote=
+:
 >
-> Because there are literally thousands of developers working on kernel
-> bits here and there, and you're swatting this particular fly one
-> developer at a time.
+> On Fri, 2019-09-27 at 15:07 +0200, Dmitry Vyukov wrote:
+> > On Fri, Sep 27, 2019 at 5:43 AM Walter Wu <walter-zh.wu@mediatek.com> w=
+rote:
+> > >
+> > > memmove() and memcpy() have missing underflow issues.
+> > > When -7 <=3D size < 0, then KASAN will miss to catch the underflow is=
+sue.
+> > > It looks like shadow start address and shadow end address is the same=
+,
+> > > so it does not actually check anything.
+> > >
+> > > The following test is indeed not caught by KASAN:
+> > >
+> > >         char *p =3D kmalloc(64, GFP_KERNEL);
+> > >         memset((char *)p, 0, 64);
+> > >         memmove((char *)p, (char *)p + 4, -2);
+> > >         kfree((char*)p);
+> > >
+> > > It should be checked here:
+> > >
+> > > void *memmove(void *dest, const void *src, size_t len)
+> > > {
+> > >         check_memory_region((unsigned long)src, len, false, _RET_IP_)=
+;
+> > >         check_memory_region((unsigned long)dest, len, true, _RET_IP_)=
+;
+> > >
+> > >         return __memmove(dest, src, len);
+> > > }
+> > >
+> > > We fix the shadow end address which is calculated, then generic KASAN
+> > > get the right shadow end address and detect this underflow issue.
+> > >
+> > > [1] https://bugzilla.kernel.org/show_bug.cgi?id=3D199341
+> > >
+> > > Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
+> > > Reported-by: Dmitry Vyukov <dvyukov@google.com>
+> > > ---
+> > >  lib/test_kasan.c   | 36 ++++++++++++++++++++++++++++++++++++
+> > >  mm/kasan/generic.c |  8 ++++++--
+> > >  2 files changed, 42 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/lib/test_kasan.c b/lib/test_kasan.c
+> > > index b63b367a94e8..8bd014852556 100644
+> > > --- a/lib/test_kasan.c
+> > > +++ b/lib/test_kasan.c
+> > > @@ -280,6 +280,40 @@ static noinline void __init kmalloc_oob_in_memse=
+t(void)
+> > >         kfree(ptr);
+> > >  }
+> > >
+> > > +static noinline void __init kmalloc_oob_in_memmove_underflow(void)
+> > > +{
+> > > +       char *ptr;
+> > > +       size_t size =3D 64;
+> > > +
+> > > +       pr_info("underflow out-of-bounds in memmove\n");
+> > > +       ptr =3D kmalloc(size, GFP_KERNEL);
+> > > +       if (!ptr) {
+> > > +               pr_err("Allocation failed\n");
+> > > +               return;
+> > > +       }
+> > > +
+> > > +       memset((char *)ptr, 0, 64);
+> > > +       memmove((char *)ptr, (char *)ptr + 4, -2);
+> > > +       kfree(ptr);
+> > > +}
+> > > +
+> > > +static noinline void __init kmalloc_oob_in_memmove_overflow(void)
+> > > +{
+> > > +       char *ptr;
+> > > +       size_t size =3D 64;
+> > > +
+> > > +       pr_info("overflow out-of-bounds in memmove\n");
+> > > +       ptr =3D kmalloc(size, GFP_KERNEL);
+> > > +       if (!ptr) {
+> > > +               pr_err("Allocation failed\n");
+> > > +               return;
+> > > +       }
+> > > +
+> > > +       memset((char *)ptr, 0, 64);
+> > > +       memmove((char *)ptr + size, (char *)ptr, 2);
+> > > +       kfree(ptr);
+> > > +}
+> > > +
+> > >  static noinline void __init kmalloc_uaf(void)
+> > >  {
+> > >         char *ptr;
+> > > @@ -734,6 +768,8 @@ static int __init kmalloc_tests_init(void)
+> > >         kmalloc_oob_memset_4();
+> > >         kmalloc_oob_memset_8();
+> > >         kmalloc_oob_memset_16();
+> > > +       kmalloc_oob_in_memmove_underflow();
+> > > +       kmalloc_oob_in_memmove_overflow();
+> > >         kmalloc_uaf();
+> > >         kmalloc_uaf_memset();
+> > >         kmalloc_uaf2();
+> > > diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
+> > > index 616f9dd82d12..34ca23d59e67 100644
+> > > --- a/mm/kasan/generic.c
+> > > +++ b/mm/kasan/generic.c
+> > > @@ -131,9 +131,13 @@ static __always_inline bool memory_is_poisoned_n=
+(unsigned long addr,
+> > >                                                 size_t size)
+> > >  {
+> > >         unsigned long ret;
+> > > +       void *shadow_start =3D kasan_mem_to_shadow((void *)addr);
+> > > +       void *shadow_end =3D kasan_mem_to_shadow((void *)addr + size =
+- 1) + 1;
+> > >
+> > > -       ret =3D memory_is_nonzero(kasan_mem_to_shadow((void *)addr),
+> > > -                       kasan_mem_to_shadow((void *)addr + size - 1) =
++ 1);
+> > > +       if ((long)size < 0)
+> > > +               shadow_end =3D kasan_mem_to_shadow((void *)addr + siz=
+e);
+> >
+> > Hi Walter,
+> >
+> > Thanks for working on this.
+> >
+> > If size<0, does it make sense to continue at all? We will still check
+> > 1PB of shadow memory? What happens when we pass such huge range to
+> > memory_is_nonzero?
+> > Perhaps it's better to produce an error and bail out immediately if siz=
+e<0?
+>
+> I agree with what you said. when size<0, it is indeed an unreasonable
+> behavior, it should be blocked from continuing to do.
+>
+>
+> > Also, what's the failure mode of the tests? Didn't they badly corrupt
+> > memory? We tried to keep tests such that they produce the KASAN
+> > reports, but don't badly corrupt memory b/c/ we need to run all of
+> > them.
+>
+> Maybe we should first produce KASAN reports and then go to execute
+> memmove() or do nothing? It looks like it=E2=80=99s doing the following.o=
+r?
+>
+> void *memmove(void *dest, const void *src, size_t len)
+>  {
+> +       if (long(len) <=3D 0)
 
-Well, at least these days it's also very clearly spelled out in the
-Documentation directory.
+/\/\/\/\/\/\
 
-And the "don't rebase" does get posted on the mailing lists each time,
-and I've mentioned it over the years in my release notes too.
+This check needs to be inside of check_memory_region, otherwise we
+will have similar problems in all other places that use
+check_memory_region.
+But check_memory_region already returns a bool, so we could check that
+bool and return early.
 
-Besides, I actually only work with about a hundred top-level
-maintainers, not thousands. Yes, we have thousands of developers, but
-doing the stats over the 5.0 releases, there have been "only" 131
-people sending me pull requests. Sure, more than a couple, but at the
-same time it's not like this is a "every developer" kind of thing,
-this is literally subsystem maintainers. We've got a fair number of
-them, but it's definitely not about thousands.
 
-I feel like I've sent that email out way more than a hundred times
-over the last 15+ years.
-
-.. and I don't think having git warn is right, since rebasing is
-perfectly fine as you are doing development.
-
-It's really just that maintainers shouldn't do it for bad reasons and
-at bad times.
-
-And "there was a conflict" and "yesterday" is really one of the
-absolute worst reasons/times around.
-
-                    Linus
+> +               kasan_report_invalid_size(src, dest, len, _RET_IP_);
+> +
+>         check_memory_region((unsigned long)src, len, false, _RET_IP_);
+>         check_memory_region((unsigned long)dest, len, true, _RET_IP_);
+>
+>
+>
