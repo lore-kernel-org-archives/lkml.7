@@ -2,209 +2,138 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18048C352A9
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 02:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98952C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 02:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D03E5208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 02:24:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6399B207FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 02:26:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="LN0WFAi7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JV+juN59"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728614AbfI0CY2 (ORCPT
+        id S1728528AbfI0C0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 22:24:28 -0400
-Received: from mail-eopbgr130089.outbound.protection.outlook.com ([40.107.13.89]:55097
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726140AbfI0CY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 22:24:27 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FWTGtQm4fkZ0aCyUoo6YP/kBCU/Bwp0fT0p547oCWJzIaXqiYsenAWXQqX7n1hfFESU198eZGgJ/ZIGs8hCCYA2lySKND2ikM6wSOvn/DMaUISeq9VIGl3a9IIcXC926vVh2pE0VV8E00k1kDpq0KGEZrhAsSOYDixURzF5Bm6yHa9z0e9cMHMmBhQw0qaNMnX7w9Zl9ApHKxFRDXTD8uDmahEbhtZla2RyOZIt4X/+62YUqgg5HNFNTXjnmOE2EduyY3CsOMKCDeWWoMeFA+CNYlS76KOzsv3gqaNceDDhwqYZjOJexvzutz9hwdtFSBg//X7pbxs4ebWIL1Tzoew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lx05gsKG28o2amlhGhMrgN0keLE9klZMa40p9JDiAXY=;
- b=nHnNWOF1pCBNJ6QvW6hyP2edYqOm+GqeX4GGkY3aLgBSmi+fFrkZJANQKcRFDATKqGHFyK8OiQvazv58cd/Zm3FemlRPfjKIoUu/m79JU8Hqs8K0yXpeLRzQo5WkpFjUlhc4ceHBL9sUBajKRaGHSerdc5QlWnjHF98kURN4OKe8k0CB1zxOtIKquvHzkw4KgVbz2kroUV3ZuXDKj8gSRnzZ/DXwoY8LC6O2p9oYS78Z/wGZYWRu3Rj/hoZ7/f8Cvt6y6B2jH9lrNX5ewez5ESSJZDShcusqD+0IL+arbC4qJalbX0EjW+QIkeIqNFqMNZLV6GeangJOWL49sqFMRA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lx05gsKG28o2amlhGhMrgN0keLE9klZMa40p9JDiAXY=;
- b=LN0WFAi7kYlHiGZYfhKpC9V7XJYpno6+VWo7cGW7NeiWUyjBv5kAra/ZrMlsV7VHfgThGgp/EnqnBlDspnoRWn50g8nhdyxxCkX/US7xxIi33JYqrFyqOno5JWFID0WDe1V+s5v8lAMEXeaKWfMxww62dBfgXPhcfCn9wqW3SJk=
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
- DB7PR04MB5338.eurprd04.prod.outlook.com (52.135.128.33) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.20; Fri, 27 Sep 2019 02:23:41 +0000
-Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::4427:96f2:f651:6dfa]) by DB7PR04MB4490.eurprd04.prod.outlook.com
- ([fe80::4427:96f2:f651:6dfa%5]) with mapi id 15.20.2284.023; Fri, 27 Sep 2019
- 02:23:41 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V2 1/2] nvmem: imx: scu: support hole region check
-Thread-Topic: [PATCH V2 1/2] nvmem: imx: scu: support hole region check
-Thread-Index: AQHVdNqTeL3qiyvuR0mH+QIEq+72lw==
-Date:   Fri, 27 Sep 2019 02:23:41 +0000
-Message-ID: <1569550913-10176-1-git-send-email-peng.fan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK2PR0401CA0021.apcprd04.prod.outlook.com
- (2603:1096:202:2::31) To DB7PR04MB4490.eurprd04.prod.outlook.com
- (2603:10a6:5:36::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 12b17aef-c8ea-4f89-a52d-08d742f1b65d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR04MB5338;
-x-ms-traffictypediagnostic: DB7PR04MB5338:|DB7PR04MB5338:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB5338153CBDA7566958BE1E2288810@DB7PR04MB5338.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 0173C6D4D5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(39860400002)(136003)(396003)(346002)(43544003)(199004)(189003)(54906003)(6436002)(110136005)(6486002)(81166006)(81156014)(50226002)(8676002)(2501003)(64756008)(8936002)(2201001)(66446008)(186003)(66556008)(66476007)(6512007)(6506007)(52116002)(478600001)(386003)(99286004)(4326008)(6116002)(86362001)(26005)(102836004)(256004)(44832011)(7736002)(5660300002)(305945005)(36756003)(66946007)(3846002)(316002)(2616005)(14454004)(486006)(2906002)(66066001)(476003)(71190400001)(71200400001)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5338;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: i9tWJR9lbvzZ5SjzxhZL2wreggZ6xooxAYQ+mW5cx8YbTjEDe7B4ZkWDL4sfBA/LLSPD/UgPwtlQb6ilKpOe35+FYf74EZs7BwJbzr+xU/j7dkuuu0uJzOVOfFUszRNtTZeWU3hhFwY6b30gfUQQFMuoQVWZgzbVzxHePrU69DL69wmo/xLmmsJ4yTj9Ntu0gHXZE4QZiAd+hNwL5vfqciQRJoUbwN0ftR1Q/j4Bsm5oVf71BZtjb+trOO2jNu7fZtktWn8ZQgkWJigD/PlWv0BGOIo9foPMaPsHleGWWjD5crTWNgBoyBS+DgcXkELoeq4Lm/7YBuWOpTRs7ijFOU5sNoPSPRkWf7AtLo8GONqJCG54lcAztD64uRLTFwRfF14exu8GY15zaOpcCuLVZANcuvqxREb8OxzOb38cuAU=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 26 Sep 2019 22:26:51 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36566 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbfI0C0v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 22:26:51 -0400
+Received: by mail-io1-f67.google.com with SMTP id b136so12295942iof.3;
+        Thu, 26 Sep 2019 19:26:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=J+nWDXgsaBZmvMaavFN8h6cOxrOj2KF3ILHKLIPO34A=;
+        b=JV+juN59ZPmDpNQQVwV9fNjDwZNgGQkJrE+FskTjP4/yLYblFCQ8crGR2KH9/UavpQ
+         8UWVi99lmbiCXWTbvuQLcCzx+/7aSKDs+DxOMfmysiIWaDWaSyvjha97wFTrxHuel5iv
+         XX0LjeHToZfIC22nz0lL7jtaAThdXPR+JbL9AuWcadDU/xPFSX0Lcp6max3OsW/O39zW
+         LZGctE5D28CrQ09RAYeXHERwv/kMoxa3UrsO0B40XX/05jP4vkmtR0YsPxx4s+wBNDLx
+         q9Kz+kRAwGu3jaAJNVOuCb2+RqchXh82/TTj4kLgRbVpCYlcc/31FpcTkfTR1WJxvLQs
+         o16Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=J+nWDXgsaBZmvMaavFN8h6cOxrOj2KF3ILHKLIPO34A=;
+        b=csl4YsNYZkaE94xt6dVQQ5VEwVcGtfF4PkMb/3FaR/XKLNsEuMk5c4mZ64viMQfjHE
+         rmTfICpb5Znl4YlkGggnOdQG9T3bt85mGn1B3xMiMCsZ4ckh89jNum/PsDQec1FEFpH4
+         bjMZK8ojU1GvoeQbVIeInfrShb70I2CKUfNlzsEg86sLIu9PJ8mO8NH/1j2BR2QtqEI7
+         rxUfLnFKoU/G/TVv6eu6sAZ4RrFPT5yxmXl7U5Yyez1nz3c0ASujukEoVtlgMGVaOi7i
+         VU6We8ZOCF/PxuNFtKUd+L99l3ivbIVfiIbmb5LAbAKImnQlkglHQbYMTMJuQQqrw/GJ
+         NNZA==
+X-Gm-Message-State: APjAAAXtPiNnE2IoIxIQr3g5X718EUblffJuDAgbtV3BLkCaakBdYkpJ
+        XKenbqHcbOVZIAxB+4UYDEk=
+X-Google-Smtp-Source: APXvYqyoAakGX8Luwy1IiwMejmdpn88lbSaWc7uYSTk6Gkq85Z5M4KT6sRybkLzNVx9+598g06YZWA==
+X-Received: by 2002:a5e:8216:: with SMTP id l22mr6394174iom.252.1569551210117;
+        Thu, 26 Sep 2019 19:26:50 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.gmail.com with ESMTPSA id o8sm657890ild.55.2019.09.26.19.26.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 26 Sep 2019 19:26:49 -0700 (PDT)
+Date:   Thu, 26 Sep 2019 21:26:47 -0500
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        "David S. Miller" <davem@davemloft.net>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        John Hurley <john.hurley@netronome.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        oss-drivers@netronome.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] net: flow_offload: fix memory leak in
+ nfp_abm_u32_knode_replace
+Message-ID: <20190927022647.GC22969@cs-dulles.cs.umn.edu>
+References: <20190925182846.69a261e8@cakuba.netronome.com>
+ <20190926022240.3789-1-navid.emamdoost@gmail.com>
+ <20190925215314.10cf291d@cakuba.netronome.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 12b17aef-c8ea-4f89-a52d-08d742f1b65d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Sep 2019 02:23:41.1655
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XTKDOCU5zzGx2EkQF9dNTx4yB14/V/Yzp2l4Q6eLdCso9G+q8Z7Z6ueodJbX3GciSFudVmuAMlatLBG5nXlQBg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5338
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190925215314.10cf291d@cakuba.netronome.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+On Wed, Sep 25, 2019 at 09:53:14PM -0700, Jakub Kicinski wrote:
+> On Wed, 25 Sep 2019 21:22:35 -0500, Navid Emamdoost wrote:
+> > In nfp_abm_u32_knode_replace if the allocation for match fails it should
+> > go to the error handling instead of returning.
+> > 
+> > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> > ---
+> > Changes in v2:
+> > 	- Reused err variable for erorr value returning.
+> 
+> Thanks, there's another goto up top. And I think subject prefix could
+> be "nfp: abm:", perhaps?
+> 
+Thanks, v3 was sent which fixes this.
 
-Introduce HOLE/ECC_REGION flag and in_hole helper to ease the check
-of hole region. The ECC_REGION is also introduced here which is
-preparing for programming support. ECC_REGION could only be programmed
-once, so need take care.
-
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
-
-V2:
- Rebased on latest linux-next
-
- drivers/nvmem/imx-ocotp-scu.c | 47 ++++++++++++++++++++++++++++++++++++++-=
-----
- 1 file changed, 42 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/nvmem/imx-ocotp-scu.c b/drivers/nvmem/imx-ocotp-scu.c
-index 61a17f943f47..030e27ba4dfb 100644
---- a/drivers/nvmem/imx-ocotp-scu.c
-+++ b/drivers/nvmem/imx-ocotp-scu.c
-@@ -19,9 +19,20 @@ enum ocotp_devtype {
- 	IMX8QM,
- };
-=20
-+#define ECC_REGION	BIT(0)
-+#define HOLE_REGION	BIT(1)
-+
-+struct ocotp_region {
-+	u32 start;
-+	u32 end;
-+	u32 flag;
-+};
-+
- struct ocotp_devtype_data {
- 	int devtype;
- 	int nregs;
-+	u32 num_region;
-+	struct ocotp_region region[];
- };
-=20
- struct ocotp_priv {
-@@ -38,13 +49,41 @@ struct imx_sc_msg_misc_fuse_read {
- static struct ocotp_devtype_data imx8qxp_data =3D {
- 	.devtype =3D IMX8QXP,
- 	.nregs =3D 800,
-+	.num_region =3D 3,
-+	.region =3D {
-+		{0x10, 0x10f, ECC_REGION},
-+		{0x110, 0x21F, HOLE_REGION},
-+		{0x220, 0x31F, ECC_REGION},
-+	},
- };
-=20
- static struct ocotp_devtype_data imx8qm_data =3D {
- 	.devtype =3D IMX8QM,
- 	.nregs =3D 800,
-+	.num_region =3D 2,
-+	.region =3D {
-+		{0x10, 0x10f, ECC_REGION},
-+		{0x1a0, 0x1ff, ECC_REGION},
-+	},
- };
-=20
-+static bool in_hole(void *context, u32 index)
-+{
-+	struct ocotp_priv *priv =3D context;
-+	const struct ocotp_devtype_data *data =3D priv->data;
-+	int i;
-+
-+	for (i =3D 0; i < data->num_region; i++) {
-+		if (data->region[i].flag & HOLE_REGION) {
-+			if ((index >=3D data->region[i].start) &&
-+			    (index <=3D data->region[i].end))
-+				return true;
-+		}
-+	}
-+
-+	return false;
-+}
-+
- static int imx_sc_misc_otp_fuse_read(struct imx_sc_ipc *ipc, u32 word,
- 				     u32 *val)
- {
-@@ -91,11 +130,9 @@ static int imx_scu_ocotp_read(void *context, unsigned i=
-nt offset,
- 	buf =3D p;
-=20
- 	for (i =3D index; i < (index + count); i++) {
--		if (priv->data->devtype =3D=3D IMX8QXP) {
--			if ((i > 271) && (i < 544)) {
--				*buf++ =3D 0;
--				continue;
--			}
-+		if (in_hole(context, i)) {
-+			*buf++ =3D 0;
-+			continue;
- 		}
-=20
- 		ret =3D imx_sc_misc_otp_fuse_read(priv->nvmem_ipc, i, buf);
---=20
-2.16.4
-
+Navid.
+> >  drivers/net/ethernet/netronome/nfp/abm/cls.c | 10 +++++++---
+> >  1 file changed, 7 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/net/ethernet/netronome/nfp/abm/cls.c b/drivers/net/ethernet/netronome/nfp/abm/cls.c
+> > index 23ebddfb9532..b0cb9d201f7d 100644
+> > --- a/drivers/net/ethernet/netronome/nfp/abm/cls.c
+> > +++ b/drivers/net/ethernet/netronome/nfp/abm/cls.c
+> > @@ -198,14 +198,18 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
+> >  		if ((iter->val & cmask) == (val & cmask) &&
+> >  		    iter->band != knode->res->classid) {
+> >  			NL_SET_ERR_MSG_MOD(extack, "conflict with already offloaded filter");
+> > +			err = -EOPNOTSUPP;
+> >  			goto err_delete;
+> >  		}
+> >  	}
+> >  
+> >  	if (!match) {
+> >  		match = kzalloc(sizeof(*match), GFP_KERNEL);
+> > -		if (!match)
+> > -			return -ENOMEM;
+> > +		if (!match) {
+> > +			err = -ENOMEM;
+> > +			goto err_delete;
+> > +		}
+> > +
+> >  		list_add(&match->list, &alink->dscp_map);
+> >  	}
+> >  	match->handle = knode->handle;
+> > @@ -221,7 +225,7 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
+> >  
+> >  err_delete:
+> >  	nfp_abm_u32_knode_delete(alink, knode);
+> > -	return -EOPNOTSUPP;
+> > +	return err;
+> >  }
+> >  
+> >  static int nfp_abm_setup_tc_block_cb(enum tc_setup_type type,
+> 
