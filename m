@@ -2,305 +2,151 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3084EC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E2AAC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF4B52075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3B9E2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:28:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lpG9HcKP"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="rB6Ae8Gs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbfI0VZr (ORCPT
+        id S1727685AbfI0V2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 17:25:47 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53330 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbfI0VZq (ORCPT
+        Fri, 27 Sep 2019 17:28:11 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:35682 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725306AbfI0V2K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 17:25:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=/9cgJd4p9eb9aWJznrGVvVuTAiQn5zDbLuYD5xF9ZsU=; b=lpG9HcKPyz0/gINWLajI4KKCm
-        FDEaPLQKad/8cQag1+eXnXFayPSc88NKdqo55pnTrpQnSR3JWV1oow42PMZ8fowenFNSDFXd5AbLM
-        8B1o4DEDw1lF1nGiv3J9nA/372f6/VSyExK0b19OHFekmwiKMKp2idAH9lYkLvxRepo7dhfDVE3oX
-        SZnU8D6sr9Fh135RQF7EQAXj9PuqjJG5QVYDYSxlEloEf7kXdclFbW90KDGeiSvJfYnQkTEYgRpYn
-        lOFE4Ie/x0Y5scxx1BgkzXIWheaO9W25DB/SZLRSergZJUZGuCJn3bDMaewe548oZ2LNPZpM7pvRg
-        DTgKCHdLg==;
-Received: from [2601:1c0:6280:3f0::9a1f]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iDxk9-0006Zl-5Z; Fri, 27 Sep 2019 21:25:37 +0000
-Subject: Re: [PATCH v8 17/17] Documentation/x86/64: Add documentation for
- GS/FS addressing mode
-To:     "Chang S. Bae" <chang.seok.bae@intel.com>,
-        linux-kernel@vger.kernel.org
-Cc:     ravi.v.shankar@intel.com, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <1568318818-4091-1-git-send-email-chang.seok.bae@intel.com>
- <1568318818-4091-18-git-send-email-chang.seok.bae@intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <3942a0ed-2aa5-ff31-5f71-dcfa546e9def@infradead.org>
-Date:   Fri, 27 Sep 2019 14:25:34 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <1568318818-4091-18-git-send-email-chang.seok.bae@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 27 Sep 2019 17:28:10 -0400
+Received: by mail-qt1-f195.google.com with SMTP id m15so9123824qtq.2
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 14:28:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=OSzYm24kMm+3qsYyi0PMA9ARrI4D/MfOEwhnPkS6YeA=;
+        b=rB6Ae8GsgMKyXP2kIYlZdVkMQw5z5AgLQJ2JqQdEYq6qXHOG3NWtz3nhkxhP3Eq3Ah
+         DSwDFvsXL8szTF0jsaA1qBVp/X6Lr1RfD0mFJYkQDd2S6sXz6BVDRB06kySbFyh365z+
+         Ogzn+eX3gQqdXZZxxbdj41XasaOfqyp/leQkZlAwnUrfs7uRHkkedxTCCrexo4Cnd67v
+         zKXOkUjrEy+MZsg4YNJa0Ova2ssP7aAfIbEcTGdMv/g5vfS7Htk//ie7vX6zCO+USuuX
+         kQUCxeDVZgr4KxJy4i7t9Ntu6eBel9ktGtdZw1eKKK3vGGhOeYivJsVxNrJmIUKTb4fj
+         ZfOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=OSzYm24kMm+3qsYyi0PMA9ARrI4D/MfOEwhnPkS6YeA=;
+        b=NHBNXTuK6Wfb4grgOZAW9a5u6wxlcydCJj2E01P3bOZVaWvz14q8XburHmfb07TFrO
+         FczpUVze4HigKKiFzDUWR2bkmMRDYY+mrlYXyPpwC6LejueLmKtNpETzulQxeKRgeVUp
+         unqcxrRJy/N4SA01nl+nxB3WpWgVNy9XIBHqgThVbnUI8B9oT/+sgTQUE39qKLaYtrU1
+         GzNZhr8NFim71ptlnm8TwiAGY1/tucauzbsE1uWBcMlfDBwR8JXhVBSM9vpPMGdShFEH
+         VYXuU8aNwyMMbEFbcJ+/IdtvM20C71vC3z3poOIa0cx5xcjGFBgz9TGNFnyegasFLIcd
+         /YGQ==
+X-Gm-Message-State: APjAAAV3SUoxMJSa65KMX2e36HFsCWjF46qSsdLYE3QXM6EkEzvoqho+
+        XM0HnDsek/GsY07WLrSXer15Wg==
+X-Google-Smtp-Source: APXvYqwufZybaXtm0KCuPg3uZ3BPhqW+oT1dBLOwS6HEHY04KEDFQUFlFH14fTnbK7+h1k4NFQvDvQ==
+X-Received: by 2002:ac8:301b:: with SMTP id f27mr11837429qte.83.1569619688095;
+        Fri, 27 Sep 2019 14:28:08 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id m14sm1636640qki.27.2019.09.27.14.28.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 27 Sep 2019 14:28:07 -0700 (PDT)
+Message-ID: <1569619686.5576.242.camel@lca.pw>
+Subject: Re: [PATCH] mm/page_alloc: fix a crash in free_pages_prepare()
+From:   Qian Cai <cai@lca.pw>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Date:   Fri, 27 Sep 2019 17:28:06 -0400
+In-Reply-To: <20190927140222.6f7d0a41b9e734053ee911b9@linux-foundation.org>
+References: <1569613623-16820-1-git-send-email-cai@lca.pw>
+         <20190927140222.6f7d0a41b9e734053ee911b9@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-Some doc comments/fixes below...
-
-On 9/12/19 1:06 PM, Chang S. Bae wrote:
-> From: Thomas Gleixner <tglx@linutronix.de>
+On Fri, 2019-09-27 at 14:02 -0700, Andrew Morton wrote:
+> On Fri, 27 Sep 2019 15:47:03 -0400 Qian Cai <cai@lca.pw> wrote:
 > 
-> Explain how the GS/FS based addressing can be utilized in user space
-> applications along with the differences between the generic prctl() based
-> GS/FS base control and the FSGSBASE version available on newer CPUs.
+> > On architectures like s390, arch_free_page() could mark the page unused
+> > (set_page_unused()) and any access later would trigger a kernel panic.
+> > Fix it by moving arch_free_page() after all possible accessing calls.
+> > 
+> >  Hardware name: IBM 2964 N96 400 (z/VM 6.4.0)
+> >  Krnl PSW : 0404e00180000000 0000000026c2b96e
+> > (__free_pages_ok+0x34e/0x5d8)
+> >             R:0 T:1 IO:0 EX:0 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 RI:0 EA:3
+> >  Krnl GPRS: 0000000088d43af7 0000000000484000 000000000000007c
+> >  000000000000000f
+> >             000003d080012100 000003d080013fc0 0000000000000000
+> >  0000000000100000
+> >             00000000275cca48 0000000000000100 0000000000000008
+> >  000003d080010000
+> >             00000000000001d0 000003d000000000 0000000026c2b78a
+> >  000000002717fdb0
+> >  Krnl Code: 0000000026c2b95c: ec1100b30659 risbgn %r1,%r1,0,179,6
+> >             0000000026c2b962: e32014000036 pfd 2,1024(%r1)
+> >            #0000000026c2b968: d7ff10001000 xc 0(256,%r1),0(%r1)
+> >            >0000000026c2b96e: 41101100  la %r1,256(%r1)
+> >             0000000026c2b972: a737fff8  brctg %r3,26c2b962
+> >             0000000026c2b976: d7ff10001000 xc 0(256,%r1),0(%r1)
+> >             0000000026c2b97c: e31003400004 lg %r1,832
+> >             0000000026c2b982: ebff1430016a asi 5168(%r1),-1
+> >  Call Trace:
+> >  __free_pages_ok+0x16a/0x5d8)
+> >  memblock_free_all+0x206/0x290
+> >  mem_init+0x58/0x120
+> >  start_kernel+0x2b0/0x570
+> >  startup_continue+0x6a/0xc0
+> >  INFO: lockdep is turned off.
+> >  Last Breaking-Event-Address:
+> >  __free_pages_ok+0x372/0x5d8
+> >  Kernel panic - not syncing: Fatal exception: panic_on_oops
+> > 00: HCPGIR450W CP entered; disabled wait PSW 00020001 80000000 00000000
+> > 26A2379C
+> > 
+> > ...
+> > 
+> > --- a/mm/page_alloc.c
+> > +++ b/mm/page_alloc.c
+> > @@ -1175,11 +1175,11 @@ static __always_inline bool free_pages_prepare(struct page *page,
+> >  		debug_check_no_obj_freed(page_address(page),
+> >  					   PAGE_SIZE << order);
+> >  	}
+> > -	arch_free_page(page, order);
+> >  	if (want_init_on_free())
+> >  		kernel_init_free_pages(page, 1 << order);
+> >  
+> >  	kernel_poison_pages(page, 1 << order, 0);
+> > +	arch_free_page(page, order);
+> >  	if (debug_pagealloc_enabled())
+> >  		kernel_map_pages(page, 1 << order, 0);
 > 
-> ---
+> AFAICT the meticulously undocumented s390 set_page_unused() will cause
+> there to be a fault if anyone tries to access the page contents, yes?
+
+Yes.
+
 > 
-> Changes from v7:
-> * Rewritten the documentation and changelog by Thomas
-> * Included compiler version info additionally
-> ---
->  Documentation/x86/x86_64/fsgs.rst  | 200 +++++++++++++++++++++++++++++++++++++
->  Documentation/x86/x86_64/index.rst |   1 +
->  2 files changed, 201 insertions(+)
->  create mode 100644 Documentation/x86/x86_64/fsgs.rst
-> 
-> diff --git a/Documentation/x86/x86_64/fsgs.rst b/Documentation/x86/x86_64/fsgs.rst
-> new file mode 100644
-> index 0000000..791063c
-> --- /dev/null
-> +++ b/Documentation/x86/x86_64/fsgs.rst
-> @@ -0,0 +1,200 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +Using FS and GS segments in user space applications
-> +===================================================
-> +
-> +The x86 architecture supports segmentation. Instructions which access
-> +memory can use segment register based addressing mode. The following
-> +notation is used to address a byte within a segment:
-> +
-> +  Segment-register:Byte-address
-> +
-> +The segment base address is added to the Byte-address to compute the
-> +resulting virtual address which is accessed. This allows to access multiple
-> +instances of data with the identical Byte-address, i.e. the same code. The
-> +selection of a particular instance is purely based on the base-address in
-> +the segment register.
-> +
-> +In 32-bit mode the CPU provides 6 segments, which also support segment
-> +limits. The limits can be used to enforce address space protections.
-> +
-> +In 64-bit mode the CS/SS/DS/ES segments are ignored and the base address is
-> +always 0 to provide a full 64bit address space. The FS and GS segments are
-> +still functional in 64-bit mode.
-> +
-> +Common FS and GS usage
-> +------------------------------
-> +
-> +The FS segment is commonly used to address Thread Local Storage (TLS). FS
-> +is usually managed by runtime code or a threading library. Variables
-> +declared with the '__thread' storage class specifier are instantiated per
-> +thread and the compiler emits the FS: address prefix for accesses to these
-> +variables. Each thread has its own FS base address so common code can be
-> +used without complex address offset calculations to access the per thread
-> +instances. Applications should not use FS for other purposes when they use
-> +runtimes or threading libraries which manage the per thread FS.
-> +
-> +The GS segment has no common use and can be used freely by
-> +applications. There is no storage class specifier similar to __thread which
-> +would cause the compiler to use GS based addressing modes. Newer versions
-> +of GCC and Clang support GS based addressing via address space identifiers.
-> +
-> +
-> +Reading and writing the FS/GS base address
-> +------------------------------------------
-> +
-> +There exist two mechanisms to read and write the FS/FS base address:
+> So I think you've moved the arch_free_page() to be after the final
+> thing which can access page contents, yes?  If so, we should have a
+> comment in free_pages_prepare() to attmept to prevent this problem from
+> reoccurring as the code evolves?
 
-                                                    FS/GS
+Right, something like this above arch_free_page() there?
 
-> +
-> + - the arch_prctl() system call
-> +
-> + - the FSGSBASE instruction family
-> +
-> +Accessing FS/GS base with arch_prctl()
-> +--------------------------------------
-> +
-> + The arch_prctl(2) based mechanism is available on all 64bit CPUs and all
-
-                                                          64-bit
-
-> + kernel versions.
-> +
-> + Reading the base:
-> +
-> +   arch_prctl(ARCH_GET_FS, &fsbase);
-> +   arch_prctl(ARCH_GET_GS, &gsbase);
-> +
-> + Writing the base:
-> +
-> +   arch_prctl(ARCH_SET_FS, fsbase);
-> +   arch_prctl(ARCH_SET_GS, gsbase);
-> +
-> + The ARCH_SET_GS prctl may be disabled depending on kernel configuration
-> + and security settings.
-> +
-> +Accessing FS/GS base with the FSGSBASE instructions
-> +---------------------------------------------------
-> +
-> + With the Ivy Bridge CPU generation Intel introduced a new set of
-> + instructions to access the FS and GS base registers directly from user
-> + space. These instructions are also supported on AMD Family 17H CPUs. The
-> + following instructions are available:
-> +
-> +  =============== ===========================
-> +  RDFSBASE %reg   Read the FS base register
-> +  RDGSBASE %reg   Read the GS base register
-> +  WRFSBASE %reg   Write the FS base register
-> +  WRGSBASE %reg   Write the GS base register
-> +  =============== ===========================
-> +
-> + The instructions avoid the overhead of the arch_prctl() syscall and allow
-> + more flexible usage of the FS/GS addressing modes in user space
-> + applications. This does not prevent conflicts between threading libraries
-> + and runtimes which utilize FS and applications which want to use it for
-> + their own purpose.
-> +
-> +FSGSBASE instructions enablement
-> +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> + The instructions are enumerated in CPUID leaf 7, bit 0 of EBX. If
-> + available /proc/cpuinfo shows 'fsgsbase' in the flag entry of the CPUs.
-> +
-> + The availability of the instructions is not enabling them
-> + automatically. The kernel has to enable them explicitly in CR4. The
-> + reason for this is that older kernels make assumptions about the values in
-> + the GS register and enforce them when GS base is set via
-> + arch_prctl(). Allowing user space to write arbitrary values to GS base
-> + would violate these assumptions and cause malfunction.
-> +
-> + On kernels which do not enable FSGSBASE the execution of the FSGSBASE
-> + instructions will fault with a #UD exception.
-> +
-> + The kernel provides reliable information about the enabled state in the
-> + ELF AUX vector. If the HWCAP2_FSGSBASE bit is set in the AUX vector, the
-> + kernel has FSGSBASE instructions enabled and applications can use them.
-> + The following code example shows how this detection works::
-> +
-> +   #include <sys/auxv.h>
-> +   #include <elf.h>
-> +
-> +   /* Will be eventually in asm/hwcap.h */
-> +   #ifndef HWCAP2_FSGSBASE
-> +   #define HWCAP2_FSGSBASE        (1 << 1)
-> +   #endif
-> +
-> +   ....
-> +
-> +   unsigned val = getauxval(AT_HWCAP2);
-> +
-> +   if (val & HWCAP2_FSGSBASE)
-> +        printf("FSGSBASE enabled\n");
-> +
-> +FSGSBASE instructions compiler support
-> +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> +
-> +GCC version 4.6.4 and newer provide instrinsics for the FSGSBASE
-> +instructions. Clang 5 supports them as well.
-> +
-> +  =================== ===========================
-> +  _readfsbase_u64()   Read the FS base register
-> +  _readfsbase_u64()   Read the GS base register
-> +  _writefsbase_u64()  Write the FS base register
-> +  _writegsbase_u64()  Write the GS base register
-> +  =================== ===========================
-> +
-> +To utilize these instrinsics <immintrin.h> must be included in the source
-> +code and the compiler option -mfsgsbase has to be added.
-> +
-> +Compiler support for FS/GS based addressing
-> +-------------------------------------------
-> +
-> +GCC version 6 and newer provide support for FS/GS based addressing via
-> +Named Address Spaces. GCC implements the following address space
-> +identifiers for x86:
-> +
-> +  ========= ====================================
-> +  __seg_fs  Variable is addressed relative to FS
-> +  __seg_gs  Variable is addressed relative to GS
-> +  ========= ====================================
-> +
-> +The preprocessor symbols __SEG_FS and __SEG_GS are defined when these
-> +address spaces are supported. Code which implements fallback modes should
-> +check whether these symbols are defined. Usage example::
-> +
-> +  #ifdef __SEG_GS
-> +
-> +  long data0 = 0;
-> +  long data1 = 1;
-> +
-> +  long __seg_gs *ptr;
-> +
-> +  /* Check whether FSGSBASE is enabled by the kernel (HWCAP2_FSGSBASE) */
-> +  ....
-> +
-> +  /* Set GS to point to data0 */
-> +  _writegsbase_u64(&data0);
-> +
-> +  /* Access offset 0 of GS */
-> +  ptr = 0;
-> +  print("data0 = %ld\n", *ptr);
-> +
-> +  /* Set GS to point to data1 */
-> +  _writegsbase_u64(&data1);
-> +  /* ptr still addresses offset 0! */
-> +  print("data1 = %ld\n", *ptr);
-> +
-> +
-> +Clang does not provide these address space identifiers, but it provides
-> +an attribute based mechanism in Clang 2.6 and newer versions:
-> +
-> + ==================================== =====================================
-> +  __attribute__((address_space(256))  Variable is addressed relative to GS
-> +  __attribute__((address_space(257))  Variable is addressed relative to FS
-> + ==================================== =====================================
-> +
-> +FS/GS based addressing with inline assembly
-> +-------------------------------------------
-> +
-> +In case the compiler does not support address spaces, inline assembly can
-> +be used for FS/GS based addressing mode::
-> +
-> +	mov %fs:offset, %reg
-> +	mov %gs:offset, %reg
-> +
-> +	mov %reg, %fs:offset
-> +	mov %reg, %gs:offset
-> \ No newline at end of file
-oops.
-
--- 
-~Randy
+/*
+ * It needs to be just above kernel_map_pages(), as s390 could mark those
+ * pages unused and then trigger a fault when accessing.
+ */
