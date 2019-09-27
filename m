@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3459C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 588B0C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C74E02075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C21B207FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:49:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="fyKUsnK/"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="TbyfGYHb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbfI0HtO (ORCPT
+        id S1726865AbfI0HtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 27 Sep 2019 03:49:14 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:49660 "EHLO
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:49706 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726178AbfI0HtM (ORCPT
+        by vger.kernel.org with ESMTP id S1726466AbfI0HtM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 27 Sep 2019 03:49:12 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id EFA12C0CEF;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id E6836C0CEB;
         Fri, 27 Sep 2019 07:49:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1569570551; bh=vw4KjFOd0WN5T5S8MRjnu1Dm0OyCo4xGHIGsN5RDZ7w=;
+        t=1569570551; bh=DIrBlnTN+2e2Xshklv4tKK7eG84iI4t6E5yVB8RhCTI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=fyKUsnK/qAXJC5UaQ3Cmf4bWJOThn2V+hfmLir7754uJcr34j15ghzQYxK4RH0xxD
-         rig63bacp1AwjMT32MmTld8/myXROCi97q8nZvva6fUGBH4BBle/dqIXm+r89Z7sCX
-         bxqBYQ4VWbq0rVLPB1TnKJrvipzIymiM0lMrD/jGRxZkihvV/X0y0kVdbmN2q26Eg3
-         1rjvh22+px1iiPhwt2yREEoJZs9Fp7+EIPpdGwoIw5Mkjjpmeqyr+HxcxSdy0Et34q
-         1jtGJAX9Sx2Uh7e1LMsP1JpsSzMHJhkYypgx067XTWsEUyoHKB3zev8pLslm8oCToT
-         JpgfPC9IpxGwg==
+        b=TbyfGYHbgQ3HJIpcMCU0DuTvjctF2dD+oxBOgR41Dc9QXHduHayWgrcetyMpaAJc3
+         +s2JcvSLmvEHmaErSdISYqum5WE10GnK24d5a6749Vlpdmlqjz6GM0Qsr++R4G2bQu
+         Mr6KR6n7x+zcA5ZPpVERwA3zLf8dSsnlDsijNQDPrtDWoLADID4cLJszd5cko3nOWA
+         mgEhyFpIPdBWCYwbhacdh/BiNVRuqClBtNHNoo5y1GIKKAiDru/hEc8gqnIrGjO9YC
+         aziMasBmZWRnAs+vDRmKExB2mz3wTUQLHmvSaQRJciVQFuolhvzgPG/KbacRei75xs
+         cdxRQ45HA1e7A==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 50C32A0077;
+        by mailhost.synopsys.com (Postfix) with ESMTP id 77EF9A0089;
         Fri, 27 Sep 2019 07:49:09 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -52,9 +52,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net 2/8] net: stmmac: xgmac: Detect Hash Table size dinamically
-Date:   Fri, 27 Sep 2019 09:48:50 +0200
-Message-Id: <e521e901f3bbe8cd72d8b1492709072f21ee7c84.1569569778.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net 6/8] net: stmmac: Do not stop PHY if WoL is enabled
+Date:   Fri, 27 Sep 2019 09:48:54 +0200
+Message-Id: <b230fca25c51e8f019307e01534e4fd5578b6367.1569569778.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1569569778.git.Jose.Abreu@synopsys.com>
 References: <cover.1569569778.git.Jose.Abreu@synopsys.com>
@@ -65,12 +65,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit b8ef7020d6e5 ("net: stmmac: add support for hash table size
-128/256 in dwmac4"), we can detect the Hash Table dinamically.
+If WoL is enabled we can't really stop the PHY, otherwise we will not
+receive the WoL packet. Fix this by telling phylink that only the MAC is
+down and only stop the PHY if WoL is not enabled.
 
-Let's implement this feature in XGMAC cores and fix possible setups that
-don't support the maximum size for Hash Table.
-
+Fixes: 74371272f97f ("net: stmmac: Convert to phylink and remove phylib logic")
 Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
 ---
@@ -84,34 +83,52 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     | 1 +
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-index 5923ca62d793..f7eb06f8fb37 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-@@ -122,6 +122,7 @@
- #define XGMAC_HWFEAT_GMIISEL		BIT(1)
- #define XGMAC_HW_FEATURE1		0x00000120
- #define XGMAC_HWFEAT_L3L4FNUM		GENMASK(30, 27)
-+#define XGMAC_HWFEAT_HASHTBLSZ		GENMASK(25, 24)
- #define XGMAC_HWFEAT_RSSEN		BIT(20)
- #define XGMAC_HWFEAT_TSOEN		BIT(18)
- #define XGMAC_HWFEAT_SPHEN		BIT(17)
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
-index 53c4a40d8386..965cbe3e6f51 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
-@@ -380,6 +380,7 @@ static void dwxgmac2_get_hw_feature(void __iomem *ioaddr,
- 	/* MAC HW feature 1 */
- 	hw_cap = readl(ioaddr + XGMAC_HW_FEATURE1);
- 	dma_cap->l3l4fnum = (hw_cap & XGMAC_HWFEAT_L3L4FNUM) >> 27;
-+	dma_cap->hash_tb_sz = (hw_cap & XGMAC_HWFEAT_HASHTBLSZ) >> 24;
- 	dma_cap->rssen = (hw_cap & XGMAC_HWFEAT_RSSEN) >> 20;
- 	dma_cap->tsoen = (hw_cap & XGMAC_HWFEAT_TSOEN) >> 18;
- 	dma_cap->sphen = (hw_cap & XGMAC_HWFEAT_SPHEN) >> 17;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 31a237ec73bc..843d53e084b7 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -4718,9 +4718,7 @@ int stmmac_suspend(struct device *dev)
+ 
+ 	mutex_lock(&priv->lock);
+ 
+-	rtnl_lock();
+-	phylink_stop(priv->phylink);
+-	rtnl_unlock();
++	phylink_mac_change(priv->phylink, false);
+ 
+ 	netif_device_detach(ndev);
+ 	stmmac_stop_all_queues(priv);
+@@ -4735,6 +4733,10 @@ int stmmac_suspend(struct device *dev)
+ 		stmmac_pmt(priv, priv->hw, priv->wolopts);
+ 		priv->irq_wake = 1;
+ 	} else {
++		rtnl_lock();
++		phylink_stop(priv->phylink);
++		rtnl_unlock();
++
+ 		stmmac_mac_set(priv, priv->ioaddr, false);
+ 		pinctrl_pm_select_sleep_state(priv->device);
+ 		/* Disable clock in case of PWM is off */
+@@ -4825,9 +4827,13 @@ int stmmac_resume(struct device *dev)
+ 
+ 	stmmac_start_all_queues(priv);
+ 
+-	rtnl_lock();
+-	phylink_start(priv->phylink);
+-	rtnl_unlock();
++	if (!device_may_wakeup(priv->device)) {
++		rtnl_lock();
++		phylink_start(priv->phylink);
++		rtnl_unlock();
++	}
++
++	phylink_mac_change(priv->phylink, true);
+ 
+ 	mutex_unlock(&priv->lock);
+ 
 -- 
 2.7.4
 
