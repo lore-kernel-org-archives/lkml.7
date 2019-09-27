@@ -2,118 +2,88 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0AC6C388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D39C9C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C58212196E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:11:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569611461;
-	bh=Rj+zOWbCgAMU/VeCrq0ZDP+rKJWcVz6Tpq1CDuc72hE=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=MdRAGlbEOzNTDkT0isfuS8CwKECV2ILhfY3xFEQBT06E9GK/Ys8Fy1eCk7kONAWi3
-	 8CAKg2SY21TAnGyKsY9nRjXXGND7o9jKhxLsn0ZbCIqZ+PpFBVPjl67JIgpWLAWyAH
-	 oakIMRo55lEnLUxnPNHp4DVzvvndK2ntPfySwHbc=
+	by mail.kernel.org (Postfix) with ESMTP id A3104205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:21:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LReyqP23"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbfI0TLB (ORCPT
+        id S1726261AbfI0TVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 15:11:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35970 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbfI0TLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 15:11:00 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A56B8207E0;
-        Fri, 27 Sep 2019 19:10:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569611460;
-        bh=Rj+zOWbCgAMU/VeCrq0ZDP+rKJWcVz6Tpq1CDuc72hE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=v7kNqHHqlXj5WbOEyWDLR/STTwDc1DWbefmA3wH7bswfwU1zEd5uwbBrfU9uqERle
-         fAWiZNEt0dDVi4RAQlimPiip7PQGP7jzIdrzjjAo7n1gdDviaR9WeYPhLi3k+W93wT
-         LQkdcyReLcWYNIw2IZ365jHzt0eSlDCJzcD18apc=
-Subject: Re: [PATCH] tools/power/cpupower: Fix initializer override in
- hsw_ext_cstates
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        Thomas Renninger <trenn@suse.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com, shuah <shuah@kernel.org>
-References: <20190927162642.2292584-1-natechancellor@gmail.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <209b17e8-9800-eec9-f781-8becebeddea9@kernel.org>
-Date:   Fri, 27 Sep 2019 13:10:58 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 27 Sep 2019 15:21:38 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:39104 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfI0TVi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 15:21:38 -0400
+Received: by mail-lf1-f68.google.com with SMTP id 72so2726768lfh.6;
+        Fri, 27 Sep 2019 12:21:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NRtadYP5nbR/QB1gCSx1xAuVyFcnYFdMokbHypTtJuw=;
+        b=LReyqP239776XbWD2hbJq4Birvcg+ZyJd4AghLDcY9N1brxOImICcGYaMllKctg9A2
+         kZF1IGf+ZF8Fq7QmXS7hweLNBrQ/Iva1pX/FjA0u4H1piO4wbCpL91mzd14/4CSf7wSA
+         t81XxzhWvL0KPav4DvJZmVFQKCDr0Qji9bdgt7qh9q/TnbaCI8ANC2F4DAXjUks14PA9
+         yaQDIrvV0f91jTZqZB/IugWgo6OV0MBJZmq4zo3sOtOyIrf0CiisM97TZLf7nCaZqdE9
+         vrmqv/HjaWTYJuusCRErz76JblJSnswhR0GmQCq/ar/GV34EuenMb6AIVjKHjqHBGPDj
+         zwzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NRtadYP5nbR/QB1gCSx1xAuVyFcnYFdMokbHypTtJuw=;
+        b=ebY0KN57EwWFqet+dAO+Bp9+Jhx+B23ZrH65k2kp/xYgogc1FYPyJrGsTZQkTamN03
+         mwO660eBg05n5u3O/99KRNZxmdwyd26LkSAt3JP6bO8Q3SfbMovyxtMpUtfHZzvgnI4Y
+         DdloGtlfVLR6AppAab9xBP0MtoHF4HR9VIETtf9TqAGmQiqgJsaQO5imlU2fnZIzdSK4
+         C329VzUeXo9oFKJAf4WdwzctXxo+A4rTJcOpp0+KNNrjbq6Y7UmpGpp7Xw/VpvnMJFfZ
+         NpTFJTFQKn5r+yJ5KFmTrwCA92jx0AEz/PrOtjvFZkKLliLUEjuZ+xgk6b+NxUQHoo9f
+         STmA==
+X-Gm-Message-State: APjAAAVXP+0cBz0iVQXwX/Fdv4miCccFtSe5V0GzZZsbOCC4U5DCYyM4
+        +PBylRQ3U0fo1Ub4Ix7Gyb4hQ1PXZDoNgbMPH0A=
+X-Google-Smtp-Source: APXvYqyGetNw8QB/cCEgUgX9QGK1q9E3QJdvmyT5x9eyUvu6MgVyKYnXCepxs0WWTUxJxzT+0Mmec35MAjwTHuknFH0=
+X-Received: by 2002:ac2:5091:: with SMTP id f17mr3917135lfm.107.1569612095980;
+ Fri, 27 Sep 2019 12:21:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190927162642.2292584-1-natechancellor@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190827215539.1286-1-mmichilot@gateworks.com>
+ <cb3e9be4-9ce6-354f-bb7c-a4710edc1c1b@xs4all.nl> <20190829142931.GZ28351@bigcity.dyn.berto.se>
+ <CAJ+vNU11HTcP8L5J2Xg+Rmhvb8JDYemhJxt-GaGG5Myk3n38Tw@mail.gmail.com>
+In-Reply-To: <CAJ+vNU11HTcP8L5J2Xg+Rmhvb8JDYemhJxt-GaGG5Myk3n38Tw@mail.gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Fri, 27 Sep 2019 16:21:48 -0300
+Message-ID: <CAOMZO5AwSO8BjpmcFMT-70Xot45D2SYZ7QHRgNSmU0o+PXCyXg@mail.gmail.com>
+Subject: Re: [PATCH] media: i2c: adv7180: fix adv7280 BT.656-4 compatibility
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Matthew Michilot <matthew.michilot@gmail.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/27/19 10:26 AM, Nathan Chancellor wrote:
-> When building cpupower with clang, the following warning appears:
-> 
->   utils/idle_monitor/hsw_ext_idle.c:42:16: warning: initializer overrides
->   prior initialization of this subobject [-Winitializer-overrides]
->                   .desc                   = N_("Processor Package C2"),
->                                                ^~~~~~~~~~~~~~~~~~~~~~
->   ./utils/helpers/helpers.h:25:33: note: expanded from macro 'N_'
->   #define N_(String) gettext_noop(String)
->                                   ^~~~~~
->   ./utils/helpers/helpers.h:23:30: note: expanded from macro
->   'gettext_noop'
->   #define gettext_noop(String) String
->                                ^~~~~~
->   utils/idle_monitor/hsw_ext_idle.c:41:16: note: previous initialization
->   is here
->                   .desc                   = N_("Processor Package C9"),
->                                                ^~~~~~~~~~~~~~~~~~~~~~
->   ./utils/helpers/helpers.h:25:33: note: expanded from macro 'N_'
->   #define N_(String) gettext_noop(String)
->                                   ^~~~~~
->   ./utils/helpers/helpers.h:23:30: note: expanded from macro
->   'gettext_noop'
->   #define gettext_noop(String) String
->                               ^~~~~~
->   1 warning generated.
-> 
-> This appears to be a copy and paste or merge mistake because the name
-> and id fields both have PC9 in them, not PC2. Remove the second
-> assignment to fix the warning.
-> 
-> Fixes: 7ee767b69b68 ("cpupower: Add Haswell family 0x45 specific idle monitor to show PC8,9,10 states")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/718
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
->   tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c b/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
-> index 7c7451d3f494..58dbdfd4fa13 100644
-> --- a/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
-> +++ b/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
-> @@ -39,7 +39,6 @@ static cstate_t hsw_ext_cstates[HSW_EXT_CSTATE_COUNT] = {
->   	{
->   		.name			= "PC9",
->   		.desc			= N_("Processor Package C9"),
-> -		.desc			= N_("Processor Package C2"),
->   		.id			= PC9,
->   		.range			= RANGE_PACKAGE,
->   		.get_count_percent	= hsw_ext_get_count_percent,
-> 
+Hi Tim,
 
-Looks good to me. I will queue this up for 5.4-rc2 or rc3.
+On Wed, Sep 25, 2019 at 9:22 PM Tim Harvey <tharvey@gateworks.com> wrote:
 
-thanks,
--- Shuah
+> Have you looked at this yet? Without this patch the ADV7280A does not
+> output proper BT.656. We tested this on a Gateworks Ventana GW5404-G
+> which uses the ADV7280A connected to the IMX6 CSI parallel bus. I'm
+> hoping to see this get merged and perhaps backported to older kernels.
+
+In order to be backported to older kernels, please add a Fixes tag.
+
+Thanks
