@@ -2,139 +2,78 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC99C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 582EBC388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C530820863
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B34221850
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:48:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728756AbfI0VqB (ORCPT
+        id S1728045AbfI0VsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 17:46:01 -0400
-Received: from mga12.intel.com ([192.55.52.136]:45951 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728077AbfI0VpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 17:45:25 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Sep 2019 14:45:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,557,1559545200"; 
-   d="scan'208";a="196852057"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by FMSMGA003.fm.intel.com with ESMTP; 27 Sep 2019 14:45:24 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Reto Buerki <reet@codelabs.ch>,
-        Liran Alon <liran.alon@oracle.com>
-Subject: [PATCH v2 1/8] KVM: nVMX: Always write vmcs02.GUEST_CR3 during nested VM-Enter
-Date:   Fri, 27 Sep 2019 14:45:16 -0700
-Message-Id: <20190927214523.3376-2-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190927214523.3376-1-sean.j.christopherson@intel.com>
-References: <20190927214523.3376-1-sean.j.christopherson@intel.com>
+        Fri, 27 Sep 2019 17:48:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55570 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725815AbfI0VsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 17:48:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 36BC2ADFE;
+        Fri, 27 Sep 2019 21:48:02 +0000 (UTC)
+From:   Thomas Renninger <trenn@suse.de>
+To:     " Natarajan, Janakarajan " <Janakarajan.Natarajan@amd.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        Pu Wen <puwen@hygon.com>, Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Richard Fontana <rfontana@redhat.com>,
+        Thomas Renninger <trenn@suse.com>, Borislav Petkov <bp@suse.de>
+Subject: Re: [PATCH 1/2] Modify cpupower to schedule itself on cores it is reading MSRs from
+Date:   Fri, 27 Sep 2019 23:48:16 +0200
+Message-ID: <4340017.MFpoU6RDpq@c100>
+In-Reply-To: <9f94bb60-4be2-4303-54de-f50bdd7cb3e6@amd.com>
+References: <20190918163445.129103-1-Janakarajan.Natarajan@amd.com> <9f94bb60-4be2-4303-54de-f50bdd7cb3e6@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Write the desired L2 CR3 into vmcs02.GUEST_CR3 during nested VM-Enter
-instead of deferring the VMWRITE until vmx_set_cr3().  If the VMWRITE
-is deferred, then KVM can consume a stale vmcs02.GUEST_CR3 when it
-refreshes vmcs12->guest_cr3 during nested_vmx_vmexit() if the emulated
-VM-Exit occurs without actually entering L2, e.g. if the nested run
-is squashed because nested VM-Enter (from L1) is putting L2 into HLT.
+On Friday, September 27, 2019 6:07:56 PM CEST  Natarajan, Janakarajan  wrote:
+> On 9/18/2019 11:34 AM, Natarajan, Janakarajan wrote:
 
-Note, the above scenario can occur regardless of whether L1 is
-intercepting HLT, e.g. L1 can intercept HLT and then re-enter L2 with
-vmcs.GUEST_ACTIVITY_STATE=HALTED.  But practically speaking, a VMM will
-likely put a guest into HALTED if and only if it's not intercepting HLT.
+> > This is advantageous because an IPI is not generated when a read_msr() is
+> > executed on the local logical CPU thereby reducing the chance of having
+> > APERF and MPERF being out of sync.
+> > +	if (sched_setaffinity(getpid(), sizeof(set), &set) == -1) {
+> > +		dprint("Could not migrate to cpu: %d\n", cpu);
+> > +		return 1;
 
-In an ideal world where EPT *requires* unrestricted guest (and vice
-versa), VMX could handle CR3 similar to how it handles RSP and RIP,
-e.g. mark CR3 dirty and conditionally load it at vmx_vcpu_run().  But
-the unrestricted guest silliness complicates the dirty tracking logic
-to the point that explicitly handling vmcs02.GUEST_CR3 during nested
-VM-Enter is a simpler overall implementation.
+On a 80 core cpu the process would be pushed around through the
+system quite a lot. 
+This might affect what you are measuring or the other measure values?
+Otherwise it's the kernel's MSR read only, not the whole cpupower process,
+right? No idea about the exact overhead, though. Others in CC list should
+know.
 
-Cc: stable@vger.kernel.org
-Reported-and-tested-by: Reto Buerki <reet@codelabs.ch>
-Tested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Reviewed-by: Liran Alon <liran.alon@oracle.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/vmx/nested.c | 10 ++++++++++
- arch/x86/kvm/vmx/vmx.c    | 10 +++++++---
- 2 files changed, 17 insertions(+), 3 deletions(-)
+Afaik msr reads through msr module should be avoided anyway?
+Those which are worth it are abstracted through sysfs nowadays?
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 41abc62c9a8a..b72a00b53e4a 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -2418,6 +2418,16 @@ static int prepare_vmcs02(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
- 				entry_failure_code))
- 		return -EINVAL;
- 
-+	/*
-+	 * Immediately write vmcs02.GUEST_CR3.  It will be propagated to vmcs12
-+	 * on nested VM-Exit, which can occur without actually running L2 and
-+	 * thus without hitting vmx_set_cr3(), e.g. if L1 is entering L2 with
-+	 * vmcs12.GUEST_ACTIVITYSTATE=HLT, in which case KVM will intercept the
-+	 * transition to HLT instead of running L2.
-+	 */
-+	if (enable_ept)
-+		vmcs_writel(GUEST_CR3, vmcs12->guest_cr3);
-+
- 	/* Late preparation of GUEST_PDPTRs now that EFER and CRs are set. */
- 	if (load_guest_pdptrs_vmcs12 && nested_cpu_has_ept(vmcs12) &&
- 	    is_pae_paging(vcpu)) {
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index d4575ffb3cec..7679c2a05a50 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -2984,6 +2984,7 @@ u64 construct_eptp(struct kvm_vcpu *vcpu, unsigned long root_hpa)
- void vmx_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
- {
- 	struct kvm *kvm = vcpu->kvm;
-+	bool update_guest_cr3 = true;
- 	unsigned long guest_cr3;
- 	u64 eptp;
- 
-@@ -3000,15 +3001,18 @@ void vmx_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
- 			spin_unlock(&to_kvm_vmx(kvm)->ept_pointer_lock);
- 		}
- 
--		if (enable_unrestricted_guest || is_paging(vcpu) ||
--		    is_guest_mode(vcpu))
-+		/* Loading vmcs02.GUEST_CR3 is handled by nested VM-Enter. */
-+		if (is_guest_mode(vcpu))
-+			update_guest_cr3 = false;
-+		else if (enable_unrestricted_guest || is_paging(vcpu))
- 			guest_cr3 = kvm_read_cr3(vcpu);
- 		else
- 			guest_cr3 = to_kvm_vmx(kvm)->ept_identity_map_addr;
- 		ept_load_pdptrs(vcpu);
- 	}
- 
--	vmcs_writel(GUEST_CR3, guest_cr3);
-+	if (update_guest_cr3)
-+		vmcs_writel(GUEST_CR3, guest_cr3);
- }
- 
- int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
--- 
-2.22.0
+For aperf/mperf it might make sense to define a sysfs file where you
+can read both, as this is what you always need?
+
+It would take a while, but could be a longterm solution which is also
+usable in secure boot or without msr module case.
+
+      Thomas
+
+
 
