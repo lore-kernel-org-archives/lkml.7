@@ -3,129 +3,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 554F6C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 23:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 737AEC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 23:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31B6920869
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 23:26:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E52F21655
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 23:30:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbfI0X0c (ORCPT
+        id S1728126AbfI0Xaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 19:26:32 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37718 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725306AbfI0X0b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 19:26:31 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8RNMM8a117362;
-        Fri, 27 Sep 2019 19:25:24 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v8w27efrq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Sep 2019 19:25:24 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8RNN1oe118011;
-        Fri, 27 Sep 2019 19:25:23 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v8w27efrk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Sep 2019 19:25:23 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8RNOwfV014224;
-        Fri, 27 Sep 2019 23:25:23 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma02wdc.us.ibm.com with ESMTP id 2v5bg7v3r6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Sep 2019 23:25:23 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8RNPMFX53871064
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Sep 2019 23:25:22 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6FDDDAE062;
-        Fri, 27 Sep 2019 23:25:22 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EAB83AE05C;
-        Fri, 27 Sep 2019 23:25:18 +0000 (GMT)
-Received: from leobras.br.ibm.com (unknown [9.18.235.58])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 27 Sep 2019 23:25:18 +0000 (GMT)
-Message-ID: <ed1a954a67de3b1fa66e921883153622f3446813.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 00/11] Introduces new count-based method for
- monitoring lockless pagetable walks
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     jhubbard@nvidia.com, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org
-Cc:     benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        arnd@arndb.de, aneesh.kumar@linux.ibm.com, christophe.leroy@c-s.fr,
-        akpm@linux-foundation.org, dan.j.williams@intel.com,
-        npiggin@gmail.com, mahesh@linux.vnet.ibm.com,
-        gregkh@linuxfoundation.org, tglx@linutronix.de,
-        ganeshgr@linux.ibm.com, allison@lohutok.net, rppt@linux.ibm.com,
-        yuehaibing@huawei.com, ira.weiny@intel.com, jgg@ziepe.ca,
-        keith.busch@intel.com
-Date:   Fri, 27 Sep 2019 20:25:15 -0300
-In-Reply-To: <8fe1ee1abf52719e75902dc7d5cd1e91751eaba7.camel@linux.ibm.com>
-References: <8fe1ee1abf52719e75902dc7d5cd1e91751eaba7.camel@linux.ibm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-MbHwrL3A6S40tAt0oPvi"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Fri, 27 Sep 2019 19:30:55 -0400
+Received: from mga14.intel.com ([192.55.52.115]:24604 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725306AbfI0Xaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 19:30:55 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Sep 2019 16:30:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,557,1559545200"; 
+   d="scan'208";a="180675357"
+Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
+  by orsmga007.jf.intel.com with ESMTP; 27 Sep 2019 16:30:55 -0700
+Received: from orsmsx124.amr.corp.intel.com (10.22.240.120) by
+ ORSMSX104.amr.corp.intel.com (10.22.225.131) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 27 Sep 2019 16:30:54 -0700
+Received: from orsmsx121.amr.corp.intel.com ([169.254.10.190]) by
+ ORSMSX124.amr.corp.intel.com ([169.254.2.164]) with mapi id 14.03.0439.000;
+ Fri, 27 Sep 2019 16:30:54 -0700
+From:   "Keller, Jacob E" <jacob.e.keller@intel.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+CC:     "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: RE: [PATCH] namespace: fix namespace.pl script to support relative
+ paths
+Thread-Topic: [PATCH] namespace: fix namespace.pl script to support relative
+ paths
+Thread-Index: AQHVdYkISHS3XNGT0kCKyhZHN6EY9KdALBNA
+Date:   Fri, 27 Sep 2019 23:30:54 +0000
+Message-ID: <02874ECE860811409154E81DA85FBB58968DBE54@ORSMSX121.amr.corp.intel.com>
+References: <20190129204319.15238-1-jacob.e.keller@intel.com>
+ <7b26e6cc-10ce-5df2-6375-1f95bc4da04e@infradead.org>
+In-Reply-To: <7b26e6cc-10ce-5df2-6375-1f95bc4da04e@infradead.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiODE0ZDVjODgtYjQ4Yi00OTg5LTgyYTQtMTQ5NGI4MzFlNzhmIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoicExlNWJQK3Rmb0xrMDlYSkoycForT2lFdVlicDZzVnlaQ1M3QmpyeURzTXVjNE9MTld5Z3NvQ0VvM2ZMSlwvUEEifQ==
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.140]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-27_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909270202
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-MbHwrL3A6S40tAt0oPvi
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, 2019-09-27 at 11:46 -0300, Leonardo Bras wrote:
-> I am not sure if it would be ok to use irq_{save,restore} in real mode,
-> I will do some more reading of the docs before addressing this.=20
-
-It looks like it's unsafe to merge irq_{save,restore} in
-{start,end}_lockless_pgtbl_walk(), due to a possible access of code
-that is not accessible in real mode.
-
-I am sending a v4 for the changes so far.
-I will look forward for your feedback.
-
---=-MbHwrL3A6S40tAt0oPvi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl2OmlsACgkQlQYWtz9S
-ttQSdxAAxb2vcaIJh6GyRJa4P3h6d85JpvByKZBBiNvOp5Lol0AgvQ0skrphW2hM
-0COavBu2j4C8+n6NhwOH1gbCZpup8sGrXc7bpMg7+WZ5uE4NyyeIlvUVgerTxrAI
-MmHKILew1y5IqmcIGzea+AynytNb20c98joR2EbZ/7S3lruP93C5WLTgb586eHGi
-oAtukVuDfOeeM4QzQh8OuT7pJLASLfUE+wBh4ZF25jlIx22TBKiP2k7yAIxOHCSM
-bCUxHPinYhxA7IMKgJM98MWd4RsXRH8sQ5j0fajUwrWXqY3DzDu12OYd6KbgiBjG
-J+L/UztjLHU0qrlvVwYYzz+y5e8ZbLro1hNlnbT9wsAhKmty0VkOlY1Ml6VH909g
-2MTmldoUju1SAE61pMtCBnhGBhdXAU6H4M+H8Ry4Tj5C6TwtJlZ/WgVklxRqrdnN
-6B4VsI3DumYzbwsX/Nra6rKLWPpFhK2QJ2KUMi303M9AfPEwjH2mu5fNxBauAOry
-Frt17kk6bGWBZcehbkpx9jNxrxBisohc13LHz7o75zd8U5wvoYXLeRmTFXGPCY7M
-fxo4s8pNXyEYyfFZ8i7HPXRML6RVQ6I8QqZjV/hhRxoVkipnVScFxgCuEUGdhTei
-YnKQbPBBOI/lHVy16zst1+eW/fDo5CkAV003jZc4sIuAzvHjR24=
-=RxjC
------END PGP SIGNATURE-----
-
---=-MbHwrL3A6S40tAt0oPvi--
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSYW5keSBEdW5sYXAgW21haWx0
+bzpyZHVubGFwQGluZnJhZGVhZC5vcmddDQo+IFNlbnQ6IEZyaWRheSwgU2VwdGVtYmVyIDI3LCAy
+MDE5IDQ6MTIgUE0NCj4gVG86IEtlbGxlciwgSmFjb2IgRSA8amFjb2IuZS5rZWxsZXJAaW50ZWwu
+Y29tPg0KPiBDYzogaW50ZWwtd2lyZWQtbGFuQGxpc3RzLm9zdW9zbC5vcmc7IGxpbnV4LWtlcm5l
+bEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtidWlsZCA8bGludXgtDQo+IGtidWlsZEB2Z2VyLmtl
+cm5lbC5vcmc+OyBNYXNhaGlybyBZYW1hZGEgPHlhbWFkYS5tYXNhaGlyb0Bzb2Npb25leHQuY29t
+Pg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBuYW1lc3BhY2U6IGZpeCBuYW1lc3BhY2UucGwgc2Ny
+aXB0IHRvIHN1cHBvcnQgcmVsYXRpdmUgcGF0aHMNCj4gDQo+IA0KPiByZTogaHR0cHM6Ly9sb3Jl
+Lmtlcm5lbC5vcmcvbGttbC8yMDE5MDEyOTIwNDMxOS4xNTIzOC0xLWphY29iLmUua2VsbGVyQGlu
+dGVsLmNvbS8NCj4gDQo+IERpZCBhbnl0aGluZyBoYXBwZW4gd2l0aCB0aGlzIHBhdGNoPw0KPiAN
+Cj4gUGxlYXNlIHNlbmQgaXQgdG8gbGludXgta2J1aWxkQHZnZXIua2VybmVsLm9yZyBhbmQNCj4g
+Q2M6IE1hc2FoaXJvIFlhbWFkYSA8eWFtYWRhLm1hc2FoaXJvQHNvY2lvbmV4dC5jb20+DQo+IA0K
+PiBZb3UgY2FuIGFsc28gYWRkOg0KPiBBY2tlZC1ieTogUmFuZHkgRHVubGFwIDxyZHVubGFwQGlu
+ZnJhZGVhZC5vcmc+DQo+IFRlc3RlZC1ieTogUmFuZHkgRHVubGFwIDxyZHVubGFwQGluZnJhZGVh
+ZC5vcmc+DQo+IA0KPiANCj4gSSB3YXMganVzdCBhYm91dCB0byBmaXggdGhpcyBzY3JpcHQgYnV0
+IEkgZGVjaWRlZCB0byBmaXJzdCBzZWUgaWYgYW55b25lIGVsc2UNCj4gaGFkIGFscmVhZHkgZG9u
+ZSBzby4gIFRoYW5rcy4NCj4gDQo+IC0tDQo+IH5SYW5keQ0KDQpEb25lLCB0aGFua3MuDQoNClJl
+Z2FyZHMsDQpKYWtlDQo=
