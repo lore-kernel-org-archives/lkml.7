@@ -2,143 +2,149 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C80A7C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1133C388F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 973D0205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EB0E21655
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:15:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HWrjXwmy"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="b96I+dEe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbfI0VMf (ORCPT
+        id S1726594AbfI0VPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 17:12:35 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41094 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbfI0VMf (ORCPT
+        Fri, 27 Sep 2019 17:15:12 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:37001 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfI0VPM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 17:12:35 -0400
-Received: by mail-pg1-f194.google.com with SMTP id s1so4102392pgv.8
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 14:12:35 -0700 (PDT)
+        Fri, 27 Sep 2019 17:15:12 -0400
+Received: by mail-qk1-f195.google.com with SMTP id u184so3165502qkd.4
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 14:15:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MT3rEIfaJgpzvHmFM2pWeqN2XOEfjsN3Ht7YF+hthq8=;
-        b=HWrjXwmyGQrWIktNn2lCfS/WWNp3jM0GJkqLaICHIq/FPWxfdSodtSpyQmZZZSqYKl
-         gLWJ5uiWHrbfp7XRrlbm5tcLBi0mF8wxUQGVBvHdC+YrHRlTUWjnN/4obhqljgrPTG3A
-         RZtBAyLun1kMIfwj+XzanCaE7pfz5X+1U1DEEWl4a0HFqU4UC+8fia7u1zVDsy87zqmM
-         aCnZO4WYMlXyBvwTDY5YzycIIMk8vbQav6mKwEUaLZN6qC6Wase6y5kT8waFE/KYHjR2
-         sI+xNuy9ZVIQOG/d3gqTWFx/1AYoGsrnH4KQyKPBRTWgKQPqX7caUSWi/ZiuXFXkwHDR
-         u2xw==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=yZvVoBveDHCzVEJK+p90IwmjpCpkjwFeGPj8F1DecnI=;
+        b=b96I+dEegI+bTtnIMW2dZB0EVGBeMQFrsYW4vJo2dABzohHk6+KA7B0wh47x5ji38q
+         P7Eh0LBknV3w6EGrNr9ERxAkkjn34riEPlr5wX9H3Rp/VtO4TM7KRHpU9keJZhroFDh7
+         3eEyRKgeVoJ2Jh9QpXiJ5bp63HtssSmsQhIu3e22PHjMpI8Hg0BqbxJB25OxDHvvinXp
+         ujz6NCHIeUNvMoszgYsqH1gr69YmIATvPQq4PT5LC0z/zolzMLwxg7LC/VgeC6wEMfcZ
+         5pxyo7rqGwiKnEvT2v3KsBGMf1CSGCEn5BSqsBhCN/wzdLX9Asc+np0K5pamUxV7iy5x
+         xVWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MT3rEIfaJgpzvHmFM2pWeqN2XOEfjsN3Ht7YF+hthq8=;
-        b=WfoEWlqBdThbPJxcvlekfMQLedP81HHLaobtt9JzOZObgVg2p9xVHex97o6+KXCl/X
-         3hEokENMjocfot70XiF0jitrjKDZXVgw95aZJNPCQwEZDPbis4jmIm/KSCVN3HSH5YBS
-         cNVkaj+R4XE07gk4K7yrkpWO20rTJyCT1Rp8CE8Q1BlPqQ5dcM8mBnisKWSIHdbvDE8a
-         +L6kJTXzAOixfm2g39G8A93XJaXf8lE+5YE2LmPTqNMq/r+p+evsxQnwlmmlSPXuj26x
-         76RgZP2U7TNZUx6PYZn7BSSORu4p6LtnfD0nz/cDTIe519+NJfV/9kCGBcbKPofARYK6
-         Re5Q==
-X-Gm-Message-State: APjAAAXFpfslCETWyR4LeMSdtQU9gZWpUZ4MSIdHItL/DuVXJ1KXCRq9
-        jlhnnqRoIePTjFh8DSNUqfJP8aZStgNx+ywQ11fC2Q==
-X-Google-Smtp-Source: APXvYqy8O3KoXcSTxHqiytQM1iXWb+WWT9oKskcwqzyLQpgWA96K2vO/7MEIdTwZ75zGDyeYqjyajaWRaH5XxPonWcc=
-X-Received: by 2002:a62:798e:: with SMTP id u136mr6912504pfc.3.1569618754157;
- Fri, 27 Sep 2019 14:12:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1569569778.git.Jose.Abreu@synopsys.com> <80dd26ecf7fc82c88dc378d78210df5dd4138812.1569569778.git.Jose.Abreu@synopsys.com>
-In-Reply-To: <80dd26ecf7fc82c88dc378d78210df5dd4138812.1569569778.git.Jose.Abreu@synopsys.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 27 Sep 2019 14:12:23 -0700
-Message-ID: <CAKwvOdntD5HNb4Gg04YN7iZwvK3CB4enq4ZPhUM-Bd3huvR2pw@mail.gmail.com>
-Subject: Re: [PATCH net 8/8] net: stmmac: xgmac: Fix RSS not writing all Keys
- to HW
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     Network Development <netdev@vger.kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=yZvVoBveDHCzVEJK+p90IwmjpCpkjwFeGPj8F1DecnI=;
+        b=HlZ8bhsfGiTd1DqWsGyQ+9AReUZtj1MgTcQ8u/wCXXTCLcCffO6is9Yu5/CE7fdRng
+         hGigLRdstDSgbw+pdTVkwjBWvpsaaJTdlDP7XHXIFK4ZvWhYj1O+BotYDeGRKIb19ozm
+         y9tbYL1srDXJXKjon8YjehOizcNIZnHdKEHruy4Tv8hs+LgkXa7bjzCnkYl3LK2SuTZG
+         yLp7rXcu7FcuTidVWajXEeRy1busJ3IGMBmg1JaZXLBDSacCd30XUaKQpq9/whTKSfR2
+         lcXV/gFeRSvVYs2BnhF6dJcsVeVuXGjf847jB5Nk6ykMO2R18P3N/A6SkJUWU8jSw3I3
+         /hwA==
+X-Gm-Message-State: APjAAAW9xTN0TN33q2SrKHv4OW8L6bRaN5ZQFN9fSuUrD+slfuDzL3wO
+        sE4wu2KENnS5g0Q1AEc14QhOiw==
+X-Google-Smtp-Source: APXvYqwoSvssjY8WGFuqLcE7gxDEJB65YBJZQmbWHTvr9KiCjOXZ5gujAFBo80Z/hTActJBvMK6Frg==
+X-Received: by 2002:a05:620a:1335:: with SMTP id p21mr6640821qkj.321.1569618911147;
+        Fri, 27 Sep 2019 14:15:11 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id r1sm3282922qti.4.2019.09.27.14.15.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 27 Sep 2019 14:15:10 -0700 (PDT)
+Message-ID: <1569618908.5576.240.camel@lca.pw>
+Subject: Re: [PATCH] mm/page_alloc: fix a crash in free_pages_prepare()
+From:   Qian Cai <cai@lca.pw>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Date:   Fri, 27 Sep 2019 17:15:08 -0400
+In-Reply-To: <20190927134859.95a2f4908bdcea30df0184ed@linux-foundation.org>
+References: <1569613623-16820-1-git-send-email-cai@lca.pw>
+         <20190927134859.95a2f4908bdcea30df0184ed@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 12:49 AM Jose Abreu <Jose.Abreu@synopsys.com> wrote:
->
-> The sizeof(cfg->key) is != ARRAY_SIZE(cfg->key). Fix it.
+On Fri, 2019-09-27 at 13:48 -0700, Andrew Morton wrote:
+> On Fri, 27 Sep 2019 15:47:03 -0400 Qian Cai <cai@lca.pw> wrote:
+> 
+> > On architectures like s390, arch_free_page() could mark the page unused
+> > (set_page_unused()) and any access later would trigger a kernel panic.
+> > Fix it by moving arch_free_page() after all possible accessing calls.
+> > 
+> >  Hardware name: IBM 2964 N96 400 (z/VM 6.4.0)
+> >  Krnl PSW : 0404e00180000000 0000000026c2b96e
+> > (__free_pages_ok+0x34e/0x5d8)
+> >             R:0 T:1 IO:0 EX:0 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 RI:0 EA:3
+> >  Krnl GPRS: 0000000088d43af7 0000000000484000 000000000000007c
+> >  000000000000000f
+> >             000003d080012100 000003d080013fc0 0000000000000000
+> >  0000000000100000
+> >             00000000275cca48 0000000000000100 0000000000000008
+> >  000003d080010000
+> >             00000000000001d0 000003d000000000 0000000026c2b78a
+> >  000000002717fdb0
+> >  Krnl Code: 0000000026c2b95c: ec1100b30659 risbgn %r1,%r1,0,179,6
+> >             0000000026c2b962: e32014000036 pfd 2,1024(%r1)
+> >            #0000000026c2b968: d7ff10001000 xc 0(256,%r1),0(%r1)
+> >            >0000000026c2b96e: 41101100  la %r1,256(%r1)
+> >             0000000026c2b972: a737fff8  brctg %r3,26c2b962
+> >             0000000026c2b976: d7ff10001000 xc 0(256,%r1),0(%r1)
+> >             0000000026c2b97c: e31003400004 lg %r1,832
+> >             0000000026c2b982: ebff1430016a asi 5168(%r1),-1
+> >  Call Trace:
+> >  __free_pages_ok+0x16a/0x5d8)
+> >  memblock_free_all+0x206/0x290
+> >  mem_init+0x58/0x120
+> >  start_kernel+0x2b0/0x570
+> >  startup_continue+0x6a/0xc0
+> >  INFO: lockdep is turned off.
+> >  Last Breaking-Event-Address:
+> >  __free_pages_ok+0x372/0x5d8
+> >  Kernel panic - not syncing: Fatal exception: panic_on_oops
+> > 00: HCPGIR450W CP entered; disabled wait PSW 00020001 80000000 00000000
+> > 26A2379C
+> > 
+> > ...
+> > 
+> > --- a/mm/page_alloc.c
+> > +++ b/mm/page_alloc.c
+> > @@ -1175,11 +1175,11 @@ static __always_inline bool free_pages_prepare(struct page *page,
+> >  		debug_check_no_obj_freed(page_address(page),
+> >  					   PAGE_SIZE << order);
+> >  	}
+> > -	arch_free_page(page, order);
+> >  	if (want_init_on_free())
+> >  		kernel_init_free_pages(page, 1 << order);
+> >  
+> >  	kernel_poison_pages(page, 1 << order, 0);
+> > +	arch_free_page(page, order);
+> >  	if (debug_pagealloc_enabled())
+> >  		kernel_map_pages(page, 1 << order, 0);
+> 
+> This is all fairly mature code, isn't it?  What happened to make this
+> problem pop up now?
 
-I think the warning was from -Wsizeof-array-div.
+In the past, there is only kernel_poison_pages() would trigger it but it needs
+"page_poison=on" kernel cmdline, and I suspect nobody tested that on s390 in the
+past.
 
->
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+Recently, kernel_init_free_pages() (the commit 6471384af2a6) was added to the
+kernel and could trigger it as well.
 
-I may have reported the kbuild link, but scanning my email, there's
-also a report from
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+> 
+> IOW, is a -stable backport needed?
 
-> Fixes: 76067459c686 ("net: stmmac: Implement RSS and enable it in XGMAC core")
-> Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
->
-> ---
-> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-> Cc: Alexandre Torgue <alexandre.torgue@st.com>
-> Cc: Jose Abreu <joabreu@synopsys.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> Cc: netdev@vger.kernel.org
-> Cc: linux-stm32@st-md-mailman.stormreply.com
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> ---
->  drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-> index 6d8ac2ef4fc2..4a1f52474dbc 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-> @@ -533,7 +533,7 @@ static int dwxgmac2_rss_configure(struct mac_device_info *hw,
->                 return 0;
->         }
->
-> -       for (i = 0; i < (sizeof(cfg->key) / sizeof(u32)); i++) {
-> +       for (i = 0; i < (ARRAY_SIZE(cfg->key) / sizeof(u32)); i++) {
-
-cfg is an instance of struct stmmac_rss, which looks like:
-125 struct stmmac_rss {
-126   int enable;
-127   u8 key[STMMAC_RSS_HASH_KEY_SIZE];
-128   u32 table[STMMAC_RSS_MAX_TABLE_SIZE];
-129 };
-
-yep, LGTM. Thanks for the patch.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-
-
->                 ret = dwxgmac2_rss_write_reg(ioaddr, true, i, cfg->key[i]);
->                 if (ret)
->                         return ret;
-> --
-> 2.7.4
->
-
-
---
-Thanks,
-~Nick Desaulniers
+Since kernel_init_free_pages() was added in v5.3, I think it does not hurt to
+backport to -stable there.
