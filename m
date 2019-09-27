@@ -2,118 +2,98 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB344C388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95937C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CCCE2146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:37:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="euIPp8Wc"
+	by mail.kernel.org (Postfix) with ESMTP id 6AF4E205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:38:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728351AbfI0Uht (ORCPT
+        id S1728279AbfI0Ui4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 16:37:49 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34065 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbfI0Uht (ORCPT
+        Fri, 27 Sep 2019 16:38:56 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7994 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725789AbfI0Ui4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 16:37:49 -0400
-Received: by mail-ot1-f68.google.com with SMTP id m19so3420895otp.1;
-        Fri, 27 Sep 2019 13:37:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5HzZ318c3cKkiQZfJLfcgZNuIY2hbgfJtqOlfqrb8Eg=;
-        b=euIPp8WcmzobZ1wRzyPahQI/sNqKCya1H0EszdAiMVqnNHWrXbWc12mwe0puRbaVB0
-         0151jIM2xe6rLQE24hGrMja4GiW7m0AGsUA7VpOYkpO3Dz1IplyVEJzXVopLTansA2kj
-         dUd5RTJXR/bg+JUmORd4LCDPnvfD/cQ8BIHmWzEvTR/Z81ZJv8Qj9giJzJ/A23GF0R/e
-         Q8AfEUSwwwRc70xNTW0JekF0+QlB//kmyTyyrl0AA4N63uiKZXn3GJ0Uj9ULwPcYAKya
-         1RWIxHwbqoNw64BSR64hZF6qHXdHfdz9uxYSKaLuZikq0gITazMFlvtJdqksDH84dhuR
-         ylmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5HzZ318c3cKkiQZfJLfcgZNuIY2hbgfJtqOlfqrb8Eg=;
-        b=AjcwDrGOpGzZ+oSi8NQw/62IZtVfKkPKb8HYdCltMJLzNXq5Gd8meMQNlfq60R38Dm
-         /IJ8KkdCnf3Wa2ettQDOwrDDKnwYHjB8b1R1w/6XSlaZbYoVO6na3W/ZwCYmh/hWxD6y
-         +RyFBpQ7Nj6HClEvqiixu2zWIA3wqOgEgp5AHRaELBsT+4FDajSSh//O26kUvhrkZUlr
-         kIxS09AwjClDhm3+7EEGYCc3XCgV1pQ1Rys9CeYaTi8hzAZNjSmI9pB218nztDBQtvsk
-         NAy2xiAAqPSQq4GwblX38OlnkMoyuLlql1Hx8l3myFPXXW8+D9Uah9eqUl2Ash+wS2pI
-         qRRw==
-X-Gm-Message-State: APjAAAWwrUDlUuwTaYBI41ewHcBJZe5bey6LuKLVslmt2QXK+CFQw+EE
-        0NeQ/cXDQyTV0poh1IraJC8p71/kPidetaL6f3g=
-X-Google-Smtp-Source: APXvYqw6PImrq0c1y1VcQ7iuF4Ug5WxhWXn21mZr4P19hYblK8Q/2ovDB7x6QYfZXUtwnN0IJdGrQmVPNubZPTdCDWw=
-X-Received: by 2002:a9d:6a56:: with SMTP id h22mr4865024otn.176.1569616668476;
- Fri, 27 Sep 2019 13:37:48 -0700 (PDT)
+        Fri, 27 Sep 2019 16:38:56 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8RKasNA040269;
+        Fri, 27 Sep 2019 16:38:44 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v9rd7j4u1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 27 Sep 2019 16:38:43 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8RKUd4c029263;
+        Fri, 27 Sep 2019 20:38:43 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma01wdc.us.ibm.com with ESMTP id 2v5bg7u5k2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 27 Sep 2019 20:38:43 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8RKcfPX38142260
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Sep 2019 20:38:42 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E4DD2112063;
+        Fri, 27 Sep 2019 20:38:41 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 659D6112062;
+        Fri, 27 Sep 2019 20:38:40 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.85.194.136])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Fri, 27 Sep 2019 20:38:40 +0000 (GMT)
+References: <20190911163433.12822-1-bauerman@linux.ibm.com> <875zly1jbo.fsf@morokweng.localdomain>
+User-agent: mu4e 1.2.0; emacs 26.2
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org
+Cc:     Paul Mackerras <paulus@samba.org>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc/prom_init: Undo relocation before entering secure mode
+In-reply-to: <875zly1jbo.fsf@morokweng.localdomain>
+Date:   Fri, 27 Sep 2019 17:38:38 -0300
+Message-ID: <87v9td5vap.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-References: <20190927184722.31989-1-bparrot@ti.com> <20190927184722.31989-6-bparrot@ti.com>
-In-Reply-To: <20190927184722.31989-6-bparrot@ti.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 27 Sep 2019 21:37:22 +0100
-Message-ID: <CA+V-a8ss26F4nEFRDtXytn4ZPi==fMYdoe0JpEunURAYy9J99g@mail.gmail.com>
-Subject: Re: [Patch v4 5/8] media: dt-bindings: ov2659: add
- powerdown/reset-gpios optional property
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-27_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=907 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909270171
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 7:47 PM Benoit Parrot <bparrot@ti.com> wrote:
->
-> Add powerdown-gpios and reset-gpios to the list of optional properties
-> for the OV2659 camera sensor.
->
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> ---
->  Documentation/devicetree/bindings/media/i2c/ov2659.txt | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-Acked-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
 
-Cheers,
---Prabhakar Lad
+Thiago Jung Bauermann <bauerman@linux.ibm.com> writes:
 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov2659.txt b/Documentation/devicetree/bindings/media/i2c/ov2659.txt
-> index cabc7d827dfb..92989a619f29 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/ov2659.txt
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov2659.txt
-> @@ -12,6 +12,12 @@ Required Properties:
->  - clock-names: should be "xvclk".
->  - link-frequencies: target pixel clock frequency.
+> Thiago Jung Bauermann <bauerman@linux.ibm.com> writes:
 >
-> +Optional Properties:
-> +- powerdown-gpios: reference to the GPIO connected to the pwdn pin, if any.
-> +  Active high with internal pull down resistor.
-> +- reset-gpios: reference to the GPIO connected to the resetb pin, if any.
-> +  Active low with internal pull up resistor.
-> +
->  For further reading on port node refer to
->  Documentation/devicetree/bindings/media/video-interfaces.txt.
+>> The ultravisor will do an integrity check of the kernel image but we
+>> relocated it so the check will fail. Restore the original image by
+>> relocating it back to the kernel virtual base address.
+>>
+>> This works because during build vmlinux is linked with an expected virtual
+>> runtime address of KERNELBASE.
+>>
+>> Fixes: 6a9c930bd775 ("powerpc/prom_init: Add the ESM call to prom_init")
+>> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 >
-> @@ -27,6 +33,9 @@ Example:
->                         clocks = <&clk_ov2659 0>;
->                         clock-names = "xvclk";
+> I meant to put a Suggested-by: Paul Mackerras <paulus@samba.org>
 >
-> +                       powerdown-gpios = <&gpio6 14 GPIO_ACTIVE_HIGH>;
-> +                       reset-gpios = <&gpio6 15 GPIO_ACTIVE_LOW>;
-> +
->                         port {
->                                 ov2659_0: endpoint {
->                                         remote-endpoint = <&vpfe_ep>;
-> --
-> 2.17.1
->
+> Sorry. Will add it if there's a v2.
+
+Ping?
+
+-- 
+Thiago Jung Bauermann
+IBM Linux Technology Center
