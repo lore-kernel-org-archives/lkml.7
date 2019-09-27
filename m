@@ -2,118 +2,88 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23439C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 851B2C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05819217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 642C4217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:27:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbfI0O1a (ORCPT
+        id S1728102AbfI0O1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 10:27:30 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30496 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728068AbfI0O13 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 10:27:29 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8REM9Io037393
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 10:27:27 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v8w271wxm-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 10:27:27 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <nayna@linux.ibm.com>;
-        Fri, 27 Sep 2019 15:27:20 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 27 Sep 2019 15:27:15 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8RERDOq33030352
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Sep 2019 14:27:14 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D958AA405C;
-        Fri, 27 Sep 2019 14:27:13 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D10BAA405F;
-        Fri, 27 Sep 2019 14:27:09 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.80.207.173])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 27 Sep 2019 14:27:09 +0000 (GMT)
-From:   Nayna Jain <nayna@linux.ibm.com>
-To:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
-        linux-integrity@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nayna Jain <nayna@linux.ibm.com>
-Subject: [PATCH v6 9/9] powerpc/ima: update ima arch policy to check for blacklist
-Date:   Fri, 27 Sep 2019 10:26:00 -0400
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com>
-References: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19092714-0016-0000-0000-000002B156CB
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19092714-0017-0000-0000-000033122998
-Message-Id: <1569594360-7141-10-git-send-email-nayna@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-27_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909270134
+        Fri, 27 Sep 2019 10:27:43 -0400
+Received: from nautica.notk.org ([91.121.71.147]:35603 "EHLO nautica.notk.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727159AbfI0O1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 10:27:43 -0400
+Received: by nautica.notk.org (Postfix, from userid 1001)
+        id 06DF6C009; Fri, 27 Sep 2019 16:27:41 +0200 (CEST)
+Date:   Fri, 27 Sep 2019 16:27:26 +0200
+From:   Dominique Martinet <asmadeus@codewreck.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     v9fs-developer@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [GIT PULL] 9p updates for 5.4
+Message-ID: <20190927142725.GA8169@nautica>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch updates the arch specific policies for PowernV systems
-to add check against blacklisted hashes before doing the verification.
+Hi Linus,
 
-Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
----
- arch/powerpc/kernel/ima_arch.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Some of the usual small fixes and cleanup.
 
-diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
-index 77c61b142042..3f57433c0824 100644
---- a/arch/powerpc/kernel/ima_arch.c
-+++ b/arch/powerpc/kernel/ima_arch.c
-@@ -24,9 +24,9 @@ bool arch_ima_get_secureboot(void)
- static const char *const arch_rules[] = {
- 	"measure func=KEXEC_KERNEL_CHECK template=ima-modsig",
- 	"measure func=MODULE_CHECK template=ima-modsig",
--	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
-+	"appraise func=KEXEC_KERNEL_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
- #if !IS_ENABLED(CONFIG_MODULE_SIG)
--	"appraise func=MODULE_CHECK appraise_type=imasig|modsig",
-+	"appraise func=MODULE_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
- #endif
- 	NULL
- };
+I didn't get the target version wrong this time! :)
+
+
+The following changes since commit 089cf7f6ecb266b6a4164919a2e69bd2f938374a:
+
+  Linux 5.3-rc7 (2019-09-02 09:57:40 -0700)
+
+are available in the Git repository at:
+
+  https://github.com/martinetd/linux tags/9p-for-5.4
+
+for you to fetch changes up to aafee43b72863f1f70aeaf1332d049916e8df239:
+
+  9p/vfs_super.c: Remove unused parameter data in v9fs_fill_super
+  (2019-09-03 11:10:13 +0000)
+
+----------------------------------------------------------------
+9p pull request for inclusion in 5.4
+
+Small fixes all around:
+ - avoid overlayfs copy-up for PRIVATE mmaps
+ - KUMSAN uninitialized warning for transport error
+ - one syzbot memory leak fix in 9p cache
+ - internal API cleanup for v9fs_fill_super
+
+----------------------------------------------------------------
+Bharath Vedartham (2):
+      9p/cache.c: Fix memory leak in v9fs_cache_session_get_cookie
+      9p/vfs_super.c: Remove unused parameter data in v9fs_fill_super
+
+Chengguang Xu (1):
+      9p: avoid attaching writeback_fid on mmap with type PRIVATE
+
+Lu Shuaibing (1):
+      9p: Transport error uninitialized
+
+ fs/9p/cache.c     | 2 ++
+ fs/9p/vfs_file.c  | 3 +++
+ fs/9p/vfs_super.c | 4 ++--
+ net/9p/client.c   | 1 +
+ 4 files changed, 8 insertions(+), 2 deletions(-)
+
+Cheers,
 -- 
-2.20.1
-
+Dominique | Asmadeus
