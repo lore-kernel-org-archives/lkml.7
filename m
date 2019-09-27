@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4372C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4CAC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D3BA2146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:11:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3616F2146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:11:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727221AbfI0ILm (ORCPT
+        id S1726953AbfI0ILE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 04:11:42 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:45285 "EHLO
+        Fri, 27 Sep 2019 04:11:04 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45251 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbfI0ILF (ORCPT
+        with ESMTP id S1726877AbfI0ILB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 04:11:05 -0400
+        Fri, 27 Sep 2019 04:11:01 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iDlKx-0005cn-3h; Fri, 27 Sep 2019 10:10:47 +0200
+        id 1iDlL1-0005iS-8I; Fri, 27 Sep 2019 10:10:51 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A547C1C0742;
-        Fri, 27 Sep 2019 10:10:43 +0200 (CEST)
-Date:   Fri, 27 Sep 2019 08:10:43 -0000
-From:   "tip-bot2 for Mathieu Desnoyers" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BAD951C07BA;
+        Fri, 27 Sep 2019 10:10:44 +0200 (CEST)
+Date:   Fri, 27 Sep 2019 08:10:44 -0000
+From:   "tip-bot2 for Eric W. Biederman" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] sched/membarrier: Call sync_core only before
- usermode for same mm
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+Subject: [tip: sched/urgent] tasks: Add a count of task RCU users
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Chris Metcalf <cmetcalf@ezchip.com>,
         Christoph Lameter <cl@linux.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
         Kirill Tkhai <tkhai@yandex.ru>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Mike Galbraith <efault@gmx.de>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
         "Russell King - ARM Linux admin" <linux@armlinux.org.uk>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20190919173705.2181-4-mathieu.desnoyers@efficios.com>
-References: <20190919173705.2181-4-mathieu.desnoyers@efficios.com>
+In-Reply-To: <87woebdplt.fsf_-_@x220.int.ebiederm.org>
+References: <87woebdplt.fsf_-_@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Message-ID: <156957184362.9866.4020605846698676491.tip-bot2@tip-bot2>
+Message-ID: <156957184468.9866.15729112622047548545.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,49 +66,113 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/urgent branch of tip:
 
-Commit-ID:     2840cf02fae627860156737e83326df354ee4ec6
-Gitweb:        https://git.kernel.org/tip/2840cf02fae627860156737e83326df354ee4ec6
-Author:        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-AuthorDate:    Thu, 19 Sep 2019 13:37:01 -04:00
+Commit-ID:     3fbd7ee285b2bbc6eebd15a3c8786d9776a402a8
+Gitweb:        https://git.kernel.org/tip/3fbd7ee285b2bbc6eebd15a3c8786d9776a402a8
+Author:        Eric W. Biederman <ebiederm@xmission.com>
+AuthorDate:    Sat, 14 Sep 2019 07:33:34 -05:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 25 Sep 2019 17:42:30 +02:00
+CommitterDate: Wed, 25 Sep 2019 17:42:29 +02:00
 
-sched/membarrier: Call sync_core only before usermode for same mm
+tasks: Add a count of task RCU users
 
-When the prev and next task's mm change, switch_mm() provides the core
-serializing guarantees before returning to usermode. The only case
-where an explicit core serialization is needed is when the scheduler
-keeps the same mm for prev and next.
+Add a count of the number of RCU users (currently 1) of the task
+struct so that we can later add the scheduler case and get rid of the
+very subtle task_rcu_dereference(), and just use rcu_dereference().
 
-Suggested-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+As suggested by Oleg have the count overlap rcu_head so that no
+additional space in task_struct is required.
+
+Inspired-by: Linus Torvalds <torvalds@linux-foundation.org>
+Inspired-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Eric W. Biederman <ebiederm@xmission.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: Chris Metcalf <cmetcalf@ezchip.com>
 Cc: Christoph Lameter <cl@linux.com>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
 Cc: Kirill Tkhai <tkhai@yandex.ru>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Mike Galbraith <efault@gmx.de>
-Cc: Paul E. McKenney <paulmck@linux.ibm.com>
+Cc: Paul E. McKenney <paulmck@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Russell King - ARM Linux admin <linux@armlinux.org.uk>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190919173705.2181-4-mathieu.desnoyers@efficios.com
+Link: https://lkml.kernel.org/r/87woebdplt.fsf_-_@x220.int.ebiederm.org
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- include/linux/sched/mm.h | 2 ++
- 1 file changed, 2 insertions(+)
+ include/linux/sched.h      | 5 ++++-
+ include/linux/sched/task.h | 1 +
+ kernel/exit.c              | 7 ++++++-
+ kernel/fork.c              | 7 +++----
+ 4 files changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
-index 4a79440..8557ec6 100644
---- a/include/linux/sched/mm.h
-+++ b/include/linux/sched/mm.h
-@@ -362,6 +362,8 @@ enum {
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index e2e9196..8e43e54 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1147,7 +1147,10 @@ struct task_struct {
  
- static inline void membarrier_mm_sync_core_before_usermode(struct mm_struct *mm)
+ 	struct tlbflush_unmap_batch	tlb_ubc;
+ 
+-	struct rcu_head			rcu;
++	union {
++		refcount_t		rcu_users;
++		struct rcu_head		rcu;
++	};
+ 
+ 	/* Cache last used pipe for splice(): */
+ 	struct pipe_inode_info		*splice_pipe;
+diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+index 3d90ed8..153a683 100644
+--- a/include/linux/sched/task.h
++++ b/include/linux/sched/task.h
+@@ -120,6 +120,7 @@ static inline void put_task_struct(struct task_struct *t)
+ }
+ 
+ struct task_struct *task_rcu_dereference(struct task_struct **ptask);
++void put_task_struct_rcu_user(struct task_struct *task);
+ 
+ #ifdef CONFIG_ARCH_WANTS_DYNAMIC_TASK_STRUCT
+ extern int arch_task_struct_size __read_mostly;
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 22ab6a4..3bcaec2 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -182,6 +182,11 @@ static void delayed_put_task_struct(struct rcu_head *rhp)
+ 	put_task_struct(tsk);
+ }
+ 
++void put_task_struct_rcu_user(struct task_struct *task)
++{
++	if (refcount_dec_and_test(&task->rcu_users))
++		call_rcu(&task->rcu, delayed_put_task_struct);
++}
+ 
+ void release_task(struct task_struct *p)
  {
-+	if (current->mm != mm)
-+		return;
- 	if (likely(!(atomic_read(&mm->membarrier_state) &
- 		     MEMBARRIER_STATE_PRIVATE_EXPEDITED_SYNC_CORE)))
- 		return;
+@@ -222,7 +227,7 @@ repeat:
+ 
+ 	write_unlock_irq(&tasklist_lock);
+ 	release_thread(p);
+-	call_rcu(&p->rcu, delayed_put_task_struct);
++	put_task_struct_rcu_user(p);
+ 
+ 	p = leader;
+ 	if (unlikely(zap_leader))
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 1d1cd06..7eefe33 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -902,10 +902,9 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
+ 	if (orig->cpus_ptr == &orig->cpus_mask)
+ 		tsk->cpus_ptr = &tsk->cpus_mask;
+ 
+-	/*
+-	 * One for us, one for whoever does the "release_task()" (usually
+-	 * parent)
+-	 */
++	/* One for the user space visible state that goes away when reaped. */
++	refcount_set(&tsk->rcu_users, 1);
++	/* One for the rcu users, and one for the scheduler */
+ 	refcount_set(&tsk->usage, 2);
+ #ifdef CONFIG_BLK_DEV_IO_TRACE
+ 	tsk->btrace_seq = 0;
