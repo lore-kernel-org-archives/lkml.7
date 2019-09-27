@@ -7,65 +7,64 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB71C32774
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 09:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5921FC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 09:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C4BC2146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 09:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 234B1217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 09:10:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="e3lgOQFJ"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="p20iWOiy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfI0JK2 (ORCPT
+        id S1726851AbfI0JKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 05:10:28 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55556 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbfI0JK1 (ORCPT
+        Fri, 27 Sep 2019 05:10:46 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50624 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbfI0JKq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 05:10:27 -0400
-Received: by mail-wm1-f68.google.com with SMTP id a6so5710499wma.5
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 02:10:23 -0700 (PDT)
+        Fri, 27 Sep 2019 05:10:46 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 5so5740690wmg.0
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 02:10:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=+CHQO+4lbboa5HAQP72RqnqQA2SDLCrHaUOmIy38eu8=;
-        b=e3lgOQFJTbIBdz1bhXh8UduNAYSKvoRriMOMz71MndGlVrgly44HWj2pcnq1WdbGX5
-         kUh1fICFXSjo05EAUVc9Rn+hrKs+iktrXEa6ca5dnQ9h54+9SZFQRhmANMERh8sCz3Se
-         dzU0Sr3TkRcHABtmndBhriifexWlBLRShynPnu4R8YgQbNcOm4RHygSQLHnC0DgZv/JE
-         CAAB6cb/JuE28vkLCXVsJ8DKE9bxTzm5D56DsH80m9tTpcjqtv74DbwhYn0Ux2PyqkZE
-         QyLC6w3YlQCdWkemIQ1afDB1vVB0bmACZ4DxZXKI6hybmAooAMz92J9Aq1T5ieSXZxRj
-         jimg==
+        bh=9JDXSZfO3QSzLOKM13WUrHPFbh8gtWNxXZ5DE6hIJbM=;
+        b=p20iWOiyVHHW7ceDNPTmqJBElKRd+6hRMNGA10VGdtObZJaJ3AC5a3vH4kuTxwF0GM
+         LCgoWZ6HxbGfPXzhnVW+TFe6UVh7zZONrhh+clEcQiiyPQqRd8yj+5Ydf2ethYc5gPJ6
+         ZykEFdcz3OBCdGyEas8AtB0/a/QgF8+tAkDpoE1XOtuAmnzwj/2Z/j99HUYpnx4N6u5M
+         BxG/b+15VPUbReSaA1i6AFsNC4U25Bkb7pCuhs9293YpXxrcYzx5U0k1e1U7aCpqngtJ
+         NG05aQ3NNjFqosBnIxVOGS1SahFMU80JQjACGSJ2+RuOWcM0yjvyx337rU8m2CvMlNX0
+         QVTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=+CHQO+4lbboa5HAQP72RqnqQA2SDLCrHaUOmIy38eu8=;
-        b=IipHjiqJYaVaYIezl/nTOgd+hKIEXvZEF29K6W6naJnR7ydcMxofVBjmOcTYTwlhVY
-         2HLkxSpCp3lGHV7bPGtzkFgbi/SCpHPjTRpI51uJb2lVo4jGCW9hIZQioZ7e+HqL9PdJ
-         FjlI6Eun1VdRuymeYFxFx0Y1ECxQc1f3tD2Enq8JZKruLIrq8Q4kMbVF6BYYtynIrM/i
-         zQQ8l/FsVVpBY+m//h1bxCtd7twg48ko7p3YvE1rXL/7Y+KiNKO/lDhWuxI0obl2sEsL
-         W56Om0r8Nh9otia+qDmNJkUqre+1ZeNJCvaHFlVjRvSc78VK3B28qKpIAiTiH9LNgMIS
-         zjsQ==
-X-Gm-Message-State: APjAAAXEUa7gTqSArm4A2r+IZLYt4uVV6c7WBBTL8E6EtDc5X9wQ12Qb
-        7MM+PrA45O0ljz70UAOhtrGFJeLm/DOFQg==
-X-Google-Smtp-Source: APXvYqw2siI98p+kOoA+MTglCqjlUKrpIXjh4LJBSwy4RDBKRwo5vd0JUD710xGnmnIaUqMz2oE3wg==
-X-Received: by 2002:a1c:cf8c:: with SMTP id f134mr6569105wmg.174.1569575422908;
-        Fri, 27 Sep 2019 02:10:22 -0700 (PDT)
+        bh=9JDXSZfO3QSzLOKM13WUrHPFbh8gtWNxXZ5DE6hIJbM=;
+        b=OoEFsm2WkEBaQoUun+ydLzxRQLSuD8cUXeXdLArRI7Mk20O9SuhLHWxG3ZcxMV+ttN
+         GJAc5YG1HXkNItd8a23Alow18EQ5Dp8Ia5FEjJEApKbfDW4scUA8wYKQHZ/yJZUbC+MF
+         2ce8r0pyqSjmUKBP0WI9uLpagwu7P6ZD4e1P/q4Xi4d97dtwIdlxTQNkLbdYPhWCthV4
+         O/KA1cHGE5e9/gEK+2dttjAbud5uXTC+W8p/cUuxg+r6qQBiLxZz1aYL8gAexpk1vTjm
+         inAnC4pxGRVqwGz4Xe52lM8v/uTIaKXvUKpEXc46cVcjqdzKUhpJPRGE944FCVdRsu3y
+         qREA==
+X-Gm-Message-State: APjAAAVt0IPMZrd7ZDzeQ6sNWdpJkiszpM5CM4mSxdOI1rhRWJdxDI5E
+        6JVjYIXpY7hqs0I4m2yUBv43FeY3QMtmEQ==
+X-Google-Smtp-Source: APXvYqwJmyvJuQ3C5mzoVzAe4tLN/ZVjMLytQqz95VDUtQpNpmgZs/XT05X8JPl6P+cwVL9YLkm5Hg==
+X-Received: by 2002:a1c:4085:: with SMTP id n127mr6641515wma.68.1569575442169;
+        Fri, 27 Sep 2019 02:10:42 -0700 (PDT)
 Received: from [192.168.1.62] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id q124sm7952288wma.5.2019.09.27.02.10.22
+        by smtp.gmail.com with ESMTPSA id n1sm4095115wrg.67.2019.09.27.02.10.41
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 27 Sep 2019 02:10:22 -0700 (PDT)
-Subject: Re: [PATCH 2/7] dt-bindings: clock: meson: add sm1 resets to the
- axg-audio controller
+        Fri, 27 Sep 2019 02:10:41 -0700 (PDT)
+Subject: Re: [PATCH 3/7] clk: meson: axg-audio: remove useless defines
 To:     Jerome Brunet <jbrunet@baylibre.com>
 Cc:     Kevin Hilman <khilman@baylibre.com>,
         linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
         linux-kernel@vger.kernel.org
 References: <20190924153356.24103-1-jbrunet@baylibre.com>
- <20190924153356.24103-3-jbrunet@baylibre.com>
+ <20190924153356.24103-4-jbrunet@baylibre.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -118,12 +117,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <9ffc5134-0109-e92b-71e1-60a3521517f3@baylibre.com>
-Date:   Fri, 27 Sep 2019 11:10:21 +0200
+Message-ID: <cbad7e7c-34aa-f276-c541-b5e96ea4d4bb@baylibre.com>
+Date:   Fri, 27 Sep 2019 11:10:41 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190924153356.24103-3-jbrunet@baylibre.com>
+In-Reply-To: <20190924153356.24103-4-jbrunet@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -133,37 +132,30 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 24/09/2019 17:33, Jerome Brunet wrote:
-> Add the reset id of the sm1 audio clock controller
+> Defining the number of each input type is no longer necessary since
+> we are not using the clk-input hack anymore
 > 
+> Fixes: 282420eed23f ("clk: meson: axg-audio: migrate to the new parent description method")
 > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 > ---
->  .../reset/amlogic,meson-g12a-audio-reset.h        | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+>  drivers/clk/meson/axg-audio.c | 4 ----
+>  1 file changed, 4 deletions(-)
 > 
-> diff --git a/include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h b/include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h
-> index 14b78dabed0e..f805129ca7af 100644
-> --- a/include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h
-> +++ b/include/dt-bindings/reset/amlogic,meson-g12a-audio-reset.h
-> @@ -35,4 +35,19 @@
->  #define AUD_RESET_TOHDMITX	24
->  #define AUD_RESET_CLKTREE	25
+> diff --git a/drivers/clk/meson/axg-audio.c b/drivers/clk/meson/axg-audio.c
+> index 18b23cdf679c..60ac71856e5e 100644
+> --- a/drivers/clk/meson/axg-audio.c
+> +++ b/drivers/clk/meson/axg-audio.c
+> @@ -20,10 +20,6 @@
+>  #include "clk-phase.h"
+>  #include "sclk-div.h"
 >  
-> +/* SM1 added resets */
-> +#define AUD_RESET_RESAMPLE_B	26
-> +#define AUD_RESET_TOVAD		27
-> +#define AUD_RESET_LOCKER	28
-> +#define AUD_RESET_SPDIFIN_LB	29
-> +#define AUD_RESET_FRATV		30
-> +#define AUD_RESET_FRHDMIRX	31
-> +#define AUD_RESET_FRDDR_D	32
-> +#define AUD_RESET_TODDR_D	33
-> +#define AUD_RESET_LOOPBACK_B	34
-> +#define AUD_RESET_EARCTX	35
-> +#define AUD_RESET_EARCRX	36
-> +#define AUD_RESET_FRDDR_E	37
-> +#define AUD_RESET_TODDR_E	38
-> +
->  #endif
+> -#define AUD_MST_IN_COUNT	8
+> -#define AUD_SLV_SCLK_COUNT	10
+> -#define AUD_SLV_LRCLK_COUNT	10
+> -
+>  #define AUD_GATE(_name, _reg, _bit, _phws, _iflags)			\
+>  struct clk_regmap aud_##_name = {					\
+>  	.data = &(struct clk_regmap_gate_data){				\
 > 
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
