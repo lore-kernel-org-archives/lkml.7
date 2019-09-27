@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D4AC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C91C8C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0836217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DEA221A4C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:35:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oUBz4L9M"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Y8t0n485"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbfI0SfG (ORCPT
+        id S1728386AbfI0Se6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 14:35:06 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:57808 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728407AbfI0SfA (ORCPT
+        Fri, 27 Sep 2019 14:34:58 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:47070 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728289AbfI0Sev (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 14:35:00 -0400
+        Fri, 27 Sep 2019 14:34:51 -0400
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8RIYxRA091615;
-        Fri, 27 Sep 2019 13:34:59 -0500
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8RIYoXL066351;
+        Fri, 27 Sep 2019 13:34:50 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569609299;
-        bh=krbcjClNBl5l626Tt1s8M5AXW8701NDZN1CSgPSwXmg=;
+        s=ti-com-17Q1; t=1569609290;
+        bh=/4qTRBRq9owjDHc3ORycFgYL0HpuxktA2ILM5kkMToI=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=oUBz4L9MJhKpZCLJf4am7VldjaFQjMiI5QYJj6WrE6SPtlsTN0xAr42X524mWi5YZ
-         brthPkrlKTrsSKxo2TzWLQvMhKG7DuMN86iPidgC6jsYRAgcxdmhOux516YhhQ2h9a
-         g0b6hbxk8ex915quk4aSHEC00DOGyqzfVsSj3Ymk=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8RIYw54122802
+        b=Y8t0n485tDN37T57KwhyxqvRqrYMop0cqhi7CsvVLOsSr4FbzEOA7Q00xB7pOoWxA
+         kMAhS4sYmmfo+bHG5jE8XLrZ5xIo2vslaMqyHMNIAAbPANPcmE9ZQe+yiT9phT2bxF
+         B07HZjAK/7+LsPM2RYoOL4up7MS0rpFrwDTzEXLQ=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8RIYoVO122685
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 27 Sep 2019 13:34:58 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 27
- Sep 2019 13:34:58 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
+        Fri, 27 Sep 2019 13:34:50 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE113.ent.ti.com
  (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 27
+ Sep 2019 13:34:41 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 27 Sep 2019 13:34:50 -0500
+ Frontend Transport; Fri, 27 Sep 2019 13:34:41 -0500
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8RIYgc5073031;
-        Fri, 27 Sep 2019 13:34:58 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8RIYgbv073031;
+        Fri, 27 Sep 2019 13:34:49 -0500
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>
 CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch 16/16] media: ti-vpe: vpe: don't rely on colorspace member for conversion
-Date:   Fri, 27 Sep 2019 13:36:50 -0500
-Message-ID: <20190927183650.31345-17-bparrot@ti.com>
+Subject: [Patch 08/16] media: ti-vpe: vpe: fix a v4l2-compliance warning about invalid pixel format
+Date:   Fri, 27 Sep 2019 13:36:42 -0500
+Message-ID: <20190927183650.31345-9-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190927183650.31345-1-bparrot@ti.com>
 References: <20190927183650.31345-1-bparrot@ti.com>
@@ -66,108 +66,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Up to now VPE was relying on the colorspace value of struct v4l2_format
-as an indication to perform color space conversion from YUV to RGB or
-not.
+v4l2-compliance warns with this message:
 
-Instead we should used the source/destination fourcc codes as a more
-reliable indication to perform color space conversion or not.
+   warn: v4l2-test-formats.cpp(717): \
+ 	TRY_FMT cannot handle an invalid pixelformat.
+   warn: v4l2-test-formats.cpp(718): \
+ 	This may or may not be a problem. For more information see:
+   warn: v4l2-test-formats.cpp(719): \
+ 	http://www.mail-archive.com/linux-media@vger.kernel.org/msg56550.html
+	...
+   test VIDIOC_TRY_FMT: FAIL
+
+We need to make sure that the returns a valid pixel format in all
+instance. Based on the v4l2 framework convention drivers must return a
+valid pixel format when the requested pixel format is either invalid or
+not supported.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 41 ++++++++++++++++++++++-------
- 1 file changed, 32 insertions(+), 9 deletions(-)
+ drivers/media/platform/ti-vpe/vpe.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index e30981cd3e8f..d002adc6263f 100644
+index 1278d457f753..d3f1ae8b72fa 100644
 --- a/drivers/media/platform/ti-vpe/vpe.c
 +++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -353,6 +353,32 @@ enum {
- 	Q_DATA_DST = 1,
+@@ -351,20 +351,25 @@ enum {
  };
  
-+static bool is_fmt_rgb(u32 fourcc)
-+{
-+	if (fourcc == V4L2_PIX_FMT_RGB24 ||
-+	    fourcc == V4L2_PIX_FMT_BGR24 ||
-+	    fourcc == V4L2_PIX_FMT_RGB32 ||
-+	    fourcc == V4L2_PIX_FMT_BGR32 ||
-+	    fourcc == V4L2_PIX_FMT_RGB565 ||
-+	    fourcc == V4L2_PIX_FMT_RGB555)
-+		return true;
-+
-+	return false;
-+}
-+
-+/*
-+ * This helper is only used to setup the color space converter
-+ * the actual value returned is only to broadly differentiate between
-+ * RGB and YUV
-+ */
-+static enum  v4l2_colorspace fourcc_to_colorspace(u32 fourcc)
-+{
-+	if (is_fmt_rgb(fourcc))
-+		return V4L2_COLORSPACE_SRGB;
-+
-+	return V4L2_COLORSPACE_SMPTE170M;
-+}
-+
  /* find our format description corresponding to the passed v4l2_format */
- static struct vpe_fmt *__find_format(u32 fourcc)
+-static struct vpe_fmt *find_format(struct v4l2_format *f)
++static struct vpe_fmt *__find_format(u32 fourcc)
  {
-@@ -764,11 +790,10 @@ static void set_src_registers(struct vpe_ctx *ctx)
- static void set_dst_registers(struct vpe_ctx *ctx)
- {
- 	struct vpe_mmr_adb *mmr_adb = ctx->mmr_adb.addr;
--	enum v4l2_colorspace clrspc = ctx->q_data[Q_DATA_DST].colorspace;
- 	struct vpe_fmt *fmt = ctx->q_data[Q_DATA_DST].fmt;
- 	u32 val = 0;
+ 	struct vpe_fmt *fmt;
+ 	unsigned int k;
  
--	if (clrspc == V4L2_COLORSPACE_SRGB) {
-+	if (is_fmt_rgb(fmt->fourcc)) {
- 		val |= VPE_RGB_OUT_SELECT;
- 		vpdma_set_bg_color(ctx->dev->vpdma,
- 			(struct vpdma_data_format *)fmt->vpdma_fmt[0], 0xff);
-@@ -912,7 +937,8 @@ static int set_srcdst_params(struct vpe_ctx *ctx)
- 	set_dei_regs(ctx);
- 
- 	csc_set_coeff(ctx->dev->csc, &mmr_adb->csc_regs[0],
--		s_q_data->colorspace, d_q_data->colorspace);
-+		      fourcc_to_colorspace(s_q_data->fmt->fourcc),
-+		      fourcc_to_colorspace(d_q_data->fmt->fourcc));
- 
- 	sc_set_hs_coeffs(ctx->dev->sc, ctx->sc_coeff_h.addr, src_w, dst_w);
- 	sc_set_vs_coeffs(ctx->dev->sc, ctx->sc_coeff_v.addr, src_h, dst_h);
-@@ -1285,7 +1311,7 @@ static void device_run(void *priv)
- 	if (ctx->deinterlacing)
- 		add_out_dtd(ctx, VPE_PORT_MV_OUT);
- 
--	if (d_q_data->colorspace == V4L2_COLORSPACE_SRGB) {
-+	if (is_fmt_rgb(d_q_data->fmt->fourcc)) {
- 		add_out_dtd(ctx, VPE_PORT_RGB_OUT);
- 	} else {
- 		add_out_dtd(ctx, VPE_PORT_LUMA_OUT);
-@@ -1327,7 +1353,7 @@ static void device_run(void *priv)
+ 	for (k = 0; k < ARRAY_SIZE(vpe_formats); k++) {
+ 		fmt = &vpe_formats[k];
+-		if (fmt->fourcc == f->fmt.pix.pixelformat)
++		if (fmt->fourcc == fourcc)
+ 			return fmt;
  	}
  
- 	/* sync on channel control descriptors for output ports */
--	if (d_q_data->colorspace == V4L2_COLORSPACE_SRGB) {
-+	if (is_fmt_rgb(d_q_data->fmt->fourcc)) {
- 		vpdma_add_sync_on_channel_ctd(&ctx->desc_list,
- 			VPE_CHAN_RGB_OUT);
- 	} else {
-@@ -1682,10 +1708,7 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
- 		height = pix->height;
+ 	return NULL;
+ }
  
- 	if (!pix->colorspace) {
--		if (fmt->fourcc == V4L2_PIX_FMT_RGB24 ||
--				fmt->fourcc == V4L2_PIX_FMT_BGR24 ||
--				fmt->fourcc == V4L2_PIX_FMT_RGB32 ||
--				fmt->fourcc == V4L2_PIX_FMT_BGR32) {
-+		if (is_fmt_rgb(fmt->fourcc)) {
- 			pix->colorspace = V4L2_COLORSPACE_SRGB;
- 		} else {
- 			if (height > 1280)	/* HD */
++static struct vpe_fmt *find_format(struct v4l2_format *f)
++{
++	return __find_format(f->fmt.pix.pixelformat);
++}
++
+ /*
+  * there is one vpe_dev structure in the driver, it is shared by
+  * all instances.
+@@ -1599,9 +1604,9 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
+ 	unsigned int stride = 0;
+ 
+ 	if (!fmt || !(fmt->types & type)) {
+-		vpe_err(ctx->dev, "Fourcc format (0x%08x) invalid.\n",
++		vpe_dbg(ctx->dev, "Fourcc format (0x%08x) invalid.\n",
+ 			pix->pixelformat);
+-		return -EINVAL;
++		fmt = __find_format(V4L2_PIX_FMT_YUYV);
+ 	}
+ 
+ 	if (pix->field != V4L2_FIELD_NONE &&
 -- 
 2.17.1
 
