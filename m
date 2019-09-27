@@ -2,120 +2,114 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 256D2C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 01:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15549C352AB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 01:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF248207FF
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 01:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAA0B207FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 01:13:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569546805;
+	bh=7qtojZp5zJHlXpkEO8yCgrlaXTzo4YIuiYBry43Vq+U=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=SRQApXq5kwtOBVr6OfdLLhLKoKUxdwFKZ/+20VT8c/wztcS4p6VLFLHdPc1RQ2bfz
+	 JiQYo80hUeefcwkvGvK84ZKiX84v5HwdbUa2zE3+oebCF4e7Mr8GqBGx/YJc2Vh1fF
+	 15TVbEvKbXmIIkrhL/kj/eRzqkpCQp10d8QRce4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbfI0BH5 (ORCPT
+        id S1726747AbfI0BNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 21:07:57 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:62680 "EHLO mx2.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725808AbfI0BH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 21:07:57 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id 392C0A16F2;
-        Fri, 27 Sep 2019 03:07:54 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
-        with ESMTP id IOcJDIfveQSW; Fri, 27 Sep 2019 03:07:49 +0200 (CEST)
-Date:   Fri, 27 Sep 2019 11:07:36 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] lib: introduce copy_struct_from_user() helper
-Message-ID: <20190927010736.gy3vvvkjhwlybosj@yavin.dot.cyphar.com>
-References: <20190925230332.18690-1-cyphar@cyphar.com>
- <20190925230332.18690-2-cyphar@cyphar.com>
- <20190925232139.45sbhj34fj7yvxer@wittgenstein>
+        Thu, 26 Sep 2019 21:13:25 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43662 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfI0BNY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 21:13:24 -0400
+Received: by mail-io1-f67.google.com with SMTP id v2so11718452iob.10
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 18:13:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vEE9lOyJedYGEKwzVDnKuOkrG0RTwYW04dLMK0cfVNI=;
+        b=aewx8DaVgi2IdGL01e4RMmtoymyhqnU1GKAbN4jN+2MeIAH5LDTe27X9hTI4aQQZ6v
+         9TRC9vcS29nS6XOnSEfGzgsIU6hpszM9EamSBK20+M5v1RzMXAoG5eM5ccdafnaMZgsC
+         j7Jiv/gSplXSNatW+xjRZG6YvpXWe+QvxtcNc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vEE9lOyJedYGEKwzVDnKuOkrG0RTwYW04dLMK0cfVNI=;
+        b=GHd3M6aedf4Egh4z87vJCQZrbu4T5VndNNFc2JqXCVt8XYnbmsam9xXgnl3ZeC+mn+
+         zj5M0vYiIP6sBJJ3q9QDp+PPGqAWwL6ZZalYtQbqSuNR4KT4RwE3OwEQLkDDHt/WGdk+
+         PcTffvtAS0+2NRPYEAWw3vKxd4lydjNV3pAn239dBAc2V4SX3yZ98a+6deGIP79q3CPw
+         oZ3mEvda2a7n80rOGJvfttTlBXlWgCFweSw47XM0qqKqNs+rYJl/BGrvA3fLCcWXrdZ/
+         Vy6TuLMwmrzn7ooI0+2CKnDEgWlC20nMQTV19td5KMscEc0Ier6rnIWPD1bEbddm6l8r
+         1bFA==
+X-Gm-Message-State: APjAAAVLVWZTyUqYXwL1gjgMRZzgGgmjoNwC5K1CoR5YPmwbcDaLeQ7T
+        K6euKcte/JHHiCm03Q3SG9WdIA==
+X-Google-Smtp-Source: APXvYqyi25JQWLz5zuPdbjoyS7rTFaHfpEmPpxHwSsRTBjT+rhIcseiZPcgjtZuZTSP2Nu6zbDvXAw==
+X-Received: by 2002:a92:1685:: with SMTP id 5mr2085408ilw.81.1569546804169;
+        Thu, 26 Sep 2019 18:13:24 -0700 (PDT)
+Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id z5sm1717813ioh.23.2019.09.26.18.13.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Sep 2019 18:13:23 -0700 (PDT)
+From:   Shuah Khan <skhan@linuxfoundation.org>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
+Cc:     Shuah Khan <skhan@linuxfoundation.org>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, --cc=linux-kselftest@vger.kernel.org
+Subject: [PATCH] tools: gpio: Use !building_out_of_srctree to determine srctree
+Date:   Thu, 26 Sep 2019 19:13:21 -0600
+Message-Id: <20190927011321.4612-1-skhan@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ningxfpyii3awxw6"
-Content-Disposition: inline
-In-Reply-To: <20190925232139.45sbhj34fj7yvxer@wittgenstein>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+make TARGETS=gpio kselftest fails with:
 
---ningxfpyii3awxw6
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Makefile:23: tools/build/Makefile.include: No such file or directory
 
-On 2019-09-26, Christian Brauner <christian.brauner@ubuntu.com> wrote:
-> On Thu, Sep 26, 2019 at 01:03:29AM +0200, Aleksa Sarai wrote:
-> > +int is_zeroed_user(const void __user *from, size_t size)
-> > +{
-> > +	unsigned long val;
-> > +	uintptr_t align =3D (uintptr_t) from % sizeof(unsigned long);
-> > +
-> > +	if (unlikely(!size))
-> > +		return true;
->=20
-> You're returning "true" and another implicit boolean with (val =3D=3D 0)
-> down below but -EFAULT in other places. But that function is int
-> is_zeroed_user() Would probably be good if you either switch to bool
-> is_zeroed_user() as the name suggests or rename the function and have
-> it return an int everywhere.
+When the gpio tool make is invoked from tools Makefile, srctree is
+cleared and the current logic check for srctree equals to empty
+string to determine srctree location from CURDIR.
 
-I just checked, and in C11 (and presumably in older specs) it is
-guaranteed that "true" and "false" from <stdbool.h> have the values 1
-and 0 (respectively) [=A77.18]. So this is perfectly well-defined.
+When the build in invoked from selftests/gpio Makefile, the srctree
+is set to "." and the same logic used for srctree equals to empty is
+needed to determine srctree.
 
-Personally, I think it's more readable to have:
+Check building_out_of_srctree undefined as the condition for both
+cases to fix "make TARGETS=gpio kselftest" build failure.
 
-  if (unlikely(size =3D=3D 0))
-    return true;
-  /* ... */
-  return (val =3D=3D 0);
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+---
+ tools/gpio/Makefile | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-compared to:
+diff --git a/tools/gpio/Makefile b/tools/gpio/Makefile
+index 6ecdd1067826..1178d302757e 100644
+--- a/tools/gpio/Makefile
++++ b/tools/gpio/Makefile
+@@ -3,7 +3,11 @@ include ../scripts/Makefile.include
+ 
+ bindir ?= /usr/bin
+ 
+-ifeq ($(srctree),)
++# This will work when gpio is built in tools env. where srctree
++# isn't set and when invoked from selftests build, where srctree
++# is set to ".". building_out_of_srctree is undefined for in srctree
++# builds
++ifndef building_out_of_srctree
+ srctree := $(patsubst %/,%,$(dir $(CURDIR)))
+ srctree := $(patsubst %/,%,$(dir $(srctree)))
+ endif
+-- 
+2.20.1
 
-  if (unlikely(size =3D=3D 0))
-    return 1;
-  /* ... */
-  return val ? 0 : 1;
-
-But I will change the function name (to check_zeroed_user) to make it
-clearer that it isn't returning a boolean and that you need to check for
-negative returns.
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---ningxfpyii3awxw6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXY1g0wAKCRCdlLljIbnQ
-EmniAP96l+2UHf1KZUsjmkF+ni1i3z9S8CcAMfeKjnFvKTEOmAD+Kamb7z8aEEP6
-x2hEUZydsZf2ME41Ml2G9Z9uGlezWgM=
-=zhm8
------END PGP SIGNATURE-----
-
---ningxfpyii3awxw6--
