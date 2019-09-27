@@ -2,147 +2,135 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CD1C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9F5C388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99749207FF
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6737621927
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:43:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uyS4auWy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D1nfq5N4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbfI0PlG (ORCPT
+        id S1727854AbfI0PnD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 11:41:06 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:34654 "EHLO
+        Fri, 27 Sep 2019 11:43:03 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:33731 "EHLO
         mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727207AbfI0PlF (ORCPT
+        with ESMTP id S1727207AbfI0PnD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 11:41:05 -0400
-Received: by mail-qt1-f196.google.com with SMTP id 3so7846858qta.1;
-        Fri, 27 Sep 2019 08:41:04 -0700 (PDT)
+        Fri, 27 Sep 2019 11:43:03 -0400
+Received: by mail-qt1-f196.google.com with SMTP id r5so7873238qtd.0;
+        Fri, 27 Sep 2019 08:43:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=fJXAR3BTSiEDrzcXRUPmAyScpWS/7FX+Os6XghgaQU0=;
-        b=uyS4auWyENLNwj4ODdMyhIEu9qmUQi6TF/0NgNXCDOSuv8he1njkkWUbH6MAAuI3dw
-         7vLlXOh9w2X0TDPsPQJ0xGa50Y/w8Pbl0Q9cF27Vp8Qvg0noboRK1e1n1eLo/A2AjyuD
-         uoQuNkjjiuKExO3npjd3EHDSrgGrqoZRhPGtTlDZDMXATXqpIrJAX7izsK0w7Yxgn93w
-         /QvzX10WXMfskAJ0QsMBgNc4pDJMZWNa6H9v21iOR2mV7ZrMDDpVkvXmSUJ1ClSH+Wtd
-         HW3kxO7tiQRWuLfj+Hl5STNb7ChjeOJD5rGDjJhnWylO6N16KyagbovNjvtXlcz3Dmtm
-         BIGA==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wj8jU1iK4RSmx+X1oOclo1EaNDpdKAJxwobsrBcy5cI=;
+        b=D1nfq5N4SbJ7splLGR5xJ+5grwYQ7AM/tHiZvR1WI3Qd7JJ7hAONrI9lrtRXkkA2CN
+         yvWA8dEiKDFDybPcS9zYBFVHhZ6O4CF3XVWQOiRtNftZ+DhqBM6ayetfhQSPgbhnUaFl
+         OWllVG33BTCl8IVAhgDWS6qKE5m33yCJDauTXVM+709ES1mxIrNSsGbtwBoBEBaHNjSs
+         +nDD7eSKdVrNcT0SPSUcreQIbmrCl/W9dmrwTmvxl2Yi3sCt3BvRCmcO9Mg1KkvQXQn6
+         RWmgPNunoO0UOdwSBOKDUGk1069B3Py9c6uS/B2rjnEzRmXNIhs9vnSCRbUtH8OZ+oLt
+         FYaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=fJXAR3BTSiEDrzcXRUPmAyScpWS/7FX+Os6XghgaQU0=;
-        b=b1EeUYzNUfYKr2cxCw0a+2WaVE0rou6lpU02jW4o2Xfv80cMUOqcaIrlQs106WHHom
-         X/Q1kCfHVYkzn/kXt6sk8WfK4jBs/S74dxAiEt5DD+qUljA0cZf7K05L7adTvWdjmSwm
-         i/MFmGij10Vr2W8fKR3KoqQztYbpyt50kiW5JnpZkaWjt6FM93cJo7GenZi48DbD8mLK
-         tqGbtOYd8MsjEXdyS9nt4G+JC5gal0ZEV5bOvex1Wayv1CKwSmMmvj4kW7DTT9RQ/oKO
-         NMO605D3asO1xm15h87Ne2ynq0D22QhXZCSJcHfVf1duoiJu62txqMLijGf/Ipp9ddEC
-         mPFA==
-X-Gm-Message-State: APjAAAX/IUOm2t8Z7dLcHrSrjmpBxfdaGtyaduB1272TajRPIcw5rNQa
-        3rMQf9d5AQV4PDlHIE52z21jjKJ1GK8v/qYm
-X-Google-Smtp-Source: APXvYqzflvmRBLJzHuAYDcQ5In3raI9yBS1yeQB4x+QTsu/BKYjGLPhy0jFumIrbkX37mMPtLYA1/A==
-X-Received: by 2002:ac8:67ce:: with SMTP id r14mr10362936qtp.317.1569598864212;
-        Fri, 27 Sep 2019 08:41:04 -0700 (PDT)
-Received: from ArchLaptop (lithosphere-80.dynamic2.rpi.edu. [129.161.139.80])
-        by smtp.gmail.com with ESMTPSA id p53sm2775779qtk.23.2019.09.27.08.41.03
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wj8jU1iK4RSmx+X1oOclo1EaNDpdKAJxwobsrBcy5cI=;
+        b=NkyNHIu3sEJ0INxyfLYvm2vYAl56HFIfpArO+gBBMsfKkRG1MdN9wvEvdnP8nWKuWA
+         dumSPV70qHciu+lMWe84/D1QsDK+wiKXvKKTY6dPg3aCLej2lOoZ0Z6KibyOY++bVpSk
+         9BdUUWvjXWLwb9o+hdNwfoMR3ZAUQUQ2MCi2IE6gzbFAfNBmGg0jsdafD/E47AKSJvv9
+         APlqZ2soeijV5yE3124qNIdrIuA4F6Tnouq3VqDiBLPMdLgktMP4dYmCcfdPe0/R2k9T
+         Ff7XlTXR0K3bYC2ZrZJmoIVuX4B9dUHn+MsEkJdSg5CHrfcnmov3FDVfU0SaVx/EvxoF
+         3Zsg==
+X-Gm-Message-State: APjAAAULewu36CKhrpYuiqAcmS9cWoK7J+C79MTVgwykAfpkb1qgx75c
+        5N41rloTBpOV0tPnSVJM+VY=
+X-Google-Smtp-Source: APXvYqzMC0T6yfrqLjpGJqf8tTd90CuiY4ZBjX3WZ57r9sl5NDmnrbU7P1y+3b90GNS5/6D0kUagqA==
+X-Received: by 2002:ad4:544a:: with SMTP id h10mr8399008qvt.239.1569598982382;
+        Fri, 27 Sep 2019 08:43:02 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id b16sm3644080qtk.65.2019.09.27.08.43.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2019 08:41:03 -0700 (PDT)
-Date:   Fri, 27 Sep 2019 11:41:02 -0400
-From:   Aaron Hill <aa1ronham@gmail.com>
-To:     linux-wireless@vger.kernel.org
-Cc:     Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: mac80211: Disable preeemption when updating stat
- counters
-Message-ID: <20190927154102.GA117350@ArchLaptop>
+        Fri, 27 Sep 2019 08:43:01 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 48AE840396; Fri, 27 Sep 2019 12:42:59 -0300 (-03)
+Date:   Fri, 27 Sep 2019 12:42:59 -0300
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: perf build failed on linux -next on i386 build
+Message-ID: <20190927154259.GC20644@kernel.org>
+References: <CA+G9fYu0hkS+NdwX38DNTygV1A7eebvjZvWvFUTfL=f3_4m=Dw@mail.gmail.com>
+ <20190926173648.GA31477@kernel.org>
+ <CA+G9fYt4fzmiFCsZXP+OC1joB=w5nkgn_MR++Yu61yWDWrh1yg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <CA+G9fYt4fzmiFCsZXP+OC1joB=w5nkgn_MR++Yu61yWDWrh1yg@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mac80211 subsystem maintains per-cpu stat counters for receive and
-transmit operations. Previously, preemption was not disabled when
-updating these counters. This creates a race condition where two cpus
-could attempt to update the same counters using non-atomic operations.
+Em Fri, Sep 27, 2019 at 02:05:32AM +0530, Naresh Kamboju escreveu:
+> On Thu, 26 Sep 2019 at 23:06, Arnaldo Carvalho de Melo
+> <arnaldo.melo@gmail.com> wrote:
+> >
+> > Em Thu, Sep 26, 2019 at 10:59:41PM +0530, Naresh Kamboju escreveu:
+> > > perf build failed on linux -next on i386 build
+> > >
+> > > build error:
+> > > perf-in.o: In function `libunwind__x86_reg_id':
+> > > tools/perf/util/libunwind/../../arch/x86/util/unwind-libunwind.c:109:
+> > > undefined reference to `pr_err'
+> > > tools/perf/util/libunwind/../../arch/x86/util/unwind-libunwind.c:109:
+> > > undefined reference to `pr_err'
+> >
+> > Can you try with the following patch?
+> 
+> Thanks for the patch.
+> After applying this below patch build completes.
 
-This was causing a
-'BUG: using smp_processor_id() in preemptible [00000000] code'
-message to be printed, along with a stacktrace. This was reported
-in a few different places:
+Thanks for the report and for testing it, appreciated,
 
-* https://www.spinics.net/lists/linux-wireless/msg189992.html
-* https://bugzilla.kernel.org/show_bug.cgi?id=204127
+- Arnaldo
+ 
+> 
+> >
+> >
+> > diff --git a/tools/perf/arch/x86/util/unwind-libunwind.c b/tools/perf/arch/x86/util/unwind-libunwind.c
+> > index 05920e3edf7a..47357973b55b 100644
+> > --- a/tools/perf/arch/x86/util/unwind-libunwind.c
+> > +++ b/tools/perf/arch/x86/util/unwind-libunwind.c
+> > @@ -1,11 +1,11 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> >
+> >  #include <errno.h>
+> > +#include "../../util/debug.h"
+> >  #ifndef REMOTE_UNWIND_LIBUNWIND
+> >  #include <libunwind.h>
+> >  #include "perf_regs.h"
+> >  #include "../../util/unwind.h"
+> > -#include "../../util/debug.h"
+> >  #endif
+> >
+> >  #ifdef HAVE_ARCH_X86_64_SUPPORT
+> 
+> - Naresh
 
-This patch adds calls to preempt_disable() and preempt_enable()
-surrounding the updating of the stat counters.
-
-Signed-off-by: Aaron Hill <aa1ronham@gmail.com>
----
- net/mac80211/rx.c | 7 ++++++-
- net/mac80211/tx.c | 7 ++++++-
- 2 files changed, 12 insertions(+), 2 deletions(-)
-
-diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
-index 768d14c9a716..5ef0667151bf 100644
---- a/net/mac80211/rx.c
-+++ b/net/mac80211/rx.c
-@@ -34,12 +34,17 @@
- 
- static inline void ieee80211_rx_stats(struct net_device *dev, u32 len)
- {
--	struct pcpu_sw_netstats *tstats = this_cpu_ptr(dev->tstats);
-+	struct pcpu_sw_netstats *tstats;
-+
-+	// Disable preemption while updating per-cpu stats counters
-+	preempt_disable();
-+	tstats = this_cpu_ptr(dev->tstats);
- 
- 	u64_stats_update_begin(&tstats->syncp);
- 	tstats->rx_packets++;
- 	tstats->rx_bytes += len;
- 	u64_stats_update_end(&tstats->syncp);
-+	preempt_enable();
- }
- 
- static u8 *ieee80211_get_bssid(struct ieee80211_hdr *hdr, size_t len,
-diff --git a/net/mac80211/tx.c b/net/mac80211/tx.c
-index 1fa422782905..4cad3d741b6b 100644
---- a/net/mac80211/tx.c
-+++ b/net/mac80211/tx.c
-@@ -40,12 +40,17 @@
- 
- static inline void ieee80211_tx_stats(struct net_device *dev, u32 len)
- {
--	struct pcpu_sw_netstats *tstats = this_cpu_ptr(dev->tstats);
-+	struct pcpu_sw_netstats *tstats;
-+
-+	// Disable preemption while updating per-cpu stats counters
-+	preempt_disable();
-+	tstats = this_cpu_ptr(dev->tstats);
- 
- 	u64_stats_update_begin(&tstats->syncp);
- 	tstats->tx_packets++;
- 	tstats->tx_bytes += len;
- 	u64_stats_update_end(&tstats->syncp);
-+	preempt_enable();
- }
- 
- static __le16 ieee80211_duration(struct ieee80211_tx_data *tx,
 -- 
-2.23.0
 
+- Arnaldo
