@@ -2,194 +2,168 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F20C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 06:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BA0C352AB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 06:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0B4120863
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 06:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7617020863
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 06:48:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="ZFuxrg7n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbfI0GrB (ORCPT
+        id S1726216AbfI0Gsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 02:47:01 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60212 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725820AbfI0GrA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 02:47:00 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8R6keob107146
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 02:46:59 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v8y3arjqr-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 02:46:59 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Fri, 27 Sep 2019 07:46:56 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 27 Sep 2019 07:46:50 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8R6knIB54460588
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Sep 2019 06:46:49 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6546EA408A;
-        Fri, 27 Sep 2019 06:46:49 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C17CDA4093;
-        Fri, 27 Sep 2019 06:46:48 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 27 Sep 2019 06:46:48 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 2E6A4A00F9;
-        Fri, 27 Sep 2019 16:46:46 +1000 (AEST)
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     Mark Marshall <markmarshall14@gmail.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Qian Cai <cai@lca.pw>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Allison Randal <allison@lohutok.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        David Hildenbrand <david@redhat.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Fri, 27 Sep 2019 16:46:46 +1000
-In-Reply-To: <CAD4b4WLdMgunRoBDVtNZbhaMPbMw57AbcJgkKfmy2zpshgVyqQ@mail.gmail.com>
-References: <20190926045419.22827-1-alastair@au1.ibm.com>
-         <20190926045419.22827-6-alastair@au1.ibm.com>
-         <CAD4b4WLdMgunRoBDVtNZbhaMPbMw57AbcJgkKfmy2zpshgVyqQ@mail.gmail.com>
-Organization: IBM Australia
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Fri, 27 Sep 2019 02:48:33 -0400
+Received: from mail-eopbgr760042.outbound.protection.outlook.com ([40.107.76.42]:25285
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725812AbfI0Gsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 02:48:33 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bNKLX2R9lpZNJAVdg35C+BL+cpy34orkahShtdH+VIyt2jn4IBE0umSusvdP+LJAY2OCruqLhwlV8ErS1YnlHygJX83FcRcZL6t40XqSLdcErSgxdSwJykMGVEXZ1nYUyEtkR5fP2Os9N2nTYfIXTLqhk6wOit7/zPmouRoo63DWFI4h1/mQ/UWr9DuoucR2WUZXf8VQSKVqA/lkJ6UP6xnNxPbkKevRVKg77RSoQUwZu7tPKi6V3+lwSmoRKkxE8+qz8ElCW4UB74+fwV+sHr8C7CVzB7PPDZt2bjTz4AI/i4+zkcz8pTH27Ko+hQHgZeN9XBB8BGB4iKXFCgxaVg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=V+BgMy+irracLfuK8xlguqxJRh2xcsiqApnbgGKjRYk=;
+ b=SjAbEgnDHum3V5qTDemd9kWzMBJf4Thi62goctvjr1+N1Q5vANpvjzIm3JzVA1NvNBwcb6ccXOMpr0LZmwFwHirRF/UnIawLFkthWta9yyQW2gTvikw0QFuFQDw1V8gaZXPMdjFTNK5OLWMnZ25/xavYRust3cEwAdzRpcE2enonJSwVOBOrOOIyMLP4+aTvkpHJf7DpFpyHH4ht9csJmw9smf1/Tw2ARZuiRQb6+1o+HzmPK2cOWD7oqiw0YeSEAQq2GXy1u0Kp1zWpHT23zb+7oWc9RUKVwRS0Yp7ZoEZqRzQ2pceDumDZjw3urtASMUOkejJ1TPXWT644wZqDCw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=V+BgMy+irracLfuK8xlguqxJRh2xcsiqApnbgGKjRYk=;
+ b=ZFuxrg7nLAxFHsjxrRMu7ehjn7CF3k0+wjtDDoKDfc7OTQT0bozYj+G9YIMouUJc1VQ8LEus5YEQLP4c0z4IkH2eV71ljfTy4z1qU5bSCPHRZS62ScPow9t+js9lw6CvznimK7P3SniY1g9JY1vQQPg3Jd4NBNQ7QyMudYRNDDY=
+Received: from CH2PR02MB7000.namprd02.prod.outlook.com (20.180.9.216) by
+ CH2PR02MB6693.namprd02.prod.outlook.com (20.180.6.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.20; Fri, 27 Sep 2019 06:48:29 +0000
+Received: from CH2PR02MB7000.namprd02.prod.outlook.com
+ ([fe80::3515:e3a7:8799:73bd]) by CH2PR02MB7000.namprd02.prod.outlook.com
+ ([fe80::3515:e3a7:8799:73bd%2]) with mapi id 15.20.2305.017; Fri, 27 Sep 2019
+ 06:48:29 +0000
+From:   Radhey Shyam Pandey <radheys@xilinx.com>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        Michal Simek <michals@xilinx.com>,
+        "nick.graumann@gmail.com" <nick.graumann@gmail.com>,
+        "andrea.merello@gmail.com" <andrea.merello@gmail.com>,
+        Appana Durga Kedareswara Rao <appanad@xilinx.com>,
+        "mcgrof@kernel.org" <mcgrof@kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH -next 7/8] dmaengine: xilinx_dma: Check for both idle and
+ halted state in axidma stop_transfer
+Thread-Topic: [PATCH -next 7/8] dmaengine: xilinx_dma: Check for both idle and
+ halted state in axidma stop_transfer
+Thread-Index: AQHVZAh+BsqD15rQs0ybdZW78qGrBqc+VX+AgADPhOA=
+Date:   Fri, 27 Sep 2019 06:48:29 +0000
+Message-ID: <CH2PR02MB7000EACD029FC7E47679393CC7810@CH2PR02MB7000.namprd02.prod.outlook.com>
+References: <1567701424-25658-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+ <1567701424-25658-8-git-send-email-radhey.shyam.pandey@xilinx.com>
+ <20190926172107.GN3824@vkoul-mobl>
+In-Reply-To: <20190926172107.GN3824@vkoul-mobl>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=radheys@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 826690e6-4397-47cb-98ea-08d74316b4ba
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: CH2PR02MB6693:|CH2PR02MB6693:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR02MB6693F79A84F2232B849BE34CC7810@CH2PR02MB6693.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1850;
+x-forefront-prvs: 0173C6D4D5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(376002)(346002)(39860400002)(136003)(189003)(199004)(13464003)(52536014)(5660300002)(99286004)(71190400001)(256004)(11346002)(8676002)(229853002)(81166006)(81156014)(305945005)(476003)(74316002)(7736002)(8936002)(446003)(66066001)(76116006)(71200400001)(14454004)(102836004)(26005)(6506007)(478600001)(186003)(64756008)(486006)(66946007)(66476007)(66556008)(25786009)(76176011)(53546011)(66446008)(86362001)(6246003)(6916009)(7696005)(55016002)(9686003)(4326008)(54906003)(316002)(33656002)(6436002)(2906002)(6116002)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6693;H:CH2PR02MB7000.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: R+poyYr9nlOMJpGo6zIrXLqsqxvQlpPEmJMyPLaZW52IkEaqOpVkDdRPLknfnTNJx5WKL5yTQHU+UJ2q/C60Clo1C6F/57UIXO86wtMJQjr8l9tgmpEJsana90TEY1zyXXgydSrGWcgi/qhPd1CdxV/4p9RWWrA3i1HDicwWxXGLaohRx8ZBc96FVgv/R8Cb5SveQCMt1FWBd/QbSR1FKY1wzV/Xsu04JpfiaQRe0MsB9VLjDRSSyJ78B2wdlIop24mmuuePuGYsd0gjXpk1LH6R2SejgUdUI9OVjpuGT39zPpftDWL+l+P/SMfm/wmGmytJHDF8PXHIWRkZW2OzLixmt4pzXRKHkMV4Rv5GTZzXiJyrcOsVzOS3m1NrfGZnlg70cnMDbaM/OGJUlhz2bihLNSN+X0ZR3Y1g4SpASi0=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19092706-0020-0000-0000-0000037232A8
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19092706-0021-0000-0000-000021C8019F
-Message-Id: <a3f037f14e50ab6c6ee5b50fcc4e2f6eb8151613.camel@au1.ibm.com>
-Subject: RE: [PATCH v4 5/6] powerpc: Chunk calls to flush_dcache_range in
- arch_*_memory
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-27_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909270062
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 826690e6-4397-47cb-98ea-08d74316b4ba
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Sep 2019 06:48:29.6133
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2PjpEcbixfTK08+yL/nB92eZvCk35RvmMEFIVm5s3zdh1m/Dy1PeqihCc40E1A4M3tHpJFypaphBxrrmF8wy+g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6693
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-09-27 at 08:37 +0200, Mark Marshall wrote:
-> Comment below...
-> 
-> On Thu, 26 Sep 2019 at 12:18, Alastair D'Silva <alastair@au1.ibm.com>
-> wrote:
-> > From: Alastair D'Silva <alastair@d-silva.org>
-> > 
-> > When presented with large amounts of memory being hotplugged
-> > (in my test case, ~890GB), the call to flush_dcache_range takes
-> > a while (~50 seconds), triggering RCU stalls.
-> > 
-> > This patch breaks up the call into 1GB chunks, calling
-> > cond_resched() inbetween to allow the scheduler to run.
-> > 
-> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> -----Original Message-----
+> From: Vinod Koul <vkoul@kernel.org>
+> Sent: Thursday, September 26, 2019 10:51 PM
+> To: Radhey Shyam Pandey <radheys@xilinx.com>
+> Cc: dan.j.williams@intel.com; Michal Simek <michals@xilinx.com>;
+> nick.graumann@gmail.com; andrea.merello@gmail.com; Appana Durga
+> Kedareswara Rao <appanad@xilinx.com>; mcgrof@kernel.org;
+> dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH -next 7/8] dmaengine: xilinx_dma: Check for both idle
+> and halted state in axidma stop_transfer
+>=20
+> On 05-09-19, 22:07, Radhey Shyam Pandey wrote:
+> > From: Nicholas Graumann <nick.graumann@gmail.com>
+> >
+> > When polling for a stopped transfer in AXI DMA mode, in some cases the
+> > status of the channel may indicate IDLE instead of HALTED if the
+> > channel was reset due to an error.
+> >
+> > Signed-off-by: Nicholas Graumann <nick.graumann@gmail.com>
+> > Signed-off-by: Radhey Shyam Pandey
+> <radhey.shyam.pandey@xilinx.com>
 > > ---
-> >  arch/powerpc/mm/mem.c | 27 +++++++++++++++++++++++++--
-> >  1 file changed, 25 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-> > index cff947cb2a84..a2758e473d58 100644
-> > --- a/arch/powerpc/mm/mem.c
-> > +++ b/arch/powerpc/mm/mem.c
-> > @@ -104,6 +104,27 @@ int __weak remove_section_mapping(unsigned
-> > long start, unsigned long end)
-> >         return -ENODEV;
-> >  }
-> > 
-> > +#define FLUSH_CHUNK_SIZE SZ_1G
-> > +/**
-> > + * flush_dcache_range_chunked(): Write any modified data cache
-> > blocks out to
-> > + * memory and invalidate them, in chunks of up to FLUSH_CHUNK_SIZE
-> > + * Does not invalidate the corresponding instruction cache blocks.
-> > + *
-> > + * @start: the start address
-> > + * @stop: the stop address (exclusive)
-> > + * @chunk: the max size of the chunks
-> > + */
-> > +static void flush_dcache_range_chunked(unsigned long start,
-> > unsigned long stop,
-> > +                                      unsigned long chunk)
-> > +{
-> > +       unsigned long i;
-> > +
-> > +       for (i = start; i < stop; i += FLUSH_CHUNK_SIZE) {
-> Here you ignore the function parameter "chunk" and use the define
-> FLUSH_CHUNK_SIZE.
-> You should do one or the other; use the parameter or remove it.
+> >  drivers/dma/xilinx/xilinx_dma.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/dma/xilinx/xilinx_dma.c
+> b/drivers/dma/xilinx/xilinx_dma.c
+> > index b5dd62a..0896e07 100644
+> > --- a/drivers/dma/xilinx/xilinx_dma.c
+> > +++ b/drivers/dma/xilinx/xilinx_dma.c
+> > @@ -1092,8 +1092,9 @@ static int xilinx_dma_stop_transfer(struct
+> xilinx_dma_chan *chan)
+> >
+> >  	/* Wait for the hardware to halt */
+> >  	return xilinx_dma_poll_timeout(chan, XILINX_DMA_REG_DMASR,
+> val,
+> > -				       val & XILINX_DMA_DMASR_HALTED, 0,
+> > -				       XILINX_DMA_LOOP_COUNT);
+> > +				       val | (XILINX_DMA_DMASR_IDLE |
+> > +					      XILINX_DMA_DMASR_HALTED),
+>=20
+> The condition was bitwise AND and now is OR.. ??
 
-Good catch, thankyou :)
+Ah, it should be same as before . Only _IDLE mask should be in OR.
 
-> > +               flush_dcache_range(i, min(stop, start +
-> > FLUSH_CHUNK_SIZE));
-> > +               cond_resched();
-> > +       }
-> > +}
-> > +
-> >  int __ref arch_add_memory(int nid, u64 start, u64 size,
-> >                         struct mhp_restrictions *restrictions)
-> >  {
-> > @@ -120,7 +141,8 @@ int __ref arch_add_memory(int nid, u64 start,
-> > u64 size,
-> >                         start, start + size, rc);
-> >                 return -EFAULT;
-> >         }
-> > -       flush_dcache_range(start, start + size);
-> > +
-> > +       flush_dcache_range_chunked(start, start + size,
-> > FLUSH_CHUNK_SIZE);
-> > 
-> >         return __add_pages(nid, start_pfn, nr_pages, restrictions);
+Also on second thought to this patch- we need to describe which error
+scenario "in some cases the status of the channel may indicate IDLE
+instead of HALTED" as mentioned in commit description.
+
+@Nick: Can you comment?
+
+>=20
+> > +				       0, XILINX_DMA_LOOP_COUNT);
 > >  }
-> > @@ -137,7 +159,8 @@ void __ref arch_remove_memory(int nid, u64
-> > start, u64 size,
-> > 
-> >         /* Remove htab bolted mappings for this section of memory
-> > */
-> >         start = (unsigned long)__va(start);
-> > -       flush_dcache_range(start, start + size);
-> > +       flush_dcache_range_chunked(start, start + size,
-> > FLUSH_CHUNK_SIZE);
-> > +
-> >         ret = remove_section_mapping(start, start + size);
-> >         WARN_ON_ONCE(ret);
-> > 
+> >
+> >  /**
 > > --
-> > 2.21.0
-> > 
--- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
-
+> > 2.7.4
+>=20
+> --
+> ~Vinod
