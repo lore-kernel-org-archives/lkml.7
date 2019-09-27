@@ -2,221 +2,146 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC91DC352AB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 05:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C24CDC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 05:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D30621783
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 05:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F0CF21783
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 05:15:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726069AbfI0FOz (ORCPT
+        id S1725851AbfI0FP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 01:14:55 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:38455 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725268AbfI0FOy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 01:14:54 -0400
-X-UUID: 45376460567e4833912fd5f52c874093-20190927
-X-UUID: 45376460567e4833912fd5f52c874093-20190927
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <light.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1544338163; Fri, 27 Sep 2019 13:14:50 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 27 Sep 2019 13:14:46 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 27 Sep 2019 13:14:46 +0800
-Message-ID: <1569561287.2428.6.camel@mtkswgap22>
-Subject: Re: [PATCH v6 1/5] pinctrl: mediatek: Check gpio pin number and use
- binary  search in mtk_hw_pin_field_lookup()
-From:   Light Hsieh <light.hsieh@mediatek.com>
-To:     <linus.walleij@linaro.org>
-CC:     <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sean.wang@kernel.org>,
-        <kuohong.wang@mediatek.com>
-Date:   Fri, 27 Sep 2019 13:14:47 +0800
-In-Reply-To: <1569560532-1886-1-git-send-email-light.hsieh@mediatek.com>
-References: <1569560532-1886-1-git-send-email-light.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Fri, 27 Sep 2019 01:15:29 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59922 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725268AbfI0FP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 01:15:29 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4D9CF300894D;
+        Fri, 27 Sep 2019 05:15:28 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-78.pek2.redhat.com [10.72.12.78])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AF89C60C44;
+        Fri, 27 Sep 2019 05:15:22 +0000 (UTC)
+Date:   Fri, 27 Sep 2019 13:15:18 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Lianbo Jiang <lijiang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org, bhe@redhat.com,
+        jgross@suse.com, dhowells@redhat.com, Thomas.Lendacky@amd.com,
+        kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>
+Subject: Re: [PATCH] x86/kdump: Fix 'kmem -s' reported an invalid freepointer
+ when SME was active
+Message-ID: <20190927051518.GA13023@dhcp-128-65.nay.redhat.com>
+References: <20190920035326.27212-1-lijiang@redhat.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: C11C61617888C742E4237027CA9173895FD50B1C77B35BACF510E8BDAAA5B69F2000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190920035326.27212-1-lijiang@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 27 Sep 2019 05:15:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear reviewers:
+Hi Lianbo,
 
-Patch v6 improves v5 by:
+For kexec/kdump patches, please remember to cc kexec list next time.
+Also it is definitely kdump specific issue, I added Vivek and Eric in
+cc. 
 
-1.in mtk_pinconf_get() and mtk_pinconf_set() @pinctrl-paris.c:
-  * check if pin is in range before using pin as array index of 
-     hw->soc->pins[]
-2.in mtk_pin_field_lookup() @pinctrl-mtk-common-v2.c:
-  * declear start, end, check as signed integer instead of unsigned
-    integer. Otherwise, kernel fault will occur when s_pin field of
-    first entry of a mtk_pin_field_calc[] array is not 0.
-
-On Fri, 2019-09-27 at 13:02 +0800, Light Hsieh wrote:
-> 1. Check if gpio pin number is in valid range to prevent from get invalid
->    pointer 'desc' in the following code:
-> 	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
+On 09/20/19 at 11:53am, Lianbo Jiang wrote:
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204793
 > 
-> 2. Use binary search in mtk_hw_pin_field_lookup()
->    Modify mtk_hw_pin_field_lookup() to use binary search for accelerating
->    search.
+> Kdump kernel will reuse the first 640k region because of some reasons,
+> for example: the trampline and conventional PC system BIOS region may
+> require to allocate memory in this area. Obviously, kdump kernel will
+> also overwrite the first 640k region, therefore, kernel has to copy
+> the contents of the first 640k area to a backup area, which is done in
+> purgatory(), because vmcore may need the old memory. When vmcore is
+> dumped, kdump kernel will read the old memory from the backup area of
+> the first 640k area.
 > 
+> Basically, the main reason should be clear, kernel does not correctly
+> handle the first 640k region when SME is active, which causes that
+> kernel does not properly copy these old memory to the backup area in
+> purgatory(). Therefore, kdump kernel reads out the incorrect contents
+> from the backup area when dumping vmcore. Finally, the phenomenon is
+> as follow:
+> 
+> [root linux]$ crash vmlinux /var/crash/127.0.0.1-2019-09-19-08\:31\:27/vmcore
+> WARNING: kernel relocated [240MB]: patching 97110 gdb minimal_symbol values
+> 
+>       KERNEL: /var/crash/127.0.0.1-2019-09-19-08:31:27/vmlinux
+>     DUMPFILE: /var/crash/127.0.0.1-2019-09-19-08:31:27/vmcore  [PARTIAL DUMP]
+>         CPUS: 128
+>         DATE: Thu Sep 19 08:31:18 2019
+>       UPTIME: 00:01:21
+> LOAD AVERAGE: 0.16, 0.07, 0.02
+>        TASKS: 1343
+>     NODENAME: amd-ethanol
+>      RELEASE: 5.3.0-rc7+
+>      VERSION: #4 SMP Thu Sep 19 08:14:00 EDT 2019
+>      MACHINE: x86_64  (2195 Mhz)
+>       MEMORY: 127.9 GB
+>        PANIC: "Kernel panic - not syncing: sysrq triggered crash"
+>          PID: 9789
+>      COMMAND: "bash"
+>         TASK: "ffff89711894ae80  [THREAD_INFO: ffff89711894ae80]"
+>          CPU: 83
+>        STATE: TASK_RUNNING (PANIC)
+> 
+> crash> kmem -s|grep -i invalid
+> kmem: dma-kmalloc-512: slab:ffffd77680001c00 invalid freepointer:a6086ac099f0c5a4
+> kmem: dma-kmalloc-512: slab:ffffd77680001c00 invalid freepointer:a6086ac099f0c5a4
+> crash>
+> 
+> In order to avoid such problem, lets occupy the first 640k region when
+> SME is active, which will ensure that the allocated memory does not fall
+> into the first 640k area. So, no need to worry about whether kernel can
+> correctly copy the contents of the first 640K area to a backup region in
+> purgatory().
+
+The log is too simple,  I know you did some other tries to fix this, but
+the patch log does not show why you can not correctly copy the 640k in
+current kdump code, in purgatory here.
+
+Also this patch seems works in your test, but still to see if other
+people can comment and see if it is safe or not, if any other risks
+other than waste the small chunk of memory.  If it is safe then kdump
+can just drop the backup logic and use this in common code instead of
+only do it for SME.
+
+> 
+> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
 > ---
->  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 25 +++++++++++++++++++-----
->  drivers/pinctrl/mediatek/pinctrl-paris.c         | 25 ++++++++++++++++++++++++
->  2 files changed, 45 insertions(+), 5 deletions(-)
+>  arch/x86/kernel/setup.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> index 20e1c89..8077855 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> @@ -68,7 +68,8 @@ static int mtk_hw_pin_field_lookup(struct mtk_pinctrl *hw,
->  {
->  	const struct mtk_pin_field_calc *c, *e;
->  	const struct mtk_pin_reg_calc *rc;
-> -	u32 bits;
-> +	u32 bits, found = 0;
-> +	int start = 0, end, check;
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index 77ea96b794bd..5bfb2c83bb6c 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -1148,6 +1148,9 @@ void __init setup_arch(char **cmdline_p)
 >  
->  	if (hw->soc->reg_cal && hw->soc->reg_cal[field].range) {
->  		rc = &hw->soc->reg_cal[field];
-> @@ -79,21 +80,32 @@ static int mtk_hw_pin_field_lookup(struct mtk_pinctrl *hw,
->  		return -ENOTSUPP;
->  	}
+>  	reserve_real_mode();
 >  
-> +	end = rc->nranges - 1;
->  	c = rc->range;
->  	e = c + rc->nranges;
->  
-> -	while (c < e) {
-> -		if (desc->number >= c->s_pin && desc->number <= c->e_pin)
-> +	while (start <= end) {
-> +		check = (start + end) >> 1;
-> +		if (desc->number >= rc->range[check].s_pin
-> +		 && desc->number <= rc->range[check].e_pin) {
-> +			found = 1;
->  			break;
-> -		c++;
-> +		} else if (start == end)
-> +			break;
-> +		else if (desc->number < rc->range[check].s_pin)
-> +			end = check - 1;
-> +		else
-> +			start = check + 1;
->  	}
->  
-> -	if (c >= e) {
-> +	if (!found) {
->  		dev_dbg(hw->dev, "Not support field %d for pin = %d (%s)\n",
->  			field, desc->number, desc->name);
->  		return -ENOTSUPP;
->  	}
->  
-> +	c = rc->range + check;
+> +	if (sme_active())
+> +		memblock_reserve(0, 640*1024);
 > +
->  	if (c->i_base > hw->nbase - 1) {
->  		dev_err(hw->dev,
->  			"Invalid base for field %d for pin = %d (%s)\n",
-> @@ -182,6 +194,9 @@ int mtk_hw_set_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
->  	if (err)
->  		return err;
+>  	trim_platform_memory_ranges();
+>  	trim_low_memory_range();
 >  
-> +	if (value < 0 || value > pf.mask)
-> +		return -EINVAL;
-> +
->  	if (!pf.next)
->  		mtk_rmw(hw, pf.index, pf.offset, pf.mask << pf.bitpos,
->  			(value & pf.mask) << pf.bitpos);
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> index 923264d..3e13ae7 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> @@ -81,6 +81,8 @@ static int mtk_pinconf_get(struct pinctrl_dev *pctldev,
->  	int val, val2, err, reg, ret = 1;
->  	const struct mtk_pin_desc *desc;
->  
-> +	if (pin >= hw->soc->npins)
-> +		return -EINVAL;
->  	desc = (const struct mtk_pin_desc *)&hw->soc->pins[pin];
->  
->  	switch (param) {
-> @@ -206,6 +208,10 @@ static int mtk_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
->  	int err = 0;
->  	u32 reg;
->  
-> +	if (pin >= hw->soc->npins) {
-> +		err = -EINVAL;
-> +		goto err;
-> +	}
->  	desc = (const struct mtk_pin_desc *)&hw->soc->pins[pin];
->  
->  	switch ((u32)param) {
-> @@ -693,6 +699,9 @@ static int mtk_gpio_get_direction(struct gpio_chip *chip, unsigned int gpio)
->  	const struct mtk_pin_desc *desc;
->  	int value, err;
->  
-> +	if (gpio > hw->soc->npins)
-> +		return -EINVAL;
-> +
->  	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
->  
->  	err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DIR, &value);
-> @@ -708,6 +717,9 @@ static int mtk_gpio_get(struct gpio_chip *chip, unsigned int gpio)
->  	const struct mtk_pin_desc *desc;
->  	int value, err;
->  
-> +	if (gpio > hw->soc->npins)
-> +		return -EINVAL;
-> +
->  	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
->  
->  	err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DI, &value);
-> @@ -722,6 +734,9 @@ static void mtk_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
->  	struct mtk_pinctrl *hw = gpiochip_get_data(chip);
->  	const struct mtk_pin_desc *desc;
->  
-> +	if (gpio > hw->soc->npins)
-> +		return;
-> +
->  	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
->  
->  	mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DO, !!value);
-> @@ -729,12 +744,22 @@ static void mtk_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
->  
->  static int mtk_gpio_direction_input(struct gpio_chip *chip, unsigned int gpio)
->  {
-> +	struct mtk_pinctrl *hw = gpiochip_get_data(chip);
-> +
-> +	if (gpio > hw->soc->npins)
-> +		return -EINVAL;
-> +
->  	return pinctrl_gpio_direction_input(chip->base + gpio);
->  }
->  
->  static int mtk_gpio_direction_output(struct gpio_chip *chip, unsigned int gpio,
->  				     int value)
->  {
-> +	struct mtk_pinctrl *hw = gpiochip_get_data(chip);
-> +
-> +	if (gpio > hw->soc->npins)
-> +		return -EINVAL;
-> +
->  	mtk_gpio_set(chip, gpio, value);
->  
->  	return pinctrl_gpio_direction_output(chip->base + gpio);
+> -- 
+> 2.17.1
+> 
 
-
+Thanks
+Dave
