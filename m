@@ -2,296 +2,531 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA702C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 11:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42963C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 11:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A961D20872
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 11:48:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="J3eYAVqp"
+	by mail.kernel.org (Postfix) with ESMTP id 09BA521848
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 11:50:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbfI0LsY (ORCPT
+        id S1727277AbfI0Luk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 07:48:24 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35312 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfI0LsY (ORCPT
+        Fri, 27 Sep 2019 07:50:40 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45735 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbfI0Luj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 07:48:24 -0400
-Received: by mail-wm1-f68.google.com with SMTP id y21so5874596wmi.0
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 04:48:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ug+sBO0tkCpwdU9HKEk6e2HvXXPsdBoZldU4WxvHVS0=;
-        b=J3eYAVqp8uTe0LLK4ZduSAGyHARQx9+d0k9L/yiIdwQ3WRFDgKsjRvDZswS65gCRwV
-         I1GKL6BiHVCMtY8q+fg1HjIaswMIfJDRqBTdEJ9OM2Xn+IjP7u+ZkeiSXvXV6EpaDCWB
-         3+vzKoW0OM4XXjrN5KLyayAtGJdL81rY5NYHiI70CmfwJmKY7sklkXBwN8YVH/kkygCx
-         cg+DNwFpIGWN7wlVzvTtXllfbcfq4Xa+6VVTIxdaQOfYGzJRwG2BKd7TUSPytrloUIpS
-         ROXV9Ks1k7ELUALyxfJ3w+eHXPhRiHWv47ucRjnePjgp5VphmWijoF1s+vIONpry4CGx
-         o3+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ug+sBO0tkCpwdU9HKEk6e2HvXXPsdBoZldU4WxvHVS0=;
-        b=Cu8C+1QA4gL5g3j1Zp2TeiezDz3oyzTzUajXSMrbT+IsbRakPeykBzjKzrgMRu9Wh/
-         Fj195KSFEk+Ct2fCLHb01nRCNprcvnZ71UPXZeObxJ28ehOjsgPmh9PpTgKxcqGQcsLM
-         GnUlOvjusY+lx2/5u0NWEl8dj3BV3UjxEMruTpJHQ7iUS+3YDRcL3/hM3oC/Etn3ZQns
-         tsN6yVbkLSTC5UYDOyIK+kQ9QWs4EX2LradvC2NollwVhzDy1fnIYSXfoxzyX59awphW
-         o+WN/YgEQ++BUsQj0Qmn/ufEmrBzH7/R8loxhXvdtrqiRMVPLPPC6uqhiF+/BZSw8qxL
-         Jxfw==
-X-Gm-Message-State: APjAAAWv55tgpCsKIh9mflmhS6ofbGyGwka1011mQUizKbJyGtZ2LAIn
-        ovEc+ik5hrVydOXR0v7hji0xPg==
-X-Google-Smtp-Source: APXvYqyCvAFEUX4pyXAm1MZVJRBXHDIaylSGV5ndGZ+63m9ONhhn3j/aRyRFEYfXA/NuuzBYCIr0DA==
-X-Received: by 2002:a05:600c:389:: with SMTP id w9mr6615733wmd.139.1569584901129;
-        Fri, 27 Sep 2019 04:48:21 -0700 (PDT)
-Received: from [192.168.1.62] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id i1sm13170582wmb.19.2019.09.27.04.48.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 27 Sep 2019 04:48:20 -0700 (PDT)
-Subject: Re: drm_sched with panfrost crash on T820
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     Steven Price <steven.price@arm.com>, daniel@ffwll.ch,
-        airlied@linux.ie,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Cc:     Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        Erico Nunes <nunes.erico@gmail.com>,
-        Rob Herring <robh@kernel.org>
-References: <e450fbe6-dec7-2704-59c2-db7e869d67f5@baylibre.com>
- <3fb178d8-f069-0ae2-1ed3-4ded84a71951@arm.com>
- <26ae2a4d-8df1-e8db-3060-41638ed63e2a@arm.com>
- <1eec2f1b-0467-cd4d-aa22-23c70388ac0f@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <645fd795-7d22-268d-a8af-5ff090379505@baylibre.com>
-Date:   Fri, 27 Sep 2019 13:48:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 27 Sep 2019 07:50:39 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iDolc-0000Ip-0E; Fri, 27 Sep 2019 13:50:32 +0200
+Date:   Fri, 27 Sep 2019 13:50:31 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [ANNOUNCE] v5.2.17-rt9
+Message-ID: <20190927115031.6rew5g2kqfwjaaff@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <1eec2f1b-0467-cd4d-aa22-23c70388ac0f@baylibre.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Dear RT folks!
 
-On 27/09/2019 13:27, Neil Armstrong wrote:
-> Hi Steven,
-> 
-> Thanks for your prompt reaction !
-> 
-> On 27/09/2019 12:48, Steven Price wrote:
->> On 27/09/2019 10:55, Steven Price wrote:
->> [...]
->>> One obvious issue with the DRM scheduler is that there is a call to
->>> cancel_delayed_work() in drm_sched_stop() which to me looks like it
->>> should be cancel_delayed_work_sync() to ensure that the timeout handling
->>> has completed.
->>>
->>> However in the above scenario a _sync() variety would then cause a
->>> deadlock (one thread has pfdev->reset_lock and is waiting for the other
->>> thread which is trying to take the lock).
->>>
->>> So we need to update Panfrost so that it can coordinate the reset
->>> between schedulers. Can you try something like the following (untested):
->>
->> And actually testing it I of course discover it doesn't quite work. We
->> do need the cancel_delayed_work_sync() in the DRM scheduler (when
->> stopping a different scheduler) and we need to avoid holding the
->> reset_lock during the drm_sched_stop() call to prevent deadlocking with
->> another thread handling a timeout.
-> 
-> Yep the first patch wasn't fixing the issue all the time.
-> 
->>
->> Can you give the following patch a spin? I don't have a great
->> reproduction case, so it would be good to get some confidence it fixes
->> the problem.
-> 
-> Running it right now.
+I'm pleased to announce the v5.2.17-rt9 patch set. 
 
-First run gave me (while applying on v5.3):
-[  307.969230] Unable to handle kernel NULL pointer dereference at virtual address 00000000000000c0
-[...]
-[  308.029358] Hardware name: Khadas VIM2 (DT)
-[  308.033510] Workqueue: events drm_sched_job_timedout
-[  308.038416] pstate: 80000005 (Nzcv daif -PAN -UAO)
-[  308.043160] pc : drm_sched_start+0x88/0x138
-[  308.047300] lr : drm_sched_start+0xb0/0x138
-[...]
-[  308.133635] Call trace:
-[  308.136052]  drm_sched_start+0x88/0x138
-[  308.139847]  panfrost_job_timedout+0x1cc/0x208
-[  308.144245]  drm_sched_job_timedout+0x44/0xa8
-[  308.148560]  process_one_work+0x1e0/0x320
-[  308.152524]  worker_thread+0x40/0x450
-[  308.156149]  kthread+0x124/0x128
-[  308.159342]  ret_from_fork+0x10/0x18
-[  308.162879] Code: 54000280 f9400862 52800020 aa1a03e1 (f940605b)
-[  308.168914] ---[ end trace 256b7f5faec101d2 ]---
+Changes since v5.2.17-rt8:
 
-Bad pointer seems to be struct dma_fence *fence = s_job->s_fence->parent that
-could be a NULL return from panfrost_job_run().
+  - A missing unlock in the posix-CPU-timer code was found by Dan
+    Carpenter.
 
-Neil
-> 
-> Thanks,
-> Neil
-> 
->>
->> ----8<----
->> From 521a286789260197ae94f698932ebf369efc45ad Mon Sep 17 00:00:00 2001
->> From: Steven Price <steven.price@arm.com>
->> Date: Fri, 27 Sep 2019 11:42:40 +0100
->> Subject: [PATCH] drm/panfrost: Handle resetting on timeout better
->>
->> Panfrost uses multiple schedulers (one for each slot, so 2 in reality),
->> and on a timeout has to stop all the schedulers to safely perform a
->> reset. However more than one scheduler can trigger a timeout at the same
->> time. This race condition results in jobs being freed while they are
->> still in use.
->>
->> Modify drm_sched_stop() to call cancel_delayed_work_sync() when stopping
->> a different scheduler to the one belonging to the passed in job.
->> panfrost_job_timedout() is also modified to only allow one thread at a
->> time to handle the reset. Any subsequent threads simply return assuming
->> that the first thread will handle the situation.
->>
->> Signed-off-by: Steven Price <steven.price@arm.com>
->> ---
->>  drivers/gpu/drm/panfrost/panfrost_device.h |  2 ++
->>  drivers/gpu/drm/panfrost/panfrost_job.c    | 11 ++++++++++-
->>  drivers/gpu/drm/scheduler/sched_main.c     |  5 ++++-
->>  3 files changed, 16 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
->> index f503c566e99f..6441c7fba6c4 100644
->> --- a/drivers/gpu/drm/panfrost/panfrost_device.h
->> +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
->> @@ -99,6 +99,8 @@ struct panfrost_device {
->>  		unsigned long cur_volt;
->>  		struct panfrost_devfreq_slot slot[NUM_JOB_SLOTS];
->>  	} devfreq;
->> +
->> +	bool is_resetting;
->>  };
->>  
->>  struct panfrost_mmu {
->> diff --git a/drivers/gpu/drm/panfrost/panfrost_job.c b/drivers/gpu/drm/panfrost/panfrost_job.c
->> index 05c85f45a0de..1b2019e08b43 100644
->> --- a/drivers/gpu/drm/panfrost/panfrost_job.c
->> +++ b/drivers/gpu/drm/panfrost/panfrost_job.c
->> @@ -388,13 +388,21 @@ static void panfrost_job_timedout(struct drm_sched_job *sched_job)
->>  
->>  	mutex_lock(&pfdev->reset_lock);
->>  
->> +	if (pfdev->is_resetting) {
->> +		mutex_unlock(&pfdev->reset_lock);
->> +		return;
->> +	}
->> +	pfdev->is_resetting = true;
->> +
->> +	mutex_unlock(&pfdev->reset_lock);
->> +
->>  	for (i = 0; i < NUM_JOB_SLOTS; i++)
->>  		drm_sched_stop(&pfdev->js->queue[i].sched, sched_job);
->>  
->>  	if (sched_job)
->>  		drm_sched_increase_karma(sched_job);
->>  
->> -	/* panfrost_core_dump(pfdev); */
->> +	mutex_lock(&pfdev->reset_lock);
->>  
->>  	panfrost_devfreq_record_transition(pfdev, js);
->>  	panfrost_device_reset(pfdev);
->> @@ -406,6 +414,7 @@ static void panfrost_job_timedout(struct drm_sched_job *sched_job)
->>  	for (i = 0; i < NUM_JOB_SLOTS; i++)
->>  		drm_sched_start(&pfdev->js->queue[i].sched, true);
->>  
->> +	pfdev->is_resetting = false;
->>  	mutex_unlock(&pfdev->reset_lock);
->>  }
->>  
->> diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
->> index 148468447ba9..bc6d1862ec8a 100644
->> --- a/drivers/gpu/drm/scheduler/sched_main.c
->> +++ b/drivers/gpu/drm/scheduler/sched_main.c
->> @@ -415,7 +415,10 @@ void drm_sched_stop(struct drm_gpu_scheduler *sched, struct drm_sched_job *bad)
->>  	 * this TDR finished and before the newly restarted jobs had a
->>  	 * chance to complete.
->>  	 */
->> -	cancel_delayed_work(&sched->work_tdr);
->> +	if (bad->sched != sched)
->> +		cancel_delayed_work_sync(&sched->work_tdr);
->> +	else
->> +		cancel_delayed_work(&sched->work_tdr);
->>  }
->>  
->>  EXPORT_SYMBOL(drm_sched_stop);
->>
-> 
+  - Asking for the first recorded message in the printk buffer returns
+    the first available message if it has been overwritten. This is not
+    how it is documented and wrong since the printk rework. Patch by He
+    Zhe.
 
+  - Move RCU processing to the rcuc thread. This behaviour was enabled
+    by default in previous releases and accidentally dropped while
+    switching to the upstream code which offers the same functionality.
+    Patch by Scott Wood.
+
+  - local_bh_disable() did not serve as a rcu read section. Patch by
+    Scott Wood.
+
+  - Various migrate_disable() related patches by Scott Wood. They
+    optimized existing code, cleaned up and avoided a few false positive
+    warnings.
+
+  - The rcutorture module was broken because it tried to test for
+    scenarios which were not possible/invalid on RT. Reported by Juri
+    Lelli and patched by Scott Wood.
+
+  - Clark Williams reported locking problems and lockdep warnings in the
+    i915 driver.
+
+Known issues
+     - None.
+
+The delta patch against v5.2.17-rt8 is appended below and can be found here:
+ 
+     https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.2/incr/patch-5.2.17-rt8-rt9.patch.xz
+
+You can get this release via the git tree at:
+
+    git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git v5.2.17-rt9
+
+The RT patch against v5.2.17 can be found here:
+
+    https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.2/older/patch-5.2.17-rt9.patch.xz
+
+The split quilt queue is available at:
+
+    https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.2/older/patches-5.2.17-rt9.tar.xz
+
+Sebastian
+
+diff --git a/drivers/gpu/drm/i915/i915_reset.c b/drivers/gpu/drm/i915/i915_reset.c
+index 677d59304e782..e6fcdfed2b00e 100644
+--- a/drivers/gpu/drm/i915/i915_reset.c
++++ b/drivers/gpu/drm/i915/i915_reset.c
+@@ -804,7 +804,7 @@ static void reset_finish(struct drm_i915_private *i915)
+ 
+ 	for_each_engine(engine, i915, id) {
+ 		reset_finish_engine(engine);
+-		intel_engine_signal_breadcrumbs(engine);
++		intel_engine_breadcrumbs_irq(engine);
+ 	}
+ }
+ 
+diff --git a/drivers/gpu/drm/i915/intel_breadcrumbs.c b/drivers/gpu/drm/i915/intel_breadcrumbs.c
+index 832cb6b1e9bd4..3e813d86f51ed 100644
+--- a/drivers/gpu/drm/i915/intel_breadcrumbs.c
++++ b/drivers/gpu/drm/i915/intel_breadcrumbs.c
+@@ -101,7 +101,6 @@ __dma_fence_signal__notify(struct dma_fence *fence)
+ 	struct dma_fence_cb *cur, *tmp;
+ 
+ 	lockdep_assert_held(fence->lock);
+-	lockdep_assert_irqs_disabled();
+ 
+ 	list_for_each_entry_safe(cur, tmp, &fence->cb_list, node) {
+ 		INIT_LIST_HEAD(&cur->node);
+@@ -116,9 +115,10 @@ void intel_engine_breadcrumbs_irq(struct intel_engine_cs *engine)
+ 	const ktime_t timestamp = ktime_get();
+ 	struct intel_context *ce, *cn;
+ 	struct list_head *pos, *next;
++	unsigned long flags;
+ 	LIST_HEAD(signal);
+ 
+-	spin_lock(&b->irq_lock);
++	spin_lock_irqsave(&b->irq_lock, flags);
+ 
+ 	if (b->irq_armed && list_empty(&b->signalers))
+ 		__intel_breadcrumbs_disarm_irq(b);
+@@ -162,7 +162,7 @@ void intel_engine_breadcrumbs_irq(struct intel_engine_cs *engine)
+ 		}
+ 	}
+ 
+-	spin_unlock(&b->irq_lock);
++	spin_unlock_irqrestore(&b->irq_lock, flags);
+ 
+ 	list_for_each_safe(pos, next, &signal) {
+ 		struct i915_request *rq =
+@@ -170,21 +170,14 @@ void intel_engine_breadcrumbs_irq(struct intel_engine_cs *engine)
+ 
+ 		__dma_fence_signal__timestamp(&rq->fence, timestamp);
+ 
+-		spin_lock(&rq->lock);
++		spin_lock_irqsave(&rq->lock, flags);
+ 		__dma_fence_signal__notify(&rq->fence);
+-		spin_unlock(&rq->lock);
++		spin_unlock_irqrestore(&rq->lock, flags);
+ 
+ 		i915_request_put(rq);
+ 	}
+ }
+ 
+-void intel_engine_signal_breadcrumbs(struct intel_engine_cs *engine)
+-{
+-	local_irq_disable();
+-	intel_engine_breadcrumbs_irq(engine);
+-	local_irq_enable();
+-}
+-
+ static void signal_irq_work(struct irq_work *work)
+ {
+ 	struct intel_engine_cs *engine =
+@@ -276,7 +269,6 @@ void intel_engine_fini_breadcrumbs(struct intel_engine_cs *engine)
+ bool i915_request_enable_breadcrumb(struct i915_request *rq)
+ {
+ 	lockdep_assert_held(&rq->lock);
+-	lockdep_assert_irqs_disabled();
+ 
+ 	if (test_bit(I915_FENCE_FLAG_ACTIVE, &rq->fence.flags)) {
+ 		struct intel_breadcrumbs *b = &rq->engine->breadcrumbs;
+@@ -325,7 +317,6 @@ void i915_request_cancel_breadcrumb(struct i915_request *rq)
+ 	struct intel_breadcrumbs *b = &rq->engine->breadcrumbs;
+ 
+ 	lockdep_assert_held(&rq->lock);
+-	lockdep_assert_irqs_disabled();
+ 
+ 	/*
+ 	 * We must wait for b->irq_lock so that we know the interrupt handler
+diff --git a/drivers/gpu/drm/i915/intel_hangcheck.c b/drivers/gpu/drm/i915/intel_hangcheck.c
+index 3d51ed1428d4e..c7022bd93d24c 100644
+--- a/drivers/gpu/drm/i915/intel_hangcheck.c
++++ b/drivers/gpu/drm/i915/intel_hangcheck.c
+@@ -275,7 +275,7 @@ static void i915_hangcheck_elapsed(struct work_struct *work)
+ 	for_each_engine(engine, dev_priv, id) {
+ 		struct hangcheck hc;
+ 
+-		intel_engine_signal_breadcrumbs(engine);
++		intel_engine_breadcrumbs_irq(engine);
+ 
+ 		hangcheck_load_sample(engine, &hc);
+ 		hangcheck_accumulate_sample(engine, &hc);
+diff --git a/drivers/gpu/drm/i915/intel_ringbuffer.h b/drivers/gpu/drm/i915/intel_ringbuffer.h
+index 72c7c337ace95..e3857cc5ad185 100644
+--- a/drivers/gpu/drm/i915/intel_ringbuffer.h
++++ b/drivers/gpu/drm/i915/intel_ringbuffer.h
+@@ -388,7 +388,6 @@ void intel_engine_fini_breadcrumbs(struct intel_engine_cs *engine);
+ void intel_engine_pin_breadcrumbs_irq(struct intel_engine_cs *engine);
+ void intel_engine_unpin_breadcrumbs_irq(struct intel_engine_cs *engine);
+ 
+-void intel_engine_signal_breadcrumbs(struct intel_engine_cs *engine);
+ void intel_engine_disarm_breadcrumbs(struct intel_engine_cs *engine);
+ 
+ static inline void
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 885a195dfbe02..25afa2bb1a2cf 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -308,7 +308,9 @@ void pin_current_cpu(void)
+ 	preempt_lazy_enable();
+ 	preempt_enable();
+ 
++	sleeping_lock_inc();
+ 	__read_rt_lock(cpuhp_pin);
++	sleeping_lock_dec();
+ 
+ 	preempt_disable();
+ 	preempt_lazy_disable();
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index e3fa33f2e23c2..58c545a528b3b 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -703,14 +703,10 @@ static ssize_t devkmsg_read(struct file *file, char __user *buf,
+ 		goto out;
+ 	}
+ 
+-	if (user->seq == 0) {
+-		user->seq = seq;
+-	} else {
+-		user->seq++;
+-		if (user->seq < seq) {
+-			ret = -EPIPE;
+-			goto restore_out;
+-		}
++	user->seq++;
++	if (user->seq < seq) {
++		ret = -EPIPE;
++		goto restore_out;
+ 	}
+ 
+ 	msg = (struct printk_log *)&user->msgbuf[0];
+diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+index efaa5b3f4d3f0..ecb82cc432afe 100644
+--- a/kernel/rcu/rcutorture.c
++++ b/kernel/rcu/rcutorture.c
+@@ -60,10 +60,13 @@ MODULE_AUTHOR("Paul E. McKenney <paulmck@linux.ibm.com> and Josh Triplett <josh@
+ #define RCUTORTURE_RDR_RBH	 0x08	/*  ... rcu_read_lock_bh(). */
+ #define RCUTORTURE_RDR_SCHED	 0x10	/*  ... rcu_read_lock_sched(). */
+ #define RCUTORTURE_RDR_RCU	 0x20	/*  ... entering another RCU reader. */
+-#define RCUTORTURE_RDR_NBITS	 6	/* Number of bits defined above. */
++#define RCUTORTURE_RDR_ATOM_BH	 0x40	/*  ... disabling bh while atomic */
++#define RCUTORTURE_RDR_ATOM_RBH	 0x80	/*  ... RBH while atomic */
++#define RCUTORTURE_RDR_NBITS	 8	/* Number of bits defined above. */
+ #define RCUTORTURE_MAX_EXTEND	 \
+ 	(RCUTORTURE_RDR_BH | RCUTORTURE_RDR_IRQ | RCUTORTURE_RDR_PREEMPT | \
+-	 RCUTORTURE_RDR_RBH | RCUTORTURE_RDR_SCHED)
++	 RCUTORTURE_RDR_RBH | RCUTORTURE_RDR_SCHED | \
++	 RCUTORTURE_RDR_ATOM_BH | RCUTORTURE_RDR_ATOM_RBH)
+ #define RCUTORTURE_RDR_MAX_LOOPS 0x7	/* Maximum reader extensions. */
+ 					/* Must be power of two minus one. */
+ #define RCUTORTURE_RDR_MAX_SEGS (RCUTORTURE_RDR_MAX_LOOPS + 3)
+@@ -1092,31 +1095,52 @@ static void rcutorture_one_extend(int *readstate, int newstate,
+ 	WARN_ON_ONCE((idxold >> RCUTORTURE_RDR_SHIFT) > 1);
+ 	rtrsp->rt_readstate = newstate;
+ 
+-	/* First, put new protection in place to avoid critical-section gap. */
++	/*
++	 * First, put new protection in place to avoid critical-section gap.
++	 * Disable preemption around the ATOM disables to ensure that
++	 * in_atomic() is true.
++	 */
+ 	if (statesnew & RCUTORTURE_RDR_BH)
+ 		local_bh_disable();
++	if (statesnew & RCUTORTURE_RDR_RBH)
++		rcu_read_lock_bh();
+ 	if (statesnew & RCUTORTURE_RDR_IRQ)
+ 		local_irq_disable();
+ 	if (statesnew & RCUTORTURE_RDR_PREEMPT)
+ 		preempt_disable();
+-	if (statesnew & RCUTORTURE_RDR_RBH)
+-		rcu_read_lock_bh();
+ 	if (statesnew & RCUTORTURE_RDR_SCHED)
+ 		rcu_read_lock_sched();
++	preempt_disable();
++	if (statesnew & RCUTORTURE_RDR_ATOM_BH)
++		local_bh_disable();
++	if (statesnew & RCUTORTURE_RDR_ATOM_RBH)
++		rcu_read_lock_bh();
++	preempt_enable();
+ 	if (statesnew & RCUTORTURE_RDR_RCU)
+ 		idxnew = cur_ops->readlock() << RCUTORTURE_RDR_SHIFT;
+ 
+-	/* Next, remove old protection, irq first due to bh conflict. */
++	/*
++	 * Next, remove old protection, in decreasing order of strength
++	 * to avoid unlock paths that aren't safe in the stronger
++	 * context.  Disable preemption around the ATOM enables in
++	 * case the context was only atomic due to IRQ disabling.
++	 */
++	preempt_disable();
+ 	if (statesold & RCUTORTURE_RDR_IRQ)
+ 		local_irq_enable();
+-	if (statesold & RCUTORTURE_RDR_BH)
++	if (statesold & RCUTORTURE_RDR_ATOM_BH)
+ 		local_bh_enable();
++	if (statesold & RCUTORTURE_RDR_ATOM_RBH)
++		rcu_read_unlock_bh();
++	preempt_enable();
+ 	if (statesold & RCUTORTURE_RDR_PREEMPT)
+ 		preempt_enable();
+-	if (statesold & RCUTORTURE_RDR_RBH)
+-		rcu_read_unlock_bh();
+ 	if (statesold & RCUTORTURE_RDR_SCHED)
+ 		rcu_read_unlock_sched();
++	if (statesold & RCUTORTURE_RDR_BH)
++		local_bh_enable();
++	if (statesold & RCUTORTURE_RDR_RBH)
++		rcu_read_unlock_bh();
+ 	if (statesold & RCUTORTURE_RDR_RCU)
+ 		cur_ops->readunlock(idxold >> RCUTORTURE_RDR_SHIFT);
+ 
+@@ -1152,6 +1176,12 @@ rcutorture_extend_mask(int oldmask, struct torture_random_state *trsp)
+ 	int mask = rcutorture_extend_mask_max();
+ 	unsigned long randmask1 = torture_random(trsp) >> 8;
+ 	unsigned long randmask2 = randmask1 >> 3;
++	unsigned long preempts = RCUTORTURE_RDR_PREEMPT | RCUTORTURE_RDR_SCHED;
++	unsigned long preempts_irq = preempts | RCUTORTURE_RDR_IRQ;
++	unsigned long nonatomic_bhs = RCUTORTURE_RDR_BH | RCUTORTURE_RDR_RBH;
++	unsigned long atomic_bhs = RCUTORTURE_RDR_ATOM_BH |
++				   RCUTORTURE_RDR_ATOM_RBH;
++	unsigned long tmp;
+ 
+ 	WARN_ON_ONCE(mask >> RCUTORTURE_RDR_SHIFT);
+ 	/* Mostly only one bit (need preemption!), sometimes lots of bits. */
+@@ -1159,11 +1189,49 @@ rcutorture_extend_mask(int oldmask, struct torture_random_state *trsp)
+ 		mask = mask & randmask2;
+ 	else
+ 		mask = mask & (1 << (randmask2 % RCUTORTURE_RDR_NBITS));
+-	/* Can't enable bh w/irq disabled. */
+-	if ((mask & RCUTORTURE_RDR_IRQ) &&
+-	    ((!(mask & RCUTORTURE_RDR_BH) && (oldmask & RCUTORTURE_RDR_BH)) ||
+-	     (!(mask & RCUTORTURE_RDR_RBH) && (oldmask & RCUTORTURE_RDR_RBH))))
+-		mask |= RCUTORTURE_RDR_BH | RCUTORTURE_RDR_RBH;
++
++	/*
++	 * Can't enable bh w/irq disabled.
++	 */
++	tmp = atomic_bhs | nonatomic_bhs;
++	if (mask & RCUTORTURE_RDR_IRQ)
++		mask |= oldmask & tmp;
++
++	/*
++	 * Ideally these sequences would be detected in debug builds
++	 * (regardless of RT), but until then don't stop testing
++	 * them on non-RT.
++	 */
++	if (IS_ENABLED(CONFIG_PREEMPT_RT_FULL)) {
++		/*
++		 * Can't release the outermost rcu lock in an irq disabled
++		 * section without preemption also being disabled, if irqs
++		 * had ever been enabled during this RCU critical section
++		 * (could leak a special flag and delay reporting the qs).
++		 */
++		if ((oldmask & RCUTORTURE_RDR_RCU) &&
++		    (mask & RCUTORTURE_RDR_IRQ) &&
++		    !(mask & preempts))
++			mask |= RCUTORTURE_RDR_RCU;
++
++		/* Can't modify atomic bh in non-atomic context */
++		if ((oldmask & atomic_bhs) && (mask & atomic_bhs) &&
++		    !(mask & preempts_irq)) {
++			mask |= oldmask & preempts_irq;
++			if (mask & RCUTORTURE_RDR_IRQ)
++				mask |= oldmask & tmp;
++		}
++		if ((mask & atomic_bhs) && !(mask & preempts_irq))
++			mask |= RCUTORTURE_RDR_PREEMPT;
++
++		/* Can't modify non-atomic bh in atomic context */
++		tmp = nonatomic_bhs;
++		if (oldmask & preempts_irq)
++			mask &= ~tmp;
++		if ((oldmask | mask) & preempts_irq)
++			mask |= oldmask & tmp;
++	}
++
+ 	return mask ?: RCUTORTURE_RDR_RCU;
+ }
+ 
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index fc8b00c61b328..2e999917c5937 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -99,8 +99,10 @@ struct rcu_state rcu_state = {
+ static bool dump_tree;
+ module_param(dump_tree, bool, 0444);
+ /* By default, use RCU_SOFTIRQ instead of rcuc kthreads. */
+-static bool use_softirq = 1;
++static bool use_softirq = !IS_ENABLED(CONFIG_PREEMPT_RT_FULL);
++#ifndef CONFIG_PREEMPT_RT_FULL
+ module_param(use_softirq, bool, 0444);
++#endif
+ /* Control rcu_node-tree auto-balancing at boot time. */
+ static bool rcu_fanout_exact;
+ module_param(rcu_fanout_exact, bool, 0444);
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index e1bdd7f9be054..43f016d87f26a 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1218,7 +1218,7 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
+ 		goto out;
+ 	}
+ 
+-	if (cpumask_equal(p->cpus_ptr, new_mask))
++	if (cpumask_equal(&p->cpus_mask, new_mask))
+ 		goto out;
+ 
+ 	if (!cpumask_intersects(new_mask, cpu_valid_mask)) {
+@@ -1242,13 +1242,6 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
+ 	if (cpumask_test_cpu(task_cpu(p), new_mask) || __migrate_disabled(p))
+ 		goto out;
+ 
+-#if defined(CONFIG_SMP) && defined(CONFIG_PREEMPT_RT_BASE)
+-	if (__migrate_disabled(p)) {
+-		p->migrate_disable_update = 1;
+-		goto out;
+-	}
+-#endif
+-
+ 	dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
+ 	if (task_running(rq, p) || p->state == TASK_WAKING) {
+ 		struct migration_arg arg = { p, dest_cpu };
+@@ -7290,9 +7283,8 @@ migrate_disable_update_cpus_allowed(struct task_struct *p)
+ 	struct rq *rq;
+ 	struct rq_flags rf;
+ 
+-	p->cpus_ptr = cpumask_of(smp_processor_id());
+-
+ 	rq = task_rq_lock(p, &rf);
++	p->cpus_ptr = cpumask_of(smp_processor_id());
+ 	update_nr_migratory(p, -1);
+ 	p->nr_cpus_allowed = 1;
+ 	task_rq_unlock(rq, p, &rf);
+@@ -7304,9 +7296,8 @@ migrate_enable_update_cpus_allowed(struct task_struct *p)
+ 	struct rq *rq;
+ 	struct rq_flags rf;
+ 
+-	p->cpus_ptr = &p->cpus_mask;
+-
+ 	rq = task_rq_lock(p, &rf);
++	p->cpus_ptr = &p->cpus_mask;
+ 	p->nr_cpus_allowed = cpumask_weight(&p->cpus_mask);
+ 	update_nr_migratory(p, 1);
+ 	task_rq_unlock(rq, p, &rf);
+@@ -7405,7 +7396,10 @@ void migrate_enable(void)
+ 			unpin_current_cpu();
+ 			preempt_lazy_enable();
+ 			preempt_enable();
++
++			sleeping_lock_inc();
+ 			stop_one_cpu(task_cpu(p), migration_cpu_stop, &arg);
++			sleeping_lock_dec();
+ 			return;
+ 		}
+ 	}
+diff --git a/kernel/softirq.c b/kernel/softirq.c
+index d16d080a74f70..6080c9328df10 100644
+--- a/kernel/softirq.c
++++ b/kernel/softirq.c
+@@ -115,8 +115,10 @@ void __local_bh_disable_ip(unsigned long ip, unsigned int cnt)
+ 	long soft_cnt;
+ 
+ 	WARN_ON_ONCE(in_irq());
+-	if (!in_atomic())
++	if (!in_atomic()) {
+ 		local_lock(bh_lock);
++		rcu_read_lock();
++	}
+ 	soft_cnt = this_cpu_inc_return(softirq_counter);
+ 	WARN_ON_ONCE(soft_cnt == 0);
+ 	current->softirq_count += SOFTIRQ_DISABLE_OFFSET;
+@@ -151,8 +153,10 @@ void _local_bh_enable(void)
+ #endif
+ 
+ 	current->softirq_count -= SOFTIRQ_DISABLE_OFFSET;
+-	if (!in_atomic())
++	if (!in_atomic()) {
++		rcu_read_unlock();
+ 		local_unlock(bh_lock);
++	}
+ }
+ 
+ void _local_bh_enable_rt(void)
+@@ -185,8 +189,10 @@ void __local_bh_enable_ip(unsigned long ip, unsigned int cnt)
+ 	WARN_ON_ONCE(count < 0);
+ 	local_irq_enable();
+ 
+-	if (!in_atomic())
++	if (!in_atomic()) {
++		rcu_read_unlock();
+ 		local_unlock(bh_lock);
++	}
+ 
+ 	current->softirq_count -= SOFTIRQ_DISABLE_OFFSET;
+ 	preempt_check_resched();
+diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
+index 20cd92a8b9785..a045813c37021 100644
+--- a/kernel/time/posix-cpu-timers.c
++++ b/kernel/time/posix-cpu-timers.c
+@@ -1167,8 +1167,10 @@ static void __run_posix_cpu_timers(struct task_struct *tsk)
+ 	expiry_lock = this_cpu_ptr(&cpu_timer_expiry_lock);
+ 	spin_lock(expiry_lock);
+ 
+-	if (!lock_task_sighand(tsk, &flags))
++	if (!lock_task_sighand(tsk, &flags)) {
++		spin_unlock(expiry_lock);
+ 		return;
++	}
+ 	/*
+ 	 * Here we take off tsk->signal->cpu_timers[N] and
+ 	 * tsk->cpu_timers[N] all the timers that are firing, and
+diff --git a/localversion-rt b/localversion-rt
+index 700c857efd9ba..22746d6390a42 100644
+--- a/localversion-rt
++++ b/localversion-rt
+@@ -1 +1 @@
+--rt8
++-rt9
