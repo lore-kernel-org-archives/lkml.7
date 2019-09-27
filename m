@@ -2,125 +2,299 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A87C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C00C388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1C1621927
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:06:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0007221655
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:10:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rQRp19LE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbfI0VGo convert rfc822-to-8bit (ORCPT
+        id S1727253AbfI0VKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 17:06:44 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:57573 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726029AbfI0VGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 17:06:43 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46g49D6DRlz9sDB;
-        Sat, 28 Sep 2019 07:06:40 +1000 (AEST)
-Date:   Sat, 28 Sep 2019 07:06:37 +1000
-User-Agent: K-9 Mail for Android
-In-Reply-To: <8c99aeb3-8287-1913-7362-464ac0c59ce1@redhat.com>
-References: <20190910163932.13160-1-david@redhat.com> <a2c2f516-c37c-71f5-8f35-c357e8754b17@redhat.com> <8c99aeb3-8287-1913-7362-464ac0c59ce1@redhat.com>
+        Fri, 27 Sep 2019 17:10:15 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39714 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfI0VKO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 17:10:14 -0400
+Received: by mail-oi1-f194.google.com with SMTP id w144so6392108oia.6;
+        Fri, 27 Sep 2019 14:10:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SrBJgeprlzWO9zx74wCPUtbrggQEGPmmoT/ZYf6mMxQ=;
+        b=rQRp19LEZBL47xcpsMYy/ljurXoac2Q3Jv5gJpnqoANyQCful26DEzqyrgdd39hpJa
+         1gdPiHv8RQMKeytRBXvKm97BrTMDV+YXHXgvkN0Nm4fTFd5649WmWuytE9fIAO9lS0Y3
+         4cNN4ZUfYaTXxTjWQ/tCjuKVXkexwuzo+e+JgKyBu66g8lBNrePSmXZ41CKKqYgVU//M
+         DJgGSSNXyISWjlhT7ZhWct3JDsZh25LyJNHIjMHEUAgp+eAZ5rxNWmi2Q8IQ4noIMUph
+         Z/YSttn/8yYd5N+Ol3oylmLnEpulZWdfIebzdbfOK+BGvq7KJmkqjMAQMG0C+g948eL6
+         AJfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SrBJgeprlzWO9zx74wCPUtbrggQEGPmmoT/ZYf6mMxQ=;
+        b=FnFp89yTvoPIKWYYfoJxwgDe7AloUXIg3Ov56Lm8B8PGIXNaViJLDP3o9odqCasdj7
+         kUnXUsxgExqbRn+bpMmvYkXpWHIwzLl8fjOfpkD9NuAGR6j5TQ1LwKh/WR4OgaA94JTG
+         +HF4sYRes62CkdsT+t+Q7haMSDurAMuUDzuBrSFBanuqZabfnMnKQx4C6lvUy+rl6nOS
+         pvF3fJUkNcp0r8600DTuzN7d5gvE5BcNu/MnmLwB8fhVfZ6S6EeVNVzPfgfFJYaumfqF
+         9j8ayGMh1iBMmqmMFIk/lQ+A40uk9R8q9u08ECLcmzU7cQlh9LVzKfmrOmqd18de7rxM
+         QWUw==
+X-Gm-Message-State: APjAAAUWGUaSV+UFQ54GxlN5J/ThUMmVRQalKvu2/TXOJn5W2DaeNqDt
+        0TpJtouvm+2X2eQ/YQBc6KM3fUWRqGjO7M/40nK+RF+p
+X-Google-Smtp-Source: APXvYqxs3Nb7GR188DHFlE48xDmDO+XcrIWh9B8FK3P3au238W8pFb/OEOkd4c1rtsSyR6FSJSKTyntVN6ooSQq9K3M=
+X-Received: by 2002:aca:4e87:: with SMTP id c129mr8840475oib.7.1569618611688;
+ Fri, 27 Sep 2019 14:10:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Subject: Re: [PATCH v1] powerpc/pseries: CMM: Drop page array
-To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
-From:   Michael Ellerman <michael@ellerman.id.au>
-Message-ID: <27742115-E5A4-4DF1-B223-5E6EB7A6E4F3@ellerman.id.au>
+References: <20190927184722.31989-1-bparrot@ti.com> <20190927184722.31989-7-bparrot@ti.com>
+In-Reply-To: <20190927184722.31989-7-bparrot@ti.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 27 Sep 2019 22:09:45 +0100
+Message-ID: <CA+V-a8vdjYoVxScjBAt5fb-sPWjsj53R8JpEfWt4Dvd5Kcr_0Q@mail.gmail.com>
+Subject: Re: [Patch v4 6/8] media: i2c: ov2659: Add powerdown/reset gpio handling
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Benoit,
 
+thank you for the patch.
 
-On 27 September 2019 9:19:49 pm AEST, David Hildenbrand <david@redhat.com> wrote:
->On 25.09.19 09:37, David Hildenbrand wrote:
->> On 10.09.19 18:39, David Hildenbrand wrote:
->>> We can simply store the pages in a list (page->lru), no need for a
->>> separate data structure (+ complicated handling). This is how most
->>> other balloon drivers store allocated pages without additional
->tracking
->>> data.
->>>
->>> For the notifiers, use page_to_pfn() to check if a page is in the
->>> applicable range. plpar_page_set_loaned()/plpar_page_set_active()
->were
->>> called with __pa(page_address()) for now, I assume we can simply
->switch
->>> to page_to_phys() here. The pfn_to_kaddr() handling is now mostly
->gone.
->>>
->>> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->>> Cc: Paul Mackerras <paulus@samba.org>
->>> Cc: Michael Ellerman <mpe@ellerman.id.au>
->>> Cc: Arun KS <arunks@codeaurora.org>
->>> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
->>> Cc: Thomas Gleixner <tglx@linutronix.de>
->>> Cc: Andrew Morton <akpm@linux-foundation.org>
->>> Cc: Vlastimil Babka <vbabka@suse.cz>
->>> Signed-off-by: David Hildenbrand <david@redhat.com>
->>> ---
->>>
->>> Only compile-tested. I hope the page_to_phys() thingy is correct and
->I
->>> didn't mess up something else / ignoring something important why the
->array
->>> is needed.
->>>
->>> I stumbled over this while looking at how the memory isolation
->notifier is
->>> used - and wondered why the additional array is necessary. Also, I
->think
->>> by switching to the generic balloon compaction mechanism, we could
->get
->>> rid of the memory hotplug notifier and the memory isolation notifier
->in
->>> this code, as the migration capability of the inflated pages is the
->real
->>> requirement:
->>> 	commit 14b8a76b9d53346f2871bf419da2aaf219940c50
->>> 	Author: Robert Jennings <rcj@linux.vnet.ibm.com>
->>> 	Date:   Thu Dec 17 14:44:52 2009 +0000
->>> 	
->>> 	    powerpc: Make the CMM memory hotplug aware
->>> 	
->>> 	    The Collaborative Memory Manager (CMM) module allocates
->individual pages
->>> 	    over time that are not migratable.  On a long running system
->this can
->>> 	    severely impact the ability to find enough pages to support a
->hotplug
->>> 	    memory remove operation.
->>> 	[...]
->>>
->>> Thoughts?
->> 
->> Ping, is still feature still used at all?
->> 
->> If nobody can test, any advise on which HW I need and how to trigger
->it?
->> 
+On Fri, Sep 27, 2019 at 7:49 PM Benoit Parrot <bparrot@ti.com> wrote:
 >
->So ... if CMM is no longer alive I propose ripping it out completely.
->Does anybody know if this feature is still getting used? Getting rid of
->the memory isolation notifier sounds desirable - either by scrapping
->CMM
->or by properly wiring up balloon compaction.
+> On some board it is possible that the sensor 'powerdown' and or 'reset'
+> pin might be controlled by gpio instead of being tied.
+>
+> To implement we add pm_runtime support which will handle the power
+> up/down sequence when it is available otherwise the sensor will be
+> powered on at module insertion/probe and powered off at module removal.
+>
+> Now originally the driver assumed that the sensor would always stay
+> powered and keep its register setting. We cannot assume this anymore, so
+> every time we "power up" we need to re-program the initial registers
+> configuration first. This was previously done only at probe time.
+>
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> ---
+>  drivers/media/i2c/Kconfig  |  2 +-
+>  drivers/media/i2c/ov2659.c | 88 +++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 87 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+> index 7eee1812bba3..315c1d8bdb7b 100644
+> --- a/drivers/media/i2c/Kconfig
+> +++ b/drivers/media/i2c/Kconfig
+> @@ -634,7 +634,7 @@ config VIDEO_OV2640
+>  config VIDEO_OV2659
+>         tristate "OmniVision OV2659 sensor support"
+>         depends on VIDEO_V4L2 && I2C
+> -       depends on MEDIA_CAMERA_SUPPORT
+> +       depends on MEDIA_CAMERA_SUPPORT && GPIOLIB
+>         select V4L2_FWNODE
+>         help
+>           This is a Video4Linux2 sensor driver for the OmniVision
+> diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
+> index cd4625432264..7d0baa386644 100644
+> --- a/drivers/media/i2c/ov2659.c
+> +++ b/drivers/media/i2c/ov2659.c
+> @@ -22,9 +22,11 @@
+>
+>  #include <linux/clk.h>
+>  #include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/i2c.h>
+>  #include <linux/module.h>
+>  #include <linux/of_graph.h>
+> +#include <linux/pm_runtime.h>
+>
+>  #include <media/i2c/ov2659.h>
+>  #include <media/v4l2-ctrls.h>
+> @@ -218,6 +220,11 @@ struct ov2659 {
+>         struct sensor_register *format_ctrl_regs;
+>         struct ov2659_pll_ctrl pll;
+>         int streaming;
+> +       /* used to control the sensor PWDN pin */
+> +       struct gpio_desc *pwdn_gpio;
+> +       /* used to control the sensor RESETB pin */
+> +       struct gpio_desc *resetb_gpio;
+> +       int on;
+>  };
+>
+>  static const struct sensor_register ov2659_init_regs[] = {
+> @@ -1184,10 +1191,19 @@ static int ov2659_s_stream(struct v4l2_subdev *sd, int on)
+>                 /* Stop Streaming Sequence */
+>                 ov2659_set_streaming(ov2659, 0);
+>                 ov2659->streaming = on;
+> +               pm_runtime_put(&client->dev);
+>                 goto unlock;
+>         }
+>
+> -       ret = ov2659_set_pixel_clock(ov2659);
+> +       ret = pm_runtime_get_sync(&client->dev);
+> +       if (ret < 0) {
+> +               pm_runtime_put_noidle(&client->dev);
+> +               goto unlock;
+> +       }
+> +
+> +       ret = ov2659_init(sd, 0);
+> +       if (!ret)
+> +               ret = ov2659_set_pixel_clock(ov2659);
+>         if (!ret)
+>                 ret = ov2659_set_frame_size(ov2659);
+>         if (!ret)
+> @@ -1229,6 +1245,9 @@ static int ov2659_s_ctrl(struct v4l2_ctrl *ctrl)
+>         struct ov2659 *ov2659 =
+>                         container_of(ctrl->handler, struct ov2659, ctrls);
+>
+> +       if (!ov2659->on)
+> +               return 0;
+> +
+why is this check only in s_ctrl() ? I think we could just drop this variable.
 
-It's still used AFAIK, but the people who wrote the code have left IBM, and I'm on leave.
+Cheers,
+--Prabhakar
 
-I'll be back in a week or so and will try and track down how to test it then.
-
-cheers
--- 
-Sent from my Android phone with K-9 Mail. Please excuse my brevity.
+>         switch (ctrl->id) {
+>         case V4L2_CID_TEST_PATTERN:
+>                 return ov2659_set_test_pattern(ov2659, ctrl->val);
+> @@ -1246,6 +1265,43 @@ static const char * const ov2659_test_pattern_menu[] = {
+>         "Vertical Color Bars",
+>  };
+>
+> +static int ov2659_power_off(struct device *dev)
+> +{
+> +       struct i2c_client *client = to_i2c_client(dev);
+> +       struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> +       struct ov2659 *ov2659 = to_ov2659(sd);
+> +
+> +       dev_dbg(&client->dev, "%s:\n", __func__);
+> +
+> +       gpiod_set_value(ov2659->pwdn_gpio, 1);
+> +
+> +       ov2659->on = false;
+> +
+> +       return 0;
+> +}
+> +
+> +static int ov2659_power_on(struct device *dev)
+> +{
+> +       struct i2c_client *client = to_i2c_client(dev);
+> +       struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> +       struct ov2659 *ov2659 = to_ov2659(sd);
+> +
+> +       dev_dbg(&client->dev, "%s:\n", __func__);
+> +
+> +       gpiod_set_value(ov2659->pwdn_gpio, 0);
+> +
+> +       if (ov2659->resetb_gpio) {
+> +               gpiod_set_value(ov2659->resetb_gpio, 1);
+> +               usleep_range(500, 1000);
+> +               gpiod_set_value(ov2659->resetb_gpio, 0);
+> +               usleep_range(3000, 5000);
+> +       }
+> +
+> +       ov2659->on = true;
+> +
+> +       return 0;
+> +}
+> +
+>  /* -----------------------------------------------------------------------------
+>   * V4L2 subdev internal operations
+>   */
+> @@ -1326,7 +1382,6 @@ static int ov2659_detect(struct v4l2_subdev *sd)
+>                         ret = -ENODEV;
+>                 } else {
+>                         dev_info(&client->dev, "Found OV%04X sensor\n", id);
+> -                       ret = ov2659_init(sd, 0);
+>                 }
+>         }
+>
+> @@ -1403,6 +1458,18 @@ static int ov2659_probe(struct i2c_client *client)
+>             ov2659->xvclk_frequency > 27000000)
+>                 return -EINVAL;
+>
+> +       /* Optional gpio don't fail if not present */
+> +       ov2659->pwdn_gpio = devm_gpiod_get_optional(&client->dev, "powerdown",
+> +                                                   GPIOD_OUT_LOW);
+> +       if (IS_ERR(ov2659->pwdn_gpio))
+> +               return PTR_ERR(ov2659->pwdn_gpio);
+> +
+> +       /* Optional gpio don't fail if not present */
+> +       ov2659->resetb_gpio = devm_gpiod_get_optional(&client->dev, "reset",
+> +                                                     GPIOD_OUT_HIGH);
+> +       if (IS_ERR(ov2659->resetb_gpio))
+> +               return PTR_ERR(ov2659->resetb_gpio);
+> +
+>         v4l2_ctrl_handler_init(&ov2659->ctrls, 2);
+>         ov2659->link_frequency =
+>                         v4l2_ctrl_new_std(&ov2659->ctrls, &ov2659_ctrl_ops,
+> @@ -1448,6 +1515,8 @@ static int ov2659_probe(struct i2c_client *client)
+>         ov2659->frame_size = &ov2659_framesizes[2];
+>         ov2659->format_ctrl_regs = ov2659_formats[0].format_ctrl_regs;
+>
+> +       ov2659_power_on(&client->dev);
+> +
+>         ret = ov2659_detect(sd);
+>         if (ret < 0)
+>                 goto error;
+> @@ -1461,10 +1530,15 @@ static int ov2659_probe(struct i2c_client *client)
+>
+>         dev_info(&client->dev, "%s sensor driver registered !!\n", sd->name);
+>
+> +       pm_runtime_set_active(&client->dev);
+> +       pm_runtime_enable(&client->dev);
+> +       pm_runtime_idle(&client->dev);
+> +
+>         return 0;
+>
+>  error:
+>         v4l2_ctrl_handler_free(&ov2659->ctrls);
+> +       ov2659_power_off(&client->dev);
+>         media_entity_cleanup(&sd->entity);
+>         mutex_destroy(&ov2659->lock);
+>         return ret;
+> @@ -1480,9 +1554,18 @@ static int ov2659_remove(struct i2c_client *client)
+>         media_entity_cleanup(&sd->entity);
+>         mutex_destroy(&ov2659->lock);
+>
+> +       pm_runtime_disable(&client->dev);
+> +       if (!pm_runtime_status_suspended(&client->dev))
+> +               ov2659_power_off(&client->dev);
+> +       pm_runtime_set_suspended(&client->dev);
+> +
+>         return 0;
+>  }
+>
+> +static const struct dev_pm_ops ov2659_pm_ops = {
+> +       SET_RUNTIME_PM_OPS(ov2659_power_off, ov2659_power_on, NULL)
+> +};
+> +
+>  static const struct i2c_device_id ov2659_id[] = {
+>         { "ov2659", 0 },
+>         { /* sentinel */ },
+> @@ -1500,6 +1583,7 @@ MODULE_DEVICE_TABLE(of, ov2659_of_match);
+>  static struct i2c_driver ov2659_i2c_driver = {
+>         .driver = {
+>                 .name   = DRIVER_NAME,
+> +               .pm     = &ov2659_pm_ops,
+>                 .of_match_table = of_match_ptr(ov2659_of_match),
+>         },
+>         .probe_new      = ov2659_probe,
+> --
+> 2.17.1
+>
