@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E3BFC388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38213C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C2612146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 151BF21655
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:45:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728644AbfI0Vpb (ORCPT
+        id S1728618AbfI0Vpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 17:45:31 -0400
+        Fri, 27 Sep 2019 17:45:30 -0400
 Received: from mga12.intel.com ([192.55.52.136]:45951 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728526AbfI0Vp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 17:45:27 -0400
+        id S1728484AbfI0Vp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 17:45:26 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Sep 2019 14:45:26 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Sep 2019 14:45:25 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,557,1559545200"; 
-   d="scan'208";a="196852070"
+   d="scan'208";a="196852063"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by FMSMGA003.fm.intel.com with ESMTP; 27 Sep 2019 14:45:26 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 27 Sep 2019 14:45:25 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>,
         =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
@@ -38,9 +38,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Reto Buerki <reet@codelabs.ch>,
         Liran Alon <liran.alon@oracle.com>
-Subject: [PATCH v2 5/8] KVM: x86: Add WARNs to detect out-of-bounds register indices
-Date:   Fri, 27 Sep 2019 14:45:20 -0700
-Message-Id: <20190927214523.3376-6-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 3/8] KVM: VMX: Consolidate to_vmx() usage in RFLAGS accessors
+Date:   Fri, 27 Sep 2019 14:45:18 -0700
+Message-Id: <20190927214523.3376-4-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190927214523.3376-1-sean.j.christopherson@intel.com>
 References: <20190927214523.3376-1-sean.j.christopherson@intel.com>
@@ -51,124 +51,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add WARN_ON_ONCE() checks in kvm_register_{read,write}() to detect reg
-values that would cause KVM to overflow vcpu->arch.regs.  Change the reg
-param to an 'int' to make it clear that the reg index is unverified.
+Capture struct vcpu_vmx in a local variable to improve the readability
+of vmx_{g,s}et_rflags().
 
-Open code the RIP and RSP accessors so as to avoid pointless overhead of
-WARN_ON_ONCE().  Alternatively, lower-level helpers could be provided,
-but that opens the door for improper use of said helpers, and the
-ugliness of the open-coding will be slightly improved in future patches.
-
-Regarding the overhead of WARN_ON_ONCE(), now that all fixed GPR reads
-and writes use dedicated accessors, e.g. kvm_rax_read(), the overhead
-is limited to flows where the reg index is generated at runtime.  And
-there is at least one historical bug where KVM has generated an out-of-
-bounds access to arch.regs (see commit b68f3cc7d9789, "KVM: x86: Always
-use 32-bit SMRAM save state for 32-bit kernels").
-
-Adding the WARN_ON_ONCE() protection paves the way for additional
-cleanup related to kvm_reg and kvm_reg_ex.
+No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/kvm_cache_regs.h | 30 ++++++++++++++++++++++--------
- arch/x86/kvm/x86.h            |  6 ++----
- 2 files changed, 24 insertions(+), 12 deletions(-)
+ arch/x86/kvm/vmx/vmx.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/kvm/kvm_cache_regs.h b/arch/x86/kvm/kvm_cache_regs.h
-index 1cc6c47dc77e..3972e1b65635 100644
---- a/arch/x86/kvm/kvm_cache_regs.h
-+++ b/arch/x86/kvm/kvm_cache_regs.h
-@@ -37,19 +37,23 @@ BUILD_KVM_GPR_ACCESSORS(r14, R14)
- BUILD_KVM_GPR_ACCESSORS(r15, R15)
- #endif
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 0b8dd9c315f8..83fe8b02b732 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -1407,35 +1407,37 @@ static void vmx_decache_cr0_guest_bits(struct kvm_vcpu *vcpu);
  
--static inline unsigned long kvm_register_read(struct kvm_vcpu *vcpu,
--					      enum kvm_reg reg)
-+static inline unsigned long kvm_register_read(struct kvm_vcpu *vcpu, int reg)
+ unsigned long vmx_get_rflags(struct kvm_vcpu *vcpu)
  {
-+	if (WARN_ON_ONCE((unsigned int)reg >= NR_VCPU_REGS))
-+		return 0;
-+
- 	if (!test_bit(reg, (unsigned long *)&vcpu->arch.regs_avail))
- 		kvm_x86_ops->cache_reg(vcpu, reg);
++	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 	unsigned long rflags, save_rflags;
  
- 	return vcpu->arch.regs[reg];
+ 	if (!test_bit(VCPU_EXREG_RFLAGS, (ulong *)&vcpu->arch.regs_avail)) {
+ 		__set_bit(VCPU_EXREG_RFLAGS, (ulong *)&vcpu->arch.regs_avail);
+ 		rflags = vmcs_readl(GUEST_RFLAGS);
+-		if (to_vmx(vcpu)->rmode.vm86_active) {
++		if (vmx->rmode.vm86_active) {
+ 			rflags &= RMODE_GUEST_OWNED_EFLAGS_BITS;
+-			save_rflags = to_vmx(vcpu)->rmode.save_rflags;
++			save_rflags = vmx->rmode.save_rflags;
+ 			rflags |= save_rflags & ~RMODE_GUEST_OWNED_EFLAGS_BITS;
+ 		}
+-		to_vmx(vcpu)->rflags = rflags;
++		vmx->rflags = rflags;
+ 	}
+-	return to_vmx(vcpu)->rflags;
++	return vmx->rflags;
  }
  
--static inline void kvm_register_write(struct kvm_vcpu *vcpu,
--				      enum kvm_reg reg,
-+static inline void kvm_register_write(struct kvm_vcpu *vcpu, int reg,
- 				      unsigned long val)
+ void vmx_set_rflags(struct kvm_vcpu *vcpu, unsigned long rflags)
  {
-+	if (WARN_ON_ONCE((unsigned int)reg >= NR_VCPU_REGS))
-+		return;
-+
- 	vcpu->arch.regs[reg] = val;
- 	__set_bit(reg, (unsigned long *)&vcpu->arch.regs_dirty);
- 	__set_bit(reg, (unsigned long *)&vcpu->arch.regs_avail);
-@@ -57,22 +61,32 @@ static inline void kvm_register_write(struct kvm_vcpu *vcpu,
++	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 	unsigned long old_rflags = vmx_get_rflags(vcpu);
  
- static inline unsigned long kvm_rip_read(struct kvm_vcpu *vcpu)
- {
--	return kvm_register_read(vcpu, VCPU_REGS_RIP);
-+	if (!test_bit(VCPU_REGS_RIP, (unsigned long *)&vcpu->arch.regs_avail))
-+		kvm_x86_ops->cache_reg(vcpu, VCPU_REGS_RIP);
-+
-+	return vcpu->arch.regs[VCPU_REGS_RIP];
+ 	__set_bit(VCPU_EXREG_RFLAGS, (ulong *)&vcpu->arch.regs_avail);
+-	to_vmx(vcpu)->rflags = rflags;
+-	if (to_vmx(vcpu)->rmode.vm86_active) {
+-		to_vmx(vcpu)->rmode.save_rflags = rflags;
++	vmx->rflags = rflags;
++	if (vmx->rmode.vm86_active) {
++		vmx->rmode.save_rflags = rflags;
+ 		rflags |= X86_EFLAGS_IOPL | X86_EFLAGS_VM;
+ 	}
+ 	vmcs_writel(GUEST_RFLAGS, rflags);
+ 
+-	if ((old_rflags ^ to_vmx(vcpu)->rflags) & X86_EFLAGS_VM)
+-		to_vmx(vcpu)->emulation_required = emulation_required(vcpu);
++	if ((old_rflags ^ vmx->rflags) & X86_EFLAGS_VM)
++		vmx->emulation_required = emulation_required(vcpu);
  }
  
- static inline void kvm_rip_write(struct kvm_vcpu *vcpu, unsigned long val)
- {
--	kvm_register_write(vcpu, VCPU_REGS_RIP, val);
-+	vcpu->arch.regs[VCPU_REGS_RIP] = val;
-+	__set_bit(VCPU_REGS_RIP, (unsigned long *)&vcpu->arch.regs_dirty);
-+	__set_bit(VCPU_REGS_RIP, (unsigned long *)&vcpu->arch.regs_avail);
- }
- 
- static inline unsigned long kvm_rsp_read(struct kvm_vcpu *vcpu)
- {
--	return kvm_register_read(vcpu, VCPU_REGS_RSP);
-+	if (!test_bit(VCPU_REGS_RSP, (unsigned long *)&vcpu->arch.regs_avail))
-+		kvm_x86_ops->cache_reg(vcpu, VCPU_REGS_RSP);
-+
-+	return vcpu->arch.regs[VCPU_REGS_RSP];
- }
- 
- static inline void kvm_rsp_write(struct kvm_vcpu *vcpu, unsigned long val)
- {
--	kvm_register_write(vcpu, VCPU_REGS_RSP, val);
-+	vcpu->arch.regs[VCPU_REGS_RSP] = val;
-+	__set_bit(VCPU_REGS_RSP, (unsigned long *)&vcpu->arch.regs_dirty);
-+	__set_bit(VCPU_REGS_RSP, (unsigned long *)&vcpu->arch.regs_avail);
- }
- 
- static inline u64 kvm_pdptr_read(struct kvm_vcpu *vcpu, int index)
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index dbf7442a822b..45d82b8277e5 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -238,8 +238,7 @@ static inline bool vcpu_match_mmio_gpa(struct kvm_vcpu *vcpu, gpa_t gpa)
- 	return false;
- }
- 
--static inline unsigned long kvm_register_readl(struct kvm_vcpu *vcpu,
--					       enum kvm_reg reg)
-+static inline unsigned long kvm_register_readl(struct kvm_vcpu *vcpu, int reg)
- {
- 	unsigned long val = kvm_register_read(vcpu, reg);
- 
-@@ -247,8 +246,7 @@ static inline unsigned long kvm_register_readl(struct kvm_vcpu *vcpu,
- }
- 
- static inline void kvm_register_writel(struct kvm_vcpu *vcpu,
--				       enum kvm_reg reg,
--				       unsigned long val)
-+				       int reg, unsigned long val)
- {
- 	if (!is_64_bit_mode(vcpu))
- 		val = (u32)val;
+ u32 vmx_get_interrupt_shadow(struct kvm_vcpu *vcpu)
 -- 
 2.22.0
 
