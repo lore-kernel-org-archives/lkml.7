@@ -2,155 +2,255 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACED7C352AB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3CDC352AB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8398420872
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3A092146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:38:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jEhyHybL"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DASvc3ff";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jXmoGgiS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbfI0HeM (ORCPT
+        id S1726434AbfI0HiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 03:34:12 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42228 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfI0HeL (ORCPT
+        Fri, 27 Sep 2019 03:38:06 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:34052 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725812AbfI0HiF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 03:34:11 -0400
-Received: by mail-lj1-f196.google.com with SMTP id y23so1472166lje.9;
-        Fri, 27 Sep 2019 00:34:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=doszWGbeqJhGNmlXgnBna5EvgHabx/d6O/EtYtXDbwI=;
-        b=jEhyHybLYT0E1ol5FjBo36xmkuGWVFBC1mtbB6mIPywrkiYSa0gsRPKdYw7nAp4KQ6
-         Pj6xXEnWldEcHEmWdpg4k9ENupJSHIAqikbxKwCgPGCMZTu7bWSTZYdZGFfbVBV5Asvw
-         RwNXJKoOv4WGIeCAYh8TCP86fgEp1DBcV06euu3ajlr+1rCodsW3vE1KVQNzxnJ1rSx2
-         imtiTjVZamcO9MaSWiFv4AAU5Get7Sz11EHd290fJVJy3iPMJMdsA7LPWQsiPYIElUvh
-         KmLpXUYbJqUM5gUFcg/7i3UVyy7JPSazQ1CfexUgrfi4BXVF3mTf15/NBCa/lw8JTW/C
-         C4bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=doszWGbeqJhGNmlXgnBna5EvgHabx/d6O/EtYtXDbwI=;
-        b=KunEMKm00BjWf2D1TiI0WMEDFYz7OC8xmLOSnM96I6bsKgANYPZ9zmCYJfrqzzVXyC
-         AinTc6kIv3AOGNQAwFn1DSH65qMPM5bT2ZFwXq1Ly167RPcHMqrwKUE0myI1C3LQJWkQ
-         aCKE53aqJoLGICdMR2/tnPESP1o4r9Vu1vuuA3T8UQfG1y+GBRpfvhU1kdRtAgAJbjI0
-         SlGG888zAsi6Tg2k51Rzt5MWqMgm94E17YrvzJPOjWIANWWgoS4eHVSZvtW06eTU0Hs7
-         qSn9meHkuphzLr4U5P4So7XTFMMV0wkL2eqKkEmxklxCdE/dlwCyYsMUCBN6vjpSN/oT
-         TCgw==
-X-Gm-Message-State: APjAAAXZT5lIhxoBv2q332TYNjWWhskWg6P4OyW9OTpD3rqjuPaupL/V
-        rcSVQ7I3U8SwGtFuYVZhRdaOnuquuOE2zI+mzG8=
-X-Google-Smtp-Source: APXvYqwQmtwsyouO3Zzfka6gwtQVJ/qWbnVInojMGIv1C/zgBRBYRQk0/5BM8MAxX2bww5KD5vkH92joSMy6tECIuws=
-X-Received: by 2002:a2e:9a89:: with SMTP id p9mr1841492lji.131.1569569649807;
- Fri, 27 Sep 2019 00:34:09 -0700 (PDT)
+        Fri, 27 Sep 2019 03:38:05 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 0C75660BF9; Fri, 27 Sep 2019 07:38:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1569569884;
+        bh=teWs/vtWTsziav0JQnD9ZMzwkSFXlCN1dgwADLH494A=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=DASvc3ff7j2gnwddE6LRTNzjIkqF1lk4f+F1l2XsAHNUo29m3us24kgdjxUhQHCSU
+         rS3g8cE3ZMQukPDowzhdpybM6rMgn4k87ZLNa2K2TyjdWF9zMBFt5SC6Mzu4zIcjtq
+         SMiS36ZJOzw3AbrCrq1mOvkuBKyDkOi2O0+gMlks=
+Received: from [10.206.28.9] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CD39560BE8;
+        Fri, 27 Sep 2019 07:37:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1569569883;
+        bh=teWs/vtWTsziav0JQnD9ZMzwkSFXlCN1dgwADLH494A=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=jXmoGgiSnM9YMqGD2mBG2MxuvuXR7SBzdU40ytZNySRFx3CVGZoeBkg+A/3qNuuGr
+         urudSDobmcu5cEzA+zZbQ2ka87iWkf0Dy0y8o2cdBFmdtKmNnK0CE1bD7NS7erx+MQ
+         uqe6erYQIWodM6aFq8e97teq8dSGUpwoxP5XJYqw=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CD39560BE8
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH v3 3/3] clk: qcom: Add Global Clock controller (GCC)
+ driver for SC7180
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>, robh+dt@kernel.org
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20190918095018.17979-1-tdas@codeaurora.org>
+ <20190918095018.17979-4-tdas@codeaurora.org>
+ <20190918213946.DC03521924@mail.kernel.org>
+ <a3cd82c9-8bfa-f4a3-ab1f-2e397fbd9d16@codeaurora.org>
+ <20190924231223.9012C207FD@mail.kernel.org>
+ <347780b9-c66b-01c4-b547-b03de2cf3078@codeaurora.org>
+ <20190925130346.42E0820640@mail.kernel.org>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <35f8b699-6ff7-9104-5e3d-ef4ee8635832@codeaurora.org>
+Date:   Fri, 27 Sep 2019 13:07:57 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20190920135137.10052-1-ricardo@ribalda.com> <20190920135137.10052-8-ricardo@ribalda.com>
- <6e4c1969-a80d-4747-7a44-b7a46804fe12@xs4all.nl>
-In-Reply-To: <6e4c1969-a80d-4747-7a44-b7a46804fe12@xs4all.nl>
-From:   Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Date:   Fri, 27 Sep 2019 09:33:53 +0200
-Message-ID: <CAPybu_3ga6rJ8pzw3wAP=nMOHDqeQEWWa-reto7Xk_FzRFVLyw@mail.gmail.com>
-Subject: Re: [PATCH v6 7/7] media: imx214: Add new control with V4L2_CID_UNIT_CELL_SIZE
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190925130346.42E0820640@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans
+Hi Stephen,
 
-On Fri, 27 Sep 2019, 09:14 Hans Verkuil, <hverkuil-cisco@xs4all.nl> wrote:
->
-> On 9/20/19 3:51 PM, Ricardo Ribalda Delgado wrote:
-> > From: Ricardo Ribalda Delgado <ribalda@kernel.org>
-> >
-> > According to the product brief, the unit cell size is 1120 nanometers^2.
-> >
-> > https://www.sony-semicon.co.jp/products_en/IS/sensor1/img/products/ProductBrief_IMX214_20150428.pdf
-> >
-> > Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
-> > ---
-> >  drivers/media/i2c/imx214.c | 12 ++++++++++++
-> >  1 file changed, 12 insertions(+)
-> >
-> > diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
-> > index 159a3a604f0e..57562e20c4ca 100644
-> > --- a/drivers/media/i2c/imx214.c
-> > +++ b/drivers/media/i2c/imx214.c
-> > @@ -47,6 +47,7 @@ struct imx214 {
-> >       struct v4l2_ctrl *pixel_rate;
-> >       struct v4l2_ctrl *link_freq;
-> >       struct v4l2_ctrl *exposure;
-> > +     struct v4l2_ctrl *unit_size;
-> >
-> >       struct regulator_bulk_data      supplies[IMX214_NUM_SUPPLIES];
-> >
-> > @@ -948,6 +949,13 @@ static int imx214_probe(struct i2c_client *client)
-> >       static const s64 link_freq[] = {
-> >               IMX214_DEFAULT_LINK_FREQ,
-> >       };
-> > +     struct v4l2_area unit_size = {
-> > +             .width = 1120,
-> > +             .height = 1120,
-> > +     };
-> > +     union v4l2_ctrl_ptr p_def = {
-> > +             .p_area = &unit_size,
-> > +     };
->
-> Use static const for both.
->
-> I think you should add a small static inline helper function to v4l2-ctrls.h that
-> takes a void pointer and returns a union v4l2_ctrl_ptr.
->
-> Then you don't need to make a union v4l2_ctrl_ptr just to pass the unit_size pointer.
->
+On 9/25/2019 6:33 PM, Stephen Boyd wrote:
+> Quoting Taniya Das (2019-09-25 04:20:07)
+>> Hi Stephen,
+>>
+>> Please find my comments.
+>>
+>> On 9/25/2019 4:42 AM, Stephen Boyd wrote:
+>>> Quoting Taniya Das (2019-09-23 01:01:11)
+>>>> Hi Stephen,
+>>>>
+>>>> Thanks for your comments.
+>>>>
+>>>> On 9/19/2019 3:09 AM, Stephen Boyd wrote:
+>>>>> Quoting Taniya Das (2019-09-18 02:50:18)
+>>>>>> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
+>>>>>> new file mode 100644
+>>>>>> index 000000000000..d47865d5408f
+>>>>>> --- /dev/null
+>>>>>> +++ b/drivers/clk/qcom/gcc-sc7180.c
+>>>>>> +                       .ops = &clk_branch2_ops,
+>>>>>> +               },
+>>>>>> +       },
+>>>>>> +};
+>>>>>> +
+>>> [...]
+>>>>>> +static struct clk_branch gcc_ufs_phy_phy_aux_clk = {
+>>>>>> +       .halt_reg = 0x77094,
+>>>>>> +       .halt_check = BRANCH_HALT,
+>>>>>> +       .hwcg_reg = 0x77094,
+>>>>>> +       .hwcg_bit = 1,
+>>>>>> +       .clkr = {
+>>>>>> +               .enable_reg = 0x77094,
+>>>>>> +               .enable_mask = BIT(0),
+>>>>>> +               .hw.init = &(struct clk_init_data){
+>>>>>> +                       .name = "gcc_ufs_phy_phy_aux_clk",
+>>>>>> +                       .parent_data = &(const struct clk_parent_data){
+>>>>>> +                               .hw = &gcc_ufs_phy_phy_aux_clk_src.clkr.hw,
+>>>>>> +                       },
+>>>>>> +                       .num_parents = 1,
+>>>>>> +                       .flags = CLK_SET_RATE_PARENT,
+>>>>>> +                       .ops = &clk_branch2_ops,
+>>>>>> +               },
+>>>>>> +       },
+>>>>>> +};
+>>>>>> +
+>>>>>> +static struct clk_branch gcc_ufs_phy_rx_symbol_0_clk = {
+>>>>>> +       .halt_reg = 0x7701c,
+>>>>>> +       .halt_check = BRANCH_HALT_SKIP,
+>>>>>
+>>>>> Again, nobody has fixed the UFS driver to not need to do this halt skip
+>>>>> check for these clks? It's been over a year.
+>>>>>
+>>>>
+>>>> The UFS_PHY_RX/TX clocks could be left enabled due to certain HW boot
+>>>> configuration and thus during the late initcall of clk_disable there
+>>>> could be warnings of "clock stuck ON" in the dmesg. That is the reason
+>>>> also to use the BRANCH_HALT_SKIP flag.
+>>>
+>>> Oh that's bad. Why do the clks stay on when we try to turn them off?
+>>>
+>>
+>> Those could be due to the configuration selected by HW and SW cannot
+>> override them, so traditionally we have never polled for CLK_OFF for
+>> these clocks.
+> 
+> Is that the case or just a guess?
+> 
 
-That sounds useful, but can we warantee for all the arches that
-sizeof(v4l2_ctrl_ptr) <= sizeof (void *)
+This is the behavior :).
 
-Of course, it sounds logic, that a union of pointers is the same size
-than a pointer... but you never know.
+>>
+>>>>
+>>>> I would also check internally for the UFS driver fix you are referring here.
+>>>
+>>> Sure. I keep asking but nothing is done :(
+>>>
+>>>>
+>>>>>> +       .clkr = {
+>>>>>> +               .enable_reg = 0x7701c,
+>>>>>> +               .enable_mask = BIT(0),
+>>>>>> +               .hw.init = &(struct clk_init_data){
+>>>>>> +                       .name = "gcc_ufs_phy_rx_symbol_0_clk",
+>>>>>> +                       .ops = &clk_branch2_ops,
+>>>>>> +               },
+>>>>>> +       },
+>>>>>> +};
+>>>>>> +
+>>> [...]
+>>>>>> +
+>>>>>> +static struct clk_branch gcc_usb3_prim_phy_pipe_clk = {
+>>>>>> +       .halt_reg = 0xf058,
+>>>>>> +       .halt_check = BRANCH_HALT_SKIP,
+>>>>>
+>>>>> Why does this need halt_skip?
+>>>>
+>>>> This is required as the source is external PHY, so we want to not check
+>>>> for HALT.
+>>>
+>>> This doesn't really answer my question. If the source is an external phy
+>>> then it should be listed as a clock in the DT binding and the parent
+>>> should be specified here. Unless something doesn't work because of that?
+>>>
+>>
+>> The USB phy is managed by the USB driver and clock driver is not aware
+>> if USB driver models the phy as a clock. Thus we do want to keep a
+>> dependency on the parent and not poll for CLK_ENABLE.
+> 
+> The clk driver should be aware of the USB driver modeling the phy as a
+> clk. We do that for other phys so what is the difference here?
+> 
 
-No matter what I will make the helper and resend. with all the changes
-from Jacopo
+Let me check with the USB team, but could we keep them for now?
 
-Thanks!
+>>
+>>>>
+>>>>>
+>>>>>> +       .clkr = {
+>>>>>> +               .enable_reg = 0xf058,
+>>>>>> +               .enable_mask = BIT(0),
+>>>>>> +               .hw.init = &(struct clk_init_data){
+>>>>>> +                       .name = "gcc_usb3_prim_phy_pipe_clk",
+>>>>>> +                       .ops = &clk_branch2_ops,
+>>>>>> +               },
+>>>>>> +       },
+>>>>>> +};
+>>>>>> +
+>>>>>> +static struct clk_branch gcc_usb_phy_cfg_ahb2phy_clk = {
+>>>>>> +       .halt_reg = 0x6a004,
+>>>>>> +       .halt_check = BRANCH_HALT,
+>>>>>> +       .hwcg_reg = 0x6a004,
+>>>>>> +       .hwcg_bit = 1,
+>>>>>> +       .clkr = {
+>>>>>> +               .enable_reg = 0x6a004,
+>>>>>> +               .enable_mask = BIT(0),
+>>>>>> +               .hw.init = &(struct clk_init_data){
+>>>>>> +                       .name = "gcc_usb_phy_cfg_ahb2phy_clk",
+>>>>>> +                       .ops = &clk_branch2_ops,
+>>>>>> +               },
+>>>>>> +       },
+>>>>>> +};
+>>>>>> +
+>>>>>> +/* Leave the clock ON for parent config_noc_clk to be kept enabled */
+>>>>>
+>>>>> There's no parent though... So I guess this means it keeps it enabled
+>>>>> implicitly in hardware?
+>>>>>
+>>>>
+>>>> These are not left enabled, but want to leave them enabled for clients
+>>>> on config NOC.
+>>>
+>>> Sure. It just doesn't make sense to create clk structures and expose
+>>> them in the kernel when we just want to turn the bits on and leave them
+>>> on forever. Why not just do some register writes in probe for this
+>>> driver? Doesn't that work just as well and use less memory?
+>>>
+>>
+>> Even if I write these registers during probe, the late init check
+>> 'clk_core_is_enabled' would return true and would be turned OFF, that is
+>> the reason for marking them CRITICAL.
+>>
+> 
+> That wouldn't happen if the clks weren't registered though, no?
+> 
 
-> Regards,
+I want to keep these clock CRITICAL and registered for now, but we 
+should be able to revisit/clean them up later.
 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
 
-
->
->         Hans
->
-> >       int ret;
-> >
-> >       ret = imx214_parse_fwnode(dev);
-> > @@ -1029,6 +1037,10 @@ static int imx214_probe(struct i2c_client *client)
-> >                                            V4L2_CID_EXPOSURE,
-> >                                            0, 3184, 1, 0x0c70);
-> >
-> > +     imx214->unit_size = v4l2_ctrl_new_std_compound(&imx214->ctrls,
-> > +                                                    NULL,
-> > +                                                    V4L2_CID_UNIT_CELL_SIZE,
-> > +                                                    p_def);
-> >       ret = imx214->ctrls.error;
-> >       if (ret) {
-> >               dev_err(&client->dev, "%s control init failed (%d)\n",
-> >
->
+--
