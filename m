@@ -2,88 +2,113 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F6FC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 06:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DF9C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 06:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCDB320863
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 06:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B88A2146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 06:06:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VtON5D6G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726077AbfI0GDU (ORCPT
+        id S1726101AbfI0GGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 02:03:20 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3165 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725769AbfI0GDU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 02:03:20 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E193F3365AF5D05ACBFF;
-        Fri, 27 Sep 2019 14:03:15 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Fri, 27 Sep 2019
- 14:03:10 +0800
-To:     Bart Van Assche <bvanassche@acm.org>, <dsterba@suse.cz>,
-        <bhelgaas@google.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Alexander Duyck" <alexander.h.duyck@linux.intel.com>,
-        <sakari.ailus@linux.intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        David Sterba <dsterba@suse.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-Subject: [PATCH v2] async: Let kfree() out of the critical area of the lock
-Message-ID: <ae3b790d-9883-0ec0-425d-5ac9b32c2d0f@huawei.com>
-Date:   Fri, 27 Sep 2019 14:03:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 27 Sep 2019 02:06:16 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34207 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725769AbfI0GGQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 02:06:16 -0400
+Received: by mail-pg1-f194.google.com with SMTP id y35so2893364pgl.1;
+        Thu, 26 Sep 2019 23:06:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=shGlXP0a+d5dJlocGPNSuTbXMERJcBW0qglwv2DFJ40=;
+        b=VtON5D6Gqgn7zsdje44tVNsQVPngdLZ6lnnnM8LsYVO6xfAnLS/iRzQsH38adFqUxk
+         aENCUeM88uBg3G8vyB2KgpCogGxEkRZFO7MWT/np5uGMJ66qQwAgKJhfS92P4su7/rav
+         Tnqs2EDkuC6Z2OLI1vmsaR3eKtfjoZhnwt/+kGxuh/0mbOXWk20xWnBizey0QgSEpjBd
+         02WXhAFGyjKu4ZgzQUS6iF5b8pudy6tYqndJF2s7n8rVh5AARTMOioAVHDP08FGVI4dE
+         rvvv85bYrofAYKJko4FUes90pgkWfHs4oD65KWFS6KH8wciqlQwPIdKhe0m1DeDTAJ0h
+         dSOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=shGlXP0a+d5dJlocGPNSuTbXMERJcBW0qglwv2DFJ40=;
+        b=IPfgMT1QhxprKpKD+krV6Q+ap8Huv0eblEVRkV0jLhiZy1b9TFN6Oa26QMQVJj8hyL
+         fWZQI6YMFzoJEocIHW57qNJRI+Sr2CRWeV6J710m/2pmxLqU2AbRnhGskQNk5W+Dgc+z
+         7BTmda1+rVDcvb4hexfR9krHgzCaG6yKGgK3iAZxdEuxTIW30rmViAbW75+/Bk159z+f
+         Y3U9hSPtdx/4NGu95coCqbs1y8bvPtgYtzZqOSu8qFZJUN1K08iznN70Pc6O77yitLdn
+         82te/0U4tuN4uHyQrM8QHyyk+rygfujnwb4IZJph+vsvQb5kqWP09Fe6avUWN706u2gn
+         5etg==
+X-Gm-Message-State: APjAAAUB67zB1qrVzV2T6G1MCZD0w5FsRrjcDsbxLM4NUML+o4a60kIx
+        /8yNi4v4YQjixrRGQWMhn/Gd9JKtHbUw1M2L3ss=
+X-Google-Smtp-Source: APXvYqxkajbqm5jZ0Y8HTEc45NNxUMs7V+SguYx5MQ13HOLmS4W8m6F/rEYOQHo9u1my4ruqBn8QdFgHMirt2CEtLyw=
+X-Received: by 2002:a62:c141:: with SMTP id i62mr2223521pfg.64.1569564375309;
+ Thu, 26 Sep 2019 23:06:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
+References: <20190926192603.18647-1-gayatri.kammela@intel.com> <CAHp75Vcrp2ffDCE=tm2dwSEhwfPCPWGhb-Nw0v-7ga2y=_dL8w@mail.gmail.com>
+In-Reply-To: <CAHp75Vcrp2ffDCE=tm2dwSEhwfPCPWGhb-Nw0v-7ga2y=_dL8w@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 27 Sep 2019 09:06:04 +0300
+Message-ID: <CAHp75VfwpYLVn2qWBMK11eR3D5VwnGf7VeYE=cQfq_y78ct75A@mail.gmail.com>
+Subject: Re: [PATCH v1 0/5] Add Tiger Lake/Elkhart Lake support to pmc_core driver
+To:     Gayatri Kammela <gayatri.kammela@intel.com>
+Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        charles.d.prestopine@intel.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kan Liang <kan.liang@intel.com>,
+        "David E . Box" <david.e.box@intel.com>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
+        Tony Luck <tony.luck@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The async_lock is big global lock, and kfree() is not always cheap, it
-will increase lock contention. it's better let kfree() outside the lock
-to keep the critical area as short as possible.
+On Fri, Sep 27, 2019 at 9:01 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Thu, Sep 26, 2019 at 9:43 PM Gayatri Kammela
+> <gayatri.kammela@intel.com> wrote:
+>
+> Thank you for the series, I'll comment them later.
+>
+> For now, check how to properly setup prefix for all patches. The Title
+> all broken.
+>
 
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
----
-v1 -> v2:
- - update the description
- - add "Reviewed-by"
+On top of that the fully inconsistent SoC naming through the existing
+code / new additions.
 
- kernel/async.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+I'm pretty sure you need to spell platforms as Tiger Lake, Elkhart
+Lake and so on everywhere.
 
-diff --git a/kernel/async.c b/kernel/async.c
-index 4f9c1d6..1de270d 100644
---- a/kernel/async.c
-+++ b/kernel/async.c
-@@ -135,12 +135,12 @@ static void async_run_entry_fn(struct work_struct *work)
- 	list_del_init(&entry->domain_list);
- 	list_del_init(&entry->global_list);
+Fix this, but do not send new version till I look at the code here.
 
--	/* 3) free the entry */
--	kfree(entry);
- 	atomic_dec(&entry_count);
--
- 	spin_unlock_irqrestore(&async_lock, flags);
+> > Patch 1: Cleans up termination lines
+> > Patch 2: Refactor driver for ease of adding new SoCs
+> > Patch 3: Refactor debugfs entry for PCH IPs power gating status
+> > Patch 4: Add Tiger Lake legacy support to pmc_core
+> > Patch 5: Add Elkhart Lake legacy support to pmc_core
+> >
+> > All the information regarding the PCH IPs and names of IPs will be available
+> > in *future* Intel's Platform Controller Hub (PCH) External Design Specification
+> > (EDS) document.
+>
+> When?
 
-+	/* 3) free the entry */
-+	kfree(entry);
-+
- 	/* 4) wake up any waiters */
- 	wake_up(&async_done);
- }
 -- 
-2.7.4
-
+With Best Regards,
+Andy Shevchenko
