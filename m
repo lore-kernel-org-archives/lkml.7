@@ -2,126 +2,199 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E057C4360C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA216C4CED1
 	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 148832146E
+	by mail.kernel.org (Postfix) with ESMTP id 9CFEF21655
 	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:42:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="sGZfP/z9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569620577;
+	bh=woe0ZidU/l62b9rCpbymA++FhqsxoRS+ZiXvjj9sMeE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=CLJtWXlmA4JHvRmM/Y7XA5f7MqsykWj8bc6kV5BC63+FKFs3ZU/Ya/lAExaG7fW0B
+	 XPc1KaVtRSkNOr7se2lD1NG0YdHKCAhHK3jC7oi2NHoqf6nalUtohB1Z5h2/hjX6nh
+	 DrhLqPp0+k21kYN5+cHKBL44DdXlDg0vIxoxP350=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbfI0Vms (ORCPT
+        id S1728268AbfI0Vm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 17:42:48 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39493 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfI0Vmr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 17:42:47 -0400
-Received: by mail-pg1-f195.google.com with SMTP id o10so4137993pgs.6
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 14:42:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=Lzcnw0iAcIFwZNCYEwiqETTo7mFYOXKonShWkT8groo=;
-        b=sGZfP/z9N7kBYff/yn481rZ/m6Z9TK6lqaAfFkUlClJYaX8LJPJD0042nr+RR3kNgl
-         L8pFTcb0BAOChMz1+gAVJoDsfySeQo0Fnr0M1vXJFjjh8Z5W4DCICoF+7zkY5cJm0Nyf
-         y+AnIpfEzF2ChKoi9ajpC/gQP/wGShzwwUhQIKwQoa/Hqimb6p5zQDZpSzHQEm7kOvJ8
-         9mkCLMkFNfZzwHE5YXzSjvy/ik4EG5Q3GDmViRu29WVrQApCyARAWK969W8a7bTabQi6
-         WqByiOseyL9LLbeZy4lv7mAJKqWfhCX08Daalfg5JBz1TRuQaXpsIpIwuzozUVgYh01S
-         +EfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=Lzcnw0iAcIFwZNCYEwiqETTo7mFYOXKonShWkT8groo=;
-        b=F1YJnMPuyULydZXVH/7ZmKPF/LW4ZpwEC05/w+ooh+upI4CZ3PmsEgY9XbMhrwZLRM
-         HFo1zcU/hb9mMuWJ3Diqm4tAr99YzUPvWJgXH+807oc+WVaNTuCH8OhQCiaSDZRSGGIf
-         pNos1oNJ2werEB+s35Z3L/KJ4rbn5mBillaCrUyN+UFWUMSryfG9hjsCFUtp/vqOIPsR
-         8FiA+0vTUrV8yRLV4g+2N0y3JCZLrsXb3ZoyVkueo0P+jRfbLTdY9Ul4zRYy1e0FIrSR
-         HcF8/zcQTR1hkwZcgODIyy4y6Yafc+S7hE2Xcuzd72lW89B9tTEGrKUwtqKi5GEFtEa6
-         z4Eg==
-X-Gm-Message-State: APjAAAW4VabvHnFw/P+ykRH/ZySwrBIqwLFORC4rvtkFZUjuam94I/d0
-        Rj3FhmHrULel0mViEWVAlkB6PA==
-X-Google-Smtp-Source: APXvYqylvxizWriFlZFI3My3E7wjF1M17Xv3jfridbykbRDhmf/+GPf8eTOyqqe9JtmyjBQw57nNfA==
-X-Received: by 2002:a65:628a:: with SMTP id f10mr11289856pgv.155.1569620566828;
-        Fri, 27 Sep 2019 14:42:46 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id y138sm4035112pfb.174.2019.09.27.14.42.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2019 14:42:46 -0700 (PDT)
-Date:   Fri, 27 Sep 2019 14:42:42 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        netdev@vger.kernel.org, oss-drivers@netronome.com,
-        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen A McCamant <smccaman@umn.edu>,
-        Colin Ian King <colin.king@canonical.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        John Hurley <john.hurley@netronome.com>,
-        Pablo Neira <pablo@netfilter.org>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH v3] nfp: abm: fix memory leak in
- nfp_abm_u32_knode_replace
-Message-ID: <20190927144242.7e0d8fde@cakuba.netronome.com>
-In-Reply-To: <1cde6417-5942-598b-3670-c0a7227ffe25@web.de>
-References: <20190927015157.20070-1-navid.emamdoost@gmail.com>
-        <1cde6417-5942-598b-3670-c0a7227ffe25@web.de>
-Organization: Netronome Systems, Ltd.
+        Fri, 27 Sep 2019 17:42:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58002 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725990AbfI0Vm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 17:42:56 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CA2621655;
+        Fri, 27 Sep 2019 21:42:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569620574;
+        bh=woe0ZidU/l62b9rCpbymA++FhqsxoRS+ZiXvjj9sMeE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=bA51B+GY3JK+tXvmbY6GN1FvBXIECJHNatpEzzJbjStASusXSlvaNiwNoX2vTIST/
+         hFmLxZlQt+6FXLDpvWSdX5kwq+dAgthqeEm2fFhAvkbKAPIE0SApGkoR2e1ZEFZmr5
+         WgISIXqeBL0G1IOgIHtFmF1ooPEF4YJ4dSWZMm1E=
+Date:   Fri, 27 Sep 2019 16:42:53 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+        linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        nouveau@lists.freedesktop.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@intel.com>
+Subject: Re: [RFC PATCH] pci: prevent putting pcie devices into lower device
+ states on certain intel bridges
+Message-ID: <20190927214252.GA65801@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190927144421.22608-1-kherbst@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 27 Sep 2019 14:12:42 +0200, Markus Elfring wrote:
-> > Updated other gotos to have correct errno returned, too.  
-> 
-> How do you think about to add a jump target here?
-> 
-> 
-> > +++ b/drivers/net/ethernet/netronome/nfp/abm/cls.c
-> > @@ -176,8 +176,10 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
-> >  	u8 mask, val;
-> >  	int err;
-> >
-> > -	if (!nfp_abm_u32_check_knode(alink->abm, knode, proto, extack))
-> > +	if (!nfp_abm_u32_check_knode(alink->abm, knode, proto, extack)) {
-> > +		err = -EOPNOTSUPP;
-> >  		goto err_delete;
-> > +	}
-> >
-> >  	tos_off = proto == htons(ETH_P_IP) ? 16 : 20;  
-> 
-> -		goto err_delete;
-> +		goto e_opnotsupp;
-> 
-> 
-> > @@ -221,7 +227,7 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
-> >  
-> 
-> +e_opnotsupp:
-> +	err = -EOPNOTSUPP;
-> 
-> >  err_delete:
-> >  	nfp_abm_u32_knode_delete(alink, knode);
-> > -	return -EOPNOTSUPP;
-> > +	return err;
-> >  }
-> >
-> >  static int nfp_abm_setup_tc_block_cb(enum tc_setup_type type,  
-> 
-> 
-> Can such a change variant be a bit nicer?
+[+cc Rafael, Mika, linux-pm]
 
-Definitely not.
+On Fri, Sep 27, 2019 at 04:44:21PM +0200, Karol Herbst wrote:
+> Fixes runpm breakage mainly on Nvidia GPUs as they are not able to resume.
 
-Looks good as is, thanks Navid!
+I don't know what runpm is.  Some userspace utility?  Module
+parameter?
+
+> Works perfectly with this workaround applied.
+> 
+> RFC comment:
+> We are quite sure that there is a higher amount of bridges affected by this,
+> but I was only testing it on my own machine for now.
+> 
+> I've stresstested runpm by doing 5000 runpm cycles with that patch applied
+> and never saw it fail.
+> 
+> I mainly wanted to get a discussion going on if that's a feasable workaround
+> indeed or if we need something better.
+> 
+> I am also sure, that the nouveau driver itself isn't at fault as I am able
+> to reproduce the same issue by poking into some PCI registers on the PCIe
+> bridge to put the GPU into D3cold as it's done in ACPI code.
+> 
+> I've written a little python script to reproduce this issue without the need
+> of loading nouveau:
+> https://raw.githubusercontent.com/karolherbst/pci-stub-runpm/master/nv_runpm_bug_test.py
+
+Nice script, thanks for sharing it :)  I could learn a lot of useful
+python by studying it.
+
+> Signed-off-by: Karol Herbst <kherbst@redhat.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Lyude Paul <lyude@redhat.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: nouveau@lists.freedesktop.org
+> ---
+>  drivers/pci/pci.c | 39 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 088fcdc8d2b4..9dbd29ced1ac 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -799,6 +799,42 @@ static inline bool platform_pci_bridge_d3(struct pci_dev *dev)
+>  	return pci_platform_pm ? pci_platform_pm->bridge_d3(dev) : false;
+>  }
+>  
+> +/*
+> + * some intel bridges cause serious issues with runpm if the client device
+> + * is put into D1/D2/D3hot before putting the client into D3cold via
+> + * platform means (generally ACPI).
+
+You mention Nvidia GPUs above, but I guess the same issue may affect
+other devices?  I would really like to chase this down to a more
+specific issue, e.g., a hardware defect with erratum, an ACPI defect,
+or a Linux defect.  Without the specifics, this is just a band-aid.
+
+I don't see any relevant requirements in the _OFF description, but I
+don't know much about ACPI power control.
+
+Your script allows several scenarios; I *guess* the one that causes
+the problem is:
+
+  - write 3 (D3hot) to GPU PowerState (PCIE_PM_REG == 0x64, I assume
+    PM Capability Control Register)
+  - write 3 (D3hot) to bridge PowerState (0x84, I assume PM Capability
+    Control Register)
+  - run _OFF on the power resource for the bridge
+
+From your script I assume you do:
+
+  - run _ON on the power resource for the bridge
+  - write 0 (D0) to the bridge PowerState
+
+You do *not* write the GPU PowerState (which we can't do if the GPU is
+in D3cold).  Is there some assumption that it comes out of D3cold via
+some other mechanism, e.g., is the _ON supposed to wake up the GPU?
+
+What exactly is the serious issue?  I guess it's that the rescan
+doesn't detect the GPU, which means it's not responding to config
+accesses?  Is there any timing component here, e.g., maybe we're
+missing some delay like the ones Mika is adding to the reset paths?
+
+> + *
+> + * skipping this makes runpm work perfectly fine on such devices.
+> + *
+> + * As far as we know only skylake and kaby lake SoCs are affected.
+> + */
+> +static unsigned short intel_broken_d3_bridges[] = {
+> +	/* kbl */
+> +	0x1901,
+> +};
+> +
+> +static inline bool intel_broken_pci_pm(struct pci_bus *bus)
+> +{
+> +	struct pci_dev *bridge;
+> +	int i;
+> +
+> +	if (!bus || !bus->self)
+> +		return false;
+> +
+> +	bridge = bus->self;
+> +	if (bridge->vendor != PCI_VENDOR_ID_INTEL)
+> +		return false;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(intel_broken_d3_bridges); i++) {
+> +		if (bridge->device == intel_broken_d3_bridges[i]) {
+> +			pci_err(bridge, "found broken intel bridge\n");
+
+If this ends up being a hardware defect, we should use a quirk to set
+a bit in the pci_dev once, as we do for broken_intx_masking and
+similar bits.
+
+> +			return true;
+> +		}
+> +	}
+> +
+> +	return false;
+> +}
+> +
+>  /**
+>   * pci_raw_set_power_state - Use PCI PM registers to set the power state of
+>   *			     given PCI device
+> @@ -827,6 +863,9 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
+>  	if (state < PCI_D0 || state > PCI_D3hot)
+>  		return -EINVAL;
+>  
+> +	if (state != PCI_D0 && intel_broken_pci_pm(dev->bus))
+> +		return 0;
+> +
+>  	/*
+>  	 * Validate current state:
+>  	 * Can enter D0 from any state, but if we can only go deeper
+> -- 
+> 2.21.0
+> 
