@@ -2,102 +2,145 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9C3C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAA5C352AB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E27DB21927
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:49:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="d+3NVDBm"
+	by mail.kernel.org (Postfix) with ESMTP id BD9E02146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:52:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbfI0HtM (ORCPT
+        id S1726480AbfI0Hwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 03:49:12 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:49652 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725842AbfI0HtM (ORCPT
+        Fri, 27 Sep 2019 03:52:55 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:38005 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725812AbfI0Hwy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 03:49:12 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id E6B9EC0CED;
-        Fri, 27 Sep 2019 07:49:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1569570551; bh=F4S+1xHJRXUdoEUQwWWHucAMwa7NK06xIl14jQE+6AA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=d+3NVDBmthx5/r2rl9HdMVeCCwn5NLeIznAGgbv6iBidsJ3QpXoEZU0j7V49eiMm8
-         KZ/9G9bAv6ncgk7xhQy85h2jVYmz4P9geoaOt0p7ijEsBArMaRE9c5YVAua6La/9la
-         VJuYgEFU6pmoI7s/jxNfnXpx65xrO8hDq6hJVHAATBQzc5ZzYjljUHovI2EGk7lbY8
-         aVPIfi94cirx/tEwJOg36bLhCg1ecZaQi6JcdSikbAw1k5s4wlcTpvUFEVYBINE3dF
-         7piZqikpZ6vnrnzypZ4Lt/2y8FkdAj/A1kh3K4Zj6Sd3pL77xhhFTk0qzR4IYQns3A
-         QfRk5+SIlCnQA==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 3E601A0065;
-        Fri, 27 Sep 2019 07:49:09 +0000 (UTC)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net 1/8] net: stmmac: xgmac: Not all Unicast addresses may be available
-Date:   Fri, 27 Sep 2019 09:48:49 +0200
-Message-Id: <754c7f12d08ccde54f12d32df099aee61956616b.1569569778.git.Jose.Abreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1569569778.git.Jose.Abreu@synopsys.com>
-References: <cover.1569569778.git.Jose.Abreu@synopsys.com>
-In-Reply-To: <cover.1569569778.git.Jose.Abreu@synopsys.com>
-References: <cover.1569569778.git.Jose.Abreu@synopsys.com>
+        Fri, 27 Sep 2019 03:52:54 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id Dl3YiK9ku9D4hDl3ciArj6; Fri, 27 Sep 2019 09:52:52 +0200
+Subject: Re: [PATCH v6 7/7] media: imx214: Add new control with
+ V4L2_CID_UNIT_CELL_SIZE
+To:     Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190920135137.10052-1-ricardo@ribalda.com>
+ <20190920135137.10052-8-ricardo@ribalda.com>
+ <6e4c1969-a80d-4747-7a44-b7a46804fe12@xs4all.nl>
+ <CAPybu_3ga6rJ8pzw3wAP=nMOHDqeQEWWa-reto7Xk_FzRFVLyw@mail.gmail.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <3a5bdb3e-aad8-0f78-535e-c2ed431b4721@xs4all.nl>
+Date:   Fri, 27 Sep 2019 09:52:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <CAPybu_3ga6rJ8pzw3wAP=nMOHDqeQEWWa-reto7Xk_FzRFVLyw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfEcTm6k513b/sTsCmph+VJMYlIinvV6fbhB3i50CSHmr+WNwTwsJLflCfq72bEAW9eHPAWiU5U+6xyFcnDbW0b1Ez0zyoZGtnGZhRvOXpnVl2h9fXdoX
+ grspuQFErKFvHeBrd/M14cTXIdjtB8ReDRsMNK+wVx5ETGpMA+en0y3kMXT5d9RJUCQhm30Uv69p/+BNToWwh+HX7JZWCfKa8Je81EEAVXJphUA2GVcPIXIC
+ 6qz2cAVEFG/E0xrzJ3NvDk52bqYcjUJgHeQa3jfoZBHZmg1hxp2VBy5QV3ToKLY81eR+13uMA7HhmxYBG9h2Dk9pcF442fYET6mZAmU0Czw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some setups may not have all Unicast addresses filters available. Let's
-check this before trying to setup filters.
+On 9/27/19 9:33 AM, Ricardo Ribalda Delgado wrote:
+> Hi Hans
+> 
+> On Fri, 27 Sep 2019, 09:14 Hans Verkuil, <hverkuil-cisco@xs4all.nl> wrote:
+>>
+>> On 9/20/19 3:51 PM, Ricardo Ribalda Delgado wrote:
+>>> From: Ricardo Ribalda Delgado <ribalda@kernel.org>
+>>>
+>>> According to the product brief, the unit cell size is 1120 nanometers^2.
+>>>
+>>> https://www.sony-semicon.co.jp/products_en/IS/sensor1/img/products/ProductBrief_IMX214_20150428.pdf
+>>>
+>>> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+>>> ---
+>>>  drivers/media/i2c/imx214.c | 12 ++++++++++++
+>>>  1 file changed, 12 insertions(+)
+>>>
+>>> diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
+>>> index 159a3a604f0e..57562e20c4ca 100644
+>>> --- a/drivers/media/i2c/imx214.c
+>>> +++ b/drivers/media/i2c/imx214.c
+>>> @@ -47,6 +47,7 @@ struct imx214 {
+>>>       struct v4l2_ctrl *pixel_rate;
+>>>       struct v4l2_ctrl *link_freq;
+>>>       struct v4l2_ctrl *exposure;
+>>> +     struct v4l2_ctrl *unit_size;
+>>>
+>>>       struct regulator_bulk_data      supplies[IMX214_NUM_SUPPLIES];
+>>>
+>>> @@ -948,6 +949,13 @@ static int imx214_probe(struct i2c_client *client)
+>>>       static const s64 link_freq[] = {
+>>>               IMX214_DEFAULT_LINK_FREQ,
+>>>       };
+>>> +     struct v4l2_area unit_size = {
+>>> +             .width = 1120,
+>>> +             .height = 1120,
+>>> +     };
+>>> +     union v4l2_ctrl_ptr p_def = {
+>>> +             .p_area = &unit_size,
+>>> +     };
+>>
+>> Use static const for both.
+>>
+>> I think you should add a small static inline helper function to v4l2-ctrls.h that
+>> takes a void pointer and returns a union v4l2_ctrl_ptr.
+>>
+>> Then you don't need to make a union v4l2_ctrl_ptr just to pass the unit_size pointer.
+>>
+> 
+> That sounds useful, but can we warantee for all the arches that
+> sizeof(v4l2_ctrl_ptr) <= sizeof (void *)
 
-Fixes: 0efedbf11f07 ("net: stmmac: xgmac: Fix XGMAC selftests")
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Yes. Everything in the union is a pointer, so sizeof(v4l2_ctrl_ptr) == sizeof (void *)
 
----
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Regards,
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-index 2b277b2c586b..6d8ac2ef4fc2 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -472,7 +472,7 @@ static void dwxgmac2_set_filter(struct mac_device_info *hw,
- 	dwxgmac2_set_mchash(ioaddr, mc_filter, mcbitslog2);
- 
- 	/* Handle multiple unicast addresses */
--	if (netdev_uc_count(dev) > XGMAC_ADDR_MAX) {
-+	if (netdev_uc_count(dev) > hw->unicast_filter_entries) {
- 		value |= XGMAC_FILTER_PR;
- 	} else {
- 		struct netdev_hw_addr *ha;
--- 
-2.7.4
+	Hans
+
+> 
+> Of course, it sounds logic, that a union of pointers is the same size
+> than a pointer... but you never know.
+> 
+> No matter what I will make the helper and resend. with all the changes
+> from Jacopo
+> 
+> Thanks!
+> 
+>> Regards,
+> 
+> 
+> 
+>>
+>>         Hans
+>>
+>>>       int ret;
+>>>
+>>>       ret = imx214_parse_fwnode(dev);
+>>> @@ -1029,6 +1037,10 @@ static int imx214_probe(struct i2c_client *client)
+>>>                                            V4L2_CID_EXPOSURE,
+>>>                                            0, 3184, 1, 0x0c70);
+>>>
+>>> +     imx214->unit_size = v4l2_ctrl_new_std_compound(&imx214->ctrls,
+>>> +                                                    NULL,
+>>> +                                                    V4L2_CID_UNIT_CELL_SIZE,
+>>> +                                                    p_def);
+>>>       ret = imx214->ctrls.error;
+>>>       if (ret) {
+>>>               dev_err(&client->dev, "%s control init failed (%d)\n",
+>>>
+>>
 
