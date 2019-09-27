@@ -2,138 +2,276 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98952C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 02:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 253A8C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 02:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6399B207FF
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 02:26:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JV+juN59"
+	by mail.kernel.org (Postfix) with ESMTP id EB71D207FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 02:29:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728528AbfI0C0v (ORCPT
+        id S1728599AbfI0C32 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 22:26:51 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36566 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbfI0C0v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 22:26:51 -0400
-Received: by mail-io1-f67.google.com with SMTP id b136so12295942iof.3;
-        Thu, 26 Sep 2019 19:26:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=J+nWDXgsaBZmvMaavFN8h6cOxrOj2KF3ILHKLIPO34A=;
-        b=JV+juN59ZPmDpNQQVwV9fNjDwZNgGQkJrE+FskTjP4/yLYblFCQ8crGR2KH9/UavpQ
-         8UWVi99lmbiCXWTbvuQLcCzx+/7aSKDs+DxOMfmysiIWaDWaSyvjha97wFTrxHuel5iv
-         XX0LjeHToZfIC22nz0lL7jtaAThdXPR+JbL9AuWcadDU/xPFSX0Lcp6max3OsW/O39zW
-         LZGctE5D28CrQ09RAYeXHERwv/kMoxa3UrsO0B40XX/05jP4vkmtR0YsPxx4s+wBNDLx
-         q9Kz+kRAwGu3jaAJNVOuCb2+RqchXh82/TTj4kLgRbVpCYlcc/31FpcTkfTR1WJxvLQs
-         o16Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=J+nWDXgsaBZmvMaavFN8h6cOxrOj2KF3ILHKLIPO34A=;
-        b=csl4YsNYZkaE94xt6dVQQ5VEwVcGtfF4PkMb/3FaR/XKLNsEuMk5c4mZ64viMQfjHE
-         rmTfICpb5Znl4YlkGggnOdQG9T3bt85mGn1B3xMiMCsZ4ckh89jNum/PsDQec1FEFpH4
-         bjMZK8ojU1GvoeQbVIeInfrShb70I2CKUfNlzsEg86sLIu9PJ8mO8NH/1j2BR2QtqEI7
-         rxUfLnFKoU/G/TVv6eu6sAZ4RrFPT5yxmXl7U5Yyez1nz3c0ASujukEoVtlgMGVaOi7i
-         VU6We8ZOCF/PxuNFtKUd+L99l3ivbIVfiIbmb5LAbAKImnQlkglHQbYMTMJuQQqrw/GJ
-         NNZA==
-X-Gm-Message-State: APjAAAXtPiNnE2IoIxIQr3g5X718EUblffJuDAgbtV3BLkCaakBdYkpJ
-        XKenbqHcbOVZIAxB+4UYDEk=
-X-Google-Smtp-Source: APXvYqyoAakGX8Luwy1IiwMejmdpn88lbSaWc7uYSTk6Gkq85Z5M4KT6sRybkLzNVx9+598g06YZWA==
-X-Received: by 2002:a5e:8216:: with SMTP id l22mr6394174iom.252.1569551210117;
-        Thu, 26 Sep 2019 19:26:50 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.gmail.com with ESMTPSA id o8sm657890ild.55.2019.09.26.19.26.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 26 Sep 2019 19:26:49 -0700 (PDT)
-Date:   Thu, 26 Sep 2019 21:26:47 -0500
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        "David S. Miller" <davem@davemloft.net>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        John Hurley <john.hurley@netronome.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        oss-drivers@netronome.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] net: flow_offload: fix memory leak in
- nfp_abm_u32_knode_replace
-Message-ID: <20190927022647.GC22969@cs-dulles.cs.umn.edu>
-References: <20190925182846.69a261e8@cakuba.netronome.com>
- <20190926022240.3789-1-navid.emamdoost@gmail.com>
- <20190925215314.10cf291d@cakuba.netronome.com>
+        Thu, 26 Sep 2019 22:29:28 -0400
+Received: from mga02.intel.com ([134.134.136.20]:33414 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727631AbfI0C31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 22:29:27 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Sep 2019 19:29:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,553,1559545200"; 
+   d="scan'208";a="201864379"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga002.jf.intel.com with ESMTP; 26 Sep 2019 19:29:23 -0700
+Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        kevin.tian@intel.com, Yi Sun <yi.y.sun@linux.intel.com>,
+        ashok.raj@intel.com, kvm@vger.kernel.org, sanjay.k.kumar@intel.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        yi.y.sun@intel.com
+Subject: Re: [RFC PATCH 2/4] iommu/vt-d: Add first level page table interfaces
+To:     Peter Xu <peterx@redhat.com>
+References: <20190923122454.9888-1-baolu.lu@linux.intel.com>
+ <20190923122454.9888-3-baolu.lu@linux.intel.com>
+ <20190925052157.GL28074@xz-x1>
+ <c9792e0b-bf42-1dbb-f060-0b1a43125f47@linux.intel.com>
+ <20190926034905.GW28074@xz-x1>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <52778812-129b-0fa7-985d-5814e9d84047@linux.intel.com>
+Date:   Fri, 27 Sep 2019 10:27:24 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190925215314.10cf291d@cakuba.netronome.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190926034905.GW28074@xz-x1>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 09:53:14PM -0700, Jakub Kicinski wrote:
-> On Wed, 25 Sep 2019 21:22:35 -0500, Navid Emamdoost wrote:
-> > In nfp_abm_u32_knode_replace if the allocation for match fails it should
-> > go to the error handling instead of returning.
-> > 
-> > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> > ---
-> > Changes in v2:
-> > 	- Reused err variable for erorr value returning.
-> 
-> Thanks, there's another goto up top. And I think subject prefix could
-> be "nfp: abm:", perhaps?
-> 
-Thanks, v3 was sent which fixes this.
+Hi Peter,
 
-Navid.
-> >  drivers/net/ethernet/netronome/nfp/abm/cls.c | 10 +++++++---
-> >  1 file changed, 7 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/net/ethernet/netronome/nfp/abm/cls.c b/drivers/net/ethernet/netronome/nfp/abm/cls.c
-> > index 23ebddfb9532..b0cb9d201f7d 100644
-> > --- a/drivers/net/ethernet/netronome/nfp/abm/cls.c
-> > +++ b/drivers/net/ethernet/netronome/nfp/abm/cls.c
-> > @@ -198,14 +198,18 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
-> >  		if ((iter->val & cmask) == (val & cmask) &&
-> >  		    iter->band != knode->res->classid) {
-> >  			NL_SET_ERR_MSG_MOD(extack, "conflict with already offloaded filter");
-> > +			err = -EOPNOTSUPP;
-> >  			goto err_delete;
-> >  		}
-> >  	}
-> >  
-> >  	if (!match) {
-> >  		match = kzalloc(sizeof(*match), GFP_KERNEL);
-> > -		if (!match)
-> > -			return -ENOMEM;
-> > +		if (!match) {
-> > +			err = -ENOMEM;
-> > +			goto err_delete;
-> > +		}
-> > +
-> >  		list_add(&match->list, &alink->dscp_map);
-> >  	}
-> >  	match->handle = knode->handle;
-> > @@ -221,7 +225,7 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
-> >  
-> >  err_delete:
-> >  	nfp_abm_u32_knode_delete(alink, knode);
-> > -	return -EOPNOTSUPP;
-> > +	return err;
-> >  }
-> >  
-> >  static int nfp_abm_setup_tc_block_cb(enum tc_setup_type type,
+On 9/26/19 11:49 AM, Peter Xu wrote:
+> On Thu, Sep 26, 2019 at 10:35:24AM +0800, Lu Baolu wrote:
 > 
+> [...]
+> 
+>>>> @@ -0,0 +1,342 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>> +/**
+>>>> + * intel-pgtable.c - Intel IOMMU page table manipulation library
+>>>
+>>> Could this be a bit misleading?  Normally I'll use "IOMMU page table"
+>>> to refer to the 2nd level page table only, and I'm always
+>>> understanding it as "the new IOMMU will understand MMU page table as
+>>> the 1st level".  At least mention "IOMMU 1st level page table"?
+>>>
+>>
+>> This file is a place holder for all code that manipulating iommu page
+>> tables (both first level and second level). Instead of putting
+>> everything in intel_iommu.c, let's make the code more structured so that
+>> it's easier for reading and maintaining. This is the motivation of this
+>> file.
+> 
+> I see.
+> 
+>>
+>>>> + *
+>>>> + * Copyright (C) 2019 Intel Corporation
+>>>> + *
+>>>> + * Author: Lu Baolu <baolu.lu@linux.intel.com>
+>>>> + */
+>>>> +
+>>>> +#define pr_fmt(fmt)     "DMAR: " fmt
+>>>> +#include <linux/vmalloc.h>
+>>>> +#include <linux/mm.h>
+>>>> +#include <linux/sched.h>
+>>>> +#include <linux/io.h>
+>>>> +#include <linux/export.h>
+>>>> +#include <linux/intel-iommu.h>
+>>>> +#include <asm/cacheflush.h>
+>>>> +#include <asm/pgtable.h>
+>>>> +#include <asm/pgalloc.h>
+>>>> +#include <trace/events/intel_iommu.h>
+>>>> +
+>>>> +#ifdef CONFIG_X86
+>>>> +/*
+>>>> + * mmmap: Map a range of IO virtual address to physical addresses.
+>>>
+>>> "... to physical addresses using MMU page table"?
+>>>
+>>> Might be clearer?
+>>
+>> Yes.
+>>
+>>>
+>>>> + */
+>>>> +#define pgtable_populate(domain, nm)					\
+>>>> +do {									\
+>>>> +	void *__new = alloc_pgtable_page(domain->nid);			\
+>>>> +	if (!__new)							\
+>>>> +		return -ENOMEM;						\
+>>>> +	smp_wmb();							\
+>>>
+>>> Could I ask what's this wmb used for?
+>>
+>> Sure. This is answered by a comment in __pte_alloc() in mm/memory.c. Let
+>> me post it here.
+>>
+>>          /*
+>>           * Ensure all pte setup (eg. pte page lock and page clearing) are
+>>           * visible before the pte is made visible to other CPUs by being
+>>           * put into page tables.
+>>           *
+>>           * The other side of the story is the pointer chasing in the page
+>>           * table walking code (when walking the page table without locking;
+>>           * ie. most of the time). Fortunately, these data accesses consist
+>>           * of a chain of data-dependent loads, meaning most CPUs (alpha
+>>           * being the notable exception) will already guarantee loads are
+>>           * seen in-order. See the alpha page table accessors for the
+>>           * smp_read_barrier_depends() barriers in page table walking code.
+>>           */
+>>          smp_wmb(); /* Could be smp_wmb__xxx(before|after)_spin_lock */
+> 
+> Ok.  I don't understand the rationale much behind but the comment
+> seems to make sense...  Could you help to comment above, like "please
+> reference to comment in __pte_alloc" above the line?
+
+Yes.
+
+> 
+>>
+>>>
+>>>> +	spin_lock(&(domain)->page_table_lock);				\
+>>>
+>>> Is this intended to lock here instead of taking the lock during the
+>>> whole page table walk?  Is it safe?
+>>>
+>>> Taking the example where nm==PTE: when we reach here how do we
+>>> guarantee that the PMD page that has this PTE is still valid?
+>>
+>> We will always keep the non-leaf pages in the table,
+> 
+> I see.  Though, could I ask why?  It seems to me that the existing 2nd
+> level page table does not keep these when unmap, and it's not even use
+> locking at all by leveraging cmpxchg()?
+
+I still need some time to understand how cmpxchg() solves the race issue
+when reclaims pages. For example.
+
+Thread A				Thread B
+-A1: check all PTE's empty		-B1: up-level PDE valid
+-A2: clear the up-level PDE
+-A3: reclaim the page			-B2: populate the PTEs
+
+Both (A1,A2) and (B1,B2) should be atomic. Otherwise, race could happen.
+
+Actually, the iova allocator always packs IOVA ranges close to the top
+of the address space. This results in requiring a minimal number of
+pages to map the allocated IOVA ranges, which makes memory onsumption
+by IOMMU page tables tolerable. Hence, we don't need to reclaim the
+pages until the whole page table is about to tear down. The real data
+on my test machine also improves this.
+
+> 
+>> hence we only need
+>> a spin lock to serialize multiple tries of populating a entry for pde.
+>> As for pte, we can assume there is only single thread which can access
+>> it at a time because different mappings will have different iova's.
+> 
+> Ah yes sorry nm will never be pte here... so do you mean the upper
+> layer, e.g., the iova allocator will make sure the ranges to be mapped
+> will never collapse with each other so setting PTEs do not need lock?
+
+Yes.
+
+> 
+>>
+>>>
+>>>> +	if (nm ## _present(*nm)) {					\
+>>>> +		free_pgtable_page(__new);				\
+>>>> +	} else {							\
+>>>> +		set_##nm(nm, __##nm(__pa(__new) | _PAGE_TABLE));	\
+>>>
+>>> It seems to me that PV could trap calls to set_pte().  Then these
+>>> could also be trapped by e.g. Xen?  Are these traps needed?  Is there
+>>> side effect?  I'm totally not familiar with this, but just ask aloud...
+>>
+>> Good catch. But I don't think a vIOMMU could get a chance to run in a PV
+>> environment. I might miss something?
+> 
+> I don't know... Is there reason to not allow a Xen guest to use 1st
+> level mapping?
+
+I was thinking that a PV driver should be used in the PV environment. So
+the vIOMMU driver (which is for full virtualization) would never get a
+chance to run in PV environment.
+
+> 
+> While on the other side... If the PV interface will never be used,
+> then could native_set_##nm() be used directly?
+
+But, anyway, as you pointed out, native_set_##nm() looks better.
+
+> 
+> [...]
+> 
+>>>> +static struct page *
+>>>> +mmunmap_pte_range(struct dmar_domain *domain, pmd_t *pmd,
+>>>> +		  unsigned long addr, unsigned long end,
+>>>> +		  struct page *freelist, bool reclaim)
+>>>> +{
+>>>> +	int i;
+>>>> +	unsigned long start;
+>>>> +	pte_t *pte, *first_pte;
+>>>> +
+>>>> +	start = addr;
+>>>> +	pte = pte_offset_kernel(pmd, addr);
+>>>> +	first_pte = pte;
+>>>> +	do {
+>>>> +		set_pte(pte, __pte(0));
+>>>> +	} while (pte++, addr += PAGE_SIZE, addr != end);
+>>>> +
+>>>> +	domain_flush_cache(domain, first_pte, (void *)pte - (void *)first_pte);
+>>>> +
+>>>> +	/* Add page to free list if all entries are empty. */
+>>>> +	if (reclaim) {
+>>>
+>>> Shouldn't we know whether to reclaim if with (addr, end) specified as
+>>> long as they cover the whole range of this PMD?
+>>
+>> Current policy is that we don't reclaim any pages until the whole page
+>> table will be torn down.
+> 
+> Ah OK.  But I saw that you're passing in relaim==!start_addr.
+> Shouldn't that errornously trigger if one wants to unmap the 1st page
+> as well even if not the whole address space?
+
+IOVA 0 is assumed to be reserved by the allocator. Otherwise, we have no
+means to check whether a IOVA is valid.
+
+> 
+>> The gain is that we don't have to use a
+>> spinlock when map/unmap a pmd entry anymore.
+> 
+> So this question should also related to above on the locking - have
+> you thought about using the same way (IIUC) as the 2nd level page
+> table to use cmpxchg()?  AFAIU that does not need any lock?
+> 
+> For me it's perfectly fine to use a lock at least for initial version,
+> I just want to know the considerations behind in case I missed
+> anything important.
+
+I agree that we can use cmpxchg() to replace spinlock when populating
+a page directory entry.
+
+Best regards,
+Baolu
