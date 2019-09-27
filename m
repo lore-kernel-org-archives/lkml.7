@@ -2,263 +2,169 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE85C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 04:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4F4C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 04:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D297420872
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 04:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B22520872
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 04:59:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=colorfullife-com.20150623.gappssmtp.com header.i=@colorfullife-com.20150623.gappssmtp.com header.b="oymOPry8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729080AbfI0E5d (ORCPT
+        id S1728804AbfI0E7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 00:57:33 -0400
-Received: from mga05.intel.com ([192.55.52.43]:28040 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725996AbfI0E5c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 00:57:32 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Sep 2019 21:57:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,554,1559545200"; 
-   d="scan'208";a="341687563"
-Received: from dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.73])
-  by orsmga004.jf.intel.com with ESMTP; 26 Sep 2019 21:57:26 -0700
-Date:   Fri, 27 Sep 2019 12:54:39 +0800
-From:   Tiwei Bie <tiwei.bie@intel.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     mst@redhat.com, alex.williamson@redhat.com,
-        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        lingshan.zhu@intel.com
-Subject: Re: [PATCH] vhost: introduce mdev based hardware backend
-Message-ID: <20190927045438.GA17152@___>
-References: <20190926045427.4973-1-tiwei.bie@intel.com>
- <1b4b8891-8c14-1c85-1d6a-2eed1c90bcde@redhat.com>
+        Fri, 27 Sep 2019 00:59:07 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42228 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbfI0E7H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 00:59:07 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n14so1099996wrw.9
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 21:59:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=colorfullife-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=7o+HFvKSNQ5oJ5tFqhVjK+U9JWFrtSKKUcXzUhEqHhs=;
+        b=oymOPry8JuBH0d6tp74kJY5KqOT/efHAxxVgcOqznNkj3/sPSqUY9uc7Rm/JnFbV3T
+         yVXt8Wgn16t6CDD8H/af+HvG2QgLesNxmFlKCvOWLURgDvkVdihi7E9hcXBMV2nLtG8i
+         vobXqaMSVzP0J9t1Xq0qhRhNHg9HWitmTp/7xa16nmuQbNfjV089vVgrzEOW4C2YhfUN
+         SJd8oMPTXCQhaCiYOoFR5Gv9MXLYy+bQIwqHNfM2UWVnzLPUfl9Yr+KD/f2UBw6na42Z
+         dkIbPfrVcBKv0ZqiDeKgteYeLL/uqyCNzxgfE16qbszVDHQ8Fy5v02T1whzWGjH3+1OX
+         2cKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=7o+HFvKSNQ5oJ5tFqhVjK+U9JWFrtSKKUcXzUhEqHhs=;
+        b=ZmZeacvs6aDJcZmdKyXsDJA+144lPujxkXX/+XhGqKhAnvoyCLZSRKHu48VXZnaTeW
+         FiBAvyGFTdzYrX6ajP1glzHlBS7ES8Jz9Q+1KdgI0TWP2YuZUOSStCu8QABdJ5BOFHPE
+         lsRZHJ5oMTJ8D2FZgVo9xce16bRTquzue7VK1yWHJvTF9zkzIDwcCyW9dcREdsEZuopH
+         SQr4cxnOPUDd+Z6O/QeyfZeV6C+hyzq51j4xN3ZjXUwDzoKz+j/D5xFwCa3E63tqc94N
+         3O9hTbuBODkSgC39NgExtZGK9ocedCjdl7kJW92PuujRMgaZvZjiL0b0gxol+xz+qSSA
+         NowA==
+X-Gm-Message-State: APjAAAUnUE5MOOc89QDcB5FHJKSN1Gn9UlOsHF/N3oEc52+a3UbL05Yh
+        lLddmaaIYioS+mf910Nh2EuRxw==
+X-Google-Smtp-Source: APXvYqz0GikICQtmXCafvpDv4lL4zE8uWbmys0sWmzqfeMz1L3Oux8DwhOPXBdK5sFbuxmg8SGAJGA==
+X-Received: by 2002:adf:ef05:: with SMTP id e5mr1227882wro.127.1569560344968;
+        Thu, 26 Sep 2019 21:59:04 -0700 (PDT)
+Received: from linux.fritz.box (p200300D99708FF00061B60AEAF03373A.dip0.t-ipconnect.de. [2003:d9:9708:ff00:61b:60ae:af03:373a])
+        by smtp.googlemail.com with ESMTPSA id r20sm1479204wrg.61.2019.09.26.21.59.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Sep 2019 21:59:04 -0700 (PDT)
+Subject: Re: [PATCH] ipc/sem: Fix race between to-be-woken task and waker
+To:     Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mathieu Malaterre <malat@debian.org>,
+        Davidlohr Bueso <dave@stgolabs.net>
+References: <20190920155402.28996-1-longman@redhat.com>
+ <20190926093410.GJ4553@hirez.programming.kicks-ass.net>
+ <d16e4d82-8c5a-0663-8c00-32f4750f8a21@redhat.com>
+From:   Manfred Spraul <manfred@colorfullife.com>
+Message-ID: <6a65bfcc-661a-5ca5-86d6-0b4614f6aeea@colorfullife.com>
+Date:   Fri, 27 Sep 2019 06:59:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <d16e4d82-8c5a-0663-8c00-32f4750f8a21@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1b4b8891-8c14-1c85-1d6a-2eed1c90bcde@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 11:46:06AM +0800, Jason Wang wrote:
-> On 2019/9/26 下午12:54, Tiwei Bie wrote:
-> > +
-> > +static long vhost_mdev_start(struct vhost_mdev *m)
-> > +{
-> > +	struct mdev_device *mdev = m->mdev;
-> > +	const struct virtio_mdev_device_ops *ops = mdev_get_dev_ops(mdev);
-> > +	struct virtio_mdev_callback cb;
-> > +	struct vhost_virtqueue *vq;
-> > +	int idx;
-> > +
-> > +	ops->set_features(mdev, m->acked_features);
-> > +
-> > +	mdev_add_status(mdev, VIRTIO_CONFIG_S_FEATURES_OK);
-> > +	if (!(mdev_get_status(mdev) & VIRTIO_CONFIG_S_FEATURES_OK))
-> > +		goto reset;
-> > +
-> > +	for (idx = 0; idx < m->nvqs; idx++) {
-> > +		vq = &m->vqs[idx];
-> > +
-> > +		if (!vq->desc || !vq->avail || !vq->used)
-> > +			break;
-> > +
-> > +		if (ops->set_vq_state(mdev, idx, vq->last_avail_idx))
-> > +			goto reset;
-> 
-> 
-> If we do set_vq_state() in SET_VRING_BASE, we won't need this step here.
+Hi,
+On 9/26/19 8:12 PM, Waiman Long wrote:
+> On 9/26/19 5:34 AM, Peter Zijlstra wrote:
+>> On Fri, Sep 20, 2019 at 11:54:02AM -0400, Waiman Long wrote:
+>>> While looking at a customr bug report about potential missed wakeup in
+>>> the system V semaphore code, I spot a potential problem.  The fact that
+>>> semaphore waiter stays in TASK_RUNNING state while checking queue status
+>>> may lead to missed wakeup if a spurious wakeup happens in the right
+>>> moment as try_to_wake_up() will do nothing if the task state isn't right.
+>>>
+>>> To eliminate this possibility, the task state is now reset to
+>>> TASK_INTERRUPTIBLE immediately after wakeup before checking the queue
+>>> status. This should eliminate the race condition on the interaction
+>>> between the queue status and the task state and fix the potential missed
+>>> wakeup problem.
+You are obviously right, there is a huge race condition.
+>> Bah, this code always makes my head hurt.
+>>
+>> Yes, AFAICT the pattern it uses has been broken since 0a2b9d4c7967,
+>> since that removed doing the actual wakeup from under the sem_lock(),
+>> which is what it relies on.
 
-Yeah, I plan to do it in the next version.
+Correct - I've overlooked that.
 
-> 
-> 
-> > +
-> > +		/*
-> > +		 * In vhost-mdev, userspace should pass ring addresses
-> > +		 * in guest physical addresses when IOMMU is disabled or
-> > +		 * IOVAs when IOMMU is enabled.
-> > +		 */
-> 
-> 
-> A question here, consider we're using noiommu mode. If guest physical
-> address is passed here, how can a device use that?
-> 
-> I believe you meant "host physical address" here? And it also have the
-> implication that the HPA should be continuous (e.g using hugetlbfs).
+First, theory:
 
-The comment is talking about the virtual IOMMU (i.e. iotlb in vhost).
-It should be rephrased to cover the noiommu case as well. Thanks for
-spotting this.
+setting queue->status, reading queue->status, setting 
+current->state=TASK_INTERRUPTIBLE are all under the correct spinlock.
 
+(there is an opportunistic read of queue->status without locks, but it 
+is retried when the lock got acquired)
 
-> > +
-> > +	switch (cmd) {
-> > +	case VHOST_MDEV_SET_STATE:
-> > +		r = vhost_set_state(m, argp);
-> > +		break;
-> > +	case VHOST_GET_FEATURES:
-> > +		r = vhost_get_features(m, argp);
-> > +		break;
-> > +	case VHOST_SET_FEATURES:
-> > +		r = vhost_set_features(m, argp);
-> > +		break;
-> > +	case VHOST_GET_VRING_BASE:
-> > +		r = vhost_get_vring_base(m, argp);
-> > +		break;
-> 
-> 
-> Does it mean the SET_VRING_BASE may only take affect after
-> VHOST_MEV_SET_STATE?
+setting current->state=RUNNING is outside of any lock.
 
-Yeah, in this version, SET_VRING_BASE won't set the base to the
-device directly. But I plan to not delay this anymore in the next
-version to support the SET_STATUS.
+So as far as current->state is concerned, the lock doesn't exist. And if 
+the lock doesn't exist, we must follow the rules applicable for 
+set_current_state().
 
-> 
-> 
-> > +	default:
-> > +		r = vhost_dev_ioctl(&m->dev, cmd, argp);
-> > +		if (r == -ENOIOCTLCMD)
-> > +			r = vhost_vring_ioctl(&m->dev, cmd, argp);
-> > +	}
-> > +
-> > +	mutex_unlock(&m->mutex);
-> > +	return r;
-> > +}
-> > +
-> > +static const struct vfio_device_ops vfio_vhost_mdev_dev_ops = {
-> > +	.name		= "vfio-vhost-mdev",
-> > +	.open		= vhost_mdev_open,
-> > +	.release	= vhost_mdev_release,
-> > +	.ioctl		= vhost_mdev_unlocked_ioctl,
-> > +};
-> > +
-> > +static int vhost_mdev_probe(struct device *dev)
-> > +{
-> > +	struct mdev_device *mdev = mdev_from_dev(dev);
-> > +	const struct virtio_mdev_device_ops *ops = mdev_get_dev_ops(mdev);
-> > +	struct vhost_mdev *m;
-> > +	int nvqs, r;
-> > +
-> > +	m = kzalloc(sizeof(*m), GFP_KERNEL | __GFP_RETRY_MAYFAIL);
-> > +	if (!m)
-> > +		return -ENOMEM;
-> > +
-> > +	mutex_init(&m->mutex);
-> > +
-> > +	nvqs = ops->get_queue_max(mdev);
-> > +	m->nvqs = nvqs;
-> 
-> 
-> The name could be confusing, get_queue_max() is to get the maximum number of
-> entries for a virtqueue supported by this device.
+I'll try to check the code this week.
 
-OK. It might be better to rename it to something like:
+And we should check the remaining wake-queue users, the logic is 
+everywhere identical.
 
-	get_vq_num_max()
+> After having a second look at the code again, I probably misread the
+> code the first time around. In the sleeping path, there is a check of
+> queue.status and setting of task state both under the sem lock in the
+> sleeping path. So as long as setting of queue status is under lock, they
+> should synchronize properly.
+>
+> It looks like queue status setting is under lock, but I can't use
+> lockdep to confirm that as the locking can be done by either the array
+> lock or in one of the spinlocks in the array. Are you aware of a way of
+> doing that?
 
-which is more consistent with the set_vq_num().
+For testing? Have you considered just always using the global lock?
 
-> 
-> It looks to me that we need another API to query the maximum number of
-> virtqueues supported by the device.
+(untested):
 
-Yeah.
+--- a/ipc/sem.c
++++ b/ipc/sem.c
+@@ -370,7 +370,7 @@ static inline int sem_lock(struct sem_array *sma, 
+struct sembuf *sops,
+         struct sem *sem;
+         int idx;
 
-Thanks,
-Tiwei
+-       if (nsops != 1) {
++       if (nsops != 1 || 1) {
+                 /* Complex operation - acquire a full lock */
+                 ipc_lock_object(&sma->sem_perm);
 
 
-> 
-> Thanks
-> 
-> 
-> > +
-> > +	m->vqs = kmalloc_array(nvqs, sizeof(struct vhost_virtqueue),
-> > +			       GFP_KERNEL);
-> > +	if (!m->vqs) {
-> > +		r = -ENOMEM;
-> > +		goto err;
-> > +	}
-> > +
-> > +	r = vfio_add_group_dev(dev, &vfio_vhost_mdev_dev_ops, m);
-> > +	if (r)
-> > +		goto err;
-> > +
-> > +	m->features = ops->get_features(mdev);
-> > +	m->mdev = mdev;
-> > +	return 0;
-> > +
-> > +err:
-> > +	kfree(m->vqs);
-> > +	kfree(m);
-> > +	return r;
-> > +}
-> > +
-> > +static void vhost_mdev_remove(struct device *dev)
-> > +{
-> > +	struct vhost_mdev *m;
-> > +
-> > +	m = vfio_del_group_dev(dev);
-> > +	mutex_destroy(&m->mutex);
-> > +	kfree(m->vqs);
-> > +	kfree(m);
-> > +}
-> > +
-> > +static struct mdev_class_id id_table[] = {
-> > +	{ MDEV_ID_VHOST },
-> > +	{ 0 },
-> > +};
-> > +
-> > +static struct mdev_driver vhost_mdev_driver = {
-> > +	.name	= "vhost_mdev",
-> > +	.probe	= vhost_mdev_probe,
-> > +	.remove	= vhost_mdev_remove,
-> > +	.id_table = id_table,
-> > +};
-> > +
-> > +static int __init vhost_mdev_init(void)
-> > +{
-> > +	return mdev_register_driver(&vhost_mdev_driver, THIS_MODULE);
-> > +}
-> > +module_init(vhost_mdev_init);
-> > +
-> > +static void __exit vhost_mdev_exit(void)
-> > +{
-> > +	mdev_unregister_driver(&vhost_mdev_driver);
-> > +}
-> > +module_exit(vhost_mdev_exit);
-> > +
-> > +MODULE_VERSION("0.0.1");
-> > +MODULE_LICENSE("GPL v2");
-> > +MODULE_DESCRIPTION("Mediated device based accelerator for virtio");
-> > diff --git a/include/uapi/linux/vhost.h b/include/uapi/linux/vhost.h
-> > index 40d028eed645..5afbc2f08fa3 100644
-> > --- a/include/uapi/linux/vhost.h
-> > +++ b/include/uapi/linux/vhost.h
-> > @@ -116,4 +116,12 @@
-> >   #define VHOST_VSOCK_SET_GUEST_CID	_IOW(VHOST_VIRTIO, 0x60, __u64)
-> >   #define VHOST_VSOCK_SET_RUNNING		_IOW(VHOST_VIRTIO, 0x61, int)
-> > +/* VHOST_MDEV specific defines */
-> > +
-> > +#define VHOST_MDEV_SET_STATE	_IOW(VHOST_VIRTIO, 0x70, __u64)
-> > +
-> > +#define VHOST_MDEV_S_STOPPED	0
-> > +#define VHOST_MDEV_S_RUNNING	1
-> > +#define VHOST_MDEV_S_MAX	2
-> > +
-> >   #endif
+> Anyway, I do think we need to add some comment to clarify the situation
+> to avoid future confusion.
+
+Around line 190 is the comment that explains locking & memory ordering.
+
+I have only documented the content of sem_undo and sem_array, but 
+neither queue nor current->state :-(
+
+
+--
+
+     Manfred
+
+
