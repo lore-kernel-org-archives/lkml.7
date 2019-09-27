@@ -2,136 +2,127 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 428BEC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2845DC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16BAD20673
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F26EB21850
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:36:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ujDS9k2O"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="iH7YHSug"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfI0MgW (ORCPT
+        id S1727388AbfI0Mgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 08:36:22 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45018 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbfI0MgW (ORCPT
+        Fri, 27 Sep 2019 08:36:38 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:25338 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725890AbfI0Mgh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 08:36:22 -0400
-Received: by mail-wr1-f66.google.com with SMTP id i18so2518471wru.11
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 05:36:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VRuu/jOQ4Zp+zYJZfIF9hFDwWbv4EjPC9iKOvfai/Ug=;
-        b=ujDS9k2OFc0WreqK2y/fe3R6tAVOaH4UfeF+TiT42v8swDKFwVKCk6zo4b9m6X2ZT3
-         oSCGFDePMAAvuxW/GcldxxlJNycLBYIKPzBg5kyUBHv5TAg4ydQJM5TGuDGiXigA1AOD
-         zPOmFNnzjOL2vDIMvtZIty3Uoq1A3Al6TZ75BjLi91HdQIPMOlf0l6EHW6MjwxftMhq9
-         S0W5MQPBlcFgCSpub7F21j9+GhnXqS9sLn3TEpPuBpAqCqhmJ9Tl3vgzGn8c6Z7Y1Ctk
-         kwP/lIrLn1T3o1A7/a0SeLZ4v2XrOLsg7VG1UZZs6I5tLFLaGR8cbBmMZ/l/zt9ecSBM
-         9UWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VRuu/jOQ4Zp+zYJZfIF9hFDwWbv4EjPC9iKOvfai/Ug=;
-        b=cxFADLIrH3bPuUB86mj+sapK6zzJJFnJVjmjA99Z1Cc4Iup2E3G4r+ztrWMiMUfA64
-         +GyvB81cIX/TvJngwWGKvK+MAQ6aXhqdZmWzSgqqrQk4gQ68aOMKokGwL4NI/jeVUxZK
-         b67RVHAGUD/GYZiAknfoqzHg2NkeKjgyHSiGsHRNpe9JOHsJkZBZ00U8nS2cinEyxU7S
-         N7+huOyTqsc7TBMzOAiuWjqWeuGWcrC7LNR6/RnU5/fb5c0eMEijbqn0ZKV/WmUahDuG
-         GALUpSJ0VHEW1mgW1dXqKbaYByKviUsxq4EoUmefUy1fjn4qqXO+aO2eWtNLx8ZDnz+2
-         qtMA==
-X-Gm-Message-State: APjAAAWgLOP5hQpP3lBNmnm7aBV2QsMIpaLfiDWwZfIHOzZT61dcQXJo
-        BOX5TTIlzXU1Ee4WgR5Sae9v5g==
-X-Google-Smtp-Source: APXvYqzDMuORRfaJT68JEBTRTG1lWRYGgATP795TJZ2KXH3TNeSmXRYq3cFVQH1OjTDUF8q8NYoLWQ==
-X-Received: by 2002:a05:6000:14b:: with SMTP id r11mr2584070wrx.58.1569587777681;
-        Fri, 27 Sep 2019 05:36:17 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
-        by smtp.gmail.com with ESMTPSA id d9sm4077030wrc.44.2019.09.27.05.36.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2019 05:36:16 -0700 (PDT)
-Date:   Fri, 27 Sep 2019 13:36:13 +0100
-From:   Matthias Maennich <maennich@google.com>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Martijn Coenen <maco@android.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/7] module: avoid code duplication in
- include/linux/export.h
-Message-ID: <20190927123613.GD259443@google.com>
-References: <20190927093603.9140-1-yamada.masahiro@socionext.com>
- <20190927093603.9140-5-yamada.masahiro@socionext.com>
- <f2e28d6b-77c5-5fe2-0bc4-b24955de9954@rasmusvillemoes.dk>
+        Fri, 27 Sep 2019 08:36:37 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8RCV2M9021935;
+        Fri, 27 Sep 2019 14:36:26 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=M6/Rt2zJJu6bPQgzJKZTLTs88gSBQFbgXKdyp6w1t7k=;
+ b=iH7YHSug7LB1II+w+n/trVShN6KbsRU8XlVxnly0JfwxfbRM+coXU86VD/+cALZv2HN4
+ N8cgnn3PPPLs/OYlE/Y41B3ezWk3lxQIvzfh3NQaZRv2sY//OJxDq4svXV1f6PSo2kGL
+ jhKhhuK1My/5a8GCcLTWekCqvXU9yFJV22JY56I8SUzcN9RZTKBkWDwyc9Hf+FrYCgfm
+ QfBpkjHQnQiYqRbi+G/uu7tOzxeOZ5qpflMEgDv4d9a2SRI0/GDCj2ZTVJQp+ROet1EZ
+ /2i7wbbfgGD6a9fdpDVjEcy6Fj4hZfVbvWJetou2WlNdWm6ZsqL351UZYgnYGXWjVMlG HQ== 
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2v590bd5js-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 27 Sep 2019 14:36:25 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 37FC922;
+        Fri, 27 Sep 2019 12:36:21 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 54D262BCB1C;
+        Fri, 27 Sep 2019 14:36:21 +0200 (CEST)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE3.st.com
+ (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 27 Sep
+ 2019 14:36:20 +0200
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Fri, 27 Sep 2019 14:36:20 +0200
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     Marc Zyngier <maz@kernel.org>
+CC:     Alexandre TORGUE <alexandre.torgue@st.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ARM: dts: stm32: Enable high resolution timer
+Thread-Topic: [PATCH] ARM: dts: stm32: Enable high resolution timer
+Thread-Index: AQHVdRBWUjMsQJUFmUWpOD9xBCdtcac/P/aAgAAUtIA=
+Date:   Fri, 27 Sep 2019 12:36:20 +0000
+Message-ID: <341949c8-7864-5d65-2797-988022724a4c@st.com>
+References: <20190927084819.645-1-benjamin.gaignard@st.com>
+ <da48ce9633441cd0186518fa7ce1d528@www.loen.fr>
+In-Reply-To: <da48ce9633441cd0186518fa7ce1d528@www.loen.fr>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.49]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <886CBEEE619ADF48BFF7435C2FD21580@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <f2e28d6b-77c5-5fe2-0bc4-b24955de9954@rasmusvillemoes.dk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-09-27_06:2019-09-25,2019-09-27 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 01:07:33PM +0200, Rasmus Villemoes wrote:
->On 27/09/2019 11.36, Masahiro Yamada wrote:
->> include/linux/export.h has lots of code duplication between
->> EXPORT_SYMBOL and EXPORT_SYMBOL_NS.
->>
->> To improve the maintainability and readability, unify the
->> implementation.
->>
->> When the symbol has no namespace, pass the empty string "" to
->> the 'ns' parameter.
->>
->> The drawback of this change is, it grows the code size.
->> When the symbol has no namespace, sym->namespace was previously
->> NULL, but it is now am empty string "". So, it increases 1 byte
->> for every no namespace EXPORT_SYMBOL.
->>
->> A typical kernel configuration has 10K exported symbols, so it
->> increases 10KB in rough estimation.
->>
->> I did not come up with a good idea to refactor it without increasing
->> the code size.
->
->Can't we put the "aMS" flags on the __ksymtab_strings section? That
->would make the empty strings free, and would also deduplicate the
->USB_STORAGE string. And while almost per definition we don't have exact
->duplicates among the names of exported symbols, we might have both a foo
->and __foo, so that could save even more.
-
-I was not aware of this possibility and I was a bit bothered that I was
-not able to deduplicate the namespace strings in the PREL case. So, at
-least I tried to avoid having the redundant empty strings in it. If this
-approach solves the deduplication problem _and_ reduces the complexity
-of the code, I am very much for it. I will only be able to look into
-this next week.
-
->I don't know if we have it already, but we'd need each arch to tell us
->what symbol to use for @ in @progbits (e.g. % for arm). It seems most
->are fine with @, so maybe a generic version could be
->
->#ifndef ARCH_SECTION_TYPE_CHAR
->#define ARCH_SECTION_TYPE_CHAR "@"
->#endif
->
->and then it would be
->section("__ksymtab_strings,\"aMS\","ARCH_SECTION_TYPE_CHAR"progbits,1")
->
->But I don't know if any tooling relies on the strings not being
->deduplicated.
-
-Matthias
-Cheers,
-
->Rasmus
+DQpPbiA5LzI3LzE5IDE6MjIgUE0sIE1hcmMgWnluZ2llciB3cm90ZToNCj4gT24gMjAxOS0wOS0y
+NyAwOTo0OCwgQmVuamFtaW4gR2FpZ25hcmQgd3JvdGU6DQo+PiBBZGRpbmcgYWx3YXlzLW9uIG1h
+a2VzIGFybSBhcmNoX3RpbWVyIGNsYWltIHRvIGJlIGFuIGhpZ2ggcmVzb2x1dGlvbiANCj4+IHRp
+bWVyLg0KPj4gVGhhdCBpcyBwb3NzaWJsZSBiZWNhdXNlIHBvd2VyIG1vZGUgd29uJ3Qgc3RvcCBj
+bG9ja2luZyB0aGUgdGltZXIuDQo+DQo+IFRoZSAiYWx3YXlzLW9uIiBpcyBub3QgYWJvdXQgdGhl
+IGNsb2NrLiBJdCBpcyBhYm91dCB0aGUgY29tcGFyYXRvci4NCj4gVGhlIGNsb2NrIGl0c2VsZiBp
+cyAqZ3VhcmFudGVlZCogdG8gYWx3YXlzIHRpY2suIElmIGl0IGRpZG4ndCwgdGhhdCdkIGJlDQo+
+IGFuIGludGVncmF0aW9uIGJ1ZywgYW5kIGEgcHJldHR5IGJhZCBvbmUuDQo+DQo+IFdoYXQgeW91
+J3JlIGNsYWltaW5nIGhlcmUgaXMgdGhhdCB5b3VyIENQVSBuZXZlciBlbnRlcnMgYSBsb3ctcG93
+ZXIgbW9kZT8NCj4gRXZlcj8gSSBmaW5kIHRoaXMgdmVyeSBoYXJkIHRvIGJlbGlldmUuDQo+DQo+
+IEZ1cnRoZXJtb3JlLCBjbGFpbWluZyB0aGF0IGFsd2F5cy1vbiBpcyB0aGUgd2F5IHRvIGZvcmNl
+IHRoZSBhcmNoLXRpbWVyDQo+IHRvIGJlIGFuIGhydGltZXIgaXMgZmFjdHVhbGx5IHdyb25nLiBU
+aGlzIGlzIHdoYXQgaGFwcGVucyAqaWYqIHRoaXMgaXMNCj4gdGhlIG9ubHkgdGltZXIgaW4gdGhl
+IHN5c3RlbS4gVGhlIG9ubHkgY2FzZSB0aGlzIGlzIHRydWUgaXMgZm9yIHZpcnR1YWwNCj4gbWFj
+aGluZXMuIEFueXRoaW5nIGVsc2UgaGFzIGEgZ2xvYmFsIHRpbWVyIHNvbWV3aGVyZSB0aGF0IHdp
+bGwgYWxsb3cNCj4gdGhlIGFyY2ggdGltZXJzIHRvIGJlIHVzZWQgYXMgYW4gaHJ0aW1lci4NCj4N
+Cj4gSSdtIHByZXR0eSBzdXJlIHlvdSB0b28gaGF2ZSBhIGdsb2JhbCB0aW1lciBzb21ld2hlcmUg
+aW4geW91ciBzeXN0ZW0uDQo+IEVuYWJsZSBpdCwgYW5kIGVuam95IGhydGltZXJzIHdpdGhvdXQg
+aGF2aW5nIHRvIGxpZSBhYm91dCB0aGUgcHJvcGVydGllcw0KPiBvZiB5b3VyIHN5c3RlbSEgOy0p
+DQoNCkhpIE1hcmMsDQoNClRoaXMgU29DIGRvZXNuJ3QgaGF2ZSBhbnkgb3RoZXIgZ2xvYmFsIHRp
+bWVyLiBVc2UgYXJjaF90aW1lIGlzIHRoZSBvbmx5DQp3ZSBoYXZlIHRvIHByb3ZpZGUgaHJ0aW1l
+ciBvbiB0aGlzIHN5c3RlbS4NCg0KQmVuamFtaW4NCg0KPg0KPiDCoMKgwqDCoMKgwqDCoCBNLg0K
+Pg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IEJlbmphbWluIEdhaWduYXJkIDxiZW5qYW1pbi5nYWln
+bmFyZEBzdC5jb20+DQo+PiAtLS0NCj4+IMKgYXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJtcDE1N2Mu
+ZHRzaSB8IDEgKw0KPj4gwqAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4+DQo+PiBk
+aWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJtcDE1N2MuZHRzaQ0KPj4gYi9hcmNo
+L2FybS9ib290L2R0cy9zdG0zMm1wMTU3Yy5kdHNpDQo+PiBpbmRleCA5YjExNjU0YTBhMzkuLjc0
+ZjY0NzQ1ZDYwZCAxMDA2NDQNCj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMybXAxNTdj
+LmR0c2kNCj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMybXAxNTdjLmR0c2kNCj4+IEBA
+IC01MCw2ICs1MCw3IEBADQo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDxH
+SUNfUFBJIDExIChHSUNfQ1BVX01BU0tfU0lNUExFKDQpIHwgDQo+PiBJUlFfVFlQRV9MRVZFTF9M
+T1cpPiwNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgPEdJQ19QUEkgMTAg
+KEdJQ19DUFVfTUFTS19TSU1QTEUoNCkgfCANCj4+IElSUV9UWVBFX0xFVkVMX0xPVyk+Ow0KPj4g
+wqDCoMKgwqDCoMKgwqDCoCBpbnRlcnJ1cHQtcGFyZW50ID0gPCZpbnRjPjsNCj4+ICvCoMKgwqDC
+oMKgwqDCoCBhbHdheXMtb247DQo+PiDCoMKgwqDCoCB9Ow0KPj4NCj4+IMKgwqDCoMKgIGNsb2Nr
+cyB7DQo+
