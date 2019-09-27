@@ -2,195 +2,99 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD58C388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5795C388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C55B3217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE41321906
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:56:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="nhxK6DBT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727616AbfI0O4X (ORCPT
+        id S1727744AbfI0O4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 10:56:23 -0400
-Received: from mga04.intel.com ([192.55.52.120]:61335 "EHLO mga04.intel.com"
+        Fri, 27 Sep 2019 10:56:42 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:41904 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727366AbfI0O4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 10:56:23 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Sep 2019 07:56:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,555,1559545200"; 
-   d="scan'208";a="214854333"
-Received: from mdauner2-mobl2.ger.corp.intel.com (HELO localhost) ([10.249.39.118])
-  by fmsmga004.fm.intel.com with ESMTP; 27 Sep 2019 07:56:20 -0700
-Date:   Fri, 27 Sep 2019 17:56:19 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     ivan.lazeev@gmail.com
-Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] tpm_crb: fix fTPM on AMD Zen+ CPUs
-Message-ID: <20190927145607.GA9614@linux.intel.com>
-References: <20190925215646.24844-1-ivan.lazeev@gmail.com>
+        id S1726540AbfI0O4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 10:56:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=F0xnrmUjbrfwa3GpwQVGYBFuXq2e2mehUtxT3ModRTo=; b=nhxK6DBTvF+v06EKwJgrmAlsi7
+        JIwhI4VYfcrPNojHpc8+3Pt0aN7Lk5xpnJJDFhs33EhLD7yRs+BR5QG9L51JD0iKXDhBSy6YTcrRP
+        Krh4aOZqNKBNmvoGdG313jPmOLHKKyBBvYkC74GftuqTqshNXRZv8iEBTukdlds8psEo=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iDrfc-0002vq-L1; Fri, 27 Sep 2019 16:56:32 +0200
+Date:   Fri, 27 Sep 2019 16:56:32 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Vincent Cheng <vincent.cheng.xh@renesas.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "richardcochran@gmail.com" <richardcochran@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/2] ptp: Add a ptp clock driver for IDT ClockMatrix.
+Message-ID: <20190927145632.GI20927@lunn.ch>
+References: <1569556128-22212-1-git-send-email-vincent.cheng.xh@renesas.com>
+ <1569556128-22212-2-git-send-email-vincent.cheng.xh@renesas.com>
+ <20190927122518.GA25474@lunn.ch>
+ <20190927141215.GA24424@renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190925215646.24844-1-ivan.lazeev@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190927141215.GA24424@renesas.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 12:56:46AM +0300, ivan.lazeev@gmail.com wrote:
-> +struct tpm_crb_resources {
-> +	struct resource iores[TPM_CRB_MAX_RESOURCES];
-> +	void __iomem *iobase[TPM_CRB_MAX_RESOURCES];
-> +	int num;
-> +};
+> >> +static void set_default_function_pointers(struct idtcm *idtcm)
+> >> +{
+> >> +	idtcm->_idtcm_gettime = _idtcm_gettime;
+> >> +	idtcm->_idtcm_settime = _idtcm_settime;
+> >> +	idtcm->_idtcm_rdwr = idtcm_rdwr;
+> >> +	idtcm->_sync_pll_output = sync_pll_output;
+> >> +}
+> >
+> >Why does this indirection? Are the SPI versions of the silicon?
+> 
+> The indirection is to enable us to replace those functions in
+> our unit tests with mocked functions.
 
-Do not add a new struct.
+Due to Spectra/meltdown etc, indirection is now expensive. But i guess
+the I2C operations are a lot more expensive.
 
-> +
->  static bool crb_wait_for_reg_32(u32 __iomem *reg, u32 mask, u32 value,
->  				unsigned long timeout)
->  {
-> @@ -432,38 +438,75 @@ static const struct tpm_class_ops tpm_crb = {
->  	.req_complete_val = CRB_DRV_STS_COMPLETE,
->  };
->  
-> +static bool tpm_crb_resource_contains(struct resource *iores,
-> +				      u64 address)
-> +{
-> +	return address >= iores->start && address <= iores->end;
-> +}
+But in general, we try to keep the code KISS. Have you tried other
+ways of doing this. Have your unit test framework implement
+i2c_transfer()?
+ 
+> I read somewhere that I should leave a week between sending a
+> revised patch series.  Is this a good rule to follow?
 
-Open code this. Makes the code only more unreadable.
+There are different 'timers'. One is how long to wait for review
+comments, and reposting when you don't receiver any comments. netdev
+for example is fast, a couple of days. Other subsystems, you need to
+wait two weeks. Another 'timer' is how often to post new versions. In
+general, never more than once per day. And the slower the subsystem is
+for making reviews, the longer you should wait for additional review
+comments.
 
-> +static int tpm_crb_containing_res_idx(struct tpm_crb_resources *resources,
-> +				      u64 address)
-> +{
-> +	int res_idx;
+What also plays a role is that the merge window is currently open. So
+most subsystems won't accept patches at the moment. You need to wait
+until it closes before submitting patches you expect to be good enough
+to be accepted.
 
-Use "int i;"
+   Andrew
 
-> +
-> +	for (res_idx = 0; res_idx < resources->num; ++res_idx) {
-> +		if (tpm_crb_resource_contains(&resources->iores[res_idx],
-> +					      address))
-> +			return res_idx;
-> +	}
-> +
-> +	return -1;
-> +}
 
-Open code this. Two call sites do not make the function worth it.
 
-> +
->  static int crb_check_resource(struct acpi_resource *ares, void *data)
->  {
-> -	struct resource *io_res = data;
-> +	struct tpm_crb_resources *resources = data;
->  	struct resource_win win;
->  	struct resource *res = &(win.res);
->  
->  	if (acpi_dev_resource_memory(ares, res) ||
->  	    acpi_dev_resource_address_space(ares, &win)) {
-> -		*io_res = *res;
-> -		io_res->name = NULL;
-> +		if (resources->num < TPM_CRB_MAX_RESOURCES) {
-> +			resources->iores[resources->num] = *res;
-> +			resources->iores[resources->num].name = NULL;
-> +		}
-> +		resources->num += 1;
->  	}
->  
->  	return 1;
->  }
->  
-> -static void __iomem *crb_map_res(struct device *dev, struct crb_priv *priv,
-> -				 struct resource *io_res, u64 start, u32 size)
-> +static void __iomem *crb_map_res(struct device *dev,
-> +				 struct tpm_crb_resources *resources,
-> +				 int res_idx,
-> +				 u64 start, u32 size)
->  {
->  	struct resource new_res = {
->  		.start	= start,
->  		.end	= start + size - 1,
->  		.flags	= IORESOURCE_MEM,
->  	};
-> +	struct resource *iores;
-> +	void __iomem *iobase;
->  
->  	/* Detect a 64 bit address on a 32 bit system */
->  	if (start != new_res.start)
->  		return (void __iomem *) ERR_PTR(-EINVAL);
->  
-> -	if (!resource_contains(io_res, &new_res))
-> +	if (res_idx < 0)
->  		return devm_ioremap_resource(dev, &new_res);
->  
-> -	return priv->iobase + (new_res.start - io_res->start);
-> +	iores = &resources->iores[res_idx];
-> +	iobase = resources->iobase[res_idx];
-> +	if (!iobase) {
-> +		iobase = devm_ioremap_resource(dev, iores);
-> +		if (IS_ERR(iobase))
-> +			return iobase;
-> +
-> +		resources->iobase[res_idx] = iobase;
-> +	}
-> +
-> +	return iobase + (new_res.start - iores->start);
->  }
->  
->  /*
-> @@ -490,9 +533,10 @@ static u64 crb_fixup_cmd_size(struct device *dev, struct resource *io_res,
->  static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
->  		      struct acpi_table_tpm2 *buf)
->  {
-> -	struct list_head resources;
-> -	struct resource io_res;
-> +	struct list_head acpi_resources;
->  	struct device *dev = &device->dev;
-> +	struct tpm_crb_resources resources;
-> +	int res_idx;
->  	u32 pa_high, pa_low;
->  	u64 cmd_pa;
->  	u32 cmd_size;
-> @@ -501,21 +545,36 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
->  	u32 rsp_size;
->  	int ret;
->  
-> -	INIT_LIST_HEAD(&resources);
-> -	ret = acpi_dev_get_resources(device, &resources, crb_check_resource,
-> -				     &io_res);
-> +	INIT_LIST_HEAD(&acpi_resources);
-> +	memset(&resources, 0, sizeof(resources));
-> +	ret = acpi_dev_get_resources(device, &acpi_resources,
-> +				     crb_check_resource, &resources);
->  	if (ret < 0)
->  		return ret;
-> -	acpi_dev_free_resource_list(&resources);
-> +	acpi_dev_free_resource_list(&acpi_resources);
->  
-> -	if (resource_type(&io_res) != IORESOURCE_MEM) {
-> +	if (resources.num == 0) {
->  		dev_err(dev, FW_BUG "TPM2 ACPI table does not define a memory resource\n");
->  		return -EINVAL;
-> +	} else if (resources.num > TPM_CRB_MAX_RESOURCES) {
-> +		dev_warn(dev, FW_BUG "TPM2 ACPI table defines too many memory resources\n");
-> +		resources.num = TPM_CRB_MAX_RESOURCES;
-
-Remove FW_BUG as this would not be a bug.
-
-/Jarkko
