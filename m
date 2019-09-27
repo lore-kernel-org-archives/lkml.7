@@ -2,82 +2,126 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65EAAC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1802C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37CFB207E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B3EE207E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:55:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="cJIke0L3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbfI0Py3 (ORCPT
+        id S1727933AbfI0PzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 11:54:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52708 "EHLO mx1.redhat.com"
+        Fri, 27 Sep 2019 11:55:23 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:53804 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726251AbfI0Py3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 11:54:29 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1727825AbfI0PzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 11:55:23 -0400
+Received: from zn.tnic (p200300EC2F0ABB004403369600A4C2F6.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:bb00:4403:3696:a4:c2f6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E2976306059B;
-        Fri, 27 Sep 2019 15:54:28 +0000 (UTC)
-Received: from vitty.brq.redhat.com (unknown [10.40.205.253])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 115416293B;
-        Fri, 27 Sep 2019 15:54:14 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>
-Subject: [PATCH] KVM: selftests: x86: clarify what is reported on KVM_GET_MSRS failure
-Date:   Fri, 27 Sep 2019 17:54:13 +0200
-Message-Id: <20190927155413.31648-1-vkuznets@redhat.com>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 127891EC03F6;
+        Fri, 27 Sep 2019 17:55:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1569599718;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=uDKIwsSdhiq49Jr8VbsUJz/fuURLdvZ3MjV0Tdg/1DM=;
+        b=cJIke0L3NQjBir2sSLlzbq3h05qwXvqcpAWEZN8eInNglGGg0EFRt1UGnfRgA/E11AAHQ0
+        j9Dy4UZ8BXV/FdFW4VrIIJ/+knC0yTZ0TY6epsIm8Jtht69ZlW5N3TSlkdehIGHhRQ4oD+
+        F5pjsFVd0OVcMsmqZMg5+lmkyHEyZjU=
+Date:   Fri, 27 Sep 2019 17:55:18 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: VMX: Set VMENTER_L1D_FLUSH_NOT_REQUIRED if
+ !X86_BUG_L1TF
+Message-ID: <20190927155518.GB23002@zn.tnic>
+References: <20190826193023.23293-1-longman@redhat.com>
+ <6bc37d29-b691-28d6-d4dc-9402fa82093a@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 27 Sep 2019 15:54:28 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <6bc37d29-b691-28d6-d4dc-9402fa82093a@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When KVM_GET_MSRS fail the report looks like
+On Thu, Sep 26, 2019 at 01:29:28PM -0400, Waiman Long wrote:
+> On 8/26/19 3:30 PM, Waiman Long wrote:
+> > The l1tf_vmx_mitigation is only set to VMENTER_L1D_FLUSH_NOT_REQUIRED
+> > when the ARCH_CAPABILITIES MSR indicates that L1D flush is not required.
+> > However, if the CPU is not affected by L1TF, l1tf_vmx_mitigation will
+> > still be set to VMENTER_L1D_FLUSH_AUTO. This is certainly not the best
+> > option for a !X86_BUG_L1TF CPU.
+> >
+> > So force l1tf_vmx_mitigation to VMENTER_L1D_FLUSH_NOT_REQUIRED to make it
+> > more explicit in case users are checking the vmentry_l1d_flush parameter.
+> >
+> > Signed-off-by: Waiman Long <longman@redhat.com>
+> > ---
+> >  arch/x86/kvm/vmx/vmx.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index 42ed3faa6af8..a00ce3d6bbfd 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -7896,6 +7896,8 @@ static int __init vmx_init(void)
+> >  			vmx_exit();
+> >  			return r;
+> >  		}
+> > +	} else {
+> > +		l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_NOT_REQUIRED;
+> >  	}
+> >  
+> >  #ifdef CONFIG_KEXEC_CORE
+> 
+> Ping. Any comment on that one?
 
-==== Test Assertion Failure ====
-  lib/x86_64/processor.c:1089: r == nmsrs
-  pid=28775 tid=28775 - Argument list too long
-     1	0x000000000040a55f: vcpu_save_state at processor.c:1088 (discriminator 3)
-     2	0x00000000004010e3: main at state_test.c:171 (discriminator 4)
-     3	0x00007fb8e69223d4: ?? ??:0
-     4	0x0000000000401287: _start at ??:?
-  Unexpected result from KVM_GET_MSRS, r: 36 (failed at 194)
+I'd move that logic with the if (boot_cpu_has(X86_BUG_L1TF)) check inside
+vmx_setup_l1d_flush() so that I have this:
 
-and it's not obvious that '194' here is the failed MSR index and that
-it's printed in hex. Change that.
+        if (!boot_cpu_has_bug(X86_BUG_L1TF)) {
+                l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_NOT_REQUIRED;
+                return 0;
+        }
 
-Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- tools/testing/selftests/kvm/lib/x86_64/processor.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+	if (!enable_ept) {
+		...
 
-diff --git a/tools/testing/selftests/kvm/lib/x86_64/processor.c b/tools/testing/selftests/kvm/lib/x86_64/processor.c
-index c53dbc6bc568..6698cb741e10 100644
---- a/tools/testing/selftests/kvm/lib/x86_64/processor.c
-+++ b/tools/testing/selftests/kvm/lib/x86_64/processor.c
-@@ -1085,7 +1085,7 @@ struct kvm_x86_state *vcpu_save_state(struct kvm_vm *vm, uint32_t vcpuid)
- 	for (i = 0; i < nmsrs; i++)
- 		state->msrs.entries[i].index = list->indices[i];
- 	r = ioctl(vcpu->fd, KVM_GET_MSRS, &state->msrs);
--        TEST_ASSERT(r == nmsrs, "Unexpected result from KVM_GET_MSRS, r: %i (failed at %x)",
-+        TEST_ASSERT(r == nmsrs, "Unexpected result from KVM_GET_MSRS, r: %i (failed MSR was 0x%x)",
-                 r, r == nmsrs ? -1 : list->indices[r]);
- 
- 	r = ioctl(vcpu->fd, KVM_GET_DEBUGREGS, &state->debugregs);
+	}
+
+inside the function and outside am left with:
+
+	r = vmx_setup_l1d_flush(vmentry_l1d_flush_param);
+        if (r) {
+		vmx_exit();
+                return r;
+	}
+
+only. This way I'm concentrating the whole l1tf_vmx_mitigation picking
+apart in one place.
+
+Also, note that X86_BUG flags are checked with boot_cpu_has_bug() even
+if it boils down to the same thing now.
+
+Thx.
+
 -- 
-2.20.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
