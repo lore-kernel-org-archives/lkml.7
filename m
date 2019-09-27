@@ -3,331 +3,211 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B328EC388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F495C388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 726FD207E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1589217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:53:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PcjGBoFZ"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="hho/UIso"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbfI0Qre (ORCPT
+        id S1727872AbfI0QxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 12:47:34 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42972 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727079AbfI0Qrd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 12:47:33 -0400
-Received: by mail-pl1-f195.google.com with SMTP id e5so1313648pls.9;
-        Fri, 27 Sep 2019 09:47:33 -0700 (PDT)
+        Fri, 27 Sep 2019 12:53:16 -0400
+Received: from mail-eopbgr720086.outbound.protection.outlook.com ([40.107.72.86]:51904
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726251AbfI0QxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 12:53:15 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZZlT8i7elFF9OiYgknj2iGBhIy593n+4b/63CFUJBz8089jAjTfhkpy6hC1amo2dea0fNReeNpXc1heksfzK/QE5dtlvUtSXSefu4zpPFCcXdyq6xiP/keo466Jc31zrn21YMWPzdg39BDIjuRcXERaq7Akvh7bj1NzDf9LntmqRBzXNEOcw2nQCnSNMlP3arpPGrAAV5es0OgJysweSYC6fuB+sJBinImCoyR+p5/A1JVdAyAFld21vZy0JX78knHWsZBR+mDdzAbilFd1vlU8dqWZF3UbI+eQgxAbO6sf/0WEmOb2h8+bOIui4ihuVbZWnE+1FM9KW9Csy4NLurw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gfZABY3KvNgVN3V6mgMTRmxTMxYgnsc92XpSywvDk+w=;
+ b=halAoXYxwcI3kTzJRdRm7LFl7r8QISS8cx5u7FyJKjA/jLmQgRhy+J6PBvk7KTw1gvkkMjnSAog10NtxNxb8EAsc7JWnZ14hZ3Pv9pioQEywRNEe4Jn5UFQbXIkIIXllgKkz0tGAjNLWEk70uL1XctZpDJT0YvfclWLAbc79ralVRCMG2Cfz58Hig0UaB/PAKS0iI2rILUYLiwPUi7w7XD5j2HR4tzPpOypCVNlO6A6K8QACVu6H9NgeeYs9KDD6G+wPbyio2FNXKVkGeOQDFS7DhWNOOevWPrDhtKb8EiKJ+WwFtsp/2A8XFPJfb882VKwUyFXMoYhE0b30slR3PA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=m2PSZi6t1pyeNx43M6S8PiquKqWtbwZDxuyuxsptEfE=;
-        b=PcjGBoFZnbMupCRTceJfoECMdge7ICprprk73l6pR5gu2vaHYoRyg5jU77IAZGbT77
-         soVVqLLOXKaK4OPDwj1USXK7phjZ40JsTgkiGGNekBwu/aYEGZ80DM6cPr6Eh4CaZCZT
-         qu258tzkoERv7X8B/BJ7Fv9LEF0cLuYuKOGDniLip/qR4z3Bst3pra44A8GYV+gZSc4g
-         ftV9oHvKnUJKPzV9VHiPbyy/K65w4hbv9ja1vsy4qhwUEYvQAeS4iL2gr/JyVWRriad4
-         c5ggoqKdhuywjLAAiH8Lt+taZ0/13Yntc3Ohpqu+IDIIWU8ihtynA8Cc5ptumI+EmMo/
-         paSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=m2PSZi6t1pyeNx43M6S8PiquKqWtbwZDxuyuxsptEfE=;
-        b=GgH4vv9WNTrwkDUYLxxxuiWBBB9ukK26KOxg5/cNLdenuaMOxV7NjGVohth1dMypKo
-         DLxDg1/99xUHWuD9LSJiG3NN4zxCyLby4IXAWlobX8R42Q0/Z5V74Ezvr+f4RrcUfDJG
-         B/CoDV2Al+xBBRW8ZzGBXWUs7simuk0LiMmWKNZpmoI+GiEYyVt4xyuTS3kzZELlpoRP
-         qSDtpUC1l+fEyz/zu5YWl+v7esABV4VtfQtKbFxw0zS6HI2TuW7xmJLaZuvtlX9jwrgW
-         NuQdu7QRQIpW9F1oNLOHFyEOAieH/8Ie7Nd71by+MUoaO8Qd6gw92Q/itkPzPjw8ix5V
-         25bw==
-X-Gm-Message-State: APjAAAU1r3Y91ufN5c6KdMP9XPsFs+MxGyPR1i5KBV7vCF8bRu7dmeJY
-        h/hbIr3z1tvcKxT1E5mGbb9gJ3chRHShVTdj0VM=
-X-Google-Smtp-Source: APXvYqx5EFWMtbjcSRnztuZUm+T+I6ANhp654xUDZCDym/TLPngzA6O39HqJP/NMXLkzWVZDz2g44R2EoG4uZKwxjZk=
-X-Received: by 2002:a17:902:a715:: with SMTP id w21mr5487370plq.274.1569602852491;
- Fri, 27 Sep 2019 09:47:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <1568387004-3802-1-git-send-email-akinobu.mita@gmail.com>
- <1568387004-3802-2-git-send-email-akinobu.mita@gmail.com> <20190927063547.GA1786569@kroah.com>
-In-Reply-To: <20190927063547.GA1786569@kroah.com>
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-Date:   Sat, 28 Sep 2019 01:47:21 +0900
-Message-ID: <CAC5umyjdM1+4nPg_6UaCjcpikESamdA_ZpmP4Xfjx7_-1f=+0A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] leds: remove PAGE_SIZE limit of /sys/class/leds/<led>/trigger
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-leds@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gfZABY3KvNgVN3V6mgMTRmxTMxYgnsc92XpSywvDk+w=;
+ b=hho/UIsocjyPG0zwmi7uHMr1chBa1MsPUuL45Lt7YxEQqz3K6rJbFExES/Yues8Kc4+p53e2cgOb3lnFjRjM2t0oViJQhbILGlf3NE+WT0GVw+vhQHbxP3OgAYwmjjL7cTtZW4h3yCobVkN15V4NIV0UvbnafaPiVc8gjI9XQL8=
+Received: from CH2PR02MB7000.namprd02.prod.outlook.com (20.180.9.216) by
+ CH2PR02MB6773.namprd02.prod.outlook.com (20.180.17.8) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.20; Fri, 27 Sep 2019 16:53:11 +0000
+Received: from CH2PR02MB7000.namprd02.prod.outlook.com
+ ([fe80::3515:e3a7:8799:73bd]) by CH2PR02MB7000.namprd02.prod.outlook.com
+ ([fe80::3515:e3a7:8799:73bd%2]) with mapi id 15.20.2305.017; Fri, 27 Sep 2019
+ 16:53:11 +0000
+From:   Radhey Shyam Pandey <radheys@xilinx.com>
+To:     Nicholas Graumann <nick.graumann@gmail.com>
+CC:     Vinod Koul <vkoul@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        Michal Simek <michals@xilinx.com>,
+        "andrea.merello@gmail.com" <andrea.merello@gmail.com>,
+        Appana Durga Kedareswara Rao <appanad@xilinx.com>,
+        "mcgrof@kernel.org" <mcgrof@kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH -next 7/8] dmaengine: xilinx_dma: Check for both idle and
+ halted state in axidma stop_transfer
+Thread-Topic: [PATCH -next 7/8] dmaengine: xilinx_dma: Check for both idle and
+ halted state in axidma stop_transfer
+Thread-Index: AQHVZAh+BsqD15rQs0ybdZW78qGrBqc+VX+AgADPhOCAAInhAIAALOvg
+Date:   Fri, 27 Sep 2019 16:53:11 +0000
+Message-ID: <CH2PR02MB7000D0EF8E2B2C11C58B7235C7810@CH2PR02MB7000.namprd02.prod.outlook.com>
+References: <1567701424-25658-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+ <1567701424-25658-8-git-send-email-radhey.shyam.pandey@xilinx.com>
+ <20190926172107.GN3824@vkoul-mobl>
+ <CH2PR02MB7000EACD029FC7E47679393CC7810@CH2PR02MB7000.namprd02.prod.outlook.com>
+ <20190927135720.GA16057@lnx-nickg>
+In-Reply-To: <20190927135720.GA16057@lnx-nickg>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=radheys@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d791a120-0008-4f34-43a4-08d7436b2e5e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CH2PR02MB6773;
+x-ms-traffictypediagnostic: CH2PR02MB6773:|CH2PR02MB6773:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR02MB677370C4944BB93FA926F871C7810@CH2PR02MB6773.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2399;
+x-forefront-prvs: 0173C6D4D5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(136003)(376002)(39860400002)(366004)(199004)(189003)(13464003)(26005)(6916009)(9686003)(14454004)(25786009)(11346002)(6246003)(446003)(7736002)(4326008)(74316002)(476003)(229853002)(71190400001)(486006)(6436002)(186003)(71200400001)(3846002)(305945005)(99286004)(256004)(7696005)(86362001)(76116006)(66946007)(66476007)(66556008)(64756008)(66446008)(316002)(54906003)(478600001)(6116002)(53546011)(6506007)(2906002)(5660300002)(8676002)(102836004)(8936002)(81156014)(66066001)(76176011)(81166006)(52536014)(14444005)(55016002)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6773;H:CH2PR02MB7000.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: lYaqIoCs8JvrxVPrqn+Pd6KElGwfTZnmjTArLlq22r78DcJ3XIUcy5SJYjplmROmF4q6xGg8Io3NL//HU/hgTNoK9UyO8g5KRx7wBD+SbFuKnjYY7cOlMCazToFRGotksx6bI1JjjUZ2OfyQ1zsTTYr1MxzERY7vxeTBPFavY6jQyumDIRAunVbHF1N6sCzRWlJ/0oMntJauWXUwFQAh76CAIDhcc1k8xUIpKd9P+oB9j7O/YEn0GY4+xZD3ZxC+J5O+TbNfob5KBsxclLK4nOWQIz/fzLkcnP00Fjt/qsYEwc2S/Uf811uld8FxXjQMFfYLuNxhXNz4e5JHweGDiVQ8X0Fp0dFhGyhcl4df0SC0NF8fuQ/15dnBLUTxh2IY26jBiVFpBSRj1Xw97H7X8wQPBYgIeWPrsC6TiXDPxJY=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d791a120-0008-4f34-43a4-08d7436b2e5e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Sep 2019 16:53:11.3865
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ajvgXI8umiYrTSEEOD2sE92S30L2l+7zsKoScpfc0NfXXW9zSzft7DyOwmB2vu6r3xtYUYtgQGHnfDtIpyYbHA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6773
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=E5=B9=B49=E6=9C=8827=E6=97=A5(=E9=87=91) 15:39 Greg Kroah-Hartman <gre=
-gkh@linuxfoundation.org>:
->
-> On Sat, Sep 14, 2019 at 12:03:24AM +0900, Akinobu Mita wrote:
-> > Reading /sys/class/leds/<led>/trigger returns all available LED trigger=
-s.
-> > However, the size of this file is limited to PAGE_SIZE because of the
-> > limitation for sysfs attribute.
+> -----Original Message-----
+> From: Nicholas Graumann <nick.graumann@gmail.com>
+> Sent: Friday, September 27, 2019 7:27 PM
+> To: Radhey Shyam Pandey <radheys@xilinx.com>
+> Cc: Vinod Koul <vkoul@kernel.org>; dan.j.williams@intel.com; Michal Simek
+> <michals@xilinx.com>; andrea.merello@gmail.com; Appana Durga
+> Kedareswara Rao <appanad@xilinx.com>; mcgrof@kernel.org;
+> dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH -next 7/8] dmaengine: xilinx_dma: Check for both idle
+> and halted state in axidma stop_transfer
+>=20
+> On Fri, Sep 27, 2019 at 06:48:29AM +0000, Radhey Shyam Pandey wrote:
+> > > -----Original Message-----
+> > > From: Vinod Koul <vkoul@kernel.org>
+> > > Sent: Thursday, September 26, 2019 10:51 PM
+> > > To: Radhey Shyam Pandey <radheys@xilinx.com>
+> > > Cc: dan.j.williams@intel.com; Michal Simek <michals@xilinx.com>;
+> > > nick.graumann@gmail.com; andrea.merello@gmail.com; Appana Durga
+> > > Kedareswara Rao <appanad@xilinx.com>; mcgrof@kernel.org;
+> > > dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org
+> > > Subject: Re: [PATCH -next 7/8] dmaengine: xilinx_dma: Check for both
+> idle
+> > > and halted state in axidma stop_transfer
+> > >
+> > > On 05-09-19, 22:07, Radhey Shyam Pandey wrote:
+> > > > From: Nicholas Graumann <nick.graumann@gmail.com>
+> > > >
+> > > > When polling for a stopped transfer in AXI DMA mode, in some cases
+> the
+> > > > status of the channel may indicate IDLE instead of HALTED if the
+> > > > channel was reset due to an error.
+> > > >
+> > > > Signed-off-by: Nicholas Graumann <nick.graumann@gmail.com>
+> > > > Signed-off-by: Radhey Shyam Pandey
+> > > <radhey.shyam.pandey@xilinx.com>
+> > > > ---
+> > > >  drivers/dma/xilinx/xilinx_dma.c | 5 +++--
+> > > >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/drivers/dma/xilinx/xilinx_dma.c
+> > > b/drivers/dma/xilinx/xilinx_dma.c
+> > > > index b5dd62a..0896e07 100644
+> > > > --- a/drivers/dma/xilinx/xilinx_dma.c
+> > > > +++ b/drivers/dma/xilinx/xilinx_dma.c
+> > > > @@ -1092,8 +1092,9 @@ static int xilinx_dma_stop_transfer(struct
+> > > xilinx_dma_chan *chan)
+> > > >
+> > > >  	/* Wait for the hardware to halt */
+> > > >  	return xilinx_dma_poll_timeout(chan, XILINX_DMA_REG_DMASR,
+> > > val,
+> > > > -				       val & XILINX_DMA_DMASR_HALTED, 0,
+> > > > -				       XILINX_DMA_LOOP_COUNT);
+> > > > +				       val | (XILINX_DMA_DMASR_IDLE |
+> > > > +					      XILINX_DMA_DMASR_HALTED),
+> > >
+> > > The condition was bitwise AND and now is OR.. ??
 > >
-> > Enabling LED CPU trigger on systems with thousands of CPUs easily hits
-> > PAGE_SIZE limit, and makes it impossible to see all available LED trigg=
-ers
-> > and which trigger is currently activated.
+> > Ah, it should be same as before . Only _IDLE mask should be in OR.
 > >
-> > We work around it here by converting /sys/class/leds/<led>/trigger to
-> > binary attribute, which is not limited by length. This is _not_ good
-> > design, do not copy it.
+> > Also on second thought to this patch- we need to describe which error
+> > scenario "in some cases the status of the channel may indicate IDLE
+> > instead of HALTED" as mentioned in commit description.
 > >
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> > Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> > Cc: Pavel Machek <pavel@ucw.cz>
-> > Cc: Dan Murphy <dmurphy@ti.com>
-> > Acked-by: Pavel Machek <pavel@ucw.cz>
-> > Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-> > ---
-> >  drivers/leds/led-class.c    |  8 ++--
-> >  drivers/leds/led-triggers.c | 90 ++++++++++++++++++++++++++++++++++---=
---------
-> >  drivers/leds/leds.h         |  6 +++
-> >  include/linux/leds.h        |  5 ---
-> >  4 files changed, 79 insertions(+), 30 deletions(-)
+> > @Nick: Can you comment?
 > >
-> > diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-> > index 4793e77..8b5a1d1 100644
-> > --- a/drivers/leds/led-class.c
-> > +++ b/drivers/leds/led-class.c
-> > @@ -73,13 +73,13 @@ static ssize_t max_brightness_show(struct device *d=
-ev,
-> >  static DEVICE_ATTR_RO(max_brightness);
-> >
-> >  #ifdef CONFIG_LEDS_TRIGGERS
-> > -static DEVICE_ATTR(trigger, 0644, led_trigger_show, led_trigger_store)=
-;
-> > -static struct attribute *led_trigger_attrs[] =3D {
-> > -     &dev_attr_trigger.attr,
-> > +static BIN_ATTR(trigger, 0644, led_trigger_read, led_trigger_write, 0)=
-;
-> > +static struct bin_attribute *led_trigger_bin_attrs[] =3D {
-> > +     &bin_attr_trigger,
-> >       NULL,
-> >  };
-> >  static const struct attribute_group led_trigger_group =3D {
-> > -     .attrs =3D led_trigger_attrs,
-> > +     .bin_attrs =3D led_trigger_bin_attrs,
-> >  };
-> >  #endif
-> >
-> > diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
-> > index 8d11a5e..ed5a311 100644
-> > --- a/drivers/leds/led-triggers.c
-> > +++ b/drivers/leds/led-triggers.c
-> > @@ -16,6 +16,7 @@
-> >  #include <linux/rwsem.h>
-> >  #include <linux/leds.h>
-> >  #include <linux/slab.h>
-> > +#include <linux/mm.h>
-> >  #include "leds.h"
-> >
-> >  /*
-> > @@ -26,9 +27,11 @@ LIST_HEAD(trigger_list);
-> >
-> >   /* Used by LED Class */
-> >
-> > -ssize_t led_trigger_store(struct device *dev, struct device_attribute =
-*attr,
-> > -             const char *buf, size_t count)
-> > +ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
-> > +                       struct bin_attribute *bin_attr, char *buf,
-> > +                       loff_t pos, size_t count)
-> >  {
-> > +     struct device *dev =3D kobj_to_dev(kobj);
-> >       struct led_classdev *led_cdev =3D dev_get_drvdata(dev);
-> >       struct led_trigger *trig;
-> >       int ret =3D count;
-> > @@ -64,39 +67,84 @@ ssize_t led_trigger_store(struct device *dev, struc=
-t device_attribute *attr,
-> >       mutex_unlock(&led_cdev->led_access);
-> >       return ret;
-> >  }
-> > -EXPORT_SYMBOL_GPL(led_trigger_store);
-> > +EXPORT_SYMBOL_GPL(led_trigger_write);
-> >
-> > -ssize_t led_trigger_show(struct device *dev, struct device_attribute *=
-attr,
-> > -             char *buf)
-> > +__printf(4, 5)
-> > +static int led_trigger_snprintf(char *buf, size_t size, bool query,
-> > +                             const char *fmt, ...)
-> > +{
-> > +     va_list args;
-> > +     int i;
-> > +
-> > +     va_start(args, fmt);
-> > +     if (query)
-> > +             i =3D vsnprintf(NULL, 0, fmt, args);
-> > +     else
-> > +             i =3D vscnprintf(buf, size, fmt, args);
-> > +     va_end(args);
-> > +
-> > +     return i;
-> > +}
->
-> You only call this in one place, why is it needed like this?  The "old"
-> code open-coded this, what is this helping with here?
->
-> And what does "query" mean here?  I have no idea how that variable
-> matters, or what it does.  Why not just test if buf is NULL or not if
-> you don't want to use it?
->
-> Ah, you are trying to see how "long" the buffer is going to be.  That
-> makes more sense, but just trigger off of the NULL buffer or not, making
-> this a bit more "obvious" what you are doing and not tieing two
-> parameters to each other (meaning one always reflects the other one).
+> In regard to the mask question, yes, this looks like a bug.
+> We should be AND'ing with the mask like before.
+>=20
+> As far as the state, usually when we saw the IDLE state when invoking
+> dmaengine_terminate_all on a channel that had errors. I have not
+> proved this, but I believe what happened was the following:
 
-We cannot simply replace the "query" by checking the buffer is NULL or not.
-Because led_trigger_snprintf() is repeatedly called by led_trigger_format()
-while increasing 'buf' and decreasing 'size' by the return value of
-led_trigger_snprintf() every time.
+As per IP produce guide pg021, once DMACR[RS] is set to 0x0
+the halted bit in the DMA Status register should asserts to
+0x1 when the DMA engine is halted. Also the DMA may be the
+in IDLE state, there may be active data on the AXI interface.
 
-> > +static int led_trigger_format(char *buf, size_t size, bool query,
-> > +                           struct led_classdev *led_cdev)
-> >  {
-> > -     struct led_classdev *led_cdev =3D dev_get_drvdata(dev);
-> >       struct led_trigger *trig;
-> > -     int len =3D 0;
-> > +     int len =3D led_trigger_snprintf(buf, size, query, "%s",
-> > +                                    led_cdev->trigger ? "none" : "[non=
-e]");
-> > +
-> > +     list_for_each_entry(trig, &trigger_list, next_trig) {
-> > +             bool hit =3D led_cdev->trigger &&
-> > +                     !strcmp(led_cdev->trigger->name, trig->name);
-> > +
-> > +             len +=3D led_trigger_snprintf(buf + len, size - len, quer=
-y,
-> > +                                         " %s%s%s", hit ? "[" : "",
-> > +                                         trig->name, hit ? "]" : "");
-> > +     }
-> > +
-> > +     len +=3D led_trigger_snprintf(buf + len, size - len, query, "\n")=
-;
-> > +
-> > +     return len;
-> > +}
-> > +
-> > +/*
-> > + * It was stupid to create 10000 cpu triggers, but we are stuck with i=
-t now.
-> > + * Don't make that mistake again. We work around it here by creating b=
-inary
-> > + * attribute, which is not limited by length. This is _not_ good desig=
-n, do not
-> > + * copy it.
-> > + */
-> > +ssize_t led_trigger_read(struct file *filp, struct kobject *kobj,
-> > +                     struct bin_attribute *attr, char *buf,
-> > +                     loff_t pos, size_t count)
-> > +{
-> > +     struct device *dev =3D kobj_to_dev(kobj);
-> > +     struct led_classdev *led_cdev =3D dev_get_drvdata(dev);
-> > +     void *data;
-> > +     int len;
-> >
-> >       down_read(&triggers_list_lock);
-> >       down_read(&led_cdev->trigger_lock);
-> >
-> > -     if (!led_cdev->trigger)
-> > -             len +=3D scnprintf(buf+len, PAGE_SIZE - len, "[none] ");
-> > +     len =3D led_trigger_format(NULL, 0, true, led_cdev);
-> > +     data =3D kvmalloc(len + 1, GFP_KERNEL);
->
-> Why kvmalloc() and not just kmalloc()?  How big is this buffer you are
-> expecting to have here?
+I think for now we can skip this patchset in v2 and repost it
+when a proper root cause is done.
 
-The ledtrig-cpu supports upto 9999 cpus.  If all these cpus were available,
-the buffer size would be 78,890 bytes.
-(for i in `seq 0 9999`;do echo -n " cpu$i"; done | wc -c)
-
-The intention of this kvmalloc() allocation is to avoid costly allocation
-if possible.
-
-> > +     if (data)
-> > +             len =3D led_trigger_format(data, len + 1, false, led_cdev=
-);
-> >       else
-> > -             len +=3D scnprintf(buf+len, PAGE_SIZE - len, "none ");
-> > +             len =3D -ENOMEM;
-> >
-> > -     list_for_each_entry(trig, &trigger_list, next_trig) {
-> > -             if (led_cdev->trigger && !strcmp(led_cdev->trigger->name,
-> > -                                                     trig->name))
-> > -                     len +=3D scnprintf(buf+len, PAGE_SIZE - len, "[%s=
-] ",
-> > -                                      trig->name);
-> > -             else
-> > -                     len +=3D scnprintf(buf+len, PAGE_SIZE - len, "%s =
-",
-> > -                                      trig->name);
-> > -     }
-> >       up_read(&led_cdev->trigger_lock);
-> >       up_read(&triggers_list_lock);
->
-> Two locks?  Why not 3?  5?  How about just 1?  :)
-
-I don't touch these locks in this patch :)
-
-Locking both locks seems to be necessary to prevent someone from changing
-trigger_list or led_cdev->trigger.
-
-> >
-> > -     len +=3D scnprintf(len+buf, PAGE_SIZE - len, "\n");
-> > +     if (len < 0)
-> > +             return len;
->
-> You just leaked data if led_trigger_format() returned an error :(
->
-> Just return -ENOMEM above if !data, which makes this much simpler.
-
-We are holding the two locks, so we need to release them before return.
-Which one do you prefer?
-
-        ...
-        data =3D kvmalloc(len + 1, GFP_KERNEL);
-        if (data)
-                len =3D led_trigger_format(data, len + 1, false, led_cdev);
-        else
-                len =3D -ENOMEM;
-
-        up_read(&led_cdev->trigger_lock);
-        up_read(&triggers_list_lock);
-
-        if (len < 0)
-                return len;
-
-vs.
-
-        ...
-        data =3D kvmalloc(len + 1, GFP_KERNEL);
-        if (!data) {
-                up_read(&led_cdev->trigger_lock);
-                up_read(&triggers_list_lock);
-                return -ENOMEM;
-        }
-        len =3D led_trigger_format(data, len + 1, false, led_cdev);
-
-        up_read(&led_cdev->trigger_lock);
-        up_read(&triggers_list_lock);
+>=20
+> New transactions were queued when chan->err was set, causing
+> xilinx_dma_chan_reset to be invoked which ultimately results in the
+> hardware being in an IDLE state by the time xilinx_dma_terminate_all
+> gets around to invoking stop_transfer. At that point, stop_transfer is
+> going to time out waiting for the hardware to indicate it has HALTED and
+> ultimately will time out.
+>=20
+>=20
+> In any case, xilinx_dma_stop_transfer should be fine with the hardware
+> being in an IDLE state to indicate that the active transfer is stopped.
+> Case in point: The CDMA core also covered by this driver only has an
+> IDLE bit and no HALTED bit in its DMASR, and it checks for just the IDLE
+> bit in xilinx_cdma_stop_transfer().
+> > >
+> > > > +				       0, XILINX_DMA_LOOP_COUNT);
+> > > >  }
+> > > >
+> > > >  /**
+> > > > --
+> > > > 2.7.4
+> > >
+> > > --
+> > > ~Vinod
