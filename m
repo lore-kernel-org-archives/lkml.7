@@ -2,145 +2,192 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAA5C352AB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB69C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD9E02146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E53F7207FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:53:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbfI0Hwz (ORCPT
+        id S1726669AbfI0HxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 03:52:55 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:38005 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725812AbfI0Hwy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 03:52:54 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id Dl3YiK9ku9D4hDl3ciArj6; Fri, 27 Sep 2019 09:52:52 +0200
-Subject: Re: [PATCH v6 7/7] media: imx214: Add new control with
- V4L2_CID_UNIT_CELL_SIZE
-To:     Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190920135137.10052-1-ricardo@ribalda.com>
- <20190920135137.10052-8-ricardo@ribalda.com>
- <6e4c1969-a80d-4747-7a44-b7a46804fe12@xs4all.nl>
- <CAPybu_3ga6rJ8pzw3wAP=nMOHDqeQEWWa-reto7Xk_FzRFVLyw@mail.gmail.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <3a5bdb3e-aad8-0f78-535e-c2ed431b4721@xs4all.nl>
-Date:   Fri, 27 Sep 2019 09:52:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 27 Sep 2019 03:53:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:31305 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725812AbfI0HxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 03:53:11 -0400
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E7969C05AA52
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 07:53:10 +0000 (UTC)
+Received: by mail-io1-f71.google.com with SMTP id w8so10669022iod.21
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 00:53:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+z967OGKFyzsipkAMvwKR90NL+oBP6ClqcqeupYnwJM=;
+        b=C6RwmpEjkaWECYOp1TJeL+CsFzrIr0zgH2PuhzEMTW77i+VoPUuFC8aA65Abhz4h5F
+         CDTWIGUQMprzt7IZ2B1z4JFaBjvfnkDjzMsE4kmuJMzR3AE1x7rEfLL6A+NhtHEd2hP6
+         HM0Y194EUmcSVed2hhPCUoLDyXjbPcsCp/oidCm+gtfyPRj5ak6S+tXVqS+CPEEiLa8a
+         5puVcpEVhIUBmLBP3JfsrpJpGssbGQvuQ2h+aL+WumaidAQMylL881vdDRnVnbAv5y+E
+         gIpF/pQzQuCL0inaFiw65/HlubaheI5ac+JLkh9GKFi8/sd8XqGNTuoLcPUsS7qYclKO
+         oY9Q==
+X-Gm-Message-State: APjAAAUSDFi3SP2t8b71oKmplu6WsFB5Jin0oasoL9vE2NMn05iiLxVh
+        66fYD427hoCrc4EFepqNv3h2nILo+/AfERDwE3tH0zL3ZbuUwOssDZ+QnyjElbKNpydJL4Sh8VN
+        omsjm5Iszq0wLr1DPbAIgyTVa4xmglZmYAeZeLBuc
+X-Received: by 2002:a92:5c13:: with SMTP id q19mr3296382ilb.249.1569570790131;
+        Fri, 27 Sep 2019 00:53:10 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyQAC9ocy3CrD0E1lT+wFbJDvNy6gND2zhgtJZP9qoxiBZjNnVGhEx653IsvSSXH18WtvDnbJSa8TQZbQj7HiU=
+X-Received: by 2002:a92:5c13:: with SMTP id q19mr3296358ilb.249.1569570789810;
+ Fri, 27 Sep 2019 00:53:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAPybu_3ga6rJ8pzw3wAP=nMOHDqeQEWWa-reto7Xk_FzRFVLyw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfEcTm6k513b/sTsCmph+VJMYlIinvV6fbhB3i50CSHmr+WNwTwsJLflCfq72bEAW9eHPAWiU5U+6xyFcnDbW0b1Ez0zyoZGtnGZhRvOXpnVl2h9fXdoX
- grspuQFErKFvHeBrd/M14cTXIdjtB8ReDRsMNK+wVx5ETGpMA+en0y3kMXT5d9RJUCQhm30Uv69p/+BNToWwh+HX7JZWCfKa8Je81EEAVXJphUA2GVcPIXIC
- 6qz2cAVEFG/E0xrzJ3NvDk52bqYcjUJgHeQa3jfoZBHZmg1hxp2VBy5QV3ToKLY81eR+13uMA7HhmxYBG9h2Dk9pcF442fYET6mZAmU0Czw=
+References: <20190910151341.14986-1-kasong@redhat.com> <20190910151341.14986-3-kasong@redhat.com>
+ <20190911055618.GA104115@gmail.com> <CACPcB9eZUZ1fCsc1GZs9MJnoqLK9Ld5KEx0_emx8J44Mjcy3WA@mail.gmail.com>
+ <20190927054208.GA13426@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20190927054208.GA13426@dhcp-128-65.nay.redhat.com>
+From:   Kairui Song <kasong@redhat.com>
+Date:   Fri, 27 Sep 2019 15:52:58 +0800
+Message-ID: <CACPcB9d+5idm-0r69Qeh3GyGF-wuyie_w1jBL5GRsnxq40Gs6w@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] x86/kdump: Reserve extra memory when SME or SEV is active
+To:     Dave Young <dyoung@redhat.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Baoquan He <bhe@redhat.com>, Lianbo Jiang <lijiang@redhat.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/27/19 9:33 AM, Ricardo Ribalda Delgado wrote:
-> Hi Hans
-> 
-> On Fri, 27 Sep 2019, 09:14 Hans Verkuil, <hverkuil-cisco@xs4all.nl> wrote:
->>
->> On 9/20/19 3:51 PM, Ricardo Ribalda Delgado wrote:
->>> From: Ricardo Ribalda Delgado <ribalda@kernel.org>
->>>
->>> According to the product brief, the unit cell size is 1120 nanometers^2.
->>>
->>> https://www.sony-semicon.co.jp/products_en/IS/sensor1/img/products/ProductBrief_IMX214_20150428.pdf
->>>
->>> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
->>> ---
->>>  drivers/media/i2c/imx214.c | 12 ++++++++++++
->>>  1 file changed, 12 insertions(+)
->>>
->>> diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
->>> index 159a3a604f0e..57562e20c4ca 100644
->>> --- a/drivers/media/i2c/imx214.c
->>> +++ b/drivers/media/i2c/imx214.c
->>> @@ -47,6 +47,7 @@ struct imx214 {
->>>       struct v4l2_ctrl *pixel_rate;
->>>       struct v4l2_ctrl *link_freq;
->>>       struct v4l2_ctrl *exposure;
->>> +     struct v4l2_ctrl *unit_size;
->>>
->>>       struct regulator_bulk_data      supplies[IMX214_NUM_SUPPLIES];
->>>
->>> @@ -948,6 +949,13 @@ static int imx214_probe(struct i2c_client *client)
->>>       static const s64 link_freq[] = {
->>>               IMX214_DEFAULT_LINK_FREQ,
->>>       };
->>> +     struct v4l2_area unit_size = {
->>> +             .width = 1120,
->>> +             .height = 1120,
->>> +     };
->>> +     union v4l2_ctrl_ptr p_def = {
->>> +             .p_area = &unit_size,
->>> +     };
->>
->> Use static const for both.
->>
->> I think you should add a small static inline helper function to v4l2-ctrls.h that
->> takes a void pointer and returns a union v4l2_ctrl_ptr.
->>
->> Then you don't need to make a union v4l2_ctrl_ptr just to pass the unit_size pointer.
->>
-> 
-> That sounds useful, but can we warantee for all the arches that
-> sizeof(v4l2_ctrl_ptr) <= sizeof (void *)
+On Fri, Sep 27, 2019 at 1:42 PM Dave Young <dyoung@redhat.com> wrote:
+>
+> On 09/25/19 at 06:36pm, Kairui Song wrote:
+> > On Wed, Sep 11, 2019 at 1:56 PM Ingo Molnar <mingo@kernel.org> wrote:
+> > > * Kairui Song <kasong@redhat.com> wrote:
+> > >
+> > > > Since commit c7753208a94c ("x86, swiotlb: Add memory encryption support"),
+> > > > SWIOTLB will be enabled even if there is less than 4G of memory when SME
+> > > > is active, to support DMA of devices that not support address with the
+> > > > encrypt bit.
+> > > >
+> > > > And commit aba2d9a6385a ("iommu/amd: Do not disable SWIOTLB if SME is
+> > > > active") make the kernel keep SWIOTLB enabled even if there is an IOMMU.
+> > > >
+> > > > Then commit d7b417fa08d1 ("x86/mm: Add DMA support for SEV memory
+> > > > encryption") will always force SWIOTLB to be enabled when SEV is active
+> > > > in all cases.
+> > > >
+> > > > Now, when either SME or SEV is active, SWIOTLB will be force enabled,
+> > > > and this is also true for kdump kernel. As a result kdump kernel will
+> > > > run out of already scarce pre-reserved memory easily.
+> > > >
+> > > > So when SME/SEV is active, reserve extra memory for SWIOTLB to ensure
+> > > > kdump kernel have enough memory, except when "crashkernel=size[KMG],high"
+> > > > is specified or any offset is used. As for the high reservation case, an
+> > > > extra low memory region will always be reserved and that is enough for
+> > > > SWIOTLB. Else if the offset format is used, user should be fully aware
+> > > > of any possible kdump kernel memory requirement and have to organize the
+> > > > memory usage carefully.
+> > > >
+> > > > Signed-off-by: Kairui Song <kasong@redhat.com>
+> > > > ---
+> > > >  arch/x86/kernel/setup.c | 20 +++++++++++++++++---
+> > > >  1 file changed, 17 insertions(+), 3 deletions(-)
+> > > >
+> > > > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> > > > index 71f20bb18cb0..ee6a2f1e2226 100644
+> > > > --- a/arch/x86/kernel/setup.c
+> > > > +++ b/arch/x86/kernel/setup.c
+> > > > @@ -530,7 +530,7 @@ static int __init crashkernel_find_region(unsigned long long *crash_base,
+> > > >                                         unsigned long long *crash_size,
+> > > >                                         bool high)
+> > > >  {
+> > > > -     unsigned long long base, size;
+> > > > +     unsigned long long base, size, mem_enc_req = 0;
+> > > >
+> > > >       base = *crash_base;
+> > > >       size = *crash_size;
+> > > > @@ -561,11 +561,25 @@ static int __init crashkernel_find_region(unsigned long long *crash_base,
+> > > >       if (high)
+> > > >               goto high_reserve;
+> > > >
+> > > > +     /*
+> > > > +      * When SME/SEV is active and not using high reserve,
+> > > > +      * it will always required an extra SWIOTLB region.
+> > > > +      */
+> > > > +     if (mem_encrypt_active())
+> > > > +             mem_enc_req = ALIGN(swiotlb_size_or_default(), SZ_1M);
+> > > > +
+> > > >       base = memblock_find_in_range(CRASH_ALIGN,
+> > > > -                                   CRASH_ADDR_LOW_MAX, size,
+> > > > +                                   CRASH_ADDR_LOW_MAX,
+> > > > +                                   size + mem_enc_req,
+> > > >                                     CRASH_ALIGN);
+> > >
+> >
+> > Hi Ingo,
+> >
+> > I re-read my previous reply, it's long and tedious, let me try to make
+> > a more effective reply:
+> >
+> > > What sizes are we talking about here?
+> >
+> > The size here is how much memory will be reserved for kdump kernel, to
+> > ensure kdump kernel and userspace can run without OOM.
+> >
+> > >
+> > > - What is the possible size range of swiotlb_size_or_default()
+> >
+> > swiotlb_size_or_default() returns the swiotlb size, it's specified by
+> > user using swiotlb=<size>, or default size (64MB)
+> >
+> > >
+> > > - What is the size of CRASH_ADDR_LOW_MAX (the old limit)?
+> >
+> > It's 4G.
+> >
+> > >
+> > > - Why do we replace one fixed limit with another fixed limit instead of
+> > >   accurately sizing the area, with each required feature adding its own
+> > >   requirement to the reservation size?
+> >
+> > It's quite hard to "accurately sizing the area".
+> >
+> > No way to tell the exact amount of memory kdump needs, we can only estimate.
+> > Kdump kernel use different cmdline, drivers and components will have
+> > special handling for kdump, and userspace is totally different.
+>
+> Agreed about your above, but specific this the problem in this patch
+> There should be other ways.
+>
+> First thought about doing generic handling in swiotlb part, and do
+> something like kdump_memory_reserve(size) Ingo suggested,  but according
+> to you swiotlb init is late, so it can not increase the size, OTOH if
+> reserve another region for kdump in swiotlb will cause other issues.
+>
+> So let's think about other improvement, for example to see if you can
+> call kdump_memory_reserve(size) in AMD SME init path, for example in
+> mem_encrypt_init(), is it before crashkernel reservation?
 
-Yes. Everything in the union is a pointer, so sizeof(v4l2_ctrl_ptr) == sizeof (void *)
+Yes, mem_encrypt_init is before the crashkernel reservation.
+I think this is a good idea. Will make a V4 patch based on this.
 
-Regards,
+>
+> If doable it will be at least cleaner than the code in this patch.
+>
+> Thanks
+> Dave
 
-	Hans
-
-> 
-> Of course, it sounds logic, that a union of pointers is the same size
-> than a pointer... but you never know.
-> 
-> No matter what I will make the helper and resend. with all the changes
-> from Jacopo
-> 
-> Thanks!
-> 
->> Regards,
-> 
-> 
-> 
->>
->>         Hans
->>
->>>       int ret;
->>>
->>>       ret = imx214_parse_fwnode(dev);
->>> @@ -1029,6 +1037,10 @@ static int imx214_probe(struct i2c_client *client)
->>>                                            V4L2_CID_EXPOSURE,
->>>                                            0, 3184, 1, 0x0c70);
->>>
->>> +     imx214->unit_size = v4l2_ctrl_new_std_compound(&imx214->ctrls,
->>> +                                                    NULL,
->>> +                                                    V4L2_CID_UNIT_CELL_SIZE,
->>> +                                                    p_def);
->>>       ret = imx214->ctrls.error;
->>>       if (ret) {
->>>               dev_err(&client->dev, "%s control init failed (%d)\n",
->>>
->>
-
+-- 
+Best Regards,
+Kairui Song
