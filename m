@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6D9C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 09:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA71C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 09:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A32A821906
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 09:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8AAC207E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 09:37:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="a/t82mTw"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="NKUk7uGl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbfI0JhW (ORCPT
+        id S1727198AbfI0Jh0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 05:37:22 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:33057 "EHLO
+        Fri, 27 Sep 2019 05:37:26 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:33056 "EHLO
         conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726438AbfI0JhC (ORCPT
+        with ESMTP id S1726339AbfI0JhB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 05:37:02 -0400
+        Fri, 27 Sep 2019 05:37:01 -0400
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id x8R9a5ub001372;
-        Fri, 27 Sep 2019 18:36:07 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x8R9a5ub001372
+        by conuserg-07.nifty.com with ESMTP id x8R9a5ud001372;
+        Fri, 27 Sep 2019 18:36:09 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x8R9a5ud001372
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1569576967;
-        bh=vJzF8WlgUqc1RsR95UB9lwwYV0dr5aBFLgK7a4VpJl0=;
+        s=dec2015msa; t=1569576969;
+        bh=Fynp0G6evPgfPqhsg7r4WZQkR9spuRzwJdxpkYdeONU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a/t82mTwbwWZPr0/tQv9F1qEmfxY+FFesX4KbzmGMTG21vQhlXMBP7rrvpG/Gvk6w
-         EC+o8FZKVJbbAVEZoykh5cD2QqCDz/m+73YH1vmQ2Up3QMvK99h0chvD0XxdoYMafC
-         uOsZH+QvFnmPwiHz1IRaSCJXFXASiKeDWhOTxiFDswTY2pRWlD9V3c//TfIpSFUCwr
-         Rz0S84dpoQubEEROWm9wXT/T9ga6jnFTjaA5V4G6/pBsqw1cEZTCcCRkj3XXFk4KLL
-         2mhnuT7X3lne5Abip9GRwCQrTuntCf8So9MR7YqWsmfYyqDEW/17TOx+STvRxZF6TM
-         Cy6NJ4OYl1HKw==
+        b=NKUk7uGll+V8LdUDPB1GVeeJOolszILWQCZ7SBQwkVdpbGuFn/6kDpUjNB0/QnynN
+         2qtuscgntP19CTgrkmvl5MSiiiCNBM8MTMvqvOQ4ZMK6qxLZECMooRQMg6/8GhwHCg
+         4qU/g9rGsuM3KtYDnkAKAF8mdbt1DU2+OHsXQWxPZbNlhE1f7JA0E0NXhTwlDXPVww
+         4avl6+5iYDzdjgiBkx4qQI4Jn3n3WKQrBxF1+7k8g8hxJW9+fKH4EYxiht2YQCla4r
+         xGD/ItNo3FzzIpks94EAkkrKdxQaT80bh4XJSdYX5FJ+9Eyq/pDWRgWKZzoce+x0d1
+         X55tIS908scnw==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     Jessica Yu <jeyu@kernel.org>
@@ -46,11 +46,10 @@ Cc:     Matthias Maennich <maennich@google.com>,
         Martijn Coenen <maco@android.com>,
         Will Deacon <will.deacon@arm.com>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/7] modpost: fix broken sym->namespace for external module builds
-Date:   Fri, 27 Sep 2019 18:35:57 +0900
-Message-Id: <20190927093603.9140-2-yamada.masahiro@socionext.com>
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH 3/7] module: rename __kstrtab_ns_* to __kstrtabns_* to avoid symbol conflict
+Date:   Fri, 27 Sep 2019 18:35:59 +0900
+Message-Id: <20190927093603.9140-4-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190927093603.9140-1-yamada.masahiro@socionext.com>
 References: <20190927093603.9140-1-yamada.masahiro@socionext.com>
@@ -59,62 +58,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, external module builds produce tons of false-positives:
+The module namespace produces __strtab_ns_<sym> symbols to store
+namespace strings, but it does not guarantee the name uniqueness.
+This is a potential problem because we have exported symbols staring
+with "ns_".
 
-  WARNING: module <mod> uses symbol <sym> from namespace <ns>, but does not import it.
+For example, kernel/capability.c exports the following symbols:
 
-Here, the <ns> part shows a random string.
+  EXPORT_SYMBOL(ns_capable);
+  EXPORT_SYMBOL(capable);
 
-When you build external modules, the symbol info of vmlinux and
-in-kernel modules are read from $(objtree)/Module.symvers, but
-read_dump() is buggy in multiple ways:
+Assume a situation where those are converted as follows:
 
-[1] When the modpost is run for vmlinux and in-kernel modules,
-sym_extract_namespace() correctly allocates memory for the namespace.
-On the other hand, read_dump() does not, then sym->namespace will
-point to somewhere in the line buffer of get_next_line(). The data
-in the buffer will be replaced soon, and sym->namespace will end up
-with pointing to unrelated data. As a result, check_exports() will
-show random strings in the warning messages.
+  EXPORT_SYMBOL_NS(ns_capable, some_namespace);
+  EXPORT_SYMBOL_NS(capable, some_namespace);
 
-[2] When there is no namespace, sym_extract_namespace() returns NULL.
-On the other hand, read_dump() sets namespace to an empty string "".
-(but, it will be later replaced with unrelated data due to bug [1].)
-The check_exports() shows a warning unless exp->namespace is NULL,
-so every symbol read from read_dump() emits the warning, which is
-mostly false positive.
+The former expands to "__kstrtab_ns_capable" and "__kstrtab_ns_ns_capable",
+and the latter to "__kstrtab_capable" and "__kstrtab_ns_capable".
+Then, we have the duplication for "__kstrtab_ns_capable".
 
-To address [1], I added NOFAIL(strdup(...)) to allocate memory.
-For [2], I changed the if-conditional in check_exports().
+To ensure the uniqueness, rename "__kstrtab_ns_*" to "__kstrtabns_*".
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- scripts/mod/modpost.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/export.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index 3961941e8e7a..5c628a7d80f7 100644
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -2195,7 +2195,7 @@ static int check_exports(struct module *mod)
- 		else
- 			basename = mod->name;
+diff --git a/include/linux/export.h b/include/linux/export.h
+index 0695d4e847d9..621158ecd2e2 100644
+--- a/include/linux/export.h
++++ b/include/linux/export.h
+@@ -55,7 +55,7 @@ extern struct module __this_module;
+ 	    "__ksymtab_" #ns NS_SEPARATOR #sym ":		\n"	\
+ 	    "	.long	" #sym "- .				\n"	\
+ 	    "	.long	__kstrtab_" #sym "- .			\n"	\
+-	    "	.long	__kstrtab_ns_" #sym "- .		\n"	\
++	    "	.long	__kstrtabns_" #sym "- .			\n"	\
+ 	    "	.previous					\n")
  
--		if (exp->namespace) {
-+		if (exp->namespace && exp->namespace[0]) {
- 			add_namespace(&mod->required_namespaces,
- 				      exp->namespace);
+ #define __KSYMTAB_ENTRY(sym, sec)					\
+@@ -79,7 +79,7 @@ struct kernel_symbol {
+ 	asm("__ksymtab_" #ns NS_SEPARATOR #sym)				\
+ 	__attribute__((section("___ksymtab" sec "+" #sym), used))	\
+ 	__aligned(sizeof(void *))					\
+-	= { (unsigned long)&sym, __kstrtab_##sym, __kstrtab_ns_##sym }
++	= { (unsigned long)&sym, __kstrtab_##sym, __kstrtabns_##sym }
  
-@@ -2453,7 +2453,7 @@ static void read_dump(const char *fname, unsigned int kernel)
- 			mod = new_module(modname);
- 			mod->skip = 1;
- 		}
--		s = sym_add_exported(symname, namespace, mod,
-+		s = sym_add_exported(symname, NOFAIL(strdup(namespace)), mod,
- 				     export_no(export));
- 		s->kernel    = kernel;
- 		s->preloaded = 1;
+ #define __KSYMTAB_ENTRY(sym, sec)					\
+ 	static const struct kernel_symbol __ksymtab_##sym		\
+@@ -112,7 +112,7 @@ struct kernel_symbol {
+ /* For every exported symbol, place a struct in the __ksymtab section */
+ #define ___EXPORT_SYMBOL_NS(sym, sec, ns)				\
+ 	___export_symbol_common(sym, sec);				\
+-	static const char __kstrtab_ns_##sym[]				\
++	static const char __kstrtabns_##sym[]				\
+ 	__attribute__((section("__ksymtab_strings"), used, aligned(1)))	\
+ 	= #ns;								\
+ 	__KSYMTAB_ENTRY_NS(sym, sec, ns)
 -- 
 2.17.1
 
