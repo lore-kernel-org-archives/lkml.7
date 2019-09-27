@@ -2,237 +2,282 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B8FC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0E3C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B23421920
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:00:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E692721920
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:00:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="tjaJ3RT4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbfI0PAV (ORCPT
+        id S1727865AbfI0PAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 11:00:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:54378 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726926AbfI0PAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 11:00:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4A5AE28;
-        Fri, 27 Sep 2019 08:00:20 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F28703F534;
-        Fri, 27 Sep 2019 08:00:18 -0700 (PDT)
-Subject: Re: drm_sched with panfrost crash on T820
-To:     Neil Armstrong <narmstrong@baylibre.com>, daniel@ffwll.ch,
-        airlied@linux.ie,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Cc:     Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        Erico Nunes <nunes.erico@gmail.com>
-References: <e450fbe6-dec7-2704-59c2-db7e869d67f5@baylibre.com>
- <3fb178d8-f069-0ae2-1ed3-4ded84a71951@arm.com>
- <26ae2a4d-8df1-e8db-3060-41638ed63e2a@arm.com>
- <1eec2f1b-0467-cd4d-aa22-23c70388ac0f@baylibre.com>
- <645fd795-7d22-268d-a8af-5ff090379505@baylibre.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <5e4592e8-e1ef-864d-5ed4-3b82f54fb43d@arm.com>
-Date:   Fri, 27 Sep 2019 16:00:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 27 Sep 2019 11:00:46 -0400
+Received: from mail-eopbgr130133.outbound.protection.outlook.com ([40.107.13.133]:26241
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726926AbfI0PAq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 11:00:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UrLp+1SW6upOmQ3X+edMXhtw2nuFqPb/SZlsO/y1lsM6FkrEJIi+fviMWIeR1hy7aDUz0hegquWaCPKlMgl7FMHZkYH0ybaztCC0vOoSaMsL/MiDHHP5JbNPFC74OuQcMJobf+xUMaBQ/w2chC3zv4um3qX0j0bq0J8GSyaMlpsOU6YzeXtrxS09Tq70LSlX4MJwIlD+2HpDStysuwa67ClmlgqqSVwsOalFeF4dXokTW67AzaXBzjni4KS7ZogMsEfqRzyMaDgLEnIvQd+aBiFocIAp46UmQO/95LFjWBUYz5wFn7fT5kB3o5O/kbPCIwyI6EW2bDvb8sL+iYUrWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b59dKrnzN9cgZ0NoxXhYI0vAboBlJrGoT7+mkMZ82i0=;
+ b=fNkvug8BSJaSouJHnO9Ukq2vV6ZTzhbGsYLdv38ybCSWfn4E13fhQ6nLWmIpKwK+WN9uLsMmRR4pvyJxcJJwhDFUJTzWRo731YThqVtOEoDgCvi8fyq75QwYzcYpp2GBYCLn90Zk56jC2qXy7JwLLLkMLpdK24I5taNQXXZbPGduKX93a/pG8mV1lUuierzFpW3y0JqbRyoojM71rdB/Aadvt6q+efTLCYYIfYFlyVE15HceRFCRi4azei/mJcVZ+RNdlH56yC1jHascCBydHhBSruPJMi1tvLok/3AWzmxxWouyIYUZoamb0vqTs+9vDL4D2Fuz2CvvVwjj9vKNKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
+ dkim=pass header.d=nokia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector1-nokia-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b59dKrnzN9cgZ0NoxXhYI0vAboBlJrGoT7+mkMZ82i0=;
+ b=tjaJ3RT4qAuREsK80Pp9wl5FKmpNxbSZxZ0u0nC5Y3cW8NzNBQSy9ZqNQ7YBXVWSbxvj+FKtJZLnG9L4CtbpX+tmKjuFAf6H+s7Db6l/6AzMaNFxcqy3uKePCRDSDJhqR9Z8LJ9sHBVJzawFVHOVeF1CnIEqo7coXOeSpmD4+wk=
+Received: from AM6PR0702MB3527.eurprd07.prod.outlook.com (52.133.24.149) by
+ AM6PR0702MB3749.eurprd07.prod.outlook.com (52.133.19.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.15; Fri, 27 Sep 2019 15:00:42 +0000
+Received: from AM6PR0702MB3527.eurprd07.prod.outlook.com
+ ([fe80::7497:742a:1167:30dc]) by AM6PR0702MB3527.eurprd07.prod.outlook.com
+ ([fe80::7497:742a:1167:30dc%6]) with mapi id 15.20.2305.013; Fri, 27 Sep 2019
+ 15:00:42 +0000
+From:   "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>
+To:     Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Grant Likely <grant.likely@secretlab.ca>
+CC:     "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        "Glavinic-Pecotic, Matija (EXT - DE/Ulm)" 
+        <matija.glavinic-pecotic.ext@nokia.com>,
+        "Adamski, Krzysztof (Nokia - PL/Wroclaw)" 
+        <krzysztof.adamski@nokia.com>
+Subject: [PATCH v2 0/3] Fix irq_domain vs. irq user race
+Thread-Topic: [PATCH v2 0/3] Fix irq_domain vs. irq user race
+Thread-Index: AQHVdURVGk4z3H5Yck6AwfIUam8zlg==
+Date:   Fri, 27 Sep 2019 15:00:42 +0000
+Message-ID: <20190927150025.26481-1-alexander.sverdlin@nokia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [131.228.32.181]
+x-mailer: git-send-email 2.23.0
+x-clientproxiedby: HE1PR0102CA0006.eurprd01.prod.exchangelabs.com
+ (2603:10a6:7:14::19) To AM6PR0702MB3527.eurprd07.prod.outlook.com
+ (2603:10a6:209:11::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=alexander.sverdlin@nokia.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5b2f3ac3-c3de-4bfc-497f-08d7435b7784
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: AM6PR0702MB3749:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR0702MB3749AC67DD29BC61149B32CD88810@AM6PR0702MB3749.eurprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:644;
+x-forefront-prvs: 0173C6D4D5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(136003)(366004)(396003)(346002)(376002)(199004)(189003)(54534003)(2616005)(2906002)(6436002)(71190400001)(71200400001)(50226002)(7736002)(6512007)(4326008)(14454004)(478600001)(107886003)(52116002)(6486002)(25786009)(305945005)(66066001)(102836004)(3846002)(386003)(81156014)(256004)(6116002)(14444005)(186003)(486006)(8936002)(86362001)(8676002)(99286004)(316002)(81166006)(66556008)(5660300002)(66946007)(6506007)(1076003)(66476007)(36756003)(66446008)(110136005)(54906003)(26005)(2501003)(64756008)(476003);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR0702MB3749;H:AM6PR0702MB3527.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nokia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: GOIJNnBYww0FL5aZmY6f+j92+HYWLutEiuF5cwUOmR7EoCzntJTO4+nLCvrKDu1+BefJC80zyUpl5vNKq8sbH3wmD8BYeo4SVLUzkrpzmDI5DEjQB1iITiW10YkLsjQ9y9ivDnpxX79UUX0lHhxr8m6S7qE7O+OHIk1DctD5WnqJ20QX1wUYIgm3k4g5mQXnjJoNKGiNKlcNrCVxE7KvKTKjW8scB4xtN2fKQ11V6T4lJ6PZ6X0CQyrY6sx5vqb/zZFNDla4jo9+GmQ17+wonVa1VSgkHjnmEn4YBACO64khgbLTOijDqh3GsBendnzClZX/y9e+BQRGSL/CicDigxesj81kDd4v6nx7hZ6pLuPv5g1G0rxWXoXkosfYDv3/cmU1un0RadwUi9h+a9KpuO1MLTnEhBoVlXPcpozmI6A=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <645fd795-7d22-268d-a8af-5ff090379505@baylibre.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5b2f3ac3-c3de-4bfc-497f-08d7435b7784
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Sep 2019 15:00:42.5166
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2nLoSbBsHMB13Dv01TjsrFOqQCd4lTqps6tK8nFddJKrJXKm1/3DbSMecbed9dBjKXjAsbPh5FX/cTZVbKk4w7ZUUvc6YZqp0xN6f0wiZzE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0702MB3749
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/09/2019 12:48, Neil Armstrong wrote:
-> Hi,
-> 
-> On 27/09/2019 13:27, Neil Armstrong wrote:
->> Hi Steven,
->>
->> Thanks for your prompt reaction !
->>
->> On 27/09/2019 12:48, Steven Price wrote:
->>> On 27/09/2019 10:55, Steven Price wrote:
->>> [...]
->>>> One obvious issue with the DRM scheduler is that there is a call to
->>>> cancel_delayed_work() in drm_sched_stop() which to me looks like it
->>>> should be cancel_delayed_work_sync() to ensure that the timeout handling
->>>> has completed.
->>>>
->>>> However in the above scenario a _sync() variety would then cause a
->>>> deadlock (one thread has pfdev->reset_lock and is waiting for the other
->>>> thread which is trying to take the lock).
->>>>
->>>> So we need to update Panfrost so that it can coordinate the reset
->>>> between schedulers. Can you try something like the following (untested):
->>>
->>> And actually testing it I of course discover it doesn't quite work. We
->>> do need the cancel_delayed_work_sync() in the DRM scheduler (when
->>> stopping a different scheduler) and we need to avoid holding the
->>> reset_lock during the drm_sched_stop() call to prevent deadlocking with
->>> another thread handling a timeout.
->>
->> Yep the first patch wasn't fixing the issue all the time.
->>
->>>
->>> Can you give the following patch a spin? I don't have a great
->>> reproduction case, so it would be good to get some confidence it fixes
->>> the problem.
->>
->> Running it right now.
-> 
-> First run gave me (while applying on v5.3):
-> [  307.969230] Unable to handle kernel NULL pointer dereference at virtual address 00000000000000c0
-> [...]
-> [  308.029358] Hardware name: Khadas VIM2 (DT)
-> [  308.033510] Workqueue: events drm_sched_job_timedout
-> [  308.038416] pstate: 80000005 (Nzcv daif -PAN -UAO)
-> [  308.043160] pc : drm_sched_start+0x88/0x138
-> [  308.047300] lr : drm_sched_start+0xb0/0x138
-> [...]
-> [  308.133635] Call trace:
-> [  308.136052]  drm_sched_start+0x88/0x138
-> [  308.139847]  panfrost_job_timedout+0x1cc/0x208
-> [  308.144245]  drm_sched_job_timedout+0x44/0xa8
-> [  308.148560]  process_one_work+0x1e0/0x320
-> [  308.152524]  worker_thread+0x40/0x450
-> [  308.156149]  kthread+0x124/0x128
-> [  308.159342]  ret_from_fork+0x10/0x18
-> [  308.162879] Code: 54000280 f9400862 52800020 aa1a03e1 (f940605b)
-> [  308.168914] ---[ end trace 256b7f5faec101d2 ]---
-> 
-> Bad pointer seems to be struct dma_fence *fence = s_job->s_fence->parent that
-> could be a NULL return from panfrost_job_run().
+From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
 
-I haven't managed reproduce this locally, admittedly the test case I was
-using before relies on changes in drm-misc-next (HEAPs specifically), so
-it might be a bug present in v5.3 which isn't present in drm-misc-next.
+Seems that the discovered race was here since adapting the PowerPC code
+into genirq in 2012. I was surprized it went unnoticed all this time, but
+it turns out, device registration (being it DT or ACPI) is mostly
+sequential in kernel. In our case probe deferring was involved and another
+independent probe(), so that the fatal sequence probably looked like
+following:
 
-From the code dumped we have:
+CPU0					CPU1
 
-   0:	54000280 	b.eq	50 <.text+0x50>  // b.none
-   4:	f9400862 	ldr	x2, [x3, #16]
-   8:	52800020 	mov	w0, #0x1                   	// #1
-   c:	aa1a03e1 	mov	x1, x26
-  10:	f940605b 	ldr	x27, [x2, #192]
+					// probe() of irq-user-device
+					// irq_domain not found =3D>
+					// -EPROBE_DEFER
 
-Which looks like the expression s_job->s_fence->parent, so it looks like
-s_job->s_fence == NULL. Which looks to me like drm_sched_job_cleanup()
-has been called on the job. But I can't work out why.
+// probe of irq_domain,			// probe() of some unrelated device
+// including typical in			// leading to re-try of
+// drivers/irqchip pattern:		// irq-user-device probe(), calling
+irq_domain_create()			of_irq_get()
+for (...) irq_create_mapping()		=3D> irq_create_mapping()
+	=3D> irq_find_mapping()			=3D> irq_find_mapping()
+	=3D> irq_domain_alloc_descs()		=3D> irq_domain_alloc_descs()
+	=3D> irq_domain_associate()
+						=3D> irq_domain_associate()
 
-Steve
+irq_domain_associate() uses irq_domain_mutex internally, this doesn't help
+however, because parallel calls to irq_create_mapping() return different
+virq numbers and either the irq_domain driver is not able to perform
+necessary configuration or the mapping the "slave" driver has got is being
+overwritten by the controller driver and the virq "slave" got is never
+triggered. The test code [1] reproduces the simplified scenario, which
+doesn't involve real deferred probe.
 
-> Neil
->>
->> Thanks,
->> Neil
->>
->>>
->>> ----8<----
->>> From 521a286789260197ae94f698932ebf369efc45ad Mon Sep 17 00:00:00 2001
->>> From: Steven Price <steven.price@arm.com>
->>> Date: Fri, 27 Sep 2019 11:42:40 +0100
->>> Subject: [PATCH] drm/panfrost: Handle resetting on timeout better
->>>
->>> Panfrost uses multiple schedulers (one for each slot, so 2 in reality),
->>> and on a timeout has to stop all the schedulers to safely perform a
->>> reset. However more than one scheduler can trigger a timeout at the same
->>> time. This race condition results in jobs being freed while they are
->>> still in use.
->>>
->>> Modify drm_sched_stop() to call cancel_delayed_work_sync() when stopping
->>> a different scheduler to the one belonging to the passed in job.
->>> panfrost_job_timedout() is also modified to only allow one thread at a
->>> time to handle the reset. Any subsequent threads simply return assuming
->>> that the first thread will handle the situation.
->>>
->>> Signed-off-by: Steven Price <steven.price@arm.com>
->>> ---
->>>  drivers/gpu/drm/panfrost/panfrost_device.h |  2 ++
->>>  drivers/gpu/drm/panfrost/panfrost_job.c    | 11 ++++++++++-
->>>  drivers/gpu/drm/scheduler/sched_main.c     |  5 ++++-
->>>  3 files changed, 16 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
->>> index f503c566e99f..6441c7fba6c4 100644
->>> --- a/drivers/gpu/drm/panfrost/panfrost_device.h
->>> +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
->>> @@ -99,6 +99,8 @@ struct panfrost_device {
->>>  		unsigned long cur_volt;
->>>  		struct panfrost_devfreq_slot slot[NUM_JOB_SLOTS];
->>>  	} devfreq;
->>> +
->>> +	bool is_resetting;
->>>  };
->>>  
->>>  struct panfrost_mmu {
->>> diff --git a/drivers/gpu/drm/panfrost/panfrost_job.c b/drivers/gpu/drm/panfrost/panfrost_job.c
->>> index 05c85f45a0de..1b2019e08b43 100644
->>> --- a/drivers/gpu/drm/panfrost/panfrost_job.c
->>> +++ b/drivers/gpu/drm/panfrost/panfrost_job.c
->>> @@ -388,13 +388,21 @@ static void panfrost_job_timedout(struct drm_sched_job *sched_job)
->>>  
->>>  	mutex_lock(&pfdev->reset_lock);
->>>  
->>> +	if (pfdev->is_resetting) {
->>> +		mutex_unlock(&pfdev->reset_lock);
->>> +		return;
->>> +	}
->>> +	pfdev->is_resetting = true;
->>> +
->>> +	mutex_unlock(&pfdev->reset_lock);
->>> +
->>>  	for (i = 0; i < NUM_JOB_SLOTS; i++)
->>>  		drm_sched_stop(&pfdev->js->queue[i].sched, sched_job);
->>>  
->>>  	if (sched_job)
->>>  		drm_sched_increase_karma(sched_job);
->>>  
->>> -	/* panfrost_core_dump(pfdev); */
->>> +	mutex_lock(&pfdev->reset_lock);
->>>  
->>>  	panfrost_devfreq_record_transition(pfdev, js);
->>>  	panfrost_device_reset(pfdev);
->>> @@ -406,6 +414,7 @@ static void panfrost_job_timedout(struct drm_sched_job *sched_job)
->>>  	for (i = 0; i < NUM_JOB_SLOTS; i++)
->>>  		drm_sched_start(&pfdev->js->queue[i].sched, true);
->>>  
->>> +	pfdev->is_resetting = false;
->>>  	mutex_unlock(&pfdev->reset_lock);
->>>  }
->>>  
->>> diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
->>> index 148468447ba9..bc6d1862ec8a 100644
->>> --- a/drivers/gpu/drm/scheduler/sched_main.c
->>> +++ b/drivers/gpu/drm/scheduler/sched_main.c
->>> @@ -415,7 +415,10 @@ void drm_sched_stop(struct drm_gpu_scheduler *sched, struct drm_sched_job *bad)
->>>  	 * this TDR finished and before the newly restarted jobs had a
->>>  	 * chance to complete.
->>>  	 */
->>> -	cancel_delayed_work(&sched->work_tdr);
->>> +	if (bad->sched != sched)
->>> +		cancel_delayed_work_sync(&sched->work_tdr);
->>> +	else
->>> +		cancel_delayed_work(&sched->work_tdr);
->>>  }
->>>  
->>>  EXPORT_SYMBOL(drm_sched_stop);
->>>
->>
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> 
+As irq_find_mapping() is used in interrupt handlers it cannot take locks.
+I didn't want to change the semantics of the exported
+irq_domain_associate() (to remove the mutex from it and wrap
+irq_find_mapping()-irq_domain_associate() pair into this mutex). Therefore
+irq_domain_associate() was modified to detect the collisions and the
+callers were modified to deal with this.
 
+The race in irq_create_fwspec_mapping() is distinct, but has the same
+nature: making a decision based on the result of unprotected
+irq_find_mapping() call.
+
+Alexander Sverdlin (3):
+  genirq/irqdomain: Check for existing mapping in irq_domain_associate()
+  genirq/irqdomain: Re-check mapping after associate in
+    irq_create_mapping()
+  genirq/irqdomain: Detect type race in irq_create_fwspec_mapping()
+
+ kernel/irq/irqdomain.c | 88 +++++++++++++++++++++++++++++-----------------=
+----
+ 1 file changed, 52 insertions(+), 36 deletions(-)
+
+Changelog:
+v2:
+	- EBUSY -> EEXIST
+	- Only try to find existing mapping if irq_domain_associate() found
+	  one
+
+[1] Test kernel module:
+
+// SPDX-License-Identifier: GPL-2.0
+/**********************************************************************
+ * Author: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+ *
+ * Copyright (c) 2019 Nokia
+ *
+ * This module is intended to test the discovered race condition in
+ * irq_create_mapping() function. The typical use case is when
+ * irq_create_mapping() is being called from an IRQ controller driver
+ * and of_irq_get() is used in a device driver requesting an IRQ from
+ * the particular IRQ controller. But of_irq_get() is calling
+ * irq_create_mapping() internally and this is the genuine race.
+ **********************************************************************/
+
+#include <linux/atomic.h>
+#include <linux/irqdomain.h>
+#include <linux/kernel.h>
+#include <linux/kthread.h>
+#include <linux/module.h>
+
+static unsigned iterations =3D 1000;
+module_param(iterations, uint, S_IRUGO);
+
+static struct irq_domain *domain;
+static atomic_t sync_begin =3D ATOMIC_INIT(0);
+static atomic_t sync_end =3D ATOMIC_INIT(0);
+
+static int icm_thread(void *data)
+{
+	unsigned *res =3D data;
+
+	while (!kthread_should_stop()) {
+		/* Wait until main thread signals start */
+		if (!atomic_read(&sync_begin))
+			continue;
+		*res =3D irq_create_mapping(domain, 0);
+		smp_mb__before_atomic();
+		atomic_dec(&sync_begin);
+		/* Wait until all test threads attepted the mapping */
+		while (!kthread_should_stop())
+			if (!atomic_read(&sync_begin))
+				break;
+		atomic_dec(&sync_end);
+	}
+	return 0;
+}
+
+static int irq_create_mapping_race_init(void)
+{
+	const static struct irq_domain_ops ops;
+	struct task_struct *thr[2];
+	unsigned irq[ARRAY_SIZE(thr)];
+	unsigned i;
+	int ret =3D 0;
+
+	domain =3D irq_domain_create_linear(NULL, 2, &ops, NULL);
+	if (!domain) {
+		pr_err("irq_domain_create_linear() failed\n");
+		return -EINVAL;
+	}
+
+	for (i =3D 0; i < ARRAY_SIZE(thr); i++)
+		thr[i] =3D kthread_run(icm_thread, &irq[i], "icm_thr%u", i);
+
+	for (i =3D 0; i < iterations; i++) {
+		unsigned j;
+
+		/* Signal test threads to attempt the mapping */
+		atomic_add(ARRAY_SIZE(thr), &sync_end);
+		atomic_add(ARRAY_SIZE(thr), &sync_begin);
+		/* Wait until all threads have made an iteration */
+		while (atomic_read(&sync_end))
+			cpu_relax();
+		smp_mb__after_atomic();
+
+		for (j =3D 0; j < ARRAY_SIZE(thr); j++)
+			if (!irq[j]) {
+				pr_err("%s: %s got no virq\n", domain->name,
+					thr[j]->comm);
+				ret =3D -ENOENT;
+				goto stop_threads;
+			}
+
+		for (j =3D 1; j < ARRAY_SIZE(thr); j++)
+			if (irq[0] !=3D irq[j]) {
+				pr_err("%s: %s got virq %u and %s got virq %u\n",
+					domain->name, thr[0]->comm, irq[0],
+					thr[j]->comm, irq[j]);
+				ret =3D -EINVAL;
+				goto stop_threads;
+			}
+
+		irq_dispose_mapping(irq[0]);
+	}
+
+stop_threads:
+	for (i =3D 0; i < ARRAY_SIZE(thr); i++)
+		kthread_stop(thr[i]);
+
+	irq_domain_remove(domain);
+
+	return ret;
+}
+module_init(irq_create_mapping_race_init);
+
+static void __exit irq_create_mapping_race_exit(void)
+{
+}
+module_exit(irq_create_mapping_race_exit);
+
+MODULE_AUTHOR("Alexander Sverdlin <alexander.sverdlin@nokia.com>");
+MODULE_DESCRIPTION("irq_create_mapping() race test module");
+MODULE_LICENSE("GPL");
