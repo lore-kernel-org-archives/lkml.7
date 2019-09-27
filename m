@@ -2,166 +2,574 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C33C352AB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 03:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13517C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 03:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9755320872
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 03:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D80F0207FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 03:46:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728876AbfI0Dnu (ORCPT
+        id S1729076AbfI0DqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 23:43:50 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:6891 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726145AbfI0Dnu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 23:43:50 -0400
-X-UUID: d4b5f999be8148baadc251c1b858fb6c-20190927
-X-UUID: d4b5f999be8148baadc251c1b858fb6c-20190927
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1048956367; Fri, 27 Sep 2019 11:43:41 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 27 Sep 2019 11:43:39 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 27 Sep 2019 11:43:39 +0800
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>, <kasan-dev@googlegroups.com>,
-        <linux-mm@kvack.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Walter Wu <walter-zh.wu@mediatek.com>
-Subject: [PATCH] kasan: fix the missing underflow in memmove and memcpy with CONFIG_KASAN_GENERIC=y
-Date:   Fri, 27 Sep 2019 11:43:38 +0800
-Message-ID: <20190927034338.15813-1-walter-zh.wu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Thu, 26 Sep 2019 23:46:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41190 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726145AbfI0DqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 23:46:21 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E3C1712A2;
+        Fri, 27 Sep 2019 03:46:20 +0000 (UTC)
+Received: from [10.72.12.160] (ovpn-12-160.pek2.redhat.com [10.72.12.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 05D7F5C21F;
+        Fri, 27 Sep 2019 03:46:08 +0000 (UTC)
+Subject: Re: [PATCH] vhost: introduce mdev based hardware backend
+To:     Tiwei Bie <tiwei.bie@intel.com>, mst@redhat.com,
+        alex.williamson@redhat.com, maxime.coquelin@redhat.com
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        dan.daly@intel.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, lingshan.zhu@intel.com
+References: <20190926045427.4973-1-tiwei.bie@intel.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <1b4b8891-8c14-1c85-1d6a-2eed1c90bcde@redhat.com>
+Date:   Fri, 27 Sep 2019 11:46:06 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+In-Reply-To: <20190926045427.4973-1-tiwei.bie@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Fri, 27 Sep 2019 03:46:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-memmove() and memcpy() have missing underflow issues.
-When -7 <= size < 0, then KASAN will miss to catch the underflow issue.
-It looks like shadow start address and shadow end address is the same,
-so it does not actually check anything.
 
-The following test is indeed not caught by KASAN:
+On 2019/9/26 下午12:54, Tiwei Bie wrote:
+> This patch introduces a mdev based hardware vhost backend.
+> This backend is built on top of the same abstraction used
+> in virtio-mdev and provides a generic vhost interface for
+> userspace to accelerate the virtio devices in guest.
+>
+> This backend is implemented as a mdev device driver on top
+> of the same mdev device ops used in virtio-mdev but using
+> a different mdev class id, and it will register the device
+> as a VFIO device for userspace to use. Userspace can setup
+> the IOMMU with the existing VFIO container/group APIs and
+> then get the device fd with the device name. After getting
+> the device fd of this device, userspace can use vhost ioctls
+> to setup the backend.
+>
+> Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
+> ---
+> This patch depends on below series:
+> https://lkml.org/lkml/2019/9/24/357
 
-	char *p = kmalloc(64, GFP_KERNEL);
-	memset((char *)p, 0, 64);
-	memmove((char *)p, (char *)p + 4, -2);
-	kfree((char*)p);
 
-It should be checked here:
+Looks pretty nice, comments inline.
 
-void *memmove(void *dest, const void *src, size_t len)
-{
-	check_memory_region((unsigned long)src, len, false, _RET_IP_);
-	check_memory_region((unsigned long)dest, len, true, _RET_IP_);
 
-	return __memmove(dest, src, len);
-}
+>
+> RFC v4 -> v1:
+> - Implement vhost-mdev as a mdev device driver directly and
+>    connect it to VFIO container/group. (Jason);
+> - Pass ring addresses as GPAs/IOVAs in vhost-mdev to avoid
+>    meaningless HVA->GPA translations (Jason);
+>
+> RFC v3 -> RFC v4:
+> - Build vhost-mdev on top of the same abstraction used by
+>    virtio-mdev (Jason);
+> - Introduce vhost fd and pass VFIO fd via SET_BACKEND ioctl (MST);
+>
+> RFC v2 -> RFC v3:
+> - Reuse vhost's ioctls instead of inventing a VFIO regions/irqs
+>    based vhost protocol on top of vfio-mdev (Jason);
+>
+> RFC v1 -> RFC v2:
+> - Introduce a new VFIO device type to build a vhost protocol
+>    on top of vfio-mdev;
+>
+>   drivers/vhost/Kconfig      |   9 +
+>   drivers/vhost/Makefile     |   3 +
+>   drivers/vhost/mdev.c       | 381 +++++++++++++++++++++++++++++++++++++
+>   include/uapi/linux/vhost.h |   8 +
+>   4 files changed, 401 insertions(+)
+>   create mode 100644 drivers/vhost/mdev.c
+>
+> diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
+> index 3d03ccbd1adc..decf0be8efe9 100644
+> --- a/drivers/vhost/Kconfig
+> +++ b/drivers/vhost/Kconfig
+> @@ -34,6 +34,15 @@ config VHOST_VSOCK
+>   	To compile this driver as a module, choose M here: the module will be called
+>   	vhost_vsock.
+>   
+> +config VHOST_MDEV
+> +	tristate "Vhost driver for Mediated devices"
+> +	depends on EVENTFD && VFIO && VFIO_MDEV
+> +	select VHOST
+> +	default n
+> +	---help---
+> +	Say M here to enable the vhost_mdev module for use with
+> +	the mediated device based hardware vhost accelerators
+> +
+>   config VHOST
+>   	tristate
+>   	---help---
+> diff --git a/drivers/vhost/Makefile b/drivers/vhost/Makefile
+> index 6c6df24f770c..ad9c0f8c6d8c 100644
+> --- a/drivers/vhost/Makefile
+> +++ b/drivers/vhost/Makefile
+> @@ -10,4 +10,7 @@ vhost_vsock-y := vsock.o
+>   
+>   obj-$(CONFIG_VHOST_RING) += vringh.o
+>   
+> +obj-$(CONFIG_VHOST_MDEV) += vhost_mdev.o
+> +vhost_mdev-y := mdev.o
+> +
+>   obj-$(CONFIG_VHOST)	+= vhost.o
+> diff --git a/drivers/vhost/mdev.c b/drivers/vhost/mdev.c
+> new file mode 100644
+> index 000000000000..1c12a25b86a2
+> --- /dev/null
+> +++ b/drivers/vhost/mdev.c
+> @@ -0,0 +1,381 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2018-2019 Intel Corporation.
+> + */
+> +
+> +#include <linux/compat.h>
+> +#include <linux/kernel.h>
+> +#include <linux/miscdevice.h>
+> +#include <linux/mdev.h>
+> +#include <linux/module.h>
+> +#include <linux/vfio.h>
+> +#include <linux/vhost.h>
+> +#include <linux/virtio_mdev.h>
+> +
+> +#include "vhost.h"
+> +
+> +struct vhost_mdev {
+> +	/* The lock is to protect this structure. */
+> +	struct mutex mutex;
+> +	struct vhost_dev dev;
+> +	struct vhost_virtqueue *vqs;
+> +	int nvqs;
+> +	u64 state;
+> +	u64 features;
+> +	u64 acked_features;
+> +	bool opened;
+> +	struct mdev_device *mdev;
+> +};
+> +
+> +static u8 mdev_get_status(struct mdev_device *mdev)
+> +{
+> +	const struct virtio_mdev_device_ops *ops = mdev_get_dev_ops(mdev);
+> +
+> +	return ops->get_status(mdev);
+> +}
+> +
+> +static void mdev_set_status(struct mdev_device *mdev, u8 status)
+> +{
+> +	const struct virtio_mdev_device_ops *ops = mdev_get_dev_ops(mdev);
+> +
+> +	return ops->set_status(mdev, status);
+> +}
+> +
+> +static void mdev_add_status(struct mdev_device *mdev, u8 status)
+> +{
+> +	status |= mdev_get_status(mdev);
+> +	mdev_set_status(mdev, status);
+> +}
+> +
+> +static void mdev_reset(struct mdev_device *mdev)
+> +{
+> +	mdev_set_status(mdev, 0);
+> +}
+> +
+> +static void handle_vq_kick(struct vhost_work *work)
+> +{
+> +	struct vhost_virtqueue *vq = container_of(work, struct vhost_virtqueue,
+> +						  poll.work);
+> +	struct vhost_mdev *m = container_of(vq->dev, struct vhost_mdev, dev);
+> +	const struct virtio_mdev_device_ops *ops = mdev_get_dev_ops(m->mdev);
+> +
+> +	ops->kick_vq(m->mdev, vq - m->vqs);
+> +}
+> +
+> +static irqreturn_t vhost_mdev_virtqueue_cb(void *private)
+> +{
+> +	struct vhost_virtqueue *vq = private;
+> +	struct eventfd_ctx *call_ctx = vq->call_ctx;
+> +
+> +	if (call_ctx)
+> +		eventfd_signal(call_ctx, 1);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static long vhost_mdev_reset(struct vhost_mdev *m)
+> +{
+> +	struct mdev_device *mdev = m->mdev;
+> +
+> +	mdev_reset(mdev);
+> +	mdev_add_status(mdev, VIRTIO_CONFIG_S_ACKNOWLEDGE);
+> +	mdev_add_status(mdev, VIRTIO_CONFIG_S_DRIVER);
+> +	return 0;
+> +}
+> +
+> +static long vhost_mdev_start(struct vhost_mdev *m)
+> +{
+> +	struct mdev_device *mdev = m->mdev;
+> +	const struct virtio_mdev_device_ops *ops = mdev_get_dev_ops(mdev);
+> +	struct virtio_mdev_callback cb;
+> +	struct vhost_virtqueue *vq;
+> +	int idx;
+> +
+> +	ops->set_features(mdev, m->acked_features);
+> +
+> +	mdev_add_status(mdev, VIRTIO_CONFIG_S_FEATURES_OK);
+> +	if (!(mdev_get_status(mdev) & VIRTIO_CONFIG_S_FEATURES_OK))
+> +		goto reset;
+> +
+> +	for (idx = 0; idx < m->nvqs; idx++) {
+> +		vq = &m->vqs[idx];
+> +
+> +		if (!vq->desc || !vq->avail || !vq->used)
+> +			break;
+> +
+> +		if (ops->set_vq_state(mdev, idx, vq->last_avail_idx))
+> +			goto reset;
 
-We fix the shadow end address which is calculated, then generic KASAN
-get the right shadow end address and detect this underflow issue.
 
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=199341
+If we do set_vq_state() in SET_VRING_BASE, we won't need this step here.
 
-Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
-Reported-by: Dmitry Vyukov <dvyukov@google.com>
----
- lib/test_kasan.c   | 36 ++++++++++++++++++++++++++++++++++++
- mm/kasan/generic.c |  8 ++++++--
- 2 files changed, 42 insertions(+), 2 deletions(-)
 
-diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-index b63b367a94e8..8bd014852556 100644
---- a/lib/test_kasan.c
-+++ b/lib/test_kasan.c
-@@ -280,6 +280,40 @@ static noinline void __init kmalloc_oob_in_memset(void)
- 	kfree(ptr);
- }
- 
-+static noinline void __init kmalloc_oob_in_memmove_underflow(void)
-+{
-+	char *ptr;
-+	size_t size = 64;
-+
-+	pr_info("underflow out-of-bounds in memmove\n");
-+	ptr = kmalloc(size, GFP_KERNEL);
-+	if (!ptr) {
-+		pr_err("Allocation failed\n");
-+		return;
-+	}
-+
-+	memset((char *)ptr, 0, 64);
-+	memmove((char *)ptr, (char *)ptr + 4, -2);
-+	kfree(ptr);
-+}
-+
-+static noinline void __init kmalloc_oob_in_memmove_overflow(void)
-+{
-+	char *ptr;
-+	size_t size = 64;
-+
-+	pr_info("overflow out-of-bounds in memmove\n");
-+	ptr = kmalloc(size, GFP_KERNEL);
-+	if (!ptr) {
-+		pr_err("Allocation failed\n");
-+		return;
-+	}
-+
-+	memset((char *)ptr, 0, 64);
-+	memmove((char *)ptr + size, (char *)ptr, 2);
-+	kfree(ptr);
-+}
-+
- static noinline void __init kmalloc_uaf(void)
- {
- 	char *ptr;
-@@ -734,6 +768,8 @@ static int __init kmalloc_tests_init(void)
- 	kmalloc_oob_memset_4();
- 	kmalloc_oob_memset_8();
- 	kmalloc_oob_memset_16();
-+	kmalloc_oob_in_memmove_underflow();
-+	kmalloc_oob_in_memmove_overflow();
- 	kmalloc_uaf();
- 	kmalloc_uaf_memset();
- 	kmalloc_uaf2();
-diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
-index 616f9dd82d12..34ca23d59e67 100644
---- a/mm/kasan/generic.c
-+++ b/mm/kasan/generic.c
-@@ -131,9 +131,13 @@ static __always_inline bool memory_is_poisoned_n(unsigned long addr,
- 						size_t size)
- {
- 	unsigned long ret;
-+	void *shadow_start = kasan_mem_to_shadow((void *)addr);
-+	void *shadow_end = kasan_mem_to_shadow((void *)addr + size - 1) + 1;
- 
--	ret = memory_is_nonzero(kasan_mem_to_shadow((void *)addr),
--			kasan_mem_to_shadow((void *)addr + size - 1) + 1);
-+	if ((long)size < 0)
-+		shadow_end = kasan_mem_to_shadow((void *)addr + size);
-+
-+	ret = memory_is_nonzero(shadow_start, shadow_end);
- 
- 	if (unlikely(ret)) {
- 		unsigned long last_byte = addr + size - 1;
--- 
-2.18.0
+> +
+> +		/*
+> +		 * In vhost-mdev, userspace should pass ring addresses
+> +		 * in guest physical addresses when IOMMU is disabled or
+> +		 * IOVAs when IOMMU is enabled.
+> +		 */
 
+
+A question here, consider we're using noiommu mode. If guest physical 
+address is passed here, how can a device use that?
+
+I believe you meant "host physical address" here? And it also have the 
+implication that the HPA should be continuous (e.g using hugetlbfs).
+
+Thanks
+
+
+> +		if (ops->set_vq_address(mdev, idx, (u64)vq->desc,
+> +					(u64)vq->avail, (u64)vq->used))
+> +			goto reset;
+> +
+> +		ops->set_vq_num(mdev, idx, vq->num);
+> +
+> +		cb.callback = vhost_mdev_virtqueue_cb;
+> +		cb.private = vq;
+> +		ops->set_vq_cb(mdev, idx, &cb);
+> +
+> +		ops->set_vq_ready(mdev, idx, 1);
+> +	}
+> +
+> +	mdev_add_status(mdev, VIRTIO_CONFIG_S_DRIVER_OK);
+> +	if (mdev_get_status(mdev) & VIRTIO_CONFIG_S_NEEDS_RESET)
+> +		goto reset;
+> +	return 0;
+> +
+> +reset:
+> +	vhost_mdev_reset(m);
+> +	return -ENODEV;
+> +}
+> +
+> +static long vhost_set_state(struct vhost_mdev *m, u64 __user *statep)
+> +{
+> +	u64 state;
+> +	long r;
+> +
+> +	if (copy_from_user(&state, statep, sizeof(state)))
+> +		return -EFAULT;
+> +
+> +	if (state >= VHOST_MDEV_S_MAX)
+> +		return -EINVAL;
+> +
+> +	if (m->state == state)
+> +		return 0;
+> +
+> +	m->state = state;
+> +
+> +	switch (m->state) {
+> +	case VHOST_MDEV_S_RUNNING:
+> +		r = vhost_mdev_start(m);
+> +		break;
+> +	case VHOST_MDEV_S_STOPPED:
+> +		r = vhost_mdev_reset(m);
+> +		break;
+> +	default:
+> +		r = -EINVAL;
+> +		break;
+> +	}
+> +
+> +	return r;
+> +}
+> +
+> +static long vhost_get_features(struct vhost_mdev *m, u64 __user *featurep)
+> +{
+> +	if (copy_to_user(featurep, &m->features, sizeof(m->features)))
+> +		return -EFAULT;
+> +	return 0;
+> +}
+> +
+> +static long vhost_set_features(struct vhost_mdev *m, u64 __user *featurep)
+> +{
+> +	u64 features;
+> +
+> +	if (copy_from_user(&features, featurep, sizeof(features)))
+> +		return -EFAULT;
+> +
+> +	if (features & ~m->features)
+> +		return -EINVAL;
+> +
+> +	m->acked_features = features;
+> +
+> +	return 0;
+> +}
+> +
+> +static long vhost_get_vring_base(struct vhost_mdev *m, void __user *argp)
+> +{
+> +	const struct virtio_mdev_device_ops *ops = mdev_get_dev_ops(m->mdev);
+> +	struct vhost_virtqueue *vq;
+> +	u32 idx;
+> +	long r;
+> +
+> +	r = get_user(idx, (u32 __user *)argp);
+> +	if (r < 0)
+> +		return r;
+> +	if (idx >= m->nvqs)
+> +		return -ENOBUFS;
+> +
+> +	vq = &m->vqs[idx];
+> +	vq->last_avail_idx = ops->get_vq_state(m->mdev, idx);
+> +
+> +	return vhost_vring_ioctl(&m->dev, VHOST_GET_VRING_BASE, argp);
+> +}
+> +
+> +static int vhost_mdev_open(void *device_data)
+> +{
+> +	struct vhost_mdev *m = device_data;
+> +	struct vhost_dev *dev;
+> +	struct vhost_virtqueue **vqs;
+> +	int nvqs, i, r;
+> +
+> +	if (!try_module_get(THIS_MODULE))
+> +		return -ENODEV;
+> +
+> +	mutex_lock(&m->mutex);
+> +
+> +	if (m->opened) {
+> +		r = -EBUSY;
+> +		goto err;
+> +	}
+> +
+> +	nvqs = m->nvqs;
+> +	vhost_mdev_reset(m);
+> +
+> +	memset(&m->dev, 0, sizeof(m->dev));
+> +	memset(m->vqs, 0, nvqs * sizeof(struct vhost_virtqueue));
+> +
+> +	vqs = kmalloc_array(nvqs, sizeof(*vqs), GFP_KERNEL);
+> +	if (!vqs) {
+> +		r = -ENOMEM;
+> +		goto err;
+> +	}
+> +
+> +	dev = &m->dev;
+> +	for (i = 0; i < nvqs; i++) {
+> +		vqs[i] = &m->vqs[i];
+> +		vqs[i]->handle_kick = handle_vq_kick;
+> +	}
+> +	vhost_dev_init(dev, vqs, nvqs, 0, 0, 0);
+> +	m->opened = true;
+> +	mutex_unlock(&m->mutex);
+> +
+> +	return 0;
+> +
+> +err:
+> +	mutex_unlock(&m->mutex);
+> +	module_put(THIS_MODULE);
+> +	return r;
+> +}
+> +
+> +static void vhost_mdev_release(void *device_data)
+> +{
+> +	struct vhost_mdev *m = device_data;
+> +
+> +	mutex_lock(&m->mutex);
+> +	vhost_mdev_reset(m);
+> +	vhost_dev_stop(&m->dev);
+> +	vhost_dev_cleanup(&m->dev);
+> +
+> +	kfree(m->dev.vqs);
+> +	m->opened = false;
+> +	mutex_unlock(&m->mutex);
+> +	module_put(THIS_MODULE);
+> +}
+> +
+> +static long vhost_mdev_unlocked_ioctl(void *device_data,
+> +				      unsigned int cmd, unsigned long arg)
+> +{
+> +	struct vhost_mdev *m = device_data;
+> +	void __user *argp = (void __user *)arg;
+> +	long r;
+> +
+> +	mutex_lock(&m->mutex);
+> +
+> +	switch (cmd) {
+> +	case VHOST_MDEV_SET_STATE:
+> +		r = vhost_set_state(m, argp);
+> +		break;
+> +	case VHOST_GET_FEATURES:
+> +		r = vhost_get_features(m, argp);
+> +		break;
+> +	case VHOST_SET_FEATURES:
+> +		r = vhost_set_features(m, argp);
+> +		break;
+> +	case VHOST_GET_VRING_BASE:
+> +		r = vhost_get_vring_base(m, argp);
+> +		break;
+
+
+Does it mean the SET_VRING_BASE may only take affect after 
+VHOST_MEV_SET_STATE?
+
+
+> +	default:
+> +		r = vhost_dev_ioctl(&m->dev, cmd, argp);
+> +		if (r == -ENOIOCTLCMD)
+> +			r = vhost_vring_ioctl(&m->dev, cmd, argp);
+> +	}
+> +
+> +	mutex_unlock(&m->mutex);
+> +	return r;
+> +}
+> +
+> +static const struct vfio_device_ops vfio_vhost_mdev_dev_ops = {
+> +	.name		= "vfio-vhost-mdev",
+> +	.open		= vhost_mdev_open,
+> +	.release	= vhost_mdev_release,
+> +	.ioctl		= vhost_mdev_unlocked_ioctl,
+> +};
+> +
+> +static int vhost_mdev_probe(struct device *dev)
+> +{
+> +	struct mdev_device *mdev = mdev_from_dev(dev);
+> +	const struct virtio_mdev_device_ops *ops = mdev_get_dev_ops(mdev);
+> +	struct vhost_mdev *m;
+> +	int nvqs, r;
+> +
+> +	m = kzalloc(sizeof(*m), GFP_KERNEL | __GFP_RETRY_MAYFAIL);
+> +	if (!m)
+> +		return -ENOMEM;
+> +
+> +	mutex_init(&m->mutex);
+> +
+> +	nvqs = ops->get_queue_max(mdev);
+> +	m->nvqs = nvqs;
+
+
+The name could be confusing, get_queue_max() is to get the maximum 
+number of entries for a virtqueue supported by this device.
+
+It looks to me that we need another API to query the maximum number of 
+virtqueues supported by the device.
+
+Thanks
+
+
+> +
+> +	m->vqs = kmalloc_array(nvqs, sizeof(struct vhost_virtqueue),
+> +			       GFP_KERNEL);
+> +	if (!m->vqs) {
+> +		r = -ENOMEM;
+> +		goto err;
+> +	}
+> +
+> +	r = vfio_add_group_dev(dev, &vfio_vhost_mdev_dev_ops, m);
+> +	if (r)
+> +		goto err;
+> +
+> +	m->features = ops->get_features(mdev);
+> +	m->mdev = mdev;
+> +	return 0;
+> +
+> +err:
+> +	kfree(m->vqs);
+> +	kfree(m);
+> +	return r;
+> +}
+> +
+> +static void vhost_mdev_remove(struct device *dev)
+> +{
+> +	struct vhost_mdev *m;
+> +
+> +	m = vfio_del_group_dev(dev);
+> +	mutex_destroy(&m->mutex);
+> +	kfree(m->vqs);
+> +	kfree(m);
+> +}
+> +
+> +static struct mdev_class_id id_table[] = {
+> +	{ MDEV_ID_VHOST },
+> +	{ 0 },
+> +};
+> +
+> +static struct mdev_driver vhost_mdev_driver = {
+> +	.name	= "vhost_mdev",
+> +	.probe	= vhost_mdev_probe,
+> +	.remove	= vhost_mdev_remove,
+> +	.id_table = id_table,
+> +};
+> +
+> +static int __init vhost_mdev_init(void)
+> +{
+> +	return mdev_register_driver(&vhost_mdev_driver, THIS_MODULE);
+> +}
+> +module_init(vhost_mdev_init);
+> +
+> +static void __exit vhost_mdev_exit(void)
+> +{
+> +	mdev_unregister_driver(&vhost_mdev_driver);
+> +}
+> +module_exit(vhost_mdev_exit);
+> +
+> +MODULE_VERSION("0.0.1");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_DESCRIPTION("Mediated device based accelerator for virtio");
+> diff --git a/include/uapi/linux/vhost.h b/include/uapi/linux/vhost.h
+> index 40d028eed645..5afbc2f08fa3 100644
+> --- a/include/uapi/linux/vhost.h
+> +++ b/include/uapi/linux/vhost.h
+> @@ -116,4 +116,12 @@
+>   #define VHOST_VSOCK_SET_GUEST_CID	_IOW(VHOST_VIRTIO, 0x60, __u64)
+>   #define VHOST_VSOCK_SET_RUNNING		_IOW(VHOST_VIRTIO, 0x61, int)
+>   
+> +/* VHOST_MDEV specific defines */
+> +
+> +#define VHOST_MDEV_SET_STATE	_IOW(VHOST_VIRTIO, 0x70, __u64)
+> +
+> +#define VHOST_MDEV_S_STOPPED	0
+> +#define VHOST_MDEV_S_RUNNING	1
+> +#define VHOST_MDEV_S_MAX	2
+> +
+>   #endif
