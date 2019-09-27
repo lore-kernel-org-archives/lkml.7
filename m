@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9685C352A9
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 00:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1288C352AB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 00:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A085208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 00:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D7720835
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 00:25:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569543922;
-	bh=TW56rIG2SiRPy1ax8TLIYREnvHKrp/VdmZ3Xn8dfBOg=;
+	s=default; t=1569543923;
+	bh=9/NP/wZv/cipKjgXcy8j3h5UkUORhxltJpAOwhHW56Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=auR8jAlm5mfhx6AQZLHHRT0UHxbVxCgLp5lrLgRh66NG7FsGJRDBYruSIdBd3p2gS
-	 z82o/JThvVb9qek4/WmwEf8pYq/PiIrU9SgOL5W+k8jytFcQ/dz3zTvDRMBPk0u+T3
-	 D6KOi6ErJXpjaw0Rj0p09W4cmsf8fp/pSYM5Dtwg=
+	b=YRNlSEGCoSLF2Kmtova54Y4EJJOskIDYWIowh+iZJMOHr/nrVbjTqO26mx5R6QlBg
+	 X0Itc7bpaqKI3xtYSdItlvkiLDM91Gs1PmEwQ7w7+nP/UFM+/PL4gfvrqjctmiSqaa
+	 f1rLp7OM5suOxaHpVYcjEk9NuzxkFsEwcAx6kmhw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728110AbfI0AZR (ORCPT
+        id S1728174AbfI0AZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 20:25:17 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:38700 "EHLO
+        Thu, 26 Sep 2019 20:25:22 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33271 "EHLO
         mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727862AbfI0AZI (ORCPT
+        with ESMTP id S1728003AbfI0AZO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 20:25:08 -0400
-Received: by mail-oi1-f195.google.com with SMTP id m16so3747063oic.5;
-        Thu, 26 Sep 2019 17:25:08 -0700 (PDT)
+        Thu, 26 Sep 2019 20:25:14 -0400
+Received: by mail-oi1-f195.google.com with SMTP id e18so3767601oii.0;
+        Thu, 26 Sep 2019 17:25:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2eJmO98TJvWjef7NL2xv0z4jdHs/rDOAySInsQ51HYo=;
-        b=qvhDAxBAoQbm3dv5rQzxbn/qYzKGe8M9Q8bRLb1NFqcCmGIreODiyDFEQhX9QBXu03
-         k8mnioCWIxWn3N1Hponxx0o49k3m1IPao1UKyYUYcmUkdGJG6oUsErr6jkg4DRTSDk+B
-         YSy+hiPm2eqiuoF2QEbEE1KkAhixZKy1F1c17IH8/1Bz023JjY8lQlGqzME+PMUzxUqu
-         2ZkOXfhu1cRGDXMCwB116cyUuYcm358yoBv8vQp/OSBeqE/PTLcl6slgqWghwTaOjOSW
-         bT3p2KGcxoscq01EMRp1Yzig/pS+Gc72JiOO0u38A9NQgBBcdd0n5UkiBc/j8hn7gq3x
-         Qolg==
-X-Gm-Message-State: APjAAAWfW33ukipWuz5cmvm3nBsPPsoXjTYni3uUE7tnrUo+nnW/hDg6
-        8cwV4MwoyfhtI2iRk7Z8m+N3sOA=
-X-Google-Smtp-Source: APXvYqymF9L96mPxVpqSA9nOQNOKKwoPIHBbCEwP0jWqbUfs1Sl2A8wDMIuZP/zjDv51L0/QcKzRIQ==
-X-Received: by 2002:aca:4890:: with SMTP id v138mr5031090oia.57.1569543907590;
-        Thu, 26 Sep 2019 17:25:07 -0700 (PDT)
+        bh=KvE1OjQp2Eo5TOhHCna2F9pDoURrQBiIlsatoh/ojtA=;
+        b=KqYGlp4pnmNRkjgrtDJgECRHf1rpz2lNXLgnDrdZTmWoQOC+25/QKZtUkGcGBZ2MuG
+         +1x0fm1hlBsfW5UNwdciNVoIxhvFoLj0slGnorylKWqjR960G+fgqUfylYBaBtnLrEK8
+         BvA59sYp08yFmC61qmHiujPvI4aGdJVivsF9vnZVGiqLtWYG3zATyAsQwn8JPze4b1hS
+         4tKA94mxv/Vvpk32tlwmP1JpQnKx5PpNRlnHP5/TnMfxIaHNZ4RaOqo0JBU8AdntxtTn
+         hNXqTSnwdep+F+QLxG4vFvSPHt3XQerAcY+9zpnPZ84CFKIdzhyQPDxSXGViljO2oB6b
+         85aQ==
+X-Gm-Message-State: APjAAAXIHkETXzCMwxGJlQpNnmK+FX7+eCBnqF/zKARK2svJyUm2/YtN
+        QPEXH1JaPw0RNhjzMgz3OPEqBrs=
+X-Google-Smtp-Source: APXvYqymzzkGngPSfklXZDXctIqAbqktZ7y7sWXPpqKuwMptW/o1ke/+OGivC0alJNA1OSSWMEbpfg==
+X-Received: by 2002:a05:6808:b0d:: with SMTP id s13mr4936115oij.52.1569543912890;
+        Thu, 26 Sep 2019 17:25:12 -0700 (PDT)
 Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id j11sm339866otk.80.2019.09.26.17.25.06
+        by smtp.googlemail.com with ESMTPSA id j11sm339866otk.80.2019.09.26.17.25.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Sep 2019 17:25:07 -0700 (PDT)
+        Thu, 26 Sep 2019 17:25:12 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
@@ -64,9 +64,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         Simon Horman <horms+renesas@verge.net.au>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Oza Pawandeep <oza.oza@broadcom.com>
-Subject: [PATCH 07/11] of: address: Follow DMA parent for "dma-coherent"
-Date:   Thu, 26 Sep 2019 19:24:51 -0500
-Message-Id: <20190927002455.13169-8-robh@kernel.org>
+Subject: [PATCH 11/11] of/address: Fix of_pci_range_parser_one translation of DMA addresses
+Date:   Thu, 26 Sep 2019 19:24:55 -0500
+Message-Id: <20190927002455.13169-12-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190927002455.13169-1-robh@kernel.org>
 References: <20190927002455.13169-1-robh@kernel.org>
@@ -77,31 +77,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Murphy <robin.murphy@arm.com>
+of_pci_range_parser_one() has a bug when parsing dma-ranges. When it
+translates the parent address (aka cpu address in the code), 'ranges' is
+always being used. This happens to work because most users are just 1:1
+translation.
 
-Much like for address translation, when checking for DMA coherence we
-should be sure to walk up the DMA hierarchy, rather than the MMIO one,
-now that we can accommodate them being different.
-
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Cc: Robin Murphy <robin.murphy@arm.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/of/address.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/of/address.c       | 15 ++++++++++++---
+ include/linux/of_address.h |  1 +
+ 2 files changed, 13 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/of/address.c b/drivers/of/address.c
-index e9188c82fdae..3fd34f7ad772 100644
+index 5b835d332709..54011a355b81 100644
 --- a/drivers/of/address.c
 +++ b/drivers/of/address.c
-@@ -999,7 +999,7 @@ bool of_dma_is_coherent(struct device_node *np)
- 			of_node_put(node);
- 			return true;
- 		}
--		node = of_get_next_parent(node);
-+		node = of_get_next_dma_parent(node);
- 	}
- 	of_node_put(node);
- 	return false;
+@@ -243,6 +243,7 @@ static int parser_init(struct of_pci_range_parser *parser,
+ 	parser->node = node;
+ 	parser->pna = of_n_addr_cells(node);
+ 	parser->np = parser->pna + na + ns;
++	parser->dma = !strcmp(name, "dma-ranges");
+ 
+ 	parser->range = of_get_property(node, name, &rlen);
+ 	if (parser->range == NULL)
+@@ -281,7 +282,11 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
+ 	range->pci_space = be32_to_cpup(parser->range);
+ 	range->flags = of_bus_pci_get_flags(parser->range);
+ 	range->pci_addr = of_read_number(parser->range + 1, ns);
+-	range->cpu_addr = of_translate_address(parser->node,
++	if (parser->dma)
++		range->cpu_addr = of_translate_dma_address(parser->node,
++				parser->range + na);
++	else
++		range->cpu_addr = of_translate_address(parser->node,
+ 				parser->range + na);
+ 	range->size = of_read_number(parser->range + parser->pna + na, ns);
+ 
+@@ -294,8 +299,12 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
+ 
+ 		flags = of_bus_pci_get_flags(parser->range);
+ 		pci_addr = of_read_number(parser->range + 1, ns);
+-		cpu_addr = of_translate_address(parser->node,
+-				parser->range + na);
++		if (parser->dma)
++			cpu_addr = of_translate_dma_address(parser->node,
++					parser->range + na);
++		else
++			cpu_addr = of_translate_address(parser->node,
++					parser->range + na);
+ 		size = of_read_number(parser->range + parser->pna + na, ns);
+ 
+ 		if (flags != range->flags)
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index ddda3936039c..eac7ab109df4 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -12,6 +12,7 @@ struct of_pci_range_parser {
+ 	const __be32 *end;
+ 	int np;
+ 	int pna;
++	bool dma;
+ };
+ 
+ struct of_pci_range {
 -- 
 2.20.1
 
