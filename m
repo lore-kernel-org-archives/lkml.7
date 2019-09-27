@@ -2,305 +2,259 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C75C7C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A26A2C388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B5602146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 703892146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:33:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JOlbtDnB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbfI0OaN (ORCPT
+        id S1727404AbfI0OdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 10:30:13 -0400
-Received: from mga17.intel.com ([192.55.52.151]:45946 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727076AbfI0OaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 10:30:12 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Sep 2019 07:30:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,555,1559545200"; 
-   d="scan'208";a="196729208"
-Received: from tthayer-hp-z620.an.intel.com (HELO [10.122.105.146]) ([10.122.105.146])
-  by FMSMGA003.fm.intel.com with ESMTP; 27 Sep 2019 07:30:11 -0700
-Reply-To: thor.thayer@linux.intel.com
-Subject: Re: [PATCH v4 1/2] fpga: fpga-mgr: Add readback support
-To:     Appana Durga Kedareswara Rao <appanad@xilinx.com>,
-        Moritz Fischer <mdf@kernel.org>, Alan Tull <atull@kernel.org>
-Cc:     Michal Simek <michals@xilinx.com>,
-        "kedare06@gmail.com" <kedare06@gmail.com>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Nava kishore Manne <navam@xilinx.com>,
-        Siva Durga Prasad Paladugu <sivadur@xilinx.com>,
-        Richard Gong <richard.gong@linux.intel.com>,
-        Dinh Nguyen <dinguyen@kernel.org>
-References: <1532672551-22146-1-git-send-email-appana.durga.rao@xilinx.com>
- <CANk1AXSEWcZ7Oqv5pgpwvJRyyFWk5gPtniXa7T+oe6-uywqEqA@mail.gmail.com>
- <MN2PR02MB6400CD5312983443A67DCC4EDC810@MN2PR02MB6400.namprd02.prod.outlook.com>
-From:   Thor Thayer <thor.thayer@linux.intel.com>
-Message-ID: <4476bf39-b665-50d8-fecd-d50687d10ca2@linux.intel.com>
-Date:   Fri, 27 Sep 2019 09:32:11 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <MN2PR02MB6400CD5312983443A67DCC4EDC810@MN2PR02MB6400.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 27 Sep 2019 10:33:17 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:37760 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727079AbfI0OdR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 10:33:17 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190927143314euoutp0174f599509d7316e6fc28f65fdd2570a0~IUiZkRcTS1545915459euoutp01Z
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 14:33:14 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190927143314euoutp0174f599509d7316e6fc28f65fdd2570a0~IUiZkRcTS1545915459euoutp01Z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1569594795;
+        bh=hiJbO/O5KGuNuMhqp/5c2SuOZIf79Yix8ZcvFieL2Mg=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=JOlbtDnBj6kBsDPiX4+3E6Fa4uQ/QLX0X90pIthuoyqV7HA2Djc437/sfLxD/YP6s
+         qkvkC8TIXjGcB9y6tstcaC9npsiyW7L/f8vSEeWch1UZjERrnJg5fb/lQWIHZLdeN1
+         j1Ii+mttta/bSIrQT3POKaIVFlycH4exKN0lF5tY=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190927143314eucas1p1e8e031c5d7cd0b00ff7737c27491b61f~IUiZTsZ2k1143111431eucas1p13;
+        Fri, 27 Sep 2019 14:33:14 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id F8.88.04469.AAD1E8D5; Fri, 27
+        Sep 2019 15:33:14 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190927143314eucas1p2d419866cd740207426cd37cb6fdff468~IUiY6KbjF1734917349eucas1p2-;
+        Fri, 27 Sep 2019 14:33:14 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190927143314eusmtrp162aa909198e6ed383fa3d483e74658db~IUiY5caje3086830868eusmtrp1G;
+        Fri, 27 Sep 2019 14:33:14 +0000 (GMT)
+X-AuditID: cbfec7f2-569ff70000001175-c9-5d8e1daaff9a
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 69.25.04117.AAD1E8D5; Fri, 27
+        Sep 2019 15:33:14 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190927143313eusmtip1c0bd0ccf00d3fd9df7f66398d6fa7574~IUiYWmjgP0742707427eusmtip17;
+        Fri, 27 Sep 2019 14:33:13 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Maciej Falkowski <m.falkowski@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: [PATCH v3] dt-bindings: gpu: Convert Samsung Image Scaler to
+ dt-schema
+Date:   Fri, 27 Sep 2019 16:33:06 +0200
+Message-Id: <20190927143306.12133-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrHIsWRmVeSWpSXmKPExsWy7djPc7qrZPtiDb7c1rCYf+Qcq8WVr+/Z
+        LCbdn8Bicf78BnaLy7vmsFnMOL+PyeJB8zo2i7VH7rJbLL1+kcmide8RdgcujzXz1jB6bFrV
+        yeZxv/s4k0ffllWMHp83yQWwRnHZpKTmZJalFunbJXBlXDmylalggXzFqt1rmRsYz0l0MXJy
+        SAiYSKw/vYAFxBYSWMEoseSPbhcjF5D9hVFixutPbBDOZ0aJP1P3McF0tCxoZoRILGeUuPjx
+        HlQ7UMv1WfIgNpuAoUTX2y6wbhGBJkaJKztfsYM4zAIfGCUObp7HBlIlLBAo0fnnLZjNIqAq
+        MfHLEzCbV8BW4tHm6VDr5CVWbzjADNIsIfCeTaJlSi8rRMJF4v2+T2wQtrDEq+Nb2CFsGYnT
+        k3tYIBqaGSUenlvLDuH0MEpcbprBCFFlLXH4+EWgSRxAN2lKrN+lD2JKCDhKzF0SCWHySdx4
+        KwhSzAxkTto2nRkizCvR0SYEMUNNYtbxdXBbD164xAxhe0gsa53EBgmUWIn/Lw8yTmCUm4Ww
+        agEj4ypG8dTS4tz01GLDvNRyveLE3OLSvHS95PzcTYzAVHH63/FPOxi/Xko6xCjAwajEw3uB
+        vS9WiDWxrLgy9xCjBAezkgivb2RPrBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHeaoYH0UIC6Ykl
+        qdmpqQWpRTBZJg5OqQZGu/n/mV8cjdfmW+u2QEZVcNKeXtfYSZpilb1pfbGtJaX90sccsrgD
+        m5emhCXP5bHS2Hqu5dOZ447l5acv7T2j+YuzaaHTLPOTBamT//NmLz0me9Lz25TLRvlz16/T
+        lIx3Uvzxne1GNJuYauHZKU06O5jzdF+d/q2dNy25/MDZMinpL9OcNLmUWIozEg21mIuKEwFJ
+        7kkCEQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGLMWRmVeSWpSXmKPExsVy+t/xu7qrZPtiDRY847aYf+Qcq8WVr+/Z
+        LCbdn8Bicf78BnaLy7vmsFnMOL+PyeJB8zo2i7VH7rJbLL1+kcmide8RdgcujzXz1jB6bFrV
+        yeZxv/s4k0ffllWMHp83yQWwRunZFOWXlqQqZOQXl9gqRRtaGOkZWlroGZlY6hkam8daGZkq
+        6dvZpKTmZJalFunbJehlXDmylalggXzFqt1rmRsYz0l0MXJySAiYSLQsaGbsYuTiEBJYyijR
+        9PYRC0RCRuLktAZWCFtY4s+1LjaIok+MEq/e3mQESbAJGEp0vYVIiAi0MUp8fnyFGcRhFvjC
+        KLH57w92kCphAX+Jezeug9ksAqoSE788YQOxeQVsJR5tns4EsUJeYvWGA8wTGHkWMDKsYhRJ
+        LS3OTc8tNtIrTswtLs1L10vOz93ECAzTbcd+btnB2PUu+BCjAAejEg9vBWtfrBBrYllxZe4h
+        RgkOZiURXt/Inlgh3pTEyqrUovz4otKc1OJDjKZAyycyS4km5wNjKK8k3tDU0NzC0tDc2NzY
+        zEJJnLdD4GCMkEB6YklqdmpqQWoRTB8TB6dUA6Po26T4f0u8272nuX/bW21q9PSaqGSJk0uI
+        zFQz86umcwoVKyViPu6tUP1UEBAy8fTMpYe4JCu2zzbaEcXhPv/44TOpT2PLwxYmhe1vDDZa
+        YfTpqkfn0nXHM3dbXZtwV6Fo5ZIl/v3nrPZsP5OldOv8qdzQsGmlR9uFTiV7f5GbVOk3LfHJ
+        79VKLMUZiYZazEXFiQCaoSdsaQIAAA==
+X-CMS-MailID: 20190927143314eucas1p2d419866cd740207426cd37cb6fdff468
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190927143314eucas1p2d419866cd740207426cd37cb6fdff468
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190927143314eucas1p2d419866cd740207426cd37cb6fdff468
+References: <CGME20190927143314eucas1p2d419866cd740207426cd37cb6fdff468@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kedar & Moritz,
+From: Maciej Falkowski <m.falkowski@samsung.com>
 
-On 9/27/19 12:13 AM, Appana Durga Kedareswara Rao wrote:
-> Hi Alan,
-> 
-> Did you get a chance to send your framework changes to upstream?
-> @Moritz Fischer: If Alan couldn't send his patch series, Can we take this patch series??
-> Please let me know your thoughts on this.
-> 
-> Regards,
-> Kedar.
+Convert Samsung Image Scaler to newer dt-schema format.
+
+Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+v3:
+- Fixed description of 'clocks' property:
+rather than 'mscl clock', 'pclk clock'
+- Added empty line within if-else statement
+- Added 'additionalProperties: false'
+- Listed all missing 'properties' in properties scope
+
+Best regards,
+Maciej Falkowski
+---
+ .../bindings/gpu/samsung-scaler.txt           | 27 -------
+ .../bindings/gpu/samsung-scaler.yaml          | 81 +++++++++++++++++++
+ 2 files changed, 81 insertions(+), 27 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.txt
+ create mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
+
+diff --git a/Documentation/devicetree/bindings/gpu/samsung-scaler.txt b/Documentation/devicetree/bindings/gpu/samsung-scaler.txt
+deleted file mode 100644
+index 9c3d98105dfd..000000000000
+--- a/Documentation/devicetree/bindings/gpu/samsung-scaler.txt
++++ /dev/null
+@@ -1,27 +0,0 @@
+-* Samsung Exynos Image Scaler
+-
+-Required properties:
+-  - compatible : value should be one of the following:
+-	(a) "samsung,exynos5420-scaler" for Scaler IP in Exynos5420
+-	(b) "samsung,exynos5433-scaler" for Scaler IP in Exynos5433
+-
+-  - reg : Physical base address of the IP registers and length of memory
+-	  mapped region.
+-
+-  - interrupts : Interrupt specifier for scaler interrupt, according to format
+-		 specific to interrupt parent.
+-
+-  - clocks : Clock specifier for scaler clock, according to generic clock
+-	     bindings. (See Documentation/devicetree/bindings/clock/exynos*.txt)
+-
+-  - clock-names : Names of clocks. For exynos scaler, it should be "mscl"
+-		  on 5420 and "pclk", "aclk" and "aclk_xiu" on 5433.
+-
+-Example:
+-	scaler@12800000 {
+-		compatible = "samsung,exynos5420-scaler";
+-		reg = <0x12800000 0x1294>;
+-		interrupts = <0 220 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&clock CLK_MSCL0>;
+-		clock-names = "mscl";
+-	};
+diff --git a/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml b/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
+new file mode 100644
+index 000000000000..5317ac64426a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
+@@ -0,0 +1,81 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpu/samsung-scaler.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Samsung Exynos SoC Image Scaler
++
++maintainers:
++  - Inki Dae <inki.dae@samsung.com>
++
++properties:
++  compatible:
++    enum:
++      - samsung,exynos5420-scaler
++      - samsung,exynos5433-scaler
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks: {}
++  clock-names: {}
++  iommus: {}
++  power-domains: {}
++
++if:
++  properties:
++    compatible:
++      contains:
++        const: samsung,exynos5420-scaler
++
++then:
++  properties:
++    clocks:
++      items:
++        - description: mscl clock
++
++    clock-names:
++      items:
++        - const: mscl
++
++else:
++  properties:
++    clocks:
++      items:
++        - description: pclk clock
++        - description: aclk clock
++        - description: aclk_xiu clock
++
++    clock-names:
++      items:
++        - const: pclk
++        - const: aclk
++        - const: aclk_xiu
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/exynos5420.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    scaler@12800000 {
++        compatible = "samsung,exynos5420-scaler";
++        reg = <0x12800000 0x1294>;
++        interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&clock CLK_MSCL0>;
++        clock-names = "mscl";
++    };
++
++...
+-- 
+2.17.1
 
 
-I'd like to see some mechanism added as well. Our CvP driver needs a way 
-to load images to the FPGA over the PCIe bus.
-
-It wasn't clear to me from the discussion on Alan's patchset[1] that the 
-debugfs was acceptable to the mainline. I'd be happy to resurrect that 
-patchset with the suggested changes.
-
-Since debugfs isn't enabled for production, are there any alternatives?
-
-Alan sent a RFC [2] for loading FIT images through the sysfs.
-
-The RFC described a FIT image that included FPGA image specific 
-information to be included with the image (for systems running without 
-device tree like our PCIe bus FPGA CvP).
-
-Unfortunately, I believe this has the same uphill battle that the Device 
-Tree Overlay patches[3] have to getting accepted.
-
-Thor
-
-[1] https://patchwork.kernel.org/patch/10566865/
-
-[2] https://patchwork.kernel.org/patch/9860183/
-     https://patchwork.kernel.org/patch/9860193/
-     https://patchwork.kernel.org/patch/9860191/
-     https://patchwork.kernel.org/patch/9860189/
-     https://patchwork.kernel.org/patch/9860187/
-
-[3] https://lore.kernel.org/patchwork/cover/511851/
-
->> On Fri, Jul 27, 2018 at 1:22 AM, Appana Durga Kedareswara rao
->> <appana.durga.rao@xilinx.com> wrote:
->>
->> Hi Appana,
->>
->> There should be some documentation for the debugfs added under
->> Documentation/driver-api/fpga/
->>
->> Also there are a lot of #ifdefs that were added due to the
->> CONFIG_FPGA_MGR_DEBUG_FS.  This has caused a kernel robot complaint.
->> The way to fix that is to have a separate c file for the debugfs implementation.
->> I see a lot of other kernel drivers have done it this way.  I have an
->> implementation that I haven't submitted yet, it exposes different functionality
->> (exposing the image firmware file name and writing to the image file).  It's on
->> the downstream github.com/altera-opensource repo [1].  I'll clean this up and
->> submit it to the mailing list, it may take a minute for me to get to that.
->> Once that's done, your added functionality can be a patch on top of that.
->>
->> Alan
->>
->> [1] https://github.com/altera-opensource/linux-socfpga/blob/socfpga-
->> 4.17/drivers/fpga/fpga-mgr-debugfs.c
->> https://github.com/altera-opensource/linux-socfpga/blob/socfpga-
->> 4.17/drivers/fpga/fpga-mgr-debugfs.h
->>
->>
->>> Inorder to debug issues with fpga's users would like to read the fpga
->>> configuration information.
->>> This patch adds readback support for fpga configuration data in the
->>> framework through debugfs interface.
->>>
->>> Usage:
->>>          cat /sys/kernel/debug/fpga/fpga0/image
->>>
->>> Signed-off-by: Appana Durga Kedareswara rao
->>> <appana.durga.rao@xilinx.com>
->>> ---
->>> Changes for v4:
->>> --> None.
->>> Changes for v3:
->>> --> None.
->>> Changes for v2:
->>> --> Fixed debug attribute path and name as suggested by Alan Add
->>> --> config entry for DEBUG as suggested by Alan Fixed trival coding
->>> --> style issues.
->>>
->>>   drivers/fpga/Kconfig          |  7 +++++
->>>   drivers/fpga/fpga-mgr.c       | 68
->> +++++++++++++++++++++++++++++++++++++++++++
->>>   include/linux/fpga/fpga-mgr.h |  5 ++++
->>>   3 files changed, 80 insertions(+)
->>>
->>> diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig index
->>> 53d3f55..838ad4e 100644
->>> --- a/drivers/fpga/Kconfig
->>> +++ b/drivers/fpga/Kconfig
->>> @@ -11,6 +11,13 @@ menuconfig FPGA
->>>
->>>   if FPGA
->>>
->>> +config FPGA_MGR_DEBUG_FS
->>> +       tristate "FPGA Debug fs"
->>> +       select DEBUG_FS
->>> +       help
->>> +         FPGA manager debug provides support for reading fpga configuration
->>> +         information.
->>> +
->>>   config FPGA_MGR_SOCFPGA
->>>          tristate "Altera SOCFPGA FPGA Manager"
->>>          depends on ARCH_SOCFPGA || COMPILE_TEST diff --git
->>> a/drivers/fpga/fpga-mgr.c b/drivers/fpga/fpga-mgr.c index
->>> 9939d2c..4bea860 100644
->>> --- a/drivers/fpga/fpga-mgr.c
->>> +++ b/drivers/fpga/fpga-mgr.c
->>> @@ -484,6 +484,48 @@ void fpga_mgr_put(struct fpga_manager *mgr)  }
->>> EXPORT_SYMBOL_GPL(fpga_mgr_put);
->>>
->>> +#ifdef CONFIG_FPGA_MGR_DEBUG_FS
->>> +#include <linux/debugfs.h>
->>> +
->>> +static int fpga_mgr_read(struct seq_file *s, void *data) {
->>> +       struct fpga_manager *mgr = (struct fpga_manager *)s->private;
->>> +       int ret = 0;
->>> +
->>> +       if (!mgr->mops->read)
->>> +               return -ENOENT;
->>> +
->>> +       if (!mutex_trylock(&mgr->ref_mutex))
->>> +               return -EBUSY;
->>> +
->>> +       if (mgr->state != FPGA_MGR_STATE_OPERATING) {
->>> +               ret = -EPERM;
->>> +               goto err_unlock;
->>> +       }
->>> +
->>> +       /* Read the FPGA configuration data from the fabric */
->>> +       ret = mgr->mops->read(mgr, s);
->>> +       if (ret)
->>> +               dev_err(&mgr->dev, "Error while reading configuration
->>> + data from FPGA\n");
->>> +
->>> +err_unlock:
->>> +       mutex_unlock(&mgr->ref_mutex);
->>> +
->>> +       return ret;
->>> +}
->>> +
->>> +static int fpga_mgr_read_open(struct inode *inode, struct file *file)
->>> +{
->>> +       return single_open(file, fpga_mgr_read, inode->i_private); }
->>> +
->>> +static const struct file_operations fpga_mgr_ops_image = {
->>> +       .owner = THIS_MODULE,
->>> +       .open = fpga_mgr_read_open,
->>> +       .read = seq_read,
->>> +};
->>> +#endif
->>> +
->>>   /**
->>>    * fpga_mgr_lock - Lock FPGA manager for exclusive use
->>>    * @mgr:       fpga manager
->>> @@ -581,6 +623,29 @@ int fpga_mgr_register(struct device *dev, const
->> char *name,
->>>          if (ret)
->>>                  goto error_device;
->>>
->>> +#ifdef CONFIG_FPGA_MGR_DEBUG_FS
->>> +       struct dentry *d, *parent;
->>> +
->>> +       mgr->dir = debugfs_create_dir("fpga", NULL);
->>> +       if (!mgr->dir)
->>> +               goto error_device;
->>> +
->>> +       parent = mgr->dir;
->>> +       d = debugfs_create_dir(mgr->dev.kobj.name, parent);
->>> +       if (!d) {
->>> +               debugfs_remove_recursive(parent);
->>> +               goto error_device;
->>> +       }
->>> +
->>> +       parent = d;
->>> +       d = debugfs_create_file("image", 0644, parent, mgr,
->>> +                               &fpga_mgr_ops_image);
->>> +       if (!d) {
->>> +               debugfs_remove_recursive(mgr->dir);
->>> +               goto error_device;
->>> +       }
->>> +#endif
->>> +
->>>          dev_info(&mgr->dev, "%s registered\n", mgr->name);
->>>
->>>          return 0;
->>> @@ -604,6 +669,9 @@ void fpga_mgr_unregister(struct device *dev)
->>>
->>>          dev_info(&mgr->dev, "%s %s\n", __func__, mgr->name);
->>>
->>> +#ifdef CONFIG_FPGA_MGR_DEBUG_FS
->>> +       debugfs_remove_recursive(mgr->dir);
->>> +#endif
->>>          /*
->>>           * If the low level driver provides a method for putting fpga into
->>>           * a desired state upon unregister, do it.
->>> diff --git a/include/linux/fpga/fpga-mgr.h
->>> b/include/linux/fpga/fpga-mgr.h index 3c6de23..e9e17a9 100644
->>> --- a/include/linux/fpga/fpga-mgr.h
->>> +++ b/include/linux/fpga/fpga-mgr.h
->>> @@ -114,6 +114,7 @@ struct fpga_image_info {
->>>    * @write: write count bytes of configuration data to the FPGA
->>>    * @write_sg: write the scatter list of configuration data to the FPGA
->>>    * @write_complete: set FPGA to operating state after writing is done
->>> + * @read: optional: read FPGA configuration information
->>>    * @fpga_remove: optional: Set FPGA into a specific state during driver
->> remove
->>>    * @groups: optional attribute groups.
->>>    *
->>> @@ -131,6 +132,7 @@ struct fpga_manager_ops {
->>>          int (*write_sg)(struct fpga_manager *mgr, struct sg_table *sgt);
->>>          int (*write_complete)(struct fpga_manager *mgr,
->>>                                struct fpga_image_info *info);
->>> +       int (*read)(struct fpga_manager *mgr, struct seq_file *s);
->>>          void (*fpga_remove)(struct fpga_manager *mgr);
->>>          const struct attribute_group **groups;  }; @@ -151,6 +153,9 @@
->>> struct fpga_manager {
->>>          enum fpga_mgr_states state;
->>>          const struct fpga_manager_ops *mops;
->>>          void *priv;
->>> +#ifdef CONFIG_FPGA_MGR_DEBUG_FS
->>> +       struct dentry *dir;
->>> +#endif
->>>   };
->>>
->>>   #define to_fpga_manager(d) container_of(d, struct fpga_manager, dev)
->>> --
->>> 2.7.4
->>>
->>> --
->>> To unsubscribe from this list: send the line "unsubscribe linux-fpga"
->>> in the body of a message to majordomo@vger.kernel.org More majordomo
->>> info at  http://vger.kernel.org/majordomo-info.html
 
