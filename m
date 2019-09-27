@@ -2,164 +2,118 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC07EC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23439C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD2B3217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05819217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:27:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbfI0O12 (ORCPT
+        id S1728081AbfI0O1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 10:27:28 -0400
-Received: from mga06.intel.com ([134.134.136.31]:26680 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727128AbfI0O11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 10:27:27 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Sep 2019 07:27:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,555,1559545200"; 
-   d="scan'208";a="190331489"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga007.fm.intel.com with ESMTP; 27 Sep 2019 07:27:25 -0700
-Date:   Fri, 27 Sep 2019 07:27:25 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Liran Alon <liran.alon@oracle.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Reto Buerki <reet@codelabs.ch>
-Subject: Re: [PATCH 1/2] KVM: nVMX: Always write vmcs02.GUEST_CR3 during
- nested VM-Enter
-Message-ID: <20190927142725.GC24889@linux.intel.com>
-References: <20190926214302.21990-1-sean.j.christopherson@intel.com>
- <20190926214302.21990-2-sean.j.christopherson@intel.com>
- <68340081-0094-4A74-9B33-3431F39659AA@oracle.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <68340081-0094-4A74-9B33-3431F39659AA@oracle.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Fri, 27 Sep 2019 10:27:30 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30496 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728068AbfI0O13 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 10:27:29 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8REM9Io037393
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 10:27:27 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v8w271wxm-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 10:27:27 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <nayna@linux.ibm.com>;
+        Fri, 27 Sep 2019 15:27:20 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 27 Sep 2019 15:27:15 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8RERDOq33030352
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Sep 2019 14:27:14 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D958AA405C;
+        Fri, 27 Sep 2019 14:27:13 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D10BAA405F;
+        Fri, 27 Sep 2019 14:27:09 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.80.207.173])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 27 Sep 2019 14:27:09 +0000 (GMT)
+From:   Nayna Jain <nayna@linux.ibm.com>
+To:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
+        linux-integrity@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: [PATCH v6 9/9] powerpc/ima: update ima arch policy to check for blacklist
+Date:   Fri, 27 Sep 2019 10:26:00 -0400
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com>
+References: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19092714-0016-0000-0000-000002B156CB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19092714-0017-0000-0000-000033122998
+Message-Id: <1569594360-7141-10-git-send-email-nayna@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-27_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909270134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 03:06:02AM +0300, Liran Alon wrote:
-> 
-> 
-> > On 27 Sep 2019, at 0:43, Sean Christopherson <sean.j.christopherson@intel.com> wrote:
-> > 
-> > Write the desired L2 CR3 into vmcs02.GUEST_CR3 during nested VM-Enter
-> > isntead of deferring the VMWRITE until vmx_set_cr3().  If the VMWRITE
-> > is deferred, then KVM can consume a stale vmcs02.GUEST_CR3 when it
-> > refreshes vmcs12->guest_cr3 during nested_vmx_vmexit() if the emulated
-> > VM-Exit occurs without actually entering L2, e.g. if the nested run
-> > is squashed because L2 is being put into HLT.
-> 
-> I would rephrase to “If an emulated VMEntry is squashed because L1 sets
-> vmcs12->guest_activity_state to HLT”.  I think it’s a bit more explicit.
-> 
-> > 
-> > In an ideal world where EPT *requires* unrestricted guest (and vice
-> > versa), VMX could handle CR3 similar to how it handles RSP and RIP,
-> > e.g. mark CR3 dirty and conditionally load it at vmx_vcpu_run().  But
-> > the unrestricted guest silliness complicates the dirty tracking logic
-> > to the point that explicitly handling vmcs02.GUEST_CR3 during nested
-> > VM-Enter is a simpler overall implementation.
-> > 
-> > Cc: stable@vger.kernel.org
-> > Reported-by: Reto Buerki <reet@codelabs.ch>
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > ---
-> > arch/x86/kvm/vmx/nested.c | 8 ++++++++
-> > arch/x86/kvm/vmx/vmx.c    | 9 ++++++---
-> > 2 files changed, 14 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> > index 41abc62c9a8a..971a24134081 100644
-> > --- a/arch/x86/kvm/vmx/nested.c
-> > +++ b/arch/x86/kvm/vmx/nested.c
-> > @@ -2418,6 +2418,14 @@ static int prepare_vmcs02(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
-> > 				entry_failure_code))
-> > 		return -EINVAL;
-> > 
-> > +	/*
-> > +	 * Immediately write vmcs02.GUEST_CR3.  It will be propagated to vmcs12
-> > +	 * on nested VM-Exit, which can occur without actually running L2, e.g.
-> > +	 * if L2 is entering HLT state, and thus without hitting vmx_set_cr3().
-> > +	 */
-> 
-> If I understand correctly, it’s not exactly if L2 is entering HLT state in
-> general.  (E.g. issue doesn’t occur if L2 runs HLT directly which is not
-> configured to be intercepted by vmcs12).  It’s specifically when L1 enters L2
-> with a HLT guest-activity-state. I suggest rephrasing comment.
+This patch updates the arch specific policies for PowernV systems
+to add check against blacklisted hashes before doing the verification.
 
-I deliberately worded the comment so that it remains valid if there are
-more conditions in the future that cause KVM to skip running L2.  What if
-I split the difference and make the changelog more explicit, but leave the
-comment as is?
+Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+---
+ arch/powerpc/kernel/ima_arch.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> > +	if (enable_ept)
-> > +		vmcs_writel(GUEST_CR3, vmcs12->guest_cr3);
-> > +
-> > 	/* Late preparation of GUEST_PDPTRs now that EFER and CRs are set. */
-> > 	if (load_guest_pdptrs_vmcs12 && nested_cpu_has_ept(vmcs12) &&
-> > 	    is_pae_paging(vcpu)) {
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index d4575ffb3cec..b530950a9c2b 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -2985,6 +2985,7 @@ void vmx_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
-> > {
-> > 	struct kvm *kvm = vcpu->kvm;
-> > 	unsigned long guest_cr3;
-> > +	bool skip_cr3 = false;
-> > 	u64 eptp;
-> > 
-> > 	guest_cr3 = cr3;
-> > @@ -3000,15 +3001,17 @@ void vmx_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
-> > 			spin_unlock(&to_kvm_vmx(kvm)->ept_pointer_lock);
-> > 		}
-> > 
-> > -		if (enable_unrestricted_guest || is_paging(vcpu) ||
-> > -		    is_guest_mode(vcpu))
-> > +		if (is_guest_mode(vcpu))
-> > +			skip_cr3 = true;
-> > +		else if (enable_unrestricted_guest || is_paging(vcpu))
-> > 			guest_cr3 = kvm_read_cr3(vcpu);
-> > 		else
-> > 			guest_cr3 = to_kvm_vmx(kvm)->ept_identity_map_addr;
-> > 		ept_load_pdptrs(vcpu);
-> > 	}
-> > 
-> > -	vmcs_writel(GUEST_CR3, guest_cr3);
-> > +	if (!skip_cr3)
-> 
-> Nit: It’s a matter of taste, but I prefer positive conditions. i.e. “bool
-> write_guest_cr3”.
-> 
-> Anyway, code seems valid to me. Nice catch.
-> Reviewed-by: Liran Alon <liran.alon@oracle.com>
-> 
-> -Liran
-> 
-> > +		vmcs_writel(GUEST_CR3, guest_cr3);
-> > }
-> > 
-> > int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
-> > -- 
-> > 2.22.0
-> > 
-> 
+diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
+index 77c61b142042..3f57433c0824 100644
+--- a/arch/powerpc/kernel/ima_arch.c
++++ b/arch/powerpc/kernel/ima_arch.c
+@@ -24,9 +24,9 @@ bool arch_ima_get_secureboot(void)
+ static const char *const arch_rules[] = {
+ 	"measure func=KEXEC_KERNEL_CHECK template=ima-modsig",
+ 	"measure func=MODULE_CHECK template=ima-modsig",
+-	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
++	"appraise func=KEXEC_KERNEL_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
+ #if !IS_ENABLED(CONFIG_MODULE_SIG)
+-	"appraise func=MODULE_CHECK appraise_type=imasig|modsig",
++	"appraise func=MODULE_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
+ #endif
+ 	NULL
+ };
+-- 
+2.20.1
+
