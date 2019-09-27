@@ -2,149 +2,138 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53063C388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C3FC388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E718217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5722217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:08:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728052AbfI0QIS (ORCPT
+        id S1728020AbfI0QIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 12:08:18 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55968 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727517AbfI0QIS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 12:08:18 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8RFvL8e138079
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 12:08:17 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v9kjs54wu-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 12:08:16 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Fri, 27 Sep 2019 17:08:14 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 27 Sep 2019 17:08:12 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8RG8Brx51904738
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Sep 2019 16:08:11 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EEE7C4C040;
-        Fri, 27 Sep 2019 16:08:10 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 47C984C046;
-        Fri, 27 Sep 2019 16:08:10 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.141.201])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 27 Sep 2019 16:08:10 +0000 (GMT)
-Subject: Re: [GIT PULL] integrity subsystem updates for v5.4
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-security-module <linux-security-module@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Fri, 27 Sep 2019 12:08:09 -0400
-In-Reply-To: <1568671982.4975.145.camel@linux.ibm.com>
-References: <1568237365.5783.39.camel@linux.ibm.com>
-         <CAHk-=whuzoK+sP+feizU520p7ChHqdX8pmwyCnnKTyUNJKngZA@mail.gmail.com>
-         <1568671982.4975.145.camel@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19092716-0016-0000-0000-000002B15DC2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19092716-0017-0000-0000-000033123110
-Message-Id: <1569600489.10820.77.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-27_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909270144
+        Fri, 27 Sep 2019 12:08:54 -0400
+Received: from mga07.intel.com ([134.134.136.100]:39716 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727416AbfI0QIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 12:08:53 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Sep 2019 09:08:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,556,1559545200"; 
+   d="scan'208";a="180552277"
+Received: from mdauner2-mobl2.ger.corp.intel.com (HELO localhost) ([10.249.39.118])
+  by orsmga007.jf.intel.com with ESMTP; 27 Sep 2019 09:08:43 -0700
+Date:   Fri, 27 Sep 2019 19:08:42 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com
+Subject: Re: [PATCH v22 05/24] x86/sgx: Add ENCLS architectural error codes
+Message-ID: <20190927160842.GL10545@linux.intel.com>
+References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
+ <20190903142655.21943-6-jarkko.sakkinen@linux.intel.com>
+ <20190927102013.GA23002@zn.tnic>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190927102013.GA23002@zn.tnic>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-09-16 at 18:13 -0400, Mimi Zohar wrote:
-> On Mon, 2019-09-16 at 13:38 -0700, Linus Torvalds wrote:
-> > On Wed, Sep 11, 2019 at 2:29 PM Mimi Zohar <zohar@linux.ibm.com> wrote:
-> > >
-> > > The major feature in this pull request is IMA support for measuring
-> > > and appraising appended file signatures.  In addition are a couple of
-> > > bug fixes and code cleanup to use struct_size().
+On Fri, Sep 27, 2019 at 12:20:13PM +0200, Borislav Petkov wrote:
+> On Tue, Sep 03, 2019 at 05:26:36PM +0300, Jarkko Sakkinen wrote:
+> > Document ENCLS architectural error codes. These error codes are returned by
+> > the SGX opcodes. Make the header as part of the uapi so that they can be
+> > used in some situations directly returned to the user space (ENCLS[EINIT]
+> > leaf function error codes could be one potential use case).
 > > 
-> > How is the file signature any different from (and/or better than) the
-> > fs-verity support?
+> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > ---
+> >  arch/x86/include/uapi/asm/sgx_errno.h | 91 +++++++++++++++++++++++++++
+> >  1 file changed, 91 insertions(+)
+> >  create mode 100644 arch/x86/include/uapi/asm/sgx_errno.h
 > > 
-> > The fs-verity support got fairly extensively discussed, and is
-> > apparently going to actually be widely used by Android, and it an
-> > independent feature of any security model.
-> > 
-> > What does the IMA version bring to the table?
+> > diff --git a/arch/x86/include/uapi/asm/sgx_errno.h b/arch/x86/include/uapi/asm/sgx_errno.h
+> > new file mode 100644
+> > index 000000000000..48b87aed58d7
+> > --- /dev/null
+> > +++ b/arch/x86/include/uapi/asm/sgx_errno.h
+> > @@ -0,0 +1,91 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
+> > +/*
+> > + * Copyright(c) 2018 Intel Corporation.
+> > + *
+> > + * Contains the architecturally defined error codes that are returned by SGX
+> > + * instructions, e.g. ENCLS, and may be propagated to userspace via errno.
+> > + */
+> > +
+> > +#ifndef _UAPI_ASM_X86_SGX_ERRNO_H
+> > +#define _UAPI_ASM_X86_SGX_ERRNO_H
+> > +
+> > +/**
+> > + * enum sgx_encls_leaves - return codes for ENCLS, ENCLU and ENCLV
+> > + * %SGX_SUCCESS:		No error.
+> > + * %SGX_INVALID_SIG_STRUCT:	SIGSTRUCT contains an invalid value.
+> > + * %SGX_INVALID_ATTRIBUTE:	Enclave is not attempting to access a resource
 > 
-> IMA currently defines a system wide policy for measuring, verifying a
-> file's integrity (both mutable/immutable files) against known good
-> values, and adding audit records containing the file hashes.  The
-> policy isn't hard coded in the kernel, allowing people/companies to
-> configure it as desired for their specific use case.
+> That first "not" looks wrong.
 > 
-> Support for appended signatures already exists in the kernel for
-> kernel modules.  This pull request adds IMA support for appended
-> signatures in order to verify the kexec kernel image on OpenPOWER, as
-> part of Secure and Trusted boot enablement.  This would allow distros
-> to sign kernel images similar to how they currently sign kernel
-> modules.
+> > + *				for which it is not authorized.
+> > + * %SGX_BLKSTATE:		EPC page is already blocked.
+> > + * %SGX_INVALID_MEASUREMENT:	SIGSTRUCT or EINITTOKEN contains an incorrect
+> > + *				measurement.
+> > + * %SGX_NOTBLOCKABLE:		EPC page type is not one which can be blocked.
+> > + * %SGX_PG_INVLD:		EPC page is invalid (and cannot be blocked).
+> > + * %SGX_EPC_PAGE_CONFLICT:	EPC page in use by another SGX instruction.
+> > + * %SGX_INVALID_SIGNATURE:	Enclave's signature does not validate with
+> > + *				public key enclosed in SIGSTRUCT.
+> > + * %SGX_MAC_COMPARE_FAIL:	MAC check failed when reloading EPC page.
+> > + * %SGX_PAGE_NOT_BLOCKED:	EPC page is not marked as blocked.
+> > + * %SGX_NOT_TRACKED:		ETRACK has not been completed on the EPC page.
+> > + * %SGX_VA_SLOT_OCCUPIED:	Version array slot contains a valid entry.
+> > + * %SGX_CHILD_PRESENT:		Enclave has child pages present in the EPC.
+> > + * %SGX_ENCLAVE_ACT:		Logical processors are currently executing
+> > + *				inside the enclave.
+> > + * %SGX_ENTRYEPOCH_LOCKED:	SECS locked for EPOCH update, i.e. an ETRACK is
+> > + *				currently executing on the SECS.
+> > + * %SGX_INVALID_EINITTOKEN:	EINITTOKEN is invalid and enclave signer's
+> > + *				public key does not match IA32_SGXLEPUBKEYHASH.
+> > + * %SGX_PREV_TRK_INCMPL:	All processors did not complete the previous
+> > + *				tracking sequence.
+> > + * %SGX_PG_IS_SECS:		Target EPC page is an SECS and cannot be
+> > + *				blocked.
+> > + * %SGX_PAGE_ATTRIBUTES_MISMATCH:	Attributes of the EPC page do not match
+> > + *					the expected values.
 > 
-> IMA verifies file signatures up front, before allowing access to the
-> file.  fs-verity verifies the signature of the Merkle tree (and other
-> info), but does not verify the file data at the time of first use.
->  There are pros and cons to each of these approaches.
+> You sometimes call it "PG" and sometimes "PAGE". Unify?
+> 
+> > + * %SGX_PAGE_NOT_MODIFIABLE:	EPC page cannot be modified because it is in
+> > + *				the PENDING or MODIFIED state.
+> > + * %SGX_PAGE_NOT_DEBUGGABLE:	EPC page cannot be modified because it is in
+> > + *				the PENDING or MODIFIED state.
+> 
+> Same description text?
 
-My writing tends to be brief, hopefully concise.  I assume if you had
-further questions you would have asked.
+Thanks for the remarks. I think I define only the error codes in the
+next version that actually get used by the driver and document them
+properly. Should become way more cleaner.
 
-This pull request contained a lot of refactoring of the existing
-appended signature verification code, so that IMA could retain the
-existing framework of calculating the file hash once, storing it in
-the IMA measurement list and extending the TPM, verifying the file's
-integrity based on a file hash or signature (eg. xattrs), and adding
-an audit record containing the file hash, all based on policy.  (The
-IMA support for appended signatures patch set was posted and reviewed
-11 times.)
-
-The support for appended signature paves the way for adding other
-signature verification methods, such as fs-verity, based on a single
-system-wide policy.  The file hash used for verifying the signature
-and the signature, itself, can be included in the IMA measurement
-list.
-
-Originally, IMA & EVM were limited to local kernel file systems, based
-on i_version, but have been extended to support filesystems that don't
-support i_version and for FUSE.  There are additional discussions for
-extending IMA to support remote filesystems (eg. IETF NFS draft).  IMA
-by itself isn't enough, since the remote file isn't pinned in memory,
-but will need to be dependent on fs-verity.
-
-Nayna Jain re-posted a patch set (v6) titled "powerpc: Enabling IMA
-arch specific secure boot policies".  The changes are based on Michael
-Ellerman's review.
-
-thanks,
-
-Mimi
-
+/Jarkko
