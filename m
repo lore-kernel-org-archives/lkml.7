@@ -2,122 +2,166 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C50C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 03:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C33C352AB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 03:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43B3320872
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 03:33:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vEZ1bC2g"
+	by mail.kernel.org (Postfix) with ESMTP id 9755320872
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 03:43:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728980AbfI0DdZ (ORCPT
+        id S1728876AbfI0Dnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 23:33:25 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44189 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727796AbfI0DdZ (ORCPT
+        Thu, 26 Sep 2019 23:43:50 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:6891 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726145AbfI0Dnu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 23:33:25 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q21so696819pfn.11
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 20:33:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=sEqAKwH6i8dRuUDjuZdQGDMRFaWtJ7z76eqdeUKMFR4=;
-        b=vEZ1bC2gUnz6NoBfMDyxU9mxqyIb/A9GLsNodsnP6M2YVFdpkn/RgyXY/wut1e5Z+/
-         XvN0N7yXbIpFp8O478hZYTRFeOiuc/x+vk5ziQ7S8i4IKZa7uFJ4weGgJxfggn47bX7t
-         Cf+fkI9awLbvzBVGm1dNhlblm2J1Ffv8z/IvH6/hhWCFBZwk0VPGex6nYKnAcxK6TC8J
-         Lj1k7VxqydDx9ZpFCCOX4LJjuG4WQ3WxzinI3Cz+VnWTojik/Cx9uD1faOZK1QiDw6hc
-         7K5LdttHfaWvXbmoDi0MqFoQz4mZOoG7LsS6bUbvIiIct2exSC4W4neFLz+X+8nSEZdD
-         6Zmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=sEqAKwH6i8dRuUDjuZdQGDMRFaWtJ7z76eqdeUKMFR4=;
-        b=i3+x+wiCrOb3aKAJYPWfajThOwgWuICuRGr5W11va4h6hyzIlR1kLgDAdrff+RYmE4
-         nDIQAKM0q8cK7U83DUNUFALnfC2TScCFSsimq+qIXf9H3c+xNrF3eIsCDHy+iCRVS3l3
-         3lHeefEpheijbFlgADFAEx+aJ40/xRjxQUwJN57/CPLOQemAO7Hxi1IV5ZD8FnkLJygy
-         Bcq82OkDtYHgIpKeAewJlon2quqYZbJPdZCILdbUnUkfmm3wx1fkBlZdWrMYESq2XsE1
-         ZbRQvcj/ygbNlNryHuySxj6whxVeJ8lh+x/N/mMhZ1PAehp89MuJRckBRi2HEuy6yzV+
-         6cpQ==
-X-Gm-Message-State: APjAAAVXXmrDEkqlN3u8y+egzTwSJP7tdfalyiJ+ach5TEX8PghsQnXt
-        P7WqoeMp+s63DdGn483iGP6fsRr5jOc=
-X-Google-Smtp-Source: APXvYqy0Qv0EyDA0NnBHthk4VEz7/BQ/G3vIfATAo52ucWn6ZvMJj8NWR56RcXl52UdCm2gSHOs7EQ==
-X-Received: by 2002:a17:90a:e008:: with SMTP id u8mr7532910pjy.46.1569555203984;
-        Thu, 26 Sep 2019 20:33:23 -0700 (PDT)
-Received: from Gentoo ([103.231.91.66])
-        by smtp.gmail.com with ESMTPSA id z12sm732004pfj.41.2019.09.26.20.33.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 26 Sep 2019 20:33:23 -0700 (PDT)
-Date:   Fri, 27 Sep 2019 09:03:10 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     LinuxKernel <linux-kernel@vger.kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Subject: Please reap out these dead link from the kernel doc
-Message-ID: <20190927033307.GA4536@Gentoo>
+        Thu, 26 Sep 2019 23:43:50 -0400
+X-UUID: d4b5f999be8148baadc251c1b858fb6c-20190927
+X-UUID: d4b5f999be8148baadc251c1b858fb6c-20190927
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1048956367; Fri, 27 Sep 2019 11:43:41 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 27 Sep 2019 11:43:39 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 27 Sep 2019 11:43:39 +0800
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>, <kasan-dev@googlegroups.com>,
+        <linux-mm@kvack.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        Walter Wu <walter-zh.wu@mediatek.com>
+Subject: [PATCH] kasan: fix the missing underflow in memmove and memcpy with CONFIG_KASAN_GENERIC=y
+Date:   Fri, 27 Sep 2019 11:43:38 +0800
+Message-ID: <20190927034338.15813-1-walter-zh.wu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="LQksG6bCIzRHxTLp"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+memmove() and memcpy() have missing underflow issues.
+When -7 <= size < 0, then KASAN will miss to catch the underflow issue.
+It looks like shadow start address and shadow end address is the same,
+so it does not actually check anything.
 
---LQksG6bCIzRHxTLp
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The following test is indeed not caught by KASAN:
 
- I am not sure who is handling this ...stumble over it ...please do the
- needful
+	char *p = kmalloc(64, GFP_KERNEL);
+	memset((char *)p, 0, 64);
+	memmove((char *)p, (char *)p + 4, -2);
+	kfree((char*)p);
 
- Here is url for your reference :
+It should be checked here:
 
-https://www.kernel.org/doc/html/latest/process/email-clients.html
+void *memmove(void *dest, const void *src, size_t len)
+{
+	check_memory_region((unsigned long)src, len, false, _RET_IP_);
+	check_memory_region((unsigned long)dest, len, true, _RET_IP_);
 
- There are two external urls for mutt config , which are dead ...those are
- :
+	return __memmove(dest, src, len);
+}
 
+We fix the shadow end address which is calculated, then generic KASAN
+get the right shadow end address and detect this underflow issue.
 
-     http://dev.mutt.org/trac/wiki/UseCases/Gmail
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=199341
 
-         http://dev.mutt.org/doc/manual.html
+Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
+Reported-by: Dmitry Vyukov <dvyukov@google.com>
+---
+ lib/test_kasan.c   | 36 ++++++++++++++++++++++++++++++++++++
+ mm/kasan/generic.c |  8 ++++++--
+ 2 files changed, 42 insertions(+), 2 deletions(-)
 
-Is this because Mutt move from trac to gitlab ...here :
-https://gitlab.com/muttmua/mutt
+diff --git a/lib/test_kasan.c b/lib/test_kasan.c
+index b63b367a94e8..8bd014852556 100644
+--- a/lib/test_kasan.c
++++ b/lib/test_kasan.c
+@@ -280,6 +280,40 @@ static noinline void __init kmalloc_oob_in_memset(void)
+ 	kfree(ptr);
+ }
+ 
++static noinline void __init kmalloc_oob_in_memmove_underflow(void)
++{
++	char *ptr;
++	size_t size = 64;
++
++	pr_info("underflow out-of-bounds in memmove\n");
++	ptr = kmalloc(size, GFP_KERNEL);
++	if (!ptr) {
++		pr_err("Allocation failed\n");
++		return;
++	}
++
++	memset((char *)ptr, 0, 64);
++	memmove((char *)ptr, (char *)ptr + 4, -2);
++	kfree(ptr);
++}
++
++static noinline void __init kmalloc_oob_in_memmove_overflow(void)
++{
++	char *ptr;
++	size_t size = 64;
++
++	pr_info("overflow out-of-bounds in memmove\n");
++	ptr = kmalloc(size, GFP_KERNEL);
++	if (!ptr) {
++		pr_err("Allocation failed\n");
++		return;
++	}
++
++	memset((char *)ptr, 0, 64);
++	memmove((char *)ptr + size, (char *)ptr, 2);
++	kfree(ptr);
++}
++
+ static noinline void __init kmalloc_uaf(void)
+ {
+ 	char *ptr;
+@@ -734,6 +768,8 @@ static int __init kmalloc_tests_init(void)
+ 	kmalloc_oob_memset_4();
+ 	kmalloc_oob_memset_8();
+ 	kmalloc_oob_memset_16();
++	kmalloc_oob_in_memmove_underflow();
++	kmalloc_oob_in_memmove_overflow();
+ 	kmalloc_uaf();
+ 	kmalloc_uaf_memset();
+ 	kmalloc_uaf2();
+diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
+index 616f9dd82d12..34ca23d59e67 100644
+--- a/mm/kasan/generic.c
++++ b/mm/kasan/generic.c
+@@ -131,9 +131,13 @@ static __always_inline bool memory_is_poisoned_n(unsigned long addr,
+ 						size_t size)
+ {
+ 	unsigned long ret;
++	void *shadow_start = kasan_mem_to_shadow((void *)addr);
++	void *shadow_end = kasan_mem_to_shadow((void *)addr + size - 1) + 1;
+ 
+-	ret = memory_is_nonzero(kasan_mem_to_shadow((void *)addr),
+-			kasan_mem_to_shadow((void *)addr + size - 1) + 1);
++	if ((long)size < 0)
++		shadow_end = kasan_mem_to_shadow((void *)addr + size);
++
++	ret = memory_is_nonzero(shadow_start, shadow_end);
+ 
+ 	if (unlikely(ret)) {
+ 		unsigned long last_byte = addr + size - 1;
+-- 
+2.18.0
 
-Wildly guessing.=20
-
-Probably Jon or Kai ...I don't know ..sorry about taking names.
-
-Thanks,
-Bhaskar
-
---LQksG6bCIzRHxTLp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl2Ngu8ACgkQsjqdtxFL
-KRU2EwgAo8AVbcXsOkFZAM8KXToMIbbpjLp8355xnQd+tSFCjwayeJ1tu16dVR+L
-qZLTEJQvHNHZfkuRE6W/k0gi/fagvRSRllfI3XJzNk1xgWaLbZXU7OEM/oxZhM86
-/noSgD8OQM3xb/I1I1/jMtYlWTJs5e8kCeUADimb10QOS3zSZDxqrFpHrrgyEJuQ
-xlnj4CuKpBks4IO2t/y+c2Z63dJzoj4h/otn1RnIZDaT9lF28dgRLDVycpZhgN+U
-DEn6H6X1KAkFeNYY2vDjbKJoXq15YYmkQHajCx4zjjVvDwkJxvGZ2rFnESSa3j/R
-wN7vx47VyMc3X+aHNrnlBM3etpJaLw==
-=IG75
------END PGP SIGNATURE-----
-
---LQksG6bCIzRHxTLp--
