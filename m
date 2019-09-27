@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57010C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 00:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC56C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 00:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 284E720835
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 00:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1E2820872
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 00:25:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569543937;
-	bh=J7sWdxRgrOR09Y/rcYcUVrJ5/VoRuKBI2nIdBcq4qpo=;
+	s=default; t=1569543940;
+	bh=eqboXYYEr1L5MwwNkv+KGk8gZLgSNHFZESSGK+6zWrk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kZ8ng0hnpwEsfLtKu+gXzX7n6ahe/LbXlY1iL7o6ZCP7HTPI7y6IbHOTSkTvl3Ite
-	 Q18F7XcxfoaGs6oI0YYYQQDs95obQHu+GAOi6r65FFq1oxGgT/982kESzV48zARghE
-	 /neyiNYCFR0S2k2ZeuSTW0oBTDvN/n623IfDBSAE=
+	b=MO1+hmxjVs34d6f/SyU88qiYuPISX+kXnCsgEXAdwKTMSQMD85ogTtwCA7sJiUvhk
+	 +G+SX5yIorueG9kG2pIBAfwpNWyR0sfakJLp/Vap8ePDARfrlF+xZuLr4qe3onvCOX
+	 LpfKGybb0HKdJCPYGSI1TmNvWOur2RIQ0Q2VlvUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728503AbfI0AZg (ORCPT
+        id S1727839AbfI0AZI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 20:25:36 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43244 "EHLO
+        Thu, 26 Sep 2019 20:25:08 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40575 "EHLO
         mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727901AbfI0AZK (ORCPT
+        with ESMTP id S1727682AbfI0AZF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 20:25:10 -0400
-Received: by mail-oi1-f195.google.com with SMTP id t84so3722739oih.10;
-        Thu, 26 Sep 2019 17:25:09 -0700 (PDT)
+        Thu, 26 Sep 2019 20:25:05 -0400
+Received: by mail-oi1-f195.google.com with SMTP id k9so3726634oib.7;
+        Thu, 26 Sep 2019 17:25:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=UKCh970cxpKTSE4xQt8EA5TvLAg6lDEOHEZjgVQOiEg=;
-        b=m5XwqiFEPWtXzRHdhcmEuQygNUQouhsLrY2JHWTLwtqq5PoobZbYBbU+pvp6Pv86T4
-         zKFmmaHDMIJdNrKNWILK2YLfjpagh6NpNpKk+geYxGfbyntI5DJ3lR57bAmQggJWaFNe
-         fikGPltp5EMOy7riafYjMByhlXTfAqVaLKhMym5d84S2/CTBFDHvnVzTUjF4tG0SCMfO
-         bTz5A6xsOi8EoYWqLJbOk/B47XR0KubRoCjwJfZtGVsznsBUcqtzuj/8q5H2DSvkcRsy
-         zh9JTBZSoP8alAq8/dVcF6FumlTwfBSMsXi2SX9PLhowuI945KqN6mRMPxN629ktANF7
-         wJrg==
-X-Gm-Message-State: APjAAAW5ClND+nq5icmAYJQmaMe0cnWvML1G/wTJEQ1TferFYIMleKJp
-        wvDrmcy+vbmlie1Iy0Z+i7RI+6w=
-X-Google-Smtp-Source: APXvYqy1CQ/pJ4u81ZjOTBygjp0HyvnzRjfsumqlZMQhMMHtdm91xx5NicQ33wJ1JMQxCbhI++4dWg==
-X-Received: by 2002:a05:6808:316:: with SMTP id i22mr4935938oie.18.1569543908911;
-        Thu, 26 Sep 2019 17:25:08 -0700 (PDT)
+        bh=/FdaUd4Foou3uzALlTE4nuHwXAnVOybAVTlMM/NfMxM=;
+        b=MWof7LvYsCAN8OEjOTq0UogPE5mr2Nw/a5/2+XNVhQQ1p4gBJhJFekeCHLO0zbfXbI
+         ajIJX8wi+NBFVaWA6DnPoW1X2B8RkbQ4fJAeWGvxaZQW0M7qWQ5sVJtbikqgs65Nj5xe
+         LP6hfOVbPmjuUGzy4VF9qimsU04Fp/A9E6b9vlZUD2lNNb9gu16dHzUoq+nQxL8WbqbZ
+         Mq7bQ6sX/O1iPVLDTmfkwQrZXspFgWURIAWRyNHLOfjcy69/xlkU4SLaToGmlA41Sh2C
+         Gd/NcYHFwFA4WFKJYwG7JunSyx/ullo11nQHPCXsHY2rUqTw5YTgbUxmneS7h14gXmqc
+         CdQw==
+X-Gm-Message-State: APjAAAWuZlaWQZ510DQMXW77zAVbnaC75LNjWR0JFpQzQT1MgEkqG635
+        hjnei1f3UaK4WmLvz6bR+K/Tjz4=
+X-Google-Smtp-Source: APXvYqxes6fLBSO8a/NFYc1ZhLQ2DJ3dk3ZrSbyT+sGdDBiq/Yncolj5jjG+yPBb+Q9ycO7s7d945A==
+X-Received: by 2002:aca:fdc9:: with SMTP id b192mr4641000oii.50.1569543904799;
+        Thu, 26 Sep 2019 17:25:04 -0700 (PDT)
 Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id j11sm339866otk.80.2019.09.26.17.25.07
+        by smtp.googlemail.com with ESMTPSA id j11sm339866otk.80.2019.09.26.17.25.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Sep 2019 17:25:08 -0700 (PDT)
+        Thu, 26 Sep 2019 17:25:04 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
@@ -64,9 +64,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         Simon Horman <horms+renesas@verge.net.au>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Oza Pawandeep <oza.oza@broadcom.com>
-Subject: [PATCH 08/11] of: Factor out #{addr,size}-cells parsing
-Date:   Thu, 26 Sep 2019 19:24:52 -0500
-Message-Id: <20190927002455.13169-9-robh@kernel.org>
+Subject: [PATCH 05/11] of: Ratify of_dma_configure() interface
+Date:   Thu, 26 Sep 2019 19:24:49 -0500
+Message-Id: <20190927002455.13169-6-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190927002455.13169-1-robh@kernel.org>
 References: <20190927002455.13169-1-robh@kernel.org>
@@ -79,110 +79,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Robin Murphy <robin.murphy@arm.com>
 
-In some cases such as PCI host controllers, we may have a "parent bus"
-which is an OF leaf node, but still need to correctly parse ranges from
-the point of view of that bus. For that, factor out variants of the
-"#addr-cells" and "#size-cells" parsers which do not assume they have a
-device node and thus immediately traverse upwards before reading the
-relevant property.
+For various DMA masters not directly represented in DT, we pass the OF
+node of their parent or bridge device as the master_np argument to
+of_dma_configure(), such that they can inherit the appropriate DMA
+configuration from whatever is described there. This creates an
+ambiguity for properties which are not valid for a device itself but
+only for its parent bus, since we don't know whether to start looking
+for those at master_np or master_np->parent.
+
+Fortunately, the de-facto interface since the prototype change in
+1f5c69aa51f9 ("of: Move of_dma_configure() to device.c to help re-use")
+is pretty clear-cut: either master_np is redundant with dev->of_node, or
+dev->of_node is NULL and master_np is already the relevant parent. Let's
+formally ratify that so we can start relying on it.
 
 Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-[robh: don't make of_bus_n_{addr,size}_cells() public]
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/of/address.c    |  2 ++
- drivers/of/base.c       | 32 ++++++++++++++++++++++----------
- drivers/of/of_private.h |  3 +++
- 3 files changed, 27 insertions(+), 10 deletions(-)
+ drivers/of/device.c       | 12 ++++++++++--
+ include/linux/of_device.h |  4 ++--
+ 2 files changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 3fd34f7ad772..887c0413f648 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -14,6 +14,8 @@
- #include <linux/slab.h>
- #include <linux/string.h>
- 
-+#include "of_private.h"
-+
- /* Max address size we deal with */
- #define OF_MAX_ADDR_CELLS	4
- #define OF_CHECK_ADDR_COUNT(na)	((na) > 0 && (na) <= OF_MAX_ADDR_CELLS)
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 55e7f5bb0549..12b2e9287117 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -86,34 +86,46 @@ static bool __of_node_is_type(const struct device_node *np, const char *type)
- 	return np && match && type && !strcmp(match, type);
- }
- 
--int of_n_addr_cells(struct device_node *np)
-+int of_bus_n_addr_cells(struct device_node *np)
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index da8158392010..a45261e21144 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -75,7 +75,8 @@ int of_device_add(struct platform_device *ofdev)
+ /**
+  * of_dma_configure - Setup DMA configuration
+  * @dev:	Device to apply DMA configuration
+- * @np:		Pointer to OF node having DMA configuration
++ * @parent:	OF node of parent device having DMA configuration, if
++ * 		@dev->of_node is NULL (ignored otherwise)
+  * @force_dma:  Whether device is to be set up by of_dma_configure() even if
+  *		DMA capability is not explicitly described by firmware.
+  *
+@@ -86,15 +87,22 @@ int of_device_add(struct platform_device *ofdev)
+  * can use a platform bus notifier and handle BUS_NOTIFY_ADD_DEVICE events
+  * to fix up DMA configuration.
+  */
+-int of_dma_configure(struct device *dev, struct device_node *np, bool force_dma)
++int of_dma_configure(struct device *dev, struct device_node *parent, bool force_dma)
  {
- 	u32 cells;
+ 	u64 dma_addr, paddr, size = 0;
+ 	int ret;
+ 	bool coherent;
+ 	unsigned long offset;
+ 	const struct iommu_ops *iommu;
++	struct device_node *np;
+ 	u64 mask;
  
--	do {
--		if (np->parent)
--			np = np->parent;
-+	for (; np; np = np->parent)
- 		if (!of_property_read_u32(np, "#address-cells", &cells))
- 			return cells;
--	} while (np->parent);
++	np = dev->of_node;
++	if (!np)
++		np = parent;
++	if (!np)
++		return -ENODEV;
 +
- 	/* No #address-cells property for the root node */
- 	return OF_ROOT_NODE_ADDR_CELLS_DEFAULT;
+ 	ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
+ 	if (ret < 0) {
+ 		/*
+diff --git a/include/linux/of_device.h b/include/linux/of_device.h
+index 8d31e39dd564..a4fe418e57f6 100644
+--- a/include/linux/of_device.h
++++ b/include/linux/of_device.h
+@@ -56,7 +56,7 @@ static inline struct device_node *of_cpu_device_node_get(int cpu)
  }
-+
-+int of_n_addr_cells(struct device_node *np)
-+{
-+	if (np->parent)
-+		np = np->parent;
-+
-+	return of_bus_n_addr_cells(np);
-+}
- EXPORT_SYMBOL(of_n_addr_cells);
  
--int of_n_size_cells(struct device_node *np)
-+int of_bus_n_size_cells(struct device_node *np)
+ int of_dma_configure(struct device *dev,
+-		     struct device_node *np,
++		     struct device_node *parent,
+ 		     bool force_dma);
+ #else /* CONFIG_OF */
+ 
+@@ -107,7 +107,7 @@ static inline struct device_node *of_cpu_device_node_get(int cpu)
+ }
+ 
+ static inline int of_dma_configure(struct device *dev,
+-				   struct device_node *np,
++				   struct device_node *parent,
+ 				   bool force_dma)
  {
- 	u32 cells;
- 
--	do {
--		if (np->parent)
--			np = np->parent;
-+	for (; np; np = np->parent)
- 		if (!of_property_read_u32(np, "#size-cells", &cells))
- 			return cells;
--	} while (np->parent);
-+
- 	/* No #size-cells property for the root node */
- 	return OF_ROOT_NODE_SIZE_CELLS_DEFAULT;
- }
-+
-+int of_n_size_cells(struct device_node *np)
-+{
-+	if (np->parent)
-+		np = np->parent;
-+
-+	return of_bus_n_size_cells(np);
-+}
- EXPORT_SYMBOL(of_n_size_cells);
- 
- #ifdef CONFIG_NUMA
-diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-index f8c58615c393..66294d29942a 100644
---- a/drivers/of/of_private.h
-+++ b/drivers/of/of_private.h
-@@ -158,6 +158,9 @@ extern void __of_sysfs_remove_bin_file(struct device_node *np,
- #define for_each_transaction_entry_reverse(_oft, _te) \
- 	list_for_each_entry_reverse(_te, &(_oft)->te_list, node)
- 
-+extern int of_bus_n_addr_cells(struct device_node *np);
-+extern int of_bus_n_size_cells(struct device_node *np);
-+
- #ifdef CONFIG_OF_ADDRESS
- extern int of_dma_get_range(struct device_node *np, u64 *dma_addr,
- 			    u64 *paddr, u64 *size);
+ 	return 0;
 -- 
 2.20.1
 
