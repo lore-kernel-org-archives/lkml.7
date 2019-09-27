@@ -2,19 +2,19 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98802C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDAFC388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7127D21655
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:45:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 999AA2146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:45:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728483AbfI0VpZ (ORCPT
+        id S1728523AbfI0Vp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 17:45:25 -0400
+        Fri, 27 Sep 2019 17:45:26 -0400
 Received: from mga12.intel.com ([192.55.52.136]:45951 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
         id S1726029AbfI0VpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
@@ -22,12 +22,12 @@ Received: from mga12.intel.com ([192.55.52.136]:45951 "EHLO mga12.intel.com"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Sep 2019 14:45:24 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Sep 2019 14:45:25 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,557,1559545200"; 
-   d="scan'208";a="196852054"
+   d="scan'208";a="196852060"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by FMSMGA003.fm.intel.com with ESMTP; 27 Sep 2019 14:45:24 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 27 Sep 2019 14:45:25 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>,
         =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
@@ -38,10 +38,12 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Reto Buerki <reet@codelabs.ch>,
         Liran Alon <liran.alon@oracle.com>
-Subject: [PATCH v2 0/8] KVM: x86: nVMX GUEST_CR3 bug fix, and then some...
-Date:   Fri, 27 Sep 2019 14:45:15 -0700
-Message-Id: <20190927214523.3376-1-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 2/8] KVM: VMX: Skip GUEST_CR3 VMREAD+VMWRITE if the VMCS is up-to-date
+Date:   Fri, 27 Sep 2019 14:45:17 -0700
+Message-Id: <20190927214523.3376-3-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190927214523.3376-1-sean.j.christopherson@intel.com>
+References: <20190927214523.3376-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -49,79 +51,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-*sigh*
+Skip the VMWRITE to update GUEST_CR3 if CR3 is not available, i.e. has
+not been read from the VMCS since the last VM-Enter.  If vcpu->arch.cr3
+is stale, kvm_read_cr3(vcpu) will refresh vcpu->arch.cr3 from the VMCS,
+meaning KVM will do a VMREAD and then VMWRITE the value it just pulled
+from the VMCS.
 
-v2 was shaping up to be a trivial update, until I started working on
-Vitaly's suggestion to add a helper to test for register availability.
+Note, this is a purely theoretical change, no instances of skipping
+the VMREAD+VMWRITE have been observed with this change.
 
-The primary purpose of this series is to fix a CR3 corruption in L2
-reported by Reto Buerki when running with HLT interception disabled in L1.
-On a nested VM-Enter that puts L2 into HLT, KVM never actually enters L2
-and instead mimics HLT interception by canceling the nested run and
-pretending that VM-Enter to L2 completed and then exited on HLT (which
-KVM intercepted).  Because KVM never actually runs L2, KVM skips the
-pending MMU update for L2 and so leaves a stale value in vmcs02.GUEST_CR3.
-If the next wake event for L2 triggers a nested VM-Exit, KVM will refresh
-vmcs12->guest_cr3 from vmcs02.GUEST_CR3 and consume the stale value.
+Tested-by: Reto Buerki <reet@codelabs.ch>
+Tested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/kvm/vmx/vmx.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-Fix the issue by unconditionally writing vmcs02.GUEST_CR3 during nested
-VM-Enter instead of deferring the update to vmx_set_cr3(), and skip the
-update of GUEST_CR3 in vmx_set_cr3() when running L2.  I.e. make the
-nested code fully responsible for vmcs02.GUEST_CR3.
-
-Patch 02/08 is a minor optimization to skip the GUEST_CR3 update if
-vmcs01 is already up-to-date.
-
-Patches 03 and beyond are Vitaly's fault ;-).
-
-Patches 03 and 04 are tangentially related cleanup to vmx_set_rflags()
-that was discovered when working through the avail/dirty testing code.
-Ideally they'd be sent as a separate series, but they conflict with the
-avail/dirty helper changes and are themselves minor and straightforward.
-
-Patches 05 and 06 clean up the register caching code so that there is a
-single enum for all registers which use avail/dirty tracking.  While not
-a true prerequisite for the avail/dirty helpers, the cleanup allows the
-new helpers to take an 'enum kvm_reg' instead of a less helpful 'int reg'.
-
-Patch 07 is the helpers themselves, as suggested by Vitaly.
-
-Patch 08 is a truly optional change to ditch decache_cr3() in favor of
-handling CR3 via cache_reg() like any other avail/dirty register.
-
-
-Note, I collected the Reviewed-by and Tested-by tags for patches 01 and 02
-even though I inverted the boolean from 'skip_cr3' to 'update_guest_cr3'.
-Please drop the tags if that constitutes a non-trivial functional change.
-
-v2:
-  - Invert skip_cr3 to update_guest_cr3.  [Liran]
-  - Reword the changelog and comment to be more explicit in detailing
-    how/when KVM will process a nested VM-Enter without runnin L2.  [Liran]
-  - Added Reviewed-by and Tested-by tags.
-  - Add a comment in vmx_set_cr3() to explicitly state that nested
-    VM-Enter is responsible for loading vmcs02.GUEST_CR3.  [Jim]
-  - All of the loveliness in patches 03-08. [Vitaly]
-
-Sean Christopherson (8):
-  KVM: nVMX: Always write vmcs02.GUEST_CR3 during nested VM-Enter
-  KVM: VMX: Skip GUEST_CR3 VMREAD+VMWRITE if the VMCS is up-to-date
-  KVM: VMX: Consolidate to_vmx() usage in RFLAGS accessors
-  KVM: VMX: Optimize vmx_set_rflags() for unrestricted guest
-  KVM: x86: Add WARNs to detect out-of-bounds register indices
-  KVM: x86: Fold 'enum kvm_ex_reg' definitions into 'enum kvm_reg'
-  KVM: x86: Add helpers to test/mark reg availability and dirtiness
-  KVM: x86: Fold decache_cr3() into cache_reg()
-
- arch/x86/include/asm/kvm_host.h |  5 +-
- arch/x86/kvm/kvm_cache_regs.h   | 67 +++++++++++++++++------
- arch/x86/kvm/svm.c              |  5 --
- arch/x86/kvm/vmx/nested.c       | 14 ++++-
- arch/x86/kvm/vmx/vmx.c          | 94 ++++++++++++++++++---------------
- arch/x86/kvm/x86.c              | 13 ++---
- arch/x86/kvm/x86.h              |  6 +--
- 7 files changed, 123 insertions(+), 81 deletions(-)
-
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 7679c2a05a50..0b8dd9c315f8 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -3004,10 +3004,12 @@ void vmx_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
+ 		/* Loading vmcs02.GUEST_CR3 is handled by nested VM-Enter. */
+ 		if (is_guest_mode(vcpu))
+ 			update_guest_cr3 = false;
+-		else if (enable_unrestricted_guest || is_paging(vcpu))
+-			guest_cr3 = kvm_read_cr3(vcpu);
+-		else
++		else if (!enable_unrestricted_guest && !is_paging(vcpu))
+ 			guest_cr3 = to_kvm_vmx(kvm)->ept_identity_map_addr;
++		else if (test_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail))
++			guest_cr3 = vcpu->arch.cr3;
++		else /* vmcs01.GUEST_CR3 is already up-to-date. */
++			update_guest_cr3 = false;
+ 		ept_load_pdptrs(vcpu);
+ 	}
+ 
 -- 
 2.22.0
 
