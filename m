@@ -2,197 +2,239 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 943BCC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A72C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6935021841
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CC12217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:48:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZCBUAF5a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbfI0OrS (ORCPT
+        id S1727859AbfI0OsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 10:47:18 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18808 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727079AbfI0OrS (ORCPT
+        Fri, 27 Sep 2019 10:48:19 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:37638 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727079AbfI0OsS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 10:47:18 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8REiKbe009586;
-        Fri, 27 Sep 2019 10:46:37 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v8y3b53xk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Sep 2019 10:46:36 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8REiTGK009898;
-        Fri, 27 Sep 2019 10:46:29 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v8y3b53s7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Sep 2019 10:46:29 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8REhmPi026728;
-        Fri, 27 Sep 2019 14:46:19 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma04dal.us.ibm.com with ESMTP id 2v5bg8f0un-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Sep 2019 14:46:19 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8REkHHj40042836
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Sep 2019 14:46:18 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DF156C6059;
-        Fri, 27 Sep 2019 14:46:17 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 23C33C605F;
-        Fri, 27 Sep 2019 14:46:09 +0000 (GMT)
-Received: from leobras.br.ibm.com (unknown [9.18.235.58])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 27 Sep 2019 14:46:09 +0000 (GMT)
-Message-ID: <8fe1ee1abf52719e75902dc7d5cd1e91751eaba7.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 00/11] Introduces new count-based method for
- monitoring lockless pagetable walks
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     jhubbard@nvidia.com, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org
-Cc:     benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        arnd@arndb.de, aneesh.kumar@linux.ibm.com, christophe.leroy@c-s.fr,
-        akpm@linux-foundation.org, dan.j.williams@intel.com,
-        npiggin@gmail.com, mahesh@linux.vnet.ibm.com,
-        gregkh@linuxfoundation.org, tglx@linutronix.de,
-        ganeshgr@linux.ibm.com, allison@lohutok.net, rppt@linux.ibm.com,
-        yuehaibing@huawei.com, ira.weiny@intel.com, jgg@ziepe.ca,
-        keith.busch@intel.com
-Date:   Fri, 27 Sep 2019 11:46:04 -0300
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-0SqJjAld2WmMrSAcbuQn"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-27_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909270138
+        Fri, 27 Sep 2019 10:48:18 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8REiBCh062756;
+        Fri, 27 Sep 2019 14:47:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=rirQTgBKGE1ekWXu3Mkq2hELbwiU1mwNMNUzPWc1UXw=;
+ b=ZCBUAF5aIcqvoiMkLlDKHW3hSnXZpcOntvuLQDgN3epytO0leHXnFavTU6n5ctFnlcmy
+ Pdwp9XnsVCsreTAM7onYKyrWckMvnV58C0vc5v6fiAEOiIs/LBdkE8b+/ODAh90UnaQW
+ xg03uhIuhi8Ig1R1oo/Jzaicv+FclRvlaHlkmC1WONq+e3zEvI7leIJSe9HpuplE9GcC
+ 216ZdW6UIoRBqv9oFfN/ktLc2UaR/00r18FKz7j4mA3uY2DBgCT9uyqGL4sYtzvEdvy7
+ CWzge2Ua/ZSrA7/iGgTbxj1pX5U4o6oOCGKE2bJSshITAgGxG7KpPxzJLzLtzktNeIxX rw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2v5cgrjq9c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Sep 2019 14:47:00 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8REiFGe075813;
+        Fri, 27 Sep 2019 14:44:59 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2v9m3f1617-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Sep 2019 14:44:59 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8REivb3012302;
+        Fri, 27 Sep 2019 14:44:58 GMT
+Received: from [192.168.14.112] (/79.179.213.143)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 27 Sep 2019 07:44:57 -0700
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: [PATCH 1/2] KVM: nVMX: Always write vmcs02.GUEST_CR3 during
+ nested VM-Enter
+From:   Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <20190927142725.GC24889@linux.intel.com>
+Date:   Fri, 27 Sep 2019 17:44:53 +0300
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Reto Buerki <reet@codelabs.ch>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <EF5C03E7-E3C2-4372-955C-06FB416EB164@oracle.com>
+References: <20190926214302.21990-1-sean.j.christopherson@intel.com>
+ <20190926214302.21990-2-sean.j.christopherson@intel.com>
+ <68340081-0094-4A74-9B33-3431F39659AA@oracle.com>
+ <20190927142725.GC24889@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9393 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909270138
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9393 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909270138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---=-0SqJjAld2WmMrSAcbuQn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-John Hubbard <jhubbard@nvidia.com> writes:
+> On 27 Sep 2019, at 17:27, Sean Christopherson =
+<sean.j.christopherson@intel.com> wrote:
+>=20
+> On Fri, Sep 27, 2019 at 03:06:02AM +0300, Liran Alon wrote:
+>>=20
+>>=20
+>>> On 27 Sep 2019, at 0:43, Sean Christopherson =
+<sean.j.christopherson@intel.com> wrote:
+>>>=20
+>>> Write the desired L2 CR3 into vmcs02.GUEST_CR3 during nested =
+VM-Enter
+>>> isntead of deferring the VMWRITE until vmx_set_cr3().  If the =
+VMWRITE
+>>> is deferred, then KVM can consume a stale vmcs02.GUEST_CR3 when it
+>>> refreshes vmcs12->guest_cr3 during nested_vmx_vmexit() if the =
+emulated
+>>> VM-Exit occurs without actually entering L2, e.g. if the nested run
+>>> is squashed because L2 is being put into HLT.
+>>=20
+>> I would rephrase to =E2=80=9CIf an emulated VMEntry is squashed =
+because L1 sets
+>> vmcs12->guest_activity_state to HLT=E2=80=9D.  I think it=E2=80=99s a =
+bit more explicit.
+>>=20
+>>>=20
+>>> In an ideal world where EPT *requires* unrestricted guest (and vice
+>>> versa), VMX could handle CR3 similar to how it handles RSP and RIP,
+>>> e.g. mark CR3 dirty and conditionally load it at vmx_vcpu_run().  =
+But
+>>> the unrestricted guest silliness complicates the dirty tracking =
+logic
+>>> to the point that explicitly handling vmcs02.GUEST_CR3 during nested
+>>> VM-Enter is a simpler overall implementation.
+>>>=20
+>>> Cc: stable@vger.kernel.org
+>>> Reported-by: Reto Buerki <reet@codelabs.ch>
+>>> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+>>> ---
+>>> arch/x86/kvm/vmx/nested.c | 8 ++++++++
+>>> arch/x86/kvm/vmx/vmx.c    | 9 ++++++---
+>>> 2 files changed, 14 insertions(+), 3 deletions(-)
+>>>=20
+>>> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+>>> index 41abc62c9a8a..971a24134081 100644
+>>> --- a/arch/x86/kvm/vmx/nested.c
+>>> +++ b/arch/x86/kvm/vmx/nested.c
+>>> @@ -2418,6 +2418,14 @@ static int prepare_vmcs02(struct kvm_vcpu =
+*vcpu, struct vmcs12 *vmcs12,
+>>> 				entry_failure_code))
+>>> 		return -EINVAL;
+>>>=20
+>>> +	/*
+>>> +	 * Immediately write vmcs02.GUEST_CR3.  It will be propagated to =
+vmcs12
+>>> +	 * on nested VM-Exit, which can occur without actually running =
+L2, e.g.
+>>> +	 * if L2 is entering HLT state, and thus without hitting =
+vmx_set_cr3().
+>>> +	 */
+>>=20
+>> If I understand correctly, it=E2=80=99s not exactly if L2 is entering =
+HLT state in
+>> general.  (E.g. issue doesn=E2=80=99t occur if L2 runs HLT directly =
+which is not
+>> configured to be intercepted by vmcs12).  It=E2=80=99s specifically =
+when L1 enters L2
+>> with a HLT guest-activity-state. I suggest rephrasing comment.
+>=20
+> I deliberately worded the comment so that it remains valid if there =
+are
+> more conditions in the future that cause KVM to skip running L2.  What =
+if
+> I split the difference and make the changelog more explicit, but leave =
+the
+> comment as is?
 
-> Hi Leonardo,
->
-> Thanks for adding linux-mm to CC for this next round of reviews. For the =
-benefit
-> of any new reviewers, I'd like to add that there are some issues that wer=
-e discovered
-> while reviewing the v2 patchset, that are not (yet) addressed in this v3 =
-series.
+I think what is confusing in comment is that it seems to also refer to =
+the case
+where L2 directly enters HLT state without L1 intercept. Which isn=E2=80=99=
+t related.
+So I would explicitly mention it=E2=80=99s when L1 enters L2 but don=E2=80=
+=99t physically enter guest
+with vmcs02 because L2 is in HLT state.
 
-> Since those issues are not listed in the cover letter above, I'll list th=
-em here
+-Liran
 
-Thanks for bringing that.
-The cover letter is a great place to put this info, I will keep that in
-mind for future patchsets.
-
->
-> 1. The locking model requires a combination of disabling interrupts and
-> atomic counting and memory barriers, but
->
-> 	a) some memory barriers are missing
-> 	(start/end_lockless_pgtbl_walk), and
-
-It seems that it works fine today because of the amount of intructions
-executed between the irq_disable / start_lockless_pgtbl_walk and where
-the THP collapse/split can happen. (It's very unlikely that it reorders
-that much).
-
-But I don't think it would be so bad to put a memory barrier after
-irq_disable just in case.
-
-> 	b) some cases (patch #8) fail to disable interrupts
-
-I have done some looking into that, and it seems that some uses of
-{start,end}_lockless_pgtbl_walk are unneeded, because they operate in
-(nested) guest pgd and I was told it's safe against THP split/collapse.
-
-In other uses, there is no interrupt disable because the function is
-called in real mode, with MSR_EE=3D0, and there we have instructions
-disabled, so there is no need to disable them again.
-
->
-> ...so the synchronization appears to be inadequate. (And if it *is* adequ=
-ate, then
-> definitely we need the next item, to explain it.)
-
-
->
-> 2. Documentation of the synchronization/locking model needs to exist, onc=
-e we
-> figure out the exact details of (1).
-
-I will add the missing doc in the code, so it may be easier to
-understand in the future.
-
->
-> 3. Related to (1), I've asked to change things so that interrupt controls=
- and=20
-> atomic inc/dec are in the same start/end calls--assuming, of course, that=
- the
-> caller can tolerate that.=20
-
-I am not sure if it would be ok to use irq_{save,restore} in real mode,
-I will do some more reading of the docs before addressing this.=20
->
-> 4. Please see the v2 series for any other details I've missed.
->
-> thanks,
-> --=20
-> John Hubbard
-> NVIDIA
->
-
-Thank you for helping, John!
-
-Best regards,
-Leonardo Bras
-
---=-0SqJjAld2WmMrSAcbuQn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl2OIKwACgkQlQYWtz9S
-ttRybRAArvljWum/p1QDUJofop8oyMMy8mFrtADkUcj7l033ze/c1UL4xVoFGvwQ
-JjAv7Cz+5anu8KJ3OQy0RUpdKihQh603Mt5fp7Okt8/D3AnBcMgp3hnGvwBDs8l4
-OqU3pEjzAFhQRpi0vFzuDLzY6yZBlHhb7keU8FpY9AOVk1M7nVxAYgY5pWiPUTJB
-6bxcElXieVV811efuDvuP2i4HG8tjs0uO4i8l4Z7EhoLRSYo030UJ2lRuO83/eYG
-1GXxjhkYulE4V5uHJ3PaWmtzre5wvSMHFniZK7XF777UZ5gDDgbo/FjtmYZQmQPx
-vbOAxfZq3yVakztdgQxYi2YN9Lh2rWJzfeISnWhpLzGS+dvFnDqurLCUieyKk4A8
-whBV3OCBpfksUToZuStK6cv2FK/TyArYGBTgPTmLRHn8n4AKgh1DzN2M9YxQ28jd
-rsAsmal05v6GTWJu8w9fHhwtHUO0HWaygdJGVm483FqVHSCigIShnhqT6QfoZY9q
-t4DvkFU6htn7vTEVIsLZaOYdyMFsWIZqoItq3kE+FZdcdCBMuLDjP47IK4g0IFtg
-Yo04gfVicc35HAvJpHCluEwIkEH45KWfRwlcN9rArUYDSMHMYeKIu53d4Q5+eit5
-AtqqUn9C4uk9TWoz3ksrfi5waujwmUtAvDaiaMH78SaiQ9IhncY=
-=tj28
------END PGP SIGNATURE-----
-
---=-0SqJjAld2WmMrSAcbuQn--
+>=20
+>>> +	if (enable_ept)
+>>> +		vmcs_writel(GUEST_CR3, vmcs12->guest_cr3);
+>>> +
+>>> 	/* Late preparation of GUEST_PDPTRs now that EFER and CRs are =
+set. */
+>>> 	if (load_guest_pdptrs_vmcs12 && nested_cpu_has_ept(vmcs12) &&
+>>> 	    is_pae_paging(vcpu)) {
+>>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+>>> index d4575ffb3cec..b530950a9c2b 100644
+>>> --- a/arch/x86/kvm/vmx/vmx.c
+>>> +++ b/arch/x86/kvm/vmx/vmx.c
+>>> @@ -2985,6 +2985,7 @@ void vmx_set_cr3(struct kvm_vcpu *vcpu, =
+unsigned long cr3)
+>>> {
+>>> 	struct kvm *kvm =3D vcpu->kvm;
+>>> 	unsigned long guest_cr3;
+>>> +	bool skip_cr3 =3D false;
+>>> 	u64 eptp;
+>>>=20
+>>> 	guest_cr3 =3D cr3;
+>>> @@ -3000,15 +3001,17 @@ void vmx_set_cr3(struct kvm_vcpu *vcpu, =
+unsigned long cr3)
+>>> 			spin_unlock(&to_kvm_vmx(kvm)->ept_pointer_lock);
+>>> 		}
+>>>=20
+>>> -		if (enable_unrestricted_guest || is_paging(vcpu) ||
+>>> -		    is_guest_mode(vcpu))
+>>> +		if (is_guest_mode(vcpu))
+>>> +			skip_cr3 =3D true;
+>>> +		else if (enable_unrestricted_guest || is_paging(vcpu))
+>>> 			guest_cr3 =3D kvm_read_cr3(vcpu);
+>>> 		else
+>>> 			guest_cr3 =3D =
+to_kvm_vmx(kvm)->ept_identity_map_addr;
+>>> 		ept_load_pdptrs(vcpu);
+>>> 	}
+>>>=20
+>>> -	vmcs_writel(GUEST_CR3, guest_cr3);
+>>> +	if (!skip_cr3)
+>>=20
+>> Nit: It=E2=80=99s a matter of taste, but I prefer positive =
+conditions. i.e. =E2=80=9Cbool
+>> write_guest_cr3=E2=80=9D.
+>>=20
+>> Anyway, code seems valid to me. Nice catch.
+>> Reviewed-by: Liran Alon <liran.alon@oracle.com>
+>>=20
+>> -Liran
+>>=20
+>>> +		vmcs_writel(GUEST_CR3, guest_cr3);
+>>> }
+>>>=20
+>>> int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
+>>> --=20
+>>> 2.22.0
+>>>=20
+>>=20
 
