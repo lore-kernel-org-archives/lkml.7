@@ -6,54 +6,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8FDC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 23:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9994C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 23:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5936A21655
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 23:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9786920863
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 23:41:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728772AbfI0Xlo (ORCPT
+        id S1728795AbfI0Xls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 19:41:44 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12776 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728712AbfI0Xlj (ORCPT
+        Fri, 27 Sep 2019 19:41:48 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:1364 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728763AbfI0Xlo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 19:41:39 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8RNbX0r012541;
-        Fri, 27 Sep 2019 19:41:06 -0400
+        Fri, 27 Sep 2019 19:41:44 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8RNbX3g006406;
+        Fri, 27 Sep 2019 19:40:53 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v9u0p9n89-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v9und8sw7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Sep 2019 19:41:06 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8RNf5EF017839;
-        Fri, 27 Sep 2019 19:41:05 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v9u0p9n7x-1
+        Fri, 27 Sep 2019 19:40:53 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8RNeFJP010395;
+        Fri, 27 Sep 2019 19:40:53 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v9und8sw2-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Sep 2019 19:41:05 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8RNeO2o023852;
-        Fri, 27 Sep 2019 23:41:04 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma03dal.us.ibm.com with ESMTP id 2v5bg8b72g-1
+        Fri, 27 Sep 2019 19:40:52 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8RNeOUn029194;
+        Fri, 27 Sep 2019 23:40:52 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma02wdc.us.ibm.com with ESMTP id 2v5bg7v6d2-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Sep 2019 23:41:04 +0000
+        Fri, 27 Sep 2019 23:40:52 +0000
 Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8RNf3UT36307346
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8RNepOh44761566
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Sep 2019 23:41:03 GMT
+        Fri, 27 Sep 2019 23:40:51 GMT
 Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 990F9112067;
-        Fri, 27 Sep 2019 23:41:03 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id C4695112064;
+        Fri, 27 Sep 2019 23:40:51 +0000 (GMT)
 Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EC7D4112063;
-        Fri, 27 Sep 2019 23:40:59 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 21D89112067;
+        Fri, 27 Sep 2019 23:40:48 +0000 (GMT)
 Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.18.235.58])
         by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 27 Sep 2019 23:40:59 +0000 (GMT)
+        Fri, 27 Sep 2019 23:40:47 +0000 (GMT)
 From:   Leonardo Bras <leonardo@linux.ibm.com>
 To:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         kvm-ppc@vger.kernel.org, linux-arch@vger.kernel.org,
@@ -79,9 +79,9 @@ Cc:     Leonardo Bras <leonardo@linux.ibm.com>,
         Jason Gunthorpe <jgg@ziepe.ca>,
         John Hubbard <jhubbard@nvidia.com>,
         Keith Busch <keith.busch@intel.com>
-Subject: [PATCH v4 10/11] powerpc/book3s_64: Enables counting method to monitor lockless pgtbl walk
-Date:   Fri, 27 Sep 2019 20:40:07 -0300
-Message-Id: <20190927234008.11513-11-leonardo@linux.ibm.com>
+Subject: [PATCH v4 07/11] powerpc/kvm/e500: Applies counting method to monitor lockless pgtbl walks
+Date:   Fri, 27 Sep 2019 20:40:04 -0300
+Message-Id: <20190927234008.11513-8-leonardo@linux.ibm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190927234008.11513-1-leonardo@linux.ibm.com>
 References: <20190927234008.11513-1-leonardo@linux.ibm.com>
@@ -100,31 +100,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enables count-based monitoring method for lockless pagetable walks on
-PowerPC book3s_64.
+Applies the counting-based method for monitoring lockless pgtable walks on
+kvmppc_e500_shadow_map().
 
-Other architectures/platforms fallback to using generic dummy functions.
+Fixes the place where local_irq_restore() is called: previously, if ptep
+was NULL, local_irq_restore() would never be called.
 
 Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
 ---
- arch/powerpc/include/asm/book3s/64/pgtable.h | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/powerpc/kvm/e500_mmu_host.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
-index 8308f32e9782..eb9b26a4a483 100644
---- a/arch/powerpc/include/asm/book3s/64/pgtable.h
-+++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
-@@ -1370,5 +1370,10 @@ static inline bool pgd_is_leaf(pgd_t pgd)
- 	return !!(pgd_raw(pgd) & cpu_to_be64(_PAGE_PTE));
- }
- 
-+#define __HAVE_ARCH_LOCKLESS_PGTBL_WALK_COUNTER
-+void start_lockless_pgtbl_walk(struct mm_struct *mm);
-+void end_lockless_pgtbl_walk(struct mm_struct *mm);
-+int running_lockless_pgtbl_walk(struct mm_struct *mm);
+diff --git a/arch/powerpc/kvm/e500_mmu_host.c b/arch/powerpc/kvm/e500_mmu_host.c
+index 321db0fdb9db..a0be76ad8d14 100644
+--- a/arch/powerpc/kvm/e500_mmu_host.c
++++ b/arch/powerpc/kvm/e500_mmu_host.c
+@@ -473,6 +473,7 @@ static inline int kvmppc_e500_shadow_map(struct kvmppc_vcpu_e500 *vcpu_e500,
+ 	 * We are holding kvm->mmu_lock so a notifier invalidate
+ 	 * can't run hence pfn won't change.
+ 	 */
++	start_lockless_pgtbl_walk(kvm->mm);
+ 	local_irq_save(flags);
+ 	ptep = find_linux_pte(pgdir, hva, NULL, NULL);
+ 	if (ptep) {
+@@ -481,15 +482,18 @@ static inline int kvmppc_e500_shadow_map(struct kvmppc_vcpu_e500 *vcpu_e500,
+ 		if (pte_present(pte)) {
+ 			wimg = (pte_val(pte) >> PTE_WIMGE_SHIFT) &
+ 				MAS2_WIMGE_MASK;
+-			local_irq_restore(flags);
+ 		} else {
+ 			local_irq_restore(flags);
++			end_lockless_pgtbl_walk(kvm->mm);
+ 			pr_err_ratelimited("%s: pte not present: gfn %lx,pfn %lx\n",
+ 					   __func__, (long)gfn, pfn);
+ 			ret = -EINVAL;
+ 			goto out;
+ 		}
+ 	}
++	local_irq_restore(flags);
++	end_lockless_pgtbl_walk(kvm->mm);
 +
- #endif /* __ASSEMBLY__ */
- #endif /* _ASM_POWERPC_BOOK3S_64_PGTABLE_H_ */
+ 	kvmppc_e500_ref_setup(ref, gtlbe, pfn, wimg);
+ 
+ 	kvmppc_e500_setup_stlbe(&vcpu_e500->vcpu, gtlbe, tsize,
 -- 
 2.20.1
 
