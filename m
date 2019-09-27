@@ -2,164 +2,138 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC56C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 00:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 813C8C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 00:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1E2820872
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 00:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4860F20872
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 00:32:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569543940;
-	bh=eqboXYYEr1L5MwwNkv+KGk8gZLgSNHFZESSGK+6zWrk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MO1+hmxjVs34d6f/SyU88qiYuPISX+kXnCsgEXAdwKTMSQMD85ogTtwCA7sJiUvhk
-	 +G+SX5yIorueG9kG2pIBAfwpNWyR0sfakJLp/Vap8ePDARfrlF+xZuLr4qe3onvCOX
-	 LpfKGybb0HKdJCPYGSI1TmNvWOur2RIQ0Q2VlvUg=
+	s=default; t=1569544334;
+	bh=QsUnjBuZAwrux95SfvML5iv3eEepq0UgtdPVb2bTlH0=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=NVSKxuEjmhVmcdaJTvjie47BHCHvUbpuv3jPiaA0SY3wJjy/6x4/3G7CctEsjL6qG
+	 RPQENCDSej9DrWnvhciV3ocOdzFI9ygXSrpcVqqCPceHk0nvjxh+AtTFjhhDJOzVul
+	 uJf1hRLrjW7TGZS1/N2unJmDrCFTQ3mHQ33/qHWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbfI0AZI (ORCPT
+        id S1727439AbfI0AcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 20:25:08 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:40575 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727682AbfI0AZF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 20:25:05 -0400
-Received: by mail-oi1-f195.google.com with SMTP id k9so3726634oib.7;
-        Thu, 26 Sep 2019 17:25:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/FdaUd4Foou3uzALlTE4nuHwXAnVOybAVTlMM/NfMxM=;
-        b=MWof7LvYsCAN8OEjOTq0UogPE5mr2Nw/a5/2+XNVhQQ1p4gBJhJFekeCHLO0zbfXbI
-         ajIJX8wi+NBFVaWA6DnPoW1X2B8RkbQ4fJAeWGvxaZQW0M7qWQ5sVJtbikqgs65Nj5xe
-         LP6hfOVbPmjuUGzy4VF9qimsU04Fp/A9E6b9vlZUD2lNNb9gu16dHzUoq+nQxL8WbqbZ
-         Mq7bQ6sX/O1iPVLDTmfkwQrZXspFgWURIAWRyNHLOfjcy69/xlkU4SLaToGmlA41Sh2C
-         Gd/NcYHFwFA4WFKJYwG7JunSyx/ullo11nQHPCXsHY2rUqTw5YTgbUxmneS7h14gXmqc
-         CdQw==
-X-Gm-Message-State: APjAAAWuZlaWQZ510DQMXW77zAVbnaC75LNjWR0JFpQzQT1MgEkqG635
-        hjnei1f3UaK4WmLvz6bR+K/Tjz4=
-X-Google-Smtp-Source: APXvYqxes6fLBSO8a/NFYc1ZhLQ2DJ3dk3ZrSbyT+sGdDBiq/Yncolj5jjG+yPBb+Q9ycO7s7d945A==
-X-Received: by 2002:aca:fdc9:: with SMTP id b192mr4641000oii.50.1569543904799;
-        Thu, 26 Sep 2019 17:25:04 -0700 (PDT)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id j11sm339866otk.80.2019.09.26.17.25.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Sep 2019 17:25:04 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Oza Pawandeep <oza.oza@broadcom.com>
-Subject: [PATCH 05/11] of: Ratify of_dma_configure() interface
-Date:   Thu, 26 Sep 2019 19:24:49 -0500
-Message-Id: <20190927002455.13169-6-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190927002455.13169-1-robh@kernel.org>
-References: <20190927002455.13169-1-robh@kernel.org>
+        Thu, 26 Sep 2019 20:32:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58842 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725808AbfI0AcN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 20:32:13 -0400
+Received: from localhost (unknown [104.132.0.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38C2D2086A;
+        Fri, 27 Sep 2019 00:32:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569544332;
+        bh=QsUnjBuZAwrux95SfvML5iv3eEepq0UgtdPVb2bTlH0=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=GQyhnFVk6d9XHgaR0X3hVLxVGCnaC3zpdwphghs/tN4/9/SwERAX3RPMRIu5vBsJD
+         2/lbU5vI22OUqrCZNdAOJYpXGnmtCfcUxmwmQkxW1A6d/NNIdgT4WHLMofWIYhXKjR
+         7yGQp3eOHriItW/HzdMRbdCb1SjfWbKcJIHGQcQ4=
+Date:   Thu, 26 Sep 2019 17:32:11 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to avoid data corruption by
+ forbidding SSR overwrite
+Message-ID: <20190927003211.GA36793@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190816030334.81035-1-yuchao0@huawei.com>
+ <20190926203755.GA142676@gmail.com>
+ <20190926214653.GA29685@jaegeuk-macbookpro.roam.corp.google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190926214653.GA29685@jaegeuk-macbookpro.roam.corp.google.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Murphy <robin.murphy@arm.com>
+On 09/26, Jaegeuk Kim wrote:
+> On 09/26, Eric Biggers wrote:
+> > On Fri, Aug 16, 2019 at 11:03:34AM +0800, Chao Yu wrote:
+> > > There is one case can cause data corruption.
+> > > 
+> > > - write 4k to fileA
+> > > - fsync fileA, 4k data is writebacked to lbaA
+> > > - write 4k to fileA
+> > > - kworker flushs 4k to lbaB; dnode contain lbaB didn't be persisted yet
+> > > - write 4k to fileB
+> > > - kworker flush 4k to lbaA due to SSR
+> > > - SPOR -> dnode with lbaA will be recovered, however lbaA contains fileB's
+> > > data
+> > > 
+> > > One solution is tracking all fsynced file's block history, and disallow
+> > > SSR overwrite on newly invalidated block on that file.
+> > > 
+> > > However, during recovery, no matter the dnode is flushed or fsynced, all
+> > > previous dnodes until last fsynced one in node chain can be recovered,
+> > > that means we need to record all block change in flushed dnode, which
+> > > will cause heavy cost, so let's just use simple fix by forbidding SSR
+> > > overwrite directly.
+> > > 
+> > > Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> > > ---
+> > >  fs/f2fs/segment.c | 8 +++++---
+> > >  1 file changed, 5 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> > > index 9d9d9a050d59..69b3b553ee6b 100644
+> > > --- a/fs/f2fs/segment.c
+> > > +++ b/fs/f2fs/segment.c
+> > > @@ -2205,9 +2205,11 @@ static void update_sit_entry(struct f2fs_sb_info *sbi, block_t blkaddr, int del)
+> > >  		if (!f2fs_test_and_set_bit(offset, se->discard_map))
+> > >  			sbi->discard_blks--;
+> > >  
+> > > -		/* don't overwrite by SSR to keep node chain */
+> > > -		if (IS_NODESEG(se->type) &&
+> > > -				!is_sbi_flag_set(sbi, SBI_CP_DISABLED)) {
+> > > +		/*
+> > > +		 * SSR should never reuse block which is checkpointed
+> > > +		 * or newly invalidated.
+> > > +		 */
+> > > +		if (!is_sbi_flag_set(sbi, SBI_CP_DISABLED)) {
+> > >  			if (!f2fs_test_and_set_bit(offset, se->ckpt_valid_map))
+> > >  				se->ckpt_valid_blocks++;
+> > >  		}
+> > > -- 
+> > 
+> > FYI, this commit caused xfstests generic/064 to start failing:
+> 
+> Yup, I was looking at this.
 
-For various DMA masters not directly represented in DT, we pass the OF
-node of their parent or bridge device as the master_np argument to
-of_dma_configure(), such that they can inherit the appropriate DMA
-configuration from whatever is described there. This creates an
-ambiguity for properties which are not valid for a device itself but
-only for its parent bus, since we don't know whether to start looking
-for those at master_np or master_np->parent.
+It seems fcollapse couldn't allocate blocks sequential when rewriting blocks.
 
-Fortunately, the de-facto interface since the prototype change in
-1f5c69aa51f9 ("of: Move of_dma_configure() to device.c to help re-use")
-is pretty clear-cut: either master_np is redundant with dev->of_node, or
-dev->of_node is NULL and master_np is already the relevant parent. Let's
-formally ratify that so we can start relying on it.
-
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
+We need to adjust like this:
 ---
- drivers/of/device.c       | 12 ++++++++++--
- include/linux/of_device.h |  4 ++--
- 2 files changed, 12 insertions(+), 4 deletions(-)
+ tests/generic/064 | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index da8158392010..a45261e21144 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -75,7 +75,8 @@ int of_device_add(struct platform_device *ofdev)
- /**
-  * of_dma_configure - Setup DMA configuration
-  * @dev:	Device to apply DMA configuration
-- * @np:		Pointer to OF node having DMA configuration
-+ * @parent:	OF node of parent device having DMA configuration, if
-+ * 		@dev->of_node is NULL (ignored otherwise)
-  * @force_dma:  Whether device is to be set up by of_dma_configure() even if
-  *		DMA capability is not explicitly described by firmware.
-  *
-@@ -86,15 +87,22 @@ int of_device_add(struct platform_device *ofdev)
-  * can use a platform bus notifier and handle BUS_NOTIFY_ADD_DEVICE events
-  * to fix up DMA configuration.
-  */
--int of_dma_configure(struct device *dev, struct device_node *np, bool force_dma)
-+int of_dma_configure(struct device *dev, struct device_node *parent, bool force_dma)
- {
- 	u64 dma_addr, paddr, size = 0;
- 	int ret;
- 	bool coherent;
- 	unsigned long offset;
- 	const struct iommu_ops *iommu;
-+	struct device_node *np;
- 	u64 mask;
+diff --git a/tests/generic/064 b/tests/generic/064
+index 1ace14b6..058258d5 100755
+--- a/tests/generic/064
++++ b/tests/generic/064
+@@ -72,7 +72,9 @@ done
  
-+	np = dev->of_node;
-+	if (!np)
-+		np = parent;
-+	if (!np)
-+		return -ENODEV;
-+
- 	ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
- 	if (ret < 0) {
- 		/*
-diff --git a/include/linux/of_device.h b/include/linux/of_device.h
-index 8d31e39dd564..a4fe418e57f6 100644
---- a/include/linux/of_device.h
-+++ b/include/linux/of_device.h
-@@ -56,7 +56,7 @@ static inline struct device_node *of_cpu_device_node_get(int cpu)
- }
+ extent_after=`_count_extents $dest`
+ if [ $extent_before -ne $extent_after ]; then
+-	echo "extents mismatched before = $extent_before after = $extent_after"
++	if [ "$FSTYP" != "f2fs" ] || [ $extent_before -ne 1 ] || [ $extent_after -ne 50 ]; then
++		echo "extents mismatched before = $extent_before after = $extent_after"
++	fi
+ fi
  
- int of_dma_configure(struct device *dev,
--		     struct device_node *np,
-+		     struct device_node *parent,
- 		     bool force_dma);
- #else /* CONFIG_OF */
- 
-@@ -107,7 +107,7 @@ static inline struct device_node *of_cpu_device_node_get(int cpu)
- }
- 
- static inline int of_dma_configure(struct device *dev,
--				   struct device_node *np,
-+				   struct device_node *parent,
- 				   bool force_dma)
- {
- 	return 0;
+ # compare original file and test file.
 -- 
-2.20.1
+2.19.0.605.g01d371f741-goog
 
