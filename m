@@ -2,61 +2,155 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DBBC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACED7C352AB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3A342054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8398420872
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:34:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jEhyHybL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbfI0HbO (ORCPT
+        id S1726478AbfI0HeM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 03:31:14 -0400
-Received: from mail.monom.org ([188.138.9.77]:57162 "EHLO mail.monom.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725842AbfI0HbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 03:31:13 -0400
-Received: from mail.monom.org (localhost [127.0.0.1])
-        by filter.mynetwork.local (Postfix) with ESMTP id 0C383500587;
-        Fri, 27 Sep 2019 09:31:12 +0200 (CEST)
-Received: from localhost (b9168f76.cgn.dg-w.de [185.22.143.118])
-        by mail.monom.org (Postfix) with ESMTPSA id D5EBC500483;
-        Fri, 27 Sep 2019 09:31:11 +0200 (CEST)
-Date:   Fri, 27 Sep 2019 09:31:11 +0200
-From:   Daniel Wagner <dwagner@suse.de>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     qla2xxx-upstream@qlogic.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: qla2xxx: Remove WARN_ON_ONCE in
- qla2x00_status_cont_entry()
-Message-ID: <20190927073111.jm3jjmm5gcr6ylc7@beryllium.lan>
-References: <20190926074637.77721-1-dwagner@suse.de>
- <5d5931ef-7ffa-3f3f-bb5e-5379c1716d04@acm.org>
+        Fri, 27 Sep 2019 03:34:12 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:42228 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbfI0HeL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 03:34:11 -0400
+Received: by mail-lj1-f196.google.com with SMTP id y23so1472166lje.9;
+        Fri, 27 Sep 2019 00:34:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=doszWGbeqJhGNmlXgnBna5EvgHabx/d6O/EtYtXDbwI=;
+        b=jEhyHybLYT0E1ol5FjBo36xmkuGWVFBC1mtbB6mIPywrkiYSa0gsRPKdYw7nAp4KQ6
+         Pj6xXEnWldEcHEmWdpg4k9ENupJSHIAqikbxKwCgPGCMZTu7bWSTZYdZGFfbVBV5Asvw
+         RwNXJKoOv4WGIeCAYh8TCP86fgEp1DBcV06euu3ajlr+1rCodsW3vE1KVQNzxnJ1rSx2
+         imtiTjVZamcO9MaSWiFv4AAU5Get7Sz11EHd290fJVJy3iPMJMdsA7LPWQsiPYIElUvh
+         KmLpXUYbJqUM5gUFcg/7i3UVyy7JPSazQ1CfexUgrfi4BXVF3mTf15/NBCa/lw8JTW/C
+         C4bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=doszWGbeqJhGNmlXgnBna5EvgHabx/d6O/EtYtXDbwI=;
+        b=KunEMKm00BjWf2D1TiI0WMEDFYz7OC8xmLOSnM96I6bsKgANYPZ9zmCYJfrqzzVXyC
+         AinTc6kIv3AOGNQAwFn1DSH65qMPM5bT2ZFwXq1Ly167RPcHMqrwKUE0myI1C3LQJWkQ
+         aCKE53aqJoLGICdMR2/tnPESP1o4r9Vu1vuuA3T8UQfG1y+GBRpfvhU1kdRtAgAJbjI0
+         SlGG888zAsi6Tg2k51Rzt5MWqMgm94E17YrvzJPOjWIANWWgoS4eHVSZvtW06eTU0Hs7
+         qSn9meHkuphzLr4U5P4So7XTFMMV0wkL2eqKkEmxklxCdE/dlwCyYsMUCBN6vjpSN/oT
+         TCgw==
+X-Gm-Message-State: APjAAAXZT5lIhxoBv2q332TYNjWWhskWg6P4OyW9OTpD3rqjuPaupL/V
+        rcSVQ7I3U8SwGtFuYVZhRdaOnuquuOE2zI+mzG8=
+X-Google-Smtp-Source: APXvYqwQmtwsyouO3Zzfka6gwtQVJ/qWbnVInojMGIv1C/zgBRBYRQk0/5BM8MAxX2bww5KD5vkH92joSMy6tECIuws=
+X-Received: by 2002:a2e:9a89:: with SMTP id p9mr1841492lji.131.1569569649807;
+ Fri, 27 Sep 2019 00:34:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5d5931ef-7ffa-3f3f-bb5e-5379c1716d04@acm.org>
-User-Agent: NeoMutt/20180716
+References: <20190920135137.10052-1-ricardo@ribalda.com> <20190920135137.10052-8-ricardo@ribalda.com>
+ <6e4c1969-a80d-4747-7a44-b7a46804fe12@xs4all.nl>
+In-Reply-To: <6e4c1969-a80d-4747-7a44-b7a46804fe12@xs4all.nl>
+From:   Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Date:   Fri, 27 Sep 2019 09:33:53 +0200
+Message-ID: <CAPybu_3ga6rJ8pzw3wAP=nMOHDqeQEWWa-reto7Xk_FzRFVLyw@mail.gmail.com>
+Subject: Re: [PATCH v6 7/7] media: imx214: Add new control with V4L2_CID_UNIT_CELL_SIZE
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Hans
 
-> Should the following be added?
-> 
-> Fixes: 88263208dd23 ("scsi: qla2xxx: Complain if sp->done() is not
-> called from the completion path")
+On Fri, 27 Sep 2019, 09:14 Hans Verkuil, <hverkuil-cisco@xs4all.nl> wrote:
+>
+> On 9/20/19 3:51 PM, Ricardo Ribalda Delgado wrote:
+> > From: Ricardo Ribalda Delgado <ribalda@kernel.org>
+> >
+> > According to the product brief, the unit cell size is 1120 nanometers^2.
+> >
+> > https://www.sony-semicon.co.jp/products_en/IS/sensor1/img/products/ProductBrief_IMX214_20150428.pdf
+> >
+> > Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+> > ---
+> >  drivers/media/i2c/imx214.c | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> >
+> > diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
+> > index 159a3a604f0e..57562e20c4ca 100644
+> > --- a/drivers/media/i2c/imx214.c
+> > +++ b/drivers/media/i2c/imx214.c
+> > @@ -47,6 +47,7 @@ struct imx214 {
+> >       struct v4l2_ctrl *pixel_rate;
+> >       struct v4l2_ctrl *link_freq;
+> >       struct v4l2_ctrl *exposure;
+> > +     struct v4l2_ctrl *unit_size;
+> >
+> >       struct regulator_bulk_data      supplies[IMX214_NUM_SUPPLIES];
+> >
+> > @@ -948,6 +949,13 @@ static int imx214_probe(struct i2c_client *client)
+> >       static const s64 link_freq[] = {
+> >               IMX214_DEFAULT_LINK_FREQ,
+> >       };
+> > +     struct v4l2_area unit_size = {
+> > +             .width = 1120,
+> > +             .height = 1120,
+> > +     };
+> > +     union v4l2_ctrl_ptr p_def = {
+> > +             .p_area = &unit_size,
+> > +     };
+>
+> Use static const for both.
+>
+> I think you should add a small static inline helper function to v4l2-ctrls.h that
+> takes a void pointer and returns a union v4l2_ctrl_ptr.
+>
+> Then you don't need to make a union v4l2_ctrl_ptr just to pass the unit_size pointer.
+>
 
-Good point. Just send out and updated version
+That sounds useful, but can we warantee for all the arches that
+sizeof(v4l2_ctrl_ptr) <= sizeof (void *)
 
-> Anyway:
-> 
-> Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Of course, it sounds logic, that a union of pointers is the same size
+than a pointer... but you never know.
+
+No matter what I will make the helper and resend. with all the changes
+from Jacopo
 
 Thanks!
-Daniel
+
+> Regards,
+
+
+
+>
+>         Hans
+>
+> >       int ret;
+> >
+> >       ret = imx214_parse_fwnode(dev);
+> > @@ -1029,6 +1037,10 @@ static int imx214_probe(struct i2c_client *client)
+> >                                            V4L2_CID_EXPOSURE,
+> >                                            0, 3184, 1, 0x0c70);
+> >
+> > +     imx214->unit_size = v4l2_ctrl_new_std_compound(&imx214->ctrls,
+> > +                                                    NULL,
+> > +                                                    V4L2_CID_UNIT_CELL_SIZE,
+> > +                                                    p_def);
+> >       ret = imx214->ctrls.error;
+> >       if (ret) {
+> >               dev_err(&client->dev, "%s control init failed (%d)\n",
+> >
+>
