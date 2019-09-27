@@ -2,109 +2,145 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A330C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B27FC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06497217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:54:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFC6621920
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:57:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="BOCZwWk6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727517AbfI0RyQ (ORCPT
+        id S1727825AbfI0R5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 13:54:16 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33640 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726294AbfI0RyQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 13:54:16 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8RHs4Fo096683
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 13:54:14 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2v9n1a4hx6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 13:54:14 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
-        Fri, 27 Sep 2019 18:54:12 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 27 Sep 2019 18:54:09 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8RHrfog39977304
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Sep 2019 17:53:41 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CA58442045;
-        Fri, 27 Sep 2019 17:54:08 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0DF8F42041;
-        Fri, 27 Sep 2019 17:54:07 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.102.3.25])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Fri, 27 Sep 2019 17:54:06 +0000 (GMT)
-Date:   Fri, 27 Sep 2019 23:24:05 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Naveen Rao <naveen.n.rao@linux.vnet.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: Re: [PATCH] tracing/probe: Test nr_args match in looking for same
- probe events
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20190927055035.4c3abae9@oasis.local.home>
- <20190927131458.GA19008@linux.vnet.ibm.com>
- <20190927105019.661591cd@oasis.local.home>
+        Fri, 27 Sep 2019 13:57:14 -0400
+Received: from mail-eopbgr750054.outbound.protection.outlook.com ([40.107.75.54]:48558
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726385AbfI0R5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 13:57:13 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PJtjOKxhhHnoQ38PyMJoBc3+NssEe3E+n1WvS3/Mj4DaPG1POD1XsGwyiltcXWZB5bjTj7ZRD46fh5Yt5suPlbgXS2+7fNkcZdPl5v1klqddUBmhEtpnxqopBYUmzXX83IAVXnDuqY8njSr7M7zE4bWDv6wte2xWRCAs5oPA4V6N4KVbqY2qPNMfZd/zvEV4ezT+k6NJO0/XMKW9oY2CmjKvK6QwYmoQwOlwkPn1iRKAD6rrXWEzl9n6QmPBbSEiXcFiBZH2Ps+IVLEg7LQa6V6Vd2NWBBTy8qW+Wwp8XPkIVtJ/KwlueMOgLhoVj37ZjQFXtBRTZEsUxCJa1Wyx6A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zLK3fU9R3QqMYsmbtnfy5E1MjCmBw3cMeaUakLjq418=;
+ b=ERNTx4zUq5FcKmwkPM6/GGOPsAWD8aqg/YLB89TBgA4OijfxyKSCZZUS4maTiDStu8HjRk6x923bphwpP6m52p6Twi8TI3E69sg3adqEBHdb5dCKaEaEeug6FWu0A0L2Q5hW01XjbOLWmkiFcr6Gv6mAf6pilE+MKJ0EmoYFsjNZt+hT028VhPulbZZFvgZq0CzPF+7AVdWTh+jSgQE86gtXOlKaPFWK0qm7Yl5sYpy7Aq7BnoNSnnl1IHLzUIXYxpccDk9s+eBQa6NgNM6rIX6dVsupv+0tOC3MCo7MhwOlFQgzyJ278S/iZ5CBdvxU89tfDZVN/Gr5XhGnJLx2hw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zLK3fU9R3QqMYsmbtnfy5E1MjCmBw3cMeaUakLjq418=;
+ b=BOCZwWk6Sw/i0xgItgHGdcKQKY0l4O3kkEhNlu8hwkWBZbXIyu8refM6b9PE+PNuEWFl7CNkfqVIhJzATDIvkWCGg9hXGfoI+17IPKP/eVWvTs45CSqKXmrcAjrDtWkEOctcKG3/zhnNdW6VHrdnZFq607bCHhm14Txu4R0QycM=
+Received: from CY4PR1201MB0230.namprd12.prod.outlook.com (10.172.79.7) by
+ CY4PR1201MB0181.namprd12.prod.outlook.com (10.172.79.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.26; Fri, 27 Sep 2019 17:56:30 +0000
+Received: from CY4PR1201MB0230.namprd12.prod.outlook.com
+ ([fe80::708e:c826:5b05:e3f0]) by CY4PR1201MB0230.namprd12.prod.outlook.com
+ ([fe80::708e:c826:5b05:e3f0%11]) with mapi id 15.20.2284.023; Fri, 27 Sep
+ 2019 17:56:30 +0000
+From:   Harry Wentland <hwentlan@amd.com>
+To:     Lyude Paul <lyude@redhat.com>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>
+CC:     "Wentland, Harry" <Harry.Wentland@amd.com>,
+        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Zuo, Jerry" <Jerry.Zuo@amd.com>, Thomas Lim <Thomas.Lim@amd.com>,
+        "Francis, David" <David.Francis@amd.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/6] drm/amdgpu/dm/mst: Use ->atomic_best_encoder
+Thread-Topic: [PATCH 3/6] drm/amdgpu/dm/mst: Use ->atomic_best_encoder
+Thread-Index: AQHVdL0FUxqHHzKn0EmCiHXueawBm6c/0EsA
+Date:   Fri, 27 Sep 2019 17:56:30 +0000
+Message-ID: <6129c0a5-9a8a-8a05-4dd9-db3204dcbfd8@amd.com>
+References: <20190926225122.31455-1-lyude@redhat.com>
+ <20190926225122.31455-4-lyude@redhat.com>
+In-Reply-To: <20190926225122.31455-4-lyude@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [165.204.55.251]
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
+x-clientproxiedby: YTOPR0101CA0059.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00:14::36) To CY4PR1201MB0230.namprd12.prod.outlook.com
+ (2603:10b6:910:1e::7)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Harry.Wentland@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f9e2c36d-9bf0-43e8-6454-08d7437406b3
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:CY4PR1201MB0181;
+x-ms-traffictypediagnostic: CY4PR1201MB0181:
+x-ld-processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR1201MB01818DFCDF12965DC9DDCCE58C810@CY4PR1201MB0181.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:144;
+x-forefront-prvs: 0173C6D4D5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(346002)(39860400002)(136003)(366004)(199004)(189003)(2501003)(65956001)(31686004)(52116002)(486006)(2906002)(110136005)(4326008)(54906003)(58126008)(65806001)(8676002)(446003)(316002)(5660300002)(3846002)(186003)(99286004)(71190400001)(71200400001)(36756003)(11346002)(8936002)(76176011)(476003)(26005)(2616005)(6116002)(386003)(53546011)(6506007)(102836004)(7736002)(256004)(66476007)(25786009)(31696002)(6436002)(6486002)(229853002)(66556008)(66446008)(64756008)(14454004)(81156014)(66066001)(81166006)(6246003)(66946007)(6512007)(305945005)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR1201MB0181;H:CY4PR1201MB0230.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: HpJToeaH0+njwtJW7ZkNTNfsgmpPjmTBV7nURk3ZaLu9PBWDS4+y5e2ug014F6abZwgHrxRoDrWr/w2CaQZYpxkZovhyVvLAwLg1+I7F3p6i3oNzcZ5tl0LvOrTxCyneYqJtGCfLw7snb6bmQa1UFhWswD/wpeRceXTRV1tI+BaO4XxdjxUrvo2dXL9JUHh8cuBhhRAQea21YclnsC+k4O47L1A6KIf8i9Jt/sm2G160vcVtKCp+ve5b5Wp2bGrnWiDewkfroDSh7D86V28xv/Kkiome4Po98bp+Wd9U2hBrokac+0ShNQBHkoFwmyipuWYG256r/XMGA5MBcpwLiqHkB2kenGXUHCPf4Cu3VWmnwDAiTh6UqtuYylLjC5BWtDvwIRZFXZLMHTbmzRR44QNDTDwzpGJNOBJm32T8fec=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <934D761988E133448EB5E1019A400C28@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20190927105019.661591cd@oasis.local.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-TM-AS-GCONF: 00
-x-cbid: 19092717-0012-0000-0000-00000351631B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19092717-0013-0000-0000-0000218BFF88
-Message-Id: <20190927175405.GA7088@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-27_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=839 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909270149
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f9e2c36d-9bf0-43e8-6454-08d7437406b3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Sep 2019 17:56:30.6740
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wUXFvAIMvELfCASJeQ2ok+TCvP6hiyaE44x/VTPajJzpmTN/qmMrHSOQUx7XDwFFbvm96ISUnM9V56DBhJCxBw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0181
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > 
-> > This has a side-effect where the newer probe has same argument commands, we
-> > still end up appending the probe.
-> 
-> ??
-> 
-> How so?
-> 
-> If the two have the same number of arguments we do exactly what we did
-> before this patch. Please explain to me how that side effect would happen?
-> 
-> It basically is doing, "if the two probes do not have the same number
-> of arguments, don't bother comparing, because they are different."
-> 
-
-Lets take the first probe has 3 arguments passed to it and the second probe
-has just 2 arguments. If the first two arguments are same type, name, and
-comm, should we append to the first probe? I think No, I would believe we
-should append only if the comm of either of the arguments was different.
-
-Example:
-echo p:test _do_fork arg1=%ax arg2=%bx arg3=%cx >> kprobe_events
-
-echo p:test _do_fork arg1=%ax arg2=%bx >> kprobe_events
-
+T24gMjAxOS0wOS0yNiA2OjUxIHAubS4sIEx5dWRlIFBhdWwgd3JvdGU6DQo+IFdlIGFyZSBzdXBw
+b3NlZCB0byBiZSBhdG9taWMgYWZ0ZXIgYWxsLiBXZSdsbCBuZWVkIHRoaXMgaW4gYSBtb21lbnQg
+Zm9yDQo+IHRoZSBuZXh0IGNvbW1pdC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEx5dWRlIFBhdWwg
+PGx5dWRlQHJlZGhhdC5jb20+DQoNClJldmlld2VkLWJ5OiBIYXJyeSBXZW50bGFuZCA8aGFycnku
+d2VudGxhbmRAYW1kLmNvbT4NCg0KSGFycnkNCg0KPiAtLS0NCj4gIC4uLi9kcm0vYW1kL2Rpc3Bs
+YXkvYW1kZ3B1X2RtL2FtZGdwdV9kbV9tc3RfdHlwZXMuYyAgICB8IDEwICsrKysrLS0tLS0NCj4g
+IDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pDQo+IA0KPiBk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FtZC9kaXNwbGF5L2FtZGdwdV9kbS9hbWRncHVf
+ZG1fbXN0X3R5cGVzLmMgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvYW1kZ3B1X2RtL2Ft
+ZGdwdV9kbV9tc3RfdHlwZXMuYw0KPiBpbmRleCBhMzk4ZGRkMWYzMDYuLmQ5MTEzY2UwYmUwOSAx
+MDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FtZC9kaXNwbGF5L2FtZGdwdV9kbS9hbWRn
+cHVfZG1fbXN0X3R5cGVzLmMNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2FtZC9kaXNwbGF5L2Ft
+ZGdwdV9kbS9hbWRncHVfZG1fbXN0X3R5cGVzLmMNCj4gQEAgLTI0MywxNyArMjQzLDE3IEBAIHN0
+YXRpYyBpbnQgZG1fZHBfbXN0X2dldF9tb2RlcyhzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVj
+dG9yKQ0KPiAgCXJldHVybiByZXQ7DQo+ICB9DQo+ICANCj4gLXN0YXRpYyBzdHJ1Y3QgZHJtX2Vu
+Y29kZXIgKmRtX21zdF9iZXN0X2VuY29kZXIoc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3Rv
+cikNCj4gK3N0YXRpYyBzdHJ1Y3QgZHJtX2VuY29kZXIgKg0KPiArZG1fbXN0X2F0b21pY19iZXN0
+X2VuY29kZXIoc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvciwNCj4gKwkJCSAgIHN0cnVj
+dCBkcm1fY29ubmVjdG9yX3N0YXRlICpjb25uZWN0b3Jfc3RhdGUpDQo+ICB7DQo+IC0Jc3RydWN0
+IGFtZGdwdV9kbV9jb25uZWN0b3IgKmFtZGdwdV9kbV9jb25uZWN0b3IgPSB0b19hbWRncHVfZG1f
+Y29ubmVjdG9yKGNvbm5lY3Rvcik7DQo+IC0NCj4gLQlyZXR1cm4gJmFtZGdwdV9kbV9jb25uZWN0
+b3ItPm1zdF9lbmNvZGVyLT5iYXNlOw0KPiArCXJldHVybiAmdG9fYW1kZ3B1X2RtX2Nvbm5lY3Rv
+cihjb25uZWN0b3IpLT5tc3RfZW5jb2Rlci0+YmFzZTsNCj4gIH0NCj4gIA0KPiAgc3RhdGljIGNv
+bnN0IHN0cnVjdCBkcm1fY29ubmVjdG9yX2hlbHBlcl9mdW5jcyBkbV9kcF9tc3RfY29ubmVjdG9y
+X2hlbHBlcl9mdW5jcyA9IHsNCj4gIAkuZ2V0X21vZGVzID0gZG1fZHBfbXN0X2dldF9tb2RlcywN
+Cj4gIAkubW9kZV92YWxpZCA9IGFtZGdwdV9kbV9jb25uZWN0b3JfbW9kZV92YWxpZCwNCj4gLQku
+YmVzdF9lbmNvZGVyID0gZG1fbXN0X2Jlc3RfZW5jb2RlciwNCj4gKwkuYXRvbWljX2Jlc3RfZW5j
+b2RlciA9IGRtX21zdF9hdG9taWNfYmVzdF9lbmNvZGVyLA0KPiAgfTsNCj4gIA0KPiAgc3RhdGlj
+IHZvaWQgYW1kZ3B1X2RtX2VuY29kZXJfZGVzdHJveShzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29k
+ZXIpDQo+IA0K
