@@ -2,127 +2,123 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDEDFC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A6EC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3FFE20673
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A965520673
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:45:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="myBhg/eG"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="r/mwFqxo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727632AbfI0Mox (ORCPT
+        id S1727677AbfI0MpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 08:44:53 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38246 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbfI0Mow (ORCPT
+        Fri, 27 Sep 2019 08:45:12 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:17358 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725992AbfI0MpL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 08:44:52 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w12so2577261wro.5
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 05:44:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=iQL/mBFoyT5w4+hqPmctLZTeB55w7NLl/wO5PdSiL2U=;
-        b=myBhg/eGuipuj/7sSVjnjujigvoCGLp1eCc3gH/+ShzrqZTEiNeAsQO5iFxgOrXhZ0
-         iT/cp4R/uktq28HYdiQjaevn/BI4XxDSO0LJIdd+4SXdZROwKVUpsWkaC/CAIuYIeZF6
-         KNB44AZ7EwARPpc+ksUoIxDOHnh2+f72TqOuTNeHwGj5rYDUarg7X3eE1+XPC8dRm6r6
-         GQEf9qpoVYT/3ImSdHxdS9OUtJ0RreW1yo56qA+XwY3h4jtozieTx7s66FL6GcI5SpcA
-         zXKE40T/1sW+8byUh+KODrKra+jt+AHhdsG9IIHNstzAwmfblkzrVf6oqbQfiYY2QUJC
-         ExNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iQL/mBFoyT5w4+hqPmctLZTeB55w7NLl/wO5PdSiL2U=;
-        b=ixcSbvPzLzKXnWT6xT/mkmlkXVqgn6xmtnEeT2xRwKFi9sgtNrXL9WQqf9KPGDb/UY
-         4Xo5enH22Xs/tWvc3Bc9+isAHvUjZcuSgZKslG78PPWehyU8HJi3kc8qjJX3YQVusWwv
-         csQXo8fW+myqJ0z9GDyJyyuiFsx27PbAaoO/G1h49RmVYxWCKPXVY7N9YN+VHQxlVhsM
-         BZ9huYd6KdTpeO+OfNR7McLZm0z1CEY5jswF5Nn5jP8umETOsQ3EwGoEhaY/bbYJ5pdJ
-         p/hmjlaqohstEm4IK9baCOcTj4S+f6+JW2Z5CVaH9o+kqOWk3ZLMFN3W/FOCfEQdvNS3
-         ui4A==
-X-Gm-Message-State: APjAAAWWa/NF5dTewBqr8OYHqnAETTswzDfLbUBkPIwi8Rxe8bpmq3bv
-        WyDGQob9ZCkOYDEV77qdPW8sgA==
-X-Google-Smtp-Source: APXvYqzSC7+dVijO0hQycnadf7tT0XIPdovlOCjVDrWfHckpArc6CW+OsTBS1TZwnP1NrZaSUrm1qw==
-X-Received: by 2002:adf:fc0e:: with SMTP id i14mr2867784wrr.302.1569588289230;
-        Fri, 27 Sep 2019 05:44:49 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
-        by smtp.gmail.com with ESMTPSA id v4sm4201457wrg.56.2019.09.27.05.44.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2019 05:44:48 -0700 (PDT)
-Date:   Fri, 27 Sep 2019 13:44:46 +0100
-From:   Matthias Maennich <maennich@google.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Jessica Yu <jeyu@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Martijn Coenen <maco@android.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/7] kbuild: fix build error of 'make nsdeps' in clean
- tree
-Message-ID: <20190927124446.GE259443@google.com>
-References: <20190927093603.9140-1-yamada.masahiro@socionext.com>
- <20190927093603.9140-6-yamada.masahiro@socionext.com>
+        Fri, 27 Sep 2019 08:45:11 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8RCf7Do023288;
+        Fri, 27 Sep 2019 14:45:00 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=c2263AQj5goxPH7EsCg1rVlru4wVSjoHgnO39hvQMvU=;
+ b=r/mwFqxoJAAbj87JK8+QsrqK4//Z3gqalF4KpBrjPTVB2JQsYrRzLYcJFzHxqg2PxRE7
+ 4cm4Washim2C0ET+m+uFwBbEW8wZL/uE8ix1YYQ/nFrinQlC2AYV7roO4U6r1B2QG76u
+ ccEQnJaNAXoz9B3cFj2iKvxZ8G3rK2ie/RSWQJKSTRR432Rcho9AC700iSonRYa8XNCg
+ mkjcyu4cdiBQ1QpO2FXbiInaeJ+xchBL9IzgYs1yo3YO5qun1VnA65ML0nD83DlC6bGN
+ pBpmMcI0H1jf3uPAryo0TU76dT4b/HhfzxyaMVyyJbzsr71orpQkdtZLs4TkEbjgFZWY dg== 
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2v59mxmks1-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 27 Sep 2019 14:45:00 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 287334E;
+        Fri, 27 Sep 2019 12:44:56 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9F3222BCB3B;
+        Fri, 27 Sep 2019 14:44:56 +0200 (CEST)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 27 Sep
+ 2019 14:44:56 +0200
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Fri, 27 Sep 2019 14:44:56 +0200
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     Marc Zyngier <maz@kernel.org>
+CC:     Alexandre TORGUE <alexandre.torgue@st.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ARM: dts: stm32: Enable high resolution timer
+Thread-Topic: [PATCH] ARM: dts: stm32: Enable high resolution timer
+Thread-Index: AQHVdRBWUjMsQJUFmUWpOD9xBCdtcac/P/aAgAAUtICAAAFTgIAAARMA
+Date:   Fri, 27 Sep 2019 12:44:55 +0000
+Message-ID: <69af57d1-13a9-9e35-78f2-4a0d17bdaf6d@st.com>
+References: <20190927084819.645-1-benjamin.gaignard@st.com>
+ <da48ce9633441cd0186518fa7ce1d528@www.loen.fr>
+ <341949c8-7864-5d65-2797-988022724a4c@st.com>
+ <ff11797da8f049b354797689754fde52@www.loen.fr>
+In-Reply-To: <ff11797da8f049b354797689754fde52@www.loen.fr>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.50]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <92F7A698A77B6645A13BFC2DB06725DE@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190927093603.9140-6-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-09-27_06:2019-09-25,2019-09-27 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 06:36:01PM +0900, Masahiro Yamada wrote:
->Running 'make nsdeps' in a clean source tree fails as follows:
->
->$ make -s clean; make -s defconfig; make nsdeps
->   [ snip ]
->awk: fatal: cannot open file `init/modules.order' for reading (No such file or directory)
->make: *** [Makefile;1307: modules.order] Error 2
->make: *** Deleting file 'modules.order'
->make: *** Waiting for unfinished jobs....
->
->The cause of the error is 'make nsdeps' does not build modules at all.
->Set KBUILD_MODULES to fix it.
-
-You reported that issue earlier, but having nsdeps depend on modules
-(see Makefile:1708) resolved that for me. I wonder what I missed. But I
-won't disagree with you on kbuild advise. :-)
-
-Reviewed-by: Matthias Maennich <maennich@google.com>
-
-Cheers,
-Matthias
-
->Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
->---
->
-> Makefile | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/Makefile b/Makefile
->index d456746da347..80ba8efd56bb 100644
->--- a/Makefile
->+++ b/Makefile
->@@ -616,7 +616,7 @@ endif
-> # in addition to whatever we do anyway.
-> # Just "make" or "make all" shall build modules as well
->
->-ifneq ($(filter all _all modules,$(MAKECMDGOALS)),)
->+ifneq ($(filter all _all modules nsdeps,$(MAKECMDGOALS)),)
->   KBUILD_MODULES := 1
-> endif
->
->-- 
->2.17.1
->
+DQpPbiA5LzI3LzE5IDI6NDEgUE0sIE1hcmMgWnluZ2llciB3cm90ZToNCj4gT24gMjAxOS0wOS0y
+NyAxMzozNiwgQmVuamFtaW4gR0FJR05BUkQgd3JvdGU6DQo+PiBPbiA5LzI3LzE5IDE6MjIgUE0s
+IE1hcmMgWnluZ2llciB3cm90ZToNCj4+PiBPbiAyMDE5LTA5LTI3IDA5OjQ4LCBCZW5qYW1pbiBH
+YWlnbmFyZCB3cm90ZToNCj4+Pj4gQWRkaW5nIGFsd2F5cy1vbiBtYWtlcyBhcm0gYXJjaF90aW1l
+ciBjbGFpbSB0byBiZSBhbiBoaWdoIHJlc29sdXRpb24NCj4+Pj4gdGltZXIuDQo+Pj4+IFRoYXQg
+aXMgcG9zc2libGUgYmVjYXVzZSBwb3dlciBtb2RlIHdvbid0IHN0b3AgY2xvY2tpbmcgdGhlIHRp
+bWVyLg0KPj4+DQo+Pj4gVGhlICJhbHdheXMtb24iIGlzIG5vdCBhYm91dCB0aGUgY2xvY2suIEl0
+IGlzIGFib3V0IHRoZSBjb21wYXJhdG9yLg0KPj4+IFRoZSBjbG9jayBpdHNlbGYgaXMgKmd1YXJh
+bnRlZWQqIHRvIGFsd2F5cyB0aWNrLiBJZiBpdCBkaWRuJ3QsIA0KPj4+IHRoYXQnZCBiZQ0KPj4+
+IGFuIGludGVncmF0aW9uIGJ1ZywgYW5kIGEgcHJldHR5IGJhZCBvbmUuDQo+Pj4NCj4+PiBXaGF0
+IHlvdSdyZSBjbGFpbWluZyBoZXJlIGlzIHRoYXQgeW91ciBDUFUgbmV2ZXIgZW50ZXJzIGEgbG93
+LXBvd2VyIA0KPj4+IG1vZGU/DQo+Pj4gRXZlcj8gSSBmaW5kIHRoaXMgdmVyeSBoYXJkIHRvIGJl
+bGlldmUuDQo+Pj4NCj4+PiBGdXJ0aGVybW9yZSwgY2xhaW1pbmcgdGhhdCBhbHdheXMtb24gaXMg
+dGhlIHdheSB0byBmb3JjZSB0aGUgYXJjaC10aW1lcg0KPj4+IHRvIGJlIGFuIGhydGltZXIgaXMg
+ZmFjdHVhbGx5IHdyb25nLiBUaGlzIGlzIHdoYXQgaGFwcGVucyAqaWYqIHRoaXMgaXMNCj4+PiB0
+aGUgb25seSB0aW1lciBpbiB0aGUgc3lzdGVtLiBUaGUgb25seSBjYXNlIHRoaXMgaXMgdHJ1ZSBp
+cyBmb3IgdmlydHVhbA0KPj4+IG1hY2hpbmVzLiBBbnl0aGluZyBlbHNlIGhhcyBhIGdsb2JhbCB0
+aW1lciBzb21ld2hlcmUgdGhhdCB3aWxsIGFsbG93DQo+Pj4gdGhlIGFyY2ggdGltZXJzIHRvIGJl
+IHVzZWQgYXMgYW4gaHJ0aW1lci4NCj4+Pg0KPj4+IEknbSBwcmV0dHkgc3VyZSB5b3UgdG9vIGhh
+dmUgYSBnbG9iYWwgdGltZXIgc29tZXdoZXJlIGluIHlvdXIgc3lzdGVtLg0KPj4+IEVuYWJsZSBp
+dCwgYW5kIGVuam95IGhydGltZXJzIHdpdGhvdXQgaGF2aW5nIHRvIGxpZSBhYm91dCB0aGUgDQo+
+Pj4gcHJvcGVydGllcw0KPj4+IG9mIHlvdXIgc3lzdGVtISA7LSkNCj4+DQo+PiBIaSBNYXJjLA0K
+Pj4NCj4+IFRoaXMgU29DIGRvZXNuJ3QgaGF2ZSBhbnkgb3RoZXIgZ2xvYmFsIHRpbWVyLiBVc2Ug
+YXJjaF90aW1lIGlzIHRoZSBvbmx5DQo+PiB3ZSBoYXZlIHRvIHByb3ZpZGUgaHJ0aW1lciBvbiB0
+aGlzIHN5c3RlbS4NCj4NCj4gQW5kIHlvdSBkb24ndCBoYXZlIGFueSBmb3JtIG9mIHBvd2VyIG1h
+bmFnZW1lbnQgZWl0aGVyPyBXaGF0IGhhcHBlbnMgd2hlbg0KPiB5b3VyIENQVSBnb2VzIGludG8g
+aWRsZT8gSWYgeW91ciBzeXN0ZW0gZG9lcyBhbnkgZm9ybSBvZiBwb3dlciBtYW5hZ2VtZW50DQo+
+ICphbmQqIGRvZXNuJ3QgaGF2ZSBhIHNlcGFyYXRlIHRpbWVyLCBpdCBpcyByZW1hcmthYmx5IGJy
+b2tlbi4NCg0KRXZlbiBpbiBsb3ctcG93ZXIgbW9kZXMgdGhpcyB0aW1lciBpcyBhbHdheXMgcG93
+ZXJlZCBhbmQgY2xvY2tlZCBzbyBpdCANCmlzIHdvcmtpbmcgZmluZS4NCg0KPg0KPiDCoMKgwqDC
+oMKgwqDCoCBNLg==
