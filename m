@@ -2,199 +2,272 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50209C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88510C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E9C2207E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C1F5207E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:43:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NUpuMbLc"
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="AR/Au2s+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbfI0Unb (ORCPT
+        id S1728285AbfI0Uno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 16:43:31 -0400
-Received: from mail-pf1-f172.google.com ([209.85.210.172]:45684 "EHLO
-        mail-pf1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfI0Unb (ORCPT
+        Fri, 27 Sep 2019 16:43:44 -0400
+Received: from mail-lj1-f175.google.com ([209.85.208.175]:37842 "EHLO
+        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfI0Uno (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 16:43:31 -0400
-Received: by mail-pf1-f172.google.com with SMTP id y72so2191587pfb.12
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 13:43:30 -0700 (PDT)
+        Fri, 27 Sep 2019 16:43:44 -0400
+Received: by mail-lj1-f175.google.com with SMTP id l21so3762769lje.4
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 13:43:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZWso/5VsI7l7vmizuPZXNooRiN6pJrn5CZG207krIcU=;
-        b=NUpuMbLclSZiWRBffmG3OLzCOkD2xfh6OpA0fNGZJyijr5He1k5YEB9kr6zCp5A1G3
-         CbAk79Ww2gZZFrTRrMBVJCLuPrNaP4+KNEBsEKi2p9FdKIgS2AxzmyPn/3igX517LvnN
-         iHdMJui/KJvM4gVx6VfvBOvP4IfhJgRqTEyobW2VcJZ8C0RYItwU4/krRm1BdWRL770z
-         gy4GNzHX3hgLCib/PL85e0SiEm4/L8iZD3NbcQ7We02HCz05TUt34VmEhsWCBcjM4Tov
-         pcuZJgBB8D7MOVv2WUf0U0VEl98OypzEjAFZbiGqFw5I8ixjORmHkB3pMA/8/eU0qqoh
-         HK4g==
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=A0GOiTYcakjAsLgMbhX6Gl6xJaZlx6KbV4y/K1peXEI=;
+        b=AR/Au2s+7lQ9sclq3bK8t01/TXhB7sbpX9bS2NjVaOFNB9gM40RN6jNnSE6aCyggh6
+         FjvHFo92laJsiTYib53OGFXorKCaGJGq2o7Xd21NwIzvufPNPiIM80dwd1WJWg/JSzYt
+         mtw5LG9ns1AnVpi9EpMeEOW0Iqjqo4XR+sda5JqPYXQOG0e5eZ2sebCAmXWYQwpxQkYj
+         g1G1uGXyn8lyAULLJeE9bhp+l9lJig6kbWHU0TOi0HHqnQ8GBuTvkwsshHCFRTkYVqDC
+         MYIM5h9MGyRmxdjAgngqBKF6LAXXj3KEWd+uPTrz+Tn6T2iSRv8vlCQ+7r9/CNaQxqCG
+         MUUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZWso/5VsI7l7vmizuPZXNooRiN6pJrn5CZG207krIcU=;
-        b=k2P6+jFy99Ojuuah3N4sxm6pFhnqX3DJqMUY4Jc8FFFxzNgkG0heD1NQ+59RidKeiF
-         4mzc5cd+IgCEJSGUjehk6E7WV+14o2slorawxDEpYUyP9j4Cvp39ByPfq2Yyd++2CfUb
-         sZ/wE1xwhSkHfO+HHiNTu4lHuzUXLvsjkXgCLkPzf8Jc3fBwTpUXvAZtKNbtqws7Ckh6
-         8PEovJIj5KQtKUxykofKDLNK5ylV3MZ+yg8thqwpAxSCYzA4rvLbsM1S9RcNPqjOPFHI
-         LwiHPFQEpwy/4cdrLHDkSCgXw/OEPnZwWMQVdfZSohe64I5O7tk6tkVPS6yjV4mjzgCj
-         r8yw==
-X-Gm-Message-State: APjAAAU1Rv2r4DZV0op+S/VpJR42LA7fMXzJzXq/idrj4CyECBqZznyj
-        9DZmqRArK9IwQimwp8XG1fDOWiFmx6CuLUfsAz0fvA==
-X-Google-Smtp-Source: APXvYqzjd+Dj9oR22MHjl1lXQzd6kve9AfYuffJkedcYpkfEsUhMw9i3CZ1KZ6IgmxCy9iWc+3QIqAP385RhKXV/s6o=
-X-Received: by 2002:a62:5fc1:: with SMTP id t184mr6661461pfb.84.1569617009310;
- Fri, 27 Sep 2019 13:43:29 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=A0GOiTYcakjAsLgMbhX6Gl6xJaZlx6KbV4y/K1peXEI=;
+        b=CrhOCRHdpO30iS/q7I0vZMzPVYzrw6oOarTBQcPCLM1FcNsjhO9zD3lqE0E2n9UcZZ
+         txb1Aako7xTl4u8KD+Imyz2ecXD31pYXa/BPcHcTfC/yx9zQTz+vbAhkNlm0KDFmA/+5
+         csqLWC68Ck3IhqX1GAtcJ9JWsasarG3fe7rxLor9Nx50hp8xZyUcLO4QJV8NtCvwmcXA
+         M0VDDKbDxqTXglf/civDsuw/gbljzZqNhwnSPFFSs7Vl+DLwYwCNkorpa/cPamnp4pLa
+         2/RULfAfBjXZBwDKZ52Yu84zIP90a98prauJQZRWGPFDQg5ycw+BxnHPQuSxm/Ci31WR
+         l0Vg==
+X-Gm-Message-State: APjAAAUbSCnqmUhSjHcL4oRT+Yxr7kjfU+nu9BdTFuHeRWj+YTD9Z10N
+        4efSW9qWb0ToQumdPUoiLIbzkQLgcZI=
+X-Google-Smtp-Source: APXvYqxdsX9RsMQgUiuSw434Z+l3kvSe89jRZ2Qm/1YwlVyDnT+ULtg7zMmNOQeGGubp2NFuaGnsgA==
+X-Received: by 2002:a2e:85d2:: with SMTP id h18mr4011053ljj.18.1569617021581;
+        Fri, 27 Sep 2019 13:43:41 -0700 (PDT)
+Received: from localhost (h-93-159.A463.priv.bahnhof.se. [46.59.93.159])
+        by smtp.gmail.com with ESMTPSA id k23sm657897ljk.93.2019.09.27.13.43.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Sep 2019 13:43:40 -0700 (PDT)
+Date:   Fri, 27 Sep 2019 22:43:40 +0200
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Matthew Michilot <matthew.michilot@gmail.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] media: i2c: adv7180: fix adv7280 BT.656-4 compatibility
+Message-ID: <20190927204340.GB7409@bigcity.dyn.berto.se>
+References: <20190827215539.1286-1-mmichilot@gateworks.com>
+ <cb3e9be4-9ce6-354f-bb7c-a4710edc1c1b@xs4all.nl>
+ <20190829142931.GZ28351@bigcity.dyn.berto.se>
+ <CAJ+vNU11HTcP8L5J2Xg+Rmhvb8JDYemhJxt-GaGG5Myk3n38Tw@mail.gmail.com>
+ <20190927190454.GA7409@bigcity.dyn.berto.se>
+ <CAJ+vNU2shAbnLO9TY4dtPupLxE4UFvNi9FXoFF4MfPbtbAZo=g@mail.gmail.com>
 MIME-Version: 1.0
-References: <CAHk-=wj85tOp8WjcUp6gwstp4Cg2WT=p209S=fOzpWAgqqQPKg@mail.gmail.com>
- <20190915145905.hd5xkc7uzulqhtzr@willie-the-truck> <25289.1568379639@warthog.procyon.org.uk>
- <28447.1568728295@warthog.procyon.org.uk> <20190917170716.ud457wladfhhjd6h@willie-the-truck>
- <15228.1568821380@warthog.procyon.org.uk> <5385.1568901546@warthog.procyon.org.uk>
- <20190923144931.GC2369@hirez.programming.kicks-ass.net> <20190927095107.GA13098@andrea>
- <20190927124929.GB4643@worktop.programming.kicks-ass.net>
-In-Reply-To: <20190927124929.GB4643@worktop.programming.kicks-ass.net>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 27 Sep 2019 13:43:18 -0700
-Message-ID: <CAKwvOd=pZYiozmGv+DVpzJ1u9_0k4CXb3M1EAcu22DQF+bW0fA@mail.gmail.com>
-Subject: Re: Do we need to correct barriering in circular-buffers.rst?
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Andrea Parri <parri.andrea@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Will Deacon <will@kernel.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        jose.marchesi@oracle.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJ+vNU2shAbnLO9TY4dtPupLxE4UFvNi9FXoFF4MfPbtbAZo=g@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 5:49 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Fri, Sep 27, 2019 at 11:51:07AM +0200, Andrea Parri wrote:
->
-> > For the record, the LKMM doesn't currently model "order" derived from
-> > control dependencies to a _plain_ access (even if the plain access is
-> > a write): in particular, the following is racy (as far as the current
-> > LKMM is concerned):
+Hi Tim,
+
+On 2019-09-27 12:26:40 -0700, Tim Harvey wrote:
+> On Fri, Sep 27, 2019 at 12:04 PM Niklas Söderlund
+> <niklas.soderlund@ragnatech.se> wrote:
 > >
-> > C rb
+> > Hi Tim,
 > >
-> > { }
+> > Sorry for taking to so long to look at this.
 > >
-> > P0(int *tail, int *data, int *head)
-> > {
-> >       if (READ_ONCE(*tail)) {
-> >               *data = 1;
-> >               smp_wmb();
-> >               WRITE_ONCE(*head, 1);
-> >       }
-> > }
+> > On 2019-09-23 15:04:47 -0700, Tim Harvey wrote:
+> > > On Thu, Aug 29, 2019 at 7:29 AM Niklas Söderlund
+> > > <niklas.soderlund@ragnatech.se> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > On 2019-08-29 13:43:49 +0200, Hans Verkuil wrote:
+> > > > > Adding Niklas.
+> > > > >
+> > > > > Niklas, can you take a look at this?
+> > > >
+> > > > I'm happy to have a look at this. I'm currently moving so all my boards
+> > > > are in a box somewhere. I hope to have my lab up and running next week,
+> > > > so if this is not urgent I will look at it then.
+> > > >
+> > >
+> > > Niklas,
+> > >
+> > > Have you looked at this yet? Without this patch the ADV7280A does not
+> > > output proper BT.656. We tested this on a Gateworks Ventana GW5404-G
+> > > which uses the ADV7280A connected to the IMX6 CSI parallel bus. I'm
+> > > hoping to see this get merged and perhaps backported to older kernels.
 > >
-> > P1(int *tail, int *data, int *head)
-> > {
-> >       int r0;
-> >       int r1;
+> > I only have access to an adv7180 so I was unable to test this patch.
+> > After reviewing the documentation I think the patch is OK if what you
+> > want is to unconditionally switch the driver from outputting BT.656-3 to
+> > outputting BT.656-4.
 > >
-> >       r0 = READ_ONCE(*head);
-> >       smp_rmb();
-> >       r1 = *data;
-> >       smp_mb();
-> >       WRITE_ONCE(*tail, 1);
-> > }
+> > As this change would effect a large number of compat strings (adv7280,
+> > adv7280-m, adv7281, adv7281-m, adv7281-ma, adv7282, adv7282-m) and the
+> > goal is to back port it I'm a bit reluctant to adding my tag to this
+> > patch as I'm not sure if this will break other setups.
 > >
-> > Replacing the plain "*data = 1" with "WRITE_ONCE(*data, 1)" (or doing
-> > s/READ_ONCE(*tail)/smp_load_acquire(tail)) suffices to avoid the race.
-> > Maybe I'm short of imagination this morning...  but I can't currently
-> > see how the compiler could "break" the above scenario.
->
-> The compiler; if sufficiently smart; is 'allowed' to change P0 into
-> something terrible like:
->
->         *data = 1;
->         if (*tail) {
->                 smp_wmb();
->                 *head = 1;
->         } else
->                 *data = 0;
+> > From the documentation about the BT.656-4 register (address 0x04 bit 7):
+> >
+> >     Between Revision 3 and Revision 4 of the ITU-R BT.656 standards,
+> >     the ITU has changed the toggling position for the V bit within
+> >     the SAV EAV codes for NTSC. The ITU-R BT.656-4 standard
+> >     bit allows the user to select an output mode that is compliant
+> >     with either the previous or new standard. For further information,
+> >     visit the International Telecommunication Union website.
+> >
+> >     Note that the standard change only affects NTSC and has no
+> >     bearing on PAL.
+> >
+> >     When ITU-R BT.656-4 is 0 (default), the ITU-R BT.656-3
+> >     specification is used. The V bit goes low at EAV of Line 10
+> >     and Line 273.
+> >
+> >     When ITU-R BT.656-4 is 1, the ITU-R BT.656-4 specification is
+> >     used. The V bit goes low at EAV of Line 20 and Line 283.
+> >
+> > Do you know what effects such a change would bring? Looking at the
+> > driver BT.656-4 seems to be set unconditionally for some adv7180 chips.
+> >
+> 
+> Niklas,
+> 
+> Quite simply, we have a board that has an ADV7180 attached to the
+> parallel CSI of an IMX6 that worked fine with mainline drivers then
+> when we revised this board to attach an ADV7280A in the same way
+> capture failed to sync. Investigation showed that the NEWAVMODE
+> differed between the two.
 
-I don't think so.  This snippet has different side effects than P0.
-P0 never assigned *data to zero, this snippet does.  P0 *may* assign
-*data to 1.  This snippet will unconditionally assign to *data,
-conditionally 1 or 0.  I think the REVERSE transform (from your
-snippet to P0) would actually be legal, but IANALL (I am not a
-language lawyer; haven't yet passed the BAR).
+I understand your problem, the driver configures adv7180 and adv7280 
+differently.
 
->
->
-> (assuming it knows *data was 0 from a prior store or something)
+> 
+> So if the point of the driver is to configure the variants in the same
+> way, this patch needs to be applied.
 
-Oh, in that case I'm less sure (I still don't think so, but I would
-love to be proven wrong, preferably with a godbolt link).  I think the
-best would be to share a godbolt.org link to a case that's clearly
-broken, or cite the relevant part of the ISO C standard (which itself
-leaves room for interpretation), otherwise the discussion is too
-hypothetical.  Those two things are single-handedly the best way to
-communicate with compiler folks.
+I'm not sure that is the point of the driver. As the driver today 
+configures different compatible strings differently. Some as ITU-R 
+BT.656-3 and some as ITU-R BT.656-4, I can only assume there is a reason 
+for that.
 
->
-> Using WRITE_ONCE() defeats this because volatile indicates external
-> visibility.
+> 
+> I would maintain that the adv7180 comes up with NEWAVMODE enabled and
+> in order to be compatible we must configure the adv7282 the same.
+> 
+> The same argument can be made for setting the V bit end position in
+> NTSC mode - its done for the adv7180 so for compatible output it
+> should be done for the adv7282.
 
-Could data be declared as a pointer to volatile qualified int?
+I understand that this is needed to make it a drop-in replacement for 
+the adv7180 in your use-case. But I'm not sure it is a good idea for 
+other users of the driver. What if someone is already using a adv7282 on 
+a board and depends on it providing ITU-R BT.656-3 and the old settings?
+If this patch is picked up there use-cases may break.
 
->
-> > I also didn't spend much time thinking about it.  memory-barriers.txt
-> > has a section "CONTROL DEPENDENCIES" dedicated to "alerting developers
-> > using control dependencies for ordering".  That's quite a long section
-> > (and probably still incomplete); the last paragraph summarizes:  ;-)
->
-> Barring LTO the above works for perf because of inter-translation-unit
-> function calls, which imply a compiler barrier.
->
-> Now, when the compiler inlines, it looses that sync point (and thereby
-> subtlely changes semantics from the non-inline variant). I suspect LTO
-> does the same and can cause subtle breakage through this transformation.
+I'm not sure what the best way forward is I'm afraid. Looking at 
+video-interfaces.txt we have a device tree property bus-type which is 
+used to describe the bus is a BT.656 bus but not which revision of it.
 
-Do you have a bug report or godbolt link for the above?  I trust that
-you're familiar enough with the issue to be able to quickly reproduce
-it?  These descriptions of problems are difficult for me to picture in
-code or generated code, and when I try to read through
-memory-barriers.txt my eyes start to glaze over (then something else
-catches fire and I have to go put that out).  Having a concise test
-case I think would better illustrate potential issues with LTO that
-we'd then be able to focus on trying to fix/support.
+I'm not really found of driver specific bus descriptions, but maybe this 
+is a case where one might consider adding one? Hans what do you think?
 
-We definitely have heavy hitting language lawyers and our LTO folks
-are super sharp; I just don't have the necessary compiler experience
-just yet to be as helpful in these discussions as we need but I'm
-happy to bring them cases that don't work for the kernel and drive
-their resolution.
+> 
+> > >
+> > > Regards,
+> > >
+> > > Tim
+> > >
+> > > > >
+> > > > > Regards,
+> > > > >
+> > > > >       Hans
+> > > > >
+> > > > > On 8/27/19 11:55 PM, Matthew Michilot wrote:
+> > > > > > From: Matthew Michilot <matthew.michilot@gmail.com>
+> > > > > >
+> > > > > > Captured video would be out of sync when using the adv7280 with
+> > > > > > the BT.656-4 protocol. Certain registers (0x04, 0x31, 0xE6) had to
+> > > > > > be configured properly to ensure BT.656-4 compatibility.
+> > > > > >
+> > > > > > An error in the adv7280 reference manual suggested that EAV/SAV mode
+> > > > > > was enabled by default, however upon inspecting register 0x31, it was
+> > > > > > determined to be disabled by default.
+> >
+> > The manual I have [1] states that NEWAVMODE is switched off by default.
+> > I'm only asking as I would like to know if there is an error in that
+> > datasheet or not.
+> >
+> > 1. https://www.analog.com/media/en/technical-documentation/user-guides/ADV7280_7281_7282_7283_UG-637.pdf
+> >
+> 
+> Table 99 in that document shows NEVAVMODE disabled on power-up
+> (0x31=0x02) yet Page 77 shows it enabled at power-up. Looking at an
+> actual device we find it is indeed disabled on powerup (0x31=0x02) so
+> Table 99 is correct, and Page 77 is not.
+> 
+> If you look at the ADV7180 datasheet
+> (https://www.analog.com/media/en/technical-documentation/data-sheets/ADV7180.pdf)
+> Table 105 shows NEWAVMODE enabled by default which is also reflected
+> in the register details on Page 91 and is what you find on an actual
+> device.
+> 
+> Regards,
+> 
+> Tim
+> 
+> -- 
+> 
+> 
+> CONFIDENTIALITY NOTICE: This email constitutes an electronic 
+> communication within the meaning of the Electronic Communications Privacy 
+> Act, 18 U.S.C. 2510, and its disclosure is strictly limited to the named 
+> recipient(s) intended by the sender of this message. This email, and any 
+> attachments, may contain confidential and/or proprietary information. If 
+> you are not a named recipient, any copying, using, disclosing or 
+> distributing to others the information in this email and attachments is 
+> STRICTLY PROHIBITED. If you have received this email in error, please 
+> notify the sender immediately and permanently delete the email, any 
+> attachments, and all copies thereof from any drives or storage media and 
+> destroy any printouts or hard copies of the email and attachments.
+> 
+>  
+> 
+> 
+> EXPORT COMPLIANCE NOTICE: This email and any attachments may contain 
+> technical data subject to U.S export restrictions under the International 
+> Traffic in Arms Regulations (ITAR) or the Export Administration Regulations 
+> (EAR). Export or transfer of this technical data and/or related information 
+> to any foreign person(s) or entity(ies), either within the U.S. or outside 
+> of the U.S., may require advance export authorization by the appropriate 
+> U.S. Government agency prior to export or transfer. In addition, technical 
+> data may not be exported or transferred to certain countries or specified 
+> designated nationals identified by U.S. embargo controls without prior 
+> export authorization. By accepting this email and any attachments, all 
+> recipients confirm that they understand and will comply with all applicable 
+> ITAR, EAR and embargo compliance requirements.
 
->
-> > (*) Compilers do not understand control dependencies.  It is therefore
-> >     your job to ensure that they do not break your code.
->
-> It is one the list of things I want to talk about when I finally get
-> relevant GCC and LLVM people in the same room ;-)
->
-> Ideally the compiler can be taught to recognise conditionals dependent
-> on 'volatile' loads and disallow problematic transformations around
-> them.
->
-> I've added Nick (clang) and Jose (GCC) on Cc, hopefully they can help
-> find the right people for us.
 -- 
-Thanks,
-~Nick Desaulniers
+Regards,
+Niklas Söderlund
