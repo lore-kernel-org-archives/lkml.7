@@ -2,104 +2,103 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B80C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A55D6C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 440722075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:48:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569570487;
-	bh=F0QrRi4/7x8HmmpqmQR0RuwQ7+F0ujZXutNKd0EAbsU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mjUoXIaTp1gOCrDw38stKilrYNVZoGXUxd7o0Wnc81c7r+Wa13MM/zcL8q8sFZFva
-	 U1ed3+aX6IP1aDPwdYQ1d354JBJopUi5iSiAwSiTw52sVSXWE3Fqr17fc0KhgM6mTg
-	 WzyIwY6f8Mmz3NLjWH9b9Pu6u0DT/zLb5UI7G5/A=
+	by mail.kernel.org (Postfix) with ESMTP id 7126D2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:49:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="gibpUtAA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbfI0HsG (ORCPT
+        id S1726946AbfI0HtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 03:48:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34310 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725769AbfI0HsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 03:48:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 82F4BAD63;
-        Fri, 27 Sep 2019 07:48:04 +0000 (UTC)
-Date:   Fri, 27 Sep 2019 09:48:03 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Andrea Arcangeli <aarcange@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [patch for-5.3 0/4] revert immediate fallback to remote hugepages
-Message-ID: <20190927074803.GB26848@dhcp22.suse.cz>
-References: <alpine.DEB.2.21.1909041252230.94813@chino.kir.corp.google.com>
- <20190904205522.GA9871@redhat.com>
- <alpine.DEB.2.21.1909051400380.217933@chino.kir.corp.google.com>
- <20190909193020.GD2063@dhcp22.suse.cz>
- <20190925070817.GH23050@dhcp22.suse.cz>
- <alpine.DEB.2.21.1909261149380.39830@chino.kir.corp.google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1909261149380.39830@chino.kir.corp.google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 27 Sep 2019 03:49:15 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:34656 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726252AbfI0HtM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 03:49:12 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id EE472C0DD8;
+        Fri, 27 Sep 2019 07:49:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1569570551; bh=G+vfQq1R/8y3p6u1/BPNdwwbxWCUNbBVqRhlj5S5ctE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=gibpUtAAG8dvQ+U0BRU0VEdXKWowUzDJNPev3RoutJPBhQXUgA389hj8en/2fKTgc
+         X7u0Z56TvgCg3a/4ql6/lHOLO+nNQhjdxKnT0IvyaMo5fi13slae/ngVSBpcJp4c2X
+         yeb4OeoJRSp3bqio3QKkyvTwolXPiNalc2lYJTJfASwFkw8W2d8oq62swPK4/eoq4E
+         aB35bkz/tu8JQiqG8hWHzs8lzyUy9aJzA/zZRfCY8EcZPb1uUBKI0Slpyt83A1YrEn
+         P4D0k6IDs/uLkXFiELEG6i3pS+r5Pue1RvoXT/rGOP9n0Bs0vA/IT8aO1dh+jkqsIi
+         qjlJWsNRFS3Lg==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 8C060A008D;
+        Fri, 27 Sep 2019 07:49:09 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net 7/8] net: stmmac: xgmac: Disable the Timestamp interrupt by default
+Date:   Fri, 27 Sep 2019 09:48:55 +0200
+Message-Id: <5060574f7023e1ae13e429fcf86e373c6a79f965.1569569778.git.Jose.Abreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1569569778.git.Jose.Abreu@synopsys.com>
+References: <cover.1569569778.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <cover.1569569778.git.Jose.Abreu@synopsys.com>
+References: <cover.1569569778.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 26-09-19 12:03:37, David Rientjes wrote:
-[...]
-> Your patch is setting __GFP_THISNODE for __GFP_DIRECT_RECLAIM: this 
-> allocation will fail in the fastpath for both my case (fragmented local 
-> node) and Andrea's case (out of memory local node).  The first 
-> get_page_from_freelist() will then succeed in the slowpath for both cases; 
-> compaction is not tried for either.
-> 
-> In my case, that results in a perpetual remote access latency that we 
-> can't tolerate.  If Andrea's remote nodes are fragmented or low on memory, 
-> his case encounters swap storms over both the local node and remote nodes.
-> 
-> So I'm not really sure what is solved by your patch?
+We don't use it anyway as XGMAC only supports polling for timestamp (in
+current SW implementation). This greatly reduces the system load by
+reducing the number of interrupts.
 
-There are two aspects the patch is targeting at. The first is that the
-fast path is targeting a higher watermak (WMARK_LOW) so it might
-fallback to a remote node easier and then the fast path doesn't wake up
-kcompactd so there is no pro-active compaction going on to help future
-allocations.
+Fixes: 2142754f8b9c ("net: stmmac: Add MAC related callbacks for XGMAC2")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
-You are right that a fragmented or at min watermark node would fallback
-to a remote node even with this patch. I wanted to see how much the
-kcompactd can change the overall picture. If this is not sufficient then
-maybe we need to drop the first optimistic attempt as well and simply go
-right into the light compaction. Something like this on top
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index ff5484fdbdf9..61284e7f01ee 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -4434,7 +4434,8 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
- 	 * The adjusted alloc_flags might result in immediate success, so try
- 	 * that first
- 	 */
--	page = get_page_from_freelist(gfp_mask, order, alloc_flags, ac);
-+	if (!order)
-+		page = get_page_from_freelist(gfp_mask, order, alloc_flags, ac);
- 	if (page)
- 		goto got_pg;
- 
-The whole point of handling this in the page allocator directly is to
-have a unified solutions rather than have each specific caller invent
-its own way to achieve higher locality.
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
+index f7eb06f8fb37..99037386080a 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
+@@ -84,7 +84,7 @@
+ #define XGMAC_TSIE			BIT(12)
+ #define XGMAC_LPIIE			BIT(5)
+ #define XGMAC_PMTIE			BIT(4)
+-#define XGMAC_INT_DEFAULT_EN		(XGMAC_LPIIE | XGMAC_PMTIE | XGMAC_TSIE)
++#define XGMAC_INT_DEFAULT_EN		(XGMAC_LPIIE | XGMAC_PMTIE)
+ #define XGMAC_Qx_TX_FLOW_CTRL(x)	(0x00000070 + (x) * 4)
+ #define XGMAC_PT			GENMASK(31, 16)
+ #define XGMAC_PT_SHIFT			16
 -- 
-Michal Hocko
-SUSE Labs
+2.7.4
+
