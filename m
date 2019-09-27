@@ -2,83 +2,226 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0C0C32774
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E39C352AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEE2C21906
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44EB121928
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:42:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726104AbfI0Ili (ORCPT
+        id S1726248AbfI0Imt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 04:41:38 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:37327 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfI0Ilh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 04:41:37 -0400
-X-Originating-IP: 65.39.69.237
-Received: from localhost (unknown [65.39.69.237])
-        (Authenticated sender: repk@triplefau.lt)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id B7CF2FF80F;
-        Fri, 27 Sep 2019 08:41:34 +0000 (UTC)
-Date:   Fri, 27 Sep 2019 10:50:00 +0200
-From:   Remi Pommarel <repk@triplefau.lt>
-To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: aardvark: Don't rely on jiffies while holding
- spinlock
-Message-ID: <20190927084959.GC1208@voidbox.localdomain>
-References: <20190927083142.8571-1-repk@triplefau.lt>
- <20190927103420.48bb9335@windsurf>
+        Fri, 27 Sep 2019 04:42:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47874 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725882AbfI0Imt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 04:42:49 -0400
+Received: from oasis.local.home (unknown [65.39.69.237])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4EDD2075D;
+        Fri, 27 Sep 2019 08:42:44 +0000 (UTC)
+Date:   Fri, 27 Sep 2019 04:42:39 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-pm@vger.kernel.org, Amit Kucheria <amit.kucheria@linaro.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] PM / Domains: Add tracepoints
+Message-ID: <20190927044239.589e7c4c@oasis.local.home>
+In-Reply-To: <20190926150406.v1.1.I07a769ad7b00376777c9815fb169322cde7b9171@changeid>
+References: <20190926150406.v1.1.I07a769ad7b00376777c9815fb169322cde7b9171@changeid>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190927103420.48bb9335@windsurf>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+On Thu, 26 Sep 2019 15:04:38 -0700
+Matthias Kaehlcke <mka@chromium.org> wrote:
 
-On Fri, Sep 27, 2019 at 10:34:20AM +0200, Thomas Petazzoni wrote:
-> Hello Remi,
-> 
-> Thanks for the new iteration!
-> 
-> On Fri, 27 Sep 2019 10:31:42 +0200
-> Remi Pommarel <repk@triplefau.lt> wrote:
-> 
-> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > index fc0fe4d4de49..ee05ccb2b686 100644
-> > --- a/drivers/pci/controller/pci-aardvark.c
-> > +++ b/drivers/pci/controller/pci-aardvark.c
-> > @@ -175,7 +175,8 @@
-> >  	(PCIE_CONF_BUS(bus) | PCIE_CONF_DEV(PCI_SLOT(devfn))	| \
-> >  	 PCIE_CONF_FUNC(PCI_FUNC(devfn)) | PCIE_CONF_REG(where))
-> >  
-> > -#define PIO_TIMEOUT_MS			1
-> > +#define PIO_RETRY_CNT			10
-> > +#define PIO_RETRY_DELAY			2 /* 2 us*/
-> 
-> So this changes the timeout from 1ms to just 20us, a division by 50
-> from the previous timeout value. From my measurements, it could
-> sometime take up to 6us from a single PIO read operation to complete,
-> which is getting close to the 20us timeout.
-> 
-> Shouldn't PIO_RETRY_CNT be kept at 500, so that we keep using a 1ms
-> timeout ?
+> Define genpd_power_on/off and genpd_set_performance_state
+> tracepoints and use them.
 
-Damn. You right of course, sorry about that.
+I agree with Greg about adding a "why" you need this. But, in case
+there's a good reason to have this, I have comments about the code
+below.
 
-Thanks
+> 
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> 
+>  drivers/base/power/domain.c  | 27 +++++++++++++++++---
+>  include/trace/events/power.h | 49 ++++++++++++++++++++++++++++++++++++
+>  2 files changed, 72 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+> index cc85e87eaf05..aee988c112e5 100644
+> --- a/drivers/base/power/domain.c
+> +++ b/drivers/base/power/domain.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/suspend.h>
+>  #include <linux/export.h>
+>  #include <linux/cpu.h>
+> +#include <trace/events/power.h>
+>  
+>  #include "power.h"
+>  
+> @@ -329,6 +330,9 @@ static int _genpd_set_performance_state(struct generic_pm_domain *genpd,
+>  		goto err;
+>  
+>  	genpd->performance_state = state;
+> +
+> +	trace_genpd_set_performance_state(genpd);
+> +
+>  	return 0;
+>  
+>  err:
+> @@ -418,14 +422,21 @@ static int _genpd_power_on(struct generic_pm_domain *genpd, bool timed)
+>  	if (!genpd->power_on)
+>  		return 0;
+>  
+> -	if (!timed)
+> -		return genpd->power_on(genpd);
+> +	if (!timed) {
+> +		ret = genpd->power_on(genpd);
+> +		if (!ret)
+> +			trace_genpd_power_on(genpd);
+> +
+> +		return ret;
+> +	}
+>  
+>  	time_start = ktime_get();
+>  	ret = genpd->power_on(genpd);
+>  	if (ret)
+>  		return ret;
+>  
+> +	trace_genpd_power_on(genpd);
+> +
+>  	elapsed_ns = ktime_to_ns(ktime_sub(ktime_get(), time_start));
+>  	if (elapsed_ns <= genpd->states[state_idx].power_on_latency_ns)
+>  		return ret;
+> @@ -448,14 +459,22 @@ static int _genpd_power_off(struct generic_pm_domain *genpd, bool timed)
+>  	if (!genpd->power_off)
+>  		return 0;
+>  
+> -	if (!timed)
+> -		return genpd->power_off(genpd);
+> +	if (!timed) {
+> +		ret = genpd->power_off(genpd);
+> +		if (!ret)
 
--- 
-Remi
+Here
+
+> +			trace_genpd_power_off(genpd);
+> +
+> +		return ret;
+> +	}
+>  
+>  	time_start = ktime_get();
+>  	ret = genpd->power_off(genpd);
+>  	if (ret)
+>  		return ret;
+>  
+> +	if (!ret)
+
+And here add a conditional branch for only a tracepoint. To eliminate
+the branch when tracepoints are not enabled, please do it this way
+instead:
+
+	if (trace_genpd_power_off_enabled() && !ret)
+
+The above is a static branch (nop when disabled, and jmp when enabled),
+and the above should move the conditional branch on !ret into the
+section that is only called when the tracepoint is enabled.
+
+
+> +		trace_genpd_power_off(genpd);
+> +
+
+-- Steve
+
+>  	elapsed_ns = ktime_to_ns(ktime_sub(ktime_get(), time_start));
+>  	if (elapsed_ns <= genpd->states[state_idx].power_off_latency_ns)
+>  		return 0;
+> diff --git a/include/trace/events/power.h b/include/trace/events/power.h
+> index 7457e238e1b7..de56cd1e8d0d 100644
+> --- a/include/trace/events/power.h
+> +++ b/include/trace/events/power.h
+> @@ -7,6 +7,7 @@
+>  
+>  #include <linux/cpufreq.h>
+>  #include <linux/ktime.h>
+> +#include <linux/pm_domain.h>
+>  #include <linux/pm_qos.h>
+>  #include <linux/tracepoint.h>
+>  #include <linux/trace_events.h>
+> @@ -525,6 +526,54 @@ DEFINE_EVENT(dev_pm_qos_request, dev_pm_qos_remove_request,
+>  
+>  	TP_ARGS(name, type, new_value)
+>  );
+> +
+> +#ifdef CONFIG_PM_GENERIC_DOMAINS
+> +DECLARE_EVENT_CLASS(genpd_power_on_off,
+> +	TP_PROTO(struct generic_pm_domain *genpd),
+> +
+> +	TP_ARGS(genpd),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, genpd->name)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, genpd->name);
+> +	),
+> +
+> +	TP_printk("name=%s", __get_str(name))
+> +);
+> +
+> +DEFINE_EVENT(genpd_power_on_off, genpd_power_on,
+> +	TP_PROTO(struct generic_pm_domain *genpd),
+> +
+> +	TP_ARGS(genpd)
+> +);
+> +
+> +DEFINE_EVENT(genpd_power_on_off, genpd_power_off,
+> +	TP_PROTO(struct generic_pm_domain *genpd),
+> +
+> +	TP_ARGS(genpd)
+> +);
+> +
+> +TRACE_EVENT(genpd_set_performance_state,
+> +	TP_PROTO(struct generic_pm_domain *genpd),
+> +
+> +	TP_ARGS(genpd),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, genpd->name)
+> +		__field(unsigned int, state)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, genpd->name);
+> +		__entry->state = genpd->performance_state;
+> +	),
+> +
+> +	TP_printk("name=%s state=%u", __get_str(name), __entry->state)
+> +);
+> +#endif /* CONFIG_PM_GENERIC_DOMAINS */
+>  #endif /* _TRACE_POWER_H */
+>  
+>  /* This part must be outside protection */
+
