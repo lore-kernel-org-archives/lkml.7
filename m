@@ -2,156 +2,149 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3D5C388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53063C388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9882021841
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:08:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="0NRvRhwR"
+	by mail.kernel.org (Postfix) with ESMTP id 2E718217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:08:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbfI0QIB (ORCPT
+        id S1728052AbfI0QIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 12:08:01 -0400
-Received: from mail-eopbgr710079.outbound.protection.outlook.com ([40.107.71.79]:41520
-        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727517AbfI0QIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 12:08:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jmzGLLXIlfb6DNhSrULagTBFBxn2sx/L8sGTgqZIPEk8HCFY0omHZLk/gT6x2R0WBQ51i09wCoP4MnUvBflqiEVZcbSLfc6racQHWTavws8ODMAeNP4OFmeEnyU4icBfFEtHCTsUkGNHsCv75vzyKdI/lJ6avTCIdR1BzTL/QHhSwC32+FPRKn4u1XeyW5DtPo35KuII1LZLh3Diuzh3Q19cHt8oqbuuKKIz1ZubMPNtU9R3IX2hnfIGnTVbCKoa5nQ/nWCzew1LkTxsRk9L8ZpUE6aZX5lUsIgwFvQ/c7Lhi4WhSGkS2mIbAvoeHyw2UcAMpqC4Zrwp+Iu/Wvzu/w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zk0Y7qc/jlK+PYbSUyeY4D+Q/yHqdtmpb4/YPsjcLaY=;
- b=l5GUc/8sMBK7k2MMcePrdqiYpynrLpla12GEvxV6JElrO4wCz57nVq8YXH10JY84p+Eb72FdsSeKbdGz1cOdCgoYtToCz7vhN1e/NaF//MdgW0t8PbvhtcnYv6mGyVMiXKD7LoIDSpHEiPK/GJR9JVJXvYXJPlfk9BWiHTM5bNyl3eCPW3ntq5a2N7GJEILl+l4WfBvIVFIJZOqC7UGF2xnI7juDmV1qfaem1RUzM1Nz0BATD/tmXoA1zreThKvq249iV5jXEXlE4aVfcnjpn7aoMzkVfGxjRgVcYDVuFU6sotFyLDvUMBxIrLircZckY09PUjUs5puDU2XYQZ6z8w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zk0Y7qc/jlK+PYbSUyeY4D+Q/yHqdtmpb4/YPsjcLaY=;
- b=0NRvRhwRV8r0Xu/7P09cT0g2360evtaCLl4VDiSvCzdBnhWz6xzpykE+W3Nv+k4TGeXjbCj06vBp2dWEq5tgGr8nxk/n3/jCkJzyysr0466QCMj2dtdKx7eTx2MdbaQHQPNF8bR3ip47MAC6KCUWqhUTeM/fY/4y7YLGa5OSY3w=
-Received: from SN6PR12MB2736.namprd12.prod.outlook.com (52.135.107.27) by
- SN6PR12MB2671.namprd12.prod.outlook.com (52.135.103.24) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.26; Fri, 27 Sep 2019 16:07:56 +0000
-Received: from SN6PR12MB2736.namprd12.prod.outlook.com
- ([fe80::b1e3:1867:e650:796c]) by SN6PR12MB2736.namprd12.prod.outlook.com
- ([fe80::b1e3:1867:e650:796c%6]) with mapi id 15.20.2305.017; Fri, 27 Sep 2019
- 16:07:56 +0000
-From:   "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>
-To:     "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Thomas Renninger <trenn@suse.com>, Shuah Khan <shuah@kernel.org>,
-        Pu Wen <puwen@hygon.com>, Borislav Petkov <bp@suse.de>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>
-Subject: Re: [PATCH 1/2] Modify cpupower to schedule itself on cores it is
- reading MSRs from
-Thread-Topic: [PATCH 1/2] Modify cpupower to schedule itself on cores it is
- reading MSRs from
-Thread-Index: AQHVbj8CzXj8hQvM60aQ8slBTBcq36c/vvOA
-Date:   Fri, 27 Sep 2019 16:07:56 +0000
-Message-ID: <9f94bb60-4be2-4303-54de-f50bdd7cb3e6@amd.com>
-References: <20190918163445.129103-1-Janakarajan.Natarajan@amd.com>
-In-Reply-To: <20190918163445.129103-1-Janakarajan.Natarajan@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN6PR01CA0018.prod.exchangelabs.com (2603:10b6:805:b6::31)
- To SN6PR12MB2736.namprd12.prod.outlook.com (2603:10b6:805:77::27)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Janakarajan.Natarajan@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.77.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 76b5aeb2-aff4-478b-f817-08d74364dc1e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:SN6PR12MB2671;
-x-ms-traffictypediagnostic: SN6PR12MB2671:|SN6PR12MB2671:
-x-microsoft-antispam-prvs: <SN6PR12MB2671763FD9A034C68306B2D2E7810@SN6PR12MB2671.namprd12.prod.outlook.com>
-x-ms-exchange-transport-forked: True
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 0173C6D4D5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(346002)(396003)(376002)(199004)(189003)(186003)(25786009)(2616005)(6486002)(53546011)(6506007)(102836004)(386003)(26005)(36756003)(54906003)(52116002)(446003)(11346002)(229853002)(7416002)(31686004)(66946007)(316002)(486006)(76176011)(6436002)(14454004)(66556008)(66476007)(64756008)(66446008)(2501003)(4326008)(476003)(6246003)(5660300002)(81156014)(81166006)(31696002)(7736002)(110136005)(99286004)(71190400001)(305945005)(86362001)(2906002)(8936002)(478600001)(8676002)(6512007)(6116002)(3846002)(66066001)(256004)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2671;H:SN6PR12MB2736.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: SnlUakypfxu5PKId7qnacXhS5ju9Xrc+GlWLYEHAD2tXQL9cRSP5B+dXHb6IUcuVIv68CLSL9UW2TU6Sh/PNo//SYtQ/I0NDt7Pd6JZqH30cO9BwWeVi9dfYoBilkyVR9LRrcdXzO3NaLG/ZCwal9dvsQz0SL+9ldciGBn04XjgTm3wQgN0lnJH7CTi1RC3C+/efcNB1oTRplmT/xS/I5VjbV9sJ21YKntr/VE0ULxLnTbtFRLehcYkm/7Rl3Wz5bpOjaebWltmh6XA6B5FEOMrGcm4xzWaOblUJHvwMFRiqaE9H4tMyKjNdMFkMBrxzBn7yewhZuiNIgyGjK84WycH2YqjNMVPH7EwliCSNvN58DDkSrPMlmdcJSGljYQqc5qPpVbkHXSXtFBskFK8Cnb1xEQSMXw0BvVT99bW209c=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <02461F61FA778A4CBD87D0AB3ABEEFC8@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 76b5aeb2-aff4-478b-f817-08d74364dc1e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Sep 2019 16:07:56.7310
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uqe50y7YV2DQZsse+YM8sX27sjE/Wj/KWBDyx+jlr0sCgGiyhPdDs+UfonptmLWvl1dbP/0vZoKF9byAd8lLSg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2671
+        Fri, 27 Sep 2019 12:08:18 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55968 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727517AbfI0QIS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 12:08:18 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8RFvL8e138079
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 12:08:17 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v9kjs54wu-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 12:08:16 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 27 Sep 2019 17:08:14 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 27 Sep 2019 17:08:12 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8RG8Brx51904738
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Sep 2019 16:08:11 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EEE7C4C040;
+        Fri, 27 Sep 2019 16:08:10 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 47C984C046;
+        Fri, 27 Sep 2019 16:08:10 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.141.201])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 27 Sep 2019 16:08:10 +0000 (GMT)
+Subject: Re: [GIT PULL] integrity subsystem updates for v5.4
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-security-module <linux-security-module@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Fri, 27 Sep 2019 12:08:09 -0400
+In-Reply-To: <1568671982.4975.145.camel@linux.ibm.com>
+References: <1568237365.5783.39.camel@linux.ibm.com>
+         <CAHk-=whuzoK+sP+feizU520p7ChHqdX8pmwyCnnKTyUNJKngZA@mail.gmail.com>
+         <1568671982.4975.145.camel@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19092716-0016-0000-0000-000002B15DC2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19092716-0017-0000-0000-000033123110
+Message-Id: <1569600489.10820.77.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-27_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909270144
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gOS8xOC8yMDE5IDExOjM0IEFNLCBOYXRhcmFqYW4sIEphbmFrYXJhamFuIHdyb3RlOg0KPiBN
-b2RpZnkgY3B1cG93ZXIgdG8gc2NoZWR1bGUgaXRzZWxmIG9uIGVhY2ggb2YgdGhlIGNwdXMgaW4g
-dGhlIHN5c3RlbSBhbmQNCj4gdGhlbiBnZXQgdGhlIEFQRVJGL01QRVJGIHJlZ2lzdGVyIHZhbHVl
-cy4NCj4NCj4gVGhpcyBpcyBhZHZhbnRhZ2VvdXMgYmVjYXVzZSBhbiBJUEkgaXMgbm90IGdlbmVy
-YXRlZCB3aGVuIGEgcmVhZF9tc3IoKSBpcw0KPiBleGVjdXRlZCBvbiB0aGUgbG9jYWwgbG9naWNh
-bCBDUFUgdGhlcmVieSByZWR1Y2luZyB0aGUgY2hhbmNlIG9mIGhhdmluZw0KPiBBUEVSRiBhbmQg
-TVBFUkYgYmVpbmcgb3V0IG9mIHN5bmMuDQo+DQo+IFNpZ25lZC1vZmYtYnk6IEphbmFrYXJhamFu
-IE5hdGFyYWphbiA8SmFuYWthcmFqYW4uTmF0YXJhamFuQGFtZC5jb20+DQoNCg0KQW55IGNvbmNl
-cm5zIHJlZ2FyZGluZyB0aGlzIHBhdGNoc2V0Pw0KDQoNClRoYW5rcy4NCg0KDQo+IC0tLQ0KPiAg
-IC4uLi91dGlscy9pZGxlX21vbml0b3IvbXBlcmZfbW9uaXRvci5jICAgICAgICB8IDM4ICsrKysr
-KysrKysrKysrLS0tLS0NCj4gICAxIGZpbGUgY2hhbmdlZCwgMjggaW5zZXJ0aW9ucygrKSwgMTAg
-ZGVsZXRpb25zKC0pDQo+DQo+IGRpZmYgLS1naXQgYS90b29scy9wb3dlci9jcHVwb3dlci91dGls
-cy9pZGxlX21vbml0b3IvbXBlcmZfbW9uaXRvci5jIGIvdG9vbHMvcG93ZXIvY3B1cG93ZXIvdXRp
-bHMvaWRsZV9tb25pdG9yL21wZXJmX21vbml0b3IuYw0KPiBpbmRleCA0NDgwNmE2ZGFlMTEuLjhi
-MDcyZTM5Yzg5NyAxMDA2NDQNCj4gLS0tIGEvdG9vbHMvcG93ZXIvY3B1cG93ZXIvdXRpbHMvaWRs
-ZV9tb25pdG9yL21wZXJmX21vbml0b3IuYw0KPiArKysgYi90b29scy9wb3dlci9jcHVwb3dlci91
-dGlscy9pZGxlX21vbml0b3IvbXBlcmZfbW9uaXRvci5jDQo+IEBAIC0xMCw2ICsxMCw3IEBADQo+
-ICAgI2luY2x1ZGUgPHN0ZGxpYi5oPg0KPiAgICNpbmNsdWRlIDxzdHJpbmcuaD4NCj4gICAjaW5j
-bHVkZSA8bGltaXRzLmg+DQo+ICsjaW5jbHVkZSA8c2NoZWQuaD4NCj4gICANCj4gICAjaW5jbHVk
-ZSA8Y3B1ZnJlcS5oPg0KPiAgIA0KPiBAQCAtODYsMTUgKzg3LDMzIEBAIHN0YXRpYyBpbnQgbXBl
-cmZfZ2V0X3RzYyh1bnNpZ25lZCBsb25nIGxvbmcgKnRzYykNCj4gICAJcmV0dXJuIHJldDsNCj4g
-ICB9DQo+ICAgDQo+ICtzdGF0aWMgaW50IGdldF9hcGVyZl9tcGVyZihpbnQgY3B1LCB1bnNpZ25l
-ZCBsb25nIGxvbmcgKmF2YWwsDQo+ICsJCQkgICB1bnNpZ25lZCBsb25nIGxvbmcgKm12YWwpDQo+
-ICt7DQo+ICsJY3B1X3NldF90IHNldDsNCj4gKwlpbnQgcmV0Ow0KPiArDQo+ICsJQ1BVX1pFUk8o
-JnNldCk7DQo+ICsJQ1BVX1NFVChjcHUsICZzZXQpOw0KPiArCWlmIChzY2hlZF9zZXRhZmZpbml0
-eShnZXRwaWQoKSwgc2l6ZW9mKHNldCksICZzZXQpID09IC0xKSB7DQo+ICsJCWRwcmludCgiQ291
-bGQgbm90IG1pZ3JhdGUgdG8gY3B1OiAlZFxuIiwgY3B1KTsNCj4gKwkJcmV0dXJuIDE7DQo+ICsJ
-fQ0KPiArDQo+ICsJcmV0ID0gcmVhZF9tc3IoY3B1LCBNU1JfQVBFUkYsIGF2YWwpOw0KPiArCXJl
-dCB8PSByZWFkX21zcihjcHUsIE1TUl9NUEVSRiwgbXZhbCk7DQo+ICsNCj4gKwlyZXR1cm4gcmV0
-Ow0KPiArfQ0KPiArDQo+ICAgc3RhdGljIGludCBtcGVyZl9pbml0X3N0YXRzKHVuc2lnbmVkIGlu
-dCBjcHUpDQo+ICAgew0KPiAtCXVuc2lnbmVkIGxvbmcgbG9uZyB2YWw7DQo+ICsJdW5zaWduZWQg
-bG9uZyBsb25nIGF2YWwsIG12YWw7DQo+ICAgCWludCByZXQ7DQo+ICAgDQo+IC0JcmV0ID0gcmVh
-ZF9tc3IoY3B1LCBNU1JfQVBFUkYsICZ2YWwpOw0KPiAtCWFwZXJmX3ByZXZpb3VzX2NvdW50W2Nw
-dV0gPSB2YWw7DQo+IC0JcmV0IHw9IHJlYWRfbXNyKGNwdSwgTVNSX01QRVJGLCAmdmFsKTsNCj4g
-LQltcGVyZl9wcmV2aW91c19jb3VudFtjcHVdID0gdmFsOw0KPiArCXJldCA9IGdldF9hcGVyZl9t
-cGVyZihjcHUsICZhdmFsLCAmbXZhbCk7DQo+ICsJYXBlcmZfcHJldmlvdXNfY291bnRbY3B1XSA9
-IGF2YWw7DQo+ICsJbXBlcmZfcHJldmlvdXNfY291bnRbY3B1XSA9IG12YWw7DQo+ICAgCWlzX3Zh
-bGlkW2NwdV0gPSAhcmV0Ow0KPiAgIA0KPiAgIAlyZXR1cm4gMDsNCj4gQEAgLTEwMiwxMyArMTIx
-LDEyIEBAIHN0YXRpYyBpbnQgbXBlcmZfaW5pdF9zdGF0cyh1bnNpZ25lZCBpbnQgY3B1KQ0KPiAg
-IA0KPiAgIHN0YXRpYyBpbnQgbXBlcmZfbWVhc3VyZV9zdGF0cyh1bnNpZ25lZCBpbnQgY3B1KQ0K
-PiAgIHsNCj4gLQl1bnNpZ25lZCBsb25nIGxvbmcgdmFsOw0KPiArCXVuc2lnbmVkIGxvbmcgbG9u
-ZyBhdmFsLCBtdmFsOw0KPiAgIAlpbnQgcmV0Ow0KPiAgIA0KPiAtCXJldCA9IHJlYWRfbXNyKGNw
-dSwgTVNSX0FQRVJGLCAmdmFsKTsNCj4gLQlhcGVyZl9jdXJyZW50X2NvdW50W2NwdV0gPSB2YWw7
-DQo+IC0JcmV0IHw9IHJlYWRfbXNyKGNwdSwgTVNSX01QRVJGLCAmdmFsKTsNCj4gLQltcGVyZl9j
-dXJyZW50X2NvdW50W2NwdV0gPSB2YWw7DQo+ICsJcmV0ID0gZ2V0X2FwZXJmX21wZXJmKGNwdSwg
-JmF2YWwsICZtdmFsKTsNCj4gKwlhcGVyZl9jdXJyZW50X2NvdW50W2NwdV0gPSBhdmFsOw0KPiAr
-CW1wZXJmX2N1cnJlbnRfY291bnRbY3B1XSA9IG12YWw7DQo+ICAgCWlzX3ZhbGlkW2NwdV0gPSAh
-cmV0Ow0KPiAgIA0KPiAgIAlyZXR1cm4gMDsNCg==
+On Mon, 2019-09-16 at 18:13 -0400, Mimi Zohar wrote:
+> On Mon, 2019-09-16 at 13:38 -0700, Linus Torvalds wrote:
+> > On Wed, Sep 11, 2019 at 2:29 PM Mimi Zohar <zohar@linux.ibm.com> wrote:
+> > >
+> > > The major feature in this pull request is IMA support for measuring
+> > > and appraising appended file signatures.  In addition are a couple of
+> > > bug fixes and code cleanup to use struct_size().
+> > 
+> > How is the file signature any different from (and/or better than) the
+> > fs-verity support?
+> > 
+> > The fs-verity support got fairly extensively discussed, and is
+> > apparently going to actually be widely used by Android, and it an
+> > independent feature of any security model.
+> > 
+> > What does the IMA version bring to the table?
+> 
+> IMA currently defines a system wide policy for measuring, verifying a
+> file's integrity (both mutable/immutable files) against known good
+> values, and adding audit records containing the file hashes.  The
+> policy isn't hard coded in the kernel, allowing people/companies to
+> configure it as desired for their specific use case.
+> 
+> Support for appended signatures already exists in the kernel for
+> kernel modules.  This pull request adds IMA support for appended
+> signatures in order to verify the kexec kernel image on OpenPOWER, as
+> part of Secure and Trusted boot enablement.  This would allow distros
+> to sign kernel images similar to how they currently sign kernel
+> modules.
+> 
+> IMA verifies file signatures up front, before allowing access to the
+> file.  fs-verity verifies the signature of the Merkle tree (and other
+> info), but does not verify the file data at the time of first use.
+>  There are pros and cons to each of these approaches.
+
+My writing tends to be brief, hopefully concise.  I assume if you had
+further questions you would have asked.
+
+This pull request contained a lot of refactoring of the existing
+appended signature verification code, so that IMA could retain the
+existing framework of calculating the file hash once, storing it in
+the IMA measurement list and extending the TPM, verifying the file's
+integrity based on a file hash or signature (eg. xattrs), and adding
+an audit record containing the file hash, all based on policy.  (The
+IMA support for appended signatures patch set was posted and reviewed
+11 times.)
+
+The support for appended signature paves the way for adding other
+signature verification methods, such as fs-verity, based on a single
+system-wide policy.  The file hash used for verifying the signature
+and the signature, itself, can be included in the IMA measurement
+list.
+
+Originally, IMA & EVM were limited to local kernel file systems, based
+on i_version, but have been extended to support filesystems that don't
+support i_version and for FUSE.  There are additional discussions for
+extending IMA to support remote filesystems (eg. IETF NFS draft).  IMA
+by itself isn't enough, since the remote file isn't pinned in memory,
+but will need to be dependent on fs-verity.
+
+Nayna Jain re-posted a patch set (v6) titled "powerpc: Enabling IMA
+arch specific secure boot policies".  The changes are based on Michael
+Ellerman's review.
+
+thanks,
+
+Mimi
+
