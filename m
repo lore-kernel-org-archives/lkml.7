@@ -2,115 +2,107 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B63D4C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 10:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E331AC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 10:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F89D217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 10:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE00A217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 10:14:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbfI0KMI (ORCPT
+        id S1727197AbfI0KOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 06:12:08 -0400
-Received: from foss.arm.com ([217.140.110.172]:47960 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725946AbfI0KMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 06:12:07 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AF75F28;
-        Fri, 27 Sep 2019 03:12:06 -0700 (PDT)
-Received: from dawn-kernel.cambridge.arm.com (unknown [10.1.197.116])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 72FE73F534;
-        Fri, 27 Sep 2019 03:12:04 -0700 (PDT)
-Subject: Re: [RFC PATCH v4 2/5] ptp: Reorganize ptp_kvm modules to make it
- arch-independent.
-To:     "Jianyong Wu (Arm Technology China)" <Jianyong.Wu@arm.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "yangbo.lu@nxp.com" <yangbo.lu@nxp.com>,
-        "john.stultz@linaro.org" <john.stultz@linaro.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "richardcochran@gmail.com" <richardcochran@gmail.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Will Deacon <Will.Deacon@arm.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Steve Capper <Steve.Capper@arm.com>,
-        "Kaly Xin (Arm Technology China)" <Kaly.Xin@arm.com>,
-        "Justin He (Arm Technology China)" <Justin.He@arm.com>,
-        nd <nd@arm.com>
-References: <20190926114212.5322-1-jianyong.wu@arm.com>
- <20190926114212.5322-3-jianyong.wu@arm.com>
- <2f338b57-b0b2-e439-6089-72e5f5e4f017@arm.com>
- <HE1PR0801MB167630F7B983A7F9DBB473DFF4810@HE1PR0801MB1676.eurprd08.prod.outlook.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <4337dcf0-bd60-4db8-6c9f-cd718b89d2a4@arm.com>
-Date:   Fri, 27 Sep 2019 11:12:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Fri, 27 Sep 2019 06:14:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56844 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726033AbfI0KOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 06:14:37 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A8E92AE99;
+        Fri, 27 Sep 2019 10:14:35 +0000 (UTC)
+From:   Benjamin Poirier <bpoirier@suse.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
+        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/17] staging: qlge: Fix rx stall in case of allocation failures
+Date:   Fri, 27 Sep 2019 19:11:54 +0900
+Message-Id: <20190927101210.23856-1-bpoirier@suse.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <HE1PR0801MB167630F7B983A7F9DBB473DFF4810@HE1PR0801MB1676.eurprd08.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+qlge refills rx buffers from napi context. In case of allocation failure,
+allocation will be retried the next time napi runs. If a receive queue runs
+out of free buffers (possibly after subsequent allocation failures), it
+drops all traffic, no longer raises interrupts and napi is no longer
+scheduled; reception is stalled until manual admin intervention.
+
+This patch series adds a fallback mechanism for rx buffer allocation. If an
+rx buffer queue becomes empty, a workqueue is scheduled to refill it from
+process context where allocation can block until mm has freed some pages
+(hopefully). This approach was inspired by the virtio_net driver (commit
+3161e453e496 "virtio: net refill on out-of-memory").
+
+I've compared this with how some other devices with a similar allocation
+scheme handle this situation:
+mlx4 relies on a periodic watchdog, sfc uses a timer, e1000e and fm10k rely
+on periodic hardware interrupts (IIUC). In all cases, they use this to
+schedule napi periodically at a fixed interval (10-250ms) until allocations
+succeed. This kind of approach simplifies allocations because only one
+context may refill buffers, however it is inefficient because of the fixed
+interval: either the interval was too short, the allocation fails again and
+work was done without forward progress; or the interval was too long,
+buffers could've been allocated earlier and rx restarted earlier, instead
+traffic was dropped while the system was idle.
+
+Note that the qlge driver (and device) uses two kinds of buffers for
+received data, so-called "small buffers" and "large buffers". The two are
+arranged in ring pairs, the sbq and lbq. Depending on frame size, protocol
+content and header splitting, data can go in either type of buffers.
+Because of buffer size, lbq allocations are more likely to fail and lead to
+stall, however I've reproduced the problem with sbq as well. The problem
+was originally found when running jumbo frames. In that case, qlge uses
+order-1 allocations for the large buffers. Although the two kinds of
+buffers are managed similarly, the qlge driver duplicates most data
+structures and code for their handling. In fact, even a casual look at the
+qlge driver shows it to be in a state of disrepair, to put it kindly...
+
+Patches 1-14 are cleanups that remove, fix and deduplicate code related to
+sbq and lbq handling. Regarding those cleanups, patches 2 ("Remove
+irq_cnt") and 8 ("Deduplicate rx buffer queue management") are the most
+important. Finally, patches 15-17 fix the actual problem of rx stalls in
+case of allocation failures by implementing the fallback of allocations to
+a workqueue.
+
+I've tested these patches using two different approaches:
+1) A sender uses pktgen to send udp traffic. The receiver has a large swap,
+a large net.core.rmem_max, runs a program that dirties all free memory in a
+loop and runs a program that opens as many udp sockets as possible but
+doesn't read from them. Since received data is all queued in the sockets
+rather than freed, qlge is allocating receive buffers as quickly as
+possible and faces allocation failures if the swap is slower than the
+network.
+2) A sender uses super_netperf. Likewise, the receiver has a large swap, a
+large net.core.rmem_max and runs a program that dirties all free memory in
+a loop. After the netperf send test is started, `killall -s SIGSTOP
+netserver` on the receiver leads to the same situation as above.
+
+---
+Changes
+v1->v2
+https://lore.kernel.org/netdev/20190617074858.32467-1-bpoirier@suse.com/
+* simplified QLGE_FIT16 macro down to a simple cast
+* added "qlge: Fix irq masking in INTx mode"
+* fixed address in pci_unmap_page() calls in "qlge: Deduplicate rx buffer
+  queue management", no effect on end result of series
+* adjusted series following move of driver to staging
 
 
-On 27/09/2019 11:10, Jianyong Wu (Arm Technology China) wrote:
-> Hi Suzuki,
-> 
->> -----Original Message-----
->> From: Suzuki K Poulose <suzuki.poulose@arm.com>
->> Sent: Thursday, September 26, 2019 9:06 PM
->> To: Jianyong Wu (Arm Technology China) <Jianyong.Wu@arm.com>;
->> netdev@vger.kernel.org; yangbo.lu@nxp.com; john.stultz@linaro.org;
->> tglx@linutronix.de; pbonzini@redhat.com; sean.j.christopherson@intel.com;
->> maz@kernel.org; richardcochran@gmail.com; Mark Rutland
->> <Mark.Rutland@arm.com>; Will Deacon <Will.Deacon@arm.com>
->> Cc: linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
->> kvmarm@lists.cs.columbia.edu; kvm@vger.kernel.org; Steve Capper
->> <Steve.Capper@arm.com>; Kaly Xin (Arm Technology China)
->> <Kaly.Xin@arm.com>; Justin He (Arm Technology China)
->> <Justin.He@arm.com>; nd <nd@arm.com>
->> Subject: Re: [RFC PATCH v4 2/5] ptp: Reorganize ptp_kvm modules to make it
->> arch-independent.
->>
->> Hi Jianyong,
->>
->> On 26/09/2019 12:42, Jianyong Wu wrote:
->>> Currently, ptp_kvm modules implementation is only for x86 which
->>> includs large part of arch-specific code.  This patch move all of
->>> those code into new arch related file in the same directory.
->>>
->>> Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
->>> ---
->>>    drivers/ptp/Makefile                 |  1 +
->>>    drivers/ptp/{ptp_kvm.c => kvm_ptp.c} | 77 ++++++------------------
->>>    drivers/ptp/ptp_kvm_x86.c            | 87
->> ++++++++++++++++++++++++++++
->>>    include/asm-generic/ptp_kvm.h        | 12 ++++
->>>    4 files changed, 118 insertions(+), 59 deletions(-)
->>>    rename drivers/ptp/{ptp_kvm.c => kvm_ptp.c} (63%)
->>
->> minor nit: Could we not skip renaming the file ? Given you are following the
->> ptp_kvm_* for the arch specific files and the header files, wouldn't it be
->> good to keep ptp_kvm.c ?
->>
-> If the module name ptp_kvm.ko is the same with its dependent object file ptp_kvm.o, warning will be given by compiler,
-> So I change the ptp_kvm.c to kvm_ptp.c to avoid that conflict.
-
-Hmm, ok. How about ptp_kvm_common.c instead of kvm_ptp.c ?
-
-Suzuki
