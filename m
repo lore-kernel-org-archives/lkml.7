@@ -2,109 +2,172 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 161DEC388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06EC3C388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E321E217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:00:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569607251;
-	bh=UaEk9j/5uDfdZSXEVBdpysAKX2A+URChP/sYfYE9OiI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Lue8CM86uIG5EjuHRiGb7po1NYSX6Zblt5oVRFQD+9pljYZE/A4CNYG6I/SzeUTwq
-	 dUfR2EsT6nKsC7+FqokABZq2IJS827xVwgHDN97PEiJCLLYSbTpgq7DJYlwDVvDAfH
-	 TeImSYgsl72u1deZUPSwF40Ns5s7f5YVJ0mNCDDE=
+	by mail.kernel.org (Postfix) with ESMTP id CEDBD217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:03:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xkxfK51C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbfI0SAu (ORCPT
+        id S1727518AbfI0SDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 14:00:50 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42826 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726394AbfI0SAt (ORCPT
+        Fri, 27 Sep 2019 14:03:01 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41902 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726321AbfI0SDB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 14:00:49 -0400
-Received: by mail-ot1-f66.google.com with SMTP id c10so2991223otd.9;
-        Fri, 27 Sep 2019 11:00:49 -0700 (PDT)
+        Fri, 27 Sep 2019 14:03:01 -0400
+Received: by mail-io1-f68.google.com with SMTP id r26so18554499ioh.8
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 11:03:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=yHxRf8iSSBJVbY2jjeb4CIMSwJyJyDAiK8DXSZBel1Y=;
+        b=xkxfK51Ci8GL1Sha/Z1ZHn31hXasiiDuDy0vbFozf9TSlb0sp5S7Gq69mDmi+AHdAz
+         ZU3oLzGYbj4xxWqwmPdsK8GOJJfmoyASDVgG0VR3osjMBhAS9b5OWFyO3TowNkEMgqKE
+         iWVl0PYTyu9IphYCGnYDCP3aH/DT67m7bD5f7g43TbWmruk7PlYmQ1TUKzTn1h/7RxWC
+         lrkWy0cDF1hLusZ+tsiBZkn/RxxbD8xFN1JCwtzXpkwJECDwTTdFAWY8JoBPXmtIw3Ex
+         a9q84bit+MY27AyVJSAWE5becNKV1HSaCcz1C+d8loB4KWl/yE+gnIRBLLF8YcQ0jLo7
+         H1pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=l7BCwV3NerQ03LGiSzwjhLsOez+Wy/9zE1sSB6m5ONw=;
-        b=Whpa2SGs5h1SJtN6MHpeUKKrWBOdVeW4weJ2mkRv86oXypFEXkcsKmu/VF6yn9lcIT
-         YBzLMUupb1SG6lxim6gecCXgDsTo2mx6adJF0mLc1SfVQeGnllN+udDqInTYPEWRH/4S
-         QNpU9998akbhVrTa7WONVrgjzfkidG+SGa+U/wulYAiocfTavWHbfvXs2tH50XMCZzS5
-         SKb6NuJWd1RC8bd596DJiD/vc1+yG3l8k9vhjO38boD0WUsQjW22gIDOgy3p9KZ2uzaA
-         s0bVCEllQ3qJcqJbDhyDREUU3YZXpdrtyzNWKMNMMIwvzs9Nl783mO320zlvoZiGRLIK
-         8pBQ==
-X-Gm-Message-State: APjAAAXq8pYbgYp54dKF0G4lI8kzpVHEImCJqIohJGtGFU6rN9HVwpCW
-        0BYvuma6AXOp55gb3egmWQ==
-X-Google-Smtp-Source: APXvYqx1zz9JdKZCj7dotz/c9Xs7Sqvslg98uXH+/47gz30MNOxp2Mf70RXqi68SYeY4gvveyJFkSg==
-X-Received: by 2002:a9d:724c:: with SMTP id a12mr4598224otk.230.1569607248917;
-        Fri, 27 Sep 2019 11:00:48 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id z12sm601596oth.71.2019.09.27.11.00.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2019 11:00:47 -0700 (PDT)
-Date:   Fri, 27 Sep 2019 13:00:47 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] dt-bindings: arm: samsung: Convert Exynos PMU
- bindings to json-schema
-Message-ID: <20190927180047.GA24461@bogus>
-References: <20190920162600.7486-1-krzk@kernel.org>
- <20190920162600.7486-2-krzk@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=yHxRf8iSSBJVbY2jjeb4CIMSwJyJyDAiK8DXSZBel1Y=;
+        b=QYSiB4/6vLrMaCUkA17gnnFnYDYL6F6XKIg6yxL9KycWT4B3wlqpZcTMVkTEMZ8sUQ
+         LRMLIRdHCBGmjm8skJiL370OPQFOQVT1HX48oqOCtIh/i0yW7pvv0xhnDysb9fDP7x1s
+         kNMKJmCLJ8VyZAEYBHvh0WVO3iVzK1YYbnOAiXoTtMsRf9hCloXifhBIclq07k67v8TT
+         dNlOKQ20yvkyiczGDWChMI4j70ux+14XzS9eTOqqE8knD3zlniHIBtD367fUoLYD3XXK
+         vc+LuruAdWu2vm4avcd1DhxyOhXJQx5SVT+jPX+Y1EVqm9my9f3GqpVeNSduC1XuHKzT
+         AuKg==
+X-Gm-Message-State: APjAAAWMAFwWsi8fRuLNC66psDVv3iJw5tplAf6jkQGh3VqICFvLsYLZ
+        6zcfZdPezgHRUdRr/yLMnFYH0M/RTrQTiHar8ezREw==
+X-Google-Smtp-Source: APXvYqz+GgYI57ih3KBFENT6isulIJiUTyNks/5H4o2vkl1buRVE0KbLYSWpnU4tr4IeUdcHKjQJ095WkkX2A0QRJ64=
+X-Received: by 2002:a05:6e02:683:: with SMTP id o3mr5918830ils.58.1569607380559;
+ Fri, 27 Sep 2019 11:03:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190920162600.7486-2-krzk@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190909145015.26317-1-daniel.lezcano@linaro.org>
+ <20190909145015.26317-3-daniel.lezcano@linaro.org> <20190918193554.GC24433@xps15>
+ <f90bcd0c-e937-54f7-0dae-0e9d9ed45a41@linaro.org>
+In-Reply-To: <f90bcd0c-e937-54f7-0dae-0e9d9ed45a41@linaro.org>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Fri, 27 Sep 2019 12:02:49 -0600
+Message-ID: <CANLsYkxK3RzE1V_GwBarocrFHUSNOFmW_AfQn+JraXg3-gXVuw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] powercap/drivers/idle_inject: Specify the idle state
+ to inject
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Sep 2019 18:26:00 +0200, Krzysztof Kozlowski wrote:
-> Convert Samsung Exynos Power Management Unit (PMU) bindings to DT schema
-> format using json-schema.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
-> ---
-> 
-> Changes since v2:
-> 1. Use select to skip other syscon nodes,
-> 2. Indent example with four spaces (more readable),
-> 3. Use pattern for clkoutN property,
-> 4. Include header with clock IDs in example to bring it closer to real DTS.
-> 
-> Changes since v1:
-> 1. Fix clock-names to match all elements against schema (any number of
->    any clkoutN values).
->    This currently fails:
->        properties:clock-names:items: {'enum': ['clkout0', 'clkout1', 'clkout2',
->        'clkout3', 'clkout4', 'clkout5', 'clkout6', 'clkout7', 'clkout8',
->        'clkout9', 'clkout10', 'clkout11', 'clkout12', 'clkout13', 'clkout14',
->        'clkout15', 'clkout16']} is not of type 'array
-> 
-> 2. Add syscon reboot and poweroff nodes.
-> ---
->  .../devicetree/bindings/arm/samsung/pmu.txt   |  72 ------------
->  .../devicetree/bindings/arm/samsung/pmu.yaml  | 105 ++++++++++++++++++
->  2 files changed, 105 insertions(+), 72 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.yaml
-> 
+On Tue, 24 Sep 2019 at 07:02, Daniel Lezcano <daniel.lezcano@linaro.org> wr=
+ote:
+>
+>
+> Hi Mathieu,
+>
+> On 18/09/2019 21:35, Mathieu Poirier wrote:
+> > On Mon, Sep 09, 2019 at 04:50:15PM +0200, Daniel Lezcano wrote:
+> >> Currently the idle injection framework only allows to inject the
+> >> deepest idle state available on the system.
+> >>
+> >> Give the opportunity to specify which idle state we want to inject by
+> >> adding a new function helper to set the state and use it when calling
+> >> play_idle().
+> >>
+> >> There is no functional changes, the cpuidle state is the deepest one.
+> >>
+> >> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> >> ---
+>
+> [ ... ]
+>
+> >> +/**
+> >> + * idle_inject_set_state - set the idle state to inject
+> >> + * @state: an integer for the idle state to inject
+> >> + */
+> >> +void idle_inject_set_state(struct idle_inject_device *ii_dev, int sta=
+te)
+> >> +{
+> >> +    if (state >=3D CPUIDLE_STATE_NOUSE && state < CPUIDLE_STATE_MAX)
+> >> +            WRITE_ONCE(ii_dev->state, state);
+> >> +}
+> >> +
+> >>  /**
+> >>   * idle_inject_start - start idle injections
+> >>   * @ii_dev: idle injection control device structure
+> >> @@ -298,6 +310,7 @@ struct idle_inject_device *idle_inject_register(st=
+ruct cpumask *cpumask)
+> >>      cpumask_copy(to_cpumask(ii_dev->cpumask), cpumask);
+> >>      hrtimer_init(&ii_dev->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+> >>      ii_dev->timer.function =3D idle_inject_timer_fn;
+> >> +    ii_dev->state =3D cpuidle_find_deepest_state();
+> >>
+> >>      for_each_cpu(cpu, to_cpumask(ii_dev->cpumask)) {
+> >>
+> >> diff --git a/include/linux/idle_inject.h b/include/linux/idle_inject.h
+> >> index a445cd1a36c5..e2b26b9ccd34 100644
+> >> --- a/include/linux/idle_inject.h
+> >> +++ b/include/linux/idle_inject.h
+> >> @@ -26,4 +26,7 @@ void idle_inject_set_duration(struct idle_inject_dev=
+ice *ii_dev,
+> >>  void idle_inject_get_duration(struct idle_inject_device *ii_dev,
+> >>                               unsigned int *run_duration_us,
+> >>                               unsigned int *idle_duration_us);
+> >> +
+> >> +void idle_inject_set_state(struct idle_inject_device *ii_dev, int sta=
+te);
+> >> +
+> >
+> > The above function is not used in this patch and as such should be intr=
+oduce as
+> > part of future work.  Otherwise I agree that this patch does not carry =
+any
+> > functional changes.
+> >
+> > Without function idle_inject_set_state():
+>
+> I was about to remove the function but actually it may not make sense as
+> the idle_inject is a framework providing the different API to do the
+> idle injection and the function is an helper to set the state value. It
+> comes with the addition of the state number in the structure.
 
-Applied, thanks.
+I agree with you but there is still no current user of the API.
 
-Rob
+>
+> Next patch is the idle cooling device and makes use of it.
+
+Then why not simply introduce it then?
+
+>
+> Can I still consider your acked-by valid?
+
+Whether the API is introduced here or in the next patchset has no
+effect on the validity of the code and as such my approbation is still
+valid.
+
+Thanks,
+Mathieu
+
+>
+> --
+>  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
+RM SoCs
+>
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+>
