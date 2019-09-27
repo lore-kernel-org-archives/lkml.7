@@ -2,126 +2,92 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1802C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D5E3C388F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B3EE207E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:55:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="cJIke0L3"
+	by mail.kernel.org (Postfix) with ESMTP id E1962207E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:56:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbfI0PzX (ORCPT
+        id S1727980AbfI0P4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 11:55:23 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:53804 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727825AbfI0PzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 11:55:23 -0400
-Received: from zn.tnic (p200300EC2F0ABB004403369600A4C2F6.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:bb00:4403:3696:a4:c2f6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 127891EC03F6;
-        Fri, 27 Sep 2019 17:55:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1569599718;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=uDKIwsSdhiq49Jr8VbsUJz/fuURLdvZ3MjV0Tdg/1DM=;
-        b=cJIke0L3NQjBir2sSLlzbq3h05qwXvqcpAWEZN8eInNglGGg0EFRt1UGnfRgA/E11AAHQ0
-        j9Dy4UZ8BXV/FdFW4VrIIJ/+knC0yTZ0TY6epsIm8Jtht69ZlW5N3TSlkdehIGHhRQ4oD+
-        F5pjsFVd0OVcMsmqZMg5+lmkyHEyZjU=
-Date:   Fri, 27 Sep 2019 17:55:18 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: VMX: Set VMENTER_L1D_FLUSH_NOT_REQUIRED if
- !X86_BUG_L1TF
-Message-ID: <20190927155518.GB23002@zn.tnic>
-References: <20190826193023.23293-1-longman@redhat.com>
- <6bc37d29-b691-28d6-d4dc-9402fa82093a@redhat.com>
+        Fri, 27 Sep 2019 11:56:03 -0400
+Received: from atlmailgw1.ami.com ([63.147.10.40]:55424 "EHLO
+        atlmailgw1.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727518AbfI0P4D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 11:56:03 -0400
+X-AuditID: ac1060b2-7a7ff700000017bd-67-5d8e310ed195
+Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
+        (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by atlmailgw1.ami.com (Symantec Messaging Gateway) with SMTP id D0.07.06077.E013E8D5; Fri, 27 Sep 2019 11:55:58 -0400 (EDT)
+Received: from hongweiz-Ubuntu-AMI.us.megatrends.com (172.16.98.93) by
+ atlms1.us.megatrends.com (172.16.96.144) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Fri, 27 Sep 2019 11:56:01 -0400
+From:   Hongwei Zhang <hongweiz@ami.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Jeffery <andrew@aj.id.au>, <linux-gpio@vger.kernel.org>,
+        Joel Stanley <joel@jms.id.au>
+CC:     Hongwei Zhang <hongweiz@ami.com>, <devicetree@vger.kernel.org>,
+        <linux-aspeed@lists.ozlabs.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Doug Anderson <armlinux@m.disordat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [v2, 2/2] gpio: dts: aspeed: Add SGPIO driver
+Date:   Fri, 27 Sep 2019 11:55:48 -0400
+Message-ID: <1569599748-31181-1-git-send-email-hongweiz@ami.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1569439337-10482-3-git-send-email-hongweiz@ami.com>
+References: <1569439337-10482-3-git-send-email-hongweiz@ami.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <6bc37d29-b691-28d6-d4dc-9402fa82093a@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [172.16.98.93]
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPIsWRmVeSWpSXmKPExsWyRiBhgi6fYV+sQfcOE4s569ewWey6zGHx
+        /8NuRovv+2exWvyddIzdounQKTaLL3NPsVjMP3KO1eL3+b/MFlP+LGey2PT4GqtF8+pzzBab
+        5/9htLi8aw6bxaGpexktll6/yGTx/lMnk0Xr3iPsFjemNLBZ7L33mdFBxONq+y52jzXz1jB6
+        XL52kdnj969JjB7vb7Sye1z8eIzZY9OqTjaPO9f2sHmcmPGbxWPCogOMHpuX1Hucn7GQ0eNv
+        41d2jxPTv7N4fN4kF8AfxWWTkpqTWZZapG+XwJXx8YNzwQrmir0fP7I1MJ5i6mLk5JAQMJE4
+        fKWFGcQWEtjFJPG2waGLkQvIPswo8ax7ERtIgk1ATWLv5jlMIAkRgX5Gies7mthAHGaBrawS
+        2w80sYJUCQuYSSydMY29i5GDg0VAVeLGznCQMK+Ag0RT63c2iG1yEjfPdYJt4xRwlNjWsJMJ
+        YrODxLtHLawQ9YISJ2c+YQGxmQUkJA6+eAF1nazErUOPoa5WkHje95hlAqPALCQts5C0LGBk
+        WsUolFiSk5uYmZNebqiXmJupl5yfu4kREqmbdjC2XDQ/xMjEwXiIUYKDWUmE1zeyJ1aINyWx
+        siq1KD++qDQntfgQozQHi5I478o132KEBNITS1KzU1MLUotgskwcnFINjCs/Buk+L37G2a/y
+        ZvfFi6uVZnSJd3IVin/leb1R6JVMmqL4Is/UmgfObbbfsuN/qZ3e/bu8z23dnbI1zZt91RyV
+        zTr1g6W1WEpeZIh2uN/pMow84L2YN9jWTUquIPRUzh2jyxrnBPedfFecmCbFF8y/RKD6l0Fx
+        y7TiNzoB9ivecGxu0lugxFKckWioxVxUnAgAf+/1tsICAAA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 01:29:28PM -0400, Waiman Long wrote:
-> On 8/26/19 3:30 PM, Waiman Long wrote:
-> > The l1tf_vmx_mitigation is only set to VMENTER_L1D_FLUSH_NOT_REQUIRED
-> > when the ARCH_CAPABILITIES MSR indicates that L1D flush is not required.
-> > However, if the CPU is not affected by L1TF, l1tf_vmx_mitigation will
-> > still be set to VMENTER_L1D_FLUSH_AUTO. This is certainly not the best
-> > option for a !X86_BUG_L1TF CPU.
-> >
-> > So force l1tf_vmx_mitigation to VMENTER_L1D_FLUSH_NOT_REQUIRED to make it
-> > more explicit in case users are checking the vmentry_l1d_flush parameter.
-> >
-> > Signed-off-by: Waiman Long <longman@redhat.com>
-> > ---
-> >  arch/x86/kvm/vmx/vmx.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index 42ed3faa6af8..a00ce3d6bbfd 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -7896,6 +7896,8 @@ static int __init vmx_init(void)
-> >  			vmx_exit();
-> >  			return r;
-> >  		}
-> > +	} else {
-> > +		l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_NOT_REQUIRED;
-> >  	}
-> >  
-> >  #ifdef CONFIG_KEXEC_CORE
+Thanks Linus,
+
 > 
-> Ping. Any comment on that one?
+> I sent a separate patch to fix this up the way I want it with the file named gpio-aspeed-sgpio.c and 
+> CONFIG_GPIO_ASPEED_SGPIO.
+> 
+> I don't want to mix up the namespaces of something Aspeed-generic with the namespace of the GPIO 
+> subsystem. SGPIO is the name of a specific Aspeed component.
+> 
+> Yours,
+> Linus Walleij
 
-I'd move that logic with the if (boot_cpu_has(X86_BUG_L1TF)) check inside
-vmx_setup_l1d_flush() so that I have this:
+I agree and gpio-aspeed-sgpio.c is better.
 
-        if (!boot_cpu_has_bug(X86_BUG_L1TF)) {
-                l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_NOT_REQUIRED;
-                return 0;
-        }
-
-	if (!enable_ept) {
-		...
-
-	}
-
-inside the function and outside am left with:
-
-	r = vmx_setup_l1d_flush(vmentry_l1d_flush_param);
-        if (r) {
-		vmx_exit();
-                return r;
-	}
-
-only. This way I'm concentrating the whole l1tf_vmx_mitigation picking
-apart in one place.
-
-Also, note that X86_BUG flags are checked with boot_cpu_has_bug() even
-if it boils down to the same thing now.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Regards,
+--Hongwei
