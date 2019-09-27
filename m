@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 678DFC388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D56C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3934621906
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA6C020872
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:44:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="takF3d8T"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="QifapQB3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbfI0SoH (ORCPT
+        id S1728199AbfI0SoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 14:44:07 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:32837 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728108AbfI0SoE (ORCPT
+        Fri, 27 Sep 2019 14:44:06 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46807 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbfI0SoC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 14:44:04 -0400
-Received: by mail-wr1-f67.google.com with SMTP id b9so4350207wrs.0
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 11:44:01 -0700 (PDT)
+        Fri, 27 Sep 2019 14:44:02 -0400
+Received: by mail-wr1-f68.google.com with SMTP id o18so4280420wrv.13
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 11:44:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=bn1Yyb+y0E2XtXZ6uMo4FglNk7nmGiqm3716bVhGUbI=;
-        b=takF3d8TQ23XIGxuLOV8EzoCgdq2Cx3gSbMfwoy8dm4JOeV1XPOcGDt36yHf/TI7T+
-         FtbvWKEknxgAIutpiIolDXxparFuO4OfaK8AzTK97b0LKYe0SDv37m3nJ8nkhGqKqX+l
-         ajQyWxbLHv32CSr7pUKgba6XKx+DcFNKw1+DFc6ufE+etxrYBfXlb+f4nP8LZ1bOapM/
-         NC8bBmCjPgyuLG2UVTsEA2vzrupBytvvOiKvTboLnyCM6wxZJX1jMAWJU3qpS097AxuV
-         yLpcWtGm7n+t1ZhZedjLWOVxe+aXapZhHwoYnea03QmYlH7hDqjSMG/eA+/c/ixE0Ogp
-         3jvg==
+        bh=K7iwhASPxbBfW+q2EXnPK2zfjdwyLTY+27xuFNIdRtA=;
+        b=QifapQB3gJpS3duSfuss2bKCph2XDPCBGuA1ixcVHdgABdF3z6npkh9zYXzycrhVsp
+         8P696tdPAgaAtiYwxoIcbLstboUrNv1j/dUKiejMbo3RUyg+C3Uxj9bj6X8Gv3T8w6a1
+         Dk2LfVVAZytHukR9amphBUEAV7AcYLiMAvjZRglans6SdreItLzVs5+90rdiQVgmlpaW
+         hktKbuomksiV35M8l8y8a6RjWMYPImJaVr2RQGegblBkjr2sLL1brnPvSz9sCpYMq9Jp
+         gmG2jQ/htvJWpvTZpSEI7olV4X5GmYoG4f5xnfck2Q2FJIr3QcXyUSakZJqHPMemoJAh
+         rRiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=bn1Yyb+y0E2XtXZ6uMo4FglNk7nmGiqm3716bVhGUbI=;
-        b=sqRptEQs6uYB+9l5ggAgmTg1raUZPkFDvoWh5U8BDYq8vgwFbnXOXb/3/Igghcl+Ys
-         fiJ2e/8LHTr0msBhbjrPkcJ5o7PJBwmcNlr5EgkV/p4W3FdjUPptDGr3XhEBBfjxF5AV
-         O5wGpwMBzK96IiO9d+VBywndTNMc0haXFXOexQbJbJP4gepyzoCOyFIy3Yz/LjdrRb6z
-         AHPylVDNonzkEkUGaUIyPiOkqQbHSqJ7BbLr8/iVgUuGM0psRIg5a9Kb6DdVOqQec7og
-         xF8hHIHMsqMbA0s8yMjcNle18qw5Yh1dLlGTd/IrPpGrF5wl1jaiN21e3ZyOcQCqdLII
-         HaQw==
-X-Gm-Message-State: APjAAAWhsSfbBjwBLHd2D8dSKOk9KUA0K7k9uAv0mnyVdTLb90SWy8BI
-        JTqWzwIreuXeiE1FCuvm7xKrrg==
-X-Google-Smtp-Source: APXvYqwwmzGMJt5+RoC/OswzZ5EMENUYAm3d/ZFwKGTbNtLuc52z5Dcy/qT1fzKqYHzwCMtLhVptNg==
-X-Received: by 2002:adf:fe05:: with SMTP id n5mr4414380wrr.355.1569609841286;
-        Fri, 27 Sep 2019 11:44:01 -0700 (PDT)
-Received: from glaroque-ThinkPad-T480.home ([2a01:cb1d:6e7:d500:82a9:347a:43f3:d2ca])
-        by smtp.gmail.com with ESMTPSA id r13sm6246272wrn.0.2019.09.27.11.44.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=K7iwhASPxbBfW+q2EXnPK2zfjdwyLTY+27xuFNIdRtA=;
+        b=V8XGOmI/5JQqVbow9DH9JMTK88K6PpqkOsnsVUYhhTih+M81RmscnDL88hFDciDtX+
+         va+n/9pcBLHOmzkvlycBH8s5IQEAfdPrJU+6/Uo557Mn2VkMJFJAeAsgnZ6H/sxD6thV
+         VN7x4WrE8MHuJCF/QxLjJf1e6nWzmy/RYSM0cJ/qUndHYSwRTeHe85dMQuJfEcGuKfrG
+         lstCsBK8P38nsnjANXLnwTFmrtgkMKpmjPrBsOobNuGA+vpztSeCpenDPzNLyzIEctoL
+         ghtdFU4/oLNuAfhglLiug2Ryj9++YYxy4xDDh2z3z6iSWpNRWg5wnvHGxeDYa41Rpwsk
+         0OQg==
+X-Gm-Message-State: APjAAAUKbIhIDeS9L90VhiWlzA0bgw+aYv4/B+6gfNhbogU284F+ylhj
+        vQX6kmOxpRHXeTboimggiYPrgQ==
+X-Google-Smtp-Source: APXvYqz3u6msX1INiY6wFChhqjbg5r9ADJSXD3syZv0Fnoe6AUeuH032CUpiOhoNsGOdw83xLNWDhg==
+X-Received: by 2002:a5d:660c:: with SMTP id n12mr4269949wru.286.1569609840121;
         Fri, 27 Sep 2019 11:44:00 -0700 (PDT)
+Received: from glaroque-ThinkPad-T480.home ([2a01:cb1d:6e7:d500:82a9:347a:43f3:d2ca])
+        by smtp.gmail.com with ESMTPSA id r13sm6246272wrn.0.2019.09.27.11.43.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Sep 2019 11:43:59 -0700 (PDT)
 From:   Guillaume La Roque <glaroque@baylibre.com>
 To:     amit.kucheria@linaro.org, rui.zhang@intel.com, edubezval@gmail.com,
         daniel.lezcano@linaro.org
 Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org
-Subject: [PATCH v6 5/7] arm64: dts: amlogic: g12a: add cooling properties
-Date:   Fri, 27 Sep 2019 20:43:50 +0200
-Message-Id: <20190927184352.28759-6-glaroque@baylibre.com>
+Subject: [PATCH v6 4/7] arm64: dts: meson: g12: Add minimal thermal zone
+Date:   Fri, 27 Sep 2019 20:43:49 +0200
+Message-Id: <20190927184352.28759-5-glaroque@baylibre.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190927184352.28759-1-glaroque@baylibre.com>
 References: <20190927184352.28759-1-glaroque@baylibre.com>
@@ -72,76 +72,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing #colling-cells field for G12A SoC
-Add cooling-map for passive and hot trip point
+Add minimal thermal zone for two temperature sensor
+One is located close to the DDR and the other one is
+located close to the PLLs (between the CPU and GPU)
 
+Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Tested-by: Christian Hewitt <christianshewitt@gmail.com>
 Tested-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 24 +++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ .../boot/dts/amlogic/meson-g12-common.dtsi    | 46 +++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-index 733a9d46fc4b..3ab6497548ca 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-@@ -18,6 +18,7 @@
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
- 			next-level-cache = <&l2>;
-+			#cooling-cells = <2>;
- 		};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+index 0660d9ef6a86..f98171949fcb 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+@@ -12,6 +12,7 @@
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/reset/amlogic,meson-axg-audio-arb.h>
+ #include <dt-bindings/reset/amlogic,meson-g12a-reset.h>
++#include <dt-bindings/thermal/thermal.h>
  
- 		cpu1: cpu@1 {
-@@ -26,6 +27,7 @@
- 			reg = <0x0 0x1>;
- 			enable-method = "psci";
- 			next-level-cache = <&l2>;
-+			#cooling-cells = <2>;
- 		};
+ / {
+ 	interrupt-parent = <&gic>;
+@@ -94,6 +95,50 @@
+ 		#size-cells = <2>;
+ 		ranges;
  
- 		cpu2: cpu@2 {
-@@ -34,6 +36,7 @@
- 			reg = <0x0 0x2>;
- 			enable-method = "psci";
- 			next-level-cache = <&l2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu3: cpu@3 {
-@@ -42,6 +45,7 @@
- 			reg = <0x0 0x3>;
- 			enable-method = "psci";
- 			next-level-cache = <&l2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		l2: l2-cache0 {
-@@ -113,3 +117,23 @@
- &sd_emmc_a {
- 	amlogic,dram-access-quirk;
- };
++		thermal-zones {
++			cpu_thermal: cpu-thermal {
++				polling-delay = <1000>;
++				polling-delay-passive = <100>;
++				thermal-sensors = <&cpu_temp>;
 +
-+&cpu_thermal {
-+	cooling-maps {
-+		map0 {
-+			trip = <&cpu_passive>;
-+			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				trips {
++					cpu_passive: cpu-passive {
++						temperature = <85000>; /* millicelsius */
++						hysteresis = <2000>; /* millicelsius */
++						type = "passive";
++					};
++
++					cpu_hot: cpu-hot {
++						temperature = <95000>; /* millicelsius */
++						hysteresis = <2000>; /* millicelsius */
++						type = "hot";
++					};
++
++				};
++			};
++
++			ddr_thermal: ddr-thermal {
++				polling-delay = <1000>;
++				polling-delay-passive = <100>;
++				thermal-sensors = <&ddr_temp>;
++
++				trips {
++					ddr_passive: ddr-passive {
++						temperature = <85000>; /* millicelsius */
++						hysteresis = <2000>; /* millicelsius */
++						type = "passive";
++					};
++				};
++
++				cooling-maps {
++					map {
++						trip = <&ddr_passive>;
++						cooling-device = <&mali THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					};
++				};
++			};
 +		};
 +
-+		map1 {
-+			trip = <&cpu_hot>;
-+			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+		};
-+	};
-+};
+ 		ethmac: ethernet@ff3f0000 {
+ 			compatible = "amlogic,meson-axg-dwmac",
+ 				     "snps,dwmac-3.70a",
+@@ -2412,6 +2457,7 @@
+ 			assigned-clock-rates = <0>, /* Do Nothing */
+ 					       <800000000>,
+ 					       <0>; /* Do Nothing */
++			#cooling-cells = <2>;
+ 		};
+ 	};
+ 
 -- 
 2.17.1
 
