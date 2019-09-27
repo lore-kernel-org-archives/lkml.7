@@ -2,135 +2,152 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67AA9C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 03:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9963C352A9
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 03:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 374E7206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 03:16:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TEQHGUIn"
+	by mail.kernel.org (Postfix) with ESMTP id AA895214D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 03:26:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729002AbfI0DQi (ORCPT
+        id S1728909AbfI0D0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 23:16:38 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38798 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727796AbfI0DQh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 23:16:37 -0400
-Received: by mail-io1-f68.google.com with SMTP id u8so12494688iom.5;
-        Thu, 26 Sep 2019 20:16:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nhpJmmCWFxguq4INCKuRzsW/NZW8MQkE7UQnGQjjt/M=;
-        b=TEQHGUIn5IwSIH88Gk1uKeAKCnWEDBX12tILcuFeCc1hNCKTxO7Co8ld4YXMOYAEdV
-         ogoV55AMv67TaHERxDzINpLCi+zlqGDg7nbyAO2KWkrEuJTfudoNWK1ufhj9egXWAzHO
-         o0iAyEggI8za8j1TNWBq5ZZC4A9iN9Lq/UekBImyPPwrVhp2w/eYGZjogBs29hFLrfjA
-         SfNnBh/tBfer5HWnjS6Tzox0cjQ5/kCP6AmmDrFr2trIojLUZ+/VdZ6QDu9xot/nhgOx
-         tIzkN+8e/69+e1frwCscHojt3zi+7L4KSJj2+C9FgjfyZvqmH9m8Nw9O8UaDMv9COL2P
-         3XYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nhpJmmCWFxguq4INCKuRzsW/NZW8MQkE7UQnGQjjt/M=;
-        b=cJB7Dxt5aLX2hMLUK0K+WQh7i9NXakFQsPlx1i62VbggjfH47Jw+VpzlE3vStxl23o
-         NFn/PSq/4CJSZU/z9WiXrva6ZMYMwLtZMCliQvOd3EXa5gb31/AWLtiL99xXF7wkEU5o
-         oSx9HlvlRmdSVzZEJxVyfsULTSoGbK4HhK72u5EcVF2GZAfggBoisAc6nI2onnPHyxUY
-         SuBVyGMqs/bq2DrEpjB1d478T3s4PjDYGG/iH+qibPAS2zK4O+F8h+Fmqpfs9NcNIb5N
-         jjiCC4YpQEn5TxNMp5eCDjYtwC+zoxL7gBjhZ7+75bmZdYJbFuRgdi/qA3EQM//NOPq4
-         QbiA==
-X-Gm-Message-State: APjAAAWX9DDbaOiAh+EXpHJqlnTnvK+S8EX2HWYkS+Xbgy/K3Eut1yNT
-        0aR1f0q2E12YvQFjJB8qTXwgzAiB5wQ=
-X-Google-Smtp-Source: APXvYqzLskxgI6QmLIt/OfvRZP+gdbFZt829hTPYdLsQ5y8EO03M1gsC1GffoRzk6N0sp5dVQfuUVA==
-X-Received: by 2002:a92:1603:: with SMTP id r3mr2353189ill.243.1569554195338;
-        Thu, 26 Sep 2019 20:16:35 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.gmail.com with ESMTPSA id i26sm1803849iol.84.2019.09.26.20.16.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 26 Sep 2019 20:16:35 -0700 (PDT)
-Date:   Thu, 26 Sep 2019 22:16:32 -0500
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: qrtr: fix memory leak in qrtr_tun_read_iter
-Message-ID: <20190927031632.GG22969@cs-dulles.cs.umn.edu>
-References: <20190925230416.20126-1-navid.emamdoost@gmail.com>
- <20190925232112.GR26530@ZenIV.linux.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190925232112.GR26530@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 26 Sep 2019 23:26:36 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:47032 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727966AbfI0D0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 23:26:35 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 528871A05FA;
+        Fri, 27 Sep 2019 05:26:30 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2CE0E1A011C;
+        Fri, 27 Sep 2019 05:26:25 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id D38F84029A;
+        Fri, 27 Sep 2019 11:26:18 +0800 (SGT)
+From:   Hui Song <hui.song_1@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Song Hui <hui.song_1@nxp.com>
+Subject: [PATCH v6] gpio/mpc8xxx: change irq handler from chained to normal
+Date:   Fri, 27 Sep 2019 11:15:51 +0800
+Message-Id: <20190927031551.20074-1-hui.song_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 12:21:12AM +0100, Al Viro wrote:
-> On Wed, Sep 25, 2019 at 06:04:13PM -0500, Navid Emamdoost wrote:
-> > In qrtr_tun_read_iter we need an error handling path to appropriately
-> > release skb in cases of error.
-> 
-> Release _what_ skb?
-It is not a leak clearly! My bad ...
-> 
-> > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> > ---
-> >  net/qrtr/tun.c | 13 +++++++++----
-> >  1 file changed, 9 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/net/qrtr/tun.c b/net/qrtr/tun.c
-> > index e35869e81766..0f6e6d1d2901 100644
-> > --- a/net/qrtr/tun.c
-> > +++ b/net/qrtr/tun.c
-> > @@ -54,19 +54,24 @@ static ssize_t qrtr_tun_read_iter(struct kiocb *iocb, struct iov_iter *to)
-> >  	int count;
-> >  
-> >  	while (!(skb = skb_dequeue(&tun->queue))) {
-> 
-> The body of the loop is entered only if the loop condition has
-> evaluated true.  In this case, it means that the value of
-> 	!(skb = skb_dequeue(&tun->queue))
-> had been true, i.e. the value of
-> 	skb = skb_dequeue(&tun->queue)
-> has been NULL, i.e. that skb_dequeue() has returned NULL, which had
-> been copied into skb.
-> 
-> In other words, in the body of that loop we have skb equal to NULL.
-> 
-> > -		if (filp->f_flags & O_NONBLOCK)
-> > -			return -EAGAIN;
-> > +		if (filp->f_flags & O_NONBLOCK) {
-> > +			count = -EAGAIN;
-> > +			goto out;
-> > +		}
-> >  
-> >  		/* Wait until we get data or the endpoint goes away */
-> >  		if (wait_event_interruptible(tun->readq,
-> > -					     !skb_queue_empty(&tun->queue)))
-> > -			return -ERESTARTSYS;
-> > +					     !skb_queue_empty(&tun->queue))) {
-> > +			count = -ERESTARTSYS;
-> > +			goto out;
-> > +		}
-> >  	}
-> 
-> The meaning of that loop is fairly clear, isn't it?  Keep looking int
-> tun->queue until an skb shows up there.  If it's not immediately there,
-> fail with -EAGAIN for non-blocking files and wait on tun->readq until
-> some skb arrives.
+From: Song Hui <hui.song_1@nxp.com>
 
-Thanks for the explainations.
+More than one gpio controllers can share one interrupt, change the
+driver to request shared irq.
 
-Navid.
+While this will work, it will mess up userspace accounting of the number
+of interrupts per second in tools such as vmstat.  The reason is that
+for every GPIO interrupt, /proc/interrupts records the count against GIC
+interrupt 68 or 69, as well as the GPIO itself.  So, for every GPIO
+interrupt, the total number of interrupts that the system has seen
+increments by two
+
+Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
+Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
+---
+ Changes in v6:
+	- change request_irq to devm_request_irq and add commit message
+ Changes in v5:
+	- add traverse every bit function.
+ Changes in v4:
+	- convert 'pr_err' to 'dev_err'.
+ Changes in v3:
+	- update the patch description.
+ Changes in v2:
+	- delete the compatible of ls1088a.
+
+ drivers/gpio/gpio-mpc8xxx.c | 31 ++++++++++++++++++++-----------
+ 1 file changed, 20 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+index 16a47de..f0be284 100644
+--- a/drivers/gpio/gpio-mpc8xxx.c
++++ b/drivers/gpio/gpio-mpc8xxx.c
+@@ -22,6 +22,7 @@
+ #include <linux/irq.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/bitops.h>
++#include <linux/interrupt.h>
+ 
+ #define MPC8XXX_GPIO_PINS	32
+ 
+@@ -127,20 +128,20 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
+ 		return -ENXIO;
+ }
+ 
+-static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
++static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
+ {
+-	struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
+-	struct irq_chip *chip = irq_desc_get_chip(desc);
++	struct mpc8xxx_gpio_chip *mpc8xxx_gc = data;
+ 	struct gpio_chip *gc = &mpc8xxx_gc->gc;
+ 	unsigned int mask;
++	int i;
+ 
+ 	mask = gc->read_reg(mpc8xxx_gc->regs + GPIO_IER)
+ 		& gc->read_reg(mpc8xxx_gc->regs + GPIO_IMR);
+-	if (mask)
++	for_each_set_bit(i, &mask, 32)
+ 		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
+-						     32 - ffs(mask)));
+-	if (chip->irq_eoi)
+-		chip->irq_eoi(&desc->irq_data);
++						     31 - i));
++
++	return IRQ_HANDLED;
+ }
+ 
+ static void mpc8xxx_irq_unmask(struct irq_data *d)
+@@ -388,8 +389,8 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+ 
+ 	ret = gpiochip_add_data(gc, mpc8xxx_gc);
+ 	if (ret) {
+-		pr_err("%pOF: GPIO chip registration failed with status %d\n",
+-		       np, ret);
++		dev_err(&pdev->dev, "%pOF: GPIO chip registration failed with status %d\n",
++			np, ret);
+ 		goto err;
+ 	}
+ 
+@@ -409,8 +410,16 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+ 	if (devtype->gpio_dir_in_init)
+ 		devtype->gpio_dir_in_init(gc);
+ 
+-	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
+-					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
++	ret = devm_request_irq(&pdev->dev, mpc8xxx_gc->irqn,
++			       mpc8xxx_gpio_irq_cascade,
++			       IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade",
++			       mpc8xxx_gc);
++	if (ret) {
++		dev_err(&pdev->dev, "%s: failed to devm_request_irq(%d), ret = %d\n",
++			np->full_name, mpc8xxx_gc->irqn, ret);
++		goto err;
++	}
++
+ 	return 0;
+ err:
+ 	iounmap(mpc8xxx_gc->regs);
+-- 
+2.9.5
+
