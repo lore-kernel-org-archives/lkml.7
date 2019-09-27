@@ -2,29 +2,29 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE6BC388F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AB2C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E34021920
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7247421920
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:34:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727631AbfI0OeS (ORCPT
+        id S1727719AbfI0OeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 10:34:18 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:55551 "EHLO
+        Fri, 27 Sep 2019 10:34:21 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:52467 "EHLO
         relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbfI0OeS (ORCPT
+        with ESMTP id S1726540AbfI0OeU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 10:34:18 -0400
+        Fri, 27 Sep 2019 10:34:20 -0400
 X-Originating-IP: 86.250.200.211
 Received: from localhost.localdomain (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
         (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 0EE6620019;
-        Fri, 27 Sep 2019 14:34:14 +0000 (UTC)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 0A24120002;
+        Fri, 27 Sep 2019 14:34:17 +0000 (UTC)
 From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com
@@ -39,10 +39,12 @@ Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Jernej Skrabec <jernej.skrabec@siol.net>,
         Jonas Karlman <jonas@kwiboo.se>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v8 0/3] HEVC/H.265 stateless support for V4L2 and Cedrus
-Date:   Fri, 27 Sep 2019 16:34:08 +0200
-Message-Id: <20190927143411.141526-1-paul.kocialkowski@bootlin.com>
+Subject: [PATCH v8 2/3] media: pixfmt: Document the HEVC slice pixel format
+Date:   Fri, 27 Sep 2019 16:34:10 +0200
+Message-Id: <20190927143411.141526-3-paul.kocialkowski@bootlin.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190927143411.141526-1-paul.kocialkowski@bootlin.com>
+References: <20190927143411.141526-1-paul.kocialkowski@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -50,107 +52,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HEVC/H.265 stateless support for V4L2 and Cedrus
+Document the current state of the HEVC slice pixel format.
+The format will need to evolve in the future, which is why it is
+not part of the public API.
 
-This is early support for HEVC/H.265 stateless decoding in V4L2,
-including both definitions and driver support for the Cedrus VPU
-driver, which concerns Allwinner devices.
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+---
+ .../media/uapi/v4l/pixfmt-compressed.rst      | 23 +++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-A specific pixel format is introduced for the HEVC slice format and
-controls are provided to pass the bitstream metadata to the decoder.
-Some bitstream extensions are intentionally not supported at this point.
-
-Since this is the first proposal for stateless HEVC/H.265 support in
-V4L2, reviews and comments about the controls definitions are
-particularly welcome.
-
-On the Cedrus side, the H.265 implementation covers frame pictures
-with both uni-directional and bi-direction prediction modes (P/B
-slices). Field pictures (interleaved), scaling lists and 10-bit output
-are not supported at this point.
-
-Changes since v7:
-* Rebased on latest media tree;
-* Fixed holes in structures for cacheline alignment;
-* Added decode mode and start code controls
-  (only per-slice and no start code is supported at this point).
-
-Changes since v6:
-* Rebased on latest media tree from Hans;
-* Reordered some fields to avoid holes and multi-padding;
-* Updated the documentation.
-
-Changes since v5:
-* Rebased atop latest next media tree;
-* Moved to flags instead of u8 fields;
-* Added padding to ensure 64-bit alignment
-  (tested with GDB on 32 and 64-bit architectures);
-* Reworked cedrus H.265 driver support a bit for flags;
-* Split off codec-specific control validation and init;
-* Added HEVC controls fields cleanup at std_validate to allow reliable
-  control comparison with memcmp;
-* Fixed various misc reported mistakes.
-
-Changes since v4:
-* Rebased atop latest H.254 series.
-
-Changes since v3:
-* Updated commit messages;
-* Updated CID base to avoid conflicts;
-* Used cpu_to_le32 for packed le32 data;
-* Fixed misc minor issues in the drive code;
-* Made it clear in the docs that the API will evolve;
-* Made the pixfmt private and split commits about it.
-
-Changes since v2:
-* Moved headers to non-public API;
-* Added H265 capability for A64 and H5;
-* Moved docs to ext-ctrls-codec.rst;
-* Mentionned sections of the spec in the docs;
-* Added padding to control structures for 32-bit alignment;
-* Made write function use void/size in bytes;
-* Reduced the number of arguments to helpers when possible;
-* Removed PHYS_OFFSET since we already set PFN_OFFSET;
-* Added comments where suggested;
-* Moved to timestamp for references instead of index;
-* Fixed some style issues reported by checkpatch.
-
-Changes since v1:
-* Added a H.265 capability to whitelist relevant platforms;
-* Switched over to tags instead of buffer indices in the DPB
-* Declared variable in their reduced scope as suggested;
-* Added the H.265/HEVC spec to the biblio;
-* Used in-doc references to the spec and the required APIs;
-* Removed debugging leftovers.
-
-Cheers!
-
-Paul Kocialkowski (3):
-  media: v4l: Add definitions for HEVC stateless decoding
-  media: pixfmt: Document the HEVC slice pixel format
-  media: cedrus: Add HEVC/H.265 decoding support
-
- Documentation/media/uapi/v4l/biblio.rst       |   9 +
- .../media/uapi/v4l/ext-ctrls-codec.rst        | 553 +++++++++++++++-
- .../media/uapi/v4l/pixfmt-compressed.rst      |  23 +
- .../media/uapi/v4l/vidioc-queryctrl.rst       |  18 +
- .../media/videodev2.h.rst.exceptions          |   3 +
- drivers/media/v4l2-core/v4l2-ctrls.c          | 108 ++-
- drivers/media/v4l2-core/v4l2-ioctl.c          |   1 +
- drivers/staging/media/sunxi/cedrus/Makefile   |   2 +-
- drivers/staging/media/sunxi/cedrus/cedrus.c   |  52 +-
- drivers/staging/media/sunxi/cedrus/cedrus.h   |  18 +
- .../staging/media/sunxi/cedrus/cedrus_dec.c   |   9 +
- .../staging/media/sunxi/cedrus/cedrus_h265.c  | 616 ++++++++++++++++++
- .../staging/media/sunxi/cedrus/cedrus_hw.c    |   4 +
- .../staging/media/sunxi/cedrus/cedrus_regs.h  | 271 ++++++++
- .../staging/media/sunxi/cedrus/cedrus_video.c |  10 +
- include/media/hevc-ctrls.h                    | 212 ++++++
- include/media/v4l2-ctrls.h                    |   7 +
- 17 files changed, 1907 insertions(+), 9 deletions(-)
- create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_h265.c
- create mode 100644 include/media/hevc-ctrls.h
-
+diff --git a/Documentation/media/uapi/v4l/pixfmt-compressed.rst b/Documentation/media/uapi/v4l/pixfmt-compressed.rst
+index 292fdc116c77..7e9b2b939e59 100644
+--- a/Documentation/media/uapi/v4l/pixfmt-compressed.rst
++++ b/Documentation/media/uapi/v4l/pixfmt-compressed.rst
+@@ -188,6 +188,29 @@ Compressed Formats
+ 	If :ref:`VIDIOC_ENUM_FMT` reports ``V4L2_FMT_FLAG_CONTINUOUS_BYTESTREAM``
+ 	then the decoder has no	requirements since it can parse all the
+ 	information from the raw bytestream.
++    * .. _V4L2-PIX-FMT-HEVC-SLICE:
++
++      - ``V4L2_PIX_FMT_HEVC_SLICE``
++      - 'S265'
++      - HEVC parsed slice data, as extracted from the HEVC bitstream.
++	This format is adapted for stateless video decoders that implement a
++	HEVC pipeline (using the :ref:`mem2mem` and :ref:`media-request-api`).
++	This pixelformat has two modifiers that must be set at least once
++	through the ``V4L2_CID_MPEG_VIDEO_HEVC_DECODE_MODE``
++        and ``V4L2_CID_MPEG_VIDEO_HEVC_START_CODE`` controls.
++	Metadata associated with the frame to decode is required to be passed
++	through the following controls :
++        * ``V4L2_CID_MPEG_VIDEO_HEVC_SPS``
++        * ``V4L2_CID_MPEG_VIDEO_HEVC_PPS``
++        * ``V4L2_CID_MPEG_VIDEO_HEVC_SLICE_PARAMS``
++	See the :ref:`associated Codec Control IDs <v4l2-mpeg-hevc>`.
++	Buffers associated with this pixel format must contain the appropriate
++	number of macroblocks to decode a full corresponding frame.
++
++	.. note::
++
++	   This format is not yet part of the public kernel API and it
++	   is expected to change.
+     * .. _V4L2-PIX-FMT-FWHT:
+ 
+       - ``V4L2_PIX_FMT_FWHT``
 -- 
 2.23.0
 
