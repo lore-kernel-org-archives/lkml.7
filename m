@@ -2,125 +2,118 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 649EEC388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9015FC388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36CA82190F
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:48:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EFAA21920
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:49:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569617337;
-	bh=xwQo8FQz/psN2Spf6mXXoZUGa5ZBXdUWEtSp9tqpIl0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Dqr4hXWSr95OAEWgfxlknoq7ypJpn0Z27lAjjfQ5oKjLHhGlVj8uayqvnt+YONG87
-	 MtSZGl9nUCQhdwYv+yEfHINDfE8eJ9q3UF7vkLthM/5VvCSuuX3kKiRanii/+21K6Y
-	 glqQwQHnrshjiqn0pWzVE+Zz8lT2aJP4ikLOiq4o=
+	s=default; t=1569617343;
+	bh=/LxiqU/b/j+I7hCRMjEaNqQg9YaNjP1fvBEpmF99JtU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=syfoXhD+fTvdcrNxy4X6tIpOIEc8pG52V7uhSRM4A6N9NChi/2ozX3U/1Bup6oUh+
+	 lLQ5z5zIoDZZgWZB/k+BgyHJo1ITUsRn02YHnsMFLC1JjbLgIF64uw8rl0KIn24LYA
+	 SzpxkqMi7Yejx63pn0wWP4ALWUPEANDA0I9lf0vE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728189AbfI0Us4 (ORCPT
+        id S1728250AbfI0UtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 16:48:56 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46036 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbfI0Us4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 16:48:56 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 41so3386014oti.12;
-        Fri, 27 Sep 2019 13:48:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bHbuAWRgyfdd0/7I5EKejphIr7Awr7Ufl06cGZr9UWM=;
-        b=Yb14P2FVCzrEpsFJiIKszbjwMIp+FUs8TF+SomX6vu1HZ9mTIwr9RNEg2oLNtOkSRW
-         GYudXChlGNB0VlyoM15UkEHDVmTiHB/8dwVBrccCOmtVPqkA0KtSGJkjixkLtAEjZVh3
-         rt+HvzUZoQEHm0Ed15jNLXWwZStGoCsEwy39qfoLGEtYRmEOcVkYeJbUHcrNoWKuni34
-         VE63EnxIIRtOtikgUKgZGee2SGQsMG1LTNsA9EFWPZezVhJ7aF0NyVbLJZizUfV+OuFu
-         WLQZsnIVbOjQNDWk5/HBdwT588YYygPk21TEwYiN+8w6asdaT1vzTUBtJDrUY8XTZBsm
-         LrEA==
-X-Gm-Message-State: APjAAAVNcAiLJn3ZvC84zsg8fP7Se76wLqRURRnQ0y6zDaaWhDTMrYRO
-        9szaHpGMZU+ap6MX0Ff7SA==
-X-Google-Smtp-Source: APXvYqzPZhS/oOuHCnSCXzdNvjnEYVT4GzMZW0oHF4dRC74KXAwNQ6LWjjs9BHI9deVVAemO9XYlbA==
-X-Received: by 2002:a9d:744e:: with SMTP id p14mr4942965otk.323.1569617335327;
-        Fri, 27 Sep 2019 13:48:55 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o2sm1317553ota.3.2019.09.27.13.48.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2019 13:48:54 -0700 (PDT)
-Date:   Fri, 27 Sep 2019 15:48:54 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     vkoul@kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dan.j.williams@intel.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] dt-bindings: dma: ti-edma: Document
- dma-channel-mask for EDMA
-Message-ID: <20190927204854.GA20463@bogus>
-References: <20190926111954.9184-1-peter.ujfalusi@ti.com>
- <20190926111954.9184-3-peter.ujfalusi@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190926111954.9184-3-peter.ujfalusi@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 27 Sep 2019 16:49:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54938 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725789AbfI0UtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 16:49:02 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D45A5207E0;
+        Fri, 27 Sep 2019 20:48:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569617340;
+        bh=/LxiqU/b/j+I7hCRMjEaNqQg9YaNjP1fvBEpmF99JtU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=xlw9ya6oxlZVRcN6AFBx0LWPK5vgX8BvMWLyuVeg0E46ZTK6BzOp+myjNqEyzri8z
+         VVZWVb/UPdmtJWE+1imHt+BOqXTLh3O7F1lFTLEOSD4EUFeW4S1ZCeZPdaC7GB4jNr
+         E7sXf+nkDLAvnj7w80Wrs/Vymgby+HGdmEyamnus=
+Date:   Fri, 27 Sep 2019 13:48:59 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/page_alloc: fix a crash in free_pages_prepare()
+Message-Id: <20190927134859.95a2f4908bdcea30df0184ed@linux-foundation.org>
+In-Reply-To: <1569613623-16820-1-git-send-email-cai@lca.pw>
+References: <1569613623-16820-1-git-send-email-cai@lca.pw>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 02:19:53PM +0300, Peter Ujfalusi wrote:
-> Similarly to paRAM slots, channels can be used by other cores.
+On Fri, 27 Sep 2019 15:47:03 -0400 Qian Cai <cai@lca.pw> wrote:
+
+> On architectures like s390, arch_free_page() could mark the page unused
+> (set_page_unused()) and any access later would trigger a kernel panic.
+> Fix it by moving arch_free_page() after all possible accessing calls.
 > 
-> The common dma-channel-mask property can be used for specifying the
-> available channels.
+>  Hardware name: IBM 2964 N96 400 (z/VM 6.4.0)
+>  Krnl PSW : 0404e00180000000 0000000026c2b96e
+> (__free_pages_ok+0x34e/0x5d8)
+>             R:0 T:1 IO:0 EX:0 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 RI:0 EA:3
+>  Krnl GPRS: 0000000088d43af7 0000000000484000 000000000000007c
+>  000000000000000f
+>             000003d080012100 000003d080013fc0 0000000000000000
+>  0000000000100000
+>             00000000275cca48 0000000000000100 0000000000000008
+>  000003d080010000
+>             00000000000001d0 000003d000000000 0000000026c2b78a
+>  000000002717fdb0
+>  Krnl Code: 0000000026c2b95c: ec1100b30659 risbgn %r1,%r1,0,179,6
+>             0000000026c2b962: e32014000036 pfd 2,1024(%r1)
+>            #0000000026c2b968: d7ff10001000 xc 0(256,%r1),0(%r1)
+>            >0000000026c2b96e: 41101100  la %r1,256(%r1)
+>             0000000026c2b972: a737fff8  brctg %r3,26c2b962
+>             0000000026c2b976: d7ff10001000 xc 0(256,%r1),0(%r1)
+>             0000000026c2b97c: e31003400004 lg %r1,832
+>             0000000026c2b982: ebff1430016a asi 5168(%r1),-1
+>  Call Trace:
+>  __free_pages_ok+0x16a/0x5d8)
+>  memblock_free_all+0x206/0x290
+>  mem_init+0x58/0x120
+>  start_kernel+0x2b0/0x570
+>  startup_continue+0x6a/0xc0
+>  INFO: lockdep is turned off.
+>  Last Breaking-Event-Address:
+>  __free_pages_ok+0x372/0x5d8
+>  Kernel panic - not syncing: Fatal exception: panic_on_oops
+> 00: HCPGIR450W CP entered; disabled wait PSW 00020001 80000000 00000000
+> 26A2379C
 > 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  Documentation/devicetree/bindings/dma/ti-edma.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
-> index 4bbc94d829c8..014187088020 100644
-> --- a/Documentation/devicetree/bindings/dma/ti-edma.txt
-> +++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
-> @@ -42,6 +42,11 @@ Optional properties:
->  - ti,edma-reserved-slot-ranges: PaRAM slot ranges which should not be used by
->  		the driver, they are allocated to be used by for example the
->  		DSP. See example.
-> +- dma-channel-mask: Mask of usable channels.
-> +		Single uint32 for EDMA with 32 channels, array of two uint32 for
-> +		EDMA with 64 channels. See example and
-> +		Documentation/devicetree/bindings/dma/dma-common.yaml
-> +
+> ...
+>
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -1175,11 +1175,11 @@ static __always_inline bool free_pages_prepare(struct page *page,
+>  		debug_check_no_obj_freed(page_address(page),
+>  					   PAGE_SIZE << order);
+>  	}
+> -	arch_free_page(page, order);
+>  	if (want_init_on_free())
+>  		kernel_init_free_pages(page, 1 << order);
 >  
->  ------------------------------------------------------------------------------
->  eDMA3 Transfer Controller
-> @@ -91,6 +96,9 @@ edma: edma@49000000 {
->  	ti,edma-memcpy-channels = <20 21>;
->  	/* The following PaRAM slots are reserved: 35-44 and 100-109 */
->  	ti,edma-reserved-slot-ranges = <35 10>, <100 10>;
-> +	/* The following channels are reserved: 35-44 */
-> +	dma-channel-mask = <0xffffffff>, /* Channel 0-31 */
-> +			   <0xffffe007>; /* Channel 32-63 */
+>  	kernel_poison_pages(page, 1 << order, 0);
+> +	arch_free_page(page, order);
+>  	if (debug_pagealloc_enabled())
+>  		kernel_map_pages(page, 1 << order, 0);
 
-Doesn't matter yet, but you have a mismatch here with the schema. While 
-the <> around each int or not doesn't matter for the dtb, it does for 
-the schema.
+This is all fairly mature code, isn't it?  What happened to make this
+problem pop up now?
 
-dma-channel-mask = <0xffffffff>, <0xffffe007>;
-minItems: 1
-maxItems: 255
-
-dma-channel-mask = <0xffffffff 0xffffe007>;
-items:
-  minItems: 1
-  maxItems: 255
-
-I think the latter case is slightly more logical here as you have 1 
-thing (a mask). If had N of something (like interrupts), then the former 
-makes sense. 
-
-Rob
+IOW, is a -stable backport needed?
