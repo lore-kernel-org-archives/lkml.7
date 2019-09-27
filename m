@@ -2,75 +2,96 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA818C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EE3C388F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 13:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD8B521928
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 857B721906
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 13:00:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569589229;
+	bh=ZRR5GpkwR6Aa/fDKrENAmahjuJ9MmYU6dJrGLK0V3IM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=XzqxivLUHSmWmcdlmT5Kkmq2p14u2ZlV8AOILzKSsao08bROWjiRMDOMt5cE5ZuEw
+	 CosNcOeVVprrmRQJ6sUmYAGe8Wzgmdt+IFKmN8+cUa01XGdtEG8DXVAWZS3U5PAuN/
+	 DspKhRIVRyaCtk8UN+5f0Pyz8yuvQSxH+Crs0XzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727441AbfI0M7R (ORCPT
+        id S1727482AbfI0NA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 08:59:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:51844 "EHLO foss.arm.com"
+        Fri, 27 Sep 2019 09:00:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbfI0M7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 08:59:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 49A751000;
-        Fri, 27 Sep 2019 05:59:16 -0700 (PDT)
-Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 10C053F67D;
-        Fri, 27 Sep 2019 05:59:14 -0700 (PDT)
-Date:   Fri, 27 Sep 2019 13:59:12 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ARM: dts: stm32: Enable high resolution timer
-Message-ID: <20190927125912.GB8704@bogus>
-References: <20190927084819.645-1-benjamin.gaignard@st.com>
- <da48ce9633441cd0186518fa7ce1d528@www.loen.fr>
- <341949c8-7864-5d65-2797-988022724a4c@st.com>
- <ff11797da8f049b354797689754fde52@www.loen.fr>
- <69af57d1-13a9-9e35-78f2-4a0d17bdaf6d@st.com>
+        id S1727076AbfI0NA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 09:00:28 -0400
+Received: from localhost (173-25-179-30.client.mchsi.com [173.25.179.30])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1986217D9;
+        Fri, 27 Sep 2019 13:00:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569589227;
+        bh=ZRR5GpkwR6Aa/fDKrENAmahjuJ9MmYU6dJrGLK0V3IM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=KLGDBjTbXzad8oglmmKMJkBY3QdwZGNWEqTeYBha0ElHoxMTT2hrgqjCgjoXZxZNm
+         9OEB/HIJx2kyrPpqOTpDvWxP/FHkmbzA5zVt3lgky1adf7UXlzw+kdURO8B0TeJqAo
+         4q3SUtGL9Ed/I+iD/QrosE2eIpzuZ9UbjCd+0zPQ=
+Date:   Fri, 27 Sep 2019 08:00:26 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     tiantao6 <tiantao6@huawei.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxarm@huawei.com
+Subject: Re: [PATCH] PCI: vc: fix warning: no previous prototype
+Message-ID: <20190927130026.GA40841@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <69af57d1-13a9-9e35-78f2-4a0d17bdaf6d@st.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1568205651-60209-1-git-send-email-tiantao6@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 12:44:55PM +0000, Benjamin GAIGNARD wrote:
+On Wed, Sep 11, 2019 at 08:40:51PM +0800, tiantao6 wrote:
+> From: tiantao <tiantao6@huawei.com>
+> 
+> drivers/pci/vc.c:351:5: warning: no previous prototype for
+> pci_save_vc_state [-Wmissing-prototypes]
+> int pci_save_vc_state(struct pci_dev *dev)
+> 
+> drivers/pci/vc.c:388:6: warning: no previous prototype for
+> pci_restore_vc_state [-Wmissing-prototypes]
+> void pci_restore_vc_state(struct pci_dev *dev)
+> 
+> drivers/pci/vc.c:412:6: warning: no previous prototype for
+> pci_allocate_vc_save_buffers [-Wmissing-prototypes]
+> void pci_allocate_vc_save_buffers(struct pci_dev *dev)
+> 
+> Signed-off-by: Tian Tao <tiantao6@huawei.com>
 
-[...]
->
-> Even in low-power modes this timer is always powered and clocked so it
-> is working fine.
->
+Thanks, this was fixed incidentally by ca78410403dd ("PCI: Get rid of
+dev->has_secondary_link flag").
 
-Is that tested ? I see only cpu_{on,off} available on this platform with
-PSCI v0.1. Did you add cpu_suspend, idle-states and then gave it a spin ?
-Or do you have some other idle driver with which this is tested ?
-
-Also I don't understand how "always-on" is linked to hrtimer. Always on
-timers are just selected to be broadcast timer without sacrificing(simply
-keeping) a cpu to be always active for broadcast purposes.
-
---
-Regards,
-Sudeep
+> ---
+>  drivers/pci/vc.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/vc.c b/drivers/pci/vc.c
+> index b39e854..111f6d3 100644
+> --- a/drivers/pci/vc.c
+> +++ b/drivers/pci/vc.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/pci.h>
+>  #include <linux/pci_regs.h>
+>  #include <linux/types.h>
+> +#include "pci.h"
+>  
+>  /**
+>   * pci_vc_save_restore_dwords - Save or restore a series of dwords
+> -- 
+> 2.7.4
+> 
