@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 814E7C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2006DC32774
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 630142146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0B7B217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:10:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbfI0IK5 (ORCPT
+        id S1726859AbfI0IK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 04:10:57 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:45187 "EHLO
+        Fri, 27 Sep 2019 04:10:59 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45183 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726769AbfI0IKz (ORCPT
+        with ESMTP id S1726767AbfI0IKy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 04:10:55 -0400
+        Fri, 27 Sep 2019 04:10:54 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iDlKs-0005ad-Lr; Fri, 27 Sep 2019 10:10:42 +0200
+        id 1iDlKs-0005aa-Dp; Fri, 27 Sep 2019 10:10:42 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 27BCB1C073C;
-        Fri, 27 Sep 2019 10:10:42 +0200 (CEST)
-Date:   Fri, 27 Sep 2019 08:10:42 -0000
-From:   "tip-bot2 for KeMeng Shi" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CD1CC1C0440;
+        Fri, 27 Sep 2019 10:10:41 +0200 (CEST)
+Date:   Fri, 27 Sep 2019 08:10:41 -0000
+From:   "tip-bot2 for Qian Cai" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] sched/core: Fix migration to invalid CPU in
- __set_cpus_allowed_ptr()
-Cc:     KeMeng Shi <shikemeng@huawei.com>,
+Subject: [tip: sched/urgent] sched/fair: Fix -Wunused-but-set-variable warnings
+Cc:     Qian Cai <cai@lca.pw>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
+        Ben Segall <bsegall@google.com>,
+        Dave Chiluk <chiluk+linux@indeed.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>, pauld@redhat.com,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <1568616808-16808-1-git-send-email-shikemeng@huawei.com>
-References: <1568616808-16808-1-git-send-email-shikemeng@huawei.com>
+In-Reply-To: <1566326455-8038-1-git-send-email-cai@lca.pw>
+References: <1566326455-8038-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
-Message-ID: <156957184212.9866.17332309018333415855.tip-bot2@tip-bot2>
+Message-ID: <156957184180.9866.14215366891982372616.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,84 +61,89 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/urgent branch of tip:
 
-Commit-ID:     714e501e16cd473538b609b3e351b2cc9f7f09ed
-Gitweb:        https://git.kernel.org/tip/714e501e16cd473538b609b3e351b2cc9f7f09ed
-Author:        KeMeng Shi <shikemeng@huawei.com>
-AuthorDate:    Mon, 16 Sep 2019 06:53:28 
+Commit-ID:     763a9ec06c409dcde2a761aac4bb83ff3938e0b3
+Gitweb:        https://git.kernel.org/tip/763a9ec06c409dcde2a761aac4bb83ff3938e0b3
+Author:        Qian Cai <cai@lca.pw>
+AuthorDate:    Tue, 20 Aug 2019 14:40:55 -04:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Wed, 25 Sep 2019 17:42:31 +02:00
 
-sched/core: Fix migration to invalid CPU in __set_cpus_allowed_ptr()
+sched/fair: Fix -Wunused-but-set-variable warnings
 
-An oops can be triggered in the scheduler when running qemu on arm64:
+Commit:
 
- Unable to handle kernel paging request at virtual address ffff000008effe40
- Internal error: Oops: 96000007 [#1] SMP
- Process migration/0 (pid: 12, stack limit = 0x00000000084e3736)
- pstate: 20000085 (nzCv daIf -PAN -UAO)
- pc : __ll_sc___cmpxchg_case_acq_4+0x4/0x20
- lr : move_queued_task.isra.21+0x124/0x298
- ...
- Call trace:
-  __ll_sc___cmpxchg_case_acq_4+0x4/0x20
-  __migrate_task+0xc8/0xe0
-  migration_cpu_stop+0x170/0x180
-  cpu_stopper_thread+0xec/0x178
-  smpboot_thread_fn+0x1ac/0x1e8
-  kthread+0x134/0x138
-  ret_from_fork+0x10/0x18
+   de53fd7aedb1 ("sched/fair: Fix low cpu usage with high throttling by removing expiration of cpu-local slices")
 
-__set_cpus_allowed_ptr() will choose an active dest_cpu in affinity mask to
-migrage the process if process is not currently running on any one of the
-CPUs specified in affinity mask. __set_cpus_allowed_ptr() will choose an
-invalid dest_cpu (dest_cpu >= nr_cpu_ids, 1024 in my virtual machine) if
-CPUS in an affinity mask are deactived by cpu_down after cpumask_intersects
-check. cpumask_test_cpu() of dest_cpu afterwards is overflown and may pass if
-corresponding bit is coincidentally set. As a consequence, kernel will
-access an invalid rq address associate with the invalid CPU in
-migration_cpu_stop->__migrate_task->move_queued_task and the Oops occurs.
+introduced a few compilation warnings:
 
-The reproduce the crash:
+  kernel/sched/fair.c: In function '__refill_cfs_bandwidth_runtime':
+  kernel/sched/fair.c:4365:6: warning: variable 'now' set but not used [-Wunused-but-set-variable]
+  kernel/sched/fair.c: In function 'start_cfs_bandwidth':
+  kernel/sched/fair.c:4992:6: warning: variable 'overrun' set but not used [-Wunused-but-set-variable]
 
-  1) A process repeatedly binds itself to cpu0 and cpu1 in turn by calling
-  sched_setaffinity.
+Also, __refill_cfs_bandwidth_runtime() does no longer update the
+expiration time, so fix the comments accordingly.
 
-  2) A shell script repeatedly does "echo 0 > /sys/devices/system/cpu/cpu1/online"
-  and "echo 1 > /sys/devices/system/cpu/cpu1/online" in turn.
-
-  3) Oops appears if the invalid CPU is set in memory after tested cpumask.
-
-Signed-off-by: KeMeng Shi <shikemeng@huawei.com>
+Signed-off-by: Qian Cai <cai@lca.pw>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Reviewed-by: Ben Segall <bsegall@google.com>
+Reviewed-by: Dave Chiluk <chiluk+linux@indeed.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1568616808-16808-1-git-send-email-shikemeng@huawei.com
+Cc: pauld@redhat.com
+Fixes: de53fd7aedb1 ("sched/fair: Fix low cpu usage with high throttling by removing expiration of cpu-local slices")
+Link: https://lkml.kernel.org/r/1566326455-8038-1-git-send-email-cai@lca.pw
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/sched/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/sched/fair.c | 19 ++++++-------------
+ 1 file changed, 6 insertions(+), 13 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 2d9a394..83ea23e 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1656,7 +1656,8 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
- 	if (cpumask_equal(p->cpus_ptr, new_mask))
- 		goto out;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 5bc2399..dfdac90 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4353,21 +4353,16 @@ static inline u64 sched_cfs_bandwidth_slice(void)
+ }
  
--	if (!cpumask_intersects(new_mask, cpu_valid_mask)) {
-+	dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
-+	if (dest_cpu >= nr_cpu_ids) {
- 		ret = -EINVAL;
- 		goto out;
- 	}
-@@ -1677,7 +1678,6 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
- 	if (cpumask_test_cpu(task_cpu(p), new_mask))
- 		goto out;
+ /*
+- * Replenish runtime according to assigned quota and update expiration time.
+- * We use sched_clock_cpu directly instead of rq->clock to avoid adding
+- * additional synchronization around rq->lock.
++ * Replenish runtime according to assigned quota. We use sched_clock_cpu
++ * directly instead of rq->clock to avoid adding additional synchronization
++ * around rq->lock.
+  *
+  * requires cfs_b->lock
+  */
+ void __refill_cfs_bandwidth_runtime(struct cfs_bandwidth *cfs_b)
+ {
+-	u64 now;
+-
+-	if (cfs_b->quota == RUNTIME_INF)
+-		return;
+-
+-	now = sched_clock_cpu(smp_processor_id());
+-	cfs_b->runtime = cfs_b->quota;
++	if (cfs_b->quota != RUNTIME_INF)
++		cfs_b->runtime = cfs_b->quota;
+ }
  
--	dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
- 	if (task_running(rq, p) || p->state == TASK_WAKING) {
- 		struct migration_arg arg = { p, dest_cpu };
- 		/* Need help from migration thread: drop lock and wait. */
+ static inline struct cfs_bandwidth *tg_cfs_bandwidth(struct task_group *tg)
+@@ -4983,15 +4978,13 @@ static void init_cfs_rq_runtime(struct cfs_rq *cfs_rq)
+ 
+ void start_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
+ {
+-	u64 overrun;
+-
+ 	lockdep_assert_held(&cfs_b->lock);
+ 
+ 	if (cfs_b->period_active)
+ 		return;
+ 
+ 	cfs_b->period_active = 1;
+-	overrun = hrtimer_forward_now(&cfs_b->period_timer, cfs_b->period);
++	hrtimer_forward_now(&cfs_b->period_timer, cfs_b->period);
+ 	hrtimer_start_expires(&cfs_b->period_timer, HRTIMER_MODE_ABS_PINNED);
+ }
+ 
