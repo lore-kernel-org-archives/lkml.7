@@ -2,63 +2,153 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEE6C388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78704C388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F1A8217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48FDB2190F
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:25:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="q2Vwahk6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbfI0MUD (ORCPT
+        id S1727254AbfI0MZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 08:20:03 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:45789 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727180AbfI0MUD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 08:20:03 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1iDpE2-0000q1-Ij; Fri, 27 Sep 2019 14:19:54 +0200
-Date:   Fri, 27 Sep 2019 14:19:54 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Scott Wood <swood@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: Re: [PATCH RT 4/8] sched: migrate disable: Protect cpus_ptr with lock
-Message-ID: <20190927121954.3gbzk3i3jbpugrjo@linutronix.de>
-References: <20190727055638.20443-1-swood@redhat.com>
- <20190727055638.20443-5-swood@redhat.com>
- <20190926163940.khzhsp3a4h7vj7lw@linutronix.de>
- <f3b31297df859eb7d1dc86637c29b271fbf87970.camel@redhat.com>
+        Fri, 27 Sep 2019 08:25:25 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:41588 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726203AbfI0MZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 08:25:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=2A637Ahb7qsdDwnyq8c53qGLerD/lC6vZKHQyGPDsL0=; b=q2Vwahk68ubauaodCKHiiqHyeQ
+        0ssEzYEvHW4NU+kyLDdS+sn4TEFHVlWLxa0Td6qFXJ8Nl41qkUw8WPjYPQOEXlEMd0X9UZS1Q1E9d
+        rcWAEVyl6Z/qiDhC4D3KyHhtARTLKsONPJ95Yuzz/A6JJB2wN2D71+PAsczB7MuRT/rs=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iDpJG-0001eM-BA; Fri, 27 Sep 2019 14:25:18 +0200
+Date:   Fri, 27 Sep 2019 14:25:18 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     vincent.cheng.xh@renesas.com
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, richardcochran@gmail.com,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] ptp: Add a ptp clock driver for IDT ClockMatrix.
+Message-ID: <20190927122518.GA25474@lunn.ch>
+References: <1569556128-22212-1-git-send-email-vincent.cheng.xh@renesas.com>
+ <1569556128-22212-2-git-send-email-vincent.cheng.xh@renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f3b31297df859eb7d1dc86637c29b271fbf87970.camel@redhat.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1569556128-22212-2-git-send-email-vincent.cheng.xh@renesas.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-26 11:52:42 [-0500], Scott Wood wrote:
-> Looks good, thanks!
+> +static s32 idtcm_xfer(struct idtcm *idtcm,
+> +		      u8 regaddr,
+> +		      u8 *buf,
+> +		      u16 count,
+> +		      bool write)
+> +{
+> +	struct i2c_client *client = idtcm->client;
+> +	struct i2c_msg msg[2];
+> +	s32 cnt;
+> +
+> +	msg[0].addr = client->addr;
+> +	msg[0].flags = 0;
+> +	msg[0].len = 1;
+> +	msg[0].buf = &regaddr;
+> +
+> +	msg[1].addr = client->addr;
+> +	msg[1].flags = write ? 0 : I2C_M_RD;
+> +	msg[1].len = count;
+> +	msg[1].buf = buf;
+> +
+> +	cnt = i2c_transfer(client->adapter, msg, 2);
+> +
+> +	if (cnt < 0) {
+> +		dev_err(&client->dev, "i2c_transfer returned %d\n", cnt);
+> +		return cnt;
+> +	} else if (cnt != 2) {
+> +		dev_err(&client->dev,
+> +			"i2c_transfer sent only %d of %d messages\n", cnt, 2);
+> +		return -EIO;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static s32 idtcm_page_offset(struct idtcm *idtcm, u8 val)
+> +{
+> +	u8 buf[4];
+> +	s32 err;
 
-Thanks, just released.
-Moving forward. It would be nice to have some DL-dev feedback on DL
-patch. For the remaining once, could please throw Steven's
-stress-test-hostplug-cpu-script? If that one does not complain I don't
-see a reason why not apply the patches (since they improve performance
-and do not break anything while doing so).
+Hi Vincent
 
-> -Scott
+All your functions return s32, rather than the usual int. err is an
+s32.  i2c_transfer() will return an int, which you then assign to an
+s32.  I've no idea, but maybe the static code checkers like smatch
+will complain about this, especially on 64 bit systems? I suspect on
+64 bit machines, the compiler will be generating worse code, masking
+registers? Maybe use int, not s32?
 
-Sebastian
+> +static s32 set_pll_output_mask(struct idtcm *idtcm, u16 addr, u8 val)
+> +{
+> +	s32 err = 0;
+> +
+> +	switch (addr) {
+> +	case OUTPUT_MASK_PLL0_ADDR:
+> +		SET_U16_LSB(idtcm->channel[0].output_mask, val);
+> +		break;
+> +	case OUTPUT_MASK_PLL0_ADDR + 1:
+> +		SET_U16_MSB(idtcm->channel[0].output_mask, val);
+> +		break;
+> +	case OUTPUT_MASK_PLL1_ADDR:
+> +		SET_U16_LSB(idtcm->channel[1].output_mask, val);
+> +		break;
+> +	case OUTPUT_MASK_PLL1_ADDR + 1:
+> +		SET_U16_MSB(idtcm->channel[1].output_mask, val);
+> +		break;
+> +	case OUTPUT_MASK_PLL2_ADDR:
+> +		SET_U16_LSB(idtcm->channel[2].output_mask, val);
+> +		break;
+> +	case OUTPUT_MASK_PLL2_ADDR + 1:
+> +		SET_U16_MSB(idtcm->channel[2].output_mask, val);
+> +		break;
+> +	case OUTPUT_MASK_PLL3_ADDR:
+> +		SET_U16_LSB(idtcm->channel[3].output_mask, val);
+> +		break;
+> +	case OUTPUT_MASK_PLL3_ADDR + 1:
+> +		SET_U16_MSB(idtcm->channel[3].output_mask, val);
+> +		break;
+> +	default:
+> +		err = -1;
+
+EINVAL?
+
+> +		break;
+> +	}
+> +
+> +	return err;
+> +}
+
+> +static void set_default_function_pointers(struct idtcm *idtcm)
+> +{
+> +	idtcm->_idtcm_gettime = _idtcm_gettime;
+> +	idtcm->_idtcm_settime = _idtcm_settime;
+> +	idtcm->_idtcm_rdwr = idtcm_rdwr;
+> +	idtcm->_sync_pll_output = sync_pll_output;
+> +}
+
+Why does this indirection? Are the SPI versions of the silicon?
+
+    Andrew
