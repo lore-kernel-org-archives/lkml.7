@@ -2,192 +2,143 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB69C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE8FC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E53F7207FF
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7329207FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:53:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbfI0HxM (ORCPT
+        id S1726729AbfI0Hx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 03:53:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:31305 "EHLO mx1.redhat.com"
+        Fri, 27 Sep 2019 03:53:29 -0400
+Received: from mail.codelabs.ch ([109.202.192.35]:40022 "EHLO mail.codelabs.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725812AbfI0HxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 03:53:11 -0400
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+        id S1725812AbfI0Hx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 03:53:28 -0400
+X-Greylist: delayed 477 seconds by postgrey-1.27 at vger.kernel.org; Fri, 27 Sep 2019 03:53:26 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mail.codelabs.ch (Postfix) with ESMTP id E89DFA0167;
+        Fri, 27 Sep 2019 09:45:28 +0200 (CEST)
+Received: from mail.codelabs.ch ([127.0.0.1])
+        by localhost (fenrir.codelabs.ch [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 7pn2MKSVOG32; Fri, 27 Sep 2019 09:45:26 +0200 (CEST)
+Received: from [192.168.10.191] (unknown [192.168.10.191])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E7969C05AA52
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 07:53:10 +0000 (UTC)
-Received: by mail-io1-f71.google.com with SMTP id w8so10669022iod.21
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 00:53:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+z967OGKFyzsipkAMvwKR90NL+oBP6ClqcqeupYnwJM=;
-        b=C6RwmpEjkaWECYOp1TJeL+CsFzrIr0zgH2PuhzEMTW77i+VoPUuFC8aA65Abhz4h5F
-         CDTWIGUQMprzt7IZ2B1z4JFaBjvfnkDjzMsE4kmuJMzR3AE1x7rEfLL6A+NhtHEd2hP6
-         HM0Y194EUmcSVed2hhPCUoLDyXjbPcsCp/oidCm+gtfyPRj5ak6S+tXVqS+CPEEiLa8a
-         5puVcpEVhIUBmLBP3JfsrpJpGssbGQvuQ2h+aL+WumaidAQMylL881vdDRnVnbAv5y+E
-         gIpF/pQzQuCL0inaFiw65/HlubaheI5ac+JLkh9GKFi8/sd8XqGNTuoLcPUsS7qYclKO
-         oY9Q==
-X-Gm-Message-State: APjAAAUSDFi3SP2t8b71oKmplu6WsFB5Jin0oasoL9vE2NMn05iiLxVh
-        66fYD427hoCrc4EFepqNv3h2nILo+/AfERDwE3tH0zL3ZbuUwOssDZ+QnyjElbKNpydJL4Sh8VN
-        omsjm5Iszq0wLr1DPbAIgyTVa4xmglZmYAeZeLBuc
-X-Received: by 2002:a92:5c13:: with SMTP id q19mr3296382ilb.249.1569570790131;
-        Fri, 27 Sep 2019 00:53:10 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyQAC9ocy3CrD0E1lT+wFbJDvNy6gND2zhgtJZP9qoxiBZjNnVGhEx653IsvSSXH18WtvDnbJSa8TQZbQj7HiU=
-X-Received: by 2002:a92:5c13:: with SMTP id q19mr3296358ilb.249.1569570789810;
- Fri, 27 Sep 2019 00:53:09 -0700 (PDT)
+        by mail.codelabs.ch (Postfix) with ESMTPSA id 80F67A0166;
+        Fri, 27 Sep 2019 09:45:26 +0200 (CEST)
+Subject: Re: [PATCH 0/2] KVM: nVMX: Bug fix for consuming stale
+ vmcs02.GUEST_CR3
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190926214302.21990-1-sean.j.christopherson@intel.com>
+From:   Reto Buerki <reet@codelabs.ch>
+Openpgp: preference=signencrypt
+Autocrypt: addr=reet@codelabs.ch; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <4100532d-1bf2-0e55-5f4b-99e574ba7061@codelabs.ch>
+Date:   Fri, 27 Sep 2019 09:45:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20190910151341.14986-1-kasong@redhat.com> <20190910151341.14986-3-kasong@redhat.com>
- <20190911055618.GA104115@gmail.com> <CACPcB9eZUZ1fCsc1GZs9MJnoqLK9Ld5KEx0_emx8J44Mjcy3WA@mail.gmail.com>
- <20190927054208.GA13426@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20190927054208.GA13426@dhcp-128-65.nay.redhat.com>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Fri, 27 Sep 2019 15:52:58 +0800
-Message-ID: <CACPcB9d+5idm-0r69Qeh3GyGF-wuyie_w1jBL5GRsnxq40Gs6w@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] x86/kdump: Reserve extra memory when SME or SEV is active
-To:     Dave Young <dyoung@redhat.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        Baoquan He <bhe@redhat.com>, Lianbo Jiang <lijiang@redhat.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190926214302.21990-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-LU
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 1:42 PM Dave Young <dyoung@redhat.com> wrote:
->
-> On 09/25/19 at 06:36pm, Kairui Song wrote:
-> > On Wed, Sep 11, 2019 at 1:56 PM Ingo Molnar <mingo@kernel.org> wrote:
-> > > * Kairui Song <kasong@redhat.com> wrote:
-> > >
-> > > > Since commit c7753208a94c ("x86, swiotlb: Add memory encryption support"),
-> > > > SWIOTLB will be enabled even if there is less than 4G of memory when SME
-> > > > is active, to support DMA of devices that not support address with the
-> > > > encrypt bit.
-> > > >
-> > > > And commit aba2d9a6385a ("iommu/amd: Do not disable SWIOTLB if SME is
-> > > > active") make the kernel keep SWIOTLB enabled even if there is an IOMMU.
-> > > >
-> > > > Then commit d7b417fa08d1 ("x86/mm: Add DMA support for SEV memory
-> > > > encryption") will always force SWIOTLB to be enabled when SEV is active
-> > > > in all cases.
-> > > >
-> > > > Now, when either SME or SEV is active, SWIOTLB will be force enabled,
-> > > > and this is also true for kdump kernel. As a result kdump kernel will
-> > > > run out of already scarce pre-reserved memory easily.
-> > > >
-> > > > So when SME/SEV is active, reserve extra memory for SWIOTLB to ensure
-> > > > kdump kernel have enough memory, except when "crashkernel=size[KMG],high"
-> > > > is specified or any offset is used. As for the high reservation case, an
-> > > > extra low memory region will always be reserved and that is enough for
-> > > > SWIOTLB. Else if the offset format is used, user should be fully aware
-> > > > of any possible kdump kernel memory requirement and have to organize the
-> > > > memory usage carefully.
-> > > >
-> > > > Signed-off-by: Kairui Song <kasong@redhat.com>
-> > > > ---
-> > > >  arch/x86/kernel/setup.c | 20 +++++++++++++++++---
-> > > >  1 file changed, 17 insertions(+), 3 deletions(-)
-> > > >
-> > > > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> > > > index 71f20bb18cb0..ee6a2f1e2226 100644
-> > > > --- a/arch/x86/kernel/setup.c
-> > > > +++ b/arch/x86/kernel/setup.c
-> > > > @@ -530,7 +530,7 @@ static int __init crashkernel_find_region(unsigned long long *crash_base,
-> > > >                                         unsigned long long *crash_size,
-> > > >                                         bool high)
-> > > >  {
-> > > > -     unsigned long long base, size;
-> > > > +     unsigned long long base, size, mem_enc_req = 0;
-> > > >
-> > > >       base = *crash_base;
-> > > >       size = *crash_size;
-> > > > @@ -561,11 +561,25 @@ static int __init crashkernel_find_region(unsigned long long *crash_base,
-> > > >       if (high)
-> > > >               goto high_reserve;
-> > > >
-> > > > +     /*
-> > > > +      * When SME/SEV is active and not using high reserve,
-> > > > +      * it will always required an extra SWIOTLB region.
-> > > > +      */
-> > > > +     if (mem_encrypt_active())
-> > > > +             mem_enc_req = ALIGN(swiotlb_size_or_default(), SZ_1M);
-> > > > +
-> > > >       base = memblock_find_in_range(CRASH_ALIGN,
-> > > > -                                   CRASH_ADDR_LOW_MAX, size,
-> > > > +                                   CRASH_ADDR_LOW_MAX,
-> > > > +                                   size + mem_enc_req,
-> > > >                                     CRASH_ALIGN);
-> > >
-> >
-> > Hi Ingo,
-> >
-> > I re-read my previous reply, it's long and tedious, let me try to make
-> > a more effective reply:
-> >
-> > > What sizes are we talking about here?
-> >
-> > The size here is how much memory will be reserved for kdump kernel, to
-> > ensure kdump kernel and userspace can run without OOM.
-> >
-> > >
-> > > - What is the possible size range of swiotlb_size_or_default()
-> >
-> > swiotlb_size_or_default() returns the swiotlb size, it's specified by
-> > user using swiotlb=<size>, or default size (64MB)
-> >
-> > >
-> > > - What is the size of CRASH_ADDR_LOW_MAX (the old limit)?
-> >
-> > It's 4G.
-> >
-> > >
-> > > - Why do we replace one fixed limit with another fixed limit instead of
-> > >   accurately sizing the area, with each required feature adding its own
-> > >   requirement to the reservation size?
-> >
-> > It's quite hard to "accurately sizing the area".
-> >
-> > No way to tell the exact amount of memory kdump needs, we can only estimate.
-> > Kdump kernel use different cmdline, drivers and components will have
-> > special handling for kdump, and userspace is totally different.
->
-> Agreed about your above, but specific this the problem in this patch
-> There should be other ways.
->
-> First thought about doing generic handling in swiotlb part, and do
-> something like kdump_memory_reserve(size) Ingo suggested,  but according
-> to you swiotlb init is late, so it can not increase the size, OTOH if
-> reserve another region for kdump in swiotlb will cause other issues.
->
-> So let's think about other improvement, for example to see if you can
-> call kdump_memory_reserve(size) in AMD SME init path, for example in
-> mem_encrypt_init(), is it before crashkernel reservation?
+On 9/26/19 11:43 PM, Sean Christopherson wrote:
+> Reto Buerki reported a failure in a nested VMM when running with HLT
+> interception disabled in L1.  When putting L2 into HLT, KVM never actually
+> enters L2 and instead cancels the nested run and pretends that VM-Enter to
+> L2 completed and then exited on HLT (which KVM intercepted).  Because KVM
+> never actually runs L2, KVM skips the pending MMU update for L2 and so
+> leaves a stale value in vmcs02.GUEST_CR3.  If the next wake event for L2
+> triggers a nested VM-Exit, KVM will refresh vmcs12->guest_cr3 from
+> vmcs02.GUEST_CR3 and consume the stale value.
+> 
+> Fix the issue by unconditionally writing vmcs02.GUEST_CR3 during nested
+> VM-Enter instead of deferring the update to vmx_set_cr3(), and skip the
+> update of GUEST_CR3 in vmx_set_cr3() when running L2.  I.e. make the
+> nested code fully responsible for vmcs02.GUEST_CR3.
+> 
+> I really wanted to go with a different fix of handling this as a one-off
+> case in the HLT flow (in nested_vmx_run()), and then following that up
+> with a cleanup of VMX's CR3 handling, e.g. to do proper dirty tracking
+> instead of having the nested code do manual VMREADs and VMWRITEs.  I even
+> went so far as to hide vcpu->arch.cr3 (put CR3 in vcpu->arch.regs), but
+> things went south when I started working through the dirty tracking logic.
+> 
+> Because EPT can be enabled *without* unrestricted guest, enabling EPT
+> doesn't always mean GUEST_CR3 really is the guest CR3 (unlike SVM's NPT).
+> And because the unrestricted guest handling of GUEST_CR3 is dependent on
+> whether the guest has paging enabled, VMX can't even do a clean handoff
+> based on unrestricted guest.  In a nutshell, dynamically handling the
+> transitions of GUEST_CR3 ownership in VMX is a nightmare, so fixing this
+> purely within the context of nested VMX turned out to be the cleanest fix.
+> 
+> Sean Christopherson (2):
+>   KVM: nVMX: Always write vmcs02.GUEST_CR3 during nested VM-Enter
+>   KVM: VMX: Skip GUEST_CR3 VMREAD+VMWRITE if the VMCS is up-to-date
+> 
+>  arch/x86/kvm/vmx/nested.c |  8 ++++++++
+>  arch/x86/kvm/vmx/vmx.c    | 15 ++++++++++-----
+>  2 files changed, 18 insertions(+), 5 deletions(-)
 
-Yes, mem_encrypt_init is before the crashkernel reservation.
-I think this is a good idea. Will make a V4 patch based on this.
+Tested-by: Reto Buerki <reet@codelabs.ch>
 
->
-> If doable it will be at least cleaner than the code in this patch.
->
-> Thanks
-> Dave
-
--- 
-Best Regards,
-Kairui Song
+Thanks!
