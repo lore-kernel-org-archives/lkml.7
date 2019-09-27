@@ -2,138 +2,92 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E77C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 884DCC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0808C217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56D77217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:02:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UZ8b+2aq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BqBbqn1v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbfI0P5p (ORCPT
+        id S1727649AbfI0QCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 11:57:45 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51922 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727273AbfI0P5o (ORCPT
+        Fri, 27 Sep 2019 12:02:07 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:42375 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727334AbfI0QCH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 11:57:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=F6O5Uosygu6We4yGr3RWbNboX83MuqSZ1AiJfQK03qY=; b=UZ8b+2aqVNM89GvnyWobFt5RX
-        aWEPvZpN1Xf9PluwsG5iY/EalMwqfbXccqU70nmw75AsOxXdnEOoB7SYfAdGWZjGPeJzt7MUCpnmW
-        CUfiVz2PgNJpFIehIoDPZBHS8HFywrtQIgpzm2ovlvik4wBvtHWfZt2YbrWMpvbf5QM9riZtaCjQC
-        35zNaOUJHmrC6CLDNj8yE7ZWMIU8qWPy0IAC5x8lABP/7fQBm5JjHyTGo4GzXgabkwGQocofNW5IE
-        EerkWpkaTvsLkSaAAGw++XQQGbh4rEfAtKb0GpisJtCiFICp1ns9UA7KSKxWWG19DN6WBCUNdo0GA
-        iVnW6hIrA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iDscf-0004Uu-EC; Fri, 27 Sep 2019 15:57:38 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C70529801D6; Fri, 27 Sep 2019 17:57:30 +0200 (CEST)
-Date:   Fri, 27 Sep 2019 17:57:30 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andrea Parri <parri.andrea@gmail.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Will Deacon <will@kernel.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        jose.marchesi@oracle.com
-Subject: Re: Do we need to correct barriering in circular-buffers.rst?
-Message-ID: <20190927155730.GA11194@worktop.programming.kicks-ass.net>
-References: <CAHk-=wj85tOp8WjcUp6gwstp4Cg2WT=p209S=fOzpWAgqqQPKg@mail.gmail.com>
- <20190915145905.hd5xkc7uzulqhtzr@willie-the-truck>
- <25289.1568379639@warthog.procyon.org.uk>
- <28447.1568728295@warthog.procyon.org.uk>
- <20190917170716.ud457wladfhhjd6h@willie-the-truck>
- <15228.1568821380@warthog.procyon.org.uk>
- <5385.1568901546@warthog.procyon.org.uk>
- <20190923144931.GC2369@hirez.programming.kicks-ass.net>
- <20190927095107.GA13098@andrea>
- <20190927124929.GB4643@worktop.programming.kicks-ass.net>
+        Fri, 27 Sep 2019 12:02:07 -0400
+Received: by mail-io1-f65.google.com with SMTP id n197so17577600iod.9
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 09:02:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lgAkk/YaVOjIm+eYoirnfpTGVi4GTRsy5eJmu7zQ35M=;
+        b=BqBbqn1v6BmDj80XgHueQfDT2g8OiaP8+NPPh+sl4i4CnrYqtnxxdv+h6I7Q2C/l2T
+         Saadv4tE19a3iwbCVOyoYMs8noKK7KGUyPU41lJJUD6xE1/gs636wHaX+QqvZP4j8YrA
+         YEQOvkEvhfvstBudhmys/ZpKCjB06Czqb+fy4qAUadsv5jUvHi13iiuYFjpb699KLAi5
+         8dA31ACK1Ua/zfUNHwskFeILW39Db9V1gqf4MD7bWzc0V2lrrC/fKeZjq+1Qke1k4Ezn
+         HhopI3/wC618fZErDUxFx7lghzYwYXSNM/v0E5UpzuBY4rOyXDmIs2Sgui8mPeo4uRZB
+         XQHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lgAkk/YaVOjIm+eYoirnfpTGVi4GTRsy5eJmu7zQ35M=;
+        b=msp33btZlgEzI8ZQJg2XWqFaNJFvggPJNswWxHU30hECzGbb7mOguhX4XT/iVy9Jzq
+         aqHJZTCJd4fP7Stj6TZBwfHwO7CycxDCmVR5fJsL/ha2yk0x90zl5iNTPWkbVFGLgurd
+         bjSqfoUuz4kYMLa29w4XA1FiSwwbHohK3iYy+OpofdP6k/OJLONuu2zXxBWM49HtJE7j
+         La1m6iKqYQ3T/OmJ3G71ZQDhdbqxbhKmK57u6vXQ3fpl5JZ1j+cmPdsvjnOruDh1ZPcq
+         bHBCbOiucQfoDnuXMhtaHpiB/mf3KVdD0WRlc9hKZ4qySvgRVMtnW8IkzFG5/Kypeqxn
+         T2dg==
+X-Gm-Message-State: APjAAAXmw6oCdzB6sOoFU1sB0TeMbI+5CfP+mNu3QzOi5KNychveSSZd
+        lcBm5SPa9259pcY75gigcFIDlc4HJ1150dOcHaNcbg==
+X-Google-Smtp-Source: APXvYqwKBik3py7QHelQi1j9yqNr6X9seM8w1k1A2J3dgKRVd3txN4UH++9q5EB7yTpsxrY2YTVnE7EV+rNZJ4Of4ZI=
+X-Received: by 2002:a92:4a0d:: with SMTP id m13mr5429319ilf.119.1569600126204;
+ Fri, 27 Sep 2019 09:02:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190927124929.GB4643@worktop.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190927155413.31648-1-vkuznets@redhat.com>
+In-Reply-To: <20190927155413.31648-1-vkuznets@redhat.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Fri, 27 Sep 2019 09:01:55 -0700
+Message-ID: <CALMp9eRRavuTr44XnL-ySWy7B5=Dir1Vt+oMp1+EiFbpNy6Mig@mail.gmail.com>
+Subject: Re: [PATCH] KVM: selftests: x86: clarify what is reported on
+ KVM_GET_MSRS failure
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 02:49:29PM +0200, Peter Zijlstra wrote:
-> On Fri, Sep 27, 2019 at 11:51:07AM +0200, Andrea Parri wrote:
-> 
-> > For the record, the LKMM doesn't currently model "order" derived from
-> > control dependencies to a _plain_ access (even if the plain access is
-> > a write): in particular, the following is racy (as far as the current
-> > LKMM is concerned):
-> > 
-> > C rb
-> > 
-> > { }
-> > 
-> > P0(int *tail, int *data, int *head)
-> > {
-> > 	if (READ_ONCE(*tail)) {
-> > 		*data = 1;
-> > 		smp_wmb();
-> > 		WRITE_ONCE(*head, 1);
-> > 	}
-> > }
-> > 
-> > P1(int *tail, int *data, int *head)
-> > {
-> > 	int r0;
-> > 	int r1;
-> > 
-> > 	r0 = READ_ONCE(*head);
-> > 	smp_rmb();
-> > 	r1 = *data;
-> > 	smp_mb();
-> > 	WRITE_ONCE(*tail, 1);
-> > }
-> > 
-> > Replacing the plain "*data = 1" with "WRITE_ONCE(*data, 1)" (or doing
-> > s/READ_ONCE(*tail)/smp_load_acquire(tail)) suffices to avoid the race.
-> > Maybe I'm short of imagination this morning...  but I can't currently
-> > see how the compiler could "break" the above scenario.
-> 
-> The compiler; if sufficiently smart; is 'allowed' to change P0 into
-> something terrible like:
-> 
-> 	*data = 1;
-> 	if (*tail) {
-> 		smp_wmb();
-> 		*head = 1;
-> 	} else
-> 		*data = 0;
-> 
-> 
-> (assuming it knows *data was 0 from a prior store or something)
-> 
-> Using WRITE_ONCE() defeats this because volatile indicates external
-> visibility.
-
-The much simpler solution might be writing it like:
-
-	if (READ_ONCE(*tail) {
-		barrier();
-		*data = 1;
-		smp_wmb();
-		WRITE_ONCE(*head, 1);
-	}
-
-which I don't think the compiler is allowed to mess up.
+On Fri, Sep 27, 2019 at 8:54 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>
+> When KVM_GET_MSRS fail the report looks like
+>
+> ==== Test Assertion Failure ====
+>   lib/x86_64/processor.c:1089: r == nmsrs
+>   pid=28775 tid=28775 - Argument list too long
+>      1  0x000000000040a55f: vcpu_save_state at processor.c:1088 (discriminator 3)
+>      2  0x00000000004010e3: main at state_test.c:171 (discriminator 4)
+>      3  0x00007fb8e69223d4: ?? ??:0
+>      4  0x0000000000401287: _start at ??:?
+>   Unexpected result from KVM_GET_MSRS, r: 36 (failed at 194)
+>
+> and it's not obvious that '194' here is the failed MSR index and that
+> it's printed in hex. Change that.
+>
+> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
