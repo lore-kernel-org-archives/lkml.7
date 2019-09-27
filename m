@@ -2,115 +2,79 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E282DC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A91AC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C007C20872
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C490207FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:14:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726211AbfI0HOU (ORCPT
+        id S1726467AbfI0HOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 03:14:20 -0400
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:37487 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725804AbfI0HOT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 03:14:19 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id DkSDiJwJx9D4hDkSHiAicv; Fri, 27 Sep 2019 09:14:17 +0200
-Subject: Re: [PATCH v6 7/7] media: imx214: Add new control with
- V4L2_CID_UNIT_CELL_SIZE
-To:     Ricardo Ribalda Delgado <ricardo@ribalda.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Jacopo Mondi <jacopo@jmondi.org>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Ricardo Ribalda Delgado <ribalda@kernel.org>
-References: <20190920135137.10052-1-ricardo@ribalda.com>
- <20190920135137.10052-8-ricardo@ribalda.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <6e4c1969-a80d-4747-7a44-b7a46804fe12@xs4all.nl>
-Date:   Fri, 27 Sep 2019 09:14:13 +0200
+        Fri, 27 Sep 2019 03:14:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56280 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725804AbfI0HOz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 03:14:55 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 557223090FD3;
+        Fri, 27 Sep 2019 07:14:55 +0000 (UTC)
+Received: from [10.72.12.30] (ovpn-12-30.pek2.redhat.com [10.72.12.30])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 52410608A5;
+        Fri, 27 Sep 2019 07:14:44 +0000 (UTC)
+Subject: Re: [PATCH] vhost: introduce mdev based hardware backend
+To:     Tiwei Bie <tiwei.bie@intel.com>
+Cc:     mst@redhat.com, alex.williamson@redhat.com,
+        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        lingshan.zhu@intel.com
+References: <20190926045427.4973-1-tiwei.bie@intel.com>
+ <1b4b8891-8c14-1c85-1d6a-2eed1c90bcde@redhat.com>
+ <20190927045438.GA17152@___>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <49bb0777-3761-3737-8e5b-568957f9a935@redhat.com>
+Date:   Fri, 27 Sep 2019 15:14:42 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190920135137.10052-8-ricardo@ribalda.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190927045438.GA17152@___>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfKajgLdmMseaI99cOo72/oCxPfMs+wvPkplxsuosZtRVp92oDlN4riCbwa5jI/xGl31RvTwHv0ccUriSeNYhDz97jFL4BsL6/uE/Ljixr7wP4Yt9IQtz
- adR0JwPdBrEtNa6qdOjHnbvB6L1itOgtIINtCVlDj6xhHdkOQBAHZhGm07lXzbSPKHKX/qxt6zPlzpd2fc48/cTD5UiEX8fHXnN/IqFmRsW9FJ337t2BQPsK
- 1zyn5B74FRMdalUfWgDp2h5Q3J7AS8q9UeVBNoYgDn5xsxtI8gSDPmOszyooz8uumxTtRSEHjRCXjDe5chDiGqWRTpQbfgKSuEP1JMbyX7TImmpAyjwK9VdF
- ZkBiPp1A
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 27 Sep 2019 07:14:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/20/19 3:51 PM, Ricardo Ribalda Delgado wrote:
-> From: Ricardo Ribalda Delgado <ribalda@kernel.org>
-> 
-> According to the product brief, the unit cell size is 1120 nanometers^2.
-> 
-> https://www.sony-semicon.co.jp/products_en/IS/sensor1/img/products/ProductBrief_IMX214_20150428.pdf
-> 
-> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
-> ---
->  drivers/media/i2c/imx214.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
-> index 159a3a604f0e..57562e20c4ca 100644
-> --- a/drivers/media/i2c/imx214.c
-> +++ b/drivers/media/i2c/imx214.c
-> @@ -47,6 +47,7 @@ struct imx214 {
->  	struct v4l2_ctrl *pixel_rate;
->  	struct v4l2_ctrl *link_freq;
->  	struct v4l2_ctrl *exposure;
-> +	struct v4l2_ctrl *unit_size;
->  
->  	struct regulator_bulk_data	supplies[IMX214_NUM_SUPPLIES];
->  
-> @@ -948,6 +949,13 @@ static int imx214_probe(struct i2c_client *client)
->  	static const s64 link_freq[] = {
->  		IMX214_DEFAULT_LINK_FREQ,
->  	};
-> +	struct v4l2_area unit_size = {
-> +		.width = 1120,
-> +		.height = 1120,
-> +	};
-> +	union v4l2_ctrl_ptr p_def = {
-> +		.p_area = &unit_size,
-> +	};
 
-Use static const for both.
+On 2019/9/27 下午12:54, Tiwei Bie wrote:
+>>> +
+>>> +		/*
+>>> +		 * In vhost-mdev, userspace should pass ring addresses
+>>> +		 * in guest physical addresses when IOMMU is disabled or
+>>> +		 * IOVAs when IOMMU is enabled.
+>>> +		 */
+>> A question here, consider we're using noiommu mode. If guest physical
+>> address is passed here, how can a device use that?
+>>
+>> I believe you meant "host physical address" here? And it also have the
+>> implication that the HPA should be continuous (e.g using hugetlbfs).
+> The comment is talking about the virtual IOMMU (i.e. iotlb in vhost).
+> It should be rephrased to cover the noiommu case as well. Thanks for
+> spotting this.
 
-I think you should add a small static inline helper function to v4l2-ctrls.h that
-takes a void pointer and returns a union v4l2_ctrl_ptr.
 
-Then you don't need to make a union v4l2_ctrl_ptr just to pass the unit_size pointer.
+So the question still, if GPA is passed how can it be used by the 
+virtio-mdev device?
 
-Regards,
-
-	Hans
-
->  	int ret;
->  
->  	ret = imx214_parse_fwnode(dev);
-> @@ -1029,6 +1037,10 @@ static int imx214_probe(struct i2c_client *client)
->  					     V4L2_CID_EXPOSURE,
->  					     0, 3184, 1, 0x0c70);
->  
-> +	imx214->unit_size = v4l2_ctrl_new_std_compound(&imx214->ctrls,
-> +						       NULL,
-> +						       V4L2_CID_UNIT_CELL_SIZE,
-> +						       p_def);
->  	ret = imx214->ctrls.error;
->  	if (ret) {
->  		dev_err(&client->dev, "%s control init failed (%d)\n",
-> 
+Thanks
 
