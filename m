@@ -2,80 +2,84 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4BC5C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E32BC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 861A7217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C0A321BE5
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:34:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727542AbfI0PdK (ORCPT
+        id S1727756AbfI0Peq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 11:33:10 -0400
-Received: from mga17.intel.com ([192.55.52.151]:51426 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727140AbfI0PdK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 11:33:10 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Sep 2019 08:33:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,555,1559545200"; 
-   d="scan'208";a="194521052"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga006.jf.intel.com with ESMTP; 27 Sep 2019 08:33:05 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iDsEy-0001S5-2b; Fri, 27 Sep 2019 18:33:04 +0300
-Date:   Fri, 27 Sep 2019 18:33:04 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Cezary Rojewski <cezary.rojewski@intel.com>
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Navid Emamdoost <navid.emamdoost@gmail.com>, emamd001@umn.edu,
-        smccaman@umn.edu, kjlu@umn.edu,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ASoC: Intel: Skylake: prevent memory leak in
- snd_skl_parse_uuids
-Message-ID: <20190927153304.GS32742@smile.fi.intel.com>
-References: <20190925161922.22479-1-navid.emamdoost@gmail.com>
- <13f4bd40-dbaa-e24e-edca-4b4acff9d9c5@linux.intel.com>
- <20190927025526.GD22969@cs-dulles.cs.umn.edu>
- <dc68e0dc-9a8e-cc52-c560-3e86c783dbb3@linux.intel.com>
- <6966df25-e82c-1abe-6a0f-ff497dcda23b@intel.com>
+        Fri, 27 Sep 2019 11:34:46 -0400
+Received: from 16.mo1.mail-out.ovh.net ([178.33.104.224]:40659 "EHLO
+        16.mo1.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727334AbfI0Pep (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 11:34:45 -0400
+X-Greylist: delayed 2209 seconds by postgrey-1.27 at vger.kernel.org; Fri, 27 Sep 2019 11:34:45 EDT
+Received: from player758.ha.ovh.net (unknown [10.108.54.9])
+        by mo1.mail-out.ovh.net (Postfix) with ESMTP id 8197E1918A9
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 16:57:55 +0200 (CEST)
+Received: from sk2.org (unknown [65.39.69.237])
+        (Authenticated sender: steve@sk2.org)
+        by player758.ha.ovh.net (Postfix) with ESMTPSA id 032C7A59A1F3;
+        Fri, 27 Sep 2019 14:57:47 +0000 (UTC)
+From:   Stephen Kitt <steve@sk2.org>
+To:     Tero Kristo <t-kristo@ti.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-omap@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
+Subject: [PATCH] clk/ti/adpll: allocate room for terminating null
+Date:   Fri, 27 Sep 2019 16:57:37 +0200
+Message-Id: <20190927145737.7832-1-steve@sk2.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6966df25-e82c-1abe-6a0f-ff497dcda23b@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 2554385417407385031
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedrfeeigdekudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 05:10:18PM +0200, Cezary Rojewski wrote:
+The buffer allocated in ti_adpll_clk_get_name doesn't account for the
+terminating null. This patch adds the extra byte, and switches to
+snprintf to avoid overflowing.
 
-> I'm fine with solution #1 as I guess asking to wait for refactor is not an
-> option. Code deployment is delayed due to range of administrative decisions,
-> some of which should be uncovered on alsa-devel soon enough.
+Signed-off-by: Stephen Kitt <steve@sk2.org>
+---
+ drivers/clk/ti/adpll.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-The problem with solution #1 is freeing orphaned pointer. It will work,
-but it's simple is not okay from object life time prospective.
-
+diff --git a/drivers/clk/ti/adpll.c b/drivers/clk/ti/adpll.c
+index fdfb90058504..27933c4e8a27 100644
+--- a/drivers/clk/ti/adpll.c
++++ b/drivers/clk/ti/adpll.c
+@@ -196,12 +196,13 @@ static const char *ti_adpll_clk_get_name(struct ti_adpll_data *d,
+ 	} else {
+ 		const char *base_name = "adpll";
+ 		char *buf;
++		size_t size = 8 + 1 + strlen(base_name) + 1 +
++			      strlen(postfix) + 1;
+ 
+-		buf = devm_kzalloc(d->dev, 8 + 1 + strlen(base_name) + 1 +
+-				    strlen(postfix), GFP_KERNEL);
++		buf = devm_kzalloc(d->dev, size, GFP_KERNEL);
+ 		if (!buf)
+ 			return NULL;
+-		sprintf(buf, "%08lx.%s.%s", d->pa, base_name, postfix);
++		snprintf(buf, size, "%08lx.%s.%s", d->pa, base_name, postfix);
+ 		name = buf;
+ 	}
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.20.1
 
