@@ -2,169 +2,133 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 976DAC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B32DC388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A51621655
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:02:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dr01MoRs"
+	by mail.kernel.org (Postfix) with ESMTP id 611DE217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:03:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569611007;
+	bh=pSCjcuhP/XyBPFkQmqrYTdaopzg3Xcl3kHOOQJAx/zw=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=vKScNwL+7DKrrQ2Clqf+az+szSndy199q7XwiKDu0XR7lrCpAoTsoICjtm5pujzXz
+	 wthlbx3WNPrP2tNxb9ou08OOdnrC6+8m/aLgGzMK6ZTOsw/8gdcm4R9ap+8ZKJkBSc
+	 p15xPk6tWW+EstnD6MHgepS4WbIXWgWGa3/8YHXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbfI0TCt (ORCPT
+        id S1728254AbfI0TD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 15:02:49 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41387 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbfI0TCt (ORCPT
+        Fri, 27 Sep 2019 15:03:26 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41606 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbfI0TD0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 15:02:49 -0400
-Received: by mail-io1-f68.google.com with SMTP id r26so19006021ioh.8;
-        Fri, 27 Sep 2019 12:02:49 -0700 (PDT)
+        Fri, 27 Sep 2019 15:03:26 -0400
+Received: by mail-io1-f67.google.com with SMTP id r26so19011133ioh.8
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 12:03:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LO3JdAOU095h41fjVsuAsU+4Z0wmwAMdPedC2Thw3pg=;
-        b=dr01MoRs+YBUsJR2Yajv5Gvk1Uuzl8J/B0xZ7BtPxjvHMRUFzNHi1gn2IjV0wXHCzq
-         capi/qDYXysLutGkSjtANV/oT80eN4t3epMkMyFfb1YeeWmHa9B56XasKfDrBaj/UgsO
-         MRPgpvasw/M/Lmb03EZJA/kFsbdBVMfYO7psdw+1yHdvq6WIeA5iEWS1/Q21rJENUPAU
-         i8sw3SqRACaGNwbNZyxa3PEoYHDcCnP3XqMnzL7dbQwY6dcqx6TULVQxAbxzP5//qpyH
-         xtlvQ6qOQVSLV5vls0hohFudnvizuTxuk2TL5CkaybbkRGoPMAZj8BeQzWgp1aJOcIUM
-         OX6w==
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=E+qSxd+B5mAgasMeWMwc/UaJE1Xo8BpaT5oY9Q4d4wI=;
+        b=M8LKNRgSLYPUMGMl7I2w8aeFVONEoHT740JVrcttiLb0emgEnbPRGT4xrNWwgYTm37
+         OYNW6NeTPL8JAoxJiQp3ZD+GURM321crEPdivjuooi6+G0LevLZMWHea0ZcquoFLMi6X
+         7mQnLMIvY0JkTKn2G61mO5yjE9LrSYKzP5TsE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LO3JdAOU095h41fjVsuAsU+4Z0wmwAMdPedC2Thw3pg=;
-        b=aVcn1pNPXx0wfzpuSZsYc2XbBP7Hx/ghHhuZHe0ia1XOAhOEtNPqgajsLO6Dvu5LfE
-         XPxGfOGXPULB/R9Hz6TuYvI8eRX3zvE1GsbZHt8WOPjzWOLecalb3Dnrb7hzHPgetRfA
-         K127GcwJR9xsR/P3YlVDTamIcn5p+mXESCmM4CuXfxoPPKUwZ3phLbMwIxfJg8U7cu5r
-         XA/gwtzXq+78LD+q2jOprecBvqEwNzQVKQ1aOYZHvQNI1s0iACteFUyatZcRL/cBl/h7
-         OCzEJPd8vohlU+e9sTMmZ+T2yYFJlNLx2vmzRDV4fh9aTDuWVtqH+TbX0f4EJysuEtvr
-         zXNw==
-X-Gm-Message-State: APjAAAVOqfqqT3sdRaPXHV9IMKEFynL91Coz7wkPQS1CNdlp3OcSPmqT
-        LxdLKNivVLlBYNpNkjxj39XIagKoGJPT039rlIk=
-X-Google-Smtp-Source: APXvYqwS6ado5j8H/MS9UQpgoe/UkE+sD6PlTwv5ZTRS/6e5bGEdAPsZ4ex2TIbFU5IYmkfVt2tiTgtyAQ59xYbnLxI=
-X-Received: by 2002:a02:7810:: with SMTP id p16mr9500549jac.55.1569610967624;
- Fri, 27 Sep 2019 12:02:47 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=E+qSxd+B5mAgasMeWMwc/UaJE1Xo8BpaT5oY9Q4d4wI=;
+        b=RpKqKJvhJ1LbZRh5t7Xz2RNezlU5r247BZEL1gTGIFeTX92UM8h6R2H9492UBnSCfn
+         dxDgSHHrzLpHbaPM6AFmCRe0tt6hDkhoGskwXlhoMt4xSX2H8nol+ku4taydNt34t38v
+         l2/tHMvz9SpKH8LSDNI53wi3WVQu4wy+b2inpMSEUdsSbf8XwWXlX6B+7DfepsXVnNMZ
+         6WXyNqrE0IQePFUUy5b1yfmREsrO8kJp56uLCIPLNT/Pf3+U/pCZNOHI3aMWwLT04cOZ
+         AVstbvgAh5A1XQ04pCw8NJTbE2dxS/f9DxUpi3c7Qa6rG8m3BBZ9fGjlUnWx5+SCocGT
+         r4mA==
+X-Gm-Message-State: APjAAAVuXfwYT4Y1QlhWpncSVLhw+PpsWx297D4RVRQYmCuN35F0wmRi
+        lo3iLCLIVZQB2H2ZyU1Z1CyzAA==
+X-Google-Smtp-Source: APXvYqyHENgSj2WMDvi6eFaafpsFE/M30Ldy7dsDBryeYnpc0Mkk2ZpDpcDkPaiCljRGm46/wCsq+A==
+X-Received: by 2002:a5d:89da:: with SMTP id a26mr9289421iot.61.1569611005604;
+        Fri, 27 Sep 2019 12:03:25 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id t17sm2519972ioc.18.2019.09.27.12.03.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 27 Sep 2019 12:03:24 -0700 (PDT)
+Subject: Re: [PATCH] tools: bpf: Use !building_out_of_srctree to determine
+ srctree
+To:     Song Liu <liu.song.a23@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20190927011344.4695-1-skhan@linuxfoundation.org>
+ <CAPhsuW5EncjNRGjt7F_BN2bNhRkf=uXVeDe6NCbJe=K2J+hdyA@mail.gmail.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <5ec40572-5df9-0e5b-5a85-eb53be48b87d@linuxfoundation.org>
+Date:   Fri, 27 Sep 2019 13:03:23 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190925184239.22330-1-aford173@gmail.com> <20190925184239.22330-2-aford173@gmail.com>
- <20190927185153.GA982@bogus>
-In-Reply-To: <20190927185153.GA982@bogus>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Fri, 27 Sep 2019 14:02:35 -0500
-Message-ID: <CAHCN7x+V_-PZjhC_1K1kU+fnQYwWM4br1PTPEBd4Kks=sR5K7g@mail.gmail.com>
-Subject: Re: [PATCH V3 2/3] dt-bindings: Add Logic PD Type 28 display panel
-To:     Rob Herring <robh@kernel.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Adam Ford <adam.ford@logicpd.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAPhsuW5EncjNRGjt7F_BN2bNhRkf=uXVeDe6NCbJe=K2J+hdyA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 1:51 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, Sep 25, 2019 at 01:42:37PM -0500, Adam Ford wrote:
-> > This patch adds documentation of device tree bindings for the WVGA panel
-> > Logic PD Type 28 display.
-> >
-> > Signed-off-by: Adam Ford <aford173@gmail.com>
-> > ---
-> > V3:  Correct build errors from 'make dt_binding_check'
-> > V2:  Use YAML instead of TXT for binding
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml b/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml
-> > new file mode 100644
-> > index 000000000000..74ba650ea7a0
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml
-> > @@ -0,0 +1,31 @@
-> > +# SPDX-License-Identifier: (GPL-2.0+ OR X11)
->
-> (GPL-2.0-only OR BSD-2-Clause) please.
->
-> X11 is pretty much never right unless this is copyright X Consortium.
->
+On 9/27/19 12:44 PM, Song Liu wrote:
+> On Thu, Sep 26, 2019 at 6:14 PM Shuah Khan <skhan@linuxfoundation.org> wrote:
+>>
+>> make TARGETS=bpf kselftest fails with:
+>>
+>> Makefile:127: tools/build/Makefile.include: No such file or directory
+>>
+>> When the bpf tool make is invoked from tools Makefile, srctree is
+>> cleared and the current logic check for srctree equals to empty
+>> string to determine srctree location from CURDIR.
+>>
+>> When the build in invoked from selftests/bpf Makefile, the srctree
+>> is set to "." and the same logic used for srctree equals to empty is
+>> needed to determine srctree.
+>>
+>> Check building_out_of_srctree undefined as the condition for both
+>> cases to fix "make TARGETS=bpf kselftest" build failure.
+>>
+>> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+> 
+> The fix looks reasonable. Thanks!
+> 
+> However, I am still seeing some failure:
+> 
+> make TARGETS=bpf kselftest
+> [...]
+> test_verifier.c
+> /data/users/songliubraving/kernel/linux-git/tools/testing/selftests/bpf/test_stub.o
+> /data/users/songliubraving/kernel/linux-git/tools/testing/selftests/bpf/libbpf.a
+> -lcap -lelf -lrt -lpthread -o
+> /data/users/songliubraving/kernel/linux-git/tools/testing/selftests/bpf/test_verifier
+> make[3]: test_verifier.c: Command not found
+> 
+> Is this just a problem with my setup?
+> 
 
-I copied the example from
-Documentation/devicetree/bindings/display/panel/ronbo,rb070d30.yaml
+You are running into the second bpf failure because of the dependency
+on the latest llvm. This is known issue with bpf test and it doesn't
+compile on 5.4 and maybe even 5.3
 
-Is there a better example I can use?  If what I did is wrong, then it
-seems like that board is wrong too.
+You have upgrade to the bleeding edge llvm.
 
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/display/panel/logicpd,type28.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Logic PD Type 28 4.3" WQVGA TFT LCD panel
-> > +
-> > +maintainers:
-> > +  - Adam Ford <aford173@gmail.com>
-> > +
->
-> You need:
->
-> allOf:
->   - $ref: panel-common.yaml#
->
-> > +properties:
-> > +  compatible:
-> > +    const: logicpd,type28
-> > +
->
-> > +  power-supply:
-> > +    description: Regulator to provide the supply voltage
-> > +    maxItems: 1
-> > +
-> > +  enable-gpios:
-> > +    description: GPIO pin to enable or disable the panel
-> > +    maxItems: 1
-> > +
-> > +  backlight:
-> > +    description: Backlight used by the panel
-> > +    $ref: "/schemas/types.yaml#/definitions/phandle"
->
-> These 3 are all defined in the common schema, so you just need 'true'
-> for the value to indicate they apply to this panel and to make
-> 'additionalProperties: false' happy.
+thanks,
+-- Shuah
 
-Sorry for my ignorance, but I am not familiar with the syntax here,
-nor do I understand what is required.  Since there aren't many display
-panels with yaml docs, I don't know what is expected and clearly the
-one I used as a template didn't do it right either.
-
-Is there a branch  where this stuff is located? I am just using the
-latest linux-stable branch.
-
->
-> > +
-> > +required:
-> > +  - compatible
->
-> Are the rest really optional?
-
-From what I can tell, they are optional.  I am just adding some timing
-info to an already existing driver.  It's not my driver.
-
-
->
-> > +
-> > +additionalProperties: false
-> > --
-> > 2.17.1
-> >
