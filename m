@@ -2,226 +2,100 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E39C352AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C67AFC32774
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44EB121928
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9639F21850
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:46:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726248AbfI0Imt (ORCPT
+        id S1726197AbfI0Iqs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 04:42:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47874 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725882AbfI0Imt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 04:42:49 -0400
-Received: from oasis.local.home (unknown [65.39.69.237])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4EDD2075D;
-        Fri, 27 Sep 2019 08:42:44 +0000 (UTC)
-Date:   Fri, 27 Sep 2019 04:42:39 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-pm@vger.kernel.org, Amit Kucheria <amit.kucheria@linaro.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] PM / Domains: Add tracepoints
-Message-ID: <20190927044239.589e7c4c@oasis.local.home>
-In-Reply-To: <20190926150406.v1.1.I07a769ad7b00376777c9815fb169322cde7b9171@changeid>
-References: <20190926150406.v1.1.I07a769ad7b00376777c9815fb169322cde7b9171@changeid>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 27 Sep 2019 04:46:48 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:51479 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbfI0Iqr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 04:46:47 -0400
+X-Originating-IP: 65.39.69.237
+Received: from localhost (unknown [65.39.69.237])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 0C35C1C000B;
+        Fri, 27 Sep 2019 08:46:44 +0000 (UTC)
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>
+Subject: [PATCH v3] PCI: aardvark: Don't rely on jiffies while holding spinlock
+Date:   Fri, 27 Sep 2019 10:55:02 +0200
+Message-Id: <20190927085502.1758-1-repk@triplefau.lt>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 26 Sep 2019 15:04:38 -0700
-Matthias Kaehlcke <mka@chromium.org> wrote:
+advk_pcie_wait_pio() can be called while holding a spinlock (from
+pci_bus_read_config_dword()), then depends on jiffies in order to
+timeout while polling on PIO state registers. In the case the PIO
+transaction failed, the timeout will never happen and will also cause
+the cpu to stall.
 
-> Define genpd_power_on/off and genpd_set_performance_state
-> tracepoints and use them.
+This decrements a variable and wait instead of using jiffies.
 
-I agree with Greg about adding a "why" you need this. But, in case
-there's a good reason to have this, I have comments about the code
-below.
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+---
+Changes since v1:
+  - Reduce polling delay
+  - Change size_t into int for loop counter
+Changes since v2:
+  - Keep timeout to 1ms by increasing retry counter
+---
+ drivers/pci/controller/pci-aardvark.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
-> 
->  drivers/base/power/domain.c  | 27 +++++++++++++++++---
->  include/trace/events/power.h | 49 ++++++++++++++++++++++++++++++++++++
->  2 files changed, 72 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-> index cc85e87eaf05..aee988c112e5 100644
-> --- a/drivers/base/power/domain.c
-> +++ b/drivers/base/power/domain.c
-> @@ -21,6 +21,7 @@
->  #include <linux/suspend.h>
->  #include <linux/export.h>
->  #include <linux/cpu.h>
-> +#include <trace/events/power.h>
->  
->  #include "power.h"
->  
-> @@ -329,6 +330,9 @@ static int _genpd_set_performance_state(struct generic_pm_domain *genpd,
->  		goto err;
->  
->  	genpd->performance_state = state;
-> +
-> +	trace_genpd_set_performance_state(genpd);
-> +
->  	return 0;
->  
->  err:
-> @@ -418,14 +422,21 @@ static int _genpd_power_on(struct generic_pm_domain *genpd, bool timed)
->  	if (!genpd->power_on)
->  		return 0;
->  
-> -	if (!timed)
-> -		return genpd->power_on(genpd);
-> +	if (!timed) {
-> +		ret = genpd->power_on(genpd);
-> +		if (!ret)
-> +			trace_genpd_power_on(genpd);
-> +
-> +		return ret;
-> +	}
->  
->  	time_start = ktime_get();
->  	ret = genpd->power_on(genpd);
->  	if (ret)
->  		return ret;
->  
-> +	trace_genpd_power_on(genpd);
-> +
->  	elapsed_ns = ktime_to_ns(ktime_sub(ktime_get(), time_start));
->  	if (elapsed_ns <= genpd->states[state_idx].power_on_latency_ns)
->  		return ret;
-> @@ -448,14 +459,22 @@ static int _genpd_power_off(struct generic_pm_domain *genpd, bool timed)
->  	if (!genpd->power_off)
->  		return 0;
->  
-> -	if (!timed)
-> -		return genpd->power_off(genpd);
-> +	if (!timed) {
-> +		ret = genpd->power_off(genpd);
-> +		if (!ret)
-
-Here
-
-> +			trace_genpd_power_off(genpd);
-> +
-> +		return ret;
-> +	}
->  
->  	time_start = ktime_get();
->  	ret = genpd->power_off(genpd);
->  	if (ret)
->  		return ret;
->  
-> +	if (!ret)
-
-And here add a conditional branch for only a tracepoint. To eliminate
-the branch when tracepoints are not enabled, please do it this way
-instead:
-
-	if (trace_genpd_power_off_enabled() && !ret)
-
-The above is a static branch (nop when disabled, and jmp when enabled),
-and the above should move the conditional branch on !ret into the
-section that is only called when the tracepoint is enabled.
-
-
-> +		trace_genpd_power_off(genpd);
-> +
-
--- Steve
-
->  	elapsed_ns = ktime_to_ns(ktime_sub(ktime_get(), time_start));
->  	if (elapsed_ns <= genpd->states[state_idx].power_off_latency_ns)
->  		return 0;
-> diff --git a/include/trace/events/power.h b/include/trace/events/power.h
-> index 7457e238e1b7..de56cd1e8d0d 100644
-> --- a/include/trace/events/power.h
-> +++ b/include/trace/events/power.h
-> @@ -7,6 +7,7 @@
->  
->  #include <linux/cpufreq.h>
->  #include <linux/ktime.h>
-> +#include <linux/pm_domain.h>
->  #include <linux/pm_qos.h>
->  #include <linux/tracepoint.h>
->  #include <linux/trace_events.h>
-> @@ -525,6 +526,54 @@ DEFINE_EVENT(dev_pm_qos_request, dev_pm_qos_remove_request,
->  
->  	TP_ARGS(name, type, new_value)
->  );
-> +
-> +#ifdef CONFIG_PM_GENERIC_DOMAINS
-> +DECLARE_EVENT_CLASS(genpd_power_on_off,
-> +	TP_PROTO(struct generic_pm_domain *genpd),
-> +
-> +	TP_ARGS(genpd),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(name, genpd->name)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(name, genpd->name);
-> +	),
-> +
-> +	TP_printk("name=%s", __get_str(name))
-> +);
-> +
-> +DEFINE_EVENT(genpd_power_on_off, genpd_power_on,
-> +	TP_PROTO(struct generic_pm_domain *genpd),
-> +
-> +	TP_ARGS(genpd)
-> +);
-> +
-> +DEFINE_EVENT(genpd_power_on_off, genpd_power_off,
-> +	TP_PROTO(struct generic_pm_domain *genpd),
-> +
-> +	TP_ARGS(genpd)
-> +);
-> +
-> +TRACE_EVENT(genpd_set_performance_state,
-> +	TP_PROTO(struct generic_pm_domain *genpd),
-> +
-> +	TP_ARGS(genpd),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(name, genpd->name)
-> +		__field(unsigned int, state)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(name, genpd->name);
-> +		__entry->state = genpd->performance_state;
-> +	),
-> +
-> +	TP_printk("name=%s state=%u", __get_str(name), __entry->state)
-> +);
-> +#endif /* CONFIG_PM_GENERIC_DOMAINS */
->  #endif /* _TRACE_POWER_H */
->  
->  /* This part must be outside protection */
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index fc0fe4d4de49..7b5c9d6c8706 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -175,7 +175,8 @@
+ 	(PCIE_CONF_BUS(bus) | PCIE_CONF_DEV(PCI_SLOT(devfn))	| \
+ 	 PCIE_CONF_FUNC(PCI_FUNC(devfn)) | PCIE_CONF_REG(where))
+ 
+-#define PIO_TIMEOUT_MS			1
++#define PIO_RETRY_CNT			500
++#define PIO_RETRY_DELAY			2 /* 2 us*/
+ 
+ #define LINK_WAIT_MAX_RETRIES		10
+ #define LINK_WAIT_USLEEP_MIN		90000
+@@ -383,17 +384,16 @@ static void advk_pcie_check_pio_status(struct advk_pcie *pcie)
+ static int advk_pcie_wait_pio(struct advk_pcie *pcie)
+ {
+ 	struct device *dev = &pcie->pdev->dev;
+-	unsigned long timeout;
++	int i;
+ 
+-	timeout = jiffies + msecs_to_jiffies(PIO_TIMEOUT_MS);
+-
+-	while (time_before(jiffies, timeout)) {
++	for (i = 0; i < PIO_RETRY_CNT; i++) {
+ 		u32 start, isr;
+ 
+ 		start = advk_readl(pcie, PIO_START);
+ 		isr = advk_readl(pcie, PIO_ISR);
+ 		if (!start && isr)
+ 			return 0;
++		udelay(PIO_RETRY_DELAY);
+ 	}
+ 
+ 	dev_err(dev, "config read/write timed out\n");
+-- 
+2.20.1
 
