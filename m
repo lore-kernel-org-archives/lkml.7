@@ -2,123 +2,63 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA1CC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEE6C388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59E21217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F1A8217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:20:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbfI0MSB (ORCPT
+        id S1727521AbfI0MUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 08:18:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49168 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbfI0MSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 08:18:01 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CC55C10DCC9D;
-        Fri, 27 Sep 2019 12:18:00 +0000 (UTC)
-Received: from [10.72.12.24] (ovpn-12-24.pek2.redhat.com [10.72.12.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E731E5D9C9;
-        Fri, 27 Sep 2019 12:17:49 +0000 (UTC)
-Subject: Re: [PATCH] vhost: introduce mdev based hardware backend
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Tiwei Bie <tiwei.bie@intel.com>, alex.williamson@redhat.com,
-        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        lingshan.zhu@intel.com
-References: <20190926045427.4973-1-tiwei.bie@intel.com>
- <20190926042156-mutt-send-email-mst@kernel.org> <20190926131439.GA11652@___>
- <8ab5a8d9-284d-bba5-803d-08523c0814e1@redhat.com>
- <20190927053935-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <a959fe1e-3095-e0f0-0c9b-57f6eaa9c8b7@redhat.com>
-Date:   Fri, 27 Sep 2019 20:17:47 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 27 Sep 2019 08:20:03 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45789 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727180AbfI0MUD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 08:20:03 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iDpE2-0000q1-Ij; Fri, 27 Sep 2019 14:19:54 +0200
+Date:   Fri, 27 Sep 2019 14:19:54 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Scott Wood <swood@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: Re: [PATCH RT 4/8] sched: migrate disable: Protect cpus_ptr with lock
+Message-ID: <20190927121954.3gbzk3i3jbpugrjo@linutronix.de>
+References: <20190727055638.20443-1-swood@redhat.com>
+ <20190727055638.20443-5-swood@redhat.com>
+ <20190926163940.khzhsp3a4h7vj7lw@linutronix.de>
+ <f3b31297df859eb7d1dc86637c29b271fbf87970.camel@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190927053935-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Fri, 27 Sep 2019 12:18:00 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <f3b31297df859eb7d1dc86637c29b271fbf87970.camel@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019-09-26 11:52:42 [-0500], Scott Wood wrote:
+> Looks good, thanks!
 
-On 2019/9/27 下午5:41, Michael S. Tsirkin wrote:
-> On Fri, Sep 27, 2019 at 11:27:12AM +0800, Jason Wang wrote:
->> On 2019/9/26 下午9:14, Tiwei Bie wrote:
->>> On Thu, Sep 26, 2019 at 04:35:18AM -0400, Michael S. Tsirkin wrote:
->>>> On Thu, Sep 26, 2019 at 12:54:27PM +0800, Tiwei Bie wrote:
->>> [...]
->>>>> diff --git a/include/uapi/linux/vhost.h b/include/uapi/linux/vhost.h
->>>>> index 40d028eed645..5afbc2f08fa3 100644
->>>>> --- a/include/uapi/linux/vhost.h
->>>>> +++ b/include/uapi/linux/vhost.h
->>>>> @@ -116,4 +116,12 @@
->>>>>    #define VHOST_VSOCK_SET_GUEST_CID	_IOW(VHOST_VIRTIO, 0x60, __u64)
->>>>>    #define VHOST_VSOCK_SET_RUNNING		_IOW(VHOST_VIRTIO, 0x61, int)
->>>>> +/* VHOST_MDEV specific defines */
->>>>> +
->>>>> +#define VHOST_MDEV_SET_STATE	_IOW(VHOST_VIRTIO, 0x70, __u64)
->>>>> +
->>>>> +#define VHOST_MDEV_S_STOPPED	0
->>>>> +#define VHOST_MDEV_S_RUNNING	1
->>>>> +#define VHOST_MDEV_S_MAX	2
->>>>> +
->>>>>    #endif
->>>> So assuming we have an underlying device that behaves like virtio:
->>> I think they are really good questions/suggestions. Thanks!
->>>
->>>> 1. Should we use SET_STATUS maybe?
->>> I like this idea. I will give it a try.
->>>
->>>> 2. Do we want a reset ioctl?
->>> I think it is helpful. If we use SET_STATUS, maybe we
->>> can use it to support the reset.
->>>
->>>> 3. Do we want ability to enable rings individually?
->>> I will make it possible at least in the vhost layer.
->>
->> Note the API support e.g set_vq_ready().
-> virtio spec calls this "enabled" so let's stick to that.
+Thanks, just released.
+Moving forward. It would be nice to have some DL-dev feedback on DL
+patch. For the remaining once, could please throw Steven's
+stress-test-hostplug-cpu-script? If that one does not complain I don't
+see a reason why not apply the patches (since they improve performance
+and do not break anything while doing so).
 
+> -Scott
 
-Ok.
-
-
->
->>>> 4. Does device need to limit max ring size?
->>>> 5. Does device need to limit max number of queues?
->>> I think so. It's helpful to have ioctls to report the max
->>> ring size and max number of queues.
->>
->> An issue is the max number of queues is done through a device specific way,
->> usually device configuration space. This is supported by the transport API,
->> but how to expose it to userspace may need more thought.
->>
->> Thanks
-> an ioctl for device config?  But for v1 I'd be quite happy to just have
-> a minimal working device with 2 queues.
-
-
-I'm fully agree, and it will work as long as VIRTIO_NET_F_MQ and 
-VIRTIO_NET_F_CTRL_VQ is not advertised by the mdev device.
-
-Thanks
-
-
->
->>> Thanks!
+Sebastian
