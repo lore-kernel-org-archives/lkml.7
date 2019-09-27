@@ -2,127 +2,248 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B612C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE622C388F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 455DC217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:20:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LkvK4hE6"
+	by mail.kernel.org (Postfix) with ESMTP id A549721906
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:24:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569605043;
+	bh=kOcQwmEQ9xS6JuM5wKRAkbCGLPjVlioHTZly03evIbg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bzfNVC8tD5llhwQ+wkqfcGZ2360IoS6ikQI/cB4QD9CNJsKsDaw7lL4Qd1lG4dKEm
+	 mMj/3my4Ly85m4L5TaGo8fv1Xg6LeRm79y7cqSwQjfDQoB6uGRGyr0/IRiYK7WAT6U
+	 MzJ/TL/U1FDNC0U8xeLBmxQ61+1CdVS5rSNGvEjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbfI0RUS (ORCPT
+        id S1727427AbfI0RYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 13:20:18 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40985 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728027AbfI0RUQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 13:20:16 -0400
-Received: by mail-lj1-f196.google.com with SMTP id f5so3240802ljg.8
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 10:20:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=O/eekwhhc/lEaErl1cWQvuZyKqEyMda5rbusW6YMK7I=;
-        b=LkvK4hE626X9t4s92tPCDu4GVP+JW+rdiOHfvNh9N4jF4NJ9fWlvc7td1nIDU+CA3n
-         PEztECpiktmStFqQ0huvXxeFoYFnurGmt4lmEj4thS8is9bkVhtTwcYhaFJXZOE0CtAy
-         FW3A90ZFOAblRyxevEgwyKNwOoEO9RZOQsrxo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O/eekwhhc/lEaErl1cWQvuZyKqEyMda5rbusW6YMK7I=;
-        b=awrjseIMJnG7j7NofpADBXLAFEh+3DVFPWEkvp2AQRjUwWiZrvCSq4tpZDBFH+5ZlJ
-         U5lcu/C/ev2yIaMTA058VmNciILRo8NwGCACh8FOXrJEbww03eQNRtCJtBK4ccsAGxB3
-         RpwGj3xlIgia02KmIapaY5ESHl9URpw7VigaCX7YICaQKCeoT+zf6jGyzeal8JT6SNst
-         EaB92tX5QpReyvX5/Nj2DxZQexhLUTNXVUmtuTHWbIHj9jA+e2AnARBAdHgxzmSKlnqW
-         1wwtq6BkiXkw9VN0toVkg+kPrhnAPfOHEqQP4ALZzhzMJzOnPIZ8vqoHcCwFyqQgBGn8
-         SEDQ==
-X-Gm-Message-State: APjAAAUOUqkRQWZ4VYf0U/tl66hVeQS+hDbJzVmIDlX/ifGbSPkVlgRF
-        SL2w4p+xThugSJ0LpbXGQdpfxTbx42y9/T9YoK0cUQ==
-X-Google-Smtp-Source: APXvYqwQ0sJhbgkRNydnIi4RrSi/dFi7mwr/zU4s+w0Ydcubj32ElrELRy3PvgOlQ56qXz+SBC5iH82TlZ2DYY/65VY=
-X-Received: by 2002:a2e:5d17:: with SMTP id r23mr3716224ljb.229.1569604813845;
- Fri, 27 Sep 2019 10:20:13 -0700 (PDT)
+        Fri, 27 Sep 2019 13:24:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34274 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726033AbfI0RYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 13:24:03 -0400
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C097E21841;
+        Fri, 27 Sep 2019 17:24:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569605042;
+        bh=kOcQwmEQ9xS6JuM5wKRAkbCGLPjVlioHTZly03evIbg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=o1KeKyCXLKiIhi0W2HyrKT1udcB/EdNBMRlwllnZkH81mUwfaeyfjwkX36xShNdMK
+         Is18t8wzgXAd4BvCV9Z6C5GS/GBcTEWIST6xtnV7a3Zr3mIiT3L+Ju50F6shFfy6nA
+         uoDrNty0VLkml7piiE8UJU5F5FAZ4dj9PcrFDZeQ=
+Received: by mail-wr1-f42.google.com with SMTP id i18so4068698wru.11;
+        Fri, 27 Sep 2019 10:24:01 -0700 (PDT)
+X-Gm-Message-State: APjAAAW48DlgofR/Ccr4UBmjeIataAa+hvndl1voWdIkwyVBRPynbO0E
+        lMTaXz5h1HUNhKqCC4T5Mwi9oGtPz3G5RG+cdcA=
+X-Google-Smtp-Source: APXvYqxJRayonoJQXNATMxOzHirLDSfZSpRMI5fITwPjwiSqWk6EGlnMwwczc/mtgEUuDsHx060dSOWyoROYyy2DS24=
+X-Received: by 2002:adf:9083:: with SMTP id i3mr3791325wri.310.1569605040209;
+ Fri, 27 Sep 2019 10:24:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190822205533.4877-1-david.abdurachmanov@sifive.com>
- <alpine.DEB.2.21.9999.1908231717550.25649@viisi.sifive.com>
- <20190826145756.GB4664@cisco> <CAEn-LTrtn01=fp6taBBG_QkfBtgiJyt6oUjZJOi6VN8OeXp6=g@mail.gmail.com>
- <201908261043.08510F5E66@keescook> <alpine.DEB.2.21.9999.1908281825240.13811@viisi.sifive.com>
-In-Reply-To: <alpine.DEB.2.21.9999.1908281825240.13811@viisi.sifive.com>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Fri, 27 Sep 2019 10:20:02 -0700
-Message-ID: <CAJr-aD=UnCN9E_mdVJ2H5nt=6juRSWikZnA5HxDLQxXLbsRz-w@mail.gmail.com>
-Subject: Re: [PATCH v2] riscv: add support for SECCOMP and SECCOMP_FILTER
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     Tycho Andersen <tycho@tycho.ws>,
-        David Abdurachmanov <david.abdurachmanov@gmail.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        David Abdurachmanov <david.abdurachmanov@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        Vincent Chen <vincentc@andestech.com>,
-        Alan Kao <alankao@andestech.com>,
-        linux-riscv@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, me@carlosedp.com
+References: <1569560532-1886-1-git-send-email-light.hsieh@mediatek.com> <1569561287.2428.6.camel@mtkswgap22>
+In-Reply-To: <1569561287.2428.6.camel@mtkswgap22>
+From:   Sean Wang <sean.wang@kernel.org>
+Date:   Fri, 27 Sep 2019 10:23:48 -0700
+X-Gmail-Original-Message-ID: <CAGp9LzpnUK-wq_fStsYnYaqZn8mKMJ+9zJmURpWwEDQHA--EFg@mail.gmail.com>
+Message-ID: <CAGp9LzpnUK-wq_fStsYnYaqZn8mKMJ+9zJmURpWwEDQHA--EFg@mail.gmail.com>
+Subject: Re: [PATCH v6 1/5] pinctrl: mediatek: Check gpio pin number and use
+ binary search in mtk_hw_pin_field_lookup()
+To:     Light Hsieh <light.hsieh@mediatek.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, kuohong.wang@mediatek.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 6:30 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
-> On Mon, 26 Aug 2019, Kees Cook wrote:
+On Thu, Sep 26, 2019 at 10:14 PM Light Hsieh <light.hsieh@mediatek.com> wrote:
 >
-> > On Mon, Aug 26, 2019 at 09:39:50AM -0700, David Abdurachmanov wrote:
-> > > I don't have the a build with SECCOMP for the board right now, so it
-> > > will have to wait. I just finished a new kernel (almost rc6) for Fedora,
+> Dear reviewers:
+>
+> Patch v6 improves v5 by:
+>
+> 1.in mtk_pinconf_get() and mtk_pinconf_set() @pinctrl-paris.c:
+>   * check if pin is in range before using pin as array index of
+>      hw->soc->pins[]
+> 2.in mtk_pin_field_lookup() @pinctrl-mtk-common-v2.c:
+>   * declear start, end, check as signed integer instead of unsigned
+>     integer. Otherwise, kernel fault will occur when s_pin field of
+>     first entry of a mtk_pin_field_calc[] array is not 0.
+>
+
+And for review these patches easily, you should put the changes
+history to the cover letter.
+
+> On Fri, 2019-09-27 at 13:02 +0800, Light Hsieh wrote:
+> > 1. Check if gpio pin number is in valid range to prevent from get invalid
+> >    pointer 'desc' in the following code:
+> >       desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
 > >
-> > FWIW, I don't think this should block landing the code: all the tests
-> > fail without seccomp support. ;) So this patch is an improvement!
+> > 2. Use binary search in mtk_hw_pin_field_lookup()
+> >    Modify mtk_hw_pin_field_lookup() to use binary search for accelerating
+> >    search.
+> >
+
+You almost forgot to add the tags from you and the reviewers' feedback.
+
+> > ---
+> >  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 25 +++++++++++++++++++-----
+> >  drivers/pinctrl/mediatek/pinctrl-paris.c         | 25 ++++++++++++++++++++++++
+> >  2 files changed, 45 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> > index 20e1c89..8077855 100644
+> > --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> > +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+> > @@ -68,7 +68,8 @@ static int mtk_hw_pin_field_lookup(struct mtk_pinctrl *hw,
+> >  {
+> >       const struct mtk_pin_field_calc *c, *e;
+> >       const struct mtk_pin_reg_calc *rc;
+> > -     u32 bits;
+> > +     u32 bits, found = 0;
+
+the type of found seems to be a bool
+
+> > +     int start = 0, end, check;
+> >
+> >       if (hw->soc->reg_cal && hw->soc->reg_cal[field].range) {
+> >               rc = &hw->soc->reg_cal[field];
+> > @@ -79,21 +80,32 @@ static int mtk_hw_pin_field_lookup(struct mtk_pinctrl *hw,
+> >               return -ENOTSUPP;
+> >       }
+> >
+> > +     end = rc->nranges - 1;
+> >       c = rc->range;
+> >       e = c + rc->nranges;
+> >
+> > -     while (c < e) {
+> > -             if (desc->number >= c->s_pin && desc->number <= c->e_pin)
+> > +     while (start <= end) {
+> > +             check = (start + end) >> 1;
+> > +             if (desc->number >= rc->range[check].s_pin
+> > +              && desc->number <= rc->range[check].e_pin) {
+> > +                     found = 1;
+> >                       break;
+> > -             c++;
+> > +             } else if (start == end)
+> > +                     break;
+> > +             else if (desc->number < rc->range[check].s_pin)
+> > +                     end = check - 1;
+> > +             else
+> > +                     start = check + 1;
+> >       }
+> >
+
+yuh, it is good to do do a binary search here
+
+> > -     if (c >= e) {
+> > +     if (!found) {
+> >               dev_dbg(hw->dev, "Not support field %d for pin = %d (%s)\n",
+> >                       field, desc->number, desc->name);
+> >               return -ENOTSUPP;
+> >       }
+> >
+> > +     c = rc->range + check;
+> > +
+> >       if (c->i_base > hw->nbase - 1) {
+> >               dev_err(hw->dev,
+> >                       "Invalid base for field %d for pin = %d (%s)\n",
+> > @@ -182,6 +194,9 @@ int mtk_hw_set_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
+> >       if (err)
+> >               return err;
+> >
+> > +     if (value < 0 || value > pf.mask)
+> > +             return -EINVAL;
+> > +
+> >       if (!pf.next)
+> >               mtk_rmw(hw, pf.index, pf.offset, pf.mask << pf.bitpos,
+> >                       (value & pf.mask) << pf.bitpos);
+> > diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> > index 923264d..3e13ae7 100644
+> > --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
+> > +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> > @@ -81,6 +81,8 @@ static int mtk_pinconf_get(struct pinctrl_dev *pctldev,
+> >       int val, val2, err, reg, ret = 1;
+> >       const struct mtk_pin_desc *desc;
+> >
+> > +     if (pin >= hw->soc->npins)
+> > +             return -EINVAL;
+> >       desc = (const struct mtk_pin_desc *)&hw->soc->pins[pin];
+> >
+> >       switch (param) {
+> > @@ -206,6 +208,10 @@ static int mtk_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+> >       int err = 0;
+> >       u32 reg;
+> >
+> > +     if (pin >= hw->soc->npins) {
+> > +             err = -EINVAL;
+> > +             goto err;
+> > +     }
+> >       desc = (const struct mtk_pin_desc *)&hw->soc->pins[pin];
+> >
+> >       switch ((u32)param) {
+> > @@ -693,6 +699,9 @@ static int mtk_gpio_get_direction(struct gpio_chip *chip, unsigned int gpio)
+> >       const struct mtk_pin_desc *desc;
+> >       int value, err;
+> >
+> > +     if (gpio > hw->soc->npins)
+> > +             return -EINVAL;
+> > +
+> >       desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
+> >
+> >       err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DIR, &value);
+> > @@ -708,6 +717,9 @@ static int mtk_gpio_get(struct gpio_chip *chip, unsigned int gpio)
+> >       const struct mtk_pin_desc *desc;
+> >       int value, err;
+> >
+> > +     if (gpio > hw->soc->npins)
+> > +             return -EINVAL;
+> > +
+> >       desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
+> >
+> >       err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DI, &value);
+> > @@ -722,6 +734,9 @@ static void mtk_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
+> >       struct mtk_pinctrl *hw = gpiochip_get_data(chip);
+> >       const struct mtk_pin_desc *desc;
+> >
+> > +     if (gpio > hw->soc->npins)
+> > +             return;
+> > +
+> >       desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
+> >
+> >       mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DO, !!value);
+> > @@ -729,12 +744,22 @@ static void mtk_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
+> >
+> >  static int mtk_gpio_direction_input(struct gpio_chip *chip, unsigned int gpio)
+> >  {
+> > +     struct mtk_pinctrl *hw = gpiochip_get_data(chip);
+> > +
+> > +     if (gpio > hw->soc->npins)
+> > +             return -EINVAL;
+> > +
+> >       return pinctrl_gpio_direction_input(chip->base + gpio);
+> >  }
+> >
+> >  static int mtk_gpio_direction_output(struct gpio_chip *chip, unsigned int gpio,
+> >                                    int value)
+> >  {
+> > +     struct mtk_pinctrl *hw = gpiochip_get_data(chip);
+> > +
+> > +     if (gpio > hw->soc->npins)
+> > +             return -EINVAL;
+> > +
+> >       mtk_gpio_set(chip, gpio, value);
+> >
+> >       return pinctrl_gpio_direction_output(chip->base + gpio);
 >
-> Am sympathetic to this -- we did it with the hugetlb patches for RISC-V --
-> but it would be good to understand a little bit more about why the test
-> fails before we merge it.
-
-The test is almost certainly failing due to the environmental
-requirements (i.e. namespaces, user ids, etc). There are some corner
-cases in there that we've had to fix in the past. If the other tests
-are passing, then I would expect all the seccomp internals are fine --
-it's just the case being weird. It's just a matter of figuring out
-what state the test environment is in so we can cover that corner case
-too.
-
-> Once we merge the patch, it will probably reduce the motivation for others
-> to either understand and fix the underlying problem with the RISC-V code
-> -- or, if it truly is a flaky test, to drop (or fix) the test in the
-> seccomp_bpf kselftests.
-
-Sure, I get that point -- but I don't want to block seccomp landing
-for riscv for that. I suggested to David offlist that the test could
-just be marked with a FIXME XFAIL on riscv and once someone's in a
-better position to reproduce it we can fix it. (I think the test bug
-is almost certainly not riscv specific, but just some missing
-requirement that we aren't handling correctly.)
-
-How does that sound?
-
--Kees
+>
