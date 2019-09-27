@@ -2,88 +2,70 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D39C9C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2A5C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3104205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:21:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LReyqP23"
+	by mail.kernel.org (Postfix) with ESMTP id 096A821655
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:25:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569612326;
+	bh=IZr2QazcdgofARbHt+cPZkuALRzj7ItO4YgN7ly57i4=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=nr6cQOH4dNCjt3PnxRvJWKbwg/DXfoQAOQG5dnnvl2mv5tXCanIz4pe94sm72hrZ2
+	 Q8laKm2x1OD10iBYbezSIz81bgitwmHbB54FVa+SnAgoPDHKJUPbMG8A2HoO64zzj5
+	 Vsf+XBL0S20ZUFyBvWzs9P7wcXXFq67dOh4IJodg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbfI0TVi (ORCPT
+        id S1726395AbfI0TZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 15:21:38 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:39104 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbfI0TVi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 15:21:38 -0400
-Received: by mail-lf1-f68.google.com with SMTP id 72so2726768lfh.6;
-        Fri, 27 Sep 2019 12:21:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NRtadYP5nbR/QB1gCSx1xAuVyFcnYFdMokbHypTtJuw=;
-        b=LReyqP239776XbWD2hbJq4Birvcg+ZyJd4AghLDcY9N1brxOImICcGYaMllKctg9A2
-         kZF1IGf+ZF8Fq7QmXS7hweLNBrQ/Iva1pX/FjA0u4H1piO4wbCpL91mzd14/4CSf7wSA
-         t81XxzhWvL0KPav4DvJZmVFQKCDr0Qji9bdgt7qh9q/TnbaCI8ANC2F4DAXjUks14PA9
-         yaQDIrvV0f91jTZqZB/IugWgo6OV0MBJZmq4zo3sOtOyIrf0CiisM97TZLf7nCaZqdE9
-         vrmqv/HjaWTYJuusCRErz76JblJSnswhR0GmQCq/ar/GV34EuenMb6AIVjKHjqHBGPDj
-         zwzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NRtadYP5nbR/QB1gCSx1xAuVyFcnYFdMokbHypTtJuw=;
-        b=ebY0KN57EwWFqet+dAO+Bp9+Jhx+B23ZrH65k2kp/xYgogc1FYPyJrGsTZQkTamN03
-         mwO660eBg05n5u3O/99KRNZxmdwyd26LkSAt3JP6bO8Q3SfbMovyxtMpUtfHZzvgnI4Y
-         DdloGtlfVLR6AppAab9xBP0MtoHF4HR9VIETtf9TqAGmQiqgJsaQO5imlU2fnZIzdSK4
-         C329VzUeXo9oFKJAf4WdwzctXxo+A4rTJcOpp0+KNNrjbq6Y7UmpGpp7Xw/VpvnMJFfZ
-         NpTFJTFQKn5r+yJ5KFmTrwCA92jx0AEz/PrOtjvFZkKLliLUEjuZ+xgk6b+NxUQHoo9f
-         STmA==
-X-Gm-Message-State: APjAAAVXP+0cBz0iVQXwX/Fdv4miCccFtSe5V0GzZZsbOCC4U5DCYyM4
-        +PBylRQ3U0fo1Ub4Ix7Gyb4hQ1PXZDoNgbMPH0A=
-X-Google-Smtp-Source: APXvYqyGetNw8QB/cCEgUgX9QGK1q9E3QJdvmyT5x9eyUvu6MgVyKYnXCepxs0WWTUxJxzT+0Mmec35MAjwTHuknFH0=
-X-Received: by 2002:ac2:5091:: with SMTP id f17mr3917135lfm.107.1569612095980;
- Fri, 27 Sep 2019 12:21:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190827215539.1286-1-mmichilot@gateworks.com>
- <cb3e9be4-9ce6-354f-bb7c-a4710edc1c1b@xs4all.nl> <20190829142931.GZ28351@bigcity.dyn.berto.se>
- <CAJ+vNU11HTcP8L5J2Xg+Rmhvb8JDYemhJxt-GaGG5Myk3n38Tw@mail.gmail.com>
-In-Reply-To: <CAJ+vNU11HTcP8L5J2Xg+Rmhvb8JDYemhJxt-GaGG5Myk3n38Tw@mail.gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Fri, 27 Sep 2019 16:21:48 -0300
-Message-ID: <CAOMZO5AwSO8BjpmcFMT-70Xot45D2SYZ7QHRgNSmU0o+PXCyXg@mail.gmail.com>
-Subject: Re: [PATCH] media: i2c: adv7180: fix adv7280 BT.656-4 compatibility
-To:     Tim Harvey <tharvey@gateworks.com>
-Cc:     =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Matthew Michilot <matthew.michilot@gmail.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 27 Sep 2019 15:25:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45238 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725789AbfI0TZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 15:25:25 -0400
+Subject: Re: [GIT PULL] pwm: Changes for v5.4-rc1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569612324;
+        bh=IZr2QazcdgofARbHt+cPZkuALRzj7ItO4YgN7ly57i4=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=ifQTJ7LQDSPft1zOeSuor/9EPBQqWG6pkEbPF9ml8uXK1zJA/w9/HnAL1U18ORY1O
+         iqTmviwykPw1oLDrQ05X0frudxM6V34ox0JCAn/9sjeNg/3SIpS1Jiur0LBhtKcrwJ
+         JSch5fF1nFMQpg0NmGUblcoLjvxtTjR5YVRRIL/c=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190927163104.1456471-1-thierry.reding@gmail.com>
+References: <20190927163104.1456471-1-thierry.reding@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190927163104.1456471-1-thierry.reding@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git
+ tags/pwm/for-5.4-rc1
+X-PR-Tracked-Commit-Id: da635e7abe3f4ec9a8270ca4f5ba946d1a43f678
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: e37e3bc7e265d05d00f14079767537699cf6bd46
+Message-Id: <156961232440.19941.3044215477937173311.pr-tracker-bot@kernel.org>
+Date:   Fri, 27 Sep 2019 19:25:24 +0000
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tim,
+The pull request you sent on Fri, 27 Sep 2019 18:31:04 +0200:
 
-On Wed, Sep 25, 2019 at 9:22 PM Tim Harvey <tharvey@gateworks.com> wrote:
+> git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.4-rc1
 
-> Have you looked at this yet? Without this patch the ADV7280A does not
-> output proper BT.656. We tested this on a Gateworks Ventana GW5404-G
-> which uses the ADV7280A connected to the IMX6 CSI parallel bus. I'm
-> hoping to see this get merged and perhaps backported to older kernels.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/e37e3bc7e265d05d00f14079767537699cf6bd46
 
-In order to be backported to older kernels, please add a Fixes tag.
+Thank you!
 
-Thanks
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
