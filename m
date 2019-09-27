@@ -2,100 +2,69 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B18AC388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D3A8C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56C4A21D7A
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC16921850
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:15:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569615054;
-	bh=b7udfW27kUSAKzBz/klbWlqHmts0w2AZWPzY+ISPsnU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DXkccDMSQ3wpMxmiW6qu4DyzBWs4mb9HxOUfMvDx6LaT5VpA0totvc8KShpdI//Xp
-	 kyf4JS1vdLVMZwhJUS92Ino+Q+1Q0ERL23XSdQ/rnU1hGgxu/E6UASGPMQgB/sVK5G
-	 1bkAh1DbGboWphOGjs5vLRRJdSF9nDXQgTlnntSM=
+	s=default; t=1569615324;
+	bh=QBO3i0U9u0yvcgtO62IvhaCFPAA9RqQLsM6h9oR7iBE=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=MLOc4WSLB+QtzgIfhEn1k88s6RwThNEemDCEGA1P1gQTSMJNpGJNHAE9rEkmw+V1+
+	 GF8b4vXAB9GxS7r8q2LBzJsFjhn4yIqPH7twzf0yZBI6F3xJCDhe23CEbM0sLpcnBa
+	 L05HnKLh7DdYqBGV9Vijr9xCViSjSwoU6i0p8Nfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbfI0UKx (ORCPT
+        id S1728193AbfI0UPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 16:10:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37586 "EHLO mail.kernel.org"
+        Fri, 27 Sep 2019 16:15:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbfI0UKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 16:10:53 -0400
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B693321655;
-        Fri, 27 Sep 2019 20:10:48 +0000 (UTC)
+        id S1727093AbfI0UPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 16:15:22 -0400
+Subject: Re: [GIT PULL] arch/nios2 update for v5.4
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569615048;
-        bh=b7udfW27kUSAKzBz/klbWlqHmts0w2AZWPzY+ISPsnU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CHnc0vRGRCkhh6nfZRCObkOauHnm908L8O4k82Ewh33NujxymLEmDc2uRZj1FOI+O
-         br/tBVj0/IipUySKwpM0V2oHoaP+UU9KGRbNaeEFxDhY+wRlQSxdmYXYxrA6vSqpt+
-         FtBQtbLt5MFvnEY6w7vnWSi0OAGQ+5DJaO3QnBtk=
-Received: by mail-qk1-f172.google.com with SMTP id p10so2997286qkg.8;
-        Fri, 27 Sep 2019 13:10:48 -0700 (PDT)
-X-Gm-Message-State: APjAAAW96wR6EZ7lMBCYQS93AXAryHqxgQ9COITAdwAeHDJA3CB+GNNG
-        HzMCKemnB62YRZN4Wwj4rYoLscaJy6fgflvbSA==
-X-Google-Smtp-Source: APXvYqxKy/HEii2/OoHYOAb41fJRQion1dSlPGS5FdM1aP8Lr6iCqSO+cRGGzikOzCqBYhvNXRHDJuLbTpEBmBQ5OGI=
-X-Received: by 2002:a05:620a:7da:: with SMTP id 26mr6292676qkb.119.1569615047714;
- Fri, 27 Sep 2019 13:10:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <1569411888-98116-1-git-send-email-jian.hu@amlogic.com> <1569411888-98116-2-git-send-email-jian.hu@amlogic.com>
-In-Reply-To: <1569411888-98116-2-git-send-email-jian.hu@amlogic.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 27 Sep 2019 15:10:36 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqL8r-8J_bSaQax3cJkOUL8D7P+6_PcCqaC1k8=zS18moQ@mail.gmail.com>
-Message-ID: <CAL_JsqL8r-8J_bSaQax3cJkOUL8D7P+6_PcCqaC1k8=zS18moQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: clock: meson: add A1 clock controller bindings
-To:     Jian Hu <jian.hu@amlogic.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        devicetree@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        s=default; t=1569615322;
+        bh=QBO3i0U9u0yvcgtO62IvhaCFPAA9RqQLsM6h9oR7iBE=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=FWEI4jHdeqHWvAcOrgKwaNAyXoAbyRmZrB+KuR8TjU4O44SwLjrFR6nyuIlNueUbz
+         2dsgcSIcq4ZpFUE27Pql52fiWJFnJBZ4ql9Hyf3lBgcUf+lEjYLEtIYM4M1hSjU8xp
+         4n/VNIi67eSAvTn8sdgjaurerv/N969co/SaFKfQ=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <1569574252.9826.4.camel@intel.com>
+References: <1569574252.9826.4.camel@intel.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <1569574252.9826.4.camel@intel.com>
+X-PR-Tracked-Remote: (unable to parse the git remote)
+X-PR-Tracked-Commit-Id: 91d99a724e9c60e14332c26ab2284bf696b94c8e
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 70570a6418be2bd28be30fda700e57a81df7282b
+Message-Id: <156961532241.31800.5944226627488244545.pr-tracker-bot@kernel.org>
+Date:   Fri, 27 Sep 2019 20:15:22 +0000
+To:     Ley Foon Tan <ley.foon.tan@intel.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "lftan.linux@gmail.com" <lftan.linux@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 6:45 AM Jian Hu <jian.hu@amlogic.com> wrote:
->
-> Add the documentation to support Amlogic A1 clock driver,
-> and add A1 clock controller bindings.
->
-> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
-> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-> ---
->  .../devicetree/bindings/clock/amlogic,a1-clkc.yaml |  65 +++++++++++++
->  include/dt-bindings/clock/a1-clkc.h                | 102 +++++++++++++++++++++
->  2 files changed, 167 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
->  create mode 100644 include/dt-bindings/clock/a1-clkc.h
->
-> diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
-> new file mode 100644
-> index 0000000..f012eb2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
-> @@ -0,0 +1,65 @@
-> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+The pull request you sent on Fri, 27 Sep 2019 16:50:52 +0800:
 
-(GPL-2.0-only OR BSD-2-Clause) please.
+> (unable to parse the git remote)
 
-Rob
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/70570a6418be2bd28be30fda700e57a81df7282b
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
