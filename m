@@ -2,300 +2,144 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E887BC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 10:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7A7C32774
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 10:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE736207E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 10:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2176A207E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 10:20:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="lHF9+y0r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbfI0KQW (ORCPT
+        id S1726695AbfI0KUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 06:16:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56926 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727314AbfI0KPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 06:15:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D8CCBAE99;
-        Fri, 27 Sep 2019 10:14:54 +0000 (UTC)
-From:   Benjamin Poirier <bpoirier@suse.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
-        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 02/17] staging: qlge: Remove irq_cnt
-Date:   Fri, 27 Sep 2019 19:11:56 +0900
-Message-Id: <20190927101210.23856-3-bpoirier@suse.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190927101210.23856-1-bpoirier@suse.com>
-References: <20190927101210.23856-1-bpoirier@suse.com>
+        Fri, 27 Sep 2019 06:20:16 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:60750 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726087AbfI0KUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 06:20:15 -0400
+Received: from zn.tnic (p200300EC2F0ABB00FD8B4CEC558476E8.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:bb00:fd8b:4cec:5584:76e8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A912B1EC0716;
+        Fri, 27 Sep 2019 12:20:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1569579613;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=bvEi6n7NBCi367l5LS3E1JRtEJOQ/n+3qud74Zlw/UE=;
+        b=lHF9+y0rrasRNBd/VkCcTfZRIDvyTjicJg4FTtoJK8P7TrcZkiWpj19o2SXJr16Hxal5QW
+        SVV/hOoPRXF10iYdd3dWsW5Rov75YCocjgpOoaXHgK66pHHYQ884I+PrJIZErdk0ecHtIp
+        jr6F/Gq+AmwkBWtYMOo/g7WaqSvW/2s=
+Date:   Fri, 27 Sep 2019 12:20:13 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com
+Subject: Re: [PATCH v22 05/24] x86/sgx: Add ENCLS architectural error codes
+Message-ID: <20190927102013.GA23002@zn.tnic>
+References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
+ <20190903142655.21943-6-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190903142655.21943-6-jarkko.sakkinen@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-qlge uses an irq enable/disable refcounting scheme that is:
-* poorly implemented
-	Uses a spin_lock to protect accesses to the irq_cnt atomic
-	variable.
-* buggy
-	Breaks when there is not a 1:1 sequence of irq - napi_poll, such as
-	when using SO_BUSY_POLL.
-* unnecessary
-	The purpose or irq_cnt is to reduce irq control writes when
-	multiple work items result from one irq: the irq is re-enabled
-	after all work is done.
-	Analysis of the irq handler shows that there is only one case where
-	there might be two workers scheduled at once, and those have
-	separate irq masking bits.
+On Tue, Sep 03, 2019 at 05:26:36PM +0300, Jarkko Sakkinen wrote:
+> Document ENCLS architectural error codes. These error codes are returned by
+> the SGX opcodes. Make the header as part of the uapi so that they can be
+> used in some situations directly returned to the user space (ENCLS[EINIT]
+> leaf function error codes could be one potential use case).
+> 
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/include/uapi/asm/sgx_errno.h | 91 +++++++++++++++++++++++++++
+>  1 file changed, 91 insertions(+)
+>  create mode 100644 arch/x86/include/uapi/asm/sgx_errno.h
+> 
+> diff --git a/arch/x86/include/uapi/asm/sgx_errno.h b/arch/x86/include/uapi/asm/sgx_errno.h
+> new file mode 100644
+> index 000000000000..48b87aed58d7
+> --- /dev/null
+> +++ b/arch/x86/include/uapi/asm/sgx_errno.h
+> @@ -0,0 +1,91 @@
+> +/* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
+> +/*
+> + * Copyright(c) 2018 Intel Corporation.
+> + *
+> + * Contains the architecturally defined error codes that are returned by SGX
+> + * instructions, e.g. ENCLS, and may be propagated to userspace via errno.
+> + */
+> +
+> +#ifndef _UAPI_ASM_X86_SGX_ERRNO_H
+> +#define _UAPI_ASM_X86_SGX_ERRNO_H
+> +
+> +/**
+> + * enum sgx_encls_leaves - return codes for ENCLS, ENCLU and ENCLV
+> + * %SGX_SUCCESS:		No error.
+> + * %SGX_INVALID_SIG_STRUCT:	SIGSTRUCT contains an invalid value.
+> + * %SGX_INVALID_ATTRIBUTE:	Enclave is not attempting to access a resource
 
-Therefore, remove irq_cnt.
+That first "not" looks wrong.
 
-Additionally, we get a performance improvement:
-perf stat -e cycles -a -r5 super_netperf 100 -H 192.168.33.1 -t TCP_RR
+> + *				for which it is not authorized.
+> + * %SGX_BLKSTATE:		EPC page is already blocked.
+> + * %SGX_INVALID_MEASUREMENT:	SIGSTRUCT or EINITTOKEN contains an incorrect
+> + *				measurement.
+> + * %SGX_NOTBLOCKABLE:		EPC page type is not one which can be blocked.
+> + * %SGX_PG_INVLD:		EPC page is invalid (and cannot be blocked).
+> + * %SGX_EPC_PAGE_CONFLICT:	EPC page in use by another SGX instruction.
+> + * %SGX_INVALID_SIGNATURE:	Enclave's signature does not validate with
+> + *				public key enclosed in SIGSTRUCT.
+> + * %SGX_MAC_COMPARE_FAIL:	MAC check failed when reloading EPC page.
+> + * %SGX_PAGE_NOT_BLOCKED:	EPC page is not marked as blocked.
+> + * %SGX_NOT_TRACKED:		ETRACK has not been completed on the EPC page.
+> + * %SGX_VA_SLOT_OCCUPIED:	Version array slot contains a valid entry.
+> + * %SGX_CHILD_PRESENT:		Enclave has child pages present in the EPC.
+> + * %SGX_ENCLAVE_ACT:		Logical processors are currently executing
+> + *				inside the enclave.
+> + * %SGX_ENTRYEPOCH_LOCKED:	SECS locked for EPOCH update, i.e. an ETRACK is
+> + *				currently executing on the SECS.
+> + * %SGX_INVALID_EINITTOKEN:	EINITTOKEN is invalid and enclave signer's
+> + *				public key does not match IA32_SGXLEPUBKEYHASH.
+> + * %SGX_PREV_TRK_INCMPL:	All processors did not complete the previous
+> + *				tracking sequence.
+> + * %SGX_PG_IS_SECS:		Target EPC page is an SECS and cannot be
+> + *				blocked.
+> + * %SGX_PAGE_ATTRIBUTES_MISMATCH:	Attributes of the EPC page do not match
+> + *					the expected values.
 
-Before:
-628560
-628056
-622103
-622744
-627202
-[...]
-   268,803,947,669      cycles                 ( +-  0.09% )
+You sometimes call it "PG" and sometimes "PAGE". Unify?
 
-After:
-636300
-634106
-634984
-638555
-634188
-[...]
-   259,237,291,449      cycles                 ( +-  0.19% )
+> + * %SGX_PAGE_NOT_MODIFIABLE:	EPC page cannot be modified because it is in
+> + *				the PENDING or MODIFIED state.
+> + * %SGX_PAGE_NOT_DEBUGGABLE:	EPC page cannot be modified because it is in
+> + *				the PENDING or MODIFIED state.
 
-Signed-off-by: Benjamin Poirier <bpoirier@suse.com>
----
- drivers/staging/qlge/qlge.h      |  7 ---
- drivers/staging/qlge/qlge_main.c | 98 +++++++++-----------------------
- drivers/staging/qlge/qlge_mpi.c  |  1 -
- 3 files changed, 27 insertions(+), 79 deletions(-)
+Same description text?
 
-diff --git a/drivers/staging/qlge/qlge.h b/drivers/staging/qlge/qlge.h
-index ad7c5eb8a3b6..5d9a36deda08 100644
---- a/drivers/staging/qlge/qlge.h
-+++ b/drivers/staging/qlge/qlge.h
-@@ -1982,11 +1982,6 @@ struct intr_context {
- 	u32 intr_dis_mask;	/* value/mask used to disable this intr */
- 	u32 intr_read_mask;	/* value/mask used to read this intr */
- 	char name[IFNAMSIZ * 2];
--	atomic_t irq_cnt;	/* irq_cnt is used in single vector
--				 * environment.  It's incremented for each
--				 * irq handler that is scheduled.  When each
--				 * handler finishes it decrements irq_cnt and
--				 * enables interrupts if it's zero. */
- 	irq_handler_t handler;
- };
- 
-@@ -2074,7 +2069,6 @@ struct ql_adapter {
- 	u32 port;		/* Port number this adapter */
- 
- 	spinlock_t adapter_lock;
--	spinlock_t hw_lock;
- 	spinlock_t stats_lock;
- 
- 	/* PCI Bus Relative Register Addresses */
-@@ -2235,7 +2229,6 @@ void ql_mpi_reset_work(struct work_struct *work);
- void ql_mpi_core_to_log(struct work_struct *work);
- int ql_wait_reg_rdy(struct ql_adapter *qdev, u32 reg, u32 bit, u32 ebit);
- void ql_queue_asic_error(struct ql_adapter *qdev);
--u32 ql_enable_completion_interrupt(struct ql_adapter *qdev, u32 intr);
- void ql_set_ethtool_ops(struct net_device *ndev);
- int ql_read_xgmac_reg64(struct ql_adapter *qdev, u32 reg, u64 *data);
- void ql_mpi_idc_work(struct work_struct *work);
-diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
-index d7b64d360ea8..7a8d6390d5de 100644
---- a/drivers/staging/qlge/qlge_main.c
-+++ b/drivers/staging/qlge/qlge_main.c
-@@ -625,75 +625,26 @@ static void ql_disable_interrupts(struct ql_adapter *qdev)
- 	ql_write32(qdev, INTR_EN, (INTR_EN_EI << 16));
- }
- 
--/* If we're running with multiple MSI-X vectors then we enable on the fly.
-- * Otherwise, we may have multiple outstanding workers and don't want to
-- * enable until the last one finishes. In this case, the irq_cnt gets
-- * incremented every time we queue a worker and decremented every time
-- * a worker finishes.  Once it hits zero we enable the interrupt.
-- */
--u32 ql_enable_completion_interrupt(struct ql_adapter *qdev, u32 intr)
-+static void ql_enable_completion_interrupt(struct ql_adapter *qdev, u32 intr)
- {
--	u32 var = 0;
--	unsigned long hw_flags = 0;
--	struct intr_context *ctx = qdev->intr_context + intr;
--
--	if (likely(test_bit(QL_MSIX_ENABLED, &qdev->flags) && intr)) {
--		/* Always enable if we're MSIX multi interrupts and
--		 * it's not the default (zeroeth) interrupt.
--		 */
--		ql_write32(qdev, INTR_EN,
--			   ctx->intr_en_mask);
--		var = ql_read32(qdev, STS);
--		return var;
--	}
-+	struct intr_context *ctx = &qdev->intr_context[intr];
- 
--	spin_lock_irqsave(&qdev->hw_lock, hw_flags);
--	if (atomic_dec_and_test(&ctx->irq_cnt)) {
--		ql_write32(qdev, INTR_EN,
--			   ctx->intr_en_mask);
--		var = ql_read32(qdev, STS);
--	}
--	spin_unlock_irqrestore(&qdev->hw_lock, hw_flags);
--	return var;
-+	ql_write32(qdev, INTR_EN, ctx->intr_en_mask);
- }
- 
--static u32 ql_disable_completion_interrupt(struct ql_adapter *qdev, u32 intr)
-+static void ql_disable_completion_interrupt(struct ql_adapter *qdev, u32 intr)
- {
--	u32 var = 0;
--	struct intr_context *ctx;
-+	struct intr_context *ctx = &qdev->intr_context[intr];
- 
--	/* HW disables for us if we're MSIX multi interrupts and
--	 * it's not the default (zeroeth) interrupt.
--	 */
--	if (likely(test_bit(QL_MSIX_ENABLED, &qdev->flags) && intr))
--		return 0;
--
--	ctx = qdev->intr_context + intr;
--	spin_lock(&qdev->hw_lock);
--	if (!atomic_read(&ctx->irq_cnt)) {
--		ql_write32(qdev, INTR_EN,
--		ctx->intr_dis_mask);
--		var = ql_read32(qdev, STS);
--	}
--	atomic_inc(&ctx->irq_cnt);
--	spin_unlock(&qdev->hw_lock);
--	return var;
-+	ql_write32(qdev, INTR_EN, ctx->intr_dis_mask);
- }
- 
- static void ql_enable_all_completion_interrupts(struct ql_adapter *qdev)
- {
- 	int i;
--	for (i = 0; i < qdev->intr_count; i++) {
--		/* The enable call does a atomic_dec_and_test
--		 * and enables only if the result is zero.
--		 * So we precharge it here.
--		 */
--		if (unlikely(!test_bit(QL_MSIX_ENABLED, &qdev->flags) ||
--			i == 0))
--			atomic_set(&qdev->intr_context[i].irq_cnt, 1);
--		ql_enable_completion_interrupt(qdev, i);
--	}
- 
-+	for (i = 0; i < qdev->intr_count; i++)
-+		ql_enable_completion_interrupt(qdev, i);
- }
- 
- static int ql_validate_flash(struct ql_adapter *qdev, u32 size, const char *str)
-@@ -2500,21 +2451,22 @@ static irqreturn_t qlge_isr(int irq, void *dev_id)
- 	u32 var;
- 	int work_done = 0;
- 
--	spin_lock(&qdev->hw_lock);
--	if (atomic_read(&qdev->intr_context[0].irq_cnt)) {
--		netif_printk(qdev, intr, KERN_DEBUG, qdev->ndev,
--			     "Shared Interrupt, Not ours!\n");
--		spin_unlock(&qdev->hw_lock);
--		return IRQ_NONE;
--	}
--	spin_unlock(&qdev->hw_lock);
-+	/* Experience shows that when using INTx interrupts, interrupts must
-+	 * be masked manually.
-+	 * When using MSI mode, INTR_EN_EN must be explicitly disabled
-+	 * (even though it is auto-masked), otherwise a later command to
-+	 * enable it is not effective.
-+	 */
-+	if (!test_bit(QL_MSIX_ENABLED, &qdev->flags))
-+		ql_disable_completion_interrupt(qdev, 0);
- 
--	var = ql_disable_completion_interrupt(qdev, intr_context->intr);
-+	var = ql_read32(qdev, STS);
- 
- 	/*
- 	 * Check for fatal error.
- 	 */
- 	if (var & STS_FE) {
-+		ql_disable_completion_interrupt(qdev, 0);
- 		ql_queue_asic_error(qdev);
- 		netdev_err(qdev->ndev, "Got fatal error, STS = %x.\n", var);
- 		var = ql_read32(qdev, ERR_STS);
-@@ -2534,7 +2486,6 @@ static irqreturn_t qlge_isr(int irq, void *dev_id)
- 		 */
- 		netif_err(qdev, intr, qdev->ndev,
- 			  "Got MPI processor interrupt.\n");
--		ql_disable_completion_interrupt(qdev, intr_context->intr);
- 		ql_write32(qdev, INTR_MASK, (INTR_MASK_PI << 16));
- 		queue_delayed_work_on(smp_processor_id(),
- 				qdev->workqueue, &qdev->mpi_work, 0);
-@@ -2550,11 +2501,18 @@ static irqreturn_t qlge_isr(int irq, void *dev_id)
- 	if (var & intr_context->irq_mask) {
- 		netif_info(qdev, intr, qdev->ndev,
- 			   "Waking handler for rx_ring[0].\n");
--		ql_disable_completion_interrupt(qdev, intr_context->intr);
- 		napi_schedule(&rx_ring->napi);
- 		work_done++;
-+	} else {
-+		/* Experience shows that the device sometimes signals an
-+		 * interrupt but no work is scheduled from this function.
-+		 * Nevertheless, the interrupt is auto-masked. Therefore, we
-+		 * systematically re-enable the interrupt if we didn't
-+		 * schedule napi.
-+		 */
-+		ql_enable_completion_interrupt(qdev, 0);
- 	}
--	ql_enable_completion_interrupt(qdev, intr_context->intr);
-+
- 	return work_done ? IRQ_HANDLED : IRQ_NONE;
- }
- 
-@@ -3568,7 +3526,6 @@ static int ql_request_irq(struct ql_adapter *qdev)
- 	ql_resolve_queues_to_irqs(qdev);
- 
- 	for (i = 0; i < qdev->intr_count; i++, intr_context++) {
--		atomic_set(&intr_context->irq_cnt, 0);
- 		if (test_bit(QL_MSIX_ENABLED, &qdev->flags)) {
- 			status = request_irq(qdev->msi_x_entry[i].vector,
- 					     intr_context->handler,
-@@ -4653,7 +4610,6 @@ static int ql_init_device(struct pci_dev *pdev, struct net_device *ndev,
- 		goto err_out2;
- 	}
- 	qdev->msg_enable = netif_msg_init(debug, default_msg);
--	spin_lock_init(&qdev->hw_lock);
- 	spin_lock_init(&qdev->stats_lock);
- 
- 	if (qlge_mpi_coredump) {
-diff --git a/drivers/staging/qlge/qlge_mpi.c b/drivers/staging/qlge/qlge_mpi.c
-index 957c72985a06..9e422bbbb6ab 100644
---- a/drivers/staging/qlge/qlge_mpi.c
-+++ b/drivers/staging/qlge/qlge_mpi.c
-@@ -1257,7 +1257,6 @@ void ql_mpi_work(struct work_struct *work)
- 	/* End polled mode for MPI */
- 	ql_write32(qdev, INTR_MASK, (INTR_MASK_PI << 16) | INTR_MASK_PI);
- 	mutex_unlock(&qdev->mpi_mutex);
--	ql_enable_completion_interrupt(qdev, 0);
- }
- 
- void ql_mpi_reset_work(struct work_struct *work)
+...
+
 -- 
-2.23.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
