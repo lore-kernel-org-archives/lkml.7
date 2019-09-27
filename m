@@ -2,173 +2,149 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CE2C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41289C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 143DB21655
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:23:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569608594;
-	bh=QmIrLu1ZEoTTqq19qhZ6zTmBIedmVUIt2HJXrld3w/4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DOek8gkO0sO5TXfOiYNkHY3bl2p7bBbcPn1BHaxuI7tJguItdQ6ltH8Yo/ioC8xIm
-	 cXgLZ+oviTg5sOS2gH8hBFneOM+TyO1Lbb/7u2br9ipnekhwqtMER5eFHq5sp0iEVT
-	 DH2N3K2dfV6lqNTuIGni/mz0qSjh5FswolJ+rZKA=
+	by mail.kernel.org (Postfix) with ESMTP id 0CE4A21655
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:25:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="S9o1BssE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728151AbfI0SXN (ORCPT
+        id S1728135AbfI0SZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 14:23:13 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33983 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727243AbfI0SXM (ORCPT
+        Fri, 27 Sep 2019 14:25:17 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41272 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbfI0SZR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 14:23:12 -0400
-Received: by mail-pg1-f196.google.com with SMTP id y35so3946462pgl.1
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 11:23:11 -0700 (PDT)
+        Fri, 27 Sep 2019 14:25:17 -0400
+Received: by mail-wr1-f66.google.com with SMTP id h7so4268303wrw.8
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 11:25:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
+        bh=ILyYK/RyFSznwVzkPBcKhiT8HPwbfb9Jo/boI1cizIU=;
+        b=S9o1BssEg46wqpVTRWJVH0DuDQdCRBiTBnhb600zFmYBhAWiIfq3By9eUgU6SbMKd0
+         /pnnnBkVUSxgg5JjB9Ska3G7vmvzp1dmUHbhNedoqPE3K8ndqDP8U0qJqzjH12s4qy4u
+         8XqdZtvI5xHKroydSrGjBVqTHl5EOltqb3ioXGj1TH4DqwxK8NNo8X2uhHjpfTnDLVOW
+         n4aYTst7l9b0R4vgxGmlh972Y/TyRH5xy7ZhT/YCyHBCqqlyI0u6gnU+oqja1lwnRuZg
+         6+oRwQBY2XbCnJJK43B3G2n8OwxDIDBQRAIITZB6OJizVRy11WO7XfQUcRiZ6e6vPiK5
+         L1Cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oDBtpY1GQLpL/JR+SFoGIBX4Y29kVVG5vEdX0iccMk8=;
-        b=EplLOykmIYJ5r8AfBfQCNMof2KYuxTuuU9hKZhcBIKjp+FBiFlMOoSHE5JS/2h8SG6
-         mYpSd8KxDU1jUfu2M2HZrv9oJ2pfxsOwkc9TyIRgXL2UszUIWNTlEP2lmH1iF+8eIYNQ
-         NBRCww3EN9ap+CKHwwQ08fr3tvys2NvBOVoX1CIYCp06jMgHUKrZDnY4Ka1NGzthsBFb
-         pw7qWCh/A/lnYg1wOmFie+1MmHV5uJZQ39T3EgTY7QrTxoNQh/v6WB1IP/sBaDtps2Zr
-         NrUUyvj55N3FIXOtxUdLwg6aTrVQt+CV3AZn/6ani1f1eg6NLDcTFg+ikRd3k6g0185p
-         QUOA==
-X-Gm-Message-State: APjAAAVkoc8R5ebMH0ZvmGdPhuH106j9VFjoOaag2ZPJknDBWB3eOu/C
-        S7TPsq+Xd7nCd5BcCTiUjQb0FQ==
-X-Google-Smtp-Source: APXvYqzqWxiHSsJGgOTC3RSwQqw0m5Nd0Qtze2Vl47/R2uYBjnm6OQ+cMmKRPzISq2iCS4QfwMTWmQ==
-X-Received: by 2002:a62:8683:: with SMTP id x125mr5840538pfd.108.1569608590487;
-        Fri, 27 Sep 2019 11:23:10 -0700 (PDT)
-Received: from localhost ([2601:647:5b80:29f7:1bdd:d748:9a4e:8083])
-        by smtp.gmail.com with ESMTPSA id j16sm6087780pje.6.2019.09.27.11.23.09
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=ILyYK/RyFSznwVzkPBcKhiT8HPwbfb9Jo/boI1cizIU=;
+        b=fmTw7jmQ8bdWC2Nc0vWhXMeYDG3FPjWzRPfD3KC8U38Zv/twKkiJd/w1+nlauRpD/9
+         KiEH6WqgnB+K+5xGnCNmwe53n8r3grrkLeOHO2yH3gEXHirbRpcwzBArtK+bDkpvAdYF
+         K2eLsclkey1zfzzflPlr8oBXwHiEE+PjGCUgrXiDsI3ohobjMlADPxSGUpWF29Xf56J+
+         XiIg7MVxOZYNn7x2Ki6OBmHajh79srWxkGEqxJjUxVn2Nu7XrxXybRhLJk2hQuARwKqR
+         4B3KwKMuI1HL9qvWLMfAPtyeoVDqtLk5bTQNnWNz/RbeWgWFE8fukm8nUHQIJwe8JZO8
+         Kvsw==
+X-Gm-Message-State: APjAAAU8L8YneeI+okbreOeN+Y574N7ltqirlGbG59ynp3kIq+g1bgeR
+        IaWnP6DaNfxWgJYJpI7z7AqrXap3jv0=
+X-Google-Smtp-Source: APXvYqz6qVaFBt7XT3TUgHDF4YZhVzJCpdIiKfIOmy7VkWX76KlB8NIB36WxA7SH24DIw5NikJN4jA==
+X-Received: by 2002:adf:9c88:: with SMTP id d8mr4050027wre.364.1569608714352;
+        Fri, 27 Sep 2019 11:25:14 -0700 (PDT)
+Received: from localhost ([81.255.46.201])
+        by smtp.gmail.com with ESMTPSA id b7sm3500756wrj.28.2019.09.27.11.25.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2019 11:23:09 -0700 (PDT)
-Date:   Fri, 27 Sep 2019 11:23:08 -0700
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Thor Thayer <thor.thayer@linux.intel.com>
-Cc:     Appana Durga Kedareswara Rao <appanad@xilinx.com>,
-        Moritz Fischer <mdf@kernel.org>, Alan Tull <atull@kernel.org>,
-        Michal Simek <michals@xilinx.com>,
-        "kedare06@gmail.com" <kedare06@gmail.com>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Nava kishore Manne <navam@xilinx.com>,
-        Siva Durga Prasad Paladugu <sivadur@xilinx.com>,
-        Richard Gong <richard.gong@linux.intel.com>,
-        Dinh Nguyen <dinguyen@kernel.org>
-Subject: Re: [PATCH v4 1/2] fpga: fpga-mgr: Add readback support
-Message-ID: <20190927182308.GA6797@archbox>
-References: <1532672551-22146-1-git-send-email-appana.durga.rao@xilinx.com>
- <CANk1AXSEWcZ7Oqv5pgpwvJRyyFWk5gPtniXa7T+oe6-uywqEqA@mail.gmail.com>
- <MN2PR02MB6400CD5312983443A67DCC4EDC810@MN2PR02MB6400.namprd02.prod.outlook.com>
- <4476bf39-b665-50d8-fecd-d50687d10ca2@linux.intel.com>
+        Fri, 27 Sep 2019 11:25:13 -0700 (PDT)
+Date:   Fri, 27 Sep 2019 11:25:13 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     torvalds@linux-foundation.org
+cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] RISC-V additional updates for v5.4-rc1
+Message-ID: <alpine.DEB.2.21.9999.1909271123370.17782@viisi.sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4476bf39-b665-50d8-fecd-d50687d10ca2@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thor,
+Linus,
 
-On Fri, Sep 27, 2019 at 09:32:11AM -0500, Thor Thayer wrote:
-> Hi Kedar & Moritz,
-> 
-> On 9/27/19 12:13 AM, Appana Durga Kedareswara Rao wrote:
-> > Hi Alan,
-> > 
-> > Did you get a chance to send your framework changes to upstream?
-No they weren't upstreamed.
+The following changes since commit b41dae061bbd722b9d7fa828f35d22035b218e18:
 
-> > @Moritz Fischer: If Alan couldn't send his patch series, Can we take this patch series??
-> > Please let me know your thoughts on this.
+  Merge tag 'xfs-5.4-merge-7' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux (2019-09-18 18:32:43 -0700)
 
-Alan had some comments RE: #defines, I'll have to take another look.
-> > 
-> > Regards,
-> > Kedar.
-> 
-> 
-> I'd like to see some mechanism added as well. Our CvP driver needs a way to
-> load images to the FPGA over the PCIe bus.
+are available in the Git repository at:
 
-Can you elaborate a bit on the CvP use-case and how that would work? Who
-would use the device how after loading the bitstream?
+  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv/for-v5.4-rc1-b
 
-Generally there are several use cases that I have collected mentally
-over the years:
+for you to fetch changes up to c82dd6d078a2bb29d41eda032bb96d05699a524d:
 
-I) DFL use case:
-  - Mixed-set of drivers: Kernel and Userspace
-  - FPGA logic is discoverable through DFL
-  - Userspace application wants to reprogram FPGA
+  riscv: Avoid interrupts being erroneously enabled in handle_exception() (2019-09-20 08:42:34 -0700)
 
-II) DT configfs use case:
-  - Mixed-set of drivers: Kernel and Userspace
-  - FPGA logic is *not* discoverable (hence DT overlay)
-  - Userspace application wants to reprogram FPGA
+----------------------------------------------------------------
+RISC-V additional updates for v5.4-rc1
 
-III) Thomas' case:
-  - Kernel only drivers (pcie bridge, pcie drivers, ...)
-  - FPGA logic is fully discoverable (i.e. PCIe endpoint
-    implemented in FPGA, connected to SoC via PCIe)
-  - Userspace application wants to reprogram FPGA
+Some additional RISC-V updates for v5.4-rc1.  This includes one
+significant fix:
 
-IV) VFIO case:
-  - Usually exposes either entire device via vfio-pci or part via
-    vfio-mdev
-  - Loading (basic) bitstream at boot from flash
-  - vfio-mdev case can use FPGA region interface + ioctl
-  - Full VFIO case is similar to III)
+- Prevent interrupts from being unconditionally re-enabled during
+  exception handling if they were disabled in the context in which the
+  exception occurred
 
-How does your CvP use case fit in? Collecting all the use-cases would
-help with moving forward on coming up with an API :)
+Also a few other fixes:
 
-> 
-> It wasn't clear to me from the discussion on Alan's patchset[1] that the
-> debugfs was acceptable to the mainline. I'd be happy to resurrect that
-> patchset with the suggested changes.
+- Fix a build error when sparse memory support is manually enabled
 
-Back then we decided to not move forward with the debugfs patchset since
-it's essentially cat foo.bin > /dev/xdevcfg / cat bar.rbf > /dev/fpga0
-in disguise. Which is why I vetoed it back then.
+- Prevent CPUs beyond CONFIG_NR_CPUS from being enabled in early boot
 
-> Since debugfs isn't enabled for production, are there any alternatives?
-> 
-> Alan sent a RFC [2] for loading FIT images through the sysfs.
-> 
-> The RFC described a FIT image that included FPGA image specific information
-> to be included with the image (for systems running without device tree like
-> our PCIe bus FPGA CvP).
+And a few minor improvements:
 
-Yeah I had originally suggested that as a mechanim to make FPGA images
-discoverable by the kernel. I still think the idea has merit, however it
-will run into the same issues that the configfs interface ran into w.r.t
-using dt-overlays.
+- DT improvements: in the FU540 SoC DT files, improve U-Boot
+  compatibility by adding an "ethernet0" alias, drop an unnecessary
+  property from the DT files, and add support for the PWM device
 
-Generally I'd like to see a solution that exposes the *same* interface
-to DT and not DT systems to userspace.
+- KVM preparation: add a KVM-related macro for future RISC-V KVM
+  support, and export some symbols required to build KVM support as
+  modules
 
-Using FIT headers one could go ahead and design something along the
-lines of what DFL is doing, except for instead of parsing the DFL in the
-logic, one would parse the FIT header to create subdevices.
+- defconfig additions: build more drivers by default for QEMU
+  configurations
 
-> Unfortunately, I believe this has the same uphill battle that the Device
-> Tree Overlay patches[3] have to getting accepted.
+----------------------------------------------------------------
+Anup Patel (2):
+      RISC-V: Enable VIRTIO drivers in RV64 and RV32 defconfig
+      KVM: RISC-V: Add KVM_REG_RISCV for ONE_REG interface
 
-See above. While I'm happy to discuss this more I atm don't have the
-bandwidth to push the DT work any further.
+Atish Patra (1):
+      RISC-V: Export kernel symbols for kvm
 
-Thanks,
-Moritz
+Bin Meng (2):
+      riscv: dts: sifive: Add ethernet0 to the aliases node
+      riscv: dts: sifive: Drop "clock-frequency" property of cpu nodes
+
+Greentime Hu (1):
+      RISC-V: Fix building error when CONFIG_SPARSEMEM_MANUAL=y
+
+Vincent Chen (1):
+      riscv: Avoid interrupts being erroneously enabled in handle_exception()
+
+Xiang Wang (1):
+      arch/riscv: disable excess harts before picking main boot hart
+
+Yash Shah (1):
+      riscv: dts: Add DT support for SiFive FU540 PWM driver
+
+ arch/riscv/boot/dts/sifive/fu540-c000.dtsi         | 22 +++++++++++++++++---
+ .../riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  8 ++++++++
+ arch/riscv/configs/defconfig                       | 11 ++++++++++
+ arch/riscv/configs/rv32_defconfig                  | 11 ++++++++++
+ arch/riscv/include/asm/pgtable.h                   | 24 +++++++++++-----------
+ arch/riscv/kernel/entry.S                          |  6 +++++-
+ arch/riscv/kernel/head.S                           |  8 +++++---
+ arch/riscv/kernel/smp.c                            |  1 +
+ arch/riscv/kernel/time.c                           |  1 +
+ include/uapi/linux/kvm.h                           |  1 +
+ 10 files changed, 74 insertions(+), 19 deletions(-)
