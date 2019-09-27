@@ -2,885 +2,223 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8E4C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C602BC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A1ED21906
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87172217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:12:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="h7VHDbvv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbfI0IML (ORCPT
+        id S1727308AbfI0IMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 04:12:11 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:45337 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfI0IMK (ORCPT
+        Fri, 27 Sep 2019 04:12:54 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44386 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfI0IMy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 04:12:10 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iDlKt-0005bB-Jf; Fri, 27 Sep 2019 10:10:43 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 29BF91C073C;
-        Fri, 27 Sep 2019 10:10:43 +0200 (CEST)
-Date:   Fri, 27 Sep 2019 08:10:43 -0000
-From:   "tip-bot2 for Mathieu Desnoyers" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] selftests, sched/membarrier: Add multi-threaded test
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Chris Metcalf <cmetcalf@ezchip.com>,
-        Christoph Lameter <cl@linux.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kirill Tkhai <tkhai@yandex.ru>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mike Galbraith <efault@gmx.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        "Russell King - ARM Linux admin" <linux@armlinux.org.uk>,
-        Shuah Khan <shuahkh@osg.samsung.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20190919173705.2181-6-mathieu.desnoyers@efficios.com>
-References: <20190919173705.2181-6-mathieu.desnoyers@efficios.com>
+        Fri, 27 Sep 2019 04:12:54 -0400
+Received: by mail-wr1-f66.google.com with SMTP id i18so1601959wru.11
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 01:12:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:from:subject:openpgp:autocrypt:organization:message-id:date
+         :user-agent:mime-version:content-language:content-transfer-encoding;
+        bh=Ex6o6iK/9RL21+NQO5EVoATLXo1UjsfmNRyP+eLI70g=;
+        b=h7VHDbvvREToP7ByBL1x5fbolZ8BvB7x9eBzOwNPTSQZ68h2S3GqtGdrXBi1JiCt4w
+         v6HVEKUpipFwHfPcEjpb5bMP5+bPvn/up1nHaRQL91pCnqFLnC0VtiCw/eSDNNLJ6TeW
+         wwEdnSNORyQq5frCe7cTuyRWzrYnRhwnljkfqCkz2hKmlj0R6wCJ+FP4pXnL9w+9wPUl
+         M1aw9aTYg99VvbZTkNj6JSe9WmHaxfIBax3LjXRX+H0MFXbJImRi/cTyPx+FER4eJuPK
+         zWVF3B+fb4cD1GxOjW3xe+xbyx6jd2Na2QkVO3GsawEsZDeJH/vQh4+v600EhIqVc/g8
+         21hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=Ex6o6iK/9RL21+NQO5EVoATLXo1UjsfmNRyP+eLI70g=;
+        b=rVfvRIJjZ+DgwABeEkTDxgQElxN1KUDLLe/W8AGEsFLUEbPDIRBSktn0419l8FPIVX
+         IB57+URttvQ6enWjXkz1cXC3AN2EGG+mXM2CpchftFfwGgK1vGP5r26xyha1szsUFPc2
+         axrkkBqkRqXbYUbTbp3IGktWIyTCdxm2p9bgHZgZcXpzI5iXE00lprKd6aO+W2bNJUna
+         fkDARGZSL2tfWo0IwF7lTHQNLT+Cbu0bIm7E9MSm3VxMvo1uwPYhMCvHKVycr3RTukd0
+         DaJ6HpPmcd2fNau4kqYioPFp2LrE78nayoyU0dcm9GLwg3f7OskpLcpqxNey/nudgeo/
+         Th4w==
+X-Gm-Message-State: APjAAAWsIL+DQT2R8Oz7XV3cmIuuxCmokyHKeklb8p/sjELZLdGmvgjJ
+        C+XVyzFHT8Qs62oETpGSneC5cg==
+X-Google-Smtp-Source: APXvYqyAyvZhOb57JVeAQ8LJZD2qosO2xWuw0z0vKqeXIgjLjarLMBeIOOehk8wg4zXr3Xy5DXIQDQ==
+X-Received: by 2002:adf:e951:: with SMTP id m17mr1870220wrn.154.1569571970828;
+        Fri, 27 Sep 2019 01:12:50 -0700 (PDT)
+Received: from [192.168.1.62] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id b22sm6191462wmj.36.2019.09.27.01.12.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 27 Sep 2019 01:12:50 -0700 (PDT)
+To:     daniel@ffwll.ch, airlied@linux.ie,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Cc:     Erico Nunes <nunes.erico@gmail.com>,
+        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
+        linux-kernel@vger.kernel.org, steven.price@arm.com,
+        dri-devel@lists.freedesktop.org, Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Subject: drm_sched with panfrost crash on T820
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <e450fbe6-dec7-2704-59c2-db7e869d67f5@baylibre.com>
+Date:   Fri, 27 Sep 2019 10:12:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Message-ID: <156957184306.9866.10459210030485538128.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/urgent branch of tip:
+Hi Christian,
 
-Commit-ID:     19a4ff534bb09686f53800564cb977bad2177c00
-Gitweb:        https://git.kernel.org/tip/19a4ff534bb09686f53800564cb977bad2177c00
-Author:        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-AuthorDate:    Thu, 19 Sep 2019 13:37:03 -04:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 25 Sep 2019 17:42:31 +02:00
+In v5.3, running dEQP triggers the following kernel crash :
 
-selftests, sched/membarrier: Add multi-threaded test
+[   20.224982] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000038
+[...]
+[   20.291064] Hardware name: Khadas VIM2 (DT)
+[   20.295217] Workqueue: events drm_sched_job_timedout
+[...]
+[   20.304867] pc : drm_sched_increase_karma+0x5c/0xf0
+[   20.309696] lr : drm_sched_increase_karma+0x44/0xf0
+[...]
+[   20.396720] Call trace:
+[   20.399138]  drm_sched_increase_karma+0x5c/0xf0
+[   20.403623]  panfrost_job_timedout+0x12c/0x1e0
+[   20.408021]  drm_sched_job_timedout+0x48/0xa0
+[   20.412336]  process_one_work+0x1e0/0x320
+[   20.416300]  worker_thread+0x40/0x450
+[   20.419924]  kthread+0x124/0x128
+[   20.423116]  ret_from_fork+0x10/0x18
+[   20.426653] Code: f9400001 540001c0 f9400a83 f9402402 (f9401c64)
+[   20.432690] ---[ end trace bd02f890139096a7 ]---
 
-membarrier commands cover very different code paths if they are in
-a single-threaded vs multi-threaded process. Therefore, exercise both
-scenarios in the kernel selftests to increase coverage of this selftest.
+Which never happens, at all, on v5.2.
 
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Chris Metcalf <cmetcalf@ezchip.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Cc: Kirill Tkhai <tkhai@yandex.ru>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mike Galbraith <efault@gmx.de>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Paul E. McKenney <paulmck@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc: Shuah Khan <shuahkh@osg.samsung.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190919173705.2181-6-mathieu.desnoyers@efficios.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- tools/testing/selftests/membarrier/.gitignore                      |   3 +-
- tools/testing/selftests/membarrier/Makefile                        |   5 +-
- tools/testing/selftests/membarrier/membarrier_test.c               | 313 +---------------------------------------------------------------------
- tools/testing/selftests/membarrier/membarrier_test_impl.h          | 317 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- tools/testing/selftests/membarrier/membarrier_test_multi_thread.c  |  73 ++++++++++++++++-
- tools/testing/selftests/membarrier/membarrier_test_single_thread.c |  24 +++++-
- 6 files changed, 419 insertions(+), 316 deletions(-)
- delete mode 100644 tools/testing/selftests/membarrier/membarrier_test.c
- create mode 100644 tools/testing/selftests/membarrier/membarrier_test_impl.h
- create mode 100644 tools/testing/selftests/membarrier/membarrier_test_multi_thread.c
- create mode 100644 tools/testing/selftests/membarrier/membarrier_test_single_thread.c
+I did a (very) long (7 days, ~100runs) bisect run using our LAVA lab (thanks tomeu !), but
+bisecting was not easy since the bad commit landed on drm-misc-next after v5.1-rc6, and
+then v5.2-rc1 was backmerged into drm-misc-next at:
+[1] 374ed5429346 Merge drm/drm-next into drm-misc-next
 
-diff --git a/tools/testing/selftests/membarrier/.gitignore b/tools/testing/selftests/membarrier/.gitignore
-index 020c44f..f2f7ec0 100644
---- a/tools/testing/selftests/membarrier/.gitignore
-+++ b/tools/testing/selftests/membarrier/.gitignore
-@@ -1 +1,2 @@
--membarrier_test
-+membarrier_test_multi_thread
-+membarrier_test_single_thread
-diff --git a/tools/testing/selftests/membarrier/Makefile b/tools/testing/selftests/membarrier/Makefile
-index 97e3bdf..34d1c81 100644
---- a/tools/testing/selftests/membarrier/Makefile
-+++ b/tools/testing/selftests/membarrier/Makefile
-@@ -1,7 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0-only
- CFLAGS += -g -I../../../../usr/include/
-+LDLIBS += -lpthread
- 
--TEST_GEN_PROGS := membarrier_test
-+TEST_GEN_PROGS := membarrier_test_single_thread \
-+		membarrier_test_multi_thread
- 
- include ../lib.mk
--
-diff --git a/tools/testing/selftests/membarrier/membarrier_test.c b/tools/testing/selftests/membarrier/membarrier_test.c
-deleted file mode 100644
-index 70b4ddb..0000000
---- a/tools/testing/selftests/membarrier/membarrier_test.c
-+++ /dev/null
-@@ -1,313 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#define _GNU_SOURCE
--#include <linux/membarrier.h>
--#include <syscall.h>
--#include <stdio.h>
--#include <errno.h>
--#include <string.h>
--
--#include "../kselftest.h"
--
--static int sys_membarrier(int cmd, int flags)
--{
--	return syscall(__NR_membarrier, cmd, flags);
--}
--
--static int test_membarrier_cmd_fail(void)
--{
--	int cmd = -1, flags = 0;
--	const char *test_name = "sys membarrier invalid command";
--
--	if (sys_membarrier(cmd, flags) != -1) {
--		ksft_exit_fail_msg(
--			"%s test: command = %d, flags = %d. Should fail, but passed\n",
--			test_name, cmd, flags);
--	}
--	if (errno != EINVAL) {
--		ksft_exit_fail_msg(
--			"%s test: flags = %d. Should return (%d: \"%s\"), but returned (%d: \"%s\").\n",
--			test_name, flags, EINVAL, strerror(EINVAL),
--			errno, strerror(errno));
--	}
--
--	ksft_test_result_pass(
--		"%s test: command = %d, flags = %d, errno = %d. Failed as expected\n",
--		test_name, cmd, flags, errno);
--	return 0;
--}
--
--static int test_membarrier_flags_fail(void)
--{
--	int cmd = MEMBARRIER_CMD_QUERY, flags = 1;
--	const char *test_name = "sys membarrier MEMBARRIER_CMD_QUERY invalid flags";
--
--	if (sys_membarrier(cmd, flags) != -1) {
--		ksft_exit_fail_msg(
--			"%s test: flags = %d. Should fail, but passed\n",
--			test_name, flags);
--	}
--	if (errno != EINVAL) {
--		ksft_exit_fail_msg(
--			"%s test: flags = %d. Should return (%d: \"%s\"), but returned (%d: \"%s\").\n",
--			test_name, flags, EINVAL, strerror(EINVAL),
--			errno, strerror(errno));
--	}
--
--	ksft_test_result_pass(
--		"%s test: flags = %d, errno = %d. Failed as expected\n",
--		test_name, flags, errno);
--	return 0;
--}
--
--static int test_membarrier_global_success(void)
--{
--	int cmd = MEMBARRIER_CMD_GLOBAL, flags = 0;
--	const char *test_name = "sys membarrier MEMBARRIER_CMD_GLOBAL";
--
--	if (sys_membarrier(cmd, flags) != 0) {
--		ksft_exit_fail_msg(
--			"%s test: flags = %d, errno = %d\n",
--			test_name, flags, errno);
--	}
--
--	ksft_test_result_pass(
--		"%s test: flags = %d\n", test_name, flags);
--	return 0;
--}
--
--static int test_membarrier_private_expedited_fail(void)
--{
--	int cmd = MEMBARRIER_CMD_PRIVATE_EXPEDITED, flags = 0;
--	const char *test_name = "sys membarrier MEMBARRIER_CMD_PRIVATE_EXPEDITED not registered failure";
--
--	if (sys_membarrier(cmd, flags) != -1) {
--		ksft_exit_fail_msg(
--			"%s test: flags = %d. Should fail, but passed\n",
--			test_name, flags);
--	}
--	if (errno != EPERM) {
--		ksft_exit_fail_msg(
--			"%s test: flags = %d. Should return (%d: \"%s\"), but returned (%d: \"%s\").\n",
--			test_name, flags, EPERM, strerror(EPERM),
--			errno, strerror(errno));
--	}
--
--	ksft_test_result_pass(
--		"%s test: flags = %d, errno = %d\n",
--		test_name, flags, errno);
--	return 0;
--}
--
--static int test_membarrier_register_private_expedited_success(void)
--{
--	int cmd = MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED, flags = 0;
--	const char *test_name = "sys membarrier MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED";
--
--	if (sys_membarrier(cmd, flags) != 0) {
--		ksft_exit_fail_msg(
--			"%s test: flags = %d, errno = %d\n",
--			test_name, flags, errno);
--	}
--
--	ksft_test_result_pass(
--		"%s test: flags = %d\n",
--		test_name, flags);
--	return 0;
--}
--
--static int test_membarrier_private_expedited_success(void)
--{
--	int cmd = MEMBARRIER_CMD_PRIVATE_EXPEDITED, flags = 0;
--	const char *test_name = "sys membarrier MEMBARRIER_CMD_PRIVATE_EXPEDITED";
--
--	if (sys_membarrier(cmd, flags) != 0) {
--		ksft_exit_fail_msg(
--			"%s test: flags = %d, errno = %d\n",
--			test_name, flags, errno);
--	}
--
--	ksft_test_result_pass(
--		"%s test: flags = %d\n",
--		test_name, flags);
--	return 0;
--}
--
--static int test_membarrier_private_expedited_sync_core_fail(void)
--{
--	int cmd = MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE, flags = 0;
--	const char *test_name = "sys membarrier MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE not registered failure";
--
--	if (sys_membarrier(cmd, flags) != -1) {
--		ksft_exit_fail_msg(
--			"%s test: flags = %d. Should fail, but passed\n",
--			test_name, flags);
--	}
--	if (errno != EPERM) {
--		ksft_exit_fail_msg(
--			"%s test: flags = %d. Should return (%d: \"%s\"), but returned (%d: \"%s\").\n",
--			test_name, flags, EPERM, strerror(EPERM),
--			errno, strerror(errno));
--	}
--
--	ksft_test_result_pass(
--		"%s test: flags = %d, errno = %d\n",
--		test_name, flags, errno);
--	return 0;
--}
--
--static int test_membarrier_register_private_expedited_sync_core_success(void)
--{
--	int cmd = MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_SYNC_CORE, flags = 0;
--	const char *test_name = "sys membarrier MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_SYNC_CORE";
--
--	if (sys_membarrier(cmd, flags) != 0) {
--		ksft_exit_fail_msg(
--			"%s test: flags = %d, errno = %d\n",
--			test_name, flags, errno);
--	}
--
--	ksft_test_result_pass(
--		"%s test: flags = %d\n",
--		test_name, flags);
--	return 0;
--}
--
--static int test_membarrier_private_expedited_sync_core_success(void)
--{
--	int cmd = MEMBARRIER_CMD_PRIVATE_EXPEDITED, flags = 0;
--	const char *test_name = "sys membarrier MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE";
--
--	if (sys_membarrier(cmd, flags) != 0) {
--		ksft_exit_fail_msg(
--			"%s test: flags = %d, errno = %d\n",
--			test_name, flags, errno);
--	}
--
--	ksft_test_result_pass(
--		"%s test: flags = %d\n",
--		test_name, flags);
--	return 0;
--}
--
--static int test_membarrier_register_global_expedited_success(void)
--{
--	int cmd = MEMBARRIER_CMD_REGISTER_GLOBAL_EXPEDITED, flags = 0;
--	const char *test_name = "sys membarrier MEMBARRIER_CMD_REGISTER_GLOBAL_EXPEDITED";
--
--	if (sys_membarrier(cmd, flags) != 0) {
--		ksft_exit_fail_msg(
--			"%s test: flags = %d, errno = %d\n",
--			test_name, flags, errno);
--	}
--
--	ksft_test_result_pass(
--		"%s test: flags = %d\n",
--		test_name, flags);
--	return 0;
--}
--
--static int test_membarrier_global_expedited_success(void)
--{
--	int cmd = MEMBARRIER_CMD_GLOBAL_EXPEDITED, flags = 0;
--	const char *test_name = "sys membarrier MEMBARRIER_CMD_GLOBAL_EXPEDITED";
--
--	if (sys_membarrier(cmd, flags) != 0) {
--		ksft_exit_fail_msg(
--			"%s test: flags = %d, errno = %d\n",
--			test_name, flags, errno);
--	}
--
--	ksft_test_result_pass(
--		"%s test: flags = %d\n",
--		test_name, flags);
--	return 0;
--}
--
--static int test_membarrier(void)
--{
--	int status;
--
--	status = test_membarrier_cmd_fail();
--	if (status)
--		return status;
--	status = test_membarrier_flags_fail();
--	if (status)
--		return status;
--	status = test_membarrier_global_success();
--	if (status)
--		return status;
--	status = test_membarrier_private_expedited_fail();
--	if (status)
--		return status;
--	status = test_membarrier_register_private_expedited_success();
--	if (status)
--		return status;
--	status = test_membarrier_private_expedited_success();
--	if (status)
--		return status;
--	status = sys_membarrier(MEMBARRIER_CMD_QUERY, 0);
--	if (status < 0) {
--		ksft_test_result_fail("sys_membarrier() failed\n");
--		return status;
--	}
--	if (status & MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE) {
--		status = test_membarrier_private_expedited_sync_core_fail();
--		if (status)
--			return status;
--		status = test_membarrier_register_private_expedited_sync_core_success();
--		if (status)
--			return status;
--		status = test_membarrier_private_expedited_sync_core_success();
--		if (status)
--			return status;
--	}
--	/*
--	 * It is valid to send a global membarrier from a non-registered
--	 * process.
--	 */
--	status = test_membarrier_global_expedited_success();
--	if (status)
--		return status;
--	status = test_membarrier_register_global_expedited_success();
--	if (status)
--		return status;
--	status = test_membarrier_global_expedited_success();
--	if (status)
--		return status;
--	return 0;
--}
--
--static int test_membarrier_query(void)
--{
--	int flags = 0, ret;
--
--	ret = sys_membarrier(MEMBARRIER_CMD_QUERY, flags);
--	if (ret < 0) {
--		if (errno == ENOSYS) {
--			/*
--			 * It is valid to build a kernel with
--			 * CONFIG_MEMBARRIER=n. However, this skips the tests.
--			 */
--			ksft_exit_skip(
--				"sys membarrier (CONFIG_MEMBARRIER) is disabled.\n");
--		}
--		ksft_exit_fail_msg("sys_membarrier() failed\n");
--	}
--	if (!(ret & MEMBARRIER_CMD_GLOBAL))
--		ksft_exit_skip(
--			"sys_membarrier unsupported: CMD_GLOBAL not found.\n");
--
--	ksft_test_result_pass("sys_membarrier available\n");
--	return 0;
--}
--
--int main(int argc, char **argv)
--{
--	ksft_print_header();
--	ksft_set_plan(13);
--
--	test_membarrier_query();
--	test_membarrier();
--
--	return ksft_exit_pass();
--}
-diff --git a/tools/testing/selftests/membarrier/membarrier_test_impl.h b/tools/testing/selftests/membarrier/membarrier_test_impl.h
-new file mode 100644
-index 0000000..186be69
---- /dev/null
-+++ b/tools/testing/selftests/membarrier/membarrier_test_impl.h
-@@ -0,0 +1,317 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#define _GNU_SOURCE
-+#include <linux/membarrier.h>
-+#include <syscall.h>
-+#include <stdio.h>
-+#include <errno.h>
-+#include <string.h>
-+#include <pthread.h>
-+
-+#include "../kselftest.h"
-+
-+static int sys_membarrier(int cmd, int flags)
-+{
-+	return syscall(__NR_membarrier, cmd, flags);
-+}
-+
-+static int test_membarrier_cmd_fail(void)
-+{
-+	int cmd = -1, flags = 0;
-+	const char *test_name = "sys membarrier invalid command";
-+
-+	if (sys_membarrier(cmd, flags) != -1) {
-+		ksft_exit_fail_msg(
-+			"%s test: command = %d, flags = %d. Should fail, but passed\n",
-+			test_name, cmd, flags);
-+	}
-+	if (errno != EINVAL) {
-+		ksft_exit_fail_msg(
-+			"%s test: flags = %d. Should return (%d: \"%s\"), but returned (%d: \"%s\").\n",
-+			test_name, flags, EINVAL, strerror(EINVAL),
-+			errno, strerror(errno));
-+	}
-+
-+	ksft_test_result_pass(
-+		"%s test: command = %d, flags = %d, errno = %d. Failed as expected\n",
-+		test_name, cmd, flags, errno);
-+	return 0;
-+}
-+
-+static int test_membarrier_flags_fail(void)
-+{
-+	int cmd = MEMBARRIER_CMD_QUERY, flags = 1;
-+	const char *test_name = "sys membarrier MEMBARRIER_CMD_QUERY invalid flags";
-+
-+	if (sys_membarrier(cmd, flags) != -1) {
-+		ksft_exit_fail_msg(
-+			"%s test: flags = %d. Should fail, but passed\n",
-+			test_name, flags);
-+	}
-+	if (errno != EINVAL) {
-+		ksft_exit_fail_msg(
-+			"%s test: flags = %d. Should return (%d: \"%s\"), but returned (%d: \"%s\").\n",
-+			test_name, flags, EINVAL, strerror(EINVAL),
-+			errno, strerror(errno));
-+	}
-+
-+	ksft_test_result_pass(
-+		"%s test: flags = %d, errno = %d. Failed as expected\n",
-+		test_name, flags, errno);
-+	return 0;
-+}
-+
-+static int test_membarrier_global_success(void)
-+{
-+	int cmd = MEMBARRIER_CMD_GLOBAL, flags = 0;
-+	const char *test_name = "sys membarrier MEMBARRIER_CMD_GLOBAL";
-+
-+	if (sys_membarrier(cmd, flags) != 0) {
-+		ksft_exit_fail_msg(
-+			"%s test: flags = %d, errno = %d\n",
-+			test_name, flags, errno);
-+	}
-+
-+	ksft_test_result_pass(
-+		"%s test: flags = %d\n", test_name, flags);
-+	return 0;
-+}
-+
-+static int test_membarrier_private_expedited_fail(void)
-+{
-+	int cmd = MEMBARRIER_CMD_PRIVATE_EXPEDITED, flags = 0;
-+	const char *test_name = "sys membarrier MEMBARRIER_CMD_PRIVATE_EXPEDITED not registered failure";
-+
-+	if (sys_membarrier(cmd, flags) != -1) {
-+		ksft_exit_fail_msg(
-+			"%s test: flags = %d. Should fail, but passed\n",
-+			test_name, flags);
-+	}
-+	if (errno != EPERM) {
-+		ksft_exit_fail_msg(
-+			"%s test: flags = %d. Should return (%d: \"%s\"), but returned (%d: \"%s\").\n",
-+			test_name, flags, EPERM, strerror(EPERM),
-+			errno, strerror(errno));
-+	}
-+
-+	ksft_test_result_pass(
-+		"%s test: flags = %d, errno = %d\n",
-+		test_name, flags, errno);
-+	return 0;
-+}
-+
-+static int test_membarrier_register_private_expedited_success(void)
-+{
-+	int cmd = MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED, flags = 0;
-+	const char *test_name = "sys membarrier MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED";
-+
-+	if (sys_membarrier(cmd, flags) != 0) {
-+		ksft_exit_fail_msg(
-+			"%s test: flags = %d, errno = %d\n",
-+			test_name, flags, errno);
-+	}
-+
-+	ksft_test_result_pass(
-+		"%s test: flags = %d\n",
-+		test_name, flags);
-+	return 0;
-+}
-+
-+static int test_membarrier_private_expedited_success(void)
-+{
-+	int cmd = MEMBARRIER_CMD_PRIVATE_EXPEDITED, flags = 0;
-+	const char *test_name = "sys membarrier MEMBARRIER_CMD_PRIVATE_EXPEDITED";
-+
-+	if (sys_membarrier(cmd, flags) != 0) {
-+		ksft_exit_fail_msg(
-+			"%s test: flags = %d, errno = %d\n",
-+			test_name, flags, errno);
-+	}
-+
-+	ksft_test_result_pass(
-+		"%s test: flags = %d\n",
-+		test_name, flags);
-+	return 0;
-+}
-+
-+static int test_membarrier_private_expedited_sync_core_fail(void)
-+{
-+	int cmd = MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE, flags = 0;
-+	const char *test_name = "sys membarrier MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE not registered failure";
-+
-+	if (sys_membarrier(cmd, flags) != -1) {
-+		ksft_exit_fail_msg(
-+			"%s test: flags = %d. Should fail, but passed\n",
-+			test_name, flags);
-+	}
-+	if (errno != EPERM) {
-+		ksft_exit_fail_msg(
-+			"%s test: flags = %d. Should return (%d: \"%s\"), but returned (%d: \"%s\").\n",
-+			test_name, flags, EPERM, strerror(EPERM),
-+			errno, strerror(errno));
-+	}
-+
-+	ksft_test_result_pass(
-+		"%s test: flags = %d, errno = %d\n",
-+		test_name, flags, errno);
-+	return 0;
-+}
-+
-+static int test_membarrier_register_private_expedited_sync_core_success(void)
-+{
-+	int cmd = MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_SYNC_CORE, flags = 0;
-+	const char *test_name = "sys membarrier MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_SYNC_CORE";
-+
-+	if (sys_membarrier(cmd, flags) != 0) {
-+		ksft_exit_fail_msg(
-+			"%s test: flags = %d, errno = %d\n",
-+			test_name, flags, errno);
-+	}
-+
-+	ksft_test_result_pass(
-+		"%s test: flags = %d\n",
-+		test_name, flags);
-+	return 0;
-+}
-+
-+static int test_membarrier_private_expedited_sync_core_success(void)
-+{
-+	int cmd = MEMBARRIER_CMD_PRIVATE_EXPEDITED, flags = 0;
-+	const char *test_name = "sys membarrier MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE";
-+
-+	if (sys_membarrier(cmd, flags) != 0) {
-+		ksft_exit_fail_msg(
-+			"%s test: flags = %d, errno = %d\n",
-+			test_name, flags, errno);
-+	}
-+
-+	ksft_test_result_pass(
-+		"%s test: flags = %d\n",
-+		test_name, flags);
-+	return 0;
-+}
-+
-+static int test_membarrier_register_global_expedited_success(void)
-+{
-+	int cmd = MEMBARRIER_CMD_REGISTER_GLOBAL_EXPEDITED, flags = 0;
-+	const char *test_name = "sys membarrier MEMBARRIER_CMD_REGISTER_GLOBAL_EXPEDITED";
-+
-+	if (sys_membarrier(cmd, flags) != 0) {
-+		ksft_exit_fail_msg(
-+			"%s test: flags = %d, errno = %d\n",
-+			test_name, flags, errno);
-+	}
-+
-+	ksft_test_result_pass(
-+		"%s test: flags = %d\n",
-+		test_name, flags);
-+	return 0;
-+}
-+
-+static int test_membarrier_global_expedited_success(void)
-+{
-+	int cmd = MEMBARRIER_CMD_GLOBAL_EXPEDITED, flags = 0;
-+	const char *test_name = "sys membarrier MEMBARRIER_CMD_GLOBAL_EXPEDITED";
-+
-+	if (sys_membarrier(cmd, flags) != 0) {
-+		ksft_exit_fail_msg(
-+			"%s test: flags = %d, errno = %d\n",
-+			test_name, flags, errno);
-+	}
-+
-+	ksft_test_result_pass(
-+		"%s test: flags = %d\n",
-+		test_name, flags);
-+	return 0;
-+}
-+
-+static int test_membarrier_fail(void)
-+{
-+	int status;
-+
-+	status = test_membarrier_cmd_fail();
-+	if (status)
-+		return status;
-+	status = test_membarrier_flags_fail();
-+	if (status)
-+		return status;
-+	status = test_membarrier_private_expedited_fail();
-+	if (status)
-+		return status;
-+	status = sys_membarrier(MEMBARRIER_CMD_QUERY, 0);
-+	if (status < 0) {
-+		ksft_test_result_fail("sys_membarrier() failed\n");
-+		return status;
-+	}
-+	if (status & MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE) {
-+		status = test_membarrier_private_expedited_sync_core_fail();
-+		if (status)
-+			return status;
-+	}
-+	return 0;
-+}
-+
-+static int test_membarrier_success(void)
-+{
-+	int status;
-+
-+	status = test_membarrier_global_success();
-+	if (status)
-+		return status;
-+	status = test_membarrier_register_private_expedited_success();
-+	if (status)
-+		return status;
-+	status = test_membarrier_private_expedited_success();
-+	if (status)
-+		return status;
-+	status = sys_membarrier(MEMBARRIER_CMD_QUERY, 0);
-+	if (status < 0) {
-+		ksft_test_result_fail("sys_membarrier() failed\n");
-+		return status;
-+	}
-+	if (status & MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE) {
-+		status = test_membarrier_register_private_expedited_sync_core_success();
-+		if (status)
-+			return status;
-+		status = test_membarrier_private_expedited_sync_core_success();
-+		if (status)
-+			return status;
-+	}
-+	/*
-+	 * It is valid to send a global membarrier from a non-registered
-+	 * process.
-+	 */
-+	status = test_membarrier_global_expedited_success();
-+	if (status)
-+		return status;
-+	status = test_membarrier_register_global_expedited_success();
-+	if (status)
-+		return status;
-+	status = test_membarrier_global_expedited_success();
-+	if (status)
-+		return status;
-+	return 0;
-+}
-+
-+static int test_membarrier_query(void)
-+{
-+	int flags = 0, ret;
-+
-+	ret = sys_membarrier(MEMBARRIER_CMD_QUERY, flags);
-+	if (ret < 0) {
-+		if (errno == ENOSYS) {
-+			/*
-+			 * It is valid to build a kernel with
-+			 * CONFIG_MEMBARRIER=n. However, this skips the tests.
-+			 */
-+			ksft_exit_skip(
-+				"sys membarrier (CONFIG_MEMBARRIER) is disabled.\n");
-+		}
-+		ksft_exit_fail_msg("sys_membarrier() failed\n");
-+	}
-+	if (!(ret & MEMBARRIER_CMD_GLOBAL))
-+		ksft_exit_skip(
-+			"sys_membarrier unsupported: CMD_GLOBAL not found.\n");
-+
-+	ksft_test_result_pass("sys_membarrier available\n");
-+	return 0;
-+}
-diff --git a/tools/testing/selftests/membarrier/membarrier_test_multi_thread.c b/tools/testing/selftests/membarrier/membarrier_test_multi_thread.c
-new file mode 100644
-index 0000000..ac5613e
---- /dev/null
-+++ b/tools/testing/selftests/membarrier/membarrier_test_multi_thread.c
-@@ -0,0 +1,73 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#define _GNU_SOURCE
-+#include <linux/membarrier.h>
-+#include <syscall.h>
-+#include <stdio.h>
-+#include <errno.h>
-+#include <string.h>
-+#include <pthread.h>
-+
-+#include "membarrier_test_impl.h"
-+
-+static int thread_ready, thread_quit;
-+static pthread_mutex_t test_membarrier_thread_mutex =
-+	PTHREAD_MUTEX_INITIALIZER;
-+static pthread_cond_t test_membarrier_thread_cond =
-+	PTHREAD_COND_INITIALIZER;
-+
-+void *test_membarrier_thread(void *arg)
-+{
-+	pthread_mutex_lock(&test_membarrier_thread_mutex);
-+	thread_ready = 1;
-+	pthread_cond_broadcast(&test_membarrier_thread_cond);
-+	pthread_mutex_unlock(&test_membarrier_thread_mutex);
-+
-+	pthread_mutex_lock(&test_membarrier_thread_mutex);
-+	while (!thread_quit)
-+		pthread_cond_wait(&test_membarrier_thread_cond,
-+				  &test_membarrier_thread_mutex);
-+	pthread_mutex_unlock(&test_membarrier_thread_mutex);
-+
-+	return NULL;
-+}
-+
-+static int test_mt_membarrier(void)
-+{
-+	int i;
-+	pthread_t test_thread;
-+
-+	pthread_create(&test_thread, NULL,
-+		       test_membarrier_thread, NULL);
-+
-+	pthread_mutex_lock(&test_membarrier_thread_mutex);
-+	while (!thread_ready)
-+		pthread_cond_wait(&test_membarrier_thread_cond,
-+				  &test_membarrier_thread_mutex);
-+	pthread_mutex_unlock(&test_membarrier_thread_mutex);
-+
-+	test_membarrier_fail();
-+
-+	test_membarrier_success();
-+
-+	pthread_mutex_lock(&test_membarrier_thread_mutex);
-+	thread_quit = 1;
-+	pthread_cond_broadcast(&test_membarrier_thread_cond);
-+	pthread_mutex_unlock(&test_membarrier_thread_mutex);
-+
-+	pthread_join(test_thread, NULL);
-+
-+	return 0;
-+}
-+
-+int main(int argc, char **argv)
-+{
-+	ksft_print_header();
-+	ksft_set_plan(13);
-+
-+	test_membarrier_query();
-+
-+	/* Multi-threaded */
-+	test_mt_membarrier();
-+
-+	return ksft_exit_pass();
-+}
-diff --git a/tools/testing/selftests/membarrier/membarrier_test_single_thread.c b/tools/testing/selftests/membarrier/membarrier_test_single_thread.c
-new file mode 100644
-index 0000000..c1c9639
---- /dev/null
-+++ b/tools/testing/selftests/membarrier/membarrier_test_single_thread.c
-@@ -0,0 +1,24 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#define _GNU_SOURCE
-+#include <linux/membarrier.h>
-+#include <syscall.h>
-+#include <stdio.h>
-+#include <errno.h>
-+#include <string.h>
-+#include <pthread.h>
-+
-+#include "membarrier_test_impl.h"
-+
-+int main(int argc, char **argv)
-+{
-+	ksft_print_header();
-+	ksft_set_plan(13);
-+
-+	test_membarrier_query();
-+
-+	test_membarrier_fail();
-+
-+	test_membarrier_success();
-+
-+	return ksft_exit_pass();
-+}
+Thus bisecting between [1] ang v5.2-rc1 leads to commit based on v5.2-rc1... where panfrost was
+not enabled in the Khadas VIM2 DT.
+
+Anyway, I managed to identify 3 possibly breaking commits :
+[2] 290764af7e36 drm/sched: Keep s_fence->parent pointer
+[3] 5918045c4ed4 drm/scheduler: rework job destruction
+[4] a5343b8a2ca5 drm/scheduler: Add flag to hint the release of guilty job.
+
+But [1] and [2] doesn't crash the same way :
+[   16.257912] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000060
+[...]
+[   16.308307] CPU: 4 PID: 80 Comm: kworker/4:1 Not tainted 5.1.0-rc2-01185-g290764af7e36-dirty #378
+[   16.317099] Hardware name: Khadas VIM2 (DT)
+[...])
+[   16.330907] pc : refcount_sub_and_test_checked+0x4/0xb0
+[   16.336078] lr : refcount_dec_and_test_checked+0x14/0x20
+[...]
+[   16.423533] Process kworker/4:1 (pid: 80, stack limit = 0x(____ptrval____))
+[   16.430431] Call trace:
+[   16.432851]  refcount_sub_and_test_checked+0x4/0xb0
+[   16.437681]  drm_sched_job_cleanup+0x24/0x58
+[   16.441908]  panfrost_job_free+0x14/0x28
+[   16.445787]  drm_sched_job_timedout+0x6c/0xa0
+[   16.450102]  process_one_work+0x1e0/0x320
+[   16.454067]  worker_thread+0x40/0x450
+[   16.457690]  kthread+0x124/0x128
+[   16.460882]  ret_from_fork+0x10/0x18
+[   16.464421] Code: 52800000 d65f03c0 d503201f aa0103e3 (b9400021)
+[   16.470456] ---[ end trace 39a67412ee1b64b5 ]---
+
+and [3] fails like on v5.3 (in drm_sched_increase_karma):
+[   33.830080] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000038
+[...]
+[   33.871946] Internal error: Oops: 96000004 [#1] PREEMPT SMP
+[   33.877450] Modules linked in:
+[   33.880474] CPU: 6 PID: 81 Comm: kworker/6:1 Not tainted 5.1.0-rc2-01186-ga5343b8a2ca5-dirty #380
+[   33.889265] Hardware name: Khadas VIM2 (DT)
+[   33.893419] Workqueue: events drm_sched_job_timedout
+[...]
+[   33.903069] pc : drm_sched_increase_karma+0x5c/0xf0
+[   33.907898] lr : drm_sched_increase_karma+0x44/0xf0
+[...]
+[   33.994924] Process kworker/6:1 (pid: 81, stack limit = 0x(____ptrval____))
+[   34.001822] Call trace:
+[   34.004242]  drm_sched_increase_karma+0x5c/0xf0
+[   34.008726]  panfrost_job_timedout+0x12c/0x1e0
+[   34.013122]  drm_sched_job_timedout+0x48/0xa0
+[   34.017438]  process_one_work+0x1e0/0x320
+[   34.021402]  worker_thread+0x40/0x450
+[   34.025026]  kthread+0x124/0x128
+[   34.028218]  ret_from_fork+0x10/0x18
+[   34.031755] Code: f9400001 540001c0 f9400a83 f9402402 (f9401c64)
+[   34.037792] ---[ end trace be3fd6f77f4df267 ]---
+
+
+When I revert [3] on [1], i get the same crash as [2], meaning
+the commit [3] masks the failure [2] introduced.
+
+Do you know how to solve this ?
+
+Thanks,
+Neil
