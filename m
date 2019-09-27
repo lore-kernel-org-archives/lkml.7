@@ -2,118 +2,114 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B347C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 456EEC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 440FB21920
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 174B62146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:39:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tw1025iq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bMQzQjPT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727861AbfI0Phr (ORCPT
+        id S1727913AbfI0PjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 11:37:47 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:55662 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727207AbfI0Phr (ORCPT
+        Fri, 27 Sep 2019 11:39:00 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37359 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727207AbfI0Pi7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 11:37:47 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8RFbeYx051670;
-        Fri, 27 Sep 2019 10:37:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569598661;
-        bh=Lqo9bBRFGck3umPvJYDrWptfCEGsJ4lcKhD97BGvgh4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=tw1025iq5dUXluSa0qqR4U6Bp2835f/huQP/igQAdoBf7BB9A6bmoqA6aXnTtrg0O
-         Ci6gi14TCsYVDllFYOrN+WaIZG6gl6l46r44G4j7qzkkMdu8wcV2nGcTS4qr+7kJNV
-         EK90yh8PU6/aLkGC+Q3CDLZh1e5gb7RHko52UUCk=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8RFbeNn015785;
-        Fri, 27 Sep 2019 10:37:40 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 27
- Sep 2019 10:37:32 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 27 Sep 2019 10:37:40 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8RFba8k044922;
-        Fri, 27 Sep 2019 10:37:37 -0500
-Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to
- dts
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Adam Ford <aford173@gmail.com>
-CC:     Tony Lindgren <tony@atomide.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190510194229.20628-1-aford173@gmail.com>
- <af325707-3e42-493d-e858-77878ef06138@ti.com>
- <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
- <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
- <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
- <845055e2-8182-de74-2077-629fdf50ac6c@ti.com>
- <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
- <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com>
- <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
- <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
-Date:   Fri, 27 Sep 2019 18:37:35 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 27 Sep 2019 11:38:59 -0400
+Received: by mail-wr1-f66.google.com with SMTP id i1so3529434wro.4;
+        Fri, 27 Sep 2019 08:38:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WqPr3BMmdkR12PG5X2wdgv7YTpsF0EmWkLgo4C5gGm8=;
+        b=bMQzQjPTyXrKf1113+kG9uJO8Hd1tIflR8zyeoX13anoPf8nfo7xZktTt00/8etwVx
+         f/86eU6y2vPTGWaqDrWTFBfeaUweWBKJVnSS5hkOwuSa1uodSyzGnITqsdwzp/EImrUr
+         Hj1y7tmAXpfSH9RJ2v66esgn2iBI82gvW2A7NCSfd6BFvWq3nUFGTU29pv7n4CPB1umv
+         pZH4xLWfX5teemBDnprRU+viEUq1AyriytkLocg5STufvSIFP3R4Hq5EwGeGFyaQKB1I
+         GkHy2vxG6imthBzN7yzeYk4th90kYWiphjViudxatmJ3SO6oMbT54ZWWAEUKQsCXf6yS
+         TD3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WqPr3BMmdkR12PG5X2wdgv7YTpsF0EmWkLgo4C5gGm8=;
+        b=jbMmug2tGZ1MzYhC8iHjPPdUeVUfBXX05tvPJni/5knnuwv4lgK2pvT92FxjRLATzy
+         /RvqnGcpjS+LGYyw1GRZ/W4e/m2X0hfqxlxKuNsrbjXHIRKHzaPVuGV3Mnxwg8nZV3ay
+         dTOdPfWnyG3yk8n8FsgAOMCb3/jEtyssiR69ftDhtNp6tmO5BjBP25RVdlW9k7xWDsHQ
+         +xu7DrIiOEUHdlhHlEVi1IjrFxuRMxAHpfZi9uWP+cK6e7jyJYlmXU4wWoZuU+0+rInd
+         f2ty9uMbvzCN6DhwK84HKUwsxXBimngWjKZ8x+SJ4UbAKsn6+aMrF0IFMe9RmfQfa0Nn
+         HgxA==
+X-Gm-Message-State: APjAAAVwuIgCGMWBOO/jW38QPzGJITbBe0YFsuX/enIae4ylwr2Q40yX
+        mPtSiisqy3P5TkvMT4SUbmM=
+X-Google-Smtp-Source: APXvYqytcVLtWlyBJYAkuqwx6A2Onw/qBy8K4tRZvRbkGWY98IIBO5iTmei7P0b/bbu1gpKiddducg==
+X-Received: by 2002:a7b:cbd6:: with SMTP id n22mr8198204wmi.39.1569598737528;
+        Fri, 27 Sep 2019 08:38:57 -0700 (PDT)
+Received: from scw-93ddc8.cloud.online.net ([2001:bc8:4400:2400::302d])
+        by smtp.gmail.com with ESMTPSA id z1sm6009561wre.40.2019.09.27.08.38.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 27 Sep 2019 08:38:56 -0700 (PDT)
+Date:   Fri, 27 Sep 2019 15:38:43 +0000
+From:   Matias Ezequiel Vara Larsen <matiasevara@gmail.com>
+To:     Eric Dumazet <eric.dumazet@gmail.com>,
+        Stefano Garzarella <sgarzare@redhat.com>
+Cc:     stefanha@redhat.com, davem@davemloft.net, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vsock/virtio: add support for MSG_PEEK
+Message-ID: <20190927153843.GA15350@scw-93ddc8.cloud.online.net>
+References: <1569522214-28223-1-git-send-email-matiasevara@gmail.com>
+ <f069a65d-33b9-1fa8-d26e-b76cc51fc7cb@gmail.com>
+ <20190927085513.tdiofiisrpyehfe5@steredhat.homenet.telecomitalia.it>
+ <a7a77f0b-a658-6e46-3381-3dfea55b14d1@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a7a77f0b-a658-6e46-3381-3dfea55b14d1@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/09/2019 16:47, Tomi Valkeinen wrote:
-> On 27/09/2019 15:33, Adam Ford wrote:
+On Fri, Sep 27, 2019 at 06:37:00AM -0700, Eric Dumazet wrote:
 > 
->>> It looks like a bug in omap clock handling.
->>>
->>> DSS uses dss1_alwon_fck_3430es2 as fclk. dss1_alwon_fck_3430es2 comes
->>> from dpll4_ck, and there's a divider after the PLL, dpll4_m4_ck.
->>>
->>> When the DSS driver sets dss1_alwon_fck_3430es2 rate to 27000000 or
->>> 27870967, which can be created with m4 dividers 32 and 31, it looks like
->>> the divider goes to bypass, or to a very small value. DSS gets a very
->>> high clock rate and breaks down.
->>
->> Is there anything I can do to help troubleshoot this?  I could insert
->> a hack that checks if we're omap3 and if so make the divider equal to
->> 4, but that seems like just a hack.
->> I can run more tests or insert code somewhere if you want.
 > 
-> I think it's up to someone who's knowledgeable in omap clock framework. 
-> I'm kind of hoping that Tero or Tony would be willing to debug =). I can 
-> try to find time to debug the omap clk framework, but I'll be going on 
-> blindly there.
+> On 9/27/19 1:55 AM, Stefano Garzarella wrote:
+> 
+> > Good catch!
+> > 
+> > Maybe we can solve in this way:
+> > 
+> > 	list_for_each_entry(pkt, &vvs->rx_queue, list) {
+> > 		size_t off = pkt->off;
+> > 
+> > 		if (total == len)
+> > 			break;
+> > 
+> > 		while (total < len && off < pkt->len) {
+> > 			/* using 'off' instead of 'pkt->off' */
+> > 			...
+> > 
+> > 			total += bytes;
+> > 			off += bytes;
+> > 		}
+> > 	}
+> > 
+> > What do you think?
+> >
+> 
+> Maybe, but I need to see a complete patch, evil is in the details :)
+>
 
-If you can provide details about what clock framework / driver does 
-wrong (sample clk_set_xyz call sequence, expected results via 
-clk_get_xyz, and what fails), I can take a look at it. Just reporting 
-arbitrary display driver issues I won't be able to debug at all (I don't 
-have access to any of the displays, nor do I want to waste time 
-debugging them without absolutely no knowledge whatsoever.)
+Thanks both for your comments, I will take them into account and submit
+a second version. 
 
--Tero
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Matias
