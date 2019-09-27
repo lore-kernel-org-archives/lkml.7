@@ -2,124 +2,117 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5397C47404
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C6D1C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 875DE21850
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:25:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569615942;
-	bh=r2vE5dlqlQPzqhl0r/WVG8RIJerI5DZ0ICEng9Q1xwo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GgSrGj7pmWxN0VwYswJdpIiazKdUOrwa/aP23j83Ht6X4lC0uJbPnVQRBD12VZuRC
-	 ttDND0nDvgX2GVF5SNxlvf1D66PiWyOGKR2okwuDwEimENzVyfZaMlNaafrTOF0HO0
-	 DrbcTmGKFC/VitrxiB9LuRzLVS/qQeCiMgdjoLGI=
+	by mail.kernel.org (Postfix) with ESMTP id D2C292146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:33:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ik7ZBlY6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbfI0UZl (ORCPT
+        id S1728145AbfI0Ud4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 16:25:41 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43265 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfI0UZl (ORCPT
+        Fri, 27 Sep 2019 16:33:56 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46389 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfI0Ud4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 16:25:41 -0400
-Received: by mail-ot1-f67.google.com with SMTP id o44so3355732ota.10;
-        Fri, 27 Sep 2019 13:25:41 -0700 (PDT)
+        Fri, 27 Sep 2019 16:33:56 -0400
+Received: by mail-oi1-f195.google.com with SMTP id k25so6277584oiw.13;
+        Fri, 27 Sep 2019 13:33:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KwQqUKwfYvMR0bOzWClRV+K1hIwPyt4XhIMj6/901J4=;
+        b=Ik7ZBlY60EXvU5r5UbYDErhTPJ50/39lYOc2n2i99wHzeiUFivqDAu/I1wyHZzC5jB
+         XVvbiV/FMFVSgV8LMhLi8Pd3BHWsZdqAhF1GhFiELSXWBOXQ4IUZVh5yqX5nZXarUYR7
+         mOwKf530o2JyzW1KbWrToS4H9OWHKFA/lEizgixMyijHjFm61g0r84taQNRqnzoxTGEM
+         WYnuozS7fCsgUnxlVUW50OiFbCGGe0pDZa32IAdYLyRyQhyCUg3TARwBakWBQfIIo9Sd
+         IS73WjQQAyKYZ4LAdfmx6b1hIaUmFlogopKAleEe6ltDrxc4baKdi9ws3an5f1JwqvDc
+         FzEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DBr+kyAQD3h7/fDbIxlNBsTTTrh86TRcvJ4J3ndHmVw=;
-        b=ebT2Vw/hbb+UISgzFnqIbSnJad6R0yBe6mMfCEwi5UnOEQil9QaqTTqSWeaKedx1Ss
-         yCLdAHSMeYpHRt/Nm+SR0AA3EyVvBJR/WZSsitPSoOi3WVb1GuwCrScLK5nfIy1ZX2UG
-         nEYs9KWu1SYbf/39j2x+ft5/NX+DYf0HxZrbfyYn0Uyp/gdvxVWkcs4RyK625D/4OqRf
-         U20SVo90fh926YMUXnUnsl7gFYOiJxlpy9VHm4lD7fKFDMrUzM+iCr4v4HM3KK5IhGXM
-         2m4q9DZlyNZpPTowLpzutrmUaF2C6mTcu3NHbTjUT9hDSp//KN59ZSOezsSrmfKoIaYU
-         rSXQ==
-X-Gm-Message-State: APjAAAV9PLOmdQ/mN3e0lHGplEPnucKtT9280jv34uiIZsfcT1s1Ql8Y
-        rvpxow2x+P66qHkuSllhatG9jRA=
-X-Google-Smtp-Source: APXvYqznd9NzbTUbTaK9aZBHJBB3SLh8bEoM8JN+tq6aSN8pFSjK7Qd+cpbLPIWfWclC1JcDFrlD0Q==
-X-Received: by 2002:a9d:2de4:: with SMTP id g91mr4467829otb.57.1569615940792;
-        Fri, 27 Sep 2019 13:25:40 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d95sm1379473otb.25.2019.09.27.13.25.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2019 13:25:40 -0700 (PDT)
-Date:   Fri, 27 Sep 2019 15:25:39 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     vkoul@kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dan.j.williams@intel.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] dt-bindings: dmaengine: dma-common: Change
- dma-channel-mask to uint32-array
-Message-ID: <20190927202539.GA20669@bogus>
-References: <20190926111954.9184-1-peter.ujfalusi@ti.com>
- <20190926111954.9184-2-peter.ujfalusi@ti.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KwQqUKwfYvMR0bOzWClRV+K1hIwPyt4XhIMj6/901J4=;
+        b=XlbMl1cdc7J6Ra4IjXKF1WNcBpjWIXUb7oH5981gx2UAgaIJTqN0/YQd5JDmLhcbuL
+         UdDSoOCOIaTbAXgz7PH/5MzrMCNyKHlHJrsOmgDFWmEs6MUprlMjp1nuahPajFysUNog
+         kvFs/VHPiuSBEBJ+8P/2YRualXWnSWxyNY69COiFnV/KYIOWLADbxCLmFFMzWgg+nPrC
+         UEVSJi7Gn5wY0sTkkdbN6U82jkFdp5p5OQuD1sDx3qbg7NTxki3C8cFzICAJcRqa/t2x
+         jH/35Tkl9QXlAsWw0Mqenrti4a9AU606uwfPOakUhG13KkMeww3vUxF20whCkYF1TeLy
+         NZcA==
+X-Gm-Message-State: APjAAAXrLAjgWvVSZzEMuDwJ4Q5+1/TdKfK2I0RWzmcGiMcKipN1UFpU
+        NlymPWK+aIDzPd+ZOuALw/nlt0B1d9MzYs4Q3dw=
+X-Google-Smtp-Source: APXvYqzxtkXdEmWpB1LUva+6xNG3OnkuD3Sp+h13rFA/JvyQfKSUnxq5AFmZ7G/EKj0/qxqVmQ4OpmEpiy4qhHxh/jw=
+X-Received: by 2002:aca:d485:: with SMTP id l127mr8327733oig.162.1569616434959;
+ Fri, 27 Sep 2019 13:33:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190926111954.9184-2-peter.ujfalusi@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190927184722.31989-1-bparrot@ti.com> <20190927184722.31989-5-bparrot@ti.com>
+In-Reply-To: <20190927184722.31989-5-bparrot@ti.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 27 Sep 2019 21:33:28 +0100
+Message-ID: <CA+V-a8t3h6+2a8QWKWNwROJRz546rGbUyXs5ez9wtH6AQ-euPA@mail.gmail.com>
+Subject: Re: [Patch v4 4/8] media: i2c: ov2659: fix s_stream return value
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 02:19:52PM +0300, Peter Ujfalusi wrote:
-> Make the dma-channel-mask to be usable for controllers with more than 32
-> channels.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Hi Benoit,
+
+thank you for the patch.
+
+On Fri, Sep 27, 2019 at 7:46 PM Benoit Parrot <bparrot@ti.com> wrote:
+>
+> In ov2659_s_stream() return value for invoked function should be checked
+> and propagated.
+>
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
 > ---
->  Documentation/devicetree/bindings/dma/dma-common.yaml | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/dma-common.yaml b/Documentation/devicetree/bindings/dma/dma-common.yaml
-> index ed0a49a6f020..4527f20301ff 100644
-> --- a/Documentation/devicetree/bindings/dma/dma-common.yaml
-> +++ b/Documentation/devicetree/bindings/dma/dma-common.yaml
-> @@ -25,11 +25,18 @@ properties:
->        Used to provide DMA controller specific information.
->  
->    dma-channel-mask:
-> -    $ref: /schemas/types.yaml#definitions/uint32
->      description:
->        Bitmask of available DMA channels in ascending order that are
->        not reserved by firmware and are available to the
->        kernel. i.e. first channel corresponds to LSB.
-> +      The first item in the array is for channels 0-31, the second is for
-> +      channels 32-63, etc.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        items:
-> +          minItems: 1
-> +          # Should be enough
-> +          maxItems: 255
+>  drivers/media/i2c/ov2659.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
+> index f77320e8a60d..cd4625432264 100644
+> --- a/drivers/media/i2c/ov2659.c
+> +++ b/drivers/media/i2c/ov2659.c
+> @@ -1187,10 +1187,13 @@ static int ov2659_s_stream(struct v4l2_subdev *sd, int on)
+>                 goto unlock;
+>         }
+>
+> -       ov2659_set_pixel_clock(ov2659);
+> -       ov2659_set_frame_size(ov2659);
+> -       ov2659_set_format(ov2659);
+> -       ov2659_set_streaming(ov2659, 1);
+> +       ret = ov2659_set_pixel_clock(ov2659);
+> +       if (!ret)
+> +               ret = ov2659_set_frame_size(ov2659);
+> +       if (!ret)
+> +               ret = ov2659_set_format(ov2659);
+> +       if (!ret)
+> +               ov2659_set_streaming(ov2659, 1);
+>         ov2659->streaming = on;
+>
+the "ov2659->streaming = on;" should only be set if above calls
+succeed, otherwise we might hit -EBUSY during set_fmt.
 
-'items' has to be a separate sub-schema from $ref to have any effect:
+Cheers,
+--Prabhakar Lad
 
-    allOf:
-      - $ref: /schemas/types.yaml#/definitions/uint32-array                                                        
-    items:
-      minItems: 1
-      # Should be enough
-      maxItems: 255
-
-Or (note the added '-'):
-
-    allOf:                                                                                                            
-      - $ref: /schemas/types.yaml#/definitions/uint32-array                                                           
-      - items:                                                                                                            
-          minItems: 1                                                                                                     
-          # Should be enough                                                                                              
-          maxItems: 255                                                                                                   
-
-The first way is my preference.
-
-Rob
+>  unlock:
+> --
+> 2.17.1
+>
