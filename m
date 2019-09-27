@@ -2,114 +2,88 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC78FC32774
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67CE7C32774
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93B8521841
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:55:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="huDKGiiT"
+	by mail.kernel.org (Postfix) with ESMTP id 3B34F207FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:58:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbfI0HzY (ORCPT
+        id S1726565AbfI0H6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 03:55:24 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:43554 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbfI0HzY (ORCPT
+        Fri, 27 Sep 2019 03:58:54 -0400
+Received: from smtp.cellavision.se ([84.19.140.14]:34725 "EHLO
+        smtp.cellavision.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfI0H6x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 03:55:24 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8R7tHv2065733;
-        Fri, 27 Sep 2019 02:55:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569570917;
-        bh=tRDmuFTcml9/vkcUAcgHfVDQw97SRNjv+W5LESjr7XI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=huDKGiiTuQoxMrSKLQ4HaZZ0bHxCorwA5fVfKJKSbv4nwI4rPsuKgRB4f+rS0wWTV
-         qZEAZeYx7sUl0PlkbiZwlmuBI8cWIH/o7zEJQFcDZbSibeUbJH0HzX4AUhMKoy1GRd
-         LZeuRRobiubmw8KKEE2V9ZkUv1I6R8kLV7AthT/M=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8R7tHgD077317
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 27 Sep 2019 02:55:17 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 27
- Sep 2019 02:55:16 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 27 Sep 2019 02:55:09 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8R7tE5K122558;
-        Fri, 27 Sep 2019 02:55:14 -0500
-Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to
- dts
-To:     Adam Ford <aford173@gmail.com>, Tony Lindgren <tony@atomide.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>
-CC:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190510194229.20628-1-aford173@gmail.com>
- <af325707-3e42-493d-e858-77878ef06138@ti.com>
- <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
- <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
- <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
- <845055e2-8182-de74-2077-629fdf50ac6c@ti.com>
- <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com>
-Date:   Fri, 27 Sep 2019 10:55:13 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 27 Sep 2019 03:58:53 -0400
+Received: from DRCELLEX03.cellavision.se (172.16.169.12) by
+ DRCELLEX03.cellavision.se (172.16.169.12) with Microsoft SMTP Server (TLS) id
+ 15.0.1044.25; Fri, 27 Sep 2019 09:58:50 +0200
+Received: from ITG-CEL-24768.cellavision.se (10.230.0.148) by
+ DRCELLEX03.cellavision.se (172.16.169.12) with Microsoft SMTP Server id
+ 15.0.1044.25 via Frontend Transport; Fri, 27 Sep 2019 09:58:50 +0200
+From:   Hans Andersson <haan@cellavision.se>
+To:     <andrew@lunn.ch>
+CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <antoine.tenart@bootlin.com>,
+        Hans Andersson <hans.andersson@cellavision.se>
+Subject: [PATCH v2] net: phy: micrel: add Asym Pause workaround for KSZ9021
+Date:   Fri, 27 Sep 2019 09:58:02 +0200
+Message-ID: <20190927075802.10376-1-haan@cellavision.se>
+X-Mailer: git-send-email 2.21.0.windows.1
+In-Reply-To: <20190926120922.GD1864@lunn.ch>
+References: <20190926120922.GD1864@lunn.ch>
 MIME-Version: 1.0
-In-Reply-To: <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(dropping folks who're probably not interested...)
+From: Hans Andersson <hans.andersson@cellavision.se>
 
-On 26/09/2019 17:12, Adam Ford wrote:
-> On Thu, Sep 26, 2019 at 1:55 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
->>
->> On 25/09/2019 23:51, Adam Ford wrote:
->>
->>>> Has anyone debugged why the hang is happening?
->>> I started to debug this, but I got distracted when I noticed the LCD
->>> did't work at all on modern kernels.  I have that fixed now, so I can
->>> go back to investigating this.
+The Micrel KSZ9031 PHY may fail to establish a link when the Asymmetric
+Pause capability is set. This issue is described in a Silicon Errata
+(DS80000691D or DS80000692D), which advises to always disable the
+capability.
 
-I dont' have the same board, but I was testing with omap3 beagle xm. I 
-can reproduce rather similar issue, although I don't get a hang but 
-instead sync lost and underflow flood (which makes the device unusable).
+Micrel KSZ9021 has no errata, but has the same issue with Asymmetric Pause.
+This patch apply the same workaround as the one for KSZ9031.
 
-It looks like a bug in omap clock handling.
+Fixes: 3aed3e2a143c ("net: phy: micrel: add Asym Pause workaround")
+Signed-off-by: Hans Andersson <hans.andersson@cellavision.se>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+---
+ drivers/net/phy/micrel.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-DSS uses dss1_alwon_fck_3430es2 as fclk. dss1_alwon_fck_3430es2 comes 
-from dpll4_ck, and there's a divider after the PLL, dpll4_m4_ck.
-
-When the DSS driver sets dss1_alwon_fck_3430es2 rate to 27000000 or 
-27870967, which can be created with m4 dividers 32 and 31, it looks like 
-the divider goes to bypass, or to a very small value. DSS gets a very 
-high clock rate and breaks down.
-
-  Tomi
-
+diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+index 3c8186f269f9..2fea5541c35a 100644
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -763,6 +763,8 @@ static int ksz9031_get_features(struct phy_device *phydev)
+ 	 * Whenever the device's Asymmetric Pause capability is set to 1,
+ 	 * link-up may fail after a link-up to link-down transition.
+ 	 *
++	 * The Errata Sheet is for ksz9031, but ksz9021 has the same issue
++	 *
+ 	 * Workaround:
+ 	 * Do not enable the Asymmetric Pause capability bit.
+ 	 */
+@@ -1076,6 +1078,7 @@ static struct phy_driver ksphy_driver[] = {
+ 	/* PHY_GBIT_FEATURES */
+ 	.driver_data	= &ksz9021_type,
+ 	.probe		= kszphy_probe,
++	.get_features	= ksz9031_get_features,
+ 	.config_init	= ksz9021_config_init,
+ 	.ack_interrupt	= kszphy_ack_interrupt,
+ 	.config_intr	= kszphy_config_intr,
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.21.0.windows.1
+
