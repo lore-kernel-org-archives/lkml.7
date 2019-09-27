@@ -2,111 +2,134 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEFFC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 13:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACA3C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 13:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADE1C21850
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 13:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C699820872
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 13:15:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="KCGDieft"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727290AbfI0NOB (ORCPT
+        id S1727528AbfI0NPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 09:14:01 -0400
-Received: from mga05.intel.com ([192.55.52.43]:10968 "EHLO mga05.intel.com"
+        Fri, 27 Sep 2019 09:15:23 -0400
+Received: from mout.web.de ([212.227.15.4]:38389 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725992AbfI0NOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 09:14:00 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Sep 2019 06:14:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,555,1559545200"; 
-   d="scan'208";a="183972918"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 27 Sep 2019 06:13:59 -0700
-Received: from jastaffa-mobl3.amr.corp.intel.com (unknown [10.251.18.83])
-        by linux.intel.com (Postfix) with ESMTP id 661845801E6;
-        Fri, 27 Sep 2019 06:13:58 -0700 (PDT)
-Subject: Re: [PATCH v2] ASoC: Intel: Skylake: prevent memory leak in
- snd_skl_parse_uuids
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-References: <20190925161922.22479-1-navid.emamdoost@gmail.com>
- <13f4bd40-dbaa-e24e-edca-4b4acff9d9c5@linux.intel.com>
- <20190927025526.GD22969@cs-dulles.cs.umn.edu>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <dc68e0dc-9a8e-cc52-c560-3e86c783dbb3@linux.intel.com>
-Date:   Fri, 27 Sep 2019 08:14:00 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        id S1727376AbfI0NPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 09:15:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1569590108;
+        bh=77LlS4dssunQjdsq0f1LknYiQqkHDEPQzLkskhHSDyg=;
+        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
+        b=KCGDieftIA0oVt/RDKgSoTMzao3B7rAHThu3zW87ao36zLEMezBdrmNLTj2XofU+/
+         0v2JOWqfzckPOqw/nkUxFhbhU4aJoa708rKO+Yhm6aEyqLimhSXhAW0SPr0oymcwuz
+         KJULyD8AR/35F2m+9Gyd1tSBOskmPSVsmWLSY/OA=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.191.8]) by smtp.web.de (mrweb001
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LnSKE-1hfL8s1m3i-00hbxm; Fri, 27
+ Sep 2019 15:15:08 +0200
+To:     Paul Moore <paul@paul-moore.com>,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        linux-security-module@vger.kernel.org, netdev@vger.kernel.org
+Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Stephen A McCamant <smccaman@umn.edu>,
+        "David S. Miller" <davem@davemloft.net>
+References: <CAHC9VhR+4pZObDz7kG+rxnox2ph4z_wpZdyOL=WmdnRvdQNH9A@mail.gmail.com>
+Subject: Re: genetlink: prevent memory leak in netlbl_unlabel_defconf
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <c490685a-c7d6-5c95-5bf4-ed71f3c60cb6@web.de>
+Date:   Fri, 27 Sep 2019 15:15:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20190927025526.GD22969@cs-dulles.cs.umn.edu>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <CAHC9VhR+4pZObDz7kG+rxnox2ph4z_wpZdyOL=WmdnRvdQNH9A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:rjJKQfBm9V5MbGJysp5lHeJ/MAt7se96rJzW4qvj/ZsuJblz24o
+ LZDmhOPv4CQDyOOo/4gyDYqNm4Z1NFIqRpW2I6SqE9YlqX0mXzCtYPciMJF1SAfXGON3fRX
+ i943t9/SUZTW+tPhyqtZ9HMT3ipRkcsa/yEl8Mq6Jnk3G1IzZlbEv5GazNUGqWGe89rgcFm
+ NGLvvHGH4Y0207mWz8MkQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:o+CJJ5F4WQ4=:I0dAVsJcWpFwoSvsImSEj3
+ gLBfrADCxSttv7bU8vzswnSFRtcFOgTJkY5A87mn7g/2aPXvO0KFMVsl+ewRlSbQSRLp10sC9
+ av0cIh6POV04/slLQ1BpRHG1wJIq2epj7jsDt59nIJsrGS66QRIqQzaZC1DtcaaFi8qUWQ2TW
+ 2PrImgFVfqp9osEqzJImnMgxC7ceA2hM1vHh8pM5pAmpeJrYaKH0UjBRpn6XXgajlEOATWXLd
+ BuXpqxPlb/ziaLtt7Pu0Qs2c9wXCQO7ZOx/xl87azI+Ff5F8jMtYkvyhUosZ3T6uBXBGACntV
+ APyp69YKwInn5QsH4p1+voPwZf8+SD4jkGeG6v5OztMqVLWcY2sUKpR/5lzIbrwEy/m1XifjA
+ cd1hUix0+JG3ZftEe+sZLS55Bi0wAI4M1YwR7cNOkBXjlZ2C8OinSM8jXW+wqcHavMc81bky9
+ AQ/WEANaFRpiYugcoEFVbXIKsXoNA9xdh1I34nKJzYBy7kP/TyTA8oAX9A1q2SCqOWUtzW6VB
+ ZoOTCuVBdPZ6fM2Ub2WiZ23WJogqID8ghL6Wnjr4F7FNlKdRLCHOb9GBxoCG+omlTNwUc3Uza
+ UJy05A5CG7XODDMpofPooNVe1Q6+V1cWdzgNj5+PFmku4+9DLbjG8zGd11xL6PpE8AZs7rS9c
+ eu2xJZXVzJjTVWVqF5LvPIlZxnvMBVnHjbyi+S1neNFOQtDnyeNT/ogwZZZWYU7C1odHDne33
+ zLQlBOQnBoExJ+2kZZZdNhe9IWxAFb7mL3OuDdSs8g7e+uvmmw3Lj/7af262UJrnpYUya4hEG
+ MlIFiz3GcSxdTrFDLLHLIHQP0qC1UG42Y1XM8V+w/0NAzWdZ46vPSw8rdPz97B2sZs/5mgjc/
+ lOsatG2KntyZZJtI73bsY5rpFrT3JxggxgZB7JICYUJnWGj6lUu9piRGCTZAILFv0dfCK4LEz
+ pC+yh6xpmb2UcJnzBeSynHCiYD7V2H3uWar9YCfTQi1yXJF/zywwwXURoJiqm1JSK5FrxLOLx
+ ALTy/FUmoqCBCVsIV/iJNt1yQExOaHInsWl8Br5U7wqoroxV1YLDfoxNQiMyPAAS+P3i8gqP5
+ 0rjiarFfYQAD7Q6AouXQZH22FWxQQgjiOSAky4KetyWPfA/zqlQevNUrUzMAYRzqn5pOrFi70
+ BO17g+PatdZ6+qW1typuu43jz4tGF2ljuRXSsJ/HeGv9p/zZXlQFyujzuQqrQxsREVamGbgLO
+ 1+vPCHgu5582fkk/5wNZbGhhsLP2rOD8xeFHmbXLlGa/xjDNRkdtFSsjvQG8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/26/19 9:55 PM, Navid Emamdoost wrote:
-> On Wed, Sep 25, 2019 at 12:05:28PM -0500, Pierre-Louis Bossart wrote:
->> On 9/25/19 11:19 AM, Navid Emamdoost wrote:
->>> In snd_skl_parse_uuids if allocation for module->instance_id fails, the
->>> allocated memory for module shoulde be released. I changes the
->>> allocation for module to use devm_kzalloc to be resource_managed
->>> allocation and avoid the release in error path.
->>
->> if you use devm_, don't you need to fix the error path as well then, I see a
->> kfree(uuid) in skl_freeup_uuid_list().
->>
->> I am not very familiar with this code but the error seems to be that the
->> list_add_tail() is called after the module->instance_id is allocated, so
->> there is a risk that the module allocated earlier is not freed (since it's
->> not yet added to the list). Freeing the module as done in patch 1 works,
->> using devm_ without fixing the error path does not seem correct to me.
->>
-> Thanks for the feedback, then it's your call if you can accept patch 1 as
-> fix.
+> > In netlbl_unlabel_defconf if netlbl_domhsh_add_default fails the
+> > allocated entry should be released.
+=E2=80=A6
+> That said, netlbl_unlabel_defconf() *should* clean up here just on
+> principal if nothing else.
 
-Cezary, it's really your call.
+How do you think about to add the tag =E2=80=9CFixes=E2=80=9D then?
 
-> Navid.
->>>
->>> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
->>> ---
->>> Changes in v2:
->>> 	- Changed the allocation for module from kzalloc to devm_kzalloc
->>> ---
->>>    sound/soc/intel/skylake/skl-sst-utils.c | 2 +-
->>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/sound/soc/intel/skylake/skl-sst-utils.c b/sound/soc/intel/skylake/skl-sst-utils.c
->>> index d43cbf4a71ef..ac37f04b0eea 100644
->>> --- a/sound/soc/intel/skylake/skl-sst-utils.c
->>> +++ b/sound/soc/intel/skylake/skl-sst-utils.c
->>> @@ -284,7 +284,7 @@ int snd_skl_parse_uuids(struct sst_dsp *ctx, const struct firmware *fw,
->>>    	 */
->>>    	for (i = 0; i < num_entry; i++, mod_entry++) {
->>> -		module = kzalloc(sizeof(*module), GFP_KERNEL);
->>> +		module = devm_kzalloc(ctx->dev, sizeof(*module), GFP_KERNEL);
->>>    		if (!module) {
->>>    			ret = -ENOMEM;
->>>    			goto free_uuid_list;
->>>
->>
-
+Regards,
+Markus
