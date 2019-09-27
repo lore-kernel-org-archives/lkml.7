@@ -2,68 +2,141 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A5D4C388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BE9C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 672B421655
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:15:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569615326;
-	bh=SwDH7HOQCXwqvoE/PXOXeg2Huipb2qJ2AhfuVGYaeRU=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=xETpdX1amLGLWXE3yBcz7iBjDgEXhRHkpMgDG06mSl+I9G+f+usJnOiYBU04pnuWw
-	 mAT/HN/0MZlVGwZbgY/TWh4kp+LrsVhCy+txIMItyrhyVCn4Mu7Cq57dK9bV2jdA99
-	 WL6dkqeOBoc92r7N9pbVoEFq49gqvGtx+RsnPKKY=
+	by mail.kernel.org (Postfix) with ESMTP id 4AA7321906
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:24:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fOt4rEu6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728278AbfI0UPZ (ORCPT
+        id S1728184AbfI0UYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 16:15:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40056 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728250AbfI0UPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 16:15:24 -0400
-Subject: Re: [GIT PULL] RISC-V additional updates for v5.4-rc1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569615324;
-        bh=SwDH7HOQCXwqvoE/PXOXeg2Huipb2qJ2AhfuVGYaeRU=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=qOZKTLKbemVfI9oSkqtCpFRQN+x+xuHXtdSyz81+LqihP/EKbT6T9l3mRW7Ey+zkX
-         8jfcOd9SrSqs6W9Q0IaItsMzP7hnphU5ZI+4T9FPapGKnq9ItVdoVZtEWfpt24/Suv
-         +IfgANDXSHrgY1Rin8R7MD/x4z9ddDvftN5UcCjA=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <alpine.DEB.2.21.9999.1909271123370.17782@viisi.sifive.com>
-References: <alpine.DEB.2.21.9999.1909271123370.17782@viisi.sifive.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <alpine.DEB.2.21.9999.1909271123370.17782@viisi.sifive.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git
- tags/riscv/for-v5.4-rc1-b
-X-PR-Tracked-Commit-Id: c82dd6d078a2bb29d41eda032bb96d05699a524d
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 568d850e3c6015acec8f854f5be97766497a676b
-Message-Id: <156961532414.31800.14952198314598782581.pr-tracker-bot@kernel.org>
-Date:   Fri, 27 Sep 2019 20:15:24 +0000
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     torvalds@linux-foundation.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org
+        Fri, 27 Sep 2019 16:24:41 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45095 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfI0UYk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 16:24:40 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y72so2171032pfb.12
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 13:24:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=av8uQTzC5kAZ04adK2jUzugM4hsPl2jUpES0RTtperI=;
+        b=fOt4rEu6WT8wmVxdYRnJ5ZS/3wY9TTML1Y6MVTtId1t6nLAYoWvXz6fmKAFPqs+mKo
+         ZA3BjyNtKIj11n5uTvytcNvyA7XeEokpO/MzutnuoG5QJI1kWN1/YwV4twGddY3JDHDu
+         RzKU8tvzIixQ23Is9KezC3Lc3CVs9C3ZELa9UeAF8y7CB6srtOXhCV0RWf7zyF7Mo2iI
+         68qI11EL5VsmZ5SuQH9uB/MaD6PRt6Tuek+8zTVk7TSNNAtALCggtOy3zC4cydScB+PM
+         O/8YmwGUfZYeGNowVOONCOp8Zj6UB2RiJ93SDjb3jh6vVTFsLmYK4I6QBsc0cXxPvqC8
+         lI/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=av8uQTzC5kAZ04adK2jUzugM4hsPl2jUpES0RTtperI=;
+        b=QmdUhNc9nJzNAxt+CS6LLdouOWC3LidBvCthQIzvWJKS7RFJNnIy959wlDMbKtZzJU
+         AGazxVjuHniRyLgbJK2HXC9ajbyWd/rEi/qV/d4Rm9VntGXy/hJFKJfwtD5pvq1iF1UC
+         3oweyfCY+okPispO0RF6rGtx6uFPdsLgIC6+UyQNKS3+9tbbqquRiEyBgiVfke6uIJSH
+         wXVxuZiZZgIDzGdUg6ET+zfGCMzNmYxj6fhoYnYvogJPLsgvHvoF78JzEmuHgKr5rC6S
+         ve/dO+r1alvjMjLXs95UlzgEu15cFgADBL+rKBw/Hi+sGLWHfugQBzut/HEq02JhiTcx
+         g81A==
+X-Gm-Message-State: APjAAAV84N2IuNfWHTG/m/1yNADQRGaGs8T9gYj8OpF8X9yM1Q5M/nN6
+        HCk14W36JiMULngQUMZ/8sfFuw==
+X-Google-Smtp-Source: APXvYqwJQvt389v7itLWsRH7wK5uJv4VwzElBVKJOw/6JIjr8ATfdDL8RmFn0F1a0Swpg/916AirEg==
+X-Received: by 2002:a17:90a:80c9:: with SMTP id k9mr11914360pjw.68.1569615879390;
+        Fri, 27 Sep 2019 13:24:39 -0700 (PDT)
+Received: from js-desktop.svl.corp.google.com ([2620:15c:2cd:2:5e41:bb1f:98fb:39da])
+        by smtp.gmail.com with ESMTPSA id d1sm3421894pfc.98.2019.09.27.13.24.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Sep 2019 13:24:38 -0700 (PDT)
+Subject: Re: [PATCH v2 2/3] KVM: x86: fix nested guest live migration with PML
+To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+References: <1569582943-13476-1-git-send-email-pbonzini@redhat.com>
+ <1569582943-13476-3-git-send-email-pbonzini@redhat.com>
+From:   Junaid Shahid <junaids@google.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=junaids@google.com; keydata=
+ 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
+ iWogGkOc4UGfcj87Lt9ivHEsVoo/lwCTIiQ=
+Organization: Google
+Message-ID: <0b6701ed-8eac-1f52-8fdd-c06d2289ce11@google.com>
+Date:   Fri, 27 Sep 2019 13:24:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <1569582943-13476-3-git-send-email-pbonzini@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 27 Sep 2019 11:25:13 -0700 (PDT):
+On 9/27/19 4:15 AM, Paolo Bonzini wrote:
+> Shadow paging is fundamentally incompatible with the page-modification
+> log, because the GPAs in the log come from the wrong memory map.
+> In particular, for the EPT page-modification log, the GPAs in the log come
+> from L2 rather than L1.  (If there was a non-EPT page-modification log,
+> we couldn't use it for shadow paging because it would log GVAs rather
+> than GPAs).
+> 
+> Therefore, we need to rely on write protection to record dirty pages.
+> This has the side effect of bypassing PML, since writes now result in an
+> EPT violation vmexit.
+> 
+> This is relatively easy to add to KVM, because pretty much the only place
+> that needs changing is spte_clear_dirty.  The first access to the page
+> already goes through the page fault path and records the correct GPA;
+> it's only subsequent accesses that are wrong.  Therefore, we can equip
+> set_spte (where the first access happens) to record that the SPTE will
+> have to be write protected, and then spte_clear_dirty will use this
+> information to do the right thing.
+> 
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv/for-v5.4-rc1-b
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/568d850e3c6015acec8f854f5be97766497a676b
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Reviewed-by: Junaid Shahid <junaids@google.com>
