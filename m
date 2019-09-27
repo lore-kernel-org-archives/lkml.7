@@ -2,133 +2,82 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A377C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D8FC388F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC8120863
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C076A217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:52:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pIdGmyRt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbfI0Tt2 (ORCPT
+        id S1726883AbfI0Twl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 15:49:28 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:53858 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725813AbfI0Tt1 (ORCPT
+        Fri, 27 Sep 2019 15:52:41 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52624 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfI0Twk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 15:49:27 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <dan.streetman@canonical.com>)
-        id 1iDwF4-0005ji-9i
-        for linux-kernel@vger.kernel.org; Fri, 27 Sep 2019 19:49:26 +0000
-Received: by mail-io1-f71.google.com with SMTP id r13so14495784ioj.22
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 12:49:26 -0700 (PDT)
+        Fri, 27 Sep 2019 15:52:40 -0400
+Received: by mail-wm1-f65.google.com with SMTP id r19so7192621wmh.2;
+        Fri, 27 Sep 2019 12:52:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tkNqoPjwgjY6Tt+/Rahv/i1baIBltWJLeHfEIQ9uNuY=;
+        b=pIdGmyRtmrj8deGs8b9XvEjDoff7j4nAxZIPxMlCERwQ5HIKAJdzD/T6TPv8kkBjQ8
+         8fJLgkIdLurHta/w9T2+bF4PnQxQOHK9ICXvMEiRb4eUS5wEfAPxW/E0vEYubDFePjOo
+         MYdIlmHLbZwAWFsURQ6Ij4cLZfn0l41K9htfr0AQq08ngT3CudTBQzv4OYY+HZtRFfVp
+         WVxZUA3GqPEC1Lynb3qW4dgVaTtZhwpLThpHRRLcgFYfy9seuEokZ7UyQRGX5FonEuVd
+         LS9IMRKQkpsDh5JpQuJtY4rr5B9ayzYzkhtUZKS81+bAIyt3bnRl8Jcq61qCWAxTB2oo
+         p9Pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QzSszHmZY6R6wBZpwrMnlGiFB4TaLUoa40MZxhfjcUQ=;
-        b=ou9wiFS9x2rFHvOVit4SucacHkY8jW0s5+LdTTaTKEND9xB5phjzaYDs97f/kuLhee
-         4/hAZFyCTVY2tJZF+/n7E7F0VYueLLo3GMsr79u4VuKCTTzH6WruqQgmC6MyngZinkl0
-         SZ5pAgxkS1qHC3tlIHwYSM9CvY+rtXSWVGngNKJQOolIwTMw1J+ylFb+Yd1TxqtNSfah
-         LRNnc88xRS/l2GBCB7Y2kjcVUK9NyK1Dq2U0m7b6hKqqEctFQIV1cxSonpj6GXq4h/du
-         BJXoPG7BdhGQmSKgDV+aOivYYx2c/SrZbxYhgzlih1UP8MFAur/Vh3NSjuiW3iflJ0wn
-         pPxw==
-X-Gm-Message-State: APjAAAXfoxfd+q38qNKfvZxIRfOqd3eFbebMZnRNruC8Ow/DfkQcg6zm
-        7qaL0S7vHla5ll1r1h00ZLxkVPEkVpzYP5ZjD6cBbXrEnaQYMJ34Q7vJ0xOvf+kOvZg1EGsdTay
-        Gn3Bf+sYbZ0V/mUAsrmXyxSloEfvhFayTMqae+Sg2ilkVVYF1679O0ecRPw==
-X-Received: by 2002:a05:6602:c9:: with SMTP id z9mr9411767ioe.28.1569613765286;
-        Fri, 27 Sep 2019 12:49:25 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzGvhNv1kaE6ju+QP/5ILJjDu0CVwiSJXPvYACgs/yTF1cbZAIT67ZZEk6c8Kh9eh7t5f1wpnnhgFX0RTxQOCs=
-X-Received: by 2002:a05:6602:c9:: with SMTP id z9mr9411730ioe.28.1569613764952;
- Fri, 27 Sep 2019 12:49:24 -0700 (PDT)
+        bh=tkNqoPjwgjY6Tt+/Rahv/i1baIBltWJLeHfEIQ9uNuY=;
+        b=i/S4fi7robtvve2jV/dy6NCpfu6u2kYeOkI58Oa+ZY4rTAgK3E3p/8z4b2vDrvjwbV
+         DYjk5Jn/AO8Bm5fXF6FbkcevyLYyeCoS5b7ppAm1x6xEmQPTktwzYkByzqClELc3B0Kr
+         9bi/8pCOsSKlEXAn4BELlpVyKutKhGeZTxJ/UuoImWKzUlnLanEVb195tg8XdYzdmFbN
+         idUTDe44Gro7vVvNrcLi3F5xFQicpWYlWJVyqYEmlHFrOXPMmkQB2ShqGwJNYtJYTT7J
+         m1B/ya06sIKNu/OavsJGfixVf62WguTeM/C+p37OtvQOnwYk+UEFV87K2hvBlRWI6Jtt
+         OcKg==
+X-Gm-Message-State: APjAAAXnHqFQGyb2Tc7rFbKfHlpLixcp1T2P5a1jhchXUKU4VqUQxz3v
+        fT+bHIsFn5u5bz0j0upqAvJ6CbfbQwIsUq4cg0c=
+X-Google-Smtp-Source: APXvYqxevkOb1sjzdjGX8J8c49Tl0KQueZ4du8zN/vMYOLsCk6glXUyJWC631XcDMIClgGupDdjjQ8xidTy5JaxryHM=
+X-Received: by 2002:a7b:c7d7:: with SMTP id z23mr8400944wmk.137.1569613957236;
+ Fri, 27 Sep 2019 12:52:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190927130402.687-1-ddstreet@canonical.com> <20190927181856.GD1804168@kroah.com>
-In-Reply-To: <20190927181856.GD1804168@kroah.com>
-From:   Dan Streetman <ddstreet@canonical.com>
-Date:   Fri, 27 Sep 2019 15:48:49 -0400
-Message-ID: <CAOZ2QJNNnkM_0ZTULHOYGY2wEz1GxZWzHjosnM=j98zxZXUvYA@mail.gmail.com>
-Subject: Re: [PATCH] powerpc/vio: use simple dummy struct device as bus parent
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Rob Herring <robh@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <a9e8e68f34139d5a9abb7f8b7d3fe64ff82c6d96.camel@intel.com>
+ <CAHk-=whua2XSTLd3gtqVHfq5HtGnjhRUv7vA6SUfkbVUebqWJQ@mail.gmail.com> <64d13484950cab570e5f2691d7cdeca292882d95.camel@redhat.com>
+In-Reply-To: <64d13484950cab570e5f2691d7cdeca292882d95.camel@redhat.com>
+From:   Richard Weinberger <richard.weinberger@gmail.com>
+Date:   Fri, 27 Sep 2019 21:52:25 +0200
+Message-ID: <CAFLxGvxm77O7JnVeHjk8xMfAO2_5+PxV7QDkihL5q+86Q1xz6Q@mail.gmail.com>
+Subject: Re: [GIT PULL] Thermal management updates for v5.4-rc1
+To:     Doug Ledford <dledford@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 2:19 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Fri, Sep 27, 2019 at 09:04:02AM -0400, Dan Streetman wrote:
-> > The dummy vio_bus_device creates the /sys/devices/vio directory, which
-> > contains real vio devices under it; since it represents itself as having
-> > a bus = &vio_bus_type, its /sys/devices/vio/uevent does call the bus's
-> > .uevent function, vio_hotplug(), and as that function won't find a real
-> > device for the dummy vio_dev, it will return -ENODEV.
-> >
-> > One of the main users of the uevent node is udevadm, e.g. when it is called
-> > with 'udevadm trigger --devices'.  Up until recently, it would ignore any
-> > errors returned when writing to devices' uevent file, but it was recently
-> > changed to start returning error if it gets an error writing to any uevent
-> > file:
-> > https://github.com/systemd/systemd/commit/97afc0351a96e0daa83964df33937967c75c644f
-> >
-> > since the /sys/devices/vio/uevent file has always returned ENODEV from
-> > any write to it, this now causes the udevadm trigger command to return
-> > an error.  This may be fixed in udevadm to ignore ENODEV errors, but the
-> > vio driver should still be fixed.
-> >
-> > This patch changes the arch/powerpc/platform/pseries/vio.c 'dummy'
-> > parent device into a real dummy device with no .bus, so its uevent
-> > file will stop returning ENODEV and simply do nothing and return 0.
-> >
-> > Signed-off-by: Dan Streetman <ddstreet@canonical.com>
-> > ---
-> >  arch/powerpc/platforms/pseries/vio.c | 11 ++++-------
-> >  1 file changed, 4 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/arch/powerpc/platforms/pseries/vio.c b/arch/powerpc/platforms/pseries/vio.c
-> > index 79e2287991db..63bc16631680 100644
-> > --- a/arch/powerpc/platforms/pseries/vio.c
-> > +++ b/arch/powerpc/platforms/pseries/vio.c
-> > @@ -32,11 +32,8 @@
-> >  #include <asm/page.h>
-> >  #include <asm/hvcall.h>
-> >
-> > -static struct vio_dev vio_bus_device  = { /* fake "parent" device */
-> > -     .name = "vio",
-> > -     .type = "",
-> > -     .dev.init_name = "vio",
-> > -     .dev.bus = &vio_bus_type,
-> > +static struct device vio_bus = {
-> > +     .init_name      = "vio",
->
-> Eeek, no!  Why are you creating a static device that will then be
-> reference counted?  Not nice :(
+On Fri, Sep 27, 2019 at 9:30 PM Doug Ledford <dledford@redhat.com> wrote:
+> Because there are literally thousands of developers working on kernel
+> bits here and there, and you're swatting this particular fly one
+> developer at a time.
 
-sorry!  I'll admit that I simply copied what drivers/base/platform.c
-seemed to be doing.
+I strongly disagree. One of the golden rules of kernel development is,
+read what Linus writes. Especially during the merge window.
 
->
-> What's wrong with a simple call to device_create() for your "fake"
-> device you want to make here?  That's what it is there for :)
-
-ack, will send a new patch using that.  thanks!
-
->
-> thanks,
->
-> greg k-h
+Thanks,
+//richard
