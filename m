@@ -2,105 +2,95 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B06AC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7B6C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E71520872
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:33:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="L9qn8RT6";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RFv5nTSN"
+	by mail.kernel.org (Postfix) with ESMTP id 2B36120872
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:33:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727423AbfI0MdK (ORCPT
+        id S1727454AbfI0Md2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 08:33:10 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:52706 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbfI0MdJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 08:33:09 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 46D7460A78; Fri, 27 Sep 2019 12:33:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569587588;
-        bh=r8P0kTWFs5BN/PAIrml16HxhQSxByv11rct0foYZLGc=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=L9qn8RT6xZ4wbcsRpV1JbAIQB2wDlooRGkDSIIb4VR6rheWVGM+nREe1BspPPqp6N
-         khDGiUGDtcz8wIUVBA15X3rLyegLh2Bnb5a54/4Rtz1CBVDyPZj7xqsA5252pUdi2p
-         nAnvHFbI4tJr3cN/reR2xSG21b1x977iJPDYlrhA=
-Received: from tynnyri.adurom.net (tynnyri.adurom.net [51.15.11.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C0D07608CC;
-        Fri, 27 Sep 2019 12:33:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569587587;
-        bh=r8P0kTWFs5BN/PAIrml16HxhQSxByv11rct0foYZLGc=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=RFv5nTSNu+dIox97OpCHi6fEdAr+gbGzLwWaHHnXoVQ/xs28RkMGs5ISu1rnK8y9L
-         b9pKuKhT/KskhyetDjwc9eXAeh2m7ptyGy7+YAR+KLyo/MaTF9e5bCvyAI5aRNAP5b
-         awI4cuLEn27eHIRA7rn2i/08T06DAkZDlr66SCnQ=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C0D07608CC
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Norbert Preining <norbert@preining.info>
-Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ilw@linux.intel.com
-Subject: Re: IWL AC 8260, kernel 5.3.*, many kernel WARNING
-References: <20190927010452.b576njhcvgowasf3@burischnitzel.preining.info>
-Date:   Fri, 27 Sep 2019 15:33:02 +0300
-In-Reply-To: <20190927010452.b576njhcvgowasf3@burischnitzel.preining.info>
-        (Norbert Preining's message of "Fri, 27 Sep 2019 10:04:52 +0900")
-Message-ID: <87blv5j4w1.fsf@tynnyri.adurom.net>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 27 Sep 2019 08:33:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:51040 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726549AbfI0Md2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 08:33:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4492F1000;
+        Fri, 27 Sep 2019 05:33:27 -0700 (PDT)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 24EDC3F67D;
+        Fri, 27 Sep 2019 05:33:27 -0700 (PDT)
+Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
+        id D747268295D; Fri, 27 Sep 2019 13:33:25 +0100 (BST)
+Date:   Fri, 27 Sep 2019 13:33:25 +0100
+From:   Liviu Dudau <Liviu.Dudau@arm.com>
+To:     Mihail Atanassov <Mihail.Atanassov@arm.com>
+Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        nd <nd@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/komeda: Fix typos in komeda_splitter_validate
+Message-ID: <20190927123325.zkyttahfysypl6mv@e110455-lin.cambridge.arm.com>
+References: <20190920151117.22725-1-mihail.atanassov@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190920151117.22725-1-mihail.atanassov@arm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Norbert Preining <norbert@preining.info> writes:
+On Fri, Sep 20, 2019 at 03:11:34PM +0000, Mihail Atanassov wrote:
+> Fix both the string and the struct member being printed.
+> 
+> Fixes: 264b9436d23b ("drm/komeda: Enable writeback split support")
+> Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
+> ---
+>  drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
+> index 950235af1e79..de64a6a9964e 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
+> @@ -564,8 +564,8 @@ komeda_splitter_validate(struct komeda_splitter *splitter,
+>  	}
+>  
+>  	if (!in_range(&splitter->vsize, dflow->in_h)) {
+> -		DRM_DEBUG_ATOMIC("split in_in: %d exceed the acceptable range.\n",
+> -				 dflow->in_w);
+> +		DRM_DEBUG_ATOMIC("split in_h: %d exceed the acceptable range.\n",
 
-> Dear all,
->
-> (please cc)
->
-> linux 5.3.1
-> Debian/sid
-> Thinkpad X260
-> iwlwifi 0000:04:00.0: Detected Intel(R) Dual Band Wireless AC 8260, REV=0x208
-> iwlwifi 0000:04:00.0: loaded firmware version 36.8fd77bb3.0 op_mode iwlmvm
->
-> since about 5.3.0 I get a lot of warnings in the syslog about iwlmvm.
->
-> It starts with
-> Sep 27 09:08:35 burischnitzel kernel: iwlwifi 0000:04:00.0: Microcode SW error detected.  Restarting 0x82000000.
-> Sep 27 09:08:35 burischnitzel kernel: iwlwifi 0000:04:00.0: Start IWL Error Log Dump:
-> Sep 27 09:08:35 burischnitzel kernel: iwlwifi 0000:04:00.0: Status: 0x00000080, count: 6
-> Sep 27 09:08:35 burischnitzel kernel: iwlwifi 0000:04:00.0: Loaded firmware version: 36.8fd77bb3.0
-> Sep 27 09:08:35 burischnitzel kernel: iwlwifi 0000:04:00.0: 0x00000038 | BAD_COMMAND
-> Sep 27 09:08:35 burischnitzel kernel: iwlwifi 0000:04:00.0: 0x000002F0 | trm_hw_status0
-> Sep 27 09:08:35 burischnitzel kernel: iwlwifi 0000:04:00.0: 0x00000000 | trm_hw_status1
-> ....
->
-> after that
-> Sep 27 09:08:35 burischnitzel kernel: ieee80211 phy0: Hardware restart was requested
-> Sep 27 09:08:35 burischnitzel kernel: iwlwifi 0000:04:00.0: FW Error notification: type 0x00000000 cmd_id 0x05
-> Sep 27 09:08:35 burischnitzel kernel: iwlwifi 0000:04:00.0: FW Error notification: seq 0x0030 service 0x00000005
-> Sep 27 09:08:35 burischnitzel kernel: iwlwifi 0000:04:00.0: FW Error notification: timestamp 0x000000000037F460
-> Sep 27 09:08:35 burischnitzel kernel: iwlwifi 0000:04:00.0: FW error in SYNC CMD GEO_TX_POWER_LIMIT
+Being pedandic: s/exceed/exceeds/.
 
-I'm guessing this should fix it:
+Best regards,
+Liviu
 
-https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers.git/commit/?id=fddbfeece9c7882cc47754c7da460fe427e3e85b
+> +				 dflow->in_h);
+>  		return -EINVAL;
+>  	}
+>  
+> -- 
+> 2.23.0
+> 
 
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
