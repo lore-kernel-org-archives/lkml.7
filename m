@@ -2,101 +2,127 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48980C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB4FC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11F1C20872
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 233222082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:40:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="qDzk9fny"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="rLeSDyCp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726203AbfI0TdG (ORCPT
+        id S1726564AbfI0Tkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 15:33:06 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39600 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbfI0TdG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 15:33:06 -0400
-Received: by mail-oi1-f193.google.com with SMTP id w144so6179171oia.6
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 12:33:06 -0700 (PDT)
+        Fri, 27 Sep 2019 15:40:33 -0400
+Received: from mail-eopbgr810049.outbound.protection.outlook.com ([40.107.81.49]:11653
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725815AbfI0Tkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 15:40:32 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gTG4+C0/qWYzFGHFTaFWCD+jI9KjSKneZ9r8zdNc+HYA8tFwH8pbTbAdRULwwTPIfF2MOlw2+SXpfISkqWjfgydDajvGSh0vEuRbau+kVZsb+IX7EmFCHx4Sqdz00HdSqa2zAyJw4ySt06PkDcxur/H9QP60uc9fa+VlQoNr1jfbzUp99DWgfQ5UyNoI86omjmuQadTFxmfRk5dCOqacFGJFgcmxDK7U11krmTBM8os4Q8dUhJzDtHZRoNlzQMNMT/QaC4M+7onfQZePXfdh+k7ZHPYbai3Mn99qfDNlt1gnh7c/fQUCVWir5cyFL2yASzPSBJmvGqvL4E/Gbo7k6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u/G6d8tMR0G+kP6p0I4FxtywYsCrR0mj8FWjo9dl3n8=;
+ b=M82PWoGNftbN/J6rAaH/0NbCDXKP660Sh0GUrrFEMO/q8v/hNZLbhGKCYR79OuIPfVnhOsNKCkHM8wf2pEiPk7NXoiMgfSsyCP0FMI3fiDTnlE8HkVBJOqx8tJAnNrAbnpMZlItKWftQHJ2jXPiP02aieHj+b4D4HdTZT/ANqmUExPlPFWFSttMkgbpR8DHWKkW2996L4sZUIjZ7bcw5WH29gNbTPjY6c/ISqAIcB04EYnIPMoce2vWya+akX2U/5c+Bu44pvmP0xNCy7cGgzyAY4XrQ0poO5JCYVWybwrf09ukjlcG4b0WSRETCQ7qrR3wS0koyXfqo4ZwI2qcScw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=linaro.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=isDPGCReaiK37P8mK6pZ6yGM/s1VY4mHCre4SI/h+uk=;
-        b=qDzk9fny20uBp5VR9KMYd1Fac7VhmA3xZ0QbUkwiP80EbKY9RaCkA/4U4Qe7pi6TsI
-         zDEsEtbKHF8GpyEsQPTtGod2U4zBxqctjrd4sOKYfMmeJXF6SAxWVZ16/wp4AKGS5xv6
-         3apcUl+LXf1XdM/yu/zw1Uw97EfZ9XGnzwGMCbc919wDt95/CpOPUnrVC9TbFVA3DgnX
-         k826ZjdZJgOP0qVA9oleHpg4fFUebyz8hqjPBGPaHvhd7R/id1utbwGeNqZuwRQdicVO
-         zyrcK+uCKeiCSFtqsitZuUVl82lvIty2M8HzrYh0u6W2pvLlVz29fB2DhcjV0n04fay/
-         2OoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=isDPGCReaiK37P8mK6pZ6yGM/s1VY4mHCre4SI/h+uk=;
-        b=trDCr9RTDLDv167ztRDrClLtHN0t/TA3GtKv9e4f095RoBR9Q/xthM8ydMXXsMVkcJ
-         ZdoUcCQP3ynNaRG8k1TKx4D+Aubyw1YAhp0kXxB8DU5D/7lOTS+dGJHYLblad2aOLUex
-         F9+DRa3z++3DOFqtFVcVc4alrMlkaz95mZmrbpzbz/fAanboVZazEotPAjdzljYb4l6d
-         RwwbP0mu1NI13xQXVHLWQbDMaIbgLX42JkkaN3yf7jHb+xtRR1m/Oa54Vm2qySh7UYSy
-         7D4B8SFtyXRBPUGe+xmau6ihEaH5Krw/8U3nTs36PtQZPnjxl5+a005uaJO+1XScvF6I
-         Yy1g==
-X-Gm-Message-State: APjAAAUjMEauU91DWBXY2s+shCf6fnxS8istUoo9JBVAnu+lYoA1nfK4
-        DXoGFHzQTkr9mInzb4zJnCuOOha1EMpyAGusk/7d0A==
-X-Google-Smtp-Source: APXvYqzAZY40Bk8ZksTVV+s3FcueJU0jeqVy/scpmyhn0c0F1MSet8HaXinRuhaCTO9u6YjIBS9thk00YJposzWuWaA=
-X-Received: by 2002:aca:eb09:: with SMTP id j9mr8863477oih.105.1569612785882;
- Fri, 27 Sep 2019 12:33:05 -0700 (PDT)
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u/G6d8tMR0G+kP6p0I4FxtywYsCrR0mj8FWjo9dl3n8=;
+ b=rLeSDyCpHihyGJIe8JwPQJzI5oaOcJKnrK0WeTatFKGt14xlPprYgUq02iVW5iSOYY53EeDoWegB1ruhKIWAA9ND5tUEflHDD+MCaRByBOxiRzy5YWk0LjlQp0kIiuOBZ7UlTzoHtW33n2uJ59SrPrvi2TmdEv1WjQw1+KIiZAQ=
+Received: from DM6PR02CA0126.namprd02.prod.outlook.com (2603:10b6:5:1b4::28)
+ by BYAPR02MB6437.namprd02.prod.outlook.com (2603:10b6:a03:11d::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.19; Fri, 27 Sep
+ 2019 19:40:29 +0000
+Received: from BL2NAM02FT013.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::208) by DM6PR02CA0126.outlook.office365.com
+ (2603:10b6:5:1b4::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2305.20 via Frontend
+ Transport; Fri, 27 Sep 2019 19:40:29 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; linaro.org; dkim=none (message not signed)
+ header.d=none;linaro.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT013.mail.protection.outlook.com (10.152.77.19) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2284.20
+ via Frontend Transport; Fri, 27 Sep 2019 19:40:29 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <jolly.shah@xilinx.com>)
+        id 1iDw6O-0000L8-Ki; Fri, 27 Sep 2019 12:40:28 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <jolly.shah@xilinx.com>)
+        id 1iDw6J-0003aE-Fe; Fri, 27 Sep 2019 12:40:23 -0700
+Received: from [172.19.2.91] (helo=xsjjollys50.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <jolly.shah@xilinx.com>)
+        id 1iDw6B-0003I3-Sw; Fri, 27 Sep 2019 12:40:15 -0700
+From:   Jolly Shah <jolly.shah@xilinx.com>
+To:     ard.biesheuvel@linaro.org, mingo@kernel.org,
+        gregkh@linuxfoundation.org, matt@codeblueprint.co.uk,
+        sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org,
+        dmitry.torokhov@gmail.com, michal.simek@xilinx.com
+Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Jolly Shah <jolly.shah@xilinx.com>
+Subject: [PATCH 0/2] drivers: firmware: xilinx: Add support for versal soc
+Date:   Fri, 27 Sep 2019 12:40:04 -0700
+Message-Id: <1569613206-20189-1-git-send-email-jolly.shah@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(346002)(376002)(39860400002)(189003)(199004)(47776003)(51416003)(7696005)(44832011)(36756003)(6666004)(107886003)(26005)(9786002)(305945005)(356004)(186003)(476003)(486006)(2906002)(106002)(2616005)(126002)(8936002)(336012)(7416002)(81156014)(81166006)(316002)(36386004)(4326008)(4744005)(70206006)(478600001)(70586007)(16586007)(5660300002)(426003)(48376002)(6636002)(50466002)(50226002)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB6437;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
 MIME-Version: 1.0
-References: <20190927161416.62293-1-pilgrimtao@gmail.com>
-In-Reply-To: <20190927161416.62293-1-pilgrimtao@gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 27 Sep 2019 12:32:54 -0700
-Message-ID: <CAPcyv4imXWDSoVet4a0CYtO3JxN__f1hq+LCKTnjjF+4HB+6Kw@mail.gmail.com>
-Subject: Re: [PATCH] mm, page_alloc: drop pointless static qualifier in build_zonelists()
-To:     Kaitao Cheng <pilgrimtao@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Pasha Tatashin <pavel.tatashin@microsoft.com>,
-        Alexander Potapenko <glider@google.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Muchun Song <smuchun@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5d3f5e17-2367-4e94-96a4-08d743828d74
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(4709080)(1401327)(4618075)(2017052603328);SRVR:BYAPR02MB6437;
+X-MS-TrafficTypeDiagnostic: BYAPR02MB6437:
+X-Microsoft-Antispam-PRVS: <BYAPR02MB64379C3A41D42F9A88EF2872B8810@BYAPR02MB6437.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:3826;
+X-Forefront-PRVS: 0173C6D4D5
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: gKjXEYTOGVhJ3EcvBlrY08CjPSB399AJt7GqOAgl8PlU7vRh+DmHBaU5EyFnImprIhclnjP/cSqY/vavAsnQpgJi9ER5zmfxIVh8Ht/Jc7dRQnUmFPF+PEYRp2+Lbq7JYh6OEQyqixyO/a4UcUPf2MDYUZ3T+NXlJQGj+uHHsxq35uIDu1jVLd/TD2xAd2v1b6ouAWMacXJlY8NtHw5a4GGDEqzHWnSc2ba91C68DP//ZlXSWQwdObh5MrcjYksjSGkX7o1jDouJCnqbnCx5Y2DYlOnd3oxz/hxokFD38flrgvt5UFAxA0ypjBk3uhKZCpSU+USRuOdZnM6Sx0crOC7l+hXLwwl7ZYqRetpQnNqggNZmCZP2R2D7HmJZACw5+rMt9sI/Fj9zk01NNM0Iz8bb59kvB/62+ezB3n1UwGc=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Sep 2019 19:40:29.2510
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5d3f5e17-2367-4e94-96a4-08d743828d74
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB6437
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 9:14 AM Kaitao Cheng <pilgrimtao@gmail.com> wrote:
->
-> There is no need to make the 'node_order' variable static
-> since new value always be assigned before use it.
->
-> Signed-off-by: Kaitao Cheng <pilgrimtao@gmail.com>
-> Signed-off-by: Muchun Song <smuchun@gmail.com>
-> ---
->  mm/page_alloc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 3334a769eb91..c473c304d09f 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -5597,7 +5597,7 @@ static void build_thisnode_zonelists(pg_data_t *pgdat)
->
->  static void build_zonelists(pg_data_t *pgdat)
->  {
-> -       static int node_order[MAX_NUMNODES];
-> +       int node_order[MAX_NUMNODES];
+Versal is xilinx's next generation soc. This patch adds
+driver support required to be compatible with versal device.
 
-This isn't pointless. This prevents 4KB stack allocation which might overflow.
+Jolly Shah (2):
+  dt-bindings: firmware: Add bindings for Versal firmware
+  drivers: firmware: xilinx: Add support for versal soc
+
+ .../bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt    | 16 +++++++++++++++-
+ drivers/firmware/xilinx/zynqmp.c                         |  8 ++++++--
+ 2 files changed, 21 insertions(+), 3 deletions(-)
+
+-- 
+2.7.4
+
