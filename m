@@ -2,123 +2,150 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08794C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5ACC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFE9B20673
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 428DF20673
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:15:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iROi2TOr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JPHXQFqJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727438AbfI0MOM (ORCPT
+        id S1727451AbfI0MPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 08:14:12 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:46915 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbfI0MOL (ORCPT
+        Fri, 27 Sep 2019 08:15:03 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45649 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbfI0MPD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 08:14:11 -0400
-Received: by mail-io1-f68.google.com with SMTP id c6so15561220ioo.13;
-        Fri, 27 Sep 2019 05:14:11 -0700 (PDT)
+        Fri, 27 Sep 2019 08:15:03 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r5so2440117wrm.12
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 05:15:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XJJtNuqioZl6sa+W5Rtd/VG7UjoMxElWqoWFvVmwcPg=;
-        b=iROi2TOrPbDzeqog2o0irRLDYv8v0KQxALF63dP95BRHup05sWPpMyhjL8kxbpnyUl
-         9rlyIezwuakpTw24pXZQuDTN5ePY1nXjUTJw/ORTVKLPHr08x+DR2fAHWXJAXM/XapbP
-         2SRvVM6DubGI/ojN759mp2E01zstJgN+YsNaR8VbCOivsWZFBw3j7x3TBnuAmeUOc2b4
-         4yU1ltsIaulzT0xipQDIjckwMUOPeuxWhmX5T6yzKWYhIS2Kbe5xXa8UhNi24k+O6BQ1
-         6PP/D77y76Lb7Upg1jzA+KtGKbBy7q25jgPBcJx3HT+5pHqciyJYyW1A11MIjJSUeNgT
-         7Png==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RxdYgn61HX6a7e2eevkhCujf5ZyNeC8QPK2+w9BEZ7k=;
+        b=JPHXQFqJj47D5Fjd64grPSgNF8t78AawpFdU5Fh2PcJ7OFJ0juLG+nc57AWXaawGSm
+         XQyJnKPC87T/9XBngVDwhS8Oycud741WiHaj5nakZ5wS111aMsaTscuj8cBO8jL7bzNH
+         zTsR5KWYvJnAWn+KkyaIZWmfhzcwYS2uwBtLfqmigpVyeKLxyrqlnmYAcOH4vhJm9a8h
+         YxmdgQWRWDGM3mC7lysmSItmgGSu4X7XWF5wKH5YD6J43Br8GwicDQXyfwJea5UF98kt
+         BLwaUJBfDw0CjOBlso+TzItzhZmNUSrJE6c1Q23Ah+ycp3wnwvJB7zia4Ji+6e70Tx7R
+         lAaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XJJtNuqioZl6sa+W5Rtd/VG7UjoMxElWqoWFvVmwcPg=;
-        b=CowIxsp9KdcKzs9FVzdXQ+DWROajpK94dFP1gw4rDO4J5gatRAIFIpAz3Wd9zfF3qm
-         CAgjJTl5HnAjzioPWHCIOWKdR91CfORpD/uwqufsXyrohmbRPoETDC49UXQDqRDbYxbC
-         BTfQ27ph8cX7IW0iRPBn9jKODyj/domkQnbX4YrzBWPEorf8bObd0JE1/dMtV3ZppJwD
-         Ksq56QEp7fbFz6/naBF7lcPrwE906hLfZPDGu+yOLNLtlyClgXPAxUv82aLpMBf/iGTy
-         bsOpYBVRt5MNse270MsxxPm3ZZW0oFC1Dur4GpqHSgKfCoWW+Cmh6au4T5JEzTDEFHh7
-         SDZg==
-X-Gm-Message-State: APjAAAUSTZfsI07nHl+e1HJLuu6SrjqbvfaMUYmnYMN/49wGes6GJACm
-        ZqQaqYpyHdg7SGbSipe7ADV/QzXVdn84QMW6CXFn4Y0oFlw=
-X-Google-Smtp-Source: APXvYqwyOKCiZQF6ncWvp6oVJF/zzgcf1p5FbkC23Qgharm/Cg3vsMj4M3mHWcQhIQJk7EAyi5Ecx3hZvquvq5qC//8=
-X-Received: by 2002:a92:3f0a:: with SMTP id m10mr4235717ila.158.1569586450690;
- Fri, 27 Sep 2019 05:14:10 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RxdYgn61HX6a7e2eevkhCujf5ZyNeC8QPK2+w9BEZ7k=;
+        b=cp+RCuLyC/B3NCXQh+cNq6ggZ9I3XGmNUSG85tYYTM0Cz2udB9a5sI70+dFttHxPpM
+         KpmmaqhhSipLChyLalPstLDLNVHIPh2SwR7b6Q/NRIFDv9KXR3Y0B8+5+9wUPKf3+W8N
+         R/RPAbyrdfCn07eEk68+TxbKNwLPrhL4G7eJesSO29HiMohFPwzB8cJYvH4+wQQPQHLf
+         D7sB/WiOF81Kc2wGyG2wp7JGqg1ULOcqBgzaizOixOK+GchMjYAw5o3F43MnKpe25Trk
+         YZW26RKllr+0HX3EOPKYR+WMMX+9OMcJUTsyy67uhpGewms/a3AqCJvEe68QaKlHFjyH
+         tYAA==
+X-Gm-Message-State: APjAAAUScYihOhqDOOeord81V67bCw3UhFXAlGhRF3NdADQ3FX8w69XF
+        Lk16aOBHeXskLWxXZsYx2zwjpw==
+X-Google-Smtp-Source: APXvYqwcePL60TOI9qQkJnY2W5H8K999fdxhk/wCVp+tkDye94PsEGsW6qFqKt27dGWUcdNPa3RZ9w==
+X-Received: by 2002:adf:db83:: with SMTP id u3mr706271wri.36.1569586500509;
+        Fri, 27 Sep 2019 05:15:00 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
+        by smtp.gmail.com with ESMTPSA id i73sm10987175wmg.33.2019.09.27.05.14.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Sep 2019 05:14:59 -0700 (PDT)
+Date:   Fri, 27 Sep 2019 13:14:57 +0100
+From:   Matthias Maennich <maennich@google.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Jessica Yu <jeyu@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Martijn Coenen <maco@android.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/7] module: rename __kstrtab_ns_* to __kstrtabns_* to
+ avoid symbol conflict
+Message-ID: <20190927121457.GC259443@google.com>
+References: <20190927093603.9140-1-yamada.masahiro@socionext.com>
+ <20190927093603.9140-4-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-References: <20190510194229.20628-1-aford173@gmail.com> <af325707-3e42-493d-e858-77878ef06138@ti.com>
- <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
- <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com> <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
- <845055e2-8182-de74-2077-629fdf50ac6c@ti.com> <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
- <f6012b3a-7b96-6020-d09d-c458fa8742d8@ti.com>
-In-Reply-To: <f6012b3a-7b96-6020-d09d-c458fa8742d8@ti.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Fri, 27 Sep 2019 07:13:59 -0500
-Message-ID: <CAHCN7x+ysOEXFCE5DXvoPh6sQBdnHRE8t-KJfcijWesJRx9iXg@mail.gmail.com>
-Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to dts
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190927093603.9140-4-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 1:22 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+On Fri, Sep 27, 2019 at 06:35:59PM +0900, Masahiro Yamada wrote:
+>The module namespace produces __strtab_ns_<sym> symbols to store
+>namespace strings, but it does not guarantee the name uniqueness.
+>This is a potential problem because we have exported symbols staring
+>with "ns_".
 >
-> On 26/09/2019 17:12, Adam Ford wrote:
+>For example, kernel/capability.c exports the following symbols:
 >
-> >> And what is the hdmi5_configure there? I don't see anything in the
-> >> driver that would print hdmi5_configure. And, of course, there's no
-> >> hdmi5 on that platform. Hmm, ok... it's from component.c, using "%ps".
-> >> Somehow that goes wrong. Which is a bit alarming, but perhaps a totally
-> >> different issue.
-> >
-> > I'll try to take a look later.  For Logic PD distributions, we create
-> > a custom defconfig with all those drivers removed, so I'm not worked
-> > up about it, but it would be nice to not call drivers that don't
-> > exist.
+>  EXPORT_SYMBOL(ns_capable);
+>  EXPORT_SYMBOL(capable);
 >
-> So you have CONFIG_OMAP5_DSS_HDMI=n? Then it's even more disturbing, as
-> there's no way the string "hdmi5_configure" can be in the kernel image...
+>Assume a situation where those are converted as follows:
+>
+>  EXPORT_SYMBOL_NS(ns_capable, some_namespace);
+>  EXPORT_SYMBOL_NS(capable, some_namespace);
+>
+>The former expands to "__kstrtab_ns_capable" and "__kstrtab_ns_ns_capable",
+>and the latter to "__kstrtab_capable" and "__kstrtab_ns_capable".
+>Then, we have the duplication for "__kstrtab_ns_capable".
+>
+>To ensure the uniqueness, rename "__kstrtab_ns_*" to "__kstrtabns_*".
 
-For the logs and problems I am showing in this thread, I am using a
-stock omap2plus_defconfig which has it enabled.  I was only trying to
-state that I am not worried about the omap5 hdmi stuff, because when I
-do a custom distribution for Logic PD, I remove those config options
-to make the issue go away.
->
-> Maybe it's nothing, but... It's just so odd.
+Again, thanks for catching this!
 
-I don't think we need to worry about it now.  Ideally, it would be
-nice to have the drivers recognize they are not needed and or setup
-the Kconfig options to make these drivers dependent on the platforms
-that support it so unselecting OMAP5 could make the omap5 options
-disappear.
+Reviewed-by: Matthias Maennich <maennich@google.com>
 
-Sorry if I accidentally threw in a distraction or confusion.
-
-adam
+Cheers,
+Matthias
+>Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>---
 >
->   Tomi
+> include/linux/export.h | 6 +++---
+> 1 file changed, 3 insertions(+), 3 deletions(-)
 >
-> --
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>diff --git a/include/linux/export.h b/include/linux/export.h
+>index 0695d4e847d9..621158ecd2e2 100644
+>--- a/include/linux/export.h
+>+++ b/include/linux/export.h
+>@@ -55,7 +55,7 @@ extern struct module __this_module;
+> 	    "__ksymtab_" #ns NS_SEPARATOR #sym ":		\n"	\
+> 	    "	.long	" #sym "- .				\n"	\
+> 	    "	.long	__kstrtab_" #sym "- .			\n"	\
+>-	    "	.long	__kstrtab_ns_" #sym "- .		\n"	\
+>+	    "	.long	__kstrtabns_" #sym "- .			\n"	\
+> 	    "	.previous					\n")
+>
+> #define __KSYMTAB_ENTRY(sym, sec)					\
+>@@ -79,7 +79,7 @@ struct kernel_symbol {
+> 	asm("__ksymtab_" #ns NS_SEPARATOR #sym)				\
+> 	__attribute__((section("___ksymtab" sec "+" #sym), used))	\
+> 	__aligned(sizeof(void *))					\
+>-	= { (unsigned long)&sym, __kstrtab_##sym, __kstrtab_ns_##sym }
+>+	= { (unsigned long)&sym, __kstrtab_##sym, __kstrtabns_##sym }
+>
+> #define __KSYMTAB_ENTRY(sym, sec)					\
+> 	static const struct kernel_symbol __ksymtab_##sym		\
+>@@ -112,7 +112,7 @@ struct kernel_symbol {
+> /* For every exported symbol, place a struct in the __ksymtab section */
+> #define ___EXPORT_SYMBOL_NS(sym, sec, ns)				\
+> 	___export_symbol_common(sym, sec);				\
+>-	static const char __kstrtab_ns_##sym[]				\
+>+	static const char __kstrtabns_##sym[]				\
+> 	__attribute__((section("__ksymtab_strings"), used, aligned(1)))	\
+> 	= #ns;								\
+> 	__KSYMTAB_ENTRY_NS(sym, sec, ns)
+>-- 
+>2.17.1
+>
