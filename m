@@ -2,46 +2,77 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C43DFC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 11:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F63CC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 11:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E1A5217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 11:04:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1BBD207FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 11:07:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="MEkjkBrs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbfI0LEk (ORCPT
+        id S1726968AbfI0LHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 07:04:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:49192 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725882AbfI0LEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 07:04:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9EA0928;
-        Fri, 27 Sep 2019 04:04:39 -0700 (PDT)
-Received: from [10.1.196.50] (e108454-lin.cambridge.arm.com [10.1.196.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AFD8C3F67D;
-        Fri, 27 Sep 2019 04:04:38 -0700 (PDT)
-Subject: Re: [PATCH 1/1] arm64/sve: Fix wrong free for task->thread.sve_state
-To:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
-        linux-kernel@vger.kernel.org, Dave P Martin <Dave.Martin@arm.com>
-References: <20190926190846.3072-1-msys.mizuma@gmail.com>
- <20190926190846.3072-2-msys.mizuma@gmail.com>
-From:   Julien Grall <julien.grall@arm.com>
-Message-ID: <32b59c08-cc59-60d6-16c7-ffb5582c2901@arm.com>
-Date:   Fri, 27 Sep 2019 12:04:37 +0100
+        Fri, 27 Sep 2019 07:07:40 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42525 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbfI0LHk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 07:07:40 -0400
+Received: by mail-lj1-f193.google.com with SMTP id y23so2059368lje.9
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 04:07:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3oGUOoJ5SW+DTMVPL3UUtjpNbyCkNbodWu3m4weaNuM=;
+        b=MEkjkBrs2zp8UeloIli/4sMbZayjf5Iv+cPRCAAQKAc5OCQGFgu1WIwzwRoI2QZZZT
+         lqXy7UZOvzGC+5hY7w/kuAO8LPexJQa5xRGo999UZs385hUUFNeDw/1+q6Am+ap03NTJ
+         V7y9eLlvBUF2F+8iySWyNEJm64qOw8aWp6w/Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3oGUOoJ5SW+DTMVPL3UUtjpNbyCkNbodWu3m4weaNuM=;
+        b=Ez79PeX3hF9W/uiGy64zYzqsR23fyBK+hlV2xrAN5+UHRS9bdN3GVqS+/FyrvwrK1h
+         imVHpC/7QGkLdtlxcM+CAZOUHZQFmmNaRk/jMCPNP+ZNYqbGaiIl6AD9T0z7M2kbR38w
+         WxTM4iwxxgVTFFFv2KGv0sBFAn6nnrTTnL02yuKzv+D7B3iAzpN6VfUaMheqEcZsAnfk
+         dYpnaBJrFtDBWo6cNJXBtf2A5ocIuHaeHNOixPe+mY4AqO0khNhCjDteyluNazwAsLbq
+         kAX72x+j7+VdUF0NLKIYogvJJFpZb9PvBvUFiqVohipHU2x9BnUldKKQtM2w/0j+qpyM
+         6aZQ==
+X-Gm-Message-State: APjAAAW0wvyYwCoxwur6ajWJBcRQZoMRNJjONTWXtnFE1FqZf9kPYnsi
+        3GBPkHv+VKfOvwRfSTg31CA+0jdlXclXMN/K
+X-Google-Smtp-Source: APXvYqzumX9yp7awSisKK8bAze5UQnBkJTvkFtZqLB+nth2FTQgsa5+zv9JRLgENlXBrYrid92+DHw==
+X-Received: by 2002:a2e:9584:: with SMTP id w4mr2509460ljh.145.1569582456181;
+        Fri, 27 Sep 2019 04:07:36 -0700 (PDT)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id m21sm415265lfh.39.2019.09.27.04.07.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 27 Sep 2019 04:07:35 -0700 (PDT)
+Subject: Re: [PATCH 4/7] module: avoid code duplication in
+ include/linux/export.h
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jessica Yu <jeyu@kernel.org>
+Cc:     Matthias Maennich <maennich@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Martijn Coenen <maco@android.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
+References: <20190927093603.9140-1-yamada.masahiro@socionext.com>
+ <20190927093603.9140-5-yamada.masahiro@socionext.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <f2e28d6b-77c5-5fe2-0bc4-b24955de9954@rasmusvillemoes.dk>
+Date:   Fri, 27 Sep 2019 13:07:33 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190926190846.3072-2-msys.mizuma@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190927093603.9140-5-yamada.masahiro@socionext.com>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -49,125 +80,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(+ Dave)
-
-Hi,
-
-Thank you for the patch.
-
-On 26/09/2019 20:08, Masayoshi Mizuma wrote:
-> From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+On 27/09/2019 11.36, Masahiro Yamada wrote:
+> include/linux/export.h has lots of code duplication between
+> EXPORT_SYMBOL and EXPORT_SYMBOL_NS.
 > 
-> The system which has SVE feature crashed because of
-> the memory pointed by task->thread.sve_state was destroyed
-> by someone.
+> To improve the maintainability and readability, unify the
+> implementation.
 > 
-> That is because sve_state is freed while the forking the
-> child process. The child process has the pointer of sve_state
-> which is same as the parent's because the child's task_struct
-> is copied from the parent's one. If the copy_process()
-> fails as an error on somewhere, for example, copy_creds(),
-> then the sve_state is freed even if the parent is alive.
-> The flow is as follows.
+> When the symbol has no namespace, pass the empty string "" to
+> the 'ns' parameter.
 > 
-> copy_process
->          p = dup_task_struct
->              => arch_dup_task_struct
->                  *dst = *src;  // copy the entire region.
-> :
->          retval = copy_creds
->          if (retval < 0)
->                  goto bad_fork_free;
-> :
-> bad_fork_free:
-> ...
->          delayed_free_task(p);
->            => free_task
->               => arch_release_task_struct
->                  => fpsimd_release_task
->                     => __sve_free
->                        => kfree(task->thread.sve_state);
->                           // free the parent's sve_state
-
-The flow makes sense to me and I agree you would end up to free the parent's state.
-
+> The drawback of this change is, it grows the code size.
+> When the symbol has no namespace, sym->namespace was previously
+> NULL, but it is now am empty string "". So, it increases 1 byte
+> for every no namespace EXPORT_SYMBOL.
 > 
-> Add a flag in task->thread which shows the fork is in progress.
-> If the fork is in progress, that means the child has the pointer
-> to the parent's sve_state, doesn't free the sve_state.
-
-I haven't fully investigate it yet but I was wondering if we could just clear 
-task->thread.sve_state for the child in arch_dup_task_struct().
-
-I saw the comment on top of function mentioning potential issue to do it there. 
-I understand that you may not be able to clear TIF_SVE in the function, but I 
-don't understand why clearing just task->thread.sve_state would be an issue.
-
-The only risk I can see is TIF_SVE may be set with task->thread.sve_state to be 
-NULL. But this is a new task, so I don't think there are risk here to have it 
-unsync. Dave?
-
+> A typical kernel configuration has 10K exported symbols, so it
+> increases 10KB in rough estimation.
 > 
-> Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
-> Reported-by: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
-> ---
->   arch/arm64/include/asm/processor.h | 1 +
->   arch/arm64/kernel/fpsimd.c         | 6 ++++--
->   arch/arm64/kernel/process.c        | 2 ++
->   3 files changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm/processor.h
-> index 5623685c7d13..3ca3e350145a 100644
-> --- a/arch/arm64/include/asm/processor.h
-> +++ b/arch/arm64/include/asm/processor.h
-> @@ -143,6 +143,7 @@ struct thread_struct {
->   	unsigned long		fault_address;	/* fault info */
->   	unsigned long		fault_code;	/* ESR_EL1 value */
->   	struct debug_info	debug;		/* debugging */
-> +	unsigned int		fork_in_progress;
->   #ifdef CONFIG_ARM64_PTR_AUTH
->   	struct ptrauth_keys	keys_user;
->   #endif
-> diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
-> index 37d3912cfe06..8641db4cb062 100644
-> --- a/arch/arm64/kernel/fpsimd.c
-> +++ b/arch/arm64/kernel/fpsimd.c
-> @@ -202,8 +202,10 @@ static bool have_cpu_fpsimd_context(void)
->    */
->   static void __sve_free(struct task_struct *task)
->   {
-> -	kfree(task->thread.sve_state);
-> -	task->thread.sve_state = NULL;
-> +	if (!task->thread.fork_in_progress) {
-> +		kfree(task->thread.sve_state);
-> +		task->thread.sve_state = NULL;
-> +	}
->   }
->   
->   static void sve_free(struct task_struct *task)
-> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-> index a47462def04b..8ac0ee4e5f76 100644
-> --- a/arch/arm64/kernel/process.c
-> +++ b/arch/arm64/kernel/process.c
-> @@ -347,6 +347,7 @@ int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
->   	if (current->mm)
->   		fpsimd_preserve_current_state();
->   	*dst = *src;
-> +	dst->thread.fork_in_progress = 1;
->   
->   	return 0;
->   }
-> @@ -365,6 +366,7 @@ int copy_thread(unsigned long clone_flags, unsigned long stack_start,
->   	 * and disable discard SVE state for p:
->   	 */
->   	clear_tsk_thread_flag(p, TIF_SVE);
-> +	p->thread.fork_in_progress = 0;
->   	p->thread.sve_state = NULL;
->   
->   	/*
-> 
+> I did not come up with a good idea to refactor it without increasing
+> the code size.
 
-Cheers,
+Can't we put the "aMS" flags on the __ksymtab_strings section? That
+would make the empty strings free, and would also deduplicate the
+USB_STORAGE string. And while almost per definition we don't have exact
+duplicates among the names of exported symbols, we might have both a foo
+and __foo, so that could save even more.
 
--- 
-Julien Grall
+I don't know if we have it already, but we'd need each arch to tell us
+what symbol to use for @ in @progbits (e.g. % for arm). It seems most
+are fine with @, so maybe a generic version could be
+
+#ifndef ARCH_SECTION_TYPE_CHAR
+#define ARCH_SECTION_TYPE_CHAR "@"
+#endif
+
+and then it would be
+section("__ksymtab_strings,\"aMS\","ARCH_SECTION_TYPE_CHAR"progbits,1")
+
+But I don't know if any tooling relies on the strings not being
+deduplicated.
+
+Rasmus
