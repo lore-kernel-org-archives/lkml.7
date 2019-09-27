@@ -2,164 +2,143 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD245C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C80A7C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8086205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 973D0205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:12:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bFOi3DrN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HWrjXwmy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728157AbfI0VLw (ORCPT
+        id S1728262AbfI0VMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 17:11:52 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:45370 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbfI0VLv (ORCPT
+        Fri, 27 Sep 2019 17:12:35 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41094 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfI0VMf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 17:11:51 -0400
-Received: by mail-pg1-f201.google.com with SMTP id x31so4348310pgl.12
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 14:11:50 -0700 (PDT)
+        Fri, 27 Sep 2019 17:12:35 -0400
+Received: by mail-pg1-f194.google.com with SMTP id s1so4102392pgv.8
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 14:12:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=dkFsjRwg8uc0hi8W20VO7PaEv8qpaPdYdvJejf9CiKI=;
-        b=bFOi3DrNtqylr4NjyGI5UsRPjqQcj0J1WOWruVBZ3tfvSYDX6P106qu2x/fP1XcgLf
-         qgX0KBTfJIMKVjwcpnI8rr8ABdAcKi2CZHi4aDhWkTC52pz03GcG9fVzfWslC/l2HT9O
-         JbdUz6g/Jq/piGZUE98guSykYD6wXgV58DT33uAiFADB/LgwChL4SGahUeM2WLyP6JbE
-         CsmSGSMvHkrNZzKb9CAIs2n9CgB9Ej1ZA60gJOh3vHJpJi7UeSYaLn86/WgYb2jFnqVX
-         Of+Wm1zkklGJjWHhfCY8QIpivuov9sxTXtQCUe+VcMQmgYOg9lXpat4BMW/RY1WchktQ
-         EVsA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MT3rEIfaJgpzvHmFM2pWeqN2XOEfjsN3Ht7YF+hthq8=;
+        b=HWrjXwmyGQrWIktNn2lCfS/WWNp3jM0GJkqLaICHIq/FPWxfdSodtSpyQmZZZSqYKl
+         gLWJ5uiWHrbfp7XRrlbm5tcLBi0mF8wxUQGVBvHdC+YrHRlTUWjnN/4obhqljgrPTG3A
+         RZtBAyLun1kMIfwj+XzanCaE7pfz5X+1U1DEEWl4a0HFqU4UC+8fia7u1zVDsy87zqmM
+         aCnZO4WYMlXyBvwTDY5YzycIIMk8vbQav6mKwEUaLZN6qC6Wase6y5kT8waFE/KYHjR2
+         sI+xNuy9ZVIQOG/d3gqTWFx/1AYoGsrnH4KQyKPBRTWgKQPqX7caUSWi/ZiuXFXkwHDR
+         u2xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=dkFsjRwg8uc0hi8W20VO7PaEv8qpaPdYdvJejf9CiKI=;
-        b=UpELGW8KXAsb+LvbTVDyyrWyamH/61i2TtIDG4XhS8qagOSmrb2+gb0eBq7hhzxtVF
-         EgUnNqsuduejs/I79rVIOibIR8nfEJn/SqzLWPyT2imbvqRRt7DyDLe3XYHV3g1CMhqJ
-         F/3lTJ6YXNphnYN52PM347KR3LmqtuT4fpT6FueiT5Xhzr/CI3/lXxyt/hk29u6XoVcO
-         wVfufj1Zz3e9M7v461INn4LdgTn4n/6xOpCcgt7vb+2RjBR/j9N00rkzoczp6aIRWMTj
-         0Ns7ziu5/on5vMmZfGc+J1USGz3DC/IIaM2wpTw4jFbRDJcKILMNcoU5X+L3zMXjuxix
-         ybBA==
-X-Gm-Message-State: APjAAAUIkq5D/XKqhr3aqQW1avIsrG5WWcuL2AlK3k5l2/HnIRJ5rO5D
-        7T7QSXtRvr5LEvLCm1r1b2CPlpCnvTLZ
-X-Google-Smtp-Source: APXvYqypzR/oeNVcLfIgdE0ndV/3k8MguWNoNB2Ozs8nN/yhc7wLoeQFH9DKpu8IV0BN77iiqb1dltq4JnvW
-X-Received: by 2002:a63:e24:: with SMTP id d36mr11442670pgl.143.1569618709454;
- Fri, 27 Sep 2019 14:11:49 -0700 (PDT)
-Date:   Fri, 27 Sep 2019 14:10:05 -0700
-Message-Id: <20190927211005.147176-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.23.0.444.g18eeb5a265-goog
-Subject: [PATCH] perf tools: avoid sample_reg_masks being const + weak
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MT3rEIfaJgpzvHmFM2pWeqN2XOEfjsN3Ht7YF+hthq8=;
+        b=WfoEWlqBdThbPJxcvlekfMQLedP81HHLaobtt9JzOZObgVg2p9xVHex97o6+KXCl/X
+         3hEokENMjocfot70XiF0jitrjKDZXVgw95aZJNPCQwEZDPbis4jmIm/KSCVN3HSH5YBS
+         cNVkaj+R4XE07gk4K7yrkpWO20rTJyCT1Rp8CE8Q1BlPqQ5dcM8mBnisKWSIHdbvDE8a
+         +L6kJTXzAOixfm2g39G8A93XJaXf8lE+5YE2LmPTqNMq/r+p+evsxQnwlmmlSPXuj26x
+         76RgZP2U7TNZUx6PYZn7BSSORu4p6LtnfD0nz/cDTIe519+NJfV/9kCGBcbKPofARYK6
+         Re5Q==
+X-Gm-Message-State: APjAAAXFpfslCETWyR4LeMSdtQU9gZWpUZ4MSIdHItL/DuVXJ1KXCRq9
+        jlhnnqRoIePTjFh8DSNUqfJP8aZStgNx+ywQ11fC2Q==
+X-Google-Smtp-Source: APXvYqy8O3KoXcSTxHqiytQM1iXWb+WWT9oKskcwqzyLQpgWA96K2vO/7MEIdTwZ75zGDyeYqjyajaWRaH5XxPonWcc=
+X-Received: by 2002:a62:798e:: with SMTP id u136mr6912504pfc.3.1569618754157;
+ Fri, 27 Sep 2019 14:12:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1569569778.git.Jose.Abreu@synopsys.com> <80dd26ecf7fc82c88dc378d78210df5dd4138812.1569569778.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <80dd26ecf7fc82c88dc378d78210df5dd4138812.1569569778.git.Jose.Abreu@synopsys.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 27 Sep 2019 14:12:23 -0700
+Message-ID: <CAKwvOdntD5HNb4Gg04YN7iZwvK3CB4enq4ZPhUM-Bd3huvR2pw@mail.gmail.com>
+Subject: Re: [PATCH net 8/8] net: stmmac: xgmac: Fix RSS not writing all Keys
+ to HW
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+Cc:     Network Development <netdev@vger.kernel.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Being const + weak breaks with some compilers that constant-propagate
-from the weak symbol. This behavior is outside of the specification, but
-in LLVM is chosen to match GCC's behavior.
+On Fri, Sep 27, 2019 at 12:49 AM Jose Abreu <Jose.Abreu@synopsys.com> wrote:
+>
+> The sizeof(cfg->key) is != ARRAY_SIZE(cfg->key). Fix it.
 
-LLVM's implementation was set in this patch:
-https://github.com/llvm/llvm-project/commit/f49573d1eedcf1e44893d5a062ac1b72c8419646
-A const + weak symbol is set to be weak_odr:
-https://llvm.org/docs/LangRef.html
-ODR is one definition rule, and given there is one constant definition
-constant-propagation is possible. It is possible to get this code to
-miscompile with LLVM when applying link time optimization. As compilers
-become more aggressive, this is likely to break in more instances.
+I think the warning was from -Wsizeof-array-div.
 
-Move the definition of sample_reg_masks to the conditional part of
-perf_regs.h and guard usage with HAVE_PERF_REGS_SUPPORT. This avoids the
-weak symbol.
+>
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Reported-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/parse-regs-options.c | 4 ++++
- tools/perf/util/perf_regs.c          | 4 ----
- tools/perf/util/perf_regs.h          | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+I may have reported the kbuild link, but scanning my email, there's
+also a report from
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
 
-diff --git a/tools/perf/util/parse-regs-options.c b/tools/perf/util/parse-regs-options.c
-index ef46c2848808..a6a776597df8 100644
---- a/tools/perf/util/parse-regs-options.c
-+++ b/tools/perf/util/parse-regs-options.c
-@@ -46,18 +46,22 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
- 
- 			if (!strcmp(s, "?")) {
- 				fprintf(stderr, "available registers: ");
-+#ifdef HAVE_PERF_REGS_SUPPORT
- 				for (r = sample_reg_masks; r->name; r++) {
- 					if (r->mask & mask)
- 						fprintf(stderr, "%s ", r->name);
- 				}
-+#endif
- 				fputc('\n', stderr);
- 				/* just printing available regs */
- 				return -1;
- 			}
-+#ifdef HAVE_PERF_REGS_SUPPORT
- 			for (r = sample_reg_masks; r->name; r++) {
- 				if ((r->mask & mask) && !strcasecmp(s, r->name))
- 					break;
- 			}
-+#endif
- 			if (!r->name) {
- 				ui__warning("Unknown register \"%s\", check man page or run \"perf record %s?\"\n",
- 					    s, intr ? "-I" : "--user-regs=");
-diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
-index 2774cec1f15f..5ee47ae1509c 100644
---- a/tools/perf/util/perf_regs.c
-+++ b/tools/perf/util/perf_regs.c
-@@ -3,10 +3,6 @@
- #include "perf_regs.h"
- #include "event.h"
- 
--const struct sample_reg __weak sample_reg_masks[] = {
--	SMPL_REG_END
--};
--
- int __weak arch_sdt_arg_parse_op(char *old_op __maybe_unused,
- 				 char **new_op __maybe_unused)
- {
-diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
-index 47fe34e5f7d5..e014c2c038f4 100644
---- a/tools/perf/util/perf_regs.h
-+++ b/tools/perf/util/perf_regs.h
-@@ -15,8 +15,6 @@ struct sample_reg {
- #define SMPL_REG2(n, b) { .name = #n, .mask = 3ULL << (b) }
- #define SMPL_REG_END { .name = NULL }
- 
--extern const struct sample_reg sample_reg_masks[];
--
- enum {
- 	SDT_ARG_VALID = 0,
- 	SDT_ARG_SKIP,
-@@ -27,6 +25,8 @@ uint64_t arch__intr_reg_mask(void);
- uint64_t arch__user_reg_mask(void);
- 
- #ifdef HAVE_PERF_REGS_SUPPORT
-+extern const struct sample_reg sample_reg_masks[];
-+
- #include <perf_regs.h>
- 
- #define DWARF_MINIMAL_REGS ((1ULL << PERF_REG_IP) | (1ULL << PERF_REG_SP))
--- 
-2.23.0.444.g18eeb5a265-goog
+> Fixes: 76067459c686 ("net: stmmac: Implement RSS and enable it in XGMAC core")
+> Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+>
+> ---
+> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+> Cc: Alexandre Torgue <alexandre.torgue@st.com>
+> Cc: Jose Abreu <joabreu@synopsys.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Cc: netdev@vger.kernel.org
+> Cc: linux-stm32@st-md-mailman.stormreply.com
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> ---
+>  drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+> index 6d8ac2ef4fc2..4a1f52474dbc 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+> @@ -533,7 +533,7 @@ static int dwxgmac2_rss_configure(struct mac_device_info *hw,
+>                 return 0;
+>         }
+>
+> -       for (i = 0; i < (sizeof(cfg->key) / sizeof(u32)); i++) {
+> +       for (i = 0; i < (ARRAY_SIZE(cfg->key) / sizeof(u32)); i++) {
 
+cfg is an instance of struct stmmac_rss, which looks like:
+125 struct stmmac_rss {
+126   int enable;
+127   u8 key[STMMAC_RSS_HASH_KEY_SIZE];
+128   u32 table[STMMAC_RSS_MAX_TABLE_SIZE];
+129 };
+
+yep, LGTM. Thanks for the patch.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
+
+>                 ret = dwxgmac2_rss_write_reg(ioaddr, true, i, cfg->key[i]);
+>                 if (ret)
+>                         return ret;
+> --
+> 2.7.4
+>
+
+
+--
+Thanks,
+~Nick Desaulniers
