@@ -2,338 +2,199 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C430C388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95650C388F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65CEA21850
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:07:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569604025;
-	bh=Ye5jYYXyBDJbTygkfCgHCU6BGwSKDHtFSBlhzKtuK0E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=T3huUfsmZC5/yfVdtmKLJp8PM4+jri6XWAf+G0JuRE4lb17AonBXwmCr+Kutu8hG4
-	 /J/qoIjUftzik0ryNjdb+T9E4h9uQrGWlc5Q+auaMe46tA5MBqyKyoz2/ZcxCDnF1m
-	 wRz4cBVBeHb9GZIiLqo5m4tQZzKqCLiwGEitiO8I=
+	by mail.kernel.org (Postfix) with ESMTP id 6272E20872
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:07:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pi1TqRZg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbfI0RHE (ORCPT
+        id S1728074AbfI0RHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 13:07:04 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41190 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbfI0RHE (ORCPT
+        Fri, 27 Sep 2019 13:07:25 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43932 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbfI0RHZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 13:07:04 -0400
-Received: by mail-ot1-f65.google.com with SMTP id g13so2848319otp.8;
-        Fri, 27 Sep 2019 10:07:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=s9jZa7L1SPVwl5gIjsK2sUiHrUvMn6vrOzETT5igrfY=;
-        b=N3X0RxtRZPSjPK6KOBZP8xGVxxCYXfKC9v90m1fCjQd2F/YJEscW9kAptMlw+49ijU
-         ghKwnx6MhGQHwMjMjm1rOe6p7lnXE1KjuSxF05s0ZOo/MjpfaqZyW9TmUOxOTLB33mhH
-         1Um85hlHGyPeauyZYRS2xwt24YBOf6+OjU0hR6RkYHWFsVC6j5VtaTx5kc2jfRafD0tC
-         EJhYwklWX6uAGv0Ua7OK0Yiwbvqf8et3/0m1khyrA991DDZHrkSW5PaSc6o3HwOX8ceT
-         L11GGD+rkPcAhuVY4jrKTtxeDGVFdP+HHSovQr96+cz5t45Ut1cOwDX/uE++mea/lhJj
-         U/0A==
-X-Gm-Message-State: APjAAAVPcZuBIZBwh8MbkBWYRxg0ZD8x97Ri3vonvu3U3GSncUt8Eldg
-        EK4l0enL3VjPIAMqXwvLcA==
-X-Google-Smtp-Source: APXvYqxrslnQ9UBZ4HNinJxn5nvRcJVHKOVKFxy4EaoTDuCZDrqtAxCctkuCo5DqunoUlCnNvqK/hQ==
-X-Received: by 2002:a9d:200c:: with SMTP id n12mr4165968ota.334.1569604022352;
-        Fri, 27 Sep 2019 10:07:02 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k19sm1719599oiw.31.2019.09.27.10.07.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2019 10:07:01 -0700 (PDT)
-Date:   Fri, 27 Sep 2019 12:07:01 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        Sylwester Nawrocki <snawrocki@kernel.org>
-Subject: Re: [PATCH v4 1/8] dt-bindings: timer: Convert Exynos MCT bindings
- to json-schema
-Message-ID: <20190927170701.GA27397@bogus>
-References: <20190923161411.9236-1-krzk@kernel.org>
+        Fri, 27 Sep 2019 13:07:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=xTQzDROB7e5nWLLWCEXdqxNLgL3OQIo5th8TD+vu3MY=; b=pi1TqRZgUI6qRdwcep8MPDrUL
+        kyxNrxGrZPjdFHRGDprgUf6KB/GZkSh5Y2P/T4UDvK5JZojqrdhNf4ZUvt1hkW4h1HsZ6aTXSTBgr
+        cU6zc/gLSlq8OylD4OB+sXGFZlzaaC7bdk1E3PS1lVdOEkIUXd1GhgzGZBHFSGxCFW06jypX37mTC
+        cOU8KmHO8CiBw7EPROjFOfXE00CTrwqhu2cB/LPScMPOrwUhQsGunPTmhulCoEcdsEy3X0YF+C3sP
+        MuqVAeBXVKDNH7kzzenVR5Q3WITyRsTWAT9hbb6WJVXbJ0GNnX1G9NNOd8iFIMvPCKvHSAIz3mIKY
+        qzi+E0Wtg==;
+Received: from [2601:1c0:6280:3f0::9a1f]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iDti3-00057T-Ob; Fri, 27 Sep 2019 17:07:11 +0000
+Subject: Re: [PATCH v22 24/24] docs: x86/sgx: Document kernel internals
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org
+Cc:     akpm@linux-foundation.org, dave.hansen@intel.com,
+        sean.j.christopherson@intel.com, nhorman@redhat.com,
+        npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com
+References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
+ <20190903142655.21943-25-jarkko.sakkinen@linux.intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <97dbd2a8-f1e5-a3f9-dac7-f1f4d6b6cd4c@infradead.org>
+Date:   Fri, 27 Sep 2019 10:07:10 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190923161411.9236-1-krzk@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190903142655.21943-25-jarkko.sakkinen@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 06:14:04PM +0200, Krzysztof Kozlowski wrote:
-> Convert Samsung Exynos Soc Multi Core Timer bindings to DT schema format
-> using json-schema.
+On 9/3/19 7:26 AM, Jarkko Sakkinen wrote:
+> From: Sean Christopherson <sean.j.christopherson@intel.com>
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Document some of the more tricky parts of the kernel implementation
+> internals.
 > 
-> ---
-> 
-> Changes since v3:
-> 1. Use interrupts-extended instead of interrupts-map.
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Co-developed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-This is a binding change. You should mention it in the commit.
+Hi,
+Some edits for you to consider.
 
-> 
-> Changes since v1:
-> 1. Indent example with four spaces (more readable),
-> 2. Rename nodes in example to timer,
-> 3. Remove mct-map subnode.
 > ---
->  .../bindings/timer/samsung,exynos4210-mct.txt |  88 ------------
->  .../timer/samsung,exynos4210-mct.yaml         | 125 ++++++++++++++++++
->  2 files changed, 125 insertions(+), 88 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt
->  create mode 100644 Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml
+>  Documentation/x86/sgx/2.Kernel-internals.rst | 76 ++++++++++++++++++++
+>  Documentation/x86/sgx/index.rst              |  1 +
+>  2 files changed, 77 insertions(+)
+>  create mode 100644 Documentation/x86/sgx/2.Kernel-internals.rst
 > 
-> diff --git a/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt b/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt
-> deleted file mode 100644
-> index 8f78640ad64c..000000000000
-> --- a/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt
-> +++ /dev/null
-> @@ -1,88 +0,0 @@
-> -Samsung's Multi Core Timer (MCT)
-> -
-> -The Samsung's Multi Core Timer (MCT) module includes two main blocks, the
-> -global timer and CPU local timers. The global timer is a 64-bit free running
-> -up-counter and can generate 4 interrupts when the counter reaches one of the
-> -four preset counter values. The CPU local timers are 32-bit free running
-> -down-counters and generate an interrupt when the counter expires. There is
-> -one CPU local timer instantiated in MCT for every CPU in the system.
-> -
-> -Required properties:
-> -
-> -- compatible: should be "samsung,exynos4210-mct".
-> -  (a) "samsung,exynos4210-mct", for mct compatible with Exynos4210 mct.
-> -  (b) "samsung,exynos4412-mct", for mct compatible with Exynos4412 mct.
-> -
-> -- reg: base address of the mct controller and length of the address space
-> -  it occupies.
-> -
-> -- interrupts: the list of interrupts generated by the controller. The following
-> -  should be the order of the interrupts specified. The local timer interrupts
-> -  should be specified after the four global timer interrupts have been
-> -  specified.
-> -
-> -	0: Global Timer Interrupt 0
-> -	1: Global Timer Interrupt 1
-> -	2: Global Timer Interrupt 2
-> -	3: Global Timer Interrupt 3
-> -	4: Local Timer Interrupt 0
-> -	5: Local Timer Interrupt 1
-> -	6: ..
-> -	7: ..
-> -	i: Local Timer Interrupt n
-> -
-> -  For MCT block that uses a per-processor interrupt for local timers, such
-> -  as ones compatible with "samsung,exynos4412-mct", only one local timer
-> -  interrupt might be specified, meaning that all local timers use the same
-> -  per processor interrupt.
-> -
-> -Example 1: In this example, the IP contains two local timers, using separate
-> -	   interrupts, so two local timer interrupts have been specified,
-> -	   in addition to four global timer interrupts.
-> -
-> -	mct@10050000 {
-> -		compatible = "samsung,exynos4210-mct";
-> -		reg = <0x10050000 0x800>;
-> -		interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
-> -			     <0 42 0>, <0 48 0>;
-> -	};
-> -
-> -Example 2: In this example, the timer interrupts are connected to two separate
-> -	   interrupt controllers. Hence, an interrupt-map is created to map
-> -	   the interrupts to the respective interrupt controllers.
-> -
-> -	mct@101c0000 {
-> -		compatible = "samsung,exynos4210-mct";
-> -		reg = <0x101C0000 0x800>;
-> -		interrupt-parent = <&mct_map>;
-> -		interrupts = <0>, <1>, <2>, <3>, <4>, <5>;
-> -
-> -		mct_map: mct-map {
-> -			#interrupt-cells = <1>;
-> -			#address-cells = <0>;
-> -			#size-cells = <0>;
-> -			interrupt-map = <0 &gic 0 57 0>,
-> -					<1 &gic 0 69 0>,
-> -					<2 &combiner 12 6>,
-> -					<3 &combiner 12 7>,
-> -					<4 &gic 0 42 0>,
-> -					<5 &gic 0 48 0>;
-> -		};
-> -	};
-> -
-> -Example 3: In this example, the IP contains four local timers, but using
-> -	   a per-processor interrupt to handle them. Either all the local
-> -	   timer interrupts can be specified, with the same interrupt specifier
-> -	   value or just the first one.
-> -
-> -	mct@10050000 {
-> -		compatible = "samsung,exynos4412-mct";
-> -		reg = <0x10050000 0x800>;
-> -
-> -		/* Both ways are possible in this case. Either: */
-> -		interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
-> -			     <0 42 0>;
-> -		/* or: */
-> -		interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
-> -			     <0 42 0>, <0 42 0>, <0 42 0>, <0 42 0>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml b/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml
+> diff --git a/Documentation/x86/sgx/2.Kernel-internals.rst b/Documentation/x86/sgx/2.Kernel-internals.rst
 > new file mode 100644
-> index 000000000000..bff3f54a398f
+> index 000000000000..5c90a65936f2
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml
-> @@ -0,0 +1,125 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/timer/samsung,exynos4210-mct.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +++ b/Documentation/x86/sgx/2.Kernel-internals.rst
+> @@ -0,0 +1,76 @@
+> +.. SPDX-License-Identifier: GPL-2.0
 > +
-> +title: Samsung Exynos SoC Multi Core Timer (MCT)
+> +================
+> +Kernel Internals
+> +================
 > +
-> +maintainers:
-> +  - Krzysztof Kozlowski <krzk@kernel.org>
+> +CPU configuration
+> +=================
 > +
-> +description: |+
-> +  The Samsung's Multi Core Timer (MCT) module includes two main blocks, the
-> +  global timer and CPU local timers. The global timer is a 64-bit free running
-> +  up-counter and can generate 4 interrupts when the counter reaches one of the
-> +  four preset counter values. The CPU local timers are 32-bit free running
-> +  down-counters and generate an interrupt when the counter expires. There is
-> +  one CPU local timer instantiated in MCT for every CPU in the system.
+> +Because SGX has an ever evolving and expanding feature set, it's possible for
+> +a BIOS or VMM to configure a system in such a way that not all CPUs are equal,
+> +e.g. where Launch Control is only enabled on a subset of CPUs.  Linux does
+> +*not* support such a heterogeneous system configuration, nor does it even
+> +attempt to play nice in the face of a misconfigured system.  With the exception
+> +of Launch Control's hash MSRs, which can vary per CPU, Linux assumes that all
+> +CPUs have a configuration that is identical to the boot CPU.
 > +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - samsung,exynos4210-mct
-> +      - samsung,exynos4412-mct
+> +EPC management
+> +==============
 > +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    description: |
-> +      Interrupts should be put in specific order. This is, the local timer
-> +      interrupts should be specified after the four global timer interrupts
-> +      have been specified:
-> +      0: Global Timer Interrupt 0
-> +      1: Global Timer Interrupt 1
-> +      2: Global Timer Interrupt 2
-> +      3: Global Timer Interrupt 3
-> +      4: Local Timer Interrupt 0
-> +      5: Local Timer Interrupt 1
-> +      6: ..
-> +      7: ..
-> +      i: Local Timer Interrupt n
-> +      For MCT block that uses a per-processor interrupt for local timers, such
-> +      as ones compatible with "samsung,exynos4412-mct", only one local timer
-> +      interrupt might be specified, meaning that all local timers use the same
-> +      per processor interrupt.
-> +    minItems: 5               # 4 Global + 1 local
-> +    maxItems: 20              # 4 Global + 16 local
-> +
-> +  interrupts-extended:
+> +Because the kernel can't arbitrarily read EPC memory or share RO backing pages
+> +between enclaves, traditional memory models such as CoW and fork() do not work
+> +with enclaves.  In other words, the architectural rules of EPC forces it to be
 
-No need for this. Just document 'interrupts' and the tooling takes care 
-of supporting 'interrupts-extended' too.
+                                                                  force
 
-> +    description: |
-> +      If interrupts are coming from different controllers, this property
-> +      can be used instead of regular "interrupts" property.
-> +      The format is exactly the same as with "interrupts".
-> +      Interrupts should be put in specific order. This is, the local timer
-> +    minItems: 5               # 4 Global + 1 local
-> +    maxItems: 20              # 4 Global + 16 local
+> +treated as MAP_SHARED at all times.
 > +
-> +required:
-> +  - compatible
-> +  - interrupts
-> +  - reg
-> +
-> +allOf:
-> +  - if:
-> +      not:
-> +        required:
-> +          - interrupts
-> +    then:
-> +      required:
-> +        - interrupts-extended
+> +The inability to employ traditional memory models also means that EPC memory
+> +must be isolated from normal memory pools, e.g. attempting to use EPC memory
+> +for normal mappings would result in faults and/or perceived data corruption.
+> +Furthermore, EPC is not enumerated by as normal memory, e.g. BIOS enumerates
 
-And this is taken care of too.
+                           enumerated as
+
+> +EPC as reserved memory in the e820 tables, or not at all.  As a result, EPC
+> +memory is directly managed by the SGX subsystem, e.g. SGX employs VM_PFNMAP to
+> +manually insert/zap/swap page table entries, and exposes EPC to userspace via
+> +a well known device, /dev/sgx/enclave.
+> +
+> +The net effect is that all enclave VMAs must be MAP_SHARED and are backed by
+> +a single file, /dev/sgx/enclave.
+> +
+> +EPC oversubscription
+> +====================
+> +
+> +SGX allows to have larger enclaves than amount of available EPC by providing a
+
+                                      than the amount of
+
+> +subset of leaf instruction for swapping EPC pages to the system memory.  The
+
+                  instructions  {I think}
+
+> +details of these instructions are discussed in the architecture document. Due
+> +to the unique requirements for swapping EPC pages, and because EPC pages do not
+> +have associated page structures, management of the EPC is not handled by the
+> +standard memory subsystem.
+> +
+> +SGX directly handles swapping of EPC pages, including a thread to initiate the
+> +reclaiming process and a rudimentary LRU mechanism. When the amount of free EPC
+> +pages goes below a low watermark the swapping thread starts reclaiming pages.
+> +The pages that have not been recently accessed (i.e. do not have the A bit set)
+> +are selected as victim pages. Each enclave holds an shmem file as a backing
+> +storage for reclaimed pages.
+> +
+> +Launch Control
+> +==============
+> +
+> +The current kernel implementation supports only writable MSRs. The launch is
+> +performed by setting the MSRs to the hash of the public key modulus of the
+> +enclave signer and a token with the valid bit set to zero. Because kernel makes
+
+                                                              Because the kernel
+
+> +ultimately all the launch decisions token are not needed for anything.  We
+
+   ultimately makes all the launch decisions, tokens are not
+
+
+> +don't need or have a launch enclave for generating them as the MSRs must always
+> +be writable.
+> +
+> +Provisioning
+> +============
+> +
+> +The use of provisioning must be controlled because it allows to get access to
+> +the provisioning keys to attest to a remote party that the software is running
+> +inside a legit enclave. This could be used by a malware network to ensure that
+
+            legitimate
+
+> +its nodes are running inside legit enclaves.
+
+                                legitimate
 
 > +
-> +examples:
-> +  - |
-> +    // In this example, the IP contains two local timers, using separate
-> +    // interrupts, so two local timer interrupts have been specified,
-> +    // in addition to four global timer interrupts.
-> +
-> +    timer@10050000 {
-> +        compatible = "samsung,exynos4210-mct";
-> +        reg = <0x10050000 0x800>;
-> +        interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
-> +                     <0 42 0>, <0 48 0>;
-> +    };
-> +
-> +  - |
-> +    // In this example, the timer interrupts are connected to two separate
-> +    // interrupt controllers. Hence, an interrupts-extended is needed.
-> +
-> +    timer@101c0000 {
-> +        compatible = "samsung,exynos4210-mct";
-> +        reg = <0x101C0000 0x800>;
-> +        interrupts-extended = <&gic 0 57 0>,
-> +                              <&gic 0 69 0>,
-> +                              <&combiner 12 6>,
-> +                              <&combiner 12 7>,
-> +                              <&gic 0 42 0>,
-> +                              <&gic 0 48 0>;
-> +    };
-> +
-> +  - |
-> +    // In this example, the IP contains four local timers, but using
-> +    // a per-processor interrupt to handle them. Only one first local
-> +    // interrupt is specified.
-> +
-> +    timer@10050000 {
-> +        compatible = "samsung,exynos4412-mct";
-> +        reg = <0x10050000 0x800>;
-> +
-> +        interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
-> +                     <0 42 0>;
-> +    };
-> +
-> +  - |
-> +    // In this example, the IP contains four local timers, but using
-> +    // a per-processor interrupt to handle them. All the local timer
-> +    // interrupts are specified.
-> +
-> +    timer@10050000 {
-> +        compatible = "samsung,exynos4412-mct";
-> +        reg = <0x10050000 0x800>;
-> +
-> +        interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
-> +                     <0 42 0>, <0 42 0>, <0 42 0>, <0 42 0>;
-> +    };
-> -- 
-> 2.17.1
-> 
+> +The driver introduces a special device file /dev/sgx/provision and a special
+> +ioctl SGX_IOC_ENCLAVE_SET_ATTRIBUTE to accomplish this. A file descriptor
+> +pointing to /dev/sgx/provision is passed to ioctl from which kernel authorizes
+> +the PROVISION_KEY attribute to the enclave.
+
+
+
+-- 
+~Randy
