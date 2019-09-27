@@ -5,55 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A85AC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC6AC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DC98217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B65E8217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:35:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ukwRBNMa"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Lih83Mfr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbfI0Sew (ORCPT
+        id S1728571AbfI0Sfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 14:34:52 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50488 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728241AbfI0Seq (ORCPT
+        Fri, 27 Sep 2019 14:35:37 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:57778 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728325AbfI0Sex (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 14:34:46 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8RIYjw0077506;
-        Fri, 27 Sep 2019 13:34:45 -0500
+        Fri, 27 Sep 2019 14:34:53 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8RIYqCK091577;
+        Fri, 27 Sep 2019 13:34:52 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569609285;
-        bh=VmitdgajHHJkSVwVVJXNsT523zGlYCY363KbSQpWfJQ=;
+        s=ti-com-17Q1; t=1569609292;
+        bh=aBu0PqWOIhGTbZg+fIEAWe5OpA13KW5g5d1hdo8Rvow=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ukwRBNMatufZA/NuPc4QiACys/2tobLbHA3eFyDW1zoHoZz9tKx97S+LDmGACZk/W
-         YMoTCe9kSDAjE7Ui5bfyyIctk9NG9zpyBSbI+265YyfBIS9V3IfWUJkZZdwUUYMQ2L
-         1Pj3JqqcVA3PxieKuoq0FXGcmrLw0tsjy4jyN8Ho=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8RIYjOD108646;
-        Fri, 27 Sep 2019 13:34:45 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+        b=Lih83Mfr/uZv0CJJJPYITFRfSbwbN/lUxEi7JpjbS98kGH3ub1DSarR65YuGnh13Z
+         0nKgCvb+2hP+xv1MwQY2XC2hDwJqHr3+pZMv3+iDaqm4tu0CWj6Hr50qPc8PEwO9x6
+         7dHR94r9gkvq0qV9yelMTY9Giy+J6VIqVUJkxRzk=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8RIYqHN061224
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 27 Sep 2019 13:34:52 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 27
- Sep 2019 13:34:37 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ Sep 2019 13:34:51 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 27 Sep 2019 13:34:36 -0500
+ Frontend Transport; Fri, 27 Sep 2019 13:34:52 -0500
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8RIYgbq073031;
-        Fri, 27 Sep 2019 13:34:44 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8RIYgbx073031;
+        Fri, 27 Sep 2019 13:34:51 -0500
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>
 CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch 03/16] media: ti-vpe: vpe: Remove unnecessary use of container_of
-Date:   Fri, 27 Sep 2019 13:36:37 -0500
-Message-ID: <20190927183650.31345-4-bparrot@ti.com>
+Subject: [Patch 10/16] media: ti-vpe: vpe: fix a v4l2-compliance failure about invalid sizeimage
+Date:   Fri, 27 Sep 2019 13:36:44 -0500
+Message-ID: <20190927183650.31345-11-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190927183650.31345-1-bparrot@ti.com>
 References: <20190927183650.31345-1-bparrot@ti.com>
@@ -65,98 +66,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of saving a pointer to the 'fh' member of struct vpe_ctx to
-later have to use container_of to retrieve the actual pointer to the
-context structure, which seems to confuse static code analysis tool
-anyways, just save the pointer to the actual structure and then retrieve
-it directly.
+v4l2-compliance fails with this message:
+
+   fail: v4l2-test-formats.cpp(463): !pfmt.sizeimage
+   fail: v4l2-test-formats.cpp(736): \
+	Video Capture Multiplanar is valid, \
+	but TRY_FMT failed to return a format
+   test VIDIOC_TRY_FMT: FAIL
+
+This failure is causd by the driver failing to handle out range
+'bytesperline' values from user space applications.
+
+VPDMA hardware is limited to 64k line stride (16 bytes aligned, so 65520
+bytes). So make sure the provided or calculated 'bytesperline' is
+smaller than the maximum value.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 22 +++++++---------------
- 1 file changed, 7 insertions(+), 15 deletions(-)
+ drivers/media/platform/ti-vpe/vpdma.h | 1 +
+ drivers/media/platform/ti-vpe/vpe.c   | 4 ++++
+ 2 files changed, 5 insertions(+)
 
+diff --git a/drivers/media/platform/ti-vpe/vpdma.h b/drivers/media/platform/ti-vpe/vpdma.h
+index bce17329c4c9..393fcbb3cb40 100644
+--- a/drivers/media/platform/ti-vpe/vpdma.h
++++ b/drivers/media/platform/ti-vpe/vpdma.h
+@@ -57,6 +57,7 @@ struct vpdma_data_format {
+ 						 * line stride of source and dest
+ 						 * buffers should be 16 byte aligned
+ 						 */
++#define VPDMA_MAX_STRIDE		65520	/* Max line stride 16 byte aligned */
+ #define VPDMA_DTD_DESC_SIZE		32	/* 8 words */
+ #define VPDMA_CFD_CTD_DESC_SIZE		16	/* 4 words */
+ 
 diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index 56f60dbea15c..0e9cb0319a92 100644
+index 7aa83026fb6c..0a7cf9c820c6 100644
 --- a/drivers/media/platform/ti-vpe/vpe.c
 +++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -900,14 +900,6 @@ static int set_srcdst_params(struct vpe_ctx *ctx)
- 	return 0;
- }
+@@ -1694,6 +1694,10 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
+ 		if (stride > plane_fmt->bytesperline)
+ 			plane_fmt->bytesperline = stride;
  
--/*
-- * Return the vpe_ctx structure for a given struct file
-- */
--static struct vpe_ctx *file2ctx(struct file *file)
--{
--	return container_of(file->private_data, struct vpe_ctx, fh);
--}
--
- /*
-  * mem2mem callbacks
-  */
-@@ -1527,7 +1519,7 @@ static int vpe_enum_fmt(struct file *file, void *priv,
- static int vpe_g_fmt(struct file *file, void *priv, struct v4l2_format *f)
- {
- 	struct v4l2_pix_format_mplane *pix = &f->fmt.pix_mp;
--	struct vpe_ctx *ctx = file2ctx(file);
-+	struct vpe_ctx *ctx = file->private_data;
- 	struct vb2_queue *vq;
- 	struct vpe_q_data *q_data;
- 	int i;
-@@ -1689,7 +1681,7 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
- 
- static int vpe_try_fmt(struct file *file, void *priv, struct v4l2_format *f)
- {
--	struct vpe_ctx *ctx = file2ctx(file);
-+	struct vpe_ctx *ctx = file->private_data;
- 	struct vpe_fmt *fmt = find_format(f);
- 
- 	if (V4L2_TYPE_IS_OUTPUT(f->type))
-@@ -1762,7 +1754,7 @@ static int __vpe_s_fmt(struct vpe_ctx *ctx, struct v4l2_format *f)
- static int vpe_s_fmt(struct file *file, void *priv, struct v4l2_format *f)
- {
- 	int ret;
--	struct vpe_ctx *ctx = file2ctx(file);
-+	struct vpe_ctx *ctx = file->private_data;
- 
- 	ret = vpe_try_fmt(file, priv, f);
- 	if (ret)
-@@ -1847,7 +1839,7 @@ static int __vpe_try_selection(struct vpe_ctx *ctx, struct v4l2_selection *s)
- static int vpe_g_selection(struct file *file, void *fh,
- 		struct v4l2_selection *s)
- {
--	struct vpe_ctx *ctx = file2ctx(file);
-+	struct vpe_ctx *ctx = file->private_data;
- 	struct vpe_q_data *q_data;
- 	bool use_c_rect = false;
- 
-@@ -1908,7 +1900,7 @@ static int vpe_g_selection(struct file *file, void *fh,
- static int vpe_s_selection(struct file *file, void *fh,
- 		struct v4l2_selection *s)
- {
--	struct vpe_ctx *ctx = file2ctx(file);
-+	struct vpe_ctx *ctx = file->private_data;
- 	struct vpe_q_data *q_data;
- 	struct v4l2_selection sel = *s;
- 	int ret;
-@@ -2275,7 +2267,7 @@ static int vpe_open(struct file *file)
- 	init_adb_hdrs(ctx);
- 
- 	v4l2_fh_init(&ctx->fh, video_devdata(file));
--	file->private_data = &ctx->fh;
-+	file->private_data = ctx;
- 
- 	hdl = &ctx->hdl;
- 	v4l2_ctrl_handler_init(hdl, 1);
-@@ -2360,7 +2352,7 @@ static int vpe_open(struct file *file)
- static int vpe_release(struct file *file)
- {
- 	struct vpe_dev *dev = video_drvdata(file);
--	struct vpe_ctx *ctx = file2ctx(file);
-+	struct vpe_ctx *ctx = file->private_data;
- 
- 	vpe_dbg(dev, "releasing instance %p\n", ctx);
++		plane_fmt->bytesperline = clamp_t(u32, plane_fmt->bytesperline,
++						  stride,
++						  VPDMA_MAX_STRIDE);
++
+ 		plane_fmt->bytesperline = ALIGN(plane_fmt->bytesperline,
+ 						VPDMA_STRIDE_ALIGN);
  
 -- 
 2.17.1
