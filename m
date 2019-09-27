@@ -2,212 +2,363 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F495C388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40741C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1589217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:53:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="hho/UIso"
+	by mail.kernel.org (Postfix) with ESMTP id 0FD0821841
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:58:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbfI0QxQ (ORCPT
+        id S1727900AbfI0Q6p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 12:53:16 -0400
-Received: from mail-eopbgr720086.outbound.protection.outlook.com ([40.107.72.86]:51904
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726251AbfI0QxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 12:53:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZZlT8i7elFF9OiYgknj2iGBhIy593n+4b/63CFUJBz8089jAjTfhkpy6hC1amo2dea0fNReeNpXc1heksfzK/QE5dtlvUtSXSefu4zpPFCcXdyq6xiP/keo466Jc31zrn21YMWPzdg39BDIjuRcXERaq7Akvh7bj1NzDf9LntmqRBzXNEOcw2nQCnSNMlP3arpPGrAAV5es0OgJysweSYC6fuB+sJBinImCoyR+p5/A1JVdAyAFld21vZy0JX78knHWsZBR+mDdzAbilFd1vlU8dqWZF3UbI+eQgxAbO6sf/0WEmOb2h8+bOIui4ihuVbZWnE+1FM9KW9Csy4NLurw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gfZABY3KvNgVN3V6mgMTRmxTMxYgnsc92XpSywvDk+w=;
- b=halAoXYxwcI3kTzJRdRm7LFl7r8QISS8cx5u7FyJKjA/jLmQgRhy+J6PBvk7KTw1gvkkMjnSAog10NtxNxb8EAsc7JWnZ14hZ3Pv9pioQEywRNEe4Jn5UFQbXIkIIXllgKkz0tGAjNLWEk70uL1XctZpDJT0YvfclWLAbc79ralVRCMG2Cfz58Hig0UaB/PAKS0iI2rILUYLiwPUi7w7XD5j2HR4tzPpOypCVNlO6A6K8QACVu6H9NgeeYs9KDD6G+wPbyio2FNXKVkGeOQDFS7DhWNOOevWPrDhtKb8EiKJ+WwFtsp/2A8XFPJfb882VKwUyFXMoYhE0b30slR3PA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gfZABY3KvNgVN3V6mgMTRmxTMxYgnsc92XpSywvDk+w=;
- b=hho/UIsocjyPG0zwmi7uHMr1chBa1MsPUuL45Lt7YxEQqz3K6rJbFExES/Yues8Kc4+p53e2cgOb3lnFjRjM2t0oViJQhbILGlf3NE+WT0GVw+vhQHbxP3OgAYwmjjL7cTtZW4h3yCobVkN15V4NIV0UvbnafaPiVc8gjI9XQL8=
-Received: from CH2PR02MB7000.namprd02.prod.outlook.com (20.180.9.216) by
- CH2PR02MB6773.namprd02.prod.outlook.com (20.180.17.8) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.20; Fri, 27 Sep 2019 16:53:11 +0000
-Received: from CH2PR02MB7000.namprd02.prod.outlook.com
- ([fe80::3515:e3a7:8799:73bd]) by CH2PR02MB7000.namprd02.prod.outlook.com
- ([fe80::3515:e3a7:8799:73bd%2]) with mapi id 15.20.2305.017; Fri, 27 Sep 2019
- 16:53:11 +0000
-From:   Radhey Shyam Pandey <radheys@xilinx.com>
-To:     Nicholas Graumann <nick.graumann@gmail.com>
-CC:     Vinod Koul <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        Michal Simek <michals@xilinx.com>,
-        "andrea.merello@gmail.com" <andrea.merello@gmail.com>,
-        Appana Durga Kedareswara Rao <appanad@xilinx.com>,
-        "mcgrof@kernel.org" <mcgrof@kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH -next 7/8] dmaengine: xilinx_dma: Check for both idle and
- halted state in axidma stop_transfer
-Thread-Topic: [PATCH -next 7/8] dmaengine: xilinx_dma: Check for both idle and
- halted state in axidma stop_transfer
-Thread-Index: AQHVZAh+BsqD15rQs0ybdZW78qGrBqc+VX+AgADPhOCAAInhAIAALOvg
-Date:   Fri, 27 Sep 2019 16:53:11 +0000
-Message-ID: <CH2PR02MB7000D0EF8E2B2C11C58B7235C7810@CH2PR02MB7000.namprd02.prod.outlook.com>
-References: <1567701424-25658-1-git-send-email-radhey.shyam.pandey@xilinx.com>
- <1567701424-25658-8-git-send-email-radhey.shyam.pandey@xilinx.com>
- <20190926172107.GN3824@vkoul-mobl>
- <CH2PR02MB7000EACD029FC7E47679393CC7810@CH2PR02MB7000.namprd02.prod.outlook.com>
- <20190927135720.GA16057@lnx-nickg>
-In-Reply-To: <20190927135720.GA16057@lnx-nickg>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=radheys@xilinx.com; 
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d791a120-0008-4f34-43a4-08d7436b2e5e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CH2PR02MB6773;
-x-ms-traffictypediagnostic: CH2PR02MB6773:|CH2PR02MB6773:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR02MB677370C4944BB93FA926F871C7810@CH2PR02MB6773.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2399;
-x-forefront-prvs: 0173C6D4D5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(136003)(376002)(39860400002)(366004)(199004)(189003)(13464003)(26005)(6916009)(9686003)(14454004)(25786009)(11346002)(6246003)(446003)(7736002)(4326008)(74316002)(476003)(229853002)(71190400001)(486006)(6436002)(186003)(71200400001)(3846002)(305945005)(99286004)(256004)(7696005)(86362001)(76116006)(66946007)(66476007)(66556008)(64756008)(66446008)(316002)(54906003)(478600001)(6116002)(53546011)(6506007)(2906002)(5660300002)(8676002)(102836004)(8936002)(81156014)(66066001)(76176011)(81166006)(52536014)(14444005)(55016002)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6773;H:CH2PR02MB7000.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: lYaqIoCs8JvrxVPrqn+Pd6KElGwfTZnmjTArLlq22r78DcJ3XIUcy5SJYjplmROmF4q6xGg8Io3NL//HU/hgTNoK9UyO8g5KRx7wBD+SbFuKnjYY7cOlMCazToFRGotksx6bI1JjjUZ2OfyQ1zsTTYr1MxzERY7vxeTBPFavY6jQyumDIRAunVbHF1N6sCzRWlJ/0oMntJauWXUwFQAh76CAIDhcc1k8xUIpKd9P+oB9j7O/YEn0GY4+xZD3ZxC+J5O+TbNfob5KBsxclLK4nOWQIz/fzLkcnP00Fjt/qsYEwc2S/Uf811uld8FxXjQMFfYLuNxhXNz4e5JHweGDiVQ8X0Fp0dFhGyhcl4df0SC0NF8fuQ/15dnBLUTxh2IY26jBiVFpBSRj1Xw97H7X8wQPBYgIeWPrsC6TiXDPxJY=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 27 Sep 2019 12:58:45 -0400
+Received: from 19.mo5.mail-out.ovh.net ([46.105.35.78]:57810 "EHLO
+        19.mo5.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727079AbfI0Q6p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 12:58:45 -0400
+X-Greylist: delayed 6838 seconds by postgrey-1.27 at vger.kernel.org; Fri, 27 Sep 2019 12:58:42 EDT
+Received: from player687.ha.ovh.net (unknown [10.109.146.122])
+        by mo5.mail-out.ovh.net (Postfix) with ESMTP id 8DF382504E7
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 16:30:43 +0200 (CEST)
+Received: from sk2.org (unknown [65.39.69.237])
+        (Authenticated sender: steve@sk2.org)
+        by player687.ha.ovh.net (Postfix) with ESMTPSA id 7A2E5A476CBE;
+        Fri, 27 Sep 2019 14:30:32 +0000 (UTC)
+From:   Stephen Kitt <steve@sk2.org>
+To:     linux-doc@vger.kernel.org
+Cc:     corbet@lwn.net, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-afs@lists.infradead.org, kvm@vger.kernel.org,
+        Stephen Kitt <steve@sk2.org>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] docs: use flexible array members, not zero-length
+Date:   Fri, 27 Sep 2019 16:29:27 +0200
+Message-Id: <20190927142927.27968-1-steve@sk2.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d791a120-0008-4f34-43a4-08d7436b2e5e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Sep 2019 16:53:11.3865
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ajvgXI8umiYrTSEEOD2sE92S30L2l+7zsKoScpfc0NfXXW9zSzft7DyOwmB2vu6r3xtYUYtgQGHnfDtIpyYbHA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6773
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 2095018254973357452
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedrfeeigdejiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Nicholas Graumann <nick.graumann@gmail.com>
-> Sent: Friday, September 27, 2019 7:27 PM
-> To: Radhey Shyam Pandey <radheys@xilinx.com>
-> Cc: Vinod Koul <vkoul@kernel.org>; dan.j.williams@intel.com; Michal Simek
-> <michals@xilinx.com>; andrea.merello@gmail.com; Appana Durga
-> Kedareswara Rao <appanad@xilinx.com>; mcgrof@kernel.org;
-> dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH -next 7/8] dmaengine: xilinx_dma: Check for both idle
-> and halted state in axidma stop_transfer
->=20
-> On Fri, Sep 27, 2019 at 06:48:29AM +0000, Radhey Shyam Pandey wrote:
-> > > -----Original Message-----
-> > > From: Vinod Koul <vkoul@kernel.org>
-> > > Sent: Thursday, September 26, 2019 10:51 PM
-> > > To: Radhey Shyam Pandey <radheys@xilinx.com>
-> > > Cc: dan.j.williams@intel.com; Michal Simek <michals@xilinx.com>;
-> > > nick.graumann@gmail.com; andrea.merello@gmail.com; Appana Durga
-> > > Kedareswara Rao <appanad@xilinx.com>; mcgrof@kernel.org;
-> > > dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org
-> > > Subject: Re: [PATCH -next 7/8] dmaengine: xilinx_dma: Check for both
-> idle
-> > > and halted state in axidma stop_transfer
-> > >
-> > > On 05-09-19, 22:07, Radhey Shyam Pandey wrote:
-> > > > From: Nicholas Graumann <nick.graumann@gmail.com>
-> > > >
-> > > > When polling for a stopped transfer in AXI DMA mode, in some cases
-> the
-> > > > status of the channel may indicate IDLE instead of HALTED if the
-> > > > channel was reset due to an error.
-> > > >
-> > > > Signed-off-by: Nicholas Graumann <nick.graumann@gmail.com>
-> > > > Signed-off-by: Radhey Shyam Pandey
-> > > <radhey.shyam.pandey@xilinx.com>
-> > > > ---
-> > > >  drivers/dma/xilinx/xilinx_dma.c | 5 +++--
-> > > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/drivers/dma/xilinx/xilinx_dma.c
-> > > b/drivers/dma/xilinx/xilinx_dma.c
-> > > > index b5dd62a..0896e07 100644
-> > > > --- a/drivers/dma/xilinx/xilinx_dma.c
-> > > > +++ b/drivers/dma/xilinx/xilinx_dma.c
-> > > > @@ -1092,8 +1092,9 @@ static int xilinx_dma_stop_transfer(struct
-> > > xilinx_dma_chan *chan)
-> > > >
-> > > >  	/* Wait for the hardware to halt */
-> > > >  	return xilinx_dma_poll_timeout(chan, XILINX_DMA_REG_DMASR,
-> > > val,
-> > > > -				       val & XILINX_DMA_DMASR_HALTED, 0,
-> > > > -				       XILINX_DMA_LOOP_COUNT);
-> > > > +				       val | (XILINX_DMA_DMASR_IDLE |
-> > > > +					      XILINX_DMA_DMASR_HALTED),
-> > >
-> > > The condition was bitwise AND and now is OR.. ??
-> >
-> > Ah, it should be same as before . Only _IDLE mask should be in OR.
-> >
-> > Also on second thought to this patch- we need to describe which error
-> > scenario "in some cases the status of the channel may indicate IDLE
-> > instead of HALTED" as mentioned in commit description.
-> >
-> > @Nick: Can you comment?
-> >
-> In regard to the mask question, yes, this looks like a bug.
-> We should be AND'ing with the mask like before.
->=20
-> As far as the state, usually when we saw the IDLE state when invoking
-> dmaengine_terminate_all on a channel that had errors. I have not
-> proved this, but I believe what happened was the following:
+Update the docs throughout to remove zero-length arrays, replacing
+them with C99 flexible array members. GCC will then ensure that the
+arrays are always the last element in the struct.
 
-As per IP produce guide pg021, once DMACR[RS] is set to 0x0
-the halted bit in the DMA Status register should asserts to
-0x1 when the DMA engine is halted. Also the DMA may be the
-in IDLE state, there may be active data on the AXI interface.
+Signed-off-by: Stephen Kitt <steve@sk2.org>
+Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ Documentation/bpf/btf.rst                     |  2 +-
+ Documentation/digsig.txt                      |  4 ++--
+ Documentation/driver-api/connector.rst        |  2 +-
+ Documentation/driver-api/usb/URB.rst          |  2 +-
+ .../filesystems/autofs-mount-control.txt      |  2 +-
+ Documentation/filesystems/autofs.txt          |  2 +-
+ Documentation/filesystems/fiemap.txt          |  2 +-
+ Documentation/hwspinlock.txt                  |  2 +-
+ Documentation/networking/can.rst              |  2 +-
+ Documentation/networking/rxrpc.txt            |  2 +-
+ Documentation/remoteproc.txt                  |  4 ++--
+ Documentation/virt/kvm/api.txt                | 24 +++++++++----------
+ Documentation/x86/boot.rst                    |  4 ++--
+ 13 files changed, 27 insertions(+), 27 deletions(-)
 
-I think for now we can skip this patchset in v2 and repost it
-when a proper root cause is done.
+diff --git a/Documentation/bpf/btf.rst b/Documentation/bpf/btf.rst
+index 4d565d202ce3..24ce50fc1fc1 100644
+--- a/Documentation/bpf/btf.rst
++++ b/Documentation/bpf/btf.rst
+@@ -670,7 +670,7 @@ func_info for each specific ELF section.::
+         __u32   sec_name_off; /* offset to section name */
+         __u32   num_info;
+         /* Followed by num_info * record_size number of bytes */
+-        __u8    data[0];
++        __u8    data[];
+      };
+ 
+ Here, num_info must be greater than 0.
+diff --git a/Documentation/digsig.txt b/Documentation/digsig.txt
+index f6a8902d3ef7..d7479f98a27e 100644
+--- a/Documentation/digsig.txt
++++ b/Documentation/digsig.txt
+@@ -31,7 +31,7 @@ Public key and signature consist of header and MPIs::
+ 		time_t		timestamp;	/* key made, always 0 for now */
+ 		uint8_t		algo;
+ 		uint8_t		nmpi;
+-		char		mpi[0];
++		char		mpi[];
+ 	} __packed;
+ 
+ 	struct signature_hdr {
+@@ -41,7 +41,7 @@ Public key and signature consist of header and MPIs::
+ 		uint8_t		hash;
+ 		uint8_t		keyid[8];
+ 		uint8_t		nmpi;
+-		char		mpi[0];
++		char		mpi[];
+ 	} __packed;
+ 
+ keyid equals to SHA1[12-19] over the total key content.
+diff --git a/Documentation/driver-api/connector.rst b/Documentation/driver-api/connector.rst
+index c100c7482289..1f187028c7e1 100644
+--- a/Documentation/driver-api/connector.rst
++++ b/Documentation/driver-api/connector.rst
+@@ -49,7 +49,7 @@ be dereferenced to `struct cn_msg *`::
+ 	__u32			ack;
+ 
+ 	__u32			len;	/* Length of the following data */
+-	__u8			data[0];
++	__u8			data[];
+   };
+ 
+ Connector interfaces
+diff --git a/Documentation/driver-api/usb/URB.rst b/Documentation/driver-api/usb/URB.rst
+index 61a54da9fce9..8aca9c39e9a0 100644
+--- a/Documentation/driver-api/usb/URB.rst
++++ b/Documentation/driver-api/usb/URB.rst
+@@ -82,7 +82,7 @@ Some of the fields in struct :c:type:`urb` are::
+ 
+     // ISO only: packets are only "best effort"; each can have errors
+ 	int error_count;                // number of errors
+-	struct usb_iso_packet_descriptor iso_frame_desc[0];
++	struct usb_iso_packet_descriptor iso_frame_desc[];
+   };
+ 
+ Your driver must create the "pipe" value using values from the appropriate
+diff --git a/Documentation/filesystems/autofs-mount-control.txt b/Documentation/filesystems/autofs-mount-control.txt
+index acc02fc57993..1c5cf1ecd90d 100644
+--- a/Documentation/filesystems/autofs-mount-control.txt
++++ b/Documentation/filesystems/autofs-mount-control.txt
+@@ -194,7 +194,7 @@ struct autofs_dev_ioctl {
+ 		struct args_ismountpoint	ismountpoint;
+ 	};
+ 
+-	char path[0];
++	char path[];
+ };
+ 
+ The ioctlfd field is a mount point file descriptor of an autofs mount
+diff --git a/Documentation/filesystems/autofs.txt b/Documentation/filesystems/autofs.txt
+index 3af38c7fd26d..0766089b81f1 100644
+--- a/Documentation/filesystems/autofs.txt
++++ b/Documentation/filesystems/autofs.txt
+@@ -455,7 +455,7 @@ Each ioctl is passed a pointer to an `autofs_dev_ioctl` structure:
+ 			struct args_ismountpoint	ismountpoint;
+ 		};
+ 
+-                char path[0];
++                char path[];
+         };
+ 
+ For the **OPEN_MOUNT** and **IS_MOUNTPOINT** commands, the target
+diff --git a/Documentation/filesystems/fiemap.txt b/Documentation/filesystems/fiemap.txt
+index f6d9c99103a4..172c94377fb3 100644
+--- a/Documentation/filesystems/fiemap.txt
++++ b/Documentation/filesystems/fiemap.txt
+@@ -22,7 +22,7 @@ struct fiemap {
+ 				    * mapped (out) */
+ 	__u32	fm_extent_count; /* size of fm_extents array (in) */
+ 	__u32	fm_reserved;
+-	struct fiemap_extent fm_extents[0]; /* array of mapped extents (out) */
++	struct fiemap_extent fm_extents[]; /* array of mapped extents (out) */
+ };
+ 
+ 
+diff --git a/Documentation/hwspinlock.txt b/Documentation/hwspinlock.txt
+index 6f03713b7003..a37e7c24ff26 100644
+--- a/Documentation/hwspinlock.txt
++++ b/Documentation/hwspinlock.txt
+@@ -439,7 +439,7 @@ implementation using the hwspin_lock_register() API.
+ 		const struct hwspinlock_ops *ops;
+ 		int base_id;
+ 		int num_locks;
+-		struct hwspinlock lock[0];
++		struct hwspinlock lock[];
+ 	};
+ 
+ struct hwspinlock_device contains an array of hwspinlock structs, each
+diff --git a/Documentation/networking/can.rst b/Documentation/networking/can.rst
+index 2fd0b51a8c52..ceb40a9d2044 100644
+--- a/Documentation/networking/can.rst
++++ b/Documentation/networking/can.rst
+@@ -705,7 +705,7 @@ The broadcast manager sends responses to user space in the same form:
+             struct timeval ival1, ival2;    /* count and subsequent interval */
+             canid_t can_id;                 /* unique can_id for task */
+             __u32 nframes;                  /* number of can_frames following */
+-            struct can_frame frames[0];
++            struct can_frame frames[];
+     };
+ 
+ The aligned payload 'frames' uses the same basic CAN frame structure defined
+diff --git a/Documentation/networking/rxrpc.txt b/Documentation/networking/rxrpc.txt
+index 180e07d956a7..b1fff6870c1b 100644
+--- a/Documentation/networking/rxrpc.txt
++++ b/Documentation/networking/rxrpc.txt
+@@ -518,7 +518,7 @@ form:
+ 		uint8_t		kvno;		/* key version number */
+ 		uint8_t		__pad[3];
+ 		uint8_t		session_key[8];	/* DES session key */
+-		uint8_t		ticket[0];	/* the encrypted ticket */
++		uint8_t		ticket[];	/* the encrypted ticket */
+ 	};
+ 
+ Where the ticket blob is just appended to the above structure.
+diff --git a/Documentation/remoteproc.txt b/Documentation/remoteproc.txt
+index 03c3d2e568b0..77b1493759b2 100644
+--- a/Documentation/remoteproc.txt
++++ b/Documentation/remoteproc.txt
+@@ -274,7 +274,7 @@ The resource table begins with this header::
+ 	u32 ver;
+ 	u32 num;
+ 	u32 reserved[2];
+-	u32 offset[0];
++	u32 offset[];
+   } __packed;
+ 
+ Immediately following this header are the resource entries themselves,
+@@ -291,7 +291,7 @@ each of which begins with the following resource entry header::
+    */
+   struct fw_rsc_hdr {
+ 	u32 type;
+-	u8 data[0];
++	u8 data[];
+   } __packed;
+ 
+ Some resources entries are mere announcements, where the host is informed
+diff --git a/Documentation/virt/kvm/api.txt b/Documentation/virt/kvm/api.txt
+index 136f1eef3712..0b8955152362 100644
+--- a/Documentation/virt/kvm/api.txt
++++ b/Documentation/virt/kvm/api.txt
+@@ -192,7 +192,7 @@ Errors:
+ 
+ struct kvm_msr_list {
+ 	__u32 nmsrs; /* number of msrs in entries */
+-	__u32 indices[0];
++	__u32 indices[];
+ };
+ 
+ The user fills in the size of the indices array in nmsrs, and in return
+@@ -566,7 +566,7 @@ struct kvm_msrs {
+ 	__u32 nmsrs; /* number of msrs in entries */
+ 	__u32 pad;
+ 
+-	struct kvm_msr_entry entries[0];
++	struct kvm_msr_entry entries[];
+ };
+ 
+ struct kvm_msr_entry {
+@@ -626,7 +626,7 @@ struct kvm_cpuid_entry {
+ struct kvm_cpuid {
+ 	__u32 nent;
+ 	__u32 padding;
+-	struct kvm_cpuid_entry entries[0];
++	struct kvm_cpuid_entry entries[];
+ };
+ 
+ 
+@@ -649,7 +649,7 @@ signal mask.
+ /* for KVM_SET_SIGNAL_MASK */
+ struct kvm_signal_mask {
+ 	__u32 len;
+-	__u8  sigset[0];
++	__u8  sigset[];
+ };
+ 
+ 
+@@ -1403,7 +1403,7 @@ Returns: 0 on success, -1 on error
+ struct kvm_cpuid2 {
+ 	__u32 nent;
+ 	__u32 padding;
+-	struct kvm_cpuid_entry2 entries[0];
++	struct kvm_cpuid_entry2 entries[];
+ };
+ 
+ #define KVM_CPUID_FLAG_SIGNIFCANT_INDEX		BIT(0)
+@@ -1516,7 +1516,7 @@ On arm/arm64, GSI routing has the following limitation:
+ struct kvm_irq_routing {
+ 	__u32 nr;
+ 	__u32 flags;
+-	struct kvm_irq_routing_entry entries[0];
++	struct kvm_irq_routing_entry entries[];
+ };
+ 
+ No flags are specified so far, the corresponding field must be set to zero.
+@@ -2868,7 +2868,7 @@ Errors:
+ 
+ struct kvm_reg_list {
+ 	__u64 n; /* number of registers in reg[] */
+-	__u64 reg[0];
++	__u64 reg[];
+ };
+ 
+ This ioctl returns the guest registers that are supported for the
+@@ -2997,7 +2997,7 @@ Returns: 0 on success, -1 on error
+ struct kvm_cpuid2 {
+ 	__u32 nent;
+ 	__u32 flags;
+-	struct kvm_cpuid_entry2 entries[0];
++	struct kvm_cpuid_entry2 entries[];
+ };
+ 
+ The member 'flags' is used for passing flags from userspace.
+@@ -3889,8 +3889,8 @@ struct kvm_nested_state {
+ 	} hdr;
+ 
+ 	union {
+-		struct kvm_vmx_nested_state_data vmx[0];
+-		struct kvm_svm_nested_state_data svm[0];
++		struct kvm_vmx_nested_state_data vmx[];
++		struct kvm_svm_nested_state_data svm[];
+ 	} data;
+ };
+ 
+@@ -4016,7 +4016,7 @@ Returns: 0 on success, -1 on error
+ struct kvm_cpuid2 {
+ 	__u32 nent;
+ 	__u32 padding;
+-	struct kvm_cpuid_entry2 entries[0];
++	struct kvm_cpuid_entry2 entries[];
+ };
+ 
+ struct kvm_cpuid_entry2 {
+@@ -4110,7 +4110,7 @@ struct kvm_pmu_event_filter {
+ 	__u32 fixed_counter_bitmap;
+ 	__u32 flags;
+ 	__u32 pad[4];
+-	__u64 events[0];
++	__u64 events[];
+ };
+ 
+ This ioctl restricts the set of PMU events that the guest can program.
+diff --git a/Documentation/x86/boot.rst b/Documentation/x86/boot.rst
+index 08a2f100c0e6..1110c1a7337b 100644
+--- a/Documentation/x86/boot.rst
++++ b/Documentation/x86/boot.rst
+@@ -790,13 +790,13 @@ Protocol:	2.09+
+   The 64-bit physical pointer to NULL terminated single linked list of
+   struct setup_data. This is used to define a more extensible boot
+   parameters passing mechanism. The definition of struct setup_data is
+-  as follow::
++  as follows::
+ 
+ 	struct setup_data {
+ 		u64 next;
+ 		u32 type;
+ 		u32 len;
+-		u8  data[0];
++		u8  data[];
+ 	};
+ 
+   Where, the next is a 64-bit physical pointer to the next node of
+-- 
+2.20.1
 
->=20
-> New transactions were queued when chan->err was set, causing
-> xilinx_dma_chan_reset to be invoked which ultimately results in the
-> hardware being in an IDLE state by the time xilinx_dma_terminate_all
-> gets around to invoking stop_transfer. At that point, stop_transfer is
-> going to time out waiting for the hardware to indicate it has HALTED and
-> ultimately will time out.
->=20
->=20
-> In any case, xilinx_dma_stop_transfer should be fine with the hardware
-> being in an IDLE state to indicate that the active transfer is stopped.
-> Case in point: The CDMA core also covered by this driver only has an
-> IDLE bit and no HALTED bit in its DMASR, and it checks for just the IDLE
-> bit in xilinx_cdma_stop_transfer().
-> > >
-> > > > +				       0, XILINX_DMA_LOOP_COUNT);
-> > > >  }
-> > > >
-> > > >  /**
-> > > > --
-> > > > 2.7.4
-> > >
-> > > --
-> > > ~Vinod
