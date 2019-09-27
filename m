@@ -2,151 +2,148 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E2AAC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3374C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3B9E2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B02D221850
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:28:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="rB6Ae8Gs"
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="kGHYCLSd";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TRJ5v6i8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbfI0V2L (ORCPT
+        id S1728212AbfI0V2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 17:28:11 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:35682 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbfI0V2K (ORCPT
+        Fri, 27 Sep 2019 17:28:48 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:54041 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725306AbfI0V2s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 17:28:10 -0400
-Received: by mail-qt1-f195.google.com with SMTP id m15so9123824qtq.2
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 14:28:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=OSzYm24kMm+3qsYyi0PMA9ARrI4D/MfOEwhnPkS6YeA=;
-        b=rB6Ae8GsgMKyXP2kIYlZdVkMQw5z5AgLQJ2JqQdEYq6qXHOG3NWtz3nhkxhP3Eq3Ah
-         DSwDFvsXL8szTF0jsaA1qBVp/X6Lr1RfD0mFJYkQDd2S6sXz6BVDRB06kySbFyh365z+
-         Ogzn+eX3gQqdXZZxxbdj41XasaOfqyp/leQkZlAwnUrfs7uRHkkedxTCCrexo4Cnd67v
-         zKXOkUjrEy+MZsg4YNJa0Ova2ssP7aAfIbEcTGdMv/g5vfS7Htk//ie7vX6zCO+USuuX
-         kQUCxeDVZgr4KxJy4i7t9Ntu6eBel9ktGtdZw1eKKK3vGGhOeYivJsVxNrJmIUKTb4fj
-         ZfOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=OSzYm24kMm+3qsYyi0PMA9ARrI4D/MfOEwhnPkS6YeA=;
-        b=NHBNXTuK6Wfb4grgOZAW9a5u6wxlcydCJj2E01P3bOZVaWvz14q8XburHmfb07TFrO
-         FczpUVze4HigKKiFzDUWR2bkmMRDYY+mrlYXyPpwC6LejueLmKtNpETzulQxeKRgeVUp
-         unqcxrRJy/N4SA01nl+nxB3WpWgVNy9XIBHqgThVbnUI8B9oT/+sgTQUE39qKLaYtrU1
-         GzNZhr8NFim71ptlnm8TwiAGY1/tucauzbsE1uWBcMlfDBwR8JXhVBSM9vpPMGdShFEH
-         VYXuU8aNwyMMbEFbcJ+/IdtvM20C71vC3z3poOIa0cx5xcjGFBgz9TGNFnyegasFLIcd
-         /YGQ==
-X-Gm-Message-State: APjAAAV3SUoxMJSa65KMX2e36HFsCWjF46qSsdLYE3QXM6EkEzvoqho+
-        XM0HnDsek/GsY07WLrSXer15Wg==
-X-Google-Smtp-Source: APXvYqwufZybaXtm0KCuPg3uZ3BPhqW+oT1dBLOwS6HEHY04KEDFQUFlFH14fTnbK7+h1k4NFQvDvQ==
-X-Received: by 2002:ac8:301b:: with SMTP id f27mr11837429qte.83.1569619688095;
-        Fri, 27 Sep 2019 14:28:08 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id m14sm1636640qki.27.2019.09.27.14.28.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 27 Sep 2019 14:28:07 -0700 (PDT)
-Message-ID: <1569619686.5576.242.camel@lca.pw>
-Subject: Re: [PATCH] mm/page_alloc: fix a crash in free_pages_prepare()
-From:   Qian Cai <cai@lca.pw>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Date:   Fri, 27 Sep 2019 17:28:06 -0400
-In-Reply-To: <20190927140222.6f7d0a41b9e734053ee911b9@linux-foundation.org>
-References: <1569613623-16820-1-git-send-email-cai@lca.pw>
-         <20190927140222.6f7d0a41b9e734053ee911b9@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 27 Sep 2019 17:28:48 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 9A37A22AA;
+        Fri, 27 Sep 2019 17:28:46 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Fri, 27 Sep 2019 17:28:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
+        content-transfer-encoding:content-type:in-reply-to:date:cc
+        :subject:from:to:message-id; s=fm1; bh=tEytGYjqRKPYg5eCE7y6nPooC
+        bRk5cnOY2TTMlrG3W4=; b=kGHYCLSdj89XY6LTRlLeSXv7el6WQ20uWccauT87V
+        E2LZF1nMANPIZHGZohZb0cPcH6+JyOf4EkrfI2bnHTNK7mZq8G27nRwArvGi6jNJ
+        f27GAXCO3B/m7NTMXyq/9xCSs20CpkxwqWPm41sQWVDcPIswBqwvCEbuoiYYKj9n
+        HsutJ9EreQAdn0cPxldwvttj4F8RQev+IHxWLRx67SsWwLoxCO+YgQ+nShfi8MS8
+        9vogDptJ61ADsFQ0dsdPiwDQ3DpGstER6db494cWO8dATsHH68lDBkqEsdbVIhOP
+        7+Ed5E0V1FJ6Kncxf1Fc6YtDEcvFRMsSXZ6nSI9zpOzdw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=tEytGY
+        jqRKPYg5eCE7y6nPooCbRk5cnOY2TTMlrG3W4=; b=TRJ5v6i8Anowb1mb/c/xe5
+        aER9VH2QCbEL000vUJiyD6UAYRyZlBwp6HfqWuJB4JDKzCx+l6WiXAke/qIApb6s
+        lwuNb3Unk6c9P417zwyy66NdKXxUq6dnIPOVgLtdc4P7e+pzywk/9keUns/IQ9hu
+        KHmXtGMCMx++/F/mCc3W+fTg7cUeFxQ4pl0tKtdNtgTMSKXhSFEQUkCiilThZpZ7
+        c1UPBbc0uWxncZymjE3X3QpAqQBGfWf8LJ2zPQek4es4HtOiOKxTLYo0bvwhFaTd
+        29zcfEPbth8UeRh3RcgU0PgVoEvkmyI+FPq4YEmMcNPhdsiviy8eHBUGAgjqAmqA
+        ==
+X-ME-Sender: <xms:DX-OXf-I8FOKU-EM_IZiZaMH_6_8XfysQ23kziqjZj__X9eSPhxSFQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrfeeigdduheelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdljedtmdenucfjughrpefgtggjfffuhffvkfesthhqredttddtjeen
+    ucfhrhhomhepfdffrghnihgvlhcuighufdcuoegugihusegugihuuhhurdighiiiqeenuc
+    fkphepudelledrvddtuddrieegrddvnecurfgrrhgrmhepmhgrihhlfhhrohhmpegugihu
+    segugihuuhhurdighiiinecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:DX-OXQlGZcIaZyDrqLo631BF5AeBeYwvCQmD_G0z4o8InUDWiVJVrQ>
+    <xmx:DX-OXVkwo1OLucWU4_-JfdhgXudIt6BOj_bfagWDR8Na9nf_UvtzwA>
+    <xmx:DX-OXcva-tU3uG8rUivTJtbuLawLcP6XBN7R-WvDOlwd3rxjbZTXcw>
+    <xmx:Dn-OXXifHPLswMp9N9jbLEfGNsKtvLR0JPXCnpWGgitoEhWjZv23ug>
+Received: from localhost (unknown [199.201.64.2])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 10B9ED6005B;
+        Fri, 27 Sep 2019 17:28:43 -0400 (EDT)
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20190924083342.GA21640@krava>
+Date:   Fri, 27 Sep 2019 14:28:43 -0700
+Cc:     <bpf@vger.kernel.org>, <songliubraving@fb.com>, <yhs@fb.com>,
+        <andriin@fb.com>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <acme@kernel.org>, <ast@fb.com>,
+        <alexander.shishkin@linux.intel.com>, <namhyung@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <kernel-team@fb.com>
+Subject: Re: [PATCH bpf-next 1/5] perf/core: Add PERF_FORMAT_LOST
+ read_format
+From:   "Daniel Xu" <dxu@dxuuu.xyz>
+To:     "Jiri Olsa" <jolsa@redhat.com>
+Message-Id: <BXB3R6AZT2LR.2DHP9YCMGCTYJ@dlxu-fedora-R90QNFJV>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-09-27 at 14:02 -0700, Andrew Morton wrote:
-> On Fri, 27 Sep 2019 15:47:03 -0400 Qian Cai <cai@lca.pw> wrote:
-> 
-> > On architectures like s390, arch_free_page() could mark the page unused
-> > (set_page_unused()) and any access later would trigger a kernel panic.
-> > Fix it by moving arch_free_page() after all possible accessing calls.
-> > 
-> >  Hardware name: IBM 2964 N96 400 (z/VM 6.4.0)
-> >  Krnl PSW : 0404e00180000000 0000000026c2b96e
-> > (__free_pages_ok+0x34e/0x5d8)
-> >             R:0 T:1 IO:0 EX:0 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 RI:0 EA:3
-> >  Krnl GPRS: 0000000088d43af7 0000000000484000 000000000000007c
-> >  000000000000000f
-> >             000003d080012100 000003d080013fc0 0000000000000000
-> >  0000000000100000
-> >             00000000275cca48 0000000000000100 0000000000000008
-> >  000003d080010000
-> >             00000000000001d0 000003d000000000 0000000026c2b78a
-> >  000000002717fdb0
-> >  Krnl Code: 0000000026c2b95c: ec1100b30659 risbgn %r1,%r1,0,179,6
-> >             0000000026c2b962: e32014000036 pfd 2,1024(%r1)
-> >            #0000000026c2b968: d7ff10001000 xc 0(256,%r1),0(%r1)
-> >            >0000000026c2b96e: 41101100  la %r1,256(%r1)
-> >             0000000026c2b972: a737fff8  brctg %r3,26c2b962
-> >             0000000026c2b976: d7ff10001000 xc 0(256,%r1),0(%r1)
-> >             0000000026c2b97c: e31003400004 lg %r1,832
-> >             0000000026c2b982: ebff1430016a asi 5168(%r1),-1
-> >  Call Trace:
-> >  __free_pages_ok+0x16a/0x5d8)
-> >  memblock_free_all+0x206/0x290
-> >  mem_init+0x58/0x120
-> >  start_kernel+0x2b0/0x570
-> >  startup_continue+0x6a/0xc0
-> >  INFO: lockdep is turned off.
-> >  Last Breaking-Event-Address:
-> >  __free_pages_ok+0x372/0x5d8
-> >  Kernel panic - not syncing: Fatal exception: panic_on_oops
-> > 00: HCPGIR450W CP entered; disabled wait PSW 00020001 80000000 00000000
-> > 26A2379C
-> > 
-> > ...
-> > 
-> > --- a/mm/page_alloc.c
-> > +++ b/mm/page_alloc.c
-> > @@ -1175,11 +1175,11 @@ static __always_inline bool free_pages_prepare(struct page *page,
-> >  		debug_check_no_obj_freed(page_address(page),
-> >  					   PAGE_SIZE << order);
-> >  	}
-> > -	arch_free_page(page, order);
-> >  	if (want_init_on_free())
-> >  		kernel_init_free_pages(page, 1 << order);
-> >  
-> >  	kernel_poison_pages(page, 1 << order, 0);
-> > +	arch_free_page(page, order);
-> >  	if (debug_pagealloc_enabled())
-> >  		kernel_map_pages(page, 1 << order, 0);
-> 
-> AFAICT the meticulously undocumented s390 set_page_unused() will cause
-> there to be a fault if anyone tries to access the page contents, yes?
+Hi Jiri,
 
-Yes.
+On Tue Sep 24, 2019 at 10:33 AM Jiri Olsa wrote:
+> On Tue, Sep 17, 2019 at 06:30:52AM -0700, Daniel Xu wrote:
+>=20
+> SNIP
+>=20
+> > +	PERF_FORMAT_MAX =3D 1U << 5,		/* non-ABI */
+> >  };
+> > =20
+> >  #define PERF_ATTR_SIZE_VER0	64	/* sizeof first published struct */
+> > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > index 0463c1151bae..ee08d3ed6299 100644
+> > --- a/kernel/events/core.c
+> > +++ b/kernel/events/core.c
+> > @@ -1715,6 +1715,9 @@ static void __perf_event_read_size(struct perf_ev=
+ent *event, int nr_siblings)
+> >  	if (event->attr.read_format & PERF_FORMAT_ID)
+> >  		entry +=3D sizeof(u64);
+> > =20
+> > +	if (event->attr.read_format & PERF_FORMAT_LOST)
+> > +		entry +=3D sizeof(u64);
+> > +
+> >  	if (event->attr.read_format & PERF_FORMAT_GROUP) {
+> >  		nr +=3D nr_siblings;
+> >  		size +=3D sizeof(u64);
+> > @@ -4734,6 +4737,24 @@ u64 perf_event_read_value(struct perf_event *eve=
+nt, u64 *enabled, u64 *running)
+> >  }
+> >  EXPORT_SYMBOL_GPL(perf_event_read_value);
+> > =20
+> > +static struct pmu perf_kprobe;
+> > +static u64 perf_event_lost(struct perf_event *event)
+> > +{
+> > +	struct ring_buffer *rb;
+> > +	u64 lost =3D 0;
+> > +
+> > +	rcu_read_lock();
+> > +	rb =3D rcu_dereference(event->rb);
+> > +	if (likely(!!rb))
+> > +		lost +=3D local_read(&rb->lost);
+> > +	rcu_read_unlock();
+> > +
+> > +	if (event->attr.type =3D=3D perf_kprobe.type)
+> > +		lost +=3D perf_kprobe_missed(event);
+>=20
+> not sure what was the peterz's suggestion, but here you are mixing
+> ring buffer's lost count with kprobes missed count, seems wrong
 
-> 
-> So I think you've moved the arch_free_page() to be after the final
-> thing which can access page contents, yes?  If so, we should have a
-> comment in free_pages_prepare() to attmept to prevent this problem from
-> reoccurring as the code evolves?
+To be honest, I'm not 100% sure what the correct semantics here should
+be. I thought it might be less misleading if we included ring buffer
+related misses as well.
 
-Right, something like this above arch_free_page() there?
+Regardless, I am ok with either.
 
-/*
- * It needs to be just above kernel_map_pages(), as s390 could mark those
- * pages unused and then trigger a fault when accessing.
- */
+> maybe we could add PERF_FORMAT_KPROBE_MISSED
+
+I think the feedback from the last patchset was that we want to keep
+the misses unified.
+
+Peter, do you have any thoughts?
+
+Thanks,
+Daniel
