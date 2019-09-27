@@ -2,206 +2,203 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 697BDC4360C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95596C352A9
 	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 00:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EC4B207FF
+	by mail.kernel.org (Postfix) with ESMTP id 6A4FD20872
 	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 00:09:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="IbE53V5B"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TPKht4s0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbfI0AJ1 (ORCPT
+        id S1727577AbfI0AJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 20:09:27 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:38047 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfI0AJ0 (ORCPT
+        Thu, 26 Sep 2019 20:09:40 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:59630 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfI0AJk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 20:09:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1569542987; x=1601078987;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=KPhrBII3Q/D9Muze6sav8ec9R3+Qxjj5Wect3Thw/gs=;
-  b=IbE53V5BAKcrHfYwcWY6uuXxEQuB+dlK5NFHuz/+u3J4CTBT3jowaLiP
-   WSlRgluU3B6+Hxk5/W7hME8ZQ+V3AWIo4NLs7ln5te9J0GJx3YSDpjCuo
-   zTK6QwV44aqtjBDUoPQfi6Zda+w8YRG2LkDHWxYHmqaKvWxSoeLhYnDOu
-   7D9gkFpNzbu1WpianK+V9A6A2FrTDzOMZRvMgfRRRHSUSEMK26lL1PZfA
-   vnZGgPs88eAoYnmDKjCTM4NOJKYlPqri1JPPUnWJrIhQ/S+CjHjqYkeXF
-   LoEti2E4ptIDxgD6shhCFa2e21gTo2cMgneNrBXjTEfWm6qX/2Q2F7Tic
-   w==;
-IronPort-SDR: uYjcvG+m+59jtqspMevgNtJg3+icfkI9IpNALB4f1vW4YNfOX2NUZG9AFKvH8nqeARMW3oqI+J
- C8j0fxmI81W79jQ8Vs4nyrBAdkdopFcaDXDHDwNKkg4X4dXQV/Ymbinb3wCke36Y3szMYIhj/E
- JvFVbtOiiMbnit60TYfU6LxMiDZA7atXbHGmMqKejMDhSewIfFpWXnOP7a8/lXwPh7C5VM9Plw
- 5G4ICBQ0uyMmRNKd1SY0zZ52ViinfTiosvz+PtdLWGcVAsGXyiV8VEQSAAB+7w63UnBDEkLmXp
- DZo=
-X-IronPort-AV: E=Sophos;i="5.64,553,1559491200"; 
-   d="scan'208";a="220096737"
-Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 27 Sep 2019 08:09:45 +0800
-IronPort-SDR: +0zFzyi3miI62q5vzcFEVmf3rFbKE3JHbyTO2xUx357N4pRYmtpFbTtEFtyKoR8J2jzacwD6GW
- iHuAMEEQf0csQzkFtfUhdJnKKbm3EjW9OiDCogUe+D9N3kEodN+Gq4PSVfVqC0+/QN9Ygtbxhm
- O9JPaV8x3mM6+3zvR/Gx5eKC4wknSu75No+JbfDUXHizwP5ewXuNFrWGgrE3ACiqjscP5MAutz
- 2m9SSyor3KmGfSNhBHp+TD4JP47jL3/5eXZnQXFjHuZPTjTxIW2XWrIT9tzvsVhZ9qoe5FJP8X
- YtHI9HgD4xRRNfZ0ou0rS97+
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2019 17:05:45 -0700
-IronPort-SDR: GrXZHkzBbltDD1EMwWoWItN2OyPtRJK5UyeJYyhwfoENa/jdZXAYn3YtZzk/liUs9zkdZSIfEs
- esIOr9ibIBp97JW+oecH8cgn9ejEl7AS5VlJvFcZ3OUWlF2368/sW2tu82IgOiKFsQd2P5cWlM
- iB0KTuG0S9Y9qSVisJJp/KUIga+MdK+gAq2YQ4dVJu8rIPKklyE0dlOGLLvKwP/bT25wrekYyo
- jKqpBR7EEsYX6o/v+MSy98p314KGkj4tEMl0BiXdPMdj2WIYAba8lcV6zdOwdLKjm4kjFFPoy9
- MCQ=
-WDCIronportException: Internal
-Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
-  by uls-op-cesaip01.wdc.com with ESMTP; 26 Sep 2019 17:09:25 -0700
-From:   Atish Patra <atish.patra@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Alan Kao <alankao@andestech.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Allison Randal <allison@lohutok.net>,
-        Anup Patel <anup@brainfault.org>, Gary Guo <gary@garyguo.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-riscv@lists.infradead.org,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v2 1/3] RISC-V: Mark existing SBI as 0.1 SBI.
-Date:   Thu, 26 Sep 2019 17:09:13 -0700
-Message-Id: <20190927000915.31781-2-atish.patra@wdc.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190927000915.31781-1-atish.patra@wdc.com>
-References: <20190927000915.31781-1-atish.patra@wdc.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 26 Sep 2019 20:09:40 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8R04N8W109662;
+        Fri, 27 Sep 2019 00:08:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=lETXaTrfnoYe7AySdKj47hrTKIRb4jx9j0xKM7xYN5g=;
+ b=TPKht4s0rPNMFskB+itbn4zMS2mWeI5URRQSxx+D5vAF8LpYG2MsGd1DeGiughY5FWGV
+ 33NNVkSxk6AW84wJZbYXoam5nC+8YtaRvvlbixp/Sl0KjPkCIbZp9eqmPfxvOesDSN4S
+ HeX72EXISsbULNDUdfuOBxBT50/kguqHia5GQPpEPLO8TdTXEU8fD/f555Bq3FYhVsi4
+ oc/CFpEQj+REf7YD08VY9SC4tF2qWriSFeUmcJO/2GbIyXxeZMoyR0g5YIJzS61xet6i
+ QzJZraV1W1FvXKXB7o32xRWx9LXHw86SnVKVRUeJeWgxmsKhlfDKmLnDzDgagBGHGKOX Hw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2v5btqew25-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Sep 2019 00:08:10 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8QNx06X167582;
+        Fri, 27 Sep 2019 00:06:09 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2v8yjxgw1v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Sep 2019 00:06:09 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8R066cN017670;
+        Fri, 27 Sep 2019 00:06:06 GMT
+Received: from [192.168.14.112] (/79.179.213.143)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 26 Sep 2019 17:06:06 -0700
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: [PATCH 1/2] KVM: nVMX: Always write vmcs02.GUEST_CR3 during
+ nested VM-Enter
+From:   Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <20190926214302.21990-2-sean.j.christopherson@intel.com>
+Date:   Fri, 27 Sep 2019 03:06:02 +0300
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Reto Buerki <reet@codelabs.ch>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <68340081-0094-4A74-9B33-3431F39659AA@oracle.com>
+References: <20190926214302.21990-1-sean.j.christopherson@intel.com>
+ <20190926214302.21990-2-sean.j.christopherson@intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9392 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909260191
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9392 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909260192
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As per the new SBI specification, current SBI implementation version
-is defined as 0.1 and will be removed/replaced in future. Each of the
-function call in 0.1 is defined as a separate extension which makes
-easier to replace them one at a time.
 
-Rename existing implementation to reflect that. This patch is just
-a preparatory patch for SBI v0.2 and doesn't introduce any functional
-changes.
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
----
- arch/riscv/include/asm/sbi.h | 43 +++++++++++++++++++-----------------
- 1 file changed, 23 insertions(+), 20 deletions(-)
+> On 27 Sep 2019, at 0:43, Sean Christopherson =
+<sean.j.christopherson@intel.com> wrote:
+>=20
+> Write the desired L2 CR3 into vmcs02.GUEST_CR3 during nested VM-Enter
+> isntead of deferring the VMWRITE until vmx_set_cr3().  If the VMWRITE
+> is deferred, then KVM can consume a stale vmcs02.GUEST_CR3 when it
+> refreshes vmcs12->guest_cr3 during nested_vmx_vmexit() if the emulated
+> VM-Exit occurs without actually entering L2, e.g. if the nested run
+> is squashed because L2 is being put into HLT.
 
-diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-index 21134b3ef404..2147f384fad0 100644
---- a/arch/riscv/include/asm/sbi.h
-+++ b/arch/riscv/include/asm/sbi.h
-@@ -8,17 +8,17 @@
- 
- #include <linux/types.h>
- 
--#define SBI_SET_TIMER 0
--#define SBI_CONSOLE_PUTCHAR 1
--#define SBI_CONSOLE_GETCHAR 2
--#define SBI_CLEAR_IPI 3
--#define SBI_SEND_IPI 4
--#define SBI_REMOTE_FENCE_I 5
--#define SBI_REMOTE_SFENCE_VMA 6
--#define SBI_REMOTE_SFENCE_VMA_ASID 7
--#define SBI_SHUTDOWN 8
-+#define SBI_EXT_0_1_SET_TIMER 0x0
-+#define SBI_EXT_0_1_CONSOLE_PUTCHAR 0x1
-+#define SBI_EXT_0_1_CONSOLE_GETCHAR 0x2
-+#define SBI_EXT_0_1_CLEAR_IPI 0x3
-+#define SBI_EXT_0_1_SEND_IPI 0x4
-+#define SBI_EXT_0_1_REMOTE_FENCE_I 0x5
-+#define SBI_EXT_0_1_REMOTE_SFENCE_VMA 0x6
-+#define SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID 0x7
-+#define SBI_EXT_0_1_SHUTDOWN 0x8
- 
--#define SBI_CALL(which, arg0, arg1, arg2, arg3) ({		\
-+#define SBI_CALL(which, arg0, arg1, arg2, arg3) ({             \
- 	register uintptr_t a0 asm ("a0") = (uintptr_t)(arg0);	\
- 	register uintptr_t a1 asm ("a1") = (uintptr_t)(arg1);	\
- 	register uintptr_t a2 asm ("a2") = (uintptr_t)(arg2);	\
-@@ -42,48 +42,50 @@
- 
- static inline void sbi_console_putchar(int ch)
- {
--	SBI_CALL_1(SBI_CONSOLE_PUTCHAR, ch);
-+	SBI_CALL_1(SBI_EXT_0_1_CONSOLE_PUTCHAR, ch);
- }
- 
- static inline int sbi_console_getchar(void)
- {
--	return SBI_CALL_0(SBI_CONSOLE_GETCHAR);
-+	return SBI_CALL_0(SBI_EXT_0_1_CONSOLE_GETCHAR);
- }
- 
- static inline void sbi_set_timer(uint64_t stime_value)
- {
- #if __riscv_xlen == 32
--	SBI_CALL_2(SBI_SET_TIMER, stime_value, stime_value >> 32);
-+	SBI_CALL_2(SBI_EXT_0_1_SET_TIMER, stime_value,
-+			  stime_value >> 32);
- #else
--	SBI_CALL_1(SBI_SET_TIMER, stime_value);
-+	SBI_CALL_1(SBI_EXT_0_1_SET_TIMER, stime_value);
- #endif
- }
- 
- static inline void sbi_shutdown(void)
- {
--	SBI_CALL_0(SBI_SHUTDOWN);
-+	SBI_CALL_0(SBI_EXT_0_1_SHUTDOWN);
- }
- 
- static inline void sbi_clear_ipi(void)
- {
--	SBI_CALL_0(SBI_CLEAR_IPI);
-+	SBI_CALL_0(SBI_EXT_0_1_CLEAR_IPI);
- }
- 
- static inline void sbi_send_ipi(const unsigned long *hart_mask)
- {
--	SBI_CALL_1(SBI_SEND_IPI, hart_mask);
-+	SBI_CALL_1(SBI_EXT_0_1_SEND_IPI, hart_mask);
- }
- 
- static inline void sbi_remote_fence_i(const unsigned long *hart_mask)
- {
--	SBI_CALL_1(SBI_REMOTE_FENCE_I, hart_mask);
-+	SBI_CALL_1(SBI_EXT_0_1_REMOTE_FENCE_I, hart_mask);
- }
- 
- static inline void sbi_remote_sfence_vma(const unsigned long *hart_mask,
- 					 unsigned long start,
- 					 unsigned long size)
- {
--	SBI_CALL_3(SBI_REMOTE_SFENCE_VMA, hart_mask, start, size);
-+	SBI_CALL_3(SBI_EXT_0_1_REMOTE_SFENCE_VMA, hart_mask,
-+			  start, size);
- }
- 
- static inline void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
-@@ -91,7 +93,8 @@ static inline void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
- 					      unsigned long size,
- 					      unsigned long asid)
- {
--	SBI_CALL_4(SBI_REMOTE_SFENCE_VMA_ASID, hart_mask, start, size, asid);
-+	SBI_CALL_4(SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID, hart_mask,
-+			  start, size, asid);
- }
- 
- #endif
--- 
-2.21.0
+I would rephrase to =E2=80=9CIf an emulated VMEntry is squashed because =
+L1 sets vmcs12->guest_activity_state to HLT=E2=80=9D.
+I think it=E2=80=99s a bit more explicit.
+
+>=20
+> In an ideal world where EPT *requires* unrestricted guest (and vice
+> versa), VMX could handle CR3 similar to how it handles RSP and RIP,
+> e.g. mark CR3 dirty and conditionally load it at vmx_vcpu_run().  But
+> the unrestricted guest silliness complicates the dirty tracking logic
+> to the point that explicitly handling vmcs02.GUEST_CR3 during nested
+> VM-Enter is a simpler overall implementation.
+>=20
+> Cc: stable@vger.kernel.org
+> Reported-by: Reto Buerki <reet@codelabs.ch>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+> arch/x86/kvm/vmx/nested.c | 8 ++++++++
+> arch/x86/kvm/vmx/vmx.c    | 9 ++++++---
+> 2 files changed, 14 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index 41abc62c9a8a..971a24134081 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -2418,6 +2418,14 @@ static int prepare_vmcs02(struct kvm_vcpu =
+*vcpu, struct vmcs12 *vmcs12,
+> 				entry_failure_code))
+> 		return -EINVAL;
+>=20
+> +	/*
+> +	 * Immediately write vmcs02.GUEST_CR3.  It will be propagated to =
+vmcs12
+> +	 * on nested VM-Exit, which can occur without actually running =
+L2, e.g.
+> +	 * if L2 is entering HLT state, and thus without hitting =
+vmx_set_cr3().
+> +	 */
+
+If I understand correctly, it=E2=80=99s not exactly if L2 is entering =
+HLT state in general.
+(E.g. issue doesn=E2=80=99t occur if L2 runs HLT directly which is not =
+configured to be intercepted by vmcs12).
+It=E2=80=99s specifically when L1 enters L2 with a HLT =
+guest-activity-state. I suggest rephrasing comment.
+
+> +	if (enable_ept)
+> +		vmcs_writel(GUEST_CR3, vmcs12->guest_cr3);
+> +
+> 	/* Late preparation of GUEST_PDPTRs now that EFER and CRs are =
+set. */
+> 	if (load_guest_pdptrs_vmcs12 && nested_cpu_has_ept(vmcs12) &&
+> 	    is_pae_paging(vcpu)) {
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index d4575ffb3cec..b530950a9c2b 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -2985,6 +2985,7 @@ void vmx_set_cr3(struct kvm_vcpu *vcpu, unsigned =
+long cr3)
+> {
+> 	struct kvm *kvm =3D vcpu->kvm;
+> 	unsigned long guest_cr3;
+> +	bool skip_cr3 =3D false;
+> 	u64 eptp;
+>=20
+> 	guest_cr3 =3D cr3;
+> @@ -3000,15 +3001,17 @@ void vmx_set_cr3(struct kvm_vcpu *vcpu, =
+unsigned long cr3)
+> 			spin_unlock(&to_kvm_vmx(kvm)->ept_pointer_lock);
+> 		}
+>=20
+> -		if (enable_unrestricted_guest || is_paging(vcpu) ||
+> -		    is_guest_mode(vcpu))
+> +		if (is_guest_mode(vcpu))
+> +			skip_cr3 =3D true;
+> +		else if (enable_unrestricted_guest || is_paging(vcpu))
+> 			guest_cr3 =3D kvm_read_cr3(vcpu);
+> 		else
+> 			guest_cr3 =3D =
+to_kvm_vmx(kvm)->ept_identity_map_addr;
+> 		ept_load_pdptrs(vcpu);
+> 	}
+>=20
+> -	vmcs_writel(GUEST_CR3, guest_cr3);
+> +	if (!skip_cr3)
+
+Nit: It=E2=80=99s a matter of taste, but I prefer positive conditions. =
+i.e. =E2=80=9Cbool write_guest_cr3=E2=80=9D.
+
+Anyway, code seems valid to me. Nice catch.
+Reviewed-by: Liran Alon <liran.alon@oracle.com>
+
+-Liran
+
+> +		vmcs_writel(GUEST_CR3, guest_cr3);
+> }
+>=20
+> int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
+> --=20
+> 2.22.0
+>=20
 
