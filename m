@@ -2,70 +2,60 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B25B3C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 22:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C84AFC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 22:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 844EF2082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 22:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C1AA2082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 22:56:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W9ZJOcQw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728435AbfI0WxI (ORCPT
+        id S1728206AbfI0W4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 18:53:08 -0400
-Received: from verein.lst.de ([213.95.11.211]:48244 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbfI0WxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 18:53:08 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 0CB9E68B05; Sat, 28 Sep 2019 00:53:05 +0200 (CEST)
-Date:   Sat, 28 Sep 2019 00:53:04 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Borislav Petkov <bp@alien8.de>,
-        paul.walmsley@sifive.com, palmer@sifive.com,
-        linux-riscv@lists.infradead.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yash Shah <yash.shah@sifive.com>
-Subject: Re: [PATCH] riscv: move sifive_l2_cache.c to drivers/soc
-Message-ID: <20190927225304.GA18456@lst.de>
-References: <20190818082935.14869-1-hch@lst.de> <20190819060904.GA4841@zn.tnic> <20190819062619.GA20211@lst.de> <20190822062635.00f6e507@coco.lan>
+        Fri, 27 Sep 2019 18:56:21 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52642 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725306AbfI0W4V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 18:56:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=fG9b0yxGQ1Jf44QQLYlhMC+VV9IZnJsFIu90T3sE/08=; b=W9ZJOcQwTh/petaSlHNfzP9eS
+        +8dDgdeyNHN/rMZOHQ/kaJr11XARIZxGLnocvcaB21kVP79c1tSkI5Jzl9KsZ+e39uhMP3qK+Lgoo
+        1E50D0C72toYSOG9e4wlhWM0UZ2mR6EWhr0lGCU+1EKMFYDO0RSObFogrRtbffgklRKMDSpHtpelB
+        xufapw0o0UuOrRnuGZBodOtDtfiRWBZZE6FXbS7LICTmVTovzsnzYRu+F+T66yNJCoQClAnAWHSkb
+        8urmHHj7En+805r4l4XRJXkmsPAb+Mt4nNxUOC/W/tAsDMHgr5maxcAD0N6P4hkRfJOYR+WPqnpOy
+        31boWyePw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iDz9w-00072z-OF; Fri, 27 Sep 2019 22:56:20 +0000
+Date:   Fri, 27 Sep 2019 15:56:20 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Vincent Chen <vincent.chen@sifive.com>
+Cc:     linux-riscv@lists.infradead.org, palmer@sifive.com,
+        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu,
+        paul.walmsley@sifive.com
+Subject: Re: [PATCH 2/4] rsicv: avoid sending a SIGTRAP to a user thread
+ trapped in WARN()
+Message-ID: <20190927225620.GA26970@infradead.org>
+References: <1569199517-5884-1-git-send-email-vincent.chen@sifive.com>
+ <1569199517-5884-3-git-send-email-vincent.chen@sifive.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190822062635.00f6e507@coco.lan>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <1569199517-5884-3-git-send-email-vincent.chen@sifive.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 06:26:35AM -0300, Mauro Carvalho Chehab wrote:
-> Em Mon, 19 Aug 2019 08:26:19 +0200
-> Christoph Hellwig <hch@lst.de> escreveu:
-> 
-> > On Mon, Aug 19, 2019 at 08:09:04AM +0200, Borislav Petkov wrote:
-> > > On Sun, Aug 18, 2019 at 10:29:35AM +0200, Christoph Hellwig wrote:  
-> > > > The sifive_l2_cache.c is in no way related to RISC-V architecture
-> > > > memory management.  It is a little stub driver working around the fact
-> > > > that the EDAC maintainers prefer their drivers to be structured in a
-> > > > certain way  
-> > > 
-> > > That changed recently so I guess we can do the per-IP block driver after
-> > > all, if people would still prefer it.  
-> > 
-> > That would seem like the best idea.  But I don't really know this code
-> > well enough myself, and I really need to get this code out of the
-> > forced on RISC-V codebase as some SOCs I'm working with simply don't
-> > have the memory for it..
-> > 
-> > So unless someone signs up to do a per-IP block edac drivers instead
-> > very quickly I'd still like to see something like this go into 5.4
-> > for now.
-> 
-> I'm wandering if we should at least add an entry for this one at
-> MAINTAINERS, pointing it to the EDAC mailing list. Something like:
-
-Sounds fine.  Can you also ACK the patch with that, as Paul mention
-in another thread he wants an EDAC ACK for it.
+Oh and s/rsicv/riscv/ in the subject, please.
