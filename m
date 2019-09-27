@@ -3,222 +3,145 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C602BC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34175C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87172217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3411217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:14:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="h7VHDbvv"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Enca4z2G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbfI0IMy (ORCPT
+        id S1726910AbfI0IOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 04:12:54 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44386 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfI0IMy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 04:12:54 -0400
-Received: by mail-wr1-f66.google.com with SMTP id i18so1601959wru.11
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 01:12:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:from:subject:openpgp:autocrypt:organization:message-id:date
-         :user-agent:mime-version:content-language:content-transfer-encoding;
-        bh=Ex6o6iK/9RL21+NQO5EVoATLXo1UjsfmNRyP+eLI70g=;
-        b=h7VHDbvvREToP7ByBL1x5fbolZ8BvB7x9eBzOwNPTSQZ68h2S3GqtGdrXBi1JiCt4w
-         v6HVEKUpipFwHfPcEjpb5bMP5+bPvn/up1nHaRQL91pCnqFLnC0VtiCw/eSDNNLJ6TeW
-         wwEdnSNORyQq5frCe7cTuyRWzrYnRhwnljkfqCkz2hKmlj0R6wCJ+FP4pXnL9w+9wPUl
-         M1aw9aTYg99VvbZTkNj6JSe9WmHaxfIBax3LjXRX+H0MFXbJImRi/cTyPx+FER4eJuPK
-         zWVF3B+fb4cD1GxOjW3xe+xbyx6jd2Na2QkVO3GsawEsZDeJH/vQh4+v600EhIqVc/g8
-         21hA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=Ex6o6iK/9RL21+NQO5EVoATLXo1UjsfmNRyP+eLI70g=;
-        b=rVfvRIJjZ+DgwABeEkTDxgQElxN1KUDLLe/W8AGEsFLUEbPDIRBSktn0419l8FPIVX
-         IB57+URttvQ6enWjXkz1cXC3AN2EGG+mXM2CpchftFfwGgK1vGP5r26xyha1szsUFPc2
-         axrkkBqkRqXbYUbTbp3IGktWIyTCdxm2p9bgHZgZcXpzI5iXE00lprKd6aO+W2bNJUna
-         fkDARGZSL2tfWo0IwF7lTHQNLT+Cbu0bIm7E9MSm3VxMvo1uwPYhMCvHKVycr3RTukd0
-         DaJ6HpPmcd2fNau4kqYioPFp2LrE78nayoyU0dcm9GLwg3f7OskpLcpqxNey/nudgeo/
-         Th4w==
-X-Gm-Message-State: APjAAAWsIL+DQT2R8Oz7XV3cmIuuxCmokyHKeklb8p/sjELZLdGmvgjJ
-        C+XVyzFHT8Qs62oETpGSneC5cg==
-X-Google-Smtp-Source: APXvYqyAyvZhOb57JVeAQ8LJZD2qosO2xWuw0z0vKqeXIgjLjarLMBeIOOehk8wg4zXr3Xy5DXIQDQ==
-X-Received: by 2002:adf:e951:: with SMTP id m17mr1870220wrn.154.1569571970828;
-        Fri, 27 Sep 2019 01:12:50 -0700 (PDT)
-Received: from [192.168.1.62] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id b22sm6191462wmj.36.2019.09.27.01.12.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 27 Sep 2019 01:12:50 -0700 (PDT)
-To:     daniel@ffwll.ch, airlied@linux.ie,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Cc:     Erico Nunes <nunes.erico@gmail.com>,
-        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
-        linux-kernel@vger.kernel.org, steven.price@arm.com,
-        dri-devel@lists.freedesktop.org, Rob Herring <robh@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Subject: drm_sched with panfrost crash on T820
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <e450fbe6-dec7-2704-59c2-db7e869d67f5@baylibre.com>
-Date:   Fri, 27 Sep 2019 10:12:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 27 Sep 2019 04:14:45 -0400
+Received: from mout.web.de ([212.227.15.4]:38231 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725812AbfI0IOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 04:14:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1569572075;
+        bh=QAkNnVWeJt5SekPKj+WvdKsNgsfW0v/u3gpvyRC/tG0=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=Enca4z2G7q+QMUvMD4lEojaOK6vlPwkXUWHzAPbcUVeVPbjZt+Fpv7ByPGAqlCv/4
+         siZWjo5fdQQCxXngAe+UXWcXzURDDbvlFbkWSZhHp+E4Z8gC73RWQEQr5r2dPS2ZY9
+         70JKBpd9TFp4aLogLrBuHHkBeVzRzIzZDIKvyaQs=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.191.8]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MC1ho-1iMb5G3wLw-008nfo; Fri, 27
+ Sep 2019 10:14:35 +0200
+Subject: [PATCH v2 0/2] net: phy: mscc-miim: Adjustments for mscc_miim_probe()
+To:     netdev@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+References: <189ccfc3-d5a6-79fd-29b8-1f7140e9639a@web.de>
+ <506889a6-4148-89f9-302e-4be069595bb4@web.de> <20190920190908.GH3530@lunn.ch>
+ <121e75c5-4d45-9df2-a471-6997a1fb3218@web.de>
+ <20190926161825.GB6825@piout.net>
+ <0a1f4dbf-4cc6-8530-a38e-31c3369e6db6@web.de>
+ <20190926193239.GC6825@piout.net>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <8fbfa9ad-182a-e2ce-e91f-7350523e33c7@web.de>
+Date:   Fri, 27 Sep 2019 10:14:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
+In-Reply-To: <20190926193239.GC6825@piout.net>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:klzDtDJPyHsodHKVe00zX2aghptZrnS25Kp49RNIJegMl/4B6YF
+ G3uTX78gzMrT1NQV7F+y0Z06p2zxEIlRwQwAlTTz2ANNvBTWm/POsGrPGHiBwPy4ICRiVtB
+ XODGkOjaJgAkRsZ2+jms2V8hxVTNonXGE2yd6DckMlSppDBzdAAIQy3lbTZSDMRByacc9m6
+ w170jIP9dhBoWKxHRsu4w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1Zrzp7MwNm8=:oCZ+ScnRN+8mk+p6I1L3aU
+ rJdOZJsGG4saATYxwTSkVu/TZ5QhxzRJhF3eRb/kBte0xhu9C5BVc8CLTdY29Qt7eEJoLWA0E
+ 2l0qoIXUzpnNlzcJydKx9fV0FO6ygkopl2tgWp4VTSvy1YyjaJ5zxu+b2VCvg3W2epqo3UFUR
+ fuAKGqzZOY6BZHbHcgsJGGmG7hkUgryV8z/D6I0G/f9lonlle3FsB/OtgABgV2vf3+HLGwYlA
+ 3QxWWlIG0vfW805l0QSPSgs6SRaW60d+j6JJaVEw4KaRygZ+P7zNZN9T41jWL5JYmEz4KtFMm
+ vX7blHQKEXT5RT4gXmSgay+jL9QH9Tkb9tLlW0WSaPIEIHVZtFXrPeD/S+TxTdviAsoHlTBQW
+ Cu3tSgkrpoTNSNL/fXIks77fB259+WI9tGLPHlyU8B2ygwBM03LPD4GrK5TCUEavccdp3CFEn
+ tWUzn2s8Ndz3lMj49UxPVYoMUQJMgP0TThx3vN5XWqEYZcay+PwJm+l22xRnaGk1Vos9Dup9N
+ zazNQfNFqQ40kSsQO0AuKj4wHG+m4gYCc7PoGCYvIKF12mHO4f3Jbw2VWLze2pGa617vs0x61
+ 7Wp5f5iVYt9ro0s75nYvCHLbritquyB4cjEpRoWS6QaYDLP4tYZ7PVnxzHZKRqXQI76CIwFHK
+ tRvPf3BsBtB6G1iHdoXB4jY5+gZtZ+9v/pgfkZTBZGMoCgRXrrepXJjtfkBsorI5562i7xJ7q
+ j41mpbIJxrFpx9bpuZ4wx6iPAglUybgPFIZlLG8xxAawyBaf8YnwoUvZUlbFXorfBg6g6aAje
+ RWi/LEFqbfhJC6r+vPNygXy7/E7sPDvF/9TnMzqL/ODINLfb7R2ug1ficYZQUCb6Bjn4n6fvk
+ oGm2gD7KZpQzw4SPRzuPHMk0ifz0R4GbPytNBRjUohT4MBQT6ECCDoIDWx/kTtMVtpa46UdqR
+ rpXKpgNl2EdddqzZRgPj9Cza02XBdtrrMYvn2gKDfYxygMjMQATzaDwid3ap2HyjwoFTO/XBo
+ E0TfJu24HbCJ2KNaA/E16Tz4YJtvsaZnQxHQlOmhMIEos4VMMOyjjmfSXa9zkw5Jm8NX7RtYR
+ djItdmi6gGRwnYP0g35vaaZqL23z9FD9maodw22fgVuQPix2zlQWJ7LHebEf78AY+eKiPTkkZ
+ yvVkKUorNLvm15v25s+Hl1gQ5u0f3WR7kE2eZzm9qC92nlt1xnSn+pDQUHTjcemMaPMkEHlcP
+ OYd/O7fv8dr5oDrbNXO7L3p3HSu3m9Okpru7hcpcsi3riXaZGCQqAKSsACH0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christian,
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Fri, 27 Sep 2019 09:48:09 +0200
 
-In v5.3, running dEQP triggers the following kernel crash :
+Two update suggestions were taken into account
+from static source code analysis.
 
-[   20.224982] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000038
-[...]
-[   20.291064] Hardware name: Khadas VIM2 (DT)
-[   20.295217] Workqueue: events drm_sched_job_timedout
-[...]
-[   20.304867] pc : drm_sched_increase_karma+0x5c/0xf0
-[   20.309696] lr : drm_sched_increase_karma+0x44/0xf0
-[...]
-[   20.396720] Call trace:
-[   20.399138]  drm_sched_increase_karma+0x5c/0xf0
-[   20.403623]  panfrost_job_timedout+0x12c/0x1e0
-[   20.408021]  drm_sched_job_timedout+0x48/0xa0
-[   20.412336]  process_one_work+0x1e0/0x320
-[   20.416300]  worker_thread+0x40/0x450
-[   20.419924]  kthread+0x124/0x128
-[   20.423116]  ret_from_fork+0x10/0x18
-[   20.426653] Code: f9400001 540001c0 f9400a83 f9402402 (f9401c64)
-[   20.432690] ---[ end trace bd02f890139096a7 ]---
+Markus Elfring (2):
+  Use devm_platform_ioremap_resource()
+  Move the setting of mii_bus structure members
 
-Which never happens, at all, on v5.2.
+ drivers/net/phy/mdio-mscc-miim.c | 19 +++++++------------
+ 1 file changed, 7 insertions(+), 12 deletions(-)
 
-I did a (very) long (7 days, ~100runs) bisect run using our LAVA lab (thanks tomeu !), but
-bisecting was not easy since the bad commit landed on drm-misc-next after v5.1-rc6, and
-then v5.2-rc1 was backmerged into drm-misc-next at:
-[1] 374ed5429346 Merge drm/drm-next into drm-misc-next
+=2D-
+2.23.0
 
-Thus bisecting between [1] ang v5.2-rc1 leads to commit based on v5.2-rc1... where panfrost was
-not enabled in the Khadas VIM2 DT.
-
-Anyway, I managed to identify 3 possibly breaking commits :
-[2] 290764af7e36 drm/sched: Keep s_fence->parent pointer
-[3] 5918045c4ed4 drm/scheduler: rework job destruction
-[4] a5343b8a2ca5 drm/scheduler: Add flag to hint the release of guilty job.
-
-But [1] and [2] doesn't crash the same way :
-[   16.257912] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000060
-[...]
-[   16.308307] CPU: 4 PID: 80 Comm: kworker/4:1 Not tainted 5.1.0-rc2-01185-g290764af7e36-dirty #378
-[   16.317099] Hardware name: Khadas VIM2 (DT)
-[...])
-[   16.330907] pc : refcount_sub_and_test_checked+0x4/0xb0
-[   16.336078] lr : refcount_dec_and_test_checked+0x14/0x20
-[...]
-[   16.423533] Process kworker/4:1 (pid: 80, stack limit = 0x(____ptrval____))
-[   16.430431] Call trace:
-[   16.432851]  refcount_sub_and_test_checked+0x4/0xb0
-[   16.437681]  drm_sched_job_cleanup+0x24/0x58
-[   16.441908]  panfrost_job_free+0x14/0x28
-[   16.445787]  drm_sched_job_timedout+0x6c/0xa0
-[   16.450102]  process_one_work+0x1e0/0x320
-[   16.454067]  worker_thread+0x40/0x450
-[   16.457690]  kthread+0x124/0x128
-[   16.460882]  ret_from_fork+0x10/0x18
-[   16.464421] Code: 52800000 d65f03c0 d503201f aa0103e3 (b9400021)
-[   16.470456] ---[ end trace 39a67412ee1b64b5 ]---
-
-and [3] fails like on v5.3 (in drm_sched_increase_karma):
-[   33.830080] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000038
-[...]
-[   33.871946] Internal error: Oops: 96000004 [#1] PREEMPT SMP
-[   33.877450] Modules linked in:
-[   33.880474] CPU: 6 PID: 81 Comm: kworker/6:1 Not tainted 5.1.0-rc2-01186-ga5343b8a2ca5-dirty #380
-[   33.889265] Hardware name: Khadas VIM2 (DT)
-[   33.893419] Workqueue: events drm_sched_job_timedout
-[...]
-[   33.903069] pc : drm_sched_increase_karma+0x5c/0xf0
-[   33.907898] lr : drm_sched_increase_karma+0x44/0xf0
-[...]
-[   33.994924] Process kworker/6:1 (pid: 81, stack limit = 0x(____ptrval____))
-[   34.001822] Call trace:
-[   34.004242]  drm_sched_increase_karma+0x5c/0xf0
-[   34.008726]  panfrost_job_timedout+0x12c/0x1e0
-[   34.013122]  drm_sched_job_timedout+0x48/0xa0
-[   34.017438]  process_one_work+0x1e0/0x320
-[   34.021402]  worker_thread+0x40/0x450
-[   34.025026]  kthread+0x124/0x128
-[   34.028218]  ret_from_fork+0x10/0x18
-[   34.031755] Code: f9400001 540001c0 f9400a83 f9402402 (f9401c64)
-[   34.037792] ---[ end trace be3fd6f77f4df267 ]---
-
-
-When I revert [3] on [1], i get the same crash as [2], meaning
-the commit [3] masks the failure [2] introduced.
-
-Do you know how to solve this ?
-
-Thanks,
-Neil
