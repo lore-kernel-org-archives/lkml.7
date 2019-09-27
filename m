@@ -8,34 +8,34 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF84C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C843EC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDC5A207FF
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9460E207FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:18:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="OGyqacmG"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="BVBcpPNG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbfI0IRN (ORCPT
+        id S1726920AbfI0ISm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 04:17:13 -0400
-Received: from mout.web.de ([212.227.15.14]:51017 "EHLO mout.web.de"
+        Fri, 27 Sep 2019 04:18:42 -0400
+Received: from mout.web.de ([212.227.15.14]:35087 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbfI0IRM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 04:17:12 -0400
+        id S1726027AbfI0ISl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 04:18:41 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1569572221;
-        bh=Zmvcu8/nZOzuXMOWbFAj2qJfy89TLpGL3Fx6l2pLhJQ=;
+        s=dbaedf251592; t=1569572311;
+        bh=ZlJTddYajDzxZUvw2i60xJMbFlpFF4H6Ye3p0QwUyMo=;
         h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
-        b=OGyqacmGrxkdkRzfMA5O1KUvAjj9LKYlrmc5aZTeRshzBBSawGqBqgM3gq9j4+/3o
-         NJx3LsxazBOpVcbogUFUhHYRVcy+5deVNvUERS31vtsXvVS3nzZRQ28tj9MHw43fi6
-         RTMTdQ2NGFC4Kqx9ITAeFTj/3dS9d3SDf2l0Poxo=
+        b=BVBcpPNGFR5LcOh3zXb/Mrm6AEN1L7LdlOFugoKoiLU+ZqQEZU2BL5QlmkXV43tnp
+         GoywS5GSWtVrqqSi4LtX6Gx0HQeZxvB/kDUVSy+xGlZnXWAIURR9gu3UopuSns2SRP
+         RmrWq/GSIi23zbhEGMJZfkWpnwftEgLXWB1Qgies=
 X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.191.8]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0M3PN2-1hvxXB0Fpg-00r0Gn; Fri, 27
- Sep 2019 10:17:01 +0200
-Subject: [PATCH v2 1/2] net: phy: mscc-miim: Use
- devm_platform_ioremap_resource() in mscc_miim_probe()
+Received: from [192.168.1.2] ([93.133.191.8]) by smtp.web.de (mrweb001
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MQf77-1iaYZu1bvJ-00U5Od; Fri, 27
+ Sep 2019 10:18:31 +0200
+Subject: [PATCH v2 2/2] net: phy: mscc-miim: Move the setting of mii_bus
+ structure members in mscc_miim_probe()
 From:   Markus Elfring <Markus.Elfring@web.de>
 To:     netdev@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
@@ -95,8 +95,8 @@ Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
  x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
  pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <90c7a71f-d39a-2615-eedb-cc2d1150f3b3@web.de>
-Date:   Fri, 27 Sep 2019 10:16:56 +0200
+Message-ID: <70ec73ad-19aa-76aa-168b-b9a2a6911938@web.de>
+Date:   Fri, 27 Sep 2019 10:18:27 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.1
 MIME-Version: 1.0
@@ -104,83 +104,89 @@ In-Reply-To: <8fbfa9ad-182a-e2ce-e91f-7350523e33c7@web.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:AaX0sq9+HUsSDnV09bMPNY6kK7JV3C1Pw/3vcyFGiClRO7HQCY1
- Ull0v5PTUlkBXkK7CB2tRwtx6Ih61No22LmP4AkF7CgeYOwEl5HUbBbYfRM86dXKODsz8ZT
- VWyY0zHRzOsudJ+JkK8f/cgC24UAXFBEmTapE4x9cRbfacLI6wGgnGS4cOcQ+jfhe0fWhZH
- 35K0m7GjXtjudkLj5rhJw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:4viL5OhCNTs=:lP/MxgEccLUgGs97ZGL2+K
- XPCn6n0nmyGkIFG1cWdLfrV9Sginaj2JaAqH6xx/4dhbBqTidV3zUxWM5kaBy+jNPJcuehdOp
- mOJTWjqeghBO4JA9RGT0sULkWfUcTXnOPEYUl+Hz1ZWofNif6MNbmUb1xp2fIdd6bb70RDq2X
- G/zQ5mB8J/bsVihBGkUgbRSTeikNQq4Kq4Ai3a1NSKlulX8yKJI5oFqcPo+ycxo/FEGoUc2eJ
- /uX9Rf71oCWX1fbbl4HuejgdB7b9koc47fnx/040oD7Pr5U5cxL6Ptqwk+3PskbuYqa2XWeVj
- iNWoh2shC55QO9mNrf+WJbnilY6TTJc66dA+GA/qwchlHkU9jYmuSSIoJ4Z1IdS9Hoc1IdCMR
- DxDL4GHA7MP05knAcoYQDRweHfftaLgh8k+8yXCge5XsGesi5jWOr///0F0oK93Gf2AJEkFwk
- tsZnX+bEuTfqoytzq4WoGlnT9FIhQywFNSX7h8mEE4Ldc69hASTKB0tc2+mmKMEf/AZ14+k9J
- 0Ypi6993AWPzFOyVPyJKuk0Tk09PXd/S/iFCv4m5bthKpVQ+CbKWaQ+hWzjhkSRxQ776hfmzN
- WWJMGCL+NUBjd+eYPdJM8Gxa7M25l6psyfr6MfduUDL4Cw2q/rAS8EkIvKZBhP/YWvZ4rw/Js
- JygH+AvSGgNHNv+SRoG+5cAgKDXStn6JET/HEwuJpmuwvzZLQJsKF38imwm6GTmYFjSHygmi+
- L9WpavEKkm8OvkpXGH1WYWzeijXagIioYNT80QnY6kUXN/IFeoTiIi3ocuutbY/PpbkfIU7zq
- DZPhO5MusrVc6FjoK6svPpsrqMCWFMLzgjGAqg7wGoyzFY1m/Lt+SAa/7HGUMwYFLfLiPdkEO
- sdG1lEj0Yqd7IZsqbeKh3EWCxW6vJotcv1ZK7ui3pSeW3IVY3AJYy4EsDXUjbT3bNXkPir6/h
- T17PICuBZo2Axoh+FVphwds6HKXVBeO6yg4d+7ztzdL2oCVahgqwJ7cryGWrgVrncbZ/ZnWW4
- x7KQ2rYNnj3J8IFmJwIw7KKreCG5c/siv2ymn7nWDn8fe8p40Gkm/fnrKkXQZsotjfZ9kjpuK
- NfhzXvWxmUO35eigGWza6p+kkxo+a4BTLfwtcItyDOD+bPdDifXESStEUPf6uhnC8N5hynPKL
- rotYAF2iUhtTdgMIHNInDQz56nM1uesgOv07+mhYTWcsUOqP/UzybQy3pIOEt5p+nMj/VCzEV
- HXvAydR0sJwFjodIuVFnoZ3lxrgW1Y9WJKjXM8vxzo5de+H+HiBInT83cpbY=
+X-Provags-ID: V03:K1:gPCXHdjuqZ85wND61koKlX9qwAqruudBe3+N42vkNHBPsWSClIb
+ FbJ5QdZbKb9ZwLBnYem6VrXWllSQd90tG4JkwnJeNG1OVwGqnOWCB2HdBGgcP1i+C5NOAUQ
+ QqQ9F3Co7FH0R9+TWZLS/MxbVbQmmy1Y7PqhPzAus8g3/itmYoDIXWHQpso7A+rctC/Mp1A
+ m/nSbAS0NjY7yAmJZyPWw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:MOvpmzHJPg8=:hK60pnbaJxC6i9n5RVJn0c
+ SZi7HrwZaLApLO4XhUohpk+GmeuzqQ9w5EFgP3SwOp9czwvpLIbVH+mBJRuFemDSiBmqiknGI
+ JGsSKXKkn189kM2OWy6IOlzydJohV4XEU6ZSDvrlDN5Twjr4aHs32Gm+nmZa6AAN9cxtS5e43
+ q6jK/R41ofWo5eJzoKVBR3+WS2ITmLz3PVZocUEmG4UXdOTh+sMQimg76kC7kODBrtio+dEW/
+ Dgckd/tw0iJ7H9zpKd8cdoPb/XC9be6y8MvKktIbbZOH7eAT6q3auLNz2VKJU5eCk/PYHmLQi
+ RaA2EA844Ru2i5+l/qAtlTU4A4gjPUzGtcJZUBmjEvG9BFpRJEdtNyo66msw0qQkd5k8EgrcW
+ r5Q3Ut325DaQGHzQXLNjTn/Zw5oEjGaO0DXJU7ZGE/T6lBJwyYLoTe+Oon0aEX1oznRtFnbSd
+ 2tB7HBBcWnPgIz2Qn/u3ZQMY/mQ2/vC/zmR1v2aVizaNsi69kU9bayGguvDjYMU25sqH4lV9r
+ SpiGJsl0iMBN1U21YAsxPm4jzlvTGsY3yhtuRiRNlcOKpUjeVuEmDGPgrTVK5E61xsaUhJASz
+ 75uoxE9iGD4jaqiX9VjjZMgosTFXA0RbsnPy5xSmFmb+njThUFCMpmUllnw8dNKXC+9qXE/Es
+ kGiWE0glIromXbwJPuz2C7MiGycMzPy3R2yHiNS1KSwlpQUf5YwLtz7mQQbudi0RBE7wEaoJL
+ vTp/Vi2K34aKz36HcTTjv/xWC8NM5Gh/a3ZD+dXXxJjHUf1/ASBLZFeKxoHbGWFtSbTmr0BnI
+ ZWceFcV+07NyBpi0u8G5U4umjM0ClOUToAIRflGrhIWl25yKd/HurGOo7dzZYYh/dLhkiN1Td
+ /m+/XXT9obkc5jVFEIIw+/tYi9IjAdURwdRqdou5XKCGptBVn2MTVlqNRKSx5ldy/gsX8tjIm
+ 4s7qiasobkOzR8xzhnrs8xpy9JIHwIRAxxLbT4RFkCqgeGTNNjUlw+wxSzbUhISzGqPZJ/AHF
+ J0LmzVI6t8va7hQRUmryl8TstH1mt8z69/Lj+2J95zxiKoz7rJtcnQnR97sp2AMgZEwhPphyW
+ cG1XLYjlvWioQRnL9RQkzRtM2QVdNoncPSkp3QlCCRMag+RSotFlPKfFqhXPpJBGapC81SXs/
+ 4c9PH6k6zPdgTe/g64ygwoXLK+5clPZOzhEEquTuwzGMH5PiqcNLOqXdRQTvp+h0TSk3h6vhm
+ t2EdoA95jwv4dVYdZ+gYvNByGR5N4U0KKlhjyqhlBXicJ3w/R+AtCk87IyyE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Fri, 27 Sep 2019 09:24:03 +0200
+Date: Fri, 27 Sep 2019 09:30:14 +0200
 
-Simplify this function implementation a bit by using
-a known wrapper function.
-
-This issue was detected by using the Coccinelle software.
+Move the modification of some members in the data structure =E2=80=9Cmii_b=
+us=E2=80=9D
+for the local variable =E2=80=9Cbus=E2=80=9D directly before the call of
+the function =E2=80=9Cof_mdiobus_register=E2=80=9D so that this change wil=
+l be performed
+only after previous resource allocations succeeded.
 
 Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 =2D--
 
 v2:
-Alexandre Belloni pointed the need for adjustments out.
-https://lore.kernel.org/r/20190926193239.GC6825@piout.net/
-
-* The mapping of internal phy registers should be treated as optional.
-* An other prefix would be preferred in the commit subject.
+This suggestion was repeated based on the change for the previous update s=
+tep.
 
 
- drivers/net/phy/mdio-mscc-miim.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ drivers/net/phy/mdio-mscc-miim.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/net/phy/mdio-mscc-miim.c b/drivers/net/phy/mdio-mscc-=
 miim.c
-index badbc99bedd3..aabb13982251 100644
+index aabb13982251..a270f83bb207 100644
 =2D-- a/drivers/net/phy/mdio-mscc-miim.c
 +++ b/drivers/net/phy/mdio-mscc-miim.c
-@@ -120,10 +120,6 @@ static int mscc_miim_probe(struct platform_device *pd=
+@@ -124,13 +124,6 @@ static int mscc_miim_probe(struct platform_device *pd=
 ev)
- 	struct mscc_miim_dev *dev;
- 	int ret;
-
--	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!res)
--		return -ENODEV;
--
- 	bus =3D devm_mdiobus_alloc_size(&pdev->dev, sizeof(*dev));
  	if (!bus)
  		return -ENOMEM;
-@@ -136,7 +132,7 @@ static int mscc_miim_probe(struct platform_device *pde=
-v)
- 	bus->parent =3D &pdev->dev;
 
+-	bus->name =3D "mscc_miim";
+-	bus->read =3D mscc_miim_read;
+-	bus->write =3D mscc_miim_write;
+-	bus->reset =3D mscc_miim_reset;
+-	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-mii", dev_name(&pdev->dev));
+-	bus->parent =3D &pdev->dev;
+-
  	dev =3D bus->priv;
--	dev->regs =3D devm_ioremap_resource(&pdev->dev, res);
-+	dev->regs =3D devm_platform_ioremap_resource(pdev, 0);
+ 	dev->regs =3D devm_platform_ioremap_resource(pdev, 0);
  	if (IS_ERR(dev->regs)) {
- 		dev_err(&pdev->dev, "Unable to map MIIM registers\n");
- 		return PTR_ERR(dev->regs);
+@@ -147,6 +140,12 @@ static int mscc_miim_probe(struct platform_device *pd=
+ev)
+ 		}
+ 	}
+
++	bus->name =3D "mscc_miim";
++	bus->read =3D mscc_miim_read;
++	bus->write =3D mscc_miim_write;
++	bus->reset =3D mscc_miim_reset;
++	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-mii", dev_name(&pdev->dev));
++	bus->parent =3D &pdev->dev;
+ 	ret =3D of_mdiobus_register(bus, pdev->dev.of_node);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "Cannot register MDIO bus (%d)\n", ret);
 =2D-
 2.23.0
 
