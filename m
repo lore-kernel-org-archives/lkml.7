@@ -2,116 +2,90 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1774C388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A58C388F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9EB021906
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:44:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569599082;
-	bh=JvAibICL3mYnhHG6USFakLaq5pSAL+F0LFmV8Pd88Vs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uVsZw/8JKO6YEdjRAbkiQobaSb4UJeo3406Gq82ug6MjGv5b0XQVuyRkMfemO8YOZ
-	 oxTfpZ2fVbUzykYBBEcRDJBnUY5ve5Z2/6Nr/cmGLSC+ZvDZtFcaGMNJedouq0jPQI
-	 XMJ6LXP9pO5pUzbWbHVia6Cz+Z/cBt0k0mSSFiyo=
+	by mail.kernel.org (Postfix) with ESMTP id 2E40A21920
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:46:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbfI0Pom (ORCPT
+        id S1727769AbfI0Pqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 11:44:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42636 "EHLO mail.kernel.org"
+        Fri, 27 Sep 2019 11:46:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53852 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727207AbfI0Pol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 11:44:41 -0400
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727289AbfI0Pqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 11:46:34 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E20D32146E;
-        Fri, 27 Sep 2019 15:44:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569599081;
-        bh=JvAibICL3mYnhHG6USFakLaq5pSAL+F0LFmV8Pd88Vs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qr3k3NSCnvKmuzwCoUSSAj7EJuLfUyurlmvfcyLU6OmHhYUlheh5vMc6YiV/QGg9e
-         QyTenOtE5UHvDnKAoosmj/bRnVgUXK0z43Nfp/tYoYd9KWunj5KHvzOKFvjwHJWLio
-         GOTaZHrOfzx4Fu3kH/36XrtiI60LH1DF2kAOli3o=
-Received: by mail-qk1-f174.google.com with SMTP id x134so2358905qkb.0;
-        Fri, 27 Sep 2019 08:44:40 -0700 (PDT)
-X-Gm-Message-State: APjAAAUqnWd0uSw8Zkr0/4noE5DI0J0IJqNKysQIKT21cxVtZC+YVygp
-        w99r8SSi+rVKG49uYlUSvPxFQbHCkDtyXU3L3Q==
-X-Google-Smtp-Source: APXvYqy1MGJjHwELZ4Bw99jjQEhMXDlYRvnNqs1LnykFuiSzNrCL1BzMpOm8ays235L+R3270SmaXQZtAd7SSGPY3F4=
-X-Received: by 2002:a37:682:: with SMTP id 124mr5220879qkg.393.1569599080064;
- Fri, 27 Sep 2019 08:44:40 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id EF3208980E5;
+        Fri, 27 Sep 2019 15:46:33 +0000 (UTC)
+Received: from t460s.redhat.com (ovpn-116-169.ams2.redhat.com [10.36.116.169])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BBB3D60BF3;
+        Fri, 27 Sep 2019 15:46:29 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, xen-devel@lists.xenproject.org,
+        David Hildenbrand <david@redhat.com>,
+        =?UTF-8?q?Marek=20Marczykowski-G=C3=B3recki?= 
+        <marmarek@invisiblethingslab.com>, stable@vger.kernel.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>
+Subject: [PATCH v1] xen/balloon: Set pages PageOffline() in balloon_add_region()
+Date:   Fri, 27 Sep 2019 17:46:28 +0200
+Message-Id: <20190927154628.8480-1-david@redhat.com>
 MIME-Version: 1.0
-References: <20190927134220.8734-1-robh@kernel.org> <CAMRc=MctTVh99vE+dfd25ienWEjtMNwrM200f1im--fx9ALo7Q@mail.gmail.com>
-In-Reply-To: <CAMRc=MctTVh99vE+dfd25ienWEjtMNwrM200f1im--fx9ALo7Q@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 27 Sep 2019 10:44:29 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+R9wdB521dQtwMiWXEJEB5tGEDYi_efDqZL6xzF9YduA@mail.gmail.com>
-Message-ID: <CAL_Jsq+R9wdB521dQtwMiWXEJEB5tGEDYi_efDqZL6xzF9YduA@mail.gmail.com>
-Subject: Re: [PATCH v4] dt-bindings: at24: convert the binding document to yaml
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Peter Rosin <peda@axentia.se>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Fri, 27 Sep 2019 15:46:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 10:06 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> pt., 27 wrz 2019 o 15:42 Rob Herring <robh@kernel.org> napisa=C5=82(a):
-> >
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Convert the binding document for at24 EEPROMs from txt to yaml. The
-> > compatible property uses a regex pattern to address all the possible
-> > combinations of "vendor,model" strings.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > [robh: rework compatible schema, fix missing allOf for $ref, fix errors=
- in example]
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
-> > v4:
-> > - Add a $nodename definition
-> >
-> > - Turns out the compatible schema is too complex for generating a 'sele=
-ct'
-> > schema and only a small subset where getting validated. So we need a
-> > custom 'select' schema. This in turn fixes the issue with the nxp,se97b
-> > binding.
->
-> Thanks again!
->
-> >
-> > Now we get a different set of errors checking Arm dts files (omitting
-> > a bunch of node name ones):
-> >
->
-> > arch/arm/boot/dts/at91-dvk_som60.dt.yaml: eeprom@57: compatible: ['gian=
-tec,gt24c32a', 'atmel,24c32'] is not valid under any of the given schemas
->
-> This is because nobody bothered adding 'giantec,gt24c32a' to previous
-> .txt bindings. I'll add this in a follow-up patch.
->
-> > arch/arm/boot/dts/am3874-iceboard.dt.yaml: at24cs01@5f: compatible: ['a=
-tmel,24cs01'] is not valid under any of the given schemas
-> > arch/arm/boot/dts/am3874-iceboard.dt.yaml: at24cs08@5c: compatible: ['a=
-tmel,24cs08'] is not valid under any of the given schemas
-> >
->
-> These look fine at first glance, I'm not sure what the problem here
-> is. I'll take a look at these as soon as I can.
+We are missing a __SetPageOffline(), which is why we can get
+!PageOffline() pages onto the balloon list, where
+alloc_xenballooned_pages() will complain:
 
-Ah, that's my mistake. I guess there's only no 24cs00 variant.
+page:ffffea0003e7ffc0 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
+flags: 0xffffe00001000(reserved)
+raw: 000ffffe00001000 dead000000000100 dead000000000200 0000000000000000
+raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
+page dumped because: VM_BUG_ON_PAGE(!PageOffline(page))
+------------[ cut here ]------------
+kernel BUG at include/linux/page-flags.h:744!
+invalid opcode: 0000 [#1] SMP NOPTI
 
-Rob
+Reported-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+Tested-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+Fixes: 77c4adf6a6df ("xen/balloon: mark inflated pages PG_offline")
+Cc: stable@vger.kernel.org # v5.1+
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Stefano Stabellini <sstabellini@kernel.org>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ drivers/xen/balloon.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
+index 05b1f7e948ef..29f6256363db 100644
+--- a/drivers/xen/balloon.c
++++ b/drivers/xen/balloon.c
+@@ -687,6 +687,7 @@ static void __init balloon_add_region(unsigned long start_pfn,
+ 		/* totalram_pages and totalhigh_pages do not
+ 		   include the boot-time balloon extension, so
+ 		   don't subtract from it. */
++		__SetPageOffline(page);
+ 		__balloon_append(page);
+ 	}
+ 
+-- 
+2.21.0
+
