@@ -2,149 +2,143 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB43C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 05:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C85C352AB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 05:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6654720872
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 05:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 767ED2146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 05:57:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="lsuGNLoV"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="PKHN8p3A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725919AbfI0FzZ (ORCPT
+        id S1726055AbfI0F5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 01:55:25 -0400
-Received: from pio-pvt-msa1.bahnhof.se ([79.136.2.40]:37250 "EHLO
-        pio-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbfI0FzZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 01:55:25 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTP id B74DB3F5EE;
-        Fri, 27 Sep 2019 07:55:22 +0200 (CEST)
-Authentication-Results: pio-pvt-msa1.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b="lsuGNLoV";
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa1.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 8eK5aOG190Hn; Fri, 27 Sep 2019 07:55:21 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 1C6F13F5A8;
-        Fri, 27 Sep 2019 07:55:14 +0200 (CEST)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 4A2BA3600A4;
-        Fri, 27 Sep 2019 07:55:14 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1569563714; bh=81SUoy+FGjlC5Z9P5D0VsyvsR3Dkq5T9B6228Tm+9JA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=lsuGNLoVh2MiV7muekN2KlaEhlx8yOtHdScNzz9hVWQ88tazuxZhFvckn8qTWpKRB
-         8JBzN3YgnNW0GAgQwCZk/bl8xbiPsJAqEfE71uT4o23dZWB5i5HuK7PQxLUfHxMdM8
-         IMirgPB8ozo+nPJG6T6Lay6AkX+rPaOok8jM41fk=
-Subject: Re: Ack to merge through DRM? WAS Re: [PATCH v2 1/5] mm: Add
- write-protect and clean utilities for address space ranges
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>
-References: <20190926115548.44000-1-thomas_os@shipmail.org>
- <20190926115548.44000-2-thomas_os@shipmail.org>
- <85e31bcf-d3c8-2fcf-e659-2c9f82ebedc7@shipmail.org>
- <CAHk-=wifjLeeMEtMPytiMAKiWkqPorjf1P4PbB3dj17Y3Jcqag@mail.gmail.com>
- <a48a93d2-03e9-40d3-3b4c-a301632d3121@shipmail.org>
- <CAHk-=whwN+CvaorsmczZRwFhSV+1x98xg-zajVD1qKmN=9JhBQ@mail.gmail.com>
- <c58cdb3d-4f5e-7bfc-06b3-58c27676d101@shipmail.org>
- <CAHk-=wh_+Co=T8wG8vb5akMP=7H4BN=Qpq6PsKh8rcmT8MCV+Q@mail.gmail.com>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <e8954bda-671c-c680-8d0e-8993c0085401@shipmail.org>
-Date:   Fri, 27 Sep 2019 07:55:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <CAHk-=wh_+Co=T8wG8vb5akMP=7H4BN=Qpq6PsKh8rcmT8MCV+Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Fri, 27 Sep 2019 01:57:46 -0400
+Received: from mail-eopbgr1310138.outbound.protection.outlook.com ([40.107.131.138]:23196
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725820AbfI0F5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 01:57:45 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jgGiXWNcdSwtvTnw4DYJqqt3n/Q/L/qDEaH5uYNfnadOA3Y75YvfJSOfShm14scYoug5ufrBrjYWuhngLKoz1tZU371gUDPPphaneQhuVCL4P/hCAIHoYWfjnH4JR2yUeBmzswwssc9UQSfMOdLLKEVf8xx4Kjk/ku0P3gXta8hbpDYgAGoP04mBaOp+5XtSiRAazTCeZWS6oSKvKLwljajrz4mKNM14ow63rmpSPRoTNQAqc+fqm83MY7peKYPUUoOkQJuJ9R2Ddx19+cVTbLn/vgTEaZSwDEzSFsLV9VPE+kE+3UxKUBeV0puUznmWAMy2WrGfI3zXLGN0AgGSDg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PxR0UrYJMkbJ/JG9oWs0F1+RhKIlgReBxld1eCwf5XM=;
+ b=gRGiOTFVu+bWMoqOw4gpV3xatCecv66tqE+4u0XoY27fXF0G6VBBNz8OcOZBF2u+js5D2dGuk7OuukSCTlx9Y+8oYzZWhDSDayLdoktOacXbWTjk0rhNaiqjjWodgiP/21cbiPfCMsNNe5zfu6+WPNfU5i3Dyrw13d8I84Z0c6NSK/Zp3FWeKlKG7xK6N+049Y/3RZP3JbthX0xEENW6HUz1gnH84NHtMzRatFY81q66XVYtDAGgfrqhnyY+bfDmde4dpN+grIZ7/q1SVvnJ9UEZIsRyxL18id+beTIkkw8rZnnb9WoM5EQx0PHvZbOoLGwaV8E4l2a4c9q7gHfP+w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PxR0UrYJMkbJ/JG9oWs0F1+RhKIlgReBxld1eCwf5XM=;
+ b=PKHN8p3AfgwDb4eJ+3qcU/zlsoYAi4lb8jChuFjJld/hwxR18L+8KWj4+FfQHTXoicbeCl6OSbez8EJGd1vDUBm26L2PbHQ5CGCAjoKl6AYOotBbjlF8hoPT+wLIK3St28gC1/eQG7ev1n0glCCR6zQJd3oN9T8IuhinkJFpmpU=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0201.APCP153.PROD.OUTLOOK.COM (10.170.190.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.5; Fri, 27 Sep 2019 05:57:32 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2327.009; Fri, 27 Sep 2019
+ 05:57:32 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>
+CC:     "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: RE: [PATCH v5 3/3] clocksource/drivers: Suspend/resume Hyper-V
+ clocksource for hibernation
+Thread-Topic: [PATCH v5 3/3] clocksource/drivers: Suspend/resume Hyper-V
+ clocksource for hibernation
+Thread-Index: AQHVc/fwSon8M7RoH0Cu+okwDUbU56c9CFiQgADo/4CAARScYA==
+Date:   Fri, 27 Sep 2019 05:57:31 +0000
+Message-ID: <PU1P153MB01693752993D9EFE0DB377DEBF810@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <1567723581-29088-1-git-send-email-decui@microsoft.com>
+ <1567723581-29088-4-git-send-email-decui@microsoft.com>
+ <8ba5e2fd-6a9f-b61b-685e-23a69cabe3a2@linaro.org>
+ <PU1P153MB0169A28B05A7CDE04A57AA58BF870@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <17e5a535-8597-4780-7cd0-e8c4d2aa8f0f@linaro.org>
+In-Reply-To: <17e5a535-8597-4780-7cd0-e8c4d2aa8f0f@linaro.org>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-27T05:57:29.3587243Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=bbef767a-2d05-4de1-bedd-761b7f2037a6;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:557a:f14b:ea25:465f]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a243096e-0b5e-4c5f-292a-08d7430f9647
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: PU1P153MB0201:|PU1P153MB0201:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <PU1P153MB020132F30911C2617793BFE0BF810@PU1P153MB0201.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0173C6D4D5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(4636009)(376002)(396003)(39860400002)(136003)(366004)(346002)(51914003)(189003)(199004)(486006)(256004)(74316002)(66946007)(64756008)(66476007)(86362001)(66556008)(2906002)(66446008)(5660300002)(2201001)(25786009)(52536014)(229853002)(76116006)(81166006)(81156014)(8676002)(2501003)(7736002)(8936002)(305945005)(8990500004)(7416002)(33656002)(6636002)(14454004)(4326008)(22452003)(6506007)(76176011)(446003)(6246003)(11346002)(10290500003)(478600001)(1511001)(186003)(71200400001)(71190400001)(476003)(6116002)(110136005)(10090500001)(6436002)(46003)(7696005)(316002)(99286004)(9686003)(102836004)(55016002)(921003)(1121003)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0201;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Efr/xuJfHPg6J7UA5wLX2+c/xirgbdzZK3NOa+iFYFTPUqPMwiZD+R7Q7vqM1oSrZyjlRZzyIQPINWHHlm1AgZ7owIGTA6s1J0p9sOdtl/i1ypvqeVe1gPCnaMsCslFFBAiw5XI9BuEeRdONgxabddjSdfUh93ijHvDHiPXtFBM+NjfkqLki2bAaPzwu9wDpu1lSLkIXK0n5KrZkqP4uOpGbIi2wIQ3qpj8QmsE5RiyAE/b1yre8lb7HAc9MNqGVG30zJlb6o01Ls2bNszFumKwBZdDzbZywjXFgWvvNBddz1auvrs+tys62xIORI25EUkBjy5vzesbexDIsKsiE8kuja2kYn6bLCWZlvUjiD0LBmc4h+Sb/g7LbjrC7+quPDET8TR3aQe4Xmw9dVqfa6+XnGpWqh3hqGv7sMP5tL8Q=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a243096e-0b5e-4c5f-292a-08d7430f9647
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Sep 2019 05:57:31.5244
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pA85Svstsol1cBtmwgI4iwrHEX2yMc5+5aJo38haZxy6uTYzmiznzQIgYMJG2j7IgSn/lACYBhY5r5FnXC4DCQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0201
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/27/19 12:20 AM, Linus Torvalds wrote:
-> On Thu, Sep 26, 2019 at 1:55 PM Thomas Hellström (VMware)
-> <thomas_os@shipmail.org> wrote:
->> Well, we're working on supporting huge puds and pmds in the graphics
->> VMAs, although in the write-notify cases we're looking at here, we would
->> probably want to split them down to PTE level.
-> Well, that's what the existing walker code does if you don't have that
-> "pud_entry()" callback.
->
-> That said, I assume you would *not* want to do that if the huge
-> pud/pmd is already clean and read-only, but just continue.
->
-> So you may want to have a special pud_entry() that handles that case.
-> Eventually. Maybe. Although honestly, if you're doing dirty tracking,
-> I doubt it makes much sense to use largepages.
-
-The approach we're looking at in this case is to keep huge entries 
-write-protected and split them in the wp_huge_xxx() code's fallback path 
-with the mmap_sem held. This means that there will actually be huge 
-entries in the page-walking code soon, but as you say, only entries that 
-we want to ignore and not split. So we'd also need a way to avoid the 
-pagewalk splitting for the situation when someone faults a huge entry in 
-just before the call to split_huge_xxx.
-
->
->> Looking at zap_pud_range() which when called from unmap_mapping_pages()
->> uses identical locking (no mmap_sem), it seems we should be able to get
->> away with i_mmap_lock(), making sure the whole page table doesn't
->> disappear under us. So it's not clear to me why the mmap_sem is strictly
->> needed here. Better to sort those restrictions out now rather than when
->> huge entries start appearing.
-> zap_pud_range()actually does have that
->
->                 VM_BUG_ON_VMA(!rwsem_is_locked(&tlb->mm->mmap_sem), vma);
->
-> exactly for the case where it might have to split the pud entry.
-
-Yes. My take on this is that locking the PUD ptl can be done either with 
-the mmap_sem or the i_mmap_lock if present and that we should update the 
-asserts in xxx_trans_huge_lock to reflect that. But when actually 
-splitting transhuge pages you don't want to race with khugepaged, so you 
-need the mmap_sem. For the graphics VMAs (MIXEDMAP), khugepaged never 
-touches them. Yet.
-
->
-> It's why they've never gotten translated to use the generic walker code.
-
-OK. Yes there are a number of various specialized pagewalks all over the 
-mm code.
-
-But another thing that worries me is that the page-table modifications 
-that happen in the callback use functionality that is not guaranteed to 
-be exported, and that mm people don't want them to be exported because 
-you don't want the drivers to go hacking around in page tables, which 
-means that the two callbacks used here would need to be a set of core 
-helpers anyway.
-
-So I figure what I would end up with would actually be an extern 
-__walk_page_range anyway, and slightly modified asserts. Do you think 
-that could be acceptible?
-
-Thanks,
-
-Thomas
-
-
->
->             Linus
-
-
+PiBGcm9tOiBEYW5pZWwgTGV6Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz4NCj4gU2Vu
+dDogVGh1cnNkYXksIFNlcHRlbWJlciAyNiwgMjAxOSA2OjE3IEFNDQo+ID4+DQo+ID4+IEkgY2Fu
+IHRha2UgdGhpcyBwYXRjaCBpZiBuZWVkZWQuDQo+ID4NCj4gPiBUaGFua3MsIERhbmllbCEgVXN1
+YWxseSB0Z2x4IHRha2VzIGNhcmUgb2YgdGhlIHBhdGNoZXMsIGJ1dCBpdCBsb29rcyByZWNlbnRs
+eSBoZQ0KPiA+IG1heSBiZSB0b28gYnVzeSB0byBoYW5kbGUgdGhlIDMgcGF0Y2hlcy4NCj4gPg0K
+PiA+IEkgZ3Vlc3MgeW91IGNhbiB0YWtlIHRoZSBwYXRjaCwgaWYgdGdseCBoYXMgbm8gb2JqZWN0
+aW9uLiA6LSkNCj4gPiBJZiB5b3UgdGFrZSB0aGUgcGF0Y2gsIHBsZWFzZSB0YWtlIGFsbCB0aGUg
+MyBwYXRjaGVzLg0KPiANCj4gSSBtYWludGFpbiBkcml2ZXJzL2Nsb2Nrc291cmNlIGZvciB0aGUg
+dGlwL3RpbWVycy9jb3JlIGJyYW5jaC4gSSBkb24ndA0KPiB3YW50IHRvIHByb3h5IGFub3RoZXIg
+dGlwIGJyYW5jaCBhcyBpdCBpcyBvdXQgb2YgbXkganVyaXNkaWN0aW9uLg0KDQpJIHNlZS4gVGhh
+bmtzIGZvciB0aGUgZXhwbGFuYXRpb24hIEkgbGVhcm5lZCBtb3JlIGFib3V0IHRoZSB0aXAgdHJl
+ZS4gOi0pDQoNCj4gU28gSSBjYW4gdGFrZSBwYXRjaCAzLzMgYnV0IHdpbGwgbGV0IHRoZSBvdGhl
+ciAyIHBhdGNoZXMgdG8gYmUgcGlja2VkIGJ5DQo+IHRoZSByaWdodCBwZXJzb24uIEl0IGlzIHlv
+dXIgY2FsbC4NCg0KU291bmRzIGdvb2QuIERhbmllbCwgdGhlbiBwbGVhc2UgdGFrZSB0aGlzIHBh
+dGNoLCBlLmcuIHBhdGNoIDMvMy4NCg0KUGF0Y2ggMi8zIG1heSBhcyB3ZWxsIGdvIHRocm91Z2gg
+U2FzaGEncyBoeXBlci12IHRyZWUsIHNpbmNlIGl0J3MgcmVxdWlyZWQgYnkNCm90aGVyIGNoYW5n
+ZXMgdG8gdGhlIGRyaXZlcnMgaHZfYmFsbG9vbiwgaHZfdXRpbHMgYW5kIGh2X3ZtYnVzLg0KDQpJ
+IHN1cHBvc2UgdGdseCBpcyB0aGUgYmVzdCBwZXJzb24gdG8gdGFrZSBwYXRjaCAxLzMsIGJ1dCBp
+ZiBoZSdzIHRvbyBidXN5IHRvDQpoYW5kbGUgaXQsIGl0IGNhbiBhbHNvIGdvIHRocm91Z2ggdGhl
+IGh5cGVyLXYgdHJlZSwgc2luY2UgdGhlIHJlbGF0ZWQgb3RoZXINCnBhdGNoZXMgaGF2ZSBiZWVu
+IGluIHRoZSBtYWlubGluZSBub3cuDQoNClRoYW5rcywNCi0tIERleHVhbg0K
