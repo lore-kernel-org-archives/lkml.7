@@ -2,44 +2,45 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13578C352AB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D190C32774
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE2D52196E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C1C22075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:49:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="DTGaxncy"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="eXuXOmm4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfI0HtO (ORCPT
+        id S1726758AbfI0HtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 03:49:14 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:49678 "EHLO
+        Fri, 27 Sep 2019 03:49:13 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:49692 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726163AbfI0HtM (ORCPT
+        by vger.kernel.org with ESMTP id S1726255AbfI0HtM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 27 Sep 2019 03:49:12 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id F3BD0C0CF0;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id EB3CAC0CEE;
         Fri, 27 Sep 2019 07:49:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1569570551; bh=NNEVzMfiLaKkcrRUt6WrozEpdRe4qJSLs4dGyv8UEIQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=DTGaxncysylbblkg/YcAbZUcj6tWtc1lU2Mf/zM6sg+vWlxSMuOZqxKPsqDA0r6BV
-         7Ko2Nw+bAIrjhhpfbFRU80lni6uGVcFjwN9Wur6CX/yzRKiPVISmXUNnjRB4ZI3mhF
-         y8NCOCJZw41vrGzGfGhd8CYLcT2PpOc5/BVw6iSfD2Vu50iVBGI3QiFjVFdZLl8/gl
-         Bm6HRqSPQRcoOSF0gbu3wJJV1srvO7xQ8npJrNuWX8cQGm1WIkP8jy78oTm8zd3vtY
-         m+iZa4YuzEiC3w+za5LPTZUDoEYS2Kfl1KJ+UCle+aRHynhXC3e7g7d3vle0JA51yE
-         2JbDmrh0mb1nw==
+        t=1569570551; bh=w6MXqfF4WO8Qi/JIy8H5/V4nJcusg0KueWRh6mbOpiU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=eXuXOmm4keIvNntZUoY0pTVRk7mhBflETDmGyDIHWQqATcgAqZ+FkZA2fKQq0K4uc
+         7qRGIPncvU/d3q13h+YZmiiHlFtLdFeLmRuLQx0eHA0Kd+LLdQUNn6iAw2AgsTsMWh
+         /UjTT4pu/nX/lEx4ERoMko/zvSpU5N5qJutC75CqvPcomQgNK7/dPcScvT3gkAcbf7
+         +ZwTmY71tapk3aNjWEz8cfwIZnemOl+bvLrmrRXFc46QNLb5m6ZwXY5jWhKY2fqRps
+         Hbi3MR9yENixtbONW9Nf2PhjmJKs2MDLknu43zjYGbRb5zNQZg0pxQ/9vyuDTHnZjn
+         2QOTq3iAbf2Bw==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 5E285A005F;
-        Fri, 27 Sep 2019 07:49:08 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 95262A0091;
+        Fri, 27 Sep 2019 07:49:09 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -50,17 +51,27 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         "David S. Miller" <davem@davemloft.net>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net 0/8] net: stmmac: Fixes for -net
-Date:   Fri, 27 Sep 2019 09:48:48 +0200
-Message-Id: <cover.1569569778.git.Jose.Abreu@synopsys.com>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: [PATCH net 8/8] net: stmmac: xgmac: Fix RSS not writing all Keys to HW
+Date:   Fri, 27 Sep 2019 09:48:56 +0200
+Message-Id: <80dd26ecf7fc82c88dc378d78210df5dd4138812.1569569778.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1569569778.git.Jose.Abreu@synopsys.com>
+References: <cover.1569569778.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <cover.1569569778.git.Jose.Abreu@synopsys.com>
+References: <cover.1569569778.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Misc fixes for -net tree. More info in commit logs.
+The sizeof(cfg->key) is != ARRAY_SIZE(cfg->key). Fix it.
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+Fixes: 76067459c686 ("net: stmmac: Implement RSS and enable it in XGMAC core")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
 ---
 Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
@@ -72,26 +83,24 @@ Cc: netdev@vger.kernel.org
 Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
+Cc: Nick Desaulniers <ndesaulniers@google.com>
 ---
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Jose Abreu (8):
-  net: stmmac: xgmac: Not all Unicast addresses may be available
-  net: stmmac: xgmac: Detect Hash Table size dinamically
-  net: stmmac: selftests: Always use max DMA size in Jumbo Test
-  net: stmmac: dwmac4: Always update the MAC Hash Filter
-  net: stmmac: Correctly take timestamp for PTPv2
-  net: stmmac: Do not stop PHY if WoL is enabled
-  net: stmmac: xgmac: Disable the Timestamp interrupt by default
-  net: stmmac: xgmac: Fix RSS not writing all Keys to HW
-
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c     | 13 +++++++------
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h        |  3 ++-
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c   |  4 ++--
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c    |  1 +
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c     | 19 +++++++++++++------
- .../net/ethernet/stmicro/stmmac/stmmac_selftests.c    |  4 ----
- 6 files changed, 25 insertions(+), 19 deletions(-)
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+index 6d8ac2ef4fc2..4a1f52474dbc 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+@@ -533,7 +533,7 @@ static int dwxgmac2_rss_configure(struct mac_device_info *hw,
+ 		return 0;
+ 	}
+ 
+-	for (i = 0; i < (sizeof(cfg->key) / sizeof(u32)); i++) {
++	for (i = 0; i < (ARRAY_SIZE(cfg->key) / sizeof(u32)); i++) {
+ 		ret = dwxgmac2_rss_write_reg(ioaddr, true, i, cfg->key[i]);
+ 		if (ret)
+ 			return ret;
 -- 
 2.7.4
 
