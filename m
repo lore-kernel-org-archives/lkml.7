@@ -2,239 +2,159 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1262C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 01:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2419C352AB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 01:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95AD721848
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 01:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FAB3206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 01:55:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r9jRo5ii"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="h0O9c+E4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbfI0Byk (ORCPT
+        id S1728431AbfI0BzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 21:54:40 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40095 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727962AbfI0Byk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 21:54:40 -0400
-Received: by mail-pf1-f193.google.com with SMTP id x127so581352pfb.7;
-        Thu, 26 Sep 2019 18:54:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Jkv3+m25h7+mBhaDAmoi1fNnMKQwdsBy4HY8NW+mFDw=;
-        b=r9jRo5iilNs2wTjYGE0eSV/p47GTFQWk4EutxtXr3Bcmzu2B+W8P2aA+zWEaQG3XpI
-         q+vSIcrJCKg7pixYzCF1spux84sDxuwZJRfoBGT084K6gTz5zIkRZtrDN4YMHQPopUKX
-         B61JV1lqcFDNK6jOs9Mf8k3uFulbefsTS/0H76qPF5eKIpuHQwtmhcEjBA9Al5WEl0Km
-         tVZAPt23J+8MxX7V88vgWWe07RDsuuJHtlAvLVua2+UMP8f/azziJlTqrsVJNOkN0K5G
-         CF7/ji92yJsZN3tG9o7/tNMZdSqOE8xjFP5EoGJBrNwCKwMQKXn2nqoQRSFFG0Y26OZo
-         oGKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Jkv3+m25h7+mBhaDAmoi1fNnMKQwdsBy4HY8NW+mFDw=;
-        b=LeWK70aoNzBpsOGfL736JvzJsTkHR7jV++4rWBwpNWr6fGSrjP6tlAXqtIAYCp0auv
-         mGEF0Vf+/ZP5kXJiOlzGZwdrhanHh212qTY9a6aLJgrg/IyoV+QMt2JvPkA5NpLu4C/C
-         aPDHQm1qFpXvab20U//bB3t+k8UuF7HT93Z6UkIbXIWjajb+sinZs/PexECi+aq+ET0l
-         o3pahcuStE3gSvWFYPRNLdB/vLRQ3+/MzV2ogN7+w1tRtkbueKbe1BH8BlTIt/sS+vUT
-         PQZP+GlZmVQcYmi6OEwwwPhDV2qmE3ZN6InjZ93rq8uM6zJdmFJTkS7RDEbVnjFRtqsM
-         yO4A==
-X-Gm-Message-State: APjAAAWgcb2k7jXsG9Rqd2ckzYzVqb6aW9zBuypTKibKfT8B2EtBdk97
-        n4uJ4lRekHSxTbuPfoBtpPE=
-X-Google-Smtp-Source: APXvYqzl/BASHUYGj0Nc0aDqh/JKm2tGMJg8oKPiZ1pYyew3VA2OEU6saze0fWlG1mYPcdifDALaLQ==
-X-Received: by 2002:a63:5566:: with SMTP id f38mr6495741pgm.389.1569549279228;
-        Thu, 26 Sep 2019 18:54:39 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id x9sm9494303pje.27.2019.09.26.18.54.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 26 Sep 2019 18:54:38 -0700 (PDT)
-Date:   Thu, 26 Sep 2019 18:53:53 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
-        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, lars@metafoo.de
-Subject: Re: [PATCH V6 4/4] ASoC: fsl_asrc: Fix error with S24_3LE format
- bitstream in i.MX8
-Message-ID: <20190927015352.GA3253@Asurada-Nvidia.nvidia.com>
-References: <cover.1569493933.git.shengjiu.wang@nxp.com>
- <b6a4de2bbf960ef291ee902afe4388bd0fc1d347.1569493933.git.shengjiu.wang@nxp.com>
+        Thu, 26 Sep 2019 21:55:18 -0400
+Received: from mail-eopbgr30072.outbound.protection.outlook.com ([40.107.3.72]:40927
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727962AbfI0BzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 21:55:18 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XEEhyLbg+dDqB70xDEvkI6Ld6ea1tvW8VyLHHjnvGzP6HZw3h4ULws+FMhQ76v8fuT4e6IOur7oAder1ndjanyLUWC+u5JqX2lREKZjBvpFRoGxqksR1/AwsAf2UohzlAi1QsF0ZRL86zjgtjYiBsGW5g+/lCQsq3zVyYK5JKZVaVT9KSB/t/DzgbfUhq5HJZCerpJojJU6EBkziSSPQFeN8dPudo79cy8eaeZkhkpSRj322ilm2d6Who4mDiBCtXsbHdf6+0IUu/1/KhQ2o/lzrAb6aK1xVsU7eaixohNtfTuEDuaXT6RrDy3Hy8zDhdAYZ7GlNeur12LB0UUBUCg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eVV8MyAmvxdBFEEmeG9psM+kbTdh/A5dCpWuBNl+q8o=;
+ b=EzqA6z2gfk9MNzgx6XRIk+9WBqYavaZgMmxbjeyAt6vlgdGr9qV8EN41MKZUHayF3UKQlG+urYRkWjpsNgh+gYsj40ZLyyS6O9r2/79BaDiJjNdYY2oatacN9AMHPWevVMQdOIDQtAP/0ufe0IA37Lc8VWw4PLGGhG7Qv8ytLae3mL6OH057illSG9owSeA6SOVMSpnVAsTKNKstEcr7zKv6R7arjXAyyuKMPIXUksWSxfHvhW5M82nNcfHpu40vwX2uDGBmjqO/2W+IMzDDxocGAVTFEw+qdg6LPKeRsYClxQ6WIN0wYdGV6bAtkpyjMtPMnx0HI+ebvrGXPfULig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eVV8MyAmvxdBFEEmeG9psM+kbTdh/A5dCpWuBNl+q8o=;
+ b=h0O9c+E4CZ2LIf8WPrrqqOmwmXfm6SDH6gYRwp/iVdDdVZ3VFQfh6lStZSzoVz9bEv/KwxrpB31rILXp7LL17fYzIEEmQeRb3y2eQ05RpAQFHBSdso3iWi+X0gSn8bljbRdsc8gG7nvDQcwMeRe/NZNdYHhVCXgvV5CJIiDKnCc=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.232.15) by
+ VE1PR04MB6750.eurprd04.prod.outlook.com (20.179.234.153) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.15; Fri, 27 Sep 2019 01:55:14 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::35d1:8d88:10f4:561]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::35d1:8d88:10f4:561%5]) with mapi id 15.20.2305.017; Fri, 27 Sep 2019
+ 01:55:14 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
+Subject: RE: [PATCH v5 11/15] dmaengine: imx-sdma: fix ecspi1 rx dma not work
+ on i.mx8mm
+Thread-Topic: [PATCH v5 11/15] dmaengine: imx-sdma: fix ecspi1 rx dma not work
+ on i.mx8mm
+Thread-Index: AQHVH2TUeqmuIEjDz0ugonhEiODBJqc7eN4AgAFtyHCAADyMgIACPgtw
+Date:   Fri, 27 Sep 2019 01:55:13 +0000
+Message-ID: <VE1PR04MB6638B066EE28781A3C21973D89810@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <20190610081753.11422-12-yibin.gong@nxp.com>
+ <29cf9f29-bdb4-94db-00b0-56ec36386f7a@kontron.de>
+ <VE1PR04MB6638639EF4F580E04689538E89870@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <1307d229-4c49-80e3-04ba-377c0caeae9c@kontron.de>
+In-Reply-To: <1307d229-4c49-80e3-04ba-377c0caeae9c@kontron.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6316e2a2-cdde-4e0b-53cc-08d742edbce8
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: VE1PR04MB6750:|VE1PR04MB6750:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB675034C9E3CAA51C3EFDCDA989810@VE1PR04MB6750.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0173C6D4D5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(366004)(376002)(136003)(396003)(199004)(189003)(76176011)(25786009)(6916009)(6116002)(3846002)(66476007)(66556008)(256004)(76116006)(64756008)(66446008)(66946007)(86362001)(54906003)(4001150100001)(316002)(71190400001)(71200400001)(8936002)(52536014)(7696005)(81156014)(55016002)(99286004)(9686003)(81166006)(6436002)(7416002)(102836004)(53546011)(6506007)(26005)(66066001)(6246003)(14454004)(74316002)(446003)(486006)(11346002)(476003)(4326008)(5660300002)(8676002)(186003)(33656002)(229853002)(478600001)(7736002)(305945005)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6750;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: eevZanXK3h0QPuX+Jao5biCE+NeLiCp33NuIsjmyAWLPgvLraqMm80BdiWaqlOJWJpNDZmDh54A9F21FZUMiur4Bp6q+nPql5gn2Q70phVrLlikEn7VsmjJM3XAjS5SIaSOPqVS87Gap8I1qKkY+fXRVUH2x46p71ZHDhqZ46qVemTErkALzOFQ1AU4JzzUGEG1g1/Tyv/PvoNlHor8FkU7xropfJfjrREeec9x6RA/EyjBhK9XeqMmndfA2cg5kDpWBhIPrZW6spL3rerf+MjlFfHlAnrFwXoBLP/Q0iZCJz7epnwWQO87dSPiGX5Q/pmouGOGfufnRU+XYUFG549SsNzIyjn9zSZJV3/L8CyKsYc8ZOaeqKFaaPLqqvxLtuG4eA+yj7id8KV9LDDl7pzQYt3GbSQ9E72cfF6ptSSY=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b6a4de2bbf960ef291ee902afe4388bd0fc1d347.1569493933.git.shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6316e2a2-cdde-4e0b-53cc-08d742edbce8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Sep 2019 01:55:13.9179
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wSvurupapxzvNRrxnYYeFPNtgCrh63t9UkQZjAtYtW/rjXpzQLUd/WKI43LvB90Uaq14Kvqob+ycjouPgEFqMg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6750
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 09:46:12AM +0800, Shengjiu Wang wrote:
-> There is error "aplay: pcm_write:2023: write error: Input/output error"
-> on i.MX8QM/i.MX8QXP platform for S24_3LE format.
-> 
-> In i.MX8QM/i.MX8QXP, the DMA is EDMA, which don't support 24bit
-> sample, but we didn't add any constraint, that cause issues.
-> 
-> So we need to query the caps of dma, then update the hw parameters
-> according to the caps.
-> 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-
-> ---
->  sound/soc/fsl/fsl_asrc.c     |  4 +--
->  sound/soc/fsl/fsl_asrc.h     |  3 ++
->  sound/soc/fsl/fsl_asrc_dma.c | 64 ++++++++++++++++++++++++++++++++----
->  3 files changed, 62 insertions(+), 9 deletions(-)
-> 
-> diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
-> index 584badf956d2..0bf91a6f54b9 100644
-> --- a/sound/soc/fsl/fsl_asrc.c
-> +++ b/sound/soc/fsl/fsl_asrc.c
-> @@ -115,7 +115,7 @@ static void fsl_asrc_sel_proc(int inrate, int outrate,
->   * within range [ANCA, ANCA+ANCB-1], depends on the channels of pair A
->   * while pair A and pair C are comparatively independent.
->   */
-> -static int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair)
-> +int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair)
->  {
->  	enum asrc_pair_index index = ASRC_INVALID_PAIR;
->  	struct fsl_asrc *asrc_priv = pair->asrc_priv;
-> @@ -158,7 +158,7 @@ static int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair)
->   *
->   * It clears the resource from asrc_priv and releases the occupied channels.
->   */
-> -static void fsl_asrc_release_pair(struct fsl_asrc_pair *pair)
-> +void fsl_asrc_release_pair(struct fsl_asrc_pair *pair)
->  {
->  	struct fsl_asrc *asrc_priv = pair->asrc_priv;
->  	enum asrc_pair_index index = pair->index;
-> diff --git a/sound/soc/fsl/fsl_asrc.h b/sound/soc/fsl/fsl_asrc.h
-> index 38af485bdd22..2b57e8c53728 100644
-> --- a/sound/soc/fsl/fsl_asrc.h
-> +++ b/sound/soc/fsl/fsl_asrc.h
-> @@ -462,4 +462,7 @@ struct fsl_asrc {
->  #define DRV_NAME "fsl-asrc-dai"
->  extern struct snd_soc_component_driver fsl_asrc_component;
->  struct dma_chan *fsl_asrc_get_dma_channel(struct fsl_asrc_pair *pair, bool dir);
-> +int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair);
-> +void fsl_asrc_release_pair(struct fsl_asrc_pair *pair);
-> +
->  #endif /* _FSL_ASRC_H */
-> diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
-> index 01052a0808b0..2a60fc6142b1 100644
-> --- a/sound/soc/fsl/fsl_asrc_dma.c
-> +++ b/sound/soc/fsl/fsl_asrc_dma.c
-> @@ -16,13 +16,11 @@
->  
->  #define FSL_ASRC_DMABUF_SIZE	(256 * 1024)
->  
-> -static const struct snd_pcm_hardware snd_imx_hardware = {
-> +static struct snd_pcm_hardware snd_imx_hardware = {
->  	.info = SNDRV_PCM_INFO_INTERLEAVED |
->  		SNDRV_PCM_INFO_BLOCK_TRANSFER |
->  		SNDRV_PCM_INFO_MMAP |
-> -		SNDRV_PCM_INFO_MMAP_VALID |
-> -		SNDRV_PCM_INFO_PAUSE |
-> -		SNDRV_PCM_INFO_RESUME,
-> +		SNDRV_PCM_INFO_MMAP_VALID,
->  	.buffer_bytes_max = FSL_ASRC_DMABUF_SIZE,
->  	.period_bytes_min = 128,
->  	.period_bytes_max = 65535, /* Limited by SDMA engine */
-> @@ -270,12 +268,25 @@ static int fsl_asrc_dma_hw_free(struct snd_pcm_substream *substream)
->  
->  static int fsl_asrc_dma_startup(struct snd_pcm_substream *substream)
->  {
-> +	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
->  	struct snd_soc_pcm_runtime *rtd = substream->private_data;
->  	struct snd_pcm_runtime *runtime = substream->runtime;
->  	struct snd_soc_component *component = snd_soc_rtdcom_lookup(rtd, DRV_NAME);
-> +	struct snd_dmaengine_dai_dma_data *dma_data;
->  	struct device *dev = component->dev;
->  	struct fsl_asrc *asrc_priv = dev_get_drvdata(dev);
->  	struct fsl_asrc_pair *pair;
-> +	struct dma_chan *tmp_chan = NULL;
-> +	u8 dir = tx ? OUT : IN;
-> +	bool release_pair = true;
-> +	int ret = 0;
-> +
-> +	ret = snd_pcm_hw_constraint_integer(substream->runtime,
-> +					    SNDRV_PCM_HW_PARAM_PERIODS);
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to set pcm hw params periods\n");
-> +		return ret;
-> +	}
->  
->  	pair = kzalloc(sizeof(struct fsl_asrc_pair), GFP_KERNEL);
->  	if (!pair)
-> @@ -285,11 +296,50 @@ static int fsl_asrc_dma_startup(struct snd_pcm_substream *substream)
->  
->  	runtime->private_data = pair;
->  
-> -	snd_pcm_hw_constraint_integer(substream->runtime,
-> -				      SNDRV_PCM_HW_PARAM_PERIODS);
-> +	/* Request a dummy pair, which will be released later.
-> +	 * Request pair function needs channel num as input, for this
-> +	 * dummy pair, we just request "1" channel temporarily.
-> +	 */
-> +	ret = fsl_asrc_request_pair(1, pair);
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to request asrc pair\n");
-> +		goto req_pair_err;
-> +	}
-> +
-> +	/* Request a dummy dma channel, which will be released later. */
-> +	tmp_chan = fsl_asrc_get_dma_channel(pair, dir);
-> +	if (!tmp_chan) {
-> +		dev_err(dev, "failed to get dma channel\n");
-> +		ret = -EINVAL;
-> +		goto dma_chan_err;
-> +	}
-> +
-> +	dma_data = snd_soc_dai_get_dma_data(rtd->cpu_dai, substream);
-> +
-> +	/* Refine the snd_imx_hardware according to caps of DMA. */
-> +	ret = snd_dmaengine_pcm_refine_runtime_hwparams(substream,
-> +							dma_data,
-> +							&snd_imx_hardware,
-> +							tmp_chan);
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to refine runtime hwparams\n");
-> +		goto out;
-> +	}
-> +
-> +	release_pair = false;
->  	snd_soc_set_runtime_hwparams(substream, &snd_imx_hardware);
->  
-> -	return 0;
-> +out:
-> +	dma_release_channel(tmp_chan);
-> +
-> +dma_chan_err:
-> +	fsl_asrc_release_pair(pair);
-> +
-> +req_pair_err:
-> +	if (release_pair)
-> +		kfree(pair);
-> +
-> +	return ret;
->  }
->  
->  static int fsl_asrc_dma_shutdown(struct snd_pcm_substream *substream)
-> -- 
-> 2.21.0
-> 
+T24gMjAxOS05LTI1IDIyOjUzIFNjaHJlbXBmIEZyaWVkZXIgPGZyaWVkZXIuc2NocmVtcGZAa29u
+dHJvbi5kZT4gd3JvdGU6DQo+IE9uIDI1LjA5LjE5IDEzOjI2LCBSb2JpbiBHb25nIHdyb3RlOg0K
+PiA+IE9uIDIwMTktOS0yNCAyMToyOCBTY2hyZW1wZiBGcmllZGVyIDxmcmllZGVyLnNjaHJlbXBm
+QGtvbnRyb24uZGU+DQo+IHdyb3RlOg0KPiA+Pg0KPiA+PiBIaSBSb2JpbiwNCj4gPj4NCj4gPj4+
+IEZyb206IFJvYmluIEdvbmcgPHlpYmluLmdvbmcgYXQgbnhwLmNvbT4NCj4gPj4+DQo+ID4+PiBC
+ZWNhdXNlIHRoZSBudW1iZXIgb2YgZWNzcGkxIHJ4IGV2ZW50IG9uIGkubXg4bW0gaXMgMCwgdGhl
+IGNvbmRpdGlvbg0KPiA+Pj4gY2hlY2sgaWdub3JlIHN1Y2ggc3BlY2lhbCBjYXNlIHdpdGhvdXQg
+ZG1hIGNoYW5uZWwgZW5hYmxlZCwgd2hpY2gNCj4gPj4+IGNhdXNlZA0KPiA+Pj4gZWNzcGkxIHJ4
+IHdvcmtzIGZhaWxlZC4gQWN0dWFsbHksIG5vIG5lZWQgdG8gY2hlY2sNCj4gPj4+IGV2ZW50X2lk
+MC9ldmVudF9pZDEgYW5kIHJlcGxhY2UgY2hlY2tpbmcgJ2V2ZW50X2lkMScgd2l0aA0KPiA+Pj4g
+J0RNQV9ERVZfVE9fREVWJywgc28gdGhhdCBjb25maWd1cmUNCj4gPj4+IGV2ZW50X2lkMSBvbmx5
+IGluIGNhc2UgREVWX1RPX0RFVi4NCj4gPj4+DQo+ID4+PiBTaWduZWQtb2ZmLWJ5OiBSb2JpbiBH
+b25nIDx5aWJpbi5nb25nIGF0IG54cC5jb20+DQo+ID4+PiBBY2tlZC1ieTogVmlub2QgS291bCA8
+dmtvdWwgYXQga2VybmVsLm9yZz4NCj4gPj4NCj4gPj4gSSBoYXZlIGEgY3VzdG9tIGJvYXJkIHdp
+dGggaS5NWDhNTSBhbmQgU1BJIGZsYXNoIG9uIGVjc3BpMS4gSSdtDQo+ID4+IGN1cnJlbnRseSB0
+ZXN0aW5nIHdpdGggdjUuMyBhbmQgYXMgU1BJIGRpZG4ndCB3b3JrLCBJIHRyaWVkIHR3byBkaWZm
+ZXJlbnQNCj4gdGhpbmdzOg0KPiA+Pg0KPiA+PiAxLiBSZW1vdmluZyAnZG1hcycgYW5kICdkbWEt
+bmFtZXMnIGZyb20gdGhlIGVjc3BpMSBub2RlIGluDQo+IGlteDhtbS5kdHNpLA0KPiA+PiAgICAg
+IHRvIHVzZSBQSU8gaW5zdGVhZCBvZiBETUEuIFRoaXMgd29ya3MgYXMgZXhwZWN0ZWQgYW5kIHRo
+ZSBkcml2ZXINCj4gPj4gICAgICBib290cyB3aXRoIHRoZSBmb2xsb3dpbmcgbWVzc2FnZXM6DQo+
+ID4+DQo+ID4+ICAgICAgICAgIHNwaV9pbXggMzA4MjAwMDAuc3BpOiBkbWEgc2V0dXAgZXJyb3Ig
+LTE5LCB1c2UgcGlvDQo+ID4+ICAgICAgICAgIG0yNXA4MCBzcGkwLjA6IG14MjV2ODAzNWYgKDEw
+MjQgS2J5dGVzKQ0KPiA+PiAgICAgICAgICBzcGlfaW14IDMwODIwMDAwLnNwaTogcHJvYmVkDQo+
+ID4+DQo+ID4+IDIuIEFwcGx5aW5nIHlvdXIgcGF0Y2hzZXQgYW5kIHVzZSBETUEuIEluIHRoaXMg
+Y2FzZSwgdGhlIGZsYXNoIGFsc28NCj4gPj4gICAgICB3b3JrcyBmaW5lLCBidXQgdGhlcmUgYXJl
+IHNvbWUgZXJyb3IgbWVzc2FnZXMgcHJpbnRlZCB3aGlsZQ0KPiBib290aW5nOg0KPiA+Pg0KPiA+
+PiAgICAgICAgICBzcGlfbWFzdGVyIHNwaTA6IEkvTyBFcnJvciBpbiBETUEgUlgNCj4gPj4gICAg
+ICAgICAgbTI1cDgwIHNwaTAuMDogU1BJIHRyYW5zZmVyIGZhaWxlZDogLTExMA0KPiA+PiAgICAg
+ICAgICBzcGlfbWFzdGVyIHNwaTA6IGZhaWxlZCB0byB0cmFuc2ZlciBvbmUgbWVzc2FnZSBmcm9t
+IHF1ZXVlDQo+ID4+ICAgICAgICAgIG0yNXA4MCBzcGkwLjA6IG14MjV2ODAzNWYgKDEwMjQgS2J5
+dGVzKQ0KPiA+PiAgICAgICAgICBzcGlfaW14IDMwODIwMDAwLnNwaTogcHJvYmVkDQo+ID4+DQo+
+ID4+IEl0IHdvdWxkIGJlIGdyZWF0IHRvIGdldCB5b3VyIHBhdGNoZXMgbWVyZ2VkIGFuZCBmaXgg
+U1BJICsgRE1BLCBidXQNCj4gPj4gZm9yIGkuTVg4TU0sIHdlIG5lZWQgdG8gZ2V0IHJpZCBvZiB0
+aGUgZXJyb3IgbWVzc2FnZXMuIERvIHlvdSBoYXZlIGFuDQo+ID4+IGlkZWEsIHdoYXQncyB3cm9u
+Zz8NCj4gDQo+ID4gQ291bGQgeW91IGNoZWNrIGlmIHRoZSBsZW5ndGggb2Ygc3BpIG1lc3NhZ2Ug
+aXMgYmlnZ2VyIHRoYW4gZmlmb19zaXplDQo+ID4gZHVyaW5nIHNwaV9ub3IgcHJvYmU/IElmIHll
+cywgYXQgdGhhdCB0aW1lIG1heWJlIHNkbWEgZmlybXdhcmUgbm90IGxvYWRlZC4NCj4gPiBpZiAo
+dHJhbnNmZXItPmxlbiA8IHNwaV9pbXgtPmRldnR5cGVfZGF0YS0+Zmlmb19zaXplKQ0KPiANCj4g
+SW5kZWVkLCBtb3N0IG9mIHRoZSB0cmFuc2ZlcnMgdHJpZ2dlcmVkIGJ5IHRoZSBTUEkgTk9SIGRp
+cnZlciBhcmUgYmVsb3cNCj4gZmlmb19zaXplIGFuZCB3b3JrIGZpbmUsIGJ1dCBzb21lIGFyZSBi
+aWdnZXIuIFRoZSB0cmFuc2ZlcnMgdGhlcmVmb3JlIHRyeSB0bw0KPiB1c2UgRE1BLCBidXQgdGhl
+IGZpcm13YXJlIGlzIG5vdCBsb2FkZWQgeWV0Lg0KPiANCj4gSG93IGlzIHRoaXMgc3VwcG9zZWQg
+dG8gd29yaz8gU2hvdWxkbid0IGFsbCB0cmFuc2ZlcnMgdXNlIFBJTyBhcyBsb25nIGFzIHRoZQ0K
+PiBTRE1BIGZpcm13YXJlIGlzIG5vdCBsb2FkZWQgeWV0Pw0KWWVzLCBmb3IgZWNzcGkgc2hvdWxk
+IHdvcmsgd2l0aCByYW0gc2NyaXB0LCBpdCdzIGJldHRlciBjaGVjayBpZiBzZG1hIGZpcm13YXJl
+DQppcyByZWFkeSBpbiBzcGlfaW14X2RtYV9jb25maWd1cmUoKSwgbmVlZCBtb2RpZmljYXRpb24g
+aW4gc2RtYSBkcml2ZXIgdG9vLg0KSSdsbCBjcmVhdGUgYW5vdGhlciBwYXRjaCBhZnRlciB0aGlz
+IHBhdGNoIHNldCBhY2NlcHRlZC4gDQo+IA0KPiAoKyBDYzogbGludXgtc3BpQHZnZXIua2VybmVs
+Lm9yZykNCg==
