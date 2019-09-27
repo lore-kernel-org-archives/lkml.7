@@ -2,190 +2,98 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA49C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CACC388F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A197206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A539D206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:15:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aoZr4wlZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727493AbfI0MP4 (ORCPT
+        id S1727527AbfI0MP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 27 Sep 2019 08:15:57 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40003 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbfI0MP4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 27 Sep 2019 08:15:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34854 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726251AbfI0MP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 08:15:56 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 96CF22D7E1;
-        Fri, 27 Sep 2019 12:15:55 +0000 (UTC)
-Received: from [10.72.12.24] (ovpn-12-24.pek2.redhat.com [10.72.12.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DC722608C2;
-        Fri, 27 Sep 2019 12:15:43 +0000 (UTC)
-Subject: Re: [PATCH] vhost: introduce mdev based hardware backend
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Tiwei Bie <tiwei.bie@intel.com>, alex.williamson@redhat.com,
-        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        lingshan.zhu@intel.com
-References: <20190926045427.4973-1-tiwei.bie@intel.com>
- <1b4b8891-8c14-1c85-1d6a-2eed1c90bcde@redhat.com>
- <20190927045438.GA17152@___>
- <05ab395e-6677-e8c3-becf-57bc1529921f@redhat.com>
- <20190927053829-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <552fc91c-2eb6-8870-3077-e808e7e0917b@redhat.com>
-Date:   Fri, 27 Sep 2019 20:15:41 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190927053829-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Fri, 27 Sep 2019 12:15:55 +0000 (UTC)
+Received: by mail-pg1-f195.google.com with SMTP id w10so3395724pgj.7
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 05:15:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=M41dMSj8YsUC09fTHA1984IazgNH9432TVv2qcwf7GY=;
+        b=aoZr4wlZ/vB6NcUL28PpX4kyb84Dr46XYL5B8uLKuOD0lADCkKL1gI1R9FDcvQy0sr
+         efTDA76X/+eROw2VMl8YQ4gfEgIG38YrWzzk2qPyDh+V/k5L+yyKfVorTAb3NtEYiwZZ
+         KHg+0sUSdbSN3b8lCN1GhKclh5KV6cua4nLenxUwaRxEOwtVKiGOgthSjGa+qw8bUDRa
+         YVZqH4uaiTPZNY0sBBkeSxH8gZu0RxX+6VqCuxsWduSYmIB/03yonpmLtW1tEbRh4vVx
+         QVpoMlQ094XNyj9nu035cX8wSJHLsP9L0rvclOp5FikjgK2Z6yFFHCYyHyIxO978uifl
+         A+RQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=M41dMSj8YsUC09fTHA1984IazgNH9432TVv2qcwf7GY=;
+        b=F3+bB4aJqkWcGeAAFGh4jaVAqgrbE9BBE4j/+beJl6lDH7S+7EKtUt62cZqwRyg7oq
+         ck0V7es7p3OhvADGW3/lmo95oxmaZyRsDkpsvuY7KbkhktdvsCR7zfi1bn9MPGhWteKc
+         GLh9i8j3RNo8Z/aDhN9V/ubGfj/6yZIg6K+u5pL1+oq41eLwXCgIpICqo4qWtB/OIBwH
+         XZ3f12XnNtBeTAVP9KYYSq3MkNzazHZBQ1S9ZRsNxO4TAEd59D6wVblipz9ZPJLZaBE7
+         fWd5e5iWfuBRZKHh8Q3Dsxan6HzUdX+w21nyD6qz8xqhrUxGG4g4WIKcuZ7K47RAKbe3
+         U8gw==
+X-Gm-Message-State: APjAAAXm/JWhC94NXyexFKviH94OSIM1OcC4UAyKJOo5JUfgHLL44VU4
+        Tg6y9D2LR5ONdxULN78bZFw=
+X-Google-Smtp-Source: APXvYqynQHZ+LtAagji3jSZGDp8/ZQFb5ShdqPhqc44KILqSgW95hb4i1P2+5ZSSRM1qcaY9R8SN0A==
+X-Received: by 2002:a63:d055:: with SMTP id s21mr9061931pgi.219.1569586556011;
+        Fri, 27 Sep 2019 05:15:56 -0700 (PDT)
+Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.googlemail.com with ESMTPSA id d76sm6204634pga.80.2019.09.27.05.15.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 27 Sep 2019 05:15:55 -0700 (PDT)
+From:   Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+        Fuqian Huang <huangfq.daxian@gmail.com>
+Subject: [PATCH] m68k: q40: Fix info-leak in rtc_ioctl
+Date:   Fri, 27 Sep 2019 20:15:44 +0800
+Message-Id: <20190927121544.7650-1-huangfq.daxian@gmail.com>
+X-Mailer: git-send-email 2.11.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When the option is RTC_PLL_GET, pll will be copied to userland
+via copy_to_user. pll is initialized using mach_get_rtc_pll indirect
+call and mach_get_rtc_pll is only assigned with function
+q40_get_rtc_pll in arch/m68k/q40/config.c.
+In function q40_get_rtc_pll, the field pll_ctrl is not initialized.
+This will leak uninitialized stack content to userland.
+Fix this by zeroing the uninitialized field.
 
-On 2019/9/27 下午5:38, Michael S. Tsirkin wrote:
-> On Fri, Sep 27, 2019 at 04:47:43PM +0800, Jason Wang wrote:
->> On 2019/9/27 下午12:54, Tiwei Bie wrote:
->>> On Fri, Sep 27, 2019 at 11:46:06AM +0800, Jason Wang wrote:
->>>> On 2019/9/26 下午12:54, Tiwei Bie wrote:
->>>>> +
->>>>> +static long vhost_mdev_start(struct vhost_mdev *m)
->>>>> +{
->>>>> +	struct mdev_device *mdev = m->mdev;
->>>>> +	const struct virtio_mdev_device_ops *ops = mdev_get_dev_ops(mdev);
->>>>> +	struct virtio_mdev_callback cb;
->>>>> +	struct vhost_virtqueue *vq;
->>>>> +	int idx;
->>>>> +
->>>>> +	ops->set_features(mdev, m->acked_features);
->>>>> +
->>>>> +	mdev_add_status(mdev, VIRTIO_CONFIG_S_FEATURES_OK);
->>>>> +	if (!(mdev_get_status(mdev) & VIRTIO_CONFIG_S_FEATURES_OK))
->>>>> +		goto reset;
->>>>> +
->>>>> +	for (idx = 0; idx < m->nvqs; idx++) {
->>>>> +		vq = &m->vqs[idx];
->>>>> +
->>>>> +		if (!vq->desc || !vq->avail || !vq->used)
->>>>> +			break;
->>>>> +
->>>>> +		if (ops->set_vq_state(mdev, idx, vq->last_avail_idx))
->>>>> +			goto reset;
->>>> If we do set_vq_state() in SET_VRING_BASE, we won't need this step here.
->>> Yeah, I plan to do it in the next version.
->>>
->>>>> +
->>>>> +		/*
->>>>> +		 * In vhost-mdev, userspace should pass ring addresses
->>>>> +		 * in guest physical addresses when IOMMU is disabled or
->>>>> +		 * IOVAs when IOMMU is enabled.
->>>>> +		 */
->>>> A question here, consider we're using noiommu mode. If guest physical
->>>> address is passed here, how can a device use that?
->>>>
->>>> I believe you meant "host physical address" here? And it also have the
->>>> implication that the HPA should be continuous (e.g using hugetlbfs).
->>> The comment is talking about the virtual IOMMU (i.e. iotlb in vhost).
->>> It should be rephrased to cover the noiommu case as well. Thanks for
->>> spotting this.
->>>
->>>
->>>>> +
->>>>> +	switch (cmd) {
->>>>> +	case VHOST_MDEV_SET_STATE:
->>>>> +		r = vhost_set_state(m, argp);
->>>>> +		break;
->>>>> +	case VHOST_GET_FEATURES:
->>>>> +		r = vhost_get_features(m, argp);
->>>>> +		break;
->>>>> +	case VHOST_SET_FEATURES:
->>>>> +		r = vhost_set_features(m, argp);
->>>>> +		break;
->>>>> +	case VHOST_GET_VRING_BASE:
->>>>> +		r = vhost_get_vring_base(m, argp);
->>>>> +		break;
->>>> Does it mean the SET_VRING_BASE may only take affect after
->>>> VHOST_MEV_SET_STATE?
->>> Yeah, in this version, SET_VRING_BASE won't set the base to the
->>> device directly. But I plan to not delay this anymore in the next
->>> version to support the SET_STATUS.
->>>
->>>>> +	default:
->>>>> +		r = vhost_dev_ioctl(&m->dev, cmd, argp);
->>>>> +		if (r == -ENOIOCTLCMD)
->>>>> +			r = vhost_vring_ioctl(&m->dev, cmd, argp);
->>>>> +	}
->>>>> +
->>>>> +	mutex_unlock(&m->mutex);
->>>>> +	return r;
->>>>> +}
->>>>> +
->>>>> +static const struct vfio_device_ops vfio_vhost_mdev_dev_ops = {
->>>>> +	.name		= "vfio-vhost-mdev",
->>>>> +	.open		= vhost_mdev_open,
->>>>> +	.release	= vhost_mdev_release,
->>>>> +	.ioctl		= vhost_mdev_unlocked_ioctl,
->>>>> +};
->>>>> +
->>>>> +static int vhost_mdev_probe(struct device *dev)
->>>>> +{
->>>>> +	struct mdev_device *mdev = mdev_from_dev(dev);
->>>>> +	const struct virtio_mdev_device_ops *ops = mdev_get_dev_ops(mdev);
->>>>> +	struct vhost_mdev *m;
->>>>> +	int nvqs, r;
->>>>> +
->>>>> +	m = kzalloc(sizeof(*m), GFP_KERNEL | __GFP_RETRY_MAYFAIL);
->>>>> +	if (!m)
->>>>> +		return -ENOMEM;
->>>>> +
->>>>> +	mutex_init(&m->mutex);
->>>>> +
->>>>> +	nvqs = ops->get_queue_max(mdev);
->>>>> +	m->nvqs = nvqs;
->>>> The name could be confusing, get_queue_max() is to get the maximum number of
->>>> entries for a virtqueue supported by this device.
->>> OK. It might be better to rename it to something like:
->>>
->>> 	get_vq_num_max()
->>>
->>> which is more consistent with the set_vq_num().
->>>
->>>> It looks to me that we need another API to query the maximum number of
->>>> virtqueues supported by the device.
->>> Yeah.
->>>
->>> Thanks,
->>> Tiwei
->>
->> One problem here:
->>
->> Consider if we want to support multiqueue, how did userspace know about
->> this?
-> There's a feature bit for this, isn't there?
+Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+---
+ arch/m68k/q40/config.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/arch/m68k/q40/config.c b/arch/m68k/q40/config.c
+index e63eb5f06999..f31890078197 100644
+--- a/arch/m68k/q40/config.c
++++ b/arch/m68k/q40/config.c
+@@ -264,6 +264,7 @@ static int q40_get_rtc_pll(struct rtc_pll_info *pll)
+ {
+ 	int tmp = Q40_RTC_CTRL;
+ 
++	pll->pll_ctrl = 0;
+ 	pll->pll_value = tmp & Q40_RTC_PLL_MASK;
+ 	if (tmp & Q40_RTC_PLL_SIGN)
+ 		pll->pll_value = -pll->pll_value;
+-- 
+2.11.0
 
-Yes, but it needs to know how many queue pairs are available.
-
-Thanks
-
-
->
->> Note this information could be fetched from get_config() via a device
->> specific way, do we want ioctl for accessing that area?
->>
->> Thanks
