@@ -2,326 +2,132 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE31C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 10:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F2AC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 10:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF4A3217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 10:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1077207E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 10:30:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="hIxanbaG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbfI0KX3 (ORCPT
+        id S1726802AbfI0KaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 06:23:29 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:57090 "EHLO huawei.com"
+        Fri, 27 Sep 2019 06:30:19 -0400
+Received: from mail-eopbgr800079.outbound.protection.outlook.com ([40.107.80.79]:41053
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726033AbfI0KX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 06:23:27 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 144E8CBF1D1123BF5CD5;
-        Fri, 27 Sep 2019 18:23:24 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 27 Sep 2019 18:23:14 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: fix inconsistent comments
-Date:   Fri, 27 Sep 2019 18:23:05 +0800
-Message-ID: <20190927102305.11587-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        id S1726116AbfI0KaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 06:30:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HegDtwI6eGb4Q+oAKa6v91JTsK6jckplEoSEhsmeJ+z6TldtGrYlviz3tp9zIJvsPWBxwh9QvW7l4et0DtaofmQd6MTBDia9lJC2c1CpeUC+RhwYAxRByi5/+N1Y1ZVd0A/RtVqlzIHOPMLbnlUYxGB4W19wg4RQ0kZMVtylBO+2LL7iXPZ2wCJHASq2hKdTg4ikHuD/N4urPFDNJQCAq5d08g3KacAQ3oUpkcO5dUX5EB3cx8g9Js2i0Vq4aCr9ykjhMl8l2qxO4Aurp1DIAuQvHlGDbOwwcrRwiaMpiTZ+g5x9xIpmK+w9Bw6pMtxxrHhIsKIHdhg/JDeErvAqzw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gu9nG0z3MrJAwMXdfdakabonTNBsgha3Jrpg2TT4xHY=;
+ b=TNAl1M8+PG8AR6Rt2OZhzurtfiD/eRmXgnxJPts6TassVEGS89UycpU7btcq/pGpi9b9y0DDye+y9mFFa5nxNZrxzoqfH0gN426VmOrFOPO2OHYi1lkTD6Y6AYzzSaypKfB9VFLyGXDlUK+pktEQtBTYBlYpVKL8lFxgJ2HcWGv7NcwFLbjwaJBX7NlWFGYSEgKHralz6tK8MAocPQtmjJTfDWaY4Kz1Ph4LQ4uPY3ppcv4ChhzDfHQSGQuAW2dOCJe/iX2Kcxjp9WfAWXS0bSEy6WUMViUmvTSb3QD4i4mwq/gMF97om6GWdi3gfjWtCiEWnkDj7TVBS9ZchPs1Ew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gu9nG0z3MrJAwMXdfdakabonTNBsgha3Jrpg2TT4xHY=;
+ b=hIxanbaGA+zl0TjdbQDZez3TqVkomYbdctybWE0WYjBI57lXD33ZzICK80zCoeGgVGSB/Fp2reKKAOTmU6pZQI/66mTe+4cEQzg48XTeRLh48fg2IK/1JK+vMEuq+uRkL1n02WWz5Mv4wTKfavATWsWwYV9zkXWy2z0zLhI+LMQ=
+Received: from SN1PR12MB2575.namprd12.prod.outlook.com (52.132.197.151) by
+ SN1PR12MB2478.namprd12.prod.outlook.com (52.132.196.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.26; Fri, 27 Sep 2019 10:30:16 +0000
+Received: from SN1PR12MB2575.namprd12.prod.outlook.com
+ ([fe80::cca6:20d4:7aee:2aaf]) by SN1PR12MB2575.namprd12.prod.outlook.com
+ ([fe80::cca6:20d4:7aee:2aaf%3]) with mapi id 15.20.2284.028; Fri, 27 Sep 2019
+ 10:30:16 +0000
+From:   "Shah, Nehal-bakulchandra" <nbshah@amd.com>
+To:     Kurt Garloff <kurt@garloff.de>, Joerg Roedel <joro@8bytes.org>,
+        Jiri Kosina <jikos@kernel.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>,
+        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
+        "Singh, Sandeep" <Sandeep.Singh@amd.com>
+Subject: Re: IOMMU vs Ryzen embedded EMMC controller
+Thread-Topic: IOMMU vs Ryzen embedded EMMC controller
+Thread-Index: AQHVb7hsQOyE/u2Eok64rlGlf/1aqKc1tHeAgAbXlwCAAAROAIACwXIAgAALx4A=
+Date:   Fri, 27 Sep 2019 10:30:16 +0000
+Message-ID: <63913cd8-a0c5-61e3-2f52-139bade01afc@amd.com>
+References: <643f99a4-4613-50af-57e4-5ea6ac975314@garloff.de>
+ <47da1247-fbc1-fe50-041c-3808b0e140bf@garloff.de>
+ <nycvar.YEU.7.76.1909251726550.15418@gjva.wvxbf.pm>
+ <20190925154256.GB4643@8bytes.org>
+ <70b2d326-6257-025c-5ffa-1f543a900073@garloff.de>
+In-Reply-To: <70b2d326-6257-025c-5ffa-1f543a900073@garloff.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MA1PR0101CA0023.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:21::33) To SN1PR12MB2575.namprd12.prod.outlook.com
+ (2603:10b6:802:2b::23)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Nehal-bakulchandra.Shah@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.157.251]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 63e4d5a8-a70b-4f78-9f26-08d74335afd9
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN1PR12MB2478;
+x-ms-traffictypediagnostic: SN1PR12MB2478:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN1PR12MB24788DBE89F6826D49EA4F08A0810@SN1PR12MB2478.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0173C6D4D5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(376002)(346002)(396003)(366004)(189003)(199004)(52116002)(71190400001)(81156014)(2906002)(76176011)(99286004)(102836004)(186003)(26005)(5024004)(25786009)(66574012)(386003)(8676002)(3846002)(53546011)(6506007)(6116002)(14454004)(81166006)(6512007)(7736002)(66066001)(8936002)(305945005)(66476007)(6486002)(31686004)(256004)(316002)(2616005)(11346002)(476003)(64756008)(486006)(66446008)(4326008)(6246003)(110136005)(6436002)(66946007)(229853002)(71200400001)(66556008)(54906003)(478600001)(5660300002)(31696002)(36756003)(446003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN1PR12MB2478;H:SN1PR12MB2575.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 1n7Pqrj86JOXjBsTGEwC1U7ndGu67p3tmpNx4eGRdraj0U425o2NGw25/+Siu8ZxOX5/ekGu6SBPmGGVsl7JS8fneI+N2az/XUmh9yC1VPDPaoqq4ywMT6i+Z9N1XbXG7UxRcu9Ff5/+s6e33jqDQcGCLzCM6jXSqbXhLd+hWc2tXAYwpz7fZbcU7lN6DRQYGEvuSBpX31bQCbYFJksGpxI6twS+/rmiVWrCWwp9IIWciejtybKN1E3MJcMkmnEnkepdUy0LfO3PTcvkp6VVc5AJKqvahydgGfqHMHmTywRoxr76yNXZUaNPoAlC35ZHdoxmee2kApwO7qf5QZsz9hOQP8qP1ACjE9IgNWShCUW7VBYdgr5aHQd03gjCCd00clj3HHXSYEX8P5e9u2yq2fwTzjP3GJRlu1VdjAuRZE0=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8932311EF966594BA61991E8ED4FB8B9@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 63e4d5a8-a70b-4f78-9f26-08d74335afd9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Sep 2019 10:30:16.3024
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9Abvj8h4HhQxDQCP2Mu2qtC3e57kHW5HsON7NtCz3bobO7rnbgRjGLCHl7qPN+jc
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2478
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lack of maintenance on comments may mislead developers, fix them.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/checkpoint.c | 18 ++++--------------
- fs/f2fs/data.c       | 19 ++++++-------------
- fs/f2fs/f2fs.h       |  2 +-
- fs/f2fs/file.c       |  1 -
- fs/f2fs/gc.c         |  5 ++++-
- fs/f2fs/inode.c      |  2 +-
- fs/f2fs/namei.c      |  2 +-
- fs/f2fs/node.c       |  6 +-----
- fs/f2fs/shrinker.c   |  2 +-
- fs/f2fs/super.c      |  4 ++--
- fs/f2fs/xattr.c      |  1 -
- 11 files changed, 21 insertions(+), 41 deletions(-)
-
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index a0eef95b9e0e..c9f68b7e2663 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -50,9 +50,6 @@ struct page *f2fs_grab_meta_page(struct f2fs_sb_info *sbi, pgoff_t index)
- 	return page;
- }
- 
--/*
-- * We guarantee no failure on the returned page.
-- */
- static struct page *__get_meta_page(struct f2fs_sb_info *sbi, pgoff_t index,
- 							bool is_meta)
- {
-@@ -206,7 +203,7 @@ bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
- }
- 
- /*
-- * Readahead CP/NAT/SIT/SSA pages
-+ * Readahead CP/NAT/SIT/SSA/POR pages
-  */
- int f2fs_ra_meta_pages(struct f2fs_sb_info *sbi, block_t start, int nrpages,
- 							int type, bool sync)
-@@ -898,7 +895,7 @@ int f2fs_get_valid_checkpoint(struct f2fs_sb_info *sbi)
- 		return -ENOMEM;
- 	/*
- 	 * Finding out valid cp block involves read both
--	 * sets( cp pack1 and cp pack 2)
-+	 * sets( cp pack 1 and cp pack 2)
- 	 */
- 	cp_start_blk_no = le32_to_cpu(fsb->cp_blkaddr);
- 	cp1 = validate_checkpoint(sbi, cp_start_blk_no, &cp1_version);
-@@ -1387,10 +1384,7 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
- 	f2fs_bug_on(sbi, get_pages(sbi, F2FS_DIRTY_META) &&
- 					!f2fs_cp_error(sbi));
- 
--	/*
--	 * modify checkpoint
--	 * version number is already updated
--	 */
-+	/* start to update checkpoint, cp ver is already updated previously */
- 	ckpt->elapsed_time = cpu_to_le64(get_mtime(sbi, true));
- 	ckpt->free_segment_count = cpu_to_le32(free_segments(sbi));
- 	for (i = 0; i < NR_CURSEG_NODE_TYPE; i++) {
-@@ -1543,9 +1537,6 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
- 	return unlikely(f2fs_cp_error(sbi)) ? -EIO : 0;
- }
- 
--/*
-- * We guarantee that this checkpoint procedure will not fail.
-- */
- int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
- {
- 	struct f2fs_checkpoint *ckpt = F2FS_CKPT(sbi);
-@@ -1613,7 +1604,6 @@ int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
- 
- 	f2fs_flush_sit_entries(sbi, cpc);
- 
--	/* unlock all the fs_lock[] in do_checkpoint() */
- 	err = do_checkpoint(sbi, cpc);
- 	if (err)
- 		f2fs_release_discard_addrs(sbi);
-@@ -1626,7 +1616,7 @@ int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
- 	if (cpc->reason & CP_RECOVERY)
- 		f2fs_notice(sbi, "checkpoint: version = %llx", ckpt_ver);
- 
--	/* do checkpoint periodically */
-+	/* update CP_TIME to trigger checkpoint periodically */
- 	f2fs_update_time(sbi, CP_TIME);
- 	trace_f2fs_write_checkpoint(sbi->sb, cpc->reason, "finish checkpoint");
- out:
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 5755e897a5f0..87a6d34db34a 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -234,9 +234,6 @@ static void f2fs_write_end_io(struct bio *bio)
- 	bio_put(bio);
- }
- 
--/*
-- * Return true, if pre_bio's bdev is same as its target device.
-- */
- struct block_device *f2fs_target_device(struct f2fs_sb_info *sbi,
- 				block_t blk_addr, struct bio *bio)
- {
-@@ -273,6 +270,9 @@ int f2fs_target_device_index(struct f2fs_sb_info *sbi, block_t blkaddr)
- 	return 0;
- }
- 
-+/*
-+ * Return true, if pre_bio's bdev is same as its target device.
-+ */
- static bool __same_bdev(struct f2fs_sb_info *sbi,
- 				block_t blk_addr, struct bio *bio)
- {
-@@ -280,9 +280,6 @@ static bool __same_bdev(struct f2fs_sb_info *sbi,
- 	return bio->bi_disk == b->bd_disk && bio->bi_partno == b->bd_partno;
- }
- 
--/*
-- * Low-level block read/write IO operations.
-- */
- static struct bio *__bio_alloc(struct f2fs_io_info *fio, int npages)
- {
- 	struct f2fs_sb_info *sbi = fio->sbi;
-@@ -1142,13 +1139,9 @@ void __do_map_lock(struct f2fs_sb_info *sbi, int flag, bool lock)
- }
- 
- /*
-- * f2fs_map_blocks() now supported readahead/bmap/rw direct_IO with
-- * f2fs_map_blocks structure.
-- * If original data blocks are allocated, then give them to blockdev.
-- * Otherwise,
-- *     a. preallocate requested block addresses
-- *     b. do not use extent cache for better performance
-- *     c. give the block addresses to blockdev
-+ * f2fs_map_blocks() tries to find or build mapping relationship which
-+ * maps continuous logical blocks to physical blocks, and return such
-+ * info via f2fs_map_blocks structure.
-  */
- int f2fs_map_blocks(struct inode *inode, struct f2fs_map_blocks *map,
- 						int create, int flag)
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index f078cd20dab8..aa2e6ddccdbf 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -2291,9 +2291,9 @@ static inline block_t datablock_addr(struct inode *inode,
- 
- 	raw_node = F2FS_NODE(node_page);
- 
--	/* from GC path only */
- 	if (is_inode) {
- 		if (!inode)
-+			/* from GC path only */
- 			base = offset_in_addr(&raw_node->i);
- 		else if (f2fs_has_extra_attr(inode))
- 			base = get_extra_isize(inode);
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 29bc0a542759..6ddb2f1964a9 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -89,7 +89,6 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
- 		goto out_sem;
- 	}
- 
--	/* fill the page */
- 	f2fs_wait_on_page_writeback(page, DATA, false, true);
- 
- 	/* wait for GCed page writeback via META_MAPPING */
-diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-index 5877bd729689..9f6df84eb9e2 100644
---- a/fs/f2fs/gc.c
-+++ b/fs/f2fs/gc.c
-@@ -192,7 +192,10 @@ static void select_policy(struct f2fs_sb_info *sbi, int gc_type,
- 		p->ofs_unit = sbi->segs_per_sec;
- 	}
- 
--	/* we need to check every dirty segments in the FG_GC case */
-+	/*
-+	 * adjust candidates range, should select all dirty segments for
-+	 * foreground GC and urgent GC cases.
-+	 */
- 	if (gc_type != FG_GC &&
- 			(sbi->gc_mode != GC_URGENT) &&
- 			p->max_search > sbi->max_victim_search)
-diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-index 8547b6f7921b..540280cee614 100644
---- a/fs/f2fs/inode.c
-+++ b/fs/f2fs/inode.c
-@@ -718,7 +718,7 @@ void f2fs_evict_inode(struct inode *inode)
- 	else
- 		f2fs_inode_synced(inode);
- 
--	/* ino == 0, if f2fs_new_inode() was failed t*/
-+	/* for the case f2fs_new_inode() was failed, .i_ino is zero, skip it */
- 	if (inode->i_ino)
- 		invalidate_mapping_pages(NODE_MAPPING(sbi), inode->i_ino,
- 							inode->i_ino);
-diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
-index 4faf06e8bf89..c19ffcf1d987 100644
---- a/fs/f2fs/namei.c
-+++ b/fs/f2fs/namei.c
-@@ -167,7 +167,7 @@ static inline int is_extension_exist(const unsigned char *s, const char *sub)
- }
- 
- /*
-- * Set multimedia files as cold files for hot/cold data separation
-+ * Set file's temperature for hot/cold data separation
-  */
- static inline void set_file_temperature(struct f2fs_sb_info *sbi, struct inode *inode,
- 		const unsigned char *name)
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index 8b66bc4c004b..d35e7f953c13 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -510,9 +510,6 @@ int f2fs_try_to_free_nats(struct f2fs_sb_info *sbi, int nr_shrink)
- 	return nr - nr_shrink;
- }
- 
--/*
-- * This function always returns success
-- */
- int f2fs_get_node_info(struct f2fs_sb_info *sbi, nid_t nid,
- 						struct node_info *ni)
- {
-@@ -716,8 +713,7 @@ static int get_node_path(struct inode *inode, long block,
- /*
-  * Caller should call f2fs_put_dnode(dn).
-  * Also, it should grab and release a rwsem by calling f2fs_lock_op() and
-- * f2fs_unlock_op() only if ro is not set RDONLY_NODE.
-- * In the case of RDONLY_NODE, we don't need to care about mutex.
-+ * f2fs_unlock_op() only if mode is set with ALLOC_NODE.
-  */
- int f2fs_get_dnode_of_data(struct dnode_of_data *dn, pgoff_t index, int mode)
- {
-diff --git a/fs/f2fs/shrinker.c b/fs/f2fs/shrinker.c
-index a467aca29cfe..d66de5999a26 100644
---- a/fs/f2fs/shrinker.c
-+++ b/fs/f2fs/shrinker.c
-@@ -58,7 +58,7 @@ unsigned long f2fs_shrink_count(struct shrinker *shrink,
- 		/* count extent cache entries */
- 		count += __count_extent_cache(sbi);
- 
--		/* shrink clean nat cache entries */
-+		/* count clean nat cache entries */
- 		count += __count_nat_entries(sbi);
- 
- 		/* count free nids cache entries */
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 1443cee15863..ce012b6a9eb0 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -1552,7 +1552,7 @@ static int f2fs_disable_checkpoint(struct f2fs_sb_info *sbi)
- out_unlock:
- 	mutex_unlock(&sbi->gc_mutex);
- restore_flag:
--	sbi->sb->s_flags = s_flags;	/* Restore MS_RDONLY status */
-+	sbi->sb->s_flags = s_flags;	/* Restore SB_RDONLY status */
- 	return err;
- }
- 
-@@ -3477,7 +3477,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
- 			f2fs_err(sbi, "Cannot turn on quotas: error %d", err);
- 	}
- #endif
--	/* if there are nt orphan nodes free them */
-+	/* if there are any orphan inodes, free them */
- 	err = f2fs_recover_orphan_inodes(sbi);
- 	if (err)
- 		goto free_meta;
-diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
-index 181900af2576..66a04143768f 100644
---- a/fs/f2fs/xattr.c
-+++ b/fs/f2fs/xattr.c
-@@ -746,7 +746,6 @@ int f2fs_setxattr(struct inode *inode, int index, const char *name,
- 	f2fs_balance_fs(sbi, true);
- 
- 	f2fs_lock_op(sbi);
--	/* protect xattr_ver */
- 	down_write(&F2FS_I(inode)->i_sem);
- 	down_write(&F2FS_I(inode)->i_xattr_sem);
- 	err = __f2fs_setxattr(inode, index, name, value, size, ipage, flags);
--- 
-2.18.0.rc1
-
+SGkgS3VyZg0KDQpPbiA5LzI3LzIwMTkgMzoxNyBQTSwgS3VydCBHYXJsb2ZmIHdyb3RlOg0KPiBI
+aSBKw7ZyZywNCj4gDQo+IE9uIDI1LzA5LzIwMTkgMTc6NDIsIEpvZXJnIFJvZWRlbCB3cm90ZToN
+Cj4+IE9uIFdlZCwgU2VwIDI1LCAyMDE5IGF0IDA1OjI3OjMyUE0gKzAyMDAsIEppcmkNCj4+IEtv
+c2luYSB3cm90ZToNCj4+PiBPbiBTYXQsIDIxIFNlcCAyMDE5LCBLdXJ0IEdhcmxvZmYgd3JvdGU6
+DQo+Pj4+IFsxMjkxNi43NDAyNzRdIG1tYzA6IHNkaGNpOg0KPj4+PiA9PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KPj4+PiBbMTI5MTYuNzQwMzM3XSBtbWMwOiBl
+cnJvciAtNSB3aGlsc3QNCj4+Pj4gaW5pdGlhbGlzaW5nIE1NQyBjYXJkDQo+Pj4gRG8geW91IGhh
+dmUgQkFSIG1lbW9yeSBhbGxvY2F0aW9uIGZhaWx1cmVzIGluDQo+Pj4gZG1lc2cgd2l0aCBJT01N
+VSBvbj8NCj4gDQo+IE5vLiBUaGUgZGV2aWNlIGlzICpub3QqIHRyZWF0ZWQgYXMgUENJIGRldmlj
+ZSBhbmQNCj4gSSBzdGlsbCB0aGluayB0aGF0IHRoaXMgaXMgdGhlIHNvdXJjZSBvZiB0aGUgZXZp
+bC4NCj4gDQo+Pj4gQWN0dWFsbHksIHNoYXJpbmcgYm90aCB3b3JraW5nIGFuZCBub24td29ya2lu
+Zw0KPj4+IGRtZXNnLCBhcyB3ZWxsIGFzDQo+Pj4gL3Byb2MvaW9tZW0gY29udGVudHMsIHdvdWxk
+IGJlIGhlbHBmdWwuDQo+PiBZZXMsIGNhbiB5b3UgcGxlYXNlIGdyYWIgZG1lc2cgZnJvbSBhIGJv
+b3Qgd2l0aA0KPj4gaW9tbXUgZW5hYmxlZCBhbmQgYWRkDQo+PiAnYW1kX2lvbW11X2R1bXAnIHRv
+IHRoZSBrZXJuZWwgY29tbWFuZCBsaW5lPw0KPj4gVGhhdCBzaG91bGQgZ2l2ZSBzb21lIGhpbnRz
+DQo+PiBvbiB3aGF0IGlzIGdvaW5nIG9uLg0KPiANCj4gRm9yIG5vdyBJIGF0dGFjaCBhIGRtZXNn
+IGFuZCBpb21lbSBmcm9tIHRoZSBib290DQo+IHdpdGggSU9NTVUgZW5hYmxlZC4NCj4gTm90aGlu
+ZyBtdWNoIGludGVyZXN0aW5nIHdpdGhvdXQgSU9NTVUsIHNkaGNpLWFjcGkNCj4gdGhlcmUganVz
+dCB3b3JrcyAtLSBsZXQgbWUga25vdyBpZiB5b3Ugc3RpbGwgd2FudA0KPiBtZSB0byBzZW5kIHRo
+ZSBrZXJuZWwgbXNnLg0KPiANCj4gVGhhbmtzIGZvciBsb29raW5nIGludG8gdGhpcyENCj4gDQoN
+CkkgaGF2ZSBhZGRlZCBTdXJhdmVlIGZyb20gQU1EIGluIHRoZSBtYWlsIGxvb3AuIEhlDQp3b3Jr
+cyBvbiBJT01NVSBwYXJ0LiBBcyBwZXIgbXkgdW5kZXJzdGFuZGluZywgaXQNCm5lZWRzIGEgcGF0
+Y2ggaW4gSU9NTVUgZHJpdmVyIGZvciBhZGRpbmcgc3VwcG9ydA0Kb2YgRU1NQy4gTm90ZSB0aGF0
+IG9uIFJ5emVuIHBsYXRmb3JtIHdlIGhhdmUgRU1NQw0KNS4wIGFzIEFDUEkgZGV2aWNlLg0KDQpU
+aGFua3MNCg0KTmVoYWwgU2hhaA0K
