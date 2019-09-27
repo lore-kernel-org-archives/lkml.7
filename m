@@ -2,79 +2,115 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C577CC388F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C6FC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ED6E217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDBA921841
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:13:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569600813;
+	bh=qoNvxQCRTD55EqUE87UKOj3FcO42F1ssyJyZofN+WGo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pTjSDTvFndyBsWI2j8wPS/kt9Dgw5+DHLo9rQHzOwthR/EIUGT3eWaGeNr/xCADOp
+	 ZSpRcPhudCDnbsFoit7/MrIytlxlFROJGcoDtkAgIQWUyytkn0HpADPDr1bjCB6vmu
+	 Gpc2dEuqUOQndUPpoP8TBa0wYKqV1k2Fht3O46HA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbfI0QMF (ORCPT
+        id S1727939AbfI0QNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 12:12:05 -0400
-Received: from mga01.intel.com ([192.55.52.88]:32610 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727273AbfI0QME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 12:12:04 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Sep 2019 09:11:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,556,1559545200"; 
-   d="scan'208";a="184028854"
-Received: from mdauner2-mobl2.ger.corp.intel.com (HELO localhost) ([10.249.39.118])
-  by orsmga008.jf.intel.com with ESMTP; 27 Sep 2019 09:11:47 -0700
-Date:   Fri, 27 Sep 2019 19:11:45 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-sgx@vger.kernel.org,
-        akpm@linux-foundation.org, dave.hansen@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Haim Cohen <haim.cohen@intel.com>
-Subject: Re: [PATCH v22 02/24] x86/cpufeatures: x86/msr: Intel SGX Launch
- Control hardware bits
-Message-ID: <20190927161145.GM10545@linux.intel.com>
-References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
- <20190903142655.21943-3-jarkko.sakkinen@linux.intel.com>
- <20190924155232.GG19317@zn.tnic>
- <20190924202210.GC16218@linux.intel.com>
- <20190925085156.GA3891@zn.tnic>
- <20190925171824.GF31852@linux.intel.com>
+        Fri, 27 Sep 2019 12:13:32 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45326 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727349AbfI0QNc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 12:13:32 -0400
+Received: by mail-oi1-f193.google.com with SMTP id o205so5624732oib.12;
+        Fri, 27 Sep 2019 09:13:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=R0kFwxjKhbKX7zTefNj1C9kL38Pdttr44VLkkd4aR6M=;
+        b=IZpCYSWlF+BoeMTK/82g/bQvxkT1+8ZiggCwYMFZ50/QWwsyrgPY8MODo5VGNBGuPG
+         rangAF24vxBp4Go2zNCo2AA92Qu75ZFzkVBzzlHm8JHyQa2JWrUyXde2FwraoZph2aQo
+         rfIAMVJjfuvPLBHmzuxScGfjdrAYdU1QeMyidWjI0/YuuVxmpgqKinZTsCGoOHsEr/69
+         2djhBm+F1jP09QmkMa150C1J5o0rTwUmQrYTcFdwogMgdrKQLU7l/v5Gynme8K04PipY
+         zB2rBEgmOIOhtSw9qoaDmgopRvC/2VSL8YWSLmnUl5BZYxdfDdjSr6K3TCK4cjnh14gL
+         aSnw==
+X-Gm-Message-State: APjAAAWBw88ep7ZOpxPcmYyDf6gdqC9fmr7cCFER24etOaJ4edwFLqHl
+        loeWZ+mf65gOzDrKwOwGojhI7DA=
+X-Google-Smtp-Source: APXvYqxiXG4nUbngZE7HV8pQpIyNW2FpjPrxNR4WhkRALYxubiNWTduYFFSLqHtfuti/TCRrBze2Ag==
+X-Received: by 2002:aca:ebd1:: with SMTP id j200mr7380934oih.111.1569600811153;
+        Fri, 27 Sep 2019 09:13:31 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id w13sm1689397oih.54.2019.09.27.09.13.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Sep 2019 09:13:30 -0700 (PDT)
+Date:   Fri, 27 Sep 2019 11:13:30 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Biwen Li <biwen.li@nxp.com>
+Cc:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com,
+        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>,
+        Martin Fuzzey <mfuzzey@parkeon.com>
+Subject: Re: [v5,1/2] dt-bindings: rtc: pcf85263/pcf85363: add some properties
+Message-ID: <20190927161330.GA22996@bogus>
+References: <20190919014520.15500-1-biwen.li@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190925171824.GF31852@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20190919014520.15500-1-biwen.li@nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 10:18:24AM -0700, Sean Christopherson wrote:
-> > I wouldn't be too surprised if this happened. BIOS is very inventive.
+On Thu, 19 Sep 2019 09:45:19 +0800, Biwen Li wrote:
+> Add some properties for pcf85263/pcf85363 as follows:
+>   - nxp,rtc-interrupt-type: integer type
+>   - nxp,rtc-interrupt-output-pin: string type
+>   - quartz-load-femtofarads: integer type
+>   - quartz-drive-strength-ohms: integer type
+>   - nxp,quartz-low-jitter: bool type
+>   - wakeup-source: bool type
 > 
-> Given the number of steps BIOS needs to take to enable SGX, that'd be one
-> "inventive" BIOS. :-)
+> Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> ---
+> Change in v5:
+> 	- Replace nxp,quartz-drive-strength with
+> 	  quartz-drive-strength-ohms
+> 	- Select ohm unit for quartz drive strength
 > 
-> Anyways, adding logic to opportunistically set FEATURE_CONTROL during boot
-> should be trivial.  I'll prep a patch and send it separately from the SGX
-> series, moving the existing KVM code would be a good change irrespective
-> of SGX.
+> Change in v4:
+> 	- Drop robust defines in include/dt-bindings/rtc/pcf85363.h
+> 	- Add nxp,rtc-interrupt-type property
+> 	- Replace interrupt-output-pin with nxp,rtc-interrupt-output-pin
+> 
+> Change in v3:
+> 	- None
+> 
+> Change in v2:
+> 	- Replace properties name
+> 	  quartz-load-capacitance -> quartz-load-femtofarads
+> 	  quartz-drive-strength -> nxp,quartz-drive-strength
+> 	  quartz-low-jitter -> nxp,quartz-low-jitter
+> 	- Replace drive strength name
+> 	  PCF85263_QUARTZDRIVE_NORMAL -> PCF85263_QUARTZDRIVE_100ko
+> 	  PCF85263_QUARTZDRIVE_LOW -> PCF85263_QUARTZDRIVE_60ko
+> 	  PCF85263_QUARTZDRIVE_HIGH -> PCF85263_QUARTZDRIVE_500ko
+> 	- Set default interrupt-output-pin as "INTA"
+> 
+>  .../devicetree/bindings/rtc/pcf85363.txt      | 44 ++++++++++++++++++-
+>  include/dt-bindings/rtc/pcf85363.h            | 14 ++++++
+>  2 files changed, 57 insertions(+), 1 deletion(-)
+>  create mode 100644 include/dt-bindings/rtc/pcf85363.h
+> 
 
-Also, based on Borislav's remarks, the commit message should be more
-clear about launch control (separately describe the driver and KVM
-use). I can rework that.
-
-/Jarkko
+Reviewed-by: Rob Herring <robh@kernel.org>
