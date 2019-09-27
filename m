@@ -2,133 +2,208 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A613C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46373C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED37C217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:52:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2203C20872
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:52:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbfI0MwD (ORCPT
+        id S1727474AbfI0Mwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 08:52:03 -0400
-Received: from charlotte.tuxdriver.com ([70.61.120.58]:43340 "EHLO
-        smtp.tuxdriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbfI0MwC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 08:52:02 -0400
-Received: from cpe-2606-a000-111b-43ee-0-0-0-115f.dyn6.twc.com ([2606:a000:111b:43ee::115f] helo=localhost)
-        by smtp.tuxdriver.com with esmtpsa (TLSv1:AES256-SHA:256)
-        (Exim 4.63)
-        (envelope-from <nhorman@tuxdriver.com>)
-        id 1iDpiu-0003PC-9y; Fri, 27 Sep 2019 08:51:55 -0400
-Date:   Fri, 27 Sep 2019 08:51:42 -0400
-From:   Neil Horman <nhorman@tuxdriver.com>
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
-        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
-        eparis@parisplace.org, serge@hallyn.com, ebiederm@xmission.com,
-        dwalsh@redhat.com, mpatel@redhat.com
-Subject: Re: [PATCH ghak90 V7 06/21] audit: contid limit of 32k imposed to
- avoid DoS
-Message-ID: <20190927125142.GA25764@hmswarspite.think-freely.org>
-References: <cover.1568834524.git.rgb@redhat.com>
- <230e91cd3e50a3d8015daac135c24c4c58cf0a21.1568834524.git.rgb@redhat.com>
+        Fri, 27 Sep 2019 08:52:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:51658 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725992AbfI0Mwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 08:52:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E7231000;
+        Fri, 27 Sep 2019 05:52:33 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9A8853F67D;
+        Fri, 27 Sep 2019 05:52:32 -0700 (PDT)
+Date:   Fri, 27 Sep 2019 13:52:30 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Masayoshi Mizuma <msys.mizuma@gmail.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        Julien Grall <julien.grall@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] arm64/sve: Fix wrong free for task->thread.sve_state
+Message-ID: <20190927125228.GQ27757@arm.com>
+References: <20190926190846.3072-1-msys.mizuma@gmail.com>
+ <20190926190846.3072-2-msys.mizuma@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <230e91cd3e50a3d8015daac135c24c4c58cf0a21.1568834524.git.rgb@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190926190846.3072-2-msys.mizuma@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 09:22:23PM -0400, Richard Guy Briggs wrote:
-> Set an arbitrary limit on the number of audit container identifiers to
-> limit abuse.
+On Thu, Sep 26, 2019 at 03:08:46PM -0400, Masayoshi Mizuma wrote:
+> From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 > 
-> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> The system which has SVE feature crashed because of
+> the memory pointed by task->thread.sve_state was destroyed
+> by someone.
+> 
+> That is because sve_state is freed while the forking the
+> child process. The child process has the pointer of sve_state
+> which is same as the parent's because the child's task_struct
+> is copied from the parent's one. If the copy_process()
+> fails as an error on somewhere, for example, copy_creds(),
+> then the sve_state is freed even if the parent is alive.
+> The flow is as follows.
+> 
+> copy_process
+>         p = dup_task_struct
+>             => arch_dup_task_struct
+>                 *dst = *src;  // copy the entire region.
+> :
+>         retval = copy_creds
+>         if (retval < 0)
+>                 goto bad_fork_free;
+> :
+> bad_fork_free:
+> ...
+>         delayed_free_task(p);
+>           => free_task
+>              => arch_release_task_struct
+>                 => fpsimd_release_task
+>                    => __sve_free
+>                       => kfree(task->thread.sve_state);
+>                          // free the parent's sve_state
+> 
+> Add a flag in task->thread which shows the fork is in progress.
+> If the fork is in progress, that means the child has the pointer
+> to the parent's sve_state, doesn't free the sve_state.
+> 
+> Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+> Reported-by: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
 > ---
->  kernel/audit.c | 8 ++++++++
->  kernel/audit.h | 4 ++++
->  2 files changed, 12 insertions(+)
+>  arch/arm64/include/asm/processor.h | 1 +
+>  arch/arm64/kernel/fpsimd.c         | 6 ++++--
+>  arch/arm64/kernel/process.c        | 2 ++
+>  3 files changed, 7 insertions(+), 2 deletions(-)
 > 
-> diff --git a/kernel/audit.c b/kernel/audit.c
-> index 53d13d638c63..329916534dd2 100644
-> --- a/kernel/audit.c
-> +++ b/kernel/audit.c
-> @@ -139,6 +139,7 @@ struct audit_net {
->  struct list_head audit_inode_hash[AUDIT_INODE_BUCKETS];
->  /* Hash for contid-based rules */
->  struct list_head audit_contid_hash[AUDIT_CONTID_BUCKETS];
-> +int audit_contid_count = 0;
->  
->  static struct kmem_cache *audit_buffer_cache;
->  
-> @@ -2384,6 +2385,7 @@ void audit_cont_put(struct audit_cont *cont)
->  		put_task_struct(cont->owner);
->  		list_del_rcu(&cont->list);
->  		kfree_rcu(cont, rcu);
-> +		audit_contid_count--;
->  	}
+> diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm/processor.h
+> index 5623685c7d13..3ca3e350145a 100644
+> --- a/arch/arm64/include/asm/processor.h
+> +++ b/arch/arm64/include/asm/processor.h
+> @@ -143,6 +143,7 @@ struct thread_struct {
+>  	unsigned long		fault_address;	/* fault info */
+>  	unsigned long		fault_code;	/* ESR_EL1 value */
+>  	struct debug_info	debug;		/* debugging */
+> +	unsigned int		fork_in_progress;
+>  #ifdef CONFIG_ARM64_PTR_AUTH
+>  	struct ptrauth_keys	keys_user;
+>  #endif
+> diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
+> index 37d3912cfe06..8641db4cb062 100644
+> --- a/arch/arm64/kernel/fpsimd.c
+> +++ b/arch/arm64/kernel/fpsimd.c
+> @@ -202,8 +202,10 @@ static bool have_cpu_fpsimd_context(void)
+>   */
+>  static void __sve_free(struct task_struct *task)
+>  {
+> -	kfree(task->thread.sve_state);
+> -	task->thread.sve_state = NULL;
+> +	if (!task->thread.fork_in_progress) {
+> +		kfree(task->thread.sve_state);
+> +		task->thread.sve_state = NULL;
+> +	}
 >  }
 >  
-> @@ -2456,6 +2458,11 @@ int audit_set_contid(struct task_struct *task, u64 contid)
->  					goto conterror;
->  				}
->  			}
-> +		/* Set max contids */
-> +		if (audit_contid_count > AUDIT_CONTID_COUNT) {
-> +			rc = -ENOSPC;
-> +			goto conterror;
-> +		}
-You should check for audit_contid_count == AUDIT_CONTID_COUNT here, no?
-or at least >=, since you increment it below.  Otherwise its possible
-that you will exceed it by one in the full condition.
-
->  		if (!newcont) {
->  			newcont = kmalloc(sizeof(struct audit_cont), GFP_ATOMIC);
->  			if (newcont) {
-> @@ -2465,6 +2472,7 @@ int audit_set_contid(struct task_struct *task, u64 contid)
->  				newcont->owner = current;
->  				refcount_set(&newcont->refcount, 1);
->  				list_add_rcu(&newcont->list, &audit_contid_hash[h]);
-> +				audit_contid_count++;
->  			} else {
->  				rc = -ENOMEM;
->  				goto conterror;
-> diff --git a/kernel/audit.h b/kernel/audit.h
-> index 162de8366b32..543f1334ba47 100644
-> --- a/kernel/audit.h
-> +++ b/kernel/audit.h
-> @@ -219,6 +219,10 @@ static inline int audit_hash_contid(u64 contid)
->  	return (contid & (AUDIT_CONTID_BUCKETS-1));
+>  static void sve_free(struct task_struct *task)
+> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+> index a47462def04b..8ac0ee4e5f76 100644
+> --- a/arch/arm64/kernel/process.c
+> +++ b/arch/arm64/kernel/process.c
+> @@ -347,6 +347,7 @@ int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
+>  	if (current->mm)
+>  		fpsimd_preserve_current_state();
+>  	*dst = *src;
+> +	dst->thread.fork_in_progress = 1;
+>  
+>  	return 0;
 >  }
->  
-> +extern int audit_contid_count;
-> +
-> +#define AUDIT_CONTID_COUNT	1 << 16
-> +
-Just to ask the question, since it wasn't clear in the changelog, what
-abuse are you avoiding here?  Ostensibly you should be able to create as
-many container ids as you have space for, and the simple creation of
-container ids doesn't seem like the resource strain I would be concerned
-about here, given that an orchestrator can still create as many
-containers as the system will otherwise allow, which will consume
-significantly more ram/disk/etc.
+> @@ -365,6 +366,7 @@ int copy_thread(unsigned long clone_flags, unsigned long stack_start,
+>  	 * and disable discard SVE state for p:
+>  	 */
+>  	clear_tsk_thread_flag(p, TIF_SVE);
+> +	p->thread.fork_in_progress = 0;
+>  	p->thread.sve_state = NULL;
 
->  /* Indicates that audit should log the full pathname. */
->  #define AUDIT_NAME_FULL -1
->  
-> -- 
-> 1.8.3.1
-> 
-> 
+There's definitely a problem here, but a simpler fix is probably to
+NULL sve_state and clear TIF_SVE for dst at the same time.
+
+Once upon a time, I had to cope with the thread_flags not being copied
+as part of task_struct here, which is one reason why the code is the
+(broken) way it is, but this is ancient history...
+
+Commit c02433dd6de3 ("arm64: split thread_info from task stack") was
+merged in v4.10 and predates SVE support anyway.
+
+
+So can just do the following (untested) and delete the confusing
+comments?
+
+Cheers
+---Dave
+
+--8<--
+
+
+diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+index f674f28..6937f59 100644
+--- a/arch/arm64/kernel/process.c
++++ b/arch/arm64/kernel/process.c
+@@ -323,22 +323,16 @@ void arch_release_task_struct(struct task_struct *tsk)
+ 	fpsimd_release_task(tsk);
+ }
+ 
+-/*
+- * src and dst may temporarily have aliased sve_state after task_struct
+- * is copied.  We cannot fix this properly here, because src may have
+- * live SVE state and dst's thread_info may not exist yet, so tweaking
+- * either src's or dst's TIF_SVE is not safe.
+- *
+- * The unaliasing is done in copy_thread() instead.  This works because
+- * dst is not schedulable or traceable until both of these functions
+- * have been called.
+- */
+ int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
+ {
+ 	if (current->mm)
+ 		fpsimd_preserve_current_state();
+ 	*dst = *src;
+ 
++	BUILD_BUG_ON(!IS_ENABLED(CONFIG_THREAD_INFO_IN_TASK));
++	dst->thread.sve_state = NULL;
++	clear_tsk_thread_flag(dst, TIF_SVE);
++
+ 	return 0;
+ }
+ 
+@@ -352,13 +346,6 @@ int copy_thread(unsigned long clone_flags, unsigned long stack_start,
+ 	memset(&p->thread.cpu_context, 0, sizeof(struct cpu_context));
+ 
+ 	/*
+-	 * Unalias p->thread.sve_state (if any) from the parent task
+-	 * and disable discard SVE state for p:
+-	 */
+-	clear_tsk_thread_flag(p, TIF_SVE);
+-	p->thread.sve_state = NULL;
+-
+-	/*
+ 	 * In case p was allocated the same task_struct pointer as some
+ 	 * other recently-exited task, make sure p is disassociated from
+ 	 * any cpu that may have run that now-exited task recently.
