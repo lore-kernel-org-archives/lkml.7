@@ -2,161 +2,160 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D54C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 13:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41567C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 13:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CAD32146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 13:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17E11217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 13:23:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbfI0NWa (ORCPT
+        id S1727403AbfI0NX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 09:22:30 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:9865 "EHLO
-        mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726144AbfI0NWa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 09:22:30 -0400
-X-IronPort-AV: E=Sophos;i="5.64,555,1559512800"; 
-   d="scan'208";a="320867595"
-Received: from unknown (HELO hadrien) ([12.206.46.59])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Sep 2019 15:22:24 +0200
-Date:   Fri, 27 Sep 2019 06:22:17 -0700 (PDT)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: julia@hadrien
-To:     Joe Perches <joe@perches.com>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Stephen Kitt <steve@sk2.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nitin Gote <nitin.r.gote@intel.com>, jannh@google.com,
-        kernel-hardening@lists.openwall.com,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Subject: Re: [PATCH V2 1/2] string: Add stracpy and stracpy_pad mechanisms
-In-Reply-To: <56dc4de7e0db153cb10954ac251cb6c27c33da4a.camel@perches.com>
-Message-ID: <alpine.DEB.2.21.1909270620480.2143@hadrien>
-References: <cover.1563889130.git.joe@perches.com>  <ed4611a4a96057bf8076856560bfbf9b5e95d390.1563889130.git.joe@perches.com>  <20190925145011.c80c89b56fcee3060cf87773@linux-foundation.org> <56dc4de7e0db153cb10954ac251cb6c27c33da4a.camel@perches.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 27 Sep 2019 09:23:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51230 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727128AbfI0NXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 09:23:55 -0400
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 254C5796E9
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 13:23:55 +0000 (UTC)
+Received: by mail-qt1-f198.google.com with SMTP id n4so5682323qtp.19
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 06:23:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=AyTMKGoGs/Lkq3kyZ5E07Ek1WWcR6PtX7h75NGzXR98=;
+        b=iLDmfmeYpNb0n8fYzdiDPATcVrHb/fsRflGi3KXbTHAI4C8a2rM0GVQ84R4+VdrzK6
+         Elqs49xadPfiPDqHIXV/NH2zf1J4E9nw9JAhj1LYWiHSIm20+88JybWFgukHgrPnUb0g
+         cAsvWdx5smRA936rWZbEuKEJB1Jc/+KApIr5A3vgdNstOa2jMH1kvnuDDJ2iZL4kzkBc
+         mdKhsjVOmE5qVF1Enzcb3XSF2O5WLIbYrzYRLMId+d9sD4zdUUZ/mcaZovcoGrFY1T/t
+         3X7G4ARrUnN3z6RsET9t8sup/nrwQGuGxI2tFoxRp/WLG96c9/E5Ak/eqIufICC5N77K
+         d2Mw==
+X-Gm-Message-State: APjAAAVfRoqy5viLdqtD2UzVGjlAZp/kCec7SSPbVmB2sNO32Lw/ZVTQ
+        NbXozaJYZI+dPKPLAhvHH5SDMNzKvdPa/pFhQFx0B8xfUByBtguYyN4oUAVz33fX59MG7C/p2y1
+        +BlWQ+nuHCSjimg8RsyvWQzKO
+X-Received: by 2002:ae9:ebcc:: with SMTP id b195mr4157306qkg.387.1569590634431;
+        Fri, 27 Sep 2019 06:23:54 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyd11e5rCRWe0bxFf6zGmoFapNlaYtDWeIQ/2TfJmDkfR/AHi55ZmXJPrcHHDUd2jtkidxpVA==
+X-Received: by 2002:ae9:ebcc:: with SMTP id b195mr4157280qkg.387.1569590634189;
+        Fri, 27 Sep 2019 06:23:54 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-40-226.red.bezeqint.net. [79.176.40.226])
+        by smtp.gmail.com with ESMTPSA id m14sm1073230qki.27.2019.09.27.06.23.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Sep 2019 06:23:52 -0700 (PDT)
+Date:   Fri, 27 Sep 2019 09:23:46 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     Tiwei Bie <tiwei.bie@intel.com>, alex.williamson@redhat.com,
+        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        lingshan.zhu@intel.com
+Subject: Re: [PATCH] vhost: introduce mdev based hardware backend
+Message-ID: <20190927092219-mutt-send-email-mst@kernel.org>
+References: <20190926045427.4973-1-tiwei.bie@intel.com>
+ <20190926042156-mutt-send-email-mst@kernel.org>
+ <20190926131439.GA11652@___>
+ <8ab5a8d9-284d-bba5-803d-08523c0814e1@redhat.com>
+ <20190927053935-mutt-send-email-mst@kernel.org>
+ <a959fe1e-3095-e0f0-0c9b-57f6eaa9c8b7@redhat.com>
+ <20190927084408-mutt-send-email-mst@kernel.org>
+ <b6f6ffb2-0b16-5041-be2e-94b805c6a4c9@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b6f6ffb2-0b16-5041-be2e-94b805c6a4c9@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Sep 27, 2019 at 09:17:56PM +0800, Jason Wang wrote:
+> 
+> On 2019/9/27 下午8:46, Michael S. Tsirkin wrote:
+> > On Fri, Sep 27, 2019 at 08:17:47PM +0800, Jason Wang wrote:
+> > > On 2019/9/27 下午5:41, Michael S. Tsirkin wrote:
+> > > > On Fri, Sep 27, 2019 at 11:27:12AM +0800, Jason Wang wrote:
+> > > > > On 2019/9/26 下午9:14, Tiwei Bie wrote:
+> > > > > > On Thu, Sep 26, 2019 at 04:35:18AM -0400, Michael S. Tsirkin wrote:
+> > > > > > > On Thu, Sep 26, 2019 at 12:54:27PM +0800, Tiwei Bie wrote:
+> > > > > > [...]
+> > > > > > > > diff --git a/include/uapi/linux/vhost.h b/include/uapi/linux/vhost.h
+> > > > > > > > index 40d028eed645..5afbc2f08fa3 100644
+> > > > > > > > --- a/include/uapi/linux/vhost.h
+> > > > > > > > +++ b/include/uapi/linux/vhost.h
+> > > > > > > > @@ -116,4 +116,12 @@
+> > > > > > > >     #define VHOST_VSOCK_SET_GUEST_CID	_IOW(VHOST_VIRTIO, 0x60, __u64)
+> > > > > > > >     #define VHOST_VSOCK_SET_RUNNING		_IOW(VHOST_VIRTIO, 0x61, int)
+> > > > > > > > +/* VHOST_MDEV specific defines */
+> > > > > > > > +
+> > > > > > > > +#define VHOST_MDEV_SET_STATE	_IOW(VHOST_VIRTIO, 0x70, __u64)
+> > > > > > > > +
+> > > > > > > > +#define VHOST_MDEV_S_STOPPED	0
+> > > > > > > > +#define VHOST_MDEV_S_RUNNING	1
+> > > > > > > > +#define VHOST_MDEV_S_MAX	2
+> > > > > > > > +
+> > > > > > > >     #endif
+> > > > > > > So assuming we have an underlying device that behaves like virtio:
+> > > > > > I think they are really good questions/suggestions. Thanks!
+> > > > > > 
+> > > > > > > 1. Should we use SET_STATUS maybe?
+> > > > > > I like this idea. I will give it a try.
+> > > > > > 
+> > > > > > > 2. Do we want a reset ioctl?
+> > > > > > I think it is helpful. If we use SET_STATUS, maybe we
+> > > > > > can use it to support the reset.
+> > > > > > 
+> > > > > > > 3. Do we want ability to enable rings individually?
+> > > > > > I will make it possible at least in the vhost layer.
+> > > > > Note the API support e.g set_vq_ready().
+> > > > virtio spec calls this "enabled" so let's stick to that.
+> > > 
+> > > Ok.
+> > > 
+> > > 
+> > > > > > > 4. Does device need to limit max ring size?
+> > > > > > > 5. Does device need to limit max number of queues?
+> > > > > > I think so. It's helpful to have ioctls to report the max
+> > > > > > ring size and max number of queues.
+> > > > > An issue is the max number of queues is done through a device specific way,
+> > > > > usually device configuration space. This is supported by the transport API,
+> > > > > but how to expose it to userspace may need more thought.
+> > > > > 
+> > > > > Thanks
+> > > > an ioctl for device config?  But for v1 I'd be quite happy to just have
+> > > > a minimal working device with 2 queues.
+> > > 
+> > > I'm fully agree, and it will work as long as VIRTIO_NET_F_MQ and
+> > > VIRTIO_NET_F_CTRL_VQ is not advertised by the mdev device.
+> > > 
+> > > Thanks
+> > Hmm this means we need to validate the features bits,
+> > not just pass them through to the hardware.
+> > Problem is, how do we add more feature bits later,
+> > without testing all hardware?
+> > I guess this means the device specific driver must do it.
+> > 
+> 
+> That looks not good, maybe a virtio device id based features blacklist in
+> vhost-mdev. Then MQ and CTRL_VQ could be filtered out by vhost-mdev.
+> 
+> Thanks
 
+Two implementations of e.g. virtio net can have different
+features whitelisted. So I think there's no way but let
+the driver do it. We should probably provide a standard place
+in the ops for driver to supply the whitelist, to make sure
+drivers don't forget.
 
-On Thu, 26 Sep 2019, Joe Perches wrote:
-
-> On Wed, 2019-09-25 at 14:50 -0700, Andrew Morton wrote:
-> > On Tue, 23 Jul 2019 06:51:36 -0700 Joe Perches <joe@perches.com> wrote:
-> >
-> > > Several uses of strlcpy and strscpy have had defects because the
-> > > last argument of each function is misused or typoed.
-> > >
-> > > Add macro mechanisms to avoid this defect.
-> > >
-> > > stracpy (copy a string to a string array) must have a string
-> > > array as the first argument (dest) and uses sizeof(dest) as the
-> > > count of bytes to copy.
-> > >
-> > > These mechanisms verify that the dest argument is an array of
-> > > char or other compatible types like u8 or s8 or equivalent.
-> > >
-> > > A BUILD_BUG is emitted when the type of dest is not compatible.
-> > >
-> >
-> > I'm still reluctant to merge this because we don't have code in -next
-> > which *uses* it.  You did have a patch for that against v1, I believe?
-> > Please dust it off and send it along?
->
-> https://lore.kernel.org/lkml/CAHk-=wgqQKoAnhmhGE-2PBFt7oQs9LLAATKbYa573UO=DPBE0Q@mail.gmail.com/
->
-> I gave up, especially after the snark from Linus
-> where he wrote I don't understand this stuff.
->
-> He's just too full of himself here merely using
-> argument from authority.
->
-> Creating and using a function like copy_string with
-> both source and destination lengths specified is
-> is also potentially a large source of defects where
-> the stracpy macro atop strscpy does not have a
-> defect path other than the src not being a string
-> at all.
->
-> I think the analysis of defects in string function
-> in the kernel is overly difficult today given the
-> number of possible uses of pointer and length in
-> strcpy/strncpy/strlcpy/stracpy.
->
-> I think also that there is some sense in what he
-> wrote against the "word salad" use of str<foo>cpy,
-> but using stracpy as a macro when possible instead
-> of strscpy also makes the analysis of defects rather
-> simpler.
->
-> The trivial script cocci I posted works well for the
-> simple cases.
->
-> https://lore.kernel.org/cocci/66fcdbf607d7d0bea41edb39e5579d63b62b7d84.camel@perches.com/
->
-> The more complicated cocci script Julia posted is
-> still not quite correct as it required intermediate
-> compilation for verification of specified lengths.
-
-The script works fine without compilation, but uses compilation as an
-extra sanity check.  When there is only one possible declaration of a
-given buffer, then the compilation is not really needed.
-
-julia
-
->
-> https://lkml.org/lkml/2019/7/25/1406
->
-> Tell me again if you still want it and maybe the
-> couple conversions that mm/ would get.
->
-> via:
->
-> $ spatch --all-includes --in-place -sp-file str.cpy.cocci mm
-> $ git diff --stat -p mm
-> --
->  mm/dmapool.c | 2 +-
->  mm/zswap.c   | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/mm/dmapool.c b/mm/dmapool.c
-> index fe5d33060415..b3a4feb423f8 100644
-> --- a/mm/dmapool.c
-> +++ b/mm/dmapool.c
-> @@ -158,7 +158,7 @@ struct dma_pool *dma_pool_create(const char *name, struct device *dev,
->  	if (!retval)
->  		return retval;
->
-> -	strlcpy(retval->name, name, sizeof(retval->name));
-> +	stracpy(retval->name, name);
->
->  	retval->dev = dev;
->
-> diff --git a/mm/zswap.c b/mm/zswap.c
-> index 08b6cefae5d8..c6cd38de185a 100644
-> --- a/mm/zswap.c
-> +++ b/mm/zswap.c
-> @@ -533,7 +533,7 @@ static struct zswap_pool *zswap_pool_create(char *type, char *compressor)
->  	}
->  	pr_debug("using %s zpool\n", zpool_get_type(pool->zpool));
->
-> -	strlcpy(pool->tfm_name, compressor, sizeof(pool->tfm_name));
-> +	stracpy(pool->tfm_name, compressor);
->  	pool->tfm = alloc_percpu(struct crypto_comp *);
->  	if (!pool->tfm) {
->  		pr_err("percpu alloc failed\n");
->
->
->
->
+> 
+> > > > > > Thanks!
