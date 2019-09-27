@@ -2,272 +2,125 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88510C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 649EEC388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C1F5207E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:43:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="AR/Au2s+"
+	by mail.kernel.org (Postfix) with ESMTP id 36CA82190F
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:48:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569617337;
+	bh=xwQo8FQz/psN2Spf6mXXoZUGa5ZBXdUWEtSp9tqpIl0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Dqr4hXWSr95OAEWgfxlknoq7ypJpn0Z27lAjjfQ5oKjLHhGlVj8uayqvnt+YONG87
+	 MtSZGl9nUCQhdwYv+yEfHINDfE8eJ9q3UF7vkLthM/5VvCSuuX3kKiRanii/+21K6Y
+	 glqQwQHnrshjiqn0pWzVE+Zz8lT2aJP4ikLOiq4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728285AbfI0Uno (ORCPT
+        id S1728189AbfI0Us4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 16:43:44 -0400
-Received: from mail-lj1-f175.google.com ([209.85.208.175]:37842 "EHLO
-        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfI0Uno (ORCPT
+        Fri, 27 Sep 2019 16:48:56 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46036 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfI0Us4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 16:43:44 -0400
-Received: by mail-lj1-f175.google.com with SMTP id l21so3762769lje.4
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 13:43:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=A0GOiTYcakjAsLgMbhX6Gl6xJaZlx6KbV4y/K1peXEI=;
-        b=AR/Au2s+7lQ9sclq3bK8t01/TXhB7sbpX9bS2NjVaOFNB9gM40RN6jNnSE6aCyggh6
-         FjvHFo92laJsiTYib53OGFXorKCaGJGq2o7Xd21NwIzvufPNPiIM80dwd1WJWg/JSzYt
-         mtw5LG9ns1AnVpi9EpMeEOW0Iqjqo4XR+sda5JqPYXQOG0e5eZ2sebCAmXWYQwpxQkYj
-         g1G1uGXyn8lyAULLJeE9bhp+l9lJig6kbWHU0TOi0HHqnQ8GBuTvkwsshHCFRTkYVqDC
-         MYIM5h9MGyRmxdjAgngqBKF6LAXXj3KEWd+uPTrz+Tn6T2iSRv8vlCQ+7r9/CNaQxqCG
-         MUUQ==
+        Fri, 27 Sep 2019 16:48:56 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 41so3386014oti.12;
+        Fri, 27 Sep 2019 13:48:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=A0GOiTYcakjAsLgMbhX6Gl6xJaZlx6KbV4y/K1peXEI=;
-        b=CrhOCRHdpO30iS/q7I0vZMzPVYzrw6oOarTBQcPCLM1FcNsjhO9zD3lqE0E2n9UcZZ
-         txb1Aako7xTl4u8KD+Imyz2ecXD31pYXa/BPcHcTfC/yx9zQTz+vbAhkNlm0KDFmA/+5
-         csqLWC68Ck3IhqX1GAtcJ9JWsasarG3fe7rxLor9Nx50hp8xZyUcLO4QJV8NtCvwmcXA
-         M0VDDKbDxqTXglf/civDsuw/gbljzZqNhwnSPFFSs7Vl+DLwYwCNkorpa/cPamnp4pLa
-         2/RULfAfBjXZBwDKZ52Yu84zIP90a98prauJQZRWGPFDQg5ycw+BxnHPQuSxm/Ci31WR
-         l0Vg==
-X-Gm-Message-State: APjAAAUbSCnqmUhSjHcL4oRT+Yxr7kjfU+nu9BdTFuHeRWj+YTD9Z10N
-        4efSW9qWb0ToQumdPUoiLIbzkQLgcZI=
-X-Google-Smtp-Source: APXvYqxdsX9RsMQgUiuSw434Z+l3kvSe89jRZ2Qm/1YwlVyDnT+ULtg7zMmNOQeGGubp2NFuaGnsgA==
-X-Received: by 2002:a2e:85d2:: with SMTP id h18mr4011053ljj.18.1569617021581;
-        Fri, 27 Sep 2019 13:43:41 -0700 (PDT)
-Received: from localhost (h-93-159.A463.priv.bahnhof.se. [46.59.93.159])
-        by smtp.gmail.com with ESMTPSA id k23sm657897ljk.93.2019.09.27.13.43.40
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bHbuAWRgyfdd0/7I5EKejphIr7Awr7Ufl06cGZr9UWM=;
+        b=Yb14P2FVCzrEpsFJiIKszbjwMIp+FUs8TF+SomX6vu1HZ9mTIwr9RNEg2oLNtOkSRW
+         GYudXChlGNB0VlyoM15UkEHDVmTiHB/8dwVBrccCOmtVPqkA0KtSGJkjixkLtAEjZVh3
+         rt+HvzUZoQEHm0Ed15jNLXWwZStGoCsEwy39qfoLGEtYRmEOcVkYeJbUHcrNoWKuni34
+         VE63EnxIIRtOtikgUKgZGee2SGQsMG1LTNsA9EFWPZezVhJ7aF0NyVbLJZizUfV+OuFu
+         WLQZsnIVbOjQNDWk5/HBdwT588YYygPk21TEwYiN+8w6asdaT1vzTUBtJDrUY8XTZBsm
+         LrEA==
+X-Gm-Message-State: APjAAAVNcAiLJn3ZvC84zsg8fP7Se76wLqRURRnQ0y6zDaaWhDTMrYRO
+        9szaHpGMZU+ap6MX0Ff7SA==
+X-Google-Smtp-Source: APXvYqzPZhS/oOuHCnSCXzdNvjnEYVT4GzMZW0oHF4dRC74KXAwNQ6LWjjs9BHI9deVVAemO9XYlbA==
+X-Received: by 2002:a9d:744e:: with SMTP id p14mr4942965otk.323.1569617335327;
+        Fri, 27 Sep 2019 13:48:55 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id o2sm1317553ota.3.2019.09.27.13.48.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2019 13:43:40 -0700 (PDT)
-Date:   Fri, 27 Sep 2019 22:43:40 +0200
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Tim Harvey <tharvey@gateworks.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Matthew Michilot <matthew.michilot@gmail.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] media: i2c: adv7180: fix adv7280 BT.656-4 compatibility
-Message-ID: <20190927204340.GB7409@bigcity.dyn.berto.se>
-References: <20190827215539.1286-1-mmichilot@gateworks.com>
- <cb3e9be4-9ce6-354f-bb7c-a4710edc1c1b@xs4all.nl>
- <20190829142931.GZ28351@bigcity.dyn.berto.se>
- <CAJ+vNU11HTcP8L5J2Xg+Rmhvb8JDYemhJxt-GaGG5Myk3n38Tw@mail.gmail.com>
- <20190927190454.GA7409@bigcity.dyn.berto.se>
- <CAJ+vNU2shAbnLO9TY4dtPupLxE4UFvNi9FXoFF4MfPbtbAZo=g@mail.gmail.com>
+        Fri, 27 Sep 2019 13:48:54 -0700 (PDT)
+Date:   Fri, 27 Sep 2019 15:48:54 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     vkoul@kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dan.j.williams@intel.com,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] dt-bindings: dma: ti-edma: Document
+ dma-channel-mask for EDMA
+Message-ID: <20190927204854.GA20463@bogus>
+References: <20190926111954.9184-1-peter.ujfalusi@ti.com>
+ <20190926111954.9184-3-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJ+vNU2shAbnLO9TY4dtPupLxE4UFvNi9FXoFF4MfPbtbAZo=g@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190926111954.9184-3-peter.ujfalusi@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tim,
+On Thu, Sep 26, 2019 at 02:19:53PM +0300, Peter Ujfalusi wrote:
+> Similarly to paRAM slots, channels can be used by other cores.
+> 
+> The common dma-channel-mask property can be used for specifying the
+> available channels.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+>  Documentation/devicetree/bindings/dma/ti-edma.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
+> index 4bbc94d829c8..014187088020 100644
+> --- a/Documentation/devicetree/bindings/dma/ti-edma.txt
+> +++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
+> @@ -42,6 +42,11 @@ Optional properties:
+>  - ti,edma-reserved-slot-ranges: PaRAM slot ranges which should not be used by
+>  		the driver, they are allocated to be used by for example the
+>  		DSP. See example.
+> +- dma-channel-mask: Mask of usable channels.
+> +		Single uint32 for EDMA with 32 channels, array of two uint32 for
+> +		EDMA with 64 channels. See example and
+> +		Documentation/devicetree/bindings/dma/dma-common.yaml
+> +
+>  
+>  ------------------------------------------------------------------------------
+>  eDMA3 Transfer Controller
+> @@ -91,6 +96,9 @@ edma: edma@49000000 {
+>  	ti,edma-memcpy-channels = <20 21>;
+>  	/* The following PaRAM slots are reserved: 35-44 and 100-109 */
+>  	ti,edma-reserved-slot-ranges = <35 10>, <100 10>;
+> +	/* The following channels are reserved: 35-44 */
+> +	dma-channel-mask = <0xffffffff>, /* Channel 0-31 */
+> +			   <0xffffe007>; /* Channel 32-63 */
 
-On 2019-09-27 12:26:40 -0700, Tim Harvey wrote:
-> On Fri, Sep 27, 2019 at 12:04 PM Niklas Söderlund
-> <niklas.soderlund@ragnatech.se> wrote:
-> >
-> > Hi Tim,
-> >
-> > Sorry for taking to so long to look at this.
-> >
-> > On 2019-09-23 15:04:47 -0700, Tim Harvey wrote:
-> > > On Thu, Aug 29, 2019 at 7:29 AM Niklas Söderlund
-> > > <niklas.soderlund@ragnatech.se> wrote:
-> > > >
-> > > > Hi,
-> > > >
-> > > > On 2019-08-29 13:43:49 +0200, Hans Verkuil wrote:
-> > > > > Adding Niklas.
-> > > > >
-> > > > > Niklas, can you take a look at this?
-> > > >
-> > > > I'm happy to have a look at this. I'm currently moving so all my boards
-> > > > are in a box somewhere. I hope to have my lab up and running next week,
-> > > > so if this is not urgent I will look at it then.
-> > > >
-> > >
-> > > Niklas,
-> > >
-> > > Have you looked at this yet? Without this patch the ADV7280A does not
-> > > output proper BT.656. We tested this on a Gateworks Ventana GW5404-G
-> > > which uses the ADV7280A connected to the IMX6 CSI parallel bus. I'm
-> > > hoping to see this get merged and perhaps backported to older kernels.
-> >
-> > I only have access to an adv7180 so I was unable to test this patch.
-> > After reviewing the documentation I think the patch is OK if what you
-> > want is to unconditionally switch the driver from outputting BT.656-3 to
-> > outputting BT.656-4.
-> >
-> > As this change would effect a large number of compat strings (adv7280,
-> > adv7280-m, adv7281, adv7281-m, adv7281-ma, adv7282, adv7282-m) and the
-> > goal is to back port it I'm a bit reluctant to adding my tag to this
-> > patch as I'm not sure if this will break other setups.
-> >
-> > From the documentation about the BT.656-4 register (address 0x04 bit 7):
-> >
-> >     Between Revision 3 and Revision 4 of the ITU-R BT.656 standards,
-> >     the ITU has changed the toggling position for the V bit within
-> >     the SAV EAV codes for NTSC. The ITU-R BT.656-4 standard
-> >     bit allows the user to select an output mode that is compliant
-> >     with either the previous or new standard. For further information,
-> >     visit the International Telecommunication Union website.
-> >
-> >     Note that the standard change only affects NTSC and has no
-> >     bearing on PAL.
-> >
-> >     When ITU-R BT.656-4 is 0 (default), the ITU-R BT.656-3
-> >     specification is used. The V bit goes low at EAV of Line 10
-> >     and Line 273.
-> >
-> >     When ITU-R BT.656-4 is 1, the ITU-R BT.656-4 specification is
-> >     used. The V bit goes low at EAV of Line 20 and Line 283.
-> >
-> > Do you know what effects such a change would bring? Looking at the
-> > driver BT.656-4 seems to be set unconditionally for some adv7180 chips.
-> >
-> 
-> Niklas,
-> 
-> Quite simply, we have a board that has an ADV7180 attached to the
-> parallel CSI of an IMX6 that worked fine with mainline drivers then
-> when we revised this board to attach an ADV7280A in the same way
-> capture failed to sync. Investigation showed that the NEWAVMODE
-> differed between the two.
+Doesn't matter yet, but you have a mismatch here with the schema. While 
+the <> around each int or not doesn't matter for the dtb, it does for 
+the schema.
 
-I understand your problem, the driver configures adv7180 and adv7280 
-differently.
+dma-channel-mask = <0xffffffff>, <0xffffe007>;
+minItems: 1
+maxItems: 255
 
-> 
-> So if the point of the driver is to configure the variants in the same
-> way, this patch needs to be applied.
+dma-channel-mask = <0xffffffff 0xffffe007>;
+items:
+  minItems: 1
+  maxItems: 255
 
-I'm not sure that is the point of the driver. As the driver today 
-configures different compatible strings differently. Some as ITU-R 
-BT.656-3 and some as ITU-R BT.656-4, I can only assume there is a reason 
-for that.
+I think the latter case is slightly more logical here as you have 1 
+thing (a mask). If had N of something (like interrupts), then the former 
+makes sense. 
 
-> 
-> I would maintain that the adv7180 comes up with NEWAVMODE enabled and
-> in order to be compatible we must configure the adv7282 the same.
-> 
-> The same argument can be made for setting the V bit end position in
-> NTSC mode - its done for the adv7180 so for compatible output it
-> should be done for the adv7282.
-
-I understand that this is needed to make it a drop-in replacement for 
-the adv7180 in your use-case. But I'm not sure it is a good idea for 
-other users of the driver. What if someone is already using a adv7282 on 
-a board and depends on it providing ITU-R BT.656-3 and the old settings?
-If this patch is picked up there use-cases may break.
-
-I'm not sure what the best way forward is I'm afraid. Looking at 
-video-interfaces.txt we have a device tree property bus-type which is 
-used to describe the bus is a BT.656 bus but not which revision of it.
-
-I'm not really found of driver specific bus descriptions, but maybe this 
-is a case where one might consider adding one? Hans what do you think?
-
-> 
-> > >
-> > > Regards,
-> > >
-> > > Tim
-> > >
-> > > > >
-> > > > > Regards,
-> > > > >
-> > > > >       Hans
-> > > > >
-> > > > > On 8/27/19 11:55 PM, Matthew Michilot wrote:
-> > > > > > From: Matthew Michilot <matthew.michilot@gmail.com>
-> > > > > >
-> > > > > > Captured video would be out of sync when using the adv7280 with
-> > > > > > the BT.656-4 protocol. Certain registers (0x04, 0x31, 0xE6) had to
-> > > > > > be configured properly to ensure BT.656-4 compatibility.
-> > > > > >
-> > > > > > An error in the adv7280 reference manual suggested that EAV/SAV mode
-> > > > > > was enabled by default, however upon inspecting register 0x31, it was
-> > > > > > determined to be disabled by default.
-> >
-> > The manual I have [1] states that NEWAVMODE is switched off by default.
-> > I'm only asking as I would like to know if there is an error in that
-> > datasheet or not.
-> >
-> > 1. https://www.analog.com/media/en/technical-documentation/user-guides/ADV7280_7281_7282_7283_UG-637.pdf
-> >
-> 
-> Table 99 in that document shows NEVAVMODE disabled on power-up
-> (0x31=0x02) yet Page 77 shows it enabled at power-up. Looking at an
-> actual device we find it is indeed disabled on powerup (0x31=0x02) so
-> Table 99 is correct, and Page 77 is not.
-> 
-> If you look at the ADV7180 datasheet
-> (https://www.analog.com/media/en/technical-documentation/data-sheets/ADV7180.pdf)
-> Table 105 shows NEWAVMODE enabled by default which is also reflected
-> in the register details on Page 91 and is what you find on an actual
-> device.
-> 
-> Regards,
-> 
-> Tim
-> 
-> -- 
-> 
-> 
-> CONFIDENTIALITY NOTICE: This email constitutes an electronic 
-> communication within the meaning of the Electronic Communications Privacy 
-> Act, 18 U.S.C. 2510, and its disclosure is strictly limited to the named 
-> recipient(s) intended by the sender of this message. This email, and any 
-> attachments, may contain confidential and/or proprietary information. If 
-> you are not a named recipient, any copying, using, disclosing or 
-> distributing to others the information in this email and attachments is 
-> STRICTLY PROHIBITED. If you have received this email in error, please 
-> notify the sender immediately and permanently delete the email, any 
-> attachments, and all copies thereof from any drives or storage media and 
-> destroy any printouts or hard copies of the email and attachments.
-> 
->  
-> 
-> 
-> EXPORT COMPLIANCE NOTICE: This email and any attachments may contain 
-> technical data subject to U.S export restrictions under the International 
-> Traffic in Arms Regulations (ITAR) or the Export Administration Regulations 
-> (EAR). Export or transfer of this technical data and/or related information 
-> to any foreign person(s) or entity(ies), either within the U.S. or outside 
-> of the U.S., may require advance export authorization by the appropriate 
-> U.S. Government agency prior to export or transfer. In addition, technical 
-> data may not be exported or transferred to certain countries or specified 
-> designated nationals identified by U.S. embargo controls without prior 
-> export authorization. By accepting this email and any attachments, all 
-> recipients confirm that they understand and will comply with all applicable 
-> ITAR, EAR and embargo compliance requirements.
-
--- 
-Regards,
-Niklas Söderlund
+Rob
