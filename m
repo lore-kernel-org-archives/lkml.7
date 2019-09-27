@@ -6,36 +6,41 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EE1C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6CBC388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2B2E2146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E236C21906
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:22:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbfI0OVC (ORCPT
+        id S1727558AbfI0OWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 10:21:02 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:32962 "HELO
+        Fri, 27 Sep 2019 10:22:06 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:32982 "HELO
         iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726926AbfI0OVB (ORCPT
+        with SMTP id S1726926AbfI0OWF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 10:21:01 -0400
-Received: (qmail 2579 invoked by uid 2102); 27 Sep 2019 10:21:00 -0400
+        Fri, 27 Sep 2019 10:22:05 -0400
+Received: (qmail 2591 invoked by uid 2102); 27 Sep 2019 10:22:04 -0400
 Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 27 Sep 2019 10:21:00 -0400
-Date:   Fri, 27 Sep 2019 10:21:00 -0400 (EDT)
+  by localhost with SMTP; 27 Sep 2019 10:22:04 -0400
+Date:   Fri, 27 Sep 2019 10:22:04 -0400 (EDT)
 From:   Alan Stern <stern@rowland.harvard.edu>
 X-X-Sender: stern@iolanthe.rowland.org
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-cc:     Andrey Konovalov <andreyknvl@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        syzbot <syzbot+e74a998ca8f1df9cc332@syzkaller.appspotmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: WARNING in pvr2_i2c_core_done
-In-Reply-To: <20190927051042.GA1767219@kroah.com>
-Message-ID: <Pine.LNX.4.44L0.1909271015510.1698-100000@iolanthe.rowland.org>
+To:     Andrea Parri <parri.andrea@gmail.com>
+cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: Documentation for plain accesses and data races
+In-Reply-To: <20190927085905.GA11454@andrea>
+Message-ID: <Pine.LNX.4.44L0.1909271021130.1698-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
 Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
@@ -43,27 +48,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 27 Sep 2019, Greg Kroah-Hartman wrote:
+On Fri, 27 Sep 2019, Andrea Parri wrote:
 
-> > It turns out the reason for this error is simple: The driver 
-> > unregisters its subdevices in the release handler instead of in the 
-> > disconnect handler.  There probably is documentation about this 
-> > somewhere, but I don't know exactly where -- maybe Greg remembers.
+> On Fri, Sep 06, 2019 at 02:11:29PM -0400, Alan Stern wrote:
+> > Folks:
+> > 
+> > I have spent some time writing up a section for 
+> > tools/memory-model/Documentation/explanation.txt on plain accesses and 
+> > data races.  The initial version is below.
+> > 
+> > I'm afraid it's rather long and perhaps gets too bogged down in 
+> > complexities.  On the other hand, this is a complicated topic so to 
+> > some extent this is unavoidable.
+> > 
+> > In any case, I'd like to hear your comments and reviews.
 > 
-> Nope, I don't remember.  It should happen in the disconnect handler, odd
-> of it to be in release, but maybe that's the "easiest" way for v4l to
-> handle this?
+> Thank you for writing this up, Alan, and sorry for the delayed reply.
+> 
+> The section looks great to me, and I have no further suggestions besides
+> the minor fixes which have been already pointed out in the thread.
+> 
+> Looking forward to your v2 (an actual patch),
 
-This isn't a question of "easiest".  Unregistering child devices in a
-release handler is just _wrong_, plain and simple.  That's what gives
-rise to the
+Thanks for the review.  I'll post the patch (together with a couple of 
+other changes) in a week or so.
 
-"sysfs group 'power' not found for kobject 'i2c-0'"
-
-warning in the kernel log.  The group can't be found because it has 
-already been removed; it gets destroyed when the parent USB interface 
-device is unregistered, because unregistering a device also removes 
-from sysfs everything below that device.
-
-Alan Stern
+Alan
 
