@@ -2,190 +2,201 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E4AC388F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95558C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B54321655
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66B8A205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:16:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="E58KgLAQ";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="QE023yxh"
+	dkim=pass (1024-bit key) header.d=prevasonline.onmicrosoft.com header.i=@prevasonline.onmicrosoft.com header.b="CSVMt6H4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbfI0VPt (ORCPT
+        id S1728242AbfI0VQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 17:15:49 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:35580 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725789AbfI0VPs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 17:15:48 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id x8RLDeT6007829;
-        Fri, 27 Sep 2019 14:15:30 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=ceqPOS0TA1R8thoAAEOEdvWi7BGLAkHVcwSe3Wyx3/Q=;
- b=E58KgLAQi3h/8/RUzWVW9i7pVNeHMlUW03MApUFPMwcTVwmF9KyUlRzGBF7ZPyuAPSQA
- BN+6jB6FToicGqLcn2Cob0yBe2YSMEi/fxOW+LQF2EVbCA7VBucfkm9WqI95O58R/iw/
- R9CKTdtDSqBJpxM9IwU4zgAigguSf+rCnio= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by m0001303.ppops.net with ESMTP id 2v9mph1uw7-4
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 27 Sep 2019 14:15:30 -0700
-Received: from prn-mbx05.TheFacebook.com (2620:10d:c081:6::19) by
- prn-hub01.TheFacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Fri, 27 Sep 2019 14:15:26 -0700
-Received: from prn-hub02.TheFacebook.com (2620:10d:c081:35::126) by
- prn-mbx05.TheFacebook.com (2620:10d:c081:6::19) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Fri, 27 Sep 2019 14:15:26 -0700
-Received: from NAM01-BN3-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.26) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Fri, 27 Sep 2019 14:15:26 -0700
+        Fri, 27 Sep 2019 17:16:56 -0400
+Received: from mail-eopbgr150120.outbound.protection.outlook.com ([40.107.15.120]:64502
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725306AbfI0VQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 17:16:56 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dtbnOY9aIwHPhY58Sz5PN71UdvSEENqsDIH884MWiXkCGlj5GM67zT9+R6SgJi48JC6vJwUMLA0PB1xWsD7LTVjd8RBPzXck6/euqFK9a11cRTGFrmCXrYMOnC9XL3+Q+GGz3D8Cu1/cTaCstz7Zq/y6sbsfVYQzy3A4uEvUB8m6WIPASBTClw0roV9Z4AwBbYtbkve7seS6T/g5njgLe4Zvozxd5SqXGAg/C4o2KzMxDO5PuW6FfrqJ4E6yQ7cqD8b81I5x0freUNLMG3KcHNMbdmbQ7RD63XxwZ5+54dKw/SjfZjB5i9IIGyc1d3KInDyfutv228ISeg1m4Wzfcg==
+ b=i+fVs5IZgFQnBehj5Vrtmxb6LVGSFCPaYrDNiY247VOTssSVFTcaTp1BrYv2a5iIH4mi84+F48OeAm3ebLo+PGboboQPjsef6l7S1J9MM++2roE5dDVpY3OsGU0WNfxDQINPSHsPCYHJMCCQjw4wQY0jRTIUuLyqPGsqXbyiP8ZPH5IUmeh45qQwIJ6hmps/3VkmpalydAZzRxJCnLjocPrde6WqXvGdvXSMA9WbJGSZz32jHRfN3C8lq/EvYzqj1xVpF6z1yiMjBKtsiZUseBBySoqo7goI0FRoduCzWbxrngnLeYaFSSr5vZQIRsGQVNGC6hRyafNNiRfsFJdPDw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ceqPOS0TA1R8thoAAEOEdvWi7BGLAkHVcwSe3Wyx3/Q=;
- b=m6bOIplSL/Q+oWDgHnP49Z2GTlH75fS2wHKIjghOf03UzpbsLUIiX89196MO8+f/TQmSKFujUFcP3ytPSH4OGPwLiLvbXL1XDGUAyrSDNzf2xXsY0pHQbXmcdxiENVxya2Lthd9rGgwRUlACAYWJ0IhtSJgKli1S+Wv6ksREMNZGDrdeNFl1duUibmM8lGDxPMx7jTee0gR9Fau/6jRMLqtwRBR+nWvLGIZLjiHFwtFr19C02AX1FAx2rT2q/hHZpnM+orsnyqDrZz0HtutgAOetUvqX4r8k3/haSzvvrhuJxQ8Z5yFNm/T3rSr97nlrAWJW38SLGRnQ4R6aQ8R39A==
+ bh=rZwYsVdNLIdSAHN1SvuiOjjaOoWlwILspKN83LOqa2Q=;
+ b=cMuHJriGOUE5PJuB7zsNY8vcWvQ+v655ldJkF9hLUVEbgiqujjKd4WaFpifoR+SZvAoZA0h2yWwsg1jl9LocWpPN06REFJu56+xey72qtb1z2KmyVIV98vyqNSnxEiX03MGkDA69TAQ2fNRqayqg1AyUTUYOHD6q71z9eudJOButBWy4l75LX48Yb+xXLmA1rF0hpzQiJ+uhTxWeWJIcFFlC+wX2KqkIGxKsnBq7PPVhyhZYH2T6vA5GCPMwFqE+9blmuIFHCS1RYfT+gBqgcLCGf+p5MfBRlPD47IM21Kdz/77iuCT+Vx2o9dlz/S2JIA3b8rnxwo51eE9Ypap+kQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
+ smtp.mailfrom=prevas.dk; dmarc=pass action=none header.from=prevas.dk;
+ dkim=pass header.d=prevas.dk; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=prevasonline.onmicrosoft.com; s=selector2-prevasonline-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ceqPOS0TA1R8thoAAEOEdvWi7BGLAkHVcwSe3Wyx3/Q=;
- b=QE023yxhQ4mxNveVhTE7pTOV4IeDFDP1Vp+UWEos5Tx8P6I1rNzQWxkRML3vgfhZ3RD2IDpf5H7D9vRy434MOA2wF9Hy6Lm7Mi4cVDMC6jWjOMDL/M4wTqhv8wgvjWJFaVU4lKZ7sJiHzPG7ImC57mBeOlk4lrlSC3KHJqhw9LM=
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
- MWHPR15MB1453.namprd15.prod.outlook.com (10.173.234.143) with Microsoft SMTP
+ bh=rZwYsVdNLIdSAHN1SvuiOjjaOoWlwILspKN83LOqa2Q=;
+ b=CSVMt6H4jCFTGwFeKsjpOu83nhOvosvP9hUmJPQWtQjKFo4Xw87bO4ihiBmo4F8Vc4X6qyO11cjeABMC/l8s0mUwKVYh0T+G4vnSxGRLVSnGAwK7SQisjouQvOOl9HPQHRLc3ng+eqrbhThNl3JGr/rZ0eMFJlGDIByi7y6eo4M=
+Received: from AM0PR10MB3476.EURPRD10.PROD.OUTLOOK.COM (10.186.175.83) by
+ AM0PR10MB1986.EURPRD10.PROD.OUTLOOK.COM (52.134.84.142) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.17; Fri, 27 Sep 2019 21:15:25 +0000
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::a828:5750:379d:b9a1]) by MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::a828:5750:379d:b9a1%8]) with mapi id 15.20.2305.017; Fri, 27 Sep 2019
- 21:15:24 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-CC:     Song Liu <liu.song.a23@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin Lau <kafai@fb.com>, "Yonghong Song" <yhs@fb.com>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH] tools: bpf: Use !building_out_of_srctree to determine
- srctree
-Thread-Topic: [PATCH] tools: bpf: Use !building_out_of_srctree to determine
- srctree
-Thread-Index: AQHVdNDXBxSGfE5tmEyE9kgIwPwciqc/3XAAgAAFZoCAACTiAA==
-Date:   Fri, 27 Sep 2019 21:15:24 +0000
-Message-ID: <57756C81-5B82-4E56-9CF0-5C1C4A4FBEFC@fb.com>
-References: <20190927011344.4695-1-skhan@linuxfoundation.org>
- <CAPhsuW5EncjNRGjt7F_BN2bNhRkf=uXVeDe6NCbJe=K2J+hdyA@mail.gmail.com>
- <5ec40572-5df9-0e5b-5a85-eb53be48b87d@linuxfoundation.org>
-In-Reply-To: <5ec40572-5df9-0e5b-5a85-eb53be48b87d@linuxfoundation.org>
+ 15.20.2284.18; Fri, 27 Sep 2019 21:16:50 +0000
+Received: from AM0PR10MB3476.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::ace2:40dd:f2a:26bd]) by AM0PR10MB3476.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::ace2:40dd:f2a:26bd%2]) with mapi id 15.20.2284.028; Fri, 27 Sep 2019
+ 21:16:50 +0000
+From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+To:     Rob Herring <robh@kernel.org>, Kurt Kanzenbach <kurt@linutronix.de>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v6 2/2] dt/bindings: Add bindings for Layerscape external
+ irqs
+Thread-Topic: [PATCH v6 2/2] dt/bindings: Add bindings for Layerscape external
+ irqs
+Thread-Index: AQHVcffWKeTRBhwJoUaNxC4njuzHPKc/uHMAgABVWQA=
+Date:   Fri, 27 Sep 2019 21:16:50 +0000
+Message-ID: <f63da257-95b4-bcb8-9ba4-9786645caf26@prevas.dk>
+References: <20190923101513.32719-1-kurt@linutronix.de>
+ <20190923101513.32719-3-kurt@linutronix.de> <20190927161118.GA19333@bogus>
+In-Reply-To: <20190927161118.GA19333@bogus>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3445.104.11)
-x-originating-ip: [2620:10d:c090:200::1:cdab]
+x-clientproxiedby: HE1PR0202CA0009.eurprd02.prod.outlook.com
+ (2603:10a6:3:8c::19) To AM0PR10MB3476.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:20b:15e::19)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=rasmus.villemoes@prevas.dk; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [5.186.115.35]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 68c45fa1-16b5-4257-c9fe-08d7438fd042
-x-ms-traffictypediagnostic: MWHPR15MB1453:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR15MB14533876EBC7A220754C87C7B3810@MWHPR15MB1453.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-office365-filtering-correlation-id: fac147e6-c838-4c88-13bb-08d74390030e
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:AM0PR10MB1986;
+x-ms-traffictypediagnostic: AM0PR10MB1986:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <AM0PR10MB1986275635BF7415EBF3B4B993810@AM0PR10MB1986.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
 x-forefront-prvs: 0173C6D4D5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(39860400002)(396003)(136003)(366004)(199004)(189003)(51914003)(8676002)(478600001)(316002)(76116006)(64756008)(66446008)(36756003)(66556008)(66476007)(66946007)(81156014)(6246003)(14444005)(256004)(6486002)(4326008)(50226002)(76176011)(6436002)(8936002)(81166006)(6512007)(229853002)(71200400001)(86362001)(2616005)(446003)(11346002)(486006)(46003)(99286004)(71190400001)(305945005)(14454004)(6916009)(33656002)(476003)(7736002)(5660300002)(25786009)(186003)(2906002)(53546011)(102836004)(54906003)(6506007)(6116002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1453;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(376002)(396003)(136003)(39850400004)(199004)(189003)(52544003)(66066001)(6116002)(71200400001)(6436002)(6486002)(81166006)(36756003)(66476007)(66556008)(64756008)(66946007)(66446008)(476003)(446003)(2616005)(7736002)(5660300002)(44832011)(4326008)(305945005)(256004)(6512007)(54906003)(110136005)(6306002)(229853002)(478600001)(25786009)(14454004)(186003)(102836004)(316002)(6246003)(486006)(2906002)(3846002)(8936002)(99286004)(52116002)(86362001)(11346002)(26005)(6506007)(386003)(81156014)(8676002)(31696002)(31686004)(71190400001)(8976002)(76176011);DIR:OUT;SFP:1102;SCL:1;SRVR:AM0PR10MB1986;H:AM0PR10MB3476.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: prevas.dk does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: heJ5Dq+R8fRhqy+zbV0eVu7LpK+eOf08edNY6+/2OotD1YQWSp6M814+a3R56V0/KJE5Xo0gPQMyDmBHDBIdcmo2wh/2MBLXcrnW9izbx5+hpbwmM7mc+lDp8xuVCufgfaWtzaBL2J4Lf7VeU2z8/FIEYmFVpA1bBR0LDoOskmTKv1XlmQzTShdhu1sFkUsjPe4NcIaTvf3zOzqDjP4FRplN2ecMcoimXx+p2TkK6D2pTXlSNH50FoGkoRQK9PNX6YNRx9E8cyZY42Q8lgF5Uv446xoRlMMNpDF1kqo0EWgr4M7BtKD0046teqJ1oEfx/vzfrjVvznHbZbgWxJ4N5ylEf/XUNDMj2qkFLBOAnAPVRjKk3DXxWtlVAnCrAIUUp0vrLXpv4dfgjS4VLR98+Y4XZSsMLtmci+WYmR1QJdY=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <D6C6AF43DDFBD14B8925B24E4E06C797@namprd15.prod.outlook.com>
+x-microsoft-antispam-message-info: B8wmp5H1Z32BCN/Hog//uq1ezkHkA2SIK54GNMH06/6XuqO6pHYcLuveuV3nm04fe8wOJ0xfSS25R8hAOgsdfweCXWLZxzzfRt6vKO42g9i/eOWji2e0ojRW63v60x3zrG+OBTCn4G/EwoJ6DXtl85z4Ebzxl15ASm/TCQatTeLHMrAb502eszM/Pw2Awg/DT9mpFr+wrOjceIxqmeLlDTZqsWZjuWuFuC6s3p+4aIe3MD3bJlhMLINbny0wMvTE96cQlAeQtPG9U5/RNTsbDjvcUyKUV7zGEzVDgmHkF0SbhNpwUurqPTyKr75+B4mNbheA1Ye3dTZx6iovvOam1ZTn5apG60R2fdroPgoQ2YkoiBN+eTuXogdKvMIkO6DgnH0lv2Tx3OdL/NFrqchtX4/2wLuEDIxUIWjqN/8Tc994oh2sZc5xr034RN46b5sxXtLXVKLMZKadM2itRGcbFw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <B78BBAF278F6A0498AA0DD162BF8ECC9@EURPRD10.PROD.OUTLOOK.COM>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 68c45fa1-16b5-4257-c9fe-08d7438fd042
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Sep 2019 21:15:24.7497
+X-OriginatorOrg: prevas.dk
+X-MS-Exchange-CrossTenant-Network-Message-Id: fac147e6-c838-4c88-13bb-08d74390030e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Sep 2019 21:16:50.3581
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-id: d350cf71-778d-4780-88f5-071a4cb1ed61
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pzT4P4ntiSByp0037Hqeyp9HcRNpcWjfzwI+C+C1Y/8lnA61cRaLkHWmozD7W+PEMOj8MaGjF0qAApqiN6hnSg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1453
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-09-27_09:2019-09-25,2019-09-27 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0
- lowpriorityscore=0 phishscore=0 priorityscore=1501 spamscore=0 bulkscore=0
- suspectscore=0 clxscore=1011 mlxlogscore=999 adultscore=0 malwarescore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1909270178
-X-FB-Internal: deliver
+X-MS-Exchange-CrossTenant-userprincipalname: yV7OSSEZO/n6LsBYsvGYi6uGcyJj+90Nj16wnfoAVlhSlJT8342YiZSZpgMx8yGkjRqngxZF9unTkExE6zDYfLJI4fxX8XkeizQOosD0fPk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR10MB1986
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> On Sep 27, 2019, at 12:03 PM, Shuah Khan <skhan@linuxfoundation.org> wrot=
-e:
+On 27/09/2019 18.11, Rob Herring wrote:
+> On Mon, Sep 23, 2019 at 12:15:13PM +0200, Kurt Kanzenbach wrote:
+>> From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+>>
+>> This adds Device Tree binding documentation for the external interrupt
+>> lines with configurable polarity present on some Layerscape SOCs.
+>>
+>> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+>> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
+>> ---
+>>
+>> +* Freescale Layerscape external IRQs
+>> +
+>> +Some Layerscape SOCs (LS1021A, LS1043A, LS1046A, LS2088A) support
+>> +inverting the polarity of certain external interrupt lines.
+>> +
+>> +The device node must be a child of the node representing the
+>> +Supplemental Configuration Unit (SCFG) or the Interrupt Sampling
+>> +Control (ISC) Unit.
+>> +
+>> +Required properties:
+>> +- compatible: should be "fsl,<soc-name>-extirq", e.g. "fsl,ls1021a-exti=
+rq".
+>> +- interrupt-controller: Identifies the node as an interrupt controller
+>> +- #interrupt-cells: Must be 2. The first element is the index of the
+>> +  external interrupt line. The second element is the trigger type.
+>> +- interrupt-parent: phandle of GIC.
+>> +- reg: Specifies the Interrupt Polarity Control Register (INTPCR) in th=
+e SCFG.
+>> +- fsl,extirq-map: Specifies the mapping to interrupt numbers in the par=
+ent
+>> +  interrupt controller. Interrupts are mapped one-to-one to parent
+>> +  interrupts.
 >=20
-> On 9/27/19 12:44 PM, Song Liu wrote:
->> On Thu, Sep 26, 2019 at 6:14 PM Shuah Khan <skhan@linuxfoundation.org> w=
-rote:
->>>=20
->>> make TARGETS=3Dbpf kselftest fails with:
->>>=20
->>> Makefile:127: tools/build/Makefile.include: No such file or directory
->>>=20
->>> When the bpf tool make is invoked from tools Makefile, srctree is
->>> cleared and the current logic check for srctree equals to empty
->>> string to determine srctree location from CURDIR.
->>>=20
->>> When the build in invoked from selftests/bpf Makefile, the srctree
->>> is set to "." and the same logic used for srctree equals to empty is
->>> needed to determine srctree.
->>>=20
->>> Check building_out_of_srctree undefined as the condition for both
->>> cases to fix "make TARGETS=3Dbpf kselftest" build failure.
->>>=20
->>> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
->> The fix looks reasonable. Thanks!
->> However, I am still seeing some failure:
->> make TARGETS=3Dbpf kselftest
->> [...]
->> test_verifier.c
->> /data/users/songliubraving/kernel/linux-git/tools/testing/selftests/bpf/=
-test_stub.o
->> /data/users/songliubraving/kernel/linux-git/tools/testing/selftests/bpf/=
-libbpf.a
->> -lcap -lelf -lrt -lpthread -o
->> /data/users/songliubraving/kernel/linux-git/tools/testing/selftests/bpf/=
-test_verifier
->> make[3]: test_verifier.c: Command not found
->> Is this just a problem with my setup?
+> This should be an 'interrupt-map' instead.
+
+Rob, thanks for your review comments. I know you said the same thing at
+v5, and it might seem like they are ignored. However, I asked a couple
+of followup questions
+(https://lore.kernel.org/lkml/0bb4533d-c749-d8ff-e1f2-4b08eb724713@prevas.d=
+k/).
+I'd really appreciate it if you could (a) point to some documentation on
+how to write that interrupt-map and (b) explain how this is different
+from the Qualcomm PDC case I tried to copy and which had your Reviewed-By.
+
+>> +
+>> +Optional properties:
+>> +- fsl,bit-reverse: This boolean property should be set on the LS1021A
+>> +  if the SCFGREVCR register has been set to all-ones (which is usually
+>> +  the case), meaning that all reads and writes of SCFG registers are
+>> +  implicitly bit-reversed. Other compatible platforms do not have such
+>> +  a register.
 >=20
-> You are running into the second bpf failure because of the dependency
-> on the latest llvm. This is known issue with bpf test and it doesn't
-> compile on 5.4 and maybe even 5.3
+> Couldn't you just read that register and tell?
+
+In theory, yes, but as far as I understand (and as I wrote) it's
+specific to the ls1021a. Of course one can decide whether it's
+necessary/possible to read it based on the compatible string, but one
+would also need an extra reg property to have its address - but that
+register is not really part of the extirq "device" we're trying to
+describe. So would it need to be represented as its own subnode of scfg?
+
+If it is set at all, it's done within the first few instructions after
+reset (before control is even handed to the bootloader), so I see it as
+a kind of quirk of the hardware. The data sheet says "SCFG bit reverse
+(SCFG_SCFGREVCR) must be written 0xFFFF_FFFF as a part of initialization
+sequence before writing to any other SCFG register." which, taken
+literally, means we don't need the property at all and can just assume
+it for the ls1021a (i.e., do it based on compatible string alone) - but
+I think it should be read as "if you're going to write this register, it
+must be done first thing".
+
+> Does this apply to only the extirq register or all of scfg?
+
+All of scfg. It really seems like some accident/bad joke coming out of a
+discussion between a hardware and software engineer on the enumeration
+of bits, with the hardware guy ending up saying "alright, have it
+whichever way you want it", causing even more pain :(
+
+>> +
+>> +Example:
+>> +	scfg: scfg@1570000 {
+>> +		compatible =3D "fsl,ls1021a-scfg", "syscon";
+>> +		#address-cells =3D <1>;
+>> +		#size-cells =3D <0>;
 >=20
+> As the child node(s) are memory mapped, this should not be 0. And you=20
+> need 'ranges'.
 
-Thanks for the clarification.=20
+Indeed - I think I understand this a little better now than I did back then=
+.
 
-Acked-by: Song Liu <songliubraving@fb.com>
-
-
-
+Thanks,
+Rasmus
