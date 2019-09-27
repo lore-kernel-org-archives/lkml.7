@@ -2,118 +2,136 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 360FBC388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 428BEC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D73520872
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:34:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16BAD20673
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:36:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OkcngvAZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ujDS9k2O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727478AbfI0MeD (ORCPT
+        id S1727085AbfI0MgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 08:34:03 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:35407 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726549AbfI0MeD (ORCPT
+        Fri, 27 Sep 2019 08:36:22 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45018 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbfI0MgW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 08:34:03 -0400
-Received: by mail-io1-f66.google.com with SMTP id q10so15924941iop.2;
-        Fri, 27 Sep 2019 05:34:02 -0700 (PDT)
+        Fri, 27 Sep 2019 08:36:22 -0400
+Received: by mail-wr1-f66.google.com with SMTP id i18so2518471wru.11
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 05:36:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=k7d51AEqyE848wkPOLeJprFG9jyWEBZYHtKze/WYS4w=;
-        b=OkcngvAZiKPfuIboTpBONfv7BLGF5R/Iq4MnzDRe5U13ORHYdP24mC9azh4Zc/Cd5Q
-         zjc/eFi7DxQTt2gfFVEGlz4Zxs03GBIbzFDE/3rK5RvUDj+A1zGCnRrN8YdAGLoBwyRD
-         1SvsdCK0DQMAlsxjPDLcx8NpJ9PfZHFCDWlVx7XQv3ibTNAxJPUr7lXN4J+IqpwsMP11
-         p5RjNdSw0K+Uj7oL3izhL7pOv+40rEefZwUOMJ8fmBPf5BGQi2sSODcTOMGyjm7Sz/eq
-         5EylEn4Z6pYPsCxYY6hFmT/ZqrXxPPjxDhE/2yuR1xYG5IQEnERXL9KfdKmKsrdBRBc9
-         YitA==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VRuu/jOQ4Zp+zYJZfIF9hFDwWbv4EjPC9iKOvfai/Ug=;
+        b=ujDS9k2OFc0WreqK2y/fe3R6tAVOaH4UfeF+TiT42v8swDKFwVKCk6zo4b9m6X2ZT3
+         oSCGFDePMAAvuxW/GcldxxlJNycLBYIKPzBg5kyUBHv5TAg4ydQJM5TGuDGiXigA1AOD
+         zPOmFNnzjOL2vDIMvtZIty3Uoq1A3Al6TZ75BjLi91HdQIPMOlf0l6EHW6MjwxftMhq9
+         S0W5MQPBlcFgCSpub7F21j9+GhnXqS9sLn3TEpPuBpAqCqhmJ9Tl3vgzGn8c6Z7Y1Ctk
+         kwP/lIrLn1T3o1A7/a0SeLZ4v2XrOLsg7VG1UZZs6I5tLFLaGR8cbBmMZ/l/zt9ecSBM
+         9UWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k7d51AEqyE848wkPOLeJprFG9jyWEBZYHtKze/WYS4w=;
-        b=q+ZebEUd7m48RhuhAGXkCklAdkzML6YldMLvtl9qZW+eq/apG7DLqqTWTfdXW2uLgE
-         l7n/sQqTij8ZPnHjfmIkTYbrR5RiLsniskLDUxyvbEANzi1ILr1nF7Rf0TT9v0SfTz87
-         4jgigatlCNARCvhlZoGTiTG5s+XDr9kb76gdg20m1nzPO459wHVKgeY3B53HRu6F7+9m
-         /hiOPBpBKOetq6OJFaVv7ji2Chysrqt7V/cADFBzMDneKCGI7gkFTwMqjRBSVrhhRXHu
-         tP2CTgoPIHM4waG6CtkwNJPEXdpI0riCAPNiX3gmP6D8MqV0LYBCxv9oP1Pbd+ucDrIQ
-         v+MQ==
-X-Gm-Message-State: APjAAAWg27+b2cN94s9bjTVZSWXF1jciqJR2ul4M/qULRoKeLXURu6UV
-        G4haxGb3i9Mhqk/yDKBVQKVxpIMs5Vp0D439g6Y=
-X-Google-Smtp-Source: APXvYqyUHMQeWPmJ5lzBV5BB3t5fjqgkf5iuXKrGK12pwMzKhwgqK7OWh4iVg4iwmB77u1+QNcYJGNuPXVDMXoOrZuo=
-X-Received: by 2002:a6b:b213:: with SMTP id b19mr7682327iof.58.1569587642060;
- Fri, 27 Sep 2019 05:34:02 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VRuu/jOQ4Zp+zYJZfIF9hFDwWbv4EjPC9iKOvfai/Ug=;
+        b=cxFADLIrH3bPuUB86mj+sapK6zzJJFnJVjmjA99Z1Cc4Iup2E3G4r+ztrWMiMUfA64
+         +GyvB81cIX/TvJngwWGKvK+MAQ6aXhqdZmWzSgqqrQk4gQ68aOMKokGwL4NI/jeVUxZK
+         b67RVHAGUD/GYZiAknfoqzHg2NkeKjgyHSiGsHRNpe9JOHsJkZBZ00U8nS2cinEyxU7S
+         N7+huOyTqsc7TBMzOAiuWjqWeuGWcrC7LNR6/RnU5/fb5c0eMEijbqn0ZKV/WmUahDuG
+         GALUpSJ0VHEW1mgW1dXqKbaYByKviUsxq4EoUmefUy1fjn4qqXO+aO2eWtNLx8ZDnz+2
+         qtMA==
+X-Gm-Message-State: APjAAAWgLOP5hQpP3lBNmnm7aBV2QsMIpaLfiDWwZfIHOzZT61dcQXJo
+        BOX5TTIlzXU1Ee4WgR5Sae9v5g==
+X-Google-Smtp-Source: APXvYqzDMuORRfaJT68JEBTRTG1lWRYGgATP795TJZ2KXH3TNeSmXRYq3cFVQH1OjTDUF8q8NYoLWQ==
+X-Received: by 2002:a05:6000:14b:: with SMTP id r11mr2584070wrx.58.1569587777681;
+        Fri, 27 Sep 2019 05:36:17 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
+        by smtp.gmail.com with ESMTPSA id d9sm4077030wrc.44.2019.09.27.05.36.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Sep 2019 05:36:16 -0700 (PDT)
+Date:   Fri, 27 Sep 2019 13:36:13 +0100
+From:   Matthias Maennich <maennich@google.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Martijn Coenen <maco@android.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/7] module: avoid code duplication in
+ include/linux/export.h
+Message-ID: <20190927123613.GD259443@google.com>
+References: <20190927093603.9140-1-yamada.masahiro@socionext.com>
+ <20190927093603.9140-5-yamada.masahiro@socionext.com>
+ <f2e28d6b-77c5-5fe2-0bc4-b24955de9954@rasmusvillemoes.dk>
 MIME-Version: 1.0
-References: <20190510194229.20628-1-aford173@gmail.com> <af325707-3e42-493d-e858-77878ef06138@ti.com>
- <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
- <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com> <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
- <845055e2-8182-de74-2077-629fdf50ac6c@ti.com> <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
- <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com>
-In-Reply-To: <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Fri, 27 Sep 2019 07:33:50 -0500
-Message-ID: <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
-Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to dts
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <f2e28d6b-77c5-5fe2-0bc4-b24955de9954@rasmusvillemoes.dk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 2:55 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+On Fri, Sep 27, 2019 at 01:07:33PM +0200, Rasmus Villemoes wrote:
+>On 27/09/2019 11.36, Masahiro Yamada wrote:
+>> include/linux/export.h has lots of code duplication between
+>> EXPORT_SYMBOL and EXPORT_SYMBOL_NS.
+>>
+>> To improve the maintainability and readability, unify the
+>> implementation.
+>>
+>> When the symbol has no namespace, pass the empty string "" to
+>> the 'ns' parameter.
+>>
+>> The drawback of this change is, it grows the code size.
+>> When the symbol has no namespace, sym->namespace was previously
+>> NULL, but it is now am empty string "". So, it increases 1 byte
+>> for every no namespace EXPORT_SYMBOL.
+>>
+>> A typical kernel configuration has 10K exported symbols, so it
+>> increases 10KB in rough estimation.
+>>
+>> I did not come up with a good idea to refactor it without increasing
+>> the code size.
 >
-> (dropping folks who're probably not interested...)
->
-> On 26/09/2019 17:12, Adam Ford wrote:
-> > On Thu, Sep 26, 2019 at 1:55 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
-> >>
-> >> On 25/09/2019 23:51, Adam Ford wrote:
-> >>
-> >>>> Has anyone debugged why the hang is happening?
-> >>> I started to debug this, but I got distracted when I noticed the LCD
-> >>> did't work at all on modern kernels.  I have that fixed now, so I can
-> >>> go back to investigating this.
->
-> I dont' have the same board, but I was testing with omap3 beagle xm. I
-> can reproduce rather similar issue, although I don't get a hang but
-> instead sync lost and underflow flood (which makes the device unusable).
->
-> It looks like a bug in omap clock handling.
->
-> DSS uses dss1_alwon_fck_3430es2 as fclk. dss1_alwon_fck_3430es2 comes
-> from dpll4_ck, and there's a divider after the PLL, dpll4_m4_ck.
->
-> When the DSS driver sets dss1_alwon_fck_3430es2 rate to 27000000 or
-> 27870967, which can be created with m4 dividers 32 and 31, it looks like
-> the divider goes to bypass, or to a very small value. DSS gets a very
-> high clock rate and breaks down.
+>Can't we put the "aMS" flags on the __ksymtab_strings section? That
+>would make the empty strings free, and would also deduplicate the
+>USB_STORAGE string. And while almost per definition we don't have exact
+>duplicates among the names of exported symbols, we might have both a foo
+>and __foo, so that could save even more.
 
-Is there anything I can do to help troubleshoot this?  I could insert
-a hack that checks if we're omap3 and if so make the divider equal to
-4, but that seems like just a hack.
-I can run more tests or insert code somewhere if you want.
+I was not aware of this possibility and I was a bit bothered that I was
+not able to deduplicate the namespace strings in the PREL case. So, at
+least I tried to avoid having the redundant empty strings in it. If this
+approach solves the deduplication problem _and_ reduces the complexity
+of the code, I am very much for it. I will only be able to look into
+this next week.
 
-adam
+>I don't know if we have it already, but we'd need each arch to tell us
+>what symbol to use for @ in @progbits (e.g. % for arm). It seems most
+>are fine with @, so maybe a generic version could be
 >
->   Tomi
+>#ifndef ARCH_SECTION_TYPE_CHAR
+>#define ARCH_SECTION_TYPE_CHAR "@"
+>#endif
 >
-> --
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>and then it would be
+>section("__ksymtab_strings,\"aMS\","ARCH_SECTION_TYPE_CHAR"progbits,1")
+>
+>But I don't know if any tooling relies on the strings not being
+>deduplicated.
+
+Matthias
+Cheers,
+
+>Rasmus
