@@ -2,143 +2,177 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AABC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 125C5C388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0146D21841
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D407B2146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:07:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="PYa6H1N9"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="MktSmkQR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbfI0OG4 (ORCPT
+        id S1727731AbfI0OHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 10:06:56 -0400
-Received: from mout.web.de ([212.227.15.4]:60281 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726163AbfI0OGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 10:06:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1569593202;
-        bh=nv4VE+Hbl85HkmHRkfiuhBbAYfzLvV9VGG8OPZN4w70=;
-        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
-        b=PYa6H1N9q2C1vvlXyP199nW+PdFcGJHhSg29sTX3w+Hi+8GJpQ5F4nvC9MZ18VdGT
-         P4wHzhHsdgCQYY6NmBhJOp7xoWoMxdnKz2dwphIz3uZBtoi6TujwHHAWaZ7iMpU19u
-         QMYGBWsGo1yd+GSHH6PmnTcov1BM6LDWdu9rrsUk=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.191.8]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lwq0e-1i7U6s26jA-016T4r; Fri, 27
- Sep 2019 16:06:42 +0200
-Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen A McCamant <smccaman@umn.edu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Frederik Lotter <frederik.lotter@netronome.com>,
-        John Hurley <john.hurley@netronome.com>,
-        Pieter Jansen van Vuuren 
-        <pieter.jansenvanvuuren@netronome.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20190925190512.3404-1-navid.emamdoost@gmail.com>
-Subject: Re: [PATCH] nfp: flower: fix memory leak in
- nfp_flower_spawn_vnic_reprs
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        netdev@vger.kernel.org, oss-drivers@netronome.com
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <e20e4ea4-72c8-2e2e-1745-309fc6f6a57c@web.de>
-Date:   Fri, 27 Sep 2019 16:06:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Fri, 27 Sep 2019 10:07:47 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39645 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727076AbfI0OHq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 10:07:46 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r3so2906720wrj.6
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 07:07:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=VN7mlSEBpAu4FNFLFjzBFIbdgntaI+YfIV2E3pbQ8HE=;
+        b=MktSmkQRrc3hxl1/UUxAHZEtdM2ieHvjozG1Fgh4yytUHQ5RTi3C8VSbwH61ZkpWa4
+         rC/Qs8e19O2Git5hi+NsuOqg+JfK9XiMklgR6XAPUXCgN/qcgK6Rimv0yL37ZB7ZaroP
+         w5hzakj7QB6XtmXyA0DcBqjjE1Qrwq9K8ZShia01mb39rdimWBCCz8tlntGWMnSVx78C
+         RBUVfpVw2AzcLdhcce98ebYfBHnjCFeOnTy3S9msB2ZH4r2SbX9LwQwECuPUgxMuRVtn
+         6in4tYXt7ipKfc2nFbROblEYGAnnhk+wRbYNEgfmquDnZFt2XhrhLsMZj2DfUf5nxRQz
+         MGHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=VN7mlSEBpAu4FNFLFjzBFIbdgntaI+YfIV2E3pbQ8HE=;
+        b=jsLh4LR3/MuO6MGgikoT0FMbwkUbxDPbynZ6LsH3wRBcbgflZ0TofnYu/sNDsxx1+y
+         TdWgyLcKM4xiGhQvmduOwvamMwDv4mwRnaKErb1k9hVdfMZ0msWz3JBJ/sFp16rAIhhQ
+         L3IUK4zMQvJlFoHNJ0xhByMwS7RNJrUYCiNl3T51O/lra+RGMG64IC00/sGoxrVTYmNb
+         JGipc6Sm0EW3oxtCcsJ/MvtdI/0d44g4PB46D7bGNLOEsiDNWn9M+KQJWqKq+szKq/hA
+         ap739VYvC/fOMFLBPKlDiR4P/fzrIDEaXFU9/UucExc0XacENXk4Qt6NVRTQwOGy8bqz
+         SzHw==
+X-Gm-Message-State: APjAAAWZx17YIRm0Z+d0PgiQ62TNz+AgZQNOScSy/m0cezhiRp+0noAb
+        c2G17It1RP9KJ6bZoUf2oO8btCM2r6eInw==
+X-Google-Smtp-Source: APXvYqzbsJu1vvKQV14p/admrkqLd85nOe8sg6IPpXD54jQhxbM9Nw25iW5G38WDETF0RTx6K76bnA==
+X-Received: by 2002:a5d:6306:: with SMTP id i6mr3369228wru.323.1569593263411;
+        Fri, 27 Sep 2019 07:07:43 -0700 (PDT)
+Received: from [192.168.1.62] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id z1sm5567086wre.40.2019.09.27.07.07.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 27 Sep 2019 07:07:42 -0700 (PDT)
+Subject: Re: [PATCH 6/7] clk: meson: axg-audio: provide clk top signal name
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190924153356.24103-1-jbrunet@baylibre.com>
+ <20190924153356.24103-7-jbrunet@baylibre.com>
+ <b328b0c7-9449-172d-a1ed-7449023ff516@baylibre.com>
+ <1cd21d60-5ded-2f70-3c99-02b70f996870@baylibre.com>
+ <1jh84x2642.fsf@starbuckisacylon.baylibre.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ mQENBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAG0KE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT6JATsEEwEKACUC
+ GyMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheABQJXDO2CAhkBAAoJEBaat7Gkz/iubGIH/iyk
+ RqvgB62oKOFlgOTYCMkYpm2aAOZZLf6VKHKc7DoVwuUkjHfIRXdslbrxi4pk5VKU6ZP9AKsN
+ NtMZntB8WrBTtkAZfZbTF7850uwd3eU5cN/7N1Q6g0JQihE7w4GlIkEpQ8vwSg5W7hkx3yQ6
+ 2YzrUZh/b7QThXbNZ7xOeSEms014QXazx8+txR7jrGF3dYxBsCkotO/8DNtZ1R+aUvRfpKg5
+ ZgABTC0LmAQnuUUf2PHcKFAHZo5KrdO+tyfL+LgTUXIXkK+tenkLsAJ0cagz1EZ5gntuheLD
+ YJuzS4zN+1Asmb9kVKxhjSQOcIh6g2tw7vaYJgL/OzJtZi6JlIW5AQ0ETVkGzwEIALyKDN/O
+ GURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYpQTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXM
+ coJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hi
+ SvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY4yG6xI99NIPEVE9lNBXBKIlewIyVlkOa
+ YvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoMMtsyw18YoX9BqMFInxqYQQ3j/HpVgTSv
+ mo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUXoUk33HEAEQEAAYkBHwQYAQIACQUCTVkG
+ zwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfnM7IbRuiSZS1unlySUVYu3SD6YBYnNi3G
+ 5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa33eDIHu/zr1HMKErm+2SD6PO9umRef8V8
+ 2o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCSKmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+
+ RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJ
+ C3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTTQbM0WUIBIcGmq38+OgUsMYu4NzLu7uZF
+ Acmp6h8guQINBFYnf6QBEADQ+wBYa+X2n/xIQz/RUoGHf84Jm+yTqRT43t7sO48/cBW9vAn9
+ GNwnJ3HRJWKATW0ZXrCr40ES/JqM1fUTfiFDB3VMdWpEfwOAT1zXS+0rX8yljgsWR1UvqyEP
+ 3xN0M/40Zk+rdmZKaZS8VQaXbveaiWMEmY7sBV3QvgOzB7UF2It1HwoCon5Y+PvyE3CguhBd
+ 9iq5iEampkMIkbA3FFCpQFI5Ai3BywkLzbA3ZtnMXR8Qt9gFZtyXvFQrB+/6hDzEPnBGZOOx
+ zkd/iIX59SxBuS38LMlhPPycbFNmtauOC0DNpXCv9ACgC9tFw3exER/xQgSpDVc4vrL2Cacr
+ wmQp1k9E0W+9pk/l8S1jcHx03hgCxPtQLOIyEu9iIJb27TjcXNjiInd7Uea195NldIrndD+x
+ 58/yU3X70qVY+eWbqzpdlwF1KRm6uV0ZOQhEhbi0FfKKgsYFgBIBchGqSOBsCbL35f9hK/JC
+ 6LnGDtSHeJs+jd9/qJj4WqF3x8i0sncQ/gszSajdhnWrxraG3b7/9ldMLpKo/OoihfLaCxtv
+ xYmtw8TGhlMaiOxjDrohmY1z7f3rf6njskoIXUO0nabun1nPAiV1dpjleg60s3OmVQeEpr3a
+ K7gR1ljkemJzM9NUoRROPaT7nMlNYQL+IwuthJd6XQqwzp1jRTGG26J97wARAQABiQM+BBgB
+ AgAJBQJWJ3+kAhsCAikJEBaat7Gkz/iuwV0gBBkBAgAGBQJWJ3+kAAoJEHfc29rIyEnRk6MQ
+ AJDo0nxsadLpYB26FALZsWlN74rnFXth5dQVQ7SkipmyFWZhFL8fQ9OiIoxWhM6rSg9+C1w+
+ n45eByMg2b8H3mmQmyWztdI95OxSREKwbaXVapCcZnv52JRjlc3DoiiHqTZML5x1Z7lQ1T3F
+ 8o9sKrbFO1WQw1+Nc91+MU0MGN0jtfZ0Tvn/ouEZrSXCE4K3oDGtj3AdC764yZVq6CPigCgs
+ 6Ex80k6QlzCdVP3RKsnPO2xQXXPgyJPJlpD8bHHHW7OLfoR9DaBNympfcbQJeekQrTvyoASw
+ EOTPKE6CVWrcQIztUp0WFTdRGgMK0cZB3Xfe6sOp24PQTHAKGtjTHNP/THomkH24Fum9K3iM
+ /4Wh4V2eqGEgpdeSp5K+LdaNyNgaqzMOtt4HYk86LYLSHfFXywdlbGrY9+TqiJ+ZVW4trmui
+ NIJCOku8SYansq34QzYM0x3UFRwff+45zNBEVzctSnremg1mVgrzOfXU8rt+4N1b2MxorPF8
+ 619aCwVP7U16qNSBaqiAJr4e5SNEnoAq18+1Gp8QsFG0ARY8xp+qaKBByWES7lRi3QbqAKZf
+ yOHS6gmYo9gBmuAhc65/VtHMJtxwjpUeN4Bcs9HUpDMDVHdfeRa73wM+wY5potfQ5zkSp0Jp
+ bxnv/cRBH6+c43stTffprd//4Hgz+nJcCgZKtCYIAPkUxABC85ID2CidzbraErVACmRoizhT
+ KR2OiqSLW2x4xdmSiFNcIWkWJB6Qdri0Fzs2dHe8etD1HYaht1ZhZ810s7QOL7JwypO8dscN
+ KTEkyoTGn6cWj0CX+PeP4xp8AR8ot4d0BhtUY34UPzjE1/xyrQFAdnLd0PP4wXxdIUuRs0+n
+ WLY9Aou/vC1LAdlaGsoTVzJ2gX4fkKQIWhX0WVk41BSFeDKQ3RQ2pnuzwedLO94Bf6X0G48O
+ VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <fcf94d1d-0fb4-3fb3-846a-57afcbac41a3@baylibre.com>
+Date:   Fri, 27 Sep 2019 16:07:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190925190512.3404-1-navid.emamdoost@gmail.com>
+In-Reply-To: <1jh84x2642.fsf@starbuckisacylon.baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Provags-ID: V03:K1:87XX0FAUxgZ3ci/9ivhTH7PpNtdW6DCt86TFjJz9H4rtXgXyzLb
- q+NpTfs4SNUz9t1hB3bX/M+YDAWOirKFC1N+76qOYpHUymJWT/9aY9Rlh2Rmbolh/xFMwgC
- EHKVnxmOKBSwZb0n2lxZGGjRvpPhjJQrMrwyxTFdNJkyYhIXyXRoRwxryev54i05XDGIHs8
- PfVZzjgmwoLZvg7DVjPYQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:gWcPJBtUSk8=:L65XnfIzm37/GoIgcGRJqo
- VDN54wQ/DiUytb+vz7ee3Q31WLf97SAt34EEN16oaCYyhUVUsxlX6jQADU1aRF/1xn8XwNEBx
- ePXO314VNOFu3tNKg8NhAlEdsEvyl/Ja9i6l1uLth3sVJnrlFXKeH36jW+OA2ViGlxKSCBSyw
- gm4EQy3xbxb/WALA9Hyg61/kTpY0P6rQ+4tY/p672RpCU6L24340eoOLcM0demFGrWkS8t9C9
- S5OjUWUZQde1hYD7fj7t08zJ2oY4HsPtsPlLKj5ZArquhQb2UZbhYjpPdtDjalpHNRkvheDb1
- u87lzH4VdqqWc1kW84QQS1q6xOchZkDBj0g5sFud2ZLkcAa3DDL4FtpfmEybmO8nD/71bYyVK
- 9BPIR+Hqiu6SqdyqN9LU2eGsJ3Mp97oxYxTJXxNOAewRxw719/EIY7tyhIvOMreuyQGDn0IUF
- CmkNgyxrFv5LKrugcf/ZnX9CEGqaLau9zzWEwX+eFsP34MAHC8N0uYJj/xKCZYHJpWoHMO+w2
- acDQ0IGRUDlWfNTA0GAEcxgs/l5PCVNSc2uVhzSA5Zp1Dr0M5afjUiKgMUVT9opb0M+cIvL9p
- lMvlatGcmsOGB8n7DnKx9xq6h90VmAubJuh33zmS8KkyYXm9SgMsMiMB5hwPUYnQAWG4SocbJ
- HIiuPVH3v7ie0S6y5ncBREixp+0GCMUOAEjH+nFA0vaXLyouaVKeuEqctNYuo2ldoqgi0uhA7
- MHmM7QACyxZrb1cuEQuR9NZdAK4dd9xJ3mt93JRgfdPNKRWqYNkzOA99X3H94aayGCJkWVBCe
- P8XRZKJx9Sii4vgCzlJUOkR56Z3/36Z284FBSIYIt91HL6CIz4miswB6Zre3aAxwLLeIj3rmn
- zG9SIv4mAQuSOU4C1ybNMMGHsHWrSq/sGo+9HQVtzptd37nf0C1dYsROsGEltPykpTlqCc/gC
- T95Bd6VcbTcIygtmXlDeP2HIbh/g6f+0Nb3fKR/y+kQIPCW9od+joP6gO8QlV61l+HEF+qoOd
- xF1II0gdiqa8dmobJ7orfIvgtUue7GcogPmvovnM3tcb/pCZaKX3cEnbV/dkGAMUvcmOeG31d
- 1f6jp0hyjN+oSE7DIIXhbXnofsv6YJ6IWSEeLFrJwmaMVb4qfbU5Mivpx7dW8IMw00vemKxDq
- lJkx/1utYea9peBbLIEj414SmW6SnMLgZ4jdKk8RysBjqHhZsu+M0INz4pi6Qhp7MXjdqBY7Z
- tNEeD9X3thZLFEGWej9NXk0sTKaZ4wQiwt+as0+N40LUwzKQcRJU+tXdyjRE=
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> @@ -433,6 +435,7 @@ nfp_flower_spawn_vnic_reprs(struct nfp_app *app,
->  		err = nfp_repr_init(app, repr,
->  				    port_id, port, priv->nn->dp.netdev);
->  		if (err) {
-> +			kfree(repr_priv);
->  			nfp_port_free(port);
->  			nfp_repr_free(repr);
->  			goto err_reprs_clean;
+On 27/09/2019 15:58, Jerome Brunet wrote:
+> 
+> On Fri 27 Sep 2019 at 11:37, Neil Armstrong <narmstrong@baylibre.com> wrote:
+> 
+>> On 27/09/2019 11:14, Neil Armstrong wrote:
+>>> On 24/09/2019 17:33, Jerome Brunet wrote:
+>>>
+> 
+> [...]
+> 
+>>> AUD_CLKID_TOP seems to be missing here
+>>
+>> Oh, yes it was exposed, do you need to it to be exposed since it's
+>> dummy for G12A ?
+> 
+> It is a bypass clock on g12a and axg yes, but on the sm1.
+> It is the leaf of a block on sm1, for all I know it could be used
+> outside the clock controller.
+> 
+> Of course, I could wait this until there is an actual need for it if that is
+> what you mean ?
 
-How do you think about to move common exception handling code
-to the end of this function implementation by using another jump target?
+Yes, but it's a valid clock on sm1, so leave it as it is.
 
-Regards,
-Markus
+Neil
+
+> 
+>>
+>> Neil
+>>
+>>>
+>>>
+>>>>  /* include the CLKIDs which are part of the DT bindings */
+>>>>  #include <dt-bindings/clock/axg-audio-clkc.h>
+>>>>  
+>>>> -#define NR_CLKS	163
+>>>> +#define NR_CLKS	164
+>>>>  
+>>>>  #endif /*__AXG_AUDIO_CLKC_H */
+>>>>
+>>>
+> 
+
