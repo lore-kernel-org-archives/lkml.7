@@ -2,135 +2,476 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA737C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4797BC388F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79532217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:48:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="eBCI9e2G"
+	by mail.kernel.org (Postfix) with ESMTP id 0E2EA21841
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:51:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569606703;
+	bh=3KPT+FotQbsvKh2EsdDevRBRDIPcm+cPwmf7DXmJU9c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sqF50GxTvUkHw/YlNpMiw1Vt0NGO2RZoyb0ifOaF8+/wdFDApQ1WH5/gWZ4Dz3r9f
+	 DYnykfM3oFPHG0/ezdQS0QvbLDRfw9fIpxMnTY+zn36ObAX0wpE9v6fTUp2W2olb1t
+	 oyOrgPkD9B3TSa25vzhNs9XnsTRSfsvI/QVZ/e1g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728000AbfI0RsK (ORCPT
+        id S1727682AbfI0Rvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 13:48:10 -0400
-Received: from mail-eopbgr790078.outbound.protection.outlook.com ([40.107.79.78]:54624
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726594AbfI0RsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 13:48:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PKtE2uIMc9MO/5mQDQ2QlCWsOAhdPE60Kt5feqCXGjwekQ8HW2hXwLDdPSNH1z1SJStroiltkfhl1KSu5heIdxTRSHwLbQxELVTJoqM92x7l2BMGuqz5BizpiITSIYXQU8y9WoZmPjkDyp+5W1WuSI0T3/nRU0rGU4euW9WCQ70bx1vENI5fPUsVP6fbMOgsw1TR7gMlBqooUAZrouSOHNJA2huiBeLj6bZzF4ArgsDA2oAgnovTgOOHwwsEmeA1LdVQRO4zIp536Cdbbt+ogWXSK47QByEuv5E1na7dezDkIyIbxUnPxXvb4aAtWIAjyihAHkCR/hIJYY6FG8GyiQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dhIf6PIf4I+LJ/iS8PWnECjfmsw8Osoo+DdeE2vgPbw=;
- b=bi/SHqqWnZjALhoS9K8785PjfSTLwGGlFDmOW9CF2IPQJNM5C5IUu+xbWUdRg/kZqOaVijTEOirowpGcsEdfH80i5BNb5Pu/ErHWjRGV7ee8pZOrnM1F7+ePS6ia7iqiu02OBo93AC6FG7SBhA6f+LXkF+9MmoqQe3aYwIC7VQ7hKeAHwaC5eA8khOgSvA5bjTCrf/2n1vpytVj1kyK/2CeuV0m9vbZA1iSN7AHOjQWf7YEfweWQXMa0Qd2qitxZxPq+ZG0vmsym12d7yqeqY5rnNohGWLmkGUl3OydT+s6KstSeXEtVgjmqoQ5p+urfuoF3xZ48Cw0IG389IqjGhQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dhIf6PIf4I+LJ/iS8PWnECjfmsw8Osoo+DdeE2vgPbw=;
- b=eBCI9e2GCg5j+NIkCnjKA4CHOLQajEptyR6l6YyIApmy/ZZFnMhSlpc9FWX2MForcj0amBZ4q+ByIedNdki9KPwcrzXRG3trZnACTBZMOZPy/K6zU3Gw5D/1FQ+acosOliEZ2+0iALDsIJNG8rPeqDh9pJseJFcUhy3Z7DFtnls=
-Received: from CY4PR1201MB0230.namprd12.prod.outlook.com (10.172.79.7) by
- CY4PR1201MB0181.namprd12.prod.outlook.com (10.172.79.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.26; Fri, 27 Sep 2019 17:48:06 +0000
-Received: from CY4PR1201MB0230.namprd12.prod.outlook.com
- ([fe80::708e:c826:5b05:e3f0]) by CY4PR1201MB0230.namprd12.prod.outlook.com
- ([fe80::708e:c826:5b05:e3f0%11]) with mapi id 15.20.2284.023; Fri, 27 Sep
- 2019 17:48:06 +0000
-From:   Harry Wentland <hwentlan@amd.com>
-To:     Lyude Paul <lyude@redhat.com>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>
-CC:     "Wentland, Harry" <Harry.Wentland@amd.com>,
-        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "Zuo, Jerry" <Jerry.Zuo@amd.com>, Thomas Lim <Thomas.Lim@amd.com>,
-        "Francis, David" <David.Francis@amd.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/6] drm/amdgpu/dm/mst: Don't create MST topology managers
- for eDP ports
-Thread-Topic: [PATCH 1/6] drm/amdgpu/dm/mst: Don't create MST topology
- managers for eDP ports
-Thread-Index: AQHVdL0B5kLUEjAc5UmzYJX4Fbcbl6c/zfGA
-Date:   Fri, 27 Sep 2019 17:48:06 +0000
-Message-ID: <2a1d5221-b801-44f9-c966-1163b8d67b3f@amd.com>
-References: <20190926225122.31455-1-lyude@redhat.com>
- <20190926225122.31455-2-lyude@redhat.com>
-In-Reply-To: <20190926225122.31455-2-lyude@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [165.204.55.251]
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
-x-clientproxiedby: YT1PR01CA0011.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::24)
- To CY4PR1201MB0230.namprd12.prod.outlook.com (2603:10b6:910:1e::7)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Harry.Wentland@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6828357a-1c99-488e-babf-08d74372da3b
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:CY4PR1201MB0181;
-x-ms-traffictypediagnostic: CY4PR1201MB0181:
-x-ld-processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR1201MB0181C9029F1B0473F8FA18368C810@CY4PR1201MB0181.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:346;
-x-forefront-prvs: 0173C6D4D5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(366004)(396003)(376002)(136003)(189003)(199004)(256004)(4744005)(66476007)(25786009)(31696002)(7736002)(6246003)(81166006)(66946007)(478600001)(6512007)(305945005)(66556008)(229853002)(6486002)(6436002)(14454004)(66066001)(81156014)(64756008)(66446008)(8676002)(65806001)(446003)(110136005)(4326008)(58126008)(54906003)(316002)(31686004)(2501003)(65956001)(2906002)(52116002)(486006)(476003)(2616005)(26005)(8936002)(76176011)(386003)(6506007)(102836004)(53546011)(6116002)(186003)(99286004)(3846002)(11346002)(36756003)(71200400001)(71190400001)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR1201MB0181;H:CY4PR1201MB0230.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 1b5n473n/vqWYPvfseyfi8IFRnIGN0By/ny7B7K2H/IedsEEPloBkcbBeLNOlxb/Un8qQWjb7Wuo58fJpt5rK29R0U4LDfOw6WE8tseTZswRc5c3uuFcPmal7xbHDeUfOJlUVGQV1jQOB1dA5Q67JNagenyifF7jcDOhOd1V2hnFeptKzTFzubeqKPSbB0fF6+y30yF8m8JeDbVLrOaOBlR8pijGhxv/iMWT2qCbJRhrPTy4rsv3iFrt7QMTtWB4+HyaZ0mDYsc6QcWMb1C2bkNXci/cd1ybJTNSwN/MsDFGl1ZUXmilh52D3I8rWYkewH2tyiPT8Vcah/GcFYfNflZjyo0OOuc2htzg+rLWeY+7ujc/mnCsqQo6HueJE5PZNaMwDHbjqdGwLY/DwwSRNhC25+kxfnOMQ93XdUuSv6w=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <97FEF00A2C6A6741909CDC28AD6A4DC8@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 27 Sep 2019 13:51:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46208 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726294AbfI0Rvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 13:51:42 -0400
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2058121655;
+        Fri, 27 Sep 2019 17:51:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569606700;
+        bh=3KPT+FotQbsvKh2EsdDevRBRDIPcm+cPwmf7DXmJU9c=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=OYz1qxX+uLyT3hdZVaLJ4rBKeni0ymD+ewFXa1zD6+QuizmJZVh5/y1ZtWThNTaoT
+         aQMJaXckHpzDxIfIKpVzNOSObEwtwIZUrmmErwqNb+M40eWF0a0MoIYUUGM6MYLzbK
+         OOP1cLrm7lFu7wlk9BuFzneJLzOCT0bmk/KQDe8U=
+Received: by mail-wr1-f53.google.com with SMTP id w12so4181008wro.5;
+        Fri, 27 Sep 2019 10:51:40 -0700 (PDT)
+X-Gm-Message-State: APjAAAXWWhijnQwr8l8oSevZAPqkuFbDgnycVF5u9H3zx4Xekn/5WLzG
+        ioR5I1va0znnFktGkppirdjxeqJcC9oJ9lsYdGs=
+X-Google-Smtp-Source: APXvYqzqFdBw9b0wTE4nl2InD0zI808HLj3LeTOZ+w78WOoyb3nN8tHl6cEInyahtt3RBB8Zv48rgblN570WFapj8aQ=
+X-Received: by 2002:adf:dbc6:: with SMTP id e6mr3851738wrj.149.1569606698610;
+ Fri, 27 Sep 2019 10:51:38 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6828357a-1c99-488e-babf-08d74372da3b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Sep 2019 17:48:06.6953
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: eyh7jcfc7eI1Hqj+FoX6PoWCs6B7egPqmPVZaohyk/S2fz3Dzvo9KF7Yky7CtbVUu0xqHVW6YbYFM666Wh3STQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0181
+References: <1569560532-1886-1-git-send-email-light.hsieh@mediatek.com> <1569560532-1886-3-git-send-email-light.hsieh@mediatek.com>
+In-Reply-To: <1569560532-1886-3-git-send-email-light.hsieh@mediatek.com>
+From:   Sean Wang <sean.wang@kernel.org>
+Date:   Fri, 27 Sep 2019 10:51:27 -0700
+X-Gmail-Original-Message-ID: <CAGp9LzqB+2DvbGccYchH+ugyEN5RQMvAwrG9cY7pHDPh=u8FOA@mail.gmail.com>
+Message-ID: <CAGp9LzqB+2DvbGccYchH+ugyEN5RQMvAwrG9cY7pHDPh=u8FOA@mail.gmail.com>
+Subject: Re: [PATCH v6 3/5] pinctrl: mediatek: Refine mtk_pinconf_get() and mtk_pinconf_set()
+To:     Light Hsieh <light.hsieh@mediatek.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, kuohong.wang@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0wOS0yNiA2OjUxIHAubS4sIEx5dWRlIFBhdWwgd3JvdGU6DQo+IFNpZ25lZC1vZmYt
-Ynk6IEx5dWRlIFBhdWwgPGx5dWRlQHJlZGhhdC5jb20+DQoNClJldmlld2VkLWJ5OiBIYXJyeSBX
-ZW50bGFuZCA8aGFycnkud2VudGxhbmRAYW1kLmNvbT4NCg0KSGFycnkNCg0KPiAtLS0NCj4gIGRy
-aXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9hbWRncHVfZG0vYW1kZ3B1X2RtX21zdF90eXBlcy5j
-IHwgNCArKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FtZC9kaXNwbGF5L2FtZGdwdV9kbS9hbWRncHVfZG1f
-bXN0X3R5cGVzLmMgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvYW1kZ3B1X2RtL2FtZGdw
-dV9kbV9tc3RfdHlwZXMuYw0KPiBpbmRleCA1ZWMxNGVmZDRkOGMuLjE4NWJmMGUyYmRhMiAxMDA2
-NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FtZC9kaXNwbGF5L2FtZGdwdV9kbS9hbWRncHVf
-ZG1fbXN0X3R5cGVzLmMNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2FtZC9kaXNwbGF5L2FtZGdw
-dV9kbS9hbWRncHVfZG1fbXN0X3R5cGVzLmMNCj4gQEAgLTQxNyw2ICs0MTcsMTAgQEAgdm9pZCBh
-bWRncHVfZG1faW5pdGlhbGl6ZV9kcF9jb25uZWN0b3Ioc3RydWN0IGFtZGdwdV9kaXNwbGF5X21h
-bmFnZXIgKmRtLA0KPiAgCWRybV9kcF9hdXhfcmVnaXN0ZXIoJmFjb25uZWN0b3ItPmRtX2RwX2F1
-eC5hdXgpOw0KPiAgCWRybV9kcF9jZWNfcmVnaXN0ZXJfY29ubmVjdG9yKCZhY29ubmVjdG9yLT5k
-bV9kcF9hdXguYXV4LA0KPiAgCQkJCSAgICAgICZhY29ubmVjdG9yLT5iYXNlKTsNCj4gKw0KPiAr
-CWlmIChhY29ubmVjdG9yLT5iYXNlLmNvbm5lY3Rvcl90eXBlID09IERSTV9NT0RFX0NPTk5FQ1RP
-Ul9lRFApDQo+ICsJCXJldHVybjsNCj4gKw0KPiAgCWFjb25uZWN0b3ItPm1zdF9tZ3IuY2JzID0g
-JmRtX21zdF9jYnM7DQo+ICAJZHJtX2RwX21zdF90b3BvbG9neV9tZ3JfaW5pdCgNCj4gIAkJJmFj
-b25uZWN0b3ItPm1zdF9tZ3IsDQo+IA0K
+Hi,
+
+On Thu, Sep 26, 2019 at 10:02 PM Light Hsieh <light.hsieh@mediatek.com> wrote:
+>
+> 1.Refine mtk_pinconf_get():
+> 1.1 Use only one occurrence of return at end of this function.
+> 1.2 Correct cases for PIN_CONFIG_SLEW_RATE, PIN_CONFIG_INPUT_SCHMITT_ENABLE,
+
+If you want to fix it a bug, you should submit a separate patch for
+that and don't mix fixups and improvements in one.
+
+>     and PIN_CONFIG_OUTPUT_ENABLE -
+>     Use variable ret to receive value in mtk_hw_get_value() (instead of
+>     variable val) since pinconf_to_config_packed() at end of this function
+>     use variable ret to pack config value.
+
+Is that a fixup or an improvement?
+
+>
+> 2.Refine mtk_pinconf_set():
+> 2.1 Use only one occurrence of return at end of this function.
+> 2.2 Modify case of PIN_CONFIG_INPUT_ENABLE -
+>     Remove check of ies_present flag and always invoke mtk_hw_set_value()
+>     since mtk_hw_pin_field_lookup() invoked inside mtk_hw_set_value() has
+>     the same effect of checking if ies control is supported.
+>     [The rationale is that: available of a control is always checked
+>      in mtk_hw_pin_field_lookup() and no need to add ies_present flag
+>      specially for ies control.]
+> 2.3 Simply code logic for case of PIN_CONFIG_INPUT_SCHMITT.
+> 2.4 Add case for PIN_CONFIG_INPUT_SCHMITT_ENABLE and process it with the
+>     same code for case of PIN_CONFIG_INPUT_SCHMITT.
+
+Remember that one patch only does one thing so that please split the
+patch you proposed here to smaller patches in the appropriate group
+which are pointed out by that is either a fixup and an improvement.
+
+>
+
+There are many missing tags
+
+> ---
+>  drivers/pinctrl/mediatek/pinctrl-mt6765.c |   1 -
+>  drivers/pinctrl/mediatek/pinctrl-paris.c  | 211 +++++++++++-------------------
+>  2 files changed, 79 insertions(+), 133 deletions(-)
+>
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mt6765.c b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
+> index e024ebc..bada37f 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mt6765.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
+> @@ -1070,7 +1070,6 @@
+>         .ngrps = ARRAY_SIZE(mtk_pins_mt6765),
+>         .eint_hw = &mt6765_eint_hw,
+>         .gpio_m = 0,
+> -       .ies_present = true,
+>         .base_names = mt6765_pinctrl_register_base_names,
+>         .nbase_names = ARRAY_SIZE(mt6765_pinctrl_register_base_names),
+>         .bias_disable_set = mtk_pinconf_bias_disable_set,
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> index 5217f76..54f069b 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> @@ -78,95 +78,79 @@ static int mtk_pinconf_get(struct pinctrl_dev *pctldev,
+>  {
+>         struct mtk_pinctrl *hw = pinctrl_dev_get_drvdata(pctldev);
+>         u32 param = pinconf_to_config_param(*config);
+> -       int val, val2, err, reg, ret = 1;
+> +       int err, reg, ret = 1;
+>         const struct mtk_pin_desc *desc;
+>
+> -       if (pin >= hw->soc->npins)
+> -               return -EINVAL;
+> +       if (pin >= hw->soc->npins) {
+> +               err = -EINVAL;
+> +               goto out;
+> +       }
+>         desc = (const struct mtk_pin_desc *)&hw->soc->pins[pin];
+>
+>         switch (param) {
+>         case PIN_CONFIG_BIAS_DISABLE:
+> -               if (hw->soc->bias_disable_get) {
+> +               if (hw->soc->bias_disable_get)
+>                         err = hw->soc->bias_disable_get(hw, desc, &ret);
+> -                       if (err)
+> -                               return err;
+> -               } else {
+> -                       return -ENOTSUPP;
+> -               }
+> +               else
+> +                       err = -ENOTSUPP;
+>                 break;
+>         case PIN_CONFIG_BIAS_PULL_UP:
+> -               if (hw->soc->bias_get) {
+> +               if (hw->soc->bias_get)
+>                         err = hw->soc->bias_get(hw, desc, 1, &ret);
+> -                       if (err)
+> -                               return err;
+> -               } else {
+> -                       return -ENOTSUPP;
+> -               }
+> +               else
+> +                       err = -ENOTSUPP;
+>                 break;
+>         case PIN_CONFIG_BIAS_PULL_DOWN:
+> -               if (hw->soc->bias_get) {
+> +               if (hw->soc->bias_get)
+>                         err = hw->soc->bias_get(hw, desc, 0, &ret);
+> -                       if (err)
+> -                               return err;
+> -               } else {
+> -                       return -ENOTSUPP;
+> -               }
+> +               else
+> +                       err = -ENOTSUPP;
+>                 break;
+>         case PIN_CONFIG_SLEW_RATE:
+> -               err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_SR, &val);
+> -               if (err)
+> -                       return err;
+> -
+> -               if (!val)
+> -                       return -EINVAL;
+> -
+> +               err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_SR, &ret);
+>                 break;
+>         case PIN_CONFIG_INPUT_ENABLE:
+>         case PIN_CONFIG_OUTPUT_ENABLE:
+> -               err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DIR, &val);
+> +               err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DIR, &ret);
+>                 if (err)
+> -                       return err;
+> -
+> -               /* HW takes input mode as zero; output mode as non-zero */
+> -               if ((val && param == PIN_CONFIG_INPUT_ENABLE) ||
+> -                   (!val && param == PIN_CONFIG_OUTPUT_ENABLE))
+> -                       return -EINVAL;
+> +                       goto out;
+> +               /*     CONFIG     Current direction return value
+> +                * -------------  ----------------- ----------------------
+> +                * OUTPUT_ENABLE       output       1 (= HW value)
+> +                *                     input        0 (= HW value)
+> +                * INPUT_ENABLE        output       0 (= reverse HW value)
+> +                *                     input        1 (= reverse HW value)
+> +                */
+> +               if (param == PIN_CONFIG_INPUT_ENABLE)
+> +                       ret = !ret;
+>
+>                 break;
+>         case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
+> -               err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DIR, &val);
+> -               if (err)
+> -                       return err;
+> -
+> -               err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_SMT, &val2);
+> +               err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DIR, &ret);
+>                 if (err)
+> -                       return err;
+> +                       goto out;
+> +               /* return error when in output mode
+> +                * because schmitt trigger only work in input mode
+> +                */
+> +               if (ret) {
+> +                       err = -EINVAL;
+> +                       goto out;
+> +               }
+>
+> -               if (val || !val2)
+> -                       return -EINVAL;
+> +               err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_SMT, &ret);
+>
+>                 break;
+>         case PIN_CONFIG_DRIVE_STRENGTH:
+> -               if (hw->soc->drive_get) {
+> +               if (hw->soc->drive_get)
+>                         err = hw->soc->drive_get(hw, desc, &ret);
+> -                       if (err)
+> -                               return err;
+> -               } else {
+> +               else
+>                         err = -ENOTSUPP;
+> -               }
+>                 break;
+>         case MTK_PIN_CONFIG_TDSEL:
+>         case MTK_PIN_CONFIG_RDSEL:
+>                 reg = (param == MTK_PIN_CONFIG_TDSEL) ?
+>                        PINCTRL_PIN_REG_TDSEL : PINCTRL_PIN_REG_RDSEL;
+> -
+> -               err = mtk_hw_get_value(hw, desc, reg, &val);
+> -               if (err)
+> -                       return err;
+> -
+> -               ret = val;
+> -
+> +               err = mtk_hw_get_value(hw, desc, reg, &ret);
+>                 break;
+>         case MTK_PIN_CONFIG_PU_ADV:
+>         case MTK_PIN_CONFIG_PD_ADV:
+> @@ -175,28 +159,24 @@ static int mtk_pinconf_get(struct pinctrl_dev *pctldev,
+>
+>                         pullup = param == MTK_PIN_CONFIG_PU_ADV;
+>                         err = hw->soc->adv_pull_get(hw, desc, pullup, &ret);
+> -                       if (err)
+> -                               return err;
+> -               } else {
+> -                       return -ENOTSUPP;
+> -               }
+> +               } else
+> +                       err = -ENOTSUPP;
+>                 break;
+>         case MTK_PIN_CONFIG_DRV_ADV:
+> -               if (hw->soc->adv_drive_get) {
+> +               if (hw->soc->adv_drive_get)
+>                         err = hw->soc->adv_drive_get(hw, desc, &ret);
+> -                       if (err)
+> -                               return err;
+> -               } else {
+> -                       return -ENOTSUPP;
+> -               }
+> +               else
+> +                       err = -ENOTSUPP;
+>                 break;
+>         default:
+> -               return -ENOTSUPP;
+> +               err = -ENOTSUPP;
+>         }
+>
+> -       *config = pinconf_to_config_packed(param, ret);
+> +out:
+> +       if (!err)
+> +               *config = pinconf_to_config_packed(param, ret);
+>
+> -       return 0;
+> +       return err;
+>  }
+>
+>  static int mtk_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+> @@ -216,60 +196,45 @@ static int mtk_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+>
+>         switch ((u32)param) {
+>         case PIN_CONFIG_BIAS_DISABLE:
+> -               if (hw->soc->bias_disable_set) {
+> +               if (hw->soc->bias_disable_set)
+>                         err = hw->soc->bias_disable_set(hw, desc);
+> -                       if (err)
+> -                               return err;
+> -               } else {
+> -                       return -ENOTSUPP;
+> -               }
+> +               else
+> +                       err = -ENOTSUPP;
+>                 break;
+>         case PIN_CONFIG_BIAS_PULL_UP:
+> -               if (hw->soc->bias_set) {
+> +               if (hw->soc->bias_set)
+>                         err = hw->soc->bias_set(hw, desc, 1);
+> -                       if (err)
+> -                               return err;
+> -               } else {
+> -                       return -ENOTSUPP;
+> -               }
+> +               else
+> +                       err = -ENOTSUPP;
+>                 break;
+>         case PIN_CONFIG_BIAS_PULL_DOWN:
+> -               if (hw->soc->bias_set) {
+> +               if (hw->soc->bias_set)
+>                         err = hw->soc->bias_set(hw, desc, 0);
+> -                       if (err)
+> -                               return err;
+> -               } else {
+> -                       return -ENOTSUPP;
+> -               }
+> +               else
+> +                       err = -ENOTSUPP;
+>                 break;
+>         case PIN_CONFIG_OUTPUT_ENABLE:
+>                 err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_SMT,
+>                                        MTK_DISABLE);
+> -               if (err)
+> +               /* keep set direction to if SMT is not supported on this pin */
+> +               if (err != -ENOTSUPP)
+>                         goto err;
+>
+>                 err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DIR,
+>                                        MTK_OUTPUT);
+> -               if (err)
+> -                       goto err;
+>                 break;
+>         case PIN_CONFIG_INPUT_ENABLE:
+> -               if (hw->soc->ies_present) {
+> -                       mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_IES,
+> -                                        MTK_ENABLE);
+> -               }
+> +               /* regard all non-zero value as enable */
+> +               err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_IES, !!arg);
+> +               if (err)
+> +                       goto err;
+>
+>                 err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DIR,
+>                                        MTK_INPUT);
+> -               if (err)
+> -                       goto err;
+>                 break;
+>         case PIN_CONFIG_SLEW_RATE:
+> -               err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_SR,
+> -                                      arg);
+> -               if (err)
+> -                       goto err;
+> -
+> +               /* regard all non-zero value as enable */
+> +               err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_SR, !!arg);
+>                 break;
+>         case PIN_CONFIG_OUTPUT:
+>                 err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DIR,
+> @@ -279,41 +244,29 @@ static int mtk_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+>
+>                 err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DO,
+>                                        arg);
+> -               if (err)
+> -                       goto err;
+>                 break;
+> +       case PIN_CONFIG_INPUT_SCHMITT:
+>         case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
+> -               /* arg = 1: Input mode & SMT enable ;
+> +               /* arg = 1: Input mode & SMT enable
+>                  * arg = 0: Output mode & SMT disable
+>                  */
+> -               arg = arg ? 2 : 1;
+> -               err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DIR,
+> -                                      arg & 1);
+> +               err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DIR, !arg);
+>                 if (err)
+>                         goto err;
+>
+> -               err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_SMT,
+> -                                      !!(arg & 2));
+> -               if (err)
+> -                       goto err;
+> +               err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_SMT, !!arg);
+>                 break;
+>         case PIN_CONFIG_DRIVE_STRENGTH:
+> -               if (hw->soc->drive_set) {
+> +               if (hw->soc->drive_set)
+>                         err = hw->soc->drive_set(hw, desc, arg);
+> -                       if (err)
+> -                               return err;
+> -               } else {
+> -                       return -ENOTSUPP;
+> -               }
+> +               else
+> +                       err = -ENOTSUPP;
+>                 break;
+>         case MTK_PIN_CONFIG_TDSEL:
+>         case MTK_PIN_CONFIG_RDSEL:
+>                 reg = (param == MTK_PIN_CONFIG_TDSEL) ?
+>                        PINCTRL_PIN_REG_TDSEL : PINCTRL_PIN_REG_RDSEL;
+> -
+>                 err = mtk_hw_set_value(hw, desc, reg, arg);
+> -               if (err)
+> -                       goto err;
+>                 break;
+>         case MTK_PIN_CONFIG_PU_ADV:
+>         case MTK_PIN_CONFIG_PD_ADV:
+> @@ -323,20 +276,14 @@ static int mtk_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+>                         pullup = param == MTK_PIN_CONFIG_PU_ADV;
+>                         err = hw->soc->adv_pull_set(hw, desc, pullup,
+>                                                     arg);
+> -                       if (err)
+> -                               return err;
+> -               } else {
+> -                       return -ENOTSUPP;
+> -               }
+> +               } else
+> +                       err = -ENOTSUPP;
+>                 break;
+>         case MTK_PIN_CONFIG_DRV_ADV:
+> -               if (hw->soc->adv_drive_set) {
+> +               if (hw->soc->adv_drive_set)
+>                         err = hw->soc->adv_drive_set(hw, desc, arg);
+> -                       if (err)
+> -                               return err;
+> -               } else {
+> -                       return -ENOTSUPP;
+> -               }
+> +               else
+> +                       err = -ENOTSUPP;
+>                 break;
+>         default:
+>                 err = -ENOTSUPP;
+> @@ -952,6 +899,7 @@ int mtk_paris_pinctrl_probe(struct platform_device *pdev,
+>         return 0;
+>  }
+>
+> +
+
+Remove unnecessary the change.
+
+>  static int mtk_paris_pinctrl_suspend(struct device *device)
+>  {
+>         struct mtk_pinctrl *pctl = dev_get_drvdata(device);
+> @@ -970,4 +918,3 @@ static int mtk_paris_pinctrl_resume(struct device *device)
+>         .suspend_noirq = mtk_paris_pinctrl_suspend,
+>         .resume_noirq = mtk_paris_pinctrl_resume,
+>  };
+> -
+
+Remove unnecessary the change.
+
+> --
+> 1.8.1.1.dirty
+>
