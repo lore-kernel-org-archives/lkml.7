@@ -2,107 +2,141 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BD7C388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 22:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8424C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 22:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 063A2217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 22:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A5332082F
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 22:51:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XrSbo6tZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K1PMWaVA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbfI0WrM (ORCPT
+        id S1728327AbfI0Wvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 18:47:12 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50236 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbfI0WrL (ORCPT
+        Fri, 27 Sep 2019 18:51:37 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38773 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfI0Wvg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 18:47:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=60BRoPU6f1csk67hhK0xl/wDOsgjDKeSqv9zsD2ShtQ=; b=XrSbo6tZfJZ7zd7+ZSAuO/42Y
-        qfOq186O1Jdde4x0dp0uwEIKzC4l3G8nRDEp2Qbvq2141njSTPMfKpkZppsIGNoJtNwXZBLwy5+Zy
-        NHfo0cCgFlgtNJTx2U72HD9D5ZAk8BAZRoCTnA47coS0tNwYCly8CRke6kVqjlsuLgSiPH1qJ7aNW
-        Nm8U7bj86u6rSqAIM9DritIalPv/XCxx4TW70rhjTiM1zQfsPJuye1ck0Ab31qIuoslmZMpm/cZGc
-        m3c4i7sfUfKZ4slwjyB/kbO/atmPogBjpr4msWplcLelBoCff3UT3p5tg0YqY4vM8cvqTX2JOUPAl
-        qifH26P3g==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iDz15-00034z-CV; Fri, 27 Sep 2019 22:47:11 +0000
-Date:   Fri, 27 Sep 2019 15:47:11 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Vincent Chen <vincent.chen@sifive.com>
-Cc:     linux-riscv@lists.infradead.org, palmer@sifive.com,
-        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu,
-        paul.walmsley@sifive.com
-Subject: Re: [PATCH 4/4] riscv: remove the switch statement in do_trap_break()
-Message-ID: <20190927224711.GI4700@infradead.org>
-References: <1569199517-5884-1-git-send-email-vincent.chen@sifive.com>
- <1569199517-5884-5-git-send-email-vincent.chen@sifive.com>
+        Fri, 27 Sep 2019 18:51:36 -0400
+Received: by mail-ot1-f67.google.com with SMTP id e11so3650511otl.5
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 15:51:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UestkIPELIjBFfWcMJudydMzKJ+gMFgCuI48K8BqrAY=;
+        b=K1PMWaVARwRP8FL++1ErBgWx4Qdus1r4ONn9vNNwu89yrhxqFGuxr4DrOtAfy01N0A
+         VNtv1sAmVr7Y1nn75qAdQz5i7/uPflDiVz2bFpvtrJyKqcf8gQeb7HSoYJ9z/I+3hhQ8
+         +79su4rMPcLgmKpXa6KALw0ZHLKUqDmNY/5blt3LzapYnEOAwOA789BJrUCupeNuSm5u
+         tWa6sQFHOzbjbghiNGMHKObasz/mUgKI98H6sz8k2+dyNaWyxN/lPAIYxtlnLubNwrc/
+         JJsR6KcEHhR/XA9NbWHdrW4PNYHkW4DlrQTxNGTW5w48tnH1J8HuDXisU+yvK6QMhkU1
+         N2nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UestkIPELIjBFfWcMJudydMzKJ+gMFgCuI48K8BqrAY=;
+        b=Bij6pMbxxkLmBYlaSujx4xyjwD8W9GdcmUTwM5T3EFOJVfGSw1XkeUYmZpmYVl5w1z
+         mCkBGWW4hUvBKdRUjyPD/O9zfMpyOQm0mwEcEh2qyblW/sqHu0PJqiXArK7+5CASurV6
+         1QiiW+//FB7uL83lOdhGAJj94Hr9sq3TdI/m8wI+kLNApzjUY7ayKLWZyVfjYsB/q1BI
+         zA6mvbSxERfFZzIZZ8K/qWWV3PcUDIXwi71BoKGgSqe1PrOJKCPQs0airOmbaRyXX2Pt
+         S+LUZ7WTs9sZxsGMVGWL+KZcaPcOj0B+BEb9SyHpB9muz6NvdcSGzlyN7h5BCypWWAaO
+         8Yug==
+X-Gm-Message-State: APjAAAXZEWnR6hCYThUMsS9DGjKSo2s9OOLmJNcIr+V3HUBAtPFPzH8g
+        Iy09/yZ/jpb6UUz+bdMM5SmI0dV3IPwWTsLlbk3xuQ==
+X-Google-Smtp-Source: APXvYqztJgW0BPdmBajhQzrtxxzRSauVev6OBtd6SsBpd7X8EfW0nxAdOJDaed4nJVCUyelbJcfqxSBn0PfalhIMNSc=
+X-Received: by 2002:a05:6830:1358:: with SMTP id r24mr4925285otq.349.1569624695280;
+ Fri, 27 Sep 2019 15:51:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1569199517-5884-5-git-send-email-vincent.chen@sifive.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20190919222421.27408-1-almasrymina@google.com>
+ <3c73d2b7-f8d0-16bf-b0f0-86673c3e9ce3@oracle.com> <CAHS8izOj2AT4tX-+Hcb8LB2TOUKJDHScDtJ80u4M6OWpwktq0g@mail.gmail.com>
+ <a8e9c533-1593-35ee-e65d-1f2fc2b0fb48@oracle.com> <CAHS8izPfKQA8qTndyzWSm9fR_xJ=X-xmE+4P4K+ZFdxrYNuLBA@mail.gmail.com>
+ <alpine.DEB.2.21.1909261220150.39830@chino.kir.corp.google.com>
+ <8f7db4f1-9c16-def5-79dc-d38d6b9d150e@oracle.com> <CAHS8izM3=ZDNukx5xhWmeJT+78Ekfff9J4s5Vqkqpx-DtH=C-A@mail.gmail.com>
+ <794398cc-07a4-d235-a0da-0246f5a09f6e@oracle.com>
+In-Reply-To: <794398cc-07a4-d235-a0da-0246f5a09f6e@oracle.com>
+From:   Mina Almasry <almasrymina@google.com>
+Date:   Fri, 27 Sep 2019 15:51:24 -0700
+Message-ID: <CAHS8izMg4=mJd_d-f3ueiq6Q1AfTFBSjLXeNkkuZO0iV0Dk-iA@mail.gmail.com>
+Subject: Re: [PATCH v5 0/7] hugetlb_cgroup: Add hugetlb_cgroup reservation limits
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Tejun Heo <tj@kernel.org>, David Rientjes <rientjes@google.com>,
+        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>,
+        shuah <shuah@kernel.org>, Shakeel Butt <shakeelb@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        khalid.aziz@oracle.com, open list <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+        cgroups@vger.kernel.org,
+        =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 08:45:17AM +0800, Vincent Chen wrote:
-> To make the code more straightforward, replacing the switch statement
-> with if statement.
-> 
-> Suggested-by: Paul Walmsley <paul.walmsley@sifive.com>
-> Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
-> ---
->  arch/riscv/kernel/traps.c | 23 ++++++++++++-----------
->  1 file changed, 12 insertions(+), 11 deletions(-)
-> 
-> diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-> index dd13bc90aeb6..1ac75f7d0bff 100644
-> --- a/arch/riscv/kernel/traps.c
-> +++ b/arch/riscv/kernel/traps.c
-> @@ -124,23 +124,24 @@ static inline unsigned long get_break_insn_length(unsigned long pc)
->  
->  asmlinkage void do_trap_break(struct pt_regs *regs)
->  {
-> +	if (user_mode(regs)) {
-> +		force_sig_fault(SIGTRAP, TRAP_BRKPT,
-> +				(void __user *)(regs->sepc));
-> +		return;
-> +	}
-> +#ifdef CONFIG_GENERIC_BUG
-> +	{
->  		enum bug_trap_type type;
->  
->  		type = report_bug(regs->sepc, regs);
-> +		if (type == BUG_TRAP_TYPE_WARN) {
->  			regs->sepc += get_break_insn_length(regs->sepc);
->  			return;
->  		}
-> +#endif /* CONFIG_GENERIC_BUG */
-> +
-> +	die(regs, "Kernel BUG");
+On Fri, Sep 27, 2019 at 2:59 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+>
+> On 9/26/19 5:55 PM, Mina Almasry wrote:
+> > Provided we keep the existing controller untouched, should the new
+> > controller track:
+> >
+> > 1. only reservations, or
+> > 2. both reservations and allocations for which no reservations exist
+> > (such as the MAP_NORESERVE case)?
+> >
+> > I like the 'both' approach. Seems to me a counter like that would work
+> > automatically regardless of whether the application is allocating
+> > hugetlb memory with NORESERVE or not. NORESERVE allocations cannot cut
+> > into reserved hugetlb pages, correct?
+>
+> Correct.  One other easy way to allocate huge pages without reserves
+> (that I know is used today) is via the fallocate system call.
+>
+> >                                       If so, then applications that
+> > allocate with NORESERVE will get sigbused when they hit their limit,
+> > and applications that allocate without NORESERVE may get an error at
+> > mmap time but will always be within their limits while they access the
+> > mmap'd memory, correct?
+>
+> Correct.  At page allocation time we can easily check to see if a reservation
+> exists and not charge.  For any specific page within a hugetlbfs file,
+> a charge would happen at mmap time or allocation time.
+>
+> One exception (that I can think of) to this mmap(RESERVE) will not cause
+> a SIGBUS rule is in the case of hole punch.  If someone punches a hole in
+> a file, not only do they remove pages associated with the file but the
+> reservation information as well.  Therefore, a subsequent fault will be
+> the same as an allocation without reservation.
+>
 
-I like where this is going, but I think this can be improved further
-given that fact that report_bug has a nice stub for the
-!CONFIG_GENERIC_BUG case.
+I don't think it causes a sigbus. This is the scenario, right:
 
-How about:
+1. Make cgroup with limit X bytes.
+2. Task in cgroup mmaps a file with X bytes, causing the cgroup to get charged
+3. A hole of size Y is punched in the file, causing the cgroup to get
+uncharged Y bytes.
+4. The task faults in memory from the hole, getting charged up to Y
+bytes again. But they will be still within their limits.
 
-	if (user_mode(regs))
-		force_sig_fault(SIGTRAP, TRAP_BRKPT, (void __user *)regs->sepc);
-	else if (report_bug(regs->sepc, regs) == BUG_TRAP_TYPE_WARN)
-		regs->sepc += get_break_insn_length(regs->sepc);
-	else
-		die(regs, "Kernel BUG");
+IIUC userspace only gets sigbus'd if the limit is lowered between
+steps 3 and 4, and it's ok if it gets sigbus'd there in my opinion.
+
+> I 'think' the code to remove/truncate a file will work corrctly as it
+> is today, but I need to think about this some more.
+>
+> > mmap'd memory, correct? So the 'both' counter seems like a one size
+> > fits all.
+> >
+> > I think the only sticking point left is whether an added controller
+> > can support both cgroup-v2 and cgroup-v1. If I could get confirmation
+> > on that I'll provide a patchset.
+>
+> Sorry, but I can not provide cgroup expertise.
+> --
+> Mike Kravetz
