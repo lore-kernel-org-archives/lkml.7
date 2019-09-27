@@ -2,141 +2,115 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BE9C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48746C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AA7321906
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:24:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1301E20872
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:25:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fOt4rEu6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YJJoQmks"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbfI0UYl (ORCPT
+        id S1728241AbfI0UZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 16:24:41 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45095 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfI0UYk (ORCPT
+        Fri, 27 Sep 2019 16:25:05 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46737 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbfI0UZE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 16:24:40 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y72so2171032pfb.12
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 13:24:40 -0700 (PDT)
+        Fri, 27 Sep 2019 16:25:04 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q5so2166185pfg.13
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 13:25:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=av8uQTzC5kAZ04adK2jUzugM4hsPl2jUpES0RTtperI=;
-        b=fOt4rEu6WT8wmVxdYRnJ5ZS/3wY9TTML1Y6MVTtId1t6nLAYoWvXz6fmKAFPqs+mKo
-         ZA3BjyNtKIj11n5uTvytcNvyA7XeEokpO/MzutnuoG5QJI1kWN1/YwV4twGddY3JDHDu
-         RzKU8tvzIixQ23Is9KezC3Lc3CVs9C3ZELa9UeAF8y7CB6srtOXhCV0RWf7zyF7Mo2iI
-         68qI11EL5VsmZ5SuQH9uB/MaD6PRt6Tuek+8zTVk7TSNNAtALCggtOy3zC4cydScB+PM
-         O/8YmwGUfZYeGNowVOONCOp8Zj6UB2RiJ93SDjb3jh6vVTFsLmYK4I6QBsc0cXxPvqC8
-         lI/w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=P7s7y5MsBXTHC1vdLioQVRyjRMpyNf8MnGkSVFAC734=;
+        b=YJJoQmksBuEHSBpTTvwBx1b1GH0h0CMSQvQtggC+RcX6dS8q8zI+hryFjw79cuv4T5
+         fiDJGtUJS9ArNS8RcuRMAEc7hWJeyUfSecHutl7Q2hn6c1H3xyRMaza/MO7cH3m2pfMf
+         R38vyjWplTHBZSJsWyJA5dLy9hUPR67rR+eD1CRyH8aDSUUiYw1fUaJPlN2RNk5ES5gA
+         xgLRjP+b23Sao70l5RkrKgpoJc3uX0bYoD/bE+dL05OY4Sy9FDEcY+gR4r+MxejYjgC7
+         q9wKlAMsbtEE89eTXSDFIjtgf+E+hgWLIiKyTLRpj7607RDJWQ44sGbHkQ3QonH4xeLV
+         6+UQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=av8uQTzC5kAZ04adK2jUzugM4hsPl2jUpES0RTtperI=;
-        b=QmdUhNc9nJzNAxt+CS6LLdouOWC3LidBvCthQIzvWJKS7RFJNnIy959wlDMbKtZzJU
-         AGazxVjuHniRyLgbJK2HXC9ajbyWd/rEi/qV/d4Rm9VntGXy/hJFKJfwtD5pvq1iF1UC
-         3oweyfCY+okPispO0RF6rGtx6uFPdsLgIC6+UyQNKS3+9tbbqquRiEyBgiVfke6uIJSH
-         wXVxuZiZZgIDzGdUg6ET+zfGCMzNmYxj6fhoYnYvogJPLsgvHvoF78JzEmuHgKr5rC6S
-         ve/dO+r1alvjMjLXs95UlzgEu15cFgADBL+rKBw/Hi+sGLWHfugQBzut/HEq02JhiTcx
-         g81A==
-X-Gm-Message-State: APjAAAV84N2IuNfWHTG/m/1yNADQRGaGs8T9gYj8OpF8X9yM1Q5M/nN6
-        HCk14W36JiMULngQUMZ/8sfFuw==
-X-Google-Smtp-Source: APXvYqwJQvt389v7itLWsRH7wK5uJv4VwzElBVKJOw/6JIjr8ATfdDL8RmFn0F1a0Swpg/916AirEg==
-X-Received: by 2002:a17:90a:80c9:: with SMTP id k9mr11914360pjw.68.1569615879390;
-        Fri, 27 Sep 2019 13:24:39 -0700 (PDT)
-Received: from js-desktop.svl.corp.google.com ([2620:15c:2cd:2:5e41:bb1f:98fb:39da])
-        by smtp.gmail.com with ESMTPSA id d1sm3421894pfc.98.2019.09.27.13.24.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Sep 2019 13:24:38 -0700 (PDT)
-Subject: Re: [PATCH v2 2/3] KVM: x86: fix nested guest live migration with PML
-To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-References: <1569582943-13476-1-git-send-email-pbonzini@redhat.com>
- <1569582943-13476-3-git-send-email-pbonzini@redhat.com>
-From:   Junaid Shahid <junaids@google.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=junaids@google.com; keydata=
- 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
- iWogGkOc4UGfcj87Lt9ivHEsVoo/lwCTIiQ=
-Organization: Google
-Message-ID: <0b6701ed-8eac-1f52-8fdd-c06d2289ce11@google.com>
-Date:   Fri, 27 Sep 2019 13:24:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P7s7y5MsBXTHC1vdLioQVRyjRMpyNf8MnGkSVFAC734=;
+        b=hBojs0XFLRj9rjhl6cZYwPAtpXNDXverf9VZwwaPGjxgdH3hqa+5zXXYxuIFi/oEKK
+         2AWSnjqtc8UQbuOKeSw3INo+j6qDMeE3MYo4EwC7u/OL3tRyj6FRbe7glBeZilK1LmjS
+         WhQJyD0Zsj7vy6USGI9rCLf495rP8KZ7MdFKeHIJNjxUdjWwHj68FrdTnPwfxyOAojNA
+         etvJ8SzIPzwJHG9pwg9NN1AG1StDmquSAY9GvwejkU/Jsx65YUoOhWunGhNFQzAUvCmd
+         kmYR5h0xUJnw3TUl0y2iMW6G8YAMhggbkpoKVXxfKpisOU1vwkk1hof20CNaan4RoWVY
+         FZOg==
+X-Gm-Message-State: APjAAAX9riE9cu5BuvMSLG5pzOmEvnOb/V4uI359+b8Mzizu6l43MKZV
+        AceZcwSPOQmW0NpQJtiCkSQWPGWLmvzJ57xwIab3tQ==
+X-Google-Smtp-Source: APXvYqzMUnAsIsa7nXqhxzBmb9GTNmgw/tH9hfMTaKRwVaF8crXXuj+i10xF1biCfF4+8MgByFOhhPFB07fXi5be8Fo=
+X-Received: by 2002:a65:48cf:: with SMTP id o15mr7733135pgs.263.1569615901799;
+ Fri, 27 Sep 2019 13:25:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1569582943-13476-3-git-send-email-pbonzini@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1563150885.git.jpoimboe@redhat.com> <20190715193834.5tvzukcwq735ufgb@treble>
+ <CAKwvOdnXt=_NVjK7+RjuxeyESytO6ra769i4qjSwt1Gd1G22dA@mail.gmail.com>
+ <20190716231718.flutou25wemgsfju@treble> <CAKwvOdn8_NENF8_cxizrD-PYN_t11px+51WKtkAUa2Q-vH68yw@mail.gmail.com>
+In-Reply-To: <CAKwvOdn8_NENF8_cxizrD-PYN_t11px+51WKtkAUa2Q-vH68yw@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 27 Sep 2019 13:24:50 -0700
+Message-ID: <CAKwvOdmXbkprvi5FO2aic__JQh7z4NmU6MV_iqcnfu5G7T=9Xg@mail.gmail.com>
+Subject: Re: [PATCH 00/22] x86, objtool: several fixes/improvements
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/27/19 4:15 AM, Paolo Bonzini wrote:
-> Shadow paging is fundamentally incompatible with the page-modification
-> log, because the GPAs in the log come from the wrong memory map.
-> In particular, for the EPT page-modification log, the GPAs in the log come
-> from L2 rather than L1.  (If there was a non-EPT page-modification log,
-> we couldn't use it for shadow paging because it would log GVAs rather
-> than GPAs).
-> 
-> Therefore, we need to rely on write protection to record dirty pages.
-> This has the side effect of bypassing PML, since writes now result in an
-> EPT violation vmexit.
-> 
-> This is relatively easy to add to KVM, because pretty much the only place
-> that needs changing is spte_clear_dirty.  The first access to the page
-> already goes through the page fault path and records the correct GPA;
-> it's only subsequent accesses that are wrong.  Therefore, we can equip
-> set_spte (where the first access happens) to record that the SPTE will
-> have to be write protected, and then spte_clear_dirty will use this
-> information to do the right thing.
-> 
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
+On Thu, Jul 18, 2019 at 3:26 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> On Tue, Jul 16, 2019 at 4:17 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> >
+> > > > > 2) There's also an issue in clang where a large switch table had a bunch
+> > > > >    of unused (bad) entries.  It's not a code correctness issue, but
+> > > > >    hopefully it can get fixed in clang anyway.  See patch 20/22 for more
+> > > > >    details.
+> > >
+> > > Thanks for the report, let's follow up on steps for me to reproduce.
+> >
+> > Just to clarify, there are two clang issues.  Both of them were reported
+> > originally by Arnd, IIRC.
+> >
+> > 1) The one described above and in patch 20, where the switch table is
+> >    mostly unused entries.  Not a real bug, but it's a bit sloppy and
+> >    wasteful, and objtool doesn't know how to interpret it.
+>
+> Thanks for the concise reports.  Will follow up on these in:
+> https://github.com/ClangBuiltLinux/linux/issues/611
 
-Reviewed-by: Junaid Shahid <junaids@google.com>
+Following up on this one; in one of the test cases we determined that
+the default destination of an exhaustive switch wasn't getting cleaned
+up properly, and is being fixed in:
+https://reviews.llvm.org/D68131
+https://bugs.llvm.org/show_bug.cgi?id=43129
+I'm not sure that was the precise issue you described, or if there's
+more than one bug here, but hopefully it will help.
+
+>
+> >
+> > 2) The bug with the noreturn call site having a different stack size
+> >    depending on which code path was taken.
+>
+> and:
+> https://github.com/ClangBuiltLinux/linux/issues/612
+-- 
+Thanks,
+~Nick Desaulniers
