@@ -7,56 +7,54 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A899CC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 546E1C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74580217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EE7021655
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:35:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="u9ckipjt"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VCPw5Avx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728344AbfI0Sex (ORCPT
+        id S1728432AbfI0SfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 14:34:53 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:57762 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728123AbfI0Ses (ORCPT
+        Fri, 27 Sep 2019 14:35:00 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:50510 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728377AbfI0Se5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 14:34:48 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8RIYlVD091552;
-        Fri, 27 Sep 2019 13:34:47 -0500
+        Fri, 27 Sep 2019 14:34:57 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8RIYu7Q077570;
+        Fri, 27 Sep 2019 13:34:56 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569609287;
-        bh=HuKfbtAS6502L4aeFWxqTkMVjLR2uSz+eszYj8624Hc=;
+        s=ti-com-17Q1; t=1569609296;
+        bh=FSYboD3JqHG1wzgmeZLkIKXYQEnzeuEpUNa4uQ9WH1Q=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=u9ckipjtcX5OQdppvsWuablAlM0B205g8e0bO8PbL6s/PgFfDT+7up5FRutFiuhrK
-         6Zdm3aVoyx4zPLw6b7kQX+rhf7XBru+qXmLn5gIz9fk2p+z1uJSWyIEknLdmGAzhO+
-         NPZfUkWfnULoLeJS5TOLjpwjhAsfytwGvBAQMbUw=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8RIYlaG054057
+        b=VCPw5AvxQASa9XvUJOo+5njnfU6Rw+1nvIwxlXKnbAm1riDDZXWIBeYs71FZ6Z//s
+         1ZFo5xSnvx06ErdyqrqWkJvKa070J26IBDgylAQOjDLGDX14ZbWmX08138v4GIUONE
+         oYlFAz3eeqghmHGKUopfo/MXYIry3yY7BdOLhuJs=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8RIYuKe061257
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 27 Sep 2019 13:34:47 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 27 Sep 2019 13:34:56 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 27
- Sep 2019 13:34:38 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ Sep 2019 13:34:56 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 27 Sep 2019 13:34:38 -0500
+ Frontend Transport; Fri, 27 Sep 2019 13:34:48 -0500
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8RIYgbs073031;
-        Fri, 27 Sep 2019 13:34:46 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8RIYgc3073031;
+        Fri, 27 Sep 2019 13:34:56 -0500
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>
 CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Nikhil Devshatwar <nikhil.nd@ti.com>,
-        Benoit Parrot <bparrot@ti.com>
-Subject: [Patch 05/16] media: ti-vpe: Add support for NV21 format
-Date:   Fri, 27 Sep 2019 13:36:39 -0500
-Message-ID: <20190927183650.31345-6-bparrot@ti.com>
+        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
+Subject: [Patch 14/16] media: ti-vpe: Set the DMA mask and coherent mask
+Date:   Fri, 27 Sep 2019 13:36:48 -0500
+Message-ID: <20190927183650.31345-15-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190927183650.31345-1-bparrot@ti.com>
 References: <20190927183650.31345-1-bparrot@ti.com>
@@ -68,164 +66,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikhil Devshatwar <nikhil.nd@ti.com>
+VPE uses VPDMA (built-in dma engine) to transfer data to and from the IP
+and memory. VPDMA expect 32 bits addresses. To make sure that is always
+the case set the DMA mask and coherent mask for the device.
 
-In NV21 format, the chroma plane is written to memory such that the U
-and V components are swapped for NV12.
-
-Create a new entry in the VPDMA formats to describe the correct data
-types used in the data descriptors.
-
-Update all checks for NV12 and add NV21 there as well.
-
-Add support for V4L2_PIX_FMT_NV21 format for both capture and output
-streams.
-
-Signed-off-by: Nikhil Devshatwar <nikhil.nd@ti.com>
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 ---
- drivers/media/platform/ti-vpe/vpdma.c      | 11 ++++++--
- drivers/media/platform/ti-vpe/vpdma.h      |  1 +
- drivers/media/platform/ti-vpe/vpdma_priv.h |  1 +
- drivers/media/platform/ti-vpe/vpe.c        | 29 +++++++++++++++++-----
- 4 files changed, 34 insertions(+), 8 deletions(-)
+ drivers/media/platform/ti-vpe/vpe.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/media/platform/ti-vpe/vpdma.c b/drivers/media/platform/ti-vpe/vpdma.c
-index 53d27cd6e10a..817d287c8138 100644
---- a/drivers/media/platform/ti-vpe/vpdma.c
-+++ b/drivers/media/platform/ti-vpe/vpdma.c
-@@ -56,6 +56,11 @@ const struct vpdma_data_format vpdma_yuv_fmts[] = {
- 		.data_type	= DATA_TYPE_C420,
- 		.depth		= 4,
- 	},
-+	[VPDMA_DATA_FMT_CB420] = {
-+		.type		= VPDMA_DATA_FMT_TYPE_YUV,
-+		.data_type	= DATA_TYPE_CB420,
-+		.depth		= 4,
-+	},
- 	[VPDMA_DATA_FMT_YCR422] = {
- 		.type		= VPDMA_DATA_FMT_TYPE_YUV,
- 		.data_type	= DATA_TYPE_YCR422,
-@@ -825,7 +830,8 @@ void vpdma_rawchan_add_out_dtd(struct vpdma_desc_list *list, int width,
- 	channel = next_chan = raw_vpdma_chan;
- 
- 	if (fmt->type == VPDMA_DATA_FMT_TYPE_YUV &&
--			fmt->data_type == DATA_TYPE_C420) {
-+	    (fmt->data_type == DATA_TYPE_C420 ||
-+	     fmt->data_type == DATA_TYPE_CB420)) {
- 		rect.height >>= 1;
- 		rect.top >>= 1;
- 		depth = 8;
-@@ -893,7 +899,8 @@ void vpdma_add_in_dtd(struct vpdma_desc_list *list, int width,
- 	channel = next_chan = chan_info[chan].num;
- 
- 	if (fmt->type == VPDMA_DATA_FMT_TYPE_YUV &&
--			fmt->data_type == DATA_TYPE_C420) {
-+	    (fmt->data_type == DATA_TYPE_C420 ||
-+	     fmt->data_type == DATA_TYPE_CB420)) {
- 		rect.height >>= 1;
- 		rect.top >>= 1;
- 		depth = 8;
-diff --git a/drivers/media/platform/ti-vpe/vpdma.h b/drivers/media/platform/ti-vpe/vpdma.h
-index 28bc94129348..bce17329c4c9 100644
---- a/drivers/media/platform/ti-vpe/vpdma.h
-+++ b/drivers/media/platform/ti-vpe/vpdma.h
-@@ -71,6 +71,7 @@ enum vpdma_yuv_formats {
- 	VPDMA_DATA_FMT_C444,
- 	VPDMA_DATA_FMT_C422,
- 	VPDMA_DATA_FMT_C420,
-+	VPDMA_DATA_FMT_CB420,
- 	VPDMA_DATA_FMT_YCR422,
- 	VPDMA_DATA_FMT_YC444,
- 	VPDMA_DATA_FMT_CRY422,
-diff --git a/drivers/media/platform/ti-vpe/vpdma_priv.h b/drivers/media/platform/ti-vpe/vpdma_priv.h
-index c488609bc162..d8ae3e1cd54d 100644
---- a/drivers/media/platform/ti-vpe/vpdma_priv.h
-+++ b/drivers/media/platform/ti-vpe/vpdma_priv.h
-@@ -92,6 +92,7 @@
- #define DATA_TYPE_C444				0x4
- #define DATA_TYPE_C422				0x5
- #define DATA_TYPE_C420				0x6
-+#define DATA_TYPE_CB420				0x16
- #define DATA_TYPE_YC444				0x8
- #define DATA_TYPE_YCB422			0x7
- #define DATA_TYPE_YCR422			0x17
 diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index 5d0ec5f7ca25..f3ee9ff87927 100644
+index ad9d8b559cad..d7f8eb901475 100644
 --- a/drivers/media/platform/ti-vpe/vpe.c
 +++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -248,6 +248,14 @@ static struct vpe_fmt vpe_formats[] = {
- 				    &vpdma_yuv_fmts[VPDMA_DATA_FMT_C420],
- 				  },
- 	},
-+	{
-+		.fourcc		= V4L2_PIX_FMT_NV21,
-+		.types		= VPE_FMT_TYPE_CAPTURE | VPE_FMT_TYPE_OUTPUT,
-+		.coplanar	= 1,
-+		.vpdma_fmt	= { &vpdma_yuv_fmts[VPDMA_DATA_FMT_Y420],
-+				    &vpdma_yuv_fmts[VPDMA_DATA_FMT_CB420],
-+				  },
-+	},
- 	{
- 		.fourcc		= V4L2_PIX_FMT_YUYV,
- 		.types		= VPE_FMT_TYPE_CAPTURE | VPE_FMT_TYPE_OUTPUT,
-@@ -686,7 +694,8 @@ static void set_cfg_modes(struct vpe_ctx *ctx)
- 	 * Cfg Mode 1: YUV422 source, disable upsampler, DEI is de-interlacing.
- 	 */
+@@ -2517,6 +2517,13 @@ static int vpe_probe(struct platform_device *pdev)
+ 	struct vpe_dev *dev;
+ 	int ret, irq, func;
  
--	if (fmt->fourcc == V4L2_PIX_FMT_NV12)
-+	if (fmt->fourcc == V4L2_PIX_FMT_NV12 ||
-+	    fmt->fourcc == V4L2_PIX_FMT_NV21)
- 		cfg_mode = 0;
- 
- 	write_field(us1_reg0, cfg_mode, VPE_US_MODE_MASK, VPE_US_MODE_SHIFT);
-@@ -701,7 +710,8 @@ static void set_line_modes(struct vpe_ctx *ctx)
- 	struct vpe_fmt *fmt = ctx->q_data[Q_DATA_SRC].fmt;
- 	int line_mode = 1;
- 
--	if (fmt->fourcc == V4L2_PIX_FMT_NV12)
-+	if (fmt->fourcc == V4L2_PIX_FMT_NV12 ||
-+	    fmt->fourcc == V4L2_PIX_FMT_NV21)
- 		line_mode = 0;		/* double lines to line buffer */
- 
- 	/* regs for now */
-@@ -763,7 +773,8 @@ static void set_dst_registers(struct vpe_ctx *ctx)
- 	 */
- 	val |= VPE_DS_SRC_DEI_SCALER | VPE_CSC_SRC_DEI_SCALER;
- 
--	if (fmt->fourcc != V4L2_PIX_FMT_NV12)
-+	if (fmt->fourcc != V4L2_PIX_FMT_NV12 &&
-+	    fmt->fourcc != V4L2_PIX_FMT_NV21)
- 		val |= VPE_DS_BYPASS;
- 
- 	mmr_adb->out_fmt_reg[0] = val;
-@@ -1129,8 +1140,13 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
- 
- 			if (field) {
- 				int height = q_data->height / 2;
--				int bpp = fmt->fourcc == V4L2_PIX_FMT_NV12 ?
--						1 : (vpdma_fmt->depth >> 3);
-+				int bpp;
++	ret = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
++	if (ret) {
++		dev_err(&pdev->dev,
++			"32-bit consistent DMA enable failed\n");
++		return ret;
++	}
 +
-+				if (fmt->fourcc == V4L2_PIX_FMT_NV12 ||
-+				    fmt->fourcc == V4L2_PIX_FMT_NV21)
-+					bpp = 1;
-+				else
-+					bpp = vpdma_fmt->depth >> 3;
- 
- 				if (plane)
- 					height /= 2;
-@@ -1148,7 +1164,8 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
- 	frame_width = q_data->c_rect.width;
- 	frame_height = q_data->c_rect.height;
- 
--	if (p_data->vb_part && fmt->fourcc == V4L2_PIX_FMT_NV12)
-+	if (p_data->vb_part && (fmt->fourcc == V4L2_PIX_FMT_NV12 ||
-+				fmt->fourcc == V4L2_PIX_FMT_NV21))
- 		frame_height /= 2;
- 
- 	vpdma_add_in_dtd(&ctx->desc_list, q_data->width, stride,
+ 	dev = devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
+ 	if (!dev)
+ 		return -ENOMEM;
 -- 
 2.17.1
 
