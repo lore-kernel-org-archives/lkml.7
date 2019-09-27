@@ -2,61 +2,63 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF08C388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 019F0C388F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E82BA217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC47920872
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:45:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="b/LdKpUH"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cfWbJsWH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbfI0SpR (ORCPT
+        id S1728514AbfI0SpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 14:45:17 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:48166 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfI0SpR (ORCPT
+        Fri, 27 Sep 2019 14:45:21 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:46734 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfI0SpS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 14:45:17 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8RIjEVD068668;
-        Fri, 27 Sep 2019 13:45:14 -0500
+        Fri, 27 Sep 2019 14:45:18 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8RIjHMk094629;
+        Fri, 27 Sep 2019 13:45:17 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569609914;
-        bh=rA7FtL2+Qf+WIRNaxJA48Ma8rhf/5zjYgvZGEIMyaH0=;
-        h=From:To:CC:Subject:Date;
-        b=b/LdKpUHTy01PCJazGkorNpAfgS7uX1Xsnhw9QuX5jOAjMd7kSt6rbFbnJpTbzvIp
-         ab8Jq3cDAc6MaszFJt2zilddSj2bmjyKz0UvEXH1We2qgPIhDJbHghuW11mgDHhHMU
-         JOCc7rreKZpUAPDEFstzdBMhloiR0XeAct9QzWY4=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8RIjEvX074913
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 27 Sep 2019 13:45:14 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+        s=ti-com-17Q1; t=1569609917;
+        bh=CrlXIhfT8xsTDmUmEr9Vo9usJitecelkTp/ShJS5Jrc=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=cfWbJsWH3jTMGMExD1e//p+mdipMd0efinzI8/GCKXGr2IfLDPNw3vFW2LtHl0v7B
+         O2jEyFw1N06Z2JVTzboYzsFC8z/imz49yLArznk+3q7hIW+a6szDsCJ68xvgqNNGld
+         JrvT2Na+/YodeTRlYUXQUTHIrGpKHYp4BTjHKH8k=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8RIjHBP122200;
+        Fri, 27 Sep 2019 13:45:17 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 27
- Sep 2019 13:45:06 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ Sep 2019 13:45:16 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 27 Sep 2019 13:45:14 -0500
+ Frontend Transport; Fri, 27 Sep 2019 13:45:08 -0500
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8RIjEVV122194;
-        Fri, 27 Sep 2019 13:45:14 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8RIjEVX122194;
+        Fri, 27 Sep 2019 13:45:16 -0500
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>,
         Sakari Ailus <sakari.ailus@linux.intel.com>
 CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v4 0/8] media: i2c: ov2659: maintenance series
-Date:   Fri, 27 Sep 2019 13:47:14 -0500
-Message-ID: <20190927184722.31989-1-bparrot@ti.com>
+        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>,
+        Jyri Sarha <jsarha@ti.com>
+Subject: [Patch v4 2/8] media: i2c: ov2659: Fix sensor detection to actually fail when device is not present
+Date:   Fri, 27 Sep 2019 13:47:16 -0500
+Message-ID: <20190927184722.31989-3-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190927184722.31989-1-bparrot@ti.com>
+References: <20190927184722.31989-1-bparrot@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
@@ -65,58 +67,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series is a collection of patches we have been carrying for a
-while.
+Make sure that if the expected sensor device id register
+is not recognized properly the failure is propagated
+up so devices are not left partially initialized.
 
-It includes a few sensor register fixes which would cause visual
-artifacts at lower resolution and also at 720p.
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+---
+ drivers/media/i2c/ov2659.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Also on some board the 'powerdown' and /or 'reset' pins are not tied so
-we need to add support for optional gpios to handle these.
-
-Since these camera are removable on some board we also need the driver
-to actually fail when there is no hardware present so the driver is
-actually removed.
-
-Also added a patch to check and propagate errors on s_stream invocation.
-
-Finally, we update the licensing statement to use SPDX licensing.
-
-Changes since v3:
-- Addressed review comment from Sakari about s_ctrl i2c access whne
-  powered off
-
-Changes since v2:
-- Addressed review comment from Sakari
-- Reworked the "media: i2c: ov2659: Add powerdown/reset gpio handling"
-  to use pm_runtime if it is available but not to make it depend on it.
-- Cleaned up the gpio related calls to remove the unnecessary NULL check
-
-Changes since v1:
-- Addressed review comment from Prabhakar
-- Added support for reset-gpios
-- Rework the power setting to use pm_runtime instead of s_power
-  as based on discussion with Sakari it would be the prefered method
-- Added a patch to reduce the number explicit include files to the
-  minimum necessary instead of the previous kitchen sink approach
-
-Benoit Parrot (8):
-  media: i2c: ov2659: Fix for image wrap-around in lower resolution
-  media: i2c: ov2659: Fix sensor detection to actually fail when device
-    is not present
-  media: i2c: ov2659: Cleanup include file list
-  media: i2c: ov2659: fix s_stream return value
-  media: dt-bindings: ov2659: add powerdown/reset-gpios optional
-    property
-  media: i2c: ov2659: Add powerdown/reset gpio handling
-  media: i2c: ov2659: Fix missing 720p register config
-  media: i2c: ov2659: Switch to SPDX Licensing
-
- .../devicetree/bindings/media/i2c/ov2659.txt  |   9 ++
- drivers/media/i2c/Kconfig                     |   2 +-
- drivers/media/i2c/ov2659.c                    | 138 +++++++++++++-----
- 3 files changed, 112 insertions(+), 37 deletions(-)
-
+diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
+index 17573257097d..efbe6dc720e2 100644
+--- a/drivers/media/i2c/ov2659.c
++++ b/drivers/media/i2c/ov2659.c
+@@ -1330,11 +1330,12 @@ static int ov2659_detect(struct v4l2_subdev *sd)
+ 		unsigned short id;
+ 
+ 		id = OV265X_ID(pid, ver);
+-		if (id != OV2659_ID)
++		if (id != OV2659_ID) {
+ 			dev_err(&client->dev,
+ 				"Sensor detection failed (%04X, %d)\n",
+ 				id, ret);
+-		else {
++			ret = -ENODEV;
++		} else {
+ 			dev_info(&client->dev, "Found OV%04X sensor\n", id);
+ 			ret = ov2659_init(sd, 0);
+ 		}
 -- 
 2.17.1
 
