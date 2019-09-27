@@ -2,115 +2,124 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48746C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5397C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1301E20872
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:25:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YJJoQmks"
+	by mail.kernel.org (Postfix) with ESMTP id 875DE21850
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:25:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569615942;
+	bh=r2vE5dlqlQPzqhl0r/WVG8RIJerI5DZ0ICEng9Q1xwo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GgSrGj7pmWxN0VwYswJdpIiazKdUOrwa/aP23j83Ht6X4lC0uJbPnVQRBD12VZuRC
+	 ttDND0nDvgX2GVF5SNxlvf1D66PiWyOGKR2okwuDwEimENzVyfZaMlNaafrTOF0HO0
+	 DrbcTmGKFC/VitrxiB9LuRzLVS/qQeCiMgdjoLGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728241AbfI0UZF (ORCPT
+        id S1728286AbfI0UZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 16:25:05 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46737 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbfI0UZE (ORCPT
+        Fri, 27 Sep 2019 16:25:41 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43265 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfI0UZl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 16:25:04 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q5so2166185pfg.13
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 13:25:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=P7s7y5MsBXTHC1vdLioQVRyjRMpyNf8MnGkSVFAC734=;
-        b=YJJoQmksBuEHSBpTTvwBx1b1GH0h0CMSQvQtggC+RcX6dS8q8zI+hryFjw79cuv4T5
-         fiDJGtUJS9ArNS8RcuRMAEc7hWJeyUfSecHutl7Q2hn6c1H3xyRMaza/MO7cH3m2pfMf
-         R38vyjWplTHBZSJsWyJA5dLy9hUPR67rR+eD1CRyH8aDSUUiYw1fUaJPlN2RNk5ES5gA
-         xgLRjP+b23Sao70l5RkrKgpoJc3uX0bYoD/bE+dL05OY4Sy9FDEcY+gR4r+MxejYjgC7
-         q9wKlAMsbtEE89eTXSDFIjtgf+E+hgWLIiKyTLRpj7607RDJWQ44sGbHkQ3QonH4xeLV
-         6+UQ==
+        Fri, 27 Sep 2019 16:25:41 -0400
+Received: by mail-ot1-f67.google.com with SMTP id o44so3355732ota.10;
+        Fri, 27 Sep 2019 13:25:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P7s7y5MsBXTHC1vdLioQVRyjRMpyNf8MnGkSVFAC734=;
-        b=hBojs0XFLRj9rjhl6cZYwPAtpXNDXverf9VZwwaPGjxgdH3hqa+5zXXYxuIFi/oEKK
-         2AWSnjqtc8UQbuOKeSw3INo+j6qDMeE3MYo4EwC7u/OL3tRyj6FRbe7glBeZilK1LmjS
-         WhQJyD0Zsj7vy6USGI9rCLf495rP8KZ7MdFKeHIJNjxUdjWwHj68FrdTnPwfxyOAojNA
-         etvJ8SzIPzwJHG9pwg9NN1AG1StDmquSAY9GvwejkU/Jsx65YUoOhWunGhNFQzAUvCmd
-         kmYR5h0xUJnw3TUl0y2iMW6G8YAMhggbkpoKVXxfKpisOU1vwkk1hof20CNaan4RoWVY
-         FZOg==
-X-Gm-Message-State: APjAAAX9riE9cu5BuvMSLG5pzOmEvnOb/V4uI359+b8Mzizu6l43MKZV
-        AceZcwSPOQmW0NpQJtiCkSQWPGWLmvzJ57xwIab3tQ==
-X-Google-Smtp-Source: APXvYqzMUnAsIsa7nXqhxzBmb9GTNmgw/tH9hfMTaKRwVaF8crXXuj+i10xF1biCfF4+8MgByFOhhPFB07fXi5be8Fo=
-X-Received: by 2002:a65:48cf:: with SMTP id o15mr7733135pgs.263.1569615901799;
- Fri, 27 Sep 2019 13:25:01 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DBr+kyAQD3h7/fDbIxlNBsTTTrh86TRcvJ4J3ndHmVw=;
+        b=ebT2Vw/hbb+UISgzFnqIbSnJad6R0yBe6mMfCEwi5UnOEQil9QaqTTqSWeaKedx1Ss
+         yCLdAHSMeYpHRt/Nm+SR0AA3EyVvBJR/WZSsitPSoOi3WVb1GuwCrScLK5nfIy1ZX2UG
+         nEYs9KWu1SYbf/39j2x+ft5/NX+DYf0HxZrbfyYn0Uyp/gdvxVWkcs4RyK625D/4OqRf
+         U20SVo90fh926YMUXnUnsl7gFYOiJxlpy9VHm4lD7fKFDMrUzM+iCr4v4HM3KK5IhGXM
+         2m4q9DZlyNZpPTowLpzutrmUaF2C6mTcu3NHbTjUT9hDSp//KN59ZSOezsSrmfKoIaYU
+         rSXQ==
+X-Gm-Message-State: APjAAAV9PLOmdQ/mN3e0lHGplEPnucKtT9280jv34uiIZsfcT1s1Ql8Y
+        rvpxow2x+P66qHkuSllhatG9jRA=
+X-Google-Smtp-Source: APXvYqznd9NzbTUbTaK9aZBHJBB3SLh8bEoM8JN+tq6aSN8pFSjK7Qd+cpbLPIWfWclC1JcDFrlD0Q==
+X-Received: by 2002:a9d:2de4:: with SMTP id g91mr4467829otb.57.1569615940792;
+        Fri, 27 Sep 2019 13:25:40 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id d95sm1379473otb.25.2019.09.27.13.25.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Sep 2019 13:25:40 -0700 (PDT)
+Date:   Fri, 27 Sep 2019 15:25:39 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     vkoul@kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dan.j.williams@intel.com,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] dt-bindings: dmaengine: dma-common: Change
+ dma-channel-mask to uint32-array
+Message-ID: <20190927202539.GA20669@bogus>
+References: <20190926111954.9184-1-peter.ujfalusi@ti.com>
+ <20190926111954.9184-2-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-References: <cover.1563150885.git.jpoimboe@redhat.com> <20190715193834.5tvzukcwq735ufgb@treble>
- <CAKwvOdnXt=_NVjK7+RjuxeyESytO6ra769i4qjSwt1Gd1G22dA@mail.gmail.com>
- <20190716231718.flutou25wemgsfju@treble> <CAKwvOdn8_NENF8_cxizrD-PYN_t11px+51WKtkAUa2Q-vH68yw@mail.gmail.com>
-In-Reply-To: <CAKwvOdn8_NENF8_cxizrD-PYN_t11px+51WKtkAUa2Q-vH68yw@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 27 Sep 2019 13:24:50 -0700
-Message-ID: <CAKwvOdmXbkprvi5FO2aic__JQh7z4NmU6MV_iqcnfu5G7T=9Xg@mail.gmail.com>
-Subject: Re: [PATCH 00/22] x86, objtool: several fixes/improvements
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190926111954.9184-2-peter.ujfalusi@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 18, 2019 at 3:26 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> On Tue, Jul 16, 2019 at 4:17 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> >
-> > > > > 2) There's also an issue in clang where a large switch table had a bunch
-> > > > >    of unused (bad) entries.  It's not a code correctness issue, but
-> > > > >    hopefully it can get fixed in clang anyway.  See patch 20/22 for more
-> > > > >    details.
-> > >
-> > > Thanks for the report, let's follow up on steps for me to reproduce.
-> >
-> > Just to clarify, there are two clang issues.  Both of them were reported
-> > originally by Arnd, IIRC.
-> >
-> > 1) The one described above and in patch 20, where the switch table is
-> >    mostly unused entries.  Not a real bug, but it's a bit sloppy and
-> >    wasteful, and objtool doesn't know how to interpret it.
->
-> Thanks for the concise reports.  Will follow up on these in:
-> https://github.com/ClangBuiltLinux/linux/issues/611
+On Thu, Sep 26, 2019 at 02:19:52PM +0300, Peter Ujfalusi wrote:
+> Make the dma-channel-mask to be usable for controllers with more than 32
+> channels.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+>  Documentation/devicetree/bindings/dma/dma-common.yaml | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/dma-common.yaml b/Documentation/devicetree/bindings/dma/dma-common.yaml
+> index ed0a49a6f020..4527f20301ff 100644
+> --- a/Documentation/devicetree/bindings/dma/dma-common.yaml
+> +++ b/Documentation/devicetree/bindings/dma/dma-common.yaml
+> @@ -25,11 +25,18 @@ properties:
+>        Used to provide DMA controller specific information.
+>  
+>    dma-channel-mask:
+> -    $ref: /schemas/types.yaml#definitions/uint32
+>      description:
+>        Bitmask of available DMA channels in ascending order that are
+>        not reserved by firmware and are available to the
+>        kernel. i.e. first channel corresponds to LSB.
+> +      The first item in the array is for channels 0-31, the second is for
+> +      channels 32-63, etc.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +        items:
+> +          minItems: 1
+> +          # Should be enough
+> +          maxItems: 255
 
-Following up on this one; in one of the test cases we determined that
-the default destination of an exhaustive switch wasn't getting cleaned
-up properly, and is being fixed in:
-https://reviews.llvm.org/D68131
-https://bugs.llvm.org/show_bug.cgi?id=43129
-I'm not sure that was the precise issue you described, or if there's
-more than one bug here, but hopefully it will help.
+'items' has to be a separate sub-schema from $ref to have any effect:
 
->
-> >
-> > 2) The bug with the noreturn call site having a different stack size
-> >    depending on which code path was taken.
->
-> and:
-> https://github.com/ClangBuiltLinux/linux/issues/612
--- 
-Thanks,
-~Nick Desaulniers
+    allOf:
+      - $ref: /schemas/types.yaml#/definitions/uint32-array                                                        
+    items:
+      minItems: 1
+      # Should be enough
+      maxItems: 255
+
+Or (note the added '-'):
+
+    allOf:                                                                                                            
+      - $ref: /schemas/types.yaml#/definitions/uint32-array                                                           
+      - items:                                                                                                            
+          minItems: 1                                                                                                     
+          # Should be enough                                                                                              
+          maxItems: 255                                                                                                   
+
+The first way is my preference.
+
+Rob
