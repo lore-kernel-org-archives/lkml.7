@@ -2,144 +2,96 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98867C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B155BC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 672142082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:59:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mWn09GYj"
+	by mail.kernel.org (Postfix) with ESMTP id 75BF921841
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:59:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569621588;
+	bh=PK8b13bjmCsYmkQdL08hbsEZcnCC+UVSudjG9MgcJqE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=INhaNjj4ryf4oNsIxLDqKBtLosUafSEDm3wTwcX25/cFE/XEUpSEk7xWysZ6Eya2o
+	 +GtJDVJI9tumMJmzSr/N5H8AUQVcm5kmaiG4PS+K6NVuzR6mnPot4kNlH2w5EdToCL
+	 FPzospdG4Gmsy3XVqGwaizcr8N4pu3/PqPb0tjpI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbfI0V7a (ORCPT
+        id S1728414AbfI0V7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 17:59:30 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:57278 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728323AbfI0V7a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 17:59:30 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8RLxLEZ014595;
-        Fri, 27 Sep 2019 21:59:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=q7WvLzPyUVDxnfSPZC1SgNGak5YEXm7HxP2DMgL+p+Q=;
- b=mWn09GYjV4guHlpVnkiOPepptZLjc70Mw7Us0Es0uISfV8HwAM71Xvn/i5DehhjXLDgA
- NVQ5ZLh8t8TFdjdSY3zaeLGtBkBdrcoGQWPEzLuZEIoiYeBqDgpDXuHLCRFlzDJ9pHDR
- i84Qezf1W8+FWF/t1dIUaEvwsI1JS9Dz3VY3DZBxa9Z2XBh7ir/kYr402sbKB7mxuUjd
- UkVKAnSqnMlL7xS9kR7oFp+IKDJqvuq/D6JrvpJbSUbgsd6cRo64WcZQVsYQn0K0vfoe
- xfoTUv2//Xc8BOENpyF3m06PkDlI0RxB3iremcGTq9jUrNjXLKyCGepqMorhkShol8kM zg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2v5cgrmneq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Sep 2019 21:59:21 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8RLvvuA074084;
-        Fri, 27 Sep 2019 21:59:20 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2v91bw8sbr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Sep 2019 21:59:20 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8RLxJKQ012058;
-        Fri, 27 Sep 2019 21:59:19 GMT
-Received: from [192.168.1.222] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 27 Sep 2019 14:59:19 -0700
-Subject: Re: [PATCH v5 0/7] hugetlb_cgroup: Add hugetlb_cgroup reservation
- limits
-To:     Mina Almasry <almasrymina@google.com>, Tejun Heo <tj@kernel.org>
-Cc:     David Rientjes <rientjes@google.com>,
-        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>,
-        shuah <shuah@kernel.org>, Shakeel Butt <shakeelb@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        khalid.aziz@oracle.com, open list <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        cgroups@vger.kernel.org,
-        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>
-References: <20190919222421.27408-1-almasrymina@google.com>
- <3c73d2b7-f8d0-16bf-b0f0-86673c3e9ce3@oracle.com>
- <CAHS8izOj2AT4tX-+Hcb8LB2TOUKJDHScDtJ80u4M6OWpwktq0g@mail.gmail.com>
- <a8e9c533-1593-35ee-e65d-1f2fc2b0fb48@oracle.com>
- <CAHS8izPfKQA8qTndyzWSm9fR_xJ=X-xmE+4P4K+ZFdxrYNuLBA@mail.gmail.com>
- <alpine.DEB.2.21.1909261220150.39830@chino.kir.corp.google.com>
- <8f7db4f1-9c16-def5-79dc-d38d6b9d150e@oracle.com>
- <CAHS8izM3=ZDNukx5xhWmeJT+78Ekfff9J4s5Vqkqpx-DtH=C-A@mail.gmail.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <794398cc-07a4-d235-a0da-0246f5a09f6e@oracle.com>
-Date:   Fri, 27 Sep 2019 14:59:17 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <CAHS8izM3=ZDNukx5xhWmeJT+78Ekfff9J4s5Vqkqpx-DtH=C-A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9393 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=996
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909270186
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9393 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909270186
+        Fri, 27 Sep 2019 17:59:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40498 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725990AbfI0V7r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 17:59:47 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 883312082F;
+        Fri, 27 Sep 2019 21:59:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569621586;
+        bh=PK8b13bjmCsYmkQdL08hbsEZcnCC+UVSudjG9MgcJqE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=a1EB0Jfk92b0u0UZlXn9Ms6VE7tfNDsGyOhdTEi2indVTH6LqicuYWehBpKyOixpL
+         4GjhxvGnOHFSvnyZYMtfBI075kUoLSNyt9xjKEpVsHG1iMffAJTUwuRoJXMVQXSJ05
+         b31eGiIpCPoWnl3EdifTimDezcotfBvLvJNYqdcU=
+Date:   Fri, 27 Sep 2019 14:59:45 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/page_alloc: fix a crash in free_pages_prepare()
+Message-Id: <20190927145945.846a3f3405d3af066827d3f5@linux-foundation.org>
+In-Reply-To: <1569619686.5576.242.camel@lca.pw>
+References: <1569613623-16820-1-git-send-email-cai@lca.pw>
+        <20190927140222.6f7d0a41b9e734053ee911b9@linux-foundation.org>
+        <1569619686.5576.242.camel@lca.pw>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/26/19 5:55 PM, Mina Almasry wrote:
-> Provided we keep the existing controller untouched, should the new
-> controller track:
-> 
-> 1. only reservations, or
-> 2. both reservations and allocations for which no reservations exist
-> (such as the MAP_NORESERVE case)?
-> 
-> I like the 'both' approach. Seems to me a counter like that would work
-> automatically regardless of whether the application is allocating
-> hugetlb memory with NORESERVE or not. NORESERVE allocations cannot cut
-> into reserved hugetlb pages, correct?
+On Fri, 27 Sep 2019 17:28:06 -0400 Qian Cai <cai@lca.pw> wrote:
 
-Correct.  One other easy way to allocate huge pages without reserves
-(that I know is used today) is via the fallocate system call.
+> >=20
+> > So I think you've moved the arch_free_page() to be after the final
+> > thing which can access page contents, yes?  If so, we should have a
+> > comment in free_pages_prepare() to attmept to prevent this problem from
+> > reoccurring as the code evolves?
+>=20
+> Right, something like this above arch_free_page() there?
+>=20
+> /*
+>  * It needs to be just above=A0kernel_map_pages(), as s390 could mark tho=
+se
+>  * pages unused and then trigger a fault when accessing.
+>  */
 
->                                       If so, then applications that
-> allocate with NORESERVE will get sigbused when they hit their limit,
-> and applications that allocate without NORESERVE may get an error at
-> mmap time but will always be within their limits while they access the
-> mmap'd memory, correct?
+I did this.
 
-Correct.  At page allocation time we can easily check to see if a reservation
-exists and not charge.  For any specific page within a hugetlbfs file,
-a charge would happen at mmap time or allocation time.
+--- a/mm/page_alloc.c~mm-page_alloc-fix-a-crash-in-free_pages_prepare-fix
++++ a/mm/page_alloc.c
+@@ -1179,7 +1179,13 @@ static __always_inline bool free_pages_p
+ 		kernel_init_free_pages(page, 1 << order);
+=20
+ 	kernel_poison_pages(page, 1 << order, 0);
++	/*
++	 * arch_free_page() can make the page's contents inaccessible.  s390
++	 * does this.  So nothing which can access the page's contents should
++	 * happen after this.
++	 */
+ 	arch_free_page(page, order);
++
+ 	if (debug_pagealloc_enabled())
+ 		kernel_map_pages(page, 1 << order, 0);
+=20
+_
 
-One exception (that I can think of) to this mmap(RESERVE) will not cause
-a SIGBUS rule is in the case of hole punch.  If someone punches a hole in
-a file, not only do they remove pages associated with the file but the
-reservation information as well.  Therefore, a subsequent fault will be
-the same as an allocation without reservation.
-
-I 'think' the code to remove/truncate a file will work corrctly as it
-is today, but I need to think about this some more.
-
-> mmap'd memory, correct? So the 'both' counter seems like a one size
-> fits all.
-> 
-> I think the only sticking point left is whether an added controller
-> can support both cgroup-v2 and cgroup-v1. If I could get confirmation
-> on that I'll provide a patchset.
-
-Sorry, but I can not provide cgroup expertise.
--- 
-Mike Kravetz
