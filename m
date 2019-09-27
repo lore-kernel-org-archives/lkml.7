@@ -2,91 +2,84 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5CBC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC466C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 724D5207E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92E11207E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:03:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbfI0UBN (ORCPT
+        id S1728177AbfI0UDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 16:01:13 -0400
-Received: from proxima.lasnet.de ([78.47.171.185]:51977 "EHLO
-        proxima.lasnet.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbfI0UBN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 16:01:13 -0400
-Received: from localhost.localdomain (p200300E9D742D296A393C26E681B47E6.dip0.t-ipconnect.de [IPv6:2003:e9:d742:d296:a393:c26e:681b:47e6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 27 Sep 2019 16:03:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56704 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725802AbfI0UDE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 16:03:04 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: stefan@datenfreihafen.org)
-        by proxima.lasnet.de (Postfix) with ESMTPSA id 890E7C1B22;
-        Fri, 27 Sep 2019 22:01:10 +0200 (CEST)
-Subject: Re: [PATCH] ieee802154: ca8210: prevent memory leak
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Harry Morris <h.morris@cascoda.com>,
-        Alexander Aring <alex.aring@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wpan@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190917224713.26371-1-navid.emamdoost@gmail.com>
-From:   Stefan Schmidt <stefan@datenfreihafen.org>
-Message-ID: <cda67450-267f-3c94-68b6-73ea8c4dfe2f@datenfreihafen.org>
-Date:   Fri, 27 Sep 2019 22:01:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        by mx1.redhat.com (Postfix) with ESMTPS id 0AC5B307D84D;
+        Fri, 27 Sep 2019 20:03:04 +0000 (UTC)
+Received: from ovpn-117-172.phx2.redhat.com (ovpn-117-172.phx2.redhat.com [10.3.117.172])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F0ACD1001B07;
+        Fri, 27 Sep 2019 20:02:57 +0000 (UTC)
+Message-ID: <7804e2b7f629ff655bc8284bad17fb263d4a003a.camel@redhat.com>
+Subject: Re: [PATCH RT 4/8] sched: migrate disable: Protect cpus_ptr with
+ lock
+From:   Scott Wood <swood@redhat.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Date:   Fri, 27 Sep 2019 15:02:57 -0500
+In-Reply-To: <20190927121954.3gbzk3i3jbpugrjo@linutronix.de>
+References: <20190727055638.20443-1-swood@redhat.com>
+         <20190727055638.20443-5-swood@redhat.com>
+         <20190926163940.khzhsp3a4h7vj7lw@linutronix.de>
+         <f3b31297df859eb7d1dc86637c29b271fbf87970.camel@redhat.com>
+         <20190927121954.3gbzk3i3jbpugrjo@linutronix.de>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-In-Reply-To: <20190917224713.26371-1-navid.emamdoost@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 27 Sep 2019 20:03:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello.
-
-On 18.09.19 00:47, Navid Emamdoost wrote:
-> In ca8210_probe the allocated pdata needs to be assigned to
-> spi_device->dev.platform_data before calling ca8210_get_platform_data.
-> Othrwise when ca8210_get_platform_data fails pdata cannot be released.
+On Fri, 2019-09-27 at 14:19 +0200, Sebastian Andrzej Siewior wrote:
+> On 2019-09-26 11:52:42 [-0500], Scott Wood wrote:
+> > Looks good, thanks!
 > 
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> ---
->   drivers/net/ieee802154/ca8210.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ieee802154/ca8210.c b/drivers/net/ieee802154/ca8210.c
-> index b188fce3f641..229d70a897ca 100644
-> --- a/drivers/net/ieee802154/ca8210.c
-> +++ b/drivers/net/ieee802154/ca8210.c
-> @@ -3152,12 +3152,12 @@ static int ca8210_probe(struct spi_device *spi_device)
->   		goto error;
->   	}
->   
-> +	priv->spi->dev.platform_data = pdata;
->   	ret = ca8210_get_platform_data(priv->spi, pdata);
->   	if (ret) {
->   		dev_crit(&spi_device->dev, "ca8210_get_platform_data failed\n");
->   		goto error;
->   	}
-> -	priv->spi->dev.platform_data = pdata;
->   
->   	ret = ca8210_dev_com_init(priv);
->   	if (ret) {
-> 
+> Thanks, just released.
+> Moving forward. It would be nice to have some DL-dev feedback on DL
+> patch. For the remaining once, could please throw Steven's
+> stress-test-hostplug-cpu-script? If that one does not complain I don't
+> see a reason why not apply the patches (since they improve performance
+> and do not break anything while doing so).
 
-As Harry seems to be unavailable I am taking this patch directly.
+I'd been using a quick-and-dirty script that does something similar, and ran
+it along with rcutorture, a kernel build, and something that randomly
+changes affinities -- though with these loads I have to ignore occasional
+RCU forward progress complaints that Paul said were expected with this
+version of the RCU code, XFS warnings that happen even on unmodified non-RT, 
+and sometimes a transitory netdev timeout that is not that surprising given
+the heavy load and affinity stress (I get it without these patches as well,
+though it takes longer).
 
+I just ran Steven's script (both alone and with the other stuff above) and
+saw no difference.
 
-This patch has been applied to the wpan tree and will be
-part of the next pull request to net. Thanks!
+-Scott
 
-regards
-Stefan Schmidt
