@@ -2,160 +2,136 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4F4C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 02:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F3BAC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 02:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89730208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 02:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B6DD207FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 02:17:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727962AbfI0CIz (ORCPT
+        id S1728152AbfI0CRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 22:08:55 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:5753 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727505AbfI0CIy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 22:08:54 -0400
-X-IronPort-AV: E=Sophos;i="5.64,553,1559491200"; 
-   d="scan'208";a="76089673"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 27 Sep 2019 10:08:53 +0800
-Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
-        by cn.fujitsu.com (Postfix) with ESMTP id 7C6EB4CE14E1;
-        Fri, 27 Sep 2019 10:08:51 +0800 (CST)
-Received: from [10.167.226.60] (10.167.226.60) by
- G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- (TLS) id 14.3.439.0; Fri, 27 Sep 2019 10:08:53 +0800
-Subject: Re: [RFC PATCH] x86/doc/boot_protocol: Correct the description of
- "reloc"
-To:     <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>
-CC:     <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <tglx@linutronix.de>,
-        <mingo@redhat.com>, <bp@alien8.de>, <corbet@lwn.net>
-References: <20190926042116.17929-1-caoj.fnst@cn.fujitsu.com>
- <20190926060139.GA100481@gmail.com>
- <faabfe47-ba3e-5a92-af65-dc26e8e2ecb9@cn.fujitsu.com>
- <3073CD01-65C5-4BEC-B2FC-F76DD0E70D73@zytor.com>
- <dff52431-ce54-7c64-b223-36f4491c53b0@cn.fujitsu.com>
- <A44CE024-DEB0-476C-B71B-883307952F10@zytor.com>
-From:   Cao jin <caoj.fnst@cn.fujitsu.com>
-Message-ID: <2595d3db-4149-5764-c265-62af273fb3e5@cn.fujitsu.com>
-Date:   Fri, 27 Sep 2019 10:09:05 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <A44CE024-DEB0-476C-B71B-883307952F10@zytor.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.167.226.60]
-X-yoursite-MailScanner-ID: 7C6EB4CE14E1.A86F1
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: caoj.fnst@cn.fujitsu.com
+        Thu, 26 Sep 2019 22:17:09 -0400
+Received: from mga17.intel.com ([192.55.52.151]:25572 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726140AbfI0CRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 22:17:09 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Sep 2019 19:17:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,553,1559545200"; 
+   d="scan'208";a="193020627"
+Received: from unknown (HELO local-michael-cet-test.sh.intel.com) ([10.239.159.128])
+  by orsmga003.jf.intel.com with ESMTP; 26 Sep 2019 19:17:06 -0700
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, sean.j.christopherson@intel.com
+Cc:     mst@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
+        Yang Weijiang <weijiang.yang@intel.com>
+Subject: [PATCH v7 0/7] Introduce support for Guest CET feature
+Date:   Fri, 27 Sep 2019 10:19:20 +0800
+Message-Id: <20190927021927.23057-1-weijiang.yang@intel.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/27/19 3:18 AM, hpa@zytor.com wrote:
-> On September 26, 2019 1:20:02 AM PDT, Cao jin <caoj.fnst@cn.fujitsu.com> wrote:
->> On 9/26/19 3:58 PM, hpa@zytor.com wrote:
->>> On September 26, 2019 12:55:51 AM PDT, Cao jin
->> <caoj.fnst@cn.fujitsu.com> wrote:
->>>> On 9/26/19 2:01 PM, Ingo Molnar wrote:
->>>>> * Cao jin <caoj.fnst@cn.fujitsu.com> wrote:
->>>>>
->>>>>> The fields marked with (reloc) actually are not dedicated for
->>>> writing,
->>>>>> but communicating info for relocatable kernel with boot loaders.
->> For
->>>>>> example:
->>>>>>
->>>>>>     ============    ============
->>>>>>     Field name:     pref_address
->>>>>>     Type:           read (reloc)
->>>>>>     Offset/size:    0x258/8
->>>>>>     Protocol:       2.10+
->>>>>>     ============    ============
->>>>>>
->>>>>>     ============    ========================
->>>>>>     Field name:     code32_start
->>>>>>     Type:           modify (optional, reloc)
->>>>>>     Offset/size:    0x214/4
->>>>>>     Protocol:       2.00+
->>>>>>     ============    ========================
->>>>>>
->>>>>> Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
->>>>>> ---
->>>>>> Unless I have incorrect non-native understanding for "fill in", I
->>>> think
->>>>>> this is inaccurate.
->>>>>>
->>>>>>  Documentation/x86/boot.rst | 2 +-
->>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/Documentation/x86/boot.rst
->> b/Documentation/x86/boot.rst
->>>>>> index 08a2f100c0e6..a611bf04492d 100644
->>>>>> --- a/Documentation/x86/boot.rst
->>>>>> +++ b/Documentation/x86/boot.rst
->>>>>> @@ -243,7 +243,7 @@ bootloader ("modify").
->>>>>>  
->>>>>>  All general purpose boot loaders should write the fields marked
->>>>>>  (obligatory).  Boot loaders who want to load the kernel at a
->>>>>> -nonstandard address should fill in the fields marked (reloc);
->> other
->>>>>> +nonstandard address should consult with the fields marked
->> (reloc);
->>>> other
->>>>>>  boot loaders can ignore those fields.
->>>>>>  
->>>>>>  The byte order of all fields is littleendian (this is x86, after
->>>> all.)
->>>>>
->>>>> Well, this documentation is written from the point of view of a 
->>>>> *bootloader*, not the kernel. So the 'fill in' says that the
->>>> bootloader 
->>>>> should write those fields - which is correct, right?
->>>>>
->>>>
->>>> Take pref_address or relocatable_kernel for example, they have type:
->>>> read (reloc), does boot loader need to write them? I don't see grub
->>>> does
->>>> this at least.
->>>
->>> Read means the boot later reads them.
->>>
->>
->> Sorry I don't know what is going wrong in my mind. For me, if
->> pref_address has "read (reloc)", base on the current document, it means
->> boot loader will read it and also write it, which is conflicting. And
->> the purpose of pref_address should just inform boot loader that kernel
->> whats itself to be loaded at certain address, it don't want to be
->> written.
-> 
-> read (reloc) means it is information for the boot loader to read, but that it can ignore it completely if it does not want to relocate the kernel.
-> 
+Control-flow Enforcement Technology (CET) provides protection against
+Return/Jump-Oriented Programming (ROP/JOP) attack. It includes two
+sub-features: Shadow Stack (SHSTK) and Indirect Branch Tracking (IBT).
 
-so, "read (reloc)" also means boot loader can't write it, right?
+KVM modification is required to support Guest CET feature.
+This patch serial implemented CET related CPUID/XSAVES enumeration, MSRs
+and VMEntry configuration etc.so that Guest kernel can setup CET
+runtime infrastructure based on them. Some MSRs and related feature
+flags used in the patches reference the definitions in kernel patch.
 
-Please bear my verbiage, see protocol explanation for "(reloc)":
+CET kernel patches is here:
+https://lkml.org/lkml/2019/8/13/1110
+https://lkml.org/lkml/2019/8/13/1109
 
-"Boot loaders who want to load the kernel at a nonstandard address
-should fill in the fields marked (reloc);"
+v6 -> v7:
+- Rebased patch to kernel v5.3
+- Sean suggested to change CPUID(0xd, n) enumeration code as alined with
+  existing one, and I think it's better to make the fix as an independent patch 
+  since XSS MSR are being used widely on X86 platforms.
+- Check more host and guest status before configure guest CET
+  per Sean's feedback.
+- Add error-check before guest accesses CET MSRs per Sean's feedback.
+- Other minor fixes suggested by Sean.
 
-Doesn't the explanation means: if boot loaders want to relocate the
-kernel, they should write pref_address?
+v5 -> v6:
+- Rebase patch to kernel v5.2.
+- Move CPUID(0xD, n>=1) helper to a seperate patch.
+- Merge xsave size fix with other patch.
+- Other minor fixes per community feedback.
 
-And while pref_address actually just provide a suggestion to boot
-loader, loader could take it or not as you said, but won't write it.
-That is why I choose the word "consult with" instead of "fill in".
+v4 -> v5:
+- Rebase patch to kernel v5.1.
+- Wrap CPUID(0xD, n>=1) code to a helper function.
+- Pass through MSR_IA32_PL1_SSP and MSR_IA32_PL2_SSP to Guest.
+- Add Co-developed-by expression in patch description.
+- Refine patch description.
+
+v3 -> v4:
+- Add Sean's patch for loading Guest fpu state before access XSAVES
+  managed CET MSRs.
+- Melt down CET bits setting into CPUID configuration patch.
+- Add VMX interface to query Host XSS.
+- Check Host and Guest XSS support bits before set Guest XSS.
+- Make Guest SHSTK and IBT feature enabling independent.
+- Do not report CET support to Guest when Host CET feature is Disabled.
+
+v2 -> v3:
+- Modified patches to make Guest CET independent to Host enabling.
+- Added patch 8 to add user space access for Guest CET MSR access.
+- Modified code comments and patch description to reflect changes.
+
+v1 -> v2:
+- Re-ordered patch sequence, combined one patch.
+- Added more description for CET related VMCS fields.
+- Added Host CET capability check while enabling Guest CET loading bit.
+- Added Host CET capability check while reporting Guest CPUID(EAX=7, EXC=0).
+- Modified code in reporting Guest CPUID(EAX=D,ECX>=1), make it clearer.
+- Added Host and Guest XSS mask check while setting bits for Guest XSS.
+
+
+PATCH 1    : Fix CPUID(0xD, n) enumeration to support XSS MSR.
+PATCH 2    : Define CET VMCS fields and bits.
+PATCH 3    : Pass through CET MSRs to Guest.
+PATCH 4    : Load Guest CET states when CET is enabled.
+PATCH 5    : Add CET CR4 bit and CET xsaves support in XSS MSR.
+PATCH 6    : Load Guest FPU states for XSAVES managed MSRs.
+PATCH 7    : Add user-space CET MSR access interface.
+
+
+Sean Christopherson (1):
+  KVM: x86: Load Guest fpu state when accessing MSRs managed by XSAVES
+
+Yang Weijiang (6):
+  KVM: CPUID: Fix IA32_XSS support in CPUID(0xd,i) enumeration
+  KVM: VMX: Define CET VMCS fields and CPUID flags
+  KVM: VMX: Pass through CET related MSRs to Guest
+  KVM: VMX: Load Guest CET via VMCS when CET is enabled in Guest
+  KVM: X86: Add CET CR4 bit and XSS support
+  KVM: X86: Add user-space access interface for CET MSRs
+
+ arch/x86/include/asm/kvm_host.h |   5 +-
+ arch/x86/include/asm/vmx.h      |   8 ++
+ arch/x86/kvm/cpuid.c            | 110 ++++++++++++++-------
+ arch/x86/kvm/cpuid.h            |   2 +
+ arch/x86/kvm/svm.c              |   7 ++
+ arch/x86/kvm/vmx/vmx.c          | 169 +++++++++++++++++++++++++++++++-
+ arch/x86/kvm/x86.c              |  22 ++++-
+ arch/x86/kvm/x86.h              |   8 ++
+ 8 files changed, 287 insertions(+), 44 deletions(-)
+
 -- 
-Sincerely,
-Cao jin
-
+2.17.2
 
