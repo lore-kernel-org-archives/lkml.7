@@ -2,235 +2,202 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF28AC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A28B1C388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B71772146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:25:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="atPRrpes"
+	by mail.kernel.org (Postfix) with ESMTP id 7B3412146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:26:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727755AbfI0OZN (ORCPT
+        id S1727674AbfI0O0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 10:25:13 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:38052 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727447AbfI0OZM (ORCPT
+        Fri, 27 Sep 2019 10:26:21 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35662 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727154AbfI0O0V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 10:25:12 -0400
-Received: by mail-yb1-f195.google.com with SMTP id o18so2074074ybp.5
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 07:25:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=aSckuQ80CIiF/9/8+18nNqYpwKA6GZVh8vgmv4HFPhE=;
-        b=atPRrpesEZbMNYxnybbWCv+6b4sE7cKx2UAeCJ28BvLsStCMy3jZSkBYiSKlvqytre
-         o/5i6Wli7iHZX9z5HZ3IqR+PVGzvqNKLPWFtaeUa8X4m0GNBrBjoA5tFTX9XhmLvZCvu
-         e9CAdiyRq2VjfnJcYh2eitZMbYYChpjGE4tSnObIEENkIq4n23A1NaJ6VYhGYL2ZaFN6
-         VLHal0Db4DrplJVIi56yIDXIb4c3ixZ8d8Hb1OvG8rZNvveRSmkjQoPFiqGYcbOIymss
-         3wgow+cTMHJ92yfdElO87v9ZR+OPfTxTP9a3P/5ZoVj3ceoiOer0rtvy+KMbQRJ73sfN
-         Ttkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=aSckuQ80CIiF/9/8+18nNqYpwKA6GZVh8vgmv4HFPhE=;
-        b=U1XhpsiMj3WAGUsM/TASnmEdXF7fk8ZZaISIxJB7eXOUOT20hEdBg8QGwxLKv4Lia+
-         VN2GwYLF6uRMFMoQ+PU97qpdvfeLYQD4PymvJFkkRDEkgyPB9ovA6uVEvrghDiq5/b+d
-         H6bZd4IOqrATsfkjByeBjEZNoki6ck1f9P16Zwds47iVuQB0P8hd33wazqIjLK/5UfKv
-         iFAdE2FNcFEWN9YIinopEfaNz6vR4FiqNuIq3LqDZbiESKVT84MTQdaeSmEK7RCBbxFN
-         b9o05ZAePejgp9NTpLE6rPp1e0EJgSgEby3mH4LUL+5IqIPUdy1BkPqe6k6X+0DhjNH6
-         NRGA==
-X-Gm-Message-State: APjAAAV13Har6Bmnr2GAc+pF8sTQE4AJZ+6lxoybKKMd1Hq5xKcoUnmV
-        75yuudt/mN7OHhrrPrMOfS15/A==
-X-Google-Smtp-Source: APXvYqw9AgvCIoFb5r0eK0QhWLkXx7n2UuZarUJNPoSbq3Jp9VQN/4xEpwhM+Kker0yrzROqSe3rOA==
-X-Received: by 2002:a25:af09:: with SMTP id a9mr6448350ybh.405.1569594311669;
-        Fri, 27 Sep 2019 07:25:11 -0700 (PDT)
-Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id z137sm616354ywd.18.2019.09.27.07.25.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2019 07:25:10 -0700 (PDT)
-Date:   Fri, 27 Sep 2019 10:25:10 -0400
-From:   Sean Paul <sean@poorly.run>
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        amd-gfx@lists.freedesktop.org, Juston Li <juston.li@intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>, Harry Wentland <hwentlan@amd.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 26/27] drm/dp_mst: Also print unhashed pointers for
- malloc/topology references
-Message-ID: <20190927142510.GS218215@art_vandelay>
-References: <20190903204645.25487-1-lyude@redhat.com>
- <20190903204645.25487-27-lyude@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190903204645.25487-27-lyude@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 27 Sep 2019 10:26:21 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8REMFsU140421
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 10:26:19 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v9jpr3yc2-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 10:26:19 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <nayna@linux.ibm.com>;
+        Fri, 27 Sep 2019 15:26:17 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 27 Sep 2019 15:26:11 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8REQ9mQ56033366
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Sep 2019 14:26:09 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6769BA4064;
+        Fri, 27 Sep 2019 14:26:09 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7F861A405C;
+        Fri, 27 Sep 2019 14:26:05 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.80.207.173])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 27 Sep 2019 14:26:05 +0000 (GMT)
+From:   Nayna Jain <nayna@linux.ibm.com>
+To:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
+        linux-integrity@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: [PATCH v6 0/9] powerpc: Enabling IMA arch specific secure boot policies
+Date:   Fri, 27 Sep 2019 10:25:51 -0400
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+x-cbid: 19092714-0028-0000-0000-000003A3417A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19092714-0029-0000-0000-0000246563D4
+Message-Id: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-27_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909270134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 04:46:04PM -0400, Lyude Paul wrote:
-> Currently we only print mstb/port pointer addresses in our malloc and
-> topology refcount functions using the hashed-by-default %p, but
-> unfortunately if you're trying to debug a use-after-free error caused by
-> a refcounting error then this really isn't terribly useful. On the other
-> hand though, everything in the rest of the DP MST helpers uses hashed
-> pointer values as well and probably isn't useful to convert to unhashed.
-> So, let's just get the best of both worlds and print both the hashed and
-> unhashed pointer in our malloc/topology refcount debugging output. This
-> will hopefully make it a lot easier to figure out which port/mstb is
-> causing KASAN to get upset.
-> 
-> Cc: Juston Li <juston.li@intel.com>
-> Cc: Imre Deak <imre.deak@intel.com>
-> Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-> Cc: Harry Wentland <hwentlan@amd.com>
-> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
+This patchset extends the previous version of the patchset[1] by adding
+the support for checking against the binary blacklisted hashes.
 
-It's really too bad there isn't a CONFIG_DEBUG_SHOW_PK_ADDRESSES or even a value
-of kptr_restrict value that bypasses pointer hashing. I'm sure we're not the
-only ones to feel this pain. Maybe everyone just hacks vsnprintf...
+IMA subsystem supports custom, built-in, arch-specific policies to define
+the files to be measured and appraised. These policies are honored based
+on the priority where arch-specific policies is the highest and custom
+is the lowest.
 
-As it is, I'm not totally sold on exposing the actual addresses unconditionally.
-What do you think about pulling the print out into a function and only printing
-px if a debug kconfig is set?
+PowerNV systems uses the linux based bootloader and kexec the Host OS.
+It rely on IMA for signature verification of the kernel before doing the
+kexec. This patchset adds support for powerpc arch specific ima policies
+that are defined based on system's OS secureboot and trustedboot state.
+The OS secureboot and trustedboot state are determined via device-tree
+properties.
 
-Sean
+The verification needs to be done only for the binaries which are not
+blacklisted. The kernel currently checks against the blacklisted keys.
+However that results in blacklisting all the binaries that are signed by
+that key. In order to prevent single binary from loading, it is required
+to support checking against blacklisting of the binary hash. This patchset
+adds the support in IMA to check against blacklisted hashes for the files
+signed by appended signature.
 
-> ---
->  drivers/gpu/drm/drm_dp_mst_topology.c | 34 ++++++++++++++++-----------
->  1 file changed, 20 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-> index 2fe24e366925..5b5c0b3b3c0e 100644
-> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> @@ -1327,7 +1327,8 @@ static void
->  drm_dp_mst_get_mstb_malloc(struct drm_dp_mst_branch *mstb)
->  {
->  	kref_get(&mstb->malloc_kref);
-> -	DRM_DEBUG("mstb %p (%d)\n", mstb, kref_read(&mstb->malloc_kref));
-> +	DRM_DEBUG("mstb %p/%px (%d)\n",
-> +		  mstb, mstb, kref_read(&mstb->malloc_kref));
->  }
->  
->  /**
-> @@ -1344,7 +1345,8 @@ drm_dp_mst_get_mstb_malloc(struct drm_dp_mst_branch *mstb)
->  static void
->  drm_dp_mst_put_mstb_malloc(struct drm_dp_mst_branch *mstb)
->  {
-> -	DRM_DEBUG("mstb %p (%d)\n", mstb, kref_read(&mstb->malloc_kref) - 1);
-> +	DRM_DEBUG("mstb %p/%px (%d)\n",
-> +		  mstb, mstb, kref_read(&mstb->malloc_kref) - 1);
->  	kref_put(&mstb->malloc_kref, drm_dp_free_mst_branch_device);
->  }
->  
-> @@ -1379,7 +1381,8 @@ void
->  drm_dp_mst_get_port_malloc(struct drm_dp_mst_port *port)
->  {
->  	kref_get(&port->malloc_kref);
-> -	DRM_DEBUG("port %p (%d)\n", port, kref_read(&port->malloc_kref));
-> +	DRM_DEBUG("port %p/%px (%d)\n",
-> +		  port, port, kref_read(&port->malloc_kref));
->  }
->  EXPORT_SYMBOL(drm_dp_mst_get_port_malloc);
->  
-> @@ -1396,7 +1399,8 @@ EXPORT_SYMBOL(drm_dp_mst_get_port_malloc);
->  void
->  drm_dp_mst_put_port_malloc(struct drm_dp_mst_port *port)
->  {
-> -	DRM_DEBUG("port %p (%d)\n", port, kref_read(&port->malloc_kref) - 1);
-> +	DRM_DEBUG("port %p/%px (%d)\n",
-> +		  port, port, kref_read(&port->malloc_kref) - 1);
->  	kref_put(&port->malloc_kref, drm_dp_free_mst_port);
->  }
->  EXPORT_SYMBOL(drm_dp_mst_put_port_malloc);
-> @@ -1447,8 +1451,8 @@ drm_dp_mst_topology_try_get_mstb(struct drm_dp_mst_branch *mstb)
->  	int ret = kref_get_unless_zero(&mstb->topology_kref);
->  
->  	if (ret)
-> -		DRM_DEBUG("mstb %p (%d)\n", mstb,
-> -			  kref_read(&mstb->topology_kref));
-> +		DRM_DEBUG("mstb %p/%px (%d)\n",
-> +			  mstb, mstb, kref_read(&mstb->topology_kref));
->  
->  	return ret;
->  }
-> @@ -1471,7 +1475,8 @@ static void drm_dp_mst_topology_get_mstb(struct drm_dp_mst_branch *mstb)
->  {
->  	WARN_ON(kref_read(&mstb->topology_kref) == 0);
->  	kref_get(&mstb->topology_kref);
-> -	DRM_DEBUG("mstb %p (%d)\n", mstb, kref_read(&mstb->topology_kref));
-> +	DRM_DEBUG("mstb %p/%px (%d)\n",
-> +		  mstb, mstb, kref_read(&mstb->topology_kref));
->  }
->  
->  /**
-> @@ -1489,8 +1494,8 @@ static void drm_dp_mst_topology_get_mstb(struct drm_dp_mst_branch *mstb)
->  static void
->  drm_dp_mst_topology_put_mstb(struct drm_dp_mst_branch *mstb)
->  {
-> -	DRM_DEBUG("mstb %p (%d)\n",
-> -		  mstb, kref_read(&mstb->topology_kref) - 1);
-> +	DRM_DEBUG("mstb %p/%px (%d)\n",
-> +		  mstb, mstb, kref_read(&mstb->topology_kref) - 1);
->  	kref_put(&mstb->topology_kref, drm_dp_destroy_mst_branch_device);
->  }
->  
-> @@ -1546,8 +1551,8 @@ drm_dp_mst_topology_try_get_port(struct drm_dp_mst_port *port)
->  	int ret = kref_get_unless_zero(&port->topology_kref);
->  
->  	if (ret)
-> -		DRM_DEBUG("port %p (%d)\n", port,
-> -			  kref_read(&port->topology_kref));
-> +		DRM_DEBUG("port %p/%px (%d)\n",
-> +			  port, port, kref_read(&port->topology_kref));
->  
->  	return ret;
->  }
-> @@ -1569,7 +1574,8 @@ static void drm_dp_mst_topology_get_port(struct drm_dp_mst_port *port)
->  {
->  	WARN_ON(kref_read(&port->topology_kref) == 0);
->  	kref_get(&port->topology_kref);
-> -	DRM_DEBUG("port %p (%d)\n", port, kref_read(&port->topology_kref));
-> +	DRM_DEBUG("port %p/%px (%d)\n",
-> +		  port, port, kref_read(&port->topology_kref));
->  }
->  
->  /**
-> @@ -1585,8 +1591,8 @@ static void drm_dp_mst_topology_get_port(struct drm_dp_mst_port *port)
->   */
->  static void drm_dp_mst_topology_put_port(struct drm_dp_mst_port *port)
->  {
-> -	DRM_DEBUG("port %p (%d)\n",
-> -		  port, kref_read(&port->topology_kref) - 1);
-> +	DRM_DEBUG("port %p/%px (%d)\n",
-> +		  port, port, kref_read(&port->topology_kref) - 1);
->  	kref_put(&port->topology_kref, drm_dp_destroy_port);
->  }
->  
-> -- 
-> 2.21.0
-> 
+[1] http://patchwork.ozlabs.org/cover/1149262/ 
+
+Changelog:
+v6:
+* includes feedbacks from Michael Ellerman on the patchset v5
+  * removed email ids from comments
+  * add the doc for the device-tree
+  * renames the secboot.c to secure_boot.c and secboot.h to secure_boot.h
+  * other code specific fixes
+* split the patches to differentiate between secureboot and trustedboot
+state of the system
+* adds the patches to support the blacklisting of the binary hash.
+
+v5:
+* secureboot state is now read via device tree entry rather than OPAL
+secure variables
+* ima arch policies are updated to use policy based template for
+measurement rules
+
+v4:
+* Fixed the build issue as reported by Satheesh Rajendran.
+
+v3:
+* OPAL APIs in Patch 1 are updated to provide generic interface based on
+key/keylen. This patchset updates kernel OPAL APIs to be compatible with
+generic interface.
+* Patch 2 is cleaned up to use new OPAL APIs.
+* Since OPAL can support different types of backend which can vary in the
+variable interpretation, the Patch 2 is updated to add a check for the
+backend version
+* OPAL API now expects consumer to first check the supported backend version
+before calling other secvar OPAL APIs. This check is now added in patch 2.
+* IMA policies in Patch 3 is updated to specify appended signature and
+per policy template.
+* The patches now are free of any EFIisms.
+
+v2:
+
+* Removed Patch 1: powerpc/include: Override unneeded early ioremap
+functions
+* Updated Subject line and patch description of the Patch 1 of this series
+* Removed dependency of OPAL_SECVAR on EFI, CPU_BIG_ENDIAN and UCS2_STRING
+* Changed OPAL APIs from static to non-static. Added opal-secvar.h for the
+same
+* Removed EFI hooks from opal_secvar.c
+* Removed opal_secvar_get_next(), opal_secvar_enqueue() and
+opal_query_variable_info() function
+* get_powerpc_sb_mode() in secboot.c now directly calls OPAL Runtime API
+rather than via EFI hooks.
+* Fixed log messages in get_powerpc_sb_mode() function.
+* Added dependency for PPC_SECURE_BOOT on configs PPC64 and OPAL_SECVAR
+* Replaced obj-$(CONFIG_IMA) with obj-$(CONFIG_PPC_SECURE_BOOT) in
+arch/powerpc/kernel/Makefile
+
+Nayna Jain (9):
+  dt-bindings: ibm,secureboot: secure boot specific properties for
+    PowerNV
+  powerpc: detect the secure boot mode of the system
+  powerpc: add support to initialize ima policy rules
+  powerpc: detect the trusted boot state of the system
+  powerpc/ima: add measurement rules to ima arch specific policy
+  ima: make process_buffer_measurement() non-static
+  ima: check against blacklisted hashes for files with modsig
+  ima: deprecate permit_directio, instead use appraise_flag
+  powerpc/ima: update ima arch policy to check for blacklist
+
+ Documentation/ABI/testing/ima_policy          |  3 +-
+ .../bindings/powerpc/ibm,secureboot.rst       | 76 +++++++++++++++
+ .../devicetree/bindings/powerpc/secvar.rst    | 89 +++++++++++++++++
+ arch/powerpc/Kconfig                          | 12 +++
+ arch/powerpc/include/asm/secure_boot.h        | 37 +++++++
+ arch/powerpc/kernel/Makefile                  |  2 +
+ arch/powerpc/kernel/ima_arch.c                | 71 ++++++++++++++
+ arch/powerpc/kernel/secure_boot.c             | 96 +++++++++++++++++++
+ include/linux/ima.h                           |  3 +-
+ security/integrity/ima/ima.h                  | 15 +++
+ security/integrity/ima/ima_appraise.c         | 35 +++++++
+ security/integrity/ima/ima_main.c             | 37 +++----
+ security/integrity/ima/ima_policy.c           | 12 ++-
+ security/integrity/integrity.h                |  1 +
+ 14 files changed, 468 insertions(+), 21 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/powerpc/ibm,secureboot.rst
+ create mode 100644 Documentation/devicetree/bindings/powerpc/secvar.rst
+ create mode 100644 arch/powerpc/include/asm/secure_boot.h
+ create mode 100644 arch/powerpc/kernel/ima_arch.c
+ create mode 100644 arch/powerpc/kernel/secure_boot.c
 
 -- 
-Sean Paul, Software Engineer, Google / Chromium OS
+2.20.1
+
