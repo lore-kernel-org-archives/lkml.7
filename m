@@ -2,84 +2,144 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2860C352AB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 03:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D29C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 03:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B94F2208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 03:03:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569553396;
-	bh=1xp6jXQw6QmaMFMbYAUaFcPgQ6zsmGdlTLA/DF77qmE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=cTT1fZO/7ZS2gafCF4fUpGoeCe6UrkIx/UMX3r2/uPnkRMtp37GSA4LKRU4z7I9df
-	 9lBvYH1zhwGHcb4+i2MYxkKmyXk2fs+AaZrND36QNlfP1URnFFohoMG+Mw9H9fsy1f
-	 HVK317LI1P1B5n6gMBv5RU6Gv226wKrEZ1K85OaI=
+	by mail.kernel.org (Postfix) with ESMTP id C99D7207FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 03:08:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728925AbfI0DDQ (ORCPT
+        id S1728970AbfI0DIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 23:03:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34666 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727794AbfI0DDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 23:03:15 -0400
-Received: from guoren-Inspiron-7460.lan (unknown [223.93.147.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34447207FF;
-        Fri, 27 Sep 2019 03:03:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569553395;
-        bh=1xp6jXQw6QmaMFMbYAUaFcPgQ6zsmGdlTLA/DF77qmE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=0xunrN9hh2ukZUHvWT5t+tXHyS3+GAgeBCeL+3BZqrrlvxgJcdtrFf5By1GhhvQUw
-         k+fL0GAO3xkl0dGDWVZMPVbCbCkWj+5q8vg4r6NLRS7cXHIF0ZALIMhtAioKhEmSey
-         T3P/e6+DvxdNKsTaxqpqCiHRsh2WKo7gnw3Hx7T4=
-From:   guoren@kernel.org
-To:     arnd@arndb.de
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-csky@vger.kernel.org, Mao Han <han_mao@c-sky.com>,
-        Guo Ren <ren_guo@c-sky.com>
-Subject: [PATCH] csky: Fixup csky_pmu.max_period assignment
-Date:   Fri, 27 Sep 2019 11:02:59 +0800
-Message-Id: <1569553379-11327-1-git-send-email-guoren@kernel.org>
-X-Mailer: git-send-email 2.7.4
+        Thu, 26 Sep 2019 23:08:04 -0400
+Received: from lucky1.263xmail.com ([211.157.147.133]:45666 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727906AbfI0DID (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 23:08:03 -0400
+Received: from localhost (unknown [192.168.167.158])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 59109673C7;
+        Fri, 27 Sep 2019 11:00:40 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P5565T139972115928832S1569553235679252_;
+        Fri, 27 Sep 2019 11:00:40 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <1db5e33c8ff71cd2c0bc378bbe070ca7>
+X-RL-SENDER: zhangqing@rock-chips.com
+X-SENDER: zhangqing@rock-chips.com
+X-LOGIN-NAME: zhangqing@rock-chips.com
+X-FST-TO: heiko@sntech.de
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+From:   Elaine Zhang <zhangqing@rock-chips.com>
+To:     heiko@sntech.de
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com,
+        Elaine Zhang <zhangqing@rock-chips.com>
+Subject: [PATCH v3 3/5] clk: rockchip: add a clock-type for muxes based in the pmugrf
+Date:   Fri, 27 Sep 2019 11:00:42 +0800
+Message-Id: <1569553244-3165-4-git-send-email-zhangqing@rock-chips.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1569553244-3165-1-git-send-email-zhangqing@rock-chips.com>
+References: <1569553244-3165-1-git-send-email-zhangqing@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Han <han_mao@c-sky.com>
+Rockchip socs often have some tiny number of muxes not controlled from
+the core clock controller but through bits set in the pmugrf.
+Use MUXPMUGRF() to cover this special clock-type.
 
-The csky_pmu.max_period has type u64, and BIT() can only return
-32 bits unsigned long on C-SKY. The initialization for max_period
-will be incorrect when count_width is bigger than 32.
-
-Use BIG_ULL()
-
-Signed-off-by: Mao Han <han_mao@c-sky.com>
-Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
 ---
- arch/csky/kernel/perf_event.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/rockchip/clk.c |  9 +++++++++
+ drivers/clk/rockchip/clk.h | 17 +++++++++++++++++
+ 2 files changed, 26 insertions(+)
 
-diff --git a/arch/csky/kernel/perf_event.c b/arch/csky/kernel/perf_event.c
-index 4c1a193..7570109 100644
---- a/arch/csky/kernel/perf_event.c
-+++ b/arch/csky/kernel/perf_event.c
-@@ -1306,7 +1306,7 @@ int csky_pmu_device_probe(struct platform_device *pdev,
- 				 &csky_pmu.count_width)) {
- 		csky_pmu.count_width = DEFAULT_COUNT_WIDTH;
+diff --git a/drivers/clk/rockchip/clk.c b/drivers/clk/rockchip/clk.c
+index 8f77c3f9fab7..4f238f2851ac 100644
+--- a/drivers/clk/rockchip/clk.c
++++ b/drivers/clk/rockchip/clk.c
+@@ -407,6 +407,8 @@ struct rockchip_clk_provider * __init rockchip_clk_init(struct device_node *np,
+ 
+ 	ctx->grf = syscon_regmap_lookup_by_phandle(ctx->cru_node,
+ 						   "rockchip,grf");
++	ctx->pmugrf = syscon_regmap_lookup_by_phandle(ctx->cru_node,
++						   "rockchip,pmugrf");
+ 
+ 	return ctx;
+ 
+@@ -482,6 +484,13 @@ void __init rockchip_clk_register_branches(
+ 				list->mux_shift, list->mux_width,
+ 				list->mux_flags);
+ 			break;
++		case branch_muxpmugrf:
++			clk = rockchip_clk_register_muxgrf(list->name,
++				list->parent_names, list->num_parents,
++				flags, ctx->pmugrf, list->muxdiv_offset,
++				list->mux_shift, list->mux_width,
++				list->mux_flags);
++			break;
+ 		case branch_divider:
+ 			if (list->div_table)
+ 				clk = clk_register_divider_table(NULL,
+diff --git a/drivers/clk/rockchip/clk.h b/drivers/clk/rockchip/clk.h
+index 0d401ce09a54..ae059b7744f9 100644
+--- a/drivers/clk/rockchip/clk.h
++++ b/drivers/clk/rockchip/clk.h
+@@ -238,6 +238,7 @@ struct rockchip_clk_provider {
+ 	struct clk_onecell_data clk_data;
+ 	struct device_node *cru_node;
+ 	struct regmap *grf;
++	struct regmap *pmugrf;
+ 	spinlock_t lock;
+ };
+ 
+@@ -390,6 +391,7 @@ enum rockchip_clk_branch_type {
+ 	branch_composite,
+ 	branch_mux,
+ 	branch_muxgrf,
++	branch_muxpmugrf,
+ 	branch_divider,
+ 	branch_fraction_divider,
+ 	branch_gate,
+@@ -662,6 +664,21 @@ struct rockchip_clk_branch {
+ 		.gate_offset	= -1,				\
  	}
--	csky_pmu.max_period = BIT(csky_pmu.count_width) - 1;
-+	csky_pmu.max_period = BIT_ULL(csky_pmu.count_width) - 1;
  
- 	csky_pmu.plat_device = pdev;
- 
++#define MUXPMUGRF(_id, cname, pnames, f, o, s, w, mf)		\
++	{							\
++		.id		= _id,				\
++		.branch_type	= branch_muxpmugrf,		\
++		.name		= cname,			\
++		.parent_names	= pnames,			\
++		.num_parents	= ARRAY_SIZE(pnames),		\
++		.flags		= f,				\
++		.muxdiv_offset	= o,				\
++		.mux_shift	= s,				\
++		.mux_width	= w,				\
++		.mux_flags	= mf,				\
++		.gate_offset	= -1,				\
++	}
++
+ #define DIV(_id, cname, pname, f, o, s, w, df)			\
+ 	{							\
+ 		.id		= _id,				\
 -- 
-2.7.4
+1.9.1
+
+
 
