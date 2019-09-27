@@ -2,121 +2,91 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C549FC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD1CC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9523D207E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:05:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tWZt3K4l"
+	by mail.kernel.org (Postfix) with ESMTP id 6A0E321850
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:05:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569600339;
+	bh=8CSeS9F/4G2eeUxeyd4c7CtL2C8yijITsDDLQsUqk/I=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=uNtgdCuaGMKnkSVHH/VNhvq3fVtFr8NkeA6bdlAS8GHh3QVr2zTdCLuwGk5ZCwmug
+	 tCRhXugbc7iPwKkOUUcwu4Tr9LFCSg7+ch9YJjT+34ks0/BYw0CQ5gAfECY0o3SI+A
+	 kPNkCPI1dBZYagql9Sspqljsz4dmIx7A7xwf7Imo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbfI0QFW (ORCPT
+        id S1728028AbfI0QFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 12:05:22 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39519 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727624AbfI0QFV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 12:05:21 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r3so3701086wrj.6;
-        Fri, 27 Sep 2019 09:05:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=gMGe1RxHLB7ktDM+P7ngRhIvwgy8WL2hbGJxbnP4AYg=;
-        b=tWZt3K4lxY9TyOFlfpmgYUURbaM2YtjqW2Tn6Qn9UB4suAdWVtz6rimKk/o2y17zIc
-         0D5Qq/LdkLObm/VAKzJFQSREpzD1ZdvWMom+0Jp3J0Sc7vxs/aq1a3S927C7GEVFROyY
-         OVolY6iVD3VCMYPzsN9RWpYGngxOl+RwW9j2jNI+yD/WGjhvUquuV5XSnM9QpPQ7qUOT
-         fBOIqw+YKVU69QzT+shWplvB24c7rOnchBpey6wqPw6HOmhDkCVnZChWz/OSQT/ltx9X
-         OY2RylsKsAuipYpV5ONedCVY4UejzzrDb+f9bJdjZmRWc1VE1Ppk4HKLm1rCPgfgDkh8
-         tRXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=gMGe1RxHLB7ktDM+P7ngRhIvwgy8WL2hbGJxbnP4AYg=;
-        b=ibo1x4LSAnXGxp+gP5e+7zYYFqHLJgR/zteQz9HtCpiwOWYiI1dkZ8/9KwqiVxuMRT
-         dNYu85P0hWwxz1B1Y8TxB16LWA33SUavqIRwGXwft6OEL8kY0bhclz0fL30WbyF3HuNQ
-         TVgKfipriC7d/5yPgnpAWtP5v2oj5Mvv0xJNzjdl2dzMgmAlvPD/6uZTuMbklt+6JLL+
-         VUDZkUh2PlXZRlH3p1xs1K9g+1WgzjU/1iFIpH9JSPWQqdREA+bIU2x615WUovmQWk4J
-         kbWKCPirq/7iG1/Qvu3sbGyhZrI8agHmCqLLTCrtpPcF3iWSZVPeVLty/v5X8xWX0glR
-         Shtw==
-X-Gm-Message-State: APjAAAWJQiwcdbzN5HWJMNf3g0FltA1vGyMsa12qEanQ0N6yx+4r3zm/
-        46B0AOlHIWt8ar5FGQaMRRmbTvWp
-X-Google-Smtp-Source: APXvYqzrf/BNCHYjyJATAYJdCzH3MpkGG2RZJC595mLoHIWxWvFh0FaUQydvQV/sCeYQrDbgNwgCyQ==
-X-Received: by 2002:adf:ce89:: with SMTP id r9mr685277wrn.335.1569600318893;
-        Fri, 27 Sep 2019 09:05:18 -0700 (PDT)
-Received: from 640k.lan ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id g24sm3475615wrb.35.2019.09.27.09.05.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 27 Sep 2019 09:05:17 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     bp@alien8.de, Waiman Long <longman@redhat.com>
-Subject: [PATCH v2] KVM: VMX: Set VMENTER_L1D_FLUSH_NOT_REQUIRED if !X86_BUG_L1TF
-Date:   Fri, 27 Sep 2019 18:05:16 +0200
-Message-Id: <1569600316-35966-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        Fri, 27 Sep 2019 12:05:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58682 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727995AbfI0QFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 12:05:38 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53E7C207E0;
+        Fri, 27 Sep 2019 16:05:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569600337;
+        bh=8CSeS9F/4G2eeUxeyd4c7CtL2C8yijITsDDLQsUqk/I=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=V9GPThNsj0HKMJ7PtZdAYqPlWNQYPpDjMzmA2NFSBNEAtFnbQkPC8Crd7iG9xiXQD
+         bIU7y3WUUqT4Qh2z6pLluvZAMRurEmL8gv4F74ojQsLKvHcDp+Q/yGl64DPfNgkq5n
+         NVFfM8SYfDeyJj1JsIcrRec69gT5VFU24S2ccV6A=
+Subject: Re: [PATCH] usbip: clean up an indentation issue
+To:     Colin King <colin.king@canonical.com>,
+        Valentina Manea <valentina.manea.m@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shuah <shuah@kernel.org>
+References: <20190927092000.19373-1-colin.king@canonical.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <824cf4f0-572b-9b60-e93c-83c1be0df181@kernel.org>
+Date:   Fri, 27 Sep 2019 10:05:24 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190927092000.19373-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Waiman Long <longman@redhat.com>
+On 9/27/19 3:20 AM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There is a return statement that is indented incorrectly, fix this.
 
-The l1tf_vmx_mitigation is only set to VMENTER_L1D_FLUSH_NOT_REQUIRED
-when the ARCH_CAPABILITIES MSR indicates that L1D flush is not required.
-However, if the CPU is not affected by L1TF, l1tf_vmx_mitigation will
-still be set to VMENTER_L1D_FLUSH_AUTO. This is certainly not the best
-option for a !X86_BUG_L1TF CPU.
-
-So force l1tf_vmx_mitigation to VMENTER_L1D_FLUSH_NOT_REQUIRED to make it
-more explicit in case users are checking the vmentry_l1d_flush parameter.
-
-Signed-off-by: Waiman Long <longman@redhat.com>
-[Patch rewritten accoring to Borislav Petkov's suggestion. - Paolo]
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/vmx/vmx.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index d4575ffb3cec..e7970a2e8eae 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -209,6 +209,11 @@ static int vmx_setup_l1d_flush(enum vmx_l1d_flush_state l1tf)
- 	struct page *page;
- 	unsigned int i;
- 
-+	if (!boot_cpu_has_bug(X86_BUG_L1TF)) {
-+		l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_NOT_REQUIRED;
-+		return 0;
-+	}
-+
- 	if (!enable_ept) {
- 		l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_EPT_DISABLED;
- 		return 0;
-@@ -7995,12 +8000,10 @@ static int __init vmx_init(void)
- 	 * contain 'auto' which will be turned into the default 'cond'
- 	 * mitigation mode.
- 	 */
--	if (boot_cpu_has(X86_BUG_L1TF)) {
--		r = vmx_setup_l1d_flush(vmentry_l1d_flush_param);
--		if (r) {
--			vmx_exit();
--			return r;
--		}
-+	r = vmx_setup_l1d_flush(vmentry_l1d_flush_param);
-+	if (r) {
-+		vmx_exit();
-+		return r;
- 	}
- 
- #ifdef CONFIG_KEXEC_CORE
--- 
-1.8.3.1
-
+Please include the warn you are fixing in the commit log
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>   drivers/usb/usbip/stub_tx.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/usbip/stub_tx.c b/drivers/usb/usbip/stub_tx.c
+> index 36010a82b359..b1c2f6781cb3 100644
+> --- a/drivers/usb/usbip/stub_tx.c
+> +++ b/drivers/usb/usbip/stub_tx.c
+> @@ -291,7 +291,7 @@ static int stub_send_ret_submit(struct stub_device *sdev)
+>   				kfree(iov);
+>   				usbip_event_add(&sdev->ud,
+>   						SDEV_EVENT_ERROR_TCP);
+> -			   return -1;
+> +				return -1;
+>   			}
+>   		}
+>   
+> 
+thanks,
+-- Shuah
