@@ -2,123 +2,168 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25BD4C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 13:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D6AC388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 13:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02C5B20872
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 13:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C65E20872
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 13:57:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S8Fj6UkF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbfI0N5L (ORCPT
+        id S1727516AbfI0N5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 09:57:11 -0400
-Received: from gardel.0pointer.net ([85.214.157.71]:51550 "EHLO
-        gardel.0pointer.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbfI0N5L (ORCPT
+        Fri, 27 Sep 2019 09:57:33 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46276 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbfI0N5d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 09:57:11 -0400
-Received: from gardel-login.0pointer.net (gardel.0pointer.net [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
-        by gardel.0pointer.net (Postfix) with ESMTP id D409AE80A99;
-        Fri, 27 Sep 2019 15:57:08 +0200 (CEST)
-Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
-        id 88319160AE4; Fri, 27 Sep 2019 15:57:08 +0200 (CEST)
-Date:   Fri, 27 Sep 2019 15:57:08 +0200
-From:   Lennart Poettering <mzxreary@0pointer.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.3-rc8
-Message-ID: <20190927135708.GD11791@gardel-login>
-References: <20190917052438.GA26923@1wt.eu>
- <2508489.jOnZlRuxVn@merkaba>
- <20190917121156.GC6762@mit.edu>
- <20190917123015.sirlkvy335crozmj@debian-stretch-darwi.lab.linutronix.de>
- <20190917160844.GC31567@gardel-login>
- <CAHk-=wgsWTCZ=LPHi7BXzFCoWbyp3Ey-zZbaKzWixO91Ryr9=A@mail.gmail.com>
- <20190917174219.GD31798@gardel-login>
- <87zhj15qgf.fsf@x220.int.ebiederm.org>
- <84824f79-2d12-0fd5-5b32-b0360eb075ac@gmail.com>
- <CAHk-=whYhC-qXHdEypy6iC7SzPA+KvWphLXSGF+mvGCGHGjNZw@mail.gmail.com>
+        Fri, 27 Sep 2019 09:57:33 -0400
+Received: by mail-io1-f66.google.com with SMTP id c6so16404215ioo.13;
+        Fri, 27 Sep 2019 06:57:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=boZXw4SCirqsRIbJ+By9WPXJ92CkT49uSIzr686TYUY=;
+        b=S8Fj6UkFcdsLkCEyrpQPS3iJ8WGWrM+qKfeVBrIhZsUSCPJM1LRzD2jxENfvoj2Vv/
+         MwfNdaP8Xu0UwyZOHetLuvAxCD4IZBEfeq1CAYixwrTW/WJ45GRz8pNFV/xSIZDO/cRS
+         9WkeCJrcuAeGMUkW2L2AQ9jfFozLZPVhWWnLNMENvtb14cfWN7T+bcFAsEPaJgVb0rAN
+         7ry0Wts/mlQ9iYVBaRU+09WIfJsihRt6Fk/bsf5sxVfp3pHxWzkge0S0KgxxqCdosUTJ
+         bEhdErU5a5BeICLhZH1i0pai+orCELVEsgtpGUC6an3jWgI2vBdJxPuQo6NInrgLxLux
+         eOZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=boZXw4SCirqsRIbJ+By9WPXJ92CkT49uSIzr686TYUY=;
+        b=Vk0bZ1oO54W1vFj9Sti+aef3UXUtfJoJJFI4NOcytxl/w5p3tvkPbtHFrnPaR8Xx5K
+         Q607hYnV0n1iLOOPE8xWMQG7JIfkqpqBe/1wGki+ALyIvXJ4OPB4epMtGYr+1ILMPt5F
+         Sj4qCAQoexZj1lC3Vj607kDdPh9Y/4vdudSfRtO7frdpBBixSt2RAA5rjbDSHO9jxakc
+         wonZSTS3VUhoDGUdSyieHD3YtDhUrl5aMVeFy50LVuU5bNoSh3jAgxD/29aXLjd445l8
+         ulNHTLVKWPRUN0smwy3759V6R/O01yVnM9U/pXFdp1euXkZ31WDW90rK7Orq5S46B1qf
+         hP/w==
+X-Gm-Message-State: APjAAAWYu3grQWls7p72V2FOTQ8HLi6akkNjWxkqtwfOd9VY5p1CoUua
+        RtcmLe4+f9bXsyai67Uf34kC4eAMdJU=
+X-Google-Smtp-Source: APXvYqw+uVnKir54+fie0lakYdLAjfXFd/WwDbFLVOLXyMmg2a5liUojGMH+R+YgpA3ZfNzqBh8H9Q==
+X-Received: by 2002:a92:8f19:: with SMTP id j25mr4890285ild.302.1569592652193;
+        Fri, 27 Sep 2019 06:57:32 -0700 (PDT)
+Received: from lnx-nickg ([96.78.92.5])
+        by smtp.gmail.com with ESMTPSA id i14sm1095488ilq.38.2019.09.27.06.57.30
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Fri, 27 Sep 2019 06:57:31 -0700 (PDT)
+Date:   Fri, 27 Sep 2019 08:57:20 -0500
+From:   Nicholas Graumann <nick.graumann@gmail.com>
+To:     Radhey Shyam Pandey <radheys@xilinx.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        Michal Simek <michals@xilinx.com>,
+        "andrea.merello@gmail.com" <andrea.merello@gmail.com>,
+        Appana Durga Kedareswara Rao <appanad@xilinx.com>,
+        "mcgrof@kernel.org" <mcgrof@kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next 7/8] dmaengine: xilinx_dma: Check for both idle and
+ halted state in axidma stop_transfer
+Message-ID: <20190927135720.GA16057@lnx-nickg>
+References: <1567701424-25658-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+ <1567701424-25658-8-git-send-email-radhey.shyam.pandey@xilinx.com>
+ <20190926172107.GN3824@vkoul-mobl>
+ <CH2PR02MB7000EACD029FC7E47679393CC7810@CH2PR02MB7000.namprd02.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=whYhC-qXHdEypy6iC7SzPA+KvWphLXSGF+mvGCGHGjNZw@mail.gmail.com>
+In-Reply-To: <CH2PR02MB7000EACD029FC7E47679393CC7810@CH2PR02MB7000.namprd02.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mi, 18.09.19 13:26, Linus Torvalds (torvalds@linux-foundation.org) wrote:
+On Fri, Sep 27, 2019 at 06:48:29AM +0000, Radhey Shyam Pandey wrote:
+> > -----Original Message-----
+> > From: Vinod Koul <vkoul@kernel.org>
+> > Sent: Thursday, September 26, 2019 10:51 PM
+> > To: Radhey Shyam Pandey <radheys@xilinx.com>
+> > Cc: dan.j.williams@intel.com; Michal Simek <michals@xilinx.com>;
+> > nick.graumann@gmail.com; andrea.merello@gmail.com; Appana Durga
+> > Kedareswara Rao <appanad@xilinx.com>; mcgrof@kernel.org;
+> > dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org
+> > Subject: Re: [PATCH -next 7/8] dmaengine: xilinx_dma: Check for both idle
+> > and halted state in axidma stop_transfer
+> > 
+> > On 05-09-19, 22:07, Radhey Shyam Pandey wrote:
+> > > From: Nicholas Graumann <nick.graumann@gmail.com>
+> > >
+> > > When polling for a stopped transfer in AXI DMA mode, in some cases the
+> > > status of the channel may indicate IDLE instead of HALTED if the
+> > > channel was reset due to an error.
+> > >
+> > > Signed-off-by: Nicholas Graumann <nick.graumann@gmail.com>
+> > > Signed-off-by: Radhey Shyam Pandey
+> > <radhey.shyam.pandey@xilinx.com>
+> > > ---
+> > >  drivers/dma/xilinx/xilinx_dma.c | 5 +++--
+> > >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/dma/xilinx/xilinx_dma.c
+> > b/drivers/dma/xilinx/xilinx_dma.c
+> > > index b5dd62a..0896e07 100644
+> > > --- a/drivers/dma/xilinx/xilinx_dma.c
+> > > +++ b/drivers/dma/xilinx/xilinx_dma.c
+> > > @@ -1092,8 +1092,9 @@ static int xilinx_dma_stop_transfer(struct
+> > xilinx_dma_chan *chan)
+> > >
+> > >  	/* Wait for the hardware to halt */
+> > >  	return xilinx_dma_poll_timeout(chan, XILINX_DMA_REG_DMASR,
+> > val,
+> > > -				       val & XILINX_DMA_DMASR_HALTED, 0,
+> > > -				       XILINX_DMA_LOOP_COUNT);
+> > > +				       val | (XILINX_DMA_DMASR_IDLE |
+> > > +					      XILINX_DMA_DMASR_HALTED),
+> > 
+> > The condition was bitwise AND and now is OR.. ??
+> 
+> Ah, it should be same as before . Only _IDLE mask should be in OR.
+> 
+> Also on second thought to this patch- we need to describe which error
+> scenario "in some cases the status of the channel may indicate IDLE
+> instead of HALTED" as mentioned in commit description.
+> 
+> @Nick: Can you comment?
+> 
+In regard to the mask question, yes, this looks like a bug.
+We should be AND'ing with the mask like before.
 
-> On Wed, Sep 18, 2019 at 1:15 PM Alexander E. Patrakov
-> <patrakov@gmail.com> wrote:
-> >
-> > No, this is not the solution, if we take seriously not only getrandom
-> > hangs, but also urandom warnings. In some setups (root on LUKS is one of
-> > them) they happen early in the initramfs. Therefore "restoring" entropy
-> > from the previous boot by a script that runs from the main system is too
-> > late. That's why it is suggested to load at least a part of the random
-> > seed in the boot loader, and that has not been commonly implemented.
->
-> Honestly, I think the bootloader suggestion is naive and silly too.
->
-> Yes, we now support it. And no, I don't think people will trust that
-> either. And I suspect for good reason: there's really very little
-> reason to believe that bootloaders would be any better than any other
-> part of the system.
->
-> So right now some people trust bootloaders exactly _because_ there
-> basically is just one or two that do this, and the people who use them
-> are usually the people who wrote them or are at least closely
-> associated with them. That will change, and then people will say "why
-> would I trust that, when we know of bug Xyz".
+As far as the state, usually when we saw the IDLE state when invoking 
+dmaengine_terminate_all on a channel that had errors. I have not
+proved this, but I believe what happened was the following:
 
-Doing the random seed in the boot loader is nice for two reasons:
+New transactions were queued when chan->err was set, causing
+xilinx_dma_chan_reset to be invoked which ultimately results in the
+hardware being in an IDLE state by the time xilinx_dma_terminate_all
+gets around to invoking stop_transfer. At that point, stop_transfer is
+going to time out waiting for the hardware to indicate it has HALTED and
+ultimately will time out.
 
-1. It runs very very early, so that the OS can come up with fully
-   initialized entropy right from the beginning.
 
-2. The boot loader generally has found some disk to read the kernel from,
-   i.e. has a place where stuff can be stored and which can be updated
-   (most modern boot loaders can write to disk these days, and so can
-   EFI). Thus, it can derive a new random seed from a stored seed on disk
-   and pass it to the OS *AND* update it right away on disk ensuring that
-   it is never reused again. The point where the OS kernel comes to an
-   equivalent point where it can write to disk is much much later,
-   i.e. after the initrd, after the transition to the actual OS, ony
-   after /var has been remounted writable.
-
-So to me this is not about trust, but about "first place we can read
-*AND* write a seed on disk".
-
-i.e. the key to grok here: it's not OK to use a stored seed unless you
-can at the same time update the it on disk, as only that protects you
-from reusing the key if the system's startup is aborted due to power
-failure or such.
-
-> Adding an EFI variable (or other platform nonvolatile thing), and
-> reading (and writing to it) purely from the kernel ends up being one
-> of those things where you can then say "ok, if we trust the platform
-> AT ALL, we can trust that". Since you can't reasonably do things like
-> add EFI variables to your distro image by mistake.
-
-NVRAM backing EFI vars sucks. Nothing you want to update on every
-cycle. It's OK to update during OS installation, but during every
-single boot? I'd rather not.
-
-Lennart
-
---
-Lennart Poettering, Berlin
+In any case, xilinx_dma_stop_transfer should be fine with the hardware
+being in an IDLE state to indicate that the active transfer is stopped.
+Case in point: The CDMA core also covered by this driver only has an
+IDLE bit and no HALTED bit in its DMASR, and it checks for just the IDLE
+bit in xilinx_cdma_stop_transfer().
+> > 
+> > > +				       0, XILINX_DMA_LOOP_COUNT);
+> > >  }
+> > >
+> > >  /**
+> > > --
+> > > 2.7.4
+> > 
+> > --
+> > ~Vinod
