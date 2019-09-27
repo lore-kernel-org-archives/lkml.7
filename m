@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D7BC352AC
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 01:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 965F4C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 01:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A5DA208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 01:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D352206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 01:48:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728215AbfI0BsM (ORCPT
+        id S1728374AbfI0BsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 21:48:12 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:59078 "EHLO inva021.nxp.com"
+        Thu, 26 Sep 2019 21:48:20 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:51024 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727505AbfI0BsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 21:48:10 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 964E620060B;
-        Fri, 27 Sep 2019 03:48:07 +0200 (CEST)
+        id S1726140AbfI0BsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 21:48:06 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 943BB1A0AB1;
+        Fri, 27 Sep 2019 03:48:04 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E8E902005DF;
-        Fri, 27 Sep 2019 03:48:00 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 22ED21A02F3;
+        Fri, 27 Sep 2019 03:47:58 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id BA3E04029A;
-        Fri, 27 Sep 2019 09:47:52 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 0A8EF402EE;
+        Fri, 27 Sep 2019 09:47:49 +0800 (SGT)
 From:   Shengjiu Wang <shengjiu.wang@nxp.com>
 To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
         festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
@@ -35,9 +35,9 @@ To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
         linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         robh+dt@kernel.org, mark.rutland@arm.com,
         devicetree@vger.kernel.org, lars@metafoo.de
-Subject: [PATCH V6 4/4] ASoC: fsl_asrc: Fix error with S24_3LE format bitstream in i.MX8
-Date:   Fri, 27 Sep 2019 09:46:12 +0800
-Message-Id: <b6a4de2bbf960ef291ee902afe4388bd0fc1d347.1569493933.git.shengjiu.wang@nxp.com>
+Subject: [PATCH V6 2/4] ASoC: fsl_asrc: update supported sample format
+Date:   Fri, 27 Sep 2019 09:46:10 +0800
+Message-Id: <45a7c383f43cc1dd9d0934846447aee653278c03.1569493933.git.shengjiu.wang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1569493933.git.shengjiu.wang@nxp.com>
 References: <cover.1569493933.git.shengjiu.wang@nxp.com>
@@ -49,156 +49,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is error "aplay: pcm_write:2023: write error: Input/output error"
-on i.MX8QM/i.MX8QXP platform for S24_3LE format.
+The ASRC support 24bit/16bit/8bit input width, which is
+data width, not slot width.
 
-In i.MX8QM/i.MX8QXP, the DMA is EDMA, which don't support 24bit
-sample, but we didn't add any constraint, that cause issues.
+For the S20_3LE format, the data with is 20bit, slot width
+is 24bit, if we set ASRMCR1n.IWD to be 24bits, the result
+is the volume is lower than expected, it likes 24bit data
+right shift 4 bits
 
-So we need to query the caps of dma, then update the hw parameters
-according to the caps.
+So replace S20_3LE with S24_3LE in supported list and add S8
+format in TX supported list
 
 Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
 ---
- sound/soc/fsl/fsl_asrc.c     |  4 +--
- sound/soc/fsl/fsl_asrc.h     |  3 ++
- sound/soc/fsl/fsl_asrc_dma.c | 64 ++++++++++++++++++++++++++++++++----
- 3 files changed, 62 insertions(+), 9 deletions(-)
+ sound/soc/fsl/fsl_asrc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
-index 584badf956d2..0bf91a6f54b9 100644
+index 4d3804a1ea55..584badf956d2 100644
 --- a/sound/soc/fsl/fsl_asrc.c
 +++ b/sound/soc/fsl/fsl_asrc.c
-@@ -115,7 +115,7 @@ static void fsl_asrc_sel_proc(int inrate, int outrate,
-  * within range [ANCA, ANCA+ANCB-1], depends on the channels of pair A
-  * while pair A and pair C are comparatively independent.
-  */
--static int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair)
-+int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair)
- {
- 	enum asrc_pair_index index = ASRC_INVALID_PAIR;
- 	struct fsl_asrc *asrc_priv = pair->asrc_priv;
-@@ -158,7 +158,7 @@ static int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair)
-  *
-  * It clears the resource from asrc_priv and releases the occupied channels.
-  */
--static void fsl_asrc_release_pair(struct fsl_asrc_pair *pair)
-+void fsl_asrc_release_pair(struct fsl_asrc_pair *pair)
- {
- 	struct fsl_asrc *asrc_priv = pair->asrc_priv;
- 	enum asrc_pair_index index = pair->index;
-diff --git a/sound/soc/fsl/fsl_asrc.h b/sound/soc/fsl/fsl_asrc.h
-index 38af485bdd22..2b57e8c53728 100644
---- a/sound/soc/fsl/fsl_asrc.h
-+++ b/sound/soc/fsl/fsl_asrc.h
-@@ -462,4 +462,7 @@ struct fsl_asrc {
- #define DRV_NAME "fsl-asrc-dai"
- extern struct snd_soc_component_driver fsl_asrc_component;
- struct dma_chan *fsl_asrc_get_dma_channel(struct fsl_asrc_pair *pair, bool dir);
-+int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair);
-+void fsl_asrc_release_pair(struct fsl_asrc_pair *pair);
-+
- #endif /* _FSL_ASRC_H */
-diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
-index 01052a0808b0..2a60fc6142b1 100644
---- a/sound/soc/fsl/fsl_asrc_dma.c
-+++ b/sound/soc/fsl/fsl_asrc_dma.c
-@@ -16,13 +16,11 @@
+@@ -624,7 +624,7 @@ static int fsl_asrc_dai_probe(struct snd_soc_dai *dai)
  
- #define FSL_ASRC_DMABUF_SIZE	(256 * 1024)
+ #define FSL_ASRC_FORMATS	(SNDRV_PCM_FMTBIT_S24_LE | \
+ 				 SNDRV_PCM_FMTBIT_S16_LE | \
+-				 SNDRV_PCM_FMTBIT_S20_3LE)
++				 SNDRV_PCM_FMTBIT_S24_3LE)
  
--static const struct snd_pcm_hardware snd_imx_hardware = {
-+static struct snd_pcm_hardware snd_imx_hardware = {
- 	.info = SNDRV_PCM_INFO_INTERLEAVED |
- 		SNDRV_PCM_INFO_BLOCK_TRANSFER |
- 		SNDRV_PCM_INFO_MMAP |
--		SNDRV_PCM_INFO_MMAP_VALID |
--		SNDRV_PCM_INFO_PAUSE |
--		SNDRV_PCM_INFO_RESUME,
-+		SNDRV_PCM_INFO_MMAP_VALID,
- 	.buffer_bytes_max = FSL_ASRC_DMABUF_SIZE,
- 	.period_bytes_min = 128,
- 	.period_bytes_max = 65535, /* Limited by SDMA engine */
-@@ -270,12 +268,25 @@ static int fsl_asrc_dma_hw_free(struct snd_pcm_substream *substream)
- 
- static int fsl_asrc_dma_startup(struct snd_pcm_substream *substream)
- {
-+	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
- 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
- 	struct snd_pcm_runtime *runtime = substream->runtime;
- 	struct snd_soc_component *component = snd_soc_rtdcom_lookup(rtd, DRV_NAME);
-+	struct snd_dmaengine_dai_dma_data *dma_data;
- 	struct device *dev = component->dev;
- 	struct fsl_asrc *asrc_priv = dev_get_drvdata(dev);
- 	struct fsl_asrc_pair *pair;
-+	struct dma_chan *tmp_chan = NULL;
-+	u8 dir = tx ? OUT : IN;
-+	bool release_pair = true;
-+	int ret = 0;
-+
-+	ret = snd_pcm_hw_constraint_integer(substream->runtime,
-+					    SNDRV_PCM_HW_PARAM_PERIODS);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to set pcm hw params periods\n");
-+		return ret;
-+	}
- 
- 	pair = kzalloc(sizeof(struct fsl_asrc_pair), GFP_KERNEL);
- 	if (!pair)
-@@ -285,11 +296,50 @@ static int fsl_asrc_dma_startup(struct snd_pcm_substream *substream)
- 
- 	runtime->private_data = pair;
- 
--	snd_pcm_hw_constraint_integer(substream->runtime,
--				      SNDRV_PCM_HW_PARAM_PERIODS);
-+	/* Request a dummy pair, which will be released later.
-+	 * Request pair function needs channel num as input, for this
-+	 * dummy pair, we just request "1" channel temporarily.
-+	 */
-+	ret = fsl_asrc_request_pair(1, pair);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to request asrc pair\n");
-+		goto req_pair_err;
-+	}
-+
-+	/* Request a dummy dma channel, which will be released later. */
-+	tmp_chan = fsl_asrc_get_dma_channel(pair, dir);
-+	if (!tmp_chan) {
-+		dev_err(dev, "failed to get dma channel\n");
-+		ret = -EINVAL;
-+		goto dma_chan_err;
-+	}
-+
-+	dma_data = snd_soc_dai_get_dma_data(rtd->cpu_dai, substream);
-+
-+	/* Refine the snd_imx_hardware according to caps of DMA. */
-+	ret = snd_dmaengine_pcm_refine_runtime_hwparams(substream,
-+							dma_data,
-+							&snd_imx_hardware,
-+							tmp_chan);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to refine runtime hwparams\n");
-+		goto out;
-+	}
-+
-+	release_pair = false;
- 	snd_soc_set_runtime_hwparams(substream, &snd_imx_hardware);
- 
--	return 0;
-+out:
-+	dma_release_channel(tmp_chan);
-+
-+dma_chan_err:
-+	fsl_asrc_release_pair(pair);
-+
-+req_pair_err:
-+	if (release_pair)
-+		kfree(pair);
-+
-+	return ret;
- }
- 
- static int fsl_asrc_dma_shutdown(struct snd_pcm_substream *substream)
+ static struct snd_soc_dai_driver fsl_asrc_dai = {
+ 	.probe = fsl_asrc_dai_probe,
+@@ -635,7 +635,8 @@ static struct snd_soc_dai_driver fsl_asrc_dai = {
+ 		.rate_min = 5512,
+ 		.rate_max = 192000,
+ 		.rates = SNDRV_PCM_RATE_KNOT,
+-		.formats = FSL_ASRC_FORMATS,
++		.formats = FSL_ASRC_FORMATS |
++			   SNDRV_PCM_FMTBIT_S8,
+ 	},
+ 	.capture = {
+ 		.stream_name = "ASRC-Capture",
 -- 
 2.21.0
 
