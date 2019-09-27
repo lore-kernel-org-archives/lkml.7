@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2AEC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 02:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BC2C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 02:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB1EC2146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 02:17:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 836292146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 02:17:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728976AbfI0CR3 (ORCPT
+        id S1728893AbfI0CRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 22:17:29 -0400
+        Thu, 26 Sep 2019 22:17:21 -0400
 Received: from mga17.intel.com ([192.55.52.151]:25572 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728960AbfI0CRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 22:17:23 -0400
+        id S1728656AbfI0CRR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 22:17:17 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Sep 2019 19:17:23 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Sep 2019 19:17:17 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,553,1559545200"; 
-   d="scan'208";a="193020711"
+   d="scan'208";a="193020675"
 Received: from unknown (HELO local-michael-cet-test.sh.intel.com) ([10.239.159.128])
-  by orsmga003.jf.intel.com with ESMTP; 26 Sep 2019 19:17:21 -0700
+  by orsmga003.jf.intel.com with ESMTP; 26 Sep 2019 19:17:15 -0700
 From:   Yang Weijiang <weijiang.yang@intel.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         pbonzini@redhat.com, sean.j.christopherson@intel.com
 Cc:     mst@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
         Yang Weijiang <weijiang.yang@intel.com>
-Subject: [PATCH v7 7/7] KVM: x86: Add user-space access interface for CET MSRs
-Date:   Fri, 27 Sep 2019 10:19:27 +0800
-Message-Id: <20190927021927.23057-8-weijiang.yang@intel.com>
+Subject: [PATCH v7 4/7] KVM: VMX: Load Guest CET via VMCS when CET is enabled in Guest
+Date:   Fri, 27 Sep 2019 10:19:24 +0800
+Message-Id: <20190927021927.23057-5-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20190927021927.23057-1-weijiang.yang@intel.com>
 References: <20190927021927.23057-1-weijiang.yang@intel.com>
@@ -44,125 +44,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There're two different places storing Guest CET states, the states
-managed with XSAVES/XRSTORS, as restored/saved
-in previous patch, can be read/write directly from/to the MSRs.
-For those stored in VMCS fields, they're access via vmcs_read/
-vmcs_write.
+"Load Guest CET state" bit controls whether Guest CET states
+will be loaded at Guest entry. Before doing that, KVM needs
+to check if CPU CET feature is enabled on host and available
+to Guest.
 
+Note: SHSTK and IBT features share one control MSR:
+MSR_IA32_{U,S}_CET, which means it's difficult to hide
+one feature from another in the case of SHSTK != IBT,
+after discussed in community, it's agreed to allow Guest
+control two features independently as it won't introduce
+security hole.
+
+Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 83 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 83 insertions(+)
+ arch/x86/kvm/vmx/vmx.c | 35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 44913e4ab558..5265db7cd2af 100644
+index f720baa7a9ba..ba1a83d11e69 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1671,6 +1671,49 @@ static int vmx_get_msr_feature(struct kvm_msr_entry *msr)
- 	return 0;
+@@ -44,6 +44,7 @@
+ #include <asm/spec-ctrl.h>
+ #include <asm/virtext.h>
+ #include <asm/vmx.h>
++#include <asm/cet.h>
+ 
+ #include "capabilities.h"
+ #include "cpuid.h"
+@@ -2918,6 +2919,37 @@ void vmx_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
+ 	vmcs_writel(GUEST_CR3, guest_cr3);
  }
  
-+static int check_cet_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
++static int set_cet_bit(struct kvm_vcpu *vcpu, unsigned long cr4)
 +{
-+	u64 kvm_xss = kvm_supported_xss();
++	struct vcpu_vmx *vmx = to_vmx(vcpu);
++	const u64 cet_bits = XFEATURE_MASK_CET_USER | XFEATURE_MASK_CET_KERNEL;
++	bool cet_xss = vmx_xsaves_supported() &&
++		       (kvm_supported_xss() & cet_bits);
++	bool cet_cpuid = guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
++			 guest_cpuid_has(vcpu, X86_FEATURE_IBT);
++	bool cet_on = !!(cr4 & X86_CR4_CET);
 +
-+	switch (msr_info->index) {
-+	case MSR_IA32_PL0_SSP ... MSR_IA32_PL2_SSP:
-+		if (!(kvm_xss | XFEATURE_MASK_CET_KERNEL))
-+			return 1;
-+		if (!msr_info->host_initiated &&
-+		    !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK))
-+			return 1;
-+		break;
-+	case MSR_IA32_PL3_SSP:
-+		if (!(kvm_xss | XFEATURE_MASK_CET_USER))
-+			return 1;
-+		if (!msr_info->host_initiated &&
-+		    !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK))
-+			return 1;
-+		break;
-+	case MSR_IA32_U_CET:
-+		if (!(kvm_xss | XFEATURE_MASK_CET_USER))
-+			return 1;
-+		if (!msr_info->host_initiated &&
-+		    !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) &&
-+		    !guest_cpuid_has(vcpu, X86_FEATURE_IBT))
-+			return 1;
-+		break;
-+	case MSR_IA32_S_CET:
-+		if (!msr_info->host_initiated &&
-+		    !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) &&
-+		    !guest_cpuid_has(vcpu, X86_FEATURE_IBT))
-+			return 1;
-+		break;
-+	case MSR_IA32_INT_SSP_TAB:
-+		if (!msr_info->host_initiated &&
-+		    !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK))
-+			return 1;
-+		break;
-+	default:
++	if (cet_on && vmx->nested.vmxon)
 +		return 1;
-+	}
++
++	if (cet_on && !cpu_x86_cet_enabled())
++		return 1;
++
++	if (cet_on && !cet_xss)
++		return 1;
++
++	if (cet_on && !cet_cpuid)
++		return 1;
++
++	if (cet_on)
++		vmcs_set_bits(VM_ENTRY_CONTROLS,
++			      VM_ENTRY_LOAD_GUEST_CET_STATE);
++	else
++		vmcs_clear_bits(VM_ENTRY_CONTROLS,
++				VM_ENTRY_LOAD_GUEST_CET_STATE);
 +	return 0;
 +}
- /*
-  * Reads an msr value (of 'msr_index') into 'pdata'.
-  * Returns 0 on success, non-0 otherwise.
-@@ -1788,6 +1831,26 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		else
- 			msr_info->data = vmx->pt_desc.guest.addr_a[index / 2];
- 		break;
-+	case MSR_IA32_S_CET:
-+		if (check_cet_msr(vcpu, msr_info))
-+			return 1;
-+		msr_info->data = vmcs_readl(GUEST_S_CET);
-+		break;
-+	case MSR_IA32_INT_SSP_TAB:
-+		if (check_cet_msr(vcpu, msr_info))
-+			return 1;
-+		msr_info->data = vmcs_readl(GUEST_INTR_SSP_TABLE);
-+		break;
-+	case MSR_IA32_U_CET:
-+		if (check_cet_msr(vcpu, msr_info))
-+			return 1;
-+		rdmsrl(MSR_IA32_U_CET, msr_info->data);
-+		break;
-+	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
-+		if (check_cet_msr(vcpu, msr_info))
-+			return 1;
-+		rdmsrl(msr_info->index, msr_info->data);
-+		break;
- 	case MSR_TSC_AUX:
- 		if (!msr_info->host_initiated &&
- 		    !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
-@@ -2039,6 +2102,26 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		else
- 			vmx->pt_desc.guest.addr_a[index / 2] = data;
- 		break;
-+	case MSR_IA32_S_CET:
-+		if (check_cet_msr(vcpu, msr_info))
-+			return 1;
-+		vmcs_writel(GUEST_S_CET, data);
-+		break;
-+	case MSR_IA32_INT_SSP_TAB:
-+		if (check_cet_msr(vcpu, msr_info))
-+			return 1;
-+		vmcs_writel(GUEST_INTR_SSP_TABLE, data);
-+		break;
-+	case MSR_IA32_U_CET:
-+		if (check_cet_msr(vcpu, msr_info))
-+			return 1;
-+		wrmsrl(MSR_IA32_U_CET, data);
-+		break;
-+	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
-+		if (check_cet_msr(vcpu, msr_info))
-+			return 1;
-+		wrmsrl(msr_info->index, data);
-+		break;
- 	case MSR_TSC_AUX:
- 		if (!msr_info->host_initiated &&
- 		    !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
++
+ int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
+ {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+@@ -2958,6 +2990,9 @@ int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
+ 			return 1;
+ 	}
+ 
++	if (set_cet_bit(vcpu, cr4))
++		return 1;
++
+ 	if (vmx->nested.vmxon && !nested_cr4_valid(vcpu, cr4))
+ 		return 1;
+ 
 -- 
 2.17.2
 
