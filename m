@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F94C4360C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F56CC352A9
 	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 01:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F268206B7
+	by mail.kernel.org (Postfix) with ESMTP id 6FA12206B7
 	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 01:48:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbfI0BsH (ORCPT
+        id S1728138AbfI0BsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 21:48:07 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:50988 "EHLO inva020.nxp.com"
+        Thu, 26 Sep 2019 21:48:10 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:59046 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727505AbfI0BsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 21:48:06 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6E9351A0AA9;
-        Fri, 27 Sep 2019 03:48:03 +0200 (CEST)
+        id S1727944AbfI0BsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 21:48:09 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2829B20060E;
+        Fri, 27 Sep 2019 03:48:06 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C0E511A0615;
-        Fri, 27 Sep 2019 03:47:56 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7B5042005B7;
+        Fri, 27 Sep 2019 03:47:59 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A6DDC402D5;
-        Fri, 27 Sep 2019 09:47:48 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 62686402F2;
+        Fri, 27 Sep 2019 09:47:51 +0800 (SGT)
 From:   Shengjiu Wang <shengjiu.wang@nxp.com>
 To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
         festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
@@ -35,9 +35,9 @@ To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
         linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         robh+dt@kernel.org, mark.rutland@arm.com,
         devicetree@vger.kernel.org, lars@metafoo.de
-Subject: [PATCH V6 1/4] ASoC: fsl_asrc: Use in(out)put_format instead of in(out)put_word_width
-Date:   Fri, 27 Sep 2019 09:46:09 +0800
-Message-Id: <7937c1404ee327ce141cb03b3575b02ea01a740c.1569493933.git.shengjiu.wang@nxp.com>
+Subject: [PATCH V6 3/4] ASoC: pcm_dmaengine: Extract snd_dmaengine_pcm_refine_runtime_hwparams
+Date:   Fri, 27 Sep 2019 09:46:11 +0800
+Message-Id: <d728f65194e9978cbec4132b522d4fed420d704a.1569493933.git.shengjiu.wang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1569493933.git.shengjiu.wang@nxp.com>
 References: <cover.1569493933.git.shengjiu.wang@nxp.com>
@@ -49,145 +49,210 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-snd_pcm_format_t is more formal than enum asrc_word_width, which has
-two property, width and physical width, which is more accurate than
-enum asrc_word_width. So it is better to use in(out)put_format
-instead of in(out)put_word_width.
+When set the runtime hardware parameters, we may need to query
+the capability of DMA to complete the parameters.
+
+This patch is to Extract this operation from
+dmaengine_pcm_set_runtime_hwparams function to a separate function
+snd_dmaengine_pcm_refine_runtime_hwparams, that other components
+which need this feature can call this function.
 
 Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Reviewed-by: Nicolin Chen <nicoleotsuka@gmail.com>
 ---
- sound/soc/fsl/fsl_asrc.c | 56 +++++++++++++++++++++++++++-------------
- sound/soc/fsl/fsl_asrc.h |  4 +--
- 2 files changed, 40 insertions(+), 20 deletions(-)
+ include/sound/dmaengine_pcm.h         |  5 ++
+ sound/core/pcm_dmaengine.c            | 83 +++++++++++++++++++++++++++
+ sound/soc/soc-generic-dmaengine-pcm.c | 61 ++------------------
+ 3 files changed, 94 insertions(+), 55 deletions(-)
 
-diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
-index cfa40ef6b1ca..4d3804a1ea55 100644
---- a/sound/soc/fsl/fsl_asrc.c
-+++ b/sound/soc/fsl/fsl_asrc.c
-@@ -265,6 +265,8 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
- 	struct asrc_config *config = pair->config;
- 	struct fsl_asrc *asrc_priv = pair->asrc_priv;
- 	enum asrc_pair_index index = pair->index;
-+	enum asrc_word_width input_word_width;
-+	enum asrc_word_width output_word_width;
- 	u32 inrate, outrate, indiv, outdiv;
- 	u32 clk_index[2], div[2];
- 	int in, out, channels;
-@@ -283,9 +285,32 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
- 		return -EINVAL;
- 	}
+diff --git a/include/sound/dmaengine_pcm.h b/include/sound/dmaengine_pcm.h
+index c679f6116580..b65220685920 100644
+--- a/include/sound/dmaengine_pcm.h
++++ b/include/sound/dmaengine_pcm.h
+@@ -83,6 +83,11 @@ void snd_dmaengine_pcm_set_config_from_dai_data(
+ 	const struct snd_dmaengine_dai_dma_data *dma_data,
+ 	struct dma_slave_config *config);
  
--	/* Validate output width */
--	if (config->output_word_width == ASRC_WIDTH_8_BIT) {
--		pair_err("does not support 8bit width output\n");
-+	switch (snd_pcm_format_width(config->input_format)) {
-+	case 8:
-+		input_word_width = ASRC_WIDTH_8_BIT;
-+		break;
-+	case 16:
-+		input_word_width = ASRC_WIDTH_16_BIT;
-+		break;
-+	case 24:
-+		input_word_width = ASRC_WIDTH_24_BIT;
-+		break;
-+	default:
-+		pair_err("does not support this input format, %d\n",
-+			 config->input_format);
++int snd_dmaengine_pcm_refine_runtime_hwparams(
++	struct snd_pcm_substream *substream,
++	struct snd_dmaengine_dai_dma_data *dma_data,
++	struct snd_pcm_hardware *hw,
++	struct dma_chan *chan);
+ 
+ /*
+  * Try to request the DMA channel using compat_request_channel or
+diff --git a/sound/core/pcm_dmaengine.c b/sound/core/pcm_dmaengine.c
+index 89a05926ac73..5749a8a49784 100644
+--- a/sound/core/pcm_dmaengine.c
++++ b/sound/core/pcm_dmaengine.c
+@@ -369,4 +369,87 @@ int snd_dmaengine_pcm_close_release_chan(struct snd_pcm_substream *substream)
+ }
+ EXPORT_SYMBOL_GPL(snd_dmaengine_pcm_close_release_chan);
+ 
++/**
++ * snd_dmaengine_pcm_refine_runtime_hwparams - Refine runtime hw params
++ * @substream: PCM substream
++ * @dma_data: DAI DMA data
++ * @hw: PCM hw params
++ * @chan: DMA channel to use for data transfers
++ *
++ * Returns 0 on success, a negative error code otherwise.
++ *
++ * This function will query DMA capability, then refine the pcm hardware
++ * parameters.
++ */
++int snd_dmaengine_pcm_refine_runtime_hwparams(
++	struct snd_pcm_substream *substream,
++	struct snd_dmaengine_dai_dma_data *dma_data,
++	struct snd_pcm_hardware *hw,
++	struct dma_chan *chan)
++{
++	struct dma_slave_caps dma_caps;
++	u32 addr_widths = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
++			  BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
++			  BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
++	snd_pcm_format_t i;
++	int ret = 0;
++
++	if (!hw || !chan || !dma_data)
 +		return -EINVAL;
++
++	ret = dma_get_slave_caps(chan, &dma_caps);
++	if (ret == 0) {
++		if (dma_caps.cmd_pause && dma_caps.cmd_resume)
++			hw->info |= SNDRV_PCM_INFO_PAUSE | SNDRV_PCM_INFO_RESUME;
++		if (dma_caps.residue_granularity <= DMA_RESIDUE_GRANULARITY_SEGMENT)
++			hw->info |= SNDRV_PCM_INFO_BATCH;
++
++		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
++			addr_widths = dma_caps.dst_addr_widths;
++		else
++			addr_widths = dma_caps.src_addr_widths;
 +	}
 +
-+	switch (snd_pcm_format_width(config->output_format)) {
-+	case 16:
-+		output_word_width = ASRC_WIDTH_16_BIT;
-+		break;
-+	case 24:
-+		output_word_width = ASRC_WIDTH_24_BIT;
-+		break;
-+	default:
-+		pair_err("does not support this output format, %d\n",
-+			 config->output_format);
- 		return -EINVAL;
- 	}
++	/*
++	 * If SND_DMAENGINE_PCM_DAI_FLAG_PACK is set keep
++	 * hw.formats set to 0, meaning no restrictions are in place.
++	 * In this case it's the responsibility of the DAI driver to
++	 * provide the supported format information.
++	 */
++	if (!(dma_data->flags & SND_DMAENGINE_PCM_DAI_FLAG_PACK))
++		/*
++		 * Prepare formats mask for valid/allowed sample types. If the
++		 * dma does not have support for the given physical word size,
++		 * it needs to be masked out so user space can not use the
++		 * format which produces corrupted audio.
++		 * In case the dma driver does not implement the slave_caps the
++		 * default assumption is that it supports 1, 2 and 4 bytes
++		 * widths.
++		 */
++		for (i = SNDRV_PCM_FORMAT_FIRST; i <= SNDRV_PCM_FORMAT_LAST; i++) {
++			int bits = snd_pcm_format_physical_width(i);
++
++			/*
++			 * Enable only samples with DMA supported physical
++			 * widths
++			 */
++			switch (bits) {
++			case 8:
++			case 16:
++			case 24:
++			case 32:
++			case 64:
++				if (addr_widths & (1 << (bits / 8)))
++					hw->formats |= pcm_format_to_bits(i);
++				break;
++			default:
++				/* Unsupported types */
++				break;
++			}
++		}
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(snd_dmaengine_pcm_refine_runtime_hwparams);
++
+ MODULE_LICENSE("GPL");
+diff --git a/sound/soc/soc-generic-dmaengine-pcm.c b/sound/soc/soc-generic-dmaengine-pcm.c
+index 748f5f641002..b9f147eaf7c4 100644
+--- a/sound/soc/soc-generic-dmaengine-pcm.c
++++ b/sound/soc/soc-generic-dmaengine-pcm.c
+@@ -118,12 +118,7 @@ static int dmaengine_pcm_set_runtime_hwparams(struct snd_pcm_substream *substrea
+ 	struct device *dma_dev = dmaengine_dma_dev(pcm, substream);
+ 	struct dma_chan *chan = pcm->chan[substream->stream];
+ 	struct snd_dmaengine_dai_dma_data *dma_data;
+-	struct dma_slave_caps dma_caps;
+ 	struct snd_pcm_hardware hw;
+-	u32 addr_widths = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+-			  BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
+-			  BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
+-	snd_pcm_format_t i;
+ 	int ret;
  
-@@ -383,8 +408,8 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair)
- 	/* Implement word_width configurations */
- 	regmap_update_bits(asrc_priv->regmap, REG_ASRMCR1(index),
- 			   ASRMCR1i_OW16_MASK | ASRMCR1i_IWD_MASK,
--			   ASRMCR1i_OW16(config->output_word_width) |
--			   ASRMCR1i_IWD(config->input_word_width));
-+			   ASRMCR1i_OW16(output_word_width) |
-+			   ASRMCR1i_IWD(input_word_width));
+ 	if (pcm->config && pcm->config->pcm_hardware)
+@@ -145,56 +140,12 @@ static int dmaengine_pcm_set_runtime_hwparams(struct snd_pcm_substream *substrea
+ 	if (pcm->flags & SND_DMAENGINE_PCM_FLAG_NO_RESIDUE)
+ 		hw.info |= SNDRV_PCM_INFO_BATCH;
  
- 	/* Enable BUFFER STALL */
- 	regmap_update_bits(asrc_priv->regmap, REG_ASRMCR(index),
-@@ -497,13 +522,13 @@ static int fsl_asrc_dai_hw_params(struct snd_pcm_substream *substream,
- 				  struct snd_soc_dai *dai)
- {
- 	struct fsl_asrc *asrc_priv = snd_soc_dai_get_drvdata(dai);
--	int width = params_width(params);
- 	struct snd_pcm_runtime *runtime = substream->runtime;
- 	struct fsl_asrc_pair *pair = runtime->private_data;
- 	unsigned int channels = params_channels(params);
- 	unsigned int rate = params_rate(params);
- 	struct asrc_config config;
--	int word_width, ret;
-+	snd_pcm_format_t format;
-+	int ret;
- 
- 	ret = fsl_asrc_request_pair(channels, pair);
- 	if (ret) {
-@@ -513,15 +538,10 @@ static int fsl_asrc_dai_hw_params(struct snd_pcm_substream *substream,
- 
- 	pair->config = &config;
- 
--	if (width == 16)
--		width = ASRC_WIDTH_16_BIT;
--	else
--		width = ASRC_WIDTH_24_BIT;
+-	ret = dma_get_slave_caps(chan, &dma_caps);
+-	if (ret == 0) {
+-		if (dma_caps.cmd_pause && dma_caps.cmd_resume)
+-			hw.info |= SNDRV_PCM_INFO_PAUSE | SNDRV_PCM_INFO_RESUME;
+-		if (dma_caps.residue_granularity <= DMA_RESIDUE_GRANULARITY_SEGMENT)
+-			hw.info |= SNDRV_PCM_INFO_BATCH;
 -
- 	if (asrc_priv->asrc_width == 16)
--		word_width = ASRC_WIDTH_16_BIT;
-+		format = SNDRV_PCM_FORMAT_S16_LE;
- 	else
--		word_width = ASRC_WIDTH_24_BIT;
-+		format = SNDRV_PCM_FORMAT_S24_LE;
+-		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+-			addr_widths = dma_caps.dst_addr_widths;
+-		else
+-			addr_widths = dma_caps.src_addr_widths;
+-	}
+-
+-	/*
+-	 * If SND_DMAENGINE_PCM_DAI_FLAG_PACK is set keep
+-	 * hw.formats set to 0, meaning no restrictions are in place.
+-	 * In this case it's the responsibility of the DAI driver to
+-	 * provide the supported format information.
+-	 */
+-	if (!(dma_data->flags & SND_DMAENGINE_PCM_DAI_FLAG_PACK))
+-		/*
+-		 * Prepare formats mask for valid/allowed sample types. If the
+-		 * dma does not have support for the given physical word size,
+-		 * it needs to be masked out so user space can not use the
+-		 * format which produces corrupted audio.
+-		 * In case the dma driver does not implement the slave_caps the
+-		 * default assumption is that it supports 1, 2 and 4 bytes
+-		 * widths.
+-		 */
+-		for (i = SNDRV_PCM_FORMAT_FIRST; i <= SNDRV_PCM_FORMAT_LAST; i++) {
+-			int bits = snd_pcm_format_physical_width(i);
+-
+-			/*
+-			 * Enable only samples with DMA supported physical
+-			 * widths
+-			 */
+-			switch (bits) {
+-			case 8:
+-			case 16:
+-			case 24:
+-			case 32:
+-			case 64:
+-				if (addr_widths & (1 << (bits / 8)))
+-					hw.formats |= pcm_format_to_bits(i);
+-				break;
+-			default:
+-				/* Unsupported types */
+-				break;
+-			}
+-		}
++	ret = snd_dmaengine_pcm_refine_runtime_hwparams(substream,
++							dma_data,
++							&hw,
++							chan);
++	if (ret)
++		return ret;
  
- 	config.pair = pair->index;
- 	config.channel_num = channels;
-@@ -529,13 +549,13 @@ static int fsl_asrc_dai_hw_params(struct snd_pcm_substream *substream,
- 	config.outclk = OUTCLK_ASRCK1_CLK;
- 
- 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
--		config.input_word_width   = width;
--		config.output_word_width  = word_width;
-+		config.input_format   = params_format(params);
-+		config.output_format  = format;
- 		config.input_sample_rate  = rate;
- 		config.output_sample_rate = asrc_priv->asrc_rate;
- 	} else {
--		config.input_word_width   = word_width;
--		config.output_word_width  = width;
-+		config.input_format   = format;
-+		config.output_format  = params_format(params);
- 		config.input_sample_rate  = asrc_priv->asrc_rate;
- 		config.output_sample_rate = rate;
- 	}
-diff --git a/sound/soc/fsl/fsl_asrc.h b/sound/soc/fsl/fsl_asrc.h
-index c60075112570..38af485bdd22 100644
---- a/sound/soc/fsl/fsl_asrc.h
-+++ b/sound/soc/fsl/fsl_asrc.h
-@@ -342,8 +342,8 @@ struct asrc_config {
- 	unsigned int dma_buffer_size;
- 	unsigned int input_sample_rate;
- 	unsigned int output_sample_rate;
--	enum asrc_word_width input_word_width;
--	enum asrc_word_width output_word_width;
-+	snd_pcm_format_t input_format;
-+	snd_pcm_format_t output_format;
- 	enum asrc_inclk inclk;
- 	enum asrc_outclk outclk;
- };
+ 	return snd_soc_set_runtime_hwparams(substream, &hw);
+ }
 -- 
 2.21.0
 
