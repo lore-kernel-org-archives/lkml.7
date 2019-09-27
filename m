@@ -2,137 +2,160 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E23C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA29C388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2624217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:44:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f5pKS48J"
+	by mail.kernel.org (Postfix) with ESMTP id A841421850
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:44:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727700AbfI0Oo0 (ORCPT
+        id S1727780AbfI0Oo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 10:44:26 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46144 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727447AbfI0OoZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 10:44:25 -0400
-Received: by mail-pl1-f194.google.com with SMTP id q24so1178387plr.13
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 07:44:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=TUjdrIXMNe8uNjDuFL/hI5mDTUlQM39+j47CXaMJo8w=;
-        b=f5pKS48J2COaawff7kRnyg+7s7TWdUiALYYKjnnUNhdMtiygqrHeRVw0SKktYJWbTo
-         CE1mzz+Va3wzQI6+ON0nIC5qcY7B8Ll61o8e3rnBJ3/xE0GQQ7LHegK+piEXslKsqKtL
-         fT6c/HsgbYlbH9dxzjkkXTX3e3WPBI8lU8D+5fekbAdqDWG3QxiNPdp+RlMi7hPNDRdj
-         RlgtMoH+5RH2F070EL8D9DrB2ljhOpYJbk5AN5buEpj5NznpQZvEw384ew+rfqFlhr6p
-         Dx/mmz7Zo0sHweitgdjDn6RUklKlgFmhXw7pOZGcs92m4Mv+RYoFDBWpDmLjtYERRN2T
-         WAPA==
+        Fri, 27 Sep 2019 10:44:29 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52160 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727711AbfI0Oo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 10:44:27 -0400
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9EFD389AC5
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 14:44:26 +0000 (UTC)
+Received: by mail-wr1-f71.google.com with SMTP id j2so1138268wre.1
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 07:44:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=TUjdrIXMNe8uNjDuFL/hI5mDTUlQM39+j47CXaMJo8w=;
-        b=HzF0B5w88Kl/pfha4O4FQ/2u1w53DsqWWpOQL6YUFEXjPPz+fWSQmI6kwBZSSvOerU
-         9TgX/9THsvsUV83xTwZOcjytjgEtBi7DYX0leuAtBMdsP3NsYW1VTTK9bsBb67YfZGfL
-         Yy9zjAtFNk6zuwuQkc5kWqusP3YQiPbFw2xi5Wz2Agz5aj3Ct3djeVqhNZSGgXvI4xOv
-         sJ0haWUlqs4G0kH9qUTS0h0uKz2Bdwb0eFUUSnt9n69YQmHsM73PTf1lpNEoQayxvSoZ
-         hiQ4KpfJRyMWBEyFqPptGwpdqnCrjqUikSOXr+yFNdCGn9LQ1xJB37vV3mm1RVlswo4i
-         ttJA==
-X-Gm-Message-State: APjAAAWHQvlksYNtUR5mhcg+o0qULaSSRIcBvnVZu4GtsvE6Kd4hMtAi
-        va6UWB+jidrKXWLkVFLYeAdLyWVH
-X-Google-Smtp-Source: APXvYqyX6XKug6In1kYuzUUS+vN+QxNpF0CH8jaibQbiI318FYbxhJCnjD9OExrS/yZjdvohCE430A==
-X-Received: by 2002:a17:902:8c8a:: with SMTP id t10mr5102056plo.109.1569595464901;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tKJlXVu+C+SUSWhFcHR/cVLK3eVfpegwLk/6ZeTU4Lw=;
+        b=f9bGHlgFSUzCDq3j38rLyk3Y3sXq3fFnXt4cCAJqnF9sBG1ZdTrwNOz/snoQMBouHY
+         Gq1yOSp/gRSLjTWytXn8EGqDPxZs4ugZj2W9HPEH0wG5HsKGfZsdEDz59d6gOGS6yRW4
+         pzY9Cj8kbgVyfUNukzIB0m4PUHlYK/lZCjqG9JaQi2Ycy4zo40uNplsUahSWnlykij4s
+         /KrZRcVYROIZTv79izwPNPIozf3l2k3wiADa6ot4lj9UdH0dusrMIM/Gwmq50t4R4gPZ
+         3EcmNsbxbT9Gk59cN8Wii4bLJ/q5c/oYStoMzFFbIVW3JZsIuWabIJ0oVQCOJwbnqooL
+         AMDg==
+X-Gm-Message-State: APjAAAV6hBeC9iP5VZjCKX8tsBWXO7BxJpQNOahS5SG5DXyKHJy08uUx
+        9i6L8HgKerRpUesB0Z5kphKnap0aVY2e5dFCmAdwPCYsW3rFdkdQEoeOFoMxyJaVf7JABdpTioK
+        vCs/1N11ANybtkZKVZd01MPqm
+X-Received: by 2002:a1c:1c7:: with SMTP id 190mr395785wmb.23.1569595464977;
         Fri, 27 Sep 2019 07:44:24 -0700 (PDT)
-Received: from ArchLinux ([103.231.90.172])
-        by smtp.gmail.com with ESMTPSA id d20sm3806250pfq.88.2019.09.27.07.44.20
+X-Google-Smtp-Source: APXvYqxC2IYP1DXa/fMg1u9ig7ZhBeyIkZ56QIfJYKHZiecxua/UDg6iVgqlCp0MKwat0LoPX/Jjxg==
+X-Received: by 2002:a1c:1c7:: with SMTP id 190mr395767wmb.23.1569595464744;
+        Fri, 27 Sep 2019 07:44:24 -0700 (PDT)
+Received: from kherbst.pingu.com ([2a02:8308:b0be:6900:6174:20eb:3f66:382f])
+        by smtp.gmail.com with ESMTPSA id e18sm4580926wrv.63.2019.09.27.07.44.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 27 Sep 2019 07:44:23 -0700 (PDT)
-Date:   Fri, 27 Sep 2019 20:14:11 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     corbet@lwn.net
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH V2] Remove dead url and added active url .
-Message-ID: <20190927144411.GA167835@ArchLinux>
+From:   Karol Herbst <kherbst@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Karol Herbst <kherbst@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lyude Paul <lyude@redhat.com>, linux-pci@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [RFC PATCH] pci: prevent putting pcie devices into lower device states on certain intel bridges
+Date:   Fri, 27 Sep 2019 16:44:21 +0200
+Message-Id: <20190927144421.22608-1-kherbst@redhat.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="IJpNTDwzlM2Ie8A6"
-Content-Disposition: inline
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fixes runpm breakage mainly on Nvidia GPUs as they are not able to resume.
 
---IJpNTDwzlM2Ie8A6
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Works perfectly with this workaround applied.
 
+RFC comment:
+We are quite sure that there is a higher amount of bridges affected by this,
+but I was only testing it on my own machine for now.
 
-The below links/urls leads to "server not found" error, that means ,
-those sites are not maintained anymore.
+I've stresstested runpm by doing 5000 runpm cycles with that patch applied
+and never saw it fail.
 
+I mainly wanted to get a discussion going on if that's a feasable workaround
+indeed or if we need something better.
 
-We should induct these below urls to look for the config.
+I am also sure, that the nouveau driver itself isn't at fault as I am able
+to reproduce the same issue by poking into some PCI registers on the PCIe
+bridge to put the GPU into D3cold as it's done in ACPI code.
 
-Dead Url for Gmail Settings : http://dev.mutt.org/trac/wiki/UseCases/Gmail
-                          (we need to remove it)
+I've written a little python script to reproduce this issue without the need
+of loading nouveau:
+https://raw.githubusercontent.com/karolherbst/pci-stub-runpm/master/nv_runpm_bug_test.py
 
-Active Url for Gmail Settings : https://gitlab.com/muttmua/mutt/wikis/UseCa=
-ses/Gmail
-                             (We need to induct it)
-
-Dead URL for Manual : http://dev.mutt.org/doc/manual.html
-                 (We need to remove it)
-
-Active URL for Manual : https://gitlab.com/muttmua/mutt/wikis/MuttGuide
-                             (We need to induct it)
-
-
-Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Signed-off-by: Karol Herbst <kherbst@redhat.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: linux-pci@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: nouveau@lists.freedesktop.org
 ---
- Documentation/process/email-clients.rst | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/pci/pci.c | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-diff --git a/Documentation/process/email-clients.rst b/Documentation/proces=
-s/email-clients.rst
-index 1f920d445a8b..15781bf10b8d 100644
---- a/Documentation/process/email-clients.rst
-+++ b/Documentation/process/email-clients.rst
-=20
-+The Mutt docs have lots more information:
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 088fcdc8d2b4..9dbd29ced1ac 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -799,6 +799,42 @@ static inline bool platform_pci_bridge_d3(struct pci_dev *dev)
+ 	return pci_platform_pm ? pci_platform_pm->bridge_d3(dev) : false;
+ }
+ 
++/*
++ * some intel bridges cause serious issues with runpm if the client device
++ * is put into D1/D2/D3hot before putting the client into D3cold via
++ * platform means (generally ACPI).
++ *
++ * skipping this makes runpm work perfectly fine on such devices.
++ *
++ * As far as we know only skylake and kaby lake SoCs are affected.
++ */
++static unsigned short intel_broken_d3_bridges[] = {
++	/* kbl */
++	0x1901,
++};
 +
-+ https://gitlab.com/muttmua/mutt/wikis/UseCases/Gmail
++static inline bool intel_broken_pci_pm(struct pci_bus *bus)
++{
++	struct pci_dev *bridge;
++	int i;
 +
-+  https://gitlab.com/muttmua/mutt/wikis/MuttGuide
++	if (!bus || !bus->self)
++		return false;
 +
-=20
++	bridge = bus->self;
++	if (bridge->vendor != PCI_VENDOR_ID_INTEL)
++		return false;
++
++	for (i = 0; i < ARRAY_SIZE(intel_broken_d3_bridges); i++) {
++		if (bridge->device == intel_broken_d3_bridges[i]) {
++			pci_err(bridge, "found broken intel bridge\n");
++			return true;
++		}
++	}
++
++	return false;
++}
++
+ /**
+  * pci_raw_set_power_state - Use PCI PM registers to set the power state of
+  *			     given PCI device
+@@ -827,6 +863,9 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
+ 	if (state < PCI_D0 || state > PCI_D3hot)
+ 		return -EINVAL;
+ 
++	if (state != PCI_D0 && intel_broken_pci_pm(dev->bus))
++		return 0;
++
+ 	/*
+ 	 * Validate current state:
+ 	 * Can enter D0 from any state, but if we can only go deeper
+-- 
+2.21.0
 
-
---IJpNTDwzlM2Ie8A6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl2OIDEACgkQsjqdtxFL
-KRVB0AgA1xoyjymkYpFrvCsxEB5ABxzcZUA+ED1vc4ATtGSnaAXuL5uXPs3pjl0B
-md2PhUsi8jecCAjI/a8sXJ+oLYuH2tD2x0r6j+aheKDCEnMcj6oBSbGioeRu3mby
-eBNf2H6y4UoMl1tQxafAQOudeKv8byei2apMZayteuatSRB2L49GbXvvHOSLiXpV
-HH74Th29RKDwRv5dzMQfaFFuDGDlrG0vc7Y8PeLglsIJvJhGqcjBb1RjKKQsgqtd
-2Y1QKiMysiQuTrlqstl1lVsAxC4JrMRczwct46+cA+XuSJz/x3rpfq4yHB+djnUY
-5CG//DRBAxfmDTlCKRcLOPmq8M1Xog==
-=7cbu
------END PGP SIGNATURE-----
-
---IJpNTDwzlM2Ie8A6--
