@@ -2,72 +2,70 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF840C388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB58BC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6A6D2196E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:43:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569588239;
-	bh=jamsxmewOwW1hajFsNPRM2b1/u7MXsj2LovSPyoM/wY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=U2pIiyHc+34ZhP75XbcTs4OFr3A5vRuElb6oGSaEzcxgy6fmyGkury/R0Dg4CLrOW
-	 4AbRdRb19QAVq/fatAcDRiWUbkPoRxg2xrVrgNtWdzayhZgHdkaa7x0hs12nCd60i4
-	 FPnM2N9SIrex69iqwEMbFP4g9dYCMq/zHTLBMZvQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8461F21850
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:44:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727546AbfI0Mn7 (ORCPT
+        id S1727592AbfI0Mov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 08:43:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47318 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727385AbfI0Mn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 08:43:58 -0400
-Received: from localhost (173-25-179-30.client.mchsi.com [173.25.179.30])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9E5E217D9;
-        Fri, 27 Sep 2019 12:43:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569588238;
-        bh=jamsxmewOwW1hajFsNPRM2b1/u7MXsj2LovSPyoM/wY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=AaAbvhz9l1pZKD4FIgk5+2NPvXg5MPMhMU//JlDHnYiR3qvGnruk5IA1W9eDsF1KR
-         d/bhsjAADpLzvqNsy+TmYisBZ7QyckZtWfolS7EHtXoaiiQ2qC8Inu9fMdF6gJgFzQ
-         3P3IoIKzIqFB1yK+N4DkdQ4r//S9LOzzpiKdy3as=
-Date:   Fri, 27 Sep 2019 07:43:56 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-hyperv@vger.kernel.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH v3 02/26] PCI: hv: Use PCI_STD_NUM_BARS
-Message-ID: <20190927124356.GA32981@google.com>
+        Fri, 27 Sep 2019 08:44:51 -0400
+Received: from www62.your-server.de ([213.133.104.62]:43326 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbfI0Mov (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 08:44:51 -0400
+Received: from [2a02:120b:2c12:c120:71a0:62dd:894c:fd0e] (helo=localhost)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1iDpc8-0004dT-ND; Fri, 27 Sep 2019 14:44:48 +0200
+Date:   Fri, 27 Sep 2019 14:44:48 +0200
+From:   Daniel Borkmann <daniel@iogearbox.net>
+To:     Allan Zhang <allanzhang@google.com>
+Cc:     songliubraving@fb.com, netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stanislav Fomichev <sdf@google.com>,
+        Eric Dumazet <edumazet@google.com>
+Subject: Re: [PATCH 1/1] bpf: Fix bpf_event_output re-entry issue
+Message-ID: <20190927124448.GA22184@pc-66.home>
+References: <20190925234312.94063-1-allanzhang@google.com>
+ <20190925234312.94063-2-allanzhang@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190926220531.GA200826@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190925234312.94063-2-allanzhang@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25585/Fri Sep 27 10:25:33 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 05:05:31PM -0500, Bjorn Helgaas wrote:
-> On Mon, Sep 16, 2019 at 11:41:34PM +0300, Denis Efremov wrote:
-> > Replace the magic constant (6) with define PCI_STD_NUM_BARS representing
-> > the number of PCI BARs.
+On Wed, Sep 25, 2019 at 04:43:12PM -0700, Allan Zhang wrote:
+> BPF_PROG_TYPE_SOCK_OPS program can reenter bpf_event_output because it can
+> be called from atomic and non-atomic contexts since we don't have
+> bpf_prog_active to prevent it happen.
 > 
-> For some reason patches 0 and 1 didn't make it to the list.  Can you
-> resend them?
+> This patch enables 3 level of nesting to support normal, irq and nmi
+> context.
+> 
+> We can easily reproduce the issue by running neper crr mode with 100 flows
+> and 10 threads from neper client side.
+> 
+> Here is the whole stack dump:
+[...]
+> 
+> Fixes: a5a3a828cd00 ("bpf: add perf event notificaton support for sock_ops")
+> 
+> Effort: BPF
+> Signed-off-by: Allan Zhang <allanzhang@google.com>
+> Reviewed-by: Stanislav Fomichev <sdf@google.com>
+> Reviewed-by: Eric Dumazet <edumazet@google.com>
 
-(No need to resend the whole series, which might annoy all the other
-maintainers.  Just send 0 (the cover letter) and 1 (which I assume
-adds the PCI_STD_NUM_BARS definition)).
+Applied, thanks!
