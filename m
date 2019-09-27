@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9347AC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 10:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E259C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 10:04:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64087217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 10:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDE9A217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 10:04:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbfI0KEX (ORCPT
+        id S1727255AbfI0KE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 06:04:23 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:50263 "EHLO
+        Fri, 27 Sep 2019 06:04:27 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:41531 "EHLO
         relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726988AbfI0KEV (ORCPT
+        with ESMTP id S1726988AbfI0KEZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 06:04:21 -0400
+        Fri, 27 Sep 2019 06:04:25 -0400
 Received: from localhost.localdomain (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
         (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 7020B24002D;
-        Fri, 27 Sep 2019 10:04:19 +0000 (UTC)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 59F0724001D;
+        Fri, 27 Sep 2019 10:04:22 +0000 (UTC)
 From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
@@ -34,9 +34,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Lee Jones <lee.jones@linaro.org>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH v3 3/5] gpio: syscon: Add support for a custom get operation
-Date:   Fri, 27 Sep 2019 12:04:05 +0200
-Message-Id: <20190927100407.1863293-4-paul.kocialkowski@bootlin.com>
+Subject: [PATCH v3 5/5] gpio: syscon: Add support for the Xylon LogiCVC GPIOs
+Date:   Fri, 27 Sep 2019 12:04:07 +0200
+Message-Id: <20190927100407.1863293-6-paul.kocialkowski@bootlin.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com>
 References: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com>
@@ -47,41 +47,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some drivers might need a custom get operation to match custom
-behavior implemented in the set operation.
+The LogiCVC display hardware block comes with GPIO capabilities
+that must be exposed separately from the main driver (as GPIOs) for
+use with regulators and panels. A syscon is used to share the same
+regmap across the two drivers.
 
-Add plumbing for supporting that.
+Since the GPIO capabilities are pretty simple, add them to the syscon
+GPIO driver.
 
 Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 ---
- drivers/gpio/gpio-syscon.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/gpio/gpio-syscon.c | 68 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 68 insertions(+)
 
 diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
-index 31f332074d7d..05c537ed73f1 100644
+index 05c537ed73f1..cdcb913b8f0c 100644
 --- a/drivers/gpio/gpio-syscon.c
 +++ b/drivers/gpio/gpio-syscon.c
-@@ -43,8 +43,9 @@ struct syscon_gpio_data {
- 	unsigned int	bit_count;
- 	unsigned int	dat_bit_offset;
- 	unsigned int	dir_bit_offset;
--	void		(*set)(struct gpio_chip *chip,
--			       unsigned offset, int value);
-+	int		(*get)(struct gpio_chip *chip, unsigned offset);
-+	void		(*set)(struct gpio_chip *chip, unsigned offset,
-+			       int value);
+@@ -190,6 +190,70 @@ static const struct syscon_gpio_data keystone_dsp_gpio = {
+ 	.set		= keystone_gpio_set,
  };
  
- struct syscon_gpio_priv {
-@@ -252,7 +253,7 @@ static int syscon_gpio_probe(struct platform_device *pdev)
- 	priv->chip.label = dev_name(dev);
- 	priv->chip.base = -1;
- 	priv->chip.ngpio = priv->data->bit_count;
--	priv->chip.get = syscon_gpio_get;
-+	priv->chip.get = priv->data->get ? : syscon_gpio_get;
- 	if (priv->data->flags & GPIO_SYSCON_FEAT_IN)
- 		priv->chip.direction_input = syscon_gpio_dir_in;
- 	if (priv->data->flags & GPIO_SYSCON_FEAT_OUT) {
++#define LOGICVC_CTRL_REG		0x40
++#define LOGICVC_CTRL_GPIO_SHIFT		11
++#define LOGICVC_CTRL_GPIO_BITS		5
++
++#define LOGICVC_POWER_CTRL_REG		0x78
++#define LOGICVC_POWER_CTRL_GPIO_SHIFT	0
++#define LOGICVC_POWER_CTRL_GPIO_BITS	4
++
++static void logicvc_gpio_offset(struct syscon_gpio_priv *priv,
++				unsigned offset, unsigned int *reg,
++				unsigned int *bit)
++{
++	if (offset >= LOGICVC_CTRL_GPIO_BITS) {
++		*reg = LOGICVC_POWER_CTRL_REG;
++
++		/* To the (virtual) power ctrl offset. */
++		offset -= LOGICVC_CTRL_GPIO_BITS;
++		/* To the actual bit offset in reg. */
++		offset += LOGICVC_POWER_CTRL_GPIO_SHIFT;
++	} else {
++		*reg = LOGICVC_CTRL_REG;
++
++		/* To the actual bit offset in reg. */
++		offset += LOGICVC_CTRL_GPIO_SHIFT;
++	}
++
++	*bit = BIT(offset);
++}
++
++static int logicvc_gpio_get(struct gpio_chip *chip, unsigned offset)
++{
++	struct syscon_gpio_priv *priv = gpiochip_get_data(chip);
++	unsigned int reg;
++	unsigned int bit;
++	unsigned int value;
++	int ret;
++
++	logicvc_gpio_offset(priv, offset, &reg, &bit);
++
++	ret = regmap_read(priv->syscon, reg, &value);
++	if (ret)
++		return ret;
++
++	return !!(value & bit);
++}
++
++static void logicvc_gpio_set(struct gpio_chip *chip, unsigned offset, int val)
++{
++	struct syscon_gpio_priv *priv = gpiochip_get_data(chip);
++	unsigned int reg;
++	unsigned int bit;
++
++	logicvc_gpio_offset(priv, offset, &reg, &bit);
++
++	regmap_update_bits(priv->syscon, reg, bit, val ? bit : 0);
++}
++
++static const struct syscon_gpio_data logicvc_gpio = {
++	.flags		= GPIO_SYSCON_FEAT_OUT,
++	.bit_count	= LOGICVC_CTRL_GPIO_BITS + LOGICVC_POWER_CTRL_GPIO_BITS,
++	.get		= logicvc_gpio_get,
++	.set		= logicvc_gpio_set,
++};
++
+ static const struct of_device_id syscon_gpio_ids[] = {
+ 	{
+ 		.compatible	= "cirrus,ep7209-mctrl-gpio",
+@@ -203,6 +267,10 @@ static const struct of_device_id syscon_gpio_ids[] = {
+ 		.compatible	= "rockchip,rk3328-grf-gpio",
+ 		.data		= &rockchip_rk3328_gpio_mute,
+ 	},
++	{
++		.compatible	= "xylon,logicvc-3.02.a-gpio",
++		.data		= &logicvc_gpio,
++	},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, syscon_gpio_ids);
 -- 
 2.23.0
 
