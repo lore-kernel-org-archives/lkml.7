@@ -2,115 +2,91 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 235AEC388F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5CBC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F262C21A4C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 724D5207E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:01:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbfI0T5c (ORCPT
+        id S1728147AbfI0UBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 15:57:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41704 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbfI0T5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 15:57:31 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 27 Sep 2019 16:01:13 -0400
+Received: from proxima.lasnet.de ([78.47.171.185]:51977 "EHLO
+        proxima.lasnet.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbfI0UBN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 16:01:13 -0400
+Received: from localhost.localdomain (p200300E9D742D296A393C26E681B47E6.dip0.t-ipconnect.de [IPv6:2003:e9:d742:d296:a393:c26e:681b:47e6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 88BE318C4270;
-        Fri, 27 Sep 2019 19:57:31 +0000 (UTC)
-Received: from linux-ws.nc.xsintricity.com (ovpn-112-20.rdu2.redhat.com [10.10.112.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 96445600C6;
-        Fri, 27 Sep 2019 19:57:30 +0000 (UTC)
-Message-ID: <7689df508569921295851c83bbb6f5fcd2e3f90f.camel@redhat.com>
-Subject: Re: [GIT PULL] Thermal management updates for v5.4-rc1
-From:   Doug Ledford <dledford@redhat.com>
-To:     Richard Weinberger <richard.weinberger@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Date:   Fri, 27 Sep 2019 15:57:28 -0400
-In-Reply-To: <CAFLxGvxm77O7JnVeHjk8xMfAO2_5+PxV7QDkihL5q+86Q1xz6Q@mail.gmail.com>
-References: <a9e8e68f34139d5a9abb7f8b7d3fe64ff82c6d96.camel@intel.com>
-         <CAHk-=whua2XSTLd3gtqVHfq5HtGnjhRUv7vA6SUfkbVUebqWJQ@mail.gmail.com>
-         <64d13484950cab570e5f2691d7cdeca292882d95.camel@redhat.com>
-         <CAFLxGvxm77O7JnVeHjk8xMfAO2_5+PxV7QDkihL5q+86Q1xz6Q@mail.gmail.com>
-Organization: Red Hat, Inc.
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-+xwQn8O+V8Vnc687ssdT"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        (Authenticated sender: stefan@datenfreihafen.org)
+        by proxima.lasnet.de (Postfix) with ESMTPSA id 890E7C1B22;
+        Fri, 27 Sep 2019 22:01:10 +0200 (CEST)
+Subject: Re: [PATCH] ieee802154: ca8210: prevent memory leak
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        Harry Morris <h.morris@cascoda.com>,
+        Alexander Aring <alex.aring@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wpan@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190917224713.26371-1-navid.emamdoost@gmail.com>
+From:   Stefan Schmidt <stefan@datenfreihafen.org>
+Message-ID: <cda67450-267f-3c94-68b6-73ea8c4dfe2f@datenfreihafen.org>
+Date:   Fri, 27 Sep 2019 22:01:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Fri, 27 Sep 2019 19:57:31 +0000 (UTC)
+In-Reply-To: <20190917224713.26371-1-navid.emamdoost@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello.
 
---=-+xwQn8O+V8Vnc687ssdT
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 18.09.19 00:47, Navid Emamdoost wrote:
+> In ca8210_probe the allocated pdata needs to be assigned to
+> spi_device->dev.platform_data before calling ca8210_get_platform_data.
+> Othrwise when ca8210_get_platform_data fails pdata cannot be released.
+> 
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> ---
+>   drivers/net/ieee802154/ca8210.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ieee802154/ca8210.c b/drivers/net/ieee802154/ca8210.c
+> index b188fce3f641..229d70a897ca 100644
+> --- a/drivers/net/ieee802154/ca8210.c
+> +++ b/drivers/net/ieee802154/ca8210.c
+> @@ -3152,12 +3152,12 @@ static int ca8210_probe(struct spi_device *spi_device)
+>   		goto error;
+>   	}
+>   
+> +	priv->spi->dev.platform_data = pdata;
+>   	ret = ca8210_get_platform_data(priv->spi, pdata);
+>   	if (ret) {
+>   		dev_crit(&spi_device->dev, "ca8210_get_platform_data failed\n");
+>   		goto error;
+>   	}
+> -	priv->spi->dev.platform_data = pdata;
+>   
+>   	ret = ca8210_dev_com_init(priv);
+>   	if (ret) {
+> 
 
-On Fri, 2019-09-27 at 21:52 +0200, Richard Weinberger wrote:
-> On Fri, Sep 27, 2019 at 9:30 PM Doug Ledford <dledford@redhat.com>
-> wrote:
-> > Because there are literally thousands of developers working on
-> > kernel
-> > bits here and there, and you're swatting this particular fly one
-> > developer at a time.
->=20
-> I strongly disagree. One of the golden rules of kernel development is,
-> read what Linus writes. Especially during the merge window.
->=20
-> Thanks,
-> //richard
+As Harry seems to be unavailable I am taking this patch directly.
 
-Developers come and go.  Your argument is temporally flawed.  A
-developer might start working on the tree, read everything during a
-merge window, and not catch one of Linus' rebase rants prior to
-committing a rebase felony of their own.
 
-Besides, I don't think this rule of yours is all that universal.  If
-Linus is off on a thread about arm64 device tree brokenness and someone
-does a rebase and he rants about it, I'm very likely to miss that rant.=20
-I read what I reasonably deem to be relevant to me and my work, or
-sometimes additional stuff that just jumps out at me.  But I never
-learned to speed read so I don't even try to read it all and wouldn't
-agree to a rule that says I have to.
+This patch has been applied to the wpan tree and will be
+part of the next pull request to net. Thanks!
 
---=20
-Doug Ledford <dledford@redhat.com>
-    GPG KeyID: B826A3330E572FDD
-    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
-
---=-+xwQn8O+V8Vnc687ssdT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl2OaagACgkQuCajMw5X
-L93QUQ//TacqfC4HVxcoDM1NNCIENpLBhSu9mWsQWzUvr/srTywtJgQNj8z1HFPG
-Z12DIZLWzFL29cPlNXfKglxxYox/sfEHNa6PDhnLkhfz2KrdDgs+Vj0cMxKQHQJa
-GPZt2+aH5Zdn2zUFV/aSt9N3Cx02EwR/Ao+5jYBnoi4DHSN70VcRfXqXwocHkH0R
-BzpqeiCaCyigg6zng4D42mICwNJnmRul7VBv6gEFvpNXCTzSbm2FIluAZHrB5Uho
-CZVcRdb7Gv6uE8/6WJhmh2hYwRk6Nr0yjD9XXvEjt5yfyzeFQqaoELkuApAakSgb
-zOCBbNL3+00ql6PT8f3IujJX0sh66PFbipyq9RB/eoye+8BQ5VH5YpzatMRZCHjE
-mF0bV3DujtNR2WTGKBG52EDJQGVdA26qo4GQ5HrlzI6as7NWVaKw2qgj8M0wm6/5
-W8XOFfwZ82+BDyP1msEARqCt1T0pkE0Qu84PtDyQEQf4XYw3Rc1eIsCxoS42olo4
-uyPQIBx1I8tpz5VLx1DPr96DRUiCkOhoKVltWYVji+t76bRSoKT0BsqQV2kdCpmr
-7hYw9fNifgVdYRFq8Sg69QXUoVv/mxae/HSdzEZ8c1K8AblymrdTOqauO1kwFsX9
-ns3KcxWkGYuiJ4CVRVIHVJz6gVdLiwzIcW3MHQl1Z9ZBRxcDFHk=
-=EL43
------END PGP SIGNATURE-----
-
---=-+xwQn8O+V8Vnc687ssdT--
-
+regards
+Stefan Schmidt
