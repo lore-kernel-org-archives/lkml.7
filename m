@@ -2,146 +2,127 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B94BDC388F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B612C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9726D21920
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 455DC217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:20:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LkvK4hE6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbfI0RUO (ORCPT
+        id S1728079AbfI0RUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 13:20:14 -0400
-Received: from mga02.intel.com ([134.134.136.20]:44174 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726251AbfI0RUO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 13:20:14 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Sep 2019 10:20:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,556,1559545200"; 
-   d="scan'208";a="184051043"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga008.jf.intel.com with ESMTP; 27 Sep 2019 10:20:12 -0700
-Date:   Fri, 27 Sep 2019 10:20:12 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-sgx@vger.kernel.org,
-        akpm@linux-foundation.org, dave.hansen@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com
-Subject: Re: [PATCH v22 05/24] x86/sgx: Add ENCLS architectural error codes
-Message-ID: <20190927172012.GE25513@linux.intel.com>
-References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
- <20190903142655.21943-6-jarkko.sakkinen@linux.intel.com>
- <20190927102013.GA23002@zn.tnic>
- <20190927160842.GL10545@linux.intel.com>
+        Fri, 27 Sep 2019 13:20:18 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40985 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728027AbfI0RUQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 13:20:16 -0400
+Received: by mail-lj1-f196.google.com with SMTP id f5so3240802ljg.8
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 10:20:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=O/eekwhhc/lEaErl1cWQvuZyKqEyMda5rbusW6YMK7I=;
+        b=LkvK4hE626X9t4s92tPCDu4GVP+JW+rdiOHfvNh9N4jF4NJ9fWlvc7td1nIDU+CA3n
+         PEztECpiktmStFqQ0huvXxeFoYFnurGmt4lmEj4thS8is9bkVhtTwcYhaFJXZOE0CtAy
+         FW3A90ZFOAblRyxevEgwyKNwOoEO9RZOQsrxo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=O/eekwhhc/lEaErl1cWQvuZyKqEyMda5rbusW6YMK7I=;
+        b=awrjseIMJnG7j7NofpADBXLAFEh+3DVFPWEkvp2AQRjUwWiZrvCSq4tpZDBFH+5ZlJ
+         U5lcu/C/ev2yIaMTA058VmNciILRo8NwGCACh8FOXrJEbww03eQNRtCJtBK4ccsAGxB3
+         RpwGj3xlIgia02KmIapaY5ESHl9URpw7VigaCX7YICaQKCeoT+zf6jGyzeal8JT6SNst
+         EaB92tX5QpReyvX5/Nj2DxZQexhLUTNXVUmtuTHWbIHj9jA+e2AnARBAdHgxzmSKlnqW
+         1wwtq6BkiXkw9VN0toVkg+kPrhnAPfOHEqQP4ALZzhzMJzOnPIZ8vqoHcCwFyqQgBGn8
+         SEDQ==
+X-Gm-Message-State: APjAAAUOUqkRQWZ4VYf0U/tl66hVeQS+hDbJzVmIDlX/ifGbSPkVlgRF
+        SL2w4p+xThugSJ0LpbXGQdpfxTbx42y9/T9YoK0cUQ==
+X-Google-Smtp-Source: APXvYqwQ0sJhbgkRNydnIi4RrSi/dFi7mwr/zU4s+w0Ydcubj32ElrELRy3PvgOlQ56qXz+SBC5iH82TlZ2DYY/65VY=
+X-Received: by 2002:a2e:5d17:: with SMTP id r23mr3716224ljb.229.1569604813845;
+ Fri, 27 Sep 2019 10:20:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190927160842.GL10545@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190822205533.4877-1-david.abdurachmanov@sifive.com>
+ <alpine.DEB.2.21.9999.1908231717550.25649@viisi.sifive.com>
+ <20190826145756.GB4664@cisco> <CAEn-LTrtn01=fp6taBBG_QkfBtgiJyt6oUjZJOi6VN8OeXp6=g@mail.gmail.com>
+ <201908261043.08510F5E66@keescook> <alpine.DEB.2.21.9999.1908281825240.13811@viisi.sifive.com>
+In-Reply-To: <alpine.DEB.2.21.9999.1908281825240.13811@viisi.sifive.com>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Fri, 27 Sep 2019 10:20:02 -0700
+Message-ID: <CAJr-aD=UnCN9E_mdVJ2H5nt=6juRSWikZnA5HxDLQxXLbsRz-w@mail.gmail.com>
+Subject: Re: [PATCH v2] riscv: add support for SECCOMP and SECCOMP_FILTER
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     Tycho Andersen <tycho@tycho.ws>,
+        David Abdurachmanov <david.abdurachmanov@gmail.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        David Abdurachmanov <david.abdurachmanov@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Vincent Chen <vincentc@andestech.com>,
+        Alan Kao <alankao@andestech.com>,
+        linux-riscv@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, me@carlosedp.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 07:08:42PM +0300, Jarkko Sakkinen wrote:
-> On Fri, Sep 27, 2019 at 12:20:13PM +0200, Borislav Petkov wrote:
-> > On Tue, Sep 03, 2019 at 05:26:36PM +0300, Jarkko Sakkinen wrote:
-> > > Document ENCLS architectural error codes. These error codes are returned by
-> > > the SGX opcodes. Make the header as part of the uapi so that they can be
-> > > used in some situations directly returned to the user space (ENCLS[EINIT]
-> > > leaf function error codes could be one potential use case).
-> > > 
-> > > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > > ---
-> > >  arch/x86/include/uapi/asm/sgx_errno.h | 91 +++++++++++++++++++++++++++
-> > >  1 file changed, 91 insertions(+)
-> > >  create mode 100644 arch/x86/include/uapi/asm/sgx_errno.h
-> > > 
-> > > diff --git a/arch/x86/include/uapi/asm/sgx_errno.h b/arch/x86/include/uapi/asm/sgx_errno.h
-> > > new file mode 100644
-> > > index 000000000000..48b87aed58d7
-> > > --- /dev/null
-> > > +++ b/arch/x86/include/uapi/asm/sgx_errno.h
-> > > @@ -0,0 +1,91 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
-> > > +/*
-> > > + * Copyright(c) 2018 Intel Corporation.
-> > > + *
-> > > + * Contains the architecturally defined error codes that are returned by SGX
-> > > + * instructions, e.g. ENCLS, and may be propagated to userspace via errno.
-> > > + */
-> > > +
-> > > +#ifndef _UAPI_ASM_X86_SGX_ERRNO_H
-> > > +#define _UAPI_ASM_X86_SGX_ERRNO_H
-> > > +
-> > > +/**
-> > > + * enum sgx_encls_leaves - return codes for ENCLS, ENCLU and ENCLV
-> > > + * %SGX_SUCCESS:		No error.
-> > > + * %SGX_INVALID_SIG_STRUCT:	SIGSTRUCT contains an invalid value.
-> > > + * %SGX_INVALID_ATTRIBUTE:	Enclave is not attempting to access a resource
-> > 
-> > That first "not" looks wrong.
-> > 
-> > > + *				for which it is not authorized.
-> > > + * %SGX_BLKSTATE:		EPC page is already blocked.
-> > > + * %SGX_INVALID_MEASUREMENT:	SIGSTRUCT or EINITTOKEN contains an incorrect
-> > > + *				measurement.
-> > > + * %SGX_NOTBLOCKABLE:		EPC page type is not one which can be blocked.
-> > > + * %SGX_PG_INVLD:		EPC page is invalid (and cannot be blocked).
-> > > + * %SGX_EPC_PAGE_CONFLICT:	EPC page in use by another SGX instruction.
-> > > + * %SGX_INVALID_SIGNATURE:	Enclave's signature does not validate with
-> > > + *				public key enclosed in SIGSTRUCT.
-> > > + * %SGX_MAC_COMPARE_FAIL:	MAC check failed when reloading EPC page.
-> > > + * %SGX_PAGE_NOT_BLOCKED:	EPC page is not marked as blocked.
-> > > + * %SGX_NOT_TRACKED:		ETRACK has not been completed on the EPC page.
-> > > + * %SGX_VA_SLOT_OCCUPIED:	Version array slot contains a valid entry.
-> > > + * %SGX_CHILD_PRESENT:		Enclave has child pages present in the EPC.
-> > > + * %SGX_ENCLAVE_ACT:		Logical processors are currently executing
-> > > + *				inside the enclave.
-> > > + * %SGX_ENTRYEPOCH_LOCKED:	SECS locked for EPOCH update, i.e. an ETRACK is
-> > > + *				currently executing on the SECS.
-> > > + * %SGX_INVALID_EINITTOKEN:	EINITTOKEN is invalid and enclave signer's
-> > > + *				public key does not match IA32_SGXLEPUBKEYHASH.
-> > > + * %SGX_PREV_TRK_INCMPL:	All processors did not complete the previous
-> > > + *				tracking sequence.
-> > > + * %SGX_PG_IS_SECS:		Target EPC page is an SECS and cannot be
-> > > + *				blocked.
-> > > + * %SGX_PAGE_ATTRIBUTES_MISMATCH:	Attributes of the EPC page do not match
-> > > + *					the expected values.
-> > 
-> > You sometimes call it "PG" and sometimes "PAGE". Unify?
+On Wed, Aug 28, 2019 at 6:30 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
+> On Mon, 26 Aug 2019, Kees Cook wrote:
+>
+> > On Mon, Aug 26, 2019 at 09:39:50AM -0700, David Abdurachmanov wrote:
+> > > I don't have the a build with SECCOMP for the board right now, so it
+> > > will have to wait. I just finished a new kernel (almost rc6) for Fedora,
+> >
+> > FWIW, I don't think this should block landing the code: all the tests
+> > fail without seccomp support. ;) So this patch is an improvement!
+>
+> Am sympathetic to this -- we did it with the hugetlb patches for RISC-V --
+> but it would be good to understand a little bit more about why the test
+> fails before we merge it.
 
-We pulled the names verbatim from the SDM.  I agree that diverging from
-the SDM makes sense.  I'll also see if the SDM can be updated to use
-consistent names.
+The test is almost certainly failing due to the environmental
+requirements (i.e. namespaces, user ids, etc). There are some corner
+cases in there that we've had to fix in the past. If the other tests
+are passing, then I would expect all the seccomp internals are fine --
+it's just the case being weird. It's just a matter of figuring out
+what state the test environment is in so we can cover that corner case
+too.
 
-> > > + * %SGX_PAGE_NOT_MODIFIABLE:	EPC page cannot be modified because it is in
-> > > + *				the PENDING or MODIFIED state.
-> > > + * %SGX_PAGE_NOT_DEBUGGABLE:	EPC page cannot be modified because it is in
-> > > + *				the PENDING or MODIFIED state.
-> > 
-> > Same description text?
-> 
-> Thanks for the remarks. I think I define only the error codes in the
-> next version that actually get used by the driver and document them
-> properly. Should become way more cleaner.
+> Once we merge the patch, it will probably reduce the motivation for others
+> to either understand and fix the underlying problem with the RISC-V code
+> -- or, if it truly is a flaky test, to drop (or fix) the test in the
+> seccomp_bpf kselftests.
 
-Please keep all error codes.  For errors that inevitably occur during
-development, it's very helpful to have the complete list in the kernel
-(well, reasonably complete).  I hate having to open and search through the
-SDM just to decipher a random numeric error code.
+Sure, I get that point -- but I don't want to block seccomp landing
+for riscv for that. I suggested to David offlist that the test could
+just be marked with a FIXME XFAIL on riscv and once someone's in a
+better position to reproduce it we can fix it. (I think the test bug
+is almost certainly not riscv specific, but just some missing
+requirement that we aren't handling correctly.)
+
+How does that sound?
+
+-Kees
