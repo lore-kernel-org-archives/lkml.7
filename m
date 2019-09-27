@@ -2,142 +2,144 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2351C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E80C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C57BC21841
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:38:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="vlJH88ij"
+	by mail.kernel.org (Postfix) with ESMTP id 4C5E6207E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 16:40:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569602409;
+	bh=NKyJm/eDMEI/d+lsw/BFZuFVPCPvUMbDCEKMAac7GJ8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MrB8wyvOwjBahAP8VGcE2rSVxDhgr/h3zP/C2hzV5TYqHZX9ZDudETtQccp5Iy6uh
+	 eBusH1OmSk90x+DWwWXO2mGC6ZIKvbq3kHoTSo5MC9Y/xp85czhUpoKEdq6W23r5Ta
+	 v9RyZQxtjx966e0QJWCIL2bklITMsojRDZaq+Jhw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbfI0Qit (ORCPT
+        id S1728025AbfI0QkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 12:38:49 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45095 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727447AbfI0Qit (ORCPT
+        Fri, 27 Sep 2019 12:40:08 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:43749 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbfI0QkI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 12:38:49 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r5so3853297wrm.12
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 09:38:48 -0700 (PDT)
+        Fri, 27 Sep 2019 12:40:08 -0400
+Received: by mail-lf1-f67.google.com with SMTP id u3so2387838lfl.10
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 09:40:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=H9qpcAXROEOSHATHIODGl5R6XLJmU3Nit6aFPlUl9PY=;
-        b=vlJH88ijYnpukf4ZiGFC3tgXvxD1NRCykGaXRu7yCbSTKpcKP3ety0gptHFmz1x+9A
-         R/Zij0mk9nhPfjOY+LKUIwqed8VuCJy6QuPiI87ofhmDeo6H6oLRNVsZ5zE71JbcpYs7
-         uc7+vzjvAFtQ712pTxhRUUUTQcZwPb4HlY/iTEal88bUJii40H23wDmbW1J9zCSWVHGO
-         4dLbPL+BvvZoXBrCGsugMVLtvI/uFbz+gafElcBGJnTW7LkFpuxjK4NBrzMpXkDvwg/i
-         zRdsMSnPa1NibDmYOg/w0WIKy76RjgF1OahTmnNR5MoE/6qCzo8Gl5LJSwGSRso85PN5
-         DL2A==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xikpq9YYpaESAspYkHi86qdMdW/0HQNg7LvP7+WL5BI=;
+        b=IbzOc3i8Qh0m8AF1EsRhezxjzpKCXsufVYfdSoXZLVLOVoGXeqKHkqV7wBluqDOwbT
+         MCp9ANQ3eaGMUd8ZEHipocDweq22Nvp//cUG/Wnjk17KiGBd1UpAGJPuLeiMx8y+mZqx
+         jxeglbySlcyzMuq1nYuuyMtVfExCtAU9niysk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=H9qpcAXROEOSHATHIODGl5R6XLJmU3Nit6aFPlUl9PY=;
-        b=n1FS9byvI1cbcuK3CBuku0Q4ncY9IRnCxojtVjUTsULxYK11N2ga3RNQl4JGa1mcdP
-         n6X0qoW6kqRVxQDF7yGMk079L+4KtZcPkRHZKqO5aWM2FFwn89nTRSfRXBqPcSbSjCzc
-         S+xMNtAnxtdhRJ81ddtWkdqewBnjvYXYHmA45YJFBm2auFGBONYq17odYhBDwutPB+Bd
-         Qhn3+CKBeEwpzsaUlAgW0n3dtbaorKQBtWaxk/TCb3jxLL7KVnYgOieQm+2SI8hMF5oM
-         kuWUnXU5WLFYpaGeUly+7SCQ5o0bTslh2+0zfuPYQZzAxnSULtTgHjxnGcZ/4ZcP87ed
-         e9vQ==
-X-Gm-Message-State: APjAAAXnxpW86lNhkdncWQ++7bmPtqtjAAnQO6chTS3EsuUJDOcAZXDa
-        7MGBBufHf5jR2783mjsFZstz1g==
-X-Google-Smtp-Source: APXvYqyOToIhXgMB3p4wq1eYwswK4+ABcMmXeNT+QmoldWbGpxe9NmpO0SA2ZuMkhyc8J4VZ7vGPAw==
-X-Received: by 2002:adf:f547:: with SMTP id j7mr3872939wrp.119.1569602327457;
-        Fri, 27 Sep 2019 09:38:47 -0700 (PDT)
-Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id j1sm6587771wrg.24.2019.09.27.09.38.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2019 09:38:46 -0700 (PDT)
-References: <20190919102518.25126-1-narmstrong@baylibre.com> <20190919102518.25126-2-narmstrong@baylibre.com> <20190927001425.DFDC7207FF@mail.kernel.org> <8486dec0-8aea-ea39-2a52-7347a01c5c40@baylibre.com>
-User-agent: mu4e 1.3.3; emacs 26.2
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     mturquette@baylibre.com, linux-clk@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 1/2] clk: introduce clk_invalidate_rate()
-In-reply-to: <8486dec0-8aea-ea39-2a52-7347a01c5c40@baylibre.com>
-Date:   Fri, 27 Sep 2019 18:38:45 +0200
-Message-ID: <1jef011yp6.fsf@starbuckisacylon.baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xikpq9YYpaESAspYkHi86qdMdW/0HQNg7LvP7+WL5BI=;
+        b=a4ojgoaqVxgJjwkcVy4vWQci5jZlyw1/FJYbPInn5c60rxJtwuE7K1kDUarBn8wzSU
+         KE+imXs00nfxd4FEljbPUwp2EJRg+3AG2lhWvbvsMTrdcYiI6q1IqYAqqKqBw91jJew6
+         J/rq2mV2QyHoAORR9MmXj63VIGNYPF+xPxaJ/bhzbjOstdLS2zaBtS0IaDrHTfea4mxN
+         UE5FxmaHzpqWGHUYFxwIEYo171KagSquveZZysWLdJtJhmFNyuv6aa4rNFIXNZ7OgX9E
+         FkmLVjaFc9ETedPBSxRnsUYu1MPP/xQknzXeH9wk+C4ML2+ZtHLvcHzwbRTqr66/UiSQ
+         x5qA==
+X-Gm-Message-State: APjAAAVksS5pbRe94k6zsqM5lqMk/bvg96EQpcdXozcKkvu4X1cWPPEB
+        D0G6uqPtPSQhzEkjZoAD3Po/8pWd9HA=
+X-Google-Smtp-Source: APXvYqw1YCIculcpsttNcLn9q7XR/kW+wzHt1wW/nbQ4zZttV+Ig9MCk6NA1MzQKPEpKF8tWsrn/eA==
+X-Received: by 2002:a05:6512:304:: with SMTP id t4mr3541345lfp.15.1569602406174;
+        Fri, 27 Sep 2019 09:40:06 -0700 (PDT)
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
+        by smtp.gmail.com with ESMTPSA id c3sm562829lfi.32.2019.09.27.09.40.04
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Sep 2019 09:40:05 -0700 (PDT)
+Received: by mail-lf1-f53.google.com with SMTP id x80so2417026lff.3
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 09:40:04 -0700 (PDT)
+X-Received: by 2002:a19:f204:: with SMTP id q4mr3381847lfh.29.1569602404666;
+ Fri, 27 Sep 2019 09:40:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190926115548.44000-1-thomas_os@shipmail.org>
+ <20190926115548.44000-2-thomas_os@shipmail.org> <85e31bcf-d3c8-2fcf-e659-2c9f82ebedc7@shipmail.org>
+ <CAHk-=wifjLeeMEtMPytiMAKiWkqPorjf1P4PbB3dj17Y3Jcqag@mail.gmail.com>
+ <a48a93d2-03e9-40d3-3b4c-a301632d3121@shipmail.org> <CAHk-=whwN+CvaorsmczZRwFhSV+1x98xg-zajVD1qKmN=9JhBQ@mail.gmail.com>
+ <20190927121754.kn46qh2crvsnw5z2@box>
+In-Reply-To: <20190927121754.kn46qh2crvsnw5z2@box>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 27 Sep 2019 09:39:48 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whfriLqivyRtyjDPzeNr_Y3UYkC9g123Yi_yB5c8Gcmiw@mail.gmail.com>
+Message-ID: <CAHk-=whfriLqivyRtyjDPzeNr_Y3UYkC9g123Yi_yB5c8Gcmiw@mail.gmail.com>
+Subject: Re: Ack to merge through DRM? WAS Re: [PATCH v2 1/5] mm: Add
+ write-protect and clean utilities for address space ranges
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On Fri 27 Sep 2019 at 08:40, Neil Armstrong <narmstrong@baylibre.com> wrote:
-
-> On 27/09/2019 02:14, Stephen Boyd wrote:
->> Quoting Neil Armstrong (2019-09-19 03:25:17)
->>> This introduces the clk_invalidate_rate() call used to recalculate the
->>> rate and parent tree of a particular clock if it's known that the
->>> underlying registers set has been altered by the firmware, like from
->>> a suspend/resume handler running in trusted cpu mode.
->>>
->>> The call refreshes the actual parent and when changed, instructs CCF
->>> the parent has changed. Finally the call will recalculate the rate of
->>> each part of the tree to make sure the CCF cached tree is in sync with
->>> the hardware.
->>>
->>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->>> ---
->> 
->> The knee-jerk reaction to these patches is that it shouldn't be a
->> consumer API (i.e. taking a struct clk) but a provider API (i.e. taking
->> a struct clk_hw). I haven't looked in any more detail but just know that
->> it's a non-starter to be a consumer based API because we don't want
->> random consumers out there to be telling the CCF or provider drivers
->> that some clk has lost state and needs to be "refreshed".
->> 
+On Fri, Sep 27, 2019 at 5:17 AM Kirill A. Shutemov <kirill@shutemov.name> wrote:
 >
-> Totally agree, I hesitated and obviously did the wrong choice, but
-> this is a nit, the main algorithm is not tied to the API level.
+> > Call it "walk_page_mapping()". And talk extensively about how the
+> > locking differs a lot from the usual "walk_page_vma()" things.
 >
-> Should I resend it with clk_hw ? the difference will be small and
-> the main subject is the resync algorithm.
+> Walking mappings of a page is what rmap does. This code thas to be
+> integrated there.
 
-Independent of the point above (partly a least), I wonder what will
-happen in some particular use cases
+Well, that's very questionable.
 
-* If clock is changed while in suspend. This clock can be a parent of
-  the clock invalidated but currently is not. What happen, if later,
-  it becomes the parent ?
+The rmap code mainly does the "page -> virtual" mapping.  One page at a time.
 
-  Since it is not parent on resume it won't be invalidated. CCF might
-  still take a decision based on an invalid cached value.
+The page walker code does the "virtual -> pte" mapping. Always a whole
+range at a time.
 
-* If a mux is changed while in suspend, the parent is not correct
-  anymore. The proposed patch recurse through the parents, it might
-  not invalidate what we need/expect ... things are getting a bit
-  unpredictable
+The new code wants a combination of both.
 
-IOW, this change take a leaf clock and tries to tell CCF that any parent
-of this clock should not be trusted, but it might get it wrong in some
-cases.
+It very much is about walking ranges - as in mm/pagewalk.c. It's just
+that it walks potentially multiple ranges, based on where the address
+space is mapped.
 
-I think we should do it in the opposite way:
- * Mark the "rogue" clock with a flag (CLK_REFRESH ?)
- * Let CCF update the children of these clocks based on the new status
+I think it has way more commonalities with the page walking code than
+it has with the rmap code. But yes, there is some of that "look up
+mappings based on address space" in there too, but it's the least part
+of it
 
-Back to Stephen point, I don't know which API it should be, but I
-think the platform (fw driver or power stuff - not only clock provider)
-should be able somehow to trigger the mechanism to let CCF know
-something sketchy may have happened.
+And as Thomas pointed out, it also has commonalities with
+unmap_mapping_pages() in mm/memory.c. In many ways that part is the
+closest.
 
-For the parameter, maybe there should not be any (no struct clk or
-clk_hw) ? Maybe it would better if we let CCF refresh all the "rogue"
-clocks ?
+I'd say that from a code sharing standpoint, mm/rmap.c is absolutely
+the wrong place. It's the furthest away from what Thomas wants to do.
 
->
-> Neil
+The mm/pagewalk.c code has the most actual code that could be shared,
+and the addition would be smallest there.
 
+And conceptually the closest analogue in terms of what it _does_ is
+unmap_mapping_range() in mm/memory.c, but I see no room for sharing
+actual code there unless we completely change how we do
+zap_page_range() and add a lot of configurability there (which we
+don't want, because page table teardown at exit is really a pretty
+critical operation - I commonly see copy_page_range() and
+zap_page_range() on profiles if you have things like script-heavyu
+traditional UNIX loads).
+
+So I think conceptually, mm/memory.c and unmap_mapping_range() is
+closest but I don't think it's practical to share code.
+
+And between mm/pagewalk.c and mm/rmap.c, I think the page walking has
+way more of actual practical code sharing, and is also conceptually
+closer because most of the code is about walking a range, not looking
+up the mapping of one page.
+
+               Linus
