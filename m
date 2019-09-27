@@ -2,168 +2,111 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D6AC388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 13:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C33FBC388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 13:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C65E20872
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 13:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99B6620872
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 13:58:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S8Fj6UkF"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jib1Vio9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727516AbfI0N5d (ORCPT
+        id S1727653AbfI0N6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 09:57:33 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46276 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbfI0N5d (ORCPT
+        Fri, 27 Sep 2019 09:58:41 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40321 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727079AbfI0N6l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 09:57:33 -0400
-Received: by mail-io1-f66.google.com with SMTP id c6so16404215ioo.13;
-        Fri, 27 Sep 2019 06:57:32 -0700 (PDT)
+        Fri, 27 Sep 2019 09:58:41 -0400
+Received: by mail-wr1-f65.google.com with SMTP id l3so2855586wru.7
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 06:58:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=boZXw4SCirqsRIbJ+By9WPXJ92CkT49uSIzr686TYUY=;
-        b=S8Fj6UkFcdsLkCEyrpQPS3iJ8WGWrM+qKfeVBrIhZsUSCPJM1LRzD2jxENfvoj2Vv/
-         MwfNdaP8Xu0UwyZOHetLuvAxCD4IZBEfeq1CAYixwrTW/WJ45GRz8pNFV/xSIZDO/cRS
-         9WkeCJrcuAeGMUkW2L2AQ9jfFozLZPVhWWnLNMENvtb14cfWN7T+bcFAsEPaJgVb0rAN
-         7ry0Wts/mlQ9iYVBaRU+09WIfJsihRt6Fk/bsf5sxVfp3pHxWzkge0S0KgxxqCdosUTJ
-         bEhdErU5a5BeICLhZH1i0pai+orCELVEsgtpGUC6an3jWgI2vBdJxPuQo6NInrgLxLux
-         eOZw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=gII68bP4dZ9iYMhUx7xHDSWnoKBKHppjR8OxdRxuXBw=;
+        b=jib1Vio9p2uFXLtUzi6lfZKzVGWkziSLDW2+TRSJFGk6PgvdnLiOEh2A4ORdDfaL/6
+         3uLg4fyINURnKSKJATlRUCzv07Rs/SJISz5rR4j4akSghw4SPPBtkiWOwIJpajnSVcOe
+         WHWuUrGtYlk3nahK60v2BFXzYfA+3KFiaIkruKQVCQcTIZImNru0PuBFCBa4DJyDiGKa
+         j3C1qJdA3ZniSFVahofA1sTCU65ji40vYu/fNYmhnq/b6VbO3ChdzOBrzGJcgLwz01MP
+         /+bgNfXwtE+4D6EGE8iVLI9zTgAaSoW/bkxNCuYB2Djz3f+WpwX+Ury8d+/SsQQ7Zw0S
+         2swQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=boZXw4SCirqsRIbJ+By9WPXJ92CkT49uSIzr686TYUY=;
-        b=Vk0bZ1oO54W1vFj9Sti+aef3UXUtfJoJJFI4NOcytxl/w5p3tvkPbtHFrnPaR8Xx5K
-         Q607hYnV0n1iLOOPE8xWMQG7JIfkqpqBe/1wGki+ALyIvXJ4OPB4epMtGYr+1ILMPt5F
-         Sj4qCAQoexZj1lC3Vj607kDdPh9Y/4vdudSfRtO7frdpBBixSt2RAA5rjbDSHO9jxakc
-         wonZSTS3VUhoDGUdSyieHD3YtDhUrl5aMVeFy50LVuU5bNoSh3jAgxD/29aXLjd445l8
-         ulNHTLVKWPRUN0smwy3759V6R/O01yVnM9U/pXFdp1euXkZ31WDW90rK7Orq5S46B1qf
-         hP/w==
-X-Gm-Message-State: APjAAAWYu3grQWls7p72V2FOTQ8HLi6akkNjWxkqtwfOd9VY5p1CoUua
-        RtcmLe4+f9bXsyai67Uf34kC4eAMdJU=
-X-Google-Smtp-Source: APXvYqw+uVnKir54+fie0lakYdLAjfXFd/WwDbFLVOLXyMmg2a5liUojGMH+R+YgpA3ZfNzqBh8H9Q==
-X-Received: by 2002:a92:8f19:: with SMTP id j25mr4890285ild.302.1569592652193;
-        Fri, 27 Sep 2019 06:57:32 -0700 (PDT)
-Received: from lnx-nickg ([96.78.92.5])
-        by smtp.gmail.com with ESMTPSA id i14sm1095488ilq.38.2019.09.27.06.57.30
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Fri, 27 Sep 2019 06:57:31 -0700 (PDT)
-Date:   Fri, 27 Sep 2019 08:57:20 -0500
-From:   Nicholas Graumann <nick.graumann@gmail.com>
-To:     Radhey Shyam Pandey <radheys@xilinx.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        Michal Simek <michals@xilinx.com>,
-        "andrea.merello@gmail.com" <andrea.merello@gmail.com>,
-        Appana Durga Kedareswara Rao <appanad@xilinx.com>,
-        "mcgrof@kernel.org" <mcgrof@kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next 7/8] dmaengine: xilinx_dma: Check for both idle and
- halted state in axidma stop_transfer
-Message-ID: <20190927135720.GA16057@lnx-nickg>
-References: <1567701424-25658-1-git-send-email-radhey.shyam.pandey@xilinx.com>
- <1567701424-25658-8-git-send-email-radhey.shyam.pandey@xilinx.com>
- <20190926172107.GN3824@vkoul-mobl>
- <CH2PR02MB7000EACD029FC7E47679393CC7810@CH2PR02MB7000.namprd02.prod.outlook.com>
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=gII68bP4dZ9iYMhUx7xHDSWnoKBKHppjR8OxdRxuXBw=;
+        b=XAfhBc80s4dpWzVzy3PpcgcVwrjkxCJscnqpB5ClOSNFgsT0LW/2nPqKe2CcsfGfbw
+         DYez9g7SzpfHPMTHENVvAT+3mpRJXq46S5dUdcxGGd852m6JIzh8WIzTafUXDM0Y+4Ky
+         mv8YTUnRfRt/H8ATgY+WKwPncck81zP3cP//3xEaxoqmEBihWJzez82+hp53V+fO5EM/
+         +yZSLDrWskCfo9uu65i1lPZp6J1PmyVChfkiz6dURZEhHGFi4eHLw+hZ/NuzhIHkLZUB
+         lWzEjp1954I3Q4AFx8j4IHHOEKzz4dYKgga4VUBGQWuuHYWEHMVe1JE4u4Kz6145OdiF
+         EFzg==
+X-Gm-Message-State: APjAAAWNuvJpkpjEAOfpqcquje9CUnlrEgQaDlhxovcdzlDZWG6xqDoS
+        4fguAceUc1a3KJbfr3t80voLhYFToJM=
+X-Google-Smtp-Source: APXvYqwuSdVoFqaJkOuDyzzg3VoL6LNVdgNCAOB7KF6CRtWFJZG1jZiUaDvFOdDugpzHJK1GuGAddg==
+X-Received: by 2002:adf:dc01:: with SMTP id t1mr3093951wri.222.1569592719413;
+        Fri, 27 Sep 2019 06:58:39 -0700 (PDT)
+Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id b7sm2920872wrj.28.2019.09.27.06.58.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Sep 2019 06:58:38 -0700 (PDT)
+References: <20190924153356.24103-1-jbrunet@baylibre.com> <20190924153356.24103-7-jbrunet@baylibre.com> <b328b0c7-9449-172d-a1ed-7449023ff516@baylibre.com> <1cd21d60-5ded-2f70-3c99-02b70f996870@baylibre.com>
+User-agent: mu4e 1.3.3; emacs 26.2
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/7] clk: meson: axg-audio: provide clk top signal name
+In-reply-to: <1cd21d60-5ded-2f70-3c99-02b70f996870@baylibre.com>
+Date:   Fri, 27 Sep 2019 15:58:37 +0200
+Message-ID: <1jh84x2642.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CH2PR02MB7000EACD029FC7E47679393CC7810@CH2PR02MB7000.namprd02.prod.outlook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 06:48:29AM +0000, Radhey Shyam Pandey wrote:
-> > -----Original Message-----
-> > From: Vinod Koul <vkoul@kernel.org>
-> > Sent: Thursday, September 26, 2019 10:51 PM
-> > To: Radhey Shyam Pandey <radheys@xilinx.com>
-> > Cc: dan.j.williams@intel.com; Michal Simek <michals@xilinx.com>;
-> > nick.graumann@gmail.com; andrea.merello@gmail.com; Appana Durga
-> > Kedareswara Rao <appanad@xilinx.com>; mcgrof@kernel.org;
-> > dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH -next 7/8] dmaengine: xilinx_dma: Check for both idle
-> > and halted state in axidma stop_transfer
-> > 
-> > On 05-09-19, 22:07, Radhey Shyam Pandey wrote:
-> > > From: Nicholas Graumann <nick.graumann@gmail.com>
-> > >
-> > > When polling for a stopped transfer in AXI DMA mode, in some cases the
-> > > status of the channel may indicate IDLE instead of HALTED if the
-> > > channel was reset due to an error.
-> > >
-> > > Signed-off-by: Nicholas Graumann <nick.graumann@gmail.com>
-> > > Signed-off-by: Radhey Shyam Pandey
-> > <radhey.shyam.pandey@xilinx.com>
-> > > ---
-> > >  drivers/dma/xilinx/xilinx_dma.c | 5 +++--
-> > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/dma/xilinx/xilinx_dma.c
-> > b/drivers/dma/xilinx/xilinx_dma.c
-> > > index b5dd62a..0896e07 100644
-> > > --- a/drivers/dma/xilinx/xilinx_dma.c
-> > > +++ b/drivers/dma/xilinx/xilinx_dma.c
-> > > @@ -1092,8 +1092,9 @@ static int xilinx_dma_stop_transfer(struct
-> > xilinx_dma_chan *chan)
-> > >
-> > >  	/* Wait for the hardware to halt */
-> > >  	return xilinx_dma_poll_timeout(chan, XILINX_DMA_REG_DMASR,
-> > val,
-> > > -				       val & XILINX_DMA_DMASR_HALTED, 0,
-> > > -				       XILINX_DMA_LOOP_COUNT);
-> > > +				       val | (XILINX_DMA_DMASR_IDLE |
-> > > +					      XILINX_DMA_DMASR_HALTED),
-> > 
-> > The condition was bitwise AND and now is OR.. ??
-> 
-> Ah, it should be same as before . Only _IDLE mask should be in OR.
-> 
-> Also on second thought to this patch- we need to describe which error
-> scenario "in some cases the status of the channel may indicate IDLE
-> instead of HALTED" as mentioned in commit description.
-> 
-> @Nick: Can you comment?
-> 
-In regard to the mask question, yes, this looks like a bug.
-We should be AND'ing with the mask like before.
 
-As far as the state, usually when we saw the IDLE state when invoking 
-dmaengine_terminate_all on a channel that had errors. I have not
-proved this, but I believe what happened was the following:
+On Fri 27 Sep 2019 at 11:37, Neil Armstrong <narmstrong@baylibre.com> wrote:
 
-New transactions were queued when chan->err was set, causing
-xilinx_dma_chan_reset to be invoked which ultimately results in the
-hardware being in an IDLE state by the time xilinx_dma_terminate_all
-gets around to invoking stop_transfer. At that point, stop_transfer is
-going to time out waiting for the hardware to indicate it has HALTED and
-ultimately will time out.
+> On 27/09/2019 11:14, Neil Armstrong wrote:
+>> On 24/09/2019 17:33, Jerome Brunet wrote:
+>>
 
+[...]
 
-In any case, xilinx_dma_stop_transfer should be fine with the hardware
-being in an IDLE state to indicate that the active transfer is stopped.
-Case in point: The CDMA core also covered by this driver only has an
-IDLE bit and no HALTED bit in its DMASR, and it checks for just the IDLE
-bit in xilinx_cdma_stop_transfer().
-> > 
-> > > +				       0, XILINX_DMA_LOOP_COUNT);
-> > >  }
-> > >
-> > >  /**
-> > > --
-> > > 2.7.4
-> > 
-> > --
-> > ~Vinod
+>> AUD_CLKID_TOP seems to be missing here
+>
+> Oh, yes it was exposed, do you need to it to be exposed since it's
+> dummy for G12A ?
+
+It is a bypass clock on g12a and axg yes, but on the sm1.
+It is the leaf of a block on sm1, for all I know it could be used
+outside the clock controller.
+
+Of course, I could wait this until there is an actual need for it if that is
+what you mean ?
+
+>
+> Neil
+>
+>> 
+>> 
+>>>  /* include the CLKIDs which are part of the DT bindings */
+>>>  #include <dt-bindings/clock/axg-audio-clkc.h>
+>>>  
+>>> -#define NR_CLKS	163
+>>> +#define NR_CLKS	164
+>>>  
+>>>  #endif /*__AXG_AUDIO_CLKC_H */
+>>>
+>> 
+
