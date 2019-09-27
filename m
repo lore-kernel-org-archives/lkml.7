@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E8AEC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 00:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9685C352A9
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 00:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFD1820835
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 00:25:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A085208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 00:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569543916;
-	bh=CVVhYXn3jmsV2VMLYSZbofFoPr26FJDeYI9Zg8HIPUs=;
+	s=default; t=1569543922;
+	bh=TW56rIG2SiRPy1ax8TLIYREnvHKrp/VdmZ3Xn8dfBOg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hn0POBbcRvPgTT0L+tXPNaYNUnCOsgsYlWuqw3cQvnbR+EIVl/Q/juZyU2uqJdmJX
-	 E+CXFmqyQYX5Yx7Qf7WDyzDoJSzC1rwVDWKTCg0X1WPBXjowCZS0fpza9bEU+fu5zF
-	 3XJksBbnBQrdt7WtudqBi67AQUkdRNSMd7AQpgoA=
+	b=auR8jAlm5mfhx6AQZLHHRT0UHxbVxCgLp5lrLgRh66NG7FsGJRDBYruSIdBd3p2gS
+	 z82o/JThvVb9qek4/WmwEf8pYq/PiIrU9SgOL5W+k8jytFcQ/dz3zTvDRMBPk0u+T3
+	 D6KOi6ErJXpjaw0Rj0p09W4cmsf8fp/pSYM5Dtwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbfI0AZM (ORCPT
+        id S1728110AbfI0AZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 20:25:12 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:38700 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727777AbfI0AZH (ORCPT
+        Thu, 26 Sep 2019 20:25:17 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:38700 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727862AbfI0AZI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 20:25:07 -0400
-Received: by mail-oi1-f196.google.com with SMTP id m16so3747036oic.5;
-        Thu, 26 Sep 2019 17:25:06 -0700 (PDT)
+        Thu, 26 Sep 2019 20:25:08 -0400
+Received: by mail-oi1-f195.google.com with SMTP id m16so3747063oic.5;
+        Thu, 26 Sep 2019 17:25:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+Kwduh2L3Q3wglxQRQFNc0vVRF7aZPumhA9/VlLU+NE=;
-        b=mjhcUDE8XUiETIYkOZkncJVwXFfDn3+5OtMOKkMygQtL0EMH6+dzILudd6EoFv4LRt
-         NFOVho6exq84wuyEEwcJayqJJ6hzsSz6HAQK1rgWBpW1V52UgdUZe3AHwUtVGOGK73Y+
-         aw0vdIsvkAPuEyEvBkTE3pZmOdTDD7jIw35WNmM9Bx/iLhYrfQCtF7sZ0k7O4VdRjGbC
-         LV4eBoFPJeKw4wt+FWwOuntgjxUqw9mhdypHpHS2W5oyE5EoT2EUSW7YqLecLlAfMsWl
-         lD+3oBlaBBxy4s1L0rVECGMI0c5BFFOXhHwwxeKXX0kWFzxrj9kvJ9bT72PyFp6Uf5fX
-         UN/A==
-X-Gm-Message-State: APjAAAW8KwnBEzAcWpKg7+K+BIwbrJgcq/hMxW7G8FI6SvMK3qn+OlK/
-        0U7Iss5M88wxi5UOZ4txzZdhKvY=
-X-Google-Smtp-Source: APXvYqwZ4lR/YWP5vXy1ugIkWQ7hYP0e0FO8/TUE1SqXSQM+108Okq4ee9Kd9IvMs2n7+cX5zbFRVg==
-X-Received: by 2002:aca:540a:: with SMTP id i10mr4633085oib.108.1569543906002;
-        Thu, 26 Sep 2019 17:25:06 -0700 (PDT)
+        bh=2eJmO98TJvWjef7NL2xv0z4jdHs/rDOAySInsQ51HYo=;
+        b=qvhDAxBAoQbm3dv5rQzxbn/qYzKGe8M9Q8bRLb1NFqcCmGIreODiyDFEQhX9QBXu03
+         k8mnioCWIxWn3N1Hponxx0o49k3m1IPao1UKyYUYcmUkdGJG6oUsErr6jkg4DRTSDk+B
+         YSy+hiPm2eqiuoF2QEbEE1KkAhixZKy1F1c17IH8/1Bz023JjY8lQlGqzME+PMUzxUqu
+         2ZkOXfhu1cRGDXMCwB116cyUuYcm358yoBv8vQp/OSBeqE/PTLcl6slgqWghwTaOjOSW
+         bT3p2KGcxoscq01EMRp1Yzig/pS+Gc72JiOO0u38A9NQgBBcdd0n5UkiBc/j8hn7gq3x
+         Qolg==
+X-Gm-Message-State: APjAAAWfW33ukipWuz5cmvm3nBsPPsoXjTYni3uUE7tnrUo+nnW/hDg6
+        8cwV4MwoyfhtI2iRk7Z8m+N3sOA=
+X-Google-Smtp-Source: APXvYqymF9L96mPxVpqSA9nOQNOKKwoPIHBbCEwP0jWqbUfs1Sl2A8wDMIuZP/zjDv51L0/QcKzRIQ==
+X-Received: by 2002:aca:4890:: with SMTP id v138mr5031090oia.57.1569543907590;
+        Thu, 26 Sep 2019 17:25:07 -0700 (PDT)
 Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id j11sm339866otk.80.2019.09.26.17.25.04
+        by smtp.googlemail.com with ESMTPSA id j11sm339866otk.80.2019.09.26.17.25.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Sep 2019 17:25:05 -0700 (PDT)
+        Thu, 26 Sep 2019 17:25:07 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
@@ -64,9 +64,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         Simon Horman <horms+renesas@verge.net.au>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Oza Pawandeep <oza.oza@broadcom.com>
-Subject: [PATCH 06/11] of/address: Introduce of_get_next_dma_parent() helper
-Date:   Thu, 26 Sep 2019 19:24:50 -0500
-Message-Id: <20190927002455.13169-7-robh@kernel.org>
+Subject: [PATCH 07/11] of: address: Follow DMA parent for "dma-coherent"
+Date:   Thu, 26 Sep 2019 19:24:51 -0500
+Message-Id: <20190927002455.13169-8-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190927002455.13169-1-robh@kernel.org>
 References: <20190927002455.13169-1-robh@kernel.org>
@@ -79,37 +79,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Robin Murphy <robin.murphy@arm.com>
 
-Add of_get_next_dma_parent() helper which is similar to
-__of_get_dma_parent(), but can be used in iterators and decrements the
-ref count on the prior parent.
+Much like for address translation, when checking for DMA coherence we
+should be sure to walk up the DMA hierarchy, rather than the MMIO one,
+now that we can accommodate them being different.
 
 Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/of/address.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/of/address.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 53d2656c2269..e9188c82fdae 100644
+index e9188c82fdae..3fd34f7ad772 100644
 --- a/drivers/of/address.c
 +++ b/drivers/of/address.c
-@@ -695,6 +695,16 @@ static struct device_node *__of_get_dma_parent(const struct device_node *np)
- 	return of_node_get(args.np);
- }
- 
-+static struct device_node *of_get_next_dma_parent(struct device_node *np)
-+{
-+	struct device_node *parent;
-+
-+	parent = __of_get_dma_parent(np);
-+	of_node_put(np);
-+
-+	return parent;
-+}
-+
- u64 of_translate_dma_address(struct device_node *dev, const __be32 *in_addr)
- {
- 	struct device_node *host;
+@@ -999,7 +999,7 @@ bool of_dma_is_coherent(struct device_node *np)
+ 			of_node_put(node);
+ 			return true;
+ 		}
+-		node = of_get_next_parent(node);
++		node = of_get_next_dma_parent(node);
+ 	}
+ 	of_node_put(node);
+ 	return false;
 -- 
 2.20.1
 
