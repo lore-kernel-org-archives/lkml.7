@@ -2,150 +2,151 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D02DEC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA92BC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CEE521850
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:26:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="YgsDhm59"
+	by mail.kernel.org (Postfix) with ESMTP id 850752146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:26:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbfI0O0p (ORCPT
+        id S1727954AbfI0O04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 10:26:45 -0400
-Received: from mout.web.de ([212.227.15.4]:36607 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727859AbfI0O0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 10:26:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1569594390;
-        bh=tn9PVg9E/PLEvgmiwwqgXnvlHelynp+BqoPiHXcL2SU=;
-        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
-        b=YgsDhm59dKhKQFr9VUp8nA2ABSk9zlGnq6I8T6IygMz9VhSub5qSfRhnPBi00p4R8
-         S9zgQL1vGg0ZCmF+cHxCU4wZG0zax1EaRA85Yv/YLfKCZRxYk4jeIAzbySK/Fq2weo
-         nDklWKToFpnQXJk/F7/EsHHwfSW2zQV8Lolk+KsQ=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.191.8]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LpwMZ-1hhntp0cX1-00fg63; Fri, 27
- Sep 2019 16:26:30 +0200
-Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen A McCamant <smccaman@umn.edu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Frederik Lotter <frederik.lotter@netronome.com>,
-        John Hurley <john.hurley@netronome.com>,
-        Pieter Jansen van Vuuren 
-        <pieter.jansenvanvuuren@netronome.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20190925182405.31287-1-navid.emamdoost@gmail.com>
-Subject: Re: [PATCH] nfp: flower: prevent memory leak in
- nfp_flower_spawn_phy_reprs
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        netdev@vger.kernel.org, oss-drivers@netronome.com
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <95ee54a0-a5ff-a9f0-0d87-471e0f1f790c@web.de>
-Date:   Fri, 27 Sep 2019 16:26:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <20190925182405.31287-1-navid.emamdoost@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Provags-ID: V03:K1:ft+zKUE+sK3aNCGLB5RhDOFVPiCMUg/6fPQMt+VV2vC3V4knNZj
- zQ15PFAHai252MmMsBIbyPOi3m8EWx57pgrHO0lXSu9UW9SLHPsxRLxwkQp7op5kP0cF/1h
- BkUTrfbv0wek2Lhc5bw2bmPrhtOlhV+RJpd4YVghBt3A6yKnrQAbkv4UjWplvstmPkOXzsA
- ZccEoYT+nvxbooygis9xQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Piojxsa/rho=:xgrVQyOodkPmvqUNXG8FY2
- SIhjE0mSyhkBmzbUdZ3/Ugy+XtkqluRY3IlQoOas+gUn9oN19W3YMdFjluYSabW/e8nVbY5W/
- 68FuzO720GcmMSStt3qWTqGp24NKGJvWi8K/6lOTcQ0HuMXeHyLkW0/fJfmKOe1/KTdSkNHIo
- 5f8T4a++NqYN18wnsX4QRP7HJy+tU0szkMrWk8iKaZ6FlH+IRW7nkZiSzhRc3F5Qli44Dx75r
- 1ybwHwmI8NMA67m6QKYTIICG+qIp6kieRqaFE9w1A3N6KxInpX1kDjLTWKibaLFXZqsRCrfkD
- ty/R8Q83YQrjLrIA8SZCsc14Ke/Vw20H/VOB3uhJByjKMRpO6Yj3HHrsbmi1sHddmi6Tnv2Wn
- i+jxoTQvEgTX/eIjOziqDx2LVEjDML56Hdq+1Y+p6bZYkrgJYjIUB2yLCSrvvEjrCpI01jA0Y
- k9VoFkFNUZX5hzTmauFxS2p75iuEbBzcWk3RwO6R2KbTCzExML8Exi0KEJ/bmnMtOWyJdBIBr
- 5KNPVYCPXPT9xhkM77xEEIr3egF+LjIE2IHAMRlRSTEiuHULbR00+ga5V2WWT0TFbHi9QCr9J
- +6JA59hMtxxpbc8bVXX5WPoVvOuAApzMHw5DEs5hf69Q2Z/V2N6c4Z8W2yLD7JPMaMBdNN3zA
- 8GAftTnR69f8fRSPIEoGZFTQgjKfshdVum7vb/NYOv5A1cvieQH13NLyMgcYh8fBZDu79IZm8
- a3WmPvWOk/8MSl4gbKarX8DQg8EKkCMGeKdvmhcrFwYovdfURhYFyciUTjEriDQDMvY26ZKi7
- WH3oJnErubdNvu9vJo1MZsNHJCaZhPA1srhbAH2iWTDpczvVrIRoCdIpwBTRLUUHcwVQKNPJb
- MFrZnlMg6ojDbvNmUUZt4FU+9BQD+18dQSngYNN1jMiKAzG62/DsvW2lEFvgTqtHP+/g7efW9
- Zmy1ZrtdNDGpE9liHTr6L6+47fKToPJUsgBoQu16y6FQenvmM+iXiJ1LJkYnA7QkeVF7aQbki
- HZMAA4cLO7H0c6hUWQwGmGSGnDSxW/WGcuasZtesPxT8DgK3NSK0gBig4fY9FCFdmfYRmuN5P
- xAFD4kZVQi6sBCA0BziIMP/XBQGci4RAsd9xYD88/pgjWTVdvHNASa0Oe2T61TtGusPQWiYfa
- 2XjQVz3FCQp8oTOVt2HPRsUew2VPTWy0MMLCyauKnEw4BuyO6xDC3GF3sE4jKHWHLiIv1f2k2
- Ok53WoL+CRVphS3XptQn3x86T4jwegy60cQHmI22jHkCVxj45gWCWLyb1prA=
+        Fri, 27 Sep 2019 10:26:56 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49348 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727927AbfI0O0z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 10:26:55 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8REMLcw112317
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 10:26:54 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v9ky08mpw-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 10:26:54 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <nayna@linux.ibm.com>;
+        Fri, 27 Sep 2019 15:26:51 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 27 Sep 2019 15:26:45 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8REQijN23396564
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Sep 2019 14:26:44 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2C26FA405F;
+        Fri, 27 Sep 2019 14:26:44 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4D4E7A4054;
+        Fri, 27 Sep 2019 14:26:40 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.80.207.173])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 27 Sep 2019 14:26:40 +0000 (GMT)
+From:   Nayna Jain <nayna@linux.ibm.com>
+To:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
+        linux-integrity@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: [PATCH v6 4/9] powerpc: detect the trusted boot state of the system
+Date:   Fri, 27 Sep 2019 10:25:55 -0400
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com>
+References: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19092714-0012-0000-0000-000003515662
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19092714-0013-0000-0000-0000218BF23F
+Message-Id: <1569594360-7141-5-git-send-email-nayna@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-27_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=580 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909270134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> In nfp_flower_spawn_phy_reprs, in the for loop over eth_tbl if any of
-> intermediate allocations or initializations fail memory is leaked.
-> requiered releases are added.
+PowerNV systems enables the IMA measurement rules only if the
+trusted boot is enabled on the system.
 
-I suggest to improve also this change description.
+This patch adds the function to detect if the system has trusted
+boot enabled.
 
+Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+---
+ arch/powerpc/include/asm/secure_boot.h |  6 ++++++
+ arch/powerpc/kernel/secure_boot.c      | 14 ++++++++++++++
+ 2 files changed, 20 insertions(+)
 
-> @@ -542,6 +545,7 @@ nfp_flower_spawn_phy_reprs(struct nfp_app *app, struct nfp_flower_priv *priv)
->  		err = nfp_repr_init(app, repr,
->  				    cmsg_port_id, port, priv->nn->dp.netdev);
->  		if (err) {
-> +			kfree(repr_priv);
->  			nfp_port_free(port);
->  			nfp_repr_free(repr);
->  			goto err_reprs_clean;
+diff --git a/arch/powerpc/include/asm/secure_boot.h b/arch/powerpc/include/asm/secure_boot.h
+index 4e8e2b08a993..192caaedbe7a 100644
+--- a/arch/powerpc/include/asm/secure_boot.h
++++ b/arch/powerpc/include/asm/secure_boot.h
+@@ -14,6 +14,7 @@
+ 
+ bool is_powerpc_os_secureboot_enabled(void);
+ int get_powerpc_os_sb_node(struct device_node **node);
++bool is_powerpc_trustedboot_enabled(void);
+ 
+ #else
+ 
+@@ -27,5 +28,10 @@ static inline int get_powerpc_os_sb_node(struct device_node **node)
+ 	return -ENOENT;
+ }
+ 
++static inline bool is_powerpc_os_trustedboot_enabled(void)
++{
++	return false;
++}
++
+ #endif
+ #endif
+diff --git a/arch/powerpc/kernel/secure_boot.c b/arch/powerpc/kernel/secure_boot.c
+index 45ca19f5e836..9d452e1550ae 100644
+--- a/arch/powerpc/kernel/secure_boot.c
++++ b/arch/powerpc/kernel/secure_boot.c
+@@ -80,3 +80,17 @@ bool is_powerpc_os_secureboot_enabled(void)
+ 	pr_info("secureboot mode disabled\n");
+ 	return false;
+ }
++
++bool is_powerpc_trustedboot_enabled(void)
++{
++	struct device_node *node;
++
++	node = get_powerpc_fw_sb_node();
++	if (node && (of_find_property(node, "trusted-enabled", NULL))) {
++		pr_info("trustedboot mode enabled\n");
++		return true;
++	}
++
++	pr_info("trustedboot mode disabled\n");
++	return false;
++}
+-- 
+2.20.1
 
-How do you think about to move common exception handling code
-to the end of this function implementation by adding jump targets?
-
-Regards,
-Markus
