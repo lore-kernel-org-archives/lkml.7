@@ -2,317 +2,163 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B889AC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7C7C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80F34217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:56:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="nqRDy8aC"
+	by mail.kernel.org (Postfix) with ESMTP id 434A6217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:57:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbfI0M4a (ORCPT
+        id S1727356AbfI0M5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 08:56:30 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43551 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727128AbfI0M4a (ORCPT
+        Fri, 27 Sep 2019 08:57:35 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:56924 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726295AbfI0M5f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 08:56:30 -0400
-Received: by mail-wr1-f65.google.com with SMTP id q17so2599502wrx.10
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 05:56:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=tXfdCu+y9o1huO3oAZ1Sbx7ZMu/iHmnXt+9DDmG/YAY=;
-        b=nqRDy8aCjz8sLdPAnWGUlZOMS0O0rrLYKivpUvP0b+vARC8X6gyIzwCIJadImYFMOi
-         qH82KEeyWSIoHlgye9453TKY+dQpHrF0D1mRCx68dWUw3ecCMdOMfuXCGlqjGuOzbKMv
-         X89u2UZ/rIsZEKlzz4dDHmVk/JV6p9haeVjq2XuxOM3yjWIzTGa+iaYPNuP0HSDd1Vpk
-         Bjb8Xoio79OWCc8/ZkklhcuZMBux6DG4VW19YWR2hH1Z970c/DOmgzU3/Bgjtr2ZRACk
-         n8hcg5mkgJzl3JKwW9PYG11UJJ9dvinYfxQGx6Bji5KwS8izwJT8yMtM55OuTQCsDTJC
-         j2Ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=tXfdCu+y9o1huO3oAZ1Sbx7ZMu/iHmnXt+9DDmG/YAY=;
-        b=a42NRPSvPHY4UfcpMlEWRthImRIOw/uL8cKeQnvO+wnGlGjd3JYCAfCDUL8yGHJl0Y
-         TGE5ucT3xnW2qIv7QmYPdORS+R+iMcoFIG7T5vCCTC2CYtB9iPswlujcH3RrOaY6KkgG
-         wDWnBCXNqKf/B0vNjSVcVyAtNEx41y+0V0gei8qZekOcNuSDt+fXQZ28HwpUDgUts4RS
-         lQ/zkWyXp5YtP8L+3g0ZtFE9PCPyxpDfd8E+wUNdYNODVVv0KjndQLAkLtcGUc/JiNjr
-         G2AWAQTjHZ61avuTnuKD3gQ99xLzubuIQi6LwAonkkvI2Xxyk9DE9WZ2lxtY3lGvR99W
-         WCOQ==
-X-Gm-Message-State: APjAAAV40Nz9b8o7dqI5e977kgjZxS/yJJaMveeSa/5sdmr6LQLO5iue
-        SolbQ0GV6XajjtlmJ8aHp9JHGg==
-X-Google-Smtp-Source: APXvYqxEAMML2l1NxVnaWU8UXk7ISpBIST+iO7UeAyZMmaJg19OlU0u9d0T0jRfPnyNo1oc1SYmdWg==
-X-Received: by 2002:a5d:4d89:: with SMTP id b9mr2730758wru.395.1569588985491;
-        Fri, 27 Sep 2019 05:56:25 -0700 (PDT)
-Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id w7sm4735628wmd.22.2019.09.27.05.56.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2019 05:56:24 -0700 (PDT)
-References: <1569411888-98116-1-git-send-email-jian.hu@amlogic.com> <1569411888-98116-3-git-send-email-jian.hu@amlogic.com> <20190925131232.4751020640@mail.kernel.org> <8351489a-f91e-be08-7fcc-e2a90c6e87f0@amlogic.com>
-User-agent: mu4e 1.3.3; emacs 26.2
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Jian Hu <jian.hu@amlogic.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        devicetree@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/2] clk: meson: a1: add support for Amlogic A1 clock driver
-In-reply-to: <8351489a-f91e-be08-7fcc-e2a90c6e87f0@amlogic.com>
-Date:   Fri, 27 Sep 2019 14:56:23 +0200
-Message-ID: <1jk19t28zs.fsf@starbuckisacylon.baylibre.com>
+        Fri, 27 Sep 2019 08:57:35 -0400
+X-IronPort-AV: E=Sophos;i="5.64,555,1559512800"; 
+   d="scan'208";a="403686033"
+Received: from unknown (HELO hadrien) ([12.206.46.59])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Sep 2019 14:57:30 +0200
+Date:   Fri, 27 Sep 2019 05:57:28 -0700 (PDT)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: julia@hadrien
+To:     Joe Perches <joe@perches.com>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Stephen Kitt <steve@sk2.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nitin Gote <nitin.r.gote@intel.com>, jannh@google.com,
+        kernel-hardening@lists.openwall.com,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Subject: Re: [PATCH V2 1/2] string: Add stracpy and stracpy_pad mechanisms
+In-Reply-To: <56dc4de7e0db153cb10954ac251cb6c27c33da4a.camel@perches.com>
+Message-ID: <alpine.DEB.2.21.1909270555030.2143@hadrien>
+References: <cover.1563889130.git.joe@perches.com>  <ed4611a4a96057bf8076856560bfbf9b5e95d390.1563889130.git.joe@perches.com>  <20190925145011.c80c89b56fcee3060cf87773@linux-foundation.org> <56dc4de7e0db153cb10954ac251cb6c27c33da4a.camel@perches.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On Fri 27 Sep 2019 at 05:11, Jian Hu <jian.hu@amlogic.com> wrote:
 
-> Hi, Stephen
+On Thu, 26 Sep 2019, Joe Perches wrote:
+
+> On Wed, 2019-09-25 at 14:50 -0700, Andrew Morton wrote:
+> > On Tue, 23 Jul 2019 06:51:36 -0700 Joe Perches <joe@perches.com> wrote:
+> >
+> > > Several uses of strlcpy and strscpy have had defects because the
+> > > last argument of each function is misused or typoed.
+> > >
+> > > Add macro mechanisms to avoid this defect.
+> > >
+> > > stracpy (copy a string to a string array) must have a string
+> > > array as the first argument (dest) and uses sizeof(dest) as the
+> > > count of bytes to copy.
+> > >
+> > > These mechanisms verify that the dest argument is an array of
+> > > char or other compatible types like u8 or s8 or equivalent.
+> > >
+> > > A BUILD_BUG is emitted when the type of dest is not compatible.
+> > >
+> >
+> > I'm still reluctant to merge this because we don't have code in -next
+> > which *uses* it.  You did have a patch for that against v1, I believe?
+> > Please dust it off and send it along?
 >
-> Thank you for review
+> https://lore.kernel.org/lkml/CAHk-=wgqQKoAnhmhGE-2PBFt7oQs9LLAATKbYa573UO=DPBE0Q@mail.gmail.com/
 >
-> On 2019/9/25 21:12, Stephen Boyd wrote:
->> Quoting Jian Hu (2019-09-25 04:44:48)
->>> The Amlogic A1 clock includes three parts:
->>> peripheral clocks, pll clocks, CPU clocks.
->>> sys pll and CPU clocks will be sent in next patch.
->>>
->>> Unlike the previous series, there is no EE/AO domain
->>> in A1 CLK controllers.
->>>
->>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
->>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
->>
->> This second name didn't send the patch. Please follow the signoff
->> procedures documented in Documentation/process/submitting-patches.rst
->>
->>> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
->>> index 16d7614..a48f67d 100644
->>> --- a/arch/arm64/Kconfig.platforms
->>> +++ b/arch/arm64/Kconfig.platforms
->>> @@ -138,6 +138,7 @@ config ARCH_MESON
->>>          select COMMON_CLK_AXG
->>>          select COMMON_CLK_G12A
->>>          select MESON_IRQ_GPIO
->>> +       select COMMON_CLK_A1
->>
->> Sort?
-> ok, I will put it behind COMMON_CLK_AXG
->>
->>>          help
->>>            This enables support for the arm64 based Amlogic SoCs
->>>            such as the s905, S905X/D, S912, A113X/D or S905X/D2
->>> diff --git a/drivers/clk/meson/Kconfig b/drivers/clk/meson/Kconfig
->>> index dabeb43..e6cb4c3 100644
->>> --- a/drivers/clk/meson/Kconfig
->>> +++ b/drivers/clk/meson/Kconfig
->>> @@ -107,3 +107,13 @@ config COMMON_CLK_G12A
->>>          help
->>>            Support for the clock controller on Amlogic S905D2, S905X2 and S905Y2
->>>            devices, aka g12a. Say Y if you want peripherals to work.
->>> +
->>> +config COMMON_CLK_A1
->>
->> Probably should be placed somewhere alphabetically in this file?
-> ok, I will put it behind COMMON_CLK_AXG_AUDIO
->>
->>> +       bool
->>> +       depends on ARCH_MESON
->>> +       select COMMON_CLK_MESON_REGMAP
->>> +       select COMMON_CLK_MESON_DUALDIV
->>> +       select COMMON_CLK_MESON_PLL
->>> +       help
->>> +         Support for the clock controller on Amlogic A113L device,
->>> +         aka a1. Say Y if you want peripherals to work.
->>> diff --git a/drivers/clk/meson/Makefile b/drivers/clk/meson/Makefile
->>> index 3939f21..6be3a8f 100644
->>> --- a/drivers/clk/meson/Makefile
->>> +++ b/drivers/clk/meson/Makefile
->>> @@ -19,3 +19,4 @@ obj-$(CONFIG_COMMON_CLK_AXG_AUDIO) += axg-audio.o
->>>   obj-$(CONFIG_COMMON_CLK_GXBB) += gxbb.o gxbb-aoclk.o
->>>   obj-$(CONFIG_COMMON_CLK_G12A) += g12a.o g12a-aoclk.o
->>>   obj-$(CONFIG_COMMON_CLK_MESON8B) += meson8b.o
->>> +obj-$(CONFIG_COMMON_CLK_A1) += a1.o
->>
->> I would guess this should be sorted on Kconfig name in this file?
-> ok, I will put it behind COMMON_CLK_AXG_AUDIO
->>
->>> diff --git a/drivers/clk/meson/a1.c b/drivers/clk/meson/a1.c
->>> new file mode 100644
->>> index 0000000..26edae0f
->>> --- /dev/null
->>> +++ b/drivers/clk/meson/a1.c
->>> @@ -0,0 +1,2617 @@
->>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->>> +/*
->>> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
->>> + */
->>> +
->>> +#include <linux/clk-provider.h>
->>> +#include <linux/init.h>
->>> +#include <linux/of_device.h>
->>> +#include <linux/platform_device.h>
->>> +#include <linux/of_address.h>
->>> +#include "clk-mpll.h"
->>> +#include "clk-pll.h"
->>> +#include "clk-regmap.h"
->>> +#include "vid-pll-div.h"
->>> +#include "clk-dualdiv.h"
->>> +#include "meson-eeclk.h"
->>> +#include "a1.h"
->>> +
->> [...]
->>> +
->>> +/*
->>> + * The Meson A1 HIFI PLL is 614.4M, it requires
->>> + * a strict register sequence to enable the PLL.
->>> + * set meson_clk_pcie_pll_ops as its ops
->>
->> Please remove this last line as it's obvious from the code what ops are
->> used.
->>
-> ok, I will remove it.
->>> + */
->>> +static struct clk_regmap a1_hifi_pll = {
->>> +       .data = &(struct meson_clk_pll_data){
->>> +               .en = {
->>> +                       .reg_off = ANACTRL_HIFIPLL_CTRL0,
->>> +                       .shift   = 28,
->>> +                       .width   = 1,
->>> +               },
->>> +               .m = {
->>> +                       .reg_off = ANACTRL_HIFIPLL_CTRL0,
->>> +                       .shift   = 0,
->>> +                       .width   = 8,
->>> +               },
->>> +               .n = {
->>> +                       .reg_off = ANACTRL_HIFIPLL_CTRL0,
->>> +                       .shift   = 10,
->>> +                       .width   = 5,
->>> +               },
->>> +               .frac = {
->>> +                       .reg_off = ANACTRL_HIFIPLL_CTRL1,
->>> +                       .shift   = 0,
->>> +                       .width   = 19,
->>> +               },
->>> +               .l = {
->>> +                       .reg_off = ANACTRL_HIFIPLL_STS,
->>> +                       .shift   = 31,
->>> +                       .width   = 1,
->>> +               },
->>> +               .table = a1_hifi_pll_params_table,
->>> +               .init_regs = a1_hifi_init_regs,
->>> +               .init_count = ARRAY_SIZE(a1_hifi_init_regs),
->>> +       },
->>> +       .hw.init = &(struct clk_init_data){
->>> +               .name = "hifi_pll",
->>> +               .ops = &meson_clk_pcie_pll_ops,
->>> +               .parent_hws = (const struct clk_hw *[]) {
->>> +                       &a1_xtal_hifipll.hw
->>> +               },
->>> +               .num_parents = 1,
->>> +       },
->>> +};
->>> +
->> [..]
->>> +
->>> +static struct clk_regmap a1_fclk_div2 = {
->>> +       .data = &(struct clk_regmap_gate_data){
->>> +               .offset = ANACTRL_FIXPLL_CTRL0,
->>> +               .bit_idx = 21,
->>> +       },
->>> +       .hw.init = &(struct clk_init_data){
->>> +               .name = "fclk_div2",
->>> +               .ops = &clk_regmap_gate_ops,
->>> +               .parent_hws = (const struct clk_hw *[]) {
->>> +                       &a1_fclk_div2_div.hw
->>> +               },
->>> +               .num_parents = 1,
->>> +               /*
->>> +                * add CLK_IS_CRITICAL flag to avoid being disabled by clk core
->>> +                * or its children clocks.
->>
->> This comment is useless. Please replace it with an actual reason for
->> keeping the clk on instead of describing what the flag does.
->>
-> ok, The actual reason is it should not change at runtime.
+> I gave up, especially after the snark from Linus
+> where he wrote I don't understand this stuff.
+>
+> He's just too full of himself here merely using
+> argument from authority.
+>
+> Creating and using a function like copy_string with
+> both source and destination lengths specified is
+> is also potentially a large source of defects where
+> the stracpy macro atop strscpy does not have a
+> defect path other than the src not being a string
+> at all.
+>
+> I think the analysis of defects in string function
+> in the kernel is overly difficult today given the
+> number of possible uses of pointer and length in
+> strcpy/strncpy/strlcpy/stracpy.
+>
+> I think also that there is some sense in what he
+> wrote against the "word salad" use of str<foo>cpy,
+> but using stracpy as a macro when possible instead
+> of strscpy also makes the analysis of defects rather
+> simpler.
+>
+> The trivial script cocci I posted works well for the
+> simple cases.
+>
+> https://lore.kernel.org/cocci/66fcdbf607d7d0bea41edb39e5579d63b62b7d84.camel@perches.com/
+>
+> The more complicated cocci script Julia posted is
+> still not quite correct as it required intermediate
+> compilation for verification of specified lengths.
 
-Yeah, from the flag we understand that you want to keep this on. What we
-are after is why ? What device is using this clock and cannot tolerate
-this gate to turn off ?
+The problem seems to be detecting whether the string can reach user level
+and knowing whether padding is needed.  There are many cases where the
+copied string is a constant and can easily be checked to fit into the
+destination.  But without further investigation that I am not able to do
+at the moment, it's not clear how to address the user level issue.
 
-This is important and this is kind of comment we are after.
-These flag should be viewed as "mid term work around". In the end, there
-should be a driver for your device which claims the clock and properly
-manage it
+julia
 
->>> +                */
->>> +               .flags = CLK_IS_CRITICAL,
->>> +       },
->>> +};
->>> +
->> [..]
->>> +static struct clk_regmap a1_dmc = {
->>> +       .data = &(struct clk_regmap_gate_data){
->>> +               .offset = DMC_CLK_CTRL,
->>> +               .bit_idx = 8,
->>> +       },
->>> +       .hw.init = &(struct clk_init_data) {
->>> +               .name = "dmc",
->>> +               .ops = &clk_regmap_gate_ops,
->>> +               .parent_hws = (const struct clk_hw *[]) {
->>> +                       &a1_dmc_sel2.hw
->>> +               },
->>> +               .num_parents = 1,
->>> +               /*
->>> +                * add CLK_IGNORE_UNUSED to avoid hangup
->>> +                * DDR clock should not change at runtime
->>> +                */
->>> +               .flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
->>
->> So not CLK_IS_CRITICAL?
-> Yes, CLK_IS_CRITICAL is better, I will change it.
-
-Same comment as above.
-
->>
->>> +       },
->>> +};
->>> +
->> [...]
->>> +
->>> +/*
->>> + * cpu clock register base address is 0xfd000080
->>> + */
->>> +static struct clk_regmap *const a1_cpu_clk_regmaps[] = {
->>> +       /* TODO */
->>
->> Can it be done?
-> I plan to compelte cpu clock with the DVFS verified. And  Some peripheral
-> devices rely on this patch to send. I prefer to do it in the next patch.
->>
->>> +};
->>
->> .
->>
-
+>
+> https://lkml.org/lkml/2019/7/25/1406
+>
+> Tell me again if you still want it and maybe the
+> couple conversions that mm/ would get.
+>
+> via:
+>
+> $ spatch --all-includes --in-place -sp-file str.cpy.cocci mm
+> $ git diff --stat -p mm
+> --
+>  mm/dmapool.c | 2 +-
+>  mm/zswap.c   | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/mm/dmapool.c b/mm/dmapool.c
+> index fe5d33060415..b3a4feb423f8 100644
+> --- a/mm/dmapool.c
+> +++ b/mm/dmapool.c
+> @@ -158,7 +158,7 @@ struct dma_pool *dma_pool_create(const char *name, struct device *dev,
+>  	if (!retval)
+>  		return retval;
+>
+> -	strlcpy(retval->name, name, sizeof(retval->name));
+> +	stracpy(retval->name, name);
+>
+>  	retval->dev = dev;
+>
+> diff --git a/mm/zswap.c b/mm/zswap.c
+> index 08b6cefae5d8..c6cd38de185a 100644
+> --- a/mm/zswap.c
+> +++ b/mm/zswap.c
+> @@ -533,7 +533,7 @@ static struct zswap_pool *zswap_pool_create(char *type, char *compressor)
+>  	}
+>  	pr_debug("using %s zpool\n", zpool_get_type(pool->zpool));
+>
+> -	strlcpy(pool->tfm_name, compressor, sizeof(pool->tfm_name));
+> +	stracpy(pool->tfm_name, compressor);
+>  	pool->tfm = alloc_percpu(struct crypto_comp *);
+>  	if (!pool->tfm) {
+>  		pr_err("percpu alloc failed\n");
+>
+>
+>
+>
