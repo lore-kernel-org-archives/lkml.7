@@ -2,59 +2,79 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBC7C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0697C352AB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A68F2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C358F2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:34:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbfI0Ide (ORCPT
+        id S1726498AbfI0IeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 04:33:34 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:57324 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbfI0Ide (ORCPT
+        Fri, 27 Sep 2019 04:34:24 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:47353 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfI0IeX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 04:33:34 -0400
-Received: from localhost (unknown [65.39.69.237])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5384014DF0D7D;
-        Fri, 27 Sep 2019 01:33:29 -0700 (PDT)
-Date:   Fri, 27 Sep 2019 10:33:28 +0200 (CEST)
-Message-Id: <20190927.103328.1345010550910672678.davem@davemloft.net>
-To:     navid.emamdoost@gmail.com
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        borisp@mellanox.com, saeedm@mellanox.com, leon@kernel.org,
-        yishaih@mellanox.com, maximmi@mellanox.com, eranbe@mellanox.com,
-        tariqt@mellanox.com, bodong@mellanox.com, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net/mlx5: prevent memory leak in
- mlx5_fpga_conn_create_cq
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190925032038.22943-1-navid.emamdoost@gmail.com>
-References: <20190925032038.22943-1-navid.emamdoost@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.2
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Fri, 27 Sep 2019 04:34:23 -0400
+X-Originating-IP: 86.250.200.211
+Received: from windsurf (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: thomas.petazzoni@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 9C4DA24000C;
+        Fri, 27 Sep 2019 08:34:21 +0000 (UTC)
+Date:   Fri, 27 Sep 2019 10:34:20 +0200
+From:   Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To:     Remi Pommarel <repk@triplefau.lt>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: aardvark: Don't rely on jiffies while holding
+ spinlock
+Message-ID: <20190927103420.48bb9335@windsurf>
+In-Reply-To: <20190927083142.8571-1-repk@triplefau.lt>
+References: <20190927083142.8571-1-repk@triplefau.lt>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 27 Sep 2019 01:33:34 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
-Date: Tue, 24 Sep 2019 22:20:34 -0500
+Hello Remi,
 
-> In mlx5_fpga_conn_create_cq if mlx5_vector2eqn fails the allocated
-> memory should be released.
-> 
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Thanks for the new iteration!
 
-Saeed, please queue this up.
+On Fri, 27 Sep 2019 10:31:42 +0200
+Remi Pommarel <repk@triplefau.lt> wrote:
+
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index fc0fe4d4de49..ee05ccb2b686 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -175,7 +175,8 @@
+>  	(PCIE_CONF_BUS(bus) | PCIE_CONF_DEV(PCI_SLOT(devfn))	| \
+>  	 PCIE_CONF_FUNC(PCI_FUNC(devfn)) | PCIE_CONF_REG(where))
+>  
+> -#define PIO_TIMEOUT_MS			1
+> +#define PIO_RETRY_CNT			10
+> +#define PIO_RETRY_DELAY			2 /* 2 us*/
+
+So this changes the timeout from 1ms to just 20us, a division by 50
+from the previous timeout value. From my measurements, it could
+sometime take up to 6us from a single PIO read operation to complete,
+which is getting close to the 20us timeout.
+
+Shouldn't PIO_RETRY_CNT be kept at 500, so that we keep using a 1ms
+timeout ?
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
