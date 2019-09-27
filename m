@@ -2,71 +2,105 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70098C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 528F9C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A604206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:17:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F442206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:19:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbfI0HRh (ORCPT
+        id S1726332AbfI0HT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 03:17:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47764 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725804AbfI0HRh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 03:17:37 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 33E1B2114;
-        Fri, 27 Sep 2019 07:17:37 +0000 (UTC)
-Received: from [10.72.12.30] (ovpn-12-30.pek2.redhat.com [10.72.12.30])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6A1A81000337;
-        Fri, 27 Sep 2019 07:17:26 +0000 (UTC)
-Subject: Re: [PATCH] vhost: introduce mdev based hardware backend
-To:     Tiwei Bie <tiwei.bie@intel.com>
-Cc:     mst@redhat.com, alex.williamson@redhat.com,
-        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        lingshan.zhu@intel.com
-References: <20190926045427.4973-1-tiwei.bie@intel.com>
- <1b4b8891-8c14-1c85-1d6a-2eed1c90bcde@redhat.com>
- <20190927045438.GA17152@___>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <64a1f619-138f-cd21-e996-84724935e4c8@redhat.com>
-Date:   Fri, 27 Sep 2019 15:17:24 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 27 Sep 2019 03:19:57 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3226 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725804AbfI0HT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 03:19:57 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 5CA93AB8D235F5ACECF8;
+        Fri, 27 Sep 2019 15:04:02 +0800 (CST)
+Received: from [127.0.0.1] (10.184.12.158) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Fri, 27 Sep 2019
+ 15:03:53 +0800
+Subject: Re: [PATCH 03/35] irqchip/gic-v3-its: Allow LPI invalidation via the
+ DirectLPI interface
+To:     Marc Zyngier <maz@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
+        <linux-kernel@vger.kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20190923182606.32100-1-maz@kernel.org>
+ <20190923182606.32100-4-maz@kernel.org>
+ <92ff82ca-ebcb-8f5f-5063-313f65bbc5e3@huawei.com>
+ <22202880-9a99-f0d9-4737-6112d60b30a6@kernel.org>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <9399fbe3-5293-d34f-712e-3bf62680fda4@huawei.com>
+Date:   Fri, 27 Sep 2019 14:59:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
+ Thunderbird/64.0
 MIME-Version: 1.0
-In-Reply-To: <20190927045438.GA17152@___>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <22202880-9a99-f0d9-4737-6112d60b30a6@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Fri, 27 Sep 2019 07:17:37 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.12.158]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019/9/27 0:17, Marc Zyngier wrote:
+> On 26/09/2019 15:57, Zenghui Yu wrote:
+>> Hi Marc,
+>>
+>> I get one kernel panic with this patch on D05.
+> 
+> Can you please try this (completely untested for now) on top of the
+> whole series? I'll otherwise give it a go next week.
 
-On 2019/9/27 下午12:54, Tiwei Bie wrote:
->> The name could be confusing, get_queue_max() is to get the maximum number of
->> entries for a virtqueue supported by this device.
-> OK. It might be better to rename it to something like:
->
-> 	get_vq_num_max()
->
-> which is more consistent with the set_vq_num().
->
+Yes, it helps. At least I don't see panic any more. Without this change,
+the host would get crashed as long as the VM is started.
 
-Yes, will do in next version.
 
-Thanks
+Thanks,
+zenghui
+
+> 
+> Thanks,
+> 
+> 	M.
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> index bc55327406b7..9d24236d1257 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -3461,15 +3461,16 @@ static void its_vpe_send_cmd(struct its_vpe *vpe,
+>   
+>   static void its_vpe_send_inv(struct irq_data *d)
+>   {
+> +	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
+> +
+>   	if (gic_rdists->has_direct_lpi) {
+> -		/*
+> -		 * Don't mess about. Generating the invalidation is easily
+> -		 * done by using the parent irq_data, just like below.
+> -		 */
+> -		direct_lpi_inv(d->parent_data);
+> -	} else {
+> -		struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
+> +		void __iomem *rdbase;
+>   
+> +		/* Target the redistributor this VPE is currently known on */
+> +		rdbase = per_cpu_ptr(gic_rdists->rdist, vpe->col_idx)->rd_base;
+> +		gic_write_lpir(d->parent_data->hwirq, rdbase + GICR_INVLPIR);
+> +		wait_for_syncr(rdbase);
+> +	} else {
+>   		its_vpe_send_cmd(vpe, its_send_inv);
+>   	}
+>   }
+> 
 
