@@ -2,224 +2,206 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F93C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B292C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3B4821655
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 507C02190F
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:08:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="ubZB15BK"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Qs+eGqNE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbfI0TE6 (ORCPT
+        id S1726548AbfI0TIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 15:04:58 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38860 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfI0TE5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 15:04:57 -0400
-Received: by mail-lj1-f193.google.com with SMTP id b20so3528493ljj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 12:04:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=4wbDflaWLhDcXWdkn217zW2gOLTlGF2zJ1ifl74VgLQ=;
-        b=ubZB15BKquliImyXNHwo9tar2iWTGSsP40wD2TLXhbFGlPHtFD+lolFe6jSaUlp4Rw
-         kcGqm1PWE4jdCeEN0YpdOPGiXLii3+d84FB+txjWNoBML7IeUWG3Sw3b9vvOVsXgzVTS
-         g+TbkAL/i/E4awGMq55436a/KZwuSw1uoEq3/esIWrTAjLWH7shy0hEuaVhbcqqcvydb
-         pYGoo/jK/5a8Ew17A9FxvOq3GweFNeo+mAtPCHHK3aQou5+55gVYovaIA5oY/f6L1jAD
-         iUXaigvLe6XCXqOcBpNIn9RFJyctE/pY8S1c9Vl+y6r8rtHy8ndiKi2X6CJERT7xGq7V
-         sx8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=4wbDflaWLhDcXWdkn217zW2gOLTlGF2zJ1ifl74VgLQ=;
-        b=fhwUAJUG5UyanVhXZxCiqtpWHbex5FgTYRRnnfeRThkzKkiq0cR1Er8pkBm2X71gtH
-         BACj/HO0fyVO730tF6eqXR0SWDEYrrbIYTsiEaz43HfUtre7xfv3eXPFsoQNJwpV9wsI
-         OiixEdr4nfhNOKUYOYp/eyNyMQ1n+ADJJxqW1MPOZSAj92o3W/V8UrtN50SrHeyCIV6P
-         M2f/kvNVupteTQzRtqmlYQcas96vDQac/fDXyV9y1nM5hQDosaT+Ky6en1nB6U5Dkcg5
-         PC1fQdaHgzDRgv/MemfPMQqzrWZT9aKzWU4WEgK3fxCalCLG/lZZwHrbAEkUpreukZUT
-         NKag==
-X-Gm-Message-State: APjAAAUp+sageKXbKkKXcQvQWcvF+woxol+xDakcnzFGkchgQC3AbKtM
-        2OdEkSUQ9ktIc0O73yKLtKZ60Q==
-X-Google-Smtp-Source: APXvYqxX48CO66OpHtjCOmhPRC7/3r1MK4chmqYkk7WZKO3KsmdpcrZ33wvfHw4JKb/+UmHXmcLAKQ==
-X-Received: by 2002:a2e:504f:: with SMTP id v15mr4102041ljd.67.1569611095285;
-        Fri, 27 Sep 2019 12:04:55 -0700 (PDT)
-Received: from localhost (h-93-159.A463.priv.bahnhof.se. [46.59.93.159])
-        by smtp.gmail.com with ESMTPSA id w16sm614372lji.42.2019.09.27.12.04.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2019 12:04:54 -0700 (PDT)
-Date:   Fri, 27 Sep 2019 21:04:54 +0200
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Tim Harvey <tharvey@gateworks.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Matthew Michilot <matthew.michilot@gmail.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] media: i2c: adv7180: fix adv7280 BT.656-4 compatibility
-Message-ID: <20190927190454.GA7409@bigcity.dyn.berto.se>
-References: <20190827215539.1286-1-mmichilot@gateworks.com>
- <cb3e9be4-9ce6-354f-bb7c-a4710edc1c1b@xs4all.nl>
- <20190829142931.GZ28351@bigcity.dyn.berto.se>
- <CAJ+vNU11HTcP8L5J2Xg+Rmhvb8JDYemhJxt-GaGG5Myk3n38Tw@mail.gmail.com>
+        Fri, 27 Sep 2019 15:08:20 -0400
+Received: from mail.andi.de1.cc ([85.214.55.253]:35320 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725790AbfI0TIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 15:08:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Z3HupTrxEpV8y2g+PdzUzD5fHaCUrAd0hS4kvWJATxo=; b=Qs+eGqNEPBP4N7bSduqg3bDy4U
+        NAxNVgGqiT5NHEoEYwDech1O2TTjjl6vKUEA6u75AMq3oK7Lp6Zrfcw4xFoqAgW8oXjPW7/wSylOf
+        ztk4uYdXzSNNZ8bKkKzhDLukbwBuanb7fZWvl2+ZnLyoc9f7EkS8m0KGva5yczYPIK6E=;
+Received: from p200300ccff0e5f001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0e:5f00:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1iDvb6-0006GS-GH; Fri, 27 Sep 2019 21:08:09 +0200
+Date:   Fri, 27 Sep 2019 21:08:07 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, manivannan.sadhasivam@linaro.org,
+        andrew.smirnov@gmail.com, marex@denx.de, angus@akkea.ca,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, j.neuschaefer@gmx.net,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>
+Subject: Re: [PATCH 1/3] ARM: dts: add Netronix E60K02 board common file
+Message-ID: <20190927210807.26439a94@aktux>
+In-Reply-To: <20190927094721.w26ggnli4f5a64uv@pengutronix.de>
+References: <20190927061423.17278-1-andreas@kemnade.info>
+        <20190927061423.17278-2-andreas@kemnade.info>
+        <20190927094721.w26ggnli4f5a64uv@pengutronix.de>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJ+vNU11HTcP8L5J2Xg+Rmhvb8JDYemhJxt-GaGG5Myk3n38Tw@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tim,
+Hi Marco,
 
-Sorry for taking to so long to look at this.
+On Fri, 27 Sep 2019 11:47:21 +0200
+Marco Felsch <m.felsch@pengutronix.de> wrote:
 
-On 2019-09-23 15:04:47 -0700, Tim Harvey wrote:
-> On Thu, Aug 29, 2019 at 7:29 AM Niklas Söderlund
-> <niklas.soderlund@ragnatech.se> wrote:
-> >
-> > Hi,
-> >
-> > On 2019-08-29 13:43:49 +0200, Hans Verkuil wrote:
-> > > Adding Niklas.
-> > >
-> > > Niklas, can you take a look at this?
-> >
-> > I'm happy to have a look at this. I'm currently moving so all my boards
-> > are in a box somewhere. I hope to have my lab up and running next week,
-> > so if this is not urgent I will look at it then.
-> >
+> Hi Andreas,
 > 
-> Niklas,
+> thanks for the patch.
 > 
-> Have you looked at this yet? Without this patch the ADV7280A does not
-> output proper BT.656. We tested this on a Gateworks Ventana GW5404-G
-> which uses the ADV7280A connected to the IMX6 CSI parallel bus. I'm
-> hoping to see this get merged and perhaps backported to older kernels.
+thanks for the quick review. Most of your comments are clear.
 
-I only have access to an adv7180 so I was unable to test this patch.  
-After reviewing the documentation I think the patch is OK if what you 
-want is to unconditionally switch the driver from outputting BT.656-3 to 
-outputting BT.656-4.
-
-As this change would effect a large number of compat strings (adv7280, 
-adv7280-m, adv7281, adv7281-m, adv7281-ma, adv7282, adv7282-m) and the 
-goal is to back port it I'm a bit reluctant to adding my tag to this 
-patch as I'm not sure if this will break other setups.
-
-From the documentation about the BT.656-4 register (address 0x04 bit 7):
-
-    Between Revision 3 and Revision 4 of the ITU-R BT.656 standards,
-    the ITU has changed the toggling position for the V bit within
-    the SAV EAV codes for NTSC. The ITU-R BT.656-4 standard
-    bit allows the user to select an output mode that is compliant
-    with either the previous or new standard. For further information,
-    visit the International Telecommunication Union website.
-
-    Note that the standard change only affects NTSC and has no
-    bearing on PAL.
-
-    When ITU-R BT.656-4 is 0 (default), the ITU-R BT.656-3
-    specification is used. The V bit goes low at EAV of Line 10
-    and Line 273.
-
-    When ITU-R BT.656-4 is 1, the ITU-R BT.656-4 specification is
-    used. The V bit goes low at EAV of Line 20 and Line 283.
-
-Do you know what effects such a change would bring? Looking at the 
-driver BT.656-4 seems to be set unconditionally for some adv7180 chips.
-
+[...]
+> > +	wifi_pwrseq: wifi_pwrseq {
+> > +		compatible = "mmc-pwrseq-simple";
+> > +		post-power-on-delay-ms = <20>;
+> > +		reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;  
 > 
-> Regards,
+> Can you add a pinctrl-entry here please? The general rule is to mux
+> things where you use it.
 > 
-> Tim
+yes, there are many places in my patch where they are added to some
+parent devices.
+I will fix that.
+[...]
+> > +	leds {
+> > +		compatible = "gpio-leds";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pinctrl_led>;  
 > 
-> > >
-> > > Regards,
-> > >
-> > >       Hans
-> > >
-> > > On 8/27/19 11:55 PM, Matthew Michilot wrote:
-> > > > From: Matthew Michilot <matthew.michilot@gmail.com>
-> > > >
-> > > > Captured video would be out of sync when using the adv7280 with
-> > > > the BT.656-4 protocol. Certain registers (0x04, 0x31, 0xE6) had to
-> > > > be configured properly to ensure BT.656-4 compatibility.
-> > > >
-> > > > An error in the adv7280 reference manual suggested that EAV/SAV mode
-> > > > was enabled by default, however upon inspecting register 0x31, it was
-> > > > determined to be disabled by default.
+> Please move all muxing you made here into this file or add phandles so
+> the dts file need to add only the muxing stuff. This applies to all
+> pinctrl you made here.
+> 
+so you disagree with this pattern:
+in .dtsi
+ some_device {
+   pinctrl-0 = <&pinctrl_some_device>;
+ };
 
-The manual I have [1] states that NEWAVMODE is switched off by default.  
-I'm only asking as I would like to know if there is an error in that 
-datasheet or not.
+and in .dts (one I sent with this patch series and the tolino/mx6sl one
+is not ready-cooked yet, will be part of a later series)
+&iomuxc {
+   pinctrl_some_device: some_devicegrp {
+   	fsl,pins = <...>;
+   };
+};
 
-1. https://www.analog.com/media/en/technical-documentation/user-guides/ADV7280_7281_7282_7283_UG-637.pdf
+?
 
-> > > >
-> > > > Signed-off-by: Matthew Michilot <matthew.michilot@gmail.com>
-> > > > Reviewed-by: Tim Harvey <tharvey@gateworks.com>
-> > > > ---
-> > > >  drivers/media/i2c/adv7180.c | 15 +++++++++++++--
-> > > >  1 file changed, 13 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/drivers/media/i2c/adv7180.c b/drivers/media/i2c/adv7180.c
-> > > > index 99697baad2ea..27da424dce76 100644
-> > > > --- a/drivers/media/i2c/adv7180.c
-> > > > +++ b/drivers/media/i2c/adv7180.c
-> > > > @@ -94,6 +94,7 @@
-> > > >  #define ADV7180_REG_SHAP_FILTER_CTL_1      0x0017
-> > > >  #define ADV7180_REG_CTRL_2         0x001d
-> > > >  #define ADV7180_REG_VSYNC_FIELD_CTL_1      0x0031
-> > > > +#define ADV7180_VSYNC_FIELD_CTL_1_NEWAV 0x12
-> > > >  #define ADV7180_REG_MANUAL_WIN_CTL_1       0x003d
-> > > >  #define ADV7180_REG_MANUAL_WIN_CTL_2       0x003e
-> > > >  #define ADV7180_REG_MANUAL_WIN_CTL_3       0x003f
-> > > > @@ -935,10 +936,20 @@ static int adv7182_init(struct adv7180_state *state)
-> > > >             adv7180_write(state, ADV7180_REG_EXTENDED_OUTPUT_CONTROL, 0x57);
-> > > >             adv7180_write(state, ADV7180_REG_CTRL_2, 0xc0);
-> > > >     } else {
-> > > > -           if (state->chip_info->flags & ADV7180_FLAG_V2)
-> > > > +           if (state->chip_info->flags & ADV7180_FLAG_V2) {
-> > > > +                   /* ITU-R BT.656-4 compatible */
-> > > >                     adv7180_write(state,
-> > > >                                   ADV7180_REG_EXTENDED_OUTPUT_CONTROL,
-> > > > -                                 0x17);
-> > > > +                                 ADV7180_EXTENDED_OUTPUT_CONTROL_NTSCDIS);
-> > > > +                   /* Manually set NEWAVMODE */
-> > > > +                   adv7180_write(state,
-> > > > +                                 ADV7180_REG_VSYNC_FIELD_CTL_1,
-> > > > +                                 ADV7180_VSYNC_FIELD_CTL_1_NEWAV);
-> > > > +                   /* Manually set V bit end position in NTSC mode */
-> > > > +                   adv7180_write(state,
-> > > > +                                 ADV7180_REG_NTSC_V_BIT_END,
-> > > > +                                 ADV7180_NTSC_V_BIT_END_MANUAL_NVEND);
-> > > > +           }
-> > > >             else
-> > > >                     adv7180_write(state,
-> > > >                                   ADV7180_REG_EXTENDED_OUTPUT_CONTROL,
-> > > >
-> > >
-> >
-> > --
-> > Regards,
-> > Niklas Söderlund
+> > +
+> > +		GLED {
+> > +			gpios = <&gpio5 7 GPIO_ACTIVE_LOW>;
+> > +			linux,default-trigger = "timer";
+> > +		};
+> > +	};
+> > +
+> > +	gpio-keys {
+> > +		compatible = "gpio-keys";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pinctrl_gpio_keys>;
+> > +		power {
+> > +			label = "Power";
+> > +			gpios = <&gpio5 8 GPIO_ACTIVE_LOW>;
+> > +			linux,code = <KEY_POWER>;  
+> 
+> Add missing header: dt-bindings/input/input.h to use this.
+> 
+I am doing this in the .dts but it is probably better to do it here
+because it is used here.
 
--- 
+> > +			gpio-key,wakeup;
+> > +		};
+> > +		cover {
+> > +			label = "Cover";
+> > +			gpios = <&gpio5 12 GPIO_ACTIVE_LOW>;
+> > +			linux,code = <SW_LID>;
+> > +			linux,input-type = <0x05>;    /* EV_SW */  
+> 
+> In the header above EV_SW is also specified so please use it here.
+> 
+This pattern is in many files. I took one as an example. It seems that
+50% of devicetree files have this pattern, the other 50% do have the
+pattern you proposed (which I like more). So probably EV_SW was not
+available in former times?
+
+> > +			gpio-key,wakeup;
+> > +		};
+> > +	};
+> > +
+> > +};
+> > +
+> > +
+> > +  
+> 
+> Whitespaces
+> 
+> > +&audmux {
+> > +	pinctrl-names = "default";
+> > +	status = "disabled";  
+> 
+> Why you mentioned a pinctrl-names here without the mux? Do we need the
+> status line here? The common case is that such devices are off by
+> default/the base dt.
+> 
+yes, that things can be removed.
+> > +};
+> > +
+> > +&snvs_rtc {
+> > +	status = "disabled";  
+> 
+> Same applies here.
+> 
+
+No, seems to be an exception, it does not have a status = "disabled" in
+imx6sll.dtsi.
+
+> > +};
+> > +
+> > +&i2c1 {
+> > +	clock-frequency = <100000>;
+> > +	pinctrl-names = "default","sleep";
+> > +	pinctrl-0 = <&pinctrl_i2c1 &pinctrl_lm3630a_bl_gpio>;  
+> 
+> The &pinctrl_lm3630a_bl_gpio should be moved into the lm3630a node.
+> 
+> > +	pinctrl-1 = <&pinctrl_i2c1_sleep>;
+> > +	status = "okay";
+> > +
+> > +	lm3630a: lm3630a-i2c@36 {  
+> 
+> please name it backlight@36
+> 
+> > +		reg = <0x36>;
+> > +		status = "ok";  
+> 
+> status lines are always be the last and if it is okay you can drop it
+> because the default is okay.
+> 
+well, I added it because the driver was not loaded but later I found out
+that the real reason is that module aliases were broken and forgot to
+remove that "ok".
+
 Regards,
-Niklas Söderlund
+Andreas
