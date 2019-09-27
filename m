@@ -2,114 +2,185 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81610C388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A711C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59810217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:05:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569585916;
-	bh=W3Fut34UYd87648+dZlDGceVMqrfwS5SkthrB6eivls=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KFEml36lf998SThdTFWrIdZyhYL3D0AfuGIGadcFE5hHWbLrR3Rw5T77KwIfvulxm
-	 W21uU66SrTxznPjdkQI5qfDrw+3Rj65rcgkUCUpn3dSYiTzQ539saWpOwKQF/ZQBls
-	 paswY7ydUpfEyumAOBWEUt+AoP8OI/Ys2u5hYcuU=
+	by mail.kernel.org (Postfix) with ESMTP id D90EB217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:07:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WoDuTDJ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727139AbfI0MFP (ORCPT
+        id S1727270AbfI0MHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 08:05:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59988 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726087AbfI0MFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 08:05:15 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2946B217D7;
-        Fri, 27 Sep 2019 12:05:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569585914;
-        bh=W3Fut34UYd87648+dZlDGceVMqrfwS5SkthrB6eivls=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ov8RUuH/Vluia5z9gTayuY3fyS6jNImzZIAwMUryKnJXG9Lz+T6yOD54+T8IViSYH
-         ws3GBi0RdsNwQHXG8jHxP0g6HRX8a0Ng5XvGjjHRQflxFecx/K2v+5LpzwWkajR52v
-         +NW866OC9BVmZ6l3ic09nwkjI57H/1UtS4EdqK10=
-Date:   Fri, 27 Sep 2019 08:05:13 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     Jiri Kosina <jikos@kernel.org>, KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: Re: [PATCH] HID: hyperv: Add the support of hibernation
-Message-ID: <20190927120513.GM8171@sasha-vm>
-References: <1568244952-66716-1-git-send-email-decui@microsoft.com>
- <PU1P153MB01695CEE01D65E8CD5CFA4E9BF870@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <nycvar.YFH.7.76.1909261521410.24354@cbobk.fhfr.pm>
- <nycvar.YFH.7.76.1909261522380.24354@cbobk.fhfr.pm>
- <PU1P153MB016973F30CC1A52E46D15230BF810@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+        Fri, 27 Sep 2019 08:07:33 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38901 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbfI0MHc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 08:07:32 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 3so5913169wmi.3
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 05:07:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=84xRwRrZmOOdIxdbCFs/76XVQL6uDCBjiwfidtG4ZYM=;
+        b=WoDuTDJ51YpWy/YTLe3hqO+KzOYNYKoW0+q9q0OQPcU/aio9PtBbBoWCF1YqMtaj8V
+         hQiEBkcuJfUEWV9pQVH06ZHV7IMIdYEJjDjNpLIwovn1xGmBPYx28ZMVXqzdcFKP3qSx
+         J8XLZ4S/fFMX5VTG31hnjH+1EVtwz7RURg3WoD/AM6d7jsl+ogW2pkKL9LbMiBGKfWfq
+         3fjMjHu7gRcz1wr5aWPUMYMpBBI/XPmBoDQlBPKFwc2dAF5c/AES00tYXRRqeWmfwSqg
+         5HOIpn+WjiDQkdDSzuVxPnh0N8DxuR33WREM2SdLMjejLeWaTloir5hs6sgS2uQ6mRFQ
+         eYJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=84xRwRrZmOOdIxdbCFs/76XVQL6uDCBjiwfidtG4ZYM=;
+        b=OS1CmOyASoDM0OauceRQkd/cGuBsAFY0wJ/eXNO/M042PgT1y4fAoRZzyS/q/EYHpD
+         BtEsdpXefKIT/ofz/DnpoIRGPoE8T50W/4oDVcwESl8I+diuQDO8B7NdRTF6i4MnEF6I
+         hnfoDqOIGwBIGZx29jJszbZQtlcM5yAx4xjQcuC5AuRBCGSt3SzIMY4sJBrdIvpzas0L
+         +giOAUi9B5z3Cll0TV7uKKVFRjAsCozB5am8eaSLwiioqmSjq5AXESq2i0x7vhExbTn+
+         8mjQPTQmVUKb8f3DcwvZH0bJF/l5u9pM7KGyOfPy9XQyeqskT070c1Ye0N0wAvLTQ5Ms
+         AV8Q==
+X-Gm-Message-State: APjAAAVVaxKf3g2Uoy5gtN/q1C8lwtw4ss1LmFKNkS098ujt8c2AmCoF
+        f2iyIiF9nnKu3XTjjEMyDQBCnw==
+X-Google-Smtp-Source: APXvYqyl4i/x7HZQ30O6mlu2aXxv7XYbP6Z+aw4pLYSgDuPMZfoBLL2hyS3M3I2UZrJt6GKFDNdq3g==
+X-Received: by 2002:a05:600c:34e:: with SMTP id u14mr6416482wmd.110.1569586050030;
+        Fri, 27 Sep 2019 05:07:30 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
+        by smtp.gmail.com with ESMTPSA id a14sm7174519wmm.44.2019.09.27.05.07.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Sep 2019 05:07:28 -0700 (PDT)
+Date:   Fri, 27 Sep 2019 13:07:25 +0100
+From:   Matthias Maennich <maennich@google.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Jessica Yu <jeyu@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Martijn Coenen <maco@android.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Will Deacon <will@kernel.org>, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/7] module: swap the order of symbol.namespace
+Message-ID: <20190927120725.GB259443@google.com>
+References: <20190927093603.9140-1-yamada.masahiro@socionext.com>
+ <20190927093603.9140-3-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <PU1P153MB016973F30CC1A52E46D15230BF810@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+In-Reply-To: <20190927093603.9140-3-yamada.masahiro@socionext.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 05:42:31AM +0000, Dexuan Cui wrote:
->> From: Jiri Kosina <jikos@kernel.org>
->> Sent: Thursday, September 26, 2019 6:23 AM
->> To: Dexuan Cui <decui@microsoft.com>
->>
->> On Thu, 26 Sep 2019, Jiri Kosina wrote:
->>
->> > > > This patch is basically a pure Hyper-V specific change and it has a
->> > > > build dependency on the commit 271b2224d42f ("Drivers: hv: vmbus:
->> > > > Implement
->> > > > suspend/resume for VSC drivers for hibernation"), which is on Sasha
->> Levin's
->> > > > Hyper-V tree's hyperv-next branch [ ... snipped ...]
->> > > >
->> > > > I request this patch should go through Sasha's tree rather than the
->> > > > input subsystem's tree.
->> > > >
->> > > > Hi Jiri, Benjamin, can you please Ack?
->> > >
->> > > Hi Jiri, Benjamin,
->> > > Can you please take a look at the patch?
->> >
->> > Hi Dexuan,
->> >
->> > I am planning to process it once 5.4 merge window is over and thus hid.git
->> > is open again for 5.5 material.
->>
->> Ah, now I see you asked for this go through hyperv tree. For that, feel
->> free to add
->> 	Acked-by: Jiri Kosina <jkosina@suse.cz>
->> Jiri Kosina
+On Fri, Sep 27, 2019 at 06:35:58PM +0900, Masahiro Yamada wrote:
+>Currently, EXPORT_SYMBOL_NS(_GPL) constructs the kernel symbol as
+>follows:
 >
->Thanks for the Ack, Jiri!
+>  __ksymtab_SYMBOL.NAMESPACE
 >
->I have a bunch of patches, including this one, to support Linux VM's hibernation
->when the VM runs on Hyper-V. I just feel it would be better for all of them to
->go through the Hyper-V tree. :-)
+>The sym_extract_namespace() in modpost allocates memory for the part
+>SYMBOL.NAMESPACE when '.' is contained. One problem is that the pointer
+>returned by strdup() is lost because the symbol name will be copied to
+>malloc'ed memory by alloc_symbol(). No one will keep track of the
+>pointer of strdup'ed memory.
+>
+>sym->namespace still points to the NAMESPACE part. So, if you like,
+>you can free it with complicated code like this:
+>
+>   free(sym->namespace - strlen(sym->name) - 1);
+>
+>I would not say it is fatal since we seldom bother to manually free
+>memory in host programs. But, I can fix it in an elegant way.
+>
+>I swapped the order of the symbol and the namespace as follows:
+>
+>  __ksymtab_NAMESPACE.SYMBOL
+>
+>then, simplified sym_extract_namespace() so that it allocates memory
+>only for the NAMESPACE part.
+>
+>I prefer this order because it is intuitive and also matches to major
+>languages. For example, NAMESPACE::NAME in C++, MODULE.NAME in Python.
 
-Thank Dexuan, Jiri,
+I agree with this rationale and like the implementation. I believe the
+idea of appending the namespace came from being afraid of other tools
+facing the problem of parsing the namespace out of the middle of the
+entry. Thanks for this improvement.
 
-Dexuan, I've been silently ignoring your patches for the past few weeks
-for the same reason as Jiri has mentioned. I'll pick them all up once
-the 5.4 merge window closes in a few days.
+Reviewed-by: Matthias Maennich <maennich@google.com>
 
---
-Thanks,
-Sasha
+Cheers,
+Matthias
+
+>Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>---
+>
+> include/linux/export.h |  4 ++--
+> scripts/mod/modpost.c  | 16 +++++++---------
+> 2 files changed, 9 insertions(+), 11 deletions(-)
+>
+>diff --git a/include/linux/export.h b/include/linux/export.h
+>index 95f55b7f83a0..0695d4e847d9 100644
+>--- a/include/linux/export.h
+>+++ b/include/linux/export.h
+>@@ -52,7 +52,7 @@ extern struct module __this_module;
+> 	__ADDRESSABLE(sym)						\
+> 	asm("	.section \"___ksymtab" sec "+" #sym "\", \"a\"	\n"	\
+> 	    "	.balign	4					\n"	\
+>-	    "__ksymtab_" #sym NS_SEPARATOR #ns ":		\n"	\
+>+	    "__ksymtab_" #ns NS_SEPARATOR #sym ":		\n"	\
+> 	    "	.long	" #sym "- .				\n"	\
+> 	    "	.long	__kstrtab_" #sym "- .			\n"	\
+> 	    "	.long	__kstrtab_ns_" #sym "- .		\n"	\
+>@@ -76,7 +76,7 @@ struct kernel_symbol {
+> #else
+> #define __KSYMTAB_ENTRY_NS(sym, sec, ns)				\
+> 	static const struct kernel_symbol __ksymtab_##sym##__##ns	\
+>-	asm("__ksymtab_" #sym NS_SEPARATOR #ns)				\
+>+	asm("__ksymtab_" #ns NS_SEPARATOR #sym)				\
+> 	__attribute__((section("___ksymtab" sec "+" #sym), used))	\
+> 	__aligned(sizeof(void *))					\
+> 	= { (unsigned long)&sym, __kstrtab_##sym, __kstrtab_ns_##sym }
+>diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+>index 5c628a7d80f7..d171b0cffb05 100644
+>--- a/scripts/mod/modpost.c
+>+++ b/scripts/mod/modpost.c
+>@@ -350,18 +350,16 @@ static enum export export_from_sec(struct elf_info *elf, unsigned int sec)
+>
+> static const char *sym_extract_namespace(const char **symname)
+> {
+>-	size_t n;
+>-	char *dupsymname;
+>+	char *namespace = NULL;
+>+	char *ns_separator;
+>
+>-	n = strcspn(*symname, ".");
+>-	if (n < strlen(*symname) - 1) {
+>-		dupsymname = NOFAIL(strdup(*symname));
+>-		dupsymname[n] = '\0';
+>-		*symname = dupsymname;
+>-		return dupsymname + n + 1;
+>+	ns_separator = strchr(*symname, '.');
+>+	if (ns_separator) {
+>+		namespace = NOFAIL(strndup(*symname, ns_separator - *symname));
+>+		*symname = ns_separator + 1;
+> 	}
+>
+>-	return NULL;
+>+	return namespace;
+> }
+>
+> /**
+>-- 
+>2.17.1
+>
