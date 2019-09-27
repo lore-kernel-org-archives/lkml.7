@@ -2,142 +2,172 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D37C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 11:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C43DFC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 11:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCB3A20673
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 11:00:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="lTrXqdfp"
+	by mail.kernel.org (Postfix) with ESMTP id 9E1A5217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 11:04:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbfI0LA0 (ORCPT
+        id S1726796AbfI0LEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 07:00:26 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:51144 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725882AbfI0LAZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 07:00:25 -0400
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8RAxKHL024144;
-        Fri, 27 Sep 2019 05:59:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=t4yOQo0VlJX6JufnHlZIny/cmaBng/L1TfNmP/2VMGU=;
- b=lTrXqdfpDsdRtLbwZQcpO+qpqMdi93ncS5Dz9Cdnlcb5zl2eNC5iNv7R9BUqkcfzVQV7
- F44mcqofdU1HXuSEj0cRS9Hb6VCrOzUBz9YE/KqSkiiGoGgcWJr6jW3VZNmuCoYM1Gey
- NdNiCa8RXQwaKJMSugeU6oWrQOhe7IDUCoCY0k/Sljhe+EQ8PuuGpUS6h1FGrfYJoYE/
- Bl7XRlHGXS3AVvVWG9L6xgB2ynH4oWkRnLyNBGgA/4L6Zk8S4k5wI2Gyn2ovq8eI7ybo
- w6OMLdaVUlVjO73j3vxGEOeFMXidTgG40wJnGgpjfGz2Tja26L5V90ba2AJALfgvYA4c Mg== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex01.ad.cirrus.com ([87.246.76.36])
-        by mx0a-001ae601.pphosted.com with ESMTP id 2v5h92ckbg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 27 Sep 2019 05:59:44 -0500
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Fri, 27 Sep
- 2019 11:59:42 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Fri, 27 Sep 2019 11:59:42 +0100
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 0B7692C3;
-        Fri, 27 Sep 2019 10:59:42 +0000 (UTC)
-Date:   Fri, 27 Sep 2019 10:59:42 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-CC:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
+        Fri, 27 Sep 2019 07:04:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:49192 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725882AbfI0LEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 07:04:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9EA0928;
+        Fri, 27 Sep 2019 04:04:39 -0700 (PDT)
+Received: from [10.1.196.50] (e108454-lin.cambridge.arm.com [10.1.196.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AFD8C3F67D;
+        Fri, 27 Sep 2019 04:04:38 -0700 (PDT)
+Subject: Re: [PATCH 1/1] arm64/sve: Fix wrong free for task->thread.sve_state
+To:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        <rmk+kernel@arm.linux.org.uk>, Will Deacon <will@kernel.org>,
-        Stefan Wahren <wahrenst@gmx.net>
-Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
-Message-ID: <20190927105942.GS10204@ediswmail.ad.cirrus.com>
-References: <20190830034304.24259-1-yamada.masahiro@socionext.com>
- <f5c221f5749e5768c9f0d909175a14910d349456.camel@suse.de>
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        linux-kernel@vger.kernel.org, Dave P Martin <Dave.Martin@arm.com>
+References: <20190926190846.3072-1-msys.mizuma@gmail.com>
+ <20190926190846.3072-2-msys.mizuma@gmail.com>
+From:   Julien Grall <julien.grall@arm.com>
+Message-ID: <32b59c08-cc59-60d6-16c7-ffb5582c2901@arm.com>
+Date:   Fri, 27 Sep 2019 12:04:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <f5c221f5749e5768c9f0d909175a14910d349456.camel@suse.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 priorityscore=1501
- adultscore=0 mlxlogscore=999 bulkscore=0 phishscore=0 clxscore=1011
- impostorscore=0 spamscore=0 malwarescore=0 mlxscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1908290000
- definitions=main-1909270103
+In-Reply-To: <20190926190846.3072-2-msys.mizuma@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 12:43:33PM +0200, Nicolas Saenz Julienne wrote:
-> On Fri, 2019-08-30 at 12:43 +0900, Masahiro Yamada wrote:
-> > Commit 9012d011660e ("compiler: allow all arches to enable
-> > CONFIG_OPTIMIZE_INLINING") allowed all architectures to enable
-> > this option. A couple of build errors were reported by randconfig,
-> > but all of them have been ironed out.
-> > 
-> > Towards the goal of removing CONFIG_OPTIMIZE_INLINING entirely
-> > (and it will simplify the 'inline' macro in compiler_types.h),
-> > this commit changes it to always-on option. Going forward, the
-> > compiler will always be allowed to not inline functions marked
-> > 'inline'.
-> > 
-> > This is not a problem for x86 since it has been long used by
-> > arch/x86/configs/{x86_64,i386}_defconfig.
-> > 
-> > I am keeping the config option just in case any problem crops up for
-> > other architectures.
-> > 
-> > The code clean-up will be done after confirming this is solid.
-> > 
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+(+ Dave)
+
+Hi,
+
+Thank you for the patch.
+
+On 26/09/2019 20:08, Masayoshi Mizuma wrote:
+> From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 > 
-> [ Adding some ARM people as they might be able to help ]
+> The system which has SVE feature crashed because of
+> the memory pointed by task->thread.sve_state was destroyed
+> by someone.
 > 
-> This was found to cause a regression on a Raspberry Pi 2 B built with
-> bcm2835_defconfig which among other things has no SMP support.
+> That is because sve_state is freed while the forking the
+> child process. The child process has the pointer of sve_state
+> which is same as the parent's because the child's task_struct
+> is copied from the parent's one. If the copy_process()
+> fails as an error on somewhere, for example, copy_creds(),
+> then the sve_state is freed even if the parent is alive.
+> The flow is as follows.
 > 
-> The relevant logs (edited to remove the noise) are:
+> copy_process
+>          p = dup_task_struct
+>              => arch_dup_task_struct
+>                  *dst = *src;  // copy the entire region.
+> :
+>          retval = copy_creds
+>          if (retval < 0)
+>                  goto bad_fork_free;
+> :
+> bad_fork_free:
+> ...
+>          delayed_free_task(p);
+>            => free_task
+>               => arch_release_task_struct
+>                  => fpsimd_release_task
+>                     => __sve_free
+>                        => kfree(task->thread.sve_state);
+>                           // free the parent's sve_state
+
+The flow makes sense to me and I agree you would end up to free the parent's state.
+
 > 
-> [    5.827333] Run /init as init process
-> Loading, please wait...
-> Failed to set SO_PASSCRED: Bad address
-> Failed to bind netlink socket: Bad address
-> Failed to create manager: Bad address
-> Failed to set SO_PASSCRED: Bad address
-> [    9.021623] systemd[1]: SO_PASSCRED failed: Bad address
-> [!!!!!!] Failed to start up manager.
-> [    9.079148] systemd[1]: Freezing execution.
+> Add a flag in task->thread which shows the fork is in progress.
+> If the fork is in progress, that means the child has the pointer
+> to the parent's sve_state, doesn't free the sve_state.
+
+I haven't fully investigate it yet but I was wondering if we could just clear 
+task->thread.sve_state for the child in arch_dup_task_struct().
+
+I saw the comment on top of function mentioning potential issue to do it there. 
+I understand that you may not be able to clear TIF_SVE in the function, but I 
+don't understand why clearing just task->thread.sve_state would be an issue.
+
+The only risk I can see is TIF_SVE may be set with task->thread.sve_state to be 
+NULL. But this is a new task, so I don't think there are risk here to have it 
+unsync. Dave?
+
 > 
-> I looked into it, it turns out that the call to get_user() in sock_setsockopt()
-> is returning -EFAULT. Down the assembly rabbit hole that get_user() is I
-> found-out that it's the macro 'check_uaccess' who's triggering the error.
+> Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+> Reported-by: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
+> ---
+>   arch/arm64/include/asm/processor.h | 1 +
+>   arch/arm64/kernel/fpsimd.c         | 6 ++++--
+>   arch/arm64/kernel/process.c        | 2 ++
+>   3 files changed, 7 insertions(+), 2 deletions(-)
 > 
-> I'm clueless at this point, so I hope you can give me some hints on what's
-> going bad here.
+> diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm/processor.h
+> index 5623685c7d13..3ca3e350145a 100644
+> --- a/arch/arm64/include/asm/processor.h
+> +++ b/arch/arm64/include/asm/processor.h
+> @@ -143,6 +143,7 @@ struct thread_struct {
+>   	unsigned long		fault_address;	/* fault info */
+>   	unsigned long		fault_code;	/* ESR_EL1 value */
+>   	struct debug_info	debug;		/* debugging */
+> +	unsigned int		fork_in_progress;
+>   #ifdef CONFIG_ARM64_PTR_AUTH
+>   	struct ptrauth_keys	keys_user;
+>   #endif
+> diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
+> index 37d3912cfe06..8641db4cb062 100644
+> --- a/arch/arm64/kernel/fpsimd.c
+> +++ b/arch/arm64/kernel/fpsimd.c
+> @@ -202,8 +202,10 @@ static bool have_cpu_fpsimd_context(void)
+>    */
+>   static void __sve_free(struct task_struct *task)
+>   {
+> -	kfree(task->thread.sve_state);
+> -	task->thread.sve_state = NULL;
+> +	if (!task->thread.fork_in_progress) {
+> +		kfree(task->thread.sve_state);
+> +		task->thread.sve_state = NULL;
+> +	}
+>   }
+>   
+>   static void sve_free(struct task_struct *task)
+> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+> index a47462def04b..8ac0ee4e5f76 100644
+> --- a/arch/arm64/kernel/process.c
+> +++ b/arch/arm64/kernel/process.c
+> @@ -347,6 +347,7 @@ int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
+>   	if (current->mm)
+>   		fpsimd_preserve_current_state();
+>   	*dst = *src;
+> +	dst->thread.fork_in_progress = 1;
+>   
+>   	return 0;
+>   }
+> @@ -365,6 +366,7 @@ int copy_thread(unsigned long clone_flags, unsigned long stack_start,
+>   	 * and disable discard SVE state for p:
+>   	 */
+>   	clear_tsk_thread_flag(p, TIF_SVE);
+> +	p->thread.fork_in_progress = 0;
+>   	p->thread.sve_state = NULL;
+>   
+>   	/*
 > 
 
-Not sure I can add much in terms of a solution, but I can at
-least confirm I am seeing exactly the same issue, on my Zynq
-based ARM system.
+Cheers,
 
-Thanks,
-Charles
+-- 
+Julien Grall
