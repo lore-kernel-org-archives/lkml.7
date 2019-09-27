@@ -2,545 +2,204 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D70D4C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 05:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF42C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 05:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1900217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 05:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10CB620863
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 05:06:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nphyvAmI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbfI0FC2 (ORCPT
+        id S1729012AbfI0FG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 01:02:28 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:47583 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726302AbfI0FC0 (ORCPT
+        Fri, 27 Sep 2019 01:06:27 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34406 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726217AbfI0FG1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 01:02:26 -0400
-X-UUID: 1a248a4b1a634b38b035407f2756c925-20190927
-X-UUID: 1a248a4b1a634b38b035407f2756c925-20190927
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <light.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 482953813; Fri, 27 Sep 2019 13:02:15 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 27 Sep 2019 13:02:12 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 27 Sep 2019 13:02:12 +0800
-From:   Light Hsieh <light.hsieh@mediatek.com>
-To:     <linus.walleij@linaro.org>
-CC:     <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sean.wang@kernel.org>,
-        <kuohong.wang@mediatek.com>, Light Hsieh <light.hsieh@mediatek.com>
-Subject: [PATCH v6 4/5] pinctrl: mediatek: Backward compatible to previous  Mediatek's bias-pull usage
-Date:   Fri, 27 Sep 2019 13:02:11 +0800
-Message-ID: <1569560532-1886-4-git-send-email-light.hsieh@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1569560532-1886-1-git-send-email-light.hsieh@mediatek.com>
-References: <1569560532-1886-1-git-send-email-light.hsieh@mediatek.com>
+        Fri, 27 Sep 2019 01:06:27 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b128so840940pfa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 22:06:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gmthhdO8i8YzAo8qsmW2C157vnOgxWk2DkxBpuFm+3U=;
+        b=nphyvAmILeYXnOu0afi9B/klyectMrtxcrD3Hz6Vrkvvz/dmfZHNDhfsRenDOYr4ec
+         j+31eJIiNm70CstDLuD7eLp5yLwVd4PH/1d2nIj9c2kOB0MC3QN/Fc0stS3olqf1wq7n
+         1q2RfqoamBxRp7867wH2B0JECCWp0879wpKvU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gmthhdO8i8YzAo8qsmW2C157vnOgxWk2DkxBpuFm+3U=;
+        b=B5O8duVsqXcsZ+9n58LqquHqQAAthYNPr2NYtSIBtshP1ApPNHYyWvGXKKyV5N0TdV
+         cHs1D7GjomA2Ds8A5gWiL2OqIstBzNaBScHg9/ZMONfRAnyUOFWewo+j+pQp0kUVLTFr
+         RuHCY7Kwb+CT5jZUZ2EYLiKGMCtx8paLv4kkobqy751EKXHle/YIRBhD7LaUervA1r+j
+         yQb0Jz/7nd3uCEUEcgo2rycG3L+WVCOZatM7BH3rqS/udBQsKOhZ8ZWT+zhxI4vRL3J6
+         5f+sr4FG8svine2UznYzuu+AD9BYmns5+sRcEVOvm6jjwsBuvm1rTNSbrHmk4rdUoxBv
+         Vy+A==
+X-Gm-Message-State: APjAAAUFIyLQEHdMWPm+H/fX/pvRHo1vZY9KePXBjz0l34I7rkzqhpPX
+        FToVdmicQ0DpjIR5agJJ+JuLrQ==
+X-Google-Smtp-Source: APXvYqxomaa9+MP71Ya7IxN8ToS7XZRCuPg0KBkQB6PFtaZzWv6iwa13EU4+25hTZqAMThds9R8dlg==
+X-Received: by 2002:a17:90b:d91:: with SMTP id bg17mr7631357pjb.79.1569560786104;
+        Thu, 26 Sep 2019 22:06:26 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id p88sm3867131pjp.22.2019.09.26.22.06.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Sep 2019 22:06:25 -0700 (PDT)
+Date:   Thu, 26 Sep 2019 22:06:24 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH] get_maintainer: Add signatures from Fixes: <badcommit>
+ lines in commit message
+Message-ID: <201909262205.EEFAF1CA4@keescook>
+References: <33605b9fc0e0f711236951ae84185a6218acff4f.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <33605b9fc0e0f711236951ae84185a6218acff4f.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Refine mtk_pinconf_set()/mtk_pinconf_get() for backward compatibility to
-previous Mediatek's bias-pull usage.
-In PINCTRL_MTK that use pinctrl-mtk-common.c, bias-pull setting for pins
-with 2 pull resistors can be specified as value for bias-pull-up and
-bias-pull-down. For example:
-    bias-pull-up = <MTK_PUPD_SET_R1R0_00>;
-    bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
-    bias-pull-up = <MTK_PUPD_SET_R1R0_10>;
-    bias-pull-up = <MTK_PUPD_SET_R1R0_11>;
-    bias-pull-down = <MTK_PUPD_SET_R1R0_00>;
-    bias-pull-down = <MTK_PUPD_SET_R1R0_01>;
-    bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
-    bias-pull-down = <MTK_PUPD_SET_R1R0_11>;
+On Thu, Sep 26, 2019 at 09:46:34PM -0700, Joe Perches wrote:
+> Fixes: lines in a commit message generally indicate that a
+> previous commit was inadequate for whatever reason.
+> 
+> The signers of the previous inadequate commit should also be
+> cc'd on this new commit so update get_maintainer to find the
+> old commit and add the original signers.
+> 
+> Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Signed-off-by: Joe Perches <joe@perches.com>
 
-On the other hand, PINCTRL_MTK_PARIS use customized properties
-"mediatek,pull-up-adv" and "mediatek,pull-down-adv" to specify bias-pull
-setting for pins with 2 pull resistors.
-This introduce in-compatibility in device tree and increatse porting
-effort to Mediatek's customer that had already used PINCTRL_MTK version.
-Besides, if customers are not awared of this change and still write devicetree
-for PINCTRL_MTK version, they may encounter runtime failure with pinctrl and
-spent time to debug.
+I wanted to have this feature today, even. :)
 
-This patch add backward compatible to previous Mediatek's bias-pull usage
-so that Mediatek's customer need not use a new devicetree property name.
-The rationale is that: changing driver implemenation had better leave
-interface unchanged.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
----
- drivers/pinctrl/mediatek/pinctrl-mt6765.c        |   6 +-
- drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 285 +++++++++++++++++++++++
- drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h |  11 +
- drivers/pinctrl/mediatek/pinctrl-paris.c         |  49 ++--
- 4 files changed, 327 insertions(+), 24 deletions(-)
+-Kees
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mt6765.c b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
-index bada37f..ae85fdc 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mt6765.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
-@@ -1072,10 +1072,8 @@
- 	.gpio_m = 0,
- 	.base_names = mt6765_pinctrl_register_base_names,
- 	.nbase_names = ARRAY_SIZE(mt6765_pinctrl_register_base_names),
--	.bias_disable_set = mtk_pinconf_bias_disable_set,
--	.bias_disable_get = mtk_pinconf_bias_disable_get,
--	.bias_set = mtk_pinconf_bias_set,
--	.bias_get = mtk_pinconf_bias_get,
-+	.bias_set_combo = mtk_pinconf_bias_set_combo,
-+	.bias_get_combo = mtk_pinconf_bias_get_combo,
- 	.drive_set = mtk_pinconf_drive_set_direct_val,
- 	.drive_get = mtk_pinconf_drive_get_direct_val,
- 	.adv_pull_get = mtk_pinconf_adv_pull_get,
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-index acfddf9..6d9972f 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-@@ -13,6 +13,8 @@
- #include <linux/io.h>
- #include <linux/of_irq.h>
- 
-+#include <dt-bindings/pinctrl/mt65xx.h>
-+
- #include "mtk-eint.h"
- #include "pinctrl-mtk-common-v2.h"
- 
-@@ -206,6 +208,20 @@ int mtk_hw_set_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
- 	return 0;
- }
- 
-+void mtk_hw_set_value_no_lookup(struct mtk_pinctrl *hw,
-+				const struct mtk_pin_desc *desc,
-+				int value, struct mtk_pin_field *pf)
-+{
-+	if (value < 0 || value > pf->mask)
-+		return;
-+
-+	if (!pf->next)
-+		mtk_rmw(hw, pf->index, pf->offset, pf->mask << pf->bitpos,
-+			(value & pf->mask) << pf->bitpos);
-+	else
-+		mtk_hw_write_cross_field(hw, pf, value);
-+}
-+
- int mtk_hw_get_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
- 		     int field, int *value)
- {
-@@ -225,6 +241,17 @@ int mtk_hw_get_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
- 	return 0;
- }
- 
-+void mtk_hw_get_value_no_lookup(struct mtk_pinctrl *hw,
-+				const struct mtk_pin_desc *desc,
-+				int *value, struct mtk_pin_field *pf)
-+{
-+	if (!pf->next)
-+		*value = (mtk_r32(hw, pf->index, pf->offset)
-+			  >> pf->bitpos) & pf->mask;
-+	else
-+		mtk_hw_read_cross_field(hw, pf, value);
-+}
-+
- static int mtk_xt_find_eint_num(struct mtk_pinctrl *hw, unsigned long eint_n)
- {
- 	const struct mtk_pin_desc *desc;
-@@ -517,6 +544,264 @@ int mtk_pinconf_bias_get_rev1(struct mtk_pinctrl *hw,
- 	return 0;
- }
- 
-+/* Combo for the following pull register type:
-+ * 1. PU + PD
-+ * 2. PULLSEL + PULLEN
-+ * 3. PUPD + R0 + R1
-+ */
-+int mtk_pinconf_bias_set_pu_pd(struct mtk_pinctrl *hw,
-+				const struct mtk_pin_desc *desc,
-+				u32 pullup, u32 arg)
-+{
-+	struct mtk_pin_field pf;
-+	int err = -EINVAL;
-+	int pu, pd;
-+
-+	err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_PU, &pf);
-+	if (err)
-+		goto out;
-+
-+	if (arg == MTK_DISABLE) {
-+		pu = 0;
-+		pd = 0;
-+	} else if ((arg == MTK_ENABLE) && pullup) {
-+		pu = 1;
-+		pd = 0;
-+	} else if ((arg == MTK_ENABLE) && !pullup) {
-+		pu = 0;
-+		pd = 1;
-+	} else {
-+		goto out;
-+	}
-+
-+	mtk_hw_set_value_no_lookup(hw, desc, pu, &pf);
-+
-+	err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_PD, &pf);
-+	if (err)
-+		goto out;
-+
-+	mtk_hw_set_value_no_lookup(hw, desc, pd, &pf);
-+
-+out:
-+	return err;
-+}
-+
-+int mtk_pinconf_bias_set_pullsel_pullen(struct mtk_pinctrl *hw,
-+				const struct mtk_pin_desc *desc,
-+				u32 pullup, u32 arg)
-+{
-+	struct mtk_pin_field pf;
-+	int err = -EINVAL, enable;
-+
-+	err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_PULLEN, &pf);
-+	if (err)
-+		goto out;
-+
-+	if (arg == MTK_DISABLE)
-+		enable = 0;
-+	else if (arg == MTK_ENABLE)
-+		enable = 1;
-+	else
-+		goto out;
-+
-+	mtk_hw_set_value_no_lookup(hw, desc, enable, &pf);
-+
-+	err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_PULLSEL, &pf);
-+	if (err)
-+		goto out;
-+	mtk_hw_set_value_no_lookup(hw, desc, pullup, &pf);
-+
-+out:
-+	return err;
-+}
-+
-+int mtk_pinconf_bias_set_pupd_r1_r0(struct mtk_pinctrl *hw,
-+				const struct mtk_pin_desc *desc,
-+				u32 pullup, u32 arg)
-+{
-+	struct mtk_pin_field pf;
-+	int err = -EINVAL;
-+	int r0, r1;
-+
-+	err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_PUPD, &pf);
-+	if (err)
-+		goto out;
-+
-+	if ((arg == MTK_DISABLE) || (arg == MTK_PUPD_SET_R1R0_00)) {
-+		pullup = 0;
-+		r0 = 0;
-+		r1 = 0;
-+	} else if (arg == MTK_PUPD_SET_R1R0_01) {
-+		r0 = 1;
-+		r1 = 0;
-+	} else if (arg == MTK_PUPD_SET_R1R0_10) {
-+		r0 = 0;
-+		r1 = 1;
-+	} else if (arg == MTK_PUPD_SET_R1R0_11) {
-+		r0 = 1;
-+		r1 = 1;
-+	} else
-+		goto out;
-+
-+	/* MTK HW PUPD bit: 1 for pull-down, 0 for pull-up */
-+	mtk_hw_set_value_no_lookup(hw, desc, !pullup, &pf);
-+
-+	err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_R0, &pf);
-+	if (err)
-+		goto out;
-+	mtk_hw_set_value_no_lookup(hw, desc, r0, &pf);
-+
-+	err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_R1, &pf);
-+	if (err)
-+		goto out;
-+	mtk_hw_set_value_no_lookup(hw, desc, r1, &pf);
-+
-+out:
-+	return err;
-+}
-+
-+int mtk_pinconf_bias_get_pu_pd(struct mtk_pinctrl *hw,
-+				const struct mtk_pin_desc *desc,
-+				u32 *pullup, u32 *enable)
-+{
-+	struct mtk_pin_field pf;
-+	int err = -EINVAL;
-+	int pu, pd;
-+
-+	err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_PU, &pf);
-+	if (err)
-+		goto out;
-+
-+	mtk_hw_get_value_no_lookup(hw, desc, &pu, &pf);
-+
-+	err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_PD, &pf);
-+	if (err)
-+		goto out;
-+
-+	mtk_hw_get_value_no_lookup(hw, desc, &pd, &pf);
-+
-+	if (pu == 0 && pd == 0) {
-+		*pullup = 0;
-+		*enable = MTK_DISABLE;
-+	} else if (pu == 1 && pd == 0) {
-+		*pullup = 1;
-+		*enable = MTK_ENABLE;
-+	} else if (pu == 0 && pd == 1) {
-+		*pullup = 0;
-+		*enable = MTK_ENABLE;
-+	} else {
-+		err = -EINVAL;
-+		goto out;
-+	}
-+
-+out:
-+	return err;
-+}
-+
-+int mtk_pinconf_bias_get_pullsel_pullen(struct mtk_pinctrl *hw,
-+				const struct mtk_pin_desc *desc,
-+				u32 *pullup, u32 *enable)
-+{
-+	struct mtk_pin_field pf;
-+	int err = -EINVAL;
-+
-+	err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_PULLSEL, &pf);
-+	if (err)
-+		goto out;
-+
-+	mtk_hw_get_value_no_lookup(hw, desc, pullup, &pf);
-+
-+	err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_PULLEN, &pf);
-+	if (err)
-+		goto out;
-+
-+	mtk_hw_get_value_no_lookup(hw, desc, enable, &pf);
-+
-+out:
-+	return err;
-+}
-+
-+int mtk_pinconf_bias_get_pupd_r1_r0(struct mtk_pinctrl *hw,
-+				const struct mtk_pin_desc *desc,
-+				u32 *pullup, u32 *enable)
-+{
-+	struct mtk_pin_field pf;
-+	int err = -EINVAL;
-+	int r0, r1;
-+
-+	err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_PUPD, &pf);
-+	if (err)
-+		goto out;
-+
-+	/* MTK HW PUPD bit: 1 for pull-down, 0 for pull-up */
-+	mtk_hw_get_value_no_lookup(hw, desc, pullup, &pf);
-+	*pullup = !(*pullup);
-+
-+	err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_R0, &pf);
-+	if (err)
-+		goto out;
-+	mtk_hw_get_value_no_lookup(hw, desc, &r0, &pf);
-+
-+	err = mtk_hw_pin_field_lookup(hw, desc, PINCTRL_PIN_REG_R1, &pf);
-+	if (err)
-+		goto out;
-+	mtk_hw_get_value_no_lookup(hw, desc, &r1, &pf);
-+
-+	if ((r1 == 0) && (r0 == 0))
-+		*enable = MTK_PUPD_SET_R1R0_00;
-+	else if ((r1 == 0) && (r0 == 1))
-+		*enable = MTK_PUPD_SET_R1R0_01;
-+	else if ((r1 == 1) && (r0 == 0))
-+		*enable = MTK_PUPD_SET_R1R0_10;
-+	else if ((r1 == 1) && (r0 == 1))
-+		*enable = MTK_PUPD_SET_R1R0_11;
-+	else
-+		goto out;
-+
-+out:
-+	return err;
-+}
-+
-+int mtk_pinconf_bias_set_combo(struct mtk_pinctrl *hw,
-+				const struct mtk_pin_desc *desc,
-+				u32 pullup, u32 arg)
-+{
-+	int err;
-+
-+	err = mtk_pinconf_bias_set_pu_pd(hw, desc, pullup, arg);
-+	if (!err)
-+		goto out;
-+
-+	err = mtk_pinconf_bias_set_pullsel_pullen(hw, desc, pullup, arg);
-+	if (!err)
-+		goto out;
-+
-+	err = mtk_pinconf_bias_set_pupd_r1_r0(hw, desc, pullup, arg);
-+
-+out:
-+	return err;
-+}
-+
-+int mtk_pinconf_bias_get_combo(struct mtk_pinctrl *hw,
-+			      const struct mtk_pin_desc *desc,
-+			      u32 *pullup, u32 *enable)
-+{
-+	int err;
-+
-+	err = mtk_pinconf_bias_get_pu_pd(hw, desc, pullup, enable);
-+	if (!err)
-+		goto out;
-+
-+	err = mtk_pinconf_bias_get_pullsel_pullen(hw, desc, pullup, enable);
-+	if (!err)
-+		goto out;
-+
-+	err = mtk_pinconf_bias_get_pupd_r1_r0(hw, desc, pullup, enable);
-+
-+out:
-+	return err;
-+}
-+
- /* Revision 0 */
- int mtk_pinconf_drive_set(struct mtk_pinctrl *hw,
- 			  const struct mtk_pin_desc *desc, u32 arg)
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-index b3bada0..a13dcae 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-+++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-@@ -216,6 +216,11 @@ struct mtk_pin_soc {
- 	int (*bias_get)(struct mtk_pinctrl *hw,
- 			const struct mtk_pin_desc *desc, bool pullup, int *res);
- 
-+	int (*bias_set_combo)(struct mtk_pinctrl *hw,
-+			const struct mtk_pin_desc *desc, u32 pullup, u32 arg);
-+	int (*bias_get_combo)(struct mtk_pinctrl *hw,
-+			const struct mtk_pin_desc *desc, u32 *pullup, u32 *arg);
-+
- 	int (*drive_set)(struct mtk_pinctrl *hw,
- 			 const struct mtk_pin_desc *desc, u32 arg);
- 	int (*drive_get)(struct mtk_pinctrl *hw,
-@@ -277,6 +282,12 @@ int mtk_pinconf_bias_set_rev1(struct mtk_pinctrl *hw,
- int mtk_pinconf_bias_get_rev1(struct mtk_pinctrl *hw,
- 			      const struct mtk_pin_desc *desc, bool pullup,
- 			      int *res);
-+int mtk_pinconf_bias_set_combo(struct mtk_pinctrl *hw,
-+				const struct mtk_pin_desc *desc,
-+				u32 pullup, u32 enable);
-+int mtk_pinconf_bias_get_combo(struct mtk_pinctrl *hw,
-+			      const struct mtk_pin_desc *desc,
-+			      u32 *pullup, u32 *enable);
- 
- int mtk_pinconf_drive_set(struct mtk_pinctrl *hw,
- 			  const struct mtk_pin_desc *desc, u32 arg);
-diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-index 54f069b..2a47c45 100644
---- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-@@ -79,6 +79,7 @@ static int mtk_pinconf_get(struct pinctrl_dev *pctldev,
- 	struct mtk_pinctrl *hw = pinctrl_dev_get_drvdata(pctldev);
- 	u32 param = pinconf_to_config_param(*config);
- 	int err, reg, ret = 1;
-+	int pullup;
- 	const struct mtk_pin_desc *desc;
- 
- 	if (pin >= hw->soc->npins) {
-@@ -89,22 +90,31 @@ static int mtk_pinconf_get(struct pinctrl_dev *pctldev,
- 
- 	switch (param) {
- 	case PIN_CONFIG_BIAS_DISABLE:
--		if (hw->soc->bias_disable_get)
--			err = hw->soc->bias_disable_get(hw, desc, &ret);
--		else
--			err = -ENOTSUPP;
--		break;
- 	case PIN_CONFIG_BIAS_PULL_UP:
--		if (hw->soc->bias_get)
--			err = hw->soc->bias_get(hw, desc, 1, &ret);
--		else
--			err = -ENOTSUPP;
--		break;
- 	case PIN_CONFIG_BIAS_PULL_DOWN:
--		if (hw->soc->bias_get)
--			err = hw->soc->bias_get(hw, desc, 0, &ret);
--		else
-+		if (hw->soc->bias_get_combo) {
-+			err = hw->soc->bias_get_combo(hw, desc, &pullup, &ret);
-+			if (err)
-+				goto out;
-+			if (param == PIN_CONFIG_BIAS_DISABLE) {
-+				if (ret == MTK_PUPD_SET_R1R0_00)
-+					ret = MTK_DISABLE;
-+			} else if (param == PIN_CONFIG_BIAS_PULL_UP) {
-+				/* When desire to get pull-up value,
-+				 * return error if current setting is pull-down
-+				 */
-+				if (!pullup)
-+					err = -EINVAL;
-+			} else if (param == PIN_CONFIG_BIAS_PULL_DOWN) {
-+				/* When desire to get pull-down value,
-+				 * return error if current setting is pull-up
-+				 */
-+				if (pullup)
-+					err = -EINVAL;
-+			}
-+		} else {
- 			err = -ENOTSUPP;
-+		}
- 		break;
- 	case PIN_CONFIG_SLEW_RATE:
- 		err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_SR, &ret);
-@@ -196,20 +206,20 @@ static int mtk_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 
- 	switch ((u32)param) {
- 	case PIN_CONFIG_BIAS_DISABLE:
--		if (hw->soc->bias_disable_set)
--			err = hw->soc->bias_disable_set(hw, desc);
-+		if (hw->soc->bias_set_combo)
-+			err = hw->soc->bias_set_combo(hw, desc, 0, MTK_DISABLE);
- 		else
- 			err = -ENOTSUPP;
- 		break;
- 	case PIN_CONFIG_BIAS_PULL_UP:
--		if (hw->soc->bias_set)
--			err = hw->soc->bias_set(hw, desc, 1);
-+		if (hw->soc->bias_set_combo)
-+			err = hw->soc->bias_set_combo(hw, desc, 1, arg);
- 		else
- 			err = -ENOTSUPP;
- 		break;
- 	case PIN_CONFIG_BIAS_PULL_DOWN:
--		if (hw->soc->bias_set)
--			err = hw->soc->bias_set(hw, desc, 0);
-+		if (hw->soc->bias_set_combo)
-+			err = hw->soc->bias_set_combo(hw, desc, 0, arg);
- 		else
- 			err = -ENOTSUPP;
- 		break;
-@@ -899,7 +909,6 @@ int mtk_paris_pinctrl_probe(struct platform_device *pdev,
- 	return 0;
- }
- 
--
- static int mtk_paris_pinctrl_suspend(struct device *device)
- {
- 	struct mtk_pinctrl *pctl = dev_get_drvdata(device);
+> ---
+>  scripts/get_maintainer.pl | 38 +++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 37 insertions(+), 1 deletion(-)
+> 
+> diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
+> index 5ef59214c555..34085d146fa2 100755
+> --- a/scripts/get_maintainer.pl
+> +++ b/scripts/get_maintainer.pl
+> @@ -26,6 +26,7 @@ my $email = 1;
+>  my $email_usename = 1;
+>  my $email_maintainer = 1;
+>  my $email_reviewer = 1;
+> +my $email_fixes = 1;
+>  my $email_list = 1;
+>  my $email_moderated_list = 1;
+>  my $email_subscriber_list = 0;
+> @@ -249,6 +250,7 @@ if (!GetOptions(
+>  		'r!' => \$email_reviewer,
+>  		'n!' => \$email_usename,
+>  		'l!' => \$email_list,
+> +		'fixes!' => \$email_fixes,
+>  		'moderated!' => \$email_moderated_list,
+>  		's!' => \$email_subscriber_list,
+>  		'multiline!' => \$output_multiline,
+> @@ -503,6 +505,7 @@ sub read_mailmap {
+>  ## use the filenames on the command line or find the filenames in the patchfiles
+>  
+>  my @files = ();
+> +my @fixes = ();			# If a patch description includes Fixes: lines
+>  my @range = ();
+>  my @keyword_tvi = ();
+>  my @file_emails = ();
+> @@ -568,6 +571,8 @@ foreach my $file (@ARGV) {
+>  		my $filename2 = $2;
+>  		push(@files, $filename1);
+>  		push(@files, $filename2);
+> +	    } elsif (m/^Fixes:\s+([0-9a-fA-F]{6,40})/) {
+> +		push(@fixes, $1) if ($email_fixes);
+>  	    } elsif (m/^\+\+\+\s+(\S+)/ or m/^---\s+(\S+)/) {
+>  		my $filename = $1;
+>  		$filename =~ s@^[^/]*/@@;
+> @@ -598,6 +603,7 @@ foreach my $file (@ARGV) {
+>  }
+>  
+>  @file_emails = uniq(@file_emails);
+> +@fixes = uniq(@fixes);
+>  
+>  my %email_hash_name;
+>  my %email_hash_address;
+> @@ -612,7 +618,6 @@ my %deduplicate_name_hash = ();
+>  my %deduplicate_address_hash = ();
+>  
+>  my @maintainers = get_maintainers();
+> -
+>  if (@maintainers) {
+>      @maintainers = merge_email(@maintainers);
+>      output(@maintainers);
+> @@ -927,6 +932,10 @@ sub get_maintainers {
+>  	}
+>      }
+>  
+> +    foreach my $fix (@fixes) {
+> +	vcs_add_commit_signers($fix, "blamed_fixes");
+> +    }
+> +
+>      foreach my $email (@email_to, @list_to) {
+>  	$email->[0] = deduplicate_email($email->[0]);
+>      }
+> @@ -1031,6 +1040,7 @@ MAINTAINER field selection options:
+>      --roles => show roles (status:subsystem, git-signer, list, etc...)
+>      --rolestats => show roles and statistics (commits/total_commits, %)
+>      --file-emails => add email addresses found in -f file (default: 0 (off))
+> +    --fixes => for patches, add signatures of commits with 'Fixes: <commit>' (default: 1 (on))
+>    --scm => print SCM tree(s) if any
+>    --status => print status if any
+>    --subsystem => print subsystem name if any
+> @@ -1730,6 +1740,32 @@ sub vcs_is_hg {
+>      return $vcs_used == 2;
+>  }
+>  
+> +sub vcs_add_commit_signers {
+> +    return if (!vcs_exists());
+> +
+> +    my ($commit, $desc) = @_;
+> +    my $commit_count = 0;
+> +    my $commit_authors_ref;
+> +    my $commit_signers_ref;
+> +    my $stats_ref;
+> +    my @commit_authors = ();
+> +    my @commit_signers = ();
+> +    my $cmd;
+> +
+> +    $cmd = $VCS_cmds{"find_commit_signers_cmd"};
+> +    $cmd =~ s/(\$\w+)/$1/eeg;	#substitute variables in $cmd
+> +
+> +    ($commit_count, $commit_signers_ref, $commit_authors_ref, $stats_ref) = vcs_find_signers($cmd, "");
+> +    @commit_authors = @{$commit_authors_ref} if defined $commit_authors_ref;
+> +    @commit_signers = @{$commit_signers_ref} if defined $commit_signers_ref;
+> +
+> +    foreach my $signer (@commit_signers) {
+> +	$signer = deduplicate_email($signer);
+> +    }
+> +
+> +    vcs_assign($desc, 1, @commit_signers);
+> +}
+> +
+>  sub interactive_get_maintainers {
+>      my ($list_ref) = @_;
+>      my @list = @$list_ref;
+> 
+> 
+
 -- 
-1.8.1.1.dirty
-
+Kees Cook
