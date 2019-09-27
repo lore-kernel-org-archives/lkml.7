@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E259C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 10:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AAAEC32774
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 10:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDE9A217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 10:04:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C356217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 10:04:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727255AbfI0KE1 (ORCPT
+        id S1727229AbfI0KE0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 06:04:27 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:41531 "EHLO
+        Fri, 27 Sep 2019 06:04:26 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:48173 "EHLO
         relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726988AbfI0KEZ (ORCPT
+        with ESMTP id S1727158AbfI0KEX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 06:04:25 -0400
+        Fri, 27 Sep 2019 06:04:23 -0400
 Received: from localhost.localdomain (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
         (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 59F0724001D;
-        Fri, 27 Sep 2019 10:04:22 +0000 (UTC)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id BCC3424000D;
+        Fri, 27 Sep 2019 10:04:20 +0000 (UTC)
 From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
@@ -34,9 +34,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Lee Jones <lee.jones@linaro.org>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH v3 5/5] gpio: syscon: Add support for the Xylon LogiCVC GPIOs
-Date:   Fri, 27 Sep 2019 12:04:07 +0200
-Message-Id: <20190927100407.1863293-6-paul.kocialkowski@bootlin.com>
+Subject: [PATCH v3 4/5] dt-bindings: gpio: Document the Xylon LogiCVC GPIO controller
+Date:   Fri, 27 Sep 2019 12:04:06 +0200
+Message-Id: <20190927100407.1863293-5-paul.kocialkowski@bootlin.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com>
 References: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com>
@@ -47,105 +47,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The LogiCVC display hardware block comes with GPIO capabilities
-that must be exposed separately from the main driver (as GPIOs) for
-use with regulators and panels. A syscon is used to share the same
-regmap across the two drivers.
-
-Since the GPIO capabilities are pretty simple, add them to the syscon
-GPIO driver.
+The Xylon LogiCVC display controller exports some GPIOs, which are
+exposed as a separate entity.
 
 Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 ---
- drivers/gpio/gpio-syscon.c | 68 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
+ .../bindings/gpio/xylon,logicvc-gpio.yaml     | 69 +++++++++++++++++++
+ 1 file changed, 69 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.yaml
 
-diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
-index 05c537ed73f1..cdcb913b8f0c 100644
---- a/drivers/gpio/gpio-syscon.c
-+++ b/drivers/gpio/gpio-syscon.c
-@@ -190,6 +190,70 @@ static const struct syscon_gpio_data keystone_dsp_gpio = {
- 	.set		= keystone_gpio_set,
- };
- 
-+#define LOGICVC_CTRL_REG		0x40
-+#define LOGICVC_CTRL_GPIO_SHIFT		11
-+#define LOGICVC_CTRL_GPIO_BITS		5
+diff --git a/Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.yaml b/Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.yaml
+new file mode 100644
+index 000000000000..d102888c1be7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.yaml
+@@ -0,0 +1,69 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019 Bootlin
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/gpio/xylon,logicvc-gpio.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+#define LOGICVC_POWER_CTRL_REG		0x78
-+#define LOGICVC_POWER_CTRL_GPIO_SHIFT	0
-+#define LOGICVC_POWER_CTRL_GPIO_BITS	4
++title: Xylon LogiCVC GPIO controller
 +
-+static void logicvc_gpio_offset(struct syscon_gpio_priv *priv,
-+				unsigned offset, unsigned int *reg,
-+				unsigned int *bit)
-+{
-+	if (offset >= LOGICVC_CTRL_GPIO_BITS) {
-+		*reg = LOGICVC_POWER_CTRL_REG;
++maintainers:
++  - Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 +
-+		/* To the (virtual) power ctrl offset. */
-+		offset -= LOGICVC_CTRL_GPIO_BITS;
-+		/* To the actual bit offset in reg. */
-+		offset += LOGICVC_POWER_CTRL_GPIO_SHIFT;
-+	} else {
-+		*reg = LOGICVC_CTRL_REG;
++description: |
++  The LogiCVC GPIO describes the GPIO block included in the LogiCVC display
++  controller. These are meant to be used for controlling display-related
++  signals.
 +
-+		/* To the actual bit offset in reg. */
-+		offset += LOGICVC_CTRL_GPIO_SHIFT;
-+	}
++  The controller exposes GPIOs from the display and power control registers,
++  which are mapped by the driver as follows:
++  - GPIO[4:0] (display control) mapped to index 0-4
++  - EN_BLIGHT (power control) mapped to index 5
++  - EN_VDD (power control) mapped to index 6
++  - EN_VEE (power control) mapped to index 7
++  - V_EN (power control) mapped to index 8
 +
-+	*bit = BIT(offset);
-+}
++properties:
++  $nodename:
++    pattern: "^gpio@[0-9a-f]+$"
 +
-+static int logicvc_gpio_get(struct gpio_chip *chip, unsigned offset)
-+{
-+	struct syscon_gpio_priv *priv = gpiochip_get_data(chip);
-+	unsigned int reg;
-+	unsigned int bit;
-+	unsigned int value;
-+	int ret;
++  compatible:
++    enum:
++      - xylon,logicvc-3.02.a-gpio
 +
-+	logicvc_gpio_offset(priv, offset, &reg, &bit);
++  reg:
++    maxItems: 1
 +
-+	ret = regmap_read(priv->syscon, reg, &value);
-+	if (ret)
-+		return ret;
++  "#gpio-cells":
++    const: 2
 +
-+	return !!(value & bit);
-+}
++  gpio-controller: true
 +
-+static void logicvc_gpio_set(struct gpio_chip *chip, unsigned offset, int val)
-+{
-+	struct syscon_gpio_priv *priv = gpiochip_get_data(chip);
-+	unsigned int reg;
-+	unsigned int bit;
++  gpio-line-names:
++    minItems: 1
++    maxItems: 9
 +
-+	logicvc_gpio_offset(priv, offset, &reg, &bit);
++required:
++  - compatible
++  - reg
++  - "#gpio-cells"
++  - gpio-controller
 +
-+	regmap_update_bits(priv->syscon, reg, bit, val ? bit : 0);
-+}
++examples:
++  - |
++    logicvc: logicvc@43c00000 {
++      compatible = "xylon,logicvc-3.02.a", "syscon", "simple-mfd";
++      reg = <0x43c00000 0x6000>;
 +
-+static const struct syscon_gpio_data logicvc_gpio = {
-+	.flags		= GPIO_SYSCON_FEAT_OUT,
-+	.bit_count	= LOGICVC_CTRL_GPIO_BITS + LOGICVC_POWER_CTRL_GPIO_BITS,
-+	.get		= logicvc_gpio_get,
-+	.set		= logicvc_gpio_set,
-+};
++      #address-cells = <1>;
++      #size-cells = <1>;
 +
- static const struct of_device_id syscon_gpio_ids[] = {
- 	{
- 		.compatible	= "cirrus,ep7209-mctrl-gpio",
-@@ -203,6 +267,10 @@ static const struct of_device_id syscon_gpio_ids[] = {
- 		.compatible	= "rockchip,rk3328-grf-gpio",
- 		.data		= &rockchip_rk3328_gpio_mute,
- 	},
-+	{
-+		.compatible	= "xylon,logicvc-3.02.a-gpio",
-+		.data		= &logicvc_gpio,
-+	},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, syscon_gpio_ids);
++      logicvc_gpio: gpio@40 {
++        compatible = "xylon,logicvc-3.02.a-gpio";
++        reg = <0x40 0x40>;
++        gpio-controller;
++        #gpio-cells = <2>;
++        gpio-line-names = "GPIO0", "GPIO1", "GPIO2", "GPIO3", "GPIO4",
++               "EN_BLIGHT", "EN_VDD", "EN_VEE", "V_EN";
++      };
++    };
 -- 
 2.23.0
 
