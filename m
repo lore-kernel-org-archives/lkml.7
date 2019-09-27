@@ -2,109 +2,112 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C177CC32774
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 06:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBF9C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 06:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 933BD206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 06:22:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="f/f90h4J"
+	by mail.kernel.org (Postfix) with ESMTP id 34CB9206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 06:22:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726206AbfI0GWS (ORCPT
+        id S1726240AbfI0GWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 02:22:18 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:51996 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfI0GWR (ORCPT
+        Fri, 27 Sep 2019 02:22:20 -0400
+Received: from cmccmta2.chinamobile.com ([221.176.66.80]:2746 "EHLO
+        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbfI0GWR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 27 Sep 2019 02:22:17 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8R6M3JX047749;
-        Fri, 27 Sep 2019 01:22:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569565323;
-        bh=JqiE37S8xxOHs3Eb1p83iWARD+ZjkZBMD8QHKwW9zZg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=f/f90h4JC0NDBaZuDbsbOj+1bA/0VvhCXP5/J01Dy9T8FXO7chLc5xmaOaqzEOV6g
-         PITB2NIDNUWHE7fvWiUHeiAX3L5na5pdz9n/OPDk9nKAbimZeNMXUa8j3gF7YCfPZG
-         dSyGN4B5gqd0CNQ61+CsKkIiD7Sui0izh8rCiAeY=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8R6M3j8023623
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 27 Sep 2019 01:22:03 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 27
- Sep 2019 01:21:55 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 27 Sep 2019 01:21:55 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8R6M0j7005041;
-        Fri, 27 Sep 2019 01:22:00 -0500
-Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to
- dts
-To:     Adam Ford <aford173@gmail.com>
-CC:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190510194229.20628-1-aford173@gmail.com>
- <af325707-3e42-493d-e858-77878ef06138@ti.com>
- <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
- <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
- <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
- <845055e2-8182-de74-2077-629fdf50ac6c@ti.com>
- <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <f6012b3a-7b96-6020-d09d-c458fa8742d8@ti.com>
-Date:   Fri, 27 Sep 2019 09:21:59 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.19]) by rmmx-syy-dmz-app07-12007 (RichMail) with SMTP id 2ee75d8daa775f3-3c282; Fri, 27 Sep 2019 14:21:44 +0800 (CST)
+X-RM-TRANSID: 2ee75d8daa775f3-3c282
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost (unknown[223.105.0.241])
+        by rmsmtp-syy-appsvr10-12010 (RichMail) with SMTP id 2eea5d8daa77b10-a621c;
+        Fri, 27 Sep 2019 14:21:44 +0800 (CST)
+X-RM-TRANSID: 2eea5d8daa77b10-a621c
+From:   Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+To:     Shuah Khan <shuah@kernel.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Julian Anastasov <ja@ssi.bg>, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, lvs-devel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org,
+        Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+Subject: [PATCH v2 2/3] selftests: netfilter: add ipvs nat test case
+Date:   Fri, 27 Sep 2019 14:21:05 +0800
+Message-Id: <1569565266-31566-3-git-send-email-yanhaishuang@cmss.chinamobile.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1569565266-31566-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
+References: <1569565266-31566-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/09/2019 17:12, Adam Ford wrote:
+Test virtual server via NAT.
 
->> And what is the hdmi5_configure there? I don't see anything in the
->> driver that would print hdmi5_configure. And, of course, there's no
->> hdmi5 on that platform. Hmm, ok... it's from component.c, using "%ps".
->> Somehow that goes wrong. Which is a bit alarming, but perhaps a totally
->> different issue.
-> 
-> I'll try to take a look later.  For Logic PD distributions, we create
-> a custom defconfig with all those drivers removed, so I'm not worked
-> up about it, but it would be nice to not call drivers that don't
-> exist.
+Tested:
+# selftests: netfilter: ipvs.sh
+# Testing DR mode...
+# Testing NAT mode...
+# ipvs.sh: PASS
 
-So you have CONFIG_OMAP5_DSS_HDMI=n? Then it's even more disturbing, as 
-there's no way the string "hdmi5_configure" can be in the kernel image...
+Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+---
+ tools/testing/selftests/netfilter/ipvs.sh | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
-Maybe it's nothing, but... It's just so odd.
-
-  Tomi
-
+diff --git a/tools/testing/selftests/netfilter/ipvs.sh b/tools/testing/selftests/netfilter/ipvs.sh
+index 658c06b..e95453b 100755
+--- a/tools/testing/selftests/netfilter/ipvs.sh
++++ b/tools/testing/selftests/netfilter/ipvs.sh
+@@ -160,20 +160,40 @@ test_dr() {
+     test_service
+ }
+ 
++test_nat() {
++    ip netns exec ns0 ip route add ${vip_v4} via ${gip_v4} dev br0
++
++    ip netns exec ns1 sysctl -qw net.ipv4.ip_forward=1
++    ip netns exec ns1 ipvsadm -A -t ${vip_v4}:${port} -s rr
++    ip netns exec ns1 ipvsadm -a -m -t ${vip_v4}:${port} -r ${rip_v4}:${port}
++    ip netns exec ns1 ip addr add ${vip_v4}/32 dev lo:1
++
++    ip netns exec ns2 ip link del veth20
++    ip netns exec ns2 ip route add default via ${dip_v4} dev veth21
++
++    test_service
++}
++
+ run_tests() {
+ 	local errors=
+ 
+ 	echo "Testing DR mode..."
++	cleanup
+ 	setup
+ 	test_dr
+ 	errors=$(( $errors + $? ))
+ 
++	echo "Testing NAT mode..."
++	cleanup
++	setup
++	test_nat
++	errors=$(( $errors + $? ))
++
+ 	return $errors
+ }
+ 
+ trap cleanup EXIT
+ 
+-cleanup
+ run_tests
+ 
+ if [ $? -ne 0 ]; then
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+1.8.3.1
+
+
+
