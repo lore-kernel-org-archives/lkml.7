@@ -2,105 +2,181 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7089C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D04C388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC664217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:35:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569609319;
-	bh=gCxde8flDYxeiWj3b1CUbAwvbzsbngWbOjjQy9o7eSs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=oNnpnIQDEAmvldNklwVvq9Hq7rbgUt2clwRpAM8oZh/bBUgqRItHJZWUgjtnTy/3u
-	 D2F6oh2f7fOP+boytpHu4ar/6ezL9Pc/bqoeNR5KHW6uABA6K+J8g6CNxwESe4HsmH
-	 /MR6L0qj1OK+Eh2+P5ofeN1yxd5wWbpVioBwiIGI=
+	by mail.kernel.org (Postfix) with ESMTP id AED3D21850
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:35:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FXxLPpXX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728530AbfI0SfT (ORCPT
+        id S1728510AbfI0SfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 14:35:19 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36383 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728487AbfI0SfQ (ORCPT
+        Fri, 27 Sep 2019 14:35:17 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:45572 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728351AbfI0Sez (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 14:35:16 -0400
-Received: by mail-lj1-f194.google.com with SMTP id v24so3465036ljj.3
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 11:35:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vfo/aCWS6InNpF6+CbMoDQhZTwhAvaIIzwPXAG1ON2k=;
-        b=PmjiZGWIuux93oBdsbKTUcDUjOwRzdmDhCW+izQNooViyiY5zi7nNI8gmKybNudXez
-         mSBXzQfHIJMk7J54/kR1Q0FTZiLQo2TdURWv9EPGoNG5dafe9qzlnG0ZSVDkNphLEhzj
-         OpxYIyiGR1+Yl9vS9XQTRr2D9CYcY+0rTw3LI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vfo/aCWS6InNpF6+CbMoDQhZTwhAvaIIzwPXAG1ON2k=;
-        b=srw4PIvCPZ5J1OE7+pwDa2Fwt1Sr7JUPUaaYrV2650Is/QUt4beqJCj7157cio8Bet
-         9ZqAGHA7so7xM8yoL6gHxkwmVxpZKhe6vTDJ2X0AMIDh4t3hG6sLK+c7tDL7OEw1E8Wt
-         ZlGnQRjs7u466t8SSkS5VNtci6xAmEB7RDvvjlbB6dMEPxH+SoDX2h3JcVmitWbiHbOH
-         L8pE3JC1fhSUI8A3oLKrTOts6wtDpEF4eWAJEjBXp7FdQmwwouE+X+oENjTaagjsdQFV
-         DWl0t9b3WUHavGhtehPNyuW+ar9MsY260L+bpSh+H/bixVHRL3LaChjCk0sUc4k6N8jk
-         ADvg==
-X-Gm-Message-State: APjAAAUQ1kSFzrSOW4JEdoXTolIlrhBYPDMFHthvF45HmPsWAD1icbgz
-        p9wYyFkXgCmBFakETjdcEavcLlAYIWk=
-X-Google-Smtp-Source: APXvYqyiM5ZbiD4/tseULmN9iHPe/wnCE4gD1yjm7evPzxfHtyFYl43cA/74dAMx3DF8QgLNPFcq8w==
-X-Received: by 2002:a05:651c:150:: with SMTP id c16mr3857777ljd.224.1569609313937;
-        Fri, 27 Sep 2019 11:35:13 -0700 (PDT)
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
-        by smtp.gmail.com with ESMTPSA id c18sm721280ljd.27.2019.09.27.11.35.12
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Sep 2019 11:35:12 -0700 (PDT)
-Received: by mail-lf1-f54.google.com with SMTP id 72so2636248lfh.6
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 11:35:12 -0700 (PDT)
-X-Received: by 2002:a19:2489:: with SMTP id k131mr3700375lfk.52.1569609312334;
- Fri, 27 Sep 2019 11:35:12 -0700 (PDT)
+        Fri, 27 Sep 2019 14:34:55 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8RIYsFa092346;
+        Fri, 27 Sep 2019 13:34:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569609294;
+        bh=E3rMcw7U0ktsEGYukudUhIDdBCppNQ7594aPdfV/7Hw=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=FXxLPpXXmscIrb9JoQoVs8DiVfF0w6J6MlW9mLtxtxDwRRXudbthC49yf5O0Hwa7h
+         kjsTiX9262yl2ojHFWws8XqlNxsExK9JzFKhYsocyjP06aYzqsx6opFtvVLu93a8Ot
+         z7uwzC2noDXQhOsZC+8Fag4C4iOD0RptLPbjrNLg=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8RIYsIh054133
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 27 Sep 2019 13:34:54 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 27
+ Sep 2019 13:34:46 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 27 Sep 2019 13:34:46 -0500
+Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8RIYgc1073031;
+        Fri, 27 Sep 2019 13:34:54 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
+Subject: [Patch 12/16] media: ti-vpe: vpe: ensure buffers are cleaned up properly in abort cases
+Date:   Fri, 27 Sep 2019 13:36:46 -0500
+Message-ID: <20190927183650.31345-13-bparrot@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190927183650.31345-1-bparrot@ti.com>
+References: <20190927183650.31345-1-bparrot@ti.com>
 MIME-Version: 1.0
-References: <a9e8e68f34139d5a9abb7f8b7d3fe64ff82c6d96.camel@intel.com>
-In-Reply-To: <a9e8e68f34139d5a9abb7f8b7d3fe64ff82c6d96.camel@intel.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 27 Sep 2019 11:34:56 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whua2XSTLd3gtqVHfq5HtGnjhRUv7vA6SUfkbVUebqWJQ@mail.gmail.com>
-Message-ID: <CAHk-=whua2XSTLd3gtqVHfq5HtGnjhRUv7vA6SUfkbVUebqWJQ@mail.gmail.com>
-Subject: Re: [GIT PULL] Thermal management updates for v5.4-rc1
-To:     Zhang Rui <rui.zhang@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 6:08 AM Zhang Rui <rui.zhang@intel.com> wrote:
->
-> One thing to mention is that, all the patches have been tested in
-> linux-next for weeks, but there is a conflict detected, because
-> upstream has took commit eaf7b46083a7e34 ("docs: thermal: add it to the
-> driver API") from jc-docs tree while I'm keeping a wrong version of the
-> patch, so I just rebased my tree to fix this.
+v4l2-compliance fails with this message:
 
-Why do I have to say this EVERY single release?
+   fail: v4l2-test-buffers.cpp(691): ret == 0
+   fail: v4l2-test-buffers.cpp(974): captureBufs(node, q, m2m_q,
+frame_count, true)
+   test MMAP: FAIL
 
-A conflict is not a reason to rebase. Conflicts happen. They happen a
-lot. I deal with them, and it's usually trivial.
+This caused the following Kernel Warning:
 
-If you feel it's not trivial, just describe what the resolution is,
-rather than rebasing. Really.
+WARNING: CPU: 0 PID: 961 at
+drivers/media/v4l2-core/videobuf2-core.c:1658
+__vb2_queue_cancel+0x174/0x1d8
+...
+CPU: 0 PID: 961 Comm: v4l2-compliance Not tainted
+4.14.62-01720-g20ecd717e87a #6
+Hardware name: Generic DRA72X (Flattened Device Tree)
+Backtrace:
+[<c020b5bc>] (dump_backtrace) from [<c020b8a0>] (show_stack+0x18/0x1c)
+ r7:00000009 r6:60070013 r5:00000000 r4:c1053824
+[<c020b888>] (show_stack) from [<c09232e8>] (dump_stack+0x90/0xa4)
+[<c0923258>] (dump_stack) from [<c022b740>] (__warn+0xec/0x104)
+  r7:00000009 r6:c0c0ad50 r5:00000000 r4:00000000
+[<c022b654>] (__warn) from [<c022b810>] (warn_slowpath_null+0x28/0x30)
+  r9:00000008 r8:00000000 r7:eced4808 r6:edbc9bac r5:eced4844
+r4:eced4808
+[<c022b7e8>] (warn_slowpath_null) from [<c0726f48>]
+(__vb2_queue_cancel+0x174/0x1d8)
+[<c0726dd4>] (__vb2_queue_cancel) from [<c0727648>]
+(vb2_core_queue_release+0x20/0x40)
+  r10:ecc7bd70 r9:00000008 r8:00000000 r7:edb73010 r6:edbc9bac
+r5:eced4844
+  r4:eced4808 r3:00000004
+[<c0727628>] (vb2_core_queue_release) from [<c0729528>]
+(vb2_queue_release+0x10/0x14)
+  r5:edbc9810 r4:eced4800
+[<c0729518>] (vb2_queue_release) from [<c0724d08>]
+(v4l2_m2m_ctx_release+0x1c/0x30)
+[<c0724cec>] (v4l2_m2m_ctx_release) from [<bf0e8f28>]
+(vpe_release+0x74/0xb0 [ti_vpe])
+  r5:edbc9810 r4:ed67a400
+[<bf0e8eb4>] (vpe_release [ti_vpe]) from [<c070fccc>]
+(v4l2_release+0x3c/0x80)
+  r7:edb73010 r6:ed176aa0 r5:edbc9868 r4:ed5119c0
+[<c070fc90>] (v4l2_release) from [<c033cf1c>] (__fput+0x8c/0x1dc)
+  r5:ecc7bd70 r4:ed5119c0
+[<c033ce90>] (__fput) from [<c033d0cc>] (____fput+0x10/0x14)
+  r10:00000000 r9:ed5119c0 r8:ece392d0 r7:c1059544 r6:ece38d80
+r5:ece392b4
+  r4:00000000
+[<c033d0bc>] (____fput) from [<c0246e00>] (task_work_run+0x98/0xb8)
+[<c0246d68>] (task_work_run) from [<c022f1d8>] (do_exit+0x170/0xa80)
+  r9:ece351fc r8:00000000 r7:ecde3f58 r6:ffffe000 r5:ece351c0
+r4:ece38d80
+[<c022f068>] (do_exit) from [<c022fb6c>] (do_group_exit+0x48/0xc4)
+  r7:000000f8
+[<c022fb24>] (do_group_exit) from [<c022fc00>]
+(__wake_up_parent+0x0/0x28)
+  r7:000000f8 r6:b6c6a798 r5:00000001 r4:00000001
+[<c022fbe8>] (SyS_exit_group) from [<c0207c80>]
+(ret_fast_syscall+0x0/0x4c)
 
-Rebasing for a random conflict (particularly in documentation, for
-chrissake!) is like using an atomic bomb to swat a fly.  You have all
-those downsides, and there are basically _no_ upsides. It only makes
-for more work for me because I have to re-write this email for the
-millionth time, and that takes longer and is more aggravating than the
-conflict would have taken to just sort out.
+These warnings are caused by buffers which not properly cleaned
+up/release during an abort use case.
 
-                   Linus
+In the abort cases the VPDMA desc buffers would still be mapped and the
+in-flight VB2 buffers would not be released properly causing a kernel
+warning from being generated by the videobuf2-core level.
+
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+---
+ drivers/media/platform/ti-vpe/vpe.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
+index 8ab1c3241b74..ad9d8b559cad 100644
+--- a/drivers/media/platform/ti-vpe/vpe.c
++++ b/drivers/media/platform/ti-vpe/vpe.c
+@@ -1427,9 +1427,6 @@ static irqreturn_t vpe_irq(int irq_vpe, void *data)
+ 	 /* the previous dst mv buffer becomes the next src mv buffer */
+ 	ctx->src_mv_buf_selector = !ctx->src_mv_buf_selector;
+ 
+-	if (ctx->aborting)
+-		goto finished;
+-
+ 	s_vb = ctx->src_vbs[0];
+ 	d_vb = ctx->dst_vb;
+ 
+@@ -1494,6 +1491,9 @@ static irqreturn_t vpe_irq(int irq_vpe, void *data)
+ 	ctx->src_vbs[0] = NULL;
+ 	ctx->dst_vb = NULL;
+ 
++	if (ctx->aborting)
++		goto finished;
++
+ 	ctx->bufs_completed++;
+ 	if (ctx->bufs_completed < ctx->bufs_per_job && job_ready(ctx)) {
+ 		device_run(ctx);
+@@ -2404,6 +2404,12 @@ static int vpe_release(struct file *file)
+ 
+ 	mutex_lock(&dev->dev_mutex);
+ 	free_mv_buffers(ctx);
++
++	vpdma_unmap_desc_buf(dev->vpdma, &ctx->desc_list.buf);
++	vpdma_unmap_desc_buf(dev->vpdma, &ctx->mmr_adb);
++	vpdma_unmap_desc_buf(dev->vpdma, &ctx->sc_coeff_h);
++	vpdma_unmap_desc_buf(dev->vpdma, &ctx->sc_coeff_v);
++
+ 	vpdma_free_desc_list(&ctx->desc_list);
+ 	vpdma_free_desc_buf(&ctx->mmr_adb);
+ 
+-- 
+2.17.1
+
