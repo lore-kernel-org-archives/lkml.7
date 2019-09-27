@@ -4,66 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 677DBC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 09:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B12C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 09:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E5A1217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 09:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92141217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 09:10:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="i1noes0U"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="TXXjl9eX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbfI0JI7 (ORCPT
+        id S1726559AbfI0JKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 05:08:59 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37652 "EHLO
+        Fri, 27 Sep 2019 05:10:10 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50510 "EHLO
         mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfI0JI7 (ORCPT
+        with ESMTP id S1726234AbfI0JKK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 05:08:59 -0400
-Received: by mail-wm1-f68.google.com with SMTP id f22so5343307wmc.2
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 02:08:56 -0700 (PDT)
+        Fri, 27 Sep 2019 05:10:10 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 5so5738170wmg.0
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 02:10:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=D3OzD1hf0H56gcDrQbyUaQfmUYWImUAVbM45JNOexLY=;
-        b=i1noes0UtmrZd/alh2IDqWXcEtnNh/Cq4JZFYWtHORnTgHJwiplImllKMhBLTMl+ZH
-         g5qk08JX76gy/KNeTXTXOQXpwQFrSdN9TM0N8gNEGchdsHaJj2v2FtAnnFuQ1kL2zz1o
-         YTUgfWC04rdBN5c6kqF+xnjVoIGZo6QpwN5NQ0IAtaL8dJgYSh9PZ9ywgLznVkDq8wp0
-         /ByQuIrrOak1yCZ8QPngDkWWav86XPR7+vkx1X32ZwyYiGWhd9SF1g7xKD8clPMmJtuL
-         R4bonXwOwdE/O43jSvXjXDW3FcxwQsH096WrrBjyCVSg7wxAVxzC1zetgqpTl9ZZKd95
-         Klzw==
+        bh=j7PsqOo3VNEELHLNUHE9shovLJXO6eMA+Y/LMPEsZ8U=;
+        b=TXXjl9eXRA+ejFeIO9IfkqxgAqeo1WFANLgur0I7Ihn93hfDaNeqd6r9k6n/sVoas6
+         VriraTfnVgA8DY7phuKRB9pG57kLlhVheW/xSB/Ftc6EFdDQC8Yrj2m1M9Yl1zMI6aVk
+         7wzOFE2LiBaql6gR9ogUOfpqRhrRAt3ggW8w5l1GaXR4lzsktDM4RJ1QV3rDpmfsL1Lf
+         H8SSZR8RD7GAcBnGGd3nbsRpqsPIIEJzFo7NaJNpwHM3PwsaninDVcEaBQZj9u+T/8LR
+         Rr4GGNFgd6zQrrqXpOUw9N83fEjZk+a3SzU0pnAUjRurHAFyOCmnCAxVb9P/9JL8v62k
+         gFDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=D3OzD1hf0H56gcDrQbyUaQfmUYWImUAVbM45JNOexLY=;
-        b=gCNT35yjGbc6byn0QNUtZgkKQBOSDWCRgQTNsmS6ESt1mNEZuZo4EpI929j+pQhqx0
-         NrdJWmhovnWiJSYvbTgqkGgL8iWHc9plLNcTqjLGBo7S8D9eUwPEFHQWlaU3Wgr76PRt
-         qq7v+ysZTh2jWAFSY+fXbWmvxnPNgVeU2Fp/lp86az08NWwgfw0EqsapCIAHlqv5mqV5
-         S5ae1D8DNjfOK1CpzxAT08anpezwpf24FUBxhQbIo715NF195ElXKZcOhdQuOSTF6Ll7
-         /dbOJqt7F7AxnR2owEbuv+fgR9cQ1Zcj93E15x7f/tcjqdfXii+JXSeWgz+pRlrwy2vL
-         AD7w==
-X-Gm-Message-State: APjAAAVP60z6t/km6ve3pG31XscC9AQRFYUY5feZF8ADwZycYXA6XAI0
-        1Fdnxnqi6NhTCJLnaLSoFDIfmBRQF6/17w==
-X-Google-Smtp-Source: APXvYqyLvZvD/UjYpUX7ivAodhd31r3/tNz71w9iOXQroqd+5CfjIXg4vF7pBXTMm+o5v8TMFQsldw==
-X-Received: by 2002:a1c:29c4:: with SMTP id p187mr6773759wmp.28.1569575335838;
-        Fri, 27 Sep 2019 02:08:55 -0700 (PDT)
+        bh=j7PsqOo3VNEELHLNUHE9shovLJXO6eMA+Y/LMPEsZ8U=;
+        b=LWSh+1nhVg7H60bJxkJ6BvAaNbsoOZiROGkkjjrPo128DNIMiKtY47HbQ5rZlw8nHz
+         tOOS91wievMIrFvRPEEawHicfAUcLvtCSZ0EkFl/3MAlbV3Fs+iX8XELWKaW4FlJsXXz
+         f5IO1JAWXynirgE46XeFI46aFhfgxhlc6NHzdglLWxY67fs2G9k/WVvdY7FACEC7I69O
+         wlv5WAe3jtomfpmwFQGgB0yB9WW3mvBJr/u32Khqjf0i/YRNfJLOj9cGUM4KtjtdFC76
+         UYGQJgfGMYE2D1qOp+MbUhfxFPbtzu04+treaF4LnrhGAWF/T3MnsmhwSe1tkvmpN6He
+         1imQ==
+X-Gm-Message-State: APjAAAWEHboOEjl2T7LjLA1sMOjJBe6WLV1l9R3E43OpH91s3YJUA6k2
+        Ks0OhjH2rvoIdb7rNlokI96OICVJUZJG3A==
+X-Google-Smtp-Source: APXvYqz4e29c2d4K1B5dIoapU06tbDMzOKvXGkPrfM7nNq0Jm4rov4dqQ+2k3Qbx7s91L8fCD/34AA==
+X-Received: by 2002:a1c:35c9:: with SMTP id c192mr6211927wma.91.1569575406927;
+        Fri, 27 Sep 2019 02:10:06 -0700 (PDT)
 Received: from [192.168.1.62] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id o19sm2072963wro.50.2019.09.27.02.08.54
+        by smtp.gmail.com with ESMTPSA id g185sm11473915wme.10.2019.09.27.02.10.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 27 Sep 2019 02:08:55 -0700 (PDT)
-Subject: Re: [PATCH] arm64: dts: meson: g12a: add audio devices resets
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>
-Cc:     linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        Fri, 27 Sep 2019 02:10:06 -0700 (PDT)
+Subject: Re: [PATCH 1/7] dt-bindings: clk: axg-audio: add sm1 bindings
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20190925093358.15476-1-jbrunet@baylibre.com>
+References: <20190924153356.24103-1-jbrunet@baylibre.com>
+ <20190924153356.24103-2-jbrunet@baylibre.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -116,12 +117,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <9ff3a6f8-13c2-856f-f37b-dd96cb45faad@baylibre.com>
-Date:   Fri, 27 Sep 2019 11:08:54 +0200
+Message-ID: <6331eea0-5f66-95d8-7a88-81d3588a21ba@baylibre.com>
+Date:   Fri, 27 Sep 2019 11:10:05 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190925093358.15476-1-jbrunet@baylibre.com>
+In-Reply-To: <20190924153356.24103-2-jbrunet@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -130,117 +131,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/09/2019 11:33, Jerome Brunet wrote:
-> Provide the reset lines coming from the audio clock controller to
-> the audio devices of the g12 family
+On 24/09/2019 17:33, Jerome Brunet wrote:
+> Add the compatible and clock ids of the sm1 audio clock controller
 > 
 > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 > ---
->  arch/arm64/boot/dts/amlogic/meson-g12.dtsi | 28 +++++++++++++++++-----
->  1 file changed, 22 insertions(+), 6 deletions(-)
+>  .../bindings/clock/amlogic,axg-audio-clkc.txt          |  3 ++-
+>  include/dt-bindings/clock/axg-audio-clkc.h             | 10 ++++++++++
+>  2 files changed, 12 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12.dtsi
-> index 0d9df29994f3..3cf74fc96434 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12.dtsi
-> @@ -103,7 +103,9 @@
->  			sound-name-prefix = "TODDR_A";
->  			interrupts = <GIC_SPI 148 IRQ_TYPE_EDGE_RISING>;
->  			clocks = <&clkc_audio AUD_CLKID_TODDR_A>;
-> -			resets = <&arb AXG_ARB_TODDR_A>;
-> +			resets = <&arb AXG_ARB_TODDR_A>,
-> +				 <&clkc_audio AUD_RESET_TODDR_A>;
-> +			reset-names = "arb", "rst";
->  			status = "disabled";
->  		};
+> diff --git a/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt
+> index b3957d10d241..3a8948c04bc9 100644
+> --- a/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt
+> +++ b/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt
+> @@ -7,7 +7,8 @@ devices.
+>  Required Properties:
 >  
-> @@ -115,7 +117,9 @@
->  			sound-name-prefix = "TODDR_B";
->  			interrupts = <GIC_SPI 149 IRQ_TYPE_EDGE_RISING>;
->  			clocks = <&clkc_audio AUD_CLKID_TODDR_B>;
-> -			resets = <&arb AXG_ARB_TODDR_B>;
-> +			resets = <&arb AXG_ARB_TODDR_B>,
-> +				 <&clkc_audio AUD_RESET_TODDR_B>;
-> +			reset-names = "arb", "rst";
->  			status = "disabled";
->  		};
+>  - compatible	: should be "amlogic,axg-audio-clkc" for the A113X and A113D,
+> -		  "amlogic,g12a-audio-clkc" for G12A.
+> +		  "amlogic,g12a-audio-clkc" for G12A,
+> +		  "amlogic,sm1-audio-clkc" for S905X3.
+>  - reg		: physical base address of the clock controller and length of
+>  		  memory mapped region.
+>  - clocks	: a list of phandle + clock-specifier pairs for the clocks listed
+> diff --git a/include/dt-bindings/clock/axg-audio-clkc.h b/include/dt-bindings/clock/axg-audio-clkc.h
+> index 75901c636893..f561f5c5ef8f 100644
+> --- a/include/dt-bindings/clock/axg-audio-clkc.h
+> +++ b/include/dt-bindings/clock/axg-audio-clkc.h
+> @@ -80,5 +80,15 @@
+>  #define AUD_CLKID_TDM_SCLK_PAD0		160
+>  #define AUD_CLKID_TDM_SCLK_PAD1		161
+>  #define AUD_CLKID_TDM_SCLK_PAD2		162
+> +#define AUD_CLKID_TOP			163
+> +#define AUD_CLKID_TORAM			164
+> +#define AUD_CLKID_EQDRC			165
+> +#define AUD_CLKID_RESAMPLE_B		166
+> +#define AUD_CLKID_TOVAD			167
+> +#define AUD_CLKID_LOCKER		168
+> +#define AUD_CLKID_SPDIFIN_LB		169
+> +#define AUD_CLKID_FRDDR_D		170
+> +#define AUD_CLKID_TODDR_D		171
+> +#define AUD_CLKID_LOOPBACK_B		172
 >  
-> @@ -127,7 +131,9 @@
->  			sound-name-prefix = "TODDR_C";
->  			interrupts = <GIC_SPI 150 IRQ_TYPE_EDGE_RISING>;
->  			clocks = <&clkc_audio AUD_CLKID_TODDR_C>;
-> -			resets = <&arb AXG_ARB_TODDR_C>;
-> +			resets = <&arb AXG_ARB_TODDR_C>,
-> +				 <&clkc_audio AUD_RESET_TODDR_C>;
-> +			reset-names = "arb", "rst";
->  			status = "disabled";
->  		};
->  
-> @@ -139,7 +145,9 @@
->  			sound-name-prefix = "FRDDR_A";
->  			interrupts = <GIC_SPI 152 IRQ_TYPE_EDGE_RISING>;
->  			clocks = <&clkc_audio AUD_CLKID_FRDDR_A>;
-> -			resets = <&arb AXG_ARB_FRDDR_A>;
-> +			resets = <&arb AXG_ARB_FRDDR_A>,
-> +				 <&clkc_audio AUD_RESET_FRDDR_A>;
-> +			reset-names = "arb", "rst";
->  			status = "disabled";
->  		};
->  
-> @@ -151,7 +159,9 @@
->  			sound-name-prefix = "FRDDR_B";
->  			interrupts = <GIC_SPI 153 IRQ_TYPE_EDGE_RISING>;
->  			clocks = <&clkc_audio AUD_CLKID_FRDDR_B>;
-> -			resets = <&arb AXG_ARB_FRDDR_B>;
-> +			resets = <&arb AXG_ARB_FRDDR_B>,
-> +				 <&clkc_audio AUD_RESET_FRDDR_B>;
-> +			reset-names = "arb", "rst";
->  			status = "disabled";
->  		};
->  
-> @@ -163,7 +173,9 @@
->  			sound-name-prefix = "FRDDR_C";
->  			interrupts = <GIC_SPI 154 IRQ_TYPE_EDGE_RISING>;
->  			clocks = <&clkc_audio AUD_CLKID_FRDDR_C>;
-> -			resets = <&arb AXG_ARB_FRDDR_C>;
-> +			resets = <&arb AXG_ARB_FRDDR_C>,
-> +				 <&clkc_audio AUD_RESET_FRDDR_C>;
-> +			reset-names = "arb", "rst";
->  			status = "disabled";
->  		};
->  
-> @@ -249,6 +261,7 @@
->  			clocks = <&clkc_audio AUD_CLKID_SPDIFIN>,
->  				 <&clkc_audio AUD_CLKID_SPDIFIN_CLK>;
->  			clock-names = "pclk", "refclk";
-> +			resets = <&clkc_audio AUD_RESET_SPDIFIN>;
->  			status = "disabled";
->  		};
->  
-> @@ -261,6 +274,7 @@
->  			clocks = <&clkc_audio AUD_CLKID_SPDIFOUT>,
->  				 <&clkc_audio AUD_CLKID_SPDIFOUT_CLK>;
->  			clock-names = "pclk", "mclk";
-> +			resets = <&clkc_audio AUD_RESET_SPDIFOUT>;
->  			status = "disabled";
->  		};
->  
-> @@ -318,6 +332,7 @@
->  			clocks = <&clkc_audio AUD_CLKID_SPDIFOUT_B>,
->  				 <&clkc_audio AUD_CLKID_SPDIFOUT_B_CLK>;
->  			clock-names = "pclk", "mclk";
-> +			resets = <&clkc_audio AUD_RESET_SPDIFOUT_B>;
->  			status = "disabled";
->  		};
->  
-> @@ -326,6 +341,7 @@
->  			reg = <0x0 0x744 0x0 0x4>;
->  			#sound-dai-cells = <1>;
->  			sound-name-prefix = "TOHDMITX";
-> +			resets = <&clkc_audio AUD_RESET_TOHDMITX>;
->  			status = "disabled";
->  		};
->  	};
+>  #endif /* __AXG_AUDIO_CLKC_BINDINGS_H */
 > 
 
 Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
