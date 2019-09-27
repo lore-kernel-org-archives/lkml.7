@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E56C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBA5C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 684922146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB89217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:11:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbfI0ILV (ORCPT
+        id S1727151AbfI0ILY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 04:11:21 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:45317 "EHLO
+        Fri, 27 Sep 2019 04:11:24 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45320 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727079AbfI0ILT (ORCPT
+        with ESMTP id S1727105AbfI0ILW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 04:11:19 -0400
+        Fri, 27 Sep 2019 04:11:22 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iDlKs-0005ae-VE; Fri, 27 Sep 2019 10:10:43 +0200
+        id 1iDlKz-0005dQ-Eq; Fri, 27 Sep 2019 10:10:49 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 798FD1C0740;
-        Fri, 27 Sep 2019 10:10:42 +0200 (CEST)
-Date:   Fri, 27 Sep 2019 08:10:42 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0BE701C073C;
+        Fri, 27 Sep 2019 10:10:44 +0200 (CEST)
+Date:   Fri, 27 Sep 2019 08:10:43 -0000
 From:   "tip-bot2 for Mathieu Desnoyers" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] sched/membarrier: Return -ENOMEM to userspace on
- memory allocation failure
+Subject: [tip: sched/urgent] sched/membarrier: Fix private expedited
+ registration check
 Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Chris Metcalf <cmetcalf@ezchip.com>,
@@ -49,10 +49,10 @@ Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20190919173705.2181-8-mathieu.desnoyers@efficios.com>
-References: <20190919173705.2181-8-mathieu.desnoyers@efficios.com>
+In-Reply-To: <20190919173705.2181-2-mathieu.desnoyers@efficios.com>
+References: <20190919173705.2181-2-mathieu.desnoyers@efficios.com>
 MIME-Version: 1.0
-Message-ID: <156957184244.9866.6327974056677601202.tip-bot2@tip-bot2>
+Message-ID: <156957184400.9866.2004002174416727815.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,23 +68,22 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/urgent branch of tip:
 
-Commit-ID:     c172e0a3e8e65a4c6fffec5bc4d6de08d6f894f7
-Gitweb:        https://git.kernel.org/tip/c172e0a3e8e65a4c6fffec5bc4d6de08d6f894f7
+Commit-ID:     fc0d77387cb5ae883fd774fc559e056a8dde024c
+Gitweb:        https://git.kernel.org/tip/fc0d77387cb5ae883fd774fc559e056a8dde024c
 Author:        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-AuthorDate:    Thu, 19 Sep 2019 13:37:05 -04:00
+AuthorDate:    Thu, 19 Sep 2019 13:36:59 -04:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 25 Sep 2019 17:42:31 +02:00
+CommitterDate: Wed, 25 Sep 2019 17:42:30 +02:00
 
-sched/membarrier: Return -ENOMEM to userspace on memory allocation failure
+sched/membarrier: Fix private expedited registration check
 
-Remove the IPI fallback code from membarrier to deal with very
-infrequent cpumask memory allocation failure. Use GFP_KERNEL rather
-than GFP_NOWAIT, and relax the blocking guarantees for the expedited
-membarrier system call commands, allowing it to block if waiting for
-memory to be made available.
+Fix a logic flaw in the way membarrier_register_private_expedited()
+handles ready state checks for private expedited sync core and private
+expedited registrations.
 
-In addition, now -ENOMEM can be returned to user-space if the cpumask
-memory allocation fails.
+If a private expedited membarrier registration is first performed, and
+then a private expedited sync_core registration is performed, the ready
+state check will skip the second registration when it really should not.
 
 Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
@@ -99,129 +98,22 @@ Cc: Paul E. McKenney <paulmck@linux.ibm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Russell King - ARM Linux admin <linux@armlinux.org.uk>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190919173705.2181-8-mathieu.desnoyers@efficios.com
+Link: https://lkml.kernel.org/r/20190919173705.2181-2-mathieu.desnoyers@efficios.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/sched/membarrier.c | 63 ++++++++++++--------------------------
- 1 file changed, 20 insertions(+), 43 deletions(-)
+ kernel/sched/membarrier.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/kernel/sched/membarrier.c b/kernel/sched/membarrier.c
-index fced54a..a39bed2 100644
+index b14250a..d48b95f 100644
 --- a/kernel/sched/membarrier.c
 +++ b/kernel/sched/membarrier.c
-@@ -66,7 +66,6 @@ void membarrier_exec_mmap(struct mm_struct *mm)
- static int membarrier_global_expedited(void)
- {
- 	int cpu;
--	bool fallback = false;
- 	cpumask_var_t tmpmask;
- 
- 	if (num_online_cpus() == 1)
-@@ -78,15 +77,8 @@ static int membarrier_global_expedited(void)
+@@ -226,7 +226,7 @@ static int membarrier_register_private_expedited(int flags)
+ 	 * groups, which use the same mm. (CLONE_VM but not
+ 	 * CLONE_THREAD).
  	 */
- 	smp_mb();	/* system call entry is not a mb. */
- 
--	/*
--	 * Expedited membarrier commands guarantee that they won't
--	 * block, hence the GFP_NOWAIT allocation flag and fallback
--	 * implementation.
--	 */
--	if (!zalloc_cpumask_var(&tmpmask, GFP_NOWAIT)) {
--		/* Fallback for OOM. */
--		fallback = true;
--	}
-+	if (!zalloc_cpumask_var(&tmpmask, GFP_KERNEL))
-+		return -ENOMEM;
- 
- 	cpus_read_lock();
- 	rcu_read_lock();
-@@ -117,18 +109,15 @@ static int membarrier_global_expedited(void)
- 		if (p->flags & PF_KTHREAD)
- 			continue;
- 
--		if (!fallback)
--			__cpumask_set_cpu(cpu, tmpmask);
--		else
--			smp_call_function_single(cpu, ipi_mb, NULL, 1);
-+		__cpumask_set_cpu(cpu, tmpmask);
- 	}
- 	rcu_read_unlock();
--	if (!fallback) {
--		preempt_disable();
--		smp_call_function_many(tmpmask, ipi_mb, NULL, 1);
--		preempt_enable();
--		free_cpumask_var(tmpmask);
--	}
-+
-+	preempt_disable();
-+	smp_call_function_many(tmpmask, ipi_mb, NULL, 1);
-+	preempt_enable();
-+
-+	free_cpumask_var(tmpmask);
- 	cpus_read_unlock();
- 
- 	/*
-@@ -143,7 +132,6 @@ static int membarrier_global_expedited(void)
- static int membarrier_private_expedited(int flags)
- {
- 	int cpu;
--	bool fallback = false;
- 	cpumask_var_t tmpmask;
- 	struct mm_struct *mm = current->mm;
- 
-@@ -168,15 +156,8 @@ static int membarrier_private_expedited(int flags)
- 	 */
- 	smp_mb();	/* system call entry is not a mb. */
- 
--	/*
--	 * Expedited membarrier commands guarantee that they won't
--	 * block, hence the GFP_NOWAIT allocation flag and fallback
--	 * implementation.
--	 */
--	if (!zalloc_cpumask_var(&tmpmask, GFP_NOWAIT)) {
--		/* Fallback for OOM. */
--		fallback = true;
--	}
-+	if (!zalloc_cpumask_var(&tmpmask, GFP_KERNEL))
-+		return -ENOMEM;
- 
- 	cpus_read_lock();
- 	rcu_read_lock();
-@@ -195,20 +176,16 @@ static int membarrier_private_expedited(int flags)
- 			continue;
- 		rcu_read_lock();
- 		p = rcu_dereference(cpu_rq(cpu)->curr);
--		if (p && p->mm == mm) {
--			if (!fallback)
--				__cpumask_set_cpu(cpu, tmpmask);
--			else
--				smp_call_function_single(cpu, ipi_mb, NULL, 1);
--		}
-+		if (p && p->mm == mm)
-+			__cpumask_set_cpu(cpu, tmpmask);
- 	}
- 	rcu_read_unlock();
--	if (!fallback) {
--		preempt_disable();
--		smp_call_function_many(tmpmask, ipi_mb, NULL, 1);
--		preempt_enable();
--		free_cpumask_var(tmpmask);
--	}
-+
-+	preempt_disable();
-+	smp_call_function_many(tmpmask, ipi_mb, NULL, 1);
-+	preempt_enable();
-+
-+	free_cpumask_var(tmpmask);
- 	cpus_read_unlock();
- 
- 	/*
-@@ -264,7 +241,7 @@ static int sync_runqueues_membarrier_state(struct mm_struct *mm)
- 		struct rq *rq = cpu_rq(cpu);
- 		struct task_struct *p;
- 
--		p = rcu_dereference(&rq->curr);
-+		p = rcu_dereference(rq->curr);
- 		if (p && p->mm == mm)
- 			__cpumask_set_cpu(cpu, tmpmask);
- 	}
+-	if (atomic_read(&mm->membarrier_state) & state)
++	if ((atomic_read(&mm->membarrier_state) & state) == state)
+ 		return 0;
+ 	atomic_or(MEMBARRIER_STATE_PRIVATE_EXPEDITED, &mm->membarrier_state);
+ 	if (flags & MEMBARRIER_FLAG_SYNC_CORE)
