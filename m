@@ -5,56 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E136AC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A85AC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3D5C217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:35:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DC98217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 18:35:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fT993C9W"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ukwRBNMa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728554AbfI0Sf2 (ORCPT
+        id S1728329AbfI0Sew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 14:35:28 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:45568 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728335AbfI0Sex (ORCPT
+        Fri, 27 Sep 2019 14:34:52 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:50488 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728241AbfI0Seq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 14:34:53 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8RIYrYF092339;
-        Fri, 27 Sep 2019 13:34:53 -0500
+        Fri, 27 Sep 2019 14:34:46 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8RIYjw0077506;
+        Fri, 27 Sep 2019 13:34:45 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569609293;
-        bh=iWcuSYGGxJQmWw1VXtt+kP/BQGmtHkntulM+0CTanrI=;
+        s=ti-com-17Q1; t=1569609285;
+        bh=VmitdgajHHJkSVwVVJXNsT523zGlYCY363KbSQpWfJQ=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=fT993C9Wou6MZQmwykGlwwzqOQWuOqGP7jgfacQK0Lr0yyJv8+Hd/ohlKGgX3oTNy
-         myr+yxnlPCJ49t17pfP0cDUAMJnE+pxyR+AyZ63A7jdTW7CV4qgUqGMyXPvqQwNB3m
-         3hbHGh6lFDjSkhBLmYYVOufxbvagsx+dgLyzf4cg=
+        b=ukwRBNMatufZA/NuPc4QiACys/2tobLbHA3eFyDW1zoHoZz9tKx97S+LDmGACZk/W
+         YMoTCe9kSDAjE7Ui5bfyyIctk9NG9zpyBSbI+265YyfBIS9V3IfWUJkZZdwUUYMQ2L
+         1Pj3JqqcVA3PxieKuoq0FXGcmrLw0tsjy4jyN8Ho=
 Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8RIYrlY054125
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 27 Sep 2019 13:34:53 -0500
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8RIYjOD108646;
+        Fri, 27 Sep 2019 13:34:45 -0500
 Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE114.ent.ti.com
  (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 27
- Sep 2019 13:34:45 -0500
+ Sep 2019 13:34:37 -0500
 Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE105.ent.ti.com
  (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 27 Sep 2019 13:34:45 -0500
+ Frontend Transport; Fri, 27 Sep 2019 13:34:36 -0500
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8RIYgc0073031;
-        Fri, 27 Sep 2019 13:34:53 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8RIYgbq073031;
+        Fri, 27 Sep 2019 13:34:44 -0500
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>
 CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch 11/16] media: ti-vpe: vpe: fix a v4l2-compliance failure about frame sequence number
-Date:   Fri, 27 Sep 2019 13:36:45 -0500
-Message-ID: <20190927183650.31345-12-bparrot@ti.com>
+Subject: [Patch 03/16] media: ti-vpe: vpe: Remove unnecessary use of container_of
+Date:   Fri, 27 Sep 2019 13:36:37 -0500
+Message-ID: <20190927183650.31345-4-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190927183650.31345-1-bparrot@ti.com>
 References: <20190927183650.31345-1-bparrot@ti.com>
@@ -66,41 +65,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v4l2-compliance fails with this message:
-
-   fail: v4l2-test-buffers.cpp(294): \
-	(int)g_sequence() < seq.last_seq + 1
-   fail: v4l2-test-buffers.cpp(740): \
-	buf.check(m2m_q, last_m2m_seq)
-   fail: v4l2-test-buffers.cpp(974): \
-	captureBufs(node, q, m2m_q, frame_count, true)
-   test MMAP: FAIL
-
-The driver is failing to update the source frame sequence number in the
-vb2 buffer object. Only the destination frame sequence was being
-updated.
-
-This is only a reporting issue if the user space app actually cares
-about the frame sequence number. But it is fixed nonetheless.
+Instead of saving a pointer to the 'fh' member of struct vpe_ctx to
+later have to use container_of to retrieve the actual pointer to the
+context structure, which seems to confuse static code analysis tool
+anyways, just save the pointer to the actual structure and then retrieve
+it directly.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/platform/ti-vpe/vpe.c | 22 +++++++---------------
+ 1 file changed, 7 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index 0a7cf9c820c6..8ab1c3241b74 100644
+index 56f60dbea15c..0e9cb0319a92 100644
 --- a/drivers/media/platform/ti-vpe/vpe.c
 +++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -1440,6 +1440,7 @@ static irqreturn_t vpe_irq(int irq_vpe, void *data)
- 		d_vb->timecode = s_vb->timecode;
+@@ -900,14 +900,6 @@ static int set_srcdst_params(struct vpe_ctx *ctx)
+ 	return 0;
+ }
  
- 	d_vb->sequence = ctx->sequence;
-+	s_vb->sequence = ctx->sequence;
+-/*
+- * Return the vpe_ctx structure for a given struct file
+- */
+-static struct vpe_ctx *file2ctx(struct file *file)
+-{
+-	return container_of(file->private_data, struct vpe_ctx, fh);
+-}
+-
+ /*
+  * mem2mem callbacks
+  */
+@@ -1527,7 +1519,7 @@ static int vpe_enum_fmt(struct file *file, void *priv,
+ static int vpe_g_fmt(struct file *file, void *priv, struct v4l2_format *f)
+ {
+ 	struct v4l2_pix_format_mplane *pix = &f->fmt.pix_mp;
+-	struct vpe_ctx *ctx = file2ctx(file);
++	struct vpe_ctx *ctx = file->private_data;
+ 	struct vb2_queue *vq;
+ 	struct vpe_q_data *q_data;
+ 	int i;
+@@ -1689,7 +1681,7 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
  
- 	d_q_data = &ctx->q_data[Q_DATA_DST];
- 	if (d_q_data->flags & Q_IS_INTERLACED) {
+ static int vpe_try_fmt(struct file *file, void *priv, struct v4l2_format *f)
+ {
+-	struct vpe_ctx *ctx = file2ctx(file);
++	struct vpe_ctx *ctx = file->private_data;
+ 	struct vpe_fmt *fmt = find_format(f);
+ 
+ 	if (V4L2_TYPE_IS_OUTPUT(f->type))
+@@ -1762,7 +1754,7 @@ static int __vpe_s_fmt(struct vpe_ctx *ctx, struct v4l2_format *f)
+ static int vpe_s_fmt(struct file *file, void *priv, struct v4l2_format *f)
+ {
+ 	int ret;
+-	struct vpe_ctx *ctx = file2ctx(file);
++	struct vpe_ctx *ctx = file->private_data;
+ 
+ 	ret = vpe_try_fmt(file, priv, f);
+ 	if (ret)
+@@ -1847,7 +1839,7 @@ static int __vpe_try_selection(struct vpe_ctx *ctx, struct v4l2_selection *s)
+ static int vpe_g_selection(struct file *file, void *fh,
+ 		struct v4l2_selection *s)
+ {
+-	struct vpe_ctx *ctx = file2ctx(file);
++	struct vpe_ctx *ctx = file->private_data;
+ 	struct vpe_q_data *q_data;
+ 	bool use_c_rect = false;
+ 
+@@ -1908,7 +1900,7 @@ static int vpe_g_selection(struct file *file, void *fh,
+ static int vpe_s_selection(struct file *file, void *fh,
+ 		struct v4l2_selection *s)
+ {
+-	struct vpe_ctx *ctx = file2ctx(file);
++	struct vpe_ctx *ctx = file->private_data;
+ 	struct vpe_q_data *q_data;
+ 	struct v4l2_selection sel = *s;
+ 	int ret;
+@@ -2275,7 +2267,7 @@ static int vpe_open(struct file *file)
+ 	init_adb_hdrs(ctx);
+ 
+ 	v4l2_fh_init(&ctx->fh, video_devdata(file));
+-	file->private_data = &ctx->fh;
++	file->private_data = ctx;
+ 
+ 	hdl = &ctx->hdl;
+ 	v4l2_ctrl_handler_init(hdl, 1);
+@@ -2360,7 +2352,7 @@ static int vpe_open(struct file *file)
+ static int vpe_release(struct file *file)
+ {
+ 	struct vpe_dev *dev = video_drvdata(file);
+-	struct vpe_ctx *ctx = file2ctx(file);
++	struct vpe_ctx *ctx = file->private_data;
+ 
+ 	vpe_dbg(dev, "releasing instance %p\n", ctx);
+ 
 -- 
 2.17.1
 
