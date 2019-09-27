@@ -2,184 +2,169 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 202C9C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9705C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7F1820872
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC1BE20872
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 20:56:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Zixga9Uh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L55gU92R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfI0U4D (ORCPT
+        id S1728230AbfI0U4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 16:56:03 -0400
-Received: from mail-eopbgr770083.outbound.protection.outlook.com ([40.107.77.83]:13891
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725306AbfI0U4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 16:56:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P++z8aeo2frWt5N9REo7D7puyHfyQVCi6ElZGjMGGlPuH0QY15U5m/wQFjFx4HtrgPR85l04RtSvDdyfROxGPfb4j/SAayX9FAj24hXwHV5qoXDEEuwJzNxOgYspzouJjPaeZaYx6tF/2RuudnGRXRm2R4m+fLDPXiCHN/+0YjmoxfAiwk/VAQxMuwUVxTodX9CdfJEXezSi+Wj+P6OsHYcGCGL4KutEmAiCAcBtFlddXue9y4dhpX7LtB1mYxwWyPB5m2kWMtGp40hOyJE7usfp5ztxFSma5WLcCssnP0GItIikajQQZek23N9Tl6doAXXq+jspIZoN7OUx0JL4oA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JX7yj9jLUzQcm5DBkaAkxFwoyZkri3auLn7bi0rCrXY=;
- b=TV2f6oBHII9R428ZHiY25ue6Jq+7HcG6/2Ks8E/vmlic/4osxoeFbM2utpR2bLbKv+5saxMhRr+g8e2oqvVsMwevgDMq9VNuh9zQYmVnjUB0rXLN6FeUnVrzRKDHq3Mt0SZc97Nclgr9tvEoxZtYRzhBr5zASVAFHykGikGdMETgAHwXqCFGB3TV+ycLx7gtG6EOrTtMddir1EBIS5RIic7tLE2kNJer571FkR73YTi3nh116ArJEd03Ti5hGR8gajJprFhCHdx3mZHpMezlxr9Q+34+h5urA9GbDc6LT6gy3iyR8G63jjqK/8/HNQdSc15Rrtm/lbkvXPPdom//cQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Fri, 27 Sep 2019 16:56:20 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38080 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727243AbfI0U4T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 16:56:19 -0400
+Received: by mail-io1-f66.google.com with SMTP id u8so19900956iom.5;
+        Fri, 27 Sep 2019 13:56:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JX7yj9jLUzQcm5DBkaAkxFwoyZkri3auLn7bi0rCrXY=;
- b=Zixga9UhFs1Y30lswDwLbPnp85/A50w0EudfyFudkLai17BSlG6Zbas/zhCWUdBrkdudEGgq3JcB9OQYgXEPNJ9wlUNTxVA0XpkBuMyblMREOTxziEisSGkj78yFqxcE1kWjF7wxaJwPwrHMN/5C2gPye9TMHlXES1eM7AUTt2s=
-Received: from MWHPR12MB1453.namprd12.prod.outlook.com (10.172.55.22) by
- MWHPR12MB1693.namprd12.prod.outlook.com (10.172.56.8) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.20; Fri, 27 Sep 2019 20:55:55 +0000
-Received: from MWHPR12MB1453.namprd12.prod.outlook.com
- ([fe80::4803:438a:eb1d:d6a6]) by MWHPR12MB1453.namprd12.prod.outlook.com
- ([fe80::4803:438a:eb1d:d6a6%10]) with mapi id 15.20.2305.017; Fri, 27 Sep
- 2019 20:55:55 +0000
-From:   "Grodzovsky, Andrey" <Andrey.Grodzovsky@amd.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>
-CC:     Erico Nunes <nunes.erico@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "steven.price@arm.com" <steven.price@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Rob Herring <robh@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>
-Subject: Re: drm_sched with panfrost crash on T820
-Thread-Topic: drm_sched with panfrost crash on T820
-Thread-Index: AQHVdQtdjrcnE/APhki/CyOIa6xfH6dAAc4A
-Date:   Fri, 27 Sep 2019 20:55:55 +0000
-Message-ID: <f0ab487e-8d49-987b-12b8-7a115a6543e1@amd.com>
-References: <e450fbe6-dec7-2704-59c2-db7e869d67f5@baylibre.com>
-In-Reply-To: <e450fbe6-dec7-2704-59c2-db7e869d67f5@baylibre.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YT1PR01CA0006.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::19)
- To MWHPR12MB1453.namprd12.prod.outlook.com (2603:10b6:301:e::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Andrey.Grodzovsky@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.55.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d0aed735-28c0-4f50-83c5-08d7438d16f8
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: MWHPR12MB1693:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR12MB16935EAF24DF9FC3C1CB6D31EA810@MWHPR12MB1693.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0173C6D4D5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(136003)(396003)(39860400002)(366004)(199004)(189003)(51234002)(52314003)(316002)(478600001)(446003)(5660300002)(11346002)(14444005)(256004)(66066001)(2616005)(476003)(6246003)(99286004)(7416002)(229853002)(86362001)(6512007)(7736002)(52116002)(36756003)(8936002)(31686004)(66556008)(66946007)(6506007)(64756008)(54906003)(66476007)(486006)(386003)(66446008)(2201001)(53546011)(110136005)(45080400002)(3846002)(6116002)(6636002)(305945005)(25786009)(26005)(2906002)(14454004)(186003)(4326008)(2501003)(76176011)(71190400001)(71200400001)(6436002)(8676002)(102836004)(31696002)(81156014)(6486002)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR12MB1693;H:MWHPR12MB1453.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: sjcSFo5wb8fu2vsivCgc1cI63PoUPWrL1Jc8/qJt2iL1lVzAJs2ixfDfnvwEHI+D35n4Yz3WTz3/Om0OfIbcKN8Dwxf/PtgM5arT9TNc/SVcoWf8ssxVkzkCh7oXWazQML4nOSu4NAOzIk7qYRFoQ9ONL4CTp6xck2LQyAyxOuK4/uXwfEyoIRkzdTudDD7Pf8vPBxQV7q/JqHjZlcU2eGecoQ/k8Ht6heUcVn1BlVofoHGZ/ZF6KcYwgTEr8f22jg86lY+seDrnJKFAJnryHMRBqPaV8jkaLRg4plJwxGLu9n5g5SsGE1JLCZXy9/CB3TGlmUF/Hwvp8WJO9yWvhazPYdw7gFnsEpugJyWcV3M0A6UymJ2Rs1vO29VnT5MeP/uvkhutyDkifV/bxiuRsoi498Qq5adTw3S5yoo7nOk=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C59B838ADB0BFB40BDF91512DA78EF80@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d0aed735-28c0-4f50-83c5-08d7438d16f8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Sep 2019 20:55:55.4738
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RqjwhEx7DkbtNXlFFgp77gueyq6PVBLvyc7QAfdx6qokz3RJXAkdL0h0xcFKLLFvvl0p2q5dgHqqzZWBWYmUYw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1693
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=6XWDs202HxUMQZwjYYpTO5aVNS5TRVFQi//IFrYDeeY=;
+        b=L55gU92RCxo9GNVu0j7NUeyo3YCMTbuo25tgLSLVNxFov7l77Bov+cwbWcukwIMGmi
+         uQ11xfLgUDttTuKPXKLZDN9SXki7uN/vSBZJjGwRaPASn4ZdEpkR54UxwTGhuzDi4Z5e
+         l8Xea2ALVip9/5WqRkO4tXSvqA1llwWS889D/XRPyBwoBv4nAUYijYD+vJ7SsLGeULiy
+         86xYsrGPscwG8DThH7DuLFMb/AmppggrpgbQ73OviP5K+aUd5taDOel92JLovRZd/g1/
+         lNPGt27Kuum7GLKO6cf/tpQgV8Dd3i1pUkpK9LHr3lW0Hu8VRN7t+1rcgm8ta8+tYWQT
+         TZtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=6XWDs202HxUMQZwjYYpTO5aVNS5TRVFQi//IFrYDeeY=;
+        b=ZCsn1QXkwGfgdOs1NGCn3eJB3hQP5yiTcogEnximLT94JtBYsSswsyRbwrTg+mb+gh
+         YVkwca/swl2DHJ0haGzJUwfz2ifcWIzpPauryuRsitgIxJdaVZl/AGwaXqDjhhd3M/rR
+         pKumL7yEXgngHjn6+mHih5D5GyqAFuuh5ljoMBF5mYNivY6xxNEhrV9RkrClAnu2TZms
+         V0MYT0wcapm+P+dcJ5DXJeCa0+3e06Pi7EOuZp2y97dX1rl4/OWiOasBqvW0Z1Up9Zo7
+         OcZwcEUebXiNikVQkp+GMBNVS1ppV77hQ+g2oP3fqomzm9uYhq4lgmxEA71eizlnni9a
+         Ifhw==
+X-Gm-Message-State: APjAAAUpSIgBWmLsiNcrAwTCJY1dx0bA6mp/2ywHupDeT9f5Lcw1wbPj
+        P9OPhXPJxcLx90JQEvanEo4=
+X-Google-Smtp-Source: APXvYqxIcYCc3Etak50jxb9W0VgkeBkDrg7+srVbZp7ZubSS9Bq9i9G37DHrUcaMh7iYwl9mc9fWIA==
+X-Received: by 2002:a6b:6d07:: with SMTP id a7mr10591163iod.261.1569617778856;
+        Fri, 27 Sep 2019 13:56:18 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id 197sm3197316ioc.78.2019.09.27.13.56.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Sep 2019 13:56:18 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Shaul Triebitz <shaul.triebitz@intel.com>,
+        Sara Sharon <sara.sharon@intel.com>,
+        Shahar S Matityahu <shahar.s.matityahu@intel.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] iwlwifi: fix memory leaks in iwl_pcie_ctxt_info_gen3_init
+Date:   Fri, 27 Sep 2019 15:56:04 -0500
+Message-Id: <20190927205608.8755-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Q2FuIHlvdSBwbGVhc2UgdXNlIGFkZHIybGluZSBvciBnZGIgdG8gcGlucG9pbnQgd2hlcmUgaW4g
-DQpkcm1fc2NoZWRfaW5jcmVhc2Vfa2FybWEgeW91IGhpdCB0aGUgTlVMTCBwdHIgPyBJdCBsb29r
-cyBsaWtlIHRoZSBndWlsdHkgDQpqb2IsIGJ1dCB0byBiZSBzdXJlLg0KDQpBbmRyZXkNCg0KT24g
-OS8yNy8xOSA0OjEyIEFNLCBOZWlsIEFybXN0cm9uZyB3cm90ZToNCj4gSGkgQ2hyaXN0aWFuLA0K
-Pg0KPiBJbiB2NS4zLCBydW5uaW5nIGRFUVAgdHJpZ2dlcnMgdGhlIGZvbGxvd2luZyBrZXJuZWwg
-Y3Jhc2ggOg0KPg0KPiBbICAgMjAuMjI0OTgyXSBVbmFibGUgdG8gaGFuZGxlIGtlcm5lbCBOVUxM
-IHBvaW50ZXIgZGVyZWZlcmVuY2UgYXQgdmlydHVhbCBhZGRyZXNzIDAwMDAwMDAwMDAwMDAwMzgN
-Cj4gWy4uLl0NCj4gWyAgIDIwLjI5MTA2NF0gSGFyZHdhcmUgbmFtZTogS2hhZGFzIFZJTTIgKERU
-KQ0KPiBbICAgMjAuMjk1MjE3XSBXb3JrcXVldWU6IGV2ZW50cyBkcm1fc2NoZWRfam9iX3RpbWVk
-b3V0DQo+IFsuLi5dDQo+IFsgICAyMC4zMDQ4NjddIHBjIDogZHJtX3NjaGVkX2luY3JlYXNlX2th
-cm1hKzB4NWMvMHhmMA0KPiBbICAgMjAuMzA5Njk2XSBsciA6IGRybV9zY2hlZF9pbmNyZWFzZV9r
-YXJtYSsweDQ0LzB4ZjANCj4gWy4uLl0NCj4gWyAgIDIwLjM5NjcyMF0gQ2FsbCB0cmFjZToNCj4g
-WyAgIDIwLjM5OTEzOF0gIGRybV9zY2hlZF9pbmNyZWFzZV9rYXJtYSsweDVjLzB4ZjANCj4gWyAg
-IDIwLjQwMzYyM10gIHBhbmZyb3N0X2pvYl90aW1lZG91dCsweDEyYy8weDFlMA0KPiBbICAgMjAu
-NDA4MDIxXSAgZHJtX3NjaGVkX2pvYl90aW1lZG91dCsweDQ4LzB4YTANCj4gWyAgIDIwLjQxMjMz
-Nl0gIHByb2Nlc3Nfb25lX3dvcmsrMHgxZTAvMHgzMjANCj4gWyAgIDIwLjQxNjMwMF0gIHdvcmtl
-cl90aHJlYWQrMHg0MC8weDQ1MA0KPiBbICAgMjAuNDE5OTI0XSAga3RocmVhZCsweDEyNC8weDEy
-OA0KPiBbICAgMjAuNDIzMTE2XSAgcmV0X2Zyb21fZm9yaysweDEwLzB4MTgNCj4gWyAgIDIwLjQy
-NjY1M10gQ29kZTogZjk0MDAwMDEgNTQwMDAxYzAgZjk0MDBhODMgZjk0MDI0MDIgKGY5NDAxYzY0
-KQ0KPiBbICAgMjAuNDMyNjkwXSAtLS1bIGVuZCB0cmFjZSBiZDAyZjg5MDEzOTA5NmE3IF0tLS0N
-Cj4NCj4gV2hpY2ggbmV2ZXIgaGFwcGVucywgYXQgYWxsLCBvbiB2NS4yLg0KPg0KPiBJIGRpZCBh
-ICh2ZXJ5KSBsb25nICg3IGRheXMsIH4xMDBydW5zKSBiaXNlY3QgcnVuIHVzaW5nIG91ciBMQVZB
-IGxhYiAodGhhbmtzIHRvbWV1ICEpLCBidXQNCj4gYmlzZWN0aW5nIHdhcyBub3QgZWFzeSBzaW5j
-ZSB0aGUgYmFkIGNvbW1pdCBsYW5kZWQgb24gZHJtLW1pc2MtbmV4dCBhZnRlciB2NS4xLXJjNiwg
-YW5kDQo+IHRoZW4gdjUuMi1yYzEgd2FzIGJhY2ttZXJnZWQgaW50byBkcm0tbWlzYy1uZXh0IGF0
-Og0KPiBbMV0gMzc0ZWQ1NDI5MzQ2IE1lcmdlIGRybS9kcm0tbmV4dCBpbnRvIGRybS1taXNjLW5l
-eHQNCj4NCj4gVGh1cyBiaXNlY3RpbmcgYmV0d2VlbiBbMV0gYW5nIHY1LjItcmMxIGxlYWRzIHRv
-IGNvbW1pdCBiYXNlZCBvbiB2NS4yLXJjMS4uLiB3aGVyZSBwYW5mcm9zdCB3YXMNCj4gbm90IGVu
-YWJsZWQgaW4gdGhlIEtoYWRhcyBWSU0yIERULg0KPg0KPiBBbnl3YXksIEkgbWFuYWdlZCB0byBp
-ZGVudGlmeSAzIHBvc3NpYmx5IGJyZWFraW5nIGNvbW1pdHMgOg0KPiBbMl0gMjkwNzY0YWY3ZTM2
-IGRybS9zY2hlZDogS2VlcCBzX2ZlbmNlLT5wYXJlbnQgcG9pbnRlcg0KPiBbM10gNTkxODA0NWM0
-ZWQ0IGRybS9zY2hlZHVsZXI6IHJld29yayBqb2IgZGVzdHJ1Y3Rpb24NCj4gWzRdIGE1MzQzYjhh
-MmNhNSBkcm0vc2NoZWR1bGVyOiBBZGQgZmxhZyB0byBoaW50IHRoZSByZWxlYXNlIG9mIGd1aWx0
-eSBqb2IuDQo+DQo+IEJ1dCBbMV0gYW5kIFsyXSBkb2Vzbid0IGNyYXNoIHRoZSBzYW1lIHdheSA6
-DQo+IFsgICAxNi4yNTc5MTJdIFVuYWJsZSB0byBoYW5kbGUga2VybmVsIE5VTEwgcG9pbnRlciBk
-ZXJlZmVyZW5jZSBhdCB2aXJ0dWFsIGFkZHJlc3MgMDAwMDAwMDAwMDAwMDA2MA0KPiBbLi4uXQ0K
-PiBbICAgMTYuMzA4MzA3XSBDUFU6IDQgUElEOiA4MCBDb21tOiBrd29ya2VyLzQ6MSBOb3QgdGFp
-bnRlZCA1LjEuMC1yYzItMDExODUtZzI5MDc2NGFmN2UzNi1kaXJ0eSAjMzc4DQo+IFsgICAxNi4z
-MTcwOTldIEhhcmR3YXJlIG5hbWU6IEtoYWRhcyBWSU0yIChEVCkNCj4gWy4uLl0pDQo+IFsgICAx
-Ni4zMzA5MDddIHBjIDogcmVmY291bnRfc3ViX2FuZF90ZXN0X2NoZWNrZWQrMHg0LzB4YjANCj4g
-WyAgIDE2LjMzNjA3OF0gbHIgOiByZWZjb3VudF9kZWNfYW5kX3Rlc3RfY2hlY2tlZCsweDE0LzB4
-MjANCj4gWy4uLl0NCj4gWyAgIDE2LjQyMzUzM10gUHJvY2VzcyBrd29ya2VyLzQ6MSAocGlkOiA4
-MCwgc3RhY2sgbGltaXQgPSAweChfX19fcHRydmFsX19fXykpDQo+IFsgICAxNi40MzA0MzFdIENh
-bGwgdHJhY2U6DQo+IFsgICAxNi40MzI4NTFdICByZWZjb3VudF9zdWJfYW5kX3Rlc3RfY2hlY2tl
-ZCsweDQvMHhiMA0KPiBbICAgMTYuNDM3NjgxXSAgZHJtX3NjaGVkX2pvYl9jbGVhbnVwKzB4MjQv
-MHg1OA0KPiBbICAgMTYuNDQxOTA4XSAgcGFuZnJvc3Rfam9iX2ZyZWUrMHgxNC8weDI4DQo+IFsg
-ICAxNi40NDU3ODddICBkcm1fc2NoZWRfam9iX3RpbWVkb3V0KzB4NmMvMHhhMA0KPiBbICAgMTYu
-NDUwMTAyXSAgcHJvY2Vzc19vbmVfd29yaysweDFlMC8weDMyMA0KPiBbICAgMTYuNDU0MDY3XSAg
-d29ya2VyX3RocmVhZCsweDQwLzB4NDUwDQo+IFsgICAxNi40NTc2OTBdICBrdGhyZWFkKzB4MTI0
-LzB4MTI4DQo+IFsgICAxNi40NjA4ODJdICByZXRfZnJvbV9mb3JrKzB4MTAvMHgxOA0KPiBbICAg
-MTYuNDY0NDIxXSBDb2RlOiA1MjgwMDAwMCBkNjVmMDNjMCBkNTAzMjAxZiBhYTAxMDNlMyAoYjk0
-MDAwMjEpDQo+IFsgICAxNi40NzA0NTZdIC0tLVsgZW5kIHRyYWNlIDM5YTY3NDEyZWUxYjY0YjUg
-XS0tLQ0KPg0KPiBhbmQgWzNdIGZhaWxzIGxpa2Ugb24gdjUuMyAoaW4gZHJtX3NjaGVkX2luY3Jl
-YXNlX2thcm1hKToNCj4gWyAgIDMzLjgzMDA4MF0gVW5hYmxlIHRvIGhhbmRsZSBrZXJuZWwgTlVM
-TCBwb2ludGVyIGRlcmVmZXJlbmNlIGF0IHZpcnR1YWwgYWRkcmVzcyAwMDAwMDAwMDAwMDAwMDM4
-DQo+IFsuLi5dDQo+IFsgICAzMy44NzE5NDZdIEludGVybmFsIGVycm9yOiBPb3BzOiA5NjAwMDAw
-NCBbIzFdIFBSRUVNUFQgU01QDQo+IFsgICAzMy44Nzc0NTBdIE1vZHVsZXMgbGlua2VkIGluOg0K
-PiBbICAgMzMuODgwNDc0XSBDUFU6IDYgUElEOiA4MSBDb21tOiBrd29ya2VyLzY6MSBOb3QgdGFp
-bnRlZCA1LjEuMC1yYzItMDExODYtZ2E1MzQzYjhhMmNhNS1kaXJ0eSAjMzgwDQo+IFsgICAzMy44
-ODkyNjVdIEhhcmR3YXJlIG5hbWU6IEtoYWRhcyBWSU0yIChEVCkNCj4gWyAgIDMzLjg5MzQxOV0g
-V29ya3F1ZXVlOiBldmVudHMgZHJtX3NjaGVkX2pvYl90aW1lZG91dA0KPiBbLi4uXQ0KPiBbICAg
-MzMuOTAzMDY5XSBwYyA6IGRybV9zY2hlZF9pbmNyZWFzZV9rYXJtYSsweDVjLzB4ZjANCj4gWyAg
-IDMzLjkwNzg5OF0gbHIgOiBkcm1fc2NoZWRfaW5jcmVhc2Vfa2FybWErMHg0NC8weGYwDQo+IFsu
-Li5dDQo+IFsgICAzMy45OTQ5MjRdIFByb2Nlc3Mga3dvcmtlci82OjEgKHBpZDogODEsIHN0YWNr
-IGxpbWl0ID0gMHgoX19fX3B0cnZhbF9fX18pKQ0KPiBbICAgMzQuMDAxODIyXSBDYWxsIHRyYWNl
-Og0KPiBbICAgMzQuMDA0MjQyXSAgZHJtX3NjaGVkX2luY3JlYXNlX2thcm1hKzB4NWMvMHhmMA0K
-PiBbICAgMzQuMDA4NzI2XSAgcGFuZnJvc3Rfam9iX3RpbWVkb3V0KzB4MTJjLzB4MWUwDQo+IFsg
-ICAzNC4wMTMxMjJdICBkcm1fc2NoZWRfam9iX3RpbWVkb3V0KzB4NDgvMHhhMA0KPiBbICAgMzQu
-MDE3NDM4XSAgcHJvY2Vzc19vbmVfd29yaysweDFlMC8weDMyMA0KPiBbICAgMzQuMDIxNDAyXSAg
-d29ya2VyX3RocmVhZCsweDQwLzB4NDUwDQo+IFsgICAzNC4wMjUwMjZdICBrdGhyZWFkKzB4MTI0
-LzB4MTI4DQo+IFsgICAzNC4wMjgyMThdICByZXRfZnJvbV9mb3JrKzB4MTAvMHgxOA0KPiBbICAg
-MzQuMDMxNzU1XSBDb2RlOiBmOTQwMDAwMSA1NDAwMDFjMCBmOTQwMGE4MyBmOTQwMjQwMiAoZjk0
-MDFjNjQpDQo+IFsgICAzNC4wMzc3OTJdIC0tLVsgZW5kIHRyYWNlIGJlM2ZkNmY3N2Y0ZGYyNjcg
-XS0tLQ0KPg0KPg0KPiBXaGVuIEkgcmV2ZXJ0IFszXSBvbiBbMV0sIGkgZ2V0IHRoZSBzYW1lIGNy
-YXNoIGFzIFsyXSwgbWVhbmluZw0KPiB0aGUgY29tbWl0IFszXSBtYXNrcyB0aGUgZmFpbHVyZSBb
-Ml0gaW50cm9kdWNlZC4NCj4NCj4gRG8geW91IGtub3cgaG93IHRvIHNvbHZlIHRoaXMgPw0KPg0K
-PiBUaGFua3MsDQo+IE5laWwNCg==
+In iwl_pcie_ctxt_info_gen3_init there are cases that the allocated dma
+memory is leaked in case of error.
+DMA memories prph_scratch, prph_info, and ctxt_info_gen3 are allocated
+and initialized to be later assigned to trans_pcie. But in any error case
+before such assignment the allocated memories should be released.
+First of such error cases happens when iwl_pcie_init_fw_sec fails.
+Current implementation correctly releases prph_scratch. But in two
+sunsequent error cases where dma_alloc_coherent may fail, such releases
+are missing. This commit adds release for prph_scratch when allocation
+for prph_info fails, and adds releases for prph_scratch and prph_info
+when allocation for ctxt_info_gen3 fails.
+
+Fixes: 2ee824026288 ("iwlwifi: pcie: support context information for 22560 devices")
+
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ .../intel/iwlwifi/pcie/ctxt-info-gen3.c       | 36 +++++++++++++------
+ 1 file changed, 25 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info-gen3.c b/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info-gen3.c
+index 75fa8a6aafee..b2759c751822 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info-gen3.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/ctxt-info-gen3.c
+@@ -107,13 +107,9 @@ int iwl_pcie_ctxt_info_gen3_init(struct iwl_trans *trans,
+ 
+ 	/* allocate ucode sections in dram and set addresses */
+ 	ret = iwl_pcie_init_fw_sec(trans, fw, &prph_scratch->dram);
+-	if (ret) {
+-		dma_free_coherent(trans->dev,
+-				  sizeof(*prph_scratch),
+-				  prph_scratch,
+-				  trans_pcie->prph_scratch_dma_addr);
+-		return ret;
+-	}
++	if (ret)
++		goto err_free_prph_scratch;
++
+ 
+ 	/* Allocate prph information
+ 	 * currently we don't assign to the prph info anything, but it would get
+@@ -121,16 +117,20 @@ int iwl_pcie_ctxt_info_gen3_init(struct iwl_trans *trans,
+ 	prph_info = dma_alloc_coherent(trans->dev, sizeof(*prph_info),
+ 				       &trans_pcie->prph_info_dma_addr,
+ 				       GFP_KERNEL);
+-	if (!prph_info)
+-		return -ENOMEM;
++	if (!prph_info) {
++		ret = -ENOMEM;
++		goto err_free_prph_scratch;
++	}
+ 
+ 	/* Allocate context info */
+ 	ctxt_info_gen3 = dma_alloc_coherent(trans->dev,
+ 					    sizeof(*ctxt_info_gen3),
+ 					    &trans_pcie->ctxt_info_dma_addr,
+ 					    GFP_KERNEL);
+-	if (!ctxt_info_gen3)
+-		return -ENOMEM;
++	if (!ctxt_info_gen3) {
++		ret = -ENOMEM;
++		goto err_free_prph_info;
++	}
+ 
+ 	ctxt_info_gen3->prph_info_base_addr =
+ 		cpu_to_le64(trans_pcie->prph_info_dma_addr);
+@@ -186,6 +186,20 @@ int iwl_pcie_ctxt_info_gen3_init(struct iwl_trans *trans,
+ 		iwl_set_bit(trans, CSR_GP_CNTRL, CSR_AUTO_FUNC_INIT);
+ 
+ 	return 0;
++
++err_free_prph_info:
++	dma_free_coherent(trans->dev,
++			  sizeof(*prph_info),
++			prph_info,
++			trans_pcie->prph_info_dma_addr);
++
++err_free_prph_scratch:
++	dma_free_coherent(trans->dev,
++			  sizeof(*prph_scratch),
++			prph_scratch,
++			trans_pcie->prph_scratch_dma_addr);
++	return ret;
++
+ }
+ 
+ void iwl_pcie_ctxt_info_gen3_free(struct iwl_trans *trans)
+-- 
+2.17.1
+
