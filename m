@@ -2,88 +2,105 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F594C32774
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 09:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BD4C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 09:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 052F7217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 09:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 380082075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 09:19:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfI0JS7 (ORCPT
+        id S1726750AbfI0JT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 05:18:59 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34002 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbfI0JS7 (ORCPT
+        Fri, 27 Sep 2019 05:19:27 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:57429 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfI0JT1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 05:18:59 -0400
-Received: by mail-ot1-f68.google.com with SMTP id m19so1681309otp.1;
-        Fri, 27 Sep 2019 02:18:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1BH0Vz3nqYEk3uBlmLrPdAWKkQEPayw9EpZKQBCwWhc=;
-        b=I0JDaqs6fyP+gRO5zyOduL0kpcligQ3/+TipnlTvgLQWhxlBQJBY0Ly8lzocCzaJVM
-         bM95A79JRCLtWlP8Lv4jOrB6bTPTez+En7nO0wTEyxWOVwZI3RUWwdidcgmO40mPi9GC
-         aDXaW4Uy1CcH2lorFskxsh4H6vXg03pPNSeDHwr7+CytIv4ETPRF/fmugV/61Xy99juS
-         9Ga024kvd0tlZ3J3PQB1p9xyO8hVdMEsf0/EbnL+4ruugIA1vbslEabaEGVW+uCunYge
-         6LETrSJGZ4jOwwY6fEpFVpGTUs7oFnr2w6fZ+MOfrTMnd3IhT341JOcIRCp3AdlqdEnQ
-         Kg1g==
-X-Gm-Message-State: APjAAAUsSQ71pJeDVw0Z3QVBiLjyJ+DNAmx4me1HMuMYx4530myhCAos
-        +7zaBTqw0c1XUpbQRwEn2QLUXE7ge2ZZL2S5fyQ=
-X-Google-Smtp-Source: APXvYqzbPjRiKTghIyriIKOe9Ucwh6OZNxL7ThafEIlwv9M07UyWLoDcrPJrT0NojwgaVgn5gQrCwXQhwitVJOPGwpw=
-X-Received: by 2002:a9d:193:: with SMTP id e19mr2283511ote.107.1569575938022;
- Fri, 27 Sep 2019 02:18:58 -0700 (PDT)
+        Fri, 27 Sep 2019 05:19:27 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iDmPG-0002DZ-GD; Fri, 27 Sep 2019 11:19:18 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iDmPB-0000Js-GM; Fri, 27 Sep 2019 11:19:13 +0200
+Date:   Fri, 27 Sep 2019 11:19:13 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, manivannan.sadhasivam@linaro.org,
+        andrew.smirnov@gmail.com, marex@denx.de, angus@akkea.ca,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, j.neuschaefer@gmx.net,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>
+Subject: Re: [PATCH 2/3] dt-bindings: arm: fsl: add compatible string for
+ Kobo Clara HD
+Message-ID: <20190927091913.iben3anhg3jr4eps@pengutronix.de>
+References: <20190927061423.17278-1-andreas@kemnade.info>
+ <20190927061423.17278-3-andreas@kemnade.info>
 MIME-Version: 1.0
-References: <20190927002455.13169-1-robh@kernel.org> <20190927002455.13169-3-robh@kernel.org>
-In-Reply-To: <20190927002455.13169-3-robh@kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 27 Sep 2019 11:18:47 +0200
-Message-ID: <CAMuHMdVmG9NJ3eDWTGbMtzH7+Q0HDOjDR_QoGoGFN4OcQUTbNQ@mail.gmail.com>
-Subject: Re: [PATCH 02/11] of: Make of_dma_get_range() private
-To:     Rob Herring <robh@kernel.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Oza Pawandeep <oza.oza@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190927061423.17278-3-andreas@kemnade.info>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 11:18:22 up 132 days, 15:36, 86 users,  load average: 0.08, 0.07,
+ 0.12
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 2:25 AM Rob Herring <robh@kernel.org> wrote:
-> of_dma_get_range() is only used within the DT core code, so remove the
-> export and move the header declaration to the private header.
->
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
+Hi Andreas,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On 19-09-27 08:14, Andreas Kemnade wrote:
+> This adds a compatible string fro the Kobo Clara HD eBook reader.
+> 
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> ---
 
-Gr{oetje,eeting}s,
+Just a nitpick, this should be patch number 1.
 
-                        Geert
+Regards,
+  Marco
+
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+> index 7294ac36f4c0..afa3bfeca0c0 100644
+> --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> @@ -148,6 +148,7 @@ properties:
+>          items:
+>            - enum:
+>                - fsl,imx6sll-evk
+> +              - kobo,clarahd
+>            - const: fsl,imx6sll
+>  
+>        - description: i.MX6SX based Boards
+> -- 
+> 2.20.1
+> 
+> 
+> 
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
