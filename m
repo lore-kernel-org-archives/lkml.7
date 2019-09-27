@@ -2,123 +2,96 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A55C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 06:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C057AC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 06:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45B4021783
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 06:52:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569567156;
-	bh=5gBIEkjI6iWejQF/56wpFyaJjanOtL42ZOiB2WqlbO0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VPJs+FFi87eEN7gVJu8eDy2ZawAOlz2Ch7kMU9b/A8b/mfyBIaJ+d0tOcImndPdM3
-	 ZaJRiBcxVrmQTLAirL04DuIq6GZ7rd1YBRlyzq5l2Ul2wCzjNNwp2D3clEoY3wJirD
-	 6vQSVxSnrWP3nJj7gyZjcP18N2vfxPTfKktrk5gU=
+	by mail.kernel.org (Postfix) with ESMTP id 957B421783
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 06:57:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ofTo4Fcs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbfI0Gwf (ORCPT
+        id S1726135AbfI0G5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 02:52:35 -0400
-Received: from mail-wr1-f43.google.com ([209.85.221.43]:37285 "EHLO
-        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725837AbfI0Gwf (ORCPT
+        Fri, 27 Sep 2019 02:57:05 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42449 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725820AbfI0G5F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 02:52:35 -0400
-Received: by mail-wr1-f43.google.com with SMTP id i1so1377124wro.4;
-        Thu, 26 Sep 2019 23:52:33 -0700 (PDT)
+        Fri, 27 Sep 2019 02:57:05 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n14so1365276wrw.9
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 23:57:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=u2P8AbN7Weo/sHgPPISeZwn+7KOvEl8QMm31QIQuXF8=;
+        b=ofTo4FcsEy51qA0Sl11NYFJXHXvI71yAmWnKYefWox3Bmloa6xkhV3dttDo7xMOSKS
+         7KpZ/7Jj+93HLqaFXUJEqjfVczDN5/JOMcg76+KEIFjpKg2iVAPH2Y2bTW1FYtuYzGAB
+         m8aAbBSw2IdOsoqL8uHcOiqmHTQSfdvf87yCTSiQbUIsDAR+1Gld1Ro6CN48jQ32GTow
+         bIqcmZQqz7lbCZ3R8FgCWvw4BeWIHE65RetlmE769+rs+IOxWvjaN3PcYJhBrzTM+xpX
+         2cdn7pCVgXWf3tjdSmTCwJRuepHfJ+xS60KFNbW7pjqQeSR+N8aSVjVOGr5ucLz3Bg92
+         3lvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=od5B4j98TvNYBzRRG1HwoKOK/0TgQjKHWbpoGxQhWMA=;
-        b=ajcj43eQminsdWFZj1BcSC4hNR2IMMhCpFPxUMUxP1+887tOQm9PMtCmo5boupGYsM
-         Qziyr2ReK50I1cXAyQUoBteTD7/O/mB0ZBfIgmXSHSIbEPoyd4DP9PH9NSrowV2PeYvI
-         Ni6ibxFdiC7c3nkgGoe0CkpIbZ0sWID5T/uatlgVSaNxdkEprYcpGdWo7lHlteq8UCCo
-         fFSnln+5nqV/RJpXL9zJ8KnfY0fhZBe9aTq90IlxY5GNKIuGo4/I+fULL8S1ESh7e1p6
-         cGwNJs51Wk2LcDAisr1kyQoVG0M4pGIJ5xPBoPTpWcaF0+2VD9Ngz857HBdWDzV19B5X
-         bzqg==
-X-Gm-Message-State: APjAAAV+lryCbpGfvK4o6eCYoQ9//Kjxo9UM9tS5lv6eSOXpcG1m3yZQ
-        hCzEtoaBTzh2UfwoU7/PPm5MYDEP
-X-Google-Smtp-Source: APXvYqxdEtihX4Yerytw8i64RZ/298ncU9GqZWRrjMVs8x96gM2opoAvGjGhrDbKmbgWIrHpe/sbHg==
-X-Received: by 2002:adf:a350:: with SMTP id d16mr1667998wrb.326.1569567152554;
-        Thu, 26 Sep 2019 23:52:32 -0700 (PDT)
-Received: from pi3 ([194.230.155.145])
-        by smtp.googlemail.com with ESMTPSA id j1sm3672139wrg.24.2019.09.26.23.52.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Sep 2019 23:52:31 -0700 (PDT)
-Date:   Fri, 27 Sep 2019 08:52:29 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: timer: Use defines instead of numbers in
- Exynos MCT examples
-Message-ID: <20190927065229.GA18923@pi3>
-References: <CGME20190926183707epcas3p350fe17bc738540b37f1130d967c31a62@epcas3p3.samsung.com>
- <20190926183643.7118-1-krzk@kernel.org>
- <fc0809b0-1e6a-0564-75d9-0ccb14d2826c@samsung.com>
+        bh=u2P8AbN7Weo/sHgPPISeZwn+7KOvEl8QMm31QIQuXF8=;
+        b=M7LlDa1SXPLVZ1q0lFiZ585wLRISxI9EBH6w/1z5UQenZVcN4Jo8s7S3It3cm6ktJH
+         eqlVPIsBIcYVCNTSw8crRnhkc71PYXmtGof4Uw868fOL/8gMVmaVayv+nYmUYPQyK72a
+         SFPYkGFlAgH1qVdqMrRNLqt6gLiPSv88rDO3Us2Rjd3E8pbhcKYqsOACRzw/4BkM39Z7
+         35kQQUR5gXgJho9aNf2QMnKb7EuQ/hJRabyeGgKFyu3XjFc45xX5KPxcSaj5UhXTsSIt
+         faX0qxb12ejkW88hweX8XdS+PqI+QBXrOyNsF++vy0L+6LFD+ItY+/s5lydwvozUF8NB
+         ra3g==
+X-Gm-Message-State: APjAAAWBe3x68Vu6k9J3//sruRbxSTLSJuKinmq5BbcnoRIrPQlLgNSf
+        QeD1fmCstK6tXLGwu21Lsg==
+X-Google-Smtp-Source: APXvYqwSKfzPAVpPpD1887r09lrL9k621UTDLWQfyMKnW+uf2J8eQfr8IH1PA/rNfcCix9Gfq8r10A==
+X-Received: by 2002:adf:ea10:: with SMTP id q16mr1727843wrm.356.1569567423533;
+        Thu, 26 Sep 2019 23:57:03 -0700 (PDT)
+Received: from avx2 ([46.53.252.76])
+        by smtp.gmail.com with ESMTPSA id y3sm17525896wmg.2.2019.09.26.23.57.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 26 Sep 2019 23:57:02 -0700 (PDT)
+Date:   Fri, 27 Sep 2019 09:57:00 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Joe Perches <joe@perches.com>
+Subject: Re: [GIT PULL] treewide conversion to sizeof_member() for v5.4-rc1
+Message-ID: <20190927065700.GA2215@avx2>
+References: <201909261026.6E3381876C@keescook>
+ <CAHk-=wg8+eNK+SK1Ekqm0qNQHVM6e6YOdZx3yhsX6Ajo3gEupg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <fc0809b0-1e6a-0564-75d9-0ccb14d2826c@samsung.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAHk-=wg8+eNK+SK1Ekqm0qNQHVM6e6YOdZx3yhsX6Ajo3gEupg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 08:36:47AM +0200, Marek Szyprowski wrote:
-> Hi Krzysztof,
- >   
-> >       timer@10050000 {
-> >           compatible = "samsung,exynos4412-mct";
-> >           reg = <0x10050000 0x800>;
-> >   
-> > -        interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
-> > -                     <0 42 0>;
-> > +        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-> > +                     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
-> > +                     <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
-> > +                     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>,
-> > +                     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+On Thu, Sep 26, 2019 at 01:06:01PM -0700, Linus Torvalds wrote:
+> On Thu, Sep 26, 2019 at 10:33 AM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > Please pull this mostly mechanical treewide conversion to the single and
+> > more accurately named sizeof_member() macro for the end of v5.4-rc1. This
+> > replaces 3 macros of the same behavior (FIELD_SIZEOF(), SIZEOF_FIELD(),
+> > and sizeof_field()). The last patch in the series has a script in the
+> > commit log to do the conversion, if you want to compare the results
+> > (they remained identical today when I checked).
 > 
-> the last one should be GIC_PPI
+> Honestly, I'm not sure why "sizeof_field()" wasn't just picked when we
+> already had it. Making a new macro for the exact same thing seems
+> somewhat questionable.
 > 
-> >       };
-> >   
-> >     - |
-> >       // In this example, the IP contains four local timers, but using
-> >       // a per-processor interrupt to handle them. All the local timer
-> >       // interrupts are specified.
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> >   
-> >       timer@10050000 {
-> >           compatible = "samsung,exynos4412-mct";
-> >           reg = <0x10050000 0x800>;
-> >   
-> > -        interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
-> > -                     <0 42 0>, <0 42 0>, <0 42 0>, <0 42 0>;
-> > +        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-> > +                     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
-> > +                     <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
-> > +                     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>,
-> > +                     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
-> > +                     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
-> > +                     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
-> > +                     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-> 
-> again, last 4 entries should use GIC_PPI
+> Yes, yes, the C standard calls them "members". Except when it doesn't,
+> and they are members of a bit type, and it calls them bit-fields.
 
-Indeed, thanks for noticing it.
-
-Best regards,
-Krzysztof
-
+It does, but neither typeof nor sizeof work on bitfields.
