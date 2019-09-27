@@ -2,89 +2,100 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ADF5C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 13:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD37FC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6036421841
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 13:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 900FD20872
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 14:01:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rajcAFOy"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="QwhnczTv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727710AbfI0N7J (ORCPT
+        id S1727465AbfI0OBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 09:59:09 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:60994 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727416AbfI0N7J (ORCPT
+        Fri, 27 Sep 2019 10:01:47 -0400
+Received: from mail-wr1-f43.google.com ([209.85.221.43]:36787 "EHLO
+        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726843AbfI0OBq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 09:59:09 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8RDwn29021767;
-        Fri, 27 Sep 2019 13:59:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=OISkejdCnUQ7n1u+9AO5cwXNSfG1nz9xfUQ6TViyWls=;
- b=rajcAFOyckY2py9OvWKGBHE0XENcGcHHZWI7QydjlrZz9LrWBYBJPTca08zYkuOcedvD
- tin+eBGjDIDdCFMFged5W7wZUxe99ySnap81P1wdbdmQOS60Zz+uib0d91nknSbeHmuu
- TEZ/gzNnDc/h1ih5xP5SStWU4VhoIYjsPIgC5uZETBBRl4GBchKhwkPG4ItNmnLKzAAw
- SVED0dJHfl0lJcrfx5Z7FRcVP4zb5yZiHjJacCXjXijQxAI1Y9nMQLACqO3G6bH9n9Af
- m9MZMKo8+9Exsop2Fatt1GZEB9v0Pa4MnSBEkfctcYQkULY/r/Bo8dPBRB6MR8JFoTxu 3A== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2v5cgrjdry-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Sep 2019 13:59:00 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8RDwaeP014695;
-        Fri, 27 Sep 2019 13:58:59 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2v8yk03hxy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Sep 2019 13:58:52 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8RDwS9f032464;
-        Fri, 27 Sep 2019 13:58:28 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 27 Sep 2019 06:58:27 -0700
-Date:   Fri, 27 Sep 2019 16:58:18 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Connor Kuehl <connor.kuehl@canonical.com>
-Cc:     Larry.Finger@lwfinger.net, gregkh@linuxfoundation.org,
-        straube.linux@gmail.com, devel@driverdev.osuosl.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] staging: rtl8188eu: remove dead code/vestigial
- do..while loop
-Message-ID: <20190927102349.GG27389@kadam>
-References: <20190924142819.5243-1-connor.kuehl@canonical.com>
+        Fri, 27 Sep 2019 10:01:46 -0400
+Received: by mail-wr1-f43.google.com with SMTP id y19so2893096wrd.3
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 07:01:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=RKXGJO67bSVwcMxapZtp3HQ/bxJlidvJPusHAL8DCEE=;
+        b=QwhnczTvZSqyKTVGhoX1/k1O5JUcXrinwvEVzw/2GMgtscxYn2JQt+cGP8Y/nPnben
+         Kx2+3Klv2P28K2aOxrY/0eRB2f5cU9PyoIlwiyjwYE6C1xryj4SNW5marQTWm6VzUGhh
+         w0innW9sm1+Zk4kJlhf+Emm/+95/3hyFVnnxvzewx+UvSwA35qpjwyxBU32dYs6dZ/jQ
+         eGEwyNz++7qiZYmA+uYRyv4jnrPCgSZ8F5yZr0FcnUJr4bjo4uAREFH3G4cdK+frUjnG
+         48EV8cVtDuYd09+Qk/tnwG3BrPSv+wlJbNh/BWXPqcoSUEwndWxTf69UZjKcWpsK5NTa
+         q8wQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=RKXGJO67bSVwcMxapZtp3HQ/bxJlidvJPusHAL8DCEE=;
+        b=f6dK5ILjZUhb/s28G2d+UJv4gIquvaTPQneJOeAxoho9BC4xBxnfaTrYpAjc/mGu+k
+         25v84SkgWMFo4tv8/7sGzNYI1CdrHcjeHsyaEP+qHPixgRsiXsveUaeG6BGaDUuaiNv4
+         YrG9KkULCwZKadTVsd+Q0ySgb8RTS1EnYkk8bNdGha0k99tpkjXj6BG8fVL0CAivFhwO
+         JyTx/F+2tpQIx/fVtCl0zC9qXucXrqCG7KYkkUSOOPxe9WxDSDG1ZQSLvX/PcSEOpjFI
+         xGdrx2bUJVj9TxVpyUFShaVn4fp+z1hF+bjGFeJt0W1oWNeos0Gc7FYj8J8N5WBx67CC
+         gqLA==
+X-Gm-Message-State: APjAAAXG9D2zspIdsmjDZNpUx8v8Ukf5lQkb5I7IhE4zPDOr91flPk1G
+        1+uir4onHAnA2Az6uJKIiG/WAg==
+X-Google-Smtp-Source: APXvYqzOuKYxBRVn2GcuMubPwocxzt5Z1JaAXuyzDNij4c6n2cyhfFh4z6NQyBhBElqMeCRehy8T6A==
+X-Received: by 2002:a5d:4f04:: with SMTP id c4mr2443279wru.98.1569592904391;
+        Fri, 27 Sep 2019 07:01:44 -0700 (PDT)
+Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id f10sm4276096wml.4.2019.09.27.07.01.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Sep 2019 07:01:43 -0700 (PDT)
+References: <20190924153356.24103-1-jbrunet@baylibre.com> <20190924153356.24103-8-jbrunet@baylibre.com> <22415bc6-2550-d927-93e0-88f6aa2bee9d@baylibre.com>
+User-agent: mu4e 1.3.3; emacs 26.2
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 7/7] clk: meson: axg_audio: add sm1 support
+In-reply-to: <22415bc6-2550-d927-93e0-88f6aa2bee9d@baylibre.com>
+Date:   Fri, 27 Sep 2019 16:01:42 +0200
+Message-ID: <1jftkh25yx.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190924142819.5243-1-connor.kuehl@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9392 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=843
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909270132
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9392 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=924 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909270132
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good.  Thanks!
 
-regards,
-dan carpenter
+On Fri 27 Sep 2019 at 11:36, Neil Armstrong <narmstrong@baylibre.com> wrote:
+
+>>  
+>>  static struct clk_regmap spdifout_clk_sel =
+>>  	AUD_MST_MCLK_MUX(spdifout_clk, AUDIO_CLK_SPDIFOUT_CTRL);
+>> @@ -502,7 +522,6 @@ static struct clk_regmap tdmout_c_lrclk =
+>>  	AUD_TDM_LRLCK(out_c, AUDIO_CLK_TDMOUT_C_CTRL);
+>>  
+>>  /* AXG/G12A Clocks */
+>> -
+>
+> Spurious line remove
+
+Oops, I'll migrate that to the appropriate change, Thx
+
+>
+>>  static struct clk_hw axg_aud_top = {
+>>  	.init = &(struct clk_init_data) {
+>>  		/* Provide aud_top signal name on axg and g12a */
+>> @@ -573,7 +592,185 @@ static struct clk_regmap g12a_tdm_sclk_pad_2 = AUD_TDM_PAD_CTRL(
+>
+> Small nit, but:
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 
