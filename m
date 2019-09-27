@@ -2,165 +2,147 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A8BAC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 01:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E6FC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 01:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4836520835
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 01:20:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDF2F207FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 01:39:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="gzWVkz8A"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=preining.info header.i=@preining.info header.b="RqAcgnX3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbfI0BUX (ORCPT
+        id S1727882AbfI0BjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 21:20:23 -0400
-Received: from mail-eopbgr140049.outbound.protection.outlook.com ([40.107.14.49]:6371
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725808AbfI0BUX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 21:20:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ql7VdHwyOn3rQse9E8HBpOy7nAH4n4Go2jDSqYuI7qqIMEQFbZL7nbjgjpBiZLwdQiJkt8I+Qe0U41QIXSIxbJ2gkNsaFz4ln9Ze1+X/oYbA++eDpv0xmhNwOszvKB332PFvUyDZ0fL5DMpmsHA3ucHYJAIc5MF2Hv4XHhY3+o7YD5oNaQkZxrr8vIoesSqj9VBzO/mJjZtqyxtrxnMLDjDg20TgmM9MXfNC2P5OTwK8uXLke6i5CAFrzIlCc9oBNbUpqExBK3iRhX8uFjhyJM+JWWPJX/zWJQcNS4NwdEixDHQX+Cy0XFEfYelSn+P2thnUpQdFqXFwwFwiAjA3XA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JXmBSpXUKHDu0Em+Dia+VEzOiwGY0ytRP9L24v+/Z1Q=;
- b=YSKZqKLukNo9+p0L3aLdpYCyibbJjYORZWiGa6hS394lhEQPaMQzF7sGUqZ+9VxEIctVNkgUqnqbJEcYpcFbq0X2GF6jlEqb8sMIOAC5j40VQakOEcNJ0K8QZ7N3Q4mcOYqzZckgaROYxnORrO5G626LP+cUFcPTMawGYzdxzMeOKeFsjkC7XLqX1LM6RxkwefoWXEPXXqxb/LOafnm+wzgdiltFHmK9EDgP812spDofXg3ub50O6bA9gKeUMcfhnHo8f5dctJ+Gso2dbtSeaWou5qeUsk5C+xqB1sHLVEDR7+Vz1ThxR1Jl1tVHcGTIPusSIcj5EoK6r0OLCD8MxA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JXmBSpXUKHDu0Em+Dia+VEzOiwGY0ytRP9L24v+/Z1Q=;
- b=gzWVkz8A6bR5w4xzjSstCntuCMllNGuJiyucWIrtY4/0JAqN5EjqNNwRv4wOYUb6zOBrcmhEhUmnpXCktCQq0xEaj7t9oCqSpPJYi7q7wCQGWQ/8xdyZJGhQw0ymm8gNKrjewLwvmweF/L6WuT+T6k/KMMRJ6UCKTX8CZoo6ayY=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3753.eurprd04.prod.outlook.com (52.134.71.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.21; Fri, 27 Sep 2019 01:20:17 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::8958:299c:bc54:2a38]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::8958:299c:bc54:2a38%7]) with mapi id 15.20.2284.028; Fri, 27 Sep 2019
- 01:20:17 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Aisheng Dong <aisheng.dong@nxp.com>
-CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH] firmware: imx: Skip return value check for some special
- SCU firmware APIs
-Thread-Topic: [PATCH] firmware: imx: Skip return value check for some special
- SCU firmware APIs
-Thread-Index: AQHVc4lT/ErvPybCJUCbZ2x7mLGjsqc+tdHg
-Date:   Fri, 27 Sep 2019 01:20:17 +0000
-Message-ID: <DB3PR0402MB391675F9BF6FCA315B124BEBF5810@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1569406066-16626-1-git-send-email-Anson.Huang@nxp.com>
- <20190926075914.i7tsd3cbpitrqe4q@pengutronix.de>
- <DB3PR0402MB391683202692BEAE4D2CD9C1F5860@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20190926100558.egils3ds37m3s5wo@pengutronix.de>
- <VI1PR04MB702336F648EA1BF0E4AC584BEE860@VI1PR04MB7023.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR04MB702336F648EA1BF0E4AC584BEE860@VI1PR04MB7023.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b45de280-eca6-471d-123d-08d742e8db3c
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3753;
-x-ms-traffictypediagnostic: DB3PR0402MB3753:|DB3PR0402MB3753:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB3753BB9ABF4240BB0D6C41C0F5810@DB3PR0402MB3753.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0173C6D4D5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(39860400002)(396003)(136003)(376002)(199004)(189003)(6636002)(229853002)(476003)(26005)(55016002)(6246003)(71200400001)(74316002)(66556008)(64756008)(102836004)(2906002)(66476007)(71190400001)(316002)(186003)(8676002)(25786009)(9686003)(81156014)(66066001)(81166006)(99286004)(7696005)(76176011)(486006)(66446008)(44832011)(54906003)(446003)(7736002)(110136005)(33656002)(4326008)(8936002)(478600001)(52536014)(6436002)(305945005)(256004)(53546011)(5660300002)(6116002)(66946007)(11346002)(3846002)(6506007)(14454004)(76116006)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3753;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 0ADiU2w0wLaQhm3rv+zbVR4ah1orAPlFkti3R3m193qHDALvcycWmQNrtpIY47quNYZIsYCOeafhwkKhrclTiN5gx/HXjCjwSCO4sI2FQuTrAv97QL791H3awcmRedwXWjee/23foycfdPgK8bQt/FBjLeWX4wpWPYLa1OB7Oo9+qgpJzdVqB7rKCoo5BuhNhS3Qyxx33duIS01quntpSIjPBEYt/kufUeelpqmuAnXet4HvAtsq+rX2DWDOOdrhFQrjbHR7a4LtfeGv8jLqSMYnX39gKjOL5sI8CYflpaoFCtrsnw8D3oJED2XAS6j5JAghubpZODQK1+B/pUIrIQBac24y4CZCpGMdXwaYlOiVBZhRiZzaxrEM5q0jthrUEa0gbL5LexjXajSd9b+q0+ZyOzBcPGSRuMj5eRmHVXY=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 26 Sep 2019 21:39:07 -0400
+Received: from hz.preining.info ([95.216.25.247]:42730 "EHLO hz.preining.info"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726029AbfI0BjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Sep 2019 21:39:06 -0400
+X-Greylist: delayed 2046 seconds by postgrey-1.27 at vger.kernel.org; Thu, 26 Sep 2019 21:39:05 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=preining.info; s=201909; h=Content-Type:MIME-Version:Message-ID:Subject:To:
+        From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=cl09kV01AzgoCLJw2K7xZ5KEVLK6dS5enLVqGXWm9cs=; b=RqAcgnX31xdoOiHJfNPnCYLFRG
+        NXNXX7Q6yMetX9UNXNDI3gG+hPJOHStiz9dryxpcsXf02oGMC/PMe1+sWxBCpUBkE6VD7yYxm8TOb
+        xnCdyYRMU70PPXYQAA2+MdPvmW8glqp5QAvIl++RAAVXJ5QeS9j8oOs2urBiIgnufv6XCNz5wO5Y9
+        lgaBJTGXaFQZckhcpvzkXn1DvN98hExLEbv6k3Eyf9OZ0dQl0Sou98evngd0uVLjVNyyeNuydQ0v+
+        GIG7RHrQc9qhGdRm+52Qlnd/9XoIp8E3TaS1xjej4mXmyG4fw0mdDv5Y2X7HOL9hAt7QbSm52mOAO
+        vaIjAaOg==;
+Received: from om126133241008.21.openmobile.ne.jp ([126.133.241.8] helo=burischnitzel.preining.info)
+        by hz.preining.info with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <norbert@preining.info>)
+        id 1iDegr-0004UR-M6; Fri, 27 Sep 2019 01:04:58 +0000
+Received: by burischnitzel.preining.info (Postfix, from userid 1000)
+        id 41101690249D; Fri, 27 Sep 2019 10:04:52 +0900 (JST)
+Date:   Fri, 27 Sep 2019 10:04:52 +0900
+From:   Norbert Preining <norbert@preining.info>
+To:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ilw@linux.intel.com
+Subject: IWL AC 8260, kernel 5.3.*, many kernel WARNING
+Message-ID: <20190927010452.b576njhcvgowasf3@burischnitzel.preining.info>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b45de280-eca6-471d-123d-08d742e8db3c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Sep 2019 01:20:17.3647
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gyZV4f45O8OHhD5Hv9wCK1JfIKqq/bNH/PHhM57/VEO34WmBkUOC1Cl5xTCdVXHtArGjTlIO47CkBkG9wqaL4A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3753
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIExlb25hcmQNCg0KPiBPbiAyMDE5LTA5LTI2IDE6MDYgUE0sIE1hcmNvIEZlbHNjaCB3cm90
-ZToNCj4gPiBPbiAxOS0wOS0yNiAwODowMywgQW5zb24gSHVhbmcgd3JvdGU6DQo+ID4+PiBPbiAx
-OS0wOS0yNSAxODowNywgQW5zb24gSHVhbmcgd3JvdGU6DQo+ID4+Pj4gVGhlIFNDVSBmaXJtd2Fy
-ZSBkb2VzIE5PVCBhbHdheXMgaGF2ZSByZXR1cm4gdmFsdWUgc3RvcmVkIGluDQo+ID4+Pj4gbWVz
-c2FnZSBoZWFkZXIncyBmdW5jdGlvbiBlbGVtZW50IGV2ZW4gdGhlIEFQSSBoYXMgcmVzcG9uc2Ug
-ZGF0YSwNCj4gPj4+PiB0aG9zZSBzcGVjaWFsIEFQSXMgYXJlIGRlZmluZWQgYXMgdm9pZCBmdW5j
-dGlvbiBpbiBTQ1UgZmlybXdhcmUsIHNvDQo+ID4+Pj4gdGhleSBzaG91bGQgYmUgdHJlYXRlZCBh
-cyByZXR1cm4gc3VjY2VzcyBhbHdheXMuDQo+ID4+Pj4NCj4gPj4+PiArc3RhdGljIGNvbnN0IHN0
-cnVjdCBpbXhfc2NfcnBjX21zZyB3aGl0ZWxpc3RbXSA9IHsNCj4gPj4+PiArCXsgLnN2YyA9IElN
-WF9TQ19SUENfU1ZDX01JU0MsIC5mdW5jID0NCj4gPj4+IElNWF9TQ19NSVNDX0ZVTkNfVU5JUVVF
-X0lEIH0sDQo+ID4+Pj4gKwl7IC5zdmMgPSBJTVhfU0NfUlBDX1NWQ19NSVNDLCAuZnVuYyA9DQo+
-ID4+Pj4gK0lNWF9TQ19NSVNDX0ZVTkNfR0VUX0JVVFRPTl9TVEFUVVMgfSwgfTsNCj4gPj4+DQo+
-ID4+PiBJcyB0aGlzIGdvaW5nIHRvIGJlIGV4dGVuZGVkIGluIHRoZSBuZWFyIGZ1dHVyZT8gSSBz
-ZWUgc29tZSB1cGNvbWluZw0KPiA+Pj4gcHJvYmxlbXMgaGVyZSBpZiBzb21lb25lIHVzZXMgYSBk
-aWZmZXJlbnQgc2N1LWZ3PC0+a2VybmVsDQo+ID4+PiBjb21iaW5hdGlvbiBhcyBueHAgd291bGQg
-c3VnZ2VzdC4NCj4gPj4NCj4gPj4gQ291bGQgYmUsIGJ1dCBJIGNoZWNrZWQgdGhlIGN1cnJlbnQg
-QVBJcywgT05MWSB0aGVzZSAyIHdpbGwgYmUgdXNlZA0KPiA+PiBpbiBMaW51eCBrZXJuZWwsIHNv
-IEkgT05MWSBhZGQgdGhlc2UgMiBBUElzIGZvciBub3cuDQo+ID4NCj4gPiBPa2F5Lg0KPiA+DQo+
-ID4+IEhvd2V2ZXIsIGFmdGVyIHJldGhpbmssIG1heWJlIHdlIHNob3VsZCBhZGQgYW5vdGhlciBp
-bXhfc2NfcnBjIEFQSQ0KPiA+PiBmb3IgdGhvc2Ugc3BlY2lhbCBBUElzPyBUbyBhdm9pZCBjaGVj
-a2luZyBpdCBmb3IgYWxsIHRoZSBBUElzIGNhbGxlZCB3aGljaA0KPiBtYXkgaW1wYWN0IHNvbWUg
-cGVyZm9ybWFuY2UuDQo+ID4+IFN0aWxsIHVuZGVyIGRpc2N1c3Npb24sIGlmIHlvdSBoYXZlIGJl
-dHRlciBpZGVhLCBwbGVhc2UgYWR2aXNlLCB0aGFua3MhDQo+IA0KPiBNeSBzdWdnZXN0aW9uIGlz
-IHRvIHJlZmFjdG9yIHRoZSBjb2RlIGFuZCBhZGQgYSBuZXcgQVBJIGZvciB0aGUgdGhpcyAibm8N
-Cj4gZXJyb3IgdmFsdWUiIGNvbnZlbnRpb24uIEludGVybmFsbHkgdGhleSBjYW4gY2FsbCBhIGNv
-bW1vbiBmdW5jdGlvbiB3aXRoDQo+IGZsYWdzLg0KDQpJZiBJIHVuZGVyc3RhbmQgeW91ciBwb2lu
-dCBjb3JyZWN0bHksIHRoYXQgbWVhbnMgdGhlIGxvb3AgY2hlY2sgb2Ygd2hldGhlciB0aGUgQVBJ
-DQppcyB3aXRoICJubyBlcnJvciB2YWx1ZSIgZm9yIGV2ZXJ5IEFQSSBzdGlsbCBOT1QgYmUgc2tp
-cHBlZCwgaXQgaXMganVzdCByZWZhY3RvcmluZyB0aGUgY29kZSwNCnJpZ2h0Pw0KDQo+IA0KPiA+
-IEFkZGluZyBhIHNwZWNpYWwgYXBpIHNob3VsZG4ndCBiZSB0aGUgcmlnaHQgZml4LiBJbWFnaW5l
-IGlmIHNvbWVvbmUNCj4gPiAobm90IGEgbnhwLWRldmVsb3Blcikgd2FudHMgdG8gYWRkIGEgbmV3
-IGRyaXZlci4gSG93IGNvdWxkIGhlIGJlDQo+ID4gZXhwZWN0ZWQgdG8ga25vdyB3aGljaCBhcGkg
-aGUgc2hvdWxkIHVzZS4gVGhlIGJldHRlciBhYmJyb2FjaCB3b3VsZCBiZQ0KPiA+IHRvIGZpeCB0
-aGUgc2N1LWZ3IGluc3RlYWQgb2YgYWRkaW5nIHF1aXJrcy4uDQoNClllcywgZml4aW5nIFNDVSBG
-VyBpcyB0aGUgYmVzdCBzb2x1dGlvbiwgYnV0IHdlIGhhdmUgdGFsa2VkIHRvIFNDVSBGVyBvd25l
-ciwgdGhlIFNDVQ0KRlcgcmVsZWFzZWQgaGFzIGJlZW4gZmluYWxpemVkLCBzbyB0aGUgQVBJIGlt
-cGxlbWVudGF0aW9uIGNhbiBOT1QgYmUgY2hhbmdlZCwgYnV0DQp0aGV5IHdpbGwgcGF5IGF0dGVu
-dGlvbiB0byB0aGlzIGlzc3VlIGZvciBuZXcgYWRkZWQgQVBJcyBsYXRlci4gVGhhdCBtZWFucyB0
-aGUgbnVtYmVyDQpvZiBBUElzIGhhdmluZyB0aGlzIGlzc3VlIGEgdmVyeSBsaW1pdGVkLiANCg0K
-PiANCj4gUmlnaHQgbm93IGRldmVsb3BlcnMgd2hvIHdhbnQgdG8gbWFrZSBTQ0ZXIGNhbGxzIGlu
-IHVwc3RyZWFtIG5lZWQgdG8NCj4gZGVmaW5lIHRoZSBtZXNzYWdlIHN0cnVjdCBpbiB0aGVpciBk
-cml2ZXIgYmFzZWQgb24gcHJvdG9jb2wgZG9jdW1lbnRhdGlvbi4NCj4gVGhpcyBpbmNsdWRlczoN
-Cj4gDQo+ICogQmluYXJ5IGxheW91dCBvZiB0aGUgbWVzc2FnZSAoYSBwYWNrZWQgc3RydWN0KQ0K
-PiAqIElmIHRoZSBtZXNzYWdlIGhhcyBhIHJlc3BvbnNlIChhbHJlYWR5IGEgYm9vbCBmbGFnKQ0K
-PiAqIElmIGFuIGVycm9yIGNvZGUgaXMgcmV0dXJuZWQgKHRoaXMgcGF0Y2ggYWRkcyBzdXBwb3J0
-IGZvciBpdCkNCj4gDQo+IFNpbmNlIGNhbGxlcnMgYXJlIGFscmVhZHkgZXhwb3NlZCB0byB0aGUg
-YmluYXJ5IHByb3RvY29sIGV4cG9zaW5nIHRoZW0gdG8NCj4gbWlub3IgcXVpcmtzIG9mIHRoZSBj
-YWxsaW5nIGNvbnZlbnRpb24gYWxzbyBzZWVtcyByZWFzb25hYmxlLiBIYXZpbmcgdGhlDQo+IGxv
-dy1sZXZlbCBJUEMgY29kZSBwZWVrIGF0IG1lc3NhZ2UgSURzIHNlZW1zIGxpa2UgYSBoYWNrOyB0
-aGlzIGJlbG9uZyBhdCBhDQo+IHNsaWdodGx5IGhpZ2hlciBsZXZlbC4NCg0KQSBsaXR0bGUgY29u
-ZnVzZWQsIHNvIHdoYXQgeW91IHN1Z2dlc3RlZCBpcyB0byBhZGQgbWFrZSB0aGUgaW14X3NjdV9j
-YWxsX3JwYygpDQpiZWNvbWVzIHRoZSAic2xpZ2h0bHkgaGlnaGVyIGxldmVsIiBBUEksIHRoZW4g
-aW4gdGhpcyBBUEksIGNoZWNrIHRoZSBtZXNzYWdlIElEcw0KdG8gZGVjaWRlIHdoZXRoZXIgdG8g
-cmV0dXJuIGVycm9yIHZhbHVlLCB0aGVuIGNhbGxzIGEgbmV3IEFQSSB3aGljaCB3aWxsIGhhdmUN
-CnRoZSBsb3ctbGV2ZWwgSVBDIGNvZGUsIHRoZSB0aGlzIG5ldyBBUEkgd2lsbCBoYXZlIGEgZmxh
-ZyBwYXNzZWQgZnJvbSBpbXhfc2N1X2NhbGxfcnBjKCkNCmZ1bmN0aW9uLCBhbSBJIHJpZ2h0Pw0K
-DQpBbnNvbg0K
+Dear all,
+
+(please cc)
+
+linux 5.3.1
+Debian/sid
+Thinkpad X260
+iwlwifi 0000:04:00.0: Detected Intel(R) Dual Band Wireless AC 8260, REV=0x208
+iwlwifi 0000:04:00.0: loaded firmware version 36.8fd77bb3.0 op_mode iwlmvm
+
+since about 5.3.0 I get a lot of warnings in the syslog about iwlmvm.
+
+It starts with
+Sep 27 09:08:35 burischnitzel kernel: iwlwifi 0000:04:00.0: Microcode SW error detected.  Restarting 0x82000000.
+Sep 27 09:08:35 burischnitzel kernel: iwlwifi 0000:04:00.0: Start IWL Error Log Dump:
+Sep 27 09:08:35 burischnitzel kernel: iwlwifi 0000:04:00.0: Status: 0x00000080, count: 6
+Sep 27 09:08:35 burischnitzel kernel: iwlwifi 0000:04:00.0: Loaded firmware version: 36.8fd77bb3.0
+Sep 27 09:08:35 burischnitzel kernel: iwlwifi 0000:04:00.0: 0x00000038 | BAD_COMMAND
+Sep 27 09:08:35 burischnitzel kernel: iwlwifi 0000:04:00.0: 0x000002F0 | trm_hw_status0
+Sep 27 09:08:35 burischnitzel kernel: iwlwifi 0000:04:00.0: 0x00000000 | trm_hw_status1
+....
+
+after that
+Sep 27 09:08:35 burischnitzel kernel: ieee80211 phy0: Hardware restart was requested
+Sep 27 09:08:35 burischnitzel kernel: iwlwifi 0000:04:00.0: FW Error notification: type 0x00000000 cmd_id 0x05
+Sep 27 09:08:35 burischnitzel kernel: iwlwifi 0000:04:00.0: FW Error notification: seq 0x0030 service 0x00000005
+Sep 27 09:08:35 burischnitzel kernel: iwlwifi 0000:04:00.0: FW Error notification: timestamp 0x000000000037F460
+Sep 27 09:08:35 burischnitzel kernel: iwlwifi 0000:04:00.0: FW error in SYNC CMD GEO_TX_POWER_LIMIT
+Sep 27 09:08:35 burischnitzel kernel: CPU: 0 PID: 525 Comm: kworker/0:1 Tainted: G        W  OE     5.3.1 #15
+Sep 27 09:08:35 burischnitzel kernel: Hardware name: LENOVO 20F5CTO1WW/20F5CTO1WW, BIOS R02ET71W (1.44 ) 05/08/2019
+Sep 27 09:08:35 burischnitzel kernel: Workqueue: events iwl_mvm_async_handlers_wk [iwlmvm]
+Sep 27 09:08:35 burischnitzel kernel: Call Trace:
+Sep 27 09:08:35 burischnitzel kernel:  dump_stack+0x46/0x60
+Sep 27 09:08:35 burischnitzel kernel:  iwl_trans_pcie_send_hcmd+0x46e/0x490 [iwlwifi]
+Sep 27 09:08:35 burischnitzel kernel:  ? wait_woken+0x70/0x70
+Sep 27 09:08:35 burischnitzel kernel:  iwl_trans_send_cmd+0x57/0xb0 [iwlwifi]
+Sep 27 09:08:35 burischnitzel kernel:  iwl_mvm_send_cmd+0x23/0x80 [iwlmvm]
+Sep 27 09:08:35 burischnitzel kernel:  iwl_mvm_get_sar_geo_profile+0xae/0x130 [iwlmvm]
+Sep 27 09:08:35 burischnitzel kernel:  ? iwl_mvm_get_regdomain+0x7f/0xc0 [iwlmvm]
+Sep 27 09:08:35 burischnitzel kernel:  iwl_mvm_rx_chub_update_mcc+0xcd/0x110 [iwlmvm]
+Sep 27 09:08:35 burischnitzel kernel:  iwl_mvm_async_handlers_wk+0xaa/0x140 [iwlmvm]
+Sep 27 09:08:35 burischnitzel kernel:  process_one_work+0x1cf/0x370
+Sep 27 09:08:35 burischnitzel kernel:  worker_thread+0x4a/0x3c0
+Sep 27 09:08:35 burischnitzel kernel:  ? process_one_work+0x370/0x370
+Sep 27 09:08:35 burischnitzel kernel:  kthread+0x118/0x130
+Sep 27 09:08:35 burischnitzel kernel:  ? kthread_create_worker_on_cpu+0x70/0x70
+Sep 27 09:08:35 burischnitzel kernel:  ret_from_fork+0x35/0x40
+Sep 27 09:08:35 burischnitzel kernel: iwlwifi 0000:04:00.0: Failed to get geographic profile info -5
+Sep 27 09:08:35 burischnitzel kernel: ------------[ cut here ]------------
+Sep 27 09:08:35 burischnitzel kernel: WARNING: CPU: 0 PID: 525 at iwl_mvm_rx_umac_scan_complete_notif.cold+0xc/0x13 [iwlmvm]
+Sep 27 09:08:35 burischnitzel kernel: Modules linked in: xt_MASQUERADE(E) nf_conntrack_netlink(E) xfrm_user(E) xfrm_algo(E) xt>
+Sep 27 09:08:35 burischnitzel kernel:  libarc4(E) snd_hda_intel(E) x86_pkg_temp_thermal(E) intel_powerclamp(E) iwlwifi(E) core>
+Sep 27 09:08:35 burischnitzel kernel:  rtsx_pci_sdmmc(E) aes_x86_64(E) crypto_simd(E) mmc_core(E) cryptd(E) glue_helper(E) scs>
+Sep 27 09:08:35 burischnitzel kernel: CPU: 0 PID: 525 Comm: kworker/0:1 Tainted: G        W  OE     5.3.1 #15
+Sep 27 09:08:35 burischnitzel kernel: Hardware name: LENOVO 20F5CTO1WW/20F5CTO1WW, BIOS R02ET71W (1.44 ) 05/08/2019
+Sep 27 09:08:35 burischnitzel kernel: Workqueue: events iwl_mvm_async_handlers_wk [iwlmvm]
+Sep 27 09:08:35 burischnitzel kernel: RIP: 0010:iwl_mvm_rx_umac_scan_complete_notif.cold+0xc/0x13 [iwlmvm]
+Sep 27 09:08:35 burischnitzel kernel: Code: 48 c7 c7 68 8e d8 c0 e8 8a c3 74 d2 0f 0b 49 8b 47 10 44 8b a0 9c 00 00 00 e9 d2 0>
+Sep 27 09:08:35 burischnitzel kernel: RSP: 0018:ffff9f524343fdf8 EFLAGS: 00010246
+Sep 27 09:08:35 burischnitzel kernel: RAX: 0000000000000024 RBX: ffff8cea7f44b040 RCX: 0000000000000006
+Sep 27 09:08:35 burischnitzel kernel: RDX: 0000000000000000 RSI: 0000000000000096 RDI: ffff8ced12216450
+Sep 27 09:08:35 burischnitzel kernel: RBP: ffff8cecf7d81e38 R08: ffff9f524343fcad R09: 00000000000006fe
+Sep 27 09:08:35 burischnitzel kernel: R10: 0000000000000008 R11: ffff9f524343fcad R12: ffff8cecf7d81e08
+Sep 27 09:08:35 burischnitzel kernel: R13: ffff8cecf7d81e08 R14: ffff8cea72eb0540 R15: dead000000000100
+Sep 27 09:08:35 burischnitzel kernel: FS:  0000000000000000(0000) GS:ffff8ced12200000(0000) knlGS:0000000000000000
+Sep 27 09:08:35 burischnitzel kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+Sep 27 09:08:35 burischnitzel kernel: CR2: 000034b8490c9000 CR3: 000000035980a004 CR4: 00000000003606f0
+Sep 27 09:08:35 burischnitzel kernel: Call Trace:
+Sep 27 09:08:35 burischnitzel kernel:  iwl_mvm_async_handlers_wk+0xaa/0x140 [iwlmvm]
+Sep 27 09:08:35 burischnitzel kernel:  process_one_work+0x1cf/0x370
+Sep 27 09:08:35 burischnitzel kernel:  worker_thread+0x4a/0x3c0
+Sep 27 09:08:35 burischnitzel kernel:  ? process_one_work+0x370/0x370
+Sep 27 09:08:35 burischnitzel kernel:  kthread+0x118/0x130
+Sep 27 09:08:35 burischnitzel kernel:  ? kthread_create_worker_on_cpu+0x70/0x70
+Sep 27 09:08:35 burischnitzel kernel:  ret_from_fork+0x35/0x40
+Sep 27 09:08:35 burischnitzel kernel: ---[ end trace 544d5d5df075debd ]---
+
+
+This repeats a few times (2-4) and then it settles down.
+
+WIFI works without any problems, though.
+
+Best
+
+Norbert
+
+--
+PREINING Norbert                               http://www.preining.info
+Accelia Inc. + IFMGA ProGuide + TU Wien + JAIST + TeX Live + Debian Dev
+GPG: 0x860CDC13   fp: F7D8 A928 26E3 16A1 9FA0 ACF0 6CAC A448 860C DC13
