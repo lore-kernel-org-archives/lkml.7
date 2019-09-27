@@ -2,134 +2,251 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E4DC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 22:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3EE5C388F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 22:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 530A721850
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 22:08:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nb7R0Uo8"
+	by mail.kernel.org (Postfix) with ESMTP id 7DF89217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 22:11:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569622276;
+	bh=58COh0a9lzNayEkOKvFt70ACnycq2rNmRYv95pg9O+E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=a0zsTqJHr+UHSOV7JhD3kZvrdv4gcYOYIvNU7wKMFt1C3ZoOzLbZTGoLT/IoOjVfc
+	 x0/OfkVysyk4L+4FnuZ+rlVx1L3tBTnovpSXf21sDHTwl3Gn/6S4rteTocHm7XhKz7
+	 ONYcaJBilATtjVZ2sF9quBhZlVXk2zOv9mdp8adI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728191AbfI0WId (ORCPT
+        id S1728292AbfI0WLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 18:08:33 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:32947 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfI0WId (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 18:08:33 -0400
-Received: by mail-pl1-f194.google.com with SMTP id d22so1597638pls.0
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 15:08:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QclGIxEt9wIwf/D5SYN1US1c97mZDr9iuEHzA7hulOc=;
-        b=Nb7R0Uo8kJGk6pIv8mrz1TSF1TwnUnKp1wVJGg+UdXj3D4RCiF7u0hawk91MqImsVQ
-         aXOsqOPLeYFnReqiyQ5aiodoOy1ByH7GoAqSIQnAWjd3vltsjZpGQrhwiHnvTf3t5ydY
-         ByIW8N6lJG+/BIIgWqYkHWAaGNaqGuOqzItiKEA0W/3HjdpA7vWsWT/JrXzybFhBg9Md
-         6SOQPxkTfGcqG3XTYKHzXLd5jP7fE1b7SNTfv1OHz42/1WJTIN175zJJXKcW6NREOiwh
-         BDKoz5wf5mDQTuX9vJ8VdBQgWyjJzPyy7sHiwnV3VC0tN3MzbNCPWeGagWeCNBK/eE7w
-         mFpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QclGIxEt9wIwf/D5SYN1US1c97mZDr9iuEHzA7hulOc=;
-        b=kLy/rTnf3dTiqhR30wP76NCBcuLVXpEQdLsYz1ct5kFGfUTX1jq03o/xMM7Z1yA1NR
-         9jjZczjrizhTYTNNH/kFhZksyfZuQx1/xMKPAk5hP4q2uWILe2IbaxId+CFNfHOChs0g
-         dejsHNTLxr9FQR93G7aGd1hvFAToCdLvBsv54iTlFbAZ2OAE2i8uc4EhDTzAcWm5mxYS
-         T3nZDVRvp+pXsrsizi+ciWQQ3A2HqMzJwpPcIOPoG+3WZJdZB2VQm86pVxf4bVrfOT2E
-         MPNVLO9tL6z2XrDSwC9JsA/Fqotf8gmZjf9aBjb6rQlDWAHSgb8+rASvRhTZ33uTUnqZ
-         hyJg==
-X-Gm-Message-State: APjAAAV4tZ6JOHUasHARfZYb9obgmt0bq1WD8wvHWU/lhZdQhV0KZzZe
-        cwEJ6tY/m1KHaouy2eHjNVe5T1f5JKrDHd5abWNdmw==
-X-Google-Smtp-Source: APXvYqz92+mVA5I3LKt61mIUPkDYBwp18EWEu6GPdh84rUZXFmpV9Q2ceBhRV8PBVhENBXLuxesaMZzgzmtIzdlR5c0=
-X-Received: by 2002:a17:902:d891:: with SMTP id b17mr6858867plz.119.1569622112129;
- Fri, 27 Sep 2019 15:08:32 -0700 (PDT)
+        Fri, 27 Sep 2019 18:11:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47142 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726033AbfI0WLP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 18:11:15 -0400
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 406BA217D9;
+        Fri, 27 Sep 2019 22:11:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569622274;
+        bh=58COh0a9lzNayEkOKvFt70ACnycq2rNmRYv95pg9O+E=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=euo5fT1PzNI/vG5JFBL0XIchph3OiWMQyRqCIIKhen+P6P5GT0SD4pVnbUFI4Ny51
+         LNc31rhB6/z213+UpEzIrGX7KFG2bUabffhMmTiUyxUijt7dGHLbWyK0TQ2eAw8pI4
+         IxYqOEbncqCaeWJKq0JpdWSe9stdSkNuNjCjcMeo=
+Received: by mail-wm1-f53.google.com with SMTP id 3so6990486wmi.3;
+        Fri, 27 Sep 2019 15:11:14 -0700 (PDT)
+X-Gm-Message-State: APjAAAUHwPU9LxgwJQI/f9oY4wdLbtjVLvMqnDjZlflGLf55O5yz2xUq
+        GuUvILjkMxcj04rGVyUm2z85JqDJeyMOcdlctm8=
+X-Google-Smtp-Source: APXvYqz4VPgxhyHSxGNoezNefD7iHVu009KTZ47zBxC7f6LvK3X27cb5VbS/erEUJho47dJVp84sRMs0XE3SU7xDXyM=
+X-Received: by 2002:a05:600c:1103:: with SMTP id b3mr9005703wma.3.1569622272786;
+ Fri, 27 Sep 2019 15:11:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190830034304.24259-1-yamada.masahiro@socionext.com> <f5c221f5749e5768c9f0d909175a14910d349456.camel@suse.de>
-In-Reply-To: <f5c221f5749e5768c9f0d909175a14910d349456.camel@suse.de>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 27 Sep 2019 15:08:20 -0700
-Message-ID: <CAKwvOdk=tr5nqq1CdZnUvRskaVqsUCP0SEciSGonzY5ayXsMXw@mail.gmail.com>
-Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        rmk+kernel@arm.linux.org.uk, Will Deacon <will@kernel.org>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Kees Cook <keescook@google.com>
+References: <1569560532-1886-1-git-send-email-light.hsieh@mediatek.com> <1569560532-1886-5-git-send-email-light.hsieh@mediatek.com>
+In-Reply-To: <1569560532-1886-5-git-send-email-light.hsieh@mediatek.com>
+From:   Sean Wang <sean.wang@kernel.org>
+Date:   Fri, 27 Sep 2019 15:11:00 -0700
+X-Gmail-Original-Message-ID: <CAGp9LzpdVJ1=hSGiUxi9i+FSDtB9g2Qk22NmMoe660a8hCvU-Q@mail.gmail.com>
+Message-ID: <CAGp9LzpdVJ1=hSGiUxi9i+FSDtB9g2Qk22NmMoe660a8hCvU-Q@mail.gmail.com>
+Subject: Re: [PATCH v6 5/5] pinctrl: mediatek: Add support for pin
+ configuration dump via debugfs.
+To:     Light Hsieh <light.hsieh@mediatek.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, kuohong.wang@mediatek.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 3:43 AM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
->
-> On Fri, 2019-08-30 at 12:43 +0900, Masahiro Yamada wrote:
-> > Commit 9012d011660e ("compiler: allow all arches to enable
-> > CONFIG_OPTIMIZE_INLINING") allowed all architectures to enable
-> > this option. A couple of build errors were reported by randconfig,
-> > but all of them have been ironed out.
-> >
-> > Towards the goal of removing CONFIG_OPTIMIZE_INLINING entirely
-> > (and it will simplify the 'inline' macro in compiler_types.h),
-> > this commit changes it to always-on option. Going forward, the
-> > compiler will always be allowed to not inline functions marked
-> > 'inline'.
-> >
-> > This is not a problem for x86 since it has been long used by
-> > arch/x86/configs/{x86_64,i386}_defconfig.
-> >
-> > I am keeping the config option just in case any problem crops up for
-> > other architectures.
-> >
-> > The code clean-up will be done after confirming this is solid.
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
->
-> [ Adding some ARM people as they might be able to help ]
->
-> This was found to cause a regression on a Raspberry Pi 2 B built with
-> bcm2835_defconfig which among other things has no SMP support.
->
-> The relevant logs (edited to remove the noise) are:
->
-> [    5.827333] Run /init as init process
-> Loading, please wait...
-> Failed to set SO_PASSCRED: Bad address
-> Failed to bind netlink socket: Bad address
-> Failed to create manager: Bad address
-> Failed to set SO_PASSCRED: Bad address
-> [    9.021623] systemd[1]: SO_PASSCRED failed: Bad address
-> [!!!!!!] Failed to start up manager.
-> [    9.079148] systemd[1]: Freezing execution.
->
-> I looked into it, it turns out that the call to get_user() in sock_setsockopt()
-> is returning -EFAULT. Down the assembly rabbit hole that get_user() is I
-> found-out that it's the macro 'check_uaccess' who's triggering the error.
->
-> I'm clueless at this point, so I hope you can give me some hints on what's
-> going bad here.
+Hi,
 
-So get_user() was passed a bad value/pointer from userspace? Do you
-know which of the tree calls to get_user() from sock_setsockopt() is
-failing?  (It's not immediately clear to me how this patch is at
-fault, vs there just being a bug in the source somewhere).
--- 
-Thanks,
-~Nick Desaulniers
+On Thu, Sep 26, 2019 at 10:02 PM Light Hsieh <light.hsieh@mediatek.com> wrote:
+>
+> Add support for pin configuration dump via catting
+> /sys/kernel/debug/pinctrl/$platform_dependent_path/pinconf-pins.
+> pinctrl framework had already support such dump. This patch implement the
+> operation function pointer to fullfill this dump.
+>
+
+Here are missing tags too.
+
+> ---
+>  drivers/pinctrl/mediatek/pinctrl-paris.c | 88 ++++++++++++++++++++++++++++++++
+>  drivers/pinctrl/mediatek/pinctrl-paris.h | 30 +++++++++++
+>  2 files changed, 118 insertions(+)
+>
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> index 2a47c45..f531908 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> @@ -538,12 +538,99 @@ static int mtk_pctrl_get_group_pins(struct pinctrl_dev *pctldev,
+>         return 0;
+>  }
+>
+> +int mtk_hw_get_value_wrap(struct mtk_pinctrl *hw, unsigned int gpio, int field)
+> +{
+> +       const struct mtk_pin_desc *desc;
+> +       int value, err;
+> +
+> +       if (gpio > hw->soc->npins)
+> +               return -EINVAL;
+> +
+> +       desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
+> +
+> +       err = mtk_hw_get_value(hw, desc, field, &value);
+> +       if (err)
+> +               return err;
+> +
+> +       return value;
+> +}
+> +
+> +ssize_t mtk_pctrl_show_one_pin(struct mtk_pinctrl *hw,
+> +       unsigned int gpio, char *buf, unsigned int bufLen)
+> +{
+> +       const struct mtk_pin_desc *desc;
+> +       int pinmux, pullup, pullen, r1 = -1, r0 = -1, len = 0;
+
+Sort the variable declarations in reverse xmas tree order.
+
+> +
+> +       if (gpio > hw->soc->npins)
+> +               return -EINVAL;
+> +
+> +       desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
+> +       pinmux = mtk_pctrl_get_pinmux(hw, gpio);
+> +       if (pinmux >= hw->soc->nfuncs)
+> +               pinmux -= hw->soc->nfuncs;
+> +
+> +       mtk_pinconf_bias_get_combo(hw, desc, &pullup, &pullen);
+> +       if (pullen == MTK_PUPD_SET_R1R0_00) {
+> +               pullen = 0;
+> +               r1 = 0;
+> +               r0 = 0;
+> +       } else if (pullen == MTK_PUPD_SET_R1R0_01) {
+> +               pullen = 1;
+> +               r1 = 0;
+> +               r0 = 1;
+> +       } else if (pullen == MTK_PUPD_SET_R1R0_10) {
+> +               pullen = 1;
+> +               r1 = 1;
+> +               r0 = 0;
+> +       } else if (pullen == MTK_PUPD_SET_R1R0_11) {
+> +               pullen = 1;
+> +               r1 = 1;
+> +               r0 = 1;
+> +       } else if (pullen != MTK_DISABLE && pullen != MTK_ENABLE) {
+> +               pullen = 0;
+> +       }
+> +       len += snprintf(buf + len, bufLen - len,
+> +                       "%03d: %1d%1d%1d%1d%02d%1d%1d%1d%1d",
+> +                       gpio,
+> +                       pinmux,
+> +                       mtk_pctrl_get_direction(hw, gpio),
+> +                       mtk_pctrl_get_out(hw, gpio),
+> +                       mtk_pctrl_get_in(hw, gpio),
+> +                       mtk_pctrl_get_driving(hw, gpio),
+> +                       mtk_pctrl_get_smt(hw, gpio),
+> +                       mtk_pctrl_get_ies(hw, gpio),
+> +                       pullen,
+> +                       pullup);
+> +
+> +       if (r1 != -1) {
+> +               len += snprintf(buf + len, bufLen - len, " (%1d %1d)\n",
+> +                       r1, r0);
+> +       } else {
+> +               len += snprintf(buf + len, bufLen - len, "\n");
+> +       }
+> +
+> +       return len;
+> +}
+> +
+> +#define PIN_DBG_BUF_SZ 96
+> +static void mtk_pctrl_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
+> +                         unsigned int gpio)
+> +{
+> +       struct mtk_pinctrl *hw = pinctrl_dev_get_drvdata(pctldev);
+> +       char buf[PIN_DBG_BUF_SZ];
+> +
+> +       (void)mtk_pctrl_show_one_pin(hw, gpio, buf, PIN_DBG_BUF_SZ);
+> +
+> +       seq_printf(s, "%s", buf);
+> +}
+> +
+>  static const struct pinctrl_ops mtk_pctlops = {
+>         .dt_node_to_map         = mtk_pctrl_dt_node_to_map,
+>         .dt_free_map            = pinctrl_utils_free_map,
+>         .get_groups_count       = mtk_pctrl_get_groups_count,
+>         .get_group_name         = mtk_pctrl_get_group_name,
+>         .get_group_pins         = mtk_pctrl_get_group_pins,
+> +       .pin_dbg_show           = mtk_pctrl_dbg_show,
+>  };
+>
+>  static int mtk_pmx_get_funcs_cnt(struct pinctrl_dev *pctldev)
+> @@ -640,6 +727,7 @@ static int mtk_pconf_group_set(struct pinctrl_dev *pctldev, unsigned group,
+>         .pin_config_get = mtk_pinconf_get,
+>         .pin_config_group_get   = mtk_pconf_group_get,
+>         .pin_config_group_set   = mtk_pconf_group_set,
+> +       .is_generic = true,
+>  };
+>
+>  static struct pinctrl_desc mtk_desc = {
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.h b/drivers/pinctrl/mediatek/pinctrl-paris.h
+> index 3d43771..d73f4b6 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-paris.h
+> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.h
+> @@ -60,6 +60,36 @@
+>  int mtk_paris_pinctrl_probe(struct platform_device *pdev,
+>                             const struct mtk_pin_soc *soc);
+>
+> +int mtk_hw_get_value_wrap(struct mtk_pinctrl *hw, unsigned int gpio, int field);
+> +
+> +#define mtk_pctrl_get_pinmux(hw, gpio)                 \
+> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_MODE)
+> +
+> +/* MTK HW use 0 as input, 1 for output
+> + * This interface is for get direct register value,
+> + * so don't reverse
+> + */
+
+The comment should be removed since that is not really matched with the context.
+
+> +#define mtk_pctrl_get_direction(hw, gpio)              \
+> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_DIR)
+> +
+> +#define mtk_pctrl_get_out(hw, gpio)                    \
+> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_DO)
+> +
+> +#define mtk_pctrl_get_in(hw, gpio)                     \
+> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_DI)
+> +
+> +#define mtk_pctrl_get_smt(hw, gpio)                    \
+> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_SMT)
+> +
+> +#define mtk_pctrl_get_ies(hw, gpio)                    \
+> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_IES)
+> +
+> +#define mtk_pctrl_get_driving(hw, gpio)                        \
+> +       mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_DRV)
+> +
+> +ssize_t mtk_pctrl_show_one_pin(struct mtk_pinctrl *hw,
+> +       unsigned int gpio, char *buf, unsigned int bufLen);
+> +
+
+Currently, these above functions are not being referred by other users
+outside the file so stay them visible inside the file until there are
+explicit users present.
+
+>  extern const struct dev_pm_ops mtk_paris_pinctrl_pm_ops;
+>
+>  #endif /* __PINCTRL_PARIS_H */
+> --
+> 1.8.1.1.dirty
+>
