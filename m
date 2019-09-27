@@ -3,100 +3,151 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFD7C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEFFC388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3B682146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B83B2146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:46:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727692AbfI0Mpz (ORCPT
+        id S1727729AbfI0Mqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 08:45:55 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:38105 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbfI0Mpy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 08:45:54 -0400
-Received: by mail-ot1-f66.google.com with SMTP id e11so2107061otl.5
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 05:45:54 -0700 (PDT)
+        Fri, 27 Sep 2019 08:46:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59550 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725992AbfI0Mqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 08:46:39 -0400
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id DE4C0806CD
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 12:46:38 +0000 (UTC)
+Received: by mail-qk1-f200.google.com with SMTP id s3so2481978qkd.6
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 05:46:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XdHj9CUIRn1bgsM+6mBPRINoGvRqefaGdJ7HyQ7uQQk=;
-        b=rfavjP3FyCp8sIuks9Q0WcRue6lFb+bbuOh2JBIAzbjWjlUJT885DhSGHGMolkBVuD
-         3U+XNv2gcbCVg85+xbT+Oy4sSgBHicufVANEkkmnZhJBk/eA0rmqnMPrbqErLEyj0SrL
-         kyRpYiCf6/DH4UQzXj3jfJGuxu0IO1tXGH8MLRTjXwSqbcSOEbkYW1GBliXDgt4snDUH
-         qxbwNfZD84+cgLqmDl2mGTBLjYnVLYAClAT5XplbikTcuK+uO8b4Es071Ur/kquDLayu
-         bHy09j4CI4oFSlkBK1i1Q4uK5NksNzkkqqnaPt7DZHXhO7i893n8zZPI/FcZBEjevifS
-         jf6g==
-X-Gm-Message-State: APjAAAVkV1maQGkqwFXVdn3kthtIPEowNJKFqtz734Uue0rTb+s88/Rk
-        m+bFdZSQSwagyBo+hR6ADXkBj/SheWhtyRXYkKnJ1w==
-X-Google-Smtp-Source: APXvYqy0dJZnS+qplEq9PCcAwzPw+E6vfBlSy21Ptq26bwCZIEjG55UbvKQ17wbb/EDVxG5DUaMQRsmC5mJ1HWh6RzE=
-X-Received: by 2002:a9d:17e6:: with SMTP id j93mr3103258otj.297.1569588353689;
- Fri, 27 Sep 2019 05:45:53 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=F0AJjiYSseSar3j8FYQBkm/uGwjn3oyXe7/oWdhrCrA=;
+        b=s1TPxVod3PbZ9OT8uRTBzZTqa82Am+P5rH2lHpc5w5rCGQ0/nOtcBTRbOXea5NrByv
+         fg5aQOcxwBwrt6mp/TguzQDVxzakLBVkTHaRDp0K+ngOF1JdjpJ2UBB5ik38TScIrOnU
+         E214OSXoOjw8lWrcyjdYLXZrCSsVYOgw4qWugo9IGowekQ0CW/ogLq9fYFsDL/VzjvLC
+         wEQEkbeiYr6GYnesUiExYBIIv5DW3nZKyAC8D6D3lpDas9+VgjqG4TeYVBO69D8eTcjK
+         UqDCG2xeGAiqsvVD4azDoGCknIOWk8/hb3Iqaz739U4yGJv21g/Eq43WKo2f3x0MrnkP
+         HDpg==
+X-Gm-Message-State: APjAAAW4YiCUDzoVwF+/J503BZgTnliUYRF/0lVWqf3Kh5y6co78gpXN
+        eUoompnjf0VDxiJYwpOSlLzrj9VKEv9oG2q1TiI9+ar9eiCT4jya+dxzTDLMMquP4DMwcuEOnOL
+        MH/UrCan6K2mmux7c3/PXHivw
+X-Received: by 2002:ac8:4799:: with SMTP id k25mr7997669qtq.367.1569588398246;
+        Fri, 27 Sep 2019 05:46:38 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyAFgv2zv7Du3HbBGPrbXCj+OH0ccwA9kLx7oS6JvyRcdhReSO32VIYn0OwwDZ4C1U+jtQ3wA==
+X-Received: by 2002:ac8:4799:: with SMTP id k25mr7997659qtq.367.1569588398060;
+        Fri, 27 Sep 2019 05:46:38 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-40-226.red.bezeqint.net. [79.176.40.226])
+        by smtp.gmail.com with ESMTPSA id q2sm1095503qkc.68.2019.09.27.05.46.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Sep 2019 05:46:37 -0700 (PDT)
+Date:   Fri, 27 Sep 2019 08:46:31 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     Tiwei Bie <tiwei.bie@intel.com>, alex.williamson@redhat.com,
+        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        lingshan.zhu@intel.com
+Subject: Re: [PATCH] vhost: introduce mdev based hardware backend
+Message-ID: <20190927084408-mutt-send-email-mst@kernel.org>
+References: <20190926045427.4973-1-tiwei.bie@intel.com>
+ <20190926042156-mutt-send-email-mst@kernel.org>
+ <20190926131439.GA11652@___>
+ <8ab5a8d9-284d-bba5-803d-08523c0814e1@redhat.com>
+ <20190927053935-mutt-send-email-mst@kernel.org>
+ <a959fe1e-3095-e0f0-0c9b-57f6eaa9c8b7@redhat.com>
 MIME-Version: 1.0
-References: <1503819148-11676-1-git-send-email-himanshujha199640@gmail.com>
-In-Reply-To: <1503819148-11676-1-git-send-email-himanshujha199640@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 27 Sep 2019 14:45:42 +0200
-Message-ID: <CAMuHMdWWnAVsVci9ZAKX_hhwYCHgaMNdOt=+k3P_xCQ7jWG-iw@mail.gmail.com>
-Subject: Re: [PATCH] nubus: remove cast to void pointer
-To:     Himanshu Jha <himanshujha199640@gmail.com>
-Cc:     Finn Thain <fthain@telegraphics.com.au>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a959fe1e-3095-e0f0-0c9b-57f6eaa9c8b7@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Himanshu,
+On Fri, Sep 27, 2019 at 08:17:47PM +0800, Jason Wang wrote:
+> 
+> On 2019/9/27 下午5:41, Michael S. Tsirkin wrote:
+> > On Fri, Sep 27, 2019 at 11:27:12AM +0800, Jason Wang wrote:
+> > > On 2019/9/26 下午9:14, Tiwei Bie wrote:
+> > > > On Thu, Sep 26, 2019 at 04:35:18AM -0400, Michael S. Tsirkin wrote:
+> > > > > On Thu, Sep 26, 2019 at 12:54:27PM +0800, Tiwei Bie wrote:
+> > > > [...]
+> > > > > > diff --git a/include/uapi/linux/vhost.h b/include/uapi/linux/vhost.h
+> > > > > > index 40d028eed645..5afbc2f08fa3 100644
+> > > > > > --- a/include/uapi/linux/vhost.h
+> > > > > > +++ b/include/uapi/linux/vhost.h
+> > > > > > @@ -116,4 +116,12 @@
+> > > > > >    #define VHOST_VSOCK_SET_GUEST_CID	_IOW(VHOST_VIRTIO, 0x60, __u64)
+> > > > > >    #define VHOST_VSOCK_SET_RUNNING		_IOW(VHOST_VIRTIO, 0x61, int)
+> > > > > > +/* VHOST_MDEV specific defines */
+> > > > > > +
+> > > > > > +#define VHOST_MDEV_SET_STATE	_IOW(VHOST_VIRTIO, 0x70, __u64)
+> > > > > > +
+> > > > > > +#define VHOST_MDEV_S_STOPPED	0
+> > > > > > +#define VHOST_MDEV_S_RUNNING	1
+> > > > > > +#define VHOST_MDEV_S_MAX	2
+> > > > > > +
+> > > > > >    #endif
+> > > > > So assuming we have an underlying device that behaves like virtio:
+> > > > I think they are really good questions/suggestions. Thanks!
+> > > > 
+> > > > > 1. Should we use SET_STATUS maybe?
+> > > > I like this idea. I will give it a try.
+> > > > 
+> > > > > 2. Do we want a reset ioctl?
+> > > > I think it is helpful. If we use SET_STATUS, maybe we
+> > > > can use it to support the reset.
+> > > > 
+> > > > > 3. Do we want ability to enable rings individually?
+> > > > I will make it possible at least in the vhost layer.
+> > > 
+> > > Note the API support e.g set_vq_ready().
+> > virtio spec calls this "enabled" so let's stick to that.
+> 
+> 
+> Ok.
+> 
+> 
+> > 
+> > > > > 4. Does device need to limit max ring size?
+> > > > > 5. Does device need to limit max number of queues?
+> > > > I think so. It's helpful to have ioctls to report the max
+> > > > ring size and max number of queues.
+> > > 
+> > > An issue is the max number of queues is done through a device specific way,
+> > > usually device configuration space. This is supported by the transport API,
+> > > but how to expose it to userspace may need more thought.
+> > > 
+> > > Thanks
+> > an ioctl for device config?  But for v1 I'd be quite happy to just have
+> > a minimal working device with 2 queues.
+> 
+> 
+> I'm fully agree, and it will work as long as VIRTIO_NET_F_MQ and
+> VIRTIO_NET_F_CTRL_VQ is not advertised by the mdev device.
+> 
+> Thanks
 
-On Sun, Aug 27, 2017 at 9:33 AM Himanshu Jha
-<himanshujha199640@gmail.com> wrote:
-> Casting void pointers to other pointer types in unnecessary.
->
-> Signed-off-by: Himanshu Jha <himanshujha199640@gmail.com>
+Hmm this means we need to validate the features bits,
+not just pass them through to the hardware.
+Problem is, how do we add more feature bits later,
+without testing all hardware?
+I guess this means the device specific driver must do it.
 
-Thanks for your patch!
 
-> --- a/drivers/nubus/nubus.c
-> +++ b/drivers/nubus/nubus.c
-> @@ -167,7 +167,7 @@ static unsigned char *nubus_dirptr(const struct nubus_dirent *nd)
->  void nubus_get_rsrc_mem(void *dest, const struct nubus_dirent *dirent,
->                         int len)
->  {
-> -       unsigned char *t = (unsigned char *)dest;
-> +       unsigned char *t = dest;
->         unsigned char *p = nubus_dirptr(dirent);
->
->         while (len) {
-> @@ -180,7 +180,7 @@ EXPORT_SYMBOL(nubus_get_rsrc_mem);
->  void nubus_get_rsrc_str(void *dest, const struct nubus_dirent *dirent,
->                         int len)
->  {
-> -       unsigned char *t = (unsigned char *)dest;
-> +       unsigned char *t = dest;
->         unsigned char *p = nubus_dirptr(dirent);
->
->         while (len) {
-
-The second chunk is no longer valid, but the first one still is.
-
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-i.e. will queue the first chunk for v5.5.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> 
+> > 
+> > > > Thanks!
