@@ -2,178 +2,95 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F58C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A73CEC4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0038217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72A482190F
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 08:48:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Bv5Vu79F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbfI0IsB (ORCPT
+        id S1726668AbfI0Ist (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 04:48:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49380 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725882AbfI0IsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 04:48:00 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 24E34300C72B;
-        Fri, 27 Sep 2019 08:48:00 +0000 (UTC)
-Received: from [10.72.12.30] (ovpn-12-30.pek2.redhat.com [10.72.12.30])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B1FD85D6A7;
-        Fri, 27 Sep 2019 08:47:45 +0000 (UTC)
-Subject: Re: [PATCH] vhost: introduce mdev based hardware backend
-To:     Tiwei Bie <tiwei.bie@intel.com>
-Cc:     mst@redhat.com, alex.williamson@redhat.com,
-        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        lingshan.zhu@intel.com
-References: <20190926045427.4973-1-tiwei.bie@intel.com>
- <1b4b8891-8c14-1c85-1d6a-2eed1c90bcde@redhat.com>
- <20190927045438.GA17152@___>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <05ab395e-6677-e8c3-becf-57bc1529921f@redhat.com>
-Date:   Fri, 27 Sep 2019 16:47:43 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 27 Sep 2019 04:48:49 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:57999 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726016AbfI0Iss (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 04:48:48 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8R8fjec006027;
+        Fri, 27 Sep 2019 10:48:34 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=ayL8eQrfMYYYZ89qhZMpJBir5iXTNJTvqlhNsSEpU0k=;
+ b=Bv5Vu79FuQV8xXY8UAsqZmpHCrLurvtmL+VGNFjfmdMVl2J/AvEdxtF2we4h/K+/fiuT
+ SSj79PkHgLt3sYGdTqVpU4xmaA56rTmEoV6YIJYk5WCR+Umn+DMt7MW0yIIlMImmEvfi
+ 7NshGQuUNKLzZr5kbGrW2xf30mNa8Q6J4uvo82uJbJpogC9A/SHJzgIM3GhnDpXKnZKZ
+ 6fQrlbyg5agbkgWoIacEWZtgMXrRZcUEEj+Q5/IfaKpBVbhurA33AD7yaHZGqeK3a9tE
+ pyMIXpbI/ELU1DBGT/cK9qQwViyMYsruAqyQayBRg8pml5w7c1vQNcAATAuMQgA+te3a 5w== 
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2v59mxkeyf-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 27 Sep 2019 10:48:34 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9ADDF4D;
+        Fri, 27 Sep 2019 08:48:30 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BCD522B13BF;
+        Fri, 27 Sep 2019 10:48:29 +0200 (CEST)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.92) by SAFEX1HUBCAS23.st.com
+ (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 27 Sep
+ 2019 10:48:29 +0200
+Received: from localhost (10.201.20.122) by Webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 27 Sep 2019 10:48:28
+ +0200
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <alexandre.torgue@st.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH] ARM: dts: stm32: Enable high resolution timer
+Date:   Fri, 27 Sep 2019 10:48:19 +0200
+Message-ID: <20190927084819.645-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-In-Reply-To: <20190927045438.GA17152@___>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 27 Sep 2019 08:48:00 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.201.20.122]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-09-27_04:2019-09-25,2019-09-27 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Adding always-on makes arm arch_timer claim to be an high resolution timer.
+That is possible because power mode won't stop clocking the timer.
 
-On 2019/9/27 下午12:54, Tiwei Bie wrote:
-> On Fri, Sep 27, 2019 at 11:46:06AM +0800, Jason Wang wrote:
->> On 2019/9/26 下午12:54, Tiwei Bie wrote:
->>> +
->>> +static long vhost_mdev_start(struct vhost_mdev *m)
->>> +{
->>> +	struct mdev_device *mdev = m->mdev;
->>> +	const struct virtio_mdev_device_ops *ops = mdev_get_dev_ops(mdev);
->>> +	struct virtio_mdev_callback cb;
->>> +	struct vhost_virtqueue *vq;
->>> +	int idx;
->>> +
->>> +	ops->set_features(mdev, m->acked_features);
->>> +
->>> +	mdev_add_status(mdev, VIRTIO_CONFIG_S_FEATURES_OK);
->>> +	if (!(mdev_get_status(mdev) & VIRTIO_CONFIG_S_FEATURES_OK))
->>> +		goto reset;
->>> +
->>> +	for (idx = 0; idx < m->nvqs; idx++) {
->>> +		vq = &m->vqs[idx];
->>> +
->>> +		if (!vq->desc || !vq->avail || !vq->used)
->>> +			break;
->>> +
->>> +		if (ops->set_vq_state(mdev, idx, vq->last_avail_idx))
->>> +			goto reset;
->> If we do set_vq_state() in SET_VRING_BASE, we won't need this step here.
-> Yeah, I plan to do it in the next version.
->
->>> +
->>> +		/*
->>> +		 * In vhost-mdev, userspace should pass ring addresses
->>> +		 * in guest physical addresses when IOMMU is disabled or
->>> +		 * IOVAs when IOMMU is enabled.
->>> +		 */
->> A question here, consider we're using noiommu mode. If guest physical
->> address is passed here, how can a device use that?
->>
->> I believe you meant "host physical address" here? And it also have the
->> implication that the HPA should be continuous (e.g using hugetlbfs).
-> The comment is talking about the virtual IOMMU (i.e. iotlb in vhost).
-> It should be rephrased to cover the noiommu case as well. Thanks for
-> spotting this.
->
->
->>> +
->>> +	switch (cmd) {
->>> +	case VHOST_MDEV_SET_STATE:
->>> +		r = vhost_set_state(m, argp);
->>> +		break;
->>> +	case VHOST_GET_FEATURES:
->>> +		r = vhost_get_features(m, argp);
->>> +		break;
->>> +	case VHOST_SET_FEATURES:
->>> +		r = vhost_set_features(m, argp);
->>> +		break;
->>> +	case VHOST_GET_VRING_BASE:
->>> +		r = vhost_get_vring_base(m, argp);
->>> +		break;
->> Does it mean the SET_VRING_BASE may only take affect after
->> VHOST_MEV_SET_STATE?
-> Yeah, in this version, SET_VRING_BASE won't set the base to the
-> device directly. But I plan to not delay this anymore in the next
-> version to support the SET_STATUS.
->
->>> +	default:
->>> +		r = vhost_dev_ioctl(&m->dev, cmd, argp);
->>> +		if (r == -ENOIOCTLCMD)
->>> +			r = vhost_vring_ioctl(&m->dev, cmd, argp);
->>> +	}
->>> +
->>> +	mutex_unlock(&m->mutex);
->>> +	return r;
->>> +}
->>> +
->>> +static const struct vfio_device_ops vfio_vhost_mdev_dev_ops = {
->>> +	.name		= "vfio-vhost-mdev",
->>> +	.open		= vhost_mdev_open,
->>> +	.release	= vhost_mdev_release,
->>> +	.ioctl		= vhost_mdev_unlocked_ioctl,
->>> +};
->>> +
->>> +static int vhost_mdev_probe(struct device *dev)
->>> +{
->>> +	struct mdev_device *mdev = mdev_from_dev(dev);
->>> +	const struct virtio_mdev_device_ops *ops = mdev_get_dev_ops(mdev);
->>> +	struct vhost_mdev *m;
->>> +	int nvqs, r;
->>> +
->>> +	m = kzalloc(sizeof(*m), GFP_KERNEL | __GFP_RETRY_MAYFAIL);
->>> +	if (!m)
->>> +		return -ENOMEM;
->>> +
->>> +	mutex_init(&m->mutex);
->>> +
->>> +	nvqs = ops->get_queue_max(mdev);
->>> +	m->nvqs = nvqs;
->> The name could be confusing, get_queue_max() is to get the maximum number of
->> entries for a virtqueue supported by this device.
-> OK. It might be better to rename it to something like:
->
-> 	get_vq_num_max()
->
-> which is more consistent with the set_vq_num().
->
->> It looks to me that we need another API to query the maximum number of
->> virtqueues supported by the device.
-> Yeah.
->
-> Thanks,
-> Tiwei
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+ arch/arm/boot/dts/stm32mp157c.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-
-One problem here:
-
-Consider if we want to support multiqueue, how did userspace know about 
-this? Note this information could be fetched from get_config() via a 
-device specific way, do we want ioctl for accessing that area?
-
-Thanks
+diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+index 9b11654a0a39..74f64745d60d 100644
+--- a/arch/arm/boot/dts/stm32mp157c.dtsi
++++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+@@ -50,6 +50,7 @@
+ 			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+ 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+ 		interrupt-parent = <&intc>;
++		always-on;
+ 	};
+ 
+ 	clocks {
+-- 
+2.15.0
 
