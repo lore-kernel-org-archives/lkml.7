@@ -2,139 +2,101 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B73AC388F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48980C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1715020872
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11F1C20872
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 19:33:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="qDzk9fny"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfI0T3v (ORCPT
+        id S1726203AbfI0TdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 15:29:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:32912 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725990AbfI0T3v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 15:29:51 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E21F33082137;
-        Fri, 27 Sep 2019 19:29:50 +0000 (UTC)
-Received: from linux-ws.nc.xsintricity.com (ovpn-112-20.rdu2.redhat.com [10.10.112.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 318826061E;
-        Fri, 27 Sep 2019 19:29:50 +0000 (UTC)
-Message-ID: <64d13484950cab570e5f2691d7cdeca292882d95.camel@redhat.com>
-Subject: Re: [GIT PULL] Thermal management updates for v5.4-rc1
-From:   Doug Ledford <dledford@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Zhang Rui <rui.zhang@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Date:   Fri, 27 Sep 2019 15:29:47 -0400
-In-Reply-To: <CAHk-=whua2XSTLd3gtqVHfq5HtGnjhRUv7vA6SUfkbVUebqWJQ@mail.gmail.com>
-References: <a9e8e68f34139d5a9abb7f8b7d3fe64ff82c6d96.camel@intel.com>
-         <CAHk-=whua2XSTLd3gtqVHfq5HtGnjhRUv7vA6SUfkbVUebqWJQ@mail.gmail.com>
-Organization: Red Hat, Inc.
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-8QpI9/NYV64F34cjfsuA"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Fri, 27 Sep 2019 15:33:06 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39600 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbfI0TdG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 15:33:06 -0400
+Received: by mail-oi1-f193.google.com with SMTP id w144so6179171oia.6
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 12:33:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=isDPGCReaiK37P8mK6pZ6yGM/s1VY4mHCre4SI/h+uk=;
+        b=qDzk9fny20uBp5VR9KMYd1Fac7VhmA3xZ0QbUkwiP80EbKY9RaCkA/4U4Qe7pi6TsI
+         zDEsEtbKHF8GpyEsQPTtGod2U4zBxqctjrd4sOKYfMmeJXF6SAxWVZ16/wp4AKGS5xv6
+         3apcUl+LXf1XdM/yu/zw1Uw97EfZ9XGnzwGMCbc919wDt95/CpOPUnrVC9TbFVA3DgnX
+         k826ZjdZJgOP0qVA9oleHpg4fFUebyz8hqjPBGPaHvhd7R/id1utbwGeNqZuwRQdicVO
+         zyrcK+uCKeiCSFtqsitZuUVl82lvIty2M8HzrYh0u6W2pvLlVz29fB2DhcjV0n04fay/
+         2OoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=isDPGCReaiK37P8mK6pZ6yGM/s1VY4mHCre4SI/h+uk=;
+        b=trDCr9RTDLDv167ztRDrClLtHN0t/TA3GtKv9e4f095RoBR9Q/xthM8ydMXXsMVkcJ
+         ZdoUcCQP3ynNaRG8k1TKx4D+Aubyw1YAhp0kXxB8DU5D/7lOTS+dGJHYLblad2aOLUex
+         F9+DRa3z++3DOFqtFVcVc4alrMlkaz95mZmrbpzbz/fAanboVZazEotPAjdzljYb4l6d
+         RwwbP0mu1NI13xQXVHLWQbDMaIbgLX42JkkaN3yf7jHb+xtRR1m/Oa54Vm2qySh7UYSy
+         7D4B8SFtyXRBPUGe+xmau6ihEaH5Krw/8U3nTs36PtQZPnjxl5+a005uaJO+1XScvF6I
+         Yy1g==
+X-Gm-Message-State: APjAAAUjMEauU91DWBXY2s+shCf6fnxS8istUoo9JBVAnu+lYoA1nfK4
+        DXoGFHzQTkr9mInzb4zJnCuOOha1EMpyAGusk/7d0A==
+X-Google-Smtp-Source: APXvYqzAZY40Bk8ZksTVV+s3FcueJU0jeqVy/scpmyhn0c0F1MSet8HaXinRuhaCTO9u6YjIBS9thk00YJposzWuWaA=
+X-Received: by 2002:aca:eb09:: with SMTP id j9mr8863477oih.105.1569612785882;
+ Fri, 27 Sep 2019 12:33:05 -0700 (PDT)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 27 Sep 2019 19:29:50 +0000 (UTC)
+References: <20190927161416.62293-1-pilgrimtao@gmail.com>
+In-Reply-To: <20190927161416.62293-1-pilgrimtao@gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 27 Sep 2019 12:32:54 -0700
+Message-ID: <CAPcyv4imXWDSoVet4a0CYtO3JxN__f1hq+LCKTnjjF+4HB+6Kw@mail.gmail.com>
+Subject: Re: [PATCH] mm, page_alloc: drop pointless static qualifier in build_zonelists()
+To:     Kaitao Cheng <pilgrimtao@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Pasha Tatashin <pavel.tatashin@microsoft.com>,
+        Alexander Potapenko <glider@google.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Muchun Song <smuchun@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Sep 27, 2019 at 9:14 AM Kaitao Cheng <pilgrimtao@gmail.com> wrote:
+>
+> There is no need to make the 'node_order' variable static
+> since new value always be assigned before use it.
+>
+> Signed-off-by: Kaitao Cheng <pilgrimtao@gmail.com>
+> Signed-off-by: Muchun Song <smuchun@gmail.com>
+> ---
+>  mm/page_alloc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 3334a769eb91..c473c304d09f 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -5597,7 +5597,7 @@ static void build_thisnode_zonelists(pg_data_t *pgdat)
+>
+>  static void build_zonelists(pg_data_t *pgdat)
+>  {
+> -       static int node_order[MAX_NUMNODES];
+> +       int node_order[MAX_NUMNODES];
 
---=-8QpI9/NYV64F34cjfsuA
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, 2019-09-27 at 11:34 -0700, Linus Torvalds wrote:
-> On Fri, Sep 27, 2019 at 6:08 AM Zhang Rui <rui.zhang@intel.com> wrote:
-> > One thing to mention is that, all the patches have been tested in
-> > linux-next for weeks, but there is a conflict detected, because
-> > upstream has took commit eaf7b46083a7e34 ("docs: thermal: add it to
-> > the
-> > driver API") from jc-docs tree while I'm keeping a wrong version of
-> > the
-> > patch, so I just rebased my tree to fix this.
->=20
-> Why do I have to say this EVERY single release?
-
-Because there are literally thousands of developers working on kernel
-bits here and there, and you're swatting this particular fly one
-developer at a time.
-
-I might suggest that you need to speak with the git people and politely
-ask them to add a warning to the rebase command itself so that it prints
-out something like:
-
-----
-
-If you are doing linux kernel development, and you are doing a rebase,
-please read Documentation/When_Not_To_Rebase.rst before rebasing your
-code and sending it to Linus.  You've been warned.
-
-Acknowledge receipt of warning and proceed with rebase? (y/N)
-
-----
-
-You would have free reign to put one of your more monumental yet funny
-rants in place in the documentation.
-
-You could also have a global git config to turn off the "Don't annoy
-Linus with rebases" warning.  But only mention that global config at the
-end of the kernel documentation so you know people have read it before
-they turn the warning off.
-
-Maybe that would help.
-
-> A conflict is not a reason to rebase. Conflicts happen. They happen a
-> lot. I deal with them, and it's usually trivial.
->=20
-> If you feel it's not trivial, just describe what the resolution is,
-> rather than rebasing. Really.
->=20
-> Rebasing for a random conflict (particularly in documentation, for
-> chrissake!) is like using an atomic bomb to swat a fly.  You have all
-> those downsides, and there are basically _no_ upsides. It only makes
-> for more work for me because I have to re-write this email for the
-> millionth time, and that takes longer and is more aggravating than the
-> conflict would have taken to just sort out.
->=20
->                    Linus
---=20
-Doug Ledford <dledford@redhat.com>
-    GPG KeyID: B826A3330E572FDD
-    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
-
---=-8QpI9/NYV64F34cjfsuA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl2OYysACgkQuCajMw5X
-L90VIhAAk4jcZJRijjuESGrODGMdq/AM+xnSTztebqGgWciuhlh2Z/WU30wi0kbF
-XT18gkS8YSPm1bmvBwYy9a0daQu41XLegvOyj+LoeoEbUCmhyxnZpA/SQysfau5v
-eyXhCBZYi36nOtBiOuhncTSyQqP/QpF0ck6Ygs4WYgj04CVGIURg8PTDqR9/nu9L
-u+j3qhtxUGU5VfcAK1CVss2Zm+zZWb7FQIqZDYvpOee6S2AKo793Y0pIykeMScrr
-Xv8qqrOXmC8aPqQBpzwnEtMgN19LgabPpGhFkO4nsiXFBRqK/t1heHNdyZRWqVcv
-Ac6o9+OmNJ7YaVpL61kobwk3v6cZuJlFsGdjD7AMpcLtFYZslRlxA11+OUlreAFV
-A8uWKLtNAvhYmm8GFTKCXJ00DZGj/5/eHoGOaBhFN1bZ43CuDkSyxmM/Q/XM02Ab
-q6ThGcX0/XOj+Ccb4a0Kl5hdG1w8UW8+dwVb1yBVKbDEwFHNx1ntMHLgw+s9eTGT
-7xKtL8tXFEh2Di7L8YS9XeTGciooa8yHo0nhXrh1Awu4MKbWIgf3GkoSat2RiyO2
-NoubaPBUEJaeM3FfgO38aU1cQU8OLnOcUWjMfQlOrVKaivp1os6c8lsDt9OvOWhf
-/t61QnNxiJIkBobNERwBEsUF5LkLX59H5cA4bTD++6ymvHR3VLE=
-=tHNu
------END PGP SIGNATURE-----
-
---=-8QpI9/NYV64F34cjfsuA--
-
+This isn't pointless. This prevents 4KB stack allocation which might overflow.
