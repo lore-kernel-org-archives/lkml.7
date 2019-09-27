@@ -2,92 +2,138 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D5E3C388F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E77C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1962207E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0808C217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:57:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UZ8b+2aq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbfI0P4D (ORCPT
+        id S1727802AbfI0P5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 11:56:03 -0400
-Received: from atlmailgw1.ami.com ([63.147.10.40]:55424 "EHLO
-        atlmailgw1.ami.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727518AbfI0P4D (ORCPT
+        Fri, 27 Sep 2019 11:57:45 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:51922 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727273AbfI0P5o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 11:56:03 -0400
-X-AuditID: ac1060b2-7a7ff700000017bd-67-5d8e310ed195
-Received: from atlms1.us.megatrends.com (atlms1.us.megatrends.com [172.16.96.144])
-        (using TLS with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by atlmailgw1.ami.com (Symantec Messaging Gateway) with SMTP id D0.07.06077.E013E8D5; Fri, 27 Sep 2019 11:55:58 -0400 (EDT)
-Received: from hongweiz-Ubuntu-AMI.us.megatrends.com (172.16.98.93) by
- atlms1.us.megatrends.com (172.16.96.144) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Fri, 27 Sep 2019 11:56:01 -0400
-From:   Hongwei Zhang <hongweiz@ami.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Jeffery <andrew@aj.id.au>, <linux-gpio@vger.kernel.org>,
-        Joel Stanley <joel@jms.id.au>
-CC:     Hongwei Zhang <hongweiz@ami.com>, <devicetree@vger.kernel.org>,
-        <linux-aspeed@lists.ozlabs.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Fri, 27 Sep 2019 11:57:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=F6O5Uosygu6We4yGr3RWbNboX83MuqSZ1AiJfQK03qY=; b=UZ8b+2aqVNM89GvnyWobFt5RX
+        aWEPvZpN1Xf9PluwsG5iY/EalMwqfbXccqU70nmw75AsOxXdnEOoB7SYfAdGWZjGPeJzt7MUCpnmW
+        CUfiVz2PgNJpFIehIoDPZBHS8HFywrtQIgpzm2ovlvik4wBvtHWfZt2YbrWMpvbf5QM9riZtaCjQC
+        35zNaOUJHmrC6CLDNj8yE7ZWMIU8qWPy0IAC5x8lABP/7fQBm5JjHyTGo4GzXgabkwGQocofNW5IE
+        EerkWpkaTvsLkSaAAGw++XQQGbh4rEfAtKb0GpisJtCiFICp1ns9UA7KSKxWWG19DN6WBCUNdo0GA
+        iVnW6hIrA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iDscf-0004Uu-EC; Fri, 27 Sep 2019 15:57:38 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C70529801D6; Fri, 27 Sep 2019 17:57:30 +0200 (CEST)
+Date:   Fri, 27 Sep 2019 17:57:30 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andrea Parri <parri.andrea@gmail.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Will Deacon <will@kernel.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Doug Anderson <armlinux@m.disordat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [v2, 2/2] gpio: dts: aspeed: Add SGPIO driver
-Date:   Fri, 27 Sep 2019 11:55:48 -0400
-Message-ID: <1569599748-31181-1-git-send-email-hongweiz@ami.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1569439337-10482-3-git-send-email-hongweiz@ami.com>
-References: <1569439337-10482-3-git-send-email-hongweiz@ami.com>
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        jose.marchesi@oracle.com
+Subject: Re: Do we need to correct barriering in circular-buffers.rst?
+Message-ID: <20190927155730.GA11194@worktop.programming.kicks-ass.net>
+References: <CAHk-=wj85tOp8WjcUp6gwstp4Cg2WT=p209S=fOzpWAgqqQPKg@mail.gmail.com>
+ <20190915145905.hd5xkc7uzulqhtzr@willie-the-truck>
+ <25289.1568379639@warthog.procyon.org.uk>
+ <28447.1568728295@warthog.procyon.org.uk>
+ <20190917170716.ud457wladfhhjd6h@willie-the-truck>
+ <15228.1568821380@warthog.procyon.org.uk>
+ <5385.1568901546@warthog.procyon.org.uk>
+ <20190923144931.GC2369@hirez.programming.kicks-ass.net>
+ <20190927095107.GA13098@andrea>
+ <20190927124929.GB4643@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.16.98.93]
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPIsWRmVeSWpSXmKPExsWyRiBhgi6fYV+sQfcOE4s569ewWey6zGHx
-        /8NuRovv+2exWvyddIzdounQKTaLL3NPsVjMP3KO1eL3+b/MFlP+LGey2PT4GqtF8+pzzBab
-        5/9htLi8aw6bxaGpexktll6/yGTx/lMnk0Xr3iPsFjemNLBZ7L33mdFBxONq+y52jzXz1jB6
-        XL52kdnj969JjB7vb7Sye1z8eIzZY9OqTjaPO9f2sHmcmPGbxWPCogOMHpuX1Hucn7GQ0eNv
-        41d2jxPTv7N4fN4kF8AfxWWTkpqTWZZapG+XwJXx8YNzwQrmir0fP7I1MJ5i6mLk5JAQMJE4
-        fKWFGcQWEtjFJPG2waGLkQvIPswo8ax7ERtIgk1ATWLv5jlMIAkRgX5Gies7mthAHGaBrawS
-        2w80sYJUCQuYSSydMY29i5GDg0VAVeLGznCQMK+Ag0RT63c2iG1yEjfPdYJt4xRwlNjWsJMJ
-        YrODxLtHLawQ9YISJ2c+YQGxmQUkJA6+eAF1nazErUOPoa5WkHje95hlAqPALCQts5C0LGBk
-        WsUolFiSk5uYmZNebqiXmJupl5yfu4kREqmbdjC2XDQ/xMjEwXiIUYKDWUmE1zeyJ1aINyWx
-        siq1KD++qDQntfgQozQHi5I478o132KEBNITS1KzU1MLUotgskwcnFINjCs/Buk+L37G2a/y
-        ZvfFi6uVZnSJd3IVin/leb1R6JVMmqL4Is/UmgfObbbfsuN/qZ3e/bu8z23dnbI1zZt91RyV
-        zTr1g6W1WEpeZIh2uN/pMow84L2YN9jWTUquIPRUzh2jyxrnBPedfFecmCbFF8y/RKD6l0Fx
-        y7TiNzoB9ivecGxu0lugxFKckWioxVxUnAgAf+/1tsICAAA=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190927124929.GB4643@worktop.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Linus,
-
+On Fri, Sep 27, 2019 at 02:49:29PM +0200, Peter Zijlstra wrote:
+> On Fri, Sep 27, 2019 at 11:51:07AM +0200, Andrea Parri wrote:
 > 
-> I sent a separate patch to fix this up the way I want it with the file named gpio-aspeed-sgpio.c and 
-> CONFIG_GPIO_ASPEED_SGPIO.
+> > For the record, the LKMM doesn't currently model "order" derived from
+> > control dependencies to a _plain_ access (even if the plain access is
+> > a write): in particular, the following is racy (as far as the current
+> > LKMM is concerned):
+> > 
+> > C rb
+> > 
+> > { }
+> > 
+> > P0(int *tail, int *data, int *head)
+> > {
+> > 	if (READ_ONCE(*tail)) {
+> > 		*data = 1;
+> > 		smp_wmb();
+> > 		WRITE_ONCE(*head, 1);
+> > 	}
+> > }
+> > 
+> > P1(int *tail, int *data, int *head)
+> > {
+> > 	int r0;
+> > 	int r1;
+> > 
+> > 	r0 = READ_ONCE(*head);
+> > 	smp_rmb();
+> > 	r1 = *data;
+> > 	smp_mb();
+> > 	WRITE_ONCE(*tail, 1);
+> > }
+> > 
+> > Replacing the plain "*data = 1" with "WRITE_ONCE(*data, 1)" (or doing
+> > s/READ_ONCE(*tail)/smp_load_acquire(tail)) suffices to avoid the race.
+> > Maybe I'm short of imagination this morning...  but I can't currently
+> > see how the compiler could "break" the above scenario.
 > 
-> I don't want to mix up the namespaces of something Aspeed-generic with the namespace of the GPIO 
-> subsystem. SGPIO is the name of a specific Aspeed component.
+> The compiler; if sufficiently smart; is 'allowed' to change P0 into
+> something terrible like:
 > 
-> Yours,
-> Linus Walleij
+> 	*data = 1;
+> 	if (*tail) {
+> 		smp_wmb();
+> 		*head = 1;
+> 	} else
+> 		*data = 0;
+> 
+> 
+> (assuming it knows *data was 0 from a prior store or something)
+> 
+> Using WRITE_ONCE() defeats this because volatile indicates external
+> visibility.
 
-I agree and gpio-aspeed-sgpio.c is better.
+The much simpler solution might be writing it like:
 
-Regards,
---Hongwei
+	if (READ_ONCE(*tail) {
+		barrier();
+		*data = 1;
+		smp_wmb();
+		WRITE_ONCE(*head, 1);
+	}
+
+which I don't think the compiler is allowed to mess up.
