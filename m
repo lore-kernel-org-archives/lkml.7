@@ -2,149 +2,190 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1133C388F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E4AC388F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EB0E21655
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:15:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B54321655
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:15:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="b96I+dEe"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="E58KgLAQ";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="QE023yxh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbfI0VPM (ORCPT
+        id S1728179AbfI0VPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 17:15:12 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:37001 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbfI0VPM (ORCPT
+        Fri, 27 Sep 2019 17:15:49 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:35580 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725789AbfI0VPs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 17:15:12 -0400
-Received: by mail-qk1-f195.google.com with SMTP id u184so3165502qkd.4
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 14:15:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=yZvVoBveDHCzVEJK+p90IwmjpCpkjwFeGPj8F1DecnI=;
-        b=b96I+dEegI+bTtnIMW2dZB0EVGBeMQFrsYW4vJo2dABzohHk6+KA7B0wh47x5ji38q
-         P7Eh0LBknV3w6EGrNr9ERxAkkjn34riEPlr5wX9H3Rp/VtO4TM7KRHpU9keJZhroFDh7
-         3eEyRKgeVoJ2Jh9QpXiJ5bp63HtssSmsQhIu3e22PHjMpI8Hg0BqbxJB25OxDHvvinXp
-         ujz6NCHIeUNvMoszgYsqH1gr69YmIATvPQq4PT5LC0z/zolzMLwxg7LC/VgeC6wEMfcZ
-         5pxyo7rqGwiKnEvT2v3KsBGMf1CSGCEn5BSqsBhCN/wzdLX9Asc+np0K5pamUxV7iy5x
-         xVWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=yZvVoBveDHCzVEJK+p90IwmjpCpkjwFeGPj8F1DecnI=;
-        b=HlZ8bhsfGiTd1DqWsGyQ+9AReUZtj1MgTcQ8u/wCXXTCLcCffO6is9Yu5/CE7fdRng
-         hGigLRdstDSgbw+pdTVkwjBWvpsaaJTdlDP7XHXIFK4ZvWhYj1O+BotYDeGRKIb19ozm
-         y9tbYL1srDXJXKjon8YjehOizcNIZnHdKEHruy4Tv8hs+LgkXa7bjzCnkYl3LK2SuTZG
-         yLp7rXcu7FcuTidVWajXEeRy1busJ3IGMBmg1JaZXLBDSacCd30XUaKQpq9/whTKSfR2
-         lcXV/gFeRSvVYs2BnhF6dJcsVeVuXGjf847jB5Nk6ykMO2R18P3N/A6SkJUWU8jSw3I3
-         /hwA==
-X-Gm-Message-State: APjAAAW9xTN0TN33q2SrKHv4OW8L6bRaN5ZQFN9fSuUrD+slfuDzL3wO
-        sE4wu2KENnS5g0Q1AEc14QhOiw==
-X-Google-Smtp-Source: APXvYqwoSvssjY8WGFuqLcE7gxDEJB65YBJZQmbWHTvr9KiCjOXZ5gujAFBo80Z/hTActJBvMK6Frg==
-X-Received: by 2002:a05:620a:1335:: with SMTP id p21mr6640821qkj.321.1569618911147;
-        Fri, 27 Sep 2019 14:15:11 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id r1sm3282922qti.4.2019.09.27.14.15.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 27 Sep 2019 14:15:10 -0700 (PDT)
-Message-ID: <1569618908.5576.240.camel@lca.pw>
-Subject: Re: [PATCH] mm/page_alloc: fix a crash in free_pages_prepare()
-From:   Qian Cai <cai@lca.pw>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Date:   Fri, 27 Sep 2019 17:15:08 -0400
-In-Reply-To: <20190927134859.95a2f4908bdcea30df0184ed@linux-foundation.org>
-References: <1569613623-16820-1-git-send-email-cai@lca.pw>
-         <20190927134859.95a2f4908bdcea30df0184ed@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 27 Sep 2019 17:15:48 -0400
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id x8RLDeT6007829;
+        Fri, 27 Sep 2019 14:15:30 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=ceqPOS0TA1R8thoAAEOEdvWi7BGLAkHVcwSe3Wyx3/Q=;
+ b=E58KgLAQi3h/8/RUzWVW9i7pVNeHMlUW03MApUFPMwcTVwmF9KyUlRzGBF7ZPyuAPSQA
+ BN+6jB6FToicGqLcn2Cob0yBe2YSMEi/fxOW+LQF2EVbCA7VBucfkm9WqI95O58R/iw/
+ R9CKTdtDSqBJpxM9IwU4zgAigguSf+rCnio= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by m0001303.ppops.net with ESMTP id 2v9mph1uw7-4
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 27 Sep 2019 14:15:30 -0700
+Received: from prn-mbx05.TheFacebook.com (2620:10d:c081:6::19) by
+ prn-hub01.TheFacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Fri, 27 Sep 2019 14:15:26 -0700
+Received: from prn-hub02.TheFacebook.com (2620:10d:c081:35::126) by
+ prn-mbx05.TheFacebook.com (2620:10d:c081:6::19) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Fri, 27 Sep 2019 14:15:26 -0700
+Received: from NAM01-BN3-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.26) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Fri, 27 Sep 2019 14:15:26 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dtbnOY9aIwHPhY58Sz5PN71UdvSEENqsDIH884MWiXkCGlj5GM67zT9+R6SgJi48JC6vJwUMLA0PB1xWsD7LTVjd8RBPzXck6/euqFK9a11cRTGFrmCXrYMOnC9XL3+Q+GGz3D8Cu1/cTaCstz7Zq/y6sbsfVYQzy3A4uEvUB8m6WIPASBTClw0roV9Z4AwBbYtbkve7seS6T/g5njgLe4Zvozxd5SqXGAg/C4o2KzMxDO5PuW6FfrqJ4E6yQ7cqD8b81I5x0freUNLMG3KcHNMbdmbQ7RD63XxwZ5+54dKw/SjfZjB5i9IIGyc1d3KInDyfutv228ISeg1m4Wzfcg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ceqPOS0TA1R8thoAAEOEdvWi7BGLAkHVcwSe3Wyx3/Q=;
+ b=m6bOIplSL/Q+oWDgHnP49Z2GTlH75fS2wHKIjghOf03UzpbsLUIiX89196MO8+f/TQmSKFujUFcP3ytPSH4OGPwLiLvbXL1XDGUAyrSDNzf2xXsY0pHQbXmcdxiENVxya2Lthd9rGgwRUlACAYWJ0IhtSJgKli1S+Wv6ksREMNZGDrdeNFl1duUibmM8lGDxPMx7jTee0gR9Fau/6jRMLqtwRBR+nWvLGIZLjiHFwtFr19C02AX1FAx2rT2q/hHZpnM+orsnyqDrZz0HtutgAOetUvqX4r8k3/haSzvvrhuJxQ8Z5yFNm/T3rSr97nlrAWJW38SLGRnQ4R6aQ8R39A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ceqPOS0TA1R8thoAAEOEdvWi7BGLAkHVcwSe3Wyx3/Q=;
+ b=QE023yxhQ4mxNveVhTE7pTOV4IeDFDP1Vp+UWEos5Tx8P6I1rNzQWxkRML3vgfhZ3RD2IDpf5H7D9vRy434MOA2wF9Hy6Lm7Mi4cVDMC6jWjOMDL/M4wTqhv8wgvjWJFaVU4lKZ7sJiHzPG7ImC57mBeOlk4lrlSC3KHJqhw9LM=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
+ MWHPR15MB1453.namprd15.prod.outlook.com (10.173.234.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.17; Fri, 27 Sep 2019 21:15:25 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::a828:5750:379d:b9a1]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::a828:5750:379d:b9a1%8]) with mapi id 15.20.2305.017; Fri, 27 Sep 2019
+ 21:15:24 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+CC:     Song Liu <liu.song.a23@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, "Yonghong Song" <yhs@fb.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH] tools: bpf: Use !building_out_of_srctree to determine
+ srctree
+Thread-Topic: [PATCH] tools: bpf: Use !building_out_of_srctree to determine
+ srctree
+Thread-Index: AQHVdNDXBxSGfE5tmEyE9kgIwPwciqc/3XAAgAAFZoCAACTiAA==
+Date:   Fri, 27 Sep 2019 21:15:24 +0000
+Message-ID: <57756C81-5B82-4E56-9CF0-5C1C4A4FBEFC@fb.com>
+References: <20190927011344.4695-1-skhan@linuxfoundation.org>
+ <CAPhsuW5EncjNRGjt7F_BN2bNhRkf=uXVeDe6NCbJe=K2J+hdyA@mail.gmail.com>
+ <5ec40572-5df9-0e5b-5a85-eb53be48b87d@linuxfoundation.org>
+In-Reply-To: <5ec40572-5df9-0e5b-5a85-eb53be48b87d@linuxfoundation.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.104.11)
+x-originating-ip: [2620:10d:c090:200::1:cdab]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 68c45fa1-16b5-4257-c9fe-08d7438fd042
+x-ms-traffictypediagnostic: MWHPR15MB1453:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR15MB14533876EBC7A220754C87C7B3810@MWHPR15MB1453.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0173C6D4D5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(39860400002)(396003)(136003)(366004)(199004)(189003)(51914003)(8676002)(478600001)(316002)(76116006)(64756008)(66446008)(36756003)(66556008)(66476007)(66946007)(81156014)(6246003)(14444005)(256004)(6486002)(4326008)(50226002)(76176011)(6436002)(8936002)(81166006)(6512007)(229853002)(71200400001)(86362001)(2616005)(446003)(11346002)(486006)(46003)(99286004)(71190400001)(305945005)(14454004)(6916009)(33656002)(476003)(7736002)(5660300002)(25786009)(186003)(2906002)(53546011)(102836004)(54906003)(6506007)(6116002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1453;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: heJ5Dq+R8fRhqy+zbV0eVu7LpK+eOf08edNY6+/2OotD1YQWSp6M814+a3R56V0/KJE5Xo0gPQMyDmBHDBIdcmo2wh/2MBLXcrnW9izbx5+hpbwmM7mc+lDp8xuVCufgfaWtzaBL2J4Lf7VeU2z8/FIEYmFVpA1bBR0LDoOskmTKv1XlmQzTShdhu1sFkUsjPe4NcIaTvf3zOzqDjP4FRplN2ecMcoimXx+p2TkK6D2pTXlSNH50FoGkoRQK9PNX6YNRx9E8cyZY42Q8lgF5Uv446xoRlMMNpDF1kqo0EWgr4M7BtKD0046teqJ1oEfx/vzfrjVvznHbZbgWxJ4N5ylEf/XUNDMj2qkFLBOAnAPVRjKk3DXxWtlVAnCrAIUUp0vrLXpv4dfgjS4VLR98+Y4XZSsMLtmci+WYmR1QJdY=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <D6C6AF43DDFBD14B8925B24E4E06C797@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 68c45fa1-16b5-4257-c9fe-08d7438fd042
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Sep 2019 21:15:24.7497
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pzT4P4ntiSByp0037Hqeyp9HcRNpcWjfzwI+C+C1Y/8lnA61cRaLkHWmozD7W+PEMOj8MaGjF0qAApqiN6hnSg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1453
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-09-27_09:2019-09-25,2019-09-27 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0
+ lowpriorityscore=0 phishscore=0 priorityscore=1501 spamscore=0 bulkscore=0
+ suspectscore=0 clxscore=1011 mlxlogscore=999 adultscore=0 malwarescore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1909270178
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-09-27 at 13:48 -0700, Andrew Morton wrote:
-> On Fri, 27 Sep 2019 15:47:03 -0400 Qian Cai <cai@lca.pw> wrote:
-> 
-> > On architectures like s390, arch_free_page() could mark the page unused
-> > (set_page_unused()) and any access later would trigger a kernel panic.
-> > Fix it by moving arch_free_page() after all possible accessing calls.
-> > 
-> >  Hardware name: IBM 2964 N96 400 (z/VM 6.4.0)
-> >  Krnl PSW : 0404e00180000000 0000000026c2b96e
-> > (__free_pages_ok+0x34e/0x5d8)
-> >             R:0 T:1 IO:0 EX:0 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 RI:0 EA:3
-> >  Krnl GPRS: 0000000088d43af7 0000000000484000 000000000000007c
-> >  000000000000000f
-> >             000003d080012100 000003d080013fc0 0000000000000000
-> >  0000000000100000
-> >             00000000275cca48 0000000000000100 0000000000000008
-> >  000003d080010000
-> >             00000000000001d0 000003d000000000 0000000026c2b78a
-> >  000000002717fdb0
-> >  Krnl Code: 0000000026c2b95c: ec1100b30659 risbgn %r1,%r1,0,179,6
-> >             0000000026c2b962: e32014000036 pfd 2,1024(%r1)
-> >            #0000000026c2b968: d7ff10001000 xc 0(256,%r1),0(%r1)
-> >            >0000000026c2b96e: 41101100  la %r1,256(%r1)
-> >             0000000026c2b972: a737fff8  brctg %r3,26c2b962
-> >             0000000026c2b976: d7ff10001000 xc 0(256,%r1),0(%r1)
-> >             0000000026c2b97c: e31003400004 lg %r1,832
-> >             0000000026c2b982: ebff1430016a asi 5168(%r1),-1
-> >  Call Trace:
-> >  __free_pages_ok+0x16a/0x5d8)
-> >  memblock_free_all+0x206/0x290
-> >  mem_init+0x58/0x120
-> >  start_kernel+0x2b0/0x570
-> >  startup_continue+0x6a/0xc0
-> >  INFO: lockdep is turned off.
-> >  Last Breaking-Event-Address:
-> >  __free_pages_ok+0x372/0x5d8
-> >  Kernel panic - not syncing: Fatal exception: panic_on_oops
-> > 00: HCPGIR450W CP entered; disabled wait PSW 00020001 80000000 00000000
-> > 26A2379C
-> > 
-> > ...
-> > 
-> > --- a/mm/page_alloc.c
-> > +++ b/mm/page_alloc.c
-> > @@ -1175,11 +1175,11 @@ static __always_inline bool free_pages_prepare(struct page *page,
-> >  		debug_check_no_obj_freed(page_address(page),
-> >  					   PAGE_SIZE << order);
-> >  	}
-> > -	arch_free_page(page, order);
-> >  	if (want_init_on_free())
-> >  		kernel_init_free_pages(page, 1 << order);
-> >  
-> >  	kernel_poison_pages(page, 1 << order, 0);
-> > +	arch_free_page(page, order);
-> >  	if (debug_pagealloc_enabled())
-> >  		kernel_map_pages(page, 1 << order, 0);
-> 
-> This is all fairly mature code, isn't it?  What happened to make this
-> problem pop up now?
 
-In the past, there is only kernel_poison_pages() would trigger it but it needs
-"page_poison=on" kernel cmdline, and I suspect nobody tested that on s390 in the
-past.
 
-Recently, kernel_init_free_pages() (the commit 6471384af2a6) was added to the
-kernel and could trigger it as well.
+> On Sep 27, 2019, at 12:03 PM, Shuah Khan <skhan@linuxfoundation.org> wrot=
+e:
+>=20
+> On 9/27/19 12:44 PM, Song Liu wrote:
+>> On Thu, Sep 26, 2019 at 6:14 PM Shuah Khan <skhan@linuxfoundation.org> w=
+rote:
+>>>=20
+>>> make TARGETS=3Dbpf kselftest fails with:
+>>>=20
+>>> Makefile:127: tools/build/Makefile.include: No such file or directory
+>>>=20
+>>> When the bpf tool make is invoked from tools Makefile, srctree is
+>>> cleared and the current logic check for srctree equals to empty
+>>> string to determine srctree location from CURDIR.
+>>>=20
+>>> When the build in invoked from selftests/bpf Makefile, the srctree
+>>> is set to "." and the same logic used for srctree equals to empty is
+>>> needed to determine srctree.
+>>>=20
+>>> Check building_out_of_srctree undefined as the condition for both
+>>> cases to fix "make TARGETS=3Dbpf kselftest" build failure.
+>>>=20
+>>> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+>> The fix looks reasonable. Thanks!
+>> However, I am still seeing some failure:
+>> make TARGETS=3Dbpf kselftest
+>> [...]
+>> test_verifier.c
+>> /data/users/songliubraving/kernel/linux-git/tools/testing/selftests/bpf/=
+test_stub.o
+>> /data/users/songliubraving/kernel/linux-git/tools/testing/selftests/bpf/=
+libbpf.a
+>> -lcap -lelf -lrt -lpthread -o
+>> /data/users/songliubraving/kernel/linux-git/tools/testing/selftests/bpf/=
+test_verifier
+>> make[3]: test_verifier.c: Command not found
+>> Is this just a problem with my setup?
+>=20
+> You are running into the second bpf failure because of the dependency
+> on the latest llvm. This is known issue with bpf test and it doesn't
+> compile on 5.4 and maybe even 5.3
+>=20
 
-> 
-> IOW, is a -stable backport needed?
+Thanks for the clarification.=20
 
-Since kernel_init_free_pages() was added in v5.3, I think it does not hurt to
-backport to -stable there.
+Acked-by: Song Liu <songliubraving@fb.com>
+
+
+
