@@ -2,81 +2,72 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E4CC388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21021C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54BF8217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:23:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED4DB217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:25:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727668AbfI0PXT (ORCPT
+        id S1727691AbfI0PZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 11:23:19 -0400
-Received: from muru.com ([72.249.23.125]:34640 "EHLO muru.com"
+        Fri, 27 Sep 2019 11:25:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727140AbfI0PXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 11:23:19 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id C37D88022;
-        Fri, 27 Sep 2019 15:23:50 +0000 (UTC)
-Date:   Fri, 27 Sep 2019 08:23:15 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Stephen Kitt <steve@sk2.org>
-Cc:     Tero Kristo <t-kristo@ti.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-omap@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] clk/ti/adpll: allocate room for terminating null
-Message-ID: <20190927152315.GE5610@atomide.com>
-References: <20190927145737.7832-1-steve@sk2.org>
+        id S1727076AbfI0PZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 11:25:22 -0400
+Received: from oasis.local.home (unknown [65.39.69.237])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00F6B217D7;
+        Fri, 27 Sep 2019 15:25:19 +0000 (UTC)
+Date:   Fri, 27 Sep 2019 11:25:14 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Naveen Rao <naveen.n.rao@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Shuah Khan <shuah@kernel.org>
+Subject: [PATCH] selftests/ftrace: Fix same probe error test
+Message-ID: <20190927112514.00cc6e92@oasis.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190927145737.7832-1-steve@sk2.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Stephen Kitt <steve@sk2.org> [190927 15:13]:
-> The buffer allocated in ti_adpll_clk_get_name doesn't account for the
-> terminating null. This patch adds the extra byte, and switches to
-> snprintf to avoid overflowing.
-> 
-> Signed-off-by: Stephen Kitt <steve@sk2.org>
-> ---
->  drivers/clk/ti/adpll.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/clk/ti/adpll.c b/drivers/clk/ti/adpll.c
-> index fdfb90058504..27933c4e8a27 100644
-> --- a/drivers/clk/ti/adpll.c
-> +++ b/drivers/clk/ti/adpll.c
-> @@ -196,12 +196,13 @@ static const char *ti_adpll_clk_get_name(struct ti_adpll_data *d,
->  	} else {
->  		const char *base_name = "adpll";
->  		char *buf;
-> +		size_t size = 8 + 1 + strlen(base_name) + 1 +
-> +			      strlen(postfix) + 1;
->  
-> -		buf = devm_kzalloc(d->dev, 8 + 1 + strlen(base_name) + 1 +
-> -				    strlen(postfix), GFP_KERNEL);
-> +		buf = devm_kzalloc(d->dev, size, GFP_KERNEL);
->  		if (!buf)
->  			return NULL;
-> -		sprintf(buf, "%08lx.%s.%s", d->pa, base_name, postfix);
-> +		snprintf(buf, size, "%08lx.%s.%s", d->pa, base_name, postfix);
->  		name = buf;
->  	}
->  
 
-Thanks for catching this. Maybe just use devm_kasprintf() here?
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-Regards,
+The "same probe" selftest that tests that adding the same probe fails
+doesn't add the same probe and passes, which fails the test.
 
-Tony
+Fixes: b78b94b82122 ("selftests/ftrace: Update kprobe event error testcase")
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ .../selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc      | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
+index 8a4025e912cb..ef1e9bafb098 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
+@@ -95,7 +95,7 @@ echo 'p:kprobes/testevent _do_fork abcd=\1' > kprobe_events
+ check_error 'p:kprobes/testevent _do_fork ^bcd=\1'	# DIFF_ARG_TYPE
+ check_error 'p:kprobes/testevent _do_fork ^abcd=\1:u8'	# DIFF_ARG_TYPE
+ check_error 'p:kprobes/testevent _do_fork ^abcd=\"foo"'	# DIFF_ARG_TYPE
+-check_error '^p:kprobes/testevent _do_fork'	# SAME_PROBE
++check_error '^p:kprobes/testevent _do_fork abcd=\1'	# SAME_PROBE
+ fi
+ 
+ exit 0
+-- 
+2.20.1
+
