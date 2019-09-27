@@ -2,237 +2,129 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6901C388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 23:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02123C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 23:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C80E20863
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 23:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D394020665
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 23:52:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbfI0XnQ (ORCPT
+        id S1727758AbfI0XwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 19:43:16 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35327 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbfI0XnQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 19:43:16 -0400
-Received: by mail-lf1-f67.google.com with SMTP id w6so3116459lfl.2;
-        Fri, 27 Sep 2019 16:43:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=c8uGLij7T5Lhd9NNM8IRpienFCfZLI1fF2YsMfwjMb0=;
-        b=nGEy3BShGtH9jG0mH+ZtDfICSzXbZwOQWP3jeLcW93g20Qkt/JnkUI6i/1tsHCXtQq
-         5mAoANpqa1BecDWxVjyr6VZkOS0xU69VvudDeerrU1SJlAjtkmfBqoIUNfOAdtffnEhE
-         muVvtwrXJZ7q+f+tGWt3q6xnFFSEFJlcmZlPS7sAYm2L92Hy9g9Q1tHwwOLte1K3e/KJ
-         qg+R2okbKGnfOEB4wF3h91EF9ey9x2YUhje6aSw/jaVb+sXU1Hzj+IbrdnOVCoISAv9c
-         bpCTkxGJVqijAc0U22vuNZ7U1So4HNUfhva14qO2qxIhHPiMl7k8XH9s0T4bIuk7ufse
-         LUUg==
-X-Gm-Message-State: APjAAAWaqLjk8krkp7T8bzcPm61xAYWxTdyPgbmKapb5dRQr/WVEYTiC
-        qEUt/KnkRFuDjUHlq94YDZNuey8rsTY=
-X-Google-Smtp-Source: APXvYqxaiyRdOlpBwWGF862QfV4eTAG1q+uwD8zL+weLda64/duQKMgTc/QRXQANLb7+8tTLId6QQQ==
-X-Received: by 2002:ac2:4c8f:: with SMTP id d15mr4785336lfl.74.1569627792625;
-        Fri, 27 Sep 2019 16:43:12 -0700 (PDT)
-Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.googlemail.com with ESMTPSA id b67sm788812ljf.5.2019.09.27.16.43.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2019 16:43:12 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Denis Efremov <efremov@linux.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        x86@kernel.org, linux-s390@vger.kernel.org,
-        linux-alpha@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH RESEND v3 01/26] PCI: Add define for the number of standard PCI BARs
-Date:   Sat, 28 Sep 2019 02:43:08 +0300
-Message-Id: <20190927234308.23935-1-efremov@linux.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190916204158.6889-3-efremov@linux.com>
-References: <20190916204158.6889-3-efremov@linux.com>
+        Fri, 27 Sep 2019 19:52:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52166 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726116AbfI0XwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 19:52:03 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3D3E918C426D;
+        Fri, 27 Sep 2019 23:52:03 +0000 (UTC)
+Received: from localhost (ovpn-12-27.pek2.redhat.com [10.72.12.27])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 002EF1EC;
+        Fri, 27 Sep 2019 23:51:59 +0000 (UTC)
+Date:   Sat, 28 Sep 2019 07:51:56 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Dave Young <dyoung@redhat.com>, Lianbo Jiang <lijiang@redhat.com>,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org, jgross@suse.com,
+        dhowells@redhat.com, Thomas.Lendacky@amd.com,
+        kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH] x86/kdump: Fix 'kmem -s' reported an invalid freepointer
+ when SME was active
+Message-ID: <20190927235156.GI31919@MiWiFi-R3L-srv>
+References: <20190920035326.27212-1-lijiang@redhat.com>
+ <20190927051518.GA13023@dhcp-128-65.nay.redhat.com>
+ <87r241piqg.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87r241piqg.fsf@x220.int.ebiederm.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Fri, 27 Sep 2019 23:52:03 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Code that iterates over all standard PCI BARs typically uses
-PCI_STD_RESOURCE_END. However, it requires the "unusual" loop condition
-"i <= PCI_STD_RESOURCE_END" rather than something more standard like
-"i < PCI_STD_NUM_BARS".
+On 09/27/19 at 03:49pm, Eric W. Biederman wrote:
+> >> In order to avoid such problem, lets occupy the first 640k region when
+> >> SME is active, which will ensure that the allocated memory does not fall
+> >> into the first 640k area. So, no need to worry about whether kernel can
+> >> correctly copy the contents of the first 640K area to a backup region in
+> >> purgatory().
+> 
+> We must occupy part of the first 640k so that we can start up secondary
+> cpus unless someone has added another way to do that in recent years on
+> SME capable cpus.
+> 
+> Further there is Fimware/BIOS interaction that happens within those
+> first 640K.
+> 
+> Furthermore the kdump kernel needs to be able to read all of the memory
+> that the previous kernel could read.  Otherwise we can't get a crash
+> dump.
+> 
+> So I do not think ignoring the first 640K is the correct resolution
+> here.
 
-This patch adds the definition PCI_STD_NUM_BARS which is equivalent to
-"PCI_STD_RESOURCE_END + 1". To iterate through all possible BARs, loop
-conditions changed to the *number* of BARs "i < PCI_STD_NUM_BARS",
-instead of the index of the last valid BAR "i <= PCI_STD_RESOURCE_END"
-or PCI_ROM_RESOURCE. The magic constant (6) is also replaced with new
-define PCI_STD_NUM_BARS.
+We discussed and tried many ways to copy the first 640K of 1st kernel
+out since kernel data may be allocated there, then crash need it to
+parse. But SME makes the copy very difficult to do, because the first
+640K is encrypted in 1st kernel, but the copy is done in purgatory with
+1:1 ident-mapping and unencrypted.
 
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- drivers/pci/pci-sysfs.c       |  4 ++--
- drivers/pci/pci.c             | 13 +++++++------
- drivers/pci/proc.c            |  4 ++--
- drivers/pci/quirks.c          |  4 ++--
- include/linux/pci.h           |  2 +-
- include/uapi/linux/pci_regs.h |  1 +
- 6 files changed, 15 insertions(+), 13 deletions(-)
+Finally we decided this way as patch does. Reserving it in memblock is
+not ignoring the first 640K, but lock it down to avoid any later kernel
+data allocated in this area. The first 640K will be taken as system RAM
+of kdump kernel as is. Like this, no available kernel information
+could be located in this area, then we don't care if the copy is correct
+or not.
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 965c72104150..3e26b8e03bd5 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -1257,7 +1257,7 @@ static void pci_remove_resource_files(struct pci_dev *pdev)
- {
- 	int i;
- 
--	for (i = 0; i < PCI_ROM_RESOURCE; i++) {
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 		struct bin_attribute *res_attr;
- 
- 		res_attr = pdev->res_attr[i];
-@@ -1328,7 +1328,7 @@ static int pci_create_resource_files(struct pci_dev *pdev)
- 	int retval;
- 
- 	/* Expose the PCI resources from this device as files */
--	for (i = 0; i < PCI_ROM_RESOURCE; i++) {
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 
- 		/* skip empty resources */
- 		if (!pci_resource_len(pdev, i))
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 1b27b5af3d55..7d543986026b 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -674,7 +674,7 @@ struct resource *pci_find_resource(struct pci_dev *dev, struct resource *res)
- {
- 	int i;
- 
--	for (i = 0; i < PCI_ROM_RESOURCE; i++) {
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 		struct resource *r = &dev->resource[i];
- 
- 		if (r->start && resource_contains(r, res))
-@@ -3768,7 +3768,7 @@ void pci_release_selected_regions(struct pci_dev *pdev, int bars)
- {
- 	int i;
- 
--	for (i = 0; i < 6; i++)
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++)
- 		if (bars & (1 << i))
- 			pci_release_region(pdev, i);
- }
-@@ -3779,7 +3779,7 @@ static int __pci_request_selected_regions(struct pci_dev *pdev, int bars,
- {
- 	int i;
- 
--	for (i = 0; i < 6; i++)
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++)
- 		if (bars & (1 << i))
- 			if (__pci_request_region(pdev, i, res_name, excl))
- 				goto err_out;
-@@ -3827,7 +3827,7 @@ EXPORT_SYMBOL(pci_request_selected_regions_exclusive);
- 
- void pci_release_regions(struct pci_dev *pdev)
- {
--	pci_release_selected_regions(pdev, (1 << 6) - 1);
-+	pci_release_selected_regions(pdev, (1 << PCI_STD_NUM_BARS) - 1);
- }
- EXPORT_SYMBOL(pci_release_regions);
- 
-@@ -3846,7 +3846,8 @@ EXPORT_SYMBOL(pci_release_regions);
-  */
- int pci_request_regions(struct pci_dev *pdev, const char *res_name)
- {
--	return pci_request_selected_regions(pdev, ((1 << 6) - 1), res_name);
-+	return pci_request_selected_regions(pdev,
-+			((1 << PCI_STD_NUM_BARS) - 1), res_name);
- }
- EXPORT_SYMBOL(pci_request_regions);
- 
-@@ -3868,7 +3869,7 @@ EXPORT_SYMBOL(pci_request_regions);
- int pci_request_regions_exclusive(struct pci_dev *pdev, const char *res_name)
- {
- 	return pci_request_selected_regions_exclusive(pdev,
--					((1 << 6) - 1), res_name);
-+				((1 << PCI_STD_NUM_BARS) - 1), res_name);
- }
- EXPORT_SYMBOL(pci_request_regions_exclusive);
- 
-diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
-index fe7fe678965b..cb61ec2c24e8 100644
---- a/drivers/pci/proc.c
-+++ b/drivers/pci/proc.c
-@@ -248,13 +248,13 @@ static int proc_bus_pci_mmap(struct file *file, struct vm_area_struct *vma)
- 	}
- 
- 	/* Make sure the caller is mapping a real resource for this device */
--	for (i = 0; i < PCI_ROM_RESOURCE; i++) {
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 		if (dev->resource[i].flags & res_bit &&
- 		    pci_mmap_fits(dev, i, vma,  PCI_MMAP_PROCFS))
- 			break;
- 	}
- 
--	if (i >= PCI_ROM_RESOURCE)
-+	if (i >= PCI_STD_NUM_BARS)
- 		return -ENODEV;
- 
- 	if (fpriv->mmap_state == pci_mmap_mem &&
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 44c4ae1abd00..998454b0ae8d 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -475,7 +475,7 @@ static void quirk_extend_bar_to_page(struct pci_dev *dev)
- {
- 	int i;
- 
--	for (i = 0; i <= PCI_STD_RESOURCE_END; i++) {
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 		struct resource *r = &dev->resource[i];
- 
- 		if (r->flags & IORESOURCE_MEM && resource_size(r) < PAGE_SIZE) {
-@@ -1810,7 +1810,7 @@ static void quirk_alder_ioapic(struct pci_dev *pdev)
- 	 * The next five BARs all seem to be rubbish, so just clean
- 	 * them out.
- 	 */
--	for (i = 1; i < 6; i++)
-+	for (i = 1; i < PCI_STD_NUM_BARS; i++)
- 		memset(&pdev->resource[i], 0, sizeof(pdev->resource[i]));
- }
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_EESSC,	quirk_alder_ioapic);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 82e4cd1b7ac3..cf7d16305243 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -76,7 +76,7 @@ enum pci_mmap_state {
- enum {
- 	/* #0-5: standard PCI resources */
- 	PCI_STD_RESOURCES,
--	PCI_STD_RESOURCE_END = 5,
-+	PCI_STD_RESOURCE_END = PCI_STD_RESOURCES + PCI_STD_NUM_BARS - 1,
- 
- 	/* #6: expansion ROM resource */
- 	PCI_ROM_RESOURCE,
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index f28e562d7ca8..68b571d491eb 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -34,6 +34,7 @@
-  * of which the first 64 bytes are standardized as follows:
-  */
- #define PCI_STD_HEADER_SIZEOF	64
-+#define PCI_STD_NUM_BARS	6	/* Number of standard BARs */
- #define PCI_VENDOR_ID		0x00	/* 16 bits */
- #define PCI_DEVICE_ID		0x02	/* 16 bits */
- #define PCI_COMMAND		0x04	/* 16 bits */
--- 
-2.21.0
+One word, what the patch is doing is locking down the first 640K after 
+reserve_real_mode() invocation. Putting it after reserve_real_mode() is
+because reserve_real_mode() may put real mode trampoline inside first
+640K. Surely the real mode trampoline will be discarded too in kdump
+kernel, since it's not important and unnecessary for crash parsing.
 
+I think Lianbo need rewrite this patch log to make it clearer.
+
+
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 77ea96b794bd..5bfb2c83bb6c 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -1148,6 +1148,9 @@ void __init setup_arch(char **cmdline_p)
+
+        reserve_real_mode();
+
++       if (sme_active())
++               memblock_reserve(0, 640*1024);
++
+        trim_platform_memory_ranges();
+        trim_low_memory_range();
+
+
+> 
+> > The log is too simple,  I know you did some other tries to fix this, but
+> > the patch log does not show why you can not correctly copy the 640k in
+> > current kdump code, in purgatory here.
+> >
+> > Also this patch seems works in your test, but still to see if other
+> > people can comment and see if it is safe or not, if any other risks
+> > other than waste the small chunk of memory.  If it is safe then kdump
+> > can just drop the backup logic and use this in common code instead of
+> > only do it for SME.
+> 
+> Exactly.
+> 
+> I think at best this avoids the symptoms, but does not give a reliable
+> crash dump.
+> 
+> Eric
