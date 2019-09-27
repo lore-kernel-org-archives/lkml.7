@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECAEC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC99C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBA7C2146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C530820863
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 21:46:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728752AbfI0Vpr (ORCPT
+        id S1728756AbfI0VqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 17:45:47 -0400
-Received: from mga12.intel.com ([192.55.52.136]:45957 "EHLO mga12.intel.com"
+        Fri, 27 Sep 2019 17:46:01 -0400
+Received: from mga12.intel.com ([192.55.52.136]:45951 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728527AbfI0Vp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 17:45:27 -0400
+        id S1728077AbfI0VpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 17:45:25 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Sep 2019 14:45:27 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Sep 2019 14:45:25 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,557,1559545200"; 
-   d="scan'208";a="196852078"
+   d="scan'208";a="196852057"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by FMSMGA003.fm.intel.com with ESMTP; 27 Sep 2019 14:45:26 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 27 Sep 2019 14:45:24 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>,
         =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
@@ -38,9 +38,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Reto Buerki <reet@codelabs.ch>,
         Liran Alon <liran.alon@oracle.com>
-Subject: [PATCH v2 7/8] KVM: x86: Add helpers to test/mark reg availability and dirtiness
-Date:   Fri, 27 Sep 2019 14:45:22 -0700
-Message-Id: <20190927214523.3376-8-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 1/8] KVM: nVMX: Always write vmcs02.GUEST_CR3 during nested VM-Enter
+Date:   Fri, 27 Sep 2019 14:45:16 -0700
+Message-Id: <20190927214523.3376-2-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190927214523.3376-1-sean.j.christopherson@intel.com>
 References: <20190927214523.3376-1-sean.j.christopherson@intel.com>
@@ -51,285 +51,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add helpers to prettify code that tests and/or marks whether or not a
-register is available and/or dirty.
+Write the desired L2 CR3 into vmcs02.GUEST_CR3 during nested VM-Enter
+instead of deferring the VMWRITE until vmx_set_cr3().  If the VMWRITE
+is deferred, then KVM can consume a stale vmcs02.GUEST_CR3 when it
+refreshes vmcs12->guest_cr3 during nested_vmx_vmexit() if the emulated
+VM-Exit occurs without actually entering L2, e.g. if the nested run
+is squashed because nested VM-Enter (from L1) is putting L2 into HLT.
 
-Suggested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Note, the above scenario can occur regardless of whether L1 is
+intercepting HLT, e.g. L1 can intercept HLT and then re-enter L2 with
+vmcs.GUEST_ACTIVITY_STATE=HALTED.  But practically speaking, a VMM will
+likely put a guest into HALTED if and only if it's not intercepting HLT.
+
+In an ideal world where EPT *requires* unrestricted guest (and vice
+versa), VMX could handle CR3 similar to how it handles RSP and RIP,
+e.g. mark CR3 dirty and conditionally load it at vmx_vcpu_run().  But
+the unrestricted guest silliness complicates the dirty tracking logic
+to the point that explicitly handling vmcs02.GUEST_CR3 during nested
+VM-Enter is a simpler overall implementation.
+
+Cc: stable@vger.kernel.org
+Reported-and-tested-by: Reto Buerki <reet@codelabs.ch>
+Tested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Reviewed-by: Liran Alon <liran.alon@oracle.com>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/kvm_cache_regs.h | 45 +++++++++++++++++++++++++----------
- arch/x86/kvm/vmx/nested.c     |  4 ++--
- arch/x86/kvm/vmx/vmx.c        | 29 ++++++++++------------
- arch/x86/kvm/x86.c            | 13 ++++------
- 4 files changed, 53 insertions(+), 38 deletions(-)
+ arch/x86/kvm/vmx/nested.c | 10 ++++++++++
+ arch/x86/kvm/vmx/vmx.c    | 10 +++++++---
+ 2 files changed, 17 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kvm/kvm_cache_regs.h b/arch/x86/kvm/kvm_cache_regs.h
-index b85fc4b4e04f..9c2bc528800b 100644
---- a/arch/x86/kvm/kvm_cache_regs.h
-+++ b/arch/x86/kvm/kvm_cache_regs.h
-@@ -37,12 +37,37 @@ BUILD_KVM_GPR_ACCESSORS(r14, R14)
- BUILD_KVM_GPR_ACCESSORS(r15, R15)
- #endif
- 
-+static inline bool kvm_register_is_available(struct kvm_vcpu *vcpu,
-+					     enum kvm_reg reg)
-+{
-+	return test_bit(reg, (unsigned long *)&vcpu->arch.regs_avail);
-+}
-+
-+static inline bool kvm_register_is_dirty(struct kvm_vcpu *vcpu,
-+					 enum kvm_reg reg)
-+{
-+	return test_bit(reg, (unsigned long *)&vcpu->arch.regs_dirty);
-+}
-+
-+static inline void kvm_register_mark_available(struct kvm_vcpu *vcpu,
-+					       enum kvm_reg reg)
-+{
-+	__set_bit(reg, (unsigned long *)&vcpu->arch.regs_avail);
-+}
-+
-+static inline void kvm_register_mark_dirty(struct kvm_vcpu *vcpu,
-+					   enum kvm_reg reg)
-+{
-+	__set_bit(reg, (unsigned long *)&vcpu->arch.regs_avail);
-+	__set_bit(reg, (unsigned long *)&vcpu->arch.regs_dirty);
-+}
-+
- static inline unsigned long kvm_register_read(struct kvm_vcpu *vcpu, int reg)
- {
- 	if (WARN_ON_ONCE((unsigned int)reg >= NR_VCPU_REGS))
- 		return 0;
- 
--	if (!test_bit(reg, (unsigned long *)&vcpu->arch.regs_avail))
-+	if (!kvm_register_is_available(vcpu, reg))
- 		kvm_x86_ops->cache_reg(vcpu, reg);
- 
- 	return vcpu->arch.regs[reg];
-@@ -55,13 +80,12 @@ static inline void kvm_register_write(struct kvm_vcpu *vcpu, int reg,
- 		return;
- 
- 	vcpu->arch.regs[reg] = val;
--	__set_bit(reg, (unsigned long *)&vcpu->arch.regs_dirty);
--	__set_bit(reg, (unsigned long *)&vcpu->arch.regs_avail);
-+	kvm_register_mark_dirty(vcpu, reg);
- }
- 
- static inline unsigned long kvm_rip_read(struct kvm_vcpu *vcpu)
- {
--	if (!test_bit(VCPU_REGS_RIP, (unsigned long *)&vcpu->arch.regs_avail))
-+	if (!kvm_register_is_available(vcpu, VCPU_REGS_RIP))
- 		kvm_x86_ops->cache_reg(vcpu, VCPU_REGS_RIP);
- 
- 	return vcpu->arch.regs[VCPU_REGS_RIP];
-@@ -70,13 +94,12 @@ static inline unsigned long kvm_rip_read(struct kvm_vcpu *vcpu)
- static inline void kvm_rip_write(struct kvm_vcpu *vcpu, unsigned long val)
- {
- 	vcpu->arch.regs[VCPU_REGS_RIP] = val;
--	__set_bit(VCPU_REGS_RIP, (unsigned long *)&vcpu->arch.regs_dirty);
--	__set_bit(VCPU_REGS_RIP, (unsigned long *)&vcpu->arch.regs_avail);
-+	kvm_register_mark_dirty(vcpu, VCPU_REGS_RIP);
- }
- 
- static inline unsigned long kvm_rsp_read(struct kvm_vcpu *vcpu)
- {
--	if (!test_bit(VCPU_REGS_RSP, (unsigned long *)&vcpu->arch.regs_avail))
-+	if (!kvm_register_is_available(vcpu, VCPU_REGS_RSP))
- 		kvm_x86_ops->cache_reg(vcpu, VCPU_REGS_RSP);
- 
- 	return vcpu->arch.regs[VCPU_REGS_RSP];
-@@ -85,16 +108,14 @@ static inline unsigned long kvm_rsp_read(struct kvm_vcpu *vcpu)
- static inline void kvm_rsp_write(struct kvm_vcpu *vcpu, unsigned long val)
- {
- 	vcpu->arch.regs[VCPU_REGS_RSP] = val;
--	__set_bit(VCPU_REGS_RSP, (unsigned long *)&vcpu->arch.regs_dirty);
--	__set_bit(VCPU_REGS_RSP, (unsigned long *)&vcpu->arch.regs_avail);
-+	kvm_register_mark_dirty(vcpu, VCPU_REGS_RSP);
- }
- 
- static inline u64 kvm_pdptr_read(struct kvm_vcpu *vcpu, int index)
- {
- 	might_sleep();  /* on svm */
- 
--	if (!test_bit(VCPU_EXREG_PDPTR,
--		      (unsigned long *)&vcpu->arch.regs_avail))
-+	if (!kvm_register_is_available(vcpu, VCPU_EXREG_PDPTR))
- 		kvm_x86_ops->cache_reg(vcpu, VCPU_EXREG_PDPTR);
- 
- 	return vcpu->arch.walk_mmu->pdptrs[index];
-@@ -123,7 +144,7 @@ static inline ulong kvm_read_cr4_bits(struct kvm_vcpu *vcpu, ulong mask)
- 
- static inline ulong kvm_read_cr3(struct kvm_vcpu *vcpu)
- {
--	if (!test_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail))
-+	if (!kvm_register_is_available(vcpu, VCPU_EXREG_CR3))
- 		kvm_x86_ops->decache_cr3(vcpu);
- 	return vcpu->arch.cr3;
- }
 diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index b72a00b53e4a..8946f11c574c 100644
+index 41abc62c9a8a..b72a00b53e4a 100644
 --- a/arch/x86/kvm/vmx/nested.c
 +++ b/arch/x86/kvm/vmx/nested.c
-@@ -1012,7 +1012,7 @@ static int nested_vmx_load_cr3(struct kvm_vcpu *vcpu, unsigned long cr3, bool ne
- 		kvm_mmu_new_cr3(vcpu, cr3, false);
+@@ -2418,6 +2418,16 @@ static int prepare_vmcs02(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
+ 				entry_failure_code))
+ 		return -EINVAL;
  
- 	vcpu->arch.cr3 = cr3;
--	__set_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail);
-+	kvm_register_mark_available(vcpu, VCPU_EXREG_CR3);
- 
- 	kvm_init_mmu(vcpu, false);
- 
-@@ -3986,7 +3986,7 @@ static void nested_vmx_restore_host_state(struct kvm_vcpu *vcpu)
- 
- 	nested_ept_uninit_mmu_context(vcpu);
- 	vcpu->arch.cr3 = vmcs_readl(GUEST_CR3);
--	__set_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail);
-+	kvm_register_mark_available(vcpu, VCPU_EXREG_CR3);
- 
- 	/*
- 	 * Use ept_save_pdptrs(vcpu) to load the MMU's cached PDPTRs
++	/*
++	 * Immediately write vmcs02.GUEST_CR3.  It will be propagated to vmcs12
++	 * on nested VM-Exit, which can occur without actually running L2 and
++	 * thus without hitting vmx_set_cr3(), e.g. if L1 is entering L2 with
++	 * vmcs12.GUEST_ACTIVITYSTATE=HLT, in which case KVM will intercept the
++	 * transition to HLT instead of running L2.
++	 */
++	if (enable_ept)
++		vmcs_writel(GUEST_CR3, vmcs12->guest_cr3);
++
+ 	/* Late preparation of GUEST_PDPTRs now that EFER and CRs are set. */
+ 	if (load_guest_pdptrs_vmcs12 && nested_cpu_has_ept(vmcs12) &&
+ 	    is_pae_paging(vcpu)) {
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 814d3e6d0264..ed03d0cd1cc8 100644
+index d4575ffb3cec..7679c2a05a50 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -721,8 +721,8 @@ static bool vmx_segment_cache_test_set(struct vcpu_vmx *vmx, unsigned seg,
- 	bool ret;
- 	u32 mask = 1 << (seg * SEG_FIELD_NR + field);
- 
--	if (!(vmx->vcpu.arch.regs_avail & (1 << VCPU_EXREG_SEGMENTS))) {
--		vmx->vcpu.arch.regs_avail |= (1 << VCPU_EXREG_SEGMENTS);
-+	if (!kvm_register_is_available(&vmx->vcpu, VCPU_EXREG_SEGMENTS)) {
-+		kvm_register_mark_available(&vmx->vcpu, VCPU_EXREG_SEGMENTS);
- 		vmx->segment_cache.bitmask = 0;
- 	}
- 	ret = vmx->segment_cache.bitmask & mask;
-@@ -1410,8 +1410,8 @@ unsigned long vmx_get_rflags(struct kvm_vcpu *vcpu)
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	unsigned long rflags, save_rflags;
- 
--	if (!test_bit(VCPU_EXREG_RFLAGS, (ulong *)&vcpu->arch.regs_avail)) {
--		__set_bit(VCPU_EXREG_RFLAGS, (ulong *)&vcpu->arch.regs_avail);
-+	if (!kvm_register_is_available(vcpu, VCPU_EXREG_RFLAGS)) {
-+		kvm_register_mark_available(vcpu, VCPU_EXREG_RFLAGS);
- 		rflags = vmcs_readl(GUEST_RFLAGS);
- 		if (vmx->rmode.vm86_active) {
- 			rflags &= RMODE_GUEST_OWNED_EFLAGS_BITS;
-@@ -1429,7 +1429,7 @@ void vmx_set_rflags(struct kvm_vcpu *vcpu, unsigned long rflags)
- 	unsigned long old_rflags;
- 
- 	if (enable_unrestricted_guest) {
--		__set_bit(VCPU_EXREG_RFLAGS, (ulong *)&vcpu->arch.regs_avail);
-+		kvm_register_mark_available(vcpu, VCPU_EXREG_RFLAGS);
- 
- 		vmx->rflags = rflags;
- 		vmcs_writel(GUEST_RFLAGS, rflags);
-@@ -2175,7 +2175,8 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 
- static void vmx_cache_reg(struct kvm_vcpu *vcpu, enum kvm_reg reg)
+@@ -2984,6 +2984,7 @@ u64 construct_eptp(struct kvm_vcpu *vcpu, unsigned long root_hpa)
+ void vmx_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
  {
--	__set_bit(reg, (unsigned long *)&vcpu->arch.regs_avail);
-+	kvm_register_mark_available(vcpu, reg);
-+
- 	switch (reg) {
- 	case VCPU_REGS_RSP:
- 		vcpu->arch.regs[VCPU_REGS_RSP] = vmcs_readl(GUEST_RSP);
-@@ -2862,7 +2863,7 @@ static void vmx_decache_cr3(struct kvm_vcpu *vcpu)
- {
- 	if (enable_unrestricted_guest || (enable_ept && is_paging(vcpu)))
- 		vcpu->arch.cr3 = vmcs_readl(GUEST_CR3);
--	__set_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail);
-+	kvm_register_mark_available(vcpu, VCPU_EXREG_CR3);
- }
+ 	struct kvm *kvm = vcpu->kvm;
++	bool update_guest_cr3 = true;
+ 	unsigned long guest_cr3;
+ 	u64 eptp;
  
- static void vmx_decache_cr4_guest_bits(struct kvm_vcpu *vcpu)
-@@ -2877,8 +2878,7 @@ static void ept_load_pdptrs(struct kvm_vcpu *vcpu)
- {
- 	struct kvm_mmu *mmu = vcpu->arch.walk_mmu;
+@@ -3000,15 +3001,18 @@ void vmx_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
+ 			spin_unlock(&to_kvm_vmx(kvm)->ept_pointer_lock);
+ 		}
  
--	if (!test_bit(VCPU_EXREG_PDPTR,
--		      (unsigned long *)&vcpu->arch.regs_dirty))
-+	if (!kvm_register_is_dirty(vcpu, VCPU_EXREG_PDPTR))
- 		return;
- 
- 	if (is_pae_paging(vcpu)) {
-@@ -2900,10 +2900,7 @@ void ept_save_pdptrs(struct kvm_vcpu *vcpu)
- 		mmu->pdptrs[3] = vmcs_read64(GUEST_PDPTR3);
+-		if (enable_unrestricted_guest || is_paging(vcpu) ||
+-		    is_guest_mode(vcpu))
++		/* Loading vmcs02.GUEST_CR3 is handled by nested VM-Enter. */
++		if (is_guest_mode(vcpu))
++			update_guest_cr3 = false;
++		else if (enable_unrestricted_guest || is_paging(vcpu))
+ 			guest_cr3 = kvm_read_cr3(vcpu);
+ 		else
+ 			guest_cr3 = to_kvm_vmx(kvm)->ept_identity_map_addr;
+ 		ept_load_pdptrs(vcpu);
  	}
  
--	__set_bit(VCPU_EXREG_PDPTR,
--		  (unsigned long *)&vcpu->arch.regs_avail);
--	__set_bit(VCPU_EXREG_PDPTR,
--		  (unsigned long *)&vcpu->arch.regs_dirty);
-+	kvm_register_mark_dirty(vcpu, VCPU_EXREG_PDPTR);
+-	vmcs_writel(GUEST_CR3, guest_cr3);
++	if (update_guest_cr3)
++		vmcs_writel(GUEST_CR3, guest_cr3);
  }
  
- static void ept_update_paging_mode_cr0(unsigned long *hw_cr0,
-@@ -2912,7 +2909,7 @@ static void ept_update_paging_mode_cr0(unsigned long *hw_cr0,
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 
--	if (!test_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail))
-+	if (!kvm_register_is_available(vcpu, VCPU_EXREG_CR3))
- 		vmx_decache_cr3(vcpu);
- 	if (!(cr0 & X86_CR0_PG)) {
- 		/* From paging/starting to nonpaging */
-@@ -6528,9 +6525,9 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 	if (vmx->nested.need_vmcs12_to_shadow_sync)
- 		nested_sync_vmcs12_to_shadow(vcpu);
- 
--	if (test_bit(VCPU_REGS_RSP, (unsigned long *)&vcpu->arch.regs_dirty))
-+	if (kvm_register_is_dirty(vcpu, VCPU_REGS_RSP))
- 		vmcs_writel(GUEST_RSP, vcpu->arch.regs[VCPU_REGS_RSP]);
--	if (test_bit(VCPU_REGS_RIP, (unsigned long *)&vcpu->arch.regs_dirty))
-+	if (kvm_register_is_dirty(vcpu, VCPU_REGS_RIP))
- 		vmcs_writel(GUEST_RIP, vcpu->arch.regs[VCPU_REGS_RIP]);
- 
- 	cr3 = __get_current_cr3_fast();
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 0ed07d8d2caa..cd6bd7991c39 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -709,10 +709,8 @@ int load_pdptrs(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu, unsigned long cr3)
- 	ret = 1;
- 
- 	memcpy(mmu->pdptrs, pdpte, sizeof(mmu->pdptrs));
--	__set_bit(VCPU_EXREG_PDPTR,
--		  (unsigned long *)&vcpu->arch.regs_avail);
--	__set_bit(VCPU_EXREG_PDPTR,
--		  (unsigned long *)&vcpu->arch.regs_dirty);
-+	kvm_register_mark_dirty(vcpu, VCPU_EXREG_PDPTR);
-+
- out:
- 
- 	return ret;
-@@ -730,8 +728,7 @@ bool pdptrs_changed(struct kvm_vcpu *vcpu)
- 	if (!is_pae_paging(vcpu))
- 		return false;
- 
--	if (!test_bit(VCPU_EXREG_PDPTR,
--		      (unsigned long *)&vcpu->arch.regs_avail))
-+	if (!kvm_register_is_available(vcpu, VCPU_EXREG_PDPTR))
- 		return true;
- 
- 	gfn = (kvm_read_cr3(vcpu) & 0xffffffe0ul) >> PAGE_SHIFT;
-@@ -976,7 +973,7 @@ int kvm_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
- 
- 	kvm_mmu_new_cr3(vcpu, cr3, skip_tlb_flush);
- 	vcpu->arch.cr3 = cr3;
--	__set_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail);
-+	kvm_register_mark_available(vcpu, VCPU_EXREG_CR3);
- 
- 	return 0;
- }
-@@ -8766,7 +8763,7 @@ static int __set_sregs(struct kvm_vcpu *vcpu, struct kvm_sregs *sregs)
- 	vcpu->arch.cr2 = sregs->cr2;
- 	mmu_reset_needed |= kvm_read_cr3(vcpu) != sregs->cr3;
- 	vcpu->arch.cr3 = sregs->cr3;
--	__set_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail);
-+	kvm_register_mark_available(vcpu, VCPU_EXREG_CR3);
- 
- 	kvm_set_cr8(vcpu, sregs->cr8);
- 
+ int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
 -- 
 2.22.0
 
