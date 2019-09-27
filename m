@@ -2,136 +2,139 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B33AC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 06:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE27C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 06:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20414206B7
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 06:16:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=kojedz.in header.i=@kojedz.in header.b="c2IodFNR"
+	by mail.kernel.org (Postfix) with ESMTP id 37290206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 06:20:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726075AbfI0GQ5 (ORCPT
+        id S1725939AbfI0GU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 02:16:57 -0400
-Received: from pi.kojedz.in ([109.61.102.5]:27889 "EHLO pi.kojedz.in"
+        Fri, 27 Sep 2019 02:20:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:42306 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725804AbfI0GQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 02:16:57 -0400
-Received: from webmail.srv.kojedz.in (unknown [IPv6:2a01:be00:10:201:0:80:0:1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: richard@kojedz.in)
-        by pi.kojedz.in (Postfix) with ESMTPSA id 11A8812DCB;
-        Fri, 27 Sep 2019 08:16:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kojedz.in; s=mail;
-        t=1569565014; bh=1fai7zVrEIPp6m7DYpaViVG7jo5MqBydWDeWQpzA65U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=c2IodFNRFUKAu7vlA5EmdzsZo0hRpaiwGbzv/MGEMUQ56CaAyOdhYI3+5fhgHTGb5
-         mzCOH3GwwhQzrwqSpF3fqzZHb3JPxGO5e41oze+yiIofxwRoDihruyWGck8S1zMm98
-         jqgDoa0a6eQstM+qG7QY3JvUlqXpXX6Yl0SMSWgjFdMrD4pBi9RCj8VyB7IeT/FmLg
-         MW6u4ykn8fGA9aqE2HVg66wUUqf2j+xZFSwIVItJhhMyhoJb4TpFosgTPWl+y2AkCh
-         cSli7eHiMfwwDSIa1m5JfXJOtdl+KG4sRMtVbyq47h2kYN0GTfYiLX2l+Sk8JhqUvE
-         h6eB8bAyH71tHValSYv19stqvg6x8zB+B7obGNbaZFKfO1IscBGpAu1ZcNYLZzHx/Y
-         mARS8/TJPE2q+GXiFHpDNO1FZrid3iz8CljUCSP3wrQx9wnjSkd8rx3q3To01/pXq2
-         EGj1GfyRb8OZkq7MoyXBlpDcqQCnwnP7JBBCuYysDu9L+0Jq4bGE2AnDg4AZ0BUyPM
-         ir8F0t0X8qH9lQ+AJQR2uC4bWfvK53Ovaj8ztJk0FdeE82igBZTpvPeoaRtyN5Uyo9
-         BNXUQaxIMwGrjU2tnBNobw6W1LnfeImB/1DNWo4ZI8Kukl8qepjKaerzhvEi0WC9rI
-         FtejzXk+8kuIAOTosv8vVrpg=
+        id S1725268AbfI0GU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 02:20:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 42AC328;
+        Thu, 26 Sep 2019 23:20:27 -0700 (PDT)
+Received: from [10.162.41.136] (p8cg001049571a15.blr.arm.com [10.162.41.136])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B1FC93F739;
+        Thu, 26 Sep 2019 23:23:00 -0700 (PDT)
+Subject: Re: [PATCH v3] arm64: use generic free_initrd_mem()
+To:     Mike Rapoport <rppt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Laura Abbott <labbott@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+References: <1569388180-28274-1-git-send-email-rppt@kernel.org>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <76b49810-c59f-8cf1-7401-1f7262873601@arm.com>
+Date:   Fri, 27 Sep 2019 11:50:42 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Fri, 27 Sep 2019 08:16:53 +0200
-From:   Richard Kojedzinszky <richard@kojedz.in>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Ali Saidi <alisaidi@amazon.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] binfmt_elf: Do not move brk for INTERP-less ET_EXEC
-In-Reply-To: <201909261136.780526BB@keescook>
-References: <201909261012.96DE554A@keescook>
- <cfdb3b68100025288177da8a963bc909@kojedz.in>
- <201909261136.780526BB@keescook>
-Message-ID: <321faad3c5e1f8eaf9d81fd78f3b22d6@kojedz.in>
-X-Sender: richard@kojedz.in
-User-Agent: Roundcube Webmail/1.3.8
+In-Reply-To: <1569388180-28274-1-git-send-email-rppt@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-Thanks for the fix, again. I am not familiar with the code here, I 
-suspect the intent was to fix or improve something. That happens 
-sometimes, that things get broken. I am happy that I could report it, 
-and it got fixed quickly.
-
-Thanks again,
-Richard
-
-
-2019-09-26 20:37 időpontban Kees Cook ezt írta:
-> On Thu, Sep 26, 2019 at 08:26:12PM +0200, Richard Kojedzinszky wrote:
->> Thanks for the quick patch. It seems my binaries start up well, and 
->> work as
->> expected, as before.
->> 
->> Thanks again for the quick response.
+On 09/25/2019 10:39 AM, Mike Rapoport wrote:
+> From: Mike Rapoport <rppt@linux.ibm.com>
 > 
-> Awesome; thanks for the testing (and sorry for the breakage)! :)
+> arm64 calls memblock_free() for the initrd area in its implementation of
+> free_initrd_mem(), but this call has no actual effect that late in the boot
+> process. By the time initrd is freed, all the reserved memory is managed by
+> the page allocator and the memblock.reserved is unused, so the only purpose
+> of the memblock_free() call is to keep track of initrd memory for debugging
+> and accounting.
 > 
-> -Kees
+> Without the memblock_free() call the only difference between arm64 and the
+> generic versions of free_initrd_mem() is the memory poisoning.
 > 
->> 
->> Regards,
->> Richard Kojedzinszky
->> 
->> 2019-09-26 19:15 időpontban Kees Cook ezt írta:
->> > When brk was moved for binaries without an interpreter, it should have
->> > been limited to ET_DYN only. In other words, the special case was an
->> > ET_DYN that lacks an INTERP, not just an executable that lacks INTERP.
->> > The bug manifested for giant static executables, where the brk would end
->> > up in the middle of the text area on 32-bit architectures.
->> >
->> > Reported-by: Richard Kojedzinszky <richard@kojedz.in>
->> > Fixes: bbdc6076d2e5 ("binfmt_elf: move brk out of mmap when doing
->> > direct loader exec")
->> > Cc: stable@vger.kernel.org
->> > Signed-off-by: Kees Cook <keescook@chromium.org>
->> > ---
->> > Richard, are you able to test this? I'm able to run the gitea binary
->> > with this change, and my INTERP-less ET_DYN tests (from the original
->> > bug) continue to pass as well.
->> > ---
->> >  fs/binfmt_elf.c | 3 ++-
->> >  1 file changed, 2 insertions(+), 1 deletion(-)
->> >
->> > diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
->> > index cec3b4146440..ad4c6b1d5074 100644
->> > --- a/fs/binfmt_elf.c
->> > +++ b/fs/binfmt_elf.c
->> > @@ -1121,7 +1121,8 @@ static int load_elf_binary(struct linux_binprm
->> > *bprm)
->> >  		 * (since it grows up, and may collide early with the stack
->> >  		 * growing down), and into the unused ELF_ET_DYN_BASE region.
->> >  		 */
->> > -		if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) && !interpreter)
->> > +		if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) &&
->> > +		    loc->elf_ex.e_type == ET_DYN && !interpreter)
->> >  			current->mm->brk = current->mm->start_brk =
->> >  				ELF_ET_DYN_BASE;
->> >
->> > --
->> > 2.17.1
+> Move memblock_free() call to the generic code, enable it there
+> for the architectures that define ARCH_KEEP_MEMBLOCK and use the generic
+> implementaion of free_initrd_mem() on arm64.
+
+Small nit. s/implementaion/implementation.
+
+> 
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> ---
+> 
+> v3:
+> * fix powerpc build
+> 
+> v2: 
+> * add memblock_free() to the generic free_initrd_mem()
+> * rebase on the current upstream
+> 
+> 
+>  arch/arm64/mm/init.c | 12 ------------
+>  init/initramfs.c     |  5 +++++
+>  2 files changed, 5 insertions(+), 12 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index 45c00a5..87a0e3b 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -580,18 +580,6 @@ void free_initmem(void)
+>  	unmap_kernel_range((u64)__init_begin, (u64)(__init_end - __init_begin));
+>  }
+>  
+> -#ifdef CONFIG_BLK_DEV_INITRD
+> -void __init free_initrd_mem(unsigned long start, unsigned long end)
+> -{
+> -	unsigned long aligned_start, aligned_end;
+> -
+> -	aligned_start = __virt_to_phys(start) & PAGE_MASK;
+> -	aligned_end = PAGE_ALIGN(__virt_to_phys(end));
+> -	memblock_free(aligned_start, aligned_end - aligned_start);
+> -	free_reserved_area((void *)start, (void *)end, 0, "initrd");
+> -}
+> -#endif
+> -
+>  /*
+>   * Dump out memory limit information on panic.
+>   */
+> diff --git a/init/initramfs.c b/init/initramfs.c
+> index c47dad0..3d61e13 100644
+> --- a/init/initramfs.c
+> +++ b/init/initramfs.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/syscalls.h>
+>  #include <linux/utime.h>
+>  #include <linux/file.h>
+> +#include <linux/memblock.h>
+>  
+>  static ssize_t __init xwrite(int fd, const char *p, size_t count)
+>  {
+> @@ -531,6 +532,10 @@ void __weak free_initrd_mem(unsigned long start, unsigned long end)
+>  {
+>  	free_reserved_area((void *)start, (void *)end, POISON_FREE_INITMEM,
+>  			"initrd");
+> +
+> +#ifdef CONFIG_ARCH_KEEP_MEMBLOCK
+
+Should not the addresses here be aligned first before calling memblock_free() ?
+Without alignment, it breaks present behavior on arm64 which was explicitly added
+with 13776f9d40a0 ("arm64: mm: free the initrd reserved memblock in a aligned manner").
+Or does initrd always gets allocated with page alignment on other architectures.
+
+> +	memblock_free(__pa(start), end - start);
+> +#endif
+>  }
+>  
+>  #ifdef CONFIG_KEXEC_CORE
+> 
