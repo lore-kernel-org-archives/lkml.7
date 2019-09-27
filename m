@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A55D6C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1601C352AB
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7126D2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AD6321927
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 07:49:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="gibpUtAA"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="DZdO6Dl2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbfI0HtP (ORCPT
+        id S1726918AbfI0HtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 27 Sep 2019 03:49:15 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:34656 "EHLO
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:34666 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726252AbfI0HtM (ORCPT
+        by vger.kernel.org with ESMTP id S1726394AbfI0HtM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 27 Sep 2019 03:49:12 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id EE472C0DD8;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D728AC0DC4;
         Fri, 27 Sep 2019 07:49:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1569570551; bh=G+vfQq1R/8y3p6u1/BPNdwwbxWCUNbBVqRhlj5S5ctE=;
+        t=1569570551; bh=DrIxAcUMdhwcfqhJRFHtOh2PccbH2YMx64iLgCedU0c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=gibpUtAAG8dvQ+U0BRU0VEdXKWowUzDJNPev3RoutJPBhQXUgA389hj8en/2fKTgc
-         X7u0Z56TvgCg3a/4ql6/lHOLO+nNQhjdxKnT0IvyaMo5fi13slae/ngVSBpcJp4c2X
-         yeb4OeoJRSp3bqio3QKkyvTwolXPiNalc2lYJTJfASwFkw8W2d8oq62swPK4/eoq4E
-         aB35bkz/tu8JQiqG8hWHzs8lzyUy9aJzA/zZRfCY8EcZPb1uUBKI0Slpyt83A1YrEn
-         P4D0k6IDs/uLkXFiELEG6i3pS+r5Pue1RvoXT/rGOP9n0Bs0vA/IT8aO1dh+jkqsIi
-         qjlJWsNRFS3Lg==
+        b=DZdO6Dl2CHYoN0aDORDwMnQHxYdBDO0VFMkYAQOJPq8sJXlHDdt1CJwD5iUf44n5p
+         nQS7FQOV4fIQat6l+2EJsqkykWKil8f3/BqQjJHTm4TtjMThrrIxTTKaXxtObsQQ+U
+         d/pbdPdo9BM+XQq+6BK9YL1Xdcg8ijtfNLjFs3SPZec6oPkeRo7ok1D3XVzSIFjLEE
+         lPoGGUIV7CZwWrGfqWnFYDdetdfSxoSU9LI2KdHZmpxAMOTDsg31yGBsiDF7S9Kqz1
+         8+f77GGu0QdlMw/t1fFq5N+SMS3JEZreJFHyx9YcMMPWdx3Zgj38cUENG029hW3+pT
+         rpUSqi9q3XmIg==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 8C060A008D;
+        by mailhost.synopsys.com (Postfix) with ESMTP id 6522DA0080;
         Fri, 27 Sep 2019 07:49:09 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -52,9 +52,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net 7/8] net: stmmac: xgmac: Disable the Timestamp interrupt by default
-Date:   Fri, 27 Sep 2019 09:48:55 +0200
-Message-Id: <5060574f7023e1ae13e429fcf86e373c6a79f965.1569569778.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net 5/8] net: stmmac: Correctly take timestamp for PTPv2
+Date:   Fri, 27 Sep 2019 09:48:53 +0200
+Message-Id: <649168117d7fcf63704f92cfb687e3493ad46045.1569569778.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1569569778.git.Jose.Abreu@synopsys.com>
 References: <cover.1569569778.git.Jose.Abreu@synopsys.com>
@@ -65,11 +65,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We don't use it anyway as XGMAC only supports polling for timestamp (in
-current SW implementation). This greatly reduces the system load by
-reducing the number of interrupts.
+The case for PTPV2_EVENT requires event packets to be captured so add
+this setting to the list of enabled captures.
 
-Fixes: 2142754f8b9c ("net: stmmac: Add MAC related callbacks for XGMAC2")
+Fixes: 891434b18ec0 ("stmmac: add IEEE PTPv1 and PTPv2 support.")
 Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
 ---
@@ -83,22 +82,21 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-index f7eb06f8fb37..99037386080a 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-@@ -84,7 +84,7 @@
- #define XGMAC_TSIE			BIT(12)
- #define XGMAC_LPIIE			BIT(5)
- #define XGMAC_PMTIE			BIT(4)
--#define XGMAC_INT_DEFAULT_EN		(XGMAC_LPIIE | XGMAC_PMTIE | XGMAC_TSIE)
-+#define XGMAC_INT_DEFAULT_EN		(XGMAC_LPIIE | XGMAC_PMTIE)
- #define XGMAC_Qx_TX_FLOW_CTRL(x)	(0x00000070 + (x) * 4)
- #define XGMAC_PT			GENMASK(31, 16)
- #define XGMAC_PT_SHIFT			16
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index d3232738fb25..31a237ec73bc 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -629,6 +629,7 @@ static int stmmac_hwtstamp_set(struct net_device *dev, struct ifreq *ifr)
+ 			config.rx_filter = HWTSTAMP_FILTER_PTP_V2_EVENT;
+ 			ptp_v2 = PTP_TCR_TSVER2ENA;
+ 			snap_type_sel = PTP_TCR_SNAPTYPSEL_1;
++			ts_event_en = PTP_TCR_TSEVNTENA;
+ 			ptp_over_ipv4_udp = PTP_TCR_TSIPV4ENA;
+ 			ptp_over_ipv6_udp = PTP_TCR_TSIPV6ENA;
+ 			ptp_over_ethernet = PTP_TCR_TSIPENA;
 -- 
 2.7.4
 
