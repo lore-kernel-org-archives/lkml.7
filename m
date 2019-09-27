@@ -2,98 +2,116 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6ED7C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1774C388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADD9D2146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:44:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="vZt4KX24"
+	by mail.kernel.org (Postfix) with ESMTP id B9EB021906
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:44:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569599082;
+	bh=JvAibICL3mYnhHG6USFakLaq5pSAL+F0LFmV8Pd88Vs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uVsZw/8JKO6YEdjRAbkiQobaSb4UJeo3406Gq82ug6MjGv5b0XQVuyRkMfemO8YOZ
+	 oxTfpZ2fVbUzykYBBEcRDJBnUY5ve5Z2/6Nr/cmGLSC+ZvDZtFcaGMNJedouq0jPQI
+	 XMJ6LXP9pO5pUzbWbHVia6Cz+Z/cBt0k0mSSFiyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727988AbfI0PoU (ORCPT
+        id S1728019AbfI0Pom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 11:44:20 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:39500 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727718AbfI0PoU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 11:44:20 -0400
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x8RFi4eA009542;
-        Sat, 28 Sep 2019 00:44:04 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x8RFi4eA009542
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1569599044;
-        bh=gzJo/aONCarQ6b7tWSpu8o7T3okifDbbFuC/WDn1Xi0=;
+        Fri, 27 Sep 2019 11:44:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42636 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727207AbfI0Pol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 11:44:41 -0400
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E20D32146E;
+        Fri, 27 Sep 2019 15:44:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569599081;
+        bh=JvAibICL3mYnhHG6USFakLaq5pSAL+F0LFmV8Pd88Vs=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vZt4KX24r+2VqIonDXQ8Or866HDZfY0HYBwQ56Pd4gTZD3NXViXf4dr7jwy3Oat7x
-         6M2PCB6mS0owXlC0SWqMKwG7JepJbDUGU9vR54jl6cCPt67K8lCc0vkOwLxsZaTrUk
-         6oyCzwhmWnuQQlxKhgbpFGjHCuKDge8nlKtTRFanx7pNXteNfIpfnyDwTFnwMeQ9Jq
-         HtoszZ9bIRBnM4hdxkwCNAPx+MCoeUL2fWFiEknLR6NjYo4gDw+S1OibzWV4ajRIyr
-         L3Lhj0ddpuwRJ7vqdAMkMsNo/qE8W+mQqX04h5yXdAyOE6Zcr0AfaZshAVtKvrSgLo
-         FE/zjvLOJLmaQ==
-X-Nifty-SrcIP: [209.85.217.45]
-Received: by mail-vs1-f45.google.com with SMTP id w195so2146655vsw.11;
-        Fri, 27 Sep 2019 08:44:04 -0700 (PDT)
-X-Gm-Message-State: APjAAAVNqyNWfmJHkFzjJnPYR4R297hK6A0IpylxRs8bRvjywRHlk7sr
-        2a2nModBhS3bOQyhTl/I566qCAROUVLKT5CRIOc=
-X-Google-Smtp-Source: APXvYqzkPP+5+gW7UOVviZCc+AsV04mkGbcmhsmIvYpdLtePMFmTpuoMLKu5pZnHmSoI5rPhRho7b9WDFJhyIn7/u5U=
-X-Received: by 2002:a67:88c9:: with SMTP id k192mr2745631vsd.181.1569599043639;
- Fri, 27 Sep 2019 08:44:03 -0700 (PDT)
+        b=qr3k3NSCnvKmuzwCoUSSAj7EJuLfUyurlmvfcyLU6OmHhYUlheh5vMc6YiV/QGg9e
+         QyTenOtE5UHvDnKAoosmj/bRnVgUXK0z43Nfp/tYoYd9KWunj5KHvzOKFvjwHJWLio
+         GOTaZHrOfzx4Fu3kH/36XrtiI60LH1DF2kAOli3o=
+Received: by mail-qk1-f174.google.com with SMTP id x134so2358905qkb.0;
+        Fri, 27 Sep 2019 08:44:40 -0700 (PDT)
+X-Gm-Message-State: APjAAAUqnWd0uSw8Zkr0/4noE5DI0J0IJqNKysQIKT21cxVtZC+YVygp
+        w99r8SSi+rVKG49uYlUSvPxFQbHCkDtyXU3L3Q==
+X-Google-Smtp-Source: APXvYqy1MGJjHwELZ4Bw99jjQEhMXDlYRvnNqs1LnykFuiSzNrCL1BzMpOm8ays235L+R3270SmaXQZtAd7SSGPY3F4=
+X-Received: by 2002:a37:682:: with SMTP id 124mr5220879qkg.393.1569599080064;
+ Fri, 27 Sep 2019 08:44:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190927093603.9140-1-yamada.masahiro@socionext.com> <20190927134108.GC187147@google.com>
-In-Reply-To: <20190927134108.GC187147@google.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 28 Sep 2019 00:43:27 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARc+jA5MYr7E5hBn2ALJ29o=AQ5j51fU_Z7h7Mc++BHUQ@mail.gmail.com>
-Message-ID: <CAK7LNARc+jA5MYr7E5hBn2ALJ29o=AQ5j51fU_Z7h7Mc++BHUQ@mail.gmail.com>
-Subject: Re: [PATCH 0/7] module: various bug-fixes and clean-ups for module namespace
-To:     Matthias Maennich <maennich@google.com>
-Cc:     Jessica Yu <jeyu@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Martijn Coenen <maco@android.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Will Deacon <will@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190927134220.8734-1-robh@kernel.org> <CAMRc=MctTVh99vE+dfd25ienWEjtMNwrM200f1im--fx9ALo7Q@mail.gmail.com>
+In-Reply-To: <CAMRc=MctTVh99vE+dfd25ienWEjtMNwrM200f1im--fx9ALo7Q@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 27 Sep 2019 10:44:29 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+R9wdB521dQtwMiWXEJEB5tGEDYi_efDqZL6xzF9YduA@mail.gmail.com>
+Message-ID: <CAL_Jsq+R9wdB521dQtwMiWXEJEB5tGEDYi_efDqZL6xzF9YduA@mail.gmail.com>
+Subject: Re: [PATCH v4] dt-bindings: at24: convert the binding document to yaml
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Peter Rosin <peda@axentia.se>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
-
-On Fri, Sep 27, 2019 at 10:41 PM Matthias Maennich <maennich@google.com> wrote:
+On Fri, Sep 27, 2019 at 10:06 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 >
-> On Fri, Sep 27, 2019 at 06:35:56PM +0900, Masahiro Yamada wrote:
+> pt., 27 wrz 2019 o 15:42 Rob Herring <robh@kernel.org> napisa=C5=82(a):
 > >
-> >I was hit by some problems caused by the module namespace feature
-> >that was merged recently. At least, the breakage of
-> >external module builds is a fatal one. I just took a look at the code
-> >closer, and I noticed some more issues and improvements.
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > >
-> >I hope these patches are mostly OK.
-> >The 4th patch might have room for argument since it is a trade-off
-> >of "cleaner implermentation" vs "code size".
+> > Convert the binding document for at24 EEPROMs from txt to yaml. The
+> > compatible property uses a regex pattern to address all the possible
+> > combinations of "vendor,model" strings.
 > >
-> Thanks Masahiro for taking the time to improve the implementation of the
-> symbol namespaces. These are all good points that you addressed!
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > [robh: rework compatible schema, fix missing allOf for $ref, fix errors=
+ in example]
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> > v4:
+> > - Add a $nodename definition
+> >
+> > - Turns out the compatible schema is too complex for generating a 'sele=
+ct'
+> > schema and only a small subset where getting validated. So we need a
+> > custom 'select' schema. This in turn fixes the issue with the nxp,se97b
+> > binding.
 >
-> For [04/07], I can work on this if you do not mind.
+> Thanks again!
+>
+> >
+> > Now we get a different set of errors checking Arm dts files (omitting
+> > a bunch of node name ones):
+> >
+>
+> > arch/arm/boot/dts/at91-dvk_som60.dt.yaml: eeprom@57: compatible: ['gian=
+tec,gt24c32a', 'atmel,24c32'] is not valid under any of the given schemas
+>
+> This is because nobody bothered adding 'giantec,gt24c32a' to previous
+> .txt bindings. I'll add this in a follow-up patch.
+>
+> > arch/arm/boot/dts/am3874-iceboard.dt.yaml: at24cs01@5f: compatible: ['a=
+tmel,24cs01'] is not valid under any of the given schemas
+> > arch/arm/boot/dts/am3874-iceboard.dt.yaml: at24cs08@5c: compatible: ['a=
+tmel,24cs08'] is not valid under any of the given schemas
+> >
+>
+> These look fine at first glance, I'm not sure what the problem here
+> is. I'll take a look at these as soon as I can.
 
+Ah, that's my mistake. I guess there's only no 24cs00 variant.
 
-Please feel free to.
-
-Thanks for your review.
-
-
--- 
-Best Regards
-Masahiro Yamada
+Rob
