@@ -2,168 +2,147 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF1DC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CD1C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0A192146E
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:39:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99749207FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 15:41:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uuB0lD3f"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uyS4auWy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbfI0Pj5 (ORCPT
+        id S1728004AbfI0PlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 11:39:57 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:43569 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727427AbfI0Pj5 (ORCPT
+        Fri, 27 Sep 2019 11:41:06 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:34654 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727207AbfI0PlF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 11:39:57 -0400
-Received: by mail-qt1-f193.google.com with SMTP id c3so7783488qtv.10
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 08:39:56 -0700 (PDT)
+        Fri, 27 Sep 2019 11:41:05 -0400
+Received: by mail-qt1-f196.google.com with SMTP id 3so7846858qta.1;
+        Fri, 27 Sep 2019 08:41:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Cpv5ZNVm9yUOsy7vshEHjPrRDw5bm6guIdo54Z4wEpg=;
-        b=uuB0lD3fcX2NayhCWqNwWoaQ88d7SNLOxTyN4fzAmIqh8st6lYIXQC+nvvTJBHS0NL
-         KiFSFOo7oS7qcCNMq1H3zbtN5RRxQ/0pUTPeLFjs1ewSzaJu0cQX0zn6ljqwWNH1gBQ4
-         dP1bI3AqhMO1jDx71uSRcuzRXDAbfZjfFAcG+pbeOtQSCu6ZrqIA7f0JOEM0GowXTcqw
-         TGh4qbSEAcN8L5aIceACCVcqBUUcIlASjkTxVczSVYHCACkOK/la/iMONawnFo2RVBeL
-         cJdp3OC90dbVziwQS9BssT9M3NWJYRHnqY43xXtI5ULv9VmxuDjknrND3GmVF1RuvWfG
-         ZhLw==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=fJXAR3BTSiEDrzcXRUPmAyScpWS/7FX+Os6XghgaQU0=;
+        b=uyS4auWyENLNwj4ODdMyhIEu9qmUQi6TF/0NgNXCDOSuv8he1njkkWUbH6MAAuI3dw
+         7vLlXOh9w2X0TDPsPQJ0xGa50Y/w8Pbl0Q9cF27Vp8Qvg0noboRK1e1n1eLo/A2AjyuD
+         uoQuNkjjiuKExO3npjd3EHDSrgGrqoZRhPGtTlDZDMXATXqpIrJAX7izsK0w7Yxgn93w
+         /QvzX10WXMfskAJ0QsMBgNc4pDJMZWNa6H9v21iOR2mV7ZrMDDpVkvXmSUJ1ClSH+Wtd
+         HW3kxO7tiQRWuLfj+Hl5STNb7ChjeOJD5rGDjJhnWylO6N16KyagbovNjvtXlcz3Dmtm
+         BIGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Cpv5ZNVm9yUOsy7vshEHjPrRDw5bm6guIdo54Z4wEpg=;
-        b=g/nmdd2f1h9V8r6F/iF+xSAFQ5xYXcBRgPEbk2BiXa606qZHMVk8bbBgCn443ogaPE
-         JlwLyHU6IheUEclUZc3B209SG5+gl3gSx6OIeG+IeAzFvOJ8tOpWWzvHATB8ScmRG/XW
-         tMFfQA8JAQbsRXtNWlnLhymUYLk1/gMr8lVnnA8HJLEYeKbqYR8xlckYqpBJLZHiJB3+
-         L7HnjRCCvkbCIZfFQ40mefDuvYQp44ScXk5dq5E9Ln/ZqyqNadS1uHXHUAS3gDSJcH3M
-         2SEYKHbOsPCtLmIMHXVzEgAmCY2WXMA+esvBXlbny8izosQ5Y2PjPRzBMVBHhA4FCVai
-         vO9w==
-X-Gm-Message-State: APjAAAWpZ5MCuv2KRU/1bYVf+zbdUfJZ5huNxjK86YrD7Bpfj0g9dP0/
-        MFHKtelDmW25CCX3NYn4gg==
-X-Google-Smtp-Source: APXvYqxjo3cjsefaUMK6ihV7YZ9PbwXglYSh5Frdyx7pyyNvt1hnrtIPMjj+3egFABrR+y/qG6ILeQ==
-X-Received: by 2002:a0c:d6c9:: with SMTP id l9mr8321121qvi.179.1569598796511;
-        Fri, 27 Sep 2019 08:39:56 -0700 (PDT)
-Received: from gabell.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id n42sm3030137qta.31.2019.09.27.08.39.55
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=fJXAR3BTSiEDrzcXRUPmAyScpWS/7FX+Os6XghgaQU0=;
+        b=b1EeUYzNUfYKr2cxCw0a+2WaVE0rou6lpU02jW4o2Xfv80cMUOqcaIrlQs106WHHom
+         X/Q1kCfHVYkzn/kXt6sk8WfK4jBs/S74dxAiEt5DD+qUljA0cZf7K05L7adTvWdjmSwm
+         i/MFmGij10Vr2W8fKR3KoqQztYbpyt50kiW5JnpZkaWjt6FM93cJo7GenZi48DbD8mLK
+         tqGbtOYd8MsjEXdyS9nt4G+JC5gal0ZEV5bOvex1Wayv1CKwSmMmvj4kW7DTT9RQ/oKO
+         NMO605D3asO1xm15h87Ne2ynq0D22QhXZCSJcHfVf1duoiJu62txqMLijGf/Ipp9ddEC
+         mPFA==
+X-Gm-Message-State: APjAAAX/IUOm2t8Z7dLcHrSrjmpBxfdaGtyaduB1272TajRPIcw5rNQa
+        3rMQf9d5AQV4PDlHIE52z21jjKJ1GK8v/qYm
+X-Google-Smtp-Source: APXvYqzflvmRBLJzHuAYDcQ5In3raI9yBS1yeQB4x+QTsu/BKYjGLPhy0jFumIrbkX37mMPtLYA1/A==
+X-Received: by 2002:ac8:67ce:: with SMTP id r14mr10362936qtp.317.1569598864212;
+        Fri, 27 Sep 2019 08:41:04 -0700 (PDT)
+Received: from ArchLaptop (lithosphere-80.dynamic2.rpi.edu. [129.161.139.80])
+        by smtp.gmail.com with ESMTPSA id p53sm2775779qtk.23.2019.09.27.08.41.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2019 08:39:55 -0700 (PDT)
-From:   Masayoshi Mizuma <msys.mizuma@gmail.com>
-To:     Dave Martin <Dave.Martin@arm.com>,
-        Julien Grall <julien.grall@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        Fri, 27 Sep 2019 08:41:03 -0700 (PDT)
+Date:   Fri, 27 Sep 2019 11:41:02 -0400
+From:   Aaron Hill <aa1ronham@gmail.com>
+To:     linux-wireless@vger.kernel.org
+Cc:     Johannes Berg <johannes@sipsolutions.net>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2] arm64/sve: Fix wrong free for task->thread.sve_state
-Date:   Fri, 27 Sep 2019 11:39:49 -0400
-Message-Id: <20190927153949.29870-1-msys.mizuma@gmail.com>
-X-Mailer: git-send-email 2.17.1
+Subject: [PATCH] net: mac80211: Disable preeemption when updating stat
+ counters
+Message-ID: <20190927154102.GA117350@ArchLaptop>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+The mac80211 subsystem maintains per-cpu stat counters for receive and
+transmit operations. Previously, preemption was not disabled when
+updating these counters. This creates a race condition where two cpus
+could attempt to update the same counters using non-atomic operations.
 
-The system which has SVE feature crashed because of
-the memory pointed by task->thread.sve_state was destroyed
-by someone.
+This was causing a
+'BUG: using smp_processor_id() in preemptible [00000000] code'
+message to be printed, along with a stacktrace. This was reported
+in a few different places:
 
-That is because sve_state is freed while the forking the
-child process. The child process has the pointer of sve_state
-which is same as the parent's because the child's task_struct
-is copied from the parent's one. If the copy_process()
-fails as an error on somewhere, for example, copy_creds(),
-then the sve_state is freed even if the parent is alive.
-The flow is as follows.
+* https://www.spinics.net/lists/linux-wireless/msg189992.html
+* https://bugzilla.kernel.org/show_bug.cgi?id=204127
 
-copy_process
-        p = dup_task_struct
-            => arch_dup_task_struct
-                *dst = *src;  // copy the entire region.
-:
-        retval = copy_creds
-        if (retval < 0)
-                goto bad_fork_free;
-:
-bad_fork_free:
-...
-        delayed_free_task(p);
-          => free_task
-             => arch_release_task_struct
-                => fpsimd_release_task
-                   => __sve_free
-                      => kfree(task->thread.sve_state);
-                         // free the parent's sve_state
+This patch adds calls to preempt_disable() and preempt_enable()
+surrounding the updating of the stat counters.
 
-Move child's sve_state = NULL and clearing TIF_SVE flag
-to arch_dup_task_struct() so that the child doesn't free the
-parent's one.
-
-Cc: stable@vger.kernel.org
-Fixes: bc0ee4760364 ("arm64/sve: Core task context handling")
-Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
-Reported-by: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
-Suggested-by: Dave Martin <Dave.Martin@arm.com>
+Signed-off-by: Aaron Hill <aa1ronham@gmail.com>
 ---
- arch/arm64/kernel/process.c | 21 ++++-----------------
- 1 file changed, 4 insertions(+), 17 deletions(-)
+ net/mac80211/rx.c | 7 ++++++-
+ net/mac80211/tx.c | 7 ++++++-
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-index f674f28df..6937f5935 100644
---- a/arch/arm64/kernel/process.c
-+++ b/arch/arm64/kernel/process.c
-@@ -323,22 +323,16 @@ void arch_release_task_struct(struct task_struct *tsk)
- 	fpsimd_release_task(tsk);
- }
+diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
+index 768d14c9a716..5ef0667151bf 100644
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -34,12 +34,17 @@
  
--/*
-- * src and dst may temporarily have aliased sve_state after task_struct
-- * is copied.  We cannot fix this properly here, because src may have
-- * live SVE state and dst's thread_info may not exist yet, so tweaking
-- * either src's or dst's TIF_SVE is not safe.
-- *
-- * The unaliasing is done in copy_thread() instead.  This works because
-- * dst is not schedulable or traceable until both of these functions
-- * have been called.
-- */
- int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
+ static inline void ieee80211_rx_stats(struct net_device *dev, u32 len)
  {
- 	if (current->mm)
- 		fpsimd_preserve_current_state();
- 	*dst = *src;
- 
-+	BUILD_BUG_ON(!IS_ENABLED(CONFIG_THREAD_INFO_IN_TASK));
-+	dst->thread.sve_state = NULL;
-+	clear_tsk_thread_flag(dst, TIF_SVE);
+-	struct pcpu_sw_netstats *tstats = this_cpu_ptr(dev->tstats);
++	struct pcpu_sw_netstats *tstats;
 +
- 	return 0;
++	// Disable preemption while updating per-cpu stats counters
++	preempt_disable();
++	tstats = this_cpu_ptr(dev->tstats);
+ 
+ 	u64_stats_update_begin(&tstats->syncp);
+ 	tstats->rx_packets++;
+ 	tstats->rx_bytes += len;
+ 	u64_stats_update_end(&tstats->syncp);
++	preempt_enable();
  }
  
-@@ -351,13 +345,6 @@ int copy_thread(unsigned long clone_flags, unsigned long stack_start,
+ static u8 *ieee80211_get_bssid(struct ieee80211_hdr *hdr, size_t len,
+diff --git a/net/mac80211/tx.c b/net/mac80211/tx.c
+index 1fa422782905..4cad3d741b6b 100644
+--- a/net/mac80211/tx.c
++++ b/net/mac80211/tx.c
+@@ -40,12 +40,17 @@
  
- 	memset(&p->thread.cpu_context, 0, sizeof(struct cpu_context));
+ static inline void ieee80211_tx_stats(struct net_device *dev, u32 len)
+ {
+-	struct pcpu_sw_netstats *tstats = this_cpu_ptr(dev->tstats);
++	struct pcpu_sw_netstats *tstats;
++
++	// Disable preemption while updating per-cpu stats counters
++	preempt_disable();
++	tstats = this_cpu_ptr(dev->tstats);
  
--	/*
--	 * Unalias p->thread.sve_state (if any) from the parent task
--	 * and disable discard SVE state for p:
--	 */
--	clear_tsk_thread_flag(p, TIF_SVE);
--	p->thread.sve_state = NULL;
--
- 	/*
- 	 * In case p was allocated the same task_struct pointer as some
- 	 * other recently-exited task, make sure p is disassociated from
+ 	u64_stats_update_begin(&tstats->syncp);
+ 	tstats->tx_packets++;
+ 	tstats->tx_bytes += len;
+ 	u64_stats_update_end(&tstats->syncp);
++	preempt_enable();
+ }
+ 
+ static __le16 ieee80211_duration(struct ieee80211_tx_data *tx,
 -- 
-2.18.1
+2.23.0
 
