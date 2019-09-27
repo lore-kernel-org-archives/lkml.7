@@ -2,110 +2,143 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B58C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD900C388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B583921655
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:42:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sy1Htyq5"
+	by mail.kernel.org (Postfix) with ESMTP id 8E65721655
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:45:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727235AbfI0Rmr (ORCPT
+        id S1727593AbfI0Rp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 13:42:47 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36695 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbfI0Rmq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 13:42:46 -0400
-Received: by mail-lf1-f66.google.com with SMTP id x80so2549346lff.3;
-        Fri, 27 Sep 2019 10:42:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=R2dWFPB086+p8xJ/thjxb6g8VFmjwb9hHyVKeU6WZ/0=;
-        b=Sy1Htyq5XwwO9o5yPUeSrTq7Dh7gibf4TrUuEOuXgqrIeKy/zx6N84M0Fl98VqBhE6
-         724CVD4qRV7BymXYazp+pyZBZxXyyyKGWZvi8nRI2K8CC/ClKQvsD3WmOns1f/wsPx3K
-         6Y7bSANa18K1yRjHsaZ/l/HPIpGdss2SAKj6UBf7phbE8uJMQsuL4A3B6sC6YEcD9vpO
-         xmrl9MasDD+8SgnNaLuXe/HHQyGIF+u1wBGPKJ8lQHQHjRNzmw72qocRGWhlwKgJH6MV
-         WQJ2Cdzz4p5aCc5XacVTjoT41/RJ8ud/YGTIbq7ZOu4Pfd2ri74EiHHpXasNWQhcZsGu
-         jZIQ==
+        Fri, 27 Sep 2019 13:45:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38864 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726294AbfI0Rp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 13:45:26 -0400
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5B365C05AA61
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 17:45:25 +0000 (UTC)
+Received: by mail-io1-f70.google.com with SMTP id k13so5511803ioc.11
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 10:45:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=R2dWFPB086+p8xJ/thjxb6g8VFmjwb9hHyVKeU6WZ/0=;
-        b=Oh9gbse0Ah/jGVxEUyIELRqCRp56pO8DDRWd5jQXWGXMDy1gRZg4rGKDOO6KHh17oN
-         iPjwOkp7uPLlc1IIBdeVrNXXSM9xdLEEIageynbPOtv8Hft6Vb0X7k55zYDsXip2W9T0
-         XfpJozQNI2ckge5tlYITFPwCpz48Qin5ZfZYeY1hhEzTTeFQlSSCUgQcJ86QiPGS+sBI
-         RRZQSENoVcaj+WraQozfCApFiVQrjDRtUYeaLB319ycIcE5U12LQiz12RkVx9k1iFXFH
-         MZFyeWqBdBbZ6Dyax7d2qTmKDQ684onUTTSuS3P2WCqVMz3h8tzPF9MoKq1guAIs3Pje
-         K7FA==
-X-Gm-Message-State: APjAAAVQOmez5I7GBs5qY6sXXiqokqGfNAmo3kiX1/5mu+yux3bOVPVZ
-        vTNFf7AZ2jJ25bJ0GDU/lX2ogoNdHQlQvA==
-X-Google-Smtp-Source: APXvYqwGr8bV/GXzdC57sgkSs7LFXCZslMzPQlxL9Rrsc5AoXYXN3FwkcvWhOTriaNZpytJdaCRwiQ==
-X-Received: by 2002:ac2:50c5:: with SMTP id h5mr3557274lfm.105.1569606162813;
-        Fri, 27 Sep 2019 10:42:42 -0700 (PDT)
-Received: from huvuddator (132-228.soderhamn.com. [80.245.228.132])
-        by smtp.gmail.com with ESMTPSA id g27sm578026lja.33.2019.09.27.10.42.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2019 10:42:41 -0700 (PDT)
-Date:   Fri, 27 Sep 2019 19:42:32 +0200
-From:   Ulf Magnusson <ulfalizer@gmail.com>
-To:     linux-kbuild@vger.kernel.org, yamada.masahiro@socionext.com
-Cc:     airlied@linux.ie, daniel@ffwll.ch, noralf@tronnes.org,
-        sam@ravnborg.org, david@lechnology.com, hdegoede@redhat.com,
-        eric@anholt.net, tglx@linutronix.de,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/tiny: Kconfig: Remove always-y THERMAL dep. from
- TINYDRM_REPAPER
-Message-ID: <20190927174218.GA32085@huvuddator>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=V7uKVOUP48sjqm3uZXCLKF4/Ns/Wlt7x8/p5qhE25yM=;
+        b=ebtguJL8txKXer8YfaitvYmdU5bzXHZfmeOsAKAqDdci1Rmys0lJ4G1me/kujVTYOl
+         knsvL8n99b57Y25b9zXrdzbbMoH8II/Y2nbp2d1fEwW4gUJfkkbXM0inLroL0qnZpBe7
+         Z380yJNYKrHSoh1BcXpB1wKjyybsn7bcafbuT7SE5NgB3e4RWBzWPseMohzp8KsMaUHz
+         8BOzwKZ4Ry4a5uRYWJHppEt9vzN3xXRnky0D6oh2eZCszslmaaWrdApjP84OqbgLkhFP
+         oig/UjRAKUSCL6VEZPjZ0y04eR0HmDjTeC12/dURE4lidMy3egn/kmsXaLrS1WIVxng8
+         sTTQ==
+X-Gm-Message-State: APjAAAXV5cTvwmSRB3i0HnuASjDbu8x5X2mV7SmTVdZmivRH3z6sr+Hc
+        oUGr7w/Wa6UEIeO2Pf0xZE6nN29YD7pcavI4g264I6e1s/XhRqPXZ1cDdMLr2Xd8AjQmFIjxvrP
+        ZtOvfatjKfbcOLjMPfcwxV3Hc
+X-Received: by 2002:a6b:7b01:: with SMTP id l1mr9667887iop.292.1569606324583;
+        Fri, 27 Sep 2019 10:45:24 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxn9P3vvJuZThbXqohEVpw39+J3Lm89eYktjf2LzDdXdg38hErbsCdidVqxqFGbfNDqBwekMw==
+X-Received: by 2002:a6b:7b01:: with SMTP id l1mr9667854iop.292.1569606324228;
+        Fri, 27 Sep 2019 10:45:24 -0700 (PDT)
+Received: from rhel7lobe ([2600:6c64:4e80:f1:aa45:cafe:5682:368f])
+        by smtp.gmail.com with ESMTPSA id b7sm2529587iod.42.2019.09.27.10.45.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 27 Sep 2019 10:45:23 -0700 (PDT)
+Message-ID: <3a8ee584f9846fba94d98d0e6941fefdcbed5d71.camel@redhat.com>
+Subject: Re: [PATCH] scsi: core: Log SCSI command age with errors
+From:   Laurence Oberman <loberman@redhat.com>
+To:     Martin Wilck <mwilck@suse.de>,
+        "Milan P. Gandhi" <mgandhi@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
+Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com
+Date:   Fri, 27 Sep 2019 13:45:21 -0400
+In-Reply-To: <471732f03049a1528df1d144013d723041f0a419.camel@suse.de>
+References: <20190923060122.GA9603@machine1>
+         <471732f03049a1528df1d144013d723041f0a419.camel@suse.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-2.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 554b3529fe01 ("thermal/drivers/core: Remove the module Kconfig's
-option") changed the type of THERMAL from tristate to bool, so
-THERMAL || !THERMAL is now always y. Remove the redundant dependency.
+On Fri, 2019-09-27 at 17:26 +0200, Martin Wilck wrote:
+> On Mon, 2019-09-23 at 11:31 +0530,  Milan P. Gandhi wrote:
+> > Couple of users had requested to print the SCSI command age along 
+> > with command failure errors. This is a small change, but allows 
+> > users to get more important information about the command that was 
+> > failed, it would help the users in debugging the command failures:
+> > 
+> > Signed-off-by: Milan P. Gandhi <mgandhi@redhat.com>
+> > ---
+> > diff --git a/drivers/scsi/scsi_logging.c
+> > b/drivers/scsi/scsi_logging.c
+> > index ecc5918e372a..ca2182bc53c6 100644
+> > --- a/drivers/scsi/scsi_logging.c
+> > +++ b/drivers/scsi/scsi_logging.c
+> > @@ -437,6 +437,7 @@ void scsi_print_result(const struct scsi_cmnd
+> > *cmd, const char *msg,
+> >  	const char *mlret_string = scsi_mlreturn_string(disposition);
+> >  	const char *hb_string = scsi_hostbyte_string(cmd->result);
+> >  	const char *db_string = scsi_driverbyte_string(cmd->result);
+> > +	unsigned long cmd_age = (jiffies - cmd->jiffies_at_alloc) / HZ;
+> 
+> This comes down to pretty coarse time resolution, does it not? More
+> often than not, the time difference shown will be 0. I'd recommend at
+> least millisecond resolution.
+> 
+> >  
+> >  	logbuf = scsi_log_reserve_buffer(&logbuf_len);
+> >  	if (!logbuf)
+> > @@ -478,10 +479,15 @@ void scsi_print_result(const struct scsi_cmnd
+> > *cmd, const char *msg,
+> >  
+> >  	if (db_string)
+> >  		off += scnprintf(logbuf + off, logbuf_len - off,
+> > -				 "driverbyte=%s", db_string);
+> > +				 "driverbyte=%s ", db_string);
+> >  	else
+> >  		off += scnprintf(logbuf + off, logbuf_len - off,
+> > -				 "driverbyte=0x%02x", driver_byte(cmd-
+> > > result));
+> > 
+> > +				 "driverbyte=0x%02x ",
+> > +				 driver_byte(cmd->result));
+> > +
+> > +	off += scnprintf(logbuf + off, logbuf_len - off,
+> > +			 "cmd-age=%lus", cmd_age);
+> 
+> This is certainly helpful in some situations. Yet I am unsure if it
+> should *always* be printed. I wouldn't say it's as important as the 
+> other stuff scsi_print_result() provides. After all, by activating
+> MLQUEUE+MLCOMPLETE, the time on-wire can be extracted with better
+> accuracy from currently available logs. 
+> 
+> So perhaps make this depend on a module parameter?
+> 
+> Also, we should carefully ponder if we want to put this on the same
+> line as the driver byte, as users may have created scripts for
+> parsing
+> this output.
+> 
+> Regards,
+> Martin
+> 
+> 
+Hi Martin
 
-Discovered through Kconfiglib detecting a dependency loop. The C tools
-simplify the expression to y before running dependency loop detection,
-and so don't see it. Changing the type of THERMAL back to tristate makes
-the C tools detect the same loop.
+Agreed about log extraction, but turning that on with a busy workload
+in a production environment is not practical. We cant do it with
+systems with 1000's of luns and 1000's of IOPS/sec.
+Also second resolution is good enough for the debug we want to see.
 
-Not sure if running dep. loop detection after simplification can be
-called a bug. Fixing this nit unbreaks Kconfiglib on the kernel at
-least.
-
-Signed-off-by: Ulf Magnusson <ulfalizer@gmail.com>
----
- drivers/gpu/drm/tiny/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/tiny/Kconfig b/drivers/gpu/drm/tiny/Kconfig
-index 504763423d46..a46ac284dd5e 100644
---- a/drivers/gpu/drm/tiny/Kconfig
-+++ b/drivers/gpu/drm/tiny/Kconfig
-@@ -63,7 +63,6 @@ config TINYDRM_REPAPER
- 	depends on DRM && SPI
- 	select DRM_KMS_HELPER
- 	select DRM_KMS_CMA_HELPER
--	depends on THERMAL || !THERMAL
- 	help
- 	  DRM driver for the following Pervasive Displays panels:
- 	  1.44" TFT EPD Panel (E1144CS021)
--- 
-2.20.1
+Regards
+Laurence
 
