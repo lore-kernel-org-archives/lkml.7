@@ -2,69 +2,71 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15549C352AB
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 01:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 653E1C47404
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 01:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAA0B207FF
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 01:13:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A750206B7
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 01:13:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569546805;
-	bh=7qtojZp5zJHlXpkEO8yCgrlaXTzo4YIuiYBry43Vq+U=;
+	s=default; t=1569546829;
+	bh=4h3VdqNvuJ7Ee0T+JD8YetkwZO5LgNClDV7vYWjLB+w=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=SRQApXq5kwtOBVr6OfdLLhLKoKUxdwFKZ/+20VT8c/wztcS4p6VLFLHdPc1RQ2bfz
-	 JiQYo80hUeefcwkvGvK84ZKiX84v5HwdbUa2zE3+oebCF4e7Mr8GqBGx/YJc2Vh1fF
-	 15TVbEvKbXmIIkrhL/kj/eRzqkpCQp10d8QRce4I=
+	b=AB/e6xanDoHDKNLUQP6lFOELdGWnjJikjqvfDzFFhWY/kBbWWkDYiuoSfkGy1itKx
+	 G/EJICldTJG40wmGS9xhAyaRPRvW3JGPNxho7I9asdlbAXYXDEDZJ24GMbwHLhZUbc
+	 7jeb07FPEfyGB8NkAdFMiYcfwZEpruqQo4PSVjG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfI0BNZ (ORCPT
+        id S1727579AbfI0BNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 21:13:25 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:43662 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726029AbfI0BNY (ORCPT
+        Thu, 26 Sep 2019 21:13:48 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:39311 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfI0BNs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 21:13:24 -0400
-Received: by mail-io1-f67.google.com with SMTP id v2so11718452iob.10
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 18:13:24 -0700 (PDT)
+        Thu, 26 Sep 2019 21:13:48 -0400
+Received: by mail-io1-f68.google.com with SMTP id a1so11836774ioc.6
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 18:13:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=vEE9lOyJedYGEKwzVDnKuOkrG0RTwYW04dLMK0cfVNI=;
-        b=aewx8DaVgi2IdGL01e4RMmtoymyhqnU1GKAbN4jN+2MeIAH5LDTe27X9hTI4aQQZ6v
-         9TRC9vcS29nS6XOnSEfGzgsIU6hpszM9EamSBK20+M5v1RzMXAoG5eM5ccdafnaMZgsC
-         j7Jiv/gSplXSNatW+xjRZG6YvpXWe+QvxtcNc=
+        bh=8j9rA1WD839oUqijh+Vh8zZRtr0Ej8NqAU1MM5cNTJc=;
+        b=dX6f3lPvSg9p2xx0kSYYtSRW/JjhIx4eA1YpglOO+6kZKvxeJICogR/PdXk9SyluNE
+         d/qt5V5/PUpkaX+OSSVc5kSdh/AmzoxZ5aMrEr4rEgwa7fil0v9ZZX4A34BfhjiZdyLo
+         xxSwfEFenWsZrSvfYTJwR5aDCJitIxqWKE8tw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=vEE9lOyJedYGEKwzVDnKuOkrG0RTwYW04dLMK0cfVNI=;
-        b=GHd3M6aedf4Egh4z87vJCQZrbu4T5VndNNFc2JqXCVt8XYnbmsam9xXgnl3ZeC+mn+
-         zj5M0vYiIP6sBJJ3q9QDp+PPGqAWwL6ZZalYtQbqSuNR4KT4RwE3OwEQLkDDHt/WGdk+
-         PcTffvtAS0+2NRPYEAWw3vKxd4lydjNV3pAn239dBAc2V4SX3yZ98a+6deGIP79q3CPw
-         oZ3mEvda2a7n80rOGJvfttTlBXlWgCFweSw47XM0qqKqNs+rYJl/BGrvA3fLCcWXrdZ/
-         Vy6TuLMwmrzn7ooI0+2CKnDEgWlC20nMQTV19td5KMscEc0Ier6rnIWPD1bEbddm6l8r
-         1bFA==
-X-Gm-Message-State: APjAAAVLVWZTyUqYXwL1gjgMRZzgGgmjoNwC5K1CoR5YPmwbcDaLeQ7T
-        K6euKcte/JHHiCm03Q3SG9WdIA==
-X-Google-Smtp-Source: APXvYqyi25JQWLz5zuPdbjoyS7rTFaHfpEmPpxHwSsRTBjT+rhIcseiZPcgjtZuZTSP2Nu6zbDvXAw==
-X-Received: by 2002:a92:1685:: with SMTP id 5mr2085408ilw.81.1569546804169;
-        Thu, 26 Sep 2019 18:13:24 -0700 (PDT)
+        bh=8j9rA1WD839oUqijh+Vh8zZRtr0Ej8NqAU1MM5cNTJc=;
+        b=Rre+E2SYU3AXNv/Ytl6pd17wwjfu6weud6z15nViOwoDvGq+Ye5LvNI4HGnXXDSlGI
+         oNYIip7YFg86BVFkxNAly8lH+w/YMoJ/08mLudn/8oQOtx/23A/g6ThlxS1gkwSEbYau
+         NKg1HoGptMJmnZ8NJdoJAzTmdxTu1Ibw1QI8KMCYctx0n8ywTyPMWYo1w7YR4yrPRK7B
+         xq8ZlSx0UMCipCra+loned8fwD/HIA3p5P7kEkARC+Zkfp0b1dC68P8q6MeLxH/2nyD2
+         zkMBb4//+2coaPf6dxzOcF6ZA8n0cpySmsc18jRzQ6iNeQhFc/pgF3xRWxElGsLesWcq
+         +UEw==
+X-Gm-Message-State: APjAAAU+hpwRXxrIMUaYIVvq0uiWyt32Km8l7pz6ZoYjsG0pTotFqPoU
+        XGMZVu2gLdUVWEM71LS7QxlA7Q==
+X-Google-Smtp-Source: APXvYqyXeSPC+d9QdCWlvsXRPQVaxLUlT8C3HCTK3Kg9BOMblYLJYajtK7SPVki2xvpeDwPQEca/3A==
+X-Received: by 2002:a02:1cc5:: with SMTP id c188mr6360952jac.26.1569546827184;
+        Thu, 26 Sep 2019 18:13:47 -0700 (PDT)
 Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id z5sm1717813ioh.23.2019.09.26.18.13.23
+        by smtp.gmail.com with ESMTPSA id h70sm1907469iof.48.2019.09.26.18.13.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Sep 2019 18:13:23 -0700 (PDT)
+        Thu, 26 Sep 2019 18:13:46 -0700 (PDT)
 From:   Shuah Khan <skhan@linuxfoundation.org>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
-Cc:     Shuah Khan <skhan@linuxfoundation.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, --cc=linux-kselftest@vger.kernel.org
-Subject: [PATCH] tools: gpio: Use !building_out_of_srctree to determine srctree
-Date:   Thu, 26 Sep 2019 19:13:21 -0600
-Message-Id: <20190927011321.4612-1-skhan@linuxfoundation.org>
+To:     ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
+        songliubraving@fb.com, yhs@fb.com
+Cc:     Shuah Khan <skhan@linuxfoundation.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH] tools: bpf: Use !building_out_of_srctree to determine srctree
+Date:   Thu, 26 Sep 2019 19:13:44 -0600
+Message-Id: <20190927011344.4695-1-skhan@linuxfoundation.org>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -73,36 +75,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-make TARGETS=gpio kselftest fails with:
+make TARGETS=bpf kselftest fails with:
 
-Makefile:23: tools/build/Makefile.include: No such file or directory
+Makefile:127: tools/build/Makefile.include: No such file or directory
 
-When the gpio tool make is invoked from tools Makefile, srctree is
+When the bpf tool make is invoked from tools Makefile, srctree is
 cleared and the current logic check for srctree equals to empty
 string to determine srctree location from CURDIR.
 
-When the build in invoked from selftests/gpio Makefile, the srctree
+When the build in invoked from selftests/bpf Makefile, the srctree
 is set to "." and the same logic used for srctree equals to empty is
 needed to determine srctree.
 
 Check building_out_of_srctree undefined as the condition for both
-cases to fix "make TARGETS=gpio kselftest" build failure.
+cases to fix "make TARGETS=bpf kselftest" build failure.
 
 Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 ---
- tools/gpio/Makefile | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ tools/bpf/Makefile     | 6 +++++-
+ tools/lib/bpf/Makefile | 6 +++++-
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/tools/gpio/Makefile b/tools/gpio/Makefile
-index 6ecdd1067826..1178d302757e 100644
---- a/tools/gpio/Makefile
-+++ b/tools/gpio/Makefile
-@@ -3,7 +3,11 @@ include ../scripts/Makefile.include
- 
- bindir ?= /usr/bin
+diff --git a/tools/bpf/Makefile b/tools/bpf/Makefile
+index fbf5e4a0cb9c..5d1995fd369c 100644
+--- a/tools/bpf/Makefile
++++ b/tools/bpf/Makefile
+@@ -12,7 +12,11 @@ INSTALL ?= install
+ CFLAGS += -Wall -O2
+ CFLAGS += -D__EXPORTED_HEADERS__ -I$(srctree)/include/uapi -I$(srctree)/include
  
 -ifeq ($(srctree),)
-+# This will work when gpio is built in tools env. where srctree
++# This will work when bpf is built in tools env. where srctree
 +# isn't set and when invoked from selftests build, where srctree
 +# is set to ".". building_out_of_srctree is undefined for in srctree
 +# builds
@@ -110,6 +113,23 @@ index 6ecdd1067826..1178d302757e 100644
  srctree := $(patsubst %/,%,$(dir $(CURDIR)))
  srctree := $(patsubst %/,%,$(dir $(srctree)))
  endif
+diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+index c6f94cffe06e..20772663d3e1 100644
+--- a/tools/lib/bpf/Makefile
++++ b/tools/lib/bpf/Makefile
+@@ -8,7 +8,11 @@ LIBBPF_MAJOR_VERSION := $(firstword $(subst ., ,$(LIBBPF_VERSION)))
+ 
+ MAKEFLAGS += --no-print-directory
+ 
+-ifeq ($(srctree),)
++# This will work when bpf is built in tools env. where srctree
++# isn't set and when invoked from selftests build, where srctree
++# is a ".". building_out_of_srctree is undefined for in srctree
++# builds
++ifndef building_out_of_srctree
+ srctree := $(patsubst %/,%,$(dir $(CURDIR)))
+ srctree := $(patsubst %/,%,$(dir $(srctree)))
+ srctree := $(patsubst %/,%,$(dir $(srctree)))
 -- 
 2.20.1
 
