@@ -2,68 +2,88 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DADC388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 23:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE954C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 23:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C77221924
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 23:15:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ihosnk8T"
+	by mail.kernel.org (Postfix) with ESMTP id 979A520872
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 23:23:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbfI0XPH (ORCPT
+        id S1726676AbfI0XX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 19:15:07 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53766 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbfI0XPH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 19:15:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=jpQ+cgpYgorqncxujkoyHM8IzUkc+K1/nH0wPDL+W9s=; b=ihosnk8ToIlXCYlg3/0bKQS0y
-        1cIBC2Q3dbp6UZuz/7oOeMIjwXvptnoZBMRRFi7769g7WcBypM8yjx3LreaPkji4KVvF9U8r+hPLp
-        S0KzexbzN4RaL+gD6ma66lJAFqTHON/LJu/wLbT4k8F2vkpjpiFtECpTU6v5MbqmG/eQUjU69Se8s
-        zL8PqCWhnrgdOIhHXIpcEvXg1g+6ao2eukBs/rVtaWAUEYhMLzjnAZ0EmthsiiC7XZ0oXhdptxiWH
-        aC7k40lmmWThGW3QuCM2NvwPtSvOsEizWoMdcUtMKKSmx7z23dKf468T9ivNyhWZeR36OQJnli4fv
-        LxJ/E2PAQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iDzS4-0004Lk-9W; Fri, 27 Sep 2019 23:15:04 +0000
-Date:   Fri, 27 Sep 2019 16:15:04 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Minghuan Lian <Minghuan.Lian@nxp.com>,
-        Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
-Subject: Re: [PATCH] PCI: mobiveil: Fix csr_read/write build issue
-Message-ID: <20190927231504.GA13714@infradead.org>
-References: <20190925142121.56607-1-wangkefeng.wang@huawei.com>
- <20190926092933.GC9720@e119886-lin.cambridge.arm.com>
+        Fri, 27 Sep 2019 19:23:58 -0400
+Received: from mga06.intel.com ([134.134.136.31]:4834 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725306AbfI0XX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 19:23:58 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Sep 2019 16:23:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,557,1559545200"; 
+   d="scan'208";a="189606803"
+Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
+  by fmsmga008.fm.intel.com with ESMTP; 27 Sep 2019 16:23:57 -0700
+Received: from orsmsx158.amr.corp.intel.com (10.22.240.20) by
+ ORSMSX109.amr.corp.intel.com (10.22.240.7) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 27 Sep 2019 16:23:56 -0700
+Received: from orsmsx121.amr.corp.intel.com ([169.254.10.190]) by
+ ORSMSX158.amr.corp.intel.com ([169.254.10.46]) with mapi id 14.03.0439.000;
+ Fri, 27 Sep 2019 16:23:56 -0700
+From:   "Keller, Jacob E" <jacob.e.keller@intel.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+CC:     "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: RE: [PATCH] namespace: fix namespace.pl script to support relative
+ paths
+Thread-Topic: [PATCH] namespace: fix namespace.pl script to support relative
+ paths
+Thread-Index: AQHVdYkISHS3XNGT0kCKyhZHN6EY9KdAKfGw
+Date:   Fri, 27 Sep 2019 23:23:56 +0000
+Message-ID: <02874ECE860811409154E81DA85FBB58968DBE40@ORSMSX121.amr.corp.intel.com>
+References: <20190129204319.15238-1-jacob.e.keller@intel.com>
+ <7b26e6cc-10ce-5df2-6375-1f95bc4da04e@infradead.org>
+In-Reply-To: <7b26e6cc-10ce-5df2-6375-1f95bc4da04e@infradead.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYWFmNGVmZTQtNGE1OC00YTJmLThjMDctYTY0OTAyMzM4NTkzIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoicmZ0WVFia2tFQWhBeXJURjRicjBjR2p4M05OUWFNdWI4ODBrWmpzS0RTWlwvVzNLTHIyZXlXd1FRMHo3ckpCOFYifQ==
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.140]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190926092933.GC9720@e119886-lin.cambridge.arm.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 10:29:34AM +0100, Andrew Murray wrote:
-> Though I'd be just as happy if the csr_[read,write][l,] functions were
-> renamed to mobiveil_csr_[read,write][l,].
-
-Please do that instead, using such generic names as csr_* in a driver
-is a bad idea, with or without a __ prefix.
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSYW5keSBEdW5sYXAgW21haWx0
+bzpyZHVubGFwQGluZnJhZGVhZC5vcmddDQo+IFNlbnQ6IEZyaWRheSwgU2VwdGVtYmVyIDI3LCAy
+MDE5IDQ6MTIgUE0NCj4gVG86IEtlbGxlciwgSmFjb2IgRSA8amFjb2IuZS5rZWxsZXJAaW50ZWwu
+Y29tPg0KPiBDYzogaW50ZWwtd2lyZWQtbGFuQGxpc3RzLm9zdW9zbC5vcmc7IGxpbnV4LWtlcm5l
+bEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtidWlsZCA8bGludXgtDQo+IGtidWlsZEB2Z2VyLmtl
+cm5lbC5vcmc+OyBNYXNhaGlybyBZYW1hZGEgPHlhbWFkYS5tYXNhaGlyb0Bzb2Npb25leHQuY29t
+Pg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBuYW1lc3BhY2U6IGZpeCBuYW1lc3BhY2UucGwgc2Ny
+aXB0IHRvIHN1cHBvcnQgcmVsYXRpdmUgcGF0aHMNCj4gDQo+IA0KPiByZTogaHR0cHM6Ly9sb3Jl
+Lmtlcm5lbC5vcmcvbGttbC8yMDE5MDEyOTIwNDMxOS4xNTIzOC0xLWphY29iLmUua2VsbGVyQGlu
+dGVsLmNvbS8NCj4gDQo+IERpZCBhbnl0aGluZyBoYXBwZW4gd2l0aCB0aGlzIHBhdGNoPw0KPiAN
+Cg0KSSBoYXZlbid0IGhlYXJkIGFueXRoaW5nIG9yIHNlZW4gaXQgZ2V0IGFwcGxpZWQuDQoNCj4g
+UGxlYXNlIHNlbmQgaXQgdG8gbGludXgta2J1aWxkQHZnZXIua2VybmVsLm9yZyBhbmQNCj4gQ2M6
+IE1hc2FoaXJvIFlhbWFkYSA8eWFtYWRhLm1hc2FoaXJvQHNvY2lvbmV4dC5jb20+DQo+IA0KDQpT
+dXJlLCBJIGNhbiBmb3J3YXJkIGl0Lg0KDQo+IFlvdSBjYW4gYWxzbyBhZGQ6DQo+IEFja2VkLWJ5
+OiBSYW5keSBEdW5sYXAgPHJkdW5sYXBAaW5mcmFkZWFkLm9yZz4NCj4gVGVzdGVkLWJ5OiBSYW5k
+eSBEdW5sYXAgPHJkdW5sYXBAaW5mcmFkZWFkLm9yZz4NCj4gDQo+IA0KPiBJIHdhcyBqdXN0IGFi
+b3V0IHRvIGZpeCB0aGlzIHNjcmlwdCBidXQgSSBkZWNpZGVkIHRvIGZpcnN0IHNlZSBpZiBhbnlv
+bmUgZWxzZQ0KPiBoYWQgYWxyZWFkeSBkb25lIHNvLiAgVGhhbmtzLg0KPiANCg0KVGhhbmtzIGZv
+ciB0aGUgcmV2aWV3L25vdGljZSBoZXJlLg0KDQo+IC0tDQo+IH5SYW5keQ0KDQotSmFrZQ0K
