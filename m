@@ -2,255 +2,182 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24AD6C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 00:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD6EC352AC
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 00:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7C8B2086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 00:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE38521D56
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 00:55:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mWJcqqxG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfI0AdZ (ORCPT
+        id S1727629AbfI0Azm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 20:33:25 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47584 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727505AbfI0AdY (ORCPT
+        Thu, 26 Sep 2019 20:55:42 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40535 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727450AbfI0Azl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 20:33:24 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8R0XAFS025826
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 20:33:23 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v97jt0nrx-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 20:33:23 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Fri, 27 Sep 2019 01:33:21 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 27 Sep 2019 01:33:18 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8R0XGjn55181528
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Sep 2019 00:33:17 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D586F52057;
-        Fri, 27 Sep 2019 00:33:16 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.145.93.29])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 3B08B5204E;
-        Fri, 27 Sep 2019 00:33:16 +0000 (GMT)
-Date:   Fri, 27 Sep 2019 02:33:14 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        linux-kernel@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        iommu@lists.linux-foundation.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Subject: Re: [RFC PATCH 1/3] dma-mapping: make overriding GFP_* flags arch
- customizable
-In-Reply-To: <6c62da57-c94c-8078-957c-b6832ed7fd1b@arm.com>
-References: <20190923123418.22695-1-pasic@linux.ibm.com>
- <20190923123418.22695-2-pasic@linux.ibm.com>
- <20190923152117.GA2767@lst.de>
- <20190926143745.68bdd082.pasic@linux.ibm.com>
- <6c62da57-c94c-8078-957c-b6832ed7fd1b@arm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Thu, 26 Sep 2019 20:55:41 -0400
+Received: by mail-oi1-f193.google.com with SMTP id k9so3772694oib.7
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Sep 2019 17:55:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w6GtUWD65Sb2e3DNABoXgvvmVNvez3XhNPll/iTmngk=;
+        b=mWJcqqxG0yvWUhw/T7tKy9RfvCH7jcGWz8miRGuWvLmTwqKJ3ZfLN2t5FDY/5MGWhf
+         ksuRq1AECJHnDrA0xQt+a4UYEbD8UkzPJY+fqn/8NAyINpG17nBfdXvau2HnxCbKLB1Q
+         vf3nugrT7CDycCO9Lf4mLAu/WO/MIupOReMgVMjTF7NEWU6zQNqyxdetxF3YH28a1ZE7
+         /oE/UleTqIWRhPtcbsdoFfbHxLRkhc4HjmCAKBGLYDpgy3dSsWZK6MjWZWl9GC9MMWmC
+         drBPJKlLe2xE4nQfIjgf1D707tvSN6vOQoL8hN1DcuGOl6hhyjnrpkGzuysSkBASGQAo
+         R6gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w6GtUWD65Sb2e3DNABoXgvvmVNvez3XhNPll/iTmngk=;
+        b=nsq6MD4BZ77cQdk2K4INlXi5x4w6PTEt2JOSjA77ZDphypr8fZr6E3EZ70G4RE7wKd
+         STaPu9F9CGXsQs/TRwyqvPmHLbILHe167OxylHmoNqpPNSa6ODFU6MA7rv08zDJI3hME
+         BIOLgFMB0fhaNkQovzkvLihvZIvL8+5SRo61jwIY9G7RWKRZx0tRvPuTjAu2JWpHjuGA
+         Zmn5D868kI/c+tQA9fsKGjhrILc8epilgBXUT1P5g86AiUEWYUN89KaNNenx/kdY1+1E
+         LUWXZSrQdX73anivs/Ov+GfnAp/yrdtIfpyEFnbM4gic5xiRVsRLMCxQEU537bewDy7M
+         vacg==
+X-Gm-Message-State: APjAAAWAQ3ECJCLi7Vc9eBOolBKhc/7g3qqZCuocBNBq3214T5+I8xWH
+        sCD/q8ynKHZCdO8jztsZB/2pBdbgmiIZp0IXHnp4wQ==
+X-Google-Smtp-Source: APXvYqxaOUtFksyd5tFVpugObKeftAVgGeD3PicNGLqGrAfqoaEha1rcj49CSeZUiGTh6XZYzJwpS6/fjcHQVM057qs=
+X-Received: by 2002:aca:cf51:: with SMTP id f78mr5004751oig.8.1569545740466;
+ Thu, 26 Sep 2019 17:55:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19092700-0028-0000-0000-000003A30C9F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19092700-0029-0000-0000-000024652C45
-Message-Id: <20190927023314.3e5c8324.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-26_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909270004
+References: <20190919222421.27408-1-almasrymina@google.com>
+ <3c73d2b7-f8d0-16bf-b0f0-86673c3e9ce3@oracle.com> <CAHS8izOj2AT4tX-+Hcb8LB2TOUKJDHScDtJ80u4M6OWpwktq0g@mail.gmail.com>
+ <a8e9c533-1593-35ee-e65d-1f2fc2b0fb48@oracle.com> <CAHS8izPfKQA8qTndyzWSm9fR_xJ=X-xmE+4P4K+ZFdxrYNuLBA@mail.gmail.com>
+ <alpine.DEB.2.21.1909261220150.39830@chino.kir.corp.google.com> <8f7db4f1-9c16-def5-79dc-d38d6b9d150e@oracle.com>
+In-Reply-To: <8f7db4f1-9c16-def5-79dc-d38d6b9d150e@oracle.com>
+From:   Mina Almasry <almasrymina@google.com>
+Date:   Thu, 26 Sep 2019 17:55:29 -0700
+Message-ID: <CAHS8izM3=ZDNukx5xhWmeJT+78Ekfff9J4s5Vqkqpx-DtH=C-A@mail.gmail.com>
+Subject: Re: [PATCH v5 0/7] hugetlb_cgroup: Add hugetlb_cgroup reservation limits
+To:     Mike Kravetz <mike.kravetz@oracle.com>, Tejun Heo <tj@kernel.org>
+Cc:     David Rientjes <rientjes@google.com>,
+        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>,
+        shuah <shuah@kernel.org>, Shakeel Butt <shakeelb@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        khalid.aziz@oracle.com, open list <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+        cgroups@vger.kernel.org,
+        =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 26 Sep 2019 14:04:13 +0100
-Robin Murphy <robin.murphy@arm.com> wrote:
-
-> On 26/09/2019 13:37, Halil Pasic wrote:
-> > On Mon, 23 Sep 2019 17:21:17 +0200
-> > Christoph Hellwig <hch@lst.de> wrote:
-> > 
-> >> On Mon, Sep 23, 2019 at 02:34:16PM +0200, Halil Pasic wrote:
-> >>> Before commit 57bf5a8963f8 ("dma-mapping: clear harmful GFP_* flags in
-> >>> common code") tweaking the client code supplied GFP_* flags used to be
-> >>> an issue handled in the architecture specific code. The commit message
-> >>> suggests, that fixing the client code would actually be a better way
-> >>> of dealing with this.
+On Thu, Sep 26, 2019 at 2:23 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+>
+> On 9/26/19 12:28 PM, David Rientjes wrote:
+> > On Tue, 24 Sep 2019, Mina Almasry wrote:
+> >
+> >>> I personally prefer the one counter approach only for the reason that it
+> >>> exposes less information about hugetlb reservations.  I was not around
+> >>> for the introduction of hugetlb reservations, but I have fixed several
+> >>> issues having to do with reservations.  IMO, reservations should be hidden
+> >>> from users as much as possible.  Others may disagree.
 > >>>
-> >>> On s390 common I/O devices are generally capable of using the full 64
-> >>> bit address space for DMA I/O, but some chunks of the DMA memory need to
-> >>> be 31 bit addressable (in physical address space) because the
-> >>> instructions involved mandate it. Before switching to DMA API this used
-> >>> to be a non-issue, we used to allocate those chunks from ZONE_DMA.
-> >>> Currently our only option with the DMA API is to restrict the devices to
-> >>> (via dma_mask and coherent_dma_mask) to 31 bit, which is sub-optimal.
+> >>> I really hope that Aneesh will comment.  He added the existing hugetlb
+> >>> cgroup code.  I was not involved in that effort, but it looks like there
+> >>> might have been some thought given to reservations in early versions of
+> >>> that code.  It would be interesting to get his perspective.
 > >>>
-> >>> Thus s390 we would benefit form having control over what flags are
-> >>> dropped.
+> >>> Changes included in patch 4 (disable region_add file_region coalescing)
+> >>> would be needed in a one counter approach as well, so I do plan to
+> >>> review those changes.
 > >>
-> >> No way, sorry.  You need to express that using a dma mask instead of
-> >> overloading the GFP flags.
-> > 
-> > Thanks for your feedback and sorry for the delay. Can you help me figure
-> > out how can I express that using a dma mask?
-> > 
-> > IMHO what you ask from me is frankly impossible.
-> > 
-> > What I need is the ability to ask for  (considering the physical
-> > address) 31 bit addressable DMA memory if the chunk is supposed to host
-> > control-type data that needs to be 31 bit addressable because that is
-> > how the architecture is, without affecting the normal data-path. So
-> > normally 64 bit mask is fine but occasionally (control) we would need
-> > a 31 bit mask.
-> 
-> If it's possible to rework the "data" path to use streaming mappings 
-> instead of coherent allocations, you could potentially mimic what virtio 
-> does for a similar situation - see commit a0be1db4304f.
-> 
+> >> OK, FWIW, the 1 counter approach should be sufficient for us, so I'm
+> >> not really opposed. David, maybe chime in if you see a problem here?
+> >> From the perspective of hiding reservations from the user as much as
+> >> possible, it is an improvement.
+> >>
+> >> I'm only wary about changing the behavior of the current and having
+> >> that regress applications. I'm hoping you and Aneesh can shed light on
+> >> this.
+> >>
+> >
+> > I think neither Aneesh nor myself are going to be able to provide a
+> > complete answer on the use of hugetlb cgroup today, anybody could be using
+> > it without our knowledge and that opens up the possibility that combining
+> > the limits would adversely affect a real system configuration.
+>
+> I agree that nobody can provide complete information on hugetlb cgroup usage
+> today.  My interest was in anything Aneesh could remember about development
+> of the current cgroup code.  It 'appears' that the idea of including
+> reservations or mmap ranges was considered or at least discussed.  But, those
+> discussions happened more than 7 years old and my searches are not providing
+> a complete picture.  My hope was that Aneesh may remember those discussions.
+>
+> > If that is a possibility, I think we need to do some due diligence and try
+> > to deprecate allocation limits if possible.  One of the benefits to
+> > separate limits is that we can make reasonable steps to deprecating the
+> > actual allocation limits, if possible: we could add warnings about the
+> > deprecation of allocation limits and see if anybody complains.
+> >
+> > That could take the form of two separate limits or a tunable in the root
+> > hugetlb cgroup that defines whether the limits are for allocation or
+> > reservation.
+> >
+> > Combining them in the first pass seems to be very risky and could cause
+> > pain for users that will not detect this during an rc cycle and will
+> > report the issue only when their distro gets it.  Then we are left with no
+> > alternative other than stable backports and the separation of the limits
+> > anyway.
+>
+> I agree that changing behavior of the existing controller is too risky.
+> Such a change is likely to break someone.
 
-Thank you for your feedback. Just to be sure we are on the same pager, I
-read commit a0be1db4304f like this:
-1) virtio_pci_legacy needs to allocate the virtqueues so that the base
-address fits 44 bits
-2) if 64 bit dma is possible they set coherent_dma_mask to
-  DMA_BIT_MASK(44) and dma_mask to DMA_BIT_MASK(64)
-3) since the queues get allocated with coherent allocations 1) is
-satisfied
-4) when the streaming mappings see a buffer that is beyond
-  DMA_BIT_MASK(44) then it has to treat it as not coherent memory
-  and do the syncing magic (which isn't actually required, just
-  a side effect of the workaround.
+I'm glad we're converging on keeping the existing behavior unchanged.
 
-I'm actually trying to get virtio_ccw working nice with Protected
-Virtualization (best think of encrypted memory). So the "data" path
-is mostly the same as for virtio_pci.
+> The more I think about it, the
+> best way forward will be to retain the existing controller and create a
+> new controller that satisfies the new use cases.
 
-But unlike virtio_pci_legacy we are perfectly fine with virtqueues at
-an arbitrary address.
+My guess is that a new controller needs to support cgroups-v2, which
+is fine. But can a new controller also support v1? Or is there a
+requirement that new controllers support *only* v2? I need whatever
+solution here to work on v1. Added Tejun to hopefully comment on this.
 
-We can make
-coherent_dma_mask == DMA_BIT_MASK(31) != dma_mask == DMA_BIT_MASK(64)
-but that affects all dma coherent allocations and needlessly force
-the virtio control structures into the  [0..2G] range. Furthermore this
-whole issue has nothing to do with memory coherence. For ccw devices
-memory at addresses above 2G is no less coherent for ccw devices than
-memory at addresses below 2G.
+>The question remains as
+> to what that new controller will be.  Does it control reservations only?
+> Is it a combination of reservations and allocations?  If a combined
+> controller will work for new use cases, that would be my preference.  Of
+> course, I have not prototyped such a controller so there may be issues when
+> we get into the details.  For a reservation only or combined controller,
+> the region_* changes proposed by Mina would be used.
 
-I've already implemented a patch (see after the scissors line) that
-takes a similar route as commit a0be1db4304f, but I consider that a
-workaround at best. But if that is what the community wants... I have to
-get the job done one way or the other.
+Provided we keep the existing controller untouched, should the new
+controller track:
 
-Many thanks for your help and your time.
+1. only reservations, or
+2. both reservations and allocations for which no reservations exist
+(such as the MAP_NORESERVE case)?
 
--------------------------------8<------------------------------------
+I like the 'both' approach. Seems to me a counter like that would work
+automatically regardless of whether the application is allocating
+hugetlb memory with NORESERVE or not. NORESERVE allocations cannot cut
+into reserved hugetlb pages, correct? If so, then applications that
+allocate with NORESERVE will get sigbused when they hit their limit,
+and applications that allocate without NORESERVE may get an error at
+mmap time but will always be within their limits while they access the
+mmap'd memory, correct? So the 'both' counter seems like a one size
+fits all.
 
-From: Halil Pasic <pasic@linux.ibm.com>
-Date: Thu, 25 Jul 2019 18:44:21 +0200
-Subject: [PATCH 1/1] s390/cio: fix virtio-ccw DMA without PV
+I think the only sticking point left is whether an added controller
+can support both cgroup-v2 and cgroup-v1. If I could get confirmation
+on that I'll provide a patchset.
 
-Commit 37db8985b211 ("s390/cio: add basic protected virtualization
-support") breaks virtio-ccw devices with VIRTIO_F_IOMMU_PLATFORM for non
-Protected Virtualization (PV) guests. The problem is that the dma_mask
-of the ccw device, which is used by virtio core, gets changed from 64 to
-31 bit, because some of the DMA allocations do require 31 bit
-addressable memory. For PV the only drawback is that some of the virtio
-structures must end up in ZONE_DMA because we have the bounce the
-buffers mapped via DMA API anyway.
-
-But for non PV guests we have a problem: because of the 31 bit mask
-guests bigger than 2G are likely to try bouncing buffers. The swiotlb
-however is only initialized for PV guests, because we don't want to
-bounce anything for non PV guests. The first such map kills the guest.
-
-Since the DMA API won't allow us to specify for each allocating whether
-we need memory from ZONE_DMA (31 bit addressable) or any DMA capable
-memory will do, let us abuse coherent_dma_mask (which is used for
-allocations) to force allocating form ZONE_DMA while changing dma_mask
-to DMA_BIT_MASK(64).
-
-Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-Reported-by: Marc Hartmayer <mhartmay@linux.ibm.com>
-Suggested-by: Robin Murphy <robin.murphy@arm.com>
-Fixes: 37db8985b211 ("s390/cio: add basic protected virtualization support")
----
- drivers/s390/cio/cio.h    | 1 +
- drivers/s390/cio/css.c    | 8 +++++++-
- drivers/s390/cio/device.c | 2 +-
- 3 files changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/s390/cio/cio.h b/drivers/s390/cio/cio.h
-index ba7d248..dcdaba6 100644
---- a/drivers/s390/cio/cio.h
-+++ b/drivers/s390/cio/cio.h
-@@ -113,6 +113,7 @@ struct subchannel {
- 	enum sch_todo todo;
- 	struct work_struct todo_work;
- 	struct schib_config config;
-+	u64 dma_mask;
- 	char *driver_override; /* Driver name to force a match */
- } __attribute__ ((aligned(8)));
- 
-diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
-index 22c5581..d63e80a 100644
---- a/drivers/s390/cio/css.c
-+++ b/drivers/s390/cio/css.c
-@@ -232,7 +232,13 @@ struct subchannel *css_alloc_subchannel(struct subchannel_id schid,
- 	 * belong to a subchannel need to fit 31 bit width (e.g. ccw).
- 	 */
- 	sch->dev.coherent_dma_mask = DMA_BIT_MASK(31);
--	sch->dev.dma_mask = &sch->dev.coherent_dma_mask;
-+	/*
-+	 * But we don't have such restrictions imposed on the stuff that
-+	 * is handled by the streaming API. Using coherent_dma_mask != dma_mask
-+	 * is just a workaround.
-+	 */
-+	sch->dma_mask = DMA_BIT_MASK(64);
-+	sch->dev.dma_mask = &sch->dma_mask;
- 	return sch;
- 
- err:
-diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
-index 131430b..0c6245f 100644
---- a/drivers/s390/cio/device.c
-+++ b/drivers/s390/cio/device.c
-@@ -710,7 +710,7 @@ static struct ccw_device * io_subchannel_allocate_dev(struct subchannel *sch)
- 	if (!cdev->private)
- 		goto err_priv;
- 	cdev->dev.coherent_dma_mask = sch->dev.coherent_dma_mask;
--	cdev->dev.dma_mask = &cdev->dev.coherent_dma_mask;
-+	cdev->dev.dma_mask = sch->dev.dma_mask;
- 	dma_pool = cio_gp_dma_create(&cdev->dev, 1);
- 	if (!dma_pool)
- 		goto err_dma_pool;
--- 
-2.5.5
-
-
-
-
+> --
+> Mike Kravetz
