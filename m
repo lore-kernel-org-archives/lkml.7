@@ -2,123 +2,107 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F63CC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 11:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 572F8C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 11:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1BBD207FF
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 11:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 243A02146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 11:15:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="MEkjkBrs"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J1It2fck"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbfI0LHk (ORCPT
+        id S1727015AbfI0LPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 07:07:40 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42525 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfI0LHk (ORCPT
+        Fri, 27 Sep 2019 07:15:49 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54672 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbfI0LPs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 07:07:40 -0400
-Received: by mail-lj1-f193.google.com with SMTP id y23so2059368lje.9
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 04:07:37 -0700 (PDT)
+        Fri, 27 Sep 2019 07:15:48 -0400
+Received: by mail-wm1-f67.google.com with SMTP id p7so6150225wmp.4;
+        Fri, 27 Sep 2019 04:15:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3oGUOoJ5SW+DTMVPL3UUtjpNbyCkNbodWu3m4weaNuM=;
-        b=MEkjkBrs2zp8UeloIli/4sMbZayjf5Iv+cPRCAAQKAc5OCQGFgu1WIwzwRoI2QZZZT
-         lqXy7UZOvzGC+5hY7w/kuAO8LPexJQa5xRGo999UZs385hUUFNeDw/1+q6Am+ap03NTJ
-         V7y9eLlvBUF2F+8iySWyNEJm64qOw8aWp6w/Y=
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=KM5/fL2Yt0ZifkcygAo4LHNxxbfupXEym28ra8qTLbk=;
+        b=J1It2fckNyXTHriDkvoPhArrNWQ61s/q+CcHPM86GDjlu3yV/E30GGKi06M5gZcTUJ
+         5Weme2PW+RFADwyGaVDgf+o1HyXScwzisYSrqzqlkaG92KV4s/IfPfHxGQeCqwNy9YZr
+         fyK0Qv+U1PlZ8A75KLv13rIFgMF62pDHMPhi4CaARRsuFBzziali0yDpdC0cD80EAxhi
+         ETza7tpuWouCNJTynMhq1UM4FTcr8eaSlqrfSD88BuahkZRYrrFI5LS3yVaxCexemLCs
+         4YnocKfMigCdOm7ulq4Kpi603M4DV4jlZRx2Uuhp6CHmEuuycQiXFCOcnYhdtElwxAYV
+         5ieA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3oGUOoJ5SW+DTMVPL3UUtjpNbyCkNbodWu3m4weaNuM=;
-        b=Ez79PeX3hF9W/uiGy64zYzqsR23fyBK+hlV2xrAN5+UHRS9bdN3GVqS+/FyrvwrK1h
-         imVHpC/7QGkLdtlxcM+CAZOUHZQFmmNaRk/jMCPNP+ZNYqbGaiIl6AD9T0z7M2kbR38w
-         WxTM4iwxxgVTFFFv2KGv0sBFAn6nnrTTnL02yuKzv+D7B3iAzpN6VfUaMheqEcZsAnfk
-         dYpnaBJrFtDBWo6cNJXBtf2A5ocIuHaeHNOixPe+mY4AqO0khNhCjDteyluNazwAsLbq
-         kAX72x+j7+VdUF0NLKIYogvJJFpZb9PvBvUFiqVohipHU2x9BnUldKKQtM2w/0j+qpyM
-         6aZQ==
-X-Gm-Message-State: APjAAAW0wvyYwCoxwur6ajWJBcRQZoMRNJjONTWXtnFE1FqZf9kPYnsi
-        3GBPkHv+VKfOvwRfSTg31CA+0jdlXclXMN/K
-X-Google-Smtp-Source: APXvYqzumX9yp7awSisKK8bAze5UQnBkJTvkFtZqLB+nth2FTQgsa5+zv9JRLgENlXBrYrid92+DHw==
-X-Received: by 2002:a2e:9584:: with SMTP id w4mr2509460ljh.145.1569582456181;
-        Fri, 27 Sep 2019 04:07:36 -0700 (PDT)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id m21sm415265lfh.39.2019.09.27.04.07.34
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=KM5/fL2Yt0ZifkcygAo4LHNxxbfupXEym28ra8qTLbk=;
+        b=LGwDq0/FiHw0dbQFGJBXydnOfVrUj+ByHpiMRfwQb+1A/MkFnKaprOrgJK2B9hoTP8
+         Fj+j6Bz3ay+Wv3AZ39K7Zdv0qFfgq53emo/zwwkV3ts5CtkGBgwzHtw/k9jnB2Wqn7j6
+         O5bM0jIWDgFSvJDXy0JgSLboSvLX4ClNUV5MOsPUzI45vwgGBiCE2yNlqORvsQAO/w3V
+         OaNPRtB+J6htOezYhJgxNimUju61Oggsqga9GqWIIjg3UGn1CHlKDTr2EQpuYS1NJNQw
+         RLFgGwEk7SlJYKWHfiTapOsSiKHHOQ7NBQAI0HvmZOFOYJzlGxwaLYfUYPETtoF6qPzJ
+         An+g==
+X-Gm-Message-State: APjAAAUiyPOVt96gblXV1r5feMqlI27AvBF/TvQy0GLAtqFjIN9AdQuF
+        XH4aed+kZnQSPBdpFRk/yfaLnBsu
+X-Google-Smtp-Source: APXvYqze5BcvyPMMQhinLxNxJJjbNrKHXTnEhYvRSJiYH2P41iv6PpSAah/uL9xk67roqKzZRCpsuw==
+X-Received: by 2002:a05:600c:290c:: with SMTP id i12mr7014897wmd.77.1569582946521;
+        Fri, 27 Sep 2019 04:15:46 -0700 (PDT)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id r28sm2913848wrr.94.2019.09.27.04.15.45
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 27 Sep 2019 04:07:35 -0700 (PDT)
-Subject: Re: [PATCH 4/7] module: avoid code duplication in
- include/linux/export.h
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jessica Yu <jeyu@kernel.org>
-Cc:     Matthias Maennich <maennich@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Martijn Coenen <maco@android.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
-References: <20190927093603.9140-1-yamada.masahiro@socionext.com>
- <20190927093603.9140-5-yamada.masahiro@socionext.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <f2e28d6b-77c5-5fe2-0bc4-b24955de9954@rasmusvillemoes.dk>
-Date:   Fri, 27 Sep 2019 13:07:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190927093603.9140-5-yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 27 Sep 2019 04:15:45 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Junaid Shahid <junaids@google.com>
+Subject: [PATCH v2 0/3] KVM: MMU: fix nested guest live migration with PML
+Date:   Fri, 27 Sep 2019 13:15:40 +0200
+Message-Id: <1569582943-13476-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/09/2019 11.36, Masahiro Yamada wrote:
-> include/linux/export.h has lots of code duplication between
-> EXPORT_SYMBOL and EXPORT_SYMBOL_NS.
-> 
-> To improve the maintainability and readability, unify the
-> implementation.
-> 
-> When the symbol has no namespace, pass the empty string "" to
-> the 'ns' parameter.
-> 
-> The drawback of this change is, it grows the code size.
-> When the symbol has no namespace, sym->namespace was previously
-> NULL, but it is now am empty string "". So, it increases 1 byte
-> for every no namespace EXPORT_SYMBOL.
-> 
-> A typical kernel configuration has 10K exported symbols, so it
-> increases 10KB in rough estimation.
-> 
-> I did not come up with a good idea to refactor it without increasing
-> the code size.
+Shadow paging is fundamentally incompatible with the page-modification
+log, because the GPAs in the log come from the wrong memory map.
+In particular, for the EPT page-modification log, the GPAs in the log come
+from L2 rather than L1.  (If there was a non-EPT page-modification log,
+we couldn't use it for shadow paging because it would log GVAs rather
+than GPAs).
 
-Can't we put the "aMS" flags on the __ksymtab_strings section? That
-would make the empty strings free, and would also deduplicate the
-USB_STORAGE string. And while almost per definition we don't have exact
-duplicates among the names of exported symbols, we might have both a foo
-and __foo, so that could save even more.
+Therefore, we need to rely on write protection to record dirty pages.
+This has the side effect of bypassing PML, since writes now result in an
+EPT violation vmexit.
 
-I don't know if we have it already, but we'd need each arch to tell us
-what symbol to use for @ in @progbits (e.g. % for arm). It seems most
-are fine with @, so maybe a generic version could be
+This turns out to be a surprisingly small patch---the testcase is what's
+guilty of the scary diffstat.  But that is because the KVM MMU code is
+absurdly clever, so a very close review is appreciated.
 
-#ifndef ARCH_SECTION_TYPE_CHAR
-#define ARCH_SECTION_TYPE_CHAR "@"
-#endif
+Paolo
 
-and then it would be
-section("__ksymtab_strings,\"aMS\","ARCH_SECTION_TYPE_CHAR"progbits,1")
+v1->v2: don't place the new code in spte_clear_dirty [Junaid]
 
-But I don't know if any tooling relies on the strings not being
-deduplicated.
+Paolo Bonzini (3):
+  KVM: x86: assign two bits to track SPTE kinds
+  KVM: x86: fix nested guest live migration with PML
+  selftests: kvm: add test for dirty logging inside nested guests
 
-Rasmus
+ arch/x86/include/asm/kvm_host.h                    |   7 -
+ arch/x86/kvm/mmu.c                                 |  65 +++++--
+ tools/testing/selftests/kvm/Makefile               |   1 +
+ .../selftests/kvm/include/x86_64/processor.h       |   3 +
+ tools/testing/selftests/kvm/include/x86_64/vmx.h   |  14 ++
+ tools/testing/selftests/kvm/lib/kvm_util.c         |   2 +-
+ .../testing/selftests/kvm/lib/kvm_util_internal.h  |   3 +
+ tools/testing/selftests/kvm/lib/x86_64/vmx.c       | 201 ++++++++++++++++++++-
+ .../selftests/kvm/x86_64/vmx_dirty_log_test.c      | 156 ++++++++++++++++
+ 9 files changed, 426 insertions(+), 26 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/x86_64/vmx_dirty_log_test.c
+
+-- 
+1.8.3.1
+
