@@ -2,143 +2,316 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD900C388F3
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D518AC388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E65721655
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AA1F217D9
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 17:46:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569606406;
+	bh=WcEO23YAVLrDPnehWuLKxDFeVrU4c5TYJVFCM1t8jQ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EgW8dYAc2gCVxNrfoj/ygCL0bcBM+hNtR5TyojFYj8ehu+UOYyKPWXQPwmXwbbJ0L
+	 wlWfbBLdiMtjXAzTYP8VqLwRG/QFfCZy0r3nBw54WvWD7pBChmHJEhR5hMUuIEUeBt
+	 ZCl3141zjh5tgG3W4zkTjU1+09FvDtEXsevnYLOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbfI0Rp0 (ORCPT
+        id S1727969AbfI0Rqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 13:45:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38864 "EHLO mx1.redhat.com"
+        Fri, 27 Sep 2019 13:46:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726294AbfI0Rp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 13:45:26 -0400
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726321AbfI0Rqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 13:46:45 -0400
+Received: from localhost (unknown [62.119.166.9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5B365C05AA61
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 17:45:25 +0000 (UTC)
-Received: by mail-io1-f70.google.com with SMTP id k13so5511803ioc.11
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 10:45:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=V7uKVOUP48sjqm3uZXCLKF4/Ns/Wlt7x8/p5qhE25yM=;
-        b=ebtguJL8txKXer8YfaitvYmdU5bzXHZfmeOsAKAqDdci1Rmys0lJ4G1me/kujVTYOl
-         knsvL8n99b57Y25b9zXrdzbbMoH8II/Y2nbp2d1fEwW4gUJfkkbXM0inLroL0qnZpBe7
-         Z380yJNYKrHSoh1BcXpB1wKjyybsn7bcafbuT7SE5NgB3e4RWBzWPseMohzp8KsMaUHz
-         8BOzwKZ4Ry4a5uRYWJHppEt9vzN3xXRnky0D6oh2eZCszslmaaWrdApjP84OqbgLkhFP
-         oig/UjRAKUSCL6VEZPjZ0y04eR0HmDjTeC12/dURE4lidMy3egn/kmsXaLrS1WIVxng8
-         sTTQ==
-X-Gm-Message-State: APjAAAXV5cTvwmSRB3i0HnuASjDbu8x5X2mV7SmTVdZmivRH3z6sr+Hc
-        oUGr7w/Wa6UEIeO2Pf0xZE6nN29YD7pcavI4g264I6e1s/XhRqPXZ1cDdMLr2Xd8AjQmFIjxvrP
-        ZtOvfatjKfbcOLjMPfcwxV3Hc
-X-Received: by 2002:a6b:7b01:: with SMTP id l1mr9667887iop.292.1569606324583;
-        Fri, 27 Sep 2019 10:45:24 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxn9P3vvJuZThbXqohEVpw39+J3Lm89eYktjf2LzDdXdg38hErbsCdidVqxqFGbfNDqBwekMw==
-X-Received: by 2002:a6b:7b01:: with SMTP id l1mr9667854iop.292.1569606324228;
-        Fri, 27 Sep 2019 10:45:24 -0700 (PDT)
-Received: from rhel7lobe ([2600:6c64:4e80:f1:aa45:cafe:5682:368f])
-        by smtp.gmail.com with ESMTPSA id b7sm2529587iod.42.2019.09.27.10.45.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 27 Sep 2019 10:45:23 -0700 (PDT)
-Message-ID: <3a8ee584f9846fba94d98d0e6941fefdcbed5d71.camel@redhat.com>
-Subject: Re: [PATCH] scsi: core: Log SCSI command age with errors
-From:   Laurence Oberman <loberman@redhat.com>
-To:     Martin Wilck <mwilck@suse.de>,
-        "Milan P. Gandhi" <mgandhi@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
-Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com
-Date:   Fri, 27 Sep 2019 13:45:21 -0400
-In-Reply-To: <471732f03049a1528df1d144013d723041f0a419.camel@suse.de>
-References: <20190923060122.GA9603@machine1>
-         <471732f03049a1528df1d144013d723041f0a419.camel@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-2.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F7E721655;
+        Fri, 27 Sep 2019 17:46:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569606404;
+        bh=WcEO23YAVLrDPnehWuLKxDFeVrU4c5TYJVFCM1t8jQ8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kRx8jVYqdIa1zqHhO+pROkGgDo7HpdPlsIiMSdj7/XnPznJuRtxt/SzkBH9j1HjZH
+         dJXKuvEiUuX1xK7OPHHvCWCfNuyI5nDPAvp7PPSGHUQMyKbkwegCs5HeAXbfNWa1TL
+         dQ0cLDy9TPsFtbFLkLH8PHT0+bwuUDw4oKKn498U=
+Date:   Fri, 27 Sep 2019 19:46:33 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Akinobu Mita <akinobu.mita@gmail.com>
+Cc:     linux-leds@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v2 1/1] leds: remove PAGE_SIZE limit of
+ /sys/class/leds/<led>/trigger
+Message-ID: <20190927174633.GB1802011@kroah.com>
+References: <1568387004-3802-1-git-send-email-akinobu.mita@gmail.com>
+ <1568387004-3802-2-git-send-email-akinobu.mita@gmail.com>
+ <20190927063547.GA1786569@kroah.com>
+ <CAC5umyjdM1+4nPg_6UaCjcpikESamdA_ZpmP4Xfjx7_-1f=+0A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAC5umyjdM1+4nPg_6UaCjcpikESamdA_ZpmP4Xfjx7_-1f=+0A@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-09-27 at 17:26 +0200, Martin Wilck wrote:
-> On Mon, 2019-09-23 at 11:31 +0530,  Milan P. Gandhi wrote:
-> > Couple of users had requested to print the SCSI command age along 
-> > with command failure errors. This is a small change, but allows 
-> > users to get more important information about the command that was 
-> > failed, it would help the users in debugging the command failures:
-> > 
-> > Signed-off-by: Milan P. Gandhi <mgandhi@redhat.com>
-> > ---
-> > diff --git a/drivers/scsi/scsi_logging.c
-> > b/drivers/scsi/scsi_logging.c
-> > index ecc5918e372a..ca2182bc53c6 100644
-> > --- a/drivers/scsi/scsi_logging.c
-> > +++ b/drivers/scsi/scsi_logging.c
-> > @@ -437,6 +437,7 @@ void scsi_print_result(const struct scsi_cmnd
-> > *cmd, const char *msg,
-> >  	const char *mlret_string = scsi_mlreturn_string(disposition);
-> >  	const char *hb_string = scsi_hostbyte_string(cmd->result);
-> >  	const char *db_string = scsi_driverbyte_string(cmd->result);
-> > +	unsigned long cmd_age = (jiffies - cmd->jiffies_at_alloc) / HZ;
+On Sat, Sep 28, 2019 at 01:47:21AM +0900, Akinobu Mita wrote:
+> 2019年9月27日(金) 15:39 Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
+> >
+> > On Sat, Sep 14, 2019 at 12:03:24AM +0900, Akinobu Mita wrote:
+> > > Reading /sys/class/leds/<led>/trigger returns all available LED triggers.
+> > > However, the size of this file is limited to PAGE_SIZE because of the
+> > > limitation for sysfs attribute.
+> > >
+> > > Enabling LED CPU trigger on systems with thousands of CPUs easily hits
+> > > PAGE_SIZE limit, and makes it impossible to see all available LED triggers
+> > > and which trigger is currently activated.
+> > >
+> > > We work around it here by converting /sys/class/leds/<led>/trigger to
+> > > binary attribute, which is not limited by length. This is _not_ good
+> > > design, do not copy it.
+> > >
+> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> > > Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> > > Cc: Pavel Machek <pavel@ucw.cz>
+> > > Cc: Dan Murphy <dmurphy@ti.com>
+> > > Acked-by: Pavel Machek <pavel@ucw.cz>
+> > > Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+> > > ---
+> > >  drivers/leds/led-class.c    |  8 ++--
+> > >  drivers/leds/led-triggers.c | 90 ++++++++++++++++++++++++++++++++++-----------
+> > >  drivers/leds/leds.h         |  6 +++
+> > >  include/linux/leds.h        |  5 ---
+> > >  4 files changed, 79 insertions(+), 30 deletions(-)
+> > >
+> > > diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+> > > index 4793e77..8b5a1d1 100644
+> > > --- a/drivers/leds/led-class.c
+> > > +++ b/drivers/leds/led-class.c
+> > > @@ -73,13 +73,13 @@ static ssize_t max_brightness_show(struct device *dev,
+> > >  static DEVICE_ATTR_RO(max_brightness);
+> > >
+> > >  #ifdef CONFIG_LEDS_TRIGGERS
+> > > -static DEVICE_ATTR(trigger, 0644, led_trigger_show, led_trigger_store);
+> > > -static struct attribute *led_trigger_attrs[] = {
+> > > -     &dev_attr_trigger.attr,
+> > > +static BIN_ATTR(trigger, 0644, led_trigger_read, led_trigger_write, 0);
+> > > +static struct bin_attribute *led_trigger_bin_attrs[] = {
+> > > +     &bin_attr_trigger,
+> > >       NULL,
+> > >  };
+> > >  static const struct attribute_group led_trigger_group = {
+> > > -     .attrs = led_trigger_attrs,
+> > > +     .bin_attrs = led_trigger_bin_attrs,
+> > >  };
+> > >  #endif
+> > >
+> > > diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
+> > > index 8d11a5e..ed5a311 100644
+> > > --- a/drivers/leds/led-triggers.c
+> > > +++ b/drivers/leds/led-triggers.c
+> > > @@ -16,6 +16,7 @@
+> > >  #include <linux/rwsem.h>
+> > >  #include <linux/leds.h>
+> > >  #include <linux/slab.h>
+> > > +#include <linux/mm.h>
+> > >  #include "leds.h"
+> > >
+> > >  /*
+> > > @@ -26,9 +27,11 @@ LIST_HEAD(trigger_list);
+> > >
+> > >   /* Used by LED Class */
+> > >
+> > > -ssize_t led_trigger_store(struct device *dev, struct device_attribute *attr,
+> > > -             const char *buf, size_t count)
+> > > +ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
+> > > +                       struct bin_attribute *bin_attr, char *buf,
+> > > +                       loff_t pos, size_t count)
+> > >  {
+> > > +     struct device *dev = kobj_to_dev(kobj);
+> > >       struct led_classdev *led_cdev = dev_get_drvdata(dev);
+> > >       struct led_trigger *trig;
+> > >       int ret = count;
+> > > @@ -64,39 +67,84 @@ ssize_t led_trigger_store(struct device *dev, struct device_attribute *attr,
+> > >       mutex_unlock(&led_cdev->led_access);
+> > >       return ret;
+> > >  }
+> > > -EXPORT_SYMBOL_GPL(led_trigger_store);
+> > > +EXPORT_SYMBOL_GPL(led_trigger_write);
+> > >
+> > > -ssize_t led_trigger_show(struct device *dev, struct device_attribute *attr,
+> > > -             char *buf)
+> > > +__printf(4, 5)
+> > > +static int led_trigger_snprintf(char *buf, size_t size, bool query,
+> > > +                             const char *fmt, ...)
+> > > +{
+> > > +     va_list args;
+> > > +     int i;
+> > > +
+> > > +     va_start(args, fmt);
+> > > +     if (query)
+> > > +             i = vsnprintf(NULL, 0, fmt, args);
+> > > +     else
+> > > +             i = vscnprintf(buf, size, fmt, args);
+> > > +     va_end(args);
+> > > +
+> > > +     return i;
+> > > +}
+> >
+> > You only call this in one place, why is it needed like this?  The "old"
+> > code open-coded this, what is this helping with here?
+> >
+> > And what does "query" mean here?  I have no idea how that variable
+> > matters, or what it does.  Why not just test if buf is NULL or not if
+> > you don't want to use it?
+> >
+> > Ah, you are trying to see how "long" the buffer is going to be.  That
+> > makes more sense, but just trigger off of the NULL buffer or not, making
+> > this a bit more "obvious" what you are doing and not tieing two
+> > parameters to each other (meaning one always reflects the other one).
 > 
-> This comes down to pretty coarse time resolution, does it not? More
-> often than not, the time difference shown will be 0. I'd recommend at
-> least millisecond resolution.
-> 
-> >  
-> >  	logbuf = scsi_log_reserve_buffer(&logbuf_len);
-> >  	if (!logbuf)
-> > @@ -478,10 +479,15 @@ void scsi_print_result(const struct scsi_cmnd
-> > *cmd, const char *msg,
-> >  
-> >  	if (db_string)
-> >  		off += scnprintf(logbuf + off, logbuf_len - off,
-> > -				 "driverbyte=%s", db_string);
-> > +				 "driverbyte=%s ", db_string);
-> >  	else
-> >  		off += scnprintf(logbuf + off, logbuf_len - off,
-> > -				 "driverbyte=0x%02x", driver_byte(cmd-
-> > > result));
-> > 
-> > +				 "driverbyte=0x%02x ",
-> > +				 driver_byte(cmd->result));
-> > +
-> > +	off += scnprintf(logbuf + off, logbuf_len - off,
-> > +			 "cmd-age=%lus", cmd_age);
-> 
-> This is certainly helpful in some situations. Yet I am unsure if it
-> should *always* be printed. I wouldn't say it's as important as the 
-> other stuff scsi_print_result() provides. After all, by activating
-> MLQUEUE+MLCOMPLETE, the time on-wire can be extracted with better
-> accuracy from currently available logs. 
-> 
-> So perhaps make this depend on a module parameter?
-> 
-> Also, we should carefully ponder if we want to put this on the same
-> line as the driver byte, as users may have created scripts for
-> parsing
-> this output.
-> 
-> Regards,
-> Martin
-> 
-> 
-Hi Martin
+> We cannot simply replace the "query" by checking the buffer is NULL or not.
+> Because led_trigger_snprintf() is repeatedly called by led_trigger_format()
+> while increasing 'buf' and decreasing 'size' by the return value of
+> led_trigger_snprintf() every time.
 
-Agreed about log extraction, but turning that on with a busy workload
-in a production environment is not practical. We cant do it with
-systems with 1000's of luns and 1000's of IOPS/sec.
-Also second resolution is good enough for the debug we want to see.
+Odd, but ok, I'll trust you, this looks like very odd code :(
 
-Regards
-Laurence
+> > > +static int led_trigger_format(char *buf, size_t size, bool query,
+> > > +                           struct led_classdev *led_cdev)
+> > >  {
+> > > -     struct led_classdev *led_cdev = dev_get_drvdata(dev);
+> > >       struct led_trigger *trig;
+> > > -     int len = 0;
+> > > +     int len = led_trigger_snprintf(buf, size, query, "%s",
+> > > +                                    led_cdev->trigger ? "none" : "[none]");
+> > > +
+> > > +     list_for_each_entry(trig, &trigger_list, next_trig) {
+> > > +             bool hit = led_cdev->trigger &&
+> > > +                     !strcmp(led_cdev->trigger->name, trig->name);
+> > > +
+> > > +             len += led_trigger_snprintf(buf + len, size - len, query,
+> > > +                                         " %s%s%s", hit ? "[" : "",
+> > > +                                         trig->name, hit ? "]" : "");
+> > > +     }
+> > > +
+> > > +     len += led_trigger_snprintf(buf + len, size - len, query, "\n");
+> > > +
+> > > +     return len;
+> > > +}
+> > > +
+> > > +/*
+> > > + * It was stupid to create 10000 cpu triggers, but we are stuck with it now.
+> > > + * Don't make that mistake again. We work around it here by creating binary
+> > > + * attribute, which is not limited by length. This is _not_ good design, do not
+> > > + * copy it.
+> > > + */
+> > > +ssize_t led_trigger_read(struct file *filp, struct kobject *kobj,
+> > > +                     struct bin_attribute *attr, char *buf,
+> > > +                     loff_t pos, size_t count)
+> > > +{
+> > > +     struct device *dev = kobj_to_dev(kobj);
+> > > +     struct led_classdev *led_cdev = dev_get_drvdata(dev);
+> > > +     void *data;
+> > > +     int len;
+> > >
+> > >       down_read(&triggers_list_lock);
+> > >       down_read(&led_cdev->trigger_lock);
+> > >
+> > > -     if (!led_cdev->trigger)
+> > > -             len += scnprintf(buf+len, PAGE_SIZE - len, "[none] ");
+> > > +     len = led_trigger_format(NULL, 0, true, led_cdev);
+> > > +     data = kvmalloc(len + 1, GFP_KERNEL);
+> >
+> > Why kvmalloc() and not just kmalloc()?  How big is this buffer you are
+> > expecting to have here?
+> 
+> The ledtrig-cpu supports upto 9999 cpus.  If all these cpus were available,
+> the buffer size would be 78,890 bytes.
+> (for i in `seq 0 9999`;do echo -n " cpu$i"; done | wc -c)
+> 
+> The intention of this kvmalloc() allocation is to avoid costly allocation
+> if possible.
 
+Ah, forgot it could get that big.
+
+> > > +     if (data)
+> > > +             len = led_trigger_format(data, len + 1, false, led_cdev);
+> > >       else
+> > > -             len += scnprintf(buf+len, PAGE_SIZE - len, "none ");
+> > > +             len = -ENOMEM;
+> > >
+> > > -     list_for_each_entry(trig, &trigger_list, next_trig) {
+> > > -             if (led_cdev->trigger && !strcmp(led_cdev->trigger->name,
+> > > -                                                     trig->name))
+> > > -                     len += scnprintf(buf+len, PAGE_SIZE - len, "[%s] ",
+> > > -                                      trig->name);
+> > > -             else
+> > > -                     len += scnprintf(buf+len, PAGE_SIZE - len, "%s ",
+> > > -                                      trig->name);
+> > > -     }
+> > >       up_read(&led_cdev->trigger_lock);
+> > >       up_read(&triggers_list_lock);
+> >
+> > Two locks?  Why not 3?  5?  How about just 1?  :)
+> 
+> I don't touch these locks in this patch :)
+> 
+> Locking both locks seems to be necessary to prevent someone from changing
+> trigger_list or led_cdev->trigger.
+
+Ok, it just looked odd to me.
+
+> > > -     len += scnprintf(len+buf, PAGE_SIZE - len, "\n");
+> > > +     if (len < 0)
+> > > +             return len;
+> >
+> > You just leaked data if led_trigger_format() returned an error :(
+> >
+> > Just return -ENOMEM above if !data, which makes this much simpler.
+> 
+> We are holding the two locks, so we need to release them before return.
+> Which one do you prefer?
+> 
+>         ...
+>         data = kvmalloc(len + 1, GFP_KERNEL);
+>         if (data)
+>                 len = led_trigger_format(data, len + 1, false, led_cdev);
+>         else
+>                 len = -ENOMEM;
+> 
+>         up_read(&led_cdev->trigger_lock);
+>         up_read(&triggers_list_lock);
+> 
+>         if (len < 0)
+>                 return len;
+> 
+> vs.
+> 
+>         ...
+>         data = kvmalloc(len + 1, GFP_KERNEL);
+>         if (!data) {
+>                 up_read(&led_cdev->trigger_lock);
+>                 up_read(&triggers_list_lock);
+>                 return -ENOMEM;
+>         }
+>         len = led_trigger_format(data, len + 1, false, led_cdev);
+> 
+>         up_read(&led_cdev->trigger_lock);
+>         up_read(&triggers_list_lock);
+
+I don't care, as long as you do not leak memory I'm happy :)
+
+thanks,
+
+greg k-h
