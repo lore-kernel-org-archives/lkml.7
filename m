@@ -2,571 +2,192 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB30AC4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 11:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7A9C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 11:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 974AE217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 11:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 524622146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 11:16:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nwwqC8OY"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="J4eSe9es"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727259AbfI0LP4 (ORCPT
+        id S1727381AbfI0LQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 07:15:56 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55907 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727110AbfI0LPx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 07:15:53 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a6so6133626wma.5;
-        Fri, 27 Sep 2019 04:15:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=zLN+r2W5U/KLTUp8ommfyNpxfdEpCNafvs1bua4gTA8=;
-        b=nwwqC8OY24xiamiODqeJXd5I2gdCe/iv2w8NfaWABcSBuEO9uz5KS0hs2fqPQEroj+
-         FL+yXq296w5dpkkPF6syb9BvDrM1YlpdTNlQU/fGkMVfGKa27C8I9rp6F1ggiADd1Jc8
-         zoX6Czzqip1hbgcu1AZv7/cV/v3BL5XOCbkyCcATdAaXOl/TnQEV4Jy+yY5JsubjGNpE
-         6yxGX7bjqrONag1eFQU0Brkc/sUzlePiVsezy7NKWIe3safddzd4GEysccX8Vetrr2ZS
-         HfVg4rVeCxa2xxAwkD+jKpgQHnv1eCkkKOJiatGUBgC6d2PwreeABhpD2FNURqWIbI1h
-         VsAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=zLN+r2W5U/KLTUp8ommfyNpxfdEpCNafvs1bua4gTA8=;
-        b=a3m+FUI2ti104C3DuvVb2OJ9toOIBn2Vu3HXgP2f8jInNz6GEX5JZ/JP0cuKDC7KMC
-         U+7CGn4+pKIb9R4JiKfoVdlNFJ4UADu/3eDHMBRl62QE3xyV4sBwHj+i/4xffyvsbp4U
-         QYA/OsKGeUwJbOn8sb4NW0Y5hbeEHBXWVDqw/wZSnvHxzrVHUs3j5Y0W5jEwoH7CH9gd
-         sWTdtfygGet0JM1Fy3wGxd+oL7Df6TdHTGUcZkwiJq7R/mLS2h/DOy/+4ur/oRKlog/s
-         3R0ZttKx+H8MrNT2EDbOqKd7TsrD2bIGZUaZTUKQWmtTuMJBApcjkccfdoB6qVmn8xAT
-         Uzlg==
-X-Gm-Message-State: APjAAAXb6Goq/pWB4OvrZHbn3LA0D00z+JWva1vOKmlGPr6e1GnkLlfd
-        o1uYilzTaGBWtacVlsQMuvNW5VlC
-X-Google-Smtp-Source: APXvYqzWECk7Nzgmau4IJJlx7w6U8AghPxa0MEqugR+6A9gi+OVlGeFSPBKx074xq/frqammSFUD4A==
-X-Received: by 2002:a05:600c:1089:: with SMTP id e9mr7019781wmd.176.1569582949985;
-        Fri, 27 Sep 2019 04:15:49 -0700 (PDT)
-Received: from 640k.lan ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id r28sm2913848wrr.94.2019.09.27.04.15.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 27 Sep 2019 04:15:49 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Junaid Shahid <junaids@google.com>
-Subject: [PATCH v2 3/3] selftests: kvm: add test for dirty logging inside nested guests
-Date:   Fri, 27 Sep 2019 13:15:43 +0200
-Message-Id: <1569582943-13476-4-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1569582943-13476-1-git-send-email-pbonzini@redhat.com>
-References: <1569582943-13476-1-git-send-email-pbonzini@redhat.com>
+        Fri, 27 Sep 2019 07:16:31 -0400
+Received: from mail-eopbgr140050.outbound.protection.outlook.com ([40.107.14.50]:10471
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727343AbfI0LQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 07:16:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iF42uAvftLYOHCAOrVk+WeuxY9IvFvehx7NNZV8EbogNydcXPjdmzPnF4lTE14339l0Q8snbynbIEdvIGZMZqlTQigIQbRZOaW+MEU26l3il4O/C11G118Emt/EJWEaPpCRRX88mxuRx8MYkpuboMor4Az/k6uDF1cH2i1RZ/jvyJUi6OU9SuxyT5+FEcdm0ZBXRSknB3JbRE1DivJw9uGlkSpFfafxd4PprTk9KFRxz3NFqF5F+ZGzPk86aY9irhfRiWG8JiGLgX9ehlqJH+komC6vHkBO9QDisQ9WdOCZc5CrGpQvMWpftSbSuOcJB+KsDtTXN+MuxGsyh66Y5cw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QCKUUWno90d2RVTD0wJMjtko4AQN5aEb67px0CqKhn4=;
+ b=FXB8pi3DBbzKa6DwAm+oEd+eQ0+ONo2xRdXcx/kFdr3pb+PH11YcgWbMeAPRQ7hTWwBtJCbY8D+6fcYfQiSfvPfC9O8VSfZt4FcuaVw6ZHJj2GCb98dy+TzzyQU9AY0umlNJFhMPDu2/fX/jweVbnOzBlrFHoAt1d6nGUhinGFPACsVRyOajsQ5/P22eUjLV+ZbdfoBnlniKpooQQZpqzWWX0Obvv0iwd+jq0fyjMeS0L0KWrJN9gfYLyuNMWxdG/BzB6gfBhaZUFTbzUl4UeYUp7EShLDWD807pD2yZ1L44dt/oLU5hLE2TjEaan3HW4j31vdCPHdd+wPUvG0PCrg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QCKUUWno90d2RVTD0wJMjtko4AQN5aEb67px0CqKhn4=;
+ b=J4eSe9esYQPsys9LN6S5t/iS3RlnCkENFsYH0EnMlijvRDC4yHKHdfBTchOfgBmbk8PwsdgqaRxEF6WvsX39+wwF9nZSImhnxoEbEW7/AFskpxHr37MHnxucqrH1eBhZxYc3s2zUEvm9Lyesh9BFBwGf++k/gW/CtNnZ1uDz+jw=
+Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
+ VI1PR04MB5311.eurprd04.prod.outlook.com (20.177.52.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.21; Fri, 27 Sep 2019 11:16:24 +0000
+Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
+ ([fe80::15cd:b6e7:5016:ae8]) by VI1PR04MB7023.eurprd04.prod.outlook.com
+ ([fe80::15cd:b6e7:5016:ae8%2]) with mapi id 15.20.2284.023; Fri, 27 Sep 2019
+ 11:16:24 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Aisheng Dong <aisheng.dong@nxp.com>
+CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH] firmware: imx: Skip return value check for some special
+ SCU firmware APIs
+Thread-Topic: [PATCH] firmware: imx: Skip return value check for some special
+ SCU firmware APIs
+Thread-Index: AQHVc4lSn4nBMGf230anvZh0PllY6g==
+Date:   Fri, 27 Sep 2019 11:16:24 +0000
+Message-ID: <VI1PR04MB70236265478233D8025706F1EE810@VI1PR04MB7023.eurprd04.prod.outlook.com>
+References: <1569406066-16626-1-git-send-email-Anson.Huang@nxp.com>
+ <20190926075914.i7tsd3cbpitrqe4q@pengutronix.de>
+ <DB3PR0402MB391683202692BEAE4D2CD9C1F5860@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <20190926100558.egils3ds37m3s5wo@pengutronix.de>
+ <VI1PR04MB702336F648EA1BF0E4AC584BEE860@VI1PR04MB7023.eurprd04.prod.outlook.com>
+ <DB3PR0402MB391675F9BF6FCA315B124BEBF5810@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 076cc439-c9b9-4f06-cacc-08d7433c2246
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5311;
+x-ms-traffictypediagnostic: VI1PR04MB5311:|VI1PR04MB5311:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB53117895A525E8FB7BB57AFEEE810@VI1PR04MB5311.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0173C6D4D5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(376002)(39860400002)(136003)(366004)(199004)(189003)(74316002)(7736002)(5660300002)(2906002)(6436002)(229853002)(6506007)(256004)(446003)(99286004)(110136005)(53546011)(186003)(54906003)(102836004)(26005)(86362001)(52536014)(4326008)(6636002)(55016002)(81156014)(66066001)(8676002)(81166006)(14454004)(6116002)(3846002)(33656002)(66946007)(66476007)(76116006)(6246003)(64756008)(7696005)(8936002)(9686003)(66556008)(66446008)(91956017)(76176011)(71190400001)(71200400001)(316002)(25786009)(486006)(476003)(478600001)(44832011)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5311;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 7Se0PzbHD0S7GnMiVkMoS55SQ+qMODiFil5D9WABhQYxyz6VSMKYkVJKDEOXoRlnm0wN3Jpz3hxX3Ir4mfjEIsmrjENd0t41WAPdIpgr4LIlf6QKWjVbjaXkacYgZgsD1URQEACHg/p1oi4tkdvhDSqulRmokUvW/HELiBESHZtwwdX0xAo2rRvuEI1u6ez/1c6SOeXdjpYoaDsm2tVTyqwvsc16mK9YDjM1AXlMbNdSONrAyt8pJy54BoJtkA3YIclrkwbN4E5PRV8HFp9ESmbkOPneuEN5U+oIoN81SP5FiaX4dN0r/F+NoGmyXHWo6CwDjAkMd/Aaww9/oY+GjmsMOMV5uSU/nEcOnpvQHEoZCgZ/hIkuMEtb88ixc4ZWIunjGIrJh/JYs2w5AtpJ7Sl6N8G/kIE5xGlVVBPwow4=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 076cc439-c9b9-4f06-cacc-08d7433c2246
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Sep 2019 11:16:24.7027
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: x3u2QcDEU8DV3y9oCj3+7vgizJMVzzLCDbLkCGmx+KR4VKCn2aWhxPWQ12qz229wXggkAQCIGJ6kE9rtwV2yhA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5311
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check that accesses by nested guests are logged according to the
-L1 physical addresses rather than L2.
-
-Most of the patch is really adding EPT support to the testing
-framework.
-
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- tools/testing/selftests/kvm/Makefile               |   1 +
- .../selftests/kvm/include/x86_64/processor.h       |   3 +
- tools/testing/selftests/kvm/include/x86_64/vmx.h   |  14 ++
- tools/testing/selftests/kvm/lib/kvm_util.c         |   2 +-
- .../testing/selftests/kvm/lib/kvm_util_internal.h  |   3 +
- tools/testing/selftests/kvm/lib/x86_64/vmx.c       | 201 ++++++++++++++++++++-
- .../selftests/kvm/x86_64/vmx_dirty_log_test.c      | 156 ++++++++++++++++
- 7 files changed, 377 insertions(+), 3 deletions(-)
- create mode 100644 tools/testing/selftests/kvm/x86_64/vmx_dirty_log_test.c
-
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index 62c591f87dab..fd84b7a78dcf 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -22,6 +22,7 @@ TEST_GEN_PROGS_x86_64 += x86_64/smm_test
- TEST_GEN_PROGS_x86_64 += x86_64/state_test
- TEST_GEN_PROGS_x86_64 += x86_64/sync_regs_test
- TEST_GEN_PROGS_x86_64 += x86_64/vmx_close_while_nested_test
-+TEST_GEN_PROGS_x86_64 += x86_64/vmx_dirty_log_test
- TEST_GEN_PROGS_x86_64 += x86_64/vmx_set_nested_state_test
- TEST_GEN_PROGS_x86_64 += x86_64/vmx_tsc_adjust_test
- TEST_GEN_PROGS_x86_64 += clear_dirty_log_test
-diff --git a/tools/testing/selftests/kvm/include/x86_64/processor.h b/tools/testing/selftests/kvm/include/x86_64/processor.h
-index 0c17f2ee685e..ff234018219c 100644
---- a/tools/testing/selftests/kvm/include/x86_64/processor.h
-+++ b/tools/testing/selftests/kvm/include/x86_64/processor.h
-@@ -1083,6 +1083,9 @@ void vcpu_set_msr(struct kvm_vm *vm, uint32_t vcpuid, uint64_t msr_index,
- #define VMX_BASIC_MEM_TYPE_WB	6LLU
- #define VMX_BASIC_INOUT		0x0040000000000000LLU
- 
-+/* VMX_EPT_VPID_CAP bits */
-+#define VMX_EPT_VPID_CAP_AD_BITS	(1ULL << 21)
-+
- /* MSR_IA32_VMX_MISC bits */
- #define MSR_IA32_VMX_MISC_VMWRITE_SHADOW_RO_FIELDS (1ULL << 29)
- #define MSR_IA32_VMX_MISC_PREEMPTION_TIMER_SCALE   0x1F
-diff --git a/tools/testing/selftests/kvm/include/x86_64/vmx.h b/tools/testing/selftests/kvm/include/x86_64/vmx.h
-index 69b17055f63d..6ae5a47fe067 100644
---- a/tools/testing/selftests/kvm/include/x86_64/vmx.h
-+++ b/tools/testing/selftests/kvm/include/x86_64/vmx.h
-@@ -569,6 +569,10 @@ struct vmx_pages {
- 	void *enlightened_vmcs_hva;
- 	uint64_t enlightened_vmcs_gpa;
- 	void *enlightened_vmcs;
-+
-+	void *eptp_hva;
-+	uint64_t eptp_gpa;
-+	void *eptp;
- };
- 
- struct vmx_pages *vcpu_alloc_vmx(struct kvm_vm *vm, vm_vaddr_t *p_vmx_gva);
-@@ -576,4 +580,14 @@ struct vmx_pages {
- void prepare_vmcs(struct vmx_pages *vmx, void *guest_rip, void *guest_rsp);
- bool load_vmcs(struct vmx_pages *vmx);
- 
-+void nested_pg_map(struct vmx_pages *vmx, struct kvm_vm *vm,
-+		   uint64_t nested_paddr, uint64_t paddr, uint32_t eptp_memslot);
-+void nested_map(struct vmx_pages *vmx, struct kvm_vm *vm,
-+		 uint64_t nested_paddr, uint64_t paddr, uint64_t size,
-+		 uint32_t eptp_memslot);
-+void nested_map_memslot(struct vmx_pages *vmx, struct kvm_vm *vm,
-+			uint32_t memslot, uint32_t eptp_memslot);
-+void prepare_eptp(struct vmx_pages *vmx, struct kvm_vm *vm,
-+		  uint32_t eptp_memslot);
-+
- #endif /* SELFTEST_KVM_VMX_H */
-diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index 80a338b5403c..41cf45416060 100644
---- a/tools/testing/selftests/kvm/lib/kvm_util.c
-+++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -705,7 +705,7 @@ void vm_userspace_mem_region_add(struct kvm_vm *vm,
-  *   on error (e.g. currently no memory region using memslot as a KVM
-  *   memory slot ID).
-  */
--static struct userspace_mem_region *
-+struct userspace_mem_region *
- memslot2region(struct kvm_vm *vm, uint32_t memslot)
- {
- 	struct userspace_mem_region *region;
-diff --git a/tools/testing/selftests/kvm/lib/kvm_util_internal.h b/tools/testing/selftests/kvm/lib/kvm_util_internal.h
-index f36262e0f655..ac50c42750cf 100644
---- a/tools/testing/selftests/kvm/lib/kvm_util_internal.h
-+++ b/tools/testing/selftests/kvm/lib/kvm_util_internal.h
-@@ -68,4 +68,7 @@ struct kvm_vm {
- void regs_dump(FILE *stream, struct kvm_regs *regs, uint8_t indent);
- void sregs_dump(FILE *stream, struct kvm_sregs *sregs, uint8_t indent);
- 
-+struct userspace_mem_region *
-+memslot2region(struct kvm_vm *vm, uint32_t memslot);
-+
- #endif /* SELFTEST_KVM_UTIL_INTERNAL_H */
-diff --git a/tools/testing/selftests/kvm/lib/x86_64/vmx.c b/tools/testing/selftests/kvm/lib/x86_64/vmx.c
-index 9cef0455b819..fab8f6b0bf52 100644
---- a/tools/testing/selftests/kvm/lib/x86_64/vmx.c
-+++ b/tools/testing/selftests/kvm/lib/x86_64/vmx.c
-@@ -7,11 +7,39 @@
- 
- #include "test_util.h"
- #include "kvm_util.h"
-+#include "../kvm_util_internal.h"
- #include "processor.h"
- #include "vmx.h"
- 
-+#define PAGE_SHIFT_4K  12
-+
-+#define KVM_EPT_PAGE_TABLE_MIN_PADDR 0x1c0000
-+
- bool enable_evmcs;
- 
-+struct eptPageTableEntry {
-+	uint64_t readable:1;
-+	uint64_t writable:1;
-+	uint64_t executable:1;
-+	uint64_t memory_type:3;
-+	uint64_t ignore_pat:1;
-+	uint64_t page_size:1;
-+	uint64_t accessed:1;
-+	uint64_t dirty:1;
-+	uint64_t ignored_11_10:2;
-+	uint64_t address:40;
-+	uint64_t ignored_62_52:11;
-+	uint64_t suppress_ve:1;
-+};
-+
-+struct eptPageTablePointer {
-+	uint64_t memory_type:3;
-+	uint64_t page_walk_length:3;
-+	uint64_t ad_enabled:1;
-+	uint64_t reserved_11_07:5;
-+	uint64_t address:40;
-+	uint64_t reserved_63_52:12;
-+};
- int vcpu_enable_evmcs(struct kvm_vm *vm, int vcpu_id)
- {
- 	uint16_t evmcs_ver;
-@@ -174,15 +202,35 @@ bool load_vmcs(struct vmx_pages *vmx)
-  */
- static inline void init_vmcs_control_fields(struct vmx_pages *vmx)
- {
-+	uint32_t sec_exec_ctl = 0;
-+
- 	vmwrite(VIRTUAL_PROCESSOR_ID, 0);
- 	vmwrite(POSTED_INTR_NV, 0);
- 
- 	vmwrite(PIN_BASED_VM_EXEC_CONTROL, rdmsr(MSR_IA32_VMX_TRUE_PINBASED_CTLS));
--	if (!vmwrite(SECONDARY_VM_EXEC_CONTROL, 0))
-+
-+	if (vmx->eptp_gpa) {
-+		uint64_t ept_paddr;
-+		struct eptPageTablePointer eptp = {
-+			.memory_type = VMX_BASIC_MEM_TYPE_WB,
-+			.page_walk_length = 3, /* + 1 */
-+			.ad_enabled = !!(rdmsr(MSR_IA32_VMX_EPT_VPID_CAP) & VMX_EPT_VPID_CAP_AD_BITS),
-+			.address = vmx->eptp_gpa >> PAGE_SHIFT_4K,
-+		};
-+
-+		memcpy(&ept_paddr, &eptp, sizeof(ept_paddr));
-+		vmwrite(EPT_POINTER, ept_paddr);
-+		sec_exec_ctl |= SECONDARY_EXEC_ENABLE_EPT;
-+	}
-+
-+	if (!vmwrite(SECONDARY_VM_EXEC_CONTROL, sec_exec_ctl))
- 		vmwrite(CPU_BASED_VM_EXEC_CONTROL,
- 			rdmsr(MSR_IA32_VMX_TRUE_PROCBASED_CTLS) | CPU_BASED_ACTIVATE_SECONDARY_CONTROLS);
--	else
-+	else {
- 		vmwrite(CPU_BASED_VM_EXEC_CONTROL, rdmsr(MSR_IA32_VMX_TRUE_PROCBASED_CTLS));
-+		GUEST_ASSERT(!sec_exec_ctl);
-+	}
-+
- 	vmwrite(EXCEPTION_BITMAP, 0);
- 	vmwrite(PAGE_FAULT_ERROR_CODE_MASK, 0);
- 	vmwrite(PAGE_FAULT_ERROR_CODE_MATCH, -1); /* Never match */
-@@ -327,3 +375,152 @@ void prepare_vmcs(struct vmx_pages *vmx, void *guest_rip, void *guest_rsp)
- 	init_vmcs_host_state();
- 	init_vmcs_guest_state(guest_rip, guest_rsp);
- }
-+
-+void nested_pg_map(struct vmx_pages *vmx, struct kvm_vm *vm,
-+	 	   uint64_t nested_paddr, uint64_t paddr, uint32_t eptp_memslot)
-+{
-+	uint16_t index[4];
-+	struct eptPageTableEntry *pml4e;
-+
-+	TEST_ASSERT(vm->mode == VM_MODE_PXXV48_4K, "Attempt to use "
-+		    "unknown or unsupported guest mode, mode: 0x%x", vm->mode);
-+
-+	TEST_ASSERT((nested_paddr % vm->page_size) == 0,
-+		    "Nested physical address not on page boundary,\n"
-+		    "  nested_paddr: 0x%lx vm->page_size: 0x%x",
-+		    nested_paddr, vm->page_size);
-+	TEST_ASSERT((nested_paddr >> vm->page_shift) <= vm->max_gfn,
-+		    "Physical address beyond beyond maximum supported,\n"
-+		    "  nested_paddr: 0x%lx vm->max_gfn: 0x%lx vm->page_size: 0x%x",
-+		    paddr, vm->max_gfn, vm->page_size);
-+	TEST_ASSERT((paddr % vm->page_size) == 0,
-+		    "Physical address not on page boundary,\n"
-+		    "  paddr: 0x%lx vm->page_size: 0x%x",
-+		    paddr, vm->page_size);
-+	TEST_ASSERT((paddr >> vm->page_shift) <= vm->max_gfn,
-+		    "Physical address beyond beyond maximum supported,\n"
-+		    "  paddr: 0x%lx vm->max_gfn: 0x%lx vm->page_size: 0x%x",
-+		    paddr, vm->max_gfn, vm->page_size);
-+
-+	index[0] = (nested_paddr >> 12) & 0x1ffu;
-+	index[1] = (nested_paddr >> 21) & 0x1ffu;
-+	index[2] = (nested_paddr >> 30) & 0x1ffu;
-+	index[3] = (nested_paddr >> 39) & 0x1ffu;
-+
-+	/* Allocate page directory pointer table if not present. */
-+	pml4e = vmx->eptp_hva;
-+	if (!pml4e[index[3]].readable) {
-+		pml4e[index[3]].address = vm_phy_page_alloc(vm,
-+			  KVM_EPT_PAGE_TABLE_MIN_PADDR, eptp_memslot)
-+			>> vm->page_shift;
-+		pml4e[index[3]].writable = true;
-+		pml4e[index[3]].readable = true;
-+		pml4e[index[3]].executable = true;
-+	}
-+
-+	/* Allocate page directory table if not present. */
-+	struct eptPageTableEntry *pdpe;
-+	pdpe = addr_gpa2hva(vm, pml4e[index[3]].address * vm->page_size);
-+	if (!pdpe[index[2]].readable) {
-+		pdpe[index[2]].address = vm_phy_page_alloc(vm,
-+			  KVM_EPT_PAGE_TABLE_MIN_PADDR, eptp_memslot)
-+			>> vm->page_shift;
-+		pdpe[index[2]].writable = true;
-+		pdpe[index[2]].readable = true;
-+		pdpe[index[2]].executable = true;
-+	}
-+
-+	/* Allocate page table if not present. */
-+	struct eptPageTableEntry *pde;
-+	pde = addr_gpa2hva(vm, pdpe[index[2]].address * vm->page_size);
-+	if (!pde[index[1]].readable) {
-+		pde[index[1]].address = vm_phy_page_alloc(vm,
-+			  KVM_EPT_PAGE_TABLE_MIN_PADDR, eptp_memslot)
-+			>> vm->page_shift;
-+		pde[index[1]].writable = true;
-+		pde[index[1]].readable = true;
-+		pde[index[1]].executable = true;
-+	}
-+
-+	/* Fill in page table entry. */
-+	struct eptPageTableEntry *pte;
-+	pte = addr_gpa2hva(vm, pde[index[1]].address * vm->page_size);
-+	pte[index[0]].address = paddr >> vm->page_shift;
-+	pte[index[0]].writable = true;
-+	pte[index[0]].readable = true;
-+	pte[index[0]].executable = true;
-+
-+	/*
-+	 * For now mark these as accessed and dirty because the only
-+	 * testcase we have needs that.  Can be reconsidered later.
-+	 */
-+	pte[index[0]].accessed = true;
-+	pte[index[0]].dirty = true;
-+}
-+
-+/*
-+ * Map a range of EPT guest physical addresses to the VM's physical address
-+ *
-+ * Input Args:
-+ *   vm - Virtual Machine
-+ *   nested_paddr - Nested guest physical address to map
-+ *   paddr - VM Physical Address
-+ *   size - The size of the range to map
-+ *   eptp_memslot - Memory region slot for new virtual translation tables
-+ *
-+ * Output Args: None
-+ *
-+ * Return: None
-+ *
-+ * Within the VM given by vm, creates a nested guest translation for the
-+ * page range starting at nested_paddr to the page range starting at paddr.
-+ */
-+void nested_map(struct vmx_pages *vmx, struct kvm_vm *vm,
-+		uint64_t nested_paddr, uint64_t paddr, uint64_t size,
-+		uint32_t eptp_memslot)
-+{
-+	size_t page_size = vm->page_size;
-+	size_t npages = size / page_size;
-+
-+	TEST_ASSERT(nested_paddr + size > nested_paddr, "Vaddr overflow");
-+	TEST_ASSERT(paddr + size > paddr, "Paddr overflow");
-+
-+	while (npages--) {
-+		nested_pg_map(vmx, vm, nested_paddr, paddr, eptp_memslot);
-+		nested_paddr += page_size;
-+		paddr += page_size;
-+	}
-+}
-+
-+/* Prepare an identity extended page table that maps all the
-+ * physical pages in VM.
-+ */
-+void nested_map_memslot(struct vmx_pages *vmx, struct kvm_vm *vm,
-+			uint32_t memslot, uint32_t eptp_memslot)
-+{
-+	sparsebit_idx_t i, last;
-+	struct userspace_mem_region *region =
-+		memslot2region(vm, memslot);
-+
-+	i = (region->region.guest_phys_addr >> vm->page_shift) - 1;
-+	last = i + (region->region.memory_size >> vm->page_shift);
-+	for (;;) {
-+		i = sparsebit_next_clear(region->unused_phy_pages, i);
-+		if (i > last)
-+			break;
-+
-+		nested_map(vmx, vm,
-+			   (uint64_t)i << vm->page_shift,
-+			   (uint64_t)i << vm->page_shift,
-+			   1 << vm->page_shift,
-+			   eptp_memslot);
-+	}
-+}
-+
-+void prepare_eptp(struct vmx_pages *vmx, struct kvm_vm *vm,
-+		  uint32_t eptp_memslot)
-+{
-+	vmx->eptp = (void *)vm_vaddr_alloc(vm, getpagesize(), 0x10000, 0, 0);
-+	vmx->eptp_hva = addr_gva2hva(vm, (uintptr_t)vmx->eptp);
-+	vmx->eptp_gpa = addr_gva2gpa(vm, (uintptr_t)vmx->eptp);
-+}
-diff --git a/tools/testing/selftests/kvm/x86_64/vmx_dirty_log_test.c b/tools/testing/selftests/kvm/x86_64/vmx_dirty_log_test.c
-new file mode 100644
-index 000000000000..0bca1cfe2c1e
---- /dev/null
-+++ b/tools/testing/selftests/kvm/x86_64/vmx_dirty_log_test.c
-@@ -0,0 +1,156 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * KVM dirty page logging test
-+ *
-+ * Copyright (C) 2018, Red Hat, Inc.
-+ */
-+
-+#define _GNU_SOURCE /* for program_invocation_name */
-+
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <linux/bitmap.h>
-+#include <linux/bitops.h>
-+
-+#include "test_util.h"
-+#include "kvm_util.h"
-+#include "processor.h"
-+#include "vmx.h"
-+
-+#define VCPU_ID				1
-+
-+/* The memory slot index to track dirty pages */
-+#define TEST_MEM_SLOT_INDEX		1
-+#define TEST_MEM_SIZE			3
-+
-+/* L1 guest test virtual memory offset */
-+#define GUEST_TEST_MEM			0xc0000000
-+
-+/* L2 guest test virtual memory offset */
-+#define NESTED_TEST_MEM1		0xc0001000
-+#define NESTED_TEST_MEM2		0xc0002000
-+
-+static void l2_guest_code(void)
-+{
-+	*(volatile uint64_t *)NESTED_TEST_MEM1;
-+	*(volatile uint64_t *)NESTED_TEST_MEM1 = 1;
-+	GUEST_SYNC(true);
-+	GUEST_SYNC(false);
-+
-+	*(volatile uint64_t *)NESTED_TEST_MEM2 = 1;
-+	GUEST_SYNC(true);
-+	*(volatile uint64_t *)NESTED_TEST_MEM2 = 1;
-+	GUEST_SYNC(true);
-+	GUEST_SYNC(false);
-+
-+	/* Exit to L1 and never come back.  */
-+	vmcall();
-+}
-+
-+void l1_guest_code(struct vmx_pages *vmx)
-+{
-+#define L2_GUEST_STACK_SIZE 64
-+	unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
-+
-+	GUEST_ASSERT(vmx->vmcs_gpa);
-+	GUEST_ASSERT(prepare_for_vmx_operation(vmx));
-+	GUEST_ASSERT(load_vmcs(vmx));
-+
-+	prepare_vmcs(vmx, l2_guest_code,
-+		     &l2_guest_stack[L2_GUEST_STACK_SIZE]);
-+
-+	GUEST_SYNC(false);
-+	GUEST_ASSERT(!vmlaunch());
-+	GUEST_SYNC(false);
-+	GUEST_ASSERT(vmreadz(VM_EXIT_REASON) == EXIT_REASON_VMCALL);
-+	GUEST_DONE();
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	vm_vaddr_t vmx_pages_gva = 0;
-+	struct vmx_pages *vmx;
-+	unsigned long *bmap;
-+	uint64_t *host_test_mem;
-+
-+	struct kvm_vm *vm;
-+	struct kvm_run *run;
-+	struct ucall uc;
-+	bool done = false;
-+
-+	/* Create VM */
-+	vm = vm_create_default(VCPU_ID, 0, l1_guest_code);
-+	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
-+	vmx = vcpu_alloc_vmx(vm, &vmx_pages_gva);
-+	vcpu_args_set(vm, VCPU_ID, 1, vmx_pages_gva);
-+	run = vcpu_state(vm, VCPU_ID);
-+
-+	/* Add an extra memory slot for testing dirty logging */
-+	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS,
-+				    GUEST_TEST_MEM,
-+				    TEST_MEM_SLOT_INDEX,
-+				    TEST_MEM_SIZE,
-+				    KVM_MEM_LOG_DIRTY_PAGES);
-+
-+	/*
-+	 * Add an identity map for GVA range [0xc0000000, 0xc0002000).  This
-+	 * affects both L1 and L2.  However...
-+	 */
-+	virt_map(vm, GUEST_TEST_MEM, GUEST_TEST_MEM,
-+		 TEST_MEM_SIZE * 4096, 0);
-+
-+	/*
-+	 * ... pages in the L2 GPA range [0xc0001000, 0xc0003000) will map to
-+	 * 0xc0000000.
-+	 *
-+	 * Note that prepare_eptp should be called only L1's GPA map is done,
-+	 * meaning after the last call to virt_map.
-+	 */
-+	prepare_eptp(vmx, vm, 0);
-+	nested_map_memslot(vmx, vm, 0, 0);
-+	nested_map(vmx, vm, NESTED_TEST_MEM1, GUEST_TEST_MEM, 4096, 0);
-+	nested_map(vmx, vm, NESTED_TEST_MEM2, GUEST_TEST_MEM, 4096, 0);
-+
-+	bmap = bitmap_alloc(TEST_MEM_SIZE);
-+	host_test_mem = addr_gpa2hva(vm, GUEST_TEST_MEM);
-+
-+	while (!done) {
-+		memset(host_test_mem, 0xaa, TEST_MEM_SIZE * 4096);
-+		_vcpu_run(vm, VCPU_ID);
-+		TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
-+			    "Unexpected exit reason: %u (%s),\n",
-+			    run->exit_reason,
-+			    exit_reason_str(run->exit_reason));
-+
-+		switch (get_ucall(vm, VCPU_ID, &uc)) {
-+		case UCALL_ABORT:
-+			TEST_ASSERT(false, "%s at %s:%d", (const char *)uc.args[0],
-+				    __FILE__, uc.args[1]);
-+			/* NOT REACHED */
-+		case UCALL_SYNC:
-+			/*
-+			 * The nested guest wrote at offset 0x1000 in the memslot, but the
-+			 * dirty bitmap must be filled in according to L1 GPA, not L2.
-+			 */
-+			kvm_vm_get_dirty_log(vm, TEST_MEM_SLOT_INDEX, bmap);
-+			if (uc.args[1]) {
-+				TEST_ASSERT(test_bit(0, bmap), "Page 0 incorrectly reported clean\n");
-+				TEST_ASSERT(host_test_mem[0] == 1, "Page 0 not written by guest\n");
-+			} else {
-+				TEST_ASSERT(!test_bit(0, bmap), "Page 0 incorrectly reported dirty\n");
-+				TEST_ASSERT(host_test_mem[0] == 0xaaaaaaaaaaaaaaaaULL, "Page 0 written by guest\n");
-+			}
-+
-+			TEST_ASSERT(!test_bit(1, bmap), "Page 1 incorrectly reported dirty\n");
-+			TEST_ASSERT(host_test_mem[4096 / 8] == 0xaaaaaaaaaaaaaaaaULL, "Page 1 written by guest\n");
-+			TEST_ASSERT(!test_bit(2, bmap), "Page 2 incorrectly reported dirty\n");
-+			TEST_ASSERT(host_test_mem[8192 / 8] == 0xaaaaaaaaaaaaaaaaULL, "Page 2 written by guest\n");
-+			break;
-+		case UCALL_DONE:
-+			done = true;
-+			break;
-+		default:
-+			TEST_ASSERT(false, "Unknown ucall 0x%x.", uc.cmd);
-+		}
-+	}
-+}
--- 
-1.8.3.1
-
+On 27.09.2019 04:20, Anson Huang wrote:=0A=
+>> On 2019-09-26 1:06 PM, Marco Felsch wrote:=0A=
+>>> On 19-09-26 08:03, Anson Huang wrote:=0A=
+>>>>> On 19-09-25 18:07, Anson Huang wrote:=0A=
+>>>>>> The SCU firmware does NOT always have return value stored in=0A=
+>>>>>> message header's function element even the API has response data,=0A=
+>>>>>> those special APIs are defined as void function in SCU firmware, so=
+=0A=
+>>>>>> they should be treated as return success always.=0A=
+>>>>>>=0A=
+>>>>>> +static const struct imx_sc_rpc_msg whitelist[] =3D {=0A=
+>>>>>> +	{ .svc =3D IMX_SC_RPC_SVC_MISC, .func =3D=0A=
+>>>>> IMX_SC_MISC_FUNC_UNIQUE_ID },=0A=
+>>>>>> +	{ .svc =3D IMX_SC_RPC_SVC_MISC, .func =3D=0A=
+>>>>>> +IMX_SC_MISC_FUNC_GET_BUTTON_STATUS }, };=0A=
+>>>>>=0A=
+>>>>> Is this going to be extended in the near future? I see some upcoming=
+=0A=
+>>>>> problems here if someone uses a different scu-fw<->kernel=0A=
+>>>>> combination as nxp would suggest.=0A=
+>>>>=0A=
+>>>> Could be, but I checked the current APIs, ONLY these 2 will be used=0A=
+>>>> in Linux kernel, so I ONLY add these 2 APIs for now.=0A=
+>>>=0A=
+>>> Okay.=0A=
+>>>=0A=
+>>>> However, after rethink, maybe we should add another imx_sc_rpc API=0A=
+>>>> for those special APIs? To avoid checking it for all the APIs called w=
+hich=0A=
+>> may impact some performance.=0A=
+>>>> Still under discussion, if you have better idea, please advise, thanks=
+!=0A=
+>>=0A=
+>> My suggestion is to refactor the code and add a new API for the this "no=
+=0A=
+>> error value" convention. Internally they can call a common function with=
+=0A=
+>> flags.=0A=
+> =0A=
+> If I understand your point correctly, that means the loop check of whethe=
+r the API=0A=
+> is with "no error value" for every API still NOT be skipped, it is just r=
+efactoring the code,=0A=
+> right?=0A=
+=0A=
+>> Right now developers who want to make SCFW calls in upstream need to=0A=
+>> define the message struct in their driver based on protocol documentatio=
+n.=0A=
+>> This includes:=0A=
+>>=0A=
+>> * Binary layout of the message (a packed struct)=0A=
+>> * If the message has a response (already a bool flag)=0A=
+>> * If an error code is returned (this patch adds support for it)=0A=
+>>=0A=
+>> Since callers are already exposed to the binary protocol exposing them t=
+o=0A=
+>> minor quirks of the calling convention also seems reasonable. Having the=
+=0A=
+>> low-level IPC code peek at message IDs seems like a hack; this belong at=
+ a=0A=
+>> slightly higher level.=0A=
+> =0A=
+> A little confused, so what you suggested is to add make the imx_scu_call_=
+rpc()=0A=
+> becomes the "slightly higher level" API, then in this API, check the mess=
+age IDs=0A=
+> to decide whether to return error value, then calls a new API which will =
+have=0A=
+> the low-level IPC code, the this new API will have a flag passed from imx=
+_scu_call_rpc()=0A=
+> function, am I right?=0A=
+=0A=
+No, I mean there should be no loop enumerating svc/func ids: *the caller =
+=0A=
+should know* that it's calling a func which doesn't return an error code =
+=0A=
+and call a different variant of imx_scu_call_rpc=0A=
+=0A=
+Maybe add an internal __imx_scu_call_rpc_flags and turn the current =0A=
+imx_scu_call_rpc into a wrapper.=0A=
+=0A=
+--=0A=
+Regards,=0A=
+Leonard=0A=
