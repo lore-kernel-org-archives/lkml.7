@@ -1,165 +1,126 @@
-Return-Path: <SRS0=EKka=XV=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26ED2C4360C
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 23:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B66C4360C
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 00:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 832BF20872
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Sep 2019 23:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BAAD207FF
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 00:09:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="Cth/P0MQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Ej7e0p2a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729036AbfIZXyL (ORCPT
+        id S1726325AbfI0AJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Sep 2019 19:54:11 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:46977 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728946AbfIZXyL (ORCPT
+        Thu, 26 Sep 2019 20:09:26 -0400
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:38047 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfI0AJ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Sep 2019 19:54:11 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 1AA9E886BF
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 11:54:08 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1569542048;
-        bh=adqayW/GotDamDLFcn4zqEqVhVtqWXa5Bmps2f+e1iY=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=Cth/P0MQZUmST4NB5xwYaF93gt8YAbUKhufSZam8r2HuNdMfXG3yQn+Km2M1YSJj5
-         7h0zPzjnd2ME/wD6ZBuhG4OPn1jGVfVMJ5mNsckumAhGhi+W+Nn7DkzbWMU2FXtDRm
-         S4zWotQqT3AwUzOt+taxFn3rFtTVdvl6wAPM/HFTbXZySygwQlenkn1KC8tluFxb8J
-         PrklhxisUeFb42hI6j4UrJ6AZR3j+pD2Ku/3mlVChC69WQh9AAXnRkpY2nJq+zj8WA
-         Y09Ul3mhol4Ubt2Y1edUqpyMAoPYJ5irqLaa4fuCN+zzcC4KCTijXxc3xQ9kim4bCM
-         L6xVE8pRn9Vbw==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d8d4fa00001>; Fri, 27 Sep 2019 11:54:08 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1156.6; Fri, 27 Sep 2019 11:54:07 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Fri, 27 Sep 2019 11:54:07 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "malat@debian.org" <malat@debian.org>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] powerpc: Support CMDLINE_EXTEND
-Thread-Topic: [PATCH v3] powerpc: Support CMDLINE_EXTEND
-Thread-Index: AQHVSLt5SSIu+9gAGkizQ6ZspvV50qbmfk4AgFeyboA=
-Date:   Thu, 26 Sep 2019 23:54:07 +0000
-Message-ID: <337d48b4ecfa116b0ec04ccfb4d936f41757692e.camel@alliedtelesis.co.nz>
-References: <20190801225006.21952-1-chris.packham@alliedtelesis.co.nz>
-         <9262a291-161f-e172-9d13-88a717da9de4@c-s.fr>
-In-Reply-To: <9262a291-161f-e172-9d13-88a717da9de4@c-s.fr>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:34ed:f955:f4f7:adde]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5AFE55F8ECD39C4689C628C31801848E@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Thu, 26 Sep 2019 20:09:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1569542987; x=1601078987;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=s8wencevRmeMDEGXC4oPCf69aZsPiCihnU+edmEPkWw=;
+  b=Ej7e0p2aEbWVXAsiilTlTU+D0X/cIIOIIjZbJO9DaDH4BrDlwCKrcInw
+   r+giZM579t717orVxTyTbQzsq4V/9+tx3CQqEDGVBOXCnX0/B+ZFBdo9p
+   Wy0wcnlGwXa5zStQ6qxyOT98NBmEp4mxzqHPilLIcvEzJeFFRFqn9G0mo
+   1rlJ2o6Z7y65gvjbSolCPG1wTbEh/K7UYQXkUjEtpoMwYJ/pb4PZCdqsq
+   Z1I2uy4gSNpHMt3s9yUlsgJUKuozMoJfqF5iBxJ6dLIX+VBtjvQAmbNXw
+   1810aLRghtfYObQYaEShpcWH8qZJVd0kVYh2RJsoMC8uJP+SjjmlTnZ5z
+   A==;
+IronPort-SDR: hiueuz5vIpbAgMw++JQJQGVPQB+OGa7P2eMSBl1mqi0YPS7k4mCe+ZVfO2AxeZV4DdtDWGuBFv
+ Uv+D7t873M0aVxV8whPGui/vInVPdSzZTvZlqIffBVstjUheTLTVnTVPRAjNVe0LSKFxstfIRW
+ 7qIIBpsoFctIXGk4VwYWpAvA5ZPph03RTHu71GPEVkdypV/GU3yu3GKbSxRQmolJiBmPtGIT9o
+ Mpo/4VoTYG6nOPn/EUZbih7uj3l02KE6+bY1SaT5hY8kjr8gBBPvH4KQeumZPr3MimDf8B3E7e
+ dO4=
+X-IronPort-AV: E=Sophos;i="5.64,553,1559491200"; 
+   d="scan'208";a="220096732"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 27 Sep 2019 08:09:45 +0800
+IronPort-SDR: 8Yj5RDTQbH6D1JaWmeOYjj2sU1NhrtzL74OSNqBXhIJ++CufH4ZSdKVje7LPt9fQKci4N2k4N0
+ JF1LKnUXExZHSeJAWtzLlR5nP1ZtnhZvd+/ZgJGR0uuH8Vk4tGNkYsr4LAe7klyTV671Mi0bb7
+ sb+yTfgpZzlj3o0rUG9g8YvQNBdnzdMCjt4iS8saHVltLmeo6+HwCrWfdRDnrATwp3KvSSBrXJ
+ Do+n56/tS5R+I9XXu4mRb3y1EP0jYb9Mj6tcJ+WxFFLRnGVVAkYSQRfnPZoAFUfRYUpL8z753K
+ uJdYJ2rq2Ff7KLEfR9ncCpD7
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2019 17:05:45 -0700
+IronPort-SDR: T01SUBszgnCFFTpYhAutlE/F0IhOeeTfpSKFyhZjg4LICu9Mvq8KbW/RSMGwTOz4weUwIa+U+2
+ 43KU9rdSbkurKSoj5OJZKqdeCoSNyVuew2CNR10B2W6uLePqS1TAOgAJpV+5/qU3VvsiwY3zm4
+ BVB677+W3j0uE0iCNAZUiOKM///VB5QXiEwBT/MI3DhWhTOkjVpelMQbxgZgXvr60ToiHjuOUg
+ WooKN/v+KeFPwlWv6CWkN4Btgt53KdeLVhRyk2wlt6UTdyehcKt8tpslx0z+oV5EN7JR+edF/f
+ WzA=
+WDCIronportException: Internal
+Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
+  by uls-op-cesaip01.wdc.com with ESMTP; 26 Sep 2019 17:09:24 -0700
+From:   Atish Patra <atish.patra@wdc.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Alan Kao <alankao@andestech.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Allison Randal <allison@lohutok.net>,
+        Anup Patel <anup@brainfault.org>, Gary Guo <gary@garyguo.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-riscv@lists.infradead.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v2 0/3] Add support for SBI v0.2 
+Date:   Thu, 26 Sep 2019 17:09:12 -0700
+Message-Id: <20190927000915.31781-1-atish.patra@wdc.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQWxsLA0KDQpPbiBGcmksIDIwMTktMDgtMDIgYXQgMDY6NDAgKzAyMDAsIENocmlzdG9waGUg
-TGVyb3kgd3JvdGU6DQo+IA0KPiBMZSAwMi8wOC8yMDE5IMOgIDAwOjUwLCBDaHJpcyBQYWNraGFt
-IGEgw6ljcml0IDoNCj4gPiBCcmluZyBwb3dlcnBjIGluIGxpbmUgd2l0aCBvdGhlciBhcmNoaXRl
-Y3R1cmVzIHRoYXQgc3VwcG9ydCBleHRlbmRpbmcgb3INCj4gPiBvdmVycmlkaW5nIHRoZSBib290
-bG9hZGVyIHByb3ZpZGVkIGNvbW1hbmQgbGluZS4NCj4gPiANCj4gPiBUaGUgY3VycmVudCBiZWhh
-dmlvdXIgaXMgbW9zdCBsaWtlIENNRExJTkVfRlJPTV9CT09UTE9BREVSIHdoZXJlIHRoZQ0KPiA+
-IGJvb3Rsb2FkZXIgY29tbWFuZCBsaW5lIGlzIHByZWZlcnJlZCBidXQgdGhlIGtlcm5lbCBjb25m
-aWcgY2FuIHByb3ZpZGUgYQ0KPiA+IGZhbGxiYWNrIHNvIENNRExJTkVfRlJPTV9CT09UTE9BREVS
-IGlzIHRoZSBkZWZhdWx0LiBDTURMSU5FX0VYVEVORCBjYW4NCj4gPiBiZSB1c2VkIHRvIGFwcGVu
-ZCB0aGUgQ01ETElORSBmcm9tIHRoZSBrZXJuZWwgY29uZmlnIHRvIHRoZSBvbmUgcHJvdmlkZWQN
-Cj4gPiBieSB0aGUgYm9vdGxvYWRlci4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBQ
-YWNraGFtIDxjaHJpcy5wYWNraGFtQGFsbGllZHRlbGVzaXMuY28ubno+DQo+IA0KPiBSZXZpZXdl
-ZC1ieTogQ2hyaXN0b3BoZSBMZXJveSA8Y2hyaXN0b3BoZS5sZXJveUBjLXMuZnI+DQoNCkkgc2Vl
-IHRoaXMgaGFzbid0IGhpdCBMaW51cydzIHRyZWUgaXMgaXQgd2FpdGluZyBmb3IgbWUgdG8gZG8g
-c29tZXRoaW5nDQpvciBqdXN0IGZhbGxlbiBvZmYgdGhlIHJhZGFyPw0KDQo+IA0KPiA+IC0tLQ0K
-PiA+IENoYW5nZXMgaW4gdjM6DQo+ID4gLSBkb24ndCB1c2UgQlVHX09OIGluIHByb21fc3RybGNh
-dA0KPiA+IC0gcmVhcnJhbmdlIHRoaW5ncyB0byBlbGltaW5hdGUgcHJvbV9zdHJsY3B5DQo+ID4g
-DQo+ID4gQ2hhbmdlcyBpbiB2MjoNCj4gPiAtIGluY29ycG9yYXRlIGlkZWFzIGZyb20gQ2hyaXN0
-b3BlJ3MgcGF0Y2ggaHR0cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC8xMDc0MTI2Lw0K
-PiA+IC0gc3VwcG9ydCBDTURMSU5FX0ZPUkNFDQo+ID4gDQo+ID4gICBhcmNoL3Bvd2VycGMvS2Nv
-bmZpZyAgICAgICAgICAgIHwgMjAgKysrKysrKysrKysrKysrKystDQo+ID4gICBhcmNoL3Bvd2Vy
-cGMva2VybmVsL3Byb21faW5pdC5jIHwgMzYgKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0t
-LS0tDQo+ID4gICAyIGZpbGVzIGNoYW5nZWQsIDQzIGluc2VydGlvbnMoKyksIDEzIGRlbGV0aW9u
-cygtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvS2NvbmZpZyBiL2FyY2gv
-cG93ZXJwYy9LY29uZmlnDQo+ID4gaW5kZXggNzdmNmViZjk3MTEzLi5kNDEzZmUxYjQwNTggMTAw
-NjQ0DQo+ID4gLS0tIGEvYXJjaC9wb3dlcnBjL0tjb25maWcNCj4gPiArKysgYi9hcmNoL3Bvd2Vy
-cGMvS2NvbmZpZw0KPiA+IEBAIC04NTIsMTUgKzg1MiwzMyBAQCBjb25maWcgQ01ETElORQ0KPiA+
-ICAgCSAgc29tZSBjb21tYW5kLWxpbmUgb3B0aW9ucyBhdCBidWlsZCB0aW1lIGJ5IGVudGVyaW5n
-IHRoZW0gaGVyZS4gIEluDQo+ID4gICAJICBtb3N0IGNhc2VzIHlvdSB3aWxsIG5lZWQgdG8gc3Bl
-Y2lmeSB0aGUgcm9vdCBkZXZpY2UgaGVyZS4NCj4gPiAgIA0KPiA+ICtjaG9pY2UNCj4gPiArCXBy
-b21wdCAiS2VybmVsIGNvbW1hbmQgbGluZSB0eXBlIiBpZiBDTURMSU5FICE9ICIiDQo+ID4gKwlk
-ZWZhdWx0IENNRExJTkVfRlJPTV9CT09UTE9BREVSDQo+ID4gKw0KPiA+ICtjb25maWcgQ01ETElO
-RV9GUk9NX0JPT1RMT0FERVINCj4gPiArCWJvb2wgIlVzZSBib290bG9hZGVyIGtlcm5lbCBhcmd1
-bWVudHMgaWYgYXZhaWxhYmxlIg0KPiA+ICsJaGVscA0KPiA+ICsJICBVc2VzIHRoZSBjb21tYW5k
-LWxpbmUgb3B0aW9ucyBwYXNzZWQgYnkgdGhlIGJvb3QgbG9hZGVyLiBJZg0KPiA+ICsJICB0aGUg
-Ym9vdCBsb2FkZXIgZG9lc24ndCBwcm92aWRlIGFueSwgdGhlIGRlZmF1bHQga2VybmVsIGNvbW1h
-bmQNCj4gPiArCSAgc3RyaW5nIHByb3ZpZGVkIGluIENNRExJTkUgd2lsbCBiZSB1c2VkLg0KPiA+
-ICsNCj4gPiArY29uZmlnIENNRExJTkVfRVhURU5EDQo+ID4gKwlib29sICJFeHRlbmQgYm9vdGxv
-YWRlciBrZXJuZWwgYXJndW1lbnRzIg0KPiA+ICsJaGVscA0KPiA+ICsJICBUaGUgY29tbWFuZC1s
-aW5lIGFyZ3VtZW50cyBwcm92aWRlZCBieSB0aGUgYm9vdCBsb2FkZXIgd2lsbCBiZQ0KPiA+ICsJ
-ICBhcHBlbmRlZCB0byB0aGUgZGVmYXVsdCBrZXJuZWwgY29tbWFuZCBzdHJpbmcuDQo+ID4gKw0K
-PiA+ICAgY29uZmlnIENNRExJTkVfRk9SQ0UNCj4gPiAgIAlib29sICJBbHdheXMgdXNlIHRoZSBk
-ZWZhdWx0IGtlcm5lbCBjb21tYW5kIHN0cmluZyINCj4gPiAtCWRlcGVuZHMgb24gQ01ETElORV9C
-T09MDQo+ID4gICAJaGVscA0KPiA+ICAgCSAgQWx3YXlzIHVzZSB0aGUgZGVmYXVsdCBrZXJuZWwg
-Y29tbWFuZCBzdHJpbmcsIGV2ZW4gaWYgdGhlIGJvb3QNCj4gPiAgIAkgIGxvYWRlciBwYXNzZXMg
-b3RoZXIgYXJndW1lbnRzIHRvIHRoZSBrZXJuZWwuDQo+ID4gICAJICBUaGlzIGlzIHVzZWZ1bCBp
-ZiB5b3UgY2Fubm90IG9yIGRvbid0IHdhbnQgdG8gY2hhbmdlIHRoZQ0KPiA+ICAgCSAgY29tbWFu
-ZC1saW5lIG9wdGlvbnMgeW91ciBib290IGxvYWRlciBwYXNzZXMgdG8gdGhlIGtlcm5lbC4NCj4g
-PiAgIA0KPiA+ICtlbmRjaG9pY2UNCj4gPiArDQo+ID4gICBjb25maWcgRVhUUkFfVEFSR0VUUw0K
-PiA+ICAgCXN0cmluZyAiQWRkaXRpb25hbCBkZWZhdWx0IGltYWdlIHR5cGVzIg0KPiA+ICAgCWhl
-bHANCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2tlcm5lbC9wcm9tX2luaXQuYyBiL2Fy
-Y2gvcG93ZXJwYy9rZXJuZWwvcHJvbV9pbml0LmMNCj4gPiBpbmRleCA1MTQ3MDdlZjY3NzkuLjFj
-NzAxMGNjNmVjOSAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL3Bvd2VycGMva2VybmVsL3Byb21faW5p
-dC5jDQo+ID4gKysrIGIvYXJjaC9wb3dlcnBjL2tlcm5lbC9wcm9tX2luaXQuYw0KPiA+IEBAIC0y
-OTgsMTYgKzI5OCwyNCBAQCBzdGF0aWMgY2hhciBfX2luaXQgKnByb21fc3Ryc3RyKGNvbnN0IGNo
-YXIgKnMxLCBjb25zdCBjaGFyICpzMikNCj4gPiAgIAlyZXR1cm4gTlVMTDsNCj4gPiAgIH0NCj4g
-PiAgIA0KPiA+IC1zdGF0aWMgc2l6ZV90IF9faW5pdCBwcm9tX3N0cmxjcHkoY2hhciAqZGVzdCwg
-Y29uc3QgY2hhciAqc3JjLCBzaXplX3Qgc2l6ZSkNCj4gPiAtew0KPiA+IC0Jc2l6ZV90IHJldCA9
-IHByb21fc3RybGVuKHNyYyk7DQo+ID4gK3N0YXRpYyBzaXplX3QgX19pbml0IHByb21fc3RybGNh
-dChjaGFyICpkZXN0LCBjb25zdCBjaGFyICpzcmMsIHNpemVfdCBjb3VudCkNCj4gPiArew0KPiA+
-ICsJc2l6ZV90IGRzaXplID0gcHJvbV9zdHJsZW4oZGVzdCk7DQo+ID4gKwlzaXplX3QgbGVuID0g
-cHJvbV9zdHJsZW4oc3JjKTsNCj4gPiArCXNpemVfdCByZXMgPSBkc2l6ZSArIGxlbjsNCj4gPiAr
-DQo+ID4gKwkvKiBUaGlzIHdvdWxkIGJlIGEgYnVnICovDQo+ID4gKwlpZiAoZHNpemUgPj0gY291
-bnQpDQo+ID4gKwkJcmV0dXJuIGNvdW50Ow0KPiA+ICsNCj4gPiArCWRlc3QgKz0gZHNpemU7DQo+
-ID4gKwljb3VudCAtPSBkc2l6ZTsNCj4gPiArCWlmIChsZW4gPj0gY291bnQpDQo+ID4gKwkJbGVu
-ID0gY291bnQtMTsNCj4gPiArCW1lbWNweShkZXN0LCBzcmMsIGxlbik7DQo+ID4gKwlkZXN0W2xl
-bl0gPSAwOw0KPiA+ICsJcmV0dXJuIHJlczsNCj4gPiAgIA0KPiA+IC0JaWYgKHNpemUpIHsNCj4g
-PiAtCQlzaXplX3QgbGVuID0gKHJldCA+PSBzaXplKSA/IHNpemUgLSAxIDogcmV0Ow0KPiA+IC0J
-CW1lbWNweShkZXN0LCBzcmMsIGxlbik7DQo+ID4gLQkJZGVzdFtsZW5dID0gJ1wwJzsNCj4gPiAt
-CX0NCj4gPiAtCXJldHVybiByZXQ7DQo+ID4gICB9DQo+ID4gICANCj4gPiAgICNpZmRlZiBDT05G
-SUdfUFBDX1BTRVJJRVMNCj4gPiBAQCAtNzU5LDEwICs3NjcsMTQgQEAgc3RhdGljIHZvaWQgX19p
-bml0IGVhcmx5X2NtZGxpbmVfcGFyc2Uodm9pZCkNCj4gPiAgIA0KPiA+ICAgCXByb21fY21kX2xp
-bmVbMF0gPSAwOw0KPiA+ICAgCXAgPSBwcm9tX2NtZF9saW5lOw0KPiA+IC0JaWYgKChsb25nKXBy
-b20uY2hvc2VuID4gMCkNCj4gPiArDQo+ID4gKwlpZiAoIUlTX0VOQUJMRUQoQ09ORklHX0NNRExJ
-TkVfRk9SQ0UpICYmIChsb25nKXByb20uY2hvc2VuID4gMCkNCj4gPiAgIAkJbCA9IHByb21fZ2V0
-cHJvcChwcm9tLmNob3NlbiwgImJvb3RhcmdzIiwgcCwgQ09NTUFORF9MSU5FX1NJWkUtMSk7DQo+
-ID4gLQlpZiAoSVNfRU5BQkxFRChDT05GSUdfQ01ETElORV9CT09MKSAmJiAobCA8PSAwIHx8IHBb
-MF0gPT0gJ1wwJykpIC8qIGRibCBjaGVjayAqLw0KPiA+IC0JCXByb21fc3RybGNweShwcm9tX2Nt
-ZF9saW5lLCBDT05GSUdfQ01ETElORSwgc2l6ZW9mKHByb21fY21kX2xpbmUpKTsNCj4gPiArDQo+
-ID4gKwlpZiAoSVNfRU5BQkxFRChDT05GSUdfQ01ETElORV9FWFRFTkQpIHx8IGwgPD0gMCB8fCBw
-WzBdID09ICdcMCcpDQo+ID4gKwkJcHJvbV9zdHJsY2F0KHByb21fY21kX2xpbmUsICIgIiBDT05G
-SUdfQ01ETElORSwNCj4gPiArCQkJICAgICBzaXplb2YocHJvbV9jbWRfbGluZSkpOw0KPiA+ICsN
-Cj4gPiAgIAlwcm9tX3ByaW50ZigiY29tbWFuZCBsaW5lOiAlc1xuIiwgcHJvbV9jbWRfbGluZSk7
-DQo+ID4gICANCj4gPiAgICNpZmRlZiBDT05GSUdfUFBDNjQNCj4gPiANCg==
+The Supervisor Binary Interface(SBI) specification[1] now defines a
+base extension that provides extendability to add future extensions
+while maintaining backward compatibility with previous versions.
+The new version is defined as 0.2 and older version is marked as 0.1.
+
+This series adds support v0.2 and a unified calling convention
+implementation between 0.1 and 0.2. It also adds minimal SBI functions
+from 0.2 as well to keep the series lean. 
+
+[1] https://github.com/riscv/riscv-sbi-doc/blob/master/riscv-sbi.adoc
+
+The SBI v0.2 support for OpenSBI is already available at
+
+https://github.com/atishp04/opensbi/tree/sbi_v0.2_2
+and in the OpenSBI mailing list.
+
+Tested on both BBL, OpenSBI with/without the above patch series. 
+
+Changes from v1->v2
+1. Removed the legacy calling convention.
+2. Moved all SBI related calls to sbi.c.
+3. Moved all SBI related macros to uapi.
+
+Atish Patra (3):
+RISC-V: Mark existing SBI as 0.1 SBI.
+RISC-V: Add basic support for SBI v0.2
+RISC-V: Move SBI related macros under uapi.
+
+arch/riscv/include/asm/sbi.h      | 109 +++++---------
+arch/riscv/include/uapi/asm/sbi.h |  48 ++++++
+arch/riscv/kernel/Makefile        |   1 +
+arch/riscv/kernel/sbi.c           | 241 ++++++++++++++++++++++++++++++
+arch/riscv/kernel/setup.c         |   2 +
+5 files changed, 328 insertions(+), 73 deletions(-)
+create mode 100644 arch/riscv/include/uapi/asm/sbi.h
+create mode 100644 arch/riscv/kernel/sbi.c
+
+--
+2.21.0
+
