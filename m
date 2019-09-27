@@ -2,95 +2,118 @@ Return-Path: <SRS0=WTd2=XW=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7B6C4360C
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 360FBC388F3
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B36120872
-	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:33:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D73520872
+	for <linux-kernel@archiver.kernel.org>; Fri, 27 Sep 2019 12:34:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OkcngvAZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727454AbfI0Md2 (ORCPT
+        id S1727478AbfI0MeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 08:33:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:51040 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726549AbfI0Md2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 08:33:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4492F1000;
-        Fri, 27 Sep 2019 05:33:27 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 24EDC3F67D;
-        Fri, 27 Sep 2019 05:33:27 -0700 (PDT)
-Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
-        id D747268295D; Fri, 27 Sep 2019 13:33:25 +0100 (BST)
-Date:   Fri, 27 Sep 2019 13:33:25 +0100
-From:   Liviu Dudau <Liviu.Dudau@arm.com>
-To:     Mihail Atanassov <Mihail.Atanassov@arm.com>
-Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        nd <nd@arm.com>,
-        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/komeda: Fix typos in komeda_splitter_validate
-Message-ID: <20190927123325.zkyttahfysypl6mv@e110455-lin.cambridge.arm.com>
-References: <20190920151117.22725-1-mihail.atanassov@arm.com>
+        Fri, 27 Sep 2019 08:34:03 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:35407 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726549AbfI0MeD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 08:34:03 -0400
+Received: by mail-io1-f66.google.com with SMTP id q10so15924941iop.2;
+        Fri, 27 Sep 2019 05:34:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k7d51AEqyE848wkPOLeJprFG9jyWEBZYHtKze/WYS4w=;
+        b=OkcngvAZiKPfuIboTpBONfv7BLGF5R/Iq4MnzDRe5U13ORHYdP24mC9azh4Zc/Cd5Q
+         zjc/eFi7DxQTt2gfFVEGlz4Zxs03GBIbzFDE/3rK5RvUDj+A1zGCnRrN8YdAGLoBwyRD
+         1SvsdCK0DQMAlsxjPDLcx8NpJ9PfZHFCDWlVx7XQv3ibTNAxJPUr7lXN4J+IqpwsMP11
+         p5RjNdSw0K+Uj7oL3izhL7pOv+40rEefZwUOMJ8fmBPf5BGQi2sSODcTOMGyjm7Sz/eq
+         5EylEn4Z6pYPsCxYY6hFmT/ZqrXxPPjxDhE/2yuR1xYG5IQEnERXL9KfdKmKsrdBRBc9
+         YitA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k7d51AEqyE848wkPOLeJprFG9jyWEBZYHtKze/WYS4w=;
+        b=q+ZebEUd7m48RhuhAGXkCklAdkzML6YldMLvtl9qZW+eq/apG7DLqqTWTfdXW2uLgE
+         l7n/sQqTij8ZPnHjfmIkTYbrR5RiLsniskLDUxyvbEANzi1ILr1nF7Rf0TT9v0SfTz87
+         4jgigatlCNARCvhlZoGTiTG5s+XDr9kb76gdg20m1nzPO459wHVKgeY3B53HRu6F7+9m
+         /hiOPBpBKOetq6OJFaVv7ji2Chysrqt7V/cADFBzMDneKCGI7gkFTwMqjRBSVrhhRXHu
+         tP2CTgoPIHM4waG6CtkwNJPEXdpI0riCAPNiX3gmP6D8MqV0LYBCxv9oP1Pbd+ucDrIQ
+         v+MQ==
+X-Gm-Message-State: APjAAAWg27+b2cN94s9bjTVZSWXF1jciqJR2ul4M/qULRoKeLXURu6UV
+        G4haxGb3i9Mhqk/yDKBVQKVxpIMs5Vp0D439g6Y=
+X-Google-Smtp-Source: APXvYqyUHMQeWPmJ5lzBV5BB3t5fjqgkf5iuXKrGK12pwMzKhwgqK7OWh4iVg4iwmB77u1+QNcYJGNuPXVDMXoOrZuo=
+X-Received: by 2002:a6b:b213:: with SMTP id b19mr7682327iof.58.1569587642060;
+ Fri, 27 Sep 2019 05:34:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190920151117.22725-1-mihail.atanassov@arm.com>
-User-Agent: NeoMutt/20180716
+References: <20190510194229.20628-1-aford173@gmail.com> <af325707-3e42-493d-e858-77878ef06138@ti.com>
+ <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
+ <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com> <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
+ <845055e2-8182-de74-2077-629fdf50ac6c@ti.com> <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
+ <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com>
+In-Reply-To: <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Fri, 27 Sep 2019 07:33:50 -0500
+Message-ID: <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
+Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to dts
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 03:11:34PM +0000, Mihail Atanassov wrote:
-> Fix both the string and the struct member being printed.
-> 
-> Fixes: 264b9436d23b ("drm/komeda: Enable writeback split support")
-> Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
-> ---
->  drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
-> index 950235af1e79..de64a6a9964e 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline_state.c
-> @@ -564,8 +564,8 @@ komeda_splitter_validate(struct komeda_splitter *splitter,
->  	}
->  
->  	if (!in_range(&splitter->vsize, dflow->in_h)) {
-> -		DRM_DEBUG_ATOMIC("split in_in: %d exceed the acceptable range.\n",
-> -				 dflow->in_w);
-> +		DRM_DEBUG_ATOMIC("split in_h: %d exceed the acceptable range.\n",
+On Fri, Sep 27, 2019 at 2:55 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+>
+> (dropping folks who're probably not interested...)
+>
+> On 26/09/2019 17:12, Adam Ford wrote:
+> > On Thu, Sep 26, 2019 at 1:55 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+> >>
+> >> On 25/09/2019 23:51, Adam Ford wrote:
+> >>
+> >>>> Has anyone debugged why the hang is happening?
+> >>> I started to debug this, but I got distracted when I noticed the LCD
+> >>> did't work at all on modern kernels.  I have that fixed now, so I can
+> >>> go back to investigating this.
+>
+> I dont' have the same board, but I was testing with omap3 beagle xm. I
+> can reproduce rather similar issue, although I don't get a hang but
+> instead sync lost and underflow flood (which makes the device unusable).
+>
+> It looks like a bug in omap clock handling.
+>
+> DSS uses dss1_alwon_fck_3430es2 as fclk. dss1_alwon_fck_3430es2 comes
+> from dpll4_ck, and there's a divider after the PLL, dpll4_m4_ck.
+>
+> When the DSS driver sets dss1_alwon_fck_3430es2 rate to 27000000 or
+> 27870967, which can be created with m4 dividers 32 and 31, it looks like
+> the divider goes to bypass, or to a very small value. DSS gets a very
+> high clock rate and breaks down.
 
-Being pedandic: s/exceed/exceeds/.
+Is there anything I can do to help troubleshoot this?  I could insert
+a hack that checks if we're omap3 and if so make the divider equal to
+4, but that seems like just a hack.
+I can run more tests or insert code somewhere if you want.
 
-Best regards,
-Liviu
-
-> +				 dflow->in_h);
->  		return -EINVAL;
->  	}
->  
-> -- 
-> 2.23.0
-> 
-
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+adam
+>
+>   Tomi
+>
+> --
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
