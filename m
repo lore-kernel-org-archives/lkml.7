@@ -2,185 +2,152 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33927C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 09:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A94C388F3
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 09:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E91652075C
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 09:31:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C175C2075C
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 09:35:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rVWQuWjy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TW7KPlSq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727457AbfI1JbC (ORCPT
+        id S1727899AbfI1JfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Sep 2019 05:31:02 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54027 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbfI1JbB (ORCPT
+        Sat, 28 Sep 2019 05:35:02 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39538 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725856AbfI1JfB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Sep 2019 05:31:01 -0400
-Received: by mail-wm1-f66.google.com with SMTP id i16so8294644wmd.3;
-        Sat, 28 Sep 2019 02:30:59 -0700 (PDT)
+        Sat, 28 Sep 2019 05:35:01 -0400
+Received: by mail-lf1-f65.google.com with SMTP id 72so3642086lfh.6;
+        Sat, 28 Sep 2019 02:35:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TCs/8nlpXbSdnRhoVRZAnKrxE2CTT3D9lBs8voTjYNs=;
-        b=rVWQuWjy036UQ2W5RkKo4ubOfrcqumSywP0JeXL5bNOPIyACFAcFnAc4haFoj8WO/G
-         eB4RdWcEIoCVjTEH93C3rJuuC+hAg1w8EPfKIsgU//w4E15Mj8AR6+RUhwSM62RtNUFD
-         kmCsYOV6JVYv604pW1YcAyR9B69FEx1gj4KkZNL8u0HlOB4y7LZilUGxX39GLsX9oIPn
-         pS4iDY3wZd0efd8sljR24a3/76TCunEa3UcLdZeYVdCjDAohOIVkFd3vlP8swFeR0Qf1
-         Gc7iG4aFMn39NtYwmjlRPaM2x1XZo66KWvvjWO9FC6qm/d1Ayz0UClwdAIcd3+Q/EqLg
-         29dA==
+        h=date:from:to:cc:subject:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sqzpIJTUSyMjvNLNtMpXjO9U+cAbapAxKF1UKLPlejs=;
+        b=TW7KPlSqAa6wsClwUUOFxv1pU8gsHgaqMzCgLKlROwfWVCIOZI/H1Hd+e5H9ihsl2S
+         213aT5DDG6Dx+LzKxT83l3BQyPRmpPOEk0r9PTLDz1pxWx010Zkp3FWEydjxO0M60emn
+         uXzE1ZIGNwm84dmDSwyvYl9tckI0DDrh7nqI6KrmJguW3EVMB6B2gHdY25J2Ym9A7Vt8
+         4hsfZ7s+jYwC2dwpDvxAX5kvPKuQGPzVSQtFWU7fH5jG/zkKomUd+kILFUsSyTWiBWue
+         6yA5hOEQ9e07M2IN5Req/JsvKAsjG/AKWxNg6F/hr/+OWUQ4nWXgbeDrT9dt69hayOnq
+         S3Qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TCs/8nlpXbSdnRhoVRZAnKrxE2CTT3D9lBs8voTjYNs=;
-        b=Ex8jtlbuLAQ9wc0JirI6bQm1e3hIzXFvn8NACQdXWDIaN2cKBqGmogRoDdLEkbaUvB
-         jS40pC1NGzv32huknfJ6+tZfxFfs9mTaQ1MthK5fpVvxmRedRIz6DFssfZMUGcQMwvap
-         BYMvjDmNZ/VXVOAAk0J9zdLHgyBCJTzwZuaEfxxnYutufJz6LKesgHmVt5yBAB8IDE+Q
-         GuaSbs3McFdJCta+FrYQaJVHWi7Qc2YRtVrwA0OxM2Xj8hyoEvQUbZKGWbmpG5hRci8G
-         MfC6633f7JX4d0rHjcEZJijpgjs16BCjfxDhZW9r/WFeU/dzmGZVPm7XUfJG0BqWM5yO
-         k/ag==
-X-Gm-Message-State: APjAAAV4PSVQjyyNWyw1RYUHAnDPFtJyoeNdkTXcsB0A6Pz95Eh52wA7
-        dayjkLSTU3OlQYLESGIVZsAAw6anZWFyyw==
-X-Google-Smtp-Source: APXvYqwPv49Z9qq8s4Li6UkyxiroJ52geU4gAaCCVqsL9cci41z6vRBV3TqjGf0oFg0mcukKWLpMng==
-X-Received: by 2002:a05:600c:284:: with SMTP id 4mr9742207wmk.107.1569663058527;
-        Sat, 28 Sep 2019 02:30:58 -0700 (PDT)
-Received: from darwi-home-pc (ip-109-42-2-0.web.vodafone.de. [109.42.2.0])
-        by smtp.gmail.com with ESMTPSA id f18sm6349267wmh.43.2019.09.28.02.30.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Sep 2019 02:30:57 -0700 (PDT)
-Date:   Sat, 28 Sep 2019 11:30:46 +0200
-From:   "Ahmed S. Darwish" <darwish.07@gmail.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Florian Weimer <fweimer@redhat.com>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>
-Subject: Re: [PATCH v5 1/1] random: getrandom(2): warn on large CRNG waits,
- introduce new flags
-Message-ID: <20190928093046.GA1039@darwi-home-pc>
-References: <20190914122500.GA1425@darwi-home-pc>
- <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
- <20190915052242.GG19710@mit.edu>
- <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
- <20190918211503.GA1808@darwi-home-pc>
- <20190918211713.GA2225@darwi-home-pc>
- <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
- <20190926204217.GA1366@pc>
- <20190926204425.GA2198@pc>
- <9a9715dc-e30b-24fb-a754-464449cafb2f@kernel.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sqzpIJTUSyMjvNLNtMpXjO9U+cAbapAxKF1UKLPlejs=;
+        b=NI6gFtC0rRdZfOG26e8Us7EzRwfHthfpw5J4KnE38Zj2m2Br+p23tMXoF/nLvY/NRD
+         mPp0UZEH0Bi6BI7PUGWBqKLf826A2oU8fb1g5ZT8jgnj3c3/aDA3TH/Ip/qNOFByf2tO
+         PZu22GS9LFfQ6eE7o3Y9r7ekre26O1i9s7Exr/mqKPXfmuVwC2d5vkBcVvWINMDkpR5n
+         T4+thq0yBbEEuJ2k3AWyV+7GwCJECZgQOsOtZ+aHEhEj5L9y3hQSIKmmsgkpK93IR1yA
+         GFwEEPLG2vrQi1cyI+BrzpXvhoYYDfYOBlN8WBAwjfn1qNowL4p5zBsigRBvTYyB49vr
+         imGg==
+X-Gm-Message-State: APjAAAWktKoENRY2P4LdK6NxRnGA30BuyR+x40h6qRq/SMWU6cR+vucV
+        C99yWwMuyvXQHP6ukkNog+I=
+X-Google-Smtp-Source: APXvYqwwuh1GjfIdsBSxb/r0rjF6N074kvqQ1/3Wn9VOkGtT9HtjiGXMAQChZMByZxxHrjibevm+Cg==
+X-Received: by 2002:a19:641e:: with SMTP id y30mr5789536lfb.148.1569663299262;
+        Sat, 28 Sep 2019 02:34:59 -0700 (PDT)
+Received: from bigdell (2.69.152.136.mobile.tre.se. [2.69.152.136])
+        by smtp.gmail.com with ESMTPSA id m15sm1247655ljg.97.2019.09.28.02.34.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 28 Sep 2019 02:34:59 -0700 (PDT)
+Date:   Sat, 28 Sep 2019 11:34:56 +0200
+From:   Vitaly Wool <vitalywool@gmail.com>
+To:     Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Markus Linnala <markus.linnala@gmail.com>,
+        Dan Streetman <ddstreet@ieee.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Stable <stable@vger.kernel.org>
+Subject: [PATCH v2] z3fold: claim page in the beginning of free
+Message-ID: <20190928113456.152742cf@bigdell>
+X-Mailer: Claws Mail 3.17.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9a9715dc-e30b-24fb-a754-464449cafb2f@kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 02:39:44PM -0700, Andy Lutomirski wrote:
-> On 9/26/19 1:44 PM, Ahmed S. Darwish wrote:
-> > Since Linux v3.17, getrandom(2) has been created as a new and more
-> > secure interface for pseudorandom data requests.  It attempted to
-> > solve three problems, as compared to /dev/urandom:
-> > 
-> >    1. the need to access filesystem paths, which can fail, e.g. under a
-> >       chroot
-> > 
-> >    2. the need to open a file descriptor, which can fail under file
-> >       descriptor exhaustion attacks
-> > 
-> >    3. the possibility of getting not-so-random data from /dev/urandom,
-> >       due to an incompletely initialized kernel entropy pool
-> > 
-> > To solve the third point, getrandom(2) was made to block until a
-> > proper amount of entropy has been accumulated to initialize the CRNG
-> > ChaCha20 cipher.  This made the system call have no guaranteed
-> > upper-bound for its initial waiting time.
-> > 
-> > Thus when it was introduced at c6e9d6f38894 ("random: introduce
-> > getrandom(2) system call"), it came with a clear warning: "Any
-> > userspace program which uses this new functionality must take care to
-> > assure that if it is used during the boot process, that it will not
-> > cause the init scripts or other portions of the system startup to hang
-> > indefinitely."
-> > 
-> > Unfortunately, due to multiple factors, including not having this
-> > warning written in a scary-enough language in the manpages, and due to
-> > glibc since v2.25 implementing a BSD-like getentropy(3) in terms of
-> > getrandom(2), modern user-space is calling getrandom(2) in the boot
-> > path everywhere (e.g. Qt, GDM, etc.)
-> > 
-> > Embedded Linux systems were first hit by this, and reports of embedded
-> > systems "getting stuck at boot" began to be common.  Over time, the
-> > issue began to even creep into consumer-level x86 laptops: mainstream
-> > distributions, like Debian Buster, began to recommend installing
-> > haveged as a duct-tape workaround... just to let the system boot.
-> > 
-> > Moreover, filesystem optimizations in EXT4 and XFS, e.g. b03755ad6f33
-> > ("ext4: make __ext4_get_inode_loc plug"), which merged directory
-> > lookup code inode table IO, and very fast systemd boots, further
-> > exaggerated the problem by limiting interrupt-based entropy sources.
-> > This led to large delays until the kernel's cryptographic random
-> > number generator (CRNG) got initialized.
-> > 
-> > On a Thinkpad E480 x86 laptop and an ArchLinux user-space, the ext4
-> > commit earlier mentioned reliably blocked the system on GDM boot.
-> > Mitigate the problem, as a first step, in two ways:
-> > 
-> >    1. Issue a big WARN_ON when any process gets stuck on getrandom(2)
-> >       for more than CONFIG_GETRANDOM_WAIT_THRESHOLD_SEC seconds.
-> > 
-> >    2. Introduce new getrandom(2) flags, with clear semantics that can
-> >       hopefully guide user-space in doing the right thing.
-> > 
-> > Set CONFIG_GETRANDOM_WAIT_THRESHOLD_SEC to a heuristic 30-second
-> > default value. System integrators and distribution builders are deeply
-> > encouraged not to increase it much: during system boot, you either
-> > have entropy, or you don't. And if you didn't have entropy, it will
-> > stay like this forever, because if you had, you wouldn't have blocked
-> > in the first place. It's an atomic "either/or" situation, with no
-> > middle ground. Please think twice.
-> 
-> So what do we expect glibc's getentropy() to do?  If it just adds the new
-> flag to shut up the warning, we haven't really accomplished much.
+There's a really hard to reproduce race in z3fold between
+z3fold_free() and z3fold_reclaim_page(). z3fold_reclaim_page()
+can claim the page after z3fold_free() has checked if the page
+was claimed and z3fold_free() will then schedule this page for
+compaction which may in turn lead to random page faults (since
+that page would have been reclaimed by then). Fix that by
+claiming page in the beginning of z3fold_free() and not
+forgetting to clear the claim in the end.
 
-Yes, if glibc adds GRND_SECURE_UNBOUNDED_INITIAL_WAIT to gentropy(3),
-then this exercise would indeed be invalidated. Hopefully,
-coordination with glibc will be done so it won't happen... @Florian?
+Reported-by: Markus Linnala <markus.linnala@gmail.com>
+Signed-off-by: Vitaly Wool <vitalywool@gmail.com>
+Cc: <stable@vger.kernel.org>
+---
+ mm/z3fold.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-Afterwards, a sane approach would be for gentropy(3) to be deprecated,
-and to add getentropy_secure_unbounded_initial_wait(3) and
-getentropy_insecure(3).
-
-Note that this V5 patch does not claim to fully solve the problem, but
-it will:
-
-  1. Pinpoint to the processes causing system boots to block
-  
-  2. Tell people what correct alternative to use when facing problem
-     #1 above, through the proposed getrandom_wait(7) manpage. That
-     manpage page will fully describe the problem, and advise
-     user-space to either use the new getrandom flags, or the new
-     glibc gentropy_*() variants.
-
-thanks,
-
---
-Ahmed Darwish
+diff --git a/mm/z3fold.c b/mm/z3fold.c
+index 05bdf90646e7..6d3d3f698ebb 100644
+--- a/mm/z3fold.c
++++ b/mm/z3fold.c
+@@ -998,9 +998,11 @@ static void z3fold_free(struct z3fold_pool *pool,
+unsigned long handle) struct z3fold_header *zhdr;
+ 	struct page *page;
+ 	enum buddy bud;
++	bool page_claimed;
+ 
+ 	zhdr = handle_to_z3fold_header(handle);
+ 	page = virt_to_page(zhdr);
++	page_claimed = test_and_set_bit(PAGE_CLAIMED, &page->private);
+ 
+ 	if (test_bit(PAGE_HEADLESS, &page->private)) {
+ 		/* if a headless page is under reclaim, just leave.
+@@ -1008,7 +1010,7 @@ static void z3fold_free(struct z3fold_pool *pool,
+unsigned long handle)
+ 		 * has not been set before, we release this page
+ 		 * immediately so we don't care about its value any
+more. */
+-		if (!test_and_set_bit(PAGE_CLAIMED, &page->private)) {
++		if (!page_claimed) {
+ 			spin_lock(&pool->lock);
+ 			list_del(&page->lru);
+ 			spin_unlock(&pool->lock);
+@@ -1044,13 +1046,15 @@ static void z3fold_free(struct z3fold_pool
+*pool, unsigned long handle) atomic64_dec(&pool->pages_nr);
+ 		return;
+ 	}
+-	if (test_bit(PAGE_CLAIMED, &page->private)) {
++	if (page_claimed) {
++		/* the page has not been claimed by us */
+ 		z3fold_page_unlock(zhdr);
+ 		return;
+ 	}
+ 	if (unlikely(PageIsolated(page)) ||
+ 	    test_and_set_bit(NEEDS_COMPACTING, &page->private)) {
+ 		z3fold_page_unlock(zhdr);
++		clear_bit(PAGE_CLAIMED, &page->private);
+ 		return;
+ 	}
+ 	if (zhdr->cpu < 0 || !cpu_online(zhdr->cpu)) {
+@@ -1060,10 +1064,12 @@ static void z3fold_free(struct z3fold_pool
+*pool, unsigned long handle) zhdr->cpu = -1;
+ 		kref_get(&zhdr->refcount);
+ 		do_compact_page(zhdr, true);
++		clear_bit(PAGE_CLAIMED, &page->private);
+ 		return;
+ 	}
+ 	kref_get(&zhdr->refcount);
+ 	queue_work_on(zhdr->cpu, pool->compact_wq, &zhdr->work);
++	clear_bit(PAGE_CLAIMED, &page->private);
+ 	z3fold_page_unlock(zhdr);
+ }
+ 
+-- 
+2.17.1
