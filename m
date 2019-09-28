@@ -2,91 +2,76 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED62C388F3
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 14:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7166C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 14:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5F9B20873
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 14:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC8A820863
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 14:31:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728501AbfI1OAD (ORCPT
+        id S1728500AbfI1ObE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Sep 2019 10:00:03 -0400
-Received: from mga14.intel.com ([192.55.52.115]:53799 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725957AbfI1OAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Sep 2019 10:00:02 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Sep 2019 07:00:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,559,1559545200"; 
-   d="scan'208";a="391492522"
-Received: from baoyuyan-mobl.ccr.corp.intel.com ([10.255.31.72])
-  by fmsmga006.fm.intel.com with ESMTP; 28 Sep 2019 07:00:01 -0700
-Message-ID: <64052a03bf5af899574ad81dff9203cfc307901c.camel@intel.com>
-Subject: Re: [GIT PULL] Thermal management updates for v5.4-rc1
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Date:   Sat, 28 Sep 2019 22:00:00 +0800
-In-Reply-To: <CAHk-=whua2XSTLd3gtqVHfq5HtGnjhRUv7vA6SUfkbVUebqWJQ@mail.gmail.com>
-References: <a9e8e68f34139d5a9abb7f8b7d3fe64ff82c6d96.camel@intel.com>
-         <CAHk-=whua2XSTLd3gtqVHfq5HtGnjhRUv7vA6SUfkbVUebqWJQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Sat, 28 Sep 2019 10:31:04 -0400
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:46942 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725876AbfI1ObE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Sep 2019 10:31:04 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01451;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TdeNtUM_1569681047;
+Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0TdeNtUM_1569681047)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 28 Sep 2019 22:30:59 +0800
+From:   Wen Yang <wenyang@linux.alibaba.com>
+To:     Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Cc:     xlpang@linux.alibaba.com, Wen Yang <wenyang@linux.alibaba.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Franklin S Cooper Jr <fcooper@ti.com>,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] can: dev: add missing of_node_put after calling of_get_child_by_name
+Date:   Sat, 28 Sep 2019 22:29:05 +0800
+Message-Id: <20190928142905.34832-1-wenyang@linux.alibaba.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Linus,
+of_node_put needs to be called when the device node which is got
+from of_get_child_by_name finished using.
 
-I'm really sorry about this.
+fixes: 2290aefa2e90 ("can: dev: Add support for limiting configured bitrate")
+Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+Cc: Wolfgang Grandegger <wg@grandegger.com>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Franklin S Cooper Jr <fcooper@ti.com>
+Cc: linux-can@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/net/can/dev.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I thought no code change could be a reason that a rebase can be
-accepted, but didn't realize this is exactly the case we should avoid
-it. I wish I could read Documentation/maintainer/rebasing-and-
-merging.rst earlier so that I didn't make this mistake.
-Sorry to bring this trouble.
-
-thanks,
-rui
-
-On Fri, 2019-09-27 at 11:34 -0700, Linus Torvalds wrote:
-> On Fri, Sep 27, 2019 at 6:08 AM Zhang Rui <rui.zhang@intel.com>
-> wrote:
-> > 
-> > One thing to mention is that, all the patches have been tested in
-> > linux-next for weeks, but there is a conflict detected, because
-> > upstream has took commit eaf7b46083a7e34 ("docs: thermal: add it to
-> > the
-> > driver API") from jc-docs tree while I'm keeping a wrong version of
-> > the
-> > patch, so I just rebased my tree to fix this.
-> 
-> Why do I have to say this EVERY single release?
-> 
-> A conflict is not a reason to rebase. Conflicts happen. They happen a
-> lot. I deal with them, and it's usually trivial.
-> 
-> If you feel it's not trivial, just describe what the resolution is,
-> rather than rebasing. Really.
-> 
-> Rebasing for a random conflict (particularly in documentation, for
-> chrissake!) is like using an atomic bomb to swat a fly.  You have all
-> those downsides, and there are basically _no_ upsides. It only makes
-> for more work for me because I have to re-write this email for the
-> millionth time, and that takes longer and is more aggravating than
-> the
-> conflict would have taken to just sort out.
-> 
->                    Linus
+diff --git a/drivers/net/can/dev.c b/drivers/net/can/dev.c
+index ac86be5..1c88c36 100644
+--- a/drivers/net/can/dev.c
++++ b/drivers/net/can/dev.c
+@@ -848,6 +848,7 @@ void of_can_transceiver(struct net_device *dev)
+ 		return;
+ 
+ 	ret = of_property_read_u32(dn, "max-bitrate", &priv->bitrate_max);
++	of_node_put(dn);
+ 	if ((ret && ret != -EINVAL) || (!ret && !priv->bitrate_max))
+ 		netdev_warn(dev, "Invalid value for transceiver max bitrate. Ignoring bitrate limit.\n");
+ }
+-- 
+1.8.3.1
 
