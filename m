@@ -2,99 +2,127 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBB9C47404
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 02:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91119C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 02:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD8EC21655
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 02:29:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569637760;
-	bh=DjezQNrhL5RoYpTkbIb4gBWCVmhYLj92teI/9u5Sx3U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=lu+Sm4xrh5XhSOl+qgf4C8tdnujwvHxqST7SSDFunXaCwuLZ3R9IELTk8tOeBvDca
-	 hL8cq/I2PxUlqjItFQJWXCXbzeUFCSrj0pLgbcGpYRRfYj3NxUuxXiGZWm3hzPYHTW
-	 vPDW6hvc5gXwQltrty7shKvaY3EtbFS4E0u1t2V0=
+	by mail.kernel.org (Postfix) with ESMTP id 68D9A20872
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 02:32:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728451AbfI1C3R (ORCPT
+        id S1728487AbfI1Ccy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 22:29:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57542 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726033AbfI1C3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 22:29:16 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 863B620869;
-        Sat, 28 Sep 2019 02:29:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569637756;
-        bh=DjezQNrhL5RoYpTkbIb4gBWCVmhYLj92teI/9u5Sx3U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=tgaG0uOUvZGie4JEzdqPnkHWldCPBPzN1WiFgCWvtYeuPwzs7AAiHzraa/bo9j7HB
-         UNRFmnt2ARnJzxIo8UUpPRC9uDYR4Mn3/X1J6l2dgkYiQD/gTG0eJKA9J63W78LC6w
-         GT8TqVKI6WFaHT6WEubvLFRYnNu9Xit4tu0dpOyY=
-Date:   Fri, 27 Sep 2019 19:29:15 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     hev <r@hev.cc>
-Cc:     linux-fsdevel@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
-        Davide Libenzi <davidel@xmailserver.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Eric Wong <e@80x24.org>, Jason Baron <jbaron@akamai.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Roman Penyaev <rpenyaev@suse.de>,
-        Sridhar Samudrala <sridhar.samudrala@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v4] fs/epoll: Remove unnecessary wakeups of
- nested epoll that in ET mode
-Message-Id: <20190927192915.6ec24ad706258de99470a96e@linux-foundation.org>
-In-Reply-To: <20190925015603.10939-1-r@hev.cc>
-References: <20190925015603.10939-1-r@hev.cc>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 27 Sep 2019 22:32:54 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:53821 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726061AbfI1Ccy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 22:32:54 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1iE2XR-0002Vh-Og; Fri, 27 Sep 2019 20:32:49 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1iE2XR-00059p-0e; Fri, 27 Sep 2019 20:32:49 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Baoquan He <bhe@redhat.com>
+Cc:     Dave Young <dyoung@redhat.com>, Lianbo Jiang <lijiang@redhat.com>,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org, jgross@suse.com,
+        dhowells@redhat.com, Thomas.Lendacky@amd.com,
+        kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>
+References: <20190920035326.27212-1-lijiang@redhat.com>
+        <20190927051518.GA13023@dhcp-128-65.nay.redhat.com>
+        <87r241piqg.fsf@x220.int.ebiederm.org>
+        <20190928000505.GJ31919@MiWiFi-R3L-srv>
+Date:   Fri, 27 Sep 2019 21:32:16 -0500
+In-Reply-To: <20190928000505.GJ31919@MiWiFi-R3L-srv> (Baoquan He's message of
+        "Sat, 28 Sep 2019 08:05:05 +0800")
+Message-ID: <875zldp2vj.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-XM-SPF: eid=1iE2XR-00059p-0e;;;mid=<875zldp2vj.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18cKlj+RxELBQM4X5UB6lrbfTM/kZbSpoA=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH] x86/kdump: Fix 'kmem -s' reported an invalid freepointer when SME was active
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 25 Sep 2019 09:56:03 +0800 hev <r@hev.cc> wrote:
+Baoquan He <bhe@redhat.com> writes:
 
-> From: Heiher <r@hev.cc>
-> 
-> Take the case where we have:
-> 
->         t0
->          | (ew)
->         e0
->          | (et)
->         e1
->          | (lt)
->         s0
-> 
-> t0: thread 0
-> e0: epoll fd 0
-> e1: epoll fd 1
-> s0: socket fd 0
-> ew: epoll_wait
-> et: edge-trigger
-> lt: level-trigger
-> 
-> We only need to wakeup nested epoll fds if something has been queued to the
-> overflow list, since the ep_poll() traverses the rdllist during recursive poll
-> and thus events on the overflow list may not be visible yet.
-> 
-> Test code:
+> On 09/27/19 at 03:49pm, Eric W. Biederman wrote:
+>> Dave Young <dyoung@redhat.com> writes:
+>> >> In order to avoid such problem, lets occupy the first 640k region when
+>> >> SME is active, which will ensure that the allocated memory does not fall
+>> >> into the first 640k area. So, no need to worry about whether kernel can
+>> >> correctly copy the contents of the first 640K area to a backup region in
+>> >> purgatory().
+>> 
+>> We must occupy part of the first 640k so that we can start up secondary
+>> cpus unless someone has added another way to do that in recent years on
+>> SME capable cpus.
+>> 
+>> Further there is Fimware/BIOS interaction that happens within those
+>> first 640K.
+>> 
+>> Furthermore the kdump kernel needs to be able to read all of the memory
+>> that the previous kernel could read.  Otherwise we can't get a crash
+>> dump.
+>> 
+>> So I do not think ignoring the first 640K is the correct resolution
+>> here.
+>> 
+>> > The log is too simple,  I know you did some other tries to fix this, but
+>> > the patch log does not show why you can not correctly copy the 640k in
+>> > current kdump code, in purgatory here.
+>> >
+>> > Also this patch seems works in your test, but still to see if other
+>> > people can comment and see if it is safe or not, if any other risks
+>> > other than waste the small chunk of memory.  If it is safe then kdump
+>> > can just drop the backup logic and use this in common code instead of
+>> > only do it for SME.
+>> 
+>> Exactly.
+>> 
+>> I think at best this avoids the symptoms, but does not give a reliable
+>> crash dump.
+>
+> Sorry, didn't notice this comment at bottom.
+>
+> From code, currently the first 640K area is needed in two places.
+> One is for 5-level trampoline during boot compressing stage, in
+> find_trampoline_placement(). 
+>
+> The other is in reserve_real_mode(), as you mentioned, for application
+> CPU booting.
+>
+> Only allow these two put data inside first 640K, then lock it done. It
+> should not impact crash dump and parsing. And these two's content
+> doesn't matter.
 
-Look sane to me.  Do you have any performance testing results which
-show a benefit?
+Apologies.  Do I understand correctly that the idea is that the kernel
+that may crash will never touch these pages?  And that the reservation
+is not in the kernel that recovers from the crash?  That definitely
+needs a little better description.  I know it is not a lot on modern
+systems but reserving an extra 1M of memory to avoid having to special
+case it later seems in need of calling out.
 
-epoll maintainership isn't exactly a hive of activity nowadays :(
-Roman, would you please have time to review this?
+I have an old system around that I think that 640K is about 25% of
+memory.
 
+How we interact with BIOS tables in the first 640k needs some
+explanation.  Both in the first kernel and in the crash kernel.
+
+Eric
