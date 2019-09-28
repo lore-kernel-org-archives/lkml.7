@@ -2,182 +2,185 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2482C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 09:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33927C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 09:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 825A720862
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 09:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E91652075C
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 09:31:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rVWQuWjy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbfI1JXm (ORCPT
+        id S1727457AbfI1JbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Sep 2019 05:23:42 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:48209 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbfI1JXm (ORCPT
+        Sat, 28 Sep 2019 05:31:02 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54027 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725856AbfI1JbB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Sep 2019 05:23:42 -0400
-Received: from p200300d06f16eff20347f9711eb7065e.dip0.t-ipconnect.de ([2003:d0:6f16:eff2:347:f971:1eb7:65e] helo=linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <kurt.kanzenbach@linutronix.de>)
-        id 1iE8wy-0006UX-Qb; Sat, 28 Sep 2019 11:23:36 +0200
-Date:   Sat, 28 Sep 2019 11:23:31 +0200
-From:   Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>
-To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Cc:     Rob Herring <robh@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v6 2/2] dt/bindings: Add bindings for Layerscape external
- irqs
-Message-ID: <20190928092331.GB1894@linutronix.de>
-References: <20190923101513.32719-1-kurt@linutronix.de>
- <20190923101513.32719-3-kurt@linutronix.de>
- <20190927161118.GA19333@bogus>
- <f63da257-95b4-bcb8-9ba4-9786645caf26@prevas.dk>
+        Sat, 28 Sep 2019 05:31:01 -0400
+Received: by mail-wm1-f66.google.com with SMTP id i16so8294644wmd.3;
+        Sat, 28 Sep 2019 02:30:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TCs/8nlpXbSdnRhoVRZAnKrxE2CTT3D9lBs8voTjYNs=;
+        b=rVWQuWjy036UQ2W5RkKo4ubOfrcqumSywP0JeXL5bNOPIyACFAcFnAc4haFoj8WO/G
+         eB4RdWcEIoCVjTEH93C3rJuuC+hAg1w8EPfKIsgU//w4E15Mj8AR6+RUhwSM62RtNUFD
+         kmCsYOV6JVYv604pW1YcAyR9B69FEx1gj4KkZNL8u0HlOB4y7LZilUGxX39GLsX9oIPn
+         pS4iDY3wZd0efd8sljR24a3/76TCunEa3UcLdZeYVdCjDAohOIVkFd3vlP8swFeR0Qf1
+         Gc7iG4aFMn39NtYwmjlRPaM2x1XZo66KWvvjWO9FC6qm/d1Ayz0UClwdAIcd3+Q/EqLg
+         29dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TCs/8nlpXbSdnRhoVRZAnKrxE2CTT3D9lBs8voTjYNs=;
+        b=Ex8jtlbuLAQ9wc0JirI6bQm1e3hIzXFvn8NACQdXWDIaN2cKBqGmogRoDdLEkbaUvB
+         jS40pC1NGzv32huknfJ6+tZfxFfs9mTaQ1MthK5fpVvxmRedRIz6DFssfZMUGcQMwvap
+         BYMvjDmNZ/VXVOAAk0J9zdLHgyBCJTzwZuaEfxxnYutufJz6LKesgHmVt5yBAB8IDE+Q
+         GuaSbs3McFdJCta+FrYQaJVHWi7Qc2YRtVrwA0OxM2Xj8hyoEvQUbZKGWbmpG5hRci8G
+         MfC6633f7JX4d0rHjcEZJijpgjs16BCjfxDhZW9r/WFeU/dzmGZVPm7XUfJG0BqWM5yO
+         k/ag==
+X-Gm-Message-State: APjAAAV4PSVQjyyNWyw1RYUHAnDPFtJyoeNdkTXcsB0A6Pz95Eh52wA7
+        dayjkLSTU3OlQYLESGIVZsAAw6anZWFyyw==
+X-Google-Smtp-Source: APXvYqwPv49Z9qq8s4Li6UkyxiroJ52geU4gAaCCVqsL9cci41z6vRBV3TqjGf0oFg0mcukKWLpMng==
+X-Received: by 2002:a05:600c:284:: with SMTP id 4mr9742207wmk.107.1569663058527;
+        Sat, 28 Sep 2019 02:30:58 -0700 (PDT)
+Received: from darwi-home-pc (ip-109-42-2-0.web.vodafone.de. [109.42.2.0])
+        by smtp.gmail.com with ESMTPSA id f18sm6349267wmh.43.2019.09.28.02.30.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Sep 2019 02:30:57 -0700 (PDT)
+Date:   Sat, 28 Sep 2019 11:30:46 +0200
+From:   "Ahmed S. Darwish" <darwish.07@gmail.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Florian Weimer <fweimer@redhat.com>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>
+Subject: Re: [PATCH v5 1/1] random: getrandom(2): warn on large CRNG waits,
+ introduce new flags
+Message-ID: <20190928093046.GA1039@darwi-home-pc>
+References: <20190914122500.GA1425@darwi-home-pc>
+ <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
+ <20190915052242.GG19710@mit.edu>
+ <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
+ <20190918211503.GA1808@darwi-home-pc>
+ <20190918211713.GA2225@darwi-home-pc>
+ <CAHk-=wiCqDiU7SE3FLn2W26MS_voUAuqj5XFa1V_tiGTrrW-zQ@mail.gmail.com>
+ <20190926204217.GA1366@pc>
+ <20190926204425.GA2198@pc>
+ <9a9715dc-e30b-24fb-a754-464449cafb2f@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="yEPQxsgoJgBvi8ip"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f63da257-95b4-bcb8-9ba4-9786645caf26@prevas.dk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <9a9715dc-e30b-24fb-a754-464449cafb2f@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Sep 26, 2019 at 02:39:44PM -0700, Andy Lutomirski wrote:
+> On 9/26/19 1:44 PM, Ahmed S. Darwish wrote:
+> > Since Linux v3.17, getrandom(2) has been created as a new and more
+> > secure interface for pseudorandom data requests.  It attempted to
+> > solve three problems, as compared to /dev/urandom:
+> > 
+> >    1. the need to access filesystem paths, which can fail, e.g. under a
+> >       chroot
+> > 
+> >    2. the need to open a file descriptor, which can fail under file
+> >       descriptor exhaustion attacks
+> > 
+> >    3. the possibility of getting not-so-random data from /dev/urandom,
+> >       due to an incompletely initialized kernel entropy pool
+> > 
+> > To solve the third point, getrandom(2) was made to block until a
+> > proper amount of entropy has been accumulated to initialize the CRNG
+> > ChaCha20 cipher.  This made the system call have no guaranteed
+> > upper-bound for its initial waiting time.
+> > 
+> > Thus when it was introduced at c6e9d6f38894 ("random: introduce
+> > getrandom(2) system call"), it came with a clear warning: "Any
+> > userspace program which uses this new functionality must take care to
+> > assure that if it is used during the boot process, that it will not
+> > cause the init scripts or other portions of the system startup to hang
+> > indefinitely."
+> > 
+> > Unfortunately, due to multiple factors, including not having this
+> > warning written in a scary-enough language in the manpages, and due to
+> > glibc since v2.25 implementing a BSD-like getentropy(3) in terms of
+> > getrandom(2), modern user-space is calling getrandom(2) in the boot
+> > path everywhere (e.g. Qt, GDM, etc.)
+> > 
+> > Embedded Linux systems were first hit by this, and reports of embedded
+> > systems "getting stuck at boot" began to be common.  Over time, the
+> > issue began to even creep into consumer-level x86 laptops: mainstream
+> > distributions, like Debian Buster, began to recommend installing
+> > haveged as a duct-tape workaround... just to let the system boot.
+> > 
+> > Moreover, filesystem optimizations in EXT4 and XFS, e.g. b03755ad6f33
+> > ("ext4: make __ext4_get_inode_loc plug"), which merged directory
+> > lookup code inode table IO, and very fast systemd boots, further
+> > exaggerated the problem by limiting interrupt-based entropy sources.
+> > This led to large delays until the kernel's cryptographic random
+> > number generator (CRNG) got initialized.
+> > 
+> > On a Thinkpad E480 x86 laptop and an ArchLinux user-space, the ext4
+> > commit earlier mentioned reliably blocked the system on GDM boot.
+> > Mitigate the problem, as a first step, in two ways:
+> > 
+> >    1. Issue a big WARN_ON when any process gets stuck on getrandom(2)
+> >       for more than CONFIG_GETRANDOM_WAIT_THRESHOLD_SEC seconds.
+> > 
+> >    2. Introduce new getrandom(2) flags, with clear semantics that can
+> >       hopefully guide user-space in doing the right thing.
+> > 
+> > Set CONFIG_GETRANDOM_WAIT_THRESHOLD_SEC to a heuristic 30-second
+> > default value. System integrators and distribution builders are deeply
+> > encouraged not to increase it much: during system boot, you either
+> > have entropy, or you don't. And if you didn't have entropy, it will
+> > stay like this forever, because if you had, you wouldn't have blocked
+> > in the first place. It's an atomic "either/or" situation, with no
+> > middle ground. Please think twice.
+> 
+> So what do we expect glibc's getentropy() to do?  If it just adds the new
+> flag to shut up the warning, we haven't really accomplished much.
 
---yEPQxsgoJgBvi8ip
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes, if glibc adds GRND_SECURE_UNBOUNDED_INITIAL_WAIT to gentropy(3),
+then this exercise would indeed be invalidated. Hopefully,
+coordination with glibc will be done so it won't happen... @Florian?
 
-On Fri, Sep 27, 2019 at 09:16:50PM +0000, Rasmus Villemoes wrote:
-> On 27/09/2019 18.11, Rob Herring wrote:
-> > On Mon, Sep 23, 2019 at 12:15:13PM +0200, Kurt Kanzenbach wrote:
-> >> +Required properties:
-> >> +- compatible: should be "fsl,<soc-name>-extirq", e.g. "fsl,ls1021a-extirq".
-> >> +- interrupt-controller: Identifies the node as an interrupt controller
-> >> +- #interrupt-cells: Must be 2. The first element is the index of the
-> >> +  external interrupt line. The second element is the trigger type.
-> >> +- interrupt-parent: phandle of GIC.
-> >> +- reg: Specifies the Interrupt Polarity Control Register (INTPCR) in the SCFG.
-> >> +- fsl,extirq-map: Specifies the mapping to interrupt numbers in the parent
-> >> +  interrupt controller. Interrupts are mapped one-to-one to parent
-> >> +  interrupts.
-> >
-> > This should be an 'interrupt-map' instead.
->
-> Rob, thanks for your review comments. I know you said the same thing at
-> v5, and it might seem like they are ignored.
+Afterwards, a sane approach would be for gentropy(3) to be deprecated,
+and to add getentropy_secure_unbounded_initial_wait(3) and
+getentropy_insecure(3).
 
-Well, I didn't ignore them. It just wasn't clear to me from the previous
-discussions which way you want to go.
+Note that this V5 patch does not claim to fully solve the problem, but
+it will:
 
-> However, I asked a couple of followup questions
-> (https://lore.kernel.org/lkml/0bb4533d-c749-d8ff-e1f2-4b08eb724713@prevas.dk/).
-> I'd really appreciate it if you could (a) point to some documentation
-> on how to write that interrupt-map and (b) explain how this is
-> different from the Qualcomm PDC case I tried to copy and which had
-> your Reviewed-By.
+  1. Pinpoint to the processes causing system boots to block
+  
+  2. Tell people what correct alternative to use when facing problem
+     #1 above, through the proposed getrandom_wait(7) manpage. That
+     manpage page will fully describe the problem, and advise
+     user-space to either use the new getrandom flags, or the new
+     glibc gentropy_*() variants.
 
-I guess, we can have a look at other interrupt controllers and how they
-handle the interrupt-map property. For example:
+thanks,
 
- https://www.kernel.org/doc/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
-
-I need to send a v7 anyway, because I forgot to include the SOC_LS1021A
-in the build process.
-
->
-> >> +
-> >> +Optional properties:
-> >> +- fsl,bit-reverse: This boolean property should be set on the LS1021A
-> >> +  if the SCFGREVCR register has been set to all-ones (which is usually
-> >> +  the case), meaning that all reads and writes of SCFG registers are
-> >> +  implicitly bit-reversed. Other compatible platforms do not have such
-> >> +  a register.
-> >
-> > Couldn't you just read that register and tell?
->
-> In theory, yes, but as far as I understand (and as I wrote) it's
-> specific to the ls1021a. Of course one can decide whether it's
-> necessary/possible to read it based on the compatible string, but one
-> would also need an extra reg property to have its address - but that
-> register is not really part of the extirq "device" we're trying to
-> describe. So would it need to be represented as its own subnode of scfg?
-
-Keep in mind, that not all Layerscapes have that feature and the
-corresponding register. As you said that may be handled via compatible
-string. However, the bit-reverse property looks like the simplest
-solution to me.
-
->
-> If it is set at all, it's done within the first few instructions after
-> reset (before control is even handed to the bootloader), so I see it as
-> a kind of quirk of the hardware. The data sheet says "SCFG bit reverse
-> (SCFG_SCFGREVCR) must be written 0xFFFF_FFFF as a part of initialization
-> sequence before writing to any other SCFG register." which, taken
-> literally, means we don't need the property at all and can just assume
-> it for the ls1021a (i.e., do it based on compatible string alone) - but
-> I think it should be read as "if you're going to write this register, it
-> must be done first thing".
->
-> > Does this apply to only the extirq register or all of scfg?
->
-> All of scfg. It really seems like some accident/bad joke coming out of a
-> discussion between a hardware and software engineer on the enumeration
-> of bits, with the hardware guy ending up saying "alright, have it
-> whichever way you want it", causing even more pain :(
->
-> >> +
-> >> +Example:
-> >> +	scfg: scfg@1570000 {
-> >> +		compatible = "fsl,ls1021a-scfg", "syscon";
-> >> +		#address-cells = <1>;
-> >> +		#size-cells = <0>;
-> >
-> > As the child node(s) are memory mapped, this should not be 0. And you
-> > need 'ranges'.
->
-> Indeed - I think I understand this a little better now than I did back then.
->
-
-Okay.
-
-> Thanks,
-> Rasmus
-
-Thanks,
-Kurt
-
---yEPQxsgoJgBvi8ip
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl2PJpIACgkQeSpbgcuY
-8Kajvg//UY/iWpJ5yvrHwwEiYOH2DbJAxGiyGQVXkHjCReroDWbMPXfY6rxMfz3G
-SesspSgDF0yD2JTfOjvEX343oB+iWJYT+/RWLrfaNQRWcGp3iDp3ZCopXvzMPFpA
-qLpZogd2ttYHSu4gkw4sc6jZcLJ+39Wk5rIO08AyufvPIjPjr8TROfJJgNcEYoyp
-g6DUEheatnqhlk6rGqAlzr+/pLnJocu9gYkeV0IOG07v/HaIfPKzuhYX3yQF+1Vj
-l9t/r+DXfOZLkr4Hq9kItxtlSb498lAb1QE8dbu1LC7Oz155ihujSoPh9Twf6e9b
-h8Ys9ljYH3W+TteL6iqznefoqgz18hE/F6d6GxKx9EmOy2Il/c2c5AtsLMlZEYtf
-pT5iYe+rkToYUofURWi6BhH+kQPLqUTl9p5IORavL26S8lIKmWbaJa9QNRBxV6rc
-HBJSKMd7BB9P8ztqTiXoGyl73JIPWBmIp8knjFnojiHFLYfv6ydt67RpxozB8oU7
-FX+oheQ0r2xh85BAlSdX8seFI73yMigaVIZ8AyUkIm7rlhhtqeB/APf53tJurz3n
-4a2Bmpx42e576fQlyHRsOODk4O596ACqUVYBvg11G/aREsK7luZLilfuzBZ4cybc
-Nlyl7Lx5ksVGO9iZVTKUftFZ4cZIt1xTT6Z37jerdYQ5OyFTk18=
-=3dnz
------END PGP SIGNATURE-----
-
---yEPQxsgoJgBvi8ip--
+--
+Ahmed Darwish
