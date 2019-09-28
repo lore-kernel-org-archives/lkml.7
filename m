@@ -2,143 +2,154 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A20F0C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 01:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 845AEC4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 01:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76B0B2146E
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 01:31:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B7842146E
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 01:32:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="c17hv9Uh";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gWltI+e8"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="dLJ87Vj7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728520AbfI1Bbp (ORCPT
+        id S1728538AbfI1BcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 21:31:45 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:46112 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbfI1Bbo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 21:31:44 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 01FDC61382; Sat, 28 Sep 2019 01:31:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569634303;
-        bh=m/+SNT1ylRadZlQdB8fVjW39Gd/vKBoLUGrjef6eP84=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c17hv9Uha9O4Yc5WUJbDaV5nqWB8BdZ8/SGEZA+53oA8BJXy1pkp4y784RDbcHdAd
-         29h33WwL7dII3xllCezwW3NAXzAYQGRu+RCjLElwnRSmQBl5vl7fF4xzg+d0oA9sj0
-         JMuKwvncRhseWWoa79v086YIoxDK/l1Js8tZilJ4=
-Received: from jeykumar-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jsanka@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 48A1D61215;
-        Sat, 28 Sep 2019 01:31:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569634300;
-        bh=m/+SNT1ylRadZlQdB8fVjW39Gd/vKBoLUGrjef6eP84=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gWltI+e8ODxHtIEtclTtLsrsvPIs5a9B4Gwew/tlufCZvnw6SppeDSq0nMs/tFlje
-         UFqToKo/LIIWRdNbhvAbgn6OzKFayULvC1QxqEbhX9fc0hVTCIAcDr2Zy62tdd6QBB
-         FV9gw8s2lve5RsiNGyiCQETZyv7Wr/xhnhdi8GHE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 48A1D61215
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jsanka@codeaurora.org
-From:   Jeykumar Sankaran <jsanka@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Jeykumar Sankaran <jsanka@codeaurora.org>, narmstrong@baylibre.com,
-        seanpaul@chromium.org, robdclark@gmail.com, jcrouse@codeaurora.org
-Subject: [PATCH] drm: add fb max width/height fields to drm_mode_config
-Date:   Fri, 27 Sep 2019 18:31:24 -0700
-Message-Id: <1569634284-14147-2-git-send-email-jsanka@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1569634284-14147-1-git-send-email-jsanka@codeaurora.org>
-References: <1569634284-14147-1-git-send-email-jsanka@codeaurora.org>
+        Fri, 27 Sep 2019 21:32:24 -0400
+Received: from mail-eopbgr710114.outbound.protection.outlook.com ([40.107.71.114]:1281
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725306AbfI1BcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 21:32:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Utw4VVvJTUsoz5htniM82oddyvY+8YejKROI+6BwJGwr7jbtNjL6X3PTAoSMBHsxqPGL35xgEzDuKExEDuFa9ka6Phhzt5jgE7YknF4GWhBd579W2aF3US69hayfevGLNMLNWjlrCOczMxnKT8NKJyauBYMDI07SM3vNyMSBxsusxRo9RYcPHUPONhTz41s8DhfOLXLTipmRykCZIHCguP3vciWKpRDV2HhR3uGm+ggmc5jjQxO9Jv11O9w07VYmOERSA9ZxltHMWHK9HKH1k7KaNo0Ki8PFu+X3dd/5ZAuPwKjmirL2oz2lnkw+oPO72CcL223hJS8uygQAk1PcqA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Or5waImo+3BOMhqPvSUSRQekAOlYSjMsQQ7rYVpbQys=;
+ b=OODkabnbPAE7h2HvENTYAWe0S1ibcfCpqoB3Bxc3MWxNzildiN810NpRsglXeiG1WaiURs37iyZ5jzFG1QDIOyy5S67Sz5vGTAsF6CG6vcAJjzvZMEQXXnpHFPbfvbJxyIsjsoZsR7/kN5mSOFqbsWR/ukNc+P6FIVvdl+obpcDXnda/osA4XcSedhnnRwEw+Y7CergTNCbZqNMgv4OobSK1JVqY0aPgrKMG2kzHr+iq+3JjhFzhy4lwMj47KWCVC2iiXRGYxsHlcwU3DdmXAtH1u2NKKva73sYyGFN9KzQQurVTKxRbEPRlT3fm9lmxN2LpntFthvEqNHWi0ShYXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Or5waImo+3BOMhqPvSUSRQekAOlYSjMsQQ7rYVpbQys=;
+ b=dLJ87Vj7N1EnmXpdpygQp1C/x1KHgR4a/wAlf+DzmhjeeBGlAmqZSAyGeVRqWC7rfiwtMVr/hYDkT/RL1+tvb0tkuc0yD/PQFpGSwKKVB+xYDzn74n2xAEu5wUNPIouBZWnjHiPwvCGc89oech9aczLh1zEJD8tRrwTY0ZXHqc0=
+Received: from BN8PR21MB1362.namprd21.prod.outlook.com (20.179.76.155) by
+ BN8PR21MB1153.namprd21.prod.outlook.com (20.179.72.160) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2327.7; Sat, 28 Sep 2019 01:32:19 +0000
+Received: from BN8PR21MB1362.namprd21.prod.outlook.com
+ ([fe80::6cea:8074:a394:f20d]) by BN8PR21MB1362.namprd21.prod.outlook.com
+ ([fe80::6cea:8074:a394:f20d%9]) with mapi id 15.20.2327.004; Sat, 28 Sep 2019
+ 01:32:19 +0000
+From:   Steve MacLean <Steve.MacLean@microsoft.com>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Changbin Du <changbin.du@intel.com>,
+        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
+        John Keeping <john@metanate.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Leo Yan <leo.yan@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Brian Robbins <brianrob@microsoft.com>,
+        Tom McDonald <Thomas.McDonald@microsoft.com>,
+        John Salem <josalem@microsoft.com>
+Subject: RE: [PATCH] perf map: fix overlapped map handling
+Thread-Topic: [PATCH] perf map: fix overlapped map handling
+Thread-Index: AdVv5y6SzPv23L21QnSQJe3E6wWQgAAA9l0AAAMWwpABVHUWAAAUmtAQ
+Date:   Sat, 28 Sep 2019 01:32:18 +0000
+Message-ID: <BN8PR21MB13625A503C82F5135AB1706CF7800@BN8PR21MB1362.namprd21.prod.outlook.com>
+References: <BN8PR21MB136261C1A4BB2C884F10FCECF7880@BN8PR21MB1362.namprd21.prod.outlook.com>
+ <20190920193852.GI4865@kernel.org>
+ <BN8PR21MB1362B1921DF8ABF3A19B43A5F7880@BN8PR21MB1362.namprd21.prod.outlook.com>
+ <20190927153540.GB20644@kernel.org>
+In-Reply-To: <20190927153540.GB20644@kernel.org>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=stmaclea@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-28T01:32:17.5799580Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d9324a5d-6f2d-4418-859a-cf61ccaa864d;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Steve.MacLean@microsoft.com; 
+x-originating-ip: [24.163.126.65]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d373467f-2685-4b29-4c91-08d743b3b3ec
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: BN8PR21MB1153:|BN8PR21MB1153:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN8PR21MB1153B9E6EDB3E2975F5583AEF7800@BN8PR21MB1153.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0174BD4BDA
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(376002)(136003)(346002)(396003)(39860400002)(189003)(199004)(229853002)(66446008)(478600001)(10090500001)(33656002)(55016002)(9686003)(8936002)(256004)(6916009)(8676002)(25786009)(11346002)(4326008)(486006)(71200400001)(52536014)(81156014)(6246003)(5660300002)(86362001)(446003)(81166006)(107886003)(66476007)(76176011)(7696005)(186003)(3846002)(99286004)(6116002)(6506007)(71190400001)(7736002)(476003)(6436002)(14454004)(8990500004)(305945005)(64756008)(66066001)(102836004)(54906003)(74316002)(76116006)(22452003)(316002)(2906002)(66556008)(10290500003)(7416002)(66946007)(26005);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR21MB1153;H:BN8PR21MB1362.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: P+YjxbdJtKBIDTci7PvyVUQycCFq4iH7N6RJJ+VqE8/HGxCT3IpmiPbampCzlc2q21KqVmqJRErR2k9CKM2nAUgvFplRuUsn9G3AuzhxSOGNja4sDFDXm0j9I4szSLC7JnjbM/m2dy7zZVD6SaQzCGl5UWPvnElQlEjfewb1+WQw1gyF8lTTusqWylddtbeFdGGGvxKCIP1yR1NRA/h6eILviBZHBog8ZHuarrgMfdxqmuiPPMTZeTK/XjmNsB5yo8bp7d/ybKBV7kWgjEpHpXSngLnPJ1UMZWVReRBFgBHXGqpbHQ0300wRSE1VWtTiVkCYR5pFLDI7dCktLPt3NW4vdnH1dM9fjc0PhP87x98niAIUOCaw5x3Znxxd7tu2tNPn/D8wfBAmokyX0w4GNbYxdw9UC2xLBHr8nStXP/A=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d373467f-2685-4b29-4c91-08d743b3b3ec
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Sep 2019 01:32:19.1030
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pVOGAvV06lw+q4Im8WduHcWPTYJD/9L7OR5IZiTrA2oXMut9KeKGuM4B0r4vsQtKgH9ItJveqM+UtUUCoDaiaw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR21MB1153
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mode_config max width/height values determine the maximum
-resolution the pixel reader can handle. But the same values are
-used to restrict the size of the framebuffer creation. Hardware's
-with scaling blocks can operate on framebuffers larger/smaller than
-that of the pixel reader resolutions by scaling them down/up before
-rendering.
+>> An earlier version of this patch used:
+>>   			after->start =3D map->end;
+>> +			after->pgoff +=3D map->end - pos->start;
+>>=20
+>> Instead of the newer Functionally equivalent:
+>>   			after->start =3D map->end;
+>> +			after->pgoff =3D pos->map_ip(pos, map->end);
+>>=20
+>> I preferred the latter form as it made more sense with the assertion tha=
+t the mapping of map->end should match in pos and after.
+>
+> So, if they are equivalent then I think its better to use code that resse=
+mbles the kernel as much as possible, so that when in doubt we can compare =
+the tools/perf calcs with how the kernel does it, filtering out things like=
+ the PAGE_SHIFT, can we go that way?
+>
+> Also do you have some reproducer, if you have one then we can try and hav=
+e this as a 'perf test' entry, bolting some more checks into tools/perf/tes=
+ts/perf-record.c or using it as a start for a test that stresses this code.
+>
+> This is not a prerequisite for having your fix on, but would help checkin=
+g that perf doesn't regresses in this area.
+>
+> - Arnaldo
 
-This changes adds a separate framebuffer max width/height fields
-in drm_mode_config to allow vendors to set if they are different
-than that of the default max resolution values.
+I have updated the patch to use the earlier version, which more closely mat=
+ches the kernel.
 
-Vendors setting these fields should fix their mode_set paths too
-by filtering and validating the modes against the appropriate max
-fields in their mode_valid() implementations.
+I have updated the commit message to include the repro info.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Jeykumar Sankaran <jsanka@codeaurora.org>
----
- drivers/gpu/drm/drm_framebuffer.c | 15 +++++++++++----
- include/drm/drm_mode_config.h     |  3 +++
- 2 files changed, 14 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/drm_framebuffer.c b/drivers/gpu/drm/drm_framebuffer.c
-index 5756431..2083168 100644
---- a/drivers/gpu/drm/drm_framebuffer.c
-+++ b/drivers/gpu/drm/drm_framebuffer.c
-@@ -300,14 +300,21 @@ struct drm_framebuffer *
- 		return ERR_PTR(-EINVAL);
- 	}
- 
--	if ((config->min_width > r->width) || (r->width > config->max_width)) {
-+	if ((config->min_width > r->width) ||
-+	    (!config->max_fb_width && r->width > config->max_width) ||
-+	    (config->max_fb_width && r->width > config->max_fb_width)) {
- 		DRM_DEBUG_KMS("bad framebuffer width %d, should be >= %d && <= %d\n",
--			  r->width, config->min_width, config->max_width);
-+			r->width, config->min_width, config->max_fb_width ?
-+			config->max_fb_width : config->max_width);
- 		return ERR_PTR(-EINVAL);
- 	}
--	if ((config->min_height > r->height) || (r->height > config->max_height)) {
-+
-+	if ((config->min_height > r->height) ||
-+	    (!config->max_fb_height && r->height > config->max_height) ||
-+	    (config->max_fb_height && r->height > config->max_fb_height)) {
- 		DRM_DEBUG_KMS("bad framebuffer height %d, should be >= %d && <= %d\n",
--			  r->height, config->min_height, config->max_height);
-+			r->height, config->min_height, config->max_fb_width ?
-+			config->max_fb_height : config->max_height);
- 		return ERR_PTR(-EINVAL);
- 	}
- 
-diff --git a/include/drm/drm_mode_config.h b/include/drm/drm_mode_config.h
-index 3bcbe30..c6394ed 100644
---- a/include/drm/drm_mode_config.h
-+++ b/include/drm/drm_mode_config.h
-@@ -339,6 +339,8 @@ struct drm_mode_config_funcs {
-  * @min_height: minimum fb pixel height on this device
-  * @max_width: maximum fb pixel width on this device
-  * @max_height: maximum fb pixel height on this device
-+ * @max_fb_width: maximum fb buffer width if differs from max_width
-+ * @max_fb_height: maximum fb buffer height if differs from  max_height
-  * @funcs: core driver provided mode setting functions
-  * @fb_base: base address of the framebuffer
-  * @poll_enabled: track polling support for this device
-@@ -523,6 +525,7 @@ struct drm_mode_config {
- 
- 	int min_width, min_height;
- 	int max_width, max_height;
-+	int max_fb_width, max_fb_height;
- 	const struct drm_mode_config_funcs *funcs;
- 	resource_size_t fb_base;
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+I am including a few other patches I have generated while adding support fo=
+r perf jitdump to coreclr.
