@@ -2,144 +2,176 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E04C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 06:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 154A7C388F3
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 06:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 176E9207FA
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 06:22:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hoW52JNO"
+	by mail.kernel.org (Postfix) with ESMTP id EAAC120830
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 06:57:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbfI1GWg (ORCPT
+        id S1726019AbfI1G5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Sep 2019 02:22:36 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:34808 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbfI1GWg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Sep 2019 02:22:36 -0400
-Received: by mail-yb1-f193.google.com with SMTP id p11so2764186ybc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 23:22:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Bg7uM/vqGqsjyM9H0Hgoy0WYnWDjhpVkIU5063YeccE=;
-        b=hoW52JNOW+UrzwDPyp5y+OJVXfOYJeQM61QNHfj8TFQE5loHjsGS/anBQbi0gKJABo
-         97Zfz7DYXT+PnmSh2VqJv3UbJD4lU4TEs8B7Ke88pNI/1boVCi7XFzlrGyDBzCS1eQyQ
-         3GaRUJppIwhTL2O9pfuhoXou00xPoRpo2V2f0LatTw2E9nGFgHSGiIbpxexc/n4DF4hH
-         j6CV8smroWMwONQFcrKCx0mblkNb6XyshYOE6VhynxtjgGPMBAyRRkuZl8104ym+ZIV9
-         5V9HOp49sSMIF1BJ0mmcB68XI8X5MCL+AjVI0+FwYXrbof7VwpfIn4k2SYvTZMSvtO8p
-         47Ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Bg7uM/vqGqsjyM9H0Hgoy0WYnWDjhpVkIU5063YeccE=;
-        b=c+UR9aFXH44kAEuwZYt7sSJ78EuJBNEI4/oYSuDUxaTVh2DKMasJ4cOt3GSXabQIqD
-         0yNRsvK5JRkAO7y0MCF1aYCMPjhuwasFL9U7crY8cKNoqHq2OLYjnDoWn7QylsHijYnc
-         SBuclpL/HY0WSIMoC9TFdUjmkGh3C7tW1/13PxcQYZg1AGbKU6ee6cJPDIjVwbUNBqvu
-         aYFlWyXH6ctZrokQDH3nQgUBnOwDr7hUZ18IeYE/Go8V+c0qy04AhYAMYyBKLGZXGuDS
-         B4ASWAGYPoPGQ/RyFG/ifpkKy9RK+8nUnxqwxhC00vr8It43YvTHnHVh1gfyqpcd4hs1
-         p8dQ==
-X-Gm-Message-State: APjAAAUaqZ/x47M+TLJZA+LIBmuHHKObxe/H4I2FZz2Vexgrpnb9cVmS
-        mQydu3msBemzN112pqhlCGWJMGgo38AwWWWzBbo=
-X-Google-Smtp-Source: APXvYqyANmT1+JktvebdIP3ODZAdL6CKSso8Gua+q3zbGI/cl6lVo2NUOIn6bpTPmm0tSOitNUy7sg/gnT1dG/L18I4=
-X-Received: by 2002:a25:a87:: with SMTP id 129mr8587098ybk.203.1569651755563;
- Fri, 27 Sep 2019 23:22:35 -0700 (PDT)
+        Sat, 28 Sep 2019 02:57:08 -0400
+Received: from 178.115.242.59.static.drei.at ([178.115.242.59]:33763 "EHLO
+        mail.osadl.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725283AbfI1G5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Sep 2019 02:57:08 -0400
+X-Greylist: delayed 583 seconds by postgrey-1.27 at vger.kernel.org; Sat, 28 Sep 2019 02:57:07 EDT
+Received: by mail.osadl.at (Postfix, from userid 1001)
+        id 98F565C0864; Sat, 28 Sep 2019 08:47:20 +0200 (CEST)
+Date:   Sat, 28 Sep 2019 08:47:20 +0200
+From:   Nicholas Mc Guire <der.herr@hofr.at>
+To:     Yizhuo <yzhai003@ucr.edu>
+Cc:     csong@cs.ucr.edu, zhiyunq@cs.ucr.edu,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nicholas Mc Guire <hofrat@osadl.org>,
+        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: adc: meson-saradc: Variables could be uninitalized
+ if regmap_read() fails
+Message-ID: <20190928064720.GA24515@osadl.at>
+References: <20190928004642.28932-1-yzhai003@ucr.edu>
 MIME-Version: 1.0
-References: <20190927231418.83100-1-aou@eecs.berkeley.edu>
-In-Reply-To: <20190927231418.83100-1-aou@eecs.berkeley.edu>
-From:   Bin Meng <bmeng.cn@gmail.com>
-Date:   Sat, 28 Sep 2019 14:22:22 +0800
-Message-ID: <CAEUhbmURq0M3sPecxTdOwrB+vP5GB59_Du=7hVsaVMAqO-nk4w@mail.gmail.com>
-Subject: Re: [PATCH v2] riscv: Fix memblock reservation for device tree blob
-To:     Albert Ou <aou@eecs.berkeley.edu>
-Cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190928004642.28932-1-yzhai003@ucr.edu>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 28, 2019 at 7:14 AM Albert Ou <aou@eecs.berkeley.edu> wrote:
->
-> This fixes an error with how the FDT blob is reserved in memblock.
-> An incorrect physical address calculation exposed the FDT header to
-> unintended corruption, which typically manifested with of_fdt_raw_init()
-> faulting during late boot after fdt_totalsize() returned a wrong value.
-> Systems with smaller physical memory sizes more frequently trigger this
-> issue, as the kernel is more likely to allocate from the DMA32 zone
-> where bbl places the DTB after the kernel image.
->
-> Commit 671f9a3e2e24 ("RISC-V: Setup initial page tables in two stages")
-> changed the mapping of the DTB to reside in the fixmap area.
-> Consequently, early_init_fdt_reserve_self() cannot be used anymore in
-> setup_bootmem() since it relies on __pa() to derive a physical address,
-> which does not work with dtb_early_va that is no longer a valid kernel
-> logical address.
->
-> The reserved[0x1] region shows the effect of the pointer underflow
-> resulting from the __pa(initial_boot_params) offset subtraction:
->
-> [    0.000000] MEMBLOCK configuration:
-> [    0.000000]  memory size = 0x000000001fe00000 reserved size = 0x0000000000a2e514
-> [    0.000000]  memory.cnt  = 0x1
-> [    0.000000]  memory[0x0]     [0x0000000080200000-0x000000009fffffff], 0x000000001fe00000 bytes flags: 0x0
-> [    0.000000]  reserved.cnt  = 0x2
-> [    0.000000]  reserved[0x0]   [0x0000000080200000-0x0000000080c2dfeb], 0x0000000000a2dfec bytes flags: 0x0
-> [    0.000000]  reserved[0x1]   [0xfffffff080100000-0xfffffff080100527], 0x0000000000000528 bytes flags: 0x0
->
-> With the fix applied:
->
-> [    0.000000] MEMBLOCK configuration:
-> [    0.000000]  memory size = 0x000000001fe00000 reserved size = 0x0000000000a2e514
-> [    0.000000]  memory.cnt  = 0x1
-> [    0.000000]  memory[0x0]     [0x0000000080200000-0x000000009fffffff], 0x000000001fe00000 bytes flags: 0x0
-> [    0.000000]  reserved.cnt  = 0x2
-> [    0.000000]  reserved[0x0]   [0x0000000080200000-0x0000000080c2dfeb], 0x0000000000a2dfec bytes flags: 0x0
-> [    0.000000]  reserved[0x1]   [0x0000000080e00000-0x0000000080e00527], 0x0000000000000528 bytes flags: 0x0
->
-> Fixes: 671f9a3e2e24 ("RISC-V: Setup initial page tables in two stages")
+On Fri, Sep 27, 2019 at 05:46:41PM -0700, Yizhuo wrote:
+> Several functions in this file are trying to use regmap_read() to
+> initialize the specific variable, however, if regmap_read() fails,
+> the variable could be uninitialized but used directly, which is
+> potentially unsafe. The return value of regmap_read() should be
+> checked and handled.
+> 
+> Signed-off-by: Yizhuo <yzhai003@ucr.edu>
 
-I also found that with commit 671f9a3e2e24 ("RISC-V: Setup initial
-page tables in two stages"), when booting the kernel from U-Boot via:
+Just a few minor style issues - contentwise it look correct to me.
+Reviewed-by: Nicholas Mc Guire <hofrat@osadl.org>
 
-=> bootm $kernel_addr_t - $fdtcontroladdr
-($kernel_addr_t = 0x84000000 and $fdtcontroladdr = 0xff741c60)
-
-kernel does not boot. I looked at people's instructions of booting
-Linux kernel, and they seem to have such:
-
-=> cp.l ${fdtcontroladdr} ${fdt_addr_r} 0x10000
-=> bootm ${kernel_addr_r} - ${fdt_addr_r}
-
-where ${fdt_addr_r} is 0x88000000, and "bootm 84000000  - 88000000"
-can make the kernel boot.
-
-Thanks for the patch. Now "bootm $kernel_addr_t - $fdtcontroladdr" works again!
-
-Tested-by: Bin Meng <bmeng.cn@gmail.com>
-
-> Signed-off-by: Albert Ou <aou@eecs.berkeley.edu>
 > ---
->
-> Changes in v2:
-> * Changed variable identifier to dtb_early_pa per reviewer feedback.
-> * Removed whitespace change.
->
->  arch/riscv/mm/init.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
->
+>  drivers/iio/adc/meson_saradc.c | 28 +++++++++++++++++++++++-----
+>  1 file changed, 23 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/meson_saradc.c b/drivers/iio/adc/meson_saradc.c
+> index 7b28d045d271..c032a64108b4 100644
+> --- a/drivers/iio/adc/meson_saradc.c
+> +++ b/drivers/iio/adc/meson_saradc.c
+> @@ -323,6 +323,7 @@ static int meson_sar_adc_wait_busy_clear(struct iio_dev *indio_dev)
+>  {
+>  	struct meson_sar_adc_priv *priv = iio_priv(indio_dev);
+>  	int regval, timeout = 10000;
+> +	int ret;
+>  
+>  	/*
+>  	 * NOTE: we need a small delay before reading the status, otherwise
+> @@ -331,7 +332,9 @@ static int meson_sar_adc_wait_busy_clear(struct iio_dev *indio_dev)
+>  	 */
+>  	do {
+>  		udelay(1);
+> -		regmap_read(priv->regmap, MESON_SAR_ADC_REG0, &regval);
+> +		ret = regmap_read(priv->regmap, MESON_SAR_ADC_REG0, &regval);
+> +		if (ret)
+> +			return ret;
+>  	} while (FIELD_GET(MESON_SAR_ADC_REG0_BUSY_MASK, regval) && timeout--);
+>  
+>  	if (timeout < 0)
+> @@ -358,7 +361,11 @@ static int meson_sar_adc_read_raw_sample(struct iio_dev *indio_dev,
 
-Regards,
-Bin
+any reason not to declear ret in the declaration block ?
+so just for consistency with coding style within meson_saradc.c
+this might be:
+
+	int regval, fifo_chan, fifo_val, count;
++	int ret;
+
+>  		return -EINVAL;
+>  	}
+>  
+> -	regmap_read(priv->regmap, MESON_SAR_ADC_FIFO_RD, &regval);
+> +	int ret = regmap_read(priv->regmap, MESON_SAR_ADC_FIFO_RD, &regval);
+
++	ret = regmap_read(priv->regmap, MESON_SAR_ADC_FIFO_RD, &regval);
+
+> +
+> +	if (ret)
+> +		return ret;
+> +
+>  	fifo_chan = FIELD_GET(MESON_SAR_ADC_FIFO_RD_CHAN_ID_MASK, regval);
+>  	if (fifo_chan != chan->address) {
+>  		dev_err(&indio_dev->dev,
+> @@ -491,6 +498,7 @@ static int meson_sar_adc_lock(struct iio_dev *indio_dev)
+>  {
+>  	struct meson_sar_adc_priv *priv = iio_priv(indio_dev);
+>  	int val, timeout = 10000;
+> +	int ret;
+>  
+>  	mutex_lock(&indio_dev->mlock);
+>  
+> @@ -506,7 +514,10 @@ static int meson_sar_adc_lock(struct iio_dev *indio_dev)
+>  		 */
+>  		do {
+>  			udelay(1);
+> -			regmap_read(priv->regmap, MESON_SAR_ADC_DELAY, &val);
+> +			ret = regmap_read(priv->regmap,
+> +					MESON_SAR_ADC_DELAY, &val);
+
+checkpatch does not fuss here but the continuation should be alligned
+witht the ( here
+
+> +			if (ret)
+> +				return ret;
+>  		} while (val & MESON_SAR_ADC_DELAY_BL30_BUSY && timeout--);
+>  
+>  		if (timeout < 0) {
+> @@ -784,7 +795,10 @@ static int meson_sar_adc_init(struct iio_dev *indio_dev)
+>  		 * BL30 to make sure BL30 gets the values it expects when
+>  		 * reading the temperature sensor.
+>  		 */
+> -		regmap_read(priv->regmap, MESON_SAR_ADC_REG3, &regval);
+> +		ret = regmap_read(priv->regmap, MESON_SAR_ADC_REG3, &regval);
+> +		if (ret)
+> +			return ret;
+> +
+>  		if (regval & MESON_SAR_ADC_REG3_BL30_INITIALIZED)
+>  			return 0;
+>  	}
+> @@ -1014,7 +1028,11 @@ static irqreturn_t meson_sar_adc_irq(int irq, void *data)
+>  	unsigned int cnt, threshold;
+>  	u32 regval;
+
+same as above
+
++       int ret;
+
+>  
+> -	regmap_read(priv->regmap, MESON_SAR_ADC_REG0, &regval);
+> +	int ret = regmap_read(priv->regmap, MESON_SAR_ADC_REG0, &regval);
+
++	ret = regmap_read(priv->regmap, MESON_SAR_ADC_REG0, &regval);
+
+> +
+> +	if (ret)
+> +		return ret;
+> +
+>  	cnt = FIELD_GET(MESON_SAR_ADC_REG0_FIFO_COUNT_MASK, regval);
+>  	threshold = FIELD_GET(MESON_SAR_ADC_REG0_FIFO_CNT_IRQ_MASK, regval);
+>  
+> -- 
+> 2.17.1
+> 
