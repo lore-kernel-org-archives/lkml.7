@@ -4,43 +4,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69243C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 02:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8719C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 02:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3FE2086A
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 02:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88E9C21655
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 02:29:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728427AbfI1CFK (ORCPT
+        id S1728267AbfI1CYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 22:05:10 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:58846 "EHLO huawei.com"
+        Fri, 27 Sep 2019 22:24:24 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:58164 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725990AbfI1CFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 22:05:09 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9DDB44CD10C3886E974F;
-        Sat, 28 Sep 2019 10:05:06 +0800 (CST)
-Received: from [127.0.0.1] (10.184.12.158) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Sat, 28 Sep 2019
- 10:04:57 +0800
-Subject: Re: [PATCH 20/35] irqchip/gic-v4.1: Allow direct invalidation of
- VLPIs
+        id S1725990AbfI1CYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 22:24:23 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 6D27871ACCD5290A275B;
+        Sat, 28 Sep 2019 10:24:21 +0800 (CST)
+Received: from [127.0.0.1] (10.184.12.158) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Sat, 28 Sep 2019
+ 10:24:11 +0800
+Subject: Re: [PATCH 24/35] irqchip/gic-v4.1: Add initial SGI configuration
 To:     Marc Zyngier <maz@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
         <linux-kernel@vger.kernel.org>
 CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Jason Cooper <jason@lakedaemon.net>,
         Thomas Gleixner <tglx@linutronix.de>
 References: <20190923182606.32100-1-maz@kernel.org>
- <20190923182606.32100-21-maz@kernel.org>
+ <20190923182606.32100-25-maz@kernel.org>
 From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <db01f956-bc53-b8a5-9406-15b889d717f0@huawei.com>
-Date:   Sat, 28 Sep 2019 10:02:07 +0800
+Message-ID: <4ad002e2-1b3c-3420-98a5-0bedf067cfd9@huawei.com>
+Date:   Sat, 28 Sep 2019 10:20:56 +0800
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
  Thunderbird/64.0
 MIME-Version: 1.0
-In-Reply-To: <20190923182606.32100-21-maz@kernel.org>
+In-Reply-To: <20190923182606.32100-25-maz@kernel.org>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -51,89 +50,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Marc,
+
 On 2019/9/24 2:25, Marc Zyngier wrote:
-> Just like for INVALL, GICv4.1 has grown a VPE-aware INVLPI register.
-> Let's plumb it in and make use of the DirectLPI code in that case.
+> The GICv4.1 ITS has yet another new command (VSGI) which allows
+> a VPE-targeted SGI to be configured (or have its pending state
+> cleared). Add support for this command and plumb it into the
+> activate irqdomain callback so that it is ready to be used.
 > 
 > Signed-off-by: Marc Zyngier <maz@kernel.org>
 > ---
->   drivers/irqchip/irq-gic-v3-its.c   | 19 +++++++++++++++++--
->   include/linux/irqchip/arm-gic-v3.h |  1 +
->   2 files changed, 18 insertions(+), 2 deletions(-)
+>   drivers/irqchip/irq-gic-v3-its.c   | 88 ++++++++++++++++++++++++++++++
+>   include/linux/irqchip/arm-gic-v3.h |  3 +-
+>   2 files changed, 90 insertions(+), 1 deletion(-)
 > 
 > diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-> index b791c9beddf2..34595a7fcccb 100644
+> index 69c26be709be..5234b9eef8ad 100644
 > --- a/drivers/irqchip/irq-gic-v3-its.c
 > +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -1200,13 +1200,27 @@ static void wait_for_syncr(void __iomem *rdbase)
+
+[...]
+
+> @@ -3574,6 +3628,38 @@ static struct irq_chip its_vpe_4_1_irq_chip = {
+>   	.irq_set_vcpu_affinity	= its_vpe_4_1_set_vcpu_affinity,
+>   };
 >   
->   static void direct_lpi_inv(struct irq_data *d)
->   {
-> +	struct its_vlpi_map *map = get_vlpi_map(d);
->   	struct its_collection *col;
->   	void __iomem *rdbase;
-> +	u64 val;
+> +static struct its_node *find_4_1_its(void)
+> +{
+> +	static struct its_node *its = NULL;
 > +
-> +	if (map) {
-> +		struct its_device *its_dev = irq_data_get_irq_chip_data(d);
+> +	if (!its) {
+> +		list_for_each_entry(its, &its_nodes, entry) {
+> +			if (is_v4_1(its))
+> +				return its;
+> +		}
 > +
-> +		WARN_ON(!is_v4_1(its_dev->its));
-> +
-> +		val  = GICR_INVLPIR_V;
-> +		val |= FIELD_PREP(GICR_INVLPIR_VPEID, map->vpe->vpe_id);
-> +		val |= FIELD_PREP(GICR_INVLPIR_INTID, map->vintid);
-> +	} else {
-> +		val = d->hwirq;
+> +		/* Oops? */
+> +		its = NULL;
 > +	}
->   
->   	/* Target the redistributor this LPI is currently routed to */
->   	col = irq_to_col(d);
+> +
+> +	return its;
+> +}
+> +
+> +static void its_configure_sgi(struct irq_data *d, bool clear)
+> +{
+> +	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
+> +	struct its_cmd_desc desc;
+> +
+> +	desc.its_vsgi_cmd.vpe = vpe;
+> +	desc.its_vsgi_cmd.sgi = d->hwirq;
+> +	desc.its_vsgi_cmd.priority = vpe->sgi_config[d->hwirq].priority;
+> +	desc.its_vsgi_cmd.enable = vpe->sgi_config[d->hwirq].enabled;
+> +	desc.its_vsgi_cmd.group = vpe->sgi_config[d->hwirq].group;
+> +	desc.its_vsgi_cmd.clear = clear;
+> +
+> +	its_send_single_vcommand(find_4_1_its(), its_build_vsgi_cmd, &desc);
 
-I think irq_to_col() may not work when GICv4.1 VLPIs are involved in.
-
-irq_to_col() gives us col_map[event] as the target redistributor,
-but the correct one for VLPIs should be vlpi_maps[event]->vpe->col_idx.
-These two are not always pointing to the same physical RD.
-For example, if guest issues a MOVI against a VLPI, we will update the
-corresponding vlpi_map->vpe and issue a VMOVI on ITS... but leave the
-col_map[event] unchanged.
-
-col_map[event] usually describes the physical LPI's CPU affinity, but
-when this physical LPI serves as something which the VLPI is backed by,
-we take really little care of it.  Did I miss something here?
+I can't follow the logic in find_4_1_its().  We simply use the first ITS
+with GICv4.1 support, but what if the vPE is not mapped on this ITS?
+We will fail the valid_vpe() check when building this command and will
+have no effect on HW in the end?
 
 
 Thanks,
 zenghui
 
-
->   	rdbase = per_cpu_ptr(gic_rdists->rdist, col->col_id)->rd_base;
-> -	gic_write_lpir(d->hwirq, rdbase + GICR_INVLPIR);
-> +	gic_write_lpir(val, rdbase + GICR_INVLPIR);
->   
->   	wait_for_syncr(rdbase);
+> +}
+> +
+>   static int its_sgi_set_affinity(struct irq_data *d,
+>   				const struct cpumask *mask_val,
+>   				bool force)
+> @@ -3619,6 +3705,8 @@ static void its_sgi_irq_domain_free(struct irq_domain *domain,
+>   static int its_sgi_irq_domain_activate(struct irq_domain *domain,
+>   				       struct irq_data *d, bool reserve)
+>   {
+> +	/* Write out the initial SGI configuration */
+> +	its_configure_sgi(d, false);
+>   	return 0;
 >   }
-> @@ -1216,7 +1230,8 @@ static void lpi_update_config(struct irq_data *d, u8 clr, u8 set)
->   	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
 >   
->   	lpi_write_config(d, clr, set);
-> -	if (gic_rdists->has_direct_lpi && !irqd_is_forwarded_to_vcpu(d))
-> +	if (gic_rdists->has_direct_lpi &&
-> +	    (is_v4_1(its_dev->its) || !irqd_is_forwarded_to_vcpu(d)))
->   		direct_lpi_inv(d);
->   	else
->   		its_send_inv(its_dev, its_get_event_id(d));
 > diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
-> index b69f60792554..5f3278cbf247 100644
+> index 5f3278cbf247..c73176d3ab2b 100644
 > --- a/include/linux/irqchip/arm-gic-v3.h
 > +++ b/include/linux/irqchip/arm-gic-v3.h
-> @@ -247,6 +247,7 @@
->   #define GICR_TYPER_COMMON_LPI_AFF	GENMASK_ULL(25, 24)
->   #define GICR_TYPER_AFFINITY		GENMASK_ULL(63, 32)
+> @@ -497,8 +497,9 @@
+>   #define GITS_CMD_VMAPTI			GITS_CMD_GICv4(GITS_CMD_MAPTI)
+>   #define GITS_CMD_VMOVI			GITS_CMD_GICv4(GITS_CMD_MOVI)
+>   #define GITS_CMD_VSYNC			GITS_CMD_GICv4(GITS_CMD_SYNC)
+> -/* VMOVP and INVDB are the odd ones, as they dont have a physical counterpart */
+> +/* VMOVP, VSGI and INVDB are the odd ones, as they dont have a physical counterpart */
+>   #define GITS_CMD_VMOVP			GITS_CMD_GICv4(2)
+> +#define GITS_CMD_VSGI			GITS_CMD_GICv4(3)
+>   #define GITS_CMD_INVDB			GITS_CMD_GICv4(0xe)
 >   
-> +#define GICR_INVLPIR_INTID		GENMASK_ULL(31, 0)
->   #define GICR_INVLPIR_VPEID		GENMASK_ULL(47, 32)
->   #define GICR_INVLPIR_V			GENMASK_ULL(63, 63)
->   
+>   /*
 > 
 
