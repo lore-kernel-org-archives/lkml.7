@@ -2,135 +2,80 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83618C32793
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 21:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96613C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 21:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BFA8208E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 21:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6826320863
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 21:47:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MNzZrXao"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JI+T+tHy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728790AbfI1Vgf (ORCPT
+        id S1728828AbfI1VrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Sep 2019 17:36:35 -0400
-Received: from mail-io1-f43.google.com ([209.85.166.43]:36584 "EHLO
-        mail-io1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726581AbfI1Vgf (ORCPT
+        Sat, 28 Sep 2019 17:47:18 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45998 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726581AbfI1VrS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Sep 2019 17:36:35 -0400
-Received: by mail-io1-f43.google.com with SMTP id b136so27262088iof.3;
-        Sat, 28 Sep 2019 14:36:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=5N4/gVVHg8/PXbBpdg5Q+FRK+1aZx3zHcEy4NEqiJd4=;
-        b=MNzZrXaoy2TPXpWG4NBGtaMn+r5sli8/zEzYtR0/pRwqIr1TP8ziTcAEBcQ+Sh5+9y
-         F71vk79/k8uP50HgzpZi77kMsM9WQqmRiQWvyEeVgkCvA5us50sIwOoWtvNJmMlpO9Ym
-         63DrvCmTn2znGGoPu7tPfOyHYpxeWc22Wk88zoWY1yx42/ruDghjrEpRwgZv6SfzNdTP
-         TaqIFqodvDCedIg4goJIfNY8b0U/2xxko2DuWXGSM/Isys+eLtA45Sxx/SBho0kAA+P6
-         G1BlKMvDnlFG52vO+BmVZnu5uyiQ1oar3ziVrV2Yy8Ozxy0ND7aYHlN31D+CZTnp37dY
-         N/Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=5N4/gVVHg8/PXbBpdg5Q+FRK+1aZx3zHcEy4NEqiJd4=;
-        b=BNpj9jgHKsrbI963HJOware+0Lpiix5NqYgFjeBopKytcXFi0apZC4VW5Q/xRYHC9w
-         3jIp/JITET/z02VD4gCVKlSHPmOZ8gPIhYwQz+eqKVbXUft3+4dWDOIBzf5SyDklLnpi
-         5x0XfJ9UxcdOKRbCA7OYk2X2BUSNlGBhToTpol8/KigXNrdfSLTppZyv56GXEeFPk+yp
-         2mEsovv3CY1Q9wynjayNFdDq698sqH0/V/1rRZ3KUEez3Eo5L8gdtgFk7I9BWrxV9i+4
-         sKweNr72tWweVEijhpFSRUMZn4TtxiAVVCpPJbNoxWfCshHYe8iEDjf9LUNw3NBF/3kZ
-         UiXQ==
-X-Gm-Message-State: APjAAAXM5s4WPSJHFHzyVm7UkhvCXYDGu1vgSZXTmx8Z9An6TpZGZ5Eo
-        3mXtoAOXhtHwfcVRCGCFlLA03Kq+S+SY2ZRRT4DyrXqDLwE=
-X-Google-Smtp-Source: APXvYqxnXaC+9p8LeEm+NJ6+Bo+NYpDLlxh0kkJV07GLJbeIqGODs1GCXkzlOMeua378WEyd73MOTxVHmLfQgzOjfvE=
-X-Received: by 2002:a05:6e02:60f:: with SMTP id t15mr12840728ils.3.1569706592677;
- Sat, 28 Sep 2019 14:36:32 -0700 (PDT)
+        Sat, 28 Sep 2019 17:47:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=mS/WPmBvHmCvj9LjwYuwySkMwkJdIDR8uWJJT1v85Tw=; b=JI+T+tHy6rTt1mdzgwGOmKKEs
+        PymbdU108IKyAkfNxlhutuKqr8cbiDtDtxbJw1VjmNJOTx9ok9ee2CCpnBkgrn57q2yhbAfYOMm/0
+        5WL1oo4a1Hn2JbklNoa6V4Y5UyBAtwS26p1vOhP+6IGden8CVhlu0IHAc9A/6woZl707YpUV0LHUz
+        sjAVlUQcCsq3T/A+OlQ4fhW9oeYa7xF6jyEZyFchcj4Yqy6y6c5yqfP0lutD/w+1Uglz+0SOEj9rh
+        +bZ8eqyFQkKPCGe7x67dRzgZpaApitQ9ci0Orv/g++BY6JytSd1BqEh1pVBrfWqltpiCDkBWLPEKE
+        S0XRUDKtw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iEKYQ-0001pU-Bp; Sat, 28 Sep 2019 21:47:02 +0000
+Date:   Sat, 28 Sep 2019 14:47:02 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        tglx@linutronix.de, Enrico Weigelt <info@metux.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] mm, vmpressure: Fix a signedness bug in
+ vmpressure_register_event()
+Message-ID: <20190928214702.GA30382@bombadil.infradead.org>
+References: <20190925110449.GO3264@mwanda>
+ <20190928142356.932cff0ad6c17f4a18edc80f@linux-foundation.org>
 MIME-Version: 1.0
-From:   Steve French <smfrench@gmail.com>
-Date:   Sat, 28 Sep 2019 16:36:21 -0500
-Message-ID: <CAH2r5mu_4C=V=BsNAsEiPQp-rFbV-rYixgkpG1oJzRWdSsbejw@mail.gmail.com>
-Subject: [GIT PULL] SMB3 Fixes
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     CIFS <linux-cifs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190928142356.932cff0ad6c17f4a18edc80f@linux-foundation.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please update the following changes since commit
-4d6bcba70aeb4a512ead9c9eaf9edc6bbab00b14:
+On Sat, Sep 28, 2019 at 02:23:56PM -0700, Andrew Morton wrote:
+> How about doing it this way?  Only copy the int to the enum once we
+> know it's within range?
 
-  cifs: update internal module version number (2019-09-16 19:18:39 -0500)
+This will return a positive integer on success instead of 0.  We need:
 
-are available in the Git repository at:
+ 	mutex_unlock(&vmpr->events_lock);
++	ret = 0;
+ out:
 
-  git://git.samba.org/sfrench/cifs-2.6.git tags/5.4-rc-smb3-fixes
+with that,
 
-for you to fetch changes up to a016e2794fc3a245a91946038dd8f34d65e53cc3:
+Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-  CIFS: Fix oplock handling for SMB 2.1+ protocols (2019-09-26 16:42:44 -0500)
+How about further adding ...
 
-----------------------------------------------------------------
-Fixes from the recent SMB3 Test events and Storage Developer
-Conference (held the last two weeks).
-
-9 smb3 patches including an important patch needed for viewing SMB3
-encrypted traffic in wireshark for debugging, and 3 patches for stable
-
-Buildbot SMB3 regression tests passed:
-http://smb3-test-rhel-75.southcentralus.cloudapp.azure.com/#/builders/2/builds/253
-
-Additional fixes from last week to better handle some newly discovered
-reparse points, and a fix the create/mkdir path for setting the mode
-more atomically (in SMB3 Create security descriptor context), and one
-for path name processing are still being tested so are not included in
-this PR.
-
-----------------------------------------------------------------
-Murphy Zhou (1):
-      CIFS: fix max ea value size
-
-Pavel Shilovsky (1):
-      CIFS: Fix oplock handling for SMB 2.1+ protocols
-
-Steve French (5):
-      smb3: allow decryption keys to be dumped by admin for debugging
-      smb3: fix leak in "open on server" perf counter
-      smb3: Add missing reparse tags
-      smb3: pass mode bits into create calls
-      smb3: missing ACL related flags
-
-zhengbin (2):
-      fs/cifs/smb2pdu.c: Make SMB2_notify_init static
-      fs/cifs/sess.c: Remove set but not used variable 'capabilities'
-
- fs/cifs/cifs_ioctl.h |  9 +++++++++
- fs/cifs/cifsacl.h    | 81
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- fs/cifs/cifsglob.h   |  6 ++++--
- fs/cifs/cifsproto.h  |  3 ++-
- fs/cifs/cifssmb.c    |  3 ++-
- fs/cifs/inode.c      |  3 ++-
- fs/cifs/ioctl.c      | 29 +++++++++++++++++++++++++++++
- fs/cifs/sess.c       |  3 +--
- fs/cifs/smb2inode.c  | 34 +++++++++++++++++++---------------
- fs/cifs/smb2ops.c    | 10 ++++++++++
- fs/cifs/smb2pdu.c    | 23 ++++++++++++++++++++++-
- fs/cifs/smb2proto.h  |  3 ++-
- fs/cifs/smbfsctl.h   | 11 +++++++++++
- fs/cifs/xattr.c      |  2 +-
- 14 files changed, 194 insertions(+), 26 deletions(-)
-
-
--- 
-Thanks,
-
-Steve
++ * Return: 0 on success, -ENOMEM on memory failure or -EINVAL if @args could
++ * not be parsed.
