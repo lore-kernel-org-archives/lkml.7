@@ -2,113 +2,69 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 390BBC388F3
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 01:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C8DC388F3
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 01:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 106D421906
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 01:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B39421841
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 01:15:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569633305;
+	bh=7aOUjdezsTd6RNB3MK+Zy5lRVFHt/aG2SjoaqKn51VA=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=0qoHxz5+Jb/kQxJEqjwKij6rpQi8OSFv25LhO+CsSQMn6mqfR191wrb3AqEd4vSVA
+	 ZZ8mWi1zqGhmShGBpv83dh1MkxwuKOlP4WHxFU8wbsu454BtTPJ5SvbeCdfJKrWjUg
+	 Hp+Sdw6gamWGhpns5g8dxd5oehPBlF3Drz7NKTAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbfI1BMv (ORCPT
+        id S1728200AbfI1BPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 21:12:51 -0400
-Received: from gentwo.org ([3.19.106.255]:49786 "EHLO gentwo.org"
+        Fri, 27 Sep 2019 21:15:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725990AbfI1BMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 21:12:50 -0400
-Received: by gentwo.org (Postfix, from userid 1002)
-        id 438FF3EEC9; Sat, 28 Sep 2019 01:12:49 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-        by gentwo.org (Postfix) with ESMTP id 413B93E8CB;
-        Sat, 28 Sep 2019 01:12:49 +0000 (UTC)
-Date:   Sat, 28 Sep 2019 01:12:49 +0000 (UTC)
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@www.lameter.com
-To:     Vlastimil Babka <vbabka@suse.cz>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        David Sterba <dsterba@suse.cz>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        linux-btrfs@vger.kernel.org, Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [PATCH v2 2/2] mm, sl[aou]b: guarantee natural alignment for
- kmalloc(power-of-two)
-In-Reply-To: <6a28a096-0e65-c7ea-9ca9-f72d68948e10@suse.cz>
-Message-ID: <alpine.DEB.2.21.1909272251190.21341@www.lameter.com>
-References: <20190826111627.7505-1-vbabka@suse.cz> <20190826111627.7505-3-vbabka@suse.cz> <df8d1cf4-ff8f-1ee1-12fb-cfec39131b32@suse.cz> <20190923171710.GN2751@twin.jikos.cz> <alpine.DEB.2.21.1909242048020.17661@www.lameter.com>
- <20190924165425.a79a2dafbaf37828a931df2b@linux-foundation.org> <alpine.DEB.2.21.1909260005060.1508@www.lameter.com> <6a28a096-0e65-c7ea-9ca9-f72d68948e10@suse.cz>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        id S1725306AbfI1BPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 21:15:04 -0400
+Subject: Re: [GIT PULL] nfsd changes for 5.4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569633303;
+        bh=7aOUjdezsTd6RNB3MK+Zy5lRVFHt/aG2SjoaqKn51VA=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=YPKFrrgBtRmJ372EB1gPSU53IvAqSasvBaOOiLhiCiLHte3uUpc1XVsuBzJH2CtjS
+         o9EfK1wKWZq44+VQfdUke3FLhtAO0YCeTKuKOkoBefUmAB2m7iuq874ISEdV8Unlkx
+         Sq9uLL9DMTHKdJslsmG52MfBJTjmoUz1MZdD79j4=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190927200838.GA2618@fieldses.org>
+References: <20190927200838.GA2618@fieldses.org>
+X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190927200838.GA2618@fieldses.org>
+X-PR-Tracked-Remote: git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.4
+X-PR-Tracked-Commit-Id: 64a38e840ce5940253208eaba40265c73decc4ee
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4f375483559c94ec7c58fa3499e28e327d1ef911
+Message-Id: <156963330384.27765.9291757462869185181.pr-tracker-bot@kernel.org>
+Date:   Sat, 28 Sep 2019 01:15:03 +0000
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chuck Lever <chuck.lever@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 26 Sep 2019, Vlastimil Babka wrote:
+The pull request you sent on Fri, 27 Sep 2019 16:08:38 -0400:
 
-> > - It will only work for special cases like the kmalloc array
-> > without extras like metadata at the end of objects.
->
-> I don't understand what you mean here? The kmalloc caches are special
-> because they don't have metadata at the end of objects? Others do?
+> git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.4
 
-Yes.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4f375483559c94ec7c58fa3499e28e327d1ef911
 
-> > - These alignments are only needed in exceptional cases but with the patch
-> > we will provide the alignment by default even if the allocating subsystem
-> > does not need it.
->
-> True. This is where we have to make the decision whether to make things
-> simpler for those that don't realize they need the alignment, and
-> whether that's worth the cost. We have evidence of those cases, and the
-> cost is currently zero in the common cases (SLAB, SLUB without debug
-> runtime-enabled).
+Thank you!
 
-The cost is zero for a particular layout of the objects in a page using a
-particular allocator and hardware configuration.
-
-However, the layout may be different due to another allocator that prefers
-to arrange things differently (SLOB puts multiple objects of different
-types in the same page to save memory), if we need to add data to these
-objects (debugging info, new metadata about the object, maybe the memcg
-pointer, maybe other things that may come up), or other innovative
-approaches (such as putting data of different kmem caches that are
-commonly used together in the same page to improve locality).
-
-The cost is an unnecessary petrification of the data layout of the memory
-allocators.
-
-> > - We have mechanisms to detect alignment problems using debug kernels and
-> > debug options that have been available for years. These were not used for
-> > testing in these cases it seems before the patches hit mainline. Once in
-> > mainly someone ran a debug kernel and found the issue.
->
-> Debugging options are useful if you know there's a bug and you want to
-> find it. AFAIK the various bots/CIs that do e.g. randconfig, or enable
-> debug options explicitly, run those kernels in a VM, so I guess that's
-> why potential breakage due to alignment can lurk in a hw-specific driver.
-
-That is not my experience. You need to run debugging to verify that a
-patch does not cause locking problems, memory corruption etc etc. And
-upstream code is tested by various people with debugging kernels so they
-will locate the bugs that others introduce. This is usually not because
-there was a focus on a particular bug. If you have a hw specific thing
-that is not generally tested and skip the debugging tests well yes then we
-have a problem.
-
-What I have seen with developers is that they feel the debugging steps are
-unnecessary for conveniences sake. I have seen build environments that had
-proper steps for verification with a debug kernel. However, someone
-disabled them "some months ago" and "nothing happened". Then strange
-failures in production systems occur.
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
