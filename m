@@ -2,50 +2,50 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C44FFC4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 01:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE6A9C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 01:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B66120869
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 01:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94D8C20869
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 01:29:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hdjZvkQZ";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZXuRnuDC"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="N32Lfa0Y";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="O0L0ahWk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbfI1B2n (ORCPT
+        id S1728305AbfI1B3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 21:28:43 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:42640 "EHLO
+        Fri, 27 Sep 2019 21:29:00 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:43308 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbfI1B2n (ORCPT
+        with ESMTP id S1725306AbfI1B27 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 21:28:43 -0400
+        Fri, 27 Sep 2019 21:28:59 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 7329961231; Sat, 28 Sep 2019 01:28:42 +0000 (UTC)
+        id 038616155F; Sat, 28 Sep 2019 01:28:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569634122;
+        s=default; t=1569634139;
         bh=kbPZarCkYnlJWtdPyEyjjRJbhqhbOcPRYQvgulMnMvY=;
         h=From:To:Cc:Subject:Date:From;
-        b=hdjZvkQZo2N+fUk7Sx+pYGkNYjzSyMvZT38pn3PYdm7pQAs0Z3qsvEyV44v7ScS/t
-         Sif3OgTgCkQ0naYjj2QCwvY/UxLf4S7oRZzL9XuZxiuHqvAzfJKt3xhC9MaU3pcrjr
-         RBtI32eHFqnm68rJEIs9TU9VHQGulDaJXNtUjcQc=
+        b=N32Lfa0Y7LRi1uThRZ/7c7Srgdep5Yoos4XJTzy0HAf6KIJ6e3Z1rvkyBr7Y7eVSP
+         ONpxLfF0k7bgoBP/KYW9kY8Eg98kzae7Fev+Fox6QzpolRzscKxf7a3MbcgTEoMczB
+         mWcqbSwhxAKS6yka4vmpKMXEns8jmOVQYlaMrSgk=
 Received: from jeykumar-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: jsanka@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4D5DA60A60;
-        Sat, 28 Sep 2019 01:28:41 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DECE9611DC;
+        Sat, 28 Sep 2019 01:28:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569634121;
+        s=default; t=1569634138;
         bh=kbPZarCkYnlJWtdPyEyjjRJbhqhbOcPRYQvgulMnMvY=;
         h=From:To:Cc:Subject:Date:From;
-        b=ZXuRnuDCeN548AzE5Wzs5ogkd43oGCUNkvpy/bo8I7X1pOQsCewBHv/NRGmDl/8bg
-         26XNsi/tdBUxPZBoFCPe9MKQAMsozB0+CCjNlGj2SSRpFY697HZEYnRPCEc/xpG+rl
-         OWAse0U8VGHT5ZFU044ZavT1lLYK2WoGOgqiQySI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4D5DA60A60
+        b=O0L0ahWkKvLy6IZGm3VGL/RvsTxlYN41OBCib2zthF35LJ6AufeCnvVlpxMKsSCVf
+         9CSQ1/1pRUq23Z+PTxErUhLG/+BKtAZzcyUhPH/aOJv58t5L7uBgPeAIM1wKeMZXVz
+         Tf8JQDuMvPwoa/7EcEPHvZ3E5yKHNcTQbzDtCtO8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DECE9611DC
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jsanka@codeaurora.org
 From:   Jeykumar Sankaran <jsanka@codeaurora.org>
@@ -54,8 +54,8 @@ To:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
 Cc:     Jeykumar Sankaran <jsanka@codeaurora.org>, narmstrong@baylibre.com,
         seanpaul@chromium.org, robdclark@gmail.com, jcrouse@codeaurora.org
 Subject: [PATCH] Add framebuffer max width/height fields to drm_mode_config
-Date:   Fri, 27 Sep 2019 18:28:35 -0700
-Message-Id: <1569634116-13819-1-git-send-email-jsanka@codeaurora.org>
+Date:   Fri, 27 Sep 2019 18:28:50 -0700
+Message-Id: <1569634131-13875-1-git-send-email-jsanka@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
