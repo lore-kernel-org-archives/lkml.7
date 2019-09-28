@@ -2,156 +2,163 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E68C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 20:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B175C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 21:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADFE42081B
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 20:59:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569704389;
-	bh=dHDQcB7svL+eaSBP54YSK8pf/T/f1vQZyVio5FhayY4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cD3nWqkRWXad6n2h1/TyYag1+qZnbKrZwhX45tPSvlT65X7sf0IMiZbvX2B4a6V6d
-	 ivM5ZSIpLtNi9Hymqo4qFScp4gkDulKNBFRv9swem2AXjD+wKTTkwtjRDQ0/wkAtdK
-	 OkB4uMCJuTRkvfwWlAaDRvceQOiO1atTx7izxAug=
+	by mail.kernel.org (Postfix) with ESMTP id 5543320863
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 21:12:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728729AbfI1U7r (ORCPT
+        id S1728741AbfI1VMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Sep 2019 16:59:47 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:34756 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726581AbfI1U7q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Sep 2019 16:59:46 -0400
-Received: by mail-lf1-f65.google.com with SMTP id r22so4331648lfm.1
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Sep 2019 13:59:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nA9XhvmDPP8zs4JjFJOeuslROAGPKec0VWKiDgsMsAo=;
-        b=KRjbob1tCwjO/4jj3ojiuB847HVXl9G3M3ASy8896FQecUQKkH8RBaQGBAfLo10wgC
-         5Wtk1CVZ9RRM0oi/PQuiyCxKBXmdArn14By6S/8TM9oV+tPdagEWeiX+DNez5JG7Q5BM
-         WYxuQ/5vFBl/OQqgpeNL/iaJDj9FOMM3O4ffY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nA9XhvmDPP8zs4JjFJOeuslROAGPKec0VWKiDgsMsAo=;
-        b=TOPFMuGENJ+XsrUXGVGpip51PGl7mQissKuOI1JqEM7UrzICfkdJ5SL5XikNP03xyL
-         n96UJL6r1Syz2QOg56E9T1829+NIvxmaGDbDNXNlYb7ARnkirkzjcb9as9/zwzTLTAcU
-         ZW7zaKGZHR10tgQrlrNWc7kqZAwF7m/7i3IVTHm2DbxNjk4F4XdUhl8/kPkRfD97S7su
-         oI4sLaEKdXYvoDiD7JgB+a+pJ+dWXAgdHG6QcCjtey3JzQo63wa2g+c4Ol2sQPGzGlpz
-         FKP9703ZrQQ65SOwBrsK3JMOQn5raf4+pQubqOcvbK5vsQZUTN2tWW2ZBwR+k3rbFEf2
-         dPDw==
-X-Gm-Message-State: APjAAAWokAwV5Q9+HaWARzmZfmh/bZA/vaUiYUb6r9x5b/XtZB3LZC2k
-        fMHo2jNML/6i6EEgoDnQLTqUSHxuZ+c=
-X-Google-Smtp-Source: APXvYqzgc0spkHVDJJrrKCRAUxx5QBstaZ18oxLz4Ui2CMry7K70LKs1LeJI4o9Qf54p1xyaqk7DmA==
-X-Received: by 2002:ac2:4a8f:: with SMTP id l15mr6931075lfp.21.1569704384110;
-        Sat, 28 Sep 2019 13:59:44 -0700 (PDT)
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
-        by smtp.gmail.com with ESMTPSA id 196sm1529898ljj.76.2019.09.28.13.59.42
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 28 Sep 2019 13:59:42 -0700 (PDT)
-Received: by mail-lf1-f52.google.com with SMTP id c195so4300735lfg.9
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Sep 2019 13:59:42 -0700 (PDT)
-X-Received: by 2002:a19:7d55:: with SMTP id y82mr6858954lfc.106.1569704382232;
- Sat, 28 Sep 2019 13:59:42 -0700 (PDT)
+        Sat, 28 Sep 2019 17:12:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39328 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726581AbfI1VMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Sep 2019 17:12:02 -0400
+Received: from oasis.local.home (unknown [12.174.139.122])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BE2520863;
+        Sat, 28 Sep 2019 21:12:00 +0000 (UTC)
+Date:   Sat, 28 Sep 2019 17:11:58 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Naveen Rao <naveen.n.rao@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, mingo@redhat.com
+Subject: Re: [PATCH] tracing/probe: Fix to check the difference of nr_args
+ before adding probe
+Message-ID: <20190928171158.4b72ab55@oasis.local.home>
+In-Reply-To: <156966474783.3478.13217501608215769150.stgit@devnote2>
+References: <20190928011748.599255f6ffc9a4831e1efd2c@kernel.org>
+        <156966474783.3478.13217501608215769150.stgit@devnote2>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <alpine.DEB.2.21.1909041252230.94813@chino.kir.corp.google.com>
- <20190904205522.GA9871@redhat.com> <alpine.DEB.2.21.1909051400380.217933@chino.kir.corp.google.com>
- <20190909193020.GD2063@dhcp22.suse.cz> <20190925070817.GH23050@dhcp22.suse.cz>
- <alpine.DEB.2.21.1909261149380.39830@chino.kir.corp.google.com> <20190927074803.GB26848@dhcp22.suse.cz>
-In-Reply-To: <20190927074803.GB26848@dhcp22.suse.cz>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 28 Sep 2019 13:59:26 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgba5zOJtGBFCBP3Oc1m4ma+AR+80s=hy=BbvNr3GqEmA@mail.gmail.com>
-Message-ID: <CAHk-=wgba5zOJtGBFCBP3Oc1m4ma+AR+80s=hy=BbvNr3GqEmA@mail.gmail.com>
-Subject: Re: [patch for-5.3 0/4] revert immediate fallback to remote hugepages
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     David Rientjes <rientjes@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 12:48 AM Michal Hocko <mhocko@kernel.org> wrote:
->
-> -       page = get_page_from_freelist(gfp_mask, order, alloc_flags, ac);
-> +       if (!order)
-> +               page = get_page_from_freelist(gfp_mask, order, alloc_flags, ac);
->         if (page)
->                 goto got_pg;
->
-> The whole point of handling this in the page allocator directly is to
-> have a unified solutions rather than have each specific caller invent
-> its own way to achieve higher locality.
+On Sat, 28 Sep 2019 02:59:08 -0700
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-The above just looks hacky.
+> Fix to check the difference of nr_args before adding probe
+> on existing probes. This also may set the error log index
+> bigger than the number of command parameters. In that case
+> it sets the error position is next to the last parameter.
+> 
+> Fixes: ca89bc071d5e ("tracing/kprobe: Add multi-probe per event support")
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-Why would order-0 be special?
+I modified the change log a bit, below is the patch I plan on submitting.
 
-It really is hugepages that are special - small orders don't generally
-need a lot of compaction. and this secondary get_page_from_freelist()
-is not primarily about compaction, it's about relaxing some of the
-other constraints, and the actual alloc_flags have changed from the
-initial ones.
+You OK with this?
 
-I really think that you're missing the big picture. We want node
-locality, and we want big pages, but those "we want" simply shouldn't
-be as black-and-white as they sometimes are today. In fact, the whole
-black-and-white thing is completely crazy for anything but some
-test-load.
+-- Steve
 
-I will just do the reverts and apply David's two patches on top. We
-now have the time to actually test the behavior, and we're not just
-before a release.
 
-The thing is, David has numbers, and the patches make _sense_. There's
-a description of what they do, there are comments, but the *code*
-makes sense too. Much more sense than the above kind of insane hack.
-David's patches literally do two things:
+From: Masami Hiramatsu <mhiramat@kernel.org>
+Date: Sat, 28 Sep 2019 05:53:29 -0400
+Subject: [PATCH] tracing/probe: Fix to check the difference of nr_args before
+ adding probe
 
- - [3/4] just admit that the allocation failed when you're trying to
-allocate a huge-page and compaction wasn't successful
+Steven reported that a test triggered:
 
- - [4/4] when that huge-page allocation failed, retry on another node
-when appropriate
+==================================================================
+ BUG: KASAN: slab-out-of-bounds in trace_kprobe_create+0xa9e/0xe40
+ Read of size 8 at addr ffff8880c4f25a48 by task ftracetest/4798
 
-That's _literally_ what David's two patches do. The above is purely
-the English translation of the patches.
+ CPU: 2 PID: 4798 Comm: ftracetest Not tainted 5.3.0-rc6-test+ #30
+ Hardware name: Hewlett-Packard HP Compaq Pro 6300 SFF/339A, BIOS K01 v03.03 07/14/2016
+ Call Trace:
+  dump_stack+0x7c/0xc0
+  ? trace_kprobe_create+0xa9e/0xe40
+  print_address_description+0x6c/0x332
+  ? trace_kprobe_create+0xa9e/0xe40
+  ? trace_kprobe_create+0xa9e/0xe40
+  __kasan_report.cold.6+0x1a/0x3b
+  ? trace_kprobe_create+0xa9e/0xe40
+  kasan_report+0xe/0x12
+  trace_kprobe_create+0xa9e/0xe40
+  ? print_kprobe_event+0x280/0x280
+  ? match_held_lock+0x1b/0x240
+  ? find_held_lock+0xac/0xd0
+  ? fs_reclaim_release.part.112+0x5/0x20
+  ? lock_downgrade+0x350/0x350
+  ? kasan_unpoison_shadow+0x30/0x40
+  ? __kasan_kmalloc.constprop.6+0xc1/0xd0
+  ? trace_kprobe_create+0xe40/0xe40
+  ? trace_kprobe_create+0xe40/0xe40
+  create_or_delete_trace_kprobe+0x2e/0x60
+  trace_run_command+0xc3/0xe0
+  ? trace_panic_handler+0x20/0x20
+  ? kasan_unpoison_shadow+0x30/0x40
+  trace_parse_run_command+0xdc/0x163
+  vfs_write+0xe1/0x240
+  ksys_write+0xba/0x150
+  ? __ia32_sys_read+0x50/0x50
+  ? tracer_hardirqs_on+0x61/0x180
+  ? trace_hardirqs_off_caller+0x43/0x110
+  ? mark_held_locks+0x29/0xa0
+  ? do_syscall_64+0x14/0x260
+  do_syscall_64+0x68/0x260
 
-And I claim that the English translation also ends up being
-_sensible_. I go look at those two statements, and my reaction "yeah,
-that makes sense".
+Fix to check the difference of nr_args before adding probe
+on existing probes. This also may set the error log index
+bigger than the number of command parameters. In that case
+it sets the error position is next to the last parameter.
 
-So there were numbers, there was "this is sensible", and there were no
-indications that those sensible choices would actually be problematic.
-Nobody has actually argued against the patches making sense. Nobody
-has even argued that the patches would be wrong. The _only_ argument
-against them were literally "what if this changes something subtle",
-together with patches like the above that do _not_ make sense either
-on a big picture level or even locally on a small level.
+Link: http://lkml.kernel.org/r/156966474783.3478.13217501608215769150.stgit@devnote2
 
-The reason I didn't apply those patches for 5.3 was that they came in
-very late, and there were horrendous numbers for the 5.2 behavior that
-caused those two big reverts. But the patches made sense back then,
-the timing for them just didn't.
+Fixes: ca89bc071d5e ("tracing/kprobe: Add multi-probe per event support")
+Reported-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_probe.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-I was hoping this would just get done in the mm tree, but clearly it
-isn't, and I'll just do my own mm branch and merge the patches that
-way.
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index baf58a3612c0..905b10af5d5c 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -178,6 +178,16 @@ void __trace_probe_log_err(int offset, int err_type)
+ 	if (!command)
+ 		return;
+ 
++	if (trace_probe_log.index >= trace_probe_log.argc) {
++		/**
++		 * Set the error position is next to the last arg + space.
++		 * Note that len includes the terminal null and the cursor
++		 * appaers at pos + 1.
++		 */
++		pos = len;
++		offset = 0;
++	}
++
+ 	/* And make a command string from argv array */
+ 	p = command;
+ 	for (i = 0; i < trace_probe_log.argc; i++) {
+@@ -1084,6 +1094,12 @@ int trace_probe_compare_arg_type(struct trace_probe *a, struct trace_probe *b)
+ {
+ 	int i;
+ 
++	/* In case of more arguments */
++	if (a->nr_args < b->nr_args)
++		return a->nr_args + 1;
++	if (a->nr_args > b->nr_args)
++		return b->nr_args + 1;
++
+ 	for (i = 0; i < a->nr_args; i++) {
+ 		if ((b->nr_args <= i) ||
+ 		    ((a->args[i].type != b->args[i].type) ||
+-- 
+2.20.1
 
-                Linus
