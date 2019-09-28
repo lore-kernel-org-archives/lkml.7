@@ -3,179 +3,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09CD1C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 17:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A1ABC32793
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 17:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D19D3208E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 17:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 112D9208E4
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 17:24:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728957AbfI1RXx (ORCPT
+        id S1729011AbfI1RYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Sep 2019 13:23:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53536 "EHLO mx1.redhat.com"
+        Sat, 28 Sep 2019 13:24:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47872 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728741AbfI1RX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728788AbfI1RX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 28 Sep 2019 13:23:26 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B751C89AC5;
-        Sat, 28 Sep 2019 17:23:25 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 13F39898104;
+        Sat, 28 Sep 2019 17:23:26 +0000 (UTC)
 Received: from mail (ovpn-125-159.rdu2.redhat.com [10.10.125.159])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7ABFF60600;
-        Sat, 28 Sep 2019 17:23:25 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4839260C4B;
+        Sat, 28 Sep 2019 17:23:24 +0000 (UTC)
 From:   Andrea Arcangeli <aarcange@redhat.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH 10/14] KVM: monolithic: x86: drop the kvm_pmu_ops structure
-Date:   Sat, 28 Sep 2019 13:23:19 -0400
-Message-Id: <20190928172323.14663-11-aarcange@redhat.com>
+Subject: [PATCH 02/14] KVM: monolithic: x86: disable linking vmx and svm at the same time into the kernel
+Date:   Sat, 28 Sep 2019 13:23:11 -0400
+Message-Id: <20190928172323.14663-3-aarcange@redhat.com>
 In-Reply-To: <20190928172323.14663-1-aarcange@redhat.com>
 References: <20190928172323.14663-1-aarcange@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Sat, 28 Sep 2019 17:23:25 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Sat, 28 Sep 2019 17:23:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cleanup after the structure was finally left completely unused.
+Linking both vmx and svm into the kernel at the same time isn't
+possible anymore or the kvm_x86/kvm_x86_pmu external function names
+would collide.
 
+Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
 ---
- arch/x86/include/asm/kvm_host.h |  3 ---
- arch/x86/kvm/pmu.h              | 20 --------------------
- arch/x86/kvm/pmu_amd.c          | 15 ---------------
- arch/x86/kvm/svm.c              |  1 -
- arch/x86/kvm/vmx/pmu_intel.c    | 15 ---------------
- arch/x86/kvm/vmx/vmx.c          |  2 --
- 6 files changed, 56 deletions(-)
+ arch/x86/kvm/Kconfig | 24 ++++++++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 75affbf7861b..0481648852c0 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1348,9 +1348,6 @@ struct kvm_x86_ops {
- 					   gfn_t offset, unsigned long mask);
- 	int (*write_log_dirty)(struct kvm_vcpu *vcpu);
+diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
+index 840e12583b85..e1601c54355e 100644
+--- a/arch/x86/kvm/Kconfig
++++ b/arch/x86/kvm/Kconfig
+@@ -59,9 +59,29 @@ config KVM
  
--	/* pmu operations of sub-arch */
--	const struct kvm_pmu_ops *pmu_ops;
--
- 	/*
- 	 * Architecture specific hooks for vCPU blocking due to
- 	 * HLT instruction.
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index 82f07e3492df..c74d4ab30f66 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -36,23 +36,6 @@ extern void kvm_x86_pmu_refresh(struct kvm_vcpu *vcpu);
- extern void kvm_x86_pmu_init(struct kvm_vcpu *vcpu);
- extern void kvm_x86_pmu_reset(struct kvm_vcpu *vcpu);
+ 	  If unsure, say N.
  
--struct kvm_pmu_ops {
--	unsigned (*find_arch_event)(struct kvm_pmu *pmu, u8 event_select,
--				    u8 unit_mask);
--	unsigned (*find_fixed_event)(int idx);
--	bool (*pmc_is_enabled)(struct kvm_pmc *pmc);
--	struct kvm_pmc *(*pmc_idx_to_pmc)(struct kvm_pmu *pmu, int pmc_idx);
--	struct kvm_pmc *(*msr_idx_to_pmc)(struct kvm_vcpu *vcpu, unsigned idx,
--					  u64 *mask);
--	int (*is_valid_msr_idx)(struct kvm_vcpu *vcpu, unsigned idx);
--	bool (*is_valid_msr)(struct kvm_vcpu *vcpu, u32 msr);
--	int (*get_msr)(struct kvm_vcpu *vcpu, u32 msr, u64 *data);
--	int (*set_msr)(struct kvm_vcpu *vcpu, struct msr_data *msr_info);
--	void (*refresh)(struct kvm_vcpu *vcpu);
--	void (*init)(struct kvm_vcpu *vcpu);
--	void (*reset)(struct kvm_vcpu *vcpu);
--};
--
- static inline u64 pmc_bitmask(struct kvm_pmc *pmc)
- {
- 	struct kvm_pmu *pmu = pmc_to_pmu(pmc);
-@@ -138,7 +121,4 @@ void kvm_pmu_destroy(struct kvm_vcpu *vcpu);
- int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp);
++if KVM=y
++
++choice
++	prompt "To link KVM statically into the kernel you need to choose"
++	help
++	  In order to build a kernel with support for both AMD and Intel
++	  CPUs, you need to set CONFIG_KVM=m.
++
++config KVM_AMD_STATIC
++	select KVM_AMD
++	bool "Link KVM AMD statically into the kernel"
++
++config KVM_INTEL_STATIC
++	select KVM_INTEL
++	bool "Link KVM Intel statically into the kernel"
++
++endchoice
++
++endif
++
+ config KVM_INTEL
+ 	tristate "KVM for Intel processors support"
+-	depends on KVM
++	depends on (KVM && !KVM_AMD_STATIC) || KVM_INTEL_STATIC
+ 	# for perf_guest_get_msrs():
+ 	depends on CPU_SUP_INTEL
+ 	---help---
+@@ -73,7 +93,7 @@ config KVM_INTEL
  
- bool is_vmware_backdoor_pmc(u32 pmc_idx);
--
--extern struct kvm_pmu_ops intel_pmu_ops;
--extern struct kvm_pmu_ops amd_pmu_ops;
- #endif /* __KVM_X86_PMU_H */
-diff --git a/arch/x86/kvm/pmu_amd.c b/arch/x86/kvm/pmu_amd.c
-index 7ea588023949..1b09ae337516 100644
---- a/arch/x86/kvm/pmu_amd.c
-+++ b/arch/x86/kvm/pmu_amd.c
-@@ -300,18 +300,3 @@ void kvm_x86_pmu_reset(struct kvm_vcpu *vcpu)
- 		pmc->counter = pmc->eventsel = 0;
- 	}
- }
--
--struct kvm_pmu_ops amd_pmu_ops = {
--	.find_arch_event = kvm_x86_pmu_find_arch_event,
--	.find_fixed_event = kvm_x86_pmu_find_fixed_event,
--	.pmc_is_enabled = kvm_x86_pmu_pmc_is_enabled,
--	.pmc_idx_to_pmc = kvm_x86_pmu_pmc_idx_to_pmc,
--	.msr_idx_to_pmc = kvm_x86_pmu_msr_idx_to_pmc,
--	.is_valid_msr_idx = kvm_x86_pmu_is_valid_msr_idx,
--	.is_valid_msr = kvm_x86_pmu_is_valid_msr,
--	.get_msr = kvm_x86_pmu_get_msr,
--	.set_msr = kvm_x86_pmu_set_msr,
--	.refresh = kvm_x86_pmu_refresh,
--	.init = kvm_x86_pmu_init,
--	.reset = kvm_x86_pmu_reset,
--};
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 057ba1f8d7b3..50c57112c0ce 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -7305,7 +7305,6 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
- 
- 	.sched_in = kvm_x86_sched_in,
- 
--	.pmu_ops = &amd_pmu_ops,
- 	.deliver_posted_interrupt = kvm_x86_deliver_posted_interrupt,
- 	.dy_apicv_has_pending_interrupt = kvm_x86_dy_apicv_has_pending_interrupt,
- 	.update_pi_irte = kvm_x86_update_pi_irte,
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index 758d6dbdbed2..530ca9942ecd 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -356,18 +356,3 @@ void kvm_x86_pmu_reset(struct kvm_vcpu *vcpu)
- 	pmu->fixed_ctr_ctrl = pmu->global_ctrl = pmu->global_status =
- 		pmu->global_ovf_ctrl = 0;
- }
--
--struct kvm_pmu_ops intel_pmu_ops = {
--	.find_arch_event = kvm_x86_pmu_find_arch_event,
--	.find_fixed_event = kvm_x86_pmu_find_fixed_event,
--	.pmc_is_enabled = kvm_x86_pmu_pmc_is_enabled,
--	.pmc_idx_to_pmc = kvm_x86_pmu_pmc_idx_to_pmc,
--	.msr_idx_to_pmc = kvm_x86_pmu_msr_idx_to_pmc,
--	.is_valid_msr_idx = kvm_x86_pmu_is_valid_msr_idx,
--	.is_valid_msr = kvm_x86_pmu_is_valid_msr,
--	.get_msr = kvm_x86_pmu_get_msr,
--	.set_msr = kvm_x86_pmu_set_msr,
--	.refresh = kvm_x86_pmu_refresh,
--	.init = kvm_x86_pmu_init,
--	.reset = kvm_x86_pmu_reset,
--};
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index faccffc4709e..6e995e37a8c8 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7805,8 +7805,6 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
- 	.pre_block = kvm_x86_pre_block,
- 	.post_block = kvm_x86_post_block,
- 
--	.pmu_ops = &intel_pmu_ops,
--
- 	.update_pi_irte = kvm_x86_update_pi_irte,
- 
- #ifdef CONFIG_X86_64
+ config KVM_AMD
+ 	tristate "KVM for AMD processors support"
+-	depends on KVM
++	depends on (KVM && !KVM_INTEL_STATIC) || KVM_AMD_STATIC
+ 	---help---
+ 	  Provides support for KVM on AMD processors equipped with the AMD-V
+ 	  (SVM) extensions.
