@@ -2,91 +2,72 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64136C388F3
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 20:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA541C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 20:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 375202146E
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 20:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C844208E4
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 20:50:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569700936;
-	bh=iBI4ADUUwpbjA+pmHsEfnTeue1a9adW21YpVKP9WhKE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=auhEXWVujOhrpD6utKAxaXxJxggicjxUWQEyWbZPcXvT3j8nTJKGc5JSftSMDHRaU
-	 fOB3oXYJywY9+GW2nTEkJPDS/WhStpefXfqchKenaYQNtgcDHEZliRucbgghYuyxx8
-	 whYbA8lo18cX5hu8qW14GEy3fKA+outXL8zzVc/w=
+	s=default; t=1569703823;
+	bh=ze6cliEOUiUVzoy8NNLZbFo8kjc3vLmjiDahTajozAw=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=B4wbYCM5smBh3K8M/NMw0TnvwQ3t6ji3/Ay1MyNBGmDteo5FWH49C87v8M0VmV006
+	 LUsulyjohv9KnDgobIuZ88yf8tY1JTCnqjsbZmZzsQxjiJkfzfYvpiGk1lwXx9FdBB
+	 FpcyCtm4FW2X76KUZEpF4fcnr3tZ48Jx54ClB8Wo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbfI1UCP (ORCPT
+        id S1728727AbfI1UuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Sep 2019 16:02:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51176 "EHLO mail.kernel.org"
+        Sat, 28 Sep 2019 16:50:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728617AbfI1UCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Sep 2019 16:02:15 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8023F20863;
-        Sat, 28 Sep 2019 20:02:14 +0000 (UTC)
+        id S1726581AbfI1UuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Sep 2019 16:50:22 -0400
+Subject: Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.4-2 tag
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569700934;
-        bh=iBI4ADUUwpbjA+pmHsEfnTeue1a9adW21YpVKP9WhKE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T2F5ar22dPjflJL9yIU58hu70yONBakpNONVOBBsTvNXDHVVGdyHdS1PDdcN/Q2yB
-         +XUqR8207O4FeHFf1saqEFOAxmexTHTj23wLC9UQ43DmmvdORzZpKjh10ipBAGqLVk
-         YQZea0UROJnoEp41s4cIDmuxBDLTJJx4BDk+yCgo=
-Date:   Sat, 28 Sep 2019 16:02:13 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     stable@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
-        linus.walleij@linaro.org, natechancellor@gmail.com, sre@kernel.org,
-        longman@redhat.com, linux-gpio@vger.kernel.org,
-        david@lechnology.com, linux-pm@vger.kernel.org, arnd@arndb.de,
-        orsonzhai@gmail.com, vincent.guittot@linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [BACKPORT 4.19.y 0/3] Candidates from Spreadtrum 4.14 product
- kernel
-Message-ID: <20190927153055.GP8171@sasha-vm>
-References: <cover.1569404757.git.baolin.wang@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <cover.1569404757.git.baolin.wang@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        s=default; t=1569703822;
+        bh=ze6cliEOUiUVzoy8NNLZbFo8kjc3vLmjiDahTajozAw=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=A3S/pQghcrexHgU29yVOXFVO0hsKThjFWMcKIy9HurII5ZZ7ZPfQXFIrmLCgpu9kG
+         CB4U/8NJwHnXtewiZP7MBFKhfvL5hrUKrriZKaIitVNnvEixOuDN2/q3zysFpcTOc3
+         HG90+6vPQOkPus8KPwTWMJue6pgK+3fLIridE+9I=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <877e5sr52g.fsf@mpe.ellerman.id.au>
+References: <877e5sr52g.fsf@mpe.ellerman.id.au>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <877e5sr52g.fsf@mpe.ellerman.id.au>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git
+ tags/powerpc-5.4-2
+X-PR-Tracked-Commit-Id: 253c892193ab58da6b1d94371285971b22c63260
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: a2953204b576ea3ba4afd07b917811d50fc49778
+Message-Id: <156970382209.9125.2408026177073178873.pr-tracker-bot@kernel.org>
+Date:   Sat, 28 Sep 2019 20:50:22 +0000
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        alistair@popple.id.au, aneesh.kumar@linux.ibm.com,
+        christophe.leroy@c-s.fr, gromero@linux.ibm.com, jniethe5@gmail.com,
+        ldufour@linux.ibm.com, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, mdroth@linux.vnet.ibm.com,
+        oohall@gmail.com, paulus@ozlabs.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 05:52:26PM +0800, Baolin Wang wrote:
->With Arnd's script [1] help, I found some bugfixes in Spreadtrum 4.14 product
->kernel, but missing in v4.19.75:
->
->513e1073d52e locking/lockdep: Add debug_locks check in __lock_downgrade()
->957063c92473 pinctrl: sprd: Use define directive for sprd_pinconf_params values
->87a2b65fc855 power: supply: sysfs: ratelimit property read error message
->
->[1] https://lore.kernel.org/lkml/20190322154425.3852517-19-arnd@arndb.de/T/
->
->David Lechner (1):
->  power: supply: sysfs: ratelimit property read error message
->
->Nathan Chancellor (1):
->  pinctrl: sprd: Use define directive for sprd_pinconf_params values
->
->Waiman Long (1):
->  locking/lockdep: Add debug_locks check in __lock_downgrade()
->
-> drivers/pinctrl/sprd/pinctrl-sprd.c       |    6 ++----
-> drivers/power/supply/power_supply_sysfs.c |    3 ++-
-> kernel/locking/lockdep.c                  |    3 +++
-> 3 files changed, 7 insertions(+), 5 deletions(-)
+The pull request you sent on Sat, 28 Sep 2019 22:14:15 +1000:
 
-I've queued these up for 4.19, 4.14 and some for 4.9 and 4.4. Thank you.
+> https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.4-2
 
---
-Thanks,
-Sasha
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/a2953204b576ea3ba4afd07b917811d50fc49778
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
