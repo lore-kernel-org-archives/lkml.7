@@ -2,148 +2,184 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D9EC4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 11:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 105F5C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 12:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 481752075D
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 11:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B278120815
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 12:14:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d6RR3j+b"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="kJZb5wZ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbfI1LS7 (ORCPT
+        id S1728289AbfI1MOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Sep 2019 07:18:59 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45096 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbfI1LS6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Sep 2019 07:18:58 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y72so2944536pfb.12
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Sep 2019 04:18:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=w8sT6SIcK6jRm2xE3oY90NMunUqoKu7f4Evu1cgn3pk=;
-        b=d6RR3j+bKFNgQUE5G2xIqXT+jV6jbCcCrcK2Bwm9T1ASSKvBpf0qR7lbCkM+n+Km13
-         ylZ8DsyQYU48WUNsSWXrKPIHuOR+E/mGo/yfsKugSoWh1011+xZQoh1lQhCUiRPB7XGr
-         +ZeYWwLKCdR6R79+vpMoevkGLxmKuMic6mIItXHukQ7y5Wa46EmwngVJFPYdw1msssTB
-         0ioMc0vgPChCH+iWy18pa/wPXOHHQdVzxmfanmPh4oez6HaMi38eLrH1oJS9qua4foEm
-         h78AXUGtqQTj6/qJKs+si3C04HOYwT8Ku3JXSPwKXj0ZziBwzG7UyzmO6JRyHqHbtM9T
-         VSNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=w8sT6SIcK6jRm2xE3oY90NMunUqoKu7f4Evu1cgn3pk=;
-        b=X10MedqnrVjQVXhr/lgcfXuFci2vCH0A2912x4zR8K0aRRP/wyG6SqTVcHNjIO/oue
-         F9ecLTLPW1cCPBWbJ/FrL1wJISLi84dnE7KvLFsLg3Vw/9PhzQxi8JorNIVywq3oVQZa
-         bpNlfDl+GvRqbIl3DoIBKOuxSBz+kOXmwLZ/v0g71vJ543xQ1bDFVliFrjy24aRvyvlN
-         8aB+wYvgw7i5Bw5dg0vHWXRrHQE2OxYMZOizWExC7II+A7QH7RpgPBNXsdCn+XqtSNri
-         GN7+Tk4sM8RM9UJhoRfbOkRqirjmmFn2Fv659vo2W2cxLO6NNHjsKLhSomfn59w1AdRD
-         aMLQ==
-X-Gm-Message-State: APjAAAWuvubcMfXXdZQfWuBq/mE6tCFhbs2fjnHyBpAWPPdD4NIi6A4b
-        5PeEh5FAj/T0AEnzcDpeYN8=
-X-Google-Smtp-Source: APXvYqzZ3zFOmcdPwcMNVF7j1yZPBvTEZltk6wfTgLxGiOGAugH02C4X5OzgppNBMEV8OK/7zebMnw==
-X-Received: by 2002:a17:90b:149:: with SMTP id em9mr15486521pjb.135.1569669537675;
-        Sat, 28 Sep 2019 04:18:57 -0700 (PDT)
-Received: from debian ([103.231.91.34])
-        by smtp.gmail.com with ESMTPSA id a23sm2032464pgd.83.2019.09.28.04.18.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Sep 2019 04:18:56 -0700 (PDT)
-Date:   Sat, 28 Sep 2019 16:48:45 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     LinuxKernel <linux-kernel@vger.kernel.org>
-Subject: Re:Need your input [PATCH V2] Remove dead url and added active url .
-Message-ID: <20190928111841.GA1956@debian>
-References: <20190927144411.GA167835@ArchLinux>
- <20190928012359.38874015@lwn.net>
+        Sat, 28 Sep 2019 08:14:19 -0400
+Received: from ozlabs.org ([203.11.71.1]:36773 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725857AbfI1MOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Sep 2019 08:14:19 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46gSJT0YY7z9sNf;
+        Sat, 28 Sep 2019 22:14:17 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1569672857;
+        bh=PDWq9hH3YyXXTpq0KMTZ1nCLI7LcPLMFtlg8UcURUrs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=kJZb5wZ/f3p0EjPUFmga2ShvnC2dFqPfIdU2wOPijcQsrwUw0ZG/OO+Wd4uVECGnF
+         bIVyINu/glpNmW47ubYSohvC14DI5HTpyvnd3IhJPVJn3rlK37dPp/+rWyb3VaHIFx
+         N4/fLB+1AZ9dWCCpYa6FzLR0LNw+Lw9XpV8bfeQ01JX5JpgtKftYUNf6NZ9nGUgFcc
+         VUj0eRYuuRiRJ1zvKJ7JcrFIEmEoP/jfXLel/oICir4CP+PwBcXc7p2GE3ArvpuRea
+         WrRjhIa51fxNJZafTNMg8Mr/n4xnKkuaDvkYbfrGYyV3dJ3YcQ2ZqTKCjxgDYzngh4
+         LHXSpZCYdCEYg==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     alistair@popple.id.au, aneesh.kumar@linux.ibm.com,
+        christophe.leroy@c-s.fr, gromero@linux.ibm.com, jniethe5@gmail.com,
+        ldufour@linux.ibm.com, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, mdroth@linux.vnet.ibm.com,
+        oohall@gmail.com, paulus@ozlabs.org
+Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-5.4-2 tag
+Date:   Sat, 28 Sep 2019 22:14:15 +1000
+Message-ID: <877e5sr52g.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
-Content-Disposition: inline
-In-Reply-To: <20190928012359.38874015@lwn.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
 
---ZPt4rx8FFjLCG7dd
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Linus,
 
-On 01:23 Sat 28 Sep 2019, Jonathan Corbet wrote:
->On Fri, 27 Sep 2019 20:14:11 +0530
->Bhaskar Chowdhury <unixbhaskar@gmail.com> wrote:
->
->> diff --git a/Documentation/process/email-clients.rst b/Documentation/pro=
-cess/email-clients.rst
->> index 1f920d445a8b..15781bf10b8d 100644
->> --- a/Documentation/process/email-clients.rst
->> +++ b/Documentation/process/email-clients.rst
->>
->> +The Mutt docs have lots more information:
->> +
->> + https://gitlab.com/muttmua/mutt/wikis/UseCases/Gmail
->> +
->> +  https://gitlab.com/muttmua/mutt/wikis/MuttGuide
->
+Please pull some more powerpc updates for 5.4:
 
-Okay, few noob query ... curse me as much as you like Jon...
+The following changes since commit 45824fc0da6e46cc5d563105e1eaaf3098a686f9:
 
->So you clearly didn't generate this patch against any upstream tree; I
->can't apply this.
->
-NO, I have genrated it on Linus repo directly clong in my laptop.
+  Merge tag 'powerpc-5.4-1' of git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux (2019-09-20 11:48:06 -0700)
 
-if I fork Linus GitHub repo to  My GitHub repo , and then made change on
-it, does it work??? I mean this the way ...or some other way???
+are available in the git repository at:
 
->Also, it seems clear that you didn't try to build the docs afterward.
->
-I have tried to run on local tree=20
+  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.4-2
 
-=2E./../scripts/kernel-doc -rst "thae changed file"=20
+for you to fetch changes up to 253c892193ab58da6b1d94371285971b22c63260:
 
-Am I doing it differently or plain wrong??
+  powerpc/eeh: Fix eeh eeh_debugfs_break_device() with SRIOV devices (2019-09-27 09:04:17 +1000)
 
-Or do you think , I go through to install sphinx and do all those
-stuff??=20
+- ------------------------------------------------------------------
+powerpc fixes for 5.4 #2
 
-I failed to understand.
+An assortment of fixes that were either missed by me, or didn't arrive quite in
+time for the first v5.4 pull.
 
->Please give this one more try, with a bit more care, and we'll get it
->merged.
->
-Certain thing..because it started to bug me..
+Most notable is a fix for an issue with tlbie (broadcast TLB invalidation) on
+Power9, when using the Radix MMU. The tlbie can race with an mtpid (move to PID
+register, essentially MMU context switch) on another thread of the core, which
+can cause stores to continue to go to a page after it's unmapped.
 
->Thanks,
->
->jon
+A fix in our KVM code to add a missing barrier, the lack of which has been
+observed to cause missed IPIs and subsequently stuck CPUs in the host.
 
---ZPt4rx8FFjLCG7dd
-Content-Type: application/pgp-signature; name="signature.asc"
+A change to the way we initialise PCR (Processor Compatibility Register) to make
+it forward compatible with future CPUs.
 
+On some older PowerVM systems our H_BLOCK_REMOVE support could oops, fix it to
+detect such systems and fallback to the old invalidation method.
+
+A fix for an oops seen on some machines when using KASAN on 32-bit.
+
+A handful of other minor fixes, and two new selftests.
+
+Thanks to:
+  Alistair Popple, Aneesh Kumar K.V, Christophe Leroy, Gustavo Romero, Joel
+  Stanley, Jordan Niethe, Laurent Dufour, Michael Roth, Oliver O'Halloran.
+
+- ------------------------------------------------------------------
+Alistair Popple (1):
+      powerpc: Fix definition of PCR bits to work with old binutils
+
+Aneesh Kumar K.V (7):
+      powerpc/book3s64/radix: Remove WARN_ON in destroy_context()
+      powerpc/book3s64/mm: Don't do tlbie fixup for some hardware revisions
+      powerpc/book3s64/radix: Rename CPU_FTR_P9_TLBIE_BUG feature flag
+      powerpc/mm: Fixup tlbie vs mtpidr/mtlpidr ordering issue on POWER9
+      selftests/powerpc: Add test case for tlbie vs mtpidr ordering issue
+      powerpc/nvdimm: Use HCALL error as the return value
+      powerpc/nvdimm: use H_SCM_QUERY hcall on H_OVERLAP error
+
+Christophe Leroy (2):
+      powerpc/mm: Add a helper to select PAGE_KERNEL_RO or PAGE_READONLY
+      powerpc/mm: Fix an Oops in kasan_mmu_init()
+
+Gustavo Romero (1):
+      powerpc/tm: Add tm-poison test
+
+Jordan Niethe (1):
+      powerpc/64s: Set reserved PCR bits
+
+Laurent Dufour (2):
+      powerpc/pseries: Read TLB Block Invalidate Characteristics
+      powerpc/pseries: Call H_BLOCK_REMOVE when supported
+
+Michael Roth (1):
+      KVM: PPC: Book3S HV: use smp_mb() when setting/clearing host_ipi flag
+
+Oliver O'Halloran (1):
+      powerpc/eeh: Fix eeh eeh_debugfs_break_device() with SRIOV devices
+
+
+ arch/powerpc/include/asm/cputable.h             |   5 +-
+ arch/powerpc/include/asm/kvm_ppc.h              | 100 ++-
+ arch/powerpc/include/asm/reg.h                  |   9 +-
+ arch/powerpc/kernel/cpu_setup_power.S           |   6 +
+ arch/powerpc/kernel/dbell.c                     |   6 +-
+ arch/powerpc/kernel/dt_cpu_ftrs.c               |  35 +-
+ arch/powerpc/kernel/eeh.c                       |   4 +-
+ arch/powerpc/kvm/book3s_hv.c                    |  11 +-
+ arch/powerpc/kvm/book3s_hv_nested.c             |   6 +-
+ arch/powerpc/kvm/book3s_hv_rm_mmu.c             |  42 +-
+ arch/powerpc/kvm/book3s_hv_rm_xics.c            |   2 +-
+ arch/powerpc/kvm/book3s_hv_rmhandlers.S         |  10 +-
+ arch/powerpc/mm/book3s64/hash_native.c          |  31 +-
+ arch/powerpc/mm/book3s64/mmu_context.c          |  15 +-
+ arch/powerpc/mm/book3s64/radix_tlb.c            |  84 ++-
+ arch/powerpc/mm/kasan/kasan_init_32.c           |  34 +-
+ arch/powerpc/platforms/powernv/smp.c            |   2 +-
+ arch/powerpc/platforms/pseries/lpar.c           | 163 ++++-
+ arch/powerpc/platforms/pseries/papr_scm.c       |  72 +-
+ arch/powerpc/platforms/pseries/pseries.h        |   1 +
+ arch/powerpc/platforms/pseries/setup.c          |   1 +
+ arch/powerpc/sysdev/xics/icp-native.c           |   6 +-
+ arch/powerpc/sysdev/xics/icp-opal.c             |   6 +-
+ tools/testing/selftests/powerpc/mm/Makefile     |   2 +
+ tools/testing/selftests/powerpc/mm/tlbie_test.c | 734 ++++++++++++++++++++
+ tools/testing/selftests/powerpc/tm/.gitignore   |   1 +
+ tools/testing/selftests/powerpc/tm/Makefile     |   2 +-
+ tools/testing/selftests/powerpc/tm/tm-poison.c  | 179 +++++
+ 28 files changed, 1476 insertions(+), 93 deletions(-)
+ create mode 100644 tools/testing/selftests/powerpc/mm/tlbie_test.c
+ create mode 100644 tools/testing/selftests/powerpc/tm/tm-poison.c
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl2PQYgACgkQsjqdtxFL
-KRVvgQgA1nUrA9dP0zfYeRf4vgwuRERTe5rDweBhV2wxJeVgiilOFPoj8j+cKsir
-gVBq3zN+9gO1XU2k4DX3U0MjSc3fucsbUsp4cGtC8kg/usNFC/prvmiUgP+3XZAk
-7GJZEDiRob0J4dv/AVEQbhziv5Bm1Hqry1zuIpW3KQx39qyPYWzhdvEXQChEwQvx
-e1hQJ17RjCkap5iqt943Tq6AHoOZtzLCw8UA4TPd0Sl7oQUIbsjYZpaVb+HIDMla
-rIkmdm5WEkVe4Vu/YHur6S7W4gIZzrxMTuMdLspa1gWhArHqXkJU5k7YrST2MBvI
-H7iyjNtZ/0e3p677687eInuun4nUZA==
-=0Pf7
+iQIzBAEBCAAdFiEEJFGtCPCthwEv2Y/bUevqPMjhpYAFAl2PTlsACgkQUevqPMjh
+pYAFmw//XZUKzoMT+p2U1o/4sJ+bgR4tulFKZVykGAgcp99gtqbUINKItvDyz/yS
+FOudE1m+deEmf2lWlO+Z6Wd0Q8gEH2+3+mFm6WsBlPPj9KGzuLw+pabNgljW+Oz/
+C41WufCeyuEd8TbhYIz4wRUrPn+LNFdppPqNgkYNwhhjks2SIO5oGypd5S/NmtRS
+L0/F7Q9WL62NHUzgDXEa0AXF0h94hilOyHIfT5Ic+tfydoUHbj3CYP7d4Rk3ISrF
+TZ9PONfyROFbPew50mI1PuktQurYSnk3B1Y3Voc33wJqqDPiIa6rqduKHTAo97rh
+yMjyYSpZVN9q22/NGg3enXLSbLJGxWTGGBkcnrugA/7+D7TWaonfmmEJqFQBmKvN
+t0+06DCpu+0L93/sPUtF8vIHQYuRJZNO9cDFb85Zpy1OjOYMhnKFJvIvv8Oa93yx
+6Zn39Qf+SAdzdkzUah/kVK6ZEzOWGELrtqcQcUAFwNScs8OGVi9iQXsdhUib/HmA
+WSy+ZVem1HvUVAvZBNv7RjGFDFAmL2uJlzHZjEQ/q1FjHZFA8H8n2kcAwGnj1jYq
+sTwEhEnbjyC7sze0mGPuhNOMHcqjYisZlENlddfCde3/jP0CqQepqn9EfZFkTMLq
+cy4+J3evuyvcMSLMYrIQsODZAhcXxCPxU03yNiO+4HQLyZXQ0Cg=
+=+U4R
 -----END PGP SIGNATURE-----
-
---ZPt4rx8FFjLCG7dd--
