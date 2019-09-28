@@ -2,73 +2,41 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A94C388F3
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 09:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07851C388F3
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 09:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C175C2075C
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 09:35:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TW7KPlSq"
+	by mail.kernel.org (Postfix) with ESMTP id DC8832075C
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 09:37:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbfI1JfC (ORCPT
+        id S1728300AbfI1Jhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Sep 2019 05:35:02 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:39538 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbfI1JfB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Sep 2019 05:35:01 -0400
-Received: by mail-lf1-f65.google.com with SMTP id 72so3642086lfh.6;
-        Sat, 28 Sep 2019 02:35:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sqzpIJTUSyMjvNLNtMpXjO9U+cAbapAxKF1UKLPlejs=;
-        b=TW7KPlSqAa6wsClwUUOFxv1pU8gsHgaqMzCgLKlROwfWVCIOZI/H1Hd+e5H9ihsl2S
-         213aT5DDG6Dx+LzKxT83l3BQyPRmpPOEk0r9PTLDz1pxWx010Zkp3FWEydjxO0M60emn
-         uXzE1ZIGNwm84dmDSwyvYl9tckI0DDrh7nqI6KrmJguW3EVMB6B2gHdY25J2Ym9A7Vt8
-         4hsfZ7s+jYwC2dwpDvxAX5kvPKuQGPzVSQtFWU7fH5jG/zkKomUd+kILFUsSyTWiBWue
-         6yA5hOEQ9e07M2IN5Req/JsvKAsjG/AKWxNg6F/hr/+OWUQ4nWXgbeDrT9dt69hayOnq
-         S3Qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sqzpIJTUSyMjvNLNtMpXjO9U+cAbapAxKF1UKLPlejs=;
-        b=NI6gFtC0rRdZfOG26e8Us7EzRwfHthfpw5J4KnE38Zj2m2Br+p23tMXoF/nLvY/NRD
-         mPp0UZEH0Bi6BI7PUGWBqKLf826A2oU8fb1g5ZT8jgnj3c3/aDA3TH/Ip/qNOFByf2tO
-         PZu22GS9LFfQ6eE7o3Y9r7ekre26O1i9s7Exr/mqKPXfmuVwC2d5vkBcVvWINMDkpR5n
-         T4+thq0yBbEEuJ2k3AWyV+7GwCJECZgQOsOtZ+aHEhEj5L9y3hQSIKmmsgkpK93IR1yA
-         GFwEEPLG2vrQi1cyI+BrzpXvhoYYDfYOBlN8WBAwjfn1qNowL4p5zBsigRBvTYyB49vr
-         imGg==
-X-Gm-Message-State: APjAAAWktKoENRY2P4LdK6NxRnGA30BuyR+x40h6qRq/SMWU6cR+vucV
-        C99yWwMuyvXQHP6ukkNog+I=
-X-Google-Smtp-Source: APXvYqwwuh1GjfIdsBSxb/r0rjF6N074kvqQ1/3Wn9VOkGtT9HtjiGXMAQChZMByZxxHrjibevm+Cg==
-X-Received: by 2002:a19:641e:: with SMTP id y30mr5789536lfb.148.1569663299262;
-        Sat, 28 Sep 2019 02:34:59 -0700 (PDT)
-Received: from bigdell (2.69.152.136.mobile.tre.se. [2.69.152.136])
-        by smtp.gmail.com with ESMTPSA id m15sm1247655ljg.97.2019.09.28.02.34.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 28 Sep 2019 02:34:59 -0700 (PDT)
-Date:   Sat, 28 Sep 2019 11:34:56 +0200
-From:   Vitaly Wool <vitalywool@gmail.com>
-To:     Linux-MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Markus Linnala <markus.linnala@gmail.com>,
-        Dan Streetman <ddstreet@ieee.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Stable <stable@vger.kernel.org>
-Subject: [PATCH v2] z3fold: claim page in the beginning of free
-Message-ID: <20190928113456.152742cf@bigdell>
-X-Mailer: Claws Mail 3.17.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Sat, 28 Sep 2019 05:37:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43368 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725856AbfI1Jhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Sep 2019 05:37:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7F8EFAC93;
+        Sat, 28 Sep 2019 09:37:45 +0000 (UTC)
+Date:   Sat, 28 Sep 2019 11:37:54 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     <Amy.Shih@advantech.com.tw>
+Cc:     <she90122@gmail.com>, <oakley.ding@advantech.com.tw>,
+        <bichan.lu@advantech.com.tw>, <jia.sui@advantech.com.cn>,
+        Guenter Roeck <linux@roeck-us.net>,
+        <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [v6,1/1] hwmon: (nct7904) Fix incorrect temperature limitation
+ register setting of LTD.
+Message-ID: <20190928113754.26594064@endymion>
+In-Reply-To: <20850618155720.24857-1-Amy.Shih@advantech.com.tw>
+References: <20850618155720.24857-1-Amy.Shih@advantech.com.tw>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -77,77 +45,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's a really hard to reproduce race in z3fold between
-z3fold_free() and z3fold_reclaim_page(). z3fold_reclaim_page()
-can claim the page after z3fold_free() has checked if the page
-was claimed and z3fold_free() will then schedule this page for
-compaction which may in turn lead to random page faults (since
-that page would have been reclaimed by then). Fix that by
-claiming page in the beginning of z3fold_free() and not
-forgetting to clear the claim in the end.
+On Mon, 18 Jun 2085 15:57:19 +0000, Amy.Shih@advantech.com.tw wrote:
+> (...)
 
-Reported-by: Markus Linnala <markus.linnala@gmail.com>
-Signed-off-by: Vitaly Wool <vitalywool@gmail.com>
-Cc: <stable@vger.kernel.org>
----
- mm/z3fold.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+I suggest you fix your system clock ;-)
 
-diff --git a/mm/z3fold.c b/mm/z3fold.c
-index 05bdf90646e7..6d3d3f698ebb 100644
---- a/mm/z3fold.c
-+++ b/mm/z3fold.c
-@@ -998,9 +998,11 @@ static void z3fold_free(struct z3fold_pool *pool,
-unsigned long handle) struct z3fold_header *zhdr;
- 	struct page *page;
- 	enum buddy bud;
-+	bool page_claimed;
- 
- 	zhdr = handle_to_z3fold_header(handle);
- 	page = virt_to_page(zhdr);
-+	page_claimed = test_and_set_bit(PAGE_CLAIMED, &page->private);
- 
- 	if (test_bit(PAGE_HEADLESS, &page->private)) {
- 		/* if a headless page is under reclaim, just leave.
-@@ -1008,7 +1010,7 @@ static void z3fold_free(struct z3fold_pool *pool,
-unsigned long handle)
- 		 * has not been set before, we release this page
- 		 * immediately so we don't care about its value any
-more. */
--		if (!test_and_set_bit(PAGE_CLAIMED, &page->private)) {
-+		if (!page_claimed) {
- 			spin_lock(&pool->lock);
- 			list_del(&page->lru);
- 			spin_unlock(&pool->lock);
-@@ -1044,13 +1046,15 @@ static void z3fold_free(struct z3fold_pool
-*pool, unsigned long handle) atomic64_dec(&pool->pages_nr);
- 		return;
- 	}
--	if (test_bit(PAGE_CLAIMED, &page->private)) {
-+	if (page_claimed) {
-+		/* the page has not been claimed by us */
- 		z3fold_page_unlock(zhdr);
- 		return;
- 	}
- 	if (unlikely(PageIsolated(page)) ||
- 	    test_and_set_bit(NEEDS_COMPACTING, &page->private)) {
- 		z3fold_page_unlock(zhdr);
-+		clear_bit(PAGE_CLAIMED, &page->private);
- 		return;
- 	}
- 	if (zhdr->cpu < 0 || !cpu_online(zhdr->cpu)) {
-@@ -1060,10 +1064,12 @@ static void z3fold_free(struct z3fold_pool
-*pool, unsigned long handle) zhdr->cpu = -1;
- 		kref_get(&zhdr->refcount);
- 		do_compact_page(zhdr, true);
-+		clear_bit(PAGE_CLAIMED, &page->private);
- 		return;
- 	}
- 	kref_get(&zhdr->refcount);
- 	queue_work_on(zhdr->cpu, pool->compact_wq, &zhdr->work);
-+	clear_bit(PAGE_CLAIMED, &page->private);
- 	z3fold_page_unlock(zhdr);
- }
- 
 -- 
-2.17.1
+Jean Delvare
+SUSE L3 Support
