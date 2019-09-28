@@ -2,106 +2,88 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2D1C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 00:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C435C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 00:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7792E21655
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 00:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26E7320869
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 00:05:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbfI1AFM (ORCPT
+        id S1728333AbfI1AFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 20:05:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57212 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbfI1AFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 20:05:12 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DB91030860D1;
-        Sat, 28 Sep 2019 00:05:11 +0000 (UTC)
-Received: from localhost (ovpn-12-27.pek2.redhat.com [10.72.12.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C79A7600CD;
-        Sat, 28 Sep 2019 00:05:08 +0000 (UTC)
-Date:   Sat, 28 Sep 2019 08:05:05 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Dave Young <dyoung@redhat.com>, Lianbo Jiang <lijiang@redhat.com>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org, jgross@suse.com,
-        dhowells@redhat.com, Thomas.Lendacky@amd.com,
-        kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] x86/kdump: Fix 'kmem -s' reported an invalid freepointer
- when SME was active
-Message-ID: <20190928000505.GJ31919@MiWiFi-R3L-srv>
-References: <20190920035326.27212-1-lijiang@redhat.com>
- <20190927051518.GA13023@dhcp-128-65.nay.redhat.com>
- <87r241piqg.fsf@x220.int.ebiederm.org>
+        Fri, 27 Sep 2019 20:05:36 -0400
+Received: from shelob.surriel.com ([96.67.55.147]:45078 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfI1AFf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 20:05:35 -0400
+Received: from imladris.surriel.com ([96.67.55.152])
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.2)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1iE0Et-0007ss-CP; Fri, 27 Sep 2019 20:05:31 -0400
+Message-ID: <3989537df397001a7f909c6495292ea79cce041e.camel@surriel.com>
+Subject: Re: [PATCH v3 03/10] sched/fair: remove meaningless imbalance
+ calculation
+From:   Rik van Riel <riel@surriel.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org, mingo@redhat.com,
+        peterz@infradead.org
+Cc:     pauld@redhat.com, valentin.schneider@arm.com,
+        srikar@linux.vnet.ibm.com, quentin.perret@arm.com,
+        dietmar.eggemann@arm.com, Morten.Rasmussen@arm.com,
+        hdanton@sina.com
+Date:   Fri, 27 Sep 2019 20:05:30 -0400
+In-Reply-To: <1568878421-12301-4-git-send-email-vincent.guittot@linaro.org>
+References: <1568878421-12301-1-git-send-email-vincent.guittot@linaro.org>
+         <1568878421-12301-4-git-send-email-vincent.guittot@linaro.org>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-3XZ/y1IFppNmU436yTMp"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87r241piqg.fsf@x220.int.ebiederm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Sat, 28 Sep 2019 00:05:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/27/19 at 03:49pm, Eric W. Biederman wrote:
-> Dave Young <dyoung@redhat.com> writes:
-> >> In order to avoid such problem, lets occupy the first 640k region when
-> >> SME is active, which will ensure that the allocated memory does not fall
-> >> into the first 640k area. So, no need to worry about whether kernel can
-> >> correctly copy the contents of the first 640K area to a backup region in
-> >> purgatory().
-> 
-> We must occupy part of the first 640k so that we can start up secondary
-> cpus unless someone has added another way to do that in recent years on
-> SME capable cpus.
-> 
-> Further there is Fimware/BIOS interaction that happens within those
-> first 640K.
-> 
-> Furthermore the kdump kernel needs to be able to read all of the memory
-> that the previous kernel could read.  Otherwise we can't get a crash
-> dump.
-> 
-> So I do not think ignoring the first 640K is the correct resolution
-> here.
-> 
-> > The log is too simple,  I know you did some other tries to fix this, but
-> > the patch log does not show why you can not correctly copy the 640k in
-> > current kdump code, in purgatory here.
-> >
-> > Also this patch seems works in your test, but still to see if other
-> > people can comment and see if it is safe or not, if any other risks
-> > other than waste the small chunk of memory.  If it is safe then kdump
-> > can just drop the backup logic and use this in common code instead of
-> > only do it for SME.
-> 
-> Exactly.
-> 
-> I think at best this avoids the symptoms, but does not give a reliable
-> crash dump.
 
-Sorry, didn't notice this comment at bottom.
+--=-3XZ/y1IFppNmU436yTMp
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From code, currently the first 640K area is needed in two places.
-One is for 5-level trampoline during boot compressing stage, in
-find_trampoline_placement(). 
+On Thu, 2019-09-19 at 09:33 +0200, Vincent Guittot wrote:
+> clean up load_balance and remove meaningless calculation and fields
+> before
+> adding new algorithm.
+>=20
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
 
-The other is in reserve_real_mode(), as you mentioned, for application
-CPU booting.
+Yay.
 
-Only allow these two put data inside first 640K, then lock it done. It
-should not impact crash dump and parsing. And these two's content
-doesn't matter.
+Acked-by: Rik van Riel <riel@surriel.com>
 
-Thanks
-Baoquan
+--=20
+All Rights Reversed.
+
+--=-3XZ/y1IFppNmU436yTMp
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl2Oo8sACgkQznnekoTE
+3oMJlAgAgmRQMnp6XiEs9/xyV1FpM+weOBxCntq8s95JpAeI7iDzRIyg7olBAlol
+gM/ZoIUHw9Ask2LjTYiO195uyfw8WnTnA5TQ38C+4QIDY+IUOPqHTzCEV909eenl
+SAUyXA0W4y3cLYvuMXMsdXTTF9ZBDECMH7550FK5N9wOKcsQZ715QYNoW0mdKWsE
+FsndyKMMqfqgDDbuWbI/HwN00H//5AexeBsMW1f+Xgt2LMlAEZwX0/SHr+XeSFUm
+306VJYTN7iJ03cfPpVAWAzruMINw/UTvCQIZ4f3vBG2g7Eog7XHFpJ0baw6oeOb1
+hl2dtq2yD9LY/n8dHNUg6fvx3CJcXA==
+=Otml
+-----END PGP SIGNATURE-----
+
+--=-3XZ/y1IFppNmU436yTMp--
+
