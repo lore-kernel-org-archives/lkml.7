@@ -2,116 +2,176 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E94D3C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 17:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCC4C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 17:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB8C22086A
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 17:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5DF620863
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 17:54:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="xPFANoLR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728604AbfI1Rpr (ORCPT
+        id S1728654AbfI1RyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Sep 2019 13:45:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54602 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725897AbfI1Rpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Sep 2019 13:45:47 -0400
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3424A883C2
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Sep 2019 17:45:47 +0000 (UTC)
-Received: by mail-io1-f70.google.com with SMTP id i2so19838494ioo.10
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Sep 2019 10:45:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=iG/YHVcFqQVe7mP6cE9UwyWSN4iynxZhaekQHviCFmw=;
-        b=YCe+gEeA7HxywXu1L+JGiVS5fdU64d9ZFawtrWA047b0JUKjjN4X1cbUWFrz9t5UDI
-         Xou1KfcoLEeXJFkVEv4Hr8s3BvhlCNAUpX/tiZ0JU2wQ2ArMS7oEWGKOanqLuZ9+VMg+
-         +IHuRAv/+09kWckGr6muPeNKqHSGIuNVes9qyQmpRsNUH0K/kydxeyyaMRIMORvGemE1
-         rvB9zDLcv3x51JPfDNGmoq+DrbJGVL/2A75kaMhY2rYua3IoarCuH5Zvy5RS1j9h+NNZ
-         hzlXfVEbx9F5gjL2irNvEHV2071cGmJrmLB/rTCBQgXDoLRiPEJL9z4z8jkVkr0z//HK
-         6gtQ==
-X-Gm-Message-State: APjAAAXVQNNOXJurI2tdoNFMi7x7N5DUnBGIqaDHIvTTO/NfsmWfi6uv
-        DUFkbalzezSeSVgPrieRGE7HIeJ2dGDA1vceuqaibFL1T3DUyDMVh7xcT1/WT7OTSurLdJm9anE
-        iowD6p2UQCrPRlEhavCCz5N6W
-X-Received: by 2002:a92:498b:: with SMTP id k11mr12162587ilg.105.1569692746611;
-        Sat, 28 Sep 2019 10:45:46 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqze0HjOplNBn9SWhXTQMRBHd0phxnym4QSz29LhtpIKrf3+QQSVqTXxYoBpkDsRICWONJi3Fw==
-X-Received: by 2002:a92:498b:: with SMTP id k11mr12162573ilg.105.1569692746369;
-        Sat, 28 Sep 2019 10:45:46 -0700 (PDT)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id g79sm3452208ilf.14.2019.09.28.10.45.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Sep 2019 10:45:45 -0700 (PDT)
-Date:   Sat, 28 Sep 2019 10:45:43 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Alexey Klimov <aklimov@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>
-Subject: Re: [PATCH v4 0/4] tpm: add update_durations class op to allow
- override of chip supplied values
-Message-ID: <20190928174543.6msskzuyhirtjxwe@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Alexey Klimov <aklimov@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>
-References: <20190902142735.6280-1-jsnitsel@redhat.com>
+        Sat, 28 Sep 2019 13:54:16 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:49127 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbfI1RyP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Sep 2019 13:54:15 -0400
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x8SHrwTn000817;
+        Sun, 29 Sep 2019 02:53:58 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x8SHrwTn000817
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1569693239;
+        bh=0Gd7o+697MeBCUqaaUAEfXA11UsBOCRd4GDceG/VWV4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=xPFANoLRpX3aNeemf3C7gLC4sZ7YE7Q5QlSE0KS3GgrbAgkF7INARMIm+s9FhcTMw
+         m+xT3uOIuLPZk5TDTa7CvpChMnLjkiMJInpniRGnxGySUGDS1JKTXHGRxdVqjj55gA
+         Jh6NndGojJLx3IoCfS9CwK+nhEhj/fEJQp6mvWKQW36ZVTL/JLFKEvrAd+olzj64u2
+         8V2e4eXCwcP90UtSUyTIg5Qzs/cj7UXXiH16ruZFg4yAu10Xo79Fjpz8SXypfOc596
+         Ii0lLSuPkx1F5dOocTfQDA74GJLD7aq5kZcQzsAn+/vg5DHTJeCVlpZSf9v3F0DQeL
+         QfpfGNpwjkvRw==
+X-Nifty-SrcIP: [209.85.217.52]
+Received: by mail-vs1-f52.google.com with SMTP id p13so4058783vsr.4;
+        Sat, 28 Sep 2019 10:53:58 -0700 (PDT)
+X-Gm-Message-State: APjAAAV4RAVCoyZ2f6fRY5GfQ8H+tQTzHMZpaVux9I9K/0DkEBPKczHz
+        w/wi5oOzgTPN9RkrV1SrXX0p8+hOAVKNFD/unzI=
+X-Google-Smtp-Source: APXvYqzswS2+WFLQdAXZWkoQOfsSbayR7ZmaqNEdTu0Bi2gncoF0XyLVOTRaza3guM2TSyOyfuZU/b+7FdMS3e/zRxM=
+X-Received: by 2002:a67:1a41:: with SMTP id a62mr6023749vsa.54.1569693237601;
+ Sat, 28 Sep 2019 10:53:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190902142735.6280-1-jsnitsel@redhat.com>
-User-Agent: NeoMutt/20180716
+References: <20190926224014.28910-1-skhan@linuxfoundation.org>
+In-Reply-To: <20190926224014.28910-1-skhan@linuxfoundation.org>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sun, 29 Sep 2019 02:53:21 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASNOUwnS1=FStKCpPPxDVv=43F_dgvZehJnWQUXj4ER-g@mail.gmail.com>
+Message-ID: <CAK7LNASNOUwnS1=FStKCpPPxDVv=43F_dgvZehJnWQUXj4ER-g@mail.gmail.com>
+Subject: Re: [PATCH v2] selftests: Add kselftest-all and kselftest-install targets
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        "Cc: Shuah Khan" <shuah@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon Sep 02 19, Jerry Snitselaar wrote:
->We've run into a case where a customer has an STM TPM 1.2 chip
->(version 1.2.8.28), that is getting into an inconsistent state and
->they end up getting tpm transmit errors.  In really old tpm code this
->wasn't seen because the code that grabbed the duration values from the
->chip could fail silently, and would proceed to just use default values
->and move forward. More recent code though successfully gets the
->duration values from the chip, and using those values this particular
->chip version gets into the state seen by the customer.
+On Fri, Sep 27, 2019 at 7:40 AM Shuah Khan <skhan@linuxfoundation.org> wrote:
 >
->The idea with this patchset is to provide a facility like the
->update_timeouts operation to allow the override of chip supplied
->values.
+> Add kselftest-all target to build tests from the top level
+> Makefile. This is to simplify kselftest use-cases for CI and
+> distributions where build and test systems are different.
 >
->changes from v3:
->    * Assign value to version when tpm1_getcap is successful for TPM 1.1 device
->      not when it fails.
+> Current kselftest target builds and runs tests on a development
+> system which is a developer use-case.
 >
->changes from v2:
->    * Added patch 1/3
->    * Rework tpm_tis_update_durations to make use of new version structs
->      and pull tpm1_getcap calls out of loop.
+> Add kselftest-install target to install tests from the top level
+> Makefile. This is to simplify kselftest use-cases for CI and
+> distributions where build and test systems are different.
 >
->changes from v1:
->    * Remove unneeded newline
->    * Formatting cleanups
->    * Change tpm_tis_update_durations to be a void function, and
->      use chip->duration_adjusted to track whether adjustment was
->      made.
+> This change addresses requests from developers and testers to add
+> support for installing kselftest from the main Makefile.
 >
->Jarkko Sakkinen (1):
->      tpm: Remove duplicate code from caps_show() in tpm-sysfs.c
+> In addition, make the install directory the same when install is
+> run using "make kselftest-install" or by running kselftest_install.sh.
+> Also fix the INSTALL_PATH variable conflict between main Makefile and
+> selftests Makefile.
 >
->Jerry Snitselaar (2):
->      tpm: provide a way to override the chip returned durations
->      tpm_tis: override durations for STM tpm with firmware 1.2.8.28
+> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+
+For the top Makefile change:
+
+Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+
+
+> ---
+> Changes since v1:
+> - Collpased two patches that added separate targets to
+>   build and install into one patch using pattern rule to
+>   invoke all, install, and clean targets from main Makefile.
 >
+>  Makefile                                     | 5 ++---
+>  tools/testing/selftests/Makefile             | 8 ++++++--
+>  tools/testing/selftests/kselftest_install.sh | 4 ++--
+>  3 files changed, 10 insertions(+), 7 deletions(-)
+>
+> diff --git a/Makefile b/Makefile
+> index d456746da347..ec296c60c1af 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1237,9 +1237,8 @@ PHONY += kselftest
+>  kselftest:
+>         $(Q)$(MAKE) -C $(srctree)/tools/testing/selftests run_tests
+>
+> -PHONY += kselftest-clean
+> -kselftest-clean:
+> -       $(Q)$(MAKE) -C $(srctree)/tools/testing/selftests clean
+> +kselftest-%: FORCE
+> +       $(Q)$(MAKE) -C $(srctree)/tools/testing/selftests $*
+>
+>  PHONY += kselftest-merge
+>  kselftest-merge:
+> diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+> index c3feccb99ff5..bad18145ed1a 100644
+> --- a/tools/testing/selftests/Makefile
+> +++ b/tools/testing/selftests/Makefile
+> @@ -171,9 +171,12 @@ run_pstore_crash:
+>  # 1. output_dir=kernel_src
+>  # 2. a separate output directory is specified using O= KBUILD_OUTPUT
+>  # 3. a separate output directory is specified using KBUILD_OUTPUT
+> +# Avoid conflict with INSTALL_PATH set by the main Makefile
+>  #
+> -INSTALL_PATH ?= $(BUILD)/install
+> -INSTALL_PATH := $(abspath $(INSTALL_PATH))
+> +KSFT_INSTALL_PATH ?= $(BUILD)/kselftest_install
+> +KSFT_INSTALL_PATH := $(abspath $(KSFT_INSTALL_PATH))
+> +# Avoid changing the rest of the logic here and lib.mk.
+> +INSTALL_PATH := $(KSFT_INSTALL_PATH)
+>  ALL_SCRIPT := $(INSTALL_PATH)/run_kselftest.sh
+>
+>  install: all
+> @@ -203,6 +206,7 @@ ifdef INSTALL_PATH
+>                 echo "[ -w /dev/kmsg ] && echo \"kselftest: Running tests in $$TARGET\" >> /dev/kmsg" >> $(ALL_SCRIPT); \
+>                 echo "cd $$TARGET" >> $(ALL_SCRIPT); \
+>                 echo -n "run_many" >> $(ALL_SCRIPT); \
+> +               echo -n "Emit Tests for $$TARGET\n"; \
+>                 $(MAKE) -s --no-print-directory OUTPUT=$$BUILD_TARGET -C $$TARGET emit_tests >> $(ALL_SCRIPT); \
+>                 echo "" >> $(ALL_SCRIPT);           \
+>                 echo "cd \$$ROOT" >> $(ALL_SCRIPT); \
+> diff --git a/tools/testing/selftests/kselftest_install.sh b/tools/testing/selftests/kselftest_install.sh
+> index ec304463883c..e2e1911d62d5 100755
+> --- a/tools/testing/selftests/kselftest_install.sh
+> +++ b/tools/testing/selftests/kselftest_install.sh
+> @@ -24,12 +24,12 @@ main()
+>                 echo "$0: Installing in specified location - $install_loc ..."
+>         fi
+>
+> -       install_dir=$install_loc/kselftest
+> +       install_dir=$install_loc/kselftest_install
+>
+>  # Create install directory
+>         mkdir -p $install_dir
+>  # Build tests
+> -       INSTALL_PATH=$install_dir make install
+> +       KSFT_INSTALL_PATH=$install_dir make install
+>  }
+>
+>  main "$@"
+> --
+> 2.20.1
 >
 
-Anyone else have any feedback on this patchset?
+
+-- 
+Best Regards
+Masahiro Yamada
