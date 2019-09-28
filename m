@@ -2,121 +2,91 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E84C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 19:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64136C388F3
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 20:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 182642082F
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 19:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 375202146E
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 20:02:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569700936;
+	bh=iBI4ADUUwpbjA+pmHsEfnTeue1a9adW21YpVKP9WhKE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=auhEXWVujOhrpD6utKAxaXxJxggicjxUWQEyWbZPcXvT3j8nTJKGc5JSftSMDHRaU
+	 fOB3oXYJywY9+GW2nTEkJPDS/WhStpefXfqchKenaYQNtgcDHEZliRucbgghYuyxx8
+	 whYbA8lo18cX5hu8qW14GEy3fKA+outXL8zzVc/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728753AbfI1TKU (ORCPT
+        id S1728767AbfI1UCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Sep 2019 15:10:20 -0400
-Received: from 8bytes.org ([81.169.241.247]:56620 "EHLO theia.8bytes.org"
+        Sat, 28 Sep 2019 16:02:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728569AbfI1TKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Sep 2019 15:10:20 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id BFF26342; Sat, 28 Sep 2019 21:10:18 +0200 (CEST)
-Date:   Sat, 28 Sep 2019 21:10:17 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: [git pull] IOMMU Fixes for Linux v5.4-rc1
-Message-ID: <20190928191007.GA7565@8bytes.org>
+        id S1728617AbfI1UCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Sep 2019 16:02:15 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8023F20863;
+        Sat, 28 Sep 2019 20:02:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569700934;
+        bh=iBI4ADUUwpbjA+pmHsEfnTeue1a9adW21YpVKP9WhKE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T2F5ar22dPjflJL9yIU58hu70yONBakpNONVOBBsTvNXDHVVGdyHdS1PDdcN/Q2yB
+         +XUqR8207O4FeHFf1saqEFOAxmexTHTj23wLC9UQ43DmmvdORzZpKjh10ipBAGqLVk
+         YQZea0UROJnoEp41s4cIDmuxBDLTJJx4BDk+yCgo=
+Date:   Sat, 28 Sep 2019 16:02:13 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     stable@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
+        linus.walleij@linaro.org, natechancellor@gmail.com, sre@kernel.org,
+        longman@redhat.com, linux-gpio@vger.kernel.org,
+        david@lechnology.com, linux-pm@vger.kernel.org, arnd@arndb.de,
+        orsonzhai@gmail.com, vincent.guittot@linaro.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [BACKPORT 4.19.y 0/3] Candidates from Spreadtrum 4.14 product
+ kernel
+Message-ID: <20190927153055.GP8171@sasha-vm>
+References: <cover.1569404757.git.baolin.wang@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="CE+1k2dSO48ffgeK"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
+In-Reply-To: <cover.1569404757.git.baolin.wang@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Sep 25, 2019 at 05:52:26PM +0800, Baolin Wang wrote:
+>With Arnd's script [1] help, I found some bugfixes in Spreadtrum 4.14 product
+>kernel, but missing in v4.19.75:
+>
+>513e1073d52e locking/lockdep: Add debug_locks check in __lock_downgrade()
+>957063c92473 pinctrl: sprd: Use define directive for sprd_pinconf_params values
+>87a2b65fc855 power: supply: sysfs: ratelimit property read error message
+>
+>[1] https://lore.kernel.org/lkml/20190322154425.3852517-19-arnd@arndb.de/T/
+>
+>David Lechner (1):
+>  power: supply: sysfs: ratelimit property read error message
+>
+>Nathan Chancellor (1):
+>  pinctrl: sprd: Use define directive for sprd_pinconf_params values
+>
+>Waiman Long (1):
+>  locking/lockdep: Add debug_locks check in __lock_downgrade()
+>
+> drivers/pinctrl/sprd/pinctrl-sprd.c       |    6 ++----
+> drivers/power/supply/power_supply_sysfs.c |    3 ++-
+> kernel/locking/lockdep.c                  |    3 +++
+> 3 files changed, 7 insertions(+), 5 deletions(-)
 
---CE+1k2dSO48ffgeK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I've queued these up for 4.19, 4.14 and some for 4.9 and 4.4. Thank you.
 
-Hi Linus,
-
-The following changes since commit e95adb9add75affb98570a518c902f50e5fcce1b:
-
-  Merge branches 'arm/omap', 'arm/exynos', 'arm/smmu', 'arm/mediatek', 'arm/qcom', 'arm/renesas', 'x86/amd', 'x86/vt-d' and 'core' into next (2019-09-11 12:39:19 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-fixes-5.4-rc1
-
-for you to fetch changes up to 2a78f9962565e53b78363eaf516eb052009e8020:
-
-  iommu/amd: Lock code paths traversing protection_domain->dev_list (2019-09-28 14:44:13 +0200)
-
-----------------------------------------------------------------
-IOMMU Fixes for Linux v5.4-rc1
-
-A couple of fixes for the AMD IOMMU driver have piled up:
-
-	* Some fixes for the reworked IO page-table which caused memory
-	  leaks or did not allow to downgrade mappings under some
-	  conditions.
-
-	* Locking fixes to fix a couple of possible races around
-	  accessing 'struct protection_domain'. The races got introduced
-	  when the dma-ops path became lock-less in the fast-path.
-
-----------------------------------------------------------------
-Andrei Dulea (4):
-      iommu/amd: Fix pages leak in free_pagetable()
-      iommu/amd: Fix downgrading default page-sizes in alloc_pte()
-      iommu/amd: Introduce first_pte_l7() helper
-      iommu/amd: Unmap all L7 PTEs when downgrading page-sizes
-
-Filippo Sironi (1):
-      iommu/amd: Wait for completion of IOTLB flush in attach_device
-
-Joerg Roedel (6):
-      iommu/amd: Remove domain->updated
-      iommu/amd: Remove amd_iommu_devtable_lock
-      iommu/amd: Take domain->lock for complete attach/detach path
-      iommu/amd: Check for busy devices earlier in attach_device()
-      iommu/amd: Lock dev_data in attach/detach code paths
-      iommu/amd: Lock code paths traversing protection_domain->dev_list
-
- drivers/iommu/amd_iommu.c       | 229 ++++++++++++++++++++++++----------------
- drivers/iommu/amd_iommu_types.h |   4 +-
- 2 files changed, 139 insertions(+), 94 deletions(-)
-
-Please pull.
-
+--
 Thanks,
-
-	Joerg
-
---CE+1k2dSO48ffgeK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEr9jSbILcajRFYWYyK/BELZcBGuMFAl2PsA8ACgkQK/BELZcB
-GuO23hAA3ywhr5/cgbIu7M8wV+zAeqx0i0R6qkG7Imzh98HfCMtFGnkcl97tKM+k
-ojIM1ITKJZhM+C96dkNVMdp7V5jcqA6RS4+9q1HcchU47Krb1I8050zxf9lp4Nhy
-3GCTzC1waEhhrc39tBNJNkdz+KiZUm4WvMlYbjieD9KxH0Ny/zTWnVDiiW9Fq98c
-rXJhWv+OwQ6Z/clSNQIUS87mTGymro/5VBc2IEh61N82YgOzmlDA2tgMNOKIFVV7
-eQsAf2E/jGyNLR2zumceDB+p/0GXWNoz+imUXHJIRWDWcjL+W5+0GamPZ9YwFF+r
-Lu3+bI4JSCkpUo0UbEwFe7l7Aw0KEMoyXHmySfuZ0sZ2ysMY5Xkx/InklX2kpHbk
-NjfAiPbMn+AHuyDxj/9YkpApV7Q+WCEhvHapBKLmKBbYiRn7nz0N7hX3CaJqmeo1
-Hi7La6y3NIAT95nyhkzU4tgklH1wMW3nzpwx2BXdYjcsy/Pe63C9IgPIxcCuq1cC
-1W6A9YpYrV44sPl82V3u1SGoxM9KpWNx9uumSXBqzOJ8aj5luCoCYJVRHZgut+bm
-R45JVVpHs4oIdeJSGC/wsCVwSDMyHf/dPd0+dz5nUnbGnCaKKxeZX5u618lU5gCJ
-45zXdBAsUKafcU7d/ge6ZdlWmW1Q0oHRRPziuQq9isZ1JZansTA=
-=ftDq
------END PGP SIGNATURE-----
-
---CE+1k2dSO48ffgeK--
+Sasha
