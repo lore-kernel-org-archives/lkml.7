@@ -2,148 +2,255 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D07F9C388F3
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 03:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1711FC4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 03:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A61AB21655
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 03:15:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569640519;
-	bh=3OF1vilItFteZHZLRZa6EA+C1EdUbT48lGH3zl9W3mQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HOqyTX7LsIZFBFni66+abjhbzdQgRsNaEKGaFXctmGifUthHZYqc6vxiX//E3tpap
-	 rjTXbv66Cf3MTSzZ9srT9gsHo5UYF4OjAm6TQb4i204ZyZl/qI0e7Yc3ZR2HsyIEC0
-	 nXeJGBTId/eW8CD0VpRU/MJt5uFoqfHzUDvlPvXc=
+	by mail.kernel.org (Postfix) with ESMTP id CF43F2086A
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 03:33:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YElWvSa+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728619AbfI1DPP (ORCPT
+        id S1728589AbfI1Ddb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 23:15:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42668 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728501AbfI1DPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 23:15:14 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2FD9207FA;
-        Sat, 28 Sep 2019 03:15:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569640512;
-        bh=3OF1vilItFteZHZLRZa6EA+C1EdUbT48lGH3zl9W3mQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Kpeg6InUVnVYOtsyrbLe3qt3J5rqETH1GMlHPTBwZL05pbihO5k9suFODkBHbavR8
-         jBtuF6OduhAHn5zxD7uoOzH/a0yp0YeIH7eCi1mfNd1W2qwPhomQF+r69OS51LiGl/
-         VKRhofX9RXW9vHwhWlo9e4/UqfE3H0XRWHrAQQYc=
-Date:   Fri, 27 Sep 2019 20:15:10 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>, Al Viro <viro@zeniv.linux.org.uk>
-Cc:     syzbot <syzbot+eb853b51b10f1befa0b7@syzkaller.appspotmail.com>,
-        ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net, hawk@kernel.org, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com, kafai@fb.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ppp@vger.kernel.org, netdev@vger.kernel.org,
-        paulus@samba.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
-Subject: Re: KASAN: slab-out-of-bounds Read in bpf_prog_create
-Message-ID: <20190928031510.GD1079@sol.localdomain>
-Mail-Followup-To: Arnd Bergmann <arnd@arndb.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        syzbot <syzbot+eb853b51b10f1befa0b7@syzkaller.appspotmail.com>,
-        ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net, hawk@kernel.org, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com, kafai@fb.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ppp@vger.kernel.org, netdev@vger.kernel.org, paulus@samba.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
-References: <000000000000cacc7e0592c42ce3@google.com>
+        Fri, 27 Sep 2019 23:33:31 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:35896 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728402AbfI1Ddb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 23:33:31 -0400
+Received: by mail-qk1-f193.google.com with SMTP id y189so3632193qkc.3
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 20:33:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7XfWamgXzgjfyCQ8IeDaGLG0DVgISAwCi1P0IUeRYWg=;
+        b=YElWvSa+J91Kefo1RlLQEGvq36hDM5SBTzQeVq2y9vVjvYynKPaqDIZJ9vFpTSdvE5
+         UP18NA+frTSqoXehMuu7repR1ALXCKj1lhnXQOJrP1tyYWirlx5Qf80Y9WjDfdgMo8sQ
+         38Tk2mAXaIv24UexsMdoEGDCnaqC5h256qPTU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7XfWamgXzgjfyCQ8IeDaGLG0DVgISAwCi1P0IUeRYWg=;
+        b=miA1Tg85QfcpZ2oL9GjzXignDxhlfLatkrmNTjz3/ZTpYRQY1nCSNyhwke9RZ4zBRX
+         dWZTtd2AUIdJO6xcVmdG61sk82zTZWk7hohVGSM+UEN0e6ZOI+oAEE+Wo4b4YGkE0nnT
+         Vrm9Eor122nxERDlmEz7DvOVOKIpCaoooL+eINZfCBJxQy9U3lhEk9Pui0uRh0MQ5/L8
+         KAh6/IevSzadhxTzTUqExEezlaTLAQtcEKbccqCdiTYGTHWXyCoIqEuYHsQKns/QqdPp
+         NJ/EBrLiDI3wW4NkjiYcgYULS/GdalX2DGQnv2OVbRdDvS9VQ8wz+uW0NRvXzuqImT36
+         YOZA==
+X-Gm-Message-State: APjAAAXZVN8wMYFnSirTauhwHS5R11LUUA6kahog4lTqSqmiJDccZQOg
+        1uuZys0zAQPjSEaN+sT3jcj0Nzt+ovhLQW6WD/LCvg==
+X-Google-Smtp-Source: APXvYqzAvI/81xPqhpMw9kKOcI8J05C52lV7qiiCJrdR50eikGe7yTzmsqVlliIUSVGHD4S/2Ck6ILYUyQ3Y01S1ZeA=
+X-Received: by 2002:a05:620a:113a:: with SMTP id p26mr8284726qkk.353.1569641607589;
+ Fri, 27 Sep 2019 20:33:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000cacc7e0592c42ce3@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20190802131226.123800-1-shik@chromium.org>
+In-Reply-To: <20190802131226.123800-1-shik@chromium.org>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Sat, 28 Sep 2019 11:33:16 +0800
+Message-ID: <CANMq1KD3Pth7LNnVqxSesx3kSFte0eR5JqEBETv45s_9_YKWHw@mail.gmail.com>
+Subject: Re: [PATCH] media: uvcvideo: Use streaming DMA APIs to transfer buffers
+To:     Shik Chen <shik@chromium.org>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>, notify@kernel.org,
+        Keiichi Watanabe <keiichiw@chromium.org>,
+        Ricky Liang <jcliang@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        kieran.bingham@ideasonboard.com, Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        Christoph Hellwig <hch@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd and Al,
+On Fri, Aug 2, 2019 at 9:13 PM Shik Chen <shik@chromium.org> wrote:
+>
+> Similar to the commit 1161db6776bd ("media: usb: pwc: Don't use coherent
+> DMA buffers for ISO transfer") [1] for the pwc driver. Use streaming DMA
+> APIs to transfer buffers and sync them explicitly, because accessing
+> buffers allocated by usb_alloc_coherent() is slow on platforms without
+> hardware coherent DMA.
+>
+> Tested on x86-64 (Intel Celeron 4305U) and armv7l (Rockchip RK3288) with
+> Logitech Brio 4K camera at 1920x1080 using the WebRTC sample site [3].
+>
+> |                  |  URB (us)  | Decode (Gbps) | CPU (%) |
+> |------------------|------------|---------------|---------|
+> | x86-64 coherent  |  53 +-  20 |          50.6 |    0.24 |
+> | x86-64 streaming |  55 +-  19 |          50.1 |    0.25 |
+> | armv7l coherent  | 342 +- 379 |           1.8 |    2.16 |
+> | armv7l streaming |  99 +-  98 |          11.0 |    0.36 |
+>
+> The performance characteristics are improved a lot on armv7l, and
+> remained (almost) unchanged on x86-64. The code used for measurement can
+> be found at [2].
+>
+> [1] https://git.kernel.org/torvalds/c/1161db6776bd
+> [2] https://crrev.com/c/1729133
+> [3] https://webrtc.github.io/samples/src/content/getusermedia/resolution/
+>
+> Signed-off-by: Shik Chen <shik@chromium.org>
+> ---
+> The allocated buffer could be as large as 768K when streaming 4K video.
+> Ideally we should use some generic helper to allocate non-coherent
+> memory in a more efficient way, such as https://lwn.net/Articles/774429/
+> ("make the non-consistent DMA allocator more userful").
+>
+> But I cannot find any existing helper so a simple kzalloc() is used in
+> this patch. The logic to figure out the DMA addressable GFP flags is
+> similar to __dma_direct_alloc_pages() without the optimistic retries:
+> https://elixir.bootlin.com/linux/v5.2.5/source/kernel/dma/direct.c#L96
+>
+>  drivers/media/usb/uvc/uvc_video.c | 65 +++++++++++++++++++++----------
+>  1 file changed, 45 insertions(+), 20 deletions(-)
+>
+> diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
+> index 8fa77a81dd7f2c..962c35478896c4 100644
+> --- a/drivers/media/usb/uvc/uvc_video.c
+> +++ b/drivers/media/usb/uvc/uvc_video.c
+> @@ -1539,6 +1539,8 @@ static void uvc_video_complete(struct urb *urb)
+>          * Process the URB headers, and optionally queue expensive memcpy tasks
+>          * to be deferred to a work queue.
+>          */
+> +       dma_sync_single_for_cpu(&urb->dev->dev, urb->transfer_dma,
+> +                               urb->transfer_buffer_length, DMA_FROM_DEVICE);
+>         stream->decode(uvc_urb, buf, buf_meta);
+>
+>         /* If no async work is needed, resubmit the URB immediately. */
+> @@ -1565,18 +1567,51 @@ static void uvc_free_urb_buffers(struct uvc_streaming *stream)
+>                 if (!uvc_urb->buffer)
+>                         continue;
+>
+> -#ifndef CONFIG_DMA_NONCOHERENT
+> -               usb_free_coherent(stream->dev->udev, stream->urb_size,
+> -                                 uvc_urb->buffer, uvc_urb->dma);
+> -#else
+> +               dma_unmap_single(&stream->dev->udev->dev, uvc_urb->dma,
+> +                                stream->urb_size, DMA_FROM_DEVICE);
+>                 kfree(uvc_urb->buffer);
+> -#endif
+> -               uvc_urb->buffer = NULL;
+>         }
+>
+>         stream->urb_size = 0;
+>  }
+>
+> +static gfp_t uvc_alloc_gfp_flags(struct device *dev)
+> +{
+> +       u64 mask = dma_get_mask(dev);
+> +
+> +       if (dev->bus_dma_mask)
+> +               mask &= dev->bus_dma_mask;
+> +
+> +       if (mask < DMA_BIT_MASK(32) && IS_ENABLED(CONFIG_ZONE_DMA))
+> +               return GFP_DMA;
+> +
+> +       if (mask < DMA_BIT_MASK(64)) {
+> +               if (IS_ENABLED(CONFIG_ZONE_DMA32))
+> +                       return GFP_DMA32;
 
-On Tue, Sep 17, 2019 at 11:49:06AM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    2015a28f Add linux-next specific files for 20190915
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=11880d69600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=110691c2286b679a
-> dashboard link: https://syzkaller.appspot.com/bug?extid=eb853b51b10f1befa0b7
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=127c3481600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1150a70d600000
-> 
-> The bug was bisected to:
-> 
-> commit 2f4fa2db75e26995709043c8d3de4632ebed5c4b
-> Author: Al Viro <viro@zeniv.linux.org.uk>
-> Date:   Thu Apr 18 03:48:01 2019 +0000
-> 
->     compat_ioctl: unify copy-in of ppp filters
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=145eee1d600000
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=165eee1d600000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=125eee1d600000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+eb853b51b10f1befa0b7@syzkaller.appspotmail.com
-> Fixes: 2f4fa2db75e2 ("compat_ioctl: unify copy-in of ppp filters")
-> 
-> ==================================================================
-> BUG: KASAN: slab-out-of-bounds in memcpy include/linux/string.h:404 [inline]
-> BUG: KASAN: slab-out-of-bounds in bpf_prog_create+0xe9/0x250
-> net/core/filter.c:1351
-> Read of size 32768 at addr ffff88809cf74000 by task syz-executor183/8575
-> 
-> CPU: 0 PID: 8575 Comm: syz-executor183 Not tainted 5.3.0-rc8-next-20190915
-> #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
->  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
->  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
->  kasan_report+0x12/0x20 mm/kasan/common.c:634
->  check_memory_region_inline mm/kasan/generic.c:185 [inline]
->  check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
->  memcpy+0x24/0x50 mm/kasan/common.c:122
->  memcpy include/linux/string.h:404 [inline]
->  bpf_prog_create+0xe9/0x250 net/core/filter.c:1351
->  get_filter.isra.0+0x108/0x1a0 drivers/net/ppp/ppp_generic.c:572
->  ppp_get_filter drivers/net/ppp/ppp_generic.c:584 [inline]
->  ppp_ioctl+0x129d/0x2590 drivers/net/ppp/ppp_generic.c:801
+We're hitting issues with this on 64-bit ARM platform, where
+ZONE_DMA32 is enabled (default), the kmalloc allocation with GFP_DMA32
+fails.
 
-This is a correct bisection.  This commit needs:
+There is no slab cache for GFP_DMA32, so those calls are expected to
+fail, AFAICT there are no other (working) kmalloc(..., .. | GFP_DMA32)
+users in the kernel, so I don't think we want to add a cache. If this
+helps, some discussion here why the cache wasn't added:
+https://lore.kernel.org/patchwork/patch/1009563/#1198622
 
-diff --git a/drivers/net/ppp/ppp_generic.c b/drivers/net/ppp/ppp_generic.c
-index 267fe2c58087..f55d7937d6c5 100644
---- a/drivers/net/ppp/ppp_generic.c
-+++ b/drivers/net/ppp/ppp_generic.c
-@@ -564,8 +564,9 @@ static struct bpf_prog *get_filter(struct sock_fprog *uprog)
- 		return NULL;
- 
- 	/* uprog->len is unsigned short, so no overflow here */
--	fprog.len = uprog->len * sizeof(struct sock_filter);
--	fprog.filter = memdup_user(uprog->filter, fprog.len);
-+	fprog.len = uprog->len;
-+	fprog.filter = memdup_user(uprog->filter,
-+				   uprog->len * sizeof(struct sock_filter));
- 	if (IS_ERR(fprog.filter))
- 		return ERR_CAST(fprog.filter);
- 
+This function looks out of place in a high-level driver, but from your
+comment above (below ---), I guess we may have to live with that until
+the kernel provides a better API?
+
+For the time being, looking at how __dma_direct_alloc_pages works,
+could you use alloc_pages_node (or dma_alloc_contiguous?) instead of
+kmalloc, that would let you use GFP_DMA32 as needed?
+
+> +               if (IS_ENABLED(CONFIG_ZONE_DMA))
+> +                       return GFP_DMA;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static char *uvc_alloc_urb_buffer(struct device *dev, size_t size,
+> +                                 gfp_t gfp_flags, dma_addr_t *dma_handle)
+> +{
+> +       void *buffer = kzalloc(size, gfp_flags | uvc_alloc_gfp_flags(dev));
+> +
+> +       if (!buffer)
+> +               return NULL;
+> +
+> +       *dma_handle = dma_map_single(dev, buffer, size, DMA_FROM_DEVICE);
+> +       if (dma_mapping_error(dev, *dma_handle)) {
+> +               kfree(buffer);
+> +               return NULL;
+> +       }
+> +
+> +       return buffer;
+> +}
+> +
+>  /*
+>   * Allocate transfer buffers. This function can be called with buffers
+>   * already allocated when resuming from suspend, in which case it will
+> @@ -1607,18 +1642,14 @@ static int uvc_alloc_urb_buffers(struct uvc_streaming *stream,
+>
+>         /* Retry allocations until one succeed. */
+>         for (; npackets > 1; npackets /= 2) {
+> +               stream->urb_size = psize * npackets;
+> +
+>                 for (i = 0; i < UVC_URBS; ++i) {
+>                         struct uvc_urb *uvc_urb = &stream->uvc_urb[i];
+>
+> -                       stream->urb_size = psize * npackets;
+> -#ifndef CONFIG_DMA_NONCOHERENT
+> -                       uvc_urb->buffer = usb_alloc_coherent(
+> -                               stream->dev->udev, stream->urb_size,
+> +                       uvc_urb->buffer = uvc_alloc_urb_buffer(
+> +                               &stream->dev->udev->dev, stream->urb_size,
+>                                 gfp_flags | __GFP_NOWARN, &uvc_urb->dma);
+> -#else
+> -                       uvc_urb->buffer =
+> -                           kmalloc(stream->urb_size, gfp_flags | __GFP_NOWARN);
+> -#endif
+>                         if (!uvc_urb->buffer) {
+>                                 uvc_free_urb_buffers(stream);
+>                                 break;
+> @@ -1728,12 +1759,8 @@ static int uvc_init_video_isoc(struct uvc_streaming *stream,
+>                 urb->context = uvc_urb;
+>                 urb->pipe = usb_rcvisocpipe(stream->dev->udev,
+>                                 ep->desc.bEndpointAddress);
+> -#ifndef CONFIG_DMA_NONCOHERENT
+>                 urb->transfer_flags = URB_ISO_ASAP | URB_NO_TRANSFER_DMA_MAP;
+>                 urb->transfer_dma = uvc_urb->dma;
+> -#else
+> -               urb->transfer_flags = URB_ISO_ASAP;
+> -#endif
+>                 urb->interval = ep->desc.bInterval;
+>                 urb->transfer_buffer = uvc_urb->buffer;
+>                 urb->complete = uvc_video_complete;
+> @@ -1793,10 +1820,8 @@ static int uvc_init_video_bulk(struct uvc_streaming *stream,
+>
+>                 usb_fill_bulk_urb(urb, stream->dev->udev, pipe, uvc_urb->buffer,
+>                                   size, uvc_video_complete, uvc_urb);
+> -#ifndef CONFIG_DMA_NONCOHERENT
+>                 urb->transfer_flags = URB_NO_TRANSFER_DMA_MAP;
+>                 urb->transfer_dma = uvc_urb->dma;
+> -#endif
+>
+>                 uvc_urb->urb = urb;
+>         }
+> --
+> 2.22.0.770.g0f2c4a37fd-goog
+>
