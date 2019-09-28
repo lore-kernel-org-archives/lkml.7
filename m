@@ -2,118 +2,133 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E462EC4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 17:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D04C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 17:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6267208E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 17:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD85120866
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 17:24:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729025AbfI1RYL (ORCPT
+        id S1728764AbfI1RXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Sep 2019 13:24:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45988 "EHLO mx1.redhat.com"
+        Sat, 28 Sep 2019 13:23:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33720 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728768AbfI1RX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Sep 2019 13:23:26 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        id S1725897AbfI1RXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Sep 2019 13:23:24 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 03DF210CC1F4;
-        Sat, 28 Sep 2019 17:23:26 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 82B6690B0A;
+        Sat, 28 Sep 2019 17:23:24 +0000 (UTC)
 Received: from mail (ovpn-125-159.rdu2.redhat.com [10.10.125.159])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D225C5D6B0;
-        Sat, 28 Sep 2019 17:23:25 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 48291261B8;
+        Sat, 28 Sep 2019 17:23:24 +0000 (UTC)
 From:   Andrea Arcangeli <aarcange@redhat.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH 11/14] KVM: x86: optimize more exit handlers in vmx.c
-Date:   Sat, 28 Sep 2019 13:23:20 -0400
-Message-Id: <20190928172323.14663-12-aarcange@redhat.com>
-In-Reply-To: <20190928172323.14663-1-aarcange@redhat.com>
-References: <20190928172323.14663-1-aarcange@redhat.com>
+Subject: [PATCH 00/14] KVM monolithic v2
+Date:   Sat, 28 Sep 2019 13:23:09 -0400
+Message-Id: <20190928172323.14663-1-aarcange@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Sat, 28 Sep 2019 17:23:26 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Sat, 28 Sep 2019 17:23:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Eliminate wasteful call/ret non RETPOLINE case and unnecessary fentry
-dynamic tracing hooking points.
+Hello,
 
-Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
----
- arch/x86/kvm/vmx/vmx.c | 30 +++++-------------------------
- 1 file changed, 5 insertions(+), 25 deletions(-)
+as usual the last 4 patches could be splitted off but I did more
+measurements in that area and I altered the commit headers. They're
+fairly small commits compared to the previous part so I kept it
+considering they're needed to benchmark the previous part.
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 6e995e37a8c8..de3ae2246205 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4589,7 +4589,7 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
- 	return 0;
- }
- 
--static int handle_external_interrupt(struct kvm_vcpu *vcpu)
-+static __always_inline int handle_external_interrupt(struct kvm_vcpu *vcpu)
- {
- 	++vcpu->stat.irq_exits;
- 	return 1;
-@@ -4860,21 +4860,6 @@ void kvm_x86_set_dr7(struct kvm_vcpu *vcpu, unsigned long val)
- 	vmcs_writel(GUEST_DR7, val);
- }
- 
--static int handle_cpuid(struct kvm_vcpu *vcpu)
--{
--	return kvm_emulate_cpuid(vcpu);
--}
--
--static int handle_rdmsr(struct kvm_vcpu *vcpu)
--{
--	return kvm_emulate_rdmsr(vcpu);
--}
--
--static int handle_wrmsr(struct kvm_vcpu *vcpu)
--{
--	return kvm_emulate_wrmsr(vcpu);
--}
--
- static int handle_tpr_below_threshold(struct kvm_vcpu *vcpu)
- {
- 	kvm_apic_update_ppr(vcpu);
-@@ -4891,11 +4876,6 @@ static int handle_interrupt_window(struct kvm_vcpu *vcpu)
- 	return 1;
- }
- 
--static int handle_halt(struct kvm_vcpu *vcpu)
--{
--	return kvm_emulate_halt(vcpu);
--}
--
- static int handle_vmcall(struct kvm_vcpu *vcpu)
- {
- 	return kvm_emulate_hypercall(vcpu);
-@@ -5487,11 +5467,11 @@ static int (*kvm_vmx_exit_handlers[])(struct kvm_vcpu *vcpu) = {
- 	[EXIT_REASON_IO_INSTRUCTION]          = handle_io,
- 	[EXIT_REASON_CR_ACCESS]               = handle_cr,
- 	[EXIT_REASON_DR_ACCESS]               = handle_dr,
--	[EXIT_REASON_CPUID]                   = handle_cpuid,
--	[EXIT_REASON_MSR_READ]                = handle_rdmsr,
--	[EXIT_REASON_MSR_WRITE]               = handle_wrmsr,
-+	[EXIT_REASON_CPUID]                   = kvm_emulate_cpuid,
-+	[EXIT_REASON_MSR_READ]                = kvm_emulate_rdmsr,
-+	[EXIT_REASON_MSR_WRITE]               = kvm_emulate_wrmsr,
- 	[EXIT_REASON_PENDING_INTERRUPT]       = handle_interrupt_window,
--	[EXIT_REASON_HLT]                     = handle_halt,
-+	[EXIT_REASON_HLT]                     = kvm_emulate_halt,
- 	[EXIT_REASON_INVD]		      = handle_invd,
- 	[EXIT_REASON_INVLPG]		      = handle_invlpg,
- 	[EXIT_REASON_RDPMC]                   = handle_rdpmc,
+The KVM monolithic enhancement is easy to identify checking the word
+"monolithic" in the subject so there's no confusion about where that
+work stops.
+
+This renames all functions in place mixed up in whatever location they
+existed in svm.c or vmx.c. If they require an inline call they're
+defined now as extern before the kvm_x86_ops structure.
+
+Converting those small kvm_x86 functions to inlines requires more
+Makefile work and header restructuring so it's left for later.
+
+The removal of kvm_x86_ops is also left for later because that
+requires lots of logic changes in the code scattered all over the
+place in KVM code. This patchset tries to do the conversion with as
+few logic changes as possible, so the code works the same and this
+only improves the implementation and the performance.
+
+Doing the conversion plus the logic changes at the same time would
+pose the risk of not being able to identify through bisection if any
+regression is caused by a bug in the conversion or in one small commit
+to alter the logic and to remove the need of one more pointer to
+function.
+
+It's best if each single removal of any pointer to functional change
+is done through a separate small commit. After all those small commits
+done incrementally with this patchset, the kvm_x86_ops structure can
+be deleted.
+
+https://git.kernel.org/pub/scm/linux/kernel/git/andrea/aa.git/log/?h=kvm-mono2
+
+Thanks,
+Andrea
+
+Andrea Arcangeli (14):
+  KVM: monolithic: x86: remove kvm.ko
+  KVM: monolithic: x86: disable linking vmx and svm at the same time
+    into the kernel
+  KVM: monolithic: x86: convert the kvm_x86_ops and kvm_pmu_ops methods
+    to external functions
+  KVM: monolithic: x86: handle the request_immediate_exit variation
+  KVM: monolithic: add more section prefixes in the KVM common code
+  KVM: monolithic: x86: remove __exit section prefix from
+    machine_unsetup
+  KVM: monolithic: x86: remove __init section prefix from
+    kvm_x86_cpu_has_kvm_support
+  KVM: monolithic: x86: remove exports
+  KVM: monolithic: remove exports from KVM common code
+  KVM: monolithic: x86: drop the kvm_pmu_ops structure
+  KVM: x86: optimize more exit handlers in vmx.c
+  KVM: retpolines: x86: eliminate retpoline from vmx.c exit handlers
+  KVM: retpolines: x86: eliminate retpoline from svm.c exit handlers
+  x86: retpolines: eliminate retpoline from msr event handlers
+
+ arch/x86/events/intel/core.c    |  11 +
+ arch/x86/include/asm/kvm_host.h | 205 +++++++-
+ arch/x86/kvm/Kconfig            |  24 +-
+ arch/x86/kvm/Makefile           |   5 +-
+ arch/x86/kvm/cpuid.c            |  27 +-
+ arch/x86/kvm/hyperv.c           |   8 +-
+ arch/x86/kvm/irq.c              |   4 -
+ arch/x86/kvm/irq_comm.c         |   2 -
+ arch/x86/kvm/kvm_cache_regs.h   |  10 +-
+ arch/x86/kvm/lapic.c            |  46 +-
+ arch/x86/kvm/mmu.c              |  50 +-
+ arch/x86/kvm/mmu.h              |   4 +-
+ arch/x86/kvm/mtrr.c             |   2 -
+ arch/x86/kvm/pmu.c              |  27 +-
+ arch/x86/kvm/pmu.h              |  37 +-
+ arch/x86/kvm/pmu_amd.c          |  43 +-
+ arch/x86/kvm/svm.c              | 682 ++++++++++++++++-----------
+ arch/x86/kvm/trace.h            |   4 +-
+ arch/x86/kvm/vmx/nested.c       |  84 ++--
+ arch/x86/kvm/vmx/pmu_intel.c    |  46 +-
+ arch/x86/kvm/vmx/vmx.c          | 795 ++++++++++++++++++--------------
+ arch/x86/kvm/vmx/vmx.h          |  39 +-
+ arch/x86/kvm/x86.c              | 418 +++++++----------
+ arch/x86/kvm/x86.h              |   2 +-
+ include/linux/kvm_host.h        |   4 +-
+ virt/kvm/eventfd.c              |   1 -
+ virt/kvm/kvm_main.c             |  71 +--
+ 27 files changed, 1413 insertions(+), 1238 deletions(-)
