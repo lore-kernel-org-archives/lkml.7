@@ -6,126 +6,580 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 372F9C388F3
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 17:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C83C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 17:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10BD520880
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 17:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEA0220866
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 17:23:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbfI1RX1 (ORCPT
+        id S1728899AbfI1RXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Sep 2019 13:23:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54328 "EHLO mx1.redhat.com"
+        Sat, 28 Sep 2019 13:23:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53540 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728787AbfI1RX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728802AbfI1RX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 28 Sep 2019 13:23:26 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 180FAC051688;
+        by mx1.redhat.com (Postfix) with ESMTPS id 3EA8B89ACA;
         Sat, 28 Sep 2019 17:23:26 +0000 (UTC)
 Received: from mail (ovpn-125-159.rdu2.redhat.com [10.10.125.159])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D3C3E261B7;
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 60A4C60BE1;
         Sat, 28 Sep 2019 17:23:25 +0000 (UTC)
 From:   Andrea Arcangeli <aarcange@redhat.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH 12/14] KVM: retpolines: x86: eliminate retpoline from vmx.c exit handlers
-Date:   Sat, 28 Sep 2019 13:23:21 -0400
-Message-Id: <20190928172323.14663-13-aarcange@redhat.com>
+Subject: [PATCH 09/14] KVM: monolithic: remove exports from KVM common code
+Date:   Sat, 28 Sep 2019 13:23:18 -0400
+Message-Id: <20190928172323.14663-10-aarcange@redhat.com>
 In-Reply-To: <20190928172323.14663-1-aarcange@redhat.com>
 References: <20190928172323.14663-1-aarcange@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Sat, 28 Sep 2019 17:23:26 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Sat, 28 Sep 2019 17:23:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's enough to check the exit value and issue a direct call to avoid
-the retpoline for all the common vmexit reasons.
+The exports would be duplicated across kvm-amd and kvm-intel if
+they're kept and that causes various harmless warnings.
 
-Reducing this list to only EXIT_REASON_MSR_WRITE,
-EXIT_REASON_PREEMPTION_TIMER, EXIT_REASON_EPT_MISCONFIG,
-EXIT_REASON_IO_INSTRUCTION increases the computation time of the
-hrtimer guest testcase on Haswell i5-4670T CPU @ 2.30GHz by 7% with
-the default spectre v2 mitigation enabled in the host and guest. On
-skylake as opposed there's no measurable difference with the short
-list. To put things in prospective on Haswell the same hrtimer
-workload (note: it never calls cpuid and it never attempts to trigger
-more vmexit on purpose) in guest takes 16.3% longer to compute on
-upstream KVM running in the host than with the KVM mono v1 patchset
-applied to the host kernel, while on skylake the same takes only 5.4%
-more time (both with the default mitigations enabled in guest and
-host).
+The warnings aren't particularly concerning because the two modules
+can't load at the same time, but it's cleaner to remove the warnings
+by removing the exports.
 
-It's also unclear why EXIT_REASON_IO_INSTRUCTION should be included.
+This commit might break non-x86 archs, but it should be simple to make
+them monolithic too (if they're not already).
 
-Of course CONFIG_RETPOLINE already forbids gcc not to do indirect
-jumps while compiling all switch() statements, however switch() would
-still allow the compiler to bisect the value, however it seems to run
-slower if something and the reason is that it's better to prioritize
-and do the minimal possible number of checks for the most common vmexit.
+In the unlikely case there's a legit reason not to go monolithic in
+any arch and to keep kvm.ko around, we'll need a way to retain the
+exports. In which case this commit would need to be reversed and the
+exports in the kvm common code should then be done only conditionally
+to a new opt-in per-arch CONFIG option.
 
-The halt and pause loop exiting may be slow paths from the point of
-the guest, but not necessarily so from the point of the host. There
-can be a flood of halt exit reasons (in fact that's why the cpuidle
-guest haltpoll support was recently merged and we can't rely on it
-here because there are older kernels and other OS that must also
-perform optimally). All it takes is a pipe ping pong with a different
-host CPU and the host CPUs running at full capacity.
+The following warning remains for now to be able to load the kvmgt
+driver. These remaining warnings can be handled later.
 
-The same consideration applies to the pause loop exiting exit reason,
-if there's heavy host overcommit that collides heavily in a spinlock
-the same may happen.
-
-In the common case of a fully idle host, the halt and pause loop
-exiting can't help, but adding them doesn't hurt the common case and
-the expectation here is that if they would ever become measurable, it
-would be because they are increasing (and not decreasing) performance.
+WARNING: arch/x86/kvm/kvm-amd: 'kvm_get_kvm' exported twice. Previous export was in arch/x86/kvm/kvm-intel.ko
+WARNING: arch/x86/kvm/kvm-amd: 'kvm_put_kvm' exported twice. Previous export was in arch/x86/kvm/kvm-intel.ko
+WARNING: arch/x86/kvm/kvm-amd: 'gfn_to_memslot' exported twice. Previous export was in arch/x86/kvm/kvm-intel.ko
+WARNING: arch/x86/kvm/kvm-amd: 'kvm_is_visible_gfn' exported twice. Previous export was in arch/x86/kvm/kvm-intel.ko
+WARNING: arch/x86/kvm/kvm-amd: 'gfn_to_pfn' exported twice. Previous export was in arch/x86/kvm/kvm-intel.ko
+WARNING: arch/x86/kvm/kvm-amd: 'kvm_read_guest' exported twice. Previous export was in arch/x86/kvm/kvm-intel.ko
+WARNING: arch/x86/kvm/kvm-amd: 'kvm_write_guest' exported twice. Previous export was in arch/x86/kvm/kvm-intel.ko
 
 Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 24 ++++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
+ virt/kvm/eventfd.c  |  1 -
+ virt/kvm/kvm_main.c | 65 ---------------------------------------------
+ 2 files changed, 66 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index de3ae2246205..2bd57a7d2be1 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -5846,9 +5846,29 @@ int kvm_x86_handle_exit(struct kvm_vcpu *vcpu)
- 	}
+diff --git a/virt/kvm/eventfd.c b/virt/kvm/eventfd.c
+index 67b6fc153e9c..4c1a8abd1458 100644
+--- a/virt/kvm/eventfd.c
++++ b/virt/kvm/eventfd.c
+@@ -462,7 +462,6 @@ bool kvm_irq_has_notifier(struct kvm *kvm, unsigned irqchip, unsigned pin)
  
- 	if (exit_reason < kvm_vmx_max_exit_handlers
--	    && kvm_vmx_exit_handlers[exit_reason])
-+	    && kvm_vmx_exit_handlers[exit_reason]) {
-+#ifdef CONFIG_RETPOLINE
-+		if (exit_reason == EXIT_REASON_MSR_WRITE)
-+			return kvm_emulate_wrmsr(vcpu);
-+		else if (exit_reason == EXIT_REASON_PREEMPTION_TIMER)
-+			return handle_preemption_timer(vcpu);
-+		else if (exit_reason == EXIT_REASON_PENDING_INTERRUPT)
-+			return handle_interrupt_window(vcpu);
-+		else if (exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT)
-+			return handle_external_interrupt(vcpu);
-+		else if (exit_reason == EXIT_REASON_HLT)
-+			return kvm_emulate_halt(vcpu);
-+		else if (exit_reason == EXIT_REASON_PAUSE_INSTRUCTION)
-+			return handle_pause(vcpu);
-+		else if (exit_reason == EXIT_REASON_MSR_READ)
-+			return kvm_emulate_rdmsr(vcpu);
-+		else if (exit_reason == EXIT_REASON_CPUID)
-+			return kvm_emulate_cpuid(vcpu);
-+		else if (exit_reason == EXIT_REASON_EPT_MISCONFIG)
-+			return handle_ept_misconfig(vcpu);
-+#endif
- 		return kvm_vmx_exit_handlers[exit_reason](vcpu);
--	else {
-+	} else {
- 		vcpu_unimpl(vcpu, "vmx: unexpected exit reason 0x%x\n",
- 				exit_reason);
- 		dump_vmcs();
+ 	return false;
+ }
+-EXPORT_SYMBOL_GPL(kvm_irq_has_notifier);
+ 
+ void kvm_notify_acked_gsi(struct kvm *kvm, int gsi)
+ {
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 9aa448ea688f..1afbb387001a 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -72,22 +72,18 @@ MODULE_LICENSE("GPL");
+ /* Architectures should define their poll value according to the halt latency */
+ unsigned int halt_poll_ns = KVM_HALT_POLL_NS_DEFAULT;
+ module_param(halt_poll_ns, uint, 0644);
+-EXPORT_SYMBOL_GPL(halt_poll_ns);
+ 
+ /* Default doubles per-vcpu halt_poll_ns. */
+ unsigned int halt_poll_ns_grow = 2;
+ module_param(halt_poll_ns_grow, uint, 0644);
+-EXPORT_SYMBOL_GPL(halt_poll_ns_grow);
+ 
+ /* The start value to grow halt_poll_ns from */
+ unsigned int halt_poll_ns_grow_start = 10000; /* 10us */
+ module_param(halt_poll_ns_grow_start, uint, 0644);
+-EXPORT_SYMBOL_GPL(halt_poll_ns_grow_start);
+ 
+ /* Default resets per-vcpu halt_poll_ns . */
+ unsigned int halt_poll_ns_shrink;
+ module_param(halt_poll_ns_shrink, uint, 0644);
+-EXPORT_SYMBOL_GPL(halt_poll_ns_shrink);
+ 
+ /*
+  * Ordering of locks:
+@@ -104,12 +100,10 @@ static int kvm_usage_count;
+ static atomic_t hardware_enable_failed;
+ 
+ struct kmem_cache *kvm_vcpu_cache;
+-EXPORT_SYMBOL_GPL(kvm_vcpu_cache);
+ 
+ static __read_mostly struct preempt_ops kvm_preempt_ops;
+ 
+ struct dentry *kvm_debugfs_dir;
+-EXPORT_SYMBOL_GPL(kvm_debugfs_dir);
+ 
+ static int kvm_debugfs_num_entries;
+ static const struct file_operations *stat_fops_per_vm[];
+@@ -133,7 +127,6 @@ static void kvm_io_bus_destroy(struct kvm_io_bus *bus);
+ static void mark_page_dirty_in_slot(struct kvm_memory_slot *memslot, gfn_t gfn);
+ 
+ __visible bool kvm_rebooting;
+-EXPORT_SYMBOL_GPL(kvm_rebooting);
+ 
+ static bool largepages_enabled = true;
+ 
+@@ -167,7 +160,6 @@ void vcpu_load(struct kvm_vcpu *vcpu)
+ 	kvm_arch_vcpu_load(vcpu, cpu);
+ 	put_cpu();
+ }
+-EXPORT_SYMBOL_GPL(vcpu_load);
+ 
+ void vcpu_put(struct kvm_vcpu *vcpu)
+ {
+@@ -176,7 +168,6 @@ void vcpu_put(struct kvm_vcpu *vcpu)
+ 	preempt_notifier_unregister(&vcpu->preempt_notifier);
+ 	preempt_enable();
+ }
+-EXPORT_SYMBOL_GPL(vcpu_put);
+ 
+ /* TODO: merge with kvm_arch_vcpu_should_kick */
+ static bool kvm_request_needs_ipi(struct kvm_vcpu *vcpu, unsigned req)
+@@ -280,7 +271,6 @@ void kvm_flush_remote_tlbs(struct kvm *kvm)
+ 		++kvm->stat.remote_tlb_flush;
+ 	cmpxchg(&kvm->tlbs_dirty, dirty_count, 0);
+ }
+-EXPORT_SYMBOL_GPL(kvm_flush_remote_tlbs);
+ #endif
+ 
+ void kvm_reload_remote_mmus(struct kvm *kvm)
+@@ -326,7 +316,6 @@ int kvm_vcpu_init(struct kvm_vcpu *vcpu, struct kvm *kvm, unsigned id)
+ fail:
+ 	return r;
+ }
+-EXPORT_SYMBOL_GPL(kvm_vcpu_init);
+ 
+ void kvm_vcpu_uninit(struct kvm_vcpu *vcpu)
+ {
+@@ -339,7 +328,6 @@ void kvm_vcpu_uninit(struct kvm_vcpu *vcpu)
+ 	kvm_arch_vcpu_uninit(vcpu);
+ 	free_page((unsigned long)vcpu->run);
+ }
+-EXPORT_SYMBOL_GPL(kvm_vcpu_uninit);
+ 
+ #if defined(CONFIG_MMU_NOTIFIER) && defined(KVM_ARCH_WANT_MMU_NOTIFIER)
+ static inline struct kvm *mmu_notifier_to_kvm(struct mmu_notifier *mn)
+@@ -1076,7 +1064,6 @@ int __kvm_set_memory_region(struct kvm *kvm,
+ out:
+ 	return r;
+ }
+-EXPORT_SYMBOL_GPL(__kvm_set_memory_region);
+ 
+ int kvm_set_memory_region(struct kvm *kvm,
+ 			  const struct kvm_userspace_memory_region *mem)
+@@ -1088,7 +1075,6 @@ int kvm_set_memory_region(struct kvm *kvm,
+ 	mutex_unlock(&kvm->slots_lock);
+ 	return r;
+ }
+-EXPORT_SYMBOL_GPL(kvm_set_memory_region);
+ 
+ static int kvm_vm_ioctl_set_memory_region(struct kvm *kvm,
+ 					  struct kvm_userspace_memory_region *mem)
+@@ -1130,7 +1116,6 @@ int kvm_get_dirty_log(struct kvm *kvm,
+ 		*is_dirty = 1;
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(kvm_get_dirty_log);
+ 
+ #ifdef CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT
+ /**
+@@ -1216,7 +1201,6 @@ int kvm_get_dirty_log_protect(struct kvm *kvm,
+ 		return -EFAULT;
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(kvm_get_dirty_log_protect);
+ 
+ /**
+  * kvm_clear_dirty_log_protect - clear dirty bits in the bitmap
+@@ -1290,7 +1274,6 @@ int kvm_clear_dirty_log_protect(struct kvm *kvm,
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(kvm_clear_dirty_log_protect);
+ #endif
+ 
+ bool kvm_largepages_enabled(void)
+@@ -1302,7 +1285,6 @@ void kvm_disable_largepages(void)
+ {
+ 	largepages_enabled = false;
+ }
+-EXPORT_SYMBOL_GPL(kvm_disable_largepages);
+ 
+ struct kvm_memory_slot *gfn_to_memslot(struct kvm *kvm, gfn_t gfn)
+ {
+@@ -1382,19 +1364,16 @@ unsigned long gfn_to_hva_memslot(struct kvm_memory_slot *slot,
+ {
+ 	return gfn_to_hva_many(slot, gfn, NULL);
+ }
+-EXPORT_SYMBOL_GPL(gfn_to_hva_memslot);
+ 
+ unsigned long gfn_to_hva(struct kvm *kvm, gfn_t gfn)
+ {
+ 	return gfn_to_hva_many(gfn_to_memslot(kvm, gfn), gfn, NULL);
+ }
+-EXPORT_SYMBOL_GPL(gfn_to_hva);
+ 
+ unsigned long kvm_vcpu_gfn_to_hva(struct kvm_vcpu *vcpu, gfn_t gfn)
+ {
+ 	return gfn_to_hva_many(kvm_vcpu_gfn_to_memslot(vcpu, gfn), gfn, NULL);
+ }
+-EXPORT_SYMBOL_GPL(kvm_vcpu_gfn_to_hva);
+ 
+ /*
+  * Return the hva of a @gfn and the R/W attribute if possible.
+@@ -1656,7 +1635,6 @@ kvm_pfn_t __gfn_to_pfn_memslot(struct kvm_memory_slot *slot, gfn_t gfn,
+ 	return hva_to_pfn(addr, atomic, async, write_fault,
+ 			  writable);
+ }
+-EXPORT_SYMBOL_GPL(__gfn_to_pfn_memslot);
+ 
+ kvm_pfn_t gfn_to_pfn_prot(struct kvm *kvm, gfn_t gfn, bool write_fault,
+ 		      bool *writable)
+@@ -1664,31 +1642,26 @@ kvm_pfn_t gfn_to_pfn_prot(struct kvm *kvm, gfn_t gfn, bool write_fault,
+ 	return __gfn_to_pfn_memslot(gfn_to_memslot(kvm, gfn), gfn, false, NULL,
+ 				    write_fault, writable);
+ }
+-EXPORT_SYMBOL_GPL(gfn_to_pfn_prot);
+ 
+ kvm_pfn_t gfn_to_pfn_memslot(struct kvm_memory_slot *slot, gfn_t gfn)
+ {
+ 	return __gfn_to_pfn_memslot(slot, gfn, false, NULL, true, NULL);
+ }
+-EXPORT_SYMBOL_GPL(gfn_to_pfn_memslot);
+ 
+ kvm_pfn_t gfn_to_pfn_memslot_atomic(struct kvm_memory_slot *slot, gfn_t gfn)
+ {
+ 	return __gfn_to_pfn_memslot(slot, gfn, true, NULL, true, NULL);
+ }
+-EXPORT_SYMBOL_GPL(gfn_to_pfn_memslot_atomic);
+ 
+ kvm_pfn_t gfn_to_pfn_atomic(struct kvm *kvm, gfn_t gfn)
+ {
+ 	return gfn_to_pfn_memslot_atomic(gfn_to_memslot(kvm, gfn), gfn);
+ }
+-EXPORT_SYMBOL_GPL(gfn_to_pfn_atomic);
+ 
+ kvm_pfn_t kvm_vcpu_gfn_to_pfn_atomic(struct kvm_vcpu *vcpu, gfn_t gfn)
+ {
+ 	return gfn_to_pfn_memslot_atomic(kvm_vcpu_gfn_to_memslot(vcpu, gfn), gfn);
+ }
+-EXPORT_SYMBOL_GPL(kvm_vcpu_gfn_to_pfn_atomic);
+ 
+ kvm_pfn_t gfn_to_pfn(struct kvm *kvm, gfn_t gfn)
+ {
+@@ -1700,7 +1673,6 @@ kvm_pfn_t kvm_vcpu_gfn_to_pfn(struct kvm_vcpu *vcpu, gfn_t gfn)
+ {
+ 	return gfn_to_pfn_memslot(kvm_vcpu_gfn_to_memslot(vcpu, gfn), gfn);
+ }
+-EXPORT_SYMBOL_GPL(kvm_vcpu_gfn_to_pfn);
+ 
+ int gfn_to_page_many_atomic(struct kvm_memory_slot *slot, gfn_t gfn,
+ 			    struct page **pages, int nr_pages)
+@@ -1717,7 +1689,6 @@ int gfn_to_page_many_atomic(struct kvm_memory_slot *slot, gfn_t gfn,
+ 
+ 	return __get_user_pages_fast(addr, nr_pages, 1, pages);
+ }
+-EXPORT_SYMBOL_GPL(gfn_to_page_many_atomic);
+ 
+ static struct page *kvm_pfn_to_page(kvm_pfn_t pfn)
+ {
+@@ -1740,7 +1711,6 @@ struct page *gfn_to_page(struct kvm *kvm, gfn_t gfn)
+ 
+ 	return kvm_pfn_to_page(pfn);
+ }
+-EXPORT_SYMBOL_GPL(gfn_to_page);
+ 
+ static int __kvm_map_gfn(struct kvm_memory_slot *slot, gfn_t gfn,
+ 			 struct kvm_host_map *map)
+@@ -1780,7 +1750,6 @@ int kvm_vcpu_map(struct kvm_vcpu *vcpu, gfn_t gfn, struct kvm_host_map *map)
+ {
+ 	return __kvm_map_gfn(kvm_vcpu_gfn_to_memslot(vcpu, gfn), gfn, map);
+ }
+-EXPORT_SYMBOL_GPL(kvm_vcpu_map);
+ 
+ void kvm_vcpu_unmap(struct kvm_vcpu *vcpu, struct kvm_host_map *map,
+ 		    bool dirty)
+@@ -1808,7 +1777,6 @@ void kvm_vcpu_unmap(struct kvm_vcpu *vcpu, struct kvm_host_map *map,
+ 	map->hva = NULL;
+ 	map->page = NULL;
+ }
+-EXPORT_SYMBOL_GPL(kvm_vcpu_unmap);
+ 
+ struct page *kvm_vcpu_gfn_to_page(struct kvm_vcpu *vcpu, gfn_t gfn)
+ {
+@@ -1818,7 +1786,6 @@ struct page *kvm_vcpu_gfn_to_page(struct kvm_vcpu *vcpu, gfn_t gfn)
+ 
+ 	return kvm_pfn_to_page(pfn);
+ }
+-EXPORT_SYMBOL_GPL(kvm_vcpu_gfn_to_page);
+ 
+ void kvm_release_page_clean(struct page *page)
+ {
+@@ -1826,14 +1793,12 @@ void kvm_release_page_clean(struct page *page)
+ 
+ 	kvm_release_pfn_clean(page_to_pfn(page));
+ }
+-EXPORT_SYMBOL_GPL(kvm_release_page_clean);
+ 
+ void kvm_release_pfn_clean(kvm_pfn_t pfn)
+ {
+ 	if (!is_error_noslot_pfn(pfn) && !kvm_is_reserved_pfn(pfn))
+ 		put_page(pfn_to_page(pfn));
+ }
+-EXPORT_SYMBOL_GPL(kvm_release_pfn_clean);
+ 
+ void kvm_release_page_dirty(struct page *page)
+ {
+@@ -1841,14 +1806,12 @@ void kvm_release_page_dirty(struct page *page)
+ 
+ 	kvm_release_pfn_dirty(page_to_pfn(page));
+ }
+-EXPORT_SYMBOL_GPL(kvm_release_page_dirty);
+ 
+ void kvm_release_pfn_dirty(kvm_pfn_t pfn)
+ {
+ 	kvm_set_pfn_dirty(pfn);
+ 	kvm_release_pfn_clean(pfn);
+ }
+-EXPORT_SYMBOL_GPL(kvm_release_pfn_dirty);
+ 
+ void kvm_set_pfn_dirty(kvm_pfn_t pfn)
+ {
+@@ -1858,21 +1821,18 @@ void kvm_set_pfn_dirty(kvm_pfn_t pfn)
+ 		SetPageDirty(page);
+ 	}
+ }
+-EXPORT_SYMBOL_GPL(kvm_set_pfn_dirty);
+ 
+ void kvm_set_pfn_accessed(kvm_pfn_t pfn)
+ {
+ 	if (!kvm_is_reserved_pfn(pfn))
+ 		mark_page_accessed(pfn_to_page(pfn));
+ }
+-EXPORT_SYMBOL_GPL(kvm_set_pfn_accessed);
+ 
+ void kvm_get_pfn(kvm_pfn_t pfn)
+ {
+ 	if (!kvm_is_reserved_pfn(pfn))
+ 		get_page(pfn_to_page(pfn));
+ }
+-EXPORT_SYMBOL_GPL(kvm_get_pfn);
+ 
+ static int next_segment(unsigned long len, int offset)
+ {
+@@ -1904,7 +1864,6 @@ int kvm_read_guest_page(struct kvm *kvm, gfn_t gfn, void *data, int offset,
+ 
+ 	return __kvm_read_guest_page(slot, gfn, data, offset, len);
+ }
+-EXPORT_SYMBOL_GPL(kvm_read_guest_page);
+ 
+ int kvm_vcpu_read_guest_page(struct kvm_vcpu *vcpu, gfn_t gfn, void *data,
+ 			     int offset, int len)
+@@ -1913,7 +1872,6 @@ int kvm_vcpu_read_guest_page(struct kvm_vcpu *vcpu, gfn_t gfn, void *data,
+ 
+ 	return __kvm_read_guest_page(slot, gfn, data, offset, len);
+ }
+-EXPORT_SYMBOL_GPL(kvm_vcpu_read_guest_page);
+ 
+ int kvm_read_guest(struct kvm *kvm, gpa_t gpa, void *data, unsigned long len)
+ {
+@@ -1953,7 +1911,6 @@ int kvm_vcpu_read_guest(struct kvm_vcpu *vcpu, gpa_t gpa, void *data, unsigned l
+ 	}
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(kvm_vcpu_read_guest);
+ 
+ static int __kvm_read_guest_atomic(struct kvm_memory_slot *slot, gfn_t gfn,
+ 			           void *data, int offset, unsigned long len)
+@@ -1981,7 +1938,6 @@ int kvm_read_guest_atomic(struct kvm *kvm, gpa_t gpa, void *data,
+ 
+ 	return __kvm_read_guest_atomic(slot, gfn, data, offset, len);
+ }
+-EXPORT_SYMBOL_GPL(kvm_read_guest_atomic);
+ 
+ int kvm_vcpu_read_guest_atomic(struct kvm_vcpu *vcpu, gpa_t gpa,
+ 			       void *data, unsigned long len)
+@@ -1992,7 +1948,6 @@ int kvm_vcpu_read_guest_atomic(struct kvm_vcpu *vcpu, gpa_t gpa,
+ 
+ 	return __kvm_read_guest_atomic(slot, gfn, data, offset, len);
+ }
+-EXPORT_SYMBOL_GPL(kvm_vcpu_read_guest_atomic);
+ 
+ static int __kvm_write_guest_page(struct kvm_memory_slot *memslot, gfn_t gfn,
+ 			          const void *data, int offset, int len)
+@@ -2017,7 +1972,6 @@ int kvm_write_guest_page(struct kvm *kvm, gfn_t gfn,
+ 
+ 	return __kvm_write_guest_page(slot, gfn, data, offset, len);
+ }
+-EXPORT_SYMBOL_GPL(kvm_write_guest_page);
+ 
+ int kvm_vcpu_write_guest_page(struct kvm_vcpu *vcpu, gfn_t gfn,
+ 			      const void *data, int offset, int len)
+@@ -2026,7 +1980,6 @@ int kvm_vcpu_write_guest_page(struct kvm_vcpu *vcpu, gfn_t gfn,
+ 
+ 	return __kvm_write_guest_page(slot, gfn, data, offset, len);
+ }
+-EXPORT_SYMBOL_GPL(kvm_vcpu_write_guest_page);
+ 
+ int kvm_write_guest(struct kvm *kvm, gpa_t gpa, const void *data,
+ 		    unsigned long len)
+@@ -2068,7 +2021,6 @@ int kvm_vcpu_write_guest(struct kvm_vcpu *vcpu, gpa_t gpa, const void *data,
+ 	}
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(kvm_vcpu_write_guest);
+ 
+ static int __kvm_gfn_to_hva_cache_init(struct kvm_memslots *slots,
+ 				       struct gfn_to_hva_cache *ghc,
+@@ -2114,7 +2066,6 @@ int kvm_gfn_to_hva_cache_init(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
+ 	struct kvm_memslots *slots = kvm_memslots(kvm);
+ 	return __kvm_gfn_to_hva_cache_init(slots, ghc, gpa, len);
+ }
+-EXPORT_SYMBOL_GPL(kvm_gfn_to_hva_cache_init);
+ 
+ int kvm_write_guest_offset_cached(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
+ 				  void *data, unsigned int offset,
+@@ -2142,14 +2093,12 @@ int kvm_write_guest_offset_cached(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(kvm_write_guest_offset_cached);
+ 
+ int kvm_write_guest_cached(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
+ 			   void *data, unsigned long len)
+ {
+ 	return kvm_write_guest_offset_cached(kvm, ghc, data, 0, len);
+ }
+-EXPORT_SYMBOL_GPL(kvm_write_guest_cached);
+ 
+ int kvm_read_guest_cached(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
+ 			   void *data, unsigned long len)
+@@ -2174,7 +2123,6 @@ int kvm_read_guest_cached(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(kvm_read_guest_cached);
+ 
+ int kvm_clear_guest_page(struct kvm *kvm, gfn_t gfn, int offset, int len)
+ {
+@@ -2182,7 +2130,6 @@ int kvm_clear_guest_page(struct kvm *kvm, gfn_t gfn, int offset, int len)
+ 
+ 	return kvm_write_guest_page(kvm, gfn, zero_page, offset, len);
+ }
+-EXPORT_SYMBOL_GPL(kvm_clear_guest_page);
+ 
+ int kvm_clear_guest(struct kvm *kvm, gpa_t gpa, unsigned long len)
+ {
+@@ -2201,7 +2148,6 @@ int kvm_clear_guest(struct kvm *kvm, gpa_t gpa, unsigned long len)
+ 	}
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(kvm_clear_guest);
+ 
+ static void mark_page_dirty_in_slot(struct kvm_memory_slot *memslot,
+ 				    gfn_t gfn)
+@@ -2220,7 +2166,6 @@ void mark_page_dirty(struct kvm *kvm, gfn_t gfn)
+ 	memslot = gfn_to_memslot(kvm, gfn);
+ 	mark_page_dirty_in_slot(memslot, gfn);
+ }
+-EXPORT_SYMBOL_GPL(mark_page_dirty);
+ 
+ void kvm_vcpu_mark_page_dirty(struct kvm_vcpu *vcpu, gfn_t gfn)
+ {
+@@ -2229,7 +2174,6 @@ void kvm_vcpu_mark_page_dirty(struct kvm_vcpu *vcpu, gfn_t gfn)
+ 	memslot = kvm_vcpu_gfn_to_memslot(vcpu, gfn);
+ 	mark_page_dirty_in_slot(memslot, gfn);
+ }
+-EXPORT_SYMBOL_GPL(kvm_vcpu_mark_page_dirty);
+ 
+ void kvm_sigset_activate(struct kvm_vcpu *vcpu)
+ {
+@@ -2377,7 +2321,6 @@ void kvm_vcpu_block(struct kvm_vcpu *vcpu)
+ 	trace_kvm_vcpu_wakeup(block_ns, waited, vcpu_valid_wakeup(vcpu));
+ 	kvm_arch_vcpu_block_finish(vcpu);
+ }
+-EXPORT_SYMBOL_GPL(kvm_vcpu_block);
+ 
+ bool kvm_vcpu_wake_up(struct kvm_vcpu *vcpu)
+ {
+@@ -2393,7 +2336,6 @@ bool kvm_vcpu_wake_up(struct kvm_vcpu *vcpu)
+ 
+ 	return false;
+ }
+-EXPORT_SYMBOL_GPL(kvm_vcpu_wake_up);
+ 
+ #ifndef CONFIG_S390
+ /*
+@@ -2413,7 +2355,6 @@ void kvm_vcpu_kick(struct kvm_vcpu *vcpu)
+ 			smp_send_reschedule(cpu);
+ 	put_cpu();
+ }
+-EXPORT_SYMBOL_GPL(kvm_vcpu_kick);
+ #endif /* !CONFIG_S390 */
+ 
+ int kvm_vcpu_yield_to(struct kvm_vcpu *target)
+@@ -2434,7 +2375,6 @@ int kvm_vcpu_yield_to(struct kvm_vcpu *target)
+ 
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(kvm_vcpu_yield_to);
+ 
+ /*
+  * Helper that checks whether a VCPU is eligible for directed yield.
+@@ -2551,7 +2491,6 @@ void kvm_vcpu_on_spin(struct kvm_vcpu *me, bool yield_to_kernel_mode)
+ 	/* Ensure vcpu is not eligible during next spinloop */
+ 	kvm_vcpu_set_dy_eligible(me, false);
+ }
+-EXPORT_SYMBOL_GPL(kvm_vcpu_on_spin);
+ 
+ static vm_fault_t kvm_vcpu_fault(struct vm_fault *vmf)
+ {
+@@ -3735,7 +3674,6 @@ int kvm_io_bus_write(struct kvm_vcpu *vcpu, enum kvm_bus bus_idx, gpa_t addr,
+ 	r = __kvm_io_bus_write(vcpu, bus, &range, val);
+ 	return r < 0 ? r : 0;
+ }
+-EXPORT_SYMBOL_GPL(kvm_io_bus_write);
+ 
+ /* kvm_io_bus_write_cookie - called under kvm->slots_lock */
+ int kvm_io_bus_write_cookie(struct kvm_vcpu *vcpu, enum kvm_bus bus_idx,
+@@ -3912,7 +3850,6 @@ struct kvm_io_device *kvm_io_bus_get_dev(struct kvm *kvm, enum kvm_bus bus_idx,
+ 
+ 	return iodev;
+ }
+-EXPORT_SYMBOL_GPL(kvm_io_bus_get_dev);
+ 
+ static int kvm_debugfs_open(struct inode *inode, struct file *file,
+ 			   int (*get)(void *, u64 *), int (*set)(void *, u64),
+@@ -4341,7 +4278,6 @@ __init int kvm_init(void *opaque, unsigned vcpu_size, unsigned vcpu_align,
+ out_fail:
+ 	return r;
+ }
+-EXPORT_SYMBOL_GPL(kvm_init);
+ 
+ void kvm_exit(void)
+ {
+@@ -4359,4 +4295,3 @@ void kvm_exit(void)
+ 	free_cpumask_var(cpus_hardware_enabled);
+ 	kvm_vfio_ops_exit();
+ }
+-EXPORT_SYMBOL_GPL(kvm_exit);
