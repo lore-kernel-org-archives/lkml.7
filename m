@@ -2,163 +2,125 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B175C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 21:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E15FC4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 21:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5543320863
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 21:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FB8220863
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 21:15:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JxNru4/H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728741AbfI1VMC (ORCPT
+        id S1728787AbfI1VO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Sep 2019 17:12:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39328 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726581AbfI1VMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Sep 2019 17:12:02 -0400
-Received: from oasis.local.home (unknown [12.174.139.122])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BE2520863;
-        Sat, 28 Sep 2019 21:12:00 +0000 (UTC)
-Date:   Sat, 28 Sep 2019 17:11:58 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Naveen Rao <naveen.n.rao@linux.vnet.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, mingo@redhat.com
-Subject: Re: [PATCH] tracing/probe: Fix to check the difference of nr_args
- before adding probe
-Message-ID: <20190928171158.4b72ab55@oasis.local.home>
-In-Reply-To: <156966474783.3478.13217501608215769150.stgit@devnote2>
-References: <20190928011748.599255f6ffc9a4831e1efd2c@kernel.org>
-        <156966474783.3478.13217501608215769150.stgit@devnote2>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 28 Sep 2019 17:14:59 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:41363 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728569AbfI1VO6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Sep 2019 17:14:58 -0400
+Received: by mail-qt1-f196.google.com with SMTP id n1so11873086qtp.8
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Sep 2019 14:14:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=0P2GLR5OwtTpxgCDK5Jv/YpV62Rd2/0hL9aWprfsTbE=;
+        b=JxNru4/HpIbgU77KyIsMwYKhI7Rk9WTyEQhMLNvoXaR2Ds0RbXEZfFS97IBxe8vKMt
+         DUc6YsDCsNJP/Pey/wgKIPhv5cjfASGQvj12LbpMte/5lT6gBuXgTsgnyx3m3Bm+3bBk
+         tEcs4617kXKCFA3mGK3JQ77PvIJ5TlUbqgcPk5uRsaQICwsKfQ4aBFiq1j0Jt9+/ir1N
+         Lndu2HPiH/iG4aSgLAbr/nkLJZXeeE4xHKOB6vtMvoK14UovliIWvg/W8xAU0/mz6s5g
+         FlamfLZoPoUGwruznUiWRbCnk+IMWrOCRW5RGuEOhU4iVlftMa4ALaZVylVkpHTqWHOk
+         n7FA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=0P2GLR5OwtTpxgCDK5Jv/YpV62Rd2/0hL9aWprfsTbE=;
+        b=W6bU5b0KHWgSM4g4gaa+2f8Zm+ZYkTu5iB9I+wDoTD1sB1QCWVJlcL7A0Qk3fWV49E
+         hLgG8B+lmQ8dbIFdak0borqpobRKaOUA45BpkdIwjp/lPhXt08WAD4YbCUthCPV7LaDb
+         KwcKL/b/KU5ThgztoAGvwzlilyOo/jI0tN43f4EB5aMGHFd05nzUu+PwLzQD2Bka+hDJ
+         9XAi/xteh7XXYgd7O6xNMhYzZYYzhC4v45nIrzdVAye5Zb/TxMW2cxxoD4PGrAHyeb/b
+         OArgGcYcAyHIYF+vhfGp7cWjHCR3o7OcpJm8juvfnnNhX9hO3CN9/7LtIgchSRT1cr1l
+         xkBA==
+X-Gm-Message-State: APjAAAV0J9OdjOfl9QwceG0AxU7c5okl7z8RqgXhvSSP2s2pn0IXs02x
+        GE9FWUk1aYRUqbmpN49ATfg=
+X-Google-Smtp-Source: APXvYqyB+J5TCd9aIbGc1PC4owAT4ijHmxKcTbdCBtKg7SUEJXH4UoLA0rI2lS0Pa238KVSbKO7DWQ==
+X-Received: by 2002:aed:3f3a:: with SMTP id p55mr18283755qtf.148.1569705297722;
+        Sat, 28 Sep 2019 14:14:57 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id e4sm2954890qkl.135.2019.09.28.14.14.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 28 Sep 2019 14:14:57 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Sat, 28 Sep 2019 17:14:55 -0400
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Andreas Smas <andreas@lonelycoder.com>
+Subject: Re: x86/purgatory: undefined symbol __stack_chk_fail
+Message-ID: <20190928211453.GA2300554@rani.riverdale.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 28 Sep 2019 02:59:08 -0700
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
-
-> Fix to check the difference of nr_args before adding probe
-> on existing probes. This also may set the error log index
-> bigger than the number of command parameters. In that case
-> it sets the error position is next to the last parameter.
+On Sat, Sep 28, 2019 at 12:41:29PM +0000, Ingo Molnar wrote:
 > 
-> Fixes: ca89bc071d5e ("tracing/kprobe: Add multi-probe per event support")
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> * Randy Dunlap <rdunlap@infradead.org> wrote:
+> 
+> > On 9/3/19 8:50 AM, Andreas Smas wrote:
+> > > Hi,
+> > > 
+> > > For me, kernels built including this commit
+> > > b059f801a937 (x86/purgatory: Use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS)
+> > > 
+> > > results in kexec() failing to load the kernel:
+> > > 
+> > > kexec: Undefined symbol: __stack_chk_fail
+> > > kexec-bzImage64: Loading purgatory failed
+> > > 
+> > > Can be seen:
+> > > 
+> > > $ readelf -a arch/x86/purgatory/purgatory.ro | grep UND
+> > >      0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND
+> > >     51: 0000000000000000     0 NOTYPE  GLOBAL DEFAULT  UND __stack_chk_fail
+> > > 
+> > > Using: gcc version 7.4.0 (Ubuntu 7.4.0-1ubuntu1~18.04.1)
+> > > 
+> > > Adding -ffreestanding or -fno-stack-protector to ccflags-y in
+> > > arch/x86/purgatory/Makefile
+> > > fixes the problem. Not sure which would be preferred.
+> > > 
+> > 
+> > Hi,
+> > Do you have a kernel .config file that causes this?
+> > I can't seem to reproduce it.
+> 
+> Does it go away with this fix in x86/urgent:
+> 
+>   ca14c996afe7: ("x86/purgatory: Disable the stackleak GCC plugin for the purgatory")
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/urgent
+> 
+> ?
+> 
+> Thanks,
+> 
+> 	Ing
+This one was fixed by [1] e16c2983fba0f ("x86/purgatory: Change compiler
+flags from -mcmodel=kernel to -mcmodel=large to fix kexec relocation
+errors") from Steve Wahl, which in addition to changing mcmodel also
+added back -ffreestanding (and -fno-zero-initialized-in-bss). It was
+merged on the 12th. The stackleak one is a different undefined symbol
+error.
 
-I modified the change log a bit, below is the patch I plan on submitting.
-
-You OK with this?
-
--- Steve
-
-
-From: Masami Hiramatsu <mhiramat@kernel.org>
-Date: Sat, 28 Sep 2019 05:53:29 -0400
-Subject: [PATCH] tracing/probe: Fix to check the difference of nr_args before
- adding probe
-
-Steven reported that a test triggered:
-
-==================================================================
- BUG: KASAN: slab-out-of-bounds in trace_kprobe_create+0xa9e/0xe40
- Read of size 8 at addr ffff8880c4f25a48 by task ftracetest/4798
-
- CPU: 2 PID: 4798 Comm: ftracetest Not tainted 5.3.0-rc6-test+ #30
- Hardware name: Hewlett-Packard HP Compaq Pro 6300 SFF/339A, BIOS K01 v03.03 07/14/2016
- Call Trace:
-  dump_stack+0x7c/0xc0
-  ? trace_kprobe_create+0xa9e/0xe40
-  print_address_description+0x6c/0x332
-  ? trace_kprobe_create+0xa9e/0xe40
-  ? trace_kprobe_create+0xa9e/0xe40
-  __kasan_report.cold.6+0x1a/0x3b
-  ? trace_kprobe_create+0xa9e/0xe40
-  kasan_report+0xe/0x12
-  trace_kprobe_create+0xa9e/0xe40
-  ? print_kprobe_event+0x280/0x280
-  ? match_held_lock+0x1b/0x240
-  ? find_held_lock+0xac/0xd0
-  ? fs_reclaim_release.part.112+0x5/0x20
-  ? lock_downgrade+0x350/0x350
-  ? kasan_unpoison_shadow+0x30/0x40
-  ? __kasan_kmalloc.constprop.6+0xc1/0xd0
-  ? trace_kprobe_create+0xe40/0xe40
-  ? trace_kprobe_create+0xe40/0xe40
-  create_or_delete_trace_kprobe+0x2e/0x60
-  trace_run_command+0xc3/0xe0
-  ? trace_panic_handler+0x20/0x20
-  ? kasan_unpoison_shadow+0x30/0x40
-  trace_parse_run_command+0xdc/0x163
-  vfs_write+0xe1/0x240
-  ksys_write+0xba/0x150
-  ? __ia32_sys_read+0x50/0x50
-  ? tracer_hardirqs_on+0x61/0x180
-  ? trace_hardirqs_off_caller+0x43/0x110
-  ? mark_held_locks+0x29/0xa0
-  ? do_syscall_64+0x14/0x260
-  do_syscall_64+0x68/0x260
-
-Fix to check the difference of nr_args before adding probe
-on existing probes. This also may set the error log index
-bigger than the number of command parameters. In that case
-it sets the error position is next to the last parameter.
-
-Link: http://lkml.kernel.org/r/156966474783.3478.13217501608215769150.stgit@devnote2
-
-Fixes: ca89bc071d5e ("tracing/kprobe: Add multi-probe per event support")
-Reported-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- kernel/trace/trace_probe.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index baf58a3612c0..905b10af5d5c 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -178,6 +178,16 @@ void __trace_probe_log_err(int offset, int err_type)
- 	if (!command)
- 		return;
- 
-+	if (trace_probe_log.index >= trace_probe_log.argc) {
-+		/**
-+		 * Set the error position is next to the last arg + space.
-+		 * Note that len includes the terminal null and the cursor
-+		 * appaers at pos + 1.
-+		 */
-+		pos = len;
-+		offset = 0;
-+	}
-+
- 	/* And make a command string from argv array */
- 	p = command;
- 	for (i = 0; i < trace_probe_log.argc; i++) {
-@@ -1084,6 +1094,12 @@ int trace_probe_compare_arg_type(struct trace_probe *a, struct trace_probe *b)
- {
- 	int i;
- 
-+	/* In case of more arguments */
-+	if (a->nr_args < b->nr_args)
-+		return a->nr_args + 1;
-+	if (a->nr_args > b->nr_args)
-+		return b->nr_args + 1;
-+
- 	for (i = 0; i < a->nr_args; i++) {
- 		if ((b->nr_args <= i) ||
- 		    ((a->args[i].type != b->args[i].type) ||
--- 
-2.20.1
-
+[1] https://marc.info/?l=git-commits-head&m=156829711224800
