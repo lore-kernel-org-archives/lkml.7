@@ -2,146 +2,131 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 382DDC4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 00:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC794C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 00:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02E9D20863
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 00:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A21D920869
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 00:16:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="HODFctfz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e7BPZjEF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728376AbfI1AGP (ORCPT
+        id S1728336AbfI1AQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 20:06:15 -0400
-Received: from mx5.ucr.edu ([138.23.62.67]:44738 "EHLO mx5.ucr.edu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbfI1AGO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 20:06:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
-  t=1569629174; x=1601165174;
-  h=from:to:cc:subject:date:message-id;
-  bh=FaCTevKekKWl5COEvVNNzHMFqf8s6yFBpnUXYidtk40=;
-  b=HODFctfzHQm5OD3d03A3lBChZUK6FnLUgLvYkY4UgOGqXQ/3Zwps9wMJ
-   /HyATVsh/pICGXuTL3cpLQY2tVgQSMyY9kUCUEz/Fx9So6mBuO7VCUgeS
-   70n5O4F7nc+QMM7H/TxOdTms/Z2zeQSLa0NyRUbgOxlVcp+IbAT0SE270
-   tJK1bHiTMCW2FVXWyqearH7I+TigbOH1xLjH5yXMTb81yg+ZDuH7mapbn
-   rVTBxAyWizvZCctI3j9HSjUNDKSYGCpP/UVJupgZ3NMmpe6bcYMbfT7GM
-   q6B5Kx6ZH+M5fvgXHU18E4A7TUf3gJ41IzisyY48ALgJa3OER97sqvKI8
-   g==;
-IronPort-SDR: Us1RZBoAnQAuhL6i+6pgsyeQUjgNHchTfDOxZgklxnpxf5utUgVkb/Ce0+bcLX2iGO+XNtk16b
- NJwbbDlaTJ3aaMdjsdSq1XX2w3inzrKja/p0EG0GGmOL1tfxKYmXsJuW/ZAtNQk1tmw7bx7XJE
- eeEtWUIH+a+iBcg9/2+2h0qmCdpA2XNCTRUm3fQe8yT5r+s2vEa6mMeg4pQruLqoh3IwDbXS84
- w4WyGN+7hjhGgU6Vgqd330x3XOkTypKYuAjFsl3A30K7EkxiK5pfTW34NUhykVp7wqRspoVx3E
- Ek4=
-IronPort-PHdr: =?us-ascii?q?9a23=3ABPoZvRXDnbKriX3wS+aIfoGgQ2fV8LGtZVwlr6?=
- =?us-ascii?q?E/grcLSJyIuqrYYx2Gt8tkgFKBZ4jH8fUM07OQ7/m7Hzdfqszf+Fk5M7V0Hy?=
- =?us-ascii?q?cfjssXmwFySOWkMmbcaMDQUiohAc5ZX0Vk9XzoeWJcGcL5ekGA6ibqtW1aFR?=
- =?us-ascii?q?rwLxd6KfroEYDOkcu3y/qy+5rOaAlUmTaxe7x/IAi4oAnLuMQbg4RuJrgwxx?=
- =?us-ascii?q?DUvnZGZuNayH9yK1mOhRj8/MCw/JBi8yRUpf0s8tNLXLv5caolU7FWFSwqPG?=
- =?us-ascii?q?8p6sLlsxnDVhaP6WAHUmoKiBpIAhPK4w/8U5zsryb1rOt92C2dPc3rUbA5XC?=
- =?us-ascii?q?mp4ql3RBP0jioMKiU0+3/LhMNukK1boQqhpx1hzI7SfIGVL+d1cqfEcd8HWW?=
- =?us-ascii?q?ZNQsNdWipEAoO9dIsPFOsBPeBXr4LguVUAtAa1BQetBOzxzj9Hm2L90ak03u?=
- =?us-ascii?q?g9FA3L2hErEdATv3TOtNj7NLkcX/27wqfLyjvOdO9a1Svn5YTUaB0tve2AUL?=
- =?us-ascii?q?RtesTR00kvEAbFg02SpozkPjKV1vkNs2+G5OdnVeOuim4npBtwojSz2sshhJ?=
- =?us-ascii?q?LEhp8JxVDe7yl23ps6JcChRUN9fNWqE4NQujmEO4dqRs4uWWJltSYgxrEYpJ?=
- =?us-ascii?q?K2fDIGxIkjyhPcc/CLbomF7xb5WOqPLzp1hGhpdKy+ihqo80WtxevxXdSu3l?=
- =?us-ascii?q?lQtCpKiNzMu2gI1xzU98eIVONw/lyk2TaTzwDT7fxEIVwsmarbNZEhxrkwm4?=
- =?us-ascii?q?IWsUvZHy/2nFz6jLeZdkk54+So5fnrb7Hlq5OGOI90jQb+MqsqmsOhG+g3Lg?=
- =?us-ascii?q?8OX22D9eS90r3s41H5Ta1UgvEqlqTVqpPXKMQBqqKnHgNY0pwv5wu7AjqlyN?=
- =?us-ascii?q?gYmGMILFNBeBKJlYjpPFTOLej4DPa+g1SjijZry+zaMrDvGZjNM2TMkK37cb?=
- =?us-ascii?q?lj9kFc1RI/zcpD6JJMFrEBPPXzV1f1tNzZCB85LgO1z//kCNpjzIMeX3yAAq?=
- =?us-ascii?q?uCPaPMvl+H+PgvL/OPZIALojb9LeYq5/r0gX8+g18dcvrh84EQbSWJH+ZmPk?=
- =?us-ascii?q?LRNWv+gt4AST9Rlhc1VqrnhEDUAm0bXGq7Q69pvmJzM4mhF4qWA9/1jQ=3D?=
- =?us-ascii?q?=3D?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2GIAACYoo5dgMbXVdFmHQEBBQEMBQG?=
- =?us-ascii?q?BVAcBCwGDXUwQjR6FclABAQEGiyYYcYV6gwuFJoF7AQgBAQEMAQEtAgEBhEC?=
- =?us-ascii?q?DOiM1CA4CAwkBAQUBAQEBAQUEAQECEAEBCQ0JCCeFQoI6KYM1CxYVUlY/AQU?=
- =?us-ascii?q?BNSI5gkcBgXYUBaEogQM8jCUziHEBCQ2BSAkBCIEiAYc0hFmBEIEHhGGEDYN?=
- =?us-ascii?q?WgkQEgS8BAQGNcIcrlkkBBgKCEBSBeJMHJ4Q5iTuLPwEtpxICCgcGDyOBMQG?=
- =?us-ascii?q?CDk0lgWwKgURQEBSBWhcVji0hM4EIi2mCVAE?=
-X-IPAS-Result: =?us-ascii?q?A2GIAACYoo5dgMbXVdFmHQEBBQEMBQGBVAcBCwGDXUwQj?=
- =?us-ascii?q?R6FclABAQEGiyYYcYV6gwuFJoF7AQgBAQEMAQEtAgEBhECDOiM1CA4CAwkBA?=
- =?us-ascii?q?QUBAQEBAQUEAQECEAEBCQ0JCCeFQoI6KYM1CxYVUlY/AQUBNSI5gkcBgXYUB?=
- =?us-ascii?q?aEogQM8jCUziHEBCQ2BSAkBCIEiAYc0hFmBEIEHhGGEDYNWgkQEgS8BAQGNc?=
- =?us-ascii?q?IcrlkkBBgKCEBSBeJMHJ4Q5iTuLPwEtpxICCgcGDyOBMQGCDk0lgWwKgURQE?=
- =?us-ascii?q?BSBWhcVji0hM4EIi2mCVAE?=
-X-IronPort-AV: E=Sophos;i="5.64,557,1559545200"; 
-   d="scan'208";a="79200551"
-Received: from mail-pg1-f198.google.com ([209.85.215.198])
-  by smtpmx5.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 27 Sep 2019 17:06:13 -0700
-Received: by mail-pg1-f198.google.com with SMTP id f10so3802294pgj.0
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 17:06:13 -0700 (PDT)
+        Fri, 27 Sep 2019 20:16:33 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38265 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726673AbfI1AQc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 20:16:32 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w8so1217312plq.5;
+        Fri, 27 Sep 2019 17:16:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=x5OtQT6idH9LaA0kReytId/54o5wnDaqSP4igHTa5XY=;
+        b=e7BPZjEFn4/KUlv5Ovicz7B8+NjJVVxKI1DAuSojbyeqBZ21yHH03kDleRv3QH0SpJ
+         XyBRkOLoflo3fYMxMLbyy8FZiPclujibOSGgwfLB2blGbhvz4Dyv0iHGbphWKHjxCJTg
+         EUCf9CUg+bcwy+nW+PXgsDr7d4Tcopz2SbD6Ttmz/3RVbvvB4qFvLpigqN+tOi2SVT6p
+         wDZ+3bjprPDQBMYhOzBiXV/jVl/GEo3MiTbWeAmacmMe9Andi0ORV/14eFAkgRAiyrgW
+         2dTXYk6KO4IwWGCwg3Liu+GLbqwiO7mSHsjPzGka4tZghhBgIGOdHXocxDQ00Cv4UtGz
+         nW9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=iWRIaOK35hrLohXaCf+wY4P/hDj86VUIyT0UiZ54CEE=;
-        b=RDtA4+zvv7lt1Wnff6/d860vx9iFlrCI6VUxXgpWCdWs16tMzcKviV2SfYVJ9kRAie
-         /eGrLaEfZlLOuZjfqTkAgYpjj6Qir0auRZrCujM9WbLlBWAKrAvlCVwyObTyGz3S1RvO
-         /KAxFGs2wutXEQrBtxDWxCoLuX3KoZNfn2a1B6onSvCMhjo4UXr2ba6VX2rlzwl2zS+7
-         xxC9jyisZD0UFnGZ5DPAipcAFpZ4WCbdw5O2+Ip8/9rSkHvx1WaPu/+WOrjpcn/EOFo6
-         HRtOgALvT9b1i0Hc6LFD1zNLvLJQ+A/Pp0BEuybi0N0oTbTHM3kKXByEiC6RYCE8mxNB
-         V3rA==
-X-Gm-Message-State: APjAAAXBtSk2CBkK18uUIv+jx9seR8y0LFl5LWlgdHbRG61mhMkho2PB
-        wvW2htBulDJEY0Vyrh7rpJGymoDURJ28N7MGw0On3LoYCO9gZsLKPvX2ruRUsxSNfMGZBT38zl4
-        r7QmcnhD/0GtiTx2rtZThKhESqw==
-X-Received: by 2002:a65:5003:: with SMTP id f3mr12170037pgo.335.1569629172932;
-        Fri, 27 Sep 2019 17:06:12 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqx3zzIUKbwUDelODLitrwoLWyQ8vBQ0lg/rhYGX9pv+WYB6eYPDVIHDeWRYXarba746c+dW0w==
-X-Received: by 2002:a65:5003:: with SMTP id f3mr12170002pgo.335.1569629172560;
-        Fri, 27 Sep 2019 17:06:12 -0700 (PDT)
-Received: from Yizhuo.cs.ucr.edu (yizhuo.cs.ucr.edu. [169.235.26.74])
-        by smtp.googlemail.com with ESMTPSA id p1sm7381787pfb.112.2019.09.27.17.06.10
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=x5OtQT6idH9LaA0kReytId/54o5wnDaqSP4igHTa5XY=;
+        b=cxBUXTMN1E/LEBBJF7JjxUvbSAlhAPzuUGXKJUuuA7La9afWTT5O0lWqbVW5du/4vZ
+         IZCvwzsMZ+opyub+jIBm3FdYNBQymKabeXyhcAMCjyczJE57Myl9s8IJEaA1EigyVt9r
+         YScjAKFom0/YmurE9rm0S0rSxb28PbYIT8hD0daUE3CzzlyJWdKpqmzTh9t/c8uo166p
+         1//HYt3200gjfIp6Td+JT7hqH03qd+1aBHh9q+6RqH7fIvPZh0SPjruUyKTlU5tn5wHU
+         g7C0pcO0xdS2eOinC1Lg1W6flMu1S+IznKY3+9be76uh2Uqq+73LmTQGy1l2LWMfzLXN
+         Yhmw==
+X-Gm-Message-State: APjAAAUvcgCQM83uRgfTF1aqsSZ8oQlJ5zSYXHL5vxv17bVh+H50oWp5
+        E+nTLqgP7zNDuB10PxKi85M=
+X-Google-Smtp-Source: APXvYqxyc66WqiOrnzpM4pZlBN6HZjbsmJOX1+wJ7Uz+aku8RT8PgT4DhH5Fnm/Da1L+nlxkWo7ohg==
+X-Received: by 2002:a17:902:b08b:: with SMTP id p11mr7886498plr.320.1569629789779;
+        Fri, 27 Sep 2019 17:16:29 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id k31sm6940665pjb.14.2019.09.27.17.16.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2019 17:06:11 -0700 (PDT)
-From:   Yizhuo <yzhai003@ucr.edu>
-Cc:     csong@cs.ucr.edu, zhiyunq@cs.ucr.edu, Yizhuo <yzhai003@ucr.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Jeeeun Evans <jeeeunevans@gmail.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtl8723bs: Variable rf_type in function rtw_cfg80211_init_wiphy() could be uninitialized
-Date:   Fri, 27 Sep 2019 17:06:51 -0700
-Message-Id: <20190928000655.27507-1-yzhai003@ucr.edu>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Fri, 27 Sep 2019 17:16:29 -0700 (PDT)
+Date:   Fri, 27 Sep 2019 17:16:26 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Nick Dyer <nick@shmanahar.org>,
+        Jongpil Jung <jongpil19.jung@samsung.com>,
+        Furquan Shaikh <furquan@chromium.org>,
+        Rajat Jain <rajatja@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: Re: [PATCH v2] Input: atmel_mxt_ts - Disable IRQ across suspend
+Message-ID: <20190928001626.GT237523@dtor-ws>
+References: <20190924215238.184750-1-evgreen@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190924215238.184750-1-evgreen@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In function rtw_cfg80211_init_wiphy(), local variable "rf_type" could
-be uninitialized if function rtw_hal_get_hwreg() fails to initialize
-it. However, this value is used in function rtw_cfg80211_init_ht_capab()
-and used to decide the value writing to ht_cap, which is potentially
-unsafe.
+Hi Evan,
 
-Signed-off-by: Yizhuo <yzhai003@ucr.edu>
----
- drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, Sep 24, 2019 at 02:52:38PM -0700, Evan Green wrote:
+> Across suspend and resume, we are seeing error messages like the following:
+> 
+> atmel_mxt_ts i2c-PRP0001:00: __mxt_read_reg: i2c transfer failed (-121)
+> atmel_mxt_ts i2c-PRP0001:00: Failed to read T44 and T5 (-121)
+> 
+> This occurs because the driver leaves its IRQ enabled. Upon resume, there
+> is an IRQ pending, but the interrupt is serviced before both the driver and
+> the underlying I2C bus have been resumed. This causes EREMOTEIO errors.
+> 
+> Disable the IRQ in suspend, and re-enable it on resume. If there are cases
+> where the driver enters suspend with interrupts disabled, that's a bug we
+> should fix separately.
+> 
+> Signed-off-by: Evan Green <evgreen@chromium.org>
+> ---
+> 
+> Changes in v2:
+>  - Enable and disable unconditionally (Dmitry)
+> 
+>  drivers/input/touchscreen/atmel_mxt_ts.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+> index 24c4b691b1c9..a58092488679 100644
+> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
+> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+> @@ -3155,6 +3155,7 @@ static int __maybe_unused mxt_suspend(struct device *dev)
+>  		mxt_stop(data);
+>  
+>  	mutex_unlock(&input_dev->mutex);
+> +	disable_irq(data->irq);
+>  
+>  	return 0;
+>  }
+> @@ -3174,6 +3175,7 @@ static int __maybe_unused mxt_resume(struct device *dev)
+>  		mxt_start(data);
+>  
+>  	mutex_unlock(&input_dev->mutex);
+> +	enable_irq(data->irq);
 
-diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-index 9bc685632651..dd39a581b7ef 100644
---- a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-+++ b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-@@ -3315,7 +3315,7 @@ static void rtw_cfg80211_init_ht_capab(struct ieee80211_sta_ht_cap *ht_cap, enum
- 
- void rtw_cfg80211_init_wiphy(struct adapter *padapter)
- {
--	u8 rf_type;
-+	u8 rf_type = RF_MAX_TYPE;
- 	struct ieee80211_supported_band *bands;
- 	struct wireless_dev *pwdev = padapter->rtw_wdev;
- 	struct wiphy *wiphy = pwdev->wiphy;
+At least for older devices that do soft reset on resume we need
+interrupts to already work when we call mxt_start().
+
+In general, order of resume steps should mirror suspend.
+
+Thanks.
+
 -- 
-2.17.1
-
+Dmitry
