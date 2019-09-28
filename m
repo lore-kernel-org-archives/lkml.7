@@ -2,89 +2,113 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EC2C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 00:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 390BBC388F3
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 01:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C7F220863
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 00:48:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Aq3xguF+"
+	by mail.kernel.org (Postfix) with ESMTP id 106D421906
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 01:12:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728240AbfI1Asb (ORCPT
+        id S1728481AbfI1BMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 20:48:31 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34838 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfI1Asb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 20:48:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:Cc:References:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=kTYZ3z+xc2tDSZhwDjvXx1dXpdH2rNEG/lGjHo+wCdQ=; b=Aq3xguF+enqAVnlPAZo1eGFGw
-        728UYXw/ow5TQwRHiXB4xDP9yS2NJNp+3ayZXiAm4lHItKLDnjiBs+B4v8b3PG4AVv79LFZdt7Jty
-        Gvw8FhpKZweF7AkhmDOO3CknKjh+txwI9r6AMlRsoYPio5pCs8a5qCZNvr17gr+eFGLM/s4208Xfi
-        fhvNDiEZ1zTvk0f70dAu7nE90/5Zjj4tsfYndHdnMUfHIy3J8TfBZDe0kJ589b1ECWnMKjQQDhsW8
-        GWUxlhuGe9U74AzxtsLdhm2wgrDvuahGw4yXGEFmixme1U6NC7iiJSywLTe9OmobnI35CChXHr9zB
-        Ija4Kdxsw==;
-Received: from [2601:1c0:6280:3f0::9a1f]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iE0uU-0003bu-R6; Sat, 28 Sep 2019 00:48:30 +0000
-Subject: Re: x86/purgatory: undefined symbol __stack_chk_fail
-To:     Andreas Smas <andreas@lonelycoder.com>,
-        linux-kernel@vger.kernel.org
-References: <CAObFT-SqdcM2Xo7P3FqgwTABao5uoWrb+A3bXy9vKt5rBffSwA@mail.gmail.com>
-Cc:     X86 ML <x86@kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <6c46ae4d-6837-d1a3-dbe0-03a9efcb862f@infradead.org>
-Date:   Fri, 27 Sep 2019 17:48:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 27 Sep 2019 21:12:51 -0400
+Received: from gentwo.org ([3.19.106.255]:49786 "EHLO gentwo.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725990AbfI1BMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 21:12:50 -0400
+Received: by gentwo.org (Postfix, from userid 1002)
+        id 438FF3EEC9; Sat, 28 Sep 2019 01:12:49 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+        by gentwo.org (Postfix) with ESMTP id 413B93E8CB;
+        Sat, 28 Sep 2019 01:12:49 +0000 (UTC)
+Date:   Sat, 28 Sep 2019 01:12:49 +0000 (UTC)
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@www.lameter.com
+To:     Vlastimil Babka <vbabka@suse.cz>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        David Sterba <dsterba@suse.cz>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        linux-btrfs@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Subject: Re: [PATCH v2 2/2] mm, sl[aou]b: guarantee natural alignment for
+ kmalloc(power-of-two)
+In-Reply-To: <6a28a096-0e65-c7ea-9ca9-f72d68948e10@suse.cz>
+Message-ID: <alpine.DEB.2.21.1909272251190.21341@www.lameter.com>
+References: <20190826111627.7505-1-vbabka@suse.cz> <20190826111627.7505-3-vbabka@suse.cz> <df8d1cf4-ff8f-1ee1-12fb-cfec39131b32@suse.cz> <20190923171710.GN2751@twin.jikos.cz> <alpine.DEB.2.21.1909242048020.17661@www.lameter.com>
+ <20190924165425.a79a2dafbaf37828a931df2b@linux-foundation.org> <alpine.DEB.2.21.1909260005060.1508@www.lameter.com> <6a28a096-0e65-c7ea-9ca9-f72d68948e10@suse.cz>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <CAObFT-SqdcM2Xo7P3FqgwTABao5uoWrb+A3bXy9vKt5rBffSwA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/3/19 8:50 AM, Andreas Smas wrote:
-> Hi,
-> 
-> For me, kernels built including this commit
-> b059f801a937 (x86/purgatory: Use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS)
-> 
-> results in kexec() failing to load the kernel:
-> 
-> kexec: Undefined symbol: __stack_chk_fail
-> kexec-bzImage64: Loading purgatory failed
-> 
-> Can be seen:
-> 
-> $ readelf -a arch/x86/purgatory/purgatory.ro | grep UND
->      0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND
->     51: 0000000000000000     0 NOTYPE  GLOBAL DEFAULT  UND __stack_chk_fail
-> 
-> Using: gcc version 7.4.0 (Ubuntu 7.4.0-1ubuntu1~18.04.1)
-> 
-> Adding -ffreestanding or -fno-stack-protector to ccflags-y in
-> arch/x86/purgatory/Makefile
-> fixes the problem. Not sure which would be preferred.
-> 
+On Thu, 26 Sep 2019, Vlastimil Babka wrote:
 
-Hi,
-Do you have a kernel .config file that causes this?
-I can't seem to reproduce it.
+> > - It will only work for special cases like the kmalloc array
+> > without extras like metadata at the end of objects.
+>
+> I don't understand what you mean here? The kmalloc caches are special
+> because they don't have metadata at the end of objects? Others do?
 
-Thanks.
--- 
-~Randy
+Yes.
+
+> > - These alignments are only needed in exceptional cases but with the patch
+> > we will provide the alignment by default even if the allocating subsystem
+> > does not need it.
+>
+> True. This is where we have to make the decision whether to make things
+> simpler for those that don't realize they need the alignment, and
+> whether that's worth the cost. We have evidence of those cases, and the
+> cost is currently zero in the common cases (SLAB, SLUB without debug
+> runtime-enabled).
+
+The cost is zero for a particular layout of the objects in a page using a
+particular allocator and hardware configuration.
+
+However, the layout may be different due to another allocator that prefers
+to arrange things differently (SLOB puts multiple objects of different
+types in the same page to save memory), if we need to add data to these
+objects (debugging info, new metadata about the object, maybe the memcg
+pointer, maybe other things that may come up), or other innovative
+approaches (such as putting data of different kmem caches that are
+commonly used together in the same page to improve locality).
+
+The cost is an unnecessary petrification of the data layout of the memory
+allocators.
+
+> > - We have mechanisms to detect alignment problems using debug kernels and
+> > debug options that have been available for years. These were not used for
+> > testing in these cases it seems before the patches hit mainline. Once in
+> > mainly someone ran a debug kernel and found the issue.
+>
+> Debugging options are useful if you know there's a bug and you want to
+> find it. AFAIK the various bots/CIs that do e.g. randconfig, or enable
+> debug options explicitly, run those kernels in a VM, so I guess that's
+> why potential breakage due to alignment can lurk in a hw-specific driver.
+
+That is not my experience. You need to run debugging to verify that a
+patch does not cause locking problems, memory corruption etc etc. And
+upstream code is tested by various people with debugging kernels so they
+will locate the bugs that others introduce. This is usually not because
+there was a focus on a particular bug. If you have a hw specific thing
+that is not generally tested and skip the debugging tests well yes then we
+have a problem.
+
+What I have seen with developers is that they feel the debugging steps are
+unnecessary for conveniences sake. I have seen build environments that had
+proper steps for verification with a debug kernel. However, someone
+disabled them "some months ago" and "nothing happened". Then strange
+failures in production systems occur.
