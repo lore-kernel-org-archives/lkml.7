@@ -2,127 +2,117 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91119C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 02:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D7EC388F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 02:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68D9A20872
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 02:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4C8A20872
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 02:40:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569638433;
+	bh=h2njq1vJkcfwtI+56dxihbhds6Qb1mamZ+2/Z87FA/c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=e4TQGhwZYY8x3IHIBm7S/k5Msr7NUxYVsmBRNhYY477iPnhaF1K2Bp70OZ1y+bJdG
+	 ePrpTcN8eBDqQUdxxOo2z79xHRbwo5y0DQHmhJhKbsljZdeBzDXIs2DsoUOu0aBWCv
+	 tDZKq4Uc5Gr0jMoLlVVA/lQ8eM2J+S1ksnEXNF6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728487AbfI1Ccy (ORCPT
+        id S1728395AbfI1Ckd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 22:32:54 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:53821 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726061AbfI1Ccy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 22:32:54 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1iE2XR-0002Vh-Og; Fri, 27 Sep 2019 20:32:49 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1iE2XR-00059p-0e; Fri, 27 Sep 2019 20:32:49 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Dave Young <dyoung@redhat.com>, Lianbo Jiang <lijiang@redhat.com>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org, jgross@suse.com,
-        dhowells@redhat.com, Thomas.Lendacky@amd.com,
-        kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>
-References: <20190920035326.27212-1-lijiang@redhat.com>
-        <20190927051518.GA13023@dhcp-128-65.nay.redhat.com>
-        <87r241piqg.fsf@x220.int.ebiederm.org>
-        <20190928000505.GJ31919@MiWiFi-R3L-srv>
-Date:   Fri, 27 Sep 2019 21:32:16 -0500
-In-Reply-To: <20190928000505.GJ31919@MiWiFi-R3L-srv> (Baoquan He's message of
-        "Sat, 28 Sep 2019 08:05:05 +0800")
-Message-ID: <875zldp2vj.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 27 Sep 2019 22:40:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34202 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725306AbfI1Ckc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 22:40:32 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B58820869;
+        Sat, 28 Sep 2019 02:40:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569638431;
+        bh=h2njq1vJkcfwtI+56dxihbhds6Qb1mamZ+2/Z87FA/c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HTifdSFmwMqxAmAk6Y+efXUCTyVezDCuUudoFxFcl+UJI4QZTNOe3k4QgD6cxIVVj
+         1RD8e2+dk1lR+DGy6qP/gV9Z4tCLIc1BPp0WIjAJEwNp9AZ/TeVcQAMZd2ZkeKpXVq
+         kwoAJd8L+FVx+cQTFDcfpiWTRvtVY55mM2CumdvE=
+Date:   Fri, 27 Sep 2019 19:40:29 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     "axboe@kernel.dk" <axboe@kernel.dk>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>,
+        Ming Lei <ming.lei@redhat.com>
+Subject: Re: WARNING in blk_mq_init_sched
+Message-ID: <20190928024029.GB1079@sol.localdomain>
+Mail-Followup-To: Damien Le Moal <Damien.LeMoal@wdc.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>,
+        Ming Lei <ming.lei@redhat.com>
+References: <0000000000007909bf059363878e@google.com>
+ <BYAPR04MB5816244183004247FD3D1074E7870@BYAPR04MB5816.namprd04.prod.outlook.com>
+ <BYAPR04MB58169DBC0647FE4C91338844E7870@BYAPR04MB5816.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1iE2XR-00059p-0e;;;mid=<875zldp2vj.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18cKlj+RxELBQM4X5UB6lrbfTM/kZbSpoA=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH] x86/kdump: Fix 'kmem -s' reported an invalid freepointer when SME was active
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BYAPR04MB58169DBC0647FE4C91338844E7870@BYAPR04MB5816.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Baoquan He <bhe@redhat.com> writes:
+On Wed, Sep 25, 2019 at 10:13:30PM +0000, Damien Le Moal wrote:
+> On 2019/09/25 10:56, Damien Le Moal wrote:
+> > On 2019/09/25 9:56, syzbot wrote:
+> >> Hello,
+> >>
+> >> syzbot found the following crash on:
+> >>
+> >> HEAD commit:    f7c3bf8f Merge tag 'gfs2-for-5.4' of git://git.kernel.org/..
+> >> git tree:       upstream
+> >> console output: https://syzkaller.appspot.com/x/log.txt?x=15f5baf9600000
+> >> kernel config:  https://syzkaller.appspot.com/x/.config?x=50d4af03d68a470c
+> >> dashboard link: https://syzkaller.appspot.com/bug?extid=b2c197f98f86543b69c8
+> >> compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+> >> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
+> >>
+> >> Unfortunately, I don't have any reproducer for this crash yet.
+> >>
+> >> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> >> Reported-by: syzbot+b2c197f98f86543b69c8@syzkaller.appspotmail.com
+> > 
+> > Oh... When the queue is initialized and the elevator initialization done by
+> > elevator_init_mq() is executed without the queue sysfs lock held. In that step,
+> > if the elevator initialization fails, blk_mq_sched_free_requests() is called and
+> > will trip on the lockdep_assert_held(&q->sysfs_lock) check on entry. I guess
+> > that is what is causing the crash ? But I thought lockdep_assert_held() only
+> > spits out warnings...
+> > 
+> > Ming,
+> > 
+> > Your patch c48dac137a62 ("block: don't hold q->sysfs_lock in elevator_init_mq")
+> > removed the sysfs_lock use in elevator_init_mq(). With that, should we move the
+> > lockdep_assert_held(&q->sysfs_lock) call out of blk_mq_sched_free_requests() and
+> > directly call it lockdep before calling that function (that's ugly) or do you
+> > see a nice trick for handling the special case that is the first initialization ?
+> 
+> Please ignore. It looks like the gfs2 tree tested does not have commit
+> 954b4a5ce4a8 ("block: Change elevator_init_mq() to always succeed") which
+> removes the possibility of having blk_mq_sched_free_requests() being called
+> during the first elevator initialization without the sysfs lock being held.
+> 
+> So if the crash is indeed triggered by the lockdep_assert_held() call, then this
+> problem will be fixed after a rebase on 5.4-rc1.
+> 
 
-> On 09/27/19 at 03:49pm, Eric W. Biederman wrote:
->> Dave Young <dyoung@redhat.com> writes:
->> >> In order to avoid such problem, lets occupy the first 640k region when
->> >> SME is active, which will ensure that the allocated memory does not fall
->> >> into the first 640k area. So, no need to worry about whether kernel can
->> >> correctly copy the contents of the first 640K area to a backup region in
->> >> purgatory().
->> 
->> We must occupy part of the first 640k so that we can start up secondary
->> cpus unless someone has added another way to do that in recent years on
->> SME capable cpus.
->> 
->> Further there is Fimware/BIOS interaction that happens within those
->> first 640K.
->> 
->> Furthermore the kdump kernel needs to be able to read all of the memory
->> that the previous kernel could read.  Otherwise we can't get a crash
->> dump.
->> 
->> So I do not think ignoring the first 640K is the correct resolution
->> here.
->> 
->> > The log is too simple,  I know you did some other tries to fix this, but
->> > the patch log does not show why you can not correctly copy the 640k in
->> > current kdump code, in purgatory here.
->> >
->> > Also this patch seems works in your test, but still to see if other
->> > people can comment and see if it is safe or not, if any other risks
->> > other than waste the small chunk of memory.  If it is safe then kdump
->> > can just drop the backup logic and use this in common code instead of
->> > only do it for SME.
->> 
->> Exactly.
->> 
->> I think at best this avoids the symptoms, but does not give a reliable
->> crash dump.
->
-> Sorry, didn't notice this comment at bottom.
->
-> From code, currently the first 640K area is needed in two places.
-> One is for 5-level trampoline during boot compressing stage, in
-> find_trampoline_placement(). 
->
-> The other is in reserve_real_mode(), as you mentioned, for application
-> CPU booting.
->
-> Only allow these two put data inside first 640K, then lock it done. It
-> should not impact crash dump and parsing. And these two's content
-> doesn't matter.
+No, as the report says, this occurred on commit f7c3bf8f.  Commit 954b4a5ce4a8
+("block: Change elevator_init_mq() to always succeed") was already merged then.
 
-Apologies.  Do I understand correctly that the idea is that the kernel
-that may crash will never touch these pages?  And that the reservation
-is not in the kernel that recovers from the crash?  That definitely
-needs a little better description.  I know it is not a lot on modern
-systems but reserving an extra 1M of memory to avoid having to special
-case it later seems in need of calling out.
-
-I have an old system around that I think that 640K is about 25% of
-memory.
-
-How we interact with BIOS tables in the first 640k needs some
-explanation.  Both in the first kernel and in the crash kernel.
-
-Eric
+- Eric
