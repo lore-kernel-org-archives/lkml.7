@@ -2,219 +2,89 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 381D8C388F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 00:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EC2C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 00:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 104FF20863
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 00:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C7F220863
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 00:48:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="r4fcNMNe"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Aq3xguF+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728355AbfI1AqC (ORCPT
+        id S1728240AbfI1Asb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 20:46:02 -0400
-Received: from mx5.ucr.edu ([138.23.62.67]:46797 "EHLO mx5.ucr.edu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725306AbfI1AqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 20:46:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
-  t=1569631561; x=1601167561;
-  h=from:to:cc:subject:date:message-id;
-  bh=Gyih0+ys/dsZuk6p5tTk9jxHvhG3+TejPRIPLUcLycQ=;
-  b=r4fcNMNelVKQz6Ykpc2XLK+N5160eGKs8qfNIHumoGr5+jc8p3Xd0yv3
-   BSwq5gjXZw8sgw/ql2L4tWUD4XIFAz64XHct932t/+EPeny0x946YVNCJ
-   Obt8GvnRmI06fs9RXoRqakOmS/AWbuxZsODrkfmpN255giprJT1z8/+IL
-   NmfGLyyUpZ1fGxoWT8HIjM9SEfI8JBM96XLekB821zM69wooJVZLIQLdQ
-   AZBc6elqiYPh38n9iiyDF91xH9GBi2KRxscl1sd0pdwOY8x6VhIGaxuNJ
-   AyJV89cML5K17E94xweLfty+OTK+Zjq0N9JMc005F1C5J8dPtoS+3Isj5
-   A==;
-IronPort-SDR: 5VC74JGaosMXjQToRRM8IvHvCuvg8oE8m6rwTlADGzhdhydxao80fm4CmlOOu+/RElzjtp6gh2
- r8bcyWgOCepIH1FcpvVbVMwEVAcvhXP2av7IS1VR14ZkIrjTQFbaaIZgswRquNFUCRFXKFtpAp
- y6M64jRUBQTF5EwoX1PStH9r7Sn4im33w7M3ubfmmwnylSJwXNhTkjpurmBW2F8fB4hqchACGS
- CzbPiE8+RnrSYiB/OALPJwT18HpBheQbFA1nR39tqbySqpgCjgSASgTbzQzovR9q68bf8Tgc0A
- j68=
-IronPort-PHdr: =?us-ascii?q?9a23=3A/wB38xWDq9vUxEdys7+mCjyQ8SnV8LGtZVwlr6?=
- =?us-ascii?q?E/grcLSJyIuqrYYx2Gt8tkgFKBZ4jH8fUM07OQ7/m7Hzdfqs3d+Fk5M7V0Hy?=
- =?us-ascii?q?cfjssXmwFySOWkMmbcaMDQUiohAc5ZX0Vk9XzoeWJcGcL5ekGA6ibqtW1aFR?=
- =?us-ascii?q?rwLxd6KfroEYDOkcu3y/qy+5rOaAlUmTaxe7x/IAi4oAnLuMQbg4RuJ6g+xx?=
- =?us-ascii?q?DUvnZGZuNayH9yK1mOhRj8/MCw/JBi8yRUpf0s8tNLXLv5caolU7FWFSwqPG?=
- =?us-ascii?q?8p6sLlsxnDVhaP6WAHUmoKiBpIAhPK4w/8U5zsryb1rOt92C2dPc3rUbA5XC?=
- =?us-ascii?q?mp4ql3RBP0jioMKiU0+3/LhMNukK1boQqhpx1hzI7SfIGVL+d1cqfEcd8HWW?=
- =?us-ascii?q?ZNQsNdWipEAoO9dIsPFOsBPeBXr4LguVUAtAa1BQetBOzxzj9Hm2L90ak03u?=
- =?us-ascii?q?g9FA3L2hErEdATv3TOtNj7NLkcX/27wqfLyjvOdO9a1Svn5YTUaB0tve2AUL?=
- =?us-ascii?q?RtesTR00kvEAbFg02SpozkPjKV1vkNs2+G5OdnVeOuim4npBtwojSz2sshhJ?=
- =?us-ascii?q?LEhp8JxVDe7yl23ps6JcChRUN9fNWqE4NQujmEO4dqRs4uWWJltSYgxrEYpJ?=
- =?us-ascii?q?K2czIGxIo7yxLDc/CLbomF7xb5WOqPLzp1hGhpdKy+ihqo80WtxevxXdSu3l?=
- =?us-ascii?q?lQtCpKiNzMu2gI1xzU98eIVONw/lyk2TaTzwDT7fxEIVwsmarbNZEhxrkwm4?=
- =?us-ascii?q?IWsUvZHy/2nFz6jLeSdkk54+So5frrbqn6qpOGOI90jQb+MqsqmsOhG+g3Lg?=
- =?us-ascii?q?8OX22D9eS90r3s41H5Ta1UgvEqlqTVqpPXKMQBqqKnHgNY3Zwv5wijAzu6yN?=
- =?us-ascii?q?gYmGMILFNBeBKJlYjpPFTOLej4DPa+g1SjijZry+zaMrDvGZjNM2TMkK37cb?=
- =?us-ascii?q?lj9kFc1RI/zcpD6JJMFrEBPPXzV1f1tNzZCB85LgO1z//kCNpjzIMeX3yAAq?=
- =?us-ascii?q?uCPaPMvl+H+PgvL/OPZIALojb9LeYq5/r0gX8+g18dcvrh84EQbSWJH+ZmPk?=
- =?us-ascii?q?LRNWv+gt4AST9Rlhc1VqrnhEDUAm0bXGq7Q69pvmJzM4mhF4qWA9/1jQ=3D?=
- =?us-ascii?q?=3D?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2FFCgDkq45dgMjWVdFmHgEGEoFcC4N?=
- =?us-ascii?q?eTBCNHoVyUAMGiyaBCYV6iDGBewEIAQEBDAEBLQIBAYRAgzojNAkOAgMJAQE?=
- =?us-ascii?q?FAQEBAQEFBAEBAhABAQkNCQgnhUKCOimDNQsWFVKBFQEFATUiOYJHAYF2FAW?=
- =?us-ascii?q?hLoEDPIwlM4hxAQkNgUgJAQiBIoc1hFmBEIEHgRGDUIdjgkQEgS8BAQGLP4I?=
- =?us-ascii?q?xhyuWSQEGAoIQFIF4kwcnhDmJPYs/AS2KKJxqAgoHBg8jgS+CEU0lgWwKgUR?=
- =?us-ascii?q?QEBSBWhcVji0hM4EIjj0B?=
-X-IPAS-Result: =?us-ascii?q?A2FFCgDkq45dgMjWVdFmHgEGEoFcC4NeTBCNHoVyUAMGi?=
- =?us-ascii?q?yaBCYV6iDGBewEIAQEBDAEBLQIBAYRAgzojNAkOAgMJAQEFAQEBAQEFBAEBA?=
- =?us-ascii?q?hABAQkNCQgnhUKCOimDNQsWFVKBFQEFATUiOYJHAYF2FAWhLoEDPIwlM4hxA?=
- =?us-ascii?q?QkNgUgJAQiBIoc1hFmBEIEHgRGDUIdjgkQEgS8BAQGLP4IxhyuWSQEGAoIQF?=
- =?us-ascii?q?IF4kwcnhDmJPYs/AS2KKJxqAgoHBg8jgS+CEU0lgWwKgURQEBSBWhcVji0hM?=
- =?us-ascii?q?4EIjj0B?=
-X-IronPort-AV: E=Sophos;i="5.64,557,1559545200"; 
-   d="scan'208";a="79205498"
-Received: from mail-pl1-f200.google.com ([209.85.214.200])
-  by smtpmx5.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 27 Sep 2019 17:46:00 -0700
-Received: by mail-pl1-f200.google.com with SMTP id g11so2601313plm.22
-        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 17:46:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=WVXKJFPAYYP31lJ6IlM5/o8x5LjKeBVij0jUlLnOB1Y=;
-        b=NCEwi9D9Q4u+MjmFiH39LZZJ/IeF36SZoCfi40RbhQxPkivAAe+lCf4J3R/SR/qUee
-         q9p1IX6HUDj4QzOsopN1RB0XfB5ECcAkNt5lcBnRdZK60ljQDfgRx350KmkfYuc9REPe
-         rqnnNNVGENNIfD7xXJzBJMxMvzIjvBpYprX8kJw1NQt2LxRWX/Sx5aExCpGlERG3xROS
-         xXyJyADWRpeqNjTOJOIGj1cJYdTJR9fx0oy3q1yE5HMDsNctkG7Cu2FmplJDu1jZXLXx
-         khC+g++JcerPrOsyscsLcBNG3RMSMx7nM1gn9Gbjioxgi3OflrmlHA8sA5KzHWePyFQf
-         sL2w==
-X-Gm-Message-State: APjAAAXW71bDSCNUJSwQtifNTS+r4RbSF4XlBUzTdD4x1bKPtaEEtoRe
-        3KWdSbUxU0TY4zUzYaljWNLkLtaE027HFOLhohBK4L7W8TU5PmyC490/3ehImQqEJF1snwFQHxf
-        m9+bcNSkClF57vO/wkYOd2PgQ6w==
-X-Received: by 2002:a17:90a:3301:: with SMTP id m1mr13556470pjb.27.1569631560294;
-        Fri, 27 Sep 2019 17:46:00 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqx/7cnNYMLx9aWgtGrOZYcIU8PemYtXquLbvog1tYQtmk61OBe75ni/14YXREFeG7CW3SRlDg==
-X-Received: by 2002:a17:90a:3301:: with SMTP id m1mr13556446pjb.27.1569631560014;
-        Fri, 27 Sep 2019 17:46:00 -0700 (PDT)
-Received: from Yizhuo.cs.ucr.edu (yizhuo.cs.ucr.edu. [169.235.26.74])
-        by smtp.googlemail.com with ESMTPSA id r2sm4136689pfq.60.2019.09.27.17.45.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2019 17:45:59 -0700 (PDT)
-From:   Yizhuo <yzhai003@ucr.edu>
-Cc:     csong@cs.ucr.edu, zhiyunq@cs.ucr.edu, Yizhuo <yzhai003@ucr.edu>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nicholas Mc Guire <hofrat@osadl.org>,
-        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] iio: adc: meson-saradc: Variables could be uninitalized if regmap_read() fails
-Date:   Fri, 27 Sep 2019 17:46:41 -0700
-Message-Id: <20190928004642.28932-1-yzhai003@ucr.edu>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Fri, 27 Sep 2019 20:48:31 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34838 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfI1Asb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 20:48:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:Cc:References:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=kTYZ3z+xc2tDSZhwDjvXx1dXpdH2rNEG/lGjHo+wCdQ=; b=Aq3xguF+enqAVnlPAZo1eGFGw
+        728UYXw/ow5TQwRHiXB4xDP9yS2NJNp+3ayZXiAm4lHItKLDnjiBs+B4v8b3PG4AVv79LFZdt7Jty
+        Gvw8FhpKZweF7AkhmDOO3CknKjh+txwI9r6AMlRsoYPio5pCs8a5qCZNvr17gr+eFGLM/s4208Xfi
+        fhvNDiEZ1zTvk0f70dAu7nE90/5Zjj4tsfYndHdnMUfHIy3J8TfBZDe0kJ589b1ECWnMKjQQDhsW8
+        GWUxlhuGe9U74AzxtsLdhm2wgrDvuahGw4yXGEFmixme1U6NC7iiJSywLTe9OmobnI35CChXHr9zB
+        Ija4Kdxsw==;
+Received: from [2601:1c0:6280:3f0::9a1f]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iE0uU-0003bu-R6; Sat, 28 Sep 2019 00:48:30 +0000
+Subject: Re: x86/purgatory: undefined symbol __stack_chk_fail
+To:     Andreas Smas <andreas@lonelycoder.com>,
+        linux-kernel@vger.kernel.org
+References: <CAObFT-SqdcM2Xo7P3FqgwTABao5uoWrb+A3bXy9vKt5rBffSwA@mail.gmail.com>
+Cc:     X86 ML <x86@kernel.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <6c46ae4d-6837-d1a3-dbe0-03a9efcb862f@infradead.org>
+Date:   Fri, 27 Sep 2019 17:48:29 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <CAObFT-SqdcM2Xo7P3FqgwTABao5uoWrb+A3bXy9vKt5rBffSwA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Several functions in this file are trying to use regmap_read() to
-initialize the specific variable, however, if regmap_read() fails,
-the variable could be uninitialized but used directly, which is
-potentially unsafe. The return value of regmap_read() should be
-checked and handled.
+On 9/3/19 8:50 AM, Andreas Smas wrote:
+> Hi,
+> 
+> For me, kernels built including this commit
+> b059f801a937 (x86/purgatory: Use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS)
+> 
+> results in kexec() failing to load the kernel:
+> 
+> kexec: Undefined symbol: __stack_chk_fail
+> kexec-bzImage64: Loading purgatory failed
+> 
+> Can be seen:
+> 
+> $ readelf -a arch/x86/purgatory/purgatory.ro | grep UND
+>      0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND
+>     51: 0000000000000000     0 NOTYPE  GLOBAL DEFAULT  UND __stack_chk_fail
+> 
+> Using: gcc version 7.4.0 (Ubuntu 7.4.0-1ubuntu1~18.04.1)
+> 
+> Adding -ffreestanding or -fno-stack-protector to ccflags-y in
+> arch/x86/purgatory/Makefile
+> fixes the problem. Not sure which would be preferred.
+> 
 
-Signed-off-by: Yizhuo <yzhai003@ucr.edu>
----
- drivers/iio/adc/meson_saradc.c | 28 +++++++++++++++++++++++-----
- 1 file changed, 23 insertions(+), 5 deletions(-)
+Hi,
+Do you have a kernel .config file that causes this?
+I can't seem to reproduce it.
 
-diff --git a/drivers/iio/adc/meson_saradc.c b/drivers/iio/adc/meson_saradc.c
-index 7b28d045d271..c032a64108b4 100644
---- a/drivers/iio/adc/meson_saradc.c
-+++ b/drivers/iio/adc/meson_saradc.c
-@@ -323,6 +323,7 @@ static int meson_sar_adc_wait_busy_clear(struct iio_dev *indio_dev)
- {
- 	struct meson_sar_adc_priv *priv = iio_priv(indio_dev);
- 	int regval, timeout = 10000;
-+	int ret;
- 
- 	/*
- 	 * NOTE: we need a small delay before reading the status, otherwise
-@@ -331,7 +332,9 @@ static int meson_sar_adc_wait_busy_clear(struct iio_dev *indio_dev)
- 	 */
- 	do {
- 		udelay(1);
--		regmap_read(priv->regmap, MESON_SAR_ADC_REG0, &regval);
-+		ret = regmap_read(priv->regmap, MESON_SAR_ADC_REG0, &regval);
-+		if (ret)
-+			return ret;
- 	} while (FIELD_GET(MESON_SAR_ADC_REG0_BUSY_MASK, regval) && timeout--);
- 
- 	if (timeout < 0)
-@@ -358,7 +361,11 @@ static int meson_sar_adc_read_raw_sample(struct iio_dev *indio_dev,
- 		return -EINVAL;
- 	}
- 
--	regmap_read(priv->regmap, MESON_SAR_ADC_FIFO_RD, &regval);
-+	int ret = regmap_read(priv->regmap, MESON_SAR_ADC_FIFO_RD, &regval);
-+
-+	if (ret)
-+		return ret;
-+
- 	fifo_chan = FIELD_GET(MESON_SAR_ADC_FIFO_RD_CHAN_ID_MASK, regval);
- 	if (fifo_chan != chan->address) {
- 		dev_err(&indio_dev->dev,
-@@ -491,6 +498,7 @@ static int meson_sar_adc_lock(struct iio_dev *indio_dev)
- {
- 	struct meson_sar_adc_priv *priv = iio_priv(indio_dev);
- 	int val, timeout = 10000;
-+	int ret;
- 
- 	mutex_lock(&indio_dev->mlock);
- 
-@@ -506,7 +514,10 @@ static int meson_sar_adc_lock(struct iio_dev *indio_dev)
- 		 */
- 		do {
- 			udelay(1);
--			regmap_read(priv->regmap, MESON_SAR_ADC_DELAY, &val);
-+			ret = regmap_read(priv->regmap,
-+					MESON_SAR_ADC_DELAY, &val);
-+			if (ret)
-+				return ret;
- 		} while (val & MESON_SAR_ADC_DELAY_BL30_BUSY && timeout--);
- 
- 		if (timeout < 0) {
-@@ -784,7 +795,10 @@ static int meson_sar_adc_init(struct iio_dev *indio_dev)
- 		 * BL30 to make sure BL30 gets the values it expects when
- 		 * reading the temperature sensor.
- 		 */
--		regmap_read(priv->regmap, MESON_SAR_ADC_REG3, &regval);
-+		ret = regmap_read(priv->regmap, MESON_SAR_ADC_REG3, &regval);
-+		if (ret)
-+			return ret;
-+
- 		if (regval & MESON_SAR_ADC_REG3_BL30_INITIALIZED)
- 			return 0;
- 	}
-@@ -1014,7 +1028,11 @@ static irqreturn_t meson_sar_adc_irq(int irq, void *data)
- 	unsigned int cnt, threshold;
- 	u32 regval;
- 
--	regmap_read(priv->regmap, MESON_SAR_ADC_REG0, &regval);
-+	int ret = regmap_read(priv->regmap, MESON_SAR_ADC_REG0, &regval);
-+
-+	if (ret)
-+		return ret;
-+
- 	cnt = FIELD_GET(MESON_SAR_ADC_REG0_FIFO_COUNT_MASK, regval);
- 	threshold = FIELD_GET(MESON_SAR_ADC_REG0_FIFO_CNT_IRQ_MASK, regval);
- 
+Thanks.
 -- 
-2.17.1
-
+~Randy
