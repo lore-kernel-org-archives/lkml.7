@@ -2,176 +2,83 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-4.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 154A7C388F3
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 06:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17933C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 07:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAAC120830
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 06:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE3DD207FA
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 07:16:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726019AbfI1G5I (ORCPT
+        id S1726454AbfI1HQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Sep 2019 02:57:08 -0400
-Received: from 178.115.242.59.static.drei.at ([178.115.242.59]:33763 "EHLO
-        mail.osadl.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbfI1G5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Sep 2019 02:57:08 -0400
-X-Greylist: delayed 583 seconds by postgrey-1.27 at vger.kernel.org; Sat, 28 Sep 2019 02:57:07 EDT
-Received: by mail.osadl.at (Postfix, from userid 1001)
-        id 98F565C0864; Sat, 28 Sep 2019 08:47:20 +0200 (CEST)
-Date:   Sat, 28 Sep 2019 08:47:20 +0200
-From:   Nicholas Mc Guire <der.herr@hofr.at>
-To:     Yizhuo <yzhai003@ucr.edu>
-Cc:     csong@cs.ucr.edu, zhiyunq@cs.ucr.edu,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nicholas Mc Guire <hofrat@osadl.org>,
-        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: meson-saradc: Variables could be uninitalized
- if regmap_read() fails
-Message-ID: <20190928064720.GA24515@osadl.at>
-References: <20190928004642.28932-1-yzhai003@ucr.edu>
+        Sat, 28 Sep 2019 03:16:47 -0400
+Received: from ms.lwn.net ([45.79.88.28]:35680 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725856AbfI1HQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Sep 2019 03:16:46 -0400
+Received: from localhost.localdomain (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 30D802B4;
+        Sat, 28 Sep 2019 07:16:43 +0000 (UTC)
+Date:   Sat, 28 Sep 2019 01:16:39 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Stephen Kitt <steve@sk2.org>
+Cc:     linux-doc@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-can@vger.kernel.org, linux-afs@lists.infradead.org,
+        kvm@vger.kernel.org,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH] docs: use flexible array members, not zero-length
+Message-ID: <20190928011639.7c983e77@lwn.net>
+In-Reply-To: <20190927142927.27968-1-steve@sk2.org>
+References: <20190927142927.27968-1-steve@sk2.org>
+Organization: LWN.net
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190928004642.28932-1-yzhai003@ucr.edu>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 05:46:41PM -0700, Yizhuo wrote:
-> Several functions in this file are trying to use regmap_read() to
-> initialize the specific variable, however, if regmap_read() fails,
-> the variable could be uninitialized but used directly, which is
-> potentially unsafe. The return value of regmap_read() should be
-> checked and handled.
-> 
-> Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+On Fri, 27 Sep 2019 16:29:27 +0200
+Stephen Kitt <steve@sk2.org> wrote:
 
-Just a few minor style issues - contentwise it look correct to me.
-Reviewed-by: Nicholas Mc Guire <hofrat@osadl.org>
+> Update the docs throughout to remove zero-length arrays, replacing
+> them with C99 flexible array members. GCC will then ensure that the
+> arrays are always the last element in the struct.
 
-> ---
->  drivers/iio/adc/meson_saradc.c | 28 +++++++++++++++++++++++-----
->  1 file changed, 23 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/meson_saradc.c b/drivers/iio/adc/meson_saradc.c
-> index 7b28d045d271..c032a64108b4 100644
-> --- a/drivers/iio/adc/meson_saradc.c
-> +++ b/drivers/iio/adc/meson_saradc.c
-> @@ -323,6 +323,7 @@ static int meson_sar_adc_wait_busy_clear(struct iio_dev *indio_dev)
->  {
->  	struct meson_sar_adc_priv *priv = iio_priv(indio_dev);
->  	int regval, timeout = 10000;
-> +	int ret;
->  
->  	/*
->  	 * NOTE: we need a small delay before reading the status, otherwise
-> @@ -331,7 +332,9 @@ static int meson_sar_adc_wait_busy_clear(struct iio_dev *indio_dev)
->  	 */
->  	do {
->  		udelay(1);
-> -		regmap_read(priv->regmap, MESON_SAR_ADC_REG0, &regval);
-> +		ret = regmap_read(priv->regmap, MESON_SAR_ADC_REG0, &regval);
-> +		if (ret)
-> +			return ret;
->  	} while (FIELD_GET(MESON_SAR_ADC_REG0_BUSY_MASK, regval) && timeout--);
->  
->  	if (timeout < 0)
-> @@ -358,7 +361,11 @@ static int meson_sar_adc_read_raw_sample(struct iio_dev *indio_dev,
+I appreciate the thought but...
 
-any reason not to declear ret in the declaration block ?
-so just for consistency with coding style within meson_saradc.c
-this might be:
+> diff --git a/Documentation/bpf/btf.rst b/Documentation/bpf/btf.rst
+> index 4d565d202ce3..24ce50fc1fc1 100644
+> --- a/Documentation/bpf/btf.rst
+> +++ b/Documentation/bpf/btf.rst
+> @@ -670,7 +670,7 @@ func_info for each specific ELF section.::
+>          __u32   sec_name_off; /* offset to section name */
+>          __u32   num_info;
+>          /* Followed by num_info * record_size number of bytes */
+> -        __u8    data[0];
+> +        __u8    data[];
+>       };
 
-	int regval, fifo_chan, fifo_val, count;
-+	int ret;
+I only checked this one, but found what I had expected: the actual
+definition of this structure (found in tools/lib/bpf/libbpf_internal.h)
+says "data[0]".  We can't really make the documentation read the way we
+*wish* the source would be, we need to document reality.
 
->  		return -EINVAL;
->  	}
->  
-> -	regmap_read(priv->regmap, MESON_SAR_ADC_FIFO_RD, &regval);
-> +	int ret = regmap_read(priv->regmap, MESON_SAR_ADC_FIFO_RD, &regval);
+I'm pretty sure that most of the other examples will be the same.
 
-+	ret = regmap_read(priv->regmap, MESON_SAR_ADC_FIFO_RD, &regval);
+If you really want to fix these, the right solution is to fix the offending
+structures — one patch per structure — in the source, then update the
+documentation to match the new reality.
 
-> +
-> +	if (ret)
-> +		return ret;
-> +
->  	fifo_chan = FIELD_GET(MESON_SAR_ADC_FIFO_RD_CHAN_ID_MASK, regval);
->  	if (fifo_chan != chan->address) {
->  		dev_err(&indio_dev->dev,
-> @@ -491,6 +498,7 @@ static int meson_sar_adc_lock(struct iio_dev *indio_dev)
->  {
->  	struct meson_sar_adc_priv *priv = iio_priv(indio_dev);
->  	int val, timeout = 10000;
-> +	int ret;
->  
->  	mutex_lock(&indio_dev->mlock);
->  
-> @@ -506,7 +514,10 @@ static int meson_sar_adc_lock(struct iio_dev *indio_dev)
->  		 */
->  		do {
->  			udelay(1);
-> -			regmap_read(priv->regmap, MESON_SAR_ADC_DELAY, &val);
-> +			ret = regmap_read(priv->regmap,
-> +					MESON_SAR_ADC_DELAY, &val);
+Thanks,
 
-checkpatch does not fuss here but the continuation should be alligned
-witht the ( here
-
-> +			if (ret)
-> +				return ret;
->  		} while (val & MESON_SAR_ADC_DELAY_BL30_BUSY && timeout--);
->  
->  		if (timeout < 0) {
-> @@ -784,7 +795,10 @@ static int meson_sar_adc_init(struct iio_dev *indio_dev)
->  		 * BL30 to make sure BL30 gets the values it expects when
->  		 * reading the temperature sensor.
->  		 */
-> -		regmap_read(priv->regmap, MESON_SAR_ADC_REG3, &regval);
-> +		ret = regmap_read(priv->regmap, MESON_SAR_ADC_REG3, &regval);
-> +		if (ret)
-> +			return ret;
-> +
->  		if (regval & MESON_SAR_ADC_REG3_BL30_INITIALIZED)
->  			return 0;
->  	}
-> @@ -1014,7 +1028,11 @@ static irqreturn_t meson_sar_adc_irq(int irq, void *data)
->  	unsigned int cnt, threshold;
->  	u32 regval;
-
-same as above
-
-+       int ret;
-
->  
-> -	regmap_read(priv->regmap, MESON_SAR_ADC_REG0, &regval);
-> +	int ret = regmap_read(priv->regmap, MESON_SAR_ADC_REG0, &regval);
-
-+	ret = regmap_read(priv->regmap, MESON_SAR_ADC_REG0, &regval);
-
-> +
-> +	if (ret)
-> +		return ret;
-> +
->  	cnt = FIELD_GET(MESON_SAR_ADC_REG0_FIFO_COUNT_MASK, regval);
->  	threshold = FIELD_GET(MESON_SAR_ADC_REG0_FIFO_CNT_IRQ_MASK, regval);
->  
-> -- 
-> 2.17.1
-> 
+jon
