@@ -2,154 +2,147 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE8BC4360C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C55C388F3
 	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 03:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58FA8207FA
+	by mail.kernel.org (Postfix) with ESMTP id 7AF182146E
 	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 03:14:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728545AbfI1DJR (ORCPT
+        id S1728513AbfI1DNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 23:09:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33882 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726673AbfI1DJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 23:09:17 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 957561DD4;
-        Sat, 28 Sep 2019 03:09:16 +0000 (UTC)
-Received: from localhost (ovpn-12-27.pek2.redhat.com [10.72.12.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id ABDC35D9C3;
-        Sat, 28 Sep 2019 03:09:13 +0000 (UTC)
-Date:   Sat, 28 Sep 2019 11:09:10 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Dave Young <dyoung@redhat.com>, Lianbo Jiang <lijiang@redhat.com>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org, jgross@suse.com,
-        dhowells@redhat.com, Thomas.Lendacky@amd.com,
-        kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] x86/kdump: Fix 'kmem -s' reported an invalid freepointer
- when SME was active
-Message-ID: <20190928030910.GA5774@MiWiFi-R3L-srv>
-References: <20190920035326.27212-1-lijiang@redhat.com>
- <20190927051518.GA13023@dhcp-128-65.nay.redhat.com>
- <87r241piqg.fsf@x220.int.ebiederm.org>
- <20190928000505.GJ31919@MiWiFi-R3L-srv>
- <875zldp2vj.fsf@x220.int.ebiederm.org>
+        Fri, 27 Sep 2019 23:13:22 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3167 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725990AbfI1DNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 23:13:21 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 55649E13E901CAD785BF;
+        Sat, 28 Sep 2019 11:13:19 +0800 (CST)
+Received: from [127.0.0.1] (10.184.12.158) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Sat, 28 Sep 2019
+ 11:13:10 +0800
+Subject: Re: [PATCH 31/35] irqchip/gic-v4.1: Eagerly vmap vPEs
+To:     Marc Zyngier <maz@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
+        <linux-kernel@vger.kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20190923182606.32100-1-maz@kernel.org>
+ <20190923182606.32100-32-maz@kernel.org>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <82576f6e-3736-8069-bbf2-7744fbea9ed2@huawei.com>
+Date:   Sat, 28 Sep 2019 11:11:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
+ Thunderbird/64.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <875zldp2vj.fsf@x220.int.ebiederm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Sat, 28 Sep 2019 03:09:16 +0000 (UTC)
+In-Reply-To: <20190923182606.32100-32-maz@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.12.158]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/27/19 at 09:32pm, Eric W. Biederman wrote:
-> Baoquan He <bhe@redhat.com> writes:
+On 2019/9/24 2:26, Marc Zyngier wrote:
+> Now that we have HW-accelerated SGIs being delivered to VPEs, it
+> becomes required to map the VPEs on all ITSs instead of relying
+> on the lazy approach that we would use when using the ITS-list
+> mechanism.
 > 
-> > On 09/27/19 at 03:49pm, Eric W. Biederman wrote:
-> >> Dave Young <dyoung@redhat.com> writes:
-> >> >> In order to avoid such problem, lets occupy the first 640k region when
-> >> >> SME is active, which will ensure that the allocated memory does not fall
-> >> >> into the first 640k area. So, no need to worry about whether kernel can
-> >> >> correctly copy the contents of the first 640K area to a backup region in
-> >> >> purgatory().
-> >> 
-> >> We must occupy part of the first 640k so that we can start up secondary
-> >> cpus unless someone has added another way to do that in recent years on
-> >> SME capable cpus.
-> >> 
-> >> Further there is Fimware/BIOS interaction that happens within those
-> >> first 640K.
-> >> 
-> >> Furthermore the kdump kernel needs to be able to read all of the memory
-> >> that the previous kernel could read.  Otherwise we can't get a crash
-> >> dump.
-> >> 
-> >> So I do not think ignoring the first 640K is the correct resolution
-> >> here.
-> >> 
-> >> > The log is too simple,  I know you did some other tries to fix this, but
-> >> > the patch log does not show why you can not correctly copy the 640k in
-> >> > current kdump code, in purgatory here.
-> >> >
-> >> > Also this patch seems works in your test, but still to see if other
-> >> > people can comment and see if it is safe or not, if any other risks
-> >> > other than waste the small chunk of memory.  If it is safe then kdump
-> >> > can just drop the backup logic and use this in common code instead of
-> >> > only do it for SME.
-> >> 
-> >> Exactly.
-> >> 
-> >> I think at best this avoids the symptoms, but does not give a reliable
-> >> crash dump.
-> >
-> > Sorry, didn't notice this comment at bottom.
-> >
-> > From code, currently the first 640K area is needed in two places.
-> > One is for 5-level trampoline during boot compressing stage, in
-> > find_trampoline_placement(). 
-> >
-> > The other is in reserve_real_mode(), as you mentioned, for application
-> > CPU booting.
-> >
-> > Only allow these two put data inside first 640K, then lock it done. It
-> > should not impact crash dump and parsing. And these two's content
-> > doesn't matter.
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>   drivers/irqchip/irq-gic-v3-its.c | 39 +++++++++++++++++++++++++-------
+>   1 file changed, 31 insertions(+), 8 deletions(-)
 > 
-> Do I understand correctly that the idea is that the kernel
-> that may crash will never touch these pages?  And that the reservation
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> index 4aae9582182b..a1e8c4c2598a 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -1417,12 +1417,31 @@ static int its_irq_set_irqchip_state(struct irq_data *d,
+>   	return 0;
+>   }
+>   
+> +/*
+> + * Two favourable cases:
+> + *
+> + * (a) Either we have a GICv4.1, and all vPEs have to be mapped at all times
+> + *     for vSGI delivery
+> + *
+> + * (b) Or the ITSs do not use a list map, meaning that VMOVP is cheap enough
+> + *     and we're better off mapping all VPEs always
+> + *
+> + * If neither (a) nor (b) is true, then we map VLPIs on demand.
+                                                  ^^^^^
+vPEs
 
-Thanks a lot for your comments, Eric.
-
-And yes. Except of the reserved real mode trampoline for secondary cpu if
-the trampoline is allocated in this area, it will be reused. We search area
-for real mode under 1M. Otherwise, the kernel that may crash will never
-touch these pages.
-
-> is not in the kernel that recovers from the crash?  That definitely
-
-You mean kdump kernel? Only the e820 reserved regions which are inserted
-into io_resource will be passed to kdump kernel, memblock reserved
-region is only seen by the present kernel.
-
-But for the content in first 640K, it's not erased, kdump kernel will
-ignore it and take it as a available memory resource into memory
-allocator.
-
-
-> needs a little better description.  I know it is not a lot on modern
-> systems but reserving an extra 1M of memory to avoid having to special
-> case it later seems in need of calling out.
+> + *
+> + */
+> +static bool gic_requires_eager_mapping(void)
+> +{
+> +	if (!its_list_map || gic_rdists->has_rvpeid)
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+>   static void its_map_vm(struct its_node *its, struct its_vm *vm)
+>   {
+>   	unsigned long flags;
+>   
+> -	/* Not using the ITS list? Everything is always mapped. */
+> -	if (!its_list_map)
+> +	if (gic_requires_eager_mapping())
+>   		return;
+>   
+>   	raw_spin_lock_irqsave(&vmovp_lock, flags);
+> @@ -1456,7 +1475,7 @@ static void its_unmap_vm(struct its_node *its, struct its_vm *vm)
+>   	unsigned long flags;
+>   
+>   	/* Not using the ITS list? Everything is always mapped. */
+> -	if (!its_list_map)
+> +	if (gic_requires_eager_mapping())
+>   		return;
+>   
+>   	raw_spin_lock_irqsave(&vmovp_lock, flags);
+> @@ -3957,8 +3976,12 @@ static int its_vpe_irq_domain_activate(struct irq_domain *domain,
+>   	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
+>   	struct its_node *its;
+>   
+> -	/* If we use the list map, we issue VMAPP on demand... */
+> -	if (its_list_map)
+> +	/*
+> +	 * If we use the list map, we issue VMAPP on demand... Unless
+> +	 * we're on a GICv4.1 and we eagerly map the VPE on all ITSs
+> +	 * so that VSGIs can work.
+> +	 */
+> +	if (!gic_requires_eager_mapping())
+>   		return 0;
+>   
+>   	/* Map the VPE to the first possible CPU */
+> @@ -3984,10 +4007,10 @@ static void its_vpe_irq_domain_deactivate(struct irq_domain *domain,
+>   	struct its_node *its;
+>   
+>   	/*
+> -	 * If we use the list map, we unmap the VPE once no VLPIs are
+> -	 * associated with the VM.
+> +	 * If we use the list map on GICv4.0, we unmap the VPE once no
+> +	 * VLPIs are associated with the VM.
+>   	 */
+> -	if (its_list_map)
+> +	if (!gic_requires_eager_mapping())
+>   		return;
+>   
+>   	list_for_each_entry(its, &its_nodes, entry) {
 > 
-> I have an old system around that I think that 640K is about 25% of
-> memory.
 
-Understood. Basically 640K is wasted in this case. But we only do like
-this in SME case, a condition checking is added. And system with SME is
-pretty new model, it may not impact the old system.
 
-> 
-> How we interact with BIOS tables in the first 640k needs some
-> explanation.  Both in the first kernel and in the crash kernel.
+Thanks,
+zenghui
 
-Yes, totally agree.
-
-Those BIOS tables have been reserved as e820 reserved regions and will
-be passed to kdump kernel for reusing. Memblock reserved 640K doesn't
-mean it will cover the whole [0, 640K) region, it only searches for
-available system RAM from memblock allocator.
-
-Thanks
-Baoquan
