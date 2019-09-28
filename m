@@ -2,133 +2,114 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D04C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 17:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBA9C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 17:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD85120866
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 17:24:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1DE020866
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 17:24:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728764AbfI1RXZ (ORCPT
+        id S1729043AbfI1RYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Sep 2019 13:23:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33720 "EHLO mx1.redhat.com"
+        Sat, 28 Sep 2019 13:24:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59420 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725897AbfI1RXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Sep 2019 13:23:24 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        id S1728713AbfI1RXZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Sep 2019 13:23:25 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 82B6690B0A;
-        Sat, 28 Sep 2019 17:23:24 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6588C30ADBAD;
+        Sat, 28 Sep 2019 17:23:25 +0000 (UTC)
 Received: from mail (ovpn-125-159.rdu2.redhat.com [10.10.125.159])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 48291261B8;
-        Sat, 28 Sep 2019 17:23:24 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4386B5D9C3;
+        Sat, 28 Sep 2019 17:23:25 +0000 (UTC)
 From:   Andrea Arcangeli <aarcange@redhat.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH 00/14] KVM monolithic v2
-Date:   Sat, 28 Sep 2019 13:23:09 -0400
-Message-Id: <20190928172323.14663-1-aarcange@redhat.com>
+Subject: [PATCH 06/14] KVM: monolithic: x86: remove __exit section prefix from machine_unsetup
+Date:   Sat, 28 Sep 2019 13:23:15 -0400
+Message-Id: <20190928172323.14663-7-aarcange@redhat.com>
+In-Reply-To: <20190928172323.14663-1-aarcange@redhat.com>
+References: <20190928172323.14663-1-aarcange@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Sat, 28 Sep 2019 17:23:24 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Sat, 28 Sep 2019 17:23:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Adjusts the section prefixes of some KVM x86 code function because
+with the monolithic KVM model the section checker can now do a more
+accurate static analysis at build time and it found a potentially
+kernel crashing bug. This also allows to build without
+CONFIG_SECTION_MISMATCH_WARN_ONLY=n.
 
-as usual the last 4 patches could be splitted off but I did more
-measurements in that area and I altered the commit headers. They're
-fairly small commits compared to the previous part so I kept it
-considering they're needed to benchmark the previous part.
+The __exit removed from machine_unsetup is because
+kvm_arch_hardware_unsetup() is called by kvm_init() which is in the
+__init section. It's not allowed to call a function located in the
+__exit section and dropped during the kernel link from the __init
+section or the kernel will crash if that call is made.
 
-The KVM monolithic enhancement is easy to identify checking the word
-"monolithic" in the subject so there's no confusion about where that
-work stops.
+Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
+---
+ arch/x86/include/asm/kvm_host.h | 4 ++--
+ arch/x86/kvm/svm.c              | 2 +-
+ arch/x86/kvm/vmx/vmx.c          | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-This renames all functions in place mixed up in whatever location they
-existed in svm.c or vmx.c. If they require an inline call they're
-defined now as extern before the kvm_x86_ops structure.
-
-Converting those small kvm_x86 functions to inlines requires more
-Makefile work and header restructuring so it's left for later.
-
-The removal of kvm_x86_ops is also left for later because that
-requires lots of logic changes in the code scattered all over the
-place in KVM code. This patchset tries to do the conversion with as
-few logic changes as possible, so the code works the same and this
-only improves the implementation and the performance.
-
-Doing the conversion plus the logic changes at the same time would
-pose the risk of not being able to identify through bisection if any
-regression is caused by a bug in the conversion or in one small commit
-to alter the logic and to remove the need of one more pointer to
-function.
-
-It's best if each single removal of any pointer to functional change
-is done through a separate small commit. After all those small commits
-done incrementally with this patchset, the kvm_x86_ops structure can
-be deleted.
-
-https://git.kernel.org/pub/scm/linux/kernel/git/andrea/aa.git/log/?h=kvm-mono2
-
-Thanks,
-Andrea
-
-Andrea Arcangeli (14):
-  KVM: monolithic: x86: remove kvm.ko
-  KVM: monolithic: x86: disable linking vmx and svm at the same time
-    into the kernel
-  KVM: monolithic: x86: convert the kvm_x86_ops and kvm_pmu_ops methods
-    to external functions
-  KVM: monolithic: x86: handle the request_immediate_exit variation
-  KVM: monolithic: add more section prefixes in the KVM common code
-  KVM: monolithic: x86: remove __exit section prefix from
-    machine_unsetup
-  KVM: monolithic: x86: remove __init section prefix from
-    kvm_x86_cpu_has_kvm_support
-  KVM: monolithic: x86: remove exports
-  KVM: monolithic: remove exports from KVM common code
-  KVM: monolithic: x86: drop the kvm_pmu_ops structure
-  KVM: x86: optimize more exit handlers in vmx.c
-  KVM: retpolines: x86: eliminate retpoline from vmx.c exit handlers
-  KVM: retpolines: x86: eliminate retpoline from svm.c exit handlers
-  x86: retpolines: eliminate retpoline from msr event handlers
-
- arch/x86/events/intel/core.c    |  11 +
- arch/x86/include/asm/kvm_host.h | 205 +++++++-
- arch/x86/kvm/Kconfig            |  24 +-
- arch/x86/kvm/Makefile           |   5 +-
- arch/x86/kvm/cpuid.c            |  27 +-
- arch/x86/kvm/hyperv.c           |   8 +-
- arch/x86/kvm/irq.c              |   4 -
- arch/x86/kvm/irq_comm.c         |   2 -
- arch/x86/kvm/kvm_cache_regs.h   |  10 +-
- arch/x86/kvm/lapic.c            |  46 +-
- arch/x86/kvm/mmu.c              |  50 +-
- arch/x86/kvm/mmu.h              |   4 +-
- arch/x86/kvm/mtrr.c             |   2 -
- arch/x86/kvm/pmu.c              |  27 +-
- arch/x86/kvm/pmu.h              |  37 +-
- arch/x86/kvm/pmu_amd.c          |  43 +-
- arch/x86/kvm/svm.c              | 682 ++++++++++++++++-----------
- arch/x86/kvm/trace.h            |   4 +-
- arch/x86/kvm/vmx/nested.c       |  84 ++--
- arch/x86/kvm/vmx/pmu_intel.c    |  46 +-
- arch/x86/kvm/vmx/vmx.c          | 795 ++++++++++++++++++--------------
- arch/x86/kvm/vmx/vmx.h          |  39 +-
- arch/x86/kvm/x86.c              | 418 +++++++----------
- arch/x86/kvm/x86.h              |   2 +-
- include/linux/kvm_host.h        |   4 +-
- virt/kvm/eventfd.c              |   1 -
- virt/kvm/kvm_main.c             |  71 +--
- 27 files changed, 1413 insertions(+), 1238 deletions(-)
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 47eeb92d4b4a..0ae65148e5ed 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1008,7 +1008,7 @@ extern int kvm_x86_hardware_enable(void);
+ extern void kvm_x86_hardware_disable(void);
+ extern __init int kvm_x86_check_processor_compatibility(void);
+ extern __init int kvm_x86_hardware_setup(void);
+-extern __exit void kvm_x86_hardware_unsetup(void);
++extern void kvm_x86_hardware_unsetup(void);
+ extern bool kvm_x86_cpu_has_accelerated_tpr(void);
+ extern bool kvm_x86_has_emulated_msr(int index);
+ extern void kvm_x86_cpuid_update(struct kvm_vcpu *vcpu);
+@@ -1199,7 +1199,7 @@ struct kvm_x86_ops {
+ 	void (*hardware_disable)(void);
+ 	int (*check_processor_compatibility)(void);/* __init */
+ 	int (*hardware_setup)(void);               /* __init */
+-	void (*hardware_unsetup)(void);            /* __exit */
++	void (*hardware_unsetup)(void);
+ 	bool (*cpu_has_accelerated_tpr)(void);
+ 	bool (*has_emulated_msr)(int index);
+ 	void (*cpuid_update)(struct kvm_vcpu *vcpu);
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index aa8c0efdc441..057ba1f8d7b3 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -1405,7 +1405,7 @@ __init int kvm_x86_hardware_setup(void)
+ 	return r;
+ }
+ 
+-__exit void kvm_x86_hardware_unsetup(void)
++void kvm_x86_hardware_unsetup(void)
+ {
+ 	int cpu;
+ 
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index aad44e62b20a..2ae162eb082e 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7645,7 +7645,7 @@ __init int kvm_x86_hardware_setup(void)
+ 	return r;
+ }
+ 
+-__exit void kvm_x86_hardware_unsetup(void)
++void kvm_x86_hardware_unsetup(void)
+ {
+ 	if (nested)
+ 		nested_vmx_hardware_unsetup();
