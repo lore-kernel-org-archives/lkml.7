@@ -2,218 +2,182 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E612EC4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 09:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2482C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 09:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 932B22082F
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 09:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 825A720862
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 09:23:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbfI1JHA (ORCPT
+        id S1726603AbfI1JXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Sep 2019 05:07:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58230 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725857AbfI1JHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Sep 2019 05:07:00 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5BE4B3099F56;
-        Sat, 28 Sep 2019 09:06:59 +0000 (UTC)
-Received: from [10.36.116.71] (ovpn-116-71.ams2.redhat.com [10.36.116.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 693B05D9C3;
-        Sat, 28 Sep 2019 09:06:57 +0000 (UTC)
-Subject: Re: [PATCH] mm/page_alloc: fix a crash in free_pages_prepare()
-To:     Alexander Duyck <alexander.duyck@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Qian Cai <cai@lca.pw>, Heiko Carstens <heiko.carstens@de.ibm.com>,
-        gor@linux.ibm.com, borntraeger@de.ibm.com,
-        linux-s390@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <1569613623-16820-1-git-send-email-cai@lca.pw>
- <20190927140222.6f7d0a41b9e734053ee911b9@linux-foundation.org>
- <1569619686.5576.242.camel@lca.pw>
- <20190927145945.846a3f3405d3af066827d3f5@linux-foundation.org>
- <CAKgT0UfZBNmn1aZdvRT6Yvki3LBi_Nr5hjkYeSnpA7S8kY58-Q@mail.gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <5ee9164f-71c5-4082-a80d-8fbc5dc50750@redhat.com>
-Date:   Sat, 28 Sep 2019 11:06:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 28 Sep 2019 05:23:42 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:48209 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbfI1JXm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Sep 2019 05:23:42 -0400
+Received: from p200300d06f16eff20347f9711eb7065e.dip0.t-ipconnect.de ([2003:d0:6f16:eff2:347:f971:1eb7:65e] helo=linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <kurt.kanzenbach@linutronix.de>)
+        id 1iE8wy-0006UX-Qb; Sat, 28 Sep 2019 11:23:36 +0200
+Date:   Sat, 28 Sep 2019 11:23:31 +0200
+From:   Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     Rob Herring <robh@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v6 2/2] dt/bindings: Add bindings for Layerscape external
+ irqs
+Message-ID: <20190928092331.GB1894@linutronix.de>
+References: <20190923101513.32719-1-kurt@linutronix.de>
+ <20190923101513.32719-3-kurt@linutronix.de>
+ <20190927161118.GA19333@bogus>
+ <f63da257-95b4-bcb8-9ba4-9786645caf26@prevas.dk>
 MIME-Version: 1.0
-In-Reply-To: <CAKgT0UfZBNmn1aZdvRT6Yvki3LBi_Nr5hjkYeSnpA7S8kY58-Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Sat, 28 Sep 2019 09:06:59 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="yEPQxsgoJgBvi8ip"
+Content-Disposition: inline
+In-Reply-To: <f63da257-95b4-bcb8-9ba4-9786645caf26@prevas.dk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28.09.19 00:17, Alexander Duyck wrote:
-> On Fri, Sep 27, 2019 at 2:59 PM Andrew Morton <akpm@linux-foundation.org> wrote:
->>
->> On Fri, 27 Sep 2019 17:28:06 -0400 Qian Cai <cai@lca.pw> wrote:
->>
->>>>
->>>> So I think you've moved the arch_free_page() to be after the final
->>>> thing which can access page contents, yes?  If so, we should have a
->>>> comment in free_pages_prepare() to attmept to prevent this problem from
->>>> reoccurring as the code evolves?
->>>
->>> Right, something like this above arch_free_page() there?
->>>
->>> /*
->>>  * It needs to be just above kernel_map_pages(), as s390 could mark those
->>>  * pages unused and then trigger a fault when accessing.
->>>  */
->>
->> I did this.
->>
->> --- a/mm/page_alloc.c~mm-page_alloc-fix-a-crash-in-free_pages_prepare-fix
->> +++ a/mm/page_alloc.c
->> @@ -1179,7 +1179,13 @@ static __always_inline bool free_pages_p
->>                 kernel_init_free_pages(page, 1 << order);
->>
->>         kernel_poison_pages(page, 1 << order, 0);
->> +       /*
->> +        * arch_free_page() can make the page's contents inaccessible.  s390
->> +        * does this.  So nothing which can access the page's contents should
->> +        * happen after this.
->> +        */
->>         arch_free_page(page, order);
->> +
->>         if (debug_pagealloc_enabled())
->>                 kernel_map_pages(page, 1 << order, 0);
->>
-> 
-> So the question I would have is what is the state of the page after it
-> has been marked unused and then pulled back in? I'm assuming it will
-> be all 0s.
 
-I think this comment relates to the s390x implementation, so I'll try to
-explain that. After arch_free_page() the page might have been zapped in
-the hypervisor, but that might happen deferred. The guest ends up
-triggering the ESSA instruction in arch_free_page(). That instruction
-sets some extended-page-table-related ("pgste") bits in the hypervisor
-tables for the guest ("gmap") and fills a buffer with these entries. The
-page is marked _PGSTE_GPS_USAGE_UNUSED.
+--yEPQxsgoJgBvi8ip
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Once the buffer is full, the ESSA instruction intercepts to the
-hypervisor, where the hypervisor can go over all recorded entries and
-zap them *in case* the extended-page-table-related bits still indicate
-that the page is unused by the guest (_PGSTE_GPS_USAGE_UNUSED) or is
-marked to be logically zero (_PGSTE_GPS_ZERO). Zapping a page only
-happens if it's a pte_swap(pte) entry and effectively triggers a
-ptep_zap_unused() -> ptep_zap_swap_entry() -> free_swap_and_cache(). So
-I think it will be backed with the zero page when pulled back in.
+On Fri, Sep 27, 2019 at 09:16:50PM +0000, Rasmus Villemoes wrote:
+> On 27/09/2019 18.11, Rob Herring wrote:
+> > On Mon, Sep 23, 2019 at 12:15:13PM +0200, Kurt Kanzenbach wrote:
+> >> +Required properties:
+> >> +- compatible: should be "fsl,<soc-name>-extirq", e.g. "fsl,ls1021a-extirq".
+> >> +- interrupt-controller: Identifies the node as an interrupt controller
+> >> +- #interrupt-cells: Must be 2. The first element is the index of the
+> >> +  external interrupt line. The second element is the trigger type.
+> >> +- interrupt-parent: phandle of GIC.
+> >> +- reg: Specifies the Interrupt Polarity Control Register (INTPCR) in the SCFG.
+> >> +- fsl,extirq-map: Specifies the mapping to interrupt numbers in the parent
+> >> +  interrupt controller. Interrupts are mapped one-to-one to parent
+> >> +  interrupts.
+> >
+> > This should be an 'interrupt-map' instead.
+>
+> Rob, thanks for your review comments. I know you said the same thing at
+> v5, and it might seem like they are ignored.
 
-arch_alloc_page() will similarly trigger the ESSA instruction but only
-set the extended-page-table-related bits, so the entry is no longer
-_PGSTE_GPS_USAGE_UNUSED. This is basically to make sure a page won't get
-zapped in the hypervisor while it is already getting used by the guest
-again.
+Well, I didn't ignore them. It just wasn't clear to me from the previous
+discussions which way you want to go.
 
-The implementation on the KVM side resides in
-arch/s390/kvm/priv.c:handle_essa() but more importantly in
-arch/s390/kvm/priv.c:__do_essa() ("pure interpretation path skipping
-hardware interpretation completely").
+> However, I asked a couple of followup questions
+> (https://lore.kernel.org/lkml/0bb4533d-c749-d8ff-e1f2-4b08eb724713@prevas.dk/).
+> I'd really appreciate it if you could (a) point to some documentation
+> on how to write that interrupt-map and (b) explain how this is
+> different from the Qualcomm PDC case I tried to copy and which had
+> your Reviewed-By.
 
-Now, one interesting thing resides in
-arch/s390/kvm/priv.c:pgste_perform_essa():
-	/* If we are discarding a page, set it to logical zero */
-	if (res)
-		pgstev |= _PGSTE_GPS_ZERO;
+I guess, we can have a look at other interrupt controllers and how they
+handle the interrupt-map property. For example:
 
-So whenever we do an arch_free_page() in the guest, the page will
-immediately also be set in the hypervisor to _PGSTE_GPS_ZERO. However, I
-think setting the page logically to zero is just an "extended HW state"
-and will not actually result in the page reading zeroes before we
-actually zap it. I might be wrong and I only see one place where
-_PGSTE_GPS_ZERO actually gets cleared again, especially when setting a
-page stable (which looks bogus but as the documentation is confidential
-I have no idea what's happening there).
+ https://www.kernel.org/doc/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
 
-Long story short: I think there is *no guarantee* that
-a) After arch_free_page(), the page is actually zeroed-out
-b) After arch_free_page() the page has been zapped in the hypervisor or
-   will get zapped.
-c) After arch_alloc_page(), the page was actually zeroed-out.
+I need to send a v7 anyway, because I forgot to include the SOC_LS1021A
+in the build process.
 
-I might be wrong, depending on how _PGSTE_GPS_ZERO is actually used.
+>
+> >> +
+> >> +Optional properties:
+> >> +- fsl,bit-reverse: This boolean property should be set on the LS1021A
+> >> +  if the SCFGREVCR register has been set to all-ones (which is usually
+> >> +  the case), meaning that all reads and writes of SCFG registers are
+> >> +  implicitly bit-reversed. Other compatible platforms do not have such
+> >> +  a register.
+> >
+> > Couldn't you just read that register and tell?
+>
+> In theory, yes, but as far as I understand (and as I wrote) it's
+> specific to the ls1021a. Of course one can decide whether it's
+> necessary/possible to read it based on the compatible string, but one
+> would also need an extra reg property to have its address - but that
+> register is not really part of the extirq "device" we're trying to
+> describe. So would it need to be represented as its own subnode of scfg?
 
-However, *if* the page was zapped in the hypervisor
-(free_swap_and_cache()), I think it will get populated using the zero-page.
+Keep in mind, that not all Layerscapes have that feature and the
+corresponding register. As you said that may be handled via compatible
+string. However, the bit-reverse property looks like the simplest
+solution to me.
 
-Also, please not that s390x requires an arch_alloc_page() after an
-arch_free_page(). You cannot simply go ahead and reuse the page after
-arch_alloc_page().
+>
+> If it is set at all, it's done within the first few instructions after
+> reset (before control is even handed to the bootloader), so I see it as
+> a kind of quirk of the hardware. The data sheet says "SCFG bit reverse
+> (SCFG_SCFGREVCR) must be written 0xFFFF_FFFF as a part of initialization
+> sequence before writing to any other SCFG register." which, taken
+> literally, means we don't need the property at all and can just assume
+> it for the ls1021a (i.e., do it based on compatible string alone) - but
+> I think it should be read as "if you're going to write this register, it
+> must be done first thing".
+>
+> > Does this apply to only the extirq register or all of scfg?
+>
+> All of scfg. It really seems like some accident/bad joke coming out of a
+> discussion between a hardware and software engineer on the enumeration
+> of bits, with the hardware guy ending up saying "alright, have it
+> whichever way you want it", causing even more pain :(
+>
+> >> +
+> >> +Example:
+> >> +	scfg: scfg@1570000 {
+> >> +		compatible = "fsl,ls1021a-scfg", "syscon";
+> >> +		#address-cells = <1>;
+> >> +		#size-cells = <0>;
+> >
+> > As the child node(s) are memory mapped, this should not be 0. And you
+> > need 'ranges'.
+>
+> Indeed - I think I understand this a little better now than I did back then.
+>
 
-> 
-> I know with the work I am still doing on marking pages as unused this
-> ends up being an additional item that we will need to pay attention
-> to, however in our case we will just be initializing the page as zero
-> if we end up evicting it from the guest.
+Okay.
 
-Please note that if you are using MADV_FREE instead of MADV_DONTNEED in
-the hypervisor, you might end up with the same guarantees that s390x'
-implementation gives you. Could be, that the page was not zapped/zeroed
-out on the next access. Depends on if the hypervisor was feeling like
-zapping entries marked using MADV_FREE.
-
--- 
+> Thanks,
+> Rasmus
 
 Thanks,
+Kurt
 
-David / dhildenb
+--yEPQxsgoJgBvi8ip
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl2PJpIACgkQeSpbgcuY
+8Kajvg//UY/iWpJ5yvrHwwEiYOH2DbJAxGiyGQVXkHjCReroDWbMPXfY6rxMfz3G
+SesspSgDF0yD2JTfOjvEX343oB+iWJYT+/RWLrfaNQRWcGp3iDp3ZCopXvzMPFpA
+qLpZogd2ttYHSu4gkw4sc6jZcLJ+39Wk5rIO08AyufvPIjPjr8TROfJJgNcEYoyp
+g6DUEheatnqhlk6rGqAlzr+/pLnJocu9gYkeV0IOG07v/HaIfPKzuhYX3yQF+1Vj
+l9t/r+DXfOZLkr4Hq9kItxtlSb498lAb1QE8dbu1LC7Oz155ihujSoPh9Twf6e9b
+h8Ys9ljYH3W+TteL6iqznefoqgz18hE/F6d6GxKx9EmOy2Il/c2c5AtsLMlZEYtf
+pT5iYe+rkToYUofURWi6BhH+kQPLqUTl9p5IORavL26S8lIKmWbaJa9QNRBxV6rc
+HBJSKMd7BB9P8ztqTiXoGyl73JIPWBmIp8knjFnojiHFLYfv6ydt67RpxozB8oU7
+FX+oheQ0r2xh85BAlSdX8seFI73yMigaVIZ8AyUkIm7rlhhtqeB/APf53tJurz3n
+4a2Bmpx42e576fQlyHRsOODk4O596ACqUVYBvg11G/aREsK7luZLilfuzBZ4cybc
+Nlyl7Lx5ksVGO9iZVTKUftFZ4cZIt1xTT6Z37jerdYQ5OyFTk18=
+=3dnz
+-----END PGP SIGNATURE-----
+
+--yEPQxsgoJgBvi8ip--
