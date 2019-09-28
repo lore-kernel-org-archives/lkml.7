@@ -2,179 +2,143 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DB4C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 08:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F88C4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 08:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF4F2075C
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 08:01:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="WN/WcnCQ"
+	by mail.kernel.org (Postfix) with ESMTP id 81B6B2082F
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 08:02:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569657755;
+	bh=7r4x/xOBVKIryWPeO1cbNSCirEK4o0T+ejZK1ZnMUG8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=JrV1R/p8e2iBbkk0t2bQwCa9GYz8jIaYGJu00LL4Bf5hvPjTthmTcATrDcQhtscrg
+	 94AubxE5PXzMNtjEDazHgaC/WNywogcUG7fRED/5j4YrO2oNdyUkrZHO4/xh393h98
+	 ey5OYorRjLB8cT8sKhcdQema0brhDP6FIai53F6U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbfI1IBL (ORCPT
+        id S1726680AbfI1ICe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Sep 2019 04:01:11 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53891 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfI1IBL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Sep 2019 04:01:11 -0400
-Received: by mail-wm1-f68.google.com with SMTP id i16so8159045wmd.3
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Sep 2019 01:01:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9wITyUrwg8h7GjKpTtAxenv9sNKlKE3bGBHmQEB/5os=;
-        b=WN/WcnCQb503cdvTtFyI9tWB+gjSc6Nd53vmFzSu+GfDK4YhvUIuJzYfWOD54xhyN3
-         JIhamxdk0Ev54CnMfXr6Ry3+cP1/N1bJAeyonKucjt0CliM3nCqbs8KkgsVnu4JXuEh9
-         NyY25tDwMbC5/PUldI9fjtAeROrTnTRAiHGR5U7dHAqWfvXd43QFp9zqYyAaPZFg4QHr
-         Oxi9dS/SzqwDP9sk8VSW6LpWWMmvfE9qHAbpiHda0SAnjdhmhOqMNJuWs5DXO3szpkac
-         o63aldu1w14cUtQSur1dpeYWc9cSdba61SREWEC2PczKX3wy6PwCWHY7fhXunHKMA2e7
-         +uOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9wITyUrwg8h7GjKpTtAxenv9sNKlKE3bGBHmQEB/5os=;
-        b=kZxNH5ZW0MlzuAFxlp+/daqJOYkR3c88mqUEV7k8VzIHsGgiw2J3VYoo1nYX8iQRNZ
-         UxiuteD8rKfbVKbr1TU7IEmrg13h9ZSiGsq1QWRsEIzPrK+s/oU8UsGpTY8Zzqbjjkw7
-         UFsie3IyGaduJzJzl8BKa2WFBiCLl9pfAiNBfECZPLqcOhTVB8wh6XaeSyoL7f9rBjqv
-         CbNhE+QKp5Kahlye0XwUz7GAsaqka80POo4uuXLZgAhA8dktmKiMT+TJWBu2uSzJff7W
-         OIu5oYzSCxmG8rvh/xGlwE5q5UkuD9xmg5dVGU5MHR/9TULjt7/ppHGLtdrpPU3S/50/
-         39yA==
-X-Gm-Message-State: APjAAAXIQBUdFSdKuMts+duxcsUBhMt/wKEtkpBjMAT7VzV/tcpTetW5
-        871NFc5ji3kPYE6B2OlSJVzMXuqTupEBkUnVlxcniA==
-X-Google-Smtp-Source: APXvYqzjIsj//YQ6zt+7Uyy1PEs6TJKIuXhk/P1ci7xL5y9q8OIdh8AGNRshtc+iEykR0DtSdTVA7iD6fWhIiEWsO8g=
-X-Received: by 2002:a7b:c84f:: with SMTP id c15mr10421189wml.52.1569657667847;
- Sat, 28 Sep 2019 01:01:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190927231418.83100-1-aou@eecs.berkeley.edu> <CAEUhbmURq0M3sPecxTdOwrB+vP5GB59_Du=7hVsaVMAqO-nk4w@mail.gmail.com>
-In-Reply-To: <CAEUhbmURq0M3sPecxTdOwrB+vP5GB59_Du=7hVsaVMAqO-nk4w@mail.gmail.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Sat, 28 Sep 2019 13:30:57 +0530
-Message-ID: <CAAhSdy2RcFSDtBtf5ecvpxDgu9SoAEWHpm7=9i1uroX2si0BXw@mail.gmail.com>
-Subject: Re: [PATCH v2] riscv: Fix memblock reservation for device tree blob
-To:     Bin Meng <bmeng.cn@gmail.com>
-Cc:     Albert Ou <aou@eecs.berkeley.edu>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 28 Sep 2019 04:02:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45572 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725857AbfI1ICe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Sep 2019 04:02:34 -0400
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47C502075C;
+        Sat, 28 Sep 2019 08:02:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569657753;
+        bh=7r4x/xOBVKIryWPeO1cbNSCirEK4o0T+ejZK1ZnMUG8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=n0p1q46eN85Ic/K8oKeWP3PROrk6h3rnwGiUuKFyROku4hqcdrjA/CMfDbkS24Yxu
+         HNDfkbahjcs73EZuzcblH9xf7qgDoIGj20gsu7eHiJmKhGbdPtuT8n1BLQ4+FAWfRs
+         ypYn2MG9AOXzt/PWtIo+PPNIyscPjQgUK1HW52uI=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Laura Abbott <labbott@redhat.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH v4] arm64: use generic free_initrd_mem()
+Date:   Sat, 28 Sep 2019 11:02:26 +0300
+Message-Id: <1569657746-31672-1-git-send-email-rppt@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 28, 2019 at 11:52 AM Bin Meng <bmeng.cn@gmail.com> wrote:
->
-> On Sat, Sep 28, 2019 at 7:14 AM Albert Ou <aou@eecs.berkeley.edu> wrote:
-> >
-> > This fixes an error with how the FDT blob is reserved in memblock.
-> > An incorrect physical address calculation exposed the FDT header to
-> > unintended corruption, which typically manifested with of_fdt_raw_init()
-> > faulting during late boot after fdt_totalsize() returned a wrong value.
-> > Systems with smaller physical memory sizes more frequently trigger this
-> > issue, as the kernel is more likely to allocate from the DMA32 zone
-> > where bbl places the DTB after the kernel image.
-> >
-> > Commit 671f9a3e2e24 ("RISC-V: Setup initial page tables in two stages")
-> > changed the mapping of the DTB to reside in the fixmap area.
-> > Consequently, early_init_fdt_reserve_self() cannot be used anymore in
-> > setup_bootmem() since it relies on __pa() to derive a physical address,
-> > which does not work with dtb_early_va that is no longer a valid kernel
-> > logical address.
-> >
-> > The reserved[0x1] region shows the effect of the pointer underflow
-> > resulting from the __pa(initial_boot_params) offset subtraction:
-> >
-> > [    0.000000] MEMBLOCK configuration:
-> > [    0.000000]  memory size = 0x000000001fe00000 reserved size = 0x0000000000a2e514
-> > [    0.000000]  memory.cnt  = 0x1
-> > [    0.000000]  memory[0x0]     [0x0000000080200000-0x000000009fffffff], 0x000000001fe00000 bytes flags: 0x0
-> > [    0.000000]  reserved.cnt  = 0x2
-> > [    0.000000]  reserved[0x0]   [0x0000000080200000-0x0000000080c2dfeb], 0x0000000000a2dfec bytes flags: 0x0
-> > [    0.000000]  reserved[0x1]   [0xfffffff080100000-0xfffffff080100527], 0x0000000000000528 bytes flags: 0x0
-> >
-> > With the fix applied:
-> >
-> > [    0.000000] MEMBLOCK configuration:
-> > [    0.000000]  memory size = 0x000000001fe00000 reserved size = 0x0000000000a2e514
-> > [    0.000000]  memory.cnt  = 0x1
-> > [    0.000000]  memory[0x0]     [0x0000000080200000-0x000000009fffffff], 0x000000001fe00000 bytes flags: 0x0
-> > [    0.000000]  reserved.cnt  = 0x2
-> > [    0.000000]  reserved[0x0]   [0x0000000080200000-0x0000000080c2dfeb], 0x0000000000a2dfec bytes flags: 0x0
-> > [    0.000000]  reserved[0x1]   [0x0000000080e00000-0x0000000080e00527], 0x0000000000000528 bytes flags: 0x0
-> >
-> > Fixes: 671f9a3e2e24 ("RISC-V: Setup initial page tables in two stages")
->
-> I also found that with commit 671f9a3e2e24 ("RISC-V: Setup initial
-> page tables in two stages"), when booting the kernel from U-Boot via:
->
-> => bootm $kernel_addr_t - $fdtcontroladdr
-> ($kernel_addr_t = 0x84000000 and $fdtcontroladdr = 0xff741c60)
->
-> kernel does not boot. I looked at people's instructions of booting
-> Linux kernel, and they seem to have such:
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-Thanks for reporting this issue Bin.
+arm64 calls memblock_free() for the initrd area in its implementation of
+free_initrd_mem(), but this call has no actual effect that late in the boot
+process. By the time initrd is freed, all the reserved memory is managed by
+the page allocator and the memblock.reserved is unused, so the only purpose
+of the memblock_free() call is to keep track of initrd memory for debugging
+and accounting.
 
-I will add more information about the relation of FDT location
-with the commit Bin mentioned:
-1. With two staged initial page tables in-place, the first stage
-only maps kernel image so we used FIXMAP to map FDT
-in setup_vm()
-2. Another advantage of using FIXMAP to map FDT is that
-we can now place FDT anywhere in entire memory map. This
-was not possible previously because FDT had to be placed
-after kernel load address for __va() and __pa() to work fine.
+Without the memblock_free() call the only difference between arm64 and the
+generic versions of free_initrd_mem() is the memory poisoning.
 
-The one thing which two-staged page tables missed was to
-remove use of early_init_fdt_reserve_self() which is what
-this patch does.
+Move memblock_free() call to the generic code, enable it there
+for the architectures that define ARCH_KEEP_MEMBLOCK and use the generic
+implementation of free_initrd_mem() on arm64.
 
-Also, the ARM64 Linux also used FIXMAP to map FDT and
-it does not use early_init_fdt_reserve_self() to reserved FDT.
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+---
 
-Anyways, my comments to previous version of this patch
-are taken case so...
+v4:
+* memblock_free() aligned area around the initrd
 
-Reviewed-by: Anup Patel <anup@brainfault.org>
+v3:
+* fix powerpc build
 
-Regards,
-Anup
+v2:
+* add memblock_free() to the generic free_initrd_mem()
+* rebase on the current upstream
 
->
-> => cp.l ${fdtcontroladdr} ${fdt_addr_r} 0x10000
-> => bootm ${kernel_addr_r} - ${fdt_addr_r}
->
-> where ${fdt_addr_r} is 0x88000000, and "bootm 84000000  - 88000000"
-> can make the kernel boot.
->
-> Thanks for the patch. Now "bootm $kernel_addr_t - $fdtcontroladdr" works again!
->
-> Tested-by: Bin Meng <bmeng.cn@gmail.com>
->
-> > Signed-off-by: Albert Ou <aou@eecs.berkeley.edu>
-> > ---
-> >
-> > Changes in v2:
-> > * Changed variable identifier to dtb_early_pa per reviewer feedback.
-> > * Removed whitespace change.
-> >
-> >  arch/riscv/mm/init.c | 12 +++++++++++-
-> >  1 file changed, 11 insertions(+), 1 deletion(-)
-> >
->
-> Regards,
-> Bin
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+
+ arch/arm64/mm/init.c | 12 ------------
+ init/initramfs.c     |  8 ++++++++
+ 2 files changed, 8 insertions(+), 12 deletions(-)
+
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 45c00a5..87a0e3b 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -580,18 +580,6 @@ void free_initmem(void)
+ 	unmap_kernel_range((u64)__init_begin, (u64)(__init_end - __init_begin));
+ }
+ 
+-#ifdef CONFIG_BLK_DEV_INITRD
+-void __init free_initrd_mem(unsigned long start, unsigned long end)
+-{
+-	unsigned long aligned_start, aligned_end;
+-
+-	aligned_start = __virt_to_phys(start) & PAGE_MASK;
+-	aligned_end = PAGE_ALIGN(__virt_to_phys(end));
+-	memblock_free(aligned_start, aligned_end - aligned_start);
+-	free_reserved_area((void *)start, (void *)end, 0, "initrd");
+-}
+-#endif
+-
+ /*
+  * Dump out memory limit information on panic.
+  */
+diff --git a/init/initramfs.c b/init/initramfs.c
+index c47dad0..8ec1be4 100644
+--- a/init/initramfs.c
++++ b/init/initramfs.c
+@@ -10,6 +10,7 @@
+ #include <linux/syscalls.h>
+ #include <linux/utime.h>
+ #include <linux/file.h>
++#include <linux/memblock.h>
+ 
+ static ssize_t __init xwrite(int fd, const char *p, size_t count)
+ {
+@@ -529,6 +530,13 @@ extern unsigned long __initramfs_size;
+ 
+ void __weak free_initrd_mem(unsigned long start, unsigned long end)
+ {
++#ifdef CONFIG_ARCH_KEEP_MEMBLOCK
++	unsigned long aligned_start = ALIGN_DOWN(start, PAGE_SIZE);
++	unsigned long aligned_end = ALIGN(end, PAGE_SIZE);
++
++	memblock_free(__pa(aligned_start), aligned_end - aligned_start);
++#endif
++
+ 	free_reserved_area((void *)start, (void *)end, POISON_FREE_INITMEM,
+ 			"initrd");
+ }
+-- 
+2.7.4
+
