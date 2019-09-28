@@ -2,228 +2,180 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 710BAC4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 01:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 043AAC4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 01:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 332AE20869
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 01:39:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="EYOP3HCT"
+	by mail.kernel.org (Postfix) with ESMTP id D5FD920869
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 01:41:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbfI1BjE (ORCPT
+        id S1728382AbfI1BlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 27 Sep 2019 21:39:04 -0400
-Received: from mail-eopbgr770135.outbound.protection.outlook.com ([40.107.77.135]:39689
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725815AbfI1BjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 27 Sep 2019 21:39:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H+2hJ1NeTV4PoSvl7/DwpFmJ57urHcsyG/LP9B+5VqvQ6G7XppR1eTEuRORIj5BmmcapD0R62RIkB2sdJCVsehtgGulpElEE85xwvPN4HyKEHKlYP54XD94OVx+fVC48M7wMMbtFVuRwutj7HCpVu5G6J8vsmPZwb8qsgpMRyl+RXIPLSdg/Hcl7fnUTjSXQe1NgH0HCGlSVaKXHYcwltgIU5TGaAG2px2LML8aQlIj+Dh2t5bFcdABKdw7YqZ5fNj0cC254UbbdIgK8UBAtmiHYMZjEaXkHxeKtMiEsgVmr+U0SZApIdUy0X4ZjC5AMXbHQUEF5CXDrXFMPja5Kjg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/jGCMCBrUgq/6hw6L80clSR7szmROcDTg60EnlrnwjM=;
- b=Svh9gSVzit2SwYz09mI8TqU5huwTKqwOE7wDj9qEG+tTVBftop4aasTurAU2FUcpbcn44GEfYAxbbhhEoDrJV2aDOCSnQ0qFf+JFAhjIkdudBe+3ucRjdRBi/zXN1OeBqOMQr60sEkIkYoMC2he2LOl5PK1KULuMvwyabyJyMjeG9jQO92Be5gpjPYbpinNa+92BCmW8R8zYleuGNPXPvGnANe1ckY9W+8lCEjHzCw78JD/VEqN8LLQdfwhZ6DKcpzzom/3E7U+lMUJ9p5S9wNGgrYP31+MkVMEOERbpmRj43tVettJ0LZ+HgwXwAR1papwdfEKfR9eHqA15Ns77kA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/jGCMCBrUgq/6hw6L80clSR7szmROcDTg60EnlrnwjM=;
- b=EYOP3HCTSoWo81Qv8yoCrG/tFUNSnDim6t2KPeR2iSqO4zSt4Nilm/muKzRVBVRpAp4N0hUrlzXskuTMs+dpYIPXr0PaRS8b81i/bKEbYehDD2L1z3qg8O8yLgt2FU/dcjpjjpbynQHErrkXEGya4J1QOqozfX9PQvTiXu8G0H8=
-Received: from BN8PR21MB1362.namprd21.prod.outlook.com (20.179.76.155) by
- BN8PR21MB1137.namprd21.prod.outlook.com (20.179.72.96) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.7; Sat, 28 Sep 2019 01:39:00 +0000
-Received: from BN8PR21MB1362.namprd21.prod.outlook.com
- ([fe80::6cea:8074:a394:f20d]) by BN8PR21MB1362.namprd21.prod.outlook.com
- ([fe80::6cea:8074:a394:f20d%9]) with mapi id 15.20.2327.004; Sat, 28 Sep 2019
- 01:39:00 +0000
-From:   Steve MacLean <Steve.MacLean@microsoft.com>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-CC:     Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
-        John Keeping <john@metanate.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Leo Yan <leo.yan@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Brian Robbins <brianrob@microsoft.com>,
-        Tom McDonald <Thomas.McDonald@microsoft.com>,
-        John Salem <josalem@microsoft.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: [PATCH 1/4] perf map: fix overlapped map handling
-Thread-Topic: [PATCH 1/4] perf map: fix overlapped map handling
-Thread-Index: AdV1nTZ8lfM9Cf56S6GO5+sKq8wUvw==
-Date:   Sat, 28 Sep 2019 01:39:00 +0000
-Message-ID: <BN8PR21MB136270949F22A6A02335C238F7800@BN8PR21MB1362.namprd21.prod.outlook.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=stmaclea@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-28T01:38:59.2288447Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ab65d156-f883-4db3-993c-08be3d8ea58e;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Steve.MacLean@microsoft.com; 
-x-originating-ip: [24.163.126.65]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7ae6c3c4-9012-45a4-dde8-08d743b4a2ef
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: BN8PR21MB1137:|BN8PR21MB1137:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN8PR21MB1137A19C8445480D6DF410E3F7800@BN8PR21MB1137.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0174BD4BDA
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(136003)(346002)(39860400002)(366004)(396003)(189003)(199004)(74316002)(8990500004)(66066001)(478600001)(8936002)(52536014)(2906002)(25786009)(8676002)(7736002)(99286004)(4326008)(81156014)(19627235002)(110136005)(7696005)(71190400001)(81166006)(71200400001)(10290500003)(5660300002)(102836004)(316002)(64756008)(7416002)(66446008)(256004)(76116006)(476003)(14454004)(305945005)(486006)(26005)(6506007)(66574012)(14444005)(55016002)(9686003)(66946007)(33656002)(66556008)(186003)(10090500001)(86362001)(6116002)(22452003)(3846002)(6436002)(66476007)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR21MB1137;H:BN8PR21MB1362.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: aNwkRJWlfLUsWOXrUidSwgJHjXDuf6jX0b0zJs20Mit9GiG+2JkwmnHDWjZ5enE5pPZQg2RbJTIeJC/akMtbC1CEgaI+kWO/LfnaA/B9oLWMLauJY6KlLEcS/8R0tcq4h+TuwTLkXaNA2b6sXiLxHn/0wstmXbH5Ln5WUFHwKJWaKqWyrZsUB2/KIKrJS1NE9l9thggBnWa+OFxLuBzw1+VWO0CSP52tkTn3/xb62F9MhJZcXnbt8g4l6y8ie5spJEhlTwk45kVsbDfSFNTsGI9h5MWQTEyLdG0oRnlRAFRX21AC0/ID1/s8We4zyY2of6EE0L2E+dsHCGu8NCLjvu5zN6OUYKwpe13d4Xz74qTM6VsQ2ZxPJPwGV5U7hxVNmLw/yKVqwJ8+0uUgKx3ZtapD3YQr5z/aBd2uZLB8XKs=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 27 Sep 2019 21:41:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60898 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727046AbfI1BlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 27 Sep 2019 21:41:00 -0400
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CAA4581F13
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Sep 2019 01:40:59 +0000 (UTC)
+Received: by mail-pf1-f200.google.com with SMTP id i187so3129576pfc.10
+        for <linux-kernel@vger.kernel.org>; Fri, 27 Sep 2019 18:40:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ky42kKvEgu1tdZiOICEE1JQBSJf2IPpUikQsHQIbtbs=;
+        b=J39/k0vofSqHbH9F5pUfgCFYjuzXe6UFrn1mJu0ZiwG2HVjoF//svJMc1B8qOey50D
+         p2ScfbcUBlVqMBYS9EYIObIEQ6fH4BylYsSCh68tJpfM9CTX4A4qMGHWQoF9mjy70Ruf
+         JoKjJc8gRankOd6nm1CjJQAKmazI6dPF/2ZQX5bqVS/JUWkuRiKzexPOuZaYeyq4YacK
+         sdMwDP1SoRq8CHAQ26MG8lT2mCaji0Rzsn6BEbdfXZ4FIF8kwwL3jZLxxbcI5dN9Mtcc
+         x/ZonjMISrsNQd8ip0KAMhq3TXdQ0u1MTFz77zB5tIW4bAWM8s1aB577VwH/uHXfMtPF
+         VBfA==
+X-Gm-Message-State: APjAAAV8EQ+WrbQrxGbW82tgUHW4FqsKhN/VPTpXO2b70+ybmlnhJUqt
+        Y82EChy/+FmrjZ8X6Uz4w2KbvrKNk7GSOLsO83vxadrLDaLVwWtHwrvFt5pY+GKRKUBrmI/ZJI8
+        IJ0At+YaJHfj+yKWkZ6cXTz0x
+X-Received: by 2002:a17:902:6c:: with SMTP id 99mr8033101pla.89.1569634858862;
+        Fri, 27 Sep 2019 18:40:58 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyBPMPLxsYGBRQQZkg2NdMe7+vlXq7pC8C3qOB86cmiFcfzkMiTyNDISkn8pQJFgJ8cCCb4FQ==
+X-Received: by 2002:a17:902:6c:: with SMTP id 99mr8033093pla.89.1569634858663;
+        Fri, 27 Sep 2019 18:40:58 -0700 (PDT)
+Received: from xz-x1.redhat.com ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id z12sm4196455pfj.41.2019.09.27.18.40.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Sep 2019 18:40:57 -0700 (PDT)
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>, peterx@redhat.com,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: [PATCH] KVM: Unlimit number of ioeventfd assignments for real
+Date:   Sat, 28 Sep 2019 09:40:45 +0800
+Message-Id: <20190928014045.10721-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7ae6c3c4-9012-45a4-dde8-08d743b4a2ef
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Sep 2019 01:39:00.0868
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: q0fJIWwBHQWih2gRRlHvu/QsOoiIUtUy9TCckRAFGGDAjUlzymCXR3dyP2wBUVca6XVEw4RIjadvl2SGu6ninw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR21MB1137
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Whenever an mmap/mmap2 event occurs, the map tree must be updated to add a =
-new
-entry. If a new map overlaps a previous map, the overlapped section of the
-previous map is effectively unmapped, but the non-overlapping sections are
-still valid.
+Previously we've tried to unlimit ioeventfd creation (6ea34c9b78c1,
+"kvm: exclude ioeventfd from counting kvm_io_range limit",
+2013-06-04), because that can be easily done by fd limitations and
+otherwise it can easily reach the current maximum of 1000 iodevices.
+Meanwhile, we still use the counter to limit the maximum allowed kvm
+io devices to be created besides ioeventfd.
 
-maps__fixup_overlappings() is responsible for creating any new map entries =
-from
-the previously overlapped map. It optionally creates a before and an after =
-map.
+6ea34c9b78c1 achieved that in most cases, however it'll still fali the
+ioeventfd creation when non-ioeventfd io devices overflows to 1000.
+Then the next ioeventfd creation will fail while logically it should
+be the next non-ioeventfd iodevice creation to fail.
 
-When creating the after map the existing code failed to adjust the map.pgof=
-f.
-This meant the new after map would incorrectly calculate the file offset
-for the ip. This results in incorrect symbol name resolution for any ip in =
-the
-after region.
+That's not really a big problem at all because when it happens it
+probably means something has leaked in userspace (or even malicious
+program) so it's a bug to fix there.  However the error message like
+"ioeventfd creation failed" with an -ENOSPACE is really confusing and
+may let people think about the fact that it's the ioeventfd that is
+leaked (while in most cases it's not!).
 
-Make maps__fixup_overlappings() correctly populate map.pgoff.
+Let's use this patch to unlimit the creation of ioeventfd for real
+this time, assuming this is also a bugfix of 6ea34c9b78c1.  To me more
+importantly, when with a bug in userspace this patch can probably give
+us another more meaningful failure on what has overflowed/leaked
+rather than "ioeventfd creation failure: -ENOSPC".
 
-Add an assert that new mapping matches old mapping at the beginning of
-the after map.
-
-Committer-testing:
-
-Validated correct parsing of libcoreclr.so symbols from .NET Core 3.0 previ=
-ew9
-(which didn't strip symbols).
-
-Preparation:
-
-~/dotnet3.0-preview9/dotnet new webapi -o perfSymbol
-cd perfSymbol
-~/dotnet3.0-preview9/dotnet publish
-perf record ~/dotnet3.0-preview9/dotnet \
-    bin/Debug/netcoreapp3.0/publish/perfSymbol.dll
-^C
-
-Before:
-
-perf script --show-mmap-events 2>&1 | grep -e MMAP -e unknown |\
-   grep libcoreclr.so | head -n 4
-      dotnet  1907 373352.698780: PERF_RECORD_MMAP2 1907/1907: \
-          [0x7fe615726000(0x768000) @ 0 08:02 5510620 765057155]: \
-          r-xp .../3.0.0-preview9-19423-09/libcoreclr.so
-      dotnet  1907 373352.701091: PERF_RECORD_MMAP2 1907/1907: \
-          [0x7fe615974000(0x1000) @ 0x24e000 08:02 5510620 765057155]: \
-          rwxp .../3.0.0-preview9-19423-09/libcoreclr.so
-      dotnet  1907 373352.701241: PERF_RECORD_MMAP2 1907/1907: \
-          [0x7fe615c42000(0x1000) @ 0x51c000 08:02 5510620 765057155]: \
-          rwxp .../3.0.0-preview9-19423-09/libcoreclr.so
-      dotnet  1907 373352.705249:     250000 cpu-clock: \
-           7fe6159a1f99 [unknown] \
-           (.../3.0.0-preview9-19423-09/libcoreclr.so)
-
-After:
-
-perf script --show-mmap-events 2>&1 | grep -e MMAP -e unknown |\
-   grep libcoreclr.so | head -n 4
-      dotnet  1907 373352.698780: PERF_RECORD_MMAP2 1907/1907: \
-          [0x7fe615726000(0x768000) @ 0 08:02 5510620 765057155]: \
-          r-xp .../3.0.0-preview9-19423-09/libcoreclr.so
-      dotnet  1907 373352.701091: PERF_RECORD_MMAP2 1907/1907: \
-          [0x7fe615974000(0x1000) @ 0x24e000 08:02 5510620 765057155]: \
-          rwxp .../3.0.0-preview9-19423-09/libcoreclr.so
-      dotnet  1907 373352.701241: PERF_RECORD_MMAP2 1907/1907: \
-          [0x7fe615c42000(0x1000) @ 0x51c000 08:02 5510620 765057155]: \
-          rwxp .../3.0.0-preview9-19423-09/libcoreclr.so
-
-All the [unknown] symbols were resolved.
-
-Tested-by: Brian Robbins <brianrob@microsoft.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Steve MacLean <Steve.MacLean@Microsoft.com>
+CC: Dr. David Alan Gilbert <dgilbert@redhat.com>
+Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- tools/perf/util/map.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/linux/kvm_host.h |  3 +++
+ virt/kvm/eventfd.c       |  4 ++--
+ virt/kvm/kvm_main.c      | 23 ++++++++++++++++++++---
+ 3 files changed, 25 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 5b83ed1..eec9b28 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "symbol.h"
-+#include <assert.h>
- #include <errno.h>
- #include <inttypes.h>
- #include <limits.h>
-@@ -850,6 +851,8 @@ static int maps__fixup_overlappings(struct maps *maps, =
-struct map *map, FILE *fp
- 			}
-=20
- 			after->start =3D map->end;
-+			after->pgoff +=3D map->end - pos->start;
-+			assert(pos->map_ip(pos, map->end) =3D=3D after->map_ip(after, map->end)=
-);
- 			__map_groups__insert(pos->groups, after);
- 			if (verbose >=3D 2 && !use_browser)
- 				map__fprintf(after, fp);
---=20
-2.7.4
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index fcb46b3374c6..d8530e7d85d4 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -192,6 +192,9 @@ int kvm_io_bus_read(struct kvm_vcpu *vcpu, enum kvm_bus bus_idx, gpa_t addr,
+ 		    int len, void *val);
+ int kvm_io_bus_register_dev(struct kvm *kvm, enum kvm_bus bus_idx, gpa_t addr,
+ 			    int len, struct kvm_io_device *dev);
++int kvm_io_bus_register_dev_ioeventfd(struct kvm *kvm, enum kvm_bus bus_idx,
++				      gpa_t addr, int len,
++				      struct kvm_io_device *dev);
+ void kvm_io_bus_unregister_dev(struct kvm *kvm, enum kvm_bus bus_idx,
+ 			       struct kvm_io_device *dev);
+ struct kvm_io_device *kvm_io_bus_get_dev(struct kvm *kvm, enum kvm_bus bus_idx,
+diff --git a/virt/kvm/eventfd.c b/virt/kvm/eventfd.c
+index 67b6fc153e9c..3cb0e1c3279b 100644
+--- a/virt/kvm/eventfd.c
++++ b/virt/kvm/eventfd.c
+@@ -823,8 +823,8 @@ static int kvm_assign_ioeventfd_idx(struct kvm *kvm,
+ 
+ 	kvm_iodevice_init(&p->dev, &ioeventfd_ops);
+ 
+-	ret = kvm_io_bus_register_dev(kvm, bus_idx, p->addr, p->length,
+-				      &p->dev);
++	ret = kvm_io_bus_register_dev_ioeventfd(kvm, bus_idx, p->addr,
++						p->length, &p->dev);
+ 	if (ret < 0)
+ 		goto unlock_fail;
+ 
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index c6a91b044d8d..242cfcaa9a56 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -3809,8 +3809,10 @@ int kvm_io_bus_read(struct kvm_vcpu *vcpu, enum kvm_bus bus_idx, gpa_t addr,
+ }
+ 
+ /* Caller must hold slots_lock. */
+-int kvm_io_bus_register_dev(struct kvm *kvm, enum kvm_bus bus_idx, gpa_t addr,
+-			    int len, struct kvm_io_device *dev)
++static int __kvm_io_bus_register_dev(struct kvm *kvm, enum kvm_bus bus_idx,
++				     gpa_t addr, int len,
++				     struct kvm_io_device *dev,
++				     bool check_limit)
+ {
+ 	int i;
+ 	struct kvm_io_bus *new_bus, *bus;
+@@ -3821,7 +3823,8 @@ int kvm_io_bus_register_dev(struct kvm *kvm, enum kvm_bus bus_idx, gpa_t addr,
+ 		return -ENOMEM;
+ 
+ 	/* exclude ioeventfd which is limited by maximum fd */
+-	if (bus->dev_count - bus->ioeventfd_count > NR_IOBUS_DEVS - 1)
++	if (check_limit &&
++	    (bus->dev_count - bus->ioeventfd_count > NR_IOBUS_DEVS - 1))
+ 		return -ENOSPC;
+ 
+ 	new_bus = kmalloc(struct_size(bus, range, bus->dev_count + 1),
+@@ -3851,6 +3854,20 @@ int kvm_io_bus_register_dev(struct kvm *kvm, enum kvm_bus bus_idx, gpa_t addr,
+ 	return 0;
+ }
+ 
++int kvm_io_bus_register_dev(struct kvm *kvm, enum kvm_bus bus_idx, gpa_t addr,
++			    int len, struct kvm_io_device *dev)
++{
++	return __kvm_io_bus_register_dev(kvm, bus_idx, addr, len, dev, true);
++}
++
++int kvm_io_bus_register_dev_ioeventfd(struct kvm *kvm, enum kvm_bus bus_idx,
++				      gpa_t addr, int len,
++				      struct kvm_io_device *dev)
++{
++	return __kvm_io_bus_register_dev(kvm, bus_idx, addr, len, dev, false);
++}
++
++
+ /* Caller must hold slots_lock. */
+ void kvm_io_bus_unregister_dev(struct kvm *kvm, enum kvm_bus bus_idx,
+ 			       struct kvm_io_device *dev)
+-- 
+2.21.0
+
