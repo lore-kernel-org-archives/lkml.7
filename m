@@ -2,176 +2,128 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCC4C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 17:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D90FC32793
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 18:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5DF620863
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 17:54:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="xPFANoLR"
+	by mail.kernel.org (Postfix) with ESMTP id EE03B20866
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 18:06:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbfI1RyQ (ORCPT
+        id S1728661AbfI1SGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Sep 2019 13:54:16 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:49127 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbfI1RyP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Sep 2019 13:54:15 -0400
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x8SHrwTn000817;
-        Sun, 29 Sep 2019 02:53:58 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x8SHrwTn000817
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1569693239;
-        bh=0Gd7o+697MeBCUqaaUAEfXA11UsBOCRd4GDceG/VWV4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=xPFANoLRpX3aNeemf3C7gLC4sZ7YE7Q5QlSE0KS3GgrbAgkF7INARMIm+s9FhcTMw
-         m+xT3uOIuLPZk5TDTa7CvpChMnLjkiMJInpniRGnxGySUGDS1JKTXHGRxdVqjj55gA
-         Jh6NndGojJLx3IoCfS9CwK+nhEhj/fEJQp6mvWKQW36ZVTL/JLFKEvrAd+olzj64u2
-         8V2e4eXCwcP90UtSUyTIg5Qzs/cj7UXXiH16ruZFg4yAu10Xo79Fjpz8SXypfOc596
-         Ii0lLSuPkx1F5dOocTfQDA74GJLD7aq5kZcQzsAn+/vg5DHTJeCVlpZSf9v3F0DQeL
-         QfpfGNpwjkvRw==
-X-Nifty-SrcIP: [209.85.217.52]
-Received: by mail-vs1-f52.google.com with SMTP id p13so4058783vsr.4;
-        Sat, 28 Sep 2019 10:53:58 -0700 (PDT)
-X-Gm-Message-State: APjAAAV4RAVCoyZ2f6fRY5GfQ8H+tQTzHMZpaVux9I9K/0DkEBPKczHz
-        w/wi5oOzgTPN9RkrV1SrXX0p8+hOAVKNFD/unzI=
-X-Google-Smtp-Source: APXvYqzswS2+WFLQdAXZWkoQOfsSbayR7ZmaqNEdTu0Bi2gncoF0XyLVOTRaza3guM2TSyOyfuZU/b+7FdMS3e/zRxM=
-X-Received: by 2002:a67:1a41:: with SMTP id a62mr6023749vsa.54.1569693237601;
- Sat, 28 Sep 2019 10:53:57 -0700 (PDT)
+        Sat, 28 Sep 2019 14:06:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40792 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728569AbfI1SGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Sep 2019 14:06:09 -0400
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2FA63369DA
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Sep 2019 18:06:08 +0000 (UTC)
+Received: by mail-qt1-f200.google.com with SMTP id n59so9154065qtd.8
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Sep 2019 11:06:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=d0byJOIsz1lqJ5hnq+jj0W7I6Ibu7N/QFdfVSTVCzMo=;
+        b=Pk3SuRMNQN1XsQhnqnBYG15skYhwAkSVVT9b6O6hTm0zAPTQGImgVrwySdv58yyeLt
+         jOjy56r13sjsd8jGI9mvh6Zcc0D62MrzgVTk76UM7MFqXtgc/vSEZbz4qXLpKg2/skWG
+         ng/RzF/za7oGs3PTUsym8mX+B+Dc2EIljRGFwmaW1+iU26ymR9N3noDGUeku8vkF0eiP
+         c4E0a8z3cgPekFIuGSEPjubJ2ZA2RykGIOvtyZUprSwxaqSye6Y/IvgdPrTQWHtvZpQu
+         oMsHV6L7EW50VkEV2/mTzy12VWMrUekdgMXO8OfxkKXqplEaFm4uSnSQ+3R4djpQ96eD
+         238g==
+X-Gm-Message-State: APjAAAV/Q+nB4P0bJjEVk+xnbGVnFJLwI49Vsbn0CmfF4djMkkorJG64
+        OSZhhg/5biRK29yhyV/bD2fDRt6wjekWX3b0F2Xdcfo+FA4MWg8Bohia+7FQjr84Lr12RZyeVx1
+        r96P1M40kzAwtbYsICi2aK4EH
+X-Received: by 2002:a37:aa58:: with SMTP id t85mr11009827qke.381.1569693967477;
+        Sat, 28 Sep 2019 11:06:07 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqztxQPbojuWzD2tjs1KlNLYklUTuFbRfAwL7mz2CmOFv1UcY4AcvsgovDjiYI9wdsF0ybTlZg==
+X-Received: by 2002:a37:aa58:: with SMTP id t85mr11009800qke.381.1569693967176;
+        Sat, 28 Sep 2019 11:06:07 -0700 (PDT)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id d40sm5647462qtk.6.2019.09.28.11.06.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Sep 2019 11:06:06 -0700 (PDT)
+Date:   Sat, 28 Sep 2019 11:05:59 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-integrity@vger.kernel.org, stable@vger.kernel.org,
+        David Howells <dhowells@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] KEYS: asym_tpm: Switch to get_random_bytes()
+Message-ID: <20190928180559.jivt5zlisr43fnva@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-integrity@vger.kernel.org, stable@vger.kernel.org,
+        David Howells <dhowells@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        "open list:CRYPTO API" <linux-crypto@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190926171601.30404-1-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-References: <20190926224014.28910-1-skhan@linuxfoundation.org>
-In-Reply-To: <20190926224014.28910-1-skhan@linuxfoundation.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sun, 29 Sep 2019 02:53:21 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASNOUwnS1=FStKCpPPxDVv=43F_dgvZehJnWQUXj4ER-g@mail.gmail.com>
-Message-ID: <CAK7LNASNOUwnS1=FStKCpPPxDVv=43F_dgvZehJnWQUXj4ER-g@mail.gmail.com>
-Subject: Re: [PATCH v2] selftests: Add kselftest-all and kselftest-install targets
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        "Cc: Shuah Khan" <shuah@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190926171601.30404-1-jarkko.sakkinen@linux.intel.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 7:40 AM Shuah Khan <skhan@linuxfoundation.org> wrote:
+On Thu Sep 26 19, Jarkko Sakkinen wrote:
+>Only the kernel random pool should be used for generating random numbers.
+>TPM contributes to that pool among the other sources of entropy. In here it
+>is not, agreed, absolutely critical because TPM is what is trusted anyway
+>but in order to remove tpm_get_random() we need to first remove all the
+>call sites.
 >
-> Add kselftest-all target to build tests from the top level
-> Makefile. This is to simplify kselftest use-cases for CI and
-> distributions where build and test systems are different.
+>Cc: stable@vger.kernel.org
+>Fixes: 0c36264aa1d5 ("KEYS: asym_tpm: Add loadkey2 and flushspecific [ver #2]")
+>Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+>---
+> crypto/asymmetric_keys/asym_tpm.c | 7 ++-----
+> 1 file changed, 2 insertions(+), 5 deletions(-)
 >
-> Current kselftest target builds and runs tests on a development
-> system which is a developer use-case.
+>diff --git a/crypto/asymmetric_keys/asym_tpm.c b/crypto/asymmetric_keys/asym_tpm.c
+>index 76d2ce3a1b5b..c14b8d186e93 100644
+>--- a/crypto/asymmetric_keys/asym_tpm.c
+>+++ b/crypto/asymmetric_keys/asym_tpm.c
+>@@ -6,6 +6,7 @@
+> #include <linux/kernel.h>
+> #include <linux/seq_file.h>
+> #include <linux/scatterlist.h>
+>+#include <linux/random.h>
+> #include <linux/tpm.h>
+> #include <linux/tpm_command.h>
+> #include <crypto/akcipher.h>
+>@@ -54,11 +55,7 @@ static int tpm_loadkey2(struct tpm_buf *tb,
+> 	}
 >
-> Add kselftest-install target to install tests from the top level
-> Makefile. This is to simplify kselftest use-cases for CI and
-> distributions where build and test systems are different.
+> 	/* generate odd nonce */
+>-	ret = tpm_get_random(NULL, nonceodd, TPM_NONCE_SIZE);
+>-	if (ret < 0) {
+>-		pr_info("tpm_get_random failed (%d)\n", ret);
+>-		return ret;
+>-	}
+>+	get_random_bytes(nonceodd, TPM_NONCE_SIZE);
 >
-> This change addresses requests from developers and testers to add
-> support for installing kselftest from the main Makefile.
->
-> In addition, make the install directory the same when install is
-> run using "make kselftest-install" or by running kselftest_install.sh.
-> Also fix the INSTALL_PATH variable conflict between main Makefile and
-> selftests Makefile.
->
-> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-
-For the top Makefile change:
-
-Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-
-
-> ---
-> Changes since v1:
-> - Collpased two patches that added separate targets to
->   build and install into one patch using pattern rule to
->   invoke all, install, and clean targets from main Makefile.
->
->  Makefile                                     | 5 ++---
->  tools/testing/selftests/Makefile             | 8 ++++++--
->  tools/testing/selftests/kselftest_install.sh | 4 ++--
->  3 files changed, 10 insertions(+), 7 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index d456746da347..ec296c60c1af 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1237,9 +1237,8 @@ PHONY += kselftest
->  kselftest:
->         $(Q)$(MAKE) -C $(srctree)/tools/testing/selftests run_tests
->
-> -PHONY += kselftest-clean
-> -kselftest-clean:
-> -       $(Q)$(MAKE) -C $(srctree)/tools/testing/selftests clean
-> +kselftest-%: FORCE
-> +       $(Q)$(MAKE) -C $(srctree)/tools/testing/selftests $*
->
->  PHONY += kselftest-merge
->  kselftest-merge:
-> diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-> index c3feccb99ff5..bad18145ed1a 100644
-> --- a/tools/testing/selftests/Makefile
-> +++ b/tools/testing/selftests/Makefile
-> @@ -171,9 +171,12 @@ run_pstore_crash:
->  # 1. output_dir=kernel_src
->  # 2. a separate output directory is specified using O= KBUILD_OUTPUT
->  # 3. a separate output directory is specified using KBUILD_OUTPUT
-> +# Avoid conflict with INSTALL_PATH set by the main Makefile
->  #
-> -INSTALL_PATH ?= $(BUILD)/install
-> -INSTALL_PATH := $(abspath $(INSTALL_PATH))
-> +KSFT_INSTALL_PATH ?= $(BUILD)/kselftest_install
-> +KSFT_INSTALL_PATH := $(abspath $(KSFT_INSTALL_PATH))
-> +# Avoid changing the rest of the logic here and lib.mk.
-> +INSTALL_PATH := $(KSFT_INSTALL_PATH)
->  ALL_SCRIPT := $(INSTALL_PATH)/run_kselftest.sh
->
->  install: all
-> @@ -203,6 +206,7 @@ ifdef INSTALL_PATH
->                 echo "[ -w /dev/kmsg ] && echo \"kselftest: Running tests in $$TARGET\" >> /dev/kmsg" >> $(ALL_SCRIPT); \
->                 echo "cd $$TARGET" >> $(ALL_SCRIPT); \
->                 echo -n "run_many" >> $(ALL_SCRIPT); \
-> +               echo -n "Emit Tests for $$TARGET\n"; \
->                 $(MAKE) -s --no-print-directory OUTPUT=$$BUILD_TARGET -C $$TARGET emit_tests >> $(ALL_SCRIPT); \
->                 echo "" >> $(ALL_SCRIPT);           \
->                 echo "cd \$$ROOT" >> $(ALL_SCRIPT); \
-> diff --git a/tools/testing/selftests/kselftest_install.sh b/tools/testing/selftests/kselftest_install.sh
-> index ec304463883c..e2e1911d62d5 100755
-> --- a/tools/testing/selftests/kselftest_install.sh
-> +++ b/tools/testing/selftests/kselftest_install.sh
-> @@ -24,12 +24,12 @@ main()
->                 echo "$0: Installing in specified location - $install_loc ..."
->         fi
->
-> -       install_dir=$install_loc/kselftest
-> +       install_dir=$install_loc/kselftest_install
->
->  # Create install directory
->         mkdir -p $install_dir
->  # Build tests
-> -       INSTALL_PATH=$install_dir make install
-> +       KSFT_INSTALL_PATH=$install_dir make install
->  }
->
->  main "$@"
-> --
-> 2.20.1
+> 	/* calculate authorization HMAC value */
+> 	ret = TSS_authhmac(authdata, keyauth, SHA1_DIGEST_SIZE, enonce,
+>-- 
+>2.20.1
 >
 
-
--- 
-Best Regards
-Masahiro Yamada
+Should tpm_unbind and tpm_sign in asym_tpm.c be switched as well then?
