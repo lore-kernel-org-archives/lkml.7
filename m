@@ -2,269 +2,185 @@ Return-Path: <SRS0=c662=XX=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D63C4360C
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 22:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BEFC4360C
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 22:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05F612081B
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 22:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DF0D2081B
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Sep 2019 22:29:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BSkK+t1r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728886AbfI1WYs (ORCPT
+        id S1728908AbfI1W3r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Sep 2019 18:24:48 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:49227 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728815AbfI1WYr (ORCPT
+        Sat, 28 Sep 2019 18:29:47 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45121 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728742AbfI1W3r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Sep 2019 18:24:47 -0400
-Received: from pd9ef19d4.dip0.t-ipconnect.de ([217.239.25.212] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iEL8q-0004Lq-Tp; Sun, 29 Sep 2019 00:24:41 +0200
-Date:   Sun, 29 Sep 2019 00:24:28 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Nicholas Mc Guire <hofrat@opentech.at>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: x86/random: Speculation to the rescue
-Message-ID: <alpine.DEB.2.21.1909290010500.2636@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sat, 28 Sep 2019 18:29:47 -0400
+Received: by mail-pl1-f193.google.com with SMTP id u12so2409103pls.12
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Sep 2019 15:29:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=AEZIJNzLPkvsFCAzQm/Iaj2JvjR7Pra3pBs/P444LIA=;
+        b=BSkK+t1rem246jzTlalFkAqga0guUSSHEtLeWsO53LpfnYU8auIx7CY0mBtnOPsJj4
+         j2qQoHhjaY0tNJLUvqL+kp8MCT/ZALu+qi0chkb23g8V6uL2puNyFG3Bd5vRDoeE9jNW
+         7HjCZtbQcPuhtKZor75t//6X0o4tgcXfSSp7MJJZnV9SFTdhAWpP//cJEN28G9Qq8A4c
+         f51FjRPp809BtL29997NaessI83my1iTO59aic4Y5eOcErQLmADUGLZbQmDXvuZNQleK
+         vqSsfkaZWdlTdRQ/QwUQxIoelmJaxmsafhVeqHg5K0T3e5YfEtX/rlJs5aWnji54E8Us
+         5orA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:references:date
+         :in-reply-to:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=AEZIJNzLPkvsFCAzQm/Iaj2JvjR7Pra3pBs/P444LIA=;
+        b=ax29ThzCMabHdU544y2XXQ6dlBJsoBjnxDb3gDJwYTI391DWPL3ia4u6qW2gyc7G2z
+         v7Sc51jD2FvnFPCwVkmiY45RS+VIlOveVENxIXdSLHjeNqhPWyX85XrGXjaVOb19HJM2
+         BWcWft1XTM4T9eHOLTvLQTAnjn4apuqkbNhDi7+RxFqK5hyNmonxvimtVdpiWT4vtzM3
+         KLKVcMpAYU58o6fkfxAC0DBjbbyqFGkCG/c0ciALyqJ6ZftIiCWp88XSiZC/9CwRu725
+         46L+UozT350f7X56xZHOeYjRRDLknlv3cfSjGvkPY4131jXRutxHq5eF/F5NiJJx9GdV
+         ba8w==
+X-Gm-Message-State: APjAAAU6JXRLLavYWKWiNu/tL0EGyVPSYl9r2PDCwPq0Qm9+Ou4mwatp
+        ggKZVNndwXPWTNH7eHAuNEj0FJaq
+X-Google-Smtp-Source: APXvYqzGYJWDyRmqlR5Cog13s33yU172iG9Cc4yeeElgqsj8+wAdrSKTn883Cw79/gd/0DzEJRM8Hw==
+X-Received: by 2002:a17:902:144:: with SMTP id 62mr12562357plb.70.1569709786041;
+        Sat, 28 Sep 2019 15:29:46 -0700 (PDT)
+Received: from alun-evanss-mbpr.local ([2001:5a8:4:3d80:2137:a395:5c87:9605])
+        by smtp.gmail.com with ESMTPSA id 19sm8666721pjd.23.2019.09.28.15.29.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Sep 2019 15:29:45 -0700 (PDT)
+From:   Alun Evans <alun@badgerous.net>
+To:     ebiederm@xmission.com (Eric W. Biederman)
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 05/27] containers: Open a socket inside a container
+References: <m2o8z7t2w5.fsf@badgerous.net>
+        <871rw1yey8.fsf@x220.int.ebiederm.org>
+Date:   Sat, 28 Sep 2019 15:29:44 -0700
+In-Reply-To: <871rw1yey8.fsf@x220.int.ebiederm.org> (Eric W. Biederman's
+        message of "Fri, 27 Sep 2019 09:46:39 -0500")
+Message-ID: <m2d0fkt5pj.fsf@badgerous.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (darwin)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nicholas presented the idea to (ab)use speculative execution for random
-number generation years ago at the Real-Time Linux Workshop:
 
-   https://static.lwn.net/images/conf/rtlws11/random-hardware.pdf
 
-The idea is to use the non-constant execution time of loops on speculative
-CPUs. The trick is to "time" the execution with rdtsc() and having enough
-other instructions within the loop which make the uops scheduling
-non-deterministic.
+On Fri 27 Sep '19 at 07:46 ebiederm@xmission.com (Eric W. Biederman) wrote:
+>=20
+> Alun Evans <alun@badgerous.net> writes:
+>
+>> Hi Eric,
+>>
+>>
+>> On Tue, 19 Feb 2019, Eric W. Biederman <ebiederm@xmission.com> wrote:
+>>>
+>>> David Howells <dhowells@redhat.com> writes:
+>>>
+>>> > Provide a system call to open a socket inside of a container, using t=
+hat
+>>> > container's network namespace.  This allows netlink to be used to man=
+age
+>>> > the container.
+>>> >
+>>> > 	fd =3D container_socket(int container_fd,
+>>> > 			      int domain, int type, int protocol);
+>>> >
+>>>
+>>> Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+>>>
+>>> Use a namespace file descriptor if you need this.  So far we have not
+>>> added this system call as it is just a performance optimization.  And it
+>>> has been too niche to matter.
+>>>
+>>> If this that has changed we can add this separately from everything else
+>>> you are doing here.
+>>
+>> I think I've found the niche.
+>>
+>>
+>> I'm trying to use network namespaces from Go.
+>
+> Yes. Go sucks for this.
 
-A trivial loop:
+Haha... Neither confirm nor deny.
 
-	for (i = 0; i < nbits; i++) {
-		t = rdtsc();
-		if (t & 0x01ULL)
-			d |= (1ULL << i);
-	}
+>> Since setns is thread
+>> specific, I'm forced to use this pattern:
+>>
+>>     runtime.LockOSThread()
+>>     defer runtime.UnlockOSThread()
+>>     =E2=80=A6
+>>     err =3D netns.Set(newns)
+>>
+>>
+>> This is only safe recently:
+>> https://github.com/vishvananda/netns/issues/17#issuecomment-367325770
+>>
+>> - but is still less than ideal performance wise, as it locks out other
+>>   socket operations.
+>>
+>> The socketat() / socketns() would be ideal:
+>>
+>>   https://lwn.net/Articles/406684/
+>>   https://lwn.net/Articles/407495/
+>>   https://lkml.org/lkml/2011/10/3/220
+>>
+>>
+>> One thing that is interesting, the LockOSThread works pretty well for
+>> receiving, since I can wrap it around the socket()/bind()/listen() at
+>> startup. Then accept() can run outside of the lock.
+>>
+>> It's creating new outbound tcp connections via socket()/connect() pairs
+>> that is the issue.
+>
+> As I understand it you should be able to write socketat in go something l=
+ike:
+>
+>         runtime.LockOSThread()
+>         err =3D netns.Set(newns);
+>         fd =3D socket(...);
+>         err =3D netns.Set(defaultns);
+>         runtime.UnlockOSThread()
 
-does not provide enough entropy, but adding a pointless construct into the
-loop makes it work:
+Yeah, this is currently what I'm having to do. It's painful because due
+to the Go runtime model of a single OS netpoller thread, locking the OS
+thread to the current goroutine blocks out the other goroutines doing
+network I/O.
 
-	for (i = 0; i < nbits; i++) {
-		t = __sw_hweight64(rdtsc() + rdtsc();
-		if (t & 0x01ULL)
-			d |= (1ULL << i);
-	}
+> I have no real objections to a kernel system call doing that.  It has
+> just never risen to the level where it was necessary to optimize
+> userspace yet.
 
-The interesting part is that rdtsc() can be speculated and the software
-variant of hweight64() is adding enough 'useless' instructions to make the
-uops scheduling and therefore the execution time random enough so that bit
-zero of the result yields useful entropy.
+Would you be able to accept the patch from this thread with the
+container API?
 
-To verify that this is true, there is a debugfs interface which provides
-two files:
+    fd =3D container_socket(int container_fd,
+                          int domain, int type, int protocol);
 
-    /sys/kernel/debug/x86/rnd_fill
-    /sys/kernel/debug/x86/rnd_data
+I think that seems more coherent with the rest of the container world
+than a follow up of https://lkml.org/lkml/2011/10/3/220 :
 
-Writing anything into 'rnd_fill' triggers the entropy collection via the
-above algorithm and stores 64bit in one go in a data array after running
-the 64bit value through a lame folding algorithm (Fibonacci LFSR).
+    int socketns(int namespace, int domain, int type, int protocol)
 
-When the write returns (which takes less than 10ms), the buffer is filled
-with 4096 64bit entries, i.e. 262144 bits. The resulting data was read out
-from rnd_data and tested against dieharder and the test01 Rabbit suite.
 
-Most runs pass all tests, but both test suites find occasionally a few
-tests which they considers weak, but the weak points are not the same on
-the failing runs. The number of weak findings depends on the
-microarchitecture, older CPUs expose it more than newer ones, which is not
-suprising as the speculation gets more crazy on newer generations.
+I could also put some up if required.
 
-As the folding algorithm is lazy and primitive, it's not necessarily a
-proof that the approach is wrong.  Feeding the entropy into the proper
-kernel random generator should make that go away. Aside of that as the
-'weak' points are randomly moving around there is no real way to attack
-them in my opinion (but I might be wrong as usual).
 
-What's interesting is that even with the trivial 64bit folding the result
-is surprisingly good. That means that the speculative execution provides
-usable entropy.
+A.
 
-A visual comparison of 262144 bits retrieved from /dev/random and from the
-rng_data file is here:
 
-  https://tglx.de/~tglx/random/index.html
-
-The tests were successfully run on various generations of Intel and AMD
-hardware, but of course that needs way more investigation than a few runs
-on a few machines.
-
-As this depends on the microarchitecure and the pipeline depth this needs
-at least some basic runtime verification mechanism before utilizing this.
-
-But contrary to the last two years experience, speculation seems to have
-it's useful sides as well :)
-
-Suggested-by: Nicholas Mc Guire <hofrat@opentech.at>
-Not-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- arch/x86/include/asm/processor.h |    2 
- arch/x86/kernel/cpu/common.c     |    4 +
- arch/x86/kernel/tsc.c            |   95 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 101 insertions(+)
-
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -988,4 +988,6 @@ enum mds_mitigations {
- 	MDS_MITIGATION_VMWERV,
- };
- 
-+extern bool cpu_has_speculation;
-+
- #endif /* _ASM_X86_PROCESSOR_H */
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -77,6 +77,9 @@ EXPORT_SYMBOL(smp_num_siblings);
- /* Last level cache ID of each logical CPU */
- DEFINE_PER_CPU_READ_MOSTLY(u16, cpu_llc_id) = BAD_APICID;
- 
-+/* Indicator that the CPU is speculating */
-+bool cpu_has_speculation __ro_after_init;
-+
- /* correctly size the local cpu masks */
- void __init setup_cpu_local_masks(void)
- {
-@@ -1099,6 +1102,7 @@ static void __init cpu_set_bug_bits(stru
- 	if (cpu_matches(NO_SPECULATION))
- 		return;
- 
-+	cpu_has_speculation = true;
- 	setup_force_cpu_bug(X86_BUG_SPECTRE_V1);
- 	setup_force_cpu_bug(X86_BUG_SPECTRE_V2);
- 
---- a/arch/x86/kernel/tsc.c
-+++ b/arch/x86/kernel/tsc.c
-@@ -14,6 +14,7 @@
- #include <linux/percpu.h>
- #include <linux/timex.h>
- #include <linux/static_key.h>
-+#include <linux/debugfs.h>
- 
- #include <asm/hpet.h>
- #include <asm/timer.h>
-@@ -1531,3 +1532,97 @@ unsigned long calibrate_delay_is_known(v
- 	return 0;
- }
- #endif
-+
-+unsigned int arch_get_speculative_entropy(u64 *buf, unsigned int nentries)
-+{
-+	unsigned int n, i;
-+
-+	if (!boot_cpu_has(X86_FEATURE_TSC) || !cpu_has_speculation)
-+		return 0;
-+
-+	for (n = 0; n < nentries; n++) {
-+		u64 d = 0;
-+
-+		/*
-+		 * The loop below does not execute in constant time on
-+		 * speculative CPUs. The trick is to do useless operations
-+		 * between the TSC reads, i.e. calling __sw_hweight64().
-+		 * This makes uops scheduling sufficiently random resulting
-+		 * in useable entropy.
-+		 */
-+		for (i = 0; i < 64; i++) {
-+			u64 t = rdtsc() + __sw_hweight64(rdtsc());
-+
-+			if (t & 0x01ULL)
-+				d |= (1ULL << i);
-+		}
-+		buf[n] = d;
-+	}
-+	return nentries;
-+}
-+
-+#define BUFSIZE 4096
-+static u64 rng_array[4096];
-+
-+static struct debugfs_blob_wrapper rng_blob = {
-+	.data = rng_array,
-+	.size = sizeof(rng_array),
-+};
-+
-+static u64 fold(u64 d)
-+{
-+	unsigned int i;
-+	u64 res = d;
-+
-+	/*
-+	 * Lazy and trivial folding just for testing purposes.
-+	 *
-+	 * Fibonacci LFSR with the primitive polynomial:
-+	 * x^64 + x^61 + x^56 + x^31 + x^28 + x^23 + 1
-+	 */
-+	for (i = 1; i < 64; i++) {
-+		u64 tmp = d << 63;
-+
-+		tmp = tmp >> 63;
-+
-+		tmp ^= ((res >> 63) & 1);
-+		tmp ^= ((res >> 60) & 1);
-+		tmp ^= ((res >> 55) & 1);
-+		tmp ^= ((res >> 30) & 1);
-+		tmp ^= ((res >> 27) & 1);
-+		tmp ^= ((res >> 22) & 1);
-+		res <<= 1;
-+		res ^= tmp;
-+	}
-+	return res;
-+}
-+
-+static ssize_t rngfill_write(struct file *file, const char __user *user_buf,
-+			     size_t count, loff_t *ppos)
-+{
-+	unsigned int n;
-+	u64 d;
-+
-+	for (n = 0; n < BUFSIZE; n++) {
-+		if (!arch_get_speculative_entropy(&d, 1))
-+			return -ENODEV;
-+		rng_array[n] = fold(d);
-+	}
-+	return count;
-+}
-+
-+static const struct file_operations fops_rngfill = {
-+	.write = rngfill_write,
-+	.llseek = default_llseek,
-+};
-+
-+static int __init rng_debug_init(void)
-+{
-+	debugfs_create_file("rng_fill", S_IWUSR,
-+			    arch_debugfs_dir, NULL, &fops_rngfill);
-+
-+	debugfs_create_blob("rng_data", 0444, arch_debugfs_dir, &rng_blob);
-+
-+	return 0;
-+}
-+late_initcall(rng_debug_init);
+--=20
+Alun Evans.
