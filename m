@@ -2,147 +2,131 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E762DC4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 05:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6C5C4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 05:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE86A20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 05:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFF0C20815
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 05:24:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="JgnfsH3g"
+	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="ZH1r+kg1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729484AbfI3FRI (ORCPT
+        id S1729540AbfI3FYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 01:17:08 -0400
-Received: from mail-eopbgr60102.outbound.protection.outlook.com ([40.107.6.102]:47489
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725809AbfI3FRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 01:17:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ePRmL32d4pIQG8bONh1r4ep5EbYDnESSd5hTTQoSdfDGO8wjT9gLAt1bi0kAtmhdeE3u+wShzytC4IOCryTREnDJak4M4VluDDKSBcI9ZVNzadgtox3HoBEogCT9Jv70txN8benw3PZBz8+q0aYro6pcbW1+2OCyoAWxMF/iw6gBAMebocMrbu6KLdXyQ8Pf23lTB1y6/MYICm+AIMurYIh0eiVol1U8F4RVUYvk3747jVOwoXZVM3XKbdDFmxljv3J+i5FCp4O+oD/+EHUpBlujtB2OV5lH+qw609wKKKQ9F++pQaPu6Av25l2IktPkzMQwaTmf9D+TN+uUOjuYcA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XpAg0sH77YO2bpDWQFLlvvumNWZNot0FTU3h6FbX6Go=;
- b=gIevuCDu3xKGZTOUGtA9K5wt3QsgXpuR9VJ0hJchdyBDGw0SylNLcAOxsBHKhjjJ13xIEjsb/5StL/CLON2GwBwOvw9kvpX1x6x1yqm1ElEgwkaPFCv7rXRyOp/o70ULgLypLmpaIhXLS8ZLKCyNzx0y+4DavpAqyi98q05ob1gekpx7NSjpqsA3EdxRY5CCz0Xqz3VRrbrilvju1htqBZ1z6lIBh4OrWVoJAVMtO0Sax81arhMpU3Hvz/YeTLgvKM/XPDROLo6nfCstndVqJml3rml9GIhH2ND20C7msJPmbTOIEyhmkz1V6CpVOpW4xiCCP7edRv+3zRYayycB1Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XpAg0sH77YO2bpDWQFLlvvumNWZNot0FTU3h6FbX6Go=;
- b=JgnfsH3gpLc06YOFmFtSqMmW5vurp0YmZRqA+hl7Ck+56kQo82geaJMkVSrKqyZHBI7xwihm6S1iBiK7/elNDYCqyuc1SXhEIqroybZTiZOyq5iIUdqNhMnZvZmpOTW5MyAUCDgcGz3nDUv+WrgBwsEwl+Icez/NU3AsZERbYbc=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3275.eurprd02.prod.outlook.com (52.134.66.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.17; Mon, 30 Sep 2019 05:16:24 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::c5b8:6014:87a4:1afe]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::c5b8:6014:87a4:1afe%7]) with mapi id 15.20.2305.017; Mon, 30 Sep 2019
- 05:16:24 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Biwen Li <biwen.li@nxp.com>, Leo Li <leoyang.li@nxp.com>
-CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [EXT] Re: [PATCH] i2c: pca954x: Add property to skip disabling
- PCA954x MUX device
-Thread-Topic: [EXT] Re: [PATCH] i2c: pca954x: Add property to skip disabling
- PCA954x MUX device
-Thread-Index: AQHVdrNFZZMQUbNsZkan/V0TQ0c5o6dDS96AgAA4dwCAACqiAA==
-Date:   Mon, 30 Sep 2019 05:16:24 +0000
-Message-ID: <07d85748-0721-39d4-d2be-13eb16b0f1de@axentia.se>
-References: <20190929103638.46038-1-biwen.li@nxp.com>
- <e5f4f0b8-05e0-5c70-84f0-817c83059ae7@axentia.se>
- <DB7PR04MB44907DC45C950DE0829A93688F820@DB7PR04MB4490.eurprd04.prod.outlook.com>
-In-Reply-To: <DB7PR04MB44907DC45C950DE0829A93688F820@DB7PR04MB4490.eurprd04.prod.outlook.com>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: HE1PR0701CA0070.eurprd07.prod.outlook.com
- (2603:10a6:3:64::14) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3d9858e6-f14b-4b80-442f-08d745655661
-x-ms-traffictypediagnostic: DB3PR0202MB3275:
-x-microsoft-antispam-prvs: <DB3PR0202MB3275CE83D432DC90FABBAE41BC820@DB3PR0202MB3275.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 01762B0D64
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(39830400003)(396003)(376002)(42606007)(346002)(189003)(199004)(508600001)(66946007)(66446008)(110136005)(66556008)(31696002)(7736002)(229853002)(6486002)(64756008)(65806001)(2906002)(6116002)(65956001)(66066001)(6436002)(102836004)(54906003)(305945005)(14454004)(86362001)(66476007)(316002)(3846002)(4326008)(31686004)(58126008)(6512007)(476003)(99286004)(76176011)(36756003)(71190400001)(25786009)(26005)(386003)(6506007)(53546011)(14444005)(81156014)(8676002)(6246003)(81166006)(446003)(2616005)(11346002)(256004)(8936002)(186003)(52116002)(71200400001)(486006)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3275;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Qk9yhCtZjtm1numg/leIaJSn/+K/o839TrQHE+TNEhp337kQVqMOiMQwhL2wfBBc5hvoaAqrJIsQCbf6O2LeH6dfGnFDTKkssQlVwPASlY3TbffW9QlPnlfb7ipJZ0hF/7AduaZ3hmg9QP3QrrqHjRIEjfJnGGP7H/5Ro1ORl2TjQmk6dNeFZ71VdrOqHF4z1/X5VqGWI3jRpANqIxN9R0+3cA4nguZ+avj/dzY0mQ6yXibL1nrSRTxx42Ip9RngPhsw50Mnzt/6JcYPqoOu5+9GdN3QwAq5O2CHdgUXsG800jEggyWW6gKXMNe49ttMmdLGZySFFxVOZ/GzznxrHMqVbD1Nk0ZJ1cQWfSHoo7dW/40x/YPBjpnSA5NVU6qYAv122Dg9w253rIOjzaGG5hKyFMw+IrwIhd3pop74iYo=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0B1D8956CF8A9340AEC713E571D6F58C@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d9858e6-f14b-4b80-442f-08d745655661
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2019 05:16:24.1152
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RUOtWhLUH7HSt7wwiK1p2s5/ya527vsi/ZfL49rm2jUQYZ4SLw1iP8KV1uqOq7Qt
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3275
+        Mon, 30 Sep 2019 01:24:01 -0400
+Received: from bgl-iport-1.cisco.com ([72.163.197.25]:64454 "EHLO
+        bgl-iport-1.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbfI3FYB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 01:24:01 -0400
+X-Greylist: delayed 430 seconds by postgrey-1.27 at vger.kernel.org; Mon, 30 Sep 2019 01:24:00 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=cisco.com; i=@cisco.com; l=1841; q=dns/txt; s=iport;
+  t=1569821040; x=1571030640;
+  h=from:to:cc:subject:date:message-id;
+  bh=G+siyYRdHd2n4HbLETGj+hla7mCl53/mKPxeUkMl8FQ=;
+  b=ZH1r+kg1Yvfm7x2IUvxrT3n7yAg/rzGTU+bkkIPUa2+IQ3TxO9mPMaUR
+   c8rYKLkniXtQ96bcnrbj/13lrWd4NaMrIhdBuzROne/HMiq1GukpKR1hm
+   1/+gJNA2/oOSsuTJQIF90C/Z96zXD35mvlhTfQ3/YE0TRvuGglf7/dqHo
+   o=;
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0AsAQA7jpFd/xjFo0hmHAEBAQQBAQwEA?=
+ =?us-ascii?q?QGBVAYBAQsBg10gEiqNHoZEBQGBMol5jy+BewkBAQEOLwEBhECDXzUIDgIMAQE?=
+ =?us-ascii?q?EAQEBAgEFBG2FOYV5UimBFQsIgyKBdxSqd4F0M4hzgUgUgSABhzSFaYEHjwgEg?=
+ =?us-ascii?q?S8BlRyWSwaCJpULAhmZNQEtpzuBUwE2gVhNI4FugU5QEBSBWheOKjkDMJEOAQE?=
+X-IronPort-AV: E=Sophos;i="5.64,565,1559520000"; 
+   d="scan'208";a="119743880"
+Received: from vla196-nat.cisco.com (HELO bgl-core-4.cisco.com) ([72.163.197.24])
+  by bgl-iport-1.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 30 Sep 2019 05:16:45 +0000
+Received: from ubuntuServ16.cisco.com ([10.142.88.17])
+        by bgl-core-4.cisco.com (8.15.2/8.15.2) with ESMTP id x8U5Gih6001012;
+        Mon, 30 Sep 2019 05:16:45 GMT
+From:   Sriram Krishnan <srirakr2@cisco.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     xe-linux-external@cisco.com,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] AF_PACKET doesnt strip VLAN information
+Date:   Sat, 28 Sep 2019 10:28:24 +0530
+Message-Id: <1569646705-10585-1-git-send-email-srirakr2@cisco.com>
+X-Mailer: git-send-email 2.7.4
+X-Auto-Response-Suppress: DR, OOF, AutoReply
+X-Outbound-SMTP-Client: 10.142.88.17, [10.142.88.17]
+X-Outbound-Node: bgl-core-4.cisco.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS0wOS0zMCAwNDo0MywgQml3ZW4gTGkgd3JvdGU6DQo+Pg0KPj4gT24gMjAxOS0wOS0y
-OSAxMjozNiwgQml3ZW4gTGkgd3JvdGU6DQo+Pj4gT24gc29tZSBMYXllcnNjYXBlIGJvYXJkcyBs
-aWtlIExTMjA4NUFSREIgYW5kIExTMjA4OEFSREIsIGlucHV0DQo+Pj4gcHVsbC11cCByZXNpc3Rv
-cnMgb24gUENBOTU0eCBNVVggZGV2aWNlIGFyZSBtaXNzaW5nIG9uIGJvYXJkLCBTbywgaWYNCj4+
-PiBNVVggYXJlIGRpc2FibGVkIGFmdGVyIHBvd2VyZWQtb24sIGlucHV0IGxpbmVzIHdpbGwgZmxv
-YXQgbGVhZGluZyB0bw0KPj4+IGluY29ycmVjdCBmdW5jdGlvbmFsaXR5Lg0KDQpTREEgYW5kIFND
-TCBhcmUgbm90ICJpbnB1dHMiLiBUaGV5IGFyZSBwYXJ0IG9mIGEgYnVzIGFuZCBhcmUgYm90aA0K
-YmlkaXJlY3Rpb25hbCBzaWduYWxzLiBTcGVha2luZyBvZiBpbnB1dCBzaWduYWxzIGluIGFuIEky
-QyBjb250ZXh0DQppcyBhbWJpZ3VvdXMuDQoNCj4+DQo+PiBIaSENCj4+DQo+PiBBcmUgeW91IHNh
-eWluZyB0aGF0IHRoZSBwYXJlbnQgYnVzIG9mIHRoZSBtdXggaXMgcmVseWluZyBvbiBzb21lIHB1
-bGwtdXBzIGluc2lkZQ0KPj4gdGhlIG11eD8NCj4gWWVzLCBhcyBmb2xsb3dzOg0KPiAJCQkJCQkJ
-CQkJCQkJVkNDDQo+IAkJCQkJCQkJCQkJCQktLS0tLS0tDQo+IAkJCQkJCQkJCQkJCQkgIHwtLS0t
-LS0tLS0tLS0tLS0tLS0tDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIHwgICAgICAgICAgICB8DQo+IAkJCQkJCQkJCQkJCQkgIFwgICAgICAg
-ICAgICBcDQo+IAkJCQkJCQkJCQkJCQkgIC8xMEsgcmVzaXN0ZXIgIC8gMTBrIHJlc2lzdGVyDQo+
-IAkJCQkJCQkJCQkJCQkgIFwgICAgICAgICAgICBcDQo+IAkJCQkJCQkJCQkJCQkgIHwgICAgICAg
-ICAgICB8DQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIHwgICAgICAgICAgICB8DQo+ICAgIEkyQzFfU0NMICAtLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0gICAgICAgICAgICAgICAgICAgICAgICAgSTJDMV9TQ0wgICAgICAgfCAgICAgICAtLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tDQo+IC0tLS0tLS0tLS0tLS0tLS0tLS0tfFNDTCAgICAgICAgICAg
-fCAgICAgICAgICAgICAgICAgICAgICAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tfFNDTCAgICAgICAgICB8DQo+ICAgIEkyQzFfU0RBICB8ICAgUENBOTU0NyAgIHwgICAg
-ICAgICAgICAgICAgICAgICAgICBJMkMxX1NEQSAgICAgICB8ICAgICAgIHwgICAgUENBOTU0NyAg
-fCAgICAgICAgICANCj4gLS0tLS0tLS0tLS0tLS0tLS0tLS18U0RBICAgICAgICAgICB8ICAgICAg
-ICAgICAgICAgICAgICAgIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS18LS0tLS0tLS0tLS18
-U0RBICAgICAgICAgfA0KPiAgICAgICAgICAgICAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLQ0KPiAgIC0td3JvbmcgZGVzaWduKG5lZWQgc29mdHdhcmUgZml4IGFzIGFib3Zl
-IG9yIGhhcmR3YXJlIGZpeCktLSAgICAgICAgICAgICAgLS1wcm9wZXIgZGVzaWduLS0NCg0KT2ss
-IGdvdCBpdCAoYnV0IHRoZSAicGljdHVyZSIgZGlkbid0IGhlbHApLg0KDQo+Pg0KPj4+IEhlbmNl
-LCBQQ0E5NTR4IE1VWCBkZXZpY2Ugc2hvdWxkIG5ldmVyIGJlIHR1cm5lZC1vZmYgYWZ0ZXIgcG93
-ZXItb24uDQo+Pj4NCj4+PiBBZGQgcHJvcGVydHkgdG8gc2tpcCBkaXNhYmxpbmcgUENBOTU0eCBN
-VVggZGV2aWNlIGlmIGRldmljZSB0cmVlDQo+Pj4gY29udGFpbnMgImkyYy1tdXgtbmV2ZXItZGlz
-YWJsZSINCj4+PiBmb3IgUENBOTU0eCBkZXZpY2Ugbm9kZS4NCj4+Pg0KPj4+IEVycmF0YSBJRDog
-RS0wMDAxMyBvbiBib2FyZCBMUzIwODVBUkRCIGFuZCBMUzIwODhBUkRCIChCb2FyZCByZXZpc2lv
-bg0KPj4+IGZvdW5kIG9uIFJldi5CLCBSZXYuQyBhbmQgUmV2LkQpDQo+Pg0KPj4gSSB0aGluayB5
-b3Ugc2hvdWxkIGZvbGxvdyB0aGUgZXhhbXBsZSBvZiB0aGUgaTJjLW11eC1ncGlvIGRyaXZlciBh
-bmQgaW1wbGVtZW50DQo+PiB0aGUgaWRsZS1zdGF0ZSBwcm9wZXJ0eSBpbnN0ZWFkLg0KPj4NCj4+
-IFRoYXQgaXMgYSBsb3QgbW9yZSBjb25zaXN0ZW50LCBhc3N1bWluZyBpdCBzb2x2ZXMgdGhlIHBy
-b2JsZW0gYXQgaGFuZD8NCj4gR290IGl0LCB0aGFua3MsIEkgd2lsbCB0cnkgaXQuDQoNCkknbGwg
-d2FpdCBmb3IgdGhhdCBwYXRjaCB0aGVuLCBpbnN0ZWFkIG9mIHNwZW5kaW5nIG1vcmUgZW5lcmd5
-IG9uIHRoZQ0KbmV2ZXItZGlzYWJsZSBhcHByb2FjaC4NCg0KQ2hlZXJzLA0KUGV0ZXINCg==
+When an application sends with AF_PACKET and places a vlan header on
+the raw packet; then the AF_PACKET needs to move the tag into the skb
+so that it gets processed normally through the rest of the transmit
+path.
+
+This is particularly a problem on Hyper-V where the host only allows
+vlan in the offload info.
+
+Cc: xe-linux-external@cisco.com
+---
+ net/packet/af_packet.c | 26 ++++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
+
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index e2742b0..cfe0904 100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -1849,15 +1849,35 @@ static int packet_rcv_spkt(struct sk_buff *skb, struct net_device *dev,
+ 	return 0;
+ }
+ 
+-static void packet_parse_headers(struct sk_buff *skb, struct socket *sock)
++static int packet_parse_headers(struct sk_buff *skb, struct socket *sock)
+ {
+ 	if ((!skb->protocol || skb->protocol == htons(ETH_P_ALL)) &&
+ 	    sock->type == SOCK_RAW) {
++		__be16 ethertype;
++
+ 		skb_reset_mac_header(skb);
++
++		ethertype = eth_hdr(skb)->h_proto;
++		/*
++		 * If Vlan tag is present in the packet
++		 *  move it to skb
++		*/
++		if (eth_type_vlan(ethertype)) {
++			int err;
++			__be16 vlan_tci;
++
++			err = __skb_vlan_pop(skb, &vlan_tci);
++			if (unlikely(err))
++				return err;
++
++			__vlan_hwaccel_put_tag(skb, ethertype, vlan_tci);
++		}
++
+ 		skb->protocol = dev_parse_header_protocol(skb);
+ 	}
+ 
+ 	skb_probe_transport_header(skb);
++	return 0;
+ }
+ 
+ /*
+@@ -1979,7 +1999,9 @@ static int packet_sendmsg_spkt(struct socket *sock, struct msghdr *msg,
+ 	if (unlikely(extra_len == 4))
+ 		skb->no_fcs = 1;
+ 
+-	packet_parse_headers(skb, sock);
++	err = packet_parse_headers(skb, sock);
++	if (err)
++		goto out_unlock;
+ 
+ 	dev_queue_xmit(skb);
+ 	rcu_read_unlock();
+-- 
+2.7.4
+
