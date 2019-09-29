@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABF2C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F1CC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 488A421920
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDFC721906
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:58:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569765529;
-	bh=+KG8sRgP3Wm81Em5/w/DimPHknppyCnQMQyI2CmVChw=;
+	s=default; t=1569765532;
+	bh=uH1HUWuKukDOrWbWpV9nwDLryxXChBQvaLLNDBn2C/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K9nT9AAR8nlRKTuB3CExzirkUvu+je1S9kVmWwJpZXbDuCoIBz5YRqeUZxWDqgDht
-	 NIwUrV5DzS5GuaGWAYZZ6u13DwYN/fWbxaHZHAD9RgzSXMLf/3c6FEMxcbakoW8q5T
-	 VFB5v3Bh8Ir5aApNJfrdWHwpgE98/61HD4LTffsg=
+	b=XRXLTSvIPlJA/yW0BPlZsbKMaqXrjSMcxsBi+CLuYZ1ZMyn3iq5v5E/ZT210LKzaO
+	 8QoXuIozuAAHDvnmvB47FELvCNV3DFKZPE5KDCUuqicLY7kubcH8v6jU+o5VkNEw3y
+	 nDyJw05QEWJbP2rXxBOsQHX9GmgcoPU1rqDZyI7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729595AbfI2N6s (ORCPT
+        id S1729607AbfI2N6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 09:58:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39650 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 09:58:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729530AbfI2N6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 09:58:47 -0400
+        id S1729530AbfI2N6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 09:58:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AE5521906;
-        Sun, 29 Sep 2019 13:58:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F2AF21882;
+        Sun, 29 Sep 2019 13:58:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569765526;
-        bh=+KG8sRgP3Wm81Em5/w/DimPHknppyCnQMQyI2CmVChw=;
+        s=default; t=1569765529;
+        bh=uH1HUWuKukDOrWbWpV9nwDLryxXChBQvaLLNDBn2C/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fizPgT0TZk2drue2pnIsnyKV1ZtLIeVe+kUAu7Qlkjz7WwFqBUxiIZDghnyoj2CAF
-         0bnTXFZW72owr7NR34pyhGf1Mig+wzBzcqaV0wHNfs9WtfBc5PxatlA5N7qxyf8+Ey
-         95r6mx221w4lSRiuq/Scrv+qWI5Pp5xo5zNKSd0U=
+        b=f4z+vwNdeIM7z3dXwwUPfOHiHfjSMP2JjciCeVE/vmpRA9eVQeYyobfYdNgQNXxQl
+         RFvs+g+F241lil61zr82M9mTG+jU2XfgHSohshGoXJoZLlHP6iOy5t3oh+Mizm4CCa
+         7XOnxrE4k0VjddOYO4RzfBBozdXNcbKLfYSwglhA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Juha Aatrokoski <juha.aatrokoski@aalto.fi>,
-        Shenghui Wang <shhuiw@foxmail.com>, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 46/63] bcache: remove redundant LIST_HEAD(journal) from run_cache_set()
-Date:   Sun, 29 Sep 2019 15:54:19 +0200
-Message-Id: <20190929135039.656505067@linuxfoundation.org>
+        stable@vger.kernel.org, Steven Price <steven.price@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 47/63] initramfs: dont free a non-existent initrd
+Date:   Sun, 29 Sep 2019 15:54:20 +0200
+Message-Id: <20190929135039.770549694@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190929135031.382429403@linuxfoundation.org>
 References: <20190929135031.382429403@linuxfoundation.org>
@@ -60,39 +64,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Steven Price <steven.price@arm.com>
 
-[ Upstream commit cdca22bcbc64fc83dadb8d927df400a8d86ddabb ]
+[ Upstream commit 5d59aa8f9ce972b472201aed86e904bb75879ff0 ]
 
-Commit 95f18c9d1310 ("bcache: avoid potential memleak of list of
-journal_replay(s) in the CACHE_SYNC branch of run_cache_set") forgets
-to remove the original define of LIST_HEAD(journal), which makes
-the change no take effect. This patch removes redundant variable
-LIST_HEAD(journal) from run_cache_set(), to make Shenghui's fix
-working.
+Since commit 54c7a8916a88 ("initramfs: free initrd memory if opening
+/initrd.image fails"), the kernel has unconditionally attempted to free
+the initrd even if it doesn't exist.
 
-Fixes: 95f18c9d1310 ("bcache: avoid potential memleak of list of journal_replay(s) in the CACHE_SYNC branch of run_cache_set")
-Reported-by: Juha Aatrokoski <juha.aatrokoski@aalto.fi>
-Cc: Shenghui Wang <shhuiw@foxmail.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+In the non-existent case this causes a boot-time splat if
+CONFIG_DEBUG_VIRTUAL is enabled due to a call to virt_to_phys() with a
+NULL address.
+
+Instead we should check that the initrd actually exists and only attempt
+to free it if it does.
+
+Link: http://lkml.kernel.org/r/20190516143125.48948-1-steven.price@arm.com
+Fixes: 54c7a8916a88 ("initramfs: free initrd memory if opening /initrd.image fails")
+Signed-off-by: Steven Price <steven.price@arm.com>
+Reported-by: Mark Rutland <mark.rutland@arm.com>
+Tested-by: Mark Rutland <mark.rutland@arm.com>
+Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/super.c | 1 -
- 1 file changed, 1 deletion(-)
+ init/initramfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index e6c7a84bb1dfd..2321643974dab 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -1768,7 +1768,6 @@ static int run_cache_set(struct cache_set *c)
- 	set_gc_sectors(c);
+diff --git a/init/initramfs.c b/init/initramfs.c
+index cd5fb00fcb549..dab8d63459f63 100644
+--- a/init/initramfs.c
++++ b/init/initramfs.c
+@@ -524,7 +524,7 @@ static void __init free_initrd(void)
+ 	unsigned long crashk_start = (unsigned long)__va(crashk_res.start);
+ 	unsigned long crashk_end   = (unsigned long)__va(crashk_res.end);
+ #endif
+-	if (do_retain_initrd)
++	if (do_retain_initrd || !initrd_start)
+ 		goto skip;
  
- 	if (CACHE_SYNC(&c->sb)) {
--		LIST_HEAD(journal);
- 		struct bkey *k;
- 		struct jset *j;
- 
+ #ifdef CONFIG_KEXEC_CORE
 -- 
 2.20.1
 
