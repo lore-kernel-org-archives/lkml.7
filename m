@@ -2,55 +2,69 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A78C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5E6C352A9
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F6EC2196E
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 574BC21906
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:38:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778682;
-	bh=b1pw3I7anKjMaltyEWcE2OML/koA6Q4UK/0WEWlOycg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qYVg/KPohGQh3CGr25Q5Sw3H2u30qGjfep5jedaMKQS6F7W9VXIltrSySWBOV/fyz
-	 jDEvLfPOiZNaGq6Vf0YJzNkB9oobGqrPlYhvu5BcGf3/8GNzAcfbKiM0LMLIdNwZcj
-	 d84gtR1JERYKfSoGFbveQz0zly2rD79kX9Zl/5Hg=
+	s=default; t=1569778691;
+	bh=0Aqdg5Rcg5WWheNYUhJwI5jz/7qigaqtY/pqcbi9bjo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=jBZy50k5WoK3e7BcqbIvoQOIH8RKLuAzSKhzUoDE2CCYK1z/l33hP5PxnAtgiRlGV
+	 /MSLzoquItfGbfqJs/0KYxsPFVbjqN3e4+JmKA5ZQTEOBN1zCXes/ITI6SXlsH/uz7
+	 PAxc444aWZ7Q5E/MTMyzEdSEY17OBoBpbyqwp0G0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729785AbfI2RiB (ORCPT
+        id S1730848AbfI2Rgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:38:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49416 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:36:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730898AbfI2Rgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:36:43 -0400
+        id S1730790AbfI2Rga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:36:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3D3721A4A;
-        Sun, 29 Sep 2019 17:36:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 327E021925;
+        Sun, 29 Sep 2019 17:36:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778602;
-        bh=b1pw3I7anKjMaltyEWcE2OML/koA6Q4UK/0WEWlOycg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=clnhs5PJqyYhH6hIRV2Q7qwJAKMZacUsHlunyezk06Ko2jESMRv2FCVoT8A7HLyYF
-         W2u59s19TSOKXYJP1j/YsrrSMT2DtILfvZGg7x2ONiwgh7y0Z35JNaCXVOJ+5BueXJ
-         2iGAdzQyt4KJVr8x8Fy31+KovnACok+7R/QAjAOI=
+        s=default; t=1569778588;
+        bh=0Aqdg5Rcg5WWheNYUhJwI5jz/7qigaqtY/pqcbi9bjo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=EPWD/iq48kh16/BMCco9kXhCar4e2XtVHb5bhwkGtHdOPTx8Bs7PmJyT9K7TnDv7a
+         fx0t49xj2vrRXoeSAImo+7eCnsRY+O1LmmRC3vfggLOxAuSrOiQhRRqMRjOaNExMlI
+         q4Ey5Jf6ul3oW877b+BGzJVm3e9Q7gL7Yk0Ly9dQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 08/13] security: smack: Fix possible null-pointer dereferences in smack_socket_sock_rcv_skb()
-Date:   Sun, 29 Sep 2019 13:36:18 -0400
-Message-Id: <20190929173625.10003-8-sashal@kernel.org>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Artur Rojek <contact@artur-rojek.eu>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 01/13] clk: jz4740: Add TCU clock
+Date:   Sun, 29 Sep 2019 13:36:11 -0400
+Message-Id: <20190929173625.10003-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190929173625.10003-1-sashal@kernel.org>
-References: <20190929173625.10003-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,46 +74,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Paul Cercueil <paul@crapouillou.net>
 
-[ Upstream commit 3f4287e7d98a2954f20bf96c567fdffcd2b63eb9 ]
+[ Upstream commit 73dd11dc1a883d4c994d729dc9984f4890001157 ]
 
-In smack_socket_sock_rcv_skb(), there is an if statement
-on line 3920 to check whether skb is NULL:
-    if (skb && skb->secmark != 0)
+Add the missing TCU clock to the list of clocks supplied by the CGU for
+the JZ4740 SoC.
 
-This check indicates skb can be NULL in some cases.
-
-But on lines 3931 and 3932, skb is used:
-    ad.a.u.net->netif = skb->skb_iif;
-    ipv6_skb_to_auditdata(skb, &ad.a, NULL);
-
-Thus, possible null-pointer dereferences may occur when skb is NULL.
-
-To fix these possible bugs, an if statement is added to check skb.
-
-These bugs are found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Tested-by: Mathieu Malaterre <malat@debian.org>
+Tested-by: Artur Rojek <contact@artur-rojek.eu>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-mips@vger.kernel.org
+Cc: linux-clk@vger.kernel.org
+Cc: od@zcrc.me
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/smack/smack_lsm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/clk/ingenic/jz4740-cgu.c       | 6 ++++++
+ include/dt-bindings/clock/jz4740-cgu.h | 1 +
+ 2 files changed, 7 insertions(+)
 
-diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
-index aeb3ba70f9077..19d1702aa9856 100644
---- a/security/smack/smack_lsm.c
-+++ b/security/smack/smack_lsm.c
-@@ -4037,6 +4037,8 @@ static int smack_socket_sock_rcv_skb(struct sock *sk, struct sk_buff *skb)
- 			skp = smack_ipv6host_label(&sadd);
- 		if (skp == NULL)
- 			skp = smack_net_ambient;
-+		if (skb == NULL)
-+			break;
- #ifdef CONFIG_AUDIT
- 		smk_ad_init_net(&ad, __func__, LSM_AUDIT_DATA_NET, &net);
- 		ad.a.u.net->family = family;
+diff --git a/drivers/clk/ingenic/jz4740-cgu.c b/drivers/clk/ingenic/jz4740-cgu.c
+index 510fe7e0c8f1c..79f0d48ec875b 100644
+--- a/drivers/clk/ingenic/jz4740-cgu.c
++++ b/drivers/clk/ingenic/jz4740-cgu.c
+@@ -211,6 +211,12 @@ static const struct ingenic_cgu_clk_info jz4740_cgu_clocks[] = {
+ 		.parents = { JZ4740_CLK_EXT, -1, -1, -1 },
+ 		.gate = { CGU_REG_CLKGR, 5 },
+ 	},
++
++	[JZ4740_CLK_TCU] = {
++		"tcu", CGU_CLK_GATE,
++		.parents = { JZ4740_CLK_EXT, -1, -1, -1 },
++		.gate = { CGU_REG_CLKGR, 1 },
++	},
+ };
+ 
+ static void __init jz4740_cgu_init(struct device_node *np)
+diff --git a/include/dt-bindings/clock/jz4740-cgu.h b/include/dt-bindings/clock/jz4740-cgu.h
+index 43153d3e9bd26..ff7c27bc98e37 100644
+--- a/include/dt-bindings/clock/jz4740-cgu.h
++++ b/include/dt-bindings/clock/jz4740-cgu.h
+@@ -33,5 +33,6 @@
+ #define JZ4740_CLK_ADC		19
+ #define JZ4740_CLK_I2C		20
+ #define JZ4740_CLK_AIC		21
++#define JZ4740_CLK_TCU		22
+ 
+ #endif /* __DT_BINDINGS_CLOCK_JZ4740_CGU_H__ */
 -- 
 2.20.1
 
