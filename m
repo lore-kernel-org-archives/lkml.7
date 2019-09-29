@@ -2,59 +2,58 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED82C32793
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5875AC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AF8B21835
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:43:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26DD52086A
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:43:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778996;
-	bh=6U12gjLd5+hWTbCP6kB3SDmu7dkXEuPqe6BNUcEyDwE=;
+	s=default; t=1569779008;
+	bh=C8GGBJVGuQevLu0Z6ggEvyEinRf5njOQ0297fhKdxTA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ut2h9kIux4Q2rgr1QjHgkAJToZP2DieMQevRcjDpKqaMIdelSIbl+bb8O06vjgpd1
-	 Jxn47KidnggvprJKM00WTxVZbUlMxA47KMAqaK7Zeom9cHDGeOg+Apxj1uxW9RJB3B
-	 reWWeA8rvpL83Vt6DJM/mf7a5RWhvRAKFp/nQSVM=
+	b=hpWDwNmfzTa75wNW4gHWs1vsFvwhDpi7uWDYsLWHMNqh0YadKsEundBkp3jAvaVxP
+	 nA59E76eVUwCgVhkrSWqmkXc0MIwRGAmA4qZpkuaiif8DS3jAGZZagVh1xrzY31c9R
+	 SE2xtpsTwkXyUdENGXSwjZ2HE2YrHdHRAkS0GU0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729405AbfI2Rbm (ORCPT
+        id S1729835AbfI2Rn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:31:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42176 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:43:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729376AbfI2Rbk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:31:40 -0400
+        id S1729204AbfI2Rbg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:31:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0CA921924;
-        Sun, 29 Sep 2019 17:31:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9251218AC;
+        Sun, 29 Sep 2019 17:31:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778299;
-        bh=6U12gjLd5+hWTbCP6kB3SDmu7dkXEuPqe6BNUcEyDwE=;
+        s=default; t=1569778295;
+        bh=C8GGBJVGuQevLu0Z6ggEvyEinRf5njOQ0297fhKdxTA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YCfJGgmwcimX2Z9hICl4zWNdOXdLoU41l0brXB5+jx4yMdmjRP86/fhDw/NWb/ybm
-         mwerE5uInU1MrycVHP4pB5hvdPVe1cWo0tnFjn7a9tmm37rcRYG82Huik2XwFXL5Or
-         opvy9KsYVKgokjVPBpRCy5U1/2kpltWtO2CNhB8A=
+        b=sV1Ain1i8/g+AuQE09KWd5T4r3HA87Xfksss3I+uKJKePRZkSxJiB2fybwfG7ahGu
+         vabpU2qcqzdEIhFrNlDEJYkVk29kc4tqsjWV6XbV5UUsKdYM7mJlQrHmHp+iTGnLK4
+         kZpGbkO0Jao4mEOYEYTI3wmt/KU3n+ys7rSdxANY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@linux-mips.org,
-        joe@perches.com,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
-        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 20/49] firmware: bcm47xx_nvram: Correct size_t printf format
-Date:   Sun, 29 Sep 2019 13:30:20 -0400
-Message-Id: <20190929173053.8400-20-sashal@kernel.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.3 18/49] ARM: 8875/1: Kconfig: default to AEABI w/ Clang
+Date:   Sun, 29 Sep 2019 13:30:18 -0400
+Message-Id: <20190929173053.8400-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173053.8400-1-sashal@kernel.org>
 References: <20190929173053.8400-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,57 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Nick Desaulniers <ndesaulniers@google.com>
 
-[ Upstream commit feb4eb060c3aecc3c5076bebe699cd09f1133c41 ]
+[ Upstream commit a05b9608456e0d4464c6f7ca8572324ace57a3f4 ]
 
-When building on a 64-bit host, we will get warnings like those:
+Clang produces references to __aeabi_uidivmod and __aeabi_idivmod for
+arm-linux-gnueabi and arm-linux-gnueabihf targets incorrectly when AEABI
+is not selected (such as when OABI_COMPAT is selected).
 
-drivers/firmware/broadcom/bcm47xx_nvram.c:103:3: note: in expansion of macro 'pr_err'
-   pr_err("nvram on flash (%i bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
-   ^~~~~~
-drivers/firmware/broadcom/bcm47xx_nvram.c:103:28: note: format string is defined here
-   pr_err("nvram on flash (%i bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
-                           ~^
-                           %li
+While this means that OABI userspaces wont be able to upgraded to
+kernels built with Clang, it means that boards that don't enable AEABI
+like s3c2410_defconfig will stop failing to link in KernelCI when built
+with Clang.
 
-Use %zu instead for that purpose.
+Link: https://github.com/ClangBuiltLinux/linux/issues/482
+Link: https://groups.google.com/forum/#!msg/clang-built-linux/yydsAAux5hk/GxjqJSW-AQAJ
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: linux-mips@linux-mips.org
-Cc: joe@perches.com
-Cc: Rafał Miłecki <zajec5@gmail.com>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/broadcom/bcm47xx_nvram.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/Kconfig | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/firmware/broadcom/bcm47xx_nvram.c b/drivers/firmware/broadcom/bcm47xx_nvram.c
-index 77eb74666ecbc..6d2820f6aca13 100644
---- a/drivers/firmware/broadcom/bcm47xx_nvram.c
-+++ b/drivers/firmware/broadcom/bcm47xx_nvram.c
-@@ -96,7 +96,7 @@ static int nvram_find_and_copy(void __iomem *iobase, u32 lim)
- 		nvram_len = size;
- 	}
- 	if (nvram_len >= NVRAM_SPACE) {
--		pr_err("nvram on flash (%i bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
-+		pr_err("nvram on flash (%zu bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
- 		       nvram_len, NVRAM_SPACE - 1);
- 		nvram_len = NVRAM_SPACE - 1;
- 	}
-@@ -148,7 +148,7 @@ static int nvram_init(void)
- 	    header.len > sizeof(header)) {
- 		nvram_len = header.len;
- 		if (nvram_len >= NVRAM_SPACE) {
--			pr_err("nvram on flash (%i bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
-+			pr_err("nvram on flash (%zu bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
- 				header.len, NVRAM_SPACE);
- 			nvram_len = NVRAM_SPACE - 1;
- 		}
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 24360211534ab..5e2c68e9dd6e2 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -1572,8 +1572,9 @@ config ARM_PATCH_IDIV
+ 	  code to do integer division.
+ 
+ config AEABI
+-	bool "Use the ARM EABI to compile the kernel" if !CPU_V7 && !CPU_V7M && !CPU_V6 && !CPU_V6K
+-	default CPU_V7 || CPU_V7M || CPU_V6 || CPU_V6K
++	bool "Use the ARM EABI to compile the kernel" if !CPU_V7 && \
++		!CPU_V7M && !CPU_V6 && !CPU_V6K && !CC_IS_CLANG
++	default CPU_V7 || CPU_V7M || CPU_V6 || CPU_V6K || CC_IS_CLANG
+ 	help
+ 	  This option allows for the kernel to be compiled using the latest
+ 	  ARM ABI (aka EABI).  This is only useful if you are using a user
 -- 
 2.20.1
 
