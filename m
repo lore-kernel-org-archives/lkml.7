@@ -6,63 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C8CC32793
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB92C352A9
 	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E603E2082F
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28DEE2086A
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:50:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1569779428;
-	bh=sLpBK98JGjYLJeeMKeMxZXtgz3IbLinnFUJWoo1RwjE=;
+	bh=+XWUYtBP1qT7QheXIg8At80qTqeBy2oEuBlU8jR6p38=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=WlbRaofbigg40gonnB1Cn/agECohBcZo7jTO4VFvJxCyD2Qx4PBCN0Ke1WT89gcZQ
-	 8vfLV7hbwAnJDnmzd3RHQ5HCFELdWbY1gDj5qlyejE1UXLV0Dj/rRluZOmsegJuMPM
-	 UQBIWIgc2yqVikz3kCDgVNJG1TUHSrSRe0rukEjQ=
+	b=aFi00hKgnAhmO82/nMmRHhAwJUQV5BoU5EWQDNyfxlHdLBR9BRt3EzPQYvZw4oHbW
+	 jIhtGXWMMQWsu9emU2CZ+zfrTQ8f7rBpxTgFeRlbpt6e2espTb7BaesyVfZRSmM5G+
+	 OKGFTwqi4ICKZoCGzvguLPSHJV4UVu8Rax01k5Uo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729316AbfI2RuZ (ORCPT
+        id S1729339AbfI2Ru1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:50:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35902 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:50:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729197AbfI2RuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729254AbfI2RuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 29 Sep 2019 13:50:24 -0400
-Subject: Re: [GIT PULL] libnvdimm fixes for v5.4-rc1
+Subject: Re: [PULL REQUEST] i2c for 5.4
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569779423;
-        bh=sLpBK98JGjYLJeeMKeMxZXtgz3IbLinnFUJWoo1RwjE=;
+        s=default; t=1569779424;
+        bh=+XWUYtBP1qT7QheXIg8At80qTqeBy2oEuBlU8jR6p38=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=S2FmXA27bktlnMH3emqurNob0egawmtiVT06arsVQPs65bcvb6jDvRzV6tR2k1x4d
-         TZxuckVZTADTqO73grBvrAdyjVEreHwvqdvQsViA5PEgxFS3eCY1zYAQ4Dcws6cIry
-         jeAD7YNIQvWgz4CDWZnneUAoM3x5w7tvn5pfPVwY=
+        b=QQKx22MCiqyJyHH7AB8+0bHj4LAASeHEWCtiaBq1VMfYyWflreuVPRtdWqJ6ud1cx
+         LrobzcI+HwdKN4p8rEgVW5ayqxcfDeix0fdIscIj6aileJoSV8IJzJfx0nt6N1fjpb
+         v73X0eISvxhd65L57xDwByb4I6gSHvB6Ajh4IB7g=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAPcyv4jJjjkXXSYpYNC3y2r2YJrcSYw=tZ9p=KyA8BS46kfFuA@mail.gmail.com>
-References: <CAPcyv4jJjjkXXSYpYNC3y2r2YJrcSYw=tZ9p=KyA8BS46kfFuA@mail.gmail.com>
+In-Reply-To: <20190929103950.GA9497@kunai>
+References: <20190929103950.GA9497@kunai>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAPcyv4jJjjkXXSYpYNC3y2r2YJrcSYw=tZ9p=KyA8BS46kfFuA@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
- tags/libnvdimm-fixes-5.4-rc1
-X-PR-Tracked-Commit-Id: 4c806b897d6075bfa5067e524fb058c57ab64e7b
+X-PR-Tracked-Message-Id: <20190929103950.GA9497@kunai>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-next
+X-PR-Tracked-Commit-Id: 11af27f494086188620e7768e421894af93c126a
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a3c0e7b1fe1fc62bba5f591c4bc404eea96823b8
-Message-Id: <156977942385.28081.14590936149544081114.pr-tracker-bot@kernel.org>
-Date:   Sun, 29 Sep 2019 17:50:23 +0000
-To:     Dan Williams <dan.j.williams@intel.com>
+X-PR-Merge-Commit-Id: 9ecb3e10a9f2d3443c3bcd0dba42e7e3e2e67618
+Message-Id: <156977942406.28081.7782548145153903012.pr-tracker-bot@kernel.org>
+Date:   Sun, 29 Sep 2019 17:50:24 +0000
+To:     Wolfram Sang <wsa@the-dreams.de>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 28 Sep 2019 18:44:17 -0700:
+The pull request you sent on Sun, 29 Sep 2019 12:39:54 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm tags/libnvdimm-fixes-5.4-rc1
+> git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-next
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a3c0e7b1fe1fc62bba5f591c4bc404eea96823b8
+https://git.kernel.org/torvalds/c/9ecb3e10a9f2d3443c3bcd0dba42e7e3e2e67618
 
 Thank you!
 
