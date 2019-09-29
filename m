@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BE7C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7828C32793
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A62F021925
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7966421A4C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:36:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778575;
-	bh=1gGCjJia8yEAWiHCMurLorhELpMT7PCKhoCa6fsupq0=;
+	s=default; t=1569778579;
+	bh=p/RHvbDV/1tIo8Or4RuVoQrBkcui4L3WwhNnxozAR/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=egVd9OZGvxYuymgdhOL+0Pe7zuZBnom7wK787vkX0Ivxe8FKMEpHmNigvdY5eUQaV
-	 3wgzXM8IIVrXywNLJhK/87sWFTTmuTW1UyxQLsmknaqaEhh2ytwK/U7zR5e0xeRLXt
-	 rXXc8doQdnZCc4SJ1cOm/CtSIjX8MJModvp9J7ko=
+	b=Zi+t37oZOO94Q6G4xBZ2vaT/aB6e6/TwliqB4F2/RqwiKfYmQAXQtSNYz7yJ4FWix
+	 iMtxUyLRDmG4/mG7PLYsX8yNpyzlMuoUA75VWBCVoPC9yyxmN1Wvjf+T0P+1hYU33n
+	 v93TUp8u4pqFxKbzobKqTmEFvDxXuabQa/YrlMWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730783AbfI2RgO (ORCPT
+        id S1730811AbfI2RgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:36:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48576 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:36:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730759AbfI2RgK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:36:10 -0400
+        id S1730790AbfI2RgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:36:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2E2E21906;
-        Sun, 29 Sep 2019 17:36:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5237421925;
+        Sun, 29 Sep 2019 17:36:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778570;
-        bh=1gGCjJia8yEAWiHCMurLorhELpMT7PCKhoCa6fsupq0=;
+        s=default; t=1569778577;
+        bh=p/RHvbDV/1tIo8Or4RuVoQrBkcui4L3WwhNnxozAR/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YjD65/qONJ35el1mCHr5iCvV7YTC994BoXM6u2jO6SApcTk73ENBHdmyikvB9lHwt
-         1yvPyPhnIbimHfvb99trW6MafF6mj/IKjGtB1KlXl4UCkdWZLDDFOQLqrZrb6htMxU
-         qf2a6CN9tvULF59uYMi1uPJUXAn997f48BR+DKHQ=
+        b=2cXsXTZHLItGsLQkD8zDMI8nae8l0qTCojHXcTfxGnVxeaGBBtOhOSt8n5zHebitm
+         FVvj6AEv86/4TUwwR1OFF55Brz/bzh637KEg+usEPwx2qBj8xXsYHgclqyUgBwhq7c
+         DCBJ31d7xyeL6s0rVR/ZlAyd4mzUmB4xEs5T/BHA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Rapoport <mike.rapoport@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+Cc:     Greg Thelen <gthelen@google.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 17/23] ARM: 8903/1: ensure that usable memory in bank 0 starts from a PMD-aligned address
-Date:   Sun, 29 Sep 2019 13:35:27 -0400
-Message-Id: <20190929173535.9744-17-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 21/23] kbuild: clean compressed initramfs image
+Date:   Sun, 29 Sep 2019 13:35:31 -0400
+Message-Id: <20190929173535.9744-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173535.9744-1-sashal@kernel.org>
 References: <20190929173535.9744-1-sashal@kernel.org>
@@ -60,55 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <mike.rapoport@gmail.com>
+From: Greg Thelen <gthelen@google.com>
 
-[ Upstream commit 00d2ec1e6bd82c0538e6dd3e4a4040de93ba4fef ]
+[ Upstream commit 6279eb3dd7946c69346a3b98473ed13d3a44adb5 ]
 
-The calculation of memblock_limit in adjust_lowmem_bounds() assumes that
-bank 0 starts from a PMD-aligned address. However, the beginning of the
-first bank may be NOMAP memory and the start of usable memory
-will be not aligned to PMD boundary. In such case the memblock_limit will
-be set to the end of the NOMAP region, which will prevent any memblock
-allocations.
+Since 9e3596b0c653 ("kbuild: initramfs cleanup, set target from Kconfig")
+"make clean" leaves behind compressed initramfs images.  Example:
 
-Mark the region between the end of the NOMAP area and the next PMD-aligned
-address as NOMAP as well, so that the usable memory will start at
-PMD-aligned address.
+  $ make defconfig
+  $ sed -i 's|CONFIG_INITRAMFS_SOURCE=""|CONFIG_INITRAMFS_SOURCE="/tmp/ir.cpio"|' .config
+  $ make olddefconfig
+  $ make -s
+  $ make -s clean
+  $ git clean -ndxf | grep initramfs
+  Would remove usr/initramfs_data.cpio.gz
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+clean rules do not have CONFIG_* context so they do not know which
+compression format was used.  Thus they don't know which files to delete.
+
+Tell clean to delete all possible compression formats.
+
+Once patched usr/initramfs_data.cpio.gz and friends are deleted by
+"make clean".
+
+Link: http://lkml.kernel.org/r/20190722063251.55541-1-gthelen@google.com
+Fixes: 9e3596b0c653 ("kbuild: initramfs cleanup, set target from Kconfig")
+Signed-off-by: Greg Thelen <gthelen@google.com>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mm/mmu.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ usr/Makefile | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
-index e46a6a446cdd2..70e560cf8ca03 100644
---- a/arch/arm/mm/mmu.c
-+++ b/arch/arm/mm/mmu.c
-@@ -1175,6 +1175,22 @@ void __init adjust_lowmem_bounds(void)
- 	 */
- 	vmalloc_limit = (u64)(uintptr_t)vmalloc_min - PAGE_OFFSET + PHYS_OFFSET;
+diff --git a/usr/Makefile b/usr/Makefile
+index 237a028693ce9..5f1bc5b23b14c 100644
+--- a/usr/Makefile
++++ b/usr/Makefile
+@@ -11,6 +11,9 @@ datafile_y = initramfs_data.cpio$(suffix_y)
+ datafile_d_y = .$(datafile_y).d
+ AFLAGS_initramfs_data.o += -DINITRAMFS_IMAGE="usr/$(datafile_y)"
  
-+	/*
-+	 * The first usable region must be PMD aligned. Mark its start
-+	 * as MEMBLOCK_NOMAP if it isn't
-+	 */
-+	for_each_memblock(memory, reg) {
-+		if (!memblock_is_nomap(reg)) {
-+			if (!IS_ALIGNED(reg->base, PMD_SIZE)) {
-+				phys_addr_t len;
-+
-+				len = round_up(reg->base, PMD_SIZE) - reg->base;
-+				memblock_mark_nomap(reg->base, len);
-+			}
-+			break;
-+		}
-+	}
-+
- 	for_each_memblock(memory, reg) {
- 		phys_addr_t block_start = reg->base;
- 		phys_addr_t block_end = reg->base + reg->size;
++# clean rules do not have CONFIG_INITRAMFS_COMPRESSION.  So clean up after all
++# possible compression formats.
++clean-files += initramfs_data.cpio*
+ 
+ # Generate builtin.o based on initramfs_data.o
+ obj-$(CONFIG_BLK_DEV_INITRD) := initramfs_data.o
 -- 
 2.20.1
 
