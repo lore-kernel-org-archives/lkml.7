@@ -2,53 +2,52 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8218BC32793
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3C4C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B2BB2190F
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68CFE2086A
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:03:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569765828;
-	bh=6Aj5dbtLhd7kA0KmaquGmsU5Jz5yxPWzd2bJ84wED3A=;
+	s=default; t=1569765831;
+	bh=oJ1DAPC6i1yD3poQaOwZoOjZyJqHHxMJuBpIZsKKyd8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aUvUUEmYuZiXQ029/H7zcbXSCLcwXfPOUEuK03U+S6gR4AqWAc+tbe4+o/7q5bzs3
-	 bm4ahV1nnxB07XGISdr3g8+W5WSFVl/s3LDvrgKiVpqj7/EFPMKSlFwYLPd44/cGds
-	 coAXbEcHCZ/komIWCJsSWqO8PLsBnm397oGFH+B0=
+	b=0udt32QyH7ZJqTt5qEnF0BZFfddDfD6rt47p6EYgTG1hwSgfSrewICQ9fmzucwXVo
+	 +iNm5/s9mQQEYODw/Z6iAyXKBJzSEYJ1hrFtMsHJLYbTyKzYQQ6szGvWz43goTtFW2
+	 xjZdQXafMovOB/chKFUCI2gaJVodKp5e9K4JmOtI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730391AbfI2ODr (ORCPT
+        id S1730399AbfI2ODu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 10:03:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46862 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 10:03:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730374AbfI2ODl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 10:03:41 -0400
+        id S1728809AbfI2ODo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 10:03:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5D302086A;
-        Sun, 29 Sep 2019 14:03:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 257A82082F;
+        Sun, 29 Sep 2019 14:03:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569765820;
-        bh=6Aj5dbtLhd7kA0KmaquGmsU5Jz5yxPWzd2bJ84wED3A=;
+        s=default; t=1569765823;
+        bh=oJ1DAPC6i1yD3poQaOwZoOjZyJqHHxMJuBpIZsKKyd8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZBXFe3yG/TN7SlLM8pY6P5KsTKDB1NZ9sdIQkNg+9f9essi9oMYlKvLKt6zUJGIUB
-         1ysg7DELg0/uvpDLfSanX4CRB2mSZ+/1l60lmfg0Y57PDqncqBkfitdg9Q++fmOsII
-         Ga0v3LEFL9atuyV7nudPS2RYAIZsDbKlwKqf2QFk=
+        b=t0TfsCGa2+VWo2DrhAu7S6ynGWA/b43Bko8QQZE8jwqd6gh1orgmdbpF/EYs7YQwu
+         rdS8+hvMMM23SV/fBaJ6aIsbtDfrZI3YYwLzjha4rgkd/IUbFszSJChzKOErFghJHJ
+         jeF4vcwUdu/nM/QwjEg+NR4p9Wmt1NO6wTJKU7Yc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sedat Dilek <sedat.dilek@gmail.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.3 07/25] drm/amd/display: readd -msse2 to prevent Clang from emitting libcalls to undefined SW FP routines
-Date:   Sun, 29 Sep 2019 15:56:10 +0200
-Message-Id: <20190929135011.629505348@linuxfoundation.org>
+        stable@vger.kernel.org, Greg Kurz <groug@kaod.org>,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.3 08/25] powerpc/xive: Fix bogus error code returned by OPAL
+Date:   Sun, 29 Sep 2019 15:56:11 +0200
+Message-Id: <20190929135012.097592839@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190929135006.127269625@linuxfoundation.org>
 References: <20190929135006.127269625@linuxfoundation.org>
@@ -61,89 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Desaulniers <ndesaulniers@google.com>
+From: Greg Kurz <groug@kaod.org>
 
-commit 0f0727d971f6fdf8f1077180d495ddb9928f0c8b upstream.
+commit 6ccb4ac2bf8a35c694ead92f8ac5530a16e8f2c8 upstream.
 
-arch/x86/Makefile disables SSE and SSE2 for the whole kernel.  The
-AMDGPU drivers modified in this patch re-enable SSE but not SSE2.  Turn
-on SSE2 to support emitting double precision floating point instructions
-rather than calls to non-existent (usually available from gcc_s or
-compiler_rt) floating point helper routines for Clang.
+There's a bug in skiboot that causes the OPAL_XIVE_ALLOCATE_IRQ call
+to return the 32-bit value 0xffffffff when OPAL has run out of IRQs.
+Unfortunatelty, OPAL return values are signed 64-bit entities and
+errors are supposed to be negative. If that happens, the linux code
+confusingly treats 0xffffffff as a valid IRQ number and panics at some
+point.
 
-This was originally landed in:
-commit 10117450735c ("drm/amd/display: add -msse2 to prevent Clang from emitting libcalls to undefined SW FP routines")
-but reverted in:
-commit 193392ed9f69 ("Revert "drm/amd/display: add -msse2 to prevent Clang from emitting libcalls to undefined SW FP routines"")
-due to bugreports from GCC builds. Add guards to only do so for Clang.
+A fix was recently merged in skiboot:
 
-Link: https://bugs.freedesktop.org/show_bug.cgi?id=109487
-Link: https://github.com/ClangBuiltLinux/linux/issues/327
+e97391ae2bb5 ("xive: fix return value of opal_xive_allocate_irq()")
 
-Suggested-by: Sedat Dilek <sedat.dilek@gmail.com>
-Suggested-by: Sami Tolvanen <samitolvanen@google.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+but we need a workaround anyway to support older skiboots already
+in the field.
+
+Internally convert 0xffffffff to OPAL_RESOURCE which is the usual error
+returned upon resource exhaustion.
+
+Cc: stable@vger.kernel.org # v4.12+
+Signed-off-by: Greg Kurz <groug@kaod.org>
+Reviewed-by: Cédric Le Goater <clg@kaod.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/156821713818.1985334.14123187368108582810.stgit@bahia.lan
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/display/dc/calcs/Makefile |    4 ++++
- drivers/gpu/drm/amd/display/dc/dcn20/Makefile |    4 ++++
- drivers/gpu/drm/amd/display/dc/dml/Makefile   |    4 ++++
- drivers/gpu/drm/amd/display/dc/dsc/Makefile   |    4 ++++
- 4 files changed, 16 insertions(+)
+ arch/powerpc/include/asm/opal.h            |    2 +-
+ arch/powerpc/platforms/powernv/opal-call.c |    2 +-
+ arch/powerpc/sysdev/xive/native.c          |   11 +++++++++++
+ 3 files changed, 13 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/amd/display/dc/calcs/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/calcs/Makefile
-@@ -32,6 +32,10 @@ endif
+--- a/arch/powerpc/include/asm/opal.h
++++ b/arch/powerpc/include/asm/opal.h
+@@ -272,7 +272,7 @@ int64_t opal_xive_get_vp_info(uint64_t v
+ int64_t opal_xive_set_vp_info(uint64_t vp,
+ 			      uint64_t flags,
+ 			      uint64_t report_cl_pair);
+-int64_t opal_xive_allocate_irq(uint32_t chip_id);
++int64_t opal_xive_allocate_irq_raw(uint32_t chip_id);
+ int64_t opal_xive_free_irq(uint32_t girq);
+ int64_t opal_xive_sync(uint32_t type, uint32_t id);
+ int64_t opal_xive_dump(uint32_t type, uint32_t id);
+--- a/arch/powerpc/platforms/powernv/opal-call.c
++++ b/arch/powerpc/platforms/powernv/opal-call.c
+@@ -257,7 +257,7 @@ OPAL_CALL(opal_xive_set_queue_info,		OPA
+ OPAL_CALL(opal_xive_donate_page,		OPAL_XIVE_DONATE_PAGE);
+ OPAL_CALL(opal_xive_alloc_vp_block,		OPAL_XIVE_ALLOCATE_VP_BLOCK);
+ OPAL_CALL(opal_xive_free_vp_block,		OPAL_XIVE_FREE_VP_BLOCK);
+-OPAL_CALL(opal_xive_allocate_irq,		OPAL_XIVE_ALLOCATE_IRQ);
++OPAL_CALL(opal_xive_allocate_irq_raw,		OPAL_XIVE_ALLOCATE_IRQ);
+ OPAL_CALL(opal_xive_free_irq,			OPAL_XIVE_FREE_IRQ);
+ OPAL_CALL(opal_xive_get_vp_info,		OPAL_XIVE_GET_VP_INFO);
+ OPAL_CALL(opal_xive_set_vp_info,		OPAL_XIVE_SET_VP_INFO);
+--- a/arch/powerpc/sysdev/xive/native.c
++++ b/arch/powerpc/sysdev/xive/native.c
+@@ -231,6 +231,17 @@ static bool xive_native_match(struct dev
+ 	return of_device_is_compatible(node, "ibm,opal-xive-vc");
+ }
  
- calcs_ccflags := -mhard-float -msse $(cc_stack_align)
- 
-+ifdef CONFIG_CC_IS_CLANG
-+calcs_ccflags += -msse2
-+endif
++static s64 opal_xive_allocate_irq(u32 chip_id)
++{
++	s64 irq = opal_xive_allocate_irq_raw(chip_id);
 +
- CFLAGS_dcn_calcs.o := $(calcs_ccflags)
- CFLAGS_dcn_calc_auto.o := $(calcs_ccflags)
- CFLAGS_dcn_calc_math.o := $(calcs_ccflags) -Wno-tautological-compare
---- a/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
-@@ -18,6 +18,10 @@ endif
- 
- CFLAGS_dcn20_resource.o := -mhard-float -msse $(cc_stack_align)
- 
-+ifdef CONFIG_CC_IS_CLANG
-+CFLAGS_dcn20_resource.o += -msse2
-+endif
++	/*
++	 * Old versions of skiboot can incorrectly return 0xffffffff to
++	 * indicate no space, fix it up here.
++	 */
++	return irq == 0xffffffff ? OPAL_RESOURCE : irq;
++}
 +
- AMD_DAL_DCN20 = $(addprefix $(AMDDALPATH)/dc/dcn20/,$(DCN20))
- 
- AMD_DISPLAY_FILES += $(AMD_DAL_DCN20)
---- a/drivers/gpu/drm/amd/display/dc/dml/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/dml/Makefile
-@@ -32,6 +32,10 @@ endif
- 
- dml_ccflags := -mhard-float -msse $(cc_stack_align)
- 
-+ifdef CONFIG_CC_IS_CLANG
-+dml_ccflags += -msse2
-+endif
-+
- CFLAGS_display_mode_lib.o := $(dml_ccflags)
- 
- ifdef CONFIG_DRM_AMD_DC_DCN2_0
---- a/drivers/gpu/drm/amd/display/dc/dsc/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/dsc/Makefile
-@@ -9,6 +9,10 @@ endif
- 
- dsc_ccflags := -mhard-float -msse $(cc_stack_align)
- 
-+ifdef CONFIG_CC_IS_CLANG
-+dsc_ccflags += -msse2
-+endif
-+
- CFLAGS_rc_calc.o := $(dsc_ccflags)
- CFLAGS_rc_calc_dpi.o := $(dsc_ccflags)
- CFLAGS_codec_main_amd.o := $(dsc_ccflags)
+ #ifdef CONFIG_SMP
+ static int xive_native_get_ipi(unsigned int cpu, struct xive_cpu *xc)
+ {
 
 
