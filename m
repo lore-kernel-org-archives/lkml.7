@@ -2,163 +2,159 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3E7C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 07:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F94CC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 07:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBEF0206C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 07:49:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CKpoYcvB"
+	by mail.kernel.org (Postfix) with ESMTP id 2C892206C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 07:49:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728640AbfI2Htd (ORCPT
+        id S1728932AbfI2Htj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 03:49:33 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34084 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725379AbfI2Htd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 03:49:33 -0400
-Received: by mail-pg1-f194.google.com with SMTP id y35so5622838pgl.1
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Sep 2019 00:49:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=ALfay30h7dJ26wuLT+jtgKPUgydlfxhNtnqYzbldtjs=;
-        b=CKpoYcvB+dApUun67rFK8JgcxsGfC4Q84EUMFa1ACiz33b37J1GChmGP3Y1eT+2iVr
-         4K/orX0v2WutapxA25YnlcVcQheXodt48Nwi88TcqT+l/eS3ripTP9rJPuDTe2X8IreY
-         +hRjNoHEsXAo1qx1o85RstbXwuVdFuEHNuGRi4VSZ6eWApbpZa64LP3ZoBiPr/kQF6j4
-         BXMHOZBNamzNLRAFRd5ZIwjWFPqKsjzHMYsTHvLDey+e3iNYYMPvl25jCWFkQoJnletQ
-         elzgohPErRQUREyMY117RNo80duWWsfMio0TjBbj1cgkOcdBzB2bNPcEx4/ajv/W7JGm
-         tSlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=ALfay30h7dJ26wuLT+jtgKPUgydlfxhNtnqYzbldtjs=;
-        b=oCRppum8m1iLMJ7376hCAVDYN0/iwAaleg8k4CzyGtUjjI48IvHnOtyuW20shlvPdR
-         9tyIOXirCeIQJwVPWAJhgBW/DhF1Wn7bjWNWVSUT/t8ctjggo7Udk+DMBryn++D2a+Di
-         AowPwzwz4ai06R+nPtOZdZuMdH7tALbsTk7SxSq6hUfOvvO023jmH3uyl5Ryg4BUE6y/
-         ymUNjY1PQzNiQyQPGWkcWrbAD8WICO3Ew3rb7KFq+Yajm0QCP7etqqE8o8c3m0x20w0d
-         5Qx5ybKeNFHd+NcP/QYvrH05LmQF4mPs255OKDTg+3DN/n1RkPsQC58uzeLjzRQLpMA5
-         n5Ew==
-X-Gm-Message-State: APjAAAXT88u740x77YZ44RaJgqogZETAWU4J+34t0zxGIVEWbRRtAzda
-        OuThtc7q3PT+NzoMjt6Im2y/2KYntfc=
-X-Google-Smtp-Source: APXvYqwk03VqmdgTfQONRgf7XvkS8T1usRALeIgGxILt9vc0ZCZ02zCIEnmCAsXr2uQvMEZJgFoLiQ==
-X-Received: by 2002:a62:3083:: with SMTP id w125mr14881576pfw.102.1569743371103;
-        Sun, 29 Sep 2019 00:49:31 -0700 (PDT)
-Received: from localhost ([2402:3a80:1386:365a:afc8:2b6a:7e98:d2fd])
-        by smtp.gmail.com with ESMTPSA id 192sm8507377pfb.110.2019.09.29.00.49.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Sep 2019 00:49:30 -0700 (PDT)
-Date:   Sun, 29 Sep 2019 13:19:19 +0530
-From:   Jaskaran Singh <jaskaransingh7654321@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
-        jani.nikula@linux.intel.com
-Subject: [PATCH] drm/i915: Fix documentation build warnings w/r/t kernel-doc
-Message-ID: <20190929074919.GA5699@localhost.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Sun, 29 Sep 2019 03:49:39 -0400
+Received: from mga05.intel.com ([192.55.52.43]:8411 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725379AbfI2Hti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 03:49:38 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Sep 2019 00:49:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,562,1559545200"; 
+   d="scan'208";a="193826523"
+Received: from zhangjun-desktop.sh.intel.com ([10.239.154.83])
+  by orsmga003.jf.intel.com with ESMTP; 29 Sep 2019 00:49:28 -0700
+From:   jun.zhang@intel.com
+To:     labbott@redhat.com, sumit.semwal@linaro.org,
+        gregkh@linuxfoundation.org, arve@android.com, tkjos@android.com,
+        maco@android.com, joel@joelfernandes.org, christian@brauner.io
+Cc:     devel@driverdev.osuosl.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
+        zhang jun <jun.zhang@intel.com>, he@vger.kernel.org,
+        bo <bo.he@intel.com>, Bai@vger.kernel.org,
+        Jie A <jie.a.bai@intel.com>
+Subject: [PATCH] ion_system_heap: support X86 archtecture
+Date:   Sun, 29 Sep 2019 15:28:41 +0800
+Message-Id: <20190929072841.14848-1-jun.zhang@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Building docs with make htmldocs yields documentation build
-warnings for drivers/gpu/drm/i915/i915_drv.h. Some of the
-documentation does not follow kernel-doc format.
+From: zhang jun <jun.zhang@intel.com>
 
-This patch fixes these warnings.
+we see tons of warning like:
+[   45.846872] x86/PAT: NDK MediaCodec_:3753 map pfn RAM range req
+write-combining for [mem 0x1e7a80000-0x1e7a87fff], got write-back
+[   45.848827] x86/PAT: .vorbis.decoder:4088 map pfn RAM range req
+write-combining for [mem 0x1e7a58000-0x1e7a58fff], got write-back
+[   45.848875] x86/PAT: NDK MediaCodec_:3753 map pfn RAM range req
+write-combining for [mem 0x1e7a48000-0x1e7a4ffff], got write-back
+[   45.849403] x86/PAT: .vorbis.decoder:4088 map pfn RAM range
+req write-combining for [mem 0x1e7a70000-0x1e7a70fff], got write-back
 
-Signed-off-by: Jaskaran Singh <jaskaransingh7654321@gmail.com>
+check the kernel Documentation/x86/pat.txt, it says:
+A. Exporting pages to users with remap_pfn_range, io_remap_pfn_range,
+vm_insert_pfn
+Drivers wanting to export some pages to userspace do it by using
+mmap interface and a combination of
+1) pgprot_noncached()
+2) io_remap_pfn_range() or remap_pfn_range() or vm_insert_pfn()
+With PAT support, a new API pgprot_writecombine is being added.
+So, drivers can continue to use the above sequence, with either
+pgprot_noncached() or pgprot_writecombine() in step 1, followed by step 2.
+
+In addition, step 2 internally tracks the region as UC or WC in
+memtype list in order to ensure no conflicting mapping.
+
+Note that this set of APIs only works with IO (non RAM) regions.
+If driver ants to export a RAM region, it has to do set_memory_uc() or
+set_memory_wc() as step 0 above and also track the usage of those pages
+and use set_memory_wb() before the page is freed to free pool.
+
+the fix follow the pat document, do set_memory_wc() as step 0 and
+use the set_memory_wb() before the page is freed.
+
+Signed-off-by: he, bo <bo.he@intel.com>
+Signed-off-by: zhang jun <jun.zhang@intel.com>
+Signed-off-by: Bai, Jie A <jie.a.bai@intel.com>
 ---
- drivers/gpu/drm/i915/i915_drv.h | 28 +++++++++++++++-------------
- 1 file changed, 15 insertions(+), 13 deletions(-)
+ drivers/staging/android/ion/ion_system_heap.c | 28 ++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/i915/i915_drv.h b/drivers/gpu/drm/i915/i915_drv.h
-index 772154e4073e..573a972e3643 100644
---- a/drivers/gpu/drm/i915/i915_drv.h
-+++ b/drivers/gpu/drm/i915/i915_drv.h
-@@ -1126,7 +1126,7 @@ struct i915_perf_stream {
- 	struct i915_oa_config *oa_config;
+diff --git a/drivers/staging/android/ion/ion_system_heap.c b/drivers/staging/android/ion/ion_system_heap.c
+index b83a1d16bd89..d298b8194820 100644
+--- a/drivers/staging/android/ion/ion_system_heap.c
++++ b/drivers/staging/android/ion/ion_system_heap.c
+@@ -13,6 +13,7 @@
+ #include <linux/scatterlist.h>
+ #include <linux/slab.h>
+ #include <linux/vmalloc.h>
++#include <asm/set_memory.h>
  
- 	/**
--	 * The OA context specific information.
-+	 * @pinned_ctx: The OA context specific information.
- 	 */
- 	struct intel_context *pinned_ctx;
- 	u32 specific_ctx_id;
-@@ -1140,7 +1140,7 @@ struct i915_perf_stream {
- 	int period_exponent;
+ #include "ion.h"
  
- 	/**
--	 * State of the OA buffer.
-+	 * @oa_buffer: State of the OA buffer.
- 	 */
- 	struct {
- 		struct i915_vma *vma;
-@@ -1151,7 +1151,7 @@ struct i915_perf_stream {
- 		int size_exponent;
+@@ -134,6 +135,13 @@ static int ion_system_heap_allocate(struct ion_heap *heap,
+ 	sg = table->sgl;
+ 	list_for_each_entry_safe(page, tmp_page, &pages, lru) {
+ 		sg_set_page(sg, page, page_size(page), 0);
++
++#ifdef CONFIG_X86
++	if (!(buffer->flags & ION_FLAG_CACHED))
++		set_memory_wc((unsigned long)page_address(sg_page(sg)),
++			      PAGE_ALIGN(sg->length) >> PAGE_SHIFT);
++#endif
++
+ 		sg = sg_next(sg);
+ 		list_del(&page->lru);
+ 	}
+@@ -162,8 +170,15 @@ static void ion_system_heap_free(struct ion_buffer *buffer)
+ 	if (!(buffer->private_flags & ION_PRIV_FLAG_SHRINKER_FREE))
+ 		ion_heap_buffer_zero(buffer);
  
- 		/**
--		 * Locks reads and writes to all head/tail state
-+		 * @ptr_lock: Locks reads and writes to all head/tail state
- 		 *
- 		 * Consider: the head and tail pointer state needs to be read
- 		 * consistently from a hrtimer callback (atomic context) and
-@@ -1173,8 +1173,8 @@ struct i915_perf_stream {
- 		spinlock_t ptr_lock;
+-	for_each_sg(table->sgl, sg, table->nents, i)
++	for_each_sg(table->sgl, sg, table->nents, i) {
++#ifdef CONFIG_X86
++		if (!(buffer->flags & ION_FLAG_CACHED))
++			set_memory_wb((unsigned long)page_address(sg_page(sg)),
++				      PAGE_ALIGN(sg->length) >> PAGE_SHIFT);
++#endif
++
+ 		free_buffer_page(sys_heap, buffer, sg_page(sg));
++	}
+ 	sg_free_table(table);
+ 	kfree(table);
+ }
+@@ -316,6 +331,12 @@ static int ion_system_contig_heap_allocate(struct ion_heap *heap,
  
- 		/**
--		 * One 'aging' tail pointer and one 'aged' tail pointer ready to
--		 * used for reading.
-+		 * @tails: One 'aging' tail pointer and one 'aged' tail pointer
-+		 * ready to used for reading.
- 		 *
- 		 * Initial values of 0xffffffff are invalid and imply that an
- 		 * update is required (and should be ignored by an attempted
-@@ -1185,22 +1185,24 @@ struct i915_perf_stream {
- 		} tails[2];
+ 	buffer->sg_table = table;
  
- 		/**
--		 * Index for the aged tail ready to read() data up to.
-+		 * @aged_tail_idx: Index for the aged tail ready to read() data
-+		 * up to.
- 		 */
- 		unsigned int aged_tail_idx;
++#ifdef CONFIG_X86
++	if (!(buffer->flags & ION_FLAG_CACHED))
++		set_memory_wc((unsigned long)page_address(page),
++			      PAGE_ALIGN(len) >> PAGE_SHIFT);
++#endif
++
+ 	return 0;
  
- 		/**
--		 * A monotonic timestamp for when the current aging tail pointer
--		 * was read; used to determine when it is old enough to trust.
-+		 * @aging_timestamp: A monotonic timestamp for when the current
-+		 * aging tail pointer was read; used to determine when it is old
-+		 * enough to trust.
- 		 */
- 		u64 aging_timestamp;
+ free_table:
+@@ -334,6 +355,11 @@ static void ion_system_contig_heap_free(struct ion_buffer *buffer)
+ 	unsigned long pages = PAGE_ALIGN(buffer->size) >> PAGE_SHIFT;
+ 	unsigned long i;
  
- 		/**
--		 * Although we can always read back the head pointer register,
--		 * we prefer to avoid trusting the HW state, just to avoid any
--		 * risk that some hardware condition could * somehow bump the
--		 * head pointer unpredictably and cause us to forward the wrong
--		 * OA buffer data to userspace.
-+		 * @head: Although we can always read back the head pointer
-+		 * register, we prefer to avoid trusting the HW state, just to
-+		 * avoid any risk that some hardware condition could * somehow
-+		 * bump the head pointer unpredictably and cause us to forward
-+		 * the wrong OA buffer data to userspace.
- 		 */
- 		u32 head;
- 	} oa_buffer;
++#ifdef CONFIG_X86
++	if (!(buffer->flags & ION_FLAG_CACHED))
++		set_memory_wb((unsigned long)page_address(page), pages);
++#endif
++
+ 	for (i = 0; i < pages; i++)
+ 		__free_page(page + i);
+ 	sg_free_table(table);
 -- 
-2.21.0
+2.17.1
 
