@@ -2,148 +2,106 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42027C32793
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 00:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5E9C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 00:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17A0B214D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 00:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90D3F207FA
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 00:21:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NCW2fQ1a"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="oeAakd7g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728860AbfI2AIs (ORCPT
+        id S1728851AbfI2AVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Sep 2019 20:08:48 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:39719 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728699AbfI2AIs (ORCPT
+        Sat, 28 Sep 2019 20:21:21 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:51339 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728569AbfI2AVU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Sep 2019 20:08:48 -0400
-Received: by mail-io1-f68.google.com with SMTP id a1so27805223ioc.6;
-        Sat, 28 Sep 2019 17:08:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=sySYmdanx8FlKrC5M/xI9bXiDTGnSPM1TKZx0s0iEwo=;
-        b=NCW2fQ1a9sQDlIZ42JYWNH4b+9nCYHx7SgpJedzFVmGdDYUOdftiPhz5nl+ecIx2tc
-         69+thtrjgPxpATNxzlS9HC2pyy5rsyp1OcjOtHD+XG1La+fhHzXEdB9n53Dv8GG31QC3
-         xJhFHwpUuf/bEDpMWXW16REZZgsBcy8QHE+OfWaCEIkcW+PiigdR0VFHKQIkEZBDRkV/
-         oAV5ON6xOEajtCEp8WEz6uAf0OHGoL99MYOrOb2gXf9vbuvoHCRMni96Y32jDLFCeZr0
-         jzSZpFfwHiedgy7aTTt86yjrWWO3EsGkbHxdtArtfqTh1S9UW9LvpTbpKRDDfxxsa1oL
-         SPaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=sySYmdanx8FlKrC5M/xI9bXiDTGnSPM1TKZx0s0iEwo=;
-        b=GCCG1iNlzPEUujC9+g6nqBjPxiD36fg5RdOhYLI8nwD3qteRD48bpSw0H17B10idA+
-         rTymXx7n5adGN8ArlL7HAggKd1BCLG7SysoD7nJkma0yhLz84N82r7205kB/wCneumdR
-         vuq4xNSZKYb088u86lkcWMavD1rCojrSRLoDwZuzn+L4oAmM763vwN5xR2r1gqSds/nt
-         xfhDIcB4Tf1pN1zVhEoEASCDoQ4CQT2+QngILyr/BkyRHfztOfalEwR08CMd7w3HonEx
-         wkWSwDNijzNtoK6/axqNCENUACdHLiNHVBD2RSVtKCUC0WRxplYB7VCrMCmdMo1FUeA+
-         RUoA==
-X-Gm-Message-State: APjAAAVYrzCUH0886psRHLMjAFjYhmGGPhgDRRRtxf5jcU2Z1J+EUSUM
-        LPipMsM3UghVvCDrnfREiZWd9IdNpgCUSP5C7lo=
-X-Google-Smtp-Source: APXvYqxTyPZTUWBm7blYKJlUhNEilGHuqgwFewfkd2OZyk32KgEnEjohIti6fziLTNuPCQZbhFtJJNM7BJ+dhhYPeJI=
-X-Received: by 2002:a05:6e02:4ce:: with SMTP id f14mr12781454ils.278.1569715726965;
- Sat, 28 Sep 2019 17:08:46 -0700 (PDT)
+        Sat, 28 Sep 2019 20:21:20 -0400
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x8T0L80N016203;
+        Sun, 29 Sep 2019 09:21:09 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x8T0L80N016203
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1569716469;
+        bh=5fDc5YaT7f/VUVtzw3IY9ZlI3jXeAzbdB4vRLcrugfI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=oeAakd7g6wCJoOhdW9zt5iE6K9cgSMnoV8CoZ5y56M+issdOJmtkMxdqpupZWdPBd
+         HpIk0rLrLvFNT5RIZk4NRBViVzQaZ1ZA8nReK5SvYtQ37dZ+yRQVsIcZ28Ovk/vTR7
+         g/FDELPEAd+MwfZ9aKuQhcHcB+pCaVoKBtEfCcLbfUJ7i3L4aS4Sk2XwQaXF1v9/M6
+         SULysb10cNZKdskauvD7kil0UCOJl4FfPTJfL1C5PQ2JTs+3Zz4xpAIQaJNmLyjw60
+         BBqII+/cD51qDmVwm1wGJxiK/bJZMwB7ZWvxxEZiqUJ277D9cWSScit9/IAcEZXUPV
+         /aFX8AeNdTRqg==
+X-Nifty-SrcIP: [209.85.221.169]
+Received: by mail-vk1-f169.google.com with SMTP id t128so1966478vkd.13;
+        Sat, 28 Sep 2019 17:21:08 -0700 (PDT)
+X-Gm-Message-State: APjAAAX35arnr32zBrpccdztCwDIeqxFyaFE/80BurrXoANgwIRykV7F
+        ubG9cvOmBXYYD7eaHIf94nHrlAe2ari+owfsDj4=
+X-Google-Smtp-Source: APXvYqymOZkiXNxKVDSVKujhu5kJTfTDulxnWJzegGEnWkmbn4GZXf+H5EJwbxw+EyLqr/6h8oVz67rObQDH2Fk3mWM=
+X-Received: by 2002:a1f:2343:: with SMTP id j64mr1919485vkj.84.1569716467891;
+ Sat, 28 Sep 2019 17:21:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190927183650.31345-1-bparrot@ti.com> <20190927183650.31345-3-bparrot@ti.com>
-In-Reply-To: <20190927183650.31345-3-bparrot@ti.com>
-From:   Austin Kim <austinkernel.kim@gmail.com>
-Date:   Sun, 29 Sep 2019 09:08:37 +0900
-Message-ID: <CAOoBcBUd7reG=-WOq+Vq9SynZMJ81CWFZPN35MkmaQvquZ9xyg@mail.gmail.com>
-Subject: Re: [Patch 02/16] media: ti-vpe: vpe: Add missing null pointer checks
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20190129204319.15238-1-jacob.e.keller@intel.com>
+ <7b26e6cc-10ce-5df2-6375-1f95bc4da04e@infradead.org> <02874ECE860811409154E81DA85FBB58968DBE54@ORSMSX121.amr.corp.intel.com>
+In-Reply-To: <02874ECE860811409154E81DA85FBB58968DBE54@ORSMSX121.amr.corp.intel.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sun, 29 Sep 2019 09:20:31 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARyUEakeG_N9TWcO2cjFSzbgY__k_QJm6C+oOz+fW0aeg@mail.gmail.com>
+Message-ID: <CAK7LNARyUEakeG_N9TWcO2cjFSzbgY__k_QJm6C+oOz+fW0aeg@mail.gmail.com>
+Subject: Re: [PATCH] namespace: fix namespace.pl script to support relative paths
+To:     "Keller, Jacob E" <jacob.e.keller@intel.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=EB=85=84 9=EC=9B=94 28=EC=9D=BC (=ED=86=A0) =EC=98=A4=EC=A0=84 3:37, B=
-enoit Parrot <bparrot@ti.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+On Sat, Sep 28, 2019 at 8:30 AM Keller, Jacob E
+<jacob.e.keller@intel.com> wrote:
 >
-> A few NULL pointer checks were missing.
-> Add check with appropriate return code.
+> > -----Original Message-----
+> > From: Randy Dunlap [mailto:rdunlap@infradead.org]
+> > Sent: Friday, September 27, 2019 4:12 PM
+> > To: Keller, Jacob E <jacob.e.keller@intel.com>
+> > Cc: intel-wired-lan@lists.osuosl.org; linux-kernel@vger.kernel.org; linux-kbuild <linux-
+> > kbuild@vger.kernel.org>; Masahiro Yamada <yamada.masahiro@socionext.com>
+> > Subject: Re: [PATCH] namespace: fix namespace.pl script to support relative paths
+> >
+> >
+> > re: https://lore.kernel.org/lkml/20190129204319.15238-1-jacob.e.keller@intel.com/
+> >
+> > Did anything happen with this patch?
+> >
+> > Please send it to linux-kbuild@vger.kernel.org and
+> > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> >
+> > You can also add:
+> > Acked-by: Randy Dunlap <rdunlap@infradead.org>
+> > Tested-by: Randy Dunlap <rdunlap@infradead.org>
+> >
+> >
+> > I was just about to fix this script but I decided to first see if anyone else
+> > had already done so.  Thanks.
+> >
+> > --
+> > ~Randy
 >
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> ---
->  drivers/media/platform/ti-vpe/vpe.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
+> Done, thanks.
 >
-> diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform=
-/ti-vpe/vpe.c
-> index 5ba72445584d..56f60dbea15c 100644
-> --- a/drivers/media/platform/ti-vpe/vpe.c
-> +++ b/drivers/media/platform/ti-vpe/vpe.c
-> @@ -1537,6 +1537,8 @@ static int vpe_g_fmt(struct file *file, void *priv,=
- struct v4l2_format *f)
->                 return -EINVAL;
->
->         q_data =3D get_q_data(ctx, f->type);
-> +       if (!q_data)
-> +               return -EINVAL;
+> Regards,
+> Jake
 
-With this commit, it seems that 'Null Pointer Dereference' could be
-avoidable even though 'get_q_data(ctx, f->type);' returns NULL.
 
-* Original Code:
-        q_data =3D get_q_data(ctx, f->type);
-        // q_data =3D NULL;
+Applied to linux/kbuild. Thanks.
 
-        pix->width =3D q_data->width;
-        // pix->width =3D  (NULL)->width;
-        // In this case, data abort would be raised.
-
->
->         pix->width =3D q_data->width;
->         pix->height =3D q_data->height;
-> @@ -2001,6 +2003,8 @@ static int vpe_queue_setup(struct vb2_queue *vq,
->         struct vpe_q_data *q_data;
->
->         q_data =3D get_q_data(ctx, vq->type);
-> +       if (!q_data)
-> +               return -EINVAL;
->
->         *nplanes =3D q_data->nplanes;
->
-> @@ -2025,6 +2029,8 @@ static int vpe_buf_prepare(struct vb2_buffer *vb)
->         vpe_dbg(ctx->dev, "type: %d\n", vb->vb2_queue->type);
->
->         q_data =3D get_q_data(ctx, vb->vb2_queue->type);
-> +       if (!q_data)
-> +               return -EINVAL;
->         num_planes =3D q_data->nplanes;
->
->         if (vb->vb2_queue->type =3D=3D V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)=
- {
-> @@ -2481,7 +2487,12 @@ static int vpe_probe(struct platform_device *pdev)
->         mutex_init(&dev->dev_mutex);
->
->         dev->res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> -                       "vpe_top");
-> +                                               "vpe_top");
-> +       if (!dev->res) {
-> +               dev_err(&pdev->dev, "missing 'vpe_top' resources data\n")=
-;
-> +               return -ENODEV;
-> +       }
-> +
->         /*
->          * HACK: we get resource info from device tree in the form of a l=
-ist of
->          * VPE sub blocks, the driver currently uses only the base of vpe=
-_top
-> --
-> 2.17.1
->
+-- 
+Best Regards
+Masahiro Yamada
