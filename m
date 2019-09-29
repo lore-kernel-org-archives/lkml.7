@@ -6,65 +6,88 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84928C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 08:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C8EC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 08:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6157920815
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 08:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B047218AC
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 08:53:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728905AbfI2IWy (ORCPT
+        id S1728703AbfI2IxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 04:22:54 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3171 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725379AbfI2IWy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 04:22:54 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 138A8D7D4C8D755545CF;
-        Sun, 29 Sep 2019 16:22:52 +0800 (CST)
-Received: from huawei.com (10.175.104.217) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Sun, 29 Sep 2019
- 16:22:41 +0800
-From:   Miaohe Lin <linmiaohe@huawei.com>
-To:     <tj@kernel.org>, <lizefan@huawei.com>, <hannes@cmpxchg.org>,
-        <cgroups@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <linmiaohe@huawei.com>, <mingfangsen@huawei.com>
-Subject: [PATCH] cgroup: short-circuit current_cgns_cgroup_from_root() on the default hierarchy
-Date:   Sun, 29 Sep 2019 16:06:58 +0800
-Message-ID: <20190929080658.11430-1-linmiaohe@huawei.com>
-X-Mailer: git-send-email 2.21.GIT
+        Sun, 29 Sep 2019 04:53:14 -0400
+Received: from mailoutvs40.siol.net ([185.57.226.231]:35768 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725974AbfI2IxO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 04:53:14 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 83FA5521A0A;
+        Sun, 29 Sep 2019 10:53:11 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 9E37ArWBu4Av; Sun, 29 Sep 2019 10:53:11 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 3533B521C88;
+        Sun, 29 Sep 2019 10:53:11 +0200 (CEST)
+Received: from localhost.localdomain (cpe-86-58-59-25.static.triera.net [86.58.59.25])
+        (Authenticated sender: 031275009)
+        by mail.siol.net (Postfix) with ESMTPSA id 498E8521A0A;
+        Sun, 29 Sep 2019 10:53:10 +0200 (CEST)
+From:   Jernej Skrabec <jernej.skrabec@siol.net>
+To:     mripard@kernel.org, wens@csie.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: [PATCH] arm64: dts: allwinner: a64: sopine-baseboard: Add PHY regulator delay
+Date:   Sun, 29 Sep 2019 10:52:59 +0200
+Message-Id: <20190929085259.76462-1-jernej.skrabec@siol.net>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.217]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Like commit 13d82fb77abb ("cgroup: short-circuit cset_cgroup_from_root() on
-the default hierarchy"), short-circuit current_cgns_cgroup_from_root() on
-the default hierarchy.
+It turns out that sopine-baseboard needs same fix as pine64-plus
+for ethernet PHY. Here too Realtek ethernet PHY chip needs additional
+power on delay to properly initialize. Datasheet mentions that chip
+needs 30 ms to be properly powered on and that it needs some more time
+to be initialized.
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Fix that by adding 100ms ramp delay to regulator responsible for
+powering PHY.
+
+Note that issue was found out and fix tested on pine64-lts, but it's
+basically the same as sopine-baseboard, only layout and connectors
+differ.
+
+Fixes: bdfe4cebea11 ("arm64: allwinner: a64: add Ethernet PHY regulator f=
+or several boards")
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 ---
- kernel/cgroup/cgroup.c | 2 ++
- 1 file changed, 2 insertions(+)
+ .../boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts      | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index 8be1da1ebd9a..b90c8b200aa2 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -1374,6 +1374,8 @@ current_cgns_cgroup_from_root(struct cgroup_root *root)
- 	cset = current->nsproxy->cgroup_ns->root_cset;
- 	if (cset == &init_css_set) {
- 		res = &root->cgrp;
-+	} else if (root == &cgrp_dfl_root) {
-+		res = cset->dfl_cgrp;
- 	} else {
- 		struct cgrp_cset_link *link;
- 
--- 
-2.21.GIT
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dt=
+s b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
+index e6fb9683f213..25099202c52c 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
+@@ -159,6 +159,12 @@
+ };
+=20
+ &reg_dc1sw {
++	/*
++	 * Ethernet PHY needs 30ms to properly power up and some more
++	 * to initialize. 100ms should be plenty of time to finish
++	 * whole process.
++	 */
++	regulator-enable-ramp-delay =3D <100000>;
+ 	regulator-name =3D "vcc-phy";
+ };
+=20
+--=20
+2.23.0
 
