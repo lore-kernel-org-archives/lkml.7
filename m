@@ -2,205 +2,90 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.3 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ECE5C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59327C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40EF8218DE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C1272054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:16:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RZGkqgAH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730571AbfI3MQY (ORCPT
+        id S1730623AbfI3MQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 08:16:24 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:48827 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbfI3MQY (ORCPT
+        Mon, 30 Sep 2019 08:16:29 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:35430 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbfI3MQ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 08:16:24 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MZCX1-1iaW5x1SCX-00V7fF; Mon, 30 Sep 2019 14:16:00 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Pascal van Leeuwen <pvanleeuwen@verimatrix.com>,
-        Pascal van Leeuwen <pascalvanl@gmail.com>,
-        Kelsey Skunberg <skunberg.kelsey@gmail.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH 3/3] crypto: inside-secure - Remove #ifdef checks
-Date:   Mon, 30 Sep 2019 14:14:35 +0200
-Message-Id: <20190930121520.1388317-3-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190930121520.1388317-1-arnd@arndb.de>
-References: <20190930121520.1388317-1-arnd@arndb.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:DhNMaznTViuOF1AalsUIbiZreKsHiyUrkj8fjXw2kpt+XaZVRMO
- J8YhptUq0zNreRZAe1ciQQ9P+7PwLZ4bVXmZ2zDxUx16GeaoE+uLbSBgsq4VqI/bllMTpUm
- IuOxnA/ocfiWg7kY8BpiqjzDbShczJ0gkj3X45qj6ROtPYNI1xWVIe84GaxjDxbJJT/Kxf4
- GCMm4UdcKSxI/O67jRoeA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:iwpPAhAApkg=:vp6ThXb05tXvclIdlpOKKK
- 9xeCeSq9XRyUpW/bqAqmJKKLGkk0Dmni/pOgc+KWFb/bUqE5jDBE6agHOI3v6VlhEO1iQ7CLV
- gR4/7DWERudbPYl09MEziUp/oWYSm4xo+QgUD68FnLuodMS1fbyderRJLzO1BcIZN9wuQML2a
- mz684aYB+X5HJQ2GJrw012PxdMfTu2myUmH7usdIcW/UDg5j1Eacg1YLo5eRtYeX7pYTorqLS
- 8vdOfsIsU8Xfs7E+d3gXKiSRlVncPB3mjJOtKzh7mmJnSCXbwtpMkwYEVAHjMqVvTaY4/cXC1
- aDJCggWuHj2cimOinhDTJ88N6x/hQSQY4q5j/F6AsviI/kS6UjqM+lvl1HKXexaK7thGZI5wI
- L9WFx8+JfUpFIPj9B2dOCwHOSmdn2YeCvoBM9aQ+sStypc1brRCggst6Af1THOj2tWV8qPGF8
- 3lfwmx2ejW1KKJCqEiWM9mZCo0fwtTmRYxZIpbJDqGSwPBXjtX2lV43tf5wgd+IvKXXosuiPg
- hkCZYTPNx109UA+M/erLPaX6c+FsKrrkbL/xETUsrW3AXHPXPnc/uolW8A1fo+cz9eVYqJ5jc
- buENIliHdYaUzgxniz0DavEs/1qAuRJ/br3MXKoYUbnKH7yvrcLso51UfRorcAiLmn+9KeHBC
- ktYJlTiDUSJqBP9eWE6v2pfR4S2uYCyLMHP8O6/AWmwnGKO/Av3dGrUABq339Es85ycXV9cYd
- jTK1Loj8PKsbklF1gEbzdEb4MijosQ+QGi//ne7NtoRQiYyyXDU5DHT+OG1UCthO/M3+XADuC
- u65TN7AgkL4g98Ypd9xTpptk550otgnsWlvWZ16J47yizTnz2fsyiVcxNyk2pLGHZbpcccy+T
- 64ls0o7jlMI1K1K5AYnA==
+        Mon, 30 Sep 2019 08:16:28 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8UC8tkc186754
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 12:16:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2019-08-05;
+ bh=Ig+3i6Q7PYAbWFC2Der49rKv9whESe4oFw+kACz7qXA=;
+ b=RZGkqgAHK/p+sbFHxFs9+rc87nIvIRTGZXUO1rZqlV1Im7TpQpWVKtmCHb9L3iHgwkF/
+ 7hf6gWGVChfflBXkcXkYa/hhrWvZIaud+zYaAVvqlbnRdMkYG1kJ6lwAmXDJQJBm9DMq
+ XD8CIueNYoNWrXvzdEhKUsjE+6r3EF7xUoWJRhTFa+PvM6qxQ9MDVKhxD7LgZFd3XLb0
+ gx0lcCkRnKjLvzBNyNpARjahhqkP+/sbcUUCQchm0JJ120fkxPdKHG+ZbTxGJDdcgmhv
+ lqITu6Annwe7soSKOydbt3468aJOe8zlJbtZd4SP7FXM3vehzSialQi2OTyf6cmyvXym 1Q== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2v9xxuermw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 12:16:27 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8UC8sh3152654
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 12:16:27 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2vahngjd3v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 12:16:26 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8UCGQwp023238
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 12:16:26 GMT
+Received: from z2.cn.oracle.com (/10.182.71.205)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 30 Sep 2019 05:16:25 -0700
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Subject: [PATCH 0/3] Add a unified parameter "nopvspin"
+Date:   Sun, 29 Sep 2019 20:21:03 +0800
+Message-Id: <1569759666-26904-1-git-send-email-zhenzhong.duan@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9395 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=858
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909300130
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9395 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=956 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909300130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When both PCI and OF are disabled, no drivers are registered, and
-we get some unused-function warnings:
+There are cases folks want to disable spinlock optimization for
+debug/test purpose. Xen and hyperv already have parameters "xen_nopvspin"
+and "hv_nopvspin" to support that, but kvm doesn't.
 
-drivers/crypto/inside-secure/safexcel.c:1221:13: error: unused function 'safexcel_unregister_algorithms' [-Werror,-Wunused-function]
-static void safexcel_unregister_algorithms(struct safexcel_crypto_priv *priv)
-drivers/crypto/inside-secure/safexcel.c:1307:12: error: unused function 'safexcel_probe_generic' [-Werror,-Wunused-function]
-static int safexcel_probe_generic(void *pdev,
-drivers/crypto/inside-secure/safexcel.c:1531:13: error: unused function 'safexcel_hw_reset_rings' [-Werror,-Wunused-function]
-static void safexcel_hw_reset_rings(struct safexcel_crypto_priv *priv)
+The first patch adds that feature to KVM guest with "nopvspin".
+I also changed print code in first patch, I'm not sure if I should
+pick that part into a separate patch, just let me know if it's
+preferred.
 
-It's better to make the compiler see what is going on and remove
-such ifdef checks completely. In case of PCI, this is trivial since
-pci_register_driver() is defined to an empty function that makes the
-compiler subsequently drop all unused code silently.
+For compatibility reason original parameters "xen_nopvspin" and
+"hv_nopvspin" are retained and marked obsolete.
 
-The global pcireg_rc/ofreg_rc variables are not actually needed here
-since the driver registration does not fail in ways that would make
-it helpful.
 
-For CONFIG_OF, an IS_ENABLED() check is still required, since platform
-drivers can exist both with and without it.
-
-A little change to linux/pci.h is needed to ensure that
-pcim_enable_device() is visible to the driver. Moving the declaration
-outside of ifdef would be sufficient here, but for consistency with the
-rest of the file, adding an inline helper is probably best.
-
-Fixes: 212ef6f29e5b ("crypto: inside-secure - Fix unused variable warning when CONFIG_PCI=n")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/crypto/inside-secure/safexcel.c | 49 ++++++-------------------
- include/linux/pci.h                     |  1 +
- 2 files changed, 13 insertions(+), 37 deletions(-)
-
-diff --git a/drivers/crypto/inside-secure/safexcel.c b/drivers/crypto/inside-secure/safexcel.c
-index 311bf60df39f..c4e8fd27314c 100644
---- a/drivers/crypto/inside-secure/safexcel.c
-+++ b/drivers/crypto/inside-secure/safexcel.c
-@@ -1547,7 +1547,6 @@ static void safexcel_hw_reset_rings(struct safexcel_crypto_priv *priv)
- 	}
- }
- 
--#if IS_ENABLED(CONFIG_OF)
- /* for Device Tree platform driver */
- 
- static int safexcel_probe(struct platform_device *pdev)
-@@ -1666,9 +1665,7 @@ static struct platform_driver  crypto_safexcel = {
- 		.of_match_table = safexcel_of_match_table,
- 	},
- };
--#endif
- 
--#if IS_ENABLED(CONFIG_PCI)
- /* PCIE devices - i.e. Inside Secure development boards */
- 
- static int safexcel_pci_probe(struct pci_dev *pdev,
-@@ -1789,54 +1786,32 @@ static struct pci_driver safexcel_pci_driver = {
- 	.probe         = safexcel_pci_probe,
- 	.remove        = safexcel_pci_remove,
- };
--#endif
--
--/* Unfortunately, we have to resort to global variables here */
--#if IS_ENABLED(CONFIG_PCI)
--int pcireg_rc = -EINVAL; /* Default safe value */
--#endif
--#if IS_ENABLED(CONFIG_OF)
--int ofreg_rc = -EINVAL; /* Default safe value */
--#endif
- 
- static int __init safexcel_init(void)
- {
--#if IS_ENABLED(CONFIG_PCI)
-+	int ret;
-+
- 	/* Register PCI driver */
--	pcireg_rc = pci_register_driver(&safexcel_pci_driver);
--#endif
-+	ret = pci_register_driver(&safexcel_pci_driver);
- 
--#if IS_ENABLED(CONFIG_OF)
- 	/* Register platform driver */
--	ofreg_rc = platform_driver_register(&crypto_safexcel);
-- #if IS_ENABLED(CONFIG_PCI)
--	/* Return success if either PCI or OF registered OK */
--	return pcireg_rc ? ofreg_rc : 0;
-- #else
--	return ofreg_rc;
-- #endif
--#else
-- #if IS_ENABLED(CONFIG_PCI)
--	return pcireg_rc;
-- #else
--	return -EINVAL;
-- #endif
--#endif
-+	if (IS_ENABLED(CONFIG_OF) && !ret) {
-+		ret = platform_driver_register(&crypto_safexcel);
-+		if (ret)
-+			pci_unregister_driver(&safexcel_pci_driver);
-+	}
-+
-+	return ret;
- }
- 
- static void __exit safexcel_exit(void)
- {
--#if IS_ENABLED(CONFIG_OF)
- 	/* Unregister platform driver */
--	if (!ofreg_rc)
-+	if (IS_ENABLED(CONFIG_OF))
- 		platform_driver_unregister(&crypto_safexcel);
--#endif
- 
--#if IS_ENABLED(CONFIG_PCI)
- 	/* Unregister PCI driver if successfully registered before */
--	if (!pcireg_rc)
--		pci_unregister_driver(&safexcel_pci_driver);
--#endif
-+	pci_unregister_driver(&safexcel_pci_driver);
- }
- 
- module_init(safexcel_init);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index f9088c89a534..1a6cf19eac2d 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1686,6 +1686,7 @@ static inline struct pci_dev *pci_get_class(unsigned int class,
- static inline void pci_set_master(struct pci_dev *dev) { }
- static inline int pci_enable_device(struct pci_dev *dev) { return -EIO; }
- static inline void pci_disable_device(struct pci_dev *dev) { }
-+static inline int pcim_enable_device(struct pci_dev *pdev) { return -EIO; }
- static inline int pci_assign_resource(struct pci_dev *dev, int i)
- { return -EBUSY; }
- static inline int __pci_register_driver(struct pci_driver *drv,
--- 
-2.20.0
-
+Thanks
+Zhenzhong
