@@ -2,158 +2,131 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D9FC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 10:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E09CC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 10:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABC992086A
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 10:26:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=colorfullife-com.20150623.gappssmtp.com header.i=@colorfullife-com.20150623.gappssmtp.com header.b="R6k+IuHh"
+	by mail.kernel.org (Postfix) with ESMTP id D368F20863
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 10:39:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbfI2KYf (ORCPT
+        id S1728947AbfI2Kj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 06:24:35 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38223 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbfI2KYe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 06:24:34 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 3so9647266wmi.3
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Sep 2019 03:24:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=colorfullife-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:cc:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=3hP7uG+9EHpW+fJgEuzdYOoEFGxgLjWCOaNYKY6K2pk=;
-        b=R6k+IuHh0gRSegIuiT0hMwL+K3vAe9e5Wwvl96aNU9EysAIdFVlr6wl9EbJBfqMmyH
-         u8eAb8kmODEskCtvSxwdJmwJqYZEaa0TyZQ7NwZwAfNBcT2CkyZK/7qFGy1PY3ZKWmtv
-         DrPikXDleJ3vvbApVCWZ7nLB6OAyGLUtad6gVGKk+EDOcl/Dhr46ScYDARCe7aSJNWlC
-         DAzc15aI3RsmRsibnlUK6TrMzEOs56mQVXXv5dW0VYo8o+Ku/RVvD8iz3zpACkSLUIOB
-         e7TxLKzKKuHsGbWMeNdjfi/77awvfDJG6uqp7JJbSVAbiAgCimPVOVd4vPCxeew7Ywhe
-         IPKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:cc:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=3hP7uG+9EHpW+fJgEuzdYOoEFGxgLjWCOaNYKY6K2pk=;
-        b=DsKDkjkx3Rm9Gg7IvTc69KWMHkPvl5eNydjvIUvI+4y3dlp/owbLTzqdNseXD8bjfj
-         s9pp/iSGnIVvQ941FDxA3Cp2H65a8U7KSDo9ffHPpumKju/2VtiBHZSHEi0aZ0zoQTe8
-         jRHRJaNpce8GSD35a8JuvT+hdBZ4iCrxGawX/itARemHRxVBtshd8QF7nMDd4gQi2Rt2
-         19/CXFoHGb6aVe4uZwPLtftyZLMmQPqWCcNYQg2UffYLeTVETV1VJxQ9KfUN0KRQpG6a
-         nzyouRNtzN0/7jatsdiSl3XvsBEtrNcixCzZJOSBGfcpAo8VDsElgtJeVSWmzBRcK3O3
-         E3wQ==
-X-Gm-Message-State: APjAAAXbDEHJQfg1zk5N/cQ4itVMxZploXV+51EvJThwfyaYBUSOhx9z
-        c7f6Zl5uFw38BPilsNAx0kFAUQ==
-X-Google-Smtp-Source: APXvYqyDykjrrgNwcUTNoVacUKBlMgPiC7NhPSgDkEgKRQWJJky9JAB/CUbVgFUcmXiY0vR0bVcgNg==
-X-Received: by 2002:a05:600c:24ce:: with SMTP id 14mr13013085wmu.71.1569752673470;
-        Sun, 29 Sep 2019 03:24:33 -0700 (PDT)
-Received: from linux-2.fritz.box (p200300D997073100A232ACDA09636D2D.dip0.t-ipconnect.de. [2003:d9:9707:3100:a232:acda:963:6d2d])
-        by smtp.googlemail.com with ESMTPSA id z189sm32449238wmc.25.2019.09.29.03.24.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Sep 2019 03:24:32 -0700 (PDT)
-Subject: Re: [PATCH] ipc/sem: Fix race between to-be-woken task and waker
-To:     Waiman Long <longman@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <20190920155402.28996-1-longman () redhat ! com>
-From:   Manfred Spraul <manfred@colorfullife.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        1vier1@web.de
-Message-ID: <d89b622a-2acf-b0a9-021d-c1c521a731f5@colorfullife.com>
-Date:   Sun, 29 Sep 2019 12:24:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Sun, 29 Sep 2019 06:39:57 -0400
+Received: from sauhun.de ([88.99.104.3]:45488 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726149AbfI2Kj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 06:39:56 -0400
+Received: from localhost (p5486CA3C.dip0.t-ipconnect.de [84.134.202.60])
+        by pokefinder.org (Postfix) with ESMTPSA id 8C8682C01E8;
+        Sun, 29 Sep 2019 12:39:54 +0200 (CEST)
+Date:   Sun, 29 Sep 2019 12:39:54 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PULL REQUEST] i2c for 5.4
+Message-ID: <20190929103950.GA9497@kunai>
 MIME-Version: 1.0
-In-Reply-To: <20190920155402.28996-1-longman () redhat ! com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Waiman,
 
-I have now written the mail 3 times:
-Twice I thought that I found a race, but during further analysis, it 
-always turns out that the spin_lock() is sufficient.
+--a8Wt8u1KmwUX3Y2C
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-First, to avoid any obvious things: Until the series with e.g. 
-27d7be1801a4824e, there was a race inside sem_lock().
+Linus,
 
-Thus it was possible that multiple threads were operating on the same 
-semaphore array, with obviously arbitrary impact.
+this second pull request from I2C contains:
 
-On 9/20/19 5:54 PM, Waiman Long wrote:
+- make Lenovo Yoga C630 boot now that the dependencies are merged
+- restore BlockProcessCall for i801, accidently removed in this merge
+  window
+- a bugfix for the riic driver
+- an improvement to the slave-eeprom driver which should have been in
+  the first pull request but sadly got lost in the process
 
->   
-> +		/*
-> +		 * A spurious wakeup at the right moment can cause race
-> +		 * between the to-be-woken task and the waker leading to
-> +		 * missed wakeup. Setting state back to TASK_INTERRUPTIBLE
-> +		 * before checking queue.status will ensure that the race
-> +		 * won't happen.
-> +		 *
-> +		 *	CPU0				CPU1
-> +		 *
-> +		 *  <spurious wakeup>		wake_up_sem_queue_prepare():
-> +		 *  state = TASK_INTERRUPTIBLE    status = error
-> +		 *				try_to_wake_up():
-> +		 *  smp_mb()			  smp_mb()
-> +		 *  if (status == -EINTR)	  if (!(p->state & state))
-> +		 *    schedule()		    goto out
-> +		 */
-> +		set_current_state(TASK_INTERRUPTIBLE);
-> +
+And finally, my pull requests should be using utf-8 now.
 
-So the the hypothesis is that we have a race due to the optimization 
-within try_to_wake_up():
-If the status is already TASK_RUNNING, then the wakeup is a nop.
+Please pull.
 
-Correct?
+Thanks,
 
-The waker wants to use:
+   Wolfram
 
-     lock();
-     set_conditions();
-     unlock();
 
-as the wake_q is a shared list, completely asynchroneously this will happen:
+The following changes since commit aefcf2f4b58155d27340ba5f9ddbe9513da8286d:
 
-     smp_mb(); //// ***1
-     if (current->state = TASK_INTERRUPTIBLE) current->state=TASK_RUNNING;
+  Merge branch 'next-lockdown' of git://git.kernel.org/pub/scm/linux/kernel=
+/git/jmorris/linux-security (2019-09-28 08:14:15 -0700)
 
-The only guarantee is that this will happen after lock(), it may happen 
-before set_conditions().
+are available in the Git repository at:
 
-The task that goes to sleep uses:
+  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-next
 
-     lock();
-     check_conditions();
-     __set_current_state();
-     unlock(); //// ***2
-     schedule();
+for you to fetch changes up to 11af27f494086188620e7768e421894af93c126a:
 
-You propose to change that to:
+  i2c: slave-eeprom: Add read only mode (2019-09-28 20:44:12 +0200)
 
-     lock();
-     set_current_state();
-     check_conditions();
-     unlock();
-     schedule();
+----------------------------------------------------------------
+Bj=C3=B6rn Ard=C3=B6 (1):
+      i2c: slave-eeprom: Add read only mode
 
-I don't see a race anymore, and I don't see how the proposed change will 
-help.
-e.g.: __set_current_state() and smp_mb() have paired memory barriers 
-***1 and ***2 above.
+Chris Brandt (1):
+      i2c: riic: Clear NACK in tend isr
 
---
+Jarkko Nikula (1):
+      i2c: i801: Bring back Block Process Call support for certain platforms
 
-     Manfred
+Lee Jones (1):
+      i2c: qcom-geni: Disable DMA processing on the Lenovo Yoga C630
 
+
+with much appreciated quality assurance from
+----------------------------------------------------------------
+Alexander Sverdlin (1):
+      (Rev.) i2c: i801: Bring back Block Process Call support for certain p=
+latforms
+
+Bjorn Andersson (1):
+      (Test) i2c: qcom-geni: Disable DMA processing on the Lenovo Yoga C630
+
+ drivers/i2c/busses/i2c-i801.c      |  1 +
+ drivers/i2c/busses/i2c-qcom-geni.c | 12 ++++++++----
+ drivers/i2c/busses/i2c-riic.c      |  1 +
+ drivers/i2c/i2c-slave-eeprom.c     | 14 +++++++++++---
+ 4 files changed, 21 insertions(+), 7 deletions(-)
+
+--a8Wt8u1KmwUX3Y2C
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl2QifEACgkQFA3kzBSg
+KbaqMg/+Icc3PCrKjMdaUaIMsJET5J4B1h8YBnCwuix4w29RbJfJsLCmYtMcrtkm
+v6I2QRmKmvihaJ0ffPMthhVQby/6JJq7FP89gGWztt6y2kORrl3iXKVN0x5MhGsu
+vIOx5WTF/Jq4599A9azewt4azydW8/Y3uHms80q7qGH1+tDgf0s9GJBxSe4avlXY
+izgtTnjzJ77bpn2RGxJi8vf/NUfW5UjaY1Y7yKhk1EtKB46nMGRJ9BYBu6otJ9fQ
+naqaLMBfVfigKQfiTHkyeR3g1IwcrRZoHGc//HB8dyTgMJSlYxLi55zg6aYr97/G
+Ewedho7/+thaBuv5iJ2w69LhAve60ny7iwDBBAZC+i+KaSWjru3hL5v6nNig/oU6
+lPjVKZiyOrKBj2LVY++q43+GG3LaadcX3Nz0kVh27jKe1SL0PznJHD6iRfwso6dr
+HRVZIEg+mo19twOiwULK3iZWkmMZ/uCChWRO80EOsEVPEKa+ekExKV0MHICiwr0R
+Oglm4oa94QP0PDLhvwv5CX9UMgK+b85/z15+AQzTsV2mF7Xc7gZ7FdpCL9YgQpSC
+hy8XuWRlVLiZzWTGYLioKLwnI7xl5d9Nk+v506Cd1rl8YTeBjVuxlnRu7lLtmPsh
+3qS62TrXOhlCU6kXb47fhLYmoXxm4bcA9ujerfbhptvQUYfqs7w=
+=kJHR
+-----END PGP SIGNATURE-----
+
+--a8Wt8u1KmwUX3Y2C--
