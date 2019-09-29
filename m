@@ -2,126 +2,185 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A66E9C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 04:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C4DC32793
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 04:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD712082F
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 04:00:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="t9blx5JN"
+	by mail.kernel.org (Postfix) with ESMTP id 98E3820815
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 04:21:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbfI2EAG (ORCPT
+        id S1726765AbfI2EUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 00:00:06 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:62160 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725379AbfI2EAG (ORCPT
+        Sun, 29 Sep 2019 00:20:52 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33922 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726018AbfI2EUv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 00:00:06 -0400
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x8T40102019634;
-        Sun, 29 Sep 2019 13:00:02 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x8T40102019634
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1569729602;
-        bh=woyYg5ZX3LH+X72yt3rLwXDVMvzanzz7a9iBSSuatNc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=t9blx5JNwA2UaReQ0OtqgxMt2qkyq6fRdEWIqVBpfzw5Dcgl75zPLpiYwjcPseREK
-         GuJ+hEebEny+qrz6qwgp81Sol5lbX7iU/eWEW3nGcVvtSbvEo1LRxD7jS83q4/8Mzg
-         Lc27PpMNjTjJCNtXVLcNkH9Xt+4x1SgJBf+H9m9yTQS7GzuLjV4SYx5qyc9O/amsyB
-         PFhYNGg5zvuT/05Y0mMR95gWVkZd/yHrhPX/Hv16ktW6aBWjYOx09+avkR5wM5b9NC
-         67qrIO/ySR4RBao+XXr3bvflIqjbJ0E3Vz5/jyU5gg/pbhBaiZtoOjH4cPn8mnYj15
-         yAncEkYBNkqOg==
-X-Nifty-SrcIP: [209.85.217.46]
-Received: by mail-vs1-f46.google.com with SMTP id m22so4528879vsl.9;
-        Sat, 28 Sep 2019 21:00:02 -0700 (PDT)
-X-Gm-Message-State: APjAAAV9sSrekqwA2nIAcNHvqwvoYja5yRS4OMs8Q+3TA4cdctl9Y5q7
-        ZD0IrO5+tZ3qOhvZIz+6dHlNjilVz4KprfY+D1M=
-X-Google-Smtp-Source: APXvYqymY9M6kRY90i07BR10rMIYHpst/c0y6tGNx5PqcwpwENOpzdBCUbYJvLcYdOoYY5n4PgwRujfqSkxiAQG5Cbg=
-X-Received: by 2002:a67:ec09:: with SMTP id d9mr6522939vso.215.1569729601029;
- Sat, 28 Sep 2019 21:00:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAK7LNAT-D68xMFrE-D_F-2y+iZt45+8iLF9dmTyO8YwUX-bTqA@mail.gmail.com>
- <CAHk-=wjdc7Ovi-iVGBGzuP6prTXVRT8rgbnabBd0AiHRqECMCg@mail.gmail.com>
-In-Reply-To: <CAHk-=wjdc7Ovi-iVGBGzuP6prTXVRT8rgbnabBd0AiHRqECMCg@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sun, 29 Sep 2019 12:59:24 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQuY50tB790n85LGpX3m6yuxHTyB++0BwVFnSnz1B0gWA@mail.gmail.com>
-Message-ID: <CAK7LNAQuY50tB790n85LGpX3m6yuxHTyB++0BwVFnSnz1B0gWA@mail.gmail.com>
-Subject: Re: [GIT PULL] More Kbuild updates for v5.4-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        masahiroy@kernel.org
+        Sun, 29 Sep 2019 00:20:51 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8T47AwC145444
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Sep 2019 00:20:50 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2van1urj2y-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Sep 2019 00:20:50 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Sun, 29 Sep 2019 05:20:47 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 29 Sep 2019 05:20:42 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8T4Kf8m42926160
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 29 Sep 2019 04:20:41 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 14F41A4051;
+        Sun, 29 Sep 2019 04:20:41 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D89D1A404D;
+        Sun, 29 Sep 2019 04:20:38 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.142.195])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sun, 29 Sep 2019 04:20:38 +0000 (GMT)
+Subject: Re: [PATCH v6 5/9] powerpc/ima: add measurement rules to ima arch
+ specific policy
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Date:   Sun, 29 Sep 2019 00:20:38 -0400
+In-Reply-To: <1569594360-7141-6-git-send-email-nayna@linux.ibm.com>
+References: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com>
+         <1569594360-7141-6-git-send-email-nayna@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19092904-0028-0000-0000-000003A3A3C0
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19092904-0029-0000-0000-00002465C963
+Message-Id: <1569730838.4999.31.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-29_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909290047
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Fri, 2019-09-27 at 10:25 -0400, Nayna Jain wrote:
+> This patch adds the measurement rules to the arch specific policies for the
+> systems with trusted boot.
+> 
 
-On Sun, Sep 29, 2019 at 11:57 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Sat, Sep 28, 2019 at 11:41 AM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > Please pull some more updates for v5.4-rc1
->
-> I pulled this, but I'm not sure if I'm going to keep it.
->
-> There's thousands of lines of changes because of the header-test-y
-> thing, and I'm honestly considering just getting rid of that thing
-> entirely.
->
-> It has no actual upside that I can tell, and it's extremely annoying.
-> It pollutes the tree with hundreds of *.h.s files, which messes up
-> filename completion, and just generally is ugly and annoying.
->
-> So I've unpulled for now, and I'm not sure I want to pull more noise
-> for this mis-feature.
->
->                 Linus
+on trusted boot enabled systems.
 
 
+> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
 
+Minor comment correction below.
 
-The concept of header test is to make sure every header
-is self-contained, so that headers can be included in
-  either
-#include <linux/foo.h>
-#include <linux/bar.h>
-  or
-#include <linux/bar.h>
-#include <linux/foo.h>
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
 
+> ---
+>  arch/powerpc/kernel/ima_arch.c | 44 +++++++++++++++++++++++++++++++---
+>  1 file changed, 41 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
+> index 39401b67f19e..77c61b142042 100644
+> --- a/arch/powerpc/kernel/ima_arch.c
+> +++ b/arch/powerpc/kernel/ima_arch.c
+> @@ -12,8 +12,18 @@ bool arch_ima_get_secureboot(void)
+>  	return is_powerpc_os_secureboot_enabled();
+>  }
+>  
+> -/* Defines IMA appraise rules for secureboot */
+> +/*
+> + * The "arch_rules" contains both the securebot and trustedboot rules for adding
+> + * the kexec kernel image and kernel modules file hashes to the IMA measurement
+> + * list and verifying the file signatures against known good values.
+> + *
+> + * The "appraise_type=imasig|modsig" option allows the good signature to be
+> + * stored as an xattr or as an appended signature. The "template=ima-modsig"
+> + * option includes the appended signature in the IMA measurement list.
 
-Of course, you can argue that it is addressing hypothetical issues
-"what if the include directives are arranged in this order?",
-that nobody has been hit before.
+includes the appended signature, when available, in the IMA
+measurement list. 
 
-If this test is just annoying, shall we remove
-the 'header-test-y' syntax and include/Kbuild entirely?
+> + */
+>  static const char *const arch_rules[] = {
+> +	"measure func=KEXEC_KERNEL_CHECK template=ima-modsig",
+> +	"measure func=MODULE_CHECK template=ima-modsig",
+>  	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
+>  #if !IS_ENABLED(CONFIG_MODULE_SIG)
+>  	"appraise func=MODULE_CHECK appraise_type=imasig|modsig",
+> @@ -22,12 +32,40 @@ static const char *const arch_rules[] = {
+>  };
+>  
+>  /*
+> - * Returns the relevant IMA arch policies based on the system secureboot state.
+> + * The "measure_rules" are enabled only on "trustedboot" enabled systems.
+> + * These rules add the kexec kernel image and kernel modules file hashes to
+> + * the IMA measurement list.
+> + */
+> +static const char *const measure_rules[] = {
+> +	"measure func=KEXEC_KERNEL_CHECK",
+> +	"measure func=MODULE_CHECK",
+> +	NULL
+> +};
+> +
+> +/*
+> + * Returns the relevant IMA arch policies based on the system secureboot
+> + * and trustedboot state.
+>   */
+>  const char *const *arch_get_ima_policy(void)
+>  {
+> -	if (is_powerpc_os_secureboot_enabled())
+> +	const char *const *rules;
+> +	int offset = 0;
+> +
+> +	for (rules = arch_rules; *rules != NULL; rules++) {
+> +		if (strncmp(*rules, "appraise", 8) == 0)
+> +			break;
+> +		offset++;
+> +	}
+> +
+> +	if (is_powerpc_os_secureboot_enabled()
+> +	    && is_powerpc_trustedboot_enabled())
+>  		return arch_rules;
+>  
+> +	if (is_powerpc_os_secureboot_enabled())
+> +		return arch_rules + offset;
+> +
+> +	if (is_powerpc_trustedboot_enabled())
+> +		return measure_rules;
+> +
+>  	return NULL;
+>  }
 
-But, at least, I want to continue compile-testing
-uapi headers that are exported to user-space.
-
-This is useful to detect a broken uapi header
-that is never be able to be compiled in user-space.
-
-For example,
-https://lkml.org/lkml/2019/6/19/104
-
-
-So, I'd like to keep usr/include/Makefile
-at least.
-
-
--- 
-Best Regards
-Masahiro Yamada
