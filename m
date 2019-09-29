@@ -4,54 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22AEEC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED82C32793
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F00472086A
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:43:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AF8B21835
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778993;
-	bh=IMFn1tzxwb26dMf9wGqGPU6excEbDGy+Ynd8rhWb8Kc=;
+	s=default; t=1569778996;
+	bh=6U12gjLd5+hWTbCP6kB3SDmu7dkXEuPqe6BNUcEyDwE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HbxMrSuTZ2N13nbAgF/zUdcMDElBwOqnPgm5G3inXafqzJOrHKJAOH4qUIaKqglo5
-	 tZRDXo18jR3eDojBa36o1jS/qIu40aa9z/dcyAdAFsXRtttoMDHRiqxd5weq1aJZGl
-	 90KPxn28xe72aR9y/3nshgVc9+IkyaXrkdJBgcqY=
+	b=Ut2h9kIux4Q2rgr1QjHgkAJToZP2DieMQevRcjDpKqaMIdelSIbl+bb8O06vjgpd1
+	 Jxn47KidnggvprJKM00WTxVZbUlMxA47KMAqaK7Zeom9cHDGeOg+Apxj1uxW9RJB3B
+	 reWWeA8rvpL83Vt6DJM/mf7a5RWhvRAKFp/nQSVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729796AbfI2RnL (ORCPT
+        id S1729405AbfI2Rbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:43:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42272 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:31:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729417AbfI2Rbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:31:44 -0400
+        id S1729376AbfI2Rbk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:31:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6208221D71;
-        Sun, 29 Sep 2019 17:31:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0CA921924;
+        Sun, 29 Sep 2019 17:31:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778303;
-        bh=IMFn1tzxwb26dMf9wGqGPU6excEbDGy+Ynd8rhWb8Kc=;
+        s=default; t=1569778299;
+        bh=6U12gjLd5+hWTbCP6kB3SDmu7dkXEuPqe6BNUcEyDwE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kQBCfKWWfKLDeFRBW58iECTh2eMdyjKU0NpYkBFRQ5t5M9CIOP4eINrWF1NxRb/wu
-         H67JCkHIGjdw3SAwaN60QlBUftz+IomCETtBIKrrv4Ty4y8J+Qed9Wsoub8Uxj8wWw
-         ga3igSLJG4eCbCmWz/gr91gNCh9DPqpiSjHGDeQQ=
+        b=YCfJGgmwcimX2Z9hICl4zWNdOXdLoU41l0brXB5+jx4yMdmjRP86/fhDw/NWb/ybm
+         mwerE5uInU1MrycVHP4pB5hvdPVe1cWo0tnFjn7a9tmm37rcRYG82Huik2XwFXL5Or
+         opvy9KsYVKgokjVPBpRCy5U1/2kpltWtO2CNhB8A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Romain Izard <romain.izard.pro@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 23/49] power: supply: register HWMON devices with valid names
-Date:   Sun, 29 Sep 2019 13:30:23 -0400
-Message-Id: <20190929173053.8400-23-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@linux-mips.org,
+        joe@perches.com,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
+        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 20/49] firmware: bcm47xx_nvram: Correct size_t printf format
+Date:   Sun, 29 Sep 2019 13:30:20 -0400
+Message-Id: <20190929173053.8400-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173053.8400-1-sashal@kernel.org>
 References: <20190929173053.8400-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,73 +63,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Romain Izard <romain.izard.pro@gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit f1b937cc86bedf94dbc3478c2c0dc79471081fff ]
+[ Upstream commit feb4eb060c3aecc3c5076bebe699cd09f1133c41 ]
 
-With the introduction of the HWMON compatibility layer to the power
-supply framework in Linux 5.3, all power supply devices' names can be
-used directly to create HWMON devices with the same names.
+When building on a 64-bit host, we will get warnings like those:
 
-But HWMON has rules on allowable names that are different from those
-used in the power supply framework. The dash character is forbidden, as
-it is used by the libsensors library in userspace as a separator,
-whereas this character is used in the device names in more than half of
-the existing power supply drivers. This last case is consistent with the
-typical naming usage with MFD and Device Tree.
+drivers/firmware/broadcom/bcm47xx_nvram.c:103:3: note: in expansion of macro 'pr_err'
+   pr_err("nvram on flash (%i bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
+   ^~~~~~
+drivers/firmware/broadcom/bcm47xx_nvram.c:103:28: note: format string is defined here
+   pr_err("nvram on flash (%i bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
+                           ~^
+                           %li
 
-This leads to warnings in the kernel log, with the format:
+Use %zu instead for that purpose.
 
-power_supply gpio-charger: hwmon: \
-	'gpio-charger' is not a valid name attribute, please fix
-
-Add a protection to power_supply_add_hwmon_sysfs() that replaces any
-dash in the device name with an underscore when registering with the
-HWMON framework. Other forbidden characters (star, slash, space, tab,
-newline) are not replaced, as they are not in common use.
-
-Fixes: e67d4dfc9ff1 ("power: supply: Add HWMON compatibility layer")
-Signed-off-by: Romain Izard <romain.izard.pro@gmail.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@linux-mips.org
+Cc: joe@perches.com
+Cc: Rafał Miłecki <zajec5@gmail.com>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/power_supply_hwmon.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ drivers/firmware/broadcom/bcm47xx_nvram.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/power/supply/power_supply_hwmon.c b/drivers/power/supply/power_supply_hwmon.c
-index 51fe60440d125..75cf861ba492d 100644
---- a/drivers/power/supply/power_supply_hwmon.c
-+++ b/drivers/power/supply/power_supply_hwmon.c
-@@ -284,6 +284,7 @@ int power_supply_add_hwmon_sysfs(struct power_supply *psy)
- 	struct device *dev = &psy->dev;
- 	struct device *hwmon;
- 	int ret, i;
-+	const char *name;
- 
- 	if (!devres_open_group(dev, power_supply_add_hwmon_sysfs,
- 			       GFP_KERNEL))
-@@ -334,7 +335,19 @@ int power_supply_add_hwmon_sysfs(struct power_supply *psy)
- 		}
+diff --git a/drivers/firmware/broadcom/bcm47xx_nvram.c b/drivers/firmware/broadcom/bcm47xx_nvram.c
+index 77eb74666ecbc..6d2820f6aca13 100644
+--- a/drivers/firmware/broadcom/bcm47xx_nvram.c
++++ b/drivers/firmware/broadcom/bcm47xx_nvram.c
+@@ -96,7 +96,7 @@ static int nvram_find_and_copy(void __iomem *iobase, u32 lim)
+ 		nvram_len = size;
  	}
- 
--	hwmon = devm_hwmon_device_register_with_info(dev, psy->desc->name,
-+	name = psy->desc->name;
-+	if (strchr(name, '-')) {
-+		char *new_name;
-+
-+		new_name = devm_kstrdup(dev, name, GFP_KERNEL);
-+		if (!new_name) {
-+			ret = -ENOMEM;
-+			goto error;
-+		}
-+		strreplace(new_name, '-', '_');
-+		name = new_name;
-+	}
-+	hwmon = devm_hwmon_device_register_with_info(dev, name,
- 						psyhw,
- 						&power_supply_hwmon_chip_info,
- 						NULL);
+ 	if (nvram_len >= NVRAM_SPACE) {
+-		pr_err("nvram on flash (%i bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
++		pr_err("nvram on flash (%zu bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
+ 		       nvram_len, NVRAM_SPACE - 1);
+ 		nvram_len = NVRAM_SPACE - 1;
+ 	}
+@@ -148,7 +148,7 @@ static int nvram_init(void)
+ 	    header.len > sizeof(header)) {
+ 		nvram_len = header.len;
+ 		if (nvram_len >= NVRAM_SPACE) {
+-			pr_err("nvram on flash (%i bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
++			pr_err("nvram on flash (%zu bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
+ 				header.len, NVRAM_SPACE);
+ 			nvram_len = NVRAM_SPACE - 1;
+ 		}
 -- 
 2.20.1
 
