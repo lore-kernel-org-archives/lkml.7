@@ -7,57 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E28CC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10958C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17A1C2196E
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC4712086A
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:31:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778315;
-	bh=mzZzbvSR0cnLcFpKkLpjIj9DLeE+vyS5ObE5/GHzwbc=;
+	s=default; t=1569778317;
+	bh=kZEPCmBzfnruGMTP4vMPzELIRnJc++Rbxcjejt8mrIU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XJNYJv9fJ0DuOKaxkSq/AnNOnr9A0E+6Vx60N3ZJkLLGG56AS/OS7vGr8gExRUoIN
-	 h8vm/VaOBUOLfvkyuvS5u55vh7mZHYr+xpz+fO/syKGLznM6UNgtnnXI2eI0vubA7y
-	 gPnRdeiEU8OQnp3yoYUZ/gosZDawH9Po70hLxi0A=
+	b=IXIlboMWaweMCTsekkEB+nOISWpPMgRx0JJDfiiEF33WlNfhvB4wUTuQ1yN1tkUGM
+	 iMTJ339Q1VPpG5SIh925X/jlaI1vJBqe+i9HGrQ4qgA73AOJxtvwwKf5xom0iPO71G
+	 RCxPq16hOI25/tY/EP41q2CO0I5FZBRNIv+pAYZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729526AbfI2Rby (ORCPT
+        id S1729576AbfI2Rb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:31:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42454 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:31:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729507AbfI2Rbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:31:53 -0400
+        id S1729547AbfI2Rb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:31:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E463221906;
-        Sun, 29 Sep 2019 17:31:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3539C21D7C;
+        Sun, 29 Sep 2019 17:31:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778312;
-        bh=mzZzbvSR0cnLcFpKkLpjIj9DLeE+vyS5ObE5/GHzwbc=;
+        s=default; t=1569778316;
+        bh=kZEPCmBzfnruGMTP4vMPzELIRnJc++Rbxcjejt8mrIU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UgPEt8nuu4DFxHV5y5FEF3gzDuxCjqlih3wT50NcW2Uhr0h1xk3V3JJCf/XSc2K7v
-         tfRoAwEsGAmnXmKdA0l7oc/lg6Njphk++yzrT9TLr6GHg3dlvmj2n+Mx/+V9pvQWWH
-         KJbELDiSdGVS2LZF9rCzYjtoic1DZq3xX4b/492I=
+        b=FLHYu64U6DklqKKxtnl8uwnXg930oS2e/YaIw1h785cK8qm0Z3USup6pnzWuoVLnn
+         SKLR5bQ+/1pmHregJGU5PpvOt0I1rHq5SUj5Fv80svTXUucynrFuP64TVjRa/NffRI
+         n3CjITuhUxQA+R39OTC5VPHC05O8IqS9z/Emws3U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thierry Reding <treding@nvidia.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>, kernel@pengutronix.de,
-        linux-imx@nxp.com, Sasha Levin <sashal@kernel.org>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 29/49] PCI: imx6: Propagate errors for optional regulators
-Date:   Sun, 29 Sep 2019 13:30:29 -0400
-Message-Id: <20190929173053.8400-29-sashal@kernel.org>
+Cc:     Krzysztof Wilczynski <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 32/49] PCI: Use static const struct, not const static struct
+Date:   Sun, 29 Sep 2019 13:30:32 -0400
+Message-Id: <20190929173053.8400-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173053.8400-1-sashal@kernel.org>
 References: <20190929173053.8400-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -66,52 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+From: Krzysztof Wilczynski <kw@linux.com>
 
-[ Upstream commit 2170a09fb4b0f66e06e5bcdcbc98c9ccbf353650 ]
+[ Upstream commit 8050f3f6645ae0f7e4c1304593f6f7eb2ee7d85c ]
 
-regulator_get_optional() can fail for a number of reasons besides probe
-deferral. It can for example return -ENOMEM if it runs out of memory as
-it tries to allocate data structures. Propagating only -EPROBE_DEFER is
-problematic because it results in these legitimately fatal errors being
-treated as "regulator not specified in DT".
+Move the static keyword to the front of declarations of pci_regs_behavior[]
+and pcie_cap_regs_behavior[], which resolves compiler warnings when
+building with "W=1":
 
-What we really want is to ignore the optional regulators only if they
-have not been specified in DT. regulator_get_optional() returns -ENODEV
-in this case, so that's the special case that we need to handle. So we
-propagate all errors, except -ENODEV, so that real failures will still
-cause the driver to fail probe.
+  drivers/pci/pci-bridge-emul.c:41:1: warning: ‘static’ is not at beginning of
+  declaration [-Wold-style-declaration]
+   const static struct pci_bridge_reg_behavior pci_regs_behavior[] = {
+   ^
+  drivers/pci/pci-bridge-emul.c:176:1: warning: ‘static’ is not at beginning of
+  declaration [-Wold-style-declaration]
+   const static struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
+   ^
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: kernel@pengutronix.de
-Cc: linux-imx@nxp.com
+Link: https://lore.kernel.org/r/20190826151436.4672-1-kw@linux.com
+Link: https://lore.kernel.org/r/20190828131733.5817-1-kw@linux.com
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pci-imx6.c | 4 ++--
+ drivers/pci/pci-bridge-emul.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 9b5cb5b703890..aabf22eaa6b91 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -1173,8 +1173,8 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+diff --git a/drivers/pci/pci-bridge-emul.c b/drivers/pci/pci-bridge-emul.c
+index 06083b86d4f45..5fd90105510d9 100644
+--- a/drivers/pci/pci-bridge-emul.c
++++ b/drivers/pci/pci-bridge-emul.c
+@@ -38,7 +38,7 @@ struct pci_bridge_reg_behavior {
+ 	u32 rsvd;
+ };
  
- 	imx6_pcie->vpcie = devm_regulator_get_optional(&pdev->dev, "vpcie");
- 	if (IS_ERR(imx6_pcie->vpcie)) {
--		if (PTR_ERR(imx6_pcie->vpcie) == -EPROBE_DEFER)
--			return -EPROBE_DEFER;
-+		if (PTR_ERR(imx6_pcie->vpcie) != -ENODEV)
-+			return PTR_ERR(imx6_pcie->vpcie);
- 		imx6_pcie->vpcie = NULL;
- 	}
+-const static struct pci_bridge_reg_behavior pci_regs_behavior[] = {
++static const struct pci_bridge_reg_behavior pci_regs_behavior[] = {
+ 	[PCI_VENDOR_ID / 4] = { .ro = ~0 },
+ 	[PCI_COMMAND / 4] = {
+ 		.rw = (PCI_COMMAND_IO | PCI_COMMAND_MEMORY |
+@@ -173,7 +173,7 @@ const static struct pci_bridge_reg_behavior pci_regs_behavior[] = {
+ 	},
+ };
  
+-const static struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
++static const struct pci_bridge_reg_behavior pcie_cap_regs_behavior[] = {
+ 	[PCI_CAP_LIST_ID / 4] = {
+ 		/*
+ 		 * Capability ID, Next Capability Pointer and
 -- 
 2.20.1
 
