@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5D9C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FACC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EA5321925
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58BAF21906
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:38:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778699;
-	bh=zhxvTAlmsZKSS7jpSeHn3u1UG03P6G5MH4amv/FmMXQ=;
+	s=default; t=1569778704;
+	bh=4cRE8BoO5Dnzu1LM5gTDzH31eoGrRlvqL7fvAltIum8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yNfNe4sJp4H+Wvm6QAZAiLInfoVEVVwxvoZ6ShF2an1mVlA61UAPo+iJEOBbDOumG
-	 +HdCEyn4EM9KTHUr7xHi+ZklZL+pZuFfGUb/SmXmbtUFtw3zIZq8SZAeyGIaqLQ4SJ
-	 cGwcE3oeA7DW+vowSdMRNhj8Zb7HCM6h/Wn+oyo8=
+	b=bRENsZOpgo16K+QuyMwB6IC0SJnZ/NHcZNidBv4yFb6uoR3S0JT2ZBTAs3HTJwaje
+	 l3+OEIxHiI9Qx4Y2MUUt+b7jLBIpxpoMLIIQEGz0wnUhOh6cUQRaSSA1ZspKjiBB3g
+	 wsK1kZ1M86sRmONfQdfCW8gig3HcIee6M8CfokC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730774AbfI2RgN (ORCPT
+        id S1730599AbfI2RiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:36:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48526 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:38:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730750AbfI2RgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:36:08 -0400
+        id S1730772AbfI2RgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:36:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75A6921925;
-        Sun, 29 Sep 2019 17:36:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D993A21D71;
+        Sun, 29 Sep 2019 17:36:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778568;
-        bh=zhxvTAlmsZKSS7jpSeHn3u1UG03P6G5MH4amv/FmMXQ=;
+        s=default; t=1569778572;
+        bh=4cRE8BoO5Dnzu1LM5gTDzH31eoGrRlvqL7fvAltIum8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=odGRG7QYRja8g9X+bl+V2vPcM9KHIQUStyYQSTqEhRC8+ASH1jx/cWhsPa0CQI+2W
-         KSCXT3s05809Fe1MvsSbz6vOk88PShixzCEPe11jok7qDnQnoCB8hmw6HivmOorESB
-         bzw42qFUo0SKg358h6zBDSp269nzkq74CS4n6LYY=
+        b=fqGwE47TNwspck2Zy74Rj16V2+iuYNu1olrwQGM5Xt39mIRba9gY27EE6mBoUJGIC
+         Uhm5KxeCVo7qUkapq6oFt2xu527+osRBc1WWN/+u56vLeMlD8+Quurs4SmJDIwo2/h
+         MwTXVybI2Bw2oJS09C1W8WO3XbWO7IWSrYuHQD4w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 16/23] security: smack: Fix possible null-pointer dereferences in smack_socket_sock_rcv_skb()
-Date:   Sun, 29 Sep 2019 13:35:26 -0400
-Message-Id: <20190929173535.9744-16-sashal@kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Anatoly Pugachev <matorola@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 19/23] pktcdvd: remove warning on attempting to register non-passthrough dev
+Date:   Sun, 29 Sep 2019 13:35:29 -0400
+Message-Id: <20190929173535.9744-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173535.9744-1-sashal@kernel.org>
 References: <20190929173535.9744-1-sashal@kernel.org>
@@ -60,46 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit 3f4287e7d98a2954f20bf96c567fdffcd2b63eb9 ]
+[ Upstream commit eb09b3cc464d2c3bbde9a6648603c8d599ea8582 ]
 
-In smack_socket_sock_rcv_skb(), there is an if statement
-on line 3920 to check whether skb is NULL:
-    if (skb && skb->secmark != 0)
+Anatoly reports that he gets the below warning when booting -git on
+a sparc64 box on debian unstable:
 
-This check indicates skb can be NULL in some cases.
+...
+[   13.352975] aes_sparc64: Using sparc64 aes opcodes optimized AES
+implementation
+[   13.428002] ------------[ cut here ]------------
+[   13.428081] WARNING: CPU: 21 PID: 586 at
+drivers/block/pktcdvd.c:2597 pkt_setup_dev+0x2e4/0x5a0 [pktcdvd]
+[   13.428147] Attempt to register a non-SCSI queue
+[   13.428184] Modules linked in: pktcdvd libdes cdrom aes_sparc64
+n2_rng md5_sparc64 sha512_sparc64 rng_core sha256_sparc64 flash
+sha1_sparc64 ip_tables x_tables ipv6 crc_ccitt nf_defrag_ipv6 autofs4
+ext4 crc16 mbcache jbd2 raid10 raid456 async_raid6_recov async_memcpy
+async_pq async_xor xor async_tx raid6_pq raid1 raid0 multipath linear
+md_mod crc32c_sparc64
+[   13.428452] CPU: 21 PID: 586 Comm: pktsetup Not tainted
+5.3.0-10169-g574cc4539762 #1234
+[   13.428507] Call Trace:
+[   13.428542]  [00000000004635c0] __warn+0xc0/0x100
+[   13.428582]  [0000000000463634] warn_slowpath_fmt+0x34/0x60
+[   13.428626]  [000000001045b244] pkt_setup_dev+0x2e4/0x5a0 [pktcdvd]
+[   13.428674]  [000000001045ccf4] pkt_ctl_ioctl+0x94/0x220 [pktcdvd]
+[   13.428724]  [00000000006b95c8] do_vfs_ioctl+0x628/0x6e0
+[   13.428764]  [00000000006b96c8] ksys_ioctl+0x48/0x80
+[   13.428803]  [00000000006b9714] sys_ioctl+0x14/0x40
+[   13.428847]  [0000000000406294] linux_sparc_syscall+0x34/0x44
+[   13.428890] irq event stamp: 4181
+[   13.428924] hardirqs last  enabled at (4189): [<00000000004e0a74>]
+console_unlock+0x634/0x6c0
+[   13.428984] hardirqs last disabled at (4196): [<00000000004e0540>]
+console_unlock+0x100/0x6c0
+[   13.429048] softirqs last  enabled at (3978): [<0000000000b2e2d8>]
+__do_softirq+0x498/0x520
+[   13.429110] softirqs last disabled at (3967): [<000000000042cfb4>]
+do_softirq_own_stack+0x34/0x60
+[   13.429172] ---[ end trace 2220ca468f32967d ]---
+[   13.430018] pktcdvd: setup of pktcdvd device failed
+[   13.455589] des_sparc64: Using sparc64 des opcodes optimized DES
+implementation
+[   13.515334] camellia_sparc64: Using sparc64 camellia opcodes
+optimized CAMELLIA implementation
+[   13.522856] pktcdvd: setup of pktcdvd device failed
+[   13.529327] pktcdvd: setup of pktcdvd device failed
+[   13.532932] pktcdvd: setup of pktcdvd device failed
+[   13.536165] pktcdvd: setup of pktcdvd device failed
+[   13.539372] pktcdvd: setup of pktcdvd device failed
+[   13.542834] pktcdvd: setup of pktcdvd device failed
+[   13.546536] pktcdvd: setup of pktcdvd device failed
+[   15.431071] XFS (dm-0): Mounting V5 Filesystem
+...
 
-But on lines 3931 and 3932, skb is used:
-    ad.a.u.net->netif = skb->skb_iif;
-    ipv6_skb_to_auditdata(skb, &ad.a, NULL);
+Apparently debian auto-attaches any cdrom like device to pktcdvd, which
+can lead to the above warning. There's really no reason to warn for this
+situation, kill it.
 
-Thus, possible null-pointer dereferences may occur when skb is NULL.
-
-To fix these possible bugs, an if statement is added to check skb.
-
-These bugs are found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+Reported-by: Anatoly Pugachev <matorola@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/smack/smack_lsm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/block/pktcdvd.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
-index 0d5ce7190b17e..09119c43525ed 100644
---- a/security/smack/smack_lsm.c
-+++ b/security/smack/smack_lsm.c
-@@ -4031,6 +4031,8 @@ static int smack_socket_sock_rcv_skb(struct sock *sk, struct sk_buff *skb)
- 			skp = smack_ipv6host_label(&sadd);
- 		if (skp == NULL)
- 			skp = smack_net_ambient;
-+		if (skb == NULL)
-+			break;
- #ifdef CONFIG_AUDIT
- 		smk_ad_init_net(&ad, __func__, LSM_AUDIT_DATA_NET, &net);
- 		ad.a.u.net->family = family;
+diff --git a/drivers/block/pktcdvd.c b/drivers/block/pktcdvd.c
+index 11ec92e47455a..94944d063b372 100644
+--- a/drivers/block/pktcdvd.c
++++ b/drivers/block/pktcdvd.c
+@@ -2585,7 +2585,6 @@ static int pkt_new_dev(struct pktcdvd_device *pd, dev_t dev)
+ 	if (ret)
+ 		return ret;
+ 	if (!blk_queue_scsi_passthrough(bdev_get_queue(bdev))) {
+-		WARN_ONCE(true, "Attempt to register a non-SCSI queue\n");
+ 		blkdev_put(bdev, FMODE_READ | FMODE_NDELAY);
+ 		return -EINVAL;
+ 	}
 -- 
 2.20.1
 
