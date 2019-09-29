@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3829EC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFF1C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BE0B2082F
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F055C2082F
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:00:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569765604;
-	bh=lZJ9g3vN8/4CHNEIeGOta0sjNncUHLr4qa1CoclZ/p4=;
+	s=default; t=1569765610;
+	bh=wqdPdG1t5Mk1aHnax6epbpMt8if7rIZmNdAUg59W+/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PpkPY2AKfg3lia1liK5KiXVE7KiOxMnlERcohuKyW3w/CB12TaQJ1UbSo1Oo+0eq8
-	 iavS9TN1jnjWuR/f9IGyy8RuIUjHG0ZQQHXOkQjr5nG4VXEcuuo7DDPPqg9GuCE3qu
-	 /lg0dRnVoBPOBh3cqCEZ/BXOCSBto2G6I+2qnq+A=
+	b=pA1xCrReMeoBg+bhLmj1zD7ZUrMpA3GAfJNfGfclONcbLXwCEG4hyov6lV5zdzoCB
+	 EP3cDOirZQBt+4ZmT5FYvdZbh50sLd3V/GcmDnwtqpPufXWQ6jEEZDHr6QohA54z5B
+	 QfV/lL0HZ6qeCcizlj19z2qQolY7DqCpHVhD5Ez4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729539AbfI2OAD (ORCPT
+        id S1729865AbfI2OAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 10:00:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41440 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 10:00:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729829AbfI2N75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 09:59:57 -0400
+        id S1729545AbfI2OAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 10:00:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 398F721835;
-        Sun, 29 Sep 2019 13:59:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2E2E21835;
+        Sun, 29 Sep 2019 14:00:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569765597;
-        bh=lZJ9g3vN8/4CHNEIeGOta0sjNncUHLr4qa1CoclZ/p4=;
+        s=default; t=1569765603;
+        bh=wqdPdG1t5Mk1aHnax6epbpMt8if7rIZmNdAUg59W+/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wiuw8Ma2PBTPGp+VFedchOssqeqEh8i47nn2aJYDVvYD9FJm/ZTSwMA7zJ+kcUypw
-         tyW1oQ7GKz9hLXQWtS3MAD7xAGk5+Gm/BFwbad3jkHDx2DlReFACvVLMc/VPpd3/SC
-         I/3gykLxT/SDJMHodApQAEk9Y9JTi4nfVWBpjvs0=
+        b=fPcsS/gLrpB4sMf9Isc4CGvJkgNsyrAoXt87Ijpir7hMzkCQB5z582qA5ZRqjqkn+
+         ffn1z5c/uWvrjF9wiaaI/RCBhduV/55mSJXs5QCDGFU9pYb4eXTOpxqMEkF4YvuwCX
+         rDDCsibozdqYIteUyVbewLqbD5qgGyDoWdUmYRHw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org, Ilia Mirkin <imirkin@alum.mit.edu>,
+        Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 56/63] Bluetooth: btrtl: HCI reset on close for Realtek BT chip
-Date:   Sun, 29 Sep 2019 15:54:29 +0200
-Message-Id: <20190929135040.787343548@linuxfoundation.org>
+Subject: [PATCH 4.19 58/63] drm/nouveau/disp/nv50-: fix center/aspect-corrected scaling
+Date:   Sun, 29 Sep 2019 15:54:31 +0200
+Message-Id: <20190929135041.002602169@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190929135031.382429403@linuxfoundation.org>
 References: <20190929135031.382429403@linuxfoundation.org>
@@ -61,101 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian-Hong Pan <jian-hong@endlessm.com>
+From: Ilia Mirkin <imirkin@alum.mit.edu>
 
-[ Upstream commit 7af3f558aca74f2ee47b173f1c27f6bb9a5b5561 ]
+[ Upstream commit 533f4752407543f488a9118d817b8c504352b6fb ]
 
-Realtek RTL8822BE BT chip on ASUS X420FA cannot be turned on correctly
-after on-off several times. Bluetooth daemon sets BT mode failed when
-this issue happens. Scanning must be active while turning off for this
-bug to be hit.
+Previously center scaling would get scaling applied to it (when it was
+only supposed to center the image), and aspect-corrected scaling did not
+always correctly pick whether to reduce width or height for a particular
+combination of inputs/outputs.
 
-bluetoothd[1576]: Failed to set mode: Failed (0x03)
-
-If BT is turned off, then turned on again, it works correctly again.
-
-According to the vendor driver, the HCI_QUIRK_RESET_ON_CLOSE flag is set
-during probing. So, this patch makes Realtek's BT reset on close to fix
-this issue.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=203429
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Reviewed-by: Daniel Drake <drake@endlessm.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=110660
+Signed-off-by: Ilia Mirkin <imirkin@alum.mit.edu>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/btrtl.c | 20 ++++++++++++++++++++
- drivers/bluetooth/btrtl.h |  6 ++++++
- drivers/bluetooth/btusb.c |  1 +
- 3 files changed, 27 insertions(+)
+ drivers/gpu/drm/nouveau/dispnv50/head.c | 28 +++++++++++++++++++++----
+ 1 file changed, 24 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
-index 1342f8e6025cc..8d1cd2479e36f 100644
---- a/drivers/bluetooth/btrtl.c
-+++ b/drivers/bluetooth/btrtl.c
-@@ -639,6 +639,26 @@ int btrtl_setup_realtek(struct hci_dev *hdev)
- }
- EXPORT_SYMBOL_GPL(btrtl_setup_realtek);
- 
-+int btrtl_shutdown_realtek(struct hci_dev *hdev)
-+{
-+	struct sk_buff *skb;
-+	int ret;
-+
-+	/* According to the vendor driver, BT must be reset on close to avoid
-+	 * firmware crash.
-+	 */
-+	skb = __hci_cmd_sync(hdev, HCI_OP_RESET, 0, NULL, HCI_INIT_TIMEOUT);
-+	if (IS_ERR(skb)) {
-+		ret = PTR_ERR(skb);
-+		bt_dev_err(hdev, "HCI reset during shutdown failed");
-+		return ret;
-+	}
-+	kfree_skb(skb);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(btrtl_shutdown_realtek);
-+
- static unsigned int btrtl_convert_baudrate(u32 device_baudrate)
- {
- 	switch (device_baudrate) {
-diff --git a/drivers/bluetooth/btrtl.h b/drivers/bluetooth/btrtl.h
-index f5e36f3993a81..852f27d4ee289 100644
---- a/drivers/bluetooth/btrtl.h
-+++ b/drivers/bluetooth/btrtl.h
-@@ -65,6 +65,7 @@ void btrtl_free(struct btrtl_device_info *btrtl_dev);
- int btrtl_download_firmware(struct hci_dev *hdev,
- 			    struct btrtl_device_info *btrtl_dev);
- int btrtl_setup_realtek(struct hci_dev *hdev);
-+int btrtl_shutdown_realtek(struct hci_dev *hdev);
- int btrtl_get_uart_settings(struct hci_dev *hdev,
- 			    struct btrtl_device_info *btrtl_dev,
- 			    unsigned int *controller_baudrate,
-@@ -93,6 +94,11 @@ static inline int btrtl_setup_realtek(struct hci_dev *hdev)
- 	return -EOPNOTSUPP;
- }
- 
-+static inline int btrtl_shutdown_realtek(struct hci_dev *hdev)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
- static inline int btrtl_get_uart_settings(struct hci_dev *hdev,
- 					  struct btrtl_device_info *btrtl_dev,
- 					  unsigned int *controller_baudrate,
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 09c83dc2ef677..96b8a00934c4a 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -3128,6 +3128,7 @@ static int btusb_probe(struct usb_interface *intf,
- #ifdef CONFIG_BT_HCIBTUSB_RTL
- 	if (id->driver_info & BTUSB_REALTEK) {
- 		hdev->setup = btrtl_setup_realtek;
-+		hdev->shutdown = btrtl_shutdown_realtek;
- 
- 		/* Realtek devices lose their updated firmware over suspend,
- 		 * but the USB hub doesn't notice any status change.
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/head.c b/drivers/gpu/drm/nouveau/dispnv50/head.c
+index d81a99bb2ac31..b041ffb3af270 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/head.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/head.c
+@@ -169,14 +169,34 @@ nv50_head_atomic_check_view(struct nv50_head_atom *armh,
+ 	 */
+ 	switch (mode) {
+ 	case DRM_MODE_SCALE_CENTER:
+-		asyh->view.oW = min((u16)umode->hdisplay, asyh->view.oW);
+-		asyh->view.oH = min((u16)umode_vdisplay, asyh->view.oH);
+-		/* fall-through */
++		/* NOTE: This will cause scaling when the input is
++		 * larger than the output.
++		 */
++		asyh->view.oW = min(asyh->view.iW, asyh->view.oW);
++		asyh->view.oH = min(asyh->view.iH, asyh->view.oH);
++		break;
+ 	case DRM_MODE_SCALE_ASPECT:
+-		if (asyh->view.oH < asyh->view.oW) {
++		/* Determine whether the scaling should be on width or on
++		 * height. This is done by comparing the aspect ratios of the
++		 * sizes. If the output AR is larger than input AR, that means
++		 * we want to change the width (letterboxed on the
++		 * left/right), otherwise on the height (letterboxed on the
++		 * top/bottom).
++		 *
++		 * E.g. 4:3 (1.333) AR image displayed on a 16:10 (1.6) AR
++		 * screen will have letterboxes on the left/right. However a
++		 * 16:9 (1.777) AR image on that same screen will have
++		 * letterboxes on the top/bottom.
++		 *
++		 * inputAR = iW / iH; outputAR = oW / oH
++		 * outputAR > inputAR is equivalent to oW * iH > iW * oH
++		 */
++		if (asyh->view.oW * asyh->view.iH > asyh->view.iW * asyh->view.oH) {
++			/* Recompute output width, i.e. left/right letterbox */
+ 			u32 r = (asyh->view.iW << 19) / asyh->view.iH;
+ 			asyh->view.oW = ((asyh->view.oH * r) + (r / 2)) >> 19;
+ 		} else {
++			/* Recompute output height, i.e. top/bottom letterbox */
+ 			u32 r = (asyh->view.iH << 19) / asyh->view.iW;
+ 			asyh->view.oH = ((asyh->view.oW * r) + (r / 2)) >> 19;
+ 		}
 -- 
 2.20.1
 
