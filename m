@@ -2,98 +2,122 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBD7C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2AAAC352A9
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AB63206BB
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:36:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A91AB2082F
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:56:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569765406;
+	bh=pQnPTaXWlv1+WPL9VBSNvzL6JYxtjDaI93PENrp7EaI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=I/8JWwUOcmZR00fXA1KZyapIzugZCqavoMYBz3CK5hMmyMmB51K1GaYs7BohuABZ/
+	 LVXPkO/qjyVvgQ2+UCtPOYhCbT1g6s0nB++K2uDDs1U9BgCwWyJI+TebDVMFkd528T
+	 zjYz5tYNK/JZF4Ne4wOssSmFPL0h/eLdaPVm2xao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbfI2NgI (ORCPT
+        id S1728920AbfI2N4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 09:36:08 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:48914 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725937AbfI2NgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 09:36:07 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C75899D10838FA607073;
-        Sun, 29 Sep 2019 21:36:03 +0800 (CST)
-Received: from huawei.com (10.90.53.225) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Sun, 29 Sep 2019
- 21:35:55 +0800
-From:   yu kuai <yukuai3@huawei.com>
-To:     <cascardo@holoscopio.com>, <don@syst.com.br>,
-        <dvhart@infradead.org>, <andy@infradead.org>
-CC:     <yukuai3@huawei.com>, <zhengbin13@huawei.com>,
-        <yi.zhang@huawei.com>, <platform-driver-x86@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] classmate-laptop: remove unused variable
-Date:   Sun, 29 Sep 2019 21:42:49 +0800
-Message-ID: <1569764569-9177-1-git-send-email-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        Sun, 29 Sep 2019 09:56:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36710 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725974AbfI2N4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 09:56:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 118A62082F;
+        Sun, 29 Sep 2019 13:56:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569765401;
+        bh=pQnPTaXWlv1+WPL9VBSNvzL6JYxtjDaI93PENrp7EaI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bpR/5+fOnrFGNhTcNkW9qopuHBOgQqbOykk2UU9PZgh+98vQaaTRD9f4GFjPZPPpB
+         vJylT+PQWykwig+YPXsMHk47t+UmOYD/roaxcnT+nlLpBZfy7HLknPKf7GrPChmVzG
+         yzgzEwJwxN02UcPug8WDLJFVjBUBIlEPzMAqqfHU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 01/63] Revert "Bluetooth: validate BLE connection interval updates"
+Date:   Sun, 29 Sep 2019 15:53:34 +0200
+Message-Id: <20190929135031.579923557@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190929135031.382429403@linuxfoundation.org>
+References: <20190929135031.382429403@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+From: Marcel Holtmann <marcel@holtmann.org>
 
-drivers/platform/x86/classmate-laptop.c: In function cmpc_accel_remove_v4:
-drivers/platform/x86/classmate-laptop.c:424:21: warning: variable accel
-set but not used [-Wunused-but-set-variable]
-drivers/platform/x86/classmate-laptop.c: In function cmpc_accel_remove:
-drivers/platform/x86/classmate-laptop.c:660:21: warning: variable accel
-set but not used [-Wunused-but-set-variable]
+[ Upstream commit 68d19d7d995759b96169da5aac313363f92a9075 ]
 
-In function cmpc_accel_remove_v4 and cmpc_accel_remove, variable accel is
-set but not used, so it can be removed. In that case, variable inputdev is
-set but not used and can be removed.
+This reverts commit c49a8682fc5d298d44e8d911f4fa14690ea9485e.
 
-Fixes: 7125587df4e8 ("classmate-laptop: Add support for Classmate V4 accelerometer.")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: yu kuai <yukuai3@huawei.com>
+There are devices which require low connection intervals for usable operation
+including keyboards and mice. Forcing a static connection interval for
+these types of devices has an impact in latency and causes a regression.
+
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/classmate-laptop.c | 12 ------------
- 1 file changed, 12 deletions(-)
+ net/bluetooth/hci_event.c  | 5 -----
+ net/bluetooth/l2cap_core.c | 9 +--------
+ 2 files changed, 1 insertion(+), 13 deletions(-)
 
-diff --git a/drivers/platform/x86/classmate-laptop.c b/drivers/platform/x86/classmate-laptop.c
-index 86cc2cc..af063f6 100644
---- a/drivers/platform/x86/classmate-laptop.c
-+++ b/drivers/platform/x86/classmate-laptop.c
-@@ -420,12 +420,6 @@ static int cmpc_accel_add_v4(struct acpi_device *acpi)
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 0adcddb211fa5..3e7badb3ac2d5 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -5545,11 +5545,6 @@ static void hci_le_remote_conn_param_req_evt(struct hci_dev *hdev,
+ 		return send_conn_param_neg_reply(hdev, handle,
+ 						 HCI_ERROR_UNKNOWN_CONN_ID);
  
- static int cmpc_accel_remove_v4(struct acpi_device *acpi)
- {
--	struct input_dev *inputdev;
--	struct cmpc_accel *accel;
+-	if (min < hcon->le_conn_min_interval ||
+-	    max > hcon->le_conn_max_interval)
+-		return send_conn_param_neg_reply(hdev, handle,
+-						 HCI_ERROR_INVALID_LL_PARAMS);
 -
--	inputdev = dev_get_drvdata(&acpi->dev);
--	accel = dev_get_drvdata(&inputdev->dev);
--
- 	device_remove_file(&acpi->dev, &cmpc_accel_sensitivity_attr_v4);
- 	device_remove_file(&acpi->dev, &cmpc_accel_g_select_attr_v4);
- 	return cmpc_remove_acpi_notify_device(acpi);
-@@ -656,12 +650,6 @@ static int cmpc_accel_add(struct acpi_device *acpi)
+ 	if (hci_check_conn_params(min, max, latency, timeout))
+ 		return send_conn_param_neg_reply(hdev, handle,
+ 						 HCI_ERROR_INVALID_LL_PARAMS);
+diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
+index a54dadf4a6ca0..260ef5426e0ca 100644
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -5287,14 +5287,7 @@ static inline int l2cap_conn_param_update_req(struct l2cap_conn *conn,
  
- static int cmpc_accel_remove(struct acpi_device *acpi)
- {
--	struct input_dev *inputdev;
--	struct cmpc_accel *accel;
+ 	memset(&rsp, 0, sizeof(rsp));
+ 
+-	if (min < hcon->le_conn_min_interval ||
+-	    max > hcon->le_conn_max_interval) {
+-		BT_DBG("requested connection interval exceeds current bounds.");
+-		err = -EINVAL;
+-	} else {
+-		err = hci_check_conn_params(min, max, latency, to_multiplier);
+-	}
 -
--	inputdev = dev_get_drvdata(&acpi->dev);
--	accel = dev_get_drvdata(&inputdev->dev);
--
- 	device_remove_file(&acpi->dev, &cmpc_accel_sensitivity_attr);
- 	return cmpc_remove_acpi_notify_device(acpi);
- }
++	err = hci_check_conn_params(min, max, latency, to_multiplier);
+ 	if (err)
+ 		rsp.result = cpu_to_le16(L2CAP_CONN_PARAM_REJECTED);
+ 	else
 -- 
-2.7.4
+2.20.1
+
+
 
