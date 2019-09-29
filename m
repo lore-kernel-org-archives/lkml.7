@@ -2,144 +2,122 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9539C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 06:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 803DDC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 06:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F1F0218AC
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 06:24:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49A2420863
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 06:29:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FCoyVpS3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728961AbfI2GY2 (ORCPT
+        id S1727575AbfI2G3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 02:24:28 -0400
-Received: from mail-sz.amlogic.com ([211.162.65.117]:15311 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728198AbfI2GYZ (ORCPT
+        Sun, 29 Sep 2019 02:29:18 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36666 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfI2G3S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 02:24:25 -0400
-Received: from droid12-sz.software.amlogic (10.28.8.22) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Sun, 29 Sep 2019
- 14:24:20 +0800
-From:   Xingyu Chen <xingyu.chen@amlogic.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Xingyu Chen <xingyu.chen@amlogic.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 3/3] reset: add support for the Meson-A1 SoC Reset Controller
-Date:   Sun, 29 Sep 2019 14:24:15 +0800
-Message-ID: <1569738255-3941-4-git-send-email-xingyu.chen@amlogic.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1569738255-3941-1-git-send-email-xingyu.chen@amlogic.com>
-References: <1569738255-3941-1-git-send-email-xingyu.chen@amlogic.com>
+        Sun, 29 Sep 2019 02:29:18 -0400
+Received: by mail-io1-f65.google.com with SMTP id b136so29000210iof.3;
+        Sat, 28 Sep 2019 23:29:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4RDzM2OI8ZvEo8Fafv3HNsPBRly1dAxntip8HAHtNNA=;
+        b=FCoyVpS3+z/N4O8wWgUaJKvTgVqsNnhsa6QaPGQ+zr2+py2vnR5LElNbGPiA6CWIhD
+         f2LK4jsBAaIyTq3Y4Up1vBKi5J6nobnR+5z1rOFj4EqKRBVla4m788Jr7+Mq1GQkFFzc
+         fIV2Bw5NLQTgD+DKcokiLvOpQAkmRebJdZaPh3sw8cu3llvMwZF3llRM4vquF+RGXZiQ
+         bk8zK96weHsgNb08Wgfwrtt4q3lt5YDyRVAFuPN2NWzISRlpsehE5WI1VWwnaN1ZLle6
+         Yts489lT39wohimuYRevSEOE7CCsdyP2Q5F+8/GxIOfOsWEIMNLsNIo+KX4KQCsF+vcY
+         bp8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4RDzM2OI8ZvEo8Fafv3HNsPBRly1dAxntip8HAHtNNA=;
+        b=VAcxcsEa8EMtaOZtGuux/KaDJL78u1wZkKmNSeIpzxtJ1aMmMQdpQoTjRslEw9m9gT
+         0kEz4KqJd31PUDcgt5VhKl2qG0/fjx19ubrNXOBjSn0vwyMdON/RE8PEbtin7IJ9ONbM
+         PahaknZxJ5M+9FonRCouizyCUb6ONpPm947LNl/UG2T8p5D9eZLq+nfnd3WE2Ua7WhhH
+         a4aDlj6R7N+maU66DgK7J3n3e299khL9H8ELsw7WhudOu/uz/ccQ6bF2k/NVNe4huTRR
+         U4T4qMsZlET+GzpmmF/Wv4LW5FHbiojPKuc+BZvQfg+8+PDkhrDMO2mVV00p1cqWMsGY
+         P1Ng==
+X-Gm-Message-State: APjAAAX0MHFLCoKFEdc0e6liI0+ZhYoP6ZqPb/nPfxXWfqXHj22Nx7zs
+        7DiSd6YdrTyQtsvTZc5naM937eknnfofSj3E+gKT5Uy6RP8=
+X-Google-Smtp-Source: APXvYqyxYVkx7iKbkP8a8b5DE0Gt+us8c5WTQMMn/tRHshxezZ09qJ6PaC7A3ZA7YsyFvIxs8e5x0brkSmjySNlcRrc=
+X-Received: by 2002:a92:d148:: with SMTP id t8mr14498553ilg.287.1569738557374;
+ Sat, 28 Sep 2019 23:29:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.28.8.22]
+References: <DB8PR04MB682649CA98B0704FAF037A40F1840@DB8PR04MB6826.eurprd04.prod.outlook.com>
+ <Pine.LNX.4.44L0.1909271305030.4732-100000@iolanthe.rowland.org>
+ <DB8PR04MB6826763082AF84812426CC53F1830@DB8PR04MB6826.eurprd04.prod.outlook.com>
+ <DB8PR04MB682675054E3A5306F447E6FDF1830@DB8PR04MB6826.eurprd04.prod.outlook.com>
+In-Reply-To: <DB8PR04MB682675054E3A5306F447E6FDF1830@DB8PR04MB6826.eurprd04.prod.outlook.com>
+From:   Peter Chen <hzpeterchen@gmail.com>
+Date:   Sun, 29 Sep 2019 14:29:04 +0800
+Message-ID: <CAL411-rPQiMN15-yTDTcNzhy9bvo_XnvYQFwKQTJ779MG8gBtQ@mail.gmail.com>
+Subject: Re: [PATCH] usb: hub add filter for device with specific VID&PID
+To:     Ran Wang <ran.wang_1@nxp.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Mathias Payer <mathias.payer@nebelwelt.net>,
+        Dennis Wassenberg <dennis.wassenberg@secunet.com>,
+        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The number of RESET registers and offset of RESET_LEVEL register for
-Meson-A1 are different from previous SoCs, In order to describe these
-differences, we introduce the struct meson_reset_param.
+> > >
+> > > In fact, the system should respond the same way to any unrecognized
+> > > device that doesn't support HNP, right?  There's nothing special about
+> > > these VID/PID values.
+> >
+> > Yes, but I saw there are already some implementation in upstream kernel for this
+> > purpose, just PID different: drivers/usb/core/otg_whitelist.h function
+> > is_targeted()
+> >
+> > > > > And why those specific vid/pid values?  What do they refer to?
+> > > >
+> > > > For step 5, we got the VID / PID number from USB IF certified
+> > > > lab(Allion.inc at Taiwang). Looks like this is a reserved ID pair
+> > > > and will not be allocated to any vendor for their products. So it's
+> > > > hence used for
+> > > this case test (like saying: you should be able to pop a not-support
+> > > message for this reserved VID&PID).
+> > >
+> > > Don't we do this already?
+> >
+> > Yes, but in function is_stargeted(), I found it's a little be different:
+> > Current upstream:                     VID = 0x1a0a, PID = 0x0200
+> > Info from USB-IF certified lab: VID = 0x1a0a, PID = 0x0201
+> >
+>
+> Sorry that I mis-understood the logic of is_stargeted() and it's caller.
+>
+> So the proper way to resolve my problem is:
+> 1. Select CONFIG_USB_OTG in .config
+> 2. Add property 'tpl-support' to device tree
+> 3. Customize whitelist_table[] according to my Target-Peripheral-List
+> requirement.
+>
 
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
----
- drivers/reset/reset-meson.c | 35 ++++++++++++++++++++++++++++-------
- 1 file changed, 28 insertions(+), 7 deletions(-)
+Yan, this is the correct way, we (NXP i.MX Series) have followed this
+way for USB EH certification
+several years.
 
-diff --git a/drivers/reset/reset-meson.c b/drivers/reset/reset-meson.c
-index 7d05d76..94d7ba8 100644
---- a/drivers/reset/reset-meson.c
-+++ b/drivers/reset/reset-meson.c
-@@ -15,12 +15,16 @@
- #include <linux/types.h>
- #include <linux/of_device.h>
- 
--#define REG_COUNT	8
- #define BITS_PER_REG	32
--#define LEVEL_OFFSET	0x7c
-+
-+struct meson_reset_param {
-+	int reg_count;
-+	int level_offset;
-+};
- 
- struct meson_reset {
- 	void __iomem *reg_base;
-+	const struct meson_reset_param *param;
- 	struct reset_controller_dev rcdev;
- 	spinlock_t lock;
- };
-@@ -46,10 +50,12 @@ static int meson_reset_level(struct reset_controller_dev *rcdev,
- 		container_of(rcdev, struct meson_reset, rcdev);
- 	unsigned int bank = id / BITS_PER_REG;
- 	unsigned int offset = id % BITS_PER_REG;
--	void __iomem *reg_addr = data->reg_base + LEVEL_OFFSET + (bank << 2);
-+	void __iomem *reg_addr;
- 	unsigned long flags;
- 	u32 reg;
- 
-+	reg_addr = data->reg_base + data->param->level_offset + (bank << 2);
-+
- 	spin_lock_irqsave(&data->lock, flags);
- 
- 	reg = readl(reg_addr);
-@@ -81,10 +87,21 @@ static const struct reset_control_ops meson_reset_ops = {
- 	.deassert	= meson_reset_deassert,
- };
- 
-+static const struct meson_reset_param meson8b_param = {
-+	.reg_count	= 8,
-+	.level_offset	= 0x7c,
-+};
-+
-+static const struct meson_reset_param meson_a1_param = {
-+	.reg_count	= 3,
-+	.level_offset	= 0x40,
-+};
-+
- static const struct of_device_id meson_reset_dt_ids[] = {
--	 { .compatible = "amlogic,meson8b-reset" },
--	 { .compatible = "amlogic,meson-gxbb-reset" },
--	 { .compatible = "amlogic,meson-axg-reset" },
-+	 { .compatible = "amlogic,meson8b-reset",    .data = &meson8b_param},
-+	 { .compatible = "amlogic,meson-gxbb-reset", .data = &meson8b_param},
-+	 { .compatible = "amlogic,meson-axg-reset",  .data = &meson8b_param},
-+	 { .compatible = "amlogic,meson-a1-reset",   .data = &meson_a1_param},
- 	 { /* sentinel */ },
- };
- 
-@@ -102,12 +119,16 @@ static int meson_reset_probe(struct platform_device *pdev)
- 	if (IS_ERR(data->reg_base))
- 		return PTR_ERR(data->reg_base);
- 
-+	data->param = of_device_get_match_data(&pdev->dev);
-+	if (!data->param)
-+		return -ENODEV;
-+
- 	platform_set_drvdata(pdev, data);
- 
- 	spin_lock_init(&data->lock);
- 
- 	data->rcdev.owner = THIS_MODULE;
--	data->rcdev.nr_resets = REG_COUNT * BITS_PER_REG;
-+	data->rcdev.nr_resets = data->param->reg_count * BITS_PER_REG;
- 	data->rcdev.ops = &meson_reset_ops;
- 	data->rcdev.of_node = pdev->dev.of_node;
- 
--- 
-2.7.4
+Peter
 
+> Am I right? :)
+>
+> Regards,
+> Ran
