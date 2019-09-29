@@ -2,125 +2,118 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 413FDC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 19:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1057C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 19:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1839B2082F
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 19:00:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="Z5LKGHGi"
+	by mail.kernel.org (Postfix) with ESMTP id 82F74217F5
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 19:03:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729252AbfI2TAf (ORCPT
+        id S1729290AbfI2TDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 15:00:35 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52640 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729179AbfI2TAf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 15:00:35 -0400
-Received: by mail-wm1-f65.google.com with SMTP id r19so10885198wmh.2
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Sep 2019 12:00:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=dq1noghuki3s05Ms2hjQ2tq/heCYmToBu8e3a/R//7k=;
-        b=Z5LKGHGid/K7epxcforaYglsNnSUaV8lnCarCN9CdgBD4Qatjnn9cnsZytP9ky59ba
-         qB9zPJu0h2qcPHVPL/J+51KdrPOytzAmwLR1/kHWJoyMCVPB8zGLrGdrLha1im3vXMSg
-         bz56XJ9ykAdYr6o6krDqocZlt6CEkWarxKRKRuII1wjLcsvSHgzpq/DNx7NukuC9vPB/
-         dv1II0TaVlwLAYf8Tw/YP0Tp8ELv6SYSj12mFGgXU0mFgLiMgzMTqQHzlzxPunwLBWiY
-         NH3/sEHN0XioDah1YTnGvYnNKb+j73/N9L1sP5/Xjuoa2FyGy2aPWuRGUKIDs6fpHKwn
-         sHuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=dq1noghuki3s05Ms2hjQ2tq/heCYmToBu8e3a/R//7k=;
-        b=a2Bc4Fmz0LmgMAvxSKPDgEz98gMa92s/J0SbEpDfdQSFKbnT//6lVDXEATiW1cFYhT
-         swoRoZkoZGKIfKgV00d3h1AYXGaEXqjufxWgTBfeCh1SdUyB+KAMyT7zBSWVStxQe2B8
-         ly8T2bQIUXFI4fluaYYsAFpyHPg0YLjvsIlzA3Ro4LJ6LzUxAzwnWFUmTrV2NRvS8rZV
-         sdLRPBxOleT6jesCz/uA12N/Q56SfBi+tGwY3M+TuNgsf8qjQuPT7gUGQYN0QhnoV87f
-         TyubIBn3unGjE6C7gFz/16Ft0hyfLU01X2L/4dFHD9J8liMGc7MzQu9niTb1F4YPFOl4
-         X0rw==
-X-Gm-Message-State: APjAAAXJDiewPv2z7g1ItzweuuMm6fEa8Id9Wl5r9n/wWdn35EDGc3jl
-        7DjqmOw+4kqBxF1H9KQR01x7Cw==
-X-Google-Smtp-Source: APXvYqyFtlLEZu69YPYh3aY2ZYV4LXZ+eLcytsMIjpAYY/55CwRALUe4eIvg9U+aZQRlgfBnYgDa2g==
-X-Received: by 2002:a05:600c:d4:: with SMTP id u20mr15397343wmm.66.1569783631912;
-        Sun, 29 Sep 2019 12:00:31 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id o9sm26711912wrh.46.2019.09.29.12.00.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 29 Sep 2019 12:00:31 -0700 (PDT)
-Message-ID: <5d90ff4f.1c69fb81.12517.7d4b@mx.google.com>
-Date:   Sun, 29 Sep 2019 12:00:31 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Sun, 29 Sep 2019 15:03:43 -0400
+Received: from twin.jikos.cz ([91.219.245.39]:38805 "EHLO twin.jikos.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728755AbfI2TDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 15:03:43 -0400
+X-Greylist: delayed 1939 seconds by postgrey-1.27 at vger.kernel.org; Sun, 29 Sep 2019 15:03:42 EDT
+Received: from twin.jikos.cz (dave@[127.0.0.1])
+        by twin.jikos.cz (8.13.6/8.13.6) with ESMTP id x8TIVIpX003182
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Sun, 29 Sep 2019 20:31:19 +0200
+Received: (from dave@localhost)
+        by twin.jikos.cz (8.13.6/8.13.6/Submit) id x8TIVI2x003181;
+        Sun, 29 Sep 2019 20:31:18 +0200
+Date:   Sun, 29 Sep 2019 20:31:17 +0200
+From:   David Sterba <dave@jikos.cz>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     WireGuard mailing list <wireguard@lists.zx2c4.com>,
+        Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: WireGuard to port to existing Crypto API
+Message-ID: <20190929183117.GJ7005@twin.jikos.cz>
+Reply-To: dave@jikos.cz
+Mail-Followup-To: "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        WireGuard mailing list <wireguard@lists.zx2c4.com>,
+        Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <CAHmME9pmfZAp5zd9BDLFc2fWUhtzZcjYZc2atTPTyNFFmEdHLg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: boot
-X-Kernelci-Kernel: v4.19.75-64-gb52c75f7b978
-X-Kernelci-Branch: linux-4.19.y
-X-Kernelci-Tree: stable-rc
-In-Reply-To: <20190929135031.382429403@linuxfoundation.org>
-References: <20190929135031.382429403@linuxfoundation.org>
-Subject: Re: [PATCH 4.19 00/63] 4.19.76-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHmME9pmfZAp5zd9BDLFc2fWUhtzZcjYZc2atTPTyNFFmEdHLg@mail.gmail.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.19.y boot: 80 boots: 1 failed, 78 passed with 1 conflict =
-(v4.19.75-64-gb52c75f7b978)
+Hi,
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.19.y/kernel/v4.19.75-64-gb52c75f7b978/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.19.=
-y/kernel/v4.19.75-64-gb52c75f7b978/
+On Wed, Sep 25, 2019 at 10:29:45AM +0200, Jason A. Donenfeld wrote:
+> I've long resisted the idea of porting to the existing crypto API,
+> because I think there are serious problems with it, in terms of
+> primitives, API, performance, and overall safety. I didn't want to
+> ship WireGuard in a form that I thought was sub-optimal from a
+> security perspective, since WireGuard is a security-focused project.
+> 
+> But it seems like with or without us, WireGuard will get ported to the
+> existing crypto API. So it's probably better that we just fully
+> embrace it, and afterwards work evolutionarily to get Zinc into Linux
+> piecemeal. I've ported WireGuard already several times as a PoC to the
+> API and have a decent idea of the ways it can go wrong and generally
+> how to do it in the least-bad way.
+> 
+> I realize this kind of compromise might come as a disappointment for
+> some folks. But it's probably better that as a project we remain
+> intimately involved with our Linux kernel users and the security of
+> the implementation, rather than slinking away in protest because we
+> couldn't get it all in at once. So we'll work with upstream, port to
+> the crypto API, and get the process moving again. We'll pick up the
+> Zinc work after that's done.
+> 
+> I also understand there might be interested folks out there who enjoy
+> working with the crypto API quite a bit and would be happy to work on
+> the WireGuard port. Please do get in touch if you'd like to
+> collaborate.
 
-Tree: stable-rc
-Branch: linux-4.19.y
-Git Describe: v4.19.75-64-gb52c75f7b978
-Git Commit: b52c75f7b9785d0d0e6bf145787ed2fc99f5483c
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 43 unique boards, 15 SoC families, 13 builds out of 206
+I have some WIP code to port WG to the crypto API, more to get an idea how hard
+it would be, though I read you've ported it to the api already. My other
+project (btrfs) is going to use blake2 in kernel and for that I'm about to
+submit the code, that's where it's also of interest for wg.
 
-Boot Regressions Detected:
+My work is at 'github.com/kdave/WireGuard branch lkca-1'. I tried to find a way
+how to minimize the impact on current wg code but make it possible to
+iteratively extend it to the crypto API.
 
-arm:
+So, there's some config-time ifdefery to select which crypto functions are
+using kernel or zinc api.  See wg.git/src/crypto/Kbuild.include at the top,
+plus some source ifdefs.  I made an example of blake2s port, but only compile
+tested.
 
-    tegra_defconfig:
-        gcc-8:
-          tegra124-nyan-big:
-              lab-collabora: new failure (last pass: v4.19.75-33-gdab8e08e7=
-087)
+There are several problems in general that need to be solved on the kernel side
+first, before wireguard can work inside the kernel code base:
 
-Boot Failure Detected:
+* missing crypto functions in kernel
+  * blake2
+  * curve25519 (missing completely)
 
-arm:
-    tegra_defconfig:
-        gcc-8:
-            tegra124-nyan-big: 1 failed lab
+* missing generic crypto API callback to use blake_init_key, it's possible to
+  use only the no-key variant (I have a patch for that, it's really easy but
+  it's change in API so ...)
 
-Conflicting Boot Failure Detected: (These likely are not failures as other =
-labs are reporting PASS. Needs review.)
+The known problem is the cumbersome way to use the crypto functions, eg. for
+chacha/poly, I understand the pain and perhaps the reasons to start a fresh
+crypto library. I'm afraid the first implementation with current state of
+crypto API will be slow, until the API is extended to provide simple ways to
+transform buffers without scatterlists, request allocations, locking tfm
+context and whatnot.
 
-arm:
-    exynos_defconfig:
-        exynos5422-odroidxu3:
-            lab-collabora: PASS (gcc-8)
-            lab-baylibre: FAIL (gcc-8)
+Feel free to reuse anything from the code if you think it's going the right
+direction. I'm not sure if I'll have time to continue with the port but at
+least you can consider blake2 on the way upstream.
 
----
-For more info write to <info@kernelci.org>
+d.
