@@ -2,55 +2,57 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76217C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DBF3C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B3DC2082F
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 558472082F
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:05:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569765919;
-	bh=mQw3sMDhmXb2Pm6+a32Ys92DGuDaiAOyAzDB4ci/bpk=;
+	s=default; t=1569765931;
+	bh=n2ZPc5mWVXvVlYy8in4aeJCAQhA1LUx8eA4rG19ZCVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=16MzaCL0M62hDWDiV6PZGmxXd5Ia5k2RnRVPVDYguhOr5f22T3qfBmmD0CO2M2/c/
-	 eEpzd2hJzAjj+vpHIvpeLZ7GfF2T2OQGDDYexC4eAq8WvXU6SKM+pk0XhTae8mZdFa
-	 7O8LNVNoH0eJhlGZd8Vo/J/sdsvLlM9QzX5CH8Gs=
+	b=AOnbLMbvIitu+KQRUbD5ASAqD2cnnyoeeGftVrCFPba/pJmY+Eft8mG5nE4IqV+Ex
+	 xhJZvOUraqT48LV/8M98TRCMFIiu8WSJRZgGKncIZaprCyHvI+RULqPKayPW0BY5wR
+	 nFlkDImlQTX5v2qzGIwEXFivxXsrPF++IcrGFC/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729367AbfI2OFS (ORCPT
+        id S1729558AbfI2OAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 10:05:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42592 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 10:00:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729096AbfI2OAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 10:00:42 -0400
+        id S1729845AbfI2OAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 10:00:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1463521882;
-        Sun, 29 Sep 2019 14:00:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D8B02082F;
+        Sun, 29 Sep 2019 13:59:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569765640;
-        bh=mQw3sMDhmXb2Pm6+a32Ys92DGuDaiAOyAzDB4ci/bpk=;
+        s=default; t=1569765600;
+        bh=n2ZPc5mWVXvVlYy8in4aeJCAQhA1LUx8eA4rG19ZCVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HGug0f9xg5GAq9r8tyAtrg4SWM6t5Onp/kore58xq4z1rT7DM4saRkcGg2Km5TCT1
-         2tNwUMXkFXda3UgNvp3EzibBqk+1dWpk1g+vLcu3SWpVa+7TccW6wfymAiw0oooRdV
-         Ubb04rVFVY9N1hCx1eBBIecOqsr2zrlAzYs5e6pI=
+        b=LYP/TEzdcIl4o1ry+BwDUk3CryEhgvMBoihPkQonZeulzcHEPLtmgoOdXA9hIMo7K
+         Px4OAeWhvuyDh+iCl6Tv0Caa1wtNaCTvCNq5I12pmM9gJXOFFWLcrA7inXb3t7eOhJ
+         7eV5NHwVibsz2O8+qhaT4qFv3BLGBPeearMFRpPw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Jiri Kosina <jkosina@suse.cz>,
-        syzbot+5a6c4ec678a0c6ee84ba@syzkaller.appspotmail.com
-Subject: [PATCH 5.2 16/45] HID: hidraw: Fix invalid read in hidraw_ioctl
-Date:   Sun, 29 Sep 2019 15:55:44 +0200
-Message-Id: <20190929135028.883859509@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Kacper=20Piwi=C5=84ski?= <cosiekvfj@o2.pl>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 57/63] ACPI: video: Add new hw_changes_brightness quirk, set it on PB Easynote MZ35
+Date:   Sun, 29 Sep 2019 15:54:30 +0200
+Message-Id: <20190929135040.889718199@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190929135024.387033930@linuxfoundation.org>
-References: <20190929135024.387033930@linuxfoundation.org>
+In-Reply-To: <20190929135031.382429403@linuxfoundation.org>
+References: <20190929135031.382429403@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,72 +62,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 416dacb819f59180e4d86a5550052033ebb6d72c upstream.
+[ Upstream commit 4f7f96453b462b3de0fa18d18fe983960bb5ee7f ]
 
-The syzbot fuzzer has reported a pair of problems in the
-hidraw_ioctl() function: slab-out-of-bounds read and use-after-free
-read.  An example of the first:
+Some machines change the brightness themselves when a brightness hotkey
+gets pressed, despite us telling them not to. This causes the brightness to
+go two steps up / down when the hotkey is pressed. This is esp. a problem
+on older machines with only a few brightness levels.
 
-BUG: KASAN: slab-out-of-bounds in strlen+0x79/0x90 lib/string.c:525
-Read of size 1 at addr ffff8881c8035f38 by task syz-executor.4/2833
+This commit adds a new hw_changes_brightness quirk which makes
+acpi_video_device_notify() only call backlight_force_update(...,
+BACKLIGHT_UPDATE_HOTKEY) and not do anything else, notifying userspace
+that the brightness was changed and leaving it at that fixing the dual
+step problem.
 
-CPU: 1 PID: 2833 Comm: syz-executor.4 Not tainted 5.3.0-rc2+ #1
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  print_address_description+0x6a/0x32c mm/kasan/report.c:351
-  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
-  kasan_report+0xe/0x12 mm/kasan/common.c:612
-  strlen+0x79/0x90 lib/string.c:525
-  strlen include/linux/string.h:281 [inline]
-  hidraw_ioctl+0x245/0xae0 drivers/hid/hidraw.c:446
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xd2d/0x1330 fs/ioctl.c:696
-  ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
-  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459829
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f7a68f6dc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
-RDX: 0000000000000000 RSI: 0000000080404805 RDI: 0000000000000004
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f7a68f6e6d4
-R13: 00000000004c21de R14: 00000000004d5620 R15: 00000000ffffffff
-
-The two problems have the same cause: hidraw_ioctl() fails to test
-whether the device has been removed.  This patch adds the missing test.
-
-Reported-and-tested-by: syzbot+5a6c4ec678a0c6ee84ba@syzkaller.appspotmail.com
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-CC: <stable@vger.kernel.org>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204077
+Reported-by: Kacper Piwiński <cosiekvfj@o2.pl>
+Tested-by: Kacper Piwiński <cosiekvfj@o2.pl>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hidraw.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/acpi_video.c | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
---- a/drivers/hid/hidraw.c
-+++ b/drivers/hid/hidraw.c
-@@ -370,7 +370,7 @@ static long hidraw_ioctl(struct file *fi
+diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
+index d73afb562ad95..1a23e7aa74df7 100644
+--- a/drivers/acpi/acpi_video.c
++++ b/drivers/acpi/acpi_video.c
+@@ -73,6 +73,12 @@ module_param(report_key_events, int, 0644);
+ MODULE_PARM_DESC(report_key_events,
+ 	"0: none, 1: output changes, 2: brightness changes, 3: all");
  
- 	mutex_lock(&minors_lock);
- 	dev = hidraw_table[minor];
--	if (!dev) {
-+	if (!dev || !dev->exist) {
- 		ret = -ENODEV;
- 		goto out;
- 	}
++static int hw_changes_brightness = -1;
++module_param(hw_changes_brightness, int, 0644);
++MODULE_PARM_DESC(hw_changes_brightness,
++	"Set this to 1 on buggy hw which changes the brightness itself when "
++	"a hotkey is pressed: -1: auto, 0: normal 1: hw-changes-brightness");
++
+ /*
+  * Whether the struct acpi_video_device_attrib::device_id_scheme bit should be
+  * assumed even if not actually set.
+@@ -418,6 +424,14 @@ static int video_set_report_key_events(const struct dmi_system_id *id)
+ 	return 0;
+ }
+ 
++static int video_hw_changes_brightness(
++	const struct dmi_system_id *d)
++{
++	if (hw_changes_brightness == -1)
++		hw_changes_brightness = 1;
++	return 0;
++}
++
+ static const struct dmi_system_id video_dmi_table[] = {
+ 	/*
+ 	 * Broken _BQC workaround http://bugzilla.kernel.org/show_bug.cgi?id=13121
+@@ -542,6 +556,21 @@ static const struct dmi_system_id video_dmi_table[] = {
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "Vostro V131"),
+ 		},
+ 	},
++	/*
++	 * Some machines change the brightness themselves when a brightness
++	 * hotkey gets pressed, despite us telling them not to. In this case
++	 * acpi_video_device_notify() should only call backlight_force_update(
++	 * BACKLIGHT_UPDATE_HOTKEY) and not do anything else.
++	 */
++	{
++	 /* https://bugzilla.kernel.org/show_bug.cgi?id=204077 */
++	 .callback = video_hw_changes_brightness,
++	 .ident = "Packard Bell EasyNote MZ35",
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "Packard Bell"),
++		DMI_MATCH(DMI_PRODUCT_NAME, "EasyNote MZ35"),
++		},
++	},
+ 	{}
+ };
+ 
+@@ -1625,6 +1654,14 @@ static void acpi_video_device_notify(acpi_handle handle, u32 event, void *data)
+ 	bus = video_device->video;
+ 	input = bus->input;
+ 
++	if (hw_changes_brightness > 0) {
++		if (video_device->backlight)
++			backlight_force_update(video_device->backlight,
++					       BACKLIGHT_UPDATE_HOTKEY);
++		acpi_notifier_call_chain(device, event, 0);
++		return;
++	}
++
+ 	switch (event) {
+ 	case ACPI_VIDEO_NOTIFY_CYCLE_BRIGHTNESS:	/* Cycle brightness */
+ 		brightness_switch_event(video_device, event);
+-- 
+2.20.1
+
 
 
