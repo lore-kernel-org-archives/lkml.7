@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8925DC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD23BC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D07921928
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97D1221D7F
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:32:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778336;
-	bh=BEnfgb96q4UyJzbI8cOPcJZOQlozNTSU2+Qi33Sg6eg=;
+	s=default; t=1569778338;
+	bh=VHqFPei1l3XYQuzGwjYB6MtsKq7T/Rtc2e+h2ot99yM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NhRBVQiUiVSIlhnpc+K3374fubNqL98awsn1V0+aSKsVdrFayX6HEUL8awP0h0EUo
-	 dick1mkwVktQn8k7lAv/NtU+bnAB71R+Q0KjlGDG+EHRD6zQsgPRaVuLCN//NCDI5H
-	 m/elFXzmylFcQ+BA8MS/In4VjI37nEd3JHlpVq6Y=
+	b=z5IIilNT1KaZYqrNk0NelEcrVYP48qSkXtEaVmCRtHe2f6Edf5bSC+UImhvioNQx9
+	 OQilf0a9rl1a/lpQAV892VCHL7Dz5hmruqMc68wAGCfF/NoAmd0sCHNrw6UpdbVLsd
+	 umjAOZi2JvkW2Xx3j1dCf6Rx9m594UkHBcGU/KAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729704AbfI2RcO (ORCPT
+        id S1729720AbfI2RcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:32:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42948 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:32:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729662AbfI2RcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:32:10 -0400
+        id S1729690AbfI2RcN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:32:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AF3921928;
-        Sun, 29 Sep 2019 17:32:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D2A021906;
+        Sun, 29 Sep 2019 17:32:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778330;
-        bh=BEnfgb96q4UyJzbI8cOPcJZOQlozNTSU2+Qi33Sg6eg=;
+        s=default; t=1569778332;
+        bh=VHqFPei1l3XYQuzGwjYB6MtsKq7T/Rtc2e+h2ot99yM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GUWQdNzkezozomdseBJU/lyal1lO7XmQVIg9iyWxnB4JAcvJ9kwGuCdh2LZbJrRMO
-         pnBEmU8P0WO5ndKPrE7AN6cxyOtquFAGPoIDMnUMsQHEj0SMKnKnUaGfaoiN3tPz0d
-         ZoxOw4ziiFt9MC36aQoeUUYgdBeGa4q0to9av6GM=
+        b=UZ99K9rDMiD6+svrKZVZJl3eu0E/4zV20KF0IXwVXHnVdsj5uSwzsNOno3frUmcsS
+         upNM5mCkqcCkwqO7np+HG2qVAI90Xjjodc5Ac7fllJCp4ymqjM1JeZu1PZaIb8+11E
+         SKT3oZ0yP1emhMHb+rUThz4gVTzbgtNaTjb7J170=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Youquan Song <youquan.song@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 40/49] tools/power/x86/intel-speed-select: Fix high priority core mask over count
-Date:   Sun, 29 Sep 2019 13:30:40 -0400
-Message-Id: <20190929173053.8400-40-sashal@kernel.org>
+Cc:     Yunfeng Ye <yeyunfeng@huawei.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 41/49] crypto: hisilicon - Fix double free in sec_free_hw_sgl()
+Date:   Sun, 29 Sep 2019 13:30:41 -0400
+Message-Id: <20190929173053.8400-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173053.8400-1-sashal@kernel.org>
 References: <20190929173053.8400-1-sashal@kernel.org>
@@ -61,45 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Youquan Song <youquan.song@intel.com>
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-[ Upstream commit 44460efe44e05eae2f21e57d06d542bbbb792e65 ]
+[ Upstream commit 24fbf7bad888767bed952f540ac963bc57e47e15 ]
 
-If the CPU package has the less logical CPU than topo_max_cpus, but un-present
-CPU's punit_cpu_core will be initiated to 0 and they will be count to core 0
+There are two problems in sec_free_hw_sgl():
 
-Like below, there are only 10 high priority cores (20 logical CPUs) in the CPU
-package, but it count to 27 logic CPUs.
+First, when sgl_current->next is valid, @hw_sgl will be freed in the
+first loop, but it free again after the loop.
 
-./intel-speed-select base-freq info -l 0 | grep mask
-        high-priority-cpu-mask:7f000179,f000179f
+Second, sgl_current and sgl_current->next_sgl is not match when
+dma_pool_free() is invoked, the third parameter should be the dma
+address of sgl_current, but sgl_current->next_sgl is the dma address
+of next chain, so use sgl_current->next_sgl is wrong.
 
-With the fix patch:
-./intel-speed-select base-freq info -l 0
-        high-priority-cpu-mask:00000179,f000179f
+Fix this by deleting the last dma_pool_free() in sec_free_hw_sgl(),
+modifying the condition for while loop, and matching the address for
+dma_pool_free().
 
-Signed-off-by: Youquan Song <youquan.song@intel.com>
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: 915e4e8413da ("crypto: hisilicon - SEC security accelerator driver")
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/x86/intel-speed-select/isst-config.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/crypto/hisilicon/sec/sec_algs.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index 91c5ad1685a15..a6b1487b5f0f6 100644
---- a/tools/power/x86/intel-speed-select/isst-config.c
-+++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -402,6 +402,9 @@ void set_cpu_mask_from_punit_coremask(int cpu, unsigned long long core_mask,
- 			int j;
+diff --git a/drivers/crypto/hisilicon/sec/sec_algs.c b/drivers/crypto/hisilicon/sec/sec_algs.c
+index 02768af0dccdd..8c789b8671fc4 100644
+--- a/drivers/crypto/hisilicon/sec/sec_algs.c
++++ b/drivers/crypto/hisilicon/sec/sec_algs.c
+@@ -215,17 +215,18 @@ static void sec_free_hw_sgl(struct sec_hw_sgl *hw_sgl,
+ 			    dma_addr_t psec_sgl, struct sec_dev_info *info)
+ {
+ 	struct sec_hw_sgl *sgl_current, *sgl_next;
++	dma_addr_t sgl_next_dma;
  
- 			for (j = 0; j < topo_max_cpus; ++j) {
-+				if (!CPU_ISSET_S(j, present_cpumask_size, present_cpumask))
-+					continue;
+-	if (!hw_sgl)
+-		return;
+ 	sgl_current = hw_sgl;
+-	while (sgl_current->next) {
++	while (sgl_current) {
+ 		sgl_next = sgl_current->next;
+-		dma_pool_free(info->hw_sgl_pool, sgl_current,
+-			      sgl_current->next_sgl);
++		sgl_next_dma = sgl_current->next_sgl;
 +
- 				if (cpu_map[j].pkg_id == pkg_id &&
- 				    cpu_map[j].die_id == die_id &&
- 				    cpu_map[j].punit_cpu_core == i) {
++		dma_pool_free(info->hw_sgl_pool, sgl_current, psec_sgl);
++
+ 		sgl_current = sgl_next;
++		psec_sgl = sgl_next_dma;
+ 	}
+-	dma_pool_free(info->hw_sgl_pool, hw_sgl, psec_sgl);
+ }
+ 
+ static int sec_alg_skcipher_setkey(struct crypto_skcipher *tfm,
 -- 
 2.20.1
 
