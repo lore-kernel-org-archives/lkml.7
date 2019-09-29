@@ -4,36 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B819CC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 20:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1950CC32793
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 20:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 947A121835
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 20:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2E1321835
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 20:01:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729330AbfI2UBU (ORCPT
+        id S1729363AbfI2UBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 16:01:20 -0400
-Received: from mailoutvs59.siol.net ([185.57.226.250]:54152 "EHLO
+        Sun, 29 Sep 2019 16:01:25 -0400
+Received: from mailoutvs53.siol.net ([185.57.226.244]:54059 "EHLO
         mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729124AbfI2UBI (ORCPT
+        with ESMTP id S1725948AbfI2UBB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 16:01:08 -0400
+        Sun, 29 Sep 2019 16:01:01 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id E67E75224DC;
-        Sun, 29 Sep 2019 22:01:04 +0200 (CEST)
+        by mail.siol.net (Postfix) with ESMTP id 80D195225ED;
+        Sun, 29 Sep 2019 22:00:57 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
 Received: from mail.siol.net ([127.0.0.1])
         by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 3p6_Mfi4rNpU; Sun, 29 Sep 2019 22:01:04 +0200 (CEST)
+        with ESMTP id ksOlhXI3NIxK; Sun, 29 Sep 2019 22:00:57 +0200 (CEST)
 Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 8FBF252233F;
-        Sun, 29 Sep 2019 22:01:04 +0200 (CEST)
+        by mail.siol.net (Postfix) with ESMTPS id 202F452233F;
+        Sun, 29 Sep 2019 22:00:57 +0200 (CEST)
 Received: from localhost.localdomain (cpe-86-58-59-25.static.triera.net [86.58.59.25])
         (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id 136F65224DC;
-        Sun, 29 Sep 2019 22:01:02 +0200 (CEST)
+        by mail.siol.net (Postfix) with ESMTPSA id 7196F5225ED;
+        Sun, 29 Sep 2019 22:00:54 +0200 (CEST)
 From:   Jernej Skrabec <jernej.skrabec@siol.net>
 To:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
         paul.kocialkowski@bootlin.com, mripard@kernel.org,
@@ -42,10 +42,11 @@ To:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
 Cc:     gregkh@linuxfoundation.org, boris.brezillon@collabora.com,
         linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        ezequiel@collabora.com, jonas@kwiboo.se, jernej.skrabec@siol.net
-Subject: [PATCH v2 5/6] media: cedrus: h264: Support multiple slices per frame
-Date:   Sun, 29 Sep 2019 22:00:22 +0200
-Message-Id: <20190929200023.215831-6-jernej.skrabec@siol.net>
+        ezequiel@collabora.com, jonas@kwiboo.se, jernej.skrabec@siol.net,
+        Alexandre Courbot <acourbot@chromium.org>
+Subject: [PATCH v2 2/6] videodev2.h: add V4L2_DEC_CMD_FLUSH
+Date:   Sun, 29 Sep 2019 22:00:19 +0200
+Message-Id: <20190929200023.215831-3-jernej.skrabec@siol.net>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190929200023.215831-1-jernej.skrabec@siol.net>
 References: <20190929200023.215831-1-jernej.skrabec@siol.net>
@@ -56,54 +57,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With recent changes, support for decoding multi-slice frames can be
-easily added now.
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-Signal VPU if current slice is first in frame or not and add information
-about first macroblock coordinates.
+Add this new V4L2_DEC_CMD_FLUSH decoder command and document it.
 
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+Reviewed-by: Alexandre Courbot <acourbot@chromium.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+[Adjusted description]
 Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 ---
- drivers/staging/media/sunxi/cedrus/cedrus_h264.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst | 10 +++++++++-
+ Documentation/media/videodev2.h.rst.exceptions      |  1 +
+ include/uapi/linux/videodev2.h                      |  1 +
+ 3 files changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/s=
-taging/media/sunxi/cedrus/cedrus_h264.c
-index d6a782703c9b..b7260cfeb6f4 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-@@ -301,6 +301,8 @@ static void cedrus_set_params(struct cedrus_ctx *ctx,
- 	dma_addr_t src_buf_addr;
- 	u32 offset =3D slice->header_bit_size;
- 	u32 len =3D (slice->size * 8) - offset;
-+	unsigned int pic_width_in_mbs;
-+	bool mbaff_pic;
- 	u32 reg;
+diff --git a/Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst b/Docume=
+ntation/media/uapi/v4l/vidioc-decoder-cmd.rst
+index 57f0066f4cff..f1a504836f31 100644
+--- a/Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst
++++ b/Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst
+@@ -208,7 +208,15 @@ introduced in Linux 3.3. They are, however, mandator=
+y for stateful mem2mem decod
+ 	been started yet, the driver will return an ``EPERM`` error code. When
+ 	the decoder is already running, this command does nothing. No
+ 	flags are defined for this command.
+-
++    * - ``V4L2_DEC_CMD_FLUSH``
++      - 4
++      - Flush any held capture buffers. Only valid for stateless decoder=
+s.
++	This command is typically used when the application reached the
++	end of the stream and the last output buffer had the
++	``V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF`` flag set. This would prevent
++	dequeueing the capture buffer containing the last decoded frame.
++	So this command can be used to explicitly flush that final decoded
++	frame. This command does nothing if there are no held capture buffers.
 =20
- 	cedrus_write(dev, VE_H264_VLD_LEN, len);
-@@ -370,12 +372,19 @@ static void cedrus_set_params(struct cedrus_ctx *ct=
-x,
- 		reg |=3D VE_H264_SPS_DIRECT_8X8_INFERENCE;
- 	cedrus_write(dev, VE_H264_SPS, reg);
+ Return Value
+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+diff --git a/Documentation/media/videodev2.h.rst.exceptions b/Documentati=
+on/media/videodev2.h.rst.exceptions
+index adeb6b7a15cb..a79028e4d929 100644
+--- a/Documentation/media/videodev2.h.rst.exceptions
++++ b/Documentation/media/videodev2.h.rst.exceptions
+@@ -434,6 +434,7 @@ replace define V4L2_DEC_CMD_START decoder-cmds
+ replace define V4L2_DEC_CMD_STOP decoder-cmds
+ replace define V4L2_DEC_CMD_PAUSE decoder-cmds
+ replace define V4L2_DEC_CMD_RESUME decoder-cmds
++replace define V4L2_DEC_CMD_FLUSH decoder-cmds
 =20
-+	mbaff_pic =3D !(slice->flags & V4L2_H264_SLICE_FLAG_FIELD_PIC) &&
-+		    (sps->flags & V4L2_H264_SPS_FLAG_MB_ADAPTIVE_FRAME_FIELD);
-+	pic_width_in_mbs =3D sps->pic_width_in_mbs_minus1 + 1;
-+
- 	// slice parameters
- 	reg =3D 0;
-+	reg |=3D ((slice->first_mb_in_slice % pic_width_in_mbs) & 0xff) << 24;
-+	reg |=3D (((slice->first_mb_in_slice / pic_width_in_mbs) * (mbaff_pic +=
- 1)) & 0xff) << 16;
- 	reg |=3D decode->nal_ref_idc ? BIT(12) : 0;
- 	reg |=3D (slice->slice_type & 0xf) << 8;
- 	reg |=3D slice->cabac_init_idc & 0x3;
--	reg |=3D VE_H264_SHS_FIRST_SLICE_IN_PIC;
-+	if (run->first_slice)
-+		reg |=3D VE_H264_SHS_FIRST_SLICE_IN_PIC;
- 	if (slice->flags & V4L2_H264_SLICE_FLAG_FIELD_PIC)
- 		reg |=3D VE_H264_SHS_FIELD_PIC;
- 	if (slice->flags & V4L2_H264_SLICE_FLAG_BOTTOM_FIELD)
+ replace define V4L2_DEC_CMD_START_MUTE_AUDIO decoder-cmds
+ replace define V4L2_DEC_CMD_PAUSE_TO_BLACK decoder-cmds
+diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev=
+2.h
+index 4fa9f543742d..91a79e16089c 100644
+--- a/include/uapi/linux/videodev2.h
++++ b/include/uapi/linux/videodev2.h
+@@ -1978,6 +1978,7 @@ struct v4l2_encoder_cmd {
+ #define V4L2_DEC_CMD_STOP        (1)
+ #define V4L2_DEC_CMD_PAUSE       (2)
+ #define V4L2_DEC_CMD_RESUME      (3)
++#define V4L2_DEC_CMD_FLUSH       (4)
+=20
+ /* Flags for V4L2_DEC_CMD_START */
+ #define V4L2_DEC_CMD_START_MUTE_AUDIO	(1 << 0)
 --=20
 2.23.0
 
