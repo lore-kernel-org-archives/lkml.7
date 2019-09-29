@@ -2,350 +2,196 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA00BC32793
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 01:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE43EC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 01:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73E6D214DE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 01:18:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7864D2146E
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 01:19:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="RcgKCqBL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbfI2BSo (ORCPT
+        id S1728898AbfI2BTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Sep 2019 21:18:44 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:45984 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728569AbfI2BSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Sep 2019 21:18:44 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A4ED52E78899C66D0026;
-        Sun, 29 Sep 2019 09:18:41 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Sun, 29 Sep 2019 09:18:34 +0800
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-To:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Minghuan Lian <Minghuan.Lian@nxp.com>,
-        Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Andrew Murray" <andrew.murray@arm.com>
-Subject: [PATCH v2] PCI: mobiveil: Fix csr_read/write build issue
-Date:   Sun, 29 Sep 2019 09:35:05 +0800
-Message-ID: <20190929013505.131396-1-wangkefeng.wang@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190927231504.GA13714@infradead.org>
-References: <20190927231504.GA13714@infradead.org>
+        Sat, 28 Sep 2019 21:19:44 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:25579 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728847AbfI2BTo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Sep 2019 21:19:44 -0400
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x8T1JR6K005224
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Sep 2019 10:19:27 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x8T1JR6K005224
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1569719968;
+        bh=4yPJLL7texAUDBpAL8Bc7mm5wMMtuhCWLDO+NBR0H1s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=RcgKCqBLHYW+Ctdonx2TyxJVOHIEjOqQYbJXxlWeF681kL543Fp2ILrZHLSfzV+NB
+         ZwtuPazazw8w+sYZDTDB5CBTk61PAJ0Ys67kRzWXqLGoDmUYsAWtglBWDnjaqHnvYE
+         5574mJ8W3iEQ0/sv3KURBli8AEJe/1bJkR5Oq3bpq7ghS3gPIg2hEXy+RZnLxtnmo+
+         thkykifXPxSyNdaQ+W5PsPmiQ7XFT0DX//VOmvRm7GcNyRBMotMxlCuBujJh1mEaU9
+         5F2RDvCpE+7UrYxveLOCdOta9h6/8JG3ieW9OvMUiFjm6LN1pjRhpGa7Qsu70ROY16
+         JJv+317wfgcKA==
+X-Nifty-SrcIP: [209.85.217.48]
+Received: by mail-vs1-f48.google.com with SMTP id p13so4430792vsr.4
+        for <linux-kernel@vger.kernel.org>; Sat, 28 Sep 2019 18:19:27 -0700 (PDT)
+X-Gm-Message-State: APjAAAXi+yyn4ZKUoAmIwTtWU0M/4TW7HlLNoy3aO6liStfTDtcuwE8v
+        JrrlIoMA0tD4nQHH4ibCjo3rGyEi0ZoGdcEK4u8=
+X-Google-Smtp-Source: APXvYqxQSexiR2YeY61UDD+691IIzfSxQyWvVpnIBcnQpbPnTUctqKO9U1m2wtM65+ZZMtNU3TMOtnqZkU2chWqy04U=
+X-Received: by 2002:a67:1a41:: with SMTP id a62mr6724527vsa.54.1569719966560;
+ Sat, 28 Sep 2019 18:19:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+References: <20190927093603.9140-1-yamada.masahiro@socionext.com>
+ <20190927093603.9140-8-yamada.masahiro@socionext.com> <20190927132726.GB187147@google.com>
+ <CAK7LNARQZ49jvPOK5Dg3B7Nog7+zHsAn5=1oHH6hz9ZzJ=S+xA@mail.gmail.com> <20190927181414.GB1804168@kroah.com>
+In-Reply-To: <20190927181414.GB1804168@kroah.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sun, 29 Sep 2019 10:18:50 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQh12iuAk5aoeHhZ=iGcYraWFfsei-+VqwALbOPrrjWdg@mail.gmail.com>
+Message-ID: <CAK7LNAQh12iuAk5aoeHhZ=iGcYraWFfsei-+VqwALbOPrrjWdg@mail.gmail.com>
+Subject: Re: [PATCH 7/7] nsdeps: make generated patches independent of locale
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Matthias Maennich <maennich@google.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Martijn Coenen <maco@android.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The riscv has csr_read/write macro, see arch/riscv/include/asm/csr.h,
-the same function naming will cause build error, using such generic names
-in a driver is bad, rename csr_[read,write][l,] to mobiveil_csr_read/write
-to fix it.
+On Sat, Sep 28, 2019 at 3:14 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Sat, Sep 28, 2019 at 12:42:28AM +0900, Masahiro Yamada wrote:
+> > On Fri, Sep 27, 2019 at 10:27 PM Matthias Maennich <maennich@google.com=
+> wrote:
+> > >
+> > > On Fri, Sep 27, 2019 at 06:36:03PM +0900, Masahiro Yamada wrote:
+> > > >scripts/nsdeps automatically generates a patch to add MODULE_IMPORT_=
+NS
+> > > >tags, and what is nicer, it sorts the lines alphabetically with the
+> > > >"sort" command. However, the output from the "sort" command depends
+> > > >on locale.
+> > > >
+> > > >Especially when namespaces contain underscores, the result is
+> > > >different depending on the locale.
+> > > >
+> > > >For example, I got this:
+> > > >
+> > > >$ { echo usbcommon; echo usb_common; } | LANG=3Den_US.UTF-8 sort
+> > > >usbcommon
+> > > >usb_common
+> > > >$ { echo usbcommon; echo usb_common; } | LANG=3DC sort
+> > > >usb_common
+> > > >usbcommon
+> > > >
+> > > >So, this means people might potentially send different patches.
+> > > >
+> > > >This kind of issue was reported in the past, for example,
+> > > >commit f55f2328bb28 ("kbuild: make sorting initramfs contents
+> > > >independent of locale").
+> > > >
+> > > >Adding "LANG=3DC" is a conventional way of fixing when a determinist=
+ic
+> > > >result is desirable.
+> > > >
+> > > >Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > > >---
+> > > >
+> > > > scripts/nsdeps | 2 +-
+> > > > 1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > >diff --git a/scripts/nsdeps b/scripts/nsdeps
+> > > >index 964b7fb8c546..3754dac13b31 100644
+> > > >--- a/scripts/nsdeps
+> > > >+++ b/scripts/nsdeps
+> > > >@@ -41,7 +41,7 @@ generate_deps() {
+> > > >               for source_file in $mod_source_files; do
+> > > >                       sed '/MODULE_IMPORT_NS/Q' $source_file > ${so=
+urce_file}.tmp
+> > > >                       offset=3D$(wc -l ${source_file}.tmp | awk '{p=
+rint $1;}')
+> > > >-                      cat $source_file | grep MODULE_IMPORT_NS | so=
+rt -u >> ${source_file}.tmp
+> > > >+                      cat $source_file | grep MODULE_IMPORT_NS | LA=
+NG=3DC sort -u >> ${source_file}.tmp
+> > >
+> > > I would prefer to have this set throughout the whole runtime of the
+> > > script. Otherwise we likely see a followup patch. So, either as an
+> > > export at the beginning of this file or as part of the command that
+> > > calls this script.
+> >
+> >
+> > I prefer to keep it close to the locale-dependent code.
+> >
+> >
+> >
+> > If I move it to somewhere else, I need to add a comment like
+> >
+> > # make "sort" command deterministic
+> > export LANG=3DC
+> >
+> > Otherwise, people would have no idea why it is needed.
+>
+> A comment is fine, it documents why it is here and it keeps anyone from
+> having to remember to add it to anything else that changes in here.
+>
+> thanks,
+>
+> greg k-h
 
-drivers/pci/controller/pcie-mobiveil.c:238:69: error: macro "csr_read" passed 3 arguments, but takes just 1
- static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
 
-drivers/pci/controller/pcie-mobiveil.c:253:80: error: macro "csr_write" passed 4 arguments, but takes just 2
- static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size)
+Huh, people who live in a country with English as mother tongue
+cannot understand the i18n because English is the
+only language in the world?
 
-Cc: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Minghuan Lian <Minghuan.Lian@nxp.com>
-Cc: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Andrew Murray <andrew.murray@arm.com> 
-Fixes: bcbe0d9a8d93 ("PCI: mobiveil: Unify register accessors")
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
----
 
-v2:
-- using mobiveil prefix suggested by Andrew and Christoph 
 
- drivers/pci/controller/pcie-mobiveil.c | 115 +++++++++++++------------
- 1 file changed, 58 insertions(+), 57 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-index a45a6447b01d..5e6144b0fb95 100644
---- a/drivers/pci/controller/pcie-mobiveil.c
-+++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -235,7 +235,7 @@ static int mobiveil_pcie_write(void __iomem *addr, int size, u32 val)
- 	return PCIBIOS_SUCCESSFUL;
- }
- 
--static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
-+static u32 mobiveil_csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
- {
- 	void *addr;
- 	u32 val;
-@@ -250,7 +250,8 @@ static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
- 	return val;
- }
- 
--static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size)
-+static void mobiveil_csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off,
-+			       size_t size)
- {
- 	void *addr;
- 	int ret;
-@@ -262,19 +263,19 @@ static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size)
- 		dev_err(&pcie->pdev->dev, "write CSR address failed\n");
- }
- 
--static u32 csr_readl(struct mobiveil_pcie *pcie, u32 off)
-+static u32 mobiveil_csr_readl(struct mobiveil_pcie *pcie, u32 off)
- {
--	return csr_read(pcie, off, 0x4);
-+	return mobiveil_csr_read(pcie, off, 0x4);
- }
- 
--static void csr_writel(struct mobiveil_pcie *pcie, u32 val, u32 off)
-+static void mobiveil_csr_writel(struct mobiveil_pcie *pcie, u32 val, u32 off)
- {
--	csr_write(pcie, val, off, 0x4);
-+	mobiveil_csr_write(pcie, val, off, 0x4);
- }
- 
- static bool mobiveil_pcie_link_up(struct mobiveil_pcie *pcie)
- {
--	return (csr_readl(pcie, LTSSM_STATUS) &
-+	return (mobiveil_csr_readl(pcie, LTSSM_STATUS) &
- 		LTSSM_STATUS_L0_MASK) == LTSSM_STATUS_L0;
- }
- 
-@@ -323,7 +324,7 @@ static void __iomem *mobiveil_pcie_map_bus(struct pci_bus *bus,
- 		PCI_SLOT(devfn) << PAB_DEVICE_SHIFT |
- 		PCI_FUNC(devfn) << PAB_FUNCTION_SHIFT;
- 
--	csr_writel(pcie, value, PAB_AXI_AMAP_PEX_WIN_L(WIN_NUM_0));
-+	mobiveil_csr_writel(pcie, value, PAB_AXI_AMAP_PEX_WIN_L(WIN_NUM_0));
- 
- 	return pcie->config_axi_slave_base + where;
- }
-@@ -353,13 +354,13 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
- 	chained_irq_enter(chip, desc);
- 
- 	/* read INTx status */
--	val = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
--	mask = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
-+	val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
-+	mask = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
- 	intr_status = val & mask;
- 
- 	/* Handle INTx */
- 	if (intr_status & PAB_INTP_INTX_MASK) {
--		shifted_status = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
-+		shifted_status = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
- 		shifted_status &= PAB_INTP_INTX_MASK;
- 		shifted_status >>= PAB_INTX_START;
- 		do {
-@@ -373,12 +374,12 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
- 							    bit);
- 
- 				/* clear interrupt handled */
--				csr_writel(pcie, 1 << (PAB_INTX_START + bit),
--					   PAB_INTP_AMBA_MISC_STAT);
-+				mobiveil_csr_writel(pcie, 1 << (PAB_INTX_START + bit),
-+						    PAB_INTP_AMBA_MISC_STAT);
- 			}
- 
--			shifted_status = csr_readl(pcie,
--						   PAB_INTP_AMBA_MISC_STAT);
-+			shifted_status = mobiveil_csr_readl(pcie,
-+							    PAB_INTP_AMBA_MISC_STAT);
- 			shifted_status &= PAB_INTP_INTX_MASK;
- 			shifted_status >>= PAB_INTX_START;
- 		} while (shifted_status != 0);
-@@ -413,7 +414,7 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
- 	}
- 
- 	/* Clear the interrupt status */
--	csr_writel(pcie, intr_status, PAB_INTP_AMBA_MISC_STAT);
-+	mobiveil_csr_writel(pcie, intr_status, PAB_INTP_AMBA_MISC_STAT);
- 	chained_irq_exit(chip, desc);
- }
- 
-@@ -474,24 +475,24 @@ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
- 		return;
- 	}
- 
--	value = csr_readl(pcie, PAB_PEX_AMAP_CTRL(win_num));
-+	value = mobiveil_csr_readl(pcie, PAB_PEX_AMAP_CTRL(win_num));
- 	value &= ~(AMAP_CTRL_TYPE_MASK << AMAP_CTRL_TYPE_SHIFT | WIN_SIZE_MASK);
- 	value |= type << AMAP_CTRL_TYPE_SHIFT | 1 << AMAP_CTRL_EN_SHIFT |
- 		 (lower_32_bits(size64) & WIN_SIZE_MASK);
--	csr_writel(pcie, value, PAB_PEX_AMAP_CTRL(win_num));
-+	mobiveil_csr_writel(pcie, value, PAB_PEX_AMAP_CTRL(win_num));
- 
--	csr_writel(pcie, upper_32_bits(size64),
--		   PAB_EXT_PEX_AMAP_SIZEN(win_num));
-+	mobiveil_csr_writel(pcie, upper_32_bits(size64),
-+			    PAB_EXT_PEX_AMAP_SIZEN(win_num));
- 
--	csr_writel(pcie, lower_32_bits(cpu_addr),
--		   PAB_PEX_AMAP_AXI_WIN(win_num));
--	csr_writel(pcie, upper_32_bits(cpu_addr),
--		   PAB_EXT_PEX_AMAP_AXI_WIN(win_num));
-+	mobiveil_csr_writel(pcie, lower_32_bits(cpu_addr),
-+			    PAB_PEX_AMAP_AXI_WIN(win_num));
-+	mobiveil_csr_writel(pcie, upper_32_bits(cpu_addr),
-+			    PAB_EXT_PEX_AMAP_AXI_WIN(win_num));
- 
--	csr_writel(pcie, lower_32_bits(pci_addr),
--		   PAB_PEX_AMAP_PEX_WIN_L(win_num));
--	csr_writel(pcie, upper_32_bits(pci_addr),
--		   PAB_PEX_AMAP_PEX_WIN_H(win_num));
-+	mobiveil_csr_writel(pcie, lower_32_bits(pci_addr),
-+			    PAB_PEX_AMAP_PEX_WIN_L(win_num));
-+	mobiveil_csr_writel(pcie, upper_32_bits(pci_addr),
-+			    PAB_PEX_AMAP_PEX_WIN_H(win_num));
- 
- 	pcie->ib_wins_configured++;
- }
-@@ -515,27 +516,27 @@ static void program_ob_windows(struct mobiveil_pcie *pcie, int win_num,
- 	 * program Enable Bit to 1, Type Bit to (00) base 2, AXI Window Size Bit
- 	 * to 4 KB in PAB_AXI_AMAP_CTRL register
- 	 */
--	value = csr_readl(pcie, PAB_AXI_AMAP_CTRL(win_num));
-+	value = mobiveil_csr_readl(pcie, PAB_AXI_AMAP_CTRL(win_num));
- 	value &= ~(WIN_TYPE_MASK << WIN_TYPE_SHIFT | WIN_SIZE_MASK);
- 	value |= 1 << WIN_ENABLE_SHIFT | type << WIN_TYPE_SHIFT |
- 		 (lower_32_bits(size64) & WIN_SIZE_MASK);
--	csr_writel(pcie, value, PAB_AXI_AMAP_CTRL(win_num));
-+	mobiveil_csr_writel(pcie, value, PAB_AXI_AMAP_CTRL(win_num));
- 
--	csr_writel(pcie, upper_32_bits(size64), PAB_EXT_AXI_AMAP_SIZE(win_num));
-+	mobiveil_csr_writel(pcie, upper_32_bits(size64), PAB_EXT_AXI_AMAP_SIZE(win_num));
- 
- 	/*
- 	 * program AXI window base with appropriate value in
- 	 * PAB_AXI_AMAP_AXI_WIN0 register
- 	 */
--	csr_writel(pcie, lower_32_bits(cpu_addr) & (~AXI_WINDOW_ALIGN_MASK),
--		   PAB_AXI_AMAP_AXI_WIN(win_num));
--	csr_writel(pcie, upper_32_bits(cpu_addr),
--		   PAB_EXT_AXI_AMAP_AXI_WIN(win_num));
-+	mobiveil_csr_writel(pcie, lower_32_bits(cpu_addr) & (~AXI_WINDOW_ALIGN_MASK),
-+			    PAB_AXI_AMAP_AXI_WIN(win_num));
-+	mobiveil_csr_writel(pcie, upper_32_bits(cpu_addr),
-+			    PAB_EXT_AXI_AMAP_AXI_WIN(win_num));
- 
--	csr_writel(pcie, lower_32_bits(pci_addr),
--		   PAB_AXI_AMAP_PEX_WIN_L(win_num));
--	csr_writel(pcie, upper_32_bits(pci_addr),
--		   PAB_AXI_AMAP_PEX_WIN_H(win_num));
-+	mobiveil_csr_writel(pcie, lower_32_bits(pci_addr),
-+			    PAB_AXI_AMAP_PEX_WIN_L(win_num));
-+	mobiveil_csr_writel(pcie, upper_32_bits(pci_addr),
-+			    PAB_AXI_AMAP_PEX_WIN_H(win_num));
- 
- 	pcie->ob_wins_configured++;
- }
-@@ -579,42 +580,42 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
- 	struct resource_entry *win;
- 
- 	/* setup bus numbers */
--	value = csr_readl(pcie, PCI_PRIMARY_BUS);
-+	value = mobiveil_csr_readl(pcie, PCI_PRIMARY_BUS);
- 	value &= 0xff000000;
- 	value |= 0x00ff0100;
--	csr_writel(pcie, value, PCI_PRIMARY_BUS);
-+	mobiveil_csr_writel(pcie, value, PCI_PRIMARY_BUS);
- 
- 	/*
- 	 * program Bus Master Enable Bit in Command Register in PAB Config
- 	 * Space
- 	 */
--	value = csr_readl(pcie, PCI_COMMAND);
-+	value = mobiveil_csr_readl(pcie, PCI_COMMAND);
- 	value |= PCI_COMMAND_IO | PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER;
--	csr_writel(pcie, value, PCI_COMMAND);
-+	mobiveil_csr_writel(pcie, value, PCI_COMMAND);
- 
- 	/*
- 	 * program PIO Enable Bit to 1 (and PEX PIO Enable to 1) in PAB_CTRL
- 	 * register
- 	 */
--	pab_ctrl = csr_readl(pcie, PAB_CTRL);
-+	pab_ctrl = mobiveil_csr_readl(pcie, PAB_CTRL);
- 	pab_ctrl |= (1 << AMBA_PIO_ENABLE_SHIFT) | (1 << PEX_PIO_ENABLE_SHIFT);
--	csr_writel(pcie, pab_ctrl, PAB_CTRL);
-+	mobiveil_csr_writel(pcie, pab_ctrl, PAB_CTRL);
- 
--	csr_writel(pcie, (PAB_INTP_INTX_MASK | PAB_INTP_MSI_MASK),
--		   PAB_INTP_AMBA_MISC_ENB);
-+	mobiveil_csr_writel(pcie, (PAB_INTP_INTX_MASK | PAB_INTP_MSI_MASK),
-+			    PAB_INTP_AMBA_MISC_ENB);
- 
- 	/*
- 	 * program PIO Enable Bit to 1 and Config Window Enable Bit to 1 in
- 	 * PAB_AXI_PIO_CTRL Register
- 	 */
--	value = csr_readl(pcie, PAB_AXI_PIO_CTRL);
-+	value = mobiveil_csr_readl(pcie, PAB_AXI_PIO_CTRL);
- 	value |= APIO_EN_MASK;
--	csr_writel(pcie, value, PAB_AXI_PIO_CTRL);
-+	mobiveil_csr_writel(pcie, value, PAB_AXI_PIO_CTRL);
- 
- 	/* Enable PCIe PIO master */
--	value = csr_readl(pcie, PAB_PEX_PIO_CTRL);
-+	value = mobiveil_csr_readl(pcie, PAB_PEX_PIO_CTRL);
- 	value |= 1 << PIO_ENABLE_SHIFT;
--	csr_writel(pcie, value, PAB_PEX_PIO_CTRL);
-+	mobiveil_csr_writel(pcie, value, PAB_PEX_PIO_CTRL);
- 
- 	/*
- 	 * we'll program one outbound window for config reads and
-@@ -647,10 +648,10 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
- 	}
- 
- 	/* fixup for PCIe class register */
--	value = csr_readl(pcie, PAB_INTP_AXI_PIO_CLASS);
-+	value = mobiveil_csr_readl(pcie, PAB_INTP_AXI_PIO_CLASS);
- 	value &= 0xff;
- 	value |= (PCI_CLASS_BRIDGE_PCI << 16);
--	csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
-+	mobiveil_csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
- 
- 	/* setup MSI hardware registers */
- 	mobiveil_pcie_enable_msi(pcie);
-@@ -668,9 +669,9 @@ static void mobiveil_mask_intx_irq(struct irq_data *data)
- 	pcie = irq_desc_get_chip_data(desc);
- 	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
- 	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
--	shifted_val = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
-+	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
- 	shifted_val &= ~mask;
--	csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
-+	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
- 	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
- }
- 
-@@ -684,9 +685,9 @@ static void mobiveil_unmask_intx_irq(struct irq_data *data)
- 	pcie = irq_desc_get_chip_data(desc);
- 	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
- 	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
--	shifted_val = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
-+	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
- 	shifted_val |= mask;
--	csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
-+	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
- 	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
- }
- 
--- 
-2.20.1
 
+For example, in my locale (ja_JP.UTF-8)
+
+I can see messages in Japanese as follows:
+
+$ sh  scripts/nsdeps
+cat: /modules.order: =E3=81=9D=E3=81=AE=E3=82=88=E3=81=86=E3=81=AA=E3=83=95=
+=E3=82=A1=E3=82=A4=E3=83=AB=E3=82=84=E3=83=87=E3=82=A3=E3=83=AC=E3=82=AF=E3=
+=83=88=E3=83=AA=E3=81=AF=E3=81=82=E3=82=8A=E3=81=BE=E3=81=9B=E3=82=93
+
+
+
+If I added "LANG=3DC" to the whole of this script,
+it would forcibly change all the messages into English.
+
+
+
+$ sh  scripts/nsdeps
+cat: /modules.order: No such file or directory
+
+
+
+
+The impact on the locale should be really limited.
+So, "LANG=3DC" must be placed immediately before the "find" command.
+
+
+
+Nobody is asking to change log messages into English,
+and offering what was not asked is just *pushy*.
+
+
+
+
+
+--
+Best Regards
+Masahiro Yamada
