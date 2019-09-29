@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D5DC352A9
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5B2C32793
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78B9D2086A
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B4C721835
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:41:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778885;
-	bh=qGQ9HN8LkKwm6Kshzu4NmFigna+xkzLDeB9AZNaGBU4=;
+	s=default; t=1569778893;
+	bh=Qh1KlvMoxLrpk6JpK1J4brdqfWQuG6tOYpJ91Mr/430=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tH9Eqhi8yMoABnzSLe/SfYK7yK092UUKJFzGKbh28LPsdDYog3SHN2JaSnSLmAcAp
-	 r42dpPHtxYiN0XRGt7PnMijA86/7F5sl2oSUkwWmB3wlbNXWBOixybW/ZO9C9TBf2h
-	 JfaF2HvvgtGf/V6z7y1c89TBrNN8t+vOc6WBOYOQ=
+	b=NMisKJatb3+lsiMsUNnc3iWx9hTjqrohbROh+9k+gxdb231d+9TL4l3givN1zBpQ0
+	 5fFpuqtKzgLp6a93bnLxP9rd39dY2o+xTgV8xoeui6DO/0hib3IbPUQy/rszbptjNl
+	 EkEP9QUJGcl7ZgmetVAhL2a74lIMnE8k0CzcXUh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730410AbfI2RlZ (ORCPT
+        id S1730107AbfI2Rdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:41:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44978 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:33:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730123AbfI2Rdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:33:38 -0400
+        id S1730069AbfI2Rda (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:33:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 400DE21925;
-        Sun, 29 Sep 2019 17:33:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BCA421A4C;
+        Sun, 29 Sep 2019 17:33:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778418;
-        bh=qGQ9HN8LkKwm6Kshzu4NmFigna+xkzLDeB9AZNaGBU4=;
+        s=default; t=1569778409;
+        bh=Qh1KlvMoxLrpk6JpK1J4brdqfWQuG6tOYpJ91Mr/430=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qEn0OkEuybXEkUBsjKTdotDsGE/COzDS/xqmwkUxHQ6/cSICI7/eonEAwj1m9bzlz
-         J3LAkMw9onRlUWnCCMPcS3LwujyRy411ib3hEaMpQOO5qV/Qltp0f9js1bU1FEWaoE
-         JQtjYtKTp4EIxtYEyCBT7dD6m7PkF3L21WcV3QhQ=
+        b=tAcL46SzlVdoaxXOHNX9Lw2tXf0wQIO9/fj1m4KrMgNED32bus15lTOcDP0kRx9QB
+         MYArH95ahjfC/GIr4MeCcsOGVMtVz+EbBqBNz/zf65IY781LWEZLZowkExsM9eTAEH
+         0pJP9mJ9I6tzplrDbB0WueOvI4QNpbFKMVJnohUs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thierry Reding <treding@nvidia.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 25/42] PCI: histb: Propagate errors for optional regulators
-Date:   Sun, 29 Sep 2019 13:32:24 -0400
-Message-Id: <20190929173244.8918-25-sashal@kernel.org>
+Cc:     Anson Huang <Anson.Huang@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 19/42] rtc: snvs: fix possible race condition
+Date:   Sun, 29 Sep 2019 13:32:18 -0400
+Message-Id: <20190929173244.8918-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173244.8918-1-sashal@kernel.org>
 References: <20190929173244.8918-1-sashal@kernel.org>
@@ -61,46 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+From: Anson Huang <Anson.Huang@nxp.com>
 
-[ Upstream commit 8f9e1641ba445437095411d9fda2324121110d5d ]
+[ Upstream commit 6fd4fe9b496d9ba3382992ff4fde3871d1b6f63d ]
 
-regulator_get_optional() can fail for a number of reasons besides probe
-deferral. It can for example return -ENOMEM if it runs out of memory as
-it tries to allocate data structures. Propagating only -EPROBE_DEFER is
-problematic because it results in these legitimately fatal errors being
-treated as "regulator not specified in DT".
+The RTC IRQ is requested before the struct rtc_device is allocated,
+this may lead to a NULL pointer dereference in IRQ handler.
 
-What we really want is to ignore the optional regulators only if they
-have not been specified in DT. regulator_get_optional() returns -ENODEV
-in this case, so that's the special case that we need to handle. So we
-propagate all errors, except -ENODEV, so that real failures will still
-cause the driver to fail probe.
+To fix this issue, allocating the rtc_device struct before requesting
+the RTC IRQ using devm_rtc_allocate_device, and use rtc_register_device
+to register the RTC device.
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Cc: Shawn Guo <shawn.guo@linaro.org>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+Link: https://lore.kernel.org/r/20190716071858.36750-1-Anson.Huang@nxp.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-histb.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/rtc/rtc-snvs.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-histb.c b/drivers/pci/controller/dwc/pcie-histb.c
-index 954bc2b74bbcd..811b5c6d62eae 100644
---- a/drivers/pci/controller/dwc/pcie-histb.c
-+++ b/drivers/pci/controller/dwc/pcie-histb.c
-@@ -340,8 +340,8 @@ static int histb_pcie_probe(struct platform_device *pdev)
+diff --git a/drivers/rtc/rtc-snvs.c b/drivers/rtc/rtc-snvs.c
+index 7ee673a25fd0a..4f9a107a04277 100644
+--- a/drivers/rtc/rtc-snvs.c
++++ b/drivers/rtc/rtc-snvs.c
+@@ -279,6 +279,10 @@ static int snvs_rtc_probe(struct platform_device *pdev)
+ 	if (!data)
+ 		return -ENOMEM;
  
- 	hipcie->vpcie = devm_regulator_get_optional(dev, "vpcie");
- 	if (IS_ERR(hipcie->vpcie)) {
--		if (PTR_ERR(hipcie->vpcie) == -EPROBE_DEFER)
--			return -EPROBE_DEFER;
-+		if (PTR_ERR(hipcie->vpcie) != -ENODEV)
-+			return PTR_ERR(hipcie->vpcie);
- 		hipcie->vpcie = NULL;
++	data->rtc = devm_rtc_allocate_device(&pdev->dev);
++	if (IS_ERR(data->rtc))
++		return PTR_ERR(data->rtc);
++
+ 	data->regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node, "regmap");
+ 
+ 	if (IS_ERR(data->regmap)) {
+@@ -343,10 +347,9 @@ static int snvs_rtc_probe(struct platform_device *pdev)
+ 		goto error_rtc_device_register;
  	}
  
+-	data->rtc = devm_rtc_device_register(&pdev->dev, pdev->name,
+-					&snvs_rtc_ops, THIS_MODULE);
+-	if (IS_ERR(data->rtc)) {
+-		ret = PTR_ERR(data->rtc);
++	data->rtc->ops = &snvs_rtc_ops;
++	ret = rtc_register_device(data->rtc);
++	if (ret) {
+ 		dev_err(&pdev->dev, "failed to register rtc: %d\n", ret);
+ 		goto error_rtc_device_register;
+ 	}
 -- 
 2.20.1
 
