@@ -2,52 +2,55 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83005C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 266D1C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E50F21835
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:32:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F07722086A
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:32:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778320;
-	bh=k/CKsmCS30QHIytIpsZwjwBWQ5cbvop2pcjUtBpbhDo=;
+	s=default; t=1569778323;
+	bh=jgjxV17hWXr5NUkzNmqQV2rMGWVCCgrhAuf9KnqIIKA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UDKWi5N7uR28UsgwahAoy5uA89CLC4X0JLW1KHOUPDEPb4QFI4blCOw1eaNLnDbgX
-	 Gr7DZHj9YH7J1J0GSuG8qiizLl3Vk9xsbgs8+GVmPH5i26f/b/svO0WO206qxkPS5e
-	 5TVNKzD63aAi3bfJwHMLMJ87KO8r7ej7zoHeQFwY=
+	b=xP3aaV8sZj76ZX3sbPMto2xLj30INtCwWI/tXr3TrOg/Cx4TqAZfCPcnksW/ymzH0
+	 pv+zFO5QbwoqveggKZTlQ7kzhv8uIf7BlWiijL5E6LBn5AyjcSNX3eM/giIwgIUEf0
+	 mxIdP8du9Y9di/5aAgTlywJL9yaOrbfttbY8lBPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729563AbfI2Rb4 (ORCPT
+        id S1729593AbfI2RcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:31:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42528 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:32:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729532AbfI2Rbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:31:55 -0400
+        id S1729547AbfI2RcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:32:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2336F21A4C;
-        Sun, 29 Sep 2019 17:31:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6A7D2086A;
+        Sun, 29 Sep 2019 17:31:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778314;
-        bh=k/CKsmCS30QHIytIpsZwjwBWQ5cbvop2pcjUtBpbhDo=;
+        s=default; t=1569778319;
+        bh=jgjxV17hWXr5NUkzNmqQV2rMGWVCCgrhAuf9KnqIIKA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zrN2QIhK34UqxWmq3lZ3sQ6LchmlSqfp0K1U9nbOx3jurjQRFkSqY6Bve23ySKX3N
-         N/B4xFdYvGxecN8vZfWcP8q+rcK/q6EwPeoYZgUGmwsVrBRyJC4lsS4TQsa05mR5aF
-         Pr4SfbbyJD2NaJweGWDJN4Wj2+U5ZQ4Bpy2+xxVw=
+        b=yFPyVk/ha/Bar+m+aEs5FKNKHc13e5Ffhb0Wjz7OmaQ/8T2fehECSdRVSevxWeuOj
+         AuriVI6qwVpSGykB8OD4jTCUfoFOCfsgpQJwSgtuW0+lsqMMDaLAXyLyRfU3n2TQSa
+         4tG+bEhvNEQDLKsbi6mgN4okepV7Zi6lZYJ8w+lM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 31/49] security: smack: Fix possible null-pointer dereferences in smack_socket_sock_rcv_skb()
-Date:   Sun, 29 Sep 2019 13:30:31 -0400
-Message-Id: <20190929173053.8400-31-sashal@kernel.org>
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.3 33/49] ARM: 8905/1: Emit __gnu_mcount_nc when using Clang 10.0.0 or newer
+Date:   Sun, 29 Sep 2019 13:30:33 -0400
+Message-Id: <20190929173053.8400-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173053.8400-1-sashal@kernel.org>
 References: <20190929173053.8400-1-sashal@kernel.org>
@@ -60,46 +63,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 3f4287e7d98a2954f20bf96c567fdffcd2b63eb9 ]
+[ Upstream commit b0fe66cf095016e0b238374c10ae366e1f087d11 ]
 
-In smack_socket_sock_rcv_skb(), there is an if statement
-on line 3920 to check whether skb is NULL:
-    if (skb && skb->secmark != 0)
+Currently, multi_v7_defconfig + CONFIG_FUNCTION_TRACER fails to build
+with clang:
 
-This check indicates skb can be NULL in some cases.
+arm-linux-gnueabi-ld: kernel/softirq.o: in function `_local_bh_enable':
+softirq.c:(.text+0x504): undefined reference to `mcount'
+arm-linux-gnueabi-ld: kernel/softirq.o: in function `__local_bh_enable_ip':
+softirq.c:(.text+0x58c): undefined reference to `mcount'
+arm-linux-gnueabi-ld: kernel/softirq.o: in function `do_softirq':
+softirq.c:(.text+0x6c8): undefined reference to `mcount'
+arm-linux-gnueabi-ld: kernel/softirq.o: in function `irq_enter':
+softirq.c:(.text+0x75c): undefined reference to `mcount'
+arm-linux-gnueabi-ld: kernel/softirq.o: in function `irq_exit':
+softirq.c:(.text+0x840): undefined reference to `mcount'
+arm-linux-gnueabi-ld: kernel/softirq.o:softirq.c:(.text+0xa50): more undefined references to `mcount' follow
 
-But on lines 3931 and 3932, skb is used:
-    ad.a.u.net->netif = skb->skb_iif;
-    ipv6_skb_to_auditdata(skb, &ad.a, NULL);
+clang can emit a working mcount symbol, __gnu_mcount_nc, when
+'-meabi gnu' is passed to it. Until r369147 in LLVM, this was
+broken and caused the kernel not to boot with '-pg' because the
+calling convention was not correct. Always build with '-meabi gnu'
+when using clang but ensure that '-pg' (which is added with
+CONFIG_FUNCTION_TRACER and its prereq CONFIG_HAVE_FUNCTION_TRACER)
+cannot be added with it unless this is fixed (which means using
+clang 10.0.0 and newer).
 
-Thus, possible null-pointer dereferences may occur when skb is NULL.
+Link: https://github.com/ClangBuiltLinux/linux/issues/35
+Link: https://bugs.llvm.org/show_bug.cgi?id=33845
+Link: https://github.com/llvm/llvm-project/commit/16fa8b09702378bacfa3d07081afe6b353b99e60
 
-To fix these possible bugs, an if statement is added to check skb.
-
-These bugs are found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Stefan Agner <stefan@agner.ch>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/smack/smack_lsm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/Kconfig  | 2 +-
+ arch/arm/Makefile | 4 ++++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
-index 4c5e5a438f8bd..5c9fc8ba6e572 100644
---- a/security/smack/smack_lsm.c
-+++ b/security/smack/smack_lsm.c
-@@ -3925,6 +3925,8 @@ static int smack_socket_sock_rcv_skb(struct sock *sk, struct sk_buff *skb)
- 			skp = smack_ipv6host_label(&sadd);
- 		if (skp == NULL)
- 			skp = smack_net_ambient;
-+		if (skb == NULL)
-+			break;
- #ifdef CONFIG_AUDIT
- 		smk_ad_init_net(&ad, __func__, LSM_AUDIT_DATA_NET, &net);
- 		ad.a.u.net->family = family;
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 5e2c68e9dd6e2..b587a3b3939ab 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -82,7 +82,7 @@ config ARM
+ 	select HAVE_FAST_GUP if ARM_LPAE
+ 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
+ 	select HAVE_FUNCTION_GRAPH_TRACER if !THUMB2_KERNEL && !CC_IS_CLANG
+-	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
++	select HAVE_FUNCTION_TRACER if !XIP_KERNEL && (CC_IS_GCC || CLANG_VERSION >= 100000)
+ 	select HAVE_GCC_PLUGINS
+ 	select HAVE_HW_BREAKPOINT if PERF_EVENTS && (CPU_V6 || CPU_V6K || CPU_V7)
+ 	select HAVE_IDE if PCI || ISA || PCMCIA
+diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+index c3624ca6c0bca..9b3d4deca9e4e 100644
+--- a/arch/arm/Makefile
++++ b/arch/arm/Makefile
+@@ -112,6 +112,10 @@ ifeq ($(CONFIG_ARM_UNWIND),y)
+ CFLAGS_ABI	+=-funwind-tables
+ endif
+ 
++ifeq ($(CONFIG_CC_IS_CLANG),y)
++CFLAGS_ABI	+= -meabi gnu
++endif
++
+ # Accept old syntax despite ".syntax unified"
+ AFLAGS_NOWARN	:=$(call as-option,-Wa$(comma)-mno-warn-deprecated,-Wa$(comma)-W)
+ 
 -- 
 2.20.1
 
