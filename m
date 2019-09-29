@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C27AC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B74C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4461B21928
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:33:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5B5F2196E
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:34:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778436;
-	bh=mqSyEFPTAyzBwMRSRdz3y61W0tMmYA/5+LdqDpAIF+M=;
+	s=default; t=1569778442;
+	bh=9DqCLIXw3OgaPQz/yyOp5nMdkQ0mojVShjTJc+3CrmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Y6MistWzdgQuBk7A3dKr2ss1N4NFYbTQlg6ZKyx3y20vI00q+U8t1qsaI63uLRiV
-	 CZjYPkS7+CcVkkbTaFDLGetGsM2CQYR68vvyFBWS6ad/RkRLW9Ov/uqpLtx66zaCCN
-	 C+IvpQ5P4mFX0C4yVwELNd4/eneCmRge+YnJlux8=
+	b=FcHUNpIL3yTv2k0TsCsWve6MZluoWfadzlAHolt8riz3q+fKbdzXA1VRHjg5iXo0l
+	 kLUAzptFbDvEbt4Aqxx8IM/2hijlibc8f8KnbdNORsMNIGjSFwPypNPmheiVAVg9Jl
+	 VTPtHVQz0QhHlpV2qFiInkzCWv0ksBz8c8eTwtAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730215AbfI2Rdz (ORCPT
+        id S1730261AbfI2ReB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:33:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45270 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:34:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730176AbfI2Rdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:33:52 -0400
+        id S1730209AbfI2Rdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:33:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B43521906;
-        Sun, 29 Sep 2019 17:33:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F2D721906;
+        Sun, 29 Sep 2019 17:33:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778431;
-        bh=mqSyEFPTAyzBwMRSRdz3y61W0tMmYA/5+LdqDpAIF+M=;
+        s=default; t=1569778434;
+        bh=9DqCLIXw3OgaPQz/yyOp5nMdkQ0mojVShjTJc+3CrmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XeI3xufgURW6vE++d1hf09GV/Xdnd6NPCe0MZYAoHkpTkKuNBW7gfpPFFk6mQGg5T
-         bOSU5RvUUU2s6LSLELScEIlUddVQfhVzqfSIWJXTATIAm6N5fQzU0AN3/BTrShykaa
-         COuU7qEpP3JM0nsUsDRcHsGmLDZchoNv5x2Tvg60=
+        b=Fe30uL6PAvKNiFeREJL9c8l7WwD3+p+WkHulEK+h2/KlAfZeCxV4CYPDv5BmGfTP8
+         6Yczs3264XDKaam7BikyjvJj89LMKMOPd42qzbpXNmFeghP+HUw4K3Y6cTk0NJG2pL
+         WXxUmB+tPw87a+XS81X1/Wk9PZ+/AKQH6COm3Bv4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Anatoly Pugachev <matorola@gmail.com>,
+Cc:     David Howells <dhowells@redhat.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-s390@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 33/42] pktcdvd: remove warning on attempting to register non-passthrough dev
-Date:   Sun, 29 Sep 2019 13:32:32 -0400
-Message-Id: <20190929173244.8918-33-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 34/42] hypfs: Fix error number left in struct pointer member
+Date:   Sun, 29 Sep 2019 13:32:33 -0400
+Message-Id: <20190929173244.8918-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173244.8918-1-sashal@kernel.org>
 References: <20190929173244.8918-1-sashal@kernel.org>
@@ -59,85 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit eb09b3cc464d2c3bbde9a6648603c8d599ea8582 ]
+[ Upstream commit b54c64f7adeb241423cd46598f458b5486b0375e ]
 
-Anatoly reports that he gets the below warning when booting -git on
-a sparc64 box on debian unstable:
+In hypfs_fill_super(), if hypfs_create_update_file() fails,
+sbi->update_file is left holding an error number.  This is passed to
+hypfs_kill_super() which doesn't check for this.
 
-...
-[   13.352975] aes_sparc64: Using sparc64 aes opcodes optimized AES
-implementation
-[   13.428002] ------------[ cut here ]------------
-[   13.428081] WARNING: CPU: 21 PID: 586 at
-drivers/block/pktcdvd.c:2597 pkt_setup_dev+0x2e4/0x5a0 [pktcdvd]
-[   13.428147] Attempt to register a non-SCSI queue
-[   13.428184] Modules linked in: pktcdvd libdes cdrom aes_sparc64
-n2_rng md5_sparc64 sha512_sparc64 rng_core sha256_sparc64 flash
-sha1_sparc64 ip_tables x_tables ipv6 crc_ccitt nf_defrag_ipv6 autofs4
-ext4 crc16 mbcache jbd2 raid10 raid456 async_raid6_recov async_memcpy
-async_pq async_xor xor async_tx raid6_pq raid1 raid0 multipath linear
-md_mod crc32c_sparc64
-[   13.428452] CPU: 21 PID: 586 Comm: pktsetup Not tainted
-5.3.0-10169-g574cc4539762 #1234
-[   13.428507] Call Trace:
-[   13.428542]  [00000000004635c0] __warn+0xc0/0x100
-[   13.428582]  [0000000000463634] warn_slowpath_fmt+0x34/0x60
-[   13.428626]  [000000001045b244] pkt_setup_dev+0x2e4/0x5a0 [pktcdvd]
-[   13.428674]  [000000001045ccf4] pkt_ctl_ioctl+0x94/0x220 [pktcdvd]
-[   13.428724]  [00000000006b95c8] do_vfs_ioctl+0x628/0x6e0
-[   13.428764]  [00000000006b96c8] ksys_ioctl+0x48/0x80
-[   13.428803]  [00000000006b9714] sys_ioctl+0x14/0x40
-[   13.428847]  [0000000000406294] linux_sparc_syscall+0x34/0x44
-[   13.428890] irq event stamp: 4181
-[   13.428924] hardirqs last  enabled at (4189): [<00000000004e0a74>]
-console_unlock+0x634/0x6c0
-[   13.428984] hardirqs last disabled at (4196): [<00000000004e0540>]
-console_unlock+0x100/0x6c0
-[   13.429048] softirqs last  enabled at (3978): [<0000000000b2e2d8>]
-__do_softirq+0x498/0x520
-[   13.429110] softirqs last disabled at (3967): [<000000000042cfb4>]
-do_softirq_own_stack+0x34/0x60
-[   13.429172] ---[ end trace 2220ca468f32967d ]---
-[   13.430018] pktcdvd: setup of pktcdvd device failed
-[   13.455589] des_sparc64: Using sparc64 des opcodes optimized DES
-implementation
-[   13.515334] camellia_sparc64: Using sparc64 camellia opcodes
-optimized CAMELLIA implementation
-[   13.522856] pktcdvd: setup of pktcdvd device failed
-[   13.529327] pktcdvd: setup of pktcdvd device failed
-[   13.532932] pktcdvd: setup of pktcdvd device failed
-[   13.536165] pktcdvd: setup of pktcdvd device failed
-[   13.539372] pktcdvd: setup of pktcdvd device failed
-[   13.542834] pktcdvd: setup of pktcdvd device failed
-[   13.546536] pktcdvd: setup of pktcdvd device failed
-[   15.431071] XFS (dm-0): Mounting V5 Filesystem
-...
+Fix this by not setting sbi->update_value until after we've checked for
+error.
 
-Apparently debian auto-attaches any cdrom like device to pktcdvd, which
-can lead to the above warning. There's really no reason to warn for this
-situation, kill it.
-
-Reported-by: Anatoly Pugachev <matorola@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 24bbb1faf3f0 ("[PATCH] s390_hypfs filesystem")
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+cc: linux-s390@vger.kernel.org
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/pktcdvd.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/s390/hypfs/inode.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/block/pktcdvd.c b/drivers/block/pktcdvd.c
-index 024060165afa7..76457003f1406 100644
---- a/drivers/block/pktcdvd.c
-+++ b/drivers/block/pktcdvd.c
-@@ -2594,7 +2594,6 @@ static int pkt_new_dev(struct pktcdvd_device *pd, dev_t dev)
- 	if (ret)
- 		return ret;
- 	if (!blk_queue_scsi_passthrough(bdev_get_queue(bdev))) {
--		WARN_ONCE(true, "Attempt to register a non-SCSI queue\n");
- 		blkdev_put(bdev, FMODE_READ | FMODE_NDELAY);
- 		return -EINVAL;
- 	}
+diff --git a/arch/s390/hypfs/inode.c b/arch/s390/hypfs/inode.c
+index ccad1398abd40..b5cfcad953c2e 100644
+--- a/arch/s390/hypfs/inode.c
++++ b/arch/s390/hypfs/inode.c
+@@ -269,7 +269,7 @@ static int hypfs_show_options(struct seq_file *s, struct dentry *root)
+ static int hypfs_fill_super(struct super_block *sb, void *data, int silent)
+ {
+ 	struct inode *root_inode;
+-	struct dentry *root_dentry;
++	struct dentry *root_dentry, *update_file;
+ 	int rc = 0;
+ 	struct hypfs_sb_info *sbi;
+ 
+@@ -300,9 +300,10 @@ static int hypfs_fill_super(struct super_block *sb, void *data, int silent)
+ 		rc = hypfs_diag_create_files(root_dentry);
+ 	if (rc)
+ 		return rc;
+-	sbi->update_file = hypfs_create_update_file(root_dentry);
+-	if (IS_ERR(sbi->update_file))
+-		return PTR_ERR(sbi->update_file);
++	update_file = hypfs_create_update_file(root_dentry);
++	if (IS_ERR(update_file))
++		return PTR_ERR(update_file);
++	sbi->update_file = update_file;
+ 	hypfs_update_update(sb);
+ 	pr_info("Hypervisor filesystem mounted\n");
+ 	return 0;
 -- 
 2.20.1
 
