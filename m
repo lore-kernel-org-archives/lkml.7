@@ -7,91 +7,79 @@ X-Spam-Status: No, score=-1.7 required=3.0 tests=DATE_IN_PAST_12_24,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F26C35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF42C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D84620842
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55F60218DE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:08:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569852496;
-	bh=kt7fla+BzzgYe489Sg6nEjWAJ0zp3OgREXHfjYBlS3Y=;
+	s=default; t=1569852499;
+	bh=VDbhSD5QYW6zk202BDR/WM3sd0a3/efH6bZ7teyPZIA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RrqXNAyAu1Av88J4cgHKxnPNsrV4RWA/nVxeXAWr36FBn6Rdej7a9+Un21FYS9f1s
-	 i2/OQnxy9jaJcdWc3FYO+1whmsEfUfRnF99IAnKZ7miBqN5IywU9YaK/1IrkkAm1UW
-	 rS9g1UQ5lq0UF4oJZOVMXZwkhTk7KvxSYw7cvtPQ=
+	b=XwEZ65g+nhyLQBYBAhciByTtHg+HQ0ZBMMLYUdi4L/Hw6/EKIsrmeQ4i27GzH3um6
+	 zrUgKzxk0f0uDywo7pYGa8ZXbwzOYEqF7xu5QfAp1JpVwjmzeSsMAEDrLDFA/sVCE8
+	 YE10YvNR+ELtS7cEVXViY0hCzv6FSaaPKHvFb8fM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731612AbfI3OIP (ORCPT
+        id S1731623AbfI3OIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 10:08:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44250 "EHLO mail.kernel.org"
+        Mon, 30 Sep 2019 10:08:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731375AbfI3OIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 10:08:14 -0400
+        id S1731375AbfI3OIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 10:08:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBF56216F4;
-        Mon, 30 Sep 2019 14:08:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFDEF21855;
+        Mon, 30 Sep 2019 14:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569852493;
-        bh=kt7fla+BzzgYe489Sg6nEjWAJ0zp3OgREXHfjYBlS3Y=;
+        s=default; t=1569852496;
+        bh=VDbhSD5QYW6zk202BDR/WM3sd0a3/efH6bZ7teyPZIA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=azRfqxqYJMigCAgiF+TDmSvzc2YzSJRfHI98n+QETYLLkFOxzxf8l/lG78ONWtMNy
-         zW92z9jldZ1ik4kR1bjORLjYuK5lSN5Yz9nM9uXnb39P6GoWXy4aGeV1P64cw5CRXk
-         DsrjMwBJ/x9M/yQA357bBhMh8yoJ/VATM0SanepA=
-Date:   Sun, 29 Sep 2019 16:49:12 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com,
-        Waiman Long <longman@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 36/63] locking/lockdep: Add debug_locks check in
- __lock_downgrade()
-Message-ID: <20190929144912.GA2011833@kroah.com>
-References: <20190929135031.382429403@linuxfoundation.org>
- <20190929135038.482721804@linuxfoundation.org>
- <801c81d2-ce72-8eb3-a18b-1b0943270fc4@i-love.sakura.ne.jp>
+        b=KLDIOiNu3HLHg1pWpCztA/mt8Mea5HTJN4ba2+gjUsY+jmbEzHavx+BmVWVX2BfWl
+         klpM4jXH1G60XMDJSDhAxpAK4Z94N2Bb0jF0kHt9CYCFW5DhvWi9lXHnWJsi8Gup/S
+         9nc/VGhNm+ieC4lsH5nhBkgcnukj8sEkQq3qDsnA=
+Date:   Sun, 29 Sep 2019 16:57:58 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jesse Barton <jessebarton95@gmail.com>
+Cc:     valdis.kletnieks@vt.edu, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] Staging: exfat: exfat_super.c: fixed camelcase
+ coding style issue
+Message-ID: <20190929145758.GA2017443@kroah.com>
+References: <20190929145057.37752-1-jessebarton95@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <801c81d2-ce72-8eb3-a18b-1b0943270fc4@i-love.sakura.ne.jp>
+In-Reply-To: <20190929145057.37752-1-jessebarton95@gmail.com>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 29, 2019 at 11:43:38PM +0900, Tetsuo Handa wrote:
-> On 2019/09/29 22:54, Greg Kroah-Hartman wrote:
-> > From: Waiman Long <longman@redhat.com>
-> > 
-> > [ Upstream commit 513e1073d52e55b8024b4f238a48de7587c64ccf ]
-> > 
-> > Tetsuo Handa had reported he saw an incorrect "downgrading a read lock"
-> > warning right after a previous lockdep warning. It is likely that the
-> > previous warning turned off lock debugging causing the lockdep to have
-> > inconsistency states leading to the lock downgrade warning.
-> > 
-> > Fix that by add a check for debug_locks at the beginning of
-> > __lock_downgrade().
+On Sun, Sep 29, 2019 at 09:50:57AM -0500, Jesse Barton wrote:
+> Changed function names:
+> ffsUmountVol to ffs_umount_vol
+> ffsMountVol to ffs_mount_vol
+> ffsSyncVol to ffs_sync_vol
 > 
-> Please drop "[PATCH 4.19 36/63] locking/lockdep: Add debug_locks check in __lock_downgrade()".
-> We had a revert patch shown below in the past.
+> 
 
-Ugh, I missed that, thanks.
+That says _what_ you did, but not _why_ you are doing this.
 
-> "[PATCH 4.19 37/63] locking/lockdep: Add debug_locks check in __lock_downgrade() - again" seems the correct patch.
+And is this really the best name for these functions?  Why the ffs_*
+prefix?
 
-Ok, will keep that one.  And will drop the "again" part of that subject
-line, had to add that to make quilt happy :(
+Also, you didn't include the maintainer again, and you didn't thread
+your emails using 'git send-email' :(
 
-thanks for the review.
+And finally, you sent a new version of the patch, but did not "version"
+it, saying what changed from the previous version.  The documentation
+says how to do this, so you might want to re-read that.
+
+Can you please fix this all up and resend the series as "v3"?
+
+thanks,
 
 greg k-h
