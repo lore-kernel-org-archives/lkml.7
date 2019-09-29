@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E28EC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B79C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63FFD21D82
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62E1921906
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:38:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778723;
-	bh=loZr7MLJpU4XU6TOPh2BVQXDVFm5QAyJaqArvekhQzo=;
+	s=default; t=1569778728;
+	bh=QAeX3pYl1wm9N0GeIoBGX1XUJSECbBcflCV8F8zifwE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cMo/Jny8zoZNhkKqbMJM/BWzR6UKgfDBO/SfmBZ7iGonj7W7+J1n4c+uTDE4PfBSG
-	 W4jy9MOH+7CgK8qL+2KXU7/EAMpvcIkxV/ikSfOIBD+J9kR2S6azxCvb7QCimrC1+v
-	 MsuVZ8wzKHmXeJpUAZrFdPuHwjImhEnuCd04bHys=
+	b=z7VZVzoG6XLpNcwEOjnKyL8x8TrXPpWdvcoFu7p6Zlo0Sq/Yk3wtJZTpdpv3wilpK
+	 Fc2KlEy4tniSrMJMYrYSGrxmTX3Je83N9vot42fTitQydnnz4GFBDrmLHR11mNx1dt
+	 DCZ8S6R2jd03uBFu51JLqGgRIZjihXbus1q68sac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730589AbfI2Rii (ORCPT
+        id S1730674AbfI2Rfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:38:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48292 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:35:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729786AbfI2RgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:36:00 -0400
+        id S1729743AbfI2Rfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:35:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3E2621D6C;
-        Sun, 29 Sep 2019 17:35:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8ECE21D7B;
+        Sun, 29 Sep 2019 17:35:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778559;
-        bh=loZr7MLJpU4XU6TOPh2BVQXDVFm5QAyJaqArvekhQzo=;
+        s=default; t=1569778550;
+        bh=QAeX3pYl1wm9N0GeIoBGX1XUJSECbBcflCV8F8zifwE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jx8InXds9YDSisXpCh5ducyiVGQR6LV8v9n/4YJatME7aRpIpmrhnZlECpRoswSRL
-         1R7NnnVyOpdahZDKH+9f6hY9EEXr9VVWAP2CfxoIbl1UkZ4xpc6UgywZU0UGv3hYMN
-         4j9/tk3QDVBXiC++J4wto/XV9RPXLOqvjLg8p0jI=
+        b=ebstBfn6kc1XJCJ3F8ia3ier+SL2FAB50gxUxBrHhSuj5BUE+csQy/qMmC16OUwmv
+         fBcatmz97IMZgsACsqBLDb1LLvGNrk4O+DSGATxJX0pgUEhtT46f9IBeWgaDjFuTiu
+         Z3DnNlrdd81b7Dke7hRW6QJUM3IoTIJWN3a7ScxQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Joao Moreno <mail@joaomoreno.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 12/23] HID: apple: Fix stuck function keys when using FN
-Date:   Sun, 29 Sep 2019 13:35:22 -0400
-Message-Id: <20190929173535.9744-12-sashal@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, Orion Hodson <oth@google.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 07/23] ARM: 8898/1: mm: Don't treat faults reported from cache maintenance as writes
+Date:   Sun, 29 Sep 2019 13:35:17 -0400
+Message-Id: <20190929173535.9744-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173535.9744-1-sashal@kernel.org>
 References: <20190929173535.9744-1-sashal@kernel.org>
@@ -59,109 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joao Moreno <mail@joaomoreno.com>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit aec256d0ecd561036f188dbc8fa7924c47a9edfd ]
+[ Upstream commit 834020366da9ab3fb87d1eb9a3160eb22dbed63a ]
 
-This fixes an issue in which key down events for function keys would be
-repeatedly emitted even after the user has raised the physical key. For
-example, the driver fails to emit the F5 key up event when going through
-the following steps:
-- fnmode=1: hold FN, hold F5, release FN, release F5
-- fnmode=2: hold F5, hold FN, release F5, release FN
+Translation faults arising from cache maintenance instructions are
+rather unhelpfully reported with an FSR value where the WnR field is set
+to 1, indicating that the faulting access was a write. Since cache
+maintenance instructions on 32-bit ARM do not require any particular
+permissions, this can cause our private 'cacheflush' system call to fail
+spuriously if a translation fault is generated due to page aging when
+targetting a read-only VMA.
 
-The repeated F5 key down events can be easily verified using xev.
+In this situation, we will return -EFAULT to userspace, although this is
+unfortunately suppressed by the popular '__builtin___clear_cache()'
+intrinsic provided by GCC, which returns void.
 
-Signed-off-by: Joao Moreno <mail@joaomoreno.com>
-Co-developed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Although it's tempting to write this off as a userspace issue, we can
+actually do a little bit better on CPUs that support LPAE, even if the
+short-descriptor format is in use. On these CPUs, cache maintenance
+faults additionally set the CM field in the FSR, which we can use to
+suppress the write permission checks in the page fault handler and
+succeed in performing cache maintenance to read-only areas even in the
+presence of a translation fault.
+
+Reported-by: Orion Hodson <oth@google.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-apple.c | 49 +++++++++++++++++++++++------------------
- 1 file changed, 28 insertions(+), 21 deletions(-)
+ arch/arm/mm/fault.c | 4 ++--
+ arch/arm/mm/fault.h | 1 +
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
-index 1cb41992aaa1f..d0a81a03ddbdd 100644
---- a/drivers/hid/hid-apple.c
-+++ b/drivers/hid/hid-apple.c
-@@ -57,7 +57,6 @@ MODULE_PARM_DESC(swap_opt_cmd, "Swap the Option (\"Alt\") and Command (\"Flag\")
- struct apple_sc {
- 	unsigned long quirks;
- 	unsigned int fn_on;
--	DECLARE_BITMAP(pressed_fn, KEY_CNT);
- 	DECLARE_BITMAP(pressed_numlock, KEY_CNT);
- };
- 
-@@ -184,6 +183,8 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
+diff --git a/arch/arm/mm/fault.c b/arch/arm/mm/fault.c
+index 49b1b80486358..9bb446cc135d1 100644
+--- a/arch/arm/mm/fault.c
++++ b/arch/arm/mm/fault.c
+@@ -215,7 +215,7 @@ static inline bool access_error(unsigned int fsr, struct vm_area_struct *vma)
  {
- 	struct apple_sc *asc = hid_get_drvdata(hid);
- 	const struct apple_key_translation *trans, *table;
-+	bool do_translate;
-+	u16 code = 0;
+ 	unsigned int mask = VM_READ | VM_WRITE | VM_EXEC;
  
- 	if (usage->code == KEY_FN) {
- 		asc->fn_on = !!value;
-@@ -192,8 +193,6 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
- 	}
+-	if (fsr & FSR_WRITE)
++	if ((fsr & FSR_WRITE) && !(fsr & FSR_CM))
+ 		mask = VM_WRITE;
+ 	if (fsr & FSR_LNX_PF)
+ 		mask = VM_EXEC;
+@@ -285,7 +285,7 @@ do_page_fault(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
  
- 	if (fnmode) {
--		int do_translate;
--
- 		if (hid->product >= USB_DEVICE_ID_APPLE_WELLSPRING4_ANSI &&
- 				hid->product <= USB_DEVICE_ID_APPLE_WELLSPRING4A_JIS)
- 			table = macbookair_fn_keys;
-@@ -205,25 +204,33 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
- 		trans = apple_find_translation (table, usage->code);
+ 	if (user_mode(regs))
+ 		flags |= FAULT_FLAG_USER;
+-	if (fsr & FSR_WRITE)
++	if ((fsr & FSR_WRITE) && !(fsr & FSR_CM))
+ 		flags |= FAULT_FLAG_WRITE;
  
- 		if (trans) {
--			if (test_bit(usage->code, asc->pressed_fn))
--				do_translate = 1;
--			else if (trans->flags & APPLE_FLAG_FKEY)
--				do_translate = (fnmode == 2 && asc->fn_on) ||
--					(fnmode == 1 && !asc->fn_on);
--			else
--				do_translate = asc->fn_on;
--
--			if (do_translate) {
--				if (value)
--					set_bit(usage->code, asc->pressed_fn);
--				else
--					clear_bit(usage->code, asc->pressed_fn);
--
--				input_event(input, usage->type, trans->to,
--						value);
--
--				return 1;
-+			if (test_bit(trans->from, input->key))
-+				code = trans->from;
-+			else if (test_bit(trans->to, input->key))
-+				code = trans->to;
-+
-+			if (!code) {
-+				if (trans->flags & APPLE_FLAG_FKEY) {
-+					switch (fnmode) {
-+					case 1:
-+						do_translate = !asc->fn_on;
-+						break;
-+					case 2:
-+						do_translate = asc->fn_on;
-+						break;
-+					default:
-+						/* should never happen */
-+						do_translate = false;
-+					}
-+				} else {
-+					do_translate = asc->fn_on;
-+				}
-+
-+				code = do_translate ? trans->to : trans->from;
- 			}
-+
-+			input_event(input, usage->type, code, value);
-+			return 1;
- 		}
- 
- 		if (asc->quirks & APPLE_NUMLOCK_EMULATION &&
+ 	/*
+diff --git a/arch/arm/mm/fault.h b/arch/arm/mm/fault.h
+index c063708fa5032..9ecc2097a87a0 100644
+--- a/arch/arm/mm/fault.h
++++ b/arch/arm/mm/fault.h
+@@ -6,6 +6,7 @@
+  * Fault status register encodings.  We steal bit 31 for our own purposes.
+  */
+ #define FSR_LNX_PF		(1 << 31)
++#define FSR_CM			(1 << 13)
+ #define FSR_WRITE		(1 << 11)
+ #define FSR_FS4			(1 << 10)
+ #define FSR_FS3_0		(15)
 -- 
 2.20.1
 
