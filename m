@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3458C47404
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26458C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 905D021835
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 009A42086A
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:41:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778870;
-	bh=XSU9Lm/zgAzIoiJRp75m3u5Wjh77YFlhrhlEZ9ovvSo=;
+	s=default; t=1569778876;
+	bh=q7LE7xSjAk2WfDmqoRiEwsDQ5sKIVq8bwyqwusRYBgk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qz7aETT4jxrP48vIb6+rntXPDWk77D+Yh9pw/n4ko/E7HfTsz96aNoTCY4zAkN6O+
-	 1XNSnxeK981Ctqccv1PjvcVCBxgy+jqVPbhm1QjiQICWwDPodYG/ZxSMo84D+1TKex
-	 2u9NNcm8SL+FhxjbDZa2kz/7Ly/f+/8xr7KB49xY=
+	b=Ok4xfHHfmMWf/V/gwRIKR7lSF+7Jv+pn1FElWPXJALEAHkSn9lf5VlGQ2+UQgtHfF
+	 dbH+8Elb9hhb6vlywxNJE60T1sGTtz0Swx+ibTBcoano+cR7W4xwe1ckIr3uhEr9qO
+	 bgRnBt/raSQuoJxam+kUOFtp0h1nR4YtPJu0yjUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730231AbfI2Rd6 (ORCPT
+        id S1730150AbfI2Rdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:33:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45260 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:33:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730194AbfI2Rdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:33:52 -0400
+        id S1730110AbfI2Rdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:33:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBE9221928;
-        Sun, 29 Sep 2019 17:33:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D14A62196E;
+        Sun, 29 Sep 2019 17:33:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778430;
-        bh=XSU9Lm/zgAzIoiJRp75m3u5Wjh77YFlhrhlEZ9ovvSo=;
+        s=default; t=1569778416;
+        bh=q7LE7xSjAk2WfDmqoRiEwsDQ5sKIVq8bwyqwusRYBgk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d7CKkulf/nxZUMlPkcx/IxbOX/4bJYZqc3LtcfZAVWoa2cY0VX1b4yMZASU7QHtS7
-         VPzf2iQeHSFripGFiY2CtSyUspZ6aBWalEs/mKaJ5miTvkH8IBDPJjqE7zLpdX3GOg
-         gsAAE+zqqN7Kt76GrJJbEZs5/RzGQHF17NXJCqYk=
+        b=PXqB++4lGn2RG16SermnNojuI/Aa4tc8rVEPVSNuFrJKlqyaf73Gh+ERq2Zp5nziY
+         +PGxghLjL7PhfGlrJQUaCI2uKDUAlIMLIL8MUKQl148v+e0zrrPO1aCqRCObSsSP4d
+         uPhdcmAmua0fvK0KXQLaaTIkfPVEpU7GaocBz6tU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Jan Stancek <jstancek@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 32/42] fat: work around race with userspace's read via blockdev while mounting
-Date:   Sun, 29 Sep 2019 13:32:31 -0400
-Message-Id: <20190929173244.8918-32-sashal@kernel.org>
+Cc:     Thierry Reding <treding@nvidia.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        linux-rockchip@lists.infradead.org,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 24/42] PCI: rockchip: Propagate errors for optional regulators
+Date:   Sun, 29 Sep 2019 13:32:23 -0400
+Message-Id: <20190929173244.8918-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173244.8918-1-sashal@kernel.org>
 References: <20190929173244.8918-1-sashal@kernel.org>
@@ -61,107 +63,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit 07bfa4415ab607e459b69bd86aa7e7602ce10b4f ]
+[ Upstream commit 0e3ff0ac5f71bdb6be2a698de0ed0c7e6e738269 ]
 
-If userspace reads the buffer via blockdev while mounting,
-sb_getblk()+modify can race with buffer read via blockdev.
+regulator_get_optional() can fail for a number of reasons besides probe
+deferral. It can for example return -ENOMEM if it runs out of memory as
+it tries to allocate data structures. Propagating only -EPROBE_DEFER is
+problematic because it results in these legitimately fatal errors being
+treated as "regulator not specified in DT".
 
-For example,
+What we really want is to ignore the optional regulators only if they
+have not been specified in DT. regulator_get_optional() returns -ENODEV
+in this case, so that's the special case that we need to handle. So we
+propagate all errors, except -ENODEV, so that real failures will still
+cause the driver to fail probe.
 
-            FS                               userspace
-    bh = sb_getblk()
-    modify bh->b_data
-                                  read
-				    ll_rw_block(bh)
-				      fill bh->b_data by on-disk data
-				      /* lost modified data by FS */
-				      set_buffer_uptodate(bh)
-    set_buffer_uptodate(bh)
-
-Userspace should not use the blockdev while mounting though, the udev
-seems to be already doing this.  Although I think the udev should try to
-avoid this, workaround the race by small overhead.
-
-Link: http://lkml.kernel.org/r/87pnk7l3sw.fsf_-_@mail.parknet.co.jp
-Signed-off-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Reported-by: Jan Stancek <jstancek@redhat.com>
-Tested-by: Jan Stancek <jstancek@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Tested-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Acked-by: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-rockchip@lists.infradead.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fat/dir.c    | 13 +++++++++++--
- fs/fat/fatent.c |  3 +++
- 2 files changed, 14 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pcie-rockchip-host.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/fs/fat/dir.c b/fs/fat/dir.c
-index 1bda2ab6745ba..814ad2c2ba808 100644
---- a/fs/fat/dir.c
-+++ b/fs/fat/dir.c
-@@ -1100,8 +1100,11 @@ static int fat_zeroed_cluster(struct inode *dir, sector_t blknr, int nr_used,
- 			err = -ENOMEM;
- 			goto error;
- 		}
-+		/* Avoid race with userspace read via bdev */
-+		lock_buffer(bhs[n]);
- 		memset(bhs[n]->b_data, 0, sb->s_blocksize);
- 		set_buffer_uptodate(bhs[n]);
-+		unlock_buffer(bhs[n]);
- 		mark_buffer_dirty_inode(bhs[n], dir);
+diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+index 8d20f1793a618..ef8e677ce9d11 100644
+--- a/drivers/pci/controller/pcie-rockchip-host.c
++++ b/drivers/pci/controller/pcie-rockchip-host.c
+@@ -608,29 +608,29 @@ static int rockchip_pcie_parse_host_dt(struct rockchip_pcie *rockchip)
  
- 		n++;
-@@ -1158,6 +1161,8 @@ int fat_alloc_new_dir(struct inode *dir, struct timespec64 *ts)
- 	fat_time_unix2fat(sbi, ts, &time, &date, &time_cs);
+ 	rockchip->vpcie12v = devm_regulator_get_optional(dev, "vpcie12v");
+ 	if (IS_ERR(rockchip->vpcie12v)) {
+-		if (PTR_ERR(rockchip->vpcie12v) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
++		if (PTR_ERR(rockchip->vpcie12v) != -ENODEV)
++			return PTR_ERR(rockchip->vpcie12v);
+ 		dev_info(dev, "no vpcie12v regulator found\n");
+ 	}
  
- 	de = (struct msdos_dir_entry *)bhs[0]->b_data;
-+	/* Avoid race with userspace read via bdev */
-+	lock_buffer(bhs[0]);
- 	/* filling the new directory slots ("." and ".." entries) */
- 	memcpy(de[0].name, MSDOS_DOT, MSDOS_NAME);
- 	memcpy(de[1].name, MSDOS_DOTDOT, MSDOS_NAME);
-@@ -1180,6 +1185,7 @@ int fat_alloc_new_dir(struct inode *dir, struct timespec64 *ts)
- 	de[0].size = de[1].size = 0;
- 	memset(de + 2, 0, sb->s_blocksize - 2 * sizeof(*de));
- 	set_buffer_uptodate(bhs[0]);
-+	unlock_buffer(bhs[0]);
- 	mark_buffer_dirty_inode(bhs[0], dir);
+ 	rockchip->vpcie3v3 = devm_regulator_get_optional(dev, "vpcie3v3");
+ 	if (IS_ERR(rockchip->vpcie3v3)) {
+-		if (PTR_ERR(rockchip->vpcie3v3) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
++		if (PTR_ERR(rockchip->vpcie3v3) != -ENODEV)
++			return PTR_ERR(rockchip->vpcie3v3);
+ 		dev_info(dev, "no vpcie3v3 regulator found\n");
+ 	}
  
- 	err = fat_zeroed_cluster(dir, blknr, 1, bhs, MAX_BUF_PER_PAGE);
-@@ -1237,11 +1243,14 @@ static int fat_add_new_entries(struct inode *dir, void *slots, int nr_slots,
+ 	rockchip->vpcie1v8 = devm_regulator_get_optional(dev, "vpcie1v8");
+ 	if (IS_ERR(rockchip->vpcie1v8)) {
+-		if (PTR_ERR(rockchip->vpcie1v8) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
++		if (PTR_ERR(rockchip->vpcie1v8) != -ENODEV)
++			return PTR_ERR(rockchip->vpcie1v8);
+ 		dev_info(dev, "no vpcie1v8 regulator found\n");
+ 	}
  
- 			/* fill the directory entry */
- 			copy = min(size, sb->s_blocksize);
-+			/* Avoid race with userspace read via bdev */
-+			lock_buffer(bhs[n]);
- 			memcpy(bhs[n]->b_data, slots, copy);
--			slots += copy;
--			size -= copy;
- 			set_buffer_uptodate(bhs[n]);
-+			unlock_buffer(bhs[n]);
- 			mark_buffer_dirty_inode(bhs[n], dir);
-+			slots += copy;
-+			size -= copy;
- 			if (!size)
- 				break;
- 			n++;
-diff --git a/fs/fat/fatent.c b/fs/fat/fatent.c
-index 265983635f2be..3647c65a0f482 100644
---- a/fs/fat/fatent.c
-+++ b/fs/fat/fatent.c
-@@ -388,8 +388,11 @@ static int fat_mirror_bhs(struct super_block *sb, struct buffer_head **bhs,
- 				err = -ENOMEM;
- 				goto error;
- 			}
-+			/* Avoid race with userspace read via bdev */
-+			lock_buffer(c_bh);
- 			memcpy(c_bh->b_data, bhs[n]->b_data, sb->s_blocksize);
- 			set_buffer_uptodate(c_bh);
-+			unlock_buffer(c_bh);
- 			mark_buffer_dirty_inode(c_bh, sbi->fat_inode);
- 			if (sb->s_flags & SB_SYNCHRONOUS)
- 				err = sync_dirty_buffer(c_bh);
+ 	rockchip->vpcie0v9 = devm_regulator_get_optional(dev, "vpcie0v9");
+ 	if (IS_ERR(rockchip->vpcie0v9)) {
+-		if (PTR_ERR(rockchip->vpcie0v9) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
++		if (PTR_ERR(rockchip->vpcie0v9) != -ENODEV)
++			return PTR_ERR(rockchip->vpcie0v9);
+ 		dev_info(dev, "no vpcie0v9 regulator found\n");
+ 	}
+ 
 -- 
 2.20.1
 
