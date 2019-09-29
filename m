@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A5CC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FAEC32793
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB92F218AC
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 117402082F
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:58:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569765491;
-	bh=GdIffLFp64U+qmVRRNCys33kBb0lfwiyi8JcL2Ho3nY=;
+	s=default; t=1569765496;
+	bh=xSVCcNYPoiddy2ru/RSdMNMGPSvUvg4ndjubIp2ZvdU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q5jKkqLEHcBRoKZkYiQFaTitfPsQADILHSPVocjDAMsBR2TMA8+EATP1AJTSsKAwu
-	 USor9FuX2xNNdVjYjM0Jd1ouE7bIxjsmgY4immbNA2rN4kp4RyLgYg3hCWZcI3dcvf
-	 P49gHzY3oJhDYawdNrZBtdzFoxkAj+EKJUTGcIK8=
+	b=xZNQ5650+SBhTW/1pnHGCK1ZZi3EN9NxvokKHfhF/6ecQ7EO442ucZA64iWWWSY8N
+	 saZHCzxKkxSvEGh7w0/e80pqzwrxGem8+kxv7VJSupFQIL7uGoA/EnxsSwv2LBR1Yp
+	 83Wlas5R8RwimwDA5XN0QFCncLcF6Yj2gIso3YpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729432AbfI2N6L (ORCPT
+        id S1729446AbfI2N6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 09:58:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38736 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 09:58:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729294AbfI2N6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 09:58:09 -0400
+        id S1729294AbfI2N6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 09:58:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A9BC21882;
-        Sun, 29 Sep 2019 13:58:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFD172082F;
+        Sun, 29 Sep 2019 13:58:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569765489;
-        bh=GdIffLFp64U+qmVRRNCys33kBb0lfwiyi8JcL2Ho3nY=;
+        s=default; t=1569765492;
+        bh=xSVCcNYPoiddy2ru/RSdMNMGPSvUvg4ndjubIp2ZvdU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xMH9AaGGtzkPxYdD7RuwUUyq5ddF7o+Lz98kfeLxdhaUYreqm9bGCadmrPfz8j/mq
-         GKz+5JjYApggN8nO2U3hG6+5Cnvxwi8Mu/+fGpoApZ/wtTH39eBvNjXAuFOFWjn65F
-         3VAXlULlccylxQkqzjFqSGtkWunyi8WY5v8iPHqs=
+        b=ex6C+k+qaRy+lS6wBXMfw2k2NNEiSSkSVdYXHqJa4IbmaSlpg/ARMCX++c+w3MgZF
+         ae96NzSnvcBQR4BGPwLAoubx/cDjQHfxdvIXGYPZ9RQPbpwtywdXIYHc8WHc0PFuiA
+         WKzzbkT3lD4WVERqZ0gnB8k+Hlaznf06gfnqTHno=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tariq Toukan <tariqt@mellanox.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
         Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.19 19/63] net/mlx5e: XDP, Avoid checksum complete when XDP prog is loaded
-Date:   Sun, 29 Sep 2019 15:53:52 +0200
-Message-Id: <20190929135035.712772979@linuxfoundation.org>
+Subject: [PATCH 4.19 20/63] net/mlx5e: Rx, Fixup skb checksum for packets with tail padding
+Date:   Sun, 29 Sep 2019 15:53:53 +0200
+Message-Id: <20190929135035.936857742@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190929135031.382429403@linuxfoundation.org>
 References: <20190929135031.382429403@linuxfoundation.org>
@@ -61,62 +62,181 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Saeed Mahameed <saeedm@mellanox.com>
 
-[ Upstream commit 5d0bb3bac4b9f6c22280b04545626fdfd99edc6b ]
+[ Upstream commit 0aa1d18615c163f92935b806dcaff9157645233a ]
 
-XDP programs might change packets data contents which will make the
-reported skb checksum (checksum complete) invalid.
+When an ethernet frame with ip payload is padded, the padding octets are
+not covered by the hardware checksum.
 
-When XDP programs are loaded/unloaded set/clear rx RQs
-MLX5E_RQ_STATE_NO_CSUM_COMPLETE flag.
+Prior to the cited commit, skb checksum was forced to be CHECKSUM_NONE
+when padding is detected. After it, the kernel will try to trim the
+padding bytes and subtract their checksum from skb->csum.
 
-Fixes: 86994156c736 ("net/mlx5e: XDP fast RX drop bpf programs support")
+In this patch we fixup skb->csum for any ip packet with tail padding of
+any size, if any padding found.
+FCS case is just one special case of this general purpose patch, hence,
+it is removed.
+
+Fixes: 88078d98d1bb ("net: pskb_trim_rcsum() and CHECKSUM_COMPLETE are friends"),
+Cc: Eric Dumazet <edumazet@google.com>
 Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
 Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c |    3 ++-
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c    |    6 +++++-
- drivers/net/ethernet/mellanox/mlx5/core/en_rx.c      |    3 ++-
- 3 files changed, 9 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_rx.c    |   79 +++++++++++++++++----
+ drivers/net/ethernet/mellanox/mlx5/core/en_stats.c |    6 +
+ drivers/net/ethernet/mellanox/mlx5/core/en_stats.h |    4 +
+ 3 files changed, 74 insertions(+), 15 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-@@ -1517,7 +1517,8 @@ static int set_pflag_rx_no_csum_complete
- 	struct mlx5e_channel *c;
- 	int i;
- 
--	if (!test_bit(MLX5E_STATE_OPENED, &priv->state))
-+	if (!test_bit(MLX5E_STATE_OPENED, &priv->state) ||
-+	    priv->channels.params.xdp_prog)
- 		return 0;
- 
- 	for (i = 0; i < channels->num; i++) {
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -934,7 +934,11 @@ static int mlx5e_open_rq(struct mlx5e_ch
- 	if (params->rx_dim_enabled)
- 		__set_bit(MLX5E_RQ_STATE_AM, &c->rq.state);
- 
--	if (params->pflags & MLX5E_PFLAG_RX_NO_CSUM_COMPLETE)
-+	/* We disable csum_complete when XDP is enabled since
-+	 * XDP programs might manipulate packets which will render
-+	 * skb->checksum incorrect.
-+	 */
-+	if (MLX5E_GET_PFLAG(params, MLX5E_PFLAG_RX_NO_CSUM_COMPLETE) || c->xdp)
- 		__set_bit(MLX5E_RQ_STATE_NO_CSUM_COMPLETE, &c->rq.state);
- 
- 	return 0;
 --- a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
 +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
-@@ -754,7 +754,8 @@ static inline void mlx5e_handle_csum(str
+@@ -714,17 +714,6 @@ static inline void mlx5e_enable_ecn(stru
+ 	rq->stats->ecn_mark += !!rc;
+ }
+ 
+-static u32 mlx5e_get_fcs(const struct sk_buff *skb)
+-{
+-	const void *fcs_bytes;
+-	u32 _fcs_bytes;
+-
+-	fcs_bytes = skb_header_pointer(skb, skb->len - ETH_FCS_LEN,
+-				       ETH_FCS_LEN, &_fcs_bytes);
+-
+-	return __get_unaligned_cpu32(fcs_bytes);
+-}
+-
+ static u8 get_ip_proto(struct sk_buff *skb, int network_depth, __be16 proto)
+ {
+ 	void *ip_p = skb->data + network_depth;
+@@ -735,6 +724,68 @@ static u8 get_ip_proto(struct sk_buff *s
+ 
+ #define short_frame(size) ((size) <= ETH_ZLEN + ETH_FCS_LEN)
+ 
++#define MAX_PADDING 8
++
++static void
++tail_padding_csum_slow(struct sk_buff *skb, int offset, int len,
++		       struct mlx5e_rq_stats *stats)
++{
++	stats->csum_complete_tail_slow++;
++	skb->csum = csum_block_add(skb->csum,
++				   skb_checksum(skb, offset, len, 0),
++				   offset);
++}
++
++static void
++tail_padding_csum(struct sk_buff *skb, int offset,
++		  struct mlx5e_rq_stats *stats)
++{
++	u8 tail_padding[MAX_PADDING];
++	int len = skb->len - offset;
++	void *tail;
++
++	if (unlikely(len > MAX_PADDING)) {
++		tail_padding_csum_slow(skb, offset, len, stats);
++		return;
++	}
++
++	tail = skb_header_pointer(skb, offset, len, tail_padding);
++	if (unlikely(!tail)) {
++		tail_padding_csum_slow(skb, offset, len, stats);
++		return;
++	}
++
++	stats->csum_complete_tail++;
++	skb->csum = csum_block_add(skb->csum, csum_partial(tail, len, 0), offset);
++}
++
++static void
++mlx5e_skb_padding_csum(struct sk_buff *skb, int network_depth, __be16 proto,
++		       struct mlx5e_rq_stats *stats)
++{
++	struct ipv6hdr *ip6;
++	struct iphdr   *ip4;
++	int pkt_len;
++
++	switch (proto) {
++	case htons(ETH_P_IP):
++		ip4 = (struct iphdr *)(skb->data + network_depth);
++		pkt_len = network_depth + ntohs(ip4->tot_len);
++		break;
++	case htons(ETH_P_IPV6):
++		ip6 = (struct ipv6hdr *)(skb->data + network_depth);
++		pkt_len = network_depth + sizeof(*ip6) + ntohs(ip6->payload_len);
++		break;
++	default:
++		return;
++	}
++
++	if (likely(pkt_len >= skb->len))
++		return;
++
++	tail_padding_csum(skb, pkt_len, stats);
++}
++
+ static inline void mlx5e_handle_csum(struct net_device *netdev,
+ 				     struct mlx5_cqe64 *cqe,
+ 				     struct mlx5e_rq *rq,
+@@ -783,10 +834,8 @@ static inline void mlx5e_handle_csum(str
+ 			skb->csum = csum_partial(skb->data + ETH_HLEN,
+ 						 network_depth - ETH_HLEN,
+ 						 skb->csum);
+-		if (unlikely(netdev->features & NETIF_F_RXFCS))
+-			skb->csum = csum_block_add(skb->csum,
+-						   (__force __wsum)mlx5e_get_fcs(skb),
+-						   skb->len - ETH_FCS_LEN);
++
++		mlx5e_skb_padding_csum(skb, network_depth, proto, stats);
+ 		stats->csum_complete++;
  		return;
  	}
- 
--	if (unlikely(test_bit(MLX5E_RQ_STATE_NO_CSUM_COMPLETE, &rq->state)))
-+	/* True when explicitly set via priv flag, or XDP prog is loaded */
-+	if (test_bit(MLX5E_RQ_STATE_NO_CSUM_COMPLETE, &rq->state))
- 		goto csum_unnecessary;
- 
- 	/* CQE csum doesn't cover padding octets in short ethernet
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
+@@ -58,6 +58,8 @@ static const struct counter_desc sw_stat
+ 	{ MLX5E_DECLARE_STAT(struct mlx5e_sw_stats, rx_csum_unnecessary) },
+ 	{ MLX5E_DECLARE_STAT(struct mlx5e_sw_stats, rx_csum_none) },
+ 	{ MLX5E_DECLARE_STAT(struct mlx5e_sw_stats, rx_csum_complete) },
++	{ MLX5E_DECLARE_STAT(struct mlx5e_sw_stats, rx_csum_complete_tail) },
++	{ MLX5E_DECLARE_STAT(struct mlx5e_sw_stats, rx_csum_complete_tail_slow) },
+ 	{ MLX5E_DECLARE_STAT(struct mlx5e_sw_stats, rx_csum_unnecessary_inner) },
+ 	{ MLX5E_DECLARE_STAT(struct mlx5e_sw_stats, rx_xdp_drop) },
+ 	{ MLX5E_DECLARE_STAT(struct mlx5e_sw_stats, rx_xdp_redirect) },
+@@ -149,6 +151,8 @@ void mlx5e_grp_sw_update_stats(struct ml
+ 		s->rx_removed_vlan_packets += rq_stats->removed_vlan_packets;
+ 		s->rx_csum_none	+= rq_stats->csum_none;
+ 		s->rx_csum_complete += rq_stats->csum_complete;
++		s->rx_csum_complete_tail += rq_stats->csum_complete_tail;
++		s->rx_csum_complete_tail_slow += rq_stats->csum_complete_tail_slow;
+ 		s->rx_csum_unnecessary += rq_stats->csum_unnecessary;
+ 		s->rx_csum_unnecessary_inner += rq_stats->csum_unnecessary_inner;
+ 		s->rx_xdp_drop     += rq_stats->xdp_drop;
+@@ -1139,6 +1143,8 @@ static const struct counter_desc rq_stat
+ 	{ MLX5E_DECLARE_RX_STAT(struct mlx5e_rq_stats, packets) },
+ 	{ MLX5E_DECLARE_RX_STAT(struct mlx5e_rq_stats, bytes) },
+ 	{ MLX5E_DECLARE_RX_STAT(struct mlx5e_rq_stats, csum_complete) },
++	{ MLX5E_DECLARE_RX_STAT(struct mlx5e_rq_stats, csum_complete_tail) },
++	{ MLX5E_DECLARE_RX_STAT(struct mlx5e_rq_stats, csum_complete_tail_slow) },
+ 	{ MLX5E_DECLARE_RX_STAT(struct mlx5e_rq_stats, csum_unnecessary) },
+ 	{ MLX5E_DECLARE_RX_STAT(struct mlx5e_rq_stats, csum_unnecessary_inner) },
+ 	{ MLX5E_DECLARE_RX_STAT(struct mlx5e_rq_stats, csum_none) },
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.h
+@@ -71,6 +71,8 @@ struct mlx5e_sw_stats {
+ 	u64 rx_csum_unnecessary;
+ 	u64 rx_csum_none;
+ 	u64 rx_csum_complete;
++	u64 rx_csum_complete_tail;
++	u64 rx_csum_complete_tail_slow;
+ 	u64 rx_csum_unnecessary_inner;
+ 	u64 rx_xdp_drop;
+ 	u64 rx_xdp_redirect;
+@@ -180,6 +182,8 @@ struct mlx5e_rq_stats {
+ 	u64 packets;
+ 	u64 bytes;
+ 	u64 csum_complete;
++	u64 csum_complete_tail;
++	u64 csum_complete_tail_slow;
+ 	u64 csum_unnecessary;
+ 	u64 csum_unnecessary_inner;
+ 	u64 csum_none;
 
 
