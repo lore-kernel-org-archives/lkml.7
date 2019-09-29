@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63041C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A8EC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3014B21835
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AE3121835
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778982;
-	bh=9T7/eaUJAeVaHklqNckNEqYtv7SCBRVS9WgcTLmyNp4=;
+	s=default; t=1569778985;
+	bh=F8RTzDc+fECkTRNigXyurxf3VNTlrsOpbjYpgckPm38=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eXgRzaU4/AAfW6k13IXTraC/5oKNsfmCE7fr5BFptnFkMmuh5xc75EyNU9w7vLM/r
-	 vKibHxAOPIOhaXEtrQtzH/SFs5vlAvfWQMfSp1WKxl55LPJyy+flppoOmjhpxY8u/l
-	 lS7TK7tD+rgwa9CItacUFyth2QNdBlrqfE/iCypk=
+	b=1tAoLDtkOUSK6zcqLTxUWz62xQU9GHMKGudx/E1epNuSMkPvMTBSBJql/sOPO5WOK
+	 erEl3SLjVXJK0sOvZ6hPjd/0noRzNB+WzRj9RLktq0MYGleC1N2UrBITo2entllfq5
+	 0jV8YApg+IwncMadJAhAvSXiz33Id+Ax98i3epYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729483AbfI2Rbv (ORCPT
+        id S1729466AbfI2Rbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:31:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42342 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:31:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729443AbfI2Rbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:31:47 -0400
+        id S1729400AbfI2Rbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:31:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B59021925;
-        Sun, 29 Sep 2019 17:31:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA31121906;
+        Sun, 29 Sep 2019 17:31:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778306;
-        bh=9T7/eaUJAeVaHklqNckNEqYtv7SCBRVS9WgcTLmyNp4=;
+        s=default; t=1569778305;
+        bh=F8RTzDc+fECkTRNigXyurxf3VNTlrsOpbjYpgckPm38=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Roe9f3WQO5UWgeC99mVva5nP6r4X6p6oi/VDBxZ6drPVm9gFdm81IGtbONmnxNM+W
-         iJa/buD41uvOpBRhD7Ua/P8RL7SPVF5EiqSXavZNpk6+rsnTTkVKb/JJX0NZs4vB/T
-         ghdSUhqV5aB2nX4YD8O1gbckLxCoVC0d2udhNh8o=
+        b=bDaE5NSM3FVA7TK9eB/IZuU9lbf+p4wlFN+y8ttg5ZMVQmxuAg1tPSe2Pc5Mf8n8m
+         ONMQvnVJTHd+d3Ec92HD9RIlKWTpRXH0SyEO3R8IIJ1x9/jgJEBEpEIelrYmXr8VgV
+         uyAdF0FSCcZvHdTxEf5ygdy3F8YPm+QKz7Lo864Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Krzysztof Wilczynski <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 25/49] PCI: Add pci_info_ratelimited() to ratelimit PCI separately
-Date:   Sun, 29 Sep 2019 13:30:25 -0400
-Message-Id: <20190929173053.8400-25-sashal@kernel.org>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Sasha Levin <sashal@kernel.org>, selinux@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 24/49] selinux: fix residual uses of current_security() for the SELinux blob
+Date:   Sun, 29 Sep 2019 13:30:24 -0400
+Message-Id: <20190929173053.8400-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173053.8400-1-sashal@kernel.org>
 References: <20190929173053.8400-1-sashal@kernel.org>
@@ -59,53 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Wilczynski <kw@linux.com>
+From: Stephen Smalley <sds@tycho.nsa.gov>
 
-[ Upstream commit 7f1c62c443a453deb6eb3515e3c05650ffe0dcf0 ]
+[ Upstream commit 169ce0c081cd85f78388bb6c1638c1ad7b81bde7 ]
 
-Do not use printk_ratelimit() in drivers/pci/pci.c as it shares the rate
-limiting state with all other callers to the printk_ratelimit().
+We need to use selinux_cred() to fetch the SELinux cred blob instead
+of directly using current->security or current_security().  There
+were a couple of lingering uses of current_security() in the SELinux code
+that were apparently missed during the earlier conversions. IIUC, this
+would only manifest as a bug if multiple security modules including
+SELinux are enabled and SELinux is not first in the lsm order. After
+this change, there appear to be no other users of current_security()
+in-tree; perhaps we should remove it altogether.
 
-Add pci_info_ratelimited() (similar to pci_notice_ratelimited() added in
-the commit a88a7b3eb076 ("vfio: Use dev_printk() when possible")) and use
-it instead of printk_ratelimit() + pci_info().
-
-Link: https://lore.kernel.org/r/20190825224616.8021-1-kw@linux.com
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Fixes: bbd3662a8348 ("Infrastructure management of the cred security blob")
+Signed-off-by: Stephen Smalley <sds@tycho.nsa.gov>
+Acked-by: Casey Schaufler <casey@schaufler-ca.com>
+Reviewed-by: James Morris <jamorris@linux.microsoft.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci.c   | 4 ++--
- include/linux/pci.h | 3 +++
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ security/selinux/hooks.c          |  2 +-
+ security/selinux/include/objsec.h | 20 ++++++++++----------
+ 2 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 1b27b5af3d552..1f17da3dfeac5 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -890,8 +890,8 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index 74dd46de01b6a..e755174647866 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -3403,7 +3403,7 @@ static int selinux_inode_copy_up_xattr(const char *name)
+ static int selinux_kernfs_init_security(struct kernfs_node *kn_dir,
+ 					struct kernfs_node *kn)
+ {
+-	const struct task_security_struct *tsec = current_security();
++	const struct task_security_struct *tsec = selinux_cred(current_cred());
+ 	u32 parent_sid, newsid, clen;
+ 	int rc;
+ 	char *context;
+diff --git a/security/selinux/include/objsec.h b/security/selinux/include/objsec.h
+index 91c5395dd20c2..586b7abd0aa73 100644
+--- a/security/selinux/include/objsec.h
++++ b/security/selinux/include/objsec.h
+@@ -37,16 +37,6 @@ struct task_security_struct {
+ 	u32 sockcreate_sid;	/* fscreate SID */
+ };
  
- 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
- 	dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
--	if (dev->current_state != state && printk_ratelimit())
--		pci_info(dev, "Refused to change power state, currently in D%d\n",
-+	if (dev->current_state != state)
-+		pci_info_ratelimited(dev, "Refused to change power state, currently in D%d\n",
- 			 dev->current_state);
+-/*
+- * get the subjective security ID of the current task
+- */
+-static inline u32 current_sid(void)
+-{
+-	const struct task_security_struct *tsec = current_security();
+-
+-	return tsec->sid;
+-}
+-
+ enum label_initialized {
+ 	LABEL_INVALID,		/* invalid or not initialized */
+ 	LABEL_INITIALIZED,	/* initialized */
+@@ -185,4 +175,14 @@ static inline struct ipc_security_struct *selinux_ipc(
+ 	return ipc->security + selinux_blob_sizes.lbs_ipc;
+ }
  
- 	/*
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 82e4cd1b7ac3c..ac8a6c4e17923 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2435,4 +2435,7 @@ void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
- #define pci_notice_ratelimited(pdev, fmt, arg...) \
- 	dev_notice_ratelimited(&(pdev)->dev, fmt, ##arg)
- 
-+#define pci_info_ratelimited(pdev, fmt, arg...) \
-+	dev_info_ratelimited(&(pdev)->dev, fmt, ##arg)
++/*
++ * get the subjective security ID of the current task
++ */
++static inline u32 current_sid(void)
++{
++	const struct task_security_struct *tsec = selinux_cred(current_cred());
 +
- #endif /* LINUX_PCI_H */
++	return tsec->sid;
++}
++
+ #endif /* _SELINUX_OBJSEC_H_ */
 -- 
 2.20.1
 
