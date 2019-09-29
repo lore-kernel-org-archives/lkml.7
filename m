@@ -2,179 +2,350 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1FBC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 01:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA00BC32793
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 01:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5905B214AE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 01:13:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="E4dqtpH7"
+	by mail.kernel.org (Postfix) with ESMTP id 73E6D214DE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 01:18:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728856AbfI2BNE (ORCPT
+        id S1728845AbfI2BSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Sep 2019 21:13:04 -0400
-Received: from mail-eopbgr20058.outbound.protection.outlook.com ([40.107.2.58]:3054
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        Sat, 28 Sep 2019 21:18:44 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:45984 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728601AbfI2BNE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Sep 2019 21:13:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AQhHYk4aRNBdq/YfP+7vQdttwm3ZcEPlS7fks6moIL2n1B1Q3PW36vKmwG02wmoJOzc204O+cauD/M5n0sPHTMkUhXycj1InIUHsbNhD1TpwjlNG06N/H72JcEzlsaBHIP3gEQihApYO7ZvKhxLCNK8QefnJXjxB1ctsywiGQjbmR3WMkcb9r7/tXlC+MZ6oLAy7agNgw3RR4Z9vTCWUBtXzNERFFP2Vk1Q3+hWmOYr4XfmzP7XNxUm8lZL/532b2e892K86ojus+dBkAci/ZY/f6d0Hyqnd7Xjg4ZimMR0zWuUUMkpjCyt+z/FcqJybZz2l1vOJrNXTzfDjBaEe5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d0rfWE9NhDLQGy/IThYSNVrqtPYuozVqMZgghShHS0E=;
- b=YLOOqASOAtO055LetssByThdcxwtbnOvqNi+VjmnrZwxxjkqMXbe12rWn8IucfCjzc7GkpHB4NouPCBj9Wgn9XMwta3qaIWnhyEkbD5DnkcWQwV0VugvUgeNnfYWu2z5pxn8IDveOUO4AekKK/pPuclfIPSBDPL/j9hwNcuaTCYlDdcMAp830JCLIeujICRL6P81pNmdMMvbNg8jFhD+w/2sqnckjdh+lnGSEufuYunB5AU1gOpINzNB3n3Px8fPmmDeb9deWPL34mtUn77fzC3me6wcCVLP33cFOQB/6sGz40suKYAM4lEUHoBx2ccuZG7fBOJTnlrC78f8/VXOlw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d0rfWE9NhDLQGy/IThYSNVrqtPYuozVqMZgghShHS0E=;
- b=E4dqtpH7rypy7K+1D4dT8zGwcsfeTMYzB7F+o/XwH2P0ZDWXwiZm8O34zC19U4iry0hmGD5vF/ca+NsfcBcdFlnFyTt/Pyt3m6mdHu7aOBNSv+IVhkpG7QWUrk0wcie5gOsYJMqRiN9txCJkjEp6+8WATf6vKXCDs+UPqCe12BA=
-Received: from AM6PR0402MB3911.eurprd04.prod.outlook.com (52.133.30.10) by
- AM6PR0402MB3639.eurprd04.prod.outlook.com (52.133.28.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.20; Sun, 29 Sep 2019 01:12:57 +0000
-Received: from AM6PR0402MB3911.eurprd04.prod.outlook.com
- ([fe80::b0c2:4fbb:fae7:991]) by AM6PR0402MB3911.eurprd04.prod.outlook.com
- ([fe80::b0c2:4fbb:fae7:991%5]) with mapi id 15.20.2305.017; Sun, 29 Sep 2019
- 01:12:57 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Marco Felsch <m.felsch@pengutronix.de>
-CC:     Aisheng Dong <aisheng.dong@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH] firmware: imx: Skip return value check for some special
- SCU firmware APIs
-Thread-Topic: [PATCH] firmware: imx: Skip return value check for some special
- SCU firmware APIs
-Thread-Index: AQHVc4lT/ErvPybCJUCbZ2x7mLGjsqdB1xcg
-Date:   Sun, 29 Sep 2019 01:12:57 +0000
-Message-ID: <AM6PR0402MB39115E54D8879FFBFF5CB798F5830@AM6PR0402MB3911.eurprd04.prod.outlook.com>
-References: <1569406066-16626-1-git-send-email-Anson.Huang@nxp.com>
- <20190926075914.i7tsd3cbpitrqe4q@pengutronix.de>
- <DB3PR0402MB391683202692BEAE4D2CD9C1F5860@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20190926100558.egils3ds37m3s5wo@pengutronix.de>
- <VI1PR04MB702336F648EA1BF0E4AC584BEE860@VI1PR04MB7023.eurprd04.prod.outlook.com>
- <DB3PR0402MB391675F9BF6FCA315B124BEBF5810@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20190927090609.fyxdekkzrco7memt@pengutronix.de>
- <VI1PR04MB702397C54519DC27CFF05A78EE810@VI1PR04MB7023.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR04MB702397C54519DC27CFF05A78EE810@VI1PR04MB7023.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ba4101f0-bd5b-4d15-c2e8-08d7447a29e4
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: AM6PR0402MB3639:|AM6PR0402MB3639:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR0402MB3639CFEE384C0E2D80C98C8BF5830@AM6PR0402MB3639.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 017589626D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(346002)(376002)(396003)(39860400002)(189003)(199004)(8936002)(66476007)(110136005)(54906003)(66946007)(66556008)(71200400001)(71190400001)(486006)(74316002)(7696005)(99286004)(3846002)(6116002)(11346002)(5660300002)(76176011)(446003)(44832011)(186003)(476003)(256004)(66446008)(64756008)(76116006)(25786009)(9686003)(81166006)(81156014)(229853002)(6246003)(66066001)(102836004)(33656002)(26005)(53546011)(86362001)(6506007)(478600001)(316002)(4326008)(55016002)(52536014)(2906002)(6436002)(14454004)(7736002)(305945005)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR0402MB3639;H:AM6PR0402MB3911.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: R9heKuEaNZwdhHRRa5pi42DGB+ji0IYjCMwJWUF0Zvi9H0NzW1xU/DJx6KxV/xBd3hqf80oWyHp+AiUipQQAhcMrhJ9lRa9Xy6c1fVmX9WxTpSoNX0c0fM6l+AH5nF8j4XWsDKofK+nYmkCRv3gOnxbRKplwT3A1nDd1gXnQNivx18F1bk/u53Lw+jTgb66v0IYSrcAXcRHHSegZOnPW9A8BaRqySFVvJON2NayvDKRIraF8a06hhij2Z9+T1ZZUqWdzlCCXih1cu2ZCHyuzIC0CqSa2bU8WjG25q/N6hYdK74G+q8cLY95pob+0Ha1FF2cEuU4x+GOhXgILEOz/Cnod3oKkiGoQIM8WbzSE/HsBEWsNwitnOAryW/UtYoT9DJFTmpqg4rr9LtJD9U1thB8lH490ccPSSvqj37HR/XY=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1728569AbfI2BSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Sep 2019 21:18:44 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A4ED52E78899C66D0026;
+        Sun, 29 Sep 2019 09:18:41 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.439.0; Sun, 29 Sep 2019 09:18:34 +0800
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+To:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Minghuan Lian <Minghuan.Lian@nxp.com>,
+        Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Andrew Murray" <andrew.murray@arm.com>
+Subject: [PATCH v2] PCI: mobiveil: Fix csr_read/write build issue
+Date:   Sun, 29 Sep 2019 09:35:05 +0800
+Message-ID: <20190929013505.131396-1-wangkefeng.wang@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190927231504.GA13714@infradead.org>
+References: <20190927231504.GA13714@infradead.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba4101f0-bd5b-4d15-c2e8-08d7447a29e4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Sep 2019 01:12:57.4122
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1X8mqCX2xXQaPcFKsc6gZTYbD+U2Rr6Jqx4VCK78EGc+NUUCO/pxIf28mLYzQPQzpVH1OUeB2hE0W/ImL3Ex9A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3639
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIExlb25hcmQvTWFyY28NCglJIHRoaW5rIHdlIHNob3VsZCBnZXQgYWxpZ25lZCBmaXJzdCwg
-bXkgb3JpZ2luYWwgdGhvdWdodCBpcyB0byBsZXQgU0NVIEFQSSBjYWxsZXIgTk9UIGF3YXJlIG9m
-IHRob3NlIHNwZWNpYWwgQVBJcywgc28gaGF2ZSB0byBkbyB0aGUgc3BlY2lhbCBoYW5kbGluZyBp
-biBpbXhfc2N1X2NhbGxfcnBjKCkuIEFuZCB0aGUgc2hvcnQgbG9vcCBjaGVjayBoYXMgdG8gYmUg
-dXNlZCB3aGljaCB3b3VsZCBpbXBhY3QgdGhlIHBlcmZvcm1hbmNlIGEgbGl0dGxlIGJpdCBJIHRo
-aW5rLiBCdXQgTGVvbmFyZCBzdGF0ZWQgdGhlIGNhbGxlciBzaG91bGQga25vdyB0aGUgU0NVIEZX
-IEFQSSdzIHVzYWdlLCBpZiBzbywgdGhlbiBJIHRoaW5rIHRoZSBzcGVjaWFsIGNhbGxlcnMgY2Fu
-IGp1c3Qgc2tpcCB0aGUgcmV0dXJuIHZhbHVlIGNoZWNrLCBhZGRpbmcgYSBjb21tZW50IHRvIGRl
-c2NyaWJlIHRoZSByZWFzb24sIHdvdWxkIGl0IGJlIG11Y2ggbW9yZSBlYXNpZXIgdGhhbiBjaGFu
-Z2luZyB0aGUgaW14X3NjdV9jYWxsX3JwYygpPyBPciBhbnkgb3RoZXIgc3VnZ2VzdGlvbj8NCg0K
-QW5zb24NCg0KPiBPbiAyNy4wOS4yMDE5IDEyOjA2LCBNYXJjbyBGZWxzY2ggd3JvdGU6DQo+ID4g
-SGkgQW5zb24sIExlb25hcmQsDQo+ID4NCj4gPiBPbiAxOS0wOS0yNyAwMToyMCwgQW5zb24gSHVh
-bmcgd3JvdGU6DQo+ID4+IEhpLCBMZW9uYXJkDQo+ID4+DQo+ID4+PiBPbiAyMDE5LTA5LTI2IDE6
-MDYgUE0sIE1hcmNvIEZlbHNjaCB3cm90ZToNCj4gPj4+PiBPbiAxOS0wOS0yNiAwODowMywgQW5z
-b24gSHVhbmcgd3JvdGU6DQo+ID4+Pj4+PiBPbiAxOS0wOS0yNSAxODowNywgQW5zb24gSHVhbmcg
-d3JvdGU6DQo+ID4+Pj4+Pj4gVGhlIFNDVSBmaXJtd2FyZSBkb2VzIE5PVCBhbHdheXMgaGF2ZSBy
-ZXR1cm4gdmFsdWUgc3RvcmVkIGluDQo+ID4+Pj4+Pj4gbWVzc2FnZSBoZWFkZXIncyBmdW5jdGlv
-biBlbGVtZW50IGV2ZW4gdGhlIEFQSSBoYXMgcmVzcG9uc2UNCj4gPj4+Pj4+PiBkYXRhLCB0aG9z
-ZSBzcGVjaWFsIEFQSXMgYXJlIGRlZmluZWQgYXMgdm9pZCBmdW5jdGlvbiBpbiBTQ1UNCj4gPj4+
-Pj4+PiBmaXJtd2FyZSwgc28gdGhleSBzaG91bGQgYmUgdHJlYXRlZCBhcyByZXR1cm4gc3VjY2Vz
-cyBhbHdheXMuDQo+ID4+Pj4+Pj4NCj4gPj4+Pj4+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBpbXhf
-c2NfcnBjX21zZyB3aGl0ZWxpc3RbXSA9IHsNCj4gPj4+Pj4+PiArCXsgLnN2YyA9IElNWF9TQ19S
-UENfU1ZDX01JU0MsIC5mdW5jID0NCj4gPj4+Pj4+IElNWF9TQ19NSVNDX0ZVTkNfVU5JUVVFX0lE
-IH0sDQo+ID4+Pj4+Pj4gKwl7IC5zdmMgPSBJTVhfU0NfUlBDX1NWQ19NSVNDLCAuZnVuYyA9DQo+
-ID4+Pj4+Pj4gK0lNWF9TQ19NSVNDX0ZVTkNfR0VUX0JVVFRPTl9TVEFUVVMgfSwgfTsNCj4gPj4+
-Pj4+DQo+ID4+Pj4+PiBJcyB0aGlzIGdvaW5nIHRvIGJlIGV4dGVuZGVkIGluIHRoZSBuZWFyIGZ1
-dHVyZT8gSSBzZWUgc29tZQ0KPiA+Pj4+Pj4gdXBjb21pbmcgcHJvYmxlbXMgaGVyZSBpZiBzb21l
-b25lIHVzZXMgYSBkaWZmZXJlbnQNCj4gPj4+Pj4+IHNjdS1mdzwtPmtlcm5lbCBjb21iaW5hdGlv
-biBhcyBueHAgd291bGQgc3VnZ2VzdC4NCj4gPj4+Pj4NCj4gPj4+Pj4gQ291bGQgYmUsIGJ1dCBJ
-IGNoZWNrZWQgdGhlIGN1cnJlbnQgQVBJcywgT05MWSB0aGVzZSAyIHdpbGwgYmUNCj4gPj4+Pj4g
-dXNlZCBpbiBMaW51eCBrZXJuZWwsIHNvIEkgT05MWSBhZGQgdGhlc2UgMiBBUElzIGZvciBub3cu
-DQo+ID4+Pj4NCj4gPj4+PiBPa2F5Lg0KPiA+Pj4+DQo+ID4+Pj4+IEhvd2V2ZXIsIGFmdGVyIHJl
-dGhpbmssIG1heWJlIHdlIHNob3VsZCBhZGQgYW5vdGhlciBpbXhfc2NfcnBjIEFQSQ0KPiA+Pj4+
-PiBmb3IgdGhvc2Ugc3BlY2lhbCBBUElzPyBUbyBhdm9pZCBjaGVja2luZyBpdCBmb3IgYWxsIHRo
-ZSBBUElzDQo+ID4+Pj4+IGNhbGxlZCB3aGljaA0KPiA+Pj4gbWF5IGltcGFjdCBzb21lIHBlcmZv
-cm1hbmNlLg0KPiA+Pj4+PiBTdGlsbCB1bmRlciBkaXNjdXNzaW9uLCBpZiB5b3UgaGF2ZSBiZXR0
-ZXIgaWRlYSwgcGxlYXNlIGFkdmlzZSwgdGhhbmtzIQ0KPiA+Pj4NCj4gPj4+IE15IHN1Z2dlc3Rp
-b24gaXMgdG8gcmVmYWN0b3IgdGhlIGNvZGUgYW5kIGFkZCBhIG5ldyBBUEkgZm9yIHRoZSB0aGlz
-DQo+ID4+PiAibm8gZXJyb3IgdmFsdWUiIGNvbnZlbnRpb24uIEludGVybmFsbHkgdGhleSBjYW4g
-Y2FsbCBhIGNvbW1vbg0KPiA+Pj4gZnVuY3Rpb24gd2l0aCBmbGFncy4NCj4gPj4NCj4gPj4+PiBB
-ZGRpbmcgYSBzcGVjaWFsIGFwaSBzaG91bGRuJ3QgYmUgdGhlIHJpZ2h0IGZpeC4gSW1hZ2luZSBp
-ZiBzb21lb25lDQo+ID4+Pj4gKG5vdCBhIG54cC1kZXZlbG9wZXIpIHdhbnRzIHRvIGFkZCBhIG5l
-dyBkcml2ZXIuIEhvdyBjb3VsZCBoZSBiZQ0KPiA+Pj4+IGV4cGVjdGVkIHRvIGtub3cgd2hpY2gg
-YXBpIGhlIHNob3VsZCB1c2UuIFRoZSBiZXR0ZXIgYWJicm9hY2ggd291bGQNCj4gPj4+PiBiZSB0
-byBmaXggdGhlIHNjdS1mdyBpbnN0ZWFkIG9mIGFkZGluZyBxdWlya3MuLg0KPiA+Pg0KPiA+PiBZ
-ZXMsIGZpeGluZyBTQ1UgRlcgaXMgdGhlIGJlc3Qgc29sdXRpb24sIGJ1dCB3ZSBoYXZlIHRhbGtl
-ZCB0byBTQ1UgRlcNCj4gPj4gb3duZXIsIHRoZSBTQ1UgRlcgcmVsZWFzZWQgaGFzIGJlZW4gZmlu
-YWxpemVkLCBzbyB0aGUgQVBJDQo+ID4+IGltcGxlbWVudGF0aW9uIGNhbiBOT1QgYmUgY2hhbmdl
-ZCwgYnV0IHRoZXkgd2lsbCBwYXkgYXR0ZW50aW9uIHRvDQo+ID4+IHRoaXMgaXNzdWUgZm9yIG5l
-dyBhZGRlZCBBUElzIGxhdGVyLiBUaGF0IG1lYW5zIHRoZSBudW1iZXIgb2YgQVBJcyBoYXZpbmcN
-Cj4gdGhpcyBpc3N1ZSBhIHZlcnkgbGltaXRlZC4NCj4gPg0KPiA+IFRoaXMgbWVhbnMgdGhvc2Ug
-QVBJcyB3aGljaCBhbHJlYWR5IGhhdmUgdGhpcyBidWcgd2lsbCBub3QgYmUgZml4ZWQ/DQo+ID4g
-SU1ITyB0aGlzIHNvdW5kcyBhIGJpdCB3ZWlyZCBzaW5jZSB0aGlzIGlzIGEgY2hhbmdlYWJsZSBw
-ZWFjZSBvZiBjb2RlDQo+ID4gOykNCj4gDQo+IEl0J3Mgbm90IGEgYnVnLCBpdCdzIGEgZG9jdW1l
-bnRlZCBmZWF0dXJlIDspDQo+IA0KPiA+Pj4gUmlnaHQgbm93IGRldmVsb3BlcnMgd2hvIHdhbnQg
-dG8gbWFrZSBTQ0ZXIGNhbGxzIGluIHVwc3RyZWFtIG5lZWQgdG8NCj4gPj4+IGRlZmluZSB0aGUg
-bWVzc2FnZSBzdHJ1Y3QgaW4gdGhlaXIgZHJpdmVyIGJhc2VkIG9uIHByb3RvY29sDQo+IGRvY3Vt
-ZW50YXRpb24uDQo+ID4+PiBUaGlzIGluY2x1ZGVzOg0KPiA+Pj4NCj4gPj4+ICogQmluYXJ5IGxh
-eW91dCBvZiB0aGUgbWVzc2FnZSAoYSBwYWNrZWQgc3RydWN0KQ0KPiA+Pj4gKiBJZiB0aGUgbWVz
-c2FnZSBoYXMgYSByZXNwb25zZSAoYWxyZWFkeSBhIGJvb2wgZmxhZykNCj4gPj4+ICogSWYgYW4g
-ZXJyb3IgY29kZSBpcyByZXR1cm5lZCAodGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIGl0KQ0K
-PiA+DQo+ID4gV2h5IHNob3VsZCBJIHNwZWNpZnkgaWYgYSBlcnJvciBjb2RlIGlzIHJldHVybmVk
-Pw0KPiANCj4gQmVjYXVzZSB5b3UncmUgYWxyZWFkeSBkZWZpbmluZyB0aGUgbWVzc2FnZSBzdHJ1
-Y3QgYW5kIHlvdSdyZSBhbHJlYWR5DQo+IHNwZWNpZnlpbmcgaWYgYSByZXNwb25zZSBpcyByZXF1
-aXJlZC4NCj4gDQo+IFRoZSBhc3N1bXB0aW9uIGlzIHRoYXQgYW55b25lIGFkZGluZyBhIFNDRlcg
-Y2FsbCB0byBhIGRyaXZlciBpcyBhbHJlYWR5DQo+IGxvb2tpbmcgYXQgU0NGVyBkb2N1bWVudGF0
-aW9uIHdoaWNoIGRlc2NyaWJlcyB0aGUgYmluYXJ5IG1lc3NhZ2UgZm9ybWF0Lg0KPiANCj4gLS0N
-Cj4gUmVnYXJkcywNCj4gTGVvbmFyZA0K
+The riscv has csr_read/write macro, see arch/riscv/include/asm/csr.h,
+the same function naming will cause build error, using such generic names
+in a driver is bad, rename csr_[read,write][l,] to mobiveil_csr_read/write
+to fix it.
+
+drivers/pci/controller/pcie-mobiveil.c:238:69: error: macro "csr_read" passed 3 arguments, but takes just 1
+ static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
+
+drivers/pci/controller/pcie-mobiveil.c:253:80: error: macro "csr_write" passed 4 arguments, but takes just 2
+ static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size)
+
+Cc: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Minghuan Lian <Minghuan.Lian@nxp.com>
+Cc: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Andrew Murray <andrew.murray@arm.com> 
+Fixes: bcbe0d9a8d93 ("PCI: mobiveil: Unify register accessors")
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+---
+
+v2:
+- using mobiveil prefix suggested by Andrew and Christoph 
+
+ drivers/pci/controller/pcie-mobiveil.c | 115 +++++++++++++------------
+ 1 file changed, 58 insertions(+), 57 deletions(-)
+
+diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+index a45a6447b01d..5e6144b0fb95 100644
+--- a/drivers/pci/controller/pcie-mobiveil.c
++++ b/drivers/pci/controller/pcie-mobiveil.c
+@@ -235,7 +235,7 @@ static int mobiveil_pcie_write(void __iomem *addr, int size, u32 val)
+ 	return PCIBIOS_SUCCESSFUL;
+ }
+ 
+-static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
++static u32 mobiveil_csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
+ {
+ 	void *addr;
+ 	u32 val;
+@@ -250,7 +250,8 @@ static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
+ 	return val;
+ }
+ 
+-static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size)
++static void mobiveil_csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off,
++			       size_t size)
+ {
+ 	void *addr;
+ 	int ret;
+@@ -262,19 +263,19 @@ static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size)
+ 		dev_err(&pcie->pdev->dev, "write CSR address failed\n");
+ }
+ 
+-static u32 csr_readl(struct mobiveil_pcie *pcie, u32 off)
++static u32 mobiveil_csr_readl(struct mobiveil_pcie *pcie, u32 off)
+ {
+-	return csr_read(pcie, off, 0x4);
++	return mobiveil_csr_read(pcie, off, 0x4);
+ }
+ 
+-static void csr_writel(struct mobiveil_pcie *pcie, u32 val, u32 off)
++static void mobiveil_csr_writel(struct mobiveil_pcie *pcie, u32 val, u32 off)
+ {
+-	csr_write(pcie, val, off, 0x4);
++	mobiveil_csr_write(pcie, val, off, 0x4);
+ }
+ 
+ static bool mobiveil_pcie_link_up(struct mobiveil_pcie *pcie)
+ {
+-	return (csr_readl(pcie, LTSSM_STATUS) &
++	return (mobiveil_csr_readl(pcie, LTSSM_STATUS) &
+ 		LTSSM_STATUS_L0_MASK) == LTSSM_STATUS_L0;
+ }
+ 
+@@ -323,7 +324,7 @@ static void __iomem *mobiveil_pcie_map_bus(struct pci_bus *bus,
+ 		PCI_SLOT(devfn) << PAB_DEVICE_SHIFT |
+ 		PCI_FUNC(devfn) << PAB_FUNCTION_SHIFT;
+ 
+-	csr_writel(pcie, value, PAB_AXI_AMAP_PEX_WIN_L(WIN_NUM_0));
++	mobiveil_csr_writel(pcie, value, PAB_AXI_AMAP_PEX_WIN_L(WIN_NUM_0));
+ 
+ 	return pcie->config_axi_slave_base + where;
+ }
+@@ -353,13 +354,13 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+ 	chained_irq_enter(chip, desc);
+ 
+ 	/* read INTx status */
+-	val = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
+-	mask = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
++	val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
++	mask = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+ 	intr_status = val & mask;
+ 
+ 	/* Handle INTx */
+ 	if (intr_status & PAB_INTP_INTX_MASK) {
+-		shifted_status = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
++		shifted_status = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
+ 		shifted_status &= PAB_INTP_INTX_MASK;
+ 		shifted_status >>= PAB_INTX_START;
+ 		do {
+@@ -373,12 +374,12 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+ 							    bit);
+ 
+ 				/* clear interrupt handled */
+-				csr_writel(pcie, 1 << (PAB_INTX_START + bit),
+-					   PAB_INTP_AMBA_MISC_STAT);
++				mobiveil_csr_writel(pcie, 1 << (PAB_INTX_START + bit),
++						    PAB_INTP_AMBA_MISC_STAT);
+ 			}
+ 
+-			shifted_status = csr_readl(pcie,
+-						   PAB_INTP_AMBA_MISC_STAT);
++			shifted_status = mobiveil_csr_readl(pcie,
++							    PAB_INTP_AMBA_MISC_STAT);
+ 			shifted_status &= PAB_INTP_INTX_MASK;
+ 			shifted_status >>= PAB_INTX_START;
+ 		} while (shifted_status != 0);
+@@ -413,7 +414,7 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+ 	}
+ 
+ 	/* Clear the interrupt status */
+-	csr_writel(pcie, intr_status, PAB_INTP_AMBA_MISC_STAT);
++	mobiveil_csr_writel(pcie, intr_status, PAB_INTP_AMBA_MISC_STAT);
+ 	chained_irq_exit(chip, desc);
+ }
+ 
+@@ -474,24 +475,24 @@ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
+ 		return;
+ 	}
+ 
+-	value = csr_readl(pcie, PAB_PEX_AMAP_CTRL(win_num));
++	value = mobiveil_csr_readl(pcie, PAB_PEX_AMAP_CTRL(win_num));
+ 	value &= ~(AMAP_CTRL_TYPE_MASK << AMAP_CTRL_TYPE_SHIFT | WIN_SIZE_MASK);
+ 	value |= type << AMAP_CTRL_TYPE_SHIFT | 1 << AMAP_CTRL_EN_SHIFT |
+ 		 (lower_32_bits(size64) & WIN_SIZE_MASK);
+-	csr_writel(pcie, value, PAB_PEX_AMAP_CTRL(win_num));
++	mobiveil_csr_writel(pcie, value, PAB_PEX_AMAP_CTRL(win_num));
+ 
+-	csr_writel(pcie, upper_32_bits(size64),
+-		   PAB_EXT_PEX_AMAP_SIZEN(win_num));
++	mobiveil_csr_writel(pcie, upper_32_bits(size64),
++			    PAB_EXT_PEX_AMAP_SIZEN(win_num));
+ 
+-	csr_writel(pcie, lower_32_bits(cpu_addr),
+-		   PAB_PEX_AMAP_AXI_WIN(win_num));
+-	csr_writel(pcie, upper_32_bits(cpu_addr),
+-		   PAB_EXT_PEX_AMAP_AXI_WIN(win_num));
++	mobiveil_csr_writel(pcie, lower_32_bits(cpu_addr),
++			    PAB_PEX_AMAP_AXI_WIN(win_num));
++	mobiveil_csr_writel(pcie, upper_32_bits(cpu_addr),
++			    PAB_EXT_PEX_AMAP_AXI_WIN(win_num));
+ 
+-	csr_writel(pcie, lower_32_bits(pci_addr),
+-		   PAB_PEX_AMAP_PEX_WIN_L(win_num));
+-	csr_writel(pcie, upper_32_bits(pci_addr),
+-		   PAB_PEX_AMAP_PEX_WIN_H(win_num));
++	mobiveil_csr_writel(pcie, lower_32_bits(pci_addr),
++			    PAB_PEX_AMAP_PEX_WIN_L(win_num));
++	mobiveil_csr_writel(pcie, upper_32_bits(pci_addr),
++			    PAB_PEX_AMAP_PEX_WIN_H(win_num));
+ 
+ 	pcie->ib_wins_configured++;
+ }
+@@ -515,27 +516,27 @@ static void program_ob_windows(struct mobiveil_pcie *pcie, int win_num,
+ 	 * program Enable Bit to 1, Type Bit to (00) base 2, AXI Window Size Bit
+ 	 * to 4 KB in PAB_AXI_AMAP_CTRL register
+ 	 */
+-	value = csr_readl(pcie, PAB_AXI_AMAP_CTRL(win_num));
++	value = mobiveil_csr_readl(pcie, PAB_AXI_AMAP_CTRL(win_num));
+ 	value &= ~(WIN_TYPE_MASK << WIN_TYPE_SHIFT | WIN_SIZE_MASK);
+ 	value |= 1 << WIN_ENABLE_SHIFT | type << WIN_TYPE_SHIFT |
+ 		 (lower_32_bits(size64) & WIN_SIZE_MASK);
+-	csr_writel(pcie, value, PAB_AXI_AMAP_CTRL(win_num));
++	mobiveil_csr_writel(pcie, value, PAB_AXI_AMAP_CTRL(win_num));
+ 
+-	csr_writel(pcie, upper_32_bits(size64), PAB_EXT_AXI_AMAP_SIZE(win_num));
++	mobiveil_csr_writel(pcie, upper_32_bits(size64), PAB_EXT_AXI_AMAP_SIZE(win_num));
+ 
+ 	/*
+ 	 * program AXI window base with appropriate value in
+ 	 * PAB_AXI_AMAP_AXI_WIN0 register
+ 	 */
+-	csr_writel(pcie, lower_32_bits(cpu_addr) & (~AXI_WINDOW_ALIGN_MASK),
+-		   PAB_AXI_AMAP_AXI_WIN(win_num));
+-	csr_writel(pcie, upper_32_bits(cpu_addr),
+-		   PAB_EXT_AXI_AMAP_AXI_WIN(win_num));
++	mobiveil_csr_writel(pcie, lower_32_bits(cpu_addr) & (~AXI_WINDOW_ALIGN_MASK),
++			    PAB_AXI_AMAP_AXI_WIN(win_num));
++	mobiveil_csr_writel(pcie, upper_32_bits(cpu_addr),
++			    PAB_EXT_AXI_AMAP_AXI_WIN(win_num));
+ 
+-	csr_writel(pcie, lower_32_bits(pci_addr),
+-		   PAB_AXI_AMAP_PEX_WIN_L(win_num));
+-	csr_writel(pcie, upper_32_bits(pci_addr),
+-		   PAB_AXI_AMAP_PEX_WIN_H(win_num));
++	mobiveil_csr_writel(pcie, lower_32_bits(pci_addr),
++			    PAB_AXI_AMAP_PEX_WIN_L(win_num));
++	mobiveil_csr_writel(pcie, upper_32_bits(pci_addr),
++			    PAB_AXI_AMAP_PEX_WIN_H(win_num));
+ 
+ 	pcie->ob_wins_configured++;
+ }
+@@ -579,42 +580,42 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+ 	struct resource_entry *win;
+ 
+ 	/* setup bus numbers */
+-	value = csr_readl(pcie, PCI_PRIMARY_BUS);
++	value = mobiveil_csr_readl(pcie, PCI_PRIMARY_BUS);
+ 	value &= 0xff000000;
+ 	value |= 0x00ff0100;
+-	csr_writel(pcie, value, PCI_PRIMARY_BUS);
++	mobiveil_csr_writel(pcie, value, PCI_PRIMARY_BUS);
+ 
+ 	/*
+ 	 * program Bus Master Enable Bit in Command Register in PAB Config
+ 	 * Space
+ 	 */
+-	value = csr_readl(pcie, PCI_COMMAND);
++	value = mobiveil_csr_readl(pcie, PCI_COMMAND);
+ 	value |= PCI_COMMAND_IO | PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER;
+-	csr_writel(pcie, value, PCI_COMMAND);
++	mobiveil_csr_writel(pcie, value, PCI_COMMAND);
+ 
+ 	/*
+ 	 * program PIO Enable Bit to 1 (and PEX PIO Enable to 1) in PAB_CTRL
+ 	 * register
+ 	 */
+-	pab_ctrl = csr_readl(pcie, PAB_CTRL);
++	pab_ctrl = mobiveil_csr_readl(pcie, PAB_CTRL);
+ 	pab_ctrl |= (1 << AMBA_PIO_ENABLE_SHIFT) | (1 << PEX_PIO_ENABLE_SHIFT);
+-	csr_writel(pcie, pab_ctrl, PAB_CTRL);
++	mobiveil_csr_writel(pcie, pab_ctrl, PAB_CTRL);
+ 
+-	csr_writel(pcie, (PAB_INTP_INTX_MASK | PAB_INTP_MSI_MASK),
+-		   PAB_INTP_AMBA_MISC_ENB);
++	mobiveil_csr_writel(pcie, (PAB_INTP_INTX_MASK | PAB_INTP_MSI_MASK),
++			    PAB_INTP_AMBA_MISC_ENB);
+ 
+ 	/*
+ 	 * program PIO Enable Bit to 1 and Config Window Enable Bit to 1 in
+ 	 * PAB_AXI_PIO_CTRL Register
+ 	 */
+-	value = csr_readl(pcie, PAB_AXI_PIO_CTRL);
++	value = mobiveil_csr_readl(pcie, PAB_AXI_PIO_CTRL);
+ 	value |= APIO_EN_MASK;
+-	csr_writel(pcie, value, PAB_AXI_PIO_CTRL);
++	mobiveil_csr_writel(pcie, value, PAB_AXI_PIO_CTRL);
+ 
+ 	/* Enable PCIe PIO master */
+-	value = csr_readl(pcie, PAB_PEX_PIO_CTRL);
++	value = mobiveil_csr_readl(pcie, PAB_PEX_PIO_CTRL);
+ 	value |= 1 << PIO_ENABLE_SHIFT;
+-	csr_writel(pcie, value, PAB_PEX_PIO_CTRL);
++	mobiveil_csr_writel(pcie, value, PAB_PEX_PIO_CTRL);
+ 
+ 	/*
+ 	 * we'll program one outbound window for config reads and
+@@ -647,10 +648,10 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+ 	}
+ 
+ 	/* fixup for PCIe class register */
+-	value = csr_readl(pcie, PAB_INTP_AXI_PIO_CLASS);
++	value = mobiveil_csr_readl(pcie, PAB_INTP_AXI_PIO_CLASS);
+ 	value &= 0xff;
+ 	value |= (PCI_CLASS_BRIDGE_PCI << 16);
+-	csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
++	mobiveil_csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
+ 
+ 	/* setup MSI hardware registers */
+ 	mobiveil_pcie_enable_msi(pcie);
+@@ -668,9 +669,9 @@ static void mobiveil_mask_intx_irq(struct irq_data *data)
+ 	pcie = irq_desc_get_chip_data(desc);
+ 	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
+ 	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
+-	shifted_val = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
++	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+ 	shifted_val &= ~mask;
+-	csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
++	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
+ 	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
+ }
+ 
+@@ -684,9 +685,9 @@ static void mobiveil_unmask_intx_irq(struct irq_data *data)
+ 	pcie = irq_desc_get_chip_data(desc);
+ 	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
+ 	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
+-	shifted_val = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
++	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+ 	shifted_val |= mask;
+-	csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
++	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
+ 	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
+ }
+ 
+-- 
+2.20.1
+
