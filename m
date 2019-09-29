@@ -2,55 +2,51 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5785C352A9
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C27AC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C058721925
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4461B21928
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:33:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778431;
-	bh=oRgLhrKc4k3mo0FARYlSzSkP3Mf1sLVjO6FzgjI3NpE=;
+	s=default; t=1569778436;
+	bh=mqSyEFPTAyzBwMRSRdz3y61W0tMmYA/5+LdqDpAIF+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sYtRpU9TiN4ZwoZAeRwTJ45cIAD7+TXmBPjLL+9IiWktsmbCJRI8ty8N0OOn882hE
-	 +S1Zh4xcvgRWkjWekxGxeMJZDdH9M+0zGEbueA1tBh68Gj9M/A0vX3yvzcpnm9X9j6
-	 oxctIVRnr3+XaWGDpqyJtKfmS+eMkXXBEcQ2YSrY=
+	b=1Y6MistWzdgQuBk7A3dKr2ss1N4NFYbTQlg6ZKyx3y20vI00q+U8t1qsaI63uLRiV
+	 CZjYPkS7+CcVkkbTaFDLGetGsM2CQYR68vvyFBWS6ad/RkRLW9Ov/uqpLtx66zaCCN
+	 C+IvpQ5P4mFX0C4yVwELNd4/eneCmRge+YnJlux8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730198AbfI2Rdv (ORCPT
+        id S1730215AbfI2Rdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:33:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45176 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:33:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730176AbfI2Rds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:33:48 -0400
+        id S1730176AbfI2Rdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:33:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 590C221906;
-        Sun, 29 Sep 2019 17:33:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B43521906;
+        Sun, 29 Sep 2019 17:33:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778427;
-        bh=oRgLhrKc4k3mo0FARYlSzSkP3Mf1sLVjO6FzgjI3NpE=;
+        s=default; t=1569778431;
+        bh=mqSyEFPTAyzBwMRSRdz3y61W0tMmYA/5+LdqDpAIF+M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GJBcXYY1ZKc222FHhhtEximIHIHk2CiTvo0M1iPghfOODaJgZ0ufkyfoknS1uqBKg
-         qPdHsm7By2U9/Nlrnk+jBr5RenAuMAmPjw7PB7O+V7NJvBaUrwWtW9ZiCY2RsyuuyK
-         USMMsmUuPyjaS8Ztpdg5m8SljdsMRKdtRaNgCW7U=
+        b=XeI3xufgURW6vE++d1hf09GV/Xdnd6NPCe0MZYAoHkpTkKuNBW7gfpPFFk6mQGg5T
+         bOSU5RvUUU2s6LSLELScEIlUddVQfhVzqfSIWJXTATIAm6N5fQzU0AN3/BTrShykaa
+         COuU7qEpP3JM0nsUsDRcHsGmLDZchoNv5x2Tvg60=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.2 30/42] ARM: 8905/1: Emit __gnu_mcount_nc when using Clang 10.0.0 or newer
-Date:   Sun, 29 Sep 2019 13:32:29 -0400
-Message-Id: <20190929173244.8918-30-sashal@kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Anatoly Pugachev <matorola@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 33/42] pktcdvd: remove warning on attempting to register non-passthrough dev
+Date:   Sun, 29 Sep 2019 13:32:32 -0400
+Message-Id: <20190929173244.8918-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173244.8918-1-sashal@kernel.org>
 References: <20190929173244.8918-1-sashal@kernel.org>
@@ -63,77 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit b0fe66cf095016e0b238374c10ae366e1f087d11 ]
+[ Upstream commit eb09b3cc464d2c3bbde9a6648603c8d599ea8582 ]
 
-Currently, multi_v7_defconfig + CONFIG_FUNCTION_TRACER fails to build
-with clang:
+Anatoly reports that he gets the below warning when booting -git on
+a sparc64 box on debian unstable:
 
-arm-linux-gnueabi-ld: kernel/softirq.o: in function `_local_bh_enable':
-softirq.c:(.text+0x504): undefined reference to `mcount'
-arm-linux-gnueabi-ld: kernel/softirq.o: in function `__local_bh_enable_ip':
-softirq.c:(.text+0x58c): undefined reference to `mcount'
-arm-linux-gnueabi-ld: kernel/softirq.o: in function `do_softirq':
-softirq.c:(.text+0x6c8): undefined reference to `mcount'
-arm-linux-gnueabi-ld: kernel/softirq.o: in function `irq_enter':
-softirq.c:(.text+0x75c): undefined reference to `mcount'
-arm-linux-gnueabi-ld: kernel/softirq.o: in function `irq_exit':
-softirq.c:(.text+0x840): undefined reference to `mcount'
-arm-linux-gnueabi-ld: kernel/softirq.o:softirq.c:(.text+0xa50): more undefined references to `mcount' follow
+...
+[   13.352975] aes_sparc64: Using sparc64 aes opcodes optimized AES
+implementation
+[   13.428002] ------------[ cut here ]------------
+[   13.428081] WARNING: CPU: 21 PID: 586 at
+drivers/block/pktcdvd.c:2597 pkt_setup_dev+0x2e4/0x5a0 [pktcdvd]
+[   13.428147] Attempt to register a non-SCSI queue
+[   13.428184] Modules linked in: pktcdvd libdes cdrom aes_sparc64
+n2_rng md5_sparc64 sha512_sparc64 rng_core sha256_sparc64 flash
+sha1_sparc64 ip_tables x_tables ipv6 crc_ccitt nf_defrag_ipv6 autofs4
+ext4 crc16 mbcache jbd2 raid10 raid456 async_raid6_recov async_memcpy
+async_pq async_xor xor async_tx raid6_pq raid1 raid0 multipath linear
+md_mod crc32c_sparc64
+[   13.428452] CPU: 21 PID: 586 Comm: pktsetup Not tainted
+5.3.0-10169-g574cc4539762 #1234
+[   13.428507] Call Trace:
+[   13.428542]  [00000000004635c0] __warn+0xc0/0x100
+[   13.428582]  [0000000000463634] warn_slowpath_fmt+0x34/0x60
+[   13.428626]  [000000001045b244] pkt_setup_dev+0x2e4/0x5a0 [pktcdvd]
+[   13.428674]  [000000001045ccf4] pkt_ctl_ioctl+0x94/0x220 [pktcdvd]
+[   13.428724]  [00000000006b95c8] do_vfs_ioctl+0x628/0x6e0
+[   13.428764]  [00000000006b96c8] ksys_ioctl+0x48/0x80
+[   13.428803]  [00000000006b9714] sys_ioctl+0x14/0x40
+[   13.428847]  [0000000000406294] linux_sparc_syscall+0x34/0x44
+[   13.428890] irq event stamp: 4181
+[   13.428924] hardirqs last  enabled at (4189): [<00000000004e0a74>]
+console_unlock+0x634/0x6c0
+[   13.428984] hardirqs last disabled at (4196): [<00000000004e0540>]
+console_unlock+0x100/0x6c0
+[   13.429048] softirqs last  enabled at (3978): [<0000000000b2e2d8>]
+__do_softirq+0x498/0x520
+[   13.429110] softirqs last disabled at (3967): [<000000000042cfb4>]
+do_softirq_own_stack+0x34/0x60
+[   13.429172] ---[ end trace 2220ca468f32967d ]---
+[   13.430018] pktcdvd: setup of pktcdvd device failed
+[   13.455589] des_sparc64: Using sparc64 des opcodes optimized DES
+implementation
+[   13.515334] camellia_sparc64: Using sparc64 camellia opcodes
+optimized CAMELLIA implementation
+[   13.522856] pktcdvd: setup of pktcdvd device failed
+[   13.529327] pktcdvd: setup of pktcdvd device failed
+[   13.532932] pktcdvd: setup of pktcdvd device failed
+[   13.536165] pktcdvd: setup of pktcdvd device failed
+[   13.539372] pktcdvd: setup of pktcdvd device failed
+[   13.542834] pktcdvd: setup of pktcdvd device failed
+[   13.546536] pktcdvd: setup of pktcdvd device failed
+[   15.431071] XFS (dm-0): Mounting V5 Filesystem
+...
 
-clang can emit a working mcount symbol, __gnu_mcount_nc, when
-'-meabi gnu' is passed to it. Until r369147 in LLVM, this was
-broken and caused the kernel not to boot with '-pg' because the
-calling convention was not correct. Always build with '-meabi gnu'
-when using clang but ensure that '-pg' (which is added with
-CONFIG_FUNCTION_TRACER and its prereq CONFIG_HAVE_FUNCTION_TRACER)
-cannot be added with it unless this is fixed (which means using
-clang 10.0.0 and newer).
+Apparently debian auto-attaches any cdrom like device to pktcdvd, which
+can lead to the above warning. There's really no reason to warn for this
+situation, kill it.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/35
-Link: https://bugs.llvm.org/show_bug.cgi?id=33845
-Link: https://github.com/llvm/llvm-project/commit/16fa8b09702378bacfa3d07081afe6b353b99e60
-
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Stefan Agner <stefan@agner.ch>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Reported-by: Anatoly Pugachev <matorola@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/Kconfig  | 2 +-
- arch/arm/Makefile | 4 ++++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ drivers/block/pktcdvd.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 3539be8700558..6029d324911cf 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -75,7 +75,7 @@ config ARM
- 	select HAVE_EXIT_THREAD
- 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
- 	select HAVE_FUNCTION_GRAPH_TRACER if !THUMB2_KERNEL && !CC_IS_CLANG
--	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
-+	select HAVE_FUNCTION_TRACER if !XIP_KERNEL && (CC_IS_GCC || CLANG_VERSION >= 100000)
- 	select HAVE_GCC_PLUGINS
- 	select HAVE_HW_BREAKPOINT if PERF_EVENTS && (CPU_V6 || CPU_V6K || CPU_V7)
- 	select HAVE_IDE if PCI || ISA || PCMCIA
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index f863c6935d0e5..c0b2783583016 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -112,6 +112,10 @@ ifeq ($(CONFIG_ARM_UNWIND),y)
- CFLAGS_ABI	+=-funwind-tables
- endif
- 
-+ifeq ($(CONFIG_CC_IS_CLANG),y)
-+CFLAGS_ABI	+= -meabi gnu
-+endif
-+
- # Accept old syntax despite ".syntax unified"
- AFLAGS_NOWARN	:=$(call as-option,-Wa$(comma)-mno-warn-deprecated,-Wa$(comma)-W)
- 
+diff --git a/drivers/block/pktcdvd.c b/drivers/block/pktcdvd.c
+index 024060165afa7..76457003f1406 100644
+--- a/drivers/block/pktcdvd.c
++++ b/drivers/block/pktcdvd.c
+@@ -2594,7 +2594,6 @@ static int pkt_new_dev(struct pktcdvd_device *pd, dev_t dev)
+ 	if (ret)
+ 		return ret;
+ 	if (!blk_queue_scsi_passthrough(bdev_get_queue(bdev))) {
+-		WARN_ONCE(true, "Attempt to register a non-SCSI queue\n");
+ 		blkdev_put(bdev, FMODE_READ | FMODE_NDELAY);
+ 		return -EINVAL;
+ 	}
 -- 
 2.20.1
 
