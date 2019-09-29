@@ -2,287 +2,94 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64742C352A9
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EB2C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31730217F5
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 822DF217F5
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:20:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rbOvKSai"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="i7wnqtKF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbfI2OTN (ORCPT
+        id S1729100AbfI2OU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 10:19:13 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43795 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbfI2OTM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 10:19:12 -0400
-Received: by mail-pg1-f196.google.com with SMTP id v27so5824226pgk.10;
-        Sun, 29 Sep 2019 07:19:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=GWVmon7ssB0uuITFe2bBCfeRidxeNfTrMso/H8aAwhQ=;
-        b=rbOvKSairizR+P/rHoAlq+Sy2ek1VHohcLx3BvzSi2lNJwE/gcEsJGzxf994X8UR5S
-         6nzZiGv8h3FC7zL0/gVonWZcjklrSe2pEI3a/+25W6j1PucQ/AzjUqBhRQ/0jkA2CPdy
-         Nls0DreyTyI7cf6LSAp87tqpkzD4StLja4oZw+aM6sqCFIGzvxLWYgikJtFO1jeF2hQY
-         SvOimE6P+oJ88J0kihMpvfcX+W7E4N8FSDbO4aSZvbpSzlzbBa6+ichWogcXgpO6yU+L
-         x2ZnxpOMulkWfd/qOOF7BhHGJBCfv+TTKaH5O36gqlBYyVmJplfcfp86Cm9aCUkHMeq8
-         56xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=GWVmon7ssB0uuITFe2bBCfeRidxeNfTrMso/H8aAwhQ=;
-        b=KYwKfcfNRxiN9ihtrXQF2FrRqggFXkKGhKk6kf65yO7ABsHUctPGGrYra8urwO5QvL
-         rWACRZBC8SvYv7yQ/FJrQ0l7xgrsodWhetlavHjY80R5ykbkJj/zvFnFUp1YHYTVzkco
-         RDSuX0/BEYMWSEbxzTsL7A1DYz7GXWcaWa6ctVShiMrM6ecXYkkrz7i811CcJmZH21UQ
-         BA6h4m9gUzmCY38K+iW11GpXDh57X5Evkm8e1s/X1NmyQKaQA8ae7t05ZSsJHdk9RAS6
-         Iv3Y2E3/v3N1IBTDsxPLzvAoziUTeTXC3th9M6C48YvL1hcY3ADtMrZvHR/UWkxmdgbS
-         okHQ==
-X-Gm-Message-State: APjAAAVi5GXuTpAJ9NJAmrDFLxD12kOq1591f17puh7XKp1FoLxJDSbj
-        qMjquGa6M9UGmHsNmmlvjwJpS0p7
-X-Google-Smtp-Source: APXvYqwaqAQpJoqcisrKfz1WY9gAJDrFsIw4UQN+ZUk6yZ4giCEOvJQAlTpDDlf9ET9ZmAC6bgGHGQ==
-X-Received: by 2002:a63:441b:: with SMTP id r27mr19487414pga.357.1569766750665;
-        Sun, 29 Sep 2019 07:19:10 -0700 (PDT)
-Received: from localhost.localdomain ([240f:34:212d:1:20:6ca:d990:a8a2])
-        by smtp.gmail.com with ESMTPSA id fa24sm10833336pjb.13.2019.09.29.07.19.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 29 Sep 2019 07:19:09 -0700 (PDT)
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-To:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v3 1/1] leds: remove PAGE_SIZE limit of /sys/class/leds/<led>/trigger
-Date:   Sun, 29 Sep 2019 23:18:49 +0900
-Message-Id: <1569766729-8433-2-git-send-email-akinobu.mita@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1569766729-8433-1-git-send-email-akinobu.mita@gmail.com>
-References: <1569766729-8433-1-git-send-email-akinobu.mita@gmail.com>
+        Sun, 29 Sep 2019 10:20:27 -0400
+Received: from mout.gmx.net ([212.227.17.20]:44323 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725948AbfI2OU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 10:20:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1569766813;
+        bh=QjI2UKdBTdDpx4cfmKvkvgj/Fe/s7UCv8NhDMhZZ83Q=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=i7wnqtKFdzLyx0BtJPPZGiShPm6JBNEb+2pEsyxqR1VI1xyJhmekU8vtNBhB9fmFZ
+         oGvygj/tA4L2dTrO5cOXo1M3Oh5dj+Ui5ts03i9/vVA/9w1PuS7S545qrnBBfNI608
+         a2BtGUmw0qSu7yuWw+i3qT7cjxVH03nXj7G/UUMU=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.1.162] ([37.4.249.130]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MJmGP-1iYiIv43p3-00KAVg; Sun, 29
+ Sep 2019 16:20:13 +0200
+Subject: Re: [PATCH RFC V2] nl80211: Fix init of cfg80211 channel definition
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     Alexei Avshalom Lazar <ailizaro@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1569766379-9516-1-git-send-email-wahrenst@gmx.net>
+From:   Stefan Wahren <wahrenst@gmx.net>
+Message-ID: <560d7cb0-b509-6f2a-f31a-1743131e14df@gmx.net>
+Date:   Sun, 29 Sep 2019 16:20:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <1569766379-9516-1-git-send-email-wahrenst@gmx.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:E+Gc2cS4gkyzLOB29obc3xQlu0XoQVRGJvunw+VypChp4pm/K3D
+ YuUgzyjCQBqfS4HIj8paluhlTzX8hfH82fg0Ilr7GtiVI2jv5L94rfcoHdqKn1jfQVdGUTj
+ +UKHxGtpo2E4rKOpdS0rYkVd1FMof12yha5IQo4664pXa+5fXKb8upinEhrqE8qYW8OKIog
+ i2gOv91jqlcso6iZE+0/w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:f7pxAe5sqkQ=:4tM3hg7I9Yh/lnxS3cDqJQ
+ bEE/lgFkxFw1EB8Ll8n5xXU4uGZ80aTUzQovNIR6JG96w6Or3ak4NoMjDie9BjjzyTxV4/CyY
+ CtLYqRCfDANTiNeDfge1QXlFCW3DPOj1HfhtmnXPHJ5HktKzRyNhscRhiUJPbyftR6NH+G8pJ
+ 5SnVj0tbMzcLTxP2xSJ1RBYaW/U0ekB9CJ/jmMpJH3on/4TNSQ3arQUZSYKzfQnZQLxpxY7fv
+ hDx7+o9COROUgGeCuZSRsg7sW4qdFxpzugQzc+qtay8/BhXSq4wNwUx3p07wiowOjqGTnMpyo
+ Tm/jyWnKNYEWv7eicByuV/yPNihn2hfN8FZ7tBlgb7k1xnu2vBPP+EBUoVwNZkTPScJZz3MhX
+ Oep3CVwXhy1f79tWaOoFLV3qjbgHhDhSk6bUVIjJf7aOSgYRGUwMZCwwMeapRU6qrbVcCPmUW
+ KCzP33JjV8VIXBfI9ytCchHpdOZTuU53Wxsv5uGCoK0SS0zM7OUDW9STjKSbpL6o4fkRnIrV5
+ ouGXEDheF1cz+SkQxIHGVXs4tJKyxixglsYd03Hj1WPn3F52v/BJRYTz1hx5bOc13IyP9ikAx
+ X9/TdxPky1NTLgGu+pAaTqnV5PllAZHKTCYKfM0tUa9GOZiMN0/FuBv2eCMdP1q3uM0UGQQ91
+ 4e20VaAcSF9TOPIaOozYE03baZllf4HwWBWQiyww0Xf08sieOWXpd16PnL8AIvn0aTzte0Kpv
+ PdtIqA8cebx9PjZRJfI5sUBgfIXpKXyyO9+kEOjFBherLZBmMY81ZbTFV9Is6gkqiUJO7U1Un
+ V0dQON21G6lAtaTBcl9GQaMmqVDBEZl+oUNHlcVJQ7+BKViRmDslnMm+B4OejKM+CkxjYn1yC
+ C2E+G30wJWmwufzugkIDWnTt0y67CDTzdytpBio21IsbYwpAFWqt3lDMhRnphsYQ+3RvTjpoX
+ M6e3pW1+nJCeYqkxl3ftdtXAT9AOG7Ao/TAjh4rQLnmsB6CEtLrRXXz4rqhTqT6L8Gc7lYCGb
+ RKOrNwA5kVaa7wsx1yI2jDpoXxwSawRUA/ktUE7WKkq7z9NrrRF+jjqlN11BEzIxHfvg/HRvC
+ KmnHTn7V2TEclEH/COIcPt6d/BBr7l+I2iMCS0T3ueoUKC3HxmsWQ3SbyqbVccu510GgHnAD/
+ EITgfvHJiMdOU00LPazxwQUQ/beKZ1OqDIiID19arvWFcnji81fBsZTKIhK8ZMltfMwwNBahe
+ YxB0nXZ5ytjlUzFMRvltsqZ9KiPqDjjudFHqlZCcdkBIM4XMOkhv3hs6ikLQ=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reading /sys/class/leds/<led>/trigger returns all available LED triggers.
-However, the size of this file is limited to PAGE_SIZE because of the
-limitation for sysfs attribute.
+Hi Johannes,
 
-Enabling LED CPU trigger on systems with thousands of CPUs easily hits
-PAGE_SIZE limit, and makes it impossible to see all available LED triggers
-and which trigger is currently activated.
-
-We work around it here by converting /sys/class/leds/<led>/trigger to
-binary attribute, which is not limited by length. This is _not_ good
-design, do not copy it.
-
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Dan Murphy <dmurphy@ti.com>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
----
- drivers/leds/led-class.c    |  8 ++--
- drivers/leds/led-triggers.c | 90 ++++++++++++++++++++++++++++++++++-----------
- drivers/leds/leds.h         |  6 +++
- include/linux/leds.h        |  5 ---
- 4 files changed, 78 insertions(+), 31 deletions(-)
-
-diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-index 647b126..3f04334 100644
---- a/drivers/leds/led-class.c
-+++ b/drivers/leds/led-class.c
-@@ -74,13 +74,13 @@ static ssize_t max_brightness_show(struct device *dev,
- static DEVICE_ATTR_RO(max_brightness);
- 
- #ifdef CONFIG_LEDS_TRIGGERS
--static DEVICE_ATTR(trigger, 0644, led_trigger_show, led_trigger_store);
--static struct attribute *led_trigger_attrs[] = {
--	&dev_attr_trigger.attr,
-+static BIN_ATTR(trigger, 0644, led_trigger_read, led_trigger_write, 0);
-+static struct bin_attribute *led_trigger_bin_attrs[] = {
-+	&bin_attr_trigger,
- 	NULL,
- };
- static const struct attribute_group led_trigger_group = {
--	.attrs = led_trigger_attrs,
-+	.bin_attrs = led_trigger_bin_attrs,
- };
- #endif
- 
-diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
-index 23963e5c..79e30d2 100644
---- a/drivers/leds/led-triggers.c
-+++ b/drivers/leds/led-triggers.c
-@@ -16,6 +16,7 @@
- #include <linux/rwsem.h>
- #include <linux/leds.h>
- #include <linux/slab.h>
-+#include <linux/mm.h>
- #include "leds.h"
- 
- /*
-@@ -26,9 +27,11 @@ LIST_HEAD(trigger_list);
- 
-  /* Used by LED Class */
- 
--ssize_t led_trigger_store(struct device *dev, struct device_attribute *attr,
--		const char *buf, size_t count)
-+ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
-+			  struct bin_attribute *bin_attr, char *buf,
-+			  loff_t pos, size_t count)
- {
-+	struct device *dev = kobj_to_dev(kobj);
- 	struct led_classdev *led_cdev = dev_get_drvdata(dev);
- 	struct led_trigger *trig;
- 	int ret = count;
-@@ -64,39 +67,82 @@ ssize_t led_trigger_store(struct device *dev, struct device_attribute *attr,
- 	mutex_unlock(&led_cdev->led_access);
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(led_trigger_store);
-+EXPORT_SYMBOL_GPL(led_trigger_write);
- 
--ssize_t led_trigger_show(struct device *dev, struct device_attribute *attr,
--		char *buf)
-+__printf(3, 4)
-+static int led_trigger_snprintf(char *buf, ssize_t size, const char *fmt, ...)
-+{
-+	va_list args;
-+	int i;
-+
-+	va_start(args, fmt);
-+	if (size <= 0)
-+		i = vsnprintf(NULL, 0, fmt, args);
-+	else
-+		i = vscnprintf(buf, size, fmt, args);
-+	va_end(args);
-+
-+	return i;
-+}
-+
-+static int led_trigger_format(char *buf, size_t size,
-+			      struct led_classdev *led_cdev)
- {
--	struct led_classdev *led_cdev = dev_get_drvdata(dev);
- 	struct led_trigger *trig;
--	int len = 0;
-+	int len = led_trigger_snprintf(buf, size, "%s",
-+				       led_cdev->trigger ? "none" : "[none]");
-+
-+	list_for_each_entry(trig, &trigger_list, next_trig) {
-+		bool hit = led_cdev->trigger &&
-+			!strcmp(led_cdev->trigger->name, trig->name);
-+
-+		len += led_trigger_snprintf(buf + len, size - len,
-+					    " %s%s%s", hit ? "[" : "",
-+					    trig->name, hit ? "]" : "");
-+	}
-+
-+	len += led_trigger_snprintf(buf + len, size - len, "\n");
-+
-+	return len;
-+}
-+
-+/*
-+ * It was stupid to create 10000 cpu triggers, but we are stuck with it now.
-+ * Don't make that mistake again. We work around it here by creating binary
-+ * attribute, which is not limited by length. This is _not_ good design, do not
-+ * copy it.
-+ */
-+ssize_t led_trigger_read(struct file *filp, struct kobject *kobj,
-+			struct bin_attribute *attr, char *buf,
-+			loff_t pos, size_t count)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct led_classdev *led_cdev = dev_get_drvdata(dev);
-+	void *data;
-+	int len;
- 
- 	down_read(&triggers_list_lock);
- 	down_read(&led_cdev->trigger_lock);
- 
--	if (!led_cdev->trigger)
--		len += scnprintf(buf+len, PAGE_SIZE - len, "[none] ");
--	else
--		len += scnprintf(buf+len, PAGE_SIZE - len, "none ");
--
--	list_for_each_entry(trig, &trigger_list, next_trig) {
--		if (led_cdev->trigger && !strcmp(led_cdev->trigger->name,
--							trig->name))
--			len += scnprintf(buf+len, PAGE_SIZE - len, "[%s] ",
--					 trig->name);
--		else
--			len += scnprintf(buf+len, PAGE_SIZE - len, "%s ",
--					 trig->name);
-+	len = led_trigger_format(NULL, 0, led_cdev);
-+	data = kvmalloc(len + 1, GFP_KERNEL);
-+	if (!data) {
-+		up_read(&led_cdev->trigger_lock);
-+		up_read(&triggers_list_lock);
-+		return -ENOMEM;
- 	}
-+	len = led_trigger_format(data, len + 1, led_cdev);
-+
- 	up_read(&led_cdev->trigger_lock);
- 	up_read(&triggers_list_lock);
- 
--	len += scnprintf(len+buf, PAGE_SIZE - len, "\n");
-+	len = memory_read_from_buffer(buf, count, &pos, data, len);
-+
-+	kvfree(data);
-+
- 	return len;
- }
--EXPORT_SYMBOL_GPL(led_trigger_show);
-+EXPORT_SYMBOL_GPL(led_trigger_read);
- 
- /* Caller must ensure led_cdev->trigger_lock held */
- int led_trigger_set(struct led_classdev *led_cdev, struct led_trigger *trig)
-diff --git a/drivers/leds/leds.h b/drivers/leds/leds.h
-index 0b577ce..2d9eb48 100644
---- a/drivers/leds/leds.h
-+++ b/drivers/leds/leds.h
-@@ -23,6 +23,12 @@ void led_set_brightness_nopm(struct led_classdev *led_cdev,
- 				enum led_brightness value);
- void led_set_brightness_nosleep(struct led_classdev *led_cdev,
- 				enum led_brightness value);
-+ssize_t led_trigger_read(struct file *filp, struct kobject *kobj,
-+			struct bin_attribute *attr, char *buf,
-+			loff_t pos, size_t count);
-+ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
-+			struct bin_attribute *bin_attr, char *buf,
-+			loff_t pos, size_t count);
- 
- extern struct rw_semaphore leds_list_lock;
- extern struct list_head leds_list;
-diff --git a/include/linux/leds.h b/include/linux/leds.h
-index 5c8f3c5..da78b27 100644
---- a/include/linux/leds.h
-+++ b/include/linux/leds.h
-@@ -361,11 +361,6 @@ struct led_trigger {
- #define led_trigger_get_led(dev)	((struct led_classdev *)dev_get_drvdata((dev)))
- #define led_trigger_get_drvdata(dev)	(led_get_trigger_data(led_trigger_get_led(dev)))
- 
--ssize_t led_trigger_store(struct device *dev, struct device_attribute *attr,
--			const char *buf, size_t count);
--ssize_t led_trigger_show(struct device *dev, struct device_attribute *attr,
--			char *buf);
--
- /* Registration functions for complex triggers */
- extern int led_trigger_register(struct led_trigger *trigger);
- extern void led_trigger_unregister(struct led_trigger *trigger);
--- 
-2.7.4
-
+Am 29.09.19 um 16:12 schrieb Stefan Wahren:
+> The commit 2a38075cd0be ("nl80211: Add support for EDMG channels")
+> introduced a member to the cfg80211 channel definition. Unfortunately
+> the channel definitions are allocated on the stack and are not always
+> initialized via memset. Now this results in a broken probe of brcmfmac
+> driver, because cfg80211_chandef_valid() accesses uninitialized memory
+> and fail. Fix this by init the remaining occurences with memset.
+>
+> Reported-by: Dmitry Osipenko <digetx@gmail.com>
+> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+> Fixes: 2a38075cd0be ("nl80211: Add support for EDMG channels")
+i oversight your patch. Sorry for the noise.
