@@ -2,64 +2,145 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E88AFC32793
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DD5C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA47121882
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2809B2086A
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:44:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728880AbfI2OYx (ORCPT
+        id S1728975AbfI2Oo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 10:24:53 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:43476 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725948AbfI2OYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 10:24:53 -0400
-Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iEa80-0008VQ-Bc; Sun, 29 Sep 2019 16:24:48 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     mka@chromium.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: dts: rockchip: Add cpu id to rk3288 efuse node
-Date:   Sun, 29 Sep 2019 16:24:47 +0200
-Message-ID: <9574075.6R2mNjq6rT@phil>
-In-Reply-To: <20190919142611.1.I309434f00a2a9be71e4437991fe08abc12f06e2e@changeid>
-References: <20190919142611.1.I309434f00a2a9be71e4437991fe08abc12f06e2e@changeid>
+        Sun, 29 Sep 2019 10:44:27 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:59224 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfI2Oo1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 10:44:27 -0400
+Received: from fsav402.sakura.ne.jp (fsav402.sakura.ne.jp [133.242.250.101])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x8TEhfp4094706;
+        Sun, 29 Sep 2019 23:43:41 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav402.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav402.sakura.ne.jp);
+ Sun, 29 Sep 2019 23:43:41 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav402.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x8TEhd7U094685
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Sun, 29 Sep 2019 23:43:40 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH 4.19 36/63] locking/lockdep: Add debug_locks check in
+ __lock_downgrade()
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org,
+        syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com,
+        Waiman Long <longman@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+References: <20190929135031.382429403@linuxfoundation.org>
+ <20190929135038.482721804@linuxfoundation.org>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <801c81d2-ce72-8eb3-a18b-1b0943270fc4@i-love.sakura.ne.jp>
+Date:   Sun, 29 Sep 2019 23:43:38 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20190929135038.482721804@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Donnerstag, 19. September 2019, 23:26:41 CEST schrieb Douglas Anderson:
-> This just adds in another field of what's stored in the e-fuse on
-> rk3288.  Though I can't personally promise that every rk3288 out there
-> has the CPU ID stored in the eFuse at this location, there is some
-> evidence that it is correct:
-> - This matches what was in the Chrome OS 3.14 branch (see
->   EFUSE_CHIP_UID_OFFSET and EFUSE_CHIP_UID_LEN) for rk3288.
-> - The upstream rk3399 dts file has this same data at the same offset
->   and with the same length, indiciating that this is likely common for
->   several modern Rockchip SoCs.
+On 2019/09/29 22:54, Greg Kroah-Hartman wrote:
+> From: Waiman Long <longman@redhat.com>
 > 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> [ Upstream commit 513e1073d52e55b8024b4f238a48de7587c64ccf ]
+> 
+> Tetsuo Handa had reported he saw an incorrect "downgrading a read lock"
+> warning right after a previous lockdep warning. It is likely that the
+> previous warning turned off lock debugging causing the lockdep to have
+> inconsistency states leading to the lock downgrade warning.
+> 
+> Fix that by add a check for debug_locks at the beginning of
+> __lock_downgrade().
 
-applied for 5.5
+Please drop "[PATCH 4.19 36/63] locking/lockdep: Add debug_locks check in __lock_downgrade()".
+We had a revert patch shown below in the past.
 
-Thanks
-Heiko
+"[PATCH 4.19 37/63] locking/lockdep: Add debug_locks check in __lock_downgrade() - again" seems the correct patch.
 
 
+On 2019/04/25 17:08, gregkh@linuxfoundation.org wrote:> 
+> This is a note to let you know that I've just added the patch titled
+> 
+>     Revert "locking/lockdep: Add debug_locks check in __lock_downgrade()"
+> 
+> to the 4.19-stable tree which can be found at:
+>     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+> 
+> The filename of the patch is:
+>      revert-locking-lockdep-add-debug_locks-check-in-__lock_downgrade.patch
+> and it can be found in the queue-4.19 subdirectory.
+> 
+> If you, or anyone else, feels it should not be added to the stable tree,
+> please let <stable@vger.kernel.org> know about it.
+> 
+> 
+>>From 7f437eec35a20f40d9ff82ae1c072b211c29e8e0 Mon Sep 17 00:00:00 2001
+> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Date: Thu, 25 Apr 2019 10:00:43 +0200
+> Subject: Revert "locking/lockdep: Add debug_locks check in __lock_downgrade()"
+> 
+> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> This reverts commit 0e0f7b30721233ce610bde2395a8e58ff7771475 which was
+> commit 71492580571467fb7177aade19c18ce7486267f5 upstream.
+> 
+> Tetsuo rightly points out that the backport here is incorrect, as it
+> touches the __lock_set_class function instead of the intended
+> __lock_downgrade function.
+> 
+> Reported-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+> Cc: Waiman Long <longman@redhat.com>
+> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Sasha Levin <sashal@kernel.org>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>  kernel/locking/lockdep.c |    3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> --- a/kernel/locking/lockdep.c
+> +++ b/kernel/locking/lockdep.c
+> @@ -3567,9 +3567,6 @@ __lock_set_class(struct lockdep_map *loc
+>  	unsigned int depth;
+>  	int i;
+>  
+> -	if (unlikely(!debug_locks))
+> -		return 0;
+> -
+>  	depth = curr->lockdep_depth;
+>  	/*
+>  	 * This function is about (re)setting the class of a held lock,
+> 
+> 
