@@ -3,139 +3,132 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AFEC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 18:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2161C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 18:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDFFD217F5
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 18:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF4EB21882
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 18:22:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="OiuaOnoH"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="tIYVkbVQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729186AbfI2SSe (ORCPT
+        id S1729204AbfI2SW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 14:18:34 -0400
-Received: from mout.web.de ([212.227.17.11]:51935 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729044AbfI2SSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 14:18:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1569781083;
-        bh=4AvMrLTqbzy0Idt+PIgiT3OEZyJcUdGAXWRw4xDt458=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=OiuaOnoHu54wgFSGL2wWHvYsDNuy08KQTFt5I8UIwaUz8HMTCdVLqAloQ3lcz63xh
-         /8pF1Q+Iz23TEwU0cUEhANhyL5L9aI3NHPGxTeeOnwRy3Tt10mG6SgAlX5DXOAMERN
-         FMK3Dw/6RfXfhYqkCRAeB8IdNTuODMzHHBdiysNM=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.99.91]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0M1X0v-1hzJly2IdV-00tT5Z; Sun, 29
- Sep 2019 20:18:03 +0200
-Subject: Re: [Cocci] [RFC] scripts: Fix coccicheck failed
-To:     Julia Lawall <julia.lawall@lip6.fr>, cocci@systeme.lip6.fr
-Cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Matthias Maennich <maennich@google.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Yue Haibing <yuehaibing@huawei.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Martijn Coenen <maco@android.com>
-References: <alpine.DEB.2.21.1909291810300.3346@hadrien>
- <90cea5d2-b586-6f82-34dd-d7a812f57396@web.de>
- <alpine.DEB.2.21.1909292004460.4485@hadrien>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <91b84fbf-0be8-85a2-616e-d3c463987cb8@web.de>
-Date:   Sun, 29 Sep 2019 20:18:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Sun, 29 Sep 2019 14:22:26 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37903 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728755AbfI2SWZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 14:22:25 -0400
+Received: by mail-lf1-f67.google.com with SMTP id u28so5349531lfc.5
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Sep 2019 11:22:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=I2oOR5tvCS97CthrHouvMSqg5pOQDzVvDjebg3lF4eM=;
+        b=tIYVkbVQOZCJMPpJ0sLuPNRCxg4cehWVsLNJuRCbXOw0B5uzh6+q5cRrJHRzVTX1oY
+         a1+/RSOmlVhyZ4vsLMGp55DUYlMuzii6M9Zn6glgxrVC5aoytx8VI1mbu9iI7jFf11bE
+         CK1dsllj2ogxETE2uYTWK4dw1aSgEizTjKhYH7uBpiG4dz+QdYVheodqMk7F7yTmldqn
+         xytIQQ2JfklxD1ZOmaGA9c0gA0LgqHwXimUHrFHQGpsuISXKkMhjpMwcAK5u/9N8EBJT
+         q+aqVpwRztj35nMZzukQLm1TVeezBR3kkc6cqsKlmxdIC/pjspeizZBffSrAa2qWE/Ok
+         cwYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=I2oOR5tvCS97CthrHouvMSqg5pOQDzVvDjebg3lF4eM=;
+        b=GCbe8F8JCu+flw9lYJ40e23heBqdvnZgMI1hXA21qqECEh37C8HG08X1rCIasmcdw1
+         UDTT2UO3yZXEqM3bjft/Dfs9aAQKZcAR8pZXJ4B/r/nkO7wouLMTkLYYbhY5tU14lad/
+         fuQk3OqSLhhtP/j176g01Gp4Ugz6Hmbv94O4aw6PoDRNLJH9ZR/Pfec98+bJbVST/FCy
+         vUnLLNNkWMilPkpXv2MO77dODdK6wMuq0U+I5MFIDl3Ne2JyQp3wPYyZDDsbJ8x/O7Tm
+         UV1jjYxDDJk/xJlbeol96dZqu4rLSSF3RsX2yi6DPEi+a6/BKWyxrtkKwMN3ip0vhzES
+         xQ+A==
+X-Gm-Message-State: APjAAAUzzfhxshVGOV8LV+rmUlok6TeJI0EUEorm9pY83THu/fnuaIqB
+        Irm6u0hXU6M0k1mA+vA2nO7NOg==
+X-Google-Smtp-Source: APXvYqyNAiN5/diZRd39+iCMS5W2kHJDnF2GMM0abR1vMgUrxxMRPqXHBdEW+qUBiJnvzJdG1SpQXw==
+X-Received: by 2002:a19:8a0b:: with SMTP id m11mr9035909lfd.4.1569781343744;
+        Sun, 29 Sep 2019 11:22:23 -0700 (PDT)
+Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
+        by smtp.gmail.com with ESMTPSA id p3sm2520051ljn.78.2019.09.29.11.22.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 29 Sep 2019 11:22:22 -0700 (PDT)
+Date:   Sun, 29 Sep 2019 10:51:34 -0700
+From:   Olof Johansson <olof@lixom.net>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, arm-soc <arm@kernel.org>,
+        SoC Team <soc@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>
+Subject: Re: [GIT PULL 1/2] arm64: dts: exynos: Pull for v5.4
+Message-ID: <20190929175134.fsieffurfdiqhpj2@localhost>
+References: <20190911183632.4317-1-krzk@kernel.org>
+ <CAK8P3a2pBV+fh0rHitZ30Zz61QNRLfNSD-nhnzq4ZtxSh66F1Q@mail.gmail.com>
+ <CAJKOXPcOSvc2DfoN+7Tca=t5dSm3RcKqmm06AfR0PAVBeY=GvQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1909292004460.4485@hadrien>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Provags-ID: V03:K1:lbyYnPfvZC0h6AfmYrRGclopsH2xKrAlKhNJrqcH2iqYkYnnZeD
- bFH6Z3cHaRvE3B0BXRC/Ij2xYpTVxAOj1hvPZldkOE4nfedSQP8yj74bWLqPZV1p0ljztun
- ZImCPk5kL7+P/lbtJV8hncIBwHQk7j1R8oNb9hN0Jp99bW2uCM5MnUJdg15Ferby02VnxbR
- vnx0p5FAoBRTabSyJIM6w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:LmktBG7wbRM=:XbhsXLt1PNBIl1iqPTcADw
- CF3DcHheRHNM2xy8EjhnVF5C2h+2ucXQq/7dWK7woKerqw+HoOdZ5LNSKmgCzD/9ZDmnYBB6x
- 5KV+rv7J7WsDE0J1Q3Jzi8ms2Io5OaX7zoIvdTe47qTGa8MYanZf4mmj9Y3tMQnkQu6w88qHs
- pCICwT/HMKw1mloeI9GZ+2fw89FrIU7RLmqYo44cHiYJYMSF5bHTM1gP7viOAJKbbMEJlOfKQ
- lXIawjFxqgNXlu+YabcbYYrShYyh3nfU68rdEcpvF0fiW3F4tMGJUwllU7R5CwQMYX4KSEySY
- Q7/dbXlwRYXKAdbivZKyfN3LDJdwWQaw+X8d6OIXzuHD8Yw9pFtAwV65vslRMTIwNl7hqXh+u
- F8WERNQMN7UhYE8yFKjGfnYMIh+67JDfcGIDUQ+p3IHt4/F7PrvxemYPlxfaMWtCbrbJcCRg2
- vyXrxEatb+bASNqzCe8Iq81MwxGGPClgu3CCAhWg5Wx9XwR792EvUVuKE4UfZDYwV/KcsU2P8
- FtxabpY1xgfFh3YZF8UxezaGorP6OPc2eUI/QZxk+FENjnRXBDT8n4+c86DVhLBXf6rckbwQg
- AWwnPP2yFWOdnKawX0DJYH2TR7s5naS/MoAWywRJOM6Ipq1IInTOVgDQ5BlLf7dIHqG/x3ty0
- OsXopOwEtswogAcpb13HanJj3VXqLprtbB2PKGhaDs+AHw0QdG7hFHkeQUd5x+em0Kd+YJy83
- I92HOyjGpkBAGXDEbrx/tzVYPE/+WBatMEQsQo1lj5qT8kBix8EOadxhYrEeZpEslR9Md8J3z
- yVei8qRZqIrma4Lj6Y3lhYQ+Qs3+FCQUIY2796kx7HxgYousQ8eBFAQgEYKO9xBSRYdAtbjB4
- 5E+SBzAZFOqMCCO7VQBkuX/XLZq++b5VHfnhV+ydHoKWnNYaxJtx2iHkVmGML+EPdoP2qs9yW
- XR/28DEChvq92CKxEmDmJlI0CxEyBd8yaiP0Vyh5btxossyWaEBTbZR9U81hoKVy1c/uvblp7
- WLaoDufp7oe8dxIagvv2CU2WsC/VMC47vmHgeNEMhiy3jMZDMIFFX93wSmTqGLjjTvt28Iv7+
- B7BPscGFD76IWWRqeykiIsFsFJa0sDJXg6WZWUeLh90SmyA+unUTGFzWPNF3YjRnqpa/rhIm6
- kveo8sHEMQnV++rzdEQJTub5RO8H0k6nElzAtIcjlgfJdoLh2WpWuKG8/DdBRh282uYEWn9k9
- lJWnId7caUTP4Thi/P96Ph7yxiywZdiumzCCdpy2jDfiTxq2EpKcAKk8vAxI=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJKOXPcOSvc2DfoN+7Tca=t5dSm3RcKqmm06AfR0PAVBeY=GvQ@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Coccicheck requires that all rules support the report mode.
+Hi,
 
-I find this requirement not so clear while this operation mode
-is reasonable as a default selection.
-https://bottest.wiki.kernel.org/coccicheck#modes
+On Thu, Sep 12, 2019 at 08:32:47AM +0200, Krzysztof Kozlowski wrote:
+> On Wed, 11 Sep 2019 at 23:07, Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > On Wed, Sep 11, 2019 at 8:36 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > >
+> > > Hi,
+> > >
+> > > Unfortunately the patches were applied right after closing the linux-next.
+> >
+> > Hi Krzysztof,
+> >
+> > I took a look at these and am not convinced this is right:
+> >
+> > > 1. Fix boot of Exynos7 due to wrong address/size of memory node,
+> >
+> > The current state is clearly broken and a fix is needed, but
+> > I'm not sure this is the right fix. Why do you have 32-bit physical
+> > addressing on a 64-bit chip? I looked at commit ef72171b3621
+> > that introduced it, and it seems it would be better to just
+> > revert back to 64-bit addresses.
+> 
+> We discussed with Marek Szyprowski that either we can go back to
+> 64-bit addressing or stick to 32. There are not known boards with more
+> than 4 GB of RAM so from this point of view the choice was irrelevant.
+> At the end of discussion I mentioned to stick with other arm64 boards
+> (although not all), so revert to have 64 bit address... but Marek
+> chosen differently. Since you ask, let's go back with revert.
+> 
+> >
+> > > 2. Move GPU under /soc node,
+> >
+> > No problem
+> >
+> > > 3. Minor cleanup of #address-cells.
+> >
+> > IIRC, an interrupt-controller is required to have a #address-cells
+> > property, even if that is normally zero. I don't remember the
+> > details, but the gic binding lists it as mandatory, and I think
+> > the PCI interrupt-map relies on it. I would just drop this patch.
+> 
+> Indeed, binding requires both address and size cells. I'll drop it.
 
-I am curious how the software will evolve further also in this area.
-Possible solutions might become more interesting in other directions.
+Looking through the history of pending material, I didn't see a new pull for
+this material. Just checking in to see if there's something we missed?
 
-Regards,
-Markus
+
+Thanks,
+
+
+-Olof
