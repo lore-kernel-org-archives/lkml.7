@@ -2,98 +2,138 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61AA6C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 18:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFD5C352A9
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 18:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D2E121BE5
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 18:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D1D22190F
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 18:08:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lGlRE8qP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729166AbfI2SFf (ORCPT
+        id S1729170AbfI2SI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 14:05:35 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:48721 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728994AbfI2SFf (ORCPT
+        Sun, 29 Sep 2019 14:08:58 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38276 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728755AbfI2SI6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 14:05:35 -0400
-X-IronPort-AV: E=Sophos;i="5.64,563,1559512800"; 
-   d="scan'208";a="403859097"
-Received: from 81-65-53-202.rev.numericable.fr (HELO hadrien) ([81.65.53.202])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Sep 2019 20:05:32 +0200
-Date:   Sun, 29 Sep 2019 20:05:32 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Markus Elfring <Markus.Elfring@web.de>
-cc:     cocci@systeme.lip6.fr, Gilles Muller <Gilles.Muller@lip6.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Matthias Maennich <maennich@google.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Yue Haibing <yuehaibing@huawei.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Martijn Coenen <maco@android.com>
-Subject: Re: [Cocci] [RFC PATCH] scripts: Fix coccicheck failed
-In-Reply-To: <90cea5d2-b586-6f82-34dd-d7a812f57396@web.de>
-Message-ID: <alpine.DEB.2.21.1909292004460.4485@hadrien>
-References: <alpine.DEB.2.21.1909291810300.3346@hadrien> <90cea5d2-b586-6f82-34dd-d7a812f57396@web.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 29 Sep 2019 14:08:58 -0400
+Received: by mail-wr1-f68.google.com with SMTP id w12so8496552wro.5;
+        Sun, 29 Sep 2019 11:08:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Q7Nt4+duQpotUrg9cZce+XjSv5bPAauflILLelR5rNY=;
+        b=lGlRE8qPfkrZlUOxjW7gvZ1eaqxs7xFRNqpWaBnQChVBSPqp5p4IxTfXitvtbdt+Jy
+         VCkOnzb38e7uAptUVRPCG/P4hZbwze1evk4mJSvvcQ06RENDhE+OQmWUR5o8iju3/gHN
+         b059o3mHgmjuGzL8Pfvayep+YDYU+luhq8A27xj5G/pS/DSGI5E1LJKsOdKdVXyZjqHN
+         ZrpygPZQ8Xdtv1F3tKCnSvPXGVDw3Lhp2q1uWVdgv+Hjy9lq/Pdz79mc96eqshpFet6A
+         GNeQnFB9R7NR5gQMdc0ZGjSo001H/VFMoKXXii/ulc+mRLpneSraI3II4HuKwl52mrXC
+         zNmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Q7Nt4+duQpotUrg9cZce+XjSv5bPAauflILLelR5rNY=;
+        b=bOLEa52YYXxyG2x6AZKx28ppCZEAoqccB93F+Ft624DWpVAG9k08sf5tDhw0yjmCGY
+         dly8IR1nbFIE5Yr2xyEn94Og5uNB4LUw+hPRl0kBv9LCrGFLSv4PTcL6n5vNLCJhMrU1
+         45ntwIsjxTUBnXHBKdXkoYjufL18l9HBgzsolVlZyXacTZP4NpgsJrqQomuHWB0DhuSE
+         Cxm+Y7OFik5rzOEr00UH+YZ6Ja2FwN/gM1Tw6Ft5GAZXXCw6AgfL2INMBn0RKLwKuzMp
+         C1Dmgu6SG8Y4+d3fP0hxj6SEzget1gBIsLYCigf/TxbVaaxSs07wY+1JH/icCZbYkire
+         Lc1w==
+X-Gm-Message-State: APjAAAVcySXKOs/Oui1kXpeuEm866ak2plqV2FaMHbssBhHIyTPx4g6n
+        tFHrRC3889mBE2E5OwHGBrg=
+X-Google-Smtp-Source: APXvYqyc6oALJdKNYfHzCYAHERLZa5ARLq/Lrua9iN0miCoy+W5ztmfwfCqDO6fe92p4++q8I/oC5Q==
+X-Received: by 2002:adf:e442:: with SMTP id t2mr9030685wrm.87.1569780534389;
+        Sun, 29 Sep 2019 11:08:54 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id i1sm26645189wmb.19.2019.09.29.11.08.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Sep 2019 11:08:53 -0700 (PDT)
+Date:   Sun, 29 Sep 2019 11:08:52 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH AUTOSEL 4.14 08/23] ARM: 8875/1: Kconfig: default to
+ AEABI w/ Clang
+Message-ID: <20190929180852.GA901024@archlinux-threadripper>
+References: <20190929173535.9744-1-sashal@kernel.org>
+ <20190929173535.9744-8-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-964066602-1569780332=:4485"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190929173535.9744-8-sashal@kernel.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Sun, Sep 29, 2019 at 01:35:18PM -0400, Sasha Levin wrote:
+> From: Nick Desaulniers <ndesaulniers@google.com>
+> 
+> [ Upstream commit a05b9608456e0d4464c6f7ca8572324ace57a3f4 ]
+> 
+> Clang produces references to __aeabi_uidivmod and __aeabi_idivmod for
+> arm-linux-gnueabi and arm-linux-gnueabihf targets incorrectly when AEABI
+> is not selected (such as when OABI_COMPAT is selected).
+> 
+> While this means that OABI userspaces wont be able to upgraded to
+> kernels built with Clang, it means that boards that don't enable AEABI
+> like s3c2410_defconfig will stop failing to link in KernelCI when built
+> with Clang.
+> 
+> Link: https://github.com/ClangBuiltLinux/linux/issues/482
+> Link: https://groups.google.com/forum/#!msg/clang-built-linux/yydsAAux5hk/GxjqJSW-AQAJ
+> 
+> Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  arch/arm/Kconfig | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index cf69aab648fbd..f0080864b9ce8 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -1595,8 +1595,9 @@ config ARM_PATCH_IDIV
+>  	  code to do integer division.
+>  
+>  config AEABI
+> -	bool "Use the ARM EABI to compile the kernel" if !CPU_V7 && !CPU_V7M && !CPU_V6 && !CPU_V6K
+> -	default CPU_V7 || CPU_V7M || CPU_V6 || CPU_V6K
+> +	bool "Use the ARM EABI to compile the kernel" if !CPU_V7 && \
+> +		!CPU_V7M && !CPU_V6 && !CPU_V6K && !CC_IS_CLANG
+> +	default CPU_V7 || CPU_V7M || CPU_V6 || CPU_V6K || CC_IS_CLANG
+>  	help
+>  	  This option allows for the kernel to be compiled using the latest
+>  	  ARM ABI (aka EABI).  This is only useful if you are using a user
+> -- 
+> 2.20.1
+> 
 
---8323329-964066602-1569780332=:4485
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Hi Sasha,
 
+This patch will not do anything for 4.14 because CC_IS_CLANG is not
+defined in this tree. The Kconfig patches that make this symbol possible
+were not merged until 4.18. I would recommend dropping it (unless Nick
+has an idea to make this work).
 
-
-On Sun, 29 Sep 2019, Markus Elfring wrote:
-
-> > Maybe the problem would be solved by putting virtual report at the top of the rule.
->
-> I assume that support for the operation mode “patch” can eventually be considered.
->
-
-Coccicheck requires that all rules support the report mode.
-
-julia
-
->
-> > But it might still fail because nothing can happen without a value
-> > for the virtual metavariable ns.
->
-> I imagine that the safe handling of this command line input parameter
-> will trigger further software development concerns.
->
->
-> > Should the coccinelle directory be only for things that work with make coccicheck,
->
-> I hope not.
->
-> But it seems that a filter command expressed such a restriction so far.
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/coccicheck?id=02dc96ef6c25f990452c114c59d75c368a1f4c8f#n257
->
-> Is this place an update candidate now?
->
->
-> > or for all Coccinelle scripts?
->
-> I would prefer file storage selections in this direction.
-> How do you think about to improve the software taxonomy accordingly?
->
-> Regards,
-> Markus
->
---8323329-964066602-1569780332=:4485--
+Cheers,
+Nathan
