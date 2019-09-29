@@ -4,57 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2FA1C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69244C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A8242196E
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4138721906
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:35:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778504;
-	bh=083q+yZ0ZAmFQlK1Ja7FPWGtT4oivjOlDpFQKWeB3Uw=;
+	s=default; t=1569778507;
+	bh=loZr7MLJpU4XU6TOPh2BVQXDVFm5QAyJaqArvekhQzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C0/3CHuTjceqtylF6IdADBi5Fk6h4wHkFpfgiyNCsdCEnQht19sWD2Ugd6akIDGOp
-	 ea1g3HO8Xm0m+Hk8zQj0tir5wiR5DLBqQj8LaLkpTGw6Z2LePv6HLEhm/P9KEKCduQ
-	 oqqKlIBVB3X2eROQE1Zhas9JfCmsDq47hoE32HZM=
+	b=FNFaJfetPbXOiuh2Is8/IoHudfPalCQo7l8FJjFMJ/qsQa/GgyL7jLksTP/tbibC9
+	 9IiJH8dVSh2GqhNQ1SCryKgyQAprcJmREHkWQFMf7UtOs4J+3aZ2OkI+ocjmGjnAzp
+	 85/IXwU/fauL3f/nJky4Jfy2yrPY/p12sAQelEpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbfI2RfD (ORCPT
+        id S1729144AbfI2RfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:35:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46946 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:35:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730463AbfI2Rew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:34:52 -0400
+        id S1730481AbfI2Re4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:34:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BCA221906;
-        Sun, 29 Sep 2019 17:34:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33D0621A4C;
+        Sun, 29 Sep 2019 17:34:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778491;
-        bh=083q+yZ0ZAmFQlK1Ja7FPWGtT4oivjOlDpFQKWeB3Uw=;
+        s=default; t=1569778494;
+        bh=loZr7MLJpU4XU6TOPh2BVQXDVFm5QAyJaqArvekhQzo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xRlL51JnvpQ5RbOV+XDAuP3+28I1kZ99pl4Z4RDZBLcfMylvj7W7nRpDNTJKg3b3q
-         9mecIzQCEHUMIIN/fzVGiID68fyMKXYwXZKRXY7RJ3eF9c8UkpC3DiE6RP/Enmc5Pc
-         RG/1whwZjIy2WQ2AAfWSSQeJqqFjajtElgy3A/Ls=
+        b=bUFRnF4P4fuaR1jUgNIXB0AdfwlU8WC5R4zK6ZLuP7cTreFGBtWQJWIFWj49hJZ/5
+         WOCsDmhsM6RJTyKQYGrKkQEvHIZSY6a8kkxwM58cwjyrfFCRWTWkGRo0kyOlr1Qv+u
+         qQumsquvdnSqGxvBAckZprPb1adBdRwbR5s/CT9c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@linux-mips.org,
-        joe@perches.com,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
-        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 13/33] firmware: bcm47xx_nvram: Correct size_t printf format
-Date:   Sun, 29 Sep 2019 13:34:01 -0400
-Message-Id: <20190929173424.9361-13-sashal@kernel.org>
+Cc:     Joao Moreno <mail@joaomoreno.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 16/33] HID: apple: Fix stuck function keys when using FN
+Date:   Sun, 29 Sep 2019 13:34:04 -0400
+Message-Id: <20190929173424.9361-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173424.9361-1-sashal@kernel.org>
 References: <20190929173424.9361-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,57 +59,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Joao Moreno <mail@joaomoreno.com>
 
-[ Upstream commit feb4eb060c3aecc3c5076bebe699cd09f1133c41 ]
+[ Upstream commit aec256d0ecd561036f188dbc8fa7924c47a9edfd ]
 
-When building on a 64-bit host, we will get warnings like those:
+This fixes an issue in which key down events for function keys would be
+repeatedly emitted even after the user has raised the physical key. For
+example, the driver fails to emit the F5 key up event when going through
+the following steps:
+- fnmode=1: hold FN, hold F5, release FN, release F5
+- fnmode=2: hold F5, hold FN, release F5, release FN
 
-drivers/firmware/broadcom/bcm47xx_nvram.c:103:3: note: in expansion of macro 'pr_err'
-   pr_err("nvram on flash (%i bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
-   ^~~~~~
-drivers/firmware/broadcom/bcm47xx_nvram.c:103:28: note: format string is defined here
-   pr_err("nvram on flash (%i bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
-                           ~^
-                           %li
+The repeated F5 key down events can be easily verified using xev.
 
-Use %zu instead for that purpose.
-
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: linux-mips@linux-mips.org
-Cc: joe@perches.com
-Cc: Rafał Miłecki <zajec5@gmail.com>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Joao Moreno <mail@joaomoreno.com>
+Co-developed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/broadcom/bcm47xx_nvram.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/hid/hid-apple.c | 49 +++++++++++++++++++++++------------------
+ 1 file changed, 28 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/firmware/broadcom/bcm47xx_nvram.c b/drivers/firmware/broadcom/bcm47xx_nvram.c
-index d25f080fcb0d8..8698c5dd29d9c 100644
---- a/drivers/firmware/broadcom/bcm47xx_nvram.c
-+++ b/drivers/firmware/broadcom/bcm47xx_nvram.c
-@@ -100,7 +100,7 @@ static int nvram_find_and_copy(void __iomem *iobase, u32 lim)
- 		nvram_len = size;
+diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
+index 1cb41992aaa1f..d0a81a03ddbdd 100644
+--- a/drivers/hid/hid-apple.c
++++ b/drivers/hid/hid-apple.c
+@@ -57,7 +57,6 @@ MODULE_PARM_DESC(swap_opt_cmd, "Swap the Option (\"Alt\") and Command (\"Flag\")
+ struct apple_sc {
+ 	unsigned long quirks;
+ 	unsigned int fn_on;
+-	DECLARE_BITMAP(pressed_fn, KEY_CNT);
+ 	DECLARE_BITMAP(pressed_numlock, KEY_CNT);
+ };
+ 
+@@ -184,6 +183,8 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
+ {
+ 	struct apple_sc *asc = hid_get_drvdata(hid);
+ 	const struct apple_key_translation *trans, *table;
++	bool do_translate;
++	u16 code = 0;
+ 
+ 	if (usage->code == KEY_FN) {
+ 		asc->fn_on = !!value;
+@@ -192,8 +193,6 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
  	}
- 	if (nvram_len >= NVRAM_SPACE) {
--		pr_err("nvram on flash (%i bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
-+		pr_err("nvram on flash (%zu bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
- 		       nvram_len, NVRAM_SPACE - 1);
- 		nvram_len = NVRAM_SPACE - 1;
- 	}
-@@ -152,7 +152,7 @@ static int nvram_init(void)
- 	    header.len > sizeof(header)) {
- 		nvram_len = header.len;
- 		if (nvram_len >= NVRAM_SPACE) {
--			pr_err("nvram on flash (%i bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
-+			pr_err("nvram on flash (%zu bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
- 				header.len, NVRAM_SPACE);
- 			nvram_len = NVRAM_SPACE - 1;
+ 
+ 	if (fnmode) {
+-		int do_translate;
+-
+ 		if (hid->product >= USB_DEVICE_ID_APPLE_WELLSPRING4_ANSI &&
+ 				hid->product <= USB_DEVICE_ID_APPLE_WELLSPRING4A_JIS)
+ 			table = macbookair_fn_keys;
+@@ -205,25 +204,33 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
+ 		trans = apple_find_translation (table, usage->code);
+ 
+ 		if (trans) {
+-			if (test_bit(usage->code, asc->pressed_fn))
+-				do_translate = 1;
+-			else if (trans->flags & APPLE_FLAG_FKEY)
+-				do_translate = (fnmode == 2 && asc->fn_on) ||
+-					(fnmode == 1 && !asc->fn_on);
+-			else
+-				do_translate = asc->fn_on;
+-
+-			if (do_translate) {
+-				if (value)
+-					set_bit(usage->code, asc->pressed_fn);
+-				else
+-					clear_bit(usage->code, asc->pressed_fn);
+-
+-				input_event(input, usage->type, trans->to,
+-						value);
+-
+-				return 1;
++			if (test_bit(trans->from, input->key))
++				code = trans->from;
++			else if (test_bit(trans->to, input->key))
++				code = trans->to;
++
++			if (!code) {
++				if (trans->flags & APPLE_FLAG_FKEY) {
++					switch (fnmode) {
++					case 1:
++						do_translate = !asc->fn_on;
++						break;
++					case 2:
++						do_translate = asc->fn_on;
++						break;
++					default:
++						/* should never happen */
++						do_translate = false;
++					}
++				} else {
++					do_translate = asc->fn_on;
++				}
++
++				code = do_translate ? trans->to : trans->from;
+ 			}
++
++			input_event(input, usage->type, code, value);
++			return 1;
  		}
+ 
+ 		if (asc->quirks & APPLE_NUMLOCK_EMULATION &&
 -- 
 2.20.1
 
