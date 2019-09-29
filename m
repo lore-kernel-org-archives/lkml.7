@@ -4,50 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F95C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B412C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A378218AC
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02DCA21925
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:31:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778278;
-	bh=QwTcFMBesfpfRCkx9Ek6f7fseKxUhCJ26xYBuzSQOoA=;
+	s=default; t=1569778286;
+	bh=qa0mUQv2VHTLNbiFSyncuiRPcluh1c6Y3izKC1A5WRY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AkHGZlT7wrX56CF7ferVgCeEWHS2klB0RbNgMlfj9Slvs/GHcsu4jR7cN1Iaj+1on
-	 ZnDp0l6QwicQHNgPjIL45HioDEX39Q20I5NqcKL2B/hd5rEhVaJlJ5nUOrYnb9nEbd
-	 X0sFQOgjKUQuCvMoKQN8E+F99PVrox1OJWzI2nv0=
+	b=Q05ji9MLVAjnO2EdupPzTZiWPxD43gsd5oHPJxcrqqhDpv+DJMIkSVkjjm+xkgwRY
+	 Ufz860jjW/auJekDYlqjZv5cO34ilDcz04qIJpLvtI4BiJNRO+eC71V72U9IIQpPV9
+	 pb8UBnIwWo/7kCHETc8YgAe600NFHIEkKOP0Z3o4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729212AbfI2RbR (ORCPT
+        id S1729300AbfI2RbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:31:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41532 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:31:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726149AbfI2RbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:31:09 -0400
+        id S1729238AbfI2RbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:31:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2750B2190F;
-        Sun, 29 Sep 2019 17:31:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D791D218DE;
+        Sun, 29 Sep 2019 17:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778268;
-        bh=QwTcFMBesfpfRCkx9Ek6f7fseKxUhCJ26xYBuzSQOoA=;
+        s=default; t=1569778280;
+        bh=qa0mUQv2VHTLNbiFSyncuiRPcluh1c6Y3izKC1A5WRY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ezw3pvRMmIN71XLmHrYa/fAY6EnAkVbexhOpUsNf0LvU884xzLqcKk47Uwmj+lxCh
-         xPJSOH5a+1JzhF0Kp37GTmUf7PnRW2YwNC8+5+wHom7SO+nRpIdwD3isOlKRsMETQR
-         uq+H+baH6kkHR1np6viknyKTg5Kj0Oiqp4FPYcC4=
+        b=k9QedUbUurHXTdRUQ6Nljn8O1vMgE33NShOBJ0q8AmhGV3YjPA/8ffzI/5fChNPis
+         JM6Wjv/YilIuVHKlUzTp/hGFtyc9wPRSUwf6YqSygRFwD17BJq6oBlx5u3nXIprAoD
+         aHA7uWzFeYX1asbzlbzT+ljVDa22a7U9TzUwDsVU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 06/49] mfd: intel-lpss: Remove D3cold delay
-Date:   Sun, 29 Sep 2019 13:30:06 -0400
-Message-Id: <20190929173053.8400-6-sashal@kernel.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jake Oshins <jakeo@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH AUTOSEL 5.3 11/49] PCI: pci-hyperv: Fix build errors on non-SYSFS config
+Date:   Sun, 29 Sep 2019 13:30:11 -0400
+Message-Id: <20190929173053.8400-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173053.8400-1-sashal@kernel.org>
 References: <20190929173053.8400-1-sashal@kernel.org>
@@ -60,45 +67,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-[ Upstream commit 76380a607ba0b28627c9b4b55cd47a079a59624b ]
+[ Upstream commit f58ba5e3f6863ea4486952698898848a6db726c2 ]
 
-Goodix touchpad may drop its first couple input events when
-i2c-designware-platdrv and intel-lpss it connects to took too long to
-runtime resume from runtime suspended state.
+Fix build errors when building almost-allmodconfig but with SYSFS
+not set (not enabled). Fixes these build errors:
 
-This issue happens becuase the touchpad has a rather small buffer to
-store up to 13 input events, so if the host doesn't read those events in
-time (i.e. runtime resume takes too long), events are dropped from the
-touchpad's buffer.
+ERROR: "pci_destroy_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
+ERROR: "pci_create_slot" [drivers/pci/controller/pci-hyperv.ko] undefined!
 
-The bottleneck is D3cold delay it waits when transitioning from D3cold
-to D0, hence remove the delay to make the resume faster. I've tested
-some systems with intel-lpss and haven't seen any regression.
+drivers/pci/slot.o is only built when SYSFS is enabled, so
+pci-hyperv.o has an implicit dependency on SYSFS.
+Make that explicit.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202683
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Also, depending on X86 && X86_64 is not needed, so just change that
+to depend on X86_64.
+
+Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot information")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Jake Oshins <jakeo@microsoft.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Stephen Hemminger <stephen@networkplumber.org>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org
+Cc: linux-hyperv@vger.kernel.org
+Cc: Dexuan Cui <decui@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/intel-lpss-pci.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pci/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
-index ade6e1ce5a983..e3a04929aaa36 100644
---- a/drivers/mfd/intel-lpss-pci.c
-+++ b/drivers/mfd/intel-lpss-pci.c
-@@ -35,6 +35,8 @@ static int intel_lpss_pci_probe(struct pci_dev *pdev,
- 	info->mem = &pdev->resource[0];
- 	info->irq = pdev->irq;
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index 2ab92409210af..297bf928d6522 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -181,7 +181,7 @@ config PCI_LABEL
  
-+	pdev->d3cold_delay = 0;
-+
- 	/* Probably it is enough to set this for iDMA capable devices only */
- 	pci_set_master(pdev);
- 	pci_try_set_mwi(pdev);
+ config PCI_HYPERV
+         tristate "Hyper-V PCI Frontend"
+-        depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_64
++        depends on X86_64 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && SYSFS
+         help
+           The PCI device frontend driver allows the kernel to import arbitrary
+           PCI devices from a PCI backend to support PCI driver domains.
 -- 
 2.20.1
 
