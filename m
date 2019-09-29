@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9193C32793
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA4DC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76D5921906
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:38:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93E8821D56
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778731;
-	bh=7p8XyQrphJ/tq8QCysawjdWH1XU2lS/L9DrP0XhWqyo=;
+	s=default; t=1569778738;
+	bh=hErGe3uINxLsS7mNQ/P8aL8IKEVdLi6IrfKsbRzA1YA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MutbabHDCAPbGUg80dWxkNf+XqRR6aDmjns3wBmX9gBckDAm/6qU1zL4ICpfOautR
-	 d6rxfgG63Dw2YhfX7T6I+qAknMveVj6RkhHUQtBDn0o0HaVQVqylaXv8QST7MlsBkV
-	 HRLhPI/2z+CRj1ZKWLUzUI/iWpSDIetS9PRpnfyw=
+	b=GWBY4U4/kEET9K7rTlJeyjBDDvavfFL7RgcHDG81kSEBX6Jt5SaE6NRz6S/2rc6HL
+	 TtgyGo8lLW19mjUf8fbMbTs8O/FvYLlsnl/FR5FYeRSnt17ShTOdQD9Akc8cG29V6K
+	 cGh9hsDUrggs+QescqE0kPcuISjGDa3Qbk7V8sPw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730663AbfI2Rfw (ORCPT
+        id S1730066AbfI2Ri6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:35:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48018 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:38:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729757AbfI2Rfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:35:47 -0400
+        id S1729742AbfI2Rfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:35:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6426121D7D;
-        Sun, 29 Sep 2019 17:35:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1E8121D7B;
+        Sun, 29 Sep 2019 17:35:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778547;
-        bh=7p8XyQrphJ/tq8QCysawjdWH1XU2lS/L9DrP0XhWqyo=;
+        s=default; t=1569778543;
+        bh=hErGe3uINxLsS7mNQ/P8aL8IKEVdLi6IrfKsbRzA1YA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vdTezx6U7aHNhMq3QIYLuoo4Zx4LD4mJa87KmHJxYb2AJeRxigjhrDWryfl1unSLq
-         oVtUIP/ZaUuThg1eSRaltlnZPiit3tEAoiON+HBwo+e99N+KKcII2Iir1OHXQM6mCe
-         MwTiywualgL1FpSbQKL0SDox1n0iDPtU5meyJ5G8=
+        b=100iCrjVf3TFpyyirjCh84kHQnz+SlyIL2XfsQGP7W6FrzA4KCSOMWWTPf6NMJrDj
+         cFApxULPRIZMATCnOSik4HoviRH/vs2ffhkmmFmuI8aLegp8P/Q13vr0mAs2kblr/g
+         5fOysP6Mql570imypk9XF/otB1MWdisFFb+DGqco=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miroslav Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, live-patching@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 06/23] livepatch: Nullify obj->mod in klp_module_coming()'s error path
-Date:   Sun, 29 Sep 2019 13:35:16 -0400
-Message-Id: <20190929173535.9744-6-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 04/23] mfd: intel-lpss: Remove D3cold delay
+Date:   Sun, 29 Sep 2019 13:35:14 -0400
+Message-Id: <20190929173535.9744-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173535.9744-1-sashal@kernel.org>
 References: <20190929173535.9744-1-sashal@kernel.org>
@@ -59,39 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miroslav Benes <mbenes@suse.cz>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 4ff96fb52c6964ad42e0a878be8f86a2e8052ddd ]
+[ Upstream commit 76380a607ba0b28627c9b4b55cd47a079a59624b ]
 
-klp_module_coming() is called for every module appearing in the system.
-It sets obj->mod to a patched module for klp_object obj. Unfortunately
-it leaves it set even if an error happens later in the function and the
-patched module is not allowed to be loaded.
+Goodix touchpad may drop its first couple input events when
+i2c-designware-platdrv and intel-lpss it connects to took too long to
+runtime resume from runtime suspended state.
 
-klp_is_object_loaded() uses obj->mod variable and could currently give a
-wrong return value. The bug is probably harmless as of now.
+This issue happens becuase the touchpad has a rather small buffer to
+store up to 13 input events, so if the host doesn't read those events in
+time (i.e. runtime resume takes too long), events are dropped from the
+touchpad's buffer.
 
-Signed-off-by: Miroslav Benes <mbenes@suse.cz>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Petr Mladek <pmladek@suse.com>
+The bottleneck is D3cold delay it waits when transitioning from D3cold
+to D0, hence remove the delay to make the resume faster. I've tested
+some systems with intel-lpss and haven't seen any regression.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202683
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/livepatch/core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mfd/intel-lpss-pci.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-index 88754e9790f9b..f8dc77b18962c 100644
---- a/kernel/livepatch/core.c
-+++ b/kernel/livepatch/core.c
-@@ -941,6 +941,7 @@ int klp_module_coming(struct module *mod)
- 	pr_warn("patch '%s' failed for module '%s', refusing to load module '%s'\n",
- 		patch->mod->name, obj->mod->name, obj->mod->name);
- 	mod->klp_alive = false;
-+	obj->mod = NULL;
- 	klp_cleanup_module_patches_limited(mod, patch);
- 	mutex_unlock(&klp_mutex);
+diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
+index d9ae983095c54..2b7e8eeaa59e9 100644
+--- a/drivers/mfd/intel-lpss-pci.c
++++ b/drivers/mfd/intel-lpss-pci.c
+@@ -39,6 +39,8 @@ static int intel_lpss_pci_probe(struct pci_dev *pdev,
+ 	info->mem = &pdev->resource[0];
+ 	info->irq = pdev->irq;
  
++	pdev->d3cold_delay = 0;
++
+ 	/* Probably it is enough to set this for iDMA capable devices only */
+ 	pci_set_master(pdev);
+ 	pci_try_set_mwi(pdev);
 -- 
 2.20.1
 
