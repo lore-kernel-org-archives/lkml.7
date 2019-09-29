@@ -2,52 +2,54 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED8BDC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5711CC32793
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C38FA21925
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 283442196E
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:40:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778801;
-	bh=azVwqCcUGfwsGN7sFnQ7PhAV7yBm/e9jcdaGx2ASHUg=;
+	s=default; t=1569778810;
+	bh=hfNg8Nm40zRI8TDF/Icp+MSffb6Vg+BWyaWKFeR4cw4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xp4DoU9Prttrs6BkQIY9rYeoob/3aKXzL+7k+BNt8zfVZiXqRjQjgARmiakRemZx9
-	 w/H1vQpDnBmktzpj+Alwk6bczSDJIqm7dEbJWZMlya5QenXsmyLqo0E94+M7q0ipYL
-	 vK3wze7ptGP9VFfmhQ6d8EOLmprLqJyvhG2lJTKI=
+	b=nXcBJWqLzMre7aXxjRqUqItFW6MV0k01uu+7rE1Vndb1aR0Lphfs3xRpXbZ2+GksS
+	 7ibGtvvfRXTZ/VEKedqXRdQba9VP9MlM3QpgmVxDbPNCzYj2oNzZX80Ovfj6c6e//4
+	 llBm2+1+Piqqt07TPWhifpU4ri3HfCdFcO8Ac+3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729739AbfI2RkB (ORCPT
+        id S1729433AbfI2Re5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:40:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47180 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:34:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730499AbfI2RfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:35:02 -0400
+        id S1730403AbfI2Rer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:34:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15D5A21906;
-        Sun, 29 Sep 2019 17:35:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28D2F21906;
+        Sun, 29 Sep 2019 17:34:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778501;
-        bh=azVwqCcUGfwsGN7sFnQ7PhAV7yBm/e9jcdaGx2ASHUg=;
+        s=default; t=1569778487;
+        bh=hfNg8Nm40zRI8TDF/Icp+MSffb6Vg+BWyaWKFeR4cw4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U7nHh1Y8aJAdgAqPqWAjXXsVylDjS5hLTU/i+dYHEFuB2yObEzj+28duXLJzsknsR
-         Bu7xr/Z3TN1BfA+0917SLBTlhNDyRqdCEil1fNZID+O2ixVonwSM266aHB5/tR3lz3
-         duJ2iSqUwejHPILbqujRZ1gQAbaA1MD1DhHJjS38=
+        b=Du8iy/6GEEtRWtci+gq2PvK9oHbQDKivOlbOh7hbHXFvSdD34eGufx12vxD1GdGLI
+         XxNxhqX8tIRhgiUIILaoQSdIc+LA5H9rP5wNn2X7TPlcDFKU/vvny3fLuLj6hTLJwH
+         AEGCogaAWzA1GrW+kYVCI1uflBUZfR9jKGmz3ci8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 21/33] security: smack: Fix possible null-pointer dereferences in smack_socket_sock_rcv_skb()
-Date:   Sun, 29 Sep 2019 13:34:09 -0400
-Message-Id: <20190929173424.9361-21-sashal@kernel.org>
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 11/33] ARM: 8875/1: Kconfig: default to AEABI w/ Clang
+Date:   Sun, 29 Sep 2019 13:33:59 -0400
+Message-Id: <20190929173424.9361-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173424.9361-1-sashal@kernel.org>
 References: <20190929173424.9361-1-sashal@kernel.org>
@@ -60,46 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Nick Desaulniers <ndesaulniers@google.com>
 
-[ Upstream commit 3f4287e7d98a2954f20bf96c567fdffcd2b63eb9 ]
+[ Upstream commit a05b9608456e0d4464c6f7ca8572324ace57a3f4 ]
 
-In smack_socket_sock_rcv_skb(), there is an if statement
-on line 3920 to check whether skb is NULL:
-    if (skb && skb->secmark != 0)
+Clang produces references to __aeabi_uidivmod and __aeabi_idivmod for
+arm-linux-gnueabi and arm-linux-gnueabihf targets incorrectly when AEABI
+is not selected (such as when OABI_COMPAT is selected).
 
-This check indicates skb can be NULL in some cases.
+While this means that OABI userspaces wont be able to upgraded to
+kernels built with Clang, it means that boards that don't enable AEABI
+like s3c2410_defconfig will stop failing to link in KernelCI when built
+with Clang.
 
-But on lines 3931 and 3932, skb is used:
-    ad.a.u.net->netif = skb->skb_iif;
-    ipv6_skb_to_auditdata(skb, &ad.a, NULL);
+Link: https://github.com/ClangBuiltLinux/linux/issues/482
+Link: https://groups.google.com/forum/#!msg/clang-built-linux/yydsAAux5hk/GxjqJSW-AQAJ
 
-Thus, possible null-pointer dereferences may occur when skb is NULL.
-
-To fix these possible bugs, an if statement is added to check skb.
-
-These bugs are found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/smack/smack_lsm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/Kconfig | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
-index 017c47eb795eb..120bd56e5d89e 100644
---- a/security/smack/smack_lsm.c
-+++ b/security/smack/smack_lsm.c
-@@ -4005,6 +4005,8 @@ static int smack_socket_sock_rcv_skb(struct sock *sk, struct sk_buff *skb)
- 			skp = smack_ipv6host_label(&sadd);
- 		if (skp == NULL)
- 			skp = smack_net_ambient;
-+		if (skb == NULL)
-+			break;
- #ifdef CONFIG_AUDIT
- 		smk_ad_init_net(&ad, __func__, LSM_AUDIT_DATA_NET, &net);
- 		ad.a.u.net->family = family;
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 51794c7fa6d5b..185e552f14610 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -1586,8 +1586,9 @@ config ARM_PATCH_IDIV
+ 	  code to do integer division.
+ 
+ config AEABI
+-	bool "Use the ARM EABI to compile the kernel" if !CPU_V7 && !CPU_V7M && !CPU_V6 && !CPU_V6K
+-	default CPU_V7 || CPU_V7M || CPU_V6 || CPU_V6K
++	bool "Use the ARM EABI to compile the kernel" if !CPU_V7 && \
++		!CPU_V7M && !CPU_V6 && !CPU_V6K && !CC_IS_CLANG
++	default CPU_V7 || CPU_V7M || CPU_V6 || CPU_V6K || CC_IS_CLANG
+ 	help
+ 	  This option allows for the kernel to be compiled using the latest
+ 	  ARM ABI (aka EABI).  This is only useful if you are using a user
 -- 
 2.20.1
 
