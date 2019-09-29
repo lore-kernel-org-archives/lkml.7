@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 352DDC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AC3C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F78521920
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:33:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11B9621928
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:33:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778389;
-	bh=DSnlGAxhxB7SSX6XqT2FqtNxf7JUGJ/CRstIzZireiI=;
+	s=default; t=1569778395;
+	bh=RZZgYD1fyG5xCQcGnFdd9/9L3RDH6oeyniowEFWObRY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KsmZUW47OfbORZFWL1z+yn1ASJZxZnq6Gx4FTjpB7LX/WjqRRQof50QqdtrxM91sJ
-	 Bp+ieTe/TeIWVPAsN48utZ1I9tFDdwuP1nkwEQji6UUQhMLlo3YjX8IRc1Tj/hpHwV
-	 zatIJYgPJZ0DVi4Gc2EOsmmTuhV45RgKhIF+Y5qc=
+	b=CNlamkIKOG/xjiYya2tkSbCmF4sOJ0+O8gz6K+fhMuPDicYq58WWD9tVHk74yLBKc
+	 rw3CLK2yRKIP/1rdWCZt4HIEaYn7umhLrUPwW+syba6pNA8dJsFG+B9PopNNGHrwvJ
+	 /tjhLAbuMNMfOcN5rgwHG6NhB/ICrO3ZkADnlL/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729940AbfI2RdI (ORCPT
+        id S1729989AbfI2RdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:33:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44172 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:33:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729925AbfI2RdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:33:01 -0400
+        id S1729962AbfI2RdL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:33:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D85A421928;
-        Sun, 29 Sep 2019 17:32:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90D6F21925;
+        Sun, 29 Sep 2019 17:33:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778380;
-        bh=DSnlGAxhxB7SSX6XqT2FqtNxf7JUGJ/CRstIzZireiI=;
+        s=default; t=1569778390;
+        bh=RZZgYD1fyG5xCQcGnFdd9/9L3RDH6oeyniowEFWObRY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IDlgNZr92weRBLNSjxf3V0g5V5irYr5blztWA+6jrUVv63ahKFM5+6QKwxbSZxb1m
-         07Z/LaDjIE7YqHZ3WKBhnRMvvbTQeEmm76A/T3CdLoTOR0PcaVtuSnSuI7ZgW+CGp/
-         DZNK4m/zqeB97AOl0sjCHNHGCgt20xNeEY729Jvg=
+        b=ZNBcfU9D4jdS41r8ppDMqKlasm7y7tXtJYchI1SMTr13nKM1eTBCUHsBj9xZG8eYn
+         QgL4YXmNm4ob7Uzyin8641AhML5+eG1+dqXRLv5YEH6XgRnxPq99m+bN5sVYX2KrHG
+         oVfeyhlUKFssoaL7rc4nHGhgIMugTq/8kkk439J4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Gerecke <killertofu@gmail.com>,
-        Jason Gerecke <jason.gerecke@wacom.com>,
-        Aaron Armstrong Skomra <aaron.skomra@wacom.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 08/42] HID: wacom: Fix several minor compiler warnings
-Date:   Sun, 29 Sep 2019 13:32:07 -0400
-Message-Id: <20190929173244.8918-8-sashal@kernel.org>
+Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.2 11/42] PCI: layerscape: Add the bar_fixed_64bit property to the endpoint driver
+Date:   Sun, 29 Sep 2019 13:32:10 -0400
+Message-Id: <20190929173244.8918-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173244.8918-1-sashal@kernel.org>
 References: <20190929173244.8918-1-sashal@kernel.org>
@@ -61,87 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gerecke <killertofu@gmail.com>
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
 
-[ Upstream commit 073b50bccbbf99a3b79a1913604c656d0e1a56c9 ]
+[ Upstream commit fd5d16531a39322c3d7433d9f8a36203c9aaeddc ]
 
-Addresses a few issues that were noticed when compiling with non-default
-warnings enabled. The trimmed-down warnings in the order they are fixed
-below are:
+The layerscape PCIe controller have 4 BARs.
 
-* declaration of 'size' shadows a parameter
+ BAR0 and BAR1 are 32bit, BAR2 and BAR4 are 64bit and that's a
+fixed hardware configuration.
 
-* '%s' directive output may be truncated writing up to 5 bytes into a
-  region of size between 1 and 64
+Set the bar_fixed_64bit variable accordingly.
 
-* pointer targets in initialization of 'char *' from 'unsigned char *'
-  differ in signedness
-
-* left shift of negative value
-
-Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
-Reviewed-by: Aaron Armstrong Skomra <aaron.skomra@wacom.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+[lorenzo.pieralisi@arm.com: commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/wacom_sys.c | 7 ++++---
- drivers/hid/wacom_wac.c | 4 ++--
- 2 files changed, 6 insertions(+), 5 deletions(-)
+ drivers/pci/controller/dwc/pci-layerscape-ep.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/hid/wacom_sys.c b/drivers/hid/wacom_sys.c
-index 53bddb50aebaf..602219a8710d0 100644
---- a/drivers/hid/wacom_sys.c
-+++ b/drivers/hid/wacom_sys.c
-@@ -88,7 +88,7 @@ static void wacom_wac_queue_flush(struct hid_device *hdev,
- }
+diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+index be61d96cc95ed..ca9aa4501e7e9 100644
+--- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
++++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+@@ -44,6 +44,7 @@ static const struct pci_epc_features ls_pcie_epc_features = {
+ 	.linkup_notifier = false,
+ 	.msi_capable = true,
+ 	.msix_capable = false,
++	.bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
+ };
  
- static int wacom_wac_pen_serial_enforce(struct hid_device *hdev,
--		struct hid_report *report, u8 *raw_data, int size)
-+		struct hid_report *report, u8 *raw_data, int report_size)
- {
- 	struct wacom *wacom = hid_get_drvdata(hdev);
- 	struct wacom_wac *wacom_wac = &wacom->wacom_wac;
-@@ -149,7 +149,8 @@ static int wacom_wac_pen_serial_enforce(struct hid_device *hdev,
- 	if (flush)
- 		wacom_wac_queue_flush(hdev, &wacom_wac->pen_fifo);
- 	else if (insert)
--		wacom_wac_queue_insert(hdev, &wacom_wac->pen_fifo, raw_data, size);
-+		wacom_wac_queue_insert(hdev, &wacom_wac->pen_fifo,
-+				       raw_data, report_size);
- 
- 	return insert && !flush;
- }
-@@ -2176,7 +2177,7 @@ static void wacom_update_name(struct wacom *wacom, const char *suffix)
- {
- 	struct wacom_wac *wacom_wac = &wacom->wacom_wac;
- 	struct wacom_features *features = &wacom_wac->features;
--	char name[WACOM_NAME_MAX];
-+	char name[WACOM_NAME_MAX - 20]; /* Leave some room for suffixes */
- 
- 	/* Generic devices name unspecified */
- 	if ((features->type == HID_GENERIC) && !strcmp("Wacom HID", features->name)) {
-diff --git a/drivers/hid/wacom_wac.c b/drivers/hid/wacom_wac.c
-index 58719461850de..6be98851edca4 100644
---- a/drivers/hid/wacom_wac.c
-+++ b/drivers/hid/wacom_wac.c
-@@ -251,7 +251,7 @@ static int wacom_dtu_irq(struct wacom_wac *wacom)
- 
- static int wacom_dtus_irq(struct wacom_wac *wacom)
- {
--	char *data = wacom->data;
-+	unsigned char *data = wacom->data;
- 	struct input_dev *input = wacom->pen_input;
- 	unsigned short prox, pressure = 0;
- 
-@@ -572,7 +572,7 @@ static int wacom_intuos_pad(struct wacom_wac *wacom)
- 		strip2 = ((data[3] & 0x1f) << 8) | data[4];
- 	}
- 
--	prox = (buttons & ~(~0 << nbuttons)) | (keys & ~(~0 << nkeys)) |
-+	prox = (buttons & ~(~0U << nbuttons)) | (keys & ~(~0U << nkeys)) |
- 	       (ring1 & 0x80) | (ring2 & 0x80) | strip1 | strip2;
- 
- 	wacom_report_numbered_buttons(input, nbuttons, buttons);
+ static const struct pci_epc_features*
 -- 
 2.20.1
 
