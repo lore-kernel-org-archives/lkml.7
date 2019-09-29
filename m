@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D356CC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E95C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D0CD218DE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8474821920
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:59:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569765564;
-	bh=7I/7TJjRXumpUmGCVVswASnOwdjkMxIlJxWCtUuC1XE=;
+	s=default; t=1569765567;
+	bh=D637BfuFhvKzDJBqTN3H+D/yVwkIDylpZHe7eDje37I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SYSGmkmFlTxk9m+grrLbMfviyDXK3/Ob6YfxcmymEiKS78J7c3s3ZmRu8LqT6q6da
-	 hJd5ShCwCjDkvaZ7TzNamwZf6wkgM1Th3Iry1YlH7EFJERjzREL8nGCnR5u4J5kSlm
-	 renR4mdHRlzpq3fMW8rDDJgHNwE+uQvKCs4xb/rc=
+	b=G2FgHJzLB8UWwIWVjBzHxCkOg+4O60qidno+N1MiEOYTBonmRPFbXsf/gW+v2B/aO
+	 fWuzp0WF6+ergZ2Fqre+ODqZeg1lbYrn3z44UghzXB5/okGJAIT5wD5Ih14oBqcz30
+	 5SqJ1GuCIyL3vbweDcMUiTVO3XQ+lDOM2/xs5ZoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729708AbfI2N7X (ORCPT
+        id S1729723AbfI2N70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 09:59:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40396 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 09:59:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729661AbfI2N7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 09:59:17 -0400
+        id S1729661AbfI2N7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 09:59:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D04FC21882;
-        Sun, 29 Sep 2019 13:59:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C697821882;
+        Sun, 29 Sep 2019 13:59:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569765556;
-        bh=7I/7TJjRXumpUmGCVVswASnOwdjkMxIlJxWCtUuC1XE=;
+        s=default; t=1569765563;
+        bh=D637BfuFhvKzDJBqTN3H+D/yVwkIDylpZHe7eDje37I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u4nkGdLJhEpqV0Jzqc/GfwKyexri7ahTXIqghQQTEe0n7HRzQdxyNlkqxYSpv+mOc
-         jkUdEG07vxG+HXFPNBalfCZT4dGWIw/+Wm2YOOc9mHJMRyThvVSC9OE4wonyYsIMhZ
-         RdNXxIPsDiwhmSPKzvj2jcZTDuAculTmOph26yHY=
+        b=m1q7rwG+wuhTbMT+xzAwtzhTJZVkfVc6p+pYCBWd3KJ+9ra9dpVIuAiDQG1ONDJ9u
+         7FVPoTs5Tpzcty3wUjcA0MQO1kIlnw5WKRaiizGxFLwpyTzxDGxENG9kwGPDB3pGmo
+         YfMzrfXmmyr7b4y8aHgtrsf4npqOOp9os+KRGe9g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Quinn Tran <quinn.tran@cavium.com>,
-        Himanshu Madhani <himanshu.madhani@cavium.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Shirish S <shirish.s@amd.com>,
+        suresh guttula <suresh.guttula@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 39/63] scsi: qla2xxx: Remove all rports if fabric scan retry fails
-Date:   Sun, 29 Sep 2019 15:54:12 +0200
-Message-Id: <20190929135038.875619341@linuxfoundation.org>
+Subject: [PATCH 4.19 41/63] Revert "drm/amd/powerplay: Enable/Disable NBPSTATE on On/OFF of UVD"
+Date:   Sun, 29 Sep 2019 15:54:14 +0200
+Message-Id: <20190929135039.083030953@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190929135031.382429403@linuxfoundation.org>
 References: <20190929135031.382429403@linuxfoundation.org>
@@ -61,210 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <quinn.tran@cavium.com>
+From: Shirish S <shirish.s@amd.com>
 
-[ Upstream commit 9ba1cb25c151de306d64647e545d34af64f30c19 ]
+[ Upstream commit 00fedbe629bfc0a51c07b6e665265ce31d8b6f3c ]
 
-When all fabric scan retries fail, remove all RPorts, DMA resources for the
-command. Otherwise we have stale Rports.
+This reverts commit dbd8299c32f6f413f6cfe322fe0308f3cfc577e8.
 
-Signed-off-by: Quinn Tran <quinn.tran@cavium.com>
-Signed-off-by: Himanshu Madhani <himanshu.madhani@cavium.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reason for revert:
+This patch sends  msg PPSMC_MSG_DisableLowMemoryPstate(0x002e)
+in wrong of sequence to SMU which is before PPSMC_MSG_UVDPowerON (0x0008).
+This leads to SMU failing to service the request as it is
+dependent on UVD to be powered ON, since it accesses UVD
+registers.
+
+This msg should ideally be sent only when the UVD is about to decode
+a 4k video.
+
+Signed-off-by: Shirish S <shirish.s@amd.com>
+Signed-off-by: suresh guttula <suresh.guttula@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_gs.c | 128 +++++++++++++++++-----------------
- 1 file changed, 64 insertions(+), 64 deletions(-)
+ drivers/gpu/drm/amd/powerplay/hwmgr/smu8_hwmgr.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_gs.c b/drivers/scsi/qla2xxx/qla_gs.c
-index 98d936f18b65e..34ff4bbc8de10 100644
---- a/drivers/scsi/qla2xxx/qla_gs.c
-+++ b/drivers/scsi/qla2xxx/qla_gs.c
-@@ -4045,6 +4045,41 @@ void qla24xx_async_gnnft_done(scsi_qla_host_t *vha, srb_t *sp)
- 	}
+diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu8_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/smu8_hwmgr.c
+index c9a15baf2c10f..0adfc5392cd37 100644
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu8_hwmgr.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu8_hwmgr.c
+@@ -1222,17 +1222,14 @@ static int smu8_dpm_force_dpm_level(struct pp_hwmgr *hwmgr,
+ 
+ static int smu8_dpm_powerdown_uvd(struct pp_hwmgr *hwmgr)
+ {
+-	if (PP_CAP(PHM_PlatformCaps_UVDPowerGating)) {
+-		smu8_nbdpm_pstate_enable_disable(hwmgr, true, true);
++	if (PP_CAP(PHM_PlatformCaps_UVDPowerGating))
+ 		return smum_send_msg_to_smc(hwmgr, PPSMC_MSG_UVDPowerOFF);
+-	}
+ 	return 0;
  }
  
-+static int qla2x00_post_gnnft_gpnft_done_work(struct scsi_qla_host *vha,
-+    srb_t *sp, int cmd)
-+{
-+	struct qla_work_evt *e;
-+
-+	if (cmd != QLA_EVT_GPNFT_DONE && cmd != QLA_EVT_GNNFT_DONE)
-+		return QLA_PARAMETER_ERROR;
-+
-+	e = qla2x00_alloc_work(vha, cmd);
-+	if (!e)
-+		return QLA_FUNCTION_FAILED;
-+
-+	e->u.iosb.sp = sp;
-+
-+	return qla2x00_post_work(vha, e);
-+}
-+
-+static int qla2x00_post_nvme_gpnft_done_work(struct scsi_qla_host *vha,
-+    srb_t *sp, int cmd)
-+{
-+	struct qla_work_evt *e;
-+
-+	if (cmd != QLA_EVT_GPNFT)
-+		return QLA_PARAMETER_ERROR;
-+
-+	e = qla2x00_alloc_work(vha, cmd);
-+	if (!e)
-+		return QLA_FUNCTION_FAILED;
-+
-+	e->u.gpnft.fc4_type = FC4_TYPE_NVME;
-+	e->u.gpnft.sp = sp;
-+
-+	return qla2x00_post_work(vha, e);
-+}
-+
- static void qla2x00_find_free_fcp_nvme_slot(struct scsi_qla_host *vha,
- 	struct srb *sp)
+ static int smu8_dpm_powerup_uvd(struct pp_hwmgr *hwmgr)
  {
-@@ -4145,22 +4180,36 @@ static void qla2x00_async_gpnft_gnnft_sp_done(void *s, int res)
- {
- 	struct srb *sp = s;
- 	struct scsi_qla_host *vha = sp->vha;
--	struct qla_work_evt *e;
- 	struct ct_sns_req *ct_req =
- 		(struct ct_sns_req *)sp->u.iocb_cmd.u.ctarg.req;
- 	u16 cmd = be16_to_cpu(ct_req->command);
- 	u8 fc4_type = sp->gen2;
- 	unsigned long flags;
-+	int rc;
- 
- 	/* gen2 field is holding the fc4type */
- 	ql_dbg(ql_dbg_disc, vha, 0xffff,
- 	    "Async done-%s res %x FC4Type %x\n",
- 	    sp->name, res, sp->gen2);
- 
-+	sp->rc = res;
- 	if (res) {
- 		unsigned long flags;
-+		const char *name = sp->name;
-+
-+		/*
-+		 * We are in an Interrupt context, queue up this
-+		 * sp for GNNFT_DONE work. This will allow all
-+		 * the resource to get freed up.
-+		 */
-+		rc = qla2x00_post_gnnft_gpnft_done_work(vha, sp,
-+		    QLA_EVT_GNNFT_DONE);
-+		if (rc) {
-+			/* Cleanup here to prevent memory leak */
-+			qla24xx_sp_unmap(vha, sp);
-+			sp->free(sp);
-+		}
- 
--		sp->free(sp);
- 		spin_lock_irqsave(&vha->work_lock, flags);
- 		vha->scan.scan_flags &= ~SF_SCANNING;
- 		vha->scan.scan_retry++;
-@@ -4171,9 +4220,9 @@ static void qla2x00_async_gpnft_gnnft_sp_done(void *s, int res)
- 			set_bit(LOOP_RESYNC_NEEDED, &vha->dpc_flags);
- 			qla2xxx_wake_dpc(vha);
- 		} else {
--			ql_dbg(ql_dbg_disc, sp->vha, 0xffff,
--			    "Async done-%s rescan failed on all retries\n",
--			    sp->name);
-+			ql_dbg(ql_dbg_disc, vha, 0xffff,
-+			    "Async done-%s rescan failed on all retries.\n",
-+			    name);
- 		}
- 		return;
- 	}
-@@ -4188,80 +4237,31 @@ static void qla2x00_async_gpnft_gnnft_sp_done(void *s, int res)
- 		vha->scan.scan_flags &= ~SF_SCANNING;
- 		spin_unlock_irqrestore(&vha->work_lock, flags);
- 
--		e = qla2x00_alloc_work(vha, QLA_EVT_GPNFT);
--		if (!e) {
--			/*
--			 * please ignore kernel warning. Otherwise,
--			 * we have mem leak.
--			 */
--			if (sp->u.iocb_cmd.u.ctarg.req) {
--				dma_free_coherent(&vha->hw->pdev->dev,
--				    sp->u.iocb_cmd.u.ctarg.req_allocated_size,
--				    sp->u.iocb_cmd.u.ctarg.req,
--				    sp->u.iocb_cmd.u.ctarg.req_dma);
--				sp->u.iocb_cmd.u.ctarg.req = NULL;
--			}
--			if (sp->u.iocb_cmd.u.ctarg.rsp) {
--				dma_free_coherent(&vha->hw->pdev->dev,
--				    sp->u.iocb_cmd.u.ctarg.rsp_allocated_size,
--				    sp->u.iocb_cmd.u.ctarg.rsp,
--				    sp->u.iocb_cmd.u.ctarg.rsp_dma);
--				sp->u.iocb_cmd.u.ctarg.rsp = NULL;
--			}
--
--			ql_dbg(ql_dbg_disc, vha, 0xffff,
--			    "Async done-%s unable to alloc work element\n",
--			    sp->name);
--			sp->free(sp);
-+		sp->rc = res;
-+		rc = qla2x00_post_nvme_gpnft_done_work(vha, sp, QLA_EVT_GPNFT);
-+		if (!rc) {
-+			qla24xx_sp_unmap(vha, sp);
- 			set_bit(LOCAL_LOOP_UPDATE, &vha->dpc_flags);
- 			set_bit(LOOP_RESYNC_NEEDED, &vha->dpc_flags);
- 			return;
- 		}
--		e->u.gpnft.fc4_type = FC4_TYPE_NVME;
--		sp->rc = res;
--		e->u.gpnft.sp = sp;
--
--		qla2x00_post_work(vha, e);
--		return;
- 	}
- 
- 	if (cmd == GPN_FT_CMD) {
- 		del_timer(&sp->u.iocb_cmd.timer);
--		e = qla2x00_alloc_work(vha, QLA_EVT_GPNFT_DONE);
-+		rc = qla2x00_post_gnnft_gpnft_done_work(vha, sp,
-+		    QLA_EVT_GPNFT_DONE);
- 	} else {
--		e = qla2x00_alloc_work(vha, QLA_EVT_GNNFT_DONE);
-+		rc = qla2x00_post_gnnft_gpnft_done_work(vha, sp,
-+		    QLA_EVT_GNNFT_DONE);
- 	}
- 
--	if (!e) {
--		/* please ignore kernel warning. Otherwise, we have mem leak. */
--		if (sp->u.iocb_cmd.u.ctarg.req) {
--			dma_free_coherent(&vha->hw->pdev->dev,
--			    sp->u.iocb_cmd.u.ctarg.req_allocated_size,
--			    sp->u.iocb_cmd.u.ctarg.req,
--			    sp->u.iocb_cmd.u.ctarg.req_dma);
--			sp->u.iocb_cmd.u.ctarg.req = NULL;
--		}
--		if (sp->u.iocb_cmd.u.ctarg.rsp) {
--			dma_free_coherent(&vha->hw->pdev->dev,
--			    sp->u.iocb_cmd.u.ctarg.rsp_allocated_size,
--			    sp->u.iocb_cmd.u.ctarg.rsp,
--			    sp->u.iocb_cmd.u.ctarg.rsp_dma);
--			sp->u.iocb_cmd.u.ctarg.rsp = NULL;
--		}
--
--		ql_dbg(ql_dbg_disc, vha, 0xffff,
--		    "Async done-%s unable to alloc work element\n",
--		    sp->name);
--		sp->free(sp);
-+	if (rc) {
-+		qla24xx_sp_unmap(vha, sp);
- 		set_bit(LOCAL_LOOP_UPDATE, &vha->dpc_flags);
- 		set_bit(LOOP_RESYNC_NEEDED, &vha->dpc_flags);
- 		return;
- 	}
--
--	sp->rc = res;
--	e->u.iosb.sp = sp;
--
--	qla2x00_post_work(vha, e);
- }
- 
- /*
+ 	if (PP_CAP(PHM_PlatformCaps_UVDPowerGating)) {
+-		smu8_nbdpm_pstate_enable_disable(hwmgr, false, true);
+ 		return smum_send_msg_to_smc_with_parameter(
+ 			hwmgr,
+ 			PPSMC_MSG_UVDPowerON,
 -- 
 2.20.1
 
