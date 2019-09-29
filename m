@@ -2,258 +2,150 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1FC3C352A9
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E49C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 752532082F
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1AA32082F
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:09:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lC5plcFE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=preining.info header.i=@preining.info header.b="KoPkTZ3q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728847AbfI2NB4 (ORCPT
+        id S1728629AbfI2NJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 09:01:56 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39700 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbfI2NB4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 09:01:56 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r3so8003622wrj.6;
-        Sun, 29 Sep 2019 06:01:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bdCVpjeUeIvhTicwteXOBMxHJh/rxwiqJp3B1DRQ450=;
-        b=lC5plcFEqfiPBelkcu2z/AFCQq6Eh9DIh9o6eqCz65MGOXul/YkGDVCU1R5nYNWWBs
-         lYB6GIMoJ/B9MzPUNYqxsz2UoRzAGXgr4CKJ9Rs/o83jL+p6da+XQtJsAgj94Cm49hmg
-         0o8+9SPsYSheSR/UOHLlMZ7U6COv/wS1KBvKfanAZnLQ1eCjENkoOA/IZIn/ccCmgYES
-         8QjHFrlRrAjJFOTvHU0Lh5uleQmKnvpKsnsmOK6aNTR8aEhssRcwLpK9jdE+qqWGvIyc
-         yzovnmkOXKAkCD61OT06JpoYm5pBuuid39Xr90TPWJu8cOnaSDky++mCuWzG6B4tlG31
-         ePcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=bdCVpjeUeIvhTicwteXOBMxHJh/rxwiqJp3B1DRQ450=;
-        b=Kz5apdNTSaW0vxHr0J6DvLNtji5k6TGSVKEPX9cOM5L2WcJM29NKG6/K8wfR+Zm+VE
-         N0yDArsOrNJ9zG6NpSraQxuRzJddw9GttwR1LGGUkcRPeE1Vz6YH0xmOYmKYDWNTBZJY
-         PkFOs5m5c8fd0jr/PTPR7ibikmBpN/0pZSF4xKo/u4ObbhhrIzTxLSmu1ZWd0jame9kA
-         Ebe7zbs+nNKrDtsT1SzEfvMY3Kg6MKtROt3dduTo//tgwKkZsdj6sI5rFZX8qKIPfgVk
-         4xyKn+4+CnmfX/wdBEuqsNMX2NuKXZP523EeXG3P5tpPalADXAiSVHvBp2ifDnQ5RNWl
-         LcWg==
-X-Gm-Message-State: APjAAAXxwaaLvYctEgx6gQKbbmdTQ8WNs1XIVxtqKYh86Zpb6CLlMMI7
-        ka82cvkya84PLMZthO9DjyilPh9G
-X-Google-Smtp-Source: APXvYqyTeezpv6e2vpPToWFa1EjUHrc4FkrzRy0TxAlAna9wJ9kyK+PNAaAAhe8lCJQBhWvXtszrvw==
-X-Received: by 2002:adf:ef12:: with SMTP id e18mr4969169wro.65.1569762112856;
-        Sun, 29 Sep 2019 06:01:52 -0700 (PDT)
-Received: from [192.168.1.19] (blg187.neoplus.adsl.tpnet.pl. [83.28.200.187])
-        by smtp.gmail.com with ESMTPSA id l7sm7684612wrv.77.2019.09.29.06.01.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 29 Sep 2019 06:01:52 -0700 (PDT)
-Subject: Re: [PATCH v9 13/15] leds: lp55xx: Update the lp55xx to use the multi
- color framework
-To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190925174616.3714-1-dmurphy@ti.com>
- <20190925174616.3714-14-dmurphy@ti.com>
- <59e58ccf-84fb-5db7-5008-20afc7436d35@gmail.com>
- <64d00aab-501c-d709-94af-4747a27df098@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <35e25398-81de-3755-7979-72638a119c77@gmail.com>
-Date:   Sun, 29 Sep 2019 15:01:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sun, 29 Sep 2019 09:09:51 -0400
+Received: from hz.preining.info ([95.216.25.247]:53908 "EHLO hz.preining.info"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725924AbfI2NJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 09:09:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=preining.info; s=201909; h=Content-Type:MIME-Version:Message-ID:Subject:To:
+        From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ppgVLlqkVsOKnpBZSVm+M6uI9uNrUQPKpIDO4/1dEkA=; b=KoPkTZ3q7QhnU3VJKuK6GD6yMV
+        sGWHFzj011hONE95gxj3rCvaLleUjSHIVUICVR6kzREa0vjyDMrEOSNN7Ucb7IfHrtfd8dl/z222j
+        v5RG5n7ZFPW6MzxSa54+A4j3SW+xirkvt6St+aL4NyIqN+R+R53hXOEeNTV1iNYHRweb+zbOHU4+G
+        4KyL5CLi8f4aPZalJ30A0LkFDjEB53JyydLZgBi33EDgGaVnxGJEb94BuHCnarBZaYs9Uy8cKjAdM
+        EIBfjG7QLKY5ebWUZlE+su4S6cVoir+htIMVpdIPruDHBz6ilvob8ldoBRpPB5ywZorcCVdxwdIzr
+        IASQVucw==;
+Received: from tvk213002.tvk.ne.jp ([180.94.213.2] helo=burischnitzel.preining.info)
+        by hz.preining.info with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <norbert@preining.info>)
+        id 1iEYxO-0002SM-QO; Sun, 29 Sep 2019 13:09:47 +0000
+Received: by burischnitzel.preining.info (Postfix, from userid 1000)
+        id 3CAED698B215; Sun, 29 Sep 2019 22:09:43 +0900 (JST)
+Date:   Sun, 29 Sep 2019 22:09:43 +0900
+From:   Norbert Preining <norbert@preining.info>
+To:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: kernel warning related to i915 code
+Message-ID: <20190929130943.rfe6f2vsnaifrip5@burischnitzel.preining.info>
 MIME-Version: 1.0
-In-Reply-To: <64d00aab-501c-d709-94af-4747a27df098@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan,
+Dear all,
 
-On 9/26/19 2:02 PM, Dan Murphy wrote:
-> Jacek
-> 
-> On 9/25/19 5:00 PM, Jacek Anaszewski wrote:
->> Dan,
->>
->> On 9/25/19 7:46 PM, Dan Murphy wrote:
->>> Update the lp5523 to allow the use of the multi color framework.
->>>
->>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>> ---
->>>   drivers/leds/Kconfig                      |   1 +
->>>   drivers/leds/leds-lp5523.c                |  13 ++
->>>   drivers/leds/leds-lp55xx-common.c         | 150 ++++++++++++++++++----
->>>   drivers/leds/leds-lp55xx-common.h         |  11 ++
->>>   include/linux/platform_data/leds-lp55xx.h |   6 +
->>>   5 files changed, 157 insertions(+), 24 deletions(-)
->>>
->>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
->>> index 84f60e35c5ee..dc3d9f2194cd 100644
->>> --- a/drivers/leds/Kconfig
->>> +++ b/drivers/leds/Kconfig
->>> @@ -377,6 +377,7 @@ config LEDS_LP50XX
->>>   config LEDS_LP55XX_COMMON
->>>       tristate "Common Driver for TI/National
->>> LP5521/5523/55231/5562/8501"
->>>       depends on LEDS_LP5521 || LEDS_LP5523 || LEDS_LP5562 ||
->>> LEDS_LP8501
->>> +    depends on LEDS_CLASS_MULTI_COLOR && OF
->>>       select FW_LOADER
->>>       select FW_LOADER_USER_HELPER
->>>       help
->>> diff --git a/drivers/leds/leds-lp5523.c b/drivers/leds/leds-lp5523.c
->>> index d0b931a136b9..8b2cdb98fed6 100644
->>> --- a/drivers/leds/leds-lp5523.c
->>> +++ b/drivers/leds/leds-lp5523.c
->>> @@ -791,6 +791,18 @@ static ssize_t store_master_fader_leds(struct
->>> device *dev,
->>>       return ret;
->>>   }
->>>   +static int lp5523_led_intensity(struct lp55xx_led *led, int chan_num)
->> Why do we need this function? brightness op will not suffice?
-> 
-> I looked at this before sending it in.  This API adds the chan_num to
-> write to.
-> 
-> The brightness_fn does not it takes it from the led structure.
-> 
->>
->>> +{
->>> +    struct lp55xx_chip *chip = led->chip;
->>> +    int ret;
->>> +
->>> +    mutex_lock(&chip->lock);
->>> +    ret = lp55xx_write(chip, LP5523_REG_LED_PWM_BASE + chan_num,
->>> +             led->brightness);
->>> +    mutex_unlock(&chip->lock);
->>> +    return ret;
->>> +}
->>> +
->>>   static int lp5523_led_brightness(struct lp55xx_led *led)
->>>   {
->>>       struct lp55xx_chip *chip = led->chip;
->>> @@ -857,6 +869,7 @@ static struct lp55xx_device_config lp5523_cfg = {
->>>       .max_channel  = LP5523_MAX_LEDS,
->>>       .post_init_device   = lp5523_post_init_device,
->>>       .brightness_fn      = lp5523_led_brightness,
->>> +    .color_intensity_fn = lp5523_led_intensity,
->>>       .set_led_current    = lp5523_set_led_current,
->>>       .firmware_cb        = lp5523_firmware_loaded,
->>>       .run_engine         = lp5523_run_engine,
->>> diff --git a/drivers/leds/leds-lp55xx-common.c
->>> b/drivers/leds/leds-lp55xx-common.c
->>> index 44ced02b49f9..0e4b3a9d3047 100644
->>> --- a/drivers/leds/leds-lp55xx-common.c
->>> +++ b/drivers/leds/leds-lp55xx-common.c
->>> @@ -136,9 +136,26 @@ static int lp55xx_set_brightness(struct
->>> led_classdev *cdev,
->>>   {
->>>       struct lp55xx_led *led = cdev_to_lp55xx_led(cdev);
->>>       struct lp55xx_device_config *cfg = led->chip->cfg;
->>> +    int brightness_val[LP55XX_MAX_GROUPED_CHAN];
->>> +    int ret;
->>> +    int i;
->>> +
->>> +    if (led->mc_cdev.num_leds > 1) {
->>> +        led_mc_calc_brightness(&led->mc_cdev,
->>> +                       brightness, brightness_val);
->>> +        for (i = 0; i < led->mc_cdev.num_leds; i++) {
->>> +            led->brightness = brightness_val[i];
->>> +            ret = cfg->color_intensity_fn(led,
->>> +                              led->grouped_channels[i]);
->> Now we will have three separate calls for each color component
->> (and possibly sleeping on mutex on contention).
->>
->> Probably LED mc class use case will need a bit different design.
->>
->> Also, instead of grouped_channels we could possibly have
->>
->> led_mc_get_color_id(&led->mc_dev, i)
-> color_id and grouped_channels are not a 1:1 mapping
+(please Cc)
 
-OK, they're channel numbers.
+linux 5.3.1
+Debian/sid
+Lenovo X260
+[    2.472152] i915 0000:00:02.0: vgaarb: deactivate vga console
+[    2.473035] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+[    2.473037] [drm] Driver supports precise vblank timestamp query.
+[    2.473431] i915 0000:00:02.0: vgaarb: changed VGA decodes: olddecodes=io+mem,decodes=io+mem:owns=io+mem
+[    2.474796] [drm] Finished loading DMC firmware i915/skl_dmc_ver1_27.bin (v1.27)
+[    2.497068] [drm] Initialized i915 1.6.0 20190619 for 0000:00:02.0 on minor 0
+[    2.499469] ACPI: Video Device [GFX0] (multi-head: yes  rom: no  post: no)
+[    2.500011] input: Video Bus as /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/LNXVIDEO:00/input/input3
+[    2.697843] fbcon: i915drmfb (fb0) is primary device
+[    2.711468] Console: switching to colour frame buffer device 240x67
+[    2.732932] i915 0000:00:02.0: fb0: i915drmfb frame buffer device
 
->> which would map entry position index to color_id.
->>
->> I will stop reviewing here and will continue after taking
->> deeper look at this lp55xx design.
 
-I've analyzed that design in greater detail and have started
-to wonder why you can't pass two arrays to the new op:
-channel numbers and corresponding calculated channel intensities?
+I am seeing kernel warnings in flushqueue:
+[ 6180.832664] workqueue: PF_MEMALLOC task 117(kswapd0) is flushing !WQ_MEM_RECLAIM events:gen6_pm_rps_work [i915]
+[ 6180.832670] WARNING: CPU: 2 PID: 117 at check_flush_dependency+0xa0/0x130
+[ 6180.832671] Modules linked in: hid_generic(E) usbhid(E) hid(E) xt_MASQUERADE(E) nf_conntrack_netlink(E) xfrm_user(E) xfrm_algo(
+E) xt_addrtype(E) xt_conntrack(E) br_netfilter(E) pci_stub(E) vboxpci(OE) vboxnetadp(OE) l2tp_ppp(E) l2tp_netlink(E) vboxnetflt(OE
+) l2tp_core(E) ip6_udp_tunnel(E) udp_tunnel(E) pppox(E) ppp_generic(E) vboxdrv(OE) slhc(E) ccm(E) rfcomm(E) xt_CHECKSUM(E) ipt_REJ
+ECT(E) nf_reject_ipv4(E) xt_tcpudp(E) nft_compat(E) nft_counter(E) nft_chain_nat(E) nf_nat(E) nf_conntrack(E) nf_defrag_ipv6(E) nf
+_defrag_ipv4(E) nf_tables(E) nfnetlink(E) tun(E) cmac(E) cpufreq_userspace(E) cpufreq_powersave(E) bnep(E) cpufreq_conservative(E)
+ uinput(E) binfmt_misc(E) nls_ascii(E) nls_cp437(E) btusb(E) btrtl(E) btbcm(E) uvcvideo(E) btintel(E) intel_rapl_msr(E) snd_hda_co
+dec_hdmi(E) videobuf2_vmalloc(E) intel_rapl_common(E) videobuf2_memops(E) videobuf2_v4l2(E) fuse(E) bluetooth(E) videobuf2_common(
+E) iwlmvm(E) snd_hda_codec_realtek(E) ecdh_generic(E) videodev(E) ecc(E) snd_hda_codec_generic(E)
+[ 6180.832696]  mac80211(E) mei_hdcp(E) x86_pkg_temp_thermal(E) libarc4(E) snd_hda_intel(E) intel_powerclamp(E) coretemp(E) iwlwif
+i(E) snd_hda_codec(E) snd_hwdep(E) kvm_intel(E) snd_hda_core(E) efi_pstore(E) kvm(E) cfg80211(E) irqbypass(E) snd_pcm(E) thinkpad_
+acpi(E) intel_pch_thermal(E) iTCO_wdt(E) joydev(E) mei_me(E) snd_timer(E) nvram(E) efivars(E) ledtrig_audio(E) iTCO_vendor_support
+(E) serio_raw(E) sg(E) snd(E) tpm_crb(E) mei(E) evdev(E) pcspkr(E) soundcore(E) rfkill(E) tpm_tis(E) ac(E) tpm_tis_core(E) battery
+(E) tpm(E) rng_core(E) button(E) sunrpc(E) efivarfs(E) ip_tables(E) x_tables(E) autofs4(E) dm_crypt(E) dm_mod(E) raid10(E) raid456
+(E) async_raid6_recov(E) async_memcpy(E) async_pq(E) async_xor(E) async_tx(E) raid1(E) raid0(E) multipath(E) linear(E) md_mod(E) s
+d_mod(E) crct10dif_pclmul(E) crc32_pclmul(E) crc32c_intel(E) ghash_clmulni_intel(E) i915(E) ahci(E) i2c_algo_bit(E) libahci(E) drm
+_kms_helper(E) aesni_intel(E) rtsx_pci_sdmmc(E) syscopyarea(E) xhci_pci(E) libata(E) mmc_core(E)
+[ 6180.832721]  sysfillrect(E) aes_x86_64(E) sysimgblt(E) crypto_simd(E) fb_sys_fops(E) xhci_hcd(E) cryptd(E) glue_helper(E) psmou
+se(E) i2c_i801(E) scsi_mod(E) drm(E) usbcore(E) thermal(E) video(E)
+[ 6180.832730] CPU: 2 PID: 117 Comm: kswapd0 Tainted: G           OE     5.3.1+ #16
+[ 6180.832731] Hardware name: LENOVO 20F5CTO1WW/20F5CTO1WW, BIOS R02ET71W (1.44 ) 05/08/2019
+[ 6180.832733] RIP: 0010:check_flush_dependency+0xa0/0x130
+[ 6180.832735] Code: 8d 8a 60 06 00 00 49 89 e8 48 c7 c7 f0 a0 87 97 48 8d 8b b0 00 00 00 4c 89 ca 48 89 04 24 c6 05 62 2b 28 01 0
+1 e8 0e 16 fe ff <0f> 0b 48 8b 04 24 eb 10 4c 89 e7 e8 30 64 00 00 41 f6 44 24 25 08
+[ 6180.832736] RSP: 0018:ffffaa41801e78e8 EFLAGS: 00010082
+[ 6180.832738] RAX: 0000000000000000 RBX: ffff9e48d0414c00 RCX: 0000000000000000
+[ 6180.832739] RDX: 0000000000000063 RSI: ffffffff980515e3 RDI: ffffffff980519e3
+[ 6180.832740] RBP: ffffffffc05ae640 R08: 0000059f1655da91 R09: 0000000000000063
+[ 6180.832741] R10: ffffffff98051960 R11: 00000000980515cb R12: ffff9e48cf87e080
+[ 6180.832742] R13: ffff9e48d222c400 R14: 0000000000000001 R15: ffff9e48c97ede80
+[ 6180.832743] FS:  0000000000000000(0000) GS:ffff9e48d2300000(0000) knlGS:0000000000000000
+[ 6180.832744] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 6180.832745] CR2: 00007fc7a50c2000 CR3: 0000000118c0a005 CR4: 00000000003606e0
+[ 6180.832746] Call Trace:
+[ 6180.832750]  __flush_work+0x92/0x1b0
+[ 6180.832753]  ? enqueue_hrtimer+0x36/0x90
+[ 6180.832755]  ? hrtimer_start_range_ns+0x18b/0x2c0
+[ 6180.832757]  __cancel_work_timer+0x100/0x190
+[ 6180.832760]  ? _cond_resched+0x15/0x30
+[ 6180.832762]  ? synchronize_irq+0x3a/0xa0
+[ 6180.832764]  ? _raw_spin_lock_irqsave+0x25/0x30
+[ 6180.832783]  ? fwtable_write32+0x4f/0x210 [i915]
+[ 6180.832799]  gen6_disable_rps_interrupts+0x79/0xa0 [i915]
+[ 6180.832817]  gen6_rps_idle+0x13/0xe0 [i915]
+[ 6180.832836]  intel_gt_park+0x54/0x60 [i915]
+[ 6180.832854]  __intel_wakeref_put_last+0x17/0x50 [i915]
+[ 6180.832873]  __engine_park+0xbc/0xd0 [i915]
+[ 6180.832890]  __intel_wakeref_put_last+0x17/0x50 [i915]
+[ 6180.832912]  i915_request_retire+0x178/0x310 [i915]
+[ 6180.832934]  ring_retire_requests+0x4e/0x60 [i915]
+[ 6180.832955]  i915_retire_requests+0x43/0x80 [i915]
+[ 6180.832976]  i915_gem_shrink+0xcb/0x4c0 [i915]
+[ 6180.832997]  i915_gem_shrinker_scan+0x63/0x110 [i915]
+[ 6180.833007]  do_shrink_slab+0x149/0x290
+[ 6180.833011]  shrink_slab+0xac/0x2b0
+[ 6180.833013]  shrink_node+0xf5/0x490
+[ 6180.833016]  balance_pgdat+0x2bb/0x500
+[ 6180.833019]  kswapd+0x1e8/0x3b0
+[ 6180.833024]  ? wait_woken+0x70/0x70
+[ 6180.833026]  ? balance_pgdat+0x500/0x500
+[ 6180.833029]  kthread+0x118/0x130
+[ 6180.833032]  ? kthread_create_worker_on_cpu+0x70/0x70
+[ 6180.833034]  ret_from_fork+0x35/0x40
+[ 6180.833036] ---[ end trace 765b2991cf66218a ]---
 
--- 
-Best regards,
-Jacek Anaszewski
+Best
+
+Norbert
+
+--
+PREINING Norbert                               http://www.preining.info
+Accelia Inc. + IFMGA ProGuide + TU Wien + JAIST + TeX Live + Debian Dev
+GPG: 0x860CDC13   fp: F7D8 A928 26E3 16A1 9FA0 ACF0 6CAC A448 860C DC13
