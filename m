@@ -2,57 +2,54 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD3D4C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E8AC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0F3B2082F
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:04:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B6672082F
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569765891;
-	bh=FGP+XNu2Ib1vWj/+5kSrQEzlaKrwsEKHcAsPA1D78Go=;
+	s=default; t=1569765908;
+	bh=g4EIyYRYGSUWt9y0XJmLdDFQ6tAcVEVuhUhDrId1rQk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u06Tt7bRL060Rzp3UAqv2T+lP6+vpMiuSY5JGn+FrOuZHk7D/WpGdmEGhOIeq+nKp
-	 CNNvMHxN67dobogp937a/IzqBSc4RYM/f6vkUDQkrUdotHj+d+sKY6qUCkTdhqu/+j
-	 h0Wvt+lDFhoEphLf/oxLdgtuv4TpOjZlZstg6Ozc=
+	b=bUKmBlGpHXTcsrAuPHgeZ8EHZwIRliiuuiH7jrwclT25nO+Lmie1GgSPJdqfBs79p
+	 r7I36f108t8VssE+15Huy8xSMG9zqIXLMvE/OohBpbDi9tlsuVGVXoOpvI1M/6r2w1
+	 vMcRA7Bwp+x4Jmu+zLXrLsWLmanMQnoN9b9BkxaY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730179AbfI2OCQ (ORCPT
+        id S1729987AbfI2OBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 10:02:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44622 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 10:01:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730144AbfI2OCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 10:02:09 -0400
+        id S1729279AbfI2OBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 10:01:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5FE72082F;
-        Sun, 29 Sep 2019 14:02:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 762132082F;
+        Sun, 29 Sep 2019 14:01:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569765728;
-        bh=FGP+XNu2Ib1vWj/+5kSrQEzlaKrwsEKHcAsPA1D78Go=;
+        s=default; t=1569765667;
+        bh=g4EIyYRYGSUWt9y0XJmLdDFQ6tAcVEVuhUhDrId1rQk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pAXo27SazifWiS7+qcBWpNflYcdSsLJrC4q/MkobEkZVjXB1072doEukoF80pIaC7
-         zswUrLnhmVKuNxr+UnWWtCM+sC+229Ecdtq4BqxgT2EQrHEkwKaLrIQStYuzMaQ9sG
-         NeykgY4DGNlV34QdWVh6aL21PDifPtVI6oVd1HAs=
+        b=zngbyiuIndT7LLDJuFbT9vgyoqbNG1IigN3GOQ6v4/wDgvd/xV1tmY2gWmuzn+F9Z
+         cIrPEMpakccNrh5ukl+wNGeAneISlCYOk/fIeo2RX71HlBa9FpfCevS2TYKzi6mn8O
+         y/bia2Pv794CIpwoNECedUjLIeoVqd15yQTmEI/Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Joakim Tjernlund <Joakim.Tjernlund@infinera.com>,
-        linux-mtd@lists.infradead.org, Fabio Bettoni <fbettoni@gmail.com>,
-        Felix Fietkau <nbd@nbd.name>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Tokunori Ikegami <ikegami.t@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [PATCH 5.2 18/45] mtd: cfi_cmdset_0002: Use chip_good() to retry in do_write_oneword()
-Date:   Sun, 29 Sep 2019 15:55:46 +0200
-Message-Id: <20190929135030.092855722@linuxfoundation.org>
+        stable@vger.kernel.org, Sedat Dilek <sedat.dilek@gmail.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 10/45] drm/amd/display: readd -msse2 to prevent Clang from emitting libcalls to undefined SW FP routines
+Date:   Sun, 29 Sep 2019 15:55:38 +0200
+Message-Id: <20190929135027.732791582@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190929135024.387033930@linuxfoundation.org>
 References: <20190929135024.387033930@linuxfoundation.org>
@@ -65,85 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tokunori Ikegami <ikegami.t@gmail.com>
+From: Nick Desaulniers <ndesaulniers@google.com>
 
-commit 37c673ade35c707d50583b5b25091ff8ebdeafd7 upstream.
+[ Upstream commit 0f0727d971f6fdf8f1077180d495ddb9928f0c8b ]
 
-As reported by the OpenWRT team, write requests sometimes fail on some
-platforms.
-Currently to check the state chip_ready() is used correctly as described by
-the flash memory S29GL256P11TFI01 datasheet.
-Also chip_good() is used to check if the write is succeeded and it was
-implemented by the commit fb4a90bfcd6d8 ("[MTD] CFI-0002 - Improve error
-checking").
-But actually the write failure is caused on some platforms and also it can
-be fixed by using chip_good() to check the state and retry instead.
-Also it seems that it is caused after repeated about 1,000 times to retry
-the write one word with the reset command.
-By using chip_good() to check the state to be done it can be reduced the
-retry with reset.
-It is depended on the actual flash chip behavior so the root cause is
-unknown.
+arch/x86/Makefile disables SSE and SSE2 for the whole kernel.  The
+AMDGPU drivers modified in this patch re-enable SSE but not SSE2.  Turn
+on SSE2 to support emitting double precision floating point instructions
+rather than calls to non-existent (usually available from gcc_s or
+compiler_rt) floating point helper routines for Clang.
 
-Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
-Cc: linux-mtd@lists.infradead.org
-Cc: stable@vger.kernel.org
-Reported-by: Fabio Bettoni <fbettoni@gmail.com>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
-Signed-off-by: Tokunori Ikegami <ikegami.t@gmail.com>
-[vigneshr@ti.com: Fix a checkpatch warning]
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This was originally landed in:
+commit 10117450735c ("drm/amd/display: add -msse2 to prevent Clang from emitting libcalls to undefined SW FP routines")
+but reverted in:
+commit 193392ed9f69 ("Revert "drm/amd/display: add -msse2 to prevent Clang from emitting libcalls to undefined SW FP routines"")
+due to bugreports from GCC builds. Add guards to only do so for Clang.
 
+Link: https://bugs.freedesktop.org/show_bug.cgi?id=109487
+Link: https://github.com/ClangBuiltLinux/linux/issues/327
+
+Suggested-by: Sedat Dilek <sedat.dilek@gmail.com>
+Suggested-by: Sami Tolvanen <samitolvanen@google.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/chips/cfi_cmdset_0002.c |   18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/amd/display/dc/calcs/Makefile | 4 ++++
+ drivers/gpu/drm/amd/display/dc/dml/Makefile   | 4 ++++
+ 2 files changed, 8 insertions(+)
 
---- a/drivers/mtd/chips/cfi_cmdset_0002.c
-+++ b/drivers/mtd/chips/cfi_cmdset_0002.c
-@@ -1628,29 +1628,35 @@ static int __xipram do_write_oneword(str
- 			continue;
- 		}
+diff --git a/drivers/gpu/drm/amd/display/dc/calcs/Makefile b/drivers/gpu/drm/amd/display/dc/calcs/Makefile
+index 95f332ee3e7e6..16614d73a5fcf 100644
+--- a/drivers/gpu/drm/amd/display/dc/calcs/Makefile
++++ b/drivers/gpu/drm/amd/display/dc/calcs/Makefile
+@@ -32,6 +32,10 @@ endif
  
--		if (time_after(jiffies, timeo) && !chip_ready(map, adr)){
-+		/*
-+		 * We check "time_after" and "!chip_good" before checking
-+		 * "chip_good" to avoid the failure due to scheduling.
-+		 */
-+		if (time_after(jiffies, timeo) && !chip_good(map, adr, datum)) {
- 			xip_enable(map, chip, adr);
- 			printk(KERN_WARNING "MTD %s(): software timeout\n", __func__);
- 			xip_disable(map, chip, adr);
-+			ret = -EIO;
- 			break;
- 		}
+ calcs_ccflags := -mhard-float -msse $(cc_stack_align)
  
--		if (chip_ready(map, adr))
-+		if (chip_good(map, adr, datum))
- 			break;
- 
- 		/* Latency issues. Drop the lock, wait a while and retry */
- 		UDELAY(map, chip, adr, 1);
- 	}
++ifdef CONFIG_CC_IS_CLANG
++calcs_ccflags += -msse2
++endif
 +
- 	/* Did we succeed? */
--	if (!chip_good(map, adr, datum)) {
-+	if (ret) {
- 		/* reset on all failures. */
- 		map_write(map, CMD(0xF0), chip->start);
- 		/* FIXME - should have reset delay before continuing */
+ CFLAGS_dcn_calcs.o := $(calcs_ccflags)
+ CFLAGS_dcn_calc_auto.o := $(calcs_ccflags)
+ CFLAGS_dcn_calc_math.o := $(calcs_ccflags) -Wno-tautological-compare
+diff --git a/drivers/gpu/drm/amd/display/dc/dml/Makefile b/drivers/gpu/drm/amd/display/dc/dml/Makefile
+index d97ca6528f9d9..934ffe1b4b00e 100644
+--- a/drivers/gpu/drm/amd/display/dc/dml/Makefile
++++ b/drivers/gpu/drm/amd/display/dc/dml/Makefile
+@@ -32,6 +32,10 @@ endif
  
--		if (++retry_cnt <= MAX_RETRIES)
-+		if (++retry_cnt <= MAX_RETRIES) {
-+			ret = 0;
- 			goto retry;
--
--		ret = -EIO;
-+		}
- 	}
- 	xip_enable(map, chip, adr);
-  op_done:
+ dml_ccflags := -mhard-float -msse $(cc_stack_align)
+ 
++ifdef CONFIG_CC_IS_CLANG
++dml_ccflags += -msse2
++endif
++
+ CFLAGS_display_mode_lib.o := $(dml_ccflags)
+ CFLAGS_display_pipe_clocks.o := $(dml_ccflags)
+ CFLAGS_dml1_display_rq_dlg_calc.o := $(dml_ccflags)
+-- 
+2.20.1
+
 
 
