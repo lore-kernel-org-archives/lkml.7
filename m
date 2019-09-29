@@ -2,116 +2,159 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F5BC352A9
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 08:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC72C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 08:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E8A721835
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 08:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81E4320863
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 08:05:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mail.ru header.i=@mail.ru header.b="qyvTBly6";
-	dkim=pass (1024-bit key) header.d=mail.ru header.i=@mail.ru header.b="qyvTBly6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h2pwvASX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728948AbfI2IFD (ORCPT
+        id S1728981AbfI2IFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 04:05:03 -0400
-Received: from fallback18.mail.ru ([185.5.136.250]:54112 "EHLO
-        fallback18.mail.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726702AbfI2IFD (ORCPT
+        Sun, 29 Sep 2019 04:05:22 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45919 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726889AbfI2IFV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 04:05:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mail.ru; s=mail2;
-        h=Message-Id:Date:Subject:Cc:To:From; bh=61a8VvzuJLVRvgj/y8WDqa759TJZDGbkVwWi3YKsILk=;
-        b=qyvTBly6P3bY6JMte5HdnH1+ZKjM9sEvZ+PM/BOl5WCqmj/fKQP3UTNDYXgDCQfWfmseFKIXVl4q3YcyHVz1iJRu8lue8798cblQLE8FJKIkj8tk3nMQkHVdVqSjmQRKJhQTFQfpyQDxPNOzjssEJ+4ugLSKdSU2d/Tz7Wg9k7E=;
-Received: from [10.161.100.15] (port=58086 helo=smtpng3.m.smailru.net)
-        by fallback18.m.smailru.net with esmtp (envelope-from <andreykosh000@mail.ru>)
-        id 1iEUCS-0000iX-DQ; Sun, 29 Sep 2019 11:05:00 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mail.ru; s=mail2;
-        h=Message-Id:Date:Subject:Cc:To:From; bh=61a8VvzuJLVRvgj/y8WDqa759TJZDGbkVwWi3YKsILk=;
-        b=qyvTBly6P3bY6JMte5HdnH1+ZKjM9sEvZ+PM/BOl5WCqmj/fKQP3UTNDYXgDCQfWfmseFKIXVl4q3YcyHVz1iJRu8lue8798cblQLE8FJKIkj8tk3nMQkHVdVqSjmQRKJhQTFQfpyQDxPNOzjssEJ+4ugLSKdSU2d/Tz7Wg9k7E=;
-Received: by smtpng3.m.smailru.net with esmtpa (envelope-from <andreykosh000@mail.ru>)
-        id 1iEUCJ-00052u-5n; Sun, 29 Sep 2019 11:04:51 +0300
-From:   Andrei Koshkosh <andreykosh000@mail.ru>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Andrei Koshkosh <andreykosh000@mail.ru>,
-        linux-media@vger.kernel.org, Sean Young <sean@mess.org>,
-        Jan Pieter van Woerkom <jp@jpvw.nl>,
-        =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens@rwth-aachen.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sun, 29 Sep 2019 04:05:21 -0400
+Received: by mail-lf1-f66.google.com with SMTP id r134so4760487lff.12
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Sep 2019 01:05:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0Kup/WuM5USev7LE9gSO4eOzCdji3byaAj/3kHQx28s=;
+        b=h2pwvASX7WQiv/rG/0XYDhLUx3u00mBa+Jz8rIT6Pw+WoeadNb+O6ie2l7YKC5Rf8J
+         5stOLp7KSQ4PIqko2eAhgEJHMyn7GKhuS7LudsvEaV80s0BKLUl7VclZjKIBvdIQsfMO
+         PZRVepNvb3vht+suAXOPFWzPbi07gGt2OPjnRLRDi1x0XrB64PgxCOJ005atFdPXEoPj
+         2aKrVzHgih52hT+GRID9d7Hk/593LA0slzUtT1NjK5rSX2i8FHW3OMU7eUQo2HGeFz5W
+         tm2XBHctTStlpYlUPd6M8oG91MjnMPRWv68lvgfkc2fuVEQ49bEhT2SmQiQScJiusP0H
+         ZkAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0Kup/WuM5USev7LE9gSO4eOzCdji3byaAj/3kHQx28s=;
+        b=EsUWAZ7lJ2uyd5npKxT3C68Lgfd1qNSnRU+9EkcrrHlrJZxgJKRu2Urcjo92zkrVRg
+         ml0aoIAxVnna7PvgVHTOrwwjpVzLuz5oTMhdjMK505OE61Hlx++xQiUOI0xToUAYfcWu
+         YuuFPE3oYZYJYUGzT3qwG4B9Nn2zuHy1RXS/2TYI5R5qYe/SarrzTxzKes+mfKNPqvDM
+         T1+PmayR5J/E6Bcne9uSz7XGF0qjMlcvq+OqlTMvc/2ayqL+S7RH7hBcT731YNdOktFX
+         q7z28LtBv0jxOATig/o9b5GUXYeS/zGocqf7DeCPsjhEIi17vFxez5WmeVw65NFb1ktl
+         AR3Q==
+X-Gm-Message-State: APjAAAUOviR0i+Rm/Y+iujnWAmxTpUw2dB9yQEpe/ATIGTf+50yeoOpj
+        TuDDArSq2b7+hVZWz4kL9sY=
+X-Google-Smtp-Source: APXvYqzQ27SQ8AgNg+1d3xDMRZ/tOmc2/bsfFZmJc638vE9EJcM2NHuyfPs2y3RUwJio0D5B8VEjdA==
+X-Received: by 2002:a19:dc10:: with SMTP id t16mr7774621lfg.85.1569744319667;
+        Sun, 29 Sep 2019 01:05:19 -0700 (PDT)
+Received: from ?IPv6:2a02:17d0:4a6:5700:d63d:7eff:fed9:a39? ([2a02:17d0:4a6:5700:d63d:7eff:fed9:a39])
+        by smtp.googlemail.com with ESMTPSA id q3sm1985677ljq.4.2019.09.29.01.05.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 29 Sep 2019 01:05:17 -0700 (PDT)
+Subject: Re: x86/random: Speculation to the rescue
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] media: dvbsky: use a single mutex and state buffers for all R/W ops
-Date:   Sun, 29 Sep 2019 11:04:05 +0300
-Message-Id: <1569744245-23030-1-git-send-email-andreykosh000@mail.ru>
-X-Mailer: git-send-email 2.7.4
-X-77F55803: 2D1AD755E866B1545A78504BD2AC2941A61359CF0AD36FC0B135F8510420F1D93A86C3D027D1C80282A6CBF2A3B387CE
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7E61612FB1FB8A919EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F7900637CD877809B688EA868638F802B75D45FF5571747095F342E8C7A0BC55FA0FE5FC2F074859904BBCD9BA54080B8E2616A90A031FEF788ADDF4389733CBF5DBD5E913377AFFFEAFD269176DF2183F8FC7C05A64D9A1E9CA65708941B15DA834481FCF19DD082D7633A0E7DDDDC251EA7DABA471835C12D1D977725E5C173C3A84C390BCC82C2C62A6D1117882F4460429728AD0CFFFB425014E40A5AABA2AD3711975ECD9A6C639B01B78DA827A17800CE71E79D001AB00117447C4BABD0925318B75ECD9A6C639B01B4E70A05D1297E1BBC6867C52282FAC85D9B7C4F32B44FF57285124B2A10EEC6C00306258E7E6ABB4E4A6367B16DE6309
-X-Mailru-Sender: 689FA8AB762F739303AC06854B751545C64EF7A825FA5A97967DEE4CBCD4108FEC1B5849042ADB87648B0B2FE8089527E13B0FA3D5E9F256A7B6C1515A0AD0BE5FEEDEB644C299C0ED14614B50AE0675
-X-Mras: OK
-X-77F55803: 669901E4625912A97F9F52485CB584D7271FD7DF62800FDC22C2679BEE9317514E57A9610849DBCB933AD4F01543077417D899E2A0A66AC9
-X-7FA49CB5: 0D63561A33F958A5005BC3E0E0A915E48BF2F6F3BA512F27B8336824E80207238941B15DA834481FA18204E546F3947C78444BBB7636F62AF6B57BC7E64490618DEB871D839B7333395957E7521B51C2545D4CF71C94A83E9FA2833FD35BB23D27C277FBC8AE2E8B55D5BE2F85BDEC5FA471835C12D1D977C4224003CC836476C0CAF46E325F83A50BF2EBBBDD9D6B0F05F538519369F3743B503F486389A921A5CC5B56E945C8DA
-X-Mailru-Sender: A5480F10D64C90052060E016933BC039A8F0687CE85A16726B7AB1A8EB50CD91662C540C2CCA2F9DD4B93D0BF3EA581BC77752E0C033A69EA7E5F91E6B0D0F4EE05E346907A1D06F3453F38A29522196
-X-Mras: OK
+        "Ahmed S. Darwish" <darwish.07@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Theodore Ts'o <tytso@mit.edu>,
+        Nicholas Mc Guire <hofrat@opentech.at>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Stephan Mueller <smueller@chronox.de>
+References: <alpine.DEB.2.21.1909290010500.2636@nanos.tec.linutronix.de>
+ <CAHk-=wgjC01UaoV35PZvGPnrQ812SRGPoV7Xp63BBFxAsJjvrg@mail.gmail.com>
+From:   "Alexander E. Patrakov" <patrakov@gmail.com>
+Message-ID: <d606a69f-8d90-9f61-e0cb-c7f948f55c2d@gmail.com>
+Date:   Sun, 29 Sep 2019 13:05:15 +0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
+MIME-Version: 1.0
+In-Reply-To: <CAHk-=wgjC01UaoV35PZvGPnrQ812SRGPoV7Xp63BBFxAsJjvrg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-PH
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Andrei Koshkosh <andreykosh000@mail.ru>
----
- drivers/media/usb/dvb-usb-v2/dvbsky.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+29.09.2019 04:53, Linus Torvalds пишет:
+> On Sat, Sep 28, 2019 at 3:24 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>>
+>> Nicholas presented the idea to (ab)use speculative execution for random
+>> number generation years ago at the Real-Time Linux Workshop:
+> 
+> What you describe is just a particularly simple version of the jitter
+> entropy. Not very reliable.
+> 
+> But hey, here's a made-up patch. It basically does jitter entropy, but
+> it uses a more complex load than the fibonacci LFSR folding: it calls
+> "schedule()" in a loop, and it sets up a timer to fire.
+> 
+> And then it mixes in the TSC in that loop.
+> 
+> And to be fairly conservative, it then credits one bit of entropy for
+> every timer tick. Not because the timer itself would be all that
+> unpredictable, but because the interaction between the timer and the
+> loop is going to be pretty damn unpredictable.
 
-diff --git a/drivers/media/usb/dvb-usb-v2/dvbsky.c b/drivers/media/usb/dvb-usb-v2/dvbsky.c
-index c41e10b..6a118a0 100644
---- a/drivers/media/usb/dvb-usb-v2/dvbsky.c
-+++ b/drivers/media/usb/dvb-usb-v2/dvbsky.c
-@@ -22,7 +22,6 @@ MODULE_PARM_DESC(disable_rc, "Disable inbuilt IR receiver.");
- DVB_DEFINE_MOD_OPT_ADAPTER_NR(adapter_nr);
- 
- struct dvbsky_state {
--	struct mutex stream_mutex;
- 	u8 ibuf[DVBSKY_BUF_LEN];
- 	u8 obuf[DVBSKY_BUF_LEN];
- 	u8 last_lock;
-@@ -61,16 +60,18 @@ static int dvbsky_stream_ctrl(struct dvb_usb_device *d, u8 onoff)
- {
- 	struct dvbsky_state *state = d_to_priv(d);
- 	int ret;
--	u8 obuf_pre[3] = { 0x37, 0, 0 };
--	u8 obuf_post[3] = { 0x36, 3, 0 };
-+	static u8 obuf_pre[3] = { 0x37, 0, 0 };
-+	static u8 obuf_post[3] = { 0x36, 3, 0 };
- 
--	mutex_lock(&state->stream_mutex);
--	ret = dvbsky_usb_generic_rw(d, obuf_pre, 3, NULL, 0);
-+	mutex_lock(&d->usb_mutex);
-+	memcpy(state->obuf, obuf_pre, 3);
-+	ret = dvb_usbv2_generic_write_locked(d, state->obuf, 3);
- 	if (!ret && onoff) {
- 		msleep(20);
--		ret = dvbsky_usb_generic_rw(d, obuf_post, 3, NULL, 0);
-+		memcpy(state->obuf, obuf_post, 3);
-+		ret = dvb_usbv2_generic_write_locked(d, state->obuf, 3);
- 	}
--	mutex_unlock(&state->stream_mutex);
-+	mutex_unlock(&d->usb_mutex);
- 	return ret;
- }
- 
-@@ -599,7 +600,6 @@ static int dvbsky_init(struct dvb_usb_device *d)
- 	if (ret)
- 		return ret;
- 	*/
--	mutex_init(&state->stream_mutex);
- 
- 	state->last_lock = 0;
- 
+This looks quite similar to the refactoring proposed earlier by Stephan 
+Müller in his paper: https://www.chronox.de/lrng/doc/lrng.pdf . Indeed, 
+he makes a good argument that the timing of device interrupts is right 
+now the main actual source of entropy in Linux, at the end of Section 1.1:
+
+"""
+The discussion shows that the noise sources of block devices and HIDs 
+are a derivative of the interrupt noise source. All events used as 
+entropy source recorded by the block device and HID noise source are 
+delivered to the Linux kernel via interrupts.
+"""
+
+Now your patch adds the timer interrupt (while the schedule() loop is 
+running) to the mix, essentially in the same setup as proposed.
+
+> 
+> Ok, I'm handwaving. But I do claim it really is fairly conservative to
+> think that a cycle counter would give one bit of entropy when you time
+> over a timer actually happening. The way that loop is written, we do
+> guarantee that we'll mix in the TSC value both before and after the
+> timer actually happened. We never look at the difference of TSC
+> values, because the mixing makes that uninteresting, but the code does
+> start out with verifying that "yes, the TSC really is changing rapidly
+> enough to be meaningful".
+> 
+> So if we want to do jitter entropy, I'd much rather do something like
+> this that actually has a known fairly complex load with timers and
+> scheduling.
+> 
+> And even if absolutely no actual other process is running, the timer
+> itself is still going to cause perturbations. And the "schedule()"
+> call is more complicated than the LFSR is anyway.
+> 
+> It does wait for one second the old way before it starts doing this.
+> 
+> Whatever. I'm entirely convinced this won't make everybody happy
+> anyway, but it's _one_ approach to handle the issue.
+> 
+> Ahmed - would you be willing to test this on your problem case (with
+> the ext4 optimization re-enabled, of course)?
+> 
+> And Thomas - mind double-checking that I didn't do anything
+> questionable with the timer code..
+> 
+> And this goes without saying - this patch is ENTIRELY untested.  Apart
+> from making people upset for the lack of rigor, it might do
+> unspeakable crimes against your pets. You have been warned.
+> 
+>                 Linus
+> 
+
+
 -- 
-2.7.4
-
+Alexander E. Patrakov
