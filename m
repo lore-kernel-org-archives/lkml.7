@@ -4,51 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 178EEC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE27CC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E56F52196E
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:34:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8547921906
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:34:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778447;
-	bh=UjF/+zrMh2A8WpMuI+am8+4yCtxPltsqQNNdz86765Q=;
+	s=default; t=1569778450;
+	bh=BU1jzN53PqmlJ8ONEqVVq43OmhXY/UNCrwZY04OTspg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u3ZspmBR7Vm9EsXM9eIfbS2+BuIsy5iPZkoDehpEGjT57wbO6QFzCLAKLAHrMuA6s
-	 UfH1vVxwZnZWeY+5NhcVbudItoNzSv/s7P8nF3C1Yha/dj5TDa+iO7pJ2F0B5/6Vdz
-	 t6QLkuysfJeaZBraTCT5iUoZFpJLvsGiFpFixWxc=
+	b=rHwNsXSYmHatf+WCkbSCTfNUkFyq43zna5Jo/knptd65ogFzXXGJenYv3IgbNC1tL
+	 efVoz7ePxJHMX0DpipJLNygtd3J83Zc3sZkKm0lYvPaS2a32iyT4WSYkkz8cQJS/p0
+	 SITManXDSUtu9WDV7DC9F2SwDJO6lDJ770S+W6+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730292AbfI2ReG (ORCPT
+        id S1730308AbfI2ReJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:34:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45424 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:34:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730239AbfI2Rd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:33:59 -0400
+        id S1730286AbfI2ReF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:34:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F186D21928;
-        Sun, 29 Sep 2019 17:33:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79AEA21928;
+        Sun, 29 Sep 2019 17:34:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778438;
-        bh=UjF/+zrMh2A8WpMuI+am8+4yCtxPltsqQNNdz86765Q=;
+        s=default; t=1569778445;
+        bh=BU1jzN53PqmlJ8ONEqVVq43OmhXY/UNCrwZY04OTspg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K8fsH67TJPJjal1tgb4NxjrAty4MJFIpZ7lThNoyamWnaU3Nw0OaQaaDdZU9WC02T
-         asD5k5UwQJn3B6G6K0t1HhDdZvdTeIedjzTedHK7lEnSpMbutwKavF9QDNXyoXzSWp
-         63wzoGTkBlMzzFrBXFUuzSZ6kuuCU1FB1T8gzdhE=
+        b=UDbKSYRh8dDLjeT2bEduwJFOnuyzLl4BFUskq03IaMKxTZPb7Iu/UFLUdrS5YW0AU
+         9yL7bNZdjBvvAWVcwDMIiAWPp4gKwwdT66N2uwenpQe1QvwpPnB9b0OgmA92VydS1h
+         4fQOdz/SlULwxCqAhMN/0M4sl5V9K/76/GArzojo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Greg Thelen <gthelen@google.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 36/42] kbuild: clean compressed initramfs image
-Date:   Sun, 29 Sep 2019 13:32:35 -0400
-Message-Id: <20190929173244.8918-36-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 38/42] kmemleak: increase DEBUG_KMEMLEAK_EARLY_LOG_SIZE default to 16K
+Date:   Sun, 29 Sep 2019 13:32:37 -0400
+Message-Id: <20190929173244.8918-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173244.8918-1-sashal@kernel.org>
 References: <20190929173244.8918-1-sashal@kernel.org>
@@ -61,54 +72,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Thelen <gthelen@google.com>
+From: Nicolas Boichat <drinkcat@chromium.org>
 
-[ Upstream commit 6279eb3dd7946c69346a3b98473ed13d3a44adb5 ]
+[ Upstream commit b751c52bb587ae66f773b15204ef7a147467f4c7 ]
 
-Since 9e3596b0c653 ("kbuild: initramfs cleanup, set target from Kconfig")
-"make clean" leaves behind compressed initramfs images.  Example:
+The current default value (400) is too low on many systems (e.g.  some
+ARM64 platform takes up 1000+ entries).
 
-  $ make defconfig
-  $ sed -i 's|CONFIG_INITRAMFS_SOURCE=""|CONFIG_INITRAMFS_SOURCE="/tmp/ir.cpio"|' .config
-  $ make olddefconfig
-  $ make -s
-  $ make -s clean
-  $ git clean -ndxf | grep initramfs
-  Would remove usr/initramfs_data.cpio.gz
+syzbot uses 16000 as default value, and has proved to be enough on beefy
+configurations, so let's pick that value.
 
-clean rules do not have CONFIG_* context so they do not know which
-compression format was used.  Thus they don't know which files to delete.
+This consumes more RAM on boot (each entry is 160 bytes, so in total
+~2.5MB of RAM), but the memory would later be freed (early_log is
+__initdata).
 
-Tell clean to delete all possible compression formats.
-
-Once patched usr/initramfs_data.cpio.gz and friends are deleted by
-"make clean".
-
-Link: http://lkml.kernel.org/r/20190722063251.55541-1-gthelen@google.com
-Fixes: 9e3596b0c653 ("kbuild: initramfs cleanup, set target from Kconfig")
-Signed-off-by: Greg Thelen <gthelen@google.com>
-Cc: Nicholas Piggin <npiggin@gmail.com>
+Link: http://lkml.kernel.org/r/20190730154027.101525-1-drinkcat@chromium.org
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Suggested-by: Dmitry Vyukov <dvyukov@google.com>
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Acked-by: Dmitry Vyukov <dvyukov@google.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: Joe Lawrence <joe.lawrence@redhat.com>
+Cc: Uladzislau Rezki <urezki@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- usr/Makefile | 3 +++
- 1 file changed, 3 insertions(+)
+ lib/Kconfig.debug | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/usr/Makefile b/usr/Makefile
-index 4a70ae43c9cb5..bdb3f52fadc44 100644
---- a/usr/Makefile
-+++ b/usr/Makefile
-@@ -11,6 +11,9 @@ datafile_y = initramfs_data.cpio$(suffix_y)
- datafile_d_y = .$(datafile_y).d
- AFLAGS_initramfs_data.o += -DINITRAMFS_IMAGE="usr/$(datafile_y)"
- 
-+# clean rules do not have CONFIG_INITRAMFS_COMPRESSION.  So clean up after all
-+# possible compression formats.
-+clean-files += initramfs_data.cpio*
- 
- # Generate builtin.o based on initramfs_data.o
- obj-$(CONFIG_BLK_DEV_INITRD) := initramfs_data.o
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index cbdfae3798965..120ec6f64bbc3 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -599,7 +599,7 @@ config DEBUG_KMEMLEAK_EARLY_LOG_SIZE
+ 	int "Maximum kmemleak early log entries"
+ 	depends on DEBUG_KMEMLEAK
+ 	range 200 40000
+-	default 400
++	default 16000
+ 	help
+ 	  Kmemleak must track all the memory allocations to avoid
+ 	  reporting false positives. Since memory may be allocated or
 -- 
 2.20.1
 
