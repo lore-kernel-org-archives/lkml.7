@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D37C32793
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E41C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4DAE21882
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5791B218AC
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:00:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569765618;
-	bh=vB8PEykiLTpJVoylB+3/isI7qp+NEDMc4CvjjxdfpbI=;
+	s=default; t=1569765621;
+	bh=/BoCGF4/07bQpOwajFqI6N94O6SxuR+AXlBda70eWxM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bz8OA3/gAEeAy69UeNLuuyjG4NBQbRnl77lrt1/lJoxw3/I4HitUEGWzBztSeFyOf
-	 xvcK4q4NYcRrBpiidnZkoa8ObeyYhjSCsdSR1J5J0I/LyeFBrswTEKSFLG8sUJfg+K
-	 M4w093wLJ/Z3eWx9yRGZoebCeTZrCs16KGD8XgyM=
+	b=QsvvlcB2x8CdmxLHOLQEzqAGLp9YXWoyxbhFmzZgl7dbIdd8SzJ4JZNgfVnbut7PJ
+	 R82zxA8NIGOkmq/rv8t7bUGusjqdhXZR6LUOjiC9sdZ9YMDJoHoqi0dvPG04txvw+Y
+	 87Rmxwux/ZYRYco3sxV6xf1hOuIOun8jI/7wnec4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729117AbfI2OAP (ORCPT
+        id S1729133AbfI2OAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 10:00:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41804 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 10:00:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729871AbfI2OAL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 10:00:11 -0400
+        id S1726390AbfI2OAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 10:00:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A724721835;
-        Sun, 29 Sep 2019 14:00:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0682E21882;
+        Sun, 29 Sep 2019 14:00:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569765610;
-        bh=vB8PEykiLTpJVoylB+3/isI7qp+NEDMc4CvjjxdfpbI=;
+        s=default; t=1569765613;
+        bh=/BoCGF4/07bQpOwajFqI6N94O6SxuR+AXlBda70eWxM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Znd12XbFRjPjyEtophp9UappMkmtOqXTAFK26tfVblSDgP2CUkxuJxce7xZX3pPMt
-         S0ryJkrOGqEiN6qPvXKi1U3jn0QRxy07ga3xjMbV5NsDDL21KXOuFJ7EIQGxkJqf5W
-         d82KXGh7x73giEds0EKJ/rjN1qltP1DbsdUPXxfA=
+        b=F1yPjuv6tUoVIRzE3MY/plPiWnY0yEWr0zqtOyGTe3vhJLV2BfT2qSMkqo8LYSaW7
+         BHwPOXdEfelo3YfThdT30pnN1SknX2DTVIMdnfQ5cDDpRQkB1VWWl8GjkJdQQdhehL
+         uNrHn4TmznOF94rk/4Cmah22MkzWTge9nFUIPLxg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Fernando Fernandez Mancera <ffmancera@riseup.net>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Mike Snitzer <snitzer@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 60/63] netfilter: nft_socket: fix erroneous socket assignment
-Date:   Sun, 29 Sep 2019 15:54:33 +0200
-Message-Id: <20190929135041.228856362@linuxfoundation.org>
+Subject: [PATCH 4.19 51/63] dm zoned: fix invalid memory access
+Date:   Sun, 29 Sep 2019 15:54:24 +0200
+Message-Id: <20190929135040.223777269@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190929135031.382429403@linuxfoundation.org>
 References: <20190929135031.382429403@linuxfoundation.org>
@@ -61,46 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fernando Fernandez Mancera <ffmancera@riseup.net>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-[ Upstream commit 039b1f4f24ecc8493b6bb9d70b4b78750d1b35c2 ]
+[ Upstream commit 0c8e9c2d668278652af028c3cc068c65f66342f4 ]
 
-The socket assignment is wrong, see skb_orphan():
-When skb->destructor callback is not set, but skb->sk is set, this hits BUG().
+Commit 75d66ffb48efb30f2dd42f041ba8b39c5b2bd115 ("dm zoned: properly
+handle backing device failure") triggers a coverity warning:
 
-Link: https://bugzilla.redhat.com/show_bug.cgi?id=1651813
-Fixes: 554ced0a6e29 ("netfilter: nf_tables: add support for native socket matching")
-Signed-off-by: Fernando Fernandez Mancera <ffmancera@riseup.net>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+*** CID 1452808:  Memory - illegal accesses  (USE_AFTER_FREE)
+/drivers/md/dm-zoned-target.c: 137 in dmz_submit_bio()
+131             clone->bi_private = bioctx;
+132
+133             bio_advance(bio, clone->bi_iter.bi_size);
+134
+135             refcount_inc(&bioctx->ref);
+136             generic_make_request(clone);
+>>>     CID 1452808:  Memory - illegal accesses  (USE_AFTER_FREE)
+>>>     Dereferencing freed pointer "clone".
+137             if (clone->bi_status == BLK_STS_IOERR)
+138                     return -EIO;
+139
+140             if (bio_op(bio) == REQ_OP_WRITE && dmz_is_seq(zone))
+141                     zone->wp_block += nr_blocks;
+142
+
+The "clone" bio may be processed and freed before the check
+"clone->bi_status == BLK_STS_IOERR" - so this check can access invalid
+memory.
+
+Fixes: 75d66ffb48efb3 ("dm zoned: properly handle backing device failure")
+Cc: stable@vger.kernel.org
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_socket.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/md/dm-zoned-target.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/net/netfilter/nft_socket.c b/net/netfilter/nft_socket.c
-index d7f3776dfd719..637ce3e8c575c 100644
---- a/net/netfilter/nft_socket.c
-+++ b/net/netfilter/nft_socket.c
-@@ -47,9 +47,6 @@ static void nft_socket_eval(const struct nft_expr *expr,
- 		return;
- 	}
+diff --git a/drivers/md/dm-zoned-target.c b/drivers/md/dm-zoned-target.c
+index 1030c42add05f..3dd668f694051 100644
+--- a/drivers/md/dm-zoned-target.c
++++ b/drivers/md/dm-zoned-target.c
+@@ -133,8 +133,6 @@ static int dmz_submit_bio(struct dmz_target *dmz, struct dm_zone *zone,
  
--	/* So that subsequent socket matching not to require other lookups. */
--	skb->sk = sk;
--
- 	switch(priv->key) {
- 	case NFT_SOCKET_TRANSPARENT:
- 		nft_reg_store8(dest, inet_sk_transparent(sk));
-@@ -66,6 +63,9 @@ static void nft_socket_eval(const struct nft_expr *expr,
- 		WARN_ON(1);
- 		regs->verdict.code = NFT_BREAK;
- 	}
-+
-+	if (sk != skb->sk)
-+		sock_gen_put(sk);
- }
+ 	atomic_inc(&bioctx->ref);
+ 	generic_make_request(clone);
+-	if (clone->bi_status == BLK_STS_IOERR)
+-		return -EIO;
  
- static const struct nla_policy nft_socket_policy[NFTA_SOCKET_MAX + 1] = {
+ 	if (bio_op(bio) == REQ_OP_WRITE && dmz_is_seq(zone))
+ 		zone->wp_block += nr_blocks;
 -- 
 2.20.1
 
