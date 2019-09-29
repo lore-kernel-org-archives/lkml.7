@@ -2,131 +2,77 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E09CC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 10:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E14BEC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 10:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D368F20863
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 10:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF2B20863
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 10:41:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569753705;
+	bh=0LLWBqF97fc5Fr5BEVtlP5SMQejKi+dK3TKGxVoEBs4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2rPBMyZ8ntIv9JHe1wAIJ6DhK3VDgrAZwymVl3FIv4DwnrnbFstrX27BRRYnEajkV
+	 dfO9GwquCWL/DIPUy1FZzK7IZfreqsLLtPi9/KMxyTSMlq3qb9atzl/yQspahTlPnZ
+	 Vlz/2lnlGv6pF2ixBvfdduva0GjAaeqRFebF9e7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728947AbfI2Kj5 (ORCPT
+        id S1728989AbfI2Kk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 06:39:57 -0400
-Received: from sauhun.de ([88.99.104.3]:45488 "EHLO pokefinder.org"
+        Sun, 29 Sep 2019 06:40:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726149AbfI2Kj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 06:39:56 -0400
-Received: from localhost (p5486CA3C.dip0.t-ipconnect.de [84.134.202.60])
-        by pokefinder.org (Postfix) with ESMTPSA id 8C8682C01E8;
-        Sun, 29 Sep 2019 12:39:54 +0200 (CEST)
-Date:   Sun, 29 Sep 2019 12:39:54 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Rosin <peda@axentia.se>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PULL REQUEST] i2c for 5.4
-Message-ID: <20190929103950.GA9497@kunai>
+        id S1726018AbfI2Kk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 06:40:59 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C441E20863;
+        Sun, 29 Sep 2019 10:40:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569753658;
+        bh=0LLWBqF97fc5Fr5BEVtlP5SMQejKi+dK3TKGxVoEBs4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HXSQ0+QeeX7w9/iF2XyriowDk6kQXrBBO1iriGqYE0/6SpSOeddYZOAYxbig9ajQE
+         gBnbvTVWMoPsc1rgrpWMfAfg04/8v0SsXZxtTizCD/Ebe1PPW/gIm5vi1RNrcti9wL
+         ua1XFBUuzeZb56R5ifLBC9321FR2q4MoJhHIgrP4=
+Date:   Sun, 29 Sep 2019 12:40:55 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        ndesaulniers@google.com,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Nadav Amit <namit@vmware.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v3 1/6] staging: rtl8723bs: replace __inline by inline
+Message-ID: <20190929104055.GA1941196@kroah.com>
+References: <20190830231527.22304-1-linux@rasmusvillemoes.dk>
+ <20190912221927.18641-1-linux@rasmusvillemoes.dk>
+ <20190912221927.18641-2-linux@rasmusvillemoes.dk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190912221927.18641-2-linux@rasmusvillemoes.dk>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Sep 13, 2019 at 12:19:22AM +0200, Rasmus Villemoes wrote:
+> Currently, __inline is #defined as inline in compiler_types.h, so this
+> should not change functionality. It is preparation for removing said
+> #define.
+> 
+> While at it, change some "inline static" to the customary "static
+> inline" order.
+> 
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> ---
 
---a8Wt8u1KmwUX3Y2C
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Linus,
-
-this second pull request from I2C contains:
-
-- make Lenovo Yoga C630 boot now that the dependencies are merged
-- restore BlockProcessCall for i801, accidently removed in this merge
-  window
-- a bugfix for the riic driver
-- an improvement to the slave-eeprom driver which should have been in
-  the first pull request but sadly got lost in the process
-
-And finally, my pull requests should be using utf-8 now.
-
-Please pull.
-
-Thanks,
-
-   Wolfram
-
-
-The following changes since commit aefcf2f4b58155d27340ba5f9ddbe9513da8286d:
-
-  Merge branch 'next-lockdown' of git://git.kernel.org/pub/scm/linux/kernel=
-/git/jmorris/linux-security (2019-09-28 08:14:15 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-next
-
-for you to fetch changes up to 11af27f494086188620e7768e421894af93c126a:
-
-  i2c: slave-eeprom: Add read only mode (2019-09-28 20:44:12 +0200)
-
-----------------------------------------------------------------
-Bj=C3=B6rn Ard=C3=B6 (1):
-      i2c: slave-eeprom: Add read only mode
-
-Chris Brandt (1):
-      i2c: riic: Clear NACK in tend isr
-
-Jarkko Nikula (1):
-      i2c: i801: Bring back Block Process Call support for certain platforms
-
-Lee Jones (1):
-      i2c: qcom-geni: Disable DMA processing on the Lenovo Yoga C630
-
-
-with much appreciated quality assurance from
-----------------------------------------------------------------
-Alexander Sverdlin (1):
-      (Rev.) i2c: i801: Bring back Block Process Call support for certain p=
-latforms
-
-Bjorn Andersson (1):
-      (Test) i2c: qcom-geni: Disable DMA processing on the Lenovo Yoga C630
-
- drivers/i2c/busses/i2c-i801.c      |  1 +
- drivers/i2c/busses/i2c-qcom-geni.c | 12 ++++++++----
- drivers/i2c/busses/i2c-riic.c      |  1 +
- drivers/i2c/i2c-slave-eeprom.c     | 14 +++++++++++---
- 4 files changed, 21 insertions(+), 7 deletions(-)
-
---a8Wt8u1KmwUX3Y2C
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl2QifEACgkQFA3kzBSg
-KbaqMg/+Icc3PCrKjMdaUaIMsJET5J4B1h8YBnCwuix4w29RbJfJsLCmYtMcrtkm
-v6I2QRmKmvihaJ0ffPMthhVQby/6JJq7FP89gGWztt6y2kORrl3iXKVN0x5MhGsu
-vIOx5WTF/Jq4599A9azewt4azydW8/Y3uHms80q7qGH1+tDgf0s9GJBxSe4avlXY
-izgtTnjzJ77bpn2RGxJi8vf/NUfW5UjaY1Y7yKhk1EtKB46nMGRJ9BYBu6otJ9fQ
-naqaLMBfVfigKQfiTHkyeR3g1IwcrRZoHGc//HB8dyTgMJSlYxLi55zg6aYr97/G
-Ewedho7/+thaBuv5iJ2w69LhAve60ny7iwDBBAZC+i+KaSWjru3hL5v6nNig/oU6
-lPjVKZiyOrKBj2LVY++q43+GG3LaadcX3Nz0kVh27jKe1SL0PznJHD6iRfwso6dr
-HRVZIEg+mo19twOiwULK3iZWkmMZ/uCChWRO80EOsEVPEKa+ekExKV0MHICiwr0R
-Oglm4oa94QP0PDLhvwv5CX9UMgK+b85/z15+AQzTsV2mF7Xc7gZ7FdpCL9YgQpSC
-hy8XuWRlVLiZzWTGYLioKLwnI7xl5d9Nk+v506Cd1rl8YTeBjVuxlnRu7lLtmPsh
-3qS62TrXOhlCU6kXb47fhLYmoXxm4bcA9ujerfbhptvQUYfqs7w=
-=kJHR
------END PGP SIGNATURE-----
-
---a8Wt8u1KmwUX3Y2C--
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
