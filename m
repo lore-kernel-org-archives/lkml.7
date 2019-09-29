@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2DEC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A0CC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77BED218DE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6DA521835
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:59:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569765571;
-	bh=8M0Ni5gWktIAGrSox9qoutWjX+E8Vi8utdd0udKpVEo=;
+	s=default; t=1569765575;
+	bh=kVAwFbfYiAnUCQrMyyQhRLe3JhsJ4MXJBC72Df8IfMI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vn9H5EfVDJl3s6kAdhLbN6OnJ5kyOc7J08OX5nPfb1VDQOFxtcW2ukQpr8oSR3g1I
-	 FM1JfU+FafaePefkcx41VeRlOLRrUJ8yf/4/+B1pvi7TX8IPPxkO9ewv+Yiwq9dqq8
-	 t8O/XQLmMyQXfHe0jYGrRGPVAZ0399OdOmniyP6w=
+	b=eibEbkckJf3v3A3bNyO2xZUhh493iRnB1lcVOyT8Z6DPjaLutGs/TtBZ2gQb9egnV
+	 e9vSVvF6CfulJrIRy7Jo2hlhJsA2kE98wbD0nf/B07YA6E0cz09w7C/Clik9pD4quv
+	 1BuDyxN91NeOrXDsNcb09pObFAP9ZpXTUXWY+xE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729735AbfI2N7a (ORCPT
+        id S1729750AbfI2N7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 09:59:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40654 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 09:59:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729661AbfI2N71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 09:59:27 -0400
+        id S1729661AbfI2N7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 09:59:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15B0C2082F;
-        Sun, 29 Sep 2019 13:59:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C45AD21835;
+        Sun, 29 Sep 2019 13:59:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569765566;
-        bh=8M0Ni5gWktIAGrSox9qoutWjX+E8Vi8utdd0udKpVEo=;
+        s=default; t=1569765570;
+        bh=kVAwFbfYiAnUCQrMyyQhRLe3JhsJ4MXJBC72Df8IfMI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b10GgUmYIlNOIwigirtBB6LEqcgtLs8K0+H8v7JEW/eM3j9OphAcgqMRN76xl5h9L
-         8cxvFvCwgRfpJvaYnAjQM9bo3F9oWg4TlXFr6v+MHu6EBmh5Nd094x+LSH8+06goPZ
-         LV/9iHCd3Mrgb2kgnIm4icRl8CvbJXZ5eC49FAg0=
+        b=bZ5AbhGXcxDktK93wQliFliZDHd+ajI3bVsGkHzEME9Rj0boGWrL1wtwjB0il3qTr
+         P49QfuBhbcVu1KAoVl9PqQuv2FcN8gws1WqvMf7VABZTSanvnMsPSmdYrqitJZk+Xs
+         zff39Pob/Fn3wl4sxFOMH3svSObHDCz9JzJDnrKQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lorenz Bauer <lmb@cloudflare.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Vadim Sukhomlinov <sukhomlinov@google.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 42/63] bpf: libbpf: retry loading program on EAGAIN
-Date:   Sun, 29 Sep 2019 15:54:15 +0200
-Message-Id: <20190929135039.190739304@linuxfoundation.org>
+Subject: [PATCH 4.19 33/63] tpm: Fix TPM 1.2 Shutdown sequence to prevent future TPM operations
+Date:   Sun, 29 Sep 2019 15:54:06 +0200
+Message-Id: <20190929135038.128262622@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190929135031.382429403@linuxfoundation.org>
 References: <20190929135031.382429403@linuxfoundation.org>
@@ -60,71 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenz Bauer <lmb@cloudflare.com>
+From: Vadim Sukhomlinov <sukhomlinov@google.com>
 
-[ Upstream commit 86edaed379632e216a97e6bcef9f498b64522d50 ]
+commit db4d8cb9c9f2af71c4d087817160d866ed572cc9 upstream
 
-Commit c3494801cd17 ("bpf: check pending signals while
-verifying programs") makes it possible for the BPF_PROG_LOAD
-to fail with EAGAIN. Retry unconditionally in this case.
+TPM 2.0 Shutdown involve sending TPM2_Shutdown to TPM chip and disabling
+future TPM operations. TPM 1.2 behavior was different, future TPM
+operations weren't disabled, causing rare issues. This patch ensures
+that future TPM operations are disabled.
 
-Fixes: c3494801cd17 ("bpf: check pending signals while verifying programs")
-Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Fixes: d1bd4a792d39 ("tpm: Issue a TPM2_Shutdown for TPM2 devices.")
+Cc: stable@vger.kernel.org
+Signed-off-by: Vadim Sukhomlinov <sukhomlinov@google.com>
+[dianders: resolved merge conflicts with mainline]
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/bpf.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ drivers/char/tpm/tpm-chip.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
-index dd0b68d1f4be0..482025b728399 100644
---- a/tools/lib/bpf/bpf.c
-+++ b/tools/lib/bpf/bpf.c
-@@ -75,6 +75,17 @@ static inline int sys_bpf(enum bpf_cmd cmd, union bpf_attr *attr,
- 	return syscall(__NR_bpf, cmd, attr, size);
- }
- 
-+static inline int sys_bpf_prog_load(union bpf_attr *attr, unsigned int size)
-+{
-+	int fd;
-+
-+	do {
-+		fd = sys_bpf(BPF_PROG_LOAD, attr, size);
-+	} while (fd < 0 && errno == EAGAIN);
-+
-+	return fd;
-+}
-+
- int bpf_create_map_xattr(const struct bpf_create_map_attr *create_attr)
+diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
+index 46caadca916a0..dccc61af9ffab 100644
+--- a/drivers/char/tpm/tpm-chip.c
++++ b/drivers/char/tpm/tpm-chip.c
+@@ -187,12 +187,15 @@ static int tpm_class_shutdown(struct device *dev)
  {
- 	__u32 name_len = create_attr->name ? strlen(create_attr->name) : 0;
-@@ -218,7 +229,7 @@ int bpf_load_program_xattr(const struct bpf_load_program_attr *load_attr,
- 	memcpy(attr.prog_name, load_attr->name,
- 	       min(name_len, BPF_OBJ_NAME_LEN - 1));
+ 	struct tpm_chip *chip = container_of(dev, struct tpm_chip, dev);
  
--	fd = sys_bpf(BPF_PROG_LOAD, &attr, sizeof(attr));
-+	fd = sys_bpf_prog_load(&attr, sizeof(attr));
- 	if (fd >= 0 || !log_buf || !log_buf_sz)
- 		return fd;
++	down_write(&chip->ops_sem);
+ 	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
+ 		down_write(&chip->ops_sem);
+ 		tpm2_shutdown(chip, TPM2_SU_CLEAR);
+ 		chip->ops = NULL;
+ 		up_write(&chip->ops_sem);
+ 	}
++	chip->ops = NULL;
++	up_write(&chip->ops_sem);
  
-@@ -227,7 +238,7 @@ int bpf_load_program_xattr(const struct bpf_load_program_attr *load_attr,
- 	attr.log_size = log_buf_sz;
- 	attr.log_level = 1;
- 	log_buf[0] = 0;
--	return sys_bpf(BPF_PROG_LOAD, &attr, sizeof(attr));
-+	return sys_bpf_prog_load(&attr, sizeof(attr));
+ 	return 0;
  }
- 
- int bpf_load_program(enum bpf_prog_type type, const struct bpf_insn *insns,
-@@ -268,7 +279,7 @@ int bpf_verify_program(enum bpf_prog_type type, const struct bpf_insn *insns,
- 	attr.kern_version = kern_version;
- 	attr.prog_flags = strict_alignment ? BPF_F_STRICT_ALIGNMENT : 0;
- 
--	return sys_bpf(BPF_PROG_LOAD, &attr, sizeof(attr));
-+	return sys_bpf_prog_load(&attr, sizeof(attr));
- }
- 
- int bpf_map_update_elem(int fd, const void *key, const void *value,
 -- 
 2.20.1
 
