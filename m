@@ -2,136 +2,114 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5739FC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B5FC352A9
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C1EA2082F
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38A1E217F5
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:19:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="RRG3VDdM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TeQv9/rd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729052AbfI2ONt (ORCPT
+        id S1729001AbfI2OTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 10:13:49 -0400
-Received: from mout.gmx.net ([212.227.15.18]:58237 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725974AbfI2ONt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 10:13:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1569766407;
-        bh=yEinVkrAXAA8zQDhZFR9oqEyIJv63B/asAyfFNVqSM4=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=RRG3VDdMKFbrKf/asVjppSdST3OMVT0er6CYNahZdgkbg9SBKmCG8fMjeJIBmxFar
-         kiOfjgVRaTAIUsPwuo5NyBAI4d50UlXJaleKXIss6WmKmm7NNo2nlXZYfGpJqX3tYT
-         Qs1B/LL3odoO/RywBNaakPU3od+Vz21PRlb8aMZE=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([37.4.249.130]) by mail.gmx.com
- (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MxDkw-1hugcp2Khk-00xXQe; Sun, 29 Sep 2019 16:13:27 +0200
-From:   Stefan Wahren <wahrenst@gmx.net>
-To:     Johannes Berg <johannes@sipsolutions.net>,
-        Alexei Avshalom Lazar <ailizaro@codeaurora.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH RFC V2] nl80211: Fix init of cfg80211 channel definition
-Date:   Sun, 29 Sep 2019 16:12:59 +0200
-Message-Id: <1569766379-9516-1-git-send-email-wahrenst@gmx.net>
+        Sun, 29 Sep 2019 10:19:08 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39163 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfI2OTI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 10:19:08 -0400
+Received: by mail-pg1-f193.google.com with SMTP id e1so321238pgj.6;
+        Sun, 29 Sep 2019 07:19:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=6GGeajit1jjOmgXu5rYd10s/WUyfgUSy5N7u3Buyurw=;
+        b=TeQv9/rdOpyui7CTIpPnGqFn8G/qYoS9xzweUt4dkbHOUtjeLZ2tDWNnrCedPQAmhy
+         n3PuvVBp00Xgi1uel4exwsgC/v+FRcnfbRrdk+gRbNi3Y4uPitdjqCHecw95gZmnZcGp
+         fniZb3IXgF3Wrru7P4f1qSAziXk9ZNC8oknYHHUEzGpd9Xwu73VDUZHRSif0zoLJmefk
+         8t69JfsyvHp8/+DP3KNFQLuPI5QzY4COf+BCC6UEv7pMF6bumI2zp5+HMnPc+99ZGJiy
+         gnemi7YBzibDsWhvZuWR46y86ffOJPsfxCORMoVb+frDXfL2OtzKhYsBvf0YHRdYRxO2
+         Ancg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=6GGeajit1jjOmgXu5rYd10s/WUyfgUSy5N7u3Buyurw=;
+        b=j/E1MNH1Z5AjS1A/S2x/LPnvU+pYPZVCh7GZCL5oAtL1eHn5kEFnAMwWYlVtzrc0p7
+         QDT6RgcEHmcP9mvuWzKk1X9zNu0TEfOS0yWS+/kfgUszAwgl/zSQ2neJ8HC9opJtxOfo
+         KpxF9oRHzxllKn8Eo+6eYAG/yzPOM0waRQymrGv/+9aF/dT4j8FiqOByXWuZ+IwfFZS8
+         RDJTwp/AbUBTGF2/XOloinHyuHRqAEtnUN0QhzyyVamBmkqMmVnPWijbnHzlF02SRlHE
+         tfJSXGLmWnKj3EJ4xzyI6s2A/ODWyK/TgO/vh9EuGl/vdDS3WdOzJLjSDGmsk79R8hQW
+         voHQ==
+X-Gm-Message-State: APjAAAXBdQ1w5AsFROMoqXGxPVL8j7Uq3hPm6U/CQCRg0wDKl7K3l8D3
+        9A0Z3J7RqcVmB/aVbLrLn57fwYOm
+X-Google-Smtp-Source: APXvYqzdcR+0sT7rN9dPARWzvhrQyI06o+w2JF7UgJpzPOqyN9c6xw19V1WbNCB6tmoFp66mk/qO9Q==
+X-Received: by 2002:a62:1b97:: with SMTP id b145mr16662369pfb.163.1569766746769;
+        Sun, 29 Sep 2019 07:19:06 -0700 (PDT)
+Received: from localhost.localdomain ([240f:34:212d:1:20:6ca:d990:a8a2])
+        by smtp.gmail.com with ESMTPSA id fa24sm10833336pjb.13.2019.09.29.07.19.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 29 Sep 2019 07:19:06 -0700 (PDT)
+From:   Akinobu Mita <akinobu.mita@gmail.com>
+To:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v3 0/1] leds: fix /sys/class/leds/<led>/trigger
+Date:   Sun, 29 Sep 2019 23:18:48 +0900
+Message-Id: <1569766729-8433-1-git-send-email-akinobu.mita@gmail.com>
 X-Mailer: git-send-email 2.7.4
-X-Provags-ID: V03:K1:VbwrAyG5najNxf/+021dm/Rj8RcIWUM6M25RtSPhDVFJD5+dhjl
- ZyrkNsajURwYh/nGeIeoybai2Yc859S+5BSH0OpWxp0sUfQDmRICBXv34FsIwnj4ZcbJ15m
- Ql91Yski7W0bUWxefiexBmswUVfhtp1xiuP13ftHZJQSsvVlOYa08ejqblmgFkmRcIqoy0H
- 9tSLs3PgcndFSvbt8IUkg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:sqSrEt0BRbI=:KELXrJoVqL4wpDbb1rpmtP
- g9SOdSGC39BpbJZiYuxIIqrUhN1G9ijQ9KqAc7bTrhJaFnccPU0e3by/HhK0GGmYKiO/x1w+w
- VgVVyzlrWT3w+q6veBMJ9rU2CB+5LkOqztsRoa0J8A6YZLLZrJAsfadWjwet7O/W+LXgLW6of
- UwY1q/iYYetSdCKnCftRYZ3Tw38Hs1BpJmsha2PaqFXt8ctKMyTjQKQ4Zd/D+TQSZneVmI/xP
- 9hK6XgcCE1neiMgE8voFMfpPEFiRxGfjF86FnJ9NEVs1TDEdCO4RE8bsuKFV+vgaaqDEG3G3Z
- xqpVB/ze0qZHfdNvSbgYLEMR2iHILMdPYHVYG3iqs/ZiVPlcRGs3vRC+O+D9yuy3bBlNOsIMT
- 4lvVPZcWUJxKnodiAQ6SQh4622jNGCPTLwXDUwGk+CYKgGc5jQEnmIYig0BGHQnDCV7hpGh1b
- MbY3PAzzYcMwlRN8E/SBgo8ViZbKml9uVYOJ1g2jUFXm7e/t8XYFjBfwvkSpFvV9nyFZ6yxPV
- 7dCqP+/G8hGY1Fes+aYMK/J2zxJfzaM5aJWZpd1YQFA/srCZhwCmY+NoJjFbCkkvrfk/nFYdf
- WwIX4/wqQL4qmD3a9OzFUkd2EUxmjQQeNFTJCZsTBjBTdLQs3AYKQByAB3LnfLCdzL6GbUfAl
- +Y+TD8U6NBxH+IAc1dAaWpTzLHXb1dy1Wd3zOL+c/y8ebbCRUmijadVRvhMyn4hTOURG7SuOX
- G0RCbG8KKMl7e8d/eX20Br2bu3/xnlg/D8mJaKdbdNamK0qR+DveMyhXLAVh40ROwDu5IrGBT
- f5o8f81xGrc2KIFDTiqlztnZBQTRsVOnVooqpCgmzoDkLJ4F6iBpGaRbBku4B/eZDc8GizWQE
- /kx/f505Cf+RumtNgR2Lq8v91k7c9G+hQczEo7UP7na66xDxmSX9lEGFGgFCR19TzspFNeoO4
- kMwxJiS+BQUuzhp5eMh6RCIfbYFlUZvOPe6E+nbNp+l9U6FdsB/A3puvL610/G0Nm3ov/TLCp
- G1r6k8SN//9B+2ImRdTiaxKoFfiOOOZC7VfAoqSD1023Bfkr+kPE7hwCR64Z2IcrSFXt6Wjrj
- 8hNxsbCrw0VYSAqbQes3r2UASPPE6gIXKxBJprvZFHpBm19klaV8FlS58vrrws975LRTlgwYF
- +YW+eLPErIpR6YDhhN4XD4l3MvvTkQM3dZbamNg6wodEsRktg4vjLulC9ECRyNi5Rvt6Kq15X
- jaca6XPJJy93UAou/v0+dt7ZtXOquZiGD9mSc1Sp23n5XgkmiaI4oW1bKF1WKxiQpdN065i0s
- p/aad+pTWp0dEsr+HZrNPOVJVKVoJeuFWr2+F12QYnqoBI2B/1+KjH5WtmUqKyNEtnDgO+kKg
- 33gkvxlvFF1JcePxynZXG81KH+z3HsUdO5tTdSA3gvzsh4bZB0nj7Z7DkKteW48GfmnTt2GTG
- +/83uuwjWleQ8nj3U5LE7grQ2scpzQy9t8ieO20n3iyxwwmdupeMlIrZVjA0atAMuOOH0aWMG
- 6Ug==
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 2a38075cd0be ("nl80211: Add support for EDMG channels")
-introduced a member to the cfg80211 channel definition. Unfortunately
-the channel definitions are allocated on the stack and are not always
-initialized via memset. Now this results in a broken probe of brcmfmac
-driver, because cfg80211_chandef_valid() accesses uninitialized memory
-and fail. Fix this by init the remaining occurences with memset.
+Reading /sys/class/leds/<led>/trigger returns all available LED triggers.
+However, the size of this file is limited to PAGE_SIZE because of the
+limitation for sysfs attribute.
 
-Reported-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Fixes: 2a38075cd0be ("nl80211: Add support for EDMG channels")
-=2D--
- net/mac80211/util.c    | 1 +
- net/wireless/nl80211.c | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+Enabling LED CPU trigger on systems with thousands of CPUs easily hits
+PAGE_SIZE limit, and makes it impossible to see all available LED triggers
+and which trigger is currently activated.
 
-diff --git a/net/mac80211/util.c b/net/mac80211/util.c
-index 051a02d..d887753 100644
-=2D-- a/net/mac80211/util.c
-+++ b/net/mac80211/util.c
-@@ -1885,6 +1885,7 @@ struct sk_buff *ieee80211_build_probe_req(struct iee=
-e80211_sub_if_data *sdata,
- 	 * in order to maximize the chance that we get a response.  Some
- 	 * badly-behaved APs don't respond when this parameter is included.
- 	 */
-+	memset(&chandef, 0, sizeof(struct cfg80211_chan_def));
- 	chandef.width =3D sdata->vif.bss_conf.chandef.width;
- 	if (flags & IEEE80211_PROBE_FLAG_DIRECTED)
- 		chandef.chan =3D NULL;
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index d21b158..9a107be 100644
-=2D-- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -2636,10 +2636,10 @@ int nl80211_parse_chandef(struct cfg80211_register=
-ed_device *rdev,
+This patch converts /sys/class/leds/<led>/trigger to bin attribute and
+removes the PAGE_SIZE limitation.
 
- 	control_freq =3D nla_get_u32(attrs[NL80211_ATTR_WIPHY_FREQ]);
+The first version of this seris provided the new api that follows the
+"one value per file" rule of sysfs. The second version dropped it because
+there have been a number of problems and it turns out that the new api
+should be submitted separately.
 
-+	memset(chandef, 0, sizeof(struct cfg80211_chan_def));
- 	chandef->chan =3D ieee80211_get_channel(&rdev->wiphy, control_freq);
- 	chandef->width =3D NL80211_CHAN_WIDTH_20_NOHT;
- 	chandef->center_freq1 =3D control_freq;
--	chandef->center_freq2 =3D 0;
+* v3
+- Remove "query" parameters from led_trigger_snprintf() and
+  led_trigger_format()
+- Return -ENOMEM immediately if memory allocation fails
+- Drop Acked-by: tag due to a certain amount of changes
 
- 	/* Primary channel not allowed */
- 	if (!chandef->chan || chandef->chan->flags & IEEE80211_CHAN_DISABLED) {
-@@ -3178,6 +3178,7 @@ static int nl80211_send_iface(struct sk_buff *msg, u=
-32 portid, u32 seq, int flag
- 		int ret;
- 		struct cfg80211_chan_def chandef;
+* v2
+- Update commit message
+- Drop patches for new api
 
-+		memset(&chandef, 0, sizeof(struct cfg80211_chan_def));
- 		ret =3D rdev_get_channel(rdev, wdev, &chandef);
- 		if (ret =3D=3D 0) {
- 			if (nl80211_send_chandef(msg, &chandef))
-=2D-
+Akinobu Mita (1):
+  leds: remove PAGE_SIZE limit of /sys/class/leds/<led>/trigger
+
+ drivers/leds/led-class.c    |  8 ++--
+ drivers/leds/led-triggers.c | 90 ++++++++++++++++++++++++++++++++++-----------
+ drivers/leds/leds.h         |  6 +++
+ include/linux/leds.h        |  5 ---
+ 4 files changed, 78 insertions(+), 31 deletions(-)
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Dan Murphy <dmurphy@ti.com>
+-- 
 2.7.4
 
