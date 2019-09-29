@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9CFC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8925DC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6A9521920
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D07921928
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:32:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778333;
-	bh=mqSyEFPTAyzBwMRSRdz3y61W0tMmYA/5+LdqDpAIF+M=;
+	s=default; t=1569778336;
+	bh=BEnfgb96q4UyJzbI8cOPcJZOQlozNTSU2+Qi33Sg6eg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zAfJOSsn53funzsMF5CM+sX3U0yC3uR9iWav3WhDve9RMpeH8+sBHled/cVgev5qW
-	 szeEvDkX1zEZOuBYvzpxvWFPOdKhH8NLlKtIZU5ZmcKCXOkQtPmrPaL1XaBhOkLJHG
-	 jp60z+OBze43AoDTUYZU4aq2bQS2eG92hX916W/I=
+	b=NhRBVQiUiVSIlhnpc+K3374fubNqL98awsn1V0+aSKsVdrFayX6HEUL8awP0h0EUo
+	 dick1mkwVktQn8k7lAv/NtU+bnAB71R+Q0KjlGDG+EHRD6zQsgPRaVuLCN//NCDI5H
+	 m/elFXzmylFcQ+BA8MS/In4VjI37nEd3JHlpVq6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729691AbfI2RcN (ORCPT
+        id S1729704AbfI2RcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:32:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42870 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:32:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729632AbfI2RcI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:32:08 -0400
+        id S1729662AbfI2RcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:32:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F75921906;
-        Sun, 29 Sep 2019 17:32:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AF3921928;
+        Sun, 29 Sep 2019 17:32:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778326;
-        bh=mqSyEFPTAyzBwMRSRdz3y61W0tMmYA/5+LdqDpAIF+M=;
+        s=default; t=1569778330;
+        bh=BEnfgb96q4UyJzbI8cOPcJZOQlozNTSU2+Qi33Sg6eg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=USexjMLsTNkR5P3WWmLX22Ghy8BDTl1Emc7jv+KNXPwDlnNLJ1LJcjJelqNtJ+z/k
-         BVwdYpJItSiFM/5GWs6h5c/oKta/HUj7KEO9qgp6ETwXvqeWhet+MA2UdE3B6inhdo
-         IaPI3ioEDRdC1t+GG2FrSSwqiyAT8VnPtOqe+lu8=
+        b=GUWQdNzkezozomdseBJU/lyal1lO7XmQVIg9iyWxnB4JAcvJ9kwGuCdh2LZbJrRMO
+         pnBEmU8P0WO5ndKPrE7AN6cxyOtquFAGPoIDMnUMsQHEj0SMKnKnUaGfaoiN3tPz0d
+         ZoxOw4ziiFt9MC36aQoeUUYgdBeGa4q0to9av6GM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Anatoly Pugachev <matorola@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 38/49] pktcdvd: remove warning on attempting to register non-passthrough dev
-Date:   Sun, 29 Sep 2019 13:30:38 -0400
-Message-Id: <20190929173053.8400-38-sashal@kernel.org>
+Cc:     Youquan Song <youquan.song@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 40/49] tools/power/x86/intel-speed-select: Fix high priority core mask over count
+Date:   Sun, 29 Sep 2019 13:30:40 -0400
+Message-Id: <20190929173053.8400-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173053.8400-1-sashal@kernel.org>
 References: <20190929173053.8400-1-sashal@kernel.org>
@@ -59,85 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Youquan Song <youquan.song@intel.com>
 
-[ Upstream commit eb09b3cc464d2c3bbde9a6648603c8d599ea8582 ]
+[ Upstream commit 44460efe44e05eae2f21e57d06d542bbbb792e65 ]
 
-Anatoly reports that he gets the below warning when booting -git on
-a sparc64 box on debian unstable:
+If the CPU package has the less logical CPU than topo_max_cpus, but un-present
+CPU's punit_cpu_core will be initiated to 0 and they will be count to core 0
 
-...
-[   13.352975] aes_sparc64: Using sparc64 aes opcodes optimized AES
-implementation
-[   13.428002] ------------[ cut here ]------------
-[   13.428081] WARNING: CPU: 21 PID: 586 at
-drivers/block/pktcdvd.c:2597 pkt_setup_dev+0x2e4/0x5a0 [pktcdvd]
-[   13.428147] Attempt to register a non-SCSI queue
-[   13.428184] Modules linked in: pktcdvd libdes cdrom aes_sparc64
-n2_rng md5_sparc64 sha512_sparc64 rng_core sha256_sparc64 flash
-sha1_sparc64 ip_tables x_tables ipv6 crc_ccitt nf_defrag_ipv6 autofs4
-ext4 crc16 mbcache jbd2 raid10 raid456 async_raid6_recov async_memcpy
-async_pq async_xor xor async_tx raid6_pq raid1 raid0 multipath linear
-md_mod crc32c_sparc64
-[   13.428452] CPU: 21 PID: 586 Comm: pktsetup Not tainted
-5.3.0-10169-g574cc4539762 #1234
-[   13.428507] Call Trace:
-[   13.428542]  [00000000004635c0] __warn+0xc0/0x100
-[   13.428582]  [0000000000463634] warn_slowpath_fmt+0x34/0x60
-[   13.428626]  [000000001045b244] pkt_setup_dev+0x2e4/0x5a0 [pktcdvd]
-[   13.428674]  [000000001045ccf4] pkt_ctl_ioctl+0x94/0x220 [pktcdvd]
-[   13.428724]  [00000000006b95c8] do_vfs_ioctl+0x628/0x6e0
-[   13.428764]  [00000000006b96c8] ksys_ioctl+0x48/0x80
-[   13.428803]  [00000000006b9714] sys_ioctl+0x14/0x40
-[   13.428847]  [0000000000406294] linux_sparc_syscall+0x34/0x44
-[   13.428890] irq event stamp: 4181
-[   13.428924] hardirqs last  enabled at (4189): [<00000000004e0a74>]
-console_unlock+0x634/0x6c0
-[   13.428984] hardirqs last disabled at (4196): [<00000000004e0540>]
-console_unlock+0x100/0x6c0
-[   13.429048] softirqs last  enabled at (3978): [<0000000000b2e2d8>]
-__do_softirq+0x498/0x520
-[   13.429110] softirqs last disabled at (3967): [<000000000042cfb4>]
-do_softirq_own_stack+0x34/0x60
-[   13.429172] ---[ end trace 2220ca468f32967d ]---
-[   13.430018] pktcdvd: setup of pktcdvd device failed
-[   13.455589] des_sparc64: Using sparc64 des opcodes optimized DES
-implementation
-[   13.515334] camellia_sparc64: Using sparc64 camellia opcodes
-optimized CAMELLIA implementation
-[   13.522856] pktcdvd: setup of pktcdvd device failed
-[   13.529327] pktcdvd: setup of pktcdvd device failed
-[   13.532932] pktcdvd: setup of pktcdvd device failed
-[   13.536165] pktcdvd: setup of pktcdvd device failed
-[   13.539372] pktcdvd: setup of pktcdvd device failed
-[   13.542834] pktcdvd: setup of pktcdvd device failed
-[   13.546536] pktcdvd: setup of pktcdvd device failed
-[   15.431071] XFS (dm-0): Mounting V5 Filesystem
-...
+Like below, there are only 10 high priority cores (20 logical CPUs) in the CPU
+package, but it count to 27 logic CPUs.
 
-Apparently debian auto-attaches any cdrom like device to pktcdvd, which
-can lead to the above warning. There's really no reason to warn for this
-situation, kill it.
+./intel-speed-select base-freq info -l 0 | grep mask
+        high-priority-cpu-mask:7f000179,f000179f
 
-Reported-by: Anatoly Pugachev <matorola@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+With the fix patch:
+./intel-speed-select base-freq info -l 0
+        high-priority-cpu-mask:00000179,f000179f
+
+Signed-off-by: Youquan Song <youquan.song@intel.com>
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/pktcdvd.c | 1 -
- 1 file changed, 1 deletion(-)
+ tools/power/x86/intel-speed-select/isst-config.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/block/pktcdvd.c b/drivers/block/pktcdvd.c
-index 024060165afa7..76457003f1406 100644
---- a/drivers/block/pktcdvd.c
-+++ b/drivers/block/pktcdvd.c
-@@ -2594,7 +2594,6 @@ static int pkt_new_dev(struct pktcdvd_device *pd, dev_t dev)
- 	if (ret)
- 		return ret;
- 	if (!blk_queue_scsi_passthrough(bdev_get_queue(bdev))) {
--		WARN_ONCE(true, "Attempt to register a non-SCSI queue\n");
- 		blkdev_put(bdev, FMODE_READ | FMODE_NDELAY);
- 		return -EINVAL;
- 	}
+diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
+index 91c5ad1685a15..a6b1487b5f0f6 100644
+--- a/tools/power/x86/intel-speed-select/isst-config.c
++++ b/tools/power/x86/intel-speed-select/isst-config.c
+@@ -402,6 +402,9 @@ void set_cpu_mask_from_punit_coremask(int cpu, unsigned long long core_mask,
+ 			int j;
+ 
+ 			for (j = 0; j < topo_max_cpus; ++j) {
++				if (!CPU_ISSET_S(j, present_cpumask_size, present_cpumask))
++					continue;
++
+ 				if (cpu_map[j].pkg_id == pkg_id &&
+ 				    cpu_map[j].die_id == die_id &&
+ 				    cpu_map[j].punit_cpu_core == i) {
 -- 
 2.20.1
 
