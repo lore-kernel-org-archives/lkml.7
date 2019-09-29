@@ -2,52 +2,51 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A49C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADA2C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F14B21835
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 663CD2086A
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:01:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569765704;
-	bh=a0PbLUSHOQeGFwj/sxkijENQgTYWHyWj7f+/YAYp85s=;
+	s=default; t=1569765708;
+	bh=/N4BNUim2ujhrBzUpyfOBCNZJx17ZezEr41HEe4TTRE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DUr7Y7nvRXMpPHfevV26Hj20xw/433NWhLDFcF594DLRG/lhkHv85GdQ+a3lcGjT2
-	 u5PF3iO2G5EjUHRiTr0HrROmDmwctrArXkaWe5MW/pwns2tmhKQKT7iyILo998n2MK
-	 CIUprKHoY7OVT5Y1j+0iQXhVquZROocIOB1bIcBM=
+	b=G0JM63acQVw1cmIVtta4M6zO0JkjGuX4fV6sJMm6LL4vGWIg+aECI90FJmciVrwHS
+	 cAej+PgOi8MjFY1eSp3iEY6iA5hkpSCAdyuwPpCWnUcwQKqDOvsk+wIusTP7y5zdcK
+	 Cvi6Rk/C0LNqS481v/Fe/exDgNjIYh15T+omqmQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730079AbfI2OBn (ORCPT
+        id S1730088AbfI2OBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 10:01:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43974 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 10:01:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730064AbfI2OBk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 10:01:40 -0400
+        id S1730075AbfI2OBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 10:01:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04B8B2082F;
-        Sun, 29 Sep 2019 14:01:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49ADB2086A;
+        Sun, 29 Sep 2019 14:01:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569765698;
-        bh=a0PbLUSHOQeGFwj/sxkijENQgTYWHyWj7f+/YAYp85s=;
+        s=default; t=1569765702;
+        bh=/N4BNUim2ujhrBzUpyfOBCNZJx17ZezEr41HEe4TTRE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b2yDbYC1wWQ0FajWDkSQmjwV+CufsvJM0xV7SaHMgGo8r3Xx4nHtMznRq+u4c9Jap
-         PV4cnleT4JF2UghOv5oUlnb1BQAoqO9V7MnibZW23Gcgzzst790dIw6vVkm+lauV1t
-         bD2fjtUg/rU8nXMOTZipZoQkF5phjYeMU7U1Zw5s=
+        b=Gruy2G3fuFI3T7L55Gp/ba3qEQvysbUu049K+bs0NY1Srr7wOQUBRdvuiyngtDdNP
+         LuD7RqMkREKYKIhr1VRRs7cpqpdKb3S6pPKdc+ccdZfB9zksaHhWRgz/BZLszHW3fq
+         5J4PBuH5NfcwWubev3b6cycMQcldXlCG6ORhXGz8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 33/45] f2fs: fix to do sanity check on segment bitmap of LFS curseg
-Date:   Sun, 29 Sep 2019 15:56:01 +0200
-Message-Id: <20190929135032.339459211@linuxfoundation.org>
+        stable@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 5.2 20/45] clk: imx: imx8mm: fix audio pll setting
+Date:   Sun, 29 Sep 2019 15:55:48 +0200
+Message-Id: <20190929135030.441236419@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190929135024.387033930@linuxfoundation.org>
 References: <20190929135024.387033930@linuxfoundation.org>
@@ -60,110 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Peng Fan <peng.fan@nxp.com>
 
-[ Upstream commit c854f4d681365498f53ba07843a16423625aa7e9 ]
+commit 053a4ffe298836bb973d2cba59f82fff60c7db5b upstream.
 
-As Jungyeon Reported in bugzilla:
+The AUDIO PLL max support 650M, so the original clk settings violate
+spec. This patch makes the output 786432000 -> 393216000,
+and 722534400 -> 361267200 to aligned with NXP vendor kernel without any
+impact on audio functionality and go within 650MHz PLL limit.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203233
+Cc: <stable@vger.kernel.org>
+Fixes: ba5625c3e272 ("clk: imx: Add clock driver support for imx8mm")
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Acked-by: Abel Vesa <abel.vesa@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-- Reproduces
-gcc poc_13.c
-./run.sh f2fs
-
-- Kernel messages
- F2FS-fs (sdb): Bitmap was wrongly set, blk:4608
- kernel BUG at fs/f2fs/segment.c:2133!
- RIP: 0010:update_sit_entry+0x35d/0x3e0
- Call Trace:
-  f2fs_allocate_data_block+0x16c/0x5a0
-  do_write_page+0x57/0x100
-  f2fs_do_write_node_page+0x33/0xa0
-  __write_node_page+0x270/0x4e0
-  f2fs_sync_node_pages+0x5df/0x670
-  f2fs_write_checkpoint+0x364/0x13a0
-  f2fs_sync_fs+0xa3/0x130
-  f2fs_do_sync_file+0x1a6/0x810
-  do_fsync+0x33/0x60
-  __x64_sys_fsync+0xb/0x10
-  do_syscall_64+0x43/0x110
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The testcase fails because that, in fuzzed image, current segment was
-allocated with LFS type, its .next_blkoff should point to an unused
-block address, but actually, its bitmap shows it's not. So during
-allocation, f2fs crash when setting bitmap.
-
-Introducing sanity_check_curseg() to check such inconsistence of
-current in-used segment.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/segment.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ drivers/clk/imx/clk-imx8mm.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 291f7106537c7..0a6be0212e390 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -4242,6 +4242,41 @@ static int build_dirty_segmap(struct f2fs_sb_info *sbi)
- 	return init_victim_secmap(sbi);
- }
+--- a/drivers/clk/imx/clk-imx8mm.c
++++ b/drivers/clk/imx/clk-imx8mm.c
+@@ -55,8 +55,8 @@ static const struct imx_pll14xx_rate_tab
+ };
  
-+static int sanity_check_curseg(struct f2fs_sb_info *sbi)
-+{
-+	int i;
-+
-+	/*
-+	 * In LFS/SSR curseg, .next_blkoff should point to an unused blkaddr;
-+	 * In LFS curseg, all blkaddr after .next_blkoff should be unused.
-+	 */
-+	for (i = 0; i < NO_CHECK_TYPE; i++) {
-+		struct curseg_info *curseg = CURSEG_I(sbi, i);
-+		struct seg_entry *se = get_seg_entry(sbi, curseg->segno);
-+		unsigned int blkofs = curseg->next_blkoff;
-+
-+		if (f2fs_test_bit(blkofs, se->cur_valid_map))
-+			goto out;
-+
-+		if (curseg->alloc_type == SSR)
-+			continue;
-+
-+		for (blkofs += 1; blkofs < sbi->blocks_per_seg; blkofs++) {
-+			if (!f2fs_test_bit(blkofs, se->cur_valid_map))
-+				continue;
-+out:
-+			f2fs_msg(sbi->sb, KERN_ERR,
-+				"Current segment's next free block offset is "
-+				"inconsistent with bitmap, logtype:%u, "
-+				"segno:%u, type:%u, next_blkoff:%u, blkofs:%u",
-+				i, curseg->segno, curseg->alloc_type,
-+				curseg->next_blkoff, blkofs);
-+			return -EINVAL;
-+		}
-+	}
-+	return 0;
-+}
-+
- /*
-  * Update min, max modified time for cost-benefit GC algorithm
-  */
-@@ -4337,6 +4372,10 @@ int f2fs_build_segment_manager(struct f2fs_sb_info *sbi)
- 	if (err)
- 		return err;
+ static const struct imx_pll14xx_rate_table imx8mm_audiopll_tbl[] = {
+-	PLL_1443X_RATE(786432000U, 655, 5, 2, 23593),
+-	PLL_1443X_RATE(722534400U, 301, 5, 1, 3670),
++	PLL_1443X_RATE(393216000U, 262, 2, 3, 9437),
++	PLL_1443X_RATE(361267200U, 361, 3, 3, 17511),
+ };
  
-+	err = sanity_check_curseg(sbi);
-+	if (err)
-+		return err;
-+
- 	init_min_max_mtime(sbi);
- 	return 0;
- }
--- 
-2.20.1
-
+ static const struct imx_pll14xx_rate_table imx8mm_videopll_tbl[] = {
 
 
