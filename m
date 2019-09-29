@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA5FC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0D0C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8647218DE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 012EF21906
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:02:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569765751;
-	bh=LNhH+DAAmF6IDi+AxFJ4GguOaZjC2sVTm/JMgj4MUzI=;
+	s=default; t=1569765756;
+	bh=M3/SmVArOA7JBk5QAHOoRMcoDkCTQfWxfBebZbq2kkQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mzr4h09Gb9m0dZGnFpPnmbue4mwEr7aaurYpdIpOiJ/u9hTwkyc0O8BSDsdoGgXhF
-	 VtZ544i6H4tM4GBCldnc5NGS7ltjxc4TpxSx6WQUmxJROvs7No3jlhb2dwBFnNiib0
-	 OIkdzVopoFEjL+KuK05afuyXvygsTgvH8+QZAf0w=
+	b=MRKrfiVCyISz18cIgE7NpqsHM/VkuZkrQrRJzVB0hp8dFkCrCoYffOKqDvaxovSYy
+	 Ox/7uSlujHJVCOn1cSnv0TiQEx7S/8bHT5mcIRtZtiduvUDl7ALkR4ronoW81IsPpZ
+	 k8M/IcfDHRSmdNXBAkKqh8scLR7QpI1xPbqBp+/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730232AbfI2OCb (ORCPT
+        id S1730247AbfI2OCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 10:02:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45178 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 10:02:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730220AbfI2OC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 10:02:28 -0400
+        id S1730220AbfI2OCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 10:02:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92F362082F;
-        Sun, 29 Sep 2019 14:02:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A06682082F;
+        Sun, 29 Sep 2019 14:02:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569765748;
-        bh=LNhH+DAAmF6IDi+AxFJ4GguOaZjC2sVTm/JMgj4MUzI=;
+        s=default; t=1569765751;
+        bh=M3/SmVArOA7JBk5QAHOoRMcoDkCTQfWxfBebZbq2kkQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=giVT078EOSZMBUuXL1O29XJzBN18Y9lzaHmQ9dcDTpdlUkdr8TyhQ+I4LNnnW2Me2
-         7Z/z3hNkQEpNhPrkvbEburaXLkSiX+KrSOy2Wn3vIC05F4zbbwjHtQqQYng2AEA4X6
-         V/Tv7bCIE1uBYelnYXTSSG15UoYdDjV7Zoq7uC3A=
+        b=n643buitx5JwcLqG1egBPsXuca7rvCDU4dzb7TcgvgdfK/LM1J4uB4HDToWrOVuYC
+         VNONK/wtfFBfCxuflEGZSVe5XKHGmHnoFZ5/87ogMyaNB2pJmMIkA2Cghmzz3UyK3i
+         6lw+jk0i1HH28COAmvPqqtVhnr6bzyA1to6plLPk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Kacper=20Piwi=C5=84ski?= <cosiekvfj@o2.pl>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Ilia Mirkin <imirkin@alum.mit.edu>,
+        Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 38/45] ACPI: video: Add new hw_changes_brightness quirk, set it on PB Easynote MZ35
-Date:   Sun, 29 Sep 2019 15:56:06 +0200
-Message-Id: <20190929135033.030560273@linuxfoundation.org>
+Subject: [PATCH 5.2 39/45] drm/nouveau/disp/nv50-: fix center/aspect-corrected scaling
+Date:   Sun, 29 Sep 2019 15:56:07 +0200
+Message-Id: <20190929135033.149716277@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190929135024.387033930@linuxfoundation.org>
 References: <20190929135024.387033930@linuxfoundation.org>
@@ -62,100 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Ilia Mirkin <imirkin@alum.mit.edu>
 
-[ Upstream commit 4f7f96453b462b3de0fa18d18fe983960bb5ee7f ]
+[ Upstream commit 533f4752407543f488a9118d817b8c504352b6fb ]
 
-Some machines change the brightness themselves when a brightness hotkey
-gets pressed, despite us telling them not to. This causes the brightness to
-go two steps up / down when the hotkey is pressed. This is esp. a problem
-on older machines with only a few brightness levels.
+Previously center scaling would get scaling applied to it (when it was
+only supposed to center the image), and aspect-corrected scaling did not
+always correctly pick whether to reduce width or height for a particular
+combination of inputs/outputs.
 
-This commit adds a new hw_changes_brightness quirk which makes
-acpi_video_device_notify() only call backlight_force_update(...,
-BACKLIGHT_UPDATE_HOTKEY) and not do anything else, notifying userspace
-that the brightness was changed and leaving it at that fixing the dual
-step problem.
-
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204077
-Reported-by: Kacper Piwiński <cosiekvfj@o2.pl>
-Tested-by: Kacper Piwiński <cosiekvfj@o2.pl>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=110660
+Signed-off-by: Ilia Mirkin <imirkin@alum.mit.edu>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpi_video.c | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ drivers/gpu/drm/nouveau/dispnv50/head.c | 28 +++++++++++++++++++++----
+ 1 file changed, 24 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
-index 9489ffc064117..4f325e47519f5 100644
---- a/drivers/acpi/acpi_video.c
-+++ b/drivers/acpi/acpi_video.c
-@@ -60,6 +60,12 @@ module_param(report_key_events, int, 0644);
- MODULE_PARM_DESC(report_key_events,
- 	"0: none, 1: output changes, 2: brightness changes, 3: all");
- 
-+static int hw_changes_brightness = -1;
-+module_param(hw_changes_brightness, int, 0644);
-+MODULE_PARM_DESC(hw_changes_brightness,
-+	"Set this to 1 on buggy hw which changes the brightness itself when "
-+	"a hotkey is pressed: -1: auto, 0: normal 1: hw-changes-brightness");
-+
- /*
-  * Whether the struct acpi_video_device_attrib::device_id_scheme bit should be
-  * assumed even if not actually set.
-@@ -405,6 +411,14 @@ static int video_set_report_key_events(const struct dmi_system_id *id)
- 	return 0;
- }
- 
-+static int video_hw_changes_brightness(
-+	const struct dmi_system_id *d)
-+{
-+	if (hw_changes_brightness == -1)
-+		hw_changes_brightness = 1;
-+	return 0;
-+}
-+
- static const struct dmi_system_id video_dmi_table[] = {
- 	/*
- 	 * Broken _BQC workaround http://bugzilla.kernel.org/show_bug.cgi?id=13121
-@@ -529,6 +543,21 @@ static const struct dmi_system_id video_dmi_table[] = {
- 		DMI_MATCH(DMI_PRODUCT_NAME, "Vostro V131"),
- 		},
- 	},
-+	/*
-+	 * Some machines change the brightness themselves when a brightness
-+	 * hotkey gets pressed, despite us telling them not to. In this case
-+	 * acpi_video_device_notify() should only call backlight_force_update(
-+	 * BACKLIGHT_UPDATE_HOTKEY) and not do anything else.
-+	 */
-+	{
-+	 /* https://bugzilla.kernel.org/show_bug.cgi?id=204077 */
-+	 .callback = video_hw_changes_brightness,
-+	 .ident = "Packard Bell EasyNote MZ35",
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "Packard Bell"),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "EasyNote MZ35"),
-+		},
-+	},
- 	{}
- };
- 
-@@ -1612,6 +1641,14 @@ static void acpi_video_device_notify(acpi_handle handle, u32 event, void *data)
- 	bus = video_device->video;
- 	input = bus->input;
- 
-+	if (hw_changes_brightness > 0) {
-+		if (video_device->backlight)
-+			backlight_force_update(video_device->backlight,
-+					       BACKLIGHT_UPDATE_HOTKEY);
-+		acpi_notifier_call_chain(device, event, 0);
-+		return;
-+	}
-+
- 	switch (event) {
- 	case ACPI_VIDEO_NOTIFY_CYCLE_BRIGHTNESS:	/* Cycle brightness */
- 		brightness_switch_event(video_device, event);
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/head.c b/drivers/gpu/drm/nouveau/dispnv50/head.c
+index 06ee23823a689..acfafc4bda0e1 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/head.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/head.c
+@@ -169,14 +169,34 @@ nv50_head_atomic_check_view(struct nv50_head_atom *armh,
+ 	 */
+ 	switch (mode) {
+ 	case DRM_MODE_SCALE_CENTER:
+-		asyh->view.oW = min((u16)umode->hdisplay, asyh->view.oW);
+-		asyh->view.oH = min((u16)umode_vdisplay, asyh->view.oH);
+-		/* fall-through */
++		/* NOTE: This will cause scaling when the input is
++		 * larger than the output.
++		 */
++		asyh->view.oW = min(asyh->view.iW, asyh->view.oW);
++		asyh->view.oH = min(asyh->view.iH, asyh->view.oH);
++		break;
+ 	case DRM_MODE_SCALE_ASPECT:
+-		if (asyh->view.oH < asyh->view.oW) {
++		/* Determine whether the scaling should be on width or on
++		 * height. This is done by comparing the aspect ratios of the
++		 * sizes. If the output AR is larger than input AR, that means
++		 * we want to change the width (letterboxed on the
++		 * left/right), otherwise on the height (letterboxed on the
++		 * top/bottom).
++		 *
++		 * E.g. 4:3 (1.333) AR image displayed on a 16:10 (1.6) AR
++		 * screen will have letterboxes on the left/right. However a
++		 * 16:9 (1.777) AR image on that same screen will have
++		 * letterboxes on the top/bottom.
++		 *
++		 * inputAR = iW / iH; outputAR = oW / oH
++		 * outputAR > inputAR is equivalent to oW * iH > iW * oH
++		 */
++		if (asyh->view.oW * asyh->view.iH > asyh->view.iW * asyh->view.oH) {
++			/* Recompute output width, i.e. left/right letterbox */
+ 			u32 r = (asyh->view.iW << 19) / asyh->view.iH;
+ 			asyh->view.oW = ((asyh->view.oH * r) + (r / 2)) >> 19;
+ 		} else {
++			/* Recompute output height, i.e. top/bottom letterbox */
+ 			u32 r = (asyh->view.iH << 19) / asyh->view.iW;
+ 			asyh->view.oH = ((asyh->view.oW * r) + (r / 2)) >> 19;
+ 		}
 -- 
 2.20.1
 
