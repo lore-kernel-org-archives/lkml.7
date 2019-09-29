@@ -2,134 +2,98 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4DBC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBD7C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC62521920
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AB63206BB
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:36:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728960AbfI2NTE convert rfc822-to-8bit (ORCPT
+        id S1728862AbfI2NgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 09:19:04 -0400
-Received: from mailoutvs2.siol.net ([185.57.226.193]:39453 "EHLO mail.siol.net"
+        Sun, 29 Sep 2019 09:36:08 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:48914 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725937AbfI2NTD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 09:19:03 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id F3AD4520DE2;
-        Sun, 29 Sep 2019 15:18:59 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id GfKKfDQhmfqB; Sun, 29 Sep 2019 15:18:59 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 7DCB75207AE;
-        Sun, 29 Sep 2019 15:18:59 +0200 (CEST)
-Received: from jernej-laptop.localnet (cpe-86-58-59-25.static.triera.net [86.58.59.25])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id 0AE24520DE2;
-        Sun, 29 Sep 2019 15:18:59 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        mchehab@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 5/6] media: sun4i: Add H3 deinterlace driver
-Date:   Sun, 29 Sep 2019 15:18:58 +0200
-Message-ID: <14809830.gx5DXe3C1k@jernej-laptop>
-In-Reply-To: <20190912202647.wfcjur7yxhlelvd6@localhost.localdomain>
-References: <20190912175132.411-1-jernej.skrabec@siol.net> <20190912175132.411-6-jernej.skrabec@siol.net> <20190912202647.wfcjur7yxhlelvd6@localhost.localdomain>
+        id S1725937AbfI2NgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 09:36:07 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id C75899D10838FA607073;
+        Sun, 29 Sep 2019 21:36:03 +0800 (CST)
+Received: from huawei.com (10.90.53.225) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Sun, 29 Sep 2019
+ 21:35:55 +0800
+From:   yu kuai <yukuai3@huawei.com>
+To:     <cascardo@holoscopio.com>, <don@syst.com.br>,
+        <dvhart@infradead.org>, <andy@infradead.org>
+CC:     <yukuai3@huawei.com>, <zhengbin13@huawei.com>,
+        <yi.zhang@huawei.com>, <platform-driver-x86@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] classmate-laptop: remove unused variable
+Date:   Sun, 29 Sep 2019 21:42:49 +0800
+Message-ID: <1569764569-9177-1-git-send-email-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne četrtek, 12. september 2019 ob 22:26:47 CEST je Maxime Ripard napisal(a):
-> Hi,
-> 
-> On Thu, Sep 12, 2019 at 07:51:31PM +0200, Jernej Skrabec wrote:
-> > +	dev->regmap = devm_regmap_init_mmio(dev->dev, dev->base,
-> > +					    
-&deinterlace_regmap_config);
-> > +	if (IS_ERR(dev->regmap)) {
-> > +		dev_err(dev->dev, "Couldn't create deinterlace 
-regmap\n");
-> > +
-> > +		return PTR_ERR(dev->regmap);
-> > +	}
-> > +
-> > +	ret = clk_prepare_enable(dev->bus_clk);
-> > +	if (ret) {
-> > +		dev_err(dev->dev, "Failed to enable bus clock\n");
-> > +
-> > +		return ret;
-> > +	}
-> 
-> Do you need to keep the bus clock enabled all the time? Usually, for
-> the SoCs that have a reset line, you only need it to read / write to
-> the registers, not to have the controller actually running.
-> 
-> If you don't, then regmap_init_mmio_clk will take care of that for
-> you.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-I just tested and using regmap_init_mmio_clk() with "bus" clock doesn't work. 
-I guess it has to be enabled whole time. I'll just leave it as-is.
+drivers/platform/x86/classmate-laptop.c: In function cmpc_accel_remove_v4:
+drivers/platform/x86/classmate-laptop.c:424:21: warning: variable accel
+set but not used [-Wunused-but-set-variable]
+drivers/platform/x86/classmate-laptop.c: In function cmpc_accel_remove:
+drivers/platform/x86/classmate-laptop.c:660:21: warning: variable accel
+set but not used [-Wunused-but-set-variable]
 
-Best regards,
-Jernej
+In function cmpc_accel_remove_v4 and cmpc_accel_remove, variable accel is
+set but not used, so it can be removed. In that case, variable inputdev is
+set but not used and can be removed.
 
-> 
-> > +	clk_set_rate(dev->mod_clk, 300000000);
-> > +
-> > +	ret = clk_prepare_enable(dev->mod_clk);
-> > +	if (ret) {
-> > +		dev_err(dev->dev, "Failed to enable mod clock\n");
-> > +
-> > +		goto err_bus_clk;
-> > +	}
-> > +
-> > +	ret = clk_prepare_enable(dev->ram_clk);
-> > +	if (ret) {
-> > +		dev_err(dev->dev, "Failed to enable ram clock\n");
-> > +
-> > +		goto err_mod_clk;
-> > +	}
-> > +
-> > +	ret = reset_control_reset(dev->rstc);
-> > +	if (ret) {
-> > +		dev_err(dev->dev, "Failed to apply reset\n");
-> > +
-> > +		goto err_ram_clk;
-> > +	}
-> 
-> This could be moved to a runtime_pm hook, with get_sync called in the
-> open. That way you won't leave the device powered on if it's unused.
-> 
-> > +struct deinterlace_dev {
-> > +	struct v4l2_device	v4l2_dev;
-> > +	struct video_device	vfd;
-> > +	struct device		*dev;
-> > +	struct v4l2_m2m_dev	*m2m_dev;
-> > +
-> > +	/* Device file mutex */
-> > +	struct mutex		dev_mutex;
-> > +
-> > +	void __iomem		*base;
-> > +	struct regmap		*regmap;
-> 
-> Do you need to store the base address in that structure if you're
-> using the regmap?
-> 
-> Maxime
+Fixes: 7125587df4e8 ("classmate-laptop: Add support for Classmate V4 accelerometer.")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+---
+ drivers/platform/x86/classmate-laptop.c | 12 ------------
+ 1 file changed, 12 deletions(-)
 
-
-
+diff --git a/drivers/platform/x86/classmate-laptop.c b/drivers/platform/x86/classmate-laptop.c
+index 86cc2cc..af063f6 100644
+--- a/drivers/platform/x86/classmate-laptop.c
++++ b/drivers/platform/x86/classmate-laptop.c
+@@ -420,12 +420,6 @@ static int cmpc_accel_add_v4(struct acpi_device *acpi)
+ 
+ static int cmpc_accel_remove_v4(struct acpi_device *acpi)
+ {
+-	struct input_dev *inputdev;
+-	struct cmpc_accel *accel;
+-
+-	inputdev = dev_get_drvdata(&acpi->dev);
+-	accel = dev_get_drvdata(&inputdev->dev);
+-
+ 	device_remove_file(&acpi->dev, &cmpc_accel_sensitivity_attr_v4);
+ 	device_remove_file(&acpi->dev, &cmpc_accel_g_select_attr_v4);
+ 	return cmpc_remove_acpi_notify_device(acpi);
+@@ -656,12 +650,6 @@ static int cmpc_accel_add(struct acpi_device *acpi)
+ 
+ static int cmpc_accel_remove(struct acpi_device *acpi)
+ {
+-	struct input_dev *inputdev;
+-	struct cmpc_accel *accel;
+-
+-	inputdev = dev_get_drvdata(&acpi->dev);
+-	accel = dev_get_drvdata(&inputdev->dev);
+-
+ 	device_remove_file(&acpi->dev, &cmpc_accel_sensitivity_attr);
+ 	return cmpc_remove_acpi_notify_device(acpi);
+ }
+-- 
+2.7.4
 
