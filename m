@@ -2,81 +2,83 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEECCC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 07:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C0F8C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 07:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97F50218DE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 07:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2571121882
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 07:44:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728977AbfI2Hki (ORCPT
+        id S1726579AbfI2HoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 03:40:38 -0400
-Received: from mga11.intel.com ([192.55.52.93]:63856 "EHLO mga11.intel.com"
+        Sun, 29 Sep 2019 03:44:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55326 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbfI2Hki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 03:40:38 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Sep 2019 00:40:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,562,1559545200"; 
-   d="scan'208";a="204547592"
-Received: from zhangjun-desktop.sh.intel.com ([10.239.154.83])
-  by fmsmga001.fm.intel.com with ESMTP; 29 Sep 2019 00:40:35 -0700
-From:   jun.zhang@intel.com
-To:     dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        bo.he@intel.com
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        zhang jun <jun.zhang@intel.com>, he@vger.kernel.org
-Subject: [PATCH] x86/PAT: priority the PAT warn to error to highlight the developer
-Date:   Sun, 29 Sep 2019 15:20:31 +0800
-Message-Id: <20190929072032.14195-1-jun.zhang@intel.com>
-X-Mailer: git-send-email 2.17.1
+        id S1725379AbfI2HoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 03:44:12 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E0A4218C4262;
+        Sun, 29 Sep 2019 07:44:11 +0000 (UTC)
+Received: from krava (ovpn-204-44.brq.redhat.com [10.40.204.44])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 89BBF643C1;
+        Sun, 29 Sep 2019 07:44:08 +0000 (UTC)
+Date:   Sun, 29 Sep 2019 09:44:07 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] perf: add support for logging debug messages to
+ file
+Message-ID: <20190929073951.GA15099@krava.homenet.telecomitalia.it>
+References: <20190922023823.12543-1-changbin.du@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190922023823.12543-1-changbin.du@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Sun, 29 Sep 2019 07:44:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhang jun <jun.zhang@intel.com>
+On Sun, Sep 22, 2019 at 10:38:21AM +0800, Changbin Du wrote:
+> When in TUI mode, it is impossible to show all the debug messages to
+> console. This make it hard to debug perf issues using debug messages.
+> This patch adds support for logging debug messages to file to resolve
+> this problem.
+> 
+> v2:
+>   o specific all debug options one time.
+> 
+> Changbin Du (2):
+>   perf: support multiple debug options separated by ','
+>   perf: add support for logging debug messages to file
 
-Documentation/x86/pat.txt says:
-set_memory_uc() or set_memory_wc() must use together with set_memory_wb()
+hi,
+getting segfault with:
 
-if break the PAT attribute, there are tons of warning like:
-[   45.846872] x86/PAT: NDK MediaCodec_:3753 map pfn RAM range req
-write-combining for [mem 0x1e7a80000-0x1e7a87fff], got write-back
-and in the extremely case, we see kernel panic unexpected like:
-list_del corruption. prev->next should be ffff88806dbe69c0,
-but was ffff888036f048c0
+[jolsa@krava perf]$ ./perf --debug verbose=2,file report
+build id event received for [kernel.kallsyms]: bf6ca14c03795fd67b4d88113681ba4af2b8c18a
+Segmentation fault (core dumped)
 
-so it's better to priority the warn to error to highlight to
-remind the developer.
+jirka
 
-Signed-off-by: zhang jun <jun.zhang@intel.com>
-Signed-off-by: he, bo <bo.he@intel.com>
----
- arch/x86/mm/pat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/mm/pat.c b/arch/x86/mm/pat.c
-index d9fbd4f69920..43a4dfdcedc8 100644
---- a/arch/x86/mm/pat.c
-+++ b/arch/x86/mm/pat.c
-@@ -897,7 +897,7 @@ static int reserve_pfn_range(u64 paddr, unsigned long size, pgprot_t *vma_prot,
- 
- 		pcm = lookup_memtype(paddr);
- 		if (want_pcm != pcm) {
--			pr_warn("x86/PAT: %s:%d map pfn RAM range req %s for [mem %#010Lx-%#010Lx], got %s\n",
-+			pr_err("x86/PAT: %s:%d map pfn RAM range req %s for [mem %#010Lx-%#010Lx], got %s!!!\n",
- 				current->comm, current->pid,
- 				cattr_name(want_pcm),
- 				(unsigned long long)paddr,
--- 
-2.17.1
-
+> 
+>  tools/perf/Documentation/perf.txt |  14 ++--
+>  tools/perf/util/debug.c           | 106 ++++++++++++++++++------------
+>  2 files changed, 73 insertions(+), 47 deletions(-)
+> 
+> -- 
+> 2.20.1
+> 
