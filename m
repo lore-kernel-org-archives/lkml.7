@@ -2,52 +2,52 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB50C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF621C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08BB7218AC
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96BDB21882
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:00:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569765630;
-	bh=KLbFfGlf9oltN7d7+gTl8gb7w5YEcQPPEj9x0jk4g74=;
+	s=default; t=1569765634;
+	bh=9K5VrEJ5Mu18MwhovO++6lF5hDTZl5gGUGSNuOZvb0w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uGqw5NkOGkz3ztCOBNxPdnvHoXeycuzlPbhRcZ2o9qlWUguppu0XCLlTh9rgJUHp7
-	 +kF9OYuVNz5SAVIptgrxuFy0MBH12qpRWXvrzZts/gIpuRoo2vELs72WsgEdj8SZ2F
-	 Ry1L47Nxf1j38MO3dzGnBMAHSnGFpiIDWBHVZn88=
+	b=mKxkMAmcII3BXc3p0EA+WQKLvBfuyO74uJZJiRD7qJaM6n2uEJdZUJ1Zb1N1GSat4
+	 Equ/izKxXkFAX2tzSrOrbUme7KFaTkYime1lVAbFgH3DXIptGmmrSOO+Lr4VYiHJXJ
+	 z2y+i2+zZPPZ6u0vcxwRCNNgVAoWDg8vxg7CXArs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729910AbfI2OA3 (ORCPT
+        id S1729927AbfI2OAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 10:00:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42154 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 10:00:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729888AbfI2OAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 10:00:24 -0400
+        id S1729899AbfI2OA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 10:00:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05DDF21882;
-        Sun, 29 Sep 2019 14:00:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25FA821906;
+        Sun, 29 Sep 2019 14:00:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569765623;
-        bh=KLbFfGlf9oltN7d7+gTl8gb7w5YEcQPPEj9x0jk4g74=;
+        s=default; t=1569765626;
+        bh=9K5VrEJ5Mu18MwhovO++6lF5hDTZl5gGUGSNuOZvb0w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RTkYVPs5I6L/ZE65V06LzlacLZq/isYE4S+Ja2BYs2D5qLH+MM9cioV/cPn+uk2z0
-         u0aH/zOFiDzL6pJxz6cxhVt1NDghDQSc1UbZnzl3p7VndI1XwEINAl4hfViU8WoEI1
-         Ezc6WfhqZ2RrQ6luTwxwxYj6mJXZS2y1TEEwu/hY=
+        b=QzMzGE3VtzLz1DkOMDQ+DfmywcxkbUXMQ+c/p/bh5SCBVUuhLZ/Kv1AwtpYpMkRC+
+         LYG9tUl3HmObjLobnE2cla/Fkwz7+EyTRzaBPYCq3YsLyJPpEEqJkzUk1NRkdZe+x8
+         h8qZe0n+23B+zDa5KUCqv07S4J5eW43V3Tn0lhK8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 03/45] phy: qcom-qmp: Raise qcom_qmp_phy_enable() polling delay
-Date:   Sun, 29 Sep 2019 15:55:31 +0200
-Message-Id: <20190929135025.438428669@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Jiri Kosina <jkosina@suse.cz>,
+        syzbot+1088533649dafa1c9004@syzkaller.appspotmail.com
+Subject: [PATCH 5.2 12/45] HID: prodikeys: Fix general protection fault during probe
+Date:   Sun, 29 Sep 2019 15:55:40 +0200
+Message-Id: <20190929135028.034124300@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190929135024.387033930@linuxfoundation.org>
 References: <20190929135024.387033930@linuxfoundation.org>
@@ -60,38 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Gonzalez <marc.w.gonzalez@free.fr>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-[ Upstream commit 5206026404190125436f81088eb3667076e56083 ]
+commit 98375b86c79137416e9fd354177b85e768c16e56 upstream.
 
-readl_poll_timeout() calls usleep_range() to sleep between reads.
-usleep_range() doesn't work efficiently for tiny values.
+The syzbot fuzzer provoked a general protection fault in the
+hid-prodikeys driver:
 
-Raise the polling delay in qcom_qmp_phy_enable() to bring it in line
-with the delay in qcom_qmp_phy_com_init().
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] SMP KASAN
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.3.0-rc5+ #28
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+RIP: 0010:pcmidi_submit_output_report drivers/hid/hid-prodikeys.c:300  [inline]
+RIP: 0010:pcmidi_set_operational drivers/hid/hid-prodikeys.c:558 [inline]
+RIP: 0010:pcmidi_snd_initialise drivers/hid/hid-prodikeys.c:686 [inline]
+RIP: 0010:pk_probe+0xb51/0xfd0 drivers/hid/hid-prodikeys.c:836
+Code: 0f 85 50 04 00 00 48 8b 04 24 4c 89 7d 10 48 8b 58 08 e8 b2 53 e4 fc
+48 8b 54 24 20 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f
+85 13 04 00 00 48 ba 00 00 00 00 00 fc ff df 49 8b
 
-Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The problem is caused by the fact that pcmidi_get_output_report() will
+return an error if the HID device doesn't provide the right sort of
+output report, but pcmidi_set_operational() doesn't bother to check
+the return code and assumes the function call always succeeds.
+
+This patch adds the missing check and aborts the probe operation if
+necessary.
+
+Reported-and-tested-by: syzbot+1088533649dafa1c9004@syzkaller.appspotmail.com
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: <stable@vger.kernel.org>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/phy/qualcomm/phy-qcom-qmp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/hid-prodikeys.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index 43abdfd0deed9..99b3bc04d215a 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -1549,7 +1549,7 @@ static int qcom_qmp_phy_enable(struct phy *phy)
- 	status = pcs + cfg->regs[QPHY_PCS_READY_STATUS];
- 	mask = cfg->mask_pcs_ready;
+--- a/drivers/hid/hid-prodikeys.c
++++ b/drivers/hid/hid-prodikeys.c
+@@ -551,10 +551,14 @@ static void pcmidi_setup_extra_keys(
  
--	ret = readl_poll_timeout(status, val, val & mask, 1,
-+	ret = readl_poll_timeout(status, val, val & mask, 10,
- 				 PHY_INIT_COMPLETE_TIMEOUT);
- 	if (ret) {
- 		dev_err(qmp->dev, "phy initialization timed-out\n");
--- 
-2.20.1
-
+ static int pcmidi_set_operational(struct pcmidi_snd *pm)
+ {
++	int rc;
++
+ 	if (pm->ifnum != 1)
+ 		return 0; /* only set up ONCE for interace 1 */
+ 
+-	pcmidi_get_output_report(pm);
++	rc = pcmidi_get_output_report(pm);
++	if (rc < 0)
++		return rc;
+ 	pcmidi_submit_output_report(pm, 0xc1);
+ 	return 0;
+ }
+@@ -683,7 +687,11 @@ static int pcmidi_snd_initialise(struct
+ 	spin_lock_init(&pm->rawmidi_in_lock);
+ 
+ 	init_sustain_timers(pm);
+-	pcmidi_set_operational(pm);
++	err = pcmidi_set_operational(pm);
++	if (err < 0) {
++		pk_error("failed to find output report\n");
++		goto fail_register;
++	}
+ 
+ 	/* register it */
+ 	err = snd_card_register(card);
 
 
