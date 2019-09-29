@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A74AC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 15:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BABCC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 15:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71DEA2082F
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 15:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0844E2082F
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 15:45:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728979AbfI2Po3 (ORCPT
+        id S1729027AbfI2PpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 11:44:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42084 "EHLO mx1.redhat.com"
+        Sun, 29 Sep 2019 11:45:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40802 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725948AbfI2Po3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 11:44:29 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        id S1725948AbfI2PpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 11:45:13 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5CB7E10DCC8A;
-        Sun, 29 Sep 2019 15:44:28 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id EA43A8980F0;
+        Sun, 29 Sep 2019 15:45:12 +0000 (UTC)
 Received: from krava (ovpn-204-45.brq.redhat.com [10.40.204.45])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 970685D9C3;
-        Sun, 29 Sep 2019 15:44:22 +0000 (UTC)
-Date:   Sun, 29 Sep 2019 17:44:21 +0200
+        by smtp.corp.redhat.com (Postfix) with SMTP id 6CE4C60606;
+        Sun, 29 Sep 2019 15:45:02 +0000 (UTC)
+Date:   Sun, 29 Sep 2019 17:45:01 +0200
 From:   Jiri Olsa <jolsa@redhat.com>
 To:     Steve MacLean <Steve.MacLean@microsoft.com>
 Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
@@ -47,59 +47,31 @@ Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
         Tom McDonald <Thomas.McDonald@microsoft.com>,
         John Salem <josalem@microsoft.com>,
         Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 1/4] perf map: fix overlapped map handling
-Message-ID: <20190929154421.GA602@krava>
-References: <BN8PR21MB136270949F22A6A02335C238F7800@BN8PR21MB1362.namprd21.prod.outlook.com>
+Subject: Re: [PATCH 2/4] perf inject jit: Fix JIT_CODE_MOVE filename
+Message-ID: <20190929154501.GB602@krava>
+References: <BN8PR21MB1362FF8F127B31DBF4121528F7800@BN8PR21MB1362.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BN8PR21MB136270949F22A6A02335C238F7800@BN8PR21MB1362.namprd21.prod.outlook.com>
+In-Reply-To: <BN8PR21MB1362FF8F127B31DBF4121528F7800@BN8PR21MB1362.namprd21.prod.outlook.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Sun, 29 Sep 2019 15:44:28 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Sun, 29 Sep 2019 15:45:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 28, 2019 at 01:39:00AM +0000, Steve MacLean wrote:
-
-SNIP
-
-> Before:
+On Sat, Sep 28, 2019 at 01:41:18AM +0000, Steve MacLean wrote:
+> During perf inject --jit, JIT_CODE_MOVE records were injecting MMAP records
+> with an incorrect filename. Specifically it was missing the ".so" suffix.
 > 
-> perf script --show-mmap-events 2>&1 | grep -e MMAP -e unknown |\
->    grep libcoreclr.so | head -n 4
->       dotnet  1907 373352.698780: PERF_RECORD_MMAP2 1907/1907: \
->           [0x7fe615726000(0x768000) @ 0 08:02 5510620 765057155]: \
->           r-xp .../3.0.0-preview9-19423-09/libcoreclr.so
->       dotnet  1907 373352.701091: PERF_RECORD_MMAP2 1907/1907: \
->           [0x7fe615974000(0x1000) @ 0x24e000 08:02 5510620 765057155]: \
->           rwxp .../3.0.0-preview9-19423-09/libcoreclr.so
->       dotnet  1907 373352.701241: PERF_RECORD_MMAP2 1907/1907: \
->           [0x7fe615c42000(0x1000) @ 0x51c000 08:02 5510620 765057155]: \
->           rwxp .../3.0.0-preview9-19423-09/libcoreclr.so
->       dotnet  1907 373352.705249:     250000 cpu-clock: \
->            7fe6159a1f99 [unknown] \
->            (.../3.0.0-preview9-19423-09/libcoreclr.so)
+> Further the JIT_CODE_LOAD record were silently truncating the
+> jr->load.code_index field to 32 bits before generating the filename.
 > 
-> After:
+> Make both records emit the same filename based on the full 64 bit
+> code_index field.
 > 
-> perf script --show-mmap-events 2>&1 | grep -e MMAP -e unknown |\
->    grep libcoreclr.so | head -n 4
->       dotnet  1907 373352.698780: PERF_RECORD_MMAP2 1907/1907: \
->           [0x7fe615726000(0x768000) @ 0 08:02 5510620 765057155]: \
->           r-xp .../3.0.0-preview9-19423-09/libcoreclr.so
->       dotnet  1907 373352.701091: PERF_RECORD_MMAP2 1907/1907: \
->           [0x7fe615974000(0x1000) @ 0x24e000 08:02 5510620 765057155]: \
->           rwxp .../3.0.0-preview9-19423-09/libcoreclr.so
->       dotnet  1907 373352.701241: PERF_RECORD_MMAP2 1907/1907: \
->           [0x7fe615c42000(0x1000) @ 0x51c000 08:02 5510620 765057155]: \
->           rwxp .../3.0.0-preview9-19423-09/libcoreclr.so
-> 
-> All the [unknown] symbols were resolved.
-> 
-> Tested-by: Brian Robbins <brianrob@microsoft.com>
 > Cc: Peter Zijlstra <peterz@infradead.org>
 > Cc: Ingo Molnar <mingo@redhat.com>
 > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -117,28 +89,39 @@ thanks,
 jirka
 
 > ---
->  tools/perf/util/map.c | 3 +++
->  1 file changed, 3 insertions(+)
+>  tools/perf/util/jitdump.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-> index 5b83ed1..eec9b28 100644
-> --- a/tools/perf/util/map.c
-> +++ b/tools/perf/util/map.c
-> @@ -1,5 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include "symbol.h"
-> +#include <assert.h>
->  #include <errno.h>
->  #include <inttypes.h>
->  #include <limits.h>
-> @@ -850,6 +851,8 @@ static int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp
->  			}
+> diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
+> index 1bdf4c6..e3ccb0c 100644
+> --- a/tools/perf/util/jitdump.c
+> +++ b/tools/perf/util/jitdump.c
+> @@ -395,7 +395,7 @@ static int jit_repipe_code_load(struct jit_buf_desc *jd, union jr_entry *jr)
+>  	size_t size;
+>  	u16 idr_size;
+>  	const char *sym;
+> -	uint32_t count;
+> +	uint64_t count;
+>  	int ret, csize, usize;
+>  	pid_t pid, tid;
+>  	struct {
+> @@ -418,7 +418,7 @@ static int jit_repipe_code_load(struct jit_buf_desc *jd, union jr_entry *jr)
+>  		return -1;
 >  
->  			after->start = map->end;
-> +			after->pgoff += map->end - pos->start;
-> +			assert(pos->map_ip(pos, map->end) == after->map_ip(after, map->end));
->  			__map_groups__insert(pos->groups, after);
->  			if (verbose >= 2 && !use_browser)
->  				map__fprintf(after, fp);
+>  	filename = event->mmap2.filename;
+> -	size = snprintf(filename, PATH_MAX, "%s/jitted-%d-%u.so",
+> +	size = snprintf(filename, PATH_MAX, "%s/jitted-%d-%" PRIu64 ".so",
+>  			jd->dir,
+>  			pid,
+>  			count);
+> @@ -529,7 +529,7 @@ static int jit_repipe_code_move(struct jit_buf_desc *jd, union jr_entry *jr)
+>  		return -1;
+>  
+>  	filename = event->mmap2.filename;
+> -	size = snprintf(filename, PATH_MAX, "%s/jitted-%d-%"PRIu64,
+> +	size = snprintf(filename, PATH_MAX, "%s/jitted-%d-%" PRIu64 ".so",
+>  	         jd->dir,
+>  	         pid,
+>  		 jr->move.code_index);
 > -- 
 > 2.7.4
