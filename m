@@ -2,133 +2,146 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A22C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24722C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 471C52086A
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:00:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569776416;
-	bh=O7Au76RC+mZ4j5oya48DjoDo29q9lKW170STez8LAWU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xyg/1yzH4Z5knWgRBYrHC3/rbk2kCnHbduMM3XTDwPsyCaJ6Wgdw6jnUKfOsXgFce
-	 HMMXapeB8v0F1zVdt/FvOlGoMCKyHBzm+8TXKv/apP+CnBaAju1YCj+LmjfumfxPFm
-	 DR7AttxCRggAwtMEIIvVxnX85uEUy06JNj2BhIMY=
+	by mail.kernel.org (Postfix) with ESMTP id DE8192082F
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:09:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="uB0pEDFq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729089AbfI2RAO (ORCPT
+        id S1729037AbfI2RJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:00:14 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:43734 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726827AbfI2RAO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:00:14 -0400
-Received: by mail-lf1-f65.google.com with SMTP id u3so5255232lfl.10
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Sep 2019 10:00:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RNDoutGDvOZvHTVduDc/xowF3Yl3vCcT50+XRcdHU+4=;
-        b=a9TpzaH3q3HwmagNzHo1UyLPfKUrFN8tPFY8I1+plKnNTY1e10w+JBEJFpaTuRBvRW
-         W2yIcI3Xrultoz6vVXOdWNqGlQo+iCB6FGJsrDMifCWX1Qms3kf26i2WdF88FE2sIvJA
-         AEgkWZvERAKYAY8SVcmU5Emsf3IfqPwGrj15g=
+        Sun, 29 Sep 2019 13:09:20 -0400
+Received: from mx5.ucr.edu ([138.23.62.67]:52283 "EHLO mx5.ucr.edu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725948AbfI2RJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:09:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
+  t=1569776959; x=1601312959;
+  h=from:to:cc:subject:date:message-id;
+  bh=fmr7YP/ut3UpiMsxws7I4CnuC7FsVpaYEYfqva0mvp4=;
+  b=uB0pEDFq75OutIaa4lqusFdH6JJUf9j2AzEIp3GBcxycg8ovki9qTqfo
+   hkbkXmmzRjm2tYpXQqPcGRIW4dW1l6YsDPaBWHEQe/EmpP+X13CqQ7Hf8
+   8tGG63xNr8p2bbVgZkJzDbwc9FJPVp+45A+iV5L4SjJN0QuJ7elQFLP8z
+   rJ9hOYK9mc5Z+FGMmA4qQmXgf+/m0e36+2GVC0eRCAjeV5YdiCZb4wmdn
+   ToZjIWaZSGsEpmUcUy3BOkdLu39KISbrH0zCSdr62ifqGCATSdSx4cvTC
+   5G/i1oJcG7L59qYRSBSIgaA0Yts4WN7GeslQvDdakunBmgj6zPNIDetvJ
+   Q==;
+IronPort-SDR: bnKKeyQGJjkr20CoJj2Sdd4fg6UGUv2EoMENcNGXu1ryJIbPyTKoAo3HV9Em5sbp/VlazvPC7k
+ RRZdVFOZbXbii8IglmHLIaOD/AzczPs4AX3HPENWZ5v/vDw69h82hzpA5RiW3lZ6v2SbqO121U
+ 3z7BCHR7sh73uIJFWKfA/b6GUCdafXMCTHYXBmf5MrbhJX0Q3KrNnWjB1rf0y1EjCFDLPgwbB7
+ Nm0ZinlZ/m/3tXVtHSFx6/6xlBO90bMCFztZtd07ju/6VnmELmuxdU3rtQbCGxFRULM/lmvNwY
+ SOs=
+IronPort-PHdr: =?us-ascii?q?9a23=3Azj+bFxI6IGTNlN9G6dmcpTZWNBhigK39O0sv0r?=
+ =?us-ascii?q?FitYgRI/jxwZ3uMQTl6Ol3ixeRBMOHsqkC17Kd6vixEUU7or+5+EgYd5JNUx?=
+ =?us-ascii?q?JXwe43pCcHRPC/NEvgMfTxZDY7FskRHHVs/nW8LFQHUJ2mPw6arXK99yMdFQ?=
+ =?us-ascii?q?viPgRpOOv1BpTSj8Oq3Oyu5pHfeQpFiCezbL9oIxi6sQrdutQKjYZmN6081g?=
+ =?us-ascii?q?bHrnxUdupM2GhmP0iTnxHy5sex+J5s7SFdsO8/+sBDTKv3Yb02QaRXAzo6PW?=
+ =?us-ascii?q?814tbrtQTYQguU+nQcSGQWnQFWDAXD8Rr3Q43+sir+tup6xSmaIcj7Rq06VD?=
+ =?us-ascii?q?i+86tmTgLjhTwZPDAl7m7Yls1wjLpaoB2/oRx/35XUa5yROPZnY6/RYc8WSW?=
+ =?us-ascii?q?9HU8ZUVixBGZi8b4oJD+oOIO1WsZDzrEYArRu/GwasAP7gwSJMinL4waE21u?=
+ =?us-ascii?q?IsGhzE0gM9BdIDqHTaosvoOqkcUu67y7LFwSnfY/5MxTvw8pTEfgwnrPqRXb?=
+ =?us-ascii?q?xwa83RyUw3GgzHj1WRqIzlPy6S1u8QtGWa7+thVeK1hG4mtw19vjaiy9wxio?=
+ =?us-ascii?q?bVnIIZ0E7L+jhkwIssI9CzVU11Yca8HZdOqy2XM5F6T8AiTm1ypio2170LtY?=
+ =?us-ascii?q?SmcCUOzJkr3wPTZv2DfoSS/B7uWuacLS1miH9kYr6yhRm//E69wePmTMa0yk?=
+ =?us-ascii?q?xFri9dn9nJsXACygLc59CcSvt44kehwTGP1x3P6u1cIUA7i67bK5k5z741jJ?=
+ =?us-ascii?q?UTsEDDEjbumEX5kaOab0sk9vWs5unjeLnmqZicN4h7igH6LKsigNCwAeM9Mg?=
+ =?us-ascii?q?QWXmib//qz1KH78EHnXLlHiuc6n6rZvZzAO8gXu660DxVI3osn7xuzFzKm38?=
+ =?us-ascii?q?4ZnXkDIlJFYhWHj43xNlDOIfH4De2wg1WwnDt3yf3LJaDhDYnXLnTZjrjuYK?=
+ =?us-ascii?q?t951ZGyAUv1dBf+45UCrYZLfL3W0/xssHYDxAgPwy33ennEtN92Z0aWW+UHK?=
+ =?us-ascii?q?+ZP73dsUWS6uIsPeaMfokVtyj5K/Q/4P7ul3A5yhczZ66siKoWenClGbwyMl?=
+ =?us-ascii?q?eZaHu02owpDGwQ+AcyUbq52xW5TTdPaiPqDOoH7TYhBdfjUt/O?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2GiBAD+45Bdf8fXVdFmHQEBBQEMBQG?=
+ =?us-ascii?q?BZ4NeTBCNHoZDAQEGiyaBCYV6gwuHIQEIAQEBDAEBLQIBAYRAgzojOBMCAwk?=
+ =?us-ascii?q?BAQUBAQEBAQUEAQECEAEBCQsLCCeFQoI6KYM1CxYVUlY/AQUBNSI5gkcBgXY?=
+ =?us-ascii?q?UBZ9HgQM8jCUziGcBCQ2BSAkBCIEihzWEWYEQgQeEYYQNLIMqgkQEgS8BAQG?=
+ =?us-ascii?q?VG5ZJAQYCghAUgXiTByeCN4ICiT05iwYBLacTAgoHBg8jgUaBek0lgWwKgUR?=
+ =?us-ascii?q?QEBSCBo4tITOBCI07glQB?=
+X-IPAS-Result: =?us-ascii?q?A2GiBAD+45Bdf8fXVdFmHQEBBQEMBQGBZ4NeTBCNHoZDA?=
+ =?us-ascii?q?QEGiyaBCYV6gwuHIQEIAQEBDAEBLQIBAYRAgzojOBMCAwkBAQUBAQEBAQUEA?=
+ =?us-ascii?q?QECEAEBCQsLCCeFQoI6KYM1CxYVUlY/AQUBNSI5gkcBgXYUBZ9HgQM8jCUzi?=
+ =?us-ascii?q?GcBCQ2BSAkBCIEihzWEWYEQgQeEYYQNLIMqgkQEgS8BAQGVG5ZJAQYCghAUg?=
+ =?us-ascii?q?XiTByeCN4ICiT05iwYBLacTAgoHBg8jgUaBek0lgWwKgURQEBSCBo4tITOBC?=
+ =?us-ascii?q?I07glQB?=
+X-IronPort-AV: E=Sophos;i="5.64,563,1559545200"; 
+   d="scan'208";a="79424629"
+Received: from mail-pg1-f199.google.com ([209.85.215.199])
+  by smtpmx5.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 29 Sep 2019 10:09:18 -0700
+Received: by mail-pg1-f199.google.com with SMTP id r35so7298518pgb.2
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Sep 2019 10:09:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RNDoutGDvOZvHTVduDc/xowF3Yl3vCcT50+XRcdHU+4=;
-        b=bTgpiD5sa+rbaKKaXg+IBeDI8Gt1lrLfbhRK2UvU2bsA7cwMQfYlJlo1MwTqr/gpx7
-         VcjaXPtShxFrNjokCSlTuw9Rgu6aeVjPsSZMH7IspEAKFgL98Y+WBC4aNl2XIpjISOHY
-         aMqoYAYuE/3o6U5/A40PCwSfb2IJNR9ni/FvuIKaqImKsQV/nMcGEhn3Y5wKFdrsD639
-         ArEIHzEG1+E2/oxiVb+Ngx4sCXHSRxspWj0f/hJQ8+fEWzVIMX8mlvnCM7kXfXJk3cnc
-         Q4nAh5Kz9E1Pubm1Q1ybTq72vDaanidRZvbr1Y05dyEZu5Az+2R33FlrCHa0ZN4msq3P
-         h6bQ==
-X-Gm-Message-State: APjAAAUj0Qc8ZwIognVuGCWyKxS3l1ZFfmZG9XJR8jcsIZ2zKW1Etn7r
-        QNAp9hWzHIOghokz/pPDErHmJATOPJ0=
-X-Google-Smtp-Source: APXvYqzvrwqA46HEPV/Kj56vRgtM55nSEgS0q9+I+v13DbFVqwWZuPVgDa+SWwXjnYJqNheKJMrsSQ==
-X-Received: by 2002:ac2:50cb:: with SMTP id h11mr8870080lfm.170.1569776411554;
-        Sun, 29 Sep 2019 10:00:11 -0700 (PDT)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id x30sm2397939ljd.39.2019.09.29.10.00.10
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Sep 2019 10:00:10 -0700 (PDT)
-Received: by mail-lj1-f172.google.com with SMTP id 7so7009567ljw.7
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Sep 2019 10:00:10 -0700 (PDT)
-X-Received: by 2002:a2e:3e07:: with SMTP id l7mr9326176lja.180.1569776410194;
- Sun, 29 Sep 2019 10:00:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAK7LNAT-D68xMFrE-D_F-2y+iZt45+8iLF9dmTyO8YwUX-bTqA@mail.gmail.com>
- <CAHk-=wjdc7Ovi-iVGBGzuP6prTXVRT8rgbnabBd0AiHRqECMCg@mail.gmail.com> <CAK7LNAQuY50tB790n85LGpX3m6yuxHTyB++0BwVFnSnz1B0gWA@mail.gmail.com>
-In-Reply-To: <CAK7LNAQuY50tB790n85LGpX3m6yuxHTyB++0BwVFnSnz1B0gWA@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 29 Sep 2019 09:59:54 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjhKeCH+yGOmHk_2v8GY2EHwXboSS6R-Jov63JHat21XQ@mail.gmail.com>
-Message-ID: <CAHk-=wjhKeCH+yGOmHk_2v8GY2EHwXboSS6R-Jov63JHat21XQ@mail.gmail.com>
-Subject: Re: [GIT PULL] More Kbuild updates for v5.4-rc1
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        masahiroy@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=dfAB/2GP8aHKzOrul+nMRwFpXXcn4QXiRUinb90bawg=;
+        b=ttwDLC4EsQWqzhrvPgBN34TyW5voEoCIBE0sEGWm9ttSH+OWLGfcjkzRBix4ikxaZd
+         2Gxd08lmY7jkXYhPouVyWpfeki3wIi5EYrq6knkTuTOIB4l/a9eRLVPhitUarq2kKGro
+         UUR1TZWsg2OKyigkxDedOldcqNTfaTvR9RRvb8q+ZaRKO/LFC9Mue46omfFQe5Oek3fH
+         WbFnv5XZxY3w7NR9ASPs+r8ITa7ycPfd+pROmxoZ6Be0GJWjB7eG9nTSSIOw6njPZbpq
+         t0FYyt2oDwKb6FkNjZOUP3lE/0T8ccQvpbST9/iBcMFY581Igxw0EiyMrhPKawoWQ/hX
+         d/DQ==
+X-Gm-Message-State: APjAAAUNJsMAcQ3/VfluE0ZVM58Eymna1sIiosAl8NfeV8StaEnYy9Qn
+        3CqZkLeJnQ4jLZtBhBkRpKglwZzH0mk0M9V16Zp1XzGvRkvEvZsKzw4vkVk/Yih6/X1rvI74eBP
+        e5QGwoH0Mbd7JraHrOMTffkwTLA==
+X-Received: by 2002:a17:90a:a4c6:: with SMTP id l6mr22912019pjw.15.1569776957563;
+        Sun, 29 Sep 2019 10:09:17 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzDsp39Vss4vjFYnY1K3kB0U9MwS68tQfmMqZs46zsnnGlrhIvZAS77G/AMzzzPH+taRD/WaA==
+X-Received: by 2002:a17:90a:a4c6:: with SMTP id l6mr22912000pjw.15.1569776957226;
+        Sun, 29 Sep 2019 10:09:17 -0700 (PDT)
+Received: from Yizhuo.cs.ucr.edu (yizhuo.cs.ucr.edu. [169.235.26.74])
+        by smtp.googlemail.com with ESMTPSA id v43sm26680984pjb.1.2019.09.29.10.09.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Sep 2019 10:09:16 -0700 (PDT)
+From:   Yizhuo <yzhai003@ucr.edu>
+Cc:     csong@cs.ucr.edu, zhiyunq@cs.ucr.edu, Yizhuo <yzhai003@ucr.edu>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] regulator: pfuze100-regulator: Variable "val" in pfuze100_regulator_probe() could be uninitialized
+Date:   Sun, 29 Sep 2019 10:09:57 -0700
+Message-Id: <20190929170957.14775-1-yzhai003@ucr.edu>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 28, 2019 at 9:00 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> The concept of header test is to make sure every header
-> is self-contained,
+In function pfuze100_regulator_probe(), variable "val" could be
+initialized if regmap_read() fails. However, "val" is used to
+decide the control flow later in the if statement, which is
+potentially unsafe.
 
-Yes, I realize. But at the same time the filenames it creates are very
-annoying and clutter up the tree, and I'm not sure we really want that
-in the first place.
+Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+---
+ drivers/regulator/pfuze100-regulator.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-The thing _I_ would want is actually a lot less includes, and a lot
-more streamlined, just for better build times. I sometimes get a small
-pull, and wonder why the *whole* tree recompiles, and realize that
-it's due to some really obscure header file that just gets included
-"in case".
+diff --git a/drivers/regulator/pfuze100-regulator.c b/drivers/regulator/pfuze100-regulator.c
+index df5df1c495ad..689537927f6f 100644
+--- a/drivers/regulator/pfuze100-regulator.c
++++ b/drivers/regulator/pfuze100-regulator.c
+@@ -788,7 +788,13 @@ static int pfuze100_regulator_probe(struct i2c_client *client,
+ 
+ 		/* SW2~SW4 high bit check and modify the voltage value table */
+ 		if (i >= sw_check_start && i <= sw_check_end) {
+-			regmap_read(pfuze_chip->regmap, desc->vsel_reg, &val);
++			ret = regmap_read(pfuze_chip->regmap,
++						desc->vsel_reg, &val);
++			if (ret) {
++				dev_err(&client->dev, "Fails to read from the register.\n");
++				return ret;
++			}
++
+ 			if (val & sw_hi) {
+ 				if (pfuze_chip->chip_id == PFUZE3000 ||
+ 					pfuze_chip->chip_id == PFUZE3001) {
+-- 
+2.17.1
 
-So I'd like us to be stricter about header files another way entirely,
-and I'm not sure that header files should need to be completely
-independent.
-
-> Of course, you can argue that it is addressing hypothetical issues
-> "what if the include directives are arranged in this order?",
-> that nobody has been hit before.
-
-Well, I think people hit it all the time but just add the right header
-file when some build fails.
-
-In a perfect world, we'd have something that understands what symbols
-get declared in each header file, and what symbols each header file
-needs, and have a SAT solver for this that actually also understands
-about different configurations and architectures. And actually
-minimize the headers, and have a tool that warns when you have
-unnecessary ones - or are lacking some.
-
-Yeah, it's probably too complex to be worth the pain, but it would be lovely.
-
-> But, at least, I want to continue compile-testing
-> uapi headers that are exported to user-space.
-
-I think the uapi headers have a much stronger case for being
-self-sufficient, but even there I'd really prefer some other model
-than "*.h.s".
-
-We have the dot-files for dependencies and for tracking the command
-that was used to generate them, I'd much rather have that. At least
-then we wouldn't uglify the directory structure.
-
-Yea, I realize that some people "solve" that problem by just not
-building in the source-tree at all, but I find that annoying too.
-
-               Linus
