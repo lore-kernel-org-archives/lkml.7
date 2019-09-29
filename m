@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0D0C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C47C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 012EF21906
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D1422082F
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:02:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569765756;
-	bh=M3/SmVArOA7JBk5QAHOoRMcoDkCTQfWxfBebZbq2kkQ=;
+	s=default; t=1569765759;
+	bh=u2leZk9+XL+R+jk69ue+zE6yJodzlmPNHZyk+UGg9oU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MRKrfiVCyISz18cIgE7NpqsHM/VkuZkrQrRJzVB0hp8dFkCrCoYffOKqDvaxovSYy
-	 Ox/7uSlujHJVCOn1cSnv0TiQEx7S/8bHT5mcIRtZtiduvUDl7ALkR4ronoW81IsPpZ
-	 k8M/IcfDHRSmdNXBAkKqh8scLR7QpI1xPbqBp+/g=
+	b=Yer5/nqylHDKHfVuit5NaHSstimmAGY/EWlDarBDjz7PVCsXFTPrQ4uK6SCBuJzpn
+	 iFXhKgLkojzU30s1YtE5LZsb9uT1BkXnhCwv+Q0lDnwZbWqlcQrkUQ3PzlIGSUeWeY
+	 BsiNVgkbxpTDL9gS+yXSQwS4zbk2PEES33+PreuE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730247AbfI2OCf (ORCPT
+        id S1729658AbfI2OCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 10:02:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45262 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 10:02:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730220AbfI2OCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 10:02:31 -0400
+        id S1730246AbfI2OCf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 10:02:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A06682082F;
-        Sun, 29 Sep 2019 14:02:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3530218DE;
+        Sun, 29 Sep 2019 14:02:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569765751;
-        bh=M3/SmVArOA7JBk5QAHOoRMcoDkCTQfWxfBebZbq2kkQ=;
+        s=default; t=1569765754;
+        bh=u2leZk9+XL+R+jk69ue+zE6yJodzlmPNHZyk+UGg9oU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n643buitx5JwcLqG1egBPsXuca7rvCDU4dzb7TcgvgdfK/LM1J4uB4HDToWrOVuYC
-         VNONK/wtfFBfCxuflEGZSVe5XKHGmHnoFZ5/87ogMyaNB2pJmMIkA2Cghmzz3UyK3i
-         6lw+jk0i1HH28COAmvPqqtVhnr6bzyA1to6plLPk=
+        b=g5i4IX3Y4mFwMkmGq/tEU4PF/9MY/wCYEgnhS5pFEMm+94j8or2uWIZie7Ed+envc
+         EmzrzGgl5uP97aSkhU6or4oq0VG4u4+pSlk9FcsC1wgGW7JQIoSY8lcHNRmEu4m4Qt
+         1jGllU7B8cC7WYEZ05r08PNoeQqaTXjR9oU3zNMQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilia Mirkin <imirkin@alum.mit.edu>,
-        Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org, Zorro Lang <zlang@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Bill ODonnell <billodo@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 39/45] drm/nouveau/disp/nv50-: fix center/aspect-corrected scaling
-Date:   Sun, 29 Sep 2019 15:56:07 +0200
-Message-Id: <20190929135033.149716277@linuxfoundation.org>
+Subject: [PATCH 5.2 40/45] xfs: dont crash on null attr fork xfs_bmapi_read
+Date:   Sun, 29 Sep 2019 15:56:08 +0200
+Message-Id: <20190929135033.287691542@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190929135024.387033930@linuxfoundation.org>
 References: <20190929135024.387033930@linuxfoundation.org>
@@ -60,66 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilia Mirkin <imirkin@alum.mit.edu>
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-[ Upstream commit 533f4752407543f488a9118d817b8c504352b6fb ]
+[ Upstream commit 8612de3f7ba6e900465e340516b8313806d27b2d ]
 
-Previously center scaling would get scaling applied to it (when it was
-only supposed to center the image), and aspect-corrected scaling did not
-always correctly pick whether to reduce width or height for a particular
-combination of inputs/outputs.
+Zorro Lang reported a crash in generic/475 if we try to inactivate a
+corrupt inode with a NULL attr fork (stack trace shortened somewhat):
 
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=110660
-Signed-off-by: Ilia Mirkin <imirkin@alum.mit.edu>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+RIP: 0010:xfs_bmapi_read+0x311/0xb00 [xfs]
+RSP: 0018:ffff888047f9ed68 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: ffff888047f9f038 RCX: 1ffffffff5f99f51
+RDX: 0000000000000002 RSI: 0000000000000008 RDI: 0000000000000012
+RBP: ffff888002a41f00 R08: ffffed10005483f0 R09: ffffed10005483ef
+R10: ffffed10005483ef R11: ffff888002a41f7f R12: 0000000000000004
+R13: ffffe8fff53b5768 R14: 0000000000000005 R15: 0000000000000001
+FS:  00007f11d44b5b80(0000) GS:ffff888114200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000ef6000 CR3: 000000002e176003 CR4: 00000000001606e0
+Call Trace:
+ xfs_dabuf_map.constprop.18+0x696/0xe50 [xfs]
+ xfs_da_read_buf+0xf5/0x2c0 [xfs]
+ xfs_da3_node_read+0x1d/0x230 [xfs]
+ xfs_attr_inactive+0x3cc/0x5e0 [xfs]
+ xfs_inactive+0x4c8/0x5b0 [xfs]
+ xfs_fs_destroy_inode+0x31b/0x8e0 [xfs]
+ destroy_inode+0xbc/0x190
+ xfs_bulkstat_one_int+0xa8c/0x1200 [xfs]
+ xfs_bulkstat_one+0x16/0x20 [xfs]
+ xfs_bulkstat+0x6fa/0xf20 [xfs]
+ xfs_ioc_bulkstat+0x182/0x2b0 [xfs]
+ xfs_file_ioctl+0xee0/0x12a0 [xfs]
+ do_vfs_ioctl+0x193/0x1000
+ ksys_ioctl+0x60/0x90
+ __x64_sys_ioctl+0x6f/0xb0
+ do_syscall_64+0x9f/0x4d0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x7f11d39a3e5b
+
+The "obvious" cause is that the attr ifork is null despite the inode
+claiming an attr fork having at least one extent, but it's not so
+obvious why we ended up with an inode in that state.
+
+Reported-by: Zorro Lang <zlang@redhat.com>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204031
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Bill O'Donnell <billodo@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/dispnv50/head.c | 28 +++++++++++++++++++++----
- 1 file changed, 24 insertions(+), 4 deletions(-)
+ fs/xfs/libxfs/xfs_bmap.c | 29 +++++++++++++++++++++--------
+ 1 file changed, 21 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/head.c b/drivers/gpu/drm/nouveau/dispnv50/head.c
-index 06ee23823a689..acfafc4bda0e1 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/head.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/head.c
-@@ -169,14 +169,34 @@ nv50_head_atomic_check_view(struct nv50_head_atom *armh,
- 	 */
- 	switch (mode) {
- 	case DRM_MODE_SCALE_CENTER:
--		asyh->view.oW = min((u16)umode->hdisplay, asyh->view.oW);
--		asyh->view.oH = min((u16)umode_vdisplay, asyh->view.oH);
--		/* fall-through */
-+		/* NOTE: This will cause scaling when the input is
-+		 * larger than the output.
+diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+index 356ebd1cbe825..d6fbe487d91ad 100644
+--- a/fs/xfs/libxfs/xfs_bmap.c
++++ b/fs/xfs/libxfs/xfs_bmap.c
+@@ -3840,15 +3840,28 @@ xfs_bmapi_read(
+ 	XFS_STATS_INC(mp, xs_blk_mapr);
+ 
+ 	ifp = XFS_IFORK_PTR(ip, whichfork);
++	if (!ifp) {
++		/* No CoW fork?  Return a hole. */
++		if (whichfork == XFS_COW_FORK) {
++			mval->br_startoff = bno;
++			mval->br_startblock = HOLESTARTBLOCK;
++			mval->br_blockcount = len;
++			mval->br_state = XFS_EXT_NORM;
++			*nmap = 1;
++			return 0;
++		}
+ 
+-	/* No CoW fork?  Return a hole. */
+-	if (whichfork == XFS_COW_FORK && !ifp) {
+-		mval->br_startoff = bno;
+-		mval->br_startblock = HOLESTARTBLOCK;
+-		mval->br_blockcount = len;
+-		mval->br_state = XFS_EXT_NORM;
+-		*nmap = 1;
+-		return 0;
++		/*
++		 * A missing attr ifork implies that the inode says we're in
++		 * extents or btree format but failed to pass the inode fork
++		 * verifier while trying to load it.  Treat that as a file
++		 * corruption too.
 +		 */
-+		asyh->view.oW = min(asyh->view.iW, asyh->view.oW);
-+		asyh->view.oH = min(asyh->view.iH, asyh->view.oH);
-+		break;
- 	case DRM_MODE_SCALE_ASPECT:
--		if (asyh->view.oH < asyh->view.oW) {
-+		/* Determine whether the scaling should be on width or on
-+		 * height. This is done by comparing the aspect ratios of the
-+		 * sizes. If the output AR is larger than input AR, that means
-+		 * we want to change the width (letterboxed on the
-+		 * left/right), otherwise on the height (letterboxed on the
-+		 * top/bottom).
-+		 *
-+		 * E.g. 4:3 (1.333) AR image displayed on a 16:10 (1.6) AR
-+		 * screen will have letterboxes on the left/right. However a
-+		 * 16:9 (1.777) AR image on that same screen will have
-+		 * letterboxes on the top/bottom.
-+		 *
-+		 * inputAR = iW / iH; outputAR = oW / oH
-+		 * outputAR > inputAR is equivalent to oW * iH > iW * oH
-+		 */
-+		if (asyh->view.oW * asyh->view.iH > asyh->view.iW * asyh->view.oH) {
-+			/* Recompute output width, i.e. left/right letterbox */
- 			u32 r = (asyh->view.iW << 19) / asyh->view.iH;
- 			asyh->view.oW = ((asyh->view.oH * r) + (r / 2)) >> 19;
- 		} else {
-+			/* Recompute output height, i.e. top/bottom letterbox */
- 			u32 r = (asyh->view.iH << 19) / asyh->view.iW;
- 			asyh->view.oH = ((asyh->view.oW * r) + (r / 2)) >> 19;
- 		}
++#ifdef DEBUG
++		xfs_alert(mp, "%s: inode %llu missing fork %d",
++				__func__, ip->i_ino, whichfork);
++#endif /* DEBUG */
++		return -EFSCORRUPTED;
+ 	}
+ 
+ 	if (!(ifp->if_flags & XFS_IFEXTENTS)) {
 -- 
 2.20.1
 
