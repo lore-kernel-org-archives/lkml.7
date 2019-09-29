@@ -2,56 +2,52 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B51A0C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44922C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B96B2190F
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 193A52086A
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:01:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569765688;
-	bh=fJRIE1yXHyuEXQ+irInj0w2AxnLqI9dVf+67QWo0nfc=;
+	s=default; t=1569765694;
+	bh=476I8gwOaPfJybD0uj+iX2biT3xfPGq1TbijcaYmdlQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q+xkXgz0f7f48dCgw+4yr9d3NnW5t6oGMd/LrUCHVN/00M8nu5Zu0Avd9RXJ+X7Gm
-	 pWxS+tmvzXLWkGXbLFbkBeXo5QyQpu0eisw6qBi9d6/jU/gU21HQhTwfxOL1h1LOg7
-	 /6TYcbb5uxjxDvaBirTBtcplp3L76PCWLaH1afFk=
+	b=d0fyc1I6tJFJObj5BCoeR7GOSDRG5rD0TJT7/LyKGjSx9oTtJfZTCvhOoW2g6jofw
+	 QtB0NRgMBuF3AvQukedwfZAT6dTPbhD8ZqDbMw2bzGk0Zy0Z3ArkhpZjuMXDdP1sec
+	 QnV5mwERn7SqOHNFx01zDSkAWeHFtEFT2cdCoo2w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730040AbfI2OB1 (ORCPT
+        id S1729440AbfI2OBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 10:01:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43618 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 10:01:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729427AbfI2OBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 10:01:24 -0400
+        id S1729427AbfI2OB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 10:01:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43C6A2086A;
-        Sun, 29 Sep 2019 14:01:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CFC1218DE;
+        Sun, 29 Sep 2019 14:01:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569765684;
-        bh=fJRIE1yXHyuEXQ+irInj0w2AxnLqI9dVf+67QWo0nfc=;
+        s=default; t=1569765688;
+        bh=476I8gwOaPfJybD0uj+iX2biT3xfPGq1TbijcaYmdlQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kx0y92vVV8tmDkBRI08V987u8SHuCz7dKInE7F9Q1SE1u60NM0evFjSGKImrYsSS6
-         d3OWqTtcN3FQJEkx57Q6CKSWFYc6nJkWgK7SgIAJs5i1p8Fvn8rN99h4gzc+bfOben
-         7S05lbIPwB1roK4Oy5yH61jyt9cRN1OZS+Bae9RQ=
+        b=nquLjZIy12YSn0eVyW5GlYiyCJwxnCAm/zyBZKSGJvaalyWy3yJpnr6te8yxvrhe2
+         t7zPyXuhNmIWtedm2QHB5DTULDkVjVSYJouRPioej0zM0vwio5y8yjGlobuoChK7MT
+         nYjUX/FWW/tLinVlto65FDrRSV8OYEvcAxj+bNlM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH 5.2 29/45] objtool: Clobber user CFLAGS variable
-Date:   Sun, 29 Sep 2019 15:55:57 +0200
-Message-Id: <20190929135031.833990464@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 30/45] Revert "f2fs: avoid out-of-range memory access"
+Date:   Sun, 29 Sep 2019 15:55:58 +0200
+Message-Id: <20190929135031.976705152@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190929135024.387033930@linuxfoundation.org>
 References: <20190929135024.387033930@linuxfoundation.org>
@@ -64,40 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-commit f73b3cc39c84220e6dccd463b5c8279b03514646 upstream.
+[ Upstream commit a37d0862d17411edb67677a580a6f505ec2225f6 ]
 
-If the build user has the CFLAGS variable set in their environment,
-objtool blindly appends to it, which can cause unexpected behavior.
+As Pavel Machek reported:
 
-Clobber CFLAGS to ensure consistent objtool compilation behavior.
+"We normally use -EUCLEAN to signal filesystem corruption. Plus, it is
+good idea to report it to the syslog and mark filesystem as "needing
+fsck" if filesystem can do that."
 
-Reported-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Tested-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/83a276df209962e6058fcb6c615eef9d401c21bc.1567121311.git.jpoimboe@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-CC: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Still we need improve the original patch with:
+- use unlikely keyword
+- add message print
+- return EUCLEAN
 
+However, after rethink this patch, I don't think we should add such
+condition check here as below reasons:
+- We have already checked the field in f2fs_sanity_check_ckpt(),
+- If there is fs corrupt or security vulnerability, there is nothing
+to guarantee the field is integrated after the check, unless we do
+the check before each of its use, however no filesystem does that.
+- We only have similar check for bitmap, which was added due to there
+is bitmap corruption happened on f2fs' runtime in product.
+- There are so many key fields in SB/CP/NAT did have such check
+after f2fs_sanity_check_{sb,cp,..}.
+
+So I propose to revert this unneeded check.
+
+This reverts commit 56f3ce675103e3fb9e631cfb4131fc768bc23e9a.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/objtool/Makefile |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/f2fs/segment.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
---- a/tools/objtool/Makefile
-+++ b/tools/objtool/Makefile
-@@ -35,7 +35,7 @@ INCLUDES := -I$(srctree)/tools/include \
- 	    -I$(srctree)/tools/arch/$(HOSTARCH)/include/uapi \
- 	    -I$(srctree)/tools/objtool/arch/$(ARCH)/include
- WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed
--CFLAGS   += -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
-+CFLAGS   := -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
- LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
- 
- # Allow old libelf to be used:
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index ce15fbcd7cff0..291f7106537c7 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -3403,11 +3403,6 @@ static int read_compacted_summaries(struct f2fs_sb_info *sbi)
+ 		seg_i = CURSEG_I(sbi, i);
+ 		segno = le32_to_cpu(ckpt->cur_data_segno[i]);
+ 		blk_off = le16_to_cpu(ckpt->cur_data_blkoff[i]);
+-		if (blk_off > ENTRIES_IN_SUM) {
+-			f2fs_bug_on(sbi, 1);
+-			f2fs_put_page(page, 1);
+-			return -EFAULT;
+-		}
+ 		seg_i->next_segno = segno;
+ 		reset_curseg(sbi, i, 0);
+ 		seg_i->alloc_type = ckpt->alloc_type[i];
+-- 
+2.20.1
+
 
 
