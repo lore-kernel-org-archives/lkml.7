@@ -2,118 +2,62 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1057C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 19:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B10EC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 19:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82F74217F5
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 19:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6FB920679
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 19:34:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729290AbfI2TDn (ORCPT
+        id S1729279AbfI2TeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 15:03:43 -0400
-Received: from twin.jikos.cz ([91.219.245.39]:38805 "EHLO twin.jikos.cz"
+        Sun, 29 Sep 2019 15:34:17 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:45272 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728755AbfI2TDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 15:03:43 -0400
-X-Greylist: delayed 1939 seconds by postgrey-1.27 at vger.kernel.org; Sun, 29 Sep 2019 15:03:42 EDT
-Received: from twin.jikos.cz (dave@[127.0.0.1])
-        by twin.jikos.cz (8.13.6/8.13.6) with ESMTP id x8TIVIpX003182
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Sun, 29 Sep 2019 20:31:19 +0200
-Received: (from dave@localhost)
-        by twin.jikos.cz (8.13.6/8.13.6/Submit) id x8TIVI2x003181;
-        Sun, 29 Sep 2019 20:31:18 +0200
-Date:   Sun, 29 Sep 2019 20:31:17 +0200
-From:   David Sterba <dave@jikos.cz>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     WireGuard mailing list <wireguard@lists.zx2c4.com>,
-        Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: WireGuard to port to existing Crypto API
-Message-ID: <20190929183117.GJ7005@twin.jikos.cz>
-Reply-To: dave@jikos.cz
-Mail-Followup-To: "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        WireGuard mailing list <wireguard@lists.zx2c4.com>,
-        Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <CAHmME9pmfZAp5zd9BDLFc2fWUhtzZcjYZc2atTPTyNFFmEdHLg@mail.gmail.com>
+        id S1729098AbfI2TeQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 15:34:16 -0400
+Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iEexA-0001BS-Tj; Sun, 29 Sep 2019 21:33:56 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCH 2/3] clk: let init callback return an error code
+Date:   Sun, 29 Sep 2019 21:33:53 +0200
+Message-ID: <7697352.nLdc4jJAoa@phil>
+In-Reply-To: <20190924123954.31561-3-jbrunet@baylibre.com>
+References: <20190924123954.31561-1-jbrunet@baylibre.com> <20190924123954.31561-3-jbrunet@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHmME9pmfZAp5zd9BDLFc2fWUhtzZcjYZc2atTPTyNFFmEdHLg@mail.gmail.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Wed, Sep 25, 2019 at 10:29:45AM +0200, Jason A. Donenfeld wrote:
-> I've long resisted the idea of porting to the existing crypto API,
-> because I think there are serious problems with it, in terms of
-> primitives, API, performance, and overall safety. I didn't want to
-> ship WireGuard in a form that I thought was sub-optimal from a
-> security perspective, since WireGuard is a security-focused project.
+Am Dienstag, 24. September 2019, 14:39:53 CEST schrieb Jerome Brunet:
+> If the init callback is allowed to request resources, it needs a return
+> value to report the outcome of such a request.
 > 
-> But it seems like with or without us, WireGuard will get ported to the
-> existing crypto API. So it's probably better that we just fully
-> embrace it, and afterwards work evolutionarily to get Zinc into Linux
-> piecemeal. I've ported WireGuard already several times as a PoC to the
-> API and have a decent idea of the ways it can go wrong and generally
-> how to do it in the least-bad way.
-> 
-> I realize this kind of compromise might come as a disappointment for
-> some folks. But it's probably better that as a project we remain
-> intimately involved with our Linux kernel users and the security of
-> the implementation, rather than slinking away in protest because we
-> couldn't get it all in at once. So we'll work with upstream, port to
-> the crypto API, and get the process moving again. We'll pick up the
-> Zinc work after that's done.
-> 
-> I also understand there might be interested folks out there who enjoy
-> working with the crypto API quite a bit and would be happy to work on
-> the WireGuard port. Please do get in touch if you'd like to
-> collaborate.
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+[...]
+>  drivers/clk/rockchip/clk-pll.c        | 28 ++++++++++++++++-----------
 
-I have some WIP code to port WG to the crypto API, more to get an idea how hard
-it would be, though I read you've ported it to the api already. My other
-project (btrfs) is going to use blake2 in kernel and for that I'm about to
-submit the code, that's where it's also of interest for wg.
+for the Rockchip part
+Acked-by: Heiko Stuebner <heiko@sntech.de>
 
-My work is at 'github.com/kdave/WireGuard branch lkca-1'. I tried to find a way
-how to minimize the impact on current wg code but make it possible to
-iteratively extend it to the crypto API.
 
-So, there's some config-time ifdefery to select which crypto functions are
-using kernel or zinc api.  See wg.git/src/crypto/Kbuild.include at the top,
-plus some source ifdefs.  I made an example of blake2s port, but only compile
-tested.
-
-There are several problems in general that need to be solved on the kernel side
-first, before wireguard can work inside the kernel code base:
-
-* missing crypto functions in kernel
-  * blake2
-  * curve25519 (missing completely)
-
-* missing generic crypto API callback to use blake_init_key, it's possible to
-  use only the no-key variant (I have a patch for that, it's really easy but
-  it's change in API so ...)
-
-The known problem is the cumbersome way to use the crypto functions, eg. for
-chacha/poly, I understand the pain and perhaps the reasons to start a fresh
-crypto library. I'm afraid the first implementation with current state of
-crypto API will be slow, until the API is extended to provide simple ways to
-transform buffers without scatterlists, request allocations, locking tfm
-context and whatnot.
-
-Feel free to reuse anything from the code if you think it's going the right
-direction. I'm not sure if I'll have time to continue with the port but at
-least you can consider blake2 on the way upstream.
-
-d.
