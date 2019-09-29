@@ -7,50 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E1AC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78152C32793
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B24E621925
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:40:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53BE32086A
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778850;
-	bh=S20uy8P4PRf/bzXgHQAXj8lKXo82Ek27pjMYweAOWz8=;
+	s=default; t=1569778861;
+	bh=nVXqpg3EWzWrGx+Rt5GKZFcx6da05pFj5oeiYDJ0CU8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H2GZ8nAdbKJWtBogeU+AiSg8x8F9QhHl0aPwXOxC43nMkYa0KqMhqQGRL5qzzJI5N
-	 l4tScbz+6XZx6JU1IlBVHNk4qGkytMmosKxntnhdinGo1SdXYIFilAu3lPC4UqHl0G
-	 9OJfpcJZ7JdWfflHZX8k+Pj1R602VQX0vliPPq+E=
+	b=KjdlmW76QWNuPbhh0rXWYiEjeyBJ6cklCsn9n5GpaWpNoT157v0Dh64un0zTwo35+
+	 qKngaj7KvGjmw/VS9AEYDf5DBTRkEOMZTV7pFqMCwFNEzftAlXycFgmWASzRS7xr6b
+	 WrmWRo/LYUIVthqUEf4qpto204pOYiaeZFABdpt8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730526AbfI2Rku (ORCPT
+        id S1730530AbfI2RlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:40:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46598 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:41:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730397AbfI2Reg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:34:36 -0400
+        id S1730260AbfI2ReD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:34:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5372921D56;
-        Sun, 29 Sep 2019 17:34:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CA8921906;
+        Sun, 29 Sep 2019 17:34:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778476;
-        bh=S20uy8P4PRf/bzXgHQAXj8lKXo82Ek27pjMYweAOWz8=;
+        s=default; t=1569778441;
+        bh=nVXqpg3EWzWrGx+Rt5GKZFcx6da05pFj5oeiYDJ0CU8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XWovZuRqW4pld4dH3zTrG3vwQLJHUyxQtD3S4SbYyHBVDis8qwoz2VmZ5WlARwJMl
-         5BTCZtzWXyO+5By0Q7FaDfG7S3vhhU3Rt0TfIPYJTVAfRYZK7csO0K7JZ/IW8sc4ed
-         7qdsuBEZdU5vzgLdzCVqnuEwf8B1v16TMyuGsnv4=
+        b=1zgTuFWw7yo4EaMooO0nX5eBZYMwno8HA9ZJw4LSnWVd8wauaExlz8F9OmDYfkOkF
+         pbV9c1OVg12eueEy8J+cNC7DZA4Utp/Ml4Upty/TW0b4qw+OCXB63fo59hjk4mG4k8
+         kBsxbkTBf1CWbl4UDiXioFgAG65myxSl/M7vOwbk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
+Cc:     Changwei Ge <gechangwei@live.cn>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 05/33] mfd: intel-lpss: Remove D3cold delay
-Date:   Sun, 29 Sep 2019 13:33:53 -0400
-Message-Id: <20190929173424.9361-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 37/42] ocfs2: wait for recovering done after direct unlock request
+Date:   Sun, 29 Sep 2019 13:32:36 -0400
+Message-Id: <20190929173244.8918-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190929173424.9361-1-sashal@kernel.org>
-References: <20190929173424.9361-1-sashal@kernel.org>
+In-Reply-To: <20190929173244.8918-1-sashal@kernel.org>
+References: <20190929173244.8918-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,45 +64,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Changwei Ge <gechangwei@live.cn>
 
-[ Upstream commit 76380a607ba0b28627c9b4b55cd47a079a59624b ]
+[ Upstream commit 0a3775e4f883912944481cf2ef36eb6383a9cc74 ]
 
-Goodix touchpad may drop its first couple input events when
-i2c-designware-platdrv and intel-lpss it connects to took too long to
-runtime resume from runtime suspended state.
+There is a scenario causing ocfs2 umount hang when multiple hosts are
+rebooting at the same time.
 
-This issue happens becuase the touchpad has a rather small buffer to
-store up to 13 input events, so if the host doesn't read those events in
-time (i.e. runtime resume takes too long), events are dropped from the
-touchpad's buffer.
+NODE1                           NODE2               NODE3
+send unlock requset to NODE2
+                                dies
+                                                    become recovery master
+                                                    recover NODE2
+find NODE2 dead
+mark resource RECOVERING
+directly remove lock from grant list
+calculate usage but RECOVERING marked
+**miss the window of purging
+clear RECOVERING
 
-The bottleneck is D3cold delay it waits when transitioning from D3cold
-to D0, hence remove the delay to make the resume faster. I've tested
-some systems with intel-lpss and haven't seen any regression.
+To reproduce this issue, crash a host and then umount ocfs2
+from another node.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202683
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+To solve this, just let unlock progress wait for recovery done.
+
+Link: http://lkml.kernel.org/r/1550124866-20367-1-git-send-email-gechangwei@live.cn
+Signed-off-by: Changwei Ge <gechangwei@live.cn>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/intel-lpss-pci.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/ocfs2/dlm/dlmunlock.c | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
-index 0e5282fc14675..c37c8bb860685 100644
---- a/drivers/mfd/intel-lpss-pci.c
-+++ b/drivers/mfd/intel-lpss-pci.c
-@@ -39,6 +39,8 @@ static int intel_lpss_pci_probe(struct pci_dev *pdev,
- 	info->mem = &pdev->resource[0];
- 	info->irq = pdev->irq;
+diff --git a/fs/ocfs2/dlm/dlmunlock.c b/fs/ocfs2/dlm/dlmunlock.c
+index e78657742bd89..3883633e82eb9 100644
+--- a/fs/ocfs2/dlm/dlmunlock.c
++++ b/fs/ocfs2/dlm/dlmunlock.c
+@@ -90,7 +90,8 @@ static enum dlm_status dlmunlock_common(struct dlm_ctxt *dlm,
+ 	enum dlm_status status;
+ 	int actions = 0;
+ 	int in_use;
+-        u8 owner;
++	u8 owner;
++	int recovery_wait = 0;
  
-+	pdev->d3cold_delay = 0;
+ 	mlog(0, "master_node = %d, valblk = %d\n", master_node,
+ 	     flags & LKM_VALBLK);
+@@ -193,9 +194,12 @@ static enum dlm_status dlmunlock_common(struct dlm_ctxt *dlm,
+ 		}
+ 		if (flags & LKM_CANCEL)
+ 			lock->cancel_pending = 0;
+-		else
+-			lock->unlock_pending = 0;
+-
++		else {
++			if (!lock->unlock_pending)
++				recovery_wait = 1;
++			else
++				lock->unlock_pending = 0;
++		}
+ 	}
+ 
+ 	/* get an extra ref on lock.  if we are just switching
+@@ -229,6 +233,17 @@ static enum dlm_status dlmunlock_common(struct dlm_ctxt *dlm,
+ 	spin_unlock(&res->spinlock);
+ 	wake_up(&res->wq);
+ 
++	if (recovery_wait) {
++		spin_lock(&res->spinlock);
++		/* Unlock request will directly succeed after owner dies,
++		 * and the lock is already removed from grant list. We have to
++		 * wait for RECOVERING done or we miss the chance to purge it
++		 * since the removement is much faster than RECOVERING proc.
++		 */
++		__dlm_wait_on_lockres_flags(res, DLM_LOCK_RES_RECOVERING);
++		spin_unlock(&res->spinlock);
++	}
 +
- 	/* Probably it is enough to set this for iDMA capable devices only */
- 	pci_set_master(pdev);
- 	pci_try_set_mwi(pdev);
+ 	/* let the caller's final dlm_lock_put handle the actual kfree */
+ 	if (actions & DLM_UNLOCK_FREE_LOCK) {
+ 		/* this should always be coupled with list removal */
 -- 
 2.20.1
 
