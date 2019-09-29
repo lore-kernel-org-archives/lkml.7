@@ -2,95 +2,139 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1ABC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 10:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACC8C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 10:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C84321882
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 10:42:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569753772;
-	bh=ouR6V9q3KJPqpqZJmVp8djwQWpu1aWzL4JO+zDi+DHU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wzH0khNU29CFkUUT8WmS0FjdKdDg4izS51LJqBpazpqxi5+6vcs9ZDy306bicUukf
-	 rzz2b6mLAdqcwPPVpWHYForc/eVSUGPpaInZByx/vTlJxCnea8QMCusxJHOPqRF3Pz
-	 oVgTq//U0rSnwO6tL9avL9gulSHzPd9YQuVraI8g=
+	by mail.kernel.org (Postfix) with ESMTP id D590121835
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 10:47:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729006AbfI2Kmv (ORCPT
+        id S1728965AbfI2KrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 06:42:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55288 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 06:47:21 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:50862 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725924AbfI2Kmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 06:42:51 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0946020863;
-        Sun, 29 Sep 2019 10:42:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569753770;
-        bh=ouR6V9q3KJPqpqZJmVp8djwQWpu1aWzL4JO+zDi+DHU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vJhp5ixQu0JaUOtDCRFnssf4D8OOtIWMKQahWAef6kNlX/JoxUFS1RommlxVGXVYP
-         3Ep7MuVSOND2aC64z71aw1G5x1gtCIrprGNKF9eF7sG+KKUpsGVZJOM92doxjUEcdP
-         UetlwIR/DQKuEPNH3eVnGxKl3aACu2F0A+dmaFMw=
-Date:   Sun, 29 Sep 2019 12:42:47 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, corbet@lwn.net, sashal@kernel.org,
-        ben@decadent.org.uk, tglx@linutronix.de, labbott@redhat.com,
-        andrew.cooper3@citrix.com, tsoni@codeaurora.org,
-        keescook@chromium.org, tony.luck@intel.com,
-        linux-doc@vger.kernel.org, dan.j.williams@intel.com
-Subject: Re: [PATCH 2/4] Documentation/process: describe relaxing disclosing
- party NDAs
-Message-ID: <20190929104247.GA1944229@kroah.com>
-References: <20190910172644.4D2CDF0A@viggo.jf.intel.com>
- <20190910172649.74639177@viggo.jf.intel.com>
- <20190911154453.GA14152@kroah.com>
- <5e9f2343-1a76-125a-9555-ab26f15b4487@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5e9f2343-1a76-125a-9555-ab26f15b4487@intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        id S1726149AbfI2KrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 06:47:21 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 185221A019F;
+        Sun, 29 Sep 2019 12:47:18 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 811E61A0179;
+        Sun, 29 Sep 2019 12:47:15 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E42CA4029A;
+        Sun, 29 Sep 2019 18:47:11 +0800 (SGT)
+From:   Biwen Li <biwen.li@nxp.com>
+To:     peda@axentia.se, leoyang.li@nxp.com
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Biwen Li <biwen.li@nxp.com>
+Subject: [PATCH] i2c: pca954x: Add property to skip disabling PCA954x MUX device
+Date:   Sun, 29 Sep 2019 18:36:38 +0800
+Message-Id: <20190929103638.46038-1-biwen.li@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 09:09:18AM -0700, Dave Hansen wrote:
-> On 9/11/19 8:44 AM, Greg KH wrote:
-> > Intel had months of review time for this document before this was
-> > published.  Your lawyers had it and never objected to this lack of
-> > inclusion at all, and explictitly said that the document as written was
-> > fine with them.  So I'm sorry, but it is much too late to add something
-> > like this to the document at this point in time.
-> 
-> Hi Greg,
-> 
-> I'll personally take 100% of the blame for this patch.  I intended for
-> it to show our commitment to work *with* our colleagues in the
-> community, not to dictate demands.  Please consider this as you would
-> any other patch: a humble suggestion to address what I see as a gap.
-> 
-> Just to be clear: this addition came from me and only me.  It did not
-> come from any Intel lawyers and does not represent any kind of objection
-> to the process.  Intel's support for this process is unconditional and
-> not dependent on any of these patches.
+On some Layerscape boards like LS2085ARDB and LS2088ARDB,
+input pull-up resistors on PCA954x MUX device are missing on board,
+So, if MUX are disabled after powered-on, input lines will float
+leading to incorrect functionality.
 
-Ok, thanks for the clarification.  It looked like this came from Intel
-based on the comments you made on the other patches in this series.  My
-confusion, sorry.
+Hence, PCA954x MUX device should never be turned-off after
+power-on.
 
-I think that Thomas's rewording here makes more sense, and you seem to
-agree, so I'll go queue that up now.
+Add property to skip disabling PCA954x MUX device
+if device tree contains "i2c-mux-never-disable"
+for PCA954x device node.
 
-thanks,
+Errata ID: E-00013 on board LS2085ARDB and LS2088ARDB
+(Board revision found on Rev.B, Rev.C and Rev.D)
 
-greg k-h
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
+---
+ drivers/i2c/muxes/i2c-mux-pca954x.c | 33 +++++++++++++++++++++++++----
+ 1 file changed, 29 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
+index 923aa3a5a3dc..ea8aca54d572 100644
+--- a/drivers/i2c/muxes/i2c-mux-pca954x.c
++++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
+@@ -93,6 +93,7 @@ struct pca954x {
+ 	struct irq_domain *irq;
+ 	unsigned int irq_mask;
+ 	raw_spinlock_t lock;
++	u8 disable_mux;		/* do not disable mux if val not 0 */
+ };
+ 
+ /* Provide specs for the PCA954x types we know about */
+@@ -258,6 +259,11 @@ static int pca954x_deselect_mux(struct i2c_mux_core *muxc, u32 chan)
+ 	struct i2c_client *client = data->client;
+ 	s8 idle_state;
+ 
++	if (data->disable_mux != 0) {
++		data->last_chan = data->chip->nchans;
++		return pca954x_reg_write(muxc->parent, client, data->disable_mux);
++	}
++
+ 	idle_state = READ_ONCE(data->idle_state);
+ 	if (idle_state >= 0)
+ 		/* Set the mux back to a predetermined channel */
+@@ -462,16 +468,32 @@ static int pca954x_probe(struct i2c_client *client,
+ 		}
+ 	}
+ 
++	/* Errata ID E-00013 on board LS2088ARDB and LS2088ARDB:
++	 * The point here is that you must not disable a mux if there
++	 * are no pullups on the input or you mess up the I2C. This
++	 * needs to be put into the DTS really as the kernel cannot
++	 * know this otherwise.
++	 */
++
++	data->disable_mux = np &&
++		of_property_read_bool(np, "i2c-mux-never-disable") &&
++		data->chip->muxtype == pca954x_ismux ?
++		data->chip->enable : 0;
++
+ 	/* Write the mux register at addr to verify
+ 	 * that the mux is in fact present. This also
+ 	 * initializes the mux to disconnected state.
+ 	 */
+-	if (i2c_smbus_write_byte(client, 0) < 0) {
++	if (i2c_smbus_write_byte(client, data->disable_mux) < 0) {
+ 		dev_warn(dev, "probe failed\n");
+ 		return -ENODEV;
+ 	}
+ 
+-	data->last_chan = 0;		   /* force the first selection */
++	if (data->disable_mux != 0)
++		data->last_chan = data->chip->nchans;
++	else
++		data->last_chan = 0;               /* force the first selection */
++
+ 	data->idle_state = MUX_IDLE_AS_IS;
+ 
+ 	idle_disconnect_dt = np &&
+@@ -531,8 +553,11 @@ static int pca954x_resume(struct device *dev)
+ 	struct i2c_mux_core *muxc = i2c_get_clientdata(client);
+ 	struct pca954x *data = i2c_mux_priv(muxc);
+ 
+-	data->last_chan = 0;
+-	return i2c_smbus_write_byte(client, 0);
++	if (data->disable_mux != 0)
++		data->last_chan = data->chip->nchans;
++	else
++		data->last_chan = 0;
++	return i2c_smbus_write_byte(client, data->disable_mux);
+ }
+ #endif
+ 
+-- 
+2.17.1
+
