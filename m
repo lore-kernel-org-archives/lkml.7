@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 589C6C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B29C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25EC221882
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24B8D21882
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:02:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569765766;
-	bh=vB8PEykiLTpJVoylB+3/isI7qp+NEDMc4CvjjxdfpbI=;
+	s=default; t=1569765770;
+	bh=KKwCJ2Jhqo9yT3luONXGpSEQ/hHdZWM1lw6vCsJpMtw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fojlhNygGAGuOiu4ju4dRNW9P8HfRxizDzTzPswIAAsWWrJB3kwa/rZqChhD0ES96
-	 2OHhVsmz1CYSIserY3W49gak3hI62U1As2Ror4iR4iX/DXRbwJpLw5jLUmcl60UHem
-	 TsBWaWEEQe0tKaDczMu67eZnLfRpXZoPcQRk+4dg=
+	b=nH8JJb7dqTgs+Dmyw5E75Z8cDdB0v63TXIODJ1xi5i3A4CfKwABSDFa6KdWLizVYw
+	 1XGIlNYdp9MJT6Bv7yWH/tTZeNYe8TCpYTZ0y8g8d1zfd6lDaZOLYNOgHakc8O5n9h
+	 KZyuODQvV3fo5u3WO+CuWk67j7OB+XplKlkGyLyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729730AbfI2OCp (ORCPT
+        id S1730271AbfI2OCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 10:02:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45492 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 10:02:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729662AbfI2OCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 10:02:42 -0400
+        id S1729752AbfI2OCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 10:02:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C36E52082F;
-        Sun, 29 Sep 2019 14:02:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFE572082F;
+        Sun, 29 Sep 2019 14:02:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569765761;
-        bh=vB8PEykiLTpJVoylB+3/isI7qp+NEDMc4CvjjxdfpbI=;
+        s=default; t=1569765765;
+        bh=KKwCJ2Jhqo9yT3luONXGpSEQ/hHdZWM1lw6vCsJpMtw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v+FEns+uvSzJ3Pc+DP341+uhcgeg0XadkGt5XKlWYj4Sna3HXGHpAwL4gUyzkSef4
-         uyEAa0bxPZbksuZTj3wlwIoi+U240hXA9TfQ4luyDAqRtGClUIRH5/3/3ILGt+3pcc
-         ePpJLIfDJMm6cDgjm+N/NQly5E2U4xuI1PJaaBUM=
+        b=YNd4kdNJWUOHCYc2vW+w6v4VM+ZytLnU7VVhI0mYLzTDDcBR73mJdXH/T/Dxk20K8
+         fpWPDdmuQvXTotvl2fe/sCm//ZkeqvEWGRfUoYKZrEOWmoIJ8Xr+yCLkyo5Z2gEf9S
+         JqWFcYVZw0iJUaOsmju+T1jc0GHSvy5l1naNuIfw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Fernando Fernandez Mancera <ffmancera@riseup.net>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 42/45] netfilter: nft_socket: fix erroneous socket assignment
-Date:   Sun, 29 Sep 2019 15:56:10 +0200
-Message-Id: <20190929135033.655419389@linuxfoundation.org>
+Subject: [PATCH 5.2 43/45] Bluetooth: btrtl: Additional Realtek 8822CE Bluetooth devices
+Date:   Sun, 29 Sep 2019 15:56:11 +0200
+Message-Id: <20190929135034.459828829@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190929135024.387033930@linuxfoundation.org>
 References: <20190929135024.387033930@linuxfoundation.org>
@@ -61,46 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fernando Fernandez Mancera <ffmancera@riseup.net>
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-[ Upstream commit 039b1f4f24ecc8493b6bb9d70b4b78750d1b35c2 ]
+[ Upstream commit 6d0762b19c5963ff9e178e8af3626532ee04d93d ]
 
-The socket assignment is wrong, see skb_orphan():
-When skb->destructor callback is not set, but skb->sk is set, this hits BUG().
+The ASUS X412FA laptop contains a Realtek RTL8822CE device with an
+associated BT chip using a USB ID of 04ca:4005. This ID is added to the
+driver.
 
-Link: https://bugzilla.redhat.com/show_bug.cgi?id=1651813
-Fixes: 554ced0a6e29 ("netfilter: nf_tables: add support for native socket matching")
-Signed-off-by: Fernando Fernandez Mancera <ffmancera@riseup.net>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+The /sys/kernel/debug/usb/devices portion for this device is:
+
+T:  Bus=01 Lev=01 Prnt=01 Port=09 Cnt=04 Dev#=  4 Spd=12   MxCh= 0
+D:  Ver= 1.00 Cls=e0(wlcon) Sub=01 Prot=01 MxPS=64 #Cfgs=  1
+P:  Vendor=04ca ProdID=4005 Rev= 0.00
+S:  Manufacturer=Realtek
+S:  Product=Bluetooth Radio
+S:  SerialNumber=00e04c000001
+C:* #Ifs= 2 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:* If#= 0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=81(I) Atr=03(Int.) MxPS=  16 Ivl=1ms
+E:  Ad=02(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+E:  Ad=82(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+I:* If#= 1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=   0 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=   0 Ivl=1ms
+I:  If#= 1 Alt= 1 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=   9 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=   9 Ivl=1ms
+I:  If#= 1 Alt= 2 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  17 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  17 Ivl=1ms
+I:  If#= 1 Alt= 3 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  25 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  25 Ivl=1ms
+I:  If#= 1 Alt= 4 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  33 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  33 Ivl=1ms
+I:  If#= 1 Alt= 5 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  49 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  49 Ivl=1ms
+
+Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=204707
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_socket.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/bluetooth/btusb.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/net/netfilter/nft_socket.c b/net/netfilter/nft_socket.c
-index d7f3776dfd719..637ce3e8c575c 100644
---- a/net/netfilter/nft_socket.c
-+++ b/net/netfilter/nft_socket.c
-@@ -47,9 +47,6 @@ static void nft_socket_eval(const struct nft_expr *expr,
- 		return;
- 	}
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 0f4750322864a..aa6e2f9d48617 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -378,6 +378,9 @@ static const struct usb_device_id blacklist_table[] = {
+ 	{ USB_DEVICE(0x13d3, 0x3526), .driver_info = BTUSB_REALTEK },
+ 	{ USB_DEVICE(0x0b05, 0x185c), .driver_info = BTUSB_REALTEK },
  
--	/* So that subsequent socket matching not to require other lookups. */
--	skb->sk = sk;
--
- 	switch(priv->key) {
- 	case NFT_SOCKET_TRANSPARENT:
- 		nft_reg_store8(dest, inet_sk_transparent(sk));
-@@ -66,6 +63,9 @@ static void nft_socket_eval(const struct nft_expr *expr,
- 		WARN_ON(1);
- 		regs->verdict.code = NFT_BREAK;
- 	}
++	/* Additional Realtek 8822CE Bluetooth devices */
++	{ USB_DEVICE(0x04ca, 0x4005), .driver_info = BTUSB_REALTEK },
 +
-+	if (sk != skb->sk)
-+		sock_gen_put(sk);
- }
+ 	/* Silicon Wave based devices */
+ 	{ USB_DEVICE(0x0c10, 0x0000), .driver_info = BTUSB_SWAVE },
  
- static const struct nla_policy nft_socket_policy[NFTA_SOCKET_MAX + 1] = {
 -- 
 2.20.1
 
