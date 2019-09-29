@@ -2,204 +2,93 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93742C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C038EC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A19D218DE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 986B12086A
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:02:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569765776;
-	bh=VMET+PjEaLvGZp3XEaxxb8FxyhaWnRrGnESSoSLxdfc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=zXic/mJGe0JGpBvUVb/z2Z2zSX+EvhBRkso03q1y1ouuO/KfRhZiuXouAb0Q8WwR0
-	 Vxd/MWpkJ8bFAUUYv7mZxrEgTvcg6Swoc39UJLbpyu3NAjDw1m5p1PGvNQKfh/0GBA
-	 bIWFXAl4uNtQrrKhzvAmkn48bx4TMjJlnP3OuQ0o=
+	s=default; t=1569765779;
+	bh=sgzGlI1/+w+8UgTyIP745ekMfbCwyPb117mkLDg4PDQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PFkIz7n+ev/iegVlRofzq2IiB+5nQdwa7G+V2PQRvzjyogyuR5YjVvlNKxZ+EtC6z
+	 hG/aCWP1tASXzPSRT+ZTPElkSFy2OvD7dBVfmbhjFlgI7mJVNcjsiygcrAWs5ADgpn
+	 XS0VhPPc8WPaOevhwiW5qZLLXJNIPhWuvJoPkuec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730275AbfI2OCz (ORCPT
+        id S1730280AbfI2OC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 10:02:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45736 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 10:02:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729662AbfI2OCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 10:02:53 -0400
+        id S1729223AbfI2OC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 10:02:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F086721882;
-        Sun, 29 Sep 2019 14:02:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61E3F2082F;
+        Sun, 29 Sep 2019 14:02:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569765772;
-        bh=VMET+PjEaLvGZp3XEaxxb8FxyhaWnRrGnESSoSLxdfc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=JdoWiya3EhQz/pivuMpNJ8HVnEl9BTjq79Y8mWIHs6k+gftMZ3nFhYlt71W6exkT8
-         hONAG+6RcE3KBxTHoQj4Oy/Hn9mhNtWA2I406xBO46mtOtb+ds+VHg77GCzeZtTrL0
-         0tooV5K0oeK1uE9KOezpzFyIxUXWHM6LnOPeiTac=
+        s=default; t=1569765775;
+        bh=sgzGlI1/+w+8UgTyIP745ekMfbCwyPb117mkLDg4PDQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JoaMxDQc6BnclTjNExMECoH5IQsp5zL3KxXxHdPHlyeYiHIs9CcgTeimRhTjq3VO2
+         IV0koAC532+H/d13yuUQc0DA+P3TVBxQQl9YVDY9j2Kn++1K8t4Ix2MEMNRsvqsl01
+         tqZi7siUnWTFjWWkxkymXAKBOjKrk9qR3hWlgwsA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 5.3 00/25] 5.3.2-stable review
-Date:   Sun, 29 Sep 2019 15:56:03 +0200
-Message-Id: <20190929135006.127269625@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [PATCH 5.3 02/25] clocksource/drivers/timer-of: Do not warn on deferred probe
+Date:   Sun, 29 Sep 2019 15:56:05 +0200
+Message-Id: <20190929135007.562831229@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
+In-Reply-To: <20190929135006.127269625@linuxfoundation.org>
+References: <20190929135006.127269625@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.3.2-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.3.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.3.2-rc1
-X-KernelTest-Deadline: 2019-10-01T13:50+00:00
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 5.3.2 release.
-There are 25 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Jon Hunter <jonathanh@nvidia.com>
 
-Responses should be made by Tue 01 Oct 2019 01:47:47 PM UTC.
-Anything received after that time might be too late.
+commit 763719771e84b8c8c2f53af668cdc905faa608de upstream.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.2-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
-and the diffstat can be found below.
+Deferred probe is an expected return value for clk_get() on many
+platforms. The driver deals with it properly, so there's no need
+to output a warning that may potentially confuse users.
 
-thanks,
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-greg k-h
+---
+ drivers/clocksource/timer-of.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.3.2-rc1
-
-Josh Poimboeuf <jpoimboe@redhat.com>
-    objtool: Clobber user CFLAGS variable
-
-Heikki Krogerus <heikki.krogerus@linux.intel.com>
-    platform/x86: i2c-multi-instantiate: Derive the device name from parent
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: hda - Apply AMD controller workaround for Raven platform
-
-Shih-Yuan Lee (FourDollars) <fourdollars@debian.org>
-    ALSA: hda - Add laptop imic fixup for ASUS M9V laptop
-
-Takashi Sakamoto <o-takashi@sakamocchi.jp>
-    ALSA: dice: fix wrong packet parameter for Alesis iO26
-
-Jussi Laako <jussi@sonarnerd.net>
-    ALSA: usb-audio: Add DSD support for EVGA NU Audio
-
-Ilya Pshonkin <sudokamikaze@protonmail.com>
-    ALSA: usb-audio: Add Hiby device family to quirks for native DSD support
-
-Vitaly Wool <vitalywool@gmail.com>
-    Revert "mm/z3fold.c: fix race between migration and destruction"
-
-Peng Fan <peng.fan@nxp.com>
-    clk: imx: imx8mm: fix audio pll setting
-
-Gustavo A. R. Silva <gustavo@embeddedor.com>
-    crypto: talitos - fix missing break in switch statement
-
-Tokunori Ikegami <ikegami.t@gmail.com>
-    mtd: cfi_cmdset_0002: Use chip_good() to retry in do_write_oneword()
-
-Sebastian Parschauer <s.parschauer@gmx.de>
-    HID: Add quirk for HP X500 PIXART OEM mouse
-
-Alan Stern <stern@rowland.harvard.edu>
-    HID: hidraw: Fix invalid read in hidraw_ioctl
-
-Hans de Goede <hdegoede@redhat.com>
-    HID: logitech-dj: Fix crash when initial logi_dj_recv_query_paired_devices fails
-
-Alan Stern <stern@rowland.harvard.edu>
-    HID: logitech: Fix general protection fault caused by Logitech driver
-
-Roderick Colenbrander <roderick.colenbrander@sony.com>
-    HID: sony: Fix memory corruption issue on cleanup.
-
-Alan Stern <stern@rowland.harvard.edu>
-    HID: prodikeys: Fix general protection fault during probe
-
-Greg Kurz <groug@kaod.org>
-    powerpc/xive: Fix bogus error code returned by OPAL
-
-Nick Desaulniers <ndesaulniers@google.com>
-    drm/amd/display: readd -msse2 to prevent Clang from emitting libcalls to undefined SW FP routines
-
-Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-    drm/amd/display: Don't replace the dc_state for fast updates
-
-Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-    drm/amd/display: Skip determining update type for async updates
-
-Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-    drm/amd/display: Allow cursor async updates for framebuffer swaps
-
-Jon Hunter <jonathanh@nvidia.com>
-    clocksource/drivers: Do not warn on probe defer
-
-Jon Hunter <jonathanh@nvidia.com>
-    clocksource/drivers/timer-of: Do not warn on deferred probe
-
-Jeremy Sowden <jeremy@azazel.net>
-    netfilter: add missing IS_ENABLED(CONFIG_NF_TABLES) check to header-file.
-
-
--------------
-
-Diffstat:
-
- Makefile                                          |  4 +-
- arch/powerpc/include/asm/opal.h                   |  2 +-
- arch/powerpc/platforms/powernv/opal-call.c        |  2 +-
- arch/powerpc/sysdev/xive/native.c                 | 11 +++
- drivers/clk/imx/clk-imx8mm.c                      |  4 +-
- drivers/clocksource/timer-of.c                    |  6 +-
- drivers/clocksource/timer-probe.c                 |  4 +-
- drivers/crypto/talitos.c                          |  1 +
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 56 ++++++++++----
- drivers/gpu/drm/amd/display/dc/calcs/Makefile     |  4 +
- drivers/gpu/drm/amd/display/dc/dcn20/Makefile     |  4 +
- drivers/gpu/drm/amd/display/dc/dml/Makefile       |  4 +
- drivers/gpu/drm/amd/display/dc/dsc/Makefile       |  4 +
- drivers/hid/hid-ids.h                             |  1 +
- drivers/hid/hid-lg.c                              | 10 ++-
- drivers/hid/hid-lg4ff.c                           |  1 -
- drivers/hid/hid-logitech-dj.c                     | 10 +--
- drivers/hid/hid-prodikeys.c                       | 12 ++-
- drivers/hid/hid-quirks.c                          |  1 +
- drivers/hid/hid-sony.c                            |  2 +-
- drivers/hid/hidraw.c                              |  2 +-
- drivers/mtd/chips/cfi_cmdset_0002.c               | 18 +++--
- drivers/platform/x86/i2c-multi-instantiate.c      |  2 +-
- include/net/netfilter/nf_tables.h                 |  4 +
- mm/z3fold.c                                       | 90 -----------------------
- sound/firewire/dice/dice-alesis.c                 |  2 +-
- sound/pci/hda/hda_intel.c                         |  3 +-
- sound/pci/hda/patch_analog.c                      |  1 +
- sound/usb/quirks.c                                |  2 +
- tools/objtool/Makefile                            |  2 +-
- 30 files changed, 130 insertions(+), 139 deletions(-)
+--- a/drivers/clocksource/timer-of.c
++++ b/drivers/clocksource/timer-of.c
+@@ -113,8 +113,10 @@ static __init int timer_of_clk_init(stru
+ 	of_clk->clk = of_clk->name ? of_clk_get_by_name(np, of_clk->name) :
+ 		of_clk_get(np, of_clk->index);
+ 	if (IS_ERR(of_clk->clk)) {
+-		pr_err("Failed to get clock for %pOF\n", np);
+-		return PTR_ERR(of_clk->clk);
++		ret = PTR_ERR(of_clk->clk);
++		if (ret != -EPROBE_DEFER)
++			pr_err("Failed to get clock for %pOF\n", np);
++		goto out;
+ 	}
+ 
+ 	ret = clk_prepare_enable(of_clk->clk);
 
 
