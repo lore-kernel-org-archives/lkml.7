@@ -2,159 +2,116 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F94CC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 07:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F5BC352A9
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 08:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C892206C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 07:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E8A721835
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 08:05:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mail.ru header.i=@mail.ru header.b="qyvTBly6";
+	dkim=pass (1024-bit key) header.d=mail.ru header.i=@mail.ru header.b="qyvTBly6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728932AbfI2Htj (ORCPT
+        id S1728948AbfI2IFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 03:49:39 -0400
-Received: from mga05.intel.com ([192.55.52.43]:8411 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725379AbfI2Hti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 03:49:38 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Sep 2019 00:49:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,562,1559545200"; 
-   d="scan'208";a="193826523"
-Received: from zhangjun-desktop.sh.intel.com ([10.239.154.83])
-  by orsmga003.jf.intel.com with ESMTP; 29 Sep 2019 00:49:28 -0700
-From:   jun.zhang@intel.com
-To:     labbott@redhat.com, sumit.semwal@linaro.org,
-        gregkh@linuxfoundation.org, arve@android.com, tkjos@android.com,
-        maco@android.com, joel@joelfernandes.org, christian@brauner.io
-Cc:     devel@driverdev.osuosl.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
-        zhang jun <jun.zhang@intel.com>, he@vger.kernel.org,
-        bo <bo.he@intel.com>, Bai@vger.kernel.org,
-        Jie A <jie.a.bai@intel.com>
-Subject: [PATCH] ion_system_heap: support X86 archtecture
-Date:   Sun, 29 Sep 2019 15:28:41 +0800
-Message-Id: <20190929072841.14848-1-jun.zhang@intel.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 29 Sep 2019 04:05:03 -0400
+Received: from fallback18.mail.ru ([185.5.136.250]:54112 "EHLO
+        fallback18.mail.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726702AbfI2IFD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 04:05:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mail.ru; s=mail2;
+        h=Message-Id:Date:Subject:Cc:To:From; bh=61a8VvzuJLVRvgj/y8WDqa759TJZDGbkVwWi3YKsILk=;
+        b=qyvTBly6P3bY6JMte5HdnH1+ZKjM9sEvZ+PM/BOl5WCqmj/fKQP3UTNDYXgDCQfWfmseFKIXVl4q3YcyHVz1iJRu8lue8798cblQLE8FJKIkj8tk3nMQkHVdVqSjmQRKJhQTFQfpyQDxPNOzjssEJ+4ugLSKdSU2d/Tz7Wg9k7E=;
+Received: from [10.161.100.15] (port=58086 helo=smtpng3.m.smailru.net)
+        by fallback18.m.smailru.net with esmtp (envelope-from <andreykosh000@mail.ru>)
+        id 1iEUCS-0000iX-DQ; Sun, 29 Sep 2019 11:05:00 +0300
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mail.ru; s=mail2;
+        h=Message-Id:Date:Subject:Cc:To:From; bh=61a8VvzuJLVRvgj/y8WDqa759TJZDGbkVwWi3YKsILk=;
+        b=qyvTBly6P3bY6JMte5HdnH1+ZKjM9sEvZ+PM/BOl5WCqmj/fKQP3UTNDYXgDCQfWfmseFKIXVl4q3YcyHVz1iJRu8lue8798cblQLE8FJKIkj8tk3nMQkHVdVqSjmQRKJhQTFQfpyQDxPNOzjssEJ+4ugLSKdSU2d/Tz7Wg9k7E=;
+Received: by smtpng3.m.smailru.net with esmtpa (envelope-from <andreykosh000@mail.ru>)
+        id 1iEUCJ-00052u-5n; Sun, 29 Sep 2019 11:04:51 +0300
+From:   Andrei Koshkosh <andreykosh000@mail.ru>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Andrei Koshkosh <andreykosh000@mail.ru>,
+        linux-media@vger.kernel.org, Sean Young <sean@mess.org>,
+        Jan Pieter van Woerkom <jp@jpvw.nl>,
+        =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens@rwth-aachen.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] media: dvbsky: use a single mutex and state buffers for all R/W ops
+Date:   Sun, 29 Sep 2019 11:04:05 +0300
+Message-Id: <1569744245-23030-1-git-send-email-andreykosh000@mail.ru>
+X-Mailer: git-send-email 2.7.4
+X-77F55803: 2D1AD755E866B1545A78504BD2AC2941A61359CF0AD36FC0B135F8510420F1D93A86C3D027D1C80282A6CBF2A3B387CE
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7E61612FB1FB8A919EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F7900637CD877809B688EA868638F802B75D45FF5571747095F342E8C7A0BC55FA0FE5FC2F074859904BBCD9BA54080B8E2616A90A031FEF788ADDF4389733CBF5DBD5E913377AFFFEAFD269176DF2183F8FC7C05A64D9A1E9CA65708941B15DA834481FCF19DD082D7633A0E7DDDDC251EA7DABA471835C12D1D977725E5C173C3A84C390BCC82C2C62A6D1117882F4460429728AD0CFFFB425014E40A5AABA2AD3711975ECD9A6C639B01B78DA827A17800CE71E79D001AB00117447C4BABD0925318B75ECD9A6C639B01B4E70A05D1297E1BBC6867C52282FAC85D9B7C4F32B44FF57285124B2A10EEC6C00306258E7E6ABB4E4A6367B16DE6309
+X-Mailru-Sender: 689FA8AB762F739303AC06854B751545C64EF7A825FA5A97967DEE4CBCD4108FEC1B5849042ADB87648B0B2FE8089527E13B0FA3D5E9F256A7B6C1515A0AD0BE5FEEDEB644C299C0ED14614B50AE0675
+X-Mras: OK
+X-77F55803: 669901E4625912A97F9F52485CB584D7271FD7DF62800FDC22C2679BEE9317514E57A9610849DBCB933AD4F01543077417D899E2A0A66AC9
+X-7FA49CB5: 0D63561A33F958A5005BC3E0E0A915E48BF2F6F3BA512F27B8336824E80207238941B15DA834481FA18204E546F3947C78444BBB7636F62AF6B57BC7E64490618DEB871D839B7333395957E7521B51C2545D4CF71C94A83E9FA2833FD35BB23D27C277FBC8AE2E8B55D5BE2F85BDEC5FA471835C12D1D977C4224003CC836476C0CAF46E325F83A50BF2EBBBDD9D6B0F05F538519369F3743B503F486389A921A5CC5B56E945C8DA
+X-Mailru-Sender: A5480F10D64C90052060E016933BC039A8F0687CE85A16726B7AB1A8EB50CD91662C540C2CCA2F9DD4B93D0BF3EA581BC77752E0C033A69EA7E5F91E6B0D0F4EE05E346907A1D06F3453F38A29522196
+X-Mras: OK
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhang jun <jun.zhang@intel.com>
-
-we see tons of warning like:
-[   45.846872] x86/PAT: NDK MediaCodec_:3753 map pfn RAM range req
-write-combining for [mem 0x1e7a80000-0x1e7a87fff], got write-back
-[   45.848827] x86/PAT: .vorbis.decoder:4088 map pfn RAM range req
-write-combining for [mem 0x1e7a58000-0x1e7a58fff], got write-back
-[   45.848875] x86/PAT: NDK MediaCodec_:3753 map pfn RAM range req
-write-combining for [mem 0x1e7a48000-0x1e7a4ffff], got write-back
-[   45.849403] x86/PAT: .vorbis.decoder:4088 map pfn RAM range
-req write-combining for [mem 0x1e7a70000-0x1e7a70fff], got write-back
-
-check the kernel Documentation/x86/pat.txt, it says:
-A. Exporting pages to users with remap_pfn_range, io_remap_pfn_range,
-vm_insert_pfn
-Drivers wanting to export some pages to userspace do it by using
-mmap interface and a combination of
-1) pgprot_noncached()
-2) io_remap_pfn_range() or remap_pfn_range() or vm_insert_pfn()
-With PAT support, a new API pgprot_writecombine is being added.
-So, drivers can continue to use the above sequence, with either
-pgprot_noncached() or pgprot_writecombine() in step 1, followed by step 2.
-
-In addition, step 2 internally tracks the region as UC or WC in
-memtype list in order to ensure no conflicting mapping.
-
-Note that this set of APIs only works with IO (non RAM) regions.
-If driver ants to export a RAM region, it has to do set_memory_uc() or
-set_memory_wc() as step 0 above and also track the usage of those pages
-and use set_memory_wb() before the page is freed to free pool.
-
-the fix follow the pat document, do set_memory_wc() as step 0 and
-use the set_memory_wb() before the page is freed.
-
-Signed-off-by: he, bo <bo.he@intel.com>
-Signed-off-by: zhang jun <jun.zhang@intel.com>
-Signed-off-by: Bai, Jie A <jie.a.bai@intel.com>
+Signed-off-by: Andrei Koshkosh <andreykosh000@mail.ru>
 ---
- drivers/staging/android/ion/ion_system_heap.c | 28 ++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
+ drivers/media/usb/dvb-usb-v2/dvbsky.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/staging/android/ion/ion_system_heap.c b/drivers/staging/android/ion/ion_system_heap.c
-index b83a1d16bd89..d298b8194820 100644
---- a/drivers/staging/android/ion/ion_system_heap.c
-+++ b/drivers/staging/android/ion/ion_system_heap.c
-@@ -13,6 +13,7 @@
- #include <linux/scatterlist.h>
- #include <linux/slab.h>
- #include <linux/vmalloc.h>
-+#include <asm/set_memory.h>
+diff --git a/drivers/media/usb/dvb-usb-v2/dvbsky.c b/drivers/media/usb/dvb-usb-v2/dvbsky.c
+index c41e10b..6a118a0 100644
+--- a/drivers/media/usb/dvb-usb-v2/dvbsky.c
++++ b/drivers/media/usb/dvb-usb-v2/dvbsky.c
+@@ -22,7 +22,6 @@ MODULE_PARM_DESC(disable_rc, "Disable inbuilt IR receiver.");
+ DVB_DEFINE_MOD_OPT_ADAPTER_NR(adapter_nr);
  
- #include "ion.h"
+ struct dvbsky_state {
+-	struct mutex stream_mutex;
+ 	u8 ibuf[DVBSKY_BUF_LEN];
+ 	u8 obuf[DVBSKY_BUF_LEN];
+ 	u8 last_lock;
+@@ -61,16 +60,18 @@ static int dvbsky_stream_ctrl(struct dvb_usb_device *d, u8 onoff)
+ {
+ 	struct dvbsky_state *state = d_to_priv(d);
+ 	int ret;
+-	u8 obuf_pre[3] = { 0x37, 0, 0 };
+-	u8 obuf_post[3] = { 0x36, 3, 0 };
++	static u8 obuf_pre[3] = { 0x37, 0, 0 };
++	static u8 obuf_post[3] = { 0x36, 3, 0 };
  
-@@ -134,6 +135,13 @@ static int ion_system_heap_allocate(struct ion_heap *heap,
- 	sg = table->sgl;
- 	list_for_each_entry_safe(page, tmp_page, &pages, lru) {
- 		sg_set_page(sg, page, page_size(page), 0);
-+
-+#ifdef CONFIG_X86
-+	if (!(buffer->flags & ION_FLAG_CACHED))
-+		set_memory_wc((unsigned long)page_address(sg_page(sg)),
-+			      PAGE_ALIGN(sg->length) >> PAGE_SHIFT);
-+#endif
-+
- 		sg = sg_next(sg);
- 		list_del(&page->lru);
+-	mutex_lock(&state->stream_mutex);
+-	ret = dvbsky_usb_generic_rw(d, obuf_pre, 3, NULL, 0);
++	mutex_lock(&d->usb_mutex);
++	memcpy(state->obuf, obuf_pre, 3);
++	ret = dvb_usbv2_generic_write_locked(d, state->obuf, 3);
+ 	if (!ret && onoff) {
+ 		msleep(20);
+-		ret = dvbsky_usb_generic_rw(d, obuf_post, 3, NULL, 0);
++		memcpy(state->obuf, obuf_post, 3);
++		ret = dvb_usbv2_generic_write_locked(d, state->obuf, 3);
  	}
-@@ -162,8 +170,15 @@ static void ion_system_heap_free(struct ion_buffer *buffer)
- 	if (!(buffer->private_flags & ION_PRIV_FLAG_SHRINKER_FREE))
- 		ion_heap_buffer_zero(buffer);
- 
--	for_each_sg(table->sgl, sg, table->nents, i)
-+	for_each_sg(table->sgl, sg, table->nents, i) {
-+#ifdef CONFIG_X86
-+		if (!(buffer->flags & ION_FLAG_CACHED))
-+			set_memory_wb((unsigned long)page_address(sg_page(sg)),
-+				      PAGE_ALIGN(sg->length) >> PAGE_SHIFT);
-+#endif
-+
- 		free_buffer_page(sys_heap, buffer, sg_page(sg));
-+	}
- 	sg_free_table(table);
- 	kfree(table);
+-	mutex_unlock(&state->stream_mutex);
++	mutex_unlock(&d->usb_mutex);
+ 	return ret;
  }
-@@ -316,6 +331,12 @@ static int ion_system_contig_heap_allocate(struct ion_heap *heap,
  
- 	buffer->sg_table = table;
+@@ -599,7 +600,6 @@ static int dvbsky_init(struct dvb_usb_device *d)
+ 	if (ret)
+ 		return ret;
+ 	*/
+-	mutex_init(&state->stream_mutex);
  
-+#ifdef CONFIG_X86
-+	if (!(buffer->flags & ION_FLAG_CACHED))
-+		set_memory_wc((unsigned long)page_address(page),
-+			      PAGE_ALIGN(len) >> PAGE_SHIFT);
-+#endif
-+
- 	return 0;
+ 	state->last_lock = 0;
  
- free_table:
-@@ -334,6 +355,11 @@ static void ion_system_contig_heap_free(struct ion_buffer *buffer)
- 	unsigned long pages = PAGE_ALIGN(buffer->size) >> PAGE_SHIFT;
- 	unsigned long i;
- 
-+#ifdef CONFIG_X86
-+	if (!(buffer->flags & ION_FLAG_CACHED))
-+		set_memory_wb((unsigned long)page_address(page), pages);
-+#endif
-+
- 	for (i = 0; i < pages; i++)
- 		__free_page(page + i);
- 	sg_free_table(table);
 -- 
-2.17.1
+2.7.4
 
