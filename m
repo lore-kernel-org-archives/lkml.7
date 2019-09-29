@@ -2,87 +2,95 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E8C7C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 20:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EBF2C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 20:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE8B920815
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 20:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A67E20863
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 20:51:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="UlGoRVxL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sT1wM/fR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729092AbfI2UVw (ORCPT
+        id S1729121AbfI2Uo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 16:21:52 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39142 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726390AbfI2UVv (ORCPT
+        Sun, 29 Sep 2019 16:44:29 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33498 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726827AbfI2Uo3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 16:21:51 -0400
-Received: by mail-ed1-f68.google.com with SMTP id a15so6775792edt.6
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Sep 2019 13:21:50 -0700 (PDT)
+        Sun, 29 Sep 2019 16:44:29 -0400
+Received: by mail-wr1-f68.google.com with SMTP id b9so8818343wrs.0
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Sep 2019 13:44:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/CVt/vLJtBjg+T9O+xWd34W6CPNXiOTrjXGXhqyE4Y4=;
-        b=UlGoRVxLOvOnW6xzDkMA5QeopjV40q5Qkvbds6GzjMXoxAsOrxfjJhTEzThD1SQkHl
-         ix+CHa4EHdQU9v6X8b9rtw+0V2FlyDAlvVbXloRaN5wK4Y8/nSGxjC35A4yY6ZlYKnOi
-         YfnDQEcEp1AY86CgHh5QxCvOGwor+A7/6MjeM=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6g8BFOr4RuJJvpBnYUG0GgT2UdKjcagjVd8h5jd5/M8=;
+        b=sT1wM/fRKKWD3kB4Q9J9gqeWWMDzMq0zn4ntcp14NIUbRd7lGCK9kjj5UJ4DWs3wpf
+         +hwDeY0km2cJpIJrGpinS66lH9Qo8Uuk6prZQCSwdD43CkOB6A8d4qNZYemRBhZLgioe
+         LvleJ/xBZqNq+IjDX4ONYA4Igu4fYaUbLX7H7sqmshqKXm3Egdc1rLKAw7IUhH0HXp3f
+         wj0c+0R3TsCLOj5s4N7ODTPhuYvyqZjkPBNNFSiwNO452QXg3jE0Gn7/frOyABdTSgvn
+         R5VjXrMiSmMq3k5mCgQiQ3k3Oy26zJf4q0BUpToKlERADsR54yt/FlfanolhUcQXtZ4Q
+         KA1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/CVt/vLJtBjg+T9O+xWd34W6CPNXiOTrjXGXhqyE4Y4=;
-        b=ZFJpVUTaSE9aRmA7EWMfMj8KR+ZrkfMYENpzrFmPDZuQnctfM19/YY0Jgnhz/wUJER
-         L/BF0YwwEdamcP9LE1YVuaNHbYgV4fp+PjGNGXzBFGKo/n69aM71ZgAd2EntCFuRMV7O
-         e+TD3MXXvDCsjX/0JJiNqLy1fqm51fdXqCxsq1rZJ+JpHq9lzYO1MRrII4L0tpqqlk7a
-         VM+Wtn+/r0XJbaRrytcrMGGCsUNehvU9kEyKlYhyKlFCkysFeSqyQ9UrOJNsGFe2jyhy
-         ZdTckux6SSdOLgtBB2XgEIWhk2sxO8tGjPz92P1ym2L2KR+KpA6qtttLeGghMhqbWLAc
-         /nug==
-X-Gm-Message-State: APjAAAVaopeZeq5HTLKzngRl3HUnxli6IJpGlPPN4tfFORwJ9RGKAej6
-        qkxL8qvcYN4tgnEH5XVDxkS/jw==
-X-Google-Smtp-Source: APXvYqw0Xe1a2UNI2ulgsLY3l1OlAI7XERAIvvAsujPSwcPQkpK0D+mRjLYp+QM71d8lRu9f9PF4TQ==
-X-Received: by 2002:a50:fa83:: with SMTP id w3mr15958065edr.262.1569788509849;
-        Sun, 29 Sep 2019 13:21:49 -0700 (PDT)
-Received: from [192.168.1.149] (ip-5-186-115-35.cgn.fibianet.dk. [5.186.115.35])
-        by smtp.gmail.com with ESMTPSA id f36sm2019864ede.28.2019.09.29.13.21.48
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6g8BFOr4RuJJvpBnYUG0GgT2UdKjcagjVd8h5jd5/M8=;
+        b=pZvwpW2mW6QdetU2MkJj3gx6riFciVyp4IzQSAANI6QGGPfjwiD6i85nGTu5SIZpwq
+         qX5jQSk/f9QVGfLNUocvXSFptZXR3mlrK/5EFGzpYBAgSZarJNS0sD65Yhl3atSvvy6m
+         biOj/k7whhanwULXnASDvYTyRXYaqSM/ZVn7nAc+5h4RcASrpKGnQn7n9uxHrfvZ/1hq
+         wi8BI5kbjCmCDf21L6WYeqpkzmqTJhjeXJ+HDdMsLOXpFQ9sUYbK+/WTiXffdDVpsV/4
+         fSqn+oyPsYnNLyrdccnoTqyZRFfLreq1KD3pt3Ajl0NXcsG3GjM1Z2YZwSKAJPB5xirF
+         vZ7g==
+X-Gm-Message-State: APjAAAXpHTgVCKJ4+0FCLHX+T1Dhnl/6QNnVKbaMofJejtuBwB5M2lQz
+        Z5zif8gSBh13U6/18cXzuw==
+X-Google-Smtp-Source: APXvYqyRd+2X5uvlwES43XuRYMjiMK3l6KgPqgWkoynAa288MY6y0tQsTSgyWOL5PQ2eUFgitLTnww==
+X-Received: by 2002:adf:f092:: with SMTP id n18mr11134779wro.262.1569789867436;
+        Sun, 29 Sep 2019 13:44:27 -0700 (PDT)
+Received: from avx2 ([46.53.254.141])
+        by smtp.gmail.com with ESMTPSA id y14sm21961780wrd.84.2019.09.29.13.44.26
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 29 Sep 2019 13:21:49 -0700 (PDT)
+        Sun, 29 Sep 2019 13:44:26 -0700 (PDT)
+Date:   Sun, 29 Sep 2019 23:44:24 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, intel-gfx@lists.freedesktop.org,
+        mingo@redhat.com, linux@rasmusvillemoes.dk
 Subject: Re: [PATCH] Make is_signed_type() simpler
-To:     Alexey Dobriyan <adobriyan@gmail.com>, akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        intel-gfx@lists.freedesktop.org, rostedt@goodmis.org,
-        mingo@redhat.com
+Message-ID: <20190929204424.GA14565@avx2>
 References: <20190929200619.GA12851@avx2>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <f99ca43d-1ba2-95fb-b90f-6706a06f8ce6@rasmusvillemoes.dk>
-Date:   Sun, 29 Sep 2019 22:21:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ <20190929161531.727da348@gandalf.local.home>
 MIME-Version: 1.0
-In-Reply-To: <20190929200619.GA12851@avx2>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20190929161531.727da348@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/09/2019 22.06, Alexey Dobriyan wrote:
-> * Simply compare -1 with 0,
-> * Drop unnecessary parenthesis sets
+On Sun, Sep 29, 2019 at 04:15:31PM -0400, Steven Rostedt wrote:
+> On Sun, 29 Sep 2019 23:06:19 +0300
+> Alexey Dobriyan <adobriyan@gmail.com> wrote:
 > 
-> -#define is_signed_type(type)       (((type)(-1)) < (type)1)
-> +#define is_signed_type(type)       ((type)-1 < 0)
+> > * Simply compare -1 with 0,
+> > * Drop unnecessary parenthesis sets
+> > 
+> > New macro leaves pointer as "unsigned type" but gives a warning,
+> > which should be fine because asking whether a pointer is signed is
+> > strange question.
+> > 
+> > I'm not sure what's going on in the i915 driver, it is shipping kernel
+> > pointers to userspace.
+> 
+> This tells us what the patch does, not why.
 
-NAK. I wrote it that way to avoid -Wtautological-compare when type is
-unsigned.
-
-Rasmus
+Check the subject line.
