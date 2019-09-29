@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAB8C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9D1C352A9
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:57:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8473A218AC
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B048821835
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:57:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569765456;
-	bh=+OYwP19RhWuLwdi9dWYB9JjNHhAy3RS3munsabWWZF8=;
+	s=default; t=1569765457;
+	bh=VgJHbkXi6XgDArXSDQSarRKa0D95G21+N5RxOh7jyfA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MuMMvLFko8+hajYFcF6SnJU3aC2D5G9UtqE7RwVLeUmqwNqqoJh8oZI9XnRtduJh4
-	 SU1kTHN4QBVME3BAoc192CVeam1nTb1mTXsu1H2N6FkApeSnbnueAjXk3TVIQzwUj0
-	 5/3b3I2h8JD6JN5P41CTMP05yXIKeh0SfwldnQu0=
+	b=FGZXrPFpXlryhw37lzmA1jcjJQJ/hJsgp2hqzSnHwQjTRh4Ua7drF0jj1V1aP4XlX
+	 nsZJuujxnk0nQO3aPekCR7rPZEsRRAipeVK6ZZRRGO8pAwc+ASd1YnwGFcg1tEH4be
+	 p+uSIw82AlcrmhHwezZQAOdLp24X7SlBkNQ0jtmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729277AbfI2N5f (ORCPT
+        id S1729250AbfI2N5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 09:57:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37834 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 09:57:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729240AbfI2N5c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 09:57:32 -0400
+        id S1729211AbfI2N50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 09:57:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0868421835;
-        Sun, 29 Sep 2019 13:57:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A07382082F;
+        Sun, 29 Sep 2019 13:57:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569765451;
-        bh=+OYwP19RhWuLwdi9dWYB9JjNHhAy3RS3munsabWWZF8=;
+        s=default; t=1569765444;
+        bh=VgJHbkXi6XgDArXSDQSarRKa0D95G21+N5RxOh7jyfA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HJRGuQPD4a5sxU58X4qA1t/dtPAMnFID+Rj7SNEb9W+Lv0ZaYTjEWbzmHBMn5GVKT
-         0R82pvGVvarc+o2D3XFRoJkOk2RN+Bu5aAgRAtNfhIaxMNvZP62iwRBQ7GMjuGNVC+
-         oyeXmQexiHFIlj4g0RzkU7VV+i39BOJdJAyh4ON0=
+        b=zaLq2FBOdkHSwdF87Md97VzgXkWlvKq7t/wPZihJgWFISALk3k66SNNymrvbN13Sw
+         svoXzDvd/tw9Fy9wujYfiyqnrBg4OID7VEsN/vuh1viVAP22U504B1djqQRPsV0qnb
+         bG+Yfr/wpfFHnLEY3l3JLSfcrDkeTdjDHfIyi/RQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alaa Hleihel <alaa@mellanox.com>,
-        Or Gerlitz <ogerlitz@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.19 16/63] net/mlx5e: dont set CHECKSUM_COMPLETE on SCTP packets
-Date:   Sun, 29 Sep 2019 15:53:49 +0200
-Message-Id: <20190929135035.043739528@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Jiri Kosina <jkosina@suse.cz>,
+        syzbot+3cbe5cd105d2ad56a1df@syzkaller.appspotmail.com
+Subject: [PATCH 4.19 09/63] HID: logitech: Fix general protection fault caused by Logitech driver
+Date:   Sun, 29 Sep 2019 15:53:42 +0200
+Message-Id: <20190929135032.890160688@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190929135031.382429403@linuxfoundation.org>
 References: <20190929135031.382429403@linuxfoundation.org>
@@ -60,48 +60,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alaa Hleihel <alaa@mellanox.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-[ Upstream commit fe1dc069990c1f290ef6b99adb46332c03258f38 ]
+commit 5f9242775bb61f390f0885f23fc16397262c7538 upstream.
 
-CHECKSUM_COMPLETE is not applicable to SCTP protocol.
-Setting it for SCTP packets leads to CRC32c validation failure.
+The syzbot fuzzer found a general protection fault in the HID subsystem:
 
-Fixes: bbceefce9adf ("net/mlx5e: Support RX CHECKSUM_COMPLETE")
-Signed-off-by: Alaa Hleihel <alaa@mellanox.com>
-Reviewed-by: Or Gerlitz <ogerlitz@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] SMP KASAN
+CPU: 0 PID: 3715 Comm: syz-executor.3 Not tainted 5.2.0-rc6+ #15
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+Google 01/01/2011
+RIP: 0010:__pm_runtime_resume+0x49/0x180 drivers/base/power/runtime.c:1069
+Code: ed 74 d5 fe 45 85 ed 0f 85 9a 00 00 00 e8 6f 73 d5 fe 48 8d bd c1 02
+00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 48
+89 fa 83 e2 07 38 d0 7f 08 84 c0 0f 85 fe 00 00 00
+RSP: 0018:ffff8881d99d78e0 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000000000020 RCX: ffffc90003f3f000
+RDX: 0000000416d8686d RSI: ffffffff82676841 RDI: 00000020b6c3436a
+RBP: 00000020b6c340a9 R08: ffff8881c6d64800 R09: fffffbfff0e84c25
+R10: ffff8881d99d7940 R11: ffffffff87426127 R12: 0000000000000004
+R13: 0000000000000000 R14: ffff8881d9b94000 R15: ffffffff897f9048
+FS:  00007f047f542700(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b30f21000 CR3: 00000001ca032000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  pm_runtime_get_sync include/linux/pm_runtime.h:226 [inline]
+  usb_autopm_get_interface+0x1b/0x50 drivers/usb/core/driver.c:1707
+  usbhid_power+0x7c/0xe0 drivers/hid/usbhid/hid-core.c:1234
+  hid_hw_power include/linux/hid.h:1038 [inline]
+  hidraw_open+0x20d/0x740 drivers/hid/hidraw.c:282
+  chrdev_open+0x219/0x5c0 fs/char_dev.c:413
+  do_dentry_open+0x497/0x1040 fs/open.c:778
+  do_last fs/namei.c:3416 [inline]
+  path_openat+0x1430/0x3ff0 fs/namei.c:3533
+  do_filp_open+0x1a1/0x280 fs/namei.c:3563
+  do_sys_open+0x3c0/0x580 fs/open.c:1070
+  do_syscall_64+0xb7/0x560 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+It turns out the fault was caused by a bug in the HID Logitech driver,
+which violates the requirement that every pathway calling
+hid_hw_start() must also call hid_hw_stop().  This patch fixes the bug
+by making sure the requirement is met.
+
+Reported-and-tested-by: syzbot+3cbe5cd105d2ad56a1df@syzkaller.appspotmail.com
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: <stable@vger.kernel.org>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mellanox/mlx5/core/en_rx.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
-@@ -725,6 +725,14 @@ static u32 mlx5e_get_fcs(const struct sk
- 	return __get_unaligned_cpu32(fcs_bytes);
+---
+ drivers/hid/hid-lg.c    |   10 ++++++----
+ drivers/hid/hid-lg4ff.c |    1 -
+ 2 files changed, 6 insertions(+), 5 deletions(-)
+
+--- a/drivers/hid/hid-lg.c
++++ b/drivers/hid/hid-lg.c
+@@ -763,7 +763,7 @@ static int lg_probe(struct hid_device *h
+ 
+ 		if (!buf) {
+ 			ret = -ENOMEM;
+-			goto err_free;
++			goto err_stop;
+ 		}
+ 
+ 		ret = hid_hw_raw_request(hdev, buf[0], buf, sizeof(cbuf),
+@@ -795,9 +795,12 @@ static int lg_probe(struct hid_device *h
+ 		ret = lg4ff_init(hdev);
+ 
+ 	if (ret)
+-		goto err_free;
++		goto err_stop;
+ 
+ 	return 0;
++
++err_stop:
++	hid_hw_stop(hdev);
+ err_free:
+ 	kfree(drv_data);
+ 	return ret;
+@@ -808,8 +811,7 @@ static void lg_remove(struct hid_device
+ 	struct lg_drv_data *drv_data = hid_get_drvdata(hdev);
+ 	if (drv_data->quirks & LG_FF4)
+ 		lg4ff_deinit(hdev);
+-	else
+-		hid_hw_stop(hdev);
++	hid_hw_stop(hdev);
+ 	kfree(drv_data);
  }
  
-+static u8 get_ip_proto(struct sk_buff *skb, __be16 proto)
-+{
-+	void *ip_p = skb->data + sizeof(struct ethhdr);
-+
-+	return (proto == htons(ETH_P_IP)) ? ((struct iphdr *)ip_p)->protocol :
-+					    ((struct ipv6hdr *)ip_p)->nexthdr;
-+}
-+
- #define short_frame(size) ((size) <= ETH_ZLEN + ETH_FCS_LEN)
+--- a/drivers/hid/hid-lg4ff.c
++++ b/drivers/hid/hid-lg4ff.c
+@@ -1483,7 +1483,6 @@ int lg4ff_deinit(struct hid_device *hid)
+ 		}
+ 	}
+ #endif
+-	hid_hw_stop(hid);
+ 	drv_data->device_props = NULL;
  
- static inline void mlx5e_handle_csum(struct net_device *netdev,
-@@ -758,6 +766,9 @@ static inline void mlx5e_handle_csum(str
- 		goto csum_unnecessary;
- 
- 	if (likely(is_last_ethertype_ip(skb, &network_depth, &proto))) {
-+		if (unlikely(get_ip_proto(skb, proto) == IPPROTO_SCTP))
-+			goto csum_unnecessary;
-+
- 		skb->ip_summed = CHECKSUM_COMPLETE;
- 		skb->csum = csum_unfold((__force __sum16)cqe->check_sum);
- 		if (network_depth > ETH_HLEN)
+ 	kfree(entry);
 
 
