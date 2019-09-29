@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DCEC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D79C7C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C0D6218DE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3B3121882
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:42:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778937;
-	bh=2r8AeKYGjMupGol4CtMYkDcX41Wu5e//UTgfixnBy/0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hT68C0y6H07jPfTaJioym/503IkKu2t/EvBFrNHIipgb7gefzn6s3evEa7Im5CZQz
-	 Q4YJZRXB4REkfhoDfdE99s+M+2pqePOOMpt1QgRoECU4EA5L/uQOEJDL47kZ0+J7Sv
-	 xQ7dYmH+a4LeHCJUL2jt8nUYBTJATEbcXiiyYJr4=
+	s=default; t=1569778942;
+	bh=9RTI3BxKAQ8c6bSqWTjG3ttwscWdlooxdIEWTE/1ib4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=lhwbWPJMHvkQhUlTqSYNDRYT93ikqGZDXtBg/Abbd6fyO1bKdP4thWILeeeNOLgsi
+	 KL6h1UY8lCaXjvzmKz/0X5dhnlVLxOMdk/hRQoOn9Ldy8GaHpEqVMZY8Q07/WZy4VO
+	 uB3u5e+0ghtuNNmipkIJjuNFO8VUV+fnGKZXf0N8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730675AbfI2RmP (ORCPT
+        id S1729866AbfI2Rcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:42:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44100 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:32:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729907AbfI2Rc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:32:58 -0400
+        id S1729044AbfI2Rcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:32:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1AFB21925;
-        Sun, 29 Sep 2019 17:32:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 434722086A;
+        Sun, 29 Sep 2019 17:32:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778378;
-        bh=2r8AeKYGjMupGol4CtMYkDcX41Wu5e//UTgfixnBy/0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vILg1d17/hr6ZulH1pedIQ4z6yzhEf4QkjWlqIVLx0fP3qVoX/7UK6dxu2fxYP//N
-         n2UAn17kQdJB2k8o5lzBYm2snGQZ+HKpJsHEcPiO4bBvM9tseTAiFWFF5VkK4OOZib
-         XvhezmWJi36wRl3V6dDOuo6IsHxiDpe+pj7QBfJw=
+        s=default; t=1569778366;
+        bh=9RTI3BxKAQ8c6bSqWTjG3ttwscWdlooxdIEWTE/1ib4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=iEAR/hOut5suQfyemYkRGkiIyv0lx9136nBylWqKLL+remdxmoeewgoHPqnw7KwLQ
+         xR9P/fq0AyUU451vFkHarPKNRq3YDfcYt0HuM9+Z6E60PjELqJ9sgfzrPs54rRcFud
+         hNVXTslDNwT1/JP6T69Bhb1xEk7B4Brf+P9Il1+E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 06/42] mfd: intel-lpss: Remove D3cold delay
-Date:   Sun, 29 Sep 2019 13:32:05 -0400
-Message-Id: <20190929173244.8918-6-sashal@kernel.org>
+Cc:     Zhou Yanjie <zhouyanjie@zoho.com>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        ralf@linux-mips.org, paul@crapouillou.net, jhogan@kernel.org,
+        malat@debian.org, gregkh@linuxfoundation.org, tglx@linutronix.de,
+        allison@lohutok.net, syq@debian.org, chenhc@lemote.com,
+        jiaxun.yang@flygoat.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 01/42] MIPS: Ingenic: Disable broken BTB lookup optimization.
+Date:   Sun, 29 Sep 2019 13:32:00 -0400
+Message-Id: <20190929173244.8918-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190929173244.8918-1-sashal@kernel.org>
-References: <20190929173244.8918-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,45 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Zhou Yanjie <zhouyanjie@zoho.com>
 
-[ Upstream commit 76380a607ba0b28627c9b4b55cd47a079a59624b ]
+[ Upstream commit 053951dda71ecb4b554a2cdbe26f5f6f9bee9dd2 ]
 
-Goodix touchpad may drop its first couple input events when
-i2c-designware-platdrv and intel-lpss it connects to took too long to
-runtime resume from runtime suspended state.
+In order to further reduce power consumption, the XBurst core
+by default attempts to avoid branch target buffer lookups by
+detecting & special casing loops. This feature will cause
+BogoMIPS and lpj calculate in error. Set cp0 config7 bit 4 to
+disable this feature.
 
-This issue happens becuase the touchpad has a rather small buffer to
-store up to 13 input events, so if the host doesn't read those events in
-time (i.e. runtime resume takes too long), events are dropped from the
-touchpad's buffer.
-
-The bottleneck is D3cold delay it waits when transitioning from D3cold
-to D0, hence remove the delay to make the resume faster. I've tested
-some systems with intel-lpss and haven't seen any regression.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202683
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: ralf@linux-mips.org
+Cc: paul@crapouillou.net
+Cc: jhogan@kernel.org
+Cc: malat@debian.org
+Cc: gregkh@linuxfoundation.org
+Cc: tglx@linutronix.de
+Cc: allison@lohutok.net
+Cc: syq@debian.org
+Cc: chenhc@lemote.com
+Cc: jiaxun.yang@flygoat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/intel-lpss-pci.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/mips/include/asm/mipsregs.h | 4 ++++
+ arch/mips/kernel/cpu-probe.c     | 7 +++++++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
-index aed2c04479663..3c271b14e7c6c 100644
---- a/drivers/mfd/intel-lpss-pci.c
-+++ b/drivers/mfd/intel-lpss-pci.c
-@@ -35,6 +35,8 @@ static int intel_lpss_pci_probe(struct pci_dev *pdev,
- 	info->mem = &pdev->resource[0];
- 	info->irq = pdev->irq;
+diff --git a/arch/mips/include/asm/mipsregs.h b/arch/mips/include/asm/mipsregs.h
+index 1e6966e8527e9..bdbdc19a2b8f8 100644
+--- a/arch/mips/include/asm/mipsregs.h
++++ b/arch/mips/include/asm/mipsregs.h
+@@ -689,6 +689,9 @@
+ #define MIPS_CONF7_IAR		(_ULCAST_(1) << 10)
+ #define MIPS_CONF7_AR		(_ULCAST_(1) << 16)
  
-+	pdev->d3cold_delay = 0;
++/* Ingenic Config7 bits */
++#define MIPS_CONF7_BTB_LOOP_EN	(_ULCAST_(1) << 4)
 +
- 	/* Probably it is enough to set this for iDMA capable devices only */
- 	pci_set_master(pdev);
- 	pci_try_set_mwi(pdev);
+ /* Config7 Bits specific to MIPS Technologies. */
+ 
+ /* Performance counters implemented Per TC */
+@@ -2813,6 +2816,7 @@ __BUILD_SET_C0(status)
+ __BUILD_SET_C0(cause)
+ __BUILD_SET_C0(config)
+ __BUILD_SET_C0(config5)
++__BUILD_SET_C0(config7)
+ __BUILD_SET_C0(intcontrol)
+ __BUILD_SET_C0(intctl)
+ __BUILD_SET_C0(srsmap)
+diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
+index 9635c1db3ae6a..e654ffc1c8a0d 100644
+--- a/arch/mips/kernel/cpu-probe.c
++++ b/arch/mips/kernel/cpu-probe.c
+@@ -1964,6 +1964,13 @@ static inline void cpu_probe_ingenic(struct cpuinfo_mips *c, unsigned int cpu)
+ 		c->cputype = CPU_JZRISC;
+ 		c->writecombine = _CACHE_UNCACHED_ACCELERATED;
+ 		__cpu_name[cpu] = "Ingenic JZRISC";
++		/*
++		 * The XBurst core by default attempts to avoid branch target
++		 * buffer lookups by detecting & special casing loops. This
++		 * feature will cause BogoMIPS and lpj calculate in error.
++		 * Set cp0 config7 bit 4 to disable this feature.
++		 */
++		set_c0_config7(MIPS_CONF7_BTB_LOOP_EN);
+ 		break;
+ 	default:
+ 		panic("Unknown Ingenic Processor ID!");
 -- 
 2.20.1
 
