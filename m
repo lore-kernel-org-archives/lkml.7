@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E560C32793
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDDCC352A9
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29D5E21906
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA24221906
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:31:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778299;
-	bh=PxSi+cTwfa9Lu6cGhKDYSq72x622R/OQZffxCTUfG8I=;
+	s=default; t=1569778301;
+	bh=WpjyyY71nhJF7zkpi9tYH3ElZc5ciQj8cn5tx4hB88s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LS4r4weujHYlQ0a9vKkAEiI9J+iccV6m4pd+2PgJ1KQQcZKbCJ7WAD7t3PvGr39ze
-	 QptNK7geO+mao4mEqRQmzgcZPYY/ExlumSqDrkfs52qIyX21wMe6qvwUhpN50R56qQ
-	 rKAkKDhCiK/Zydid9+OiQYoT/zRcyNwC5TwxZK6M=
+	b=yr7CnfSH//yuDjsMCj3VHBd5xKR6vxTqct1GzSsq9lYmx2DoY6HZaCaN+PURw/sJy
+	 puQyxY2euJ5TRGqcyQRxn29tbvBipffZfjvkH8i20QLU4BEZ+VRhzV+edF/cUoDwl9
+	 pwcJW4xKSzW1HAsbdgFcyPs5IkuUXYVXy+j5+62A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729370AbfI2Rbi (ORCPT
+        id S1729391AbfI2Rbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:31:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41992 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:31:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729332AbfI2Rbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:31:34 -0400
+        id S1729332AbfI2Rbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:31:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3363721D71;
-        Sun, 29 Sep 2019 17:31:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 069B121835;
+        Sun, 29 Sep 2019 17:31:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778293;
-        bh=PxSi+cTwfa9Lu6cGhKDYSq72x622R/OQZffxCTUfG8I=;
+        s=default; t=1569778298;
+        bh=WpjyyY71nhJF7zkpi9tYH3ElZc5ciQj8cn5tx4hB88s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GzNPtvifzVdeKa4ZCO3lykb2oPF485QCpxRmr0wrLE7sb0nBCfvEdgOS91SM0jqR0
-         g6TZtEE9gtUpoUCsHXzauwNkQwjBRngPD/eDFMgOwZSUePA5Zhqfqtsdv81ZmiTQcm
-         XOux3iuDQb4LzFvFIGwKG6v3PCkWdGLM5esnXaUc=
+        b=Qws6js7e7TagCJnRoBoFwSekyn7vvVUF6FxmCB1KpKlx/mlvPUw7pM+65ojiLNyWX
+         OnyQyQrwyyGiALjYMSDkvoFGacgcUhSfrXqtPKXXqWwb2tq0KNF0BCetNXlXdWhmOE
+         D3zT2ilc7IBs9vWEsph/Xe/5xTs5+3+gaDHRTTy0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Minghuan Lian <Minghuan.Lian@nxp.com>,
-        Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 17/49] PCI: mobiveil: Fix the CPU base address setup in inbound window
-Date:   Sun, 29 Sep 2019 13:30:17 -0400
-Message-Id: <20190929173053.8400-17-sashal@kernel.org>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, john@phrozen.org, kishon@ti.com,
+        ralf@linux-mips.org, robh+dt@kernel.org, hauke@hauke-m.de,
+        mark.rutland@arm.com, ms@dev.tdt.de,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 19/49] MIPS: lantiq: update the clock alias' for the mainline PCIe PHY driver
+Date:   Sun, 29 Sep 2019 13:30:19 -0400
+Message-Id: <20190929173053.8400-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173053.8400-1-sashal@kernel.org>
 References: <20190929173053.8400-1-sashal@kernel.org>
@@ -61,73 +62,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit df901c85cc28b538c62f6bc20b16a8bd05fcb756 ]
+[ Upstream commit ed90302be64a53d9031c8ce05428c358b16a5d96 ]
 
-Current code erroneously sets-up the CPU base address through the
-parameter 'pci_addr', which is passed to initialize the CPU (AXI) base
-address of the inbound window where the controller maps the PCI address
-space into CPU physical address space; furthermore, it also truncates it
-by programming only the lower 32-bit value into the inbound CPU address
-register.
+The mainline PCIe PHY driver has it's own devicetree node. Update the
+clock alias so the mainline driver finds the clocks.
 
-Fix both issues by introducing a new parameter 'u64 cpu_addr' to
-initialize both lower 32-bit and upper 32-bit of the CPU physical
-base address mapping PCI inbound transactions into CPU (AXI) ones.
+The first PCIe PHY is located at 0x1f106800 and exists on VRX200, ARX300
+and GRX390.
+The second PCIe PHY is located at 0x1f700400 and exists on ARX300 and
+GRX390.
+The third PCIe PHY is located at 0x1f106a00 and exists onl on GRX390.
+Lantiq's board support package (called "UGW") names these registers
+"PDI".
 
-Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: john@phrozen.org
+Cc: kishon@ti.com
+Cc: ralf@linux-mips.org
+Cc: robh+dt@kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: hauke@hauke-m.de
+Cc: mark.rutland@arm.com
+Cc: ms@dev.tdt.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pcie-mobiveil.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ arch/mips/lantiq/xway/sysctrl.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-index 672e633601c78..a45a6447b01d9 100644
---- a/drivers/pci/controller/pcie-mobiveil.c
-+++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -88,6 +88,7 @@
- #define  AMAP_CTRL_TYPE_MASK		3
+diff --git a/arch/mips/lantiq/xway/sysctrl.c b/arch/mips/lantiq/xway/sysctrl.c
+index b4323b2214e20..156a95ac5c725 100644
+--- a/arch/mips/lantiq/xway/sysctrl.c
++++ b/arch/mips/lantiq/xway/sysctrl.c
+@@ -468,14 +468,14 @@ void __init ltq_soc_init(void)
+ 		clkdev_add_pmu("1f203018.usb2-phy", "phy", 1, 2, PMU_ANALOG_USB0_P);
+ 		clkdev_add_pmu("1f203034.usb2-phy", "phy", 1, 2, PMU_ANALOG_USB1_P);
+ 		/* rc 0 */
+-		clkdev_add_pmu("1d900000.pcie", "phy", 1, 2, PMU_ANALOG_PCIE0_P);
++		clkdev_add_pmu("1f106800.phy", "phy", 1, 2, PMU_ANALOG_PCIE0_P);
+ 		clkdev_add_pmu("1d900000.pcie", "msi", 1, 1, PMU1_PCIE_MSI);
+-		clkdev_add_pmu("1d900000.pcie", "pdi", 1, 1, PMU1_PCIE_PDI);
++		clkdev_add_pmu("1f106800.phy", "pdi", 1, 1, PMU1_PCIE_PDI);
+ 		clkdev_add_pmu("1d900000.pcie", "ctl", 1, 1, PMU1_PCIE_CTL);
+ 		/* rc 1 */
+-		clkdev_add_pmu("19000000.pcie", "phy", 1, 2, PMU_ANALOG_PCIE1_P);
++		clkdev_add_pmu("1f700400.phy", "phy", 1, 2, PMU_ANALOG_PCIE1_P);
+ 		clkdev_add_pmu("19000000.pcie", "msi", 1, 1, PMU1_PCIE1_MSI);
+-		clkdev_add_pmu("19000000.pcie", "pdi", 1, 1, PMU1_PCIE1_PDI);
++		clkdev_add_pmu("1f700400.phy", "pdi", 1, 1, PMU1_PCIE1_PDI);
+ 		clkdev_add_pmu("19000000.pcie", "ctl", 1, 1, PMU1_PCIE1_CTL);
+ 	}
  
- #define PAB_EXT_PEX_AMAP_SIZEN(win)	PAB_EXT_REG_ADDR(0xbef0, win)
-+#define PAB_EXT_PEX_AMAP_AXI_WIN(win)	PAB_EXT_REG_ADDR(0xb4a0, win)
- #define PAB_PEX_AMAP_AXI_WIN(win)	PAB_REG_ADDR(0x4ba4, win)
- #define PAB_PEX_AMAP_PEX_WIN_L(win)	PAB_REG_ADDR(0x4ba8, win)
- #define PAB_PEX_AMAP_PEX_WIN_H(win)	PAB_REG_ADDR(0x4bac, win)
-@@ -462,7 +463,7 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
- }
+@@ -499,9 +499,9 @@ void __init ltq_soc_init(void)
+ 		clkdev_add_pmu("1e101000.usb", "otg", 1, 0, PMU_USB0);
+ 		clkdev_add_pmu("1e106000.usb", "otg", 1, 0, PMU_USB1);
+ 		/* rc 2 */
+-		clkdev_add_pmu("1a800000.pcie", "phy", 1, 2, PMU_ANALOG_PCIE2_P);
++		clkdev_add_pmu("1f106a00.pcie", "phy", 1, 2, PMU_ANALOG_PCIE2_P);
+ 		clkdev_add_pmu("1a800000.pcie", "msi", 1, 1, PMU1_PCIE2_MSI);
+-		clkdev_add_pmu("1a800000.pcie", "pdi", 1, 1, PMU1_PCIE2_PDI);
++		clkdev_add_pmu("1f106a00.pcie", "pdi", 1, 1, PMU1_PCIE2_PDI);
+ 		clkdev_add_pmu("1a800000.pcie", "ctl", 1, 1, PMU1_PCIE2_CTL);
+ 		clkdev_add_pmu("1e10b308.eth", NULL, 0, 0, PMU_SWITCH | PMU_PPE_DP);
+ 		clkdev_add_pmu("1da00000.usif", "NULL", 1, 0, PMU_USIF);
+@@ -526,10 +526,10 @@ void __init ltq_soc_init(void)
+ 		clkdev_add_pmu("1e101000.usb", "otg", 1, 0, PMU_USB0 | PMU_AHBM);
+ 		clkdev_add_pmu("1f203034.usb2-phy", "phy", 1, 0, PMU_USB1_P);
+ 		clkdev_add_pmu("1e106000.usb", "otg", 1, 0, PMU_USB1 | PMU_AHBM);
+-		clkdev_add_pmu("1d900000.pcie", "phy", 1, 1, PMU1_PCIE_PHY);
++		clkdev_add_pmu("1f106800.phy", "phy", 1, 1, PMU1_PCIE_PHY);
+ 		clkdev_add_pmu("1d900000.pcie", "bus", 1, 0, PMU_PCIE_CLK);
+ 		clkdev_add_pmu("1d900000.pcie", "msi", 1, 1, PMU1_PCIE_MSI);
+-		clkdev_add_pmu("1d900000.pcie", "pdi", 1, 1, PMU1_PCIE_PDI);
++		clkdev_add_pmu("1f106800.phy", "pdi", 1, 1, PMU1_PCIE_PDI);
+ 		clkdev_add_pmu("1d900000.pcie", "ctl", 1, 1, PMU1_PCIE_CTL);
+ 		clkdev_add_pmu(NULL, "ahb", 1, 0, PMU_AHBM | PMU_AHBS);
  
- static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
--			       u64 pci_addr, u32 type, u64 size)
-+			       u64 cpu_addr, u64 pci_addr, u32 type, u64 size)
- {
- 	u32 value;
- 	u64 size64 = ~(size - 1);
-@@ -482,7 +483,10 @@ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
- 	csr_writel(pcie, upper_32_bits(size64),
- 		   PAB_EXT_PEX_AMAP_SIZEN(win_num));
- 
--	csr_writel(pcie, pci_addr, PAB_PEX_AMAP_AXI_WIN(win_num));
-+	csr_writel(pcie, lower_32_bits(cpu_addr),
-+		   PAB_PEX_AMAP_AXI_WIN(win_num));
-+	csr_writel(pcie, upper_32_bits(cpu_addr),
-+		   PAB_EXT_PEX_AMAP_AXI_WIN(win_num));
- 
- 	csr_writel(pcie, lower_32_bits(pci_addr),
- 		   PAB_PEX_AMAP_PEX_WIN_L(win_num));
-@@ -624,7 +628,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
- 			   CFG_WINDOW_TYPE, resource_size(pcie->ob_io_res));
- 
- 	/* memory inbound translation window */
--	program_ib_windows(pcie, WIN_NUM_0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
-+	program_ib_windows(pcie, WIN_NUM_0, 0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
- 
- 	/* Get the I/O and memory ranges from DT */
- 	resource_list_for_each_entry(win, &pcie->resources) {
 -- 
 2.20.1
 
