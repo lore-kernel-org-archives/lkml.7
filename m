@@ -2,52 +2,54 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B65E2C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D19C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82DD821882
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEE882082F
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:58:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569765512;
-	bh=KcT1AO6aASVQMvdJ3FAS42K0zGTJvtZ+7xmRiqmMuJA=;
+	s=default; t=1569765514;
+	bh=VKgeM9sNxxdUBkK3MBTRqUHENPhdRXiHCCA163TOKcI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u9p3zNOpv21aYD7R78x2y9QRfsSNGOIEocxey+zUYBwoCUiP771pnxUuvOBNW+Fja
-	 pWa5oELQk1yEOukmSW2gRKwnhZUSe9OOFG+IHbEMrNllwOYmbyf6o4cUDMVbYW6JPX
-	 uTnOxDA//psRqokFFl23Jo44m4vYrbuVLuhiAOaU=
+	b=1Y0oDa/MhdQZeMPQKBnvHiG2yuazMj34ReAFWPwmLU7qPv9gbuTGqfRmdpxKhWfmw
+	 MyTXmZqi8A4uLwxnTzqyd1TXwfVaLrcda9ApsiqkSo0rxp3IRMqCgHHtlR0ZKv1hgk
+	 N46esE4BHGBErIPrztALeQoeWkqCTYa9Su76cvOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729516AbfI2N6c (ORCPT
+        id S1729529AbfI2N6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 09:58:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39198 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 09:58:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729503AbfI2N6a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 09:58:30 -0400
+        id S1729503AbfI2N6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 09:58:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C18B21835;
-        Sun, 29 Sep 2019 13:58:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F2532082F;
+        Sun, 29 Sep 2019 13:58:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569765509;
-        bh=KcT1AO6aASVQMvdJ3FAS42K0zGTJvtZ+7xmRiqmMuJA=;
+        s=default; t=1569765512;
+        bh=VKgeM9sNxxdUBkK3MBTRqUHENPhdRXiHCCA163TOKcI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KiHYQXJ/hCoN1hXbU5qYhtXuQ6bk7z8DeEP/TB5iLy6dZKhbPZteijZuZzecSoheF
-         PKCARy7KhNy2cAslwrcTViSInCHKHGsXxzz9eaVywR/tCQSZHFE9SOOcHD7ebS1lMH
-         FmcWN/vq1h/p8NxyGLVf28JSJCKntkQQpU4JjvA4=
+        b=zelsdYiRwiaYMGUf3ZvItdMTdwfHXfNtFnqVpowoW5eUbMljPQwiKj77oilhfqPIV
+         68oJc43eH/s0r7k4DdV/aZrEWWWXbKZRe9Tooq6gAgTHQ78ZdaWOr4hAl+dAkLzDcT
+         Wzpa5M8f6DYA5bviCNsiTKVbVR9pce1v4lGdRP8s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Natali Shechtman <natali@mellanox.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.19 15/63] net/mlx5e: Set ECN for received packets using CQE indication
-Date:   Sun, 29 Sep 2019 15:53:48 +0200
-Message-Id: <20190929135034.757504729@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 34/63] pinctrl: sprd: Use define directive for sprd_pinconf_params values
+Date:   Sun, 29 Sep 2019 15:54:07 +0200
+Message-Id: <20190929135038.255017606@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190929135031.382429403@linuxfoundation.org>
 References: <20190929135031.382429403@linuxfoundation.org>
@@ -60,158 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Natali Shechtman <natali@mellanox.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit f007c13d4ad62f494c83897eda96437005df4a91 ]
+[ Upstream commit 957063c924736d4341e5d588757b9f31e8f6fa24 ]
 
-In multi-host (MH) NIC scheme, a single HW port serves multiple hosts
-or sockets on the same host.
-The HW uses a mechanism in the PCIe buffer which monitors
-the amount of consumed PCIe buffers per host.
-On a certain configuration, under congestion,
-the HW emulates a switch doing ECN marking on packets using ECN
-indication on the completion descriptor (CQE).
+Clang warns when one enumerated type is implicitly converted to another:
 
-The driver needs to set the ECN bits on the packet SKB,
-such that the network stack can react on that, this commit does that.
+drivers/pinctrl/sprd/pinctrl-sprd.c:845:19: warning: implicit conversion
+from enumeration type 'enum sprd_pinconf_params' to different
+enumeration type 'enum pin_config_param' [-Wenum-conversion]
+        {"sprd,control", SPRD_PIN_CONFIG_CONTROL, 0},
+        ~                ^~~~~~~~~~~~~~~~~~~~~~~
+drivers/pinctrl/sprd/pinctrl-sprd.c:846:22: warning: implicit conversion
+from enumeration type 'enum sprd_pinconf_params' to different
+enumeration type 'enum pin_config_param' [-Wenum-conversion]
+        {"sprd,sleep-mode", SPRD_PIN_CONFIG_SLEEP_MODE, 0},
+        ~                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Needed by downstream patch which fixes a mlx5 checksum issue.
+It is expected that pinctrl drivers can extend pin_config_param because
+of the gap between PIN_CONFIG_END and PIN_CONFIG_MAX so this conversion
+isn't an issue. Most drivers that take advantage of this define the
+PIN_CONFIG variables as constants, rather than enumerated values. Do the
+same thing here so that Clang no longer warns.
 
-Fixes: bbceefce9adf ("net/mlx5e: Support RX CHECKSUM_COMPLETE")
-Signed-off-by: Natali Shechtman <natali@mellanox.com>
-Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://github.com/ClangBuiltLinux/linux/issues/138
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_rx.c    |   35 ++++++++++++++++++---
- drivers/net/ethernet/mellanox/mlx5/core/en_stats.c |    3 +
- drivers/net/ethernet/mellanox/mlx5/core/en_stats.h |    2 +
- 3 files changed, 35 insertions(+), 5 deletions(-)
+ drivers/pinctrl/sprd/pinctrl-sprd.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
-@@ -37,6 +37,7 @@
- #include <net/busy_poll.h>
- #include <net/ip6_checksum.h>
- #include <net/page_pool.h>
-+#include <net/inet_ecn.h>
- #include "en.h"
- #include "en_tc.h"
- #include "eswitch.h"
-@@ -688,12 +689,29 @@ static inline void mlx5e_skb_set_hash(st
- 	skb_set_hash(skb, be32_to_cpu(cqe->rss_hash_result), ht);
- }
+diff --git a/drivers/pinctrl/sprd/pinctrl-sprd.c b/drivers/pinctrl/sprd/pinctrl-sprd.c
+index 78c2f548b25f1..8f3468d9f848d 100644
+--- a/drivers/pinctrl/sprd/pinctrl-sprd.c
++++ b/drivers/pinctrl/sprd/pinctrl-sprd.c
+@@ -159,10 +159,8 @@ struct sprd_pinctrl {
+ 	struct sprd_pinctrl_soc_info *info;
+ };
  
--static inline bool is_last_ethertype_ip(struct sk_buff *skb, int *network_depth)
-+static inline bool is_last_ethertype_ip(struct sk_buff *skb, int *network_depth,
-+					__be16 *proto)
- {
--	__be16 ethertype = ((struct ethhdr *)skb->data)->h_proto;
-+	*proto = ((struct ethhdr *)skb->data)->h_proto;
-+	*proto = __vlan_get_protocol(skb, *proto, network_depth);
-+	return (*proto == htons(ETH_P_IP) || *proto == htons(ETH_P_IPV6));
-+}
-+
-+static inline void mlx5e_enable_ecn(struct mlx5e_rq *rq, struct sk_buff *skb)
-+{
-+	int network_depth = 0;
-+	__be16 proto;
-+	void *ip;
-+	int rc;
+-enum sprd_pinconf_params {
+-	SPRD_PIN_CONFIG_CONTROL = PIN_CONFIG_END + 1,
+-	SPRD_PIN_CONFIG_SLEEP_MODE = PIN_CONFIG_END + 2,
+-};
++#define SPRD_PIN_CONFIG_CONTROL		(PIN_CONFIG_END + 1)
++#define SPRD_PIN_CONFIG_SLEEP_MODE	(PIN_CONFIG_END + 2)
  
--	ethertype = __vlan_get_protocol(skb, ethertype, network_depth);
--	return (ethertype == htons(ETH_P_IP) || ethertype == htons(ETH_P_IPV6));
-+	if (unlikely(!is_last_ethertype_ip(skb, &network_depth, &proto)))
-+		return;
-+
-+	ip = skb->data + network_depth;
-+	rc = ((proto == htons(ETH_P_IP)) ? IP_ECN_set_ce((struct iphdr *)ip) :
-+					 IP6_ECN_set_ce(skb, (struct ipv6hdr *)ip));
-+
-+	rq->stats->ecn_mark += !!rc;
- }
- 
- static u32 mlx5e_get_fcs(const struct sk_buff *skb)
-@@ -717,6 +735,7 @@ static inline void mlx5e_handle_csum(str
- {
- 	struct mlx5e_rq_stats *stats = rq->stats;
- 	int network_depth = 0;
-+	__be16 proto;
- 
- 	if (unlikely(!(netdev->features & NETIF_F_RXCSUM)))
- 		goto csum_none;
-@@ -738,7 +757,7 @@ static inline void mlx5e_handle_csum(str
- 	if (short_frame(skb->len))
- 		goto csum_unnecessary;
- 
--	if (likely(is_last_ethertype_ip(skb, &network_depth))) {
-+	if (likely(is_last_ethertype_ip(skb, &network_depth, &proto))) {
- 		skb->ip_summed = CHECKSUM_COMPLETE;
- 		skb->csum = csum_unfold((__force __sum16)cqe->check_sum);
- 		if (network_depth > ETH_HLEN)
-@@ -775,6 +794,8 @@ csum_none:
- 	stats->csum_none++;
- }
- 
-+#define MLX5E_CE_BIT_MASK 0x80
-+
- static inline void mlx5e_build_rx_skb(struct mlx5_cqe64 *cqe,
- 				      u32 cqe_bcnt,
- 				      struct mlx5e_rq *rq,
-@@ -819,6 +840,10 @@ static inline void mlx5e_build_rx_skb(st
- 	skb->mark = be32_to_cpu(cqe->sop_drop_qpn) & MLX5E_TC_FLOW_ID_MASK;
- 
- 	mlx5e_handle_csum(netdev, cqe, rq, skb, !!lro_num_seg);
-+	/* checking CE bit in cqe - MSB in ml_path field */
-+	if (unlikely(cqe->ml_path & MLX5E_CE_BIT_MASK))
-+		mlx5e_enable_ecn(rq, skb);
-+
- 	skb->protocol = eth_type_trans(skb, netdev);
- }
- 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
-@@ -53,6 +53,7 @@ static const struct counter_desc sw_stat
- 
- 	{ MLX5E_DECLARE_STAT(struct mlx5e_sw_stats, rx_lro_packets) },
- 	{ MLX5E_DECLARE_STAT(struct mlx5e_sw_stats, rx_lro_bytes) },
-+	{ MLX5E_DECLARE_STAT(struct mlx5e_sw_stats, rx_ecn_mark) },
- 	{ MLX5E_DECLARE_STAT(struct mlx5e_sw_stats, rx_removed_vlan_packets) },
- 	{ MLX5E_DECLARE_STAT(struct mlx5e_sw_stats, rx_csum_unnecessary) },
- 	{ MLX5E_DECLARE_STAT(struct mlx5e_sw_stats, rx_csum_none) },
-@@ -144,6 +145,7 @@ void mlx5e_grp_sw_update_stats(struct ml
- 		s->rx_bytes	+= rq_stats->bytes;
- 		s->rx_lro_packets += rq_stats->lro_packets;
- 		s->rx_lro_bytes	+= rq_stats->lro_bytes;
-+		s->rx_ecn_mark	+= rq_stats->ecn_mark;
- 		s->rx_removed_vlan_packets += rq_stats->removed_vlan_packets;
- 		s->rx_csum_none	+= rq_stats->csum_none;
- 		s->rx_csum_complete += rq_stats->csum_complete;
-@@ -1144,6 +1146,7 @@ static const struct counter_desc rq_stat
- 	{ MLX5E_DECLARE_RX_STAT(struct mlx5e_rq_stats, xdp_redirect) },
- 	{ MLX5E_DECLARE_RX_STAT(struct mlx5e_rq_stats, lro_packets) },
- 	{ MLX5E_DECLARE_RX_STAT(struct mlx5e_rq_stats, lro_bytes) },
-+	{ MLX5E_DECLARE_RX_STAT(struct mlx5e_rq_stats, ecn_mark) },
- 	{ MLX5E_DECLARE_RX_STAT(struct mlx5e_rq_stats, removed_vlan_packets) },
- 	{ MLX5E_DECLARE_RX_STAT(struct mlx5e_rq_stats, wqe_err) },
- 	{ MLX5E_DECLARE_RX_STAT(struct mlx5e_rq_stats, mpwqe_filler_cqes) },
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.h
-@@ -66,6 +66,7 @@ struct mlx5e_sw_stats {
- 	u64 tx_nop;
- 	u64 rx_lro_packets;
- 	u64 rx_lro_bytes;
-+	u64 rx_ecn_mark;
- 	u64 rx_removed_vlan_packets;
- 	u64 rx_csum_unnecessary;
- 	u64 rx_csum_none;
-@@ -184,6 +185,7 @@ struct mlx5e_rq_stats {
- 	u64 csum_none;
- 	u64 lro_packets;
- 	u64 lro_bytes;
-+	u64 ecn_mark;
- 	u64 removed_vlan_packets;
- 	u64 xdp_drop;
- 	u64 xdp_redirect;
+ static int sprd_pinctrl_get_id_by_name(struct sprd_pinctrl *sprd_pctl,
+ 				       const char *name)
+-- 
+2.20.1
+
 
 
