@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C35BDC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A10B0C352A9
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CB1721920
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D19821924
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:59:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569765547;
-	bh=0vs7MKP/u+n+bqQbFXLZ3o3kg6UDGOoJgE5xJnQoLTg=;
+	s=default; t=1569765549;
+	bh=z2cC+n1rIUMVeEHpIOOVVWC99VjcHafZ2tlIc1+zhrs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nCLTakNQpPFbKlwM8lcds1IzhCKbYAcv7ZkJRpD9gskx6YcNYj2Ln8WjzRavuq9Gb
-	 M1fVqxnJt1X58hC6d29R13jVF+6fIurkovu/adhU+QSWFsTalT61h4EhUmlzsVZjq/
-	 xPHicWUbBpLcDW7zHv+w91j++PhfaUhvqCZPVssM=
+	b=H0nFKs1KMQ/tjtBtEdzN6RLcxtoNwv6oVbUfMbMOmp1OBqZSdngzwTChjbH/e824l
+	 +kKXAisV5XwuR9gyr9qTwD0VCJ9UJ7wdNEzDnsd6o/mxboEuaexCdkE/IbLA1/zSgu
+	 i9IymTajm5b4jfe4ooXokibuGKzkULKojFWqkEU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729631AbfI2N7C (ORCPT
+        id S1729657AbfI2N7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 09:59:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39900 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 09:59:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729614AbfI2N65 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 09:58:57 -0400
+        id S1729639AbfI2N7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 09:59:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93A5221835;
-        Sun, 29 Sep 2019 13:58:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 604A8218AC;
+        Sun, 29 Sep 2019 13:59:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569765537;
-        bh=0vs7MKP/u+n+bqQbFXLZ3o3kg6UDGOoJgE5xJnQoLTg=;
+        s=default; t=1569765544;
+        bh=z2cC+n1rIUMVeEHpIOOVVWC99VjcHafZ2tlIc1+zhrs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JNU6ZakcpsH2dzJk1+2pWfdNguUlNMVH4CCJW9tlglnNETM7AMgH0AFAcvH9V0V+0
-         lmAIlJwKCj/NFMxLjULmb72GGjjvYTbizUi0IlXcHc0ZCuRbJIVaLSwr+W1Jly43AC
-         aPA3E+IiWNfkJMhNndhhtXZnFmTWBb00bdih+phc=
+        b=Ppgv2y7r8SkH4B+mZ3wbInEFv1xh7Kui5ADaZ7cW3BL3XY+nAzfQT1f3zT4hddF43
+         UhkX+sD0OL8klwLTtTGAE+S9zLKiui5jpVKSF0WH4nA9MalB7RdX30+Nurinwxl3O1
+         uMwaU1oihCjVGS1HgpH+XbC+9GWXJnta0z9146PI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        zhengbin <zhengbin13@huawei.com>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, David Lechner <david@lechnology.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 49/63] blk-mq: move cancel of requeue_work to the front of blk_exit_queue
-Date:   Sun, 29 Sep 2019 15:54:22 +0200
-Message-Id: <20190929135039.979179041@linuxfoundation.org>
+Subject: [PATCH 4.19 35/63] power: supply: sysfs: ratelimit property read error message
+Date:   Sun, 29 Sep 2019 15:54:08 +0200
+Message-Id: <20190929135038.378746421@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190929135031.382429403@linuxfoundation.org>
 References: <20190929135031.382429403@linuxfoundation.org>
@@ -60,59 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhengbin <zhengbin13@huawei.com>
+From: David Lechner <david@lechnology.com>
 
-[ Upstream commit e26cc08265dda37d2acc8394604f220ef412299d ]
+[ Upstream commit 87a2b65fc855e6be50f791c2ebbb492541896827 ]
 
-blk_exit_queue will free elevator_data, while blk_mq_requeue_work
-will access it. Move cancel of requeue_work to the front of
-blk_exit_queue to avoid use-after-free.
+This adds rate limiting to the message that is printed when reading a
+power supply property via sysfs returns an error. This will prevent
+userspace applications from unintentionally dDOSing the system by
+continuously reading a property that returns an error.
 
-blk_exit_queue                blk_mq_requeue_work
-  __elevator_exit               blk_mq_run_hw_queues
-    blk_mq_exit_sched             blk_mq_run_hw_queue
-      dd_exit_queue                 blk_mq_hctx_has_pending
-        kfree(elevator_data)          blk_mq_sched_has_work
-                                        dd_has_work
-
-Fixes: fbc2a15e3433 ("blk-mq: move cancel of requeue_work into blk_mq_release")
-Cc: stable@vger.kernel.org
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: zhengbin <zhengbin13@huawei.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: David Lechner <david@lechnology.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-mq.c    | 2 --
- block/blk-sysfs.c | 3 +++
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ drivers/power/supply/power_supply_sysfs.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 9dfafee65bce2..7ea85ec52026e 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -2461,8 +2461,6 @@ void blk_mq_release(struct request_queue *q)
- 	struct blk_mq_hw_ctx *hctx;
- 	unsigned int i;
- 
--	cancel_delayed_work_sync(&q->requeue_work);
--
- 	/* hctx kobj stays in hctx */
- 	queue_for_each_hw_ctx(q, hctx, i) {
- 		if (!hctx)
-diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
-index 3772671cf2bc5..bab47a17b96f4 100644
---- a/block/blk-sysfs.c
-+++ b/block/blk-sysfs.c
-@@ -836,6 +836,9 @@ static void __blk_release_queue(struct work_struct *work)
- 
- 	blk_free_queue_stats(q->stats);
- 
-+	if (q->mq_ops)
-+		cancel_delayed_work_sync(&q->requeue_work);
-+
- 	blk_exit_rl(q, &q->root_rl);
- 
- 	if (q->queue_tags)
+diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+index 5a2757a7f4088..5358a80d854f9 100644
+--- a/drivers/power/supply/power_supply_sysfs.c
++++ b/drivers/power/supply/power_supply_sysfs.c
+@@ -131,7 +131,8 @@ static ssize_t power_supply_show_property(struct device *dev,
+ 				dev_dbg(dev, "driver has no data for `%s' property\n",
+ 					attr->attr.name);
+ 			else if (ret != -ENODEV && ret != -EAGAIN)
+-				dev_err(dev, "driver failed to report `%s' property: %zd\n",
++				dev_err_ratelimited(dev,
++					"driver failed to report `%s' property: %zd\n",
+ 					attr->attr.name, ret);
+ 			return ret;
+ 		}
 -- 
 2.20.1
 
