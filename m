@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D665C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 589C6C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0024C21882
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25EC221882
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:02:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569765762;
-	bh=2zC0+TUGKe2DUJPprr29ayJRiDT5XGW6PsxWCASiPwA=;
+	s=default; t=1569765766;
+	bh=vB8PEykiLTpJVoylB+3/isI7qp+NEDMc4CvjjxdfpbI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FyfSTbTkQRFQ7715MqWLa1PBkUEhgryg/5Vu3/EY2+GPx2uate9ywTPU3gz2e1XWZ
-	 lt8iCht1tGSjl1KeHy66nXIq2y741mY6m6dGJk+46DKiGkBE6x4zyJU0boeScrVVFY
-	 EjKKKt04Q7zGfjhzMiVcdK5fgneofHQMwJmoX+hQ=
+	b=fojlhNygGAGuOiu4ju4dRNW9P8HfRxizDzTzPswIAAsWWrJB3kwa/rZqChhD0ES96
+	 2OHhVsmz1CYSIserY3W49gak3hI62U1As2Ror4iR4iX/DXRbwJpLw5jLUmcl60UHem
+	 TsBWaWEEQe0tKaDczMu67eZnLfRpXZoPcQRk+4dg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730267AbfI2OCk (ORCPT
+        id S1729730AbfI2OCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 10:02:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45422 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 10:02:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730260AbfI2OCj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 10:02:39 -0400
+        id S1729662AbfI2OCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 10:02:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64AF0218DE;
-        Sun, 29 Sep 2019 14:02:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C36E52082F;
+        Sun, 29 Sep 2019 14:02:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569765758;
-        bh=2zC0+TUGKe2DUJPprr29ayJRiDT5XGW6PsxWCASiPwA=;
+        s=default; t=1569765761;
+        bh=vB8PEykiLTpJVoylB+3/isI7qp+NEDMc4CvjjxdfpbI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t1oHSB9i0V3L2+9omuSma3EtAoozBWZePyZP4y2+D2Gc2VLZxjrRWQXFOIZHuj8wT
-         vR1fcjYrlM3xUoqD7Zveweo1Q43eQ6wpjS3pSylqXeEvEDB/+mGU+eOY3Fmg4oq6sw
-         Ar16bW5Xb7mo28nZ+ppoENtpMqlZi+TWQSa7FZOs=
+        b=v+FEns+uvSzJ3Pc+DP341+uhcgeg0XadkGt5XKlWYj4Sna3HXGHpAwL4gUyzkSef4
+         uyEAa0bxPZbksuZTj3wlwIoi+U240hXA9TfQ4luyDAqRtGClUIRH5/3/3ILGt+3pcc
+         ePpJLIfDJMm6cDgjm+N/NQly5E2U4xuI1PJaaBUM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+8cc27ace5f6972910b31@syzkaller.appspotmail.com,
-        Florian Westphal <fw@strlen.de>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
+        Fernando Fernandez Mancera <ffmancera@riseup.net>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 41/45] xfrm: policy: avoid warning splat when merging nodes
-Date:   Sun, 29 Sep 2019 15:56:09 +0200
-Message-Id: <20190929135033.467279157@linuxfoundation.org>
+Subject: [PATCH 5.2 42/45] netfilter: nft_socket: fix erroneous socket assignment
+Date:   Sun, 29 Sep 2019 15:56:10 +0200
+Message-Id: <20190929135033.655419389@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190929135024.387033930@linuxfoundation.org>
 References: <20190929135024.387033930@linuxfoundation.org>
@@ -62,99 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Fernando Fernandez Mancera <ffmancera@riseup.net>
 
-[ Upstream commit 769a807d0b41df4201dbeb01c22eaeb3e5905532 ]
+[ Upstream commit 039b1f4f24ecc8493b6bb9d70b4b78750d1b35c2 ]
 
-syzbot reported a splat:
- xfrm_policy_inexact_list_reinsert+0x625/0x6e0 net/xfrm/xfrm_policy.c:877
- CPU: 1 PID: 6756 Comm: syz-executor.1 Not tainted 5.3.0-rc2+ #57
- Call Trace:
-  xfrm_policy_inexact_node_reinsert net/xfrm/xfrm_policy.c:922 [inline]
-  xfrm_policy_inexact_node_merge net/xfrm/xfrm_policy.c:958 [inline]
-  xfrm_policy_inexact_insert_node+0x537/0xb50 net/xfrm/xfrm_policy.c:1023
-  xfrm_policy_inexact_alloc_chain+0x62b/0xbd0 net/xfrm/xfrm_policy.c:1139
-  xfrm_policy_inexact_insert+0xe8/0x1540 net/xfrm/xfrm_policy.c:1182
-  xfrm_policy_insert+0xdf/0xce0 net/xfrm/xfrm_policy.c:1574
-  xfrm_add_policy+0x4cf/0x9b0 net/xfrm/xfrm_user.c:1670
-  xfrm_user_rcv_msg+0x46b/0x720 net/xfrm/xfrm_user.c:2676
-  netlink_rcv_skb+0x1f0/0x460 net/netlink/af_netlink.c:2477
-  xfrm_netlink_rcv+0x74/0x90 net/xfrm/xfrm_user.c:2684
-  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-  netlink_unicast+0x809/0x9a0 net/netlink/af_netlink.c:1328
-  netlink_sendmsg+0xa70/0xd30 net/netlink/af_netlink.c:1917
-  sock_sendmsg_nosec net/socket.c:637 [inline]
-  sock_sendmsg net/socket.c:657 [inline]
+The socket assignment is wrong, see skb_orphan():
+When skb->destructor callback is not set, but skb->sk is set, this hits BUG().
 
-There is no reproducer, however, the warning can be reproduced
-by adding rules with ever smaller prefixes.
-
-The sanity check ("does the policy match the node") uses the prefix value
-of the node before its updated to the smaller value.
-
-To fix this, update the prefix earlier.  The bug has no impact on tree
-correctness, this is only to prevent a false warning.
-
-Reported-by: syzbot+8cc27ace5f6972910b31@syzkaller.appspotmail.com
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Link: https://bugzilla.redhat.com/show_bug.cgi?id=1651813
+Fixes: 554ced0a6e29 ("netfilter: nf_tables: add support for native socket matching")
+Signed-off-by: Fernando Fernandez Mancera <ffmancera@riseup.net>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xfrm/xfrm_policy.c                     | 6 ++++--
- tools/testing/selftests/net/xfrm_policy.sh | 7 +++++++
- 2 files changed, 11 insertions(+), 2 deletions(-)
+ net/netfilter/nft_socket.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
-index d5342687fdcaa..7c2fa80b20bdf 100644
---- a/net/xfrm/xfrm_policy.c
-+++ b/net/xfrm/xfrm_policy.c
-@@ -915,6 +915,7 @@ static void xfrm_policy_inexact_node_reinsert(struct net *net,
- 		} else if (delta > 0) {
- 			p = &parent->rb_right;
- 		} else {
-+			bool same_prefixlen = node->prefixlen == n->prefixlen;
- 			struct xfrm_policy *tmp;
- 
- 			hlist_for_each_entry(tmp, &n->hhead, bydst) {
-@@ -922,9 +923,11 @@ static void xfrm_policy_inexact_node_reinsert(struct net *net,
- 				hlist_del_rcu(&tmp->bydst);
- 			}
- 
-+			node->prefixlen = prefixlen;
-+
- 			xfrm_policy_inexact_list_reinsert(net, node, family);
- 
--			if (node->prefixlen == n->prefixlen) {
-+			if (same_prefixlen) {
- 				kfree_rcu(n, rcu);
- 				return;
- 			}
-@@ -932,7 +935,6 @@ static void xfrm_policy_inexact_node_reinsert(struct net *net,
- 			rb_erase(*p, new);
- 			kfree_rcu(n, rcu);
- 			n = node;
--			n->prefixlen = prefixlen;
- 			goto restart;
- 		}
+diff --git a/net/netfilter/nft_socket.c b/net/netfilter/nft_socket.c
+index d7f3776dfd719..637ce3e8c575c 100644
+--- a/net/netfilter/nft_socket.c
++++ b/net/netfilter/nft_socket.c
+@@ -47,9 +47,6 @@ static void nft_socket_eval(const struct nft_expr *expr,
+ 		return;
  	}
-diff --git a/tools/testing/selftests/net/xfrm_policy.sh b/tools/testing/selftests/net/xfrm_policy.sh
-index 5445943bf07f2..7a1bf94c5bd38 100755
---- a/tools/testing/selftests/net/xfrm_policy.sh
-+++ b/tools/testing/selftests/net/xfrm_policy.sh
-@@ -106,6 +106,13 @@ do_overlap()
-     #
-     # 10.0.0.0/24 and 10.0.1.0/24 nodes have been merged as 10.0.0.0/23.
-     ip -net $ns xfrm policy add src 10.1.0.0/24 dst 10.0.0.0/23 dir fwd priority 200 action block
+ 
+-	/* So that subsequent socket matching not to require other lookups. */
+-	skb->sk = sk;
+-
+ 	switch(priv->key) {
+ 	case NFT_SOCKET_TRANSPARENT:
+ 		nft_reg_store8(dest, inet_sk_transparent(sk));
+@@ -66,6 +63,9 @@ static void nft_socket_eval(const struct nft_expr *expr,
+ 		WARN_ON(1);
+ 		regs->verdict.code = NFT_BREAK;
+ 	}
 +
-+    # similar to above: add policies (with partially random address), with shrinking prefixes.
-+    for p in 29 28 27;do
-+      for k in $(seq 1 32); do
-+       ip -net $ns xfrm policy add src 10.253.1.$((RANDOM%255))/$p dst 10.254.1.$((RANDOM%255))/$p dir fwd priority $((200+k)) action block 2>/dev/null
-+      done
-+    done
++	if (sk != skb->sk)
++		sock_gen_put(sk);
  }
  
- do_esp_policy_get_check() {
+ static const struct nla_policy nft_socket_policy[NFTA_SOCKET_MAX + 1] = {
 -- 
 2.20.1
 
