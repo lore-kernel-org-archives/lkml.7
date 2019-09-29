@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CEDC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 991C7C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C86221A4C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F6D621906
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:32:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778324;
-	bh=hAUa0TrWfb4X363IN8Z1okqGk+klZDY+uWc9BkkRJr4=;
+	s=default; t=1569778329;
+	bh=XSU9Lm/zgAzIoiJRp75m3u5Wjh77YFlhrhlEZ9ovvSo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VJuLNgxIxy+Rnm2PAvIVNlmz6W81DDeIEQRumOf7I5dWIN9JXc2JARsbTWlgld738
-	 KF3g40QLMj1i3iwB9jRtSUx6mg5LzXLdSY47L6HfEumgtB6K5zZtgcSViIWWLDdUpz
-	 ZB9e05tlciqkDPPmW8vYTgwgcN8rPX386h4Z4eO8=
+	b=jcxIBqCEmqpAYAqFF+yKrW3uB0LI4Wma8X7GRGRQ2KM/xURIZZyQS0OKflj8zli7t
+	 gPJgCjAgnnfmw6Qdwd5HQFBhtkPbWZq0okKLxwA9Pl4WEYnshY+tPPhZMdEvcdVg82
+	 B6J8ADHvBNRMjCW6buR+VylaPnQCI/xFGIsQfsWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729606AbfI2RcD (ORCPT
+        id S1729656AbfI2RcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:32:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42748 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:32:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729591AbfI2RcC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:32:02 -0400
+        id S1729617AbfI2RcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:32:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 635D121835;
-        Sun, 29 Sep 2019 17:32:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAB192086A;
+        Sun, 29 Sep 2019 17:32:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778322;
-        bh=hAUa0TrWfb4X363IN8Z1okqGk+klZDY+uWc9BkkRJr4=;
+        s=default; t=1569778325;
+        bh=XSU9Lm/zgAzIoiJRp75m3u5Wjh77YFlhrhlEZ9ovvSo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bORbGyy6Jit1WjpnSO/X3N4hEkwfYIRZPJcCuUCcnaU7wL/iO24UkABaluMWOVR7Q
-         9qv9J/uliWXbApLOujsOgRJtrQSbcW5CvzoMSLhmNdF5S7QTwvDSbfCt88zjx3Zl2V
-         Ws5BPbNmDmHVFLV3Tex/3WEWTkKyfDikBBndbH3w=
+        b=WK/iR4qPoprB+qI2NiIEVU7olJh6v3teCDc6Hmj7DEdsjPGEuVkdxaOS888uT5t01
+         xq3RxUueFKtmvsBZ9+gN68Tg/W3qPs7mmb5diDMTN0a8g+Z+deV/GWFgFT+Hpyssh8
+         TUixb+nxJTF82QCGyEWWM2KQIumFcZsV/NK6Q88E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Rapoport <mike.rapoport@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+Cc:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        Jan Stancek <jstancek@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 34/49] ARM: 8903/1: ensure that usable memory in bank 0 starts from a PMD-aligned address
-Date:   Sun, 29 Sep 2019 13:30:34 -0400
-Message-Id: <20190929173053.8400-34-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 37/49] fat: work around race with userspace's read via blockdev while mounting
+Date:   Sun, 29 Sep 2019 13:30:37 -0400
+Message-Id: <20190929173053.8400-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173053.8400-1-sashal@kernel.org>
 References: <20190929173053.8400-1-sashal@kernel.org>
@@ -60,55 +61,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <mike.rapoport@gmail.com>
+From: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
 
-[ Upstream commit 00d2ec1e6bd82c0538e6dd3e4a4040de93ba4fef ]
+[ Upstream commit 07bfa4415ab607e459b69bd86aa7e7602ce10b4f ]
 
-The calculation of memblock_limit in adjust_lowmem_bounds() assumes that
-bank 0 starts from a PMD-aligned address. However, the beginning of the
-first bank may be NOMAP memory and the start of usable memory
-will be not aligned to PMD boundary. In such case the memblock_limit will
-be set to the end of the NOMAP region, which will prevent any memblock
-allocations.
+If userspace reads the buffer via blockdev while mounting,
+sb_getblk()+modify can race with buffer read via blockdev.
 
-Mark the region between the end of the NOMAP area and the next PMD-aligned
-address as NOMAP as well, so that the usable memory will start at
-PMD-aligned address.
+For example,
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+            FS                               userspace
+    bh = sb_getblk()
+    modify bh->b_data
+                                  read
+				    ll_rw_block(bh)
+				      fill bh->b_data by on-disk data
+				      /* lost modified data by FS */
+				      set_buffer_uptodate(bh)
+    set_buffer_uptodate(bh)
+
+Userspace should not use the blockdev while mounting though, the udev
+seems to be already doing this.  Although I think the udev should try to
+avoid this, workaround the race by small overhead.
+
+Link: http://lkml.kernel.org/r/87pnk7l3sw.fsf_-_@mail.parknet.co.jp
+Signed-off-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Reported-by: Jan Stancek <jstancek@redhat.com>
+Tested-by: Jan Stancek <jstancek@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mm/mmu.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ fs/fat/dir.c    | 13 +++++++++++--
+ fs/fat/fatent.c |  3 +++
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
-index d9a0038774a6d..d5e0b908f0bad 100644
---- a/arch/arm/mm/mmu.c
-+++ b/arch/arm/mm/mmu.c
-@@ -1177,6 +1177,22 @@ void __init adjust_lowmem_bounds(void)
- 	 */
- 	vmalloc_limit = (u64)(uintptr_t)vmalloc_min - PAGE_OFFSET + PHYS_OFFSET;
+diff --git a/fs/fat/dir.c b/fs/fat/dir.c
+index 1bda2ab6745ba..814ad2c2ba808 100644
+--- a/fs/fat/dir.c
++++ b/fs/fat/dir.c
+@@ -1100,8 +1100,11 @@ static int fat_zeroed_cluster(struct inode *dir, sector_t blknr, int nr_used,
+ 			err = -ENOMEM;
+ 			goto error;
+ 		}
++		/* Avoid race with userspace read via bdev */
++		lock_buffer(bhs[n]);
+ 		memset(bhs[n]->b_data, 0, sb->s_blocksize);
+ 		set_buffer_uptodate(bhs[n]);
++		unlock_buffer(bhs[n]);
+ 		mark_buffer_dirty_inode(bhs[n], dir);
  
-+	/*
-+	 * The first usable region must be PMD aligned. Mark its start
-+	 * as MEMBLOCK_NOMAP if it isn't
-+	 */
-+	for_each_memblock(memory, reg) {
-+		if (!memblock_is_nomap(reg)) {
-+			if (!IS_ALIGNED(reg->base, PMD_SIZE)) {
-+				phys_addr_t len;
-+
-+				len = round_up(reg->base, PMD_SIZE) - reg->base;
-+				memblock_mark_nomap(reg->base, len);
-+			}
-+			break;
-+		}
-+	}
-+
- 	for_each_memblock(memory, reg) {
- 		phys_addr_t block_start = reg->base;
- 		phys_addr_t block_end = reg->base + reg->size;
+ 		n++;
+@@ -1158,6 +1161,8 @@ int fat_alloc_new_dir(struct inode *dir, struct timespec64 *ts)
+ 	fat_time_unix2fat(sbi, ts, &time, &date, &time_cs);
+ 
+ 	de = (struct msdos_dir_entry *)bhs[0]->b_data;
++	/* Avoid race with userspace read via bdev */
++	lock_buffer(bhs[0]);
+ 	/* filling the new directory slots ("." and ".." entries) */
+ 	memcpy(de[0].name, MSDOS_DOT, MSDOS_NAME);
+ 	memcpy(de[1].name, MSDOS_DOTDOT, MSDOS_NAME);
+@@ -1180,6 +1185,7 @@ int fat_alloc_new_dir(struct inode *dir, struct timespec64 *ts)
+ 	de[0].size = de[1].size = 0;
+ 	memset(de + 2, 0, sb->s_blocksize - 2 * sizeof(*de));
+ 	set_buffer_uptodate(bhs[0]);
++	unlock_buffer(bhs[0]);
+ 	mark_buffer_dirty_inode(bhs[0], dir);
+ 
+ 	err = fat_zeroed_cluster(dir, blknr, 1, bhs, MAX_BUF_PER_PAGE);
+@@ -1237,11 +1243,14 @@ static int fat_add_new_entries(struct inode *dir, void *slots, int nr_slots,
+ 
+ 			/* fill the directory entry */
+ 			copy = min(size, sb->s_blocksize);
++			/* Avoid race with userspace read via bdev */
++			lock_buffer(bhs[n]);
+ 			memcpy(bhs[n]->b_data, slots, copy);
+-			slots += copy;
+-			size -= copy;
+ 			set_buffer_uptodate(bhs[n]);
++			unlock_buffer(bhs[n]);
+ 			mark_buffer_dirty_inode(bhs[n], dir);
++			slots += copy;
++			size -= copy;
+ 			if (!size)
+ 				break;
+ 			n++;
+diff --git a/fs/fat/fatent.c b/fs/fat/fatent.c
+index 265983635f2be..3647c65a0f482 100644
+--- a/fs/fat/fatent.c
++++ b/fs/fat/fatent.c
+@@ -388,8 +388,11 @@ static int fat_mirror_bhs(struct super_block *sb, struct buffer_head **bhs,
+ 				err = -ENOMEM;
+ 				goto error;
+ 			}
++			/* Avoid race with userspace read via bdev */
++			lock_buffer(c_bh);
+ 			memcpy(c_bh->b_data, bhs[n]->b_data, sb->s_blocksize);
+ 			set_buffer_uptodate(c_bh);
++			unlock_buffer(c_bh);
+ 			mark_buffer_dirty_inode(c_bh, sbi->fat_inode);
+ 			if (sb->s_flags & SB_SYNCHRONOUS)
+ 				err = sync_dirty_buffer(c_bh);
 -- 
 2.20.1
 
