@@ -2,54 +2,52 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D19C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84875C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEE882082F
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:58:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EC7E218DE
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:58:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569765514;
-	bh=VKgeM9sNxxdUBkK3MBTRqUHENPhdRXiHCCA163TOKcI=;
+	s=default; t=1569765521;
+	bh=tMeytRh19/5JwBBfiNuzCT9ZIvcUn/hRqRtQ3c1g+Xg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Y0oDa/MhdQZeMPQKBnvHiG2yuazMj34ReAFWPwmLU7qPv9gbuTGqfRmdpxKhWfmw
-	 MyTXmZqi8A4uLwxnTzqyd1TXwfVaLrcda9ApsiqkSo0rxp3IRMqCgHHtlR0ZKv1hgk
-	 N46esE4BHGBErIPrztALeQoeWkqCTYa9Su76cvOk=
+	b=BUlGBwjRR+eVTwDgLw/W83BLEhmsY+Ticn+UFuhKF6R0TviJGfsHeAO8Ioei+ymVp
+	 II2F7mGRH8S48XJU8HYWO+r7DvwBBUSPmfYqlZWAKXCCpAN3b7i7a8xApbl34wwHYG
+	 WxUpMB9jZaMdZvdv+6o/aIMeqfeHk0ZJ2QR9j138=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729529AbfI2N6e (ORCPT
+        id S1729575AbfI2N6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 09:58:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39260 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 09:58:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729503AbfI2N6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 09:58:32 -0400
+        id S1729567AbfI2N6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 09:58:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F2532082F;
-        Sun, 29 Sep 2019 13:58:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A7422082F;
+        Sun, 29 Sep 2019 13:58:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569765512;
-        bh=VKgeM9sNxxdUBkK3MBTRqUHENPhdRXiHCCA163TOKcI=;
+        s=default; t=1569765519;
+        bh=tMeytRh19/5JwBBfiNuzCT9ZIvcUn/hRqRtQ3c1g+Xg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zelsdYiRwiaYMGUf3ZvItdMTdwfHXfNtFnqVpowoW5eUbMljPQwiKj77oilhfqPIV
-         68oJc43eH/s0r7k4DdV/aZrEWWWXbKZRe9Tooq6gAgTHQ78ZdaWOr4hAl+dAkLzDcT
-         Wzpa5M8f6DYA5bviCNsiTKVbVR9pce1v4lGdRP8s=
+        b=u8B2wJzYr+uu9vGpqGSG40obWIUUempDXzC/KgCwV2H7nVjtUZuX6FGk34r2xrI3X
+         uc2AmdejDvDQleDE5TsEKt2fts1e6VJcLr5zj1ah2PavunSD1w5s7xXlReMpor19Kh
+         EyN5+MAspi3GIUEYobw7wELvlJuTCO/8kF2m0oJc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Surbhi Palande <csurbhi@gmail.com>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 34/63] pinctrl: sprd: Use define directive for sprd_pinconf_params values
-Date:   Sun, 29 Sep 2019 15:54:07 +0200
-Message-Id: <20190929135038.255017606@linuxfoundation.org>
+Subject: [PATCH 4.19 44/63] f2fs: check all the data segments against all node ones
+Date:   Sun, 29 Sep 2019 15:54:17 +0200
+Message-Id: <20190929135039.441288123@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190929135031.382429403@linuxfoundation.org>
 References: <20190929135031.382429403@linuxfoundation.org>
@@ -62,55 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Surbhi Palande <f2fsnewbie@gmail.com>
 
-[ Upstream commit 957063c924736d4341e5d588757b9f31e8f6fa24 ]
+[ Upstream commit 1166c1f2f69117ad254189ca781287afa6e550b6 ]
 
-Clang warns when one enumerated type is implicitly converted to another:
+As a part of the sanity checking while mounting, distinct segment number
+assignment to data and node segments is verified. Fixing a small bug in
+this verification between node and data segments. We need to check all
+the data segments with all the node segments.
 
-drivers/pinctrl/sprd/pinctrl-sprd.c:845:19: warning: implicit conversion
-from enumeration type 'enum sprd_pinconf_params' to different
-enumeration type 'enum pin_config_param' [-Wenum-conversion]
-        {"sprd,control", SPRD_PIN_CONFIG_CONTROL, 0},
-        ~                ^~~~~~~~~~~~~~~~~~~~~~~
-drivers/pinctrl/sprd/pinctrl-sprd.c:846:22: warning: implicit conversion
-from enumeration type 'enum sprd_pinconf_params' to different
-enumeration type 'enum pin_config_param' [-Wenum-conversion]
-        {"sprd,sleep-mode", SPRD_PIN_CONFIG_SLEEP_MODE, 0},
-        ~                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
-
-It is expected that pinctrl drivers can extend pin_config_param because
-of the gap between PIN_CONFIG_END and PIN_CONFIG_MAX so this conversion
-isn't an issue. Most drivers that take advantage of this define the
-PIN_CONFIG variables as constants, rather than enumerated values. Do the
-same thing here so that Clang no longer warns.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/138
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 042be0f849e5f ("f2fs: fix to do sanity check with current segment number")
+Signed-off-by: Surbhi Palande <csurbhi@gmail.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sprd/pinctrl-sprd.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ fs/f2fs/super.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/sprd/pinctrl-sprd.c b/drivers/pinctrl/sprd/pinctrl-sprd.c
-index 78c2f548b25f1..8f3468d9f848d 100644
---- a/drivers/pinctrl/sprd/pinctrl-sprd.c
-+++ b/drivers/pinctrl/sprd/pinctrl-sprd.c
-@@ -159,10 +159,8 @@ struct sprd_pinctrl {
- 	struct sprd_pinctrl_soc_info *info;
- };
- 
--enum sprd_pinconf_params {
--	SPRD_PIN_CONFIG_CONTROL = PIN_CONFIG_END + 1,
--	SPRD_PIN_CONFIG_SLEEP_MODE = PIN_CONFIG_END + 2,
--};
-+#define SPRD_PIN_CONFIG_CONTROL		(PIN_CONFIG_END + 1)
-+#define SPRD_PIN_CONFIG_SLEEP_MODE	(PIN_CONFIG_END + 2)
- 
- static int sprd_pinctrl_get_id_by_name(struct sprd_pinctrl *sprd_pctl,
- 				       const char *name)
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 1871031e2d5eb..e9ab4b39d4eef 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -2413,11 +2413,11 @@ int f2fs_sanity_check_ckpt(struct f2fs_sb_info *sbi)
+ 		}
+ 	}
+ 	for (i = 0; i < NR_CURSEG_NODE_TYPE; i++) {
+-		for (j = i; j < NR_CURSEG_DATA_TYPE; j++) {
++		for (j = 0; j < NR_CURSEG_DATA_TYPE; j++) {
+ 			if (le32_to_cpu(ckpt->cur_node_segno[i]) ==
+ 				le32_to_cpu(ckpt->cur_data_segno[j])) {
+ 				f2fs_msg(sbi->sb, KERN_ERR,
+-					"Data segment (%u) and Data segment (%u)"
++					"Node segment (%u) and Data segment (%u)"
+ 					" has the same segno: %u", i, j,
+ 					le32_to_cpu(ckpt->cur_node_segno[i]));
+ 				return 1;
 -- 
 2.20.1
 
