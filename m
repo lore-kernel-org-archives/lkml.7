@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA75C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3829EC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66F8721835
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BE0B2082F
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:00:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569765601;
-	bh=fArfNnT5vFYjofUn+0euUGANcA1sp8AW4rWpRpsRnTw=;
+	s=default; t=1569765604;
+	bh=lZJ9g3vN8/4CHNEIeGOta0sjNncUHLr4qa1CoclZ/p4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iKQJf3couirJNk20PQwRMDTZnIfgghxYoGRsZSYdU5e/9rrtSBE5jrj0AqolBu2ad
-	 OtCWFVq0GWNgAbDIN+yW36ob/DfHcpqMUIhPS2Tc7PBbjd7njxcAnECAI4vZiDbl9t
-	 gIiXHDq2IMqiL34eMPDO299QP0jUYNOhn8PLgjyI=
+	b=PpkPY2AKfg3lia1liK5KiXVE7KiOxMnlERcohuKyW3w/CB12TaQJ1UbSo1Oo+0eq8
+	 iavS9TN1jnjWuR/f9IGyy8RuIUjHG0ZQQHXOkQjr5nG4VXEcuuo7DDPPqg9GuCE3qu
+	 /lg0dRnVoBPOBh3cqCEZ/BXOCSBto2G6I+2qnq+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729846AbfI2OAA (ORCPT
+        id S1729539AbfI2OAD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 10:00:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39376 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 10:00:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729503AbfI2N6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 09:58:36 -0400
+        id S1729829AbfI2N75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 09:59:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3EFF21835;
-        Sun, 29 Sep 2019 13:58:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 398F721835;
+        Sun, 29 Sep 2019 13:59:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569765515;
-        bh=fArfNnT5vFYjofUn+0euUGANcA1sp8AW4rWpRpsRnTw=;
+        s=default; t=1569765597;
+        bh=lZJ9g3vN8/4CHNEIeGOta0sjNncUHLr4qa1CoclZ/p4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y/bbLoHaWfVeBl8Hl5LXrEAQqCJw0b8TPw7Jj1aBlT/4RMxYdG2iu6lzX8N850Ia+
-         c3YWQeOAUba7kZQJnycky7Tn4NxgRBAaplGe7ZaCNDCi1P2+R9dg12kURpB/p/2nKp
-         Bo3F+fbuHFXDL4fiq3UHFgw4XQr9nVlNVwvvZ1BM=
+        b=Wiuw8Ma2PBTPGp+VFedchOssqeqEh8i47nn2aJYDVvYD9FJm/ZTSwMA7zJ+kcUypw
+         tyW1oQ7GKz9hLXQWtS3MAD7xAGk5+Gm/BFwbad3jkHDx2DlReFACvVLMc/VPpd3/SC
+         I/3gykLxT/SDJMHodApQAEk9Y9JTi4nfVWBpjvs0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiaxing Luo <luojiaxing@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 43/63] irqchip/gic-v3-its: Fix LPI release for Multi-MSI devices
-Date:   Sun, 29 Sep 2019 15:54:16 +0200
-Message-Id: <20190929135039.298788031@linuxfoundation.org>
+        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
+        Daniel Drake <drake@endlessm.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 56/63] Bluetooth: btrtl: HCI reset on close for Realtek BT chip
+Date:   Sun, 29 Sep 2019 15:54:29 +0200
+Message-Id: <20190929135040.787343548@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190929135031.382429403@linuxfoundation.org>
 References: <20190929135031.382429403@linuxfoundation.org>
@@ -60,52 +61,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-[ Upstream commit c9c96e30ecaa0aafa225aa1a5392cb7db17c7a82 ]
+[ Upstream commit 7af3f558aca74f2ee47b173f1c27f6bb9a5b5561 ]
 
-When allocating a range of LPIs for a Multi-MSI capable device,
-this allocation extended to the closest power of 2.
+Realtek RTL8822BE BT chip on ASUS X420FA cannot be turned on correctly
+after on-off several times. Bluetooth daemon sets BT mode failed when
+this issue happens. Scanning must be active while turning off for this
+bug to be hit.
 
-But on the release path, the interrupts are released one by
-one. This results in not releasing the "extra" range, leaking
-the its_device. Trying to reprobe the device will then fail.
+bluetoothd[1576]: Failed to set mode: Failed (0x03)
 
-Fix it by releasing the LPIs the same way we allocate them.
+If BT is turned off, then turned on again, it works correctly again.
 
-Fixes: 8208d1708b88 ("irqchip/gic-v3-its: Align PCI Multi-MSI allocation on their size")
-Reported-by: Jiaxing Luo <luojiaxing@huawei.com>
-Tested-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com
+According to the vendor driver, the HCI_QUIRK_RESET_ON_CLOSE flag is set
+during probing. So, this patch makes Realtek's BT reset on close to fix
+this issue.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=203429
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Reviewed-by: Daniel Drake <drake@endlessm.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/bluetooth/btrtl.c | 20 ++++++++++++++++++++
+ drivers/bluetooth/btrtl.h |  6 ++++++
+ drivers/bluetooth/btusb.c |  1 +
+ 3 files changed, 27 insertions(+)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 9ba73e11757d9..e7549a2b1482b 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -2514,14 +2514,13 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
- 	struct its_node *its = its_dev->its;
- 	int i;
+diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
+index 1342f8e6025cc..8d1cd2479e36f 100644
+--- a/drivers/bluetooth/btrtl.c
++++ b/drivers/bluetooth/btrtl.c
+@@ -639,6 +639,26 @@ int btrtl_setup_realtek(struct hci_dev *hdev)
+ }
+ EXPORT_SYMBOL_GPL(btrtl_setup_realtek);
  
-+	bitmap_release_region(its_dev->event_map.lpi_map,
-+			      its_get_event_id(irq_domain_get_irq_data(domain, virq)),
-+			      get_count_order(nr_irqs));
++int btrtl_shutdown_realtek(struct hci_dev *hdev)
++{
++	struct sk_buff *skb;
++	int ret;
 +
- 	for (i = 0; i < nr_irqs; i++) {
- 		struct irq_data *data = irq_domain_get_irq_data(domain,
- 								virq + i);
--		u32 event = its_get_event_id(data);
--
--		/* Mark interrupt index as unused */
--		clear_bit(event, its_dev->event_map.lpi_map);
--
- 		/* Nuke the entry in the domain */
- 		irq_domain_reset_irq_data(data);
- 	}
++	/* According to the vendor driver, BT must be reset on close to avoid
++	 * firmware crash.
++	 */
++	skb = __hci_cmd_sync(hdev, HCI_OP_RESET, 0, NULL, HCI_INIT_TIMEOUT);
++	if (IS_ERR(skb)) {
++		ret = PTR_ERR(skb);
++		bt_dev_err(hdev, "HCI reset during shutdown failed");
++		return ret;
++	}
++	kfree_skb(skb);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(btrtl_shutdown_realtek);
++
+ static unsigned int btrtl_convert_baudrate(u32 device_baudrate)
+ {
+ 	switch (device_baudrate) {
+diff --git a/drivers/bluetooth/btrtl.h b/drivers/bluetooth/btrtl.h
+index f5e36f3993a81..852f27d4ee289 100644
+--- a/drivers/bluetooth/btrtl.h
++++ b/drivers/bluetooth/btrtl.h
+@@ -65,6 +65,7 @@ void btrtl_free(struct btrtl_device_info *btrtl_dev);
+ int btrtl_download_firmware(struct hci_dev *hdev,
+ 			    struct btrtl_device_info *btrtl_dev);
+ int btrtl_setup_realtek(struct hci_dev *hdev);
++int btrtl_shutdown_realtek(struct hci_dev *hdev);
+ int btrtl_get_uart_settings(struct hci_dev *hdev,
+ 			    struct btrtl_device_info *btrtl_dev,
+ 			    unsigned int *controller_baudrate,
+@@ -93,6 +94,11 @@ static inline int btrtl_setup_realtek(struct hci_dev *hdev)
+ 	return -EOPNOTSUPP;
+ }
+ 
++static inline int btrtl_shutdown_realtek(struct hci_dev *hdev)
++{
++	return -EOPNOTSUPP;
++}
++
+ static inline int btrtl_get_uart_settings(struct hci_dev *hdev,
+ 					  struct btrtl_device_info *btrtl_dev,
+ 					  unsigned int *controller_baudrate,
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 09c83dc2ef677..96b8a00934c4a 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -3128,6 +3128,7 @@ static int btusb_probe(struct usb_interface *intf,
+ #ifdef CONFIG_BT_HCIBTUSB_RTL
+ 	if (id->driver_info & BTUSB_REALTEK) {
+ 		hdev->setup = btrtl_setup_realtek;
++		hdev->shutdown = btrtl_shutdown_realtek;
+ 
+ 		/* Realtek devices lose their updated firmware over suspend,
+ 		 * but the USB hub doesn't notice any status change.
 -- 
 2.20.1
 
