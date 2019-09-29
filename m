@@ -6,61 +6,64 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 691CFC352A9
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF656C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 461E5218AC
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:50:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD4C6218AC
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:50:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569779423;
-	bh=eMIVtaaYxmqE+13EFEMvT3gTKsf9DNaaYaJnjwKMjuY=;
+	s=default; t=1569779424;
+	bh=bHXIm8Z3qU0UO34CYscDkvZ0mPCZy0QUZD2hU22CW5c=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=UG3F9LL7h0TD1IefIjg0hU1tXAOD9u/vKKWla7qDiPaLC4SsVWPrKv2tYCCEswVXj
-	 ZhF5iCjNs28sneu+O2S/hnEH+yM9g/FHkp1omPHGRJeTQ9HN8ejoFUfaXjJZushbEf
-	 2iEcx7a6tLunqf8K6PFmg2xe1vlEL4rhxA2txGUI=
+	b=t0TeGCXJBH7iKlySGbiZlJlYswgMepitdfsDA1wc22Q3cXCo+/XUSBhsXi8iC/gZP
+	 UQVt9uVTRXS3X/2f4NE2TMDcd/65C702l2k6m6tFTwMALUFocy3p8YvlGYriNvAT1M
+	 /IIfFYizW/3q1TyHSPMsLmLPcP2nll81vxqba9qI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729238AbfI2RuW (ORCPT
+        id S1729247AbfI2RuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:50:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35826 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:50:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729197AbfI2RuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:50:22 -0400
-Subject: Re: [git pull] IOMMU Fixes for Linux v5.4-rc1
+        id S1729197AbfI2RuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:50:23 -0400
+Subject: Re: [GIT PULL] Thermal-SoC management changes for v5.4-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569779421;
-        bh=eMIVtaaYxmqE+13EFEMvT3gTKsf9DNaaYaJnjwKMjuY=;
+        s=default; t=1569779422;
+        bh=bHXIm8Z3qU0UO34CYscDkvZ0mPCZy0QUZD2hU22CW5c=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=OxQG+ql3muIrR4IO4Uerz99E72GRLgbUuNGbjlc3w3Fw6jAdt+Kb/ilLa/SU3nek5
-         tlTD5UgVjLOJzo8YLWfQfNpvgV/1LU7OPgm2I9iuLqwTASSsXZppeQmA2Io1Y9DnfG
-         upcbgFwy1Uh6n5jJdlp/tDxjOS3m0oKyROnDM1XI=
+        b=k6uf60Sq/6j5t12+qKwBc8d9ZI7mmwmj3V59MX7ZlVmy0mgosZyv6qRFDrTvsGT1x
+         Mo4ksvI05dIA2/XrIE5RByLLOjVgGBry58RndIhHwQq1rqp1m+qgfzQOPt9I0NFb3o
+         7B9N3XzeHQvsdvO3IieAk7MUyHjSvm2iXdgJML0E=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190928191007.GA7565@8bytes.org>
-References: <20190928191007.GA7565@8bytes.org>
+In-Reply-To: <20190928231236.GD7360@localhost.localdomain>
+References: <20190928231236.GD7360@localhost.localdomain>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190928191007.GA7565@8bytes.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git
- tags/iommu-fixes-5.4-rc1
-X-PR-Tracked-Commit-Id: 2a78f9962565e53b78363eaf516eb052009e8020
+X-PR-Tracked-Message-Id: <20190928231236.GD7360@localhost.localdomain>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal
+ linus
+X-PR-Tracked-Commit-Id: 6c375eccded41df8033ed55a1b785531b304fc67
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 4d2af08ed08ce87c4fd2379fa857153631ee8537
-Message-Id: <156977942161.28081.7134210299973252649.pr-tracker-bot@kernel.org>
-Date:   Sun, 29 Sep 2019 17:50:21 +0000
-To:     Joerg Roedel <joro@8bytes.org>
+X-PR-Merge-Commit-Id: 939ca9f1751d1d65424f80b9284b6c18e78c7f4e
+Message-Id: <156977942273.28081.7573269007324807343.pr-tracker-bot@kernel.org>
+Date:   Sun, 29 Sep 2019 17:50:22 +0000
+To:     Eduardo Valentin <edubezval@gmail.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+        Rui Zhang <rui.zhang@intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 28 Sep 2019 21:10:17 +0200:
+The pull request you sent on Sat, 28 Sep 2019 16:12:36 -0700:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-fixes-5.4-rc1
+> git://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/4d2af08ed08ce87c4fd2379fa857153631ee8537
+https://git.kernel.org/torvalds/c/939ca9f1751d1d65424f80b9284b6c18e78c7f4e
 
 Thank you!
 
