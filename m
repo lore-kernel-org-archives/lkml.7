@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 213BCC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 919FBC32793
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEFDC21928
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BC2421925
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:33:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778415;
-	bh=YDlb7eJfsCJYSe+W+bAGfQM6oR+1wKO4K2sY+007I9Y=;
+	s=default; t=1569778420;
+	bh=fw70Y8GuPTIYaTwZ+t61VIeVfbkLgrEAuV3Y4OcKnl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1lcacOxJlWwKPjZBE4elpWRl8WAoO2GD3+CFulfdTmsCklWICs83bDiJEFXHV3BRY
-	 YOgt4Sn37D7apNzhj+Jt5XXYiv3ynFwDNI98yzWcqhw3S1SXr8I4FI9ZaOuhI4peY2
-	 X5nc2RcXV9LWPtK9ZN+bfMIUovQvJXWWr3Kp9TsQ=
+	b=lU3skiQZew6TEUmLYc18lUZ51+uThFMkPdTl0eZ8bLD0G8rldkMI+NDSsxiybUrSj
+	 Rjm1fvPDgnOgLEjXdj7dk9g+c36uK+7gNPCD8nftsz95Pl4AJDBeL9qqfWqA4hjsQY
+	 vbFpoV2WmG7Iek8/DBaXws3hozfBZDqgdNKruYT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730092AbfI2Rde (ORCPT
+        id S1730129AbfI2Rdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:33:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44812 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:33:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730049AbfI2Rdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:33:31 -0400
+        id S1730098AbfI2Rdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:33:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E68121D7C;
-        Sun, 29 Sep 2019 17:33:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE2F121925;
+        Sun, 29 Sep 2019 17:33:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778410;
-        bh=YDlb7eJfsCJYSe+W+bAGfQM6oR+1wKO4K2sY+007I9Y=;
+        s=default; t=1569778415;
+        bh=fw70Y8GuPTIYaTwZ+t61VIeVfbkLgrEAuV3Y4OcKnl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=du/I6ZntEAHQUnFTk6WGLJTUvNilRGF+m/HhCt0QRiTBXkey1lHnyRacHW90mg8Td
-         wkCQk8aHKfPeaa3hvlG7nCXjdgfp7agyffKmd3Yx9DPt+l+tnuEEyb1eXO1d/ETMwG
-         dJZ1Z7nS9wfIusxdgsw33ExkFb6pG/27N13g9cXs=
+        b=FWDz7P9TYcSRIB8Zb5MZvxV+SOF6caE5sHhnCWr5V3VnBr4nQgKMdYvBwrNADE+ke
+         EhhBVKBYs+lfyiGIanub4fiUuOLsFpdPZmagesxdIx6QPgx/V3Sn3NOKp7LZnaGgZg
+         6F96jQIkmb8o2zTSMI5bejXJguxoi9LErXUp79jU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Biwen Li <biwen.li@nxp.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 20/42] rtc: pcf85363/pcf85263: fix regmap error in set_time
-Date:   Sun, 29 Sep 2019 13:32:19 -0400
-Message-Id: <20190929173244.8918-20-sashal@kernel.org>
+Cc:     Joao Moreno <mail@joaomoreno.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 23/42] HID: apple: Fix stuck function keys when using FN
+Date:   Sun, 29 Sep 2019 13:32:22 -0400
+Message-Id: <20190929173244.8918-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173244.8918-1-sashal@kernel.org>
 References: <20190929173244.8918-1-sashal@kernel.org>
@@ -59,60 +59,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Biwen Li <biwen.li@nxp.com>
+From: Joao Moreno <mail@joaomoreno.com>
 
-[ Upstream commit 7ef66122bdb3b839e9f51b76d7e600b6e21ef648 ]
+[ Upstream commit aec256d0ecd561036f188dbc8fa7924c47a9edfd ]
 
-Issue:
-    - # hwclock -w
-      hwclock: RTC_SET_TIME: Invalid argument
+This fixes an issue in which key down events for function keys would be
+repeatedly emitted even after the user has raised the physical key. For
+example, the driver fails to emit the F5 key up event when going through
+the following steps:
+- fnmode=1: hold FN, hold F5, release FN, release F5
+- fnmode=2: hold F5, hold FN, release F5, release FN
 
-Why:
-    - Relative commit: 8b9f9d4dc511 ("regmap: verify if register is
-      writeable before writing operations"), this patch
-      will always check for unwritable registers, it will compare reg
-      with max_register in regmap_writeable.
+The repeated F5 key down events can be easily verified using xev.
 
-    - The pcf85363/pcf85263 has the capability of address wrapping
-      which means if you access an address outside the allowed range
-      (0x00-0x2f) hardware actually wraps the access to a lower address.
-      The rtc-pcf85363 driver will use this feature to configure the time
-      and execute 2 actions in the same i2c write operation (stopping the
-      clock and configure the time). However the driver has also
-      configured the `regmap maxregister` protection mechanism that will
-      block accessing addresses outside valid range (0x00-0x2f).
-
-How:
-    - Split of writing regs to two parts, first part writes control
-      registers about stop_enable and resets, second part writes
-      RTC time and date registers.
-
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
-Link: https://lore.kernel.org/r/20190829021418.4607-1-biwen.li@nxp.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Joao Moreno <mail@joaomoreno.com>
+Co-developed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-pcf85363.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/hid/hid-apple.c | 49 +++++++++++++++++++++++------------------
+ 1 file changed, 28 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/rtc/rtc-pcf85363.c b/drivers/rtc/rtc-pcf85363.c
-index a075e77617dcb..3450d615974d5 100644
---- a/drivers/rtc/rtc-pcf85363.c
-+++ b/drivers/rtc/rtc-pcf85363.c
-@@ -166,7 +166,12 @@ static int pcf85363_rtc_set_time(struct device *dev, struct rtc_time *tm)
- 	buf[DT_YEARS] = bin2bcd(tm->tm_year % 100);
+diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
+index 81df62f48c4c3..6ac8becc2372e 100644
+--- a/drivers/hid/hid-apple.c
++++ b/drivers/hid/hid-apple.c
+@@ -54,7 +54,6 @@ MODULE_PARM_DESC(swap_opt_cmd, "Swap the Option (\"Alt\") and Command (\"Flag\")
+ struct apple_sc {
+ 	unsigned long quirks;
+ 	unsigned int fn_on;
+-	DECLARE_BITMAP(pressed_fn, KEY_CNT);
+ 	DECLARE_BITMAP(pressed_numlock, KEY_CNT);
+ };
  
- 	ret = regmap_bulk_write(pcf85363->regmap, CTRL_STOP_EN,
--				tmp, sizeof(tmp));
-+				tmp, 2);
-+	if (ret)
-+		return ret;
+@@ -181,6 +180,8 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
+ {
+ 	struct apple_sc *asc = hid_get_drvdata(hid);
+ 	const struct apple_key_translation *trans, *table;
++	bool do_translate;
++	u16 code = 0;
+ 
+ 	if (usage->code == KEY_FN) {
+ 		asc->fn_on = !!value;
+@@ -189,8 +190,6 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
+ 	}
+ 
+ 	if (fnmode) {
+-		int do_translate;
+-
+ 		if (hid->product >= USB_DEVICE_ID_APPLE_WELLSPRING4_ANSI &&
+ 				hid->product <= USB_DEVICE_ID_APPLE_WELLSPRING4A_JIS)
+ 			table = macbookair_fn_keys;
+@@ -202,25 +201,33 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
+ 		trans = apple_find_translation (table, usage->code);
+ 
+ 		if (trans) {
+-			if (test_bit(usage->code, asc->pressed_fn))
+-				do_translate = 1;
+-			else if (trans->flags & APPLE_FLAG_FKEY)
+-				do_translate = (fnmode == 2 && asc->fn_on) ||
+-					(fnmode == 1 && !asc->fn_on);
+-			else
+-				do_translate = asc->fn_on;
+-
+-			if (do_translate) {
+-				if (value)
+-					set_bit(usage->code, asc->pressed_fn);
+-				else
+-					clear_bit(usage->code, asc->pressed_fn);
+-
+-				input_event(input, usage->type, trans->to,
+-						value);
+-
+-				return 1;
++			if (test_bit(trans->from, input->key))
++				code = trans->from;
++			else if (test_bit(trans->to, input->key))
++				code = trans->to;
 +
-+	ret = regmap_bulk_write(pcf85363->regmap, DT_100THS,
-+				buf, sizeof(tmp) - 2);
- 	if (ret)
- 		return ret;
++			if (!code) {
++				if (trans->flags & APPLE_FLAG_FKEY) {
++					switch (fnmode) {
++					case 1:
++						do_translate = !asc->fn_on;
++						break;
++					case 2:
++						do_translate = asc->fn_on;
++						break;
++					default:
++						/* should never happen */
++						do_translate = false;
++					}
++				} else {
++					do_translate = asc->fn_on;
++				}
++
++				code = do_translate ? trans->to : trans->from;
+ 			}
++
++			input_event(input, usage->type, code, value);
++			return 1;
+ 		}
  
+ 		if (asc->quirks & APPLE_NUMLOCK_EMULATION &&
 -- 
 2.20.1
 
