@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69244C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9FEC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4138721906
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A533C21A4C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:35:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778507;
-	bh=loZr7MLJpU4XU6TOPh2BVQXDVFm5QAyJaqArvekhQzo=;
+	s=default; t=1569778525;
+	bh=63/jWXKufjyiFg2ahV8Id1e3jfvZ9rfSOZpiyU+pRdk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FNFaJfetPbXOiuh2Is8/IoHudfPalCQo7l8FJjFMJ/qsQa/GgyL7jLksTP/tbibC9
-	 9IiJH8dVSh2GqhNQ1SCryKgyQAprcJmREHkWQFMf7UtOs4J+3aZ2OkI+ocjmGjnAzp
-	 85/IXwU/fauL3f/nJky4Jfy2yrPY/p12sAQelEpY=
+	b=1Da8PzobKygMvOfqioqRp73DLqMsGZ+bpFdBklt8oIPWS/sQagG9fX5CUltg1rL6f
+	 pYYbi+8I6rQ1NVYh6G8YjMpdi/RITQ9Vd+X1I9R7QYiZYnPAfbLgwMNe3oxxQ2LyVG
+	 YSNI7Ze7NJ31GUghOyUGAZc6hFLkwRy7jEPsea3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbfI2RfG (ORCPT
+        id S1730576AbfI2RfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:35:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47026 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:35:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730481AbfI2Re4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:34:56 -0400
+        id S1729675AbfI2RfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:35:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33D0621A4C;
-        Sun, 29 Sep 2019 17:34:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D0D121906;
+        Sun, 29 Sep 2019 17:35:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778494;
-        bh=loZr7MLJpU4XU6TOPh2BVQXDVFm5QAyJaqArvekhQzo=;
+        s=default; t=1569778515;
+        bh=63/jWXKufjyiFg2ahV8Id1e3jfvZ9rfSOZpiyU+pRdk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bUFRnF4P4fuaR1jUgNIXB0AdfwlU8WC5R4zK6ZLuP7cTreFGBtWQJWIFWj49hJZ/5
-         WOCsDmhsM6RJTyKQYGrKkQEvHIZSY6a8kkxwM58cwjyrfFCRWTWkGRo0kyOlr1Qv+u
-         qQumsquvdnSqGxvBAckZprPb1adBdRwbR5s/CT9c=
+        b=UoC9joQQrnCRESraY+tWbQiLBlvLBLDglxn8GvCp5z+q+X47nXKmwU0ShdsuookZB
+         r1NecfcD7zg7DS0qFXO61TE8UhQoefYTa7rVPr93bqAtnQ8yTinqXZ9WvuY8Vf7eH1
+         izJpgDUPobgPnDcZL/jnyItTYuuzwIio5XbGZRqI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Joao Moreno <mail@joaomoreno.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 16/33] HID: apple: Fix stuck function keys when using FN
-Date:   Sun, 29 Sep 2019 13:34:04 -0400
-Message-Id: <20190929173424.9361-16-sashal@kernel.org>
+Cc:     Changwei Ge <gechangwei@live.cn>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 28/33] ocfs2: wait for recovering done after direct unlock request
+Date:   Sun, 29 Sep 2019 13:34:16 -0400
+Message-Id: <20190929173424.9361-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173424.9361-1-sashal@kernel.org>
 References: <20190929173424.9361-1-sashal@kernel.org>
@@ -59,109 +64,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joao Moreno <mail@joaomoreno.com>
+From: Changwei Ge <gechangwei@live.cn>
 
-[ Upstream commit aec256d0ecd561036f188dbc8fa7924c47a9edfd ]
+[ Upstream commit 0a3775e4f883912944481cf2ef36eb6383a9cc74 ]
 
-This fixes an issue in which key down events for function keys would be
-repeatedly emitted even after the user has raised the physical key. For
-example, the driver fails to emit the F5 key up event when going through
-the following steps:
-- fnmode=1: hold FN, hold F5, release FN, release F5
-- fnmode=2: hold F5, hold FN, release F5, release FN
+There is a scenario causing ocfs2 umount hang when multiple hosts are
+rebooting at the same time.
 
-The repeated F5 key down events can be easily verified using xev.
+NODE1                           NODE2               NODE3
+send unlock requset to NODE2
+                                dies
+                                                    become recovery master
+                                                    recover NODE2
+find NODE2 dead
+mark resource RECOVERING
+directly remove lock from grant list
+calculate usage but RECOVERING marked
+**miss the window of purging
+clear RECOVERING
 
-Signed-off-by: Joao Moreno <mail@joaomoreno.com>
-Co-developed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+To reproduce this issue, crash a host and then umount ocfs2
+from another node.
+
+To solve this, just let unlock progress wait for recovery done.
+
+Link: http://lkml.kernel.org/r/1550124866-20367-1-git-send-email-gechangwei@live.cn
+Signed-off-by: Changwei Ge <gechangwei@live.cn>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-apple.c | 49 +++++++++++++++++++++++------------------
- 1 file changed, 28 insertions(+), 21 deletions(-)
+ fs/ocfs2/dlm/dlmunlock.c | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
-index 1cb41992aaa1f..d0a81a03ddbdd 100644
---- a/drivers/hid/hid-apple.c
-+++ b/drivers/hid/hid-apple.c
-@@ -57,7 +57,6 @@ MODULE_PARM_DESC(swap_opt_cmd, "Swap the Option (\"Alt\") and Command (\"Flag\")
- struct apple_sc {
- 	unsigned long quirks;
- 	unsigned int fn_on;
--	DECLARE_BITMAP(pressed_fn, KEY_CNT);
- 	DECLARE_BITMAP(pressed_numlock, KEY_CNT);
- };
+diff --git a/fs/ocfs2/dlm/dlmunlock.c b/fs/ocfs2/dlm/dlmunlock.c
+index 63d701cd1e2e7..c8e9b7031d9ad 100644
+--- a/fs/ocfs2/dlm/dlmunlock.c
++++ b/fs/ocfs2/dlm/dlmunlock.c
+@@ -105,7 +105,8 @@ static enum dlm_status dlmunlock_common(struct dlm_ctxt *dlm,
+ 	enum dlm_status status;
+ 	int actions = 0;
+ 	int in_use;
+-        u8 owner;
++	u8 owner;
++	int recovery_wait = 0;
  
-@@ -184,6 +183,8 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
- {
- 	struct apple_sc *asc = hid_get_drvdata(hid);
- 	const struct apple_key_translation *trans, *table;
-+	bool do_translate;
-+	u16 code = 0;
- 
- 	if (usage->code == KEY_FN) {
- 		asc->fn_on = !!value;
-@@ -192,8 +193,6 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
+ 	mlog(0, "master_node = %d, valblk = %d\n", master_node,
+ 	     flags & LKM_VALBLK);
+@@ -208,9 +209,12 @@ static enum dlm_status dlmunlock_common(struct dlm_ctxt *dlm,
+ 		}
+ 		if (flags & LKM_CANCEL)
+ 			lock->cancel_pending = 0;
+-		else
+-			lock->unlock_pending = 0;
+-
++		else {
++			if (!lock->unlock_pending)
++				recovery_wait = 1;
++			else
++				lock->unlock_pending = 0;
++		}
  	}
  
- 	if (fnmode) {
--		int do_translate;
--
- 		if (hid->product >= USB_DEVICE_ID_APPLE_WELLSPRING4_ANSI &&
- 				hid->product <= USB_DEVICE_ID_APPLE_WELLSPRING4A_JIS)
- 			table = macbookair_fn_keys;
-@@ -205,25 +204,33 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
- 		trans = apple_find_translation (table, usage->code);
+ 	/* get an extra ref on lock.  if we are just switching
+@@ -244,6 +248,17 @@ static enum dlm_status dlmunlock_common(struct dlm_ctxt *dlm,
+ 	spin_unlock(&res->spinlock);
+ 	wake_up(&res->wq);
  
- 		if (trans) {
--			if (test_bit(usage->code, asc->pressed_fn))
--				do_translate = 1;
--			else if (trans->flags & APPLE_FLAG_FKEY)
--				do_translate = (fnmode == 2 && asc->fn_on) ||
--					(fnmode == 1 && !asc->fn_on);
--			else
--				do_translate = asc->fn_on;
--
--			if (do_translate) {
--				if (value)
--					set_bit(usage->code, asc->pressed_fn);
--				else
--					clear_bit(usage->code, asc->pressed_fn);
--
--				input_event(input, usage->type, trans->to,
--						value);
--
--				return 1;
-+			if (test_bit(trans->from, input->key))
-+				code = trans->from;
-+			else if (test_bit(trans->to, input->key))
-+				code = trans->to;
++	if (recovery_wait) {
++		spin_lock(&res->spinlock);
++		/* Unlock request will directly succeed after owner dies,
++		 * and the lock is already removed from grant list. We have to
++		 * wait for RECOVERING done or we miss the chance to purge it
++		 * since the removement is much faster than RECOVERING proc.
++		 */
++		__dlm_wait_on_lockres_flags(res, DLM_LOCK_RES_RECOVERING);
++		spin_unlock(&res->spinlock);
++	}
 +
-+			if (!code) {
-+				if (trans->flags & APPLE_FLAG_FKEY) {
-+					switch (fnmode) {
-+					case 1:
-+						do_translate = !asc->fn_on;
-+						break;
-+					case 2:
-+						do_translate = asc->fn_on;
-+						break;
-+					default:
-+						/* should never happen */
-+						do_translate = false;
-+					}
-+				} else {
-+					do_translate = asc->fn_on;
-+				}
-+
-+				code = do_translate ? trans->to : trans->from;
- 			}
-+
-+			input_event(input, usage->type, code, value);
-+			return 1;
- 		}
- 
- 		if (asc->quirks & APPLE_NUMLOCK_EMULATION &&
+ 	/* let the caller's final dlm_lock_put handle the actual kfree */
+ 	if (actions & DLM_UNLOCK_FREE_LOCK) {
+ 		/* this should always be coupled with list removal */
 -- 
 2.20.1
 
