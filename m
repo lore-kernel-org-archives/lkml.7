@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77231C352A9
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA241C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49EAF2086A
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDC9C21835
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:42:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778955;
-	bh=1gC8dF8dzfLCl1x3XsU1+O9RnKWeN/KhwwtSk3TzVcw=;
+	s=default; t=1569778965;
+	bh=fmz5hC3yBNgy6dgTbMASSrGRRvVOVbS1qhdGVdbjLH0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B6uVY0FYV7/E+/LHvhBh6ofaM86xGcpAKh/UN2ACD18ZjZhR/1AiUw3Jzbfproj6Y
-	 yeYDmMn8t9EwPG/j2Ske07z5PHygX2u9cdOVMvN7TGBHItBV1WPzb2jDD9HGn818wJ
-	 FZyvOcBcKaEVoLb8rhaBmv5e5tqQEQf1hxzZXKJU=
+	b=lD6xihQdi9oC1Y28JaV8dmA7TYYB0RkYJormyivo6ze0CdnK4Q1XBud4mLuRQxmsj
+	 4wm1ydhjLx18A6kge7oKDpUV5pquQQRD6NucoZIMi8XCQYkDo2Ks3eEN+6Z9+ho1Cx
+	 86LeI1SmsHBEmefTUsw2Ny3EApxakUPT/73i0Ik8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729630AbfI2RcG (ORCPT
+        id S1729545AbfI2Rb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:32:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42810 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:31:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729591AbfI2RcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:32:05 -0400
+        id S1729518AbfI2Rby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:31:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7BBD2196E;
-        Sun, 29 Sep 2019 17:32:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0A3421925;
+        Sun, 29 Sep 2019 17:31:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778324;
-        bh=1gC8dF8dzfLCl1x3XsU1+O9RnKWeN/KhwwtSk3TzVcw=;
+        s=default; t=1569778313;
+        bh=fmz5hC3yBNgy6dgTbMASSrGRRvVOVbS1qhdGVdbjLH0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZndgS7LGHCSTDfbGS3wn6hSE2Da4e9AM9WUn36W1B2dqVreCDN/qWG+5eBNVGf8d6
-         AiaTNwnzRZSPUly4GSozkTXbmdtwBH4bCgXofX3qrcstGp82oV40Plg5B+WiPkZfrH
-         7wHWxZoEouid+7JCBcvEY/d53YMrL80gidYFUk6I=
+        b=w/gIGKn+Udn7cPkhPrlW6jyYfE5dVcHg4/DRmcG2h8ShQ5JmsD5UTGPg3pGuEL3u+
+         Qmy5PSSWKY3Jfi/jUEeNdUrDh9iVgMftL8PQvh2Fx3L5m43qld4wduZpf0ARx6Wz1/
+         Qg3GV5d6QJNa6CX+737VLQRtOYv/hkuT12VymCi4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paolo Valente <paolo.valente@linaro.org>,
-        Oleksandr Natalenko <oleksandr@natalenko.name>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 36/49] block, bfq: push up injection only after setting service time
-Date:   Sun, 29 Sep 2019 13:30:36 -0400
-Message-Id: <20190929173053.8400-36-sashal@kernel.org>
+Cc:     Thierry Reding <treding@nvidia.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 30/49] PCI: exynos: Propagate errors for optional PHYs
+Date:   Sun, 29 Sep 2019 13:30:30 -0400
+Message-Id: <20190929173053.8400-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173053.8400-1-sashal@kernel.org>
 References: <20190929173053.8400-1-sashal@kernel.org>
@@ -60,48 +63,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Valente <paolo.valente@linaro.org>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit 58494c980f40274c465ebfdece02d401def088bf ]
+[ Upstream commit ddd6960087d4b45759434146d681a94bbb1c54ad ]
 
-If equal to 0, the injection limit for a bfq_queue is pushed to 1
-after a first sample of the total service time of the I/O requests of
-the queue is computed (to allow injection to start). Yet, because of a
-mistake in the branch that performs this action, the push may happen
-also in some other case. This commit fixes this issue.
+devm_of_phy_get() can fail for a number of reasons besides probe
+deferral. It can for example return -ENOMEM if it runs out of memory as
+it tries to allocate devres structures. Propagating only -EPROBE_DEFER
+is problematic because it results in these legitimately fatal errors
+being treated as "PHY not specified in DT".
 
-Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+What we really want is to ignore the optional PHYs only if they have not
+been specified in DT. devm_of_phy_get() returns -ENODEV in this case, so
+that's the special case that we need to handle. So we propagate all
+errors, except -ENODEV, so that real failures will still cause the
+driver to fail probe.
+
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>
+Cc: Kukjin Kim <kgene@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bfq-iosched.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/pci/controller/dwc/pci-exynos.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index b33be928d164f..70bcbd02edcb1 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -5809,12 +5809,14 @@ static void bfq_update_inject_limit(struct bfq_data *bfqd,
- 	 */
- 	if ((bfqq->last_serv_time_ns == 0 && bfqd->rq_in_driver == 1) ||
- 	    tot_time_ns < bfqq->last_serv_time_ns) {
-+		if (bfqq->last_serv_time_ns == 0) {
-+			/*
-+			 * Now we certainly have a base value: make sure we
-+			 * start trying injection.
-+			 */
-+			bfqq->inject_limit = max_t(unsigned int, 1, old_limit);
-+		}
- 		bfqq->last_serv_time_ns = tot_time_ns;
--		/*
--		 * Now we certainly have a base value: make sure we
--		 * start trying injection.
--		 */
--		bfqq->inject_limit = max_t(unsigned int, 1, old_limit);
- 	} else if (!bfqd->rqs_injected && bfqd->rq_in_driver == 1)
- 		/*
- 		 * No I/O injected and no request still in service in
+diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
+index cee5f2f590e2d..14a6ba4067fbe 100644
+--- a/drivers/pci/controller/dwc/pci-exynos.c
++++ b/drivers/pci/controller/dwc/pci-exynos.c
+@@ -465,7 +465,7 @@ static int __init exynos_pcie_probe(struct platform_device *pdev)
+ 
+ 	ep->phy = devm_of_phy_get(dev, np, NULL);
+ 	if (IS_ERR(ep->phy)) {
+-		if (PTR_ERR(ep->phy) == -EPROBE_DEFER)
++		if (PTR_ERR(ep->phy) != -ENODEV)
+ 			return PTR_ERR(ep->phy);
+ 
+ 		ep->phy = NULL;
 -- 
 2.20.1
 
