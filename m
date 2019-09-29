@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A0FC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AF8C352A9
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3669E21906
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2388B21906
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:37:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778650;
-	bh=6VxObvtBRK/ilQU5VcaKho9SLGs2TFTb6Cc+yDAzb9M=;
+	s=default; t=1569778655;
+	bh=FRowA1mgth8qSVn5n86QD5RHhQy4jDtxItqvkVd170Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KNMRDtzbocJJMtJIlAC4DrH+QB1+F+QQ4X1NubtVCqQNvzNJoKys7k8ER8vt+1Ki1
-	 u64plHlTHSppxPiQV4nmyPRwgSXb4SGMchRLun1FAKwRDu7zZDHUQ1bbKAzXdIgnot
-	 E1xso1knfZLU+XPMYdAal4a33Hnb3eXaV10/4hPc=
+	b=k5SfsQF0alVc4KjNXxISuMJtaRqCqjD/k5URPSG1tB3a9c69OtimGChUzRtari0M7
+	 anFoNnCfQ/AOJRnXBmajHQsX93uT9eA9pdX2qjF2wBf+GM2LGK5QxqD9iz4ApK6e5h
+	 H0U5C0dmZp8l7gSPUZ7drXbepHpv7k/KmavvnCPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730205AbfI2Rh3 (ORCPT
+        id S1730287AbfI2RhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:37:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50024 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:37:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730313AbfI2RhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:37:06 -0400
+        id S1730114AbfI2RhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:37:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4117B21D71;
-        Sun, 29 Sep 2019 17:37:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C162B21BE5;
+        Sun, 29 Sep 2019 17:36:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778625;
-        bh=6VxObvtBRK/ilQU5VcaKho9SLGs2TFTb6Cc+yDAzb9M=;
+        s=default; t=1569778620;
+        bh=FRowA1mgth8qSVn5n86QD5RHhQy4jDtxItqvkVd170Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EH1JxedZpB1X7Z8TFN4SlOUSBh9LfkFrl4BoOo15b4KIp9bg36PiQdfyIsU2Evp1P
-         GmDyd3SRdxhOjkW54wQgSMDzonjX/YKwJqQ+rDWm8+QXsdzvRSy1REuwjRKq1g2j9X
-         bw0vu6P63wtWgrjYKRSWEyUuxdJQt+/9kfkcPDi4=
+        b=gXmQ491ivDnVbcQgC6U2GJsVrFxYinUU+JGGH5YaEdeXx5AX1/g5eiqEFMHv502/L
+         ZTX3QZD0wfFIjNHqRxt668LQtgUR3w6AAapZd2owL11mD5gUmPH77v7jU9BQh4HveW
+         HRgNxRCO6S5Nv38usnBPZss4x6TJHJNfzi3gk3TY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 5/9] security: smack: Fix possible null-pointer dereferences in smack_socket_sock_rcv_skb()
-Date:   Sun, 29 Sep 2019 13:36:50 -0400
-Message-Id: <20190929173655.10178-5-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 2/9] mfd: intel-lpss: Remove D3cold delay
+Date:   Sun, 29 Sep 2019 13:36:47 -0400
+Message-Id: <20190929173655.10178-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173655.10178-1-sashal@kernel.org>
 References: <20190929173655.10178-1-sashal@kernel.org>
@@ -60,46 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 3f4287e7d98a2954f20bf96c567fdffcd2b63eb9 ]
+[ Upstream commit 76380a607ba0b28627c9b4b55cd47a079a59624b ]
 
-In smack_socket_sock_rcv_skb(), there is an if statement
-on line 3920 to check whether skb is NULL:
-    if (skb && skb->secmark != 0)
+Goodix touchpad may drop its first couple input events when
+i2c-designware-platdrv and intel-lpss it connects to took too long to
+runtime resume from runtime suspended state.
 
-This check indicates skb can be NULL in some cases.
+This issue happens becuase the touchpad has a rather small buffer to
+store up to 13 input events, so if the host doesn't read those events in
+time (i.e. runtime resume takes too long), events are dropped from the
+touchpad's buffer.
 
-But on lines 3931 and 3932, skb is used:
-    ad.a.u.net->netif = skb->skb_iif;
-    ipv6_skb_to_auditdata(skb, &ad.a, NULL);
+The bottleneck is D3cold delay it waits when transitioning from D3cold
+to D0, hence remove the delay to make the resume faster. I've tested
+some systems with intel-lpss and haven't seen any regression.
 
-Thus, possible null-pointer dereferences may occur when skb is NULL.
-
-To fix these possible bugs, an if statement is added to check skb.
-
-These bugs are found by a static analysis tool STCheck written by us.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202683
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/smack/smack_lsm.c | 2 ++
+ drivers/mfd/intel-lpss-pci.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
-index 9db7c80a74aa5..b76075dbd6fc8 100644
---- a/security/smack/smack_lsm.c
-+++ b/security/smack/smack_lsm.c
-@@ -3986,6 +3986,8 @@ static int smack_socket_sock_rcv_skb(struct sock *sk, struct sk_buff *skb)
- 			skp = smack_ipv6host_label(&sadd);
- 		if (skp == NULL)
- 			skp = smack_net_ambient;
-+		if (skb == NULL)
-+			break;
- #ifdef CONFIG_AUDIT
- 		smk_ad_init_net(&ad, __func__, LSM_AUDIT_DATA_NET, &net);
- 		ad.a.u.net->family = sk->sk_family;
+diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
+index 5bfdfccbb9a1a..032c95157497f 100644
+--- a/drivers/mfd/intel-lpss-pci.c
++++ b/drivers/mfd/intel-lpss-pci.c
+@@ -38,6 +38,8 @@ static int intel_lpss_pci_probe(struct pci_dev *pdev,
+ 	info->mem = &pdev->resource[0];
+ 	info->irq = pdev->irq;
+ 
++	pdev->d3cold_delay = 0;
++
+ 	/* Probably it is enough to set this for iDMA capable devices only */
+ 	pci_set_master(pdev);
+ 
 -- 
 2.20.1
 
