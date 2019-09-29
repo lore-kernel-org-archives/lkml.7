@@ -2,69 +2,84 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98778C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 16:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB58C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 16:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 766A320673
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 16:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48EBC20673
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 16:43:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729039AbfI2Qk6 (ORCPT
+        id S1729071AbfI2Qna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 12:40:58 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:39521 "EHLO
+        Sun, 29 Sep 2019 12:43:30 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:39701 "EHLO
         mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725948AbfI2Qk6 (ORCPT
+        by vger.kernel.org with ESMTP id S1725948AbfI2Qna (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 12:40:58 -0400
+        Sun, 29 Sep 2019 12:43:30 -0400
 X-IronPort-AV: E=Sophos;i="5.64,563,1559512800"; 
-   d="scan'208";a="403855449"
+   d="scan'208";a="403855551"
 Received: from 81-65-53-202.rev.numericable.fr (HELO hadrien) ([81.65.53.202])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Sep 2019 18:40:56 +0200
-Date:   Sun, 29 Sep 2019 18:40:56 +0200 (CEST)
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 29 Sep 2019 18:43:28 +0200
+Date:   Sun, 29 Sep 2019 18:43:28 +0200 (CEST)
 From:   Julia Lawall <julia.lawall@lip6.fr>
 X-X-Sender: jll@hadrien
-To:     Markus Elfring <Markus.Elfring@web.de>
-cc:     Coccinelle <cocci@systeme.lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Matthias Maennich <maennich@google.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Yue Haibing <yuehaibing@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, Martijn Coenen <maco@android.com>
-Subject: Re: [Cocci] [RFC PATCH] scripts: Fix coccicheck failed
-In-Reply-To: <7664d59f-78cf-7644-0ee8-304b3d78d752@web.de>
-Message-ID: <alpine.DEB.2.21.1909291840280.3346@hadrien>
-References: <20190928094245.45696-1-yuehaibing@huawei.com> <7664d59f-78cf-7644-0ee8-304b3d78d752@web.de>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?ISO-8859-2?Q?Radim_Kr=E8m=E1=F8?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Subject: [PATCH] KVM: x86: fix bugon.cocci warnings
+Message-ID: <alpine.DEB.2.21.1909291841260.3346@hadrien>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-78162315-1569775256=:3346"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+From: kbuild test robot <lkp@intel.com>
 
---8323329-78162315-1569775256=:3346
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Use BUG_ON instead of a if condition followed by BUG.
 
-> I suggest to think a bit more about the desired directory hierarchy.
-> If you would like to keep these files generally within a (sub)folder
-> of “scripts/coccinelle”, other solutions should be taken into account.
-> How do you think about to adjust the filter command?
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/coccicheck?id=02dc96ef6c25f990452c114c59d75c368a1f4c8f#n257
+Generated by: scripts/coccinelle/misc/bugon.cocci
 
-Changing this could also be a solution.
+Fixes: 4b526de50e39 ("KVM: x86: Check kvm_rebooting in kvm_spurious_fault()")
+CC: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
+---
 
-julia
---8323329-78162315-1569775256=:3346--
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   02dc96ef6c25f990452c114c59d75c368a1f4c8f
+commit: 4b526de50e39b38cd828396267379183c7c21354 KVM: x86: Check kvm_rebooting in kvm_spurious_fault()
+:::::: branch date: 9 hours ago
+:::::: commit date: 4 days ago
+
+Please take the patch only if it's a positive warning. Thanks!
+
+ x86.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -360,8 +360,7 @@ EXPORT_SYMBOL_GPL(kvm_set_apic_base);
+ asmlinkage __visible void kvm_spurious_fault(void)
+ {
+ 	/* Fault while not rebooting.  We want the trace. */
+-	if (!kvm_rebooting)
+-		BUG();
++	BUG_ON(!kvm_rebooting);
+ }
+ EXPORT_SYMBOL_GPL(kvm_spurious_fault);
+
