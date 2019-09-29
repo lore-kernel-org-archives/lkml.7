@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C5BC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 701DBC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1944621906
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:01:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4556021906
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:01:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569765668;
-	bh=oJ1DAPC6i1yD3poQaOwZoOjZyJqHHxMJuBpIZsKKyd8=;
+	s=default; t=1569765674;
+	bh=Zhqt+ijLdkbbOgVShEyuhIXfz7EmFYOouXSeyX7XA3c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=exIeZTjMmIJD6ZbtwC22qA4GFlsC1EcqYK4w89SyZs1rHEJhZkQ3JqQ3NcbS6UPEH
-	 kagT9ueqQVXZ3SIRgq+dEiKMy9G/gKhTZvZ+B4Ya4hcJq5k58d6qUJa+FWIsZZ60vR
-	 nlBK8VTURPbiz2BMKQRMbFe+Fh+wr+qNOC3Jmfnc=
+	b=GcU8kaOggm/qycOD2SqzdrFno+d348rLjCyim9cuzwj0g+ZSlE1ipmxNeem0uPFhR
+	 Zwa2mCg4ZeaNNrX6v0P5FqENEpke4Cm3R+tlsE4dUq3pPoQfXrJVvZqpt24Gch3x4I
+	 ryhnteCo/HvhOS7bo79BGo0fnGA5ktu1vLnRx1YQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729278AbfI2OBH (ORCPT
+        id S1729997AbfI2OBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 10:01:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43156 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 10:01:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729385AbfI2OBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 10:01:04 -0400
+        id S1729975AbfI2OBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 10:01:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31A402086A;
-        Sun, 29 Sep 2019 14:01:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA990218DE;
+        Sun, 29 Sep 2019 14:01:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569765663;
-        bh=oJ1DAPC6i1yD3poQaOwZoOjZyJqHHxMJuBpIZsKKyd8=;
+        s=default; t=1569765670;
+        bh=Zhqt+ijLdkbbOgVShEyuhIXfz7EmFYOouXSeyX7XA3c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cQcC/DjJaYmi1gQ3xBcboEjgX7ZdS72RIPbnVMM4dcrt3XZ4qTNYu12nvz17/VeTw
-         /xU5qPN62JRXERVptZoPqSv/FA9F3LEL1jgpZWWKfctevF5dkSzjfVt2lHHl6Ckdme
-         kUW2R2pq0u7ooWzsCcqGaYB5GshgSOhJl3afrnak=
+        b=je4IbyuiDYUea4mreWGyERf7cLAOWaNLlycV8MpiaSNcCgq1Li4QtjYZUSyQiQkBY
+         VyBMa3f40yFz6VLOSzY+3wGUNm9rlv9gQyJu4bkCOz/Fv6Q6SaQ5n0sDBbC7NaTY31
+         vrv7noM2HCLQziq5eyhINCkEGR2l8iRcp7/Ab8qM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Greg Kurz <groug@kaod.org>,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.2 09/45] powerpc/xive: Fix bogus error code returned by OPAL
-Date:   Sun, 29 Sep 2019 15:55:37 +0200
-Message-Id: <20190929135027.480058711@linuxfoundation.org>
+        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Yonglong Liu <liuyonglong@huawei.com>
+Subject: [PATCH 5.2 11/45] Revert "net: hns: fix LED configuration for marvell phy"
+Date:   Sun, 29 Sep 2019 15:55:39 +0200
+Message-Id: <20190929135027.883053256@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190929135024.387033930@linuxfoundation.org>
 References: <20190929135024.387033930@linuxfoundation.org>
@@ -60,81 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kurz <groug@kaod.org>
+From: David S. Miller <davem@davemloft.net>
 
-commit 6ccb4ac2bf8a35c694ead92f8ac5530a16e8f2c8 upstream.
+commit b3e487c0cf425369a48049251af75593a5652dc1 upstream.
 
-There's a bug in skiboot that causes the OPAL_XIVE_ALLOCATE_IRQ call
-to return the 32-bit value 0xffffffff when OPAL has run out of IRQs.
-Unfortunatelty, OPAL return values are signed 64-bit entities and
-errors are supposed to be negative. If that happens, the linux code
-confusingly treats 0xffffffff as a valid IRQ number and panics at some
-point.
+This reverts commit f4e5f775db5a4631300dccd0de5eafb50a77c131.
 
-A fix was recently merged in skiboot:
+Andrew Lunn says this should be handled another way.
 
-e97391ae2bb5 ("xive: fix return value of opal_xive_allocate_irq()")
-
-but we need a workaround anyway to support older skiboots already
-in the field.
-
-Internally convert 0xffffffff to OPAL_RESOURCE which is the usual error
-returned upon resource exhaustion.
-
-Cc: stable@vger.kernel.org # v4.12+
-Signed-off-by: Greg Kurz <groug@kaod.org>
-Reviewed-by: Cédric Le Goater <clg@kaod.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/156821713818.1985334.14123187368108582810.stgit@bahia.lan
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Yonglong Liu <liuyonglong@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/include/asm/opal.h            |    2 +-
- arch/powerpc/platforms/powernv/opal-call.c |    2 +-
- arch/powerpc/sysdev/xive/native.c          |   11 +++++++++++
- 3 files changed, 13 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/hisilicon/hns/hns_enet.c |   23 +----------------------
+ 1 file changed, 1 insertion(+), 22 deletions(-)
 
---- a/arch/powerpc/include/asm/opal.h
-+++ b/arch/powerpc/include/asm/opal.h
-@@ -272,7 +272,7 @@ int64_t opal_xive_get_vp_info(uint64_t v
- int64_t opal_xive_set_vp_info(uint64_t vp,
- 			      uint64_t flags,
- 			      uint64_t report_cl_pair);
--int64_t opal_xive_allocate_irq(uint32_t chip_id);
-+int64_t opal_xive_allocate_irq_raw(uint32_t chip_id);
- int64_t opal_xive_free_irq(uint32_t girq);
- int64_t opal_xive_sync(uint32_t type, uint32_t id);
- int64_t opal_xive_dump(uint32_t type, uint32_t id);
---- a/arch/powerpc/platforms/powernv/opal-call.c
-+++ b/arch/powerpc/platforms/powernv/opal-call.c
-@@ -257,7 +257,7 @@ OPAL_CALL(opal_xive_set_queue_info,		OPA
- OPAL_CALL(opal_xive_donate_page,		OPAL_XIVE_DONATE_PAGE);
- OPAL_CALL(opal_xive_alloc_vp_block,		OPAL_XIVE_ALLOCATE_VP_BLOCK);
- OPAL_CALL(opal_xive_free_vp_block,		OPAL_XIVE_FREE_VP_BLOCK);
--OPAL_CALL(opal_xive_allocate_irq,		OPAL_XIVE_ALLOCATE_IRQ);
-+OPAL_CALL(opal_xive_allocate_irq_raw,		OPAL_XIVE_ALLOCATE_IRQ);
- OPAL_CALL(opal_xive_free_irq,			OPAL_XIVE_FREE_IRQ);
- OPAL_CALL(opal_xive_get_vp_info,		OPAL_XIVE_GET_VP_INFO);
- OPAL_CALL(opal_xive_set_vp_info,		OPAL_XIVE_SET_VP_INFO);
---- a/arch/powerpc/sysdev/xive/native.c
-+++ b/arch/powerpc/sysdev/xive/native.c
-@@ -231,6 +231,17 @@ static bool xive_native_match(struct dev
- 	return of_device_is_compatible(node, "ibm,opal-xive-vc");
+--- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+@@ -11,7 +11,6 @@
+ #include <linux/io.h>
+ #include <linux/ip.h>
+ #include <linux/ipv6.h>
+-#include <linux/marvell_phy.h>
+ #include <linux/module.h>
+ #include <linux/phy.h>
+ #include <linux/platform_device.h>
+@@ -1150,13 +1149,6 @@ static void hns_nic_adjust_link(struct n
+ 	}
  }
  
-+static s64 opal_xive_allocate_irq(u32 chip_id)
-+{
-+	s64 irq = opal_xive_allocate_irq_raw(chip_id);
-+
-+	/*
-+	 * Old versions of skiboot can incorrectly return 0xffffffff to
-+	 * indicate no space, fix it up here.
-+	 */
-+	return irq == 0xffffffff ? OPAL_RESOURCE : irq;
-+}
-+
- #ifdef CONFIG_SMP
- static int xive_native_get_ipi(unsigned int cpu, struct xive_cpu *xc)
- {
+-static int hns_phy_marvell_fixup(struct phy_device *phydev)
+-{
+-	phydev->dev_flags |= MARVELL_PHY_LED0_LINK_LED1_ACTIVE;
+-
+-	return 0;
+-}
+-
+ /**
+  *hns_nic_init_phy - init phy
+  *@ndev: net device
+@@ -1182,16 +1174,6 @@ int hns_nic_init_phy(struct net_device *
+ 	if (h->phy_if != PHY_INTERFACE_MODE_XGMII) {
+ 		phy_dev->dev_flags = 0;
+ 
+-		/* register the PHY fixup (for Marvell 88E1510) */
+-		ret = phy_register_fixup_for_uid(MARVELL_PHY_ID_88E1510,
+-						 MARVELL_PHY_ID_MASK,
+-						 hns_phy_marvell_fixup);
+-		/* we can live without it, so just issue a warning */
+-		if (ret)
+-			netdev_warn(ndev,
+-				    "Cannot register PHY fixup, ret=%d\n",
+-				    ret);
+-
+ 		ret = phy_connect_direct(ndev, phy_dev, hns_nic_adjust_link,
+ 					 h->phy_if);
+ 	} else {
+@@ -2447,11 +2429,8 @@ static int hns_nic_dev_remove(struct pla
+ 		hns_nic_uninit_ring_data(priv);
+ 	priv->ring_data = NULL;
+ 
+-	if (ndev->phydev) {
+-		phy_unregister_fixup_for_uid(MARVELL_PHY_ID_88E1510,
+-					     MARVELL_PHY_ID_MASK);
++	if (ndev->phydev)
+ 		phy_disconnect(ndev->phydev);
+-	}
+ 
+ 	if (!IS_ERR_OR_NULL(priv->ae_handle))
+ 		hnae_put_handle(priv->ae_handle);
 
 
