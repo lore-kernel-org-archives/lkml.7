@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88568C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E29C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6062B21835
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7F7B21882
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:57:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569765427;
-	bh=zBIgDdIM5oBN2pRQk15Qm3YAgRhv9IwZ7wotxvqQnIQ=;
+	s=default; t=1569765433;
+	bh=ErNap2xw6iRG18xwQrNDGvj100492629qz78lFk2HEc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n/4GV9n3Q5uSqsgXbrI810mOh/AwHhPse3xozpFw/8W8kQNSnIJ8HYQhTbGE4RUhZ
-	 0hEBAadWpCV0h+ZZa8jMs+J3WjotXogqzKxoll60oQ1IVSEwig0brMdppm6zNpNrO/
-	 waj5rYUIgZfRmuEVfZxNX89DW9P2tr0AzbOOntdU=
+	b=1DGp23epw8cQiiAl6K1a+0nkv8XHYuwgSHhz9dppJFV/8AnaCEhfHM8wDw/Kn+dCm
+	 G8h87VIG+Rwg1Gc1Z+YDUFkhsxgDFU2A6EJGw1Z9wkDh5M2WUiHrjEYEGxerUNvhPk
+	 HY/+Rh+gr/crMg6fIKg/GrT/2YX1IvetUV4NUmIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729110AbfI2N5C (ORCPT
+        id S1729174AbfI2N5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 09:57:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37082 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 09:57:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725974AbfI2N46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 09:56:58 -0400
+        id S1729145AbfI2N5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 09:57:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0843421882;
-        Sun, 29 Sep 2019 13:56:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 748AF218DE;
+        Sun, 29 Sep 2019 13:57:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569765417;
-        bh=zBIgDdIM5oBN2pRQk15Qm3YAgRhv9IwZ7wotxvqQnIQ=;
+        s=default; t=1569765428;
+        bh=ErNap2xw6iRG18xwQrNDGvj100492629qz78lFk2HEc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=meayJ8swhzsvhIh9tnQbkRZ46EKwS3obVC5rrDw3WrZem/jnqycBkuE5IS5lGYDnO
-         +ka0ffWoAOvsco/PitndfrQz7z2w1AtRidtWn4zecsBUvg5LUBPOu4XFb+/XHE324+
-         +nx76KH6MR4N/DabTcuqx8gUMQOzdw2SSyPBVcs4=
+        b=c2xCN/4n48bwCTjsYnOsO6H//fwRgv3XvPXw2wyHQwjL+fUw5aapqQM/dZdN8X77k
+         ejcAFszmdgFitBHZefhwjmYXe1c5ChSDLANDXTlc+OjiZnaG7fIBU+eMVjoa9zE8Cn
+         6N3Frh8p07VLUh72L8pGBxgdrvxfVS6JyaemzHv0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aurelien Aptel <aaptel@suse.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 4.19 14/63] CIFS: fix deadlock in cached root handling
-Date:   Sun, 29 Sep 2019 15:53:47 +0200
-Message-Id: <20190929135033.649952261@linuxfoundation.org>
+        stable@vger.kernel.org, Greg Kurz <groug@kaod.org>,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.19 04/63] powerpc/xive: Fix bogus error code returned by OPAL
+Date:   Sun, 29 Sep 2019 15:53:37 +0200
+Message-Id: <20190929135032.069551607@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190929135031.382429403@linuxfoundation.org>
 References: <20190929135031.382429403@linuxfoundation.org>
@@ -60,88 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aurelien Aptel <aaptel@suse.com>
+From: Greg Kurz <groug@kaod.org>
 
-commit 7e5a70ad88b1e6f6d9b934b2efb41afff496820f upstream.
+commit 6ccb4ac2bf8a35c694ead92f8ac5530a16e8f2c8 upstream.
 
-Prevent deadlock between open_shroot() and
-cifs_mark_open_files_invalid() by releasing the lock before entering
-SMB2_open, taking it again after and checking if we still need to use
-the result.
+There's a bug in skiboot that causes the OPAL_XIVE_ALLOCATE_IRQ call
+to return the 32-bit value 0xffffffff when OPAL has run out of IRQs.
+Unfortunatelty, OPAL return values are signed 64-bit entities and
+errors are supposed to be negative. If that happens, the linux code
+confusingly treats 0xffffffff as a valid IRQ number and panics at some
+point.
 
-Link: https://lore.kernel.org/linux-cifs/684ed01c-cbca-2716-bc28-b0a59a0f8521@prodrive-technologies.com/T/#u
-Fixes: 3d4ef9a15343 ("smb3: fix redundant opens on root")
-Signed-off-by: Aurelien Aptel <aaptel@suse.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
+A fix was recently merged in skiboot:
+
+e97391ae2bb5 ("xive: fix return value of opal_xive_allocate_irq()")
+
+but we need a workaround anyway to support older skiboots already
+in the field.
+
+Internally convert 0xffffffff to OPAL_RESOURCE which is the usual error
+returned upon resource exhaustion.
+
+Cc: stable@vger.kernel.org # v4.12+
+Signed-off-by: Greg Kurz <groug@kaod.org>
+Reviewed-by: Cédric Le Goater <clg@kaod.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/156821713818.1985334.14123187368108582810.stgit@bahia.lan
+(groug: fix arch/powerpc/platforms/powernv/opal-wrappers.S instead of
+        non-existing arch/powerpc/platforms/powernv/opal-call.c)
+Signed-off-by: Greg Kurz <groug@kaod.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- fs/cifs/smb2ops.c |   44 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ arch/powerpc/include/asm/opal.h                |    2 +-
+ arch/powerpc/platforms/powernv/opal-wrappers.S |    2 +-
+ arch/powerpc/sysdev/xive/native.c              |   11 +++++++++++
+ 3 files changed, 13 insertions(+), 2 deletions(-)
 
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -553,7 +553,50 @@ int open_shroot(unsigned int xid, struct
- 	oparams.fid = pfid;
- 	oparams.reconnect = false;
- 
-+	/*
-+	 * We do not hold the lock for the open because in case
-+	 * SMB2_open needs to reconnect, it will end up calling
-+	 * cifs_mark_open_files_invalid() which takes the lock again
-+	 * thus causing a deadlock
-+	 */
-+	mutex_unlock(&tcon->crfid.fid_mutex);
- 	rc = SMB2_open(xid, &oparams, &srch_path, &oplock, NULL, NULL, NULL);
-+	mutex_lock(&tcon->crfid.fid_mutex);
-+
-+	/*
-+	 * Now we need to check again as the cached root might have
-+	 * been successfully re-opened from a concurrent process
-+	 */
-+
-+	if (tcon->crfid.is_valid) {
-+		/* work was already done */
-+
-+		/* stash fids for close() later */
-+		struct cifs_fid fid = {
-+			.persistent_fid = pfid->persistent_fid,
-+			.volatile_fid = pfid->volatile_fid,
-+		};
-+
-+		/*
-+		 * Caller expects this func to set pfid to a valid
-+		 * cached root, so we copy the existing one and get a
-+		 * reference
-+		 */
-+		memcpy(pfid, tcon->crfid.fid, sizeof(*pfid));
-+		kref_get(&tcon->crfid.refcount);
-+
-+		mutex_unlock(&tcon->crfid.fid_mutex);
-+
-+		if (rc == 0) {
-+			/* close extra handle outside of critical section */
-+			SMB2_close(xid, tcon, fid.persistent_fid,
-+				   fid.volatile_fid);
-+		}
-+		return 0;
-+	}
-+
-+	/* Cached root is still invalid, continue normaly */
-+
- 	if (rc == 0) {
- 		memcpy(tcon->crfid.fid, pfid, sizeof(struct cifs_fid));
- 		tcon->crfid.tcon = tcon;
-@@ -561,6 +604,7 @@ int open_shroot(unsigned int xid, struct
- 		kref_init(&tcon->crfid.refcount);
- 		kref_get(&tcon->crfid.refcount);
- 	}
-+
- 	mutex_unlock(&tcon->crfid.fid_mutex);
- 	return rc;
+--- a/arch/powerpc/include/asm/opal.h
++++ b/arch/powerpc/include/asm/opal.h
+@@ -275,7 +275,7 @@ int64_t opal_xive_get_vp_info(uint64_t v
+ int64_t opal_xive_set_vp_info(uint64_t vp,
+ 			      uint64_t flags,
+ 			      uint64_t report_cl_pair);
+-int64_t opal_xive_allocate_irq(uint32_t chip_id);
++int64_t opal_xive_allocate_irq_raw(uint32_t chip_id);
+ int64_t opal_xive_free_irq(uint32_t girq);
+ int64_t opal_xive_sync(uint32_t type, uint32_t id);
+ int64_t opal_xive_dump(uint32_t type, uint32_t id);
+--- a/arch/powerpc/platforms/powernv/opal-wrappers.S
++++ b/arch/powerpc/platforms/powernv/opal-wrappers.S
+@@ -303,7 +303,7 @@ OPAL_CALL(opal_xive_set_queue_info,		OPA
+ OPAL_CALL(opal_xive_donate_page,		OPAL_XIVE_DONATE_PAGE);
+ OPAL_CALL(opal_xive_alloc_vp_block,		OPAL_XIVE_ALLOCATE_VP_BLOCK);
+ OPAL_CALL(opal_xive_free_vp_block,		OPAL_XIVE_FREE_VP_BLOCK);
+-OPAL_CALL(opal_xive_allocate_irq,		OPAL_XIVE_ALLOCATE_IRQ);
++OPAL_CALL(opal_xive_allocate_irq_raw,		OPAL_XIVE_ALLOCATE_IRQ);
+ OPAL_CALL(opal_xive_free_irq,			OPAL_XIVE_FREE_IRQ);
+ OPAL_CALL(opal_xive_get_vp_info,		OPAL_XIVE_GET_VP_INFO);
+ OPAL_CALL(opal_xive_set_vp_info,		OPAL_XIVE_SET_VP_INFO);
+--- a/arch/powerpc/sysdev/xive/native.c
++++ b/arch/powerpc/sysdev/xive/native.c
+@@ -235,6 +235,17 @@ static bool xive_native_match(struct dev
+ 	return of_device_is_compatible(node, "ibm,opal-xive-vc");
  }
+ 
++static s64 opal_xive_allocate_irq(u32 chip_id)
++{
++	s64 irq = opal_xive_allocate_irq_raw(chip_id);
++
++	/*
++	 * Old versions of skiboot can incorrectly return 0xffffffff to
++	 * indicate no space, fix it up here.
++	 */
++	return irq == 0xffffffff ? OPAL_RESOURCE : irq;
++}
++
+ #ifdef CONFIG_SMP
+ static int xive_native_get_ipi(unsigned int cpu, struct xive_cpu *xc)
+ {
 
 
