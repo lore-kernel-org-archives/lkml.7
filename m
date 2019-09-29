@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF957C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D5BC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9CDC21D7D
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8975621925
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:32:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778358;
-	bh=lDQ0vRak90qAKBGgcQOhzIF+hJtm9oHmlBRzBXpF70A=;
+	s=default; t=1569778362;
+	bh=Rq5KCnNb5DcsX1r+Iur5At0kw9Uc65vXdmpWwLR0yhI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iuYtgML29CMAtNQ66mXHGprA3YskbJVxUJ63wVGsVGwFpaneVbKMP4v2Dko/UC/k8
-	 /mVy/3VO/TdM60xpj+dLvR8IFqlf1fPjXaEKQPV23dNpmB5dHU4iuVa2IeGoC/dkW6
-	 Azma0HkoPfAxsO+zfQ+TsbyEFNFxA8DDHkF+wpaY=
+	b=tKykNC0AJVHR6xi7goTMANsWWJNIklcefn7SdjvtFk7CQsc9cO7kQnjwSMJb8rvqp
+	 IqTyzcilvx42+oNI7vd82yasbOE5Rhg7mnMa0H1jnw0YMUBnOQmlS8bgUtjhsweXpN
+	 3hhCpchX7VPn7em8auFKwH9OLDDBdfd+U9XMl92Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729811AbfI2Rch (ORCPT
+        id S1729828AbfI2Rcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:32:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43556 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:32:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729690AbfI2Rcf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:32:35 -0400
+        id S1729690AbfI2Rci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:32:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA5EB21928;
-        Sun, 29 Sep 2019 17:32:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A95921D56;
+        Sun, 29 Sep 2019 17:32:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778354;
-        bh=lDQ0vRak90qAKBGgcQOhzIF+hJtm9oHmlBRzBXpF70A=;
+        s=default; t=1569778358;
+        bh=Rq5KCnNb5DcsX1r+Iur5At0kw9Uc65vXdmpWwLR0yhI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tNiyu296XGzj1065NBpT4HlkUWBAfLIO/WQXfSpw16TWttlDXms0/YD/2APaoPJ4c
-         e0OIJ55nrHAsmw6DgYj6091G+VifYBzahmFRGQ6eiq+O3oPUx12RJuL0h9Sj1y1fEE
-         Jff3CUrqemCMAqfWGvIeOzQnXI5QnSpTtL/6CqKA=
+        b=ymt66MxFsPZyxCZUnsrf9DwX4OtsJriMcEoU+0YhY0YDpoPX5f4RD3FAg7hkVp+80
+         1aSnb8tG9xUJobVN/dBvnv6qJwFMbVt3mphMxWcB+M5xgvk38+mrGAxL9EvlG8Axjz
+         0axWSDdBFBwnCxOVNBz+XizyeuOBwJMWN5QfgyXs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Alexandre Ghiti <alex@ghiti.fr>, Kees Cook <keescook@chromium.org>,
@@ -57,9 +57,9 @@ Cc:     Alexandre Ghiti <alex@ghiti.fr>, Kees Cook <keescook@chromium.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 48/49] arm: properly account for stack randomization and stack guard gap
-Date:   Sun, 29 Sep 2019 13:30:48 -0400
-Message-Id: <20190929173053.8400-48-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 49/49] arm: use STACK_TOP when computing mmap base address
+Date:   Sun, 29 Sep 2019 13:30:49 -0400
+Message-Id: <20190929173053.8400-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173053.8400-1-sashal@kernel.org>
 References: <20190929173053.8400-1-sashal@kernel.org>
@@ -74,14 +74,12 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alexandre Ghiti <alex@ghiti.fr>
 
-[ Upstream commit af0f4297286f13a75edf93677b1fb2fc16c412a7 ]
+[ Upstream commit 86e568e9c0525fc40e76d827212d5e9721cf7504 ]
 
-This commit takes care of stack randomization and stack guard gap when
-computing mmap base address and checks if the task asked for
-randomization.  This fixes the problem uncovered and not fixed for arm
-here: https://lkml.kernel.org/r/20170622200033.25714-1-riel@redhat.com
+mmap base address must be computed wrt stack top address, using TASK_SIZE
+is wrong since STACK_TOP and TASK_SIZE are not equivalent.
 
-Link: http://lkml.kernel.org/r/20190730055113.23635-7-alex@ghiti.fr
+Link: http://lkml.kernel.org/r/20190730055113.23635-8-alex@ghiti.fr
 Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
 Acked-by: Kees Cook <keescook@chromium.org>
 Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
@@ -100,41 +98,31 @@ Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mm/mmap.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ arch/arm/mm/mmap.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm/mm/mmap.c b/arch/arm/mm/mmap.c
-index f866870db749c..bff3d00bda5be 100644
+index bff3d00bda5be..0b94b674aa91f 100644
 --- a/arch/arm/mm/mmap.c
 +++ b/arch/arm/mm/mmap.c
-@@ -18,8 +18,9 @@
- 	 (((pgoff)<<PAGE_SHIFT) & (SHMLBA-1)))
+@@ -19,7 +19,7 @@
  
  /* gap between mmap and stack */
--#define MIN_GAP (128*1024*1024UL)
--#define MAX_GAP ((TASK_SIZE)/6*5)
-+#define MIN_GAP		(128*1024*1024UL)
-+#define MAX_GAP		((TASK_SIZE)/6*5)
-+#define STACK_RND_MASK	(0x7ff >> (PAGE_SHIFT - 12))
+ #define MIN_GAP		(128*1024*1024UL)
+-#define MAX_GAP		((TASK_SIZE)/6*5)
++#define MAX_GAP		((STACK_TOP)/6*5)
+ #define STACK_RND_MASK	(0x7ff >> (PAGE_SHIFT - 12))
  
  static int mmap_is_legacy(struct rlimit *rlim_stack)
- {
-@@ -35,6 +36,15 @@ static int mmap_is_legacy(struct rlimit *rlim_stack)
- static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
- {
- 	unsigned long gap = rlim_stack->rlim_cur;
-+	unsigned long pad = stack_guard_gap;
-+
-+	/* Account for stack randomization if necessary */
-+	if (current->flags & PF_RANDOMIZE)
-+		pad += (STACK_RND_MASK << PAGE_SHIFT);
-+
-+	/* Values close to RLIM_INFINITY can overflow. */
-+	if (gap + pad > gap)
-+		gap += pad;
+@@ -51,7 +51,7 @@ static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
+ 	else if (gap > MAX_GAP)
+ 		gap = MAX_GAP;
  
- 	if (gap < MIN_GAP)
- 		gap = MIN_GAP;
+-	return PAGE_ALIGN(TASK_SIZE - gap - rnd);
++	return PAGE_ALIGN(STACK_TOP - gap - rnd);
+ }
+ 
+ /*
 -- 
 2.20.1
 
