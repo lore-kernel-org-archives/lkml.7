@@ -2,166 +2,96 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78EC0C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 21:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C3EC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 21:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 560312081B
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 21:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AD2C21835
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 21:09:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WIUTOy91"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729072AbfI2VFU (ORCPT
+        id S1729136AbfI2VJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 17:05:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50946 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726390AbfI2VFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 17:05:20 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id ABEF1859FF;
-        Sun, 29 Sep 2019 21:05:19 +0000 (UTC)
-Received: from krava (ovpn-204-49.brq.redhat.com [10.40.204.49])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 5240360C4B;
-        Sun, 29 Sep 2019 21:05:15 +0000 (UTC)
-Date:   Sun, 29 Sep 2019 23:05:14 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2] perf tools: avoid sample_reg_masks being const + weak
-Message-ID: <20190929210514.GC602@krava>
-References: <20190927211005.147176-1-irogers@google.com>
- <20190927214341.170683-1-irogers@google.com>
+        Sun, 29 Sep 2019 17:09:13 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36764 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726390AbfI2VJN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 17:09:13 -0400
+Received: by mail-wm1-f66.google.com with SMTP id m18so10536394wmc.1
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Sep 2019 14:09:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=835gZDZiuAF6RS45JuXHhw4Y13hBZmcyjNDrpLLnfmM=;
+        b=WIUTOy91IuoCxAELuPqxD4CKI0w4Iiw7JljoJS3qctBLHtDR76dHlhD4OpgzaNUnWQ
+         tKRpmpEgz21rdRo2gCI5zl7tzSSeGwhKxh9hR0Ui1ebdy0CTYRRsNaB2/I2X9s6NFZYj
+         UecVusL2XHESUreXOgMkoY/VSUylSNw/8RLBC1jjyc8Rz+UZirvQ6BRkh7xmSmJPIHth
+         5sBqvC243Hbujb661UxDZOSmFS7heSRsrs6wf0PMggl200i3/QHKcpJptT4uw9wSA4G8
+         H3Kh2XR2QntogKOgLxgDyqLDe39VbIcsCMVFNXJNh2jJVyBg/LKt9NHnL3sa7Ht44Czx
+         RJlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=835gZDZiuAF6RS45JuXHhw4Y13hBZmcyjNDrpLLnfmM=;
+        b=mrvdXJ8N+bwneF+evfkcuvhSuKlsLiWz9f8W2trU89jCQc6MiO7B5Qu0G7U98KxXiz
+         qpf9JX0uHJe2NOcaxFtsi6JoLgQxrsZfoCIPlZDifPTEg5tRqEWJvhPhJBCGpLS/Ma4g
+         5B/Aq1K7k6bzv+W9Cd56YSi4JGQsXR3GdS6VOGkBb6nYEiMOSVz+kbAgjEqaff0vWyLD
+         JlrAbzjHrxaJyXZ77NEE4HpVjokwW4gbkpdHCzU2AGVJoM/6G+kjnd8jTYgV6SZ0q94K
+         4qwL53Bo9tpNa9ZyNqVpMYQjKiJZLxX8YnJKYnqqVnB6AL3YmbrTYHtqEJAH+aXMw4js
+         Kk3A==
+X-Gm-Message-State: APjAAAVOE8Dd5gVxkJ3QFoXgUFzprQPjdRvgC2yFLEWmhoX57au24qUp
+        yfubNe9DO0OPTuQXA38gPw==
+X-Google-Smtp-Source: APXvYqw/QW34YVSRfb9yYDWgKOd0tsxqOry2MrRncpo1t7GZ9CS1E9wu/zy+Y6iVPy/h/SGTKM1XVQ==
+X-Received: by 2002:a1c:3cc3:: with SMTP id j186mr14001127wma.119.1569791350994;
+        Sun, 29 Sep 2019 14:09:10 -0700 (PDT)
+Received: from avx2 ([46.53.249.180])
+        by smtp.gmail.com with ESMTPSA id j1sm23452456wrg.24.2019.09.29.14.09.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 29 Sep 2019 14:09:10 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 00:09:08 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, intel-gfx@lists.freedesktop.org,
+        rostedt@goodmis.org, mingo@redhat.com
+Subject: Re: [PATCH] Make is_signed_type() simpler
+Message-ID: <20190929210908.GA14456@avx2>
+References: <20190929200619.GA12851@avx2>
+ <f99ca43d-1ba2-95fb-b90f-6706a06f8ce6@rasmusvillemoes.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190927214341.170683-1-irogers@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Sun, 29 Sep 2019 21:05:19 +0000 (UTC)
+In-Reply-To: <f99ca43d-1ba2-95fb-b90f-6706a06f8ce6@rasmusvillemoes.dk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 02:43:41PM -0700, Ian Rogers wrote:
-> Being const + weak breaks with some compilers that constant-propagate
-> from the weak symbol. This behavior is outside of the specification, but
-> in LLVM is chosen to match GCC's behavior.
+On Sun, Sep 29, 2019 at 10:21:48PM +0200, Rasmus Villemoes wrote:
+> On 29/09/2019 22.06, Alexey Dobriyan wrote:
+> > * Simply compare -1 with 0,
+> > * Drop unnecessary parenthesis sets
+> > 
+> > -#define is_signed_type(type)       (((type)(-1)) < (type)1)
+> > +#define is_signed_type(type)       ((type)-1 < 0)
 > 
-> LLVM's implementation was set in this patch:
-> https://github.com/llvm/llvm-project/commit/f49573d1eedcf1e44893d5a062ac1b72c8419646
-> A const + weak symbol is set to be weak_odr:
-> https://llvm.org/docs/LangRef.html
-> ODR is one definition rule, and given there is one constant definition
-> constant-propagation is possible. It is possible to get this code to
-> miscompile with LLVM when applying link time optimization. As compilers
-> become more aggressive, this is likely to break in more instances.
-> 
-> Move the definition of sample_reg_masks to the conditional part of
-> perf_regs.h and guard usage with HAVE_PERF_REGS_SUPPORT. This avoids the
-> weak symbol.
-> 
-> Fix an issue when HAVE_PERF_REGS_SUPPORT isn't defined from patch v1.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> NAK. I wrote it that way to avoid -Wtautological-compare when type is
+> unsigned.
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+Was is W=1?
 
-thanks,
-jirka
+godbolt doesn't show it with just -Wall
 
-> ---
->  tools/perf/util/parse-regs-options.c | 8 ++++++--
->  tools/perf/util/perf_regs.c          | 4 ----
->  tools/perf/util/perf_regs.h          | 4 ++--
->  3 files changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/tools/perf/util/parse-regs-options.c b/tools/perf/util/parse-regs-options.c
-> index ef46c2848808..e687497b3aac 100644
-> --- a/tools/perf/util/parse-regs-options.c
-> +++ b/tools/perf/util/parse-regs-options.c
-> @@ -13,7 +13,7 @@ static int
->  __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
->  {
->  	uint64_t *mode = (uint64_t *)opt->value;
-> -	const struct sample_reg *r;
-> +	const struct sample_reg *r = NULL;
->  	char *s, *os = NULL, *p;
->  	int ret = -1;
->  	uint64_t mask;
-> @@ -46,19 +46,23 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
->  
->  			if (!strcmp(s, "?")) {
->  				fprintf(stderr, "available registers: ");
-> +#ifdef HAVE_PERF_REGS_SUPPORT
->  				for (r = sample_reg_masks; r->name; r++) {
->  					if (r->mask & mask)
->  						fprintf(stderr, "%s ", r->name);
->  				}
-> +#endif
->  				fputc('\n', stderr);
->  				/* just printing available regs */
->  				return -1;
->  			}
-> +#ifdef HAVE_PERF_REGS_SUPPORT
->  			for (r = sample_reg_masks; r->name; r++) {
->  				if ((r->mask & mask) && !strcasecmp(s, r->name))
->  					break;
->  			}
-> -			if (!r->name) {
-> +#endif
-> +			if (!r || !r->name) {
->  				ui__warning("Unknown register \"%s\", check man page or run \"perf record %s?\"\n",
->  					    s, intr ? "-I" : "--user-regs=");
->  				goto error;
-> diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
-> index 2774cec1f15f..5ee47ae1509c 100644
-> --- a/tools/perf/util/perf_regs.c
-> +++ b/tools/perf/util/perf_regs.c
-> @@ -3,10 +3,6 @@
->  #include "perf_regs.h"
->  #include "event.h"
->  
-> -const struct sample_reg __weak sample_reg_masks[] = {
-> -	SMPL_REG_END
-> -};
-> -
->  int __weak arch_sdt_arg_parse_op(char *old_op __maybe_unused,
->  				 char **new_op __maybe_unused)
->  {
-> diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
-> index 47fe34e5f7d5..e014c2c038f4 100644
-> --- a/tools/perf/util/perf_regs.h
-> +++ b/tools/perf/util/perf_regs.h
-> @@ -15,8 +15,6 @@ struct sample_reg {
->  #define SMPL_REG2(n, b) { .name = #n, .mask = 3ULL << (b) }
->  #define SMPL_REG_END { .name = NULL }
->  
-> -extern const struct sample_reg sample_reg_masks[];
-> -
->  enum {
->  	SDT_ARG_VALID = 0,
->  	SDT_ARG_SKIP,
-> @@ -27,6 +25,8 @@ uint64_t arch__intr_reg_mask(void);
->  uint64_t arch__user_reg_mask(void);
->  
->  #ifdef HAVE_PERF_REGS_SUPPORT
-> +extern const struct sample_reg sample_reg_masks[];
-> +
->  #include <perf_regs.h>
->  
->  #define DWARF_MINIMAL_REGS ((1ULL << PERF_REG_IP) | (1ULL << PERF_REG_SP))
-> -- 
-> 2.23.0.444.g18eeb5a265-goog
-> 
+	https://godbolt.org/z/kCA7mm
+
+And the warning which found i915 case is -Wextra not -Wtautological-compare.
