@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5B2C32793
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1314DC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B4C721835
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:41:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DED4221835
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:41:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778893;
-	bh=Qh1KlvMoxLrpk6JpK1J4brdqfWQuG6tOYpJ91Mr/430=;
+	s=default; t=1569778895;
+	bh=hkctlvyNTnBfIMJFghBmAj+o0d3mrZHtRkI+IrQdr+g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NMisKJatb3+lsiMsUNnc3iWx9hTjqrohbROh+9k+gxdb231d+9TL4l3givN1zBpQ0
-	 5fFpuqtKzgLp6a93bnLxP9rd39dY2o+xTgV8xoeui6DO/0hib3IbPUQy/rszbptjNl
-	 EkEP9QUJGcl7ZgmetVAhL2a74lIMnE8k0CzcXUh0=
+	b=IwqdEAg21DAOE66COT1hB/1GowmFJ/8P7NjlqXrgIFPOKhDXrz9bh2LS2VC2p4dJN
+	 tPqWFYHsh1xCAw5xXji4ugf80ldlOe38zoLQupmuMNdkXWW2Ji9LsOBokRRKKBWjNx
+	 9N81IOazvsKWb54iz9PC13IyXE2u6gL7ej2hWiMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730107AbfI2Rdg (ORCPT
+        id S1730579AbfI2Rlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:33:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44798 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:41:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730069AbfI2Rda (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:33:30 -0400
+        id S1730093AbfI2Rdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:33:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BCA421A4C;
-        Sun, 29 Sep 2019 17:33:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF98A21A4C;
+        Sun, 29 Sep 2019 17:33:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778409;
-        bh=Qh1KlvMoxLrpk6JpK1J4brdqfWQuG6tOYpJ91Mr/430=;
+        s=default; t=1569778414;
+        bh=hkctlvyNTnBfIMJFghBmAj+o0d3mrZHtRkI+IrQdr+g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tAcL46SzlVdoaxXOHNX9Lw2tXf0wQIO9/fj1m4KrMgNED32bus15lTOcDP0kRx9QB
-         MYArH95ahjfC/GIr4MeCcsOGVMtVz+EbBqBNz/zf65IY781LWEZLZowkExsM9eTAEH
-         0pJP9mJ9I6tzplrDbB0WueOvI4QNpbFKMVJnohUs=
+        b=1Q8uY+6o8VguyrbJ6JIMG3iqjnQI9Yr654JhCIxz7dFz5lWefHxcP/TFoFxm3WpPb
+         W6mw3w/4ZsJgRoPxIT1fRlxM8vN6dgWRa6a87GmDqPA52sUvHKeO2DFFtyxIdoigfF
+         M2Ay8ARzoWBzY1ewS+R6aan08dpA+LOuYx84gkwY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anson Huang <Anson.Huang@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 19/42] rtc: snvs: fix possible race condition
-Date:   Sun, 29 Sep 2019 13:32:18 -0400
-Message-Id: <20190929173244.8918-19-sashal@kernel.org>
+Cc:     Krzysztof Wilczynski <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 22/42] PCI: Add pci_info_ratelimited() to ratelimit PCI separately
+Date:   Sun, 29 Sep 2019 13:32:21 -0400
+Message-Id: <20190929173244.8918-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173244.8918-1-sashal@kernel.org>
 References: <20190929173244.8918-1-sashal@kernel.org>
@@ -60,55 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+From: Krzysztof Wilczynski <kw@linux.com>
 
-[ Upstream commit 6fd4fe9b496d9ba3382992ff4fde3871d1b6f63d ]
+[ Upstream commit 7f1c62c443a453deb6eb3515e3c05650ffe0dcf0 ]
 
-The RTC IRQ is requested before the struct rtc_device is allocated,
-this may lead to a NULL pointer dereference in IRQ handler.
+Do not use printk_ratelimit() in drivers/pci/pci.c as it shares the rate
+limiting state with all other callers to the printk_ratelimit().
 
-To fix this issue, allocating the rtc_device struct before requesting
-the RTC IRQ using devm_rtc_allocate_device, and use rtc_register_device
-to register the RTC device.
+Add pci_info_ratelimited() (similar to pci_notice_ratelimited() added in
+the commit a88a7b3eb076 ("vfio: Use dev_printk() when possible")) and use
+it instead of printk_ratelimit() + pci_info().
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-Link: https://lore.kernel.org/r/20190716071858.36750-1-Anson.Huang@nxp.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Link: https://lore.kernel.org/r/20190825224616.8021-1-kw@linux.com
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-snvs.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/pci/pci.c   | 4 ++--
+ include/linux/pci.h | 3 +++
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/rtc/rtc-snvs.c b/drivers/rtc/rtc-snvs.c
-index 7ee673a25fd0a..4f9a107a04277 100644
---- a/drivers/rtc/rtc-snvs.c
-+++ b/drivers/rtc/rtc-snvs.c
-@@ -279,6 +279,10 @@ static int snvs_rtc_probe(struct platform_device *pdev)
- 	if (!data)
- 		return -ENOMEM;
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 088fcdc8d2b4d..f2ab112c0a71f 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -884,8 +884,8 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
  
-+	data->rtc = devm_rtc_allocate_device(&pdev->dev);
-+	if (IS_ERR(data->rtc))
-+		return PTR_ERR(data->rtc);
+ 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+ 	dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
+-	if (dev->current_state != state && printk_ratelimit())
+-		pci_info(dev, "Refused to change power state, currently in D%d\n",
++	if (dev->current_state != state)
++		pci_info_ratelimited(dev, "Refused to change power state, currently in D%d\n",
+ 			 dev->current_state);
+ 
+ 	/*
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index dd436da7eccc1..9feb59ac85507 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2375,4 +2375,7 @@ void pci_uevent_ers(struct pci_dev *pdev, enum  pci_ers_result err_type);
+ #define pci_notice_ratelimited(pdev, fmt, arg...) \
+ 	dev_notice_ratelimited(&(pdev)->dev, fmt, ##arg)
+ 
++#define pci_info_ratelimited(pdev, fmt, arg...) \
++	dev_info_ratelimited(&(pdev)->dev, fmt, ##arg)
 +
- 	data->regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node, "regmap");
- 
- 	if (IS_ERR(data->regmap)) {
-@@ -343,10 +347,9 @@ static int snvs_rtc_probe(struct platform_device *pdev)
- 		goto error_rtc_device_register;
- 	}
- 
--	data->rtc = devm_rtc_device_register(&pdev->dev, pdev->name,
--					&snvs_rtc_ops, THIS_MODULE);
--	if (IS_ERR(data->rtc)) {
--		ret = PTR_ERR(data->rtc);
-+	data->rtc->ops = &snvs_rtc_ops;
-+	ret = rtc_register_device(data->rtc);
-+	if (ret) {
- 		dev_err(&pdev->dev, "failed to register rtc: %d\n", ret);
- 		goto error_rtc_device_register;
- 	}
+ #endif /* LINUX_PCI_H */
 -- 
 2.20.1
 
