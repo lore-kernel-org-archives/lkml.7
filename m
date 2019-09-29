@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 602F9C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 352DDC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EB4121835
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F78521920
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:33:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778385;
-	bh=GKjZy4P+9TGkqvMqU59odRlZDEdrfCj2aPgQx1WN0X4=;
+	s=default; t=1569778389;
+	bh=DSnlGAxhxB7SSX6XqT2FqtNxf7JUGJ/CRstIzZireiI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aYAaaB+rvYmzO0Z/IL1O9OcOz++CxHi4rpdLnelIq26hrXKbsHHRik9IlL2xbCbHA
-	 sXtIRT1Hs0QHWr93I1/K6my5g+Ttyi/Cv4Bwx+nRD0A4pnrz7QWizU4Gs/42bPB0d6
-	 c97tPQwcBJzUqULU1g0FIBj0qR8rEs/FvHEjhp1Q=
+	b=KsmZUW47OfbORZFWL1z+yn1ASJZxZnq6Gx4FTjpB7LX/WjqRRQof50QqdtrxM91sJ
+	 Bp+ieTe/TeIWVPAsN48utZ1I9tFDdwuP1nkwEQji6UUQhMLlo3YjX8IRc1Tj/hpHwV
+	 zatIJYgPJZ0DVi4Gc2EOsmmTuhV45RgKhIF+Y5qc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729939AbfI2RdE (ORCPT
+        id S1729940AbfI2RdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:33:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44082 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:33:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729899AbfI2Rc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:32:59 -0400
+        id S1729925AbfI2RdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:33:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8ECE321920;
-        Sun, 29 Sep 2019 17:32:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D85A421928;
+        Sun, 29 Sep 2019 17:32:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778377;
-        bh=GKjZy4P+9TGkqvMqU59odRlZDEdrfCj2aPgQx1WN0X4=;
+        s=default; t=1569778380;
+        bh=DSnlGAxhxB7SSX6XqT2FqtNxf7JUGJ/CRstIzZireiI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jxdkojLBkMR0uTJjYSvget3NtH0395MDYMGhF3Vgt+kSHKRUHW0YFqecE8RbnzWT9
-         inX2/xur+ctxrJNUIng3qA87acymnsBxmrsJA5igO2Pnbws2z9zKh7EvJ8qJGGtQdt
-         nTk6/0brIHPB69oLcevHsfG97h3GDepoj+xRxpx0=
+        b=IDlgNZr92weRBLNSjxf3V0g5V5irYr5blztWA+6jrUVv63ahKFM5+6QKwxbSZxb1m
+         07Z/LaDjIE7YqHZ3WKBhnRMvvbTQeEmm76A/T3CdLoTOR0PcaVtuSnSuI7ZgW+CGp/
+         DZNK4m/zqeB97AOl0sjCHNHGCgt20xNeEY729Jvg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 05/42] i2c-cht-wc: Fix lockdep warning
-Date:   Sun, 29 Sep 2019 13:32:04 -0400
-Message-Id: <20190929173244.8918-5-sashal@kernel.org>
+Cc:     Jason Gerecke <killertofu@gmail.com>,
+        Jason Gerecke <jason.gerecke@wacom.com>,
+        Aaron Armstrong Skomra <aaron.skomra@wacom.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 08/42] HID: wacom: Fix several minor compiler warnings
+Date:   Sun, 29 Sep 2019 13:32:07 -0400
+Message-Id: <20190929173244.8918-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173244.8918-1-sashal@kernel.org>
 References: <20190929173244.8918-1-sashal@kernel.org>
@@ -59,188 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Jason Gerecke <killertofu@gmail.com>
 
-[ Upstream commit 232219b9a464c2479c98aa589acb1bd3383ae9d6 ]
+[ Upstream commit 073b50bccbbf99a3b79a1913604c656d0e1a56c9 ]
 
-When the kernel is build with lockdep support and the i2c-cht-wc driver is
-used, the following warning is shown:
+Addresses a few issues that were noticed when compiling with non-default
+warnings enabled. The trimmed-down warnings in the order they are fixed
+below are:
 
-[   66.674334] ======================================================
-[   66.674337] WARNING: possible circular locking dependency detected
-[   66.674340] 5.3.0-rc4+ #83 Not tainted
-[   66.674342] ------------------------------------------------------
-[   66.674345] systemd-udevd/1232 is trying to acquire lock:
-[   66.674349] 00000000a74dab07 (intel_soc_pmic_chtwc:167:(&cht_wc_regmap_cfg)->lock){+.+.}, at: regmap_write+0x31/0x70
-[   66.674360]
-               but task is already holding lock:
-[   66.674362] 00000000d44a85b7 (i2c_register_adapter){+.+.}, at: i2c_smbus_xfer+0x49/0xf0
-[   66.674370]
-               which lock already depends on the new lock.
+* declaration of 'size' shadows a parameter
 
-[   66.674371]
-               the existing dependency chain (in reverse order) is:
-[   66.674374]
-               -> #1 (i2c_register_adapter){+.+.}:
-[   66.674381]        rt_mutex_lock_nested+0x46/0x60
-[   66.674384]        i2c_smbus_xfer+0x49/0xf0
-[   66.674387]        i2c_smbus_read_byte_data+0x45/0x70
-[   66.674391]        cht_wc_byte_reg_read+0x35/0x50
-[   66.674394]        _regmap_read+0x63/0x1a0
-[   66.674396]        _regmap_update_bits+0xa8/0xe0
-[   66.674399]        regmap_update_bits_base+0x63/0xa0
-[   66.674403]        regmap_irq_update_bits.isra.0+0x3b/0x50
-[   66.674406]        regmap_add_irq_chip+0x592/0x7a0
-[   66.674409]        devm_regmap_add_irq_chip+0x89/0xed
-[   66.674412]        cht_wc_probe+0x102/0x158
-[   66.674415]        i2c_device_probe+0x95/0x250
-[   66.674419]        really_probe+0xf3/0x380
-[   66.674422]        driver_probe_device+0x59/0xd0
-[   66.674425]        device_driver_attach+0x53/0x60
-[   66.674428]        __driver_attach+0x92/0x150
-[   66.674431]        bus_for_each_dev+0x7d/0xc0
-[   66.674434]        bus_add_driver+0x14d/0x1f0
-[   66.674437]        driver_register+0x6d/0xb0
-[   66.674440]        i2c_register_driver+0x45/0x80
-[   66.674445]        do_one_initcall+0x60/0x2f4
-[   66.674450]        kernel_init_freeable+0x20d/0x2b4
-[   66.674453]        kernel_init+0xa/0x10c
-[   66.674457]        ret_from_fork+0x3a/0x50
-[   66.674459]
-               -> #0 (intel_soc_pmic_chtwc:167:(&cht_wc_regmap_cfg)->lock){+.+.}:
-[   66.674465]        __lock_acquire+0xe07/0x1930
-[   66.674468]        lock_acquire+0x9d/0x1a0
-[   66.674472]        __mutex_lock+0xa8/0x9a0
-[   66.674474]        regmap_write+0x31/0x70
-[   66.674480]        cht_wc_i2c_adap_smbus_xfer+0x72/0x240 [i2c_cht_wc]
-[   66.674483]        __i2c_smbus_xfer+0x1a3/0x640
-[   66.674486]        i2c_smbus_xfer+0x67/0xf0
-[   66.674489]        i2c_smbus_read_byte_data+0x45/0x70
-[   66.674494]        bq24190_probe+0x26b/0x410 [bq24190_charger]
-[   66.674497]        i2c_device_probe+0x189/0x250
-[   66.674500]        really_probe+0xf3/0x380
-[   66.674503]        driver_probe_device+0x59/0xd0
-[   66.674506]        device_driver_attach+0x53/0x60
-[   66.674509]        __driver_attach+0x92/0x150
-[   66.674512]        bus_for_each_dev+0x7d/0xc0
-[   66.674515]        bus_add_driver+0x14d/0x1f0
-[   66.674518]        driver_register+0x6d/0xb0
-[   66.674521]        i2c_register_driver+0x45/0x80
-[   66.674524]        do_one_initcall+0x60/0x2f4
-[   66.674528]        do_init_module+0x5c/0x230
-[   66.674531]        load_module+0x2707/0x2a20
-[   66.674534]        __do_sys_init_module+0x188/0x1b0
-[   66.674537]        do_syscall_64+0x5c/0xb0
-[   66.674541]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[   66.674543]
-               other info that might help us debug this:
+* '%s' directive output may be truncated writing up to 5 bytes into a
+  region of size between 1 and 64
 
-[   66.674545]  Possible unsafe locking scenario:
+* pointer targets in initialization of 'char *' from 'unsigned char *'
+  differ in signedness
 
-[   66.674547]        CPU0                    CPU1
-[   66.674548]        ----                    ----
-[   66.674550]   lock(i2c_register_adapter);
-[   66.674553]                                lock(intel_soc_pmic_chtwc:167:(&cht_wc_regmap_cfg)->lock);
-[   66.674556]                                lock(i2c_register_adapter);
-[   66.674559]   lock(intel_soc_pmic_chtwc:167:(&cht_wc_regmap_cfg)->lock);
-[   66.674561]
-                *** DEADLOCK ***
+* left shift of negative value
 
-The problem is that the CHT Whiskey Cove PMIC's builtin i2c-adapter is
-itself a part of an i2c-client (the PMIC). This means that transfers done
-through it take adapter->bus_lock twice, once for the parent i2c-adapter
-and once for its own bus_lock. Lockdep does not like this nested locking.
-
-To make lockdep happy in the case of busses with muxes, the i2c-core's
-i2c_adapter_lock_bus function calls:
-
- rt_mutex_lock_nested(&adapter->bus_lock, i2c_adapter_depth(adapter));
-
-But i2c_adapter_depth only works when the direct parent of the adapter is
-another adapter, as it is only meant for muxes. In this case there is an
-i2c-client and MFD instantiated platform_device in the parent->child chain
-between the 2 devices.
-
-This commit overrides the default i2c_lock_operations, passing a hardcoded
-depth of 1 to rt_mutex_lock_nested, making lockdep happy.
-
-Note that if there were to be a mux attached to the i2c-wc-cht adapter,
-this would break things again since the i2c-mux code expects the
-root-adapter to have a locking depth of 0. But the i2c-wc-cht adapter
-always has only 1 client directly attached in the form of the charger IC
-paired with the CHT Whiskey Cove PMIC.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
+Reviewed-by: Aaron Armstrong Skomra <aaron.skomra@wacom.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-cht-wc.c | 46 +++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+ drivers/hid/wacom_sys.c | 7 ++++---
+ drivers/hid/wacom_wac.c | 4 ++--
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-cht-wc.c b/drivers/i2c/busses/i2c-cht-wc.c
-index 66af44bfa67d5..f6546de66fbc8 100644
---- a/drivers/i2c/busses/i2c-cht-wc.c
-+++ b/drivers/i2c/busses/i2c-cht-wc.c
-@@ -178,6 +178,51 @@ static const struct i2c_algorithm cht_wc_i2c_adap_algo = {
- 	.smbus_xfer = cht_wc_i2c_adap_smbus_xfer,
- };
+diff --git a/drivers/hid/wacom_sys.c b/drivers/hid/wacom_sys.c
+index 53bddb50aebaf..602219a8710d0 100644
+--- a/drivers/hid/wacom_sys.c
++++ b/drivers/hid/wacom_sys.c
+@@ -88,7 +88,7 @@ static void wacom_wac_queue_flush(struct hid_device *hdev,
+ }
  
-+/*
-+ * We are an i2c-adapter which itself is part of an i2c-client. This means that
-+ * transfers done through us take adapter->bus_lock twice, once for our parent
-+ * i2c-adapter and once to take our own bus_lock. Lockdep does not like this
-+ * nested locking, to make lockdep happy in the case of busses with muxes, the
-+ * i2c-core's i2c_adapter_lock_bus function calls:
-+ * rt_mutex_lock_nested(&adapter->bus_lock, i2c_adapter_depth(adapter));
-+ *
-+ * But i2c_adapter_depth only works when the direct parent of the adapter is
-+ * another adapter, as it is only meant for muxes. In our case there is an
-+ * i2c-client and MFD instantiated platform_device in the parent->child chain
-+ * between the 2 devices.
-+ *
-+ * So we override the default i2c_lock_operations and pass a hardcoded
-+ * depth of 1 to rt_mutex_lock_nested, to make lockdep happy.
-+ *
-+ * Note that if there were to be a mux attached to our adapter, this would
-+ * break things again since the i2c-mux code expects the root-adapter to have
-+ * a locking depth of 0. But we always have only 1 client directly attached
-+ * in the form of the Charger IC paired with the CHT Whiskey Cove PMIC.
-+ */
-+static void cht_wc_i2c_adap_lock_bus(struct i2c_adapter *adapter,
-+				 unsigned int flags)
-+{
-+	rt_mutex_lock_nested(&adapter->bus_lock, 1);
-+}
-+
-+static int cht_wc_i2c_adap_trylock_bus(struct i2c_adapter *adapter,
-+				   unsigned int flags)
-+{
-+	return rt_mutex_trylock(&adapter->bus_lock);
-+}
-+
-+static void cht_wc_i2c_adap_unlock_bus(struct i2c_adapter *adapter,
-+				   unsigned int flags)
-+{
-+	rt_mutex_unlock(&adapter->bus_lock);
-+}
-+
-+static const struct i2c_lock_operations cht_wc_i2c_adap_lock_ops = {
-+	.lock_bus =    cht_wc_i2c_adap_lock_bus,
-+	.trylock_bus = cht_wc_i2c_adap_trylock_bus,
-+	.unlock_bus =  cht_wc_i2c_adap_unlock_bus,
-+};
-+
- /**** irqchip for the client connected to the extchgr i2c adapter ****/
- static void cht_wc_i2c_irq_lock(struct irq_data *data)
+ static int wacom_wac_pen_serial_enforce(struct hid_device *hdev,
+-		struct hid_report *report, u8 *raw_data, int size)
++		struct hid_report *report, u8 *raw_data, int report_size)
  {
-@@ -286,6 +331,7 @@ static int cht_wc_i2c_adap_i2c_probe(struct platform_device *pdev)
- 	adap->adapter.owner = THIS_MODULE;
- 	adap->adapter.class = I2C_CLASS_HWMON;
- 	adap->adapter.algo = &cht_wc_i2c_adap_algo;
-+	adap->adapter.lock_ops = &cht_wc_i2c_adap_lock_ops;
- 	strlcpy(adap->adapter.name, "PMIC I2C Adapter",
- 		sizeof(adap->adapter.name));
- 	adap->adapter.dev.parent = &pdev->dev;
+ 	struct wacom *wacom = hid_get_drvdata(hdev);
+ 	struct wacom_wac *wacom_wac = &wacom->wacom_wac;
+@@ -149,7 +149,8 @@ static int wacom_wac_pen_serial_enforce(struct hid_device *hdev,
+ 	if (flush)
+ 		wacom_wac_queue_flush(hdev, &wacom_wac->pen_fifo);
+ 	else if (insert)
+-		wacom_wac_queue_insert(hdev, &wacom_wac->pen_fifo, raw_data, size);
++		wacom_wac_queue_insert(hdev, &wacom_wac->pen_fifo,
++				       raw_data, report_size);
+ 
+ 	return insert && !flush;
+ }
+@@ -2176,7 +2177,7 @@ static void wacom_update_name(struct wacom *wacom, const char *suffix)
+ {
+ 	struct wacom_wac *wacom_wac = &wacom->wacom_wac;
+ 	struct wacom_features *features = &wacom_wac->features;
+-	char name[WACOM_NAME_MAX];
++	char name[WACOM_NAME_MAX - 20]; /* Leave some room for suffixes */
+ 
+ 	/* Generic devices name unspecified */
+ 	if ((features->type == HID_GENERIC) && !strcmp("Wacom HID", features->name)) {
+diff --git a/drivers/hid/wacom_wac.c b/drivers/hid/wacom_wac.c
+index 58719461850de..6be98851edca4 100644
+--- a/drivers/hid/wacom_wac.c
++++ b/drivers/hid/wacom_wac.c
+@@ -251,7 +251,7 @@ static int wacom_dtu_irq(struct wacom_wac *wacom)
+ 
+ static int wacom_dtus_irq(struct wacom_wac *wacom)
+ {
+-	char *data = wacom->data;
++	unsigned char *data = wacom->data;
+ 	struct input_dev *input = wacom->pen_input;
+ 	unsigned short prox, pressure = 0;
+ 
+@@ -572,7 +572,7 @@ static int wacom_intuos_pad(struct wacom_wac *wacom)
+ 		strip2 = ((data[3] & 0x1f) << 8) | data[4];
+ 	}
+ 
+-	prox = (buttons & ~(~0 << nbuttons)) | (keys & ~(~0 << nkeys)) |
++	prox = (buttons & ~(~0U << nbuttons)) | (keys & ~(~0U << nkeys)) |
+ 	       (ring1 & 0x80) | (ring2 & 0x80) | strip1 | strip2;
+ 
+ 	wacom_report_numbered_buttons(input, nbuttons, buttons);
 -- 
 2.20.1
 
