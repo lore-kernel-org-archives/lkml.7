@@ -2,133 +2,166 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5830BC4360C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E60C352A9
 	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 10:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25E19207FA
+	by mail.kernel.org (Postfix) with ESMTP id 5091F21835
 	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 10:14:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1569752098;
-	bh=iA59w1NaMEWbdMwVd9RqjRIthDIUAHLMrP7xRK9GzCM=;
+	bh=8Ilmt/CLNGJO3WgwhjzU9NPlqv1+VuVIxmqpzgvJrO8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=03sx44MIls/v/trzA5IqS/SLIqjqsa+flCibvu0nceFEBsKjwjX2hMk6x+GKruJFq
-	 fzNO2nOZ01k59ApS0iR2ExV3NxCHWq/kr/5zQDxoRWgtg+MoWS6bOcFy3Zc7/3A4+d
-	 fgBP5sELP+whskTkjRrI3tmoiprBH6fg8M43wXoc=
+	b=gjk1B7Usu//gDSBK9rmEqZhcScwTEQmA8kPqmMca/iW9+D8S3Zr9lKhIbzNO9gTPG
+	 KU/W4QMHGMggA/XvYWhYWzT4ZiKMgxcat/lbS7fgPnApt7a+Z2zs6KjDI9F9WNi0Zh
+	 OWeETZcEQE2h1vvcDLkQAaPneoCSO3YBOWSN5+K8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728985AbfI2KM6 (ORCPT
+        id S1729007AbfI2KOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 06:12:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48956 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 06:14:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725974AbfI2KM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 06:12:58 -0400
+        id S1726702AbfI2KOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 06:14:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91A76207FA;
-        Sun, 29 Sep 2019 10:12:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCE97207FA;
+        Sun, 29 Sep 2019 10:14:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569751977;
-        bh=iA59w1NaMEWbdMwVd9RqjRIthDIUAHLMrP7xRK9GzCM=;
+        s=default; t=1569752086;
+        bh=8Ilmt/CLNGJO3WgwhjzU9NPlqv1+VuVIxmqpzgvJrO8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UsimsHhgmGlkho9Zjk2InZF3otI2sYSWm269oaYYRMVvh3u8CR0xguJunZyBa0UxB
-         3FDThahbn9TSTlk93/fEXsvg5XkBgKbbrKkyd/dSytBUu+/o7a4kEhQuuI/jL3Vztg
-         6VPLj7yBmwHhmYUr0BBy+/qBPnRldE5+7QGDRu8U=
-Date:   Sun, 29 Sep 2019 12:12:54 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     jun.zhang@intel.com
-Cc:     labbott@redhat.com, sumit.semwal@linaro.org, arve@android.com,
-        tkjos@android.com, maco@android.com, joel@joelfernandes.org,
-        christian@brauner.io, devel@driverdev.osuosl.org,
-        Jie A <jie.a.bai@intel.com>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        he@osuosl.org, Bai@osuosl.org, bo <bo.he@intel.com>
-Subject: Re: [PATCH] ion_system_heap: support X86 archtecture
-Message-ID: <20190929101254.GA1907778@kroah.com>
-References: <20190929072841.14848-1-jun.zhang@intel.com>
+        b=q4JltL7V+1QSlxTnOPNGtHhMRYykzKK5bN36yC6yl9W096GR7VsJYei4pdGKiN09U
+         m2g6NCeNYbteRTRZnxyZizRAUJMYjqVxb9f3s/9Ux7fxIe1nabPiA9DER0cOhNSuQD
+         3y9jLujdg+qSBUYvrNwR3udSZAkHfFa4MNNQ6YwE=
+Date:   Sun, 29 Sep 2019 12:14:43 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Matthias Maennich <maennich@google.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Martijn Coenen <maco@android.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 7/7] nsdeps: make generated patches independent of locale
+Message-ID: <20190929101443.GB1907778@kroah.com>
+References: <20190927093603.9140-1-yamada.masahiro@socionext.com>
+ <20190927093603.9140-8-yamada.masahiro@socionext.com>
+ <20190927132726.GB187147@google.com>
+ <CAK7LNARQZ49jvPOK5Dg3B7Nog7+zHsAn5=1oHH6hz9ZzJ=S+xA@mail.gmail.com>
+ <20190927181414.GB1804168@kroah.com>
+ <CAK7LNAQh12iuAk5aoeHhZ=iGcYraWFfsei-+VqwALbOPrrjWdg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190929072841.14848-1-jun.zhang@intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK7LNAQh12iuAk5aoeHhZ=iGcYraWFfsei-+VqwALbOPrrjWdg@mail.gmail.com>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 29, 2019 at 03:28:41PM +0800, jun.zhang@intel.com wrote:
-> From: zhang jun <jun.zhang@intel.com>
+On Sun, Sep 29, 2019 at 10:18:50AM +0900, Masahiro Yamada wrote:
+> On Sat, Sep 28, 2019 at 3:14 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Sat, Sep 28, 2019 at 12:42:28AM +0900, Masahiro Yamada wrote:
+> > > On Fri, Sep 27, 2019 at 10:27 PM Matthias Maennich <maennich@google.com> wrote:
+> > > >
+> > > > On Fri, Sep 27, 2019 at 06:36:03PM +0900, Masahiro Yamada wrote:
+> > > > >scripts/nsdeps automatically generates a patch to add MODULE_IMPORT_NS
+> > > > >tags, and what is nicer, it sorts the lines alphabetically with the
+> > > > >"sort" command. However, the output from the "sort" command depends
+> > > > >on locale.
+> > > > >
+> > > > >Especially when namespaces contain underscores, the result is
+> > > > >different depending on the locale.
+> > > > >
+> > > > >For example, I got this:
+> > > > >
+> > > > >$ { echo usbcommon; echo usb_common; } | LANG=en_US.UTF-8 sort
+> > > > >usbcommon
+> > > > >usb_common
+> > > > >$ { echo usbcommon; echo usb_common; } | LANG=C sort
+> > > > >usb_common
+> > > > >usbcommon
+> > > > >
+> > > > >So, this means people might potentially send different patches.
+> > > > >
+> > > > >This kind of issue was reported in the past, for example,
+> > > > >commit f55f2328bb28 ("kbuild: make sorting initramfs contents
+> > > > >independent of locale").
+> > > > >
+> > > > >Adding "LANG=C" is a conventional way of fixing when a deterministic
+> > > > >result is desirable.
+> > > > >
+> > > > >Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > > > >---
+> > > > >
+> > > > > scripts/nsdeps | 2 +-
+> > > > > 1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > >
+> > > > >diff --git a/scripts/nsdeps b/scripts/nsdeps
+> > > > >index 964b7fb8c546..3754dac13b31 100644
+> > > > >--- a/scripts/nsdeps
+> > > > >+++ b/scripts/nsdeps
+> > > > >@@ -41,7 +41,7 @@ generate_deps() {
+> > > > >               for source_file in $mod_source_files; do
+> > > > >                       sed '/MODULE_IMPORT_NS/Q' $source_file > ${source_file}.tmp
+> > > > >                       offset=$(wc -l ${source_file}.tmp | awk '{print $1;}')
+> > > > >-                      cat $source_file | grep MODULE_IMPORT_NS | sort -u >> ${source_file}.tmp
+> > > > >+                      cat $source_file | grep MODULE_IMPORT_NS | LANG=C sort -u >> ${source_file}.tmp
+> > > >
+> > > > I would prefer to have this set throughout the whole runtime of the
+> > > > script. Otherwise we likely see a followup patch. So, either as an
+> > > > export at the beginning of this file or as part of the command that
+> > > > calls this script.
+> > >
+> > >
+> > > I prefer to keep it close to the locale-dependent code.
+> > >
+> > >
+> > >
+> > > If I move it to somewhere else, I need to add a comment like
+> > >
+> > > # make "sort" command deterministic
+> > > export LANG=C
+> > >
+> > > Otherwise, people would have no idea why it is needed.
+> >
+> > A comment is fine, it documents why it is here and it keeps anyone from
+> > having to remember to add it to anything else that changes in here.
+> >
+> > thanks,
+> >
+> > greg k-h
 > 
-> we see tons of warning like:
-> [   45.846872] x86/PAT: NDK MediaCodec_:3753 map pfn RAM range req
-> write-combining for [mem 0x1e7a80000-0x1e7a87fff], got write-back
-> [   45.848827] x86/PAT: .vorbis.decoder:4088 map pfn RAM range req
-> write-combining for [mem 0x1e7a58000-0x1e7a58fff], got write-back
-> [   45.848875] x86/PAT: NDK MediaCodec_:3753 map pfn RAM range req
-> write-combining for [mem 0x1e7a48000-0x1e7a4ffff], got write-back
-> [   45.849403] x86/PAT: .vorbis.decoder:4088 map pfn RAM range
-> req write-combining for [mem 0x1e7a70000-0x1e7a70fff], got write-back
 > 
-> check the kernel Documentation/x86/pat.txt, it says:
-> A. Exporting pages to users with remap_pfn_range, io_remap_pfn_range,
-> vm_insert_pfn
-> Drivers wanting to export some pages to userspace do it by using
-> mmap interface and a combination of
-> 1) pgprot_noncached()
-> 2) io_remap_pfn_range() or remap_pfn_range() or vm_insert_pfn()
-> With PAT support, a new API pgprot_writecombine is being added.
-> So, drivers can continue to use the above sequence, with either
-> pgprot_noncached() or pgprot_writecombine() in step 1, followed by step 2.
-> 
-> In addition, step 2 internally tracks the region as UC or WC in
-> memtype list in order to ensure no conflicting mapping.
-> 
-> Note that this set of APIs only works with IO (non RAM) regions.
-> If driver ants to export a RAM region, it has to do set_memory_uc() or
-> set_memory_wc() as step 0 above and also track the usage of those pages
-> and use set_memory_wb() before the page is freed to free pool.
-> 
-> the fix follow the pat document, do set_memory_wc() as step 0 and
-> use the set_memory_wb() before the page is freed.
-> 
-> Signed-off-by: he, bo <bo.he@intel.com>
-> Signed-off-by: zhang jun <jun.zhang@intel.com>
-> Signed-off-by: Bai, Jie A <jie.a.bai@intel.com>
-> ---
->  drivers/staging/android/ion/ion_system_heap.c | 28 ++++++++++++++++++-
->  1 file changed, 27 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/android/ion/ion_system_heap.c b/drivers/staging/android/ion/ion_system_heap.c
-> index b83a1d16bd89..d298b8194820 100644
-> --- a/drivers/staging/android/ion/ion_system_heap.c
-> +++ b/drivers/staging/android/ion/ion_system_heap.c
-> @@ -13,6 +13,7 @@
->  #include <linux/scatterlist.h>
->  #include <linux/slab.h>
->  #include <linux/vmalloc.h>
-> +#include <asm/set_memory.h>
->  
->  #include "ion.h"
->  
-> @@ -134,6 +135,13 @@ static int ion_system_heap_allocate(struct ion_heap *heap,
->  	sg = table->sgl;
->  	list_for_each_entry_safe(page, tmp_page, &pages, lru) {
->  		sg_set_page(sg, page, page_size(page), 0);
-> +
-> +#ifdef CONFIG_X86
-> +	if (!(buffer->flags & ION_FLAG_CACHED))
-> +		set_memory_wc((unsigned long)page_address(sg_page(sg)),
-> +			      PAGE_ALIGN(sg->length) >> PAGE_SHIFT);
-> +#endif
+> Huh, people who live in a country with English as mother tongue
+> cannot understand the i18n because English is the
+> only language in the world?
 
-There is no way to do this without these #ifdefs?  That feels odd, why
-can't you just always test for this?
+Heh, I live in a country where English is not the "mother tongue" and I
+totally missed this, sorry about that :(
 
-thanks,
+> For example, in my locale (ja_JP.UTF-8)
+> 
+> I can see messages in Japanese as follows:
+> 
+> $ sh  scripts/nsdeps
+> cat: /modules.order: そのようなファイルやディレクトリはありません
+
+Ugh, I forgot this would change the error messages from other programs.
+
+You are right, your proposal isn't ok, I missed this given that I am
+used to programming in English.
+
+sorry,
 
 greg k-h
