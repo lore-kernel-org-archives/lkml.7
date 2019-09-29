@@ -2,145 +2,302 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF5DC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 05:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83648C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 06:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 347502082F
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 05:25:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64B4A21835
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 06:16:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728313AbfI2FZv (ORCPT
+        id S1727488AbfI2GQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 01:25:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43266 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726838AbfI2FZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 01:25:51 -0400
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 884C385538
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Sep 2019 05:25:50 +0000 (UTC)
-Received: by mail-pf1-f199.google.com with SMTP id s137so5129281pfs.18
-        for <linux-kernel@vger.kernel.org>; Sat, 28 Sep 2019 22:25:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=U2Fqhrhhc3c5hT+09GB0Tz123AzZHSVYeE1k74C2N8Q=;
-        b=c5DIQ/gP0+ZlLYu8cl1CSA8mYrhBNJhuV53/OaslCM2G84KvTW+TAWS4AMti3ijHwy
-         9yt8cJLTNaqBddcFeuk+K69kRXF7FLI9BMITHnElxpUb3D9ISzvMMNb+WleqrckJ7JKu
-         g0q/Cnux3XoDhJDwmRc+8CaetgLRmajIeuCldfVo7kX/LcvvSNXq6m5I+JO8WZjnvWS1
-         Tp3bNKZyB4WAmvTNJjpW1pH4lk8lF8JNlOl0jo17USFnvdDV9d9nVhIhw6SUjsUlE7d0
-         sJhZO4aTjMESKGS4z6gthZhQCx1w65Pg08GlZTMSnFJ0+Mse5MbutaB9JsbNyw0epYxq
-         cFeA==
-X-Gm-Message-State: APjAAAXAZt0fE/PJKYHNYplm6M3stRH2X+WP1y6l6rEBRaJdGBDf0uva
-        OQ1GRCy170w6jqlMsOSv8sq0ePiSCA4zw/DK05PQDEZGX6GqhUZEDt/w/MtYiHEN39Ol6q5GiJX
-        jbZDUhcOCnRXZj+rdCRsUQ6q+
-X-Received: by 2002:a65:6111:: with SMTP id z17mr17809434pgu.415.1569734749962;
-        Sat, 28 Sep 2019 22:25:49 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxSwESBBqWbUZ8IYCB+ndAeHAFp/knXskQIwKbF6UdAPwArDrPxhK0qMIyDkQyFVFJVbYrxHA==
-X-Received: by 2002:a65:6111:: with SMTP id z17mr17809411pgu.415.1569734749539;
-        Sat, 28 Sep 2019 22:25:49 -0700 (PDT)
-Received: from xz-x1 ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id y6sm7985721pfp.82.2019.09.28.22.25.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Sep 2019 22:25:47 -0700 (PDT)
-Date:   Sun, 29 Sep 2019 13:25:32 +0800
-From:   Peter Xu <peterx@redhat.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        kevin.tian@intel.com, Yi Sun <yi.y.sun@linux.intel.com>,
-        ashok.raj@intel.com, kvm@vger.kernel.org, sanjay.k.kumar@intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        yi.y.sun@intel.com
-Subject: Re: [RFC PATCH 2/4] iommu/vt-d: Add first level page table interfaces
-Message-ID: <20190929052532.GA12953@xz-x1>
-References: <20190923122454.9888-1-baolu.lu@linux.intel.com>
- <20190923122454.9888-3-baolu.lu@linux.intel.com>
- <20190925052157.GL28074@xz-x1>
- <c9792e0b-bf42-1dbb-f060-0b1a43125f47@linux.intel.com>
- <20190926034905.GW28074@xz-x1>
- <52778812-129b-0fa7-985d-5814e9d84047@linux.intel.com>
- <20190927053449.GA9412@xz-x1>
- <66823e27-aa33-5968-b5fd-e5221fb1fffe@linux.intel.com>
+        Sun, 29 Sep 2019 02:16:01 -0400
+Received: from mail-sz.amlogic.com ([211.162.65.117]:9653 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbfI2GQB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 02:16:01 -0400
+Received: from [10.28.19.114] (10.28.19.114) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Sun, 29 Sep
+ 2019 14:15:56 +0800
+Subject: Re: [PATCH 2/2] clk: meson: a1: add support for Amlogic A1 clock
+ driver
+To:     Jerome Brunet <jbrunet@baylibre.com>
+CC:     Stephen Boyd <sboyd@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        <devicetree@vger.kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        <linux-kernel@vger.kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        <linux-amlogic@lists.infradead.org>, <linux-clk@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <1569411888-98116-1-git-send-email-jian.hu@amlogic.com>
+ <1569411888-98116-3-git-send-email-jian.hu@amlogic.com>
+ <20190925131232.4751020640@mail.kernel.org>
+ <8351489a-f91e-be08-7fcc-e2a90c6e87f0@amlogic.com>
+ <1jk19t28zs.fsf@starbuckisacylon.baylibre.com>
+From:   Jian Hu <jian.hu@amlogic.com>
+Message-ID: <aa379450-48c6-1eb4-e351-2f5ae3736470@amlogic.com>
+Date:   Sun, 29 Sep 2019 14:15:55 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <66823e27-aa33-5968-b5fd-e5221fb1fffe@linux.intel.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <1jk19t28zs.fsf@starbuckisacylon.baylibre.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.28.19.114]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 28, 2019 at 04:23:16PM +0800, Lu Baolu wrote:
-> Hi Peter,
+
+On 2019/9/27 20:56, Jerome Brunet wrote:
 > 
-> On 9/27/19 1:34 PM, Peter Xu wrote:
-> > Hi, Baolu,
-> > 
-> > On Fri, Sep 27, 2019 at 10:27:24AM +0800, Lu Baolu wrote:
-> > > > > > > +	spin_lock(&(domain)->page_table_lock);				\
-> > > > > > 
-> > > > > > Is this intended to lock here instead of taking the lock during the
-> > > > > > whole page table walk?  Is it safe?
-> > > > > > 
-> > > > > > Taking the example where nm==PTE: when we reach here how do we
-> > > > > > guarantee that the PMD page that has this PTE is still valid?
-> > > > > 
-> > > > > We will always keep the non-leaf pages in the table,
-> > > > 
-> > > > I see.  Though, could I ask why?  It seems to me that the existing 2nd
-> > > > level page table does not keep these when unmap, and it's not even use
-> > > > locking at all by leveraging cmpxchg()?
-> > > 
-> > > I still need some time to understand how cmpxchg() solves the race issue
-> > > when reclaims pages. For example.
-> > > 
-> > > Thread A				Thread B
-> > > -A1: check all PTE's empty		-B1: up-level PDE valid
-> > > -A2: clear the up-level PDE
-> > > -A3: reclaim the page			-B2: populate the PTEs
-> > > 
-> > > Both (A1,A2) and (B1,B2) should be atomic. Otherwise, race could happen.
-> > 
-> > I'm not sure of this, but IMHO it is similarly because we need to
-> > allocate the iova ranges from iova allocator first, so thread A (who's
-> > going to unmap pages) and thread B (who's going to map new pages)
-> > should never have collapsed regions if happening concurrently.  I'm
+> On Fri 27 Sep 2019 at 05:11, Jian Hu <jian.hu@amlogic.com> wrote:
 > 
-> Although they don't collapse, they might share a same pmd entry. If A
-> cleared the pmd entry and B goes ahead with populating the pte's. It
-> will crash.
-
-My understanding is that if A was not owning all the pages on that PMD
-entry then it will never free the page that was backing that PMD
-entry.  Please refer to the code in dma_pte_clear_level() where it
-has:
-
-        /* If range covers entire pagetable, free it */
-        if (start_pfn <= level_pfn &&
-                last_pfn >= level_pfn + level_size(level) - 1) {
-                ...
-        } else {
-                ...
-        }
-
-Note that when going into the else block, the PMD won't be freed but
-only the PTEs that upon the PMD will be cleared.
-
-In the case you mentioned above, IMHO it should go into that else
-block.  Say, thread A must not contain the whole range of that PMD
-otherwise thread B won't get allocated with pages within that range
-covered by the same PMD.
-
-Thanks,
-
--- 
-Peter Xu
+>> Hi, Stephen
+>>
+>> Thank you for review
+>>
+>> On 2019/9/25 21:12, Stephen Boyd wrote:
+>>> Quoting Jian Hu (2019-09-25 04:44:48)
+>>>> The Amlogic A1 clock includes three parts:
+>>>> peripheral clocks, pll clocks, CPU clocks.
+>>>> sys pll and CPU clocks will be sent in next patch.
+>>>>
+>>>> Unlike the previous series, there is no EE/AO domain
+>>>> in A1 CLK controllers.
+>>>>
+>>>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+>>>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+>>>
+>>> This second name didn't send the patch. Please follow the signoff
+>>> procedures documented in Documentation/process/submitting-patches.rst
+>>>
+>>>> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+>>>> index 16d7614..a48f67d 100644
+>>>> --- a/arch/arm64/Kconfig.platforms
+>>>> +++ b/arch/arm64/Kconfig.platforms
+>>>> @@ -138,6 +138,7 @@ config ARCH_MESON
+>>>>           select COMMON_CLK_AXG
+>>>>           select COMMON_CLK_G12A
+>>>>           select MESON_IRQ_GPIO
+>>>> +       select COMMON_CLK_A1
+>>>
+>>> Sort?
+>> ok, I will put it behind COMMON_CLK_AXG
+>>>
+>>>>           help
+>>>>             This enables support for the arm64 based Amlogic SoCs
+>>>>             such as the s905, S905X/D, S912, A113X/D or S905X/D2
+>>>> diff --git a/drivers/clk/meson/Kconfig b/drivers/clk/meson/Kconfig
+>>>> index dabeb43..e6cb4c3 100644
+>>>> --- a/drivers/clk/meson/Kconfig
+>>>> +++ b/drivers/clk/meson/Kconfig
+>>>> @@ -107,3 +107,13 @@ config COMMON_CLK_G12A
+>>>>           help
+>>>>             Support for the clock controller on Amlogic S905D2, S905X2 and S905Y2
+>>>>             devices, aka g12a. Say Y if you want peripherals to work.
+>>>> +
+>>>> +config COMMON_CLK_A1
+>>>
+>>> Probably should be placed somewhere alphabetically in this file?
+>> ok, I will put it behind COMMON_CLK_AXG_AUDIO
+>>>
+>>>> +       bool
+>>>> +       depends on ARCH_MESON
+>>>> +       select COMMON_CLK_MESON_REGMAP
+>>>> +       select COMMON_CLK_MESON_DUALDIV
+>>>> +       select COMMON_CLK_MESON_PLL
+>>>> +       help
+>>>> +         Support for the clock controller on Amlogic A113L device,
+>>>> +         aka a1. Say Y if you want peripherals to work.
+>>>> diff --git a/drivers/clk/meson/Makefile b/drivers/clk/meson/Makefile
+>>>> index 3939f21..6be3a8f 100644
+>>>> --- a/drivers/clk/meson/Makefile
+>>>> +++ b/drivers/clk/meson/Makefile
+>>>> @@ -19,3 +19,4 @@ obj-$(CONFIG_COMMON_CLK_AXG_AUDIO) += axg-audio.o
+>>>>    obj-$(CONFIG_COMMON_CLK_GXBB) += gxbb.o gxbb-aoclk.o
+>>>>    obj-$(CONFIG_COMMON_CLK_G12A) += g12a.o g12a-aoclk.o
+>>>>    obj-$(CONFIG_COMMON_CLK_MESON8B) += meson8b.o
+>>>> +obj-$(CONFIG_COMMON_CLK_A1) += a1.o
+>>>
+>>> I would guess this should be sorted on Kconfig name in this file?
+>> ok, I will put it behind COMMON_CLK_AXG_AUDIO
+>>>
+>>>> diff --git a/drivers/clk/meson/a1.c b/drivers/clk/meson/a1.c
+>>>> new file mode 100644
+>>>> index 0000000..26edae0f
+>>>> --- /dev/null
+>>>> +++ b/drivers/clk/meson/a1.c
+>>>> @@ -0,0 +1,2617 @@
+>>>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>>>> +/*
+>>>> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+>>>> + */
+>>>> +
+>>>> +#include <linux/clk-provider.h>
+>>>> +#include <linux/init.h>
+>>>> +#include <linux/of_device.h>
+>>>> +#include <linux/platform_device.h>
+>>>> +#include <linux/of_address.h>
+>>>> +#include "clk-mpll.h"
+>>>> +#include "clk-pll.h"
+>>>> +#include "clk-regmap.h"
+>>>> +#include "vid-pll-div.h"
+>>>> +#include "clk-dualdiv.h"
+>>>> +#include "meson-eeclk.h"
+>>>> +#include "a1.h"
+>>>> +
+>>> [...]
+>>>> +
+>>>> +/*
+>>>> + * The Meson A1 HIFI PLL is 614.4M, it requires
+>>>> + * a strict register sequence to enable the PLL.
+>>>> + * set meson_clk_pcie_pll_ops as its ops
+>>>
+>>> Please remove this last line as it's obvious from the code what ops are
+>>> used.
+>>>
+>> ok, I will remove it.
+>>>> + */
+>>>> +static struct clk_regmap a1_hifi_pll = {
+>>>> +       .data = &(struct meson_clk_pll_data){
+>>>> +               .en = {
+>>>> +                       .reg_off = ANACTRL_HIFIPLL_CTRL0,
+>>>> +                       .shift   = 28,
+>>>> +                       .width   = 1,
+>>>> +               },
+>>>> +               .m = {
+>>>> +                       .reg_off = ANACTRL_HIFIPLL_CTRL0,
+>>>> +                       .shift   = 0,
+>>>> +                       .width   = 8,
+>>>> +               },
+>>>> +               .n = {
+>>>> +                       .reg_off = ANACTRL_HIFIPLL_CTRL0,
+>>>> +                       .shift   = 10,
+>>>> +                       .width   = 5,
+>>>> +               },
+>>>> +               .frac = {
+>>>> +                       .reg_off = ANACTRL_HIFIPLL_CTRL1,
+>>>> +                       .shift   = 0,
+>>>> +                       .width   = 19,
+>>>> +               },
+>>>> +               .l = {
+>>>> +                       .reg_off = ANACTRL_HIFIPLL_STS,
+>>>> +                       .shift   = 31,
+>>>> +                       .width   = 1,
+>>>> +               },
+>>>> +               .table = a1_hifi_pll_params_table,
+>>>> +               .init_regs = a1_hifi_init_regs,
+>>>> +               .init_count = ARRAY_SIZE(a1_hifi_init_regs),
+>>>> +       },
+>>>> +       .hw.init = &(struct clk_init_data){
+>>>> +               .name = "hifi_pll",
+>>>> +               .ops = &meson_clk_pcie_pll_ops,
+>>>> +               .parent_hws = (const struct clk_hw *[]) {
+>>>> +                       &a1_xtal_hifipll.hw
+>>>> +               },
+>>>> +               .num_parents = 1,
+>>>> +       },
+>>>> +};
+>>>> +
+>>> [..]
+>>>> +
+>>>> +static struct clk_regmap a1_fclk_div2 = {
+>>>> +       .data = &(struct clk_regmap_gate_data){
+>>>> +               .offset = ANACTRL_FIXPLL_CTRL0,
+>>>> +               .bit_idx = 21,
+>>>> +       },
+>>>> +       .hw.init = &(struct clk_init_data){
+>>>> +               .name = "fclk_div2",
+>>>> +               .ops = &clk_regmap_gate_ops,
+>>>> +               .parent_hws = (const struct clk_hw *[]) {
+>>>> +                       &a1_fclk_div2_div.hw
+>>>> +               },
+>>>> +               .num_parents = 1,
+>>>> +               /*
+>>>> +                * add CLK_IS_CRITICAL flag to avoid being disabled by clk core
+>>>> +                * or its children clocks.
+>>>
+>>> This comment is useless. Please replace it with an actual reason for
+>>> keeping the clk on instead of describing what the flag does.
+>>>
+>> ok, The actual reason is it should not change at runtime.
+> 
+> Yeah, from the flag we understand that you want to keep this on. What we
+> are after is why ? What device is using this clock and cannot tolerate
+> this gate to turn off ?
+> 
+> This is important and this is kind of comment we are after.
+> These flag should be viewed as "mid term work around". In the end, there
+> should be a driver for your device which claims the clock and properly
+> manage it
+> 
+I have confirmed for a1_fclk_div2, ddr clock's parent is fclk_div2 which
+is initialized in the firmware. The DDR clock could not be gated. I will 
+check the other fclk_divX clocks.
+>>>> +                */
+>>>> +               .flags = CLK_IS_CRITICAL,
+>>>> +       },
+>>>> +};
+>>>> +
+>>> [..]
+>>>> +static struct clk_regmap a1_dmc = {
+>>>> +       .data = &(struct clk_regmap_gate_data){
+>>>> +               .offset = DMC_CLK_CTRL,
+>>>> +               .bit_idx = 8,
+>>>> +       },
+>>>> +       .hw.init = &(struct clk_init_data) {
+>>>> +               .name = "dmc",
+>>>> +               .ops = &clk_regmap_gate_ops,
+>>>> +               .parent_hws = (const struct clk_hw *[]) {
+>>>> +                       &a1_dmc_sel2.hw
+>>>> +               },
+>>>> +               .num_parents = 1,
+>>>> +               /*
+>>>> +                * add CLK_IGNORE_UNUSED to avoid hangup
+>>>> +                * DDR clock should not change at runtime
+>>>> +                */
+>>>> +               .flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
+>>>
+>>> So not CLK_IS_CRITICAL?
+>> Yes, CLK_IS_CRITICAL is better, I will change it.
+> 
+> Same comment as above.
+> 
+>>>
+>>>> +       },
+>>>> +};
+>>>> +
+>>> [...]
+>>>> +
+>>>> +/*
+>>>> + * cpu clock register base address is 0xfd000080
+>>>> + */
+>>>> +static struct clk_regmap *const a1_cpu_clk_regmaps[] = {
+>>>> +       /* TODO */
+>>>
+>>> Can it be done?
+>> I plan to compelte cpu clock with the DVFS verified. And  Some peripheral
+>> devices rely on this patch to send. I prefer to do it in the next patch.
+>>>
+>>>> +};
+>>>
+>>> .
+>>>
+> 
+> .
+> 
