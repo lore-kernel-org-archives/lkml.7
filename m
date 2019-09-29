@@ -2,52 +2,55 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA4DC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC51AC352A9
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93E8821D56
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:38:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C87D821928
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:39:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778738;
-	bh=hErGe3uINxLsS7mNQ/P8aL8IKEVdLi6IrfKsbRzA1YA=;
+	s=default; t=1569778744;
+	bh=P3WkhO3G6h+D3zdNU95Zo/yNNpyRu695qymatgVIGik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GWBY4U4/kEET9K7rTlJeyjBDDvavfFL7RgcHDG81kSEBX6Jt5SaE6NRz6S/2rc6HL
-	 TtgyGo8lLW19mjUf8fbMbTs8O/FvYLlsnl/FR5FYeRSnt17ShTOdQD9Akc8cG29V6K
-	 cGh9hsDUrggs+QescqE0kPcuISjGDa3Qbk7V8sPw=
+	b=Zf8JGqROSQWulLZBvamJhHjLYhVpF7bS3f9x6+v0AVVPSGT4YjSk4HxacISUI07Da
+	 yVgTz1HSwRg5bKlrusVfLW6gTk0SD6PgeiWpuMPopikr2SQk6u0Gs0PEzlPP1s9h8y
+	 zhD2LNhgGZKTTdFPQePXfr3LrhRtQR7OaX1aZXow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730066AbfI2Ri6 (ORCPT
+        id S1729742AbfI2RjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:38:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47960 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:39:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729742AbfI2Rfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:35:44 -0400
+        id S1729741AbfI2Rfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:35:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1E8121D7B;
-        Sun, 29 Sep 2019 17:35:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DB8D2196E;
+        Sun, 29 Sep 2019 17:35:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778543;
-        bh=hErGe3uINxLsS7mNQ/P8aL8IKEVdLi6IrfKsbRzA1YA=;
+        s=default; t=1569778541;
+        bh=P3WkhO3G6h+D3zdNU95Zo/yNNpyRu695qymatgVIGik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=100iCrjVf3TFpyyirjCh84kHQnz+SlyIL2XfsQGP7W6FrzA4KCSOMWWTPf6NMJrDj
-         cFApxULPRIZMATCnOSik4HoviRH/vs2ffhkmmFmuI8aLegp8P/Q13vr0mAs2kblr/g
-         5fOysP6Mql570imypk9XF/otB1MWdisFFb+DGqco=
+        b=C+equMCpRgfYtZ+HIq3ZU5YpFWKYOpwlC3a7I85vLwAsTKH4+MH8O+l92bN9c6QHY
+         4BqdHPuXhQY4vpLCtTqZEROUdiPxDs/IK//aJEsy9ShFUHfeQOgQ5GaRUUi8HRh6Tv
+         +LeYDaiTka7iwUTxxKkUCiYpVPu4I1AOpQX4briQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-mips@vger.kernel.org, clang-built-linux@googlegroups.com,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 04/23] mfd: intel-lpss: Remove D3cold delay
-Date:   Sun, 29 Sep 2019 13:35:14 -0400
-Message-Id: <20190929173535.9744-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 02/23] MIPS: tlbex: Explicitly cast _PAGE_NO_EXEC to a boolean
+Date:   Sun, 29 Sep 2019 13:35:12 -0400
+Message-Id: <20190929173535.9744-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173535.9744-1-sashal@kernel.org>
 References: <20190929173535.9744-1-sashal@kernel.org>
@@ -60,45 +63,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 76380a607ba0b28627c9b4b55cd47a079a59624b ]
+[ Upstream commit c59ae0a1055127dd3828a88e111a0db59b254104 ]
 
-Goodix touchpad may drop its first couple input events when
-i2c-designware-platdrv and intel-lpss it connects to took too long to
-runtime resume from runtime suspended state.
+clang warns:
 
-This issue happens becuase the touchpad has a rather small buffer to
-store up to 13 input events, so if the host doesn't read those events in
-time (i.e. runtime resume takes too long), events are dropped from the
-touchpad's buffer.
+arch/mips/mm/tlbex.c:634:19: error: use of logical '&&' with constant
+operand [-Werror,-Wconstant-logical-operand]
+        if (cpu_has_rixi && _PAGE_NO_EXEC) {
+                         ^  ~~~~~~~~~~~~~
+arch/mips/mm/tlbex.c:634:19: note: use '&' for a bitwise operation
+        if (cpu_has_rixi && _PAGE_NO_EXEC) {
+                         ^~
+                         &
+arch/mips/mm/tlbex.c:634:19: note: remove constant to silence this
+warning
+        if (cpu_has_rixi && _PAGE_NO_EXEC) {
+                        ~^~~~~~~~~~~~~~~~
+1 error generated.
 
-The bottleneck is D3cold delay it waits when transitioning from D3cold
-to D0, hence remove the delay to make the resume faster. I've tested
-some systems with intel-lpss and haven't seen any regression.
+Explicitly cast this value to a boolean so that clang understands we
+intend for this to be a non-zero value.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202683
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Fixes: 00bf1c691d08 ("MIPS: tlbex: Avoid placing software PTE bits in Entry* PFN fields")
+Link: https://github.com/ClangBuiltLinux/linux/issues/609
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: clang-built-linux@googlegroups.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/intel-lpss-pci.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/mips/mm/tlbex.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
-index d9ae983095c54..2b7e8eeaa59e9 100644
---- a/drivers/mfd/intel-lpss-pci.c
-+++ b/drivers/mfd/intel-lpss-pci.c
-@@ -39,6 +39,8 @@ static int intel_lpss_pci_probe(struct pci_dev *pdev,
- 	info->mem = &pdev->resource[0];
- 	info->irq = pdev->irq;
+diff --git a/arch/mips/mm/tlbex.c b/arch/mips/mm/tlbex.c
+index c2a6869418f77..dc495578d44d3 100644
+--- a/arch/mips/mm/tlbex.c
++++ b/arch/mips/mm/tlbex.c
+@@ -634,7 +634,7 @@ static __maybe_unused void build_convert_pte_to_entrylo(u32 **p,
+ 		return;
+ 	}
  
-+	pdev->d3cold_delay = 0;
-+
- 	/* Probably it is enough to set this for iDMA capable devices only */
- 	pci_set_master(pdev);
- 	pci_try_set_mwi(pdev);
+-	if (cpu_has_rixi && _PAGE_NO_EXEC) {
++	if (cpu_has_rixi && !!_PAGE_NO_EXEC) {
+ 		if (fill_includes_sw_bits) {
+ 			UASM_i_ROTR(p, reg, reg, ilog2(_PAGE_GLOBAL));
+ 		} else {
 -- 
 2.20.1
 
