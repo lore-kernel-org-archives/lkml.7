@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6433DC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA3E0C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4051021928
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:40:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CE1021928
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:40:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778827;
-	bh=l7NP07G1Ea8ObzNjqXfvhMjFFJVuFFmr/gpg2A2d3/U=;
+	s=default; t=1569778829;
+	bh=28EPEBeuVuP6Khqm6zlfvXCAwy4C7eBB7QJBK6lTiqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k98F0L1/33LiikFnHViRS9aNdTgJZNhffyD+6DSOXVWiRH1ThiSRs8UszckeV0y+c
-	 DgdA11Pmjvd+csHTJ5dQbRLVdNyRDzEtFwRcRkuEH5yfSP7T+Dz7nQ35/gdjwvi8jJ
-	 5+pZjYx1B2va81WWeuLA2FNdicHZZt1mLOkRDzEI=
+	b=xj06RvXTbl0EueiV4007Ce1p0is03P7IEwtcpaCRIVz1W5Jfnwdie8ZuMRZaDGttK
+	 5domHjMpqGHl67NsLoddTr1osYZ3hWWTP6Frt1i47qkwoXMTYy25anOaPeZ5bx0RFq
+	 kcUIi44J0oQZSLUFpgXp+iVUOoXTSq4EKd5NC65E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730202AbfI2RkZ (ORCPT
+        id S1730467AbfI2Rew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:40:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46978 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:34:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729567AbfI2Rex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:34:53 -0400
+        id S1729236AbfI2Rek (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:34:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0092821928;
-        Sun, 29 Sep 2019 17:34:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C19EE21D7A;
+        Sun, 29 Sep 2019 17:34:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778492;
-        bh=l7NP07G1Ea8ObzNjqXfvhMjFFJVuFFmr/gpg2A2d3/U=;
+        s=default; t=1569778479;
+        bh=28EPEBeuVuP6Khqm6zlfvXCAwy4C7eBB7QJBK6lTiqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GGENUDyN67PgqZdWVnEfPUTCDNAZ6qkjMKY5BzufB64GNgSHNIqIN3AagC7wv6Dbn
-         K8nW3/ivqA0fOkLjISRD6HgxSxIOcEK/P1ZF6rMJUas6hIFIYHvkNSgPuDah/A3ZYl
-         YQKENQ0Ca8nsJ69bMvWclqLs1jfe53oghlhx3eAY=
+        b=SFg7/nZQU19uettwodGd+pBvIjhjy0wvcoZaOQJBt9RSXMG8Wvtb2xq2WoibZhgs4
+         sIZwyX4qTEG2fq+Bu9HV/vubJWQFliCxNDTqN26/1Hr5c9SZtEy+2W+zRmprvevHlw
+         miRaTz4CYDaK0XtKRRG+YBiNLae9Xsajy5OcdvpU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anson Huang <Anson.Huang@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 14/33] rtc: snvs: fix possible race condition
-Date:   Sun, 29 Sep 2019 13:34:02 -0400
-Message-Id: <20190929173424.9361-14-sashal@kernel.org>
+Cc:     Miroslav Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, live-patching@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 08/33] livepatch: Nullify obj->mod in klp_module_coming()'s error path
+Date:   Sun, 29 Sep 2019 13:33:56 -0400
+Message-Id: <20190929173424.9361-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173424.9361-1-sashal@kernel.org>
 References: <20190929173424.9361-1-sashal@kernel.org>
@@ -60,55 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+From: Miroslav Benes <mbenes@suse.cz>
 
-[ Upstream commit 6fd4fe9b496d9ba3382992ff4fde3871d1b6f63d ]
+[ Upstream commit 4ff96fb52c6964ad42e0a878be8f86a2e8052ddd ]
 
-The RTC IRQ is requested before the struct rtc_device is allocated,
-this may lead to a NULL pointer dereference in IRQ handler.
+klp_module_coming() is called for every module appearing in the system.
+It sets obj->mod to a patched module for klp_object obj. Unfortunately
+it leaves it set even if an error happens later in the function and the
+patched module is not allowed to be loaded.
 
-To fix this issue, allocating the rtc_device struct before requesting
-the RTC IRQ using devm_rtc_allocate_device, and use rtc_register_device
-to register the RTC device.
+klp_is_object_loaded() uses obj->mod variable and could currently give a
+wrong return value. The bug is probably harmless as of now.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-Link: https://lore.kernel.org/r/20190716071858.36750-1-Anson.Huang@nxp.com
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Miroslav Benes <mbenes@suse.cz>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Petr Mladek <pmladek@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-snvs.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ kernel/livepatch/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/rtc/rtc-snvs.c b/drivers/rtc/rtc-snvs.c
-index b2483a749ac45..3cf011e120530 100644
---- a/drivers/rtc/rtc-snvs.c
-+++ b/drivers/rtc/rtc-snvs.c
-@@ -273,6 +273,10 @@ static int snvs_rtc_probe(struct platform_device *pdev)
- 	if (!data)
- 		return -ENOMEM;
+diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+index 722c27c40e5b3..a1250ad591c1d 100644
+--- a/kernel/livepatch/core.c
++++ b/kernel/livepatch/core.c
+@@ -1027,6 +1027,7 @@ int klp_module_coming(struct module *mod)
+ 	pr_warn("patch '%s' failed for module '%s', refusing to load module '%s'\n",
+ 		patch->mod->name, obj->mod->name, obj->mod->name);
+ 	mod->klp_alive = false;
++	obj->mod = NULL;
+ 	klp_cleanup_module_patches_limited(mod, patch);
+ 	mutex_unlock(&klp_mutex);
  
-+	data->rtc = devm_rtc_allocate_device(&pdev->dev);
-+	if (IS_ERR(data->rtc))
-+		return PTR_ERR(data->rtc);
-+
- 	data->regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node, "regmap");
- 
- 	if (IS_ERR(data->regmap)) {
-@@ -335,10 +339,9 @@ static int snvs_rtc_probe(struct platform_device *pdev)
- 		goto error_rtc_device_register;
- 	}
- 
--	data->rtc = devm_rtc_device_register(&pdev->dev, pdev->name,
--					&snvs_rtc_ops, THIS_MODULE);
--	if (IS_ERR(data->rtc)) {
--		ret = PTR_ERR(data->rtc);
-+	data->rtc->ops = &snvs_rtc_ops;
-+	ret = rtc_register_device(data->rtc);
-+	if (ret) {
- 		dev_err(&pdev->dev, "failed to register rtc: %d\n", ret);
- 		goto error_rtc_device_register;
- 	}
 -- 
 2.20.1
 
