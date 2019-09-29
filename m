@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4941C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 12:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A96C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 12:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 775C121835
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 12:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A25322086A
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 12:33:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728793AbfI2McA (ORCPT
+        id S1728954AbfI2Mdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 08:32:00 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:46142 "EHLO huawei.com"
+        Sun, 29 Sep 2019 08:33:32 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:43932 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725937AbfI2McA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 08:32:00 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 71EBBF3A29CA4E61AEAA;
-        Sun, 29 Sep 2019 20:31:57 +0800 (CST)
-Received: from huawei.com (10.90.53.225) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Sun, 29 Sep 2019
- 20:31:49 +0800
+        id S1725937AbfI2Mdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 08:33:32 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id E1906D8485D84484684B;
+        Sun, 29 Sep 2019 20:33:29 +0800 (CST)
+Received: from huawei.com (10.90.53.225) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Sun, 29 Sep 2019
+ 20:33:22 +0800
 From:   yu kuai <yukuai3@huawei.com>
 To:     <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
         <David1.Zhou@amd.com>, <airlied@linux.ie>, <daniel@ffwll.ch>
 CC:     <yukuai3@huawei.com>, <zhengbin13@huawei.com>,
         <yi.zhang@huawei.com>, <amd-gfx@lists.freedesktop.org>,
         <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] drm/amdgpu: remove set but not used variable 'pipe'
-Date:   Sun, 29 Sep 2019 20:38:43 +0800
-Message-ID: <1569760723-119944-1-git-send-email-yukuai3@huawei.com>
+Subject: [PATCH V2] drm/amdgpu: remove set but not used variable 'pipe'
+Date:   Sun, 29 Sep 2019 20:40:16 +0800
+Message-ID: <1569760816-60192-1-git-send-email-yukuai3@huawei.com>
 X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset="y"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 X-Originating-IP: [10.90.53.225]
 X-CFilter-Loop: Reflected
