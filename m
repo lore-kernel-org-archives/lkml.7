@@ -2,302 +2,211 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83648C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 06:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0228C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 06:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64B4A21835
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 06:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EA2A20863
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 06:20:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="ob5wViHF";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="ob5wViHF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727488AbfI2GQB (ORCPT
+        id S1728167AbfI2GU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 02:16:01 -0400
-Received: from mail-sz.amlogic.com ([211.162.65.117]:9653 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725379AbfI2GQB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 02:16:01 -0400
-Received: from [10.28.19.114] (10.28.19.114) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Sun, 29 Sep
- 2019 14:15:56 +0800
-Subject: Re: [PATCH 2/2] clk: meson: a1: add support for Amlogic A1 clock
- driver
-To:     Jerome Brunet <jbrunet@baylibre.com>
-CC:     Stephen Boyd <sboyd@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        <devicetree@vger.kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        <linux-kernel@vger.kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        <linux-amlogic@lists.infradead.org>, <linux-clk@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <1569411888-98116-1-git-send-email-jian.hu@amlogic.com>
- <1569411888-98116-3-git-send-email-jian.hu@amlogic.com>
- <20190925131232.4751020640@mail.kernel.org>
- <8351489a-f91e-be08-7fcc-e2a90c6e87f0@amlogic.com>
- <1jk19t28zs.fsf@starbuckisacylon.baylibre.com>
-From:   Jian Hu <jian.hu@amlogic.com>
-Message-ID: <aa379450-48c6-1eb4-e351-2f5ae3736470@amlogic.com>
-Date:   Sun, 29 Sep 2019 14:15:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.3
-MIME-Version: 1.0
-In-Reply-To: <1jk19t28zs.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+        Sun, 29 Sep 2019 02:20:56 -0400
+Received: from mail-eopbgr00049.outbound.protection.outlook.com ([40.107.0.49]:19012
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725379AbfI2GU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 02:20:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1i66CD8zMe2VMNNH4WML4pyxCs7cKHEBPw/SKU1qXlE=;
+ b=ob5wViHFYBi8JYZ8aL3EGcfzwCtoTxEnTmenrkfoXrgsnL9A52HzZ87qwgXLNZbVztsQ7WOiOwWMbLR4/k+YNW2nPsKjao4+KnDfBNUH3htl8ap33ppk8fRL4cZDscXn4N4LaaswjPKQj/PcQvowuyBY5GGz8ryJXuf8TZJ/dQg=
+Received: from VI1PR0802CA0035.eurprd08.prod.outlook.com
+ (2603:10a6:800:a9::21) by AM0PR08MB4561.eurprd08.prod.outlook.com
+ (2603:10a6:208:12d::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2305.15; Sun, 29 Sep
+ 2019 06:19:10 +0000
+Received: from VE1EUR03FT052.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e09::209) by VI1PR0802CA0035.outlook.office365.com
+ (2603:10a6:800:a9::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2305.16 via Frontend
+ Transport; Sun, 29 Sep 2019 06:19:10 +0000
+Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
+ header.from=arm.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of arm.com: DNS Timeout)
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ VE1EUR03FT052.mail.protection.outlook.com (10.152.19.173) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2305.15 via Frontend Transport; Sun, 29 Sep 2019 06:19:09 +0000
+Received: ("Tessian outbound 081de437afc7:v33"); Sun, 29 Sep 2019 06:19:03 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 72a203cab4710ca1
+X-CR-MTA-TID: 64aa7808
+Received: from ed6bda481be6.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.2.54])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 16C1A047-E96A-43B2-8E73-6A983D2D6621.1;
+        Sun, 29 Sep 2019 06:18:57 +0000
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-db5eur01lp2054.outbound.protection.outlook.com [104.47.2.54])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id ed6bda481be6.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384);
+    Sun, 29 Sep 2019 06:18:57 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=n7Q1Es/t3PBsoFS4hTX4j9JMtoLNiyPVc1mwNSUi8Ux0Ks1GIFvknSLnDpSdlNTmqqohjVf8XosLEq36NH1uYdI8Z3imilut2km+4wLY8ccgzRG0Gpggewp+tMsT5BSlP75LzeuZ4PhcYBH2XTnz0TD2ujHY7B0JQzIN5rMuXlUJCa5hyzbF9cEna5yIdVemmvT8UJIM9WKBdKrNmn6dec7TFxiB8/ZyRCF9ojfSXLXKHN8YOUGDgBybeiKx5dX2esB9xRJFkDGsZuiNM08P2cEoPum9+My37Q8VrxYQaaosP+07zxack9UZ0XsDOL3/GgmauqbYyDC1yR+3Shi27Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1i66CD8zMe2VMNNH4WML4pyxCs7cKHEBPw/SKU1qXlE=;
+ b=XyCX/VFjk9styitS8xje6up4o1fBLR6tGzZwXjE8P0ARYSa9usQjzkmhNaQhpeKEL4qUp1PiNmumevDNnxAYSd8q+m1S6DNPKykMJz8rHSFd+2RipXPiTwFD8jpO9vG1iNObN+1uCkJ8+FYKTYr1kNXjUYXoV7sUPEzw+wdPcijUq5vpGnwSeLAOTYvhDm5jG/ZCaUSdeZ0F95W0Jf3zelPrTfLMiAeOJDJDr109s2Gs92zG/8LSv99v9vLLoE4DeAWok0lQbdNaSP0C7vOzcxFUOK0Kt4vk32UW+2jwyJGnl7S/LkiHYXCObAX5PZ9X+K7coWUpuf24HaXTHB7f7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1i66CD8zMe2VMNNH4WML4pyxCs7cKHEBPw/SKU1qXlE=;
+ b=ob5wViHFYBi8JYZ8aL3EGcfzwCtoTxEnTmenrkfoXrgsnL9A52HzZ87qwgXLNZbVztsQ7WOiOwWMbLR4/k+YNW2nPsKjao4+KnDfBNUH3htl8ap33ppk8fRL4cZDscXn4N4LaaswjPKQj/PcQvowuyBY5GGz8ryJXuf8TZJ/dQg=
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
+ VE1PR08MB5245.eurprd08.prod.outlook.com (20.179.31.32) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.20; Sun, 29 Sep 2019 06:18:56 +0000
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::a0a6:ad4c:b7a7:f879]) by VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::a0a6:ad4c:b7a7:f879%5]) with mapi id 15.20.2284.028; Sun, 29 Sep 2019
+ 06:18:56 +0000
+From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+To:     Mihail Atanassov <Mihail.Atanassov@arm.com>
+CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>, nd <nd@arm.com>,
+        Sean Paul <sean@poorly.run>
+Subject: Re: [v2] drm/komeda: Workaround for broken FLIP_COMPLETE timestamps
+Thread-Topic: [v2] drm/komeda: Workaround for broken FLIP_COMPLETE timestamps
+Thread-Index: AQHVdo3GfdMAC9qVAUSxM4QfhIA3AQ==
+Date:   Sun, 29 Sep 2019 06:18:56 +0000
+Message-ID: <20190929061849.GA29382@jamwan02-TSP300>
+References: <20190923101017.35114-1-mihail.atanassov@arm.com>
+In-Reply-To: <20190923101017.35114-1-mihail.atanassov@arm.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.19.114]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mutt/1.10.1 (2018-07-13)
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK0P153CA0040.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:203:17::28) To VE1PR08MB5006.eurprd08.prod.outlook.com
+ (2603:10a6:803:113::31)
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-Correlation-Id: 8bf83097-3933-417e-f23d-08d744a4f06b
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-TrafficTypeDiagnostic: VE1PR08MB5245:|VE1PR08MB5245:|AM0PR08MB4561:
+X-MS-Exchange-PUrlCount: 1
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR08MB4561A473B8CDD6FBCFBE4B59B3830@AM0PR08MB4561.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:6790;OLM:6790;
+x-forefront-prvs: 017589626D
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(346002)(376002)(136003)(366004)(396003)(39850400004)(189003)(199004)(54906003)(305945005)(66446008)(66556008)(6486002)(6636002)(58126008)(81156014)(7736002)(81166006)(229853002)(6116002)(3846002)(64756008)(66946007)(6512007)(6436002)(14454004)(66476007)(8936002)(8676002)(486006)(476003)(11346002)(478600001)(2906002)(33716001)(9686003)(316002)(446003)(14444005)(256004)(186003)(6246003)(26005)(25786009)(86362001)(6862004)(76176011)(1076003)(52116002)(99286004)(102836004)(5660300002)(66066001)(71190400001)(6306002)(71200400001)(4326008)(55236004)(6506007)(386003)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB5245;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: ffU22a7RCFoK0CFZI8vnpPjhul7uEqnMgneAG8zjTZdzTYwFGuwATqWBnmZ2kZRtUX1kqJsDtT5r1XVZfmm9qjyEQv0dGM//VJOUYeI2SVY1gDb95XFFSie3eq0B2kUJwF0JIytMpl3jH19iEuEskYocCX6xOooRzpLKZB43+vcxnhw54uvnNN7NU0Mwijvwv/crSQS8X7JvmABN0cR+PYAWzYYXWuqk6K0/EmVi3UO8FOGSLROV7NbEuEiCobrRsSx/HJPHHsIlBImYMrQK5zGj6Mwj3YA4WwXqaJc+tdfsZoGJy80tMryc7Ze0iKfPVRIdvBaTbWkwp+s33pkISJBO5vQHaa7/jbO2IrpCX574p6npcwnwqazQR2gUtjfRM+3xB51/6laqZ+VZMiFX/g0CYuS92wV2u5Nnd8RBQ36WWqxER1EJPNBxWQuT48jhW21t0ljj5uhj9iLrDZId6A==
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <19F74D5288858D4B93C4CCB2292F0DAD@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB5245
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT052.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(7916004)(136003)(346002)(39850400004)(376002)(396003)(189003)(199004)(229853002)(46406003)(6636002)(6246003)(6506007)(3846002)(6116002)(47776003)(6486002)(107886003)(386003)(2906002)(14454004)(336012)(54906003)(102836004)(22756006)(23726003)(58126008)(26005)(33656002)(1076003)(50466002)(186003)(356004)(86362001)(7736002)(6306002)(99286004)(14444005)(486006)(70206006)(8936002)(6862004)(70586007)(81156014)(6512007)(476003)(76130400001)(8746002)(81166006)(316002)(11346002)(63350400001)(25786009)(36906005)(4326008)(9686003)(126002)(33716001)(305945005)(97756001)(5660300002)(26826003)(66066001)(478600001)(76176011)(446003)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR08MB4561;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;MX:1;A:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 167f86c9-d66f-4ff4-a913-08d744a4e882
+NoDisclaimer: True
+X-Forefront-PRVS: 017589626D
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 4X/GNquyrP/kTrINFPJCAq/mZ5ZFD7IbCeeCoHWQTQPSQAE8kmoobjz32JqoQGUpK6jXPvZICMOzPSXYcZhp3LrJjkHhv9VqyhIGcNXu8leeAMuXzLV/jmA//F5inbfMLqeQEdy/AiWgdWpFELyAlRaf6miH+CkE0qQtEOhsuytEttQE6ZGq2FNYYY1fnQGVwUf3ULZKkLB0S60MAprBdoywFQtNCQxuIDiDRTZ9uVJLFBTw9m1j882H3NmGPsozrpVGIwuHTMp434CzhwMjUMQM3PUlRMQZVFGz4d0ulDnb+N7lZIvVoe4DKwSDu/uKWk0ox1s6zHHsQEGpIphm8zQiZdRpwgAeCbdhlk2Rfg3PyxbWEFEVmTHMKLRZF6jSaK6UGnQFmJzv0qgqf+Zj93I+VzGESQdIehhda6VcPdTQyzv7r7p5oqusVdTWvILFiPfDMr+m26PD7xaCFEwGMg==
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Sep 2019 06:19:09.4065
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8bf83097-3933-417e-f23d-08d744a4f06b
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB4561
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Sep 23, 2019 at 10:10:26AM +0000, Mihail Atanassov wrote:
+> When initially turning a crtc on, drm_reset_vblank_timestamp will
+> set the vblank timestamp to 0 for any driver that doesn't provide
+> a ->get_vblank_timestamp() hook.
+>=20
+> Unfortunately, the FLIP_COMPLETE event depends on that timestamp,
+> and the only way to regenerate a valid one is to have vblank
+> interrupts enabled and have a valid in-ISR call to
+> drm_crtc_handle_vblank.
+>=20
+> Additionally, if the user doesn't request vblanks but _does_ request
+> FLIP_COMPLETE events, we still don't have a good timestamp: it'll be the
+> same stamp as the last vblank one.
+>=20
+> Work around the issue by always enabling vblanks when the CRTC is on.
+> Reducing the amount of time that PL0 has to be unmasked would be nice to
+> fix at a later time.
+>=20
+> Changes since v1 [https://patchwork.freedesktop.org/patch/331727/]:
+>  - moved drm_crtc_vblank_put call to the ->atomic_disable() hook
+>=20
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: Liviu Dudau <Liviu.Dudau@arm.com>
+> Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
+> ---
+>  drivers/gpu/drm/arm/display/komeda/komeda_crtc.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c b/drivers/g=
+pu/drm/arm/display/komeda/komeda_crtc.c
+> index 34bc73ca18bc..d06679afb228 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+> @@ -489,6 +489,7 @@ komeda_crtc_atomic_enable(struct drm_crtc *crtc,
+>  	pm_runtime_get_sync(crtc->dev->dev);
+>  	komeda_crtc_prepare(to_kcrtc(crtc));
+>  	drm_crtc_vblank_on(crtc);
+> +	WARN_ON(drm_crtc_vblank_get(crtc));
+>  	komeda_crtc_do_flush(crtc, old);
+>  }
+> =20
+> @@ -581,6 +582,7 @@ komeda_crtc_atomic_disable(struct drm_crtc *crtc,
+>  		komeda_crtc_flush_and_wait_for_flip_done(kcrtc, disable_done);
+>  	}
+> =20
+> +	drm_crtc_vblank_put(crtc);
+>  	drm_crtc_vblank_off(crtc);
+>  	komeda_crtc_unprepare(kcrtc);
+>  	pm_runtime_put(crtc->dev->dev);
 
-On 2019/9/27 20:56, Jerome Brunet wrote:
-> 
-> On Fri 27 Sep 2019 at 05:11, Jian Hu <jian.hu@amlogic.com> wrote:
-> 
->> Hi, Stephen
->>
->> Thank you for review
->>
->> On 2019/9/25 21:12, Stephen Boyd wrote:
->>> Quoting Jian Hu (2019-09-25 04:44:48)
->>>> The Amlogic A1 clock includes three parts:
->>>> peripheral clocks, pll clocks, CPU clocks.
->>>> sys pll and CPU clocks will be sent in next patch.
->>>>
->>>> Unlike the previous series, there is no EE/AO domain
->>>> in A1 CLK controllers.
->>>>
->>>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
->>>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
->>>
->>> This second name didn't send the patch. Please follow the signoff
->>> procedures documented in Documentation/process/submitting-patches.rst
->>>
->>>> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
->>>> index 16d7614..a48f67d 100644
->>>> --- a/arch/arm64/Kconfig.platforms
->>>> +++ b/arch/arm64/Kconfig.platforms
->>>> @@ -138,6 +138,7 @@ config ARCH_MESON
->>>>           select COMMON_CLK_AXG
->>>>           select COMMON_CLK_G12A
->>>>           select MESON_IRQ_GPIO
->>>> +       select COMMON_CLK_A1
->>>
->>> Sort?
->> ok, I will put it behind COMMON_CLK_AXG
->>>
->>>>           help
->>>>             This enables support for the arm64 based Amlogic SoCs
->>>>             such as the s905, S905X/D, S912, A113X/D or S905X/D2
->>>> diff --git a/drivers/clk/meson/Kconfig b/drivers/clk/meson/Kconfig
->>>> index dabeb43..e6cb4c3 100644
->>>> --- a/drivers/clk/meson/Kconfig
->>>> +++ b/drivers/clk/meson/Kconfig
->>>> @@ -107,3 +107,13 @@ config COMMON_CLK_G12A
->>>>           help
->>>>             Support for the clock controller on Amlogic S905D2, S905X2 and S905Y2
->>>>             devices, aka g12a. Say Y if you want peripherals to work.
->>>> +
->>>> +config COMMON_CLK_A1
->>>
->>> Probably should be placed somewhere alphabetically in this file?
->> ok, I will put it behind COMMON_CLK_AXG_AUDIO
->>>
->>>> +       bool
->>>> +       depends on ARCH_MESON
->>>> +       select COMMON_CLK_MESON_REGMAP
->>>> +       select COMMON_CLK_MESON_DUALDIV
->>>> +       select COMMON_CLK_MESON_PLL
->>>> +       help
->>>> +         Support for the clock controller on Amlogic A113L device,
->>>> +         aka a1. Say Y if you want peripherals to work.
->>>> diff --git a/drivers/clk/meson/Makefile b/drivers/clk/meson/Makefile
->>>> index 3939f21..6be3a8f 100644
->>>> --- a/drivers/clk/meson/Makefile
->>>> +++ b/drivers/clk/meson/Makefile
->>>> @@ -19,3 +19,4 @@ obj-$(CONFIG_COMMON_CLK_AXG_AUDIO) += axg-audio.o
->>>>    obj-$(CONFIG_COMMON_CLK_GXBB) += gxbb.o gxbb-aoclk.o
->>>>    obj-$(CONFIG_COMMON_CLK_G12A) += g12a.o g12a-aoclk.o
->>>>    obj-$(CONFIG_COMMON_CLK_MESON8B) += meson8b.o
->>>> +obj-$(CONFIG_COMMON_CLK_A1) += a1.o
->>>
->>> I would guess this should be sorted on Kconfig name in this file?
->> ok, I will put it behind COMMON_CLK_AXG_AUDIO
->>>
->>>> diff --git a/drivers/clk/meson/a1.c b/drivers/clk/meson/a1.c
->>>> new file mode 100644
->>>> index 0000000..26edae0f
->>>> --- /dev/null
->>>> +++ b/drivers/clk/meson/a1.c
->>>> @@ -0,0 +1,2617 @@
->>>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->>>> +/*
->>>> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
->>>> + */
->>>> +
->>>> +#include <linux/clk-provider.h>
->>>> +#include <linux/init.h>
->>>> +#include <linux/of_device.h>
->>>> +#include <linux/platform_device.h>
->>>> +#include <linux/of_address.h>
->>>> +#include "clk-mpll.h"
->>>> +#include "clk-pll.h"
->>>> +#include "clk-regmap.h"
->>>> +#include "vid-pll-div.h"
->>>> +#include "clk-dualdiv.h"
->>>> +#include "meson-eeclk.h"
->>>> +#include "a1.h"
->>>> +
->>> [...]
->>>> +
->>>> +/*
->>>> + * The Meson A1 HIFI PLL is 614.4M, it requires
->>>> + * a strict register sequence to enable the PLL.
->>>> + * set meson_clk_pcie_pll_ops as its ops
->>>
->>> Please remove this last line as it's obvious from the code what ops are
->>> used.
->>>
->> ok, I will remove it.
->>>> + */
->>>> +static struct clk_regmap a1_hifi_pll = {
->>>> +       .data = &(struct meson_clk_pll_data){
->>>> +               .en = {
->>>> +                       .reg_off = ANACTRL_HIFIPLL_CTRL0,
->>>> +                       .shift   = 28,
->>>> +                       .width   = 1,
->>>> +               },
->>>> +               .m = {
->>>> +                       .reg_off = ANACTRL_HIFIPLL_CTRL0,
->>>> +                       .shift   = 0,
->>>> +                       .width   = 8,
->>>> +               },
->>>> +               .n = {
->>>> +                       .reg_off = ANACTRL_HIFIPLL_CTRL0,
->>>> +                       .shift   = 10,
->>>> +                       .width   = 5,
->>>> +               },
->>>> +               .frac = {
->>>> +                       .reg_off = ANACTRL_HIFIPLL_CTRL1,
->>>> +                       .shift   = 0,
->>>> +                       .width   = 19,
->>>> +               },
->>>> +               .l = {
->>>> +                       .reg_off = ANACTRL_HIFIPLL_STS,
->>>> +                       .shift   = 31,
->>>> +                       .width   = 1,
->>>> +               },
->>>> +               .table = a1_hifi_pll_params_table,
->>>> +               .init_regs = a1_hifi_init_regs,
->>>> +               .init_count = ARRAY_SIZE(a1_hifi_init_regs),
->>>> +       },
->>>> +       .hw.init = &(struct clk_init_data){
->>>> +               .name = "hifi_pll",
->>>> +               .ops = &meson_clk_pcie_pll_ops,
->>>> +               .parent_hws = (const struct clk_hw *[]) {
->>>> +                       &a1_xtal_hifipll.hw
->>>> +               },
->>>> +               .num_parents = 1,
->>>> +       },
->>>> +};
->>>> +
->>> [..]
->>>> +
->>>> +static struct clk_regmap a1_fclk_div2 = {
->>>> +       .data = &(struct clk_regmap_gate_data){
->>>> +               .offset = ANACTRL_FIXPLL_CTRL0,
->>>> +               .bit_idx = 21,
->>>> +       },
->>>> +       .hw.init = &(struct clk_init_data){
->>>> +               .name = "fclk_div2",
->>>> +               .ops = &clk_regmap_gate_ops,
->>>> +               .parent_hws = (const struct clk_hw *[]) {
->>>> +                       &a1_fclk_div2_div.hw
->>>> +               },
->>>> +               .num_parents = 1,
->>>> +               /*
->>>> +                * add CLK_IS_CRITICAL flag to avoid being disabled by clk core
->>>> +                * or its children clocks.
->>>
->>> This comment is useless. Please replace it with an actual reason for
->>> keeping the clk on instead of describing what the flag does.
->>>
->> ok, The actual reason is it should not change at runtime.
-> 
-> Yeah, from the flag we understand that you want to keep this on. What we
-> are after is why ? What device is using this clock and cannot tolerate
-> this gate to turn off ?
-> 
-> This is important and this is kind of comment we are after.
-> These flag should be viewed as "mid term work around". In the end, there
-> should be a driver for your device which claims the clock and properly
-> manage it
-> 
-I have confirmed for a1_fclk_div2, ddr clock's parent is fclk_div2 which
-is initialized in the firmware. The DDR clock could not be gated. I will 
-check the other fclk_divX clocks.
->>>> +                */
->>>> +               .flags = CLK_IS_CRITICAL,
->>>> +       },
->>>> +};
->>>> +
->>> [..]
->>>> +static struct clk_regmap a1_dmc = {
->>>> +       .data = &(struct clk_regmap_gate_data){
->>>> +               .offset = DMC_CLK_CTRL,
->>>> +               .bit_idx = 8,
->>>> +       },
->>>> +       .hw.init = &(struct clk_init_data) {
->>>> +               .name = "dmc",
->>>> +               .ops = &clk_regmap_gate_ops,
->>>> +               .parent_hws = (const struct clk_hw *[]) {
->>>> +                       &a1_dmc_sel2.hw
->>>> +               },
->>>> +               .num_parents = 1,
->>>> +               /*
->>>> +                * add CLK_IGNORE_UNUSED to avoid hangup
->>>> +                * DDR clock should not change at runtime
->>>> +                */
->>>> +               .flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
->>>
->>> So not CLK_IS_CRITICAL?
->> Yes, CLK_IS_CRITICAL is better, I will change it.
-> 
-> Same comment as above.
-> 
->>>
->>>> +       },
->>>> +};
->>>> +
->>> [...]
->>>> +
->>>> +/*
->>>> + * cpu clock register base address is 0xfd000080
->>>> + */
->>>> +static struct clk_regmap *const a1_cpu_clk_regmaps[] = {
->>>> +       /* TODO */
->>>
->>> Can it be done?
->> I plan to compelte cpu clock with the DVFS verified. And  Some peripheral
->> devices rely on this patch to send. I prefer to do it in the next patch.
->>>
->>>> +};
->>>
->>> .
->>>
-> 
-> .
-> 
+Looks good to me.
+
+Reviewed-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.co=
+m>
+
+
