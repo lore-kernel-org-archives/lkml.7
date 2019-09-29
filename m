@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78152C32793
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F13DC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53BE32086A
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB5F62086A
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:41:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778861;
-	bh=nVXqpg3EWzWrGx+Rt5GKZFcx6da05pFj5oeiYDJ0CU8=;
+	s=default; t=1569778867;
+	bh=mEX6m77D5xfNKL3qk0Z81bvRU50ZjzXX9ZeCSI33gmo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KjdlmW76QWNuPbhh0rXWYiEjeyBJ6cklCsn9n5GpaWpNoT157v0Dh64un0zTwo35+
-	 qKngaj7KvGjmw/VS9AEYDf5DBTRkEOMZTV7pFqMCwFNEzftAlXycFgmWASzRS7xr6b
-	 WrmWRo/LYUIVthqUEf4qpto204pOYiaeZFABdpt8=
+	b=g/+ije8hxCwkqPwScundw4+vWD8J6qvjCPO3+n1H/BnW8oM8O4z2rW2APvuTHZFkX
+	 xw3qYX/uw4vtkx93UpikSosQYqIm2ZDs2aOnbpgLdG0xcn3lsg/FnZeXja5ylM4fyv
+	 xypVA/5yfQlRi8Z16xK/m/Oszr58TDQ4wAWDhbus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730530AbfI2RlA (ORCPT
+        id S1730249AbfI2ReA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:41:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45476 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:34:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730260AbfI2ReD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:34:03 -0400
+        id S1730185AbfI2Rdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:33:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CA8921906;
-        Sun, 29 Sep 2019 17:34:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5DA22196E;
+        Sun, 29 Sep 2019 17:33:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778441;
-        bh=nVXqpg3EWzWrGx+Rt5GKZFcx6da05pFj5oeiYDJ0CU8=;
+        s=default; t=1569778429;
+        bh=mEX6m77D5xfNKL3qk0Z81bvRU50ZjzXX9ZeCSI33gmo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1zgTuFWw7yo4EaMooO0nX5eBZYMwno8HA9ZJw4LSnWVd8wauaExlz8F9OmDYfkOkF
-         pbV9c1OVg12eueEy8J+cNC7DZA4Utp/Ml4Upty/TW0b4qw+OCXB63fo59hjk4mG4k8
-         kBsxbkTBf1CWbl4UDiXioFgAG65myxSl/M7vOwbk=
+        b=JFAT/Oe6JRuYfY9ADkfdr/sQQ4hN/SX7AziXteBd3tQAlO8X6UmVz78HYlTpK49LR
+         DYjMEKu3OfyF59cbWfHIKU6FPGKPfItehZdiK3R2sxwsg7+5LK96x0vo1D9HJ97p+y
+         gviMbVwbXdD2p35ed+NvUTWswG57cey6I28Y+SNo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Changwei Ge <gechangwei@live.cn>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+Cc:     Mike Rapoport <mike.rapoport@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 37/42] ocfs2: wait for recovering done after direct unlock request
-Date:   Sun, 29 Sep 2019 13:32:36 -0400
-Message-Id: <20190929173244.8918-37-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 31/42] ARM: 8903/1: ensure that usable memory in bank 0 starts from a PMD-aligned address
+Date:   Sun, 29 Sep 2019 13:32:30 -0400
+Message-Id: <20190929173244.8918-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173244.8918-1-sashal@kernel.org>
 References: <20190929173244.8918-1-sashal@kernel.org>
@@ -64,92 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Changwei Ge <gechangwei@live.cn>
+From: Mike Rapoport <mike.rapoport@gmail.com>
 
-[ Upstream commit 0a3775e4f883912944481cf2ef36eb6383a9cc74 ]
+[ Upstream commit 00d2ec1e6bd82c0538e6dd3e4a4040de93ba4fef ]
 
-There is a scenario causing ocfs2 umount hang when multiple hosts are
-rebooting at the same time.
+The calculation of memblock_limit in adjust_lowmem_bounds() assumes that
+bank 0 starts from a PMD-aligned address. However, the beginning of the
+first bank may be NOMAP memory and the start of usable memory
+will be not aligned to PMD boundary. In such case the memblock_limit will
+be set to the end of the NOMAP region, which will prevent any memblock
+allocations.
 
-NODE1                           NODE2               NODE3
-send unlock requset to NODE2
-                                dies
-                                                    become recovery master
-                                                    recover NODE2
-find NODE2 dead
-mark resource RECOVERING
-directly remove lock from grant list
-calculate usage but RECOVERING marked
-**miss the window of purging
-clear RECOVERING
+Mark the region between the end of the NOMAP area and the next PMD-aligned
+address as NOMAP as well, so that the usable memory will start at
+PMD-aligned address.
 
-To reproduce this issue, crash a host and then umount ocfs2
-from another node.
-
-To solve this, just let unlock progress wait for recovery done.
-
-Link: http://lkml.kernel.org/r/1550124866-20367-1-git-send-email-gechangwei@live.cn
-Signed-off-by: Changwei Ge <gechangwei@live.cn>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/dlm/dlmunlock.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+ arch/arm/mm/mmu.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/fs/ocfs2/dlm/dlmunlock.c b/fs/ocfs2/dlm/dlmunlock.c
-index e78657742bd89..3883633e82eb9 100644
---- a/fs/ocfs2/dlm/dlmunlock.c
-+++ b/fs/ocfs2/dlm/dlmunlock.c
-@@ -90,7 +90,8 @@ static enum dlm_status dlmunlock_common(struct dlm_ctxt *dlm,
- 	enum dlm_status status;
- 	int actions = 0;
- 	int in_use;
--        u8 owner;
-+	u8 owner;
-+	int recovery_wait = 0;
+diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
+index 1aa2586fa597b..13233c7917fe7 100644
+--- a/arch/arm/mm/mmu.c
++++ b/arch/arm/mm/mmu.c
+@@ -1177,6 +1177,22 @@ void __init adjust_lowmem_bounds(void)
+ 	 */
+ 	vmalloc_limit = (u64)(uintptr_t)vmalloc_min - PAGE_OFFSET + PHYS_OFFSET;
  
- 	mlog(0, "master_node = %d, valblk = %d\n", master_node,
- 	     flags & LKM_VALBLK);
-@@ -193,9 +194,12 @@ static enum dlm_status dlmunlock_common(struct dlm_ctxt *dlm,
- 		}
- 		if (flags & LKM_CANCEL)
- 			lock->cancel_pending = 0;
--		else
--			lock->unlock_pending = 0;
--
-+		else {
-+			if (!lock->unlock_pending)
-+				recovery_wait = 1;
-+			else
-+				lock->unlock_pending = 0;
++	/*
++	 * The first usable region must be PMD aligned. Mark its start
++	 * as MEMBLOCK_NOMAP if it isn't
++	 */
++	for_each_memblock(memory, reg) {
++		if (!memblock_is_nomap(reg)) {
++			if (!IS_ALIGNED(reg->base, PMD_SIZE)) {
++				phys_addr_t len;
++
++				len = round_up(reg->base, PMD_SIZE) - reg->base;
++				memblock_mark_nomap(reg->base, len);
++			}
++			break;
 +		}
- 	}
- 
- 	/* get an extra ref on lock.  if we are just switching
-@@ -229,6 +233,17 @@ static enum dlm_status dlmunlock_common(struct dlm_ctxt *dlm,
- 	spin_unlock(&res->spinlock);
- 	wake_up(&res->wq);
- 
-+	if (recovery_wait) {
-+		spin_lock(&res->spinlock);
-+		/* Unlock request will directly succeed after owner dies,
-+		 * and the lock is already removed from grant list. We have to
-+		 * wait for RECOVERING done or we miss the chance to purge it
-+		 * since the removement is much faster than RECOVERING proc.
-+		 */
-+		__dlm_wait_on_lockres_flags(res, DLM_LOCK_RES_RECOVERING);
-+		spin_unlock(&res->spinlock);
 +	}
 +
- 	/* let the caller's final dlm_lock_put handle the actual kfree */
- 	if (actions & DLM_UNLOCK_FREE_LOCK) {
- 		/* this should always be coupled with list removal */
+ 	for_each_memblock(memory, reg) {
+ 		phys_addr_t block_start = reg->base;
+ 		phys_addr_t block_end = reg->base + reg->size;
 -- 
 2.20.1
 
