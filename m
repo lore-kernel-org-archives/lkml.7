@@ -2,264 +2,258 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E18DFC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 12:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1FC3C352A9
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA6A920863
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 12:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 752532082F
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 13:01:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="lAmmapGt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lC5plcFE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728769AbfI2MxO (ORCPT
+        id S1728847AbfI2NB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 08:53:14 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41528 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725924AbfI2MxO (ORCPT
+        Sun, 29 Sep 2019 09:01:56 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39700 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbfI2NB4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 08:53:14 -0400
-Received: by mail-wr1-f68.google.com with SMTP id h7so7976597wrw.8
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Sep 2019 05:53:11 -0700 (PDT)
+        Sun, 29 Sep 2019 09:01:56 -0400
+Received: by mail-wr1-f65.google.com with SMTP id r3so8003622wrj.6;
+        Sun, 29 Sep 2019 06:01:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from:cc;
-        bh=fs5v+weLFPwRRRI3FkXGE9cOtwhFavNV8bkARXetJUg=;
-        b=lAmmapGtOyN+qK6w+9yVVpZkIKm6E+hmn8zHxBOg5zPd5cLOM6vvZL+QhJleU9fHH5
-         msBHmeBOljrWqOhKKNm0znPYEpQX9IL9BqCqa8no0RwKNf/gfoW2KtYmm0s3ft9a6dP+
-         Cxjh+v8SZ7KiKWQot9SG31H0V7SY+w5JeHMxGUvwJJqhiJzP+eumZOHbyQEYgVJMKOj7
-         adK6/DpIm2PmorgRmHdvJvzjUO7vclqg78Ck4K1ZfBrBWWy1T4GNRRGk6pZTzyKXOO4F
-         F7wElI8znubjspxG7DMFydwLIem+vw6A7/JQKAwunJ3DDa78Vi8WKx4o2PKwVzfdHjTo
-         LMUQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bdCVpjeUeIvhTicwteXOBMxHJh/rxwiqJp3B1DRQ450=;
+        b=lC5plcFEqfiPBelkcu2z/AFCQq6Eh9DIh9o6eqCz65MGOXul/YkGDVCU1R5nYNWWBs
+         lYB6GIMoJ/B9MzPUNYqxsz2UoRzAGXgr4CKJ9Rs/o83jL+p6da+XQtJsAgj94Cm49hmg
+         0o8+9SPsYSheSR/UOHLlMZ7U6COv/wS1KBvKfanAZnLQ1eCjENkoOA/IZIn/ccCmgYES
+         8QjHFrlRrAjJFOTvHU0Lh5uleQmKnvpKsnsmOK6aNTR8aEhssRcwLpK9jdE+qqWGvIyc
+         yzovnmkOXKAkCD61OT06JpoYm5pBuuid39Xr90TPWJu8cOnaSDky++mCuWzG6B4tlG31
+         ePcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from:cc;
-        bh=fs5v+weLFPwRRRI3FkXGE9cOtwhFavNV8bkARXetJUg=;
-        b=rdI0A4d/6T4DramnaS8CK3DbA7uT/MjN6s4/6mhUsgWqk3g2zPGxpsQDMcst6eC3TX
-         Uw90CTd0tSRZEWEcFk/MzhlUV4YH4sChnJAs+6e2yKGRmyOdxhXwitf8Oh8o5JBQ6DEf
-         9CdcGuk4gBIVClJgHgvh1G4DJ+f+YR7ob8fWwKjirZDKb+BOKeEB23C88PML64iWQb7T
-         TA2KiFDdFsNOgzm9x4V3lSWAVHlvFPzm1v/9wUOsKph0hFzIIHKS22r0eSSR9U5Yjd4D
-         uHh5nCqCiqDQFp4TWDuCybicdFBp29vRQo6uu/fUTT4t9jSbPjB9qqUCP8o46v913IsI
-         WIxA==
-X-Gm-Message-State: APjAAAXU/GnfIyAypkS09E1hxWjChXJxR+r/k3h/2tVwBrHyk15Y8nnE
-        MSbLea34wRg0wmqeOKF/Xv05pJ7IrSg=
-X-Google-Smtp-Source: APXvYqwQ++tYEr6bUH90x9+qABbXbO01MUOf6qKmw0nUFxL4osDRIfFuvlyweYIvCsfetWqF6NdsRw==
-X-Received: by 2002:adf:fa10:: with SMTP id m16mr9555181wrr.322.1569761590988;
-        Sun, 29 Sep 2019 05:53:10 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id u68sm28825342wmu.12.2019.09.29.05.53.09
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=bdCVpjeUeIvhTicwteXOBMxHJh/rxwiqJp3B1DRQ450=;
+        b=Kz5apdNTSaW0vxHr0J6DvLNtji5k6TGSVKEPX9cOM5L2WcJM29NKG6/K8wfR+Zm+VE
+         N0yDArsOrNJ9zG6NpSraQxuRzJddw9GttwR1LGGUkcRPeE1Vz6YH0xmOYmKYDWNTBZJY
+         PkFOs5m5c8fd0jr/PTPR7ibikmBpN/0pZSF4xKo/u4ObbhhrIzTxLSmu1ZWd0jame9kA
+         Ebe7zbs+nNKrDtsT1SzEfvMY3Kg6MKtROt3dduTo//tgwKkZsdj6sI5rFZX8qKIPfgVk
+         4xyKn+4+CnmfX/wdBEuqsNMX2NuKXZP523EeXG3P5tpPalADXAiSVHvBp2ifDnQ5RNWl
+         LcWg==
+X-Gm-Message-State: APjAAAXxwaaLvYctEgx6gQKbbmdTQ8WNs1XIVxtqKYh86Zpb6CLlMMI7
+        ka82cvkya84PLMZthO9DjyilPh9G
+X-Google-Smtp-Source: APXvYqyTeezpv6e2vpPToWFa1EjUHrc4FkrzRy0TxAlAna9wJ9kyK+PNAaAAhe8lCJQBhWvXtszrvw==
+X-Received: by 2002:adf:ef12:: with SMTP id e18mr4969169wro.65.1569762112856;
+        Sun, 29 Sep 2019 06:01:52 -0700 (PDT)
+Received: from [192.168.1.19] (blg187.neoplus.adsl.tpnet.pl. [83.28.200.187])
+        by smtp.gmail.com with ESMTPSA id l7sm7684612wrv.77.2019.09.29.06.01.51
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 29 Sep 2019 05:53:10 -0700 (PDT)
-Message-ID: <5d90a936.1c69fb81.90f7c.21e0@mx.google.com>
-Date:   Sun, 29 Sep 2019 05:53:10 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Sun, 29 Sep 2019 06:01:52 -0700 (PDT)
+Subject: Re: [PATCH v9 13/15] leds: lp55xx: Update the lp55xx to use the multi
+ color framework
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190925174616.3714-1-dmurphy@ti.com>
+ <20190925174616.3714-14-dmurphy@ti.com>
+ <59e58ccf-84fb-5db7-5008-20afc7436d35@gmail.com>
+ <64d00aab-501c-d709-94af-4747a27df098@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <35e25398-81de-3755-7979-72638a119c77@gmail.com>
+Date:   Sun, 29 Sep 2019 15:01:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: bisect
-X-Kernelci-Kernel: v5.3-13186-g02dc96ef6c25
-X-Kernelci-Branch: master
-X-Kernelci-Lab-Name: lab-collabora
-X-Kernelci-Tree: net-next
-Subject: net-next/master boot bisection: v5.3-13186-g02dc96ef6c25 on
- bcm2836-rpi-2-b
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        tomeu.vizoso@collabora.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        guillaume.tucker@collabora.com, mgalka@collabora.com,
-        broonie@kernel.org, matthew.hart@linaro.org, khilman@baylibre.com,
-        enric.balletbo@collabora.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Changbin Du <changbin.du@intel.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
+In-Reply-To: <64d00aab-501c-d709-94af-4747a27df098@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-* This automated bisection report was sent to you on the basis  *
-* that you may be involved with the breaking commit it has      *
-* found.  No manual investigation has been done to verify it,   *
-* and the root cause of the problem may be somewhere else.      *
-*                                                               *
-* If you do send a fix, please include this trailer:            *
-*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-*                                                               *
-* Hope this helps!                                              *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+Dan,
 
-net-next/master boot bisection: v5.3-13186-g02dc96ef6c25 on bcm2836-rpi-2-b
+On 9/26/19 2:02 PM, Dan Murphy wrote:
+> Jacek
+> 
+> On 9/25/19 5:00 PM, Jacek Anaszewski wrote:
+>> Dan,
+>>
+>> On 9/25/19 7:46 PM, Dan Murphy wrote:
+>>> Update the lp5523 to allow the use of the multi color framework.
+>>>
+>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>> ---
+>>>   drivers/leds/Kconfig                      |   1 +
+>>>   drivers/leds/leds-lp5523.c                |  13 ++
+>>>   drivers/leds/leds-lp55xx-common.c         | 150 ++++++++++++++++++----
+>>>   drivers/leds/leds-lp55xx-common.h         |  11 ++
+>>>   include/linux/platform_data/leds-lp55xx.h |   6 +
+>>>   5 files changed, 157 insertions(+), 24 deletions(-)
+>>>
+>>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+>>> index 84f60e35c5ee..dc3d9f2194cd 100644
+>>> --- a/drivers/leds/Kconfig
+>>> +++ b/drivers/leds/Kconfig
+>>> @@ -377,6 +377,7 @@ config LEDS_LP50XX
+>>>   config LEDS_LP55XX_COMMON
+>>>       tristate "Common Driver for TI/National
+>>> LP5521/5523/55231/5562/8501"
+>>>       depends on LEDS_LP5521 || LEDS_LP5523 || LEDS_LP5562 ||
+>>> LEDS_LP8501
+>>> +    depends on LEDS_CLASS_MULTI_COLOR && OF
+>>>       select FW_LOADER
+>>>       select FW_LOADER_USER_HELPER
+>>>       help
+>>> diff --git a/drivers/leds/leds-lp5523.c b/drivers/leds/leds-lp5523.c
+>>> index d0b931a136b9..8b2cdb98fed6 100644
+>>> --- a/drivers/leds/leds-lp5523.c
+>>> +++ b/drivers/leds/leds-lp5523.c
+>>> @@ -791,6 +791,18 @@ static ssize_t store_master_fader_leds(struct
+>>> device *dev,
+>>>       return ret;
+>>>   }
+>>>   +static int lp5523_led_intensity(struct lp55xx_led *led, int chan_num)
+>> Why do we need this function? brightness op will not suffice?
+> 
+> I looked at this before sending it in.  This API adds the chan_num to
+> write to.
+> 
+> The brightness_fn does not it takes it from the led structure.
+> 
+>>
+>>> +{
+>>> +    struct lp55xx_chip *chip = led->chip;
+>>> +    int ret;
+>>> +
+>>> +    mutex_lock(&chip->lock);
+>>> +    ret = lp55xx_write(chip, LP5523_REG_LED_PWM_BASE + chan_num,
+>>> +             led->brightness);
+>>> +    mutex_unlock(&chip->lock);
+>>> +    return ret;
+>>> +}
+>>> +
+>>>   static int lp5523_led_brightness(struct lp55xx_led *led)
+>>>   {
+>>>       struct lp55xx_chip *chip = led->chip;
+>>> @@ -857,6 +869,7 @@ static struct lp55xx_device_config lp5523_cfg = {
+>>>       .max_channel  = LP5523_MAX_LEDS,
+>>>       .post_init_device   = lp5523_post_init_device,
+>>>       .brightness_fn      = lp5523_led_brightness,
+>>> +    .color_intensity_fn = lp5523_led_intensity,
+>>>       .set_led_current    = lp5523_set_led_current,
+>>>       .firmware_cb        = lp5523_firmware_loaded,
+>>>       .run_engine         = lp5523_run_engine,
+>>> diff --git a/drivers/leds/leds-lp55xx-common.c
+>>> b/drivers/leds/leds-lp55xx-common.c
+>>> index 44ced02b49f9..0e4b3a9d3047 100644
+>>> --- a/drivers/leds/leds-lp55xx-common.c
+>>> +++ b/drivers/leds/leds-lp55xx-common.c
+>>> @@ -136,9 +136,26 @@ static int lp55xx_set_brightness(struct
+>>> led_classdev *cdev,
+>>>   {
+>>>       struct lp55xx_led *led = cdev_to_lp55xx_led(cdev);
+>>>       struct lp55xx_device_config *cfg = led->chip->cfg;
+>>> +    int brightness_val[LP55XX_MAX_GROUPED_CHAN];
+>>> +    int ret;
+>>> +    int i;
+>>> +
+>>> +    if (led->mc_cdev.num_leds > 1) {
+>>> +        led_mc_calc_brightness(&led->mc_cdev,
+>>> +                       brightness, brightness_val);
+>>> +        for (i = 0; i < led->mc_cdev.num_leds; i++) {
+>>> +            led->brightness = brightness_val[i];
+>>> +            ret = cfg->color_intensity_fn(led,
+>>> +                              led->grouped_channels[i]);
+>> Now we will have three separate calls for each color component
+>> (and possibly sleeping on mutex on contention).
+>>
+>> Probably LED mc class use case will need a bit different design.
+>>
+>> Also, instead of grouped_channels we could possibly have
+>>
+>> led_mc_get_color_id(&led->mc_dev, i)
+> color_id and grouped_channels are not a 1:1 mapping
 
-Summary:
-  Start:      02dc96ef6c25 Merge git://git.kernel.org/pub/scm/linux/kernel/=
-git/netdev/net
-  Details:    https://kernelci.org/boot/id/5d905d6d59b514ae41d857e9
-  Plain log:  https://storage.kernelci.org//net-next/master/v5.3-13186-g02d=
-c96ef6c25/arm/bcm2835_defconfig/gcc-8/lab-collabora/boot-bcm2836-rpi-2-b.txt
-  HTML log:   https://storage.kernelci.org//net-next/master/v5.3-13186-g02d=
-c96ef6c25/arm/bcm2835_defconfig/gcc-8/lab-collabora/boot-bcm2836-rpi-2-b.ht=
-ml
-  Result:     ac7c3e4ff401 compiler: enable CONFIG_OPTIMIZE_INLINING forcib=
-ly
+OK, they're channel numbers.
 
-Checks:
-  revert:     PASS
-  verify:     PASS
+>> which would map entry position index to color_id.
+>>
+>> I will stop reviewing here and will continue after taking
+>> deeper look at this lp55xx design.
 
-Parameters:
-  Tree:       net-next
-  URL:        git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.=
-git
-  Branch:     master
-  Target:     bcm2836-rpi-2-b
-  CPU arch:   arm
-  Lab:        lab-collabora
-  Compiler:   gcc-8
-  Config:     bcm2835_defconfig
-  Test suite: boot
+I've analyzed that design in greater detail and have started
+to wonder why you can't pass two arrays to the new op:
+channel numbers and corresponding calculated channel intensities?
 
-Breaking commit found:
-
----------------------------------------------------------------------------=
-----
-commit ac7c3e4ff401b304489a031938dbeaab585bfe0a
-Author: Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed Sep 25 16:47:42 2019 -0700
-
-    compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
-    =
-
-    Commit 9012d011660e ("compiler: allow all arches to enable
-    CONFIG_OPTIMIZE_INLINING") allowed all architectures to enable this
-    option.  A couple of build errors were reported by randconfig, but all =
-of
-    them have been ironed out.
-    =
-
-    Towards the goal of removing CONFIG_OPTIMIZE_INLINING entirely (and it
-    will simplify the 'inline' macro in compiler_types.h), this commit chan=
-ges
-    it to always-on option.  Going forward, the compiler will always be
-    allowed to not inline functions marked 'inline'.
-    =
-
-    This is not a problem for x86 since it has been long used by
-    arch/x86/configs/{x86_64,i386}_defconfig.
-    =
-
-    I am keeping the config option just in case any problem crops up for ot=
-her
-    architectures.
-    =
-
-    The code clean-up will be done after confirming this is solid.
-    =
-
-    Link: http://lkml.kernel.org/r/20190830034304.24259-1-yamada.masahiro@s=
-ocionext.com
-    Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-    Acked-by: Nick Desaulniers <ndesaulniers@google.com>
-    Cc: Ingo Molnar <mingo@redhat.com>
-    Cc: Borislav Petkov <bp@alien8.de>
-    Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 6b1b1703a646..93d97f9b0157 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -311,7 +311,7 @@ config HEADERS_CHECK
- 	  relevant for userspace, say 'Y'.
- =
-
- config OPTIMIZE_INLINING
--	bool "Allow compiler to uninline functions marked 'inline'"
-+	def_bool y
- 	help
- 	  This option determines if the kernel forces gcc to inline the functions
- 	  developers have marked 'inline'. Doing so takes away freedom from gcc to
-@@ -322,8 +322,6 @@ config OPTIMIZE_INLINING
- 	  decision will become the default in the future. Until then this option
- 	  is there to test gcc for this.
- =
-
--	  If unsure, say N.
--
- config DEBUG_SECTION_MISMATCH
- 	bool "Enable full Section mismatch analysis"
- 	help
----------------------------------------------------------------------------=
-----
-
-
-Git bisection log:
-
----------------------------------------------------------------------------=
-----
-git bisect start
-# good: [b41dae061bbd722b9d7fa828f35d22035b218e18] Merge tag 'xfs-5.4-merge=
--7' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux
-git bisect good b41dae061bbd722b9d7fa828f35d22035b218e18
-# bad: [02dc96ef6c25f990452c114c59d75c368a1f4c8f] Merge git://git.kernel.or=
-g/pub/scm/linux/kernel/git/netdev/net
-git bisect bad 02dc96ef6c25f990452c114c59d75c368a1f4c8f
-# good: [8c2b418c3f95a488f5226870eee68574d323f0f8] Merge tag 'arm64-fixes' =
-of git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux
-git bisect good 8c2b418c3f95a488f5226870eee68574d323f0f8
-# good: [9dbd83f665298c9dcf647f20d6d6488e9019114b] Merge tag 'rtc-5.4' of g=
-it://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux
-git bisect good 9dbd83f665298c9dcf647f20d6d6488e9019114b
-# bad: [cbafe18c71028d5e0ee1626b4776fea5d5824a78] Merge branch 'akpm' (patc=
-hes from Andrew)
-git bisect bad cbafe18c71028d5e0ee1626b4776fea5d5824a78
-# good: [5184d449600f501a8688069f35c138c6b3bf8b94] Merge tag 'microblaze-v5=
-.4-rc1' of git://git.monstr.eu/linux-2.6-microblaze
-git bisect good 5184d449600f501a8688069f35c138c6b3bf8b94
-# good: [351c8a09b00b5c51c8f58b016fffe51f87e2d820] Merge branch 'i2c/for-5.=
-4' of git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux
-git bisect good 351c8a09b00b5c51c8f58b016fffe51f87e2d820
-# good: [f41def397161053eb0d3ed6861ef65985efbf293] Merge tag 'ceph-for-5.4-=
-rc1' of git://github.com/ceph/ceph-client
-git bisect good f41def397161053eb0d3ed6861ef65985efbf293
-# bad: [7d92bda271ddcbb2d1be2f82733dcb9bf8378010] kgdb: don't use a notifie=
-r to enter kgdb at panic; call directly
-git bisect bad 7d92bda271ddcbb2d1be2f82733dcb9bf8378010
-# good: [94fb98450456da82a16a378816390d99b85edb55] checkpatch: allow consec=
-utive close braces
-git bisect good 94fb98450456da82a16a378816390d99b85edb55
-# good: [da5184c2ab10b57bf9b58f818405aa0054a2f829] fs/reiserfs/do_balan.c: =
-remove set but not used variables
-git bisect good da5184c2ab10b57bf9b58f818405aa0054a2f829
-# good: [2a4a4082cd4438333b5ecffdd15d1a484e5a83c7] cpumask: nicer for_each_=
-cpumask_and() signature
-git bisect good 2a4a4082cd4438333b5ecffdd15d1a484e5a83c7
-# good: [d5372c39132958679c480d0295dd328c741c7a41] kexec: restore arch_kexe=
-c_kernel_image_probe declaration
-git bisect good d5372c39132958679c480d0295dd328c741c7a41
-# bad: [ac7c3e4ff401b304489a031938dbeaab585bfe0a] compiler: enable CONFIG_O=
-PTIMIZE_INLINING forcibly
-git bisect bad ac7c3e4ff401b304489a031938dbeaab585bfe0a
-# good: [9dd819a15162f8f82a6001b090caa38c18297b39] uaccess: add missing __m=
-ust_check attributes
-git bisect good 9dd819a15162f8f82a6001b090caa38c18297b39
-# first bad commit: [ac7c3e4ff401b304489a031938dbeaab585bfe0a] compiler: en=
-able CONFIG_OPTIMIZE_INLINING forcibly
----------------------------------------------------------------------------=
-----
+-- 
+Best regards,
+Jacek Anaszewski
