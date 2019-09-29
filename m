@@ -2,144 +2,132 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7507DC32793
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 11:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E41CC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 11:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56D3F20863
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 11:16:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02E682190F
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 11:22:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TezKHyJE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728969AbfI2LQk (ORCPT
+        id S1729005AbfI2LWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 07:16:40 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:46981 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725924AbfI2LQk (ORCPT
+        Sun, 29 Sep 2019 07:22:25 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51283 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726911AbfI2LWY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 07:16:40 -0400
-Received: by mail-qt1-f194.google.com with SMTP id u22so13142021qtq.13;
-        Sun, 29 Sep 2019 04:16:39 -0700 (PDT)
+        Sun, 29 Sep 2019 07:22:24 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 7so10275684wme.1;
+        Sun, 29 Sep 2019 04:22:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:mime-version:message-id:in-reply-to
+         :references:user-agent:content-transfer-encoding;
+        bh=+5mJbdKNBA+m8vppAhdI++7fky2Q3/YXSRQyiXoFCLc=;
+        b=TezKHyJE5Sh4r/up5iuLlLvtQlnGcW+cP3IjZjdyn5mNmGmckP4YUZ8u37UQI5CyR1
+         m1FoANAti7h7OpC1dgvPkyokVmeCFCBzhLGkHcypq17mEOUhfDO6m6kiacC4AkHBcS/V
+         pB4fPiz8qqNc6npdgyAYdUAobBrUunE99yOU1yTCva+DlTDmV9EBtEujS5NOcTPlL6/n
+         RXCs/THrVHusCcxQTTp54XhPw+EbTD3N2Cg01ICIIVWHrPwYb5egg6bbzc9eicSROIT5
+         5Zy74W/86zXdQ4K6YH3DvUskoFg2xs0U3sVBuP7AAUvTyAYYQ/AbzHr4zPoJHpbM2PP5
+         //Cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xERB9KeErRz0Xv313u8END71sg7A1PW4f7hRzM9VGG8=;
-        b=Y9wWTdTnAZ/3ctNcktw4v5cuLIsNRHI+ZjXue2nLiAmqJQFRWuY6U+P1VRLjlDyeWa
-         Uv8G+ZSxm3AIJO/hyTn6gqPqSEYGiWYC91gvS4uf1pjWycAodItnX3fOfK/d5LNktYcA
-         MpDBEXNnqfA47l3ry8tt2QdZjXm25CXt//eAwnDJvOurr719LVGnTmaO3nZecaRLwxUv
-         CP+GUd84JXE4ppOyBqNSh0GEO0wAPMUedVsJ0cxmNXGcE6A9itKKMabTR/Z1gVNmOT6h
-         lAyF1h7j44D/ER3oM87VWwbrXFYGUeBaEYTHJgVsLsl0RUUoAX+PYNe3BhXtUIvpWRnr
-         Ch7w==
-X-Gm-Message-State: APjAAAUzsFdtyq5OCXeiff4Aiaw/4UsBz+yUJgpNYCZjSJt7tQoKDjTS
-        NaBSNkZoHWn8k7yVsMCp1rJlopWYjz8lkJclISQ=
-X-Google-Smtp-Source: APXvYqzPuvDp2hl6Q7/PbfUhTPr2qc74nsR1a1YtdOS3T7eZQF8h5rNOXFr8Ij4OMws3CIKCEEvauU6SKD7QNIcvC8A=
-X-Received: by 2002:ac8:32ec:: with SMTP id a41mr19832440qtb.18.1569755798825;
- Sun, 29 Sep 2019 04:16:38 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:mime-version:message-id
+         :in-reply-to:references:user-agent:content-transfer-encoding;
+        bh=+5mJbdKNBA+m8vppAhdI++7fky2Q3/YXSRQyiXoFCLc=;
+        b=sCa5RoHtSCTjh6Nk0isQnSAEktzBUqmOc0gViRmJRJ7vQoVgZSj1fLrInlsgUqQbm9
+         KuL8Udc2yyAunH3wDXX/ALWAfsDNcYD0RQ8hXHr7KDr2hD17zdlt2edQ0a63h3I/dqcf
+         6MC42J1pi1pLkY9FtmrGs03snwq58L227f/ju8OetanMU0c7JGVoSRaITOAwTIMfL8YQ
+         z++YjDcXdRcJt3oWUU7fXy/mvdTF28DDARu6VwZ+k98uFMHrPQQTO5vn9dG+rBvGU0EV
+         haU/dQWRFLxf5rGyTe002SnOAOuj4UtueylNZ/Z5Ctcob8wWqduCM0HwufO4YxkiNuns
+         4U0Q==
+X-Gm-Message-State: APjAAAW9lOeVcHY98xyiQeMlgLnLlbQqZScbtv5O5Zr2m8Ukhi8n2+AF
+        hOd/lbUx2iZ/BSioZKeVISw=
+X-Google-Smtp-Source: APXvYqwYBuT58Y/Ro1CA1xclbEevvBfYgIFxMJg2pEEKp5Se24KdjkrFWsiKF4sAjXe2yJ4wuhzJrw==
+X-Received: by 2002:a7b:c764:: with SMTP id x4mr13222224wmk.62.1569756141017;
+        Sun, 29 Sep 2019 04:22:21 -0700 (PDT)
+Received: from localhost ([94.73.41.211])
+        by smtp.gmail.com with ESMTPSA id m62sm13230613wmm.35.2019.09.29.04.22.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Sep 2019 04:22:18 -0700 (PDT)
+From:   Vicente Bergas <vicencb@gmail.com>
+To:     Vivek Unune <npcomplete13@gmail.com>
+Cc:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <heiko@sntech.de>,
+        <ezequiel@collabora.com>, <akash@openedev.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-rockchip@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@kernel.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: Fix usb-c on Hugsun X99 TV Box
+Date:   Sun, 29 Sep 2019 13:22:17 +0200
 MIME-Version: 1.0
-References: <20190927002455.13169-1-robh@kernel.org>
-In-Reply-To: <20190927002455.13169-1-robh@kernel.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Sun, 29 Sep 2019 13:16:20 +0200
-Message-ID: <CAK8P3a0oct0EOMi5t4BmpgdkiBM+LjC+2pTST4hcvNCa3MGLmw@mail.gmail.com>
-Subject: Re: [PATCH 00/11] of: dma-ranges fixes and improvements
-To:     Rob Herring <robh@kernel.org>
-Cc:     DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Oza Pawandeep <oza.oza@broadcom.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <54c67ca8-8428-48ee-9a96-e1216ba02839@gmail.com>
+In-Reply-To: <20190929032230.24628-1-npcomplete13@gmail.com>
+References: <20190929032230.24628-1-npcomplete13@gmail.com>
+User-Agent: Trojita
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 2:24 AM Rob Herring <robh@kernel.org> wrote:
+On Sunday, September 29, 2019 5:22:30 AM CEST, Vivek Unune wrote:
+> Fix usb-c on X99 TV Box. Tested with armbian w/ kernel 5.3
 >
-> This series fixes several issues related to 'dma-ranges'. Primarily,
-> 'dma-ranges' in a PCI bridge node does correctly set dma masks for PCI
-> devices not described in the DT. A common case needing dma-ranges is a
-> 32-bit PCIe bridge on a 64-bit system. This affects several platforms
-> including Broadcom, NXP, Renesas, and Arm Juno. There's been several
-> attempts to fix these issues, most recently earlier this week[1].
+> Signed-off-by: Vivek Unune <npcomplete13@gmail.com>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> In the process, I found several bugs in the address translation. It
-> appears that things have happened to work as various DTs happen to use
-> 1:1 addresses.
->
-> First 3 patches are just some clean-up. The 4th patch adds a unittest
-> exhibiting the issues. Patches 5-9 rework how of_dma_configure() works
-> making it work on either a struct device child node or a struct
-> device_node parent node so that it works on bus leaf nodes like PCI
-> bridges. Patches 10 and 11 fix 2 issues with address translation for
-> dma-ranges.
->
-> My testing on this has been with QEMU virt machine hacked up to set PCI
-> dma-ranges and the unittest. Nicolas reports this series resolves the
-> issues on Rpi4 and NXP Layerscape platforms.
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts=20
+> b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+> index 0d1f5f9a0de9..c133e8d64b2a 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+> @@ -644,7 +644,7 @@
+>  =09status =3D "okay";
+> =20
+>  =09u2phy0_host: host-port {
+> -=09=09phy-supply =3D <&vcc5v0_host>;
+> +=09=09phy-supply =3D <&vcc5v0_typec>;
+>  =09=09status =3D "okay";
+>  =09};
+> =20
+> @@ -712,7 +712,7 @@
+> =20
+>  &usbdrd_dwc3_0 {
+>  =09status =3D "okay";
+> -=09dr_mode =3D "otg";
+> +=09dr_mode =3D "host";
+>  };
+> =20
+>  &usbdrd3_1 {
 
-I've only looked briefly, but this all seems reasonable. Adding Christoph
-to Cc here to draw his attention to it as he's done a lot of reworks on
-the dma-mapping interfaces recently.
+Hi Vivek,
 
-On a semi-related note, Thierry asked about one aspect of the dma-ranges
-property recently, which is the behavior of dma_set_mask() and related
-functions when a driver sets a mask that is larger than the memory
-area in the bus-ranges but smaller than the available physical RAM.
-As I understood Thierry's problem and the current code, the generic
-dma_set_mask() will either reject the new mask entirely or override
-the mask set by of_dma_configure, but it fails to set a correct mask
-within the limitations of the parent bus in this case.
+which is the relationship of your patch and this commit:
 
-We had discussed and proposed patches for this in the past, but
-it seems that never got anywhere. Maybe now that a number of
-people have looked at this logic, we can figure it out for good.
+e1d9149e8389f1690cdd4e4056766dd26488a0fe
+arm64: dts: rockchip: Fix USB3 Type-C on rk3399-sapphire
 
-        Arnd
+with respect to this other commit:
 
-> [1] https://lore.kernel.org/linux-arm-kernel/20190924181244.7159-1-nsaenzjulienne@suse.de/
->
-> Rob Herring (5):
->   of: Remove unused of_find_matching_node_by_address()
->   of: Make of_dma_get_range() private
->   of/unittest: Add dma-ranges address translation tests
->   of/address: Translate 'dma-ranges' for parent nodes missing
->     'dma-ranges'
->   of/address: Fix of_pci_range_parser_one translation of DMA addresses
->
-> Robin Murphy (6):
->   of: address: Report of_dma_get_range() errors meaningfully
->   of: Ratify of_dma_configure() interface
->   of/address: Introduce of_get_next_dma_parent() helper
->   of: address: Follow DMA parent for "dma-coherent"
->   of: Factor out #{addr,size}-cells parsing
->   of: Make of_dma_get_range() work on bus nodes
->
->  drivers/of/address.c                        | 83 +++++++++----------
->  drivers/of/base.c                           | 32 ++++---
->  drivers/of/device.c                         | 12 ++-
->  drivers/of/of_private.h                     | 14 ++++
->  drivers/of/unittest-data/testcases.dts      |  1 +
->  drivers/of/unittest-data/tests-address.dtsi | 48 +++++++++++
->  drivers/of/unittest.c                       | 92 +++++++++++++++++++++
->  include/linux/of_address.h                  | 21 +----
->  include/linux/of_device.h                   |  4 +-
->  9 files changed, 227 insertions(+), 80 deletions(-)
->  create mode 100644 drivers/of/unittest-data/tests-address.dtsi
->
-> --
-> 2.20.1
+c09b73cfac2a9317f1104169045c519c6021aa1d
+usb: dwc3: don't set gadget->is_otg flag
+
+?
+
+I did not test reverting e1d9149e since c09b73cf was applied.
+
+Regards,
+  Vicen=C3=A7.
+
