@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A8EC4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DE7C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE3121835
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:43:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE28E2086A
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:43:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778985;
-	bh=F8RTzDc+fECkTRNigXyurxf3VNTlrsOpbjYpgckPm38=;
+	s=default; t=1569778990;
+	bh=Qh1KlvMoxLrpk6JpK1J4brdqfWQuG6tOYpJ91Mr/430=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1tAoLDtkOUSK6zcqLTxUWz62xQU9GHMKGudx/E1epNuSMkPvMTBSBJql/sOPO5WOK
-	 erEl3SLjVXJK0sOvZ6hPjd/0noRzNB+WzRj9RLktq0MYGleC1N2UrBITo2entllfq5
-	 0jV8YApg+IwncMadJAhAvSXiz33Id+Ax98i3epYs=
+	b=qC+KGxOu4ca3cK8fYTnk4J3KYNqjuNW5szBbDdDfrxGpDznrP8COnwNjZ4+3dBL2N
+	 vvVuhkBD1cmRrR6SIYLdokC8dT/8Aar+kNNHKou6yCfZBvSzuXfzo/FycUI5u4MEZ9
+	 tpyT5+ybEISIRP2W6/9Qj5sm19N1JodJvuMChpzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729466AbfI2Rbt (ORCPT
+        id S1729427AbfI2Rbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:31:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42300 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:31:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729400AbfI2Rbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:31:46 -0400
+        id S1729384AbfI2Rbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:31:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA31121906;
-        Sun, 29 Sep 2019 17:31:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 350D121925;
+        Sun, 29 Sep 2019 17:31:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778305;
-        bh=F8RTzDc+fECkTRNigXyurxf3VNTlrsOpbjYpgckPm38=;
+        s=default; t=1569778301;
+        bh=Qh1KlvMoxLrpk6JpK1J4brdqfWQuG6tOYpJ91Mr/430=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bDaE5NSM3FVA7TK9eB/IZuU9lbf+p4wlFN+y8ttg5ZMVQmxuAg1tPSe2Pc5Mf8n8m
-         ONMQvnVJTHd+d3Ec92HD9RIlKWTpRXH0SyEO3R8IIJ1x9/jgJEBEpEIelrYmXr8VgV
-         uyAdF0FSCcZvHdTxEf5ygdy3F8YPm+QKz7Lo864Q=
+        b=pMPy7x/UDj+MvvtLl/NY2ZuRqc9JYwUMUQG7LoxRCU1KbISvu2igF+zqDiT/nTl6a
+         Xu5GFq61xrVSaMEL5N3FY3/vAEeveWSLqjgek7tiIgCUkkh6vgJhhcFC6OkxnM8tbr
+         uzXuQa6/3cjQwW8wn9BAak7WqSsEHp8pdClMrXMQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Sasha Levin <sashal@kernel.org>, selinux@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 24/49] selinux: fix residual uses of current_security() for the SELinux blob
-Date:   Sun, 29 Sep 2019 13:30:24 -0400
-Message-Id: <20190929173053.8400-24-sashal@kernel.org>
+Cc:     Anson Huang <Anson.Huang@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 21/49] rtc: snvs: fix possible race condition
+Date:   Sun, 29 Sep 2019 13:30:21 -0400
+Message-Id: <20190929173053.8400-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173053.8400-1-sashal@kernel.org>
 References: <20190929173053.8400-1-sashal@kernel.org>
@@ -61,79 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Smalley <sds@tycho.nsa.gov>
+From: Anson Huang <Anson.Huang@nxp.com>
 
-[ Upstream commit 169ce0c081cd85f78388bb6c1638c1ad7b81bde7 ]
+[ Upstream commit 6fd4fe9b496d9ba3382992ff4fde3871d1b6f63d ]
 
-We need to use selinux_cred() to fetch the SELinux cred blob instead
-of directly using current->security or current_security().  There
-were a couple of lingering uses of current_security() in the SELinux code
-that were apparently missed during the earlier conversions. IIUC, this
-would only manifest as a bug if multiple security modules including
-SELinux are enabled and SELinux is not first in the lsm order. After
-this change, there appear to be no other users of current_security()
-in-tree; perhaps we should remove it altogether.
+The RTC IRQ is requested before the struct rtc_device is allocated,
+this may lead to a NULL pointer dereference in IRQ handler.
 
-Fixes: bbd3662a8348 ("Infrastructure management of the cred security blob")
-Signed-off-by: Stephen Smalley <sds@tycho.nsa.gov>
-Acked-by: Casey Schaufler <casey@schaufler-ca.com>
-Reviewed-by: James Morris <jamorris@linux.microsoft.com>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+To fix this issue, allocating the rtc_device struct before requesting
+the RTC IRQ using devm_rtc_allocate_device, and use rtc_register_device
+to register the RTC device.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+Link: https://lore.kernel.org/r/20190716071858.36750-1-Anson.Huang@nxp.com
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/selinux/hooks.c          |  2 +-
- security/selinux/include/objsec.h | 20 ++++++++++----------
- 2 files changed, 11 insertions(+), 11 deletions(-)
+ drivers/rtc/rtc-snvs.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 74dd46de01b6a..e755174647866 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -3403,7 +3403,7 @@ static int selinux_inode_copy_up_xattr(const char *name)
- static int selinux_kernfs_init_security(struct kernfs_node *kn_dir,
- 					struct kernfs_node *kn)
- {
--	const struct task_security_struct *tsec = current_security();
-+	const struct task_security_struct *tsec = selinux_cred(current_cred());
- 	u32 parent_sid, newsid, clen;
- 	int rc;
- 	char *context;
-diff --git a/security/selinux/include/objsec.h b/security/selinux/include/objsec.h
-index 91c5395dd20c2..586b7abd0aa73 100644
---- a/security/selinux/include/objsec.h
-+++ b/security/selinux/include/objsec.h
-@@ -37,16 +37,6 @@ struct task_security_struct {
- 	u32 sockcreate_sid;	/* fscreate SID */
- };
+diff --git a/drivers/rtc/rtc-snvs.c b/drivers/rtc/rtc-snvs.c
+index 7ee673a25fd0a..4f9a107a04277 100644
+--- a/drivers/rtc/rtc-snvs.c
++++ b/drivers/rtc/rtc-snvs.c
+@@ -279,6 +279,10 @@ static int snvs_rtc_probe(struct platform_device *pdev)
+ 	if (!data)
+ 		return -ENOMEM;
  
--/*
-- * get the subjective security ID of the current task
-- */
--static inline u32 current_sid(void)
--{
--	const struct task_security_struct *tsec = current_security();
--
--	return tsec->sid;
--}
--
- enum label_initialized {
- 	LABEL_INVALID,		/* invalid or not initialized */
- 	LABEL_INITIALIZED,	/* initialized */
-@@ -185,4 +175,14 @@ static inline struct ipc_security_struct *selinux_ipc(
- 	return ipc->security + selinux_blob_sizes.lbs_ipc;
- }
++	data->rtc = devm_rtc_allocate_device(&pdev->dev);
++	if (IS_ERR(data->rtc))
++		return PTR_ERR(data->rtc);
++
+ 	data->regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node, "regmap");
  
-+/*
-+ * get the subjective security ID of the current task
-+ */
-+static inline u32 current_sid(void)
-+{
-+	const struct task_security_struct *tsec = selinux_cred(current_cred());
-+
-+	return tsec->sid;
-+}
-+
- #endif /* _SELINUX_OBJSEC_H_ */
+ 	if (IS_ERR(data->regmap)) {
+@@ -343,10 +347,9 @@ static int snvs_rtc_probe(struct platform_device *pdev)
+ 		goto error_rtc_device_register;
+ 	}
+ 
+-	data->rtc = devm_rtc_device_register(&pdev->dev, pdev->name,
+-					&snvs_rtc_ops, THIS_MODULE);
+-	if (IS_ERR(data->rtc)) {
+-		ret = PTR_ERR(data->rtc);
++	data->rtc->ops = &snvs_rtc_ops;
++	ret = rtc_register_device(data->rtc);
++	if (ret) {
+ 		dev_err(&pdev->dev, "failed to register rtc: %d\n", ret);
+ 		goto error_rtc_device_register;
+ 	}
 -- 
 2.20.1
 
