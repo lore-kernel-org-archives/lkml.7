@@ -2,188 +2,128 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8634C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 02:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0BE5C32793
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 02:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 895A5214DE
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 02:57:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B735A214D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 02:57:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XpOCtPIC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728929AbfI2CxB (ORCPT
+        id S1728967AbfI2C51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Sep 2019 22:53:01 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3169 "EHLO huawei.com"
+        Sat, 28 Sep 2019 22:57:27 -0400
+Received: from mail-eopbgr140089.outbound.protection.outlook.com ([40.107.14.89]:42914
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728569AbfI2CxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Sep 2019 22:53:01 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 98C497E082E28D6D271F;
-        Sun, 29 Sep 2019 10:52:57 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.439.0; Sun, 29 Sep
- 2019 10:52:50 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix comment of f2fs_evict_inode
-To:     Gao Xiang <gaoxiang25@huawei.com>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-CC:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190925093050.118921-1-yuchao0@huawei.com>
- <20190927183150.GA54001@jaegeuk-macbookpro.roam.corp.google.com>
- <8c54adaf-163f-fcbe-7731-0c18b12410e0@huawei.com>
- <20190929021939.GA136917@architecture4>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <bcfbe250-09f4-3cb2-391f-97f574e82d35@huawei.com>
-Date:   Sun, 29 Sep 2019 10:52:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20190929021939.GA136917@architecture4>
-Content-Type: text/plain; charset="windows-1252"
+        id S1728699AbfI2C51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Sep 2019 22:57:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NE/ssykPIOOieL8lOwO+fZVS9Lw4J1jys85U9lLkQ6m9Fgi7Z0oSoOBk6N/KH2jMfeM4p+cNTAsjtO9SsUy37g/uXTTbLeGGb61CkKQ6aiG9mpFTaoE4RSFfQ+tGCyrWd24iwhhhL592MQ7ySJ/4hFg6sabgILGbmIrDHHICAdjXlNjopirNwsvMucK/o/U6oCmFZ4duaQUkIXfy1IPS2e17Z0qygqSyp+3Wb9se9hP87ALHnBuJRX+4jg8RhDavCKpUBE2yFklEAiQCAaDm1RNiJh0oF7yewjk3cfl5VKwALM5/W0WCV+CaPCLDtLYqnLsMs4iv0BpO0YG6padEfQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q7Cr/n4EZzxryUiJBwEqa8KZivcjhF4Yb8S7vhHNSNk=;
+ b=Xb+v+bPVe/18UynoDg0ORMxtLleAwDEPtUNH47Hr0/Y85pWkIRRW6gMselM4HU01385jAtgcWiZI0HLp+5WYTKUq1Ez9QgmwsRr6c76ASqAImwlhOkfVe1OTpFWCBPmjt7pb0D0INfZVxDIuQ4sIZnAt33DWRCgbDk12GT6cGfptL1KCicDhaoSlsHSdatdVV322QgGvTndvA+mD27KWuJ+soHjjnfMuMOLMFtbk+q9jwqffIvMwNsgeG5Lm2caO88M4F8MCEWB4AfQrKpHkRSVrPtQGQnAMcq0hPQKKDtkNqv7DGd0EGInUZ272wBqbEqdfwnsVsCJPv8oYot4k+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q7Cr/n4EZzxryUiJBwEqa8KZivcjhF4Yb8S7vhHNSNk=;
+ b=XpOCtPICRWj250KqiA7e2ewqbGTJtU37MJ3yLq3n1u+k0uljEmGlDR9prTBPpPkQLBGcsg/banZKvt807b6QKN6PnuY64MEYlGqOiHQyZSgCQaKcLbd+fQwV6BBKNIexlt0NSPQ+HjsmqGiY8eUMaDEEHqDn8kRXkXMnD8Z4I18=
+Received: from DB8PR04MB6826.eurprd04.prod.outlook.com (52.133.240.82) by
+ DB8PR04MB7132.eurprd04.prod.outlook.com (52.135.63.80) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.15; Sun, 29 Sep 2019 02:57:23 +0000
+Received: from DB8PR04MB6826.eurprd04.prod.outlook.com
+ ([fe80::3d0b:c71f:fa1a:e856]) by DB8PR04MB6826.eurprd04.prod.outlook.com
+ ([fe80::3d0b:c71f:fa1a:e856%2]) with mapi id 15.20.2305.017; Sun, 29 Sep 2019
+ 02:57:23 +0000
+From:   Ran Wang <ran.wang_1@nxp.com>
+To:     Alan Stern <stern@rowland.harvard.edu>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Mathias Payer <mathias.payer@nebelwelt.net>,
+        Dennis Wassenberg <dennis.wassenberg@secunet.com>,
+        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] usb: hub add filter for device with specific VID&PID
+Thread-Topic: [PATCH] usb: hub add filter for device with specific VID&PID
+Thread-Index: AQHVcfycJPrHn/IcK0qf/xic1GWPZ6c5GiAAgAEI5+CABaVFgIACLFEQgAAINyA=
+Date:   Sun, 29 Sep 2019 02:57:23 +0000
+Message-ID: <DB8PR04MB682675054E3A5306F447E6FDF1830@DB8PR04MB6826.eurprd04.prod.outlook.com>
+References: <DB8PR04MB682649CA98B0704FAF037A40F1840@DB8PR04MB6826.eurprd04.prod.outlook.com>
+ <Pine.LNX.4.44L0.1909271305030.4732-100000@iolanthe.rowland.org>
+ <DB8PR04MB6826763082AF84812426CC53F1830@DB8PR04MB6826.eurprd04.prod.outlook.com>
+In-Reply-To: <DB8PR04MB6826763082AF84812426CC53F1830@DB8PR04MB6826.eurprd04.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ran.wang_1@nxp.com; 
+x-originating-ip: [92.121.36.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 50cb416f-8165-4d48-7708-08d74488c0c2
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: DB8PR04MB7132:
+x-microsoft-antispam-prvs: <DB8PR04MB713208485020EF838FB43CFDF1830@DB8PR04MB7132.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 017589626D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(136003)(39860400002)(366004)(376002)(189003)(199004)(8936002)(25786009)(6436002)(14454004)(74316002)(478600001)(66556008)(53546011)(99286004)(446003)(33656002)(6506007)(76116006)(305945005)(66476007)(66946007)(64756008)(66066001)(7696005)(229853002)(66446008)(54906003)(4326008)(9686003)(11346002)(186003)(256004)(6916009)(102836004)(55016002)(6246003)(2171002)(76176011)(52536014)(5660300002)(71200400001)(71190400001)(81156014)(81166006)(316002)(6116002)(3846002)(8676002)(86362001)(2906002)(26005)(476003)(486006)(7736002)(2940100002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB7132;H:DB8PR04MB6826.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: zhTQlV1PYr3iPQPN28yuW/8xnwY5tpNtzn9s7o0SSKDmPFQzjN9g1DFJDQCJO/j+N+/eUCXcPFl7xcrOVnzeMNEY/MWsef3cYoBR3MC3ng4mY4prGcJJHN57i5rIl8IvBnPMYqQGghlnYwBI6i7FEleXcAR2yca8eDEJAgID36Kmk51WO7OuDy9oD2AaK/YsXFHaHjFJnlLko2WN//exKkySEbfThc1PWr718ah6TTczmft0inGccyv6ltQCcIB7eFLnUaP/z5aezpJS0SO52jk4vmOUe0SFFSvjSR1xM4wFAoZHvOCDu7Au3VWjZsVa9wxZjf1oduF9JtdLERYvGeZGme6ojTW51ZnvUCRZbHCP2/CVqmbiw+FsOQhKTHcnYpU4URP6ZJJ49yUd8CPAVsS07k3rGltQRRdPAxLJjlk=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 50cb416f-8165-4d48-7708-08d74488c0c2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Sep 2019 02:57:23.4814
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rJxuOczFpVCfzIjW0SOMS3FYo3UkO46bES5/9sQ6F90/XVt45JEldy1QYwJXrMuKxu0Xz9QbE8Ej78Engb1GKg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/29 10:20, Gao Xiang wrote:
-> On Sun, Sep 29, 2019 at 08:53:05AM +0800, Chao Yu wrote:
->> Hi Jaegeuk,
->>
->> On 2019/9/28 2:31, Jaegeuk Kim wrote:
->>> Hi Chao,
->>>
->>> On 09/25, Chao Yu wrote:
->>>> evict() should be called once i_count is zero, rather than i_nlinke
->>>> is zero.
->>>>
->>>> Reported-by: Gao Xiang <gaoxiang25@huawei.com>
->>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->>>> ---
->>>>  fs/f2fs/inode.c | 2 +-
->>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
->>>> index db4fec30c30d..8262f4a483d3 100644
->>>> --- a/fs/f2fs/inode.c
->>>> +++ b/fs/f2fs/inode.c
->>>> @@ -632,7 +632,7 @@ int f2fs_write_inode(struct inode *inode, struct writeback_control *wbc)
->>>>  }
->>>>  
->>>>  /*
->>>> - * Called at the last iput() if i_nlink is zero
->>>
->>> I don't think this comment is wrong. You may be able to add on top of this.
->>
->> It actually misleads the developer or user.
->>
->> How do you think of:
->>
->> "Called at the last iput() if i_count is zero, and will release all meta/data
->> blocks allocated in the inode if i_nlink is zero"
-> 
-> (sigh... side note: I just took some time to check the original meaning
->  out of curiosity. AFAIK, the above word was added in Linux-2.1.45 [1]
->  due to ext2_delete_inode behavior, which is called when i_nlink == 0,
->  and .delete_inode was gone in 2010 (commit 72edc4d0873b merge ext2
->  delete_inode and clear_inode, switch to ->evict_inode()), it may be
->  helpful to understand the story so I write here for later folks reference.
->  And it's also good to just kill it. )
-
-Xiang,
-
-Thanks for providing tracked info, I guess it's due to historical reason, we
-kept the wrong comments in f2fs, anyway I agree that it should be fixed in
-ext*/f2fs codes, let me send patches to fix comment in ext* as well.
-
-Thanks,
-
-> 
-> +
-> +/*
-> + * Called at the last iput() if i_nlink is zero.
-> + */
-> +void ext2_delete_inode (struct inode * inode)
-> +{
-> +	if (inode->i_ino == EXT2_ACL_IDX_INO ||
->  	    inode->i_ino == EXT2_ACL_DATA_INO)
->  		return;
->  	inode->u.ext2_i.i_dtime	= CURRENT_TIME;
-> -	inode->i_dirt = 1;
-> +	mark_inode_dirty(inode);
->  	ext2_update_inode(inode, IS_SYNC(inode));
->  	inode->i_size = 0;
->  	if (inode->i_blocks)
-> @@ -248,7 +258,7 @@
->  	if (IS_SYNC(inode) || inode->u.ext2_i.i_osync)
->  		ext2_sync_inode (inode);
->  	else
-> -		inode->i_dirt = 1;
-> +		mark_inode_dirty(inode);
->  	return result;
->  }
-> 
-> +void iput(struct inode *inode)
->  {
-> -	struct inode * inode = get_empty_inode();
-> +	if (inode) {
-> +		struct super_operations *op = NULL;
->  
-> -	PIPE_BASE(*inode) = (char*)__get_free_page(GFP_USER);
-> -	if (!(PIPE_BASE(*inode))) {
-> -		iput(inode);
-> -		return NULL;
-> +		if (inode->i_sb && inode->i_sb->s_op)
-> +			op = inode->i_sb->s_op;
-> +		if (op && op->put_inode)
-> +			op->put_inode(inode);
-> +
-> +		spin_lock(&inode_lock);
-> +		if (!--inode->i_count) {
-> +			if (!inode->i_nlink) {
-> +				list_del(&inode->i_hash);
-> +				INIT_LIST_HEAD(&inode->i_hash);
-> +				if (op && op->delete_inode) {
-> +					void (*delete)(struct inode *) = op->delete_inode;
-> +					spin_unlock(&inode_lock);
-> +					delete(inode);
-> +					spin_lock(&inode_lock);
-> +				}
-> +			}
-> +			if (list_empty(&inode->i_hash)) {
-> +				list_del(&inode->i_list);
-> +				list_add(&inode->i_list, &inode_unused);
-> +			}
-> +		}
-> +		spin_unlock(&inode_lock);
->  	}
-> 
-> [1] https://www.kernel.org/pub/linux/kernel/v2.1/patch-2.1.45.xz
-> 
-> Thanks,
-> Gao Xiang
-> 
->>
->> Thanks,
->>
->>>
->>>> + * Called at the last iput() if i_count is zero
->>>>   */
->>>>  void f2fs_evict_inode(struct inode *inode)
->>>>  {
->>>> -- 
->>>> 2.18.0.rc1
->>> .
->>>
->>
->>
->> _______________________________________________
->> Linux-f2fs-devel mailing list
->> Linux-f2fs-devel@lists.sourceforge.net
->> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
-> .
-> 
+SGkgQWxhbiwNCg0KT24gU3VuZGF5LCBTZXB0ZW1iZXIgMjksIDIwMTkgMTA6MzUsIHdyb3RlOg0K
+PiANCj4gSGkgQWxhbiwNCj4gDQo+IE9uIFNhdHVyZGF5LCBTZXB0ZW1iZXIgMjgsIDIwMTkgMDE6
+MDgsIEFsYW4gU3Rlcm4gd3JvdGU6DQo8c25pcD4NCj4gPg0KPiA+IEluIGZhY3QsIHRoZSBzeXN0
+ZW0gc2hvdWxkIHJlc3BvbmQgdGhlIHNhbWUgd2F5IHRvIGFueSB1bnJlY29nbml6ZWQNCj4gPiBk
+ZXZpY2UgdGhhdCBkb2Vzbid0IHN1cHBvcnQgSE5QLCByaWdodD8gIFRoZXJlJ3Mgbm90aGluZyBz
+cGVjaWFsIGFib3V0DQo+ID4gdGhlc2UgVklEL1BJRCB2YWx1ZXMuDQo+IA0KPiBZZXMsIGJ1dCBJ
+IHNhdyB0aGVyZSBhcmUgYWxyZWFkeSBzb21lIGltcGxlbWVudGF0aW9uIGluIHVwc3RyZWFtIGtl
+cm5lbCBmb3IgdGhpcw0KPiBwdXJwb3NlLCBqdXN0IFBJRCBkaWZmZXJlbnQ6IGRyaXZlcnMvdXNi
+L2NvcmUvb3RnX3doaXRlbGlzdC5oIGZ1bmN0aW9uDQo+IGlzX3RhcmdldGVkKCkNCj4gDQo+ID4g
+PiA+IEFuZCB3aHkgdGhvc2Ugc3BlY2lmaWMgdmlkL3BpZCB2YWx1ZXM/ICBXaGF0IGRvIHRoZXkg
+cmVmZXIgdG8/DQo+ID4gPg0KPiA+ID4gRm9yIHN0ZXAgNSwgd2UgZ290IHRoZSBWSUQgLyBQSUQg
+bnVtYmVyIGZyb20gVVNCIElGIGNlcnRpZmllZA0KPiA+ID4gbGFiKEFsbGlvbi5pbmMgYXQgVGFp
+d2FuZykuIExvb2tzIGxpa2UgdGhpcyBpcyBhIHJlc2VydmVkIElEIHBhaXINCj4gPiA+IGFuZCB3
+aWxsIG5vdCBiZSBhbGxvY2F0ZWQgdG8gYW55IHZlbmRvciBmb3IgdGhlaXIgcHJvZHVjdHMuIFNv
+IGl0J3MNCj4gPiA+IGhlbmNlIHVzZWQgZm9yDQo+ID4gdGhpcyBjYXNlIHRlc3QgKGxpa2Ugc2F5
+aW5nOiB5b3Ugc2hvdWxkIGJlIGFibGUgdG8gcG9wIGEgbm90LXN1cHBvcnQNCj4gPiBtZXNzYWdl
+IGZvciB0aGlzIHJlc2VydmVkIFZJRCZQSUQpLg0KPiA+DQo+ID4gRG9uJ3Qgd2UgZG8gdGhpcyBh
+bHJlYWR5Pw0KPiANCj4gWWVzLCBidXQgaW4gZnVuY3Rpb24gaXNfc3RhcmdldGVkKCksIEkgZm91
+bmQgaXQncyBhIGxpdHRsZSBiZSBkaWZmZXJlbnQ6DQo+IEN1cnJlbnQgdXBzdHJlYW06ICAgICAg
+ICAgICAgICAgICAgICAgVklEID0gMHgxYTBhLCBQSUQgPSAweDAyMDANCj4gSW5mbyBmcm9tIFVT
+Qi1JRiBjZXJ0aWZpZWQgbGFiOiBWSUQgPSAweDFhMGEsIFBJRCA9IDB4MDIwMQ0KPiANCg0KU29y
+cnkgdGhhdCBJIG1pcy11bmRlcnN0b29kIHRoZSBsb2dpYyBvZiBpc19zdGFyZ2V0ZWQoKSBhbmQg
+aXQncyBjYWxsZXIuDQoNClNvIHRoZSBwcm9wZXIgd2F5IHRvIHJlc29sdmUgbXkgcHJvYmxlbSBp
+czoNCjEuIFNlbGVjdCBDT05GSUdfVVNCX09URyBpbiAuY29uZmlnDQoyLiBBZGQgcHJvcGVydHkg
+J3RwbC1zdXBwb3J0JyB0byBkZXZpY2UgdHJlZQ0KMy4gQ3VzdG9taXplIHdoaXRlbGlzdF90YWJs
+ZVtdIGFjY29yZGluZyB0byBteSBUYXJnZXQtUGVyaXBoZXJhbC1MaXN0DQpyZXF1aXJlbWVudC4N
+Cg0KQW0gSSByaWdodD8gOikNCg0KUmVnYXJkcywNClJhbg0K
