@@ -2,51 +2,54 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC676C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A8C9C4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82FDB2086A
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1174321835
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 14:02:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569765729;
-	bh=HIj7xDrGYMFVV5U6wShQoDOHJHsSh4zlhJ7c9z0ONnc=;
+	s=default; t=1569765735;
+	bh=WteolVlV8xZa6ogzKxdo9wnP8h81ZVK+QRa798z6MtE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QIyCEHDlf42orTUizx1JpScqjBg0iIUvEClWFnm0+bPc1aF5P4QyuS5K8m0qgqG6+
-	 RXaCevS4TtAicZZQvXLonPOOIXgsteLEzEN37+EjsYUXZf6qap1Nk2ob5Ua2k5acMY
-	 vMju7SSTCESKIUf4cxvEMV1gzL/gcqauaqxYKHjw=
+	b=H50dDHqr4At+JiZ2y0ggR0Ikd1Wp2jYReG/dlzmeyV7er4KdiZvrbc7kpm1q5jKOu
+	 ouuJHVmMLAMV14Rd3u2NCMazBnMghILVIxCu/rW3L+mUXXNxS9sOaW06YNw7TwY/CI
+	 nj2uUuxAPArI2fNrK9tWSJaaqcWbAfWWmzOqjSwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729565AbfI2OCI (ORCPT
+        id S1730168AbfI2OCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 10:02:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44538 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 10:02:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730144AbfI2OCF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 10:02:05 -0400
+        id S1729534AbfI2OCM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 10:02:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3903721835;
-        Sun, 29 Sep 2019 14:02:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C03D2086A;
+        Sun, 29 Sep 2019 14:02:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569765725;
-        bh=HIj7xDrGYMFVV5U6wShQoDOHJHsSh4zlhJ7c9z0ONnc=;
+        s=default; t=1569765731;
+        bh=WteolVlV8xZa6ogzKxdo9wnP8h81ZVK+QRa798z6MtE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tJbXOHbJG6qxhsb6wmXrHoDv397v6jEbI+HQ4shxM0IXp7a+upQVT0xb7JqnpZZ+a
-         moCYQNZFmbUH0yNZDhvRuOQ3beN8F8h/2NKdlLhO05834TPSLNXqFpJRc/FafHsHSD
-         Kz521kADQcwGKsIBu49tZ4elSU6N1WOrbiAsygJk=
+        b=OtJLO1y+U6my/hKETjqVV+nEJBtysQLhovBJF9Eby1LBpiBrSEw/Nq2rkU+PXdA+b
+         h70I5YXrY/JlbJg1yzZd2ZhcFf73V7G84YkhXmlDmH4v7G19ttpsp8wzNotbUieRge
+         4VTLQ6wnj6aKbJZm3LKkLjKysCiwwzo8Yw6UmWeo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Dennis Padiernos <depadiernos@gmail.com>
-Subject: [PATCH 5.2 27/45] ALSA: hda - Apply AMD controller workaround for Raven platform
-Date:   Sun, 29 Sep 2019 15:55:55 +0200
-Message-Id: <20190929135031.591655291@linuxfoundation.org>
+        stable@vger.kernel.org, "David S." <david@majinbuu.com>,
+        Peteris Rudzusiks <peteris.rudzusiks@gmail.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Sasha Levin <sashal@kernel.org>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH 5.2 35/45] drm/dp: Add DP_DPCD_QUIRK_NO_SINK_COUNT
+Date:   Sun, 29 Sep 2019 15:56:03 +0200
+Message-Id: <20190929135032.577766771@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190929135024.387033930@linuxfoundation.org>
 References: <20190929135024.387033930@linuxfoundation.org>
@@ -59,37 +62,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Ville Syrjälä <ville.syrjala@linux.intel.com>
 
-commit d2c63b7dfd06788a466d5ec8a850491f084c5fc2 upstream.
+[ Upstream commit 7974033e527a5dd12d96126d09d4cff4f9b65c69 ]
 
-It's reported that the garbled sound on HP Envy x360 13z-ag000 (Ryzen
-Laptop) is fixed by the same workaround applied to other AMD chips.
-Update the driver_data entry for Raven (1022:15e3) to use the newly
-introduced preset, AZX_DCAPS_PRESET_AMD_SB.  Since it already contains
-AZX_DCAPS_PM_RUNTIME, we can drop that bit, too.
+CH7511 eDP->LVDS bridge doesn't seem to set SINK_COUNT properly
+causing i915 to detect it as disconnected. Add a quirk to ignore
+SINK_COUNT on these devices.
 
-Reported-and-tested-by: Dennis Padiernos <depadiernos@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20190920073040.31764-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: David S. <david@majinbuu.com>
+Cc: Peteris Rudzusiks <peteris.rudzusiks@gmail.com>
+Tested-by: Peteris Rudzusiks <peteris.rudzusiks@gmail.com>
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=105406
+Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190528140650.19230-1-ville.syrjala@linux.intel.com
+Acked-by: Jani Nikula <jani.nikula@intel.com> #irc
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/drm_dp_helper.c | 4 +++-
+ include/drm/drm_dp_helper.h     | 7 +++++++
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -2514,8 +2514,7 @@ static const struct pci_device_id azx_id
- 			 AZX_DCAPS_PM_RUNTIME },
- 	/* AMD Raven */
- 	{ PCI_DEVICE(0x1022, 0x15e3),
--	  .driver_data = AZX_DRIVER_GENERIC | AZX_DCAPS_PRESET_ATI_SB |
--			 AZX_DCAPS_PM_RUNTIME },
-+	  .driver_data = AZX_DRIVER_GENERIC | AZX_DCAPS_PRESET_AMD_SB },
- 	/* ATI HDMI */
- 	{ PCI_DEVICE(0x1002, 0x0002),
- 	  .driver_data = AZX_DRIVER_ATIHDMI_NS | AZX_DCAPS_PRESET_ATI_HDMI_NS },
+diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
+index 54a6414c5d961..429c58ce56ced 100644
+--- a/drivers/gpu/drm/drm_dp_helper.c
++++ b/drivers/gpu/drm/drm_dp_helper.c
+@@ -1278,7 +1278,9 @@ static const struct dpcd_quirk dpcd_quirk_list[] = {
+ 	/* LG LP140WF6-SPM1 eDP panel */
+ 	{ OUI(0x00, 0x22, 0xb9), DEVICE_ID('s', 'i', 'v', 'a', 'r', 'T'), false, BIT(DP_DPCD_QUIRK_CONSTANT_N) },
+ 	/* Apple panels need some additional handling to support PSR */
+-	{ OUI(0x00, 0x10, 0xfa), DEVICE_ID_ANY, false, BIT(DP_DPCD_QUIRK_NO_PSR) }
++	{ OUI(0x00, 0x10, 0xfa), DEVICE_ID_ANY, false, BIT(DP_DPCD_QUIRK_NO_PSR) },
++	/* CH7511 seems to leave SINK_COUNT zeroed */
++	{ OUI(0x00, 0x00, 0x00), DEVICE_ID('C', 'H', '7', '5', '1', '1'), false, BIT(DP_DPCD_QUIRK_NO_SINK_COUNT) },
+ };
+ 
+ #undef OUI
+diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
+index 97ce790a5b5aa..d6c89cbe127a3 100644
+--- a/include/drm/drm_dp_helper.h
++++ b/include/drm/drm_dp_helper.h
+@@ -1401,6 +1401,13 @@ enum drm_dp_quirk {
+ 	 * driver still need to implement proper handling for such device.
+ 	 */
+ 	DP_DPCD_QUIRK_NO_PSR,
++	/**
++	 * @DP_DPCD_QUIRK_NO_SINK_COUNT:
++	 *
++	 * The device does not set SINK_COUNT to a non-zero value.
++	 * The driver should ignore SINK_COUNT during detection.
++	 */
++	DP_DPCD_QUIRK_NO_SINK_COUNT,
+ };
+ 
+ /**
+-- 
+2.20.1
+
 
 
