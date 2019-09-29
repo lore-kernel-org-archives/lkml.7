@@ -2,159 +2,190 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC72C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 08:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD6DC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 08:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81E4320863
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 08:05:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h2pwvASX"
+	by mail.kernel.org (Postfix) with ESMTP id DA1AB21835
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 08:14:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569744851;
+	bh=fwQXZ6S1iebD6N07yqZrATtrZNAQFSJh643qYX7XHTM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=jpkB5LBarCcFXzdba1V9EGoqbIwdkAxdbmoSx45lVjhR3w/a7t48B/49G1GTFLXE7
+	 vKZcXYLn7My5L63J6HhaD4JOv2/xuu2FYZzeH9f+deZqAFu4Yd+S1UVbclCR6/cM8c
+	 ZNyw1OykCYVDS9F5R2DoJ3iFOHOjO9UDvpuYawdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728981AbfI2IFW (ORCPT
+        id S1728869AbfI2IOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 04:05:22 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:45919 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726889AbfI2IFV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 04:05:21 -0400
-Received: by mail-lf1-f66.google.com with SMTP id r134so4760487lff.12
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Sep 2019 01:05:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0Kup/WuM5USev7LE9gSO4eOzCdji3byaAj/3kHQx28s=;
-        b=h2pwvASX7WQiv/rG/0XYDhLUx3u00mBa+Jz8rIT6Pw+WoeadNb+O6ie2l7YKC5Rf8J
-         5stOLp7KSQ4PIqko2eAhgEJHMyn7GKhuS7LudsvEaV80s0BKLUl7VclZjKIBvdIQsfMO
-         PZRVepNvb3vht+suAXOPFWzPbi07gGt2OPjnRLRDi1x0XrB64PgxCOJ005atFdPXEoPj
-         2aKrVzHgih52hT+GRID9d7Hk/593LA0slzUtT1NjK5rSX2i8FHW3OMU7eUQo2HGeFz5W
-         tm2XBHctTStlpYlUPd6M8oG91MjnMPRWv68lvgfkc2fuVEQ49bEhT2SmQiQScJiusP0H
-         ZkAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0Kup/WuM5USev7LE9gSO4eOzCdji3byaAj/3kHQx28s=;
-        b=EsUWAZ7lJ2uyd5npKxT3C68Lgfd1qNSnRU+9EkcrrHlrJZxgJKRu2Urcjo92zkrVRg
-         ml0aoIAxVnna7PvgVHTOrwwjpVzLuz5oTMhdjMK505OE61Hlx++xQiUOI0xToUAYfcWu
-         YuuFPE3oYZYJYUGzT3qwG4B9Nn2zuHy1RXS/2TYI5R5qYe/SarrzTxzKes+mfKNPqvDM
-         T1+PmayR5J/E6Bcne9uSz7XGF0qjMlcvq+OqlTMvc/2ayqL+S7RH7hBcT731YNdOktFX
-         q7z28LtBv0jxOATig/o9b5GUXYeS/zGocqf7DeCPsjhEIi17vFxez5WmeVw65NFb1ktl
-         AR3Q==
-X-Gm-Message-State: APjAAAUOviR0i+Rm/Y+iujnWAmxTpUw2dB9yQEpe/ATIGTf+50yeoOpj
-        TuDDArSq2b7+hVZWz4kL9sY=
-X-Google-Smtp-Source: APXvYqzQ27SQ8AgNg+1d3xDMRZ/tOmc2/bsfFZmJc638vE9EJcM2NHuyfPs2y3RUwJio0D5B8VEjdA==
-X-Received: by 2002:a19:dc10:: with SMTP id t16mr7774621lfg.85.1569744319667;
-        Sun, 29 Sep 2019 01:05:19 -0700 (PDT)
-Received: from ?IPv6:2a02:17d0:4a6:5700:d63d:7eff:fed9:a39? ([2a02:17d0:4a6:5700:d63d:7eff:fed9:a39])
-        by smtp.googlemail.com with ESMTPSA id q3sm1985677ljq.4.2019.09.29.01.05.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Sep 2019 01:05:17 -0700 (PDT)
-Subject: Re: x86/random: Speculation to the rescue
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Theodore Ts'o <tytso@mit.edu>,
-        Nicholas Mc Guire <hofrat@opentech.at>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Stephan Mueller <smueller@chronox.de>
-References: <alpine.DEB.2.21.1909290010500.2636@nanos.tec.linutronix.de>
- <CAHk-=wgjC01UaoV35PZvGPnrQ812SRGPoV7Xp63BBFxAsJjvrg@mail.gmail.com>
-From:   "Alexander E. Patrakov" <patrakov@gmail.com>
-Message-ID: <d606a69f-8d90-9f61-e0cb-c7f948f55c2d@gmail.com>
-Date:   Sun, 29 Sep 2019 13:05:15 +0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
-MIME-Version: 1.0
-In-Reply-To: <CAHk-=wgjC01UaoV35PZvGPnrQ812SRGPoV7Xp63BBFxAsJjvrg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-PH
-Content-Transfer-Encoding: 8bit
+        Sun, 29 Sep 2019 04:14:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49454 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725924AbfI2IOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 04:14:09 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1767B20863;
+        Sun, 29 Sep 2019 08:14:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569744848;
+        bh=fwQXZ6S1iebD6N07yqZrATtrZNAQFSJh643qYX7XHTM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=H/AGsyrVLmIIUuDHygOtgbRzgULPJP7kR8i3JWCqC+Uq4fDkV4zAB8B0SoQ6kJ5HF
+         lRsfADBM+GT8I+R7pKJ5whhagtoRSq8lJRXi5Q5uXxFwBtMe5lSUsxVt2upHmRY0Xc
+         SXSSwtYPajacfFbIfHLfcFnXkYBDFilnIYqi+rDQ=
+Date:   Sun, 29 Sep 2019 17:14:01 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Naveen Rao <naveen.n.rao@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, mingo@redhat.com
+Subject: Re: [PATCH] tracing/probe: Fix to check the difference of nr_args
+ before adding probe
+Message-Id: <20190929171401.e194d491bc25caf2282fab10@kernel.org>
+In-Reply-To: <20190928171158.4b72ab55@oasis.local.home>
+References: <20190928011748.599255f6ffc9a4831e1efd2c@kernel.org>
+        <156966474783.3478.13217501608215769150.stgit@devnote2>
+        <20190928171158.4b72ab55@oasis.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-29.09.2019 04:53, Linus Torvalds пишет:
-> On Sat, Sep 28, 2019 at 3:24 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->>
->> Nicholas presented the idea to (ab)use speculative execution for random
->> number generation years ago at the Real-Time Linux Workshop:
-> 
-> What you describe is just a particularly simple version of the jitter
-> entropy. Not very reliable.
-> 
-> But hey, here's a made-up patch. It basically does jitter entropy, but
-> it uses a more complex load than the fibonacci LFSR folding: it calls
-> "schedule()" in a loop, and it sets up a timer to fire.
-> 
-> And then it mixes in the TSC in that loop.
-> 
-> And to be fairly conservative, it then credits one bit of entropy for
-> every timer tick. Not because the timer itself would be all that
-> unpredictable, but because the interaction between the timer and the
-> loop is going to be pretty damn unpredictable.
+Hi Steve,
 
-This looks quite similar to the refactoring proposed earlier by Stephan 
-Müller in his paper: https://www.chronox.de/lrng/doc/lrng.pdf . Indeed, 
-he makes a good argument that the timing of device interrupts is right 
-now the main actual source of entropy in Linux, at the end of Section 1.1:
+On Sat, 28 Sep 2019 17:11:58 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-"""
-The discussion shows that the noise sources of block devices and HIDs 
-are a derivative of the interrupt noise source. All events used as 
-entropy source recorded by the block device and HID noise source are 
-delivered to the Linux kernel via interrupts.
-"""
+> On Sat, 28 Sep 2019 02:59:08 -0700
+> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> 
+> > Fix to check the difference of nr_args before adding probe
+> > on existing probes. This also may set the error log index
+> > bigger than the number of command parameters. In that case
+> > it sets the error position is next to the last parameter.
+> > 
+> > Fixes: ca89bc071d5e ("tracing/kprobe: Add multi-probe per event support")
+> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> 
+> I modified the change log a bit, below is the patch I plan on submitting.
+> 
+> You OK with this?
 
-Now your patch adds the timer interrupt (while the schedule() loop is 
-running) to the mix, essentially in the same setup as proposed.
+Yes, of course. Thank you for updating!
 
 > 
-> Ok, I'm handwaving. But I do claim it really is fairly conservative to
-> think that a cycle counter would give one bit of entropy when you time
-> over a timer actually happening. The way that loop is written, we do
-> guarantee that we'll mix in the TSC value both before and after the
-> timer actually happened. We never look at the difference of TSC
-> values, because the mixing makes that uninteresting, but the code does
-> start out with verifying that "yes, the TSC really is changing rapidly
-> enough to be meaningful".
+> -- Steve
 > 
-> So if we want to do jitter entropy, I'd much rather do something like
-> this that actually has a known fairly complex load with timers and
-> scheduling.
 > 
-> And even if absolutely no actual other process is running, the timer
-> itself is still going to cause perturbations. And the "schedule()"
-> call is more complicated than the LFSR is anyway.
+> From: Masami Hiramatsu <mhiramat@kernel.org>
+> Date: Sat, 28 Sep 2019 05:53:29 -0400
+> Subject: [PATCH] tracing/probe: Fix to check the difference of nr_args before
+>  adding probe
 > 
-> It does wait for one second the old way before it starts doing this.
+> Steven reported that a test triggered:
 > 
-> Whatever. I'm entirely convinced this won't make everybody happy
-> anyway, but it's _one_ approach to handle the issue.
+> ==================================================================
+>  BUG: KASAN: slab-out-of-bounds in trace_kprobe_create+0xa9e/0xe40
+>  Read of size 8 at addr ffff8880c4f25a48 by task ftracetest/4798
 > 
-> Ahmed - would you be willing to test this on your problem case (with
-> the ext4 optimization re-enabled, of course)?
+>  CPU: 2 PID: 4798 Comm: ftracetest Not tainted 5.3.0-rc6-test+ #30
+>  Hardware name: Hewlett-Packard HP Compaq Pro 6300 SFF/339A, BIOS K01 v03.03 07/14/2016
+>  Call Trace:
+>   dump_stack+0x7c/0xc0
+>   ? trace_kprobe_create+0xa9e/0xe40
+>   print_address_description+0x6c/0x332
+>   ? trace_kprobe_create+0xa9e/0xe40
+>   ? trace_kprobe_create+0xa9e/0xe40
+>   __kasan_report.cold.6+0x1a/0x3b
+>   ? trace_kprobe_create+0xa9e/0xe40
+>   kasan_report+0xe/0x12
+>   trace_kprobe_create+0xa9e/0xe40
+>   ? print_kprobe_event+0x280/0x280
+>   ? match_held_lock+0x1b/0x240
+>   ? find_held_lock+0xac/0xd0
+>   ? fs_reclaim_release.part.112+0x5/0x20
+>   ? lock_downgrade+0x350/0x350
+>   ? kasan_unpoison_shadow+0x30/0x40
+>   ? __kasan_kmalloc.constprop.6+0xc1/0xd0
+>   ? trace_kprobe_create+0xe40/0xe40
+>   ? trace_kprobe_create+0xe40/0xe40
+>   create_or_delete_trace_kprobe+0x2e/0x60
+>   trace_run_command+0xc3/0xe0
+>   ? trace_panic_handler+0x20/0x20
+>   ? kasan_unpoison_shadow+0x30/0x40
+>   trace_parse_run_command+0xdc/0x163
+>   vfs_write+0xe1/0x240
+>   ksys_write+0xba/0x150
+>   ? __ia32_sys_read+0x50/0x50
+>   ? tracer_hardirqs_on+0x61/0x180
+>   ? trace_hardirqs_off_caller+0x43/0x110
+>   ? mark_held_locks+0x29/0xa0
+>   ? do_syscall_64+0x14/0x260
+>   do_syscall_64+0x68/0x260
 > 
-> And Thomas - mind double-checking that I didn't do anything
-> questionable with the timer code..
+> Fix to check the difference of nr_args before adding probe
+> on existing probes. This also may set the error log index
+> bigger than the number of command parameters. In that case
+> it sets the error position is next to the last parameter.
 > 
-> And this goes without saying - this patch is ENTIRELY untested.  Apart
-> from making people upset for the lack of rigor, it might do
-> unspeakable crimes against your pets. You have been warned.
+> Link: http://lkml.kernel.org/r/156966474783.3478.13217501608215769150.stgit@devnote2
 > 
->                 Linus
+> Fixes: ca89bc071d5e ("tracing/kprobe: Add multi-probe per event support")
+> Reported-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/trace_probe.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index baf58a3612c0..905b10af5d5c 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -178,6 +178,16 @@ void __trace_probe_log_err(int offset, int err_type)
+>  	if (!command)
+>  		return;
+>  
+> +	if (trace_probe_log.index >= trace_probe_log.argc) {
+> +		/**
+> +		 * Set the error position is next to the last arg + space.
+> +		 * Note that len includes the terminal null and the cursor
+> +		 * appaers at pos + 1.
+> +		 */
+> +		pos = len;
+> +		offset = 0;
+> +	}
+> +
+>  	/* And make a command string from argv array */
+>  	p = command;
+>  	for (i = 0; i < trace_probe_log.argc; i++) {
+> @@ -1084,6 +1094,12 @@ int trace_probe_compare_arg_type(struct trace_probe *a, struct trace_probe *b)
+>  {
+>  	int i;
+>  
+> +	/* In case of more arguments */
+> +	if (a->nr_args < b->nr_args)
+> +		return a->nr_args + 1;
+> +	if (a->nr_args > b->nr_args)
+> +		return b->nr_args + 1;
+> +
+>  	for (i = 0; i < a->nr_args; i++) {
+>  		if ((b->nr_args <= i) ||
+>  		    ((a->args[i].type != b->args[i].type) ||
+> -- 
+> 2.20.1
 > 
 
 
 -- 
-Alexander E. Patrakov
+Masami Hiramatsu <mhiramat@kernel.org>
