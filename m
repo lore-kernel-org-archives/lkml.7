@@ -2,52 +2,54 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E47C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE01BC4360C
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E65CC21D7C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABE4B2196E
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 17:35:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569778550;
-	bh=+z1/bSBIpzw/6DQYOinfkUhl+ECxEW75rghM58TcE+o=;
+	s=default; t=1569778556;
+	bh=qjjByKTwU5k+d9mVaqPivXRL/ILByHOMmv9I6dXCK/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Em6n57IcgZCTyFQmxTt/JkIAaweyhoti99dTpLIJnRBxpt7MGkZwP1i7poLLbjpos
-	 dnCYoQ3fm11ef9wPvo4PDurU0wMPoNcJIUSjcqmGBkuxuBAcIU9L9AMBGJx8FhDsil
-	 RnQYOEWUAajXQB618cKcFqGuFEDzyk7CLGi4R7mU=
+	b=ssd7jn4wd3ypZbewKE5oTozfLRPHzUJi4N2cTc+tO1/mlR7l4uyijPJUhKgWPEF+R
+	 S86VhDciPui0iMDsCLrqNCX5Koxt9Dr20lN8gKThVrWBZnXZdCGZB62H+HT9eif+ue
+	 Y0ilkc+6ozL+EPR9L6HjNxznxSD8NwIE5EJth+aI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730650AbfI2Rfs (ORCPT
+        id S1730688AbfI2Rfz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 13:35:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47974 "EHLO mail.kernel.org"
+        Sun, 29 Sep 2019 13:35:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729743AbfI2Rfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:35:46 -0400
+        id S1730667AbfI2Rfx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:35:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4341E2196E;
-        Sun, 29 Sep 2019 17:35:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21BEE2196E;
+        Sun, 29 Sep 2019 17:35:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778546;
-        bh=+z1/bSBIpzw/6DQYOinfkUhl+ECxEW75rghM58TcE+o=;
+        s=default; t=1569778553;
+        bh=qjjByKTwU5k+d9mVaqPivXRL/ILByHOMmv9I6dXCK/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yfZThi30ledzbo5pTnq1CGvVfiGn3P7uRvc1rCMGj9E0THrVAxg5yEjNJ0SjzNDpL
-         ileudGevUb/k8T8+f7P9gMJLH3YKmk2Ngzy8E4yIatHarbYN2VE2U32q/jxKeacpYJ
-         g4RuNVe4Fg/rh5JvXk09kG4ucgTqHMl17uq5cUao=
+        b=xFp/E4sfFZPvFKKNO+surpjgOe9Qwi6LBD7UE4N/aO1+fLTvcFE6o7sIIb+KF2vbX
+         6EHCQE9L6u4eWTPILwvmGFZ2OdYr7oDwCN5tOHdDynpH6+KPoc/1elwi6/9agj2Qgk
+         5N/jT0Hp/4GYWQkAA+LR2pc8Zj+LxmvZSsOB0qy4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 05/23] PCI: tegra: Fix OF node reference leak
-Date:   Sun, 29 Sep 2019 13:35:15 -0400
-Message-Id: <20190929173535.9744-5-sashal@kernel.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.14 08/23] ARM: 8875/1: Kconfig: default to AEABI w/ Clang
+Date:   Sun, 29 Sep 2019 13:35:18 -0400
+Message-Id: <20190929173535.9744-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190929173535.9744-1-sashal@kernel.org>
 References: <20190929173535.9744-1-sashal@kernel.org>
@@ -60,99 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nishka Dasgupta <nishkadg.linux@gmail.com>
+From: Nick Desaulniers <ndesaulniers@google.com>
 
-[ Upstream commit 9e38e690ace3e7a22a81fc02652fc101efb340cf ]
+[ Upstream commit a05b9608456e0d4464c6f7ca8572324ace57a3f4 ]
 
-Each iteration of for_each_child_of_node() executes of_node_put() on the
-previous node, but in some return paths in the middle of the loop
-of_node_put() is missing thus causing a reference leak.
+Clang produces references to __aeabi_uidivmod and __aeabi_idivmod for
+arm-linux-gnueabi and arm-linux-gnueabihf targets incorrectly when AEABI
+is not selected (such as when OABI_COMPAT is selected).
 
-Hence stash these mid-loop return values in a variable 'err' and add a
-new label err_node_put which executes of_node_put() on the previous node
-and returns 'err' on failure.
+While this means that OABI userspaces wont be able to upgraded to
+kernels built with Clang, it means that boards that don't enable AEABI
+like s3c2410_defconfig will stop failing to link in KernelCI when built
+with Clang.
 
-Change mid-loop return statements to point to jump to this label to
-fix the reference leak.
+Link: https://github.com/ClangBuiltLinux/linux/issues/482
+Link: https://groups.google.com/forum/#!msg/clang-built-linux/yydsAAux5hk/GxjqJSW-AQAJ
 
-Issue found with Coccinelle.
-
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
-[lorenzo.pieralisi@arm.com: rewrote commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/host/pci-tegra.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ arch/arm/Kconfig | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
-index 1987fec1f126f..8efd086c57c96 100644
---- a/drivers/pci/host/pci-tegra.c
-+++ b/drivers/pci/host/pci-tegra.c
-@@ -1910,14 +1910,15 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
- 		err = of_pci_get_devfn(port);
- 		if (err < 0) {
- 			dev_err(dev, "failed to parse address: %d\n", err);
--			return err;
-+			goto err_node_put;
- 		}
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index cf69aab648fbd..f0080864b9ce8 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -1595,8 +1595,9 @@ config ARM_PATCH_IDIV
+ 	  code to do integer division.
  
- 		index = PCI_SLOT(err);
- 
- 		if (index < 1 || index > soc->num_ports) {
- 			dev_err(dev, "invalid port number: %d\n", index);
--			return -EINVAL;
-+			err = -EINVAL;
-+			goto err_node_put;
- 		}
- 
- 		index--;
-@@ -1926,12 +1927,13 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
- 		if (err < 0) {
- 			dev_err(dev, "failed to parse # of lanes: %d\n",
- 				err);
--			return err;
-+			goto err_node_put;
- 		}
- 
- 		if (value > 16) {
- 			dev_err(dev, "invalid # of lanes: %u\n", value);
--			return -EINVAL;
-+			err = -EINVAL;
-+			goto err_node_put;
- 		}
- 
- 		lanes |= value << (index << 3);
-@@ -1945,13 +1947,15 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
- 		lane += value;
- 
- 		rp = devm_kzalloc(dev, sizeof(*rp), GFP_KERNEL);
--		if (!rp)
--			return -ENOMEM;
-+		if (!rp) {
-+			err = -ENOMEM;
-+			goto err_node_put;
-+		}
- 
- 		err = of_address_to_resource(port, 0, &rp->regs);
- 		if (err < 0) {
- 			dev_err(dev, "failed to parse address: %d\n", err);
--			return err;
-+			goto err_node_put;
- 		}
- 
- 		INIT_LIST_HEAD(&rp->list);
-@@ -1978,6 +1982,10 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
- 		return err;
- 
- 	return 0;
-+
-+err_node_put:
-+	of_node_put(port);
-+	return err;
- }
- 
- /*
+ config AEABI
+-	bool "Use the ARM EABI to compile the kernel" if !CPU_V7 && !CPU_V7M && !CPU_V6 && !CPU_V6K
+-	default CPU_V7 || CPU_V7M || CPU_V6 || CPU_V6K
++	bool "Use the ARM EABI to compile the kernel" if !CPU_V7 && \
++		!CPU_V7M && !CPU_V6 && !CPU_V6K && !CC_IS_CLANG
++	default CPU_V7 || CPU_V7M || CPU_V6 || CPU_V6K || CC_IS_CLANG
+ 	help
+ 	  This option allows for the kernel to be compiled using the latest
+ 	  ARM ABI (aka EABI).  This is only useful if you are using a user
 -- 
 2.20.1
 
