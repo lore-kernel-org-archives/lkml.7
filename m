@@ -2,236 +2,176 @@ Return-Path: <SRS0=maO4=XY=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4F8C4360C
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 16:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 138D6C352A9
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 16:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4A342086A
-	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 16:48:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D686E218AC
+	for <linux-kernel@archiver.kernel.org>; Sun, 29 Sep 2019 16:54:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=ucr.edu header.i=@ucr.edu header.b="PXClWSP/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WPB7OKJ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729024AbfI2QsK (ORCPT
+        id S1729069AbfI2Qyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 12:48:10 -0400
-Received: from mx6.ucr.edu ([138.23.62.71]:58840 "EHLO mx6.ucr.edu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725948AbfI2QsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 12:48:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=ucr.edu; i=@ucr.edu; q=dns/txt; s=selector3;
-  t=1569775689; x=1601311689;
-  h=from:to:cc:subject:date:message-id;
-  bh=UNKIGMa4Eg+l+IVQcMpLQFIdcsa8oCD4s9qyVCpjIUE=;
-  b=PXClWSP/1DOHyidKRvWshHDwqEeyyakwhqJwS4TToXaiXWTijGyLGnek
-   ttzYWjcFdixk0J0ey6zib8ZzUHWKP2v4gIqRcFi5ECVBkxOGYhNikrNaq
-   PsedSVjsz0+lvijmlI+D470YIjgxKA76UusGs1aDawgaaLfbkjr0u1bXy
-   /RET3rgi+DK2bSWrvkhEQVwuMPFQIsTZ9fAY0S4pifsBqS8sxvDBJumfy
-   LqJJxhrn0Ca/z+1gmNCHiLQJBs6eQHc1PmvSAT+WfDb0CCpZ/a9lUMuwC
-   7N5yJ1hN9/yJLK8p2w5VOXA/MmYveWbwCG1+jKWTcc8PLlzO0Qi+M1Cbr
-   Q==;
-IronPort-SDR: fWI58rZa77aNxwRN+S8a30QnVNpF2FDnO5pNf/tZKuaOmmqHKco460vflMb0WSOBP0cVtkPeI7
- nwciB4Kj4YXU8OXPEffWorWcCOT4E1U6sZTrMbUkWkw4TM4pA+VwV4YGtD1avvHm4lFKY7rT+1
- +xWLvC1aGDdEHEjyLxbFebEdIgTbW2qnRWZ4jjMn4me+QdDkQ5hig2x/LoCZpJE7JFfMlQxKe0
- 5+A87hVbaTcc27eDp25mwon2O08wCB0+l5pOqDlH38S3RVrJ1Sv4FZCx5F6CaFnpOEpzqiZdYO
- G7Q=
-IronPort-PHdr: =?us-ascii?q?9a23=3AdAyiRBAbjqvNPN4ROVwAUyQJP3N1i/DPJgcQr6?=
- =?us-ascii?q?AfoPdwSPvyo8bcNUDSrc9gkEXOFd2Cra4d0KyK6+u5ATJIyK3CmUhKSIZLWR?=
- =?us-ascii?q?4BhJdetC0bK+nBN3fGKuX3ZTcxBsVIWQwt1Xi6NU9IBJS2PAWK8TW94jEIBx?=
- =?us-ascii?q?rwKxd+KPjrFY7OlcS30P2594HObwlSizexfL1/IA+5oAnNucUanJduJ6cswR?=
- =?us-ascii?q?bVv3VEfPhby3l1LlyJhRb84cmw/J9n8ytOvv8q6tBNX6bncakmVLJUFDspPX?=
- =?us-ascii?q?w7683trhnDUBCA5mAAXWUMkxpHGBbK4RfnVZrsqCT6t+592C6HPc3qSL0/RD?=
- =?us-ascii?q?qv47t3RBLulSwKLCAy/n3JhcNsjaJbuBOhqAJ5w47Ie4GeKf5ycrrAcd8GWW?=
- =?us-ascii?q?ZNW8BcVylAAoOndIsPDuwBPelFpIfjvlUFsBW+BQiyC+Pr1zBDm3v60KMm3+?=
- =?us-ascii?q?gkFwzNwQ4uEM8UsHnMrNv7KrocX+62wqfP1jjPc+9a1C3h5IXSbhwtvfeBVq?=
- =?us-ascii?q?9wf8rLzkkvEhvIgVeRqY3kPzOVy+MNuHWc4utgVOOvi3QoqwBtrjSzyMohkZ?=
- =?us-ascii?q?TJiZ4Pylze6yp23Zs1KMS+RUVmYtCkCINduz+GO4ZyWM8vQGFltDwkxrEbpZ?=
- =?us-ascii?q?K3ZjUGxZAlyhLHdvCKcoyF7gj9WOufITp0nmxpdbOlixuw/kWtzPD3WNOu31?=
- =?us-ascii?q?ZQtCVFl8HBtnUK1xPO9MeKUuB9/kK92TaX0ADT9/1ELVg0laXFL54hxaY9lp?=
- =?us-ascii?q?8JvkTCGi/6gV32jKGLekk99Oik9uDqb7f8qp+TMI90jQ7+MqAwlcClHes4NQ?=
- =?us-ascii?q?0OU3Ca+eS6yrLj4VX0TKtWgvAyiKXUs5DXKd4FqqKkHwNZyJsv5hK9Aju+1d?=
- =?us-ascii?q?QXh3gHLFZLeBKdiIjpPknDIfD5DPe/mVuskStny+zIM7D6H5XCMmLDnK3/cr?=
- =?us-ascii?q?lg9k5Q0BAzwsxH55JIFrEBJ+r+WkvwtNzeEx84PBW4w+X5B9Vn0IMRR2aPD7?=
- =?us-ascii?q?SHMKPdr1CI/PgjI+qSa48PvjbyNfwl6+TpjX8jll9ONYez2p5CWXGqHulhax?=
- =?us-ascii?q?GIc3rlg49ZSk8XtRB4QeD33g7RGQVPbmq/CvpvrgowD5irWMKcHo0=3D?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2EZBQC035BdgMXSVdFmHgEGEoFcC4N?=
- =?us-ascii?q?eTBCNHoVyUQEBBosmgQmFeogxgXsBCAEBAQwBAS0CAQGEQIM6IzQJDgIDCQE?=
- =?us-ascii?q?BBQEBAQEBBQQBAQIQAQEJDQkIJ4VCgjopgzULFhVSgRUBBQE1IjmCRwGBdhQ?=
- =?us-ascii?q?FnzaBAzyMJTOIagEJDYFICQEIgSKHNYRZgRCBB4ERg1CHY4JEBIEvAQEBiz+?=
- =?us-ascii?q?CMYcrlkkBBgKCEBSBeJMHJ4Q5iT2LPwEtiiicawIKBwYPI4EvghFNJYFsCoF?=
- =?us-ascii?q?EUBAUgVoXFY4tITOBCJAPAQ?=
-X-IPAS-Result: =?us-ascii?q?A2EZBQC035BdgMXSVdFmHgEGEoFcC4NeTBCNHoVyUQEBB?=
- =?us-ascii?q?osmgQmFeogxgXsBCAEBAQwBAS0CAQGEQIM6IzQJDgIDCQEBBQEBAQEBBQQBA?=
- =?us-ascii?q?QIQAQEJDQkIJ4VCgjopgzULFhVSgRUBBQE1IjmCRwGBdhQFnzaBAzyMJTOIa?=
- =?us-ascii?q?gEJDYFICQEIgSKHNYRZgRCBB4ERg1CHY4JEBIEvAQEBiz+CMYcrlkkBBgKCE?=
- =?us-ascii?q?BSBeJMHJ4Q5iT2LPwEtiiicawIKBwYPI4EvghFNJYFsCoFEUBAUgVoXFY4tI?=
- =?us-ascii?q?TOBCJAPAQ?=
-X-IronPort-AV: E=Sophos;i="5.64,563,1559545200"; 
-   d="scan'208";a="79013434"
-Received: from mail-pf1-f197.google.com ([209.85.210.197])
-  by smtpmx6.ucr.edu with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 29 Sep 2019 09:48:09 -0700
-Received: by mail-pf1-f197.google.com with SMTP id s139so5988550pfc.21
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Sep 2019 09:48:08 -0700 (PDT)
+        Sun, 29 Sep 2019 12:54:32 -0400
+Received: from mail-ua1-f44.google.com ([209.85.222.44]:36330 "EHLO
+        mail-ua1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726149AbfI2Qyb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 12:54:31 -0400
+Received: by mail-ua1-f44.google.com with SMTP id r25so3416715uam.3;
+        Sun, 29 Sep 2019 09:54:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=hKXN3UH5ikId6K7/+YiazTXZNhGquUsUZgxZDxQd10Y=;
+        b=WPB7OKJ3oTtP+x/hIwIN+DcngOG06NPx4RnjbFvVdD5u4DcrIV3MH8ThyUMtF0kf3N
+         6F9Q1x3IuEEWjxDXJqyI4pwOe/YijKNoeX9GqDmU6sactOcUEQzAsXtBZ3gIcnI2V+d7
+         L3kh2zZTFQfzwka3oNMQv1wRsdHVXXc2/Ma4tj0uIoEK1eIb3cc4HHOsYP4vft0UMmu1
+         x5BO/okxSAyM2+lYQ3SUsuEBQgNcQ9VPsnnb0kTVhWeSQKemee1QEsDjnhhvooBgyE8t
+         i32kEcogqZX+90pYCbjUE1jdamhMT/ntak6Ke7MOWnwhLFPBCnYiPOdHgpn9IiDKQKMW
+         gt9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=utdaQ4jWHTttFql8WKqbnsQdQq9GY1vzrMBpLN2a9NQ=;
-        b=MrgTJ8twF4Yy9q6KttjYq2FsqY1iP0pr386IS+flpmklPiOEQx99PYXWOMvL6VcJHP
-         Lsb3sMElw4ubqaOk7evW2sLhTD3tbVdfQvWGxd00JDOErk8+w6ZoK3udweYrX27zMNd7
-         B5Mxe4QGEc7In/Ig7dNyf7NZ6nRzYBzKYcSDkD4oC+VAWU8noVpUR7FwKvrbwKVb8JNS
-         epsWtBQ2b5T0Zgxql/6lAiQaDakZRQ4t1bhX21r4l2Sg2u9cgaVXXZGgmdOtrNMv2Dm1
-         lAULiNBUw/aWYYg70DsDctffVAKcFUQA9t7AbDTEhRNAX1Adu7zX3X9RySGjC9MvzcXx
-         6/2g==
-X-Gm-Message-State: APjAAAWlY8s/Kus0fzkujh5+Bx0y1mPID6W1k4sQZH7H3uIy7hAaHfAD
-        nu4CSrLybfRt4JZ9peyJTfJWfDR1Kl756VpRPJi87aeZLnS0QAFREp30krCehNUQHEa61wQl+1l
-        7PGj2bSM4WPBqViwUys824DOv9w==
-X-Received: by 2002:a17:90a:3090:: with SMTP id h16mr22224056pjb.46.1569775687369;
-        Sun, 29 Sep 2019 09:48:07 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxJjjuQpguiCEE+oT8FZ21bOrlaI5ek77fAN6CJVVTks05KOo47tYsfxvPiCR9IDOpmjYNCew==
-X-Received: by 2002:a17:90a:3090:: with SMTP id h16mr22224024pjb.46.1569775687030;
-        Sun, 29 Sep 2019 09:48:07 -0700 (PDT)
-Received: from Yizhuo.cs.ucr.edu (yizhuo.cs.ucr.edu. [169.235.26.74])
-        by smtp.googlemail.com with ESMTPSA id ep10sm26814605pjb.2.2019.09.29.09.48.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Sep 2019 09:48:05 -0700 (PDT)
-From:   Yizhuo <yzhai003@ucr.edu>
-Cc:     csong@cs.ucr.edu, zhiyunq@cs.ucr.edu, Yizhuo <yzhai003@ucr.edu>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicholas Mc Guire <hofrat@osadl.org>,
-        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] iio: adc: meson-saradc: Variables could be uninitalized if regmap_read() fails
-Date:   Sun, 29 Sep 2019 09:48:43 -0700
-Message-Id: <20190929164848.13930-1-yzhai003@ucr.edu>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=hKXN3UH5ikId6K7/+YiazTXZNhGquUsUZgxZDxQd10Y=;
+        b=kTJ+3q1Rtpe7USiAzVP2N5ZWhJI2/DMPsQWWGPZ6l298XBSRyywKyXeVnDLzAmii38
+         PEiF6uTwvTmV4JuipFjv5GzhE0qcQbVXULUXTjfcd1qsb+P+9R63ExbKH42YprosG/tf
+         hGKTm7ZOv2wNw9JBbvYKY9i0CDvNiiCRm8FXkrlD0YRS1Ll1W400tSfguen5h25bYmEs
+         TzjKj0VtqMf+BX0kbMA2rcqyhndu3wI02MKJlN4D3xY5c58OxwChFNiqnydhb6PeY8x4
+         fipntDi+I5AWZRR15dH1/StXSDfYCqZN2QhCVVSF7vvXZopWYzP/EqmMYlJat7Y5asXH
+         wtMA==
+X-Gm-Message-State: APjAAAW9kdesNvLdGWHfr7u7QpMwYgtt1pj9UGNfIUBSxeg/SiSZxU0U
+        CFZJUBr62Ohw/TC5E/T2Olr4bUDIH5c+DTCppZs=
+X-Google-Smtp-Source: APXvYqzgyzbvTiXo3YBeaDoGYv87AhsnV9Wj2PykCpUkpRDq9o4W3/XL83+x1tUr7skuswWAXfuvFe5bAeU+1n3sJns=
+X-Received: by 2002:ab0:3310:: with SMTP id r16mr4589762uao.22.1569776070321;
+ Sun, 29 Sep 2019 09:54:30 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAOuPNLgH=JQeT3=tZ_AdBsV0e-S_JNEe4CtpFW8Wj5NfYW5PsA@mail.gmail.com>
+ <CAOuPNLjqm+Dv5RARP6dzZRKSttCvqoLe7MNYOeChAGUWX1krRA@mail.gmail.com>
+In-Reply-To: <CAOuPNLjqm+Dv5RARP6dzZRKSttCvqoLe7MNYOeChAGUWX1krRA@mail.gmail.com>
+From:   Pintu Agarwal <pintu.ping@gmail.com>
+Date:   Sun, 29 Sep 2019 22:24:19 +0530
+Message-ID: <CAOuPNLgZ3kjBaCmXkXHZrncYqUxsNYKiXQqptoDBT_EWfjpNqg@mail.gmail.com>
+Subject: Re: imx6: hdmi black screen issue after resume
+To:     p.zabel@pengutronix.de, bob.beckett@collabora.com,
+        dri-devel@lists.freedesktop.org,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Several functions in this file are trying to use regmap_read() to
-initialize the specific variable, however, if regmap_read() fails,
-the variable could be uninitialized but used directly, which is
-potentially unsafe. The return value of regmap_read() should be
-checked and handled.
+>
+> On Mon, Sep 23, 2019 at 1:28 PM Pintu Agarwal <pintu.ping@gmail.com> wrote:
+> >
+> > Dear Philipp,
+> >
+> > I have a iMX6dl custom board with custom Linux Kernel 4.8.
+> > I have both LCD and HDMI connected to the board.
+> > And we are using weston/wayland as the display interface.
+> > In normal boot, both LCD and HDMI display is working fine.
+> >
+> > But, currently, for one of the requirement, I am trying to explore and
+> > support hibernation image booting on it.
+> > Currently, we are able to resume the system without display.
+> > Also, if we make the entire imx-drm as modules, and then install the
+> > modules after resume, even LCD is also coming up.
+> > But HDMI display is black out.
+> >
+> > After, resume, when I try to launch the weston, I noticed the following errors:
+> > enabling vblank on crtc 0, ret: 0
+> > drm_vblank_get: CALLED: vblank->refcount: 1
+> > ------------[ cut here ]------------
+> > WARNING: at drivers/gpu/drm/drm_atomic_helper.c:1121
+> > drm_atomic_helper_wait_for_vblanks+0x228/0x24c [drm_kms_helper]()
+> > [CRTC:24] vblank wait timed out
+> > .....
+> > [drm:drm_atomic_helper_commit_cleanup_done [drm_kms_helper]] *ERROR*
+> > [CRTC:24:crtc-0] flip_done timed out
+> >
+> > ....
+> > [00:06:42.600] Warning: computed repaint delay is insane: -5069 msec
+> > [00:06:42.665] unexpectedly large timestamp jump (from 397522 to 402648)
+> > ....
+> >
+> > And, when I try to reboot the system, the system does not reboot.
+> > And I get the following error:
+> > /wayland # reboot
+> > ....
+> > [17:55:01.180] destroy output while page flip pending
+> > ...
+> > imx-ipuv3 2400000.ipu: DC stop timeout after 50 ms
+> >
+> >
+> > -------------
+> > If you have any clue about this issue, please let me know.
+> >
+> > Any help will be really appreciated!
+> >
+> >
+> > Thank You!
+> >
+> > Regards,
+> > Pintu
 
-Signed-off-by: Yizhuo <yzhai003@ucr.edu>
----
- drivers/iio/adc/meson_saradc.c | 30 ++++++++++++++++++++++++------
- 1 file changed, 24 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/iio/adc/meson_saradc.c b/drivers/iio/adc/meson_saradc.c
-index 7b28d045d271..4b6c2983ef39 100644
---- a/drivers/iio/adc/meson_saradc.c
-+++ b/drivers/iio/adc/meson_saradc.c
-@@ -323,6 +323,7 @@ static int meson_sar_adc_wait_busy_clear(struct iio_dev *indio_dev)
- {
- 	struct meson_sar_adc_priv *priv = iio_priv(indio_dev);
- 	int regval, timeout = 10000;
-+	int ret;
- 
- 	/*
- 	 * NOTE: we need a small delay before reading the status, otherwise
-@@ -331,7 +332,9 @@ static int meson_sar_adc_wait_busy_clear(struct iio_dev *indio_dev)
- 	 */
- 	do {
- 		udelay(1);
--		regmap_read(priv->regmap, MESON_SAR_ADC_REG0, &regval);
-+		ret = regmap_read(priv->regmap, MESON_SAR_ADC_REG0, &regval);
-+		if (ret)
-+			return ret;
- 	} while (FIELD_GET(MESON_SAR_ADC_REG0_BUSY_MASK, regval) && timeout--);
- 
- 	if (timeout < 0)
-@@ -346,6 +349,7 @@ static int meson_sar_adc_read_raw_sample(struct iio_dev *indio_dev,
- {
- 	struct meson_sar_adc_priv *priv = iio_priv(indio_dev);
- 	int regval, fifo_chan, fifo_val, count;
-+	int ret;
- 
- 	if(!wait_for_completion_timeout(&priv->done,
- 				msecs_to_jiffies(MESON_SAR_ADC_TIMEOUT)))
-@@ -358,7 +362,10 @@ static int meson_sar_adc_read_raw_sample(struct iio_dev *indio_dev,
- 		return -EINVAL;
- 	}
- 
--	regmap_read(priv->regmap, MESON_SAR_ADC_FIFO_RD, &regval);
-+	ret = regmap_read(priv->regmap, MESON_SAR_ADC_FIFO_RD, &regval);
-+	if (ret)
-+		return ret;
-+
- 	fifo_chan = FIELD_GET(MESON_SAR_ADC_FIFO_RD_CHAN_ID_MASK, regval);
- 	if (fifo_chan != chan->address) {
- 		dev_err(&indio_dev->dev,
-@@ -491,6 +498,7 @@ static int meson_sar_adc_lock(struct iio_dev *indio_dev)
- {
- 	struct meson_sar_adc_priv *priv = iio_priv(indio_dev);
- 	int val, timeout = 10000;
-+	int ret;
- 
- 	mutex_lock(&indio_dev->mlock);
- 
-@@ -506,7 +514,10 @@ static int meson_sar_adc_lock(struct iio_dev *indio_dev)
- 		 */
- 		do {
- 			udelay(1);
--			regmap_read(priv->regmap, MESON_SAR_ADC_DELAY, &val);
-+			ret = regmap_read(priv->regmap,
-+						MESON_SAR_ADC_DELAY, &val);
-+			if (ret)
-+				return ret;
- 		} while (val & MESON_SAR_ADC_DELAY_BL30_BUSY && timeout--);
- 
- 		if (timeout < 0) {
-@@ -771,7 +782,7 @@ static int meson_sar_adc_init(struct iio_dev *indio_dev)
- {
- 	struct meson_sar_adc_priv *priv = iio_priv(indio_dev);
- 	int regval, i, ret;
--
-+	int ret;
- 	/*
- 	 * make sure we start at CH7 input since the other muxes are only used
- 	 * for internal calibration.
-@@ -784,7 +795,10 @@ static int meson_sar_adc_init(struct iio_dev *indio_dev)
- 		 * BL30 to make sure BL30 gets the values it expects when
- 		 * reading the temperature sensor.
- 		 */
--		regmap_read(priv->regmap, MESON_SAR_ADC_REG3, &regval);
-+		ret = regmap_read(priv->regmap, MESON_SAR_ADC_REG3, &regval);
-+		if (ret)
-+			return ret;
-+
- 		if (regval & MESON_SAR_ADC_REG3_BL30_INITIALIZED)
- 			return 0;
- 	}
-@@ -1013,8 +1027,12 @@ static irqreturn_t meson_sar_adc_irq(int irq, void *data)
- 	struct meson_sar_adc_priv *priv = iio_priv(indio_dev);
- 	unsigned int cnt, threshold;
- 	u32 regval;
-+	int ret;
-+
-+	ret = regmap_read(priv->regmap, MESON_SAR_ADC_REG0, &regval);
-+	if (ret)
-+		return ret;
- 
--	regmap_read(priv->regmap, MESON_SAR_ADC_REG0, &regval);
- 	cnt = FIELD_GET(MESON_SAR_ADC_REG0_FIFO_COUNT_MASK, regval);
- 	threshold = FIELD_GET(MESON_SAR_ADC_REG0_FIFO_CNT_IRQ_MASK, regval);
- 
--- 
-2.17.1
+Hi All,
 
+I need some help, on the above issue.
+Finally, I could boil down the issue to be vblank refcount issue.
+After system resume, vblank ref count is getting screwed up, because
+of which vblank_enable is not happening.
+As per below code path: drivers/gpu/drm/drm_vblank.c:
+drm_vblank_get()
+{
+[...]
+/* Going from 0->1 means we have to enable interrupts again */
+if (atomic_add_return(1, &vblank->refcount) == 1) {
+    ret = drm_vblank_enable(dev, pipe);
+} else {
+    if (!vblank->enabled) {
+        atomic_dec(&vblank->refcount);
+        ret = -EINVAL;
+    }
+}
+[...]
+First time, everything seems fine.
+drm_vblank_get: CALLED: pipe: 0, vblank->refcount: 0, vblank-enabled: 0
+..
+drm_vblank_enable: calling - enable_vblank
+enabling vblank on crtc 0, ret: 0
+...
+
+But, after resume, somewhere during HDMI initialization, the refcount
+is getting incremented.
+drm_vblank_get: CALLED: pipe: 0, vblank->refcount: 1, vblank-enabled: 1
+Thus, due to the above logic, drm_vblank_enable() will not be called,
+if previous refcount is not 0.
+
+What I further noticed is that, after resume, during hdmi_setup the
+refcount is automatically getting updated.
+drm_update_vblank_count - storing vblank count: diff: 1
+
+This does not happen in normal case.
+Now, I am not sure, why the vblank counter is getting incremented
+during hdmi setup.
+Is it like, hdmi setup is taking slightly longer time for
+initialization, after resume??
+Because of which the vblank timestamp counter is getting disturbed.
+
+If anybody observed this issue, or aware about the fixes, please let me know.
+It will be of great help.
+
+Meanwhile, I am further continue to debug this more..
+
+Regards,
+Pintu
