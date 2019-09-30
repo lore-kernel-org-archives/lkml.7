@@ -2,135 +2,103 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3972EC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF946C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09C30215EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:07:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569859620;
-	bh=MvE8LLynRjUl+94cJb0CyjZtG13OGXEK4Bl34WJDU9c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PIKmUjemvDi4lAoQYlgSr9IrM2RBlfhSFwHzhQMczezTyb977SpdExOT3zo2KBeI3
-	 ALolKTTZL3hTIr5g24vu1ayJ79k/JMDDiwfzi+fyjj+Y7mlR2q1+WKPhmzz53VqhHm
-	 ++nv3XKaxKdOwntqxyj+DQqGRfbj0ytCqFmq8hIs=
+	by mail.kernel.org (Postfix) with ESMTP id 8C1A5216F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:07:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732214AbfI3QG7 (ORCPT
+        id S1732222AbfI3QHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 12:06:59 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37635 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728424AbfI3QG7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 12:06:59 -0400
-Received: by mail-lj1-f196.google.com with SMTP id l21so10104925lje.4
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 09:06:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KLe2kylkHRDEIZkqma6Y17kUgB/cRkjjQz4tSwgXeyQ=;
-        b=ItUevwyV7K+5wlAC7uIMaBiq4O5RQHwz6gB4j41pmGvLNHJJDpjra6dNJkzZoLazfE
-         E5vl2dbYUovDvSBxCVhMf2rkaldW6y6OXJpInRFLlK1dq2tUcHdFH2M5OXWmdotbJ2pB
-         JxBSQE34E7oJiQd1SzU7G3iqevwk7iUZeeLmk=
+        Mon, 30 Sep 2019 12:07:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42964 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728424AbfI3QHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 12:07:22 -0400
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AE12C58569
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 16:07:21 +0000 (UTC)
+Received: by mail-qt1-f197.google.com with SMTP id p56so14358957qtj.14
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 09:07:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KLe2kylkHRDEIZkqma6Y17kUgB/cRkjjQz4tSwgXeyQ=;
-        b=XMcHVZMhyYND84DRqqI5r/NzP23qZu/VDlwqZaOV5q3HdT36jTz3RldZQ1buZeVwYu
-         k9aC/G4BqbJ1UFzYz2UteLRmstD9ZRZ02mFk0njChBSXSLxOE7qSlkgSrYBMdcq5HDkf
-         YDziD6V8B9mPbq/5rO0Q+iJ6ATnAdrwRL/MCKtzKttsP9/MkHo8kebf9d2MYQbABWKIF
-         uyX7yZ7NmbMeFawPS+bQTz8VA2/z+dB5+ZhwelahQSq0RXfzuzqzv3Djp4fTwBbg/7R1
-         c9Oe/uXQvEx2RlU0lKz8d0MOjPrwOfiA5A/F9TJq80gS4YL+x3K2AnSjQ6lxYxSk3T49
-         KLpA==
-X-Gm-Message-State: APjAAAX5eh7vKPjzSzr31ZAXXVkZfJbAlHeSii7rGkDRHaHGoKRBDBjf
-        hsCb2aCdBOhf9Vm4eWgs6gdu8xaB4js=
-X-Google-Smtp-Source: APXvYqzE3zVh9oxw3oiYUIcGrWpBa4n2AXR79T/IiouqPFS27x5+r2izITq50kZz3i7p5OjBlFlkXQ==
-X-Received: by 2002:a2e:9702:: with SMTP id r2mr12858423lji.190.1569859614465;
-        Mon, 30 Sep 2019 09:06:54 -0700 (PDT)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id v7sm3312846lfd.55.2019.09.30.09.06.52
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=AlAgWSZN3tYrGAUetJ0PxX2LldmwlKphz6GM87t+fR0=;
+        b=Q8wm0o2f8YfH4F5Pe5Noufc4+vQxEkgWIje7M9XzCucsQ+oV1XOj6GIP2gK6K83Qc0
+         0BiPDuXMQRcAKkhvxHeRlFPtGt1tL43FP8vTLoMIjQYuKszdCLvuDt5iG9XHxqmxMJ0l
+         p3nus0mk5nV6MgjaUaRjnnixJlYOvlg74UVTSyx8SXpKinMkCefAf1OuHRkQwytjFjvS
+         qWgSn2S6NuVBCX6VzwYE0m5zv91JiUCcjPpaf1CCgONABq30p3++jDRNZZVKhmvNgMcA
+         UW5ScUyPrbcyQDSWmwq5TOtnCTjehHcEee0+gNJkURXdBzMWe2IzKHc/ToSL6HqqmgDM
+         /IaQ==
+X-Gm-Message-State: APjAAAXLXkgi+PbODqc06oSqULGrJ0OV0KdYuRH2r/EvLD3IRojohw0M
+        LRImGJtur9cGIcAKnWG/yba2x2wJnkvDCrCowCzV/vvMMeEgI3XlU09DEHz5YdjM0pMBz2R0Z4p
+        dB9u9cvJTWkWMQzhVGrTvrpHP
+X-Received: by 2002:a37:515:: with SMTP id 21mr763838qkf.87.1569859640409;
+        Mon, 30 Sep 2019 09:07:20 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwn2lO+qtSlieFtDNAL5Zi45Mn6EO2xY9cnkxx9E6Wiz4SQtkHTov4MNY3gLHrjNPTCa8epsA==
+X-Received: by 2002:a37:515:: with SMTP id 21mr763811qkf.87.1569859640138;
+        Mon, 30 Sep 2019 09:07:20 -0700 (PDT)
+Received: from ?IPv6:2601:342:8200:6edc::b073? ([2601:342:8200:6edc::b073])
+        by smtp.gmail.com with ESMTPSA id s23sm9020063qte.72.2019.09.30.09.07.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Sep 2019 09:06:53 -0700 (PDT)
-Received: by mail-lf1-f43.google.com with SMTP id r134so7448652lff.12
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 09:06:52 -0700 (PDT)
-X-Received: by 2002:ac2:47f8:: with SMTP id b24mr12078157lfp.134.1569859612393;
- Mon, 30 Sep 2019 09:06:52 -0700 (PDT)
+        Mon, 30 Sep 2019 09:07:19 -0700 (PDT)
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Hugh Dickins <hughd@google.com>
+Cc:     Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>
+From:   Laura Abbott <labbott@redhat.com>
+Subject: mount on tmpfs failing to parse context option
+Message-ID: <d5b67332-57b7-c19a-0462-f84d07ef1a16@redhat.com>
+Date:   Mon, 30 Sep 2019 12:07:18 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-References: <alpine.DEB.2.21.1909290010500.2636@nanos.tec.linutronix.de>
- <CAHk-=wgjC01UaoV35PZvGPnrQ812SRGPoV7Xp63BBFxAsJjvrg@mail.gmail.com>
- <CAHk-=wi0vxLmwEBn2Xgu7hZ0U8z2kN4sgCax+57ZJMVo3huDaQ@mail.gmail.com>
- <CAHk-=whKhD-GniDqpRhhF=V2cSxThX56NAdkAUoBkbp0mW5=LA@mail.gmail.com> <20190930061014.GC29694@zn.tnic>
-In-Reply-To: <20190930061014.GC29694@zn.tnic>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 30 Sep 2019 09:06:36 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjfLfnOyGkHM+ZRn6bc6JD6CU3Ewix3cJDqCqjbMO5PNA@mail.gmail.com>
-Message-ID: <CAHk-=wjfLfnOyGkHM+ZRn6bc6JD6CU3Ewix3cJDqCqjbMO5PNA@mail.gmail.com>
-Subject: Re: x86/random: Speculation to the rescue
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Nicholas Mc Guire <hofrat@opentech.at>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 29, 2019 at 11:10 PM Borislav Petkov <bp@alien8.de> wrote:
->
-> so sshd does getrandom(2) while those other userspace things don't. Oh
-> well.
+Hi,
 
-Well, that's actually what systems _should_ do. Presumably sshd
-actually wants secure randomness, and nothing else waits for it.
+Fedora got a bug report https://bugzilla.redhat.com/show_bug.cgi?id=1757104
+of a failure to parse options with the context mount option. From the reporter:
 
-Obviously, that can be a problem if you then need sshd in order to get
-into a headless box, so my patch fixes things for you too, but at
-least your box doesn't show the problem that Ahmed had, and the boot
-completing presumably means that you got more entropy from other disk
-IO being done by the rest of the boot.
 
-If you want to test my hacky "do /dev/urandom too", it was this one-liner:
+$ unshare -rm mount -t tmpfs tmpfs /tmp -o 'context="system_u:object_r:container_file_t:s0:c475,c690"'
+mount: /tmp: wrong fs type, bad option, bad superblock on tmpfs, missing codepage or helper program, or other error.
 
-  --- a/drivers/char/random.c
-  +++ b/drivers/char/random.c
-  @@ -2027,6 +2027,7 @@ urandom_read(struct file *file, char __user
-*buf, size_t nbytes, loff_t *ppos)
-        static int maxwarn = 10;
-        int ret;
 
-  +     if (!crng_ready()) try_to_generate_entropy();
-        if (!crng_ready() && maxwarn > 0) {
-                maxwarn--;
-                if (__ratelimit(&urandom_warning))
+Sep 30 16:50:42 kernel: tmpfs: Unknown parameter 'c690"'
 
-and that should get rid of the warnings.
+I haven't asked the reporter to bisect yet but I'm suspecting one of the
+conversion to the new mount API:
 
-It's not using the full "wait_for_random_bytes()", because in the
-absence of a cycle counter, that would introduce the boot-time lockup
-for /dev/urandom too.
+$ git log --oneline v5.3..origin/master mm/shmem.c
+edf445ad7c8d Merge branch 'hugepage-fallbacks' (hugepatch patches from David Rientjes)
+19deb7695e07 Revert "Revert "Revert "mm, thp: consolidate THP gfp handling into alloc_hugepage_direct_gfpmask""
+28eb3c808719 shmem: fix obsolete comment in shmem_getpage_gfp()
+4101196b19d7 mm: page cache: store only head pages in i_pages
+d8c6546b1aea mm: introduce compound_nr()
+f32356261d44 vfs: Convert ramfs, shmem, tmpfs, devtmpfs, rootfs to use the new mount API
+626c3920aeb4 shmem_parse_one(): switch to use of fs_parse()
+e04dc423ae2c shmem_parse_options(): take handling a single option into a helper
+f6490b7fbb82 shmem_parse_options(): don't bother with mpol in separate variable
+0b5071dd323d shmem_parse_options(): use a separate structure to keep the results
+7e30d2a5eb0b make shmem_fill_super() static
 
-Doing something like the above to /dev/urandom is likely the right
-thing to do eventually, but I didn't want to mix up "we can perhaps
-improve the urandom situation too" with the basic "let's fix the boot
-problem". The urandom behavior change would be a separate thing.
 
-Also, talking about "future changes". Right now
-"try_to_generate_entropy()" is actually uninterruptible once it gets
-started. I think we should add a test for signal_pending() too, but it
-should generally complete really fairly quickly so I left it without
-one just to see if anybody even notices.
+I didn't find another report or a fix yet. Is it worth asking the reporter to bisect?
 
-                 Linus
+Thanks,
+Laura
