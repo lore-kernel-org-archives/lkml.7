@@ -2,121 +2,125 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA70FC388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE2FC388F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BF16218DE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:29:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 337DB21920
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:30:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RIUESRFx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729423AbfI3H3D (ORCPT
+        id S1729661AbfI3HaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 03:29:03 -0400
-Received: from mga01.intel.com ([192.55.52.88]:57004 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725767AbfI3H3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 03:29:03 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Sep 2019 00:29:02 -0700
-X-IronPort-AV: E=Sophos;i="5.64,565,1559545200"; 
-   d="scan'208";a="220563276"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Sep 2019 00:29:00 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id E351220343; Mon, 30 Sep 2019 10:28:57 +0300 (EEST)
-Date:   Mon, 30 Sep 2019 10:28:57 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch v4 6/8] media: i2c: ov2659: Add powerdown/reset gpio
- handling
-Message-ID: <20190930072857.GA19037@paasikivi.fi.intel.com>
-References: <20190927184722.31989-1-bparrot@ti.com>
- <20190927184722.31989-7-bparrot@ti.com>
+        Mon, 30 Sep 2019 03:30:14 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35606 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbfI3HaN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 03:30:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=+RxVhfg/XqKkmLaVbtiYHGOh1FSjmgcY7SoSeeOxLws=; b=RIUESRFxLtDN6yOAeQnqRT2Tl
+        imOaYQBEHlXioRQUhAXw+pEyGz4F5u2Xd9pigFxiSivWCGTMUCoGIYzxyVeMIWpaOQZVML65ZJb6C
+        ZwefEhmPzjdTla9bwPzNMaDGwktKVErqLCxH1FeWc7vaqZ8Lq2LUsEl4RexprH62pddRzCo6Uv4Hu
+        jelEw3faOMfP7i+paWjjWyDnS4IZbf9PHyDhKlqDWzt4zbyzUVAplr6d5tcGTWahipCOzg7QcxRBe
+        c984nCz/UvNNxmzCNIkhw3HPOV+VVaGduUTWtfqTOkd+Lu2L75NBXHYFvOO4lOAfqyP5IGXyJuJdW
+        jDMQWAJTg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iEq7r-00013E-Gb; Mon, 30 Sep 2019 07:29:43 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E24CE301B59;
+        Mon, 30 Sep 2019 09:28:50 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A0F3F2651BB8E; Mon, 30 Sep 2019 09:29:38 +0200 (CEST)
+Date:   Mon, 30 Sep 2019 09:29:38 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     akpm@linux-foundation.org, mingo@redhat.com, will@kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org, gregkh@linuxfoundation.org,
+        jslaby@suse.com, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, intel-gfx@lists.freedesktop.org,
+        tytso@mit.edu, jack@suse.com, linux-ext4@vger.kernel.org,
+        tj@kernel.org, mark@fasheh.com, jlbec@evilplan.or,
+        joseph.qi@linux.alibaba.com, ocfs2-devel@oss.oracle.com,
+        davem@davemloft.net, st@kernel.org, daniel@iogearbox.net,
+        netdev@vger.kernel.org, bpf@vger.kernel.org, duyuyang@gmail.com,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        alexander.levin@microsoft.com
+Subject: Re: [PATCH -next] treewide: remove unused argument in lock_release()
+Message-ID: <20190930072938.GK4553@hirez.programming.kicks-ass.net>
+References: <1568909380-32199-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190927184722.31989-7-bparrot@ti.com>
+In-Reply-To: <1568909380-32199-1-git-send-email-cai@lca.pw>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benoit,
+On Thu, Sep 19, 2019 at 12:09:40PM -0400, Qian Cai wrote:
+> Since the commit b4adfe8e05f1 ("locking/lockdep: Remove unused argument
+> in __lock_release"), @nested is no longer used in lock_release(), so
+> remove it from all lock_release() calls and friends.
 
-On Fri, Sep 27, 2019 at 01:47:20PM -0500, Benoit Parrot wrote:
-> On some board it is possible that the sensor 'powerdown' and or 'reset'
-> pin might be controlled by gpio instead of being tied.
-> 
-> To implement we add pm_runtime support which will handle the power
-> up/down sequence when it is available otherwise the sensor will be
-> powered on at module insertion/probe and powered off at module removal.
-> 
-> Now originally the driver assumed that the sensor would always stay
-> powered and keep its register setting. We cannot assume this anymore, so
-> every time we "power up" we need to re-program the initial registers
-> configuration first. This was previously done only at probe time.
-> 
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Right; I never did this cleanup for not wanting the churn, but as long
+as it applies I'll take it.
+
+> Signed-off-by: Qian Cai <cai@lca.pw>
 > ---
->  drivers/media/i2c/Kconfig  |  2 +-
->  drivers/media/i2c/ov2659.c | 88 +++++++++++++++++++++++++++++++++++++-
->  2 files changed, 87 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-> index 7eee1812bba3..315c1d8bdb7b 100644
-> --- a/drivers/media/i2c/Kconfig
-> +++ b/drivers/media/i2c/Kconfig
-> @@ -634,7 +634,7 @@ config VIDEO_OV2640
->  config VIDEO_OV2659
->  	tristate "OmniVision OV2659 sensor support"
->  	depends on VIDEO_V4L2 && I2C
-> -	depends on MEDIA_CAMERA_SUPPORT
-> +	depends on MEDIA_CAMERA_SUPPORT && GPIOLIB
->  	select V4L2_FWNODE
->  	help
->  	  This is a Video4Linux2 sensor driver for the OmniVision
-> diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-> index cd4625432264..7d0baa386644 100644
-> --- a/drivers/media/i2c/ov2659.c
-> +++ b/drivers/media/i2c/ov2659.c
-> @@ -22,9 +22,11 @@
->  
->  #include <linux/clk.h>
->  #include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/i2c.h>
->  #include <linux/module.h>
->  #include <linux/of_graph.h>
-> +#include <linux/pm_runtime.h>
->  
->  #include <media/i2c/ov2659.h>
->  #include <media/v4l2-ctrls.h>
-> @@ -218,6 +220,11 @@ struct ov2659 {
->  	struct sensor_register *format_ctrl_regs;
->  	struct ov2659_pll_ctrl pll;
->  	int streaming;
-> +	/* used to control the sensor PWDN pin */
-> +	struct gpio_desc *pwdn_gpio;
-> +	/* used to control the sensor RESETB pin */
-> +	struct gpio_desc *resetb_gpio;
-> +	int on;
+>  drivers/gpu/drm/drm_connector.c               |  2 +-
+>  drivers/gpu/drm/i915/gem/i915_gem_shrinker.c  |  6 +++---
+>  drivers/gpu/drm/i915/gt/intel_engine_pm.c     |  2 +-
+>  drivers/gpu/drm/i915/i915_request.c           |  2 +-
+>  drivers/tty/tty_ldsem.c                       |  8 ++++----
+>  fs/dcache.c                                   |  2 +-
+>  fs/jbd2/transaction.c                         |  4 ++--
+>  fs/kernfs/dir.c                               |  4 ++--
+>  fs/ocfs2/dlmglue.c                            |  2 +-
+>  include/linux/jbd2.h                          |  2 +-
+>  include/linux/lockdep.h                       | 21 ++++++++++-----------
+>  include/linux/percpu-rwsem.h                  |  4 ++--
+>  include/linux/rcupdate.h                      |  2 +-
+>  include/linux/rwlock_api_smp.h                | 16 ++++++++--------
+>  include/linux/seqlock.h                       |  4 ++--
+>  include/linux/spinlock_api_smp.h              |  8 ++++----
+>  include/linux/ww_mutex.h                      |  2 +-
+>  include/net/sock.h                            |  2 +-
+>  kernel/bpf/stackmap.c                         |  2 +-
+>  kernel/cpu.c                                  |  2 +-
+>  kernel/locking/lockdep.c                      |  3 +--
+>  kernel/locking/mutex.c                        |  4 ++--
+>  kernel/locking/rtmutex.c                      |  6 +++---
+>  kernel/locking/rwsem.c                        | 10 +++++-----
+>  kernel/printk/printk.c                        | 10 +++++-----
+>  kernel/sched/core.c                           |  2 +-
+>  lib/locking-selftest.c                        | 24 ++++++++++++------------
+>  mm/memcontrol.c                               |  2 +-
+>  net/core/sock.c                               |  2 +-
+>  tools/lib/lockdep/include/liblockdep/common.h |  3 +--
+>  tools/lib/lockdep/include/liblockdep/mutex.h  |  2 +-
+>  tools/lib/lockdep/include/liblockdep/rwlock.h |  2 +-
+>  tools/lib/lockdep/preload.c                   | 16 ++++++++--------
+>  33 files changed, 90 insertions(+), 93 deletions(-)
 
-Please use runtime PM for this instead. It's hard to get this right
-otherwise.
-
-Access to "on" is not serialised with the power state changes. In this case
-e.g. drivers/media/i2c/ov5670.c is a good example. I think I'll see how I
-could improve smiapp as well.
-
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Thanks!
