@@ -2,91 +2,78 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE78DC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2A5C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 918B5224FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:54:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CYUUHhvR"
+	by mail.kernel.org (Postfix) with ESMTP id 1742822500
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:55:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731710AbfI3Uy4 (ORCPT
+        id S1731755AbfI3UzF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 16:54:56 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46951 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731130AbfI3Uyz (ORCPT
+        Mon, 30 Sep 2019 16:55:05 -0400
+Received: from lithops.sigma-star.at ([195.201.40.130]:54104 "EHLO
+        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730539AbfI3UzE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 16:54:55 -0400
-Received: by mail-io1-f67.google.com with SMTP id c6so41903040ioo.13;
-        Mon, 30 Sep 2019 13:54:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5EvV0rHaKuqZX7x+0kWB9K0Htf4/eT/XzhMy6LlTa6U=;
-        b=CYUUHhvRgRttbUU0EflAv4wNyRlLQ9182afeyQkWAluUoxDYpAJlSJkO5hqhnoEM0R
-         xtOgstn0SpD8hAPSHVDr7iUUFjYHgYE03BhHLx1Vve8K4TTsnjLCI8PlICi7NJyApEXR
-         q+Vlx97Ft5Fp1Ck1oVsnUOFOw/GFYkfeTK0lkpYZ3csosq8LcxrqWa798zGvH/Ob+k8O
-         nIEEuVvqELLOtZur6okWysQGBlYAnL+BY0Zk3gYIvHfB/CMRCdp+ytSroQWb1+8+abhT
-         //SddmgcliOEo6yT3GdaFxMJKQtc0sa0F34vnv/tBqwT5P5W0kpH0/e+86utiiKbx0aR
-         CFbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5EvV0rHaKuqZX7x+0kWB9K0Htf4/eT/XzhMy6LlTa6U=;
-        b=S/YNZmbkpN60xTpdp/ZghxTo84WDmp141UELWMXdBEQepFhySHFVYKdjIraYNP8ZAy
-         +DH16Jvr273tHpN4OP9Xkff8k1VaaN+aKynAHOR4FniMy3CHAFVGtD4cjZ51/bEaeKzO
-         jdlW7YVvUk+3OqbYo6rw0fHnZG5nflxvmwdqIMfx32kRanFOtum7ukwyFknLMbhAJ+IZ
-         GjGVbBMqLWPFLz5jl+Z/buEQ1gPHZrHUeOcRrqdXOg9QtTtqfS0Cg17C3zUOxcO+D/it
-         pDTuKnV9zzGnySjFWjhkLOFydxoL7ud+ZAtpfPOuSSgt3kr16VtHxWPC6aLLawS5S2x4
-         5GFQ==
-X-Gm-Message-State: APjAAAUkG0J2od3o/a36Cv6C2TATUis6scclQi6MN6e6L1M6Rgwh7Zi5
-        Q05bxOvrQlAm1BNP4iRHEbhE13T/Eh15BTXO/Lw=
-X-Google-Smtp-Source: APXvYqwd8c/Sw9GwhVCKSPwcRlQXMnSdWLKTWuLDMlfxm/c0XuJiFPWTDOqyaI28HonPSzCzUAY7UV9BuOuxa7o4np8=
-X-Received: by 2002:a6b:c9d7:: with SMTP id z206mr6368561iof.172.1569876894668;
- Mon, 30 Sep 2019 13:54:54 -0700 (PDT)
+        Mon, 30 Sep 2019 16:55:04 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 714A06083139;
+        Mon, 30 Sep 2019 21:39:35 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id NkoqdQgpQWCD; Mon, 30 Sep 2019 21:39:35 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 110CB608313B;
+        Mon, 30 Sep 2019 21:39:35 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id XeFpM0PpcIp7; Mon, 30 Sep 2019 21:39:34 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+        by lithops.sigma-star.at (Postfix) with ESMTP id BE0706083139;
+        Mon, 30 Sep 2019 21:39:34 +0200 (CEST)
+Date:   Mon, 30 Sep 2019 21:39:34 +0200 (CEST)
+From:   Richard Weinberger <richard@nod.at>
+To:     Kamal Dasu <kamal.dasu@broadcom.com>
+Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Schrempf Frieder <frieder.schrempf@kontron.de>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Message-ID: <724490481.10665.1569872374621.JavaMail.zimbra@nod.at>
+In-Reply-To: <CAKekbevBxGh9HRLX_4N98NwKm4GnXWvy9kwi6i=nRVnmfmJ-vw@mail.gmail.com>
+References: <20190906194719.15761-1-kdasu.kdev@gmail.com> <20190906194719.15761-2-kdasu.kdev@gmail.com> <CAC=U0a1qvKO+t_62df_JcQBETAuNq0pwRkAb-Ofi3ski2rfdEQ@mail.gmail.com> <20190930182458.761e8077@collabora.com> <CAKekbevBxGh9HRLX_4N98NwKm4GnXWvy9kwi6i=nRVnmfmJ-vw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] mtd: rawnand: use bounce buffer when vmalloced data
+ buf detected
 MIME-Version: 1.0
-References: <20190930033928.32312-1-navid.emamdoost@gmail.com> <dcd26f62-e384-bf6d-2e7d-63c0d0f7da11@web.de>
-In-Reply-To: <dcd26f62-e384-bf6d-2e7d-63c0d0f7da11@web.de>
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Date:   Mon, 30 Sep 2019 15:54:43 -0500
-Message-ID: <CAEkB2ES3kKSU+mQojZHrzMaeQZhjRUoLe+4wOaZONGT=OwRc4g@mail.gmail.com>
-Subject: Re: [PATCH] spi: gpio: prevent memory leak in spi_gpio_probe
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     linux-spi@vger.kernel.org, Navid Emamdoost <emamd001@umn.edu>,
-        Kangjie Lu <kjlu@umn.edu>, Stephen McCamant <smccaman@umn.edu>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [195.201.40.130]
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF60 (Linux)/8.8.12_GA_3809)
+Thread-Topic: rawnand: use bounce buffer when vmalloced data buf detected
+Thread-Index: 59RFbZHlw9bdW9o2LKfMJ7mOlXE2MQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixed the issues in v2.
+----- Ursprüngliche Mail -----
+> Von: "Kamal Dasu" <kamal.dasu@broadcom.com>
+> This has been observed on MIPS4K and MIPS5K architectures. There is a
+> check on the controller driver to use pio in such cases.
+
+I fear your kernel misses commit:
+074a1e1167af ("MIPS: Bounds check virt_addr_valid")
 
 Thanks,
-Navid.
-
-On Mon, Sep 30, 2019 at 1:24 AM Markus Elfring <Markus.Elfring@web.de> wrote:
->
-> * Please avoid typos in the commit message.
->
-> * I would prefer an other wording for the change description.
->   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=97f9a3c4eee55b0178b518ae7114a6a53372913d#n151
->
->
-> Regards,
-> Markus
-
-
-
--- 
-Navid.
+//richard
