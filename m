@@ -2,239 +2,122 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2567C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B7FC35280
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF01321906
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95117216F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:04:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="vkzdkYyv"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="cJY93XdH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731167AbfI3NDa (ORCPT
+        id S1731176AbfI3NEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 09:03:30 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54872 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731066AbfI3NDC (ORCPT
+        Mon, 30 Sep 2019 09:04:01 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:38758 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730802AbfI3NEA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:03:02 -0400
-Received: by mail-wm1-f66.google.com with SMTP id p7so13334595wmp.4
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 06:02:59 -0700 (PDT)
+        Mon, 30 Sep 2019 09:04:00 -0400
+Received: by mail-ed1-f68.google.com with SMTP id l21so8557501edr.5
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 06:03:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=LYsu0lDWKxQ5G5EtJe6rqenJarRBonlZ3Wzg4XP51lM=;
-        b=vkzdkYyv2bRGrVpXlSpwKW1x1i3bMfFqKHl5cSYQBhEh1uUC6r5j8/n3/+ZXRdqJKI
-         avVUnCaR9hEQ4nmnEfQxdbaNF+0LwMEuhcodmBd2yOmBm6H4CskDhXbXwL/JXuLCC+qR
-         EcUhrKv8nFvLg+trHNhrJGlgpXJH5odOS/q+9QvOgsBXS7oZGUz6JPGClRKCSokZ8xGh
-         tA0tpnyV2ZKmFfjPLEpBrR6GCcNH3BVvREjdz+H7UGfLx38NYx/O2wwy4AwYuqnS25Ov
-         ZaxDDwlAQswY1AdeOZA4X2+zZuqQBQfi3VCUQtoNdz1hMsSWRsbKf8Lbnwc6c1YAwDK1
-         RYwg==
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=X92OS/YmMaYZnmIebA59VUdwEwr03gpB8PIctXgbJZ4=;
+        b=cJY93XdHuqF+imwwh62tcdky9RZEwqCQpzVJai8K40Gou9OtqAcoT7MhKJQ6O5Cc/A
+         LjXpPigLgUd03NnABftRxqMgDJuRqWC40hRxzdmit4MTcsraNw3RQuiNTWzh+FIcITZG
+         1ty/HtNKR+IyYN6Wb47vn6iIVymFi08uQ/8gC1i7u5vjh/U8gbBs1OsiYyWW0EDD9R6w
+         52sqJtJlSwFRHLc02izDHy/P3KZF38xTMZ5jeCIyG7+C/R369yWNWcpIhXrrPL7hEFxw
+         VS0GMqx8XiuLt9dflM3IPCNeRygSUUlKdWEqNxtWdjkg96I3mY84D+bSsiq+qjp6XJPB
+         m8Bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LYsu0lDWKxQ5G5EtJe6rqenJarRBonlZ3Wzg4XP51lM=;
-        b=gQPlOO0xkeyW8YZ7BCcYc7esRmsgCyNwLBpiWD2iMvlZJ/3AgUkb/Pby8ffsx7lGqr
-         AQWu+HkaspADFraHqJfvmiEUDG5TD5KSNq1E8h2sbVirgh4FTGDY3k7TLSC3HFQwIEen
-         DH7MzeHQlcTcAttyyaXCYV4HmvDR3SG0vMOY/rMnGRsAZV7JZaCyakZmZs+204lVNJQl
-         igXiC1p3jcQVjrjUvbrvY/4r5s3OxHg0QVw1DK0AClZkcKPX2L0ZmFhUPL89jAr85aro
-         1dSVo23//Wt335mh0M0mCOJ00P8+ksiZZl8cCB+y6R85RwNsCNOPIwuTLZwz2Hw0YohR
-         8oDQ==
-X-Gm-Message-State: APjAAAVmD+3j29FTj8jFltAEkHU6JqmAuBkD9qhHN/RILZEfbLsdWHt7
-        sG0YmSfLj8jtKL75D96V36FV+w==
-X-Google-Smtp-Source: APXvYqyvZKOkmn0n9oatNC3JwQ6hUqFw5xzAHpgRsWRv/OpnGW9BxVRR9MkFoMz95vAimW545q6P+Q==
-X-Received: by 2002:a1c:cc0e:: with SMTP id h14mr17436338wmb.117.1569848578775;
-        Mon, 30 Sep 2019 06:02:58 -0700 (PDT)
-Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
-        by smtp.gmail.com with ESMTPSA id e6sm10654756wrp.91.2019.09.30.06.02.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 06:02:58 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 1/6] dt-bindings: mfd: max77650: convert the binding document to yaml
-Date:   Mon, 30 Sep 2019 15:02:41 +0200
-Message-Id: <20190930130246.4860-2-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190930130246.4860-1-brgl@bgdev.pl>
-References: <20190930130246.4860-1-brgl@bgdev.pl>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=X92OS/YmMaYZnmIebA59VUdwEwr03gpB8PIctXgbJZ4=;
+        b=sdFlCp9xCWXtEB5ZKuPT794yYy118t1A1PX6PPVA3UHX9whMpxBc4fwZotmsVi9yAs
+         19fmWJ+kakhmv1mz4GrEkQYLTHQmXh4zcf/cBXTjBWzYhLKQz6QHPAbA4E3UASqMy3zW
+         csfRLs8yVeTCdijk4ULga8lBYrWMJk588iSokiwWXIGs+Xcuaigsewe+1szwR1Wkv/Jd
+         4GEgnmdJ3cIGpBP2cNb4GHCccqKHEium9PYjajhe7uLh18kxFHlzJM7O/6HzLatMRVr1
+         xdW/Phh+G5o70ZA+z7kMXRScuSNyyENAUSwYhnnhJF1yi/11CdZ61wQmC+RxRsBwqJul
+         fvEA==
+X-Gm-Message-State: APjAAAWIMf4gBnxnuTrVdqRvErluvmbnEkEZSNRRpdNQj5UNndCoPSx7
+        rJWaSBBPDEIJb4lBFeDd5EENK2FTIS0=
+X-Google-Smtp-Source: APXvYqzelB36HojuzAqNfWSyrjONv3COCBUzGnQRje/uJA4lFQXG93gbJIZP+wzSdnBe8CIKycKesw==
+X-Received: by 2002:a50:ab83:: with SMTP id u3mr19213587edc.228.1569848639143;
+        Mon, 30 Sep 2019 06:03:59 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id a50sm2437505eda.25.2019.09.30.06.03.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 30 Sep 2019 06:03:58 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 3569C1020E6; Mon, 30 Sep 2019 16:03:57 +0300 (+03)
+Date:   Mon, 30 Sep 2019 16:03:57 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Thomas =?utf-8?Q?Hellstr=C3=B6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: Re: Ack to merge through DRM? WAS Re: [PATCH v2 1/5] mm: Add
+ write-protect and clean utilities for address space ranges
+Message-ID: <20190930130357.ye3zlkbka2jtd56a@box>
+References: <20190926115548.44000-1-thomas_os@shipmail.org>
+ <20190926115548.44000-2-thomas_os@shipmail.org>
+ <85e31bcf-d3c8-2fcf-e659-2c9f82ebedc7@shipmail.org>
+ <CAHk-=wifjLeeMEtMPytiMAKiWkqPorjf1P4PbB3dj17Y3Jcqag@mail.gmail.com>
+ <a48a93d2-03e9-40d3-3b4c-a301632d3121@shipmail.org>
+ <CAHk-=whwN+CvaorsmczZRwFhSV+1x98xg-zajVD1qKmN=9JhBQ@mail.gmail.com>
+ <20190927121754.kn46qh2crvsnw5z2@box>
+ <CAHk-=whfriLqivyRtyjDPzeNr_Y3UYkC9g123Yi_yB5c8Gcmiw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whfriLqivyRtyjDPzeNr_Y3UYkC9g123Yi_yB5c8Gcmiw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Fri, Sep 27, 2019 at 09:39:48AM -0700, Linus Torvalds wrote:
+> On Fri, Sep 27, 2019 at 5:17 AM Kirill A. Shutemov <kirill@shutemov.name> wrote:
+> >
+> > > Call it "walk_page_mapping()". And talk extensively about how the
+> > > locking differs a lot from the usual "walk_page_vma()" things.
+> >
+> > Walking mappings of a page is what rmap does. This code thas to be
+> > integrated there.
+> 
+> Well, that's very questionable.
+> 
+> The rmap code mainly does the "page -> virtual" mapping.  One page at a time.
+> 
+> The page walker code does the "virtual -> pte" mapping. Always a whole
+> range at a time.
 
-Convert the binding document for max77650 core mfd module to yaml.
+Have you seen page_vma_mapped_walk()? I made it specifically for rmap code
+to cover cases when a THP is mapped with PTEs. To me it's not a big
+stretch to make it cover multiple pages too.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- .../devicetree/bindings/mfd/max77650.txt      | 47 +----------
- .../devicetree/bindings/mfd/max77650.yaml     | 83 +++++++++++++++++++
- 2 files changed, 84 insertions(+), 46 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/max77650.yaml
+> So I think conceptually, mm/memory.c and unmap_mapping_range() is
+> closest but I don't think it's practical to share code.
+> 
+> And between mm/pagewalk.c and mm/rmap.c, I think the page walking has
+> way more of actual practical code sharing, and is also conceptually
+> closer because most of the code is about walking a range, not looking
+> up the mapping of one page.
 
-diff --git a/Documentation/devicetree/bindings/mfd/max77650.txt b/Documentation/devicetree/bindings/mfd/max77650.txt
-index b529d8d19335..080871686b3b 100644
---- a/Documentation/devicetree/bindings/mfd/max77650.txt
-+++ b/Documentation/devicetree/bindings/mfd/max77650.txt
-@@ -1,46 +1 @@
--MAX77650 ultra low-power PMIC from Maxim Integrated.
--
--Required properties:
---------------------
--- compatible:		Must be "maxim,max77650"
--- reg:			I2C device address.
--- interrupts:		The interrupt on the parent the controller is
--			connected to.
--- interrupt-controller: Marks the device node as an interrupt controller.
--- #interrupt-cells:	Must be <2>.
--
--- gpio-controller:	Marks the device node as a gpio controller.
--- #gpio-cells:		Must be <2>. The first cell is the pin number and
--			the second cell is used to specify the gpio active
--			state.
--
--Optional properties:
----------------------
--gpio-line-names:	Single string containing the name of the GPIO line.
--
--The GPIO-controller module is represented as part of the top-level PMIC
--node. The device exposes a single GPIO line.
--
--For device-tree bindings of other sub-modules (regulator, power supply,
--LEDs and onkey) refer to the binding documents under the respective
--sub-system directories.
--
--For more details on GPIO bindings, please refer to the generic GPIO DT
--binding document <devicetree/bindings/gpio/gpio.txt>.
--
--Example:
----------
--
--	pmic@48 {
--		compatible = "maxim,max77650";
--		reg = <0x48>;
--
--		interrupt-controller;
--		interrupt-parent = <&gpio2>;
--		#interrupt-cells = <2>;
--		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
--
--		gpio-controller;
--		#gpio-cells = <2>;
--		gpio-line-names = "max77650-charger";
--	};
-+This file has been moved to max77650.yaml.
-diff --git a/Documentation/devicetree/bindings/mfd/max77650.yaml b/Documentation/devicetree/bindings/mfd/max77650.yaml
-new file mode 100644
-index 000000000000..5186ad287ec7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/max77650.yaml
-@@ -0,0 +1,83 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/max77650.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MAX77650 ultra low-power PMIC from Maxim Integrated.
-+
-+maintainers:
-+  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
-+
-+description: |
-+  This document describes the DT properties of the core MFD controller.
-+
-+  The GPIO-controller module is represented as part of the top-level PMIC
-+  node. The device exposes a single GPIO line.
-+
-+  For device-tree bindings of other sub-modules (regulator, power supply,
-+  LEDs and onkey) refer to the binding documents under the respective
-+  sub-system directories.
-+
-+  For more details on GPIO bindings, please refer to the generic GPIO DT
-+  binding document <devicetree/bindings/gpio/gpio.txt>.
-+
-+properties:
-+  compatible:
-+    const: maxim,max77650
-+
-+  reg:
-+    description:
-+      I2C device address.
-+    maxItems: 1
-+
-+  interrupts:
-+    description:
-+      The interrupt on the parent the controller is connected to.
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 2
-+    description:
-+      The first cell is the IRQ number, the second cell is the trigger type.
-+
-+  gpio-controller: true
-+
-+  "#gpio-cells":
-+    const: 2
-+    description:
-+      The first cell is the pin number and the second cell is used to specify
-+      the gpio active state.
-+
-+  gpio-line-names:
-+    $ref: '/schemas/types.yaml#/definitions/string-array'
-+    maxItems: 1
-+    description:
-+      Single string containing the name of the GPIO line.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+  - gpio-controller
-+  - "#gpio-cells"
-+
-+examples:
-+  - |
-+    pmic@48 {
-+        compatible = "maxim,max77650";
-+        reg = <0x48>;
-+
-+        interrupt-controller;
-+        interrupt-parent = <&gpio2>;
-+        #interrupt-cells = <2>;
-+        interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-+
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+        gpio-line-names = "max77650-charger";
-+    };
+I guess it's matter of personal preferences, but page table walkers based
+on callback always felt wrong to me.
+
 -- 
-2.23.0
-
+ Kirill A. Shutemov
