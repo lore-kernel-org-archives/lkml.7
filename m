@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 127F2C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD8EC35280
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E81DB21906
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:37:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C1A2218DE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:37:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731818AbfI3OhE (ORCPT
+        id S1731830AbfI3OhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 10:37:04 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3195 "EHLO huawei.com"
+        Mon, 30 Sep 2019 10:37:06 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3194 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731715AbfI3OhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 10:37:03 -0400
+        id S1731803AbfI3OhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 10:37:04 -0400
 Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 40F62D0A7B7A024C01A2;
+        by Forcepoint Email with ESMTP id 324169B4856EE48EF227;
         Mon, 30 Sep 2019 22:36:58 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.75) by
  DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 30 Sep 2019 22:36:48 +0800
+ 14.3.439.0; Mon, 30 Sep 2019 22:36:49 +0800
 From:   John Garry <john.garry@huawei.com>
 To:     <lorenzo.pieralisi@arm.com>, <guohanjun@huawei.com>,
         <sudeep.holla@arm.com>, <robin.murphy@arm.com>,
@@ -35,9 +35,9 @@ CC:     <shameerali.kolothum.thodi@huawei.com>,
         <linux-kernel@vger.kernel.org>, <iommu@lists.linux-foundation.org>,
         <rjw@rjwysocki.net>, <lenb@kernel.org>, <nleeder@codeaurora.org>,
         <linuxarm@huawei.com>, John Garry <john.garry@huawei.com>
-Subject: [RFC PATCH 2/6] iommu/arm-smmu-v3: Record IIDR in arm_smmu_device structure
-Date:   Mon, 30 Sep 2019 22:33:47 +0800
-Message-ID: <1569854031-237636-3-git-send-email-john.garry@huawei.com>
+Subject: [RFC PATCH 5/6] perf/smmuv3: Match implementation options based on parent SMMU IIDR
+Date:   Mon, 30 Sep 2019 22:33:50 +0800
+Message-ID: <1569854031-237636-6-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1569854031-237636-1-git-send-email-john.garry@huawei.com>
 References: <1569854031-237636-1-git-send-email-john.garry@huawei.com>
@@ -50,47 +50,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To allow other devices know the SMMU HW IIDR, record the IIDR contents as
-the first member of the arm_smmu_device structure.
+Currently we match the implementation options based on the ACPI PLATFORM
+OEM ID.
 
-In storing as the first member, it saves exposing SMMU APIs, which are
-nicely self-contained today.
+Since we can now match based on the parent SMMUv3 IIDR, switch to this
+method.
 
 Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- drivers/iommu/arm-smmu-v3.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/perf/arm_smmuv3_pmu.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 40f4757096c3..1ed3ef0f1ec3 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -70,6 +70,8 @@
- #define IDR1_SSIDSIZE			GENMASK(10, 6)
- #define IDR1_SIDSIZE			GENMASK(5, 0)
+diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
+index 11f28ba5fae0..33d1379ae525 100644
+--- a/drivers/perf/arm_smmuv3_pmu.c
++++ b/drivers/perf/arm_smmuv3_pmu.c
+@@ -739,14 +739,10 @@ static void smmu_pmu_reset(struct smmu_pmu *smmu_pmu)
+ 		       smmu_pmu->reloc_base + SMMU_PMCG_OVSCLR0);
+ }
  
-+#define ARM_SMMU_IIDR                  0x18
-+
- #define ARM_SMMU_IDR5			0x14
- #define IDR5_STALL_MAX			GENMASK(31, 16)
- #define IDR5_GRAN64K			(1 << 6)
-@@ -546,6 +548,7 @@ struct arm_smmu_strtab_cfg {
+-static void smmu_pmu_get_acpi_options(struct smmu_pmu *smmu_pmu)
++static void smmu_pmu_get_implementation_options(struct smmu_pmu *smmu_pmu)
+ {
+-	u32 model;
+-
+-	model = *(u32 *)dev_get_platdata(smmu_pmu->dev);
+-
+-	switch (model) {
+-	case IORT_SMMU_V3_PMCG_HISI_HIP08:
++	switch (smmu_pmu->parent_iidr) {
++	case PARENT_SMMU_IIDR_HISI_HIP08:
+ 		/* HiSilicon Erratum 162001800 */
+ 		smmu_pmu->options |= SMMU_PMCG_EVCNTR_RDONLY;
+ 		break;
+@@ -844,7 +840,7 @@ static int smmu_pmu_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	}
  
- /* An SMMUv3 instance */
- struct arm_smmu_device {
-+	u32						iidr; /* must be first member */
- 	struct device			*dev;
- 	void __iomem			*base;
+-	smmu_pmu_get_acpi_options(smmu_pmu);
++	smmu_pmu_get_implementation_options(smmu_pmu);
  
-@@ -3153,6 +3156,8 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
- 	iommu_device_set_ops(&smmu->iommu, &arm_smmu_ops);
- 	iommu_device_set_fwnode(&smmu->iommu, dev->fwnode);
- 
-+	smmu->iidr = readl(smmu->base + ARM_SMMU_IIDR);
-+
- 	ret = iommu_device_register(&smmu->iommu);
- 	if (ret) {
- 		dev_err(dev, "Failed to register iommu\n");
+ 	/* Pick one CPU to be the preferred one to use */
+ 	smmu_pmu->on_cpu = raw_smp_processor_id();
 -- 
 2.17.1
 
