@@ -2,98 +2,72 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,PDS_TONAME_EQ_TOLOCAL_SHORT,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B2EC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B93FEC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:47:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C023B2168B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:47:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569883643;
-	bh=JuHgaZ3ed/vghF/I3C6OZAV/C572xMQh98BnvKB7Xao=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Bl8Vp0XPYnnEwFXaPjYyRonR4QCgrZthI+TGquIcfo1X2RJLKmaC2a/3vDSehiBMV
-	 4rWFVThq2nLz8M0cBZYxdyrNQDD+6GbWOuZ9q7yXJogWiYzHrsprnPw8GhmumnQ/Ak
-	 0cDTs6+SnQRn1/xoGEBgkK9Y/CmLmXFs6IjlfHKc=
+	by mail.kernel.org (Postfix) with ESMTP id 7FB582086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:47:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tDtbmFA+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729459AbfI3WrW (ORCPT
+        id S1730999AbfI3Wre (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 18:47:22 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33504 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726350AbfI3WrW (ORCPT
+        Mon, 30 Sep 2019 18:47:34 -0400
+Received: from mail-wr1-f52.google.com ([209.85.221.52]:35442 "EHLO
+        mail-wr1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726350AbfI3Wre (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 18:47:22 -0400
-Received: by mail-oi1-f193.google.com with SMTP id e18so12691934oii.0;
-        Mon, 30 Sep 2019 15:47:21 -0700 (PDT)
+        Mon, 30 Sep 2019 18:47:34 -0400
+Received: by mail-wr1-f52.google.com with SMTP id v8so13151000wrt.2
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 15:47:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=vACRy1d50tv2X7tYoBuy2WMfnYzmRtun586RkaFNiGM=;
+        b=tDtbmFA+vGE/kC8Lg1lvDkgL8bos67whQ0/OuZbnWVXp5rlf4k4kGKjS/kWpy7furp
+         7YSYPgW1J/CLfQK/OSgslO+litCWUx/N+iy2zSduiubIntEnjbSkPb71J6Qv6gkKsEXt
+         J+URKlys+oP5JYOtzydpV7vxiwXcl0cYLbUx5sv4HjfVVNpa3VnmovSiEQy+wLvE4JkX
+         VGVkbwEY1cAo6B5MH92whCOWqZo0IXpAC3Mf+eLZjynInbPis1TaZjRNZe5BqLPOVnF/
+         IRrZrjmUTBG3+wNIAXpwtp+ADN5HB29+1y/oDXT07/6kOrBzHIMBf4QPHzvRnC0Q8Oow
+         taVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6QfYHOqCFke/B9nmo9C0f+3JabbnkVFCdcopO1uSlDs=;
-        b=DYK56En7e5kLkrgtfoZ5vbqs4hyxBnngTMLvOQtwBAwFggVtB3tCpqkc/IDKB3ea+j
-         iP8UnQSmrn7kgfp3aJS588IyJ1OW+t21wsvJIiB1JTYJo+4jnpQb8byjb5wYmgmD68Nd
-         XCl5GTJIzPVSKgcu0nPkvnbQ92GA3p3V62caYrtmQ0bClrSJ7vfnK04036joQb2eQmoW
-         XKerP11G6x6hIcjNI2vy7+tj71sj0JtSwFHYl8JGD1XyfYrq/o/n84G2SrcRePS7dHFN
-         +gDZXzRShyEZCqUVm+KrjkySrQ//cmEHXUMZzvdrc8FSItinVWGCyJZYcrxKX4UXfKRp
-         VasA==
-X-Gm-Message-State: APjAAAW8CkZv4ivKOz4nuCgjS+xNL3VXIne1Y/3LDR0Yyo8mPfQ19hLh
-        LGhK5tqt3KrX70PKOsI3Eg==
-X-Google-Smtp-Source: APXvYqz+3Izxqt7xvoQxGYq/m9r3fsWqTy00V2Zd2TZoeuaEbOZjGQBkBMnNbE31sjBCAiNnJfXlUw==
-X-Received: by 2002:aca:c505:: with SMTP id v5mr1228689oif.79.1569883641379;
-        Mon, 30 Sep 2019 15:47:21 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u130sm4705832oib.56.2019.09.30.15.47.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 15:47:20 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 17:47:20 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Qianggui Song <qianggui.song@amlogic.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Qianggui Song <qianggui.song@amlogic.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Carlo Caione <carlo@caione.org>,
-        linux-amlogic@lists.infradead.org,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH 1/3] pinctrl: add compatible for Amlogic Meson A1 pin
-  controller
-Message-ID: <20190930224720.GA27280@bogus>
-References: <1568700442-18540-1-git-send-email-qianggui.song@amlogic.com>
- <1568700442-18540-2-git-send-email-qianggui.song@amlogic.com>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=vACRy1d50tv2X7tYoBuy2WMfnYzmRtun586RkaFNiGM=;
+        b=HRd0DXERHBb41oaS9f14pxqOi8XICHZs8umMzuHxVCwWftsTvsxMcygLQnnCqfi1az
+         SQ/m2yXwADnyiQWcWDW5ndn+uA0g114Eef7/zOWi64NAh317xHFhsXyyZ/9Esq0buvXi
+         gcfhPkczQjIkx1lNOH3GBn4VaEYp0QwkvhfTJcQhJ3r4BZVIjKR5L1Y+NiXvcGKjcXmb
+         jnohN8ytP0i5+OW7Kxdau/gFj75W/rHUOq1kgHj5hRjblT0Hok9gdzK6nEF+moERgsqV
+         1Xs+nAcmsHZ97V0GOpQ7xu4hLyQrzFatO23j+Guybxzvig03vFSbdsTuoj37JGGBBzBU
+         6OYA==
+X-Gm-Message-State: APjAAAVOs5rlWMrY0b5wJfVbk8nU5HYCXdsnoYtqAWZv9UpbXZ/SFGjd
+        3MK/1rpZdDLBFhdZ03pb+c8oj/YtRlZG7C4sAr7P1Q==
+X-Google-Smtp-Source: APXvYqzXp18FqD3gNqmWnCe4DCapImeolM/VKTXIf0yx9PedpkM/NKo3v3qJC4v0Z3I0EeP4w4KxsBtjXiaE8g0D6NY=
+X-Received: by 2002:adf:8b13:: with SMTP id n19mr16093705wra.203.1569883652914;
+ Mon, 30 Sep 2019 15:47:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1568700442-18540-2-git-send-email-qianggui.song@amlogic.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   "David F." <df7729@gmail.com>
+Date:   Mon, 30 Sep 2019 15:47:21 -0700
+Message-ID: <CAGRSmLsV96jK+7UB6T6k8j9u74oPSHTA+1TPU8F9G2NnOqCDJg@mail.gmail.com>
+Subject: What populates /proc/partitions ?
+To:     linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Sep 2019 14:07:20 +0800, Qianggui Song wrote:
-> Add new compatible name for Amlogic's Meson-A1 pin controller
-> add a dt-binding header file which document the detail pin names.
-> 
-> Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
-> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
-> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-> ---
->  .../devicetree/bindings/pinctrl/meson,pinctrl.txt  |  1 +
->  include/dt-bindings/gpio/meson-a1-gpio.h           | 73 ++++++++++++++++++++++
->  2 files changed, 74 insertions(+)
->  create mode 100644 include/dt-bindings/gpio/meson-a1-gpio.h
-> 
+Hi,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I want to find out why fd0 is being added to /proc/partitions and stop
+that for my build.  I've searched "/proc/partitions" and "partitions",
+not finding anything that matters.
+
+If udev is doing it, what function is it call so I can search on that?
+
+TIA!!
