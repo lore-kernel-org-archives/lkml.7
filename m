@@ -2,138 +2,105 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BC5C35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEB4C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88C5021906
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:42:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569854528;
-	bh=P4PufoiPhLsWp3s+Vd1yGyKyRIWv7/KoYOAbcaWqAIQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mG1yhz3xTXwtuohuNhR1N9qYvjgYaG5G/wVzMm7jQZWfIusSA7tQFTi90J7N9n9d7
-	 fcZjoqv/gQjpCxFx9B9fth2S0pba5MtU2/C1YLulBRuIoeB8/7GtQLUuN1J/5uZ9e8
-	 vqqhNnFnQeU9xLy3fCXniIjMJu4n1gkXeZxnZQms=
+	by mail.kernel.org (Postfix) with ESMTP id 281F7215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:43:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731653AbfI3OmI (ORCPT
+        id S1731766AbfI3On1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 10:42:08 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:40422 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731190AbfI3OmH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 10:42:07 -0400
-Received: by mail-oi1-f193.google.com with SMTP id k9so11313632oib.7;
-        Mon, 30 Sep 2019 07:42:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EYSKNqzhWZ5pBYySik+qJ+6jR/qzoTuoas9JM4Wu8F8=;
-        b=pD/WFvJzTeQ75IM0qSoU/zoj0oyNc55V9h2o5gf6+VxQZyvRTpVUIZ5kkCLYLALTdf
-         Jil0VAMrjmjkELoI8H7u0dUiVhHcslE5HaE+lJ96CYlag7/3K2dCpQ37WAWEhDWlcI6I
-         Iso4P0SXDE5SuTKU40gbfeLLruqkxAkrGIa8kjI4hBLZzZm89Vhn2WHDPQiDNY1IXXRt
-         hEHzNcdjCsuR6FTjfvkAjREkHOtq0w3mobpM4RhP7QGmPF55Oc9NDjxLJ33kD5xKBk3m
-         A4FjlI5Bx7eZlo5sfd8bSS6YPz6eQ+4+A7Z81g6a8SR2zULYEMrM5t6/7tmRynJINB/q
-         a41Q==
-X-Gm-Message-State: APjAAAU22yfYSKVMBngCO18ym0VGVibZyPA8UTH9XnoCpszSwo6Z9Ao6
-        92fyubusjCzhHS4BXSuB4w==
-X-Google-Smtp-Source: APXvYqwX8v05lHHK67LEiARr1bwtyadlGwKRScnVJBehvPR1uH/YfAs2RwR6L1jOvqsZkjnT81Z0uA==
-X-Received: by 2002:aca:d9c4:: with SMTP id q187mr18629684oig.45.1569854526386;
-        Mon, 30 Sep 2019 07:42:06 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 34sm3825189otf.55.2019.09.30.07.42.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 07:42:05 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 09:42:05 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     edubezval@gmail.com, rui.zhang@intel.com, ulf.hansson@linaro.org,
-        daniel.lezcano@linaro.org, bjorn.andersson@linaro.org,
-        agross@kernel.org, amit.kucheria@verdurent.com,
-        mark.rutland@arm.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/5] dt-bindings: thermal: Add generic power domain
- warming device binding
-Message-ID: <20190930144205.GA11539@bogus>
-References: <1568135676-9328-1-git-send-email-thara.gopinath@linaro.org>
- <1568135676-9328-4-git-send-email-thara.gopinath@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1568135676-9328-4-git-send-email-thara.gopinath@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 30 Sep 2019 10:43:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48436 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730809AbfI3On1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 10:43:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9E6D4AE2A;
+        Mon, 30 Sep 2019 14:43:24 +0000 (UTC)
+Message-ID: <1569853679.2639.4.camel@suse.com>
+Subject: Re: WARNING in _chaoskey_fill/usb_submit_urb
+From:   Oliver Neukum <oneukum@suse.com>
+To:     syzbot <syzbot+f5349b421c6213d34ce2@syzkaller.appspotmail.com>,
+        gustavo@embeddedor.com, andreyknvl@google.com,
+        syzkaller-bugs@googlegroups.com, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Date:   Mon, 30 Sep 2019 16:27:59 +0200
+In-Reply-To: <000000000000488dd305933945d2@google.com>
+References: <000000000000488dd305933945d2@google.com>
+Content-Type: multipart/mixed; boundary="=-pDbKljJr9HUl0bviT/pC"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 01:14:34PM -0400, Thara Gopinath wrote:
-> Add binding to define power domains as thermal warming
-> devices.
+
+--=-pDbKljJr9HUl0bviT/pC
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+
+Am Montag, den 23.09.2019, 07:31 -0700 schrieb syzbot:
+> Hello,
 > 
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> ---
->  .../bindings/thermal/pwr-domain-warming.txt        | 32 ++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/pwr-domain-warming.txt
+> syzbot found the following crash on:
 > 
-> diff --git a/Documentation/devicetree/bindings/thermal/pwr-domain-warming.txt b/Documentation/devicetree/bindings/thermal/pwr-domain-warming.txt
-> new file mode 100644
-> index 0000000..25fc568
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/pwr-domain-warming.txt
-> @@ -0,0 +1,32 @@
-> +* Generic power domain based thermal warming device.
-> +
-> +This binding describes the power domains that can be used as a
-> +thermal warming device.
-
-This looks like just a gathering of properties and way to instantiate 
-some driver.
-
-I think this all belongs in the power domain provider. Make it a cooling 
-device and you should know which domains are relevant based on the 
-compatible (though perhaps we could consider a list in DT). If you want 
-to instantiate a separate driver to handle this, then make the power 
-domain driver do that.
-
-Rob
-
-> +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: must be "thermal-power-domain-wdev"
-> +
-> +- #temp-reg-cells:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: Must be 2
-> +
-> +- power-domains:
-> +	Usage: required
-> +	Value type: <phandle>
-> +	Definition: reference to power-domains that match power-domain-names
-> +
-> +- power-domain-names:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: The power-domains that can behave as warming devices
-> +
-> +Example 1
-> +thermal_wdev: rpmhpd_mx_wdev {
-> +		compatible = "thermal-power-domain-wdev";
-> +		#cooling-cells = <2>;
-> +		power-domains =  <&rpmhpd SDM845_MX>;
-> +		power-domain-names = "mx";
-> +	};
-> -- 
-> 2.1.4
+> HEAD commit:    e0bd8d79 usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1452c6a1600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=8847e5384a16f66a
+> dashboard link: https://syzkaller.appspot.com/bug?extid=f5349b421c6213d34ce2
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16342d45600000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=166769b1600000
 > 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+f5349b421c6213d34ce2@syzkaller.appspotmail.com
+
+#syz test: https://github.com/google/kasan.git e0bd8d79
+
+--=-pDbKljJr9HUl0bviT/pC
+Content-Disposition: attachment; filename="0001-USB-chaoskey-fix-error-case-of-a-timeout.patch"
+Content-Transfer-Encoding: base64
+Content-Type: text/x-patch; name="0001-USB-chaoskey-fix-error-case-of-a-timeout.patch";
+	charset="UTF-8"
+
+RnJvbSBiODBiMzlhMjU2NWE4MGYxNmNlMDA3OTgyYmFiZTc1M2UyMjVlYTgzIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBPbGl2ZXIgTmV1a3VtIDxvbmV1a3VtQHN1c2UuY29tPgpEYXRl
+OiBNb24sIDMwIFNlcCAyMDE5IDE1OjE5OjEzICswMjAwClN1YmplY3Q6IFtQQVRDSF0gVVNCOiBj
+aGFvc2tleTogZml4IGVycm9yIGNhc2Ugb2YgYSB0aW1lb3V0CgpJbiBjYXNlIG9mIGEgdGltZW91
+dCBjb21tdW5pY2F0aW9uIHdpdGggdGhlIGRldmljZSBuZWVkcyB0byBiZSBlbmRlZApmcm9tIHRo
+ZSBob3N0IHNpZGUsIGxlc3Qgd2Ugb3ZlcndyaXRlIGFuIGFjdGl2ZSBVUkIKClNpZ25lZC1vZmYt
+Ynk6IE9saXZlciBOZXVrdW0gPG9uZXVrdW1Ac3VzZS5kZT4KLS0tCiBkcml2ZXJzL3VzYi9taXNj
+L2NoYW9za2V5LmMgfCAxNyArKysrKysrKysrKysrKy0tLQogMSBmaWxlIGNoYW5nZWQsIDE0IGlu
+c2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvbWlz
+Yy9jaGFvc2tleS5jIGIvZHJpdmVycy91c2IvbWlzYy9jaGFvc2tleS5jCmluZGV4IGNmNTgyOGNl
+OTI3YS4uM2NiN2UxYjdkNDU0IDEwMDY0NAotLS0gYS9kcml2ZXJzL3VzYi9taXNjL2NoYW9za2V5
+LmMKKysrIGIvZHJpdmVycy91c2IvbWlzYy9jaGFvc2tleS5jCkBAIC0zODMsMTMgKzM4MywxNyBA
+QCBzdGF0aWMgaW50IF9jaGFvc2tleV9maWxsKHN0cnVjdCBjaGFvc2tleSAqZGV2KQogCQkhZGV2
+LT5yZWFkaW5nLAogCQkoc3RhcnRlZCA/IE5BS19USU1FT1VUIDogQUxFQV9GSVJTVF9USU1FT1VU
+KSApOwogCi0JaWYgKHJlc3VsdCA8IDApCisJaWYgKHJlc3VsdCA8IDApIHsKKwkJdXNiX2tpbGxf
+dXJiKGRldi0+dXJiKTsKIAkJZ290byBvdXQ7CisJfQogCi0JaWYgKHJlc3VsdCA9PSAwKQorCWlm
+IChyZXN1bHQgPT0gMCkgewogCQlyZXN1bHQgPSAtRVRJTUVET1VUOwotCWVsc2UKKwkJdXNiX2tp
+bGxfdXJiKGRldi0+dXJiKTsKKwl9IGVsc2UgewogCQlyZXN1bHQgPSBkZXYtPnZhbGlkOworCX0K
+IG91dDoKIAkvKiBMZXQgdGhlIGRldmljZSBnbyBiYWNrIHRvIHNsZWVwIGV2ZW50dWFsbHkgKi8K
+IAl1c2JfYXV0b3BtX3B1dF9pbnRlcmZhY2UoZGV2LT5pbnRlcmZhY2UpOwpAQCAtNTI1LDcgKzUy
+OSwxNCBAQCBzdGF0aWMgaW50IGNoYW9za2V5X3N1c3BlbmQoc3RydWN0IHVzYl9pbnRlcmZhY2Ug
+KmludGVyZmFjZSwKIAogc3RhdGljIGludCBjaGFvc2tleV9yZXN1bWUoc3RydWN0IHVzYl9pbnRl
+cmZhY2UgKmludGVyZmFjZSkKIHsKKwlzdHJ1Y3QgY2hhb3NrZXkgKmRldjsKKwlzdHJ1Y3QgdXNi
+X2RldmljZSAqdWRldiA9IGludGVyZmFjZV90b191c2JkZXYoaW50ZXJmYWNlKTsKKwogCXVzYl9k
+YmcoaW50ZXJmYWNlLCAicmVzdW1lIik7CisJZGV2ID0gdXNiX2dldF9pbnRmZGF0YShpbnRlcmZh
+Y2UpOworCWlmIChsZTE2X3RvX2NwdSh1ZGV2LT5kZXNjcmlwdG9yLmlkVmVuZG9yKSA9PSBBTEVB
+X1ZFTkRPUl9JRCkKKwkJZGV2LT5yZWFkc19zdGFydGVkID0gZmFsc2U7CisKIAlyZXR1cm4gMDsK
+IH0KICNlbHNlCi0tIAoyLjE2LjQKCg==
+
+
+--=-pDbKljJr9HUl0bviT/pC--
+
