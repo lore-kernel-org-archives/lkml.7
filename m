@@ -2,98 +2,92 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F138FC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD97CC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF8DF2086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7849520842
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:49:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="rQYI2urg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h5m3Y6+D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732356AbfI3XtW (ORCPT
+        id S1732464AbfI3Xtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 19:49:22 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:37701 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730276AbfI3XtV (ORCPT
+        Mon, 30 Sep 2019 19:49:50 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40140 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727473AbfI3Xtu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 19:49:21 -0400
-Received: by mail-qt1-f193.google.com with SMTP id l3so19348608qtr.4
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 16:49:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=FCAEYzwQHp/oK53c+OOeDcXUXegqNanjk+gs1PbOM0c=;
-        b=rQYI2urgnS9QZIhepXn30zrdLl8ujftYDHTVOSnahx36b7E86fxoUgjxMH8D1uWwNq
-         95mOz9imHaOzBymQFaPMIHTm0R+9pm3PqkytCXft0B9zx53T6JEkTpSbgMySdJnj0yuQ
-         pWygoreFNumE8Ylq76eRimWgIIbm/m5pmXcgE0Rtk+kdCE+VGo+W9MWYUxnCEIRuvkpB
-         OAylwMKTk9T+cynvsZUfLCmC5V/QXg/pm1x8h1CI11GIl+5QVup/XVUPYnq5UQKR2DDk
-         SE2YbZ+6nlHm+yBMCtoN8aY8VNFGkUav8HsBjxhStdLqg1Gu/pPSMTyqjdUDBXr3wanv
-         +qCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=FCAEYzwQHp/oK53c+OOeDcXUXegqNanjk+gs1PbOM0c=;
-        b=TwtT+SvStsBiCcY1n7hr2sEOEMIAnC/Ay1XxHICqt8uVYLmTMpkdieV8Z0U96AFJmw
-         UnwdVwZLfBUP47c4K1Ies0PryUHeWlmpUUag7mHDbOtoHdV6wMtFw+4p6PIa+Fd2eSsh
-         kpWLf2wgZPkDUDaLvADjl285DJPHSwurV/wL1aUpPOKjG390a86L1Cq0DE3/++m7+TIb
-         ZadZwzJ3QDj/hWtZvDgZsLYhyOimW6GIbixuIRO3Eo1bL4esAA6fX7Lz39suuL+7z1S2
-         CZMpih+VxIiG0uhKSgPpefVil9Pc6cyowRGvhrQCuUSe8ePsPN0GrICSb1GLIBAS51te
-         vKuQ==
-X-Gm-Message-State: APjAAAUOUVXVBlh2n8T1ko2sGZYdTwzjkyRMdvHYydjvVtuZx0I22564
-        A9NJMUV3zDnXZvhnRV1rRJDxVQ==
-X-Google-Smtp-Source: APXvYqxoJjy4y4RTrdyui1wzZOryEZJsAQIbS3Csd1QSHfDRJJXV7WRxh/RrV57jgJjBo5KQAHF4jw==
-X-Received: by 2002:ac8:74c4:: with SMTP id j4mr12159055qtr.360.1569887360676;
-        Mon, 30 Sep 2019 16:49:20 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id j17sm10884571qta.0.2019.09.30.16.49.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Sep 2019 16:49:19 -0700 (PDT)
+        Mon, 30 Sep 2019 19:49:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
+        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=E9ubt9+aej64brgZvM9455FGrDpqWfOc9ZRlZLURQKs=; b=h5m3Y6+D8+QLYdn4kAqdGp3pp
+        LdqTkgvwpu36p1OtF4/qPV4NKpJ0GP9CGhXB9wCaTs59kwNAuMtVeuu/FJwtX+BLbr+U7YiZYaje0
+        TCKdyuAq5zoVdssgYGKCT4HU3kPSGKDgI82ugc9bbQCoZhFplRkoQ1rZm8/vf1kZw62sQmIb7rbWy
+        owDu6UDJ/dXB57khV3NiY0E+LrB6rkoBWTbdqd2fwFQt86GKzfg5SHw+UYYxg4y5gA5pEB0K/RAfR
+        Vh2lAwtvPWYAPVG/7p23iJaA+FKWk0Wa7z1RPFgMRZQhwlu5JM3SSSJZIDwaeeZC5LbM/K+HpMtev
+        TdgwYFsQA==;
+Received: from [2601:1c0:6280:3f0::9a1f]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iF5QL-0003Iq-K9; Mon, 30 Sep 2019 23:49:49 +0000
+Subject: Re: What populates /proc/partitions ?
+To:     "David F." <df7729@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <CAGRSmLsV96jK+7UB6T6k8j9u74oPSHTA+1TPU8F9G2NnOqCDJg@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <c0d9d434-1f47-66a0-1129-5003f2f2eb5c@infradead.org>
+Date:   Mon, 30 Sep 2019 16:49:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <CAGRSmLsV96jK+7UB6T6k8j9u74oPSHTA+1TPU8F9G2NnOqCDJg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v2 2/3] mm, page_owner: decouple freeing stack trace from debug_pagealloc
-Date:   Mon, 30 Sep 2019 19:49:18 -0400
-Message-Id: <731C4866-DF28-4C96-8EEE-5F22359501FE@lca.pw>
-References: <eccee04f-a56e-6f6f-01c6-e94d94bba4c5@suse.cz>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Walter Wu <walter-zh.wu@mediatek.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-In-Reply-To: <eccee04f-a56e-6f6f-01c6-e94d94bba4c5@suse.cz>
-To:     Vlastimil Babka <vbabka@suse.cz>
-X-Mailer: iPhone Mail (17A844)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 9/30/19 3:47 PM, David F. wrote:
+> Hi,
+> 
+> I want to find out why fd0 is being added to /proc/partitions and stop
+> that for my build.  I've searched "/proc/partitions" and "partitions",
+> not finding anything that matters.
 
+/proc/partitions is produced on demand by causing a read of it.
+That is done by these functions (pointers) in block/genhd.c:
 
-> On Sep 30, 2019, at 5:43 PM, Vlastimil Babka <vbabka@suse.cz> wrote:
->=20
-> Well, my use case is shipping production kernels with CONFIG_PAGE_OWNER
-> and CONFIG_DEBUG_PAGEALLOC enabled, and instructing users to boot-time
-> enable only for troubleshooting a crash or memory leak, without a need
-> to install a debug kernel. Things like static keys and page_ext
-> allocations makes this possible without CPU and memory overhead when not
-> boot-time enabled. I don't know too much about KASAN internals, but I
-> assume it's not possible to use it that way on production kernels yet?
+static const struct seq_operations partitions_op = {
+	.start	= show_partition_start,
+	.next	= disk_seqf_next,
+	.stop	= disk_seqf_stop,
+	.show	= show_partition
+};
 
-In that case, why can=E2=80=99t users just simply enable page_owner=3Don and=
- debug_pagealloc=3Don for troubleshooting? The later makes the kernel slower=
-, but I am not sure if it is worth optimization by adding a new parameter. T=
-here have already been quite a few MM-related kernel parameters that could t=
-idy up a bit in the future.=
+in particular, show_partition().  In turn, that function uses data that was
+produced upon block device discovery, also in block/genhd.c.
+See functions disk_get_part(), disk_part_iter_init(), disk_part_iter_next(),
+disk_part_iter_exit(), __device_add_disk(), and get_gendisk().
+
+> If udev is doing it, what function is it call so I can search on that?
+
+I don't know about that.  I guess in the kernel it is about "uevents".
+E.g., in block/genhd.c, there are some calls to kobject_uevent() or variants
+of it.
+
+> TIA!!
+
+There should be something in your boot log about "fd" or "fd0" or floppy.
+eh?
+
+-- 
+~Randy
