@@ -2,222 +2,184 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D7CC388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E45EFC388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4352215EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:41:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="yJ56Zet3"
+	by mail.kernel.org (Postfix) with ESMTP id C62DC21924
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:43:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732285AbfI3Qld (ORCPT
+        id S1732365AbfI3QnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 12:41:33 -0400
-Received: from gateway22.websitewelcome.com ([192.185.47.168]:36604 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732151AbfI3Qlc (ORCPT
+        Mon, 30 Sep 2019 12:43:23 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:33765 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732183AbfI3QnW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 12:41:32 -0400
-X-Greylist: delayed 1321 seconds by postgrey-1.27 at vger.kernel.org; Mon, 30 Sep 2019 12:41:32 EDT
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id 3AE2C213AC5
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 11:19:31 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id EyOZiGWNiBnGaEyOZiRKrT; Mon, 30 Sep 2019 11:19:31 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=MfJZMISa5OTKdNXPHLsCROtCu6VTNYBXkGGuJIbv5t4=; b=yJ56Zet3XSJosWaXnnkVFp8of5
-        Emg89LTRpZY9FX1zwhbSRz7Y4hf7Y3KFMNi/Yi72U975/rN+VyKhsRnh5+55fvTGVJZH9Owg7yPSm
-        Sxn/yvHV653uc3q2RkprHX2xfLl+2wNY0PKe2K80bzPKtBTHQQQylvHaKEvTWo+d1hGijucxR09xF
-        MV6E5OVB6r031JXe8cnnUL8IshjqiRgEOUn81T1RvVeRxx7ERdzfGZw927rFSQN2F1jPRuaQTk4ge
-        US9KRZSQNAoV9160efk5Zkh3uWpUwvMK9kJ9LJyHRczv8hG6YXrlJNfvxatvmGHCCo5853kUrbXFK
-        9vEpo7rA==;
-Received: from [38.98.37.138] (port=62616 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1iEyOX-0027A7-Df; Mon, 30 Sep 2019 11:19:30 -0500
-Subject: Re: [PATCH v2] bpf: use flexible array members, not zero-length
-To:     Stephen Kitt <steve@sk2.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>
-Cc:     linux-doc@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <F15E974F-4B7F-4819-B640-682A0A3A47C5@fb.com>
- <20190930073858.7639-1-steve@sk2.org>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- mQINBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
- 2Pm4wnOyEgYUyJd5tRWcIbsURAgei918mck3tugT7AQiTUN3/5aAzqe/4ApDUC+uWNkpNnSV
- tjOx1hBpla0ifywy4bvFobwSh5/I3qohxDx+c1obd8Bp/B/iaOtnq0inli/8rlvKO9hp6Z4e
- DXL3PlD0QsLSc27AkwzLEc/D3ZaqBq7ItvT9Pyg0z3Q+2dtLF00f9+663HVC2EUgP25J3xDd
- 496SIeYDTkEgbJ7WYR0HYm9uirSET3lDqOVh1xPqoy+U9zTtuA9NQHVGk+hPcoazSqEtLGBk
- YE2mm2wzX5q2uoyptseSNceJ+HE9L+z1KlWW63HhddgtRGhbP8pj42bKaUSrrfDUsicfeJf6
- m1iJRu0SXYVlMruGUB1PvZQ3O7TsVfAGCv85pFipdgk8KQnlRFkYhUjLft0u7CL1rDGZWDDr
- NaNj54q2CX9zuSxBn9XDXvGKyzKEZ4NY1Jfw+TAMPCp4buawuOsjONi2X0DfivFY+ZsjAIcx
- qQMglPtKk/wBs7q2lvJ+pHpgvLhLZyGqzAvKM1sVtRJ5j+ARKA0w4pYs5a5ufqcfT7dN6TBk
- LXZeD9xlVic93Ju08JSUx2ozlcfxq+BVNyA+dtv7elXUZ2DrYwARAQABtCxHdXN0YXZvIEEu
- IFIuIFNpbHZhIDxndXN0YXZvQGVtYmVkZGVkb3IuY29tPokCPQQTAQgAJwUCWywcDAIbIwUJ
- CWYBgAULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRBHBbTLRwbbMZ6tEACk0hmmZ2FWL1Xi
- l/bPqDGFhzzexrdkXSfTTZjBV3a+4hIOe+jl6Rci/CvRicNW4H9yJHKBrqwwWm9fvKqOBAg9
- obq753jydVmLwlXO7xjcfyfcMWyx9QdYLERTeQfDAfRqxir3xMeOiZwgQ6dzX3JjOXs6jHBP
- cgry90aWbaMpQRRhaAKeAS14EEe9TSIly5JepaHoVdASuxklvOC0VB0OwNblVSR2S5i5hSsh
- ewbOJtwSlonsYEj4EW1noQNSxnN/vKuvUNegMe+LTtnbbocFQ7dGMsT3kbYNIyIsp42B5eCu
- JXnyKLih7rSGBtPgJ540CjoPBkw2mCfhj2p5fElRJn1tcX2McsjzLFY5jK9RYFDavez5w3lx
- JFgFkla6sQHcrxH62gTkb9sUtNfXKucAfjjCMJ0iuQIHRbMYCa9v2YEymc0k0RvYr43GkA3N
- PJYd/vf9vU7VtZXaY4a/dz1d9dwIpyQARFQpSyvt++R74S78eY/+lX8wEznQdmRQ27kq7BJS
- R20KI/8knhUNUJR3epJu2YFT/JwHbRYC4BoIqWl+uNvDf+lUlI/D1wP+lCBSGr2LTkQRoU8U
- 64iK28BmjJh2K3WHmInC1hbUucWT7Swz/+6+FCuHzap/cjuzRN04Z3Fdj084oeUNpP6+b9yW
- e5YnLxF8ctRAp7K4yVlvA7kCDQRbLBwMARAAsHCE31Ffrm6uig1BQplxMV8WnRBiZqbbsVJB
- H1AAh8tq2ULl7udfQo1bsPLGGQboJSVN9rckQQNahvHAIK8ZGfU4Qj8+CER+fYPp/MDZj+t0
- DbnWSOrG7z9HIZo6PR9z4JZza3Hn/35jFggaqBtuydHwwBANZ7A6DVY+W0COEU4of7CAahQo
- 5NwYiwS0lGisLTqks5R0Vh+QpvDVfuaF6I8LUgQR/cSgLkR//V1uCEQYzhsoiJ3zc1HSRyOP
- otJTApqGBq80X0aCVj1LOiOF4rrdvQnj6iIlXQssdb+WhSYHeuJj1wD0ZlC7ds5zovXh+FfF
- l5qH5RFY/qVn3mNIVxeO987WSF0jh+T5ZlvUNdhedGndRmwFTxq2Li6GNMaolgnpO/CPcFpD
- jKxY/HBUSmaE9rNdAa1fCd4RsKLlhXda+IWpJZMHlmIKY8dlUybP+2qDzP2lY7kdFgPZRU+e
- zS/pzC/YTzAvCWM3tDgwoSl17vnZCr8wn2/1rKkcLvTDgiJLPCevqpTb6KFtZosQ02EGMuHQ
- I6Zk91jbx96nrdsSdBLGH3hbvLvjZm3C+fNlVb9uvWbdznObqcJxSH3SGOZ7kCHuVmXUcqoz
- ol6ioMHMb+InrHPP16aVDTBTPEGwgxXI38f7SUEn+NpbizWdLNz2hc907DvoPm6HEGCanpcA
- EQEAAYkCJQQYAQgADwUCWywcDAIbDAUJCWYBgAAKCRBHBbTLRwbbMdsZEACUjmsJx2CAY+QS
- UMebQRFjKavwXB/xE7fTt2ahuhHT8qQ/lWuRQedg4baInw9nhoPE+VenOzhGeGlsJ0Ys52sd
- XvUjUocKgUQq6ekOHbcw919nO5L9J2ejMf/VC/quN3r3xijgRtmuuwZjmmi8ct24TpGeoBK4
- WrZGh/1hAYw4ieARvKvgjXRstcEqM5thUNkOOIheud/VpY+48QcccPKbngy//zNJWKbRbeVn
- imua0OpqRXhCrEVm/xomeOvl1WK1BVO7z8DjSdEBGzbV76sPDJb/fw+y+VWrkEiddD/9CSfg
- fBNOb1p1jVnT2mFgGneIWbU0zdDGhleI9UoQTr0e0b/7TU+Jo6TqwosP9nbk5hXw6uR5k5PF
- 8ieyHVq3qatJ9K1jPkBr8YWtI5uNwJJjTKIA1jHlj8McROroxMdI6qZ/wZ1ImuylpJuJwCDC
- ORYf5kW61fcrHEDlIvGc371OOvw6ejF8ksX5+L2zwh43l/pKkSVGFpxtMV6d6J3eqwTafL86
- YJWH93PN+ZUh6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9eh
- GZEO3+gCDFmKrjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrS
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <ae6bce75-d477-7727-316a-cb78e2cafc46@embeddedor.com>
-Date:   Mon, 30 Sep 2019 18:18:41 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 30 Sep 2019 12:43:22 -0400
+X-Originating-IP: 88.190.179.123
+Received: from localhost (unknown [88.190.179.123])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 7769AFF80C;
+        Mon, 30 Sep 2019 16:43:19 +0000 (UTC)
+Date:   Mon, 30 Sep 2019 18:52:30 +0200
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ellie Reeves <ellierevves@gmail.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: aardvark: Use LTSSM state to build link training
+ flag
+Message-ID: <20190930165230.GA12568@voidbox>
+References: <20190522213351.21366-3-repk@triplefau.lt>
+ <20190930154017.GF42880@e119886-lin.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190930073858.7639-1-steve@sk2.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 38.98.37.138
-X-Source-L: No
-X-Exim-ID: 1iEyOX-0027A7-Df
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [38.98.37.138]:62616
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 10
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190930154017.GF42880@e119886-lin.cambridge.arm.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 9/30/19 02:38, Stephen Kitt wrote:
-> This switches zero-length arrays in variable-length structs to C99
-> flexible array members. GCC will then ensure that the arrays are
-> always the last element in the struct.
+On Mon, Sep 30, 2019 at 04:40:18PM +0100, Andrew Murray wrote:
+> On Wed, May 22, 2019 at 11:33:51PM +0200, Remi Pommarel wrote:
+> > Aardvark's PCI_EXP_LNKSTA_LT flag in its link status register is not
+> > implemented and does not reflect the actual link training state (the
+> > flag is always set to 0). In order to support link re-training feature
+> > this flag has to be emulated. The Link Training and Status State
+> > Machine (LTSSM) flag in Aardvark LMI config register could be used as
+> > a link training indicator. Indeed if the LTSSM is in L0 or upper state
+> > then link training has completed (see [1]).
+> > 
+> > Unfortunately because after asking a link retraining it takes a while
+> > for the LTSSM state to become less than 0x10 (due to L0s to recovery
+> > state transition delays), LTSSM can still be in L0 while link training
+> > has not finished yet. So this waits for link to be in recovery or lesser
+> > state before returning after asking for a link retrain.
+> > 
+> > [1] "PCI Express Base Specification", REV. 4.0
+> >     PCI Express, February 19 2014, Table 4-14
+> > 
+> > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> > ---
+> > Changes since v1:
+> >   - Rename retraining flag field
+> >   - Fix DEVCTL register writing
+> > 
+> > Changes since v2:
+> >   - Rewrite patch logic so it is more legible
+> > 
+> > Please note that I will unlikely be able to answer any comments from May
+> > 24th to June 10th.
+> > ---
+> >  drivers/pci/controller/pci-aardvark.c | 29 ++++++++++++++++++++++++++-
+> >  1 file changed, 28 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> > index 134e0306ff00..8803083b2174 100644
+> > --- a/drivers/pci/controller/pci-aardvark.c
+> > +++ b/drivers/pci/controller/pci-aardvark.c
+> > @@ -180,6 +180,8 @@
+> >  #define LINK_WAIT_MAX_RETRIES		10
+> >  #define LINK_WAIT_USLEEP_MIN		90000
+> >  #define LINK_WAIT_USLEEP_MAX		100000
+> > +#define RETRAIN_WAIT_MAX_RETRIES	10
+> > +#define RETRAIN_WAIT_USLEEP_US		2000
+> >  
+> >  #define MSI_IRQ_NUM			32
+> >  
+> > @@ -239,6 +241,17 @@ static int advk_pcie_wait_for_link(struct advk_pcie *pcie)
+> >  	return -ETIMEDOUT;
+> >  }
+> >  
+> > +static void advk_pcie_wait_for_retrain(struct advk_pcie *pcie)
+> > +{
+> > +	size_t retries;
+> > +
+> > +	for (retries = 0; retries < RETRAIN_WAIT_MAX_RETRIES; ++retries) {
+> > +		if (!advk_pcie_link_up(pcie))
+> > +			break;
+> > +		udelay(RETRAIN_WAIT_USLEEP_US);
+> > +	}
+> > +}
+> > +
+> >  static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+> >  {
+> >  	u32 reg;
+> > @@ -426,11 +439,20 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
+> >  		return PCI_BRIDGE_EMUL_HANDLED;
+> >  	}
+> >  
+> > +	case PCI_EXP_LNKCTL: {
+> > +		/* u32 contains both PCI_EXP_LNKCTL and PCI_EXP_LNKSTA */
+> > +		u32 val = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg) &
+> > +			~(PCI_EXP_LNKSTA_LT << 16);
 > 
-> Coccinelle:
-> @@
-> identifier S, fld;
-> type T;
-> @@
+> The commit message says "the flag is always set to 0" - therefore I guess
+> you don't *need* to mask out the LT bit here? I assume this is just
+> belt-and-braces but thought I'd check incase I've misunderstood or if your
+> commit message is inaccurate.
 > 
-> struct S {
->   ...
->   T fld[
-> - 0
->   ];
->   ...
-> };
+> In any case masking out the bit (or adding a comment) makes this code more
+> readable as the reader doesn't need to know what the hardware does with this
+> bit.
+
+Actually vendor eventually responded that the bit was reserved, but
+during my tests it remains to 0.
+
+So yes I am masking this out mainly for belt-and-braces and legibility.
+
+> > +		if (!advk_pcie_link_up(pcie))
+> > +			val |= (PCI_EXP_LNKSTA_LT << 16);
+> > +		*value = val;
+> > +		return PCI_BRIDGE_EMUL_HANDLED;
+> > +	}
+> > +
+> >  	case PCI_CAP_LIST_ID:
+> >  	case PCI_EXP_DEVCAP:
+> >  	case PCI_EXP_DEVCTL:
+> >  	case PCI_EXP_LNKCAP:
+> > -	case PCI_EXP_LNKCTL:
+> >  		*value = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg);
+> >  		return PCI_BRIDGE_EMUL_HANDLED;
+> >  	default:
+> > @@ -447,8 +469,13 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
+> >  
+> >  	switch (reg) {
+> >  	case PCI_EXP_DEVCTL:
+> > +		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
+> > +		break;
 > 
-> Signed-off-by: Stephen Kitt <steve@sk2.org>
-> ---
-
-What changed in v2?
-
-You should include a changelog here.
-
-I encourage you to read the following document:
-
-https://kernelnewbies.org/Outreachyfirstpatch
-
-In particular this section "Versioning one patch revision"
-
-Also, always CC the lkml: linux-kernel@vger.kernel.org
-
-Thanks
---
-Gustavo
-
-
-
->  Documentation/bpf/btf.rst       | 2 +-
->  tools/lib/bpf/libbpf.c          | 2 +-
->  tools/lib/bpf/libbpf_internal.h | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
+> Why is this here?
 > 
-> diff --git a/Documentation/bpf/btf.rst b/Documentation/bpf/btf.rst
-> index 4d565d202ce3..24ce50fc1fc1 100644
-> --- a/Documentation/bpf/btf.rst
-> +++ b/Documentation/bpf/btf.rst
-> @@ -670,7 +670,7 @@ func_info for each specific ELF section.::
->          __u32   sec_name_off; /* offset to section name */
->          __u32   num_info;
->          /* Followed by num_info * record_size number of bytes */
-> -        __u8    data[0];
-> +        __u8    data[];
->       };
->  
->  Here, num_info must be greater than 0.
-> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> index e0276520171b..c02ea0e1a588 100644
-> --- a/tools/lib/bpf/libbpf.c
-> +++ b/tools/lib/bpf/libbpf.c
-> @@ -5577,7 +5577,7 @@ static struct perf_buffer *__perf_buffer__new(int map_fd, size_t page_cnt,
->  struct perf_sample_raw {
->  	struct perf_event_header header;
->  	uint32_t size;
-> -	char data[0];
-> +	char data[];
->  };
->  
->  struct perf_sample_lost {
-> diff --git a/tools/lib/bpf/libbpf_internal.h b/tools/lib/bpf/libbpf_internal.h
-> index 2e83a34f8c79..930ada2276bf 100644
-> --- a/tools/lib/bpf/libbpf_internal.h
-> +++ b/tools/lib/bpf/libbpf_internal.h
-> @@ -86,7 +86,7 @@ struct btf_ext_info_sec {
->  	__u32	sec_name_off;
->  	__u32	num_info;
->  	/* Followed by num_info * record_size number of bytes */
-> -	__u8	data[0];
-> +	__u8	data[];
->  };
->  
->  /* The minimum bpf_func_info checked by the loader */
-> 
+
+Before PCI_EXP_DEVCTL and PCI_EXP_LNKCTL were doing the same thing, but
+as now PCI_EXP_LNKCTL does extra things (i.e. wait for link to
+successfully retrain), they do have different behaviours.
+
+So this is here so PCI_EXP_DEVCTL keeps its old behaviour and do not
+wait for link retrain in case an unrelated (PCI_EXP_LNKCTL_RL) bit is
+set.
+
+-- 
+Remi
+
+> > +
+> >  	case PCI_EXP_LNKCTL:
+> >  		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
+> > +		if (new & PCI_EXP_LNKCTL_RL)
+> > +			advk_pcie_wait_for_retrain(pcie);
+> >  		break;
+> >  
+> >  	case PCI_EXP_RTCTL:
+> > -- 
+> > 2.20.1
+> > 
