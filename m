@@ -2,79 +2,98 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06179C4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 00:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F132BC32793
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 00:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDF8F2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 00:22:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="SMiW6Imf"
+	by mail.kernel.org (Postfix) with ESMTP id BDEC121882
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 00:28:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569803311;
+	bh=18Xoe49n0LwJ985Z5rDsuGb/OZgAqt2Ye8XtTlaCTqY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CTQJSeK3qZQtY6pQSSxuWfP/cCq5gzrmANgSHlAywv0ZtIa7S6opHrrwuWYA2XKcT
+	 2aXYQk1N7fRL2V2DJjy83CzmjRVGbQ61p6SQ4Q5EXjxECxpxYUv3m1t+KAd/qrlDh2
+	 YnJMStSEPyjXbvqv1xxZGnKO5JeEeOoyxO57kk+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729236AbfI3AWp (ORCPT
+        id S1729241AbfI3A2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 20:22:45 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:34778 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729091AbfI3AWp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 20:22:45 -0400
-Received: by mail-qk1-f193.google.com with SMTP id q203so6332009qke.1
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Sep 2019 17:22:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XGwdw6USM6fmVtOR4py7H/FTk388TMG/pxH4fNnR7YQ=;
-        b=SMiW6Imf160HoDD7OIZxz/j458zUAz2dFCa0mZIo1gAP5XTsQDQxGtpiND94fDI04i
-         q7K3c7Od4+9vl7y5Zr6hd7umOAAsr/vRsODisq1i7+sdLtSoXdgZG9GJOT5kF++ogH5Q
-         SF4F9+RdVpYJDy3psGxNKEjz+bJMVJg6mxFCxA7fQ4L9JfGu1brjRfr425SUDcB6t+7/
-         oMxxPZET7P2bPMeadtM3wVu9kc+Og4kNrHMPEFqVxDjtM+r5d48i2p39s4G+tGXMKxqY
-         MBEYEusD/cnIk8g8RrwoouEGjH1bdVGVydg5m0p1WF4fD4GZPLBJO6iCGBKTf5xNm5nV
-         br0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XGwdw6USM6fmVtOR4py7H/FTk388TMG/pxH4fNnR7YQ=;
-        b=oX02qS0dzMBKGwZjOJcgir9CpwhwcfXRHJjei14+7qA7vNJrm1HFPx9dTFqbyAEi+h
-         SLZOosMiD7xcmeyZ2FX66GhYjUqW5A0bOq0PNRJ+b9KTa9PSog2V+y4ESgLdw88kU2f+
-         AG4DCzEhaXGwZDULVjRl1K4kQeDYQYM7/VRxpM10Lyb8u7TxPzENxIcmMRuuu7+llqb5
-         tR97YntP9UmOYViKJZKIW4F7Q1QVboAXuob0Jq96KhOmJNzzcS3vORCvRQvQxg5RfZ1h
-         +WaSS075N7BqbcKLTTi1hoIwwnCwC9eoRd7hCLozptbRRlugpHNA7KUP42+Xqk9eitgh
-         TAHw==
-X-Gm-Message-State: APjAAAUGicn1h3qFX3uEn/B4LWzZIIJwtM/o0QKeitGJdUUtkdJsvD+5
-        pSatymF5T3uiFz4CXCMFuYpeJGn/Xb8kcrNEsx+pzA==
-X-Google-Smtp-Source: APXvYqy3j8uNg+CUEJI8czs3s9DRTMDcdCN0bb3XNnLIQb0jeIVng5zqybz5yWzFCcY8NlU7y0u9BfZCOPRSu9kY7l0=
-X-Received: by 2002:a37:a68e:: with SMTP id p136mr15969911qke.49.1569802962803;
- Sun, 29 Sep 2019 17:22:42 -0700 (PDT)
+        Sun, 29 Sep 2019 20:28:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37454 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726360AbfI3A2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 20:28:30 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 059E02082F;
+        Mon, 30 Sep 2019 00:28:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569803310;
+        bh=18Xoe49n0LwJ985Z5rDsuGb/OZgAqt2Ye8XtTlaCTqY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1vl6AlM68mcxrKNKJrSd1tVhtyrR6+F6y2tUi5gN2GnhyJag2mk3rTFfiyB5FDf6/
+         P1TIgQV/HLhaBfAd0e+KhMXzNw/OLO8i9JYKM0Mt9RPT4dCjzkygjXeqkwUspy2jzU
+         k4+Ae1hTd6qXM15QQ+6FNvNqvskZNA3o+ydOY5mI=
+Date:   Sun, 29 Sep 2019 20:28:28 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com,
+        Waiman Long <longman@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH 4.19 36/63] locking/lockdep: Add debug_locks check in
+ __lock_downgrade()
+Message-ID: <20190930002828.GQ8171@sasha-vm>
+References: <20190929135031.382429403@linuxfoundation.org>
+ <20190929135038.482721804@linuxfoundation.org>
+ <801c81d2-ce72-8eb3-a18b-1b0943270fc4@i-love.sakura.ne.jp>
 MIME-Version: 1.0
-References: <1569199517-5884-1-git-send-email-vincent.chen@sifive.com>
- <1569199517-5884-3-git-send-email-vincent.chen@sifive.com> <20190927225620.GA26970@infradead.org>
-In-Reply-To: <20190927225620.GA26970@infradead.org>
-From:   Vincent Chen <vincent.chen@sifive.com>
-Date:   Mon, 30 Sep 2019 08:22:31 +0800
-Message-ID: <CABvJ_xgqtY4YydhAtM3ap_Ods1DUHtRE4p3OZpD8_a7iRj+gzQ@mail.gmail.com>
-Subject: Re: [PATCH 2/4] rsicv: avoid sending a SIGTRAP to a user thread
- trapped in WARN()
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <801c81d2-ce72-8eb3-a18b-1b0943270fc4@i-love.sakura.ne.jp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 28, 2019 at 6:56 AM Christoph Hellwig <hch@infradead.org> wrote:
+On Sun, Sep 29, 2019 at 11:43:38PM +0900, Tetsuo Handa wrote:
+>On 2019/09/29 22:54, Greg Kroah-Hartman wrote:
+>> From: Waiman Long <longman@redhat.com>
+>>
+>> [ Upstream commit 513e1073d52e55b8024b4f238a48de7587c64ccf ]
+>>
+>> Tetsuo Handa had reported he saw an incorrect "downgrading a read lock"
+>> warning right after a previous lockdep warning. It is likely that the
+>> previous warning turned off lock debugging causing the lockdep to have
+>> inconsistency states leading to the lock downgrade warning.
+>>
+>> Fix that by add a check for debug_locks at the beginning of
+>> __lock_downgrade().
 >
-> Oh and s/rsicv/riscv/ in the subject, please.
+>Please drop "[PATCH 4.19 36/63] locking/lockdep: Add debug_locks check in __lock_downgrade()".
+>We had a revert patch shown below in the past.
 
-Oh! Thank you for finding this typo.
-I will correct it.
+We had a revert in the stable trees, but that revert was incorrect.
+
+Take a look at commit 513e1073d52e55 upstream, it patches
+__lock_set_class() (even though the subject line says
+__lock_downgrade()). So this is not a backporting error as the revert
+said it is, but is rather the intended location to be patched.
+
+If this is actually wrong, then it should be addressed upstream first.
+
+--
+Thanks,
+Sasha
