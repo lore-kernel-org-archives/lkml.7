@@ -2,199 +2,128 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2998AC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7854BC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:01:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F18F421855
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 477F421855
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:01:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569841262;
+	bh=eKtlC/QS9C5TpQ2Zwitjtpt/UtsVlMideLkWYLpkfe8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cJ2ZZhks+KwJ6KqxoSdjHlJMtI1yALa6R4KzMqamwdD5s7HIEWPv88U/jWqQfNQqd
+	 3hiTEPcx/BFaLFVCTLrS/xx8TaPpwfr59cHkudgE9pyuR48kL1UYy30o2rk1XjqfoC
+	 Jxy9Ub/pe9pHnTpseEzg7IdT3fsz5ONBogIGpnvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730885AbfI3K66 (ORCPT
+        id S1730890AbfI3LBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 06:58:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:61760 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729415AbfI3K65 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 06:58:57 -0400
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EFE3D81DE1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 10:58:56 +0000 (UTC)
-Received: by mail-wr1-f71.google.com with SMTP id n3so4358109wrt.9
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 03:58:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=j0qxT1IXvt9wIAlUjN9ddY7lEd1GUitjNHLdt8EqWYQ=;
-        b=U04/Cuk3fYi7lg79WhFHxj0KDuQnQIzVQTSssZTu1bYZDgptP1ZQJx8dcW256uTZ9h
-         izHEPyXbjsNQj/+8GoHMivOH1MShgwmp44ffKcy1518RP9L6wBtzKNx5glKiGxR4hXAP
-         iG78JRSlAfBMhmTEcsHSmzmtSTL/MlvZZHQUmws1X7PX3iOweOwgf8e2vJ+xa5IItDgi
-         PriCKw9gUqd8diWSAn7u7oHa+HBJ+XFi4f0vDt+iR015S0FpkMFVw3jt/RYUG1k1hMiU
-         hqPc20cBtb3lmtFVuJ+dv9P9/OsgT2zzTbmnv5c4MR50rNtzp7hEja6DU5DsKjBdkBPr
-         oEKA==
-X-Gm-Message-State: APjAAAWOMtuME7i9cVW/RD6ct3sluyv30i09KopBijf6TwIPAxKLsuI1
-        Fv6XgMxX3eWIw9UuNAeTXUcPuF0qaoCZKPnqbVBf37L/A4x4g6HIMbGnV5KwmoZCHJeLPQ/Lxl0
-        yBNnj/M22IMTyaqlC7gy9F7nt
-X-Received: by 2002:adf:ff8a:: with SMTP id j10mr13252875wrr.334.1569841135512;
-        Mon, 30 Sep 2019 03:58:55 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxHekuj02R8XtQy2iPD4+dRVTghrwvfXckbudnn8NOFFGFICy/+KtRZsKtOcn3qGWRNQi1jjw==
-X-Received: by 2002:adf:ff8a:: with SMTP id j10mr13252857wrr.334.1569841135272;
-        Mon, 30 Sep 2019 03:58:55 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id b194sm35531293wmg.46.2019.09.30.03.58.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 03:58:54 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Reto Buerki <reet@codelabs.ch>,
-        Liran Alon <liran.alon@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Subject: Re: [PATCH v2 8/8] KVM: x86: Fold decache_cr3() into cache_reg()
-In-Reply-To: <20190927214523.3376-9-sean.j.christopherson@intel.com>
-References: <20190927214523.3376-1-sean.j.christopherson@intel.com> <20190927214523.3376-9-sean.j.christopherson@intel.com>
-Date:   Mon, 30 Sep 2019 12:58:53 +0200
-Message-ID: <87a7am3v9u.fsf@vitty.brq.redhat.com>
+        Mon, 30 Sep 2019 07:01:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37506 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729415AbfI3LBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 07:01:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 17D44AC7B;
+        Mon, 30 Sep 2019 11:00:59 +0000 (UTC)
+Date:   Mon, 30 Sep 2019 13:00:58 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     akpm@linux-foundation.org, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com,
+        linux-s390@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/page_alloc: fix a crash in free_pages_prepare()
+Message-ID: <20190930110058.GB25306@dhcp22.suse.cz>
+References: <1569613623-16820-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1569613623-16820-1-git-send-email-cai@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+On Fri 27-09-19 15:47:03, Qian Cai wrote:
+> On architectures like s390, arch_free_page() could mark the page unused
+> (set_page_unused()) and any access later would trigger a kernel panic.
+> Fix it by moving arch_free_page() after all possible accessing calls.
+> 
+>  Hardware name: IBM 2964 N96 400 (z/VM 6.4.0)
+>  Krnl PSW : 0404e00180000000 0000000026c2b96e
+> (__free_pages_ok+0x34e/0x5d8)
+>             R:0 T:1 IO:0 EX:0 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 RI:0 EA:3
+>  Krnl GPRS: 0000000088d43af7 0000000000484000 000000000000007c
+>  000000000000000f
+>             000003d080012100 000003d080013fc0 0000000000000000
+>  0000000000100000
+>             00000000275cca48 0000000000000100 0000000000000008
+>  000003d080010000
+>             00000000000001d0 000003d000000000 0000000026c2b78a
+>  000000002717fdb0
+>  Krnl Code: 0000000026c2b95c: ec1100b30659 risbgn %r1,%r1,0,179,6
+>             0000000026c2b962: e32014000036 pfd 2,1024(%r1)
+>            #0000000026c2b968: d7ff10001000 xc 0(256,%r1),0(%r1)
+>            >0000000026c2b96e: 41101100  la %r1,256(%r1)
+>             0000000026c2b972: a737fff8  brctg %r3,26c2b962
+>             0000000026c2b976: d7ff10001000 xc 0(256,%r1),0(%r1)
+>             0000000026c2b97c: e31003400004 lg %r1,832
+>             0000000026c2b982: ebff1430016a asi 5168(%r1),-1
+>  Call Trace:
+>  __free_pages_ok+0x16a/0x5d8)
+>  memblock_free_all+0x206/0x290
+>  mem_init+0x58/0x120
+>  start_kernel+0x2b0/0x570
+>  startup_continue+0x6a/0xc0
+>  INFO: lockdep is turned off.
+>  Last Breaking-Event-Address:
+>  __free_pages_ok+0x372/0x5d8
+>  Kernel panic - not syncing: Fatal exception: panic_on_oops
+> 00: HCPGIR450W CP entered; disabled wait PSW 00020001 80000000 00000000
+> 26A2379C
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
 
-> Handle caching CR3 (from VMX's VMCS) into struct kvm_vcpu via the common
-> cache_reg() callback and drop the dedicated decache_cr3().  The name
-> decache_cr3() is somewhat confusing as the caching behavior of CR3
-> follows that of GPRs, RFLAGS and PDPTRs, (handled via cache_reg()), and
-> has nothing in common with the caching behavior of CR0/CR4 (whose
-> decache_cr{0,4}_guest_bits() likely provided the 'decache' verbiage).
->
-> Note, this effectively adds a BUG() if KVM attempts to cache CR3 on SVM.
-> Opportunistically add a WARN_ON_ONCE() in VMX to provide an equivalent
-> check.
+Unless I am missing something 
+Fixes: 8823b1dbc05f ("mm/page_poison.c: enable PAGE_POISONING as a separate option")
+Fixes: 6471384af2a6 ("mm: security: introduce init_on_alloc=1 and init_on_free=1 boot options")
+Cc: stable
 
-Just to justify my idea of replacing such occasions with
-KVM_INTERNAL_ERROR by setting a special 'kill ASAP' bit somewhere:
+With the comment discussed later in the thread
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-This WARN_ON_ONCE() falls in the same category (IMO).
-
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 > ---
->  arch/x86/include/asm/kvm_host.h |  1 -
->  arch/x86/kvm/kvm_cache_regs.h   |  2 +-
->  arch/x86/kvm/svm.c              |  5 -----
->  arch/x86/kvm/vmx/vmx.c          | 15 ++++++---------
->  4 files changed, 7 insertions(+), 16 deletions(-)
->
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index a27f7f6b6b7a..0411dc0a27b0 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1040,7 +1040,6 @@ struct kvm_x86_ops {
->  			    struct kvm_segment *var, int seg);
->  	void (*get_cs_db_l_bits)(struct kvm_vcpu *vcpu, int *db, int *l);
->  	void (*decache_cr0_guest_bits)(struct kvm_vcpu *vcpu);
-> -	void (*decache_cr3)(struct kvm_vcpu *vcpu);
->  	void (*decache_cr4_guest_bits)(struct kvm_vcpu *vcpu);
->  	void (*set_cr0)(struct kvm_vcpu *vcpu, unsigned long cr0);
->  	void (*set_cr3)(struct kvm_vcpu *vcpu, unsigned long cr3);
-> diff --git a/arch/x86/kvm/kvm_cache_regs.h b/arch/x86/kvm/kvm_cache_regs.h
-> index 9c2bc528800b..f18177cd0030 100644
-> --- a/arch/x86/kvm/kvm_cache_regs.h
-> +++ b/arch/x86/kvm/kvm_cache_regs.h
-> @@ -145,7 +145,7 @@ static inline ulong kvm_read_cr4_bits(struct kvm_vcpu *vcpu, ulong mask)
->  static inline ulong kvm_read_cr3(struct kvm_vcpu *vcpu)
->  {
->  	if (!kvm_register_is_available(vcpu, VCPU_EXREG_CR3))
-> -		kvm_x86_ops->decache_cr3(vcpu);
-> +		kvm_x86_ops->cache_reg(vcpu, VCPU_EXREG_CR3);
->  	return vcpu->arch.cr3;
->  }
->  
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index f8ecb6df5106..3102c44c12c6 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -2517,10 +2517,6 @@ static void svm_decache_cr0_guest_bits(struct kvm_vcpu *vcpu)
->  {
->  }
->  
-> -static void svm_decache_cr3(struct kvm_vcpu *vcpu)
-> -{
-> -}
-> -
->  static void svm_decache_cr4_guest_bits(struct kvm_vcpu *vcpu)
->  {
->  }
-> @@ -7208,7 +7204,6 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
->  	.get_cpl = svm_get_cpl,
->  	.get_cs_db_l_bits = kvm_get_cs_db_l_bits,
->  	.decache_cr0_guest_bits = svm_decache_cr0_guest_bits,
-> -	.decache_cr3 = svm_decache_cr3,
->  	.decache_cr4_guest_bits = svm_decache_cr4_guest_bits,
->  	.set_cr0 = svm_set_cr0,
->  	.set_cr3 = svm_set_cr3,
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index ed03d0cd1cc8..c84798026e85 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -2188,7 +2188,12 @@ static void vmx_cache_reg(struct kvm_vcpu *vcpu, enum kvm_reg reg)
->  		if (enable_ept)
->  			ept_save_pdptrs(vcpu);
->  		break;
-> +	case VCPU_EXREG_CR3:
-> +		if (enable_unrestricted_guest || (enable_ept && is_paging(vcpu)))
-> +			vcpu->arch.cr3 = vmcs_readl(GUEST_CR3);
-> +		break;
->  	default:
-> +		WARN_ON_ONCE(1);
->  		break;
+>  mm/page_alloc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 3334a769eb91..a54ff6a60649 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -1175,11 +1175,11 @@ static __always_inline bool free_pages_prepare(struct page *page,
+>  		debug_check_no_obj_freed(page_address(page),
+>  					   PAGE_SIZE << order);
 >  	}
->  }
-> @@ -2859,13 +2864,6 @@ static void vmx_decache_cr0_guest_bits(struct kvm_vcpu *vcpu)
->  	vcpu->arch.cr0 |= vmcs_readl(GUEST_CR0) & cr0_guest_owned_bits;
->  }
+> -	arch_free_page(page, order);
+>  	if (want_init_on_free())
+>  		kernel_init_free_pages(page, 1 << order);
 >  
-> -static void vmx_decache_cr3(struct kvm_vcpu *vcpu)
-> -{
-> -	if (enable_unrestricted_guest || (enable_ept && is_paging(vcpu)))
-> -		vcpu->arch.cr3 = vmcs_readl(GUEST_CR3);
-> -	kvm_register_mark_available(vcpu, VCPU_EXREG_CR3);
-> -}
-> -
->  static void vmx_decache_cr4_guest_bits(struct kvm_vcpu *vcpu)
->  {
->  	ulong cr4_guest_owned_bits = vcpu->arch.cr4_guest_owned_bits;
-> @@ -2910,7 +2908,7 @@ static void ept_update_paging_mode_cr0(unsigned long *hw_cr0,
->  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+>  	kernel_poison_pages(page, 1 << order, 0);
+> +	arch_free_page(page, order);
+>  	if (debug_pagealloc_enabled())
+>  		kernel_map_pages(page, 1 << order, 0);
 >  
->  	if (!kvm_register_is_available(vcpu, VCPU_EXREG_CR3))
-> -		vmx_decache_cr3(vcpu);
-> +		vmx_cache_reg(vcpu, VCPU_EXREG_CR3);
->  	if (!(cr0 & X86_CR0_PG)) {
->  		/* From paging/starting to nonpaging */
->  		exec_controls_setbit(vmx, CPU_BASED_CR3_LOAD_EXITING |
-> @@ -7792,7 +7790,6 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
->  	.get_cpl = vmx_get_cpl,
->  	.get_cs_db_l_bits = vmx_get_cs_db_l_bits,
->  	.decache_cr0_guest_bits = vmx_decache_cr0_guest_bits,
-> -	.decache_cr3 = vmx_decache_cr3,
->  	.decache_cr4_guest_bits = vmx_decache_cr4_guest_bits,
->  	.set_cr0 = vmx_set_cr0,
->  	.set_cr3 = vmx_set_cr3,
-
-Reviewed (and Tested-On-Amd-By:): Vitaly Kuznetsov <vkuznets@redhat.com>
+> -- 
+> 1.8.3.1
+> 
 
 -- 
-Vitaly
+Michal Hocko
+SUSE Labs
