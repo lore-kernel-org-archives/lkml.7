@@ -2,92 +2,188 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A25C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 623BEC4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABF262086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 254A9218DE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:53:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MjfBujUM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730230AbfI3IvR (ORCPT
+        id S1730131AbfI3Ix5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 04:51:17 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:63238 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726008AbfI3IvQ (ORCPT
+        Mon, 30 Sep 2019 04:53:57 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50648 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbfI3Ix5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 04:51:16 -0400
-X-UUID: 6f8aa737f23f496cbbcd03217376e47f-20190930
-X-UUID: 6f8aa737f23f496cbbcd03217376e47f-20190930
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <sam.shih@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 249343122; Mon, 30 Sep 2019 16:51:10 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 30 Sep 2019 16:51:06 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 30 Sep 2019 16:51:06 +0800
-Message-ID: <1569833468.32131.4.camel@mtksdccf07>
-Subject: Re: [PATCH v10 08/12] pwm: mediatek: Add MT7629 compatible string
-From:   Sam Shih <sam.shih@mediatek.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Mon, 30 Sep 2019 16:51:08 +0800
-In-Reply-To: <20190927112831.GA1171568@ulmo>
-References: <1569421957-20765-1-git-send-email-sam.shih@mediatek.com>
-         <1569421957-20765-9-git-send-email-sam.shih@mediatek.com>
-         <20190927112831.GA1171568@ulmo>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Mon, 30 Sep 2019 04:53:57 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8U8rnne053094;
+        Mon, 30 Sep 2019 03:53:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569833629;
+        bh=FBo4lWc7SZQBiee+AyR2fEK/fVeMfl/F1lYaJqHGLP8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=MjfBujUM20XH57MtrMg+Vrs8uHkvkjJTNSdsGFCiAWNO2/1viMNZgVmu+ZsPL45WW
+         2p1QLEwauehWW8KMTwhG2Zd1bZth+qvrC3jeYxTGQSLs2G9GcrdK6VjvJWYQDMHrPq
+         M52XOxvIo9cP+aI0WKjaqN9kvLtOg1thEiwzmudk=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8U8rnOB077951
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 30 Sep 2019 03:53:49 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 30
+ Sep 2019 03:53:49 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 30 Sep 2019 03:53:40 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8U8rg90106105;
+        Mon, 30 Sep 2019 03:53:45 -0500
+Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to
+ dts
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Adam Ford <aford173@gmail.com>
+CC:     Tony Lindgren <tony@atomide.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190510194229.20628-1-aford173@gmail.com>
+ <af325707-3e42-493d-e858-77878ef06138@ti.com>
+ <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
+ <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
+ <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
+ <845055e2-8182-de74-2077-629fdf50ac6c@ti.com>
+ <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
+ <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com>
+ <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
+ <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com>
+ <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
+ <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com>
+ <23eba53a-9304-2ceb-d97e-01891ec0b3ed@ti.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <cb028b1e-05ca-9b22-be5d-c63f5fd56cc4@ti.com>
+Date:   Mon, 30 Sep 2019 11:53:42 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 117A8A6215936262384F6F70692A074F4A2330135B41FEF58EBF2008F4C56AEB2000:8
-X-MTK:  N
+In-Reply-To: <23eba53a-9304-2ceb-d97e-01891ec0b3ed@ti.com>
+Content-Type: multipart/mixed;
+        boundary="------------B5AFA04857B85D38A2202EDD"
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+--------------B5AFA04857B85D38A2202EDD
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, 2019-09-27 at 13:28 +0200, Thierry Reding wrote:
-> On Wed, Sep 25, 2019 at 10:32:33PM +0800, Sam Shih wrote:
-> > This adds pwm support for MT7629, and separate mt7629 compatible string
-> > from mt7622
-> > 
-> > Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-> > ---
-> >  drivers/pwm/pwm-mediatek.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
+On 30/09/2019 09:45, Tomi Valkeinen wrote:
+> Hi,
 > 
-> I picked this patch up and made some minor adjustments to make it build
-> without the num_pwms patches. With that I don't think there's anything
-> left from this series that you need.
+> On 27/09/2019 18:47, Tomi Valkeinen wrote:
+>> On 27/09/2019 18:37, Tero Kristo wrote:
+>>
+>>> If you can provide details about what clock framework / driver does 
+>>> wrong (sample clk_set_xyz call sequence, expected results via 
+>>> clk_get_xyz, and what fails), I can take a look at it. Just reporting 
+>>> arbitrary display driver issues I won't be able to debug at all (I 
+>>> don't have access to any of the displays, nor do I want to waste time 
+>>> debugging them without absolutely no knowledge whatsoever.)
+>>
+>> I used your hack patches to allow changing rates via debugfs. And set 
+>> dss1_alwon_fck_3430es2 to 27000000 or 27870967. The end result was 
+>> that DSS gets some very high clock from dss1_alwon_fck_3430es2, as the 
+>> frame rate jumps to many hundreds fps.
+>>
+>> So, these numbers are not real, but to give the idea what I saw. 
+>> Running first with 50 MHz, I can see, say, 40 fps. Then I set the 
+>> clock to 30 MHz, and fps dropped to, say, 30fps, as expected with 
+>> lower clock. Then I set the clock to 27MHz (or the other one), 
+>> expecting a bit lower fps, but instead I saw hundreds of fps.
+>>
+>> I don't know if there's any other way to observe the wrong clock rate 
+>> but have the dss enabled and running kmstest or similar. I can help 
+>> you set that up next week, should be trivial. You don't need a display 
+>> for that.
+> 
+> Here's how to reproduce. I have the attached patches. Three of them are 
+> the clk-debug ones, and one of mine to make it easy to test without a 
+> display, and without underflow flood halting the device. There are on 
+> top of v5.3. Kernel config also attached.
+> 
+> kmstest is from kms++ project (https://github.com/tomba/kmsxx). It 
+> should be straightforward to compile, but kmstest binary is also 
+> included in TI's rootfs.
 
-Yes, I think the driver should work once dtsi updated.
-("[v10,12/12] arm: dts: mediatek: add mt7629 pwm support")
+Ok, I ignored all your test code and just fiddled with my trusty clk 
+debugfs patches. I don't like debugging with test code I have no 
+experience with. :)
 
-But, due to we use comaptible string separately for every SoC now,
-The comaptible string in dt-bindings should be "mediatek,mt7629-pwm".
-I think we should use "[v10,11/12] dt-bindings: pwm: update bindings 
-for MT7629" to replace commit 1c00ad6ebf36aa3b0fa598a48b8ae59782be4121,
-Or maybe we need a little modification like this ?
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt ...
-- - "mediatek,mt7629-pwm", "mediatek,mt7622-pwm": found on mt7629 SoC.
-+ - "mediatek,mt7629-pwm": found on mt7629 SoC.
+Anyways, it seems the dpll4_m4_ck max divider value is wrong, it only 
+accepts values upto 16 at least on my board. The setting for this in DT 
+is 32, and it is most likely SoC specific what happens if you write an 
+invalid value to the divider.
 
-Thanks,
-Regards, Sam
+The best action here is probably to drop the max-div value for this 
+clock to 16. Can someone check this with their display setup and see 
+what happens? Attached patch should do the trick.
 
+-Tero
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+--------------B5AFA04857B85D38A2202EDD
+Content-Type: text/x-patch;
+	name="0001-ARM-dts-omap3-fix-DPLL4-M4-divider-max-value.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename="0001-ARM-dts-omap3-fix-DPLL4-M4-divider-max-value.patch"
+
+From 28bfaaa3747e9033b6d4cd7bb06eb72dc04580a5 Mon Sep 17 00:00:00 2001
+From: Tero Kristo <t-kristo@ti.com>
+Date: Mon, 30 Sep 2019 11:49:39 +0300
+Subject: [PATCH 1/1] ARM: dts: omap3: fix DPLL4 M4 divider max value
+
+The maximum divider value for DPLL4 M4 divider appears wrong. For most
+OMAP3 family SoCs this is 16, but it is defined as 32, which is maybe
+only valid for omap36xx. To avoid any overflows in trying to write this
+register, set the max to 16 for all omap3 family.
+
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+---
+ arch/arm/boot/dts/omap3xxx-clocks.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/omap3xxx-clocks.dtsi b/arch/arm/boot/dts/omap3xxx-clocks.dtsi
+index 685c82a9d03e..0656c32439d2 100644
+--- a/arch/arm/boot/dts/omap3xxx-clocks.dtsi
++++ b/arch/arm/boot/dts/omap3xxx-clocks.dtsi
+@@ -416,7 +416,7 @@
+ 		#clock-cells = <0>;
+ 		compatible = "ti,divider-clock";
+ 		clocks = <&dpll4_ck>;
+-		ti,max-div = <32>;
++		ti,max-div = <16>;
+ 		reg = <0x0e40>;
+ 		ti,index-starts-at-one;
+ 	};
+-- 
+2.17.1
+
+
+--------------B5AFA04857B85D38A2202EDD--
