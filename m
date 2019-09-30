@@ -2,86 +2,118 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.2 required=3.0 tests=DATE_IN_PAST_12_24,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E8F8C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1E9C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22EBD20842
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:27:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NAWE7s0q"
+	by mail.kernel.org (Postfix) with ESMTP id B7FB020815
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:27:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732390AbfI3X1N (ORCPT
+        id S1732462AbfI3X16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 19:27:13 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:36563 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731852AbfI3X1N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 19:27:13 -0400
-Received: by mail-qt1-f196.google.com with SMTP id o12so19305381qtf.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 16:27:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pl9Uoj87Ji8fhmMmVA6l1LGr0jFQ4KuWKIrFbIh3wWY=;
-        b=NAWE7s0qtdMAJiZamX3V6xokEA3BihpvGiwij4I9RhrSrs1/+NcFnC19kIYC2+VXm+
-         mw4JB/DlOtISetTBRNDx9DFrMSVyR1OwEHYcnM7fyiodpHUy35LKFF+/IykPa/76nTNi
-         oq4scSmcMmXkNJXm9at4/0G+We9rQDvDXAya0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pl9Uoj87Ji8fhmMmVA6l1LGr0jFQ4KuWKIrFbIh3wWY=;
-        b=RWrlqS/1REQfVQPqjgIEUuGK3R4W75XwFM+7N2d1CZGMmw89S4zBFmsGxpLFyjS5FM
-         os3affUFx2SsRRsa3pUk6PAZw8EQYHMUrwQialqSWol14HecF38C20kigTlpPOx5wQKV
-         FyTsV4zXebQppdp1U+IdORviJWDkH5Y0PMmOM4Utao/xi0Hy5tOJJNU9IIW1pEMCDRLv
-         PiT+HOsp0pjJu5it3wwoBZiOZiQgBOUnloQffeJyPmFm3LzsiaB7rLi3d2061NtlTWlT
-         bDiYcrn9N6n5JB6chbirSynnKJOr38Umic1cj+vn9DdVQADoK1QVKdQfG71TYIjfjmex
-         xpMg==
-X-Gm-Message-State: APjAAAXbvCGsl4PcUWhL7jOH1uJ+SdAnExIiig0UeCJJ0VoTrIG8Hlyy
-        qLSQ1ku25+tsVJh7iTY8KppYV24b5EOpyo9zx09HxA==
-X-Google-Smtp-Source: APXvYqzPlXIhfWnlF8sLl3jj8HRowIb8xLOPox6pz/DpeJE7rRAz9Qj8GEZSq7zX8V31/1SFTHD3X0AT7ZutVfrWEtc=
-X-Received: by 2002:a05:6214:11b4:: with SMTP id u20mr20478355qvv.200.1569886032025;
- Mon, 30 Sep 2019 16:27:12 -0700 (PDT)
+        Mon, 30 Sep 2019 19:27:58 -0400
+Received: from mga05.intel.com ([192.55.52.43]:63706 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731685AbfI3X15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 19:27:57 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Sep 2019 16:27:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,568,1559545200"; 
+   d="scan'208";a="215880195"
+Received: from sqa-gate.sh.intel.com (HELO clx-ap-likexu.tsp.org) ([10.239.48.212])
+  by fmsmga004.fm.intel.com with ESMTP; 30 Sep 2019 16:27:54 -0700
+From:   Like Xu <like.xu@linux.intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
+        vkuznets@redhat.com, peterz@infradead.org,
+        Jim Mattson <jmattson@google.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        ak@linux.intel.com, wei.w.wang@intel.com, kan.liang@intel.com,
+        like.xu@intel.com, ehankland@google.com, arbel.moshe@oracle.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] KVM: x86/vPMU: Efficiency optimization by reusing last created perf_event
+Date:   Mon, 30 Sep 2019 15:22:54 +0800
+Message-Id: <20190930072257.43352-1-like.xu@linux.intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190930152846.5062-1-fparent@baylibre.com> <aa0487c21e1f9f04402f209358b18c75@kernel.wtf>
-In-Reply-To: <aa0487c21e1f9f04402f209358b18c75@kernel.wtf>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Mon, 30 Sep 2019 16:26:46 -0700
-Message-ID: <CAJMQK-g_PaNsfvX-H4_BA86aUOdyqpDt9oK86O7_mRWTjWSjHQ@mail.gmail.com>
-Subject: Re: [PATCH v2] i2c: i2c-mt65xx: fix NULL ptr dereference
-To:     Cengiz Can <cengiz@kernel.wtf>
-Cc:     Fabien Parent <fparent@baylibre.com>, linux-i2c@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Qii Wang <qii.wang@mediatek.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-i2c-owner@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 2:20 PM Cengiz Can <cengiz@kernel.wtf> wrote:
->
-> On 2019-09-30 18:28, Fabien Parent wrote:
-> > Fixes: abf4923e97c3 ("i2c: mediatek: disable zero-length transfers for
-> > mt8183")
-> > Signed-off-by: Fabien Parent <fparent@baylibre.com>
->
-> Reviewed-by: Cengiz Can <cengiz@kernel.wtf>
-Reviewed-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Hi Paolo & Community:
 
-Thanks!
+Performance Monitoring Unit is designed to monitor micro architectural
+events which helps in analyzing how an application or operating systems
+are performing on the processors. In KVM/X86, version 2 Architectural
+PMU on Intel and AMD hosts have been enabled. 
+
+This patch series is going to improve vPMU Efficiency for guest perf users
+which is mainly measured by guest NMI handler latency for basic perf usage
+[1][2][3][4] with hardware PMU. It's not a passthrough solution but based
+on the legacy vPMU implementation (since 2011) with backport-friendliness.
+
+The general idea (defined in patch 2/3) is to reuse last created perf_event
+for the same vPMC when the new requested config is the exactly same as the
+last programed config (used by pmc_reprogram_counter()) AND the new event
+period is appropriate and accepted (via perf_event_period() in patch 1/3).
+Before the perf_event is resued, it would be disabled until it's could be
+reused and reassigned a hw-counter again to serve for vPMC.
+
+If the disabled perf_event is no longer reused, we do a lazy release
+mechanism (defined in patch 3/3) which in a short is to release the
+disabled perf_events on the first call of vcpu_enter_guest since the
+vcpu gets next scheduled in if its MSRs is not accessed in the last
+sched time slice. The bitmap pmu->lazy_release_ctrl is added to track.
+The kvm_pmu_cleanup() is added to the first time to run vcpu_enter_guest
+after the vcpu shced_in and the overhead is very limited.
+
+With this optimization, the average latency of the guest NMI handler is
+reduced from 99450 ns to 56195 ns (1.76x speed up on CLX-AP with v5.3).
+If host disables the watchdog (echo 0 > /proc/sys/kernel/watchdog), the
+minimum latency of guest NMI handler could be speed up at 2994x and in
+the average at 685x. The run time of workload with perf attached inside
+the guest could be reduced significantly with this optimization. 
+
+Please check each commit for more details and share your comments with us.
+
+Thanks,
+Like Xu 
+
+---
+[1] multiplexing sampling usage: time perf record  -e \
+`perf list | grep Hardware | grep event |\
+awk '{print $1}' | head -n 10 |tr '\n' ',' | sed 's/,$//' ` ./ftest
+[2] one gp counter sampling usage: perf record -e branch-misses ./ftest
+[3] one fixed counter sampling usage: perf record -e instructions ./ftest
+[4] event count usage: perf stat -e branch-misses ./ftest
+
+Like Xu (3):
+  perf/core: Provide a kernel-internal interface to recalibrate event
+    period
+  KVM: x86/vPMU: Reuse perf_event to avoid unnecessary
+    pmc_reprogram_counter
+  KVM: x86/vPMU: Add lazy mechanism to release perf_event per vPMC
+
+ arch/x86/include/asm/kvm_host.h | 10 ++++
+ arch/x86/kvm/pmu.c              | 88 ++++++++++++++++++++++++++++++++-
+ arch/x86/kvm/pmu.h              | 15 +++++-
+ arch/x86/kvm/pmu_amd.c          | 14 ++++++
+ arch/x86/kvm/vmx/pmu_intel.c    | 27 ++++++++++
+ arch/x86/kvm/x86.c              |  6 +++
+ include/linux/perf_event.h      |  5 ++
+ kernel/events/core.c            | 28 ++++++++---
+ 8 files changed, 182 insertions(+), 11 deletions(-)
+
+-- 
+2.21.0
+
