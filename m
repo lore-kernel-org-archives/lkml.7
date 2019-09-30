@@ -2,200 +2,359 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69ADFC4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B93B4C388F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 314A9218DE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:29:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dRuBx2TC"
+	by mail.kernel.org (Postfix) with ESMTP id 9969E2196E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:31:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729991AbfI3I31 (ORCPT
+        id S1730007AbfI3Ibi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 04:29:27 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41660 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfI3I31 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 04:29:27 -0400
-Received: by mail-wr1-f65.google.com with SMTP id h7so10168078wrw.8;
-        Mon, 30 Sep 2019 01:29:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:references:from:autocrypt:subject:message-id:date:user-agent
-         :mime-version:in-reply-to;
-        bh=cMSmKksRpZvm7DjI+W2FPVfuQhvxd33fHRo5ksvWmP4=;
-        b=dRuBx2TC1uq36DDhogFse6nwMfAp/ucimdeY6k5ppTn2Xho+z3y/ZjUdHhQcPoazXo
-         cUl5M2Tc2K6mKaKlg+SBDvdy7Oi3X7/ikExmnGLRT8sGsNOpxOiEHe6QK7uPo/VY0CXK
-         CVzAd7AnOL8C+caYQYuaodnOP3e54tWdY5iqQe/Cyb8kAEKxKQs1s1QktwlZCCLiO/VU
-         u/RomifRoQXgVF/ZB3ahSgGkC3anJWf1MWewAskf6e5kleYuhEMhhAW5MmC81Er9o0Et
-         N8BH6XxrP3+LHJxEPhEDwii7muqWvRD/et3s8ml3IWlUZYc7iWKvuRtsKTfBeoTgGStr
-         Gkaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:references:from:autocrypt:subject:message-id
-         :date:user-agent:mime-version:in-reply-to;
-        bh=cMSmKksRpZvm7DjI+W2FPVfuQhvxd33fHRo5ksvWmP4=;
-        b=GvrvsqXd6V1kWtjWAu/+XmDmeFHLaYYsaBeLKimkmaSJEIDanSG0rvFFJEGs+zJlyX
-         6pFAOnOYkc3YSvL/7GhskG3jcyPwi3Fbi75nyA2JTA7ycYt/UDSA6OenfHMDuNbAhxWH
-         dfTigWD2rXTcC/1ArGfAoOpjD3P8mWS2UkvwPiBQ5MA/vbp9eVdJORy+LPrM0oZqJmAN
-         nAwh/lrhDJZTdk8Sm+vHz9OCTnbl2oNxOvE/P+5+8W3/TzZQgw768xG5fiMnl212DdOa
-         54/5W+eRuCCDEoZWE6qGoPMS17gUcn3oZXFwwRNJXQ/lYgABwe5kv8uvdLMeaj2EKrJ0
-         2EnQ==
-X-Gm-Message-State: APjAAAVoFbPLykxTnSLw+2FI2XrHUYu7FQcL/35AbYq8TuOUeTiw4Ltu
-        +QXwIU1Bh7AkrhYRIyQiYiyK5TgazyU=
-X-Google-Smtp-Source: APXvYqyZ9iDjEf3KowUYVVpJfrrm4nEuNL4dXCEkaHoQiBx06KMBAOT3CFzmWVL00VRsReoL86FrKw==
-X-Received: by 2002:adf:e348:: with SMTP id n8mr11126221wrj.299.1569832162487;
-        Mon, 30 Sep 2019 01:29:22 -0700 (PDT)
-Received: from [192.168.43.187] ([109.126.142.9])
-        by smtp.gmail.com with ESMTPSA id a7sm25567078wra.43.2019.09.30.01.29.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Sep 2019 01:29:21 -0700 (PDT)
-To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, josef@toxicpanda.com,
-        Tejun Heo <tj@kernel.org>, cgroups@vger.kernel.org
-References: <cover.1560510935.git.asml.silence@gmail.com>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Subject: Re: [RESEND RFC PATCH 0/2] Fix misuse of blk_rq_stats in
- blk-iolatency
-Message-ID: <276a02f3-3b1a-0580-54fb-497f85103ae3@gmail.com>
-Date:   Mon, 30 Sep 2019 11:29:21 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Mon, 30 Sep 2019 04:31:38 -0400
+Received: from foss.arm.com ([217.140.110.172]:49736 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726121AbfI3Ibh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 04:31:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9228C1000;
+        Mon, 30 Sep 2019 01:31:36 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 04DB43F739;
+        Mon, 30 Sep 2019 01:31:35 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 09:31:34 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Minghuan Lian <Minghuan.Lian@nxp.com>,
+        Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH v2] PCI: mobiveil: Fix csr_read/write build issue
+Message-ID: <20190930083116.GA38576@e119886-lin.cambridge.arm.com>
+References: <20190927231504.GA13714@infradead.org>
+ <20190929013505.131396-1-wangkefeng.wang@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <cover.1560510935.git.asml.silence@gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="vpDpuljOak4VUjubg0p6HLJIDCCP6aiBm"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190929013505.131396-1-wangkefeng.wang@huawei.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---vpDpuljOak4VUjubg0p6HLJIDCCP6aiBm
-Content-Type: multipart/mixed; boundary="iwCQfC1143W97Fjrsn5ILXvfBDPud4pYO";
- protected-headers="v1"
-From: Pavel Begunkov <asml.silence@gmail.com>
-To: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, josef@toxicpanda.com, Tejun Heo
- <tj@kernel.org>, cgroups@vger.kernel.org
-Message-ID: <276a02f3-3b1a-0580-54fb-497f85103ae3@gmail.com>
-Subject: Re: [RESEND RFC PATCH 0/2] Fix misuse of blk_rq_stats in
- blk-iolatency
-References: <cover.1560510935.git.asml.silence@gmail.com>
-In-Reply-To: <cover.1560510935.git.asml.silence@gmail.com>
+On Sun, Sep 29, 2019 at 09:35:05AM +0800, Kefeng Wang wrote:
+> The riscv has csr_read/write macro, see arch/riscv/include/asm/csr.h,
+> the same function naming will cause build error, using such generic names
+> in a driver is bad, rename csr_[read,write][l,] to mobiveil_csr_read/write
+> to fix it.
+> 
+> drivers/pci/controller/pcie-mobiveil.c:238:69: error: macro "csr_read" passed 3 arguments, but takes just 1
+>  static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
+> 
+> drivers/pci/controller/pcie-mobiveil.c:253:80: error: macro "csr_write" passed 4 arguments, but takes just 2
+>  static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size)
+> 
+> Cc: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Minghuan Lian <Minghuan.Lian@nxp.com>
+> Cc: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+> Cc: Christoph Hellwig <hch@infradead.org>
+> Cc: Andrew Murray <andrew.murray@arm.com> 
+> Fixes: bcbe0d9a8d93 ("PCI: mobiveil: Unify register accessors")
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> ---
+> 
+> v2:
+> - using mobiveil prefix suggested by Andrew and Christoph 
+> 
+>  drivers/pci/controller/pcie-mobiveil.c | 115 +++++++++++++------------
+>  1 file changed, 58 insertions(+), 57 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+> index a45a6447b01d..5e6144b0fb95 100644
+> --- a/drivers/pci/controller/pcie-mobiveil.c
+> +++ b/drivers/pci/controller/pcie-mobiveil.c
+> @@ -235,7 +235,7 @@ static int mobiveil_pcie_write(void __iomem *addr, int size, u32 val)
+>  	return PCIBIOS_SUCCESSFUL;
+>  }
+>  
+> -static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
+> +static u32 mobiveil_csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
+>  {
+>  	void *addr;
+>  	u32 val;
+> @@ -250,7 +250,8 @@ static u32 csr_read(struct mobiveil_pcie *pcie, u32 off, size_t size)
+>  	return val;
+>  }
+>  
+> -static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size)
+> +static void mobiveil_csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off,
+> +			       size_t size)
+>  {
+>  	void *addr;
+>  	int ret;
+> @@ -262,19 +263,19 @@ static void csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off, size_t size)
+>  		dev_err(&pcie->pdev->dev, "write CSR address failed\n");
+>  }
+>  
+> -static u32 csr_readl(struct mobiveil_pcie *pcie, u32 off)
+> +static u32 mobiveil_csr_readl(struct mobiveil_pcie *pcie, u32 off)
+>  {
+> -	return csr_read(pcie, off, 0x4);
+> +	return mobiveil_csr_read(pcie, off, 0x4);
+>  }
+>  
+> -static void csr_writel(struct mobiveil_pcie *pcie, u32 val, u32 off)
+> +static void mobiveil_csr_writel(struct mobiveil_pcie *pcie, u32 val, u32 off)
+>  {
+> -	csr_write(pcie, val, off, 0x4);
+> +	mobiveil_csr_write(pcie, val, off, 0x4);
+>  }
+>  
+>  static bool mobiveil_pcie_link_up(struct mobiveil_pcie *pcie)
+>  {
+> -	return (csr_readl(pcie, LTSSM_STATUS) &
+> +	return (mobiveil_csr_readl(pcie, LTSSM_STATUS) &
+>  		LTSSM_STATUS_L0_MASK) == LTSSM_STATUS_L0;
+>  }
+>  
+> @@ -323,7 +324,7 @@ static void __iomem *mobiveil_pcie_map_bus(struct pci_bus *bus,
+>  		PCI_SLOT(devfn) << PAB_DEVICE_SHIFT |
+>  		PCI_FUNC(devfn) << PAB_FUNCTION_SHIFT;
+>  
+> -	csr_writel(pcie, value, PAB_AXI_AMAP_PEX_WIN_L(WIN_NUM_0));
+> +	mobiveil_csr_writel(pcie, value, PAB_AXI_AMAP_PEX_WIN_L(WIN_NUM_0));
+>  
+>  	return pcie->config_axi_slave_base + where;
+>  }
+> @@ -353,13 +354,13 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+>  	chained_irq_enter(chip, desc);
+>  
+>  	/* read INTx status */
+> -	val = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
+> -	mask = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+> +	val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
+> +	mask = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+>  	intr_status = val & mask;
+>  
+>  	/* Handle INTx */
+>  	if (intr_status & PAB_INTP_INTX_MASK) {
+> -		shifted_status = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
+> +		shifted_status = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
+>  		shifted_status &= PAB_INTP_INTX_MASK;
+>  		shifted_status >>= PAB_INTX_START;
+>  		do {
+> @@ -373,12 +374,12 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+>  							    bit);
+>  
+>  				/* clear interrupt handled */
+> -				csr_writel(pcie, 1 << (PAB_INTX_START + bit),
+> -					   PAB_INTP_AMBA_MISC_STAT);
+> +				mobiveil_csr_writel(pcie, 1 << (PAB_INTX_START + bit),
+> +						    PAB_INTP_AMBA_MISC_STAT);
+>  			}
+>  
+> -			shifted_status = csr_readl(pcie,
+> -						   PAB_INTP_AMBA_MISC_STAT);
+> +			shifted_status = mobiveil_csr_readl(pcie,
+> +							    PAB_INTP_AMBA_MISC_STAT);
+>  			shifted_status &= PAB_INTP_INTX_MASK;
+>  			shifted_status >>= PAB_INTX_START;
+>  		} while (shifted_status != 0);
+> @@ -413,7 +414,7 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+>  	}
+>  
+>  	/* Clear the interrupt status */
+> -	csr_writel(pcie, intr_status, PAB_INTP_AMBA_MISC_STAT);
+> +	mobiveil_csr_writel(pcie, intr_status, PAB_INTP_AMBA_MISC_STAT);
+>  	chained_irq_exit(chip, desc);
+>  }
+>  
+> @@ -474,24 +475,24 @@ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
+>  		return;
+>  	}
+>  
+> -	value = csr_readl(pcie, PAB_PEX_AMAP_CTRL(win_num));
+> +	value = mobiveil_csr_readl(pcie, PAB_PEX_AMAP_CTRL(win_num));
+>  	value &= ~(AMAP_CTRL_TYPE_MASK << AMAP_CTRL_TYPE_SHIFT | WIN_SIZE_MASK);
+>  	value |= type << AMAP_CTRL_TYPE_SHIFT | 1 << AMAP_CTRL_EN_SHIFT |
+>  		 (lower_32_bits(size64) & WIN_SIZE_MASK);
+> -	csr_writel(pcie, value, PAB_PEX_AMAP_CTRL(win_num));
+> +	mobiveil_csr_writel(pcie, value, PAB_PEX_AMAP_CTRL(win_num));
+>  
+> -	csr_writel(pcie, upper_32_bits(size64),
+> -		   PAB_EXT_PEX_AMAP_SIZEN(win_num));
+> +	mobiveil_csr_writel(pcie, upper_32_bits(size64),
+> +			    PAB_EXT_PEX_AMAP_SIZEN(win_num));
+>  
+> -	csr_writel(pcie, lower_32_bits(cpu_addr),
+> -		   PAB_PEX_AMAP_AXI_WIN(win_num));
+> -	csr_writel(pcie, upper_32_bits(cpu_addr),
+> -		   PAB_EXT_PEX_AMAP_AXI_WIN(win_num));
+> +	mobiveil_csr_writel(pcie, lower_32_bits(cpu_addr),
+> +			    PAB_PEX_AMAP_AXI_WIN(win_num));
+> +	mobiveil_csr_writel(pcie, upper_32_bits(cpu_addr),
+> +			    PAB_EXT_PEX_AMAP_AXI_WIN(win_num));
+>  
+> -	csr_writel(pcie, lower_32_bits(pci_addr),
+> -		   PAB_PEX_AMAP_PEX_WIN_L(win_num));
+> -	csr_writel(pcie, upper_32_bits(pci_addr),
+> -		   PAB_PEX_AMAP_PEX_WIN_H(win_num));
+> +	mobiveil_csr_writel(pcie, lower_32_bits(pci_addr),
+> +			    PAB_PEX_AMAP_PEX_WIN_L(win_num));
+> +	mobiveil_csr_writel(pcie, upper_32_bits(pci_addr),
+> +			    PAB_PEX_AMAP_PEX_WIN_H(win_num));
+>  
+>  	pcie->ib_wins_configured++;
+>  }
+> @@ -515,27 +516,27 @@ static void program_ob_windows(struct mobiveil_pcie *pcie, int win_num,
+>  	 * program Enable Bit to 1, Type Bit to (00) base 2, AXI Window Size Bit
+>  	 * to 4 KB in PAB_AXI_AMAP_CTRL register
+>  	 */
+> -	value = csr_readl(pcie, PAB_AXI_AMAP_CTRL(win_num));
+> +	value = mobiveil_csr_readl(pcie, PAB_AXI_AMAP_CTRL(win_num));
+>  	value &= ~(WIN_TYPE_MASK << WIN_TYPE_SHIFT | WIN_SIZE_MASK);
+>  	value |= 1 << WIN_ENABLE_SHIFT | type << WIN_TYPE_SHIFT |
+>  		 (lower_32_bits(size64) & WIN_SIZE_MASK);
+> -	csr_writel(pcie, value, PAB_AXI_AMAP_CTRL(win_num));
+> +	mobiveil_csr_writel(pcie, value, PAB_AXI_AMAP_CTRL(win_num));
+>  
+> -	csr_writel(pcie, upper_32_bits(size64), PAB_EXT_AXI_AMAP_SIZE(win_num));
+> +	mobiveil_csr_writel(pcie, upper_32_bits(size64), PAB_EXT_AXI_AMAP_SIZE(win_num));
 
---iwCQfC1143W97Fjrsn5ILXvfBDPud4pYO
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Thanks for the respin, this looks much better.
 
-Hi,
+However some of the line lengths, such as this one, are now too long. Can
+you move them to multiple lines where needed?
 
-I claim, that there is a bug, that hopefully doesn't show itself apart
-from a minor disabled optimisation. It's _too_ easy to misuse, and if
-somebody try to reuse, this could lead to quite interesting issues.
+Thanks,
 
-Could somebody at last take a look?
-Thanks
+Andrew Murray
 
-On 25/07/2019 00:35, Pavel Begunkov (Silence) wrote:
-> From: Pavel Begunkov <asml.silence@gmail.com>
->=20
-> There are implicit assumptions about struct blk_rq_stats, which make
-> it's very easy to misuse. The first patch fixes consequences, and the
-> second employs type-system to prevent recurrences.
->=20
-> Acked-by: Josef Bacik <josef@toxicpanda.com>
->=20
-> Pavel Begunkov (2):
->   blk-iolatency: Fix zero mean in previous stats
->   blk-stats: Introduce explicit stat staging buffers
->=20
->  block/blk-iolatency.c     | 60 ++++++++++++++++++++++++++++++---------=
-
->  block/blk-stat.c          | 48 +++++++++++++++++++++++--------
->  block/blk-stat.h          |  9 ++++--
->  include/linux/blk_types.h |  6 ++++
->  4 files changed, 94 insertions(+), 29 deletions(-)
->=20
-
---=20
-Yours sincerely,
-Pavel Begunkov
-
-
---iwCQfC1143W97Fjrsn5ILXvfBDPud4pYO--
-
---vpDpuljOak4VUjubg0p6HLJIDCCP6aiBm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl2RvOEACgkQWt5b1Glr
-+6UKiBAAgW2BL4yvqLYVizbAQnkdFQG/KreGrf5vyKZhcv2UHjoMvO2EUQzpwX2v
-FMaHbFAx5tOnjeoWmwXjYuAJLAnu3qT1+tGtVUFxWcDbyTnrnqAEMB9dItDr2Ga5
-K6smdf9rZhnFufPiJfJ0dFqBlfqJ1YhY3L5PG8as5/9Um9B/JCCb0Hjft5yoG2Gs
-lsVh+RFzw8hHSptJOru/Fz6oKVDiMloqRSCWhiS7hXquMUhcPusAJLzGPhQ8Kv7o
-W8bZOcs99Ijp8Ye5xlgLtohBtpN1C/+ZFMHVxv4UH+JrPvwFzLDCD/mCfGLWTbUK
-N8ypzi5AW4KmlBAbzUs8HjQk7FvswcazyWRRm9bg4JWEE1TLgUMrrWmUsHxLlnDO
-knNWMjD9+PO7BrYtQm6OUX4+0Jz9wUtYBGSZF7IXLCutJ9/NloHRTFIQWXnp2NX8
-WWhB1x590ljZ1REULO1312qztHOQyEOgI9vGV1jlMMQPp5RzRAHeJyC2Ay0JSt43
-RZBkbjkG5tcSZ/atpzi/LhXW4PIN3IBvto9F1WYpf465ISjFhmHfEk7K+Tcfa+S1
-QfHO3/t2dmFEH/2vm2/foff0av4HedV3gtulofAjpH7c4SVFWJGRjGDewrsap/C2
-zMKGPSyJnh8D+boNOMkiLV8qI0juyFQD7MTybazl6u8vHqVssVQ=
-=CxFQ
------END PGP SIGNATURE-----
-
---vpDpuljOak4VUjubg0p6HLJIDCCP6aiBm--
+>  
+>  	/*
+>  	 * program AXI window base with appropriate value in
+>  	 * PAB_AXI_AMAP_AXI_WIN0 register
+>  	 */
+> -	csr_writel(pcie, lower_32_bits(cpu_addr) & (~AXI_WINDOW_ALIGN_MASK),
+> -		   PAB_AXI_AMAP_AXI_WIN(win_num));
+> -	csr_writel(pcie, upper_32_bits(cpu_addr),
+> -		   PAB_EXT_AXI_AMAP_AXI_WIN(win_num));
+> +	mobiveil_csr_writel(pcie, lower_32_bits(cpu_addr) & (~AXI_WINDOW_ALIGN_MASK),
+> +			    PAB_AXI_AMAP_AXI_WIN(win_num));
+> +	mobiveil_csr_writel(pcie, upper_32_bits(cpu_addr),
+> +			    PAB_EXT_AXI_AMAP_AXI_WIN(win_num));
+>  
+> -	csr_writel(pcie, lower_32_bits(pci_addr),
+> -		   PAB_AXI_AMAP_PEX_WIN_L(win_num));
+> -	csr_writel(pcie, upper_32_bits(pci_addr),
+> -		   PAB_AXI_AMAP_PEX_WIN_H(win_num));
+> +	mobiveil_csr_writel(pcie, lower_32_bits(pci_addr),
+> +			    PAB_AXI_AMAP_PEX_WIN_L(win_num));
+> +	mobiveil_csr_writel(pcie, upper_32_bits(pci_addr),
+> +			    PAB_AXI_AMAP_PEX_WIN_H(win_num));
+>  
+>  	pcie->ob_wins_configured++;
+>  }
+> @@ -579,42 +580,42 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+>  	struct resource_entry *win;
+>  
+>  	/* setup bus numbers */
+> -	value = csr_readl(pcie, PCI_PRIMARY_BUS);
+> +	value = mobiveil_csr_readl(pcie, PCI_PRIMARY_BUS);
+>  	value &= 0xff000000;
+>  	value |= 0x00ff0100;
+> -	csr_writel(pcie, value, PCI_PRIMARY_BUS);
+> +	mobiveil_csr_writel(pcie, value, PCI_PRIMARY_BUS);
+>  
+>  	/*
+>  	 * program Bus Master Enable Bit in Command Register in PAB Config
+>  	 * Space
+>  	 */
+> -	value = csr_readl(pcie, PCI_COMMAND);
+> +	value = mobiveil_csr_readl(pcie, PCI_COMMAND);
+>  	value |= PCI_COMMAND_IO | PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER;
+> -	csr_writel(pcie, value, PCI_COMMAND);
+> +	mobiveil_csr_writel(pcie, value, PCI_COMMAND);
+>  
+>  	/*
+>  	 * program PIO Enable Bit to 1 (and PEX PIO Enable to 1) in PAB_CTRL
+>  	 * register
+>  	 */
+> -	pab_ctrl = csr_readl(pcie, PAB_CTRL);
+> +	pab_ctrl = mobiveil_csr_readl(pcie, PAB_CTRL);
+>  	pab_ctrl |= (1 << AMBA_PIO_ENABLE_SHIFT) | (1 << PEX_PIO_ENABLE_SHIFT);
+> -	csr_writel(pcie, pab_ctrl, PAB_CTRL);
+> +	mobiveil_csr_writel(pcie, pab_ctrl, PAB_CTRL);
+>  
+> -	csr_writel(pcie, (PAB_INTP_INTX_MASK | PAB_INTP_MSI_MASK),
+> -		   PAB_INTP_AMBA_MISC_ENB);
+> +	mobiveil_csr_writel(pcie, (PAB_INTP_INTX_MASK | PAB_INTP_MSI_MASK),
+> +			    PAB_INTP_AMBA_MISC_ENB);
+>  
+>  	/*
+>  	 * program PIO Enable Bit to 1 and Config Window Enable Bit to 1 in
+>  	 * PAB_AXI_PIO_CTRL Register
+>  	 */
+> -	value = csr_readl(pcie, PAB_AXI_PIO_CTRL);
+> +	value = mobiveil_csr_readl(pcie, PAB_AXI_PIO_CTRL);
+>  	value |= APIO_EN_MASK;
+> -	csr_writel(pcie, value, PAB_AXI_PIO_CTRL);
+> +	mobiveil_csr_writel(pcie, value, PAB_AXI_PIO_CTRL);
+>  
+>  	/* Enable PCIe PIO master */
+> -	value = csr_readl(pcie, PAB_PEX_PIO_CTRL);
+> +	value = mobiveil_csr_readl(pcie, PAB_PEX_PIO_CTRL);
+>  	value |= 1 << PIO_ENABLE_SHIFT;
+> -	csr_writel(pcie, value, PAB_PEX_PIO_CTRL);
+> +	mobiveil_csr_writel(pcie, value, PAB_PEX_PIO_CTRL);
+>  
+>  	/*
+>  	 * we'll program one outbound window for config reads and
+> @@ -647,10 +648,10 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+>  	}
+>  
+>  	/* fixup for PCIe class register */
+> -	value = csr_readl(pcie, PAB_INTP_AXI_PIO_CLASS);
+> +	value = mobiveil_csr_readl(pcie, PAB_INTP_AXI_PIO_CLASS);
+>  	value &= 0xff;
+>  	value |= (PCI_CLASS_BRIDGE_PCI << 16);
+> -	csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
+> +	mobiveil_csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
+>  
+>  	/* setup MSI hardware registers */
+>  	mobiveil_pcie_enable_msi(pcie);
+> @@ -668,9 +669,9 @@ static void mobiveil_mask_intx_irq(struct irq_data *data)
+>  	pcie = irq_desc_get_chip_data(desc);
+>  	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
+>  	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
+> -	shifted_val = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+> +	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+>  	shifted_val &= ~mask;
+> -	csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
+> +	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
+>  	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
+>  }
+>  
+> @@ -684,9 +685,9 @@ static void mobiveil_unmask_intx_irq(struct irq_data *data)
+>  	pcie = irq_desc_get_chip_data(desc);
+>  	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
+>  	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
+> -	shifted_val = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+> +	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+>  	shifted_val |= mask;
+> -	csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
+> +	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
+>  	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
+>  }
+>  
+> -- 
+> 2.20.1
+> 
