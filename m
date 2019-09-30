@@ -2,163 +2,93 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88285C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB841C388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:04:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56BD020700
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:03:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C222620700
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:04:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="ZdsV2KME"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ro25Eb2C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732839AbfJAMDw (ORCPT
+        id S1733136AbfJAMET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 08:03:52 -0400
-Received: from mail-eopbgr810080.outbound.protection.outlook.com ([40.107.81.80]:22958
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725821AbfJAMDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 08:03:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HKtLvINmp/cadYGnbWDFSNLous+S+yFvuwD6uRPWmxdOK89J0HOP6Oo9uBDIPY6BY2vsyg1gXeLzAxzNZdaSHggtjZSwxiAcWayMKz7ZuCi+Eva1JnNPW04OwJYLwr8kXr6wOg/RhxHFNJVNE6VahlJakMVw8rBl3lNivQ3qdQUuvGhPqpf1bJpCgiieUh3kIhswyr96d4dkcTuEUjOOaTnc4Sjwn9Sl9ncDCvdB+mY7UcIy5SnoWFm611xVby2/9GcjSeTKa5bEfcQZe7N/gcDLjEslh9ys20dCVz7SexETlttguRNw9J5I3XHAg3aW68MlHcuNsiuYlNGxeA//LQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YKh6HApMV0FiQZQT6Y+tm+TGxTtGB6hkOK0wPc7p58o=;
- b=WQmYknfqkE7QuueIG2IJ/ntaNzEwdp22duvO5/I1G72EeaGg+wmcRry0kPnjUi9S0Nh8LII1I7AZeINInwJRKeBYTg+IN96SFoHsiOWh9v0kKZamQcpM9N4wZSwallGZJom4pf9HkniKTes+GWvMHb9boIJbnc9SGbx6mo9DnV8YSyV2n7ZnACeHlHo1upgkt8mGDTIIBGrqZRS0OZXO3/2hlEF4JlTAGGoWUdOsw1ztqo0YqBn4sB8iKhklvIjuxek7nrFQ+bdmpSe5Jd+cwZAYJZyRv9a4u9YpckWv14qlE487GJjGYoap5K7xqCEzp7Rbw/ktJfhcaq4AYbbGHg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YKh6HApMV0FiQZQT6Y+tm+TGxTtGB6hkOK0wPc7p58o=;
- b=ZdsV2KMEUauVdjWMN1KsnTBJIPap3f/2hu8If6nQ930NWurvUIjSBK0ecWgJ4kP8uT9g9D1+jJVDdE9/TLWEpwAIjz3PyM1yLjPRINv2ZIMpXVu5Vi+GKfxeoiqheZXLs/EgDK3t50LatMi7iEoNklac6EohkDnt1t5fQ2dsbco=
-Received: from CH2PR02MB7000.namprd02.prod.outlook.com (20.180.9.216) by
- CH2PR02MB6789.namprd02.prod.outlook.com (20.180.17.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.17; Tue, 1 Oct 2019 12:03:48 +0000
-Received: from CH2PR02MB7000.namprd02.prod.outlook.com
- ([fe80::3515:e3a7:8799:73bd]) by CH2PR02MB7000.namprd02.prod.outlook.com
- ([fe80::3515:e3a7:8799:73bd%2]) with mapi id 15.20.2305.022; Tue, 1 Oct 2019
- 12:03:48 +0000
-From:   Radhey Shyam Pandey <radheys@xilinx.com>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        Michal Simek <michals@xilinx.com>,
-        "nick.graumann@gmail.com" <nick.graumann@gmail.com>,
-        "andrea.merello@gmail.com" <andrea.merello@gmail.com>,
-        Appana Durga Kedareswara Rao <appanad@xilinx.com>,
-        "mcgrof@kernel.org" <mcgrof@kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH -next 3/8] dmaengine: xilinx_dma: Introduce
- xilinx_dma_get_residue
-Thread-Topic: [PATCH -next 3/8] dmaengine: xilinx_dma: Introduce
- xilinx_dma_get_residue
-Thread-Index: AQHVZAhKDg4F4xU8mE+kGY5hxnspoac9ALWAgACRLOCAAMLBgIAAyItAgAa2VkA=
-Date:   Tue, 1 Oct 2019 12:03:48 +0000
-Message-ID: <CH2PR02MB7000539B4F841BABC31AA07AC79D0@CH2PR02MB7000.namprd02.prod.outlook.com>
-References: <1567701424-25658-1-git-send-email-radhey.shyam.pandey@xilinx.com>
- <1567701424-25658-4-git-send-email-radhey.shyam.pandey@xilinx.com>
- <20190925210123.GL3824@vkoul-mobl>
- <CH2PR02MB70008CE8600D98753BE1CC97C7860@CH2PR02MB7000.namprd02.prod.outlook.com>
- <20190926171801.GM3824@vkoul-mobl>
- <CH2PR02MB700025E26BBC12DA8B7DB6D2C7810@CH2PR02MB7000.namprd02.prod.outlook.com>
-In-Reply-To: <CH2PR02MB700025E26BBC12DA8B7DB6D2C7810@CH2PR02MB7000.namprd02.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=radheys@xilinx.com; 
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e2ba55d5-64b0-4895-7340-08d746676afb
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: CH2PR02MB6789:|CH2PR02MB6789:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR02MB6789A13780930A90D504A18EC79D0@CH2PR02MB6789.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0177904E6B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(366004)(39860400002)(136003)(346002)(13464003)(76094002)(199004)(189003)(9686003)(305945005)(316002)(55016002)(76116006)(64756008)(66446008)(66556008)(54906003)(66946007)(66476007)(6246003)(4326008)(33656002)(486006)(6436002)(476003)(86362001)(478600001)(7736002)(74316002)(229853002)(446003)(66066001)(11346002)(99286004)(6116002)(3846002)(8936002)(8676002)(81156014)(81166006)(102836004)(71190400001)(53546011)(6506007)(2906002)(7696005)(6916009)(25786009)(71200400001)(76176011)(52536014)(26005)(256004)(186003)(5660300002)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6789;H:CH2PR02MB7000.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: BKEB1T0tFY++7rCOnpaBGZ//AhH3yDAXt+0/khZGpKsnTQyBNzAsK5S4Z9lENzlkBF1xm4ovuV+2VK0xcchSdhIZnjxsXAmyuWTCICbJcRPRcd8FY7+LsvgxNmZwHDpICV9tm7h3hOifl1gMZBXhrzREJ2qyGzI7wJ3xyIf16MiML1FQIzRlj4dhYRp6nqlXcGgXq9TDGb1KBomOn5/7amOwLeZEAg2h3qqPCDQfE9PlIjZlibndUuJzuTNUTmATXum86fIsdzcId3s7Z95iCplusV6gUkY/D3bcBQSEmBDo0jop4gt6+dQ6NZBer9kJAPeVltOkQV/+rLTvaAIBlBRi5d8ocWdEprXkmiBFt0acQ/6VxAj5ku5d0AvNYQoBjGHHjxNefLfsWU0M4uAkbrXGvy69bCfBLzuG62jO1/Q=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e2ba55d5-64b0-4895-7340-08d746676afb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Oct 2019 12:03:48.5083
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xellDJf+yh7XuOldCf4Tn305YtrDgnWJmyFIkL1t03AcvCgKjVXd6d6YLLJ9JywuUdiRPcgjuNFoWbU+wfiDxw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6789
+        Tue, 1 Oct 2019 08:04:19 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:36838 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbfJAMES (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 08:04:18 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91C43p9171527;
+        Tue, 1 Oct 2019 12:04:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2019-08-05;
+ bh=tgOBFZObT23SyNVVIgjHtEVR3Av80X15fH43kUobLu8=;
+ b=ro25Eb2C5gb4RNQdAjQkaP92uhpi+c7yOPLkyY4qWDW6FlcnFWTiQSzJiQsyeUewKT7T
+ xv/FU7CliTpaPNK/aaqEyJjDXQ5VPb+yaviO2qsCzvVEJe+iok31aMR2VoxDLHZ03Pa/
+ 9i7aB5SFJAW+DE/CVYcMnYulFm5tgXq3CnYalVS7hyMpJ/bOPDFlJd4ec2yO45XOD+7/
+ 8jC4ISozo4Y/V3VOmwjOU/Jqr7dCH1VJVGpjMbsvRecCX8+MjM4Q3ICCtybLWlpposT3
+ wniKDbf7kI5d2oNL2JyX+I8y9g14cNqoaL31/gITFk24WDDKNSCNXehekdRFv36MRvfU qw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2va05rn82s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Oct 2019 12:04:13 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91C3NUm157467;
+        Tue, 1 Oct 2019 12:04:12 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2vbnqcs96x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Oct 2019 12:04:12 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x91C4B9G017612;
+        Tue, 1 Oct 2019 12:04:11 GMT
+Received: from z2.cn.oracle.com (/10.182.71.205)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 01 Oct 2019 05:04:11 -0700
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     vkuznets@redhat.com, linux-hyperv@vger.kernel.org,
+        kvm@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Subject: [PATCH v2 0/3] Add a unified parameter "nopvspin"
+Date:   Mon, 30 Sep 2019 20:08:56 +0800
+Message-Id: <1569845340-11884-1-git-send-email-zhenzhong.duan@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910010112
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910010112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Radhey Shyam Pandey
-> Sent: Friday, September 27, 2019 10:46 AM
-> To: Vinod Koul <vkoul@kernel.org>
-> Cc: dan.j.williams@intel.com; Michal Simek <michals@xilinx.com>;
-> nick.graumann@gmail.com; andrea.merello@gmail.com; Appana Durga
-> Kedareswara Rao <appanad@xilinx.com>; mcgrof@kernel.org;
-> dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: RE: [PATCH -next 3/8] dmaengine: xilinx_dma: Introduce
-> xilinx_dma_get_residue
->=20
-> > -----Original Message-----
-> > From: Vinod Koul <vkoul@kernel.org>
-> > Sent: Thursday, September 26, 2019 10:48 PM
-> > To: Radhey Shyam Pandey <radheys@xilinx.com>
-> > Cc: dan.j.williams@intel.com; Michal Simek <michals@xilinx.com>;
-> > nick.graumann@gmail.com; andrea.merello@gmail.com; Appana Durga
-> > Kedareswara Rao <appanad@xilinx.com>; mcgrof@kernel.org;
-> > dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH -next 3/8] dmaengine: xilinx_dma: Introduce
-> > xilinx_dma_get_residue
-> >
-> > On 26-09-19, 05:52, Radhey Shyam Pandey wrote:
-> >
-> > > > > +	 * VDMA and simple mode do not support residue reporting,
-> so the
-> > > > > +	 * residue field will always be 0.
-> > > > > +	 */
-> > > > > +	if (chan->xdev->dma_config->dmatype =3D=3D
-> XDMA_TYPE_VDMA ||
-> > > > !chan->has_sg)
-> > > > > +		return residue;
-> > > >
-> > > > why not check this in status callback?
-> > > Assuming we mean to move vdma and non-sg check to
-> > xilinx_dma_tx_status.
-> > > Just a thought- Keeping this check in xilinx_dma_get_residue
-> > > provides an abstraction and caller can simply call this func with
-> > > knowing about IP config specific residue calculation. Considering
-> > > this point does it looks ok ?
-> >
-> > well you are checking either way, so calling the lower level function
-> > only when you need it makes more sense!
->=20
-> Sure, will do it in v2.
+There are cases folks want to disable spinlock optimization for
+debug/test purpose. Xen and hyperv already have parameters "xen_nopvspin"
+and "hv_nopvspin" to support that, but kvm doesn't.
 
-Just noticed that xilinx_dma_get_residue() is called at the multiple
-places i.e one in device_tx_status and other in _complete_descriptor.
-To avoid code duplication, I will create a helper function to check
-if residue calculation is supported.
+The first patch adds that feature to KVM guest with "nopvspin".
 
-> >
-> > --
-> > ~Vinod
+For compatibility reason original parameters "xen_nopvspin" and
+"hv_nopvspin" are retained and marked obsolete.
+
+v2:
+PATCH1: pick the print code change into seperate PATCH2,
+        updated patch description             [Vitaly Kuznetsov]
+PATCH2: new patch with print code change      [Vitaly Kuznetsov]
+PATCH3: add Reviewed-by                       [Juergen Gross]
+
+Thanks
+Zhenzhong
