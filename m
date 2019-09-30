@@ -4,61 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC469C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7454AC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B651A2081B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3962C2086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:09:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="r1/J0cyr"
+	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="CxFp7+KB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732844AbfI3XJo (ORCPT
+        id S1732857AbfI3XJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 19:09:44 -0400
-Received: from mail-eopbgr690120.outbound.protection.outlook.com ([40.107.69.120]:5486
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        Mon, 30 Sep 2019 19:09:49 -0400
+Received: from mail-eopbgr820129.outbound.protection.outlook.com ([40.107.82.129]:60959
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732495AbfI3XJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 19:09:41 -0400
+        id S1732769AbfI3XJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 19:09:22 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H94x+5/eLp3RhaZxu6ai5ErJfhzu4u489AbCBDP3Owolct8O0Cp1zvuuEQfgq9/PEdzeu1RNDbAjQCN6lMMFsYz3G1tuvBxVitaFYsNAn62CAHSGdbjC95yqLL0sS1QqPWAie7DLQ3haAf0STDBoJG0q+cPkvin9EuRk2DaW/m+bhadJVkfYC6E9ylqdhSxF+xpOA/JN6gq6UPwHkSQiuU9I+rnbhsGjvM3TolXN815deSA2lyiscsTgNRtsDTLw207/ujaHxzco9ZwsuITEHr+7rMWySbcYZ11bjFdcKGpZwCP+7wB+f2HXppZ3iyxujz0UzTxmBKbQ4Me3sxP1Lw==
+ b=cP6VM++DGr9zafJlBBHtO2VPXKFxhqDdcHwDwSoA/3DuDEQEKXUAU1el4zuyCTmnEZedpKe0EWV/vY4ZNARcwjM9BDgi0kNzBihi/Gx5wKF25ypXs7zY6h8jsqryZU2nSwcxEsvG9iUVKBv1mrVRPO12inOHFpOJvQf3Vo/5CDUuVfC4boDn2jsIMe0jEpRT10O/QTIZvIoaSo/Rtym0BRscbpsS/YZqCJklI3rPXPtpSl9TEIES1WzlLxC/g/eu6cxpSF6U6OBPUoEvSYzC3vjVKaC/NvufJco5LCezGJ+4uFX34yGqSmqMeqFKQohc9ri4Pzi3M2RKRnDIEXDp9w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=teHP17IFWXIfuZRdFHCsldo74h/QIqpIXn+WjpeR/aA=;
- b=SRznxDMz6D19RCVGdnVLsZQ/hnr4FU3vKVQJuLszSpn66YrMXGMatf+wYHohCfRKNwNo+FatXwrUweBDer2hCMIz3uLYWO6DWTsqjUGpNylsBzig+lRdNw4rE7BcQ90Lkrd4eEv8tdeRkyFvU2m99X/qAyd4LGMeCe8nXJYc0g/Q4ERcM14Nvh7YXsOXzDBabw0NQklyin6LadwxxNH5aQ3UwfuUW35FGsWSMmahNr/EvmGnAfM24sTimcndE4EoaugyRU1dVsIDdRGN+9aAr4DgDby2sP5U0EvMe0tt/qpieIrBk/yrIYNcyutlXQS1iQJS4XoQ/a479zQcfQT0rA==
+ bh=Vl7osInJbQCZYE9OyTPsqX3Ns4VCo+RgudalhIuW48U=;
+ b=Ztcg6cxy2l8fih5WDspam+JXl2SZuJ1iRqgdBrSrDdhnOBaHg9JMqa3ISKFnUH7L2m6PfgeVF226mViCfLaWv9/03Ffj83uAr8xTXSAASQeOi3Csh74XsQoE1RcfMaF9IjX7UonXxeLpMx6wHK2ihgNtHw991/Jz/cBf6z2jDztcuzDoxLKVvo6p+TumQB4QiD2c4zT9ZgLeDHrbJTe6z8/4wrkIgfiwD46iZ8GTLLM40LCZ64uiViZlFZOAAhuZWcqEuLOqRJFP2CJM7nviZjwyyTTh/mFiLSReMX2ZEgpnoB3tXupXaBqRX3kT4mWAGYIu1uAUdvpuj6ygqCEeTQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
  dkim=pass header.d=mips.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=teHP17IFWXIfuZRdFHCsldo74h/QIqpIXn+WjpeR/aA=;
- b=r1/J0cyruvY/J+/l6EKDTb5RUfyWJV9u80R69bmtHmARSJHqMbyTJhgWWg0XhfQUa9n9rmPtuEwWfzFwfwb8s46CxNjnKp2uIT0fMHgq0ABAqNtOpBSspbn76JFjZVfh4wCtiPvvA6Upt3wbtE9Hcbaub0ymgITdYwlZyqCB1Nc=
+ bh=Vl7osInJbQCZYE9OyTPsqX3Ns4VCo+RgudalhIuW48U=;
+ b=CxFp7+KBwGjVo8hjcKdE5yi6yHmt45WPIFzU+Bq4U7BIDHN1jKmSbteaI5DzXpnuxPjyn5lXi9ti70SG0DmXCPRHOWJYytghQv6RUKcVs3a4d/CqjLtEKWwfF6lcN1gOqn/D11twkbPdONA1FSi6NWmTobz7OaypRxcOw0utf0c=
 Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
  MWHPR2201MB1022.namprd22.prod.outlook.com (10.174.167.23) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.17; Mon, 30 Sep 2019 23:08:28 +0000
+ 15.20.2305.17; Mon, 30 Sep 2019 23:09:11 +0000
 Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
  ([fe80::498b:c2cd:e816:1481]) by MWHPR2201MB1277.namprd22.prod.outlook.com
  ([fe80::498b:c2cd:e816:1481%2]) with mapi id 15.20.2305.017; Mon, 30 Sep 2019
- 23:08:28 +0000
+ 23:09:11 +0000
 From:   Paul Burton <paul.burton@mips.com>
 To:     "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
 CC:     Huacai Chen <chenhc@lemote.com>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Paul Burton <pburton@wavecomp.com>
-Subject: [PATCH 16/37] MIPS: bitops: Use generic builtin ffs/fls; drop
- cpu_has_clo_clz
-Thread-Topic: [PATCH 16/37] MIPS: bitops: Use generic builtin ffs/fls; drop
- cpu_has_clo_clz
-Thread-Index: AQHVd+P4sxZAmDQwJUGcaxRTKS+8Gg==
-Date:   Mon, 30 Sep 2019 23:08:28 +0000
-Message-ID: <20190930230806.2940505-17-paul.burton@mips.com>
+Subject: [PATCH 33/37] MIPS: barrier: Remove loongson_llsc_mb()
+Thread-Topic: [PATCH 33/37] MIPS: barrier: Remove loongson_llsc_mb()
+Thread-Index: AQHVd+QBGBvr0LXUB0q3rp1IZ4o/ww==
+Date:   Mon, 30 Sep 2019 23:08:43 +0000
+Message-ID: <20190930230806.2940505-34-paul.burton@mips.com>
 References: <20190930230806.2940505-1-paul.burton@mips.com>
 In-Reply-To: <20190930230806.2940505-1-paul.burton@mips.com>
 Accept-Language: en-US
@@ -74,268 +72,125 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.23.0
 x-originating-ip: [12.94.197.246]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8fc58cc5-2f85-4292-622f-08d745fb1a7e
+x-ms-office365-filtering-correlation-id: 5f8a0fc0-0e62-47d2-9bd4-08d745fb2380
 x-ms-traffictypediagnostic: MWHPR2201MB1022:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR2201MB1022B502D5D4F86777FA19CDC1820@MWHPR2201MB1022.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-microsoft-antispam-prvs: <MWHPR2201MB1022A41218EBD610E5580739C1820@MWHPR2201MB1022.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
 x-forefront-prvs: 01762B0D64
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(136003)(366004)(189003)(199004)(14454004)(508600001)(256004)(6512007)(81166006)(81156014)(44832011)(2351001)(486006)(476003)(6916009)(186003)(2501003)(6436002)(50226002)(8676002)(11346002)(8936002)(2616005)(5640700003)(66946007)(6486002)(42882007)(64756008)(66446008)(66476007)(66556008)(446003)(6506007)(1076003)(305945005)(386003)(52116002)(7736002)(102836004)(2906002)(71190400001)(71200400001)(36756003)(5660300002)(26005)(4326008)(66066001)(54906003)(25786009)(76176011)(107886003)(99286004)(6116002)(3846002)(41533002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1022;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39850400004)(346002)(396003)(376002)(136003)(366004)(189003)(199004)(14454004)(256004)(6512007)(81166006)(316002)(81156014)(44832011)(2351001)(486006)(476003)(6916009)(14444005)(186003)(478600001)(2501003)(6436002)(50226002)(6666004)(8676002)(11346002)(8936002)(2616005)(5640700003)(66946007)(6486002)(42882007)(64756008)(66446008)(66476007)(66556008)(446003)(6506007)(1076003)(305945005)(386003)(52116002)(7736002)(102836004)(2906002)(71190400001)(71200400001)(36756003)(5660300002)(26005)(4326008)(66066001)(54906003)(25786009)(76176011)(107886003)(99286004)(6116002)(3846002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1022;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: wavecomp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: DErhcZ1UuLtrsYEZRVxIWVBs/dvnPMXLhMIYVb0urDw0caV0dDMonr2nQwHglZKxQuWOhKP36YrTAuzjRHET3zwRMZH0IxaJSgwZ1jZZ/qhJ8/TiVBSGWkrF1Q6cTh1duCPvabw1pXlTJOaWjmxqtCmy3mGOIQ5gzkS9WB7x034SXQ6G4dBGHh0NIu1oiHWtT8kNDVzF4RKG65sE4oCW1Ob9vkXMXVHXcidagDUz/xBBiRFXZGtJ8T6409OhnC/2EfAmaEl6Lzye5v6QbhbiYKkdZ0KngezDt7CWVxgbnTM8djiDNSE5ifGO0TBxi5qRJVwJpArMjXgFzc1Z00pWFRsAjkPzcPWZ1j9YLRyToxxIqCUzdUhDUWqIeAxPt+a+Tka7MTpPolBazECbRxiVh4xiXpy+LxnBLDNvVexgzqw=
+x-microsoft-antispam-message-info: ApxVF9qBnojsfU2HMgpvSir3aDVCPXHb87d1EXmvpmGe3nzBEBWgVrlaklhb+WVGoRU8PJJ1YS97eFR71eAZiY2JLdxkuoWmi+5a0McWVkKvE3O6tyaUKq7Hrw6rlcX/dWOuGnvQYRo5Z6q/FG0ndhMU/QJEdOybo6PKkcGvHV1vZcgt3PzczjmLX2M1qFQjWWuNJKPvEgPrGM0+pH/uokRMvYBjPPwIofa4HeRkG4CTaEIuhIftwa5wmOr8i9pMqRNfVa9WScBJf2qddshjtKJJatQeLbvbI/COPQg6c47HrqTarq3x/AX9b+XbtP9zy4+Wvzas5E1sCsTlBkZTW7C5ISMc+pPeS4eZPteZIVNI7fmSquHG31MsgG9CfCC9uWCd4Xy+nqsO47ng2I/mREM1oc47PmGT8fIzYxQsYZU=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8fc58cc5-2f85-4292-622f-08d745fb1a7e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2019 23:08:28.1751
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5f8a0fc0-0e62-47d2-9bd4-08d745fb2380
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2019 23:08:43.3252
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: X+WEHG9E2n8mqTKNslxi2ndQnyn6bQbKzAtny12rOaNKk1qbzN+KOrcFNiMn/AqIhxsVyT81Vsuqz/D1Dkn7PQ==
+X-MS-Exchange-CrossTenant-userprincipalname: g+hCP62m9CHW2lCRvyi9102ZU+kb860ujlY/FYDcYvTR03yK+Nr1kKbBpVGL5wZ1f6i2IJ7b+zj7jkyUaFwa6w==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1022
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MIPS-specific implementations of __ffs(), ffs(), __fls() & fls()
-make use of the MIPS clz instruction where possible. They do this via
-inline asm, but in any configuration in which the kernel is built for a
-MIPS32 or MIPS64 release 1 or higher instruction set we know that these
-instructions are available & can be emitted using the __builtin_clz()
-function & other associated builtins which are provided by all currently
-supported versions of gcc.
-
-When targeting an older instruction set GCC will generate a longer code
-sequence similar to the fallback cases we have in our implementations.
-
-As such, remove our custom implementations of these functions & use the
-generic versions built atop compiler builtins. This allows us to drop a
-significant chunk of code, along with the cpu_has_clo_clz feature macro
-which was only used by these functions.
-
-The only thing we lose here is the ability for kernels built to target a
-pre-r1 ISA to opportunistically make use of clz when running on a CPU
-that implements it. This seems like a small cost, and well worth paying
-to simplify the code.
+The loongson_llsc_mb() macro is no longer used - instead barriers are
+emitted as part of inline asm using the __SYNC() macro. Remove the
+now-defunct loongson_llsc_mb() macro.
 
 Signed-off-by: Paul Burton <paul.burton@mips.com>
 ---
 
- arch/mips/include/asm/bitops.h                | 146 +-----------------
- arch/mips/include/asm/cpu-features.h          |  10 --
- .../asm/mach-malta/cpu-feature-overrides.h    |   2 -
- 3 files changed, 4 insertions(+), 154 deletions(-)
+ arch/mips/include/asm/barrier.h | 40 ---------------------------------
+ arch/mips/loongson64/Platform   |  2 +-
+ 2 files changed, 1 insertion(+), 41 deletions(-)
 
-diff --git a/arch/mips/include/asm/bitops.h b/arch/mips/include/asm/bitops.=
-h
-index 985d6a02f9ea..4b618afbfa5b 100644
---- a/arch/mips/include/asm/bitops.h
-+++ b/arch/mips/include/asm/bitops.h
-@@ -491,149 +491,11 @@ static inline void __clear_bit_unlock(unsigned long =
-nr, volatile unsigned long *
- 	nudge_writes();
- }
+diff --git a/arch/mips/include/asm/barrier.h b/arch/mips/include/asm/barrie=
+r.h
+index c7e05e832da9..1a99a6c5b5dd 100644
+--- a/arch/mips/include/asm/barrier.h
++++ b/arch/mips/include/asm/barrier.h
+@@ -121,46 +121,6 @@ static inline void wmb(void)
+ #define __smp_mb__before_atomic()	__smp_mb__before_llsc()
+ #define __smp_mb__after_atomic()	smp_llsc_mb()
 =20
 -/*
-- * Return the bit position (0..63) of the most significant 1 bit in a word
-- * Returns -1 if no 1 bit exists
-- */
--static __always_inline unsigned long __fls(unsigned long word)
--{
--	int num;
--
--	if (BITS_PER_LONG =3D=3D 32 && !__builtin_constant_p(word) &&
--	    __builtin_constant_p(cpu_has_clo_clz) && cpu_has_clo_clz) {
--		__asm__(
--		"	.set	push					\n"
--		"	.set	"MIPS_ISA_LEVEL"			\n"
--		"	clz	%0, %1					\n"
--		"	.set	pop					\n"
--		: "=3Dr" (num)
--		: "r" (word));
--
--		return 31 - num;
--	}
--
--	if (BITS_PER_LONG =3D=3D 64 && !__builtin_constant_p(word) &&
--	    __builtin_constant_p(cpu_has_mips64) && cpu_has_mips64) {
--		__asm__(
--		"	.set	push					\n"
--		"	.set	"MIPS_ISA_LEVEL"			\n"
--		"	dclz	%0, %1					\n"
--		"	.set	pop					\n"
--		: "=3Dr" (num)
--		: "r" (word));
--
--		return 63 - num;
--	}
--
--	num =3D BITS_PER_LONG - 1;
--
--#if BITS_PER_LONG =3D=3D 64
--	if (!(word & (~0ul << 32))) {
--		num -=3D 32;
--		word <<=3D 32;
--	}
--#endif
--	if (!(word & (~0ul << (BITS_PER_LONG-16)))) {
--		num -=3D 16;
--		word <<=3D 16;
--	}
--	if (!(word & (~0ul << (BITS_PER_LONG-8)))) {
--		num -=3D 8;
--		word <<=3D 8;
--	}
--	if (!(word & (~0ul << (BITS_PER_LONG-4)))) {
--		num -=3D 4;
--		word <<=3D 4;
--	}
--	if (!(word & (~0ul << (BITS_PER_LONG-2)))) {
--		num -=3D 2;
--		word <<=3D 2;
--	}
--	if (!(word & (~0ul << (BITS_PER_LONG-1))))
--		num -=3D 1;
--	return num;
--}
--
--/*
-- * __ffs - find first bit in word.
-- * @word: The word to search
+- * Some Loongson 3 CPUs have a bug wherein execution of a memory access (l=
+oad,
+- * store or prefetch) in between an LL & SC can cause the SC instruction t=
+o
+- * erroneously succeed, breaking atomicity. Whilst it's unusual to write c=
+ode
+- * containing such sequences, this bug bites harder than we might otherwis=
+e
+- * expect due to reordering & speculation:
 - *
-- * Returns 0..SZLONG-1
-- * Undefined if no bit exists, so code should check against 0 first.
-- */
--static __always_inline unsigned long __ffs(unsigned long word)
--{
--	return __fls(word & -word);
--}
--
--/*
-- * fls - find last bit set.
-- * @word: The word to search
+- * 1) A memory access appearing prior to the LL in program order may actua=
+lly
+- *    be executed after the LL - this is the reordering case.
 - *
-- * This is defined the same way as ffs.
-- * Note fls(0) =3D 0, fls(1) =3D 1, fls(0x80000000) =3D 32.
-- */
--static inline int fls(unsigned int x)
--{
--	int r;
--
--	if (!__builtin_constant_p(x) &&
--	    __builtin_constant_p(cpu_has_clo_clz) && cpu_has_clo_clz) {
--		__asm__(
--		"	.set	push					\n"
--		"	.set	"MIPS_ISA_LEVEL"			\n"
--		"	clz	%0, %1					\n"
--		"	.set	pop					\n"
--		: "=3Dr" (x)
--		: "r" (x));
--
--		return 32 - x;
--	}
--
--	r =3D 32;
--	if (!x)
--		return 0;
--	if (!(x & 0xffff0000u)) {
--		x <<=3D 16;
--		r -=3D 16;
--	}
--	if (!(x & 0xff000000u)) {
--		x <<=3D 8;
--		r -=3D 8;
--	}
--	if (!(x & 0xf0000000u)) {
--		x <<=3D 4;
--		r -=3D 4;
--	}
--	if (!(x & 0xc0000000u)) {
--		x <<=3D 2;
--		r -=3D 2;
--	}
--	if (!(x & 0x80000000u)) {
--		x <<=3D 1;
--		r -=3D 1;
--	}
--	return r;
--}
--
-+#include <asm-generic/bitops/builtin-__ffs.h>
-+#include <asm-generic/bitops/builtin-ffs.h>
-+#include <asm-generic/bitops/builtin-__fls.h>
-+#include <asm-generic/bitops/builtin-fls.h>
- #include <asm-generic/bitops/fls64.h>
--
--/*
-- * ffs - find first bit set.
-- * @word: The word to search
+- *    In order to avoid this we need to place a memory barrier (ie. a SYNC
+- *    instruction) prior to every LL instruction, in between it and any ea=
+rlier
+- *    memory access instructions.
 - *
-- * This is defined the same way as
-- * the libc and compiler builtin ffs routines, therefore
-- * differs in spirit from the above ffz (man ffs).
+- *    This reordering case is fixed by 3A R2 CPUs, ie. 3A2000 models and l=
+ater.
+- *
+- * 2) If a conditional branch exists between an LL & SC with a target outs=
+ide
+- *    of the LL-SC loop, for example an exit upon value mismatch in cmpxch=
+g()
+- *    or similar, then misprediction of the branch may allow speculative
+- *    execution of memory accesses from outside of the LL-SC loop.
+- *
+- *    In order to avoid this we need a memory barrier (ie. a SYNC instruct=
+ion)
+- *    at each affected branch target, for which we also use loongson_llsc_=
+mb()
+- *    defined below.
+- *
+- *    This case affects all current Loongson 3 CPUs.
+- *
+- * The above described cases cause an error in the cache coherence protoco=
+l;
+- * such that the Invalidate of a competing LL-SC goes 'missing' and SC
+- * erroneously observes its core still has Exclusive state and lets the SC
+- * proceed.
+- *
+- * Therefore the error only occurs on SMP systems.
 - */
--static inline int ffs(int word)
--{
--	if (!word)
--		return 0;
--
--	return fls(word & -word);
--}
--
- #include <asm-generic/bitops/ffz.h>
- #include <asm-generic/bitops/find.h>
-=20
-diff --git a/arch/mips/include/asm/cpu-features.h b/arch/mips/include/asm/c=
-pu-features.h
-index 983a6a7f43a1..274a35ae15af 100644
---- a/arch/mips/include/asm/cpu-features.h
-+++ b/arch/mips/include/asm/cpu-features.h
-@@ -362,16 +362,6 @@
- })
- #endif
-=20
--/*
-- * MIPS32, MIPS64, VR5500, IDT32332, IDT32334 and maybe a few other
-- * pre-MIPS32/MIPS64 processors have CLO, CLZ.	The IDT RC64574 is 64-bit a=
-nd
-- * has CLO and CLZ but not DCLO nor DCLZ.  For 64-bit kernels
-- * cpu_has_clo_clz also indicates the availability of DCLO and DCLZ.
-- */
--#ifndef cpu_has_clo_clz
--#define cpu_has_clo_clz	cpu_has_mips_r
+-#ifdef CONFIG_CPU_LOONGSON3_WORKAROUNDS /* Loongson-3's LLSC workaround */
+-#define loongson_llsc_mb()	__asm__ __volatile__("sync" : : :"memory")
+-#else
+-#define loongson_llsc_mb()	do { } while (0)
 -#endif
 -
- /*
-  * MIPS32 R2, MIPS64 R2, Loongson 3A and Octeon have WSBH.
-  * MIPS64 R2, Loongson 3A and Octeon have WSBH, DSBH and DSHD.
-diff --git a/arch/mips/include/asm/mach-malta/cpu-feature-overrides.h b/arc=
-h/mips/include/asm/mach-malta/cpu-feature-overrides.h
-index de3b66a3723e..193c0912d38e 100644
---- a/arch/mips/include/asm/mach-malta/cpu-feature-overrides.h
-+++ b/arch/mips/include/asm/mach-malta/cpu-feature-overrides.h
-@@ -32,7 +32,6 @@
- /* #define cpu_has_vtag_icache	? */
- /* #define cpu_has_dc_aliases	? */
- /* #define cpu_has_ic_fills_f_dc ? */
--#define cpu_has_clo_clz		1
- #define cpu_has_nofpuex		0
- /* #define cpu_has_64bits	? */
- /* #define cpu_has_64bit_zero_reg ? */
-@@ -59,7 +58,6 @@
- /* #define cpu_has_vtag_icache	? */
- /* #define cpu_has_dc_aliases	? */
- /* #define cpu_has_ic_fills_f_dc ? */
--#define cpu_has_clo_clz		1
- #define cpu_has_nofpuex		0
- /* #define cpu_has_64bits	? */
- /* #define cpu_has_64bit_zero_reg ? */
+ static inline void sync_ginv(void)
+ {
+ 	asm volatile(__SYNC(ginv, always));
+diff --git a/arch/mips/loongson64/Platform b/arch/mips/loongson64/Platform
+index c1a4d4dc4665..28172500f95a 100644
+--- a/arch/mips/loongson64/Platform
++++ b/arch/mips/loongson64/Platform
+@@ -27,7 +27,7 @@ cflags-$(CONFIG_CPU_LOONGSON3)	+=3D -Wa,--trap
+ #
+ # Some versions of binutils, not currently mainline as of 2019/02/04, supp=
+ort
+ # an -mfix-loongson3-llsc flag which emits a sync prior to each ll instruc=
+tion
+-# to work around a CPU bug (see loongson_llsc_mb() in asm/barrier.h for a
++# to work around a CPU bug (see __SYNC_loongson3_war in asm/sync.h for a
+ # description).
+ #
+ # We disable this in order to prevent the assembler meddling with the
 --=20
 2.23.0
 
