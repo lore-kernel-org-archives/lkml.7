@@ -2,122 +2,118 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65303C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D759EC35280
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3542F206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACCD62168B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:10:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BSYyvmHC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XAxgqcVC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731866AbfI3PIz (ORCPT
+        id S1731901AbfI3PKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 11:08:55 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42323 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731471AbfI3PIz (ORCPT
+        Mon, 30 Sep 2019 11:10:24 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35110 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731867AbfI3PKX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 11:08:55 -0400
-Received: by mail-pl1-f193.google.com with SMTP id e5so4022505pls.9
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 08:08:54 -0700 (PDT)
+        Mon, 30 Sep 2019 11:10:23 -0400
+Received: by mail-io1-f67.google.com with SMTP id q10so39311096iop.2;
+        Mon, 30 Sep 2019 08:10:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ikApTYOgNDbcm2fbjspoUTMPGqOJShasqx7zWBwbSvs=;
-        b=BSYyvmHCff1NNAFiHUaepws8k+BE5WREgyKG5kQaKaROuZh8Uzwu5mhO7eLHrEQk3p
-         ai979woMyqyER2vN/IktGmXdsuuRaIPSc/G8m7dL5RPNPL8Nz536HodDslUEPJSxcsL5
-         J5crE9Ol9I8wtkiKqcCYedqTsAhWjwh+SNtlc2NC5gEOL33wiEjV3rhDO48MSGgESU78
-         /uPZGrkDP7g0D6+ZPR/9AmqxkMZBK2YLncKBcu0+EzMtNMVETa9MDWibg6odGK14i5o9
-         2c+oyEfGqlB58dk9VLW+8zWElXC2n+D8Xt0MOutYrwsbbTHFr4DmSrksUhi4NmjsU3Nc
-         oIuQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pDc8+7cL7Y/4C0a6+07Pf5UoiAcCuQN9j9naZA92m/0=;
+        b=XAxgqcVCJ0KTsEs61oTy/OJohBiI9uvP3rdzYsBtljp2uXLIhWrCfKkri/Tu5Wl+Wr
+         BaRtLcYL7krs2ngV78Nkhx6J8pM/8T1eofwTwlgYcg6rheQnSzc9IASx3Fm4mkFvIUG2
+         Lo2Gn/siHlqy+GFLeYsW3+m1RYN+O2WSyflAEtRyXDs+9xQuCvZUUOcjRsONfB81CuZT
+         FnY1zzPD7jtNJWcLhLUps8URe4kC+hK4GvFY/C8F1d+yLgMutc0q6Nxd61Obgu1tGIpT
+         psffbZDtzaaf7lUDzIdZeoevfZxGTm6B3IBZW2QrS1x9P6/W10IsX6W4vbDcXN/Zszbt
+         6wCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ikApTYOgNDbcm2fbjspoUTMPGqOJShasqx7zWBwbSvs=;
-        b=PxEaKD+vTsIVu942i/z8GJ911wOvtsdnAsX3NyYY6BA2W7BWf8+fzAjMhhxBYsbmtX
-         tmtAlhSKh0+R8qVe5x/QnKmqw8t0y6POxLhiJHmW7CKdfE+uTax2wOFvLM7IeEKDX+z5
-         mCIyVkDY1DsF4vgZEDjA33wFVwUGyQkN5c4wxP+7ttIvnmO9QWjq3Fgj1AxIQv98CAkH
-         zI2k++EsHH6N1/u4DKvuBfTbHuRLYAxwyF4UVB7uVpSBung/xMSMYqN0Ol9C0erFV7rQ
-         I+Et8cLqyqYN1EU297teWVHnAb2umd0aHxlj9GhDkRL6qbIpIn1zV/yhawfGb8OfajlL
-         LbjQ==
-X-Gm-Message-State: APjAAAXYfRhWg8VN/RiYWaRM6/xn2Vqz/q7sKQvzGgkciXWQT/peQzWB
-        4rYA5V2fYWOA0uFT+1k7ap8=
-X-Google-Smtp-Source: APXvYqw/KQmgPb3C2PcVy/lA9wFRnhiyU5ciN4rjcoq+OaKMcz0AdcaTBx1nSXwfEESOUMTrlrSIDw==
-X-Received: by 2002:a17:902:a717:: with SMTP id w23mr20502339plq.17.1569856134000;
-        Mon, 30 Sep 2019 08:08:54 -0700 (PDT)
-Received: from localhost ([121.137.63.184])
-        by smtp.gmail.com with ESMTPSA id w6sm15690309pfj.17.2019.09.30.08.08.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 08:08:52 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Tue, 1 Oct 2019 00:08:48 +0900
-To:     Sodagudi Prasad <psodagud@codeaurora.org>
-Cc:     pmladek@suse.com, sergey.senozhatsky@gmail.com,
-        rostedt@goodmis.org, linux-kernel@vger.kernel.org
-Subject: Re: Time stamp value in printk records
-Message-ID: <20190930150848.GA303191@tigerII.localdomain>
-References: <7d1aee8505b91c460fee347ed4204b9a@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pDc8+7cL7Y/4C0a6+07Pf5UoiAcCuQN9j9naZA92m/0=;
+        b=nDkpsZYx0Dtm0UrjjEiED9SW5aucuepE5E6SWMZ9jAqc13vwlvp8/ATQ6Bc3ZKTZhm
+         yAU2vCzqQiHP0P8IF0o6+8lDZAQCqtZHT7B80xMV9Dgg/3yqwctLzS/SEm4l0bhDs5aS
+         3VZDIaD1YGgGWZnfcgnj6aCUdqcxtE4X//wFEZzBFQhpAnGvzxKOwIjjtbMmnikgIU1o
+         gTtJrANhWoYB5tnS9rRJVPLvlwa6F6nkU7dz+pcubKPB77jrqx/hMhItvyFw3vTe8af2
+         eZZHetbrfi1B9+Y8z9WQNVNv6wXGCDPWImUsoHc1ij4C+cbfoIzBoFOzN5sFEOrSiwS7
+         bdcA==
+X-Gm-Message-State: APjAAAW5ScqRWFwJPxqwpEKQy7Pj9LHg0nwLoRoESbLBmCSK1B3XfgM/
+        GdI6kNj008NdKrgmA/ExF+Pfmdwywsh8/oWL4Ko=
+X-Google-Smtp-Source: APXvYqyzDMlPXrOMXU8uR89U0O8jpXzWwYfcO5kKUr3rMEw1nkiaNwzvwL+uFQHt7SWZhkPxpu0e2/wrwcUd0IP2oeU=
+X-Received: by 2002:a6b:b213:: with SMTP id b19mr823617iof.58.1569856222518;
+ Mon, 30 Sep 2019 08:10:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7d1aee8505b91c460fee347ed4204b9a@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20190510194229.20628-1-aford173@gmail.com> <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
+ <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
+ <845055e2-8182-de74-2077-629fdf50ac6c@ti.com> <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
+ <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com> <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
+ <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com> <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
+ <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com> <23eba53a-9304-2ceb-d97e-01891ec0b3ed@ti.com>
+ <cb028b1e-05ca-9b22-be5d-c63f5fd56cc4@ti.com> <F3335195-6EB7-4D44-B884-2F29D9238011@goldelico.com>
+ <CAHCN7xL9bFxO=2i1DzmRj6A3XwUNdt=DZeJ2a0EZ0f9gcFTy6g@mail.gmail.com>
+ <CAHCN7x+vCfPTRE+zzYUwAXdbBzRotTP2hSOgsHB0FdgBhZV5zA@mail.gmail.com>
+ <CAHCN7xJDV=R9Ysjhff7=mEXdciwPP_5LQbHwaUT8KvhSkLKw8A@mail.gmail.com>
+ <04306a5e-f9be-35a4-1aa1-5795d780e289@ti.com> <3777f1b1-2d9a-334b-b9e7-99dfda2ae29b@ti.com>
+In-Reply-To: <3777f1b1-2d9a-334b-b9e7-99dfda2ae29b@ti.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Mon, 30 Sep 2019 10:10:11 -0500
+Message-ID: <CAHCN7xJNJca8W_yw5nNY3AmKDSPoLzJ8voPmR1HS3bNcU8uQGg@mail.gmail.com>
+Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to dts
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On (09/30/19 06:33), Sodagudi Prasad wrote:
-> From Qualcomm side, we would like to check with upstream team about adding
-> Raw time stamp value to printk records. On Qualcomm soc, there are various
-> DSPs subsystems are there - for example audio, video and modem DSPs.
-> Adding raw timer value(along with sched_clock()) in the printk record helps
-> in the following use cases –
-> 1)	To find out which subsystem  crashed first  -  Whether application
-> processor crashed first or DSP subsystem?
-> 2)	If there are any system stability issues on the DSP side, what is the
-> activity on the APPS processor side during that time?
+On Mon, Sep 30, 2019 at 9:27 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
 >
-> Initially during the device boot up, printk shed_clock value can be matched
-> with timer raw value used on the dsp subsystem, but after APPS processor
-> suspends several times, we don’t have way to correlate the time stamp  value
-> on the DSP and APPS processor. All timers(both apps processor timer and dsp
-> timers) are derived from globally always on timer on Qualcomm soc, So
-> keeping global timer raw values in printk records and dsp logs help to
-> correlate the activity of all the processors in SoC.
+> On 30/09/2019 17:20, Tomi Valkeinen wrote:
+>
+> > Let's see what Tero says, but yeah, something is odd here. I expected
+> > the max divider to be 16 with Tero's patch, but I don't see it having
+> > that effect. I can get the div to 31.
+> >
+> > You can see this from the clock register 0x48004e40 (CM_CLKSEL_DSS). The
+> > lowest bits are the divider, 5 to 0. The TRM says max div is 32.
+> >
+> > Tero said for him the dividers > 16 didn't "stick" to the register. I'm
+> > now wondering if he has an old beagleboard with OMAP34xx, which has max
+> > div 16.
+>
+> So testing a bit more here, I can see the DSS working fine and fps as
+> expected when I write values directly to CM_CLKSEL_DSS:5:0, with
+> dividers up to 31. With 32, DSS breaks. The TRM (AM/DM37x) says value 32
+> is valid.
 
-Off the top of my head - timestamps are really hard.
+I wonder if it's somehow being masked with bits 4:0 instead of 5:0
+which could potentially make the divider 0 and that value doesn't
+appear to be valid.
 
-Not only because, as of now, we serialize printk() internally. But also
-because a lot of things can happen on any CPU between the moment when event
-occurs - printk() - and the moment when we read clocks. NMI, IRQ, preemption.
+adam
 
-Consider the following case
-
-CPU0			CPU1			CPU2			CPU3
-printk()		printk()		printk()		printk()
-			<<preemption>>					<<irq>>
- spin_lock(logbuf)
- clock()
- spin_unlock(logbuf)				spin_lock(logbuf)
- 						clock()			<<iret>>
-						spin_unlock(logbuf)	spin_lock(logbuf)
-									clock()
-			spin_lock(logbuf)				spin_unlock(logbuf)
-			clock()
-			spin_unlock(logbuf)
-
-	-ss
+>
+>   Tomi
+>
+> --
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
