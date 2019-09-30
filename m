@@ -2,164 +2,180 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE36FC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA9BC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A934721A4A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:22:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569846143;
-	bh=cOLOKOmvaYLarF4Qg8rhvW+yROkM8klreFEOrduvdLY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2Q2L+DLlcu/4G4ccpMMgEPZJklMyZDliXIZ7bT8Ubetq4KdWf1kfqYzz/oE+QoqwC
-	 rX/+WkXTrznpLuKaHSJjX52dH6MYaAoreeY34bHzX9DKKCx39KMPAl+QQ1KNuzUFX9
-	 LKQ03o36bHV1c447GPDUyTp9fLn/QQ41DSvTU6kg=
+	by mail.kernel.org (Postfix) with ESMTP id F088120815
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:23:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730315AbfI3MWX (ORCPT
+        id S1730397AbfI3MXW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 08:22:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58170 "EHLO mail.kernel.org"
+        Mon, 30 Sep 2019 08:23:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:53116 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726072AbfI3MWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 08:22:22 -0400
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6847B216F4;
-        Mon, 30 Sep 2019 12:22:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569846141;
-        bh=cOLOKOmvaYLarF4Qg8rhvW+yROkM8klreFEOrduvdLY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QES9zpJwh+9KFJX0BeLY3ZWSYSnbZ3YWTvQwlob9ETkCKCo2RonUOPvLwJ8MlS+bx
-         GgUJXK80bRROeCz/eHnG0kop+J8Lv0zFRQ/9plLGDCMNjerGT9WnJtM0nBYX+24gWH
-         Pl51lx60GmdqV7jOfemEjSs2j9NlIF3S6/dKqwYc=
-Received: by mail-qt1-f179.google.com with SMTP id c21so16662224qtj.12;
-        Mon, 30 Sep 2019 05:22:21 -0700 (PDT)
-X-Gm-Message-State: APjAAAVTM5hYqt4ztwjQui1Pyv67xF9IOmYaZbcmfQ3vqGMctXiffRjc
-        RuBqIHPFOohNrXLlR2yd5WwJL4ya10nbg+lgnw==
-X-Google-Smtp-Source: APXvYqzrKI+HW/IJwobAuPoIwDguHXnRcIGXqgXgPSdclcufDbGq0nnxgxQ/qGqHwmh4ZxI6ERNeBADiPKAKMSdQKvY=
-X-Received: by 2002:ac8:444f:: with SMTP id m15mr24312480qtn.110.1569846140534;
- Mon, 30 Sep 2019 05:22:20 -0700 (PDT)
+        id S1726072AbfI3MXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 08:23:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 056921000;
+        Mon, 30 Sep 2019 05:23:21 -0700 (PDT)
+Received: from [10.1.196.50] (e108454-lin.cambridge.arm.com [10.1.196.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1819B3F706;
+        Mon, 30 Sep 2019 05:23:19 -0700 (PDT)
+Subject: Re: [PATCH v2] arm64/sve: Fix wrong free for task->thread.sve_state
+To:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        linux-kernel@vger.kernel.org
+References: <20190927153949.29870-1-msys.mizuma@gmail.com>
+From:   Julien Grall <julien.grall@arm.com>
+Message-ID: <b3dba44e-216c-f060-be8e-1c44bdc61576@arm.com>
+Date:   Mon, 30 Sep 2019 13:23:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20190923101513.32719-1-kurt@linutronix.de> <20190923101513.32719-3-kurt@linutronix.de>
- <20190927161118.GA19333@bogus> <f63da257-95b4-bcb8-9ba4-9786645caf26@prevas.dk>
-In-Reply-To: <f63da257-95b4-bcb8-9ba4-9786645caf26@prevas.dk>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 30 Sep 2019 07:22:08 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKZQXGtrDUiAJj+xMnYowzDdxTdvDOXTbr_n3KWMrL7_w@mail.gmail.com>
-Message-ID: <CAL_JsqKZQXGtrDUiAJj+xMnYowzDdxTdvDOXTbr_n3KWMrL7_w@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] dt/bindings: Add bindings for Layerscape external irqs
-To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Cc:     Kurt Kanzenbach <kurt@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190927153949.29870-1-msys.mizuma@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 4:16 PM Rasmus Villemoes
-<rasmus.villemoes@prevas.dk> wrote:
->
-> On 27/09/2019 18.11, Rob Herring wrote:
-> > On Mon, Sep 23, 2019 at 12:15:13PM +0200, Kurt Kanzenbach wrote:
-> >> From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-> >>
-> >> This adds Device Tree binding documentation for the external interrupt
-> >> lines with configurable polarity present on some Layerscape SOCs.
-> >>
-> >> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-> >> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
-> >> ---
-> >>
-> >> +* Freescale Layerscape external IRQs
-> >> +
-> >> +Some Layerscape SOCs (LS1021A, LS1043A, LS1046A, LS2088A) support
-> >> +inverting the polarity of certain external interrupt lines.
-> >> +
-> >> +The device node must be a child of the node representing the
-> >> +Supplemental Configuration Unit (SCFG) or the Interrupt Sampling
-> >> +Control (ISC) Unit.
-> >> +
-> >> +Required properties:
-> >> +- compatible: should be "fsl,<soc-name>-extirq", e.g. "fsl,ls1021a-extirq".
-> >> +- interrupt-controller: Identifies the node as an interrupt controller
-> >> +- #interrupt-cells: Must be 2. The first element is the index of the
-> >> +  external interrupt line. The second element is the trigger type.
-> >> +- interrupt-parent: phandle of GIC.
-> >> +- reg: Specifies the Interrupt Polarity Control Register (INTPCR) in the SCFG.
-> >> +- fsl,extirq-map: Specifies the mapping to interrupt numbers in the parent
-> >> +  interrupt controller. Interrupts are mapped one-to-one to parent
-> >> +  interrupts.
-> >
-> > This should be an 'interrupt-map' instead.
->
-> Rob, thanks for your review comments. I know you said the same thing at
-> v5, and it might seem like they are ignored. However, I asked a couple
-> of followup questions
-> (https://lore.kernel.org/lkml/0bb4533d-c749-d8ff-e1f2-4b08eb724713@prevas.dk/).
-> I'd really appreciate it if you could (a) point to some documentation on
-> how to write that interrupt-map and (b) explain how this is different
-> from the Qualcomm PDC case I tried to copy and which had your Reviewed-By.
+Hi,
 
-https://www.devicetree.org/specifications/
-https://elinux.org/Device_Tree_Usage#Advanced_Interrupt_Mapping
+On 27/09/2019 16:39, Masayoshi Mizuma wrote:
+> From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+> 
+> The system which has SVE feature crashed because of
+> the memory pointed by task->thread.sve_state was destroyed
+> by someone.
+> 
+> That is because sve_state is freed while the forking the
+> child process. The child process has the pointer of sve_state
+> which is same as the parent's because the child's task_struct
+> is copied from the parent's one. If the copy_process()
+> fails as an error on somewhere, for example, copy_creds(),
+> then the sve_state is freed even if the parent is alive.
+> The flow is as follows.
+> 
+> copy_process
+>          p = dup_task_struct
+>              => arch_dup_task_struct
+>                  *dst = *src;  // copy the entire region.
+> :
+>          retval = copy_creds
+>          if (retval < 0)
+>                  goto bad_fork_free;
+> :
+> bad_fork_free:
+> ...
+>          delayed_free_task(p);
+>            => free_task
+>               => arch_release_task_struct
+>                  => fpsimd_release_task
+>                     => __sve_free
+>                        => kfree(task->thread.sve_state);
+>                           // free the parent's sve_state
+> 
+> Move child's sve_state = NULL and clearing TIF_SVE flag
+> to arch_dup_task_struct() so that the child doesn't free the
+> parent's one.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: bc0ee4760364 ("arm64/sve: Core task context handling")
 
-For QC PDC, it could be a large number of interrupts to remap which
-interrupt-map doesn't scale to very well. Also, I think it sits in
-parallel to the GIC rather than downstream. The interrupt binding
-doesn't really have a way to express that.
+Looking at the log, it looks like THREAD_INFO_IN_TASK was selected before the 
+bc0ee4760364. So it should be fine to backport for all the Linux tree contain 
+this commit.
 
+> Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+> Reported-by: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
+> Suggested-by: Dave Martin <Dave.Martin@arm.com>
 
-> >> +Optional properties:
-> >> +- fsl,bit-reverse: This boolean property should be set on the LS1021A
-> >> +  if the SCFGREVCR register has been set to all-ones (which is usually
-> >> +  the case), meaning that all reads and writes of SCFG registers are
-> >> +  implicitly bit-reversed. Other compatible platforms do not have such
-> >> +  a register.
-> >
-> > Couldn't you just read that register and tell?
->
-> In theory, yes, but as far as I understand (and as I wrote) it's
-> specific to the ls1021a. Of course one can decide whether it's
-> necessary/possible to read it based on the compatible string, but one
-> would also need an extra reg property to have its address - but that
-> register is not really part of the extirq "device" we're trying to
-> describe. So would it need to be represented as its own subnode of scfg?
+I have tested the patch and can confirm that double-free disappeared after the 
+patch is applied:
 
-Why? You should know where the register is because you know what chip
-you are on (from the compatible).
+Tested-by: Julien Grall <julien.grall@arm.com>
 
->
-> If it is set at all, it's done within the first few instructions after
-> reset (before control is even handed to the bootloader), so I see it as
-> a kind of quirk of the hardware. The data sheet says "SCFG bit reverse
-> (SCFG_SCFGREVCR) must be written 0xFFFF_FFFF as a part of initialization
-> sequence before writing to any other SCFG register." which, taken
-> literally, means we don't need the property at all and can just assume
-> it for the ls1021a (i.e., do it based on compatible string alone) - but
-> I think it should be read as "if you're going to write this register, it
-> must be done first thing".
->
-> > Does this apply to only the extirq register or all of scfg?
->
-> All of scfg. It really seems like some accident/bad joke coming out of a
-> discussion between a hardware and software engineer on the enumeration
-> of bits, with the hardware guy ending up saying "alright, have it
-> whichever way you want it", causing even more pain :(
+See below for a few comments.
 
-If all of the scfg bits change, then if you have this property, it
-should be in the scfg node. But I prefer you use the compatible
-instead if that works.
+> ---
+>   arch/arm64/kernel/process.c | 21 ++++-----------------
+>   1 file changed, 4 insertions(+), 17 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+> index f674f28df..6937f5935 100644
+> --- a/arch/arm64/kernel/process.c
+> +++ b/arch/arm64/kernel/process.c
+> @@ -323,22 +323,16 @@ void arch_release_task_struct(struct task_struct *tsk)
+>   	fpsimd_release_task(tsk);
+>   }
+>   
+> -/*
+> - * src and dst may temporarily have aliased sve_state after task_struct
+> - * is copied.  We cannot fix this properly here, because src may have
+> - * live SVE state and dst's thread_info may not exist yet, so tweaking
+> - * either src's or dst's TIF_SVE is not safe.
+> - *
+> - * The unaliasing is done in copy_thread() instead.  This works because
+> - * dst is not schedulable or traceable until both of these functions
+> - * have been called.
+> - */
 
-Rob
+It would be good to explain in the commit message why tweaking "dst" in 
+arch_dup_task_struct() is fine.
+
+ From my understanding, Arm64 used to have thread_info on the stack. So it would 
+not be possible to clear TIF_SVE until the stack is initialized.
+
+Now that the thread_info is part of the task, it should be valid to modify the 
+flag from arch_dup_task_struct().
+
+Note that technically, TIF_SVE does not need to be cleared from 
+arch_dup_task_struct(). It could also be done from copy_thread(). But it is 
+easier to keep the both changes together.
+
+>   int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
+>   {
+>   	if (current->mm)
+>   		fpsimd_preserve_current_state();
+>   	*dst = *src;
+>   
+> +	BUILD_BUG_ON(!IS_ENABLED(CONFIG_THREAD_INFO_IN_TASK));
+
+You may want to add a comment on top explaining why TIF_SVE is cleared here.
+
+> +	dst->thread.sve_state = NULL;
+> +	clear_tsk_thread_flag(dst, TIF_SVE);
+> +
+>   	return 0;
+>   }
+>   
+> @@ -351,13 +345,6 @@ int copy_thread(unsigned long clone_flags, unsigned long stack_start,
+>   
+>   	memset(&p->thread.cpu_context, 0, sizeof(struct cpu_context));
+>   
+> -	/*
+> -	 * Unalias p->thread.sve_state (if any) from the parent task
+> -	 * and disable discard SVE state for p:
+> -	 */
+> -	clear_tsk_thread_flag(p, TIF_SVE);
+> -	p->thread.sve_state = NULL;
+> -
+>   	/*
+>   	 * In case p was allocated the same task_struct pointer as some
+>   	 * other recently-exited task, make sure p is disassociated from
+> 
+
+Cheers,
+
+-- 
+Julien Grall
