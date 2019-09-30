@@ -2,105 +2,120 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E42BFC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51FF4C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B67E02081B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:06:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 274E9205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:06:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569877581;
-	bh=TZtp8z/iTZ3ALd9DyToR8MmBnn5V7UEHCdO6Tp9gOrY=;
+	s=default; t=1569877613;
+	bh=/VQaup5CuEQUqfJz3MIjQfet3UrLzzEhVMeOPttQQ44=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qg+xntnluipPgI9GLnnhdEJkaIyZ07ikqRKfa+FOuvVmGA0WsTu3dyDSZyymZd2qW
-	 Nx8iv2+qbfRUUQJPJQA7P541KHnH71zmFO3Vg2D6itSQhkLv5HqW0b7FN0NDYtEuNS
-	 kqGfQLnvXJSKyw47ohWJbKXiW1SoJISCRbcjbGo0=
+	b=qXlrG5zwnQRBJ91RvMnZxZtamG7Y2IE4IoUHB8P7XAywEPgL51TOEtRrXRtGfX20V
+	 wYU0jgcYyl3K/37C/+QK9DNax9AuPa9HeD6bNPs2eNmYEADhlyPAqBxa1i+pANk0mQ
+	 qK7nboQOKcbO11jJahC/a1/FRqy49Gu0nEMSCze0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732580AbfI3VGV (ORCPT
+        id S1732585AbfI3VGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 17:06:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44074 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731010AbfI3VFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 17:05:54 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D627215EA;
-        Mon, 30 Sep 2019 17:27:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569864465;
-        bh=TZtp8z/iTZ3ALd9DyToR8MmBnn5V7UEHCdO6Tp9gOrY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cACX88i5rWYAkn/QArZJUsxzmXx+R/sxIaF6POWModAa8oJ057592SKgtO2zbDoXm
-         fOBtMji2n2UUmHW8G3mNPunZ8nSjrNaPC2Zxrk2Ys4HpArShmU61dSdo4MbuR/4WFZ
-         UsG5F+hmjtxHdjxGiF/e9qVl56qC6B57V/Eg0JZ8=
-Date:   Mon, 30 Sep 2019 19:27:43 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Pavel Machek <pavel@denx.de>,
-        Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     linux-leds@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-Subject: Re: [PATCH 1/2] leds: Add flag to keep trigger always
-Message-ID: <20190930172743.GA2409822@kroah.com>
-References: <1565398367-11811-1-git-send-email-gurus@codeaurora.org>
- <20190810071322.GA13760@amd>
- <20190930133902.GA2249614@kroah.com>
- <20190930172239.GA26107@amd>
+        Mon, 30 Sep 2019 17:06:52 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37008 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730886AbfI3VGw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 17:06:52 -0400
+Received: by mail-oi1-f194.google.com with SMTP id i16so12457760oie.4;
+        Mon, 30 Sep 2019 14:06:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=R+ScOBn956KzGEkg9VCnHI1hFy+s6fYadz+MoOpEicw=;
+        b=pjMhvLmNowUPj7raJGbALN8qwn2QitiKVSbnhv+BIlTh+Rmd/0WCVMGtPBDmoI4sPz
+         aahwHYHCakYIrFFOEND1JFsPVLyPItHuoEYhUg2HQ8RpAmpfYYZABFe+8JPQjWDI+APO
+         Q1KthcPJ7n43F9YoLZTjU52JVkOjUvcErYOxzX0CI6YUMn45XMfv9GjwdEJb4vtUpb+e
+         FJeONc84A3EtJUXFrCZFzLaZgUvmybymJbJf9zQlS/JTWnSQbHQdHHeSxmBLP4EGgHb3
+         NHfz1ki50qt/LP18hQXOSq7p5bIBCxvb6+O8AXa/Iv6RWZmBClHkfvbhzV5ReWwEZ/D4
+         kFKA==
+X-Gm-Message-State: APjAAAWqkvhoApMoy1CGuFKaNYJkkGTzgBbc11R4y74q5tntO9csSean
+        8a/YnCy1LNW52qxrJd0vlF/xeZM=
+X-Google-Smtp-Source: APXvYqxJdj7UgIetkxyOJuuB+3gPijhJfnPX8rakxTFVB90F9LrBkIwQZ2VZisQ5soTIpdHmL7I2rw==
+X-Received: by 2002:aca:50ca:: with SMTP id e193mr643865oib.110.1569870350475;
+        Mon, 30 Sep 2019 12:05:50 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id e61sm4090614ote.24.2019.09.30.12.05.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 12:05:49 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 14:05:49 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Cernekee <cernekee@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
+        <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH v2 2/5] dt-bindings: Document brcm,irq-can-wake for
+ brcm,bcm7038-l1-intc.txt
+Message-ID: <20190930190549.GA21236@bogus>
+References: <20190913191542.9908-1-f.fainelli@gmail.com>
+ <20190913191542.9908-3-f.fainelli@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190930172239.GA26107@amd>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20190913191542.9908-3-f.fainelli@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 07:22:39PM +0200, Pavel Machek wrote:
-> On Mon 2019-09-30 15:39:02, Greg KH wrote:
-> > On Sat, Aug 10, 2019 at 09:13:22AM +0200, Pavel Machek wrote:
-> > > On Fri 2019-08-09 17:52:46, Guru Das Srinagesh wrote:
-> > > > From: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-> > > > 
-> > > > Commit 0013b23d66a2768f5babbb0ea9f03ab067a990d8 ("leds: disable triggers
-> > > > on brightness set") removes the trigger on an LED class device when
-> > > > brightness is set to 0. However, there are some LED class devices which
-> > > > need the trigger not to be removed. In a use case like camera flash,
-> > > > camera flash driver passes in a trigger device to LED class driver. If
-> > > > the trigger is removed when the brightness is set to 0, this will affect
-> > > > the clients using those triggers. Hence add a flag to always keep the
-> > > > trigger even when brightness is set to 0.
-> > > 
-> > > No.
-> > > 
-> > > Yes, it would affect those clients. Don't do it, then. It is
-> > > root-only operation.
-> > 
-> > I don't understand.  The original commit broke userspace operations.
-> > Shouldn't it be reverted, or fixed this way in order to have userspace
-> > work properly again?
+On Fri, Sep 13, 2019 at 12:15:39PM -0700, Florian Fainelli wrote:
+> The BCM7038 L1 interrupt controller can be used as a wake-up interrupt
+> controller on MIPS and ARM-based systems, document the brcm,irq-can-wake
+> which has been "standardized" across Broadcom interrupt controllers.
+
+Not clear that that got much review...
+
+We have a defined way to indicate wakeup sources (which maybe didn't 
+exist in 2014), why can't that be used? If a device can wakeup the 
+system, I'd think we can just assume that the parent interrupt 
+controller(s) can support that.
+
+In any case, I'm not going to stand in the way of this:
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  .../bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt   | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> So, what it is exactly that is not working? :-). Yes, root can
-> disconnect LED from v4l2 interface; he can also connect it
-> back. Documentation says that happens.
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
+> index 2117d4ac1ae5..4eb043270f5b 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
+> @@ -31,6 +31,11 @@ Required properties:
+>  - interrupts: specifies the interrupt line(s) in the interrupt-parent controller
+>    node; valid values depend on the type of parent interrupt controller
+>  
+> +Optional properties:
+> +
+> +- brcm,irq-can-wake: If present, this means the L1 controller can be used as a
+> +  wakeup source for system suspend/resume.
+> +
+>  If multiple reg ranges and interrupt-parent entries are present on an SMP
+>  system, the driver will allow IRQ SMP affinity to be set up through the
+>  /proc/irq/ interface.  In the simplest possible configuration, only one
+> -- 
+> 2.17.1
 > 
-> Yes, root can do stupid things.
-> 
-> Commit 0013b23d66a2768f5babbb0ea9f03ab067a990d8 is from 2008. I'd
-> prefer we did not apply it in 2008, but...
-
-Ah, my fault, I thought this was a new commit.
-
-Guru, what are you doing here that this is required all of a sudden?  No
-other kernel seems to need these changes, what is different in your
-Android userspace that requires this patch series?
-
-thanks,
-
-greg k-h
