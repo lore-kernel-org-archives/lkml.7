@@ -2,128 +2,108 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7854BC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A54C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 477F421855
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:01:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569841262;
-	bh=eKtlC/QS9C5TpQ2Zwitjtpt/UtsVlMideLkWYLpkfe8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cJ2ZZhks+KwJ6KqxoSdjHlJMtI1yALa6R4KzMqamwdD5s7HIEWPv88U/jWqQfNQqd
-	 3hiTEPcx/BFaLFVCTLrS/xx8TaPpwfr59cHkudgE9pyuR48kL1UYy30o2rk1XjqfoC
-	 Jxy9Ub/pe9pHnTpseEzg7IdT3fsz5ONBogIGpnvA=
+	by mail.kernel.org (Postfix) with ESMTP id 9566821855
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:02:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730890AbfI3LBB (ORCPT
+        id S1730905AbfI3LCX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 07:01:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37506 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729415AbfI3LBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 07:01:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 17D44AC7B;
-        Mon, 30 Sep 2019 11:00:59 +0000 (UTC)
-Date:   Mon, 30 Sep 2019 13:00:58 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     akpm@linux-foundation.org, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com,
-        linux-s390@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/page_alloc: fix a crash in free_pages_prepare()
-Message-ID: <20190930110058.GB25306@dhcp22.suse.cz>
-References: <1569613623-16820-1-git-send-email-cai@lca.pw>
+        Mon, 30 Sep 2019 07:02:23 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:34167 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730759AbfI3LCW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 07:02:22 -0400
+Received: by mail-wm1-f65.google.com with SMTP id y135so13855382wmc.1;
+        Mon, 30 Sep 2019 04:02:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ms5iPF2H4/EUN9qkeORDrpoKQjqFYv3fNdSR7vI74Ys=;
+        b=oKpJq6bwizuB392evzxhJP6Gb2mKQPj3+rMZucZuE/UQuYAWZePTUkB4iJzdZgkd+E
+         c97Dn4UlNJdJL0fIQwwWfuYcyx8ICWu8Ir0vPbl0jEpEJPHNtoMWse2QvKAiL/mffKOi
+         igRlX1HhRRHK5fdnEEvlTp+HMshpDni0pg6jlOsJAhfloQyBQQqZVuLuGY04EVkYhBS/
+         ImRT+w8bldAJ9mLZ2L4XrA43jVpehCNeEVxnXXgXHTc7cm+rFjXAuGKRxafsOC53Z7Bt
+         C40dPqwin1s7vymhQG+L+9O7lH5fpGdHKI0jbhuULiqPJyyO8ysRhUtl6yZOrMBLX5p3
+         EqCg==
+X-Gm-Message-State: APjAAAWpzvpUM6Y2zitFPumyBPN78risi1zKsgh81VWaYDxpxoivx0w5
+        AEa+OGHeaGLkw8DtIJTpM3E=
+X-Google-Smtp-Source: APXvYqy6G2bUP18h/dG1Ymznd8phlt997hcwRCX+r1Htrq6oj5itwm6aXYaENnbK/mISBPIjuISu7A==
+X-Received: by 2002:a7b:c088:: with SMTP id r8mr17824239wmh.44.1569841340181;
+        Mon, 30 Sep 2019 04:02:20 -0700 (PDT)
+Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
+        by smtp.googlemail.com with ESMTPSA id j26sm23653452wrd.2.2019.09.30.04.02.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 04:02:19 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     devel@driverdev.osuosl.org
+Cc:     Denis Efremov <efremov@linux.com>, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Jes Sorensen <jes.sorensen@gmail.com>, stable@vger.kernel.org
+Subject: [PATCH] staging: rtl8723bs: hal: Fix memcpy calls
+Date:   Mon, 30 Sep 2019 14:01:41 +0300
+Message-Id: <20190930110141.29271-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1569613623-16820-1-git-send-email-cai@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 27-09-19 15:47:03, Qian Cai wrote:
-> On architectures like s390, arch_free_page() could mark the page unused
-> (set_page_unused()) and any access later would trigger a kernel panic.
-> Fix it by moving arch_free_page() after all possible accessing calls.
-> 
->  Hardware name: IBM 2964 N96 400 (z/VM 6.4.0)
->  Krnl PSW : 0404e00180000000 0000000026c2b96e
-> (__free_pages_ok+0x34e/0x5d8)
->             R:0 T:1 IO:0 EX:0 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 RI:0 EA:3
->  Krnl GPRS: 0000000088d43af7 0000000000484000 000000000000007c
->  000000000000000f
->             000003d080012100 000003d080013fc0 0000000000000000
->  0000000000100000
->             00000000275cca48 0000000000000100 0000000000000008
->  000003d080010000
->             00000000000001d0 000003d000000000 0000000026c2b78a
->  000000002717fdb0
->  Krnl Code: 0000000026c2b95c: ec1100b30659 risbgn %r1,%r1,0,179,6
->             0000000026c2b962: e32014000036 pfd 2,1024(%r1)
->            #0000000026c2b968: d7ff10001000 xc 0(256,%r1),0(%r1)
->            >0000000026c2b96e: 41101100  la %r1,256(%r1)
->             0000000026c2b972: a737fff8  brctg %r3,26c2b962
->             0000000026c2b976: d7ff10001000 xc 0(256,%r1),0(%r1)
->             0000000026c2b97c: e31003400004 lg %r1,832
->             0000000026c2b982: ebff1430016a asi 5168(%r1),-1
->  Call Trace:
->  __free_pages_ok+0x16a/0x5d8)
->  memblock_free_all+0x206/0x290
->  mem_init+0x58/0x120
->  start_kernel+0x2b0/0x570
->  startup_continue+0x6a/0xc0
->  INFO: lockdep is turned off.
->  Last Breaking-Event-Address:
->  __free_pages_ok+0x372/0x5d8
->  Kernel panic - not syncing: Fatal exception: panic_on_oops
-> 00: HCPGIR450W CP entered; disabled wait PSW 00020001 80000000 00000000
-> 26A2379C
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
+memcpy() in phy_ConfigBBWithParaFile() and PHY_ConfigRFWithParaFile() is
+called with "src == NULL && len == 0". This is an undefined behavior.
+Moreover this if pre-condition "pBufLen && (*pBufLen == 0) && !pBuf"
+is constantly false because it is a nested if in the else brach, i.e.,
+"if (cond) { ... } else { if (cond) {...} }". This patch alters the
+if condition to check "pBufLen && pBuf" pointers are not NULL.
 
-Unless I am missing something 
-Fixes: 8823b1dbc05f ("mm/page_poison.c: enable PAGE_POISONING as a separate option")
-Fixes: 6471384af2a6 ("mm: security: introduce init_on_alloc=1 and init_on_free=1 boot options")
-Cc: stable
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Bastien Nocera <hadess@hadess.net>
+Cc: Larry Finger <Larry.Finger@lwfinger.net>
+Cc: Jes Sorensen <jes.sorensen@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+Not tested. I don't have the hardware. The fix is based on my guess.
 
-With the comment discussed later in the thread
-Acked-by: Michal Hocko <mhocko@suse.com>
+ drivers/staging/rtl8723bs/hal/hal_com_phycfg.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> ---
->  mm/page_alloc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 3334a769eb91..a54ff6a60649 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -1175,11 +1175,11 @@ static __always_inline bool free_pages_prepare(struct page *page,
->  		debug_check_no_obj_freed(page_address(page),
->  					   PAGE_SIZE << order);
->  	}
-> -	arch_free_page(page, order);
->  	if (want_init_on_free())
->  		kernel_init_free_pages(page, 1 << order);
->  
->  	kernel_poison_pages(page, 1 << order, 0);
-> +	arch_free_page(page, order);
->  	if (debug_pagealloc_enabled())
->  		kernel_map_pages(page, 1 << order, 0);
->  
-> -- 
-> 1.8.3.1
-> 
-
+diff --git a/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c b/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c
+index 6539bee9b5ba..0902dc3c1825 100644
+--- a/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c
++++ b/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c
+@@ -2320,7 +2320,7 @@ int phy_ConfigBBWithParaFile(
+ 			}
+ 		}
+ 	} else {
+-		if (pBufLen && (*pBufLen == 0) && !pBuf) {
++		if (pBufLen && pBuf) {
+ 			memcpy(pHalData->para_file_buf, pBuf, *pBufLen);
+ 			rtStatus = _SUCCESS;
+ 		} else
+@@ -2752,7 +2752,7 @@ int PHY_ConfigRFWithParaFile(
+ 			}
+ 		}
+ 	} else {
+-		if (pBufLen && (*pBufLen == 0) && !pBuf) {
++		if (pBufLen && pBuf) {
+ 			memcpy(pHalData->para_file_buf, pBuf, *pBufLen);
+ 			rtStatus = _SUCCESS;
+ 		} else
 -- 
-Michal Hocko
-SUSE Labs
+2.21.0
+
