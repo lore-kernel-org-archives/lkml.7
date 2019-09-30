@@ -2,104 +2,178 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D84FC4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B1EC388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F192720842
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:45:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fDhmfO1e"
+	by mail.kernel.org (Postfix) with ESMTP id D5CA821928
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:47:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729760AbfI3HpB (ORCPT
+        id S1729659AbfI3Hru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 03:45:01 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:33127 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbfI3HpA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 03:45:00 -0400
-Received: by mail-lj1-f193.google.com with SMTP id a22so8372545ljd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 00:45:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AKsJKdSG5R8dGV+DIPEx5nlyGaSi4dLBqBkbszm5F9M=;
-        b=fDhmfO1ekIhNvjKsqu2BsmStSF9nq0Zinum0JZkMIVnBK74vRI2OHnevK7Po77juxo
-         wZNaqHXYAw0hfKDmBaM7F4RixYxIKCWaBO0mNC8iziTCWZK+uS4QHO4rXZDXiaEfLygH
-         6dtTyf6tCdnC6iQInJWYB4tipgjNHLEjgX5SShutOLWDwlxB9t32yJrBytP2ps2TTFZn
-         UUYqdQp9IKvyJ1o301IuR30H6QOSG3r3NYoOvnSRrk5OZep8gRjNYNPGhe6823CjLpoz
-         CHZgYarv+oRpDsXMfjjM7ER0e9znBwxZs421i309nrrMRj3E+iyOBEbnkcJzkC3gxlQu
-         ETQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AKsJKdSG5R8dGV+DIPEx5nlyGaSi4dLBqBkbszm5F9M=;
-        b=CSBy0Ez898UmJHtHaUN8dP09nKgPhg/PTSecsBIM0zqyks/o4XWbN3HxZT0WgsBgfN
-         4S9Xs7TR7wYBmCCn0awB5HTHIfkOxmz2LsX+AlXTeXrftiFdCh3IFZ4S7132s4ArvEJn
-         VZlw3tMnQGnWd1lstGubGjKjOeLjuH3To9d904VBYEHJoeA39sLjQ3Gegu7LYqqSNyvm
-         Y9CryAM1TSGV4B+n+8B9nySes+Fs0fNV7/LxZHd5f9NX27Bkng4UoEoaiuQUJV+k6/t4
-         nZ1QvjQmL7ALLa0ZLfKV7DOYCHcaWEYcHjeGpGBPXpozqloZxfvH5In+0KdxUT6Hvvww
-         AGDA==
-X-Gm-Message-State: APjAAAVXloC3s+WP3IRumM6PDZxMy+FKNamZ/BhU7d3QB6NBgk+sz3Ik
-        tePQRHkX6PIzMgMLUeKjMw20FRl/TJyKrqN8FPrU8Q==
-X-Google-Smtp-Source: APXvYqz1Eg/5CGuw4YGRcxqrRnPjjwX9NIiAoCcTMqWdBd7jpUR2FZkjOzSXb2LWVZZL+SGbi62rZYK8jzIfAczEbXU=
-X-Received: by 2002:a2e:42c9:: with SMTP id h70mr10772967ljf.88.1569829499004;
- Mon, 30 Sep 2019 00:44:59 -0700 (PDT)
+        Mon, 30 Sep 2019 03:47:50 -0400
+Received: from smtp3.goneo.de ([85.220.129.37]:57964 "EHLO smtp3.goneo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725767AbfI3Hrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 03:47:49 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by smtp3.goneo.de (Postfix) with ESMTP id 9395A23F739;
+        Mon, 30 Sep 2019 09:47:45 +0200 (CEST)
+X-Virus-Scanned: by goneo
+Received: from smtp3.goneo.de ([127.0.0.1])
+        by localhost (smtp3.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id MD998ao4vd6d; Mon, 30 Sep 2019 09:47:44 +0200 (CEST)
+Received: from lem-wkst-02.lemonage (hq.lemonage.de [87.138.178.34])
+        by smtp3.goneo.de (Postfix) with ESMTPSA id 2041D23F63A;
+        Mon, 30 Sep 2019 09:47:43 +0200 (CEST)
+Date:   Mon, 30 Sep 2019 09:47:37 +0200
+From:   Lars Poeschel <poeschel@lemonage.de>
+To:     Rob Herring <robh@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:NFC SUBSYSTEM" <netdev@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Johan Hovold <johan@kernel.org>,
+        Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v8 2/7] nfc: pn532: Add uart phy docs and rename it
+Message-ID: <20190930074737.GA24353@lem-wkst-02.lemonage>
+References: <20190919091645.16439-1-poeschel@lemonage.de>
+ <20190919091645.16439-2-poeschel@lemonage.de>
+ <20190927155209.GA6261@bogus>
 MIME-Version: 1.0
-References: <1568878421-12301-1-git-send-email-vincent.guittot@linaro.org>
- <1568878421-12301-5-git-send-email-vincent.guittot@linaro.org> <df9fc32955789e7fcd01623433faba8d2f446b6e.camel@surriel.com>
-In-Reply-To: <df9fc32955789e7fcd01623433faba8d2f446b6e.camel@surriel.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Mon, 30 Sep 2019 09:44:47 +0200
-Message-ID: <CAKfTPtD2_ZHUv5Kz3R2qV33RxrGNC=y+7-4jCdvj9Deo=7A77Q@mail.gmail.com>
-Subject: Re: [PATCH v3 04/10] sched/fair: rework load_balance
-To:     Rik van Riel <riel@surriel.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Hillf Danton <hdanton@sina.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190927155209.GA6261@bogus>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Sep 2019 at 03:13, Rik van Riel <riel@surriel.com> wrote:
->
-> On Thu, 2019-09-19 at 09:33 +0200, Vincent Guittot wrote:
-> >
-> > Also the load balance decisions have been consolidated in the 3
-> > functions
-> > below after removing the few bypasses and hacks of the current code:
-> > - update_sd_pick_busiest() select the busiest sched_group.
-> > - find_busiest_group() checks if there is an imbalance between local
-> > and
-> >   busiest group.
-> > - calculate_imbalance() decides what have to be moved.
->
-> I really like the direction this series is going.
+On Fri, Sep 27, 2019 at 10:52:09AM -0500, Rob Herring wrote:
+> On Thu, Sep 19, 2019 at 11:16:39AM +0200, Lars Poeschel wrote:
+> > This adds documentation about the uart phy to the pn532 binding doc. As
+> > the filename "pn533-i2c.txt" is not appropriate any more, rename it to
+> > the more general "pn532.txt".
+> > This also documents the deprecation of the compatible strings ending
+> > with "...-i2c".
+> > 
+> > Cc: Johan Hovold <johan@kernel.org>
+> > Cc: Simon Horman <horms@verge.net.au>
+> > Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+> > ---
+> > Changes in v8:
+> > - Update existing binding doc instead of adding a new one:
+> >   - Add uart phy example
+> >   - Add general "pn532" compatible string
+> >   - Deprecate "...-i2c" compatible strings
+> >   - Rename file to a more general filename
+> > - Intentionally drop Rob's Reviewed-By as I guess this rather big change
+> >   requires a new review
+> > 
+> > Changes in v7:
+> > - Accidentally lost Rob's Reviewed-By
+> > 
+> > Changes in v6:
+> > - Rebased the patch series on v5.3-rc5
+> > - Picked up Rob's Reviewed-By
+> > 
+> > Changes in v4:
+> > - Add documentation about reg property in case of i2c
+> > 
+> > Changes in v3:
+> > - seperate binding doc instead of entry in trivial-devices.txt
+> > 
+> >  .../devicetree/bindings/net/nfc/pn532.txt     | 46 +++++++++++++++++++
+> >  .../devicetree/bindings/net/nfc/pn533-i2c.txt | 29 ------------
+> >  2 files changed, 46 insertions(+), 29 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/net/nfc/pn532.txt
+> >  delete mode 100644 Documentation/devicetree/bindings/net/nfc/pn533-i2c.txt
+> 
+> In the future, use '-M' option (I recommend making this the default).
 
-Thanks
+As David already requested a next version of the patchset, I will do it
+in v9.
 
->
-> However, I suppose I should run these patches for
-> a few days with some of our test workloads before
-> I send out an ack for this patch :)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/nfc/pn532.txt b/Documentation/devicetree/bindings/net/nfc/pn532.txt
+> > new file mode 100644
+> > index 000000000000..f0591f160bee
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/nfc/pn532.txt
+> > @@ -0,0 +1,46 @@
+> > +* NXP Semiconductors PN532 NFC Controller
+> > +
+> > +Required properties:
+> > +- compatible: Should be
+> > +    - "nxp,pn532" Place a node with this inside the devicetree node of the bus
+> > +                  where the NFC chip is connected to.
+> > +                  Currently the kernel has phy bindings for uart and i2c.
+> > +    - "nxp,pn532-i2c" (DEPRECATED) only works for the i2c binding.
+> > +    - "nxp,pn533-i2c" (DEPRECATED) only works for the i2c binding.
+> 
+> No more pm533 support?
 
-Yes more tests on different platform are welcome
+If you ask me, no. NXP sells more or less two versions of this chip:
+pn532 and pn533. The pn532 is the version with i2c and uart interface,
+the pn533 only has an usb interface. So I would say "nxp,pn533-i2c" was
+wrong and I dropped it.
 
->
-> --
-> All Rights Reversed.
+> > +
+> > +Required properties if connected on i2c:
+> > +- clock-frequency: I²C work frequency.
+> > +- reg: for the I²C bus address. This is fixed at 0x24 for the PN532.
+> > +- interrupts: GPIO interrupt to which the chip is connected
+> 
+> UART attached case has no irq? I guess it could just start sending 
+> data...
+
+Well, the chip has it (as said above, it is the same as the i2c chip)
+but it is not an use case for me. At the moment I have no hardware to
+test this with. So I did not implement it in the uart phy driver.
+Solution is: If the chip is in sleep mode, send it some special
+"wake-up" paket over uard and wait until it actually wakes up.
+
+> > +
+> > +Optional SoC Specific Properties:
+> > +- pinctrl-names: Contains only one value - "default".
+> > +- pintctrl-0: Specifies the pin control groups used for this controller.
+> > +
+> > +Example (for ARM-based BeagleBone with PN532 on I2C2):
+> > +
+> > +&i2c2 {
+> > +
+> > +
+> > +	pn532: pn532@24 {
+> 
+> nfc@24
+
+Ok.
+
+> > +
+> > +		compatible = "nxp,pn532";
+> > +
+> > +		reg = <0x24>;
+> > +		clock-frequency = <400000>;
+> > +
+> > +		interrupt-parent = <&gpio1>;
+> > +		interrupts = <17 IRQ_TYPE_EDGE_FALLING>;
+> > +
+> > +	};
+> > +};
+> > +
+> > +Example (for PN532 connected via uart):
+> > +
+> > +uart4: serial@49042000 {
+> > +        compatible = "ti,omap3-uart";
+> > +
+> > +        pn532: nfc {
+> > +                compatible = "nxp,pn532";
+> > +        };
+> > +};
