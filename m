@@ -2,113 +2,133 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF56C388F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E762CC4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D87342190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:10:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dUtfuaAu"
+	by mail.kernel.org (Postfix) with ESMTP id C447C20679
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:11:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729917AbfI3IKy (ORCPT
+        id S1729942AbfI3ILG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 04:10:54 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33759 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbfI3IKy (ORCPT
+        Mon, 30 Sep 2019 04:11:06 -0400
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:42451 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725767AbfI3ILE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 04:10:54 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q10so5168336pfl.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 01:10:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=yfE6B4I1Ttuz0rktBjLXX/V0kpxZSolAZktw2X5hjU4=;
-        b=dUtfuaAu6Ogn4b9bn7iT7vXi9w5kClQs8X7ZU1C3hQFp4WGpedqp5hzPISyRb/xesK
-         fMezIZsRJstxPwgvZyUlhfYb4EWWD1pkzCSVNZVq28b+wO2Z08PEL69jkpFyucvzSon/
-         BFiIxtx+LcapS+tNv3Q+qlmeJrFt0c5HdXgZA2sNuEf3RGCIP6acAPfmA09JlMr9lGJl
-         8Q+VjP8mARjy/PGdF3ec68YyRTj4Wauixlu66ysKk2g74lxQJ+AzC+5GVu3yiXIXvYj9
-         uI0mVkDP35cktpAPAybC98AphNqw5zkPTQr5jNEZLI375x+o5YygCJfs0OG0ak/2Oqoi
-         uooA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=yfE6B4I1Ttuz0rktBjLXX/V0kpxZSolAZktw2X5hjU4=;
-        b=ZqqTL5SDyHGLyfPwvvZnPcoa/l+FD1r90n1cTgVK3QeNEqF3P3/4cUJI0X3pst8q4n
-         uRylP7TjxWAPnYYUZlpJqEeZOCJyRH9wsrbN6aKCpMtKXHODcme8Ighhihb+CShXl9rN
-         V+ieUm7l5YIbMQAcWbTEZXCEdpNqsVLu+kVJI2gVerkHwhvSgL6J5rtlDpBW4YQlZgsT
-         aFdKWtP3KEQQWQ/0W2wTrqP/H9XCppSvkYTawyn2pj47Vd41mL+z9WMm33VKl9bK4v2F
-         CCo958406hSrWIDJaj5GHKdPXsg/8cPTr4OoDJo35y+zg+VFc6anlxXGs8nxYUcGmr/Y
-         KyfA==
-X-Gm-Message-State: APjAAAUYPLQSgT7SSr711q0CkbDcSQpxJsJpe/bTx8EYYNhQAjLcNIC8
-        FadyMZ+y2Rk/eCiry7QzjbY=
-X-Google-Smtp-Source: APXvYqwuKnvhirgfGCeA+DRO5hst8xbSTB+cz07SeIAykHObw+8rILfZWm1Dl7oS+Ktvn7bbMUknmw==
-X-Received: by 2002:a63:1608:: with SMTP id w8mr23022721pgl.223.1569831053642;
-        Mon, 30 Sep 2019 01:10:53 -0700 (PDT)
-Received: from Slackware ([103.231.91.38])
-        by smtp.gmail.com with ESMTPSA id m22sm1870033pgj.29.2019.09.30.01.10.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 01:10:52 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 13:40:41 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        akpm@linux-foundation.org, tglx@linutronix.de,
-        viro@zeniv.linux.org.uk
-Subject: [RFC] Makefiles in scripts dir needs to move  one place 
-Message-ID: <20190930081041.GA11886@Slackware>
+        Mon, 30 Sep 2019 04:11:04 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id EqldicaL79D4hEqlgiKoVb; Mon, 30 Sep 2019 10:11:02 +0200
+Subject: Re: [PATCH v2 0/6] media: cedrus: h264: Support multi-slice frames
+To:     Jernej Skrabec <jernej.skrabec@siol.net>, mchehab@kernel.org,
+        paul.kocialkowski@bootlin.com, mripard@kernel.org,
+        pawel@osciak.com, m.szyprowski@samsung.com,
+        kyungmin.park@samsung.com, tfiga@chromium.org, wens@csie.org
+Cc:     gregkh@linuxfoundation.org, boris.brezillon@collabora.com,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        ezequiel@collabora.com, jonas@kwiboo.se
+References: <20190929200023.215831-1-jernej.skrabec@siol.net>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <9ec1c07e-b0e8-f50c-7f46-df7ca303a5bc@xs4all.nl>
+Date:   Mon, 30 Sep 2019 10:10:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bg08WKrSYDhXBjb5"
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190929200023.215831-1-jernej.skrabec@siol.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfK9IKuZNeGFEGO1ipU974FZ/22u7b0eHb52sOVTjDWar12s23xSk7+3/qAGZaBOAOIslIwDo31TGsQr/hao3CJLYeYsH4Skz//+KsV/33q5632Vxor0Q
+ t4Tkji1xtcf7hwG67KNTFDYRdVo2uQ591OX3mZdbTCca6XOdpC8VVuMTh7WHjR1TyD8qtLrp7HxYqYrHrN7Id71XtQFBpCIyo3sJid0lBgcxoo25VBmoKBy9
+ Nr046jks4iF//5HfqDbwQPEgRiIX5bNmxSrECW+67UpopUihzusX4rRYXiQHZrc/2IIBA3exeyT7hkDTPK+LSkNKvAvsUC00Ylj5E5HFK+YHAn282Va1G7zX
+ AMGknbLA17cEeMbREFO3L00c0zbhFlkMBxnEQBe3eHIbRlJMPYAbqIgfiWbgB5ahz2oG/8cj1DBSJGr48iIVTTi4YvbLyHaUd/qqnTi6qVk4ss4CWSWj7LZ9
+ 2JLc5F5cvfY3UcBm7Wk8fRs755HtOtRvInPRLIp8QzIo6NGStiPvvUa0DUs6ThUOtRqnMT8zW4AsTHgA/RZulXK+to07S+YIoqABQm9bbruKx9iguqi1/yuW
+ gM+TE6g2gkwUPnyhQFcjEmcn4Vq+7FFc+ea4oWewNURg2iOd/VI2LAYlp5pkVoT4acMj6GXO9ZIpDcXe5uj7NSOSesvXygOeGdF7iS+OGu30cdPW1FWrKzPH
+ ZexuRooJtfNwe+g2S6wzE5DBMEVIH9zp9ihXMvzqzEY3nNjvp51hhQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 9/29/19 10:00 PM, Jernej Skrabec wrote:
+> This series adds support for decoding multi-slice H264 frames along with
+> support for V4L2_DEC_CMD_FLUSH and V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF.
+> 
+> Code was tested by modified ffmpeg, which can be found here:
+> https://github.com/jernejsk/FFmpeg, branch mainline-test
+> It has to be configured with at least following options:
+> --enable-v4l2-request --enable-libudev --enable-libdrm
+> 
+> Samples used for testing:
+> http://jernej.libreelec.tv/videos/h264/BA1_FT_C.mp4
+> http://jernej.libreelec.tv/videos/h264/h264.mp4
+> 
+> Command line used for testing:
+> ffmpeg -hwaccel drm -hwaccel_device /dev/dri/card0 -i h264.mp4 -pix_fmt bgra -f fbdev /dev/fb0
+> 
+> Please note that V4L2_DEC_CMD_FLUSH was not tested because I'm
+> not sure how. ffmpeg follows exactly which slice is last in frame
+> and sets hold flag accordingly. Improper usage of hold flag would
+> corrupt ffmpeg assumptions and it would probably crash. Any ideas
+> how to test this are welcome!
 
---bg08WKrSYDhXBjb5
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It can be tested partially at least: if ffmpeg tells you it is the last
+slice, then queue the slice with the HOLD flag set, then call FLUSH afterwards.
+This should clear the HOLD flag again. In this case the queued buffer is
+probably not yet processed, so the flag is cleared before the decode job starts.
 
-=20
- Hey Greg ,
+You can also try to add a sleep before calling FLUSH to see what happens
+if the last queued buffer is already decoded.
 
- Absolute trivialities, but might break few scripts, but make things
- clean..=20
+Regards,
 
- We have so many *Makefile.* cluttering in the top level scripts dir.
- Can we please move those in one place, means create a dir and put all
- of them in it.=20
+	Hans
 
- And call those in the scripts with that dir preceded . Kindly , let me
- know how awful that would be.
+> 
+> Thanks to Jonas for adjusting ffmpeg.
+> 
+> Please let me know what you think.
+> 
+> Best regards,
+> Jernej
+> 
+> Changes from v1:
+> - added Rb tags
+> - updated V4L2_DEC_CMD_FLUSH documentation
+> - updated first slice detection in Cedrus
+> - hold capture buffer flag is set according to source format
+> - added v4l m2m stateless_(try_)decoder_cmd ioctl helpers
+> 
+> Hans Verkuil (2):
+>   vb2: add V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF
+>   videodev2.h: add V4L2_DEC_CMD_FLUSH
+> 
+> Jernej Skrabec (4):
+>   media: v4l2-mem2mem: add stateless_(try_)decoder_cmd ioctl helpers
+>   media: cedrus: Detect first slice of a frame
+>   media: cedrus: h264: Support multiple slices per frame
+>   media: cedrus: Add support for holding capture buffer
+> 
+>  Documentation/media/uapi/v4l/buffer.rst       | 13 ++++++
+>  .../media/uapi/v4l/vidioc-decoder-cmd.rst     | 10 +++-
+>  .../media/uapi/v4l/vidioc-reqbufs.rst         |  6 +++
+>  .../media/videodev2.h.rst.exceptions          |  1 +
+>  .../media/common/videobuf2/videobuf2-v4l2.c   |  8 +++-
+>  drivers/media/v4l2-core/v4l2-mem2mem.c        | 35 ++++++++++++++
+>  drivers/staging/media/sunxi/cedrus/cedrus.h   |  1 +
+>  .../staging/media/sunxi/cedrus/cedrus_dec.c   | 11 +++++
+>  .../staging/media/sunxi/cedrus/cedrus_h264.c  | 11 ++++-
+>  .../staging/media/sunxi/cedrus/cedrus_hw.c    |  8 ++--
+>  .../staging/media/sunxi/cedrus/cedrus_video.c | 14 ++++++
+>  include/media/v4l2-mem2mem.h                  | 46 +++++++++++++++++++
+>  include/media/videobuf2-core.h                |  3 ++
+>  include/media/videobuf2-v4l2.h                |  5 ++
+>  include/uapi/linux/videodev2.h                | 14 ++++--
+>  15 files changed, 175 insertions(+), 11 deletions(-)
+> 
 
- Thanks,
- Bhaskar
-
---bg08WKrSYDhXBjb5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl2RuHkACgkQsjqdtxFL
-KRWuuAf9GkXmt+9sEPYCoUPudpdBNbThtZf0deakqMrOBaAg5X8c3/BPEuGYjExK
-x0n+Xv3mQm0X8Xj1py6oAf3rO9vQGcmdxogeP1uaUAgsf+H5/wHT4koIxJyVn8uK
-BZzCvJp3+sL9uD0rH45qXcix57cIItlr/uIkyEXusHl1ogzCbOOTolmThaMRbB1m
-1IecnFtVxhH63zZtUBQFkG65LI+0eYd5Yy/IT8JyyCanrYcBbRt8eLqbvckaXKq7
-TRUKqU8qMJewlVjymMZ0pY0TGWkGmj5v4J2Cv7cL6hrNdcN15K/j+BfeX8A5FXbM
-/UEgx2lemJ9biH1i7RRUuDQiwAHo8w==
-=PZuo
------END PGP SIGNATURE-----
-
---bg08WKrSYDhXBjb5--
