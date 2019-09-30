@@ -2,104 +2,81 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8343CC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A77C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59DC021855
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DF37215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:13:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732258AbfI3VNG convert rfc822-to-8bit (ORCPT
+        id S1732235AbfI3VNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 17:13:06 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36585 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731802AbfI3VNG (ORCPT
+        Mon, 30 Sep 2019 17:13:47 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:59463 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732098AbfI3VNp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 17:13:06 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 67so9662793oto.3;
-        Mon, 30 Sep 2019 14:13:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=AoDopCjUGYoxKnmro43LDdxYLNX5XQXycxp12mlQvm8=;
-        b=RAgU5KS+qnfNa6MiDEgMKiI3z+FJ7OQKerzTkkUQxOw7rU1DdMb28kCDqli+TyIrPw
-         jP39sQTTDS8SKHh1dKMxTdvM1l0cdprIjz3fcLruXw01i1qTR5wznlMmH0cV4hwV0BoV
-         ftn2+sSzFBrxhbltxwWT93SrcNLKThzQ3E801JxpOy8JNvfop5Mh/dj4WYOcyLK73f/A
-         KMdnfrwf8z4Z112cc3C1PdZwrJeRpxMNxNFppiaC1DQqSoM8pPOJDDPUNf4hPmmgeKxQ
-         hSFkRXnPCf/Ba2qZaaaS1oGkggRtNTaOMpjkKCg87KnNMhuGyHZLEZ3gO5T9F8Ecd2zl
-         va5g==
-X-Gm-Message-State: APjAAAUZiUr2S2ThXB7D51Fl3dJ1weNvZ+89pBmtXQO8IozOif2FU3Dd
-        mSyvaHQmHBZjg8fqxxJJwqTAhAcxKlqp4PcjPecrXQ==
-X-Google-Smtp-Source: APXvYqzPkYu2PrL3iMwwL+6tej+XjS4dGWNxGQXzn+bCU2kTSqKXYzVqy+EN/9Az+2EqdSLOyjgt2nDIKfgxYblqp4g=
-X-Received: by 2002:a9d:17e6:: with SMTP id j93mr15612333otj.297.1569872057032;
- Mon, 30 Sep 2019 12:34:17 -0700 (PDT)
+        Mon, 30 Sep 2019 17:13:45 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 7837F80450; Mon, 30 Sep 2019 20:46:53 +0200 (CEST)
+Date:   Mon, 30 Sep 2019 20:47:07 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     kernel list <linux-kernel@vger.kernel.org>,
+        intel-gfx@lists.freedesktop.org, rodrigo.vivi@intel.com,
+        joonas.lahtinen@linux.intel.com, jani.nikula@linux.intel.com
+Subject: DDC on Thinkpad x220
+Message-ID: <20190930184707.GA5703@amd>
 MIME-Version: 1.0
-References: <20190920133115.12802-1-uwe@kleine-koenig.org>
-In-Reply-To: <20190920133115.12802-1-uwe@kleine-koenig.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 30 Sep 2019 21:34:05 +0200
-Message-ID: <CAMuHMdUs8oqDgYpQdu_bJ1Hvz+Lq_qPXLvuKj7=H=6818OM9=A@mail.gmail.com>
-Subject: Re: [PATCH] dimlib: make DIMLIB a hidden symbol
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>,
-        Tal Gilboa <talgi@mellanox.com>
-Cc:     Saeed Mahameed <saeedm@mellanox.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="lrZ03NoBR/3+SXJZ"
+Content-Disposition: inline
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Uwe, Tal,
 
-On Sat, Sep 21, 2019 at 7:50 PM Uwe Kleine-König <uwe@kleine-koenig.org> wrote:
-> According to Tal Gilboa the only benefit from DIM comes from a driver
-> that uses it. So it doesn't make sense to make this symbol user visible,
-> instead all drivers that use it should select it (as is already the case
-> AFAICT).
->
-> Signed-off-by: Uwe Kleine-König <uwe@kleine-koenig.org>
+--lrZ03NoBR/3+SXJZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for your patch!
+Hi!
 
-> --- a/lib/Kconfig
-> +++ b/lib/Kconfig
-> @@ -555,8 +555,7 @@ config SIGNATURE
->           Implementation is done using GnuPG MPI library
->
->  config DIMLIB
-> -       bool "DIM library"
-> -       default y
-> +       bool
->         help
->           Dynamic Interrupt Moderation library.
->           Implements an algorithm for dynamically change CQ moderation values
+Thinkpad X220 should be new enough machine to talk DDC to the
+monitors, right? And my monitor has DDC enable/disable in the menu, so
+it should support it, too...
 
-Thanks for fixing the first issue!
+But I don't have /dev/i2c* and did not figure out how to talk to the
+monitor. Is the support there in the kernel? What do I need to enable
+it?
 
-The second issue is still present: NET_VENDOR_BROADCOM (which defaults
-to y, as all other NET_VENDOR_* symbols) should only be a gatekeeper for
-the various Broadcom network driver config options, and should not select
-DIMLIB.
+lspci says:
 
-Cfr. my earlier complaint in
-https://lore.kernel.org/linux-rdma/alpine.DEB.2.21.1907021810220.13058@ramsan.of.borg/
+00:02.0 VGA compatible controller: Intel Corporation 2nd Generation
+Core Processor Family Integrated Graphics Controller (rev 09)
 
-Gr{oetje,eeting}s,
+Thanks,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-                        Geert
+--lrZ03NoBR/3+SXJZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+iEYEARECAAYFAl2STasACgkQMOfwapXb+vL16ACfSoUa6tozp+6EaRI5SZTafFKL
+SyYAmQE2L8RE1QlhotneMsJwyFUl0K8g
+=8vfn
+-----END PGP SIGNATURE-----
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--lrZ03NoBR/3+SXJZ--
