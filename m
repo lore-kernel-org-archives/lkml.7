@@ -2,147 +2,133 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC969C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80363C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7C67224FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E806224FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:58:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731790AbfI3U5N convert rfc822-to-8bit (ORCPT
+        id S1731846AbfI3U6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 16:57:13 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:41881 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730751AbfI3U5M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 16:57:12 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1iEzqk-00015W-B5; Mon, 30 Sep 2019 19:52:42 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1iEzqi-0004zx-TB; Mon, 30 Sep 2019 19:52:40 +0200
-Date:   Mon, 30 Sep 2019 19:52:40 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Jay Cliburn <jcliburn@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v1] net: ag71xx: fix mdio subnode support
-Message-ID: <20190930175240.hfujxyst475wftzt@pengutronix.de>
-References: <20190930093310.10762-1-o.rempel@pengutronix.de>
- <20190930134209.GB14745@lunn.ch>
- <20190930142907.wo3tahtg7g7mvfmp@pengutronix.de>
- <20190930162557.GB15343@lunn.ch>
+        Mon, 30 Sep 2019 16:58:15 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:54494 "EHLO mx2.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727118AbfI3U6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 16:58:14 -0400
+Received: from smtp2.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2.mailbox.org (Postfix) with ESMTPS id 54DF3A19C6;
+        Mon, 30 Sep 2019 20:28:54 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.240])
+        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
+        with ESMTP id URdz_XAhm__8; Mon, 30 Sep 2019 20:28:51 +0200 (CEST)
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 2/4] clone3: switch to copy_struct_from_user()
+Date:   Tue,  1 Oct 2019 04:28:08 +1000
+Message-Id: <20190930182810.6090-3-cyphar@cyphar.com>
+In-Reply-To: <20190930182810.6090-1-cyphar@cyphar.com>
+References: <20190930182810.6090-1-cyphar@cyphar.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20190930162557.GB15343@lunn.ch>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 19:52:14 up 136 days, 10 min, 87 users,  load average: 0.00, 0.00,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 06:25:57PM +0200, Andrew Lunn wrote:
-> On Mon, Sep 30, 2019 at 04:29:07PM +0200, Oleksij Rempel wrote:
-> > On Mon, Sep 30, 2019 at 03:42:09PM +0200, Andrew Lunn wrote:
-> > > On Mon, Sep 30, 2019 at 11:33:10AM +0200, Oleksij Rempel wrote:
-> > > > The driver was working with fixed phy without any noticeable issues. This bug
-> > > > was uncovered by introducing dsa ar9331-switch driver.
-> > > > 
-> > > > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> > > > ---
-> > > >  drivers/net/ethernet/atheros/ag71xx.c | 6 ++++--
-> > > >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/net/ethernet/atheros/ag71xx.c b/drivers/net/ethernet/atheros/ag71xx.c
-> > > > index 6703960c7cf5..d1101eea15c2 100644
-> > > > --- a/drivers/net/ethernet/atheros/ag71xx.c
-> > > > +++ b/drivers/net/ethernet/atheros/ag71xx.c
-> > > > @@ -526,7 +526,7 @@ static int ag71xx_mdio_probe(struct ag71xx *ag)
-> > > >  	struct device *dev = &ag->pdev->dev;
-> > > >  	struct net_device *ndev = ag->ndev;
-> > > >  	static struct mii_bus *mii_bus;
-> > > > -	struct device_node *np;
-> > > > +	struct device_node *np, *mnp;
-> > > >  	int err;
-> > > >  
-> > > >  	np = dev->of_node;
-> > > > @@ -571,7 +571,9 @@ static int ag71xx_mdio_probe(struct ag71xx *ag)
-> > > >  		msleep(200);
-> > > >  	}
-> > > >  
-> > > > -	err = of_mdiobus_register(mii_bus, np);
-> > > > +	mnp = of_get_child_by_name(np, "mdio");
-> > > > +	err = of_mdiobus_register(mii_bus, mnp);
-> > > > +	of_node_put(mnp);
-> > > >  	if (err)
-> > > >  		goto mdio_err_put_clk;
-> > > 
-> > > Hi Oleksij
-> > > 
-> > > You need to keep backwards compatibility here. If you find an mdio
-> > > node, use it, but if not, you need to still register np.
-> > > 
-> > > This is also extending the driver binding, so you need to update the
-> > > binding documentation.
-> > 
-> > Hi Andrew,
-> > 
-> > Normally i would agree. But in this case:
-> > - this driver is freshly added to the kernel and is different to OpenWrt
-> >   implementation any way. No users from this side.
-> > - Devicetree binding says:
-> >   Documentation/devicetree/bindings/net/qca,ar71xx.txt
-> > |Optional properties:
-> > |- phy-handle : phandle to the PHY device connected to this device.
-> > |- fixed-link : Assume a fixed link. See fixed-link.txt in the same directory.
-> > |  Use instead of phy-handle.
-> > |
-> > |Optional subnodes:
-> > |- mdio : specifies the mdio bus, used as a container for phy nodes
-> > |  according to phy.txt in the same directory
-> > 
-> > So, it is driver bug ...ooOO (my personal bug :D)
-> 
-> Hi Oleksij
-> 
-> Ah, O.K. You should of explained that in the commit message.
-> 
-> Is the mdio support just in -rc, or is it older?
-> 
-> You need to add a Fixes: tag.
-> 
-> The patch subject should be [PATCH net] to indicate this is a fix to
-> the net tree
-> 
-> The patch should be against net, not next-next.
+The change is very straightforward, and helps unify the syscall
+interface for struct-from-userspace syscalls. Additionally, explicitly
+define CLONE_ARGS_SIZE_VER0 to match the other users of the
+struct-extension pattern.
 
-Ok. thx! i'll fix it.
+Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+---
+ include/uapi/linux/sched.h |  2 ++
+ kernel/fork.c              | 34 +++++++---------------------------
+ 2 files changed, 9 insertions(+), 27 deletions(-)
 
+diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
+index b3105ac1381a..0945805982b4 100644
+--- a/include/uapi/linux/sched.h
++++ b/include/uapi/linux/sched.h
+@@ -47,6 +47,8 @@ struct clone_args {
+ 	__aligned_u64 tls;
+ };
+ 
++#define CLONE_ARGS_SIZE_VER0 64 /* sizeof first published struct */
++
+ /*
+  * Scheduling policies
+  */
+diff --git a/kernel/fork.c b/kernel/fork.c
+index f9572f416126..2ef529869c64 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2525,39 +2525,19 @@ SYSCALL_DEFINE5(clone, unsigned long, clone_flags, unsigned long, newsp,
+ #ifdef __ARCH_WANT_SYS_CLONE3
+ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
+ 					      struct clone_args __user *uargs,
+-					      size_t size)
++					      size_t usize)
+ {
++	int err;
+ 	struct clone_args args;
+ 
+-	if (unlikely(size > PAGE_SIZE))
++	if (unlikely(usize > PAGE_SIZE))
+ 		return -E2BIG;
+-
+-	if (unlikely(size < sizeof(struct clone_args)))
++	if (unlikely(usize < CLONE_ARGS_SIZE_VER0))
+ 		return -EINVAL;
+ 
+-	if (unlikely(!access_ok(uargs, size)))
+-		return -EFAULT;
+-
+-	if (size > sizeof(struct clone_args)) {
+-		unsigned char __user *addr;
+-		unsigned char __user *end;
+-		unsigned char val;
+-
+-		addr = (void __user *)uargs + sizeof(struct clone_args);
+-		end = (void __user *)uargs + size;
+-
+-		for (; addr < end; addr++) {
+-			if (get_user(val, addr))
+-				return -EFAULT;
+-			if (val)
+-				return -E2BIG;
+-		}
+-
+-		size = sizeof(struct clone_args);
+-	}
+-
+-	if (copy_from_user(&args, uargs, size))
+-		return -EFAULT;
++	err = copy_struct_from_user(&args, sizeof(args), uargs, usize);
++	if (err)
++		return err;
+ 
+ 	/*
+ 	 * Verify that higher 32bits of exit_signal are unset and that
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.23.0
+
