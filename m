@@ -7,56 +7,57 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E04C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CCF1C35280
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42D2E2081B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 631232081B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:10:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="GUc17W6/"
+	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="ghseb7DC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732632AbfI3XIr (ORCPT
+        id S1732893AbfI3XKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 19:08:47 -0400
+        Mon, 30 Sep 2019 19:10:15 -0400
 Received: from mail-eopbgr690119.outbound.protection.outlook.com ([40.107.69.119]:48448
         "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732613AbfI3XIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 19:08:43 -0400
+        id S1732442AbfI3XIo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 19:08:44 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hS9eys8wfHo6jTIju2NX8oBMShKpAbswepAE2e2yVC9YK94mOh6b76SG+Kbem18RGAh1WaE2Qo52dUqZt/sp7huXPWierIPoYrdV9soL8Pz5JaB3UHAfuFN+/WzDG1W2J6XYfcEoj/nfihiMx6BN1JbsDw22FughdwjllRzGU/CvLEnRs0ktcU+6q+fJaqCoZLaOLixcYta+3MiGc+RCv73DtU+fIcVtlof7LdkhzVcm/wiyu0KRv7+9CCKptS6Pq6bvmUxe6DqwdnhA0SMRibavWNZQ8LgcTFT8Al0FBJyC0rz++psRkVwvfRMXEeSa1WUm4CkVr64MCBP4tqBwlg==
+ b=jKJESwtrBItD+o9SsVNjiGVRYeYzIYvtoYshrcJ96js7tzvIxTOLj2j3PPA9TdIeuIvdI8fgBBze4co/Tz8e0i+jjkAVN0aYAqKsGM63PM9wYtPY0neWdlst2OR2b/Z5HxfgwHkHAj/G52fKoXX+1o01zNZUKPtCMd6a+9jy7quES9QMMl2Lu3wEtzVIXm7BE05nLikMiIkJLfbdXM6uP13LWM0bIj21GDDPVENi2lc9UeWM/nqQF86+gbPQGRk9Bpbu9aqurueBMk+OUljb5UbUiWmHMiD7sAV/VjTXMKhqfo/PqrYnhSGfgZJTgmOCT0+jouK1G6pU9giQnDlh+A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OSyB7GHykUnfUEZB4BGbdX9bewQ3q5pARr130wTJK3g=;
- b=JgDTy5dw4mOysjif7XhAICgzffXiTTqixHeFBk78WF+CkUcuCpk7V/psscj/BYfWXDQ0tfx3wuMmgmAoeA96bd79ozHOBc4J8xpSp9fcA5VVPW+mJzwdsU01DZmH3ySlX3oT4R3JCBA9RWigTNCaV3Xf+JARy4lEyFigsYHZJw9wLXX9M799VoQ7fvkYGGZR35f9UmECTYf9V7weiyFzLYLkGQr4sHra7wsW9XYKsPjHJscPWgbyU5Z3WpyUAA8GAz46iTj1JfmkDesCxVZpF5wdNvCQ1c4UzQP/EJHLnH+2CimApIowFSjp+pwLDBSne9inZk1xb9fqUNG/DGkPjQ==
+ bh=0s52wFl4qopTrNonQGmwvzdL3cvCZuaf5g3wPIwJ0j0=;
+ b=QOkBQbPpeyc79BPmlWAuT4vRZVQRh8OOS3BqHLuPo+LLnsDkUMFNVhh4gu51KoWRMOX4b5YyontWeTFNJolWeucG54vCp2UXL0d/F+Qk+I1n0CMcxKd4j0caOsjzTr+aj5EmBliac9OI0WJuidqAOHtpQToCYiLtADyDa1jG+PICqZbxaTXlFqi5KNnF2SrS0MJATzHuALLtX1lRaiotUMNaL4CngzJ6gk5u9DePmhFr4d24NsQ/TNayGWFqh7X4+oiAu4w2F2NUH1C2HgTsiiugL4QYqiGSVK/jeH4yU2rUmlIiiBxlAjbbZibxMdJVnyWJyOZf79rbuUMcBQlEZg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
  dkim=pass header.d=mips.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OSyB7GHykUnfUEZB4BGbdX9bewQ3q5pARr130wTJK3g=;
- b=GUc17W6/lInA2K1VXm/+gsUzHcKssXXqqFY9vGhlKp/DjmlRkIN1cE6caYMgXKoQB/tgcyQYuATfQlgaxSfdQK3t/2fnorldkPFB6SydlCoPJJrW8DWLezeG9ZxnMojuSbVdf8j1QjKF07IG2oF80W/FlQtJomXIrGUK/DdgrxY=
+ bh=0s52wFl4qopTrNonQGmwvzdL3cvCZuaf5g3wPIwJ0j0=;
+ b=ghseb7DClReMwrQkyGrOOVwRbGzoDRNcGOmJkgQ7m84a0HcIAu51N8QsRPumpV+JSWCkn4y37zSNsLqduxezmkAdmLvdhEGzvpgB/QQPCiHashJQ82VSvzTio2O/78tt5xsMqru4dsjxklVHLc/F9Lcrm/3YngG/f0FsYXMuEJ4=
 Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
  MWHPR2201MB1022.namprd22.prod.outlook.com (10.174.167.23) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.17; Mon, 30 Sep 2019 23:08:30 +0000
+ 15.20.2305.17; Mon, 30 Sep 2019 23:08:31 +0000
 Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
  ([fe80::498b:c2cd:e816:1481]) by MWHPR2201MB1277.namprd22.prod.outlook.com
  ([fe80::498b:c2cd:e816:1481%2]) with mapi id 15.20.2305.017; Mon, 30 Sep 2019
- 23:08:30 +0000
+ 23:08:31 +0000
 From:   Paul Burton <paul.burton@mips.com>
 To:     "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
 CC:     Huacai Chen <chenhc@lemote.com>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Paul Burton <pburton@wavecomp.com>
-Subject: [PATCH 19/37] MIPS: bitops: Use MIPS_ISA_REV, not #ifdefs
-Thread-Topic: [PATCH 19/37] MIPS: bitops: Use MIPS_ISA_REV, not #ifdefs
-Thread-Index: AQHVd+P5kxB47wj2YEm+Ca+Rab8Jgg==
-Date:   Mon, 30 Sep 2019 23:08:30 +0000
-Message-ID: <20190930230806.2940505-20-paul.burton@mips.com>
+Subject: [PATCH 20/37] MIPS: bitops: ins start position is always an immediate
+Thread-Topic: [PATCH 20/37] MIPS: bitops: ins start position is always an
+ immediate
+Thread-Index: AQHVd+P6EZDR/gPpYUyjQdLtXj7q0A==
+Date:   Mon, 30 Sep 2019 23:08:31 +0000
+Message-ID: <20190930230806.2940505-21-paul.burton@mips.com>
 References: <20190930230806.2940505-1-paul.burton@mips.com>
 In-Reply-To: <20190930230806.2940505-1-paul.burton@mips.com>
 Accept-Language: en-US
@@ -72,118 +73,81 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.23.0
 x-originating-ip: [12.94.197.246]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d8ec46ed-5859-4dac-e204-08d745fb1bf5
+x-ms-office365-filtering-correlation-id: e925c1fd-dd62-41bc-0392-08d745fb1c7d
 x-ms-traffictypediagnostic: MWHPR2201MB1022:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR2201MB10222AAEC0202CF8F7E85146C1820@MWHPR2201MB1022.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2657;
+x-microsoft-antispam-prvs: <MWHPR2201MB10228FFB56A6EA8C6B560005C1820@MWHPR2201MB1022.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2887;
 x-forefront-prvs: 01762B0D64
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(136003)(366004)(189003)(199004)(14454004)(508600001)(256004)(6512007)(81166006)(81156014)(44832011)(2351001)(486006)(476003)(6916009)(14444005)(186003)(2501003)(6436002)(50226002)(8676002)(11346002)(8936002)(2616005)(5640700003)(66946007)(6486002)(42882007)(64756008)(66446008)(66476007)(66556008)(446003)(6506007)(1076003)(305945005)(386003)(52116002)(7736002)(102836004)(2906002)(71190400001)(71200400001)(36756003)(5660300002)(26005)(4326008)(66066001)(54906003)(25786009)(76176011)(107886003)(99286004)(6116002)(3846002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1022;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(346002)(376002)(136003)(366004)(189003)(199004)(14454004)(508600001)(256004)(6512007)(81166006)(81156014)(44832011)(2351001)(486006)(476003)(6916009)(186003)(2501003)(6436002)(50226002)(8676002)(11346002)(8936002)(2616005)(5640700003)(66946007)(6486002)(42882007)(64756008)(66446008)(66476007)(66556008)(446003)(6506007)(1076003)(305945005)(386003)(52116002)(7736002)(102836004)(2906002)(71190400001)(71200400001)(36756003)(5660300002)(26005)(4326008)(66066001)(54906003)(25786009)(76176011)(107886003)(99286004)(6116002)(3846002)(14773001)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1022;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: wavecomp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: uO55gWxhUXsfY9doV59OUEFYMG0Qdu5gbrfgx6qmfb1LuHJUen1B2ptnc14tCBPf2juy8/PHy0Mui6c0qBqEkJ9wl4GxQU9bswygVrN0s6JclodD2GHB4FbvlAsPsVEkBorS2FdJ/ebvwdOgU6wYTsrLYQRaMgfNZYq0pqRe6PTVthFGb8OkzVoeQ5ZSIN/5JFYPQTeL+LLY3CxTHvcfC+qqEDqyoJ6T+YHDGZVZZmtO/0YlHSyEMoaDL1t+EDZ+/jZPA+3KIlQZgkxdB4KgvdhfEwPwFNZoFnQ0ZlWBvrfbNCHCtVkKeU9qZd5cgeId0Mz+w9gHEFFudngo0jhvh/yOLcD5KZlZf88TF5R5pvC3CXeMbg8/2YsE/+KGl8Kt/JDssPdeaTyW6Qjck6106v/9kfirFp8xbOVTzSM/L3g=
+x-microsoft-antispam-message-info: fOeJyq1AqjBmeRQYUnQM0Hjp7gwZEsDLhOvVN/B1TnPRhhjKALHxJdh7U9VMOURYcqdHlntVdJJva15i9siAsfnPbIx2aiWKf+GcXbW4+FcU0yfyf0dbYgB2qJcGWhjw6ARRTUAZ2AHvgoqXTPs18Vnp0RLDl+oQ368pdhB+IxPYiYeCERPaOYW0pQqmftJPQGLEmaLFEJIcoWPvrzOyYNKsoV+22KTHzYzmJe62B479+vOMFrQUXGNLLOuWNBuhqFHMHZBWUFJNeFSQH97g1dT/qrC0oAyu5phax3ZSQJa2v2A7J2cl9BQjK9KnwJ1sUi34GYcJsKrr2RsgX5J6fN2HneIaUgvPMJImulg101rEDBWwGDFRWi3DV/3Gis8uCDJD/uWAx6txduGB2/2FkOHU3sZjuFU0WllihaQ4QeM=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d8ec46ed-5859-4dac-e204-08d745fb1bf5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2019 23:08:30.6650
+X-MS-Exchange-CrossTenant-Network-Message-Id: e925c1fd-dd62-41bc-0392-08d745fb1c7d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2019 23:08:31.6295
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qiVgGIQEu+SgVj4buqM1nTiaYHEcMn8t3KZ7LCq2N0KlUz+IHZhuprsF2BwPUPsvCe/elfm6vHVzFJphSdsuow==
+X-MS-Exchange-CrossTenant-userprincipalname: q7gmbtDLRwgx6tHV8LYT9ndXM0TgZhfI1n/vkLYxW4POHzDAkUwa42rRP578duq5420AiDQRVyezDrYQlR1ZsQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1022
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rather than #ifdef on CONFIG_CPU_* to determine whether the ins
-instruction is supported we can simply check MIPS_ISA_REV to discover
-whether we're targeting MIPSr2 or higher. Do so in order to clean up the
-code.
+The start position for an ins instruction is always encoded as an
+immediate, so allowing registers to be used by the inline asm makes no
+sense. It should never happen anyway since a bit index should always be
+small enough to be treated as an immediate, but remove the nonsensical
+"r" for sanity.
 
 Signed-off-by: Paul Burton <paul.burton@mips.com>
 ---
 
- arch/mips/include/asm/bitops.h | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+ arch/mips/include/asm/bitops.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/arch/mips/include/asm/bitops.h b/arch/mips/include/asm/bitops.=
 h
-index 3ea4f172ac08..b8785bdf3507 100644
+index b8785bdf3507..83fd1f1c3ab4 100644
 --- a/arch/mips/include/asm/bitops.h
 +++ b/arch/mips/include/asm/bitops.h
-@@ -19,6 +19,7 @@
- #include <asm/byteorder.h>		/* sigh ... */
- #include <asm/compiler.h>
- #include <asm/cpu-features.h>
-+#include <asm/isa-rev.h>
- #include <asm/llsc.h>
- #include <asm/sgidefs.h>
- #include <asm/war.h>
-@@ -76,8 +77,7 @@ static inline void set_bit(unsigned long nr, volatile uns=
+@@ -85,7 +85,7 @@ static inline void set_bit(unsigned long nr, volatile uns=
 igned long *addr)
- 		return;
- 	}
-=20
--#if defined(CONFIG_CPU_MIPSR2) || defined(CONFIG_CPU_MIPSR6)
--	if (__builtin_constant_p(bit) && (bit >=3D 16)) {
-+	if ((MIPS_ISA_REV >=3D 2) && __builtin_constant_p(bit) && (bit >=3D 16)) =
-{
- 		loongson_llsc_mb();
- 		do {
- 			__asm__ __volatile__(
-@@ -90,7 +90,6 @@ static inline void set_bit(unsigned long nr, volatile uns=
-igned long *addr)
- 		} while (unlikely(!temp));
- 		return;
- 	}
--#endif /* CONFIG_CPU_MIPSR2 || CONFIG_CPU_MIPSR6 */
-=20
- 	loongson_llsc_mb();
- 	do {
-@@ -143,8 +142,7 @@ static inline void clear_bit(unsigned long nr, volatile=
- unsigned long *addr)
- 		return;
- 	}
-=20
--#if defined(CONFIG_CPU_MIPSR2) || defined(CONFIG_CPU_MIPSR6)
--	if (__builtin_constant_p(bit)) {
-+	if ((MIPS_ISA_REV >=3D 2) && __builtin_constant_p(bit)) {
- 		loongson_llsc_mb();
- 		do {
- 			__asm__ __volatile__(
-@@ -157,7 +155,6 @@ static inline void clear_bit(unsigned long nr, volatile=
- unsigned long *addr)
- 		} while (unlikely(!temp));
- 		return;
- 	}
--#endif /* CONFIG_CPU_MIPSR2 || CONFIG_CPU_MIPSR6 */
-=20
- 	loongson_llsc_mb();
- 	do {
-@@ -377,8 +374,7 @@ static inline int test_and_clear_bit(unsigned long nr,
- 		: "=3D&r" (temp), "+" GCC_OFF_SMALL_ASM() (*m), "=3D&r" (res)
- 		: "r" (1UL << bit)
- 		: __LLSC_CLOBBER);
--#if defined(CONFIG_CPU_MIPSR2) || defined(CONFIG_CPU_MIPSR6)
--	} else if (__builtin_constant_p(nr)) {
-+	} else if ((MIPS_ISA_REV >=3D 2) && __builtin_constant_p(nr)) {
- 		loongson_llsc_mb();
- 		do {
- 			__asm__ __volatile__(
-@@ -390,7 +386,6 @@ static inline int test_and_clear_bit(unsigned long nr,
- 			: "ir" (bit)
+ 			"	" __INS "%0, %3, %2, 1			\n"
+ 			"	" __SC "%0, %1				\n"
+ 			: "=3D&r" (temp), "+" GCC_OFF_SMALL_ASM() (*m)
+-			: "ir" (bit), "r" (~0)
++			: "i" (bit), "r" (~0)
  			: __LLSC_CLOBBER);
  		} while (unlikely(!temp));
--#endif
+ 		return;
+@@ -150,7 +150,7 @@ static inline void clear_bit(unsigned long nr, volatile=
+ unsigned long *addr)
+ 			"	" __INS "%0, $0, %2, 1			\n"
+ 			"	" __SC "%0, %1				\n"
+ 			: "=3D&r" (temp), "+" GCC_OFF_SMALL_ASM() (*m)
+-			: "ir" (bit)
++			: "i" (bit)
+ 			: __LLSC_CLOBBER);
+ 		} while (unlikely(!temp));
+ 		return;
+@@ -383,7 +383,7 @@ static inline int test_and_clear_bit(unsigned long nr,
+ 			"	" __INS "%0, $0, %3, 1			\n"
+ 			"	" __SC	"%0, %1				\n"
+ 			: "=3D&r" (temp), "+" GCC_OFF_SMALL_ASM() (*m), "=3D&r" (res)
+-			: "ir" (bit)
++			: "i" (bit)
+ 			: __LLSC_CLOBBER);
+ 		} while (unlikely(!temp));
  	} else {
- 		loongson_llsc_mb();
- 		do {
 --=20
 2.23.0
 
