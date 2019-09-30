@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E3CC35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C07C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3415A2168B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04C0D20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:39:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731071AbfI3Wje (ORCPT
+        id S1731278AbfI3Wjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 18:39:34 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:38877 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729232AbfI3WjP (ORCPT
+        Mon, 30 Sep 2019 18:39:43 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:49327 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727118AbfI3WjP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 30 Sep 2019 18:39:15 -0400
-Received: by mail-io1-f69.google.com with SMTP id e6so31614380iog.5
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 15:39:15 -0700 (PDT)
+Received: by mail-io1-f71.google.com with SMTP id e14so33313400iot.16
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 15:39:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=S+VQhWYaAUm9S3kTD+g6Uv25dCXpksl3TXWhnx7EUec=;
-        b=d0IPA1a68H0kHN2najVAZJLt/8BQFqXJCyNgcN0kZzl4kHGiT9WYzS7m4xgM4YZZrk
-         hkCoigUg/Mb93XPE4Nd7PT12uh/EhG+gNqDXih8q52mrNgKxz6HZvnGKXnemk6szxsK4
-         +uTaH8CcRWbWU/5GFthmHvhNDDheMyeCOKi8TPQ8C3a/xIy3ef2u4NwVlsCPeMi3vpqW
-         LEhTZhbNU+/+NFHSWd9KiydCEnXEZuCyPW5qgt+WCeHlX8HMw3ZuyO0oGlCCkocDQlbm
-         KXBtRzjriGgmNqKCQ9c+c+swtEy3AyxVbiD4skP2/pxDItZOvsW99R+xwCWXdf3fq0rd
-         MvBg==
-X-Gm-Message-State: APjAAAVlATPm+x0Q22/enAMKzty7t65sPlZpHLUnf6l2c+iTstU1e0Wp
-        A2DGn6E9BpUtsS4cT0iqpcIeOZ6X3YtiKQy2/cuyZV/sETIf
-X-Google-Smtp-Source: APXvYqxAGOFqID5P9o7rvH8Pzpjjiu8fp5lk/fQqSI7vrHaUe3UxQ9GKkfOrTWJQgAMXWBPCV+e/RjA9RFpV6uo1Iw2++fmbRajX
+        bh=fSg2+3ZjOd6Xm3ek+0uccVLq7lDEKLwVzQo9vBxV9uw=;
+        b=C8OemLvSnOKM8Qlf5QaNkPAzzgb1kIr/UTXkSxUb/XhjdW+b07z1SZCXBbLcCyHOQ8
+         EZDq20Qu5KGTwxrXENSzusrrRRRyKJMKCsjkH8FqDpGjzDT9BN2Ihb0+rVUmxJ8Qw3MT
+         Q2CDZKbD6juoSw+JRwp/Qu2MsnJgqjlJWDpspx2jMnNQSF1pHeKA7voQZzAw8EcsTwHf
+         ahtD4Wqn5RADBnLJZttbX6ZO1BTGsw6SNXsYKjnu7BaiSLttj48V7wmEJ68lJXFSvgId
+         NTX5mzJUxhKMmyAel52wiSza4gAMRpuMVynvHjTBGG9jCyP2rcWWiOIFKos7UUoqD/xH
+         Sr1A==
+X-Gm-Message-State: APjAAAUltmExsm7BhsyPCCM5Es7ORVdsegQMNNQttTQVkpMhEYZgxi3e
+        3JFeN0BsKKMDDS/YYpok/ciKjtqfBu82x3Yv1N1G8LqGmUz1
+X-Google-Smtp-Source: APXvYqw9CTDDQZ7VLGfC6apTmOgAmIv3Iait8U3TrD0s2cylNXj3I3FPbWr4+RIL1PcrGoyLq7CMoJVHMLrxR2zPbahk6Um1C3kL
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9457:: with SMTP id x23mr7302480ior.14.1569883154839;
+X-Received: by 2002:a92:3b09:: with SMTP id i9mr23431535ila.301.1569883154183;
  Mon, 30 Sep 2019 15:39:14 -0700 (PDT)
 Date:   Mon, 30 Sep 2019 15:39:14 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c889570593cce77b@google.com>
-Subject: KMSAN: uninit-value in rt2500usb_probe_hw
-From:   syzbot <syzbot+35c80b2190255a410f66@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, glider@google.com,
-        helmut.schaa@googlemail.com, kvalo@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, sgruszka@redhat.com,
-        syzkaller-bugs@googlegroups.com
+Message-ID: <000000000000be807f0593cce7f9@google.com>
+Subject: KMSAN: uninit-value in rpm_resume
+From:   syzbot <syzbot+f29321f9d6534937db3a@syzkaller.appspotmail.com>
+To:     glider@google.com, gregkh@linuxfoundation.org, len.brown@intel.com,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        pavel@ucw.cz, rjw@rjwysocki.net, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -59,91 +57,84 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    cebbfdbc kmsan: merge set_no_shadow_page() and set_no_orig..
+HEAD commit:    61ccdad1 Revert "drm/bochs: Use shadow buffer for bochs fr..
 git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=1125cb59600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f03c659d0830ab8d
-dashboard link: https://syzkaller.appspot.com/bug?extid=35c80b2190255a410f66
+console output: https://syzkaller.appspot.com/x/log.txt?x=16207574600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=27abc558ecb16a3b
+dashboard link: https://syzkaller.appspot.com/bug?extid=f29321f9d6534937db3a
 compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
 80fee25776c2fb61e74c1ecb1a523375c2500b69)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=146abd21600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=106a19b5600000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1187d174600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=158afe2c600000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+35c80b2190255a410f66@syzkaller.appspotmail.com
+Reported-by: syzbot+f29321f9d6534937db3a@syzkaller.appspotmail.com
 
-usb 1-1: config 0 descriptor??
-usb 1-1: reset high-speed USB device number 2 using dummy_hcd
-usb 1-1: device descriptor read/64, error -71
-usb 1-1: Using ep0 maxpacket: 16
-ieee80211 phy3: rt2x00usb_vendor_request: Error - Vendor Request 0x09  
-failed for offset 0x0000 with error -71
-ieee80211 phy3: rt2x00_set_chip: Info - Chipset detected - rt: 2570, rf:  
-0000, rev: 8771
 ==================================================================
-BUG: KMSAN: uninit-value in rt2500usb_init_eeprom  
-drivers/net/wireless/ralink/rt2x00/rt2500usb.c:1443 [inline]
-BUG: KMSAN: uninit-value in rt2500usb_probe_hw+0xb5e/0x22a0  
-drivers/net/wireless/ralink/rt2x00/rt2500usb.c:1757
-CPU: 0 PID: 3369 Comm: kworker/0:2 Not tainted 5.3.0-rc7+ #0
+BUG: KMSAN: uninit-value in rpm_resume+0x3e8/0x2bb0  
+drivers/base/power/runtime.c:715
+CPU: 0 PID: 12437 Comm: syz-executor249 Not tainted 5.3.0-rc3+ #17
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
 Call Trace:
   __dump_stack lib/dump_stack.c:77 [inline]
   dump_stack+0x191/0x1f0 lib/dump_stack.c:113
   kmsan_report+0x162/0x2d0 mm/kmsan/kmsan_report.c:109
   __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:294
-  rt2500usb_init_eeprom drivers/net/wireless/ralink/rt2x00/rt2500usb.c:1443  
-[inline]
-  rt2500usb_probe_hw+0xb5e/0x22a0  
-drivers/net/wireless/ralink/rt2x00/rt2500usb.c:1757
-  rt2x00lib_probe_dev+0xba9/0x3260  
-drivers/net/wireless/ralink/rt2x00/rt2x00dev.c:1427
-  rt2x00usb_probe+0x7ae/0xf60  
-drivers/net/wireless/ralink/rt2x00/rt2x00usb.c:842
-  rt2500usb_probe+0x50/0x60  
-drivers/net/wireless/ralink/rt2x00/rt2500usb.c:1966
-  usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
-  really_probe+0x1373/0x1dc0 drivers/base/dd.c:552
-  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:709
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:816
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x489/0x750 drivers/base/dd.c:882
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:929
-  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
-  device_add+0x25b5/0x2df0 drivers/base/core.c:2165
-  usb_set_configuration+0x309f/0x3710 drivers/usb/core/message.c:2027
-  generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
-  usb_probe_device+0x146/0x200 drivers/usb/core/driver.c:266
-  really_probe+0x1373/0x1dc0 drivers/base/dd.c:552
-  driver_probe_device+0x1ba/0x510 drivers/base/dd.c:709
-  __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:816
-  bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
-  __device_attach+0x489/0x750 drivers/base/dd.c:882
-  device_initial_probe+0x4a/0x60 drivers/base/dd.c:929
-  bus_probe_device+0x131/0x390 drivers/base/bus.c:514
-  device_add+0x25b5/0x2df0 drivers/base/core.c:2165
-  usb_new_device+0x23e5/0x2fb0 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+  rpm_resume+0x3e8/0x2bb0 drivers/base/power/runtime.c:715
+  __pm_runtime_resume+0x116/0x190 drivers/base/power/runtime.c:1076
+  pm_runtime_get_sync include/linux/pm_runtime.h:226 [inline]
+  usb_autopm_get_interface+0x5f/0x100 drivers/usb/core/driver.c:1707
+  usbhid_power+0xb7/0x170 drivers/hid/usbhid/hid-core.c:1234
+  hid_hw_power include/linux/hid.h:1038 [inline]
+  hidraw_open+0x459/0xc10 drivers/hid/hidraw.c:282
+  chrdev_open+0xc58/0xe00 fs/char_dev.c:414
+  do_dentry_open+0xda7/0x1810 fs/open.c:797
+  vfs_open+0xaf/0xe0 fs/open.c:906
+  do_last fs/namei.c:3416 [inline]
+  path_openat+0x17f4/0x6bb0 fs/namei.c:3533
+  do_filp_open+0x2b8/0x710 fs/namei.c:3563
+  do_sys_open+0x642/0xa30 fs/open.c:1089
+  __do_sys_open fs/open.c:1107 [inline]
+  __se_sys_open+0xad/0xc0 fs/open.c:1102
+  __x64_sys_open+0x4a/0x70 fs/open.c:1102
+  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:297
+  entry_SYSCALL_64_after_hwframe+0x63/0xe7
+RIP: 0033:0x401880
+Code: 01 f0 ff ff 0f 83 c0 0b 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f  
+44 00 00 83 3d 4d 5e 2d 00 00 75 14 b8 02 00 00 00 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 94 0b 00 00 c3 48 83 ec 08 e8 fa 00 00 00
+RSP: 002b:00007fff8bdb7688 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
+RAX: ffffffffffffffda RBX: 0000000000000006 RCX: 0000000000401880
+RDX: 0000000000000000 RSI: 0000000000088802 RDI: 00007fff8bdb7690
+RBP: 6666666666666667 R08: 000000000000000f R09: 000000000000000b
+R10: 0000000000000075 R11: 0000000000000246 R12: 00000000004028a0
+R13: 0000000000402930 R14: 0000000000000000 R15: 0000000000000000
+
+Uninit was created at:
+  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:187 [inline]
+  kmsan_internal_poison_shadow+0x53/0xa0 mm/kmsan/kmsan.c:146
+  kmsan_slab_free+0x8d/0x100 mm/kmsan/kmsan_hooks.c:195
+  slab_free_freelist_hook mm/slub.c:1472 [inline]
+  slab_free mm/slub.c:3038 [inline]
+  kfree+0x4c1/0x2db0 mm/slub.c:3980
+  usb_release_interface+0x105/0x120 drivers/usb/core/message.c:1633
+  device_release+0xe2/0x380 drivers/base/core.c:1060
+  kobject_cleanup lib/kobject.c:693 [inline]
+  kobject_release lib/kobject.c:722 [inline]
+  kref_put include/linux/kref.h:65 [inline]
+  kobject_put+0x38d/0x480 lib/kobject.c:739
+  put_device+0x51/0x70 drivers/base/core.c:2213
+  usb_disable_device+0x69a/0x1150 drivers/usb/core/message.c:1248
+  usb_disconnect+0x51e/0xd60 drivers/usb/core/hub.c:2199
+  hub_port_connect drivers/usb/core/hub.c:4949 [inline]
   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
   port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x581d/0x72f0 drivers/usb/core/hub.c:5441
+  hub_event+0x3fd0/0x72f0 drivers/usb/core/hub.c:5441
   process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
   worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
   kthread+0x4b5/0x4f0 kernel/kthread.c:256
   ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
-
-Local variable description: ----reg.i.i@rt2500usb_probe_hw
-Variable was created at:
-  rt2500usb_register_read drivers/net/wireless/ralink/rt2x00/rt2500usb.c:51  
-[inline]
-  rt2500usb_init_eeprom drivers/net/wireless/ralink/rt2x00/rt2500usb.c:1440  
-[inline]
-  rt2500usb_probe_hw+0x774/0x22a0  
-drivers/net/wireless/ralink/rt2x00/rt2500usb.c:1757
-  rt2x00lib_probe_dev+0xba9/0x3260  
-drivers/net/wireless/ralink/rt2x00/rt2x00dev.c:1427
 ==================================================================
 
 
