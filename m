@@ -2,68 +2,126 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D71C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41DD5C4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C00A620842
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:48:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kvtC7OtG"
+	by mail.kernel.org (Postfix) with ESMTP id 1D3FF2190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:52:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729762AbfI3Hsz (ORCPT
+        id S1729667AbfI3HwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 03:48:55 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40714 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfI3Hsy (ORCPT
+        Mon, 30 Sep 2019 03:52:11 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:57820 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbfI3HwL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 03:48:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=A8stAC97Ahttb6c40iyo9o5g9M7uA3PUIbimoTMn5h4=; b=kvtC7OtGrYidOiGcFK1ctJIWE
-        liL9Q5Od++Izt/sC4J+30CcMSnxYk6+ijr+2jbN328Fqr450l9O6UER5s2EXjTMAstBeDwA3vXSXv
-        Oan+v+N4Nkmj1elN4CgktRVsPR6jiLAyt6Y9aA4fmerYkAwx2w0CdPcy5OyGpphf52KyB0yLXhqcw
-        LDPSkVZ0zWEUxoyuTDrkdXF6/Nusm4sQ7XQoY4pmpnNm7rMTxIf+sj9DIosKPoREPSsgoDzQcmiir
-        WW83+tU77LtZtAQt6ivCKr95/kkcnUilbRXzZDf7yPagoqyrc6xhvHU/KLPOElSvTo9eNSpfFDfeB
-        e4MwinZJw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iEqQQ-0000tD-GE; Mon, 30 Sep 2019 07:48:54 +0000
-Date:   Mon, 30 Sep 2019 00:48:54 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Max Reitz <mreitz@redhat.com>
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Brian Foster <bfoster@redhat.com>
-Subject: Re: [PATCH] xfs: Fix tail rounding in xfs_alloc_file_space()
-Message-ID: <20190930074854.GB27886@infradead.org>
-References: <20190926142238.26973-1-mreitz@redhat.com>
+        Mon, 30 Sep 2019 03:52:11 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 46hZP46TZtz1rN6Q;
+        Mon, 30 Sep 2019 09:52:08 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 46hZP45p6yz1qqkD;
+        Mon, 30 Sep 2019 09:52:08 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id dtiOANqSXyJM; Mon, 30 Sep 2019 09:52:07 +0200 (CEST)
+X-Auth-Info: WBpNG5LEK2XVoOsef6oIrkjQshdPiGByhT69yw/Yjkc=
+Received: from jawa (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Mon, 30 Sep 2019 09:52:07 +0200 (CEST)
+Date:   Mon, 30 Sep 2019 09:51:59 +0200
+From:   Lukasz Majewski <lukma@denx.de>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Enrico Weigelt <info@metux.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        linux-input@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v5 0/3] mfd: mc13xxx: Fixes and enhancements for NXP's
+ mc34708
+Message-ID: <20190930095159.64e1001a@jawa>
+In-Reply-To: <20190909214440.30674-1-lukma@denx.de>
+References: <20190909214440.30674-1-lukma@denx.de>
+Organization: denx.de
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190926142238.26973-1-mreitz@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ boundary="Sig_//YIL_V9Fmub+k=zkc2GyIA6"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 04:22:38PM +0200, Max Reitz wrote:
-> To ensure that all blocks touched by the range [offset, offset + count)
-> are allocated, we need to calculate the block count from the difference
-> of the range end (rounded up) and the range start (rounded down).
-> 
-> Before this patch, we just round up the byte count, which may lead to
-> unaligned ranges not being fully allocated:
+--Sig_//YIL_V9Fmub+k=zkc2GyIA6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Looks fine:
+Dear Lee,
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+> This patch set provides several enhancements to mc13xxx MFD family
+> of devices by introducing mc34708 as a separate device.
+>=20
+> This IC has dedicated pen detection feature, which allows better
+> touchscreen experience.
+>=20
+> This is the fifth version of this code (v5).
+> Discussion regarding previous versions can be found here:
+> https://lkml.org/lkml/2018/4/12/351
+> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1661934.html
+> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1664296.html
+> https://lkml.org/lkml/2019/7/17/705
+
+Gentle ping on this patch series. It is now 3 weeks without any reply...
+
+>=20
+> Sascha Hauer (3):
+>   mfd: mc13xxx: Add mc34708 adc support
+>   input: touchscreen mc13xxx: Make platform data optional
+>   input: touchscreen mc13xxx: Add mc34708 support
+>=20
+>  drivers/input/touchscreen/mc13783_ts.c | 63 ++++++++++++++---
+>  drivers/mfd/mc13xxx-core.c             | 98
+> +++++++++++++++++++++++++- include/linux/mfd/mc34708.h            |
+> 37 ++++++++++ 3 files changed, 185 insertions(+), 13 deletions(-)
+>  create mode 100644 include/linux/mfd/mc34708.h
+>=20
+
+
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_//YIL_V9Fmub+k=zkc2GyIA6
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl2RtB8ACgkQAR8vZIA0
+zr3vHwgAqDghkSGOToJcjlxmTxbnkF2JdYSKUD0tR0Je2c3CGbGL6jtDYe2rqWk8
+8lPDns6dgzA3mlbibBXjhPbx5AAtkEtDGB5FPUigq/y/XomIoEOm33G2QuY97Jsi
+NEfhV3HzIcdhHGro/q1N3ATBGouI5xpVyKirKlmkQuJzXmseGjkJ05v4FtaIbmuP
+eFRrvytW+Bkkdarko2KWcQHDkqJtsU/mSMXh680PRX4sxZyDrkmOkm19wY9zBrhz
+CW8/j4N89iovIEq1xiJuVR/5zdxN7+tqAmjsoDvku7yGfXWRQ9pUcqJ0SnzN8hV9
+OAZjBte9hOBG9CZvPuv3sx7n4oZiLg==
+=YCsb
+-----END PGP SIGNATURE-----
+
+--Sig_//YIL_V9Fmub+k=zkc2GyIA6--
