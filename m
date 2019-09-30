@@ -2,133 +2,92 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E35EC388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16560C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 033E421920
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:31:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569839496;
-	bh=0HeOPYXdrIrODY+4Ljv3JDbm2MSyawGhlpS79Ws8AAI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=H/jbMfYuZwiMHzZfbDvV5D2juEv00AXsZVRLOGgzOHNkJ+d67uzvKdJEgdWIxDNGq
-	 we0Chio93MxOwyMpobH21bvyhiWFWj3s0tn6RzgV1YScSCETEEAPiWEnkhfEAGmsNJ
-	 ixkpaTItMSlSN9OB1HGzgeiU4qoCUEuqQCwdLpKM=
+	by mail.kernel.org (Postfix) with ESMTP id E6B62216F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:33:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730690AbfI3Kbf (ORCPT
+        id S1730698AbfI3Kdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 06:31:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37150 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729415AbfI3Kbf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 06:31:35 -0400
-Received: from guoren-Inspiron-7460.lan (unknown [223.93.147.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F2C9216F4;
-        Mon, 30 Sep 2019 10:31:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569839493;
-        bh=0HeOPYXdrIrODY+4Ljv3JDbm2MSyawGhlpS79Ws8AAI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=dpJ3mz6FATbQOKH3zBlIwGqbdSid4M2BOw1F9yGM16iiplhNYGQUTY4044OWw2GU8
-         /1lYxQBW373+RanCN6q3P3bX6Le+CUZvoiavND/LRwp3ROFzjFJ8cImq7YaFjX9yAU
-         dVOd4MIlNpyj3ws3Zfe0+DV6wyQudVBuZtsQWJCQ=
-From:   guoren@kernel.org
-To:     torvalds@linux-foundation.org
-Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-csky@vger.kernel.org
-Subject: [GIT PULL] csky changes for v5.3-rc1
-Date:   Mon, 30 Sep 2019 18:31:24 +0800
-Message-Id: <1569839484-28170-1-git-send-email-guoren@kernel.org>
-X-Mailer: git-send-email 2.7.4
+        Mon, 30 Sep 2019 06:33:38 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:39380 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728214AbfI3Kdh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 06:33:37 -0400
+Received: by mail-qt1-f193.google.com with SMTP id n7so16309268qtb.6
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 03:33:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tgXGsq2qDG4C8cBxY/ksmuSKorFjC25Y3974yHPlwp4=;
+        b=fMN0Fzx9kBvuF108MT4MelVF2lpP3tLmiiGztPBjQYlAxJcdFfBKP9mwhY0kevB2WB
+         bZhfRVzswVCtFqeFzwJ/DRWgnh2Y81i1nlFbyQBGLnDUfRcpTtQ1H1yaW4yVcb7O+3xk
+         h8wURdqCurxuHQaOWC7jIEgzXhZDLm+27YMtUi5V5X3dLxOluKh5CytW74dINlvgUXgG
+         yUfKTaORxIRKtL7jIFRXHRWA2L6qbOOvgvREw49pFSfKew4bEyQXOOfQ68GPLSMTyUSY
+         oxnJuoe05DFZ8aUWiV51fnSiH/MZgCz4rwa7VNStTAWYSmgIChnxbA9iz8B7qwzWPs4M
+         HnXg==
+X-Gm-Message-State: APjAAAW+Lo5X9JhxelyXVQTpIWUdw16jdHkIRfZx7Xqh+LDoGAAyXhlH
+        H67jG4eyaW+iIESTBkdLoOHzaQheHIzYsCz9/qM=
+X-Google-Smtp-Source: APXvYqxxeXCx+5QLul2l7M6cReMezN604YtNjFsEIIF0r/XlNTyZB6G92oWdWBQ2Pdjy6w3YfElqXH2vaUa/bH3CmOg=
+X-Received: by 2002:a0c:e0c4:: with SMTP id x4mr19858932qvk.176.1569839616714;
+ Mon, 30 Sep 2019 03:33:36 -0700 (PDT)
+MIME-Version: 1.0
+References: <201908251609.ADAD5CAAC1@keescook>
+In-Reply-To: <201908251609.ADAD5CAAC1@keescook>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 30 Sep 2019 12:33:19 +0200
+Message-ID: <CAK8P3a3_sarrMKij5=sp-o16dXERfWkHhUr0fE49Xv8BvXDfaw@mail.gmail.com>
+Subject: Re: [PATCH] uaccess: Add missing __must_check attributes
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Wed, Aug 28, 2019 at 7:38 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> The usercopy implementation comments describe that callers of the
+> copy_*_user() family of functions must always have their return values
+> checked. This can be enforced at compile time with __must_check, so add
+> it where needed.
+>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-The following changes since commit 609488bc979f99f805f34e9a32c1e3b71179d10b:
+I can't find any other reports, so I'd point out here that this found what
+looks like a bug in the x86 math-emu code:
 
-  Linux 5.3-rc2 (2019-07-28 12:47:02 -0700)
+arch/x86/math-emu/reg_ld_str.c:88:2: error: ignoring return value of
+function declared with 'warn_unused_result' attribute
+[-Werror,-Wunused-result]
+        __copy_from_user(sti_ptr, s, 10);
+        ^~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~
+arch/x86/math-emu/reg_ld_str.c:1129:2: error: ignoring return value of
+function declared with 'warn_unused_result' attribute
+[-Werror,-Wunused-result]
+        __copy_from_user(register_base + offset, s, other);
+        ^~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/x86/math-emu/reg_ld_str.c:1131:3: error: ignoring return value of
+function declared with 'warn_unused_result' attribute
+[-Werror,-Wunused-result]
+                __copy_from_user(register_base, s + other, offset);
+                ^~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-are available in the git repository at:
+Moreover, the same code also ignores the return value from most
+get_user()/put_user()/FPU_get_user()/FPU_put_user() calls,
+which have no warn_unused_result annotation (they are macros,
+but I think something could be done if we want to have that
+annotation to catch some of the other such users).
 
-  https://github.com/c-sky/csky-linux.git tags/csky-for-linus-5.4-rc1
-
-for you to fetch changes up to 9af032a30172e119a5935f802b066631f8ded2d6:
-
-  csky: Move static keyword to the front of declaration (2019-09-30 11:50:49 +0800)
-
-----------------------------------------------------------------
-csky-for-linus-5.4-rc1: arch/csky patches for 5.4-rc1
-
-This round of csky subsystem just some fixups.
-
-Fixup:
- - Fixup mb() synchronization problem
- - Fixup dma_alloc_coherent with PAGE_SO attribute
- - Fixup cache_op failed when cross memory ZONEs
- - Optimize arch_sync_dma_for_cpu/device with dma_inv_range
- - Fixup ioremap function losing
- - Fixup arch_get_unmapped_area() implementation
- - Fixup defer cache flush for 610
- - Support kernel non-aligned access
- - Fixup 610 vipt cache flush mechanism
- - Fixup add zero_fp fixup perf backtrace panic
- - Move static keyword to the front of declaration
- - Fixup csky_pmu.max_period assignment
- - Use generic free_initrd_mem()
- - entry: Remove unneeded need_resched() loop
-
-CI-Tested: https://gitlab.com/c-sky/buildroot/pipelines/77689888
-
-----------------------------------------------------------------
-Guo Ren (10):
-      csky: Fixup mb() synchronization problem
-      csky: Fixup dma_alloc_coherent with PAGE_SO attribute
-      csky/dma: Fixup cache_op failed when cross memory ZONEs
-      csky: Optimize arch_sync_dma_for_cpu/device with dma_inv_range
-      csky: Fixup ioremap function losing
-      csky: Fixup arch_get_unmapped_area() implementation
-      csky: Fixup defer cache flush for 610
-      csky: Support kernel non-aligned access
-      csky: Fixup 610 vipt cache flush mechanism
-      csky: Fixup add zero_fp fixup perf backtrace panic
-
-Krzysztof Wilczynski (1):
-      csky: Move static keyword to the front of declaration
-
-Mao Han (1):
-      csky: Fixup csky_pmu.max_period assignment
-
-Mike Rapoport (1):
-      csky: Use generic free_initrd_mem()
-
-Valentin Schneider (1):
-      csky: entry: Remove unneeded need_resched() loop
-
- arch/csky/abiv1/alignment.c          | 62 +++++++++++++++++++++--------
- arch/csky/abiv1/cacheflush.c         | 70 ++++++++++++++++++++++-----------
- arch/csky/abiv1/inc/abi/cacheflush.h | 45 ++++++++++++++-------
- arch/csky/abiv1/inc/abi/page.h       |  5 ++-
- arch/csky/abiv1/mmap.c               | 75 ++++++++++++++++++-----------------
- arch/csky/include/asm/barrier.h      | 15 ++++---
- arch/csky/include/asm/cache.h        |  1 +
- arch/csky/include/asm/io.h           | 23 +++++------
- arch/csky/include/asm/pgtable.h      | 10 +++++
- arch/csky/kernel/entry.S             | 54 +++++++++++++------------
- arch/csky/kernel/perf_event.c        |  4 +-
- arch/csky/kernel/process.c           |  2 +-
- arch/csky/mm/cachev1.c               |  7 +++-
- arch/csky/mm/cachev2.c               | 11 +++++-
- arch/csky/mm/dma-mapping.c           | 76 +++++++++++++-----------------------
- arch/csky/mm/init.c                  | 16 --------
- arch/csky/mm/ioremap.c               | 27 ++++++++-----
- 17 files changed, 291 insertions(+), 212 deletions(-)
+      Arnd
