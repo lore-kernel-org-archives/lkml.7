@@ -4,63 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C06D1C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07168C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96B14218DE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDD2A21927
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:06:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569838011;
-	bh=zPoc85WEtDPb/QzHX6JINlNAeJRn86+iWB+uo6ST3Wk=;
+	s=default; t=1569838014;
+	bh=qMDToGj5VuZFZgy2BFaEjk6oXNuX2W7PgD53NHdQzdc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Oo73vaK4pV+V6+NDQq5CQvlw+UJXuz/n9wiQckSsRuUrPv3XVuxTnn+Jp3Ej4xND
-	 oCo3d6FCOcfAOc2cawoL+EsHRinBJm10v1qeY1U4OiilLj2fKiMu6TpC5wKgxfeAvK
-	 54zN/YVAcMU70++D9oja890xiiMkaly7nXG1VtFU=
+	b=lvEADxfCi0YoxnEnuIjx8HAs1DyxS4q66KXAJd3LvFpIvhr/V/pkyydkdXGK+WC2Q
+	 +V38Qm7lviA+Cc4FwuggW2OQkng3vbIZGwltY5NDTcaBCw8FWWujQgtakNNTzcdXLj
+	 0fZEhPXRfXDv2rIgcLFJmL7dX4A0j5tNwXeaT/Wg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730640AbfI3KGu (ORCPT
+        id S1730656AbfI3KGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 06:06:50 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38227 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730485AbfI3KGr (ORCPT
+        Mon, 30 Sep 2019 06:06:53 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43129 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfI3KGu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 06:06:47 -0400
-Received: by mail-lj1-f193.google.com with SMTP id b20so8795211ljj.5;
-        Mon, 30 Sep 2019 03:06:44 -0700 (PDT)
+        Mon, 30 Sep 2019 06:06:50 -0400
+Received: by mail-lj1-f195.google.com with SMTP id n14so8758691ljj.10;
+        Mon, 30 Sep 2019 03:06:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mt9PJojqcUM4cqVHa79FQdY7MJpX4LpkJTQluT5lFmg=;
-        b=dlvPJMv3ufK7dNUBgrYCIQ9lvRxWi0miO9Lsf4e4PMS0JyKspenBiS7qAMQwbXndx4
-         uwCOSFvWBNGqLKVAaQ2ZhH4UsAKP7xmPFORlTNYOCR7CBq95MysTcQjBpvi60g4fYlDz
-         10A9hSt3X5hp1qophdLTFGJGkh4LQJR+nFkpdYOE6gSzv5l31BbcRKsHIphhI8d4RlOc
-         rcC+7XXNBTDpAVybrme3E0C3NFD/j0A+R433r2oT7/vDU4gqVKJfkD2XbZnC0kZY5qpf
-         w35wcMJeA2MA++Nuj/Ci/Y0DyUOTPmBJDUTLMs3cp5ULoBMpeuY6VaxjetVeBjDyKVg8
-         jp5A==
-X-Gm-Message-State: APjAAAXyohygPK0Ic0GVgvofM0SJ+shNR+NeeT7UH92YaCy6OgcrV06t
-        UONqfcQMSKXXtkkyUJ8daTk=
-X-Google-Smtp-Source: APXvYqx8kYRfIeqLb+n4G9xETjEBllXw6uWSapy/kW5H9ck7P7s3SkYk1UPU1wy08xlI/sMcUDozEg==
-X-Received: by 2002:a2e:654a:: with SMTP id z71mr11743727ljb.37.1569838003980;
-        Mon, 30 Sep 2019 03:06:43 -0700 (PDT)
+        bh=Ktnq7xkHoJ1ZWnUKlDDdlNDPJ4T3Et1IvqzPSJZiEIM=;
+        b=NaJHW3d7iLAQh+cPcW+r7jEPEZKgugQ3x0IwgB1Sg4ebZ3f/Z305H4hT/TIaUe59Hn
+         3AhHzzmNo1l1P76nbzy23lLd4EynxlXORkaZkTv6jeEF66Q9sp5t3ep9ttPwcuKq2HuS
+         wGL1pI2jcFRo3ZSvw6ba0buHj33uVqtlocVuXF5jUMl5KShx0z0CmxHBOwz3Bzgcvims
+         o/TGHZd3XGAroelqAqM2wKs4cjlxGfVARwfq5ljxSxDomyDiCsS/mnBg11V6ExUMG93j
+         FjMguHQ2sqaCqg/sWS18ieGySw0u0tMy1Tx7tSoE5zoQiJaIXO1+GphkIHX7IuYjgekL
+         1f1Q==
+X-Gm-Message-State: APjAAAVXt5TPhqHd8fYGg48NR053AwnS2UUKYM0lGhvzBx+fytuaF6FM
+        oPlvYZeB5jIZbyCRsTIDY7c=
+X-Google-Smtp-Source: APXvYqx5er287eVPmhJgbMadOEazef529ZrcpOhPYb5YPbBtXjwF8CgAuH4l3VyRjUClNZ+Ppbr2TQ==
+X-Received: by 2002:a2e:9943:: with SMTP id r3mr11885352ljj.171.1569838007896;
+        Mon, 30 Sep 2019 03:06:47 -0700 (PDT)
 Received: from neopili.qtec.com (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net. [80.197.57.18])
-        by smtp.gmail.com with ESMTPSA id z72sm3091580ljb.98.2019.09.30.03.06.42
+        by smtp.gmail.com with ESMTPSA id z72sm3091580ljb.98.2019.09.30.03.06.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 03:06:42 -0700 (PDT)
+        Mon, 30 Sep 2019 03:06:46 -0700 (PDT)
 From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
 To:     Philipp Zabel <p.zabel@pengutronix.de>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Jacopo Mondi <jacopo@jmondi.org>, linux-media@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Ricardo Ribalda Delgado <ricardo@ribalda.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Ricardo Ribalda Delgado <ricardo@kernel.org>
-Subject: [PATCH v7 2/8] Documentation: v4l2_ctrl_new_std_compound
-Date:   Mon, 30 Sep 2019 12:06:30 +0200
-Message-Id: <20190930100636.18318-3-ribalda@kernel.org>
+Cc:     Ricardo Ribalda Delgado <ribalda@kernel.org>
+Subject: [PATCH v7 5/8] media: add V4L2_CID_UNIT_CELL_SIZE control
+Date:   Mon, 30 Sep 2019 12:06:33 +0200
+Message-Id: <20190930100636.18318-6-ribalda@kernel.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190930100636.18318-1-ribalda@kernel.org>
 References: <20190930100636.18318-1-ribalda@kernel.org>
@@ -71,37 +69,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ricardo Ribalda Delgado <ricardo@ribalda.com>
+This control returns the unit cell size in nanometres. The struct provides
+the width and the height in separated fields to take into consideration
+asymmetric pixels and/or hardware binning.
+This control is required for automatic calibration of sensors/cameras.
 
-Function for initializing compound controls with a default value.
-
-Suggested-by: Hans Verkuil <hverkuil@xs4all.nl>
-Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
-Signed-off-by: Ricardo Ribalda Delgado <ricardo@kernel.org>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
 ---
- Documentation/media/kapi/v4l2-controls.rst | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/media/v4l2-core/v4l2-ctrls.c | 5 +++++
+ include/uapi/linux/v4l2-controls.h   | 1 +
+ 2 files changed, 6 insertions(+)
 
-diff --git a/Documentation/media/kapi/v4l2-controls.rst b/Documentation/media/kapi/v4l2-controls.rst
-index ebe2a55908be..b20800cae3f2 100644
---- a/Documentation/media/kapi/v4l2-controls.rst
-+++ b/Documentation/media/kapi/v4l2-controls.rst
-@@ -140,6 +140,15 @@ Menu controls with a driver specific menu are added by calling
-                        const struct v4l2_ctrl_ops *ops, u32 id, s32 max,
-                        s32 skip_mask, s32 def, const char * const *qmenu);
+diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+index b9a46f536406..f626f9983408 100644
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -996,6 +996,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+ 	case V4L2_CID_AUTO_FOCUS_RANGE:		return "Auto Focus, Range";
+ 	case V4L2_CID_PAN_SPEED:		return "Pan, Speed";
+ 	case V4L2_CID_TILT_SPEED:		return "Tilt, Speed";
++	case V4L2_CID_UNIT_CELL_SIZE:		return "Unit Cell Size";
  
-+Standard compound controls can be added by calling
-+:c:func:`v4l2_ctrl_new_std_compound`:
-+
-+.. code-block:: c
-+
-+       struct v4l2_ctrl *v4l2_ctrl_new_std_compound(struct v4l2_ctrl_handler *hdl,
-+                       const struct v4l2_ctrl_ops *ops, u32 id,
-+                       const union v4l2_ctrl_ptr p_def);
-+
- Integer menu controls with a driver specific menu can be added by calling
- :c:func:`v4l2_ctrl_new_int_menu`:
+ 	/* FM Radio Modulator controls */
+ 	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
+@@ -1377,6 +1378,10 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+ 	case V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER:
+ 		*type = V4L2_CTRL_TYPE_VP8_FRAME_HEADER;
+ 		break;
++	case V4L2_CID_UNIT_CELL_SIZE:
++		*type = V4L2_CTRL_TYPE_AREA;
++		*flags |= V4L2_CTRL_FLAG_READ_ONLY;
++		break;
+ 	default:
+ 		*type = V4L2_CTRL_TYPE_INTEGER;
+ 		break;
+diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+index a2669b79b294..5a7bedee2b0e 100644
+--- a/include/uapi/linux/v4l2-controls.h
++++ b/include/uapi/linux/v4l2-controls.h
+@@ -1034,6 +1034,7 @@ enum v4l2_jpeg_chroma_subsampling {
+ #define V4L2_CID_TEST_PATTERN_GREENR		(V4L2_CID_IMAGE_SOURCE_CLASS_BASE + 5)
+ #define V4L2_CID_TEST_PATTERN_BLUE		(V4L2_CID_IMAGE_SOURCE_CLASS_BASE + 6)
+ #define V4L2_CID_TEST_PATTERN_GREENB		(V4L2_CID_IMAGE_SOURCE_CLASS_BASE + 7)
++#define V4L2_CID_UNIT_CELL_SIZE			(V4L2_CID_IMAGE_SOURCE_CLASS_BASE + 8)
  
+ 
+ /* Image processing controls */
 -- 
 2.23.0
 
