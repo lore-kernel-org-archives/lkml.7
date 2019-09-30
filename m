@@ -2,520 +2,105 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3348AC35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E42BFC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC404218DE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B67E02081B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:06:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569877576;
-	bh=NhzNl9hqLMEmMBzOvAwioq3fNEGy2ZeQtdpqcgw4dv4=;
-	h=From:Date:Subject:To:List-ID:From;
-	b=NjEvpE9Cdua3m6OMpkRnIqNYCx5jeV/MfiCIM+TaOOETIFHhC0gPf4BFAWvLlepao
-	 DpaHgH4MyeB5pNoCz/q1Pea3FyfejQTEtgpz5irM01nil8V7ulL/Kd2BNHRmNaH71a
-	 O4gLZcHYSXmX8JX0WChht0YqsD+jfQkEP0k71P58=
+	s=default; t=1569877581;
+	bh=TZtp8z/iTZ3ALd9DyToR8MmBnn5V7UEHCdO6Tp9gOrY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qg+xntnluipPgI9GLnnhdEJkaIyZ07ikqRKfa+FOuvVmGA0WsTu3dyDSZyymZd2qW
+	 Nx8iv2+qbfRUUQJPJQA7P541KHnH71zmFO3Vg2D6itSQhkLv5HqW0b7FN0NDYtEuNS
+	 kqGfQLnvXJSKyw47ohWJbKXiW1SoJISCRbcjbGo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732569AbfI3VGP (ORCPT
+        id S1732580AbfI3VGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 17:06:15 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35334 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732169AbfI3VGL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 17:06:11 -0400
-Received: by mail-lj1-f196.google.com with SMTP id m7so11031905lji.2
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 14:06:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=leeoZd1/6vfGVmAmgaRTTSbrNaL7Q9WTzhVbIgYdlws=;
-        b=XAe6onuKNrkNXcy05T8nrcKgTsYPj8C995xf96TbrGmT56s6Gp3xAhgsVtRbEAyTa0
-         H8MHsOw01qpNsS132AXHR2Igvpt9gs3PCEkCNVHgjLAF8PY/U9iOrgN4hQyPqtgKQI7O
-         ka0pmPflmY851nnQt9g4RMwSVrrD3NClHwZmc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=leeoZd1/6vfGVmAmgaRTTSbrNaL7Q9WTzhVbIgYdlws=;
-        b=cOQKBJ8NH1WieTBDfTTUuIFgpa/4eBYUPJg0waCf7mjDbdss8uWKxmRPC8zAqoJQSq
-         RPXQJRYlesEdbQ3QSleFNzl+PWOaEJD0mIrr+uX4yweBSXcIExtqGtVC9zBPB7qdY05L
-         KQ7oe8FQEfFaAWCtT/EgrKKeRLUpfTLOzpWEHdvA33Bo9eEpDmcSnpVg2P/xw0BqDs8P
-         qRv2PijH7ETgw0t9hy3JskFld7bl3qb2XPXO4/3M8djDk8ho8TqSsTE0M+G/pePzuZqO
-         Qd/ZScmOGcIY+Dz5vinJh5L3GrsjyzUW+Et+DAuqP0XNsAMD7K8Pbj7pUbBO3eqPHny7
-         4ZCw==
-X-Gm-Message-State: APjAAAXFR2A97Rdf9zXv857Hmkb7/IBC9+fv1K/hoFl/L3sH+1ao2UaR
-        X846YryGkr4KkPmXSv9+U31My85dLHw=
-X-Google-Smtp-Source: APXvYqzLo5tWqSl5tclmh0kiKW0qAzObvVHxHWnqqM4e/8sqXpeLPleduSja1GwcO7U9BD3VyBHKvQ==
-X-Received: by 2002:a2e:9096:: with SMTP id l22mr12906889ljg.125.1569866665205;
-        Mon, 30 Sep 2019 11:04:25 -0700 (PDT)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
-        by smtp.gmail.com with ESMTPSA id i128sm3477809lji.49.2019.09.30.11.04.23
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Sep 2019 11:04:24 -0700 (PDT)
-Received: by mail-lf1-f48.google.com with SMTP id y127so7782259lfc.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 11:04:23 -0700 (PDT)
-X-Received: by 2002:a19:7d55:: with SMTP id y82mr12270222lfc.106.1569866663607;
- Mon, 30 Sep 2019 11:04:23 -0700 (PDT)
+        Mon, 30 Sep 2019 17:06:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44074 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731010AbfI3VFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 17:05:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D627215EA;
+        Mon, 30 Sep 2019 17:27:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569864465;
+        bh=TZtp8z/iTZ3ALd9DyToR8MmBnn5V7UEHCdO6Tp9gOrY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cACX88i5rWYAkn/QArZJUsxzmXx+R/sxIaF6POWModAa8oJ057592SKgtO2zbDoXm
+         fOBtMji2n2UUmHW8G3mNPunZ8nSjrNaPC2Zxrk2Ys4HpArShmU61dSdo4MbuR/4WFZ
+         UsG5F+hmjtxHdjxGiF/e9qVl56qC6B57V/Eg0JZ8=
+Date:   Mon, 30 Sep 2019 19:27:43 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Pavel Machek <pavel@denx.de>,
+        Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     linux-leds@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+Subject: Re: [PATCH 1/2] leds: Add flag to keep trigger always
+Message-ID: <20190930172743.GA2409822@kroah.com>
+References: <1565398367-11811-1-git-send-email-gurus@codeaurora.org>
+ <20190810071322.GA13760@amd>
+ <20190930133902.GA2249614@kroah.com>
+ <20190930172239.GA26107@amd>
 MIME-Version: 1.0
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 30 Sep 2019 11:04:07 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgbGJ-SGeevEcgrThhPp+RwYOUUgWoZ3W27cbUpuB3VgA@mail.gmail.com>
-Message-ID: <CAHk-=wgbGJ-SGeevEcgrThhPp+RwYOUUgWoZ3W27cbUpuB3VgA@mail.gmail.com>
-Subject: Linux 5.4-rc1
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190930172239.GA26107@amd>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I didn't really extend the merge window by a day here, but I gave
-myself an extra day to merge my pending queue. Thus the Monday date
-for the rc1 rather than the usual Sunday afternoon.
-
-And it wasn't all _that_ big or painful a merge window, for some
-reason I just didn't get to the end of the queue until fairly late in
-the second week, and continued to get a few more pull requests even
-then. Part of it was just other discussions too happening, so I didn't
-do _just_ merges all the time. But part of it was just that I also
-spent some of Sunday away from the computer, doing some welding
-instead.
-
-Anyway, what I'm saying is that the Monday rc1 isn't really a sign of
-any real trouble or more issues than usual. More just random timing.
-
-Size-wise, 5.4 looks to shape up very regular. It's almost exactly the
-same size as 5.3 was at the same stage, both in commits and in lines
-added (honestly in advertising: 5.3 had more lines removed mainly due
-to some isdn removal). Nothing major stands out, the most notable may
-be the long-pending lockdown patches that weren't all that big, but
-that now finally aren't tied to just EFI secure boot, so you can test
-them out other ways too.
-
-But there's changes all over. The patch is (once again) dominated by
-some AMD DRM register definition header file churn, which is almost
-half of it just by lines. But that's the nature of those beasts, being
-largely autogenerated from hw descriptions, and you should ignore it.
-
-And if you do ignore those (very boring) header file changes, you'll
-see mostly the usual distribution: about 60% driver updates (GPU,
-networking, sound, staging), with the rest being the usual mix of
-architecture updates (ia64 shows up thanks to removal of the odd sn
-platform, but it's otherwise mostly arm[64], powerpc and x86),
-tooling, filesystems, documentation and misc (core networking, code
-kernel and VM, include files etc etc).
-
-Much too many changes to list individually, and over 1500 individual
-developers.  The log below is just my usual "merge log" with who I
-merge from and a oneliner very rough description of the area it
-updates.
-
-Go test, the merge window has now closed,
-
-                Linus
-
----
-
-Al Viro (8):
-    vfs namei updates
-    d_path fix
-    vfs mount API infrastructure updates
-    misc mount API conversions
-    autofs updates
-    more mount API conversions
-    jffs2 fix
-    more vfs updates
-
-Alex Williamson (1):
-    VFIO updates
-
-Alexandre Belloni (1):
-    RTC updates
-
-Andreas Gruenbacher (1):
-    gfs2 updates
-
-Andrew Morton (2):
-    updates
-    more updates
-
-Andy Shevchenko (2):
-    x86 platform-drivers updates
-    x86 platform-drivers fixes
-
-Anna Schumaker (1):
-    NFS client updates
-
-Arnd Bergmann (7):
-    ARM SoC platform updates
-    ARM SoC driver updates
-    ARM SoC defconfig updates
-    ARM DT updates
-    asm-generic updates
-    y2038 vfs updates
-    ARM SoC late updates
-
-Benson Leung (1):
-    chrome platform updates
-
-Bjorn Andersson (2):
-    remoteproc updates
-    rpmsg updates
-
-Bjorn Helgaas (1):
-    PCI updates
-
-Boris Brezillon (1):
-    i3c updates
-
-Borislav Petkov (2):
-    EDAC updates
-    RAS updates
-
-Bruce Fields (1):
-    nfsd updates
-
-Casey Schaufler (1):
-    smack updates
-
-Christian Brauner (1):
-    pidfd/waitid updates
-
-Christoph Hellwig (2):
-    configfs updates
-    dma-mapping updates
-
-Corey Minyard (1):
-    IPMI updates
-
-Dan Williams (1):
-    libnvdimm updates
-
-Daniel Thompson (1):
-    kgdb updates
-
-Darrick Wong (4):
-    swap access updates
-    xfs updates
-    iomap updates
-    xfs fixes
-
-Dave Airlie (2):
-    drm updates
-    drm fixes
-
-David Howells (1):
-    AFS updates
-
-David Miller (2):
-    networking updates
-    networking fixes
-
-David Rientjes (1):
-    hugepage allocation updates
-
-David Sterba (2):
-    btrfs updates
-    btrfs fixes
-
-Dennis Zhou (1):
-    percpu updates
-
-Dmitry Torokhov (1):
-    input updates
-
-Dominique Martinet (1):
-    9p updates
-
-Eduardo Valentin (1):
-    thermal SoC updates
-
-Eric Biggers (2):
-    fscrypt updates
-    fs-verity support
-
-Geert Uytterhoeven (1):
-    m68k updates
-
-Greg KH (6):
-    USB updates
-    tty/serial driver updates
-    staging and IIO driver updates
-    char/misc driver updates
-    Documentation/process update
-    driver core updates
-
-Greg Ungerer (1):
-    m68knommu fix
-
-Guenter Roeck (1):
-    hwmon updates
-
-Guo Ren (1):
-    csky updates
-
-Helge Deller (1):
-    parisc updates
-
-Herbert Xu (1):
-    crypto updates
-
-Ilya Dryomov (1):
-    ceph updates
-
-Ingo Molnar (21):
-    header documentation fix
-    objtool build fix
-    RCU updates
-    stacktrace fixlet
-    EFI updates
-    locking updates
-    perf updates
-    scheduler updates
-    x86 asm updates
-    x86 boot code cleanup
-    x86 build cleanup
-    x86 cpu-feature updates
-    x86 entry updates
-    x86 mm updates
-    x86 platform update
-    x86 hyperv updates
-    x86 vmware updates
-    more perf updates
-    timer fix
-    scheduler fixes
-    x86 fix
-
-Jacek Anaszewski (1):
-    LED updates
-
-Jaegeuk Kim (1):
-    f2fs updates
-
-James Bottomley (1):
-    SCSI updates
-
-James Morris (1):
-    kernel lockdown mode
-
-Jan Kara (1):
-    ext2, quota, udf fixes and cleanups
-
-Jarkko Sakkinen (2):
-    tpm updates
-    tpm fixes
-
-Jason Gunthorpe (2):
-    hmm updates
-    RDMA subsystem updates
-
-Jassi Brar (1):
-    mailbox updates
-
-Jeff Layton (1):
-    file locking updates
-
-Jens Axboe (7):
-    io_uring updates
-    libata updates
-    block updates
-    more block updates
-    more io_uring updates
-    block fixes
-    more io_uring updates
-
-Jessica Yu (1):
-    modules updates
-
-Jiri Kosina (2):
-    HID updates
-    livepatching fix
-
-Joerg Roedel (2):
-    iommu updates
-    iommu fixes
-
-Jon Mason (1):
-    NTB updates
-
-Jonathan Corbet (1):
-    documentation updates
-
-Juergen Gross (1):
-    xen update
-
-Kees Cook (2):
-    gcc-plugins fix
-    usercopy fix
-
-Lee Jones (2):
-    backlight updates
-    MFD updates
-
-Ley Foon Tan (1):
-    nios2 fix
-
-Linus Walleij (2):
-    GPIO updates
-    pin control updates
-
-Mark Brown (3):
-    regmap updates
-    regulator updates
-    spi updates
-
-Masahiro Yamada (1):
-    Kbuild updates
-
-Mauro Carvalho Chehab (1):
-    media updates
-
-Max Filippov (1):
-    Xtensa updates
-
-Micah Morton (1):
-    SafeSetID fix
-
-Michael Ellerman (2):
-    powerpc updates
-    powerpc fixes
-
-Michal Simek (1):
-    Microblaze updates
-
-Miguel Ojeda (1):
-    asm inline support
-
-Mike Marshall (1):
-    orangefs updates
-
-Mike Snitzer (1):
-    device mapper updates
-
-Miklos Szeredi (3):
-    overlayfs fixes
-    fuse updates
-    fuse virtio-fs support
-
-Mimi Zohar (1):
-    integrity updates
-
-Olof Johansson (1):
-    ARM SoC fixes
-
-Paolo Bonzini (3):
-    KVM fix
-    KVM updates
-    more KVM updates
-
-Paul Burton (1):
-    MIPS updates
-
-Paul Moore (1):
-    selinux updates
-
-Paul Walmsley (2):
-    RISC-V updates
-    more RISC-V updates
-
-Petr Mladek (1):
-    printk updates
-
-Rafael Wysocki (3):
-    power management updates
-    ACPI updates
-    device properties framework updates
-
-Richard Kuo (1):
-    Hexagon maintainership update
-
-Richard Weinberger (3):
-    MTD updates
-    UML updates
-    UBI, UBIFS and JFFS2 updates
-
-Rob Herring (1):
-    Devicetree updates
-
-Russell King (1):
-    ARM updates
-
-Sasha Levin (1):
-    Hyper-V updates
-
-Sebastian Reichel (2):
-    HSI updates
-    power supply and reset updates
-
-Shuah Khan (1):
-    Kselftest updates
-
-Stafford Horne (1):
-    OpenRISC updates
-
-Stephen Boyd (1):
-    clk updates
-
-Steve French (2):
-    cifs updates
-    more cifs updates
-
-Steven Rostedt (3):
-    tracing updates
-    tracing fix
-    tracing fixes
-
-Takashi Iwai (2):
-    sound updates
-    sound fixes
-
-Ted Ts'o (1):
-    ext4 updates
-
-Tejun Heo (1):
-    cgroup updates
-
-Thierry Reding (1):
-    pwm updates
-
-Thomas Gleixner (7):
-    timer fix
-    CPU hotplug updates
-    x86 pti updates
-    x86 interrupt updates
-    core irq updates
-    x86 apic updates
-    core timer updates
-
-Tony Luck (1):
-    ia64 updates
-
-Ulf Hansson (2):
-    MMC updates
-    more MMC updates
-
-Vasily Gorbik (2):
-    s390 updates
-    more s390 updates
-
-Vinod Koul (2):
-    dmaengine updates
-    soundwire updates
-
-Will Deacon (2):
-    arm64 updates
-    arm64 fixes
-
-Wim Van Sebroeck (1):
-    watchdog updates
-
-Wolfram Sang (2):
-    i2c updates
-     more i2c updates
-
-Zhang Rui (1):
-    thermal management updates
+On Mon, Sep 30, 2019 at 07:22:39PM +0200, Pavel Machek wrote:
+> On Mon 2019-09-30 15:39:02, Greg KH wrote:
+> > On Sat, Aug 10, 2019 at 09:13:22AM +0200, Pavel Machek wrote:
+> > > On Fri 2019-08-09 17:52:46, Guru Das Srinagesh wrote:
+> > > > From: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+> > > > 
+> > > > Commit 0013b23d66a2768f5babbb0ea9f03ab067a990d8 ("leds: disable triggers
+> > > > on brightness set") removes the trigger on an LED class device when
+> > > > brightness is set to 0. However, there are some LED class devices which
+> > > > need the trigger not to be removed. In a use case like camera flash,
+> > > > camera flash driver passes in a trigger device to LED class driver. If
+> > > > the trigger is removed when the brightness is set to 0, this will affect
+> > > > the clients using those triggers. Hence add a flag to always keep the
+> > > > trigger even when brightness is set to 0.
+> > > 
+> > > No.
+> > > 
+> > > Yes, it would affect those clients. Don't do it, then. It is
+> > > root-only operation.
+> > 
+> > I don't understand.  The original commit broke userspace operations.
+> > Shouldn't it be reverted, or fixed this way in order to have userspace
+> > work properly again?
+> 
+> So, what it is exactly that is not working? :-). Yes, root can
+> disconnect LED from v4l2 interface; he can also connect it
+> back. Documentation says that happens.
+> 
+> Yes, root can do stupid things.
+> 
+> Commit 0013b23d66a2768f5babbb0ea9f03ab067a990d8 is from 2008. I'd
+> prefer we did not apply it in 2008, but...
+
+Ah, my fault, I thought this was a new commit.
+
+Guru, what are you doing here that this is required all of a sudden?  No
+other kernel seems to need these changes, what is different in your
+Android userspace that requires this patch series?
+
+thanks,
+
+greg k-h
