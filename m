@@ -2,193 +2,176 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5501CC4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 109C9C388F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26073218DE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1AD1218DE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:53:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qpr2ZNNI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729757AbfI3HwS (ORCPT
+        id S1729800AbfI3HxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 03:52:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38520 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725897AbfI3HwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 03:52:17 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0661A10DCC87;
-        Mon, 30 Sep 2019 07:52:17 +0000 (UTC)
-Received: from [10.36.117.170] (ovpn-117-170.ams2.redhat.com [10.36.117.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3A24B5C207;
-        Mon, 30 Sep 2019 07:52:16 +0000 (UTC)
-Subject: Re: [PATCH v1] powerpc/pseries: CMM: Drop page array
-To:     Michael Ellerman <michael@ellerman.id.au>,
-        linux-kernel@vger.kernel.org
-References: <20190910163932.13160-1-david@redhat.com>
- <a2c2f516-c37c-71f5-8f35-c357e8754b17@redhat.com>
- <8c99aeb3-8287-1913-7362-464ac0c59ce1@redhat.com>
- <27742115-E5A4-4DF1-B223-5E6EB7A6E4F3@ellerman.id.au>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <982d2b2f-203b-89fe-6e91-5dc401af90cf@redhat.com>
-Date:   Mon, 30 Sep 2019 09:52:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 30 Sep 2019 03:53:02 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40006 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbfI3HxB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 03:53:01 -0400
+Received: by mail-ot1-f67.google.com with SMTP id y39so7481882ota.7;
+        Mon, 30 Sep 2019 00:53:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3e3QqLu/jia2qbnMtLkmoAcFP2xoXlNnz1hMB8EyJXA=;
+        b=Qpr2ZNNIGre+/PA/AjXwm5lYpr0+dA+Qzv6pxORfrBHwOXM061iUzszbP4knO2XUYO
+         eSxZMOqBtJHoEdQGFTCnCCbvzlVjzQHfw+DWRzl7mAE5lLf8EL9XfHjCw8xBp17IVTSe
+         S1xwA+VdeNYqVkM7uQObppPnHD5Yi9KcNKaqOWSdXgMXSf9CSGOb5Vyrc5ORnYCZ1YkH
+         rusAhx5nsZyZNjtMOqjMIUhJn0cIuGsIES3hr4awNhX3fLMxJl+wPtApcmvXldn6cWwX
+         1zGkWfp1n2jJVx9mtHBW1lmbP1taRQiWd/9fo7vyn4CGi9NBVxjgS34PWMP76bnoq9GJ
+         /Mwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3e3QqLu/jia2qbnMtLkmoAcFP2xoXlNnz1hMB8EyJXA=;
+        b=bJk71XhDAqT40oRVfRuk4AOm8jlqCBVthXVam8AIjDHuij0q9O9Zi0kPLRiXNlxrR8
+         pSF1M3zmrMjnS17zfIG+3+nJKYTbGp290DTHWL/4CuMdWAqi4q8ZvyBDzxanQbqPJTFp
+         9zrUaLWjWnaXEjEMhsRgP/YbOvi/DZSTmf/wfzY6udiPc8DdE25ULoE6g3KWwVSOsI2d
+         SrFrQa0i5ifLfm2pEAEd3uvO+2uhWgO4Qj11MlRC/3rcrkNLDKv20CERCzZlyLW/vj8o
+         1VzD8LwKHFMje67PMRBEaFHWTsT2MMA8CP2lqzz5mWnR/HHGyUSvvObXsxCCIzZlhl36
+         TsGA==
+X-Gm-Message-State: APjAAAWqx6XRs/dcu2FY0put7Ge0lLtTrSGW+1iBoCWclroDtpwmNMO7
+        HEDFdcF2M5DfhwTe5UqUfVrpVU0N7rCJOI9zVTU=
+X-Google-Smtp-Source: APXvYqwJkciI3RP23y2G8dRh3HMk+rcZON/vcsnRtgr5mWDd+Njl5slYFv2RsowLKSAXR9N0qqZ7DR24R9MpyrkDwXM=
+X-Received: by 2002:a05:6830:156:: with SMTP id j22mr13415041otp.196.1569829980268;
+ Mon, 30 Sep 2019 00:53:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <27742115-E5A4-4DF1-B223-5E6EB7A6E4F3@ellerman.id.au>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Mon, 30 Sep 2019 07:52:17 +0000 (UTC)
+References: <00000000000084fb070593bff0fb@google.com>
+In-Reply-To: <00000000000084fb070593bff0fb@google.com>
+From:   Magnus Karlsson <magnus.karlsson@gmail.com>
+Date:   Mon, 30 Sep 2019 09:52:49 +0200
+Message-ID: <CAJ8uoz0cX-wo8=MVMJVhwVdH3V7NO79EZNHaoNyCT6x018eABA@mail.gmail.com>
+Subject: Re: BUG: unable to handle kernel NULL pointer dereference in xsk_poll
+To:     syzbot <syzbot+a5765ed8cdb1cca4d249@syzkaller.appspotmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        bpf <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>, hawk@kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        linux-kernel@vger.kernel.org,
+        "Karlsson, Magnus" <magnus.karlsson@intel.com>,
+        Network Development <netdev@vger.kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        syzkaller-bugs@googlegroups.com, Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27.09.19 23:06, Michael Ellerman wrote:
-> 
-> 
-> On 27 September 2019 9:19:49 pm AEST, David Hildenbrand <david@redhat.com> wrote:
->> On 25.09.19 09:37, David Hildenbrand wrote:
->>> On 10.09.19 18:39, David Hildenbrand wrote:
->>>> We can simply store the pages in a list (page->lru), no need for a
->>>> separate data structure (+ complicated handling). This is how most
->>>> other balloon drivers store allocated pages without additional
->> tracking
->>>> data.
->>>>
->>>> For the notifiers, use page_to_pfn() to check if a page is in the
->>>> applicable range. plpar_page_set_loaned()/plpar_page_set_active()
->> were
->>>> called with __pa(page_address()) for now, I assume we can simply
->> switch
->>>> to page_to_phys() here. The pfn_to_kaddr() handling is now mostly
->> gone.
->>>>
->>>> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->>>> Cc: Paul Mackerras <paulus@samba.org>
->>>> Cc: Michael Ellerman <mpe@ellerman.id.au>
->>>> Cc: Arun KS <arunks@codeaurora.org>
->>>> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
->>>> Cc: Thomas Gleixner <tglx@linutronix.de>
->>>> Cc: Andrew Morton <akpm@linux-foundation.org>
->>>> Cc: Vlastimil Babka <vbabka@suse.cz>
->>>> Signed-off-by: David Hildenbrand <david@redhat.com>
->>>> ---
->>>>
->>>> Only compile-tested. I hope the page_to_phys() thingy is correct and
->> I
->>>> didn't mess up something else / ignoring something important why the
->> array
->>>> is needed.
->>>>
->>>> I stumbled over this while looking at how the memory isolation
->> notifier is
->>>> used - and wondered why the additional array is necessary. Also, I
->> think
->>>> by switching to the generic balloon compaction mechanism, we could
->> get
->>>> rid of the memory hotplug notifier and the memory isolation notifier
->> in
->>>> this code, as the migration capability of the inflated pages is the
->> real
->>>> requirement:
->>>> 	commit 14b8a76b9d53346f2871bf419da2aaf219940c50
->>>> 	Author: Robert Jennings <rcj@linux.vnet.ibm.com>
->>>> 	Date:   Thu Dec 17 14:44:52 2009 +0000
->>>> 	
->>>> 	    powerpc: Make the CMM memory hotplug aware
->>>> 	
->>>> 	    The Collaborative Memory Manager (CMM) module allocates
->> individual pages
->>>> 	    over time that are not migratable.  On a long running system
->> this can
->>>> 	    severely impact the ability to find enough pages to support a
->> hotplug
->>>> 	    memory remove operation.
->>>> 	[...]
->>>>
->>>> Thoughts?
->>>
->>> Ping, is still feature still used at all?
->>>
->>> If nobody can test, any advise on which HW I need and how to trigger
->> it?
->>>
->>
->> So ... if CMM is no longer alive I propose ripping it out completely.
->> Does anybody know if this feature is still getting used? Getting rid of
->> the memory isolation notifier sounds desirable - either by scrapping
->> CMM
->> or by properly wiring up balloon compaction.
-> 
-> It's still used AFAIK, but the people who wrote the code have left IBM, and I'm on leave.
-> 
-> I'll be back in a week or so and will try and track down how to test it then.
-> 
+On Mon, Sep 30, 2019 at 9:17 AM syzbot
+<syzbot+a5765ed8cdb1cca4d249@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
 
-Thanks - sure, take your time. I'll try to play with wiring up balloon
-compaction in the meantime.
+Thank you Mr Syzcaller. I am on it.
 
-Cheers!
+/Magnus
 
-> cheers
-> 
-
-
--- 
-
-Thanks,
-
-David / dhildenb
+> HEAD commit:    a3c0e7b1 Merge tag 'libnvdimm-fixes-5.4-rc1' of git://git...
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14f05435600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=6ffbfa7e4a36190f
+> dashboard link: https://syzkaller.appspot.com/bug?extid=a5765ed8cdb1cca4d249
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1096d835600000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=129f15f3600000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+a5765ed8cdb1cca4d249@syzkaller.appspotmail.com
+>
+> IPv6: ADDRCONF(NETDEV_CHANGE): hsr0: link becomes ready
+> 8021q: adding VLAN 0 to HW filter on device batadv0
+> BUG: kernel NULL pointer dereference, address: 0000000000000000
+> #PF: supervisor instruction fetch in kernel mode
+> #PF: error_code(0x0010) - not-present page
+> PGD 99226067 P4D 99226067 PUD 8fa47067 PMD 0
+> Oops: 0010 [#1] PREEMPT SMP KASAN
+> CPU: 0 PID: 8719 Comm: syz-executor502 Not tainted 5.3.0+ #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> RIP: 0010:0x0
+> Code: Bad RIP value.
+> RSP: 0018:ffff88809dd4f848 EFLAGS: 00010246
+> RAX: 0000000000000000 RBX: ffff88808c06d740 RCX: 1ffff1101180db7c
+> RDX: 0000000000000002 RSI: 0000000000000000 RDI: ffff88809a190b00
+> RBP: ffff88809dd4f880 R08: ffff8880921924c0 R09: ffffed101180db31
+> R10: ffffed101180db30 R11: ffff88808c06d987 R12: 0000000000000002
+> R13: 0000000000000304 R14: ffff88809a190b00 R15: 0000000000000000
+> FS:  0000000001b27880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: ffffffffffffffd6 CR3: 00000000a307a000 CR4: 00000000001406f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>   xsk_poll+0x1e7/0x5a0 net/xdp/xsk.c:430
+>   sock_poll+0x15e/0x480 net/socket.c:1256
+>   vfs_poll include/linux/poll.h:90 [inline]
+>   do_pollfd fs/select.c:859 [inline]
+>   do_poll fs/select.c:907 [inline]
+>   do_sys_poll+0x63c/0xdd0 fs/select.c:1001
+>   __do_sys_ppoll fs/select.c:1101 [inline]
+>   __se_sys_ppoll fs/select.c:1081 [inline]
+>   __x64_sys_ppoll+0x259/0x310 fs/select.c:1081
+>   do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x441bd9
+> Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7
+> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
+> ff 0f 83 7b 10 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007ffd48824e98 EFLAGS: 00000246 ORIG_RAX: 000000000000010f
+> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000441bd9
+> RDX: 0000000000000000 RSI: 0000000000000006 RDI: 0000000020000040
+> RBP: 00007ffd48824eb0 R08: 0000000000000000 R09: 0000000001bbbbbb
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+> R13: 0000000000403170 R14: 0000000000000000 R15: 0000000000000000
+> Modules linked in:
+> CR2: 0000000000000000
+> ---[ end trace e262cafe88422aec ]---
+> RIP: 0010:0x0
+> Code: Bad RIP value.
+> RSP: 0018:ffff88809dd4f848 EFLAGS: 00010246
+> RAX: 0000000000000000 RBX: ffff88808c06d740 RCX: 1ffff1101180db7c
+> RDX: 0000000000000002 RSI: 0000000000000000 RDI: ffff88809a190b00
+> RBP: ffff88809dd4f880 R08: ffff8880921924c0 R09: ffffed101180db31
+> R10: ffffed101180db30 R11: ffff88808c06d987 R12: 0000000000000002
+> R13: 0000000000000304 R14: ffff88809a190b00 R15: 0000000000000000
+> FS:  0000000001b27880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: ffffffffffffffd6 CR3: 00000000a307a000 CR4: 00000000001406f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
