@@ -2,78 +2,119 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA67C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9194FC388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC6320842
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 688CD2086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:12:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dC3y8N+1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731115AbfI3NLd (ORCPT
+        id S1731092AbfI3NM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 09:11:33 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:36213 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbfI3NLd (ORCPT
+        Mon, 30 Sep 2019 09:12:56 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41936 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730693AbfI3NM4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:11:33 -0400
-Received: by mail-qk1-f196.google.com with SMTP id y189so7682169qkc.3;
-        Mon, 30 Sep 2019 06:11:32 -0700 (PDT)
+        Mon, 30 Sep 2019 09:12:56 -0400
+Received: by mail-pg1-f196.google.com with SMTP id s1so7380985pgv.8;
+        Mon, 30 Sep 2019 06:12:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FaFmGKrNxd9v1HavpyQ+K8DRicz4HO/nLLTmLpS4H/4=;
+        b=dC3y8N+1mXAuru6Y7UPSIGS8R6/VwIKIpmGCelirODQGRZ+RUPCF4Mu7vOlrpIg8vg
+         2NoWxqvY/Dy62pNz8CuzpjYeMVTRr00oTFykazjoNnjbJGwp/w2u4x8ChSz2OBbeZ8I2
+         NqQMgilrDgO68KGnkuAEkSC4ei1qR+M0azgmrmmKuXMD/QA+oR91W/JLOGZV3MX3gu3i
+         2dVvXIExzrGArJc7CjLOIASm65VLHAaTz0z1u5MQkfhlNgFD1hg88yOZSBPngSEcMrWF
+         ce0eHEk+waH/GG7RERph9lkAJ9h/rlV30ENivlYSgMS8DSom4ysIyHcxQPTRAu18xD4n
+         E/3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yvTBruD6zaxn4sjv75YBQD/wvJnGfoapWmbizXNwOe4=;
-        b=QTle/f5DLXEhlyP1XuY4qJyszbl+i54AIelwGPscZpbMgfqMw00kTq+pYnVQWNwW0O
-         LNcKarv2fWT9nJ+6OulbjshHCe3MpGGMIClpjW0OOWCMD1TBFi077e7hLSOk8uzICPds
-         3CP03cvDfD+71dy2XUx1rXKbEVZYln3lKaruP3oW+83OfdMuEGcXoswDjeLww0VrQajD
-         1+nYF3nIsHj562Fu5xuxIEDIwXcvbcWKb8MRTL0L1D+PubjlOb3dquDi2F+LZ4qfPaVl
-         TEEeFIKrzK9K9diCjx4FXCJVuYxXvGb77tN4juHjx2GeYPSU5QAKsUgjcc04rZwfI/se
-         E+ww==
-X-Gm-Message-State: APjAAAVPBo5ijoyMdXycwEYgLgQBalEFehoBccaoxfQxais/64PI3C50
-        2V6aGzoA9gyhKi53wTlhPJjHtgcRpboqCQVXoJvSdpUm
-X-Google-Smtp-Source: APXvYqxTTAYfkhCHkzMgXzRRscqOu03R0zgUehRs/wbuLHGGTGki2kNYI5vG0oUjtCDGe/Os6ctHOkQ9bUK6AsOCYAI=
-X-Received: by 2002:ae9:ef8c:: with SMTP id d134mr18891406qkg.286.1569849091986;
- Mon, 30 Sep 2019 06:11:31 -0700 (PDT)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FaFmGKrNxd9v1HavpyQ+K8DRicz4HO/nLLTmLpS4H/4=;
+        b=bYDRVg6+kl4YyOoFtgSTRHPMYpuuUdmeRSQfS6Wyp2PjA1w4bMNW21bGc8MbcsVO6A
+         URbn3VdEDO7V8AP3y3LFrLzxJG5WOLlnjuCQYH6wPqUUJGQvjPlrF2sEGLY0NlGLJeGy
+         GrrW+6VArcHVABx/ZQM9FwXtqqufLY0f6BGfkssFfF3wGVVqfwZ9924EpVNkm3BUeGS1
+         5TIE8/QuqwdgyY6JQvJuQP2Ov/vld+AsynLyrRyG+RSHCVWAJeobPqFPzE8EXLygIAzt
+         0em8MC8LQlPtrVd/exEmTaOm6ZSjCMvy0GJgAQE8Ap35TIH9bCakaKAPNM8xxSUXArH2
+         2EIg==
+X-Gm-Message-State: APjAAAVqnFStYiRRmrTS8pPaemcjwgywLrBJMl89DaecCUXjCqUOF5F6
+        O09RwoZe7IR4Er2Jx4bG+3DwzFaC
+X-Google-Smtp-Source: APXvYqxPCJQaSlD8tvpwexKP7Vny6q6AkehhbKvjtfBpyahKcJFUkAysjZ0I+oWKDziZ3JCkzYmqMA==
+X-Received: by 2002:a17:90a:17c5:: with SMTP id q63mr26614556pja.106.1569849175310;
+        Mon, 30 Sep 2019 06:12:55 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id y15sm15404983pfp.111.2019.09.30.06.12.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 30 Sep 2019 06:12:53 -0700 (PDT)
+Subject: Re: [PATCH] watchdog: meson: Fix the wrong value of left time
+To:     Xingyu Chen <xingyu.chen@amlogic.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Qianggui Song <qianggui.song@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        linux-watchdog@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1569754429-17287-1-git-send-email-xingyu.chen@amlogic.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <ee3ea7d5-1adf-c718-4533-70b04bb23ecc@roeck-us.net>
+Date:   Mon, 30 Sep 2019 06:12:51 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <cover.1569831228.git.Jose.Abreu@synopsys.com> <8879f74a8cc5dffdb14d553c321d64c63ea9fe2d.1569831229.git.Jose.Abreu@synopsys.com>
-In-Reply-To: <8879f74a8cc5dffdb14d553c321d64c63ea9fe2d.1569831229.git.Jose.Abreu@synopsys.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 30 Sep 2019 15:11:15 +0200
-Message-ID: <CAK8P3a0Fzvy=PGDKf-K_xSCpuboSJTVY5voYMFJTNhWHkTw-DA@mail.gmail.com>
-Subject: Re: [PATCH v2 net 9/9] net: stmmac: xgmac: Fix RSS writing wrong keys
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     Networking <netdev@vger.kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1569754429-17287-1-git-send-email-xingyu.chen@amlogic.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 10:19 AM Jose Abreu <Jose.Abreu@synopsys.com> wrote:
->
-> Commit b6b6cc9acd7b, changed the call to dwxgmac2_rss_write_reg()
-> passing it the variable cfg->key[i].
->
-> As key is an u8 but we write 32 bits at a time we need to cast it into
-> an u32 so that the correct key values are written. Notice that the for
-> loop already takes this into account so we don't try to write past the
-> keys size.
+On 9/29/19 3:53 AM, Xingyu Chen wrote:
+> The left time value is wrong when we get it by sysfs. The left time value
+> should be equal to preset timeout value minus elapsed time value. According
+> to the Meson-GXB/GXL datasheets which can be found at [0], the timeout value
+> is saved to BIT[0-15] of the WATCHDOG_TCNT, and elapsed time value is saved
+> to BIT[16-31] of the WATCHDOG_TCNT.
+> 
+> [0]: http://linux-meson.com
+> 
+> Fixes: 683fa50f0e18 ("watchdog: Add Meson GXBB Watchdog Driver")
+> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
 
-Right, sorry about my mistake.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-> Fixes: b6b6cc9acd7b ("net: stmmac: selftest: avoid large stack usage")
-> Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+> ---
+>   drivers/watchdog/meson_gxbb_wdt.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/watchdog/meson_gxbb_wdt.c b/drivers/watchdog/meson_gxbb_wdt.c
+> index d17c1a6..5a9ca10 100644
+> --- a/drivers/watchdog/meson_gxbb_wdt.c
+> +++ b/drivers/watchdog/meson_gxbb_wdt.c
+> @@ -89,8 +89,8 @@ static unsigned int meson_gxbb_wdt_get_timeleft(struct watchdog_device *wdt_dev)
+>   
+>   	reg = readl(data->reg_base + GXBB_WDT_TCNT_REG);
+>   
+> -	return ((reg >> GXBB_WDT_TCNT_CNT_SHIFT) -
+> -		(reg & GXBB_WDT_TCNT_SETUP_MASK)) / 1000;
+> +	return ((reg & GXBB_WDT_TCNT_SETUP_MASK) -
+> +		(reg >> GXBB_WDT_TCNT_CNT_SHIFT)) / 1000;
+>   }
+>   
+>   static const struct watchdog_ops meson_gxbb_wdt_ops = {
+> 
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
