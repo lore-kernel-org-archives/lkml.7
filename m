@@ -2,167 +2,99 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECA9C35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 756BFC388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 422C920815
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:15:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569878156;
-	bh=5YkIavbcZo/fLAlcbxRAjN/RrUGTMkGP8SzMSvE3lfY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Mi1+pCfNu7CrhA6wW7s1C38934Yw3Vugt9NCBD33JYN5AVQEetN+VkHBkMDrK9Y9t
-	 5dWwg/d6wxBr6sTnL5+t5at4Njv8SRLY3LHO3X9e5vEYGEFaPPCYdJsJeu+g4KTZx5
-	 2h0tVcjz7KoCDmSlA5X6LWELcXa1jd6Ft/2lB4Wg=
+	by mail.kernel.org (Postfix) with ESMTP id 400DD215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:16:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XdI8MqdU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732145AbfI3VP4 (ORCPT
+        id S1732198AbfI3VQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 17:15:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46020 "EHLO mail.kernel.org"
+        Mon, 30 Sep 2019 17:16:15 -0400
+Received: from ozlabs.org ([203.11.71.1]:43317 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731050AbfI3VPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 17:15:54 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731050AbfI3VQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 17:16:15 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67EDD224D7;
-        Mon, 30 Sep 2019 19:58:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569873536;
-        bh=5YkIavbcZo/fLAlcbxRAjN/RrUGTMkGP8SzMSvE3lfY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=eQ2EwAbhTnIoCao80RsHAjyuX0FiFTAlEN6giJaMJlAygtJFtLFebghluVb1IgARK
-         QJIQQXZWBQEH68It6VK2j2PAMzsVDbeK0hNpsI8f9l+BsiWY2zGIHPbIo8lDV07B5v
-         nuE1LfjWC+uyDHhdEx/TeJU/HbfFo2GBNRL7OTVo=
-Date:   Mon, 30 Sep 2019 14:58:55 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, x86@kernel.org,
-        linux-s390@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        netdev@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        kvm@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-usb@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-serial@vger.kernel.org,
-        linux-mmc@vger.kernel.org
-Subject: Re: [PATCH RESEND v3 00/26] Add definition for the number of
- standard PCI BARs
-Message-ID: <20190930195855.GA191519@google.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46hwDr1Bk1z9sNF;
+        Tue,  1 Oct 2019 07:16:12 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1569878172;
+        bh=ABi3XTYRlRRy2dg9HbrG9Jm3gXd9hiGGIVOBtE75DO8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=XdI8MqdUpZu5VMnuImREiFb1niTwI+X8ObObiWReuj6IwfmblmO+cVyxUl8GQ2V4S
+         CziSLB0CYj8sej+0FGfOUpYiqHHbAfSOCSpumvzRPJz5al1f8GAFRI00RhPdR1pGPo
+         FRav3IDYfjdN4G0zcz9JlKSDVvGtr34iOY3EoyJbNn/MCRBRHR1ZflPDKWmeAWbrAG
+         YaPuSIKVKTiu8gZrS5eOptxEDbDNu7jj76evUJvqegqttMi2esT0xh8zeGDye3NdfU
+         rV7fJxwo7Ja6tCzAn/LY7ePedtQ2i70u4pl+ir2XsIwbmPQnEGEgmvh4l6Dm63VX8f
+         gwToUk3fmfPyw==
+Date:   Tue, 1 Oct 2019 07:16:02 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Gao Xiang <hsiangkao@aol.com>
+Cc:     Mark Brown <broonie@kernel.org>, linux-erofs@lists.ozlabs.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-next@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Miao Xie <miaoxie@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: Re: erofs -next tree inclusion request
+Message-ID: <20191001071602.5723e33d@canb.auug.org.au>
+In-Reply-To: <20190930132925.GA10677@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20190919120110.GA48697@architecture4>
+        <20190919121739.GG3642@sirena.co.uk>
+        <20190919122328.GA82662@architecture4>
+        <20190919143722.GA5363@hsiangkao-HP-ZHAN-66-Pro-G1>
+        <20190930231439.37295a14@canb.auug.org.au>
+        <20190930132925.GA10677@hsiangkao-HP-ZHAN-66-Pro-G1>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190927234026.23342-1-efremov@linux.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/8u8oJwVrtwQVPX8=Bt=VocG";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 28, 2019 at 02:40:26AM +0300, Denis Efremov wrote:
-> Code that iterates over all standard PCI BARs typically uses
-> PCI_STD_RESOURCE_END, but this is error-prone because it requires
-> "i <= PCI_STD_RESOURCE_END" rather than something like
-> "i < PCI_STD_NUM_BARS". We could add such a definition and use it the same
-> way PCI_SRIOV_NUM_BARS is used. The patchset also replaces constant (6)
-> with new define PCI_STD_NUM_BARS where appropriate and removes local
-> declarations for the number of PCI BARs.
-> 
-> Changes in v3:
->   - Updated commits description.
->   - Refactored "< PCI_ROM_RESOURCE" with "< PCI_STD_NUM_BARS" in loops.
->   - Refactored "<= BAR_5" with "< PCI_STD_NUM_BARS" in loops.
->   - Removed local define GASKET_NUM_BARS.
->   - Removed local define PCI_NUM_BAR_RESOURCES.
-> 
-> Changes in v2:
->   - Reversed checks in pci_iomap_range,pci_iomap_wc_range.
->   - Refactored loops in vfio_pci to keep PCI_STD_RESOURCES.
->   - Added 2 new patches to replace the magic constant with new define.
->   - Splitted net patch in v1 to separate stmmac and dwc-xlgmac patches.
-> 
-> Denis Efremov (26):
->   PCI: Add define for the number of standard PCI BARs
->   PCI: hv: Use PCI_STD_NUM_BARS
->   PCI: dwc: Use PCI_STD_NUM_BARS
->   PCI: endpoint: Use PCI_STD_NUM_BARS
->   misc: pci_endpoint_test: Use PCI_STD_NUM_BARS
->   s390/pci: Use PCI_STD_NUM_BARS
->   x86/PCI: Loop using PCI_STD_NUM_BARS
->   alpha/PCI: Use PCI_STD_NUM_BARS
->   ia64: Use PCI_STD_NUM_BARS
->   stmmac: pci: Loop using PCI_STD_NUM_BARS
->   net: dwc-xlgmac: Loop using PCI_STD_NUM_BARS
->   ixgb: use PCI_STD_NUM_BARS
->   e1000: Use PCI_STD_NUM_BARS
->   rapidio/tsi721: Loop using PCI_STD_NUM_BARS
->   efifb: Loop using PCI_STD_NUM_BARS
->   fbmem: use PCI_STD_NUM_BARS
->   vfio_pci: Loop using PCI_STD_NUM_BARS
->   scsi: pm80xx: Use PCI_STD_NUM_BARS
->   ata: sata_nv: Use PCI_STD_NUM_BARS
->   staging: gasket: Use PCI_STD_NUM_BARS
->   serial: 8250_pci: Use PCI_STD_NUM_BARS
->   pata_atp867x: Use PCI_STD_NUM_BARS
->   memstick: use PCI_STD_NUM_BARS
->   USB: core: Use PCI_STD_NUM_BARS
->   usb: pci-quirks: Use PCI_STD_NUM_BARS
->   devres: use PCI_STD_NUM_BARS
-> 
->  arch/alpha/kernel/pci-sysfs.c                 |  8 ++---
->  arch/ia64/sn/pci/pcibr/pcibr_dma.c            |  4 +--
->  arch/s390/include/asm/pci.h                   |  5 +--
->  arch/s390/include/asm/pci_clp.h               |  6 ++--
->  arch/s390/pci/pci.c                           | 16 +++++-----
->  arch/s390/pci/pci_clp.c                       |  6 ++--
->  arch/x86/pci/common.c                         |  2 +-
->  arch/x86/pci/intel_mid_pci.c                  |  2 +-
->  drivers/ata/pata_atp867x.c                    |  2 +-
->  drivers/ata/sata_nv.c                         |  2 +-
->  drivers/memstick/host/jmb38x_ms.c             |  2 +-
->  drivers/misc/pci_endpoint_test.c              |  8 ++---
->  drivers/net/ethernet/intel/e1000/e1000.h      |  1 -
->  drivers/net/ethernet/intel/e1000/e1000_main.c |  2 +-
->  drivers/net/ethernet/intel/ixgb/ixgb.h        |  1 -
->  drivers/net/ethernet/intel/ixgb/ixgb_main.c   |  2 +-
->  .../net/ethernet/stmicro/stmmac/stmmac_pci.c  |  4 +--
->  .../net/ethernet/synopsys/dwc-xlgmac-pci.c    |  2 +-
->  drivers/pci/controller/dwc/pci-dra7xx.c       |  2 +-
->  .../pci/controller/dwc/pci-layerscape-ep.c    |  2 +-
->  drivers/pci/controller/dwc/pcie-artpec6.c     |  2 +-
->  .../pci/controller/dwc/pcie-designware-plat.c |  2 +-
->  drivers/pci/controller/dwc/pcie-designware.h  |  2 +-
->  drivers/pci/controller/pci-hyperv.c           | 10 +++---
->  drivers/pci/endpoint/functions/pci-epf-test.c | 10 +++---
->  drivers/pci/pci-sysfs.c                       |  4 +--
->  drivers/pci/pci.c                             | 13 ++++----
->  drivers/pci/proc.c                            |  4 +--
->  drivers/pci/quirks.c                          |  4 +--
->  drivers/rapidio/devices/tsi721.c              |  2 +-
->  drivers/scsi/pm8001/pm8001_hwi.c              |  2 +-
->  drivers/scsi/pm8001/pm8001_init.c             |  2 +-
->  drivers/staging/gasket/gasket_constants.h     |  3 --
->  drivers/staging/gasket/gasket_core.c          | 12 +++----
->  drivers/staging/gasket/gasket_core.h          |  4 +--
->  drivers/tty/serial/8250/8250_pci.c            |  8 ++---
->  drivers/usb/core/hcd-pci.c                    |  2 +-
->  drivers/usb/host/pci-quirks.c                 |  2 +-
->  drivers/vfio/pci/vfio_pci.c                   | 11 ++++---
->  drivers/vfio/pci/vfio_pci_config.c            | 32 ++++++++++---------
->  drivers/vfio/pci/vfio_pci_private.h           |  4 +--
->  drivers/video/fbdev/core/fbmem.c              |  4 +--
->  drivers/video/fbdev/efifb.c                   |  2 +-
->  include/linux/pci-epc.h                       |  2 +-
->  include/linux/pci.h                           |  2 +-
->  include/uapi/linux/pci_regs.h                 |  1 +
->  lib/devres.c                                  |  2 +-
->  47 files changed, 112 insertions(+), 115 deletions(-)
+--Sig_/8u8oJwVrtwQVPX8=Bt=VocG
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied to pci/resource for v5.5, thanks!
+Hi Gao,
 
-I ended up squashing these all together because they're all related
-and tiny.
+On Mon, 30 Sep 2019 21:32:22 +0800 Gao Xiang <hsiangkao@aol.com> wrote:
+>=20
+> I think xiang@kernel.org is preferred since it can always redirect
+> to my workable email address.
+
+OK, done.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/8u8oJwVrtwQVPX8=Bt=VocG
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2ScJIACgkQAVBC80lX
+0GzPQAf+MFU2QYjTEQ5TE9srpZ+8ctwTC7tAz42SidHNa3ODU5iFRT0fWQC7liis
+qL9ibdkp3aH0wEw60i4ZgyC5WLNhACh37chxD7y1OH2Tm6RQvHSjda00U5TRqziX
+T/9jAKratRrjqtICZg8JbUVzz66mq8u2UTxe4ic+Ys4G0FwVbkY41IuakBtzZYwa
+9GO9+HUAH0gGi3mU9B60KnCqENWG8zl6vOWaewxUBbDlrXFaGhdANfC0NKnwJva6
+ZwsKj8xPykSpMruDNqIk+8vffy3Q3oKuJzeDJA7wmfPzikq5B7TQExVwP8XpIRmG
+jm+Kj/RKfXSif9+TePfW1hw/1jw1vA==
+=mogZ
+-----END PGP SIGNATURE-----
+
+--Sig_/8u8oJwVrtwQVPX8=Bt=VocG--
