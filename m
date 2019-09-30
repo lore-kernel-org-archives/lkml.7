@@ -2,85 +2,105 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CD5C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 925E0C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40E29216F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64658215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569852536;
-	bh=dVI226ZRY3L1K2ohBFSeVn5/mzy6YdAm3hYyooR7kmQ=;
+	s=default; t=1569852544;
+	bh=CUY2DS6q7wSAIavwUIR9TnnZqiZpj6/VYvFvIYeBnkI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iMSncuFZg+1FLdDPFRHcheCMx58DAcAlxpREJnc5VZMxHqDGd4XN7SR/DX8sqdIbt
-	 skvJeJVX38pPodlUSZ5g5BQ3kGM7BLLiiUCVWyUXeHPLzm6/EBSn4SON8ImOxe3xwB
-	 0oFZplhrn3qx9o1P+u5shHSttkjkiq1Wl4Yi2GTs=
+	b=JmeaIMCiTF82SRVqOTH4whsIjIJTChqQEX20nN2x60fY+iVopDBv4FzIsqbvrptdu
+	 DLKfwd+HeNoYGLyg9AVW42fcKc6GOZ8btxdkCRxAauMOh2eErhXO8xMsAN4gLrZ6wt
+	 CQ+ayQL8iIcpprIMXspbYcUxwHIRLdhuz8mnqswk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731684AbfI3OIz (ORCPT
+        id S1731697AbfI3OJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 10:08:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45094 "EHLO mail.kernel.org"
+        Mon, 30 Sep 2019 10:09:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730902AbfI3OIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 10:08:54 -0400
+        id S1730902AbfI3OJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 10:09:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A81BA215EA;
-        Mon, 30 Sep 2019 14:08:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B68F120842;
+        Mon, 30 Sep 2019 14:09:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569852534;
-        bh=dVI226ZRY3L1K2ohBFSeVn5/mzy6YdAm3hYyooR7kmQ=;
+        s=default; t=1569852542;
+        bh=CUY2DS6q7wSAIavwUIR9TnnZqiZpj6/VYvFvIYeBnkI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UMF/2ntZtPbp2MktRbMnbVUbRNUdg6WwbyRG8O5CVsyuxzMdh8SGb4Z0LJf2lNO18
-         BRlXnndwtHe2ZXQh1t8KBZDAuzzId2Vubfa2JkQ4awgASsXS0GsRZM6s6/JGg3iVs0
-         8kLLDXtWjVNCFBOUmk0p0sn4Tn2GraOIb6SaUY5w=
-Date:   Mon, 30 Sep 2019 15:39:02 +0200
+        b=F+jYCb1eT/27GSczvMAgu3CCCuDPeRKe8Wdmo2yUjcgjAK3gzNkJqn6mXoulsEVdr
+         do/hYMSfaMhfS5w/fY++zlSHfTYHUf7qbsfqbAsF7GWNpa4bLwCmhvm0nxuv7l5YDw
+         vRlNw0m7H0MAqdsjGw4GuIWGOSs9WGs5xXS1tMtY=
+Date:   Mon, 30 Sep 2019 16:05:19 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Guru Das Srinagesh <gurus@codeaurora.org>,
-        linux-leds@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-Subject: Re: [PATCH 1/2] leds: Add flag to keep trigger always
-Message-ID: <20190930133902.GA2249614@kroah.com>
-References: <1565398367-11811-1-git-send-email-gurus@codeaurora.org>
- <20190810071322.GA13760@amd>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Enrico Weigelt <lkml@metux.net>,
+        Oliver Hartkopp <socketcan@hartkopp.net>,
+        jan.kiszka@siemens.com, Frank Iwanitz <friw@hms-networks.de>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v1 5/5] staging: fieldbus: add support for HMS FL-NET
+ industrial controller
+Message-ID: <20190930140519.GA2280096@kroah.com>
+References: <20190918183552.28959-1-TheSven73@gmail.com>
+ <20190918183552.28959-6-TheSven73@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190810071322.GA13760@amd>
+In-Reply-To: <20190918183552.28959-6-TheSven73@gmail.com>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 10, 2019 at 09:13:22AM +0200, Pavel Machek wrote:
-> On Fri 2019-08-09 17:52:46, Guru Das Srinagesh wrote:
-> > From: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-> > 
-> > Commit 0013b23d66a2768f5babbb0ea9f03ab067a990d8 ("leds: disable triggers
-> > on brightness set") removes the trigger on an LED class device when
-> > brightness is set to 0. However, there are some LED class devices which
-> > need the trigger not to be removed. In a use case like camera flash,
-> > camera flash driver passes in a trigger device to LED class driver. If
-> > the trigger is removed when the brightness is set to 0, this will affect
-> > the clients using those triggers. Hence add a flag to always keep the
-> > trigger even when brightness is set to 0.
-> 
-> No.
-> 
-> Yes, it would affect those clients. Don't do it, then. It is
-> root-only operation.
+On Wed, Sep 18, 2019 at 02:35:52PM -0400, Sven Van Asbroeck wrote:
+> The Anybus-S FL-NET provides full FL-NET Class 1 functionality via the
+> patented Anybus-S application interface. Any device supporting this
+> standard can take advantage of the features offered by the module,
+> providing seamless network integration regardless of network type.
 
-I don't understand.  The original commit broke userspace operations.
-Shouldn't it be reverted, or fixed this way in order to have userspace
-work properly again?
+Discussing "patented" in a changelog text is a big no-no.  Please don't
+do that.  Talk to your corporate lawyers for why not...
+
+> FL-NET is a control network, primarily used for interconnection of devices
+> such as PLCs, Robot Controllers and Numerical Control Devices. It features
+> both cyclic and acyclic data exchange capabilities, and uses a token-based
+> communication scheme for data transmission. The Anybus module is classified
+> as a 'Class 1'-node, which means that it supports cyclic data exchange in
+> both directions.
+> 
+> Official documentation:
+> https://www.anybus.com/docs/librariesprovider7/default-document-library
+> /manuals-design-guides/hms-scm_1200_073.pdf
+> 
+> This implementation is an Anybus-S client driver, designed to be
+> instantiated by the Anybus-S bus driver when it discovers the FL-NET
+> card.
+> 
+> If loaded successfully, the driver registers itself as a fieldbus_dev,
+> and userspace can access it through the fieldbus_dev interface.
+> 
+> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+> ---
+>  drivers/staging/fieldbus/anybuss/Kconfig     |  17 +
+>  drivers/staging/fieldbus/anybuss/Makefile    |   1 +
+>  drivers/staging/fieldbus/anybuss/hms-flnet.c | 520 +++++++++++++++++++
+
+Why are you adding support for new things here?  New hardware support
+should _only_ be added once the code is out of staging, otherwise there
+is no pressure to get it out of this directory structure.
+
+Please work on that first, before adding new stuff like this.
 
 thanks,
 
