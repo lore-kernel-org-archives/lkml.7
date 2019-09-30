@@ -2,228 +2,130 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 655E9C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 556E9C35280
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37B9621855
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29026215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:45:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oUyRV9cB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UsyIMUg0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731607AbfI3Woo (ORCPT
+        id S1731785AbfI3WpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 18:44:44 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:36336 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729874AbfI3Woo (ORCPT
+        Mon, 30 Sep 2019 18:45:01 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46336 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726789AbfI3WpA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 18:44:44 -0400
-Received: by mail-vs1-f68.google.com with SMTP id v19so7993407vsv.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 15:44:43 -0700 (PDT)
+        Mon, 30 Sep 2019 18:45:00 -0400
+Received: by mail-pl1-f194.google.com with SMTP id q24so4454808plr.13;
+        Mon, 30 Sep 2019 15:45:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R/2IGqkcJxyCfdXVhyfUjNS/geJP3ljERdNj2BWoXsI=;
-        b=oUyRV9cBkkkJ238JMstI0DdwTEnHLOMmk7p0pAeK/otfxi+PYeGve1JVKhGcSbwAsR
-         CSu8CVq53LDVDBpdq68Vide0GWDTg6SxzAWmZ8HUjVmgywKhOqqFOIx/s2JQ23bHpixT
-         PVOqdQ9XsD/nhCYxAO+jahlCJV4O25PbdASrh/bdIvP350tciLMBx/vdKxRaWxYqnJOp
-         EixyppQGewnOSKTGeQ74o0JTEQCDzGb/9LioyeEW27yDOeoJHC+tFDJLIX43UNxeIT59
-         LLC4yp6CdkXMcOC2X4wnR3Tgl0HRRYyG+GJMQQAOk898MKVC2yP2OliExODnacQh08Ar
-         O6YQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cK5Fghk/yA6wH8i7i1QdxuNjNjer/uYW7DYZEo/GN74=;
+        b=UsyIMUg00LtJE64A4LiLe6eJzVF1zL6nphsK2U/Q2IqWrZP53dG4q1VEndLOUOYNYn
+         5SEp3DRw3l7cXZ1osu3JlTEVDyzECiVpf9CZRZ+qF7EK8okwLv7gA5HXg3vLTVgj3toJ
+         oE3oSQHrwjSgFSD6WS0XcDb/z8Q0ATme8RO9xD/byhPytcMAtRt6rhOoarHWAyjEK9hN
+         OSXg/8HIwuMV/3mcDLh2yRcG3pIL2Lh/Pl+OTPlEuxgZKB0ZkFhU5n00g3bZjnQ7tiIL
+         XXhd2dPfa8WSw2dXTy1o38zQlEVtZweCcrWF0Ce7wmvm/rWPWuzJjX7/TE1vyxfptElF
+         18ZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R/2IGqkcJxyCfdXVhyfUjNS/geJP3ljERdNj2BWoXsI=;
-        b=GWBtzYEhl/WONUwzLN3mpZEbxK1N2jiQWKVTun3jyOf2r6Ug3McOQD1M43gzpt5Rmv
-         ujis965m7weiKIUGMHAFl9tX4nVUR4EE4ITIKve/4e0QJzKfU7PeMDdlaxha6G8jWfzx
-         c8rKPtsJJ9UCyH8jrwtMhJe/ZJk6IXfQZPh8ZokQlubZMwe4r+vzhagCt2nJ1zun2ri4
-         HkZaWc/Rj2ArEWyUZ29Fy76Pn6Trm5NA29vJuYyTLCM155oZ/LooiPYBpGbM3BHxI0td
-         bQIKWVUxAFdBjXEFXoIIfUWqk/i9HTGLd/UtEwXzHxYYQYVFwVGkjWsUEqyvEUzIfJ/6
-         xTWA==
-X-Gm-Message-State: APjAAAXOnjRChLRzRqNyxL01HEL3NXdL4uk5up/4buEtVRrpOSV2WN20
-        tuyQ0G26ewHGlk/SuBPZdb8t6XlfXWhAN33i1dlLng==
-X-Google-Smtp-Source: APXvYqwQIYB8itddzoh5/J4SJx8QLazwMpE1zHpLumKYYuLabOa9Zhdm6JeD37Zk0WNrsiC7dZ+AhT+pYp2toNtojuQ=
-X-Received: by 2002:a67:6044:: with SMTP id u65mr10627844vsb.95.1569883482533;
- Mon, 30 Sep 2019 15:44:42 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cK5Fghk/yA6wH8i7i1QdxuNjNjer/uYW7DYZEo/GN74=;
+        b=IFEJZwyXa6MjGVtKM3tUgZGdVNTmpHxoqFIi4bOElO7O6Jx2Rt0c800zsSxqpsouE/
+         f/TShsR5ufdu4WkUiCmO30FEGnMJHsyBXWVJScx9F1yY7pg3RVXoj1qB1pP9Gp0jgx5Y
+         cSaPMST73Ov8Bx+cpkc8g0fpHDJVJjBJ6yNdQ7gQR1fFCyHSyG6+HO1bn9H25ljgq1AP
+         WVvjREUuWsvSgEjHSd6jpU22Sz0vPdRRpYpZosyL3AjjLdfG4Hon1OAxrEtG9ayfhwhE
+         n1tgVHF9sd5GbnG6RPF4IoOh81TN6UqsqLUTROzc9JvgIXS7V6L7vldxIaCvjH1a1wZK
+         uL7Q==
+X-Gm-Message-State: APjAAAUxDpUF3HMtWErI+dt6me1pX4n3dlLw/lmNWjwtayajBsC25Qtd
+        zG2f/hJNcvq/tv5p7/jgs/I=
+X-Google-Smtp-Source: APXvYqzpfrf1XrfBF5s/NlyYg1/o1Be4cDh58aR3YEzX+PU8lIPJMJmjlArWpf2bHK26A22NPfYSfw==
+X-Received: by 2002:a17:902:b949:: with SMTP id h9mr8215703pls.35.1569883499500;
+        Mon, 30 Sep 2019 15:44:59 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id y7sm12632755pfn.142.2019.09.30.15.44.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 15:44:58 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 15:44:56 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH 00/11] Add support for software nodes to gpiolib
+Message-ID: <20190930224456.GV237523@dtor-ws>
+References: <20190911075215.78047-1-dmitry.torokhov@gmail.com>
+ <CACRpkdb=s67w2DCGubhbLQTtxpWtiW8S1MECMO4cvec=bF6OdA@mail.gmail.com>
+ <20190917002207.GJ237523@dtor-ws>
 MIME-Version: 1.0
-References: <cover.1558430617.git.amit.kucheria@linaro.org>
- <49cf5d94beb9af9ef4e78d4c52f3b0ad20b7c63f.1558430617.git.amit.kucheria@linaro.org>
- <CAOCk7NptTHPOdyEkCAofjTPuDQ5dsnPMQgfC0R8=7cp05xKQiA@mail.gmail.com>
-In-Reply-To: <CAOCk7NptTHPOdyEkCAofjTPuDQ5dsnPMQgfC0R8=7cp05xKQiA@mail.gmail.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Tue, 1 Oct 2019 04:14:31 +0530
-Message-ID: <CAHLCerOS1Hi3XdDZzTKFKnrsATj5cMKtjPEuJknWu-aPtwzP9g@mail.gmail.com>
-Subject: Re: [PATCH v2 7/9] arm64: dts: qcom: msm8998: Add PSCI cpuidle low
- power states
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        DTML <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190917002207.GJ237523@dtor-ws>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Can you try removing just the *SLEEP_1 states from the cpu-idle-states
-property? I want to understand if this is triggered just by the deeper
-C-state.
+Hi Linus,
 
-On Tue, Oct 1, 2019 at 3:50 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
->
-> Amit, the merged version of the below change causes a boot failure
-> (nasty hang, sometimes with RCU stalls) on the msm8998 laptops.  Oddly
-> enough, it seems to be resolved if I remove the cpu-idle-states
-> property from one of the cpu nodes.
->
-> I see no issues with the msm8998 MTP.
->
-> Do you have any suggestions on how we might debug this?
->
-> On Tue, May 21, 2019 at 3:38 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
-> >
-> > Add device bindings for cpuidle states for cpu devices.
-> >
-> > Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/msm8998.dtsi | 50 +++++++++++++++++++++++++++
-> >  1 file changed, 50 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> > index 3fd0769fe648..54810980fcf9 100644
-> > --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> > @@ -78,6 +78,7 @@
-> >                         compatible = "arm,armv8";
-> >                         reg = <0x0 0x0>;
-> >                         enable-method = "psci";
-> > +                       cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1>;
-> >                         efficiency = <1024>;
-> >                         next-level-cache = <&L2_0>;
-> >                         L2_0: l2-cache {
-> > @@ -97,6 +98,7 @@
-> >                         compatible = "arm,armv8";
-> >                         reg = <0x0 0x1>;
-> >                         enable-method = "psci";
-> > +                       cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1>;
-> >                         efficiency = <1024>;
-> >                         next-level-cache = <&L2_0>;
-> >                         L1_I_1: l1-icache {
-> > @@ -112,6 +114,7 @@
-> >                         compatible = "arm,armv8";
-> >                         reg = <0x0 0x2>;
-> >                         enable-method = "psci";
-> > +                       cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1>;
-> >                         efficiency = <1024>;
-> >                         next-level-cache = <&L2_0>;
-> >                         L1_I_2: l1-icache {
-> > @@ -127,6 +130,7 @@
-> >                         compatible = "arm,armv8";
-> >                         reg = <0x0 0x3>;
-> >                         enable-method = "psci";
-> > +                       cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1>;
-> >                         efficiency = <1024>;
-> >                         next-level-cache = <&L2_0>;
-> >                         L1_I_3: l1-icache {
-> > @@ -142,6 +146,7 @@
-> >                         compatible = "arm,armv8";
-> >                         reg = <0x0 0x100>;
-> >                         enable-method = "psci";
-> > +                       cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1>;
-> >                         efficiency = <1536>;
-> >                         next-level-cache = <&L2_1>;
-> >                         L2_1: l2-cache {
-> > @@ -161,6 +166,7 @@
-> >                         compatible = "arm,armv8";
-> >                         reg = <0x0 0x101>;
-> >                         enable-method = "psci";
-> > +                       cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1>;
-> >                         efficiency = <1536>;
-> >                         next-level-cache = <&L2_1>;
-> >                         L1_I_101: l1-icache {
-> > @@ -176,6 +182,7 @@
-> >                         compatible = "arm,armv8";
-> >                         reg = <0x0 0x102>;
-> >                         enable-method = "psci";
-> > +                       cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1>;
-> >                         efficiency = <1536>;
-> >                         next-level-cache = <&L2_1>;
-> >                         L1_I_102: l1-icache {
-> > @@ -191,6 +198,7 @@
-> >                         compatible = "arm,armv8";
-> >                         reg = <0x0 0x103>;
-> >                         enable-method = "psci";
-> > +                       cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1>;
-> >                         efficiency = <1536>;
-> >                         next-level-cache = <&L2_1>;
-> >                         L1_I_103: l1-icache {
-> > @@ -238,6 +246,48 @@
-> >                                 };
-> >                         };
-> >                 };
-> > +
-> > +               idle-states {
-> > +                       entry-method = "psci";
-> > +
-> > +                       LITTLE_CPU_SLEEP_0: cpu-sleep-0-0 {
-> > +                               compatible = "arm,idle-state";
-> > +                               idle-state-name = "little-retention";
-> > +                               arm,psci-suspend-param = <0x00000002>;
-> > +                               entry-latency-us = <43>;
-> > +                               exit-latency-us = <86>;
-> > +                               min-residency-us = <200>;
-> > +                       };
-> > +
-> > +                       LITTLE_CPU_SLEEP_1: cpu-sleep-0-1 {
-> > +                               compatible = "arm,idle-state";
-> > +                               idle-state-name = "little-power-collapse";
-> > +                               arm,psci-suspend-param = <0x00000003>;
-> > +                               entry-latency-us = <100>;
-> > +                               exit-latency-us = <612>;
-> > +                               min-residency-us = <1000>;
-> > +                               local-timer-stop;
-> > +                       };
-> > +
-> > +                       BIG_CPU_SLEEP_0: cpu-sleep-1-0 {
-> > +                               compatible = "arm,idle-state";
-> > +                               idle-state-name = "big-retention";
-> > +                               arm,psci-suspend-param = <0x00000002>;
-> > +                               entry-latency-us = <41>;
-> > +                               exit-latency-us = <82>;
-> > +                               min-residency-us = <200>;
-> > +                       };
-> > +
-> > +                       BIG_CPU_SLEEP_1: cpu-sleep-1-1 {
-> > +                               compatible = "arm,idle-state";
-> > +                               idle-state-name = "big-power-collapse";
-> > +                               arm,psci-suspend-param = <0x00000003>;
-> > +                               entry-latency-us = <100>;
-> > +                               exit-latency-us = <525>;
-> > +                               min-residency-us = <1000>;
-> > +                               local-timer-stop;
-> > +                       };
-> > +               };
-> >         };
-> >
-> >         firmware {
-> > --
-> > 2.17.1
-> >
+On Mon, Sep 16, 2019 at 05:22:07PM -0700, Dmitry Torokhov wrote:
+> On Thu, Sep 12, 2019 at 10:55:47AM +0100, Linus Walleij wrote:
+> > On Wed, Sep 11, 2019 at 8:52 AM Dmitry Torokhov
+> > <dmitry.torokhov@gmail.com> wrote:
+> > 
+> > > If we agree in principle, I would like to have the very first 3 patches
+> > > in an immutable branch off maybe -rc8 so that it can be pulled into
+> > > individual subsystems so that patches switching various drivers to
+> > > fwnode_gpiod_get_index() could be applied.
+> > 
+> > I think it seems a bit enthusiastic to have non-GPIO subsystems
+> > pick up these changes this close to the merge window so my plan
+> > is to merge patches 1.2.3 (1 already merged) and then you could
+> > massage the other subsystems in v5.4-rc1.
+> > 
+> > But if other subsystems say "hey we want do fix this in like 3 days"
+> > then I'm game for an immutable branch as well.
+> 
+> No, if it is still has a chance for -rc1 then I'm good. I was thinking
+> if it does not go into -rc1 I could convince some of them merge a
+> targeted immutable branch off -rc8 or 5.3 final and then apply patches
+> relevant to their subsystems so we do not have to wait till 5.6 to land
+> everything.
+
+So I guess we missed -rc1. Any chance we could get an immutable branch
+off -rc1 that you will pull into your main branch and I hopefully can
+persuade other maintainers to pull as well so we do not need to drag it
+over 2+ merge windows?
+
+Thanks.
+
+-- 
+Dmitry
