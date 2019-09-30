@@ -2,115 +2,118 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F289C35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18524C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0747520842
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E341F215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:14:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KkzqKB2r"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NEp7JEfP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731124AbfI3NNg (ORCPT
+        id S1731159AbfI3NOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 09:13:36 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39153 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbfI3NNg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:13:36 -0400
-Received: by mail-pf1-f196.google.com with SMTP id v4so5598668pff.6;
-        Mon, 30 Sep 2019 06:13:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pVqHd88otrSSyzUhdPAR49J1f4QIfMdZze38ZYfnGJs=;
-        b=KkzqKB2rnVFlsdLNa7dSs41MXFDLgv37IlpcfV2jnGpqNTYANx7+RcupnhBb/KhzHP
-         XUP5vxLdQHf/gBy6AnKwD3TP19AWnADwCBPYbG7Qjf/wbwMPInUm+HmfObCavMtthrPi
-         sRL1QjPy38FuGN0KyxFYPmv1AMinVWfjmoM4PGupv33amM1ZxKhDVkPSmcrNrytgwPvK
-         iHfr3kWKpGnC2qUq53mOYChj1aDxuO1mF68Wo7xQjbZDlG1wT2W1JfZci/HX13HGXfKH
-         cmW+pUQUHtItBS40eVqNnfzKgKfXlt5lbUQ4T8o/Feq6dr1B/sZNQhYGZPvuKyWgh4Yt
-         jOOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pVqHd88otrSSyzUhdPAR49J1f4QIfMdZze38ZYfnGJs=;
-        b=NVinWrHij0ZBb19wyP4yPnqw33IlKRgwwAGtL0vCNPdKumE2YF57uHsLj464aaSl2g
-         yhBdJG8lqm580Kz+v1o2UO2hglo0EgekLNPyBmpg8nKd4Wz9acpYaGGsE6VLSoK8dwQS
-         wBmFY0okZ5q8ywXNIk0dZCPm92arwSlRF38y8Pv7zi/A2gVwRtgWCclCHrLZxkCUPGME
-         pgn2oc//A42iu4E5MPhA/vlNFLmD2UHZ71zW+34AzjyEpsIo9hAcJBxstTqZc1h2nG3a
-         2vsyTYGltFgonQBPUXO/C7HWryxHYEvcpWsa5bxDjQs3Zi9j3GjulTl1hgJmJF0jmBD0
-         2OOQ==
-X-Gm-Message-State: APjAAAVIJYOpy7PiXQcYpgQdwu7o+HtcXEoITUASQX3Gvx/7P9g9m5oZ
-        ce9Z52jNaTR3YCPS6QkdzScGctby
-X-Google-Smtp-Source: APXvYqwdRxFKPM0Pz0zgUmoVNsKMD68FJTXMT+xPN89Q1GzC8MAh8LTX/FnyJOJKEKYuwPUxtC2ZCQ==
-X-Received: by 2002:a17:90a:fb91:: with SMTP id cp17mr26999130pjb.51.1569849215014;
-        Mon, 30 Sep 2019 06:13:35 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q204sm12830664pfc.11.2019.09.30.06.13.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 30 Sep 2019 06:13:34 -0700 (PDT)
-Subject: Re: [PATCH] watchdog/sbc7240_wdt: Fix yet another
- -Wimplicit-fallthrough warning
-To:     Borislav Petkov <bp@alien8.de>, LKML <linux-kernel@vger.kernel.org>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-watchdog@vger.kernel.org
-References: <20190929114649.22740-1-bp@alien8.de>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <17098752-cdbf-00f8-b578-22c56ae85c59@roeck-us.net>
-Date:   Mon, 30 Sep 2019 06:13:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 30 Sep 2019 09:14:45 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:40481 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726314AbfI3NOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 09:14:45 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46hjYD40R3z9s00;
+        Mon, 30 Sep 2019 23:14:40 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1569849281;
+        bh=yB8msfNke7AKbMgQjP8+jH3mdOiOuN7lBcpyNctMOGM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=NEp7JEfPp+ZCKm3b1wUG1W5cDXxF93TLx+8rDqmS1codPvwARVOaN5DDyLWXiAWrT
+         o12pGswJV12lybG9A5PePDDDIR2fPAl7F09ibZWZACvPFBtFvAn4PQwTfJOPgo8tWY
+         CXjKdi6Va718Tss9OgtXhRy3hNoQACFJkCpDJmN5Bn+hzfqnnx2kizGRKo1oq+is80
+         TJNtsnJKcdevQNm8+vuLa88L/GH2yGCPhFCc2HGyIx5stL4EfSpDw9JHedHJD+ijXm
+         NzwPlhuE6Wm5pssKmAhflV57KawO7MNd6Osf8D7ufqr5ujJuD3afccXd8zx279b2n4
+         gx6NjSrgQFG2A==
+Date:   Mon, 30 Sep 2019 23:14:39 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Gao Xiang <hsiangkao@aol.com>
+Cc:     Mark Brown <broonie@kernel.org>, linux-erofs@lists.ozlabs.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-next@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Miao Xie <miaoxie@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: Re: erofs -next tree inclusion request
+Message-ID: <20190930231439.37295a14@canb.auug.org.au>
+In-Reply-To: <20190919143722.GA5363@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20190919120110.GA48697@architecture4>
+        <20190919121739.GG3642@sirena.co.uk>
+        <20190919122328.GA82662@architecture4>
+        <20190919143722.GA5363@hsiangkao-HP-ZHAN-66-Pro-G1>
 MIME-Version: 1.0
-In-Reply-To: <20190929114649.22740-1-bp@alien8.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/cNqd5/Q_VFmQ_+f+Dt5kCcN";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/29/19 4:46 AM, Borislav Petkov wrote:
-> From: Borislav Petkov <bp@suse.de>
-> 
-> ... by moving the fall through comment outside of the code block so that
-> gcc sees it.
-> 
-> No functional changes.
-> 
-> Signed-off-by: Borislav Petkov <bp@suse.de>
-> Cc: Wim Van Sebroeck <wim@linux-watchdog.org>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: linux-watchdog@vger.kernel.org
+--Sig_/cNqd5/Q_VFmQ_+f+Dt5kCcN
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Hi Gao,
 
-> ---
->   drivers/watchdog/sbc7240_wdt.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/watchdog/sbc7240_wdt.c b/drivers/watchdog/sbc7240_wdt.c
-> index 12cdee7d5069..90d67e6d8e8b 100644
-> --- a/drivers/watchdog/sbc7240_wdt.c
-> +++ b/drivers/watchdog/sbc7240_wdt.c
-> @@ -194,9 +194,8 @@ static long fop_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
->   
->   		if (wdt_set_timeout(new_timeout))
->   			return -EINVAL;
-> -
-> -		/* Fall through */
->   	}
-> +	/* Fall through */
->   	case WDIOC_GETTIMEOUT:
->   		return put_user(timeout, (int __user *)arg);
->   	default:
-> 
+On Thu, 19 Sep 2019 22:37:22 +0800 Gao Xiang <hsiangkao@aol.com> wrote:
+>
+> The fixes only -fixes branch is
+> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git fixes
 
+I have added this from tomorrow (sorry for the drop out today).
+
+Which address(es) should I use as your contact address(es)?
+
+Thanks for adding your subsystem tree as a participant of linux-next.  As
+you may know, this is not a judgement of your code.  The purpose of
+linux-next is for integration testing and to lower the impact of
+conflicts between subsystems in the next merge window.=20
+
+You will need to ensure that the patches/commits in your tree/series have
+been:
+     * submitted under GPL v2 (or later) and include the Contributor's
+        Signed-off-by,
+     * posted to the relevant mailing list,
+     * reviewed by you (or another maintainer of your subsystem tree),
+     * successfully unit tested, and=20
+     * destined for the current or next Linux merge window.
+
+Basically, this should be just what you would send to Linus (or ask him
+to fetch).  It is allowed to be rebased if you deem it necessary.
+
+--=20
+Cheers,
+Stephen Rothwell=20
+sfr@canb.auug.org.au
+
+--Sig_/cNqd5/Q_VFmQ_+f+Dt5kCcN
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2R/78ACgkQAVBC80lX
+0GzWAgf/dMM/gcid6gsfajlbbFg/vesZzJ4G8ToYTWy5U4m8IfuJwh8wDyuJcyYl
+U9sDmYSt5aW/uo4S/ZyOJjAEqf3+1aZIDpV0Xkmj9gVBMhDFzNVb8fYZev5qECrb
+xsJ3Ef3+jSYer4pHGxP+fOhoxIiTMqNAUFvKLAMl4C0jluB+Tt1yKYDGI7+aYYBY
+dMl3CcynSJUJei7hHVxwT8mi+FSKcjRIR+ykwui+UmSn4KuhBUStWk1TnnUxXZak
+1IEvGtUFXIQETFpn6SeRaPlhOmLP0fogWuvYEF+To9LBsUjwnF6CBkf/z51AIkeO
++WXrSZIo8DIuyzc5cEoEvoBTjJXcnQ==
+=Voot
+-----END PGP SIGNATURE-----
+
+--Sig_/cNqd5/Q_VFmQ_+f+Dt5kCcN--
