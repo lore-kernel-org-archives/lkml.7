@@ -2,135 +2,115 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2655C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED20C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3CDB21855
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 506D3218DE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:27:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pJ4X7ZDi"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mqAFLfcV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731773AbfI3O1D (ORCPT
+        id S1731775AbfI3O1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 10:27:03 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43481 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731276AbfI3O1C (ORCPT
+        Mon, 30 Sep 2019 10:27:17 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:37168 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbfI3O1R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 10:27:02 -0400
-Received: by mail-pl1-f193.google.com with SMTP id f21so3971225plj.10
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 07:27:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=txZ1VUvm2fYL5KKS8Cpb2n4hdlyJJoHpUG0YxLbY0aM=;
-        b=pJ4X7ZDiEmiNs9lhG5lisVCdC9Ni66n95/gDgTxtvU3n3nsBmHVKgeO5NIRwtiuKYi
-         v5VOEPSpS9YY40/1TDxBHubgTs/0/TAy8L2iuAcU/abld0vM0RN8LtZkmvYk4z61Pmtc
-         9lDxpwCLbocjOCWUf4tWy5+INYVN5GSzMK2wyZxDz2YLuFlq1bNk2JLozmaO6bgiL4+2
-         VIQovS+Tjz6ViZWMEbJjyK8smVlcMkAIMlos0wKjXYvbUOy3mPHPlsFCHnqRBywTaubR
-         VQAoxk6w5543EOInZHHJBk1igJKB/XFo2nspAiv537KikDFixYNwmfM+doa20s+6bYG6
-         FujA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=txZ1VUvm2fYL5KKS8Cpb2n4hdlyJJoHpUG0YxLbY0aM=;
-        b=fkFTejL2QI1jwFf5OlH3KskqdI2WVUv2CPMv6A1Nl0znIKMNAHkAXd5ukhBEPvT6EP
-         3zzhsOMPmEDCBkNMoFdcHg7vwIaIEbA0Kc8Zrk/+F7sqN1Xqzn+qcZUrB4yR/lWRP+Zj
-         ghhIff1LyLKB3q28dzK4w4+EYhnplrhi/B9FYXicOyT8AYsUFR62J7JHcm54Nr7flrRE
-         3OPI9QULD/PiaHPGqjbI31VvF7zo2paMuFZ0tngcuicHBmi6sD/ZsDD7qrzpNPHJIm06
-         9sd1gkxV+i/JN+WdfeYqekY66PvF0YZW0aiDw/yRyLAUtb0HuVFlRiJV9BqNKjHhb7XN
-         h2xQ==
-X-Gm-Message-State: APjAAAWturgoCIRiPQWANno+oU13ED103WgylpfLzEaKFxFvuhuxXnrb
-        EduJAIlZl1C+643dIZwnCi0=
-X-Google-Smtp-Source: APXvYqyHYhEAiq3el5CMjZijDSysZcxfjmO+6pmUZjHTCqkQDq3EyVwiCZt+RMTBKVDPv8wpQi6n/w==
-X-Received: by 2002:a17:902:7d92:: with SMTP id a18mr20467503plm.243.1569853621669;
-        Mon, 30 Sep 2019 07:27:01 -0700 (PDT)
-Received: from Slackware ([103.231.91.38])
-        by smtp.gmail.com with ESMTPSA id r24sm11275940pfh.69.2019.09.30.07.26.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 07:27:00 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 19:56:48 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        akpm@linux-foundation.org, tglx@linutronix.de,
-        viro@zeniv.linux.org.uk
-Subject: Re: [RFC] Makefiles in scripts dir needs to move  one place
-Message-ID: <20190930142648.GA30066@Slackware>
-References: <20190930081041.GA11886@Slackware>
- <20190930081816.GA2036553@kroah.com>
+        Mon, 30 Sep 2019 10:27:17 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8UER9D4010738;
+        Mon, 30 Sep 2019 09:27:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569853629;
+        bh=19UZeQW7iCMEPJGBu3CVRVx3eQA8RyzMg8BIyoBYUWY=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=mqAFLfcVc72peDTQaVTX3krGNWa4dUGqG37HuzfVHniEjLFEVSOh8YoKdxbgpNypn
+         9JTrY0Nwc+jZwsA4tAyvBkeNUyOL86+NmKHRKznpqBPY2bLbEqdihnIkEZpky/3syV
+         aD/H/j8j0s3Fyh4XLDHzYd3fjjECs/1Fh8fCCAe0=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8UER9qU042622;
+        Mon, 30 Sep 2019 09:27:09 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 30
+ Sep 2019 09:27:09 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 30 Sep 2019 09:27:09 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8UER6Ak067205;
+        Mon, 30 Sep 2019 09:27:06 -0500
+Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to
+ dts
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+To:     Adam Ford <aford173@gmail.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+CC:     Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190510194229.20628-1-aford173@gmail.com>
+ <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
+ <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
+ <845055e2-8182-de74-2077-629fdf50ac6c@ti.com>
+ <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
+ <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com>
+ <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
+ <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com>
+ <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
+ <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com>
+ <23eba53a-9304-2ceb-d97e-01891ec0b3ed@ti.com>
+ <cb028b1e-05ca-9b22-be5d-c63f5fd56cc4@ti.com>
+ <F3335195-6EB7-4D44-B884-2F29D9238011@goldelico.com>
+ <CAHCN7xL9bFxO=2i1DzmRj6A3XwUNdt=DZeJ2a0EZ0f9gcFTy6g@mail.gmail.com>
+ <CAHCN7x+vCfPTRE+zzYUwAXdbBzRotTP2hSOgsHB0FdgBhZV5zA@mail.gmail.com>
+ <CAHCN7xJDV=R9Ysjhff7=mEXdciwPP_5LQbHwaUT8KvhSkLKw8A@mail.gmail.com>
+ <04306a5e-f9be-35a4-1aa1-5795d780e289@ti.com>
+Message-ID: <3777f1b1-2d9a-334b-b9e7-99dfda2ae29b@ti.com>
+Date:   Mon, 30 Sep 2019 17:27:05 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7AUc2qLy4jB3hD7Z"
-Content-Disposition: inline
-In-Reply-To: <20190930081816.GA2036553@kroah.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <04306a5e-f9be-35a4-1aa1-5795d780e289@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 30/09/2019 17:20, Tomi Valkeinen wrote:
 
---7AUc2qLy4jB3hD7Z
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Let's see what Tero says, but yeah, something is odd here. I expected 
+> the max divider to be 16 with Tero's patch, but I don't see it having 
+> that effect. I can get the div to 31.
+> 
+> You can see this from the clock register 0x48004e40 (CM_CLKSEL_DSS). The 
+> lowest bits are the divider, 5 to 0. The TRM says max div is 32.
+> 
+> Tero said for him the dividers > 16 didn't "stick" to the register. I'm 
+> now wondering if he has an old beagleboard with OMAP34xx, which has max 
+> div 16.
 
-On 10:18 Mon 30 Sep 2019, Greg KH wrote:
->On Mon, Sep 30, 2019 at 01:40:41PM +0530, Bhaskar Chowdhury wrote:
->>
->> Hey Greg ,
->>
->> Absolute trivialities, but might break few scripts, but make things
->> clean..
->>
->> We have so many *Makefile.* cluttering in the top level scripts dir.
->> Can we please move those in one place, means create a dir and put all
->> of them in it.
->
->Why?  What would that help with?
->
+So testing a bit more here, I can see the DSS working fine and fps as 
+expected when I write values directly to CM_CLKSEL_DSS:5:0, with 
+dividers up to 31. With 32, DSS breaks. The TRM (AM/DM37x) says value 32 
+is valid.
 
-Cleanliness of that directory. Nothing else,kinda organized way.YMMV
+  Tomi
 
->> And call those in the scripts with that dir preceded . Kindly , let me
->> know how awful that would be.
->
->I can not parse these sentances, sorry.
->
- :) All , I was trying to say that , the path to the makefile inside the
- scripts will add that directory to the existing path.=20
-
- Say, present is like /foo/bar/hoo that will become /foo/moo/bar/hoo
-
- that "moo" directory will holds all the makefiles.
-
- Okay,  as I said ,in top of the mail this is absolute trivialities.=20
-
-
-
-Bhaskar
-
---7AUc2qLy4jB3hD7Z
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl2SEKIACgkQsjqdtxFL
-KRWh7ggApWrB/7M2aXW+L12kaJCRL7uVhh+VCHMqhxzTwjc6yq//sdMTY5aRDGQC
-9qHITsYU4OPHppE8HaDG0olvPl6uiFH7KDS/F1R04it/2cfZbDMUNmBDoRkQC53h
-8ZpJOXOID3onmrm9waYr4VPDHW58HOVK0X4R8PngRXktZPegsCYWET1CFCQjQxcH
-6+2w1pWsaWB4CLVqTZMExapCe88wKRWJP48YnfQsH1Jct2rYs44FTZpn2V0OvS1/
-CIWXV9YDJogEC+TvVNbHyYF7CZC49CRytLZa6WxXSyHg5Woa3AFLqoSXuVZWkSNH
-bZnrj51wiw562bWhPsXWWM0az1IH4g==
-=J2lD
------END PGP SIGNATURE-----
-
---7AUc2qLy4jB3hD7Z--
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
