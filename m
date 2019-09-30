@@ -6,56 +6,56 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47CB7C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84BF8C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:55:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E42F21855
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B61920815
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:55:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="u24PiQrB"
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="Y/rFnOlC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732408AbfI3QxH (ORCPT
+        id S1730316AbfI3QzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 12:53:07 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40403 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727884AbfI3QxH (ORCPT
+        Mon, 30 Sep 2019 12:55:19 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:41458 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726858AbfI3QzT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 12:53:07 -0400
-Received: by mail-pl1-f194.google.com with SMTP id d22so4132189pll.7
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 09:53:06 -0700 (PDT)
+        Mon, 30 Sep 2019 12:55:19 -0400
+Received: by mail-pg1-f195.google.com with SMTP id s1so7702214pgv.8
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 09:55:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=f+nerH7/3f5jVInNGQWz0pf5Q2oTiewZHT4IGh7OAlM=;
-        b=u24PiQrBZ9wkrsV1JyAofa5Q/EtOFdvZVmwLAYLNZ041sgLRL+F7Ex2m9gS9K3t9Vo
-         fqjokZE6O8IHOJteak/MSW7MxymZLGwq29nwKsot1G/AZpYLR+UlA5DaP8lsBirxjyDE
-         HqvE4I9kK/ZE/0Da9LZeSHurwnqwLVJrfttCQnuVLoUG26SlonXpq1fPk3PMQ4OpClMZ
-         3rHwZCRrpKOGjaAffxwDtfC1ZiM++dBtdlA5htmxlIfgZ5qg3IkNK0oGAcNrhoGuX7er
-         XaFaGMlGqRQlYK17Aew5KelSOZ8qHErlYDRp+6FIr2F1VPdZIvgyvtpMq5oc5JNEuVYu
-         nsIg==
+        bh=lQ5PoHAAz/ydjtjUiADmfaA6ywwQrUwXkJB8zfwKppI=;
+        b=Y/rFnOlCbotMAk/hgn2CMTpa9RZ6Ewr3HU2nV06RqcNRs1WMPaucoXALh/KktpDw76
+         /9moz7Uch8yc4H7Yc+zLjfFyximUz0/8lDsraAD+dJynCs8zUMbVCocX25k8ix4nIPMU
+         YogwrS/JolfZxOGf91tK8NL/EPnaJtDvSOguVjvmXE5+LTf+nDoBbAKNNofsCMcPBLCQ
+         4Gc4m6170fTN24g3kf2TuCKZUPU0304PeRpUAVDlmXheFzljiumOLEea7ViOx8gILa7I
+         F1v29gJJOQ9702LyQ6ZDq3+EJcjcjYhpRhDcOPBvRKlAhgqL/SGLPTf4+eollQzfPAGi
+         9irQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=f+nerH7/3f5jVInNGQWz0pf5Q2oTiewZHT4IGh7OAlM=;
-        b=GVjy2w7IPsJ3vT40jJg27Nos+pYAhTB/eDNMWTl3w90c7bPuht6Psrdy5RINM+Qzp1
-         XoJHyiQ+5V+OlqkuwjH2S0EVyUfm+0dR9KCPT5/vJKJUEaCzXldip5bChJDKIuGiTrQT
-         BEUH++Y/DGPXv3HBuTZCj/TlkuFzZ1N/Wlw3cr0ORrGiyqaR51WDOKFmzg3bo80Aw4PP
-         strmDB7y+T2iCZnC4MRejUoO67hVqLoZbTI92wxVO1+w2Bxb8pdKgJmpPYb21Cq1F/ss
-         ysgzcWq3Prq7FV4DQV4IV8qTPJqEvW80gPPQUtnv4vBcq1+16+/q/TIoUNdHh4F/zhX4
-         lFKQ==
-X-Gm-Message-State: APjAAAUR+P6LiU0O6MJCWGXS8lQhdfj4SaDEErwkDmukjbwaTu1A7gw2
-        Q/NGJpz+lbRao+6exS763dTBwQ==
-X-Google-Smtp-Source: APXvYqzS2SQCyITvMRpLg6lGb2f95ywFpL74G4S5Pm3QeC98Yx2Q4IidhLo77R+Fa5fDC2DN0+eJ+A==
-X-Received: by 2002:a17:902:7003:: with SMTP id y3mr21428242plk.239.1569862386118;
-        Mon, 30 Sep 2019 09:53:06 -0700 (PDT)
+        bh=lQ5PoHAAz/ydjtjUiADmfaA6ywwQrUwXkJB8zfwKppI=;
+        b=IfppCJghJn87jsphROHqM9kvaWi8hqLQ7RGLvfLdGfJjBmou2MotkF3tEU43NkASjc
+         A7/w/FflH+ZEa18DAhEwxuz327xkRRjBey+6CtiiGt0aonK6Ls1GngP8Da+KKtPn5Fki
+         GL5h2ZcUokwnOm7GxVoz3r4v1ZwTdonmeMFhO4P3zmLtG/XM0DfKFW5PNmkWb+eRPJzU
+         l7ZmRDf8Ou7aB7EF2i5nlBRrCf4t8C73Bg52jjVqdQ1O86GHTDf1WYqVUVpR1OXONB1M
+         9sm417lZB5vyb9tesQMptVqXRSDC0UXjZfWe4L0sWplCEwdWyJeusxCf7nYAMFNW7/3s
+         sLvQ==
+X-Gm-Message-State: APjAAAXw2PsSnZApinRvKzpO6OZLz8xrWf6xnz75PDxlPQ+LmvEj7Clp
+        wxfb8EY5u1R1uV8EcGErVvllTw==
+X-Google-Smtp-Source: APXvYqwjCDqBLEOPDPQWNw13mxD4oZsNLp3E6YocIt7Y38oBW3fCG6A4qPwyQDkOcNa8jx2+WWRGnQ==
+X-Received: by 2002:a17:90a:b309:: with SMTP id d9mr253408pjr.8.1569862518487;
+        Mon, 30 Sep 2019 09:55:18 -0700 (PDT)
 Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id h8sm12990265pfo.64.2019.09.30.09.53.05
+        by smtp.gmail.com with ESMTPSA id v44sm27124250pgn.17.2019.09.30.09.55.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 09:53:06 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 09:52:58 -0700
+        Mon, 30 Sep 2019 09:55:18 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 09:55:16 -0700
 From:   Stephen Hemminger <stephen@networkplumber.org>
 To:     Borislav Petkov <bp@alien8.de>
 Cc:     Michal Kubecek <mkubecek@suse.cz>, linux-rdma@vger.kernel.org,
@@ -64,7 +64,7 @@ Cc:     Michal Kubecek <mkubecek@suse.cz>, linux-rdma@vger.kernel.org,
         lkml <linux-kernel@vger.kernel.org>
 Subject: Re: ERROR: "__umoddi3"
  [drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko] undefined!
-Message-ID: <20190930095258.1db16eb2@hermes.lan>
+Message-ID: <20190930095516.0f55513a@hermes.lan>
 In-Reply-To: <20190930162910.GI29694@zn.tnic>
 References: <20190930141316.GG29694@zn.tnic>
         <20190930154535.GC22120@unicorn.suse.cz>
@@ -106,5 +106,8 @@ Borislav Petkov <bp@alien8.de> wrote:
 >         call    __umoddi3       #
 >         popl    %edx    #
 >         popl    %ecx    #
+> 
+> HTH.
+> 
 
-Since align_base is a power of 2 masking should work as well.
+Could also us div_u64_rem here?
