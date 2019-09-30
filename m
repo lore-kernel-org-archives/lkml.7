@@ -2,87 +2,157 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C801C4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B269C4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 738E721855
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C538721855
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:34:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vvfopPJj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730486AbfI3JdS (ORCPT
+        id S1730505AbfI3JeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 05:33:18 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:56849 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730419AbfI3JdR (ORCPT
+        Mon, 30 Sep 2019 05:34:17 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:53182 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727885AbfI3JeR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 05:33:17 -0400
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1iEs3N-0001eD-IW; Mon, 30 Sep 2019 11:33:13 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1iEs3M-0002ou-A5; Mon, 30 Sep 2019 11:33:12 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Jay Cliburn <jcliburn@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1] net: ag71xx: fix mdio subnode support
-Date:   Mon, 30 Sep 2019 11:33:10 +0200
-Message-Id: <20190930093310.10762-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.23.0
+        Mon, 30 Sep 2019 05:34:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HJX9OsF7nCzAZY7WIWxxCUDlfYelrriJNJXBjDq+X1M=; b=vvfopPJjdaD8Bmrwikclthc06
+        4UBM7BsH8BFKrpARFNc4w8yKOIiW8zmh2YC2Atp7ZS/nZZkdV/sxbIWFNnn/X0bFqLz2BQbP+NTyL
+        El+ZC0stZ7pdBB0KSi9EYrQJe9TerTDiOfmUBsHY9KOo2QHEWIccOsHS3+NM7O6Qn3n542UVxAIP0
+        UtuZudVVT3fIVVxuJL8b1Nd2nc9eKuftSq6+KzlNov1CuNzZSIVcsvQEVZ/xqvEJY4QLFexPxuHhs
+        UpgkdvqFGyY4WKg6a2id/kb/KxAd/ydZbDxRhG1m6EzFOWusy8T8gVmQDNpwJGvLZwF5F5Bwmm9yl
+        t+q+ri8NA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iEs42-0006sd-Da; Mon, 30 Sep 2019 09:33:54 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 81E37305BD3;
+        Mon, 30 Sep 2019 11:33:04 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5097E2652FF85; Mon, 30 Sep 2019 11:33:52 +0200 (CEST)
+Date:   Mon, 30 Sep 2019 11:33:52 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Andrea Parri <parri.andrea@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Will Deacon <will@kernel.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        jose.marchesi@oracle.com
+Subject: Re: Do we need to correct barriering in circular-buffers.rst?
+Message-ID: <20190930093352.GM4553@hirez.programming.kicks-ass.net>
+References: <20190915145905.hd5xkc7uzulqhtzr@willie-the-truck>
+ <25289.1568379639@warthog.procyon.org.uk>
+ <28447.1568728295@warthog.procyon.org.uk>
+ <20190917170716.ud457wladfhhjd6h@willie-the-truck>
+ <15228.1568821380@warthog.procyon.org.uk>
+ <5385.1568901546@warthog.procyon.org.uk>
+ <20190923144931.GC2369@hirez.programming.kicks-ass.net>
+ <20190927095107.GA13098@andrea>
+ <20190927124929.GB4643@worktop.programming.kicks-ass.net>
+ <CAKwvOd=pZYiozmGv+DVpzJ1u9_0k4CXb3M1EAcu22DQF+bW0fA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOd=pZYiozmGv+DVpzJ1u9_0k4CXb3M1EAcu22DQF+bW0fA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver was working with fixed phy without any noticeable issues. This bug
-was uncovered by introducing dsa ar9331-switch driver.
+On Fri, Sep 27, 2019 at 01:43:18PM -0700, Nick Desaulniers wrote:
+> On Fri, Sep 27, 2019 at 5:49 AM Peter Zijlstra <peterz@infradead.org> wrote:
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- drivers/net/ethernet/atheros/ag71xx.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+> Oh, in that case I'm less sure (I still don't think so, but I would
+> love to be proven wrong, preferably with a godbolt link).  I think the
+> best would be to share a godbolt.org link to a case that's clearly
+> broken, or cite the relevant part of the ISO C standard (which itself
+> leaves room for interpretation), otherwise the discussion is too
+> hypothetical.  Those two things are single-handedly the best way to
+> communicate with compiler folks.
 
-diff --git a/drivers/net/ethernet/atheros/ag71xx.c b/drivers/net/ethernet/atheros/ag71xx.c
-index 6703960c7cf5..d1101eea15c2 100644
---- a/drivers/net/ethernet/atheros/ag71xx.c
-+++ b/drivers/net/ethernet/atheros/ag71xx.c
-@@ -526,7 +526,7 @@ static int ag71xx_mdio_probe(struct ag71xx *ag)
- 	struct device *dev = &ag->pdev->dev;
- 	struct net_device *ndev = ag->ndev;
- 	static struct mii_bus *mii_bus;
--	struct device_node *np;
-+	struct device_node *np, *mnp;
- 	int err;
- 
- 	np = dev->of_node;
-@@ -571,7 +571,9 @@ static int ag71xx_mdio_probe(struct ag71xx *ag)
- 		msleep(200);
- 	}
- 
--	err = of_mdiobus_register(mii_bus, np);
-+	mnp = of_get_child_by_name(np, "mdio");
-+	err = of_mdiobus_register(mii_bus, mnp);
-+	of_node_put(mnp);
- 	if (err)
- 		goto mdio_err_put_clk;
- 
--- 
-2.23.0
+Ah, I'm not sure current compilers will get it wrong -- and I'm trying
+to be preemptive here. I'm looking for a guarantee that compilers will
+recognise and respect control depenencies.
 
+The C language spec does not recognise the construct at _all_ and I'd be
+fine with it being behind some optional compiler knob.
+
+So far we're mostly very careful when using it, recognising that
+compilers can screw us over because they have no clue.
+
+> > Using WRITE_ONCE() defeats this because volatile indicates external
+> > visibility.
+> 
+> Could data be declared as a pointer to volatile qualified int?
+
+It's not actually 'int' data, mostly its a void* and we use memcpy().
+
+> > Barring LTO the above works for perf because of inter-translation-unit
+> > function calls, which imply a compiler barrier.
+
+Having looked at it again, I think we're good and have sufficient
+barrier() in there to not rely on function calls being a sync point.
+
+> > Now, when the compiler inlines, it looses that sync point (and thereby
+> > subtlely changes semantics from the non-inline variant). I suspect LTO
+> > does the same and can cause subtle breakage through this transformation.
+> 
+> Do you have a bug report or godbolt link for the above?  I trust that
+> you're familiar enough with the issue to be able to quickly reproduce
+> it?  These descriptions of problems are difficult for me to picture in
+> code or generated code, and when I try to read through
+> memory-barriers.txt my eyes start to glaze over (then something else
+> catches fire and I have to go put that out).  Having a concise test
+> case I think would better illustrate potential issues with LTO that
+> we'd then be able to focus on trying to fix/support.
+> 
+> We definitely have heavy hitting language lawyers and our LTO folks
+> are super sharp; I just don't have the necessary compiler experience
+> just yet to be as helpful in these discussions as we need but I'm
+> happy to bring them cases that don't work for the kernel and drive
+> their resolution.
+
+Like said; I've not seen it go wrong -- but it is one of the things I'm
+always paranoid about with LTO.
+
+Furthermore, if it were to go wrong, it'd be a very subtle data race and
+finding it would be super hard and painful. Which is again why I would
+love to get compiler folks on board to actually support control
+dependencies in some way.
+
+Like I said before, something like: "disallowing store hoists over control
+flow depending on a volatile load" would be sufficient I think.
+
+Yes this is outside of ISO/C, but it is something that is really
+important to us because, as said above, getting it wrong would be
+*SUPER* painful.
+
+So basically I'm asking for a language extension I suppose; a new
+guarantee from the compiler's memory model that does not exist _at_all_
+in the spec, one that we're actively using.
+
+And I'm hoping that getting the compilers to (optionally) support this
+is easier than waiting another few decades until Paul McKenney has
+wrestled the C committee into sanity and only then (maybe) getting it.
+Look at the horrible mess vs data dependencies and consume ordering
+(another fun thing we're actively using lots that the compilers are
+still struggling with).
