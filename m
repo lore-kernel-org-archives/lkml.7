@@ -2,79 +2,134 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2DDFC4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DFDC4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA56821721
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9589A21721
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:51:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730618AbfI3JtX (ORCPT
+        id S1730584AbfI3Jv2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 05:49:23 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3235 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728581AbfI3JtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 05:49:22 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4A6D356F2F55C9DA981A;
-        Mon, 30 Sep 2019 17:49:20 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Mon, 30 Sep 2019
- 17:49:11 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <wg@grandegger.com>, <mkl@pengutronix.de>, <davem@davemloft.net>
-CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] can: grcan: use devm_platform_ioremap_resource() to simplify code
-Date:   Mon, 30 Sep 2019 17:49:09 +0800
-Message-ID: <20190930094909.49672-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Mon, 30 Sep 2019 05:51:28 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:59170 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726504AbfI3Jv1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 05:51:27 -0400
+X-UUID: 6ae0d28dc9b24e3187041e13772beeaa-20190930
+X-UUID: 6ae0d28dc9b24e3187041e13772beeaa-20190930
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <sam.shih@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 231710556; Mon, 30 Sep 2019 17:51:21 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 30 Sep 2019 17:51:18 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 30 Sep 2019 17:51:17 +0800
+Message-ID: <1569837079.32131.5.camel@mtksdccf07>
+Subject: Re: [PATCH v10 08/12] pwm: mediatek: Add MT7629 compatible string
+From:   Sam Shih <sam.shih@mediatek.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Mon, 30 Sep 2019 17:51:19 +0800
+In-Reply-To: <20190930093629.GH1518582@ulmo>
+References: <1569421957-20765-1-git-send-email-sam.shih@mediatek.com>
+         <1569421957-20765-9-git-send-email-sam.shih@mediatek.com>
+         <20190927112831.GA1171568@ulmo> <1569833468.32131.4.camel@mtksdccf07>
+         <20190930093629.GH1518582@ulmo>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify the code a bit.
-This is detected by coccinelle.
+On Mon, 2019-09-30 at 11:36 +0200, Thierry Reding wrote:
+> On Mon, Sep 30, 2019 at 04:51:08PM +0800, Sam Shih wrote:
+> > Hi,
+> > 
+> > On Fri, 2019-09-27 at 13:28 +0200, Thierry Reding wrote:
+> > > On Wed, Sep 25, 2019 at 10:32:33PM +0800, Sam Shih wrote:
+> > > > This adds pwm support for MT7629, and separate mt7629 compatible string
+> > > > from mt7622
+> > > > 
+> > > > Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> > > > ---
+> > > >  drivers/pwm/pwm-mediatek.c | 6 ++++++
+> > > >  1 file changed, 6 insertions(+)
+> > > 
+> > > I picked this patch up and made some minor adjustments to make it build
+> > > without the num_pwms patches. With that I don't think there's anything
+> > > left from this series that you need.
+> > 
+> > Yes, I think the driver should work once dtsi updated.
+> > ("[v10,12/12] arm: dts: mediatek: add mt7629 pwm support")
+> > 
+> > But, due to we use comaptible string separately for every SoC now,
+> > The comaptible string in dt-bindings should be "mediatek,mt7629-pwm".
+> > I think we should use "[v10,11/12] dt-bindings: pwm: update bindings 
+> > for MT7629" to replace commit 1c00ad6ebf36aa3b0fa598a48b8ae59782be4121,
+> > Or maybe we need a little modification like this ?
+> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt ...
+> > - - "mediatek,mt7629-pwm", "mediatek,mt7622-pwm": found on mt7629 SoC.
+> > + - "mediatek,mt7629-pwm": found on mt7629 SoC.
+> 
+> Good catch, I must've taken this from the wrong version of the patch.
+> 
+> How about the attached patch?
+> 
+> Thanks,
+> Thierry
+> --- >8 ---
+> From 641b0ee176b139f9edd137ba636ca0cb9c63289a Mon Sep 17 00:00:00 2001
+> From: Thierry Reding <thierry.reding@gmail.com>
+> Date: Mon, 30 Sep 2019 11:33:31 +0200
+> Subject: [PATCH] dt-bindings: pwm: mediatek: Remove gratuitous compatible
+>  string for MT7629
+> 
+> The MT7629 is, in fact, not compatible with the MT7622 because the
+> former has a single PWM channel while the former has 6. Remove the
+> gratuitous compatible string for MT7629.
+> 
+> Reported-by: Sam Shih <sam.shih@mediatek.com>
+> Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> index c8501530173c..053e9b5880f1 100644
+> --- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> @@ -6,7 +6,7 @@ Required properties:
+>     - "mediatek,mt7622-pwm": found on mt7622 SoC.
+>     - "mediatek,mt7623-pwm": found on mt7623 SoC.
+>     - "mediatek,mt7628-pwm": found on mt7628 SoC.
+> -   - "mediatek,mt7629-pwm", "mediatek,mt7622-pwm": found on mt7629 SoC.
+> +   - "mediatek,mt7629-pwm": found on mt7629 SoC.
+>     - "mediatek,mt8516-pwm": found on mt8516 SoC.
+>   - reg: physical base address and length of the controller's registers.
+>   - #pwm-cells: must be 2. See pwm.txt in this directory for a description of
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/can/grcan.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+It seems good to me.
 
-diff --git a/drivers/net/can/grcan.c b/drivers/net/can/grcan.c
-index b8f1f2b69dd3..378200b682fa 100644
---- a/drivers/net/can/grcan.c
-+++ b/drivers/net/can/grcan.c
-@@ -1652,7 +1652,6 @@ static int grcan_setup_netdev(struct platform_device *ofdev,
- static int grcan_probe(struct platform_device *ofdev)
- {
- 	struct device_node *np = ofdev->dev.of_node;
--	struct resource *res;
- 	u32 sysid, ambafreq;
- 	int irq, err;
- 	void __iomem *base;
-@@ -1672,8 +1671,7 @@ static int grcan_probe(struct platform_device *ofdev)
- 		goto exit_error;
- 	}
- 
--	res = platform_get_resource(ofdev, IORESOURCE_MEM, 0);
--	base = devm_ioremap_resource(&ofdev->dev, res);
-+	base = devm_platform_ioremap_resource(ofdev, 0);
- 	if (IS_ERR(base)) {
- 		err = PTR_ERR(base);
- 		goto exit_error;
--- 
-2.20.1
+Thanks,
+Regards, Sam
 
 
