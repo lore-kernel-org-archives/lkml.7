@@ -2,158 +2,102 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0DD1C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6087C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DF53215EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:56:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84150216F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:58:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Rs92BCtN"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="W5XI/oK4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732143AbfI3P4R (ORCPT
+        id S1732154AbfI3P60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 11:56:17 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:57314 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730780AbfI3P4R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 11:56:17 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8UFuFtg090614;
-        Mon, 30 Sep 2019 10:56:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569858975;
-        bh=URZ9o4WF27v++mNirqh2f4vb/a8st2m2aDv9wcXGHAY=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=Rs92BCtN+Tp1ynSeCB48VMtBAi2teb09ZQCqVnmqNy1aaAft2ZrRo6OGR1aJQh00l
-         KuHs9+nAYorRd7DlcDVSxRIdPz+TzFA4pnpW/MSdy0j0ds4vJpb/uVRgiDHAle66c9
-         x+RR9tnlMK7OADvvopGI7WCgds1fY0o4qknr5ctI=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8UFuFOl093793
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 30 Sep 2019 10:56:15 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 30
- Sep 2019 10:56:05 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 30 Sep 2019 10:56:05 -0500
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8UFuFRt074633;
-        Mon, 30 Sep 2019 10:56:15 -0500
-Date:   Mon, 30 Sep 2019 10:58:26 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Austin Kim <austinkernel.kim@gmail.com>
-CC:     Hans Verkuil <hverkuil@xs4all.nl>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [Patch 02/16] media: ti-vpe: vpe: Add missing null pointer checks
-Message-ID: <20190930155826.pimkap75k67mji3e@ti.com>
-References: <20190927183650.31345-1-bparrot@ti.com>
- <20190927183650.31345-3-bparrot@ti.com>
- <CAOoBcBUd7reG=-WOq+Vq9SynZMJ81CWFZPN35MkmaQvquZ9xyg@mail.gmail.com>
+        Mon, 30 Sep 2019 11:58:26 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:4456 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731919AbfI3P6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 11:58:25 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 46hn7s5yWPz2J;
+        Mon, 30 Sep 2019 17:56:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1569858988; bh=SM910taOzVBeIz8sDiWoqtsSpZFNnnEfHCLXVlJL+OE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=W5XI/oK4TO+8usSOpDLLwIUD8EOfNsMD0XE8ds9ESj4IQs+D9zTxF9VT7DVuPZHVl
+         9/AEZ4r7OVtdbseLYth+b7RMiIuY4oF0124m2klhObq/VnGS+5a7s4aYffBd2yL0Vb
+         kdRZbmtDylWd8qGQpAsWP3LHRweacre6kmH+RX5Pt6+N3noLu+Vxv5Ti+Z0vPoKllq
+         SB3g/Dlvj0Hm1X5luO32G8DQcoAGN+pkecnMYSBCY/vEpq+Z/YL7COPcPcBE5+nLW0
+         z5Ljz3xu91ZoG3GdWQHa1K5LIdHE9xNwaqmAImLvdCdKAu08yv516uMZdQJxmh2vzb
+         sBzrIyWPZ1LmA==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.101.4 at mail
+Date:   Mon, 30 Sep 2019 17:58:19 +0200
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     codrin.ciubotariu@microchip.com, lgirdwood@gmail.com,
+        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] ASoC: atmel: Fix build error
+Message-ID: <20190930155818.GA32237@qmqm.qmqm.pl>
+References: <20190928081641.44232-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOoBcBUd7reG=-WOq+Vq9SynZMJ81CWFZPN35MkmaQvquZ9xyg@mail.gmail.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20190928081641.44232-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Austin,
-
-Thanks for the review,
-
-Austin Kim <austinkernel.kim@gmail.com> wrote on Sun [2019-Sep-29 09:08:37 +0900]:
-> 2019년 9월 28일 (토) 오전 3:37, Benoit Parrot <bparrot@ti.com>님이 작성:
-> >
-> > A few NULL pointer checks were missing.
-> > Add check with appropriate return code.
-> >
-> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> > ---
-> >  drivers/media/platform/ti-vpe/vpe.c | 13 ++++++++++++-
-> >  1 file changed, 12 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-> > index 5ba72445584d..56f60dbea15c 100644
-> > --- a/drivers/media/platform/ti-vpe/vpe.c
-> > +++ b/drivers/media/platform/ti-vpe/vpe.c
-> > @@ -1537,6 +1537,8 @@ static int vpe_g_fmt(struct file *file, void *priv, struct v4l2_format *f)
-> >                 return -EINVAL;
-> >
-> >         q_data = get_q_data(ctx, f->type);
-> > +       if (!q_data)
-> > +               return -EINVAL;
+On Sat, Sep 28, 2019 at 04:16:41PM +0800, YueHaibing wrote:
+> when do randbuilding, I got this error:
 > 
-> With this commit, it seems that 'Null Pointer Dereference' could be
-> avoidable even though 'get_q_data(ctx, f->type);' returns NULL.
+> sound/soc/atmel/atmel_ssc_dai.o: In function `atmel_ssc_set_audio':
+> (.text+0x12f6): undefined reference to `atmel_pcm_pdc_platform_register'
 > 
-> * Original Code:
->         q_data = get_q_data(ctx, f->type);
->         // q_data = NULL;
-> 
->         pix->width = q_data->width;
->         // pix->width =  (NULL)->width;
->         // In this case, data abort would be raised.
+> This is because SND_ATMEL_SOC_SSC_DMA=y, SND_ATMEL_SOC_SSC=y,
+> but SND_ATMEL_SOC_SSC_PDC=m. Fix it bt reintroducing the default Kconfig.
 
-Yes I know this that is why the NULL check were added.
+Defaults won't forbid the invalid configuration. Can you try following:
 
-You mentionned earlier that the NULL pointer dereference could be
-avoidable, but based on your comment I fail to see what you mean.
-
-Please also note that this patch was a result of static analysis software
-(klocwork) warnings.
-
-Benoit
-
-> 
-> >
-> >         pix->width = q_data->width;
-> >         pix->height = q_data->height;
-> > @@ -2001,6 +2003,8 @@ static int vpe_queue_setup(struct vb2_queue *vq,
-> >         struct vpe_q_data *q_data;
-> >
-> >         q_data = get_q_data(ctx, vq->type);
-> > +       if (!q_data)
-> > +               return -EINVAL;
-> >
-> >         *nplanes = q_data->nplanes;
-> >
-> > @@ -2025,6 +2029,8 @@ static int vpe_buf_prepare(struct vb2_buffer *vb)
-> >         vpe_dbg(ctx->dev, "type: %d\n", vb->vb2_queue->type);
-> >
-> >         q_data = get_q_data(ctx, vb->vb2_queue->type);
-> > +       if (!q_data)
-> > +               return -EINVAL;
-> >         num_planes = q_data->nplanes;
-> >
-> >         if (vb->vb2_queue->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE) {
-> > @@ -2481,7 +2487,12 @@ static int vpe_probe(struct platform_device *pdev)
-> >         mutex_init(&dev->dev_mutex);
-> >
-> >         dev->res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > -                       "vpe_top");
-> > +                                               "vpe_top");
-> > +       if (!dev->res) {
-> > +               dev_err(&pdev->dev, "missing 'vpe_top' resources data\n");
-> > +               return -ENODEV;
-> > +       }
-> > +
-> >         /*
-> >          * HACK: we get resource info from device tree in the form of a list of
-> >          * VPE sub blocks, the driver currently uses only the base of vpe_top
-> > --
-> > 2.17.1
-> >
+diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
+index f118c229ed82..461f023c5635 100644
+--- a/sound/soc/atmel/Kconfig
++++ b/sound/soc/atmel/Kconfig
+@@ -12,10 +12,12 @@ if SND_ATMEL_SOC
+ config SND_ATMEL_SOC_PDC
+ 	tristate
+ 	depends on HAS_DMA
++	select SND_ATMEL_SOC_SSC
+ 
+ config SND_ATMEL_SOC_DMA
+ 	tristate
+ 	select SND_SOC_GENERIC_DMAENGINE_PCM
++	select SND_ATMEL_SOC_SSC
+ 
+ config SND_ATMEL_SOC_SSC
+ 	tristate
+@@ -24,7 +26,6 @@ config SND_ATMEL_SOC_SSC_PDC
+ 	tristate "SoC PCM DAI support for AT91 SSC controller using PDC"
+ 	depends on ATMEL_SSC
+ 	select SND_ATMEL_SOC_PDC
+-	select SND_ATMEL_SOC_SSC
+ 	help
+ 	  Say Y or M if you want to add support for Atmel SSC interface
+ 	  in PDC mode configured using audio-graph-card in device-tree.
+@@ -33,7 +34,6 @@ config SND_ATMEL_SOC_SSC_DMA
+ 	tristate "SoC PCM DAI support for AT91 SSC controller using DMA"
+ 	depends on ATMEL_SSC
+ 	select SND_ATMEL_SOC_DMA
+-	select SND_ATMEL_SOC_SSC
+ 	help
+ 	  Say Y or M if you want to add support for Atmel SSC interface
+ 	  in DMA mode configured using audio-graph-card in device-tree.
