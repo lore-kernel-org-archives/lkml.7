@@ -2,114 +2,120 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF01EC4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D46C47404
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBC472086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBF252086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:13:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730340AbfI3JFv (ORCPT
+        id S1730140AbfI3JN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 05:05:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:32770 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726121AbfI3JFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 05:05:50 -0400
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 792D68553F
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 09:05:50 +0000 (UTC)
-Received: by mail-pl1-f199.google.com with SMTP id d1so4885468plj.9
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 02:05:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=w21r0Zb12wAoVhXzm3M8FXreooAqskSe2A2BpWXrpxY=;
-        b=kM9zgUlJBUt/JNXQ/mr5NBKt2+ClZ49yOKKKPcfblcq7KDCZdISuqAzbcTRgXihco4
-         qUIKT7og2pXVEAgsms9F1gWdDqyq3EXqo/N1Ni7/KQGLJ+O65y8878nwHcrTHwPUrdlP
-         urGPckP08Mz89L+Eljt4v6aURy++dKCgOTpZpAuKjMCeNgky4uqDpdEN6ew5bDA0VNk/
-         RAPDUdsf0XOTBEaPtpQwFOpg+jSHveN9Q4FRr+d5ur3B4+aVR9fbNE5RWqIqqleOMr8F
-         1479VFa3Be7iEzPJaQMMOCuNj/sLt49K33fpxOK3YbCIHJD16XPTt94gzZliZkMKzVhh
-         AKJw==
-X-Gm-Message-State: APjAAAWWtQ7jB2oHJkqN4T8ErTkPwgwUwyVNsbeDMI4wqeCiTGCmhqES
-        5C9Y2AATOnA1Sxv1TyBOUKlK+1j9HcZbk7kSpAlIFnUZBN6DaIvI+QN7bsEF87R43S9cqcJ3RHv
-        BX5UDoEIRnN8+UsD/Aajun6if
-X-Received: by 2002:a17:90a:cb18:: with SMTP id z24mr25005615pjt.108.1569834349793;
-        Mon, 30 Sep 2019 02:05:49 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwYU0VXOKT7nU3DIGlLi/lr9dxOJtQzNphen86nDz5xnGw2xjMfzF1oWem7MIubOvtfXj/f+A==
-X-Received: by 2002:a17:90a:cb18:: with SMTP id z24mr25005591pjt.108.1569834349353;
-        Mon, 30 Sep 2019 02:05:49 -0700 (PDT)
-Received: from [10.76.0.223] ([125.16.200.50])
-        by smtp.gmail.com with ESMTPSA id y7sm12546514pgj.35.2019.09.30.02.05.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Sep 2019 02:05:48 -0700 (PDT)
-Reply-To: mgandhi@redhat.com
-Subject: Re: [PATCH] scsi: core: Log SCSI command age with errors
-To:     Martin Wilck <mwilck@suse.de>,
-        Laurence Oberman <loberman@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
-Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com
-References: <20190923060122.GA9603@machine1>
- <471732f03049a1528df1d144013d723041f0a419.camel@suse.de>
- <3a8ee584f9846fba94d98d0e6941fefdcbed5d71.camel@redhat.com>
- <f2c97e860f895613ba81b69c962660b0c712723a.camel@suse.de>
-From:   "Milan P. Gandhi" <mgandhi@redhat.com>
-Organization: Red Hat
-Message-ID: <31eb5bb6-ca4e-1c6c-3013-7d94ff49623d@redhat.com>
-Date:   Mon, 30 Sep 2019 14:35:45 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 30 Sep 2019 05:13:56 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:49177 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726121AbfI3JNz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 05:13:55 -0400
+X-IronPort-AV: E=Sophos;i="5.64,565,1559491200"; 
+   d="scan'208";a="76258074"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 30 Sep 2019 17:13:53 +0800
+Received: from G08CNEXCHPEKD03.g08.fujitsu.local (unknown [10.167.33.85])
+        by cn.fujitsu.com (Postfix) with ESMTP id 73F414CE14F9;
+        Mon, 30 Sep 2019 17:13:57 +0800 (CST)
+Received: from localhost.localdomain (10.167.226.33) by
+ G08CNEXCHPEKD03.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ (TLS) id 14.3.439.0; Mon, 30 Sep 2019 17:13:57 +0800
+From:   Su Yanjun <suyj.fnst@cn.fujitsu.com>
+To:     <trond.myklebust@hammerspace.com>
+CC:     <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <suyj.fnst@cn.fujitsu.com>
+Subject: [PATCH] NFS: Fix O_DIRECT read problem when another write is going on
+Date:   Mon, 30 Sep 2019 17:11:18 +0800
+Message-ID: <1569834678-16117-1-git-send-email-suyj.fnst@cn.fujitsu.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <f2c97e860f895613ba81b69c962660b0c712723a.camel@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.167.226.33]
+X-yoursite-MailScanner-ID: 73F414CE14F9.AFB38
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: suyj.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/30/19 2:12 PM, Martin Wilck wrote:
-> On Fri, 2019-09-27 at 13:45 -0400, Laurence Oberman wrote:
->>
->> Hi Martin
->>
->> Agreed about log extraction, but turning that on with a busy workload
->> in a production environment is not practical. We cant do it with
->> systems with 1000's of luns and 1000's of IOPS/sec.
->> Also second resolution is good enough for the debug we want to see.
-> 
-> I gather that you look at a specific problem where second resolution is
-> sufficient. For upstream, the generic usefulness should be considered,
-> and I don't think we can say today that better-than-second resolution
-> will never be useful, so I still vote for milliseconds.
+In xfstests generic/465 tests failed. Because O_DIRECT r/w use
+async rpc calls, when r/w rpc calls are running concurrently we
+may read partial data which is wrong.
 
-Ok, I will change it to ms.
+For example as follows.
+ user buffer
+/--------\
+|    |XXXX|
+ rpc0 rpc1
 
-> Wrt the enablement of the option on highly loaded systems, I'm not sure
-> I understand. You need to enable SCSI logging anyway, don't you?
+When rpc0 runs it encounters eof so return 0, then another writes
+something. When rpc1 runs it returns some data. The total data
+buffer contains wrong data.
 
-By default we keep the SCSI debug logging disabled or am I missing 
-something?
+In this patch we check eof mark for each direct request. If encounters
+eof then set eof mark in the request, when we meet it again report
+-EAGAIN error. In nfs_direct_complete we convert -EAGAIN as if read
+nothing. When the reader issue another read it will read ok.
 
->Is it an issue to have to set 2 sysfs values rather than just one?
+Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
+---
+ fs/nfs/direct.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-The idea here is to capture the above debug data even without 
-any user interventions to change any sysfs entries or to enable 
-debug logging on busy, critical production systems.
+diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
+index 222d711..7f737a3 100644
+--- a/fs/nfs/direct.c
++++ b/fs/nfs/direct.c
+@@ -93,6 +93,7 @@ struct nfs_direct_req {
+ 				bytes_left,	/* bytes left to be sent */
+ 				error;		/* any reported error */
+ 	struct completion	completion;	/* wait for i/o completion */
++	int			eof;		/* eof mark in the req */
+ 
+ 	/* commit state */
+ 	struct nfs_mds_commit_info mds_cinfo;	/* Storage for cinfo */
+@@ -380,6 +381,12 @@ static void nfs_direct_complete(struct nfs_direct_req *dreq)
+ {
+ 	struct inode *inode = dreq->inode;
+ 
++	/* read partial data just as read nothing */
++	if (dreq->error == -EAGAIN) {
++		dreq->count = 0;
++		dreq->error = 0;
++	}
++
+ 	inode_dio_end(inode);
+ 
+ 	if (dreq->iocb) {
+@@ -413,8 +420,13 @@ static void nfs_direct_read_completion(struct nfs_pgio_header *hdr)
+ 	if (hdr->good_bytes != 0)
+ 		nfs_direct_good_bytes(dreq, hdr);
+ 
+-	if (test_bit(NFS_IOHDR_EOF, &hdr->flags))
++	if (dreq->eof)
++		dreq->error = -EAGAIN;
++
++	if (test_bit(NFS_IOHDR_EOF, &hdr->flags)) {
+ 		dreq->error = 0;
++		dreq->eof = 1;
++	}
+ 
+ 	spin_unlock(&dreq->lock);
+ 
+-- 
+2.7.4
 
-Also, we are not changing the existing text in SCSI command error log,
-but we are only adding one single word at the end of message. Ideally
-the user scripts are written to grep specific pattern from the logs.
-Since we are not replacing any existing text from the logs, the 
-scripts should still work with this change as well.
 
-Thanks,
-Milan.
+
