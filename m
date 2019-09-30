@@ -2,124 +2,86 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB687C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E8F8C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C83320842
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22EBD20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:27:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Dh/+7RnH"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NAWE7s0q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732242AbfI3XWv (ORCPT
+        id S1732390AbfI3X1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 19:22:51 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39077 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729224AbfI3XWv (ORCPT
+        Mon, 30 Sep 2019 19:27:13 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:36563 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731852AbfI3X1N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 19:22:51 -0400
-Received: by mail-pf1-f194.google.com with SMTP id v4so6493984pff.6
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 16:22:51 -0700 (PDT)
+        Mon, 30 Sep 2019 19:27:13 -0400
+Received: by mail-qt1-f196.google.com with SMTP id o12so19305381qtf.3
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 16:27:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=oD29p9MztJ0+RG65sUk0y34KEPusU0JDw36LEVrb3DM=;
-        b=Dh/+7RnHcSNPu7iFzG4FCn7R4X50q8rBrl/G7Gtjs3SzU9elJmVJzuWimYKVKzvex0
-         0cAVsUl1VKUbTofnpFFmHlvsWmaIcYDvycKtRt8Hji43hjeBXrQswpYIKQnd7aUtU5MI
-         ur1VGuiON4lQlYpOdff0bLlLBsFqfJPDE6RMW9zuu4EcQikQr8FBDVQgqFvfi0V0M+RQ
-         oZDCjCtTu7LoPjowkun4rJBTH07KC78J3E3N5dUxDyQifXx5rNrg47ifQWJFNrQoB6Ax
-         kqCT0TiyHMr88THW7korngsuFeOx3nCZYM/acKlLsk0rEUMdqtPudIRaA4b4SOS5pw2u
-         nTPw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pl9Uoj87Ji8fhmMmVA6l1LGr0jFQ4KuWKIrFbIh3wWY=;
+        b=NAWE7s0qtdMAJiZamX3V6xokEA3BihpvGiwij4I9RhrSrs1/+NcFnC19kIYC2+VXm+
+         mw4JB/DlOtISetTBRNDx9DFrMSVyR1OwEHYcnM7fyiodpHUy35LKFF+/IykPa/76nTNi
+         oq4scSmcMmXkNJXm9at4/0G+We9rQDvDXAya0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=oD29p9MztJ0+RG65sUk0y34KEPusU0JDw36LEVrb3DM=;
-        b=TYBxga/X/hPBj+ZqfxlM1/gDS+gygM07BvNCDS9BZJR2iVlWF6GusLJoi3f53i16tV
-         +e/et1LqGzlIaxm18xkQPPRK2+zZaNxRBln8W4tSp4l+NuWnrSOrTBeF36zAyOEjha5j
-         CBJ+8kyH0qU0YpWC9cOfcbg1h5LkOIV3pmfZQoZI1/u7QeiLx1RKVIcvbQSH5Ra5qspk
-         V1A8tPEuugwnSzxlzltU+9ap4J2fLDQDUCTVMpcSAbel8jjBbEH9e3uzLtVL4Tv6wzkk
-         US2Sgh3adJldHj1z4Cv1znAKjF+8V5j02r0LSAcvbngHWI6bdNtF56/KkFgKbxH9qUsw
-         5Vxw==
-X-Gm-Message-State: APjAAAXd9ooLE5qT+cDrI6Xxw2X8kUqDGkROpktlO4FZZv1CdPymUZ6i
-        ddM6LJtQxci6A4I6BygTwIWCywGIRy4=
-X-Google-Smtp-Source: APXvYqxArfBwf2OYAS2ryb5cgYk6T4irZNLwLtqsdIA+0Qk8MxomHoH5QY+tr74ygd6ZBdj4xaOTFQ==
-X-Received: by 2002:a63:e444:: with SMTP id i4mr27267478pgk.45.1569885770188;
-        Mon, 30 Sep 2019 16:22:50 -0700 (PDT)
-Received: from nuc7.sifive.com ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id 14sm379629pfn.21.2019.09.30.16.22.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 30 Sep 2019 16:22:49 -0700 (PDT)
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
-To:     linux-kernel@vger.kernel.org, martin.petersen@oracle.com,
-        alexios.zavras@intel.com, ming.lei@redhat.com,
-        gregkh@linuxfoundation.org, tglx@linutronix.de, jgg@ziepe.ca,
-        christophe.leroy@c-s.fr, palmer@sifive.com,
-        paul.walmsley@sifive.com
-Cc:     Alan Mikhak <alan.mikhak@sifive.com>
-Subject: [PATCH] scatterlist: Validate page before calling PageSlab()
-Date:   Mon, 30 Sep 2019 16:22:35 -0700
-Message-Id: <1569885755-10947-1-git-send-email-alan.mikhak@sifive.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pl9Uoj87Ji8fhmMmVA6l1LGr0jFQ4KuWKIrFbIh3wWY=;
+        b=RWrlqS/1REQfVQPqjgIEUuGK3R4W75XwFM+7N2d1CZGMmw89S4zBFmsGxpLFyjS5FM
+         os3affUFx2SsRRsa3pUk6PAZw8EQYHMUrwQialqSWol14HecF38C20kigTlpPOx5wQKV
+         FyTsV4zXebQppdp1U+IdORviJWDkH5Y0PMmOM4Utao/xi0Hy5tOJJNU9IIW1pEMCDRLv
+         PiT+HOsp0pjJu5it3wwoBZiOZiQgBOUnloQffeJyPmFm3LzsiaB7rLi3d2061NtlTWlT
+         bDiYcrn9N6n5JB6chbirSynnKJOr38Umic1cj+vn9DdVQADoK1QVKdQfG71TYIjfjmex
+         xpMg==
+X-Gm-Message-State: APjAAAXbvCGsl4PcUWhL7jOH1uJ+SdAnExIiig0UeCJJ0VoTrIG8Hlyy
+        qLSQ1ku25+tsVJh7iTY8KppYV24b5EOpyo9zx09HxA==
+X-Google-Smtp-Source: APXvYqzPlXIhfWnlF8sLl3jj8HRowIb8xLOPox6pz/DpeJE7rRAz9Qj8GEZSq7zX8V31/1SFTHD3X0AT7ZutVfrWEtc=
+X-Received: by 2002:a05:6214:11b4:: with SMTP id u20mr20478355qvv.200.1569886032025;
+ Mon, 30 Sep 2019 16:27:12 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190930152846.5062-1-fparent@baylibre.com> <aa0487c21e1f9f04402f209358b18c75@kernel.wtf>
+In-Reply-To: <aa0487c21e1f9f04402f209358b18c75@kernel.wtf>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Mon, 30 Sep 2019 16:26:46 -0700
+Message-ID: <CAJMQK-g_PaNsfvX-H4_BA86aUOdyqpDt9oK86O7_mRWTjWSjHQ@mail.gmail.com>
+Subject: Re: [PATCH v2] i2c: i2c-mt65xx: fix NULL ptr dereference
+To:     Cengiz Can <cengiz@kernel.wtf>
+Cc:     Fabien Parent <fparent@baylibre.com>, linux-i2c@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Qii Wang <qii.wang@mediatek.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-i2c-owner@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Mikhak <alan.mikhak@sifive.com>
+On Mon, Sep 30, 2019 at 2:20 PM Cengiz Can <cengiz@kernel.wtf> wrote:
+>
+> On 2019-09-30 18:28, Fabien Parent wrote:
+> > Fixes: abf4923e97c3 ("i2c: mediatek: disable zero-length transfers for
+> > mt8183")
+> > Signed-off-by: Fabien Parent <fparent@baylibre.com>
+>
+> Reviewed-by: Cengiz Can <cengiz@kernel.wtf>
+Reviewed-by: Hsin-Yi Wang <hsinyi@chromium.org>
 
-Modify sg_miter_stop() to validate the page pointer
-before calling PageSlab(). This check prevents a crash
-that will occur if PageSlab() gets called with a page
-pointer that is not backed by page struct.
-
-A virtual address obtained from ioremap() for a physical
-address in PCI address space can be assigned to a
-scatterlist segment using the public scatterlist API
-as in the following example:
-
-my_sg_set_page(struct scatterlist *sg,
-               const void __iomem *ioaddr,
-               size_t iosize)
-{
-	sg_set_page(sg,
-		virt_to_page(ioaddr),
-		(unsigned int)iosize,
-		offset_in_page(ioaddr));
-	sg_init_marker(sg, 1);
-}
-
-If the virtual address obtained from ioremap() is not
-backed by a page struct, virt_to_page() returns an
-invalid page pointer. However, sg_copy_buffer() can
-correctly recover the original virtual address. Such
-addresses can successfully be assigned to scatterlist
-segments to transfer data across the PCI bus with
-sg_copy_buffer() if it were not for the crash in
-PageSlab() when called by sg_miter_stop().
-
-Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
----
- lib/scatterlist.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/lib/scatterlist.c b/lib/scatterlist.c
-index c2cf2c311b7d..f5c61cad40ba 100644
---- a/lib/scatterlist.c
-+++ b/lib/scatterlist.c
-@@ -807,6 +807,7 @@ void sg_miter_stop(struct sg_mapping_iter *miter)
- 		miter->__remaining -= miter->consumed;
- 
- 		if ((miter->__flags & SG_MITER_TO_SG) &&
-+		    pfn_valid(page_to_pfn(miter->page)) &&
- 		    !PageSlab(miter->page))
- 			flush_kernel_dcache_page(miter->page);
- 
--- 
-2.7.4
-
+Thanks!
