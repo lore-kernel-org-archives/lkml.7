@@ -2,43 +2,45 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 041F8C47404
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21DD6C388F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D02A9206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED3F7218DE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:20:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="l+/KdG0p"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="mHxFytsw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730175AbfI3IT5 (ORCPT
+        id S1730196AbfI3IUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 04:19:57 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:46112 "EHLO
+        Mon, 30 Sep 2019 04:20:07 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:46100 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730032AbfI3IT1 (ORCPT
+        by vger.kernel.org with ESMTP id S1730028AbfI3IT1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 30 Sep 2019 04:19:27 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 50C11C0371;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 50BDCC011E;
         Mon, 30 Sep 2019 08:19:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1569831567; bh=X6ZuF3t+/sYHmhk5OVSm+g3RjPonhti5heRvhuw4Vho=;
-        h=From:To:Cc:Subject:Date:From;
-        b=l+/KdG0pKWvbdymwv42EIOi+8FdJw3GGE65tEJc16tl4r9V70l1fb2pIJAWbN8v3I
-         5jmyrl7IyHq4kLMFISbiioBWYFz/Th5n4O5YQaWUtIYSS+Kc6lzfFc4RqD5k3/+3ZR
-         sj5FtRrsyQ6erUwuVWVrA8JlpgvYDIz1LiopCs+shzQ8gmr7h+vn8pxQWNrGTYdxSH
-         e6oU/H+IlaVIilAKZEiHSprmoHIt0LUxTU4IcmpnmRc8ne2g+xeXCrkokwhbGEi+3v
-         4BueV+lMcmQwHCTkmiaOklfqdRDx+eM+qFdgsZyd0hUCg6oohEaEmEWgxhrMXrLt5J
-         0Jkp6ttf5gvRA==
+        t=1569831567; bh=DrIxAcUMdhwcfqhJRFHtOh2PccbH2YMx64iLgCedU0c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=mHxFytsww0fQkJmHKwl8zfUgxPAwcO8ijd/OP5Y9WJzduzrKsUhIdDEy+kLWsJfAK
+         7Nw7Sq/OOSrT5DCq9xq+rVYS2gedftuX0J1gb3jd0QemycvT43/V2cWzazL3TFo2yf
+         p5KPidR1HBkLHxt14M4tobbr12qY4/4qVdMg0MDxhjkdEdaFT90HGZVf2Zx4SjVcV0
+         jPgQHdoQB1l7DKT2Wt4hZlyIWdIgeia0u5wJjDcOaX4iXsgXq9xxng460p6iDTmBCh
+         pCP1fTdBAM61iSTvUIQJoe+MyxrtgrgBvbQRn+yfJ9dbB1iJ673QBRs84vH8MXgGTM
+         UrLp3zWqe9bIQ==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id B4E7AA0057;
-        Mon, 30 Sep 2019 08:19:21 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 70C64A007D;
+        Mon, 30 Sep 2019 08:19:23 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -50,19 +52,24 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 net 0/9] net: stmmac: Fixes for -net
-Date:   Mon, 30 Sep 2019 10:19:04 +0200
-Message-Id: <cover.1569831228.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH v2 net 5/9] net: stmmac: Correctly take timestamp for PTPv2
+Date:   Mon, 30 Sep 2019 10:19:09 +0200
+Message-Id: <0df38430ed622a5dc9f9f28feb5516ff59de8fb9.1569831229.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1569831228.git.Jose.Abreu@synopsys.com>
+References: <cover.1569831228.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <cover.1569831228.git.Jose.Abreu@synopsys.com>
+References: <cover.1569831228.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Misc fixes for -net tree. More info in commit logs.
+The case for PTPV2_EVENT requires event packets to be captured so add
+this setting to the list of enabled captures.
 
-v2 is just a rebase of v1 against -net and we added a new patch (09/09) to
-fix RSS feature.
+Fixes: 891434b18ec0 ("stmmac: add IEEE PTPv1 and PTPv2 support.")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
 ---
 Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
@@ -75,26 +82,21 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Jose Abreu (9):
-  net: stmmac: xgmac: Not all Unicast addresses may be available
-  net: stmmac: xgmac: Detect Hash Table size dinamically
-  net: stmmac: selftests: Always use max DMA size in Jumbo Test
-  net: stmmac: dwmac4: Always update the MAC Hash Filter
-  net: stmmac: Correctly take timestamp for PTPv2
-  net: stmmac: Do not stop PHY if WoL is enabled
-  net: stmmac: xgmac: Disable the Timestamp interrupt by default
-  net: stmmac: xgmac: Fix RSS not writing all Keys to HW
-  net: stmmac: xgmac: Fix RSS writing wrong keys
-
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c     | 13 +++++++------
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h        |  3 ++-
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c   |  9 +++++----
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c    |  1 +
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c     | 19 +++++++++++++------
- .../net/ethernet/stmicro/stmmac/stmmac_selftests.c    |  4 ----
- 6 files changed, 28 insertions(+), 21 deletions(-)
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index d3232738fb25..31a237ec73bc 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -629,6 +629,7 @@ static int stmmac_hwtstamp_set(struct net_device *dev, struct ifreq *ifr)
+ 			config.rx_filter = HWTSTAMP_FILTER_PTP_V2_EVENT;
+ 			ptp_v2 = PTP_TCR_TSVER2ENA;
+ 			snap_type_sel = PTP_TCR_SNAPTYPSEL_1;
++			ts_event_en = PTP_TCR_TSEVNTENA;
+ 			ptp_over_ipv4_udp = PTP_TCR_TSIPV4ENA;
+ 			ptp_over_ipv6_udp = PTP_TCR_TSIPV6ENA;
+ 			ptp_over_ethernet = PTP_TCR_TSIPENA;
 -- 
 2.7.4
 
