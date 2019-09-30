@@ -2,191 +2,102 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 147A1C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80473C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4204206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5547821855
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:55:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cB206ZEg"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="jWhbup8u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732409AbfI3VuY (ORCPT
+        id S1731499AbfI3VzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 17:50:24 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44690 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731582AbfI3VuX (ORCPT
+        Mon, 30 Sep 2019 17:55:02 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:60762 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728470AbfI3VzC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 17:50:23 -0400
-Received: by mail-pg1-f193.google.com with SMTP id i14so8079537pgt.11
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 14:50:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nZqLTazAKZGG4KJ4iEi3hzNpvjFqh7JVEXlZWdade0A=;
-        b=cB206ZEgRonZzA9R7W2bEe12czYrZkepf8raUEl93I/yZxZo1Jw4kmluZnhffkw2Hz
-         2oWyvjF4bnDyf0vqh1F8HJVYGhy8Epba0CrVSh/jRVoeUIruGvrCZ/L/NkRcOMbkOGxy
-         eKN0/SNwe6z/DHIETMseeHvpzVHHytSXAC0SZ1VsLCe5z3KScHSwF8KLFlJOsNIm2kpr
-         y4Oy5htt/7JyyD/fxIuLtQGeiwyWMCae4sEidLkAVFrl9h1lHYKOkLJuqyzvRiVnhXds
-         6wyQzqOa+tdH84XBUzDUjVdNjVujBquh4Mi3uPIR/FNF1bEpGA7yp0j5OAtRvAG6zwfW
-         ZcWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nZqLTazAKZGG4KJ4iEi3hzNpvjFqh7JVEXlZWdade0A=;
-        b=hTCoskAX1K1TFlBEzAYI6GsfwKOmsboUpgv1OxXvqwFJr5/CVzVDc62P57Zu7CfJ5t
-         56DWg5NKjpT6KsMCpNiTItwF0+mACs7N5yxTM+voosxZmUSp27UQ8dIvnXYFU9yhiKEU
-         xdkMxqFMKCQWF044+bGpkyy5ZpR8CJ5vYCbGmaQU3HPvZe3Bv2ye1qMfaVo0EMRW5R7x
-         T4pNSIIk3QhV1FGY1S/edCj9whNEJK8dySRYenIw8yQmaW+xVRSlK1UhxjBN3hb23WEp
-         ZcCRRRaw+aTyuE4R9NGnL2k0aJUwh6ZlgEdtp24339HZ57WxlcIZDrzJe3Et88upd99U
-         xG7w==
-X-Gm-Message-State: APjAAAURtXIjh0R7dIuWYiQ9ZBGeljOtuPqoeGnkMqkoZP9BTzJtnrBb
-        BethtjQVTgVkXWWxxsqRVfo+H/3JZDVXd8weTrgM5g==
-X-Google-Smtp-Source: APXvYqykUm+JhH2ruszuTpI5/UozDNlYHvGqwkze/rZd2c2RIbBqYiB9CeN8PakIgx77lmzWQlcfqx0be21lC06BIac=
-X-Received: by 2002:a17:90a:154f:: with SMTP id y15mr645274pja.73.1569880222086;
- Mon, 30 Sep 2019 14:50:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190830034304.24259-1-yamada.masahiro@socionext.com>
- <f5c221f5749e5768c9f0d909175a14910d349456.camel@suse.de> <CAKwvOdk=tr5nqq1CdZnUvRskaVqsUCP0SEciSGonzY5ayXsMXw@mail.gmail.com>
- <CAHk-=wiTy7hrA=LkmApBE9PQtri8qYsSOrf2zbms_crfjgR=Hw@mail.gmail.com>
- <20190930112636.vx2qxo4hdysvxibl@willie-the-truck> <CAK7LNASQZ82KSOrQW7+Wq1vFDCg2__maBEAPMLqUDqZMLuj1rA@mail.gmail.com>
- <20190930121803.n34i63scet2ec7ll@willie-the-truck>
-In-Reply-To: <20190930121803.n34i63scet2ec7ll@willie-the-truck>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 30 Sep 2019 14:50:10 -0700
-Message-ID: <CAKwvOdnqn=0LndrX+mUrtSAQqoT1JWRMOJCA5t3e=S=T7zkcCQ@mail.gmail.com>
-Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
-To:     Will Deacon <will@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Kees Cook <keescook@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 30 Sep 2019 17:55:02 -0400
+Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190930215459epoutp01c989e6e7fe9cabd5953023b5758008ec~JVf8zsTUo0775207752epoutp01o
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 21:54:59 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190930215459epoutp01c989e6e7fe9cabd5953023b5758008ec~JVf8zsTUo0775207752epoutp01o
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1569880499;
+        bh=cEfjYlLf43o9MBy1ICOhBt1tk62BX/W31Wq/TZFyDqk=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=jWhbup8uktGCb8V5qjynsnImduqSVZbk9h27iZqn4wpePtccHDUeO64s5jBBoDMyb
+         aBHJ1U+EBAOzbGe2I10MGCWKIHQlAV3SLEJCyroPHw3j7FObgLZL176PhtgqWBHza9
+         zbRyaRkNE8gwPa/jzOF1eMXYhRHDkVLfSEYwsnZw=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
+        20190930215458epcas2p165bd52422fc5de33e087b7b8708713ff~JVf750Y1l2313523135epcas2p1E;
+        Mon, 30 Sep 2019 21:54:58 +0000 (GMT)
+Received: from epsmges2p4.samsung.com (unknown [182.195.40.181]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 46hx5Y1NgNzMqYkW; Mon, 30 Sep
+        2019 21:54:57 +0000 (GMT)
+X-AuditID: b6c32a48-415ff70000000fe3-94-5d9279b17242
+Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
+        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        A1.6B.04067.1B9729D5; Tue,  1 Oct 2019 06:54:57 +0900 (KST)
+Mime-Version: 1.0
+Subject: Re: [PATCH 1/1] blk-mq: fill header with kernel-doc
+Reply-To: minwoo.im@samsung.com
+From:   Minwoo Im <minwoo.im@samsung.com>
+To:     =?UTF-8?B?QW5kcsOpIEFsbWVpZGE=?= <andrealmeid@collabora.com>
+CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "kernel@collabora.com" <kernel@collabora.com>,
+        "krisman@collabora.com" <krisman@collabora.com>,
+        Minwoo Im <minwoo.im@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <20190930194846.23141-1-andrealmeid@collabora.com>
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20190930215456epcms2p64c66823d97c6ffad3861e750a4145f4b@epcms2p6>
+Date:   Tue, 01 Oct 2019 06:54:56 +0900
+X-CMS-MailID: 20190930215456epcms2p64c66823d97c6ffad3861e750a4145f4b
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupmk+LIzCtJLcpLzFFi42LZdljTQndj5aRYgwsnuSw+zNvFYrH6bj+b
+        xeZzPawWi45eZ7HYe0vb4vKuOWwWz04fYHZg99hxdwmjx+WzpR59W1YxenzeJBfAEpVjk5Ga
+        mJJapJCal5yfkpmXbqvkHRzvHG9qZmCoa2hpYa6kkJeYm2qr5OIToOuWmQO0X0mhLDGnFCgU
+        kFhcrKRvZ1OUX1qSqpCRX1xiq5RakJJTYGhYoFecmFtcmpeul5yfa2VoYGBkClSZkJNx66dO
+        wSrmip/3LjI3MM5l7mLk5JAQMJG43byCqYuRi0NIYAejxJJbV1m7GDk4eAUEJf7uEAapERaw
+        kZjTe5oZJCwkIC/x45UBRFhT4t3uM6wgNpuAukTD1FcsILaIgIPE400vmEFGMgusY5JY8uUE
+        G8QuXokZ7U9ZIGxpie3LtzKC2JwC9hLP+j+zQ8RFJW6ufgtnvz82nxHCFpFovXcW6mZBiQc/
+        d0PFpSR2rD8AdrKEQDOjxB9niHADo8T1+eIQtrnE7/u7we7kFfCVeLhlOdh4FgFViTnbr0KN
+        dJFo7d4OVsMsoC2xbOFrsHeZgX5cv0sfYrqyxJFbLBAVfBIdh/+ywzy1Y94TJghbWeLjoUNQ
+        EyUlll96DfW4h8TWqT/ZIIHcxijx6/EG5gmMCrMQ4TwLyeJZCIsXMDKvYhRLLSjOTU8tNiow
+        QY7ZTYzghKjlsYPxwDmfQ4wCHIxKPLwTXk6MFWJNLCuuzD3EKMHBrCTCK84wIVaINyWxsiq1
+        KD++qDQntfgQoynQ/xOZpUST84HJOq8k3tDUyMzMwNLUwtTMyEJJnHcT980YIYH0xJLU7NTU
+        gtQimD4mDk6pBkZ1Y0uxe1xW+7QTUjedvF3/+cCWK3kTOOo/cZTEuE8NfNp19xVL6K5zR/dE
+        H/jm4nlPWGrLGfkMVpNlv/fnL7zyIGmRdMO6a2z7vuyfmd0TV/gj9+SWzn6vKZ9yf9YkHLTe
+        fOapqFpd5JvDm7UfsPJP3RkUElLpf3KGRV+T/iefYNV0+2DXq5eUWIozEg21mIuKEwFKbnTq
+        ngMAAA==
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190930211400epcas2p4253bdc8cc3630f87d7e955cd23fdf1f2
+References: <20190930194846.23141-1-andrealmeid@collabora.com>
+        <CGME20190930211400epcas2p4253bdc8cc3630f87d7e955cd23fdf1f2@epcms2p6>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 5:18 AM Will Deacon <will@kernel.org> wrote:
->
-> On Mon, Sep 30, 2019 at 09:05:11PM +0900, Masahiro Yamada wrote:
-> > On Mon, Sep 30, 2019 at 8:26 PM Will Deacon <will@kernel.org> wrote:
-> > > On Fri, Sep 27, 2019 at 03:38:44PM -0700, Linus Torvalds wrote:
-> > > > Soem of that code is pretty subtle. They have fixed register usage
-> > > > (but the asm macros actually check them). And the inline asms clobber
-> > > > the link register, but they do seem to clearly _state_ that they
-> > > > clobber it, so who knows.
-> > > >
-> > > > Just based on the EFAULT, I'd _guess_ that it's some interaction with
-> > > > the domain access control register (so that get/set_domain() thing).
-> > > > But I'm not even sure that code is enabled for the Rpi2, so who
-> > > > knows..
-> > >
-> > > FWIW, we've run into issues with CONFIG_OPTIMIZE_INLINING and local
-> > > variables marked as 'register' where GCC would do crazy things and end
-> > > up corrupting data, so I suspect the use of fixed registers in the arm
-> > > uaccess functions is hitting something similar:
-> > >
-> > > https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91111
-> >
-> > No. Not similar at all.
->
-> They're similar in that enabling CONFIG_OPTIMIZE_INLINING causes register
-> variables to go wrong. I agree that the ARM code looks dodgy with
-> that call to uaccess_save_and_enable(), but there are __asmeq macros
-> in there to try to catch that, so it's still very fishy.
->
-> > I fixed it already. See
-> > https://lore.kernel.org/patchwork/patch/1132459/
->
-> You fixed the specific case above for 32-bit ARM, but the arm64 case
-> is due to a compiler bug. As it happens, we've reworked our atomics
-> in 5.4 so that particular issue no longer triggers, but the fact remains
-> that GCC has been shown to screw up explicit register allocation for
-> perfectly legitimate code when giving the flexibility to move code out
-> of line.
-
-So __attribute__((always_inline)) doesn't guarantee that code will be
-inlined.  For instance in LLVM's inliner, it asks/answers "should I
-inline" and "can I inline."  "Should" has to do with a cost model, and
-is very heuristic-y.  "Can" has more to do with the transforms, and
-whether they're all implemented and safe.  If you if you say
-__attribute__((always_inline)), the answer to "can I inline this" can
-still be *no*.  The only way to guarantee inlining is via the C
-preprocessor.  The only way to prevent inlining is via
-__attribute__((no_inline)).  inline and __attribute__((always_inline))
-are a heuristic laden mess and should not be relied upon.  I would
-also look closely at code that *requires* inlining or the lack there
-of to be correct.  That the kernel no longer compiles at -O0 is not a
-good thing IMO, and hurts developers that want a short
-compile/execute/debug cycle.
-
-In this case, if there's a known codegen bug in a particular compiler
-or certain versions of it, I recommend the use of either the C
-preprocessor or __attribute__((no_inline)) to get the desired behavior
-localized to the function in question, and for us to proceed with
-Masahiro's cleanup.
-
-The comment above the use of CONFIG_OPTIMIZE_INLINING in
-include/linux/compiler_types.h says:
-  * Force always-inline if the user requests it so via the .config.
-Which makes me grimace (__attribute__((always_inline)) doesn't *force*
-anything as per above), and the idea that forcing things marked inline
-to also be __attribute__((always_inline)) is an "optimization" (re:
-the name of the config; CONFIG_OPTIMIZE_INLINING) is also highly
-suspect.  Aggressive inlining leads to image size bloat, instruction
-cache and register pressure; it is not exclusively an optimization.
-
->
-> > The problems are fixable by writing correct code.
->
-> Right, in the compiler ;)
->
-> > I think we discussed this already.
->
-> We did?
->
-> > - There is nothing arch-specific in CONFIG_OPTIMIZE_INLINING
->
-> Apart from the bugs... and even then, that's just based on reports.
->
-> > - 'inline' is just a hint. It does not guarantee function inlining.
-> >   This is standard.
-> >
-> > - The kernel macrofies 'inline' to add __attribute__((__always_inline__))
-> >   This terrible hack must end.
->
-> I'm all for getting rid of hacks, but not at the cost of correctness.
->
-> > -  __attribute__((__always_inline__)) takes aways compiler's freedom,
-> >    and prevents it from optimizing the code for -O2, -Os, or whatever.
->
-> s/whatever/miscompiling the code/
->
-> If it helps, here is more information about the arm64 failure which
-> triggered the GCC bugzilla:
->
-> https://www.spinics.net/lists/arm-kernel/msg730329.html
->
-> Will
-
-
-
--- 
-Thanks,
-~Nick Desaulniers
+Hi Andr=C3=A9,=0D=0A=0D=0A>=20-/*=0D=0A>=20+/**=0D=0A>=20+=20*=20blk_mq_rq_=
+from_pdu=20-=20cast=20a=20PDU=20to=20a=20request=0D=0A>=20+=20*=20=40pdu:=
+=20the=20PDU=20(protocol=20unit=20request)=20to=20be=20casted=0D=0A=0D=0AIt=
+=20makes=20sense,=20but=20it=20looks=20like=20PDU=20stands=20for=20protocol=
+=20unit=20request.=0D=0ACould=20we=20have=20it=20=22PDU(Protocol=20Data=20U=
+nit)=22=20?=0D=0A=0D=0AThanks,=0D=0A
