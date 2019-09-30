@@ -2,247 +2,170 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1637C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B778EC388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DBC9206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:40:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="VzJb97KD"
+	by mail.kernel.org (Postfix) with ESMTP id 99E6F216F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:40:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732096AbfI3PkE (ORCPT
+        id S1732107AbfI3PkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 11:40:04 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:13970 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731127AbfI3Pj6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 11:39:58 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8UFVdeR013287;
-        Mon, 30 Sep 2019 17:39:45 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=qLUAFJoZ4hJYwU9KqQE8rr3UJjLpfuf6fQEfBaTxXxs=;
- b=VzJb97KDI6wb8uChM6pzudyWFUxR+ZEOVFkOeGw0YELYgw9uZ3LkjGy7QWXRNEU3BSkM
- Gl9lxUcqTS+5QfGTN5J4sRU76egD9L/o/chK3gBRFc78NZ/KMrCjbtKISNnwvYVAj+E3
- j0pvYVGpUSH9nQdg8MB63h8P6i3Tc0sQ9RHmRKvPU7wRIWh+5i4NCpe4MC0HcskkKD/9
- 7biOcsmycLt5SRm8D1BKPK8j9s8ymFQYx52LkCF72PMv57eSdB5NJxHXcq58eOjrQ8ZE
- x18W0A1mXU++2MJbVY8D+2CxEWKpMe6Gt07NVF22isF2FpL3LnPiaBLFQ9NwDER82R3L nA== 
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2v9vna47sp-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 30 Sep 2019 17:39:45 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 6352A4D;
-        Mon, 30 Sep 2019 15:39:42 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BEEB42A45FB;
-        Mon, 30 Sep 2019 17:39:41 +0200 (CEST)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.92) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 30 Sep
- 2019 17:39:41 +0200
-Received: from localhost (10.48.0.192) by Webmail-ga.st.com (10.75.90.48) with
- Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 30 Sep 2019 17:39:41 +0200
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <thierry.reding@gmail.com>, <robh+dt@kernel.org>
-CC:     <alexandre.torgue@st.com>, <mark.rutland@arm.com>,
-        <mcoquelin.stm32@gmail.com>, <fabrice.gasnier@st.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <benjamin.gaignard@st.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH 2/2] pwm: stm32: add power management support
-Date:   Mon, 30 Sep 2019 17:39:11 +0200
-Message-ID: <1569857951-20007-3-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1569857951-20007-1-git-send-email-fabrice.gasnier@st.com>
-References: <1569857951-20007-1-git-send-email-fabrice.gasnier@st.com>
+        Mon, 30 Sep 2019 11:40:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:57210 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727767AbfI3PkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 11:40:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 589151000;
+        Mon, 30 Sep 2019 08:40:20 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C3C083F706;
+        Mon, 30 Sep 2019 08:40:19 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 16:40:18 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Remi Pommarel <repk@triplefau.lt>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Ellie Reeves <ellierevves@gmail.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: aardvark: Use LTSSM state to build link training
+ flag
+Message-ID: <20190930154017.GF42880@e119886-lin.cambridge.arm.com>
+References: <20190522213351.21366-3-repk@triplefau.lt>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.48.0.192]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-09-30_09:2019-09-30,2019-09-30 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190522213351.21366-3-repk@triplefau.lt>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add suspend/resume PM sleep ops. When going to low power, enforce the PWM
-channel isn't active. Let the PWM consumers disable it during their own
-suspend sequence, see [1]. So, perform a check here, and handle the
-pinctrl states. Also restore the break inputs upon resume, as registers
-content may be lost when going to low power mode.
+On Wed, May 22, 2019 at 11:33:51PM +0200, Remi Pommarel wrote:
+> Aardvark's PCI_EXP_LNKSTA_LT flag in its link status register is not
+> implemented and does not reflect the actual link training state (the
+> flag is always set to 0). In order to support link re-training feature
+> this flag has to be emulated. The Link Training and Status State
+> Machine (LTSSM) flag in Aardvark LMI config register could be used as
+> a link training indicator. Indeed if the LTSSM is in L0 or upper state
+> then link training has completed (see [1]).
+> 
+> Unfortunately because after asking a link retraining it takes a while
+> for the LTSSM state to become less than 0x10 (due to L0s to recovery
+> state transition delays), LTSSM can still be in L0 while link training
+> has not finished yet. So this waits for link to be in recovery or lesser
+> state before returning after asking for a link retrain.
+> 
+> [1] "PCI Express Base Specification", REV. 4.0
+>     PCI Express, February 19 2014, Table 4-14
+> 
+> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> ---
+> Changes since v1:
+>   - Rename retraining flag field
+>   - Fix DEVCTL register writing
+> 
+> Changes since v2:
+>   - Rewrite patch logic so it is more legible
+> 
+> Please note that I will unlikely be able to answer any comments from May
+> 24th to June 10th.
+> ---
+>  drivers/pci/controller/pci-aardvark.c | 29 ++++++++++++++++++++++++++-
+>  1 file changed, 28 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> index 134e0306ff00..8803083b2174 100644
+> --- a/drivers/pci/controller/pci-aardvark.c
+> +++ b/drivers/pci/controller/pci-aardvark.c
+> @@ -180,6 +180,8 @@
+>  #define LINK_WAIT_MAX_RETRIES		10
+>  #define LINK_WAIT_USLEEP_MIN		90000
+>  #define LINK_WAIT_USLEEP_MAX		100000
+> +#define RETRAIN_WAIT_MAX_RETRIES	10
+> +#define RETRAIN_WAIT_USLEEP_US		2000
+>  
+>  #define MSI_IRQ_NUM			32
+>  
+> @@ -239,6 +241,17 @@ static int advk_pcie_wait_for_link(struct advk_pcie *pcie)
+>  	return -ETIMEDOUT;
+>  }
+>  
+> +static void advk_pcie_wait_for_retrain(struct advk_pcie *pcie)
+> +{
+> +	size_t retries;
+> +
+> +	for (retries = 0; retries < RETRAIN_WAIT_MAX_RETRIES; ++retries) {
+> +		if (!advk_pcie_link_up(pcie))
+> +			break;
+> +		udelay(RETRAIN_WAIT_USLEEP_US);
+> +	}
+> +}
+> +
+>  static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+>  {
+>  	u32 reg;
+> @@ -426,11 +439,20 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
+>  		return PCI_BRIDGE_EMUL_HANDLED;
+>  	}
+>  
+> +	case PCI_EXP_LNKCTL: {
+> +		/* u32 contains both PCI_EXP_LNKCTL and PCI_EXP_LNKSTA */
+> +		u32 val = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg) &
+> +			~(PCI_EXP_LNKSTA_LT << 16);
 
-[1] https://lkml.org/lkml/2019/2/5/770
+The commit message says "the flag is always set to 0" - therefore I guess
+you don't *need* to mask out the LT bit here? I assume this is just
+belt-and-braces but thought I'd check incase I've misunderstood or if your
+commit message is inaccurate.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- drivers/pwm/pwm-stm32.c | 82 +++++++++++++++++++++++++++++++++++++------------
- 1 file changed, 62 insertions(+), 20 deletions(-)
+In any case masking out the bit (or adding a comment) makes this code more
+readable as the reader doesn't need to know what the hardware does with this
+bit.
 
-diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-index 740e2de..9bcd73a 100644
---- a/drivers/pwm/pwm-stm32.c
-+++ b/drivers/pwm/pwm-stm32.c
-@@ -12,6 +12,7 @@
- #include <linux/mfd/stm32-timers.h>
- #include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
- #include <linux/pwm.h>
- 
-@@ -19,6 +20,12 @@
- #define CCMR_CHANNEL_MASK  0xFF
- #define MAX_BREAKINPUT 2
- 
-+struct stm32_breakinput {
-+	u32 index;
-+	u32 level;
-+	u32 filter;
-+};
-+
- struct stm32_pwm {
- 	struct pwm_chip chip;
- 	struct mutex lock; /* protect pwm config/enable */
-@@ -26,15 +33,11 @@ struct stm32_pwm {
- 	struct regmap *regmap;
- 	u32 max_arr;
- 	bool have_complementary_output;
-+	struct stm32_breakinput breakinput[MAX_BREAKINPUT];
-+	unsigned int nbreakinput;
- 	u32 capture[4] ____cacheline_aligned; /* DMA'able buffer */
- };
- 
--struct stm32_breakinput {
--	u32 index;
--	u32 level;
--	u32 filter;
--};
--
- static inline struct stm32_pwm *to_stm32_pwm_dev(struct pwm_chip *chip)
- {
- 	return container_of(chip, struct stm32_pwm, chip);
-@@ -512,15 +515,27 @@ static int stm32_pwm_set_breakinput(struct stm32_pwm *priv,
- 	return (bdtr & bke) ? 0 : -EINVAL;
- }
- 
--static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv,
-+static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv)
-+{
-+	int i, ret = 0;
-+
-+	for (i = 0; i < priv->nbreakinput && !ret; i++) {
-+		ret = stm32_pwm_set_breakinput(priv,
-+					       priv->breakinput[i].index,
-+					       priv->breakinput[i].level,
-+					       priv->breakinput[i].filter);
-+	}
-+
-+	return ret;
-+}
-+
-+static int stm32_pwm_probe_breakinputs(struct stm32_pwm *priv,
- 				       struct device_node *np)
- {
--	struct stm32_breakinput breakinput[MAX_BREAKINPUT];
--	int nb, ret, i, array_size;
-+	int nb, ret, array_size;
- 
- 	nb = of_property_count_elems_of_size(np, "st,breakinput",
- 					     sizeof(struct stm32_breakinput));
--
- 	/*
- 	 * Because "st,breakinput" parameter is optional do not make probe
- 	 * failed if it doesn't exist.
-@@ -531,20 +546,14 @@ static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv,
- 	if (nb > MAX_BREAKINPUT)
- 		return -EINVAL;
- 
-+	priv->nbreakinput = nb;
- 	array_size = nb * sizeof(struct stm32_breakinput) / sizeof(u32);
- 	ret = of_property_read_u32_array(np, "st,breakinput",
--					 (u32 *)breakinput, array_size);
-+					 (u32 *)priv->breakinput, array_size);
- 	if (ret)
- 		return ret;
- 
--	for (i = 0; i < nb && !ret; i++) {
--		ret = stm32_pwm_set_breakinput(priv,
--					       breakinput[i].index,
--					       breakinput[i].level,
--					       breakinput[i].filter);
--	}
--
--	return ret;
-+	return stm32_pwm_apply_breakinputs(priv);
- }
- 
- static void stm32_pwm_detect_complementary(struct stm32_pwm *priv)
-@@ -614,7 +623,7 @@ static int stm32_pwm_probe(struct platform_device *pdev)
- 	if (!priv->regmap || !priv->clk)
- 		return -EINVAL;
- 
--	ret = stm32_pwm_apply_breakinputs(priv, np);
-+	ret = stm32_pwm_probe_breakinputs(priv, np);
- 	if (ret)
- 		return ret;
- 
-@@ -647,6 +656,38 @@ static int stm32_pwm_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int __maybe_unused stm32_pwm_suspend(struct device *dev)
-+{
-+	struct stm32_pwm *priv = dev_get_drvdata(dev);
-+	struct pwm_state state;
-+	unsigned int i;
-+
-+	for (i = 0; i < priv->chip.npwm; i++) {
-+		pwm_get_state(&priv->chip.pwms[i], &state);
-+		if (state.enabled) {
-+			dev_err(dev, "The consumer didn't stop us (%s)\n",
-+				priv->chip.pwms[i].label);
-+			return -EBUSY;
-+		}
-+	}
-+
-+	return pinctrl_pm_select_sleep_state(dev);
-+}
-+
-+static int __maybe_unused stm32_pwm_resume(struct device *dev)
-+{
-+	struct stm32_pwm *priv = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = pinctrl_pm_select_default_state(dev);
-+	if (ret)
-+		return ret;
-+
-+	return stm32_pwm_apply_breakinputs(priv);
-+}
-+
-+static SIMPLE_DEV_PM_OPS(stm32_pwm_pm_ops, stm32_pwm_suspend, stm32_pwm_resume);
-+
- static const struct of_device_id stm32_pwm_of_match[] = {
- 	{ .compatible = "st,stm32-pwm",	},
- 	{ /* end node */ },
-@@ -659,6 +700,7 @@ static struct platform_driver stm32_pwm_driver = {
- 	.driver	= {
- 		.name = "stm32-pwm",
- 		.of_match_table = stm32_pwm_of_match,
-+		.pm = &stm32_pwm_pm_ops,
- 	},
- };
- module_platform_driver(stm32_pwm_driver);
--- 
-2.7.4
 
+> +		if (!advk_pcie_link_up(pcie))
+> +			val |= (PCI_EXP_LNKSTA_LT << 16);
+> +		*value = val;
+> +		return PCI_BRIDGE_EMUL_HANDLED;
+> +	}
+> +
+>  	case PCI_CAP_LIST_ID:
+>  	case PCI_EXP_DEVCAP:
+>  	case PCI_EXP_DEVCTL:
+>  	case PCI_EXP_LNKCAP:
+> -	case PCI_EXP_LNKCTL:
+>  		*value = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg);
+>  		return PCI_BRIDGE_EMUL_HANDLED;
+>  	default:
+> @@ -447,8 +469,13 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
+>  
+>  	switch (reg) {
+>  	case PCI_EXP_DEVCTL:
+> +		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
+> +		break;
+
+Why is this here?
+
+Thanks,
+
+Andrew Murray
+
+> +
+>  	case PCI_EXP_LNKCTL:
+>  		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
+> +		if (new & PCI_EXP_LNKCTL_RL)
+> +			advk_pcie_wait_for_retrain(pcie);
+>  		break;
+>  
+>  	case PCI_EXP_RTCTL:
+> -- 
+> 2.20.1
+> 
