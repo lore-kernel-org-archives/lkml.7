@@ -2,109 +2,127 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC605C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 649BEC35280
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A72B0224EF
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 339CB224FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:01:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iwsVE4VD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vRyGgkPA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729960AbfI3VB1 (ORCPT
+        id S1730764AbfI3VBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 17:01:27 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:43216 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726504AbfI3VB0 (ORCPT
+        Mon, 30 Sep 2019 17:01:49 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43824 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726504AbfI3VBt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 17:01:26 -0400
-Received: by mail-io1-f66.google.com with SMTP id v2so41985394iob.10;
-        Mon, 30 Sep 2019 14:01:26 -0700 (PDT)
+        Mon, 30 Sep 2019 17:01:49 -0400
+Received: by mail-lj1-f196.google.com with SMTP id n14so10959622ljj.10;
+        Mon, 30 Sep 2019 14:01:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=CEUArm6gWibtMVWUMfUQg1zTk+VJsqkWb8i0x1lr37I=;
-        b=iwsVE4VD78l6Fnw0gClX+7nvq5/Bzwjph4155ZqyLgN4jqzX1ORSCaLTJ0NGyKZAna
-         /BGgTc8VwMNIaM9Aw72biO9dCIFORmK5E6cWM5FumLUpa/Pjlw70c+UC3iO7MSc5yFAn
-         d6ipZaZqB5W0JnAvBsj097K+oNLKIynYKApiiHksaEOKsB7A0Lgu0xkz5zObgNQal8Iv
-         0h0YUm6Ad6EX0+72mkNw9VmmyuOgFEsX1gJ42KSEHUNh7LabGLgaSno2Ryo3RR/DOMLr
-         7pGtqS/yj1Hcw2V/DaNtmf6PRFxsiUE1J+qdm6Ql0svB1GLiG9AcAQHa0tp05O70P9kD
-         vO3A==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+LlUNCVWfXSs/i1G07+SdYDQvuWX3zS76QLnciqHfRA=;
+        b=vRyGgkPAU1bG3UyZ6cjD178gYt42EnWzSprmI3iz4s6L5bJBGkff8Nos2+7P4ROlN0
+         tYFnjWNfx5J93hxMPMotA+rHTqelZhfDqDGolCIPHmqmvu71outUIyESgijLODwynRfO
+         rF1/hXrwpHYNoCVrpXw+ICiA8Whj7AVX6a0JCgg6edWofAgpWXd8M+bywtYa9lyYkjPI
+         K0iQ8fvLq3WJTZmNimq90wt4MHm9MU3ocSzEoH4Fc7HqqBd87VAC+TVdfEL9YYZ7PenJ
+         xS4porvj/gatgHmjKxJA+ygNnBSMW5BrhQeGogAPjdLvB32Fy+tUPaak+F1rGOnF4t6Z
+         /Qqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=CEUArm6gWibtMVWUMfUQg1zTk+VJsqkWb8i0x1lr37I=;
-        b=bIxXsd0+lizNCgM2LRw+GlStzSsMygArmwNkUokvRn1koMveRYjQPmyWsCevVK49Y0
-         Ekv70oeELMsFCrMjBqZLzMccgH1tQEd3TVyWSA3PwBmHNYb7/hxZQc0e7tpIuagtEQe2
-         gLKd/+Y3jwj+NM0h35hQj1DlKiPV7JTnuYco3sqBxVGFqdX4Y4EGG3ychHUEzJKj4v9l
-         6vnN9xAxPa3wZCo0bcTQpNQxQA/mie3SFUQeSygvMOek5qnNvlAlVbFfhF6o8k/h5qFl
-         r25SvDKnLLer/BW4zLZXtxKKLYP2o1tblhaC6KNEguSUEv923x8Awgh6AS9anX/6yMfK
-         MD6Q==
-X-Gm-Message-State: APjAAAWRelaZ+oH0RkeHyGOxqI37L/17Oid7QLexJ4mqk8s6nyuub3ds
-        VLU8BkBPKDgE7l21qpwEwN4=
-X-Google-Smtp-Source: APXvYqwGKvKPipBsipTjqYnbO0ZYDc+fU6ZsBhKsdyPYo5t6z2MnUinh4EbcZUdRgFrOXQ9W2hBq/Q==
-X-Received: by 2002:a92:d5c5:: with SMTP id d5mr20928394ilq.63.1569877285716;
-        Mon, 30 Sep 2019 14:01:25 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id c8sm6063991ile.9.2019.09.30.14.01.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 14:01:24 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Markus.Elfring@web.de
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        David Sterba <dsterba@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] fs: affs: fix a memory leak in affs_remount
-Date:   Mon, 30 Sep 2019 16:01:10 -0500
-Message-Id: <20190930210114.6557-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <ec7d3fdb-445b-7f4e-d6e6-77c6ae9a5732@web.de>
-References: <ec7d3fdb-445b-7f4e-d6e6-77c6ae9a5732@web.de>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+LlUNCVWfXSs/i1G07+SdYDQvuWX3zS76QLnciqHfRA=;
+        b=o+CrJmkXIzEZrfKo/yg7JLjugw4Kfxr1gOYG1ADxQPeyMJBGvMxSs8xQV+oMowqZsg
+         3xfOlG0KF0iq/e5YXlzvTZTpZyBBLO2qCobSBpZRvvGTldoctH5rTKbtXY2zfHScNWBM
+         +3OSotITC8/gyCiYIpHTO60qQBSYFYsQds6CCfwhHiMoFMStD98yD0x2tTrwAQ5xBptY
+         oVICVoZPc8gTEY71CRa+EzW4E+SZf7UffNHpZ3wA05fgfnc92eezbqM1Wsr10xYcJZKo
+         FCbnjKoXSATKx0wRYtsNPEqRSOHA2QTS68CB5HX68IIi94ng2FKQeeW76d4bTPc3tYOB
+         Ac9A==
+X-Gm-Message-State: APjAAAUPlL1X7duy8inuxhxyQD/PHUOBzxrADQikt58bBaOfDrPRF+Jb
+        lJ4Pb/EAvRi3SWyb3RHbwgASKBa4
+X-Google-Smtp-Source: APXvYqxqT7mVJy85RYmDDuLcpj6hmUPaCwL3lTF73T3SHNq53vxSpU8R+258fLGlXJAt6zSoFGZARw==
+X-Received: by 2002:a2e:9093:: with SMTP id l19mr12159777ljg.205.1569868372714;
+        Mon, 30 Sep 2019 11:32:52 -0700 (PDT)
+Received: from [192.168.2.145] (ppp94-29-32-67.pppoe.spdop.ru. [94.29.32.67])
+        by smtp.googlemail.com with ESMTPSA id f22sm3334897lfa.41.2019.09.30.11.32.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Sep 2019 11:32:52 -0700 (PDT)
+Subject: Re: [PATCH v5 00/14] Consolidate and improve NVIDIA Tegra CPUIDLE
+ driver(s)
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190929175952.22690-1-digetx@gmail.com>
+ <20190930082645.GF1518582@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <cf27855a-eb85-1a38-3d04-95e7efe06ebf@gmail.com>
+Date:   Mon, 30 Sep 2019 21:32:51 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
+MIME-Version: 1.0
+In-Reply-To: <20190930082645.GF1518582@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In affs_remount if data is provided it is duplicated into new_opts.
-The allocated memory for new_opts is only released if pare_options fail.
-The release for new_opts is added.
+30.09.2019 11:26, Thierry Reding пишет:
+> On Sun, Sep 29, 2019 at 08:59:38PM +0300, Dmitry Osipenko wrote:
+>> Hello,
+>>
+>> This series does the following:
+>>
+>>   1. Unifies Tegra20/30/114 drivers into a single driver and moves it out
+>>      into common drivers/cpuidle/ directory.
+>>
+>>   2. Enables CPU cluster power-down idling state on Tegra30.
+>>
+>> In the end there is a quite nice clean up of the Tegra CPUIDLE drivers
+>> and of the Tegra's arch code in general. Please review, thanks!
+> 
+> I generally like this series and it looks really good from a diffstat
+> point of view. However, removing existing drivers completely and then
+> incrementally add a new one make this impossible to review.
+> 
+> If you think about it, it also makes it really difficult to find what
+> went wrong if at any point in the future we find a regression caused by
+> the new driver. A bisection will always point at the commit that removes
+> the old driver because between that and the point where you add the new
+> driver, CPU idle just doesn't work at all anymore.
+> 
+> While I understand that it's very convenient to just throw away old code
+> and rewrite it from scratch, it's also impractical (and a little rude).
+> It's not how we do things in the kernel. Unless maybe under specific
+> circumstances.
+> 
+> Can you please try and make this a little more iterative? At the very
+> least I'd expect a series where you do all the preliminary work in
+> preparatory patches and then replace the old driver by the new driver in
+> a single patch. That way at least there will be an unambiguous commit in
+> a bisection.
+> 
+> Ideally, you'd also break up that last conversion patch into smaller
+> incremental patches to make it easier for people to review. Remember
+> that your chances to attract reviewers increases if you make the patches
+> easy to review, which means your patches should be small, logical
+> changes that (ideally) are obviously correct.
 
-Fixes: c8f33d0bec99 ("affs: kstrdup() memory handling")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
-Changes in v2:
-	-- fix a type in title, and add fixes tag
----
- fs/affs/super.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/fs/affs/super.c b/fs/affs/super.c
-index cc463ae47c12..1d38fdbc5148 100644
---- a/fs/affs/super.c
-+++ b/fs/affs/super.c
-@@ -598,6 +598,8 @@ affs_remount(struct super_block *sb, int *flags, char *data)
- 	memcpy(sbi->s_volume, volume, 32);
- 	spin_unlock(&sbi->symlink_lock);
- 
-+	kfree(new_opts);
-+
- 	if ((bool)(*flags & SB_RDONLY) == sb_rdonly(sb))
- 		return 0;
- 
--- 
-2.17.1
-
+Thanks for the detailed explanation, probably this is the same what Jon
+was asking to do. Now I see what you're are asking for.
