@@ -2,227 +2,88 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC5DC388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BDAC388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5A4121920
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:31:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ACD92168B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:32:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569882681;
-	bh=3hlrgytMsPG+Nev+4sXHGMfpWpuL+FFTmPNPIizXz4Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Ccanmi65VEQ9utfyXprllmVb9JUJLPC9CEt4XGfWqu+UP9Y9Lh6PBdeTYwIGMyQuF
-	 EuZh62oCALnuyx0Kou7csGzSr5NUxdD1QtzFFveUs1MBBHe8xALUuS4cESo+H+zvb+
-	 Wqao/Ama0f9xkERKrtezG7hADHdiKF++VaqH0fMM=
+	s=default; t=1569882725;
+	bh=033EVoPIbQQt4saxfg6lYo0ljc8tIp/LXV1ZE2Iuc3I=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=10GMoMyO/1gqw3cJZjkuNd1Qfwx4ic0GmiDUZPbdLFFldvv03xAqsHLV488hqJu2L
+	 IJ+OatVUUHQnqSkcMC+LBDBvYBxorZHPCXqSYECBcwfFwmwNxCXosfW8lkuV18OUIV
+	 GhG9w4jYwogEBkSxLR19H9SRYBZHVh0gTwW8fNVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbfI3WbV (ORCPT
+        id S1728584AbfI3WcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 18:31:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35116 "EHLO mail.kernel.org"
+        Mon, 30 Sep 2019 18:32:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726103AbfI3WbU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 18:31:20 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726103AbfI3WcE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 18:32:04 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCF6220842;
-        Mon, 30 Sep 2019 22:31:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDDCD20842;
+        Mon, 30 Sep 2019 22:32:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569882679;
-        bh=3hlrgytMsPG+Nev+4sXHGMfpWpuL+FFTmPNPIizXz4Q=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=QzDciQpN52a/HyjuM3ARibJ1X2XtHJbWTe0x/FhRta1fa7GozAQPiQm/Y7RA1Skew
-         KVQAOdj8auXOZTuby4unk9zaeFNcM+FNwqdG0ExczvJ8FRr5GfSRbALg9RJ+QEM1rU
-         +cDcUF2xmIarD1CMNIBuJZ9mk2eqAiC7paElK9QQ=
-Date:   Mon, 30 Sep 2019 17:31:17 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof Wilczynski <kw@linux.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Move ATS declarations to linux/pci-ats.h
-Message-ID: <20190930223117.GA215913@google.com>
+        s=default; t=1569882723;
+        bh=033EVoPIbQQt4saxfg6lYo0ljc8tIp/LXV1ZE2Iuc3I=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=jvrjwEXeiQkObnYuYANaOaLjZAUqrBZiamURy4U/bJnIV8dodgVEmgbSI8EIxjEM8
+         X/s9oSW6Ws6mqxPnTSVfnQF7pKfeJXDHoq8q1PRucGhr1Y0LRI4Etec7Z5iqT4vhLN
+         SyvDu6ohgsJOSzlmvz532BR/9eBoROYW3fG8+dV0=
+Subject: Re: [PATCH 5.3 00/25] 5.3.2-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190929135006.127269625@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <519f66ea-9cd5-b151-3383-b1331c710b42@kernel.org>
+Date:   Mon, 30 Sep 2019 16:31:51 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190914213032.22314-1-kw@linux.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190929135006.127269625@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 14, 2019 at 11:30:32PM +0200, Krzysztof Wilczynski wrote:
-> Move ATS function prototypes from include/linux/pci.h
-> to include/linux/pci-ats.h as the ATS, PRI, and PASID
-> interfaces are related, and are used only by the IOMMU
-> drivers.  This effecively reverts the change done in
-> commit ff9bee895c4d ("PCI: Move ATS declarations to
-> linux/pci.h so they're all together").
+On 9/29/19 7:56 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.3.2 release.
+> There are 25 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Also, remove surplus forward declaration of struct pci_ats
-> from include/linux/pci.h, as it is no longer needed, since
-> the struct pci_ats has been embedded directly into struct
-> pci_dev in the commit d544d75ac96a ("PCI: Embed ATS info
-> directly into struct pci_dev").
+> Responses should be made by Tue 01 Oct 2019 01:47:47 PM UTC.
+> Anything received after that time might be too late.
 > 
-> No functional changes intended.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.2-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
+> and the diffstat can be found below.
 > 
-> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+> thanks,
+> 
+> greg k-h
+> 
 
-Applied to pci/virtualization for v5.5, thanks!
+Compiled and booted on my test system. No dmesg regressions.
 
-> ---
-> Related:
->   https://lore.kernel.org/r/20190902211100.GH7013@google.com
->   https://lore.kernel.org/r/20190724233848.73327-9-skunberg.kelsey@gmail.com
-> 
->  include/linux/pci-ats.h | 76 +++++++++++++++--------------------------
->  include/linux/pci.h     | 14 --------
->  2 files changed, 28 insertions(+), 62 deletions(-)
-> 
-> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
-> index 1ebb88e7c184..a2001673d445 100644
-> --- a/include/linux/pci-ats.h
-> +++ b/include/linux/pci-ats.h
-> @@ -4,74 +4,54 @@
->  
->  #include <linux/pci.h>
->  
-> -#ifdef CONFIG_PCI_PRI
-> +#ifdef CONFIG_PCI_ATS
-> +/* Address Translation Service */
-> +int pci_enable_ats(struct pci_dev *dev, int ps);
-> +void pci_disable_ats(struct pci_dev *dev);
-> +int pci_ats_queue_depth(struct pci_dev *dev);
-> +int pci_ats_page_aligned(struct pci_dev *dev);
-> +#else /* CONFIG_PCI_ATS */
-> +static inline int pci_enable_ats(struct pci_dev *d, int ps)
-> +{ return -ENODEV; }
-> +static inline void pci_disable_ats(struct pci_dev *d) { }
-> +static inline int pci_ats_queue_depth(struct pci_dev *d)
-> +{ return -ENODEV; }
-> +static inline int pci_ats_page_aligned(struct pci_dev *dev)
-> +{ return 0; }
-> +#endif /* CONFIG_PCI_ATS */
->  
-> +#ifdef CONFIG_PCI_PRI
->  int pci_enable_pri(struct pci_dev *pdev, u32 reqs);
->  void pci_disable_pri(struct pci_dev *pdev);
->  void pci_restore_pri_state(struct pci_dev *pdev);
->  int pci_reset_pri(struct pci_dev *pdev);
-> -
->  #else /* CONFIG_PCI_PRI */
-> -
->  static inline int pci_enable_pri(struct pci_dev *pdev, u32 reqs)
-> -{
-> -	return -ENODEV;
-> -}
-> -
-> -static inline void pci_disable_pri(struct pci_dev *pdev)
-> -{
-> -}
-> -
-> -static inline void pci_restore_pri_state(struct pci_dev *pdev)
-> -{
-> -}
-> -
-> +{ return -ENODEV; }
-> +static inline void pci_disable_pri(struct pci_dev *pdev) { }
-> +static inline void pci_restore_pri_state(struct pci_dev *pdev) { }
->  static inline int pci_reset_pri(struct pci_dev *pdev)
-> -{
-> -	return -ENODEV;
-> -}
-> -
-> +{ return -ENODEV; }
->  #endif /* CONFIG_PCI_PRI */
->  
->  #ifdef CONFIG_PCI_PASID
-> -
->  int pci_enable_pasid(struct pci_dev *pdev, int features);
->  void pci_disable_pasid(struct pci_dev *pdev);
->  void pci_restore_pasid_state(struct pci_dev *pdev);
->  int pci_pasid_features(struct pci_dev *pdev);
->  int pci_max_pasids(struct pci_dev *pdev);
->  int pci_prg_resp_pasid_required(struct pci_dev *pdev);
-> -
-> -#else  /* CONFIG_PCI_PASID */
-> -
-> +#else /* CONFIG_PCI_PASID */
->  static inline int pci_enable_pasid(struct pci_dev *pdev, int features)
-> -{
-> -	return -EINVAL;
-> -}
-> -
-> -static inline void pci_disable_pasid(struct pci_dev *pdev)
-> -{
-> -}
-> -
-> -static inline void pci_restore_pasid_state(struct pci_dev *pdev)
-> -{
-> -}
-> -
-> +{ return -EINVAL; }
-> +static inline void pci_disable_pasid(struct pci_dev *pdev) { }
-> +static inline void pci_restore_pasid_state(struct pci_dev *pdev) { }
->  static inline int pci_pasid_features(struct pci_dev *pdev)
-> -{
-> -	return -EINVAL;
-> -}
-> -
-> +{ return -EINVAL; }
->  static inline int pci_max_pasids(struct pci_dev *pdev)
-> -{
-> -	return -EINVAL;
-> -}
-> -
-> +{ return -EINVAL; }
->  static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
-> -{
-> -	return 0;
-> -}
-> +{ return 0; }
->  #endif /* CONFIG_PCI_PASID */
->  
-> -
-> -#endif /* LINUX_PCI_ATS_H*/
-> +#endif /* LINUX_PCI_ATS_H */
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 56767f50ad96..5f2ae580bd19 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -284,7 +284,6 @@ struct irq_affinity;
->  struct pcie_link_state;
->  struct pci_vpd;
->  struct pci_sriov;
-> -struct pci_ats;
->  struct pci_p2pdma;
->  
->  /* The pci_dev structure describes PCI devices */
-> @@ -1764,19 +1763,6 @@ static inline const struct pci_device_id *pci_match_id(const struct pci_device_i
->  static inline bool pci_ats_disabled(void) { return true; }
->  #endif /* CONFIG_PCI */
->  
-> -#ifdef CONFIG_PCI_ATS
-> -/* Address Translation Service */
-> -int pci_enable_ats(struct pci_dev *dev, int ps);
-> -void pci_disable_ats(struct pci_dev *dev);
-> -int pci_ats_queue_depth(struct pci_dev *dev);
-> -int pci_ats_page_aligned(struct pci_dev *dev);
-> -#else
-> -static inline int pci_enable_ats(struct pci_dev *d, int ps) { return -ENODEV; }
-> -static inline void pci_disable_ats(struct pci_dev *d) { }
-> -static inline int pci_ats_queue_depth(struct pci_dev *d) { return -ENODEV; }
-> -static inline int pci_ats_page_aligned(struct pci_dev *dev) { return 0; }
-> -#endif
-> -
->  /* Include architecture-dependent settings and functions */
->  
->  #include <asm/pci.h>
-> -- 
-> 2.23.0
-> 
+thanks,
+-- Shuah
+
