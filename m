@@ -2,117 +2,105 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84AB5C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C280C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 556F42086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:57:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F6AB2086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:02:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gHB7DbQZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HjwYwgi/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730304AbfI3L5U (ORCPT
+        id S1729977AbfI3MCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 07:57:20 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34574 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729686AbfI3L5U (ORCPT
+        Mon, 30 Sep 2019 08:02:37 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33704 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728573AbfI3MCh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 07:57:20 -0400
-Received: by mail-wm1-f67.google.com with SMTP id y135so13967298wmc.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 04:57:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/zv5NPFffUTFWq+5VT+kNlcF7WPDHuJF4ydktGZ/WsY=;
-        b=gHB7DbQZToFeCjqdQb9B/zhfxNXQtVeZx4efkZ9xl4iyC3EefN0QLg4S7JDcSdfwNE
-         73M6UDITA0Cv9adQfTZIcXcE79Y4OeCsROVAVoyJbRv9vEpIDImPA7WxKXs++9aQcFxD
-         NEC3RhtXV2/IDtq8BsCZUazqjoBVOBgzJpqpu38PPIZ4mUFiRfF0BAi9TdalNdFEba/7
-         Dzn/Z9OcxYuowjqPJDOz4aEK44P/xUd4IKbQo1fiVUixN/Ydxnqb2BUJnTDd3qlBFnDX
-         uuBUvpQNZp2w0rm+zQ94UlhJgbn+PgAI7aJtaYj8EwfhFjq5gPoH7c3TEhOnGc3J/gUB
-         hG4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/zv5NPFffUTFWq+5VT+kNlcF7WPDHuJF4ydktGZ/WsY=;
-        b=jssR/8i5PGskzQpBeHVo7bmFx9YvmR8Xvyn8VkkAbsMbIUsow8xYdL0wNl2763pWOR
-         u+jAMvrUOEg27ce2q/Mtc5QcGsoC7EU0vJKugUocFHUPDcyiXMoBe+ASfKA2tVl455Hu
-         M5j7OMEus3aRi5st4XjWyAq6i2+AuAkE+9oOAombl9NeT3IKWdD1zfFHjJ+JsphNSDJr
-         305rk6B2eOXZhDslCCylW+TL1SKSlZwqkhIPCJ+ZB/PbqFgBUuBKcAvbU9W20wZ0u7MI
-         E9LimBdOBOD5laduQt4yLz67d2X4q4OxlGYifPsTwdYbbi6fyk/fRsbL4nDc/WM6oxAb
-         BZ3w==
-X-Gm-Message-State: APjAAAU1bnKibOn8wEf9ophQuGwTEPFmCBLvanB/tMo2hZKa9VAw7Ubg
-        DV+5QycUVqOgDCi5R2utiQLogXPyZ9A1R5EGL023Bw==
-X-Google-Smtp-Source: APXvYqzSjZCzq7vEPClkh//Q7yqVfPQznFE9UwH9Dy4nGFTtlSk7ZP8Mfm+itcx9CqEjryk0wJGf5vg9EJJpSWD3VFU=
-X-Received: by 2002:a7b:cb55:: with SMTP id v21mr17070227wmj.53.1569844638206;
- Mon, 30 Sep 2019 04:57:18 -0700 (PDT)
+        Mon, 30 Sep 2019 08:02:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=vfk8m9QbBK1FdL+EkeiKXOXWonMZIkbTRy0qgB3cHYI=; b=HjwYwgi/EIYOQ8bR9Z9KaYmT8
+        Sa0tldH7sSDElZIycK1FpzfRFINKnUKULso6uFJ6YbH4s/cdUrNeLeB8NVNZ1tsEYEPnFqyDbszRn
+        OIaewYlAAr9v4/EefDBfiD10GfWsFq6xZZSESk5Kva+dvbJsHLkegD69D6hE4YJ8jRPfeDSMMxqTx
+        46CW/xbjODAcJ6ZbS2dfDR5wGTQA1xJcyZWwk9+C4HyzHsSwKQ5pJIduYayXQJhYOxVHQFWLC9scg
+        SAWR2+VssywWFz2l9RKeX4B0PVPBMhEZalpS2bFTWjci+ELJk2xnwcQU0KZqqYlT0C0O9FJpTVqL/
+        BfbUC87Nw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iEuNr-0001tA-8b; Mon, 30 Sep 2019 12:02:31 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 685CE3056B6;
+        Mon, 30 Sep 2019 14:01:41 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3B08D265261AA; Mon, 30 Sep 2019 14:02:29 +0200 (CEST)
+Date:   Mon, 30 Sep 2019 14:02:29 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Andrea Parri <parri.andrea@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Will Deacon <will@kernel.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        jose.marchesi@oracle.com
+Subject: Re: Do we need to correct barriering in circular-buffers.rst?
+Message-ID: <20190930120229.GD4581@hirez.programming.kicks-ass.net>
+References: <28447.1568728295@warthog.procyon.org.uk>
+ <20190917170716.ud457wladfhhjd6h@willie-the-truck>
+ <15228.1568821380@warthog.procyon.org.uk>
+ <5385.1568901546@warthog.procyon.org.uk>
+ <20190923144931.GC2369@hirez.programming.kicks-ass.net>
+ <20190927095107.GA13098@andrea>
+ <20190927124929.GB4643@worktop.programming.kicks-ass.net>
+ <CAKwvOd=pZYiozmGv+DVpzJ1u9_0k4CXb3M1EAcu22DQF+bW0fA@mail.gmail.com>
+ <20190930093352.GM4553@hirez.programming.kicks-ass.net>
+ <20190930115440.GC4581@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20190928101428.GA222453@light.dominikbrodowski.net>
-In-Reply-To: <20190928101428.GA222453@light.dominikbrodowski.net>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Mon, 30 Sep 2019 13:57:06 +0200
-Message-ID: <CAKv+Gu9dqjZHfCHcHprh32eHTVinwPar1zOYopyMVfp=zPqELg@mail.gmail.com>
-Subject: Re: [RFC] random: UEFI RNG input is bootloader randomness
-To:     Dominik Brodowski <linux@dominikbrodowski.net>
-Cc:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Rob Herring <robh@kernel.org>, "Theodore Ts'o" <tytso@mit.edu>,
-        Kees Cook <keescook@chromium.org>,
-        "Lee, Chun-Yi" <joeyli.kernel@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190930115440.GC4581@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 28 Sep 2019 at 12:14, Dominik Brodowski
-<linux@dominikbrodowski.net> wrote:
->
-> Depending on RANDOM_TRUST_BOOTLOADER, bootloader-provided randomness
-> is credited as entropy. As the UEFI seeding entropy pool is seeded by
-> the UEFI firmware/bootloader, add its content as bootloader randomness.
->
-> Note that this UEFI (v2.4 or newer) feature is currently only
-> implemented for EFI stub booting on ARM, and further note that
-> RANDOM_TRUST_BOOTLOADER must only be enabled if there indeed is
-> sufficient trust in the bootloader _and_ its source of randomness.
->
-> Signed-off-by: Dominik Brodowski <linux@dominikbrodowski.net>
-> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Cc: Hsin-Yi Wang <hsinyi@chromium.org>
-> Cc: Stephen Boyd <swboyd@chromium.org>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Theodore Ts'o <tytso@mit.edu>
-> Cc: Lee, Chun-Yi <joeyli.kernel@gmail.com>
->
-> ---
->
-> Untested patch, as efi_random_get_seed() is only hooked up on ARM,
-> and the firmware on my old x86 laptop only has UEFI v2.31 anyway.
->
-> Thanks,
->         Dominik
->
-> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> index 8f1ab04f6743..db0bffce754e 100644
-> --- a/drivers/firmware/efi/efi.c
-> +++ b/drivers/firmware/efi/efi.c
-> @@ -545,7 +545,7 @@ int __init efi_config_parse_tables(void *config_tables, int count, int sz,
->                                               sizeof(*seed) + size);
->                         if (seed != NULL) {
->                                 pr_notice("seeding entropy pool\n");
-> -                               add_device_randomness(seed->bits, seed->size);
-> +                               add_bootloader_randomness(seed->bits, seed->size);
->                                 early_memunmap(seed, sizeof(*seed) + size);
->                         } else {
->                                 pr_err("Could not map UEFI random seed!\n");
+On Mon, Sep 30, 2019 at 01:54:40PM +0200, Peter Zijlstra wrote:
+> On Mon, Sep 30, 2019 at 11:33:52AM +0200, Peter Zijlstra wrote:
+> > Like I said before, something like: "disallowing store hoists over control
+> > flow depending on a volatile load" would be sufficient I think.
+> 
+> We need to add 'control flow depending on an inline-asm' to that. We
+> also very much use that.
 
-Thanks, I like this change. I'll get it queued up in efi/next.
+An example of that would be something like:
+
+bool spin_try_lock(struct spinlock *lock)
+{
+	u32 zero = 0;
+
+	if (atomic_try_cmpxchg_relaxed(&lock->val, &zero, 1)) {
+		smp_acquire__after_ctrl_dep(); /* aka smp_rmb() */
+		return true;
+	}
+
+	return false;
+}
+
+(I think most our actual trylock functions use cmpxchg_acquire(), but the
+above would be a valid implementation -- and it is the simplest
+construct using smp_acquire__after_ctrl_dep() I could come up with in a
+hurry)
