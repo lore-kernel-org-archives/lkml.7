@@ -2,176 +2,108 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09157C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CA7C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D372220842
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:18:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i1C27JYY"
+	by mail.kernel.org (Postfix) with ESMTP id 009AD2086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:18:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731228AbfI3NSV (ORCPT
+        id S1731253AbfI3NSg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 09:18:21 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41990 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbfI3NSU (ORCPT
+        Mon, 30 Sep 2019 09:18:36 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:45193 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726314AbfI3NSg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:18:20 -0400
-Received: by mail-pg1-f195.google.com with SMTP id z12so7384549pgp.9;
-        Mon, 30 Sep 2019 06:18:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IeNb76xF/iiAkmuGaqc/RgfhSXiK60RFNQ5u5Egtzwc=;
-        b=i1C27JYYTT5LFyoUJ7GsRdGiD9QUCYW3q5siKm/kIrZZHgROUsZDl7rzbVuL/39rXT
-         AajNTy1a7GtjOEjhtjzHUoV262m/SOR4EZyS1eAyxAgEVM0B0AeKTUqyB0OCcGs627EQ
-         sh5NDAg7C4i/+gB80/Yiytp6z6CTz+TeUy7PY+KocGZVSJok3zxN29dHHzP6ysjK+qmo
-         ifB0uGq1HdW1HPcUfrcMcj8zuFq7S491ZuzSlLwZuOXez2kc2ydiicfpH5m1KvpmoOcM
-         Uxsyy8ovr+lMCIDUy6nqNVHzgPslsDsbcxRAdSpHTvuw+fMi8UsMyRaEzbkYeDOpYx1C
-         j53Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IeNb76xF/iiAkmuGaqc/RgfhSXiK60RFNQ5u5Egtzwc=;
-        b=I0W02Aeg0OxfaZAvAEtPtUnMbunyOYWYIkyJQ9UdBKcWspn3D0fcEPFZlIoBGaFHbb
-         4fNOV+g0Z21tGZNAV6+eDh+fjqHCf9/aw/4MBnl00FdkzlRlqUgIz/HPyQXy+TSyO8DN
-         xoKh7/hy8thIQxZpN21FgSMgS99Zo16dgtqwH9gDXWgp23sSzOcZBqmMow5YD1jIHMeN
-         +uLDdBSbxG40Fz6NUBFP0Hl1QRqAWv6Rpc4ZK6LT2/HvhUre9Ku9NORQ1GrHhRtRcwdR
-         V6DDaPJl25ht/cLgQ+hMZCImbpTCIQRZEAzw/l9hDz/ARwdgoosdqnOCvmaFsxIgBOWM
-         Qt6g==
-X-Gm-Message-State: APjAAAVP51/6/HQD+R7EF4M4HlDH/zshvv+UU0BgAqseewNvflrNiPrt
-        KFY1z7GUILLy89f2wdjqClk=
-X-Google-Smtp-Source: APXvYqwGkAF+kWpqAj6UpJAWdIO9jQYwc6SIZA+Pk2aEG3EO6zNRI4aw5xunqrGFbM0FEZY0RNCcdg==
-X-Received: by 2002:a63:d20f:: with SMTP id a15mr24216063pgg.130.1569849499941;
-        Mon, 30 Sep 2019 06:18:19 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id i6sm19213778pfq.20.2019.09.30.06.18.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 30 Sep 2019 06:18:19 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 06:18:18 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     wim@linux-watchdog.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH 3/3] watchdog: imx2_wdt: Use 'dev' instead of
- dereferencing it repeatedly
-Message-ID: <20190930131818.GC29750@roeck-us.net>
-References: <1569308828-8320-1-git-send-email-Anson.Huang@nxp.com>
- <1569308828-8320-3-git-send-email-Anson.Huang@nxp.com>
+        Mon, 30 Sep 2019 09:18:36 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-207-hnslXOvPO-C_5kCPTbZeHQ-1; Mon, 30 Sep 2019 14:18:32 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 30 Sep 2019 14:18:32 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 30 Sep 2019 14:18:32 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Denis Efremov' <efremov@linux.com>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Jes Sorensen <jes.sorensen@gmail.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH] staging: rtl8723bs: hal: Fix memcpy calls
+Thread-Topic: [PATCH] staging: rtl8723bs: hal: Fix memcpy calls
+Thread-Index: AQHVd36LU5ikVLKK6EuvH5wLNYQtMKdEMyLw
+Date:   Mon, 30 Sep 2019 13:18:32 +0000
+Message-ID: <37b195b700394e95aa8329afc9f60431@AcuMS.aculab.com>
+References: <20190930110141.29271-1-efremov@linux.com>
+In-Reply-To: <20190930110141.29271-1-efremov@linux.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1569308828-8320-3-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-MC-Unique: hnslXOvPO-C_5kCPTbZeHQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 03:07:08PM +0800, Anson Huang wrote:
-> Add helper variable dev = &pdev->dev to simply the code.
+From: Denis Efremov
+> Sent: 30 September 2019 12:02
+> memcpy() in phy_ConfigBBWithParaFile() and PHY_ConfigRFWithParaFile() is
+> called with "src == NULL && len == 0". This is an undefined behavior.
+
+I'm pretty certain it is well defined (to do nothing).
+
+> Moreover this if pre-condition "pBufLen && (*pBufLen == 0) && !pBuf"
+> is constantly false because it is a nested if in the else brach, i.e.,
+> "if (cond) { ... } else { if (cond) {...} }". This patch alters the
+> if condition to check "pBufLen && pBuf" pointers are not NULL.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
+...
 > ---
->  drivers/watchdog/imx2_wdt.c | 23 ++++++++++++-----------
->  1 file changed, 12 insertions(+), 11 deletions(-)
+> Not tested. I don't have the hardware. The fix is based on my guess.
 > 
-> diff --git a/drivers/watchdog/imx2_wdt.c b/drivers/watchdog/imx2_wdt.c
-> index 034f32c..f8d58bf 100644
-> --- a/drivers/watchdog/imx2_wdt.c
-> +++ b/drivers/watchdog/imx2_wdt.c
-> @@ -246,13 +246,14 @@ static const struct regmap_config imx2_wdt_regmap_config = {
->  
->  static int __init imx2_wdt_probe(struct platform_device *pdev)
->  {
-> +	struct device *dev = &pdev->dev;
->  	struct imx2_wdt_device *wdev;
->  	struct watchdog_device *wdog;
->  	void __iomem *base;
->  	int ret;
->  	u32 val;
->  
-> -	wdev = devm_kzalloc(&pdev->dev, sizeof(*wdev), GFP_KERNEL);
-> +	wdev = devm_kzalloc(dev, sizeof(*wdev), GFP_KERNEL);
->  	if (!wdev)
->  		return -ENOMEM;
->  
-> @@ -260,16 +261,16 @@ static int __init imx2_wdt_probe(struct platform_device *pdev)
->  	if (IS_ERR(base))
->  		return PTR_ERR(base);
->  
-> -	wdev->regmap = devm_regmap_init_mmio_clk(&pdev->dev, NULL, base,
-> +	wdev->regmap = devm_regmap_init_mmio_clk(dev, NULL, base,
->  						 &imx2_wdt_regmap_config);
->  	if (IS_ERR(wdev->regmap)) {
-> -		dev_err(&pdev->dev, "regmap init failed\n");
-> +		dev_err(dev, "regmap init failed\n");
->  		return PTR_ERR(wdev->regmap);
->  	}
->  
-> -	wdev->clk = devm_clk_get(&pdev->dev, NULL);
-> +	wdev->clk = devm_clk_get(dev, NULL);
->  	if (IS_ERR(wdev->clk)) {
-> -		dev_err(&pdev->dev, "can't get Watchdog clock\n");
-> +		dev_err(dev, "can't get Watchdog clock\n");
->  		return PTR_ERR(wdev->clk);
->  	}
->  
-> @@ -279,12 +280,12 @@ static int __init imx2_wdt_probe(struct platform_device *pdev)
->  	wdog->min_timeout	= 1;
->  	wdog->timeout		= IMX2_WDT_DEFAULT_TIME;
->  	wdog->max_hw_heartbeat_ms = IMX2_WDT_MAX_TIME * 1000;
-> -	wdog->parent		= &pdev->dev;
-> +	wdog->parent		= dev;
->  
->  	ret = platform_get_irq(pdev, 0);
->  	if (ret > 0)
-> -		if (!devm_request_irq(&pdev->dev, ret, imx2_wdt_isr, 0,
-> -				      dev_name(&pdev->dev), wdog))
-> +		if (!devm_request_irq(dev, ret, imx2_wdt_isr, 0,
-> +				      dev_name(dev), wdog))
->  			wdog->info = &imx2_wdt_pretimeout_info;
->  
->  	ret = clk_prepare_enable(wdev->clk);
-> @@ -294,13 +295,13 @@ static int __init imx2_wdt_probe(struct platform_device *pdev)
->  	regmap_read(wdev->regmap, IMX2_WDT_WRSR, &val);
->  	wdog->bootstatus = val & IMX2_WDT_WRSR_TOUT ? WDIOF_CARDRESET : 0;
->  
-> -	wdev->ext_reset = of_property_read_bool(pdev->dev.of_node,
-> +	wdev->ext_reset = of_property_read_bool(dev->of_node,
->  						"fsl,ext-reset-output");
->  	platform_set_drvdata(pdev, wdog);
->  	watchdog_set_drvdata(wdog, wdev);
->  	watchdog_set_nowayout(wdog, nowayout);
->  	watchdog_set_restart_priority(wdog, 128);
-> -	watchdog_init_timeout(wdog, timeout, &pdev->dev);
-> +	watchdog_init_timeout(wdog, timeout, dev);
->  
->  	if (imx2_wdt_is_running(wdev)) {
->  		imx2_wdt_set_timeout(wdog, wdog->timeout);
-> @@ -318,7 +319,7 @@ static int __init imx2_wdt_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto disable_clk;
->  
-> -	dev_info(&pdev->dev, "timeout %d sec (nowayout=%d)\n",
-> +	dev_info(dev, "timeout %d sec (nowayout=%d)\n",
->  		 wdog->timeout, nowayout);
->  
->  	return 0;
-> -- 
-> 2.7.4
+>  drivers/staging/rtl8723bs/hal/hal_com_phycfg.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
+> diff --git a/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c b/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c
+> index 6539bee9b5ba..0902dc3c1825 100644
+> --- a/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c
+> +++ b/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c
+> @@ -2320,7 +2320,7 @@ int phy_ConfigBBWithParaFile(
+>  			}
+>  		}
+>  	} else {
+> -		if (pBufLen && (*pBufLen == 0) && !pBuf) {
+> +		if (pBufLen && pBuf) {
+>  			memcpy(pHalData->para_file_buf, pBuf, *pBufLen);
+
+The existing code is clearly garbage.
+It only ever does memcpy(tgt, NULL, 0).
+
+Under the assumption that the code has been tested the copy clearly isn't needed at all
+and can be deleted completely!
+
+OTOH if the code hasn't been tested maybe the entire source file should be removed :-)
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
