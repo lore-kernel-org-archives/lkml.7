@@ -2,179 +2,139 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00665C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 638EEC35280
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C41352075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3703520842
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:49:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hf25TWWS"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="c9rl2ouY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730992AbfI3Mtc (ORCPT
+        id S1731006AbfI3Mtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 08:49:32 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36861 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728214AbfI3Mtb (ORCPT
+        Mon, 30 Sep 2019 08:49:51 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:45366 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728214AbfI3Mtv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 08:49:31 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y22so5569689pfr.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 05:49:31 -0700 (PDT)
+        Mon, 30 Sep 2019 08:49:51 -0400
+Received: by mail-qt1-f196.google.com with SMTP id c21so16772972qtj.12
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 05:49:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xP8KqcbssPu7x+4Rrj4+JuoXYTZ+7+3z0iC4pOtKBNM=;
-        b=hf25TWWS+jQlHG4+MqTuA6SsveImD6DgCTp+W0K/5qXpHGou/SArlj6ZU51VmPUMXI
-         ndO9xL+gGduC6zNqg4mxBJSgoHHG8smZhqcawqt0kiS2VY/mh0utdNkvEEhGh6SLjetP
-         Vz8BqEnjYOa0kZoV+v6Jt5IWPSbZ1CJtupIalY6RzQQqtmQBWkgAnjnv+HdVP6wnULkG
-         cRy+b4bzS1hWjzrNVDRR6HUoXcoxwxu/tabd0aX8Ur1XVb1kDcajuUAQePuIgwEEw1MN
-         A7+LKuYxWqlhPjq41BinJTBHWN9GWlE6yq0HPPdZZ6GN8k96a4OsmgWlvAUPSylT+CHp
-         1BXQ==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=6K4t2QaanAjiyfaxIbACT2mjoEJYSRRvAaJqq+DnP1g=;
+        b=c9rl2ouYw3vJgLERGSrEISkC9A+UUnX6Ofv3pCbqI9nmR7zvAB6flw3hQoCTlo0Wko
+         aKs/+s38bsVMP0aLoRI7CbKkcVTeMwsX4QzE891hXgojixue3ygkbwDyoQLqq7fwTGqm
+         8jPh+RbyYmadBcSUnDauljg9YrRjq0IK2rcXcGlrkIAJAkIl2fsUVuUmYiqqFmj5NWoA
+         ImIzVpmL3Op/kpZoDtVBUh//19yHDjh/WdQE74s6QUU/aytZXLoIFKTd2GsVZj9TRNF+
+         oCUPrMBDp12tlNOFgIVkEprEN4phihsulPK7G3eQVwEQFAdXIzRTLOTmG+WFi9STLtpk
+         6ICg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xP8KqcbssPu7x+4Rrj4+JuoXYTZ+7+3z0iC4pOtKBNM=;
-        b=XwHK6G05vhSI6JWA/DrPrWfAcNly+G2kTWfw+qr58h3dCmMiAao/erqNaRaq1zfM5B
-         ZWJJC3/tZyZUZiUFeQ2xhYQ0elrs816Caigj1gqHLV4OComHu65m9P+yl1NcV2atObOJ
-         OoLegsaPz+0AivHiTOMcVPirZwWvSMT8YSyEJESBCo/Cr+M4LNUqWo3mVCr2DzXErwLJ
-         zjnBerk+Y82Dm16MU/dqe2pIxt17uYmPky/2O3d6wmNR9aKcFLllP8HMxMkXEkly1A1Y
-         2ftiO4a+jGK6RMyNr1t4E9n0M/oniw4YnIR5T/OP17EKW7DpkvtoepUKBymMzW8KP0U0
-         kQRg==
-X-Gm-Message-State: APjAAAXI2tGfBYCeUX1+odEPVaV3zSUKFyGh/u8fNK6VPaQxuMFoiyNQ
-        UVxDETAS1A2fIsO1Ck6gmhM=
-X-Google-Smtp-Source: APXvYqzfrGfwoyf3ej5K4Rs5EFjYkcJFiSG5H5fKnkHpbHZzgUsvDECUYQDFJwl4qLPWQHql1uzRcw==
-X-Received: by 2002:a65:5544:: with SMTP id t4mr24711650pgr.119.1569847770610;
-        Mon, 30 Sep 2019 05:49:30 -0700 (PDT)
-Received: from masabert ([210.161.134.36])
-        by smtp.gmail.com with ESMTPSA id i1sm14151024pfg.2.2019.09.30.05.49.29
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=6K4t2QaanAjiyfaxIbACT2mjoEJYSRRvAaJqq+DnP1g=;
+        b=Bliua51JDOIwSs44iDGH9Zb0YzwHetlVJu5PaCp4BOC8f3hMZDbN2G53aDRR/lKppv
+         6GncNMXI9l+nnkHBUXxy5G9lZST3jtMIEdqnBfZAZlBT5GOrT/tX5q29mE3rTi5l+4hw
+         pQdCRY9fPIY0neltmO58eIE8Y0RGf4DUHRwjPXRp1ZWKo9lysBrxLfRleK1UEqtzYCfl
+         IkXam3cdz4H458CoBi/M/moAbefzyDd3xSJlzO072Y0CmXiAczhur4FPLkoeVdKUup24
+         VJ1dbZVyz5UBHWh2feTBNYoM1KPhLEyRJ6BsTWBm+zCPx/rHVRJo70hG7RkeJ8zHO9wG
+         K9vw==
+X-Gm-Message-State: APjAAAUETwJr6ps7z9DB+jA+m7rSutSSBVhTmOTQHjTm301E88EXYSMd
+        gm9l+AWm69p+fA24a15Bf9Ebvg==
+X-Google-Smtp-Source: APXvYqwe6tj3QoB3PHebpJKdfxVIK3o6VVGtOXmL0DJDcuzZS+0wTwEaSEnijNE5GeAZB0r39jqS1g==
+X-Received: by 2002:ac8:110a:: with SMTP id c10mr1071249qtj.259.1569847790073;
+        Mon, 30 Sep 2019 05:49:50 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id a134sm5923647qkc.95.2019.09.30.05.49.48
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 30 Sep 2019 05:49:29 -0700 (PDT)
-Received: by masabert (Postfix, from userid 1000)
-        id 8940720119E; Mon, 30 Sep 2019 21:49:27 +0900 (JST)
-From:   Masanari Iida <standby24x7@gmail.com>
-To:     rostedt@goodmis.org, rdunlap@infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Masanari Iida <standby24x7@gmail.com>
-Subject: [PATCH] ktest: Fix some typos in sample.conf
-Date:   Mon, 30 Sep 2019 21:49:25 +0900
-Message-Id: <20190930124925.20250-1-standby24x7@gmail.com>
-X-Mailer: git-send-email 2.23.0.256.g4c86140027f4
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 30 Sep 2019 05:49:49 -0700 (PDT)
+Message-ID: <1569847787.5576.244.camel@lca.pw>
+Subject: Re: [PATCH v2 2/3] mm, page_owner: decouple freeing stack trace
+ from debug_pagealloc
+From:   Qian Cai <cai@lca.pw>
+To:     Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kasan-dev@googlegroups.com,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Walter Wu <walter-zh.wu@mediatek.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+Date:   Mon, 30 Sep 2019 08:49:47 -0400
+In-Reply-To: <20190930122916.14969-3-vbabka@suse.cz>
+References: <20190930122916.14969-1-vbabka@suse.cz>
+         <20190930122916.14969-3-vbabka@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes some spelling typo in sample.conf
+On Mon, 2019-09-30 at 14:29 +0200, Vlastimil Babka wrote:
+> The commit 8974558f49a6 ("mm, page_owner, debug_pagealloc: save and dump
+> freeing stack trace") enhanced page_owner to also store freeing stack trace,
+> when debug_pagealloc is also enabled. KASAN would also like to do this [1] to
+> improve error reports to debug e.g. UAF issues. Kirill has suggested that the
+> freeing stack trace saving should be also possible to be enabled separately.
+> 
+> This patch therefore introduces a new kernel parameter page_owner_free to
+> enable the functionality in addition to the existing page_owner parameter.
+> The free stack saving is thus enabled in these cases:
+> 1) booting with page_owner=on and debug_pagealloc=on
+> 2) booting a KASAN kernel with page_owner=on
+> 3) booting with page_owner=on and page_owner_free=on
+> 
+> To minimize runtime CPU and memory overhead when not boot-time enabled, the
+> patch introduces a new static key and struct page_ext_operations.
+> 
+> [1] https://bugzilla.kernel.org/show_bug.cgi?id=203967
+> 
+> Suggested-by: Dmitry Vyukov <dvyukov@google.com>
+> Suggested-by: Walter Wu <walter-zh.wu@mediatek.com>
+> Suggested-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+> Suggested-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> ---
+>  .../admin-guide/kernel-parameters.txt         |  8 ++
+>  Documentation/dev-tools/kasan.rst             |  3 +
+>  include/linux/page_owner.h                    |  1 +
+>  mm/page_ext.c                                 |  1 +
+>  mm/page_owner.c                               | 90 +++++++++++++------
+>  5 files changed, 78 insertions(+), 25 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 944e03e29f65..14dcb66e3457 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -3237,6 +3237,14 @@
+>  			we can turn it on.
+>  			on: enable the feature
+>  
+> +	page_owner_free=
+> +			[KNL] When enabled together with page_owner, store also
+> +			the stack of who frees a page, for error page dump
+> +			purposes. This is also implicitly enabled by
+> +			debug_pagealloc=on or KASAN, so only page_owner=on is
+> +			sufficient in those cases.
+> +			on: enable the feature
+> +
 
-Signed-off-by: Masanari Iida <standby24x7@gmail.com>
----
- tools/testing/ktest/sample.conf | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/tools/testing/ktest/sample.conf b/tools/testing/ktest/sample.conf
-index c3bc933d437b..10af34819642 100644
---- a/tools/testing/ktest/sample.conf
-+++ b/tools/testing/ktest/sample.conf
-@@ -10,7 +10,7 @@
- #
- 
- # Options set in the beginning of the file are considered to be
--# default options. These options can be overriden by test specific
-+# default options. These options can be overridden by test specific
- # options, with the following exceptions:
- #
- #  LOG_FILE
-@@ -204,7 +204,7 @@
- #
- # This config file can also contain "config variables".
- # These are assigned with ":=" instead of the ktest option
--# assigment "=".
-+# assignment "=".
- #
- # The difference between ktest options and config variables
- # is that config variables can be used multiple times,
-@@ -263,7 +263,7 @@
- #### Using options in other options ####
- #
- # Options that are defined in the config file may also be used
--# by other options. All options are evaulated at time of
-+# by other options. All options are evaluated at time of
- # use (except that config variables are evaluated at config
- # processing time).
- #
-@@ -707,7 +707,7 @@
- 
- # Line to define a successful boot up in console output.
- # This is what the line contains, not the entire line. If you need
--# the entire line to match, then use regural expression syntax like:
-+# the entire line to match, then use regular expression syntax like:
- #  (do not add any quotes around it)
- #
- #  SUCCESS_LINE = ^MyBox Login:$
-@@ -839,7 +839,7 @@
- # (ignored if POWEROFF_ON_SUCCESS is set)
- #REBOOT_ON_SUCCESS = 1
- 
--# In case there are isses with rebooting, you can specify this
-+# In case there are issues with rebooting, you can specify this
- # to always powercycle after this amount of time after calling
- # reboot.
- # Note, POWERCYCLE_AFTER_REBOOT = 0 does NOT disable it. It just
-@@ -848,7 +848,7 @@
- # (default undefined)
- #POWERCYCLE_AFTER_REBOOT = 5
- 
--# In case there's isses with halting, you can specify this
-+# In case there's issues with halting, you can specify this
- # to always poweroff after this amount of time after calling
- # halt.
- # Note, POWEROFF_AFTER_HALT = 0 does NOT disable it. It just
-@@ -972,7 +972,7 @@
- #
- #  PATCHCHECK_START is required and is the first patch to
- #   test (the SHA1 of the commit). You may also specify anything
--#   that git checkout allows (branch name, tage, HEAD~3).
-+#   that git checkout allows (branch name, tag, HEAD~3).
- #
- #  PATCHCHECK_END is the last patch to check (default HEAD)
- #
-@@ -994,7 +994,7 @@
- #     IGNORE_WARNINGS is set for the given commit's sha1
- #
- #   IGNORE_WARNINGS can be used to disable the failure of patchcheck
--#     on a particuler commit (SHA1). You can add more than one commit
-+#     on a particular commit (SHA1). You can add more than one commit
- #     by adding a list of SHA1s that are space delimited.
- #
- #   If BUILD_NOCLEAN is set, then make mrproper will not be run on
-@@ -1093,7 +1093,7 @@
- #   whatever reason. (Can't reboot, want to inspect each iteration)
- #   Doing a BISECT_MANUAL will have the test wait for you to
- #   tell it if the test passed or failed after each iteration.
--#   This is basicall the same as running git bisect yourself
-+#   This is basically the same as running git bisect yourself
- #   but ktest will rebuild and install the kernel for you.
- #
- # BISECT_CHECK = 1 (optional, default 0)
-@@ -1239,7 +1239,7 @@
- #
- # CONFIG_BISECT_EXEC (optional)
- #  The config bisect is a separate program that comes with ktest.pl.
--#  By befault, it will look for:
-+#  By default, it will look for:
- #    `pwd`/config-bisect.pl # the location ktest.pl was executed from.
- #  If it does not find it there, it will look for:
- #    `dirname <ktest.pl>`/config-bisect.pl # The directory that holds ktest.pl
--- 
-2.23.0.256.g4c86140027f4
-
+If users are willing to set page_owner=on, what prevent them from enabling KASAN
+as well? That way, we don't need this additional parameter. I read that KASAN
+supposes to be semi-production use ready, so the overhead is relatively low.
+There is even a choice to have KASAN_SW_TAGS on arm64 to work better with small
+devices.
