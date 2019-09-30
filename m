@@ -2,239 +2,265 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06198C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8472AC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8FC92075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:24:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m+b6pmil"
+	by mail.kernel.org (Postfix) with ESMTP id 4C5742075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:25:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731262AbfI3NY5 (ORCPT
+        id S1731321AbfI3NZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 09:24:57 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:40799 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728214AbfI3NY4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:24:56 -0400
-Received: by mail-ed1-f65.google.com with SMTP id v38so8606780edm.7
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 06:24:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=NaqYC49x+t+zdQq2+wgOaHU0MBIoqBpemx5qgvwCU1A=;
-        b=m+b6pmilw/JUnE9hHVh6XsOcufUTXWOJ6DpLWh8jHz9eBwSwI/PO4w97kf9GFMmj2U
-         fDC88cMGcQs4/lAuZYco8frISem2cJWrxrJOQ+moJi0d0Nmvm3ki/tjJdv/r5kQnEvYM
-         2yK6VxYiD1lcHItN3Ci8P0hTe7ouMHyyMOzh4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=NaqYC49x+t+zdQq2+wgOaHU0MBIoqBpemx5qgvwCU1A=;
-        b=Kw+hWmESfMWMb31cElJznIdkuJX6OUA+Hw1l6nxpFo+DHQF/fbei0qMmlnp4vqBJcG
-         b4DBxOZSMMm1VHBSAMQHOd1hFNsoH/Tu7IiObxE2+gaDUr1Sofo2B6xpeNJ5oI0MSOSW
-         IJ9pyv+7Pk7AYNnbQDYHHgkF/TAWMbSVvhr7u7JcFqixnrx7EtZnMGoSi/LwAhINHYZi
-         OEWmqRUC2sSiuRVYj36od7I5ACChUDen39+JWaBc/2twgGoDfVD4sr9a2IDR9Lu4ue6J
-         ZQ6nzeQTrZtLD+HKuDyaC2PxxAurjkeme1dGp7ta96tUoXZ2lAa5cugWofV+sOlIzhKh
-         1duw==
-X-Gm-Message-State: APjAAAWMZLecZAufABlEqux61bbBE2sTYHgz0n3YyLsIJ3/zelVhIlzM
-        OwK9tiz3pEoMNnQm66521In9Ww==
-X-Google-Smtp-Source: APXvYqybDB+LFMnKWiJPwawWUTyJ2I0SRJxh0oCoB6UWReD6dpU5gFinF+Hx/Ow9aPPain/r8TeViA==
-X-Received: by 2002:aa7:d4c5:: with SMTP id t5mr19547286edr.154.1569849893760;
-        Mon, 30 Sep 2019 06:24:53 -0700 (PDT)
-Received: from google.com ([2a00:79e0:1b:202:7df4:abcf:6db2:95b5])
-        by smtp.gmail.com with ESMTPSA id e13sm1428426eje.52.2019.09.30.06.24.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 06:24:53 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Mon, 30 Sep 2019 15:24:51 +0200
-To:     Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        Anton Protopopov <a.s.protopopov@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Florent Revest <revest@chromium.org>
-Subject: Re: [PATCH] tools: libbpf: Add bpf_object__open_buffer_xattr
-Message-ID: <20190930132451.GA27081@google.com>
-References: <20190927130834.18829-1-kpsingh@chromium.org>
- <CAEf4Bzb_8AJS=HLUt9QpdRrt4AzW1ME9tFyL-QTqyu=7fC-dGA@mail.gmail.com>
- <87h84uxno9.fsf@toke.dk>
+        Mon, 30 Sep 2019 09:25:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52818 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728214AbfI3NZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 09:25:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E1014AC81;
+        Mon, 30 Sep 2019 13:24:58 +0000 (UTC)
+Message-ID: <ead91241ad2bba8db120d0a5e583184b5cfb22a1.camel@suse.de>
+Subject: Re: [PATCH] HID: core: add usage_page_preceding flag for
+ hid_concatenate_usage_page()
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Candle Sun <candlesea@gmail.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, chunyan.zhang@unisoc.com,
+        Candle Sun <candle.sun@unisoc.com>,
+        Nianfu Bai <nianfu.bai@unisoc.com>
+Date:   Mon, 30 Sep 2019 15:24:57 +0200
+In-Reply-To: <CAO-hwJLrQTp7qeMpQvF7429a0qisAe-=zLFRtY79ajhLtusdRg@mail.gmail.com>
+References: <1569830949-10771-1-git-send-email-candlesea@gmail.com>
+         <CAO-hwJLrQTp7qeMpQvF7429a0qisAe-=zLFRtY79ajhLtusdRg@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-x3TYOl9kQALXdVOQfPp6"
+User-Agent: Evolution 3.32.4 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87h84uxno9.fsf@toke.dk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the feeback!
 
-I will be happy to update this patch once there is consensus about
-the design of the API for future additions.
+--=-x3TYOl9kQALXdVOQfPp6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 30-Sep 09:12, Toke Høiland-Jørgensen wrote:
-> Andrii Nakryiko <andrii.nakryiko@gmail.com> writes:
-> 
-> > On Fri, Sep 27, 2019 at 6:11 AM KP Singh <kpsingh@chromium.org> wrote:
-> >>
-> >> From: KP Singh <kpsingh@google.com>
-> >>
-> >> Introduce struct bpf_object_open_buffer_attr and an API function,
-> >> bpf_object__open_xattr, as the existing API, bpf_object__open_buffer,
-> >> doesn't provide a way to specify neither the "needs_kver" nor
-> >> the "flags" parameter to the internal call to the
-> >> __bpf_object__open which makes it inconvenient for loading BPF
-> >> objects that do not require a kernel version from a buffer.
-> >>
-> >> The flags attribute in the bpf_object_open_buffer_attr is set
-> >> to MAPS_RELAX_COMPAT when used in bpf_object__open_buffer to
-> >> maintain backward compatibility as this was added to load objects
-> >> with non-compat map definitions in:
-> >>
-> >> commit c034a177d3c8 ("bpf: bpftool, add flag to allow non-compat map
-> >>                       definitions")
-> >>
-> >> and bpf_object__open_buffer was called with this flag enabled (as a
-> >> boolean true value).
-> >>
-> >> The existing "bpf_object__open_xattr" cannot be modified to
-> >> maintain API compatibility.
-> >>
-> >> Reported-by: Anton Protopopov <a.s.protopopov@gmail.com>
-> >> Signed-off-by: KP Singh <kpsingh@google.com>
-> >> ---
-> >>  tools/lib/bpf/libbpf.c   | 39 ++++++++++++++++++++++++++++-----------
-> >>  tools/lib/bpf/libbpf.h   | 10 ++++++++++
-> >>  tools/lib/bpf/libbpf.map |  5 +++++
-> >>  3 files changed, 43 insertions(+), 11 deletions(-)
-> >>
-> >> This patch is assimilates the feedback from:
-> >>
-> >>   https://lore.kernel.org/bpf/20190815000330.12044-1-a.s.protopopov@gmail.com/
-> >>
-> >> I have added a "Reported-by:" tag, but please feel free to update to
-> >> "Co-developed-by" if it's more appropriate from an attribution perspective.
-> >>
-> >> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> >> index 2b57d7ea7836..1f1f2e92832b 100644
-> >> --- a/tools/lib/bpf/libbpf.c
-> >> +++ b/tools/lib/bpf/libbpf.c
-> >> @@ -2752,25 +2752,42 @@ struct bpf_object *bpf_object__open(const char *path)
-> >>         return bpf_object__open_xattr(&attr);
-> >>  }
-> >>
-> >> -struct bpf_object *bpf_object__open_buffer(void *obj_buf,
-> >> -                                          size_t obj_buf_sz,
-> >> -                                          const char *name)
-> >> +struct bpf_object *
-> >> +bpf_object__open_buffer_xattr(struct bpf_object_open_buffer_attr *attr)
-> >
-> > I have few concerns w.r.t. adding API in this form and I'm going to
-> > use this specific case to discuss more general problem of API design,
-> > ABI compatibility, and extending APIs with extra optional arguments.
-> >
-> > 1. In general, I think it would be good for libbpf API usability to
-> > use the following pattern consistently (moving forward):
-> >
-> > T1 some_api_function(T2 mandatory_arg1, ..., TN mandatory_arg, struct
-> > something_opts *opts)
-> >
-> > So all the mandatory arguments that have to be provides are specified
-> > explicitly as function arguments. That makes it very clear what API
-> > expects to get always.
-> > opts (we use both opts and attrs, but opts seems better because its
-> > optional options :), on the other hand, is stuff that might be
-> > omitted, so if user doesn't care about tuning behavior of API and
-> > wants all-defaults behavior, then providing NULL here should just
-> > work.
-> >
-> > So in this case for bpf_object__open_buffer_xattr(), it could look like this:
-> >
-> > struct bpf_object* bpf_object__open_buffer_opts(void *buf, size_t sz,
-> > struct bpf_object_open_opts* opts);
-> 
-> I like this idea! Sensible defaults that can be selected by just passing
-> NULL as opts is a laudable goal.
-> 
-> > 2. Now, we need to do something with adding new options without
-> > breaking ABIs. With all the existing extra attributes, when we need to
-> > add new field to that struct, that can break old code that's
-> > dynamically linked to newer versions of libbpf, because their
-> > attr/opts struct is too short for new code, so that could cause
-> > segment violation or can make libbpf read garbage for those newly
-> > added fields. There are basically three ways we can go about this:
-> >
-> > a. either provide the size of opts struct as an extra argument to each
-> > API that uses options, so:
-> > struct bpf_object* bpf_object__open_buffer_opts(void *buf, size_t sz,
-> > struct bpf_object_open_opts* opts, size_t opts_sz);
-> >
-> > b. make it mandatory that every option struct has to have as a first
-> > field its size, so:
-> >
-> > struct bpf_object_open_opts {
-> >         size_t sz;
-> >         /* now we can keep adding attrs */
-> > };
-> >
-> > Now, when options are provided, we'll read first sizeof(size_t) bytes,
-> > validate it for sanity and then we'll know which fields are there or
-> > not.
-> >
-> > Both options have downside of user needing to do extra initialization,
-> > but it's not too bad in either case. Especially in case b), if user
-> > doesn't care about extra options, then no extra steps are necessary.
-> > In case a, we can pass NULL, 0 at the end, so also not a big deal.
-> >
-> > c. Alternatively, we can do symbol versioning similar how xsk.c
-> > started doing it, and handle those options struct size differences
-> > transparently. But that's a lot of extra boilerplate code in libbpf
-> > and I'd like to avoid that, if possible.
-> 
-> My hunch is that we're kidding ourselves if we think we can avoid the
-> symbol versioning. And besides, checking struct sizes needs boilerplate
-> code as well, boilerplate that will fail at runtime instead of compile
-> time if it's done wrong.
-> 
-> So IMO we're better off just doing symbol version right from the
-> beginning.
+On Mon, 2019-09-30 at 11:36 +0200, Benjamin Tissoires wrote:
+> Hi,
+>=20
+> [also addingg Nicolas, the author of 58e75155009c]
 
-I see there is already a patch for introducing symbol versioning in
-libbpf:
+Thanks!
 
-  https://lore.kernel.org/bpf/20190928231916.3054271-1-yhs@fb.com/
+>=20
+> On Mon, Sep 30, 2019 at 10:10 AM Candle Sun <candlesea@gmail.com> wrote:
+> > From: Candle Sun <candle.sun@unisoc.com>
+> >=20
+> > Upstream commit 58e75155009c ("HID: core: move Usage Page concatenation
+> > to Main item") adds support for Usage Page item following Usage items
+> > (such as keyboards manufactured by Primax).
+> >=20
+> > Usage Page concatenation in Main item works well for following report
+> > descriptor patterns:
+> >=20
+> >     USAGE_PAGE (Keyboard)                   05 07
+> >     USAGE_MINIMUM (Keyboard LeftControl)    19 E0
+> >     USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
+> >     LOGICAL_MINIMUM (0)                     15 00
+> >     LOGICAL_MAXIMUM (1)                     25 01
+> >     REPORT_SIZE (1)                         75 01
+> >     REPORT_COUNT (8)                        95 08
+> >     INPUT (Data,Var,Abs)                    81 02
+> >=20
+> > -------------
+> >=20
+> >     USAGE_MINIMUM (Keyboard LeftControl)    19 E0
+> >     USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
+> >     LOGICAL_MINIMUM (0)                     15 00
+> >     LOGICAL_MAXIMUM (1)                     25 01
+> >     REPORT_SIZE (1)                         75 01
+> >     REPORT_COUNT (8)                        95 08
+> >     USAGE_PAGE (Keyboard)                   05 07
+> >     INPUT (Data,Var,Abs)                    81 02
+> >=20
+> > But it makes the parser act wrong for the following report
+> > descriptor pattern(such as some Gamepads):
+> >=20
+> >     USAGE_PAGE (Button)                     05 09
+> >     USAGE (Button 1)                        09 01
+> >     USAGE (Button 2)                        09 02
+> >     USAGE (Button 4)                        09 04
+> >     USAGE (Button 5)                        09 05
+> >     USAGE (Button 7)                        09 07
+> >     USAGE (Button 8)                        09 08
+> >     USAGE (Button 14)                       09 0E
+> >     USAGE (Button 15)                       09 0F
+> >     USAGE (Button 13)                       09 0D
+> >     USAGE_PAGE (Consumer Devices)           05 0C
+> >     USAGE (Back)                            0a 24 02
+> >     USAGE (HomePage)                        0a 23 02
+> >     LOGICAL_MINIMUM (0)                     15 00
+> >     LOGICAL_MAXIMUM (1)                     25 01
+> >     REPORT_SIZE (1)                         75 01
+> >     REPORT_COUNT (11)                       95 0B
+> >     INPUT (Data,Var,Abs)                    81 02
+> >=20
+> > With Usage Page concatenation in Main item, parser recognizes all the
+> > 11 Usages as consumer keys, it is not the HID device's real intention.
+> >=20
+> > This patch adds usage_page_preceding flag to detect the third pattern.
+> > Usage Page concatenation is done in both Local and Main parsing.
+> > If usage_page_preceding equals 3(the third pattern encountered),
+> > hid_concatenate_usage_page() is jumped.
+>=20
+> For anything core related (and especially the parsing), I am trying to
+> enforce having regression tests.
+> See https://gitlab.freedesktop.org/libevdev/hid-tools/merge_requests/37
+> for the one related to 58e75155009c.
+>=20
+> So I would like to have a similar-ish MR adding the matching tests so
+> I know we won't break this in the future.
+>=20
+> Few other comments in the code:
+>=20
+> > Signed-off-by: Candle Sun <candle.sun@unisoc.com>
+> > Signed-off-by: Nianfu Bai <nianfu.bai@unisoc.com>
+> > ---
+> >  drivers/hid/hid-core.c | 21 +++++++++++++++++++--
+> >  include/linux/hid.h    |  1 +
+> >  2 files changed, 20 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+> > index 3eaee2c..043a232 100644
+> > --- a/drivers/hid/hid-core.c
+> > +++ b/drivers/hid/hid-core.c
+> > @@ -221,7 +221,15 @@ static int hid_add_usage(struct hid_parser *parser=
+,
+> > unsigned usage, u8 size)
+> >                 hid_err(parser->device, "usage index exceeded\n");
+> >                 return -1;
+> >         }
+> > -       parser->local.usage[parser->local.usage_index] =3D usage;
+> > +       if (!parser->local.usage_index && parser->global.usage_page)
+>=20
+> parser->global.usage_page is never reset, so unless I am misreading,
+> it will always be set to a value except for the very first elements.
+> I am just raising this in case you rely on global.usage_page being
+> null in your algorithm.
+>=20
+> > +               parser->local.usage_page_preceding =3D 1;
+> > +       if (parser->local.usage_page_preceding =3D=3D 2)
+> > +               parser->local.usage_page_preceding =3D 3;
+>=20
+> Can't we use an enum at least for those 1, 2, 3 values?
+> Unless you are counting the previous items, in which we should rename
+> the field .usage_page_preceding with something more explicit IMO.
+>=20
+>=20
+> > +       if (size <=3D 2 && parser->global.usage_page)
+> > +               parser->local.usage[parser->local.usage_index] =3D
+> > +                       (usage & 0xffff) + (parser->global.usage_page <=
+<
+> > 16);
+>=20
+> we could use a function as this assignment is also reused in
+> hid_concatenate_usage_page()
+>=20
+> > +       else
+> > +               parser->local.usage[parser->local.usage_index] =3D usag=
+e;
+> >         parser->local.usage_size[parser->local.usage_index] =3D size;
+> >         parser->local.collection_index[parser->local.usage_index] =3D
+> >                 parser->collection_stack_ptr ?
+> > @@ -366,6 +374,8 @@ static int hid_parser_global(struct hid_parser *par=
+ser,
+> > struct hid_item *item)
+> >=20
+> >         case HID_GLOBAL_ITEM_TAG_USAGE_PAGE:
+> >                 parser->global.usage_page =3D item_udata(item);
+> > +               if (parser->local.usage_page_preceding =3D=3D 1)
+> > +                       parser->local.usage_page_preceding =3D 2;
+> >                 return 0;
+> >=20
+> >         case HID_GLOBAL_ITEM_TAG_LOGICAL_MINIMUM:
+> > @@ -547,9 +557,16 @@ static void hid_concatenate_usage_page(struct
+> > hid_parser *parser)
+> >  {
+> >         int i;
+> >=20
+> > +       if (parser->local.usage_page_preceding =3D=3D 3) {
+> > +               dbg_hid("Using preceding usage page for final usage\n")=
+;
+> > +               return;
+> > +       }
+> > +
+> >         for (i =3D 0; i < parser->local.usage_index; i++)
+> >                 if (parser->local.usage_size[i] <=3D 2)
+> > -                       parser->local.usage[i] +=3D parser->global.usag=
+e_page
+> > << 16;
+> > +                       parser->local.usage[i] =3D
+> > +                               (parser->global.usage_page << 16)
+> > +                               + (parser->local.usage[i] & 0xffff);
+>=20
+> I find the whole logic really hard to follow. I'm not saying you are
+> wrong, but if it's hard to get the concepts behind the various states
+> and this will make it really prone to future errors.
+>=20
+> I wonder if we should not:
+> - store the current usage page in the current local item as they come in
+> - then in hid_concatenate_usage_page() iterate over the usages in
+> reverse order. We should be able to detect if the last usage page was
+> given for the whole previous range (i.e. not assigned to any local
+> usage) or if it has already been given to a local usage, meaning we
+> should just keep things as it is.
 
-- KP
+I agree this would be simpler to understand. All this would also fix:
+https://lkml.org/lkml/2019/6/14/468
 
-> 
-> > 3. Now, the last minor complain is about flags field. It's super
-> > generic. Why not have a set of boolean fields in a struct, in this
-> > case to allow to specify strict/compat modes. Given we solve struct
-> > extensibility issue, adding new bool fields is not an issue at all, so
-> > the benefit of flags field are gone. The downside of flags field is
-> > that it's very opaque integer, you have to go and read sources to
-> > understand all the intended use cases and possible flags, which is
-> > certainly not a great user experience.
-> 
-> This I agree with :)
-> 
-> -Toke
-> 
+I suggest we agree on a rule of thumb and add it as a code comment. My take=
+ on
+it would be:
+
+"Usage pages are always concatenated upon parsing a local usage. If a usage
+page is defined after the local usages ennumeration, we concatenate this us=
+age
+page with all the local usages.
+
+This excludes the case were a usage page is set in between the local usages
+and then another usage page is set just before the main item. That said I d=
+oubt
+we'll ever see that one, as it makes no sense. FWIW we could still detect i=
+t.
+
+Just my two cents,
+regards,
+Nicolas
+
+
+--=-x3TYOl9kQALXdVOQfPp6
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2SAikACgkQlfZmHno8
+x/7joAf/Sv7mW7YXcc4bnFvFMyotC625VYMI8OTger5MkbmN7HHOPSIQP1Dw7fsi
+WF5VkW7zI4axGy9AKYLihpn0pjAuMxJYtC4mPm5YUhQaiN2BtD+CdOKD7+spz89Q
+8/Tcb8SBXoevGa+Tgk40Q7spvLq57/yNycBgF02vSDpF1G0W7cv2wj078JZDgnoH
+sZWQ+ounxaMQQNoPgiq/2cuDSq8+b02QXX7H2Geh98zwh2DnVQTV03VMm1MI64/p
+vILE99vid6pABXcHz/UpiTBhmC2aL77sdsUBG9t1M1lcpyyarAHpK2r1EanehK4M
+d9kdrBYsyu4RA6Wq5vVIf2x3hN9OHg==
+=NZuG
+-----END PGP SIGNATURE-----
+
+--=-x3TYOl9kQALXdVOQfPp6--
+
