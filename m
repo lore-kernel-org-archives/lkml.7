@@ -2,91 +2,89 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D0DC35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 217DCC388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D403E216F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:29:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="NwVORxvg"
+	by mail.kernel.org (Postfix) with ESMTP id EBD942075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:30:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732280AbfI3Q3J (ORCPT
+        id S1732310AbfI3QaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 12:29:09 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:50122 "EHLO mail.skyhub.de"
+        Mon, 30 Sep 2019 12:30:07 -0400
+Received: from mga09.intel.com ([134.134.136.24]:28178 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732056AbfI3Q3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 12:29:08 -0400
-Received: from zn.tnic (p200300EC2F058B00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f05:8b00:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C36C71EC05A1;
-        Mon, 30 Sep 2019 18:29:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1569860946;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=jzkAFLaCHV29m/fJWef9IzITfqS1NsfHIWmyf8nzRCA=;
-        b=NwVORxvgEnskxgL1hwnDSn7+uvAKGAHnEyl/4bKR9rA40iT/66FCEoXBNC/v06rwEkzJ7W
-        raUj6GsQz4BDeSHoexc9g+vzLtMR8MKPasfbleksFjNT0jXulw5du2jg9kqoPX07vxnCA4
-        jAjRFl5AhGzlHzMbWO7OFXjJShxZNJw=
-Date:   Mon, 30 Sep 2019 18:29:10 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     linux-rdma@vger.kernel.org, Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>, netdev@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: ERROR: "__umoddi3"
- [drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko] undefined!
-Message-ID: <20190930162910.GI29694@zn.tnic>
-References: <20190930141316.GG29694@zn.tnic>
- <20190930154535.GC22120@unicorn.suse.cz>
+        id S1732308AbfI3QaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 12:30:07 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Sep 2019 09:30:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,567,1559545200"; 
+   d="scan'208";a="204868102"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 30 Sep 2019 09:30:02 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 30 Sep 2019 19:30:01 +0300
+Date:   Mon, 30 Sep 2019 19:30:01 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>
+Subject: Re: [RFC PATCH] pci: prevent putting pcie devices into lower device
+ states on certain intel bridges
+Message-ID: <20190930163001.GX2714@lahna.fi.intel.com>
+References: <20190927144421.22608-1-kherbst@redhat.com>
+ <20190927214252.GA65801@google.com>
+ <CACO55tuaY1jFXpJPeC9M4PoWEDyy547_tE8MpLaTDb+C+ffsbg@mail.gmail.com>
+ <20190930080534.GS2714@lahna.fi.intel.com>
+ <CACO55tuMo1aAA7meGtEey6J6sOS-ZA0ebZeL52i2zfkWtPqe_g@mail.gmail.com>
+ <20190930092934.GT2714@lahna.fi.intel.com>
+ <CACO55tu9M8_TWu2MxNe_NROit+d+rHJP5_Tb+t73q5vr19sd1w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190930154535.GC22120@unicorn.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CACO55tu9M8_TWu2MxNe_NROit+d+rHJP5_Tb+t73q5vr19sd1w@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 05:45:35PM +0200, Michal Kubecek wrote:
-> On Mon, Sep 30, 2019 at 04:13:17PM +0200, Borislav Petkov wrote:
-> > I'm seeing this on i386 allyesconfig builds of current Linus master:
-> > 
-> > ERROR: "__umoddi3" [drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko] undefined!
-> > make[1]: *** [__modpost] Error 1
-> > make: *** [modules] Error 2
+On Mon, Sep 30, 2019 at 06:05:14PM +0200, Karol Herbst wrote:
+> still happens with your patch applied. The machine simply gets shut down.
 > 
-> This is usually result of dividing (or modulo) by a 64-bit integer. Can
-> you identify where (file and line number) is the __umoddi3() call
-> generated?
+> dmesg can be found here:
+> https://gist.githubusercontent.com/karolherbst/40eb091c7b7b33ef993525de660f1a3b/raw/2380e31f566e93e5ba7c87ef545420965d4c492c/gistfile1.txt
 
-Did another 32-bit allyesconfig build. It said:
+Looking your dmesg:
 
-ld: drivers/net/ethernet/mellanox/mlx5/core/steering/dr_icm_pool.o: in function `mlx5dr_icm_alloc_chunk':
-dr_icm_pool.c:(.text+0x733): undefined reference to `__umoddi3'
-make: *** [vmlinux] Error 1
+Sep 30 17:24:27 kernel: nouveau 0000:01:00.0: DRM: DCB version 4.1
+Sep 30 17:24:27 kernel: nouveau 0000:01:00.0: DRM: MM: using COPY for buffer copies
+Sep 30 17:24:27 kernel: [drm] Initialized nouveau 1.3.1 20120801 for 0000:01:00.0 on minor 1
 
-The .s file then points to the exact location:
+I would assume it runtime suspends here. Then it wakes up because of PCI
+access from userspace:
 
-# drivers/net/ethernet/mellanox/mlx5/core/steering/dr_icm_pool.c:140:   align_diff = icm_mr->icm_start_addr % align_base;
-        pushl   %ebx    # align_base
-        pushl   %ecx    # align_base
-        call    __umoddi3       #
-        popl    %edx    #
-        popl    %ecx    #
+Sep 30 17:24:42 kernel: pci_raw_set_power_state: 56 callbacks suppressed
+ 
+and for some reason it does not get resumed properly. There are also few
+warnings from ACPI that might be relevant:
 
-HTH.
+Sep 30 17:24:27 kernel: ACPI Warning: \_SB.PCI0.GFX0._DSM: Argument #4 type mismatch - Found [Buffer], ACPI requires [Package] (20190509/nsarguments-59)
+Sep 30 17:24:27 kernel: ACPI Warning: \_SB.PCI0.PEG0.PEGP._DSM: Argument #4 type mismatch - Found [Buffer], ACPI requires [Package] (20190509/nsarguments-59)
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+This seems to be Dell XPS 9560 which I think has been around some time
+already so I wonder why we only see issues now. Has it ever worked for
+you or maybe there is a regression that causes it to happen now?
