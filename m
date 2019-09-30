@@ -2,128 +2,51 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73804C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AB4C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5264620679
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36DF120815
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:56:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731832AbfI3Ozr (ORCPT
+        id S1731863AbfI3O4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 10:55:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:56204 "EHLO foss.arm.com"
+        Mon, 30 Sep 2019 10:56:14 -0400
+Received: from verein.lst.de ([213.95.11.211]:37843 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730780AbfI3Ozr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 10:55:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E76F028;
-        Mon, 30 Sep 2019 07:55:46 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 36E9A3F706;
-        Mon, 30 Sep 2019 07:55:46 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 15:55:44 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com,
-        minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v4 10/11] arm64: dts: layerscape: Add PCIe EP node for
- ls1088a
-Message-ID: <20190930145544.GB42880@e119886-lin.cambridge.arm.com>
-References: <20190924021849.3185-1-xiaowei.bao@nxp.com>
- <20190924021849.3185-11-xiaowei.bao@nxp.com>
+        id S1730780AbfI3O4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 10:56:14 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 083BA68C65; Mon, 30 Sep 2019 16:56:08 +0200 (CEST)
+Date:   Mon, 30 Sep 2019 16:56:07 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>
+Subject: Re: [PATCH 1/1] s390/cio: fix virtio-ccw DMA without PV
+Message-ID: <20190930145607.GA18163@lst.de>
+References: <20190930135310.26148-1-pasic@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190924021849.3185-11-xiaowei.bao@nxp.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <20190930135310.26148-1-pasic@linux.ibm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 10:18:48AM +0800, Xiaowei Bao wrote:
-> Add PCIe EP node for ls1088a to support EP mode.
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-
-> ---
-> v2:
->  - Remove the pf-offset proparty.
-> v3:
->  - No change.
-> v4:
->  - No change.
->  
->  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 31 ++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> index c676d07..da246ab 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> @@ -483,6 +483,17 @@
->  			status = "disabled";
->  		};
->  
-> +		pcie_ep@3400000 {
-> +			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
-> +			reg = <0x00 0x03400000 0x0 0x00100000
-> +			       0x20 0x00000000 0x8 0x00000000>;
-> +			reg-names = "regs", "addr_space";
-> +			num-ib-windows = <24>;
-> +			num-ob-windows = <128>;
-> +			max-functions = /bits/ 8 <2>;
-> +			status = "disabled";
-> +		};
-> +
->  		pcie@3500000 {
->  			compatible = "fsl,ls1088a-pcie";
->  			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
-> @@ -508,6 +519,16 @@
->  			status = "disabled";
->  		};
->  
-> +		pcie_ep@3500000 {
-> +			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
-> +			reg = <0x00 0x03500000 0x0 0x00100000
-> +			       0x28 0x00000000 0x8 0x00000000>;
-> +			reg-names = "regs", "addr_space";
-> +			num-ib-windows = <6>;
-> +			num-ob-windows = <8>;
-> +			status = "disabled";
-> +		};
-> +
->  		pcie@3600000 {
->  			compatible = "fsl,ls1088a-pcie";
->  			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
-> @@ -533,6 +554,16 @@
->  			status = "disabled";
->  		};
->  
-> +		pcie_ep@3600000 {
-> +			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
-> +			reg = <0x00 0x03600000 0x0 0x00100000
-> +			       0x30 0x00000000 0x8 0x00000000>;
-> +			reg-names = "regs", "addr_space";
-> +			num-ib-windows = <6>;
-> +			num-ob-windows = <8>;
-> +			status = "disabled";
-> +		};
-> +
->  		smmu: iommu@5000000 {
->  			compatible = "arm,mmu-500";
->  			reg = <0 0x5000000 0 0x800000>;
-> -- 
-> 2.9.5
-> 
+The code looks fine, but I still very much disagree with the workaround
+comments.  The different mask for allocations vs streaming mappings is
+exactly how the DMA API is intended to work.
