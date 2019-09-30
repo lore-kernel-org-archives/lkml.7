@@ -2,191 +2,109 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED28C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47CB7C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5EAE215EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E42F21855
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:53:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZKFO2Gko"
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="u24PiQrB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732381AbfI3Qwl (ORCPT
+        id S1732408AbfI3QxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 12:52:41 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55050 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726425AbfI3Qwk (ORCPT
+        Mon, 30 Sep 2019 12:53:07 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40403 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727884AbfI3QxH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 12:52:40 -0400
-Received: by mail-wm1-f65.google.com with SMTP id p7so238636wmp.4;
-        Mon, 30 Sep 2019 09:52:36 -0700 (PDT)
+        Mon, 30 Sep 2019 12:53:07 -0400
+Received: by mail-pl1-f194.google.com with SMTP id d22so4132189pll.7
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 09:53:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=S4meV0NsaDpqLa7tBEXkvORH5DuiHJR7oObrl4NCVW4=;
-        b=ZKFO2GkolErFUr68Pj8DzLdvfmN6K47nQm/2ypFNwkvAju1BtuE3hjRdgIslfArdCz
-         tcSel3xQCWbcB9PQrXVWPcuH3PEHd/hwfhCl2SuSzh4zQFu09bkn5UKDvsSgV48XA3IQ
-         wTXguVJwJVOrG22nKLayzi1SKn+1HdpDfx2i0URglXV/jfSSRFtVyGVfpdOy0GnJLv/8
-         ojpfSrPFo/YhMqVgCF38LrBx2u/NPItz1UqQK0tl1bDKUayanqN5P+6FDgtaA2HKX/+X
-         XtEYy4zUAt+Z4GNZDpFuC7GDd3hlHw46kI7Ko829sHQc3p9iGotQePXO/DoNFEA0pNyZ
-         Qe2Q==
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=f+nerH7/3f5jVInNGQWz0pf5Q2oTiewZHT4IGh7OAlM=;
+        b=u24PiQrBZ9wkrsV1JyAofa5Q/EtOFdvZVmwLAYLNZ041sgLRL+F7Ex2m9gS9K3t9Vo
+         fqjokZE6O8IHOJteak/MSW7MxymZLGwq29nwKsot1G/AZpYLR+UlA5DaP8lsBirxjyDE
+         HqvE4I9kK/ZE/0Da9LZeSHurwnqwLVJrfttCQnuVLoUG26SlonXpq1fPk3PMQ4OpClMZ
+         3rHwZCRrpKOGjaAffxwDtfC1ZiM++dBtdlA5htmxlIfgZ5qg3IkNK0oGAcNrhoGuX7er
+         XaFaGMlGqRQlYK17Aew5KelSOZ8qHErlYDRp+6FIr2F1VPdZIvgyvtpMq5oc5JNEuVYu
+         nsIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=S4meV0NsaDpqLa7tBEXkvORH5DuiHJR7oObrl4NCVW4=;
-        b=An34awI32oh+EqjtLvtVntQq6PYzXZcsjDWTYLbVdcg/qRrvg39u33irWvTA+SShmp
-         SNs9l4sdM/4MjnrpHm5AgzpzgKF17BjctMHY3T+xYiDxkKFQWaEczl41gCxXVpO7+d/P
-         PHPHo0poOAOfmFnk0s7tDZvGSWP7RW+rMYVl/WvcyQWM6XaFKpDr+A0G3SYGqKb+4O+0
-         UkR+EfbpgWFq98caK21xI94Rae7otbamU9KmNa14gg10YWmYfe6rcR4JDo2Oh6No3mHk
-         upBgP1D7t8cVgrCLvCWiS8WD/ppa0PmnEbRS0XAe8QEzk1LZPaNCHeMSu+kOJeSFjdQW
-         eVxg==
-X-Gm-Message-State: APjAAAWASdhu/rXgrXRKEYlHa726Kgdr17VrARdDMHve3yyW/44exLCH
-        JDWwv7aUOMV/ZkNtQZU+6WM6YusH
-X-Google-Smtp-Source: APXvYqzCLsczViMIVb7X3HfOf7obZBubZ1E1KCxx7eCgHu7Vt1z3KtWGQvxR+kz+c/TU/OFIY2h5pw==
-X-Received: by 2002:a7b:c4c9:: with SMTP id g9mr141219wmk.150.1569862355607;
-        Mon, 30 Sep 2019 09:52:35 -0700 (PDT)
-Received: from 640k.localdomain ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id n22sm139924wmk.19.2019.09.30.09.52.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 30 Sep 2019 09:52:34 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     vkuznets@redhat.com, kvm-ppc@vger.kernel.org
-Subject: [PATCH] kvm: x86, powerpc: do not allow clearing largepages debugfs entry
-Date:   Mon, 30 Sep 2019 18:52:31 +0200
-Message-Id: <1569862351-19760-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=f+nerH7/3f5jVInNGQWz0pf5Q2oTiewZHT4IGh7OAlM=;
+        b=GVjy2w7IPsJ3vT40jJg27Nos+pYAhTB/eDNMWTl3w90c7bPuht6Psrdy5RINM+Qzp1
+         XoJHyiQ+5V+OlqkuwjH2S0EVyUfm+0dR9KCPT5/vJKJUEaCzXldip5bChJDKIuGiTrQT
+         BEUH++Y/DGPXv3HBuTZCj/TlkuFzZ1N/Wlw3cr0ORrGiyqaR51WDOKFmzg3bo80Aw4PP
+         strmDB7y+T2iCZnC4MRejUoO67hVqLoZbTI92wxVO1+w2Bxb8pdKgJmpPYb21Cq1F/ss
+         ysgzcWq3Prq7FV4DQV4IV8qTPJqEvW80gPPQUtnv4vBcq1+16+/q/TIoUNdHh4F/zhX4
+         lFKQ==
+X-Gm-Message-State: APjAAAUR+P6LiU0O6MJCWGXS8lQhdfj4SaDEErwkDmukjbwaTu1A7gw2
+        Q/NGJpz+lbRao+6exS763dTBwQ==
+X-Google-Smtp-Source: APXvYqzS2SQCyITvMRpLg6lGb2f95ywFpL74G4S5Pm3QeC98Yx2Q4IidhLo77R+Fa5fDC2DN0+eJ+A==
+X-Received: by 2002:a17:902:7003:: with SMTP id y3mr21428242plk.239.1569862386118;
+        Mon, 30 Sep 2019 09:53:06 -0700 (PDT)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id h8sm12990265pfo.64.2019.09.30.09.53.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 09:53:06 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 09:52:58 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Michal Kubecek <mkubecek@suse.cz>, linux-rdma@vger.kernel.org,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>, netdev@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: ERROR: "__umoddi3"
+ [drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko] undefined!
+Message-ID: <20190930095258.1db16eb2@hermes.lan>
+In-Reply-To: <20190930162910.GI29694@zn.tnic>
+References: <20190930141316.GG29694@zn.tnic>
+        <20190930154535.GC22120@unicorn.suse.cz>
+        <20190930162910.GI29694@zn.tnic>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The largepages debugfs entry is incremented/decremented as shadow
-pages are created or destroyed.  Clearing it will result in an
-underflow, which is harmless to KVM but ugly (and could be
-misinterpreted by tools that use debugfs information), so make
-this particular statistic read-only.
+On Mon, 30 Sep 2019 18:29:10 +0200
+Borislav Petkov <bp@alien8.de> wrote:
 
-Cc: kvm-ppc@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/powerpc/kvm/book3s.c |  8 ++++----
- arch/x86/kvm/x86.c        |  6 +++---
- include/linux/kvm_host.h  |  2 ++
- virt/kvm/kvm_main.c       | 10 +++++++---
- 4 files changed, 16 insertions(+), 10 deletions(-)
+> On Mon, Sep 30, 2019 at 05:45:35PM +0200, Michal Kubecek wrote:
+> > On Mon, Sep 30, 2019 at 04:13:17PM +0200, Borislav Petkov wrote:  
+> > > I'm seeing this on i386 allyesconfig builds of current Linus master:
+> > > 
+> > > ERROR: "__umoddi3" [drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko] undefined!
+> > > make[1]: *** [__modpost] Error 1
+> > > make: *** [modules] Error 2  
+> > 
+> > This is usually result of dividing (or modulo) by a 64-bit integer. Can
+> > you identify where (file and line number) is the __umoddi3() call
+> > generated?  
+> 
+> Did another 32-bit allyesconfig build. It said:
+> 
+> ld: drivers/net/ethernet/mellanox/mlx5/core/steering/dr_icm_pool.o: in function `mlx5dr_icm_alloc_chunk':
+> dr_icm_pool.c:(.text+0x733): undefined reference to `__umoddi3'
+> make: *** [vmlinux] Error 1
+> 
+> The .s file then points to the exact location:
+> 
+> # drivers/net/ethernet/mellanox/mlx5/core/steering/dr_icm_pool.c:140:   align_diff = icm_mr->icm_start_addr % align_base;
+>         pushl   %ebx    # align_base
+>         pushl   %ecx    # align_base
+>         call    __umoddi3       #
+>         popl    %edx    #
+>         popl    %ecx    #
 
-diff --git a/arch/powerpc/kvm/book3s.c b/arch/powerpc/kvm/book3s.c
-index d7fcdfa7fee4..ec2547cc5ecb 100644
---- a/arch/powerpc/kvm/book3s.c
-+++ b/arch/powerpc/kvm/book3s.c
-@@ -36,8 +36,8 @@
- #include "book3s.h"
- #include "trace.h"
- 
--#define VM_STAT(x) offsetof(struct kvm, stat.x), KVM_STAT_VM
--#define VCPU_STAT(x) offsetof(struct kvm_vcpu, stat.x), KVM_STAT_VCPU
-+#define VM_STAT(x, ...) offsetof(struct kvm, stat.x), KVM_STAT_VM, ## __VA_ARGS__
-+#define VCPU_STAT(x, ...) offsetof(struct kvm_vcpu, stat.x), KVM_STAT_VCPU, ## __VA_ARGS__
- 
- /* #define EXIT_DEBUG */
- 
-@@ -69,8 +69,8 @@ struct kvm_stats_debugfs_item debugfs_entries[] = {
- 	{ "pthru_all",       VCPU_STAT(pthru_all) },
- 	{ "pthru_host",      VCPU_STAT(pthru_host) },
- 	{ "pthru_bad_aff",   VCPU_STAT(pthru_bad_aff) },
--	{ "largepages_2M",    VM_STAT(num_2M_pages) },
--	{ "largepages_1G",    VM_STAT(num_1G_pages) },
-+	{ "largepages_2M",    VM_STAT(num_2M_pages, .mode = 0444) },
-+	{ "largepages_1G",    VM_STAT(num_1G_pages, .mode = 0444) },
- 	{ NULL }
- };
- 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 180c7e88577a..8072acaaf028 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -92,8 +92,8 @@
- static u64 __read_mostly efer_reserved_bits = ~((u64)EFER_SCE);
- #endif
- 
--#define VM_STAT(x) offsetof(struct kvm, stat.x), KVM_STAT_VM
--#define VCPU_STAT(x) offsetof(struct kvm_vcpu, stat.x), KVM_STAT_VCPU
-+#define VM_STAT(x, ...) offsetof(struct kvm, stat.x), KVM_STAT_VM, ## __VA_ARGS__
-+#define VCPU_STAT(x, ...) offsetof(struct kvm_vcpu, stat.x), KVM_STAT_VCPU, ## __VA_ARGS__
- 
- #define KVM_X2APIC_API_VALID_FLAGS (KVM_X2APIC_API_USE_32BIT_IDS | \
-                                     KVM_X2APIC_API_DISABLE_BROADCAST_QUIRK)
-@@ -212,7 +212,7 @@ struct kvm_stats_debugfs_item debugfs_entries[] = {
- 	{ "mmu_cache_miss", VM_STAT(mmu_cache_miss) },
- 	{ "mmu_unsync", VM_STAT(mmu_unsync) },
- 	{ "remote_tlb_flush", VM_STAT(remote_tlb_flush) },
--	{ "largepages", VM_STAT(lpages) },
-+	{ "largepages", VM_STAT(lpages, .mode = 0444) },
- 	{ "max_mmu_page_hash_collisions",
- 		VM_STAT(max_mmu_page_hash_collisions) },
- 	{ NULL }
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index fcb46b3374c6..719fc3e15ea4 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -1090,6 +1090,7 @@ enum kvm_stat_kind {
- 
- struct kvm_stat_data {
- 	int offset;
-+	int mode;
- 	struct kvm *kvm;
- };
- 
-@@ -1097,6 +1098,7 @@ struct kvm_stats_debugfs_item {
- 	const char *name;
- 	int offset;
- 	enum kvm_stat_kind kind;
-+	int mode;
- };
- extern struct kvm_stats_debugfs_item debugfs_entries[];
- extern struct dentry *kvm_debugfs_dir;
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index e6de3159e682..fd68fbe0a75d 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -617,8 +617,9 @@ static int kvm_create_vm_debugfs(struct kvm *kvm, int fd)
- 
- 		stat_data->kvm = kvm;
- 		stat_data->offset = p->offset;
-+		stat_data->mode = p->mode ? p->mode : 0644;
- 		kvm->debugfs_stat_data[p - debugfs_entries] = stat_data;
--		debugfs_create_file(p->name, 0644, kvm->debugfs_dentry,
-+		debugfs_create_file(p->name, stat_data->mode, kvm->debugfs_dentry,
- 				    stat_data, stat_fops_per_vm[p->kind]);
- 	}
- 	return 0;
-@@ -3929,7 +3930,9 @@ static int kvm_debugfs_open(struct inode *inode, struct file *file,
- 	if (!refcount_inc_not_zero(&stat_data->kvm->users_count))
- 		return -ENOENT;
- 
--	if (simple_attr_open(inode, file, get, set, fmt)) {
-+	if (simple_attr_open(inode, file, get,
-+			     stat_data->mode & S_IWUGO ? set : NULL,
-+			     fmt)) {
- 		kvm_put_kvm(stat_data->kvm);
- 		return -ENOMEM;
- 	}
-@@ -4177,7 +4180,8 @@ static void kvm_init_debug(void)
- 
- 	kvm_debugfs_num_entries = 0;
- 	for (p = debugfs_entries; p->name; ++p, kvm_debugfs_num_entries++) {
--		debugfs_create_file(p->name, 0644, kvm_debugfs_dir,
-+		int mode = p->mode ? p->mode : 0644;
-+		debugfs_create_file(p->name, mode, kvm_debugfs_dir,
- 				    (void *)(long)p->offset,
- 				    stat_fops[p->kind]);
- 	}
--- 
-1.8.3.1
-
+Since align_base is a power of 2 masking should work as well.
