@@ -2,137 +2,135 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA089C35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3972EC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB7D5215EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09C30215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:07:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569859620;
+	bh=MvE8LLynRjUl+94cJb0CyjZtG13OGXEK4Bl34WJDU9c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PIKmUjemvDi4lAoQYlgSr9IrM2RBlfhSFwHzhQMczezTyb977SpdExOT3zo2KBeI3
+	 ALolKTTZL3hTIr5g24vu1ayJ79k/JMDDiwfzi+fyjj+Y7mlR2q1+WKPhmzz53VqhHm
+	 ++nv3XKaxKdOwntqxyj+DQqGRfbj0ytCqFmq8hIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732204AbfI3QF2 (ORCPT
+        id S1732214AbfI3QG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 12:05:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36010 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731967AbfI3QF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 12:05:27 -0400
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B9FFA2CD7E5
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 16:05:26 +0000 (UTC)
-Received: by mail-io1-f72.google.com with SMTP id w1so31292010ioj.9
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 09:05:26 -0700 (PDT)
+        Mon, 30 Sep 2019 12:06:59 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:37635 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728424AbfI3QG7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 12:06:59 -0400
+Received: by mail-lj1-f196.google.com with SMTP id l21so10104925lje.4
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 09:06:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KLe2kylkHRDEIZkqma6Y17kUgB/cRkjjQz4tSwgXeyQ=;
+        b=ItUevwyV7K+5wlAC7uIMaBiq4O5RQHwz6gB4j41pmGvLNHJJDpjra6dNJkzZoLazfE
+         E5vl2dbYUovDvSBxCVhMf2rkaldW6y6OXJpInRFLlK1dq2tUcHdFH2M5OXWmdotbJ2pB
+         JxBSQE34E7oJiQd1SzU7G3iqevwk7iUZeeLmk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6Jo3uapkJwME3KNEX03kTFMW4ezdDySvqiZtAQI5QuE=;
-        b=PZdzVLpqfK733qkLnvtFgKiS0deRdDrBF2YX8arDox5h9EE6lGqRc9Y2PAZQY2WFQK
-         okVOQ+zvOpgq5jbFlyyvc702Q1Jq5iErnKsCzN9XH7yZk4I6LTiK+WMvfjlcJBjQiFFW
-         pNebftjejiXwTegvT4XSZpO+ZdnACMMmfQjxogoa1Z6F+bAelEkuLnwkhh+pnNyeknBr
-         jSMOI2n427W23PYVdG5tiSR46pye+DoR9l+MXceJERZOEIpbJ+zuQWS54m86fXHnZTmJ
-         YmipN4MuGfuEp145Sts5kDVWNSYGzAmsITSh7paBCXPMqJmI9umcs+CP3Ybnhgv4CAXZ
-         tsxA==
-X-Gm-Message-State: APjAAAU2GBEmADyxbcqzdNObDCZA6Z2k+7qiLSwak0QE2uX/0M0SlvYk
-        pXgA3T9UbcN01fqkLlmAErIO58FLg+F6RdNWzM/GvW4jcgl/HLJlzIuEqgF8gQWfva6ADodvLpW
-        SBANDPNlXMoalxAHQN/cffQP+baDzxbT5Pxc0fNrH
-X-Received: by 2002:a5d:9a17:: with SMTP id s23mr21659737iol.171.1569859526156;
-        Mon, 30 Sep 2019 09:05:26 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqypngOWw3ZSLYDhxUEQ9NgyFEx9J+foY40JfzIJvF4e6vjzQEx3SO7djN0Th8o3+JHT5FzrewlaBaaAcXyAtrE=
-X-Received: by 2002:a5d:9a17:: with SMTP id s23mr21659711iol.171.1569859525882;
- Mon, 30 Sep 2019 09:05:25 -0700 (PDT)
+        bh=KLe2kylkHRDEIZkqma6Y17kUgB/cRkjjQz4tSwgXeyQ=;
+        b=XMcHVZMhyYND84DRqqI5r/NzP23qZu/VDlwqZaOV5q3HdT36jTz3RldZQ1buZeVwYu
+         k9aC/G4BqbJ1UFzYz2UteLRmstD9ZRZ02mFk0njChBSXSLxOE7qSlkgSrYBMdcq5HDkf
+         YDziD6V8B9mPbq/5rO0Q+iJ6ATnAdrwRL/MCKtzKttsP9/MkHo8kebf9d2MYQbABWKIF
+         uyX7yZ7NmbMeFawPS+bQTz8VA2/z+dB5+ZhwelahQSq0RXfzuzqzv3Djp4fTwBbg/7R1
+         c9Oe/uXQvEx2RlU0lKz8d0MOjPrwOfiA5A/F9TJq80gS4YL+x3K2AnSjQ6lxYxSk3T49
+         KLpA==
+X-Gm-Message-State: APjAAAX5eh7vKPjzSzr31ZAXXVkZfJbAlHeSii7rGkDRHaHGoKRBDBjf
+        hsCb2aCdBOhf9Vm4eWgs6gdu8xaB4js=
+X-Google-Smtp-Source: APXvYqzE3zVh9oxw3oiYUIcGrWpBa4n2AXR79T/IiouqPFS27x5+r2izITq50kZz3i7p5OjBlFlkXQ==
+X-Received: by 2002:a2e:9702:: with SMTP id r2mr12858423lji.190.1569859614465;
+        Mon, 30 Sep 2019 09:06:54 -0700 (PDT)
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
+        by smtp.gmail.com with ESMTPSA id v7sm3312846lfd.55.2019.09.30.09.06.52
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Sep 2019 09:06:53 -0700 (PDT)
+Received: by mail-lf1-f43.google.com with SMTP id r134so7448652lff.12
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 09:06:52 -0700 (PDT)
+X-Received: by 2002:ac2:47f8:: with SMTP id b24mr12078157lfp.134.1569859612393;
+ Mon, 30 Sep 2019 09:06:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190927144421.22608-1-kherbst@redhat.com> <20190927214252.GA65801@google.com>
- <CACO55tuaY1jFXpJPeC9M4PoWEDyy547_tE8MpLaTDb+C+ffsbg@mail.gmail.com>
- <20190930080534.GS2714@lahna.fi.intel.com> <CACO55tuMo1aAA7meGtEey6J6sOS-ZA0ebZeL52i2zfkWtPqe_g@mail.gmail.com>
- <20190930092934.GT2714@lahna.fi.intel.com>
-In-Reply-To: <20190930092934.GT2714@lahna.fi.intel.com>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Mon, 30 Sep 2019 18:05:14 +0200
-Message-ID: <CACO55tu9M8_TWu2MxNe_NROit+d+rHJP5_Tb+t73q5vr19sd1w@mail.gmail.com>
-Subject: Re: [RFC PATCH] pci: prevent putting pcie devices into lower device
- states on certain intel bridges
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+References: <alpine.DEB.2.21.1909290010500.2636@nanos.tec.linutronix.de>
+ <CAHk-=wgjC01UaoV35PZvGPnrQ812SRGPoV7Xp63BBFxAsJjvrg@mail.gmail.com>
+ <CAHk-=wi0vxLmwEBn2Xgu7hZ0U8z2kN4sgCax+57ZJMVo3huDaQ@mail.gmail.com>
+ <CAHk-=whKhD-GniDqpRhhF=V2cSxThX56NAdkAUoBkbp0mW5=LA@mail.gmail.com> <20190930061014.GC29694@zn.tnic>
+In-Reply-To: <20190930061014.GC29694@zn.tnic>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 30 Sep 2019 09:06:36 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjfLfnOyGkHM+ZRn6bc6JD6CU3Ewix3cJDqCqjbMO5PNA@mail.gmail.com>
+Message-ID: <CAHk-=wjfLfnOyGkHM+ZRn6bc6JD6CU3Ewix3cJDqCqjbMO5PNA@mail.gmail.com>
+Subject: Re: x86/random: Speculation to the rescue
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Nicholas Mc Guire <hofrat@opentech.at>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-still happens with your patch applied. The machine simply gets shut down.
+On Sun, Sep 29, 2019 at 11:10 PM Borislav Petkov <bp@alien8.de> wrote:
+>
+> so sshd does getrandom(2) while those other userspace things don't. Oh
+> well.
 
-dmesg can be found here:
-https://gist.githubusercontent.com/karolherbst/40eb091c7b7b33ef993525de660f1a3b/raw/2380e31f566e93e5ba7c87ef545420965d4c492c/gistfile1.txt
+Well, that's actually what systems _should_ do. Presumably sshd
+actually wants secure randomness, and nothing else waits for it.
 
-If there are no other things to try out, I will post the updated patch shortly.
+Obviously, that can be a problem if you then need sshd in order to get
+into a headless box, so my patch fixes things for you too, but at
+least your box doesn't show the problem that Ahmed had, and the boot
+completing presumably means that you got more entropy from other disk
+IO being done by the rest of the boot.
 
-On Mon, Sep 30, 2019 at 11:29 AM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
->
-> On Mon, Sep 30, 2019 at 11:15:48AM +0200, Karol Herbst wrote:
-> > On Mon, Sep 30, 2019 at 10:05 AM Mika Westerberg
-> > <mika.westerberg@linux.intel.com> wrote:
-> > >
-> > > Hi Karol,
-> > >
-> > > On Fri, Sep 27, 2019 at 11:53:48PM +0200, Karol Herbst wrote:
-> > > > > What exactly is the serious issue?  I guess it's that the rescan
-> > > > > doesn't detect the GPU, which means it's not responding to config
-> > > > > accesses?  Is there any timing component here, e.g., maybe we're
-> > > > > missing some delay like the ones Mika is adding to the reset paths?
-> > > >
-> > > > When I was checking up on some of the PCI registers of the bridge
-> > > > controller, the slot detection told me that there is no device
-> > > > recognized anymore. I don't know which register it was anymore, though
-> > > > I guess one could read it up in the SoC spec document by Intel.
-> > > >
-> > > > My guess is, that the bridge controller fails to detect the GPU being
-> > > > here or actively threw it of the bus or something. But a normal system
-> > > > suspend/resume cycle brings the GPU back online (doing a rescan via
-> > > > sysfs gets the device detected again)
-> > >
-> > > Can you elaborate a bit what kind of scenario the issue happens (e.g
-> > > steps how it reproduces)? It was not 100% clear from the changelog. Also
-> > > what the result when the failure happens?
-> > >
-> >
-> > yeah, I already have an updated patch in the works which also does the
-> > rework Bjorn suggested. Had no time yet to test if I didn't mess it
-> > up.
-> >
-> > I am also thinking of adding a kernel parameter to enable this
-> > workaround on demand, but not quite sure on that one yet.
->
-> Right, I think it would be good to figure out the root cause before
-> adding any workarounds ;-) It might very well be that we are just
-> missing something the PCIe spec requires but not implemented in Linux.
->
-> > > I see there is a script that does something but unfortunately I'm not
-> > > fluent in Python so can't extract the steps how the issue can be
-> > > reproduced ;-)
-> > >
-> > > One thing that I'm working on is that Linux PCI subsystem misses certain
-> > > delays that are needed after D3cold -> D0 transition, otherwise the
-> > > device and/or link may not be ready before we access it. What you are
-> > > experiencing sounds similar. I wonder if you could try the following
-> > > patch and see if it makes any difference?
-> > >
-> > > https://patchwork.kernel.org/patch/11106611/
-> >
-> > I think I already tried this path. The problem isn't that the device
-> > isn't accessible too late, but that it seems that the device
-> > completely falls off the bus. But I can retest again just to be sure.
->
-> Yes, please try it and share full dmesg if/when the failure still happens.
+If you want to test my hacky "do /dev/urandom too", it was this one-liner:
+
+  --- a/drivers/char/random.c
+  +++ b/drivers/char/random.c
+  @@ -2027,6 +2027,7 @@ urandom_read(struct file *file, char __user
+*buf, size_t nbytes, loff_t *ppos)
+        static int maxwarn = 10;
+        int ret;
+
+  +     if (!crng_ready()) try_to_generate_entropy();
+        if (!crng_ready() && maxwarn > 0) {
+                maxwarn--;
+                if (__ratelimit(&urandom_warning))
+
+and that should get rid of the warnings.
+
+It's not using the full "wait_for_random_bytes()", because in the
+absence of a cycle counter, that would introduce the boot-time lockup
+for /dev/urandom too.
+
+Doing something like the above to /dev/urandom is likely the right
+thing to do eventually, but I didn't want to mix up "we can perhaps
+improve the urandom situation too" with the basic "let's fix the boot
+problem". The urandom behavior change would be a separate thing.
+
+Also, talking about "future changes". Right now
+"try_to_generate_entropy()" is actually uninterruptible once it gets
+started. I think we should add a test for signal_pending() too, but it
+should generally complete really fairly quickly so I left it without
+one just to see if anybody even notices.
+
+                 Linus
