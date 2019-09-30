@@ -4,263 +4,481 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6537EC4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B66A7C388F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22E0821855
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ECF02190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:38:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e876S8J/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l9JUUAoK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730542AbfI3Jgl (ORCPT
+        id S1730550AbfI3JiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 05:36:41 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:31411 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730033AbfI3Jgj (ORCPT
+        Mon, 30 Sep 2019 05:38:05 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:38885 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729590AbfI3JiE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 05:36:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1569836198;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0K7l5E0jT2kU7E4OL4KnInZb6DPLchuZ7JsMiIQYJgc=;
-        b=e876S8J/DyakPLdMGrGqy6zCtIvqNcyxUiIfWY8xubZ8ebaKzR4asVVaX2C+pUbSUKkHwD
-        RlqlZ5zy5PwyqH2UX75Nlp0RvIiMBVELaf+jZ5raL8dqvNewbpk6IC4xGV9mNtB+PNesJa
-        G8nIxZaExpmD6nLgBfzD0uRFSKiozHs=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-228-6fVc47QMNGm_x3N9qsa9uQ-1; Mon, 30 Sep 2019 05:36:36 -0400
-Received: by mail-qk1-f198.google.com with SMTP id b143so10367050qkg.9
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 02:36:36 -0700 (PDT)
+        Mon, 30 Sep 2019 05:38:04 -0400
+Received: by mail-vs1-f68.google.com with SMTP id b123so6298715vsb.5
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 02:38:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5Eb0h8Bb/VxV1goQ9YVuDHHMV4XEvBP4jNtrzRAKJeQ=;
+        b=l9JUUAoK+g0I09OCbzEqgrx5H7gqT4mD+Vxo+QO9QAtTXNgNA9LYDrscQZA+V3HOKE
+         rpN6z13Lj2Mf81GQ5G4nPn9SuaKCZzDucG+uOQndCdGkOYlCH1+sD4BGclerU1yrIU6z
+         Spyhh3P3AT1QUZC4gqG7G8tS1iXSNElRCpOm87D0klRYrNiC/BW/oXzxJhydUTW3hw1c
+         SMNdV2vHTj6IQZxKxu6Y2VhUNddpPUvoOqE4oxQUMO6Oa9kZ7I48NH/6dUf3aeW/ui4z
+         omrMIas202b2Vp+NZ2WlaCZACP+2ahBOJDrsIyOf+YWCMv4j/rMN3BAkT+7+nFCMmKvT
+         NRsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=/FLSITt2UCArtOmIOQcEejRtEdLk44vdWkXXB2cpNlQ=;
-        b=c3tzBji9MNtH7MiDdiGY2EGbjeMOpz9EWh7tgCriHT7m8wqYNt2M4VEXXVNRiStykE
-         +GRaXZv7goi0g828ruDjl4Iw63uhCPZ5aBw/HotYvYEhZ3TZasy1E1M4gddYnCwBZhAa
-         jHbocXlxrcQAI7loos77xxyQhuIbAHVsgQLpQDsbBQ6Q9yyj+eTOwZR33JIzclmX9wby
-         py0hZ+znGtgnePZtlia1vBRsPawEoDnX8XFIkCqyvH1fzO1T81fs1LXZgT0toGLR4UHa
-         hgp7OT9MTjBOZQQMEokW/8f2U7y+j3oD0j3B8u6y8/t0YnrFlAtRzRVgZ0RlQ+Bwxu/C
-         y2TQ==
-X-Gm-Message-State: APjAAAUxjZMFLiWVJTNfnHEGHpmpBGNnRRj8tCeScWOaQo1BGtNB2Vj9
-        Cxm7wQniOU5SM16OSZkvl+xbv5Hhr1GVLsziutADC34kEtokWEzDhOoz3AT7krou8AhHpMH6F4T
-        3qjflee1DOmLNO9JW64rsQcxBBBIPhNZ+9ECD7me6
-X-Received: by 2002:ac8:3059:: with SMTP id g25mr23587245qte.154.1569836195934;
-        Mon, 30 Sep 2019 02:36:35 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxbIXYQ5nToZ03gcL/MhsfLatCHv/lPXCzN/JBTkBDUnPnmdIqAmNgXNah7mRqwloYNXE3LbQulDbjDhXBiSzc=
-X-Received: by 2002:ac8:3059:: with SMTP id g25mr23587233qte.154.1569836195675;
- Mon, 30 Sep 2019 02:36:35 -0700 (PDT)
+        bh=5Eb0h8Bb/VxV1goQ9YVuDHHMV4XEvBP4jNtrzRAKJeQ=;
+        b=R8nHubnNohnxxL+BYktyPXv1fiav5RBc1QSRk0TxRTGaVZuT147rg87NizDHNAbdKp
+         NUQ1rAbrUzIJtrBzkQPCKEo6BFpIXZYTljLwQHym505hOB4HRyQEt0a/ViJ/W+0PU3FL
+         mqOvqDgodjw+h1WUgRkgQMaXJeQ1y3+acGm0iQb63bWOrLmDr7RzpCY8rTgn02nCYCpm
+         5zhs4DyF7iqRLfuIj/R+Fje5sd6XSjTlzEYf8dyBFI+AR5nnPXJ2Waxh29FKZDISAYVl
+         acnxUAwUnsFjh5yCyb2Bo2BVTza5VwmMVkQhG+dLT2hMuvyu845A/q8c8MwZ545dw3aD
+         Q13A==
+X-Gm-Message-State: APjAAAWkozCp/VOOirClOU8Jj6OER9PLjHmHbp5FgVjZFJV8yhjkf77q
+        ytdr9Hr47t0oO5HhSqvNlo2MmbbjTris1Tlg/dlsWg==
+X-Google-Smtp-Source: APXvYqz7Qp+fOy6eoE4jdi2Ru9B+c3xebiBBV938o/gOtcUuIFQ14xtnQQEEG5i9lQrjfM+HlvdDrKgTSSg+k9ykEgQ=
+X-Received: by 2002:a67:d789:: with SMTP id q9mr8472951vsj.159.1569836283067;
+ Mon, 30 Sep 2019 02:38:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <1569830949-10771-1-git-send-email-candlesea@gmail.com>
-In-Reply-To: <1569830949-10771-1-git-send-email-candlesea@gmail.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Mon, 30 Sep 2019 11:36:23 +0200
-Message-ID: <CAO-hwJLrQTp7qeMpQvF7429a0qisAe-=zLFRtY79ajhLtusdRg@mail.gmail.com>
-Subject: Re: [PATCH] HID: core: add usage_page_preceding flag for hid_concatenate_usage_page()
-To:     Candle Sun <candlesea@gmail.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, chunyan.zhang@unisoc.com,
-        Candle Sun <candle.sun@unisoc.com>,
-        Nianfu Bai <nianfu.bai@unisoc.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-X-MC-Unique: 6fVc47QMNGm_x3N9qsa9uQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20190927184352.28759-1-glaroque@baylibre.com> <20190927184352.28759-3-glaroque@baylibre.com>
+In-Reply-To: <20190927184352.28759-3-glaroque@baylibre.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Mon, 30 Sep 2019 15:07:51 +0530
+Message-ID: <CAHLCerO3QaUwR-iua8xOYkg+Y82hDAMUdwqB2-kMd24w1gfz+w@mail.gmail.com>
+Subject: Re: [PATCH v6 2/7] thermal: amlogic: Add thermal driver to support
+ G12 SoCs
+To:     Guillaume La Roque <glaroque@baylibre.com>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sat, Sep 28, 2019 at 12:14 AM Guillaume La Roque
+<glaroque@baylibre.com> wrote:
+>
+> Amlogic G12A and G12B SoCs integrate two thermal sensors
+> with the same design. One is located close to the DDR controller
+> and the other one is located close to the PLLs (between the CPU and GPU).
+>
+> The calibration data for each of the thermal sensors instance is stored
+> in a different location within the AO region.
+>
+> Implement reading the temperature from each thermal sensor.
+>
+> The IP block has more functionality, which may be added to this driver
+> in the future:
+> - chip reset when the temperature exceeds a configurable threshold
+> - up to four interrupts when the temperature has risen above a
+> configurable threshold
+> - up to four interrupts when the temperature has fallen below a
+> configurable threshold
+>
+> Tested-by: Christian Hewitt <christianshewitt@gmail.com>
+> Tested-by: Kevin Hilman <khilman@baylibre.com>
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 
-[also addingg Nicolas, the author of 58e75155009c]
 
-On Mon, Sep 30, 2019 at 10:10 AM Candle Sun <candlesea@gmail.com> wrote:
->
-> From: Candle Sun <candle.sun@unisoc.com>
->
-> Upstream commit 58e75155009c ("HID: core: move Usage Page concatenation
-> to Main item") adds support for Usage Page item following Usage items
-> (such as keyboards manufactured by Primax).
->
-> Usage Page concatenation in Main item works well for following report
-> descriptor patterns:
->
->     USAGE_PAGE (Keyboard)                   05 07
->     USAGE_MINIMUM (Keyboard LeftControl)    19 E0
->     USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
->     LOGICAL_MINIMUM (0)                     15 00
->     LOGICAL_MAXIMUM (1)                     25 01
->     REPORT_SIZE (1)                         75 01
->     REPORT_COUNT (8)                        95 08
->     INPUT (Data,Var,Abs)                    81 02
->
-> -------------
->
->     USAGE_MINIMUM (Keyboard LeftControl)    19 E0
->     USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
->     LOGICAL_MINIMUM (0)                     15 00
->     LOGICAL_MAXIMUM (1)                     25 01
->     REPORT_SIZE (1)                         75 01
->     REPORT_COUNT (8)                        95 08
->     USAGE_PAGE (Keyboard)                   05 07
->     INPUT (Data,Var,Abs)                    81 02
->
-> But it makes the parser act wrong for the following report
-> descriptor pattern(such as some Gamepads):
->
->     USAGE_PAGE (Button)                     05 09
->     USAGE (Button 1)                        09 01
->     USAGE (Button 2)                        09 02
->     USAGE (Button 4)                        09 04
->     USAGE (Button 5)                        09 05
->     USAGE (Button 7)                        09 07
->     USAGE (Button 8)                        09 08
->     USAGE (Button 14)                       09 0E
->     USAGE (Button 15)                       09 0F
->     USAGE (Button 13)                       09 0D
->     USAGE_PAGE (Consumer Devices)           05 0C
->     USAGE (Back)                            0a 24 02
->     USAGE (HomePage)                        0a 23 02
->     LOGICAL_MINIMUM (0)                     15 00
->     LOGICAL_MAXIMUM (1)                     25 01
->     REPORT_SIZE (1)                         75 01
->     REPORT_COUNT (11)                       95 0B
->     INPUT (Data,Var,Abs)                    81 02
->
-> With Usage Page concatenation in Main item, parser recognizes all the
-> 11 Usages as consumer keys, it is not the HID device's real intention.
->
-> This patch adds usage_page_preceding flag to detect the third pattern.
-> Usage Page concatenation is done in both Local and Main parsing.
-> If usage_page_preceding equals 3(the third pattern encountered),
-> hid_concatenate_usage_page() is jumped.
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-For anything core related (and especially the parsing), I am trying to
-enforce having regression tests.
-See https://gitlab.freedesktop.org/libevdev/hid-tools/merge_requests/37
-for the one related to 58e75155009c.
-
-So I would like to have a similar-ish MR adding the matching tests so
-I know we won't break this in the future.
-
-Few other comments in the code:
-
->
-> Signed-off-by: Candle Sun <candle.sun@unisoc.com>
-> Signed-off-by: Nianfu Bai <nianfu.bai@unisoc.com>
 > ---
->  drivers/hid/hid-core.c | 21 +++++++++++++++++++--
->  include/linux/hid.h    |  1 +
->  2 files changed, 20 insertions(+), 2 deletions(-)
+>  drivers/thermal/Kconfig           |  11 +
+>  drivers/thermal/Makefile          |   1 +
+>  drivers/thermal/amlogic_thermal.c | 333 ++++++++++++++++++++++++++++++
+>  3 files changed, 345 insertions(+)
+>  create mode 100644 drivers/thermal/amlogic_thermal.c
 >
-> diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-> index 3eaee2c..043a232 100644
-> --- a/drivers/hid/hid-core.c
-> +++ b/drivers/hid/hid-core.c
-> @@ -221,7 +221,15 @@ static int hid_add_usage(struct hid_parser *parser, =
-unsigned usage, u8 size)
->                 hid_err(parser->device, "usage index exceeded\n");
->                 return -1;
->         }
-> -       parser->local.usage[parser->local.usage_index] =3D usage;
-> +       if (!parser->local.usage_index && parser->global.usage_page)
-
-parser->global.usage_page is never reset, so unless I am misreading,
-it will always be set to a value except for the very first elements.
-I am just raising this in case you rely on global.usage_page being
-null in your algorithm.
-
-> +               parser->local.usage_page_preceding =3D 1;
-> +       if (parser->local.usage_page_preceding =3D=3D 2)
-> +               parser->local.usage_page_preceding =3D 3;
-
-Can't we use an enum at least for those 1, 2, 3 values?
-Unless you are counting the previous items, in which we should rename
-the field .usage_page_preceding with something more explicit IMO.
-
-
-> +       if (size <=3D 2 && parser->global.usage_page)
-> +               parser->local.usage[parser->local.usage_index] =3D
-> +                       (usage & 0xffff) + (parser->global.usage_page << =
-16);
-
-we could use a function as this assignment is also reused in
-hid_concatenate_usage_page()
-
-> +       else
-> +               parser->local.usage[parser->local.usage_index] =3D usage;
->         parser->local.usage_size[parser->local.usage_index] =3D size;
->         parser->local.collection_index[parser->local.usage_index] =3D
->                 parser->collection_stack_ptr ?
-> @@ -366,6 +374,8 @@ static int hid_parser_global(struct hid_parser *parse=
-r, struct hid_item *item)
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index 9966364a6deb..0f31bb4bc372 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -348,6 +348,17 @@ config MTK_THERMAL
+>           Enable this option if you want to have support for thermal management
+>           controller present in Mediatek SoCs
 >
->         case HID_GLOBAL_ITEM_TAG_USAGE_PAGE:
->                 parser->global.usage_page =3D item_udata(item);
-> +               if (parser->local.usage_page_preceding =3D=3D 1)
-> +                       parser->local.usage_page_preceding =3D 2;
->                 return 0;
->
->         case HID_GLOBAL_ITEM_TAG_LOGICAL_MINIMUM:
-> @@ -547,9 +557,16 @@ static void hid_concatenate_usage_page(struct hid_pa=
-rser *parser)
->  {
->         int i;
->
-> +       if (parser->local.usage_page_preceding =3D=3D 3) {
-> +               dbg_hid("Using preceding usage page for final usage\n");
-> +               return;
+> +config AMLOGIC_THERMAL
+> +       tristate "Amlogic Thermal Support"
+> +       default ARCH_MESON
+> +       depends on OF && ARCH_MESON
+> +       help
+> +         If you say yes here you get support for Amlogic Thermal
+> +         for G12 SoC Family.
+> +
+> +         This driver can also be built as a module. If so, the module will
+> +         be called amlogic_thermal.
+> +
+>  menu "Intel thermal drivers"
+>  depends on X86 || X86_INTEL_QUARK || COMPILE_TEST
+>  source "drivers/thermal/intel/Kconfig"
+> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+> index 74a37c7f847a..baeb70bf0568 100644
+> --- a/drivers/thermal/Makefile
+> +++ b/drivers/thermal/Makefile
+> @@ -54,3 +54,4 @@ obj-$(CONFIG_MTK_THERMAL)     += mtk_thermal.o
+>  obj-$(CONFIG_GENERIC_ADC_THERMAL)      += thermal-generic-adc.o
+>  obj-$(CONFIG_ZX2967_THERMAL)   += zx2967_thermal.o
+>  obj-$(CONFIG_UNIPHIER_THERMAL) += uniphier_thermal.o
+> +obj-$(CONFIG_AMLOGIC_THERMAL)     += amlogic_thermal.o
+> diff --git a/drivers/thermal/amlogic_thermal.c b/drivers/thermal/amlogic_thermal.c
+> new file mode 100644
+> index 000000000000..8a9e9bc421c6
+> --- /dev/null
+> +++ b/drivers/thermal/amlogic_thermal.c
+> @@ -0,0 +1,333 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Amlogic Thermal Sensor Driver
+> + *
+> + * Copyright (C) 2017 Huan Biao <huan.biao@amlogic.com>
+> + * Copyright (C) 2019 Guillaume La Roque <glaroque@baylibre.com>
+> + *
+> + * Register value to celsius temperature formulas:
+> + *     Read_Val            m * U
+> + * U = ---------, Uptat = ---------
+> + *     2^16              1 + n * U
+> + *
+> + * Temperature = A * ( Uptat + u_efuse / 2^16 )- B
+> + *
+> + *  A B m n : calibration parameters
+> + *  u_efuse : fused calibration value, it's a signed 16 bits value
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/thermal.h>
+> +
+> +#include "thermal_core.h"
+> +
+> +#define TSENSOR_CFG_REG1                       0x4
+> +       #define TSENSOR_CFG_REG1_RSET_VBG       BIT(12)
+> +       #define TSENSOR_CFG_REG1_RSET_ADC       BIT(11)
+> +       #define TSENSOR_CFG_REG1_VCM_EN         BIT(10)
+> +       #define TSENSOR_CFG_REG1_VBG_EN         BIT(9)
+> +       #define TSENSOR_CFG_REG1_OUT_CTL        BIT(6)
+> +       #define TSENSOR_CFG_REG1_FILTER_EN      BIT(5)
+> +       #define TSENSOR_CFG_REG1_DEM_EN         BIT(3)
+> +       #define TSENSOR_CFG_REG1_CH_SEL         GENMASK(1, 0)
+> +       #define TSENSOR_CFG_REG1_ENABLE         \
+> +               (TSENSOR_CFG_REG1_FILTER_EN |   \
+> +                TSENSOR_CFG_REG1_VCM_EN |      \
+> +                TSENSOR_CFG_REG1_VBG_EN |      \
+> +                TSENSOR_CFG_REG1_DEM_EN |      \
+> +                TSENSOR_CFG_REG1_CH_SEL)
+> +
+> +#define TSENSOR_STAT0                  0x40
+> +
+> +#define TSENSOR_STAT9                  0x64
+> +
+> +#define TSENSOR_READ_TEMP_MASK         GENMASK(15, 0)
+> +#define TSENSOR_TEMP_MASK              GENMASK(11, 0)
+> +
+> +#define TSENSOR_TRIM_SIGN_MASK         BIT(15)
+> +#define TSENSOR_TRIM_TEMP_MASK         GENMASK(14, 0)
+> +#define TSENSOR_TRIM_VERSION_MASK      GENMASK(31, 24)
+> +
+> +#define TSENSOR_TRIM_VERSION(_version) \
+> +       FIELD_GET(TSENSOR_TRIM_VERSION_MASK, _version)
+> +
+> +#define TSENSOR_TRIM_CALIB_VALID_MASK  (GENMASK(3, 2) | BIT(7))
+> +
+> +#define TSENSOR_CALIB_OFFSET   1
+> +#define TSENSOR_CALIB_SHIFT    4
+> +
+> +/**
+> + * struct amlogic_thermal_soc_calib_data
+> + * @A, B, m, n: calibration parameters
+> + * This structure is required for configuration of amlogic thermal driver.
+> + */
+> +struct amlogic_thermal_soc_calib_data {
+> +       int A;
+> +       int B;
+> +       int m;
+> +       int n;
+> +};
+> +
+> +/**
+> + * struct amlogic_thermal_data
+> + * @u_efuse_off: register offset to read fused calibration value
+> + * @calibration_parameters: calibration parameters structure pointer
+> + * @regmap_config: regmap config for the device
+> + * This structure is required for configuration of amlogic thermal driver.
+> + */
+> +struct amlogic_thermal_data {
+> +       int u_efuse_off;
+> +       const struct amlogic_thermal_soc_calib_data *calibration_parameters;
+> +       const struct regmap_config *regmap_config;
+> +};
+> +
+> +struct amlogic_thermal {
+> +       struct platform_device *pdev;
+> +       const struct amlogic_thermal_data *data;
+> +       struct regmap *regmap;
+> +       struct regmap *sec_ao_map;
+> +       struct clk *clk;
+> +       struct thermal_zone_device *tzd;
+> +       u32 trim_info;
+> +};
+> +
+> +/*
+> + * Calculate a temperature value from a temperature code.
+> + * The unit of the temperature is degree milliCelsius.
+> + */
+> +static int amlogic_thermal_code_to_millicelsius(struct amlogic_thermal *pdata,
+> +                                               int temp_code)
+> +{
+> +       const struct amlogic_thermal_soc_calib_data *param =
+> +                                       pdata->data->calibration_parameters;
+> +       int temp;
+> +       s64 factor, Uptat, uefuse;
+> +
+> +       uefuse = pdata->trim_info & TSENSOR_TRIM_SIGN_MASK ?
+> +                            ~(pdata->trim_info & TSENSOR_TRIM_TEMP_MASK) + 1 :
+> +                            (pdata->trim_info & TSENSOR_TRIM_TEMP_MASK);
+> +
+> +       factor = param->n * temp_code;
+> +       factor = div_s64(factor, 100);
+> +
+> +       Uptat = temp_code * param->m;
+> +       Uptat = div_s64(Uptat, 100);
+> +       Uptat = Uptat * BIT(16);
+> +       Uptat = div_s64(Uptat, BIT(16) + factor);
+> +
+> +       temp = (Uptat + uefuse) * param->A;
+> +       temp = div_s64(temp, BIT(16));
+> +       temp = (temp - param->B) * 100;
+> +
+> +       return temp;
+> +}
+> +
+> +static int amlogic_thermal_initialize(struct amlogic_thermal *pdata)
+> +{
+> +       int ret = 0;
+> +       int ver;
+> +
+> +       regmap_read(pdata->sec_ao_map, pdata->data->u_efuse_off,
+> +                   &pdata->trim_info);
+> +
+> +       ver = TSENSOR_TRIM_VERSION(pdata->trim_info);
+> +
+> +       if ((ver & TSENSOR_TRIM_CALIB_VALID_MASK) == 0) {
+> +               ret = -EINVAL;
+> +               dev_err(&pdata->pdev->dev,
+> +                       "tsensor thermal calibration not supported: 0x%x!\n",
+> +                       ver);
 > +       }
 > +
->         for (i =3D 0; i < parser->local.usage_index; i++)
->                 if (parser->local.usage_size[i] <=3D 2)
-> -                       parser->local.usage[i] +=3D parser->global.usage_=
-page << 16;
-> +                       parser->local.usage[i] =3D
-> +                               (parser->global.usage_page << 16)
-> +                               + (parser->local.usage[i] & 0xffff);
-
-I find the whole logic really hard to follow. I'm not saying you are
-wrong, but if it's hard to get the concepts behind the various states
-and this will make it really prone to future errors.
-
-I wonder if we should not:
-- store the current usage page in the current local item as they come in
-- then in hid_concatenate_usage_page() iterate over the usages in
-reverse order. We should be able to detect if the last usage page was
-given for the whole previous range (i.e. not assigned to any local
-usage) or if it has already been given to a local usage, meaning we
-should just keep things as it is.
-
-Cheers,
-Benjamin
-
->  }
->
->  /*
-> diff --git a/include/linux/hid.h b/include/linux/hid.h
-> index cd41f20..7fb6cf3 100644
-> --- a/include/linux/hid.h
-> +++ b/include/linux/hid.h
-> @@ -412,6 +412,7 @@ struct hid_local {
->         unsigned usage_minimum;
->         unsigned delimiter_depth;
->         unsigned delimiter_branch;
-> +       unsigned int usage_page_preceding;
->  };
->
->  /*
+> +       return ret;
+> +}
+> +
+> +static int amlogic_thermal_enable(struct amlogic_thermal *data)
+> +{
+> +       int ret;
+> +
+> +       ret = clk_prepare_enable(data->clk);
+> +       if (ret)
+> +               return ret;
+> +
+> +       regmap_update_bits(data->regmap, TSENSOR_CFG_REG1,
+> +                          TSENSOR_CFG_REG1_ENABLE, TSENSOR_CFG_REG1_ENABLE);
+> +
+> +       return 0;
+> +}
+> +
+> +static int amlogic_thermal_disable(struct amlogic_thermal *data)
+> +{
+> +       regmap_update_bits(data->regmap, TSENSOR_CFG_REG1,
+> +                          TSENSOR_CFG_REG1_ENABLE, 0);
+> +       clk_disable_unprepare(data->clk);
+> +
+> +       return 0;
+> +}
+> +
+> +static int amlogic_thermal_get_temp(void *data, int *temp)
+> +{
+> +       unsigned int tval;
+> +       struct amlogic_thermal *pdata = data;
+> +
+> +       if (!data)
+> +               return -EINVAL;
+> +
+> +       regmap_read(pdata->regmap, TSENSOR_STAT0, &tval);
+> +       *temp =
+> +          amlogic_thermal_code_to_millicelsius(pdata,
+> +                                               tval & TSENSOR_READ_TEMP_MASK);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct thermal_zone_of_device_ops amlogic_thermal_ops = {
+> +       .get_temp       = amlogic_thermal_get_temp,
+> +};
+> +
+> +static const struct regmap_config amlogic_thermal_regmap_config_g12a = {
+> +       .reg_bits = 8,
+> +       .val_bits = 32,
+> +       .reg_stride = 4,
+> +       .max_register = TSENSOR_STAT9,
+> +};
+> +
+> +static const struct amlogic_thermal_soc_calib_data amlogic_thermal_g12a = {
+> +       .A = 9411,
+> +       .B = 3159,
+> +       .m = 424,
+> +       .n = 324,
+> +};
+> +
+> +static const struct amlogic_thermal_data amlogic_thermal_g12a_cpu_param = {
+> +       .u_efuse_off = 0x128,
+> +       .calibration_parameters = &amlogic_thermal_g12a,
+> +       .regmap_config = &amlogic_thermal_regmap_config_g12a,
+> +};
+> +
+> +static const struct amlogic_thermal_data amlogic_thermal_g12a_ddr_param = {
+> +       .u_efuse_off = 0xf0,
+> +       .calibration_parameters = &amlogic_thermal_g12a,
+> +       .regmap_config = &amlogic_thermal_regmap_config_g12a,
+> +};
+> +
+> +static const struct of_device_id of_amlogic_thermal_match[] = {
+> +       {
+> +               .compatible = "amlogic,g12a-ddr-thermal",
+> +               .data = &amlogic_thermal_g12a_ddr_param,
+> +       },
+> +       {
+> +               .compatible = "amlogic,g12a-cpu-thermal",
+> +               .data = &amlogic_thermal_g12a_cpu_param,
+> +       },
+> +       { /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, of_amlogic_thermal_match);
+> +
+> +static int amlogic_thermal_probe(struct platform_device *pdev)
+> +{
+> +       struct amlogic_thermal *pdata;
+> +       struct device *dev = &pdev->dev;
+> +       void __iomem *base;
+> +       int ret;
+> +
+> +       pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+> +       if (!pdata)
+> +               return -ENOMEM;
+> +
+> +       pdata->data = of_device_get_match_data(dev);
+> +       pdata->pdev = pdev;
+> +       platform_set_drvdata(pdev, pdata);
+> +
+> +       base = devm_platform_ioremap_resource(pdev, 0);
+> +       if (IS_ERR(base)) {
+> +               dev_err(dev, "failed to get io address\n");
+> +               return PTR_ERR(base);
+> +       }
+> +
+> +       pdata->regmap = devm_regmap_init_mmio(dev, base,
+> +                                             pdata->data->regmap_config);
+> +       if (IS_ERR(pdata->regmap))
+> +               return PTR_ERR(pdata->regmap);
+> +
+> +       pdata->clk = devm_clk_get(dev, NULL);
+> +       if (IS_ERR(pdata->clk)) {
+> +               if (PTR_ERR(pdata->clk) != -EPROBE_DEFER)
+> +                       dev_err(dev, "failed to get clock\n");
+> +               return PTR_ERR(pdata->clk);
+> +       }
+> +
+> +       pdata->sec_ao_map = syscon_regmap_lookup_by_phandle
+> +               (pdev->dev.of_node, "amlogic,ao-secure");
+> +       if (IS_ERR(pdata->sec_ao_map)) {
+> +               dev_err(dev, "syscon regmap lookup failed.\n");
+> +               return PTR_ERR(pdata->sec_ao_map);
+> +       }
+> +
+> +       pdata->tzd = devm_thermal_zone_of_sensor_register(&pdev->dev,
+> +                                                         0,
+> +                                                         pdata,
+> +                                                         &amlogic_thermal_ops);
+> +       if (IS_ERR(pdata->tzd)) {
+> +               ret = PTR_ERR(pdata->tzd);
+> +               dev_err(dev, "Failed to register tsensor: %d\n", ret);
+> +               return ret;
+> +       }
+> +
+> +       ret = amlogic_thermal_initialize(pdata);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret = amlogic_thermal_enable(pdata);
+> +
+> +       return ret;
+> +}
+> +
+> +static int amlogic_thermal_remove(struct platform_device *pdev)
+> +{
+> +       struct amlogic_thermal *data = platform_get_drvdata(pdev);
+> +
+> +       return amlogic_thermal_disable(data);
+> +}
+> +
+> +static int __maybe_unused amlogic_thermal_suspend(struct device *dev)
+> +{
+> +       struct amlogic_thermal *data = dev_get_drvdata(dev);
+> +
+> +       return amlogic_thermal_disable(data);
+> +}
+> +
+> +static int __maybe_unused amlogic_thermal_resume(struct device *dev)
+> +{
+> +       struct amlogic_thermal *data = dev_get_drvdata(dev);
+> +
+> +       return amlogic_thermal_enable(data);
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(amlogic_thermal_pm_ops,
+> +                        amlogic_thermal_suspend, amlogic_thermal_resume);
+> +
+> +static struct platform_driver amlogic_thermal_driver = {
+> +       .driver = {
+> +               .name           = "amlogic_thermal",
+> +               .pm             = &amlogic_thermal_pm_ops,
+> +               .of_match_table = of_amlogic_thermal_match,
+> +       },
+> +       .probe  = amlogic_thermal_probe,
+> +       .remove = amlogic_thermal_remove,
+> +};
+> +
+> +module_platform_driver(amlogic_thermal_driver);
+> +
+> +MODULE_AUTHOR("Guillaume La Roque <glaroque@baylibre.com>");
+> +MODULE_DESCRIPTION("Amlogic thermal driver");
+> +MODULE_LICENSE("GPL v2");
 > --
-> 2.7.4
+> 2.17.1
 >
-
