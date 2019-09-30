@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA52C4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF8AC388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 736D821920
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2333A21855
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:35:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LZFWjyQ1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ENKDUxj2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730507AbfI3JfM (ORCPT
+        id S1730519AbfI3Jf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 05:35:12 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:46493 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727884AbfI3JfL (ORCPT
+        Mon, 30 Sep 2019 05:35:57 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:44631 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727884AbfI3Jf5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 05:35:11 -0400
-Received: by mail-vs1-f65.google.com with SMTP id z14so6257278vsz.13
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 02:35:10 -0700 (PDT)
+        Mon, 30 Sep 2019 05:35:57 -0400
+Received: by mail-ua1-f66.google.com with SMTP id n2so3920226ual.11
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 02:35:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=QV4x5NHTum/jLzU4cx5C+ZxMnkOgGxMeO6LpanKwV8Q=;
-        b=LZFWjyQ1EhPcpe/hpsLIH/Tabk0U7kboQRvjElnQaSeO8fb6R0xdxk4JfgVcnbizBW
-         96mxggGf0N0DiJ+UuxdB3g3NqOo301Z4YsMUOubGYkHzAmTE7elNh8gQ9zCmBRO6jMSt
-         AKb9ZSZsSWjA2n9JPaorjb42bN4lxFzjiDS6ZdT15+paoV43KMuXz7RkOmmJukcdVkQE
-         tKinjhMracv9Bb4eAZyrJ++gq/kdIqCEX2/z3DtOoK4JBogFf700W7TyS8x8H8s6xUbF
-         uX74t+Lz741V5GFZPFumLzUJJAziOq050GnQfid4NiEgY21kp4fkolg9LF92zfrhoLWX
-         9cGA==
+        bh=gzD2qGvL3VizkE9nQvu95DK0V9ar1WcYyRCEdbmgd/s=;
+        b=ENKDUxj2S/PL76NTuZ0LtDt8Xp1Qggith5LsiWQ1vVZE86Qa0ly016ttBl1QI6INFA
+         BIGRhlxIJzDpY38IboaFgI4jFzR0GGBsoPYCWeEyoCNOvhOb4OZ1VsFSEN+dsHt/LcE0
+         QFanGtNHxC8kL9yMg0gmoLHkIz6c2u4tUG4MyElYibFOJw2SlT+Z2lf7RknOjUZXAvaS
+         gCFO/YGYKX29t/zhpJATFktFYBI5MDaPbL1eN6PHRS9wNUmLzIOYopZiy/gAfqQ6E54D
+         lQT1KLjBXc7GtGAkYyUCcFHVDZCAUlF3v4WinAc9LgL0e+DwE1i4A+7hLPWE3HJLvdJn
+         gV2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QV4x5NHTum/jLzU4cx5C+ZxMnkOgGxMeO6LpanKwV8Q=;
-        b=f3c0Dvf3+gT0azOdO2jSpEWsL7nwf7OmDCqI1fVt0nng/uEJ7BR8wvYQ9dnhmlHot/
-         D+ysWjAMrmyEWA7i7p7ChQgCfqVifrgYLsST0M4tSLMZhia0jHVCVTDj0zYJQP5uZqxb
-         pV32khZpQhmfyC9db2OEymmlLb6Aa0aBqM9xX2mmvCyjzMLOYVVAL5rwcaHsE0GYYdmM
-         wPRmb2pnz1KHJxyzr6m0zmD+AiQQzeG6uaJDM/lq/Y36SpXL8c8YP4v/mtPhMo1yem2G
-         X2QX5VqOKZ5BFKq/ORwQx1wtBVbwo0/V3Jnpfk6Js+Kf3NQF1UtmGTeL0Baox3SUn4sz
-         RSmQ==
-X-Gm-Message-State: APjAAAW8O//mdf/J/u7uVKIu1psCRIhEgZu45kM03D4fbOxyAmIJTCuD
-        6bXDmKkIBZigiq2bQlz1TXsiFVWDSjj2aOWndBEUUw==
-X-Google-Smtp-Source: APXvYqwMBz5wNpuqunAhTIOtFioIDFII4P4C9O10Q9J5ID9h0IFfwcQ92Xm+Zo1lLTaPpokB531dd4mzAf8FzHenGEU=
-X-Received: by 2002:a67:f058:: with SMTP id q24mr9102100vsm.27.1569836109918;
- Mon, 30 Sep 2019 02:35:09 -0700 (PDT)
+        bh=gzD2qGvL3VizkE9nQvu95DK0V9ar1WcYyRCEdbmgd/s=;
+        b=YP6YtCfA/5wyMzTxj6l/tfGFxBZpz6ZqyF5lHHsWljhISTh56cJxaa08eRjC1X845Z
+         xNbolyrZqskOH84/t0L6A/qTWIlbIixbQmCsP4DuFrq1m6/NRF4YUe4AXf/4muCqyLAe
+         6I9NFTL2h3ZBs9QfgKyrdAv0hclbRrgQvHpieVfD55R9X6AUUJ/Ht78qsivPpcPeyOHm
+         Mp4KRYcELAMFJ7ees/CKCnga+wI2NoB7bXGb3ZoQUVW7yyCMjHt4WKWaCfbNxOpYc4Uj
+         O/ggj38i4l/vD0utjmIIxmH8zenhx0lKnwVxMOMyiU6G6DJS+/rZlwJywAwmNCsgjoXc
+         znTg==
+X-Gm-Message-State: APjAAAXKdSwDCFY5q8e790sYXCccQ/vGbR06CoTbZyehbOOtG2m24z5l
+        nQV8hUNEzIYNSR6Cz2rz0KaXWnWC/UI9rGIFrbEG1g==
+X-Google-Smtp-Source: APXvYqwOPzgEcdOwEVKUjzTC90Fkp81Mt7170e3s+ZrPHeKlCkhi0dtBcyVb9k3LPsI52iJjSoPVhKu5BeDpUuzi5Dg=
+X-Received: by 2002:ab0:ed:: with SMTP id 100mr4570681uaj.48.1569836156110;
+ Mon, 30 Sep 2019 02:35:56 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190927184352.28759-1-glaroque@baylibre.com> <20190927184352.28759-2-glaroque@baylibre.com>
 In-Reply-To: <20190927184352.28759-2-glaroque@baylibre.com>
 From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Mon, 30 Sep 2019 15:04:59 +0530
-Message-ID: <CAHLCerPxrGMm98nDC529pYkzEaiDk0p6VTdVzyHx8=U8_PYe_A@mail.gmail.com>
+Date:   Mon, 30 Sep 2019 15:05:44 +0530
+Message-ID: <CAHLCerMDyuLW-XJ6XxnDq5Th42g_970e_Scqtuxo0r0=pbSWdA@mail.gmail.com>
 Subject: Re: [PATCH v6 1/7] dt-bindings: thermal: Add DT bindings
  documentation for Amlogic Thermal
 To:     Guillaume La Roque <glaroque@baylibre.com>
@@ -85,6 +85,9 @@ On Sat, Sep 28, 2019 at 12:14 AM Guillaume La Roque
 > Tested-by: Christian Hewitt <christianshewitt@gmail.com>
 > Tested-by: Kevin Hilman <khilman@baylibre.com>
 > Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+
 > ---
 >  .../bindings/thermal/amlogic,thermal.yaml     | 54 +++++++++++++++++++
 >  1 file changed, 54 insertions(+)
