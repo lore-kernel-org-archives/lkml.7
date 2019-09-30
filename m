@@ -2,106 +2,120 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68553C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF44DC388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B080224FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:53:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569876782;
-	bh=efT4io22JXXaMsqJPPd4MJrDntpM2iMQn6xznt4n9YI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Esbgh/SReI4YrXCCddVlQ0pTGA1rioGH3ks06pJNcSBH4VfhxTMcyTfL+I733PO03
-	 A6/oavM4hIZE24fSA+98TUuh9870vKgOMg7BLUfpRcdBSpYZNLFPSnJjxG3HU0MKju
-	 xN6lr5rHRk6A6LOEXOqYDuuW7EbC8tqVqhDHVziY=
+	by mail.kernel.org (Postfix) with ESMTP id 8FA11224FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:53:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731363AbfI3UxB (ORCPT
+        id S1731579AbfI3Ux3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 16:53:01 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:38099 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727118AbfI3UxA (ORCPT
+        Mon, 30 Sep 2019 16:53:29 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:59518 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730485AbfI3Ux2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 16:53:00 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e11so9605204otl.5;
-        Mon, 30 Sep 2019 13:53:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qttcrBHS0kIn8DMgwWljur1/ogNYEuQG7wPRDTGlx3M=;
-        b=Muxh408k0X9cXxPp2LPXLtbDx5bTsAE2n+l+7TzUT76+8ZvhR+RZyJKO1VLGABMME7
-         BanJUeAT86GhLqc+xMrYmJ2efriH0qtl0FYwuwCuDyklNU07Ujn2bRxeYROl3gZ0/oFl
-         79/T7i0lWn8YQy4yN/6h7cRKoC7222y5loj+Fi2+9FYUpr+OYNpISWApr6DerqTrSCRL
-         ukADVYWQgA1mNx0MLZA2rufk7DLn0vcCBXbwysu6PU0eZ2hbmzNC84WZGZCt8kwqj+zD
-         8UZiyjJZ8tjI6xCUlMLY6adYmsNgMCrhqz0PLFBgT+qKHJM7BWhoMVz9atahKt8Leuzx
-         SccQ==
-X-Gm-Message-State: APjAAAXEMmyZzPG5eYfbKYINZkEWFszBctdYY9KdkfqsDkmWGOY0rs0S
-        LaVAjVPOM53/s2R5H3MYXfOXoEQ=
-X-Google-Smtp-Source: APXvYqxBaCMEenuVO/TLEa22+nQKS8epFGf8JVek9VBh07i8c+Qw+sc7bz02Xq20jisGQ0FY5ulbtA==
-X-Received: by 2002:a9d:6084:: with SMTP id m4mr14638230otj.6.1569869959652;
-        Mon, 30 Sep 2019 11:59:19 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 5sm4127490otp.20.2019.09.30.11.59.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 11:59:19 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 13:59:18 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-i2c@vger.kernel.org,
-        brendanhiggins@google.com, joel@jms.id.au, andrew@aj.id.au,
-        mark.rutland@arm.com, benh@kernel.crashing.org
-Subject: Re: [PATCH 2/2] dt-bindings: i2c: Aspeed: Add AST2600 compatible
-Message-ID: <20190930185918.GA18431@bogus>
-References: <1568392510-866-1-git-send-email-eajames@linux.ibm.com>
- <1568392510-866-3-git-send-email-eajames@linux.ibm.com>
+        Mon, 30 Sep 2019 16:53:28 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 7E39228B90F
+Message-ID: <8063b9555d5bce6f2c002e49da3b7afaca9ae0b4.camel@collabora.com>
+Subject: Re: [PATCH v4 8/9] drm: rcar-du: kms: Update CMM in atomic commit
+ tail
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        laurent.pinchart@ideasonboard.com,
+        kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli+renesas@fpond.eu,
+        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
+        daniel@ffwll.ch
+Cc:     muroya@ksk.co.jp, koji.matsuoka.xm@renesas.com,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        Doug Anderson <dianders@google.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Date:   Mon, 30 Sep 2019 17:53:00 -0300
+In-Reply-To: <20190906135436.10622-9-jacopo+renesas@jmondi.org>
+References: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
+         <20190906135436.10622-9-jacopo+renesas@jmondi.org>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1568392510-866-3-git-send-email-eajames@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 11:35:10AM -0500, Eddie James wrote:
-> Document the AST2600 I2C bus compatible string.
++Doug, Heiko:
+
+On Fri, 2019-09-06 at 15:54 +0200, Jacopo Mondi wrote:
+> Update CMM settings at in the atomic commit tail helper method.
+> The CMM is updated with new gamma values provided to the driver
+> in the GAMMA_LUT blob property.
 > 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> When resuming from system suspend, the DU driver is responsible for
+> reprogramming and enabling the CMM unit if it was in use at the time the
+> system entered the suspend state.  Force the color_mgmt_changed flag to
+> true if the DRM gamma lut color transformation property was set in the
+> CRTC state duplicated at suspend time, as the CMM gets reprogrammed only
+> if said flag is active in the rcar_du_atomic_commit_update_cmm() method.
+> 
+> Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 > ---
->  Documentation/devicetree/bindings/i2c/i2c-aspeed.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
-> index 8fbd863..b47f6cc 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
-> @@ -1,4 +1,4 @@
-> -Device tree configuration for the I2C busses on the AST24XX and AST25XX SoCs.
-> +Device tree configuration for the I2C busses on the AST24XX, AST25XX, and AST26XX SoCs.
-
-Perhaps s/buses/busses/ while you're here.
-
-Acked-by: Rob Herring <robh@kernel.org>
-
->  
->  Required Properties:
->  - #address-cells	: should be 1
-> @@ -6,6 +6,7 @@ Required Properties:
->  - reg			: address offset and range of bus
->  - compatible		: should be "aspeed,ast2400-i2c-bus"
->  			  or "aspeed,ast2500-i2c-bus"
-> +			  or "aspeed,ast2600-i2c-bus"
->  - clocks		: root clock of bus, should reference the APB
->  			  clock in the second cell
->  - resets		: phandle to reset controller with the reset number in
-> -- 
-> 1.8.3.1
+> Daniel could you have a look if resume bits are worth being moved to the
+> DRM core? The color_mgmt_changed flag is set to false when the state is
+> duplicated if I read the code correctly, but when this happens in a
+> suspend/resume sequence its value should probably be restored to true if
+> any color management property was set in the crtc state when system entered
+> suspend.
 > 
+
+Perhaps we can use the for_each_new_crtc_in_state() helper here,
+and move it to the core like this:
+
+--- a/drivers/gpu/drm/drm_atomic_helper.c
++++ b/drivers/gpu/drm/drm_atomic_helper.c
+@@ -3234,8 +3234,20 @@ int drm_atomic_helper_resume(struct
+drm_device *dev,
+                             struct drm_atomic_state *state)
+ {
+        struct drm_modeset_acquire_ctx ctx;
++       struct drm_crtc_state
+*crtc_state;
++       struct drm_crtc *crtc;
++       unsigned int i;
+        int err;
+ 
++       for_each_new_crtc_in_state(state, crtc, crtc_state, i) {
++   
+            /*
++                * Force re-enablement of CMM after system resume if any
++                * of the DRM color transformation properties
+was set in
++                * the state saved at system suspend time.
++                */
++               if (crtc_state->gamma_lut)
++                    
+   crtc_state->color_mgmt_changed = true;
++       }
+
+This probably is wrong, and should be instead constrained to some
+condition of some sort.
+
+FWIW, the Rockchip DRM is going to need this as well.
+
+Any ideas?
+
+Thanks,
+Ezequiel
+
