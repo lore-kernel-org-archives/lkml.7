@@ -2,127 +2,98 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E798C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C10A9C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D7A22081B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95D8D2168B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:26:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="Nyv3MjpM"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FEXFmDSW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732060AbfI3WXK (ORCPT
+        id S1730607AbfI3W0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 18:23:10 -0400
-Received: from mail-eopbgr770123.outbound.protection.outlook.com ([40.107.77.123]:27602
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726590AbfI3WXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 18:23:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fLiqDNEBYq3sCo6kFtYxM/2HkxFvzkQGKALvwoEEB7pJjjPK9Us3MphcfsGrvRMbyj2t72qB7BKmisxR3I8Vqltpf2flHA6/C5AeAH5gHfxJWhhxnrvVw3q9lWUk86gUjXaaqZ52BVTeWXRiABPW4wNumYscmOX9xnUh/qWLdOE36ChOjYnwCR74uGHimvKKEYV3FZjodGo2HIrBHpduiFS87sDVdrpW8mwgejfpdTzkAMTyFiwgMVdKoUB50X1eBNB3NmrlYbYAB4qWh7wgcZB7cpGWD6ApK1C47AmOqbHbesYk9lFum7l+iIvs0WinlkbKozBkMpRHi4QtyXdf8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rjIeJqFz0YD2vBhdgldufYFAKwa+c7twIwQ+b6mcOPI=;
- b=ARnLIzzRovSXRLpCRLQfQgd/V24EqC66EF1EaVOkBI5KiC0AnoWkClBzNVaTquNskDvjuYrE2si7u26nyF6QsQ1g4rnpLQgVnjgdX1rUWuopv5cvVy5uS4JzH86G86GKAieN+AAiTDlCvwjD5naeL/XZ3xPVVT4KDGpYW76S70kn0wQIR7sYxO1jXIuUCJUp6eIY90IyUX+5Xyo2kxnlyD4o9VBIgaQz+EIGhYeFB+l0mXtmrLlgyyX9LZi3MbxGcxFxAuf0D5XK1a345emzgrFb3gRhbkRPDUJ5eQpHG8o1h16Yc+Q9YZSVC2Ov2A9YTD31ZXNMbmcyRRPn8TZRig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
- dkim=pass header.d=mips.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rjIeJqFz0YD2vBhdgldufYFAKwa+c7twIwQ+b6mcOPI=;
- b=Nyv3MjpMf1oIvj0vVGgf5VCQEB/GQeiCOEE90bBXw1CRlg2A9WuIo99tkNlhI1FD8IWxAxbTcPVVZq55FnoCx9i98ToIRMr+Amgz2tlSJXgyahg80WMn37JFzidqLxIY1xSoQHjkFctTM775y0mcmGRcijuOe1yOSq3Olz8NHiE=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1168.namprd22.prod.outlook.com (10.174.168.167) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.17; Mon, 30 Sep 2019 22:23:08 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::498b:c2cd:e816:1481]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::498b:c2cd:e816:1481%2]) with mapi id 15.20.2305.017; Mon, 30 Sep 2019
- 22:23:08 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <pburton@wavecomp.com>,
-        James Hogan <jhogan@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH v1] MIPS: dts: ar9331: fix interrupt-controller size
-Thread-Topic: [PATCH v1] MIPS: dts: ar9331: fix interrupt-controller size
-Thread-Index: AQHVd92icE8wAVdhU0ezG/dYASTkBg==
-Date:   Mon, 30 Sep 2019 22:23:08 +0000
-Message-ID: <MWHPR2201MB12777F4BB53AEC23CDE5B996C1820@MWHPR2201MB1277.namprd22.prod.outlook.com>
-References: <20190930093952.22418-1-o.rempel@pengutronix.de>
-In-Reply-To: <20190930093952.22418-1-o.rempel@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR05CA0080.namprd05.prod.outlook.com
- (2603:10b6:a03:e0::21) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:18::12)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bea83fa6-ebad-49b6-e452-08d745f4c54d
-x-ms-traffictypediagnostic: MWHPR2201MB1168:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR2201MB11681BF5591A9B5BC85591ADC1820@MWHPR2201MB1168.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2089;
-x-forefront-prvs: 01762B0D64
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(396003)(39850400004)(136003)(366004)(199004)(189003)(256004)(7736002)(76176011)(74316002)(305945005)(6506007)(386003)(52116002)(42882007)(26005)(55016002)(186003)(6306002)(9686003)(4744005)(102836004)(7696005)(54906003)(99286004)(316002)(44832011)(476003)(6436002)(446003)(486006)(11346002)(5660300002)(6916009)(229853002)(3846002)(6116002)(478600001)(25786009)(71190400001)(52536014)(71200400001)(33656002)(2906002)(66946007)(66446008)(66066001)(64756008)(66556008)(66476007)(6246003)(81156014)(81166006)(966005)(14454004)(4326008)(8676002)(8936002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1168;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: dp809ggupFMy6BHOXmTv+jee4+sWcfLFHQrwLyZf8x64oei8XvL8RdRsNscYYh8guQIrN4asEGHLpB4aG4/xbywnZTholVBSdBn23ol0AArP8MDWch95xAB+rJD6My3oQMNd+pAdkldDuYlL3FNZY+/y/2DfGxV+sB2RrksX3pMfQZ/0+6r28bnb09a+7KIOshUbL/LwwZDn0THyUYhNZRm8TFTYdJcI4PAiJC8Y7AN43N6kuipVKFeZTb4wRoC8q4f+M/O8m5EHZMfP+OPweDKSQX+szXJefzEA1B5Uy6lMwpmvQrdI+xSRp4OGlKZ4/haRrjhLOf9m7psuL5gMUgtdlA70zN4Yjumfx9AejmunPthQmn+A58lfdZPuwCVmqMvsdVh0XExGIEkJzkqRFN3xPVPHshRNTQKJM6guIvs7bPHRUVljw0Odxebt8Ll2WylY295qjKpUZi8qAiLSCA==
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 30 Sep 2019 18:26:15 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38950 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726590AbfI3W0P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 18:26:15 -0400
+Received: by mail-pl1-f196.google.com with SMTP id s17so4443971plp.6
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 15:26:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:to:cc:subject:user-agent:date;
+        bh=gNsbryt7zNBbao6S6XuAFO6RWtb7mB6GkwvJUITq7vM=;
+        b=FEXFmDSWmj9zN3ls+08cfHJNs9Lsa2F0tEzABAFOuqGbjQROJS6TNJU5LLLV8Qf6Yw
+         +kkcd6TuvfCWfghRPjvVmC458yCnJNKvq1bpGzjnfNSIZnaZ1Xc62B67lrYXSeW2vUp0
+         ZKyOdm+DwVGgaOV2BTZyedDwuc/YgjOZprM94=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
+         :user-agent:date;
+        bh=gNsbryt7zNBbao6S6XuAFO6RWtb7mB6GkwvJUITq7vM=;
+        b=Rw/T1OjJ8AXBj9Snplpul0gGjQi7gtBC2lIlOEVP8seYyrSAbOiP6Eo31SMAxl3HQd
+         KaaixLPYyF7WhN/Likqo5gZIiM6K4NPK4Xn6xpacqcX5Gjvqc9jPZxkh1VLjKjcSYH92
+         jXoVkvBGs/yd889SzLfEouuY9Ye6ClY2o+BtEnJMsqu3vr0pMLj9YHWJITCxhwnFKh65
+         agd/QipPCXdFTPp847CHSZn24XpUMHsrPo1vnncENqjXfZniqIXMclyY99n1mFoUZKkK
+         Or8VIFeGikDz6KITNot+NRzAWsirGXRopd4lrUz1k6RkIZ4nY9wEi96CAk7rV3oHQubp
+         orZA==
+X-Gm-Message-State: APjAAAVOigWq/ZVlC02uwJglo4EPmQcr4bXescgZOlm2DYjVqa+THhVU
+        K8JGDHN8GBz+WqY1P1vw51ZDKA==
+X-Google-Smtp-Source: APXvYqyvW7KnD4p6RRzMyQjVNhtlhTTZF+raYHO8fe9TpmKW4CBZvkZUT8KHrNro7nlOT/UpLtas9g==
+X-Received: by 2002:a17:902:aa04:: with SMTP id be4mr14295817plb.40.1569882373177;
+        Mon, 30 Sep 2019 15:26:13 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id l37sm8474089pgb.11.2019.09.30.15.26.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 15:26:12 -0700 (PDT)
+Message-ID: <5d928104.1c69fb81.29df9.6eef@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bea83fa6-ebad-49b6-e452-08d745f4c54d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2019 22:23:08.2516
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: eXx/qlLyw7rF6OO8l6Vwxw03jw+IQdSloGY8z/eoyhAg6eid4KnV+8psviibWMVfsLKnozOPBbdzKhBaXYW6Jg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1168
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190930214522.240680-1-briannorris@chromium.org>
+References: <20190930214522.240680-1-briannorris@chromium.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Brian Norris <briannorris@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Hung-Te Lin <hungte@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        stable@vger.kernel.org, Guenter Roeck <groeck@chromium.org>
+Subject: Re: [PATCH] firmware: google: increment VPD key_len properly
+User-Agent: alot/0.8.1
+Date:   Mon, 30 Sep 2019 15:26:11 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-Oleksij Rempel wrote:
-> It is two registers each of 4 byte.
-
-Applied to mips-fixes.
-
-> commit 0889d07f3e4b
-> https://git.kernel.org/mips/c/0889d07f3e4b
+Quoting Brian Norris (2019-09-30 14:45:22)
+> Commit 4b708b7b1a2c ("firmware: google: check if size is valid when
+> decoding VPD data") adds length checks, but the new vpd_decode_entry()
+> function botched the logic -- it adds the key length twice, instead of
+> adding the key and value lengths separately.
 >=20
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> Signed-off-by: Paul Burton <paul.burton@mips.com>
+> On my local system, this means vpd.c's vpd_section_create_attribs() hits
+> an error case after the first attribute it parses, since it's no longer
+> looking at the correct offset. With this patch, I'm back to seeing all
+> the correct attributes in /sys/firmware/vpd/...
+>=20
+> Fixes: 4b708b7b1a2c ("firmware: google: check if size is valid when decod=
+ing VPD data")
+> Cc: <stable@vger.kernel.org>
+> Cc: Hung-Te Lin <hungte@chromium.org>
+> Cc: Guenter Roeck <groeck@chromium.org>
+> Cc: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
+> ---
 
-Thanks,
-    Paul
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paul.burton@mips.com to report it. ]
