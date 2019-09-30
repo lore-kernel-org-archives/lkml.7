@@ -2,144 +2,183 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD05C35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA096C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9E3121855
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79C1520679
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:12:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="oinTMIHn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SRxCdHIK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731436AbfI3OMI (ORCPT
+        id S1731517AbfI3OMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 10:12:08 -0400
-Received: from mail-eopbgr40109.outbound.protection.outlook.com ([40.107.4.109]:36686
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729738AbfI3OMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 10:12:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=izAJ9qB+/VhnPPGUK5li+G1JDff+5X8UegyoALua+S8oRv0T4sQkT94n+SCPSp/OEU7iYT6Ats6j3wCFyl6hZLuzV4aeZq98/enTqne9LJh5E3Z6inJvyVWc+QI1MDk/UHfzGXSABE1Y2D4trAuAyuxnHIxoq4dafPL/ZbEIYh0BQ7HIrywRBRMq5lHU9IKIll/2hkybae4RssNX7FLxFzC3y0cfw03WtqhP001LpF2R0sLTkV25z7o6RQCgNFqTPKumDQjmp6yrRRRQ0p5/Fgbm1BDvwZFUFnRNDfIVs4cueduzejFXVWxJwckFek4EN/j2zG6Sx8d3X0xwEtUPrA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xKl3WPFEDJWeqd8d1FTxGK+hBzamFpg2JJT/epoNplM=;
- b=Z4PqPta074wpl1FcMW5zT1Va/HK5ZEGz15I3r59e6CRkVKtdB6SPfbqbgvues66UoF80LNSHaJQeiGqSotvGblSnDCnIxwz1Vti3QGgOvW24Bg2Akf+/B5NJD2K33lYVygvLNn931XtE0e8imfxg3Be4ayKl/eu0yK3k+piDD92CK2vwLW4Vhbau1BtJgUMnaEYuMrAlQO90AdN1GzRjSJ6a8YJACJfoLDqk4WZEZ/4P8dHDpGzJnV877mN0PhjWUls/Lqu2mC1QeEfY+RhVPifPdRAD4eD4UqiX05VyGlUxQnBVw6eeSC3ztpSB/8TiDzYwvBqy1g073cnILInkaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xKl3WPFEDJWeqd8d1FTxGK+hBzamFpg2JJT/epoNplM=;
- b=oinTMIHnFGtG0OWfdYutjxrf7LR6tXpffiagcTzeY6rdxbsH6yQi28xLbniFsPi453GdzLgKHBGJF19O8XloIwaFBy332/mJ8FxR8P+cBTPFXjkQG5/PUUZ/ta8yWkihsl2PIeFqENk0RKdAQQ8yQ10uOge6DA2VP5aboSz4pl8=
-Received: from VI1PR05MB6544.eurprd05.prod.outlook.com (20.179.27.210) by
- VI1PR05MB5453.eurprd05.prod.outlook.com (20.177.200.216) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.20; Mon, 30 Sep 2019 14:12:01 +0000
-Received: from VI1PR05MB6544.eurprd05.prod.outlook.com
- ([fe80::dcea:1e0a:c05a:22f9]) by VI1PR05MB6544.eurprd05.prod.outlook.com
- ([fe80::dcea:1e0a:c05a:22f9%4]) with mapi id 15.20.2305.017; Mon, 30 Sep 2019
- 14:12:01 +0000
-From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Jamie Lentin <jm@lentin.co.uk>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 0/2] This patch introduces a feature to force
- gpio-poweroff module
-Thread-Topic: [PATCH 0/2] This patch introduces a feature to force
- gpio-poweroff module
-Thread-Index: AQHVd3rLAHQrXJaKQkmXW+yh5sbf26dEIk8AgAAgtQA=
-Date:   Mon, 30 Sep 2019 14:11:59 +0000
-Message-ID: <CAGgjyvEx_F0C2XHDGxf3F0Z8iHF1vQZkoPft3_ZbTswVFv=SJA@mail.gmail.com>
-References: <20190930103531.13764-1-oleksandr.suvorov@toradex.com>
- <20190930121440.GC13301@lunn.ch>
-In-Reply-To: <20190930121440.GC13301@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MN2PR05CA0033.namprd05.prod.outlook.com
- (2603:10b6:208:c0::46) To VI1PR05MB6544.eurprd05.prod.outlook.com
- (2603:10a6:803:ff::18)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=oleksandr.suvorov@toradex.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-gm-message-state: APjAAAWPYmXBiF8N5qOu7MSKMnKxv7s5xoBSbC4WvbT9jkn5KS63hf2S
-        OQhdE0iC4tOD9/DHfBNIefR3SWY64men6HDHD/4=
-x-google-smtp-source: APXvYqwoPdmvgF0M0xVLxnVurbOqi7pvyGxlGAXoldhGgvFzKbjRgJK6Q93m78Xo48X8jrOv2kivi1+o6ktB9jp+7Bw=
-x-received: by 2002:ac8:6b82:: with SMTP id z2mr22948289qts.331.1569852715486;
- Mon, 30 Sep 2019 07:11:55 -0700 (PDT)
-x-gmail-original-message-id: <CAGgjyvEx_F0C2XHDGxf3F0Z8iHF1vQZkoPft3_ZbTswVFv=SJA@mail.gmail.com>
-x-originating-ip: [209.85.160.176]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ed83844c-700e-41e0-336d-08d745b02885
-x-ms-traffictypediagnostic: VI1PR05MB5453:
-x-microsoft-antispam-prvs: <VI1PR05MB545375B91EA44CA043CE93EDF9820@VI1PR05MB5453.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2043;
-x-forefront-prvs: 01762B0D64
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(39850400004)(376002)(346002)(396003)(189003)(199004)(4326008)(61266001)(66066001)(66556008)(66946007)(66476007)(64756008)(66446008)(55446002)(305945005)(71200400001)(71190400001)(6862004)(7736002)(256004)(6246003)(99286004)(9686003)(102836004)(6512007)(3846002)(6116002)(8676002)(2906002)(55236004)(25786009)(11346002)(76176011)(81166006)(52116002)(95326003)(8936002)(486006)(6506007)(26005)(54906003)(450100002)(316002)(478600001)(6486002)(14454004)(476003)(44832011)(5660300002)(86362001)(186003)(229853002)(53546011)(6436002)(386003)(446003)(81156014)(498394004);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR05MB5453;H:VI1PR05MB6544.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fPp5eSvFPRYhLsdzdO4HENTRrwmL2IcxjeR+2GnvN0m1kLeJRulupS14izWV2mbttUoMcXM2PFzUwc2T9LUlW+aNBhbu/wSKgDHQ5Amyswjo9YLVzvw65UMFxkJ4ywv1y57B9C+4MOPuOD6J9thMDYbbUIHzHdh7c18oda4HQo2Ngtz7pVVrR/Vc43xTUDAr+SJpJJ2BwV/MxNAXAaoA0TqLxi1sAQDPsafzKf005+BxzpvctlPY9P7XBxDy770e06WzVgrspsH81gceV/1pbH06+HqTTjc/y9acBW/BpWaaajHKHyAcYc6Ig1bMI/dBXECnyImqOlnz/+st1LIKSpqnPZT428iTOI8tp/l+HkaQ20pAjPdh5L1b64V7jYc2uhpICcgi5YHUOzg7gxuSN2iWLYDP+dobDLzMbOtiuaM=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6C95B0AFB21C7E4E999D0E55BD3C99E1@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 30 Sep 2019 10:12:41 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:35726 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729738AbfI3OMl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 10:12:41 -0400
+Received: by mail-io1-f66.google.com with SMTP id q10so38760441iop.2;
+        Mon, 30 Sep 2019 07:12:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TwbrL/89iwEv92jYm3+TvZslhh9l3A55aKvB6WQE0Aw=;
+        b=SRxCdHIK0riL2quHsjY50cpVIhRrFISodAZa537ifi6d7h07jLLeY4wUb1BpAcwAkj
+         /PrzUswmM/rzM4rc/0QziHmYRfJRbM0sAR5PGPmCrDseIo6laabFzzPkxywUDwdr06eC
+         VYxuyeDUt+2Uj425owP+L2qYUH5v6rxPWSsNoUkFm2t2t3OPEjYfiss73xCadi1J8Bj+
+         b0oiZiG5WYANrMjalqsJfzT5IFOirXaTPfXNnIrM/u+FSbe8+Q3KUH89GrWeU235hIpn
+         kf0sWTELgjeIqEfsUZ2fGb1+Bjyk/wY03XAse6vpmGCwkWdi9xspJrKomVk/qCaNAYar
+         /ODg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TwbrL/89iwEv92jYm3+TvZslhh9l3A55aKvB6WQE0Aw=;
+        b=nxBmTNeyGNvzulYmxidDvK/Q6i522IhaX3RH3NdBourervIW34W47fN/h6lMN4BTHW
+         U/feCP/o8rjy4bxK7PkQxM1mpaZKRNRFjC09UjmrrNlyKWFwmflP6O19dg0rs7Ev4Vjl
+         sbhdGZIBwmgq9XYS+FTlOTN/Uy5CGxShkA0THSS3s8b4pTJfXX/I/o7+otdRJOwzDF9q
+         pWQnliNpPFRK9fpTXd3x2SpRev07gi1XN9/4izXhh5v9xTxqG97wYtuGrj+fPnWFtaQD
+         Mu4exud/qN9W+UOQ0rd+HXOHy9IErf71z5mUtkDP6/hJqApNt/g7vey2SP3DJs9nkxC9
+         vbAw==
+X-Gm-Message-State: APjAAAUrgqqXjQFfjvkKUtrAFwjV53Lhl4bd6X/3VYgljYfrBRYWE0tz
+        eBzdXud6WRC3d+fauWb9ZQIm+gzVgVJNhc4Glwd1aRPhAeo=
+X-Google-Smtp-Source: APXvYqzT4cmcRSDdeDHW9AaSxk6Y6BgQ1h4b2jWej/Uuk9wxv1qZFa5nMO4xL5BbZ4DoqS0rAqEMZmS6f+9SegZrRyk=
+X-Received: by 2002:a5d:9c4c:: with SMTP id 12mr2054950iof.276.1569852758297;
+ Mon, 30 Sep 2019 07:12:38 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ed83844c-700e-41e0-336d-08d745b02885
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2019 14:11:59.4452
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2mafDuazl3DvX5KhJMkZbkutZoDgD8JYcGXzLJPvXO18nRdIe577YOYu0h/KYQJNRhy4GL/JzXXWt0UboFLSu20FvJX6R88+U4iU2ZvAN8Y=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5453
+References: <20190510194229.20628-1-aford173@gmail.com> <af325707-3e42-493d-e858-77878ef06138@ti.com>
+ <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
+ <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com> <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
+ <845055e2-8182-de74-2077-629fdf50ac6c@ti.com> <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
+ <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com> <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
+ <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com> <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
+ <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com> <23eba53a-9304-2ceb-d97e-01891ec0b3ed@ti.com>
+ <cb028b1e-05ca-9b22-be5d-c63f5fd56cc4@ti.com> <F3335195-6EB7-4D44-B884-2F29D9238011@goldelico.com>
+ <CAHCN7xL9bFxO=2i1DzmRj6A3XwUNdt=DZeJ2a0EZ0f9gcFTy6g@mail.gmail.com> <CAHCN7x+vCfPTRE+zzYUwAXdbBzRotTP2hSOgsHB0FdgBhZV5zA@mail.gmail.com>
+In-Reply-To: <CAHCN7x+vCfPTRE+zzYUwAXdbBzRotTP2hSOgsHB0FdgBhZV5zA@mail.gmail.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Mon, 30 Sep 2019 09:12:26 -0500
+Message-ID: <CAHCN7xJDV=R9Ysjhff7=mEXdciwPP_5LQbHwaUT8KvhSkLKw8A@mail.gmail.com>
+Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to dts
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Tero Kristo <t-kristo@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQW5kcmV3LA0KDQpPbiBNb24sIFNlcCAzMCwgMjAxOSBhdCAzOjE2IFBNIEFuZHJldyBMdW5u
-IDxhbmRyZXdAbHVubi5jaD4gd3JvdGU6DQo+DQo+IE9uIE1vbiwgU2VwIDMwLCAyMDE5IGF0IDEw
-OjM1OjM2QU0gKzAwMDAsIE9sZWtzYW5kciBTdXZvcm92IHdyb3RlOg0KPiA+IHRvIHJlZ2lzdGVy
-IGl0cyBvd24gcG1fcG93ZXJfb2ZmIGhhbmRsZXIgZXZlbiBpZiBzb21lb25lIGhhcyByZWdpc3Rl
-cmVkDQo+ID4gdGhpcyBoYW5kbGVyIGVhcmxpZXIuDQo+ID4gVXNlZnVsIHRvIGNoYW5nZSBhIHdh
-eSB0byBwb3dlciBvZmYgdGhlIHN5c3RlbSB1c2luZyBEVCBmaWxlcy4NCj4NCj4gSGkgT2xla3Nh
-bmRyDQo+DQo+IEknbSBub3Qgc3VyZSB0aGlzIGlzIGEgZ29vZCBpZGVhLiBXaGF0IGhhcHBlbnMg
-d2hlbiB0aGVyZSBhcmUgdHdvDQo+IGRyaXZlcnMgdXNpbmcgZm9yY2VkIG1vZGU/IFlvdSB0aGVu
-IGdldCB3aGljaCBldmVyIGlzIHJlZ2lzdGVyIGxhc3QuDQo+IE5vbiBkZXRlcm1pbmlzdGljIGJl
-aGF2aW91ci4NCg0KWW91J3JlIHJpZ2h0LCB3ZSBoYXZlIHRvIGhhbmRsZSBhIGNhc2Ugd2hlbiBn
-cGlvLXBvd2Vyb2ZmIGZhaWxzIHRvDQpwb3dlciB0aGUgc3lzdGVtIG9mZi4gUGxlYXNlIGxvb2sg
-YXQgdGhlDQoybmQgdmVyc2lvbiBvZiB0aGUgcGF0Y2hzZXQuDQoNClRoZXJlIGFyZSAzIG9ubHkg
-ZHJpdmVycyB0aGF0IGZvcmNpYmx5IHJlZ2lzdGVyIGl0cyBvd24gcG1fcG93ZXJfb2ZmDQpoYW5k
-bGVyIGV2ZW4gaWYgaXQgaGFzIGJlZW4gcmVnaXN0ZXJlZCBiZWZvcmUuDQoNCmRyaXZlcnMvZmly
-bXdhcmUvZWZpL3JlYm9vdC5jIC0gc3VwcG9ydHMgY2hhaW5lZCBjYWxsIG9mIG5leHQNCnBtX3Bv
-d2VyX29mZiBoYW5kbGVyIGlmIGl0cyBvd24gaGFuZGxlciBmYWlscy4NCg0KYXJjaC94ODYvcGxh
-dGZvcm0vaXJpcy9pcmlzLmMsIGRyaXZlcnMvY2hhci9pcG1pL2lwbWlfcG93ZXJvZmYuYyAtDQpk
-b24ndCBzdXBwb3J0IGNhbGxpbmcgb2YgbmV4dCBwbV9wb3dlcl9vZmYgaGFuZGxlci4NCkxvb2tz
-IGxpa2UgdGhlc2UgZHJpdmVycyBzaG91bGQgYmUgZml4ZWQgdG9vLg0KDQpBbGwgb3RoZXIgZHJp
-dmVycyBkb24ndCBjaGFuZ2UgYWxyZWFkeSBpbml0aWFsaXplZCBwbV9wb3dlcl9vZmYgaGFuZGxl
-ci4NCg0KPiBXaGF0IGlzIHRoZSBvdGhlciBkcml2ZXIgd2hpY2ggaXMgY2F1c2luZyB5b3UgcHJv
-YmxlbXM/IEhvdyBpcyBpdA0KPiBnZXR0aW5nIHByb2JlZD8gRFQ/DQoNClRoZXJlIGFyZSBzZXZl
-cmFsIFBNVXMsIFJUQ3MsIHdhdGNoZG9ncyB0aGF0IHJlZ2lzdGVyIHRoZWlyIG93biBwbV9wb3dl
-cl9vZmYuDQpNb3N0IG9mIHRoZW0sIHByb2JhYmx5IG5vdCBhbGwsIGFyZSBwcm9iZWQgZnJvbSBE
-VC4NCg0KPg0KPiBUaGFua3MNCj4gICAgICAgICBBbmRyZXcNCg0KLS0gDQpCZXN0IHJlZ2FyZHMN
-Ck9sZWtzYW5kciBTdXZvcm92DQoNClRvcmFkZXggQUcNCkFsdHNhZ2Vuc3RyYXNzZSA1IHwgNjA0
-OCBIb3J3L0x1emVybiB8IFN3aXR6ZXJsYW5kIHwgVDogKzQxIDQxIDUwMA0KNDgwMCAobWFpbiBs
-aW5lKQ0K
+On Mon, Sep 30, 2019 at 9:04 AM Adam Ford <aford173@gmail.com> wrote:
+>
+> On Mon, Sep 30, 2019 at 8:54 AM Adam Ford <aford173@gmail.com> wrote:
+> >
+> > On Mon, Sep 30, 2019 at 8:39 AM H. Nikolaus Schaller <hns@goldelico.com> wrote:
+> > >
+> > >
+> > > > Am 30.09.2019 um 10:53 schrieb Tero Kristo <t-kristo@ti.com>:
+> > > >
+> > > > The best action here is probably to drop the max-div value for this clock to 16. Can someone check this with their display setup and see what happens? Attached patch should do the trick.
+> > >
+> > > I have checked on GTA04 and OpenPandora (DM3730 resp. OMAP3430) and did not notice a negative effect.
+> > >
+> > > (Well, we never see the problem that is discussed here and have built with CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK=0).
+> >
+> > I have never been able to use CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK=0, but
+> > I assume it's either a function of pck or a combination of pck with
+> > the resolution.
+> >
+> > Based on Tomi's comment, I assume he's working on the following.  Can
+> > you also try:
+> >
+> > diff --git a/drivers/gpu/drm/omapdrm/dss/dss.c
+> > b/drivers/gpu/drm/omapdrm/dss/dss.c
+> > index 5711b7a720e6..5e584f32ea6a 100644
+> > --- a/drivers/gpu/drm/omapdrm/dss/dss.c
+> > +++ b/drivers/gpu/drm/omapdrm/dss/dss.c
+> > @@ -1090,7 +1090,7 @@ static const struct dss_features omap34xx_dss_feats = {
+> >
+> >  static const struct dss_features omap3630_dss_feats = {
+> >         .model                  =       DSS_MODEL_OMAP3,
+> > -       .fck_div_max            =       32,
+> > +       .fck_div_max            =       16,
+> >         .fck_freq_max           =       173000000,
+> >         .dss_fck_multiplier     =       1,
+> >         .parent_clk_name        =       "dpll4_ck",
+> >
+> >
+> > Hopefully it doesn't break the 3630 for you, but it fixed my issue
+> > with no back trace:
+> >
+> > [    9.915588] DSS: set fck to 54000000
+> > [    9.915618] DISPC: lck = 54000000 (1)
+> > [    9.915649] DISPC: pck = 9000000 (6)
+> > [    9.917633] DISPC: channel 0 xres 480 yres 272
+> > [    9.917663] DISPC: pck 9000000
+> >
+> > I do wonder, however if there is a divider that is higher than 16, but
+> > lower than 32.
+> > I was able to run fck at 36MHz before with divide by 4 to 9MHz, so I
+> > am hoping that by running at 54MHz / 6 doesn't draw more power.  I was
+> > reading through the datasheet, but I could not find any reference to
+> > the max divider.
+> >
+>
+> For run, I tested a max divider of 27, and I was able to get it
+> functional with a slower fck
+>
+> [    9.939056] DSS: set fck to 36000000
+> [    9.939086] DISPC: lck = 36000000 (1)
+> [    9.939086] DISPC: pck = 9000000 (4)
+> [    9.941314] DISPC: channel 0 xres 480 yres 272
+> [    9.941314] DISPC: pck 9000000
+> [    9.941314] DISPC: hsync_len 42 hfp 3 hbp 2 vsw 11 vfp 2 vbp 3
+> [    9.941314] DISPC: vsync_level 1 hsync_level 1 data_pclk_edge 1
+> de_level 1 sync_pclk_edge -1
+> [    9.941345] DISPC: hsync 17077Hz, vsync 59Hz
+>
+>
+> I don't know the implications, so if the people from TI say stick with
+> 16, I'm fine with that, but at least there is some evidence that it
+> can be higher than 16, but lower than 32.
+>
+
+Sorry for all the spam, but I moved both of them to 31 from 32, and it
+also seems to work successfully at 31.
+
+[   26.923004] DSS: set fck to 36000000
+[   26.923034] DISPC: lck = 36000000 (1)
+[   26.923034] DISPC: pck = 9000000 (4)
+[   26.925048] DISPC: channel 0 xres 480 yres 272
+[   26.925048] DISPC: pck 9000000
+[   26.925048] DISPC: hsync_len 42 hfp 3 hbp 2 vsw 11 vfp 2 vbp 3
+[   26.925079] DISPC: vsync_level 1 hsync_level 1 data_pclk_edge 1
+de_level 1 sync_pclk_edge -1
+[   26.925079] DISPC: hsync 17077Hz, vsync 59Hz
+[   27.384613] DISPC: dispc_runtime_put
+
+Is it possible to use 31?
+
+adam
+
+> adam
+>
+> > adam
+> > >
+> > > BR,
+> > > Nikolaus
+> > >
