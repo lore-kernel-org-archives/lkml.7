@@ -2,135 +2,100 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0E7C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C92CC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8070B20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:29:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YRKoZku4"
+	by mail.kernel.org (Postfix) with ESMTP id 2E1D420815
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:32:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732027AbfI3P3s (ORCPT
+        id S1731954AbfI3Pco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 11:29:48 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41249 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730809AbfI3P3s (ORCPT
+        Mon, 30 Sep 2019 11:32:44 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33714 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731127AbfI3Pcn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 11:29:48 -0400
-Received: by mail-lf1-f66.google.com with SMTP id r2so7360514lfn.8
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 08:29:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GcQj6Rd9F3KLevHVxis1OmxH3WVUvsmgXjMTIJqkIFg=;
-        b=YRKoZku4KnTPIutFbWgtdiIEXuEq2kFBYAHLjWVBAEIc7HkbxZtYTWPaO8ybwJfh/G
-         uFAGnzV940ibk70MdpNMBMwiYmlhz6ySOXR2VA7v7BaWU1ZYGh9ZMzdHPwCBbBWX5O1f
-         gWW4L64pcsKVCOfVF2OPnqp5LyGYrfKIUos4U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GcQj6Rd9F3KLevHVxis1OmxH3WVUvsmgXjMTIJqkIFg=;
-        b=MHjtVjst2mDmYPJJUOyOiXpeAtcupy3a7il2AmtwFNR90pisPeSIpX11biHgJTZEL1
-         svG0lt5B1N63+GBaSoPgbcfDDhkYOFPazGVzLsbcZ05g33ZHcaJhR5HVm2sEyfa3JFf7
-         YVWtmKDWehbDpr+e0/+57z1eUIYeYUna4Jb2bOj7Bo0POSuJpM0G7TjACFenJPl3ZmGs
-         ypA+Glxnld1Oz32sGpyUTMC+8QE7470F6CgrmR1SobCOC540wvst3WG7V73KASO74hWz
-         8AfAlSmmLxfw7B5t0Aw9qF/lTZV23mdq0RzL4jVwpgu0TxukYDI7zJgnMPdbVsridbGG
-         1ZIA==
-X-Gm-Message-State: APjAAAW7NBTmsmzUKjPkJYk98yIqO3in0SpbjbMQth9EO/f1jwzz+RtL
-        tLegqgfifrPOAuOMYWOkH8//7X2F7AY=
-X-Google-Smtp-Source: APXvYqw5aD6YrBd/rPp87/QQdqYRnbHJDxvemF91iiOctmLfuLwBviaUsscs66jnyw6K4GNjfVeYJw==
-X-Received: by 2002:a19:2c1:: with SMTP id 184mr11862060lfc.100.1569857385725;
-        Mon, 30 Sep 2019 08:29:45 -0700 (PDT)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id o2sm3316895lfl.20.2019.09.30.08.29.44
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Sep 2019 08:29:44 -0700 (PDT)
-Received: by mail-lj1-f178.google.com with SMTP id j19so9991628lja.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 08:29:44 -0700 (PDT)
-X-Received: by 2002:a2e:9f12:: with SMTP id u18mr12939698ljk.23.1569857383671;
- Mon, 30 Sep 2019 08:29:43 -0700 (PDT)
+        Mon, 30 Sep 2019 11:32:43 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8UFOGAj196404
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 11:32:42 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vbk5ec5y6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 11:32:42 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Mon, 30 Sep 2019 16:32:40 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 30 Sep 2019 16:32:39 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8UFWbZd50266328
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 30 Sep 2019 15:32:37 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 02A5511C04C;
+        Mon, 30 Sep 2019 15:32:37 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 968FD11C04A;
+        Mon, 30 Sep 2019 15:32:36 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.183])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 30 Sep 2019 15:32:36 +0000 (GMT)
+Date:   Mon, 30 Sep 2019 17:32:34 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>
+Subject: Re: [PATCH 1/1] s390/cio: fix virtio-ccw DMA without PV
+In-Reply-To: <20190930145607.GA18163@lst.de>
+References: <20190930135310.26148-1-pasic@linux.ibm.com>
+        <20190930145607.GA18163@lst.de>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20190924215238.184750-1-evgreen@chromium.org> <20190928001626.GT237523@dtor-ws>
-In-Reply-To: <20190928001626.GT237523@dtor-ws>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Mon, 30 Sep 2019 08:29:06 -0700
-X-Gmail-Original-Message-ID: <CAE=gft46VXLL5z2o5QEnTBMOrzDnK_uuFiK4NMQV21PBpLxmfQ@mail.gmail.com>
-Message-ID: <CAE=gft46VXLL5z2o5QEnTBMOrzDnK_uuFiK4NMQV21PBpLxmfQ@mail.gmail.com>
-Subject: Re: [PATCH v2] Input: atmel_mxt_ts - Disable IRQ across suspend
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Nick Dyer <nick@shmanahar.org>,
-        Jongpil Jung <jongpil19.jung@samsung.com>,
-        Furquan Shaikh <furquan@chromium.org>,
-        Rajat Jain <rajatja@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-input@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19093015-0016-0000-0000-000002B21D8F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19093015-0017-0000-0000-00003312F9A7
+Message-Id: <20190930173234.5251bcb8.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-30_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=680 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909300156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 5:16 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> Hi Evan,
->
-> On Tue, Sep 24, 2019 at 02:52:38PM -0700, Evan Green wrote:
-> > Across suspend and resume, we are seeing error messages like the following:
-> >
-> > atmel_mxt_ts i2c-PRP0001:00: __mxt_read_reg: i2c transfer failed (-121)
-> > atmel_mxt_ts i2c-PRP0001:00: Failed to read T44 and T5 (-121)
-> >
-> > This occurs because the driver leaves its IRQ enabled. Upon resume, there
-> > is an IRQ pending, but the interrupt is serviced before both the driver and
-> > the underlying I2C bus have been resumed. This causes EREMOTEIO errors.
-> >
-> > Disable the IRQ in suspend, and re-enable it on resume. If there are cases
-> > where the driver enters suspend with interrupts disabled, that's a bug we
-> > should fix separately.
-> >
-> > Signed-off-by: Evan Green <evgreen@chromium.org>
-> > ---
-> >
-> > Changes in v2:
-> >  - Enable and disable unconditionally (Dmitry)
-> >
-> >  drivers/input/touchscreen/atmel_mxt_ts.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-> > index 24c4b691b1c9..a58092488679 100644
-> > --- a/drivers/input/touchscreen/atmel_mxt_ts.c
-> > +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-> > @@ -3155,6 +3155,7 @@ static int __maybe_unused mxt_suspend(struct device *dev)
-> >               mxt_stop(data);
-> >
-> >       mutex_unlock(&input_dev->mutex);
-> > +     disable_irq(data->irq);
-> >
-> >       return 0;
-> >  }
-> > @@ -3174,6 +3175,7 @@ static int __maybe_unused mxt_resume(struct device *dev)
-> >               mxt_start(data);
-> >
-> >       mutex_unlock(&input_dev->mutex);
-> > +     enable_irq(data->irq);
->
-> At least for older devices that do soft reset on resume we need
-> interrupts to already work when we call mxt_start().
->
-> In general, order of resume steps should mirror suspend.
+On Mon, 30 Sep 2019 16:56:07 +0200
+Christoph Hellwig <hch@lst.de> wrote:
 
-Ok, I can move the enable_irq up towards the top of resume. I was
-worried that a pending IRQ might not get handled correctly if
-mxt_start() hadn't been called yet. But if we need IRQs for
-mxt_start() to run anyway, then I guess it should be handled.
--Evan
+> The code looks fine, but I still very much disagree with the workaround
+> comments.  The different mask for allocations vs streaming mappings is
+> exactly how the DMA API is intended to work.
+
+Thanks for having a look! I already changed this but messed up the
+amend with git :( I will send out a v2 shortly.
+
+Regards,
+Halil
+
