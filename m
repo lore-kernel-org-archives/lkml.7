@@ -2,239 +2,106 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40339C4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 06:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B97C4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 06:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 042F7218DE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 06:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B941521855
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 06:53:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="abvY2T4r"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="FtkhRbMu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729351AbfI3Gtq (ORCPT
+        id S1729400AbfI3GxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 02:49:46 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40733 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727702AbfI3Gtp (ORCPT
+        Mon, 30 Sep 2019 02:53:13 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45977 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729235AbfI3GxN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 02:49:45 -0400
-Received: by mail-pg1-f193.google.com with SMTP id d26so1367775pgl.7
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Sep 2019 23:49:45 -0700 (PDT)
+        Mon, 30 Sep 2019 02:53:13 -0400
+Received: by mail-lj1-f194.google.com with SMTP id q64so8162783ljb.12
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Sep 2019 23:53:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=hbbHzY2mGN6GVRxX5qIoZkQRWZNUdeV1dB8ZZwNAXLY=;
-        b=abvY2T4rdd8Vnv2F3AiA9oFrTeKJQxXAc3uROdDGqfG1CdXfeOnyCz1oQmmAfw1jGa
-         1oXroO/ZhhuIFL3ACdklnPMAbSUhUC9Y/yRzdkc9qfSIDxOY2Pa4fE2Tlhlh6gm0MTxc
-         xjZL5SS0/yQ/UAAb+LUJpXpyCjmQqv6JJvh8M=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yATsTcqOqIzZMV98qWIAPWwEMjMrM8gXIgA2HND81Xc=;
+        b=FtkhRbMuAFq9oBu9QY8Qq4PUBi7P8wG9pwBBI5gh9ZFAP1uE5Z8owLiNoz//UjqGYQ
+         fQhndMyHQ1hPRQnD6ur2p6trxwMyp46wm3Vcw6Fyrpl81AW00cOdQytunyp/2v8lQemU
+         SaOycOu6xeFMyUosNLzTevrP3MKyY/e5X/5NM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=hbbHzY2mGN6GVRxX5qIoZkQRWZNUdeV1dB8ZZwNAXLY=;
-        b=BvzELmVxz76fRheRudLAIriZT/wC5J4zH1sh/quoMaAW5oH0UMjak5HEPbhKBdJ3Xc
-         KlRjxdlR/9syS+d3x7YyEiacxo0p9+gwj6HJIqMcfWDuYKeSHXt50SjJsSOjxFxt2aW9
-         YBzw4UMZqkDbsFQDACY0/B/fVRCOZ7WL5oK2+aO1I/KFtXBqX+9ddssq0mB/2pHet1kz
-         EVpstuOvQCfQWpse/xnPJUeTdOTB7iH5cC+GdblflcEbDvCU+GzkgG3fhbfmSorKPgf6
-         INw5SHCp5sGJCWVlZRyQl7zKvF2KS6NCg9B6bTT10vAvv11VTPHDC2Rm6/PKTRhIBDx+
-         ZyEw==
-X-Gm-Message-State: APjAAAWjzpOo1tBggRKGtawjQf3PKeoJCiwXajZyXHUXM+4+kbt54BcL
-        E1H27dEsXoo3U0pRxu8MmidVPw==
-X-Google-Smtp-Source: APXvYqzp/gOfWnc+S7RU2qyxgw9Yg9ZgO2i+zhY7rs+emkfs10m9oO16DHTchECfvCrzb/LvoO3XdA==
-X-Received: by 2002:a63:dd0a:: with SMTP id t10mr22765858pgg.354.1569826184880;
-        Sun, 29 Sep 2019 23:49:44 -0700 (PDT)
-Received: from rayagonda.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id w6sm13056041pfj.17.2019.09.29.23.49.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 29 Sep 2019 23:49:43 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yATsTcqOqIzZMV98qWIAPWwEMjMrM8gXIgA2HND81Xc=;
+        b=CDEdqbFG+zaT+ZxtAV3XUPntNAsGTW4x1Cmaw3ymXLUfgyqEtdgoOJrJTXZypVT4YI
+         MVGuPZeIAC1n5PxgGDxD4zpHNqvWs8RJXOuWVJNyQ6/PA3q18UiKdkJ+0/a6j548qi1T
+         /fxcV5YEQGfyBrv1XlhXsaILjiPgH5k9t4M8ZaZGkFVtwFCQhGkmDu9iZMZFtkiAa9H9
+         vH6xZh80EVWICH2QboHC5TUkSjYp+vKJV445bGe3GLSnf/EuGVdLrjidMpu5qZcBa2wL
+         AWrQcTDYWZTJA5CpkNB77BtydB2Fvu3ZfcXQDKOvYUXY+SS9v+3daPmEt1lt0UvHL93d
+         SIoQ==
+X-Gm-Message-State: APjAAAVwsqOOohTMzh3ZPW4QEUDRhXRWGVt3a6l4nL8yzaPeqU1HVEzC
+        eDRdpQEEkKRWhWa9xDE5anfKfZDKBWu+4OYdl70H3Q==
+X-Google-Smtp-Source: APXvYqziLiuF94ED9ic8k7xqYKDkQNdzt1q3xAbH4DhKGFt+OHhSfqDtzXLbca2sgZAoi7etyCT/7Lt0hhqj6DqlfRM=
+X-Received: by 2002:a2e:1246:: with SMTP id t67mr11165358lje.174.1569826390743;
+ Sun, 29 Sep 2019 23:53:10 -0700 (PDT)
+MIME-Version: 1.0
+References: <1569472808-15284-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+ <20190928181910.GB12219@kunai>
+In-Reply-To: <20190928181910.GB12219@kunai>
 From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-To:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Wolfram Sang <wsa@the-dreams.de>,
+Date:   Mon, 30 Sep 2019 12:22:59 +0530
+Message-ID: <CAHO=5PHj1PQUGi3EYBPVNUsRHsEo9WxU6CsvR=9+bP4n6z-cMA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] i2c: iproc: Add i2c repeated start capability
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
         Michael Cheng <ccheng@broadcom.com>,
         Shreesha Rajashekar <shreesha.rajashekar@broadcom.com>,
         Lori Hikichi <lori.hikichi@broadcom.com>,
         linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Icarus Chau <icarus.chau@broadcom.com>,
         Ray Jui <ray.jui@broadcom.com>,
         Shivaraj Shetty <sshetty1@broadcom.com>
-Subject: [PATCH v2 1/1] i2c: iproc: Add i2c repeated start capability
-Date:   Mon, 30 Sep 2019 12:14:29 +0530
-Message-Id: <1569825869-30640-1-git-send-email-rayagonda.kokatanur@broadcom.com>
-X-Mailer: git-send-email 1.9.1
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lori Hikichi <lori.hikichi@broadcom.com>
+On Sat, Sep 28, 2019 at 11:53 PM Wolfram Sang <wsa@the-dreams.de> wrote:
+>
+> On Thu, Sep 26, 2019 at 10:10:08AM +0530, Rayagonda Kokatanur wrote:
+> > From: Lori Hikichi <lori.hikichi@broadcom.com>
+> >
+> > Enable handling of i2c repeated start. The current code
+> > handles a multi msg i2c transfer as separate i2c bus
+> > transactions. This change will now handle this case
+> > using the i2c repeated start protocol. The number of msgs
+> > in a transfer is limited to two, and must be a write
+> > followed by a read.
+> >
+> > Signed-off-by: Lori Hikichi <lori.hikichi@broadcom.com>
+> > Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> > Signed-off-by: Icarus Chau <icarus.chau@broadcom.com>
+> > Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+> > Signed-off-by: Shivaraj Shetty <sshetty1@broadcom.com>
+> > ---
+> > changes from v1:
+> >  - Address code review comment from Wolfram Sang
+>
+> No, sorry, this is not a proper changelog. I review so many patches, I
+> can't recall what I suggested to do for every patch. Please describe
+> what changes you actually made. It is also better when digging through
+> mail archives.
+>
+Sorry for inconvenience, I updated the changelog and resent the patch.
+I have kept the patch version as v2 only. Hope that is fine.
 
-Enable handling of i2c repeated start. The current code
-handles a multi msg i2c transfer as separate i2c bus
-transactions. This change will now handle this case
-using the i2c repeated start protocol. The number of msgs
-in a transfer is limited to two, and must be a write
-followed by a read.
-
-Signed-off-by: Lori Hikichi <lori.hikichi@broadcom.com>
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Signed-off-by: Icarus Chau <icarus.chau@broadcom.com>
-Signed-off-by: Ray Jui <ray.jui@broadcom.com>
-Signed-off-by: Shivaraj Shetty <sshetty1@broadcom.com>
----
-changes from v1:
- - Address following review comments from Wolfarm Sang,
-   Use i2c_8bit_addr_from_msg() api instead of decoding i2c_msg struct and
-   remove check against number of i2c message as it will be taken care
-   by core using quirks flags. 
-
- drivers/i2c/busses/i2c-bcm-iproc.c | 63 ++++++++++++++++++++++++++++++--------
- 1 file changed, 50 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
-index d7fd76b..e478db7 100644
---- a/drivers/i2c/busses/i2c-bcm-iproc.c
-+++ b/drivers/i2c/busses/i2c-bcm-iproc.c
-@@ -81,6 +81,7 @@
- #define M_CMD_PROTOCOL_MASK          0xf
- #define M_CMD_PROTOCOL_BLK_WR        0x7
- #define M_CMD_PROTOCOL_BLK_RD        0x8
-+#define M_CMD_PROTOCOL_PROCESS       0xa
- #define M_CMD_PEC_SHIFT              8
- #define M_CMD_RD_CNT_SHIFT           0
- #define M_CMD_RD_CNT_MASK            0xff
-@@ -675,13 +676,20 @@ static int bcm_iproc_i2c_xfer_wait(struct bcm_iproc_i2c_dev *iproc_i2c,
- 	return 0;
- }
- 
--static int bcm_iproc_i2c_xfer_single_msg(struct bcm_iproc_i2c_dev *iproc_i2c,
--					 struct i2c_msg *msg)
-+/*
-+ * If 'process_call' is true, then this is a multi-msg transfer that requires
-+ * a repeated start between the messages.
-+ * More specifically, it must be a write (reg) followed by a read (data).
-+ * The i2c quirks are set to enforce this rule.
-+ */
-+static int bcm_iproc_i2c_xfer_internal(struct bcm_iproc_i2c_dev *iproc_i2c,
-+					struct i2c_msg *msgs, bool process_call)
- {
- 	int i;
- 	u8 addr;
- 	u32 val, tmp, val_intr_en;
- 	unsigned int tx_bytes;
-+	struct i2c_msg *msg = &msgs[0];
- 
- 	/* check if bus is busy */
- 	if (!!(iproc_i2c_rd_reg(iproc_i2c,
-@@ -707,14 +715,29 @@ static int bcm_iproc_i2c_xfer_single_msg(struct bcm_iproc_i2c_dev *iproc_i2c,
- 			val = msg->buf[i];
- 
- 			/* mark the last byte */
--			if (i == msg->len - 1)
--				val |= BIT(M_TX_WR_STATUS_SHIFT);
-+			if (!process_call && (i == msg->len - 1))
-+				val |= 1 << M_TX_WR_STATUS_SHIFT;
- 
- 			iproc_i2c_wr_reg(iproc_i2c, M_TX_OFFSET, val);
- 		}
- 		iproc_i2c->tx_bytes = tx_bytes;
- 	}
- 
-+	/* Process the read message if this is process call */
-+	if (process_call) {
-+		msg++;
-+		iproc_i2c->msg = msg;  /* point to second msg */
-+
-+		/*
-+		 * The last byte to be sent out should be a slave
-+		 * address with read operation
-+		 */
-+		addr = i2c_8bit_addr_from_msg(msg);
-+		/* mark it the last byte out */
-+		val = addr | (1 << M_TX_WR_STATUS_SHIFT);
-+		iproc_i2c_wr_reg(iproc_i2c, M_TX_OFFSET, val);
-+	}
-+
- 	/* mark as incomplete before starting the transaction */
- 	if (iproc_i2c->irq)
- 		reinit_completion(&iproc_i2c->done);
-@@ -733,7 +756,7 @@ static int bcm_iproc_i2c_xfer_single_msg(struct bcm_iproc_i2c_dev *iproc_i2c,
- 	 * underrun interrupt, which will be triggerred when the TX FIFO is
- 	 * empty. When that happens we can then pump more data into the FIFO
- 	 */
--	if (!(msg->flags & I2C_M_RD) &&
-+	if (!process_call && !(msg->flags & I2C_M_RD) &&
- 	    msg->len > iproc_i2c->tx_bytes)
- 		val_intr_en |= BIT(IE_M_TX_UNDERRUN_SHIFT);
- 
-@@ -743,6 +766,8 @@ static int bcm_iproc_i2c_xfer_single_msg(struct bcm_iproc_i2c_dev *iproc_i2c,
- 	 */
- 	val = BIT(M_CMD_START_BUSY_SHIFT);
- 	if (msg->flags & I2C_M_RD) {
-+		u32 protocol;
-+
- 		iproc_i2c->rx_bytes = 0;
- 		if (msg->len > M_RX_FIFO_MAX_THLD_VALUE)
- 			iproc_i2c->thld_bytes = M_RX_FIFO_THLD_VALUE;
-@@ -758,7 +783,10 @@ static int bcm_iproc_i2c_xfer_single_msg(struct bcm_iproc_i2c_dev *iproc_i2c,
- 		/* enable the RX threshold interrupt */
- 		val_intr_en |= BIT(IE_M_RX_THLD_SHIFT);
- 
--		val |= (M_CMD_PROTOCOL_BLK_RD << M_CMD_PROTOCOL_SHIFT) |
-+		protocol = process_call ?
-+				M_CMD_PROTOCOL_PROCESS : M_CMD_PROTOCOL_BLK_RD;
-+
-+		val |= (protocol << M_CMD_PROTOCOL_SHIFT) |
- 		       (msg->len << M_CMD_RD_CNT_SHIFT);
- 	} else {
- 		val |= (M_CMD_PROTOCOL_BLK_WR << M_CMD_PROTOCOL_SHIFT);
-@@ -774,17 +802,24 @@ static int bcm_iproc_i2c_xfer(struct i2c_adapter *adapter,
- 			      struct i2c_msg msgs[], int num)
- {
- 	struct bcm_iproc_i2c_dev *iproc_i2c = i2c_get_adapdata(adapter);
--	int ret, i;
-+	bool process_call = false;
-+	int ret;
- 
--	/* go through all messages */
--	for (i = 0; i < num; i++) {
--		ret = bcm_iproc_i2c_xfer_single_msg(iproc_i2c, &msgs[i]);
--		if (ret) {
--			dev_dbg(iproc_i2c->device, "xfer failed\n");
--			return ret;
-+	if (num == 2) {
-+		/* Repeated start, use process call */
-+		process_call = true;
-+		if (msgs[1].flags & I2C_M_NOSTART) {
-+			dev_err(iproc_i2c->device, "Invalid repeated start\n");
-+			return -EOPNOTSUPP;
- 		}
- 	}
- 
-+	ret = bcm_iproc_i2c_xfer_internal(iproc_i2c, msgs, process_call);
-+	if (ret) {
-+		dev_dbg(iproc_i2c->device, "xfer failed\n");
-+		return ret;
-+	}
-+
- 	return num;
- }
- 
-@@ -806,6 +841,8 @@ static uint32_t bcm_iproc_i2c_functionality(struct i2c_adapter *adap)
- };
- 
- static struct i2c_adapter_quirks bcm_iproc_i2c_quirks = {
-+	.flags = I2C_AQ_COMB_WRITE_THEN_READ,
-+	.max_comb_1st_msg_len = M_TX_RX_FIFO_SIZE,
- 	.max_read_len = M_RX_MAX_READ_LEN,
- };
- 
--- 
-1.9.1
-
+Best regards,
+Rayagonda
