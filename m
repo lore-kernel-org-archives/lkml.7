@@ -2,92 +2,104 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C37C35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8343CC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E86821855
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:12:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gteQl+dV"
+	by mail.kernel.org (Postfix) with ESMTP id 59DC021855
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:13:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732104AbfI3VMl (ORCPT
+        id S1732258AbfI3VNG convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 17:12:41 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:39523 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726425AbfI3VMk (ORCPT
+        Mon, 30 Sep 2019 17:13:06 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36585 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731802AbfI3VNG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 17:12:40 -0400
-Received: by mail-qt1-f194.google.com with SMTP id n7so18909836qtb.6;
-        Mon, 30 Sep 2019 14:12:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Ggkj4UPTjC/OAa05ryIbgY4jWP/2oS605APpq+Z8rs8=;
-        b=gteQl+dVBPchhw/Dv3Oh4U115N/iT5KSkQMlSKDvoVZ13t7ZoHBMbJyrwkzgLS3qwk
-         /gMjF93yuhx38n2nj5cfMNA1dGayTKt2udOTJFtzQWxRzN1KiEs76rqPhDn/jL4K7SsC
-         LarHKU8MhKEAth55Es5qRfjfusC95bZ69eCD7iud/BJyEjLbd1lY3mbnvuQk73lsGf57
-         ZQnDk7XtB0Q95EIF6gMBuLXaEFc17cyqpQtI8Je9Ze0gBXT4f/T/SId8zdKzMVgVnqZ2
-         vGPbw2wJzXOeAMt6v36OxCc2tFatS2ripA7nZY/84sr2I1YIGbeFVVqz+Wzn5rNCck0R
-         jc5g==
+        Mon, 30 Sep 2019 17:13:06 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 67so9662793oto.3;
+        Mon, 30 Sep 2019 14:13:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ggkj4UPTjC/OAa05ryIbgY4jWP/2oS605APpq+Z8rs8=;
-        b=Co69ioqbZwNWrSmB1O/y3NqXZib5GHbxXXm3tZGH7c6RLKOd7kdQaLooSb4qQlSAqz
-         guN1ITBP+p/AtaT6bWPp6HmMGEi2/i8QolaF41WJlQLKkgQ/stmdz7iLeORRbZdlEcbY
-         shyVxSlaFKT+8amE5PFS4DM3nlCeFOihInxd0wPS0PPBdqjlvuhZhEX62XGaq2HzWl3/
-         TF+usnwbYwdFyG0j2BgVfgedy0+nPgwpe6K2/WCVT5YOjAfgsjuPa18aIfO5k+ZsjTJn
-         4dZ1/ZxhXYjOBljuew/IvNBI/w3coT4wrtgndqIBDqwQINZ4hSA9QJQqipnRgqzaRyqM
-         3GQw==
-X-Gm-Message-State: APjAAAWCQgaNwOydO3akQefXis/fWOiLCnY+87GS9jMIYXdDi4+nZXmu
-        qHBmoaenswlfVwCQ45OblTx5aCux
-X-Google-Smtp-Source: APXvYqyFKyt2A44FViBd+1yTlDIB7kXRU3nUGEXQNKVfgNwsO/QAXlQT8LMDYvPebIrYvvsGGOLBEA==
-X-Received: by 2002:a65:5802:: with SMTP id g2mr20020028pgr.333.1569868255622;
-        Mon, 30 Sep 2019 11:30:55 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id s3sm193931pjq.32.2019.09.30.11.30.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 30 Sep 2019 11:30:55 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 11:30:54 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 00/63] 4.19.76-stable review
-Message-ID: <20190930183054.GD22096@roeck-us.net>
-References: <20190929135031.382429403@linuxfoundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=AoDopCjUGYoxKnmro43LDdxYLNX5XQXycxp12mlQvm8=;
+        b=RAgU5KS+qnfNa6MiDEgMKiI3z+FJ7OQKerzTkkUQxOw7rU1DdMb28kCDqli+TyIrPw
+         jP39sQTTDS8SKHh1dKMxTdvM1l0cdprIjz3fcLruXw01i1qTR5wznlMmH0cV4hwV0BoV
+         ftn2+sSzFBrxhbltxwWT93SrcNLKThzQ3E801JxpOy8JNvfop5Mh/dj4WYOcyLK73f/A
+         KMdnfrwf8z4Z112cc3C1PdZwrJeRpxMNxNFppiaC1DQqSoM8pPOJDDPUNf4hPmmgeKxQ
+         hSFkRXnPCf/Ba2qZaaaS1oGkggRtNTaOMpjkKCg87KnNMhuGyHZLEZ3gO5T9F8Ecd2zl
+         va5g==
+X-Gm-Message-State: APjAAAUZiUr2S2ThXB7D51Fl3dJ1weNvZ+89pBmtXQO8IozOif2FU3Dd
+        mSyvaHQmHBZjg8fqxxJJwqTAhAcxKlqp4PcjPecrXQ==
+X-Google-Smtp-Source: APXvYqzPkYu2PrL3iMwwL+6tej+XjS4dGWNxGQXzn+bCU2kTSqKXYzVqy+EN/9Az+2EqdSLOyjgt2nDIKfgxYblqp4g=
+X-Received: by 2002:a9d:17e6:: with SMTP id j93mr15612333otj.297.1569872057032;
+ Mon, 30 Sep 2019 12:34:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190929135031.382429403@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190920133115.12802-1-uwe@kleine-koenig.org>
+In-Reply-To: <20190920133115.12802-1-uwe@kleine-koenig.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 30 Sep 2019 21:34:05 +0200
+Message-ID: <CAMuHMdUs8oqDgYpQdu_bJ1Hvz+Lq_qPXLvuKj7=H=6818OM9=A@mail.gmail.com>
+Subject: Re: [PATCH] dimlib: make DIMLIB a hidden symbol
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>,
+        Tal Gilboa <talgi@mellanox.com>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 29, 2019 at 03:53:33PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.76 release.
-> There are 63 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Tue 01 Oct 2019 01:47:47 PM UTC.
-> Anything received after that time might be too late.
-> 
+Hi Uwe, Tal,
 
-Build results:
-	total: 156 pass: 156 fail: 0
-Qemu test results:
-	total: 390 pass: 390 fail: 0
+On Sat, Sep 21, 2019 at 7:50 PM Uwe Kleine-König <uwe@kleine-koenig.org> wrote:
+> According to Tal Gilboa the only benefit from DIM comes from a driver
+> that uses it. So it doesn't make sense to make this symbol user visible,
+> instead all drivers that use it should select it (as is already the case
+> AFAICT).
+>
+> Signed-off-by: Uwe Kleine-König <uwe@kleine-koenig.org>
 
-Guenter
+Thanks for your patch!
+
+> --- a/lib/Kconfig
+> +++ b/lib/Kconfig
+> @@ -555,8 +555,7 @@ config SIGNATURE
+>           Implementation is done using GnuPG MPI library
+>
+>  config DIMLIB
+> -       bool "DIM library"
+> -       default y
+> +       bool
+>         help
+>           Dynamic Interrupt Moderation library.
+>           Implements an algorithm for dynamically change CQ moderation values
+
+Thanks for fixing the first issue!
+
+The second issue is still present: NET_VENDOR_BROADCOM (which defaults
+to y, as all other NET_VENDOR_* symbols) should only be a gatekeeper for
+the various Broadcom network driver config options, and should not select
+DIMLIB.
+
+Cfr. my earlier complaint in
+https://lore.kernel.org/linux-rdma/alpine.DEB.2.21.1907021810220.13058@ramsan.of.borg/
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
