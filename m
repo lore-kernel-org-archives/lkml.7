@@ -2,114 +2,145 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CA6C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 791AEC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3628C206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:48:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pSPM8eue"
+	by mail.kernel.org (Postfix) with ESMTP id 535FE216F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:48:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730773AbfI3Ksr (ORCPT
+        id S1730818AbfI3Ksz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 06:48:47 -0400
-Received: from mail-qt1-f181.google.com ([209.85.160.181]:43631 "EHLO
-        mail-qt1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729870AbfI3Ksr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 06:48:47 -0400
-Received: by mail-qt1-f181.google.com with SMTP id c3so16339887qtv.10
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 03:48:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SO892WAVgocnbXqqMJG3LZJ1u8N49nNayKbSCOkyt/Y=;
-        b=pSPM8eue8Pt+JuI99tgHoPBekOi6xG/jeBGX2N6BM8n9VHgbNJLAglrhW+vjHX6Jhs
-         KYybKQ9xC/BdG+9tHzc77DKbjZ0QGmif7t2Xn88xmVHg6lLhCx2aHPGwcB23IGCzygFK
-         3DfjCwXxWH8ZOvlj5BSrfNuFMnaRcfvXfVrCN7KILPtS2FYWmYtC9QixjKYfvAGSoPgB
-         QkDpL1v2y9DITlYwGnISYE7BPrxRS6ejTo+XYKdtdS3gpXFM/Wrk6PjKfkfPfNZUxCWS
-         mvGaSzqN3GKxlIy3cqk+XnKvuxWT0cAqArqX5yo7AiYaguqmHJXmaNfLuq761wpVxSEE
-         mUnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SO892WAVgocnbXqqMJG3LZJ1u8N49nNayKbSCOkyt/Y=;
-        b=PdMStLf0zmyxjQpbKIcSEDWYSLyDZCon6pilGJI+LbYhHHLOxMK+JVI3PdXDm944xc
-         TtD6GIdVtEsMN6MexoEBZ7SmZY29C8rLJ/ZlZI54BQx/DJFhLiCzerGpRgndm1ovMvaw
-         x5kHj0ESNXqyRtO75p2tDu/dFY6LCIJZ2OzR13oHdkZwKdQVX4paQ+liVBzkSM43HAPk
-         vVlD+8dnSx3Jh7R6gRwIhlTaLQpqQnTyv6rJuTbl7BkT+0cDUTE59LOUjVDbLSRBRgdY
-         OOKi1WeFVgCMjeL0uGT2iqM2Kjms1EAJBXwLnSLSUGNVSfz7x9uV0Oah4zA8WmJPfSjI
-         cDNw==
-X-Gm-Message-State: APjAAAXnDsCXBx9G/DdkFXZNsoJ8Q79ZECIyHtdgK/rPNAs5ec7ZYhlI
-        /EBZ/cgxaGZvYD0KS6qhN74=
-X-Google-Smtp-Source: APXvYqwKZ7sJYOgpP02aZtVW+zEDSNO1VwJvSmPdXjB9HVjhvw5CgU9MakPOZ5qCu5eCIKeFf9ipXw==
-X-Received: by 2002:ac8:160d:: with SMTP id p13mr24156259qtj.189.1569840526287;
-        Mon, 30 Sep 2019 03:48:46 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id i30sm7661217qte.27.2019.09.30.03.48.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 03:48:45 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B7DBA40396; Mon, 30 Sep 2019 07:48:43 -0300 (-03)
-Date:   Mon, 30 Sep 2019 07:48:43 -0300
-To:     Stephane Eranian <eranian@google.com>
-Cc:     Steve MacLean <Steve.MacLean@microsoft.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
-        John Keeping <john@metanate.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Leo Yan <leo.yan@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Brian Robbins <brianrob@microsoft.com>,
-        Tom McDonald <Thomas.McDonald@microsoft.com>,
-        John Salem <josalem@microsoft.com>
-Subject: Re: [PATCH 4/4] perf docs: Correct and clarify jitdump spec
-Message-ID: <20190930104843.GC9622@kernel.org>
-References: <BN8PR21MB1362F63CDE7AC69736FC7F9EF7800@BN8PR21MB1362.namprd21.prod.outlook.com>
- <CABPqkBTVso=2bo1EkYETXBOk_g1ykiZdHcQmt9uew5JECQzEBw@mail.gmail.com>
+        Mon, 30 Sep 2019 06:48:55 -0400
+Received: from mga04.intel.com ([192.55.52.120]:17904 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729870AbfI3Ksz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 06:48:55 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Sep 2019 03:48:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,565,1559545200"; 
+   d="scan'208";a="191104454"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by fmsmga007.fm.intel.com with SMTP; 30 Sep 2019 03:48:50 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Mon, 30 Sep 2019 13:48:49 +0300
+Date:   Mon, 30 Sep 2019 13:48:49 +0300
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Sandy Huang <hjc@rock-chips.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] drm: Add some new format DRM_FORMAT_NVXX_10
+Message-ID: <20190930104849.GA1208@intel.com>
+References: <1569486289-152061-1-git-send-email-hjc@rock-chips.com>
+ <1569486289-152061-2-git-send-email-hjc@rock-chips.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CABPqkBTVso=2bo1EkYETXBOk_g1ykiZdHcQmt9uew5JECQzEBw@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1569486289-152061-2-git-send-email-hjc@rock-chips.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Sep 27, 2019 at 09:39:00PM -0700, Stephane Eranian escreveu:
-> On Fri, Sep 27, 2019 at 6:53 PM Steve MacLean
-> <Steve.MacLean@microsoft.com> wrote:
-> >
-> > Specification claims latest version of jitdump file format is 2. Current
-> > jit dump reading code treats 1 as the latest version.
-> >
-> > Correct spec to match code.
-
-<SNIP>
- 
-> Corrections are valid.
+On Thu, Sep 26, 2019 at 04:24:47PM +0800, Sandy Huang wrote:
+> These new format is supported by some rockchip socs:
 > 
-> Acked-by: Stephane Eranian <eranian@google.com>
+> DRM_FORMAT_NV12_10/DRM_FORMAT_NV21_10
+> DRM_FORMAT_NV16_10/DRM_FORMAT_NV61_10
+> DRM_FORMAT_NV24_10/DRM_FORMAT_NV42_10
+> 
+> Signed-off-by: Sandy Huang <hjc@rock-chips.com>
+> ---
+>  drivers/gpu/drm/drm_fourcc.c  | 18 ++++++++++++++++++
+>  include/uapi/drm/drm_fourcc.h | 14 ++++++++++++++
+>  2 files changed, 32 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/drm_fourcc.c b/drivers/gpu/drm/drm_fourcc.c
+> index c630064..ccd78a3 100644
+> --- a/drivers/gpu/drm/drm_fourcc.c
+> +++ b/drivers/gpu/drm/drm_fourcc.c
+> @@ -261,6 +261,24 @@ const struct drm_format_info *__drm_format_info(u32 format)
+>  		{ .format = DRM_FORMAT_P016,		.depth = 0,  .num_planes = 2,
+>  		  .char_per_block = { 2, 4, 0 }, .block_w = { 1, 0, 0 }, .block_h = { 1, 0, 0 },
+>  		  .hsub = 2, .vsub = 2, .is_yuv = true},
+> +		{ .format = DRM_FORMAT_NV12_10,		.depth = 0,  .num_planes = 2,
+> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
+> +		  .hsub = 2, .vsub = 2, .is_yuv = true},
+> +		{ .format = DRM_FORMAT_NV21_10,		.depth = 0,  .num_planes = 2,
+> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
+> +		  .hsub = 2, .vsub = 2, .is_yuv = true},
+> +		{ .format = DRM_FORMAT_NV16_10,		.depth = 0,  .num_planes = 2,
+> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
+> +		  .hsub = 2, .vsub = 1, .is_yuv = true},
+> +		{ .format = DRM_FORMAT_NV61_10,		.depth = 0,  .num_planes = 2,
+> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
+> +		  .hsub = 2, .vsub = 1, .is_yuv = true},
+> +		{ .format = DRM_FORMAT_NV24_10,		.depth = 0,  .num_planes = 2,
+> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
+> +		  .hsub = 1, .vsub = 1, .is_yuv = true},
+> +		{ .format = DRM_FORMAT_NV42_10,		.depth = 0,  .num_planes = 2,
+> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
+> +		  .hsub = 1, .vsub = 1, .is_yuv = true},
+>  		{ .format = DRM_FORMAT_P210,		.depth = 0,
+>  		  .num_planes = 2, .char_per_block = { 2, 4, 0 },
+>  		  .block_w = { 1, 0, 0 }, .block_h = { 1, 0, 0 }, .hsub = 2,
+> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
+> index 3feeaa3..08e2221 100644
+> --- a/include/uapi/drm/drm_fourcc.h
+> +++ b/include/uapi/drm/drm_fourcc.h
+> @@ -238,6 +238,20 @@ extern "C" {
+>  #define DRM_FORMAT_NV42		fourcc_code('N', 'V', '4', '2') /* non-subsampled Cb:Cr plane */
+>  
+>  /*
+> + * 2 plane YCbCr
+> + * index 0 = Y plane, Y3:Y2:Y1:Y0 10:10:10:10
+> + * index 1 = Cb:Cr plane, Cb3:Cr3:Cb2:Cr2:Cb1:Cr1:Cb0:Cr0 10:10:10:10:10:10:10:10
+> + * or
+> + * index 1 = Cr:Cb plane, Cr3:Cb3:Cr2:Cb2:Cr1:Cb1:Cr0:Cb0 10:10:10:10:10:10:10:10
 
-Thanks, applied.
+So now you're defining it as some kind of byte aligned block.
+With that specifying endianness would now make sense since
+otherwise this tells us absolutely nothing about the memory
+layout.
 
-- Arnaldo
+So I'd either do that, or go back to not specifying anything and
+use some weasel words like "mamory layout is implementation defined"
+which of course means no one can use it for anything that involves
+any kind of cross vendor stuff.
+
+> + */
+> +#define DRM_FORMAT_NV12_10	fourcc_code('N', 'A', '1', '2') /* 2x2 subsampled Cr:Cb plane */
+> +#define DRM_FORMAT_NV21_10	fourcc_code('N', 'A', '2', '1') /* 2x2 subsampled Cb:Cr plane */
+> +#define DRM_FORMAT_NV16_10	fourcc_code('N', 'A', '1', '6') /* 2x1 subsampled Cr:Cb plane */
+> +#define DRM_FORMAT_NV61_10	fourcc_code('N', 'A', '6', '1') /* 2x1 subsampled Cb:Cr plane */
+> +#define DRM_FORMAT_NV24_10	fourcc_code('N', 'A', '2', '4') /* non-subsampled Cr:Cb plane */
+> +#define DRM_FORMAT_NV42_10	fourcc_code('N', 'A', '4', '2') /* non-subsampled Cb:Cr plane */
+> +
+> +/*
+>   * 2 plane YCbCr MSB aligned
+>   * index 0 = Y plane, [15:0] Y:x [10:6] little endian
+>   * index 1 = Cr:Cb plane, [31:0] Cr:x:Cb:x [10:6:10:6] little endian
+> -- 
+> 2.7.4
+> 
+> 
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+-- 
+Ville Syrjälä
+Intel
