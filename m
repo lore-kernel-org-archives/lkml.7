@@ -7,47 +7,39 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UPPERCASE_50_75,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 795C0C4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B834C4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02E5A2086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9C1621721
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:47:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730157AbfI3Iq1 (ORCPT
+        id S1730169AbfI3IrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 04:46:27 -0400
-Received: from mga17.intel.com ([192.55.52.151]:48480 "EHLO mga17.intel.com"
+        Mon, 30 Sep 2019 04:47:00 -0400
+Received: from mga03.intel.com ([134.134.136.65]:49225 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726121AbfI3Iq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 04:46:26 -0400
+        id S1726121AbfI3Iq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 04:46:59 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Sep 2019 01:46:23 -0700
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Sep 2019 01:46:53 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,565,1559545200"; 
-   d="yaml'?scan'208";a="365932293"
+   d="yaml'?scan'208";a="190196040"
 Received: from shao2-debian.sh.intel.com (HELO localhost) ([10.239.13.6])
-  by orsmga005.jf.intel.com with ESMTP; 30 Sep 2019 01:46:18 -0700
-Date:   Mon, 30 Sep 2019 16:46:05 +0800
+  by fmsmga008.fm.intel.com with ESMTP; 30 Sep 2019 01:46:50 -0700
+Date:   Mon, 30 Sep 2019 16:46:37 +0800
 From:   kernel test robot <rong.a.chen@intel.com>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Hugh Dickins <hughd@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        David Rientjes <rientjes@google.com>, Qian Cai <cai@lca.pw>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@01.org
-Subject: [mm]  87eaceb3fa:  stress-ng.madvise.ops_per_sec -19.6% regression
-Message-ID: <20190930084604.GC17687@shao2-debian>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     "zhengbin (A)" <zhengbin13@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, lkp@01.org
+Subject: d4f4de5e5e:  aim9.dir_rtns_1.ops_per_sec -26.1% regression
+Message-ID: <20190930084637.GD17687@shao2-debian>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="f0KYrhQ4vYSV2aJu"
+Content-Type: multipart/mixed; boundary="/3yNEOqWowh/8j+e"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 User-Agent: NeoMutt/20170113 (1.7.2)
@@ -57,31 +49,41 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---f0KYrhQ4vYSV2aJu
+--/3yNEOqWowh/8j+e
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 
 Greeting,
 
-FYI, we noticed a -19.6% regression of stress-ng.madvise.ops_per_sec due to commit:
+FYI, we noticed a -26.1% regression of aim9.dir_rtns_1.ops_per_sec due to commit:
 
 
-commit: 87eaceb3faa59b9b4d940ec9554ce251325d83fe ("mm: thp: make deferred split shrinker memcg aware")
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+commit: d4f4de5e5ef8efde85febb6876cd3c8ab1631999 ("Fix the locking in dcache_readdir() and friends")
+https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
 
-in testcase: stress-ng
-on test machine: 72 threads Intel(R) Xeon(R) Gold 6140 CPU @ 2.30GHz with 192G memory
+in testcase: aim9
+on test machine: 4 threads Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz with 4G memory
 with following parameters:
 
-	nr_threads: 100%
-	disk: 1HDD
-	testtime: 1s
-	class: vm
-	ucode: 0x200005e
+	testtime: 5s
+	test: all
 	cpufreq_governor: performance
+	ucode: 0x21
 
+test-description: Suite IX is the "AIM Independent Resource Benchmark:" the famous synthetic benchmark.
+test-url: https://sourceforge.net/projects/aimbench/files/aim-suite9/
 
+In addition to that, the commit also has significant impact on the following tests:
+
++------------------+------------------------------------------------------------------+
+| testcase: change | aim9: aim9.dir_rtns_1.ops_per_sec -26.3% regression              |
+| test machine     | 4 threads Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz with 4G memory |
+| test parameters  | cpufreq_governor=performance                                     |
+|                  | test=dir_rtns_1                                                  |
+|                  | testtime=300s                                                    |
+|                  | ucode=0x21                                                       |
++------------------+------------------------------------------------------------------+
 
 
 If you fix the issue, kindly add following tag
@@ -100,123 +102,154 @@ To reproduce:
         bin/lkp run     job.yaml
 
 =========================================================================================
-class/compiler/cpufreq_governor/disk/kconfig/nr_threads/rootfs/tbox_group/testcase/testtime/ucode:
-  vm/gcc-7/performance/1HDD/x86_64-rhel-7.6/100%/debian-x86_64-2019-05-14.cgz/lkp-skl-2sp8/stress-ng/1s/0x200005e
+compiler/cpufreq_governor/kconfig/rootfs/tbox_group/test/testcase/testtime/ucode:
+  gcc-7/performance/x86_64-rhel-7.6/debian-x86_64-2019-05-14.cgz/lkp-ivb-d03/all/aim9/5s/0x21
 
 commit: 
-  0a432dcbeb ("mm: shrinker: make shrinker not depend on memcg kmem")
-  87eaceb3fa ("mm: thp: make deferred split shrinker memcg aware")
+  mainline-tracking-v5.3-190917T112302Z
+  d4f4de5e5e ("Fix the locking in dcache_readdir() and friends")
 
-0a432dcbeb32edcd 87eaceb3faa59b9b4d940ec9554 
+mainline-trackin d4f4de5e5ef8efde85febb6876c 
 ---------------- --------------------------- 
          %stddev     %change         %stddev
              \          |                \  
-      6457           -19.5%       5198        stress-ng.madvise.ops
-      6409           -19.6%       5154        stress-ng.madvise.ops_per_sec
-      3575           -26.8%       2618 ±  6%  stress-ng.mremap.ops
-      3575           -26.9%       2613 ±  6%  stress-ng.mremap.ops_per_sec
-     15.77            -5.8%      14.85 ±  2%  iostat.cpu.user
-   3427944 ±  4%      -9.3%    3109984        meminfo.AnonPages
-     33658 ± 22%  +69791.3%   23524535 ±165%  sched_debug.cfs_rq:/.load.max
-     19951 ±  7%     +13.3%      22611 ±  3%  softirqs.CPU54.TIMER
-    109.94            -4.1%     105.41        turbostat.RAMWatt
-      5.89 ± 62%      -3.1        2.78 ±173%  perf-profile.calltrace.cycles-pp.page_fault
-      3.39 ±101%      -0.6        2.78 ±173%  perf-profile.calltrace.cycles-pp.do_page_fault.page_fault
-      3.39 ±101%      -0.6        2.78 ±173%  perf-profile.calltrace.cycles-pp.__do_page_fault.do_page_fault.page_fault
-      5.28 ±100%      -5.3        0.00        perf-profile.children.cycles-pp.___might_sleep
-      5.28 ±100%      -5.3        0.00        perf-profile.self.cycles-pp.___might_sleep
-    885704 ±  5%     -11.0%     787888 ±  6%  proc-vmstat.nr_anon_pages
- 1.742e+08 ±  5%      -9.6%  1.576e+08 ±  2%  proc-vmstat.pgalloc_normal
- 1.741e+08 ±  5%      -9.6%  1.575e+08 ±  2%  proc-vmstat.pgfree
-    375505           -19.4%     302688        proc-vmstat.pglazyfree
-     55236 ± 38%     -55.5%      24552 ± 41%  proc-vmstat.thp_deferred_split_page
-     55234 ± 38%     -55.6%      24543 ± 41%  proc-vmstat.thp_fault_alloc
-      3218           -19.4%       2595        proc-vmstat.thp_split_page
-     12163 ±  7%     -22.1%       9473 ± 12%  proc-vmstat.thp_split_pmd
-   8193516            +3.2%    8459146        proc-vmstat.unevictable_pgs_scanned
-     79085 ± 10%      -7.8%      72890        interrupts.CAL:Function_call_interrupts
-      1139 ±  9%     -10.7%       1018 ±  3%  interrupts.CPU0.CAL:Function_call_interrupts
-      3596 ±  3%     -13.8%       3100 ±  8%  interrupts.CPU20.TLB:TLB_shootdowns
-      3602 ±  4%     -12.6%       3149 ± 10%  interrupts.CPU23.TLB:TLB_shootdowns
-      3512 ±  5%      -9.9%       3163 ±  9%  interrupts.CPU25.TLB:TLB_shootdowns
-      3512 ±  3%     -12.1%       3088 ±  9%  interrupts.CPU26.TLB:TLB_shootdowns
-      3610 ±  5%     -13.2%       3134 ±  5%  interrupts.CPU29.TLB:TLB_shootdowns
-      3602 ±  5%     -17.4%       2973 ±  8%  interrupts.CPU31.TLB:TLB_shootdowns
-      3548 ±  4%     -12.7%       3098 ±  6%  interrupts.CPU32.TLB:TLB_shootdowns
-      3637 ±  5%     -15.2%       3085 ±  7%  interrupts.CPU35.TLB:TLB_shootdowns
-      3588 ±  3%     -12.7%       3131 ±  9%  interrupts.CPU56.TLB:TLB_shootdowns
-      3664 ±  5%     -14.3%       3142 ± 10%  interrupts.CPU59.TLB:TLB_shootdowns
-      3542 ±  6%     -13.0%       3082 ±  5%  interrupts.CPU64.TLB:TLB_shootdowns
-      3539 ±  5%     +12.4%       3977 ± 11%  interrupts.CPU7.TLB:TLB_shootdowns
-      3485 ±  5%     -13.0%       3033 ± 10%  interrupts.CPU70.TLB:TLB_shootdowns
-      3651 ±  4%     -16.1%       3062 ±  9%  interrupts.CPU71.TLB:TLB_shootdowns
- 1.557e+10 ±  2%      -8.1%  1.431e+10 ±  3%  perf-stat.i.branch-instructions
- 1.887e+08 ±  9%     -21.4%  1.484e+08        perf-stat.i.cache-misses
- 5.026e+08 ±  2%      -8.6%  4.595e+08 ±  4%  perf-stat.i.cache-references
-      2609 ±  3%      +6.0%       2766        perf-stat.i.cycles-between-cache-misses
- 7.344e+09            -6.6%  6.861e+09 ±  3%  perf-stat.i.dTLB-stores
- 6.969e+10            -7.6%   6.44e+10 ±  3%  perf-stat.i.instructions
-      0.37 ±  2%      -7.2%       0.34        perf-stat.i.ipc
-     43.29 ±  5%      +3.7       46.94 ±  4%  perf-stat.i.node-load-miss-rate%
-  15474576 ±  8%     -23.9%   11782653 ± 13%  perf-stat.i.node-load-misses
-     28.50 ±  6%      +3.2       31.74 ±  3%  perf-stat.i.node-store-miss-rate%
-  26447212 ±  5%     -11.6%   23382361 ±  4%  perf-stat.i.node-stores
-      0.61            +0.0        0.65        perf-stat.overall.branch-miss-rate%
-     37.58 ±  8%      -5.2       32.39 ±  4%  perf-stat.overall.cache-miss-rate%
-      2.91 ±  2%      +3.4%       3.00        perf-stat.overall.cpi
-      1091 ± 10%     +19.5%       1303 ±  3%  perf-stat.overall.cycles-between-cache-misses
-      0.17            +0.0        0.18 ±  3%  perf-stat.overall.dTLB-store-miss-rate%
-      5922            -6.6%       5533 ±  2%  perf-stat.overall.instructions-per-iTLB-miss
-      0.34 ±  2%      -3.3%       0.33        perf-stat.overall.ipc
- 1.462e+10 ±  2%      -5.3%  1.384e+10 ±  3%  perf-stat.ps.branch-instructions
- 1.765e+08 ± 10%     -18.7%  1.435e+08        perf-stat.ps.cache-misses
- 6.926e+09            -4.0%  6.648e+09 ±  3%  perf-stat.ps.dTLB-stores
- 6.555e+10            -5.0%  6.229e+10 ±  3%  perf-stat.ps.instructions
-  14736035 ±  8%     -21.6%   11547658 ± 14%  perf-stat.ps.node-load-misses
- 2.703e+12            -4.4%  2.585e+12 ±  2%  perf-stat.total.instructions
+  10976333           -26.1%    8116500        aim9.dir_rtns_1.ops_per_sec
+    916821            +1.6%     931164        aim9.sync_disk_wrt.ops_per_sec
+    145728            -1.1%     144085        aim9.tcp_test.ops_per_sec
+    276050            +1.3%     279655        aim9.udp_test.ops_per_sec
+      2307 ± 59%     -53.1%       1083 ± 45%  interrupts.CPU3.RES:Rescheduling_interrupts
+      3476            -2.0%       3406        proc-vmstat.nr_kernel_stack
+ 1.205e+08 ± 47%     -73.8%   31527642 ± 73%  cpuidle.C3.time
+    403015 ± 70%     -77.9%      89237 ± 65%  cpuidle.C3.usage
+      1085 ±  2%     +16.1%       1260 ±  4%  slabinfo.kmalloc-96.active_objs
+      1085 ±  2%     +16.1%       1260 ±  4%  slabinfo.kmalloc-96.num_objs
+    176352 ±167%    +294.7%     696134 ± 90%  softirqs.CPU3.NET_RX
+     73740 ± 51%    +136.7%     174570 ± 52%  softirqs.CPU3.RCU
+     36381 ± 23%     +33.7%      48655 ± 13%  sched_debug.cfs_rq:/.min_vruntime.min
+      6.86 ± 59%     +85.8%      12.75 ± 37%  sched_debug.cfs_rq:/.runnable_load_avg.min
+    -57832           -85.8%      -8235        sched_debug.cfs_rq:/.spread0.min
+    403011 ± 70%     -77.9%      89237 ± 65%  turbostat.C3
+      9.99 ± 47%      -7.4        2.61 ± 73%  turbostat.C3%
+      3.64 ±214%    +323.7%      15.41 ± 99%  turbostat.CPU%c6
+     39.33            -7.8%      36.25        turbostat.CoreTmp
+     38.83            -7.3%      36.00        turbostat.PkgTmp
+      1.57 ±141%      +3.2        4.78 ± 15%  perf-profile.calltrace.cycles-pp.div_double
+      0.02 ±149%      +0.1        0.08 ± 26%  perf-profile.children.cycles-pp.native_sched_clock
+      0.02 ±149%      +0.1        0.08 ± 26%  perf-profile.children.cycles-pp.sched_clock
+      0.02 ±146%      +0.1        0.09 ± 27%  perf-profile.children.cycles-pp.arch_stack_walk
+      0.02 ±146%      +0.1        0.09 ± 20%  perf-profile.children.cycles-pp.swake_up_one
+      0.02 ±149%      +0.1        0.09 ± 35%  perf-profile.children.cycles-pp.sched_clock_cpu
+      0.01 ±223%      +0.1        0.09 ± 24%  perf-profile.children.cycles-pp.swake_up_locked
+      0.03 ±152%      +0.1        0.10 ± 30%  perf-profile.children.cycles-pp.stack_trace_save_tsk
+      0.01 ±223%      +0.1        0.09 ± 34%  perf-profile.children.cycles-pp.__fxstat64
+      0.05 ±114%      +0.1        0.14 ± 33%  perf-profile.children.cycles-pp.security_task_getsecid
+      0.03 ±152%      +0.1        0.11 ± 32%  perf-profile.children.cycles-pp.__account_scheduler_latency
+      0.05 ±104%      +0.1        0.14 ± 27%  perf-profile.children.cycles-pp.selinux_inode_free_security
+      0.05 ±141%      +0.1        0.14 ± 39%  perf-profile.children.cycles-pp.__x64_sys_chdir
+      0.05 ±141%      +0.1        0.14 ± 39%  perf-profile.children.cycles-pp.ksys_chdir
+      0.05 ±120%      +0.1        0.14 ± 29%  perf-profile.children.cycles-pp.enqueue_entity
+      0.01 ±223%      +0.1        0.11 ± 36%  perf-profile.children.cycles-pp.d_set_d_op
+      0.05 ± 94%      +0.1        0.15 ± 38%  perf-profile.children.cycles-pp.ttwu_do_activate
+      0.05 ± 94%      +0.1        0.15 ± 38%  perf-profile.children.cycles-pp.activate_task
+      0.05 ±120%      +0.1        0.15 ± 36%  perf-profile.children.cycles-pp.enqueue_task_fair
+      0.00            +0.1        0.13 ± 27%  perf-profile.children.cycles-pp.__srcu_read_lock
+      0.06 ±116%      +0.2        0.22 ± 38%  perf-profile.children.cycles-pp.d_lookup
+      0.08 ±103%      +0.2        0.24 ± 32%  perf-profile.children.cycles-pp.may_open
+      0.07 ±119%      +0.2        0.25 ± 38%  perf-profile.children.cycles-pp.inode_doinit_with_dentry
+      0.06 ±101%      +0.2        0.24 ± 33%  perf-profile.children.cycles-pp.fsnotify_grab_connector
+      0.08 ±107%      +0.2        0.28 ± 35%  perf-profile.children.cycles-pp.fsnotify_destroy_marks
+      0.10 ±104%      +0.2        0.30 ± 27%  perf-profile.children.cycles-pp.selinux_inode_init_security
+      0.11 ±115%      +0.2        0.33 ± 39%  perf-profile.children.cycles-pp.lockref_put_or_lock
+      0.12 ±116%      +0.2        0.36 ± 29%  perf-profile.children.cycles-pp._IO_fgets
+      0.12 ±102%      +0.3        0.38 ± 36%  perf-profile.children.cycles-pp.vfprintf
+      0.21 ±106%      +0.3        0.56 ± 29%  perf-profile.children.cycles-pp.destroy_inode
+      0.37 ± 79%      +0.5        0.86 ± 44%  perf-profile.children.cycles-pp.kthread
+      0.37 ± 79%      +0.5        0.86 ± 45%  perf-profile.children.cycles-pp.ret_from_fork
+      0.27 ±112%      +0.5        0.80 ± 29%  perf-profile.children.cycles-pp.user_path_at_empty
+      1.57 ±141%      +3.2        4.79 ± 15%  perf-profile.children.cycles-pp.div_double
+      0.03 ±141%      +0.1        0.09 ± 37%  perf-profile.self.cycles-pp.selinux_inode_free_security
+      0.01 ±223%      +0.1        0.07 ± 31%  perf-profile.self.cycles-pp.may_open
+      0.03 ±142%      +0.1        0.11 ± 41%  perf-profile.self.cycles-pp.shmem_getattr
+      0.01 ±223%      +0.1        0.10 ± 27%  perf-profile.self.cycles-pp.may_create
+      0.01 ±223%      +0.1        0.11 ± 36%  perf-profile.self.cycles-pp.d_set_d_op
+      0.04 ±142%      +0.1        0.14 ± 36%  perf-profile.self.cycles-pp.inode_doinit_with_dentry
+      0.01 ±223%      +0.1        0.12 ± 29%  perf-profile.self.cycles-pp.__d_lookup_done
+      0.03 ±143%      +0.1        0.15 ± 16%  perf-profile.self.cycles-pp.getname_flags
+      0.02 ±144%      +0.1        0.15 ± 36%  perf-profile.self.cycles-pp.__alloc_fd
+      0.00            +0.1        0.13 ± 22%  perf-profile.self.cycles-pp.__srcu_read_lock
+      0.07 ±110%      +0.1        0.20 ± 26%  perf-profile.self.cycles-pp.selinux_inode_init_security
+      0.09 ±114%      +0.2        0.28 ± 36%  perf-profile.self.cycles-pp.lockref_put_or_lock
+      0.11 ±117%      +0.2        0.33 ± 28%  perf-profile.self.cycles-pp._IO_fgets
+      0.15 ±110%      +0.2        0.40 ± 30%  perf-profile.self.cycles-pp.inode_permission
+      0.12 ±103%      +0.2        0.37 ± 36%  perf-profile.self.cycles-pp.vfprintf
+      1.52 ±141%      +3.3        4.78 ± 15%  perf-profile.self.cycles-pp.div_double
 
 
                                                                                 
-                               stress-ng.madvise.ops                            
+                              aim9.dir_rtns_1.ops_per_sec                       
                                                                                 
-  7000 +-+------------------------------------------------------------------+   
-  6800 +-+                          +                                       |   
-       |                            :                                       |   
-  6600 +-+.+  ++.+  +.+ ++   + ++. : :+.+  +.  ++ .++  +. ++    + +.   +    |   
-  6400 +-+  ++    ++   +  +.+ +   ++ +   ++  + : +   ++  +  ++.+ +  ++ :+.++|   
-       |                                      +                       +     |   
-  6200 +-+                                                                  |   
-  6000 +-+                                                                  |   
-  5800 +-+                                                                  |   
-       |                                                                    |   
-  5600 +-+                                                                  |   
-  5400 +-+                                                                  |   
-       OO   OOO  O  O   O    O     O  O O O  O      O                       |   
-  5200 +-O O   O  OO  OO OO O OOO O OO   O O  OOOO O O                      |   
-  5000 +-+------------------------------------------------------------------+   
-                                                                                
-                                                                                                                                                                
-                           stress-ng.madvise.ops_per_sec                        
-                                                                                
-  7000 +-+------------------------------------------------------------------+   
-  6800 +-+                          +                                       |   
-       |                            :                                       |   
-  6600 +-+                         : :                                      |   
-  6400 +-+.+++++.++++.+++++.+++++.++ ++.++++.+ +++.+++++.+++++.++++.++ ++.++|   
-       |                                      +                       +     |   
-  6200 +-+                                                                  |   
-  6000 +-+                                                                  |   
-  5800 +-+                                                                  |   
-       |                                                                    |   
-  5600 +-+                                                                  |   
-  5400 +-+                                                                  |   
-       |O   O    O  O   O                           O                       |   
-  5200 O-O O OOO  O   OO OO OOOOO OOOOO OOOO OO  O O O                      |   
-  5000 +-+---------O---------------------------OO---------------------------+   
+  1.2e+07 +-+---------------------------------------------------------------+   
+          |.+.+   +.+.+        +.+.+.+.+.+.+.+.+   +.+.+        +.+.+   +.+.|   
+    1e+07 +-+ :   :   :        :               :   :   :        :   :   :   |   
+          |   :   :   :        :               :   :   :        :   :   :   |   
+          O O : O O O O O  O O O O O O O O O O O   : O :    O   :   :   :   |   
+    8e+06 +-+  : :     :      :                 :O:O   O:O     :     : :    |   
+          |    : :     :      :                 : :     :      :     : :    |   
+    6e+06 +-+  : :     :      :                 : :     :      :     : :    |   
+          |    : :     :      :                 : :     :      :     : :    |   
+    4e+06 +-+  : :     :      :                 : :     :      :     : :    |   
+          |    : :     :      :                 : :     :      :     : :    |   
+          |     :       :    :                   :       :    :       :     |   
+    2e+06 +-+   :       :    :                   :       :    :       :     |   
+          |     :       :    :                   :       :    :       :     |   
+        0 +-+-O-------------------------------------------------------------+   
                                                                                 
                                                                                 
 [*] bisect-good sample
 [O] bisect-bad  sample
+
+***************************************************************************************************
+lkp-ivb-d03: 4 threads Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz with 4G memory
+=========================================================================================
+compiler/cpufreq_governor/kconfig/rootfs/tbox_group/test/testcase/testtime/ucode:
+  gcc-7/performance/x86_64-rhel-7.6/debian-x86_64-2019-05-14.cgz/lkp-ivb-d03/dir_rtns_1/aim9/300s/0x21
+
+commit: 
+  mainline-tracking-v5.3-190917T112302Z
+  d4f4de5e5e ("Fix the locking in dcache_readdir() and friends")
+
+mainline-trackin d4f4de5e5ef8efde85febb6876c 
+---------------- --------------------------- 
+         %stddev     %change         %stddev
+             \          |                \  
+  10956895           -26.3%    8074108        aim9.dir_rtns_1.ops_per_sec
+    235.88 ±  3%      +8.0%     254.66        aim9.time.system_time
+     64.12 ± 14%     -29.3%      45.34 ±  5%  aim9.time.user_time
+     20.04 ±  3%      +1.6       21.67        mpstat.cpu.all.sys%
+      0.00            +0.1        0.07 ± 33%  perf-profile.children.cycles-pp.schedule
+      0.00           +13.6       13.63 ± 81%  perf-profile.children.cycles-pp.scan_positives
+    395.86            +2.6%     406.00        proc-vmstat.nr_active_file
+    395.86            +2.6%     406.00        proc-vmstat.nr_zone_active_file
+      1092 ±  2%     +18.0%       1288 ±  3%  slabinfo.kmalloc-96.active_objs
+      1092 ±  2%     +18.0%       1288 ±  3%  slabinfo.kmalloc-96.num_objs
+    376.29 ± 96%   +1150.0%       4703 ±111%  interrupts.CPU3.NMI:Non-maskable_interrupts
+    376.29 ± 96%   +1150.0%       4703 ±111%  interrupts.CPU3.PMI:Performance_monitoring_interrupts
+    318.00 ± 15%     -32.2%     215.50 ±  6%  interrupts.TLB:TLB_shootdowns
+     58972 ± 13%     -23.9%      44848 ±  9%  softirqs.CPU1.RCU
+     61482 ±  9%     -20.1%      49110 ±  3%  softirqs.CPU2.RCU
+    122988 ± 14%     +25.8%     154740 ±  8%  softirqs.CPU3.TIMER
+    243766 ±  8%     -20.7%     193320 ±  3%  softirqs.RCU
+     20.60 ± 54%     +67.9%      34.59 ± 23%  perf-stat.i.MPKI
+      2.08 ± 27%      +1.1        3.20 ± 39%  perf-stat.i.branch-miss-rate%
+  21252312 ± 50%     -57.6%    9012007 ± 56%  perf-stat.i.branch-misses
+      6.94 ± 57%      +5.5       12.42 ± 27%  perf-stat.i.cache-miss-rate%
+   5870887 ± 40%     -35.5%    3788398 ±  5%  perf-stat.i.cache-references
+      0.45 ± 40%      +0.2        0.69 ± 21%  perf-stat.i.dTLB-load-miss-rate%
+      5.18 ± 63%      +5.3       10.45 ± 28%  perf-stat.overall.cache-miss-rate%
+      0.63 ±  4%     +19.4%       0.75 ± 15%  perf-stat.overall.cpi
+  21183509 ± 50%     -57.5%    8992621 ± 56%  perf-stat.ps.branch-misses
+
+
 
 
 
@@ -230,9 +263,9 @@ Thanks,
 Rong Chen
 
 
---f0KYrhQ4vYSV2aJu
+--/3yNEOqWowh/8j+e
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="config-5.3.0-11872-g87eaceb3faa59"
+Content-Disposition: attachment; filename="config-5.3.0-00001-gd4f4de5e5ef8e"
 
 #
 # Automatically generated file; DO NOT EDIT.
@@ -247,7 +280,6 @@ CONFIG_GCC_VERSION=70400
 CONFIG_CLANG_VERSION=0
 CONFIG_CC_CAN_LINK=y
 CONFIG_CC_HAS_ASM_GOTO=y
-CONFIG_CC_HAS_ASM_INLINE=y
 CONFIG_CC_HAS_WARN_MAYBE_UNINITIALIZED=y
 CONFIG_IRQ_WORK=y
 CONFIG_BUILDTIME_EXTABLE_SORT=y
@@ -575,7 +607,6 @@ CONFIG_XEN_SAVE_RESTORE=y
 # CONFIG_XEN_DEBUG_FS is not set
 # CONFIG_XEN_PVH is not set
 CONFIG_KVM_GUEST=y
-CONFIG_ARCH_CPUIDLE_HALTPOLL=y
 # CONFIG_PVH is not set
 # CONFIG_KVM_DEBUG_FS is not set
 CONFIG_PARAVIRT_TIME_ACCOUNTING=y
@@ -646,6 +677,7 @@ CONFIG_X86_CPUID=y
 CONFIG_X86_5LEVEL=y
 CONFIG_X86_DIRECT_GBPAGES=y
 # CONFIG_X86_CPA_STATISTICS is not set
+CONFIG_ARCH_HAS_MEM_ENCRYPT=y
 CONFIG_AMD_MEM_ENCRYPT=y
 # CONFIG_AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT is not set
 CONFIG_NUMA=y
@@ -853,8 +885,6 @@ CONFIG_CPU_IDLE=y
 # CONFIG_CPU_IDLE_GOV_LADDER is not set
 CONFIG_CPU_IDLE_GOV_MENU=y
 # CONFIG_CPU_IDLE_GOV_TEO is not set
-# CONFIG_CPU_IDLE_GOV_HALTPOLL is not set
-CONFIG_HALTPOLL_CPUIDLE=y
 # end of CPU Idle
 
 CONFIG_INTEL_IDLE=y
@@ -917,7 +947,6 @@ CONFIG_EFI_RUNTIME_WRAPPERS=y
 # CONFIG_EFI_TEST is not set
 CONFIG_APPLE_PROPERTIES=y
 # CONFIG_RESET_ATTACK_MITIGATION is not set
-# CONFIG_EFI_RCI2_TABLE is not set
 # end of EFI (Extensible Firmware Interface) Support
 
 CONFIG_UEFI_CPER=y
@@ -992,7 +1021,6 @@ CONFIG_ARCH_HAS_SET_MEMORY=y
 CONFIG_ARCH_HAS_SET_DIRECT_MAP=y
 CONFIG_HAVE_ARCH_THREAD_STRUCT_WHITELIST=y
 CONFIG_ARCH_WANTS_DYNAMIC_TASK_STRUCT=y
-CONFIG_HAVE_ASM_MODVERSIONS=y
 CONFIG_HAVE_REGS_AND_STACK_ACCESS_API=y
 CONFIG_HAVE_RSEQ=y
 CONFIG_HAVE_FUNCTION_ARG_ACCESS_API=y
@@ -1058,7 +1086,6 @@ CONFIG_ARCH_HAS_REFCOUNT=y
 CONFIG_HAVE_ARCH_PREL32_RELOCATIONS=y
 CONFIG_ARCH_USE_MEMREMAP_PROT=y
 # CONFIG_LOCK_EVENT_COUNTS is not set
-CONFIG_ARCH_HAS_MEM_ENCRYPT=y
 
 #
 # GCOV-based kernel profiling
@@ -1098,8 +1125,6 @@ CONFIG_MODULE_SIG_SHA256=y
 # CONFIG_MODULE_SIG_SHA512 is not set
 CONFIG_MODULE_SIG_HASH="sha256"
 # CONFIG_MODULE_COMPRESS is not set
-# CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS is not set
-# CONFIG_UNUSED_SYMBOLS is not set
 # CONFIG_TRIM_UNUSED_KSYMS is not set
 CONFIG_MODULES_TREE_LOOKUP=y
 CONFIG_BLOCK=y
@@ -1113,7 +1138,6 @@ CONFIG_BLK_DEV_THROTTLING=y
 # CONFIG_BLK_CMDLINE_PARSER is not set
 # CONFIG_BLK_WBT is not set
 # CONFIG_BLK_CGROUP_IOLATENCY is not set
-# CONFIG_BLK_CGROUP_IOCOST is not set
 CONFIG_BLK_DEBUG_FS=y
 CONFIG_BLK_DEBUG_FS_ZONED=y
 # CONFIG_BLK_SED_OPAL is not set
@@ -1248,13 +1272,13 @@ CONFIG_IDLE_PAGE_TRACKING=y
 CONFIG_ARCH_HAS_PTE_DEVMAP=y
 CONFIG_ZONE_DEVICE=y
 CONFIG_DEV_PAGEMAP_OPS=y
+CONFIG_HMM_MIRROR=y
 # CONFIG_DEVICE_PRIVATE is not set
 CONFIG_FRAME_VECTOR=y
 CONFIG_ARCH_USES_HIGH_VMA_FLAGS=y
 CONFIG_ARCH_HAS_PKEYS=y
 # CONFIG_PERCPU_STATS is not set
 # CONFIG_GUP_BENCHMARK is not set
-# CONFIG_READ_ONLY_THP_FOR_FS is not set
 CONFIG_ARCH_HAS_PTE_SPECIAL=y
 # end of Memory Management options
 
@@ -1872,7 +1896,6 @@ CONFIG_NET_ACT_SKBMOD=m
 # CONFIG_NET_ACT_IFE is not set
 CONFIG_NET_ACT_TUNNEL_KEY=m
 # CONFIG_NET_ACT_CT is not set
-CONFIG_NET_TC_SKB_EXT=y
 CONFIG_NET_SCH_FIFO=y
 CONFIG_DCB=y
 CONFIG_DNS_RESOLVER=m
@@ -1921,7 +1944,6 @@ CONFIG_CAN=m
 CONFIG_CAN_RAW=m
 CONFIG_CAN_BCM=m
 CONFIG_CAN_GW=m
-# CONFIG_CAN_J1939 is not set
 
 #
 # CAN Device Drivers
@@ -1931,7 +1953,6 @@ CONFIG_CAN_VCAN=m
 CONFIG_CAN_SLCAN=m
 CONFIG_CAN_DEV=m
 CONFIG_CAN_CALC_BITTIMING=y
-# CONFIG_CAN_KVASER_PCIEFD is not set
 CONFIG_CAN_C_CAN=m
 CONFIG_CAN_C_CAN_PLATFORM=m
 CONFIG_CAN_C_CAN_PCI=m
@@ -1942,14 +1963,13 @@ CONFIG_CAN_CC770_PLATFORM=m
 # CONFIG_CAN_M_CAN is not set
 # CONFIG_CAN_PEAK_PCIEFD is not set
 CONFIG_CAN_SJA1000=m
-CONFIG_CAN_EMS_PCI=m
-# CONFIG_CAN_F81601 is not set
-CONFIG_CAN_KVASER_PCI=m
-CONFIG_CAN_PEAK_PCI=m
-CONFIG_CAN_PEAK_PCIEC=y
-CONFIG_CAN_PLX_PCI=m
 # CONFIG_CAN_SJA1000_ISA is not set
 CONFIG_CAN_SJA1000_PLATFORM=m
+CONFIG_CAN_EMS_PCI=m
+CONFIG_CAN_PEAK_PCI=m
+CONFIG_CAN_PEAK_PCIEC=y
+CONFIG_CAN_KVASER_PCI=m
+CONFIG_CAN_PLX_PCI=m
 CONFIG_CAN_SOFTING=m
 
 #
@@ -2132,7 +2152,6 @@ CONFIG_HOTPLUG_PCI_SHPC=y
 # end of Cadence PCIe controllers support
 
 CONFIG_VMD=y
-CONFIG_PCI_HYPERV_INTERFACE=m
 
 #
 # DesignWare PCI Core Support
@@ -2218,12 +2237,12 @@ CONFIG_PROC_EVENTS=y
 # CONFIG_GNSS is not set
 CONFIG_MTD=m
 # CONFIG_MTD_TESTS is not set
+# CONFIG_MTD_CMDLINE_PARTS is not set
+# CONFIG_MTD_AR7_PARTS is not set
 
 #
 # Partition parsers
 #
-# CONFIG_MTD_AR7_PARTS is not set
-# CONFIG_MTD_CMDLINE_PARTS is not set
 # CONFIG_MTD_REDBOOT_PARTS is not set
 # end of Partition parsers
 
@@ -2372,6 +2391,7 @@ CONFIG_SENSORS_LIS3LV02D=m
 # CONFIG_DUMMY_IRQ is not set
 # CONFIG_IBM_ASM is not set
 # CONFIG_PHANTOM is not set
+CONFIG_SGI_IOC4=m
 CONFIG_TIFM_CORE=m
 CONFIG_TIFM_7XX1=m
 # CONFIG_ICS932S401 is not set
@@ -2727,7 +2747,6 @@ CONFIG_DM_CACHE=m
 CONFIG_DM_CACHE_SMQ=m
 # CONFIG_DM_WRITECACHE is not set
 CONFIG_DM_ERA=m
-# CONFIG_DM_CLONE is not set
 CONFIG_DM_MIRROR=m
 CONFIG_DM_LOG_USERSPACE=m
 CONFIG_DM_RAID=m
@@ -2740,7 +2759,6 @@ CONFIG_DM_DELAY=m
 CONFIG_DM_UEVENT=y
 CONFIG_DM_FLAKEY=m
 CONFIG_DM_VERITY=m
-# CONFIG_DM_VERITY_VERIFY_ROOTHASH_SIG is not set
 # CONFIG_DM_VERITY_FEC is not set
 CONFIG_DM_SWITCH=m
 CONFIG_DM_LOG_WRITES=m
@@ -2985,14 +3003,13 @@ CONFIG_ETHOC=m
 CONFIG_NET_VENDOR_PACKET_ENGINES=y
 # CONFIG_HAMACHI is not set
 CONFIG_YELLOWFIN=m
-CONFIG_NET_VENDOR_PENSANDO=y
-# CONFIG_IONIC is not set
 CONFIG_NET_VENDOR_QLOGIC=y
 CONFIG_QLA3XXX=m
 CONFIG_QLCNIC=m
 CONFIG_QLCNIC_SRIOV=y
 CONFIG_QLCNIC_DCB=y
 CONFIG_QLCNIC_HWMON=y
+CONFIG_QLGE=m
 CONFIG_NETXEN_NIC=m
 CONFIG_QED=m
 CONFIG_QED_SRIOV=y
@@ -3061,7 +3078,6 @@ CONFIG_SWPHY=y
 #
 # MII PHY device drivers
 #
-# CONFIG_ADIN_PHY is not set
 CONFIG_AMD_PHY=m
 # CONFIG_AQUANTIA_PHY is not set
 # CONFIG_AX88796B_PHY is not set
@@ -3213,6 +3229,7 @@ CONFIG_IWLDVM=m
 CONFIG_IWLMVM=m
 CONFIG_IWLWIFI_OPMODE_MODULAR=y
 # CONFIG_IWLWIFI_BCAST_FILTERING is not set
+# CONFIG_IWLWIFI_PCIE_RTPM is not set
 
 #
 # Debugging Options
@@ -3285,6 +3302,7 @@ CONFIG_HDLC_PPP=m
 # CONFIG_WANXL is not set
 # CONFIG_PC300TOO is not set
 # CONFIG_FARSYNC is not set
+# CONFIG_DSCC4 is not set
 CONFIG_DLCI=m
 CONFIG_DLCI_MAX=8
 # CONFIG_SBNI is not set
@@ -3599,11 +3617,11 @@ CONFIG_SERIAL_8250_MANY_PORTS=y
 CONFIG_SERIAL_8250_SHARE_IRQ=y
 # CONFIG_SERIAL_8250_DETECT_IRQ is not set
 CONFIG_SERIAL_8250_RSA=y
-CONFIG_SERIAL_8250_DWLIB=y
 CONFIG_SERIAL_8250_DW=y
 # CONFIG_SERIAL_8250_RT288X is not set
 CONFIG_SERIAL_8250_LPSS=y
 CONFIG_SERIAL_8250_MID=y
+# CONFIG_SERIAL_8250_MOXA is not set
 
 #
 # Non-8250 serial port support
@@ -3623,7 +3641,6 @@ CONFIG_SERIAL_ARC=m
 CONFIG_SERIAL_ARC_NR_PORTS=1
 # CONFIG_SERIAL_RP2 is not set
 # CONFIG_SERIAL_FSL_LPUART is not set
-# CONFIG_SERIAL_FSL_LINFLEXUART is not set
 # end of Serial drivers
 
 CONFIG_SERIAL_MCTRL_GPIO=y
@@ -3685,7 +3702,6 @@ CONFIG_DEVPORT=y
 # end of Character devices
 
 # CONFIG_RANDOM_TRUST_CPU is not set
-# CONFIG_RANDOM_TRUST_BOOTLOADER is not set
 
 #
 # I2C support
@@ -3997,7 +4013,6 @@ CONFIG_SENSORS_ADT7411=m
 CONFIG_SENSORS_ADT7462=m
 CONFIG_SENSORS_ADT7470=m
 CONFIG_SENSORS_ADT7475=m
-# CONFIG_SENSORS_AS370 is not set
 CONFIG_SENSORS_ASC7621=m
 CONFIG_SENSORS_K8TEMP=m
 CONFIG_SENSORS_K10TEMP=m
@@ -4081,7 +4096,6 @@ CONFIG_PMBUS=m
 CONFIG_SENSORS_PMBUS=m
 CONFIG_SENSORS_ADM1275=m
 # CONFIG_SENSORS_IBM_CFFPS is not set
-# CONFIG_SENSORS_INSPUR_IPSPS is not set
 # CONFIG_SENSORS_IR35221 is not set
 # CONFIG_SENSORS_IR38064 is not set
 # CONFIG_SENSORS_IRPS5401 is not set
@@ -4118,6 +4132,7 @@ CONFIG_SENSORS_SCH5636=m
 # CONFIG_SENSORS_STTS751 is not set
 # CONFIG_SENSORS_SMM665 is not set
 # CONFIG_SENSORS_ADC128D818 is not set
+CONFIG_SENSORS_ADS1015=m
 CONFIG_SENSORS_ADS7828=m
 # CONFIG_SENSORS_ADS7871 is not set
 CONFIG_SENSORS_AMC6821=m
@@ -4294,6 +4309,7 @@ CONFIG_MFD_CORE=y
 # CONFIG_MFD_BCM590XX is not set
 # CONFIG_MFD_BD9571MWV is not set
 # CONFIG_MFD_AXP20X_I2C is not set
+# CONFIG_MFD_CROS_EC is not set
 # CONFIG_MFD_MADERA is not set
 # CONFIG_PMIC_DA903X is not set
 # CONFIG_MFD_DA9052_SPI is not set
@@ -4426,7 +4442,6 @@ CONFIG_MEDIA_CONTROLLER_DVB=y
 CONFIG_VIDEO_DEV=m
 # CONFIG_VIDEO_V4L2_SUBDEV_API is not set
 CONFIG_VIDEO_V4L2=m
-CONFIG_VIDEO_V4L2_I2C=y
 # CONFIG_VIDEO_ADV_DEBUG is not set
 # CONFIG_VIDEO_FIXED_MINOR_RANGES is not set
 CONFIG_VIDEO_TUNER=m
@@ -5192,14 +5207,8 @@ CONFIG_DRM_PANEL_BRIDGE=y
 # end of Display Interface Bridges
 
 # CONFIG_DRM_ETNAVIV is not set
-# CONFIG_DRM_GM12U320 is not set
-# CONFIG_TINYDRM_HX8357D is not set
-# CONFIG_TINYDRM_ILI9225 is not set
-# CONFIG_TINYDRM_ILI9341 is not set
-# CONFIG_TINYDRM_MI0283QT is not set
-# CONFIG_TINYDRM_REPAPER is not set
-# CONFIG_TINYDRM_ST7586 is not set
-# CONFIG_TINYDRM_ST7735R is not set
+# CONFIG_DRM_HISI_HIBMC is not set
+# CONFIG_DRM_TINYDRM is not set
 # CONFIG_DRM_XEN is not set
 # CONFIG_DRM_VBOXVIDEO is not set
 # CONFIG_DRM_LEGACY is not set
@@ -5465,7 +5474,6 @@ CONFIG_SND_VX222=m
 #
 CONFIG_SND_HDA=m
 CONFIG_SND_HDA_INTEL=m
-# CONFIG_SND_HDA_INTEL_DETECT_DMIC is not set
 CONFIG_SND_HDA_HWDEP=y
 CONFIG_SND_HDA_RECONFIG=y
 CONFIG_SND_HDA_INPUT_BEEP=y
@@ -5493,7 +5501,6 @@ CONFIG_SND_HDA_COMPONENT=y
 CONFIG_SND_HDA_I915=y
 CONFIG_SND_HDA_EXT_CORE=m
 CONFIG_SND_HDA_PREALLOC_SIZE=512
-CONFIG_SND_INTEL_NHLT=m
 # CONFIG_SND_SPI is not set
 CONFIG_SND_USB=y
 CONFIG_SND_USB_AUDIO=m
@@ -5591,7 +5598,6 @@ CONFIG_SND_SOC_INTEL_BYT_CHT_NOCODEC_MACH=m
 CONFIG_SND_SOC_INTEL_SKL_RT286_MACH=m
 CONFIG_SND_SOC_INTEL_SKL_NAU88L25_SSM4567_MACH=m
 CONFIG_SND_SOC_INTEL_SKL_NAU88L25_MAX98357A_MACH=m
-CONFIG_SND_SOC_INTEL_DA7219_MAX98357A_GENERIC=m
 CONFIG_SND_SOC_INTEL_BXT_DA7219_MAX98357A_MACH=m
 CONFIG_SND_SOC_INTEL_BXT_RT298_MACH=m
 CONFIG_SND_SOC_INTEL_KBL_RT5663_MAX98927_MACH=m
@@ -5729,7 +5735,6 @@ CONFIG_SND_SOC_SSM4567=m
 CONFIG_SND_SOC_TS3A227E=m
 # CONFIG_SND_SOC_TSCS42XX is not set
 # CONFIG_SND_SOC_TSCS454 is not set
-# CONFIG_SND_SOC_UDA1334 is not set
 # CONFIG_SND_SOC_WM8510 is not set
 # CONFIG_SND_SOC_WM8523 is not set
 # CONFIG_SND_SOC_WM8524 is not set
@@ -5918,9 +5923,6 @@ CONFIG_INTEL_ISH_HID=y
 CONFIG_USB_OHCI_LITTLE_ENDIAN=y
 CONFIG_USB_SUPPORT=y
 CONFIG_USB_COMMON=y
-# CONFIG_USB_LED_TRIG is not set
-# CONFIG_USB_ULPI_BUS is not set
-# CONFIG_USB_CONN_GPIO is not set
 CONFIG_USB_ARCH_HAS_HCD=y
 CONFIG_USB=y
 CONFIG_USB_PCI=y
@@ -5937,6 +5939,9 @@ CONFIG_USB_DEFAULT_PERSIST=y
 CONFIG_USB_LEDS_TRIGGER_USBPORT=m
 CONFIG_USB_AUTOSUSPEND_DELAY=2
 CONFIG_USB_MON=y
+CONFIG_USB_WUSB=m
+CONFIG_USB_WUSB_CBAF=m
+# CONFIG_USB_WUSB_CBAF_DEBUG is not set
 
 #
 # USB Host Controller Drivers
@@ -5963,6 +5968,8 @@ CONFIG_USB_UHCI_HCD=y
 # CONFIG_USB_U132_HCD is not set
 # CONFIG_USB_SL811_HCD is not set
 # CONFIG_USB_R8A66597_HCD is not set
+# CONFIG_USB_WHCI_HCD is not set
+CONFIG_USB_HWA_HCD=m
 # CONFIG_USB_HCD_BCMA is not set
 # CONFIG_USB_HCD_SSB is not set
 # CONFIG_USB_HCD_TEST_MODE is not set
@@ -6009,7 +6016,6 @@ CONFIG_USBIP_CORE=m
 # CONFIG_USBIP_VHCI_HCD is not set
 # CONFIG_USBIP_HOST is not set
 # CONFIG_USBIP_DEBUG is not set
-# CONFIG_USB_CDNS3 is not set
 # CONFIG_USB_MUSB_HDRC is not set
 # CONFIG_USB_DWC3 is not set
 # CONFIG_USB_DWC2 is not set
@@ -6143,6 +6149,12 @@ CONFIG_UCSI_ACPI=y
 # end of USB Type-C Alternate Mode drivers
 
 # CONFIG_USB_ROLE_SWITCH is not set
+# CONFIG_USB_LED_TRIG is not set
+# CONFIG_USB_ULPI_BUS is not set
+CONFIG_UWB=m
+CONFIG_UWB_HWA=m
+CONFIG_UWB_WHCI=m
+CONFIG_UWB_I1480U=m
 CONFIG_MMC=m
 CONFIG_MMC_BLOCK=m
 CONFIG_MMC_BLOCK_MINORS=8
@@ -6320,6 +6332,7 @@ CONFIG_RTC_DRV_PCF8563=m
 CONFIG_RTC_DRV_PCF8583=m
 CONFIG_RTC_DRV_M41T80=m
 CONFIG_RTC_DRV_M41T80_WDT=y
+# CONFIG_RTC_DRV_BD70528 is not set
 CONFIG_RTC_DRV_BQ32K=m
 # CONFIG_RTC_DRV_S35390A is not set
 CONFIG_RTC_DRV_FM3130=m
@@ -6422,7 +6435,6 @@ CONFIG_DMA_ENGINE_RAID=y
 CONFIG_SYNC_FILE=y
 CONFIG_SW_SYNC=y
 # CONFIG_UDMABUF is not set
-# CONFIG_DMABUF_SELFTESTS is not set
 # end of DMABUF options
 
 CONFIG_DCA=m
@@ -6477,6 +6489,7 @@ CONFIG_VIRTIO_INPUT=m
 #
 CONFIG_HYPERV=m
 CONFIG_HYPERV_TIMER=y
+CONFIG_HYPERV_TSCPAGE=y
 CONFIG_HYPERV_UTILS=m
 CONFIG_HYPERV_BALLOON=m
 # end of Microsoft Hyper-V guest support
@@ -6506,7 +6519,6 @@ CONFIG_XEN_ACPI=y
 CONFIG_XEN_HAVE_VPMU=y
 # end of Xen driver support
 
-# CONFIG_GREYBUS is not set
 CONFIG_STAGING=y
 # CONFIG_PRISM2_USB is not set
 # CONFIG_COMEDI is not set
@@ -6612,6 +6624,7 @@ CONFIG_FWTTY_MAX_CARD_PORTS=32
 # CONFIG_WILC1000_SPI is not set
 # CONFIG_MOST is not set
 # CONFIG_KS7010 is not set
+# CONFIG_GREYBUS is not set
 # CONFIG_PI433 is not set
 
 #
@@ -6620,6 +6633,7 @@ CONFIG_FWTTY_MAX_CARD_PORTS=32
 # CONFIG_STAGING_GASKET_FRAMEWORK is not set
 # end of Gasket devices
 
+# CONFIG_EROFS_FS is not set
 # CONFIG_FIELDBUS_DEV is not set
 # CONFIG_KPC2000 is not set
 
@@ -6641,17 +6655,6 @@ CONFIG_HYSDN=m
 CONFIG_HYSDN_CAPI=y
 # end of ISDN CAPI drivers
 
-CONFIG_USB_WUSB=m
-CONFIG_USB_WUSB_CBAF=m
-# CONFIG_USB_WUSB_CBAF_DEBUG is not set
-# CONFIG_USB_WHCI_HCD is not set
-CONFIG_USB_HWA_HCD=m
-CONFIG_UWB=m
-CONFIG_UWB_HWA=m
-CONFIG_UWB_WHCI=m
-CONFIG_UWB_I1480U=m
-# CONFIG_EXFAT_FS is not set
-CONFIG_QLGE=m
 CONFIG_X86_PLATFORM_DEVICES=y
 CONFIG_ACER_WMI=m
 # CONFIG_ACER_WIRELESS is not set
@@ -6741,7 +6744,6 @@ CONFIG_APPLE_GMUX=m
 # end of Intel Speed Select Technology interface support
 
 CONFIG_PMC_ATOM=y
-# CONFIG_MFD_CROS_EC is not set
 # CONFIG_CHROME_PLATFORMS is not set
 # CONFIG_MELLANOX_PLATFORM is not set
 CONFIG_CLKDEV_LOOKUP=y
@@ -6898,6 +6900,7 @@ CONFIG_IIO_CONSUMERS_PER_TRIGGER=2
 # CONFIG_DMARD09 is not set
 # CONFIG_DMARD10 is not set
 CONFIG_HID_SENSOR_ACCEL_3D=m
+# CONFIG_IIO_CROS_EC_ACCEL_LEGACY is not set
 # CONFIG_IIO_ST_ACCEL_3AXIS is not set
 # CONFIG_KXSD9 is not set
 # CONFIG_KXCJK1013 is not set
@@ -7104,7 +7107,6 @@ CONFIG_HID_SENSOR_GYRO_3D=m
 # Inertial measurement units
 #
 # CONFIG_ADIS16400 is not set
-# CONFIG_ADIS16460 is not set
 # CONFIG_ADIS16480 is not set
 # CONFIG_BMI160_I2C is not set
 # CONFIG_BMI160_SPI is not set
@@ -7140,7 +7142,6 @@ CONFIG_HID_SENSOR_PROX=m
 # CONFIG_LV0104CS is not set
 # CONFIG_MAX44000 is not set
 # CONFIG_MAX44009 is not set
-# CONFIG_NOA1305 is not set
 # CONFIG_OPT3001 is not set
 # CONFIG_PA12203001 is not set
 # CONFIG_SI1133 is not set
@@ -7202,7 +7203,6 @@ CONFIG_HID_SENSOR_DEVICE_ROTATION=m
 #
 # CONFIG_AD5272 is not set
 # CONFIG_DS1803 is not set
-# CONFIG_MAX5432 is not set
 # CONFIG_MAX5481 is not set
 # CONFIG_MAX5487 is not set
 # CONFIG_MCP4018 is not set
@@ -7427,7 +7427,6 @@ CONFIG_EXPORTFS_BLOCK_OPS=y
 CONFIG_FILE_LOCKING=y
 CONFIG_MANDATORY_FILE_LOCKING=y
 CONFIG_FS_ENCRYPTION=y
-# CONFIG_FS_VERITY is not set
 CONFIG_FSNOTIFY=y
 CONFIG_DNOTIFY=y
 CONFIG_INOTIFY_USER=y
@@ -7564,7 +7563,6 @@ CONFIG_PSTORE_PMSG=y
 CONFIG_PSTORE_RAM=m
 # CONFIG_SYSV_FS is not set
 # CONFIG_UFS_FS is not set
-# CONFIG_EROFS_FS is not set
 CONFIG_NETWORK_FILESYSTEMS=y
 CONFIG_NFS_FS=y
 # CONFIG_NFS_V2 is not set
@@ -7740,7 +7738,6 @@ CONFIG_IMA_NG_TEMPLATE=y
 CONFIG_IMA_DEFAULT_TEMPLATE="ima-ng"
 CONFIG_IMA_DEFAULT_HASH_SHA1=y
 # CONFIG_IMA_DEFAULT_HASH_SHA256 is not set
-# CONFIG_IMA_DEFAULT_HASH_SHA512 is not set
 CONFIG_IMA_DEFAULT_HASH="sha1"
 # CONFIG_IMA_WRITE_POLICY is not set
 # CONFIG_IMA_READ_POLICY is not set
@@ -7836,7 +7833,16 @@ CONFIG_CRYPTO_CCM=m
 CONFIG_CRYPTO_GCM=y
 # CONFIG_CRYPTO_CHACHA20POLY1305 is not set
 # CONFIG_CRYPTO_AEGIS128 is not set
+# CONFIG_CRYPTO_AEGIS128L is not set
+# CONFIG_CRYPTO_AEGIS256 is not set
 # CONFIG_CRYPTO_AEGIS128_AESNI_SSE2 is not set
+# CONFIG_CRYPTO_AEGIS128L_AESNI_SSE2 is not set
+# CONFIG_CRYPTO_AEGIS256_AESNI_SSE2 is not set
+# CONFIG_CRYPTO_MORUS640 is not set
+# CONFIG_CRYPTO_MORUS640_SSE2 is not set
+# CONFIG_CRYPTO_MORUS1280 is not set
+# CONFIG_CRYPTO_MORUS1280_SSE2 is not set
+# CONFIG_CRYPTO_MORUS1280_AVX2 is not set
 CONFIG_CRYPTO_SEQIV=y
 CONFIG_CRYPTO_ECHAINIV=m
 
@@ -7856,7 +7862,6 @@ CONFIG_CRYPTO_XTS=y
 # CONFIG_CRYPTO_NHPOLY1305_SSE2 is not set
 # CONFIG_CRYPTO_NHPOLY1305_AVX2 is not set
 # CONFIG_CRYPTO_ADIANTUM is not set
-CONFIG_CRYPTO_ESSIV=m
 
 #
 # Hash modes
@@ -7890,9 +7895,8 @@ CONFIG_CRYPTO_SHA1=y
 CONFIG_CRYPTO_SHA1_SSSE3=y
 CONFIG_CRYPTO_SHA256_SSSE3=y
 CONFIG_CRYPTO_SHA512_SSSE3=m
-CONFIG_CRYPTO_LIB_SHA256=y
 CONFIG_CRYPTO_SHA256=y
-CONFIG_CRYPTO_SHA512=y
+CONFIG_CRYPTO_SHA512=m
 # CONFIG_CRYPTO_SHA3 is not set
 # CONFIG_CRYPTO_SM3 is not set
 # CONFIG_CRYPTO_STREEBOG is not set
@@ -7903,9 +7907,9 @@ CONFIG_CRYPTO_GHASH_CLMUL_NI_INTEL=m
 #
 # Ciphers
 #
-CONFIG_CRYPTO_LIB_AES=y
 CONFIG_CRYPTO_AES=y
 # CONFIG_CRYPTO_AES_TI is not set
+CONFIG_CRYPTO_AES_X86_64=y
 CONFIG_CRYPTO_AES_NI_INTEL=m
 CONFIG_CRYPTO_ANUBIS=m
 CONFIG_CRYPTO_LIB_ARC4=m
@@ -7922,7 +7926,6 @@ CONFIG_CRYPTO_CAST5=m
 CONFIG_CRYPTO_CAST5_AVX_X86_64=m
 CONFIG_CRYPTO_CAST6=m
 CONFIG_CRYPTO_CAST6_AVX_X86_64=m
-CONFIG_CRYPTO_LIB_DES=m
 CONFIG_CRYPTO_DES=m
 # CONFIG_CRYPTO_DES3_EDE_X86_64 is not set
 CONFIG_CRYPTO_FCRYPT=m
@@ -7981,7 +7984,6 @@ CONFIG_CRYPTO_DEV_CCP_DD=m
 CONFIG_CRYPTO_DEV_SP_CCP=y
 CONFIG_CRYPTO_DEV_CCP_CRYPTO=m
 CONFIG_CRYPTO_DEV_SP_PSP=y
-# CONFIG_CRYPTO_DEV_CCP_DEBUGFS is not set
 CONFIG_CRYPTO_DEV_QAT=m
 CONFIG_CRYPTO_DEV_QAT_DH895xCC=m
 CONFIG_CRYPTO_DEV_QAT_C3XXX=m
@@ -7992,7 +7994,6 @@ CONFIG_CRYPTO_DEV_QAT_C62XVF=m
 # CONFIG_CRYPTO_DEV_NITROX_CNN55XX is not set
 CONFIG_CRYPTO_DEV_CHELSIO=m
 CONFIG_CRYPTO_DEV_VIRTIO=m
-# CONFIG_CRYPTO_DEV_SAFEXCEL is not set
 CONFIG_ASYMMETRIC_KEY_TYPE=y
 CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE=y
 # CONFIG_ASYMMETRIC_TPM_KEY_SUBTYPE is not set
@@ -8091,6 +8092,7 @@ CONFIG_HAS_DMA=y
 CONFIG_NEED_SG_DMA_LENGTH=y
 CONFIG_NEED_DMA_MAP_STATE=y
 CONFIG_ARCH_DMA_ADDR_T_64BIT=y
+CONFIG_DMA_DECLARE_COHERENT=y
 CONFIG_ARCH_HAS_FORCE_DMA_UNENCRYPTED=y
 CONFIG_SWIOTLB=y
 CONFIG_DMA_CMA=y
@@ -8165,6 +8167,7 @@ CONFIG_ENABLE_MUST_CHECK=y
 CONFIG_FRAME_WARN=2048
 CONFIG_STRIP_ASM_SYMS=y
 # CONFIG_READABLE_ASM is not set
+# CONFIG_UNUSED_SYMBOLS is not set
 CONFIG_DEBUG_FS=y
 # CONFIG_HEADERS_INSTALL is not set
 CONFIG_OPTIMIZE_INLINING=y
@@ -8428,7 +8431,7 @@ CONFIG_UNWINDER_ORC=y
 # CONFIG_UNWINDER_GUESS is not set
 # end of Kernel hacking
 
---f0KYrhQ4vYSV2aJu
+--/3yNEOqWowh/8j+e
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: attachment; filename=job-script
 
@@ -8436,68 +8439,58 @@ Content-Disposition: attachment; filename=job-script
 
 export_top_env()
 {
-	export suite='stress-ng'
-	export testcase='stress-ng'
+	export suite='aim9'
+	export testcase='aim9'
 	export category='benchmark'
-	export nr_threads=72
-	export testtime=1
-	export job_origin='/lkp/lkp/.src-20190927-162007/allot/cyclic:p1:linux-devel:devel-hourly/lkp-skl-2sp8/stress-ng.yaml'
+	export job_origin='/lkp/lkp/.src-20190929-221907/allot/cyclic:default:linux-devel:devel-hourly/lkp-ivb-d03/aim9.yaml'
 	export queue_cmdline_keys='branch
 commit
 queue_at_least_once'
 	export queue='validate'
-	export testbox='lkp-skl-2sp8'
-	export tbox_group='lkp-skl-2sp8'
-	export submit_id='5d910a2bd42f5e6f0a265594'
-	export job_file='/lkp/jobs/scheduled/lkp-skl-2sp8/stress-ng-vm-performance-1HDD-100%-1s-ucode=0x200005e-debian-x86-20190930-28426-1b5spfy-3.yaml'
-	export id='c5597ae6ed6054a2fdb46bd780ded34f328fd3a0'
+	export testbox='lkp-ivb-d03'
+	export tbox_group='lkp-ivb-d03'
+	export submit_id='5d911fb33103560c3ed2795d'
+	export job_file='/lkp/jobs/scheduled/lkp-ivb-d03/aim9-performance-all-5s-ucode=0x21-debian-x86_64-2019-05-14.cgz-d4-20190930-3134-13txfc5-3.yaml'
+	export id='00befe26d5a98d96cd29f9e4ac253df04d4c4e77'
 	export queuer_version='/lkp-src'
 	export arch='x86_64'
-	export model='Skylake'
-	export nr_node=2
-	export nr_cpu=72
-	export memory='192G'
-	export nr_ssd_partitions=
-	export ssd_partitions='/dev/disk/by-id/ata-INTEL_SSDSC2BB800G4_PHWL42040039800RGN-part1'
-	export hdd_partitions='/dev/disk/by-id/ata-ST1000DM003-1CH162_Z1D5P4T4-part1'
+	export model='Ivy Bridge'
+	export nr_node=1
+	export nr_cpu=4
+	export memory='4G'
+	export nr_hdd_partitions=0
+	export hdd_partitions=
 	export rootfs_partition='LABEL=LKP-ROOTFS'
-	export brand='Intel(R) Xeon(R) Gold 6140 CPU @ 2.30GHz'
-	export ucode='0x200005e'
-	export need_kconfig='CONFIG_BLK_DEV_SD
-CONFIG_SCSI
-CONFIG_BLOCK=y
-CONFIG_SATA_AHCI
-CONFIG_SATA_AHCI_PLATFORM
-CONFIG_ATA
-CONFIG_PCI=y
-CONFIG_SECURITY_APPARMOR=y'
-	export commit='87eaceb3faa59b9b4d940ec9554ce251325d83fe'
-	export need_kconfig_hw='CONFIG_I40E=y'
+	export brand='Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz'
+	export commit='d4f4de5e5ef8efde85febb6876cd3c8ab1631999'
+	export netconsole_port=6677
+	export ucode='0x21'
+	export need_kconfig_hw='CONFIG_R8169=y'
 	export kconfig='x86_64-rhel-7.6'
 	export compiler='gcc-7'
 	export rootfs='debian-x86_64-2019-05-14.cgz'
-	export enqueue_time='2019-09-30 03:46:57 +0800'
-	export _id='5d910a31d42f5e6f0a265595'
-	export _rt='/result/stress-ng/vm-performance-1HDD-100%-1s-ucode=0x200005e/lkp-skl-2sp8/debian-x86_64-2019-05-14.cgz/x86_64-rhel-7.6/gcc-7/87eaceb3faa59b9b4d940ec9554ce251325d83fe'
+	export enqueue_time='2019-09-30 05:18:46 +0800'
+	export _id='5d911fb73103560c3ed2795e'
+	export _rt='/result/aim9/performance-all-5s-ucode=0x21/lkp-ivb-d03/debian-x86_64-2019-05-14.cgz/x86_64-rhel-7.6/gcc-7/d4f4de5e5ef8efde85febb6876cd3c8ab1631999'
 	export user='lkp'
-	export head_commit='ff9fe62cd9e36794420c10a8206d367011dec69c'
+	export head_commit='3ddb96305ec403d5aea3c88c905d1900e54a6ba9'
 	export base_commit='4d856f72c10ecb060868ed10ff1b1453943fc6c8'
-	export branch='linux-devel/devel-hourly-2019092703'
-	export result_root='/result/stress-ng/vm-performance-1HDD-100%-1s-ucode=0x200005e/lkp-skl-2sp8/debian-x86_64-2019-05-14.cgz/x86_64-rhel-7.6/gcc-7/87eaceb3faa59b9b4d940ec9554ce251325d83fe/3'
+	export branch='linux-devel/devel-hourly-2019092903'
+	export result_root='/result/aim9/performance-all-5s-ucode=0x21/lkp-ivb-d03/debian-x86_64-2019-05-14.cgz/x86_64-rhel-7.6/gcc-7/d4f4de5e5ef8efde85febb6876cd3c8ab1631999/3'
 	export scheduler_version='/lkp/lkp/.src-20190929-221907'
 	export LKP_SERVER='inn'
-	export max_uptime=814.36
+	export max_uptime=2617.26
 	export initrd='/osimage/debian/debian-x86_64-2019-05-14.cgz'
 	export bootloader_append='root=/dev/ram0
 user=lkp
-job=/lkp/jobs/scheduled/lkp-skl-2sp8/stress-ng-vm-performance-1HDD-100%-1s-ucode=0x200005e-debian-x86-20190930-28426-1b5spfy-3.yaml
+job=/lkp/jobs/scheduled/lkp-ivb-d03/aim9-performance-all-5s-ucode=0x21-debian-x86_64-2019-05-14.cgz-d4-20190930-3134-13txfc5-3.yaml
 ARCH=x86_64
 kconfig=x86_64-rhel-7.6
-branch=linux-devel/devel-hourly-2019092703
-commit=87eaceb3faa59b9b4d940ec9554ce251325d83fe
-BOOT_IMAGE=/pkg/linux/x86_64-rhel-7.6/gcc-7/87eaceb3faa59b9b4d940ec9554ce251325d83fe/vmlinuz-5.3.0-11872-g87eaceb3faa59
-max_uptime=814
-RESULT_ROOT=/result/stress-ng/vm-performance-1HDD-100%-1s-ucode=0x200005e/lkp-skl-2sp8/debian-x86_64-2019-05-14.cgz/x86_64-rhel-7.6/gcc-7/87eaceb3faa59b9b4d940ec9554ce251325d83fe/3
+branch=linux-devel/devel-hourly-2019092903
+commit=d4f4de5e5ef8efde85febb6876cd3c8ab1631999
+BOOT_IMAGE=/pkg/linux/x86_64-rhel-7.6/gcc-7/d4f4de5e5ef8efde85febb6876cd3c8ab1631999/vmlinuz-5.3.0-00001-gd4f4de5e5ef8e
+max_uptime=2617
+RESULT_ROOT=/result/aim9/performance-all-5s-ucode=0x21/lkp-ivb-d03/debian-x86_64-2019-05-14.cgz/x86_64-rhel-7.6/gcc-7/d4f4de5e5ef8efde85febb6876cd3c8ab1631999/3
 LKP_SERVER=inn
 debug
 apic=debug
@@ -8519,8 +8512,8 @@ earlyprintk=ttyS0,115200
 console=ttyS0,115200
 vga=normal
 rw'
-	export modules_initrd='/pkg/linux/x86_64-rhel-7.6/gcc-7/87eaceb3faa59b9b4d940ec9554ce251325d83fe/modules.cgz'
-	export bm_initrd='/osimage/deps/debian-x86_64-2018-04-03.cgz/run-ipconfig_2018-04-03.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/lkp_2019-08-05.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/rsync-rootfs_2018-04-03.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/stress-ng_2019-09-11.cgz,/osimage/pkg/debian-x86_64-2018-04-03.cgz/stress-ng-x86_64-0.09-58_2019-09-11.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/mpstat_2019-08-12.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/vmstat_2019-08-17.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/turbostat_2019-08-17.cgz,/osimage/pkg/debian-x86_64-2018-04-03.cgz/turbostat-x86_64-3.7-4_2019-09-19.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/perf_2019-09-17.cgz,/osimage/pkg/debian-x86_64-2018-04-03.cgz/perf-x86_64-git-1_2019-09-06.cgz,/osimage/pkg/debian-x86_64-2018-04-03.cgz/sar-x86_64-ee28e4a-1_2019-09-17.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/hw_2019-08-21.cgz'
+	export modules_initrd='/pkg/linux/x86_64-rhel-7.6/gcc-7/d4f4de5e5ef8efde85febb6876cd3c8ab1631999/modules.cgz'
+	export bm_initrd='/osimage/deps/debian-x86_64-2018-04-03.cgz/run-ipconfig_2018-04-03.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/lkp_2019-08-05.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/rsync-rootfs_2018-04-03.cgz,/osimage/pkg/debian-x86_64-2018-04-03.cgz/aim9-x86_64-_2019-09-26.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/mpstat_2019-08-12.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/vmstat_2019-08-17.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/turbostat_2019-08-17.cgz,/osimage/pkg/debian-x86_64-2018-04-03.cgz/turbostat-x86_64-3.7-4_2019-09-19.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/perf_2019-09-17.cgz,/osimage/pkg/debian-x86_64-2018-04-03.cgz/perf-x86_64-git-1_2019-09-06.cgz,/osimage/pkg/debian-x86_64-2018-04-03.cgz/sar-x86_64-ee28e4a-1_2019-09-17.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/hw_2019-08-21.cgz'
 	export lkp_initrd='/osimage/user/lkp/lkp-x86_64.cgz'
 	export site='inn'
 	export LKP_CGI_PORT=80
@@ -8528,9 +8521,9 @@ rw'
 	export repeat_to=4
 	export schedule_notify_address=
 	export queue_at_least_once=1
-	export kernel='/pkg/linux/x86_64-rhel-7.6/gcc-7/87eaceb3faa59b9b4d940ec9554ce251325d83fe/vmlinuz-5.3.0-11872-g87eaceb3faa59'
-	export dequeue_time='2019-09-30 03:52:19 +0800'
-	export job_initrd='/lkp/jobs/scheduled/lkp-skl-2sp8/stress-ng-vm-performance-1HDD-100%-1s-ucode=0x200005e-debian-x86-20190930-28426-1b5spfy-3.cgz'
+	export kernel='/pkg/linux/x86_64-rhel-7.6/gcc-7/d4f4de5e5ef8efde85febb6876cd3c8ab1631999/vmlinuz-5.3.0-00001-gd4f4de5e5ef8e'
+	export dequeue_time='2019-09-30 05:30:18 +0800'
+	export job_initrd='/lkp/jobs/scheduled/lkp-ivb-d03/aim9-performance-all-5s-ucode=0x21-debian-x86_64-2019-05-14.cgz-d4-20190930-3134-13txfc5-3.cgz'
 
 	[ -n "$LKP_SRC" ] ||
 	export LKP_SRC=/lkp/${user:-lkp}/src
@@ -8545,8 +8538,6 @@ run_job()
 	. $LKP_SRC/lib/env.sh
 
 	export_top_env
-
-	run_setup nr_hdd=1 $LKP_SRC/setup/disk
 
 	run_setup $LKP_SRC/setup/cpufreq_governor 'performance'
 
@@ -8579,7 +8570,7 @@ run_job()
 	run_monitor $LKP_SRC/monitors/wrapper oom-killer
 	run_monitor $LKP_SRC/monitors/plain/watchdog
 
-	run_test class='vm' $LKP_SRC/tests/wrapper stress-ng
+	run_test testtime=5 test='all' $LKP_SRC/tests/wrapper aim9
 }
 
 extract_stats()
@@ -8587,7 +8578,7 @@ extract_stats()
 	export stats_part_begin=
 	export stats_part_end=
 
-	$LKP_SRC/stats/wrapper stress-ng
+	$LKP_SRC/stats/wrapper aim9
 	$LKP_SRC/stats/wrapper kmsg
 	$LKP_SRC/stats/wrapper boot-time
 	$LKP_SRC/stats/wrapper iostat
@@ -8611,7 +8602,7 @@ extract_stats()
 	$LKP_SRC/stats/wrapper mpstat
 	$LKP_SRC/stats/wrapper perf-profile
 
-	$LKP_SRC/stats/wrapper time stress-ng.time
+	$LKP_SRC/stats/wrapper time aim9.time
 	$LKP_SRC/stats/wrapper dmesg
 	$LKP_SRC/stats/wrapper kmsg
 	$LKP_SRC/stats/wrapper last_state
@@ -8621,22 +8612,20 @@ extract_stats()
 
 "$@"
 
---f0KYrhQ4vYSV2aJu
+--/3yNEOqWowh/8j+e
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: attachment; filename="job.yaml"
 
 ---
 
-#! jobs/stress-ng.yaml
-suite: stress-ng
-testcase: stress-ng
+#! jobs/aim9.yaml
+suite: aim9
+testcase: aim9
 category: benchmark
-nr_threads: 100%
-disk: 1HDD
-testtime: 1s
-stress-ng:
-  class: vm
-job_origin: "/lkp/lkp/.src-20190927-162007/allot/cyclic:p1:linux-devel:devel-hourly/lkp-skl-2sp8/stress-ng.yaml"
+aim9:
+  testtime: 5s
+  test: all
+job_origin: "/lkp/lkp/.src-20190929-221907/allot/cyclic:default:linux-devel:devel-hourly/lkp-ivb-d03/aim9.yaml"
 
 #! queue options
 queue_cmdline_keys:
@@ -8644,25 +8633,23 @@ queue_cmdline_keys:
 - commit
 - queue_at_least_once
 queue: bisect
-testbox: lkp-skl-2sp8
-tbox_group: lkp-skl-2sp8
-submit_id: 5d90f5e1d42f5e6cc0b6f08d
-job_file: "/lkp/jobs/scheduled/lkp-skl-2sp8/stress-ng-vm-performance-1HDD-100%-1s-ucode=0x200005e-debian-x86_6-20190930-27840-1qt1bmn-0.yaml"
-id: 0b7b9dcaaee0da5930761258666ae935e7b8395d
+testbox: lkp-ivb-d03
+tbox_group: lkp-ivb-d03
+submit_id: 5d911a013103560bdc069a47
+job_file: "/lkp/jobs/scheduled/lkp-ivb-d03/aim9-performance-all-5s-ucode=0x21-debian-x86_64-2019-05-14.cgz-d4f4-20190930-3036-1k37k0c-0.yaml"
+id: d5891fefa89371e505a71b1a144e420bf0c0af85
 queuer_version: "/lkp-src"
 arch: x86_64
 
-#! hosts/lkp-skl-2sp8
-model: Skylake
-nr_node: 2
-nr_cpu: 72
-memory: 192G
-nr_ssd_partitions: 
-ssd_partitions: "/dev/disk/by-id/ata-INTEL_SSDSC2BB800G4_PHWL42040039800RGN-part1"
-hdd_partitions: "/dev/disk/by-id/ata-ST1000DM003-1CH162_Z1D5P4T4-part1"
+#! hosts/lkp-ivb-d03
+model: Ivy Bridge
+nr_node: 1
+nr_cpu: 4
+memory: 4G
+nr_hdd_partitions: 0
+hdd_partitions: 
 rootfs_partition: LABEL=LKP-ROOTFS
-brand: Intel(R) Xeon(R) Gold 6140 CPU @ 2.30GHz
-ucode: '0x200005e'
+brand: Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz
 
 #! include/category/benchmark
 kmsg: 
@@ -8695,54 +8682,43 @@ perf-profile:
 #! include/category/ALL
 cpufreq_governor: performance
 
-#! include/disk/nr_hdd
-need_kconfig:
-- CONFIG_BLK_DEV_SD
-- CONFIG_SCSI
-- CONFIG_BLOCK=y
-- CONFIG_SATA_AHCI
-- CONFIG_SATA_AHCI_PLATFORM
-- CONFIG_ATA
-- CONFIG_PCI=y
-- CONFIG_SECURITY_APPARMOR=y
-
-#! include/stress-ng
-
 #! include/queue/cyclic
-commit: 87eaceb3faa59b9b4d940ec9554ce251325d83fe
+commit: d4f4de5e5ef8efde85febb6876cd3c8ab1631999
 
-#! include/testbox/lkp-skl-2sp8
-need_kconfig_hw: CONFIG_I40E=y
+#! include/testbox/lkp-ivb-d03
+netconsole_port: 6677
+ucode: '0x21'
+need_kconfig_hw: CONFIG_R8169=y
 
 #! default params
 kconfig: x86_64-rhel-7.6
 compiler: gcc-7
 rootfs: debian-x86_64-2019-05-14.cgz
-enqueue_time: 2019-09-30 02:20:51.255904635 +08:00
-_id: 5d90f5e1d42f5e6cc0b6f08d
-_rt: "/result/stress-ng/vm-performance-1HDD-100%-1s-ucode=0x200005e/lkp-skl-2sp8/debian-x86_64-2019-05-14.cgz/x86_64-rhel-7.6/gcc-7/87eaceb3faa59b9b4d940ec9554ce251325d83fe"
+enqueue_time: 2019-09-30 04:54:33.028402031 +08:00
+_id: 5d911a013103560bdc069a47
+_rt: "/result/aim9/performance-all-5s-ucode=0x21/lkp-ivb-d03/debian-x86_64-2019-05-14.cgz/x86_64-rhel-7.6/gcc-7/d4f4de5e5ef8efde85febb6876cd3c8ab1631999"
 
 #! schedule options
 user: lkp
-head_commit: ff9fe62cd9e36794420c10a8206d367011dec69c
+head_commit: 3ddb96305ec403d5aea3c88c905d1900e54a6ba9
 base_commit: 4d856f72c10ecb060868ed10ff1b1453943fc6c8
-branch: linux-devel/devel-hourly-2019092703
-result_root: "/result/stress-ng/vm-performance-1HDD-100%-1s-ucode=0x200005e/lkp-skl-2sp8/debian-x86_64-2019-05-14.cgz/x86_64-rhel-7.6/gcc-7/87eaceb3faa59b9b4d940ec9554ce251325d83fe/0"
+branch: linux-devel/devel-hourly-2019092903
+result_root: "/result/aim9/performance-all-5s-ucode=0x21/lkp-ivb-d03/debian-x86_64-2019-05-14.cgz/x86_64-rhel-7.6/gcc-7/d4f4de5e5ef8efde85febb6876cd3c8ab1631999/0"
 scheduler_version: "/lkp/lkp/.src-20190929-221907"
 LKP_SERVER: inn
-max_uptime: 814.36
+max_uptime: 2617.26
 initrd: "/osimage/debian/debian-x86_64-2019-05-14.cgz"
 bootloader_append:
 - root=/dev/ram0
 - user=lkp
-- job=/lkp/jobs/scheduled/lkp-skl-2sp8/stress-ng-vm-performance-1HDD-100%-1s-ucode=0x200005e-debian-x86_6-20190930-27840-1qt1bmn-0.yaml
+- job=/lkp/jobs/scheduled/lkp-ivb-d03/aim9-performance-all-5s-ucode=0x21-debian-x86_64-2019-05-14.cgz-d4f4-20190930-3036-1k37k0c-0.yaml
 - ARCH=x86_64
 - kconfig=x86_64-rhel-7.6
-- branch=linux-devel/devel-hourly-2019092703
-- commit=87eaceb3faa59b9b4d940ec9554ce251325d83fe
-- BOOT_IMAGE=/pkg/linux/x86_64-rhel-7.6/gcc-7/87eaceb3faa59b9b4d940ec9554ce251325d83fe/vmlinuz-5.3.0-11872-g87eaceb3faa59
-- max_uptime=814
-- RESULT_ROOT=/result/stress-ng/vm-performance-1HDD-100%-1s-ucode=0x200005e/lkp-skl-2sp8/debian-x86_64-2019-05-14.cgz/x86_64-rhel-7.6/gcc-7/87eaceb3faa59b9b4d940ec9554ce251325d83fe/0
+- branch=linux-devel/devel-hourly-2019092903
+- commit=d4f4de5e5ef8efde85febb6876cd3c8ab1631999
+- BOOT_IMAGE=/pkg/linux/x86_64-rhel-7.6/gcc-7/d4f4de5e5ef8efde85febb6876cd3c8ab1631999/vmlinuz-5.3.0-00001-gd4f4de5e5ef8e
+- max_uptime=2617
+- RESULT_ROOT=/result/aim9/performance-all-5s-ucode=0x21/lkp-ivb-d03/debian-x86_64-2019-05-14.cgz/x86_64-rhel-7.6/gcc-7/d4f4de5e5ef8efde85febb6876cd3c8ab1631999/0
 - LKP_SERVER=inn
 - debug
 - apic=debug
@@ -8764,12 +8740,12 @@ bootloader_append:
 - console=ttyS0,115200
 - vga=normal
 - rw
-modules_initrd: "/pkg/linux/x86_64-rhel-7.6/gcc-7/87eaceb3faa59b9b4d940ec9554ce251325d83fe/modules.cgz"
-bm_initrd: "/osimage/deps/debian-x86_64-2018-04-03.cgz/run-ipconfig_2018-04-03.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/lkp_2019-08-05.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/rsync-rootfs_2018-04-03.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/stress-ng_2019-09-11.cgz,/osimage/pkg/debian-x86_64-2018-04-03.cgz/stress-ng-x86_64-0.09-58_2019-09-11.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/mpstat_2019-08-12.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/vmstat_2019-08-17.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/turbostat_2019-08-17.cgz,/osimage/pkg/debian-x86_64-2018-04-03.cgz/turbostat-x86_64-3.7-4_2019-09-19.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/perf_2019-09-17.cgz,/osimage/pkg/debian-x86_64-2018-04-03.cgz/perf-x86_64-git-1_2019-09-06.cgz,/osimage/pkg/debian-x86_64-2018-04-03.cgz/sar-x86_64-ee28e4a-1_2019-09-17.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/hw_2019-08-21.cgz"
+modules_initrd: "/pkg/linux/x86_64-rhel-7.6/gcc-7/d4f4de5e5ef8efde85febb6876cd3c8ab1631999/modules.cgz"
+bm_initrd: "/osimage/deps/debian-x86_64-2018-04-03.cgz/run-ipconfig_2018-04-03.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/lkp_2019-08-05.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/rsync-rootfs_2018-04-03.cgz,/osimage/pkg/debian-x86_64-2018-04-03.cgz/aim9-x86_64-_2019-09-26.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/mpstat_2019-08-12.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/vmstat_2019-08-17.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/turbostat_2019-08-17.cgz,/osimage/pkg/debian-x86_64-2018-04-03.cgz/turbostat-x86_64-3.7-4_2019-09-19.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/perf_2019-09-17.cgz,/osimage/pkg/debian-x86_64-2018-04-03.cgz/perf-x86_64-git-1_2019-09-06.cgz,/osimage/pkg/debian-x86_64-2018-04-03.cgz/sar-x86_64-ee28e4a-1_2019-09-17.cgz,/osimage/deps/debian-x86_64-2018-04-03.cgz/hw_2019-08-21.cgz"
 lkp_initrd: "/osimage/user/lkp/lkp-x86_64.cgz"
 site: inn
 
-#! /lkp/lkp/.src-20190929-102559/include/site/inn
+#! /lkp/lkp/.src-20190929-221907/include/site/inn
 LKP_CGI_PORT: 80
 LKP_CIFS_PORT: 139
 oom-killer: 
@@ -8781,17 +8757,15 @@ schedule_notify_address:
 
 #! user overrides
 queue_at_least_once: 0
-kernel: "/pkg/linux/x86_64-rhel-7.6/gcc-7/87eaceb3faa59b9b4d940ec9554ce251325d83fe/vmlinuz-5.3.0-11872-g87eaceb3faa59"
-dequeue_time: 2019-09-30 03:12:19.801532095 +08:00
-
-#! /lkp/lkp/.src-20190929-221907/include/site/inn
-job_state: failed
-loadavg: 194.64 58.67 20.24 1/622 7642
-start_time: '1569784393'
-end_time: '1569784433'
+kernel: "/pkg/linux/x86_64-rhel-7.6/gcc-7/d4f4de5e5ef8efde85febb6876cd3c8ab1631999/vmlinuz-5.3.0-00001-gd4f4de5e5ef8e"
+dequeue_time: 2019-09-30 05:05:26.140757953 +08:00
+job_state: finished
+loadavg: 0.85 0.66 0.31 1/137 14305
+start_time: '1569791189'
+end_time: '1569791489'
 version: "/lkp/lkp/.src-20190929-221934"
 
---f0KYrhQ4vYSV2aJu
+--/3yNEOqWowh/8j+e
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: attachment; filename=reproduce
 
@@ -8805,6 +8779,5 @@ do
 	[ -f "$file" ] && echo "performance" > "$file"
 done
 
- "stress-ng" "--timeout" "1" "--times" "--verify" "--metrics-brief" "--sequential" "72" "--class" "vm" "--exclude" "spawn,exec"
 
---f0KYrhQ4vYSV2aJu--
+--/3yNEOqWowh/8j+e--
