@@ -4,61 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96395C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D20C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CAD621920
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63C552190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:19:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569838741;
-	bh=SdcLzt1NMV5HtC9jlXslHJgHvj8quEha2dL9Fzs+U+0=;
+	s=default; t=1569838746;
+	bh=F7PU0XTzulJyYozp4p3TKjIBYzu0jmLbK1kiwEtvVSs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qJDPJQXS8dyQajG7/60UKlgZKq5jJzgcUAYDCZe24VawGgYYj0SvMrOPzP8R2Z9/f
-	 pe3zD+wuvOv5s+QaiQm/ZEWEa2zJgQ+dReKQ0EmgSwo6m/U26i+tO3yUK4f5mjWNln
-	 Jziyp33mtqWJIaL9M7DtXIGBaI6neFt6cuDcN7h4=
+	b=hYt+MCfD68U21MlG1DbQE4iDgiELXE+H1G/0Q7bznVOvb5ScaqAhTBjGndVGZkvjD
+	 OCfLoQITaTpXhWP/FmJdHcodHbEeeG6NmU7Kdwf7Pq1NU/jAof+2koo3iww6bO/HNk
+	 xsCMeQRgOqC2gMAF5DL/MMSDS/cwimhVmczrmS2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730738AbfI3KTA (ORCPT
+        id S1730752AbfI3KTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 06:19:00 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40888 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730708AbfI3KS7 (ORCPT
+        Mon, 30 Sep 2019 06:19:06 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35468 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730694AbfI3KS4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 06:18:59 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 7so8822796ljw.7;
-        Mon, 30 Sep 2019 03:18:56 -0700 (PDT)
+        Mon, 30 Sep 2019 06:18:56 -0400
+Received: by mail-lj1-f196.google.com with SMTP id m7so8852414lji.2;
+        Mon, 30 Sep 2019 03:18:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=b2dEZ5VveeCRyXH+CovRffyZBiPh0RcTQuJCALACFyo=;
-        b=KTyKHSWrrlMe+pJZAstb/2g9DIdKJ2SElSnnOL4ZmF8KvrXVrCO91z2zA4WtYrrOs2
-         TNKqmqXzV4koMJKLPpKDmTr8ZimNx4ikbgadHfLdkwWJqAQunQfoD/zNN9gXlukQ39p5
-         TmpRC2DeWzlCC7LMPPtdqiQYpzmtxu9GkDNzhtOWs3CJOJpekoealrzSZlkvjD2qKdJ/
-         JrdAy1Z34iC/rz1KTZ8y97tp4WMK8erW6d8TbqOJy2NzWOpa0/nXoGObXYh886x4sG7Y
-         gVxJw3pltbPjc6UIKROq5h908M9/28LQVesDKwmQ5sG+q1aYo3Y2CYaN2O++tVQnMHeU
-         4ghQ==
-X-Gm-Message-State: APjAAAUO5DzzIUNQOVROlJdXQ0j11eOfBC5R5xhUbW75oDMQjgQIARla
-        qw3UQyM9ng8TnQdN4bRbEPdbsDH0yLw=
-X-Google-Smtp-Source: APXvYqw+wTlt7ZcKy04xZEFUiYRT+L2HdloGEnfYj5G76OV5ksfPvsv0WZY9b0/mrDQNHG7s8oPTuA==
-X-Received: by 2002:a2e:42c9:: with SMTP id h70mr11258722ljf.88.1569838735490;
-        Mon, 30 Sep 2019 03:18:55 -0700 (PDT)
+        bh=u6PH07eWhP9yLzHtDWmI6SB0uTSpZSpElPRT+7mhohA=;
+        b=CFDdOBG9XbQ5nZvmw0GinZmQD/aOP56uIdRhkb0d5rht1mwl4hchAhNUPrEr/YyTBi
+         fP+OhQUhUagTxp0VHvkTE1VQD0Qovo/9Ay9bLvj1coNzkmRzwm0Qv+gYaX9cPGk270RW
+         WtaJSiE4ZZbDSB15qIoJpm+bJCDFyNNXGuQMN/UU7gVtP4LFc2wZr0XgV4gQ23r9yJR2
+         ztXUCzasth4GaQmlaj+tM+6bt49NChPDmQ5QtcOOG5IrH+U4ndQZ0M4yqQE9fo4wp5a4
+         o3l6gzfehmcQY46M3ETuwCAAjoFrqQxUjiYAy/CbbTnA4Uju4OLlO9lj8LiOBrBeExnV
+         TkTQ==
+X-Gm-Message-State: APjAAAUYkS+VeMaX3T5hXrwltv7CxIF3VsDN1RFc1IsdcS5/tRRq6SM1
+        PxiUf+0so9SXHcKRWpMYZU8=
+X-Google-Smtp-Source: APXvYqy/J8Nltz74xeY945qkmg7xT8cKGfK1+u/0Y07eu0Zo3jTlJVYLUuRSJdb3JMWVBKuUEQ9feQ==
+X-Received: by 2002:a2e:90d9:: with SMTP id o25mr7903132ljg.94.1569838733873;
+        Mon, 30 Sep 2019 03:18:53 -0700 (PDT)
 Received: from neopili.qtec.com (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net. [80.197.57.18])
-        by smtp.gmail.com with ESMTPSA id z8sm3805970lfg.18.2019.09.30.03.18.53
+        by smtp.gmail.com with ESMTPSA id z8sm3805970lfg.18.2019.09.30.03.18.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 03:18:54 -0700 (PDT)
+        Mon, 30 Sep 2019 03:18:52 -0700 (PDT)
 From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
 To:     Philipp Zabel <p.zabel@pengutronix.de>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Jacopo Mondi <jacopo@jmondi.org>, linux-media@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Ricardo Ribalda Delgado <ribalda@kernel.org>
-Subject: [PATCH v8 8/8] media: imx214: Add new control with V4L2_CID_UNIT_CELL_SIZE
-Date:   Mon, 30 Sep 2019 12:18:41 +0200
-Message-Id: <20190930101841.19630-9-ribalda@kernel.org>
+Cc:     Ricardo Ribalda Delgado <ribalda@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Subject: [PATCH v8 7/8] media: v4l2-ctrl: Add new helper v4l2_ctrl_ptr_from_void
+Date:   Mon, 30 Sep 2019 12:18:40 +0200
+Message-Id: <20190930101841.19630-8-ribalda@kernel.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190930101841.19630-1-ribalda@kernel.org>
 References: <20190930101841.19630-1-ribalda@kernel.org>
@@ -69,49 +70,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to the product brief, the unit cell size is 1120 nanometers^2.
+This helper function simplifies the code by not needing a union
+v4l2_ctrl_ptr and an assignment every time we need to use
+a ctrl_ptr.
 
-https://www.sony-semicon.co.jp/products_en/IS/sensor1/img/products/ProductBrief_IMX214_20150428.pdf
-
+Suggested-by: Hans Verkuil <hverkuil@xs4all.nl>
 Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
 ---
- drivers/media/i2c/imx214.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ include/media/v4l2-ctrls.h | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
-index 159a3a604f0e..4d9879f60dfb 100644
---- a/drivers/media/i2c/imx214.c
-+++ b/drivers/media/i2c/imx214.c
-@@ -47,6 +47,7 @@ struct imx214 {
- 	struct v4l2_ctrl *pixel_rate;
- 	struct v4l2_ctrl *link_freq;
- 	struct v4l2_ctrl *exposure;
-+	struct v4l2_ctrl *unit_size;
+diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
+index c42f164e2c9e..d69cfdffd41d 100644
+--- a/include/media/v4l2-ctrls.h
++++ b/include/media/v4l2-ctrls.h
+@@ -73,6 +73,17 @@ union v4l2_ctrl_ptr {
+ 	void *p;
+ };
  
- 	struct regulator_bulk_data	supplies[IMX214_NUM_SUPPLIES];
- 
-@@ -948,6 +949,10 @@ static int imx214_probe(struct i2c_client *client)
- 	static const s64 link_freq[] = {
- 		IMX214_DEFAULT_LINK_FREQ,
- 	};
-+	static const struct v4l2_area unit_size = {
-+		.width = 1120,
-+		.height = 1120,
-+	};
- 	int ret;
- 
- 	ret = imx214_parse_fwnode(dev);
-@@ -1029,6 +1034,10 @@ static int imx214_probe(struct i2c_client *client)
- 					     V4L2_CID_EXPOSURE,
- 					     0, 3184, 1, 0x0c70);
- 
-+	imx214->unit_size = v4l2_ctrl_new_std_compound(&imx214->ctrls,
-+				NULL,
-+				V4L2_CID_UNIT_CELL_SIZE,
-+				v4l2_ctrl_ptr_from_void((void *)&unit_size));
- 	ret = imx214->ctrls.error;
- 	if (ret) {
- 		dev_err(&client->dev, "%s control init failed (%d)\n",
++/**
++ * v4l2_ctrl_ptr() - Helper function to return a v4l2_ctrl_ptr from a
++ * void pointer
++ * @ptr:	The void pointer
++ */
++static inline union v4l2_ctrl_ptr v4l2_ctrl_ptr_from_void(void *ptr)
++{
++	BUILD_BUG_ON(sizeof(union v4l2_ctrl_ptr) != sizeof(void *));
++	return (union v4l2_ctrl_ptr) ptr;
++}
++
+ /**
+  * struct v4l2_ctrl_ops - The control operations that the driver has to provide.
+  *
 -- 
 2.23.0
 
