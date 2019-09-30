@@ -2,172 +2,509 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7025C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD78C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B091C2086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:35:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C8F12086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:37:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KWgsOjLN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731722AbfI3Xfm (ORCPT
+        id S1732011AbfI3Xh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 19:35:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42650 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727118AbfI3Xfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 19:35:42 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 96E8D300C22E;
-        Mon, 30 Sep 2019 23:35:41 +0000 (UTC)
-Received: from mail (ovpn-125-159.rdu2.redhat.com [10.10.125.159])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EE71D10013A1;
-        Mon, 30 Sep 2019 23:35:38 +0000 (UTC)
-Date:   Mon, 30 Sep 2019 19:35:38 -0400
-From:   Andrea Arcangeli <aarcange@redhat.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Ben Luo <luoben@linux.alibaba.com>, cohuck@redhat.com,
+        Mon, 30 Sep 2019 19:37:57 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40609 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727118AbfI3Xh5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 19:37:57 -0400
+Received: by mail-pf1-f195.google.com with SMTP id x127so6518884pfb.7
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 16:37:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=91VYKir+8JQ78iOBXSsaytQPYr2VNMDv6h2d/zqwG0E=;
+        b=KWgsOjLNOQPYFfX0XwomaSXuahNOHNkzgy0ul+wKxMemMhm6HuuchdVtayc2YcjWMo
+         cem6a8ygzDxq4UNsps+KKHWUzJfQCUem+DKJmBWcpOJSkI/9at+CXHrCTaepfPrjT3ZA
+         PaEo8JzAwQhFhPvL3tkwqCofGvyNf1ggA93Gk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=91VYKir+8JQ78iOBXSsaytQPYr2VNMDv6h2d/zqwG0E=;
+        b=auC+mMmKBNJ5rfv1cH6u2/aL/RBLdIUcgPDZIjF8P7xFrdpE2iijfms2npZrbMbo7E
+         eGQ3AI6X5Giu6iPF3jNFaPigZg/gDByfzIM1aCPc+cSTRWXhItaC/Bi1GoE2tDCSRdIU
+         Ix2Pz1hp3IKp/e1qzIkwekMWUATXsx8UouCol6Un3gvICY5Rs9eYryHglQDD250nfvjd
+         ETNi64WMbrU1beDdwKO7lLl6d3HkqAopdNGFD+tOoosOzSv3zaok8a5QVlAkhb3WLE4y
+         RVtZxYO/1rbPRRP8aTp3fA1nWoQbQeyPUDM2UakZ5Q3CVZilGVVFAwXKITl4BSxatokm
+         MEnw==
+X-Gm-Message-State: APjAAAVnov7mdqJzqrWLocCMAtDYY7qv86o7B+fkkOW7BETJhnAvukJW
+        7xw0MZzYflqneAWJWMIOpGiyHw==
+X-Google-Smtp-Source: APXvYqyUxTT+UPZgN/L82Q4GjTNZOvmLRPIV7N6Q2A75HGj77Jyrql4sZ704NAp36gGhvyXYVdJf0Q==
+X-Received: by 2002:a63:606:: with SMTP id 6mr26655293pgg.181.1569886676028;
+        Mon, 30 Sep 2019 16:37:56 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id l24sm14852047pff.151.2019.09.30.16.37.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 16:37:55 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 16:37:54 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Aleksa Sarai <asarai@suse.de>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] vfio/type1: avoid redundant PageReserved checking
-Message-ID: <20190930233538.GA13922@redhat.com>
-References: <20190827124041.4f986005@x1.home>
- <3517844d6371794cff59b13bf9c2baf1dcbe571c.1566966365.git.luoben@linux.alibaba.com>
- <20190828095501.12e71bd3@x1.home>
- <6c234632-b7e9-45c7-3d70-51a4c83161f6@linux.alibaba.com>
- <20190829110601.6dd74052@x1.home>
- <5c9c57ba-ca5f-f080-3bb0-417a08788235@linux.alibaba.com>
- <20190913120526.363e7592@x1.home>
+Subject: Re: [PATCH RESEND v3 1/4] lib: introduce copy_struct_from_user()
+ helper
+Message-ID: <201909301622.90B70079@keescook>
+References: <20190930191526.19544-1-asarai@suse.de>
+ <20190930191526.19544-2-asarai@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190913120526.363e7592@x1.home>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Mon, 30 Sep 2019 23:35:42 +0000 (UTC)
+In-Reply-To: <20190930191526.19544-2-asarai@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Fri, Sep 13, 2019 at 12:05:26PM -0600, Alex Williamson wrote:
-> On Mon, 2 Sep 2019 15:32:42 +0800
-> Ben Luo <luoben@linux.alibaba.com> wrote:
+On Tue, Oct 01, 2019 at 05:15:23AM +1000, Aleksa Sarai wrote:
+> From: Aleksa Sarai <cyphar@cyphar.com>
 > 
-> > 在 2019/8/30 上午1:06, Alex Williamson 写道:
-> > > On Fri, 30 Aug 2019 00:58:22 +0800
-> > > Ben Luo <luoben@linux.alibaba.com> wrote:
-> > >  
-> > >> 在 2019/8/28 下午11:55, Alex Williamson 写道:  
-> > >>> On Wed, 28 Aug 2019 12:28:04 +0800
-> > >>> Ben Luo <luoben@linux.alibaba.com> wrote:
-> > >>>     
-> > >>>> currently, if the page is not a tail of compound page, it will be
-> > >>>> checked twice for the same thing.
-> > >>>>
-> > >>>> Signed-off-by: Ben Luo <luoben@linux.alibaba.com>
-> > >>>> ---
-> > >>>>    drivers/vfio/vfio_iommu_type1.c | 3 +--
-> > >>>>    1 file changed, 1 insertion(+), 2 deletions(-)
-> > >>>>
-> > >>>> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> > >>>> index 054391f..d0f7346 100644
-> > >>>> --- a/drivers/vfio/vfio_iommu_type1.c
-> > >>>> +++ b/drivers/vfio/vfio_iommu_type1.c
-> > >>>> @@ -291,11 +291,10 @@ static int vfio_lock_acct(struct vfio_dma *dma, long npage, bool async)
-> > >>>>    static bool is_invalid_reserved_pfn(unsigned long pfn)
-> > >>>>    {
-> > >>>>    	if (pfn_valid(pfn)) {
-> > >>>> -		bool reserved;
-> > >>>>    		struct page *tail = pfn_to_page(pfn);
-> > >>>>    		struct page *head = compound_head(tail);
-> > >>>> -		reserved = !!(PageReserved(head));
-> > >>>>    		if (head != tail) {
-> > >>>> +			bool reserved = PageReserved(head);
-> > >>>>    			/*
-> > >>>>    			 * "head" is not a dangling pointer
-> > >>>>    			 * (compound_head takes care of that)  
-> > >>> Thinking more about this, the code here was originally just a copy of
-> > >>> kvm_is_mmio_pfn() which was simplified in v3.12 with the commit below.
-> > >>> Should we instead do the same thing here?  Thanks,
-> > >>>
-> > >>> Alex  
-> > >> ok, and kvm_is_mmio_pfn() has also been updated since then, I will take
-> > >> a look at that and compose a new patch  
-> > > I'm not sure if the further updates are quite as relevant for vfio, but
-> > > appreciate your review of them.  Thanks,
-> > >
-> > > Alex  
-> > 
-> > After studying the related code, my personal understandings are:
-> > 
-> > kvm_is_mmio_pfn() is used to find out whether a memory range is MMIO 
-> > mapped so that to set
-> > the proper MTRR TYPE to spte.
-> > 
-> > is_invalid_reserved_pfn() is used in two scenarios:
-> >      1. to tell whether a page should be counted against user's mlock 
-> > limits, as the function's name
-> > implies, all 'invalid' PFNs who are not backed by struct page and those 
-> > reserved pages (including
-> > zero page and those from NVDIMM DAX) should be excluded.
-> > 2. to check if we have got a valid and pinned pfn for the vma 
-> > with VM_PFNMAP flag.
-> > 
-> > So, for the zero page and 'RAM' backed PFNs without 'struct page', 
-> > kvm_is_mmio_pfn() should
-> > return false because they are not MMIO and are cacheable, but 
-> > is_invalid_reserved_pfn() should
-> > return true since they are truely reserved or invalid and should not be 
-> > counted against user's
-> > mlock limits.
-> > 
-> > For fsdax-page, current get_user_pages() returns -EOPNOTSUPP, and VFIO 
-> > also returns this
-> > error code to user, seems not support fsdax for now, so there is no 
-> > chance to call into
-> > is_invalid_reserved_pfn() currently, if fsdax is to be supported, not 
-> > only this function needs to be
-> > updated, vaddr_get_pfn() also needs some changes.
-> > 
-> > Now, with the assumption that PFNs of compound pages with reserved bit 
-> > set in head will not be
-> > passed to is_invalid_reserved_pfn(), we can simplify this function to:
-> > 
-> > static bool is_invalid_reserved_pfn(unsigned long pfn)
-> > {
-> >          if (pfn_valid(pfn))
-> >                  return PageReserved(pfn_to_page(pfn));
-> > 
-> >          return true;
-> > }
-> > 
-> > But, I am not sure if the assumption above is true, if not, we still 
-> > need to check the reserved bit of
-> > head for a tail page as this PATCH v2 does.
+> A common pattern for syscall extensions is increasing the size of a
+> struct passed from userspace, such that the zero-value of the new fields
+> result in the old kernel behaviour (allowing for a mix of userspace and
+> kernel vintages to operate on one another in most cases).
 > 
-> I believe what you've described is correct.  Andrea, have we missed
-> anything?  Thanks,
+> While this interface exists for communication in both directions, only
+> one interface is straightforward to have reasonable semantics for
+> (userspace passing a struct to the kernel). For kernel returns to
+> userspace, what the correct semantics are (whether there should be an
+> error if userspace is unaware of a new extension) is very
+> syscall-dependent and thus probably cannot be unified between syscalls
+> (a good example of this problem is [1]).
+> 
+> Previously there was no common lib/ function that implemented
+> the necessary extension-checking semantics (and different syscalls
+> implemented them slightly differently or incompletely[2]). Future
+> patches replace common uses of this pattern to make use of
+> copy_struct_from_user().
+> 
+> Some in-kernel selftests that insure that the handling of alignment and
+> various byte patterns are all handled identically to memchr_inv() usage.
+> 
+> [1]: commit 1251201c0d34 ("sched/core: Fix uclamp ABI bug, clean up and
+>      robustify sched_read_attr() ABI logic and code")
+> 
+> [2]: For instance {sched_setattr,perf_event_open,clone3}(2) all do do
+>      similar checks to copy_struct_from_user() while rt_sigprocmask(2)
+>      always rejects differently-sized struct arguments.
+> 
+> Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+> ---
+>  include/linux/bitops.h  |   7 +++
+>  include/linux/uaccess.h |   4 ++
+>  lib/strnlen_user.c      |   8 +--
+>  lib/test_user_copy.c    | 133 ++++++++++++++++++++++++++++++++++++++--
+>  lib/usercopy.c          | 123 +++++++++++++++++++++++++++++++++++++
+>  5 files changed, 262 insertions(+), 13 deletions(-)
+> 
+> diff --git a/include/linux/bitops.h b/include/linux/bitops.h
+> index cf074bce3eb3..c94a9ff9f082 100644
+> --- a/include/linux/bitops.h
+> +++ b/include/linux/bitops.h
+> @@ -4,6 +4,13 @@
+>  #include <asm/types.h>
+>  #include <linux/bits.h>
+>  
+> +/* Set bits in the first 'n' bytes when loaded from memory */
+> +#ifdef __LITTLE_ENDIAN
+> +#  define aligned_byte_mask(n) ((1UL << 8*(n))-1)
+> +#else
+> +#  define aligned_byte_mask(n) (~0xffUL << (BITS_PER_LONG - 8 - 8*(n)))
+> +#endif
+> +
+>  #define BITS_PER_TYPE(type) (sizeof(type) * BITS_PER_BYTE)
+>  #define BITS_TO_LONGS(nr)	DIV_ROUND_UP(nr, BITS_PER_TYPE(long))
+>  
+> diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+> index 70bbdc38dc37..94f20e6ec6ab 100644
+> --- a/include/linux/uaccess.h
+> +++ b/include/linux/uaccess.h
+> @@ -231,6 +231,10 @@ __copy_from_user_inatomic_nocache(void *to, const void __user *from,
+>  
+>  #endif		/* ARCH_HAS_NOCACHE_UACCESS */
+>  
+> +extern int check_zeroed_user(const void __user *from, size_t size);
+> +extern int copy_struct_from_user(void *dst, size_t ksize,
+> +				 const void __user *src, size_t usize);
+> +
+>  /*
+>   * probe_kernel_read(): safely attempt to read from a location
+>   * @dst: pointer to the buffer that shall take the data
+> diff --git a/lib/strnlen_user.c b/lib/strnlen_user.c
+> index 28ff554a1be8..6c0005d5dd5c 100644
+> --- a/lib/strnlen_user.c
+> +++ b/lib/strnlen_user.c
+> @@ -3,16 +3,10 @@
+>  #include <linux/export.h>
+>  #include <linux/uaccess.h>
+>  #include <linux/mm.h>
+> +#include <linux/bitops.h>
+>  
+>  #include <asm/word-at-a-time.h>
+>  
+> -/* Set bits in the first 'n' bytes when loaded from memory */
+> -#ifdef __LITTLE_ENDIAN
+> -#  define aligned_byte_mask(n) ((1ul << 8*(n))-1)
+> -#else
+> -#  define aligned_byte_mask(n) (~0xfful << (BITS_PER_LONG - 8 - 8*(n)))
+> -#endif
+> -
+>  /*
+>   * Do a strnlen, return length of string *with* final '\0'.
+>   * 'count' is the user-supplied count, while 'max' is the
+> diff --git a/lib/test_user_copy.c b/lib/test_user_copy.c
+> index 67bcd5dfd847..3a17f71029bb 100644
+> --- a/lib/test_user_copy.c
+> +++ b/lib/test_user_copy.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/uaccess.h>
+>  #include <linux/vmalloc.h>
+> +#include <linux/random.h>
+>  
+>  /*
+>   * Several 32-bit architectures support 64-bit {get,put}_user() calls.
+> @@ -31,14 +32,129 @@
+>  # define TEST_U64
+>  #endif
+>  
+> -#define test(condition, msg)		\
+> -({					\
+> -	int cond = (condition);		\
+> -	if (cond)			\
+> -		pr_warn("%s\n", msg);	\
+> -	cond;				\
+> +#define test(condition, msg, ...)					\
+> +({									\
+> +	int cond = (condition);						\
+> +	if (cond)							\
+> +		pr_warn("[%d] " msg "\n", __LINE__, ##__VA_ARGS__);	\
+> +	cond;								\
+>  })
+>  
+> +static bool is_zeroed(void *from, size_t size)
+> +{
+> +	return memchr_inv(from, 0x0, size) == NULL;
+> +}
+> +
+> +static int test_check_nonzero_user(char *kmem, char __user *umem, size_t size)
+> +{
+> +	int ret = 0;
+> +	size_t start, end, i;
+> +	size_t zero_start = size / 4;
+> +	size_t zero_end = size - zero_start;
+> +
+> +	/*
+> +	 * We conduct a series of check_nonzero_user() tests on a block of memory
+> +	 * with the following byte-pattern (trying every possible [start,end]
+> +	 * pair):
+> +	 *
+> +	 *   [ 00 ff 00 ff ... 00 00 00 00 ... ff 00 ff 00 ]
+> +	 *
+> +	 * And we verify that check_nonzero_user() acts identically to memchr_inv().
+> +	 */
+> +
+> +	memset(kmem, 0x0, size);
+> +	for (i = 1; i < zero_start; i += 2)
+> +		kmem[i] = 0xff;
+> +	for (i = zero_end; i < size; i += 2)
+> +		kmem[i] = 0xff;
+> +
+> +	ret |= test(copy_to_user(umem, kmem, size),
+> +		    "legitimate copy_to_user failed");
+> +
+> +	for (start = 0; start <= size; start++) {
+> +		for (end = start; end <= size; end++) {
+> +			size_t len = end - start;
+> +			int retval = check_zeroed_user(umem + start, len);
+> +			int expected = is_zeroed(kmem + start, len);
+> +
+> +			ret |= test(retval != expected,
+> +				    "check_nonzero_user(=%d) != memchr_inv(=%d) mismatch (start=%zu, end=%zu)",
+> +				    retval, expected, start, end);
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int test_copy_struct_from_user(char *kmem, char __user *umem,
+> +				      size_t size)
+> +{
+> +	int ret = 0;
+> +	char *rand = NULL, *expected = NULL;
+> +	size_t ksize, usize;
+> +
+> +	rand = kmalloc(size, GFP_KERNEL);
+> +	if (ret |= test(rand == NULL, "kmalloc failed"))
+> +		goto out_free;
+> +
+> +	expected = kmalloc(size, GFP_KERNEL);
+> +	if (ret |= test(expected == NULL, "kmalloc failed"))
+> +		goto out_free;
+> +
+> +	/* Fill umem with random bytes. */
+> +	memset(kmem, 0x0, size);
+> +	prandom_bytes(rand, size);
 
-Yes it looks good. The only reason for ever wanting to check the head
-page reserved bit (instead of only checking the tail page reserved
-bit) would be if any code would transfer the reserved bit from head to
-tail during a hugepage split, but no hugepage split code can transfer
-the reserved bit from head to tail during the split, so checking the
-head can't make a difference.
+I don't really like using random() in tests on the chance that we get
+failures we can't reproduced. If you want to do this (instead of using a
+byte-fill pattern), you need to dump the entire state of the memory
+region. Why not just memset(rand, 0xff, ...)? (And obviously rename
+"rand")
 
-The buddy wouldn't allow the driver to allocate an hugepage if any
-subpage is reserved in the e820 map at boot, so non-RAM pages with a
-backing struct page aren't an issue here. This was only meaningful for
-PFNMAP in case the PG_reserved bit was set by the driver on a hugepage
-before mapping it in userland, in which case the driver needs to set
-the reserved bit in all subpages to be safe (not only in the head).
+> +	ret |= test(copy_to_user(umem, rand, size),
+> +		    "legitimate copy_to_user failed");
+> +
+> +	/* Check basic case -- (usize == ksize). */
+> +	ksize = size;
+> +	usize = size;
 
-Thanks,
-Andrea
+I'd move the memset(kmem, 0x0, size); down to here.
+
+> +	memcpy(expected, rand, ksize);
+> +
+> +	ret |= test(copy_struct_from_user(kmem, ksize, umem, usize),
+> +		    "copy_struct_from_user(usize == ksize) failed");
+> +	ret |= test(memcmp(kmem, expected, ksize),
+> +		    "copy_struct_from_user(usize == ksize) gives unexpected copy");
+> +
+> +	/* Old userspace case -- (usize < ksize). */
+> +	ksize = size;
+> +	usize = ksize / 2;
+> +
+
+I would expect memset(kmem, 0x0, size); again here since a new test of
+that region is starting.
+
+> +	memcpy(expected, rand, usize);
+> +	memset(expected + usize, 0x0, ksize - usize);
+> +
+> +	ret |= test(copy_struct_from_user(kmem, ksize, umem, usize),
+> +		    "copy_struct_from_user(usize < ksize) failed");
+> +	ret |= test(memcmp(kmem, expected, ksize),
+> +		    "copy_struct_from_user(usize < ksize) gives unexpected copy");
+> +
+> +	/* New userspace (-E2BIG) case -- (usize > ksize). */
+> +	usize = size;
+> +	ksize = usize / 2;
+
+and here?
+
+> +
+> +	ret |= test(copy_struct_from_user(kmem, ksize, umem, usize) != -E2BIG,
+> +		    "copy_struct_from_user(usize > ksize) didn't give E2BIG");
+> +
+> +	/* New userspace (success) case -- (usize > ksize). */
+> +	usize = size;
+> +	ksize = usize / 2;
+> +
+
+and here?
+
+> +	memcpy(expected, rand, ksize);
+> +
+> +	ret |= test(clear_user(umem + ksize, usize - ksize),
+> +		    "legitimate clear_user failed");
+> +	ret |= test(copy_struct_from_user(kmem, ksize, umem, usize),
+> +		    "copy_struct_from_user(usize > ksize) failed");
+> +	ret |= test(memcmp(kmem, expected, ksize),
+> +		    "copy_struct_from_user(usize > ksize) gives unexpected copy");
+> +
+> +out_free:
+> +	kfree(expected);
+> +	kfree(rand);
+> +	return ret;
+> +}
+> +
+>  static int __init test_user_copy_init(void)
+>  {
+>  	int ret = 0;
+> @@ -106,6 +222,11 @@ static int __init test_user_copy_init(void)
+>  #endif
+>  #undef test_legit
+>  
+> +	/* Test usage of check_nonzero_user(). */
+> +	ret |= test_check_nonzero_user(kmem, usermem, 2 * PAGE_SIZE);
+> +	/* Test usage of copy_struct_from_user(). */
+> +	ret |= test_copy_struct_from_user(kmem, usermem, 2 * PAGE_SIZE);
+> +
+>  	/*
+>  	 * Invalid usage: none of these copies should succeed.
+>  	 */
+> diff --git a/lib/usercopy.c b/lib/usercopy.c
+> index c2bfbcaeb3dc..cf7f854ed9c8 100644
+> --- a/lib/usercopy.c
+> +++ b/lib/usercopy.c
+> @@ -1,5 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <linux/uaccess.h>
+> +#include <linux/bitops.h>
+>  
+>  /* out-of-line parts */
+>  
+> @@ -31,3 +32,125 @@ unsigned long _copy_to_user(void __user *to, const void *from, unsigned long n)
+>  }
+>  EXPORT_SYMBOL(_copy_to_user);
+>  #endif
+> +
+> +/**
+> + * check_zeroed_user: check if a userspace buffer only contains zero bytes
+> + * @from: Source address, in userspace.
+> + * @size: Size of buffer.
+> + *
+> + * This is effectively shorthand for "memchr_inv(from, 0, size) == NULL" for
+> + * userspace addresses (and is more efficient because we don't care where the
+> + * first non-zero byte is).
+> + *
+> + * Returns:
+> + *  * 0: There were non-zero bytes present in the buffer.
+> + *  * 1: The buffer was full of zero bytes.
+> + *  * -EFAULT: access to userspace failed.
+> + */
+> +int check_zeroed_user(const void __user *from, size_t size)
+> +{
+> +	unsigned long val;
+> +	uintptr_t align = (uintptr_t) from % sizeof(unsigned long);
+> +
+> +	if (unlikely(size == 0))
+> +		return 1;
+> +
+> +	from -= align;
+> +	size += align;
+> +
+> +	if (!user_access_begin(from, size))
+> +		return -EFAULT;
+> +
+> +	unsafe_get_user(val, (unsigned long __user *) from, err_fault);
+> +	if (align)
+> +		val &= ~aligned_byte_mask(align);
+> +
+> +	while (size > sizeof(unsigned long)) {
+> +		if (unlikely(val))
+> +			goto done;
+> +
+> +		from += sizeof(unsigned long);
+> +		size -= sizeof(unsigned long);
+> +
+> +		unsafe_get_user(val, (unsigned long __user *) from, err_fault);
+> +	}
+> +
+> +	if (size < sizeof(unsigned long))
+> +		val &= aligned_byte_mask(size);
+> +
+> +done:
+> +	user_access_end();
+> +	return (val == 0);
+> +err_fault:
+> +	user_access_end();
+> +	return -EFAULT;
+> +}
+> +EXPORT_SYMBOL(check_zeroed_user);
+> +
+> +/**
+> + * copy_struct_from_user: copy a struct from userspace
+> + * @dst:   Destination address, in kernel space. This buffer must be @ksize
+> + *         bytes long.
+> + * @ksize: Size of @dst struct.
+> + * @src:   Source address, in userspace.
+> + * @usize: (Alleged) size of @src struct.
+> + *
+> + * Copies a struct from userspace to kernel space, in a way that guarantees
+> + * backwards-compatibility for struct syscall arguments (as long as future
+> + * struct extensions are made such that all new fields are *appended* to the
+> + * old struct, and zeroed-out new fields have the same meaning as the old
+> + * struct).
+> + *
+> + * @ksize is just sizeof(*dst), and @usize should've been passed by userspace.
+> + * The recommended usage is something like the following:
+> + *
+> + *   SYSCALL_DEFINE2(foobar, const struct foo __user *, uarg, size_t, usize)
+> + *   {
+> + *      int err;
+> + *      struct foo karg = {};
+> + *
+> + *      if (usize > PAGE_SIZE)
+> + *        return -E2BIG;
+> + *      if (usize < FOO_SIZE_VER0)
+> + *        return -EINVAL;
+> + *
+> + *      err = copy_struct_from_user(&karg, sizeof(karg), uarg, usize);
+> + *      if (err)
+> + *        return err;
+> + *
+> + *      // ...
+> + *   }
+> + *
+> + * There are three cases to consider:
+> + *  * If @usize == @ksize, then it's copied verbatim.
+> + *  * If @usize < @ksize, then the userspace has passed an old struct to a
+> + *    newer kernel. The rest of the trailing bytes in @dst (@ksize - @usize)
+> + *    are to be zero-filled.
+> + *  * If @usize > @ksize, then the userspace has passed a new struct to an
+> + *    older kernel. The trailing bytes unknown to the kernel (@usize - @ksize)
+> + *    are checked to ensure they are zeroed, otherwise -E2BIG is returned.
+> + *
+> + * Returns (in all cases, some data may have been copied):
+> + *  * -E2BIG:  (@usize > @ksize) and there are non-zero trailing bytes in @src.
+> + *  * -EFAULT: access to userspace failed.
+> + */
+> +int copy_struct_from_user(void *dst, size_t ksize,
+> +			  const void __user *src, size_t usize)
+
+I'd like to see this be marked __always_inline so the dst type is known
+to the compiler during the copy_from_user() size sanity checks, etc.
+
+> +{
+> +	size_t size = min(ksize, usize);
+> +	size_t rest = max(ksize, usize) - size;
+> +
+> +	/* Deal with trailing bytes. */
+> +	if (usize < ksize) {
+> +		memset(dst + size, 0, rest);
+> +	} else if (usize > ksize) {
+> +		int ret = check_zeroed_user(src + size, rest);
+> +		if (ret <= 0)
+> +			return ret ?: -E2BIG;
+> +	}
+> +	/* Copy the interoperable parts of the struct. */
+> +	if (copy_from_user(dst, src, size))
+> +		return -EFAULT;
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(copy_struct_from_user);
+> -- 
+> 2.23.0
+> 
+
+But besides those things, yes please. :)
+
+-- 
+Kees Cook
