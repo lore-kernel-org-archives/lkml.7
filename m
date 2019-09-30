@@ -2,100 +2,199 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F7EC35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2998AC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4778121855
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F18F421855
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:58:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730882AbfI3K42 (ORCPT
+        id S1730885AbfI3K66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 06:56:28 -0400
-Received: from mga09.intel.com ([134.134.136.24]:51423 "EHLO mga09.intel.com"
+        Mon, 30 Sep 2019 06:58:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:61760 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730705AbfI3K42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 06:56:28 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Sep 2019 03:56:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,565,1559545200"; 
-   d="scan'208";a="204804555"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 30 Sep 2019 03:56:24 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 30 Sep 2019 13:56:23 +0300
-Date:   Mon, 30 Sep 2019 13:56:23 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Tuowen Zhao <ztuowen@gmail.com>
-Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@linux.intel.com, acelan.kao@canonical.com,
-        bhelgaas@google.com, kai.heng.feng@canonical.com
-Subject: Re: [PATCH] mfd: intel-lpss: use devm_ioremap_uc for mmio
-Message-ID: <20190930105623.GU2714@lahna.fi.intel.com>
-References: <20190927175513.31054-1-ztuowen@gmail.com>
+        id S1729415AbfI3K65 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 06:58:57 -0400
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EFE3D81DE1
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 10:58:56 +0000 (UTC)
+Received: by mail-wr1-f71.google.com with SMTP id n3so4358109wrt.9
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 03:58:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=j0qxT1IXvt9wIAlUjN9ddY7lEd1GUitjNHLdt8EqWYQ=;
+        b=U04/Cuk3fYi7lg79WhFHxj0KDuQnQIzVQTSssZTu1bYZDgptP1ZQJx8dcW256uTZ9h
+         izHEPyXbjsNQj/+8GoHMivOH1MShgwmp44ffKcy1518RP9L6wBtzKNx5glKiGxR4hXAP
+         iG78JRSlAfBMhmTEcsHSmzmtSTL/MlvZZHQUmws1X7PX3iOweOwgf8e2vJ+xa5IItDgi
+         PriCKw9gUqd8diWSAn7u7oHa+HBJ+XFi4f0vDt+iR015S0FpkMFVw3jt/RYUG1k1hMiU
+         hqPc20cBtb3lmtFVuJ+dv9P9/OsgT2zzTbmnv5c4MR50rNtzp7hEja6DU5DsKjBdkBPr
+         oEKA==
+X-Gm-Message-State: APjAAAWOMtuME7i9cVW/RD6ct3sluyv30i09KopBijf6TwIPAxKLsuI1
+        Fv6XgMxX3eWIw9UuNAeTXUcPuF0qaoCZKPnqbVBf37L/A4x4g6HIMbGnV5KwmoZCHJeLPQ/Lxl0
+        yBNnj/M22IMTyaqlC7gy9F7nt
+X-Received: by 2002:adf:ff8a:: with SMTP id j10mr13252875wrr.334.1569841135512;
+        Mon, 30 Sep 2019 03:58:55 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxHekuj02R8XtQy2iPD4+dRVTghrwvfXckbudnn8NOFFGFICy/+KtRZsKtOcn3qGWRNQi1jjw==
+X-Received: by 2002:adf:ff8a:: with SMTP id j10mr13252857wrr.334.1569841135272;
+        Mon, 30 Sep 2019 03:58:55 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id b194sm35531293wmg.46.2019.09.30.03.58.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 03:58:54 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Reto Buerki <reet@codelabs.ch>,
+        Liran Alon <liran.alon@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Subject: Re: [PATCH v2 8/8] KVM: x86: Fold decache_cr3() into cache_reg()
+In-Reply-To: <20190927214523.3376-9-sean.j.christopherson@intel.com>
+References: <20190927214523.3376-1-sean.j.christopherson@intel.com> <20190927214523.3376-9-sean.j.christopherson@intel.com>
+Date:   Mon, 30 Sep 2019 12:58:53 +0200
+Message-ID: <87a7am3v9u.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190927175513.31054-1-ztuowen@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-In $subject, use MMIO instead of mmio.
+> Handle caching CR3 (from VMX's VMCS) into struct kvm_vcpu via the common
+> cache_reg() callback and drop the dedicated decache_cr3().  The name
+> decache_cr3() is somewhat confusing as the caching behavior of CR3
+> follows that of GPRs, RFLAGS and PDPTRs, (handled via cache_reg()), and
+> has nothing in common with the caching behavior of CR0/CR4 (whose
+> decache_cr{0,4}_guest_bits() likely provided the 'decache' verbiage).
+>
+> Note, this effectively adds a BUG() if KVM attempts to cache CR3 on SVM.
+> Opportunistically add a WARN_ON_ONCE() in VMX to provide an equivalent
+> check.
 
-On Fri, Sep 27, 2019 at 11:55:13AM -0600, Tuowen Zhao wrote:
-> Write-combining BAR for intel-lpss-pci in MTRR causes system hangs
-> during boot.
-> 
-> This patch adds devm_ioremap_uc as a new managed wrapper to ioremap_uc
-> and with it forces the use of strongly uncachable mmio in intel-lpss.
-> 
-> This bahavior is seen on Dell XPS 13 7390 2-in-1:
-> 
-> [    0.001734]   5 base 4000000000 mask 6000000000 write-combining
+Just to justify my idea of replacing such occasions with
+KVM_INTERNAL_ERROR by setting a special 'kill ASAP' bit somewhere:
 
-I think it is worth mentioning that this is actually a BIOS bug and
-fixed by some vendors via BIOS upgrade.
+This WARN_ON_ONCE() falls in the same category (IMO).
 
-> 4000000000-7fffffffff : PCI Bus 0000:00
->   4000000000-400fffffff : 0000:00:02.0 (i915)
->   4010000000-4010000fff : 0000:00:15.0 (intel-lpss-pci)
-> 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=203485
-> Signed-off-by: Tuowen Zhao <ztuowen@gmail.com>
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 > ---
->  drivers/mfd/intel-lpss.c |  2 +-
->  include/linux/io.h       |  2 ++
->  lib/devres.c             | 19 +++++++++++++++++++
->  3 files changed, 22 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mfd/intel-lpss.c b/drivers/mfd/intel-lpss.c
-> index 277f48f1cc1c..06106c9320bb 100644
-> --- a/drivers/mfd/intel-lpss.c
-> +++ b/drivers/mfd/intel-lpss.c
-> @@ -395,7 +395,7 @@ int intel_lpss_probe(struct device *dev,
->  	if (!lpss)
->  		return -ENOMEM;
+>  arch/x86/include/asm/kvm_host.h |  1 -
+>  arch/x86/kvm/kvm_cache_regs.h   |  2 +-
+>  arch/x86/kvm/svm.c              |  5 -----
+>  arch/x86/kvm/vmx/vmx.c          | 15 ++++++---------
+>  4 files changed, 7 insertions(+), 16 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index a27f7f6b6b7a..0411dc0a27b0 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1040,7 +1040,6 @@ struct kvm_x86_ops {
+>  			    struct kvm_segment *var, int seg);
+>  	void (*get_cs_db_l_bits)(struct kvm_vcpu *vcpu, int *db, int *l);
+>  	void (*decache_cr0_guest_bits)(struct kvm_vcpu *vcpu);
+> -	void (*decache_cr3)(struct kvm_vcpu *vcpu);
+>  	void (*decache_cr4_guest_bits)(struct kvm_vcpu *vcpu);
+>  	void (*set_cr0)(struct kvm_vcpu *vcpu, unsigned long cr0);
+>  	void (*set_cr3)(struct kvm_vcpu *vcpu, unsigned long cr3);
+> diff --git a/arch/x86/kvm/kvm_cache_regs.h b/arch/x86/kvm/kvm_cache_regs.h
+> index 9c2bc528800b..f18177cd0030 100644
+> --- a/arch/x86/kvm/kvm_cache_regs.h
+> +++ b/arch/x86/kvm/kvm_cache_regs.h
+> @@ -145,7 +145,7 @@ static inline ulong kvm_read_cr4_bits(struct kvm_vcpu *vcpu, ulong mask)
+>  static inline ulong kvm_read_cr3(struct kvm_vcpu *vcpu)
+>  {
+>  	if (!kvm_register_is_available(vcpu, VCPU_EXREG_CR3))
+> -		kvm_x86_ops->decache_cr3(vcpu);
+> +		kvm_x86_ops->cache_reg(vcpu, VCPU_EXREG_CR3);
+>  	return vcpu->arch.cr3;
+>  }
 >  
-> -	lpss->priv = devm_ioremap(dev, info->mem->start + LPSS_PRIV_OFFSET,
-> +	lpss->priv = devm_ioremap_uc(dev, info->mem->start + LPSS_PRIV_OFFSET,
->  				  LPSS_PRIV_SIZE);
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index f8ecb6df5106..3102c44c12c6 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -2517,10 +2517,6 @@ static void svm_decache_cr0_guest_bits(struct kvm_vcpu *vcpu)
+>  {
+>  }
+>  
+> -static void svm_decache_cr3(struct kvm_vcpu *vcpu)
+> -{
+> -}
+> -
+>  static void svm_decache_cr4_guest_bits(struct kvm_vcpu *vcpu)
+>  {
+>  }
+> @@ -7208,7 +7204,6 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+>  	.get_cpl = svm_get_cpl,
+>  	.get_cs_db_l_bits = kvm_get_cs_db_l_bits,
+>  	.decache_cr0_guest_bits = svm_decache_cr0_guest_bits,
+> -	.decache_cr3 = svm_decache_cr3,
+>  	.decache_cr4_guest_bits = svm_decache_cr4_guest_bits,
+>  	.set_cr0 = svm_set_cr0,
+>  	.set_cr3 = svm_set_cr3,
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index ed03d0cd1cc8..c84798026e85 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -2188,7 +2188,12 @@ static void vmx_cache_reg(struct kvm_vcpu *vcpu, enum kvm_reg reg)
+>  		if (enable_ept)
+>  			ept_save_pdptrs(vcpu);
+>  		break;
+> +	case VCPU_EXREG_CR3:
+> +		if (enable_unrestricted_guest || (enable_ept && is_paging(vcpu)))
+> +			vcpu->arch.cr3 = vmcs_readl(GUEST_CR3);
+> +		break;
+>  	default:
+> +		WARN_ON_ONCE(1);
+>  		break;
+>  	}
+>  }
+> @@ -2859,13 +2864,6 @@ static void vmx_decache_cr0_guest_bits(struct kvm_vcpu *vcpu)
+>  	vcpu->arch.cr0 |= vmcs_readl(GUEST_CR0) & cr0_guest_owned_bits;
+>  }
+>  
+> -static void vmx_decache_cr3(struct kvm_vcpu *vcpu)
+> -{
+> -	if (enable_unrestricted_guest || (enable_ept && is_paging(vcpu)))
+> -		vcpu->arch.cr3 = vmcs_readl(GUEST_CR3);
+> -	kvm_register_mark_available(vcpu, VCPU_EXREG_CR3);
+> -}
+> -
+>  static void vmx_decache_cr4_guest_bits(struct kvm_vcpu *vcpu)
+>  {
+>  	ulong cr4_guest_owned_bits = vcpu->arch.cr4_guest_owned_bits;
+> @@ -2910,7 +2908,7 @@ static void ept_update_paging_mode_cr0(unsigned long *hw_cr0,
+>  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+>  
+>  	if (!kvm_register_is_available(vcpu, VCPU_EXREG_CR3))
+> -		vmx_decache_cr3(vcpu);
+> +		vmx_cache_reg(vcpu, VCPU_EXREG_CR3);
+>  	if (!(cr0 & X86_CR0_PG)) {
+>  		/* From paging/starting to nonpaging */
+>  		exec_controls_setbit(vmx, CPU_BASED_CR3_LOAD_EXITING |
+> @@ -7792,7 +7790,6 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
+>  	.get_cpl = vmx_get_cpl,
+>  	.get_cs_db_l_bits = vmx_get_cs_db_l_bits,
+>  	.decache_cr0_guest_bits = vmx_decache_cr0_guest_bits,
+> -	.decache_cr3 = vmx_decache_cr3,
+>  	.decache_cr4_guest_bits = vmx_decache_cr4_guest_bits,
+>  	.set_cr0 = vmx_set_cr0,
+>  	.set_cr3 = vmx_set_cr3,
 
-Can you add a comment here explaining why this particular driver needs
-to use _uc version? Normally drivers call the plain devm_ioremap() and
-expect to get non-cached memory, however ioremap() (which resolves to
-ioremap_nocache()) does not touch x86 PAT configuration which is the
-reason we need to call _uc variant here.
+Reviewed (and Tested-On-Amd-By:): Vitaly Kuznetsov <vkuznets@redhat.com>
 
-Otherwise looks good to me.
+-- 
+Vitaly
