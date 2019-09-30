@@ -2,84 +2,88 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D84DFC35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34024C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB01621855
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:58:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F36082081B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:01:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569884324;
-	bh=oFOHpsIegBDie0JmpNKIAb9m+QmN2MQ8QREREQVUaSM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1T//kT2LkJxl3I2vxWWbcrNvjlyumKSJYi7ItKUJJyqqVGmoT5xHE9CSDwr5mwike
-	 eTrtHovjA5jDtAJDJ/gWwpr84W65A7FokTHcvjAdPhxGQyxlCAAS8w9YXnGdDb8A64
-	 G5x0cGI4qNwMXMMiyVFkQfO5Bg7N1CqYC+x1zgP4=
+	s=default; t=1569884474;
+	bh=1wQhhAUnUdJSkfKkK0D/npdNUFsXaYYB9Fffaj8AAI0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=XZZm/o5mlqUOZn3MixWvshOD7QfDByshHdv7+fEvLRGp038SLpe/sa6LLH3isD8jC
+	 EEevL45b2eo6Hw6F6VvTpt6gZAbp6RNhRisY2HxBma/kxCSCKsTSW9JbvO0EjvfHyF
+	 uDdZUQPCMgt1X47Kouwqg6OlYUeThQ9U/I7DD0qE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731889AbfI3W6o (ORCPT
+        id S1731536AbfI3XBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 18:58:44 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40524 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731685AbfI3W6m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 18:58:42 -0400
-Received: by mail-ot1-f67.google.com with SMTP id y39so9865602ota.7;
-        Mon, 30 Sep 2019 15:58:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Zsh+LJZZ1bYwJ2NNK3krE03pjGa9uFNYkpSwzo6s75E=;
-        b=cF3SuEP6UVgmLoVbAww7p98JUkzMwHp1DEDMgGI3sQcZuyAldX6pp1xwW4uBwGVpzA
-         gpLjpGJrJ490EgeLAT728uHaTrjaIfZkEfdr02Dlo7Hv46RJO0rqmfQFUXQZ4ReaGWb9
-         KjIDP3fgQyZCUXjtEwbtRJ/RPSTFNBF3VXYkNeeVNksJHnhvQ6Z/TrFuuPcH7NTZmsl3
-         V6f4iEFd1lhh2Lav213Ss2/mqxT7CHQcary9ygzHhjX56g5McM5/XTkmNV7Ma2yTp//F
-         7E2tSgBTlgGI2SoYiSA4GJaJwwbGz6mHJRPjOsjt1jnhDR/peYL3s90YMyS8w6Z2uHNR
-         4LBQ==
-X-Gm-Message-State: APjAAAUB91R2jikZ49L58S4AymLios4FUn/9Bps/Q8eTdMDaaDo2RgWT
-        GiFVd6BLO6Sjr3myv420fg==
-X-Google-Smtp-Source: APXvYqwWkT9GDFmYgFBWEu1p/Bs3nmD8s9rnVMBqjB0aVwy3EoB5SB513rfznMUpF2BgtyGrnCCJBg==
-X-Received: by 2002:a9d:67c3:: with SMTP id c3mr14456067otn.254.1569884321904;
-        Mon, 30 Sep 2019 15:58:41 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 38sm4493219otw.28.2019.09.30.15.58.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 15:58:41 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 17:58:40 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-rockchip@lists.infradead.org,
-        christoph.muellner@theobroma-systems.com,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 11/13] dt-bindings: document PX30 usb2phy General
- Register Files
-Message-ID: <20190930225840.GA14866@bogus>
-References: <20190917082659.25549-1-heiko@sntech.de>
- <20190917082659.25549-11-heiko@sntech.de>
+        Mon, 30 Sep 2019 19:01:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40702 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726789AbfI3XBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 19:01:13 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E5F32053B;
+        Mon, 30 Sep 2019 23:01:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569884472;
+        bh=1wQhhAUnUdJSkfKkK0D/npdNUFsXaYYB9Fffaj8AAI0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=1mlOHXf5+IX7jDSbA6BBVsD4iUXRJ5jBIo9Ge80GKQltRMtX8hDdq2/fiLiyi+mo0
+         ArbkDibA72Hs84fRmj7CY9gN8kok02XvLVRCT5JV9v1+PrDf4s0g/FSDJpdB0y+Nv+
+         SobMl6sF+E3Aw33SNML5dTKVT8920ieYx45WvRwc=
+Date:   Mon, 30 Sep 2019 18:01:09 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Krzysztof Wilczynski <kw@linux.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/PCI: Replace deprecated EXTRA_CFLAGS with ccflags-y.
+Message-ID: <20190930230109.GA220584@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190917082659.25549-11-heiko@sntech.de>
+In-Reply-To: <20190819060532.17093-1-kw@linux.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Sep 2019 10:26:57 +0200, Heiko Stuebner wrote:
-> One of the separate General Register Files contains the registers for
-> controlling the usb2phy, so add the necessary binding compatible for it.
+On Mon, Aug 19, 2019 at 08:05:32AM +0200, Krzysztof Wilczynski wrote:
+> Update arch/x86/pci/Makefile replacing the deprecated EXTRA_CFLAGS
+> with the ccflags-y matching recommendation as per the section 3.7
+> "Compilation flags" of the "Linux Kernel Makefiles" (see:
+> Documentation/kbuild/makefiles.txt).
 > 
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> ---
->  Documentation/devicetree/bindings/soc/rockchip/grf.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Applied to pci/misc for v5.5, thanks!
+
+> ---
+>  arch/x86/pci/Makefile | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/pci/Makefile b/arch/x86/pci/Makefile
+> index c806b57d3f22..48bcada5cabe 100644
+> --- a/arch/x86/pci/Makefile
+> +++ b/arch/x86/pci/Makefile
+> @@ -24,6 +24,4 @@ obj-y				+= bus_numa.o
+>  obj-$(CONFIG_AMD_NB)		+= amd_bus.o
+>  obj-$(CONFIG_PCI_CNB20LE_QUIRK)	+= broadcom_bus.o
+>  
+> -ifeq ($(CONFIG_PCI_DEBUG),y)
+> -EXTRA_CFLAGS += -DDEBUG
+> -endif
+> +ccflags-$(CONFIG_PCI_DEBUG)	+= -DDEBUG
+> -- 
+> 2.22.0
+> 
