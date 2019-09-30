@@ -4,61 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7990EC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E04C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A6EA2086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42D2E2081B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:10:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="h9kK2ywU"
+	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="GUc17W6/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732661AbfI3XIw (ORCPT
+        id S1732632AbfI3XIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 19:08:52 -0400
+        Mon, 30 Sep 2019 19:08:47 -0400
 Received: from mail-eopbgr690119.outbound.protection.outlook.com ([40.107.69.119]:48448
         "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732626AbfI3XIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 19:08:48 -0400
+        id S1732613AbfI3XIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 19:08:43 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LFy9eP0i7wgXBbC2Cz1vS1D7JH4CTXILLGc9j+t9lzOTB4hF3A19MNZsVfGmNEu/3Z58se+Rk6t56GvrbQ8P04Rg96nd9NcEY0NAiDKMKYLd0nk2Y+l+Fj2io2IlbZ3OI+hQ9y2Fx0SiXz6ybvJZgtSfpl2ckxzr6Jl479BQRO/YVLbh8OTTbwwM/lHARuyu3nFgPckgtbhFCgrEvUtEkIqe6N6Lmd5wsdkgGNW49p9f8d5DtJaVm927U/dSASv7ZeKlC96ENhjEHPDbjRvYc+XG2r8r5ZrRagojDGE08p1uLWc6Q/NkQfzU9Wx55lSg7fP8U9HDVjsjCnc1p5UO3w==
+ b=hS9eys8wfHo6jTIju2NX8oBMShKpAbswepAE2e2yVC9YK94mOh6b76SG+Kbem18RGAh1WaE2Qo52dUqZt/sp7huXPWierIPoYrdV9soL8Pz5JaB3UHAfuFN+/WzDG1W2J6XYfcEoj/nfihiMx6BN1JbsDw22FughdwjllRzGU/CvLEnRs0ktcU+6q+fJaqCoZLaOLixcYta+3MiGc+RCv73DtU+fIcVtlof7LdkhzVcm/wiyu0KRv7+9CCKptS6Pq6bvmUxe6DqwdnhA0SMRibavWNZQ8LgcTFT8Al0FBJyC0rz++psRkVwvfRMXEeSa1WUm4CkVr64MCBP4tqBwlg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZfAVvGvI2aPckslAY0N2YIANjNjzPYFO+OauvzKZOUs=;
- b=OtzmAI4cdl3jMy08PQaExOZ4fZk1zeLR8Z+VV94VZNqGfqgJxVF0p0DSInO+/z0mbdBlM1ZbXHX9JvGfr1ksrFpG4BJ+sxuXQ6Fay3tyMgI5RU0gQCq2SyLn6JCWE/qfAstB91K2OBfOPmUbb70kgzhJ4uw4qTNqpqfDvt4pg1znwyLTZYX7HgWh2e4MzNhFMOow7ZmxMmSRRpldj6hvjVRD8U2EwPzypNOcEC5kpXF3Xvu6tltPauypJHRFVdi//4sF7TRNsKisBNOKlOWmFio9kOLHVhH3thHpaFRH1jRIASRRad79Ifbo7bpfKvftN1QtsUZz6OelPG8fxh1jFA==
+ bh=OSyB7GHykUnfUEZB4BGbdX9bewQ3q5pARr130wTJK3g=;
+ b=JgDTy5dw4mOysjif7XhAICgzffXiTTqixHeFBk78WF+CkUcuCpk7V/psscj/BYfWXDQ0tfx3wuMmgmAoeA96bd79ozHOBc4J8xpSp9fcA5VVPW+mJzwdsU01DZmH3ySlX3oT4R3JCBA9RWigTNCaV3Xf+JARy4lEyFigsYHZJw9wLXX9M799VoQ7fvkYGGZR35f9UmECTYf9V7weiyFzLYLkGQr4sHra7wsW9XYKsPjHJscPWgbyU5Z3WpyUAA8GAz46iTj1JfmkDesCxVZpF5wdNvCQ1c4UzQP/EJHLnH+2CimApIowFSjp+pwLDBSne9inZk1xb9fqUNG/DGkPjQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
  dkim=pass header.d=mips.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZfAVvGvI2aPckslAY0N2YIANjNjzPYFO+OauvzKZOUs=;
- b=h9kK2ywUUnUVXHfc5B8My/08ZQlB7EjUVbfdxvaDmkhguypbuVGLMsP4eErqVZVvi8BGjHq6pEt4prmNXAkeXo2baRKhKkwJrbjXO9bsf1HQQUt5CHCBs6HEaTUMNgNIYmm20kkXt6T87INMWs3N4pFONzrVgMeephlIpYCghjM=
+ bh=OSyB7GHykUnfUEZB4BGbdX9bewQ3q5pARr130wTJK3g=;
+ b=GUc17W6/lInA2K1VXm/+gsUzHcKssXXqqFY9vGhlKp/DjmlRkIN1cE6caYMgXKoQB/tgcyQYuATfQlgaxSfdQK3t/2fnorldkPFB6SydlCoPJJrW8DWLezeG9ZxnMojuSbVdf8j1QjKF07IG2oF80W/FlQtJomXIrGUK/DdgrxY=
 Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
  MWHPR2201MB1022.namprd22.prod.outlook.com (10.174.167.23) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.17; Mon, 30 Sep 2019 23:08:32 +0000
+ 15.20.2305.17; Mon, 30 Sep 2019 23:08:30 +0000
 Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
  ([fe80::498b:c2cd:e816:1481]) by MWHPR2201MB1277.namprd22.prod.outlook.com
  ([fe80::498b:c2cd:e816:1481%2]) with mapi id 15.20.2305.017; Mon, 30 Sep 2019
- 23:08:32 +0000
+ 23:08:30 +0000
 From:   Paul Burton <paul.burton@mips.com>
 To:     "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
 CC:     Huacai Chen <chenhc@lemote.com>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Paul Burton <pburton@wavecomp.com>
-Subject: [PATCH 21/37] MIPS: bitops: Implement test_and_set_bit() in terms of
- _lock variant
-Thread-Topic: [PATCH 21/37] MIPS: bitops: Implement test_and_set_bit() in
- terms of _lock variant
-Thread-Index: AQHVd+P6iWZRVNZFTkSLRs37dgW89Q==
-Date:   Mon, 30 Sep 2019 23:08:32 +0000
-Message-ID: <20190930230806.2940505-22-paul.burton@mips.com>
+Subject: [PATCH 19/37] MIPS: bitops: Use MIPS_ISA_REV, not #ifdefs
+Thread-Topic: [PATCH 19/37] MIPS: bitops: Use MIPS_ISA_REV, not #ifdefs
+Thread-Index: AQHVd+P5kxB47wj2YEm+Ca+Rab8Jgg==
+Date:   Mon, 30 Sep 2019 23:08:30 +0000
+Message-ID: <20190930230806.2940505-20-paul.burton@mips.com>
 References: <20190930230806.2940505-1-paul.burton@mips.com>
 In-Reply-To: <20190930230806.2940505-1-paul.burton@mips.com>
 Accept-Language: en-US
@@ -74,207 +72,118 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.23.0
 x-originating-ip: [12.94.197.246]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 63001d44-d434-440c-5d12-08d745fb1d0e
+x-ms-office365-filtering-correlation-id: d8ec46ed-5859-4dac-e204-08d745fb1bf5
 x-ms-traffictypediagnostic: MWHPR2201MB1022:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR2201MB102286AFEAE3B61D70624D13C1820@MWHPR2201MB1022.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-microsoft-antispam-prvs: <MWHPR2201MB10222AAEC0202CF8F7E85146C1820@MWHPR2201MB1022.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2657;
 x-forefront-prvs: 01762B0D64
 x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(136003)(366004)(189003)(199004)(14454004)(508600001)(256004)(6512007)(81166006)(81156014)(44832011)(2351001)(486006)(476003)(6916009)(14444005)(186003)(2501003)(6436002)(50226002)(8676002)(11346002)(8936002)(2616005)(5640700003)(66946007)(6486002)(42882007)(64756008)(66446008)(66476007)(66556008)(446003)(6506007)(1076003)(305945005)(386003)(52116002)(7736002)(102836004)(2906002)(71190400001)(71200400001)(36756003)(5660300002)(26005)(4326008)(66066001)(54906003)(25786009)(76176011)(107886003)(99286004)(6116002)(3846002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1022;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: wavecomp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: AcHyZX3BwJe9LWnyA5nQjylcFTDS4oMYnEeFJWnGXliGqVYlZ5zyyVUglJpxLStGv+Y3FdPn8NPbSjWYHEquqn12l21YKN34tk7PjSH18Jrpno7EKT+jGuj+VUdpPs8SXEb79LriRsbtqhMe84F4xX79FwiI54dG6im4j3UsxIfeVbGNkaFgz15p3WZbYccXTSmqYnrsQTp1CrsaJsvZTphU7Elhi6/Ip0ik96Ji5ZwqOBHuSyKSPXgL0SmombDSmtEo5fvf34cxLeZ2nVqAXJBwQJBfp2sKqki5wtsHV2F3BNKeqZCGVsSK3UFMNzDSTrY499w2GCw5GYkqkEwyOzGj00XmpQnVWDJSea/lbvn77KeC3fMsgGcnWE9UaqkDKm42+uTUAqqMgUnvr8h+xRd8lN4kMyKcVPYu2s6nkM0=
+x-microsoft-antispam-message-info: uO55gWxhUXsfY9doV59OUEFYMG0Qdu5gbrfgx6qmfb1LuHJUen1B2ptnc14tCBPf2juy8/PHy0Mui6c0qBqEkJ9wl4GxQU9bswygVrN0s6JclodD2GHB4FbvlAsPsVEkBorS2FdJ/ebvwdOgU6wYTsrLYQRaMgfNZYq0pqRe6PTVthFGb8OkzVoeQ5ZSIN/5JFYPQTeL+LLY3CxTHvcfC+qqEDqyoJ6T+YHDGZVZZmtO/0YlHSyEMoaDL1t+EDZ+/jZPA+3KIlQZgkxdB4KgvdhfEwPwFNZoFnQ0ZlWBvrfbNCHCtVkKeU9qZd5cgeId0Mz+w9gHEFFudngo0jhvh/yOLcD5KZlZf88TF5R5pvC3CXeMbg8/2YsE/+KGl8Kt/JDssPdeaTyW6Qjck6106v/9kfirFp8xbOVTzSM/L3g=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 63001d44-d434-440c-5d12-08d745fb1d0e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2019 23:08:32.4602
+X-MS-Exchange-CrossTenant-Network-Message-Id: d8ec46ed-5859-4dac-e204-08d745fb1bf5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2019 23:08:30.6650
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VRZb82qP8cNWXFM/sH3OL743g0Gmdo1aB1Yr6dCdTWWQQyLgvU6VNLgRg526m+KEQaPz66LHLFYTB6jz+gTSnQ==
+X-MS-Exchange-CrossTenant-userprincipalname: qiVgGIQEu+SgVj4buqM1nTiaYHEcMn8t3KZ7LCq2N0KlUz+IHZhuprsF2BwPUPsvCe/elfm6vHVzFJphSdsuow==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1022
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The only difference between test_and_set_bit() & test_and_set_bit_lock()
-is memory ordering barrier semantics - the former provides a full
-barrier whilst the latter only provides acquire semantics.
-
-We can therefore implement test_and_set_bit() in terms of
-test_and_set_bit_lock() with the addition of the extra memory barrier.
-Do this in order to avoid duplicating logic.
+Rather than #ifdef on CONFIG_CPU_* to determine whether the ins
+instruction is supported we can simply check MIPS_ISA_REV to discover
+whether we're targeting MIPSr2 or higher. Do so in order to clean up the
+code.
 
 Signed-off-by: Paul Burton <paul.burton@mips.com>
 ---
 
- arch/mips/include/asm/bitops.h | 66 +++++++---------------------------
- arch/mips/lib/bitops.c         | 26 --------------
- 2 files changed, 13 insertions(+), 79 deletions(-)
+ arch/mips/include/asm/bitops.h | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
 diff --git a/arch/mips/include/asm/bitops.h b/arch/mips/include/asm/bitops.=
 h
-index 83fd1f1c3ab4..34d6fe3f18d0 100644
+index 3ea4f172ac08..b8785bdf3507 100644
 --- a/arch/mips/include/asm/bitops.h
 +++ b/arch/mips/include/asm/bitops.h
-@@ -31,8 +31,6 @@
- void __mips_set_bit(unsigned long nr, volatile unsigned long *addr);
- void __mips_clear_bit(unsigned long nr, volatile unsigned long *addr);
- void __mips_change_bit(unsigned long nr, volatile unsigned long *addr);
--int __mips_test_and_set_bit(unsigned long nr,
--			    volatile unsigned long *addr);
- int __mips_test_and_set_bit_lock(unsigned long nr,
- 				 volatile unsigned long *addr);
- int __mips_test_and_clear_bit(unsigned long nr,
-@@ -236,24 +234,22 @@ static inline void change_bit(unsigned long nr, volat=
-ile unsigned long *addr)
- }
+@@ -19,6 +19,7 @@
+ #include <asm/byteorder.h>		/* sigh ... */
+ #include <asm/compiler.h>
+ #include <asm/cpu-features.h>
++#include <asm/isa-rev.h>
+ #include <asm/llsc.h>
+ #include <asm/sgidefs.h>
+ #include <asm/war.h>
+@@ -76,8 +77,7 @@ static inline void set_bit(unsigned long nr, volatile uns=
+igned long *addr)
+ 		return;
+ 	}
 =20
- /*
-- * test_and_set_bit - Set a bit and return its old value
-+ * test_and_set_bit_lock - Set a bit and return its old value
-  * @nr: Bit to set
-  * @addr: Address to count from
-  *
-- * This operation is atomic and cannot be reordered.
-- * It also implies a memory barrier.
-+ * This operation is atomic and implies acquire ordering semantics
-+ * after the memory operation.
-  */
--static inline int test_and_set_bit(unsigned long nr,
-+static inline int test_and_set_bit_lock(unsigned long nr,
- 	volatile unsigned long *addr)
- {
- 	unsigned long *m =3D ((unsigned long *)addr) + (nr >> SZLONG_LOG);
- 	int bit =3D nr & SZLONG_MASK;
- 	unsigned long res, temp;
+-#if defined(CONFIG_CPU_MIPSR2) || defined(CONFIG_CPU_MIPSR6)
+-	if (__builtin_constant_p(bit) && (bit >=3D 16)) {
++	if ((MIPS_ISA_REV >=3D 2) && __builtin_constant_p(bit) && (bit >=3D 16)) =
+{
+ 		loongson_llsc_mb();
+ 		do {
+ 			__asm__ __volatile__(
+@@ -90,7 +90,6 @@ static inline void set_bit(unsigned long nr, volatile uns=
+igned long *addr)
+ 		} while (unlikely(!temp));
+ 		return;
+ 	}
+-#endif /* CONFIG_CPU_MIPSR2 || CONFIG_CPU_MIPSR6 */
 =20
--	smp_mb__before_llsc();
--
- 	if (!kernel_uses_llsc) {
--		res =3D __mips_test_and_set_bit(nr, addr);
-+		res =3D __mips_test_and_set_bit_lock(nr, addr);
- 	} else if (R10000_LLSC_WAR) {
- 		__asm__ __volatile__(
- 		"	.set	push					\n"
-@@ -264,7 +260,7 @@ static inline int test_and_set_bit(unsigned long nr,
- 		"	beqzl	%2, 1b					\n"
- 		"	and	%2, %0, %3				\n"
- 		"	.set	pop					\n"
--		: "=3D&r" (temp), "+" GCC_OFF_SMALL_ASM() (*m), "=3D&r" (res)
-+		: "=3D&r" (temp), "+m" (*m), "=3D&r" (res)
+ 	loongson_llsc_mb();
+ 	do {
+@@ -143,8 +142,7 @@ static inline void clear_bit(unsigned long nr, volatile=
+ unsigned long *addr)
+ 		return;
+ 	}
+=20
+-#if defined(CONFIG_CPU_MIPSR2) || defined(CONFIG_CPU_MIPSR6)
+-	if (__builtin_constant_p(bit)) {
++	if ((MIPS_ISA_REV >=3D 2) && __builtin_constant_p(bit)) {
+ 		loongson_llsc_mb();
+ 		do {
+ 			__asm__ __volatile__(
+@@ -157,7 +155,6 @@ static inline void clear_bit(unsigned long nr, volatile=
+ unsigned long *addr)
+ 		} while (unlikely(!temp));
+ 		return;
+ 	}
+-#endif /* CONFIG_CPU_MIPSR2 || CONFIG_CPU_MIPSR6 */
+=20
+ 	loongson_llsc_mb();
+ 	do {
+@@ -377,8 +374,7 @@ static inline int test_and_clear_bit(unsigned long nr,
+ 		: "=3D&r" (temp), "+" GCC_OFF_SMALL_ASM() (*m), "=3D&r" (res)
  		: "r" (1UL << bit)
  		: __LLSC_CLOBBER);
+-#if defined(CONFIG_CPU_MIPSR2) || defined(CONFIG_CPU_MIPSR6)
+-	} else if (__builtin_constant_p(nr)) {
++	} else if ((MIPS_ISA_REV >=3D 2) && __builtin_constant_p(nr)) {
+ 		loongson_llsc_mb();
+ 		do {
+ 			__asm__ __volatile__(
+@@ -390,7 +386,6 @@ static inline int test_and_clear_bit(unsigned long nr,
+ 			: "ir" (bit)
+ 			: __LLSC_CLOBBER);
+ 		} while (unlikely(!temp));
+-#endif
  	} else {
-@@ -291,56 +287,20 @@ static inline int test_and_set_bit(unsigned long nr,
- }
-=20
- /*
-- * test_and_set_bit_lock - Set a bit and return its old value
-+ * test_and_set_bit - Set a bit and return its old value
-  * @nr: Bit to set
-  * @addr: Address to count from
-  *
-- * This operation is atomic and implies acquire ordering semantics
-- * after the memory operation.
-+ * This operation is atomic and cannot be reordered.
-+ * It also implies a memory barrier.
-  */
--static inline int test_and_set_bit_lock(unsigned long nr,
-+static inline int test_and_set_bit(unsigned long nr,
- 	volatile unsigned long *addr)
- {
--	unsigned long *m =3D ((unsigned long *)addr) + (nr >> SZLONG_LOG);
--	int bit =3D nr & SZLONG_MASK;
--	unsigned long res, temp;
--
--	if (!kernel_uses_llsc) {
--		res =3D __mips_test_and_set_bit_lock(nr, addr);
--	} else if (R10000_LLSC_WAR) {
--		__asm__ __volatile__(
--		"	.set	push					\n"
--		"	.set	arch=3Dr4000				\n"
--		"1:	" __LL "%0, %1		# test_and_set_bit	\n"
--		"	or	%2, %0, %3				\n"
--		"	" __SC	"%2, %1					\n"
--		"	beqzl	%2, 1b					\n"
--		"	and	%2, %0, %3				\n"
--		"	.set	pop					\n"
--		: "=3D&r" (temp), "+m" (*m), "=3D&r" (res)
--		: "r" (1UL << bit)
--		: __LLSC_CLOBBER);
--	} else {
--		do {
--			__asm__ __volatile__(
--			"	.set	push				\n"
--			"	.set	"MIPS_ISA_ARCH_LEVEL"		\n"
--			"	" __LL "%0, %1	# test_and_set_bit	\n"
--			"	or	%2, %0, %3			\n"
--			"	" __SC	"%2, %1				\n"
--			"	.set	pop				\n"
--			: "=3D&r" (temp), "+" GCC_OFF_SMALL_ASM() (*m), "=3D&r" (res)
--			: "r" (1UL << bit)
--			: __LLSC_CLOBBER);
--		} while (unlikely(!res));
--
--		res =3D temp & (1UL << bit);
--	}
--
--	smp_llsc_mb();
--
--	return res !=3D 0;
-+	smp_mb__before_llsc();
-+	return test_and_set_bit_lock(nr, addr);
- }
-+
- /*
-  * test_and_clear_bit - Clear a bit and return its old value
-  * @nr: Bit to clear
-diff --git a/arch/mips/lib/bitops.c b/arch/mips/lib/bitops.c
-index 3b2a1e78a543..fba402c0879d 100644
---- a/arch/mips/lib/bitops.c
-+++ b/arch/mips/lib/bitops.c
-@@ -77,32 +77,6 @@ void __mips_change_bit(unsigned long nr, volatile unsign=
-ed long *addr)
- EXPORT_SYMBOL(__mips_change_bit);
-=20
-=20
--/**
-- * __mips_test_and_set_bit - Set a bit and return its old value.  This is
-- * called by test_and_set_bit() if it cannot find a faster solution.
-- * @nr: Bit to set
-- * @addr: Address to count from
-- */
--int __mips_test_and_set_bit(unsigned long nr,
--			    volatile unsigned long *addr)
--{
--	unsigned long *a =3D (unsigned long *)addr;
--	unsigned bit =3D nr & SZLONG_MASK;
--	unsigned long mask;
--	unsigned long flags;
--	int res;
--
--	a +=3D nr >> SZLONG_LOG;
--	mask =3D 1UL << bit;
--	raw_local_irq_save(flags);
--	res =3D (mask & *a) !=3D 0;
--	*a |=3D mask;
--	raw_local_irq_restore(flags);
--	return res;
--}
--EXPORT_SYMBOL(__mips_test_and_set_bit);
--
--
- /**
-  * __mips_test_and_set_bit_lock - Set a bit and return its old value.  Thi=
-s is
-  * called by test_and_set_bit_lock() if it cannot find a faster solution.
+ 		loongson_llsc_mb();
+ 		do {
 --=20
 2.23.0
 
