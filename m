@@ -2,91 +2,108 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 095ADC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44154C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C286A2075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19C2A218DE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:32:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l0ePlnh0"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="1YJGbspz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732315AbfI3Qa5 (ORCPT
+        id S1732276AbfI3QcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 12:30:57 -0400
-Received: from mail-ed1-f46.google.com ([209.85.208.46]:39026 "EHLO
-        mail-ed1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730780AbfI3Qa4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 12:30:56 -0400
-Received: by mail-ed1-f46.google.com with SMTP id a15so9225492edt.6
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 09:30:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=l1JjNjL9Q+ctmsJLByX8pbSl0e96/VvXq5ETaN5KZX4=;
-        b=l0ePlnh0nXV0M7vdeJq8lclvP/rG2eoKftDBcNNYLrdwoHnYRTpcXGccFWnWhBOtIt
-         BWTyNht33vqNS29P0dyutN9kvX1rRmV2rr4BH64xsAd6KsnIf79BYp4O5UcIbqOs+Zis
-         jC/+IAtFC78SPzFQ8P/DoRZ/FvxOIf7zDUMCUcNDTZlp6TxQNh2onS6464WzbeNhN8Eq
-         NqKBYTTfpgGyE/swxkEM46kSynmZgX9izjnM1IRTAhNzrRiiI6b6O3YZzf4vJGmpOc+i
-         f3XTbHsQWAz7RBe7YUo/1LKvM7uI0cZSS6AuN3aDR8GCJkFuUlCQR886PiISDE+LmP+w
-         P1UA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=l1JjNjL9Q+ctmsJLByX8pbSl0e96/VvXq5ETaN5KZX4=;
-        b=k8AcY0prMMPnk/rf7g9CGA5ZtCdoZLDkmg132W3EZCGwezRjjOP5Rcc5xpEN3kf5d+
-         ozoZEQ8s7rMhIZpnmubAr7LcNNHmIc4w4Bup8Qt0tGErQzYT5pjqKzb6Ftr5n1itKHFP
-         oKRj1Nf2nBux7gnXhjuE6v4/DQjJ7ZGL0Fu6sH6/i9VIs8GwTanQCjkQ+eAuHgP+/iL7
-         Soo0xXNrJE2NQc+HAJzVGtip8ji9bK9d0H2VVr6kMyDUS5I7EDOfjujAyK5JVow80Cgj
-         r42rPKTvg4IP7jjMA3QViNiHal8GCAQN8Jgt+eMZIAIf2oX7O1ef7Xa+PRv0mNbIso9H
-         0YLw==
-X-Gm-Message-State: APjAAAUDtmGt294Zaxg4R6gKkPi5C5ot0K03Layj2iTHEwuu6pVja23y
-        vxDvtr6ZPU6y4fCQKPPyHzc=
-X-Google-Smtp-Source: APXvYqybSXA7T+gpi+MTMOnIybYL2T+wb8VcdrgB2FxBWfu5eA1iF+Ql0c2tn5gYjDBhBtlCv84WVQ==
-X-Received: by 2002:a05:6402:794:: with SMTP id d20mr20597492edy.20.1569861054716;
-        Mon, 30 Sep 2019 09:30:54 -0700 (PDT)
-Received: from ltop.local ([2a02:a03f:4080:1900:7167:7859:9bcf:1ec4])
-        by smtp.gmail.com with ESMTPSA id h7sm2529227edn.73.2019.09.30.09.30.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 30 Sep 2019 09:30:53 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 18:30:52 +0200
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Steve French <smfrench@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: checkpatch warnings in sched.h
-Message-ID: <20190930163051.x5q3schjsitmnc4j@ltop.local>
-References: <CAH2r5mu1+muust_HA8oOWjYSmH6cLZA-d7pRzGJJsHauoDdJdQ@mail.gmail.com>
+        Mon, 30 Sep 2019 12:32:13 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:54770 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727767AbfI3QcN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 12:32:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=qZmq/vZ1uF91H9zblUBrI03dFEWUTL8yzpnf7lGHSRA=; b=1YJGbspzHZXDVLB+IPjixtBnBF
+        78wyiJv87Tac5ug/oS1uaZGWCAAU7IUysBIBn7IfosmXCBnwwLGZv5jV/3fVNxx5pzgcktZZwmvQ8
+        Buks5BBHmGfeAQGLrYVXGcDleNsAXg2DKjDwa/X6PzEOq2cyIvXWW/y5nDWXuj2A1+nI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iEyah-0004oW-L2; Mon, 30 Sep 2019 18:32:03 +0200
+Date:   Mon, 30 Sep 2019 18:32:03 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Jamie Lentin <jm@lentin.co.uk>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 0/2] This patch introduces a feature to force
+ gpio-poweroff module
+Message-ID: <20190930163203.GC15343@lunn.ch>
+References: <20190930103531.13764-1-oleksandr.suvorov@toradex.com>
+ <20190930121440.GC13301@lunn.ch>
+ <CAGgjyvEx_F0C2XHDGxf3F0Z8iHF1vQZkoPft3_ZbTswVFv=SJA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAH2r5mu1+muust_HA8oOWjYSmH6cLZA-d7pRzGJJsHauoDdJdQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAGgjyvEx_F0C2XHDGxf3F0Z8iHF1vQZkoPft3_ZbTswVFv=SJA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 02:34:46AM -0500, Steve French wrote:
-> Any hints to get rid of the noisy warnings in sched.h that make it
-> hard to spot real warnings:
+On Mon, Sep 30, 2019 at 02:11:59PM +0000, Oleksandr Suvorov wrote:
+> Hi Andrew,
 > 
-> /include/linux/sched.h:609:43: error: bad integer constant expression
-> /include/linux/sched.h:609:73: error: invalid named zero-width bitfield `value'
+> On Mon, Sep 30, 2019 at 3:16 PM Andrew Lunn <andrew@lunn.ch> wrote:
+> >
+> > On Mon, Sep 30, 2019 at 10:35:36AM +0000, Oleksandr Suvorov wrote:
+> > > to register its own pm_power_off handler even if someone has registered
+> > > this handler earlier.
+> > > Useful to change a way to power off the system using DT files.
+> >
+> > Hi Oleksandr
+> >
+> > I'm not sure this is a good idea. What happens when there are two
+> > drivers using forced mode? You then get which ever is register last.
+> > Non deterministic behaviour.
 > 
-> I noticed mention of this on lkml but didn't see any suggested
-> solution to this distracting warning
+> You're right, we have to handle a case when gpio-poweroff fails to
+> power the system off. Please look at the
+> 2nd version of the patchset.
+> 
+> There are 3 only drivers that forcibly register its own pm_power_off
+> handler even if it has been registered before.
+> 
+> drivers/firmware/efi/reboot.c - supports chained call of next
+> pm_power_off handler if its own handler fails.
+> 
+> arch/x86/platform/iris/iris.c, drivers/char/ipmi/ipmi_poweroff.c -
+> don't support calling of next pm_power_off handler.
+> Looks like these drivers should be fixed too.
+> 
+> All other drivers don't change already initialized pm_power_off handler.
+> 
+> > What is the other driver which is causing you problems? How is it
+> > getting probed? DT?
+> 
+> There are several PMUs, RTCs, watchdogs that register their own pm_power_off.
+> Most of them, probably not all, are probed from DT.
 
-Hi,
+And which specific one is causing you problems.
 
-This is now fixed in sparse's upstream.
+I don't like this forced parameter. No other driver is using it.
 
-Best regards,
--- Luc
+Maybe we should change this driver to support chained pm_power_off
+handlers?
+
+   Andrew
