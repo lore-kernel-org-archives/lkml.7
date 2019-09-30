@@ -2,133 +2,123 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AD6C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE474C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 974802190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:34:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569839647;
-	bh=0HeOPYXdrIrODY+4Ljv3JDbm2MSyawGhlpS79Ws8AAI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=tPKBilVL2KEYnbIlr98629LbZ7jEUoUnXne7jqQYJP4x2B6MuYjpaCK8LB92S6wQn
-	 wAE7MIXCuHim8zgtB6mj9PhX3d40Qk215idCTrfbKAqnk7W6hmeY88wFkLAtja2MOF
-	 v9jNENgB1q3pbLyCsxT3VbdrCazKPn2aX9Nfh6OI=
+	by mail.kernel.org (Postfix) with ESMTP id 9597D21855
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:35:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="I7higLWT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730739AbfI3KeG (ORCPT
+        id S1730755AbfI3Kfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 06:34:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38082 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728214AbfI3KeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 06:34:06 -0400
-Received: from guoren-Inspiron-7460.lan (unknown [223.93.147.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAF7B216F4;
-        Mon, 30 Sep 2019 10:33:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569839645;
-        bh=0HeOPYXdrIrODY+4Ljv3JDbm2MSyawGhlpS79Ws8AAI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Z2q85nSCsRDjoN9KW0FkP0uSlwo3kA9pKAwpf9dLHckDPqjxWnctgppiUOU68+Q+G
-         6OzoMxiUUFsQUJ3duNyRv6zgj5ccEj35+78Khkd3r5vQa+ttYLVxzq6cBaFpB6ZQws
-         ja6KuK1L+9Ki0+pEJfzpZPWghma/ka/QYDgX3dtU=
-From:   guoren@kernel.org
-To:     torvalds@linux-foundation.org
-Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-csky@vger.kernel.org
-Subject: [GIT PULL] csky changes for v5.4-rc1
-Date:   Mon, 30 Sep 2019 18:33:48 +0800
-Message-Id: <1569839628-29030-1-git-send-email-guoren@kernel.org>
-X-Mailer: git-send-email 2.7.4
+        Mon, 30 Sep 2019 06:35:42 -0400
+Received: from mail-eopbgr150139.outbound.protection.outlook.com ([40.107.15.139]:15623
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727025AbfI3Kfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 06:35:41 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FMptUMCzIcPYcm2NnTjuz6S00o5qFnE0rI9+s2NX8daVwidclVWZpveIR6l5skAfM7oyYUHdHIOdjen+ea6IwKOC3D3Sajj3RJaDk2vRCSgsE+w6qCo1rCkVan7WT2LuF9W10AfiFHjI/+HExPgkN1VvtHqJEC9rZNtl3FvbXzf8vaIlKkzyTu/LtkxllyrBs4e+ilSva9NZR9BkPJUUjAOkwc62q+WrbiYOwPIDj9VT47CzJFuOOJnSnQ3+ksB0KE2JClzh9kI9gu5EVj8Vf4Oei2c14ar7YDTITnPtRHhosUw861wdM0IH6R49KJUTNVg1iMra/Ih1+G/Cn0bHtw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jgutrwg6521FAVIMnNcAPpiMdXc1+P6ZP2osWWC9rfs=;
+ b=mHAer7QvUn+u9N2liF+2XR5+ZXLUSVOPSw8UMrDisTtwhrTjtByITnzjUNtV6IiJult98E6HAf2jqMjv6wrHmT1Q7a1qYDvb5Egr0zHTKLmVEoP7jPjouqu6TfOuUmR6+kWkr2MqT/0zNPZR/njsjp/GTIK1n0rmEHg2Vwv+VKJbtBfmU2L7PhOOM6RMAQyq8ut9xkLWXdpY/BJdjGjSsAhOXeYrs68mCSTjj+iOD6E2RPsUp+0SryLRFaqxAHayZz/ZrNACy3YiP7pO7EDYgbUZ6xngHofXftxBlgsb3TUj8D5cRjwTo8cDL3ZHZTUO1SOhYNh3GivK6oXSzi9rzQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jgutrwg6521FAVIMnNcAPpiMdXc1+P6ZP2osWWC9rfs=;
+ b=I7higLWTlaTSbCec23Kb99tIhg9nYm5AgogZlLrpYa67aBnVvHqJJbop1WghMgUp7DY+MK1gDhN7J+x/LSc8XaCCsfqZxCnkBmUlowwI39r5wkoaei2gbSmNg9xKQMaBFiT2WmuZoRlP6Ig2x/TxoqYWIxdvxI2e0r7aM53wMGw=
+Received: from VI1PR05MB6544.eurprd05.prod.outlook.com (20.179.27.210) by
+ VI1PR05MB5869.eurprd05.prod.outlook.com (20.178.125.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.17; Mon, 30 Sep 2019 10:35:36 +0000
+Received: from VI1PR05MB6544.eurprd05.prod.outlook.com
+ ([fe80::dcea:1e0a:c05a:22f9]) by VI1PR05MB6544.eurprd05.prod.outlook.com
+ ([fe80::dcea:1e0a:c05a:22f9%4]) with mapi id 15.20.2305.017; Mon, 30 Sep 2019
+ 10:35:36 +0000
+From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Jamie Lentin <jm@lentin.co.uk>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH 0/2] This patch introduces a feature to force gpio-poweroff
+ module
+Thread-Topic: [PATCH 0/2] This patch introduces a feature to force
+ gpio-poweroff module
+Thread-Index: AQHVd3rLAHQrXJaKQkmXW+yh5sbf2w==
+Date:   Mon, 30 Sep 2019 10:35:36 +0000
+Message-ID: <20190930103531.13764-1-oleksandr.suvorov@toradex.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR08CA0212.eurprd08.prod.outlook.com
+ (2603:10a6:802:15::21) To VI1PR05MB6544.eurprd05.prod.outlook.com
+ (2603:10a6:803:ff::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=oleksandr.suvorov@toradex.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.20.1
+x-originating-ip: [194.105.145.90]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8be5aef6-8431-43d6-0fbe-08d74591ee17
+x-ms-traffictypediagnostic: VI1PR05MB5869:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR05MB58692DF5F52B47CA06BA77E0F9820@VI1PR05MB5869.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1417;
+x-forefront-prvs: 01762B0D64
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(376002)(39840400004)(396003)(366004)(346002)(199004)(189003)(25786009)(6486002)(4326008)(66556008)(66476007)(66446008)(64756008)(66946007)(6512007)(36756003)(81156014)(8936002)(26005)(186003)(50226002)(6436002)(81166006)(8676002)(86362001)(2501003)(5640700003)(14454004)(6506007)(386003)(478600001)(7736002)(44832011)(102836004)(54906003)(486006)(316002)(3846002)(6916009)(2616005)(476003)(256004)(2906002)(66066001)(71200400001)(5660300002)(99286004)(4744005)(1076003)(52116002)(2351001)(6116002)(71190400001)(305945005);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR05MB5869;H:VI1PR05MB6544.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Wy2W1JhspK2cqtyk3O+2bJBYMflLrm8gxd7wciRG3ylcTRmPZPbiTCq5GGneXkKeHBijgfXobKLP8xSXMHZf+EDBOzr46MBUHMvwVcPrHiuR5veyrP2wBUQG4genVbjbgJIHpEVhOk5m7FHLb8WeKAL0jQ7PyodgrhKazBlyDyzXaDsf4Na+ujGC8lf+P6C05T8lRviF/97dXln1fi+sDDf8iwVk7Hgmo6gAl+2FJmvEZvsW6jymZKxt/1Bn8MH0wqDYKkzX9Vh3ByWfaETHSryA0aZAdX5xZNux6huYP1pPluAGJEjeaBnGBi1NvMnZWiHBwv3sDw9GvtUFC5cfTKFz7b2qXVXiMFIiE9PxzlHcPBGaXc10z1URkqf0sYSvc2prGx+wdaF0ybxZN7MGqvZ7mf5l9EMs21QeJTVpjxc=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8be5aef6-8431-43d6-0fbe-08d74591ee17
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2019 10:35:36.4337
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Z0/b5NalGB5M1e2fOzPkBP7IdMNe864aCvi0qhAcNoKoLywvixhlg6kYmRN7CQoRo412KUWV3Oh0C0WOtEH8ht87uu4p3zeATJHPVA+O/Jo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5869
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+to register its own pm_power_off handler even if someone has registered
+this handler earlier.
+Useful to change a way to power off the system using DT files.
 
-The following changes since commit 609488bc979f99f805f34e9a32c1e3b71179d10b:
 
-  Linux 5.3-rc2 (2019-07-28 12:47:02 -0700)
+Oleksandr Suvorov (2):
+  power: reset: gpio-poweroff: add force mode
+  dt-bindings: power: reset: gpio-poweroff: Add 'force-mode' property
 
-are available in the git repository at:
+ .../bindings/power/reset/gpio-poweroff.txt    |  3 +++
+ drivers/power/reset/gpio-poweroff.c           | 27 ++++++++++++++-----
+ 2 files changed, 24 insertions(+), 6 deletions(-)
 
-  https://github.com/c-sky/csky-linux.git tags/csky-for-linus-5.4-rc1
+--=20
+2.20.1
 
-for you to fetch changes up to 9af032a30172e119a5935f802b066631f8ded2d6:
-
-  csky: Move static keyword to the front of declaration (2019-09-30 11:50:49 +0800)
-
-----------------------------------------------------------------
-csky-for-linus-5.4-rc1: arch/csky patches for 5.4-rc1
-
-This round of csky subsystem just some fixups.
-
-Fixup:
- - Fixup mb() synchronization problem
- - Fixup dma_alloc_coherent with PAGE_SO attribute
- - Fixup cache_op failed when cross memory ZONEs
- - Optimize arch_sync_dma_for_cpu/device with dma_inv_range
- - Fixup ioremap function losing
- - Fixup arch_get_unmapped_area() implementation
- - Fixup defer cache flush for 610
- - Support kernel non-aligned access
- - Fixup 610 vipt cache flush mechanism
- - Fixup add zero_fp fixup perf backtrace panic
- - Move static keyword to the front of declaration
- - Fixup csky_pmu.max_period assignment
- - Use generic free_initrd_mem()
- - entry: Remove unneeded need_resched() loop
-
-CI-Tested: https://gitlab.com/c-sky/buildroot/pipelines/77689888
-
-----------------------------------------------------------------
-Guo Ren (10):
-      csky: Fixup mb() synchronization problem
-      csky: Fixup dma_alloc_coherent with PAGE_SO attribute
-      csky/dma: Fixup cache_op failed when cross memory ZONEs
-      csky: Optimize arch_sync_dma_for_cpu/device with dma_inv_range
-      csky: Fixup ioremap function losing
-      csky: Fixup arch_get_unmapped_area() implementation
-      csky: Fixup defer cache flush for 610
-      csky: Support kernel non-aligned access
-      csky: Fixup 610 vipt cache flush mechanism
-      csky: Fixup add zero_fp fixup perf backtrace panic
-
-Krzysztof Wilczynski (1):
-      csky: Move static keyword to the front of declaration
-
-Mao Han (1):
-      csky: Fixup csky_pmu.max_period assignment
-
-Mike Rapoport (1):
-      csky: Use generic free_initrd_mem()
-
-Valentin Schneider (1):
-      csky: entry: Remove unneeded need_resched() loop
-
- arch/csky/abiv1/alignment.c          | 62 +++++++++++++++++++++--------
- arch/csky/abiv1/cacheflush.c         | 70 ++++++++++++++++++++++-----------
- arch/csky/abiv1/inc/abi/cacheflush.h | 45 ++++++++++++++-------
- arch/csky/abiv1/inc/abi/page.h       |  5 ++-
- arch/csky/abiv1/mmap.c               | 75 ++++++++++++++++++-----------------
- arch/csky/include/asm/barrier.h      | 15 ++++---
- arch/csky/include/asm/cache.h        |  1 +
- arch/csky/include/asm/io.h           | 23 +++++------
- arch/csky/include/asm/pgtable.h      | 10 +++++
- arch/csky/kernel/entry.S             | 54 +++++++++++++------------
- arch/csky/kernel/perf_event.c        |  4 +-
- arch/csky/kernel/process.c           |  2 +-
- arch/csky/mm/cachev1.c               |  7 +++-
- arch/csky/mm/cachev2.c               | 11 +++++-
- arch/csky/mm/dma-mapping.c           | 76 +++++++++++++-----------------------
- arch/csky/mm/init.c                  | 16 --------
- arch/csky/mm/ioremap.c               | 27 ++++++++-----
- 17 files changed, 291 insertions(+), 212 deletions(-)
