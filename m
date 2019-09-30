@@ -2,125 +2,141 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A479C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8069DC35280
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 676CE2075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:25:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 563E920640
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:25:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="c/g2jkI4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732294AbfI3QZG (ORCPT
+        id S1732307AbfI3QZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 12:25:06 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:57376 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727767AbfI3QZG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 12:25:06 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: bbrezillon)
-        with ESMTPSA id E4C0128DF82
-Date:   Mon, 30 Sep 2019 18:24:58 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Kamal Dasu <kdasu.kdev@gmail.com>
-Cc:     Brian Norris <computersforpeace@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] mtd: rawnand: use bounce buffer when vmalloced data
- buf detected
-Message-ID: <20190930182458.761e8077@collabora.com>
-In-Reply-To: <CAC=U0a1qvKO+t_62df_JcQBETAuNq0pwRkAb-Ofi3ski2rfdEQ@mail.gmail.com>
-References: <20190906194719.15761-1-kdasu.kdev@gmail.com>
-        <20190906194719.15761-2-kdasu.kdev@gmail.com>
-        <CAC=U0a1qvKO+t_62df_JcQBETAuNq0pwRkAb-Ofi3ski2rfdEQ@mail.gmail.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 30 Sep 2019 12:25:55 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:49572 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727767AbfI3QZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 12:25:54 -0400
+Received: from zn.tnic (p200300EC2F058B00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f05:8b00:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4890E1EC05A1;
+        Mon, 30 Sep 2019 18:25:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1569860753;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=6QDt9s55OymqHMPI6kw6Cuu+S3BVbgVjYt3QSGWORhc=;
+        b=c/g2jkI4HcwijJ9goKtRTgWFBhdFy+8Skn1j7QXnxOsuMEZJymasodY3oouMlSXFL/RfYq
+        kxx8h+7elqHM8noEQtfkangLVTDCMewnggWE2NzOx8YiA1G3pqQJ23fPRP846HMGe7HwVG
+        zztTvdMu5xYlCqmoGvaKpGaEmZ226nk=
+Date:   Mon, 30 Sep 2019 18:25:51 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+Cc:     tony.luck@intel.com, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, x86@kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yazen.ghannam@amd.com,
+        vishal.l.verma@intel.com, qiuxu.zhuo@intel.com,
+        DavidWang@zhaoxin.com, CooperYan@zhaoxin.com,
+        QiyuanWang@zhaoxin.com, HerryYang@zhaoxin.com
+Subject: Re: [PATCH v4 2/4] x86/mce: Make 3 functions non-static
+Message-ID: <20190930162551.GA31926@zn.tnic>
+References: <1568787573-1297-1-git-send-email-TonyWWang-oc@zhaoxin.com>
+ <1568787573-1297-2-git-send-email-TonyWWang-oc@zhaoxin.com>
+ <1568787573-1297-3-git-send-email-TonyWWang-oc@zhaoxin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1568787573-1297-3-git-send-email-TonyWWang-oc@zhaoxin.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Sep 2019 12:01:28 -0400
-Kamal Dasu <kdasu.kdev@gmail.com> wrote:
-
-> Does anyone have any comments on this patch ?.
+On Wed, Sep 18, 2019 at 02:19:31PM +0800, Tony W Wang-oc wrote:
+> These functions are declared static and cannot be used in others
+> .c source file. this commit removes the static attribute and adds
+> the declaration to the header for these functions.
 > 
-> Kamal
+> Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+> ---
+>  arch/x86/kernel/cpu/mce/intel.c    | 6 +++---
+>  arch/x86/kernel/cpu/mce/internal.h | 6 ++++++
+>  2 files changed, 9 insertions(+), 3 deletions(-)
 > 
-> On Fri, Sep 6, 2019 at 3:49 PM Kamal Dasu <kdasu.kdev@gmail.com> wrote:
-> >
-> > For controller drivers that use DMA and set NAND_USE_BOUNCE_BUFFER
-> > option use data buffers that are not vmalloced, aligned and have
-> > valid virtual address to be able to do DMA transfers. This change
-> > adds additional check and makes use of data buffer allocated
-> > in nand_base driver when it is passed a vmalloced data buffer for
-> > DMA transfers.
-> >
-> > Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
-> > ---
-> >  drivers/mtd/nand/raw/nand_base.c | 14 ++++++++------
-> >  1 file changed, 8 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
-> > index 91f046d4d452..46f6965a896a 100644
-> > --- a/drivers/mtd/nand/raw/nand_base.c
-> > +++ b/drivers/mtd/nand/raw/nand_base.c
-> > @@ -45,6 +45,12 @@
-> >
-> >  #include "internals.h"
-> >
-> > +static int nand_need_bounce_buf(const void *buf, struct nand_chip *chip)
-> > +{
-> > +       return !virt_addr_valid(buf) || is_vmalloc_addr(buf) ||
+> diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/intel.c
+> index 88cd959..70799a5 100644
+> --- a/arch/x86/kernel/cpu/mce/intel.c
+> +++ b/arch/x86/kernel/cpu/mce/intel.c
+> @@ -423,7 +423,7 @@ void cmci_disable_bank(int bank)
+>  	raw_spin_unlock_irqrestore(&cmci_discover_lock, flags);
+>  }
+>  
+> -static void intel_init_cmci(void)
+> +void intel_init_cmci(void)
+>  {
+>  	int banks;
+>  
+> @@ -442,7 +442,7 @@ static void intel_init_cmci(void)
+>  	cmci_recheck();
+>  }
+>  
+> -static void intel_init_lmce(void)
+> +void intel_init_lmce(void)
+>  {
+>  	u64 val;
+>  
+> @@ -455,7 +455,7 @@ static void intel_init_lmce(void)
+>  		wrmsrl(MSR_IA32_MCG_EXT_CTL, val | MCG_EXT_CTL_LMCE_EN);
+>  }
+>  
+> -static void intel_clear_lmce(void)
+> +void intel_clear_lmce(void)
+>  {
+>  	u64 val;
+>  
+> diff --git a/arch/x86/kernel/cpu/mce/internal.h b/arch/x86/kernel/cpu/mce/internal.h
+> index 43031db..842b273 100644
+> --- a/arch/x86/kernel/cpu/mce/internal.h
+> +++ b/arch/x86/kernel/cpu/mce/internal.h
+> @@ -45,11 +45,17 @@ unsigned long cmci_intel_adjust_timer(unsigned long interval);
+>  bool mce_intel_cmci_poll(void);
+>  void mce_intel_hcpu_update(unsigned long cpu);
+>  void cmci_disable_bank(int bank);
+> +void intel_init_cmci(void);
+> +void intel_init_lmce(void);
+> +void intel_clear_lmce(void);
+>  #else
+>  # define cmci_intel_adjust_timer mce_adjust_timer_default
+>  static inline bool mce_intel_cmci_poll(void) { return false; }
+>  static inline void mce_intel_hcpu_update(unsigned long cpu) { }
+>  static inline void cmci_disable_bank(int bank) { }
+> +static inline void intel_init_cmci(void) { }
+> +static inline void intel_init_lmce(void) { }
+> +static inline void intel_clear_lmce(void) { }
+>  #endif
+>  
+>  void mce_timer_kick(unsigned long interval);
+> -- 
 
-I thought virt_addr_valid() was implying !is_vmalloc_addr(), are you
-sure you need that test, and can you tell me on which arch(es) this is
-needed.
+I don't think you understood what I meant last time:
 
-> > +               !IS_ALIGNED((unsigned long)buf, chip->buf_align);
-> > +}
-> > +
-> >  /* Define default oob placement schemes for large and small page devices */
-> >  static int nand_ooblayout_ecc_sp(struct mtd_info *mtd, int section,
-> >                                  struct mtd_oob_region *oobregion)
-> > @@ -3183,9 +3189,7 @@ static int nand_do_read_ops(struct nand_chip *chip, loff_t from,
-> >                 if (!aligned)
-> >                         use_bufpoi = 1;
-> >                 else if (chip->options & NAND_USE_BOUNCE_BUFFER)
-> > -                       use_bufpoi = !virt_addr_valid(buf) ||
-> > -                                    !IS_ALIGNED((unsigned long)buf,
-> > -                                                chip->buf_align);
-> > +                       use_bufpoi = nand_need_bounce_buf(buf, chip);
-> >                 else
-> >                         use_bufpoi = 0;
-> >
-> > @@ -4009,9 +4013,7 @@ static int nand_do_write_ops(struct nand_chip *chip, loff_t to,
-> >                 if (part_pagewr)
-> >                         use_bufpoi = 1;
-> >                 else if (chip->options & NAND_USE_BOUNCE_BUFFER)
-> > -                       use_bufpoi = !virt_addr_valid(buf) ||
-> > -                                    !IS_ALIGNED((unsigned long)buf,
-> > -                                                chip->buf_align);
-> > +                       use_bufpoi = nand_need_bounce_buf(buf, chip);
-> >                 else
-> >                         use_bufpoi = 0;
-> >
-> > --
-> > 2.17.1
-> >  
+"This can easily be missed because you're exporting them in one patch
+and using them in another. Do the exports in the same patch where you
+use them for the first time."
 
+Anyway, I dropped this patch and exported the functions in the
+respective patches where you use the functions.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
