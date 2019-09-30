@@ -2,98 +2,119 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F132BC32793
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 00:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23261C352A9
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 01:01:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDEC121882
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 00:28:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569803311;
-	bh=18Xoe49n0LwJ985Z5rDsuGb/OZgAqt2Ye8XtTlaCTqY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CTQJSeK3qZQtY6pQSSxuWfP/cCq5gzrmANgSHlAywv0ZtIa7S6opHrrwuWYA2XKcT
-	 2aXYQk1N7fRL2V2DJjy83CzmjRVGbQ61p6SQ4Q5EXjxECxpxYUv3m1t+KAd/qrlDh2
-	 YnJMStSEPyjXbvqv1xxZGnKO5JeEeOoyxO57kk+4=
+	by mail.kernel.org (Postfix) with ESMTP id F2D652196E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 01:01:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729241AbfI3A2b (ORCPT
+        id S1729248AbfI3BBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 20:28:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37454 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726360AbfI3A2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 20:28:30 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 059E02082F;
-        Mon, 30 Sep 2019 00:28:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569803310;
-        bh=18Xoe49n0LwJ985Z5rDsuGb/OZgAqt2Ye8XtTlaCTqY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1vl6AlM68mcxrKNKJrSd1tVhtyrR6+F6y2tUi5gN2GnhyJag2mk3rTFfiyB5FDf6/
-         P1TIgQV/HLhaBfAd0e+KhMXzNw/OLO8i9JYKM0Mt9RPT4dCjzkygjXeqkwUspy2jzU
-         k4+Ae1hTd6qXM15QQ+6FNvNqvskZNA3o+ydOY5mI=
-Date:   Sun, 29 Sep 2019 20:28:28 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com,
-        Waiman Long <longman@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH 4.19 36/63] locking/lockdep: Add debug_locks check in
- __lock_downgrade()
-Message-ID: <20190930002828.GQ8171@sasha-vm>
-References: <20190929135031.382429403@linuxfoundation.org>
- <20190929135038.482721804@linuxfoundation.org>
- <801c81d2-ce72-8eb3-a18b-1b0943270fc4@i-love.sakura.ne.jp>
+        Sun, 29 Sep 2019 21:01:50 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:48179 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728853AbfI3BBu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 21:01:50 -0400
+Received: (qmail 7255 invoked by uid 500); 29 Sep 2019 21:01:48 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 29 Sep 2019 21:01:48 -0400
+Date:   Sun, 29 Sep 2019 21:01:48 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
+cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        USB list <linux-usb@vger.kernel.org>,
+        <linux-block@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: reeze while write on external usb 3.0 hard disk [Bug 204095]
+In-Reply-To: <20190929201332.GA3099@lazy.lzy>
+Message-ID: <Pine.LNX.4.44L0.1909292056230.5908-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <801c81d2-ce72-8eb3-a18b-1b0943270fc4@i-love.sakura.ne.jp>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 29, 2019 at 11:43:38PM +0900, Tetsuo Handa wrote:
->On 2019/09/29 22:54, Greg Kroah-Hartman wrote:
->> From: Waiman Long <longman@redhat.com>
->>
->> [ Upstream commit 513e1073d52e55b8024b4f238a48de7587c64ccf ]
->>
->> Tetsuo Handa had reported he saw an incorrect "downgrading a read lock"
->> warning right after a previous lockdep warning. It is likely that the
->> previous warning turned off lock debugging causing the lockdep to have
->> inconsistency states leading to the lock downgrade warning.
->>
->> Fix that by add a check for debug_locks at the beginning of
->> __lock_downgrade().
->
->Please drop "[PATCH 4.19 36/63] locking/lockdep: Add debug_locks check in __lock_downgrade()".
->We had a revert patch shown below in the past.
+On Sun, 29 Sep 2019, Piergiorgio Sartor wrote:
 
-We had a revert in the stable trees, but that revert was incorrect.
+> On Wed, Sep 25, 2019 at 02:31:58PM -0400, Alan Stern wrote:
+> > On Wed, 25 Sep 2019, Piergiorgio Sartor wrote:
+> > 
+> > > On Mon, Aug 26, 2019 at 07:38:33PM +0200, Piergiorgio Sartor wrote:
+> > > > On Tue, Aug 20, 2019 at 06:37:22PM +0200, Piergiorgio Sartor wrote:
+> > > > > On Tue, Aug 20, 2019 at 09:23:26AM +0200, Christoph Hellwig wrote:
+> > > > > > On Mon, Aug 19, 2019 at 10:14:25AM -0400, Alan Stern wrote:
+> > > > > > > Let's bring this to the attention of some more people.
+> > > > > > > 
+> > > > > > > It looks like the bug that was supposed to be fixed by commit
+> > > > > > > d74ffae8b8dd ("usb-storage: Add a limitation for
+> > > > > > > blk_queue_max_hw_sectors()"), which is part of 5.2.5, but apparently
+> > > > > > > the bug still occurs.
+> > > > > > 
+> > > > > > Piergiorgio,
+> > > > > > 
+> > > > > > can you dump the content of max_hw_sectors_kb file for your USB storage
+> > > > > > device and send that to this thread?
+> > > > > 
+> > > > > Hi all,
+> > > > > 
+> > > > > for both kernels, 5.1.20 (working) and 5.2.8 (not working),
+> > > > > the content of /sys/dev/x:y/queue/max_hw_sectors_kb is 512
+> > > > > for USB storage devices (2.0 and 3.0).
+> > > > > 
+> > > > > This is for the PC showing the issue.
+> > > > > 
+> > > > > In an other PC, which does not show the issus at the moment,
+> > > > > the values are 120, for USB2.0, and 256, for USB3.0.
 
-Take a look at commit 513e1073d52e55 upstream, it patches
-__lock_set_class() (even though the subject line says
-__lock_downgrade()). So this is not a backporting error as the revert
-said it is, but is rather the intended location to be patched.
+> > One thing you can try is git bisect from 5.1.20 (or maybe just 5.1.0)  
+> > to 5.2.8.  If you can identify a particular commit which caused the
+> > problem to start, that would help.
+> 
+> OK, I tried a bisect (2 days compilations...).
+> Assuming I've done everything correctly (how to
+> test this? How to remove the guilty patch?), this
+> was the result:
+> 
+> 09324d32d2a0843e66652a087da6f77924358e62 is the first bad commit
+> commit 09324d32d2a0843e66652a087da6f77924358e62
+> Author: Christoph Hellwig <hch@lst.de>
+> Date:   Tue May 21 09:01:41 2019 +0200
+> 
+>     block: force an unlimited segment size on queues with a virt boundary
+> 
+>     We currently fail to update the front/back segment size in the bio when
+>     deciding to allow an otherwise gappy segement to a device with a
+>     virt boundary.  The reason why this did not cause problems is that
+>     devices with a virt boundary fundamentally don't use segments as we
+>     know it and thus don't care.  Make that assumption formal by forcing
+>     an unlimited segement size in this case.
+> 
+>     Fixes: f6970f83ef79 ("block: don't check if adjacent bvecs in one bio can be mergeable")
+>     Signed-off-by: Christoph Hellwig <hch@lst.de>
+>     Reviewed-by: Ming Lei <ming.lei@redhat.com>
+>     Reviewed-by: Hannes Reinecke <hare@suse.com>
+>     Signed-off-by: Jens Axboe <axboe@kernel.dk>
+> 
+> :040000 040000 57ba04a02f948022c0f6ba24bfa36f3b565b2440 8c925f71ce75042529c001bf244b30565d19ebf3 M      block
+> 
+> What to do now?
 
-If this is actually wrong, then it should be addressed upstream first.
+Here's how to verify that the bisection got a correct result.  First, 
+do a git checkout of commit 09324d32d2a0, build the kernel, and make 
+sure that it exhibits the problem.
 
---
-Thanks,
-Sasha
+Next, have git write out the contents of that commit in the form of a
+patch (git show commit-id >patchfile), and revert it (git apply -R
+patchfile).  Build the kernel from that tree, and make sure that it
+does not exhibit the problem.  If it doesn't, you have definitely shown
+that this commit is the cause (or at least, is _one_ of the causes).
+
+Alan Stern
+
