@@ -2,100 +2,59 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 929F9C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44563C35280
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AB602086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2362321D56
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:09:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731073AbfI3NHf (ORCPT
+        id S1731067AbfI3NJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 09:07:35 -0400
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:59311 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726314AbfI3NHf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:07:35 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id EvOjilaOfz6EAEvOniNh6y; Mon, 30 Sep 2019 15:07:33 +0200
-Subject: Re: [PATCH v8 7/8] media: v4l2-ctrl: Add new helper
- v4l2_ctrl_ptr_from_void
-To:     Ricardo Ribalda Delgado <ribalda@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Jacopo Mondi <jacopo@jmondi.org>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>
-References: <20190930101841.19630-1-ribalda@kernel.org>
- <20190930101841.19630-8-ribalda@kernel.org>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <aa6ace11-9697-d3d9-907c-83b3398d8f5e@xs4all.nl>
-Date:   Mon, 30 Sep 2019 15:07:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 30 Sep 2019 09:09:41 -0400
+Received: from ms.lwn.net ([45.79.88.28]:48828 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730637AbfI3NJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 09:09:41 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 7732555A;
+        Mon, 30 Sep 2019 13:09:40 +0000 (UTC)
+Date:   Mon, 30 Sep 2019 07:09:39 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Doug Ledford <dledford@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Subject: Re: [GIT PULL] Thermal management updates for v5.4-rc1
+Message-ID: <20190930070939.706c9dfa@lwn.net>
+In-Reply-To: <64d13484950cab570e5f2691d7cdeca292882d95.camel@redhat.com>
+References: <a9e8e68f34139d5a9abb7f8b7d3fe64ff82c6d96.camel@intel.com>
+        <CAHk-=whua2XSTLd3gtqVHfq5HtGnjhRUv7vA6SUfkbVUebqWJQ@mail.gmail.com>
+        <64d13484950cab570e5f2691d7cdeca292882d95.camel@redhat.com>
+Organization: LWN.net
 MIME-Version: 1.0
-In-Reply-To: <20190930101841.19630-8-ribalda@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfKQ8x4ojUnlXF2/Q+sXcJYMxCA+/yK479ijRvP8Qwq/cIEvO6xGdSfj1I3K7LnmRTlBDZ8rjaQdIHjI8k2v6XXupI0RkeHRROFWnFOUI37zEOWiI1fDT
- l8409lsY1Rno+7mnnSyl2xaefoqmeVfVPBFYxO6tYbWdH48eZNjAdJKk6x+9iWkxT9aEMrm/DPdU0Tf0Z1cGKyzoM7Q8D0w2h87B12tedTm4YDdEws6Zn7Z6
- KjK/BhRc7vJwha3Uj9p6mELYURhxESvw8AWbOyFj1v5xPlVAIfzz50S6sImuI/8L8tQdc1aQE54NUGu43twL/s814Y2An/OyxEbztZB+lKdePSBwJa72lKsx
- ciIbSFbE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/30/19 12:18 PM, Ricardo Ribalda Delgado wrote:
-> This helper function simplifies the code by not needing a union
-> v4l2_ctrl_ptr and an assignment every time we need to use
-> a ctrl_ptr.
-> 
-> Suggested-by: Hans Verkuil <hverkuil@xs4all.nl>
-> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
-> ---
->  include/media/v4l2-ctrls.h | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
-> index c42f164e2c9e..d69cfdffd41d 100644
-> --- a/include/media/v4l2-ctrls.h
-> +++ b/include/media/v4l2-ctrls.h
-> @@ -73,6 +73,17 @@ union v4l2_ctrl_ptr {
->  	void *p;
->  };
->  
-> +/**
-> + * v4l2_ctrl_ptr() - Helper function to return a v4l2_ctrl_ptr from a
-> + * void pointer
-> + * @ptr:	The void pointer
-> + */
-> +static inline union v4l2_ctrl_ptr v4l2_ctrl_ptr_from_void(void *ptr)
+On Fri, 27 Sep 2019 15:29:47 -0400
+Doug Ledford <dledford@redhat.com> wrote:
 
-Mismatch between function name and the comment above.
+> If you are doing linux kernel development, and you are doing a rebase,
+> please read Documentation/When_Not_To_Rebase.rst before rebasing your
+> code and sending it to Linus.  You've been warned.
 
-But _from_void is not a good name, since it's from a void pointer.
+For anybody following along at home, the proper spelling for that is
+Documentation/maintainer/rebasing-and-merging.txt or
+https://www.kernel.org/doc/html/latest/maintainer/rebasing-and-merging.html
 
-How about: v4l2_ctrl_ptr_create(void *ptr)
-
-since you create a v4l2_ctrl_ptr.
-
-Regards,
-
-	Hans
-
-> +{
-> +	BUILD_BUG_ON(sizeof(union v4l2_ctrl_ptr) != sizeof(void *));
-> +	return (union v4l2_ctrl_ptr) ptr;
-> +}
-> +
->  /**
->   * struct v4l2_ctrl_ops - The control operations that the driver has to provide.
->   *
-> 
-
+jon
