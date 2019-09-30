@@ -2,76 +2,94 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85670C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 213E7C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5140A21855
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:14:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="MfSjHOwj"
+	by mail.kernel.org (Postfix) with ESMTP id E6215218AC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:15:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730313AbfI3MOu (ORCPT
+        id S1730490AbfI3MPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 08:14:50 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:54000 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726008AbfI3MOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 08:14:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=Cs6i4ZwAF8VZe/f+tj45Qc3PscNqg2hbvI0kGS3P7PM=; b=MfSjHOwjRy+ci3bxERgM3msN6W
-        qcF7r3DjwzQNbpjcqDc8lq8ATtsZSAwFrIqynBF36pdORLYDeqeDvn9qvFLb0T7D4ODUAxl8nS8F/
-        bKJpijEbsGzisLv9154HzRgqsuHldOnlF54DBQm/INrj0QkSF5tEotzkdWpVqhLFs9YU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iEuZc-0003YY-Mo; Mon, 30 Sep 2019 14:14:40 +0200
-Date:   Mon, 30 Sep 2019 14:14:40 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Jamie Lentin <jm@lentin.co.uk>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 0/2] This patch introduces a feature to force
- gpio-poweroff module
-Message-ID: <20190930121440.GC13301@lunn.ch>
-References: <20190930103531.13764-1-oleksandr.suvorov@toradex.com>
+        Mon, 30 Sep 2019 08:15:48 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:52461 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726952AbfI3MPr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 08:15:47 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MqapC-1hjvMD2Xwm-00meW0; Mon, 30 Sep 2019 14:15:25 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Pascal van Leeuwen <pvanleeuwen@verimatrix.com>,
+        Pascal van Leeuwen <pascalvanl@gmail.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] crypto: inside-secure - Fix a maybe-uninitialized warning
+Date:   Mon, 30 Sep 2019 14:14:33 +0200
+Message-Id: <20190930121520.1388317-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190930103531.13764-1-oleksandr.suvorov@toradex.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:LInyj3Ud0A8wB1lffm2V4xf1mZe/8J3moJ6KlLFoXVopMJiU/KM
+ KxE4gKuqXvHz5qvY0skfX00Qf9wBYigW3dERcUECUQk5t+w48wwHyk5tQnjQRvHg1s9vw1H
+ cZ/9oBe3xJSdpS21GHrrqvAXp6zEoKW/PvheWvOURr3TQe8FHkaIuu0vfdLDy+QlRH18qie
+ mrXaPorGX3+Eyn5xcLY5w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:U0vHL9TV2yo=:DiIHi5HDqbjDn+66lvh3os
+ nzMF3Fp3UmCEhUte/68ClyljDSx7vzyaqqEWEK3TFQFqaUO2OKOiHG0v6QQruDYfewn3wNCFb
+ u0efen0ljbb7ev/Hvu+rImGYZJ7aqaKAzCjzkZy68VBBUBnNE0DdNP9vrnIGYW5wDTDCMjqDg
+ 0ZqHMVq/Fy6f2gXJdK1aQNMCWlldAia81jFNbJhs4IaHSpci+Gj4N5ERBVQqNYAUJnssRxxei
+ 3+NaFM59fS8mxFIts/r+X3tzUFBalDZdjaaXLcHp5qL+EbwGiouWMl7AxfbJxN4FsJwBLpZVt
+ j5n5Mpvh4AQijN+RYpzFl+hdyCfnL8vLJZLMGAgK9NZidxC1ItinGxHu/0SpprSCPSOxvc/i2
+ 7o1VYme52Tde7KRHrfjkztgJO5MFe3LZbwe/iud14AEaAa59E4zgopDXjsAb5bz4H3d+LFwnL
+ ICLYRkOIgrUuL1mTHukqdBtvE/9Lx6vABqUHymuQwwrshX9eDV/7FhAKiDh5NjOh0Mj+nTsVN
+ JR2pmX9WvGVGppUySihKW8s1qDKKKedwhkHJyjaNDTiXxWd77ljwYX49JM8YwQf8Mp6qSWB/4
+ DQjNrWV11MDtCBBywbalwJl1VQ7UoVTItdfE1+PaVrsOpEB6x5cSyHMQgJu5T+ZP5ubybNd9J
+ A0rOoVnBkAThUKeVo1NAgWtYKh6zi3bfHTyag29X2COSv1jLQzo6+CtD0791oNuOKo0ZLMtcb
+ J1chSZt5iADXu6VIZoNlrC7b8UpGYQX8w1opW9fD8t5bhta/o9Kf3TjexUzssMFRtWKH1Qf0e
+ tMk1goSf9Lb6jP/p+i6aXWyDLSf2kN5TD0VGDF8yUnptoPoMyijB7YRj2d+1zBN67mm10fYhJ
+ EQZdIIA3eBVUy4Js3uXQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 10:35:36AM +0000, Oleksandr Suvorov wrote:
-> to register its own pm_power_off handler even if someone has registered
-> this handler earlier.
-> Useful to change a way to power off the system using DT files.
+A previous fixup avoided an unused variable warning but replaced
+it with a slightly scarier warning:
 
-Hi Oleksandr
+drivers/crypto/inside-secure/safexcel.c:1100:6: error: variable 'irq' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
 
-I'm not sure this is a good idea. What happens when there are two
-drivers using forced mode? You then get which ever is register last.
-Non deterministic behaviour.
+This is harmless as it is impossible to get into this case, but
+the compiler has no way of knowing that. Add an explicit error
+handling case to make it obvious to both compilers and humans
+reading the source.
 
-What is the other driver which is causing you problems? How is it
-getting probed? DT?
+Fixes: 212ef6f29e5b ("crypto: inside-secure - Fix unused variable warning when CONFIG_PCI=n")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/crypto/inside-secure/safexcel.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks
-	Andrew
+diff --git a/drivers/crypto/inside-secure/safexcel.c b/drivers/crypto/inside-secure/safexcel.c
+index 4ab1bde8dd9b..311bf60df39f 100644
+--- a/drivers/crypto/inside-secure/safexcel.c
++++ b/drivers/crypto/inside-secure/safexcel.c
+@@ -1120,6 +1120,8 @@ static int safexcel_request_ring_irq(void *pdev, int irqid,
+ 				irq_name, irq);
+ 			return irq;
+ 		}
++	} else {
++		return -ENXIO;
+ 	}
+ 
+ 	ret = devm_request_threaded_irq(dev, irq, handler,
+-- 
+2.20.0
+
