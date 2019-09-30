@@ -2,431 +2,211 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1E5C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CFDAC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 844742190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:53:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42BAC2190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:54:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730845AbfI3Kxh (ORCPT
+        id S1730863AbfI3KyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 06:53:37 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3191 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730444AbfI3Kxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 06:53:37 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 512C5FDCAA5BEA49B81F;
-        Mon, 30 Sep 2019 18:53:34 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 30 Sep 2019 18:53:27 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: cache global IPU bio
-Date:   Mon, 30 Sep 2019 18:53:25 +0800
-Message-ID: <20190930105325.42870-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Mon, 30 Sep 2019 06:54:09 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:52076 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730345AbfI3KyI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 06:54:08 -0400
+Received: by mail-io1-f69.google.com with SMTP id x13so29233581ioa.18
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 03:54:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=el3HnliGCocK/NsWdzJTafRm41RvJYIyALJ3SFpOMsU=;
+        b=VK/gJ4PFWsSFr4efOJ9bG08WPCzwbVWwOkS3Mpcsx1x2Y0GB+S+FyLoPY4Q5/Ojmsq
+         AhoCVhHbL7hf8EDoNpiEq019u7VkG1Kpo/glxvdjbbp57goQHkhH582eRatXBh/2zy+1
+         +sN/N9lpFxdRVsKeCxzJT+bV9ZvnrpfvDKnhVCFkzn/c5kjBJTQDdmBbOs0BmaC+Z+ZV
+         RPnedTRYyezpj+B91xq6X8ddmWMKprw0lgJi7dCSDe5q3rBa/nTE2QU9XP89drwHqmlP
+         MN2JaZYRN3ygnGjZxcrofQvjpQBXpHEVY3JEhXpJHGGwMOlMH5WidrT0uGkCAktPF5LA
+         ydLQ==
+X-Gm-Message-State: APjAAAUuy0EGfcQ62TAOVHawtRqj3Mv7BRQ7K6v1BEBShsovtDgUk/lx
+        gq/1Is1P6MWfEHyG0NkZ8kqpqP5NFh5S14D+48FFSKrj2/Xq
+X-Google-Smtp-Source: APXvYqwUDB47fCYcFG/g6fU+fYLX4ECF/AHGSsA7uWcAIMrZ/bXvxsNmHvhkt7NTyhjkHgDWoDDGKJ5gaNz0OffL7WYqaUn4moT9
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+X-Received: by 2002:a6b:6e02:: with SMTP id d2mr941125ioh.8.1569840847711;
+ Mon, 30 Sep 2019 03:54:07 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 03:54:07 -0700
+In-Reply-To: <000000000000f6a13b059132aa6c@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000014f8600593c30eb0@google.com>
+Subject: Re: KASAN: use-after-free Read in rxrpc_put_peer
+From:   syzbot <syzbot+b9be979c55f2bea8ed30@syzkaller.appspotmail.com>
+To:     MAILER_DAEMON@email.uscc.net, davem@davemloft.net,
+        dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit 8648de2c581e ("f2fs: add bio cache for IPU"), we added
-f2fs_submit_ipu_bio() in __write_data_page() as below:
+syzbot has found a reproducer for the following crash on:
 
-__write_data_page()
+HEAD commit:    a3c0e7b1 Merge tag 'libnvdimm-fixes-5.4-rc1' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1622045d600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6ffbfa7e4a36190f
+dashboard link: https://syzkaller.appspot.com/bug?extid=b9be979c55f2bea8ed30
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11b8f605600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10547843600000
 
-	if (!S_ISDIR(inode->i_mode) && !IS_NOQUOTA(inode)) {
-		f2fs_submit_ipu_bio(sbi, bio, page);
-		....
-	}
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+b9be979c55f2bea8ed30@syzkaller.appspotmail.com
 
-in order to avoid below deadlock:
+==================================================================
+BUG: KASAN: use-after-free in __rxrpc_put_peer net/rxrpc/peer_object.c:411  
+[inline]
+BUG: KASAN: use-after-free in rxrpc_put_peer+0x685/0x6a0  
+net/rxrpc/peer_object.c:435
+Read of size 8 at addr ffff888097ec0058 by task syz-executor823/24216
 
-Thread A				Thread B
-- __write_data_page (inode x, page y)
- - f2fs_do_write_data_page
-  - set_page_writeback        ---- set writeback flag in page y
-  - f2fs_inplace_write_data
- - f2fs_balance_fs
-					 - lock gc_mutex
- - lock gc_mutex
-					  - f2fs_gc
-					   - do_garbage_collect
-					    - gc_data_segment
-					     - move_data_page
-					      - f2fs_wait_on_page_writeback
-					       - wait_on_page_writeback  --- wait writeback of page y
+CPU: 0 PID: 24216 Comm: syz-executor823 Not tainted 5.3.0+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  <IRQ>
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+  kasan_report+0x12/0x20 mm/kasan/common.c:634
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+  __rxrpc_put_peer net/rxrpc/peer_object.c:411 [inline]
+  rxrpc_put_peer+0x685/0x6a0 net/rxrpc/peer_object.c:435
+  rxrpc_rcu_destroy_call+0x5e/0x140 net/rxrpc/call_object.c:566
+  __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
+  rcu_do_batch kernel/rcu/tree.c:2157 [inline]
+  rcu_core+0x581/0x1560 kernel/rcu/tree.c:2377
+  rcu_core_si+0x9/0x10 kernel/rcu/tree.c:2386
+  __do_softirq+0x262/0x98c kernel/softirq.c:292
+  invoke_softirq kernel/softirq.c:373 [inline]
+  irq_exit+0x19b/0x1e0 kernel/softirq.c:413
+  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+  smp_apic_timer_interrupt+0x1a3/0x610 arch/x86/kernel/apic/apic.c:1137
+  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+  </IRQ>
+RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:756  
+[inline]
+RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:160  
+[inline]
+RIP: 0010:_raw_spin_unlock_irqrestore+0x95/0xe0  
+kernel/locking/spinlock.c:191
+Code: 48 c7 c0 20 1c f3 88 48 ba 00 00 00 00 00 fc ff df 48 c1 e8 03 80 3c  
+10 00 75 39 48 83 3d 92 28 ac 01 00 74 24 48 89 df 57 9d <0f> 1f 44 00 00  
+bf 01 00 00 00 e8 ec 10 08 fa 65 8b 05 5d 0a bb 78
+RSP: 0018:ffff8880927378c0 EFLAGS: 00000286 ORIG_RAX: ffffffffffffff13
+RAX: 1ffffffff11e6384 RBX: 0000000000000286 RCX: 0000000000000000
+RDX: dffffc0000000000 RSI: 0000000000000006 RDI: 0000000000000286
+RBP: ffff8880927378d0 R08: ffff888097632000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff8ac62ca8
+R13: ffffffff8ac62ca8 R14: ffff888083be9000 R15: 0000000000000003
+  __debug_check_no_obj_freed lib/debugobjects.c:973 [inline]
+  debug_check_no_obj_freed+0x20a/0x43f lib/debugobjects.c:994
+  free_pages_prepare mm/page_alloc.c:1175 [inline]
+  __free_pages_ok+0x266/0xea0 mm/page_alloc.c:1421
+  free_compound_page+0x97/0xd0 mm/page_alloc.c:674
+  free_transhuge_page+0x2a7/0x3b0 mm/huge_memory.c:2842
+  __put_compound_page+0x90/0xd0 mm/swap.c:97
+  release_pages+0x5e5/0x1a50 mm/swap.c:810
+  free_pages_and_swap_cache+0x2c3/0x3f0 mm/swap_state.c:296
+  tlb_batch_pages_flush mm/mmu_gather.c:49 [inline]
+  tlb_flush_mmu_free mm/mmu_gather.c:184 [inline]
+  tlb_flush_mmu+0x89/0x630 mm/mmu_gather.c:191
+  tlb_finish_mmu+0x98/0x3b0 mm/mmu_gather.c:272
+  exit_mmap+0x2da/0x530 mm/mmap.c:3163
+  __mmput kernel/fork.c:1079 [inline]
+  mmput+0x179/0x4d0 kernel/fork.c:1100
+  exit_mm kernel/exit.c:485 [inline]
+  do_exit+0x823/0x2e60 kernel/exit.c:804
+  do_group_exit+0x135/0x360 kernel/exit.c:921
+  __do_sys_exit_group kernel/exit.c:932 [inline]
+  __se_sys_exit_group kernel/exit.c:930 [inline]
+  __x64_sys_exit_group+0x44/0x50 kernel/exit.c:930
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x440078
+Code: 00 00 be 3c 00 00 00 eb 19 66 0f 1f 84 00 00 00 00 00 48 89 d7 89 f0  
+0f 05 48 3d 00 f0 ff ff 77 21 f4 48 89 d7 44 89 c0 0f 05 <48> 3d 00 f0 ff  
+ff 76 e0 f7 d8 64 41 89 01 eb d8 0f 1f 84 00 00 00
+RSP: 002b:00007ffd29763d08 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000440078
+RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
+RBP: 00000000004bfa50 R08: 00000000000000e7 R09: ffffffffffffffd0
+R10: 00000000004002c8 R11: 0000000000000246 R12: 0000000000000001
+R13: 00000000006d2180 R14: 0000000000000000 R15: 0000000000000000
 
-However, the bio submission breaks the merge of IPU IOs.
+Allocated by task 24200:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:510 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
+  kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3550
+  kmalloc include/linux/slab.h:552 [inline]
+  kzalloc include/linux/slab.h:686 [inline]
+  rxrpc_alloc_local net/rxrpc/local_object.c:79 [inline]
+  rxrpc_lookup_local+0x562/0x1ba0 net/rxrpc/local_object.c:277
+  rxrpc_sendmsg+0x379/0x5f0 net/rxrpc/af_rxrpc.c:566
+  sock_sendmsg_nosec net/socket.c:637 [inline]
+  sock_sendmsg+0xd7/0x130 net/socket.c:657
+  ___sys_sendmsg+0x3e2/0x920 net/socket.c:2311
+  __sys_sendmmsg+0x1bf/0x4d0 net/socket.c:2413
+  __do_sys_sendmmsg net/socket.c:2442 [inline]
+  __se_sys_sendmmsg net/socket.c:2439 [inline]
+  __x64_sys_sendmmsg+0x9d/0x100 net/socket.c:2439
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-So in this patch let's add a global bio cache for merged IPU pages,
-then f2fs_wait_on_page_writeback() is able to submit bio if a
-writebacked page is cached in global bio cache.
+Freed by task 16:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  kasan_set_free_info mm/kasan/common.c:332 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:471
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
+  __cache_free mm/slab.c:3425 [inline]
+  kfree+0x10a/0x2c0 mm/slab.c:3756
+  rxrpc_local_rcu+0x62/0x80 net/rxrpc/local_object.c:499
+  __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
+  rcu_do_batch kernel/rcu/tree.c:2157 [inline]
+  rcu_core+0x581/0x1560 kernel/rcu/tree.c:2377
+  rcu_core_si+0x9/0x10 kernel/rcu/tree.c:2386
+  __do_softirq+0x262/0x98c kernel/softirq.c:292
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/data.c    | 179 +++++++++++++++++++++++++++++++++++++---------
- fs/f2fs/f2fs.h    |  11 +++
- fs/f2fs/segment.c |   3 +
- fs/f2fs/super.c   |   8 +++
- 4 files changed, 169 insertions(+), 32 deletions(-)
+The buggy address belongs to the object at ffff888097ec0040
+  which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 24 bytes inside of
+  1024-byte region [ffff888097ec0040, ffff888097ec0440)
+The buggy address belongs to the page:
+page:ffffea00025fb000 refcount:1 mapcount:0 mapping:ffff8880aa400c40  
+index:0x0 compound_mapcount: 0
+flags: 0x1fffc0000010200(slab|head)
+raw: 01fffc0000010200 ffffea00025bf208 ffffea0002605e88 ffff8880aa400c40
+raw: 0000000000000000 ffff888097ec0040 0000000100000007 0000000000000000
+page dumped because: kasan: bad access detected
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 28665acb35a5..3eef7caee064 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -29,6 +29,7 @@
- #define NUM_PREALLOC_POST_READ_CTXS	128
- 
- static struct kmem_cache *bio_post_read_ctx_cache;
-+static struct kmem_cache *bio_entry_slab;
- static mempool_t *bio_post_read_ctx_pool;
- 
- static bool __is_cp_guaranteed(struct page *page)
-@@ -540,6 +541,126 @@ static bool io_is_mergeable(struct f2fs_sb_info *sbi, struct bio *bio,
- 	return io_type_is_mergeable(io, fio);
- }
- 
-+static void add_bio_entry(struct f2fs_sb_info *sbi, struct bio *bio,
-+				struct page *page, enum temp_type temp)
-+{
-+	struct f2fs_bio_info *io = sbi->write_io[DATA] + temp;
-+	struct bio_entry *be;
-+
-+	be = f2fs_kmem_cache_alloc(bio_entry_slab, GFP_NOFS);
-+	be->bio = bio;
-+	bio_get(bio);
-+
-+	if (bio_add_page(bio, page, PAGE_SIZE, 0) != PAGE_SIZE)
-+		f2fs_bug_on(sbi, 1);
-+
-+	down_write(&io->bio_list_lock);
-+	list_add_tail(&be->list, &io->bio_list);
-+	up_write(&io->bio_list_lock);
-+}
-+
-+static void del_bio_entry(struct bio_entry *be)
-+{
-+	list_del(&be->list);
-+	kmem_cache_free(bio_entry_slab, be);
-+}
-+
-+static int add_ipu_page(struct f2fs_sb_info *sbi, struct bio **bio,
-+							struct page *page)
-+{
-+	enum temp_type temp;
-+	bool found = false;
-+	int ret = -EAGAIN;
-+
-+	for (temp = HOT; temp < NR_TEMP_TYPE && !found; temp++) {
-+		struct f2fs_bio_info *io = sbi->write_io[DATA] + temp;
-+		struct list_head *head = &io->bio_list;
-+		struct bio_entry *be;
-+
-+		down_write(&io->bio_list_lock);
-+		list_for_each_entry(be, head, list) {
-+			if (be->bio != *bio)
-+				continue;
-+
-+			found = true;
-+
-+			if (bio_add_page(*bio, page, PAGE_SIZE, 0) == PAGE_SIZE) {
-+				ret = 0;
-+				break;
-+			}
-+
-+			/* bio is full */
-+			del_bio_entry(be);
-+			__submit_bio(sbi, *bio, DATA);
-+			break;
-+		}
-+		up_write(&io->bio_list_lock);
-+	}
-+
-+	if (ret) {
-+		bio_put(*bio);
-+		*bio = NULL;
-+	}
-+
-+	return ret;
-+}
-+
-+void f2fs_submit_merged_ipu_write(struct f2fs_sb_info *sbi,
-+					struct bio **bio, struct page *page)
-+{
-+	enum temp_type temp;
-+	bool found = false;
-+	struct bio *target = bio ? *bio : NULL;
-+
-+	for (temp = HOT; temp < NR_TEMP_TYPE && !found; temp++) {
-+		struct f2fs_bio_info *io = sbi->write_io[DATA] + temp;
-+		struct list_head *head = &io->bio_list;
-+		struct bio_entry *be;
-+
-+		if (list_empty(head))
-+			continue;
-+
-+		down_read(&io->bio_list_lock);
-+		list_for_each_entry(be, head, list) {
-+			if (target)
-+				found = (target == be->bio);
-+			else
-+				found = __has_merged_page(be->bio, NULL,
-+								page, 0);
-+			if (found)
-+				break;
-+		}
-+		up_read(&io->bio_list_lock);
-+
-+		if (!found)
-+			continue;
-+
-+		found = false;
-+
-+		down_write(&io->bio_list_lock);
-+		list_for_each_entry(be, head, list) {
-+			if (target)
-+				found = (target == be->bio);
-+			else
-+				found = __has_merged_page(be->bio, NULL,
-+								page, 0);
-+			if (found) {
-+				target = be->bio;
-+				del_bio_entry(be);
-+				break;
-+			}
-+		}
-+		up_write(&io->bio_list_lock);
-+	}
-+
-+	if (found)
-+		__submit_bio(sbi, target, DATA);
-+	if (bio && *bio) {
-+		bio_put(*bio);
-+		*bio = NULL;
-+	}
-+}
-+
- int f2fs_merge_page_bio(struct f2fs_io_info *fio)
- {
- 	struct bio *bio = *fio->bio;
-@@ -554,20 +675,17 @@ int f2fs_merge_page_bio(struct f2fs_io_info *fio)
- 	f2fs_trace_ios(fio, 0);
- 
- 	if (bio && !page_is_mergeable(fio->sbi, bio, *fio->last_block,
--						fio->new_blkaddr)) {
--		__submit_bio(fio->sbi, bio, fio->type);
--		bio = NULL;
--	}
-+						fio->new_blkaddr))
-+		f2fs_submit_merged_ipu_write(fio->sbi, &bio, NULL);
- alloc_new:
- 	if (!bio) {
- 		bio = __bio_alloc(fio, BIO_MAX_PAGES);
- 		bio_set_op_attrs(bio, fio->op, fio->op_flags);
--	}
- 
--	if (bio_add_page(bio, page, PAGE_SIZE, 0) < PAGE_SIZE) {
--		__submit_bio(fio->sbi, bio, fio->type);
--		bio = NULL;
--		goto alloc_new;
-+		add_bio_entry(fio->sbi, bio, page, fio->temp);
-+	} else {
-+		if (add_ipu_page(fio->sbi, &bio, page))
-+			goto alloc_new;
- 	}
- 
- 	if (fio->io_wbc)
-@@ -581,19 +699,6 @@ int f2fs_merge_page_bio(struct f2fs_io_info *fio)
- 	return 0;
- }
- 
--static void f2fs_submit_ipu_bio(struct f2fs_sb_info *sbi, struct bio **bio,
--							struct page *page)
--{
--	if (!bio)
--		return;
--
--	if (!__has_merged_page(*bio, NULL, page, 0))
--		return;
--
--	__submit_bio(sbi, *bio, DATA);
--	*bio = NULL;
--}
--
- void f2fs_submit_page_write(struct f2fs_io_info *fio)
- {
- 	struct f2fs_sb_info *sbi = fio->sbi;
-@@ -2206,14 +2311,12 @@ static int __write_data_page(struct page *page, bool *submitted,
- 
- 	unlock_page(page);
- 	if (!S_ISDIR(inode->i_mode) && !IS_NOQUOTA(inode) &&
--					!F2FS_I(inode)->cp_task) {
--		f2fs_submit_ipu_bio(sbi, bio, page);
-+					!F2FS_I(inode)->cp_task)
- 		f2fs_balance_fs(sbi, need_balance_fs);
--	}
- 
- 	if (unlikely(f2fs_cp_error(sbi))) {
--		f2fs_submit_ipu_bio(sbi, bio, page);
- 		f2fs_submit_merged_write(sbi, DATA);
-+		f2fs_submit_merged_ipu_write(sbi, bio, NULL);
- 		submitted = NULL;
- 	}
- 
-@@ -2333,13 +2436,11 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
- 			}
- 
- 			if (PageWriteback(page)) {
--				if (wbc->sync_mode != WB_SYNC_NONE) {
-+				if (wbc->sync_mode != WB_SYNC_NONE)
- 					f2fs_wait_on_page_writeback(page,
- 							DATA, true, true);
--					f2fs_submit_ipu_bio(sbi, &bio, page);
--				} else {
-+				else
- 					goto continue_unlock;
--				}
- 			}
- 
- 			if (!clear_page_dirty_for_io(page))
-@@ -2397,7 +2498,7 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
- 								NULL, 0, DATA);
- 	/* submit cached bio of IPU write */
- 	if (bio)
--		__submit_bio(sbi, bio, DATA);
-+		f2fs_submit_merged_ipu_write(sbi, &bio, NULL);
- 
- 	return ret;
- }
-@@ -3202,8 +3303,22 @@ int __init f2fs_init_post_read_processing(void)
- 	return -ENOMEM;
- }
- 
--void __exit f2fs_destroy_post_read_processing(void)
-+void f2fs_destroy_post_read_processing(void)
- {
- 	mempool_destroy(bio_post_read_ctx_pool);
- 	kmem_cache_destroy(bio_post_read_ctx_cache);
- }
-+
-+int __init f2fs_init_bio_entry_cache(void)
-+{
-+	bio_entry_slab = f2fs_kmem_cache_create("bio_entry_slab",
-+			sizeof(struct bio_entry));
-+	if (!bio_entry_slab)
-+		return -ENOMEM;
-+	return 0;
-+}
-+
-+void __exit f2fs_destroy_bio_entry_cache(void)
-+{
-+	kmem_cache_destroy(bio_entry_slab);
-+}
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 797e95933ce9..eed7918389ae 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -1068,6 +1068,11 @@ struct f2fs_io_info {
- 	unsigned char version;		/* version of the node */
- };
- 
-+struct bio_entry {
-+	struct bio *bio;
-+	struct list_head list;
-+};
-+
- #define is_read_io(rw) ((rw) == READ)
- struct f2fs_bio_info {
- 	struct f2fs_sb_info *sbi;	/* f2fs superblock */
-@@ -1077,6 +1082,8 @@ struct f2fs_bio_info {
- 	struct rw_semaphore io_rwsem;	/* blocking op for bio */
- 	spinlock_t io_lock;		/* serialize DATA/NODE IOs */
- 	struct list_head io_list;	/* track fios */
-+	struct list_head bio_list;	/* bio entry list head */
-+	struct rw_semaphore bio_list_lock;	/* lock to protect bio entry list */
- };
- 
- #define FDEV(i)				(sbi->devs[i])
-@@ -3210,10 +3217,14 @@ void f2fs_destroy_checkpoint_caches(void);
-  */
- int f2fs_init_post_read_processing(void);
- void f2fs_destroy_post_read_processing(void);
-+int f2fs_init_bio_entry_cache(void);
-+void f2fs_destroy_bio_entry_cache(void);
- void f2fs_submit_merged_write(struct f2fs_sb_info *sbi, enum page_type type);
- void f2fs_submit_merged_write_cond(struct f2fs_sb_info *sbi,
- 				struct inode *inode, struct page *page,
- 				nid_t ino, enum page_type type);
-+void f2fs_submit_merged_ipu_write(struct f2fs_sb_info *sbi,
-+					struct bio **bio, struct page *page);
- void f2fs_flush_merged_writes(struct f2fs_sb_info *sbi);
- int f2fs_submit_page_bio(struct f2fs_io_info *fio);
- int f2fs_merge_page_bio(struct f2fs_io_info *fio);
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 808709581481..25c750cd0272 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -3379,7 +3379,10 @@ void f2fs_wait_on_page_writeback(struct page *page,
- 	if (PageWriteback(page)) {
- 		struct f2fs_sb_info *sbi = F2FS_P_SB(page);
- 
-+		/* submit cached LFS IO */
- 		f2fs_submit_merged_write_cond(sbi, NULL, page, 0, type);
-+		/* sbumit cached IPU IO */
-+		f2fs_submit_merged_ipu_write(sbi, NULL, page);
- 		if (ordered) {
- 			wait_on_page_writeback(page);
- 			f2fs_bug_on(sbi, locked && PageWriteback(page));
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 0e6eb482e853..f770d0b347eb 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -3342,6 +3342,8 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
- 			sbi->write_io[i][j].bio = NULL;
- 			spin_lock_init(&sbi->write_io[i][j].io_lock);
- 			INIT_LIST_HEAD(&sbi->write_io[i][j].io_list);
-+			INIT_LIST_HEAD(&sbi->write_io[i][j].bio_list);
-+			init_rwsem(&sbi->write_io[i][j].bio_list_lock);
- 		}
- 	}
- 
-@@ -3753,8 +3755,13 @@ static int __init init_f2fs_fs(void)
- 	err = f2fs_init_post_read_processing();
- 	if (err)
- 		goto free_root_stats;
-+	err = f2fs_init_bio_entry_cache();
-+	if (err)
-+		goto free_post_read;
- 	return 0;
- 
-+free_post_read:
-+	f2fs_destroy_post_read_processing();
- free_root_stats:
- 	f2fs_destroy_root_stats();
- 	unregister_filesystem(&f2fs_fs_type);
-@@ -3778,6 +3785,7 @@ static int __init init_f2fs_fs(void)
- 
- static void __exit exit_f2fs_fs(void)
- {
-+	f2fs_destroy_bio_entry_cache();
- 	f2fs_destroy_post_read_processing();
- 	f2fs_destroy_root_stats();
- 	unregister_filesystem(&f2fs_fs_type);
--- 
-2.18.0.rc1
+Memory state around the buggy address:
+  ffff888097ebff00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+  ffff888097ebff80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> ffff888097ec0000: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
+                                                     ^
+  ffff888097ec0080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff888097ec0100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
