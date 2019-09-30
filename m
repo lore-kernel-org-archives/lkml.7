@@ -2,154 +2,108 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.0 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA6EC388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4222C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72F2D20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:38:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="twO4PxZg"
+	by mail.kernel.org (Postfix) with ESMTP id AC7E220815
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:40:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569879639;
+	bh=Lsl459yfm3HocRVG8du8uZidhFoWkPhR3RSJBF7l9Ug=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1/bpaSStw1MhXPhz9TKGdBXi5fyMNDrTfJU1Q5srCU8Vh/jMS6c/PoVK4VPMya4A3
+	 0K+m53slAMD6whGbCtu4NvBUlC6IeQ9u8JooYyzZzoIFO+F65gBliXhyxLigq9V7Fi
+	 CEaODPfdJMg5WGS4Nhf4wsg8NIQC2O+jf1NYKVAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731481AbfI3ViH (ORCPT
+        id S1731010AbfI3Vkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 17:38:07 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44039 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726504AbfI3ViG (ORCPT
+        Mon, 30 Sep 2019 17:40:39 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:36383 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbfI3Vki (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 17:38:06 -0400
-Received: by mail-lj1-f193.google.com with SMTP id m13so11046797ljj.11;
-        Mon, 30 Sep 2019 14:38:05 -0700 (PDT)
+        Mon, 30 Sep 2019 17:40:38 -0400
+Received: by mail-lf1-f65.google.com with SMTP id x80so8219690lff.3
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 14:40:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=fAydBCiqlcHtzHCOL0kArH593FU8lQU2VIhbalxOpL4=;
-        b=twO4PxZgUikmA43DkdoQx3BJB8pqgap8QbXid8WEcRB4KpnqlCLlspa3aoEXZ7hzb+
-         fjHT5EiSDiel3CSaCkxDyrGx57XsSzfW6xPqGoNdsjHPhxwmeFRl4hUiEjnTX8JpHvnJ
-         /jk04+yv0/cFCOl0yUuK4p14R8YQrSXOXWy+dzypl8aZqqmdnJy98f/cCXg5tpEfzYcg
-         3TN1DnWwkvUNzU6zDewi2VRy1M43MOLQPw7IksnAaLdNgIyngYlnOl+fsAgEEv0b+DZh
-         NNhAfr4ObRQVw9ybQ79PzvgSuRZbbjWCrfBKAzDofUVbAzgu7wCVdeIa+y/oMMSk8rO5
-         ybMg==
+         :cc;
+        bh=3Act6rfhr6ll6+lxDGIt9p6YkkxuZ3qqsousOClbC28=;
+        b=V7RLMXPETXEXeWwE1Sbnizu2qEFIZYZq5cHmesMNso3mhFcDh0YU3w13uEDwi4/e7M
+         gJ+BO6drpJpEQ0Js3lc9uRgVOARgIqUEGJ6wTOYYpcZxE8hNq1rhk8iDoPfDqTkT+AwE
+         a0YtiITRaLk9xBmk/4pRQlcopVx7UWpdCLzTY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=fAydBCiqlcHtzHCOL0kArH593FU8lQU2VIhbalxOpL4=;
-        b=TIpZyGduQPGJHKpnHYjeVKF89DwhsDbvfaWoVHv3lBkaf4hNgXkODRbtZBUxalEVUa
-         cuC+Y4OhNkfhlsBs93KvYI52pcoEznTLzh7Gnd4tjX0jj6kjEMZN4yWJFBjJgywKx6De
-         9AhWSltp6DZHzMnJ76Jn0OvUNT5NDso750AnLNJKDvAIDnohXMRCQvmQouYoa6sKz/sE
-         5eOpZSFYmeWx+Ol7P+UJdiO9mANDfInAjnPGlhDWdTyYf6LlGduiIncoqSbZ7qXP6zaY
-         h8QShtE99cn6t7lnP0P4AciPCRhwlA96hXswIAaWTGTMFSppkAgQGfQKUT5W+Z/q0WPz
-         6Mjg==
-X-Gm-Message-State: APjAAAX3XqYUgvNSmyvaASFSvipgNLCCSk1dX8s1TK9+VRxSxlaujA+D
-        jBy+j9vr9Q386zMkPkNHL9Y6/i5D8vO+QtuwrRMx
-X-Google-Smtp-Source: APXvYqzZoMJNBKkH52zUnVPvUNJ550xiv8X4zLrwV3JvYY2/vT4x09UXAG2dGnYq5NXCXJWeD+8rXZhpnLzXm3bSTg8=
-X-Received: by 2002:a2e:9713:: with SMTP id r19mr12332903lji.81.1569864747839;
- Mon, 30 Sep 2019 10:32:27 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=3Act6rfhr6ll6+lxDGIt9p6YkkxuZ3qqsousOClbC28=;
+        b=g6Bf6upP8/SHF4xJNzb6XlrO5Q9qMT/jRrQeL0yAtLwpR42SrO+TQ9O1y0LR55SYo0
+         F0jCuG6xwsEXog3R1WJx/SzWrCslaJBp+S3YDRpNizQbw0EHkLSv5qTD5MjHI5XELhMC
+         ubsiob3XZ1FC1fwNKxEBmdSdC10gziCrG8CA4UlHSntHPdYs83E52WQRsdSVe/4US7Dg
+         pBf5UUzA7qEOWJO7iG+yGs7Sptx28q6+ZFomEmRxO7ntATo78aTVEQLN0r14yRjeiDEQ
+         Z4AcfjvHBbJWr9rpqnxU9dHdYwng9YeUShZJuDR6AejjFF6wYB+9qtoiXDSLMHXg95g0
+         oTEg==
+X-Gm-Message-State: APjAAAUtAyOLNNLlhFdv+UMk89slRDxjYxMTopieV5cqcMYTLXkg04cv
+        PzaK2El4qtT/5+7BBHxMTcg4l8MZwdc=
+X-Google-Smtp-Source: APXvYqwmSAFWwf/2U3UWBxdr5rCQ1uuRgEVu/F/fGxF9G4VRp+O8Kfkrs9lpry5XcrrXbcuF9DIrzA==
+X-Received: by 2002:ac2:484a:: with SMTP id 10mr12112810lfy.135.1569863561010;
+        Mon, 30 Sep 2019 10:12:41 -0700 (PDT)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id j84sm3462644ljb.91.2019.09.30.10.12.39
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Sep 2019 10:12:39 -0700 (PDT)
+Received: by mail-lj1-f174.google.com with SMTP id n14so10280315ljj.10
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 10:12:39 -0700 (PDT)
+X-Received: by 2002:a2e:3015:: with SMTP id w21mr12950349ljw.165.1569863559288;
+ Mon, 30 Sep 2019 10:12:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190829050237.GA5161@jagdpanzerIV> <CAKywueRd4d_fojGL+n4BisoibhgkYfN9Wyc_+0=-1sarz4-HZw@mail.gmail.com>
- <20190921223847.GB29065@ZenIV.linux.org.uk>
-In-Reply-To: <20190921223847.GB29065@ZenIV.linux.org.uk>
-From:   Pavel Shilovsky <piastryyy@gmail.com>
-Date:   Mon, 30 Sep 2019 10:32:16 -0700
-Message-ID: <CAKywueSC=MoBB6t2OeUiyc6+GST2Jgg8FTO-kkXif-pn+1k-cw@mail.gmail.com>
-Subject: Re: build_path_from_dentry_optional_prefix() may schedule from
- invalid context
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steve French <stfrench@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        linux-cifs <linux-cifs@vger.kernel.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190926115548.44000-1-thomas_os@shipmail.org>
+ <20190926115548.44000-2-thomas_os@shipmail.org> <85e31bcf-d3c8-2fcf-e659-2c9f82ebedc7@shipmail.org>
+ <CAHk-=wifjLeeMEtMPytiMAKiWkqPorjf1P4PbB3dj17Y3Jcqag@mail.gmail.com>
+ <a48a93d2-03e9-40d3-3b4c-a301632d3121@shipmail.org> <CAHk-=whwN+CvaorsmczZRwFhSV+1x98xg-zajVD1qKmN=9JhBQ@mail.gmail.com>
+ <20190927121754.kn46qh2crvsnw5z2@box> <CAHk-=whfriLqivyRtyjDPzeNr_Y3UYkC9g123Yi_yB5c8Gcmiw@mail.gmail.com>
+ <20190930130357.ye3zlkbka2jtd56a@box>
+In-Reply-To: <20190930130357.ye3zlkbka2jtd56a@box>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 30 Sep 2019 10:12:23 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wigUfYXiizFH6tBCH0Na=L+c=k7CgXGoZjwKg4K1rNJ2Q@mail.gmail.com>
+Message-ID: <CAHk-=wigUfYXiizFH6tBCH0Na=L+c=k7CgXGoZjwKg4K1rNJ2Q@mail.gmail.com>
+Subject: Re: Ack to merge through DRM? WAS Re: [PATCH v2 1/5] mm: Add
+ write-protect and clean utilities for address space ranges
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=D1=81=D0=B1, 21 =D1=81=D0=B5=D0=BD=D1=82. 2019 =D0=B3. =D0=B2 15:38, Al Vi=
-ro <viro@zeniv.linux.org.uk>:
+On Mon, Sep 30, 2019 at 6:04 AM Kirill A. Shutemov <kirill@shutemov.name> wrote:
 >
-> On Thu, Sep 19, 2019 at 05:11:54PM -0700, Pavel Shilovsky wrote:
->
-> > Good catch. I think we should have another version of
-> > build_path_from_dentry() which takes pre-allocated (probably on stack)
-> > full_path as an argument. This would allow us to avoid allocations
-> > under the spin lock.
->
-> On _stack_?  For relative pathname?  Er...  You do realize that
-> kernel stack is small, right?  And said relative pathname can
-> bloody well be up to 4Kb (i.e. the half of said stack already,
-> on top of whatever the call chain has already eaten up)...
+> Have you seen page_vma_mapped_walk()? I made it specifically for rmap code
+> to cover cases when a THP is mapped with PTEs. To me it's not a big
+> stretch to make it cover multiple pages too.
 
-My idea was to use a small stack-allocated array which satisfies most
-cases (say 100-200 bytes) and fallback to dynamic a heap allocation
-for longer path names.
+I agree that is closer, but it does make for calling that big complex
+function for every iteration step.
 
->
-> BTW, looking at build_path_from_dentry()...  WTF is this?
->                 temp =3D temp->d_parent;
->                 if (temp =3D=3D NULL) {
->                         cifs_dbg(VFS, "corrupt dentry\n");
->                         rcu_read_unlock();
->                         return NULL;
->                 }
-> Why not check for any number of other forms of memory corruption?
-> Like, say it, if (temp =3D=3D (void *)0xf0adf0adf0adf0ad)?
->
-> IOW, kindly lose that nonsense.  More importantly, why bother
-> with that kmalloc()?  Just __getname() in the very beginning
-> and __putname() on failure (and for freeing the result afterwards).
->
-> What's more, you are open-coding dentry_path_raw(), badly.
-> The only differences are
->         * use of dirsep instead of '/' and
->         * a prefix slapped in the beginning.
->
-> I'm fairly sure that
->         char *buf =3D __getname();
->         char *s;
->
->         *to_free =3D NULL;
->         if (unlikely(!buf))
->                 return NULL;
->
->         s =3D dentry_path_raw(dentry, buf, PATH_MAX);
->         if (IS_ERR(s) || s < buf + prefix_len)
->                 __putname(buf);
->                 return NULL; // assuming that you don't care about detail=
-s
->         }
->
->         if (dirsep !=3D '/') {
->                 char *p =3D s;
->                 while ((p =3D strchr(p, '/')) !=3D NULL)
->                         *p++ =3D dirsep;
->         }
->
->         s -=3D prefix_len;
->         memcpy(s, prefix, prefix_len);
->
->         *to_free =3D buf;
->         return s;
->
-> would end up being faster, not to mention much easier to understand.
-> With the caller expected to pass &to_free among the arguments and
-> __putname() it once it's done.
->
-> Or just do __getname() in the caller and pass it to the function -
-> in that case freeing (in all cases) would be up to the caller.
+Of course, you are right that the callback approach is problematic
+too, now that we have retpoline issues, making those very expensive.
+But at least that hopefully gets fixed some day and gets to be a rare
+problem.
 
-Thanks for pointing this out. Someone should look at this closely and
-clean it up.
+Matter ot taste, I guess.
 
---
-Best regards,
-Pavel Shilovsky
+              Linus
