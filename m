@@ -2,62 +2,128 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4876DC35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8B7C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20D142053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:46:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B017B2053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:48:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BHbsTAOu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732353AbfI3Vqp (ORCPT
+        id S1731744AbfI3VsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 17:46:45 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:35273 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731898AbfI3Vqp (ORCPT
+        Mon, 30 Sep 2019 17:48:17 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:55210 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726590AbfI3VsQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 17:46:45 -0400
-Received: from webmail.gandi.net (webmail21.sd4.0x35.net [10.200.201.21])
-        (Authenticated sender: cengiz@kernel.wtf)
-        by relay10.mail.gandi.net (Postfix) with ESMTPA id 78A55240003;
-        Mon, 30 Sep 2019 21:46:40 +0000 (UTC)
+        Mon, 30 Sep 2019 17:48:16 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8UHmPhm061772;
+        Mon, 30 Sep 2019 12:48:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569865705;
+        bh=QNVK9aqnamqVKs2ieTsZhQ72/wiNcVA3/7UIFUG5FOc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=BHbsTAOuj8sLvQOROqK2l+5nIG8Mnr45lF20es/l3dVWF5SydCoiPBI0pBY9pdgDj
+         yf9wNopJuKFRnldepyYYeWsrFHayRT5G1MDK9QLootceqmxKPZe2Gc1bKr/5D8qAjn
+         bsDSUwhkIdeCt/C4ub0GlqtIjj3FDmY5VBt2s5oc=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8UHmPJS070578
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 30 Sep 2019 12:48:25 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 30
+ Sep 2019 12:48:25 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 30 Sep 2019 12:48:15 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8UHmK0R117112;
+        Mon, 30 Sep 2019 12:48:21 -0500
+Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to
+ dts
+To:     Adam Ford <aford173@gmail.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>
+CC:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190510194229.20628-1-aford173@gmail.com>
+ <845055e2-8182-de74-2077-629fdf50ac6c@ti.com>
+ <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
+ <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com>
+ <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
+ <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com>
+ <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
+ <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com>
+ <23eba53a-9304-2ceb-d97e-01891ec0b3ed@ti.com>
+ <cb028b1e-05ca-9b22-be5d-c63f5fd56cc4@ti.com>
+ <F3335195-6EB7-4D44-B884-2F29D9238011@goldelico.com>
+ <CAHCN7xL9bFxO=2i1DzmRj6A3XwUNdt=DZeJ2a0EZ0f9gcFTy6g@mail.gmail.com>
+ <CAHCN7x+vCfPTRE+zzYUwAXdbBzRotTP2hSOgsHB0FdgBhZV5zA@mail.gmail.com>
+ <CAHCN7xJDV=R9Ysjhff7=mEXdciwPP_5LQbHwaUT8KvhSkLKw8A@mail.gmail.com>
+ <04306a5e-f9be-35a4-1aa1-5795d780e289@ti.com>
+ <3777f1b1-2d9a-334b-b9e7-99dfda2ae29b@ti.com>
+ <CAHCN7xJNJca8W_yw5nNY3AmKDSPoLzJ8voPmR1HS3bNcU8uQGg@mail.gmail.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <6cd7c9f0-cb26-588b-dfd1-faf462732549@ti.com>
+Date:   Mon, 30 Sep 2019 20:48:20 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Tue, 01 Oct 2019 00:46:40 +0300
-From:   Cengiz Can <cengiz@kernel.wtf>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     linux@roeck-us.net, clang-built-linux@googlegroups.com,
-        jdelvare@suse.com,
-        =?UTF-8?Q?Tomasz_Pawe=C5=82_Gajc?= <tpgxyz@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon-owner@vger.kernel.org
-Subject: Re: [PATCH v2] hwmon: (applesmc) fix UB and udelay overflow
-In-Reply-To: <20190924174728.201464-1-ndesaulniers@google.com>
-References: <CAKwvOd=GVdHhsdHOMpuhEKkWMssW37keqX5c59+6fiEgLs+Q1g@mail.gmail.com>
- <20190924174728.201464-1-ndesaulniers@google.com>
-Message-ID: <e37463661a4568332bb9625eb777c5d9@kernel.wtf>
-X-Sender: cengiz@kernel.wtf
-User-Agent: Roundcube Webmail/1.3.8
+In-Reply-To: <CAHCN7xJNJca8W_yw5nNY3AmKDSPoLzJ8voPmR1HS3bNcU8uQGg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I spent quite some time to rewrite applesmc but I couldn't finish.
+On 30/09/2019 18:10, Adam Ford wrote:
+> On Mon, Sep 30, 2019 at 9:27 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+>>
+>> On 30/09/2019 17:20, Tomi Valkeinen wrote:
+>>
+>>> Let's see what Tero says, but yeah, something is odd here. I expected
+>>> the max divider to be 16 with Tero's patch, but I don't see it having
+>>> that effect. I can get the div to 31.
+>>>
+>>> You can see this from the clock register 0x48004e40 (CM_CLKSEL_DSS). The
+>>> lowest bits are the divider, 5 to 0. The TRM says max div is 32.
+>>>
+>>> Tero said for him the dividers > 16 didn't "stick" to the register. I'm
+>>> now wondering if he has an old beagleboard with OMAP34xx, which has max
+>>> div 16.
+>>
+>> So testing a bit more here, I can see the DSS working fine and fps as
+>> expected when I write values directly to CM_CLKSEL_DSS:5:0, with
+>> dividers up to 31. With 32, DSS breaks. The TRM (AM/DM37x) says value 32
+>> is valid.
+> 
+> I wonder if it's somehow being masked with bits 4:0 instead of 5:0
+> which could potentially make the divider 0 and that value doesn't
+> appear to be valid.
 
-Thanks for the loop fix. I did my reviewing part, if that matters.
+Hmmh, after some testing, it seems there is bad stuff happening with the 
+divider clock implementation, I am re-working it as of now. Basically 
+what is wrong is that with a divider max value of say 16, the driver 
+attempts to craft the max value into a mask, but this ends up being 
+0x1f. If the max value is 15, it ends up into 0xf which is correct.
 
-> Reported-by: Tomasz Paweł Gajc <tpgxyz@gmail.com>
-> Link: https://github.com/ClangBuiltLinux/linux/issues/678
-> Debugged-by: Nathan Chancellor <natechancellor@gmail.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> Build-tested-by: Nathan Chancellor <natechancellor@gmail.com>
-
-Reviewed-by: Cengiz Can <cengiz@kernel.wtf>
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
