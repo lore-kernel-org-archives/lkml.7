@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4738AC35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF029C35280
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C5702081B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:28:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8559E2081B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:28:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731888AbfI3W2f (ORCPT
+        id S1732097AbfI3W2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 18:28:35 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60326 "EHLO
+        Mon, 30 Sep 2019 18:28:39 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60344 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731349AbfI3W2e (ORCPT
+        with ESMTP id S1731349AbfI3W2i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 18:28:34 -0400
+        Mon, 30 Sep 2019 18:28:38 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: ezequiel)
-        with ESMTPSA id F04CB283BA6
+        with ESMTPSA id 96BCC28A81A
 From:   Ezequiel Garcia <ezequiel@collabora.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     linux-rockchip@lists.infradead.org,
@@ -38,9 +38,9 @@ Cc:     linux-rockchip@lists.infradead.org,
         Mark Rutland <mark.rutland@arm.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH v3 4/5] ARM: dts: rockchip: Add RK3288 VOP gamma LUT address
-Date:   Mon, 30 Sep 2019 19:28:01 -0300
-Message-Id: <20190930222802.32088-5-ezequiel@collabora.com>
+Subject: [PATCH v3 5/5] RFC: drm/atomic-helper: Reapply color transformation after resume
+Date:   Mon, 30 Sep 2019 19:28:02 -0300
+Message-Id: <20190930222802.32088-6-ezequiel@collabora.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190930222802.32088-1-ezequiel@collabora.com>
 References: <20190930222802.32088-1-ezequiel@collabora.com>
@@ -51,42 +51,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RK3288 SoC VOPs have optional support Gamma LUT setting,
-which requires specifying the Gamma LUT address in the devicetree.
+Some platforms are not able to maintain the color transformation
+state after a system suspend/resume cycle.
+
+Set the colog_mgmt_changed flag so that CMM on the CRTCs in
+the suspend state are reapplied after system resume.
 
 Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
 ---
-Changes from v2:
-* None.
-Changes from v1:
-* Drop reg-names, as suggested by Doug.
----
- arch/arm/boot/dts/rk3288.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This is an RFC, and it's mostly based on Jacopo Mondi's work https://lkml.org/lkml/2019/9/6/498.
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index cc893e154fe5..c6fc633ace80 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -1023,7 +1023,7 @@
+Changes from v2:
+* New patch.
+---
+ drivers/gpu/drm/drm_atomic_helper.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+index e41db0f202ca..518488125575 100644
+--- a/drivers/gpu/drm/drm_atomic_helper.c
++++ b/drivers/gpu/drm/drm_atomic_helper.c
+@@ -3234,8 +3234,20 @@ int drm_atomic_helper_resume(struct drm_device *dev,
+ 			     struct drm_atomic_state *state)
+ {
+ 	struct drm_modeset_acquire_ctx ctx;
++	struct drm_crtc_state *crtc_state;
++	struct drm_crtc *crtc;
++	unsigned int i;
+ 	int err;
  
- 	vopb: vop@ff930000 {
- 		compatible = "rockchip,rk3288-vop";
--		reg = <0x0 0xff930000 0x0 0x19c>;
-+		reg = <0x0 0xff930000 0x0 0x19c>, <0x0 0xff931000 0x0 0x1000>;
- 		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>;
- 		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
-@@ -1073,7 +1073,7 @@
++	for_each_new_crtc_in_state(state, crtc, crtc_state, i) {
++		/*
++		 * Force re-enablement of CMM after system resume if any
++		 * of the DRM color transformation properties was set in
++		 * the state saved at system suspend time.
++		 */
++		if (crtc_state->gamma_lut)
++			crtc_state->color_mgmt_changed = true;
++	}
+ 	drm_mode_config_reset(dev);
  
- 	vopl: vop@ff940000 {
- 		compatible = "rockchip,rk3288-vop";
--		reg = <0x0 0xff940000 0x0 0x19c>;
-+		reg = <0x0 0xff940000 0x0 0x19c>, <0x0 0xff941000 0x0 0x1000>;
- 		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&cru ACLK_VOP1>, <&cru DCLK_VOP1>, <&cru HCLK_VOP1>;
- 		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
+ 	DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, 0, err);
 -- 
 2.22.0
 
