@@ -2,182 +2,165 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C10C35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6C5C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F97B2075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:48:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="d6t4GmHO"
+	by mail.kernel.org (Postfix) with ESMTP id 2D97D21D71
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:48:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730875AbfI3MsF (ORCPT
+        id S1730911AbfI3Ms0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 08:48:05 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:47088 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728214AbfI3MsF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 08:48:05 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8UClwFS118509;
-        Mon, 30 Sep 2019 07:47:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569847678;
-        bh=MU2IxupzjQxFjETdLI0C8t3D/A7a75NCIfAIo/YLC3A=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=d6t4GmHOHUZhaLi1mgBh5+2uyMRrj9wMIVt4h4QtMin8NiBOL5wVoM600314q9VIk
-         R0Yb2k6rIK8uzNNMQa++8MnWRq0UEWEY6qciw6IYlkB5iR4KQFYolhpNZrHk4RvTRi
-         rXiO03k0BfW1/NQ2PqOs6TstF3fnHNFChDNQNVh4=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8UClwFc108236
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 30 Sep 2019 07:47:58 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 30
- Sep 2019 07:47:57 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 30 Sep 2019 07:47:58 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8UClrff044162;
-        Mon, 30 Sep 2019 07:47:55 -0500
-Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to
- dts
-To:     Adam Ford <aford173@gmail.com>
-CC:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190510194229.20628-1-aford173@gmail.com>
- <af325707-3e42-493d-e858-77878ef06138@ti.com>
- <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
- <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
- <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
- <845055e2-8182-de74-2077-629fdf50ac6c@ti.com>
- <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
- <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com>
- <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
- <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com>
- <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
- <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com>
- <23eba53a-9304-2ceb-d97e-01891ec0b3ed@ti.com>
- <cb028b1e-05ca-9b22-be5d-c63f5fd56cc4@ti.com>
- <CAHCN7xLKL42ib4t0Lte3sJPoJrKX0TPJR9VWi+uW=fZjUg1ssg@mail.gmail.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <c816d70d-fa5b-a43f-ae7a-6df4589fe484@ti.com>
-Date:   Mon, 30 Sep 2019 15:47:52 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 30 Sep 2019 08:48:26 -0400
+Received: from mga17.intel.com ([192.55.52.151]:64485 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728214AbfI3Ms0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 08:48:26 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Sep 2019 05:48:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,567,1559545200"; 
+   d="scan'208";a="220640459"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 30 Sep 2019 05:48:25 -0700
+Received: from [10.251.2.197] (kliang2-mobl.ccr.corp.intel.com [10.251.2.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 4A9E35803FA;
+        Mon, 30 Sep 2019 05:48:24 -0700 (PDT)
+Subject: Re: [PATCH V4 00/14] TopDown metrics support for Icelake
+To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com
+References: <20190916134128.18120-1-kan.liang@linux.intel.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <89a2f460-a7ec-6455-b153-f94b7f3f87d0@linux.intel.com>
+Date:   Mon, 30 Sep 2019 08:48:22 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAHCN7xLKL42ib4t0Lte3sJPoJrKX0TPJR9VWi+uW=fZjUg1ssg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20190916134128.18120-1-kan.liang@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/09/2019 15:41, Adam Ford wrote:
-> On Mon, Sep 30, 2019 at 3:53 AM Tero Kristo <t-kristo@ti.com> wrote:
->>
->> On 30/09/2019 09:45, Tomi Valkeinen wrote:
->>> Hi,
->>>
->>> On 27/09/2019 18:47, Tomi Valkeinen wrote:
->>>> On 27/09/2019 18:37, Tero Kristo wrote:
->>>>
->>>>> If you can provide details about what clock framework / driver does
->>>>> wrong (sample clk_set_xyz call sequence, expected results via
->>>>> clk_get_xyz, and what fails), I can take a look at it. Just reporting
->>>>> arbitrary display driver issues I won't be able to debug at all (I
->>>>> don't have access to any of the displays, nor do I want to waste time
->>>>> debugging them without absolutely no knowledge whatsoever.)
->>>>
->>>> I used your hack patches to allow changing rates via debugfs. And set
->>>> dss1_alwon_fck_3430es2 to 27000000 or 27870967. The end result was
->>>> that DSS gets some very high clock from dss1_alwon_fck_3430es2, as the
->>>> frame rate jumps to many hundreds fps.
->>>>
->>>> So, these numbers are not real, but to give the idea what I saw.
->>>> Running first with 50 MHz, I can see, say, 40 fps. Then I set the
->>>> clock to 30 MHz, and fps dropped to, say, 30fps, as expected with
->>>> lower clock. Then I set the clock to 27MHz (or the other one),
->>>> expecting a bit lower fps, but instead I saw hundreds of fps.
->>>>
->>>> I don't know if there's any other way to observe the wrong clock rate
->>>> but have the dss enabled and running kmstest or similar. I can help
->>>> you set that up next week, should be trivial. You don't need a display
->>>> for that.
->>>
->>> Here's how to reproduce. I have the attached patches. Three of them are
->>> the clk-debug ones, and one of mine to make it easy to test without a
->>> display, and without underflow flood halting the device. There are on
->>> top of v5.3. Kernel config also attached.
->>>
->>> kmstest is from kms++ project (https://github.com/tomba/kmsxx). It
->>> should be straightforward to compile, but kmstest binary is also
->>> included in TI's rootfs.
->>
->> Ok, I ignored all your test code and just fiddled with my trusty clk
->> debugfs patches. I don't like debugging with test code I have no
->> experience with. :)
->>
->> Anyways, it seems the dpll4_m4_ck max divider value is wrong, it only
->> accepts values upto 16 at least on my board. The setting for this in DT
->> is 32, and it is most likely SoC specific what happens if you write an
->> invalid value to the divider.
->>
->> The best action here is probably to drop the max-div value for this
->> clock to 16. Can someone check this with their display setup and see
->> what happens? Attached patch should do the trick.
-> 
-> I tried your attached patch on my dm3730 and that seems to make it
-> somewhat better in that it doesn't hang anymore, so that leads me to
-> believe that your comment about the divider being only valid on the
-> omap36 may not be true. I do think it solves the hanging issue that i
-> was seeing, but I now see a new one now which is dumping a backtrace.
-> 
-> It looks like it's unhappy that its trying to get one frequency and
-> getting something different instead.
-> 
-> [   10.014099] WARNING: CPU: 0 PID: 111 at
-> drivers/gpu/drm/omapdrm/dss/dss.c:655 dss_set_fck_rate+0x70/0x90
-> [omapdss]
-> [   10.014129] clk rate mismatch: 27870968 != 27000000
+Hi Peter,
 
-I believe this one is for Tomi to comment, his driver does some magic 
-compares for the requested vs. actual received clock rates. If I am not 
-mistaken, we are only modifying an integer divider here, and thus it is 
-physically impossible to get accurate 27MHz rate to display.
+Could you please take a look at the patch set?
 
--Tero
+Thanks,
+Kan
 
+On 9/16/2019 9:41 AM, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
 > 
-> See attached log for the full dump.
+> Icelake has support for measuring the level 1 TopDown metrics
+> directly in hardware. This is implemented by an additional METRICS
+> register, and a new Fixed Counter 3 that measures pipeline SLOTS.
 > 
-> Either way, I think you've identified the main issue.  I just think we
-> may have uncovered another one in the process.
+> For the Ice Lake implementation of performance metrics, software
+> should start both PERF_METRICS and fixed counter 3 from zero.
+> Additionally, for certain scenarios that involve counting metrics at
+> high rates, software is recommended to periodically clear both in
+> order to maintain accurate measurements.
 > 
-> For what it's worth, the video looks good.  :-)
+> IA32_PERF_GLOBAL_STATUS. OVF_PERF_METRICS[48]: If this bit is set,
+> it indicates that some PERF_METRICS-related counter has overflowed and
+> a PMI is triggered. It is recommended to clear PERF_METRICS as well as
+> fixed counter 3 in such case. However, an overflow of fixed counter 3
+> should normally happen first. If this bit is clear, no such overflow has
+> occurred.
 > 
-> adam
->>
->> -Tero
->>
->> --
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> New in Icelake
+> - Do not require generic counters. This allows to collect TopDown always
+>    in addition to other events.
+> - Measuring TopDown per thread/process instead of only per core
+> 
+> Limitation
+> - To get accurate result and avoid reading the METRICS register multiple
+>    times, the TopDown metrics events and SLOTS event have to be in the
+>    same group.
+> - METRICS and SLOTS registers have to be cleared after each read by SW.
+>    That is to prevent the lose of precision.
+> - Cannot do sampling read SLOTS and TopDown metric events
+> 
+> Please refer SDM Vol3, 18.3.9.3 Performance Metrics for the details of
+> TopDown metrics.
+> 
+> Changes since V3:
+> - Separate fixed counter3 definition patch
+> - Separate BTS index patch
+> - Apply Peter's cleanup patch
+> - Fix the name of perf capabilities for perf METRICS
+> - Apply patch for mul_u64_u32_div() x86_64 implementation
+> - Fix unconditionally allows collecting 4 extra events
+> - Add patch to clean up NMI handler by naming global status bit
+> - Add patch to reuse event_base_rdpmc for RDPMC userspace support
+> 
+> Changes since V2:
+> - Rebase on top of v5.3-rc1
+> 
+> Key changes since V1:
+> - Remove variables for reg_idx and enabled_events[] array.
+>    The reg_idx can be calculated by idx in runtime.
+>    Using existing active_mask to replace enabled_events.
+> - Choose value 47 for the fixed index of BTS.
+> - Support OVF_PERF_METRICS overflow bit in PMI handler
+> - Drops the caching mechanism and related variables
+>    New mechanism is to update all active slots/metrics events for the
+>    first slots/metrics events in a group. For each group reading, it
+>    still only read the slots/perf_metrics MSR once
+> - Disable PMU for read of topdown events to avoid the NMI issue
+> - Move RDPMC support to a separate patch
+> - Using event=0x00,umask=0x1X for topdown metrics events
+> - Drop the patch which add REMOVE transaction
+>    We can indicate x86_pmu_stop() by checking
+>    (event && !test_bit(event->hw.idx, cpuc->active_mask)),
+>    which is a good place to save the slots/metrics MSR value
+> 
+> Andi Kleen (2):
+>    perf, tools, stat: Support new per thread TopDown metrics
+>    perf, tools: Add documentation for topdown metrics
+> 
+> Kan Liang (11):
+>    perf/x86/intel: Introduce the fourth fixed counter
+>    perf/x86/intel: Set correct mask for TOPDOWN.SLOTS
+>    perf/x86/intel: Move BTS index to 47
+>    perf/x86/intel: Basic support for metrics counters
+>    perf/x86/intel: Fix the name of perf capabilities for perf METRICS
+>    perf/x86/intel: Support hardware TopDown metrics
+>    perf/x86/intel: Support per thread RDPMC TopDown metrics
+>    perf/x86/intel: Export TopDown events for Icelake
+>    perf/x86/intel: Disable sampling read slots and topdown
+>    perf/x86/intel: Name global status bit in NMI handler
+>    perf/x86: Use event_base_rdpmc for RDPMC userspace support
+> 
+> Peter Zijlstra (Intel) (1):
+>    x86/math64: Provide a sane mul_u64_u32_div() implementation for x86_64
+> 
+>   arch/x86/events/core.c                 |  80 ++++-
+>   arch/x86/events/intel/core.c           | 421 +++++++++++++++++++++++--
+>   arch/x86/events/perf_event.h           |  57 +++-
+>   arch/x86/include/asm/div64.h           |  13 +
+>   arch/x86/include/asm/msr-index.h       |   3 +
+>   arch/x86/include/asm/perf_event.h      |  48 ++-
+>   include/linux/perf_event.h             |   3 +
+>   tools/perf/Documentation/perf-stat.txt |   9 +-
+>   tools/perf/Documentation/topdown.txt   | 223 +++++++++++++
+>   tools/perf/builtin-stat.c              |  24 ++
+>   tools/perf/util/stat-shadow.c          |  89 ++++++
+>   tools/perf/util/stat.c                 |   4 +
+>   tools/perf/util/stat.h                 |   8 +
+>   13 files changed, 924 insertions(+), 58 deletions(-)
+>   create mode 100644 tools/perf/Documentation/topdown.txt
+> 
