@@ -2,225 +2,208 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E919C35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9297AC35280
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C4BA21855
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:24:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6026C2075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:25:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gxg51sWY"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="V1uGL/vz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732269AbfI3QYq (ORCPT
+        id S1732283AbfI3QY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 12:24:46 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:33948 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727767AbfI3QYq (ORCPT
+        Mon, 30 Sep 2019 12:24:59 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:47756 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727767AbfI3QY7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 12:24:46 -0400
-Received: by mail-io1-f66.google.com with SMTP id q1so39950654ion.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 09:24:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pMMecHlbii45iWOZHo2zW6iaJVDnPkjK3dSHl9V+w9k=;
-        b=gxg51sWYMWs5I+Rs64CCmaLYCptrQXOXaDSFiT6envy1JZaR2Ggqn1tMrfH3/x6wZh
-         nmHLnHuGstb3DY9wlIP9IHKb8Wim8b7I1KVeQjIlNdzzME0Q6ZyNNgdSTt8OOawfFyT2
-         /ZSC/X8fAZFAxIluTHfm1WpCf5zR1GZNw8fvk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pMMecHlbii45iWOZHo2zW6iaJVDnPkjK3dSHl9V+w9k=;
-        b=iMh0v6H//x+SM5l4rVeKaqiUXRhg4Uuyhyo+TgdfZqbXkn55sfJYWM0+AwfbUa+aop
-         13BmhWJJG/gOEQfqcvJ1W4Zzv5QfRsLYiGKsZNFbiIJIDj+awzzOxtIn2Kk37HDkU+aE
-         jObGlWSwa3BYX0zh3ToaYRsF1gi0dth0VGqq0bVOznwBiwIIj28317YYaIovqmfWGMic
-         DVINyO+lxbt3CkPr/U9fYfmQVeu5n+27+/fnzCFwQSDmatCuezzHl1eWkWNfuhB0tiD8
-         XC6OoiWwWNCoy6ThVLdLh+mI/UI+w4WUeFpcsti+/8CiILk40oxgGV9BFoYQZj3+Xq6m
-         kaOA==
-X-Gm-Message-State: APjAAAU3R00F4Yd53/icRMPOYdSyOZaBUle+cyPYE/47394xV5+IV2VE
-        +I9QAZDbJPHvjAUYklaB+hbeuIn+NDiCwHuiocB0yg==
-X-Google-Smtp-Source: APXvYqzoyjRyk10Z6QSw8uzHAdILDacqAXCbflVdJW+xpSV5WxVDagtkOpqqRF8Utl8En6M6C/yQsxGc8bzrYYmf6xY=
-X-Received: by 2002:a6b:5907:: with SMTP id n7mr21653958iob.145.1569860685182;
- Mon, 30 Sep 2019 09:24:45 -0700 (PDT)
+        Mon, 30 Sep 2019 12:24:59 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8UGOs7B065864;
+        Mon, 30 Sep 2019 11:24:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569860694;
+        bh=wt9eupa3af5TmswlMTWdT2xVqakUqx25n6+llMGJxyg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=V1uGL/vzVjuj4PqbfYbDpawt+M+cd2UGX6Zvdnm2H725qHc49a+ySjmP5imeaiSEv
+         lOXaebhE4kdpAKZvuqSSqgRHG7m1MDLERNfzbrWR6x6VIZb0LdqF/uM2zgNaHV45P7
+         Yv8nRq2XQw2Dst9oORdj/Dqcib3/R7j1j0Jh0qSY=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8UGOs0U013641
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 30 Sep 2019 11:24:54 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 30
+ Sep 2019 11:24:44 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 30 Sep 2019 11:24:53 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8UGOrPM117830;
+        Mon, 30 Sep 2019 11:24:53 -0500
+Subject: Re: [PATCH v9 13/15] leds: lp55xx: Update the lp55xx to use the multi
+ color framework
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190925174616.3714-1-dmurphy@ti.com>
+ <20190925174616.3714-14-dmurphy@ti.com>
+ <59e58ccf-84fb-5db7-5008-20afc7436d35@gmail.com>
+ <64d00aab-501c-d709-94af-4747a27df098@ti.com>
+ <35e25398-81de-3755-7979-72638a119c77@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <74099f4d-5a90-3241-9c40-47ca6f0c9521@ti.com>
+Date:   Mon, 30 Sep 2019 11:31:53 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190922175021.53449-1-gwendal@chromium.org> <20190922175021.53449-2-gwendal@chromium.org>
- <411716b0-818b-9060-7055-8ff9523c0c45@collabora.com>
-In-Reply-To: <411716b0-818b-9060-7055-8ff9523c0c45@collabora.com>
-From:   Gwendal Grignou <gwendal@chromium.org>
-Date:   Mon, 30 Sep 2019 09:24:34 -0700
-Message-ID: <CAPUE2utue_uVeZYmrtB4DyPYtNh9vBHz9W5vc=Z2VAEbBZm5Vg@mail.gmail.com>
-Subject: Re: [PATCH 01/13] mfd: cros_ec: Add sensor_count and make
- check_features public
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Benson Leung <bleung@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <35e25398-81de-3755-7979-72638a119c77@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sounds good to me, I will make the change in rev2.
+Jacek
 
-On Mon, Sep 30, 2019 at 6:15 AM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
+On 9/29/19 8:01 AM, Jacek Anaszewski wrote:
+> Dan,
 >
-> Hi Gwendal,
+> On 9/26/19 2:02 PM, Dan Murphy wrote:
+>> Jacek
+>>
+>> On 9/25/19 5:00 PM, Jacek Anaszewski wrote:
+>>> Dan,
+>>>
+>>> On 9/25/19 7:46 PM, Dan Murphy wrote:
+>>>> Update the lp5523 to allow the use of the multi color framework.
+>>>>
+>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>> ---
+>>>>    drivers/leds/Kconfig                      |   1 +
+>>>>    drivers/leds/leds-lp5523.c                |  13 ++
+>>>>    drivers/leds/leds-lp55xx-common.c         | 150 ++++++++++++++++++----
+>>>>    drivers/leds/leds-lp55xx-common.h         |  11 ++
+>>>>    include/linux/platform_data/leds-lp55xx.h |   6 +
+>>>>    5 files changed, 157 insertions(+), 24 deletions(-)
+>>>>
+>>>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+>>>> index 84f60e35c5ee..dc3d9f2194cd 100644
+>>>> --- a/drivers/leds/Kconfig
+>>>> +++ b/drivers/leds/Kconfig
+>>>> @@ -377,6 +377,7 @@ config LEDS_LP50XX
+>>>>    config LEDS_LP55XX_COMMON
+>>>>        tristate "Common Driver for TI/National
+>>>> LP5521/5523/55231/5562/8501"
+>>>>        depends on LEDS_LP5521 || LEDS_LP5523 || LEDS_LP5562 ||
+>>>> LEDS_LP8501
+>>>> +    depends on LEDS_CLASS_MULTI_COLOR && OF
+>>>>        select FW_LOADER
+>>>>        select FW_LOADER_USER_HELPER
+>>>>        help
+>>>> diff --git a/drivers/leds/leds-lp5523.c b/drivers/leds/leds-lp5523.c
+>>>> index d0b931a136b9..8b2cdb98fed6 100644
+>>>> --- a/drivers/leds/leds-lp5523.c
+>>>> +++ b/drivers/leds/leds-lp5523.c
+>>>> @@ -791,6 +791,18 @@ static ssize_t store_master_fader_leds(struct
+>>>> device *dev,
+>>>>        return ret;
+>>>>    }
+>>>>    +static int lp5523_led_intensity(struct lp55xx_led *led, int chan_num)
+>>> Why do we need this function? brightness op will not suffice?
+>> I looked at this before sending it in.  This API adds the chan_num to
+>> write to.
+>>
+>> The brightness_fn does not it takes it from the led structure.
+>>
+>>>> +{
+>>>> +    struct lp55xx_chip *chip = led->chip;
+>>>> +    int ret;
+>>>> +
+>>>> +    mutex_lock(&chip->lock);
+>>>> +    ret = lp55xx_write(chip, LP5523_REG_LED_PWM_BASE + chan_num,
+>>>> +             led->brightness);
+>>>> +    mutex_unlock(&chip->lock);
+>>>> +    return ret;
+>>>> +}
+>>>> +
+>>>>    static int lp5523_led_brightness(struct lp55xx_led *led)
+>>>>    {
+>>>>        struct lp55xx_chip *chip = led->chip;
+>>>> @@ -857,6 +869,7 @@ static struct lp55xx_device_config lp5523_cfg = {
+>>>>        .max_channel  = LP5523_MAX_LEDS,
+>>>>        .post_init_device   = lp5523_post_init_device,
+>>>>        .brightness_fn      = lp5523_led_brightness,
+>>>> +    .color_intensity_fn = lp5523_led_intensity,
+>>>>        .set_led_current    = lp5523_set_led_current,
+>>>>        .firmware_cb        = lp5523_firmware_loaded,
+>>>>        .run_engine         = lp5523_run_engine,
+>>>> diff --git a/drivers/leds/leds-lp55xx-common.c
+>>>> b/drivers/leds/leds-lp55xx-common.c
+>>>> index 44ced02b49f9..0e4b3a9d3047 100644
+>>>> --- a/drivers/leds/leds-lp55xx-common.c
+>>>> +++ b/drivers/leds/leds-lp55xx-common.c
+>>>> @@ -136,9 +136,26 @@ static int lp55xx_set_brightness(struct
+>>>> led_classdev *cdev,
+>>>>    {
+>>>>        struct lp55xx_led *led = cdev_to_lp55xx_led(cdev);
+>>>>        struct lp55xx_device_config *cfg = led->chip->cfg;
+>>>> +    int brightness_val[LP55XX_MAX_GROUPED_CHAN];
+>>>> +    int ret;
+>>>> +    int i;
+>>>> +
+>>>> +    if (led->mc_cdev.num_leds > 1) {
+>>>> +        led_mc_calc_brightness(&led->mc_cdev,
+>>>> +                       brightness, brightness_val);
+>>>> +        for (i = 0; i < led->mc_cdev.num_leds; i++) {
+>>>> +            led->brightness = brightness_val[i];
+>>>> +            ret = cfg->color_intensity_fn(led,
+>>>> +                              led->grouped_channels[i]);
+>>> Now we will have three separate calls for each color component
+>>> (and possibly sleeping on mutex on contention).
+>>>
+>>> Probably LED mc class use case will need a bit different design.
+>>>
+>>> Also, instead of grouped_channels we could possibly have
+>>>
+>>> led_mc_get_color_id(&led->mc_dev, i)
+>> color_id and grouped_channels are not a 1:1 mapping
+> OK, they're channel numbers.
 >
-> Many thanks for the patches.
->
-> On 22/9/19 19:50, Gwendal Grignou wrote:
-> > Add a new function to return the number of MEMS sensors available in a
-> > ChromeOS Embedded Controller.
-> > It uses MOTIONSENSE_CMD_DUMP if available or a specific memory map ACPI
-> > registers to find out.
-> >
-> > Also, make check_features public as it can be useful for other drivers
-> > to know whant the Embedded Controller supports.
-> >
-> > Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-> > ---
-> >  drivers/mfd/cros_ec_dev.c   | 61 ++++++++++++++++++++++++++++++++++++-
-> >  include/linux/mfd/cros_ec.h | 17 +++++++++++
-> >  2 files changed, 77 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-> > index 6e6dfd6c1871..3be80183ccaa 100644
-> > --- a/drivers/mfd/cros_ec_dev.c
-> > +++ b/drivers/mfd/cros_ec_dev.c
-> > @@ -112,7 +112,7 @@ static const struct mfd_cell cros_ec_vbc_cells[] = {
-> >       { .name = "cros-ec-vbc", }
-> >  };
-> >
-> > -static int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
-> > +int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
-> >  {
-> >       struct cros_ec_command *msg;
-> >       int ret;
-> > @@ -143,12 +143,71 @@ static int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
-> >
-> >       return ec->features[feature / 32] & EC_FEATURE_MASK_0(feature);
-> >  }
-> > +EXPORT_SYMBOL_GPL(cros_ec_check_features);
-> >
-> >  static void cros_ec_class_release(struct device *dev)
-> >  {
-> >       kfree(to_cros_ec_dev(dev));
-> >  }
-> >
-> > +int cros_ec_get_sensor_count(struct cros_ec_dev *ec)
-> > +{
-> > +     /*
-> > +      * Issue a command to get the number of sensor reported.
-> > +      * If not supported, check for legacy mode.
-> > +      */
-> > +     int ret, sensor_count;
-> > +     struct ec_params_motion_sense *params;
-> > +     struct ec_response_motion_sense *resp;
-> > +     struct cros_ec_command *msg;
-> > +     struct cros_ec_device *ec_dev = ec->ec_dev;
-> > +     u8 status;
-> > +
-> > +     msg = kzalloc(sizeof(struct cros_ec_command) +
-> > +                     max(sizeof(*params), sizeof(*resp)), GFP_KERNEL);
-> > +     if (msg == NULL)
-> > +             return -ENOMEM;
-> > +
-> > +     msg->version = 1;
-> > +     msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
-> > +     msg->outsize = sizeof(*params);
-> > +     msg->insize = sizeof(*resp);
-> > +
-> > +     params = (struct ec_params_motion_sense *)msg->data;
-> > +     params->cmd = MOTIONSENSE_CMD_DUMP;
-> > +
-> > +     ret = cros_ec_cmd_xfer(ec->ec_dev, msg);
-> > +     if (ret < 0) {
-> > +             sensor_count = ret;
-> > +     } else if (msg->result != EC_RES_SUCCESS) {
-> > +             sensor_count = -EPROTO;
-> > +     } else {
-> > +             resp = (struct ec_response_motion_sense *)msg->data;
-> > +             sensor_count = resp->dump.sensor_count;
-> > +     }
-> > +     kfree(msg);
-> > +
-> > +     /*
-> > +      * Check legacy mode: Let's find out if sensors are accessible
-> > +      * via LPC interface.
-> > +      */
-> > +     if (sensor_count == -EPROTO &&
-> > +         ec->cmd_offset == 0 &&
-> > +         ec_dev->cmd_readmem) {
-> > +             ret = ec_dev->cmd_readmem(ec_dev, EC_MEMMAP_ACC_STATUS,
-> > +                             1, &status);
-> > +             if ((ret >= 0) &&
-> > +                 (status & EC_MEMMAP_ACC_STATUS_PRESENCE_BIT)) {
-> > +                     /*
-> > +                      * We have 2 sensors, one in the lid, one in the base.
-> > +                      */
-> > +                     sensor_count = 2;
-> > +             }
-> > +     }
-> > +     return sensor_count;
-> > +}
-> > +EXPORT_SYMBOL_GPL(cros_ec_get_sensor_count);
-> > +
-> >  static void cros_ec_sensors_register(struct cros_ec_dev *ec)
-> >  {
-> >       /*
-> > diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
-> > index 61c2875c2a40..578e0bbcafdc 100644
-> > --- a/include/linux/mfd/cros_ec.h
-> > +++ b/include/linux/mfd/cros_ec.h
-> > @@ -32,4 +32,21 @@ struct cros_ec_dev {
-> >
-> >  #define to_cros_ec_dev(dev)  container_of(dev, struct cros_ec_dev, class_dev)
-> >
-> > +/**
-> > + * cros_ec_check_features - Test for the presence of EC features
-> > + *
-> > + * Call this function to test whether the ChromeOS EC supports a feature.
-> > + *
-> > + * @ec_dev: EC device
-> > + * @msg: One of ec_feature_code values
-> > + * @return: 1 if supported, 0 if not
-> > + */
-> > +int cros_ec_check_features(struct cros_ec_dev *ec, int feature);
-> > +
-> > +/*
-> > + * Return the number of MEMS sensors supported.
-> > + * Return < 0 in case of error.
-> > + */
-> > +int cros_ec_get_sensor_count(struct cros_ec_dev *ec);
-> > +
->
-> I am wondering if we should take this opportunity to move these two functions
-> from drivers/mfd/cros_ec_dev to drivers/platform/chrome/cros_ec_proto.c and
-> include/linux/platform_data/cros_ec_proto.h
->
-> I think this part is more suitable for core part that actually resides in
-> platform/chrome than the mfd device itself. What do you think? Do you see any
-> problem on doing this?
->
-> Thanks,
->  Enric
->
-> >  #endif /* __LINUX_MFD_CROS_EC_H */
-> >
+>>> which would map entry position index to color_id.
+>>>
+>>> I will stop reviewing here and will continue after taking
+>>> deeper look at this lp55xx design.
+> I've analyzed that design in greater detail and have started
+> to wonder why you can't pass two arrays to the new op:
+> channel numbers and corresponding calculated channel intensities?
+
+
+OK so I coded this up.  And there is not a clean way to do this since 
+the channels and colors are not correlated between two structures.  In 
+order to do this we would have to expand the grouped_channel and 
+channel_color arrays in the lp55xx_led to LED_COLOR_ID_MAX and put the 
+channel and color_component value in the position in the array that is 
+associated with the color ID. Then the driver can loop through the 
+available colors from the MC class and get the channel and 
+color_component information.
+
+Beyond that in coding this and thinking about the design it is better to 
+have the lp55xx_common code to do all the heavy lifting and the children 
+to just perform the action on the device itself. So doing the loop in 
+the common code like we have now and calling the intensity_fn based on x 
+number of LEDs.  The child subscriber to the common code should have to 
+worry about the color it should only care about the channel and the value.
+
+Dan
+
+
