@@ -2,172 +2,213 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD7EC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 17:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F95C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 17:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A34EB20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 17:04:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569863049;
-	bh=3TOzVG07souJUWStef4Ezz3arritY85TJpHVxY0XUn0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Fm/z3GbakP/XOa8l560Sp1Wdw3R83LZeJ+ioK0pmsyBF2zQYKjfKYuzxeJB+ONEw1
-	 0waEiGslbi/NDTT+Q1/WsgfPgZWvmpYO3pViT/kHV9EHsODFUVMMS17U6gZvha5+D7
-	 bI2iKW2lwNimcBXyJHUIW5+M8RyjCT4OkkbkZ2gg=
+	by mail.kernel.org (Postfix) with ESMTP id D116F2086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 17:07:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730852AbfI3REJ (ORCPT
+        id S1730937AbfI3RHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 13:04:09 -0400
-Received: from mail-lj1-f175.google.com ([209.85.208.175]:35526 "EHLO
-        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726425AbfI3REI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 13:04:08 -0400
-Received: by mail-lj1-f175.google.com with SMTP id m7so10315451lji.2
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 10:04:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=G6kvqMJgkD9UCgFoqnQ/NukZeo+FSprO7GoT9qWDr+M=;
-        b=aB3U6eAW/uZmwrUYAoCFXo2TwcFYt7/CygzXtx9Tt8lW622zC1011ULWCIYYxHePRZ
-         Evhs4z86CTOPPX3REnIN6VMxNfv/JVK/8VoEqzf3TadXQMcYJFQ3LVlxlijpQQCzSSXa
-         XTRgQBXEVctwDbT3smHmc8P1GVuDRo/0lPVh4=
+        Mon, 30 Sep 2019 13:07:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51540 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729022AbfI3RHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 13:07:44 -0400
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A5D552A09B2
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 17:07:43 +0000 (UTC)
+Received: by mail-wm1-f72.google.com with SMTP id 124so287284wmz.1
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 10:07:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G6kvqMJgkD9UCgFoqnQ/NukZeo+FSprO7GoT9qWDr+M=;
-        b=jmP9sDy9Ot46+rhQVNb5FrbMfaQKt/Sh84X2/w87OkpY9nshh7ob0J2V4HwETOS+5r
-         MlcNCluR2lAN7h2fNx4pFKbeQWLq1DECpUdIPqDuGyUKIAAMMcFCJvmt6BhgSGAH+JqZ
-         COqLPwjijY3vlI/3JFF2feZ19naIQgz0lvguma1AKPkh482Et8P4AD0/QustaQHyqASg
-         VjIplP7flZPSw7KM+v+PKBeWi+zpa0mSWJgmqADblLBtFW8LahJ5WS8WW0GDqEQyRblb
-         PYTDcVbN0MlL6nvD9n4RLp6OmeB4rVBthRaCJ5AyZbIpZ8h7f7R1PV0vjmdVeKKMFbC+
-         Gvcg==
-X-Gm-Message-State: APjAAAVdHCAJiwA4SgVxxeaLcdDIW07gSAPdpY3/PoFNvX6bOB65DSqe
-        kMDadux3/d2O+IRlbgZZVNsIFyOtBOM=
-X-Google-Smtp-Source: APXvYqzf3ZQQYHdvNeiBJZF8ywC/94rfaWcn0iJyt2UhSyG8v0RS6kmDnOpCbxmJ7liDcwHYwRknfQ==
-X-Received: by 2002:a2e:9943:: with SMTP id r3mr13313905ljj.171.1569863044403;
-        Mon, 30 Sep 2019 10:04:04 -0700 (PDT)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id z8sm4100307lfg.18.2019.09.30.10.04.02
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Sep 2019 10:04:03 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id m13so10252609ljj.11
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 10:04:02 -0700 (PDT)
-X-Received: by 2002:a2e:5b9a:: with SMTP id m26mr12707284lje.90.1569863042574;
- Mon, 30 Sep 2019 10:04:02 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :mime-version:content-transfer-encoding;
+        bh=cs776fH4erFtXUSzzVn3rAy9fW72VGqJRx6dq549BTs=;
+        b=lqUKRkclITSA5XHLknLGdNhiASdHvDKIA8iY1MB4c06XxQ0liDm8PHtYuVexyJLxhb
+         E8p/1cJlxM5F1wyQhtiLhgDXSJvdljPm4pmDdLQyhmg4oGgGVDirv36xTZcyx/ZrClCj
+         13XdqRC2ZKbfZ7RbQSOrk5tHZw5VQvFHJ5kTWPCOouTmWSYQsVc+TYw/wpNco4l/4l54
+         ukwyF3vaT+5GPTXep2/FY8iIPE1owDUM4q4upKGZZg5Kq49bY/AhmB6UQ5FfJ8+K1cl0
+         nQrYeUwBUERwTXuNwMXZHLJpQa9SU7JjvtagYWav4aikUORN0ldtkH1cYGDhN2/3gVFO
+         51lg==
+X-Gm-Message-State: APjAAAVsg/Wn6mSwO95fRqzgHOKBNjODQo6NUFkXZCLcDL8tgVI+0QlV
+        gMIiAujIft672O85sg9M3vl+7+BtrDvTng7ZT8EifHCibTZOzZuE2VJ64e1gFI5MtilxzuUIwHC
+        dARWLurFt8FXfBKsJEJCufnUf
+X-Received: by 2002:a7b:c4c9:: with SMTP id g9mr199043wmk.150.1569863262035;
+        Mon, 30 Sep 2019 10:07:42 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzb0zH1A2+zMb9dORMy0r94rwSyu0arMgvSfgbq6H2j091sJVKqDUCQszgUPNoaGIR1IOjP4g==
+X-Received: by 2002:a7b:c4c9:: with SMTP id g9mr199015wmk.150.1569863261784;
+        Mon, 30 Sep 2019 10:07:41 -0700 (PDT)
+Received: from kherbst.pingu.com ([2a02:8308:b0be:6900:7db2:cb58:5fb:97a5])
+        by smtp.gmail.com with ESMTPSA id r12sm12077573wrq.88.2019.09.30.10.07.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 10:07:40 -0700 (PDT)
+From:   Karol Herbst <kherbst@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Karol Herbst <kherbst@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@intel.com>,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [RFC PATCH] pci: prevent putting pcie devices into lower device states on certain intel bridges
+Date:   Mon, 30 Sep 2019 19:07:38 +0200
+Message-Id: <20190930170738.20162-1-kherbst@redhat.com>
+X-Mailer: git-send-email 2.21.0
+Reply-To: CACO55tuk4SA6-xUtJ-oRePy8MPXYAp2cfmSPxwW3J5nQuX3y2g@mail.gmail.com
 MIME-Version: 1.0
-References: <alpine.DEB.2.21.1909290010500.2636@nanos.tec.linutronix.de>
- <CAHk-=wgjC01UaoV35PZvGPnrQ812SRGPoV7Xp63BBFxAsJjvrg@mail.gmail.com>
- <CAHk-=wi0vxLmwEBn2Xgu7hZ0U8z2kN4sgCax+57ZJMVo3huDaQ@mail.gmail.com>
- <20190930033706.GD4994@mit.edu> <20190930131639.GF4994@mit.edu>
- <CAHk-=wg7YAx_+CDe6fUqApPD_ghP18H9sPnJWWUg32pQ4pU82g@mail.gmail.com> <20190930163215.GH4519@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190930163215.GH4519@hirez.programming.kicks-ass.net>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 30 Sep 2019 10:03:46 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjC0vTOgFU=dhX5NQxF84MBaGNpoQ1M6wD=yzBEy4tzTw@mail.gmail.com>
-Message-ID: <CAHk-=wjC0vTOgFU=dhX5NQxF84MBaGNpoQ1M6wD=yzBEy4tzTw@mail.gmail.com>
-Subject: Re: x86/random: Speculation to the rescue
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nicholas Mc Guire <hofrat@opentech.at>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 9:32 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> In my experience LFSRs are good at defeating branch predictors, which
-> would make even in-order cores suffer lots of branch misses. And that
-> might be enough, maybe.
+Fixes state transitions of Nvidia Pascal GPUs from D3cold into higher device
+states.
 
-Agreed, branch mis-prediction is likely fairly hard to take into
-account ahead of time even in an in-order CPU.
+v2: convert to pci_dev quirk
+    put a proper technical explenation of the issue as a in-code comment
 
-But when you know the LFSR, and you know the architecture, you could
-just re-create the timing, and have a fairly high chance of getting
-the same complex pattern.
+RFC comment (copied from last sent):
+We are quite sure that there is a higher amount of bridges affected by this,
+but I was only testing it on my own machine for now.
 
-And in the simple enough (ie bad) case - the embedded world - you
-don't need to "know" or do any deep analysis of anything or try to
-predict it ahead of time. You just look at what another identical
-machine does when given the identical starting point.
+I've stresstested runpm by doing 5000 runpm cycles with that patch applied
+and never saw it fail.
 
-So I don't think an LFSR is all that great on its own. It's
-complicated to predict, and it gives odd patterns, but on an in-order
-core I'm not convinced it gives sufficiently _different_ odd patterns
-across booting.
+I mainly wanted to get a discussion going on if that's a feasable workaround
+indeed or if we need something better.
 
-This, btw, is why you shouldn't trust the "I ran the thing a billion
-times" on my PC, even if you were to have an old in-order Atom CPU
-available to you. If you didn't restart the whole CPU state from an
-identical starting point as you re-run them, the differences you see
-may simply not be real. They may be an artificial effect of cumulative
-changes to internal CPU branch prediction arrays and cache tag layout.
+I am also sure, that the nouveau driver itself isn't at fault as I am able
+to reproduce the same issue by poking into some PCI registers on the PCIe
+bridge to put the GPU into D3cold as it's done in ACPI code.
 
-I don't think it's a huge issue if you have a real load, and you have
-_any_ source of entropy at all, but I really do not think that an LFSR
-is necessarily a good idea. It's just _too_ identical across reboots,
-and will have very similar (but yes, complex due to branch prediction)
-behavior across different runs.
+I've written a little python script to reproduce this issue without the need
+of loading nouveau:
+https://raw.githubusercontent.com/karolherbst/pci-stub-runpm/master/nv_runpm_bug_test.py
 
-Of course, in the "completely and utterly identical state and
-absolutely no timing differences anywhere" situation, even my "take
-timer interrupts and force at least cache misses on SMP" model doesn't
-protect you from just re-running the 100% identical sequence.
+Signed-off-by: Karol Herbst <kherbst@redhat.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+Cc: Mika Westerberg <mika.westerberg@intel.com>
+Cc: linux-pci@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: nouveau@lists.freedesktop.org
+---
+ drivers/pci/pci.c    | 11 ++++++++++
+ drivers/pci/quirks.c | 50 ++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/pci.h  |  1 +
+ 3 files changed, 62 insertions(+)
 
-But when it's a more complex load than an LFSR, I personally at least
-feel better about it. An LFSR I can well imagine will give the exact
-same (odd) timing patterns across boots even if there were earlier
-minor changes. But hopefully a bigger load with just a more complex
-footprint will have more of that. More cache misses, more DRAM
-accesses, more branch mispredicts, more "pipeline was broken in a
-_slightly_ different place due to timer".
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 088fcdc8d2b4..65516b024ee5 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -799,6 +799,13 @@ static inline bool platform_pci_bridge_d3(struct pci_dev *dev)
+ 	return pci_platform_pm ? pci_platform_pm->bridge_d3(dev) : false;
+ }
+ 
++static inline bool parent_broken_child_pm(struct pci_dev *dev)
++{
++	if (!dev->bus || !dev->bus->self)
++		return false;
++	return dev->bus->self->broken_child_pm;
++}
++
+ /**
+  * pci_raw_set_power_state - Use PCI PM registers to set the power state of
+  *			     given PCI device
+@@ -844,6 +851,10 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
+ 	   || (state == PCI_D2 && !dev->d2_support))
+ 		return -EIO;
+ 
++	/* check if the bus controller causes issues */
++	if (state != PCI_D0 && parent_broken_child_pm(dev))
++		return 0;
++
+ 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+ 
+ 	/*
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 0f16acc323c6..2be0deec2c3d 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5198,3 +5198,53 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
+ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
+ 			      PCI_CLASS_DISPLAY_VGA, 8,
+ 			      quirk_reset_lenovo_thinkpad_p50_nvgpu);
++
++/*
++ * Some Intel PCIe bridges cause devices to disappear from the PCIe bus after
++ * those were put into D3cold state if they were put into a non D0 PCI PM
++ * device state before doing so.
++ *
++ * This leads to various issue different issues which all manifest differently,
++ * but have the same root cause:
++ *  - AIML code execution hits an infinite loop (as the coe waits on device
++ *    memory to change).
++ *  - kernel crashes, as all pci reads return -1, which most code isn't able
++ *    to handle well enough.
++ *  - sudden shutdowns, as the kernel identified an unrecoverable error after
++ *    userspace tries to access the GPU.
++ *
++ * In all cases dmesg will contain at least one line like this:
++ * 'nouveau 0000:01:00.0: Refused to change power state, currently in D3'
++ * followed by a lot of nouveau timeouts.
++ *
++ * ACPI code writes bit 0x80 to the not documented PCI register 0x248 of the
++ * PCIe bridge controller in order to power down the GPU.
++ * Nonetheless, there are other code paths inside the ACPI firmware which use
++ * other registers, which seem to work fine:
++ *  - 0xbc bit 0x20 (publicly available documentation claims 'reserved')
++ *  - 0xb0 bit 0x10 (link disable)
++ * Changing the conditions inside the firmware by poking into the relevant
++ * addresses does resolve the issue, but it seemed to be ACPI private memory
++ * and not any device accessible memory at all, so there is no portable way of
++ * changing the conditions.
++ *
++ * The only systems where this behavior can be seen are hybrid graphics laptops
++ * with a secondary Nvidia Pascal GPU. It cannot be ruled out that this issue
++ * only occurs in combination with listed Intel PCIe bridge controllers and
++ * the mentioned GPUs or if it's only a hw bug in the bridge controller.
++ *
++ * But because this issue was NOT seen on laptops with an Nvidia Pascal GPU
++ * and an Intel Coffee Lake SoC, there is a higher chance of there being a bug
++ * in the bridge controller rather than in the GPU.
++ *
++ * This issue was not able to be reproduced on non laptop systems.
++ */
++
++static void quirk_broken_child_pm(struct pci_dev *dev)
++{
++	dev->broken_child_pm = 1;
++	printk("applied broken child pm quirk!\n");
++}
++/* kaby lake */
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1901,
++			quirk_broken_child_pm);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index dd436da7eccc..01eb0a9e6c13 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -413,6 +413,7 @@ struct pci_dev {
+ 	unsigned int	__aer_firmware_first_valid:1;
+ 	unsigned int	__aer_firmware_first:1;
+ 	unsigned int	broken_intx_masking:1;	/* INTx masking can't be used */
++	unsigned int	broken_child_pm:1;	/* children put into lower PCI PM states won't recover after D3cold transition */
+ 	unsigned int	io_window_1k:1;		/* Intel bridge 1K I/O windows */
+ 	unsigned int	irq_managed:1;
+ 	unsigned int	has_secondary_link:1;
+-- 
+2.21.0
 
-It is also, btw, why I don't mix in TSC _differences_ when I mix
-things in. I think it's better to actually mix in the TSC value
-itself. Even if you re-run the LFSR, and it has the exact same branch
-mis-predicts (because it's the same LFSR), if there were any timing
-differences from _anything_ else before you ran that LFSR, then the
-bits you'll be mixing in are different across boots. But if you mix in
-the relative difference, you might be mixing in the identical bits.
-
-The only real difference is only the initial TSC value, of course, so
-the added entropy is small. But when we're talking about trying to get
-to a total of 256 bits, a couple of bits here and there end up
-mattering.
-
-But no. Never any _guarantees_. There is no absolute security. Only best effort.
-
-An OoO CPU will have a _lot_ more internal state, and a lot of things
-that perturb that internal state, and that will make small changes in
-timing cause more chaos in the end. Much less to worry about.
-
-An in-order CPU will have less internal state, and so less
-perturbations and sources of real entropy from small differences. We
-can only hope there is _some_.
-
-It's not like our existing "depend on external interrupt timing" is
-any hard guarantee either, regardless of how long we wait or how many
-external interrupts we'd get.
-
-It's always a "at some point you have to make a judgement call".
-
-And we all have different levels of comfort about where that point
-ends up being.
-
-               Linus
