@@ -2,129 +2,139 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF7BC4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 05:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF215C4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 06:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEB852168B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 05:54:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B032A20815
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 06:02:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="sVJyT1RO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729627AbfI3FyF (ORCPT
+        id S1729635AbfI3GCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 01:54:05 -0400
-Received: from ushosting.nmnhosting.com ([66.55.73.32]:59674 "EHLO
-        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728162AbfI3FyE (ORCPT
+        Mon, 30 Sep 2019 02:02:55 -0400
+Received: from conuserg-10.nifty.com ([210.131.2.77]:65305 "EHLO
+        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbfI3GCz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 01:54:04 -0400
-Received: from mail2.nmnhosting.com (unknown [202.78.40.170])
-        by ushosting.nmnhosting.com (Postfix) with ESMTPS id 8E0E72DC006C;
-        Mon, 30 Sep 2019 01:54:03 -0400 (EDT)
-Received: from adsilva.ozlabs.ibm.com (static-82-10.transact.net.au [122.99.82.10] (may be forged))
-        (authenticated bits=0)
-        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id x8U5rh60025864
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-        Mon, 30 Sep 2019 15:53:59 +1000 (AEST)
-        (envelope-from alastair@d-silva.org)
-Message-ID: <fe92ffd261cf9d98d7d0e8e123cea29e781b9061.camel@d-silva.org>
-Subject: Re: [PATCH v5 1/1] memory_hotplug: Add a bounds check to __add_pages
-From:   "Alastair D'Silva" <alastair@d-silva.org>
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        David Hildenbrand <david@redhat.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>, linux-mm@kvack.org,
+        Mon, 30 Sep 2019 02:02:55 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-10.nifty.com with ESMTP id x8U60ANM011158;
+        Mon, 30 Sep 2019 15:00:10 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x8U60ANM011158
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1569823213;
+        bh=31RHoPop8t0h2pCPRnwABR+VMelvfuLJ6qwFWQxvRAk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=sVJyT1ROU+6mzkZMRTb0M214/0QcKkmxRbNgDwh2q1TPJpEjPLOoE+y1jkVndgyce
+         qBfr7v3nYiN5WSsx5xTwPYvHohsWcSS3AWwyVRw8Kxjd0CGrX8l5WcF76SmCvJPLCB
+         wLRZ7C1/Z/zv9v8AVlB2BGhDmSvNQJ9bvuGi42d+JbBXGDfg0HZGGHEj7yDDLBV9nW
+         EZkTGzP6wtIdqgD6DM5Lj4LA7FnlzH8Ocy6yp5agIZ7tdaiVh4E+Xb97KFsLgRin/o
+         kTPCap5ub1TziurVW+1pbzwH+G3TNVeY+yJdYcAQRFzXXOrTa7s5zIJUtObrYVGCA2
+         ctH5uaN1kjx1g==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-arm-kernel@lists.infradead.org,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Stefan Agner <stefan@agner.ch>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
         linux-kernel@vger.kernel.org
-Date:   Mon, 30 Sep 2019 15:53:42 +1000
-In-Reply-To: <20190930022152.14114-2-alastair@au1.ibm.com>
-References: <20190930022152.14114-1-alastair@au1.ibm.com>
-         <20190930022152.14114-2-alastair@au1.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Mon, 30 Sep 2019 15:54:00 +1000 (AEST)
+Subject: [PATCH] ARM: fix __get_user_check() in case uaccess_* calls are not inlined
+Date:   Mon, 30 Sep 2019 14:59:25 +0900
+Message-Id: <20190930055925.25842-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-09-30 at 12:21 +1000, Alastair D'Silva wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
-> 
-> On PowerPC, the address ranges allocated to OpenCAPI LPC memory
-> are allocated from firmware. These address ranges may be higher
-> than what older kernels permit, as we increased the maximum
-> permissable address in commit 4ffe713b7587
-> ("powerpc/mm: Increase the max addressable memory to 2PB"). It is
-> possible that the addressable range may change again in the
-> future.
-> 
-> In this scenario, we end up with a bogus section returned from
-> __section_nr (see the discussion on the thread "mm: Trigger bug on
-> if a section is not found in __section_nr").
-> 
-> Adding a check here means that we fail early and have an
-> opportunity to handle the error gracefully, rather than rumbling
-> on and potentially accessing an incorrect section.
-> 
-> Further discussion is also on the thread ("powerpc: Perform a bounds
-> check in arch_add_memory")
-> http://lkml.kernel.org/r/20190827052047.31547-1-alastair@au1.ibm.com
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> ---
->  mm/memory_hotplug.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index c73f09913165..1909607da640 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -278,6 +278,22 @@ static int check_pfn_span(unsigned long pfn,
-> unsigned long nr_pages,
->  	return 0;
->  }
->  
-> +static int check_hotplug_memory_addressable(unsigned long pfn,
-> +					    unsigned long nr_pages)
-> +{
-> +	const u64 max_addr = PFN_PHYS(pfn + nr_pages) - 1;
-> +
-> +	if (max_addr >> MAX_PHYSMEM_BITS) {
-> +		const u64 max_allowed = (1ull << (MAX_PHYSMEM_BITS +
-> 1)) - 1;
-> +		WARN(1,
-> +		     "Hotplugged memory exceeds maximum addressable
-> address, range=%#lx-%#lx, maximum=%#lx\n",
-Gah, these should all be %#llx.
+KernelCI reports that bcm2835_defconfig is no longer booting since
+commit ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING
+forcibly"):
 
-> +		     PFN_PHYS(pfn), max_addr, max_allowed);
-> +		return -E2BIG;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  /*
->   * Reasonably generic function for adding memory.  It is
->   * expected that archs that support memory hotplug will
-> @@ -291,6 +307,10 @@ int __ref __add_pages(int nid, unsigned long
-> pfn, unsigned long nr_pages,
->  	unsigned long nr, start_sec, end_sec;
->  	struct vmem_altmap *altmap = restrictions->altmap;
->  
-> +	err = check_hotplug_memory_addressable(pfn, nr_pages);
-> +	if (err)
-> +		return err;
-> +
->  	if (altmap) {
->  		/*
->  		 * Validate altmap is within bounds of the total
-> request
+  https://lkml.org/lkml/2019/9/26/825
+
+I also received a regression report from Nicolas Saenz Julienne:
+
+  https://lkml.org/lkml/2019/9/27/263
+
+This problem has cropped up on arch/arm/config/bcm2835_defconfig
+because it enables CONFIG_CC_OPTIMIZE_FOR_SIZE. The compiler tends
+to prefer not inlining functions with -Os. I was able to reproduce
+it with other boards and defconfig files by manually enabling
+CONFIG_CC_OPTIMIZE_FOR_SIZE.
+
+The __get_user_check() specifically uses r0, r1, r2 registers.
+So, uaccess_save_and_enable() and uaccess_restore() must be inlined
+in order to avoid those registers being overwritten in the callees.
+
+Prior to commit 9012d011660e ("compiler: allow all arches to enable
+CONFIG_OPTIMIZE_INLINING"), the 'inline' marker was always enough for
+inlining functions, except on x86.
+
+Since that commit, all architectures can enable CONFIG_OPTIMIZE_INLINING.
+So, __always_inline is now the only guaranteed way of forcible inlining.
+
+I want to keep as much compiler's freedom as possible about the inlining
+decision. So, I changed the function call order instead of adding
+__always_inline around.
+
+Call uaccess_save_and_enable() before assigning the __p ("r0"), and
+uaccess_restore() after evacuating the __e ("r0").
+
+Fixes: 9012d011660e ("compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING")
+Reported-by: "kernelci.org bot" <bot@kernelci.org>
+Reported-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+ arch/arm/include/asm/uaccess.h | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm/include/asm/uaccess.h b/arch/arm/include/asm/uaccess.h
+index 303248e5b990..559f252d7e3c 100644
+--- a/arch/arm/include/asm/uaccess.h
++++ b/arch/arm/include/asm/uaccess.h
+@@ -191,11 +191,12 @@ extern int __get_user_64t_4(void *);
+ #define __get_user_check(x, p)						\
+ 	({								\
+ 		unsigned long __limit = current_thread_info()->addr_limit - 1; \
++		unsigned int __ua_flags = uaccess_save_and_enable();	\
+ 		register typeof(*(p)) __user *__p asm("r0") = (p);	\
+ 		register __inttype(x) __r2 asm("r2");			\
+ 		register unsigned long __l asm("r1") = __limit;		\
+ 		register int __e asm("r0");				\
+-		unsigned int __ua_flags = uaccess_save_and_enable();	\
++		unsigned int __err;					\
+ 		switch (sizeof(*(__p))) {				\
+ 		case 1:							\
+ 			if (sizeof((x)) >= 8)				\
+@@ -223,9 +224,10 @@ extern int __get_user_64t_4(void *);
+ 			break;						\
+ 		default: __e = __get_user_bad(); break;			\
+ 		}							\
+-		uaccess_restore(__ua_flags);				\
++		__err = __e;						\
+ 		x = (typeof(*(p))) __r2;				\
+-		__e;							\
++		uaccess_restore(__ua_flags);				\
++		__err;							\
+ 	})
+ 
+ #define get_user(x, p)							\
+-- 
+2.17.1
 
