@@ -2,114 +2,88 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B37B7C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E72C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AFA821920
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C97D21855
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:04:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="OqIAvAlJ"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="X42lMnnx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730922AbfI3LCk (ORCPT
+        id S1730930AbfI3LEj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 07:02:40 -0400
-Received: from mail.andi.de1.cc ([85.214.55.253]:32980 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730759AbfI3LCj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 07:02:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=4Q2eQSaoD2aHtt1rANXm2Cc6hpmxzVEktPN68KNFqac=; b=OqIAvAlJtHFC+dzBE4XSIO2Ve+
-        +GF+kIQuQrXylq0OprfQ77TKbeo5rWyzgbD8EIYC5kpQqJeAxgHlMkqrqqWqxjKj1qgHYWMxv1OKZ
-        V+PRUS55Nlw9YUBiwvNrZq7FEJ9FCX8dsBLKX5upiljQVbxbkVaBHoGK2vmqsl1uaaCM=;
-Received: from p200300ccff0b4c001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0b:4c00:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1iEtRf-0007ix-TS; Mon, 30 Sep 2019 13:02:24 +0200
-Date:   Mon, 30 Sep 2019 13:02:22 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, manivannan.sadhasivam@linaro.org,
-        andrew.smirnov@gmail.com, marex@denx.de, angus@akkea.ca,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, j.neuschaefer@gmx.net,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-Subject: Re: [PATCH 1/3] ARM: dts: add Netronix E60K02 board common file
-Message-ID: <20190930130222.4e1cdf64@aktux>
-In-Reply-To: <20190930082715.mplf5ra35ikqmbyr@pengutronix.de>
-References: <20190927061423.17278-1-andreas@kemnade.info>
-        <20190927061423.17278-2-andreas@kemnade.info>
-        <20190927094721.w26ggnli4f5a64uv@pengutronix.de>
-        <20190927210807.26439a94@aktux>
-        <20190930082715.mplf5ra35ikqmbyr@pengutronix.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 30 Sep 2019 07:04:39 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:37589 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730759AbfI3LEj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 07:04:39 -0400
+Received: by mail-ed1-f68.google.com with SMTP id r4so8234771edy.4
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 04:04:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3k6dAmBoQBVj4O9ENLrppdo0K0+1hJqkhh7Nc8T2PGg=;
+        b=X42lMnnx21hsZzUbXK4K09UEcg8JN5kUGkiMXkCDlre/ah2Vjy5ukUfyiQJ9TL4BTr
+         wg0eMRd45KG/JAWicVc4DcRa5et4YZVgWbxDA6W780jF6mXEvBfN9R1Z+cdjsz1AgLQU
+         C+Qlf7rbRk5HL+th7zt1WS+4nd9UMV6sW08hDwhpPubs00OvuT8UcGU+Yi/C07WIuoQ8
+         fFfmYHnlI+YOYuBE+GJXTMr7AYNZPBT4y6ZgM1U1hYRWlhtKdJqS1prucSEPfByOd0gY
+         FV7ztb9DXRvWYblRLvC3rDSEi3u8ZIZqj2cCGtoi34IBQ24x5S661NlVcVJMP5Sq2z7/
+         Wwsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3k6dAmBoQBVj4O9ENLrppdo0K0+1hJqkhh7Nc8T2PGg=;
+        b=IWODakopeQVE7r+tkYGQUczShQVRNidZsf6zATOMrQtQTDoC0whvr/oG+nt2KnQnat
+         yeWbPKGx3nF+QbfP0UbL5pXvgmetQb787A2Ya4AwUjn1d3pBXnmOU+UZVSoPsAyTWjxN
+         d09UQsaoeRmfURgH9z5nHcxcdK02FN91YQ8H5Cahuk3H+dGqL5wlyLPAmCeS+LctyEul
+         26dMa9/ey/rNjaQxo8MhdErAGr4wQRUhLyScQFLwxYEgIc8QMKBSSGAqgb7Wqa3hHeud
+         bFHdHqoOBsS7cuRs1IHM9hC5G0jsGdYuE2AQXU0Dq5ztjcxJxTxVc7/PUyKprgpof6dY
+         Pbng==
+X-Gm-Message-State: APjAAAUuRg6xrHQ5LIYhnpiyXaEWontAVxeGB6WrZYPtD+5Av70oDB/k
+        Xhvd9dGPHxdhrk1g5VAkdJ6wsQ==
+X-Google-Smtp-Source: APXvYqy2PIFBcDe67nBH9RLsiz23AOO3Np3ANSt8QomqGwKLLjduWHQhucN8Jl+fY1ZvKnMFismhaw==
+X-Received: by 2002:a05:6402:3d2:: with SMTP id t18mr18496910edw.136.1569841475915;
+        Mon, 30 Sep 2019 04:04:35 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id 4sm1392570ejm.47.2019.09.30.04.04.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 30 Sep 2019 04:04:35 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 633301020E6; Mon, 30 Sep 2019 14:04:34 +0300 (+03)
+Date:   Mon, 30 Sep 2019 14:04:34 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Qian Cai <cai@lca.pw>
+Cc:     akpm@linux-foundation.org, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com,
+        linux-s390@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/page_alloc: fix a crash in free_pages_prepare()
+Message-ID: <20190930110434.5k47w7xfvkjcohkp@box>
+References: <1569613623-16820-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1569613623-16820-1-git-send-email-cai@lca.pw>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Sep 2019 10:27:15 +0200
-Marco Felsch <m.felsch@pengutronix.de> wrote:
+On Fri, Sep 27, 2019 at 03:47:03PM -0400, Qian Cai wrote:
+> On architectures like s390, arch_free_page() could mark the page unused
+> (set_page_unused()) and any access later would trigger a kernel panic.
+> Fix it by moving arch_free_page() after all possible accessing calls.
 
-[..]
-> > so you disagree with this pattern:
-> > in .dtsi
-> >  some_device {
-> >    pinctrl-0 = <&pinctrl_some_device>;
-> >  };
-> > 
-> > and in .dts (one I sent with this patch series and the tolino/mx6sl one
-> > is not ready-cooked yet, will be part of a later series)
-> > &iomuxc {
-> >    pinctrl_some_device: some_devicegrp {
-> >    	fsl,pins = <...>;
-> >    };
-> > };
-> > 
-> > ?  
-> 
-> Yes, because IMHO a dtsi is self contained as well as a dts. If it is
-> common for all boards you can move the muxing into the dtsi else it
-> should be done within the dts.
-> 
-well, since imx6sll-pinfunc.h is different than imx6sl-pinfunc.h,
-we agree that this belongs to the dts.
+Looks like Power also uses the hook. Have you check that this patch will
+not affect Power?
 
-> > > > +&snvs_rtc {
-> > > > +	status = "disabled";    
-> > > 
-> > > Same applies here.
-> > >   
-> > 
-> > No, seems to be an exception, it does not have a status = "disabled" in
-> > imx6sll.dtsi.  
-> 
-> Did you mean 6sll or 6ull?
-> 
-> Okay, is this baseboard only used with a 6ull?
-> 
-
-MCIMX6V7DVN10AB and MCIMX6L8DVN10AB
-So it is 6sll and 6sl (6sl support will be added in a follow-up patch
-series). 
-
-I will send a v2 this evening, so we can all look at better-sorted
-things.
-
-Regards,
-Andreas
+-- 
+ Kirill A. Shutemov
