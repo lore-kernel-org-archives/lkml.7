@@ -2,101 +2,120 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DAAC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA23FC35280
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 693622075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:42:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E79A2075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:45:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jO6onDot"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730980AbfI3MmO (ORCPT
+        id S1730858AbfI3Mpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 08:42:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41244 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726072AbfI3MmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 08:42:14 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1008D83F42;
-        Mon, 30 Sep 2019 12:42:14 +0000 (UTC)
-Received: from krava (unknown [10.40.205.53])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 1F39A5D9C3;
-        Mon, 30 Sep 2019 12:42:10 +0000 (UTC)
-Date:   Mon, 30 Sep 2019 14:42:09 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2] perf tools: avoid sample_reg_masks being const + weak
-Message-ID: <20190930124209.GF602@krava>
-References: <20190927211005.147176-1-irogers@google.com>
- <20190927214341.170683-1-irogers@google.com>
- <20190929210514.GC602@krava>
- <20190930122335.GF9622@kernel.org>
+        Mon, 30 Sep 2019 08:45:49 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46779 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726952AbfI3Mpt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 08:45:49 -0400
+Received: by mail-wr1-f66.google.com with SMTP id o18so11123405wrv.13;
+        Mon, 30 Sep 2019 05:45:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=iI178b6o0qZVFBE5FgkMuuPfgQeMCHtWWim2bH0vxbY=;
+        b=jO6onDotzDWCKXEXFzt5lNj+IXe2cN21TYeChnFaKzRs7HYnmYbsPmIYHIi7enbNF4
+         mQa8u5bgxNDWXpiEFIs5ZU6+ff+9UycRj24TGk9n5RnpNPVRd43/j3BJ78zZDDMf+pRR
+         eB3SrMQ58CgKzB11kCbIOLDU5KRIEutAgyT8dgXTWRj2EJEPHS+ixySzNJTfLBNhxYgJ
+         68AGeSyl39hAgbzMKsNkX2YRRvfBbRGjNjtFunngdVEhPzQuH8b/tBZ6nu3SuLhPiP9g
+         yVX8bBsl9XObGaG++9XSz8OagizFufFlSRWqnFyFk1gq+W34kWd+Y4icip9DcFuwGZCh
+         aNfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=iI178b6o0qZVFBE5FgkMuuPfgQeMCHtWWim2bH0vxbY=;
+        b=gOd8hldZfuQJR756Bl7LrlroILWsaYtF0nWAHjlW///U2de5emWh7j7RaNMRsiM/7Q
+         cACBMVUvUstX6GsVS0di346LYUGsPL3HAKLb5H12zjYX3t89hQvpHvK88ho3+D1U9g1P
+         Dd21NLsI9jfi15949abhVuFUQKzSqprjm7dL33mmuuJKa+P2UuA4BOHozVIFyyLIUxR9
+         313mhwQu2Hy61WO8AxUwGQtl1P4MBHRJ8GK24LfhOwPcfc4VIXqhalJVUGPTlpUHGLOM
+         a17Eq5U8kNKeVI6eZZxLpiHbRP4PJY1lbMX50BQFepuqSO1m8ZyV3mlNbtUZs1DIT6rl
+         SFDw==
+X-Gm-Message-State: APjAAAVptAZn2zmJsUbjAjhBBfE3cenyF5a9kaj3+k5nxAutPPO73QvH
+        KWD6SmV8qB/v25FeiSZ9ams=
+X-Google-Smtp-Source: APXvYqxXqlxnCTWpHdUcHd+CsyWUyx5za3cbr+Ty3uRN7gE1JPrkoUFKktywA+G0M4up4B1gCXbvvA==
+X-Received: by 2002:adf:e951:: with SMTP id m17mr12954736wrn.154.1569847546974;
+        Mon, 30 Sep 2019 05:45:46 -0700 (PDT)
+Received: from [192.168.1.4] (ip-86-49-35-8.net.upcbroadband.cz. [86.49.35.8])
+        by smtp.gmail.com with ESMTPSA id z1sm26014947wre.40.2019.09.30.05.45.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Sep 2019 05:45:46 -0700 (PDT)
+Subject: Re: [PATCH 00/11] of: dma-ranges fixes and improvements
+To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Oza Pawandeep <oza.oza@broadcom.com>
+References: <20190927002455.13169-1-robh@kernel.org>
+From:   Marek Vasut <marek.vasut@gmail.com>
+Message-ID: <106d5b37-5732-204f-4140-8d528256a59b@gmail.com>
+Date:   Mon, 30 Sep 2019 14:40:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190930122335.GF9622@kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Mon, 30 Sep 2019 12:42:14 +0000 (UTC)
+In-Reply-To: <20190927002455.13169-1-robh@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 09:23:35AM -0300, Arnaldo Carvalho de Melo wrote:
+On 9/27/19 2:24 AM, Rob Herring wrote:
+> This series fixes several issues related to 'dma-ranges'. Primarily,
+> 'dma-ranges' in a PCI bridge node does correctly set dma masks for PCI
+> devices not described in the DT. A common case needing dma-ranges is a
+> 32-bit PCIe bridge on a 64-bit system. This affects several platforms
+> including Broadcom, NXP, Renesas, and Arm Juno. There's been several
+> attempts to fix these issues, most recently earlier this week[1].
+> 
+> In the process, I found several bugs in the address translation. It
+> appears that things have happened to work as various DTs happen to use
+> 1:1 addresses.
+> 
+> First 3 patches are just some clean-up. The 4th patch adds a unittest
+> exhibiting the issues. Patches 5-9 rework how of_dma_configure() works
+> making it work on either a struct device child node or a struct
+> device_node parent node so that it works on bus leaf nodes like PCI
+> bridges. Patches 10 and 11 fix 2 issues with address translation for
+> dma-ranges.
+> 
+> My testing on this has been with QEMU virt machine hacked up to set PCI
+> dma-ranges and the unittest. Nicolas reports this series resolves the
+> issues on Rpi4 and NXP Layerscape platforms.
 
-SNIP
+With the following patches applied:
+      https://patchwork.ozlabs.org/patch/1144870/
+      https://patchwork.ozlabs.org/patch/1144871/
+on R8A7795 Salvator-XS
+Tested-by: Marek Vasut <marek.vasut+renesas@gmail.com>
 
->   CC       /tmp/build/perf/util/lzma.o
->   CC       /tmp/build/perf/util/demangle-java.o
->   CC       /tmp/build/perf/util/demangle-rust.o
->   CC       /tmp/build/perf/util/jitdump.o
->   CC       /tmp/build/perf/util/genelf.o
->   CC       /tmp/build/perf/util/genelf_debug.o
->   CC       /tmp/build/perf/util/perf-hooks.o
->   CC       /tmp/build/perf/util/bpf-event.o
->   FLEX     /tmp/build/perf/util/parse-events-flex.c
->   LD       /tmp/build/perf/util/intel-pt-decoder/perf-in.o
->   FLEX     /tmp/build/perf/util/pmu-flex.c
->   CC       /tmp/build/perf/util/pmu-bison.o
->   CC       /tmp/build/perf/util/expr-bison.o
->   CC       /tmp/build/perf/util/parse-events.o
->   CC       /tmp/build/perf/util/parse-events-flex.o
->   CC       /tmp/build/perf/util/pmu.o
->   CC       /tmp/build/perf/util/pmu-flex.o
->   LD       /tmp/build/perf/util/perf-in.o
->   LD       /tmp/build/perf/perf-in.o
->   LINK     /tmp/build/perf/perf
-> /usr/lib/gcc-cross/aarch64-linux-gnu/8/../../../../aarch64-linux-gnu/bin/ld: /tmp/build/perf/perf-in.o: in function `__parse_regs':
-> /git/linux/tools/perf/util/parse-regs-options.c:39: undefined reference to `sample_reg_masks'
-> /usr/lib/gcc-cross/aarch64-linux-gnu/8/../../../../aarch64-linux-gnu/bin/ld: /git/linux/tools/perf/util/parse-regs-options.c:47: undefined reference to `sample_reg_masks'
-> /usr/lib/gcc-cross/aarch64-linux-gnu/8/../../../../aarch64-linux-gnu/bin/ld: /git/linux/tools/perf/util/parse-regs-options.c:60: undefined reference to `sample_reg_masks'
-> /usr/lib/gcc-cross/aarch64-linux-gnu/8/../../../../aarch64-linux-gnu/bin/ld: /git/linux/tools/perf/util/parse-regs-options.c:50: undefined reference to `sample_reg_masks'
-
-argh.. I tried on power.. should have tried on arm ;-)
-
-I expected that all the archs that set NO_PERF_REGS := 0 would have
-sample_reg_masks defined..  all those archs did fallback to the:
-
-  const struct sample_reg __weak sample_reg_masks[] = {
-       SMPL_REG_END
-  };
-
-those archs are not able to use --user-regs/--intr-regs options,
-but for dwarf unwind we set those registers manualy, so that works
-
-so I guess we need to define empty sample_reg_masks for those archs
-
-jirka
+-- 
+Best regards,
+Marek Vasut
