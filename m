@@ -2,92 +2,108 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3A9C35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05EAAC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AA3D215EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C00D215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:34:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aMCNGRz4";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="B9x321Jk"
+	dkim=pass (1024-bit key) header.d=ysoft.com header.i=@ysoft.com header.b="KmLhQ08Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731279AbfI3Ndp (ORCPT
+        id S1731319AbfI3Nee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 09:33:45 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:52804 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729738AbfI3Ndp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:33:45 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 777CF6118C; Mon, 30 Sep 2019 13:33:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569850424;
-        bh=Aane7lX/b8MbjQ7N/QXU+4I4h3uabatlKt7JDCZCBCc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=aMCNGRz4KLejyWB8zNxhuPfOc1y9kFOnaD6aHKsJev6sWuFrCu/Kwo5RGPNIkj7Py
-         4bDbrUHl3QobQeeNK840WeIgZd4JjN6tmu827/ujJxH17umsh68XzjU2mbjkwHLX1j
-         qNKSI6be8yOjiMyzwjUgBeSzriOeMAyyPbq+M5Dc=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 53E35602CC;
-        Mon, 30 Sep 2019 13:33:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569850422;
-        bh=Aane7lX/b8MbjQ7N/QXU+4I4h3uabatlKt7JDCZCBCc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=B9x321Jkh0mHK3l5DYh1NPooOL0E0ipngQgnbuOHPc1PDSOLBbAlRKIZEtsxRV/xJ
-         lNM5pXRB3sl9PRHaH6pAReMCqufknidHJWnDMRxtTg7UDiGhs6/rE4ZlTjoTWpTTGY
-         KhCViZIXESKd7a0Puh/YQ6hTq3sH8U3RxAgRU4xY=
+        Mon, 30 Sep 2019 09:34:34 -0400
+Received: from uho.ysoft.cz ([81.19.3.130]:36312 "EHLO uho.ysoft.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730583AbfI3Nee (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 09:34:34 -0400
+Received: from [10.1.8.111] (unknown [10.1.8.111])
+        by uho.ysoft.cz (Postfix) with ESMTP id 5035FA48B3;
+        Mon, 30 Sep 2019 15:34:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ysoft.com;
+        s=20160406-ysoft-com; t=1569850471;
+        bh=DkZhXLf/liSBVKh0ARKHhgcCiN6tBxU8m1QCK+EHagE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=KmLhQ08Y2U16kKNbPRryKZWifG7u+VBmXUzd2Di93Q+vOSkJ5hnIRgqYW9RR+VZzL
+         E5RToMy9puNOGm9AHWqo93JPxDuw84gDBj/Yy33PPWsq67I8RMosGnkUAPsmPH0sol
+         xXE4tYJ9a94/BgbX3LhZS0qr4ZmIEx08QKuw3/bk=
+Subject: Re: [PATCH net] net: dsa: qca8k: Use up to 7 ports for all operations
+To:     Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+References: <1569488357-31415-1-git-send-email-michal.vokac@ysoft.com>
+From:   =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
+Message-ID: <07dda3c6-696c-928f-b007-8cda9744b624@ysoft.com>
+Date:   Mon, 30 Sep 2019 15:34:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+In-Reply-To: <1569488357-31415-1-git-send-email-michal.vokac@ysoft.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Date:   Mon, 30 Sep 2019 06:33:42 -0700
-From:   Sodagudi Prasad <psodagud@codeaurora.org>
-To:     pmladek@suse.com, sergey.senozhatsky@gmail.com, rostedt@goodmis.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: Time stamp value in printk records
-Message-ID: <7d1aee8505b91c460fee347ed4204b9a@codeaurora.org>
-X-Sender: psodagud@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+On 26. 09. 19 10:59, Michal Vokáč wrote:
+> The QCA8K family supports up to 7 ports. So use the existing
+> QCA8K_NUM_PORTS define to allocate the switch structure and limit all
+> operations with the switch ports.
+> 
+> This was not an issue until commit 0394a63acfe2 ("net: dsa: enable and
+> disable all ports") disabled all unused ports. Since the unused ports 7-11
+> are outside of the correct register range on this switch some registers
+> were rewritten with invalid content.
+> 
+> Fixes: 6b93fb46480a ("net-next: dsa: add new driver for qca8xxx family")
+> Fixes: a0c02161ecfc ("net: dsa: variable number of ports")
+> Fixes: 0394a63acfe2 ("net: dsa: enable and disable all ports")
+> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
 
- From Qualcomm side, we would like to check with upstream team about 
-adding Raw time stamp value to printk records. On Qualcomm soc, there 
-are various DSPs subsystems are there - for example audio, video and 
-modem DSPs.
-Adding raw timer value(along with sched_clock()) in the printk record 
-helps in the following use cases –
-1)	To find out which subsystem  crashed first  -  Whether application 
-processor crashed first or DSP subsystem?
-2)	If there are any system stability issues on the DSP side, what is the 
-activity on the APPS processor side during that time?
+More recent patches on the list are getting attention.
+Is this one falling through the cracks?
 
-Initially during the device boot up, printk shed_clock value can be 
-matched with timer raw value used on the dsp subsystem, but after APPS 
-processor suspends several times, we don’t have way to correlate the 
-time stamp  value on the DSP and APPS processor. All timers(both apps 
-processor timer and dsp timers) are derived from globally always on 
-timer on Qualcomm soc, So keeping global timer raw values in printk 
-records and dsp logs help to correlate the activity of all the 
-processors in SoC.
+> ---
+> I am not sure which of the fixes tags should be used but this definetelly
+> fixes something..
+> 
+> IMHO the 0394a63acfe2 ("net: dsa: enable and disable all ports") did not
+> cause the issue but made it visible.
+> 
+>   drivers/net/dsa/qca8k.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
+> index 16f15c93a102..bbeeb8618c80 100644
+> --- a/drivers/net/dsa/qca8k.c
+> +++ b/drivers/net/dsa/qca8k.c
+> @@ -705,7 +705,7 @@ qca8k_setup(struct dsa_switch *ds)
+>   		    BIT(0) << QCA8K_GLOBAL_FW_CTRL1_UC_DP_S);
+>   
+>   	/* Setup connection between CPU port & user ports */
+> -	for (i = 0; i < DSA_MAX_PORTS; i++) {
+> +	for (i = 0; i < QCA8K_NUM_PORTS; i++) {
+>   		/* CPU port gets connected to all user ports of the switch */
+>   		if (dsa_is_cpu_port(ds, i)) {
+>   			qca8k_rmw(priv, QCA8K_PORT_LOOKUP_CTRL(QCA8K_CPU_PORT),
+> @@ -1074,7 +1074,7 @@ qca8k_sw_probe(struct mdio_device *mdiodev)
+>   	if (id != QCA8K_ID_QCA8337)
+>   		return -ENODEV;
+>   
+> -	priv->ds = dsa_switch_alloc(&mdiodev->dev, DSA_MAX_PORTS);
+> +	priv->ds = dsa_switch_alloc(&mdiodev->dev, QCA8K_NUM_PORTS);
+>   	if (!priv->ds)
+>   		return -ENOMEM;
+>   
+> 
 
-It would be great if upstream team adds common solution this problem if 
-all soc vendors would get benefit by adding raw timer value to  printk 
-records.
-
--Thanks, Prasad
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
-Forum,
-Linux Foundation Collaborative Project
