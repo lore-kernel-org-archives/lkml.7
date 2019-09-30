@@ -2,170 +2,140 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B778EC388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21848C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99E6F216F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEB40206BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:40:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732107AbfI3PkV (ORCPT
+        id S1732117AbfI3Pki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 11:40:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:57210 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727767AbfI3PkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 11:40:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 589151000;
-        Mon, 30 Sep 2019 08:40:20 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C3C083F706;
-        Mon, 30 Sep 2019 08:40:19 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 16:40:18 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Remi Pommarel <repk@triplefau.lt>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ellie Reeves <ellierevves@gmail.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: aardvark: Use LTSSM state to build link training
- flag
-Message-ID: <20190930154017.GF42880@e119886-lin.cambridge.arm.com>
-References: <20190522213351.21366-3-repk@triplefau.lt>
+        Mon, 30 Sep 2019 11:40:38 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:41357 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727767AbfI3Pkh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 11:40:37 -0400
+Received: by mail-ed1-f68.google.com with SMTP id f20so9046070edv.8;
+        Mon, 30 Sep 2019 08:40:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=l0yUcGu9MFmSuUJVKJXvSt9KSqYrsEKkvHYxaWpAOwY=;
+        b=rpLz+rzMghFUgoOVWXnxivpxW3THowbyFQoTQioNFNCbw3XUcYH1648liYK+CFK819
+         kIGZr+rzhPApUU8WxT2bYBpKddAgCjcRf52UJFJy+WXvpEt00ZGfmvFo6WiqawFqcSyK
+         NnqAdjwy2VU8cC21pK3DYxymumEeHF1LQjB7pktwWC5RFnImdZsd3/XVcXv5ivzsWxCI
+         qpfEswjIQ4KFnOkEhrC1ZXDwDLyXRGxMX3IhTUetouZ8KpMXeZN4HeeD/+xvObk9xcZC
+         bc5uiu/BXjzcS7Vc0C53en3mXgxjt3Em55vWMdAwzfu19e6y7SgMxuibYdmGD3zNkVN9
+         XypA==
+X-Gm-Message-State: APjAAAUkqw+/XgncaiI1LHIRoe/UdAUFrNvYVbx2KXo+eeP9BQ24B0c2
+        WIv8o0XnQInXUqT9DGg7uEYN9RQh
+X-Google-Smtp-Source: APXvYqyGk9jEUdaFH3KevIMNskTk1I0chh4w+dn+1QHkHkE06xOO0cPwtJ0brhNDj0onn++FITIqDg==
+X-Received: by 2002:a50:f09d:: with SMTP id v29mr20047749edl.4.1569858036234;
+        Mon, 30 Sep 2019 08:40:36 -0700 (PDT)
+Received: from [10.10.2.174] (bran.ispras.ru. [83.149.199.196])
+        by smtp.gmail.com with ESMTPSA id j5sm2513357edj.62.2019.09.30.08.40.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Sep 2019 08:40:35 -0700 (PDT)
+Reply-To: efremov@linux.com
+Subject: Re: [PATCH] staging: rtl8723bs: hal: Fix memcpy calls
+To:     David Laight <David.Laight@ACULAB.COM>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Jes Sorensen <jes.sorensen@gmail.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>
+References: <20190930110141.29271-1-efremov@linux.com>
+ <37b195b700394e95aa8329afc9f60431@AcuMS.aculab.com>
+From:   Denis Efremov <efremov@linux.com>
+Message-ID: <b3a92ac3-b097-3359-8729-ad353fac2a0d@linux.com>
+Date:   Mon, 30 Sep 2019 18:40:34 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190522213351.21366-3-repk@triplefau.lt>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <37b195b700394e95aa8329afc9f60431@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 22, 2019 at 11:33:51PM +0200, Remi Pommarel wrote:
-> Aardvark's PCI_EXP_LNKSTA_LT flag in its link status register is not
-> implemented and does not reflect the actual link training state (the
-> flag is always set to 0). In order to support link re-training feature
-> this flag has to be emulated. The Link Training and Status State
-> Machine (LTSSM) flag in Aardvark LMI config register could be used as
-> a link training indicator. Indeed if the LTSSM is in L0 or upper state
-> then link training has completed (see [1]).
+On 9/30/19 4:18 PM, David Laight wrote:
+> From: Denis Efremov
+>> Sent: 30 September 2019 12:02
+>> memcpy() in phy_ConfigBBWithParaFile() and PHY_ConfigRFWithParaFile() is
+>> called with "src == NULL && len == 0". This is an undefined behavior.
 > 
-> Unfortunately because after asking a link retraining it takes a while
-> for the LTSSM state to become less than 0x10 (due to L0s to recovery
-> state transition delays), LTSSM can still be in L0 while link training
-> has not finished yet. So this waits for link to be in recovery or lesser
-> state before returning after asking for a link retrain.
+> I'm pretty certain it is well defined (to do nothing).
 > 
-> [1] "PCI Express Base Specification", REV. 4.0
->     PCI Express, February 19 2014, Table 4-14
+>> Moreover this if pre-condition "pBufLen && (*pBufLen == 0) && !pBuf"
+>> is constantly false because it is a nested if in the else brach, i.e.,
+>> "if (cond) { ... } else { if (cond) {...} }". This patch alters the
+>> if condition to check "pBufLen && pBuf" pointers are not NULL.
+>>
+> ...
+>> ---
+>> Not tested. I don't have the hardware. The fix is based on my guess.
+>>
+>>  drivers/staging/rtl8723bs/hal/hal_com_phycfg.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c b/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c
+>> index 6539bee9b5ba..0902dc3c1825 100644
+>> --- a/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c
+>> +++ b/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c
+>> @@ -2320,7 +2320,7 @@ int phy_ConfigBBWithParaFile(
+>>  			}
+>>  		}
+>>  	} else {
+>> -		if (pBufLen && (*pBufLen == 0) && !pBuf) {
+>> +		if (pBufLen && pBuf) {
+>>  			memcpy(pHalData->para_file_buf, pBuf, *pBufLen);
 > 
-> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> ---
-> Changes since v1:
->   - Rename retraining flag field
->   - Fix DEVCTL register writing
+> The existing code is clearly garbage.
+> It only ever does memcpy(tgt, NULL, 0).
 > 
-> Changes since v2:
->   - Rewrite patch logic so it is more legible
+> Under the assumption that the code has been tested the copy clearly isn't needed at all
+> and can be deleted completely!
+
+Initially I also thought that this is just a dead code and it could be simply removed. However, if
+we look at it more carefully, this if condition looks like a copy-paste error:
+
+if (pBufLen && (*pBufLen == 0) && !pBuf) {
+	// get proper len
+	// allocate pBuf
+	...
+	memcpy(pBuf, pHalData->para_file_buf, rlen);
+	...
+} else {
+	if (pBufLen && (*pBufLen == 0) && !pBuf) { // <== condition in patch
+		memcpy(pHalData->para_file_buf, pBuf, *pBufLen);
+		rtStatus = _SUCCESS;
+	} else
+		DBG_871X("%s(): Critical Error !!!\n", __func__);
+}
+
+Thus, I think it will be incorrect to delete the second memcpy.
+
 > 
-> Please note that I will unlikely be able to answer any comments from May
-> 24th to June 10th.
-> ---
->  drivers/pci/controller/pci-aardvark.c | 29 ++++++++++++++++++++++++++-
->  1 file changed, 28 insertions(+), 1 deletion(-)
+> OTOH if the code hasn't been tested maybe the entire source file should be removed :-)
 > 
-> diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> index 134e0306ff00..8803083b2174 100644
-> --- a/drivers/pci/controller/pci-aardvark.c
-> +++ b/drivers/pci/controller/pci-aardvark.c
-> @@ -180,6 +180,8 @@
->  #define LINK_WAIT_MAX_RETRIES		10
->  #define LINK_WAIT_USLEEP_MIN		90000
->  #define LINK_WAIT_USLEEP_MAX		100000
-> +#define RETRAIN_WAIT_MAX_RETRIES	10
-> +#define RETRAIN_WAIT_USLEEP_US		2000
->  
->  #define MSI_IRQ_NUM			32
->  
-> @@ -239,6 +241,17 @@ static int advk_pcie_wait_for_link(struct advk_pcie *pcie)
->  	return -ETIMEDOUT;
->  }
->  
-> +static void advk_pcie_wait_for_retrain(struct advk_pcie *pcie)
-> +{
-> +	size_t retries;
-> +
-> +	for (retries = 0; retries < RETRAIN_WAIT_MAX_RETRIES; ++retries) {
-> +		if (!advk_pcie_link_up(pcie))
-> +			break;
-> +		udelay(RETRAIN_WAIT_USLEEP_US);
-> +	}
-> +}
-> +
->  static void advk_pcie_setup_hw(struct advk_pcie *pcie)
->  {
->  	u32 reg;
-> @@ -426,11 +439,20 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
->  		return PCI_BRIDGE_EMUL_HANDLED;
->  	}
->  
-> +	case PCI_EXP_LNKCTL: {
-> +		/* u32 contains both PCI_EXP_LNKCTL and PCI_EXP_LNKSTA */
-> +		u32 val = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg) &
-> +			~(PCI_EXP_LNKSTA_LT << 16);
-
-The commit message says "the flag is always set to 0" - therefore I guess
-you don't *need* to mask out the LT bit here? I assume this is just
-belt-and-braces but thought I'd check incase I've misunderstood or if your
-commit message is inaccurate.
-
-In any case masking out the bit (or adding a comment) makes this code more
-readable as the reader doesn't need to know what the hardware does with this
-bit.
-
-
-> +		if (!advk_pcie_link_up(pcie))
-> +			val |= (PCI_EXP_LNKSTA_LT << 16);
-> +		*value = val;
-> +		return PCI_BRIDGE_EMUL_HANDLED;
-> +	}
-> +
->  	case PCI_CAP_LIST_ID:
->  	case PCI_EXP_DEVCAP:
->  	case PCI_EXP_DEVCTL:
->  	case PCI_EXP_LNKCAP:
-> -	case PCI_EXP_LNKCTL:
->  		*value = advk_readl(pcie, PCIE_CORE_PCIEXP_CAP + reg);
->  		return PCI_BRIDGE_EMUL_HANDLED;
->  	default:
-> @@ -447,8 +469,13 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
->  
->  	switch (reg) {
->  	case PCI_EXP_DEVCTL:
-> +		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
-> +		break;
-
-Why is this here?
-
-Thanks,
-
-Andrew Murray
-
-> +
->  	case PCI_EXP_LNKCTL:
->  		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
-> +		if (new & PCI_EXP_LNKCTL_RL)
-> +			advk_pcie_wait_for_retrain(pcie);
->  		break;
->  
->  	case PCI_EXP_RTCTL:
-> -- 
-> 2.20.1
+> 	David
 > 
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
+> 
+
