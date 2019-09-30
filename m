@@ -2,134 +2,186 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2AEEC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 184FDC35280
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B95D9205F4
+	by mail.kernel.org (Postfix) with ESMTP id E484D2168B
 	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:35:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WjH1Aciw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569850554;
+	bh=NpJQuFasn3vKAhMdeTrMQeWfD8YQc+ECWoAEx5wuHVQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EBW9xvrYj9ixCOpA7PoY4XgQTxsvz8yHCOmsBCyioN29dzjOz8ru3poX+qiR2XMbE
+	 Lxe/qRzGraIFgTJt7bmrj3Q8APZuZv1uVMS/kfa7W2nS4kDS3vdjVkfaxE3+GIZyZO
+	 TCABubLu110nUwHm1qjnqoteoPDvRZNzArwGU9X8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731402AbfI3Nft (ORCPT
+        id S1731418AbfI3Nfw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 09:35:49 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:46532 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730637AbfI3Nft (ORCPT
+        Mon, 30 Sep 2019 09:35:52 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41209 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728214AbfI3Nfv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:35:49 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8UDZf9u011071;
-        Mon, 30 Sep 2019 08:35:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569850542;
-        bh=xYtWnenhn+eca6d4SA4M0SG+A6mLvTWAfgkIW6YBQQM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=WjH1Aciw+tVEjXn2qPbglCYcdOquSVCC3r3PJpSyC8eATl7UOK9e9hvRStxhh3FEv
-         8vhsTpJ7xszdzLsKQnqRi0HKn/Ne2bVtmI+g5QE/ccQ0xGN5WT4MYU6xbJ+en6Rm0n
-         B9HbBDHgTFv0Pc9JEoiwKjmvLg1SxuvGZpI1SY3k=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8UDZfEs098810;
-        Mon, 30 Sep 2019 08:35:41 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 30
- Sep 2019 08:35:31 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 30 Sep 2019 08:35:31 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8UDZchM021644;
-        Mon, 30 Sep 2019 08:35:39 -0500
-Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to
- dts
-To:     Adam Ford <aford173@gmail.com>, Tero Kristo <t-kristo@ti.com>
-CC:     Tony Lindgren <tony@atomide.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190510194229.20628-1-aford173@gmail.com>
- <af325707-3e42-493d-e858-77878ef06138@ti.com>
- <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
- <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
- <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
- <845055e2-8182-de74-2077-629fdf50ac6c@ti.com>
- <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
- <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com>
- <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
- <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com>
- <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
- <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com>
- <23eba53a-9304-2ceb-d97e-01891ec0b3ed@ti.com>
- <cb028b1e-05ca-9b22-be5d-c63f5fd56cc4@ti.com>
- <CAHCN7xLKL42ib4t0Lte3sJPoJrKX0TPJR9VWi+uW=fZjUg1ssg@mail.gmail.com>
- <c816d70d-fa5b-a43f-ae7a-6df4589fe484@ti.com>
- <CAHCN7xKKNpQwWZkg-JBncp9=VOcLJFEkcvST=rZqv-i9+5_Q2g@mail.gmail.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <d2bec234-be61-5ac1-2899-63d29660a80c@ti.com>
-Date:   Mon, 30 Sep 2019 16:35:38 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 30 Sep 2019 09:35:51 -0400
+Received: by mail-oi1-f196.google.com with SMTP id w17so11092680oiw.8;
+        Mon, 30 Sep 2019 06:35:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=a9jR1BNKDDZGZvIL5lhodG0XnQTe5HRm6UzcjXJdIrE=;
+        b=ZD7c2trCFm35L1fJ3YCTdHFNIz4hNjr0XpWFhv6sMWPJmeW9jUypB8uY1phogYFYYR
+         Yxao9vB+AzeCkrlrUWru6uTI0LLRcdF3OKffHhxQi5WVwnLNlOZhFk8WDFdsgqKaXL2Q
+         vQ+j2McWcD6KEnzru760G6bj0fbu/RXrw1pgO5BpiX0xpuybyo+TMEvwQdoT3bMLdstk
+         0QkNVpc2kDTDRkrGdUsi80FiLA8YWtINJFWLGhJlYL550XcBWnDPHkvk7nAL9pexQ4+D
+         wKg+Nqk2+7u8gYKUuVTSFtMKEwm9DfCYi6l6lswnlUfQ5crYKOgGzJDYOZRTdl9WjloI
+         yqtw==
+X-Gm-Message-State: APjAAAU3P2tCiM+zB4jDTS3uk+++9DXQF4GSCugrSf4ev3rqUDI7Ywq+
+        8VGfvuO2nOnSh1+FhKVZVw==
+X-Google-Smtp-Source: APXvYqz7v38Yb3gdAuwcC3Pdow5jowdh8vbv74h20x1h3izlQLTP8SfiZeKSqNctH5OMmF/elaB/Rg==
+X-Received: by 2002:aca:cf13:: with SMTP id f19mr17629022oig.154.1569850549773;
+        Mon, 30 Sep 2019 06:35:49 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 11sm3864751otg.62.2019.09.30.06.35.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 06:35:49 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 08:35:48 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Roger Lu <roger.lu@mediatek.com>
+Cc:     Kevin Hilman <khilman@kernel.org>,
+        Nicolas Boichat <drinkcat@google.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Fan Chen <fan.chen@mediatek.com>,
+        HenryC Chen <HenryC.Chen@mediatek.com>, yt.lee@mediatek.com,
+        Angus Lin <Angus.Lin@mediatek.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v5 1/3] dt-bindings: soc: add mtk svs dt-bindings
+Message-ID: <20190930133548.GA24574@bogus>
+References: <20190906100514.30803-1-roger.lu@mediatek.com>
+ <20190906100514.30803-2-roger.lu@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHCN7xKKNpQwWZkg-JBncp9=VOcLJFEkcvST=rZqv-i9+5_Q2g@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190906100514.30803-2-roger.lu@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/09/2019 16:17, Adam Ford wrote:
-
->>> It looks like it's unhappy that its trying to get one frequency and
->>> getting something different instead.
->>>
->>> [   10.014099] WARNING: CPU: 0 PID: 111 at
->>> drivers/gpu/drm/omapdrm/dss/dss.c:655 dss_set_fck_rate+0x70/0x90
->>> [omapdss]
->>> [   10.014129] clk rate mismatch: 27870968 != 27000000
->>
->> I believe this one is for Tomi to comment, his driver does some magic
->> compares for the requested vs. actual received clock rates. If I am not
->> mistaken, we are only modifying an integer divider here, and thus it is
->> physically impossible to get accurate 27MHz rate to display.
+On Fri, Sep 06, 2019 at 06:05:13PM +0800, Roger Lu wrote:
+> Document the binding for enabling mtk svs on MediaTek SoC.
 > 
-> I didn't expect exactly 27MHz,but the back trace is what concerns me more.
-
-Ah sorry... DSS driver knows the max divider value, so that it can 
-iterate over all the rates to find a good one.
-
-I'll send a patch later, but look for omap3630_dss_feats in dss.c, and 
-change fck_div_max from 32 to 16.
-
-> However, looking at
-> # cat clk/dpll4_ck/clk_rate
-> 864000000
+> Signed-off-by: Roger Lu <roger.lu@mediatek.com>
+> ---
+>  .../devicetree/bindings/power/mtk-svs.txt     | 88 +++++++++++++++++++
+>  1 file changed, 88 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/mtk-svs.txt
 > 
-> It seems like 864000000 / 32 would be 27 MHz, but instead we're
-> dividing it by 31 yielding 27870968.  I don't know the clocking
-> architecture, so I don't know what your patch actually did or how the
-> divide by 16 limit worked into this.  If lck cannot divide by 32, it
-> would be nice to see if it could divide by 27 to get to 32MHz.  From
-> there, the pck could then divide by 4 yielding 9MHz.
+> diff --git a/Documentation/devicetree/bindings/power/mtk-svs.txt b/Documentation/devicetree/bindings/power/mtk-svs.txt
+> new file mode 100644
+> index 000000000000..6a71992ef162
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/mtk-svs.txt
+> @@ -0,0 +1,88 @@
+> +* Mediatek Smart Voltage Scaling (MTK SVS)
+> +
+> +This describes the device tree binding for the MTK SVS controller (bank)
+> +which helps provide the optimized CPU/GPU/CCI voltages. This device also
+> +needs thermal data to calculate thermal slope for accurately compensate
+> +the voltages when temperature change.
+> +
+> +Required properties:
+> +- compatible:
+> +  - "mediatek,mt8183-svs" : For MT8183 family of SoCs
+> +- reg: Address range of the MTK SVS controller.
+> +- interrupts: IRQ for the MTK SVS controller.
+> +- clocks, clock-names: Clocks needed for the svs controller. required
+> +                       clocks are:
+> +		       "main_clk": Main clock needed for register access
 
-That's pretty odd. With Tero's patch (I didn't test it though) the max 
-divider should be 16. So the minimum fclk rate should be 54MHz. But 
-somehow the clock framework managed to produce 27870968...
+'_clk' is redundant.
 
-  Tomi
+> +- nvmem-cells: Phandle to the calibration data provided by a nvmem device.
+> +- nvmem-cell-names: Should be "svs-calibration-data" and "calibration-data"
+> +
+> +Subnodes:
+> +- svs_cpu_little: SVS bank device node of little CPU
+> +  compatible: "mediatek,mt8183-svs-cpu-little"
+> +  operating-points-v2: OPP table hooked by SVS little CPU bank.
+> +		       SVS will optimze this OPP table voltage part.
+> +  vcpu-little-supply: PMIC buck of little CPU
+> +- svs_cpu_big: SVS bank device node of big CPU
+> +  compatible: "mediatek,mt8183-svs-cpu-big"
+> +  operating-points-v2: OPP table hooked by SVS big CPU bank.
+> +		       SVS will optimze this OPP table voltage part.
+> +  vcpu-big-supply: PMIC buck of big CPU
+> +- svs_cci: SVS bank device node of CCI
+> +  compatible: "mediatek,mt8183-svs-cci"
+> +  operating-points-v2: OPP table hooked by SVS CCI bank.
+> +		       SVS will optimze this OPP table voltage part.
+> +  vcci-supply: PMIC buck of CCI
+> +- svs_gpu: SVS bank device node of GPU
+> +  compatible: "mediatek,mt8183-svs-gpu"
+> +  operating-points-v2: OPP table hooked by SVS GPU bank.
+> +		       SVS will optimze this OPP table voltage part.
+> +  vgpu-spply: PMIC buck of GPU
+> +
+> +Example:
+> +
+> +	svs: svs@1100b000 {
+> +		compatible = "mediatek,mt8183-svs";
+> +		reg = <0 0x1100b000 0 0x1000>;
+> +		interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_LOW 0>;
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+GIC interrupts are 3 cells, you have 4.
+
+> +		clocks = <&infracfg CLK_INFRA_THERM>;
+> +		clock-names = "main_clk";
+> +		nvmem-cells = <&svs_calibration>, <&thermal_calibration>;
+> +		nvmem-cell-names = "svs-calibration-data", "calibration-data";
+> +
+> +		svs_cpu_little: svs_cpu_little {
+
+Don't use '_' in node names.
+
+> +			compatible = "mediatek,mt8183-svs-cpu-little";
+> +			operating-points-v2 = <&cluster0_opp>;
+> +		};
+> +
+> +		svs_cpu_big: svs_cpu_big {
+> +			compatible = "mediatek,mt8183-svs-cpu-big";
+> +			operating-points-v2 = <&cluster1_opp>;
+> +		};
+> +
+> +		svs_cci: svs_cci {
+> +			compatible = "mediatek,mt8183-svs-cci";
+> +			operating-points-v2 = <&cci_opp>;
+> +		};
+> +
+> +		svs_gpu: svs_gpu {
+> +			compatible = "mediatek,mt8183-svs-gpu";
+> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_MFG_2D>;
+> +			operating-points-v2 = <&gpu_opp_table>;
+> +		};
+> +	};
+> +
+> +	&svs_cpu_little {
+> +		vcpu-little-supply = <&mt6358_vproc12_reg>;
+
+It's already defined to have OPP and supply in the cpu nodes. Parse them
+to get this information rather than duplicating it here.
+
+The same should apply to the CCI and GPU.
+
+Rob
