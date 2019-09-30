@@ -2,91 +2,138 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B972CC388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B35C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F7BB22508
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:40:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GRFD0hyb"
+	by mail.kernel.org (Postfix) with ESMTP id 3DC1E20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:40:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569876055;
+	bh=Ia/sE7OsRwGmDutroMOdVbd3eXtqQ6ome2j9iwgAtQM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=Ui9lleiF5Hue5rJb89UhlWnq9/EU6kwqnr4Rh7glB/h/jrK09FYlGYqvxDUeHvtk3
+	 Z5CHHqk0htvlPWRgovATCMdBy1HwlPxWNAOwM6gM2JqLQCXqV4uCy/G6dmEzzeg213
+	 /Lqh9mQc12nhG2wQpREcY2UyHx9Js3RpRpHnzNvk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732437AbfI3Uk1 (ORCPT
+        id S1731446AbfI3Uky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 16:40:27 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37824 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731122AbfI3UkY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 16:40:24 -0400
-Received: by mail-wr1-f67.google.com with SMTP id i1so12868348wro.4;
-        Mon, 30 Sep 2019 13:40:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=cTUeLlsHzyRIM7wRd7q8kxuNflnVRbJU9qjFEDYt/Zw=;
-        b=GRFD0hybSsF2MXMngUmv7oG4bMRbcXLcxchTcq3vu/uz3+Q+vLwLOoC/Kh4FjRjfVf
-         J8TOnNJnfHAR1mF/kAFTt/8UKVw8t1+pV0a2PAMEkrg/TaUDMitONp+5JjQAob5j7pp9
-         S8yhhwvLUxHw3QTnLEzwcZ0ymhbVsnbr/noUgQex2Q/gyONfaf7sCyd4fBGgJIYlCGYT
-         NJsIeUeqzjy8C7PxPwvFoRj8Rwn7/mmLdCrM/KIjlguErGXdDErzIu8eczTzE+y4vWq4
-         /1yF7+EhgidtmMzncooapQEcPQ1jBtB8POooHEgIHQ6BiFVJ/RSeGUF76xA/ix3HlX6e
-         czMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=cTUeLlsHzyRIM7wRd7q8kxuNflnVRbJU9qjFEDYt/Zw=;
-        b=iHSvBqgYsf+FptqzimjmqLmOkA/fh3VAMSRslcViMBXNiix3nloEGmk8gY/FeKharG
-         G8yHUZnZS/8/Ssq+xwwL0+tOT7/Ub9CGXuaY5Oh7zs6wXfQoCD/f95hkVXzEjSbiHS5S
-         azRoKxuscmbesHyA/td2GIVR0DXq1hkcTYneReVaHese6SIh51F/bKwX/aiMM0T0TEIt
-         n+ylnXaeGQvU+tgB2AKbmwl1YZauSURM1Bpd7PT9A+hfdI/2P3AE/5TaNQGqkD3mc1l/
-         v1DrEXwz+QeuCbQLemAFbqvLllZ2fb03Y6XBhktgPQWfs6E9yuBRP6qg2/R9okUFgG5k
-         ybHw==
-X-Gm-Message-State: APjAAAXmjcSTxFNJMZJ/KEdCuQSNb0wwdxoEkfvxujN0Tt0zTHitT+1w
-        dQSKPwr+YvN/iRySZ0t0RZ1AfVdnGqU=
-X-Google-Smtp-Source: APXvYqwo4i/14wHd+SgDLNsTMLtn559N+qxd0IF7c3AL1YkLmVAHdJW4OIJjdnzsCEnYSniL2je9cg==
-X-Received: by 2002:adf:ea12:: with SMTP id q18mr15055256wrm.378.1569869740730;
-        Mon, 30 Sep 2019 11:55:40 -0700 (PDT)
-Received: from localhost.localdomain ([109.126.142.9])
-        by smtp.gmail.com with ESMTPSA id u83sm1131184wme.0.2019.09.30.11.55.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 11:55:40 -0700 (PDT)
-From:   "Pavel Begunkov (Silence)" <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Pavel Begunkov <asml.silence@gmail.com>
-Subject: [PATCH v2 0/2] Simplify blk_mq_in_flight*
-Date:   Mon, 30 Sep 2019 21:55:32 +0300
-Message-Id: <cover.1569868094.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <11ebb046bf422facf6e438672799306b80038173.1569830385.git.asml.silence@gmail.com>
-References: <11ebb046bf422facf6e438672799306b80038173.1569830385.git.asml.silence@gmail.com>
+        Mon, 30 Sep 2019 16:40:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35636 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729180AbfI3Uky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 16:40:54 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D12E224D2;
+        Mon, 30 Sep 2019 20:34:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569875651;
+        bh=Ia/sE7OsRwGmDutroMOdVbd3eXtqQ6ome2j9iwgAtQM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=W8TiKyqeBZc6pJ4n/x3zNcBQ+zNVfG5Jqyt7GuWexVjswNJ94IS4AZhlWNK6HpKgZ
+         hmJOu7FoPUwtNXAkVc6swG5WbDsCADl2YqGyc0VeWk4EYwJ43MW0EUgjrMfxUZhkUR
+         c7xsmMQIRDIEynQWykeEtOGczMovqRvvNWA8y03E=
+Date:   Mon, 30 Sep 2019 15:34:10 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     George Cherian <george.cherian@marvell.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "shannon.zhao@linux.alibaba.com" <shannon.zhao@linux.alibaba.com>,
+        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
+        George Cherian <gcherian@marvell.com>,
+        Vadim Lomovtsev <Vadim.Lomovtsev@marvell.com>,
+        Manish Jaggi <mjaggi@caviumnetworks.com>
+Subject: Re: [PATCH] PCI: Enhance the ACS quirk for Cavium devices
+Message-ID: <20190930203409.GA195851@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190919024319.GA8792@dc5-eodlnx05.marvell.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+[+cc Vadim, Manish]
 
-Clean up inflight counting code. Deduplicate it and fortify with types.
+On Thu, Sep 19, 2019 at 02:43:34AM +0000, George Cherian wrote:
+> Enhance the ACS quirk for Cavium Processors. Add the root port
+> vendor ID's in an array and use the same in match function.
+> For newer devices add the vendor ID's in the array so that the
+> match function is simpler.
+> 
+> Signed-off-by: George Cherian <george.cherian@marvell.com>
+> ---
+>  drivers/pci/quirks.c | 28 +++++++++++++++++++---------
+>  1 file changed, 19 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 44c4ae1abd00..64deeaddd51c 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -4241,17 +4241,27 @@ static int pci_quirk_amd_sb_acs(struct pci_dev *dev, u16 acs_flags)
+>  #endif
+>  }
+>  
+> +static const u16 pci_quirk_cavium_acs_ids[] = {
+> +	/* CN88xx family of devices */
+> +	0xa180, 0xa170,
+> +	/* CN99xx family of devices */
+> +	0xaf84,
+> +	/* CN11xxx family of devices */
+> +	0xb884,
+> +};
+> +
+>  static bool pci_quirk_cavium_acs_match(struct pci_dev *dev)
+>  {
+> -	/*
+> -	 * Effectively selects all downstream ports for whole ThunderX 1
+> -	 * family by 0xf800 mask (which represents 8 SoCs), while the lower
+> -	 * bits of device ID are used to indicate which subdevice is used
+> -	 * within the SoC.
+> -	 */
+> -	return (pci_is_pcie(dev) &&
+> -		(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) &&
+> -		((dev->device & 0xf800) == 0xa000));
+> +	int i;
+> +
+> +	if (!pci_is_pcie(dev) || pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
+> +		return false;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(pci_quirk_cavium_acs_ids); i++)
+> +		if (pci_quirk_cavium_acs_ids[i] == dev->device)
 
-v2: splitting the patch in two by Christoph suggestion
+I'm a little skeptical of this because the previous test:
 
-Pavel Begunkov (2):
-  blk-mq: Reuse callback in blk_mq_in_flight*()
-  blk-mq: Embed counters into struct mq_inflight
+  (dev->device & 0xf800) == 0xa000
 
- block/blk-mq.c | 32 ++++++++------------------------
- 1 file changed, 8 insertions(+), 24 deletions(-)
+could match *many* devices, but of those, the new code only matches two
+(0xa180, 0xa170).
 
--- 
-2.23.0
+And the comment says the new code matches the CN99xx and CN11xxx
+*families*, but it only matches a single device ID for each, which
+makes me think there may be more devices to come.
 
+Maybe this is all what you want, but please confirm.
+
+The commit log should be explicit that this adds CN99xx and CN11xxx,
+which previously were not matched.
+
+This looks like stable material?
+
+> +			return true;
+> +
+> +	return false;
+>  }
+>  
+>  static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
+> -- 
+> 2.17.1
+> 
