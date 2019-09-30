@@ -2,153 +2,199 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C04C388F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E751EC4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F24162075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE7F720679
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:10:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="mGLIO9Mt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hjBvolgA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729894AbfI3IGn (ORCPT
+        id S1729847AbfI3IKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 04:06:43 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:40681 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbfI3IGn (ORCPT
+        Mon, 30 Sep 2019 04:10:34 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44350 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbfI3IKd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 04:06:43 -0400
-Received: by mail-ed1-f68.google.com with SMTP id v38so7731835edm.7
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 01:06:41 -0700 (PDT)
+        Mon, 30 Sep 2019 04:10:33 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i14so6926033pgt.11;
+        Mon, 30 Sep 2019 01:10:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=javigon-com.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=bhCXeT1pshCRnI3I3+5YHaCRK9iqpcuDUzbtYhTbd4U=;
-        b=mGLIO9MtSZzET0J2dkj6BX7WiaA+H8UOryLnIZ8LRTuL33kaTEgD6QBTxfBCcInVHq
-         M60usB/UBo5muGPMTGCtS+yL9sFKs4J+BMYSQBLhHeD6LzT8JAKAc5qvCoAa2EcTFnMH
-         MIlu6EcdLp7NfHf3QyVIKo0dfjSAa2VqzN2k78dUo1jotuBqNRo9xWtj7hsVYGmNbiBB
-         ecAQIQoopM3/4cBHCoV99ro8ukLsA4/pGYstUJJrqghPNWjovQeuH3jpDWtVinTfLdmC
-         j8G4nYZEm4EsjcyYNQJrThnfOwjK0k9rjOMHKCSRxVDzs9kEQ5TnEOJczeVTVWNMS4o7
-         RPNw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=BY/AK+N2g5Gtdi627g4PugnddcbhUUIEgKh0LJ4aymM=;
+        b=hjBvolgAOikZ8KI85AaIjAhrKEjdSJQtJCTGg3n0Dwa8JiuoUdMxviHxsJ9FJT1Qhr
+         z4JQs5k9uUt/r/SXOmYYJsoqR1HZnJtH12Yt18DoTREuLRyW5GKTf9avam8KuCsoVInw
+         2Czgyfz5Mm49cl43LIDDdzKDsgDoBON0tYE3j13mckCzfs8TzjBa572igIbWN9qCwLg6
+         uxvmxjmGmrW1e/XTeEu2Bx9QE8kPTD6QUm1tISAMBnrFSvDQ8D9VTZlZO90sXKO7NjSU
+         EBr2gVbQeE/JuQ/ctn8W59v5xmqTL9RiT1/PvaMN7mkIHHApBxuvUnWLfh782JcY7jQP
+         d8DA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=bhCXeT1pshCRnI3I3+5YHaCRK9iqpcuDUzbtYhTbd4U=;
-        b=EENHQnS7J8E0bnqABJTp3ym7J8Hkz6BThmvt+BDcNSB87awPL17Od5Kvir85OHxZSo
-         Me2C5Vxa5OPoAhdqiMzcu8ERjZd+q90YXtzBarko0htmoDqv5/nBeLbPx2I51bG0M/YE
-         7teIH9be683PZBldg8wayEk7hkBgk7aS+afu6lEReZGGBuIsTTgyZ0tHvXCt9g21qDuh
-         enxDfO1/PjBde8y/qQ3F8XsOMvoCwCqHo4lcdF2KC85M3NvCRAI57hVPm7cvpDHP4P8I
-         QPQqym2ePIPI0oLAKIyFI8if8e/oSoOOwii4//eop3Tc4V4cvVllI8SGuwcOCSBUnH1a
-         bIQA==
-X-Gm-Message-State: APjAAAUSeQRpLVqxkzinR5CJaeUblbsBd0SDCqw+vKp87UD0tHpxL3VH
-        j4vZitlkxQDxjAmJPyQMhFctQw==
-X-Google-Smtp-Source: APXvYqzUval9YSx3UeU/+Slzvv3oSjw3iUYNLM8IAgaPtThFyeF46KNKpQMdJlZPbz/tiHzGlOqs0g==
-X-Received: by 2002:a17:907:11c8:: with SMTP id va8mr18016520ejb.111.1569830801252;
-        Mon, 30 Sep 2019 01:06:41 -0700 (PDT)
-Received: from macbook-pro.gnusmas ([194.62.217.57])
-        by smtp.gmail.com with ESMTPSA id d4sm1351963ejm.24.2019.09.30.01.06.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 30 Sep 2019 01:06:39 -0700 (PDT)
-From:   =?utf-8?Q?Javier_Gonz=C3=A1lez?= <javier@javigon.com>
-Message-Id: <8FE3FFB7-4FF5-4BF5-B95E-2FECC003702D@javigon.com>
-Content-Type: multipart/signed;
-        boundary="Apple-Mail=_1E4C8571-4692-42FD-921C-8B9C2894E5EF";
-        protocol="application/pgp-signature";
-        micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] lightnvm: prevent memory leak in nvm_bb_chunk_sense
-Date:   Mon, 30 Sep 2019 10:06:38 +0200
-In-Reply-To: <20190930023415.24171-1-navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        =?utf-8?Q?Matias_Bj=C3=B8rling?= <mb@lightnvm.io>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-References: <20190930023415.24171-1-navid.emamdoost@gmail.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=BY/AK+N2g5Gtdi627g4PugnddcbhUUIEgKh0LJ4aymM=;
+        b=ax84nlZdv5YI0b0rx5EiWc8YrbSdASZKs/lWfXXIIBXHTvjeRdLuG4TwjidxJq0Dtx
+         82HjCbg0iOmTTkvz74zhD/O+zkBslqHtMNsAmyO9vG8y2P9ehbjGZNfsflRCt3ftM+vZ
+         DYaCY4HaFU/2eBI8+vMs78VVKSuzPdx5YKTVRWKkEAolvFpJq8r7+U2N+zmP+kJhaB9m
+         llo+ajlS3CneaKOe7sx3SdKpEW37c57P+t90AieDqOtu0ko815sFvKCuQIi4go6jvBl/
+         6NRQfID5cVGaUqA0UykgOLV7fyKc+t2bub63IzYwmqbnsS2rj7+KdMKZ7UCM7gX/zvf0
+         f/Ew==
+X-Gm-Message-State: APjAAAWazkdmAG18eonz9VdH+QeU1zIlw9bxho0Coeyr2zAf8cf9xtwt
+        5/IMDISls8sC7D3JHUJS8Ic=
+X-Google-Smtp-Source: APXvYqxSXY/8FcJbLzD8lYwR4LPA8YS0irks7PX80NuJBfs+E5E+2x2PGXFu+SqhtZVe2OPGGPcWUQ==
+X-Received: by 2002:a63:20d:: with SMTP id 13mr23472009pgc.253.1569831032417;
+        Mon, 30 Sep 2019 01:10:32 -0700 (PDT)
+Received: from bj04616pcu.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id z29sm15699911pff.23.2019.09.30.01.10.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 30 Sep 2019 01:10:31 -0700 (PDT)
+From:   Candle Sun <candlesea@gmail.com>
+To:     jikos@kernel.org, benjamin.tissoires@redhat.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        chunyan.zhang@unisoc.com, Candle Sun <candle.sun@unisoc.com>,
+        Nianfu Bai <nianfu.bai@unisoc.com>
+Subject: [PATCH] HID: core: add usage_page_preceding flag for hid_concatenate_usage_page()
+Date:   Mon, 30 Sep 2019 16:09:09 +0800
+Message-Id: <1569830949-10771-1-git-send-email-candlesea@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Candle Sun <candle.sun@unisoc.com>
 
---Apple-Mail=_1E4C8571-4692-42FD-921C-8B9C2894E5EF
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=utf-8
+Upstream commit 58e75155009c ("HID: core: move Usage Page concatenation
+to Main item") adds support for Usage Page item following Usage items
+(such as keyboards manufactured by Primax).
 
-> On 30 Sep 2019, at 04.34, Navid Emamdoost <navid.emamdoost@gmail.com> =
-wrote:
->=20
-> In nvm_bb_chunk_sense alloc_page allocates memory which is released at
-> the end of the function. But if nvm_submit_io_sync_raw fails the error
-> check skips the release and leaks the allocated page. To fix this =
-issue
-> I moved the __free_page call before error check.
->=20
-> Fixes: aff3fb18f957 ("lightnvm: move bad block and chunk state logic =
-to core")
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> ---
-> drivers/lightnvm/core.c | 5 +++--
-> 1 file changed, 3 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/lightnvm/core.c b/drivers/lightnvm/core.c
-> index 7543e395a2c6..5fdae518f6c9 100644
-> --- a/drivers/lightnvm/core.c
-> +++ b/drivers/lightnvm/core.c
-> @@ -849,11 +849,12 @@ static int nvm_bb_chunk_sense(struct nvm_dev =
-*dev, struct ppa_addr ppa)
-> 	rqd.ppa_addr =3D generic_to_dev_addr(dev, ppa);
->=20
-> 	ret =3D nvm_submit_io_sync_raw(dev, &rqd);
-> -	if (ret)
-> -		return ret;
->=20
-> 	__free_page(page);
->=20
-> +	if (ret)
-> +		return ret;
-> +
-> 	return rqd.error;
-> }
->=20
-> --
-> 2.17.1
+Usage Page concatenation in Main item works well for following report
+descriptor patterns:
 
-You=E2=80=99re right, there is a leak here. Fix looks good to me.
+    USAGE_PAGE (Keyboard)                   05 07
+    USAGE_MINIMUM (Keyboard LeftControl)    19 E0
+    USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
+    LOGICAL_MINIMUM (0)                     15 00
+    LOGICAL_MAXIMUM (1)                     25 01
+    REPORT_SIZE (1)                         75 01
+    REPORT_COUNT (8)                        95 08
+    INPUT (Data,Var,Abs)                    81 02
 
-Reviewed-by: Javier Gonz=C3=A1lez <javier@javigon.com>
+-------------
 
+    USAGE_MINIMUM (Keyboard LeftControl)    19 E0
+    USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
+    LOGICAL_MINIMUM (0)                     15 00
+    LOGICAL_MAXIMUM (1)                     25 01
+    REPORT_SIZE (1)                         75 01
+    REPORT_COUNT (8)                        95 08
+    USAGE_PAGE (Keyboard)                   05 07
+    INPUT (Data,Var,Abs)                    81 02
 
---Apple-Mail=_1E4C8571-4692-42FD-921C-8B9C2894E5EF
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
+But it makes the parser act wrong for the following report
+descriptor pattern(such as some Gamepads):
 
------BEGIN PGP SIGNATURE-----
+    USAGE_PAGE (Button)                     05 09
+    USAGE (Button 1)                        09 01
+    USAGE (Button 2)                        09 02
+    USAGE (Button 4)                        09 04
+    USAGE (Button 5)                        09 05
+    USAGE (Button 7)                        09 07
+    USAGE (Button 8)                        09 08
+    USAGE (Button 14)                       09 0E
+    USAGE (Button 15)                       09 0F
+    USAGE (Button 13)                       09 0D
+    USAGE_PAGE (Consumer Devices)           05 0C
+    USAGE (Back)                            0a 24 02
+    USAGE (HomePage)                        0a 23 02
+    LOGICAL_MINIMUM (0)                     15 00
+    LOGICAL_MAXIMUM (1)                     25 01
+    REPORT_SIZE (1)                         75 01
+    REPORT_COUNT (11)                       95 0B
+    INPUT (Data,Var,Abs)                    81 02
 
-iQIzBAEBCAAdFiEEU1dMZpvMIkj0jATvPEYBfS0leOAFAl2Rt44ACgkQPEYBfS0l
-eOB5Mw/7Bs1F12y0gPbgfKsKy3amWsMxtOGXL3dshCtaaoaIKHQv6oQtXxIVndDZ
-km4Dj72xLh8UpgCy/jDTo2MCkGRWrBqBbvXkE3YSh+cYz5n5IyfJIn3VohuQV0hW
-bJkW37nBTFeRok7tUEauNQDthida+/mNvxpq4w0+8JVDBOK7RW0URrmRJ0sC/CVQ
-NTEjCwetQOskXa0qwIjDldGxeMGf/ZuaRZDKFRjWpBkncadGvq5dsW+L9ApQ4UDD
-SD6Vi3HX2l0KCpydFd9QPKuYJUn85AIO3FVwdj7A58ZzLtC51A3BpN5kawtY/H5S
-860bCRGLJXiAsIO1F0JTl8ThoiDbX3PqY121tJzicTBWSP8GBft44DpiFsi+89+h
-Z6UL/bw8xSTN9ee29SAijfD1T/a+3pY0rHoXkmEYwu1o8OgI1DPjPpLMVrCktUZQ
-bxy9IhVzaap1vdaJuGGbKS88HryhCyXGfoOLrgeEKn7TOlfGkfQPPzW7Rhnu6e8N
-8jdTQG36OFz4mLDd7CSFFLtFJk2gq5wLllhivQT1ihkOwc4LYGi68Bp5OMEDgCbV
-JRVHbpuvwE7hco/iIMVVZtKmTz/KfdXBjYANNYZDL1e5FQBohFrdVK+f/S0dLzSE
-s6uBG3sV/3iINDLHy65MUQw03sXVGfB3nAd/jIra6PF2Hk4oRT0=
-=CGOW
------END PGP SIGNATURE-----
+With Usage Page concatenation in Main item, parser recognizes all the
+11 Usages as consumer keys, it is not the HID device's real intention.
 
---Apple-Mail=_1E4C8571-4692-42FD-921C-8B9C2894E5EF--
+This patch adds usage_page_preceding flag to detect the third pattern.
+Usage Page concatenation is done in both Local and Main parsing.
+If usage_page_preceding equals 3(the third pattern encountered),
+hid_concatenate_usage_page() is jumped.
+
+Signed-off-by: Candle Sun <candle.sun@unisoc.com>
+Signed-off-by: Nianfu Bai <nianfu.bai@unisoc.com>
+---
+ drivers/hid/hid-core.c | 21 +++++++++++++++++++--
+ include/linux/hid.h    |  1 +
+ 2 files changed, 20 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+index 3eaee2c..043a232 100644
+--- a/drivers/hid/hid-core.c
++++ b/drivers/hid/hid-core.c
+@@ -221,7 +221,15 @@ static int hid_add_usage(struct hid_parser *parser, unsigned usage, u8 size)
+ 		hid_err(parser->device, "usage index exceeded\n");
+ 		return -1;
+ 	}
+-	parser->local.usage[parser->local.usage_index] = usage;
++	if (!parser->local.usage_index && parser->global.usage_page)
++		parser->local.usage_page_preceding = 1;
++	if (parser->local.usage_page_preceding == 2)
++		parser->local.usage_page_preceding = 3;
++	if (size <= 2 && parser->global.usage_page)
++		parser->local.usage[parser->local.usage_index] =
++			(usage & 0xffff) + (parser->global.usage_page << 16);
++	else
++		parser->local.usage[parser->local.usage_index] = usage;
+ 	parser->local.usage_size[parser->local.usage_index] = size;
+ 	parser->local.collection_index[parser->local.usage_index] =
+ 		parser->collection_stack_ptr ?
+@@ -366,6 +374,8 @@ static int hid_parser_global(struct hid_parser *parser, struct hid_item *item)
+ 
+ 	case HID_GLOBAL_ITEM_TAG_USAGE_PAGE:
+ 		parser->global.usage_page = item_udata(item);
++		if (parser->local.usage_page_preceding == 1)
++			parser->local.usage_page_preceding = 2;
+ 		return 0;
+ 
+ 	case HID_GLOBAL_ITEM_TAG_LOGICAL_MINIMUM:
+@@ -547,9 +557,16 @@ static void hid_concatenate_usage_page(struct hid_parser *parser)
+ {
+ 	int i;
+ 
++	if (parser->local.usage_page_preceding == 3) {
++		dbg_hid("Using preceding usage page for final usage\n");
++		return;
++	}
++
+ 	for (i = 0; i < parser->local.usage_index; i++)
+ 		if (parser->local.usage_size[i] <= 2)
+-			parser->local.usage[i] += parser->global.usage_page << 16;
++			parser->local.usage[i] =
++				(parser->global.usage_page << 16)
++				+ (parser->local.usage[i] & 0xffff);
+ }
+ 
+ /*
+diff --git a/include/linux/hid.h b/include/linux/hid.h
+index cd41f20..7fb6cf3 100644
+--- a/include/linux/hid.h
++++ b/include/linux/hid.h
+@@ -412,6 +412,7 @@ struct hid_local {
+ 	unsigned usage_minimum;
+ 	unsigned delimiter_depth;
+ 	unsigned delimiter_branch;
++	unsigned int usage_page_preceding;
+ };
+ 
+ /*
+-- 
+2.7.4
+
