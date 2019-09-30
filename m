@@ -2,145 +2,152 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 791AEC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC48AC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 535FE216F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CA7B206BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:50:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lb51xANn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730818AbfI3Ksz (ORCPT
+        id S1730819AbfI3Ku0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 06:48:55 -0400
-Received: from mga04.intel.com ([192.55.52.120]:17904 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729870AbfI3Ksz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 06:48:55 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Sep 2019 03:48:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,565,1559545200"; 
-   d="scan'208";a="191104454"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by fmsmga007.fm.intel.com with SMTP; 30 Sep 2019 03:48:50 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Mon, 30 Sep 2019 13:48:49 +0300
-Date:   Mon, 30 Sep 2019 13:48:49 +0300
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Sandy Huang <hjc@rock-chips.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] drm: Add some new format DRM_FORMAT_NVXX_10
-Message-ID: <20190930104849.GA1208@intel.com>
-References: <1569486289-152061-1-git-send-email-hjc@rock-chips.com>
- <1569486289-152061-2-git-send-email-hjc@rock-chips.com>
+        Mon, 30 Sep 2019 06:50:26 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:46303 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729870AbfI3Ku0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 06:50:26 -0400
+Received: by mail-qk1-f194.google.com with SMTP id 201so7269912qkd.13
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 03:50:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=eb/OD0+6kl6InPN48kdKyyt3Gl5DHdDbUpre2gx/ub8=;
+        b=lb51xANnjO9r1cPtu4SXv42EwBy6ggxalzx1tjYFaEn8flT7hAbcDn0wOzcs99FfDk
+         6MqDlQs7Xtgtv97FDunjvbOq/y5bGijVG7mmN9RTlEOygmqlN0ow1hONEzvwrEmiwA3o
+         J9o3i/3/BzQPKkiv+Rdt+GxcBWX2GXuCw++uc1xI4wDdnYDvRUk13uJOFWdMDWIPB7WD
+         5L/LUyuLcI/6I/HlT2vxsp2HQKebNH2To+Ib35CgIRa/eqpW7sUSba7X0V0piW3c/A9R
+         jfZ1ohqEt5wCaTSiG/m3oa3upfrErOp53eAACRxA7JsUQQoPXDHpa0AIfV+NclyHQcEO
+         QDyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eb/OD0+6kl6InPN48kdKyyt3Gl5DHdDbUpre2gx/ub8=;
+        b=h0WfuRgY33BwXkXTgj9Cks2MVUX0wM+jHxtfPokgUJoI7SOM8yGNAtFK6QkQvkpMKy
+         /6f5DgrQgKUP5GqCHyL7QTU2J5NGQcY5Zrg+rxgYpJxkzMLCQL7ytUyO5F4WODqQAfsM
+         Jmn381QB3EAgIEtZjwiGUwHvVcagBGZ303CMzkW39cQUyT3QesMdqWuz/X8EAWQeFPcB
+         SaTNcdgPLi/cy5hD2+uZbKSUhRlLf/JQZ7TEWXyHUb+WW/99L9Pic0FO/heFpGw5GwIB
+         xYYyt7C3nsMu9HkldJd4Y7oCAMW+UZxW2q9k3P55Dc6Q9D9X4NlCm9UQSMqhpJabsVGe
+         Bf5Q==
+X-Gm-Message-State: APjAAAVO6rH5Kcob0ry9R8KSSnFrBse6GdPieh2MeGaO5QXtvxPApcUy
+        mEi0h3RN+JzFwTSeWVKMkCEP8LnC
+X-Google-Smtp-Source: APXvYqyGisMj8iz1T0Cr9MFJbTF5p+qLmRxPizM/S1s8cHgsabJFd7K0RwQo0WLAMeB4BRpm3pn4xA==
+X-Received: by 2002:a37:4802:: with SMTP id v2mr18089079qka.496.1569840625589;
+        Mon, 30 Sep 2019 03:50:25 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id x59sm6754687qte.20.2019.09.30.03.50.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 03:50:24 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 14A7440396; Mon, 30 Sep 2019 07:50:23 -0300 (-03)
+Date:   Mon, 30 Sep 2019 07:50:23 -0300
+To:     Andi Kleen <andi@firstfloor.org>
+Cc:     jolsa@kernel.org, linux-kernel@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH 1/3] perf script brstackinsn: Fix recovery from
+ LBR/binary mismatch
+Message-ID: <20190930105023.GD9622@kernel.org>
+References: <20190927233546.11533-1-andi@firstfloor.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1569486289-152061-2-git-send-email-hjc@rock-chips.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190927233546.11533-1-andi@firstfloor.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 04:24:47PM +0800, Sandy Huang wrote:
-> These new format is supported by some rockchip socs:
+Em Fri, Sep 27, 2019 at 04:35:44PM -0700, Andi Kleen escreveu:
+> From: Andi Kleen <ak@linux.intel.com>
 > 
-> DRM_FORMAT_NV12_10/DRM_FORMAT_NV21_10
-> DRM_FORMAT_NV16_10/DRM_FORMAT_NV61_10
-> DRM_FORMAT_NV24_10/DRM_FORMAT_NV42_10
+> When the LBR data and the instructions in a binary do not match the
+> loop printing instructions could get confused and print a long
+> stream of bogus <bad> instructions.
 > 
-> Signed-off-by: Sandy Huang <hjc@rock-chips.com>
+> The problem was that if the instruction decoder cannot decode an
+> instruction it ilen wasn't initialized, so the loop going through
+> the basic block would continue with the previous value.
+> 
+> Harden the code to avoid such problems:
+> - Make sure ilen is always freshly initialized and is 0 for bad
+> instructions.
+> - Do not overrun the code buffer while printing instructions
+> - Print a warning message if the final jump is not on an
+> instruction boundary.
+
+Thanks, applied.
+
+- Arnaldo
+ 
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
 > ---
->  drivers/gpu/drm/drm_fourcc.c  | 18 ++++++++++++++++++
->  include/uapi/drm/drm_fourcc.h | 14 ++++++++++++++
->  2 files changed, 32 insertions(+)
+>  tools/perf/builtin-script.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/gpu/drm/drm_fourcc.c b/drivers/gpu/drm/drm_fourcc.c
-> index c630064..ccd78a3 100644
-> --- a/drivers/gpu/drm/drm_fourcc.c
-> +++ b/drivers/gpu/drm/drm_fourcc.c
-> @@ -261,6 +261,24 @@ const struct drm_format_info *__drm_format_info(u32 format)
->  		{ .format = DRM_FORMAT_P016,		.depth = 0,  .num_planes = 2,
->  		  .char_per_block = { 2, 4, 0 }, .block_w = { 1, 0, 0 }, .block_h = { 1, 0, 0 },
->  		  .hsub = 2, .vsub = 2, .is_yuv = true},
-> +		{ .format = DRM_FORMAT_NV12_10,		.depth = 0,  .num_planes = 2,
-> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
-> +		  .hsub = 2, .vsub = 2, .is_yuv = true},
-> +		{ .format = DRM_FORMAT_NV21_10,		.depth = 0,  .num_planes = 2,
-> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
-> +		  .hsub = 2, .vsub = 2, .is_yuv = true},
-> +		{ .format = DRM_FORMAT_NV16_10,		.depth = 0,  .num_planes = 2,
-> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
-> +		  .hsub = 2, .vsub = 1, .is_yuv = true},
-> +		{ .format = DRM_FORMAT_NV61_10,		.depth = 0,  .num_planes = 2,
-> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
-> +		  .hsub = 2, .vsub = 1, .is_yuv = true},
-> +		{ .format = DRM_FORMAT_NV24_10,		.depth = 0,  .num_planes = 2,
-> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
-> +		  .hsub = 1, .vsub = 1, .is_yuv = true},
-> +		{ .format = DRM_FORMAT_NV42_10,		.depth = 0,  .num_planes = 2,
-> +		  .char_per_block = { 5, 10, 0 }, .block_w = { 4, 4, 0 }, .block_h = { 4, 4, 0 },
-> +		  .hsub = 1, .vsub = 1, .is_yuv = true},
->  		{ .format = DRM_FORMAT_P210,		.depth = 0,
->  		  .num_planes = 2, .char_per_block = { 2, 4, 0 },
->  		  .block_w = { 1, 0, 0 }, .block_h = { 1, 0, 0 }, .hsub = 2,
-> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
-> index 3feeaa3..08e2221 100644
-> --- a/include/uapi/drm/drm_fourcc.h
-> +++ b/include/uapi/drm/drm_fourcc.h
-> @@ -238,6 +238,20 @@ extern "C" {
->  #define DRM_FORMAT_NV42		fourcc_code('N', 'V', '4', '2') /* non-subsampled Cb:Cr plane */
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index e079b34201f2..32b17d51c982 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -1061,7 +1061,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+>  			continue;
 >  
->  /*
-> + * 2 plane YCbCr
-> + * index 0 = Y plane, Y3:Y2:Y1:Y0 10:10:10:10
-> + * index 1 = Cb:Cr plane, Cb3:Cr3:Cb2:Cr2:Cb1:Cr1:Cb0:Cr0 10:10:10:10:10:10:10:10
-> + * or
-> + * index 1 = Cr:Cb plane, Cr3:Cb3:Cr2:Cb2:Cr1:Cb1:Cr0:Cb0 10:10:10:10:10:10:10:10
-
-So now you're defining it as some kind of byte aligned block.
-With that specifying endianness would now make sense since
-otherwise this tells us absolutely nothing about the memory
-layout.
-
-So I'd either do that, or go back to not specifying anything and
-use some weasel words like "mamory layout is implementation defined"
-which of course means no one can use it for anything that involves
-any kind of cross vendor stuff.
-
-> + */
-> +#define DRM_FORMAT_NV12_10	fourcc_code('N', 'A', '1', '2') /* 2x2 subsampled Cr:Cb plane */
-> +#define DRM_FORMAT_NV21_10	fourcc_code('N', 'A', '2', '1') /* 2x2 subsampled Cb:Cr plane */
-> +#define DRM_FORMAT_NV16_10	fourcc_code('N', 'A', '1', '6') /* 2x1 subsampled Cr:Cb plane */
-> +#define DRM_FORMAT_NV61_10	fourcc_code('N', 'A', '6', '1') /* 2x1 subsampled Cb:Cr plane */
-> +#define DRM_FORMAT_NV24_10	fourcc_code('N', 'A', '2', '4') /* non-subsampled Cr:Cb plane */
-> +#define DRM_FORMAT_NV42_10	fourcc_code('N', 'A', '4', '2') /* non-subsampled Cb:Cr plane */
-> +
-> +/*
->   * 2 plane YCbCr MSB aligned
->   * index 0 = Y plane, [15:0] Y:x [10:6] little endian
->   * index 1 = Cr:Cb plane, [31:0] Cr:x:Cb:x [10:6:10:6] little endian
+>  		insn = 0;
+> -		for (off = 0;; off += ilen) {
+> +		for (off = 0; off < (unsigned)len; off += ilen) {
+>  			uint64_t ip = start + off;
+>  
+>  			printed += ip__fprintf_sym(ip, thread, x.cpumode, x.cpu, &lastsym, attr, fp);
+> @@ -1072,6 +1072,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+>  					printed += print_srccode(thread, x.cpumode, ip);
+>  				break;
+>  			} else {
+> +				ilen = 0;
+>  				printed += fprintf(fp, "\t%016" PRIx64 "\t%s\n", ip,
+>  						   dump_insn(&x, ip, buffer + off, len - off, &ilen));
+>  				if (ilen == 0)
+> @@ -1081,6 +1082,8 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+>  				insn++;
+>  			}
+>  		}
+> +		if (off != (unsigned)len)
+> +			printed += fprintf(fp, "\tmismatch of LBR data and executable\n");
+>  	}
+>  
+>  	/*
+> @@ -1121,6 +1124,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+>  		goto out;
+>  	}
+>  	for (off = 0; off <= end - start; off += ilen) {
+> +		ilen = 0;
+>  		printed += fprintf(fp, "\t%016" PRIx64 "\t%s\n", start + off,
+>  				   dump_insn(&x, start + off, buffer + off, len - off, &ilen));
+>  		if (ilen == 0)
 > -- 
-> 2.7.4
-> 
-> 
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 2.21.0
 
 -- 
-Ville Syrjälä
-Intel
+
+- Arnaldo
