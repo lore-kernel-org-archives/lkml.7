@@ -2,148 +2,107 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C76C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2983AC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4224E224FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:52:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDDA6224FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:52:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jvDjmTcZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A5mKEowm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732050AbfI3UwO (ORCPT
+        id S1730945AbfI3Uw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 16:52:14 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33248 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729503AbfI3UwO (ORCPT
+        Mon, 30 Sep 2019 16:52:57 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:39209 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727118AbfI3Uw4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 16:52:14 -0400
-Received: by mail-wm1-f65.google.com with SMTP id r17so913807wme.0;
-        Mon, 30 Sep 2019 13:52:12 -0700 (PDT)
+        Mon, 30 Sep 2019 16:52:56 -0400
+Received: by mail-io1-f66.google.com with SMTP id a1so42048611ioc.6;
+        Mon, 30 Sep 2019 13:52:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8sM3A81f9Xr+CTFcU63aM7o+IniBWRXvgW3hT44K4eA=;
-        b=jvDjmTcZjLLO+pN8Q1nrG5NdUzZ7C3elxPwuszgqv6ffhIYeDSyzB+cNFypKp6ojkY
-         Ip9+9SdRMLaVo3rKmzS4qGiUmX1dpde/iZRp00GftPSUtWdc7UEwCt99SHIZLDRJ01nh
-         nFjG7pSuMSN0GmBwdQ8RiZtlNaJfwx+6psftsPmzQ24LkTDqFzF0XlLqgz8dWhivsxdJ
-         VmFy0qem9usbqvWtNXcqtVFOCaUFyDn6dyh4euwR60erq1H+T2JuE/Hi4HFK7izpUm3P
-         X24MITNb4YlGf2Sa29bkEBTt58qUZpX5venmw+TqTxn0N5a17VXUGuPr+SvX/cZUdH2D
-         XunA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=HjzHBo6jT8sEvFe44LiFogaEnhJkNVFYB6XfDK7uqQ0=;
+        b=A5mKEowmZmV++Op18zcmJR3/GH2ctiZffg/i22VkQ7tFE1c7sw8wb4oksQ6pjn3XGV
+         5NNGCwG3fx94axiNRlb/VLkqyNoXfylZgasulxkQJrbm9qKbbQCkBjlrh0iMKg2P3r0F
+         GeQwWcGXonOk1I4Yb+8/dLT2Tvc5iIEdRRsB4vdCrnG7/yKwQMcuJ1uYRFcTqE87ZqX9
+         VK2VLqGyvoS8iYb/I0DuzebaEOcC8Mycb9iqKQqRkq/SPUpntj0ZppnWmgakX5zSZtJ3
+         bLO+GoHmL8/1sqO/MLLtTUgjW07uDgE3N0nEeY8ZfwQBHvtkQ0xP8HGVt7kUjg3BeV0g
+         mpoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8sM3A81f9Xr+CTFcU63aM7o+IniBWRXvgW3hT44K4eA=;
-        b=bFyG+XvSsWxDSm3pVOrzv6qKRJSOFDM2u6Eyb3LqSiJYagg9oP+7zJlAsAjQbG/JEu
-         zJ1f1F0ZtmCoTv21Rg5nob5DrWI5OjoL44xsqOyK96Il9DrXlWtJMVznSW83QnIhhTiy
-         BilGC9AoGpUtHYOiR0DW8Q7oC/gMVY29l3GA8dTIP0tllfW0JmwIklFSGGLznm3ATgXS
-         aERzH6sIpnHnkopFdD6Flxf6ciaTz9i2xZ//T3s4qb6h0W41qnm9qZ9vT5iqfJSyBCHk
-         HsDU/xIH02OUZX5bqqo8g1AzJn4g4/yMOLGU4QLz09oBrDrvhL3XUXEqowkl2xte79so
-         +mYg==
-X-Gm-Message-State: APjAAAVXVk5tNPXQT24y2JCcYIyaBRG6npiCw+veUbSuG3Mz+zP33qJE
-        RvUfrRGct5OIBg1ebFfC7vyUJICV
-X-Google-Smtp-Source: APXvYqwyglTDIXFxcjpQPfFoYe0m/+FVKdJ9ImPfKTXtX45DEZK/eGEvy1588/8hMk1iORJ40W2J7w==
-X-Received: by 2002:a1c:9d52:: with SMTP id g79mr370084wme.91.1569867578764;
-        Mon, 30 Sep 2019 11:19:38 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f26:6400:542:c9fe:c835:31f1? (p200300EA8F2664000542C9FEC83531F1.dip0.t-ipconnect.de. [2003:ea:8f26:6400:542:c9fe:c835:31f1])
-        by smtp.googlemail.com with ESMTPSA id l9sm168955wme.45.2019.09.30.11.19.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 30 Sep 2019 11:19:38 -0700 (PDT)
-Subject: Re: [PATCH v1] net: phy: at803x: add ar9331 support
-To:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=HjzHBo6jT8sEvFe44LiFogaEnhJkNVFYB6XfDK7uqQ0=;
+        b=NcI6YA1affjO3DXITMbGWBoAJI+AaU4e5kWYImGuBfffek5czLnqy/Ceu5MCi63IBe
+         AcXkrEDgDsTdcG/AmZK07jIhvLcSlcC87yMO8SabBmOelJye0QYXfcfYyZjes7vn4UBL
+         EjKXJ/xjvqtE0IEYFlzAvxO7ttBmOAA7gyU+3LQpXrQ65PAmUBYPcrhoYVlFl8VnZYN/
+         st0Aq1rjca5R8P5bYPt+awTT686f/fh9LOMnHa34SZpZRVH3LkqWx4pGZO10XvHzBseV
+         FDRiJ3XGzvuiGUKs7dqtHrVxYdG2j1IcFLCnJWhOycAawxjn3d4pJ9hMpZV31epot0AT
+         MhkQ==
+X-Gm-Message-State: APjAAAVVkEMWOS4X5aP1Y5lokmSB24Y+ZsgkzNWCChNsQkqy3E/VCcY9
+        Gv7MS/mz1JFYqknhMgjElwc=
+X-Google-Smtp-Source: APXvYqzn/RTz90DQPs3v6GoRB75cFXIoD+MRJM6af30g7CqSFxkRz2+0cOy/I6rraDzMF6BGC8+FQw==
+X-Received: by 2002:a92:b612:: with SMTP id s18mr19955089ili.37.1569876776114;
+        Mon, 30 Sep 2019 13:52:56 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id g4sm6979666iof.56.2019.09.30.13.52.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 13:52:55 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20190930092710.32739-1-o.rempel@pengutronix.de>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <142d584d-e3b1-a544-fd78-ea93a02b594f@gmail.com>
-Date:   Mon, 30 Sep 2019 20:19:30 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20190930092710.32739-1-o.rempel@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH v2] spi: gpio: prevent memory leak in spi_gpio_probe
+Date:   Mon, 30 Sep 2019 15:52:40 -0500
+Message-Id: <20190930205241.5483-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <dcd26f62-e384-bf6d-2e7d-63c0d0f7da11@web.de>
+References: <dcd26f62-e384-bf6d-2e7d-63c0d0f7da11@web.de>
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30.09.2019 11:27, Oleksij Rempel wrote:
-> Mostly this hardware can work with generic PHY driver, but this change
-> is needed to provided interrupt handling support.
-> Tested with dsa ar9331-switch driver.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
->  drivers/net/phy/at803x.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
-> index 6ad8b1c63c34..d62a77adb8e7 100644
-> --- a/drivers/net/phy/at803x.c
-> +++ b/drivers/net/phy/at803x.c
-> @@ -53,6 +53,7 @@
->  #define AT803X_DEBUG_REG_5			0x05
->  #define AT803X_DEBUG_TX_CLK_DLY_EN		BIT(8)
->  
-> +#define AR9331_PHY_ID 0x004dd041
->  #define ATH8030_PHY_ID 0x004dd076
->  #define ATH8031_PHY_ID 0x004dd074
->  #define ATH8035_PHY_ID 0x004dd072
-> @@ -406,11 +407,24 @@ static struct phy_driver at803x_driver[] = {
->  	.aneg_done		= at803x_aneg_done,
->  	.ack_interrupt		= &at803x_ack_interrupt,
->  	.config_intr		= &at803x_config_intr,
-> +}, {
-> +	/* ATHEROS AR9331 */
-> +	.phy_id			= AR9331_PHY_ID,
-> +	.name			= "Atheros AR9331 built-in PHY",
-> +	.phy_id_mask		= AT803X_PHY_ID_MASK,
+In spi_gpio_probe an SPI master is allocated via spi_alloc_master, but
+this controller should be released if devm_add_action_or_reset fails,
+otherwise memory leaks. In order to avoid leak spi_contriller_put must
+be called in case of failure for devm_add_action_or_reset.
 
-The ID mask of 0xffffffef is quite strange, it ignores the last
-bit of the model number and requires exact match of the revision
-number. Unfortunately the original commit doesn't explain why
-this mask was chosen. It would only make sense if there are
-functionally identical PHY's with e.g. id 0x004dd051.
-If in doubt I'd suggest you use macro PHY_ID_MATCH_EXACT.
+Fixes: 8b797490b4db ("spi: gpio: Make sure spi_master_put() is called in every error path")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+Changes in v2:
+	-- fix a typo in title and update the description
+---
+ drivers/spi/spi-gpio.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> +	.probe			= at803x_probe,
+diff --git a/drivers/spi/spi-gpio.c b/drivers/spi/spi-gpio.c
+index 1d3e23ec20a6..f9c5bbb74714 100644
+--- a/drivers/spi/spi-gpio.c
++++ b/drivers/spi/spi-gpio.c
+@@ -371,8 +371,10 @@ static int spi_gpio_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	status = devm_add_action_or_reset(&pdev->dev, spi_gpio_put, master);
+-	if (status)
++	if (status) {
++		spi_master_put(master);
+ 		return status;
++	}
+ 
+ 	if (of_id)
+ 		status = spi_gpio_probe_dt(pdev, master);
+-- 
+2.17.1
 
-After 5c5f626bcace ("net: phy: improve handling link_change_notify
-callback") struct at803x_priv isn't used any longer and the probe
-callback could be removed. I didn't do that as part of this commit
-because I could compile-test the change only.
-
-> +	.config_init		= at803x_config_init,
-> +	.suspend		= at803x_suspend,
-> +	.resume			= at803x_resume,
-> +	/* PHY_BASIC_FEATURES */
-> +	.ack_interrupt		= &at803x_ack_interrupt,
-> +	.config_intr		= &at803x_config_intr,
->  } };
->  
->  module_phy_driver(at803x_driver);
->  
->  static struct mdio_device_id __maybe_unused atheros_tbl[] = {
-> +	{ AR9331_PHY_ID, AT803X_PHY_ID_MASK },
-
-See comment above regarding the id mask.
-
->  	{ ATH8030_PHY_ID, AT803X_PHY_ID_MASK },
->  	{ ATH8031_PHY_ID, AT803X_PHY_ID_MASK },
->  	{ ATH8035_PHY_ID, AT803X_PHY_ID_MASK },
-> 
-Heiner
