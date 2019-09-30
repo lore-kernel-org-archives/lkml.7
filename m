@@ -2,132 +2,97 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D40C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AEBC35280
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6256620679
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:20:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FontBJ4q"
+	by mail.kernel.org (Postfix) with ESMTP id 347BD218DE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:21:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569853275;
+	bh=6yoAIqG6hzy/d8bd7DXLZXV/MdLd77qxmf5UP8tY4bc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ExnFF29WaLSxcjuuzWMXdqoMQi/2ONJ5JMP3U23bqIZfX1kycVssrYUBxKaEGOh0V
+	 GFUVsm6ZVcluec7lJgJCuCMB1F1llJZQqG3SPsecDH5zrgO5kVl5WipxHKFFl/MGCv
+	 Yth26pdVufSmPEX2prkdcyuaPz8caESlqqP4xvT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731603AbfI3OUp (ORCPT
+        id S1731669AbfI3OVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 10:20:45 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:36448 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729738AbfI3OUp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 10:20:45 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8UEKQRC008662;
-        Mon, 30 Sep 2019 09:20:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569853226;
-        bh=m3KlGn9eWz5y87zFQfHVSLTzz9MlKOrcN02MWUhNuq0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=FontBJ4qo+JAGZ4L71jnf0PHINqfErJo7+9XrODc09frCbtGRAI1whYGCjAjAyYVB
-         FwQWXKgOi2aw8emZA+BUV428GfGabSmPBPab2266Xj4XWInquPtTcX2+Swps+3pFIe
-         UO+iWYP8ARtuZfnCVRDN0dlSgmEomFYU+RCznqgg=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8UEKQML098645
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 30 Sep 2019 09:20:26 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 30
- Sep 2019 09:20:16 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 30 Sep 2019 09:20:16 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8UEKN9N093628;
-        Mon, 30 Sep 2019 09:20:23 -0500
-Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to
- dts
-To:     Adam Ford <aford173@gmail.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-CC:     Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190510194229.20628-1-aford173@gmail.com>
- <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
- <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
- <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
- <845055e2-8182-de74-2077-629fdf50ac6c@ti.com>
- <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
- <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com>
- <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
- <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com>
- <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
- <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com>
- <23eba53a-9304-2ceb-d97e-01891ec0b3ed@ti.com>
- <cb028b1e-05ca-9b22-be5d-c63f5fd56cc4@ti.com>
- <F3335195-6EB7-4D44-B884-2F29D9238011@goldelico.com>
- <CAHCN7xL9bFxO=2i1DzmRj6A3XwUNdt=DZeJ2a0EZ0f9gcFTy6g@mail.gmail.com>
- <CAHCN7x+vCfPTRE+zzYUwAXdbBzRotTP2hSOgsHB0FdgBhZV5zA@mail.gmail.com>
- <CAHCN7xJDV=R9Ysjhff7=mEXdciwPP_5LQbHwaUT8KvhSkLKw8A@mail.gmail.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <04306a5e-f9be-35a4-1aa1-5795d780e289@ti.com>
-Date:   Mon, 30 Sep 2019 17:20:22 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 30 Sep 2019 10:21:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48926 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729738AbfI3OVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 10:21:14 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0AF3215EA;
+        Mon, 30 Sep 2019 14:21:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569853273;
+        bh=6yoAIqG6hzy/d8bd7DXLZXV/MdLd77qxmf5UP8tY4bc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=A1PXmtM1yeRrqnIzd0YbtRtXiOabHe11LfWnRmlafiXfQZYHNbyEtYvT5FSZAmWTD
+         EzI+Sd9B+UkLch9hx5VNM1eXqy+yTd0wcrJczKXUz9nQBC8AMl96TD+bLNA/TD3B0r
+         0h7ctJ1OIW0jhzXr7N+rVmFXuMyU2uA4n0AWX/J0=
+Date:   Mon, 30 Sep 2019 16:21:10 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH] arm64: dts: allwinner: a64: sopine-baseboard: Add PHY
+ regulator delay
+Message-ID: <20190930142110.vscmnupg6lqrbmuy@gilmour>
+References: <20190929085259.76462-1-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-In-Reply-To: <CAHCN7xJDV=R9Ysjhff7=mEXdciwPP_5LQbHwaUT8KvhSkLKw8A@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="quermkw47rmscx7x"
+Content-Disposition: inline
+In-Reply-To: <20190929085259.76462-1-jernej.skrabec@siol.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/09/2019 17:12, Adam Ford wrote:
 
->> I don't know the implications, so if the people from TI say stick with
->> 16, I'm fine with that, but at least there is some evidence that it
->> can be higher than 16, but lower than 32.
->>
-> 
-> Sorry for all the spam, but I moved both of them to 31 from 32, and it
-> also seems to work successfully at 31.
-> 
-> [   26.923004] DSS: set fck to 36000000
-> [   26.923034] DISPC: lck = 36000000 (1)
-> [   26.923034] DISPC: pck = 9000000 (4)
-> [   26.925048] DISPC: channel 0 xres 480 yres 272
-> [   26.925048] DISPC: pck 9000000
-> [   26.925048] DISPC: hsync_len 42 hfp 3 hbp 2 vsw 11 vfp 2 vbp 3
-> [   26.925079] DISPC: vsync_level 1 hsync_level 1 data_pclk_edge 1
-> de_level 1 sync_pclk_edge -1
-> [   26.925079] DISPC: hsync 17077Hz, vsync 59Hz
-> [   27.384613] DISPC: dispc_runtime_put
-> 
-> Is it possible to use 31?
+--quermkw47rmscx7x
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Let's see what Tero says, but yeah, something is odd here. I expected 
-the max divider to be 16 with Tero's patch, but I don't see it having 
-that effect. I can get the div to 31.
+On Sun, Sep 29, 2019 at 10:52:59AM +0200, Jernej Skrabec wrote:
+> It turns out that sopine-baseboard needs same fix as pine64-plus
+> for ethernet PHY. Here too Realtek ethernet PHY chip needs additional
+> power on delay to properly initialize. Datasheet mentions that chip
+> needs 30 ms to be properly powered on and that it needs some more time
+> to be initialized.
+>
+> Fix that by adding 100ms ramp delay to regulator responsible for
+> powering PHY.
+>
+> Note that issue was found out and fix tested on pine64-lts, but it's
+> basically the same as sopine-baseboard, only layout and connectors
+> differ.
+>
+> Fixes: bdfe4cebea11 ("arm64: allwinner: a64: add Ethernet PHY regulator for several boards")
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 
-You can see this from the clock register 0x48004e40 (CM_CLKSEL_DSS). The 
-lowest bits are the divider, 5 to 0. The TRM says max div is 32.
+Applied as a fix for 5.4, thanks!
+Maxime
 
-Tero said for him the dividers > 16 didn't "stick" to the register. I'm 
-now wondering if he has an old beagleboard with OMAP34xx, which has max 
-div 16.
+--quermkw47rmscx7x
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  Tomi
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZIPVgAKCRDj7w1vZxhR
+xVgqAQCDfcX+A/qtKjlld5IAr3fEdXZnqTWyYKgCOlqsd8Kl7gEA8JWPsQEWWnH9
+gsSbLYjkSKUkUMavqHDbIgZ6r9D58wg=
+=PU/D
+-----END PGP SIGNATURE-----
+
+--quermkw47rmscx7x--
