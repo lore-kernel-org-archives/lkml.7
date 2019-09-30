@@ -2,69 +2,159 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6118C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 014C2C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83CFA206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C59A8206BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:06:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569877569;
-	bh=ISGTh9dgGBpBhIYJpYyDAoFazDXZXj3BesU55A6KALY=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=vFR2Jq9OOYUp9ZdrlRo9jy0mbyjF3cnlb/qH32n5Jd+9HodbcVdJ0bugT0sUAhxXq
-	 RqjF6KjOmYZ6Ug+sUEtHv0Y3Nt81HUjSiS1FyGP2CA3WpqkH/OThw4Pwv/3QN4Kzft
-	 IRz+lfwwuLFj91fg3SOLIhwWMKZxtauCvpSCArlk=
+	s=default; t=1569877572;
+	bh=RglR3ukwElynROQk+l4tg76X5Ve88igj5T4s3Uya3V4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=0KRxBJ9XawwqSlB5yzaw4leS1TdIH7vmemt9tMyBavpG1zcKwSFy0IUM90TLWtDk7
+	 9w4wQwio8YX2bgNBao8p8Y+SEuVXUwMF0h6B3dO+k/qAGpZ8eAP14CHI0p4BGa1vGj
+	 Bq5lhpeQFw+/t+9jpjHCi9A/f2cOocDc0pWTKBTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732510AbfI3VF4 (ORCPT
+        id S1732561AbfI3VGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 17:05:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44080 "EHLO mail.kernel.org"
+        Mon, 30 Sep 2019 17:06:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730115AbfI3VFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 17:05:54 -0400
-Subject: Re: [GIT PULL] ARM: SoC fixes
+        id S1731976AbfI3VFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 17:05:55 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 000C6224F0;
+        Mon, 30 Sep 2019 19:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569864621;
-        bh=ISGTh9dgGBpBhIYJpYyDAoFazDXZXj3BesU55A6KALY=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Aw4Gp+WW8dgdC6Hjwq4tT3IERHv52UcjJxKvvCRBhhxQqHTT/oAzat7RD5DghvgKs
-         SVd9CC8T1/lCIWco75nf1lXjQsnsd1vCb5mz56UybIkBW9ul0LdCvtt6/KhyAHBax0
-         XUSRAn0VHvc1MabF+t/CGqnxc05ZqOghi5k20DHk=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190929183453.4sehzgovw3ouatdj@localhost>
-References: <20190929183453.4sehzgovw3ouatdj@localhost>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190929183453.4sehzgovw3ouatdj@localhost>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-fixes
-X-PR-Tracked-Commit-Id: 9bfd7319e8d353b8b81c4cfd4d7eced71adbfbb5
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: cef0aa0ce8592f68fb093b2be0d341a568ff9890
-Message-Id: <156986462107.9141.2777289664605265772.pr-tracker-bot@kernel.org>
-Date:   Mon, 30 Sep 2019 17:30:21 +0000
-To:     Olof Johansson <olof@lixom.net>
-Cc:     torvalds@linux-foundation.org, olof@lixom.net, arm@kernel.org,
-        soc@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
+        s=default; t=1569872852;
+        bh=RglR3ukwElynROQk+l4tg76X5Ve88igj5T4s3Uya3V4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=AyhBGW2BD8aoBuP8uHPkEU0pNoy10LWHB1/Mi7A+TITCzHVAlpX8Lj3Dlm63Y1V34
+         6GGm/gY/wdQwWVAs00lQOhTGcoWnItLl9B2B+/x89Udz2h7QquvnhFoawikAOeCFB2
+         riwbdSExN2h7g1dZIQFBR2OsETDegxL6VHjmzQuI=
+Date:   Mon, 30 Sep 2019 14:47:24 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Denis Efremov <efremov@linux.com>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-s390@vger.kernel.org,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Subject: Re: [PATCH v3 06/26] s390/pci: Use PCI_STD_NUM_BARS
+Message-ID: <20190930194724.GA188464@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190918085805.GY9720@e119886-lin.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 29 Sep 2019 11:34:53 -0700:
+On Wed, Sep 18, 2019 at 09:58:06AM +0100, Andrew Murray wrote:
+> On Mon, Sep 16, 2019 at 11:41:38PM +0300, Denis Efremov wrote:
+> > Remove local definition PCI_BAR_COUNT for the number of PCI BARs and use
+> > global one PCI_STD_NUM_BARS instead.
+> > 
+> > Acked-by: Sebastian Ott <sebott@linux.ibm.com>
+> > Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+> > Signed-off-by: Denis Efremov <efremov@linux.com>
+> > ---
+> >  arch/s390/include/asm/pci.h     |  5 +----
+> >  arch/s390/include/asm/pci_clp.h |  6 +++---
+> >  arch/s390/pci/pci.c             | 16 ++++++++--------
+> >  arch/s390/pci/pci_clp.c         |  6 +++---
+> >  4 files changed, 15 insertions(+), 18 deletions(-)
+> > 
+> > diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
+> > index a2399eff84ca..3a06c264ea53 100644
+> > --- a/arch/s390/include/asm/pci.h
+> > +++ b/arch/s390/include/asm/pci.h
+> > @@ -2,9 +2,6 @@
+> >  #ifndef __ASM_S390_PCI_H
+> >  #define __ASM_S390_PCI_H
+> >  
+> > -/* must be set before including pci_clp.h */
+> > -#define PCI_BAR_COUNT	6
+> > -
+> >  #include <linux/pci.h>
+> >  #include <linux/mutex.h>
+> >  #include <linux/iommu.h>
+> > @@ -138,7 +135,7 @@ struct zpci_dev {
+> >  
+> >  	char res_name[16];
+> >  	bool mio_capable;
+> > -	struct zpci_bar_struct bars[PCI_BAR_COUNT];
+> > +	struct zpci_bar_struct bars[PCI_STD_NUM_BARS];
+> >  
+> >  	u64		start_dma;	/* Start of available DMA addresses */
+> >  	u64		end_dma;	/* End of available DMA addresses */
+> > diff --git a/arch/s390/include/asm/pci_clp.h b/arch/s390/include/asm/pci_clp.h
+> > index 50359172cc48..bd2cb4ea7d93 100644
+> > --- a/arch/s390/include/asm/pci_clp.h
+> > +++ b/arch/s390/include/asm/pci_clp.h
+> > @@ -77,7 +77,7 @@ struct mio_info {
+> >  	struct {
+> >  		u64 wb;
+> >  		u64 wt;
+> > -	} addr[PCI_BAR_COUNT];
+> > +	} addr[PCI_STD_NUM_BARS];
+> >  	u32 reserved[6];
+> >  } __packed;
+> >  
+> > @@ -98,9 +98,9 @@ struct clp_rsp_query_pci {
+> >  	u16 util_str_avail	:  1;	/* utility string available? */
+> >  	u16 pfgid		:  8;	/* pci function group id */
+> >  	u32 fid;			/* pci function id */
+> > -	u8 bar_size[PCI_BAR_COUNT];
+> > +	u8 bar_size[PCI_STD_NUM_BARS];
+> >  	u16 pchid;
+> > -	__le32 bar[PCI_BAR_COUNT];
+> > +	__le32 bar[PCI_STD_NUM_BARS];
+> >  	u8 pfip[CLP_PFIP_NR_SEGMENTS];	/* pci function internal path */
+> >  	u32			: 16;
+> >  	u8 fmb_len;
+> > diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
+> > index b0e3b9a0e488..aca372c8e34f 100644
+> > --- a/arch/s390/pci/pci.c
+> > +++ b/arch/s390/pci/pci.c
+> > @@ -43,7 +43,7 @@ static DECLARE_BITMAP(zpci_domain, ZPCI_NR_DEVICES);
+> >  static DEFINE_SPINLOCK(zpci_domain_lock);
+> >  
+> >  #define ZPCI_IOMAP_ENTRIES						\
+> > -	min(((unsigned long) ZPCI_NR_DEVICES * PCI_BAR_COUNT / 2),	\
+> > +	min(((unsigned long) ZPCI_NR_DEVICES * PCI_STD_NUM_BARS / 2),	\
+> >  	    ZPCI_IOMAP_MAX_ENTRIES)
+> >  
+> >  static DEFINE_SPINLOCK(zpci_iomap_lock);
+> > @@ -294,7 +294,7 @@ static void __iomem *pci_iomap_range_mio(struct pci_dev *pdev, int bar,
+> >  void __iomem *pci_iomap_range(struct pci_dev *pdev, int bar,
+> >  			      unsigned long offset, unsigned long max)
+> >  {
+> > -	if (!pci_resource_len(pdev, bar) || bar >= PCI_BAR_COUNT)
+> > +	if (bar >= PCI_STD_NUM_BARS || !pci_resource_len(pdev, bar))
+> >  		return NULL;
+> >  
+> >  	if (static_branch_likely(&have_mio))
+> > @@ -324,7 +324,7 @@ static void __iomem *pci_iomap_wc_range_mio(struct pci_dev *pdev, int bar,
+> >  void __iomem *pci_iomap_wc_range(struct pci_dev *pdev, int bar,
+> >  				 unsigned long offset, unsigned long max)
+> >  {
+> > -	if (!pci_resource_len(pdev, bar) || bar >= PCI_BAR_COUNT)
+> > +	if (bar >= PCI_STD_NUM_BARS || !pci_resource_len(pdev, bar))
+> >  		return NULL;
+> 
+> This looks like a latent bug fix here. If 'bar' is out of range we return
+> NULL instead accessing an invalid item of an array. Should this not be
+> a separate patch and tagged as stable?
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-fixes
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/cef0aa0ce8592f68fb093b2be0d341a568ff9890
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Sharp eyes!  I didn't think of this as accessing an invalid item, but
+indeed it does (if 'bar' is out of range).  But I doubt it's worth the
+hassle of a separate patch, since we return failure anyway.
