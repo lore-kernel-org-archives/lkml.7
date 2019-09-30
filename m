@@ -6,88 +6,65 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A08C388F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 505E8C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE4AA21855
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 266BD2075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:06:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729823AbfI3IFn (ORCPT
+        id S1729871AbfI3IGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 04:05:43 -0400
-Received: from mga11.intel.com ([192.55.52.93]:26754 "EHLO mga11.intel.com"
+        Mon, 30 Sep 2019 04:06:22 -0400
+Received: from verein.lst.de ([213.95.11.211]:35237 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725767AbfI3IFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 04:05:42 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Sep 2019 01:05:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,565,1559545200"; 
-   d="scan'208";a="204781826"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 30 Sep 2019 01:05:35 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 30 Sep 2019 11:05:34 +0300
-Date:   Mon, 30 Sep 2019 11:05:34 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: Re: [RFC PATCH] pci: prevent putting pcie devices into lower device
- states on certain intel bridges
-Message-ID: <20190930080534.GS2714@lahna.fi.intel.com>
-References: <20190927144421.22608-1-kherbst@redhat.com>
- <20190927214252.GA65801@google.com>
- <CACO55tuaY1jFXpJPeC9M4PoWEDyy547_tE8MpLaTDb+C+ffsbg@mail.gmail.com>
+        id S1725767AbfI3IGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 04:06:22 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 107A768AFE; Mon, 30 Sep 2019 10:06:14 +0200 (CEST)
+Date:   Mon, 30 Sep 2019 10:06:13 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        linux-btrfs@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Subject: Re: [PATCH v2 2/2] mm, sl[aou]b: guarantee natural alignment for
+ kmalloc(power-of-two)
+Message-ID: <20190930080613.GA5379@lst.de>
+References: <20190826111627.7505-1-vbabka@suse.cz> <20190826111627.7505-3-vbabka@suse.cz> <df8d1cf4-ff8f-1ee1-12fb-cfec39131b32@suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACO55tuaY1jFXpJPeC9M4PoWEDyy547_tE8MpLaTDb+C+ffsbg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <df8d1cf4-ff8f-1ee1-12fb-cfec39131b32@suse.cz>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Karol,
+On Mon, Sep 23, 2019 at 06:36:32PM +0200, Vlastimil Babka wrote:
+> So if anyone thinks this is a good idea, please express it (preferably
+> in a formal way such as Acked-by), otherwise it seems the patch will be
+> dropped (due to a private NACK, apparently).
 
-On Fri, Sep 27, 2019 at 11:53:48PM +0200, Karol Herbst wrote:
-> > What exactly is the serious issue?  I guess it's that the rescan
-> > doesn't detect the GPU, which means it's not responding to config
-> > accesses?  Is there any timing component here, e.g., maybe we're
-> > missing some delay like the ones Mika is adding to the reset paths?
-> 
-> When I was checking up on some of the PCI registers of the bridge
-> controller, the slot detection told me that there is no device
-> recognized anymore. I don't know which register it was anymore, though
-> I guess one could read it up in the SoC spec document by Intel.
-> 
-> My guess is, that the bridge controller fails to detect the GPU being
-> here or actively threw it of the bus or something. But a normal system
-> suspend/resume cycle brings the GPU back online (doing a rescan via
-> sysfs gets the device detected again)
+I think we absolutely need something like this, and I'm sick and tired
+of the people just claiming there is no problem.
 
-Can you elaborate a bit what kind of scenario the issue happens (e.g
-steps how it reproduces)? It was not 100% clear from the changelog. Also
-what the result when the failure happens?
+From the user POV I don't care if aligned allocations need a new
+GFP_ALIGNED flag or not, but as far as I can tell the latter will
+probably cause more overhead in practice than not having it.
 
-I see there is a script that does something but unfortunately I'm not
-fluent in Python so can't extract the steps how the issue can be
-reproduced ;-)
+So unless someone comes up with a better counter proposal to provide
+aligned kmalloc of some form that doesn't require a giant amount of
+boilerplate code in the users:
 
-One thing that I'm working on is that Linux PCI subsystem misses certain
-delays that are needed after D3cold -> D0 transition, otherwise the
-device and/or link may not be ready before we access it. What you are
-experiencing sounds similar. I wonder if you could try the following
-patch and see if it makes any difference?
-
-https://patchwork.kernel.org/patch/11106611/
+Acked^2-by: Christoph Hellwig <hch@lst.de>
