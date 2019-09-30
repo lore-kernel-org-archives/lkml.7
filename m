@@ -2,124 +2,101 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD0B8C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 957DFC388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8172220815
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B3D9215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:28:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JXpc/5HW"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="up9SvLA/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732002AbfI3P2L (ORCPT
+        id S1732009AbfI3P21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 11:28:11 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51862 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731127AbfI3P2L (ORCPT
+        Mon, 30 Sep 2019 11:28:27 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:12236 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731127AbfI3P21 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 11:28:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=SR36eAXn6tsu3lDOH6AbvvqfE8WVsaSDMysCUnlEijg=; b=JXpc/5HW48o0GU9HxeSBelFTI
-        pCLWZE7bhFrbMog+qIpxi3LLElE1ah/5A2yV6IcirW4q8GJR6SODjwzFx4ASgOxtBMm5HiTqb66/h
-        moI6nlQboIV7fKF15uRa/543fasCXP9efTAf6I8X1Y68qGdkIYcCheHNHE5K2s/8asGDFW/+enClA
-        dKPiY5TxSZpPo3Uu9Agzpa2luhz82OelrpmEirPnYAh5GvCHHv83m1t1R3s10/5k5J5HNOckCq9hV
-        1hz5YRU4XTvFFhP581xC+8FdAIiJ/5W+9Y7O2xaB9AGUnfUxbIw6cI77x0BDTh3arbpwuHh4YWtdR
-        gDQpwjfQg==;
-Received: from [2601:1c0:6280:3f0::9a1f]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iExat-0004jy-6x; Mon, 30 Sep 2019 15:28:11 +0000
-Subject: Re: [GIT PULL] remove dead mutt url and add active mutt url
-To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     LinuxKernel <linux-kernel@vger.kernel.org>
-References: <20190928151300.GA18122@debian> <20190930081310.7e3b9c52@lwn.net>
- <20190930152607.GA27688@Slackware>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <a1d80b29-4cd8-2ffc-1b55-3a806fca1a06@infradead.org>
-Date:   Mon, 30 Sep 2019 08:28:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 30 Sep 2019 11:28:27 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8UFLau3016398;
+        Mon, 30 Sep 2019 17:28:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=yJpZfBWTDJMl1ZC5M8BD9X2h5CbjAxaL+Z0ej4FdTgo=;
+ b=up9SvLA/BcQdNv6vMRe8ST2ZUnCZveKCUpa54cYfijgR7ucJcyTJtlPK+oO5WNL7C9YO
+ G2qVmMc4jHQgfjF8zp4UD9JEEDHZ4ZA4HCgMF1Aa918Tf5TQMQsfNWIc0ctbOR5ocVe3
+ b6Bji8Db8sqOIf5atNQW0dsFzuYC3HWt9e+bctpQG8QU0T4zInsGX1EigYogKTo3TT/T
+ QXMPkxJNNRRzWUNTZbz2exF2B6XuxFUhw8w7Eqf3YPSeok0EW9lIVB6qME2HOLjro5oS
+ 07qU5tThzJwDsWmKc92H/fQrjMi2BVJ6kHPVBu4unrsu1I7vfR7pG+Wcz/ob9KE836dD wg== 
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2v9w00v119-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 30 Sep 2019 17:28:18 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 7331922;
+        Mon, 30 Sep 2019 15:28:14 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 29BB62B3BF9;
+        Mon, 30 Sep 2019 17:28:14 +0200 (CEST)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.92) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 30 Sep
+ 2019 17:28:14 +0200
+Received: from localhost (10.48.0.192) by Webmail-ga.st.com (10.75.90.48) with
+ Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 30 Sep 2019 17:28:12 +0200
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+To:     <wsa@the-dreams.de>, <pierre-yves.mordret@st.com>
+CC:     <alain.volmat@st.com>, <alexandre.torgue@st.com>,
+        <linux-i2c@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
+Subject: [PATCH] i2c: i2c-stm32f7: fix first byte to send in slave mode
+Date:   Mon, 30 Sep 2019 17:28:01 +0200
+Message-ID: <1569857281-19419-1-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <20190930152607.GA27688@Slackware>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.48.0.192]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-09-30_09:2019-09-30,2019-09-30 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/30/19 8:26 AM, Bhaskar Chowdhury wrote:
-> On 08:13 Mon 30 Sep 2019, Jonathan Corbet wrote:
->> On Sat, 28 Sep 2019 20:43:03 +0530
->> Bhaskar Chowdhury <unixbhaskar@gmail.com> wrote:
->>
->>> The following changes since commit 4e4327891fe2a2a4db342985bff4d4c48703c707:
->>>
->>>   replace dead mutt url with active one. (2019-09-28 20:11:00 +0530)
->>>
->>>   are available in the Git repository at:
->>
->> Bhaskar, I'm not going to take a pull request for a change like this.  If
->> you would like to make this change (and it seems like a useful change to
->> make), please send me a patch that is:
->>
->> - based on docs-next
-> I have no clue where do I found out "docs-next" Jon. But I have
-> stumbled over these places..
-> 
-> https://github.com/torvalds/linux/commit/81a84ad3cb5711cec79f4dd53a4ce026b092c432
-> 
-> and this:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/rdunlap/linux-docs.git/
-> 
-> Now, do you want me to make changes there and sent a patch?? I am
-> absolutely not sure .
-> 
-> Kindly shed some light.
->> - properly changelogged
->> - demonstrated to build properly with sphinx
->>
->> Thanks,
->>
->> jon
-> 
-> Thanks,
-> Bhaskar
+The slave-interface documentation [1] states "the bus driver should
+transmit the first byte" upon I2C_SLAVE_READ_REQUESTED slave event:
+- 'val': backend returns first byte to be sent
+The driver currently ignores the 1st byte to send on this event.
 
-Hi,
-The kernel MAINTAINERS file says:
+Fixes: 60d609f30de2 ("i2c: i2c-stm32f7: Add slave support")
 
-DOCUMENTATION
-M:	Jonathan Corbet <corbet@lwn.net>
-L:	linux-doc@vger.kernel.org
-S:	Maintained
-F:	Documentation/
-F:	scripts/documentation-file-ref-check
-F:	scripts/kernel-doc
-F:	scripts/sphinx-pre-install
-X:	Documentation/ABI/
-X:	Documentation/firmware-guide/acpi/
-X:	Documentation/devicetree/
-X:	Documentation/i2c/
-X:	Documentation/media/
-X:	Documentation/power/
-X:	Documentation/spi/
-T:	git git://git.lwn.net/linux.git docs-next
+[1] https://www.kernel.org/doc/Documentation/i2c/slave-interface
 
-that ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ drivers/i2c/busses/i2c-stm32f7.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-
+diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+index 266d1c2..0af9219 100644
+--- a/drivers/i2c/busses/i2c-stm32f7.c
++++ b/drivers/i2c/busses/i2c-stm32f7.c
+@@ -1192,6 +1192,8 @@ static void stm32f7_i2c_slave_start(struct stm32f7_i2c_dev *i2c_dev)
+ 			STM32F7_I2C_CR1_TXIE;
+ 		stm32f7_i2c_set_bits(base + STM32F7_I2C_CR1, mask);
+ 
++		/* Write 1st data byte */
++		writel_relaxed(value, base + STM32F7_I2C_TXDR);
+ 	} else {
+ 		/* Notify i2c slave that new write transfer is starting */
+ 		i2c_slave_event(slave, I2C_SLAVE_WRITE_REQUESTED, &value);
 -- 
-~Randy
+2.7.4
+
