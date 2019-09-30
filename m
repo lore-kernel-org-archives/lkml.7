@@ -2,99 +2,156 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 756BFC388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AAA4C388F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 400DD215EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:16:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E175215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:16:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XdI8MqdU"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="KZJAj1ok"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732198AbfI3VQP (ORCPT
+        id S1732288AbfI3VQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 17:16:15 -0400
-Received: from ozlabs.org ([203.11.71.1]:43317 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731050AbfI3VQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 17:16:15 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46hwDr1Bk1z9sNF;
-        Tue,  1 Oct 2019 07:16:12 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1569878172;
-        bh=ABi3XTYRlRRy2dg9HbrG9Jm3gXd9hiGGIVOBtE75DO8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=XdI8MqdUpZu5VMnuImREiFb1niTwI+X8ObObiWReuj6IwfmblmO+cVyxUl8GQ2V4S
-         CziSLB0CYj8sej+0FGfOUpYiqHHbAfSOCSpumvzRPJz5al1f8GAFRI00RhPdR1pGPo
-         FRav3IDYfjdN4G0zcz9JlKSDVvGtr34iOY3EoyJbNn/MCRBRHR1ZflPDKWmeAWbrAG
-         YaPuSIKVKTiu8gZrS5eOptxEDbDNu7jj76evUJvqegqttMi2esT0xh8zeGDye3NdfU
-         rV7fJxwo7Ja6tCzAn/LY7ePedtQ2i70u4pl+ir2XsIwbmPQnEGEgmvh4l6Dm63VX8f
-         gwToUk3fmfPyw==
-Date:   Tue, 1 Oct 2019 07:16:02 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Gao Xiang <hsiangkao@aol.com>
-Cc:     Mark Brown <broonie@kernel.org>, linux-erofs@lists.ozlabs.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-next@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Miao Xie <miaoxie@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: Re: erofs -next tree inclusion request
-Message-ID: <20191001071602.5723e33d@canb.auug.org.au>
-In-Reply-To: <20190930132925.GA10677@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20190919120110.GA48697@architecture4>
-        <20190919121739.GG3642@sirena.co.uk>
-        <20190919122328.GA82662@architecture4>
-        <20190919143722.GA5363@hsiangkao-HP-ZHAN-66-Pro-G1>
-        <20190930231439.37295a14@canb.auug.org.au>
-        <20190930132925.GA10677@hsiangkao-HP-ZHAN-66-Pro-G1>
+        Mon, 30 Sep 2019 17:16:27 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41718 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729964AbfI3VQ1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 17:16:27 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w17so12463840oiw.8;
+        Mon, 30 Sep 2019 14:16:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AGl26BC0P4MPPAVNiVH76qN3peTSsIs0AC8gMsuxmhs=;
+        b=KZJAj1okYzXl6CRX8biKWyfxTA5Hiw5PdQNVDsGTOXm+vgzJoLkWJS9H0o4Twn7PD7
+         TYwoWabeDFDlFQDF8/mYMdb6C2k8UpbM+HE5dl5xdJ8I2wyOkmaYRrv9W7BXJRe+rwCE
+         xRKNIFbXqgr/2gP1EMo3+cEzuF1jSAN9YXehVh+aJeaWD3RaBH5zHb3uWi+8VJGEj8q3
+         yLOry7/uLgh3D/R/t6LecDLnT7MagjPfCWJ2Wyg+plYOA8ZUMGYvUrxzRA6VGBJgEUS7
+         TLbz4MoME9Xkh0UyVFFJoGD2q4Z90pAMKKMBucCA7Rs/Tid652uNdwMEO6ptzXGCOZ09
+         +a3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AGl26BC0P4MPPAVNiVH76qN3peTSsIs0AC8gMsuxmhs=;
+        b=SRsz9ZOiJt6h5c7zSPHY3E1J+pnlGqWEuOygJnLXwwlPyAvPEASSIBENMhx809ZekJ
+         PPJ3Nla7uTq/rP66LIWi4A2TixMqFS0XzQwtLws7cRHzH9DgTfAyi0KIlOvFyyxjT6/i
+         FLfBiOv26WvHBceAoxOtClGTGBmWBfUTWfw3S9C9nKGpvWGYeTRecS2n5Ci31rUC9vHa
+         M8jjVfitgr+FIUod8KPqnmE0kzLAv2R2/jXjXJVppAyQf6Qw3ixlvoXOUjA16BhnMWHL
+         JdJUHYxerCbENfSiTrE3k84XYXKcLFGWfomoMHUaUySqQR/CZ+vDS2frOhxN7436pta8
+         V8gw==
+X-Gm-Message-State: APjAAAVtzAj5oRtrskJYulVCghYUR7rzq3BOdGt4ZvQSNo/WSnsx7RuE
+        eq/aNBCVVIsa0iy/7HlxD6/IjdnZdylKj96alQg=
+X-Google-Smtp-Source: APXvYqwo3X1AmgHw4aNAK1dFU4oJnTmjOuaJANGc3Lqec/DkuNhIVQyVWSQrPvO1BIegkPzh2bHOVAF5m+nxyXG3tes=
+X-Received: by 2002:aca:574c:: with SMTP id l73mr1038228oib.47.1569878186047;
+ Mon, 30 Sep 2019 14:16:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/8u8oJwVrtwQVPX8=Bt=VocG";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20190929164848.13930-1-yzhai003@ucr.edu>
+In-Reply-To: <20190929164848.13930-1-yzhai003@ucr.edu>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 30 Sep 2019 23:16:15 +0200
+Message-ID: <CAFBinCCewgHnvL+HRXR8MBOT4fdnC-nxDAw8E5rGf+NZDsbaJg@mail.gmail.com>
+Subject: Re: [PATCH] iio: adc: meson-saradc: Variables could be uninitalized
+ if regmap_read() fails
+To:     Yizhuo <yzhai003@ucr.edu>
+Cc:     csong@cs.ucr.edu, zhiyunq@cs.ucr.edu,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicholas Mc Guire <hofrat@osadl.org>,
+        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/8u8oJwVrtwQVPX8=Bt=VocG
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Yizhuo,
 
-Hi Gao,
+thank you for this patch
 
-On Mon, 30 Sep 2019 21:32:22 +0800 Gao Xiang <hsiangkao@aol.com> wrote:
->=20
-> I think xiang@kernel.org is preferred since it can always redirect
-> to my workable email address.
+On Sun, Sep 29, 2019 at 6:48 PM Yizhuo <yzhai003@ucr.edu> wrote:
+>
+> Several functions in this file are trying to use regmap_read() to
+> initialize the specific variable, however, if regmap_read() fails,
+> the variable could be uninitialized but used directly, which is
+> potentially unsafe. The return value of regmap_read() should be
+> checked and handled.
+the meson_saradc driver is using a MMIO regmap so read failures are
+unlikely (unless there's a bug in the code somewhere)
+did you find these issues with some static code analysis tool or did
+you experience a real world problem?
 
-OK, done.
+> Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+> ---
+>  drivers/iio/adc/meson_saradc.c | 30 ++++++++++++++++++++++++------
+>  1 file changed, 24 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/iio/adc/meson_saradc.c b/drivers/iio/adc/meson_saradc.c
+> index 7b28d045d271..4b6c2983ef39 100644
+> --- a/drivers/iio/adc/meson_saradc.c
+> +++ b/drivers/iio/adc/meson_saradc.c
+> @@ -323,6 +323,7 @@ static int meson_sar_adc_wait_busy_clear(struct iio_dev *indio_dev)
+>  {
+>         struct meson_sar_adc_priv *priv = iio_priv(indio_dev);
+>         int regval, timeout = 10000;
+> +       int ret;
+why not add "ret" to the variables in the line above?
+so this could be shortened to (which is also consistent with the
+coding style in meson_saradc):
+  int ret, regval, timeout = 10000;
 
---=20
-Cheers,
-Stephen Rothwell
+> @@ -506,7 +514,10 @@ static int meson_sar_adc_lock(struct iio_dev *indio_dev)
+>                  */
+>                 do {
+>                         udelay(1);
+> -                       regmap_read(priv->regmap, MESON_SAR_ADC_DELAY, &val);
+> +                       ret = regmap_read(priv->regmap,
+> +                                               MESON_SAR_ADC_DELAY, &val);
+> +                       if (ret)
+> +                               return ret;
+this is a big problem because we're returning with &indio_dev->mlock held
+see the "timeout < 0" block below
 
---Sig_/8u8oJwVrtwQVPX8=Bt=VocG
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> @@ -771,7 +782,7 @@ static int meson_sar_adc_init(struct iio_dev *indio_dev)
+>  {
+>         struct meson_sar_adc_priv *priv = iio_priv(indio_dev);
+>         int regval, i, ret;
+> -
+> +       int ret;
+this removes an empty line between the variable declarations and the
+first code (comment)
+also "ret" is already defined in the line before
+(I haven't compile-tested this myself yet but I'm surprised that this
+doesn't give an error or at least a warning)
 
------BEGIN PGP SIGNATURE-----
+> @@ -1013,8 +1027,12 @@ static irqreturn_t meson_sar_adc_irq(int irq, void *data)
+>         struct meson_sar_adc_priv *priv = iio_priv(indio_dev);
+>         unsigned int cnt, threshold;
+>         u32 regval;
+> +       int ret;
+> +
+> +       ret = regmap_read(priv->regmap, MESON_SAR_ADC_REG0, &regval);
+> +       if (ret)
+> +               return ret;
+this function doesn't return "int" but irqreturn_t
+the only allowed values are: [0]
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2ScJIACgkQAVBC80lX
-0GzPQAf+MFU2QYjTEQ5TE9srpZ+8ctwTC7tAz42SidHNa3ODU5iFRT0fWQC7liis
-qL9ibdkp3aH0wEw60i4ZgyC5WLNhACh37chxD7y1OH2Tm6RQvHSjda00U5TRqziX
-T/9jAKratRrjqtICZg8JbUVzz66mq8u2UTxe4ic+Ys4G0FwVbkY41IuakBtzZYwa
-9GO9+HUAH0gGi3mU9B60KnCqENWG8zl6vOWaewxUBbDlrXFaGhdANfC0NKnwJva6
-ZwsKj8xPykSpMruDNqIk+8vffy3Q3oKuJzeDJA7wmfPzikq5B7TQExVwP8XpIRmG
-jm+Kj/RKfXSif9+TePfW1hw/1jw1vA==
-=mogZ
------END PGP SIGNATURE-----
 
---Sig_/8u8oJwVrtwQVPX8=Bt=VocG--
+Martin
+
+
+[0] https://elixir.bootlin.com/linux/v5.3/source/include/linux/irqreturn.h#L11
