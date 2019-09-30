@@ -7,112 +7,90 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35913C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 915FBC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE1B22515
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:47:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 620A1224FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:48:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730143AbfI3Urz (ORCPT
+        id S1730553AbfI3Usp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 16:47:55 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:39139 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726425AbfI3Urz (ORCPT
+        Mon, 30 Sep 2019 16:48:45 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34276 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727469AbfI3Usp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 16:47:55 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MBUZr-1iQpiz3595-00D3fn; Mon, 30 Sep 2019 22:21:02 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     y2038@lists.linaro.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        =?UTF-8?q?Stefan=20B=C3=BChler?= <source@stbuehler.de>,
-        Hannes Reinecke <hare@suse.com>,
-        Jackie Liu <liuyun01@kylinos.cn>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hristo Venev <hristo@venev.name>, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] io_uring: use __kernel_timespec in timeout ABI
-Date:   Mon, 30 Sep 2019 22:20:39 +0200
-Message-Id: <20190930202055.1748710-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 30 Sep 2019 16:48:45 -0400
+Received: by mail-lj1-f195.google.com with SMTP id j19so10994615lja.1
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 13:48:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=2XkmrViXlZTGZ245RYNenq5fBl7sK7iDFb6fGcyt8H0=;
+        b=gYECvp4/JGA5s2zAhpm8mbt1T2QCmO3coJjCichiA+D5U9zh6rM8Z/rZW/CfHdFoJ5
+         Cre9qRu9jrQGFreRf0bIOFb3BawJWqMEBRuSrjbuTnFo0RMpO+wVhycR9XmShnWmIi5f
+         Eo9Z+X7RIeiE/AJsAJz5entbzrOl1BJiXbO6MggCH2CEH2XEem2f0D0ItchcX/C7ocQA
+         sqjeDtErfgrHfK9Ykf4BVp79a9kyaAHh9xJqB5OFuAbx0NkgD8sWEmp6Qx4Qhkq7B88T
+         C1mRrTpZzELxRMtkil3DIAxuWbTMO5tnQrZUFeTkpOGRaVNFKl7F6ww1hAxhahVyGQWO
+         WfOA==
+X-Gm-Message-State: APjAAAVz0zuEHOdT9HI4XofN4irHMjZmXzs5pjgs6X8A0Qw1N/vLbcsK
+        YLz11JhFk5ZrxkJ0tMhYIkI=
+X-Google-Smtp-Source: APXvYqyVqTLQSaSPvYycXHi8oB6poIgqD2MxYFat9MbkEE1gRedCs7BRe3biYAiHFo8Ct2d+SNMPUQ==
+X-Received: by 2002:a2e:3e16:: with SMTP id l22mr12787964lja.195.1569876523560;
+        Mon, 30 Sep 2019 13:48:43 -0700 (PDT)
+Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.googlemail.com with ESMTPSA id h9sm3441171lfp.40.2019.09.30.13.48.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 13:48:42 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Denis Efremov <efremov@linux.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [RESEND v2 PATCH] MAINTAINERS: Update path to physmap-versatile.c
+Date:   Mon, 30 Sep 2019 23:48:15 +0300
+Message-Id: <20190930204815.16635-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190813061024.15428-1-efremov@linux.com>
+References: <20190813061024.15428-1-efremov@linux.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:mlQX66YyJ89UsdNDcTaUDMkvDllD+MCdC0jwrPAhCDuUuJh0vOk
- zZ1jwySfQ09oEHruJb93xi023HsV+efktaoKqvpmHhP68Y4byhgRSjNpgjGQ3pvTTAS7rFA
- 09K8xy6PviTkfJyCKQI2+MF+0GZfaZPB8iiYdBkkw2ex2b4niBs+M6FIX3/0Hs4nPJ2Ci+M
- QEWGo3Z0tATHhXTDBD6Rg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:NV7gpjrMSJA=:okYpni+B9mopWZLlHONDJp
- xR8Uqy/ksQ9sz7P/lCZkqV1RHmQLWxi3Zcs9hP7G23NVdti21bzURdIU8KTe8KorJ2ZE52kzA
- JUY4ayZuWOuSN7SGagfzyLt2BJzmrmf/061UoiEHcSTXXZc8d3jsNnx1elf6C7BBJ6ufxKa+7
- NGYghSmO7UImkraFvg4CGdj8OK+Gh+82IZhA60bkWtkwNjFgdEJHbvFGGH7JLYUFth9c7+sxx
- vIb7BtF+63ZinJM6CA02I1FB/BAWQ8cLxI/F6iF5Un4JPbU5306X8Xb0OyVAkRdW52z2jUwsV
- FoqciNCWCdpZgxclQ4RczL+bc0/UkJxzU0kXQX9stuMQvMoSnDVLPGoismnyM5ukkA2dqPgCK
- j0fk85HX4KT1XeREo9XqHJrPPPE5XsIlETM58guXXs7H6MOmJFepI4ouGc/CeCybxqQSJeo0r
- iHrmwdqsvXNCSoyfRKxU+MTNY0P7xASYwJVNF2XRlcQ/BV9dgDjzZs+DRVwcBFwnwuHyIwO3P
- bP46smitC23t94UHyI7EehWvWuzx6mwwhySFEkX5onBqTcveJ2NyIkgpeTzQ8u4qHu6SSuSES
- pxQLbTHA+RgF2m6mB5C0EFqCvAmtdF3qlwudBVIABDFAKnSQZ/N2Di0ufu2/aH2RffXW2Yhc2
- BeYzdWjHiLQ9BoEPmet/gFeqOPy9L2R0OxZ5ZSD7ICczYGaCZ60Emlm9iZXebCTZVUVwJgHgD
- kpv9hy/fIGz4pByWEspBJQPhyg+6nRjSCy5lUcp7S1hv2DD5M/1vUHnwY9HPN+PvKEbQM7cnX
- SXzxqb7MJoSDoOzR0TSTBVMQTcIwZJDTdVt8NzikvdQiyqkcIuxI0UytpsnLgVY1yM/GzlS1B
- s6w+hxhaCHK4Aws2hZrA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All system calls use struct __kernel_timespec instead of the old struct
-timespec, but this one was just added with the old-style ABI. Change it
-now to enforce the use of __kernel_timespec, avoiding ABI confusion and
-the need for compat handlers on 32-bit architectures.
+Update MAINTAINERS record to reflect the filename change from
+physmap_of_versatile.c to physmap-versatile.c in commit 6ca15cfa0788
+("mtd: maps: Rename physmap_of_{versatile, gemini} into physmap-{versatile, gemini}").
 
-Any user space caller will have to use __kernel_timespec now, but this
-is unambiguous and works for any C library regardless of the time_t
-definition. A nicer way to specify the timeout would have been a less
-ambiguous 64-bit nanosecond value, but I suppose it's too late now to
-change that as this would impact both 32-bit and 64-bit users.
-
-Fixes: 5262f567987d ("io_uring: IORING_OP_TIMEOUT support")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Cc: Boris Brezillon <bbrezillon@kernel.org>
+Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Denis Efremov <efremov@linux.com>
 ---
- fs/io_uring.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Ping.
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index aa8ac557493c..8a0381f1a43b 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -1892,15 +1892,15 @@ static int io_timeout(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 	unsigned count, req_dist, tail_index;
- 	struct io_ring_ctx *ctx = req->ctx;
- 	struct list_head *entry;
--	struct timespec ts;
-+	struct timespec64 ts;
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 296de2b51c83..dc7137a9cf77 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1238,7 +1238,7 @@ F:	arch/arm/boot/dts/versatile*
+ F:	drivers/clk/versatile/
+ F:	drivers/i2c/busses/i2c-versatile.c
+ F:	drivers/irqchip/irq-versatile-fpga.c
+-F:	drivers/mtd/maps/physmap_of_versatile.c
++F:	drivers/mtd/maps/physmap-versatile.c
+ F:	drivers/power/reset/arm-versatile-reboot.c
+ F:	drivers/soc/versatile/
  
- 	if (unlikely(ctx->flags & IORING_SETUP_IOPOLL))
- 		return -EINVAL;
- 	if (sqe->flags || sqe->ioprio || sqe->buf_index || sqe->timeout_flags ||
- 	    sqe->len != 1)
- 		return -EINVAL;
--	if (copy_from_user(&ts, (void __user *) (unsigned long) sqe->addr,
--	    sizeof(ts)))
-+
-+	if (get_timespec64(&ts, u64_to_user_ptr(sqe->addr)))
- 		return -EFAULT;
- 
- 	/*
-@@ -1934,7 +1934,7 @@ static int io_timeout(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 
- 	hrtimer_init(&req->timeout.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
- 	req->timeout.timer.function = io_timeout_fn;
--	hrtimer_start(&req->timeout.timer, timespec_to_ktime(ts),
-+	hrtimer_start(&req->timeout.timer, timespec64_to_ktime(ts),
- 			HRTIMER_MODE_REL);
- 	return 0;
- }
 -- 
-2.20.0
+2.21.0
 
