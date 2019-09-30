@@ -2,140 +2,267 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21848C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73011C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEB40206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 426D3206BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:41:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732117AbfI3Pki (ORCPT
+        id S1732124AbfI3Plp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 11:40:38 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:41357 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727767AbfI3Pkh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 11:40:37 -0400
-Received: by mail-ed1-f68.google.com with SMTP id f20so9046070edv.8;
-        Mon, 30 Sep 2019 08:40:36 -0700 (PDT)
+        Mon, 30 Sep 2019 11:41:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60912 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730780AbfI3Plp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 11:41:45 -0400
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4CAB7859FF
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 15:41:44 +0000 (UTC)
+Received: by mail-wr1-f72.google.com with SMTP id t11so4688009wrq.19
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 08:41:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=l0yUcGu9MFmSuUJVKJXvSt9KSqYrsEKkvHYxaWpAOwY=;
-        b=rpLz+rzMghFUgoOVWXnxivpxW3THowbyFQoTQioNFNCbw3XUcYH1648liYK+CFK819
-         kIGZr+rzhPApUU8WxT2bYBpKddAgCjcRf52UJFJy+WXvpEt00ZGfmvFo6WiqawFqcSyK
-         NnqAdjwy2VU8cC21pK3DYxymumEeHF1LQjB7pktwWC5RFnImdZsd3/XVcXv5ivzsWxCI
-         qpfEswjIQ4KFnOkEhrC1ZXDwDLyXRGxMX3IhTUetouZ8KpMXeZN4HeeD/+xvObk9xcZC
-         bc5uiu/BXjzcS7Vc0C53en3mXgxjt3Em55vWMdAwzfu19e6y7SgMxuibYdmGD3zNkVN9
-         XypA==
-X-Gm-Message-State: APjAAAUkqw+/XgncaiI1LHIRoe/UdAUFrNvYVbx2KXo+eeP9BQ24B0c2
-        WIv8o0XnQInXUqT9DGg7uEYN9RQh
-X-Google-Smtp-Source: APXvYqyGk9jEUdaFH3KevIMNskTk1I0chh4w+dn+1QHkHkE06xOO0cPwtJ0brhNDj0onn++FITIqDg==
-X-Received: by 2002:a50:f09d:: with SMTP id v29mr20047749edl.4.1569858036234;
-        Mon, 30 Sep 2019 08:40:36 -0700 (PDT)
-Received: from [10.10.2.174] (bran.ispras.ru. [83.149.199.196])
-        by smtp.gmail.com with ESMTPSA id j5sm2513357edj.62.2019.09.30.08.40.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Sep 2019 08:40:35 -0700 (PDT)
-Reply-To: efremov@linux.com
-Subject: Re: [PATCH] staging: rtl8723bs: hal: Fix memcpy calls
-To:     David Laight <David.Laight@ACULAB.COM>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Jes Sorensen <jes.sorensen@gmail.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>
-References: <20190930110141.29271-1-efremov@linux.com>
- <37b195b700394e95aa8329afc9f60431@AcuMS.aculab.com>
-From:   Denis Efremov <efremov@linux.com>
-Message-ID: <b3a92ac3-b097-3359-8729-ad353fac2a0d@linux.com>
-Date:   Mon, 30 Sep 2019 18:40:34 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=t36SD6rbG6Ox7eVRaZRgR+czMyT+mDl4LHkZc37z7nY=;
+        b=PxiS5V63IPtKDlQJjR0VKTrNaYlyWWcq7ECq0jLpaw/TfF9eHuJ4rkrQQrpOWl//tz
+         UrMvzSP/+ZOC898F39pCdHYC9q54S0VIIsg3pvkK46I+9TbwUvZtXe/Z5djdr2dXOkf4
+         ktSGLGanhfGYvy+kEKeWwN+QpCs+dTJvtkb4g1k5c0HLMBYeLjn3GI7Cw6WIW0Bqfeq+
+         SZfBCnqH1nFtqB+LMnbr7CGsMqmdiZrL9WAvVFdw+GihnFx3U+xNl3iB56WLJns9DlMG
+         w2IicBfWdLTi2tsxDureP6INSgkjq40/UTFx6JvXxTpz+aATsYW42pFRqIB0uobLXoSN
+         5RRg==
+X-Gm-Message-State: APjAAAXjUBeLJbgrX8Tb5aHOY+e2CQVp69DcqWAfRjHvaJpAKOAvJs33
+        29dJlUTp3xvTCYRDu0Bq/s/ZUXOUIByRoUNixQHySlTcQ9YBhzbkE8DDrd4TiB6UuY0UqNmX6Cv
+        7USiBEk7QPHnqeqOvLMrJpqfO
+X-Received: by 2002:a1c:6841:: with SMTP id d62mr18329730wmc.48.1569858102972;
+        Mon, 30 Sep 2019 08:41:42 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyWbVgHFrBFTAT6FQPdm5LZaBJahRiGfad0UBdHndQAWlE2Om7W6ldTAC1qNejT8OzwpWGVBA==
+X-Received: by 2002:a1c:6841:: with SMTP id d62mr18329702wmc.48.1569858102711;
+        Mon, 30 Sep 2019 08:41:42 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id d78sm16644579wmd.47.2019.09.30.08.41.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 08:41:42 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH 1/3] KVM: X86: Add "nopvspin" parameter to disable PV spinlocks
+In-Reply-To: <1569759666-26904-2-git-send-email-zhenzhong.duan@oracle.com>
+References: <1569759666-26904-1-git-send-email-zhenzhong.duan@oracle.com> <1569759666-26904-2-git-send-email-zhenzhong.duan@oracle.com>
+Date:   Mon, 30 Sep 2019 17:41:41 +0200
+Message-ID: <87pnjh3i6i.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <37b195b700394e95aa8329afc9f60431@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/30/19 4:18 PM, David Laight wrote:
-> From: Denis Efremov
->> Sent: 30 September 2019 12:02
->> memcpy() in phy_ConfigBBWithParaFile() and PHY_ConfigRFWithParaFile() is
->> called with "src == NULL && len == 0". This is an undefined behavior.
-> 
-> I'm pretty certain it is well defined (to do nothing).
-> 
->> Moreover this if pre-condition "pBufLen && (*pBufLen == 0) && !pBuf"
->> is constantly false because it is a nested if in the else brach, i.e.,
->> "if (cond) { ... } else { if (cond) {...} }". This patch alters the
->> if condition to check "pBufLen && pBuf" pointers are not NULL.
->>
-> ...
->> ---
->> Not tested. I don't have the hardware. The fix is based on my guess.
->>
->>  drivers/staging/rtl8723bs/hal/hal_com_phycfg.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c b/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c
->> index 6539bee9b5ba..0902dc3c1825 100644
->> --- a/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c
->> +++ b/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c
->> @@ -2320,7 +2320,7 @@ int phy_ConfigBBWithParaFile(
->>  			}
->>  		}
->>  	} else {
->> -		if (pBufLen && (*pBufLen == 0) && !pBuf) {
->> +		if (pBufLen && pBuf) {
->>  			memcpy(pHalData->para_file_buf, pBuf, *pBufLen);
-> 
-> The existing code is clearly garbage.
-> It only ever does memcpy(tgt, NULL, 0).
-> 
-> Under the assumption that the code has been tested the copy clearly isn't needed at all
-> and can be deleted completely!
+Zhenzhong Duan <zhenzhong.duan@oracle.com> writes:
 
-Initially I also thought that this is just a dead code and it could be simply removed. However, if
-we look at it more carefully, this if condition looks like a copy-paste error:
+> There are cases where a guest tries to switch spinlocks to bare metal
+> behavior (e.g. by setting "xen_nopvspin" on XEN platform and
+> "hv_nopvspin" on HYPER_V).
+>
+> That feature is missed on KVM, add a new parameter "nopvspin" to disable
+> PV spinlocks for KVM guest.
+>
+> This new parameter is also intended to replace "xen_nopvspin" and
+> "hv_nopvspin" in the future.
 
-if (pBufLen && (*pBufLen == 0) && !pBuf) {
-	// get proper len
-	// allocate pBuf
-	...
-	memcpy(pBuf, pHalData->para_file_buf, rlen);
-	...
-} else {
-	if (pBufLen && (*pBufLen == 0) && !pBuf) { // <== condition in patch
-		memcpy(pHalData->para_file_buf, pBuf, *pBufLen);
-		rtStatus = _SUCCESS;
-	} else
-		DBG_871X("%s(): Critical Error !!!\n", __func__);
-}
+Any reason to not do it right now? We will probably need to have compat
+code to support xen_nopvspin/hv_nopvspin too but emit a 'is deprecated'
+warning.
 
-Thus, I think it will be incorrect to delete the second memcpy.
+>
+> The global variable pvspin isn't defined as __initdata as it's used at
+> runtime by XEN guest.
+>
+> Refactor the print stuff with pr_* which is preferred.
 
-> 
-> OTOH if the code hasn't been tested maybe the entire source file should be removed :-)
-> 
-> 	David
-> 
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
-> 
+Please do it in a separate patch.
 
+>
+> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Krcmar <rkrcmar@redhat.com>
+> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Cc: Wanpeng Li <wanpengli@tencent.com>
+> Cc: Jim Mattson <jmattson@google.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Will Deacon <will@kernel.org>
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt |  4 ++++
+>  arch/x86/include/asm/qspinlock.h                |  1 +
+>  arch/x86/kernel/kvm.c                           | 27 ++++++++++++++++---------
+>  kernel/locking/qspinlock.c                      |  7 +++++++
+>  4 files changed, 30 insertions(+), 9 deletions(-)
+>
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index c7ac2f3..4b956d8 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -5330,6 +5330,10 @@
+>  			as generic guest with no PV drivers. Currently support
+>  			XEN HVM, KVM, HYPER_V and VMWARE guest.
+>  
+> +	nopvspin	[X86,KVM] Disables the qspinlock slow path
+> +			using PV optimizations which allow the hypervisor to
+> +			'idle' the guest on lock contention.
+> +
+>  	xirc2ps_cs=	[NET,PCMCIA]
+>  			Format:
+>  			<irq>,<irq_mask>,<io>,<full_duplex>,<do_sound>,<lockup_hack>[,<irq2>[,<irq3>[,<irq4>]]]
+> diff --git a/arch/x86/include/asm/qspinlock.h b/arch/x86/include/asm/qspinlock.h
+> index 444d6fd..34a4484 100644
+> --- a/arch/x86/include/asm/qspinlock.h
+> +++ b/arch/x86/include/asm/qspinlock.h
+> @@ -32,6 +32,7 @@ static __always_inline u32 queued_fetch_set_pending_acquire(struct qspinlock *lo
+>  extern void __pv_init_lock_hash(void);
+>  extern void __pv_queued_spin_lock_slowpath(struct qspinlock *lock, u32 val);
+>  extern void __raw_callee_save___pv_queued_spin_unlock(struct qspinlock *lock);
+> +extern bool pvspin;
+>  
+>  #define	queued_spin_unlock queued_spin_unlock
+>  /**
+> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> index e820568..7b8cf0d 100644
+> --- a/arch/x86/kernel/kvm.c
+> +++ b/arch/x86/kernel/kvm.c
+> @@ -7,6 +7,8 @@
+>   *   Authors: Anthony Liguori <aliguori@us.ibm.com>
+>   */
+>  
+> +#define pr_fmt(fmt) "KVM: " fmt
+> +
+>  #include <linux/context_tracking.h>
+>  #include <linux/init.h>
+>  #include <linux/kernel.h>
+> @@ -286,7 +288,7 @@ static void kvm_register_steal_time(void)
+>  		return;
+>  
+>  	wrmsrl(MSR_KVM_STEAL_TIME, (slow_virt_to_phys(st) | KVM_MSR_ENABLED));
+> -	pr_info("kvm-stealtime: cpu %d, msr %llx\n",
+> +	pr_info("stealtime: cpu %d, msr %llx\n",
+>  		cpu, (unsigned long long) slow_virt_to_phys(st));
+>  }
+>  
+> @@ -321,7 +323,7 @@ static void kvm_guest_cpu_init(void)
+>  
+>  		wrmsrl(MSR_KVM_ASYNC_PF_EN, pa);
+>  		__this_cpu_write(apf_reason.enabled, 1);
+> -		printk(KERN_INFO"KVM setup async PF for cpu %d\n",
+> +		pr_info("setup async PF for cpu %d\n",
+>  		       smp_processor_id());
+>  	}
+>  
+> @@ -347,7 +349,7 @@ static void kvm_pv_disable_apf(void)
+>  	wrmsrl(MSR_KVM_ASYNC_PF_EN, 0);
+>  	__this_cpu_write(apf_reason.enabled, 0);
+>  
+> -	printk(KERN_INFO"Unregister pv shared memory for cpu %d\n",
+> +	pr_info("Unregister pv shared memory for cpu %d\n",
+>  	       smp_processor_id());
+>  }
+>  
+> @@ -509,7 +511,7 @@ static void kvm_setup_pv_ipi(void)
+>  {
+>  	apic->send_IPI_mask = kvm_send_ipi_mask;
+>  	apic->send_IPI_mask_allbutself = kvm_send_ipi_mask_allbutself;
+> -	pr_info("KVM setup pv IPIs\n");
+> +	pr_info("setup pv IPIs\n");
+>  }
+>  
+>  static void kvm_smp_send_call_func_ipi(const struct cpumask *mask)
+> @@ -639,11 +641,11 @@ static void __init kvm_guest_init(void)
+>  	    !kvm_para_has_hint(KVM_HINTS_REALTIME) &&
+>  	    kvm_para_has_feature(KVM_FEATURE_STEAL_TIME)) {
+>  		smp_ops.send_call_func_ipi = kvm_smp_send_call_func_ipi;
+> -		pr_info("KVM setup pv sched yield\n");
+> +		pr_info("setup pv sched yield\n");
+>  	}
+>  	if (cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN, "x86/kvm:online",
+>  				      kvm_cpu_online, kvm_cpu_down_prepare) < 0)
+> -		pr_err("kvm_guest: Failed to install cpu hotplug callbacks\n");
+> +		pr_err("failed to install cpu hotplug callbacks\n");
+>  #else
+>  	sev_map_percpu_data();
+>  	kvm_guest_cpu_init();
+> @@ -746,7 +748,7 @@ static __init int kvm_setup_pv_tlb_flush(void)
+>  			zalloc_cpumask_var_node(per_cpu_ptr(&__pv_tlb_mask, cpu),
+>  				GFP_KERNEL, cpu_to_node(cpu));
+>  		}
+> -		pr_info("KVM setup pv remote TLB flush\n");
+> +		pr_info("setup pv remote TLB flush\n");
+>  	}
+>  
+>  	return 0;
+> @@ -842,6 +844,13 @@ void __init kvm_spinlock_init(void)
+>  	if (num_possible_cpus() == 1)
+>  		return;
+>  
+> +	if (!pvspin) {
+> +		pr_info("PV spinlocks disabled\n");
+> +		static_branch_disable(&virt_spin_lock_key);
+> +		return;
+> +	}
+> +	pr_info("PV spinlocks enabled\n");
+> +
+>  	__pv_init_lock_hash();
+>  	pv_ops.lock.queued_spin_lock_slowpath = __pv_queued_spin_lock_slowpath;
+>  	pv_ops.lock.queued_spin_unlock =
+> @@ -872,8 +881,8 @@ static void kvm_enable_host_haltpoll(void *i)
+>  void arch_haltpoll_enable(unsigned int cpu)
+>  {
+>  	if (!kvm_para_has_feature(KVM_FEATURE_POLL_CONTROL)) {
+> -		pr_err_once("kvm: host does not support poll control\n");
+> -		pr_err_once("kvm: host upgrade recommended\n");
+> +		pr_err_once("host does not support poll control\n");
+> +		pr_err_once("host upgrade recommended\n");
+>  		return;
+>  	}
+>  
+> diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
+> index 2473f10..945b510 100644
+> --- a/kernel/locking/qspinlock.c
+> +++ b/kernel/locking/qspinlock.c
+> @@ -580,4 +580,11 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
+>  #include "qspinlock_paravirt.h"
+>  #include "qspinlock.c"
+>  
+> +bool pvspin = true;
+> +static __init int parse_nopvspin(char *arg)
+> +{
+> +	pvspin = false;
+> +	return 0;
+> +}
+> +early_param("nopvspin", parse_nopvspin);
+>  #endif
+
+-- 
+Vitaly
