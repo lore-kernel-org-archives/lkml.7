@@ -2,134 +2,106 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B526C4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6DCCC388F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D84121721
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:20:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569835212;
-	bh=BiaZ4OQsV2qvKkRzrVE7JaDs4FQRZzX9aRE3h0Vd6WI=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=vNcQtbAKdiYg7ci/pdiN7KEzVQMOqPcpSX7r2QEnDvefSCiSd8dFVQJuhB0JZKpwo
-	 UslvL0zVDh5UkTZJ11u8n6H6xsgbTncCvWVcKQR9mRlZXoKz0hNm9Y4N03OMjA/CZa
-	 w35Nug2M/+nrmwhmZRFsBeaYKXU/wDXDSL7Ctk18=
+	by mail.kernel.org (Postfix) with ESMTP id 8AD3C2190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:20:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XpjBVUwC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730370AbfI3JUL (ORCPT
+        id S1730381AbfI3JUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 05:20:11 -0400
-Received: from inca-roads.misterjones.org ([213.251.177.50]:54925 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727106AbfI3JUL (ORCPT
+        Mon, 30 Sep 2019 05:20:23 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:44347 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbfI3JUX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 05:20:11 -0400
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iErqf-0001rF-5T; Mon, 30 Sep 2019 11:20:05 +0200
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Subject: Re: [PATCH 20/35] irqchip/gic-v4.1: Allow direct invalidation of  VLPIs
-X-PHP-Originating-Script: 0:main.inc
+        Mon, 30 Sep 2019 05:20:23 -0400
+Received: by mail-lf1-f68.google.com with SMTP id q11so6435596lfc.11;
+        Mon, 30 Sep 2019 02:20:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Kdnzn0WNSmL6++6Rls+QgBKInuNxmVCJP2RucyIQe4g=;
+        b=XpjBVUwCY82RHb11yRMVfN+csUZwMGRamq8xY4dNdcZsTHjwiT+G7jhvi7AriT4myd
+         J3LQGGSLGnKbVSSTjDnWNUFMlE87Z6p6JqzHyjmQjiowKB0kIWMpeorsGQSF+vnmth0G
+         CtWa5x9QknSVx+UftCbcmI36aKAozljWgDkEs/s9WhECL5gOL6FF5Wrgh909FTkL81Q+
+         m5U6nTPth3jSPNcp7N5jv9Y1K9pEJai9NycLSUOJJsa6yDTxRmmxA17VLfmAvZXEwULc
+         V9UpnpCfAxcnuVW9p0OSZavRhjL4sSA3ymIHIFuHuc6AIQC7Gke82EIuMTbsxQVWXyAs
+         rUsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Kdnzn0WNSmL6++6Rls+QgBKInuNxmVCJP2RucyIQe4g=;
+        b=uPgqrVOYcVk1gfM262olly9aUK5E/AA2yQYyWVJG1f1eQIO9MZRfRijABrwMX0J93v
+         TP1x0eHyN4XuUTKaxH2GmzbcGNHG5froIkWUo3EC3DS1CJTwSEpzrt9UV3NuXESaZoga
+         6njSkEcf9Sk2mMZi8Q26y9Gl4KuoQEbXKYlSrF0pGI37j9dG05HwXyjeozIF2XKRChLU
+         XHsYYVdQ+TZ0+Z7lTu/dwZSMK20VjD4za+HGKzeQQ7bQl9zlXm5cubiu+foFBGNAhDtc
+         ZQki0rmFkMfs26Gqma0hHwyTJhrj4ADgNfnRs8nsy7LFaWGITljcru/HeAmPvdho8I2n
+         h3og==
+X-Gm-Message-State: APjAAAVjxLiLCaoCisUIinpj00ro7mTghAzRg+K0CURIAXx45vFl+7rn
+        PpgD30Nx9l55vu9gpG8BQyCjiay8rqQ=
+X-Google-Smtp-Source: APXvYqwfvtwMv55fxzgK/QzZWF47pMokhrIop+AuLH33tqI+rn2riwwvcmVrgzmNPkaMIr2bVBTmFA==
+X-Received: by 2002:a19:f111:: with SMTP id p17mr10874635lfh.187.1569835220507;
+        Mon, 30 Sep 2019 02:20:20 -0700 (PDT)
+Received: from [172.31.190.83] ([86.57.146.226])
+        by smtp.gmail.com with ESMTPSA id 202sm3189547ljf.75.2019.09.30.02.20.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 30 Sep 2019 02:20:20 -0700 (PDT)
+Subject: Re: [PATCH 1/1] blk-mq: reuse code in blk_mq_check_inflight*()
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <11ebb046bf422facf6e438672799306b80038173.1569830385.git.asml.silence@gmail.com>
+ <20190930083324.GA24152@infradead.org>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Message-ID: <97498865-bb36-7367-4cf3-de6d812b23cb@gmail.com>
+Date:   Mon, 30 Sep 2019 12:20:18 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+In-Reply-To: <20190930083324.GA24152@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 30 Sep 2019 10:20:05 +0100
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <kvmarm@lists.cs.columbia.edu>, <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Thomas Gleixner <tglx@linutronix.de>
-In-Reply-To: <db01f956-bc53-b8a5-9406-15b889d717f0@huawei.com>
-References: <20190923182606.32100-1-maz@kernel.org>
- <20190923182606.32100-21-maz@kernel.org>
- <db01f956-bc53-b8a5-9406-15b889d717f0@huawei.com>
-Message-ID: <1c96d38da22a97b1fda94a940b60e345@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, tglx@linutronix.de
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-28 03:02, Zenghui Yu wrote:
-> On 2019/9/24 2:25, Marc Zyngier wrote:
->> Just like for INVALL, GICv4.1 has grown a VPE-aware INVLPI register.
->> Let's plumb it in and make use of the DirectLPI code in that case.
->> Signed-off-by: Marc Zyngier <maz@kernel.org>
->> ---
->>   drivers/irqchip/irq-gic-v3-its.c   | 19 +++++++++++++++++--
->>   include/linux/irqchip/arm-gic-v3.h |  1 +
->>   2 files changed, 18 insertions(+), 2 deletions(-)
->> diff --git a/drivers/irqchip/irq-gic-v3-its.c 
->> b/drivers/irqchip/irq-gic-v3-its.c
->> index b791c9beddf2..34595a7fcccb 100644
->> --- a/drivers/irqchip/irq-gic-v3-its.c
->> +++ b/drivers/irqchip/irq-gic-v3-its.c
->> @@ -1200,13 +1200,27 @@ static void wait_for_syncr(void __iomem 
->> *rdbase)
->>   static void direct_lpi_inv(struct irq_data *d)
->>   {
->> +	struct its_vlpi_map *map = get_vlpi_map(d);
->>   	struct its_collection *col;
->>   	void __iomem *rdbase;
->> +	u64 val;
->> +
->> +	if (map) {
->> +		struct its_device *its_dev = irq_data_get_irq_chip_data(d);
->> +
->> +		WARN_ON(!is_v4_1(its_dev->its));
->> +
->> +		val  = GICR_INVLPIR_V;
->> +		val |= FIELD_PREP(GICR_INVLPIR_VPEID, map->vpe->vpe_id);
->> +		val |= FIELD_PREP(GICR_INVLPIR_INTID, map->vintid);
->> +	} else {
->> +		val = d->hwirq;
->> +	}
+On 9/30/2019 11:33 AM, Christoph Hellwig wrote:
+> On Mon, Sep 30, 2019 at 11:27:32AM +0300, Pavel Begunkov (Silence) wrote:
+>> From: Pavel Begunkov <asml.silence@gmail.com>
 >>
->>   	/* Target the redistributor this LPI is currently routed to */
->>   	col = irq_to_col(d);
->
-> I think irq_to_col() may not work when GICv4.1 VLPIs are involved in.
->
-> irq_to_col() gives us col_map[event] as the target redistributor,
-> but the correct one for VLPIs should be 
-> vlpi_maps[event]->vpe->col_idx.
-> These two are not always pointing to the same physical RD.
-> For example, if guest issues a MOVI against a VLPI, we will update 
-> the
-> corresponding vlpi_map->vpe and issue a VMOVI on ITS... but leave the
-> col_map[event] unchanged.
->
-> col_map[event] usually describes the physical LPI's CPU affinity, but
-> when this physical LPI serves as something which the VLPI is backed 
-> by,
-> we take really little care of it.  Did I miss something here?
+>> 1. Reuse the same walker callback for both blk_mq_in_flight() and
+>> blk_mq_in_flight_rw().
+>>
+>> 2. Store inflight counters immediately in struct mq_inflight.
+>> It's type-safer and removes extra indirection.
+> 
+> You really want to split this into two patches.  Part 2 looks very
 
-You didn't miss anything, and this is indeed another pretty bad bug.
-The collection mapping is completely unused when the LPI becomes a
-VLPI, and it is only the vpe->col_id that matters (which gets updated
-on VMOVP).
+Good point, diff is peculiarly aligned indeed. I will resend it.
 
-This shows that irq_to_col() is the wrong abstraction, and what we're
-interested is something that is more like 'irq to cpuid', allowing us
-to directly point to the right distributor.
+> sensible to me, but I don't really see how 1 is qn equivalent
+> transformation right now.  Splitting it out and writing a non-trivial
+> changelog might help understanding it if you think it really is
+> equivalent as-is.
+> 
 
-Please see the patch I just pushed[1], which does that.
+blk_mq_check_inflight() increments only inflight[0].
+blk_mq_check_inflight_rw() increments inflight[0] or inflight[1]
+depending on a flag, so summing them gives what the first function returns.
 
-Thanks,
-
-         M.
-
-[1] 
-https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/commit/?h=irq/gic-v4.1-devel&id=aff363113eb26b6840136b69c2c7db2ea691db20
 -- 
-Jazz is not dead. It just smells funny...
+Yours sincerely,
+Pavel Begunkov
