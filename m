@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C2AC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2F0C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32DB821906
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8036A2086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:03:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="GvXqzILM"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="c6n7wHha"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731075AbfI3NDD (ORCPT
+        id S1731111AbfI3NDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 09:03:03 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35076 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731064AbfI3NDB (ORCPT
+        Mon, 30 Sep 2019 09:03:05 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46042 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731076AbfI3NDD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:03:01 -0400
-Received: by mail-wm1-f66.google.com with SMTP id y21so12659042wmi.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 06:03:00 -0700 (PDT)
+        Mon, 30 Sep 2019 09:03:03 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r5so11192158wrm.12
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 06:03:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DR4CDnm3HTSMvdcyXG+EIsMWYn8dMZO45Sjl5iJv4rQ=;
-        b=GvXqzILM9azRuelBX+Vp16FuNpt0fcz09jJ5TkxweZg1F7ov/f1651OAHsomRxzEFD
-         b3Q9518E8FvJPXkf4F9KH0f2hMgvsDiMUh8Eqv5W6o40wP675jbqq0qdF9uNITdSKZdE
-         K3CLTBXGeb0mZIsXwkMw1+TrFZzV7nkcc2PA1rfwUqDX1ig/rD/CtYYigTvNbmD2r0JU
-         UlvTePVLEkqHzvwihDbUKypHGAzb0U+kysa1mqjvQs9TO8lUH5rquzdKnkBX4CRTqguz
-         W3RKO0CEK+Qo/AMA+kYsOC4uAL7tLlZ7hof3T7D0YggAjH9j72L+zkXfKomupQ0xPVa8
-         2ciQ==
+        bh=YaeByO83iTaTnQiZnsElO9I64wWUuESKRkcaE0MZFTM=;
+        b=c6n7wHhaZnEhyBQrEdkjmzzkiW6SU1CVO6Ud+3FdyzVI9//HukNrUOdIzXBZkvNXTd
+         pnobXczROyD4WcmyXn5bb7vt1iceOj+j0pTTk6n7WaCfv6wuaRgztqBlQOSOi7IxhMda
+         KdC1NDv8S4JegV1fNIImPpOlKYp2iNX9sYjRQZhCe0C9p/+67ltHNt8tK3YJL87h3kNJ
+         /89Pqgj46GvHXpJn6lWfgdyJku816eoibV0cxlfn/tNH7zMkWU4Z6AmZtxWSgU8RFleD
+         lUuKqk9SC9tpSA1RH0/aX+1/ssTjaY3zrGYcM+5WhoYDfKXbxewPtLN+YxhqrPtrr8eO
+         h+NA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DR4CDnm3HTSMvdcyXG+EIsMWYn8dMZO45Sjl5iJv4rQ=;
-        b=c6bEjHk4ZV1C1wHqGvRf94CbwaaZw+eDvDj+SMg5cxLfySiTL8f1l4h87v+z4eYpec
-         03qsEVZoXU4Ce8157ZfOQkaSzWNXW0Dfy89lxwajB4v19q31COUZsMhbFl3/X2V+KpRT
-         x/K+hSE/9HL0GEpooC6wF+Jv3WBNoF6KUj4KfLPKQfEiem6KbdUbtagRcei1LCqAEJ+T
-         98nTfHgqSw3lzfmsy/s+FmRCb8Tb2d6MrXd888zdo1rPygumwfZs66MisfawiMXUC95a
-         0GmC4sqXkkAfV/PW6l9/ptPIhLs7X7OfPdIznnBr1ia0PC5KVTSMeVm3GnqGim2mZ9++
-         QNfw==
-X-Gm-Message-State: APjAAAWKJFBMGsexHwPdBw4ueD0eL6fyZsdYSLgOyY65pJHb7YvE3gX2
-        CuGsl+DDky0D4ic6Q2TuhEDsYQ==
-X-Google-Smtp-Source: APXvYqw0BOhWPRLaP5niJ1EkkWvknXRhMFnLxGCU011zli4EszA5IdJdxFEl/d2oAkC227tFIQSadQ==
-X-Received: by 2002:a05:600c:20c4:: with SMTP id y4mr15454070wmm.87.1569848579871;
-        Mon, 30 Sep 2019 06:02:59 -0700 (PDT)
+        bh=YaeByO83iTaTnQiZnsElO9I64wWUuESKRkcaE0MZFTM=;
+        b=PK1F2J1RAfYmruk1yrDPeJh/oDAu2FrNGwDbsm25HNWApuP54i+o1CI0hL+q83LRs7
+         LI/j/6vK/LngplTCb5fFul3jcPVG1dmo6Mg/mJTkQDv8l8fr2OZzmGnP5/O7pOdo80Hf
+         Madf82EEyH8fO8/F9ktkSIGAB465zf4Ya52JlaP5LBIJET5VUFfR6/HnFgEI7cXcDmS4
+         I7xP/L4Tit8lEk62N1o5efkR7xJT7WrSYm9S6j4i6IiXLuIhPgcg2PYBcy+lNaicNKBm
+         pO0FkXF2GuOaMNtf16BwbLcNwDIgk1UWu4cN10Mpmb48s/n9XXM+ECIZEOLCKh0gENC2
+         UPZg==
+X-Gm-Message-State: APjAAAW8UGhd9JiahqxdUhCYg8WIVDYmN59K5YEvORhKW1Y0rSeAI/nS
+        9HKibvj9ZRkH5UUnhCSYa93juw==
+X-Google-Smtp-Source: APXvYqzK3aL6w5Mfi/jzOhvUA0i7pUBArI/dJPqVdOMu7CNg51nfovbDb0ynfDpqTf2NNQELSMaQrA==
+X-Received: by 2002:a5d:4f86:: with SMTP id d6mr13254878wru.384.1569848581033;
+        Mon, 30 Sep 2019 06:03:01 -0700 (PDT)
 Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
-        by smtp.gmail.com with ESMTPSA id e6sm10654756wrp.91.2019.09.30.06.02.58
+        by smtp.gmail.com with ESMTPSA id e6sm10654756wrp.91.2019.09.30.06.02.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 06:02:59 -0700 (PDT)
+        Mon, 30 Sep 2019 06:03:00 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -70,9 +70,9 @@ Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
         linux-pm@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 2/6] dt-bindings: input: max77650: convert the binding document to yaml
-Date:   Mon, 30 Sep 2019 15:02:42 +0200
-Message-Id: <20190930130246.4860-3-brgl@bgdev.pl>
+Subject: [PATCH 3/6] dt-bindings: regulator: max77650: convert the binding document to yaml
+Date:   Mon, 30 Sep 2019 15:02:43 +0200
+Message-Id: <20190930130246.4860-4-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190930130246.4860-1-brgl@bgdev.pl>
 References: <20190930130246.4860-1-brgl@bgdev.pl>
@@ -85,95 +85,118 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Convert the binding document for max77650 onkey module to yaml.
+Convert the binding document for max77650 regulator module to yaml.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- .../bindings/input/max77650-onkey.txt         | 27 +-----------
- .../bindings/input/max77650-onkey.yaml        | 43 +++++++++++++++++++
- 2 files changed, 44 insertions(+), 26 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/input/max77650-onkey.yaml
+ .../bindings/regulator/max77650-regulator.txt | 42 +--------------
+ .../regulator/max77650-regulator.yaml         | 51 +++++++++++++++++++
+ 2 files changed, 52 insertions(+), 41 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/max77650-regulator.yaml
 
-diff --git a/Documentation/devicetree/bindings/input/max77650-onkey.txt b/Documentation/devicetree/bindings/input/max77650-onkey.txt
-index 477dc74f452a..a691fc49f1ea 100644
---- a/Documentation/devicetree/bindings/input/max77650-onkey.txt
-+++ b/Documentation/devicetree/bindings/input/max77650-onkey.txt
-@@ -1,26 +1 @@
--Onkey driver for MAX77650 PMIC from Maxim Integrated.
+diff --git a/Documentation/devicetree/bindings/regulator/max77650-regulator.txt b/Documentation/devicetree/bindings/regulator/max77650-regulator.txt
+index f1cbe813c30f..39686610589c 100644
+--- a/Documentation/devicetree/bindings/regulator/max77650-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/max77650-regulator.txt
+@@ -1,41 +1 @@
+-Regulator driver for MAX77650 PMIC from Maxim Integrated.
 -
 -This module is part of the MAX77650 MFD device. For more details
 -see Documentation/devicetree/bindings/mfd/max77650.txt.
 -
--The onkey controller is represented as a sub-node of the PMIC node on
--the device tree.
+-The regulator controller is represented as a sub-node of the PMIC node
+-on the device tree.
+-
+-The device has a single LDO regulator and a SIMO buck-boost regulator with
+-three independent power rails.
 -
 -Required properties:
 ---------------------
--- compatible:		Must be "maxim,max77650-onkey".
+-- compatible:		Must be "maxim,max77650-regulator"
 -
--Optional properties:
--- linux,code:		The key-code to be reported when the key is pressed.
--			Defaults to KEY_POWER.
--- maxim,onkey-slide:	The system's button is a slide switch, not the default
--			push button.
+-Each rail must be instantiated under the regulators subnode of the top PMIC
+-node. Up to four regulators can be defined. For standard regulator properties
+-refer to Documentation/devicetree/bindings/regulator/regulator.txt.
+-
+-Available regulator compatible strings are: "ldo", "sbb0", "sbb1", "sbb2".
 -
 -Example:
 ---------
 -
--	onkey {
--		compatible = "maxim,max77650-onkey";
--		linux,code = <KEY_END>;
--		maxim,onkey-slide;
+-	regulators {
+-		compatible = "maxim,max77650-regulator";
+-
+-		max77650_ldo: regulator@0 {
+-			regulator-compatible = "ldo";
+-			regulator-name = "max77650-ldo";
+-			regulator-min-microvolt = <1350000>;
+-			regulator-max-microvolt = <2937500>;
+-		};
+-
+-		max77650_sbb0: regulator@1 {
+-			regulator-compatible = "sbb0";
+-			regulator-name = "max77650-sbb0";
+-			regulator-min-microvolt = <800000>;
+-			regulator-max-microvolt = <1587500>;
+-		};
 -	};
-+This file has been moved to max77650-onkey.yaml.
-diff --git a/Documentation/devicetree/bindings/input/max77650-onkey.yaml b/Documentation/devicetree/bindings/input/max77650-onkey.yaml
++This file has been moved to max77650-regulator.yaml.
+diff --git a/Documentation/devicetree/bindings/regulator/max77650-regulator.yaml b/Documentation/devicetree/bindings/regulator/max77650-regulator.yaml
 new file mode 100644
-index 000000000000..eb2f8609bae2
+index 000000000000..c0d986948ac8
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/input/max77650-onkey.yaml
-@@ -0,0 +1,43 @@
++++ b/Documentation/devicetree/bindings/regulator/max77650-regulator.yaml
+@@ -0,0 +1,51 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/input/max77650-onkey.yaml#
++$id: http://devicetree.org/schemas/regulator/max77650-regulator.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Onkey driver for MAX77650 PMIC from Maxim Integrated.
++title: Regulator driver for MAX77650 PMIC from Maxim Integrated.
 +
 +maintainers:
 +  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
 +
 +description: |
 +  This module is part of the MAX77650 MFD device. For more details
-+  see Documentation/devicetree/bindings/mfd/max77650.yaml.
++  see Documentation/devicetree/bindings/mfd/max77650.txt.
 +
-+  The onkey controller is represented as a sub-node of the PMIC node on
-+  the device tree.
++  The regulator controller is represented as a sub-node of the PMIC node
++  on the device tree.
++
++  The device has a single LDO regulator and a SIMO buck-boost regulator with
++  three independent power rails.
 +
 +properties:
 +  compatible:
-+    const: maxim,max77650-onkey
++    const: maxim,max77650-regulator
 +
-+  linux,code:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      The key-code to be reported when the key is pressed. Defaults
-+      to KEY_POWER.
-+
-+  maxim,onkey-slide:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description:
-+      The system's button is a slide switch, not the default push button.
++patternProperties:
++  "^regulator@[0-3]$":
++    $ref: "regulator.yaml#"
 +
 +required:
 +  - compatible
 +
 +examples:
 +  - |
-+    onkey {
-+        compatible = "maxim,max77650-onkey";
-+        linux,code = <KEY_END>;
-+        maxim,onkey-slide;
++    regulators {
++        compatible = "maxim,max77650-regulator";
++
++        max77650_ldo: regulator@0 {
++            regulator-compatible = "ldo";
++            regulator-name = "max77650-ldo";
++            regulator-min-microvolt = <1350000>;
++            regulator-max-microvolt = <2937500>;
++        };
++
++        max77650_sbb0: regulator@1 {
++            regulator-compatible = "sbb0";
++            regulator-name = "max77650-sbb0";
++            regulator-min-microvolt = <800000>;
++            regulator-max-microvolt = <1587500>;
++        };
 +    };
 -- 
 2.23.0
