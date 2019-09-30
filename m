@@ -2,122 +2,104 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69452C4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 02:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25421C352A9
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 02:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4127E2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 02:32:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFAEB21882
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 02:34:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b3iz1f+P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729385AbfI3Cc0 (ORCPT
+        id S1729425AbfI3Ce2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 22:32:26 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3175 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726360AbfI3Cc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 22:32:26 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 68D437E31D355E6E3DF1;
-        Mon, 30 Sep 2019 10:32:23 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Mon, 30 Sep 2019
- 10:32:19 +0800
-Subject: Re: [RFC PATCH] scripts: Fix coccicheck failed
-To:     Julia Lawall <julia.lawall@lip6.fr>
-References: <20190928094245.45696-1-yuehaibing@huawei.com>
- <alpine.DEB.2.21.1909280542490.2168@hadrien>
- <2c109d6b-45ad-b3ca-1951-bde4dac91d2a@huawei.com>
- <alpine.DEB.2.21.1909291810300.3346@hadrien>
-CC:     Gilles Muller <Gilles.Muller@lip6.fr>, <nicolas.palix@imag.fr>,
-        <michal.lkml@markovi.net>, <maennich@google.com>,
-        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
-        <cocci@systeme.lip6.fr>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <ac79cb42-1713-8801-37e4-edde540f101c@huawei.com>
-Date:   Mon, 30 Sep 2019 10:32:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
-MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1909291810300.3346@hadrien>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+        Sun, 29 Sep 2019 22:34:28 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34336 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729386AbfI3Ce1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 22:34:27 -0400
+Received: by mail-io1-f68.google.com with SMTP id q1so34215367ion.1;
+        Sun, 29 Sep 2019 19:34:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=YmFhd6XAHDu+fEWlTBA7FA5DXXWrGeJrfMLGeEjdf4w=;
+        b=b3iz1f+PSVaat04xn9ki3//MH3GfrI+IF/0VfvPaiWfXDmkzyCy8JWGa8b6NY05CRV
+         q7iA90v2+UNhzNglTO9tcYp9VpQ9CE3tW83irrRMj1+D6A9S6WzOgnz1cJ6cPbNg4eMp
+         VN5fvdtO8Zj9cGRDvbsj3kbLmqrt0SqP0c6QSeJUeGhrWvFa3YOAI261RfRjGDGUelQD
+         fTlR7Y2w+v2Ql7cNAzt2ht65p196+kFTirKPUF2fWISKm9klm/n3ATjLdEmGrlqpahnd
+         YjlwtZowLXJaLHJhJ4EOH4GPWazgPaJshSZlmQRAJWrqLjJLEdcdcVc4K0IPEd47SSxr
+         nVLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=YmFhd6XAHDu+fEWlTBA7FA5DXXWrGeJrfMLGeEjdf4w=;
+        b=K1xRXkNo8vSLF9oqAv/qeMZ3teWPPYJoDJGp+/ASUAOrcGNnIU309VM9Dko+Rth7WB
+         UFRs+3VXZxgDmJXQhHBS+ITXj3wJ9Gfq4VJnvq5CLPdBkpZHpb05Yw7gXRUwpkYaV7Fm
+         fF9xe/Mnmvf4rscq9y5kN72cdzEeTsfollsL4vs3tUFDAw4yCTW5TJ3OMcsTOIV9cNaQ
+         QAlLYbx6PWViU1DPZRmgViVk0LNwnZy7mW/YBPwSLet0aCJpPMSqeIBcdufZjFMZ2H6C
+         C4CSt8imwK/RsYso2Wf4Ni3DVLQJdg8vsyaSzhZfJNwyanpt0zovqITXomS8daYX25le
+         mydQ==
+X-Gm-Message-State: APjAAAXlIBmDn6ydIoaxx4IDIhEv1Wclzr8vww3ExGloQJISvUqwF7OY
+        1qTfgGScWo823X3h25/DYUFY79Z/1Oo=
+X-Google-Smtp-Source: APXvYqyedH4c/EmSZe42RT8dzB9J83Bl+7REqbS6Iy62dZc4Hs+mkXrtOkD3nuXZF5/J03sv00mUbw==
+X-Received: by 2002:a92:8c9a:: with SMTP id s26mr18297659ill.236.1569810866989;
+        Sun, 29 Sep 2019 19:34:26 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id m11sm4460199ioj.88.2019.09.29.19.34.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Sep 2019 19:34:26 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Matias Bjorling <mb@lightnvm.io>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] lightnvm: prevent memory leak in nvm_bb_chunk_sense
+Date:   Sun, 29 Sep 2019 21:34:14 -0500
+Message-Id: <20190930023415.24171-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/30 0:32, Julia Lawall wrote:
-> 
-> 
-> On Sun, 29 Sep 2019, Yuehaibing wrote:
-> 
->> On 2019/9/28 20:43, Julia Lawall wrote:
->>>
->>>
->>> On Sat, 28 Sep 2019, YueHaibing wrote:
->>>
->>>> Run make coccicheck, I got this:
->>>>
->>>> spatch -D patch --no-show-diff --very-quiet --cocci-file
->>>>  ./scripts/coccinelle/misc/add_namespace.cocci --dir .
->>>>  -I ./arch/x86/include -I ./arch/x86/include/generated
->>>>  -I ./include -I ./arch/x86/include/uapi
->>>>  -I ./arch/x86/include/generated/uapi -I ./include/uapi
->>>>  -I ./include/generated/uapi --include ./include/linux/kconfig.h
->>>>  --jobs 192 --chunksize 1
->>>>
->>>> virtual rule patch not supported
->>>> coccicheck failed
->>>>
->>>> It seems add_namespace.cocci cannot be called in coccicheck.
->>>
->>> Could you explain the issue better?  Does the current state cause make
->>> coccicheck to fail?  Or is it just silently not being called?
->>
->> Yes, it cause make coccicheck failed like this:
->>
->> ...
->> ./drivers/xen/xenbus/xenbus_comms.c:290:2-8: preceding lock on line 243
->> ./fs/fuse/dev.c:1227:2-8: preceding lock on line 1206
->> ./fs/fuse/dev.c:1232:3-9: preceding lock on line 1206
->> coccicheck failed
->> make[1]: *** [coccicheck] Error 255
->> make: *** [sub-make] Error 2
-> 
-> Could you set the verbose options to see what the problem is?  Maybe the
-> problem would be solved by putting virtual report at the top of the rule.
-> But it might still fail because nothing can happen without a value for the
-> virtual metavariable ns.
+In nvm_bb_chunk_sense alloc_page allocates memory which is released at
+the end of the function. But if nvm_submit_io_sync_raw fails the error
+check skips the release and leaks the allocated page. To fix this issue
+I moved the __free_page call before error check.
 
-diff --git a/scripts/coccinelle/misc/add_namespace.cocci b/scripts/coccinelle/misc/add_namespace.cocci
-index c832bb6445a8..99e93a6c2e24 100644
---- a/scripts/coccinelle/misc/add_namespace.cocci
-+++ b/scripts/coccinelle/misc/add_namespace.cocci
-@@ -6,6 +6,8 @@
- /// add a missing namespace tag to a module source file.
- ///
+Fixes: aff3fb18f957 ("lightnvm: move bad block and chunk state logic to core")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/lightnvm/core.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-+virtual report
+diff --git a/drivers/lightnvm/core.c b/drivers/lightnvm/core.c
+index 7543e395a2c6..5fdae518f6c9 100644
+--- a/drivers/lightnvm/core.c
++++ b/drivers/lightnvm/core.c
+@@ -849,11 +849,12 @@ static int nvm_bb_chunk_sense(struct nvm_dev *dev, struct ppa_addr ppa)
+ 	rqd.ppa_addr = generic_to_dev_addr(dev, ppa);
+ 
+ 	ret = nvm_submit_io_sync_raw(dev, &rqd);
+-	if (ret)
+-		return ret;
+ 
+ 	__free_page(page);
+ 
++	if (ret)
++		return ret;
 +
- @has_ns_import@
- declarer name MODULE_IMPORT_NS;
- identifier virtual.ns;
-
-
-
-Adding virtual report make the coccicheck go ahead smoothly.
-
-> 
-> Should the coccinelle directory be only for things that work with make
-> coccicheck, or for all Coccinelle scripts?
-> 
-> julia
-> 
-> .
-> 
+ 	return rqd.error;
+ }
+ 
+-- 
+2.17.1
 
