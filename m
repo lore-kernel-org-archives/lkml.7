@@ -2,102 +2,120 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 223A8C35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FEEC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC3492086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 124F121927
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:05:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569848722;
+	bh=vlABKpVJxCoTy7HHvfFk0K5uGHtb528XjiDo33yIN0o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=ef0qpJbzFpaEGXzILdGYdXpgG/4DeGk4StnF+Nfzfbyw86tmcd1XoTYkXxuHmpO7u
+	 YQQo5ukr81w1B7V78ikuDx0pmp5ZB/BO/fQJEDoMPq96Wv0ZpJk4A1i5xD9VtC2LYG
+	 FM+q23YESvtVUsRwCZMUu+9t/vtFZ3gSI9pKHjsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731372AbfI3NFQ (ORCPT
+        id S1731241AbfI3NEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 09:05:16 -0400
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:46753 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731349AbfI3NFO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:05:14 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id EvMSilZaKz6EAEvMViNgY3; Mon, 30 Sep 2019 15:05:12 +0200
-Subject: Re: [PATCH v8 7/8] media: v4l2-ctrl: Add new helper
- v4l2_ctrl_ptr_from_void
-To:     Ricardo Ribalda Delgado <ribalda@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Jacopo Mondi <jacopo@jmondi.org>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>
-References: <20190930101841.19630-1-ribalda@kernel.org>
- <20190930101841.19630-8-ribalda@kernel.org>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <e1c4618d-4adf-98f6-77ff-b7fc96617a14@xs4all.nl>
-Date:   Mon, 30 Sep 2019 15:05:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 30 Sep 2019 09:04:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46346 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731208AbfI3NEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 09:04:41 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4930F218AC;
+        Mon, 30 Sep 2019 13:04:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569848680;
+        bh=vlABKpVJxCoTy7HHvfFk0K5uGHtb528XjiDo33yIN0o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=r27qHyc+txDJIDpG2+55icHIxn1J/2AzXA5ncveAboHqBRVIDdVHaXsB1rokmXxEl
+         RrBe2C7Uv++1mlL8KdeJQY2f5UG51yxZuByStSwfO/VB0ovLtC/As+VDurRfahdSuw
+         VQxiV7AAWTABHIXD5KO/54gs3wQ9ZLLk8D3On860=
+Date:   Mon, 30 Sep 2019 08:04:38 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Pascal van Leeuwen <pvanleeuwen@verimatrix.com>,
+        Pascal van Leeuwen <pascalvanl@gmail.com>,
+        Kelsey Skunberg <skunberg.kelsey@gmail.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 3/3] crypto: inside-secure - Remove #ifdef checks
+Message-ID: <20190930130438.GA147884@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190930101841.19630-8-ribalda@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfK0gxg17lJkcq7mwa9uMANVkLhq46/18+Ai/S06mG6taCJODn5/Hv+eEaba8pDOGJTp3V+bEHKs+HavX+Mmai5yem3gyaDDRLknhQQGZKAepvPrLg5t4
- VbeIuS5GOr5uBpxqLQyFMz0xdT19dYSLArO3oz7mW/vcMQma4KyzqNlc1yC/MXxi2tW/M4H6OKDVAyl83JLfCxoFHhB0G2ekCVkOLrJ+FNbV6zGOyyHUhwwX
- XwaTudOX2u1K+uFI1qfqDPuFDPVfmyb7iY2nsWCLV/khWZdgp8thAX7fZ5drW5IAbzeYwClfmeVErZaKDI/Z9LEfjeiXD8emQcMpFlHgMvTJpbt8rGdt9Dkz
- hI/RxaHt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190930121520.1388317-3-arnd@arndb.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/30/19 12:18 PM, Ricardo Ribalda Delgado wrote:
-> This helper function simplifies the code by not needing a union
-> v4l2_ctrl_ptr and an assignment every time we need to use
-> a ctrl_ptr.
+On Mon, Sep 30, 2019 at 02:14:35PM +0200, Arnd Bergmann wrote:
+> When both PCI and OF are disabled, no drivers are registered, and
+> we get some unused-function warnings:
 > 
-> Suggested-by: Hans Verkuil <hverkuil@xs4all.nl>
-> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+> drivers/crypto/inside-secure/safexcel.c:1221:13: error: unused function 'safexcel_unregister_algorithms' [-Werror,-Wunused-function]
+> static void safexcel_unregister_algorithms(struct safexcel_crypto_priv *priv)
+> drivers/crypto/inside-secure/safexcel.c:1307:12: error: unused function 'safexcel_probe_generic' [-Werror,-Wunused-function]
+> static int safexcel_probe_generic(void *pdev,
+> drivers/crypto/inside-secure/safexcel.c:1531:13: error: unused function 'safexcel_hw_reset_rings' [-Werror,-Wunused-function]
+> static void safexcel_hw_reset_rings(struct safexcel_crypto_priv *priv)
+> 
+> It's better to make the compiler see what is going on and remove
+> such ifdef checks completely. In case of PCI, this is trivial since
+> pci_register_driver() is defined to an empty function that makes the
+> compiler subsequently drop all unused code silently.
+> 
+> The global pcireg_rc/ofreg_rc variables are not actually needed here
+> since the driver registration does not fail in ways that would make
+> it helpful.
+> 
+> For CONFIG_OF, an IS_ENABLED() check is still required, since platform
+> drivers can exist both with and without it.
+> 
+> A little change to linux/pci.h is needed to ensure that
+> pcim_enable_device() is visible to the driver. Moving the declaration
+> outside of ifdef would be sufficient here, but for consistency with the
+> rest of the file, adding an inline helper is probably best.
+> 
+> Fixes: 212ef6f29e5b ("crypto: inside-secure - Fix unused variable warning when CONFIG_PCI=n")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->  include/media/v4l2-ctrls.h | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+>  drivers/crypto/inside-secure/safexcel.c | 49 ++++++-------------------
+>  include/linux/pci.h                     |  1 +
+>  2 files changed, 13 insertions(+), 37 deletions(-)
+> ... 
+
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index f9088c89a534..1a6cf19eac2d 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1686,6 +1686,7 @@ static inline struct pci_dev *pci_get_class(unsigned int class,
+>  static inline void pci_set_master(struct pci_dev *dev) { }
+>  static inline int pci_enable_device(struct pci_dev *dev) { return -EIO; }
+>  static inline void pci_disable_device(struct pci_dev *dev) { }
+> +static inline int pcim_enable_device(struct pci_dev *pdev) { return -EIO; }
+
+I would have used "dev" here to match surrounding stubs, but either
+way:
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# pci.h
+
+>  static inline int pci_assign_resource(struct pci_dev *dev, int i)
+>  { return -EBUSY; }
+>  static inline int __pci_register_driver(struct pci_driver *drv,
+> -- 
+> 2.20.0
 > 
-> diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
-> index c42f164e2c9e..d69cfdffd41d 100644
-> --- a/include/media/v4l2-ctrls.h
-> +++ b/include/media/v4l2-ctrls.h
-> @@ -73,6 +73,17 @@ union v4l2_ctrl_ptr {
->  	void *p;
->  };
->  
-> +/**
-> + * v4l2_ctrl_ptr() - Helper function to return a v4l2_ctrl_ptr from a
-> + * void pointer
-> + * @ptr:	The void pointer
-> + */
-> +static inline union v4l2_ctrl_ptr v4l2_ctrl_ptr_from_void(void *ptr)
-> +{
-> +	BUILD_BUG_ON(sizeof(union v4l2_ctrl_ptr) != sizeof(void *));
-> +	return (union v4l2_ctrl_ptr) ptr;
-
-Huh? Why not just do:
-
-	union v4l2_ctrl_ptr p = { .p = ptr; };
-
-	return p;
-
-Or even shorter (not tested): return (union v4l2_ctrl_ptr) { .p = ptr; };
-
-No need for BUILD_BUG_ON that way, which is rather ugly.
-
-Regards,
-
-	Hans
-
-> +}
-> +
->  /**
->   * struct v4l2_ctrl_ops - The control operations that the driver has to provide.
->   *
-> 
-
