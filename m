@@ -2,179 +2,134 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=0.1 required=3.0 tests=DATE_IN_PAST_03_06,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A2B7C32792
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D0FC388F3
 	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F359224FE
+	by mail.kernel.org (Postfix) with ESMTP id 6CAC422508
 	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:36:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="izfFFobe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729373AbfI3Ugq (ORCPT
+        id S1730991AbfI3Ugr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 16:36:46 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29744 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727885AbfI3Ugp (ORCPT
+        Mon, 30 Sep 2019 16:36:47 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43185 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729283AbfI3Ugr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 16:36:45 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8UId4Tb128798;
-        Mon, 30 Sep 2019 14:42:54 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vbnbpvx6j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 30 Sep 2019 14:42:54 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8UIdGG7129741;
-        Mon, 30 Sep 2019 14:42:53 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vbnbpvx5w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 30 Sep 2019 14:42:53 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8UIextj010451;
-        Mon, 30 Sep 2019 18:42:52 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma02wdc.us.ibm.com with ESMTP id 2v9y57w08c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 30 Sep 2019 18:42:52 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8UIgpxs59310430
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 30 Sep 2019 18:42:51 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 54C7EBE056;
-        Mon, 30 Sep 2019 18:42:51 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D281EBE04F;
-        Mon, 30 Sep 2019 18:42:46 +0000 (GMT)
-Received: from leobras.br.ibm.com (unknown [9.18.235.58])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 30 Sep 2019 18:42:46 +0000 (GMT)
-Message-ID: <673bcb94b7752e086cc4133fb6cceb24394c02c0.camel@linux.ibm.com>
-Subject: Re: [PATCH v4 01/11] powerpc/mm: Adds counting method to monitor
- lockless pgtable walks
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     John Hubbard <jhubbard@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Paul Mackerras <paulus@samba.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Allison Randal <allison@lohutok.net>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Ganesh Goudar <ganeshgr@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 30 Sep 2019 15:42:42 -0300
-In-Reply-To: <48bf32ca-5d3e-5d69-4cd1-6720364a0d81@nvidia.com>
-References: <20190927234008.11513-1-leonardo@linux.ibm.com>
-         <20190927234008.11513-2-leonardo@linux.ibm.com>
-         <4ff1e8e8-929b-9cfc-9bf8-ee88e34de888@nvidia.com>
-         <2533a13f226a6e1fab387669b6cced2aa8d2e129.camel@linux.ibm.com>
-         <48bf32ca-5d3e-5d69-4cd1-6720364a0d81@nvidia.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-9k3sG6ksgKhuBdahGQJu"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Mon, 30 Sep 2019 16:36:47 -0400
+Received: by mail-io1-f67.google.com with SMTP id v2so41810290iob.10
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 13:36:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=i3dwIE3HGnY2ji6BL2lgrdHCeKt8hwvNYITijQeMpag=;
+        b=izfFFobeeAuaCN1MYV2cqTTC9SJ2B7X/u+g6CPl+hSPnOUnRbP1/BCohkPY00SKjOS
+         ngbgS5eggV73d5N3fvNsmyx4AdZ9BelpEyLZgIOQWjYZ0H/t1h9hwcopTh8luMLUlkAD
+         UvFLMMtPQWZq9ybp6G3XRQa3ba3kFxGlWt+PhVFEisFiy/ivTvQCpq4WDb2zRJWntAjY
+         RnpfLShbUA0uQ0c6YpBTgnszBbNpKq4tSWd29vid/pr0QWpkPNtc9dlZZOHIWHtbr1I4
+         64grZ5gAZJhw0mPO812L2fmFF+Kgqu62rcwu8tU01ioPJdvJ0r7FYafvOLbDi1a734kX
+         h+0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=i3dwIE3HGnY2ji6BL2lgrdHCeKt8hwvNYITijQeMpag=;
+        b=VrVbWC04P1csTQZEFsYRZN3MJNreeu1qHR8ItfcY10wsk6PoxHWnyk9PfQ/NitpgfJ
+         lDd/o7QNYnlcIEbk3lHRs3mBOJZz8j2cfER4cvqxsUIjwqm6CTrUaJH++3n3s+taPaAI
+         E3FdbayGHvDDzKqgK0iGdRFjZdeA+YLPgnlZSuV9iEKZ8PKAPSFQUJiizeXDxMvpicw9
+         vS3A07lUIWnv4n7suiAUTFDC10ODimcyG8bLwYaIfc2XFK6UkIixE5QqJn8qnjtKQOMR
+         iO0majDPzRdk4IA3qym1+TMf8qdGUyCVMTFIV/6a4OfrEFz2u1NxEDl3oc4TDde7aVyK
+         BBnQ==
+X-Gm-Message-State: APjAAAVAsSdR2oTZt3KNY94qzBzijNb/yjWVeJJ6NAy0/WPmnqH56J0E
+        qB9CPsLOM8hnR1DBebeQv7mV8IRrWSS9Mg26IsNLgIBi90zw3w==
+X-Google-Smtp-Source: APXvYqyXj8WDjHDG8Ly151dv7OzUri8sYlz4HJQ8uFbvR+QF/bAefpHZooDpQz+OMMR2j4tK+jKhsia3WuUY762LNpQ=
+X-Received: by 2002:a92:4799:: with SMTP id e25mr22126652ilk.72.1569864912988;
+ Mon, 30 Sep 2019 10:35:12 -0700 (PDT)
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-30_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909300166
+References: <20190911183632.4317-1-krzk@kernel.org> <CAK8P3a2pBV+fh0rHitZ30Zz61QNRLfNSD-nhnzq4ZtxSh66F1Q@mail.gmail.com>
+ <CAJKOXPcOSvc2DfoN+7Tca=t5dSm3RcKqmm06AfR0PAVBeY=GvQ@mail.gmail.com>
+ <20190929175134.fsieffurfdiqhpj2@localhost> <20190930080217.GA23709@pi3>
+In-Reply-To: <20190930080217.GA23709@pi3>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Mon, 30 Sep 2019 10:35:01 -0700
+Message-ID: <CAOesGMi2w9vci+kU=WFHJJBqgz9BM5RJBzqwwrR7k=275w4Tyg@mail.gmail.com>
+Subject: Re: [GIT PULL 1/2] arm64: dts: exynos: Pull for v5.4
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, arm-soc <arm@kernel.org>,
+        SoC Team <soc@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Sep 30, 2019 at 1:02 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> On Sun, Sep 29, 2019 at 10:51:34AM -0700, Olof Johansson wrote:
+> > Hi,
+> >
+> > On Thu, Sep 12, 2019 at 08:32:47AM +0200, Krzysztof Kozlowski wrote:
+> > > On Wed, 11 Sep 2019 at 23:07, Arnd Bergmann <arnd@arndb.de> wrote:
+> > > >
+> > > > On Wed, Sep 11, 2019 at 8:36 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > > > >
+> > > > > Hi,
+> > > > >
+> > > > > Unfortunately the patches were applied right after closing the linux-next.
+> > > >
+> > > > Hi Krzysztof,
+> > > >
+> > > > I took a look at these and am not convinced this is right:
+> > > >
+> > > > > 1. Fix boot of Exynos7 due to wrong address/size of memory node,
+> > > >
+> > > > The current state is clearly broken and a fix is needed, but
+> > > > I'm not sure this is the right fix. Why do you have 32-bit physical
+> > > > addressing on a 64-bit chip? I looked at commit ef72171b3621
+> > > > that introduced it, and it seems it would be better to just
+> > > > revert back to 64-bit addresses.
+> > >
+> > > We discussed with Marek Szyprowski that either we can go back to
+> > > 64-bit addressing or stick to 32. There are not known boards with more
+> > > than 4 GB of RAM so from this point of view the choice was irrelevant.
+> > > At the end of discussion I mentioned to stick with other arm64 boards
+> > > (although not all), so revert to have 64 bit address... but Marek
+> > > chosen differently. Since you ask, let's go back with revert.
+> > >
+> > > >
+> > > > > 2. Move GPU under /soc node,
+> > > >
+> > > > No problem
+> > > >
+> > > > > 3. Minor cleanup of #address-cells.
+> > > >
+> > > > IIRC, an interrupt-controller is required to have a #address-cells
+> > > > property, even if that is normally zero. I don't remember the
+> > > > details, but the gic binding lists it as mandatory, and I think
+> > > > the PCI interrupt-map relies on it. I would just drop this patch.
+> > >
+> > > Indeed, binding requires both address and size cells. I'll drop it.
+> >
+> > Looking through the history of pending material, I didn't see a new pull for
+> > this material. Just checking in to see if there's something we missed?
+>
+> No, it's me who forgot to resend. I was sure that I rebased the branch
+> and created new pull request. However it seems I did not. Let's keep it
+> for next merge window... v5.4-rc should be any minute, I guess?
 
---=-9k3sG6ksgKhuBdahGQJu
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Yeah, we're too late for this merge window but feel free to send it
+for next release.
 
-On Mon, 2019-09-30 at 10:57 -0700, John Hubbard wrote:
-> > As I told before, there are cases where this function is called from
-> > 'real mode' in powerpc, which doesn't disable irqs and may have a
-> > tricky behavior if we do. So, encapsulate the irq disable in this
-> > function can be a bad choice.
->=20
-> You still haven't explained how this works in that case. So far, the
-> synchronization we've discussed has depended upon interrupt disabling
-> as part of the solution, in order to hold off page splitting and page
-> table freeing.
 
-The irqs are already disabled by another mechanism (hw): MSR_EE=3D0.
-So, serialize will work as expected.
-
-> Simply skipping that means that an additional mechanism is required...whi=
-ch
-> btw might involve a new, ppc-specific routine, so maybe this is going to =
-end
-> up pretty close to what I pasted in after all...
-> > Of course, if we really need that, we can add a bool parameter to the
-> > function to choose about disabling/enabling irqs.
-> > > * This is really a core mm function, so don't hide it away in arch la=
-yers.
-> > >     (If you're changing mm/ files, that's a big hint.)
-> >=20
-> > My idea here is to let the arch decide on how this 'register' is going
-> > to work, as archs may have different needs (in powerpc for example, we
-> > can't always disable irqs, since we may be in realmode).
-> >=20
-> > Maybe we can create a generic function instead of a dummy, and let it
-> > be replaced in case the arch needs to do so.
->=20
-> Yes, that might be what we need, if it turns out that ppc can't use this
-> approach (although let's see about that).
->=20
-
-I initially used the dummy approach because I did not see anything like
-serialize in other archs.=20
-
-I mean, even if I put some generic function here, if there is no
-function to use the 'lockless_pgtbl_walk_count', it becomes only a
-overhead.
-
->=20
-> thanks,
-
-Thank you!
-
---=-9k3sG6ksgKhuBdahGQJu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl2STKIACgkQlQYWtz9S
-ttSxFg//Uqx1dqwNpWXo7xp/0GswLDO2WKQanbx0Qg4JKCL09MHD8khl2E9vx4IF
-Icd6eXFRwYdzgdFfGKCCUpE9dEBMkT9zPeDS7tk8jhbZ57yJtXC3X3Pcx7j82bEO
-n1x5ZL2jrTEqoWL4oYegJmVi7zzdHiGJi0O31QDIp9YGFdxUn2lPUCNMaypuLs/u
-vejkf6DcmVUXCigXaxmT5NN85fDDUJxbph79+UXyEm6jy9Zuk+PSi3AgfmkCKftk
-RdyU8pmX875qMJQGvoOAIaX/GBavIFVvujG9x7HBeL26G0pdttO0b/1nt5A3thWi
-nx2y4jlfzoDvLhAfw4wsZ+zHQjzIIZlpdM1SaDseb5mNyR1+fpTPoqhsAtqcex6N
-+LdR2q+osgMfKpklWyAhSgJVIqvvtViBEqmA5Itg4JOzQD0xJwg27DJjTd0mBv1E
-za5iWYaUxBs4qw8W98gwSbw2lKgIRfKieKynDUwdSmq8GwjCSj7H9Iuvr/aQwGnm
-E8o41KiK7frirDuS6jxdBYPvA3mtUqqVCN3pXZKktEc3CrZSd9C/J7AR5b+UZJOi
-Umdeci9BnKsx2kFvCsrdcl6DEkmKELiVjJ+aDtZBbunKnwKtupCRE2UC4X2UE02y
-Z9Mdw6OCS6VH+s+ArHVohA6MNm8+5OzhJdZV4oHv/EO5esStUTM=
-=VegT
------END PGP SIGNATURE-----
-
---=-9k3sG6ksgKhuBdahGQJu--
-
+-Olof
