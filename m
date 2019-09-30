@@ -2,79 +2,88 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CD4C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05621C35280
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01D84215EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:01:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCD502168B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:04:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YqPXUgon"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732180AbfI3WBZ (ORCPT
+        id S1732102AbfI3WEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 18:01:25 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41834 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfI3WBZ (ORCPT
+        Mon, 30 Sep 2019 18:04:16 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:42900 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfI3WEP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 18:01:25 -0400
-Received: by mail-pg1-f195.google.com with SMTP id s1so8114226pgv.8;
-        Mon, 30 Sep 2019 15:01:24 -0700 (PDT)
+        Mon, 30 Sep 2019 18:04:15 -0400
+Received: by mail-qt1-f195.google.com with SMTP id w14so19028275qto.9
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 15:04:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9iin0gJR528W5g0jWTS9HSd8at8s87+NF0eywiHCFfo=;
+        b=YqPXUgon+HjVegYUs9truqIxP4OeBTdmRhRxsSn9QnGAfLr0bvy1k6JM88cp/ixcRi
+         cDAJxitl7M3YcsWmB1HP3zw1iYgVrzMwMNHtNf3C0z6r8y6NBo5yRMRfBhYPIw0Cdn3e
+         tSOp25EZ6ri99ORX0O6oWGGiPl2mVRCXn0grE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8wmWulXHTTXGpvjqxSSMHsxFiZ7egaQe8/QmdwDC9vM=;
-        b=hmp3YlmLhI9gG8y+piu24MkbwSkk8jC40fnzCL93lGNC3fF6tHmO2PetbdKrVTlbdn
-         Z+p7dzf5jRl1PWYNMgHFwIDXsztjVgM2zyYf4bB2F2/8ShdmgM3IgHG3LPRoQq0LyX2G
-         p7U4Lh1NmdzdboptPs9M0NwaNl2r5mbmgbuvYqtil1GadnsBWftZVDO9VSa+8Vd3c+dn
-         LqiwiAZOrofM27yVfLjyXxp3tuF+AynGsMCxKDNZEQwYVim2n8A+y17namvSrc0w/5GO
-         eRGCO1qm/k+FP+zEI2xeeHD9Vs9d/ppUI0EDdVyayldW2hL31pomFkaUnqLCG+vJ5ooB
-         6dwg==
-X-Gm-Message-State: APjAAAVhDq5YSL4Awz8aLcLo87urmNPROQaGVw7JrLCWjWbMAw6maxIS
-        TLaNtkT6Vxz92z3AM+ibD1NVXgW2
-X-Google-Smtp-Source: APXvYqyCuk73P3mt/OHee3iw3iV7IUvfxeq5SUfPmdsq/aiN+8BuW2g+6lHWCfT3VYb2RS3x0mqMDA==
-X-Received: by 2002:a63:5745:: with SMTP id h5mr27349062pgm.268.1569880884260;
-        Mon, 30 Sep 2019 15:01:24 -0700 (PDT)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id a6sm13705306pgb.34.2019.09.30.15.01.15
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9iin0gJR528W5g0jWTS9HSd8at8s87+NF0eywiHCFfo=;
+        b=CbG9G2u3huUU2KiCGylh0Hl9gPlKxK4C6pUnc1Drre8Bfu0GJj9nymXgNUjtmkJSh2
+         MmW7E5LOy3RCTgBUq0ljTpSltDo0ouYiiyXtLo/ZCKN35u+fVrztOzyBRFNq2D/JkFjv
+         F/UAqvStrMuyt8FYhpm9rLkijSM0P7f2ea17Jtc1j0JxDzahrLMwFK5mEb8CRbAXSNw5
+         ro7UYqMlj8xUMD+WSNeNCRBfQRfBqdZdg9pqb36YJFEekOLtMufA1mJK/nu1f42ZJEu5
+         hHijlYFGAkEX9kYblksxYt7fHmuGMEjF/EBnyH9UTvwPrIZ3NL2aBvUgvDMLcp1iz9hu
+         3lKg==
+X-Gm-Message-State: APjAAAUIR1yrT+o+XIGLBIsveM9UC7Y4ShO3IVb/a2V2P2izQGsBIBJL
+        YDVxLfqrWEMaAtoAI5KSbkxAnkToDnI=
+X-Google-Smtp-Source: APXvYqzY17o3CLWjI0k7esRY33bc5G81AuS1EcHH/MzRnKxu7nb79d5QT/EFBtzvjYU0o1T7kYDg6Q==
+X-Received: by 2002:ac8:6c44:: with SMTP id z4mr27424382qtu.229.1569881053407;
+        Mon, 30 Sep 2019 15:04:13 -0700 (PDT)
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com. [209.85.160.182])
+        by smtp.gmail.com with ESMTPSA id 187sm6374505qki.80.2019.09.30.15.04.12
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Sep 2019 15:01:15 -0700 (PDT)
-Subject: Re: [PATCH 1/1] blk-mq: fill header with kernel-doc
-To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     axboe@kernel.dk, kernel@collabora.com, krisman@collabora.com
-References: <20190930194846.23141-1-andrealmeid@collabora.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <845be3ae-f7f4-4e80-ee26-30a03a8af8b4@acm.org>
-Date:   Mon, 30 Sep 2019 15:01:14 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 30 Sep 2019 15:04:12 -0700 (PDT)
+Received: by mail-qt1-f182.google.com with SMTP id w14so19028147qto.9
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 15:04:12 -0700 (PDT)
+X-Received: by 2002:ac8:f1c:: with SMTP id e28mr27107637qtk.161.1569881051791;
+ Mon, 30 Sep 2019 15:04:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190930194846.23141-1-andrealmeid@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190930214522.240680-1-briannorris@chromium.org>
+In-Reply-To: <20190930214522.240680-1-briannorris@chromium.org>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Mon, 30 Sep 2019 15:04:00 -0700
+X-Gmail-Original-Message-ID: <CA+ASDXOkLKqs_Uo4vdHre6JWCsjucgntDEF7T=_eXt2a-A-voA@mail.gmail.com>
+Message-ID: <CA+ASDXOkLKqs_Uo4vdHre6JWCsjucgntDEF7T=_eXt2a-A-voA@mail.gmail.com>
+Subject: Re: [PATCH] firmware: google: increment VPD key_len properly
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Hung-Te Lin <hungte@chromium.org>,
+        stable <stable@vger.kernel.org>,
+        Guenter Roeck <groeck@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/30/19 12:48 PM, André Almeida wrote:
-> Insert documentation for structs, enums and functions at header file.
-> Format existing and new comments at struct blk_mq_ops as
-> kernel-doc comments.
+On Mon, Sep 30, 2019 at 2:45 PM Brian Norris <briannorris@chromium.org> wrote:
+> Fixes: 4b708b7b1a2c ("firmware: google: check if size is valid when decoding VPD data")
+> Cc: <stable@vger.kernel.org>
 
-Hi André,
+Perhaps I should have modified the subject to note the urgency (e.g.,
+[PATCH 5.4]). The above regression was recently shipped to v4.14.146
+and v4.19.75.
 
-Seeing the documentation being improved is great. However, this patch 
-conflicts with a patch series in my tree and that I plan to post soon. 
-So I would appreciate it if this patch would be withheld until after my 
-patch series has been accepted.
-
-Thanks,
-
-Bart.
+Brian
