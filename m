@@ -2,179 +2,138 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A68B3C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F30DC4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73AF0218DE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:56:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pkVnTk26"
+	by mail.kernel.org (Postfix) with ESMTP id EE6C32086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:57:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730250AbfI3I4M (ORCPT
+        id S1730272AbfI3I5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 04:56:12 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45315 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730110AbfI3I4M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 04:56:12 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r5so10231925wrm.12;
-        Mon, 30 Sep 2019 01:56:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6fftjP5bUCArKKdB+VCYiLDFrQQtx2KZIvWcOKzDCTo=;
-        b=pkVnTk26YezVaP0QB6r6YgludHu532Mk2WYVTZVUK5YERoR7Cre0MLCfdUEVXwksmh
-         E/A4G9ZmWoZh3DyCXN9U6nYx4NR37V44cagnEPtHckwjRORmK3YYs+wVNOYpZL2eMn1w
-         i5HJrQU9kaoZshin+US3ypkKy7lvUt8lO3Gv3+su4rGmlNEABHsqTVGlV4C9T/XPHSh5
-         ETyK1J5wzAaKdV+AllRthATj0+wUpz8OAV4WEeQ/DwBbg2STqCpna3dJwDaHKtn27PGV
-         NBZodjacGxxe9x27WUBsxLENR8tfy17IYHp7oVr4X4sa21WDcqyH/VFvHo6XEhdQBenD
-         5m6g==
+        Mon, 30 Sep 2019 04:57:21 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37814 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729968AbfI3I5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 04:57:21 -0400
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A2A9081F07
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 08:57:20 +0000 (UTC)
+Received: by mail-wm1-f69.google.com with SMTP id c188so3640139wmd.9
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 01:57:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6fftjP5bUCArKKdB+VCYiLDFrQQtx2KZIvWcOKzDCTo=;
-        b=lYOX3TVsvBBVjG/g3mm6WxoNZLbvGKUTN5NC/ndR9VAHQ+2Uc3fLBDHCj4/fow1IDv
-         +FOXL1CsuRK0O9uoHaUCQf16CiMBtrK4/qdUqMZf06I4Iin/jEEnuIwrJ4dCXhFWd4dC
-         0kngCseNP0QEtaXvb/j3XxId9tvrLjHNga+jDewt451v2T9lF00Fzajj2FOT5OyROFxG
-         G5EI3/8TL4vZYat1uT0a9fvoH6Hflx8TyWGQUjIgqzbg/q9Qf2gO0Y6KzMqLhAWcMfMf
-         2eJfS1TiKKv4ZcrS+/1XO48PonOMsVSHSyykew1tUFELWxoK/5Fzamb+Q1AULNcF5kB/
-         izxw==
-X-Gm-Message-State: APjAAAUH7ZrO+LLWR3sbnHFqqkl/leV7xT3XIO0lDP7ZAWCmyUsfb1ym
-        LT8Z0O1iC7AmK4YgaKBsrkA=
-X-Google-Smtp-Source: APXvYqwWawM80XtnOjhYYvAiRzsk3JHKSsZXVdwQfDHIyltCNfgUlhCDMIJC6B8fbpk/Zl4xuFyAIA==
-X-Received: by 2002:a5d:4a8a:: with SMTP id o10mr5386140wrq.201.1569833769122;
-        Mon, 30 Sep 2019 01:56:09 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id e30sm23469234wra.48.2019.09.30.01.56.07
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=UcGS+56mom6fO6gLbiJPlRBT9sCimqwfenBjQlqeMP8=;
+        b=phckIGAg3oKto84YG7vw+r2ub5TO/kqKOiGp7b37929S6lT/ZZIMfdlS4aTw2vP4Gt
+         QQdf8ronHyhNADHPkXAvVJGdnXRmJ3StRquf310Sf+o4aa5+y72p9jJkiidCoVtB0Ra5
+         kGBDGGk3NzdvFEyP4F++sYAxUAG+4Qlaa4A/mrjyDBvaS+8ROxAV44+i/NRFTywByGQ2
+         YCiUx9s0Tcr/8WXOCZygUQL3XwsOyDYSvppMYqJker/BspTMRNgtIjw1EJpFa5KMS4zW
+         mLV/QWkJPjx6VU1FfXzd2PVQ2S1jp+6YEE9vy9ds+IH7HTONrcdWx2Z47AeyVQwchQjX
+         4q+w==
+X-Gm-Message-State: APjAAAVjVgHxg31vFShvq2hzMlnf7CWwdpl4Tj6tSV7XnoQiREmaE9WY
+        nxaCnzi2/foDd6LBzbweu5mtPLiL3Hs3GyWzMhZUVAziz6mi72crOjj5W94qnMK4vsXGIzkm/cn
+        mRRd9oy7SI+5DdufrTK8Is8Iv
+X-Received: by 2002:a5d:43d0:: with SMTP id v16mr12498660wrr.390.1569833839415;
+        Mon, 30 Sep 2019 01:57:19 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyqL/jNuwbLiXJECMuYDQFS2oi5pGvfRx0tVhTeQLsW0ZtP4yOYtHzkJVvLfzz5xWcWat0nuQ==
+X-Received: by 2002:a5d:43d0:: with SMTP id v16mr12498621wrr.390.1569833838927;
+        Mon, 30 Sep 2019 01:57:18 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id a14sm16815711wmm.44.2019.09.30.01.57.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 01:56:07 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 10:56:06 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Oza Pawandeep <oza.oza@broadcom.com>,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 00/11] of: dma-ranges fixes and improvements
-Message-ID: <20190930085606.GG1518582@ulmo>
-References: <20190927002455.13169-1-robh@kernel.org>
- <CAK8P3a0oct0EOMi5t4BmpgdkiBM+LjC+2pTST4hcvNCa3MGLmw@mail.gmail.com>
- <20190930082055.GA21971@infradead.org>
+        Mon, 30 Sep 2019 01:57:18 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Reto Buerki <reet@codelabs.ch>,
+        Liran Alon <liran.alon@oracle.com>
+Subject: Re: [PATCH v2 4/8] KVM: VMX: Optimize vmx_set_rflags() for unrestricted guest
+In-Reply-To: <20190927214523.3376-5-sean.j.christopherson@intel.com>
+References: <20190927214523.3376-1-sean.j.christopherson@intel.com> <20190927214523.3376-5-sean.j.christopherson@intel.com>
+Date:   Mon, 30 Sep 2019 10:57:17 +0200
+Message-ID: <87muem40wi.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7lMq7vMTJT4tNk0a"
-Content-Disposition: inline
-In-Reply-To: <20190930082055.GA21971@infradead.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
---7lMq7vMTJT4tNk0a
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Rework vmx_set_rflags() to avoid the extra code need to handle emulation
+> of real mode and invalid state when unrestricted guest is disabled.  The
+> primary reason for doing so is to avoid the call to vmx_get_rflags(),
+> which will incur a VMREAD when RFLAGS is not already available.  When
+> running nested VMs, the majority of calls to vmx_set_rflags() will occur
+> without an associated vmx_get_rflags(), i.e. when stuffing GUEST_RFLAGS
+> during transitions between vmcs01 and vmcs02.
+>
+> Note, vmx_get_rflags() guarantees RFLAGS is marked available.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 28 ++++++++++++++++++----------
+>  1 file changed, 18 insertions(+), 10 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 83fe8b02b732..814d3e6d0264 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -1426,18 +1426,26 @@ unsigned long vmx_get_rflags(struct kvm_vcpu *vcpu)
+>  void vmx_set_rflags(struct kvm_vcpu *vcpu, unsigned long rflags)
+>  {
+>  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+> -	unsigned long old_rflags = vmx_get_rflags(vcpu);
+> +	unsigned long old_rflags;
+>  
+> -	__set_bit(VCPU_EXREG_RFLAGS, (ulong *)&vcpu->arch.regs_avail);
+> -	vmx->rflags = rflags;
+> -	if (vmx->rmode.vm86_active) {
+> -		vmx->rmode.save_rflags = rflags;
+> -		rflags |= X86_EFLAGS_IOPL | X86_EFLAGS_VM;
+> +	if (enable_unrestricted_guest) {
+> +		__set_bit(VCPU_EXREG_RFLAGS, (ulong *)&vcpu->arch.regs_avail);
+> +
+> +		vmx->rflags = rflags;
+> +		vmcs_writel(GUEST_RFLAGS, rflags);
+> +	} else {
+> +		old_rflags = vmx_get_rflags(vcpu);
+> +
+> +		vmx->rflags = rflags;
+> +		if (vmx->rmode.vm86_active) {
+> +			vmx->rmode.save_rflags = rflags;
+> +			rflags |= X86_EFLAGS_IOPL | X86_EFLAGS_VM;
+> +		}
+> +		vmcs_writel(GUEST_RFLAGS, rflags);
+> +
+> +		if ((old_rflags ^ vmx->rflags) & X86_EFLAGS_VM)
+> +			vmx->emulation_required = emulation_required(vcpu);
+>  	}
+> -	vmcs_writel(GUEST_RFLAGS, rflags);
 
-On Mon, Sep 30, 2019 at 01:20:55AM -0700, Christoph Hellwig wrote:
-> On Sun, Sep 29, 2019 at 01:16:20PM +0200, Arnd Bergmann wrote:
-> > On a semi-related note, Thierry asked about one aspect of the dma-ranges
-> > property recently, which is the behavior of dma_set_mask() and related
-> > functions when a driver sets a mask that is larger than the memory
-> > area in the bus-ranges but smaller than the available physical RAM.
-> > As I understood Thierry's problem and the current code, the generic
-> > dma_set_mask() will either reject the new mask entirely or override
-> > the mask set by of_dma_configure, but it fails to set a correct mask
-> > within the limitations of the parent bus in this case.
->=20
-> There days dma_set_mask will only reject a mask if it is too small
-> to be supported by the hardware.  Larger than required masks are now
-> always accepted.
+We're doing vmcs_writel() in both branches so it could've stayed here, right?
 
-Summarizing why this came up: the memory subsystem on Tegra194 has a
-mechanism controlled by bit 39 of physical addresses. This is used to
-support two variants of sector ordering for block linear formats. The
-GPU uses a slightly different ordering than other MSS clients, so the
-drivers have to set this bit depending on who they interoperate with.
+> -
+> -	if ((old_rflags ^ vmx->rflags) & X86_EFLAGS_VM)
+> -		vmx->emulation_required = emulation_required(vcpu);
+>  }
+>  
+>  u32 vmx_get_interrupt_shadow(struct kvm_vcpu *vcpu)
 
-I was running into this as I was adding support for IOMMU support for
-the Ethernet controller on Tegra194. The controller has a HW feature
-register that contains how many address bits it supports. This is 40
-for Tegra194, corresponding to the number of address bits to the MSS.
-Without IOMMU support that's not a problem because there are no systems
-with 40 bits of system memory. However, if we enable IOMMU support, the
-DMA/IOMMU code will allocate from the top of a 48-bit (constrained to
-40 bits via the DMA mask) input address space. This causes bit 39 to be
-set, which in turn will make the MSS reorder sectors and break network
-communications.
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-Since this reordering takes place at the MSS level, this applies to all
-MSS clients. Most of these clients always want bit 39 to be 0, whereas
-the clients that can and want to make use of the reordering always want
-bit 39 to be under their control, so they can control in a fine-grained
-way when to set it.
-
-This means that effectively all MSS clients can only address 39 bits, so
-instead of hard-coding that for each driver I thought it'd make sense to
-have a central place to configure this, so that all devices by default
-are restricted to 39-bit addressing. However, with the current DMA API
-implementation this causes a problem because the default 39-bit DMA mask
-would get overwritten by the driver (as in the example of the Ethernet
-controller setting a 40-bit DMA mask because that's what the hardware
-supports).
-
-I realize that this is somewhat exotic. On one hand it is correct for a
-driver to say that the hardware supports 40-bit addressing (i.e. the
-Ethernet controller can address bit 39), but from a system integration
-point of view, using bit 39 is wrong, except in a very restricted set of
-cases.
-
-If I understand correctly, describing this with a dma-ranges property is
-the right thing to do, but it wouldn't work with the current
-implementation because drivers can still override a lower DMA mask with
-a higher one.
-
-Thierry
-
---7lMq7vMTJT4tNk0a
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2RwyMACgkQ3SOs138+
-s6HYvBAAiJWcvv5xcJncOs7e0ol6y9Mk77w/r0hKJYeifVE572SDCmbwK8orp3zk
-P0DcZYqws8pYA0kK38w8FJO6ptv754PoJ7Gp8Io9SIsbrvY9YFUFZAK7OQ3SExGx
-LKwNoEeKNM5ceP0HFonHM2YTTuKL7soYqLm/4fTiOTACT2c42pRTLqonIXL73vxE
-gV3/ssj+hfwNkORM3vSqgiC14re/1fi7uzG5YLjhe1maobqJ8hVUD8rfZfKIcE17
-XFPHbBo8wILS6P6vYrrw8LJLsUNJMKrmqlxCYaAhuEQaosUatdHp9/KdDXOLZDxV
-NLu2jOD4RZ46PC8P6p4E9ZgEuAJMrh5NydXMdSuGIbACndvQchObUEWbHEP8W8Xi
-Cr70CmMxfFDGoqKO99X/07jvG0D/iEmF2CwQPO0QKaIDZPYN0weoIbcEm9r1KEAm
-XCvXQl80jaMmZH2xpqeSV+i1wO0dNpPZ0MZUutXqjIyE189WvrcHsTk8HAJIcbj+
-spwwo11tAR/x2t3WIgcrAHVbSEXUuK6hNwpeC44HBcQbWPOxa1sSJvNeYq0z/kPb
-YuYY9NvQaZBX87qVunbANq05ev4cK2oeFbZjkWHKKhdBsb4rcaUvHWCQOpgTL0wQ
-Sy9ckOP6goBXLArIFmTkuDyGxoNG5mqrcPGk1duSBP8nzDQvcVw=
-=Iybe
------END PGP SIGNATURE-----
-
---7lMq7vMTJT4tNk0a--
+-- 
+Vitaly
