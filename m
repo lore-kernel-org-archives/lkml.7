@@ -6,121 +6,104 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A69C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA048C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A565121A4C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B159206BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:28:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569842804;
-	bh=srPqDShwNAxoUEhMeFDiah3VlPzS3gr2KS0cPzlZHB4=;
+	s=default; t=1569842900;
+	bh=OYc4V7Zz9JIHzFyoBcw2dxwCQoBSH1WZjvBOFpr0Mu8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oj26Wzq5763N6JcpPbofiWV0MIZgmfSFDspJss0XPdKMHT2XJxaE3R9PGIEwHmW+z
-	 x9c0dNcV2bz+oeGvq/P6B7i+39nRF4KYQkiA1M95TWKPWcRbHkS/Xx8WoAjc1yS3vF
-	 CJov9ZE0+qnO6CusYukad297Rd0oylKTotgqMb2g=
+	b=0QcZ9K1Idjr9S9QH+BF2RGDjodoQ1oIDH7VCQF/C8kEWSfaXecRmeTfIA8AUJGoeT
+	 vnoskfRCbX/SPyS8/0bO9yMOFXia0T7p34O+/P9a6SXoChJvTvJXSYecG+JAXA6s/0
+	 qEqvvlrfrSMFhsKWAqFJtegz/2m81qBWS0gVsaak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729589AbfI3L0o (ORCPT
+        id S1729754AbfI3L2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 07:26:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34152 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726072AbfI3L0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 07:26:43 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76A30206BB;
-        Mon, 30 Sep 2019 11:26:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569842802;
-        bh=srPqDShwNAxoUEhMeFDiah3VlPzS3gr2KS0cPzlZHB4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OrRkotIWqtU+1P4CM+QDBBZmq5Pz6WxzkeH0RXa8qck41YG2Z+PXSxLa5dLTUsln5
-         JpHAZfEwI5+Yq7ezissogWCmYQX/ffrQGOxrUWf26e+n/6TIsVYx8otHB74XbqQjZw
-         KiqrRsIL0KSugSGQlMAQFxJkEgkNlPLVJAMCcRXQ=
-Date:   Mon, 30 Sep 2019 12:26:37 +0100
-From:   Will Deacon <will@kernel.org>
+        Mon, 30 Sep 2019 07:28:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49452 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725767AbfI3L2T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 07:28:19 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C7A39AEAE;
+        Mon, 30 Sep 2019 11:28:17 +0000 (UTC)
+Date:   Mon, 30 Sep 2019 13:28:17 +0200
+From:   Michal Hocko <mhocko@kernel.org>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+Cc:     David Rientjes <rientjes@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Kees Cook <keescook@google.com>
-Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
-Message-ID: <20190930112636.vx2qxo4hdysvxibl@willie-the-truck>
-References: <20190830034304.24259-1-yamada.masahiro@socionext.com>
- <f5c221f5749e5768c9f0d909175a14910d349456.camel@suse.de>
- <CAKwvOdk=tr5nqq1CdZnUvRskaVqsUCP0SEciSGonzY5ayXsMXw@mail.gmail.com>
- <CAHk-=wiTy7hrA=LkmApBE9PQtri8qYsSOrf2zbms_crfjgR=Hw@mail.gmail.com>
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+Subject: Re: [patch for-5.3 0/4] revert immediate fallback to remote hugepages
+Message-ID: <20190930112817.GC15942@dhcp22.suse.cz>
+References: <alpine.DEB.2.21.1909041252230.94813@chino.kir.corp.google.com>
+ <20190904205522.GA9871@redhat.com>
+ <alpine.DEB.2.21.1909051400380.217933@chino.kir.corp.google.com>
+ <20190909193020.GD2063@dhcp22.suse.cz>
+ <20190925070817.GH23050@dhcp22.suse.cz>
+ <alpine.DEB.2.21.1909261149380.39830@chino.kir.corp.google.com>
+ <20190927074803.GB26848@dhcp22.suse.cz>
+ <CAHk-=wgba5zOJtGBFCBP3Oc1m4ma+AR+80s=hy=BbvNr3GqEmA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wiTy7hrA=LkmApBE9PQtri8qYsSOrf2zbms_crfjgR=Hw@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <CAHk-=wgba5zOJtGBFCBP3Oc1m4ma+AR+80s=hy=BbvNr3GqEmA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 03:38:44PM -0700, Linus Torvalds wrote:
-> On Fri, Sep 27, 2019 at 3:08 PM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
+On Sat 28-09-19 13:59:26, Linus Torvalds wrote:
+> On Fri, Sep 27, 2019 at 12:48 AM Michal Hocko <mhocko@kernel.org> wrote:
 > >
-> > So get_user() was passed a bad value/pointer from userspace? Do you
-> > know which of the tree calls to get_user() from sock_setsockopt() is
-> > failing?  (It's not immediately clear to me how this patch is at
-> > fault, vs there just being a bug in the source somewhere).
+> > -       page = get_page_from_freelist(gfp_mask, order, alloc_flags, ac);
+> > +       if (!order)
+> > +               page = get_page_from_freelist(gfp_mask, order, alloc_flags, ac);
+> >         if (page)
+> >                 goto got_pg;
+> >
+> > The whole point of handling this in the page allocator directly is to
+> > have a unified solutions rather than have each specific caller invent
+> > its own way to achieve higher locality.
 > 
-> Based on the error messages, the SO_PASSCRED ones are almost certainly
-> from the get_user() in net/core/sock.c: sock_setsockopt(), which just
-> does
-> 
->         if (optlen < sizeof(int))
->                 return -EINVAL;
-> 
->         if (get_user(val, (int __user *)optval))
->                 return -EFAULT;
-> 
->         valbool = val ? 1 : 0;
-> 
-> but it's the other messages imply that a lot of other cases are
-> failing too (ie the "Failed to bind netlink socket" is, according to
-> google, a bind() that fails with the same EFAULT error).
-> 
-> There are probably even more failures that happen elsewhere and just
-> don't even syslog the fact. I'd guess that all get_user() calls just
-> fail, and those are the ones that happen to get printed out.
-> 
-> Now, _why_ it would fail, I have ni idea. There are several inlines in
-> the arm uaccess.h file, and it depends on other headers like
-> <asm/domain.h> with more inlines still - eg get/set_domain() etc.
-> 
-> Soem of that code is pretty subtle. They have fixed register usage
-> (but the asm macros actually check them). And the inline asms clobber
-> the link register, but they do seem to clearly _state_ that they
-> clobber it, so who knows.
-> 
-> Just based on the EFAULT, I'd _guess_ that it's some interaction with
-> the domain access control register (so that get/set_domain() thing).
-> But I'm not even sure that code is enabled for the Rpi2, so who
-> knows..
+> The above just looks hacky.
 
-FWIW, we've run into issues with CONFIG_OPTIMIZE_INLINING and local
-variables marked as 'register' where GCC would do crazy things and end
-up corrupting data, so I suspect the use of fixed registers in the arm
-uaccess functions is hitting something similar:
+It is and it was meant to help move on when debugging rather than a
+final solution.
+ 
+> Why would order-0 be special?
 
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91111
+Ideally it wouldn't be but the current implementation makes it special.
+Why? Because the whole concept of low wmark fast path attempt is based
+on kswapd balancing for a high watermark providing some space. Kcompactd
+doesn't have any notion like that. And I believe that a large part of
+the problem really is there. If I am wrong here then I would appreciate
+to be corrected.
 
-Although this particular case couldn't be reproduced with GCC 9, prior
-versions of the compiler get it wrong so I'm very much opposed to enabling
-CONFIG_OPTIMIZE_INLINING by default on arm/arm64.
+If __GFP_THISNODE allows for a better THP utilization on a local node
+then the problem points at kcompactd not being pro-active enough. And
+that was the first diff aiming at.
 
-Will
+I also claim that this is not a THP specific problem. You are right
+that lower orders are less likely to hit the problem because the memory
+is usually not fragmented that heavily but fundamentally the over eager
+fallback in the fast path is still there. And that is the reason for me
+to pushback against __GFP_THIS_NODE && fallback allocation opencoded
+outside of the allocator. The allocator knows the context can compact
+so why should we require the caller to be doing that?
+
+Do not get me wrong, but we have a quite a long history of fine tuning
+for THP by adding kludges here and there and they usually turnout to
+break something else. I really want to get to understand the underlying
+problem and base a solution on it rather than "__GFP_THISNODE can cause
+overreclaim so pick up a break out condition and hope for the best".
+-- 
+Michal Hocko
+SUSE Labs
