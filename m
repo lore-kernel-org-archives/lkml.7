@@ -2,110 +2,156 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8FFC388F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C232C388F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A800E2190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FE7320842
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:44:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qdV6WffL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729685AbfI3Hor (ORCPT
+        id S1729737AbfI3Hov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 03:44:47 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36796 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726121AbfI3Hor (ORCPT
+        Mon, 30 Sep 2019 03:44:51 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:32808 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729598AbfI3Hos (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 03:44:47 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8U7glWl041126
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 03:44:44 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vbadrpxe8-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 03:44:44 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Mon, 30 Sep 2019 08:44:42 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 30 Sep 2019 08:44:40 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8U7icjS53673992
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 30 Sep 2019 07:44:39 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DB8404203F;
-        Mon, 30 Sep 2019 07:44:38 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8A1A342041;
-        Mon, 30 Sep 2019 07:44:38 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.201])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 30 Sep 2019 07:44:38 +0000 (GMT)
-Date:   Mon, 30 Sep 2019 09:44:37 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Qian Cai <cai@lca.pw>, Peter Oberparleiter <oberpar@linux.ibm.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/page_alloc: fix a crash in free_pages_prepare()
-References: <1569613623-16820-1-git-send-email-cai@lca.pw>
- <20190927134859.95a2f4908bdcea30df0184ed@linux-foundation.org>
- <1569618908.5576.240.camel@lca.pw>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1569618908.5576.240.camel@lca.pw>
-X-TM-AS-GCONF: 00
-x-cbid: 19093007-0008-0000-0000-0000031C541A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19093007-0009-0000-0000-00004A3AF916
-Message-Id: <20190930074437.GB5604@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-30_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=84 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909300082
+        Mon, 30 Sep 2019 03:44:48 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8U7i9bK157904;
+        Mon, 30 Sep 2019 07:44:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2019-08-05;
+ bh=E1+AZyCgUqnQ9IKyi0G2G7XawCcrfnF8283UFDFFdrk=;
+ b=qdV6WffL8Rwfaz7N3i/T/9eJYQa6GILhkNP9fZ/+zhSt/+g+M6YaV+4MjdXw5xaYS5sy
+ z9dZyhhViOxvCSQf0MhCU0BEINo8bHjFiXMNykVtuD8LC3WTQpoKLGSMhi2TUPgROIn3
+ jEP4COMyPS5Ze5dWdjbODKNlx/tE/TA5Sy5Es8MTQLWLqlX0tR8jpwuDTHx5W7zLXTK9
+ NnAkJbLCjfF4/m5H9IwYQhOnuOlNgvmsbtsOywyt7+wxbe5Wsvvf3dWIzUHrkSjFBAur
+ hNpKxMGxK6+FqYQYzhAzf2Li+1nKwVwzAUuuP9EbWSZURPmSTsC8V+PT08Y9Wge1eRqZ wQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2v9xxud1b8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 30 Sep 2019 07:44:35 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8U7iR5J152532;
+        Mon, 30 Sep 2019 07:44:34 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2vayqwd0uk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 30 Sep 2019 07:44:33 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8U7i6Ql003170;
+        Mon, 30 Sep 2019 07:44:06 GMT
+Received: from linux.cn.oracle.com (/10.182.69.106)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 30 Sep 2019 00:44:05 -0700
+From:   Dongli Zhang <dongli.zhang@oracle.com>
+To:     xen-devel@lists.xenproject.org, netdev@vger.kernel.org
+Cc:     boris.ostrovsky@oracle.com, jgross@suse.com,
+        sstabellini@kernel.org, davem@davemloft.net, joe.jin@oracle.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] xen-netfront: do not use ~0U as error return value for xennet_fill_frags()
+Date:   Mon, 30 Sep 2019 15:44:29 +0800
+Message-Id: <1569829469-16143-1-git-send-email-dongli.zhang@oracle.com>
+X-Mailer: git-send-email 2.7.4
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9395 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=882
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909300082
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9395 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=964 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909300083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 05:15:08PM -0400, Qian Cai wrote:
-> On Fri, 2019-09-27 at 13:48 -0700, Andrew Morton wrote:
-> > On Fri, 27 Sep 2019 15:47:03 -0400 Qian Cai <cai@lca.pw> wrote:
-> > > --- a/mm/page_alloc.c
-> > > +++ b/mm/page_alloc.c
-> > > @@ -1175,11 +1175,11 @@ static __always_inline bool free_pages_prepare(struct page *page,
-> > >  		debug_check_no_obj_freed(page_address(page),
-> > >  					   PAGE_SIZE << order);
-> > >  	}
-> > > -	arch_free_page(page, order);
-> > >  	if (want_init_on_free())
-> > >  		kernel_init_free_pages(page, 1 << order);
-> > >  
-> > >  	kernel_poison_pages(page, 1 << order, 0);
-> > > +	arch_free_page(page, order);
-> > >  	if (debug_pagealloc_enabled())
-> > >  		kernel_map_pages(page, 1 << order, 0);
-> > 
-> > This is all fairly mature code, isn't it?  What happened to make this
-> > problem pop up now?
-> 
-> In the past, there is only kernel_poison_pages() would trigger it but it needs
-> "page_poison=on" kernel cmdline, and I suspect nobody tested that on s390 in the
-> past.
+xennet_fill_frags() uses ~0U as return value when the sk_buff is not able
+to cache extra fragments. This is incorrect because the return type of
+xennet_fill_frags() is RING_IDX and 0xffffffff is an expected value for
+ring buffer index.
 
-Yes. Peter Oberparleiter reported this also before my short vacation,
-but I didn't have time to look into this. Thanks for fixing!
+In the situation when the rsp_cons is approaching 0xffffffff, the return
+value of xennet_fill_frags() may become 0xffffffff which xennet_poll() (the
+caller) would regard as error. As a result, queue->rx.rsp_cons is set
+incorrectly because it is updated only when there is error. If there is no
+error, xennet_poll() would be responsible to update queue->rx.rsp_cons.
+Finally, queue->rx.rsp_cons would point to the rx ring buffer entries whose
+queue->rx_skbs[i] and queue->grant_rx_ref[i] are already cleared to NULL.
+This leads to NULL pointer access in the next iteration to process rx ring
+buffer entries.
 
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+The symptom is similar to the one fixed in
+commit 00b368502d18 ("xen-netfront: do not assume sk_buff_head list is
+empty in error handling").
+
+This patch uses an extra argument to help return if there is error in
+xennet_fill_frags().
+
+Fixes: ad4f15dc2c70 ("xen/netfront: don't bug in case of too many frags")
+Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+---
+ drivers/net/xen-netfront.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/xen-netfront.c b/drivers/net/xen-netfront.c
+index e14ec75..c2a1e09 100644
+--- a/drivers/net/xen-netfront.c
++++ b/drivers/net/xen-netfront.c
+@@ -889,11 +889,14 @@ static int xennet_set_skb_gso(struct sk_buff *skb,
+ 
+ static RING_IDX xennet_fill_frags(struct netfront_queue *queue,
+ 				  struct sk_buff *skb,
+-				  struct sk_buff_head *list)
++				  struct sk_buff_head *list,
++				  int *errno)
+ {
+ 	RING_IDX cons = queue->rx.rsp_cons;
+ 	struct sk_buff *nskb;
+ 
++	*errno = 0;
++
+ 	while ((nskb = __skb_dequeue(list))) {
+ 		struct xen_netif_rx_response *rx =
+ 			RING_GET_RESPONSE(&queue->rx, ++cons);
+@@ -908,6 +911,7 @@ static RING_IDX xennet_fill_frags(struct netfront_queue *queue,
+ 		if (unlikely(skb_shinfo(skb)->nr_frags >= MAX_SKB_FRAGS)) {
+ 			queue->rx.rsp_cons = ++cons + skb_queue_len(list);
+ 			kfree_skb(nskb);
++			*errno = -ENOENT;
+ 			return ~0U;
+ 		}
+ 
+@@ -1009,6 +1013,8 @@ static int xennet_poll(struct napi_struct *napi, int budget)
+ 	i = queue->rx.rsp_cons;
+ 	work_done = 0;
+ 	while ((i != rp) && (work_done < budget)) {
++		int errno;
++
+ 		memcpy(rx, RING_GET_RESPONSE(&queue->rx, i), sizeof(*rx));
+ 		memset(extras, 0, sizeof(rinfo.extras));
+ 
+@@ -1045,8 +1051,8 @@ static int xennet_poll(struct napi_struct *napi, int budget)
+ 		skb->data_len = rx->status;
+ 		skb->len += rx->status;
+ 
+-		i = xennet_fill_frags(queue, skb, &tmpq);
+-		if (unlikely(i == ~0U))
++		i = xennet_fill_frags(queue, skb, &tmpq, &errno);
++		if (unlikely(errno == -ENOENT))
+ 			goto err;
+ 
+ 		if (rx->flags & XEN_NETRXF_csum_blank)
+-- 
+2.7.4
 
