@@ -2,107 +2,106 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2983AC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68553C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDDA6224FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:52:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A5mKEowm"
+	by mail.kernel.org (Postfix) with ESMTP id 3B080224FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:53:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569876782;
+	bh=efT4io22JXXaMsqJPPd4MJrDntpM2iMQn6xznt4n9YI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Esbgh/SReI4YrXCCddVlQ0pTGA1rioGH3ks06pJNcSBH4VfhxTMcyTfL+I733PO03
+	 A6/oavM4hIZE24fSA+98TUuh9870vKgOMg7BLUfpRcdBSpYZNLFPSnJjxG3HU0MKju
+	 xN6lr5rHRk6A6LOEXOqYDuuW7EbC8tqVqhDHVziY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730945AbfI3Uw5 (ORCPT
+        id S1731363AbfI3UxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 16:52:57 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39209 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727118AbfI3Uw4 (ORCPT
+        Mon, 30 Sep 2019 16:53:01 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:38099 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727118AbfI3UxA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 16:52:56 -0400
-Received: by mail-io1-f66.google.com with SMTP id a1so42048611ioc.6;
-        Mon, 30 Sep 2019 13:52:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=HjzHBo6jT8sEvFe44LiFogaEnhJkNVFYB6XfDK7uqQ0=;
-        b=A5mKEowmZmV++Op18zcmJR3/GH2ctiZffg/i22VkQ7tFE1c7sw8wb4oksQ6pjn3XGV
-         5NNGCwG3fx94axiNRlb/VLkqyNoXfylZgasulxkQJrbm9qKbbQCkBjlrh0iMKg2P3r0F
-         GeQwWcGXonOk1I4Yb+8/dLT2Tvc5iIEdRRsB4vdCrnG7/yKwQMcuJ1uYRFcTqE87ZqX9
-         VK2VLqGyvoS8iYb/I0DuzebaEOcC8Mycb9iqKQqRkq/SPUpntj0ZppnWmgakX5zSZtJ3
-         bLO+GoHmL8/1sqO/MLLtTUgjW07uDgE3N0nEeY8ZfwQBHvtkQ0xP8HGVt7kUjg3BeV0g
-         mpoA==
+        Mon, 30 Sep 2019 16:53:00 -0400
+Received: by mail-ot1-f65.google.com with SMTP id e11so9605204otl.5;
+        Mon, 30 Sep 2019 13:53:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=HjzHBo6jT8sEvFe44LiFogaEnhJkNVFYB6XfDK7uqQ0=;
-        b=NcI6YA1affjO3DXITMbGWBoAJI+AaU4e5kWYImGuBfffek5czLnqy/Ceu5MCi63IBe
-         AcXkrEDgDsTdcG/AmZK07jIhvLcSlcC87yMO8SabBmOelJye0QYXfcfYyZjes7vn4UBL
-         EjKXJ/xjvqtE0IEYFlzAvxO7ttBmOAA7gyU+3LQpXrQ65PAmUBYPcrhoYVlFl8VnZYN/
-         st0Aq1rjca5R8P5bYPt+awTT686f/fh9LOMnHa34SZpZRVH3LkqWx4pGZO10XvHzBseV
-         FDRiJ3XGzvuiGUKs7dqtHrVxYdG2j1IcFLCnJWhOycAawxjn3d4pJ9hMpZV31epot0AT
-         MhkQ==
-X-Gm-Message-State: APjAAAVVkEMWOS4X5aP1Y5lokmSB24Y+ZsgkzNWCChNsQkqy3E/VCcY9
-        Gv7MS/mz1JFYqknhMgjElwc=
-X-Google-Smtp-Source: APXvYqzn/RTz90DQPs3v6GoRB75cFXIoD+MRJM6af30g7CqSFxkRz2+0cOy/I6rraDzMF6BGC8+FQw==
-X-Received: by 2002:a92:b612:: with SMTP id s18mr19955089ili.37.1569876776114;
-        Mon, 30 Sep 2019 13:52:56 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id g4sm6979666iof.56.2019.09.30.13.52.55
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qttcrBHS0kIn8DMgwWljur1/ogNYEuQG7wPRDTGlx3M=;
+        b=Muxh408k0X9cXxPp2LPXLtbDx5bTsAE2n+l+7TzUT76+8ZvhR+RZyJKO1VLGABMME7
+         BanJUeAT86GhLqc+xMrYmJ2efriH0qtl0FYwuwCuDyklNU07Ujn2bRxeYROl3gZ0/oFl
+         79/T7i0lWn8YQy4yN/6h7cRKoC7222y5loj+Fi2+9FYUpr+OYNpISWApr6DerqTrSCRL
+         ukADVYWQgA1mNx0MLZA2rufk7DLn0vcCBXbwysu6PU0eZ2hbmzNC84WZGZCt8kwqj+zD
+         8UZiyjJZ8tjI6xCUlMLY6adYmsNgMCrhqz0PLFBgT+qKHJM7BWhoMVz9atahKt8Leuzx
+         SccQ==
+X-Gm-Message-State: APjAAAXEMmyZzPG5eYfbKYINZkEWFszBctdYY9KdkfqsDkmWGOY0rs0S
+        LaVAjVPOM53/s2R5H3MYXfOXoEQ=
+X-Google-Smtp-Source: APXvYqxBaCMEenuVO/TLEa22+nQKS8epFGf8JVek9VBh07i8c+Qw+sc7bz02Xq20jisGQ0FY5ulbtA==
+X-Received: by 2002:a9d:6084:: with SMTP id m4mr14638230otj.6.1569869959652;
+        Mon, 30 Sep 2019 11:59:19 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 5sm4127490otp.20.2019.09.30.11.59.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 13:52:55 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] spi: gpio: prevent memory leak in spi_gpio_probe
-Date:   Mon, 30 Sep 2019 15:52:40 -0500
-Message-Id: <20190930205241.5483-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <dcd26f62-e384-bf6d-2e7d-63c0d0f7da11@web.de>
-References: <dcd26f62-e384-bf6d-2e7d-63c0d0f7da11@web.de>
-To:     unlisted-recipients:; (no To-header on input)
+        Mon, 30 Sep 2019 11:59:19 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 13:59:18 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-i2c@vger.kernel.org,
+        brendanhiggins@google.com, joel@jms.id.au, andrew@aj.id.au,
+        mark.rutland@arm.com, benh@kernel.crashing.org
+Subject: Re: [PATCH 2/2] dt-bindings: i2c: Aspeed: Add AST2600 compatible
+Message-ID: <20190930185918.GA18431@bogus>
+References: <1568392510-866-1-git-send-email-eajames@linux.ibm.com>
+ <1568392510-866-3-git-send-email-eajames@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1568392510-866-3-git-send-email-eajames@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In spi_gpio_probe an SPI master is allocated via spi_alloc_master, but
-this controller should be released if devm_add_action_or_reset fails,
-otherwise memory leaks. In order to avoid leak spi_contriller_put must
-be called in case of failure for devm_add_action_or_reset.
+On Fri, Sep 13, 2019 at 11:35:10AM -0500, Eddie James wrote:
+> Document the AST2600 I2C bus compatible string.
+> 
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c-aspeed.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
+> index 8fbd863..b47f6cc 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
+> @@ -1,4 +1,4 @@
+> -Device tree configuration for the I2C busses on the AST24XX and AST25XX SoCs.
+> +Device tree configuration for the I2C busses on the AST24XX, AST25XX, and AST26XX SoCs.
 
-Fixes: 8b797490b4db ("spi: gpio: Make sure spi_master_put() is called in every error path")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
-Changes in v2:
-	-- fix a typo in title and update the description
----
- drivers/spi/spi-gpio.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Perhaps s/buses/busses/ while you're here.
 
-diff --git a/drivers/spi/spi-gpio.c b/drivers/spi/spi-gpio.c
-index 1d3e23ec20a6..f9c5bbb74714 100644
---- a/drivers/spi/spi-gpio.c
-+++ b/drivers/spi/spi-gpio.c
-@@ -371,8 +371,10 @@ static int spi_gpio_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	status = devm_add_action_or_reset(&pdev->dev, spi_gpio_put, master);
--	if (status)
-+	if (status) {
-+		spi_master_put(master);
- 		return status;
-+	}
- 
- 	if (of_id)
- 		status = spi_gpio_probe_dt(pdev, master);
--- 
-2.17.1
+Acked-by: Rob Herring <robh@kernel.org>
 
+>  
+>  Required Properties:
+>  - #address-cells	: should be 1
+> @@ -6,6 +6,7 @@ Required Properties:
+>  - reg			: address offset and range of bus
+>  - compatible		: should be "aspeed,ast2400-i2c-bus"
+>  			  or "aspeed,ast2500-i2c-bus"
+> +			  or "aspeed,ast2600-i2c-bus"
+>  - clocks		: root clock of bus, should reference the APB
+>  			  clock in the second cell
+>  - resets		: phandle to reset controller with the reset number in
+> -- 
+> 1.8.3.1
+> 
