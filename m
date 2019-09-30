@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0B2C35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30608C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E86FE2086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 018BD216F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:04:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=antmicro-com.20150623.gappssmtp.com header.i=@antmicro-com.20150623.gappssmtp.com header.b="GJHOt5ZJ"
+	dkim=pass (2048-bit key) header.d=antmicro-com.20150623.gappssmtp.com header.i=@antmicro-com.20150623.gappssmtp.com header.b="l3Nvt/bL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731200AbfI3NEU (ORCPT
+        id S1731207AbfI3NEj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 09:04:20 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36271 "EHLO
+        Mon, 30 Sep 2019 09:04:39 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:45268 "EHLO
         mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731177AbfI3NET (ORCPT
+        with ESMTP id S1730929AbfI3NEi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:04:19 -0400
-Received: by mail-lj1-f196.google.com with SMTP id v24so9391724ljj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 06:04:18 -0700 (PDT)
+        Mon, 30 Sep 2019 09:04:38 -0400
+Received: by mail-lj1-f196.google.com with SMTP id q64so9351391ljb.12
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 06:04:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=antmicro-com.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:mime-version:content-disposition
          :user-agent;
-        bh=wAmsq1ZRjAy0Dy4hMBe94TXzxJb/3I02Gi7CAmHEC18=;
-        b=GJHOt5ZJCob5AOYOFNDmBvLuTGz/01PKndvnW99jFT5LG3Mu4ZEwEvy1cY+IH2VlYn
-         1fmK9jIFvISsCbyqjM+faIdSgGrvb7pkaX0f3NWmkvy0BPTadP2fXoq5Yh+BmEUZZmHj
-         RnFNykhxCz2HcEuxOGjC/KKnM2cmU/jPE6JPbsUiiP6N3X5FnMw0bLK5ww/mSrEfR2X5
-         IildYAvxuvySKj1xNFidFzuUZ1YuZuFkUKuBxq7PBJzahHh/OMUwRkpcEfNgcnotXOKR
-         dfQkBKh5jXoS/t0Vni55ey+QO7Pvbj5lu7HI5aFX+1jRC5XuP6zn9Vmr8oX/sSRC/lsK
-         1qzw==
+        bh=VeoaIKGJb/61Ov+yB9zveHlqXZTEnNdTJ6NCEWY/+7A=;
+        b=l3Nvt/bLf/BeU5VnuKN3QrlxayW110zSMz+Omal6lVqbPWnUZ1gRvteEndYHlv2K/e
+         Kt3vk2g0TTVpySFJrFfaPyDMKae3t7mIxwR5n/squlLevrTksNW0QJc0ir09lNHPybw5
+         SXTt4gUX4NFBfK0zokhPR5vmrQifykB4nWgNQ7gxUFf7DyfUsH90kPo/mOcLeLDIEz9a
+         GbW5XtcelR6sery85SAAw3Anqvk3tl4QfkY+ZP/fP2svUAtwuo8p09zZ2M62j4LfwjSA
+         F/19QdNEJiKEqb0lF8viBvdZCw68BsKCLR76s4aSOygoEHfomgBJ0XvbbY9f/r3bQz8V
+         RziA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
          :content-disposition:user-agent;
-        bh=wAmsq1ZRjAy0Dy4hMBe94TXzxJb/3I02Gi7CAmHEC18=;
-        b=X4fjAVlLHeGGzIwuw5Y7ITZayk0CTOJ0w4ZaCer/0kSBDQTEZwrGVEgX2F+eGYHLba
-         Ju1T7SFLMRgp3Oi7lJfMJkVm20996Mdh5+zjbBYoRlTmjU4L0baI0roaV6HUun9mdkRm
-         KfmvLm87djze/Q5SEobTfR9WsEQ7V/pQnQ+dl1YMnffw0E625AAyAs49uVTgnRDgXZ5/
-         E+kiExpbiGcAfjkyvFSo/rOP+k50UaZWoA0oBblWzBiL/a+VVWd5wVeL+s5jNGT/Kgh0
-         bxD3t5XOjeVUf2HOGZ5HOV+QA8L8pizFNpfukiJHO+cfS/89SVm3KRkNRMwg1zNZx/bj
-         vrjA==
-X-Gm-Message-State: APjAAAVOPSzkkRMNVQxNtyCXBogVWVZ3ugNp1z8j6QTpjDvXQjvfwpOl
-        C/SqqhqsjegKOtgTkpB5ew8uuA==
-X-Google-Smtp-Source: APXvYqw0uKUhs9OxqzC42P/Kf2Rn9e00fau/7D2/YvGAN+Wkv+FMrYaUf5TyMdwJRcNlVDlswQdmtg==
-X-Received: by 2002:a2e:a0cd:: with SMTP id f13mr11973026ljm.93.1569848657561;
-        Mon, 30 Sep 2019 06:04:17 -0700 (PDT)
+        bh=VeoaIKGJb/61Ov+yB9zveHlqXZTEnNdTJ6NCEWY/+7A=;
+        b=p6nYJODU/P0IUIadaCss8vaRBqacWrOsP9rDzYWOHuwO2ywsyfvFDLT3Wmxg8V3ztg
+         FT+JhlL9UA3NyGBRjbp0C2T3TxF9BRejk7vY/SpILaday+7SOis7m7sYtrGRMXTRDR+y
+         4w+jeMq+weCNCXRQCroL+OE3ivvNwgd9UWOxrnnwqsl3Vtw5VyI2RltFmsTpo2SYeyI2
+         p+fXEg1w/KCSnZ5atq4+46sx4Rh/xXJPNYP9oeFLOv7F6O/qzBJ1IdKimRpI+vy64hWe
+         SKHHiF2ecaMRw2q3akjURUuoIDWik0eh99Nit1jlfGKtJQRlh1Jr9fLS/KTytVq7SgDC
+         etOQ==
+X-Gm-Message-State: APjAAAV7Qy7AYwwHK+7WX/D44KurJuHagMkP2rRoVor0R6EcHh63RxTT
+        r6wqQg0q5gxaaebvE0pDzS5HYQ==
+X-Google-Smtp-Source: APXvYqyCjXJY28l2+1mzvUJg1TYUmquAGr+sqV9Av/SyxGcE7N9rRX4Pr7ENgnIqoNmODxGr7QRqsQ==
+X-Received: by 2002:a2e:42c9:: with SMTP id h70mr11803035ljf.88.1569848676849;
+        Mon, 30 Sep 2019 06:04:36 -0700 (PDT)
 Received: from localhost.localdomain (d79-196.icpnet.pl. [77.65.79.196])
-        by smtp.gmail.com with ESMTPSA id s26sm3060394lfc.60.2019.09.30.06.04.15
+        by smtp.gmail.com with ESMTPSA id b15sm3220379lfj.84.2019.09.30.06.04.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 06:04:16 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 15:04:11 +0200
+        Mon, 30 Sep 2019 06:04:36 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 15:04:30 +0200
 From:   Mateusz Holenko <mholenko@antmicro.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -74,8 +74,8 @@ Cc:     Karol Gugala <kgugala@antmicro.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
         "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: [PATCH 1/3] dt-bindings: vendor: add vendor prefix for LiteX
-Message-ID: <20190930130411.GA8312@localhost.localdomain>
+Subject: [PATCH 2/3] dt-bindings: serial: document LiteUART bindings
+Message-ID: <20190930130430.GA9080@localhost.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -87,27 +87,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Filip Kokosinski <fkokosinski@internships.antmicro.com>
 
-Add vendor prefix for LiteX SoC builder.
+Add documentation for LiteUART devicetree bindings.
 
 Signed-off-by: Filip Kokosinski <fkokosinski@internships.antmicro.com>
 Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ .../devicetree/bindings/serial/litex,liteuart.txt    | 12 ++++++++++++
+ MAINTAINERS                                          |  6 ++++++
+ 2 files changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serial/litex,liteuart.txt
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 329b668da..4143c52a8 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -533,6 +533,8 @@ patternProperties:
-     description: Linux-specific binding
-   "^linx,.*":
-     description: Linx Technologies
-+  "^litex,.*":
-+    description: LiteX SoC builder
-   "^lltc,.*":
-     description: Linear Technology Corporation
-   "^logicpd,.*":
+diff --git a/Documentation/devicetree/bindings/serial/litex,liteuart.txt b/Documentation/devicetree/bindings/serial/litex,liteuart.txt
+new file mode 100644
+index 000000000..13c71a0c9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/serial/litex,liteuart.txt
+@@ -0,0 +1,12 @@
++LiteUART serial controller
++
++Required properties:
++- compatible: should be "litex,liteuart"
++- reg: base address and length of the register set for this device
++
++Example:
++
++uart0: serial@f0001000 {
++	compatible = "litex,liteuart";
++	reg = <0xe0001800 0x100>;
++};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b2326dece..65a6cf296 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9462,6 +9462,12 @@ F:	Documentation/misc-devices/lis3lv02d.rst
+ F:	drivers/misc/lis3lv02d/
+ F:	drivers/platform/x86/hp_accel.c
+ 
++LITEX PLATFORM
++M:	Karol Gugala <kgugala@antmicro.com>
++M:	Mateusz Holenko <mholenko@antmicro.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/serial/litex,liteuart.txt
++
+ LIVE PATCHING
+ M:	Josh Poimboeuf <jpoimboe@redhat.com>
+ M:	Jiri Kosina <jikos@kernel.org>
 -- 
 2.23.0
 
