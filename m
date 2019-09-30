@@ -7,247 +7,239 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 450F5C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8330ECE589
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C9C821920
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5B8820640
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:00:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jURCmzfy"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DSfUR24h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbfJAMAp (ORCPT
+        id S1731234AbfJAMAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 08:00:45 -0400
+        Tue, 1 Oct 2019 08:00:46 -0400
 Received: from fllv0015.ext.ti.com ([198.47.19.141]:50692 "EHLO
         fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbfJAMAp (ORCPT
+        with ESMTP id S1726131AbfJAMAp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Oct 2019 08:00:45 -0400
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8UKMWaj121399;
-        Mon, 30 Sep 2019 15:22:32 -0500
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8UKYbPN124510;
+        Mon, 30 Sep 2019 15:34:37 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569874952;
-        bh=/ubZdApPBnsXOwica/+pxmLmIFznLxE+d34pdI5c1JY=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=jURCmzfyYxoJwybgfhe2AQ8cgH2bRRhMutFF1AeKG8pW8kURB5xlVa4Mai1gWRbJW
-         O39iVxJrgLITaQskttlECqj2ONDqprRUOKcUj5EN8CyGII2oQQTDVhe6+N+/P+7aEN
-         SMKnEoC6z6HCVqSPahuPOJ3ssXAKZ2H12rexWnCU=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8UKMWDM001356
+        s=ti-com-17Q1; t=1569875677;
+        bh=bw9tlbxrjC99BnEJLTEUHA5a+42MA0ECMgh+G7yLHgM=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=DSfUR24hPbevBBXliMfc9GuhWY7K6MZ2zHxsxtylDlkOLJKgPOd3A64qiQkcbyedE
+         eO9JKqrTuaczbma/0rCEwyFPZQ+9pbG9OtLSvOMWRK33xECmeKgc7/FhLncPonS5Af
+         p0z1Hrr80Jk1ib6xXRD+3bnA+18LBK+IfcfdYpaI=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8UKYbL9017660
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 30 Sep 2019 15:22:32 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 30 Sep 2019 15:34:37 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 30
- Sep 2019 15:22:22 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ Sep 2019 15:34:26 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 30 Sep 2019 15:22:32 -0500
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with SMTP id x8UKMWe8020400;
-        Mon, 30 Sep 2019 15:22:32 -0500
-Date:   Mon, 30 Sep 2019 15:24:43 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [Patch 16/16] media: ti-vpe: vpe: don't rely on colorspace
- member for conversion
-Message-ID: <20190930202443.tvu4htu7w5sv33ee@ti.com>
-References: <20190927183650.31345-1-bparrot@ti.com>
- <20190927183650.31345-17-bparrot@ti.com>
- <263b7b22-b867-3f73-bcaf-8978f9e3b415@xs4all.nl>
+ Frontend Transport; Mon, 30 Sep 2019 15:34:27 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8UKYaWB055926;
+        Mon, 30 Sep 2019 15:34:36 -0500
+Subject: Re: [PATCH v9 13/15] leds: lp55xx: Update the lp55xx to use the multi
+ color framework
+From:   Dan Murphy <dmurphy@ti.com>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190925174616.3714-1-dmurphy@ti.com>
+ <20190925174616.3714-14-dmurphy@ti.com>
+ <59e58ccf-84fb-5db7-5008-20afc7436d35@gmail.com>
+ <64d00aab-501c-d709-94af-4747a27df098@ti.com>
+ <35e25398-81de-3755-7979-72638a119c77@gmail.com>
+ <74099f4d-5a90-3241-9c40-47ca6f0c9521@ti.com>
+Message-ID: <4f8247b4-45ce-a1c3-389f-2fe0de5c0e7a@ti.com>
+Date:   Mon, 30 Sep 2019 15:34:36 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <263b7b22-b867-3f73-bcaf-8978f9e3b415@xs4all.nl>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <74099f4d-5a90-3241-9c40-47ca6f0c9521@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hans Verkuil <hverkuil@xs4all.nl> wrote on Mon [2019-Sep-30 11:05:13 +0200]:
-> On 9/27/19 8:36 PM, Benoit Parrot wrote:
-> > Up to now VPE was relying on the colorspace value of struct v4l2_format
-> > as an indication to perform color space conversion from YUV to RGB or
-> > not.
-> > 
-> > Instead we should used the source/destination fourcc codes as a more
-> > reliable indication to perform color space conversion or not.
-> > 
-> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> > ---
-> >  drivers/media/platform/ti-vpe/vpe.c | 41 ++++++++++++++++++++++-------
-> >  1 file changed, 32 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-> > index e30981cd3e8f..d002adc6263f 100644
-> > --- a/drivers/media/platform/ti-vpe/vpe.c
-> > +++ b/drivers/media/platform/ti-vpe/vpe.c
-> > @@ -353,6 +353,32 @@ enum {
-> >  	Q_DATA_DST = 1,
-> >  };
-> >  
-> > +static bool is_fmt_rgb(u32 fourcc)
-> > +{
-> > +	if (fourcc == V4L2_PIX_FMT_RGB24 ||
-> > +	    fourcc == V4L2_PIX_FMT_BGR24 ||
-> > +	    fourcc == V4L2_PIX_FMT_RGB32 ||
-> > +	    fourcc == V4L2_PIX_FMT_BGR32 ||
-> > +	    fourcc == V4L2_PIX_FMT_RGB565 ||
-> > +	    fourcc == V4L2_PIX_FMT_RGB555)
-> > +		return true;
-> > +
-> > +	return false;
-> > +}
-> 
-> Why not add a 'bool is_rgb' to struct vpe_fmt?
-> 
-> It is all too easy to forget to update this function if a new RGB format is
-> added to the vpe_formats array in the future.
+Jacek
 
-Yeah I debate going that route also.
-I can change it easily enough.
+On 9/30/19 11:31 AM, Dan Murphy wrote:
+> Jacek
+>
+> On 9/29/19 8:01 AM, Jacek Anaszewski wrote:
+>> Dan,
+>>
+>> On 9/26/19 2:02 PM, Dan Murphy wrote:
+>>> Jacek
+>>>
+>>> On 9/25/19 5:00 PM, Jacek Anaszewski wrote:
+>>>> Dan,
+>>>>
+>>>> On 9/25/19 7:46 PM, Dan Murphy wrote:
+>>>>> Update the lp5523 to allow the use of the multi color framework.
+>>>>>
+>>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>>> ---
+>>>>>    drivers/leds/Kconfig                      |   1 +
+>>>>>    drivers/leds/leds-lp5523.c                |  13 ++
+>>>>>    drivers/leds/leds-lp55xx-common.c         | 150 
+>>>>> ++++++++++++++++++----
+>>>>>    drivers/leds/leds-lp55xx-common.h         |  11 ++
+>>>>>    include/linux/platform_data/leds-lp55xx.h |   6 +
+>>>>>    5 files changed, 157 insertions(+), 24 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+>>>>> index 84f60e35c5ee..dc3d9f2194cd 100644
+>>>>> --- a/drivers/leds/Kconfig
+>>>>> +++ b/drivers/leds/Kconfig
+>>>>> @@ -377,6 +377,7 @@ config LEDS_LP50XX
+>>>>>    config LEDS_LP55XX_COMMON
+>>>>>        tristate "Common Driver for TI/National
+>>>>> LP5521/5523/55231/5562/8501"
+>>>>>        depends on LEDS_LP5521 || LEDS_LP5523 || LEDS_LP5562 ||
+>>>>> LEDS_LP8501
+>>>>> +    depends on LEDS_CLASS_MULTI_COLOR && OF
+>>>>>        select FW_LOADER
+>>>>>        select FW_LOADER_USER_HELPER
+>>>>>        help
+>>>>> diff --git a/drivers/leds/leds-lp5523.c b/drivers/leds/leds-lp5523.c
+>>>>> index d0b931a136b9..8b2cdb98fed6 100644
+>>>>> --- a/drivers/leds/leds-lp5523.c
+>>>>> +++ b/drivers/leds/leds-lp5523.c
+>>>>> @@ -791,6 +791,18 @@ static ssize_t store_master_fader_leds(struct
+>>>>> device *dev,
+>>>>>        return ret;
+>>>>>    }
+>>>>>    +static int lp5523_led_intensity(struct lp55xx_led *led, int 
+>>>>> chan_num)
+>>>> Why do we need this function? brightness op will not suffice?
+>>> I looked at this before sending it in.  This API adds the chan_num to
+>>> write to.
+>>>
+>>> The brightness_fn does not it takes it from the led structure.
+>>>
+>>>>> +{
+>>>>> +    struct lp55xx_chip *chip = led->chip;
+>>>>> +    int ret;
+>>>>> +
+>>>>> +    mutex_lock(&chip->lock);
+>>>>> +    ret = lp55xx_write(chip, LP5523_REG_LED_PWM_BASE + chan_num,
+>>>>> +             led->brightness);
+>>>>> +    mutex_unlock(&chip->lock);
+>>>>> +    return ret;
+>>>>> +}
+>>>>> +
+>>>>>    static int lp5523_led_brightness(struct lp55xx_led *led)
+>>>>>    {
+>>>>>        struct lp55xx_chip *chip = led->chip;
+>>>>> @@ -857,6 +869,7 @@ static struct lp55xx_device_config lp5523_cfg = {
+>>>>>        .max_channel  = LP5523_MAX_LEDS,
+>>>>>        .post_init_device   = lp5523_post_init_device,
+>>>>>        .brightness_fn      = lp5523_led_brightness,
+>>>>> +    .color_intensity_fn = lp5523_led_intensity,
+>>>>>        .set_led_current    = lp5523_set_led_current,
+>>>>>        .firmware_cb        = lp5523_firmware_loaded,
+>>>>>        .run_engine         = lp5523_run_engine,
+>>>>> diff --git a/drivers/leds/leds-lp55xx-common.c
+>>>>> b/drivers/leds/leds-lp55xx-common.c
+>>>>> index 44ced02b49f9..0e4b3a9d3047 100644
+>>>>> --- a/drivers/leds/leds-lp55xx-common.c
+>>>>> +++ b/drivers/leds/leds-lp55xx-common.c
+>>>>> @@ -136,9 +136,26 @@ static int lp55xx_set_brightness(struct
+>>>>> led_classdev *cdev,
+>>>>>    {
+>>>>>        struct lp55xx_led *led = cdev_to_lp55xx_led(cdev);
+>>>>>        struct lp55xx_device_config *cfg = led->chip->cfg;
+>>>>> +    int brightness_val[LP55XX_MAX_GROUPED_CHAN];
+>>>>> +    int ret;
+>>>>> +    int i;
+>>>>> +
+>>>>> +    if (led->mc_cdev.num_leds > 1) {
+>>>>> +        led_mc_calc_brightness(&led->mc_cdev,
+>>>>> +                       brightness, brightness_val);
+>>>>> +        for (i = 0; i < led->mc_cdev.num_leds; i++) {
+>>>>> +            led->brightness = brightness_val[i];
+>>>>> +            ret = cfg->color_intensity_fn(led,
+>>>>> + led->grouped_channels[i]);
+>>>> Now we will have three separate calls for each color component
+>>>> (and possibly sleeping on mutex on contention).
+>>>>
+>>>> Probably LED mc class use case will need a bit different design.
+>>>>
+>>>> Also, instead of grouped_channels we could possibly have
+>>>>
+>>>> led_mc_get_color_id(&led->mc_dev, i)
+>>> color_id and grouped_channels are not a 1:1 mapping
+>> OK, they're channel numbers.
+>>
+>>>> which would map entry position index to color_id.
+>>>>
+>>>> I will stop reviewing here and will continue after taking
+>>>> deeper look at this lp55xx design.
+>> I've analyzed that design in greater detail and have started
+>> to wonder why you can't pass two arrays to the new op:
+>> channel numbers and corresponding calculated channel intensities?
+>
+>
+> OK so I coded this up.  And there is not a clean way to do this since 
+> the channels and colors are not correlated between two structures.  In 
+> order to do this we would have to expand the grouped_channel and 
+> channel_color arrays in the lp55xx_led to LED_COLOR_ID_MAX and put the 
+> channel and color_component value in the position in the array that is 
+> associated with the color ID. Then the driver can loop through the 
+> available colors from the MC class and get the channel and 
+> color_component information.
+>
+I spent the day trying to figure out the cleanest way to do this.  What 
+I did was I added a struct to the MC framework (struct name will 
+probably need to be changed)
 
-Although, depending on the further changes required below this may be moot.
-We'll see.
+This also solves the problem that you brought up on the caller knowing 
+what ID and brightness goes to what.
 
-> 
-> > +
-> > +/*
-> > + * This helper is only used to setup the color space converter
-> > + * the actual value returned is only to broadly differentiate between
-> > + * RGB and YUV
-> > + */
-> > +static enum  v4l2_colorspace fourcc_to_colorspace(u32 fourcc)
-> 
-> double space after enum.
+struct led_mc_color_conversion {
+     int color_id;
+     int brightness;
+};
 
-Arrg, I'll fix that.
+For devices that need the color conversion to take place the driver will 
+pass in an array of structs to be filled out by the MC framework.  Once 
+the MCFW populates the array the device driver can map the color IDs to 
+the the associated output.  So for the LP55xx I was able to map the 
+color ID to the channel number.
 
-> 
-> > +{
-> > +	if (is_fmt_rgb(fourcc))
-> > +		return V4L2_COLORSPACE_SRGB;
-> > +
-> > +	return V4L2_COLORSPACE_SMPTE170M;
-> > +}
-> 
-> This is highly confusing. RGB or YUV conversion does not change the colorspace
-> at all.
-> 
+I added a brightness value to the intensity function so now the caller 
+passes in the channel number and the brightness.  This should be all the 
+child cares about.
 
-Well I see here that I am missing some understanding.
-But as you saw all I am trying to get to is this: do we need to setup YUV
-to RGB conversion or not.
+I think it is ok that the common code calls the intensity function x 
+number of times.  Otherwise each child will need to have the same code 
+to de-reference the struct seems a bit error wrought IMO.
 
-Regarding csc_set_coeff() I was not trying to re-write it but use the
-pixel_formats as hint. I understand that this might not be as flexible as
-it needs to be (meaning handling colorspace, xfer_func, ycbr_encoding or
-quantization in a sane way) but to at least get the correct direction of the
-conversion. At the moment VPE driver only handles YUV to RGB conversion.
+Dan
 
 
-> There are four colorimetry related fields: colorspace, xfer_func, ycbcr_enc and
-> quantization. Most hardware (including this one AFAICT) have a 3x3 matrix + a
-> vector to do the conversion. This only allows you to convert between different
-> ycbcr encodings and quantization ranges. The colorspace and xfer_func parameters
-> stay unchanged (you need gamma tables and two other 3x3 matrices for that).
-> 
-> So if you want to set up the 3x3 matrix + vector correctly, then you need to
-> provide the ycbcr_enc value + quantization value of the source to your function.
-> ycbcr_enc is only valid of YUV pixelformats, of course, and you can use
-> V4L2_MAP_COLORSPACE_DEFAULT, V4L2_MAP_YCBCR_ENC_DEFAULT and V4L2_MAP_QUANTIZATION_DEFAULT
-> if one or more of these values as set by userspace are 0.
-> 
-> Since the V4L2 API does not (yet) support setting ycbcr_enc and quantization for the
-> capture queue you have to provide that information yourself:
-> 
-> For RGB ycbcr_enc is of course ignored, and quantization should be full range.
-> For YUV it depends: the quantization is always limited range, but for the ycbcr_enc
-> you have a choice: if the source was YUV, then you can decide to just copy the
-> ycbcr_enc value. Alternatively, you can convert to 601 for SDTV and 709 for anything
-> else. The latter is also the recommended choice if the source was RGB.
-> 
-> In any case, please do not use enum v4l2_colorspace in the csc_set_coeff function:
-> it's misleading.
-
-But I guess I can rewrite the csc_set_coeff() module API to use at least
-pixel_format instead of enum_colorspace at least as a first step.
-
-Full color space parameters support (meaning all 4 of them) would probably
-be better done as its own future patch series.
-
-Benoit
-
-> 
-> https://hverkuil.home.xs4all.nl/spec/uapi/v4l/colorspaces.html and the following two
-> sections contain a lot of information about how colorspaces work.
-> 
-> Regards,
-> 
-> 	Hans
-> 
-> > +
-> >  /* find our format description corresponding to the passed v4l2_format */
-> >  static struct vpe_fmt *__find_format(u32 fourcc)
-> >  {
-> > @@ -764,11 +790,10 @@ static void set_src_registers(struct vpe_ctx *ctx)
-> >  static void set_dst_registers(struct vpe_ctx *ctx)
-> >  {
-> >  	struct vpe_mmr_adb *mmr_adb = ctx->mmr_adb.addr;
-> > -	enum v4l2_colorspace clrspc = ctx->q_data[Q_DATA_DST].colorspace;
-> >  	struct vpe_fmt *fmt = ctx->q_data[Q_DATA_DST].fmt;
-> >  	u32 val = 0;
-> >  
-> > -	if (clrspc == V4L2_COLORSPACE_SRGB) {
-> > +	if (is_fmt_rgb(fmt->fourcc)) {
-> >  		val |= VPE_RGB_OUT_SELECT;
-> >  		vpdma_set_bg_color(ctx->dev->vpdma,
-> >  			(struct vpdma_data_format *)fmt->vpdma_fmt[0], 0xff);
-> > @@ -912,7 +937,8 @@ static int set_srcdst_params(struct vpe_ctx *ctx)
-> >  	set_dei_regs(ctx);
-> >  
-> >  	csc_set_coeff(ctx->dev->csc, &mmr_adb->csc_regs[0],
-> > -		s_q_data->colorspace, d_q_data->colorspace);
-> > +		      fourcc_to_colorspace(s_q_data->fmt->fourcc),
-> > +		      fourcc_to_colorspace(d_q_data->fmt->fourcc));
-> >  
-> >  	sc_set_hs_coeffs(ctx->dev->sc, ctx->sc_coeff_h.addr, src_w, dst_w);
-> >  	sc_set_vs_coeffs(ctx->dev->sc, ctx->sc_coeff_v.addr, src_h, dst_h);
-> > @@ -1285,7 +1311,7 @@ static void device_run(void *priv)
-> >  	if (ctx->deinterlacing)
-> >  		add_out_dtd(ctx, VPE_PORT_MV_OUT);
-> >  
-> > -	if (d_q_data->colorspace == V4L2_COLORSPACE_SRGB) {
-> > +	if (is_fmt_rgb(d_q_data->fmt->fourcc)) {
-> >  		add_out_dtd(ctx, VPE_PORT_RGB_OUT);
-> >  	} else {
-> >  		add_out_dtd(ctx, VPE_PORT_LUMA_OUT);
-> > @@ -1327,7 +1353,7 @@ static void device_run(void *priv)
-> >  	}
-> >  
-> >  	/* sync on channel control descriptors for output ports */
-> > -	if (d_q_data->colorspace == V4L2_COLORSPACE_SRGB) {
-> > +	if (is_fmt_rgb(d_q_data->fmt->fourcc)) {
-> >  		vpdma_add_sync_on_channel_ctd(&ctx->desc_list,
-> >  			VPE_CHAN_RGB_OUT);
-> >  	} else {
-> > @@ -1682,10 +1708,7 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
-> >  		height = pix->height;
-> >  
-> >  	if (!pix->colorspace) {
-> > -		if (fmt->fourcc == V4L2_PIX_FMT_RGB24 ||
-> > -				fmt->fourcc == V4L2_PIX_FMT_BGR24 ||
-> > -				fmt->fourcc == V4L2_PIX_FMT_RGB32 ||
-> > -				fmt->fourcc == V4L2_PIX_FMT_BGR32) {
-> > +		if (is_fmt_rgb(fmt->fourcc)) {
-> >  			pix->colorspace = V4L2_COLORSPACE_SRGB;
-> >  		} else {
-> >  			if (height > 1280)	/* HD */
-> > 
-> 
+> Beyond that in coding this and thinking about the design it is better 
+> to have the lp55xx_common code to do all the heavy lifting and the 
+> children to just perform the action on the device itself. So doing the 
+> loop in the common code like we have now and calling the intensity_fn 
+> based on x number of LEDs.  The child subscriber to the common code 
+> should have to worry about the color it should only care about the 
+> channel and the value.
+>
+> Dan
+>
+>
