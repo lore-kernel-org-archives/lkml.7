@@ -2,184 +2,143 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B479C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0676BC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0577A2075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:32:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RZCiuXFe"
+	by mail.kernel.org (Postfix) with ESMTP id D04502190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:32:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569879161;
+	bh=ahrG45JXVtUfkKqLUmvU7THmziQbpk9vQeSUmrjpTn4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qxK5Q/SZR5qNgPSR1o7BTRsiUuawE+B5Pb2+uV06VcnIH2nHGH54aqurL+UsQKMBA
+	 Dw8g1nVdJU48d/d9cNXgBJ1NFD1KQL+9DnTDekX0RYchZVzn6kM1jp65MeM9fN0O2A
+	 o0acZ3udmEc53nKH3ZDBb4GiI8WgXRBYA8z8FkiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730563AbfI3VcD (ORCPT
+        id S1730902AbfI3Vcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 17:32:03 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35066 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727118AbfI3VcD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 17:32:03 -0400
-Received: by mail-io1-f65.google.com with SMTP id q10so42386084iop.2
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 14:32:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w11mGwXAGqSILDThqsqkwSrlbLeSz5QPbtHcgogaejo=;
-        b=RZCiuXFesadeX9FL8sHaWkzlZ7rJdatezLvrAW3j8IXocXNwZNcvwbc9gbkFv7m00J
-         yTs613PwBpXWB+EmspKI4MmgPD8FBe3nWCCPkQvXyIai51+rFRgxjSpOb4ZQXFXbAa1r
-         agIuKthIg+b0uobf/MtFfUioYrMfzhHHJooi4jgBmjjYM9lxhA3WrFrgyp/nLCE9uqqV
-         0iioVO7IKFmCNkMIBz5nxHMuGGyfzpcO34EXgoRupNQpmWcNE8sUsTwOCObICiRPDX6N
-         l/L0VxTTmRmjY28pVhvL8NsStSqPs96JUudPS2t4SFBOLtjqI2d4+SKRtkFW4DKmIZmf
-         Fcyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w11mGwXAGqSILDThqsqkwSrlbLeSz5QPbtHcgogaejo=;
-        b=Y3qIOF4eyWx2uf7JrUq6f6pjt13MRUpmG67ApYeLyE52ldgcZ21Y2VnLwMFYRg3Uft
-         P0FqTndxZXu0KznkHWjM3K2Z8xEkLZo2iCjJQINPE/94EvQbVeMajupBRLIhUbP627+8
-         wVnz8oR/cbUVP33YGeD4mLwQkUwtpYgre4WojQ9B0Rnv696bGCrB5SzKbTflyhqskLzS
-         xOiidG+qGnJplvpnJI99BfFe643Ot1zDO+HFNcrXep9qCuDQ4MFhoH5oM2TZo2GQhc8M
-         Fqnhb5+LqTx5Ni/C5Ny6R5MPLTIOpyyMknlbR8q3/I6jmqmTLRkYmn3mnG5nXO8pfkoI
-         xSJA==
-X-Gm-Message-State: APjAAAVFEVi5EbQbQXXKPIE4RlmYGRbQU9xkrlX5BEFHIb0r8SMHjFIl
-        lt59KGee6FTBWBNEPccOu7AjrRtitRfofOxY4mY=
-X-Google-Smtp-Source: APXvYqxO56M3+g2NqwZT4JBLOZ9EjcM/IWK+zeqrzDyjaGItXiwH7jlRd5Jd3Gi4fjetcDWqMUgpWWwYj92aLRLyxcI=
-X-Received: by 2002:a92:c90b:: with SMTP id t11mr23674682ilp.227.1569879122078;
- Mon, 30 Sep 2019 14:32:02 -0700 (PDT)
+        Mon, 30 Sep 2019 17:32:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51700 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726504AbfI3Vcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 17:32:41 -0400
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 621A621A4C;
+        Mon, 30 Sep 2019 21:32:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569879159;
+        bh=ahrG45JXVtUfkKqLUmvU7THmziQbpk9vQeSUmrjpTn4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ZHq9Iid0BbcFZon6JAJa0Ns1LeLXWyA3y3CHxpLnMmZQP4jE0ySqZl79ZhI5AAMj7
+         k7GDfiQmnUIPLDhpRZZUhEp9WeAj6gnl4VG9oem/NCq4OxW5YBNSdgo3FERubtHHSt
+         hAUhe7ijMx3TQOa4lXjRRfhAnkprImxZy6Eiivw4=
+Received: by mail-qk1-f172.google.com with SMTP id 4so9212925qki.6;
+        Mon, 30 Sep 2019 14:32:39 -0700 (PDT)
+X-Gm-Message-State: APjAAAU5kSyGZQWuDbnXpqf6ooq9zBW9I3Qr9IWpzdILpDdPTZlRgEYJ
+        /BtKdKaokNBxOyUUtp6M/9Rw4z7/oNen1nmDKA==
+X-Google-Smtp-Source: APXvYqwmdAG0zihvbA/HDPLGoFaCcqTkPDudG+MUypShjhLGzz8mxUI+We5DRSX0QT0g6JWF+E3QA4gzC4d8PIMbsA0=
+X-Received: by 2002:a05:620a:7da:: with SMTP id 26mr2286889qkb.119.1569879158412;
+ Mon, 30 Sep 2019 14:32:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <7bab24ff-ded7-9f76-ba25-efd07cdd30dd@amd.com> <20190918190529.17298-1-navid.emamdoost@gmail.com>
- <88fc639a-32ed-b6c6-f930-552083d5887d@amd.com>
-In-Reply-To: <88fc639a-32ed-b6c6-f930-552083d5887d@amd.com>
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Date:   Mon, 30 Sep 2019 16:31:51 -0500
-Message-ID: <CAEkB2EREjd9BbOeMmk9VWg+UB4ujieMz13Pj7hoAPpE2PGh3hQ@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/amdgpu: fix multiple memory leaks
-To:     "Koenig, Christian" <Christian.Koenig@amd.com>
-Cc:     "emamd001@umn.edu" <emamd001@umn.edu>,
-        "smccaman@umn.edu" <smccaman@umn.edu>,
-        "kjlu@umn.edu" <kjlu@umn.edu>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Rex Zhu <Rex.Zhu@amd.com>,
+References: <20190930130430.GA9080@localhost.localdomain>
+In-Reply-To: <20190930130430.GA9080@localhost.localdomain>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 30 Sep 2019 16:32:27 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLXJNvWOOajS4JVVek=h+v_Fxrx58ogQ0Cz+5n5Sh0+=g@mail.gmail.com>
+Message-ID: <CAL_JsqLXJNvWOOajS4JVVek=h+v_Fxrx58ogQ0Cz+5n5Sh0+=g@mail.gmail.com>
+Subject: Re: [PATCH 2/3] dt-bindings: serial: document LiteUART bindings
+To:     Mateusz Holenko <mholenko@antmicro.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        devicetree@vger.kernel.org, Karol Gugala <kgugala@antmicro.com>,
+        Jiri Slaby <jslaby@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sam Ravnborg <sam@ravnborg.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 3:03 AM Koenig, Christian
-<Christian.Koenig@amd.com> wrote:
+On Mon, Sep 30, 2019 at 8:04 AM Mateusz Holenko <mholenko@antmicro.com> wrote:
 >
-> Am 18.09.19 um 21:05 schrieb Navid Emamdoost:
-> > In acp_hw_init there are some allocations that needs to be released in
-> > case of failure:
-> >
-> > 1- adev->acp.acp_genpd should be released if any allocation attemp for
-> > adev->acp.acp_cell, adev->acp.acp_res or i2s_pdata fails.
-> > 2- all of those allocations should be released if pm_genpd_add_device
-> > fails.
-> >
-> > v2: moved the released into goto error handlings
-> >
-> > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> > ---
-> >   drivers/gpu/drm/amd/amdgpu/amdgpu_acp.c | 30 +++++++++++++++++--------
-> >   1 file changed, 21 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_acp.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_acp.c
-> > index eba42c752bca..c0db75b71859 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_acp.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_acp.c
-> > @@ -184,7 +184,7 @@ static struct device *get_mfd_cell_dev(const char *device_name, int r)
-> >    */
-> >   static int acp_hw_init(void *handle)
-> >   {
-> > -     int r, i;
-> > +     int r, i, ret;
-> >       uint64_t acp_base;
-> >       u32 val = 0;
-> >       u32 count = 0;
-> > @@ -231,20 +231,21 @@ static int acp_hw_init(void *handle)
-> >       adev->acp.acp_cell = kcalloc(ACP_DEVS, sizeof(struct mfd_cell),
-> >                                                       GFP_KERNEL);
-> >
-> > -     if (adev->acp.acp_cell == NULL)
-> > -             return -ENOMEM;
-> > +     if (adev->acp.acp_cell == NULL) {
-> > +             ret = -ENOMEM;
-> > +             goto out1;
-> > +     }
-> >
-> >       adev->acp.acp_res = kcalloc(5, sizeof(struct resource), GFP_KERNEL);
-> >       if (adev->acp.acp_res == NULL) {
-> > -             kfree(adev->acp.acp_cell);
-> > -             return -ENOMEM;
-> > +             ret = -ENOMEM;
-> > +             goto out2;
-> >       }
-> >
-> >       i2s_pdata = kcalloc(3, sizeof(struct i2s_platform_data), GFP_KERNEL);
-> >       if (i2s_pdata == NULL) {
-> > -             kfree(adev->acp.acp_res);
-> > -             kfree(adev->acp.acp_cell);
-> > -             return -ENOMEM;
-> > +             ret = -ENOMEM;
-> > +             goto out3;
-> >       }
-> >
-> >       switch (adev->asic_type) {
-> > @@ -348,7 +349,8 @@ static int acp_hw_init(void *handle)
-> >               r = pm_genpd_add_device(&adev->acp.acp_genpd->gpd, dev);
-> >               if (r) {
-> >                       dev_err(dev, "Failed to add dev to genpd\n");
-> > -                     return r;
-> > +                     ret = r;
-> > +                     goto out4;
-> >               }
-> >       }
-> >
-> > @@ -393,6 +395,16 @@ static int acp_hw_init(void *handle)
-> >       val &= ~ACP_SOFT_RESET__SoftResetAud_MASK;
-> >       cgs_write_register(adev->acp.cgs_device, mmACP_SOFT_RESET, val);
-> >       return 0;
-> > +
-> > +out4:
-> > +     kfree(i2s_pdata);
-> > +out3:
-> > +     kfree(adev->acp.acp_res);
-> > +out2:
-> > +     kfree(adev->acp.acp_cell);
-> > +out1:
-> > +     kfree(adev->acp.acp_genpd);
+> From: Filip Kokosinski <fkokosinski@internships.antmicro.com>
 >
-> kfree on a NULL pointer is harmless, so a single error label should be
-> sufficient.
+> Add documentation for LiteUART devicetree bindings.
 >
-I fixed this by just using failure label.
+> Signed-off-by: Filip Kokosinski <fkokosinski@internships.antmicro.com>
+> Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
+> ---
+>  .../devicetree/bindings/serial/litex,liteuart.txt    | 12 ++++++++++++
+>  MAINTAINERS                                          |  6 ++++++
+>  2 files changed, 18 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/serial/litex,liteuart.txt
 
-> Christian.
->
-> > +     return ret;
-> >   }
-> >
-> >   /**
->
+Please make this a schema. See
+Documentation/devicetree/writing-schema.rst (or .md before 5.4).
 
-In addition to previous cases, I covered 3 more error handling cases
-that seemed need to goto failure. One where mfd_add_hotplug_devices
-fails and the other two cases where time out values expire.
+>
+> diff --git a/Documentation/devicetree/bindings/serial/litex,liteuart.txt b/Documentation/devicetree/bindings/serial/litex,liteuart.txt
+> new file mode 100644
+> index 000000000..13c71a0c9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/litex,liteuart.txt
+> @@ -0,0 +1,12 @@
+> +LiteUART serial controller
+> +
+> +Required properties:
+> +- compatible: should be "litex,liteuart"
+
+Only 1 version?
+
+> +- reg: base address and length of the register set for this device
+
+Is there really no interrupt line? That should be added if there's h/w
+support even if the driver doesn't yet support it.
+
+> +
+> +Example:
+> +
+> +uart0: serial@f0001000 {
+
+Wrong unit address. Should be "@e0001800".
 
 
--- 
-Navid.
+> +       compatible = "litex,liteuart";
+> +       reg = <0xe0001800 0x100>;
+> +};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index b2326dece..65a6cf296 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9462,6 +9462,12 @@ F:       Documentation/misc-devices/lis3lv02d.rst
+>  F:     drivers/misc/lis3lv02d/
+>  F:     drivers/platform/x86/hp_accel.c
+>
+> +LITEX PLATFORM
+> +M:     Karol Gugala <kgugala@antmicro.com>
+> +M:     Mateusz Holenko <mholenko@antmicro.com>
+> +S:     Maintained
+> +F:     Documentation/devicetree/bindings/serial/litex,liteuart.txt
+> +
+>  LIVE PATCHING
+>  M:     Josh Poimboeuf <jpoimboe@redhat.com>
+>  M:     Jiri Kosina <jikos@kernel.org>
+> --
+> 2.23.0
+>
