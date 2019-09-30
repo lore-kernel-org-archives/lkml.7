@@ -2,98 +2,156 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C10A9C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBEAC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95D8D2168B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:26:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FEXFmDSW"
+	by mail.kernel.org (Postfix) with ESMTP id 08EC52081B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:27:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730607AbfI3W0P (ORCPT
+        id S1730652AbfI3W1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 18:26:15 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38950 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726590AbfI3W0P (ORCPT
+        Mon, 30 Sep 2019 18:27:39 -0400
+Received: from mailoutvs39.siol.net ([185.57.226.230]:46718 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726858AbfI3W1i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 18:26:15 -0400
-Received: by mail-pl1-f196.google.com with SMTP id s17so4443971plp.6
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 15:26:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:from:to:cc:subject:user-agent:date;
-        bh=gNsbryt7zNBbao6S6XuAFO6RWtb7mB6GkwvJUITq7vM=;
-        b=FEXFmDSWmj9zN3ls+08cfHJNs9Lsa2F0tEzABAFOuqGbjQROJS6TNJU5LLLV8Qf6Yw
-         +kkcd6TuvfCWfghRPjvVmC458yCnJNKvq1bpGzjnfNSIZnaZ1Xc62B67lrYXSeW2vUp0
-         ZKyOdm+DwVGgaOV2BTZyedDwuc/YgjOZprM94=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
-         :user-agent:date;
-        bh=gNsbryt7zNBbao6S6XuAFO6RWtb7mB6GkwvJUITq7vM=;
-        b=Rw/T1OjJ8AXBj9Snplpul0gGjQi7gtBC2lIlOEVP8seYyrSAbOiP6Eo31SMAxl3HQd
-         KaaixLPYyF7WhN/Likqo5gZIiM6K4NPK4Xn6xpacqcX5Gjvqc9jPZxkh1VLjKjcSYH92
-         jXoVkvBGs/yd889SzLfEouuY9Ye6ClY2o+BtEnJMsqu3vr0pMLj9YHWJITCxhwnFKh65
-         agd/QipPCXdFTPp847CHSZn24XpUMHsrPo1vnncENqjXfZniqIXMclyY99n1mFoUZKkK
-         Or8VIFeGikDz6KITNot+NRzAWsirGXRopd4lrUz1k6RkIZ4nY9wEi96CAk7rV3oHQubp
-         orZA==
-X-Gm-Message-State: APjAAAVOigWq/ZVlC02uwJglo4EPmQcr4bXescgZOlm2DYjVqa+THhVU
-        K8JGDHN8GBz+WqY1P1vw51ZDKA==
-X-Google-Smtp-Source: APXvYqyvW7KnD4p6RRzMyQjVNhtlhTTZF+raYHO8fe9TpmKW4CBZvkZUT8KHrNro7nlOT/UpLtas9g==
-X-Received: by 2002:a17:902:aa04:: with SMTP id be4mr14295817plb.40.1569882373177;
-        Mon, 30 Sep 2019 15:26:13 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id l37sm8474089pgb.11.2019.09.30.15.26.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 15:26:12 -0700 (PDT)
-Message-ID: <5d928104.1c69fb81.29df9.6eef@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Mon, 30 Sep 2019 18:27:38 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 4E1E9521949;
+        Tue,  1 Oct 2019 00:27:35 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id ptcGB7QC91-1; Tue,  1 Oct 2019 00:27:34 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id A502F522D91;
+        Tue,  1 Oct 2019 00:27:34 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-86-58-59-25.static.triera.net [86.58.59.25])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 19572521949;
+        Tue,  1 Oct 2019 00:27:33 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     mchehab@kernel.org, paul.kocialkowski@bootlin.com,
+        mripard@kernel.org, pawel@osciak.com, m.szyprowski@samsung.com,
+        kyungmin.park@samsung.com, tfiga@chromium.org, wens@csie.org,
+        gregkh@linuxfoundation.org, boris.brezillon@collabora.com,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
+        ezequiel@collabora.com, jonas@kwiboo.se
+Subject: Re: [PATCH v2 0/6] media: cedrus: h264: Support multi-slice frames
+Date:   Tue, 01 Oct 2019 00:27:32 +0200
+Message-ID: <4342181.Ehiz7mZe5m@jernej-laptop>
+In-Reply-To: <9ec1c07e-b0e8-f50c-7f46-df7ca303a5bc@xs4all.nl>
+References: <20190929200023.215831-1-jernej.skrabec@siol.net> <9ec1c07e-b0e8-f50c-7f46-df7ca303a5bc@xs4all.nl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190930214522.240680-1-briannorris@chromium.org>
-References: <20190930214522.240680-1-briannorris@chromium.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Brian Norris <briannorris@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Hung-Te Lin <hungte@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        stable@vger.kernel.org, Guenter Roeck <groeck@chromium.org>
-Subject: Re: [PATCH] firmware: google: increment VPD key_len properly
-User-Agent: alot/0.8.1
-Date:   Mon, 30 Sep 2019 15:26:11 -0700
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Brian Norris (2019-09-30 14:45:22)
-> Commit 4b708b7b1a2c ("firmware: google: check if size is valid when
-> decoding VPD data") adds length checks, but the new vpd_decode_entry()
-> function botched the logic -- it adds the key length twice, instead of
-> adding the key and value lengths separately.
->=20
-> On my local system, this means vpd.c's vpd_section_create_attribs() hits
-> an error case after the first attribute it parses, since it's no longer
-> looking at the correct offset. With this patch, I'm back to seeing all
-> the correct attributes in /sys/firmware/vpd/...
->=20
-> Fixes: 4b708b7b1a2c ("firmware: google: check if size is valid when decod=
-ing VPD data")
-> Cc: <stable@vger.kernel.org>
-> Cc: Hung-Te Lin <hungte@chromium.org>
-> Cc: Guenter Roeck <groeck@chromium.org>
-> Cc: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> ---
+Dne ponedeljek, 30. september 2019 ob 10:10:48 CEST je Hans Verkuil 
+napisal(a):
+> On 9/29/19 10:00 PM, Jernej Skrabec wrote:
+> > This series adds support for decoding multi-slice H264 frames along with
+> > support for V4L2_DEC_CMD_FLUSH and V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF.
+> > 
+> > Code was tested by modified ffmpeg, which can be found here:
+> > https://github.com/jernejsk/FFmpeg, branch mainline-test
+> > It has to be configured with at least following options:
+> > --enable-v4l2-request --enable-libudev --enable-libdrm
+> > 
+> > Samples used for testing:
+> > http://jernej.libreelec.tv/videos/h264/BA1_FT_C.mp4
+> > http://jernej.libreelec.tv/videos/h264/h264.mp4
+> > 
+> > Command line used for testing:
+> > ffmpeg -hwaccel drm -hwaccel_device /dev/dri/card0 -i h264.mp4 -pix_fmt
+> > bgra -f fbdev /dev/fb0
+> > 
+> > Please note that V4L2_DEC_CMD_FLUSH was not tested because I'm
+> > not sure how. ffmpeg follows exactly which slice is last in frame
+> > and sets hold flag accordingly. Improper usage of hold flag would
+> > corrupt ffmpeg assumptions and it would probably crash. Any ideas
+> > how to test this are welcome!
+> 
+> It can be tested partially at least: if ffmpeg tells you it is the last
+> slice, then queue the slice with the HOLD flag set, then call FLUSH
+> afterwards. This should clear the HOLD flag again. In this case the queued
+> buffer is probably not yet processed, so the flag is cleared before the
+> decode job starts.
+> 
+> You can also try to add a sleep before calling FLUSH to see what happens
+> if the last queued buffer is already decoded.
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Ok, I tried following code:
+https://github.com/jernejsk/FFmpeg/blob/flush_test/libavcodec/
+v4l2_request.c#L220-L233
+
+But results are not good. It seems that out_vb in flush command is always NULL 
+and so it always marks capture buffer as done, which leads to kernel warnings.
+
+dmesg output with debugging messages is here: http://ix.io/1Ks8
+
+Currently I'm not sure what is going on. Shouldn't be output buffer queued and 
+waiting to MEDIA_REQUEST_IOC_QUEUE which is executed after flush command as it 
+can be seen from ffmpeg code linked above?
+
+Best regards,
+Jernej
+
+> 
+> Regards,
+> 
+> 	Hans
+> 
+> > Thanks to Jonas for adjusting ffmpeg.
+> > 
+> > Please let me know what you think.
+> > 
+> > Best regards,
+> > Jernej
+> > 
+> > Changes from v1:
+> > - added Rb tags
+> > - updated V4L2_DEC_CMD_FLUSH documentation
+> > - updated first slice detection in Cedrus
+> > - hold capture buffer flag is set according to source format
+> > - added v4l m2m stateless_(try_)decoder_cmd ioctl helpers
+> > 
+> > Hans Verkuil (2):
+> >   vb2: add V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF
+> >   videodev2.h: add V4L2_DEC_CMD_FLUSH
+> > 
+> > Jernej Skrabec (4):
+> >   media: v4l2-mem2mem: add stateless_(try_)decoder_cmd ioctl helpers
+> >   media: cedrus: Detect first slice of a frame
+> >   media: cedrus: h264: Support multiple slices per frame
+> >   media: cedrus: Add support for holding capture buffer
+> >  
+> >  Documentation/media/uapi/v4l/buffer.rst       | 13 ++++++
+> >  .../media/uapi/v4l/vidioc-decoder-cmd.rst     | 10 +++-
+> >  .../media/uapi/v4l/vidioc-reqbufs.rst         |  6 +++
+> >  .../media/videodev2.h.rst.exceptions          |  1 +
+> >  .../media/common/videobuf2/videobuf2-v4l2.c   |  8 +++-
+> >  drivers/media/v4l2-core/v4l2-mem2mem.c        | 35 ++++++++++++++
+> >  drivers/staging/media/sunxi/cedrus/cedrus.h   |  1 +
+> >  .../staging/media/sunxi/cedrus/cedrus_dec.c   | 11 +++++
+> >  .../staging/media/sunxi/cedrus/cedrus_h264.c  | 11 ++++-
+> >  .../staging/media/sunxi/cedrus/cedrus_hw.c    |  8 ++--
+> >  .../staging/media/sunxi/cedrus/cedrus_video.c | 14 ++++++
+> >  include/media/v4l2-mem2mem.h                  | 46 +++++++++++++++++++
+> >  include/media/videobuf2-core.h                |  3 ++
+> >  include/media/videobuf2-v4l2.h                |  5 ++
+> >  include/uapi/linux/videodev2.h                | 14 ++++--
+> >  15 files changed, 175 insertions(+), 11 deletions(-)
+
+
+
 
