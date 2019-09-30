@@ -2,97 +2,125 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6AAC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C265AC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC0312086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 949432086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:06:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RVYRTwHK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731138AbfI3NFt (ORCPT
+        id S1731191AbfI3NGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 09:05:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:53902 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729738AbfI3NFr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:05:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B17F11000;
-        Mon, 30 Sep 2019 06:05:46 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DD2783F706;
-        Mon, 30 Sep 2019 06:05:44 -0700 (PDT)
-Subject: Re: [PATCH 00/11] of: dma-ranges fixes and improvements
-To:     Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Oza Pawandeep <oza.oza@broadcom.com>
-References: <20190927002455.13169-1-robh@kernel.org>
- <106d5b37-5732-204f-4140-8d528256a59b@gmail.com>
- <40bdf7cf-3bb1-24f8-844d-3eefbc761aba@arm.com>
- <807a4f96-cbda-da4d-a3f1-2bfe5788105b@gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <107d3a83-7448-b5c8-4b38-9b376848a1fa@arm.com>
-Date:   Mon, 30 Sep 2019 14:05:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 30 Sep 2019 09:06:31 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:54314 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729738AbfI3NGb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 09:06:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=pDlR6fcxsnEYOQQvqNeC6vIfQZfiRjpLnLs2afm8Kcg=; b=RVYRTwHKqnwbzOMCE8dTEk1Sa
+        zvoURh70HF1vAzOo70H/9xE1NCdsIrGp1liocyEP6VnJmo8glv1UgYkkSgrohBhBZqeVNt21Mfhlq
+        u3T0l4/n8fK9hnuKeGIJQ5/OZYmEsmKwSr5lODbkvlomV9FKvo8xSGFBOgSO/kWVY2L+JVyKbVAFl
+        3q77p6vjgKcC8rCw7vsu64bW2022H16PC1MdrBc1rFI5dT7v/c96QpkOuxFPfCSOoN2Thwhy6AjuK
+        +NNbl+5y5RWJaeT602S5giuXS9DdANkQtFr29ME+agp38yBWGhw14qZmLwVmUg8RBA57m2cfiBa9D
+        nkp4ZDcGA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iEvNa-0002KN-Gf; Mon, 30 Sep 2019 13:06:18 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 89DF7301B59;
+        Mon, 30 Sep 2019 15:05:27 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 886C525D6479C; Mon, 30 Sep 2019 15:06:15 +0200 (CEST)
+Date:   Mon, 30 Sep 2019 15:06:15 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kan.liang@linux.intel.com
+Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com
+Subject: Re: [PATCH V4 07/14] perf/x86/intel: Support hardware TopDown metrics
+Message-ID: <20190930130615.GN4553@hirez.programming.kicks-ass.net>
+References: <20190916134128.18120-1-kan.liang@linux.intel.com>
+ <20190916134128.18120-8-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <807a4f96-cbda-da4d-a3f1-2bfe5788105b@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190916134128.18120-8-kan.liang@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/09/2019 13:54, Marek Vasut wrote:
-> On 9/30/19 2:52 PM, Robin Murphy wrote:
->> On 30/09/2019 13:40, Marek Vasut wrote:
->>> On 9/27/19 2:24 AM, Rob Herring wrote:
->>>> This series fixes several issues related to 'dma-ranges'. Primarily,
->>>> 'dma-ranges' in a PCI bridge node does correctly set dma masks for PCI
->>>> devices not described in the DT. A common case needing dma-ranges is a
->>>> 32-bit PCIe bridge on a 64-bit system. This affects several platforms
->>>> including Broadcom, NXP, Renesas, and Arm Juno. There's been several
->>>> attempts to fix these issues, most recently earlier this week[1].
->>>>
->>>> In the process, I found several bugs in the address translation. It
->>>> appears that things have happened to work as various DTs happen to use
->>>> 1:1 addresses.
->>>>
->>>> First 3 patches are just some clean-up. The 4th patch adds a unittest
->>>> exhibiting the issues. Patches 5-9 rework how of_dma_configure() works
->>>> making it work on either a struct device child node or a struct
->>>> device_node parent node so that it works on bus leaf nodes like PCI
->>>> bridges. Patches 10 and 11 fix 2 issues with address translation for
->>>> dma-ranges.
->>>>
->>>> My testing on this has been with QEMU virt machine hacked up to set PCI
->>>> dma-ranges and the unittest. Nicolas reports this series resolves the
->>>> issues on Rpi4 and NXP Layerscape platforms.
->>>
->>> With the following patches applied:
->>>         https://patchwork.ozlabs.org/patch/1144870/
->>>         https://patchwork.ozlabs.org/patch/1144871/
->>
->> Can you try it without those additional patches? This series aims to
->> make the parsing work properly generically, such that we shouldn't need
->> to add an additional PCI-specific version of almost the same code.
+On Mon, Sep 16, 2019 at 06:41:21AM -0700, kan.liang@linux.intel.com wrote:
+> Reset
+> ======
 > 
-> Seems to work even without those.
+> Both PERF_METRICS and fixed counter 3 are required to start from zero.
 
-Great, thanks for confirming!
+explain *why*, also in the comments.
 
-Robin.
+> However, current perf has -max_period as default initial value.
+> The patch force initial value as 0 for topdown and slots event counting.
+> 
+> Additionally, for certain scenarios that involve counting metrics at
+> high rates, SW is required to periodically clear both MSRs in order to
+> maintain accurate measurements. In this patch, both PERF_METRICS and
+> Fixed counter 3 are reset for each read.
+
+That forgoes all the good details again :/ 
+
+
+> Originally-by: Andi Kleen <ak@linux.intel.com>
+
+This is of dubius value here and in that other patch. In that other
+patch I've written more lines than Andi has and here you have pretty
+much rewritten everything since v1 or so.
+
+> +static bool is_first_topdown_event_in_group(struct perf_event *event)
+> +{
+> +	struct perf_event *first = NULL;
+> +
+> +	if (is_topdown_event(event->group_leader))
+> +		first = event->group_leader;
+> +	else {
+> +		for_each_sibling_event(first, event->group_leader)
+> +			if (is_topdown_event(first))
+> +				break;
+> +	}
+> +
+> +	if (event == first)
+> +		return true;
+> +
+> +	return false;
+> +}
+
+> +static u64 icl_update_topdown_event(struct perf_event *event)
+> +{
+> +	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+> +	struct perf_event *other;
+> +	u64 slots, metrics;
+> +	int idx;
+> +
+> +	/*
+> +	 * Only need to update all events for the first
+> +	 * slots/metrics event in a group
+> +	 */
+> +	if (event && !is_first_topdown_event_in_group(event))
+> +		return 0;
+
+This is pretty crap and approaches O(n^2); let me think if there's
+anything saner to do here.
+
