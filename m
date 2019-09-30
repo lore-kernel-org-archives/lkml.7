@@ -2,140 +2,110 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D060BC388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8FFC388F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0BB5218DE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A800E2190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:44:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729582AbfI3Hoa (ORCPT
+        id S1729685AbfI3Hor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 03:44:30 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:49597 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfI3Hoa (ORCPT
+        Mon, 30 Sep 2019 03:44:47 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36796 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726121AbfI3Hor (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 03:44:30 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iEqLy-0006Cg-VU; Mon, 30 Sep 2019 09:44:18 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iEqLs-0000i1-B9; Mon, 30 Sep 2019 09:44:12 +0200
-Date:   Mon, 30 Sep 2019 09:44:12 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Yizhuo <yzhai003@ucr.edu>
-Cc:     csong@cs.ucr.edu, Kate Stewart <kstewart@linuxfoundation.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Fabio Estevam <festevam@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>, zhiyunq@cs.ucr.edu,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] iio: adc: imx25-gcq: Variable could be uninitialized if
- regmap_read() fails
-Message-ID: <20190930074412.up4k6zdus4y7u4xb@pengutronix.de>
-References: <20190928002852.28329-1-yzhai003@ucr.edu>
+        Mon, 30 Sep 2019 03:44:47 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8U7glWl041126
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 03:44:44 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vbadrpxe8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 03:44:44 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Mon, 30 Sep 2019 08:44:42 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 30 Sep 2019 08:44:40 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8U7icjS53673992
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 30 Sep 2019 07:44:39 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DB8404203F;
+        Mon, 30 Sep 2019 07:44:38 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8A1A342041;
+        Mon, 30 Sep 2019 07:44:38 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.201])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 30 Sep 2019 07:44:38 +0000 (GMT)
+Date:   Mon, 30 Sep 2019 09:44:37 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Qian Cai <cai@lca.pw>, Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/page_alloc: fix a crash in free_pages_prepare()
+References: <1569613623-16820-1-git-send-email-cai@lca.pw>
+ <20190927134859.95a2f4908bdcea30df0184ed@linux-foundation.org>
+ <1569618908.5576.240.camel@lca.pw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190928002852.28329-1-yzhai003@ucr.edu>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:37:13 up 135 days, 13:55, 87 users,  load average: 0.06, 0.15,
- 0.15
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <1569618908.5576.240.camel@lca.pw>
+X-TM-AS-GCONF: 00
+x-cbid: 19093007-0008-0000-0000-0000031C541A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19093007-0009-0000-0000-00004A3AF916
+Message-Id: <20190930074437.GB5604@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-30_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=84 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909300082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yizhuo,
-
-thanks for your patch.
-
-On 19-09-27 17:28, Yizhuo wrote:
-> In function mx25_gcq_irq(), local variable "stats" could
-> be uninitialized if function regmap_read() returns -EINVAL.
-> However, this value is used in if statement, which is
-> potentially unsafe. The same case applied to the variable
-> "data" in function mx25_gcq_get_raw_value() in the same file.
-
-IMHO the commit header should be something like: "iio: adc: imx25-gcq:
-fix uninitialized variable usage"...
-
-and please add a fixes tag.
-
+On Fri, Sep 27, 2019 at 05:15:08PM -0400, Qian Cai wrote:
+> On Fri, 2019-09-27 at 13:48 -0700, Andrew Morton wrote:
+> > On Fri, 27 Sep 2019 15:47:03 -0400 Qian Cai <cai@lca.pw> wrote:
+> > > --- a/mm/page_alloc.c
+> > > +++ b/mm/page_alloc.c
+> > > @@ -1175,11 +1175,11 @@ static __always_inline bool free_pages_prepare(struct page *page,
+> > >  		debug_check_no_obj_freed(page_address(page),
+> > >  					   PAGE_SIZE << order);
+> > >  	}
+> > > -	arch_free_page(page, order);
+> > >  	if (want_init_on_free())
+> > >  		kernel_init_free_pages(page, 1 << order);
+> > >  
+> > >  	kernel_poison_pages(page, 1 << order, 0);
+> > > +	arch_free_page(page, order);
+> > >  	if (debug_pagealloc_enabled())
+> > >  		kernel_map_pages(page, 1 << order, 0);
+> > 
+> > This is all fairly mature code, isn't it?  What happened to make this
+> > problem pop up now?
 > 
-> Signed-off-by: Yizhuo <yzhai003@ucr.edu>
-> ---
->  drivers/iio/adc/fsl-imx25-gcq.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/fsl-imx25-gcq.c b/drivers/iio/adc/fsl-imx25-gcq.c
-> index df19ecae52f7..dbf3e8e85aba 100644
-> --- a/drivers/iio/adc/fsl-imx25-gcq.c
-> +++ b/drivers/iio/adc/fsl-imx25-gcq.c
-> @@ -74,7 +74,10 @@ static irqreturn_t mx25_gcq_irq(int irq, void *data)
->  	struct mx25_gcq_priv *priv = data;
->  	u32 stats;
->  
-> -	regmap_read(priv->regs, MX25_ADCQ_SR, &stats);
-> +	int ret = regmap_read(priv->regs, MX25_ADCQ_SR, &stats);
+> In the past, there is only kernel_poison_pages() would trigger it but it needs
+> "page_poison=on" kernel cmdline, and I suspect nobody tested that on s390 in the
+> past.
 
-Please don't do this. First declare the variable and then use it.
+Yes. Peter Oberparleiter reported this also before my short vacation,
+but I didn't have time to look into this. Thanks for fixing!
 
-Regards,
-  Marco
+Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
 
-> +
-> +	if (ret)
-> +		return ret;
->  
->  	if (stats & MX25_ADCQ_SR_EOQ) {
->  		regmap_update_bits(priv->regs, MX25_ADCQ_MR,
-> @@ -121,7 +124,10 @@ static int mx25_gcq_get_raw_value(struct device *dev,
->  		return -ETIMEDOUT;
->  	}
->  
-> -	regmap_read(priv->regs, MX25_ADCQ_FIFO, &data);
-> +	int ret = regmap_read(priv->regs, MX25_ADCQ_FIFO, &data);
-> +
-> +	if (ret)
-> +		return ret;
->  
->  	*val = MX25_ADCQ_FIFO_DATA(data);
->  
-> -- 
-> 2.17.1
-> 
-> 
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
