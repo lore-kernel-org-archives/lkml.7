@@ -2,104 +2,130 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA22C35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A58D4C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92F57215EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:10:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nKoKcVPc"
+	by mail.kernel.org (Postfix) with ESMTP id 85597215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:12:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731920AbfI3PK3 (ORCPT
+        id S1731871AbfI3PMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 11:10:29 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:51700 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731867AbfI3PK2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 11:10:28 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8UFA4sE077672;
-        Mon, 30 Sep 2019 10:10:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569856204;
-        bh=IobouB3hSryccexn6r91cxD5nyqRsWZvzcNZNBzoyec=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=nKoKcVPcm2Q8kdM6uUzxj+PkdqX7uI8MEFWjPgOAYTdwzRfKgQ47+b0i8HIxz0NUW
-         7ZSz3XiDsUBI8n/CnilkQtRSgTiul+h5vgzHe/osdaNHDqSDc59jmOD1ho9oWSsB22
-         toHoH4x7KqR5sNtW8nRK9Gsr2VWU9Ov6mEaFZATo=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8UFA4hJ033545
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 30 Sep 2019 10:10:04 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 30
- Sep 2019 10:10:03 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 30 Sep 2019 10:10:04 -0500
-Received: from [172.24.190.212] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8UF9xbO027057;
-        Mon, 30 Sep 2019 10:10:00 -0500
-Subject: Re: [PATCH v2 linux-next 2/4] arm: configs: davinci_all_defconfig:
- Change CONFIG_REMOTEPROC from m to y
-To:     Keerthy <j-keerthy@ti.com>, <arnd@arndb.de>, <olof@lixom.net>,
-        <t-kristo@ti.com>, <catalin.marinas@arm.com>, <will@kernel.org>,
-        <tony@atomide.com>
-CC:     <s-anna@ti.com>, <hch@lst.de>, <bjorn.andersson@linaro.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190920075946.13282-1-j-keerthy@ti.com>
- <20190920075946.13282-3-j-keerthy@ti.com>
-From:   Sekhar Nori <nsekhar@ti.com>
-Message-ID: <e48c767f-6153-a8d5-b88d-f74927921ae2@ti.com>
-Date:   Mon, 30 Sep 2019 20:39:58 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 30 Sep 2019 11:12:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40412 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731276AbfI3PMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 11:12:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 168C9AF7E;
+        Mon, 30 Sep 2019 15:12:36 +0000 (UTC)
+Date:   Mon, 30 Sep 2019 17:12:34 +0200
+From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+To:     Mina Almasry <almasrymina@google.com>
+Cc:     Tejun Heo <tj@kernel.org>, Mike Kravetz <mike.kravetz@oracle.com>,
+        Greg Thelen <gthelen@google.com>,
+        David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>, shuah <shuah@kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>,
+        khalid.aziz@oracle.com, cgroups@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v5 0/7] hugetlb_cgroup: Add hugetlb_cgroup reservation
+ limits
+Message-ID: <20190930151233.GH6694@blackbody.suse.cz>
+References: <20190919222421.27408-1-almasrymina@google.com>
+ <3c73d2b7-f8d0-16bf-b0f0-86673c3e9ce3@oracle.com>
+ <CAHS8izOj2AT4tX-+Hcb8LB2TOUKJDHScDtJ80u4M6OWpwktq0g@mail.gmail.com>
+ <a8e9c533-1593-35ee-e65d-1f2fc2b0fb48@oracle.com>
+ <CAHS8izPfKQA8qTndyzWSm9fR_xJ=X-xmE+4P4K+ZFdxrYNuLBA@mail.gmail.com>
+ <alpine.DEB.2.21.1909261220150.39830@chino.kir.corp.google.com>
+ <8f7db4f1-9c16-def5-79dc-d38d6b9d150e@oracle.com>
+ <CAHS8izM3=ZDNukx5xhWmeJT+78Ekfff9J4s5Vqkqpx-DtH=C-A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190920075946.13282-3-j-keerthy@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="YhFoJY/gx7awiIuK"
+Content-Disposition: inline
+In-Reply-To: <CAHS8izM3=ZDNukx5xhWmeJT+78Ekfff9J4s5Vqkqpx-DtH=C-A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/09/19 1:29 PM, Keerthy wrote:
-> Commit 6334150e9a36 ("remoteproc: don't allow modular build")
-> changes CONFIG_REMOTEPROC to a boolean from a tristate config
-> option which inhibits all defconfigs marking CONFIG_REMOTEPROC as
-> a module in compiling the remoteproc and dependent config options.
-> 
-> So fix the davinci_all_defconfig to have CONFIG_REMOTEPROC built in.
-> 
-> Fixes: 6334150e9a36 ("remoteproc: don't allow modular build")
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> ---
->  arch/arm/configs/davinci_all_defconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/configs/davinci_all_defconfig b/arch/arm/configs/davinci_all_defconfig
-> index b34970ce6b31..01e3c0f4be92 100644
-> --- a/arch/arm/configs/davinci_all_defconfig
-> +++ b/arch/arm/configs/davinci_all_defconfig
-> @@ -228,7 +228,7 @@ CONFIG_RTC_DRV_OMAP=m
->  CONFIG_DMADEVICES=y
->  CONFIG_TI_EDMA=y
->  CONFIG_COMMON_CLK_PWM=m
-> -CONFIG_REMOTEPROC=m
-> +CONFIG_REMOTEPROC=y
 
-Acked-by: Sekhar Nori <nsekhar@ti.com>
+--YhFoJY/gx7awiIuK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks,
-Sekhar
+Hi.
+
+On Thu, Sep 26, 2019 at 05:55:29PM -0700, Mina Almasry <almasrymina@google.com> wrote:
+> My guess is that a new controller needs to support cgroups-v2, which
+> is fine. But can a new controller also support v1? Or is there a
+> requirement that new controllers support *only* v2? I need whatever
+> solution here to work on v1.
+Here is my view of important criteria:
+
+	1) stability, v1 APIs and semantics should not be changed,
+	2) futureproofness, v1 uses should be convertible to v2 uses,
+	3) maintainability, the less (similar) code the better.
+
+And here is my braindump of some approaches:
+
+A) new controller, v2 only
+- 1) ok
+- 2) may be ok
+- 3) separate v1 and v2 implementations
+- exclusion must be ensured on hybrid hierarchies
+
+B) new controller, version oblivious (see e.g. pid)
+- 1) sort of ok
+- 2) partially ok
+- 3) two v1 implementations
+- exclusion must be ensured even on pure v1 hierarchies
+
+C) extending the existing controller, w/out v2 counterpart
+- 1) ok with workarounds (new option switching behavior)
+- 2) not ok
+- 3) likely OK
+
+D) extending the existing controller, with v2 counterpart
+- 1) ok with workarounds (new option switching behavior, see cpuset)
+- 2) may be ok
+- 3) likely OK
+
+AFAIU, the current patchset is variation of C). Personally, I think
+something like D) could work, I'm not convinced about A) and B) based on
+the breakdown above. But it may induce some other ideas.
+
+
+My two cents,
+Michal
+
+--YhFoJY/gx7awiIuK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl2SG14ACgkQia1+riC5
+qShedQ/8DyEdvjT0PcRMLE3EjsjDi32g8BDv8aIV1H1UVciQZIM+BFvPycHsjJ9N
+XwYn3bspedb10o6wm1Luj6LhXjVht5dglPSrmhTWp4E5YrLqP2AqKPt8p5ZL4pTq
+L64SrAHXo5qFq85CDnSQkFgYXmuPEkM9NCdLN3Dt30P1/zr6mrt0vhPbLNwJkgdT
+xsTp2UObM12TuEJxsnb2F6nirZLa6RHQ3utUjDZUsLbPOgnb+WbTgLyCNwHFnqUk
+bInSN/vrHcn52yYefxWuHW1VdXXV2vpjqcQG5CdYjXEzpKQxnysI+IiYxpv4kw6Q
+FQpT5nQtCVVr2EHj9LEsk9vgks2Hcfsb87psTIL0rxA4HvxiutPcDHBHqhcs/52o
+2ozl8p7G0WXGYQ+bSeTBJ35O/qtTGibw1YELSkpVhG742SrzMj9SxdhtFO7dsdeY
+uk/HdATsAPl3kAX1fOhUSmIcnOL9ECAO0pgcRnmsyPdXEDUWwaiji0tK9Q0yP6Wu
+jnFTX3MY/Nq5FhJzZ3QYvCUxc1n1LgzW9STMUU5MuTN9NYXC4AlZnZhMqduDH5HK
+l0seBNntlNnaI4lQhbWl2OR0cXTDN88Nv2bF84LBI01F4N2D/NL97p69jCMYxgUx
+5EiC89zRH0RUxb8RX+NeMG/OMd0qxTNFELjONXX1D5fpzLqg5Ao=
+=ksZu
+-----END PGP SIGNATURE-----
+
+--YhFoJY/gx7awiIuK--
