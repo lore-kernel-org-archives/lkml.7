@@ -2,164 +2,123 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 244FDC35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C0ABC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE67721855
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:33:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BB0720842
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:34:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l/gXDbiy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MOWTHPUw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729066AbfI3WdE (ORCPT
+        id S1728176AbfI3Wey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 18:33:04 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34679 "EHLO
+        Mon, 30 Sep 2019 18:34:54 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44516 "EHLO
         mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbfI3WdE (ORCPT
+        with ESMTP id S1726350AbfI3Wey (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 18:33:04 -0400
-Received: by mail-pg1-f193.google.com with SMTP id y35so8192874pgl.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 15:33:03 -0700 (PDT)
+        Mon, 30 Sep 2019 18:34:54 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i14so8147915pgt.11
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 15:34:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:from:to:cc:subject:user-agent:date;
-        bh=rmkqYB8bmzjDztcgVj4PfkZkIB/7SRqcGvT+pK2NFao=;
-        b=l/gXDbiy1YenXqFl2lZbKcRYbMIurpnW+XyMpKesD+2XT8Re0PBMl4FbQU1wWzeX9K
-         cTj2dGeT/qveI8TMM+I58Bn0TRXXjen+N4MNZ1ttjkMsewSrez0oAq7W85LiaU9I8Ku3
-         quWmCD2WM4+9BrBVoqBw7ZnNyAzgZNpA66jaY=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7SR5SJpCZzCR2HUyKgols4Ma/MTXm0Tu30NRGBJBmLQ=;
+        b=MOWTHPUwU1iS50Z3VFZA5DFevN71k70iB6IqofUavf/x1Nw+kv1n0f0Sq5oAZEzLvL
+         xLQFdHuY2ewoREYA3vaIqrKdhMxDxcKTmjl9JS5mLDb//GKRO4pR9pr0tGSdFwURX/Hm
+         q+rCUWqufGVzOq/ajZ4+ysaFaZF39LNfK6RxkybZ7Ld/DFxDtmSlJNzHEIv/BZhE+44m
+         WV6trAVqy1zOmVuGaejXWaRtNbSI1LWY2Y1QUafxdmQifE14+Vo/0IWblPjFVpw8zYyZ
+         UUfsJZRE54IiOF4YqjuO/qBjMN2RhDYUOixGN1CN8FS834d1pmqTq7UWdEHpavKTXIiq
+         oSyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:from:to:cc:subject
-         :user-agent:date;
-        bh=rmkqYB8bmzjDztcgVj4PfkZkIB/7SRqcGvT+pK2NFao=;
-        b=U6K+Owt+T5THyTCEwRLlXz4BP0JU0H8GPrVXmtrs6U5nStljPfUfiNcv7aDVTcjqWt
-         ojp7BOj69GNL77EYYH9grTYCYsZ6u6aQFuSvVwVZj0Dv2miJGBaMuR/gCAAmjgPcYDAA
-         5TBM8sa2V1Qed5R43DQSUkNvmIhGwMekAMkv2RItM5MO/umE1s0u7IpsQb90WERPLJRI
-         +Q9xePyGGMWN35XRpn4LIrT91BjioKls7iAd8Ny82ICeAnuVP8A+ZZEpK258OTZltbXM
-         046hliRKs1xr5FRWrj4hxIsZaaTvgX0t7txvnCtnrg3+Wt/NV0ty8AspGWd0txLEVO32
-         /UhQ==
-X-Gm-Message-State: APjAAAUXbKB3n2C+ndmYQ6T4mxQ1PDGflghQOMVJ9mIlEw2LA4eysfcn
-        i//6Y+Fh3V6s7dkUUfpUAg5eOA==
-X-Google-Smtp-Source: APXvYqyqekrGA/zBRXYld7eiG9Tkrnhft+G+K3lR7fTCvCFVRPIFeAsqvf/SQiIwvG8YKnVyqqkeqA==
-X-Received: by 2002:a17:90a:fb85:: with SMTP id cp5mr1796727pjb.42.1569882783243;
-        Mon, 30 Sep 2019 15:33:03 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id i1sm15310268pfg.2.2019.09.30.15.33.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 15:33:02 -0700 (PDT)
-Message-ID: <5d92829e.1c69fb81.d860a.9096@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7SR5SJpCZzCR2HUyKgols4Ma/MTXm0Tu30NRGBJBmLQ=;
+        b=CPuITodaiu0EYzvjmEr2mNprtdAfbohdhHdCgxiYDeYOlTroa8BgsVT6B2fwpPFhLP
+         4lYFEJ0Q+5eeZpAP77mUv2CdBuN4SScSY9i97yefDgss10KxJAcsKQMO7FmKeqiCY/nq
+         lp1aSlGphcWFm3utcU/tdFfcePLsBAz/TocUIQ05B9WoRmnneHfB1BgaZ8X2sxWl9swP
+         WjfjNVGMaORPoZIJUXHBL6U1lZyw60LucCX2OsP0u566P8r8oWi5MO1N07gFn51c4MKz
+         /dlrBo0kpEcVvIIvqBs2scXVQe7nwwUIWvuwiIAP9NLyfu5pRxxvG2eE9FWc5R2QFk9D
+         odAw==
+X-Gm-Message-State: APjAAAXxFT9yUz+eKNn0U33cNadKZXnpzTxdqA5Q4Czkasd5XtOupd4d
+        zn9HMdJT0XSNO4GOT9H87D3dCY2hT1sWiF1EtSqWcA==
+X-Google-Smtp-Source: APXvYqyOU2bwSPdSL51Jh7RdzyoNXLxhELPpgkbg72EzzJZ/2dNcZv/B/p8mtSppYe8kSal5ZVqB7ESgT0GvDuiU08g=
+X-Received: by 2002:a17:90a:178d:: with SMTP id q13mr1777052pja.134.1569882893154;
+ Mon, 30 Sep 2019 15:34:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1568411962-1022-7-git-send-email-ilina@codeaurora.org>
-References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org> <1568411962-1022-7-git-send-email-ilina@codeaurora.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Lina Iyer <ilina@codeaurora.org>, evgreen@chromium.org,
-        linus.walleij@linaro.org, maz@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, mkshah@codeaurora.org,
-        linux-gpio@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH RFC v2 06/14] dt-bindings/interrupt-controller: pdc: add SPI config register
-User-Agent: alot/0.8.1
-Date:   Mon, 30 Sep 2019 15:33:01 -0700
+References: <20190830034304.24259-1-yamada.masahiro@socionext.com>
+ <f5c221f5749e5768c9f0d909175a14910d349456.camel@suse.de> <CAKwvOdk=tr5nqq1CdZnUvRskaVqsUCP0SEciSGonzY5ayXsMXw@mail.gmail.com>
+ <CAHk-=wiTy7hrA=LkmApBE9PQtri8qYsSOrf2zbms_crfjgR=Hw@mail.gmail.com>
+ <20190930112636.vx2qxo4hdysvxibl@willie-the-truck> <CAK7LNASQZ82KSOrQW7+Wq1vFDCg2__maBEAPMLqUDqZMLuj1rA@mail.gmail.com>
+ <20190930121803.n34i63scet2ec7ll@willie-the-truck> <CAKwvOdnqn=0LndrX+mUrtSAQqoT1JWRMOJCA5t3e=S=T7zkcCQ@mail.gmail.com>
+ <CANiq72kbZVB4vdyQonMQzuRHdh=BnD6F=sv5NQsFey5_xAB-Zg@mail.gmail.com>
+In-Reply-To: <CANiq72kbZVB4vdyQonMQzuRHdh=BnD6F=sv5NQsFey5_xAB-Zg@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 30 Sep 2019 15:34:41 -0700
+Message-ID: <CAKwvOdm_GoUeDjAYXTqCTuvdL+9vwvfeofhv06MLMYVA75CnEg@mail.gmail.com>
+Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Kees Cook <keescook@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Lina Iyer (2019-09-13 14:59:14)
-> In addition to configuring the PDC, additional registers that interface
-> the GIC have to be configured to match the GPIO type. The registers on
-> some QCOM SoCs are access restricted, while on other SoCs are not. They
-> SoCs with access restriction to these SPI registers need to be written
-> from the firmware using the SCM interface. Add a flag to indicate if the
-> register is to be written using SCM interface.
->=20
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> ---
->  .../devicetree/bindings/interrupt-controller/qcom,pdc.txt   | 13 +++++++=
-+++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,=
-pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.t=
-xt
-> index 8e0797c..e329f8d 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-> @@ -24,6 +24,9 @@ Properties:
->         Usage: required
->         Value type: <prop-encoded-array>
->         Definition: Specifies the base physical address for PDC hardware.
-> +                   Optionally, specify the PDC's GIC interface registers=
- that
-> +                   need to be configured for wakeup capable GPIOs routed=
- to
-> +                   the PDC.
-> =20
->  - interrupt-cells:
->         Usage: required
-> @@ -50,15 +53,23 @@ Properties:
->                     The second element is the GIC hwirq number for the PD=
-C port.
->                     The third element is the number of interrupts in sequ=
-ence.
-> =20
-> +- qcom,scm-spi-cfg:
-> +       Usage: optional
-> +       Value type: <bool>
-> +       Definition: Specifies if the SPI configuration registers have to =
-be
-> +                   written from the firmware. Sometimes the PDC interface
-> +                   register to the GIC can only be written from the firm=
-ware.
-> +
->  Example:
-> =20
->         pdc: interrupt-controller@b220000 {
->                 compatible =3D "qcom,sdm845-pdc";
-> -               reg =3D <0xb220000 0x30000>;
-> +               reg =3D <0 0x0b220000 0 0x30000>, <0 0x179900f0 0 0x60>;
->                 qcom,pdc-ranges =3D <0 512 94>, <94 641 15>, <115 662 7>;
->                 #interrupt-cells =3D <2>;
->                 interrupt-parent =3D <&intc>;
->                 interrupt-controller;
-> +               qcom,scm-spi-cfg;
->         };
+On Mon, Sep 30, 2019 at 3:08 PM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> On Mon, Sep 30, 2019 at 11:50 PM Nick Desaulniers
+> <ndesaulniers@google.com> wrote:
+> >
+> > So __attribute__((always_inline)) doesn't guarantee that code will be
+> > inlined.  [...] inline and __attribute__((always_inline))
+> > are a heuristic laden mess and should not be relied upon.
+>
+> Small note: in GCC, __attribute__((always_inline)) is documented as
+> actually guaranteeing to either inline or error otherwise (although
+> see the remark for indirect calls):
+>
+>     "Failure to inline such a function is diagnosed as an error. Note
 
-This overlaps register region with the mailbox node. That node is
-actually a pile of random "CPU" registers used to ping remote processors
-and apparently control how the PDC interacts with the GIC. Maybe this
-can be changed to a phandle and then the driver can interogate the
-phandle to determine if it's the SCM firmware or if it's the shared
-mailbox register? If it's a shared mailbox then it can write to it at
-the offset it knows about (because it's sdm845 compatible specific) and
-if it's SCM then it can use the hardcoded address as well?
+Not an error, but a warning at least: https://godbolt.org/z/_V5im1.
 
-Basically I'm saying that it just needs a phandle.
+That's interesting, so it has multiple semantics, because it's also
+documented to inline even when no optimizations are specified.  So
+when someone uses __attribute__((always_inline)) without a comment,
+it's not clear whether they mean for there to be a warning when this
+is not inlined, or for it to be inlined at -O0 (guess not for the
+kernel), or both.  If the kernel wants to enforce the former, why not
+set `-Werror=attributes`?  Maybe that warning is too broad?  Seems
+like a recipe for subtly broken code found at runtime, when we'd
+rather have stronger compile time guarantees.
 
-	qcom,spi-cfg =3D <&scm>;
+> that if such a function is called indirectly the compiler may or may
+> not inline it depending on optimization level and a failure to inline
+> an indirect call may or may not be diagnosed."
+>
+> As for LLVM/Clang, no idea, since it does not say anything about it in
+> the docs -- but from what you say, it is a weaker guarantee.
 
-or
-
-	qcom,spi-cfg =3D <&mailbox>;
-
-and then driver knows how to use that to write into random registers.
-Maybe we can have an API in regmap that finds the regmap for a given
-device node? That way we don't have to funnel everything through syscon
-for this.
-
-	of_get_regmap(struct device_node *np, const char *name);
-
-Where NULL name means "first available" and then do the devres search
-otherwise for a device that has the matching node pointer.
-
+Filed https://bugs.llvm.org/show_bug.cgi?id=43517
+-- 
+Thanks,
+~Nick Desaulniers
