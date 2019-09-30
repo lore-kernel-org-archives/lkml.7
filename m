@@ -2,433 +2,161 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7307C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2442C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5AD7205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77DFA215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:09:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=verimatrix.com header.i=@verimatrix.com header.b="bf3WamBn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732603AbfI3VJJ (ORCPT
+        id S1732608AbfI3VJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 17:09:09 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:59660 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729880AbfI3VJI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 17:09:08 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: tonyk)
-        with ESMTPSA id 8F1172608AC
-From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     axboe@kernel.dk, kernel@collabora.com, krisman@collabora.com,
-        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-Subject: [PATCH 1/1] blk-mq: fill header with kernel-doc
-Date:   Mon, 30 Sep 2019 16:48:46 -0300
-Message-Id: <20190930194846.23141-1-andrealmeid@collabora.com>
-X-Mailer: git-send-email 2.23.0
+        Mon, 30 Sep 2019 17:09:17 -0400
+Received: from mail-eopbgr790048.outbound.protection.outlook.com ([40.107.79.48]:57055
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729740AbfI3VJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 17:09:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UKLJmUyJ0drRWYnDUsDdQrWt7JxmZ9iWsJ8t5AuxgKrzaoNCzxRjUAG3Pcwqtxrb8OvkMN1ToeaJlZqY07qfo53nSM2+sOe6cIG/iK65mqARGAGrcIsTrxxKCJpyEPzn9qQGp6PfCEf9L8RfBe47OnbBVVQWGnDaXJbHZfaXANI8mY1khpCt/SI5mX8vJgf3BXmeocrg4mqJ7iCCrbUt/TC4kX+ZimK2SCUY0hEJzoSWnxPt8bzo3VJdU/uLOOl4BKVAVCnJmaVe+3sTer3NKW1xVvuw7cxDRhFHI9O83txzCrHfYgZUZiAtCg7Y6nqwmqcTE95BOI85eTXKGAumuw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+y9M0jU1NXQ3R4z7pId1oCPF70lJfJXoFsLro4kDx+Y=;
+ b=A7apoVSCOD9rBgOXfSt130+9yiNXSF//wgFzs7v03qrToZYm61qFdUAp5WKL/NZdri8l3+PslLIcP9nNqpS9TyNMa8bY1aNKKSKMZHgjPMz48bzpe8VnI+83NpX0dc2H7ajFn0M7Vgrkd7p8umLO/D5v07ExGxV3nMtTPYwz7r9UMgPnbfr0OuGNNDFpAWkSX4+j097Obqn61T3dnVKTypEFA1LdFvYBsBq8oID2vDiWwon+nOfeYak7P8oriCpuQke1uOMWnWg4Sx6gHUsi90VRpfPpBEq4EKl0sUfaSlwDAAsb5PY8kt5DG61tD5xfYyNcIpP9YEEPV90bH4zslA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=verimatrix.com; dmarc=pass action=none
+ header.from=verimatrix.com; dkim=pass header.d=verimatrix.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=verimatrix.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+y9M0jU1NXQ3R4z7pId1oCPF70lJfJXoFsLro4kDx+Y=;
+ b=bf3WamBn1Ct+wy8VwOYzMY9J1mlAFYFGX+9Cyrw+IIWjk3bmGce0srhDZp+04gEzqjGvOQGm1/OA9vd+5zob+S/EB9uGjvpEU8UjO8QB2KBDuh+DcB9XhO5qjz1lTwGQ2PEOGn1OF7o2/VCEP/fsds5aCQdQV/kpnpoBqllwryU=
+Received: from CH2PR20MB2968.namprd20.prod.outlook.com (10.255.156.33) by
+ CH2PR20MB3143.namprd20.prod.outlook.com (52.132.230.157) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.22; Mon, 30 Sep 2019 21:09:10 +0000
+Received: from CH2PR20MB2968.namprd20.prod.outlook.com
+ ([fe80::e8b0:cb5f:268e:e3ae]) by CH2PR20MB2968.namprd20.prod.outlook.com
+ ([fe80::e8b0:cb5f:268e:e3ae%5]) with mapi id 15.20.2305.017; Mon, 30 Sep 2019
+ 21:09:10 +0000
+From:   Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Pascal van Leeuwen <pascalvanl@gmail.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Eric Biggers <ebiggers@google.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 2/3] crypto: inside-secure - Reduce stack usage
+Thread-Topic: [PATCH 2/3] crypto: inside-secure - Reduce stack usage
+Thread-Index: AQHVd4jLpZQEIOemw0ukUdKdGUz6fqdEp4sQgAAJNCA=
+Date:   Mon, 30 Sep 2019 21:09:10 +0000
+Message-ID: <CH2PR20MB29682E2C514733F290CFA3CECA820@CH2PR20MB2968.namprd20.prod.outlook.com>
+References: <20190930121520.1388317-1-arnd@arndb.de>
+ <20190930121520.1388317-2-arnd@arndb.de>
+ <CH2PR20MB2968B7855D241C747BEB68B9CA820@CH2PR20MB2968.namprd20.prod.outlook.com>
+ <CAK8P3a0PeocENP6c=ENVrq2X8x-vinM6qhPRDDi_WEf6y73AOQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a0PeocENP6c=ENVrq2X8x-vinM6qhPRDDi_WEf6y73AOQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pvanleeuwen@verimatrix.com; 
+x-originating-ip: [188.204.2.113]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8193124b-c623-48d5-1060-08d745ea703f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:CH2PR20MB3143;
+x-ms-traffictypediagnostic: CH2PR20MB3143:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <CH2PR20MB3143B94EA50FEC5C2D1B8B90CA820@CH2PR20MB3143.namprd20.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 01762B0D64
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39850400004)(366004)(376002)(136003)(346002)(52314003)(51444003)(13464003)(199004)(189003)(7736002)(5660300002)(256004)(55016002)(9686003)(33656002)(14444005)(7696005)(6116002)(76176011)(25786009)(99286004)(6436002)(2906002)(66476007)(66946007)(8936002)(14454004)(71190400001)(3846002)(66066001)(8676002)(81156014)(76116006)(81166006)(316002)(6916009)(71200400001)(15974865002)(478600001)(54906003)(305945005)(74316002)(4326008)(229853002)(86362001)(476003)(486006)(446003)(6246003)(52536014)(26005)(66446008)(64756008)(66556008)(6506007)(11346002)(186003)(102836004)(53546011)(18886075002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR20MB3143;H:CH2PR20MB2968.namprd20.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: verimatrix.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 9z+InvQ8lCN3oZyshQ2PhAUn8F+eIPHlYxGuo8LYCbLy8agS70129SwCEmAPJrsHsm9zn9o2aTQDjbieqNEzUUmjX+EEA3pFdwTT1WbRJfGL7LK9Sz/cwMiH+LloyVilv/mOIMec6MWO9FIui77DY9khGmoRcO5OvGJ1bBJ1R/a7sD6zbp1NnfdGbIcp678uNdDu7E3nCJgdYES43Ojr1MVZmiX5OhZrdS+fHxaOrw2wso/L8AppiGSp2d8emhku7KI43t3zAPWrvu3N6ukI7jMk5+GEnwutKidpDNxB12+H5mOPSKE72uTeebuSK5mKTIYLIQeDomocMRkKg1L3uiu3+8M8p2pd/l76i4IbIyEARN9x52onGlb/2ET4paYITcqHQAzL1nq93iQOoHmlTyqQl0LLiMwWFO7O4lalmWE=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: verimatrix.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8193124b-c623-48d5-1060-08d745ea703f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2019 21:09:10.3489
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: dcb260f9-022d-4495-8602-eae51035a0d0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Bex8wGR454iLhzcCCFVFOc3BXhyAE/q7EEGDniyd94LNHmnC84v4SpkYblrKsGxtnEkRvhaJMzqSMhdjj2Lw43u4Z2can/oGX2M0O1CvZQE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR20MB3143
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Insert documentation for structs, enums and functions at header file.
-Format existing and new comments at struct blk_mq_ops as
-kernel-doc comments.
-
-Signed-off-by: André Almeida <andrealmeid@collabora.com>
----
-Hello,
-
-This patch is an effort to enhance the documentation of the multiqueue
-API. To check if the comments are confirming to kernel-doc format, you
-first need to apply a patch[1] solving a bug around the `__cacheline...`
-directive. Then, just run
-
-./scripts/kernel-doc -none include/linux/blk-mq.h
-
-to check that there is no warning at this documentation. I've done my
-best at the source to check the purpose of each struct and its members,
-but please let me know if I get something wrong.
-
-[1] https://lkml.org/lkml/2019/9/17/820
----
- include/linux/blk-mq.h | 243 ++++++++++++++++++++++++++++++++---------
- 1 file changed, 194 insertions(+), 49 deletions(-)
-
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 0bf056de5cc3..d0aab34972b7 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -11,12 +11,85 @@ struct blk_flush_queue;
- 
- /**
-  * struct blk_mq_hw_ctx - State for a hardware queue facing the hardware block device
-+ *
-+ * @lock:	Lock for accessing dispatch queue
-+ * @dispatch:	Queue of dispatched requests, waiting for workers to send them
-+ *		to the hardware.
-+ * @state:	BLK_MQ_S_* flags. Define the state of the hw queue (active,
-+ *		scheduled to restart, stopped).
-+ *
-+ * @run_work:		Worker for dispatch scheduled requests to hardware.
-+ *			BLK_MQ_CPU_WORK_BATCH workers will be assigned to a CPU,
-+ *			then the following ones will be assigned to
-+ *			the next_cpu.
-+ * @cpumask:		Map of available CPUs.
-+ * @next_cpu:		Index of CPU/workqueue to be used in the next batch
-+ *			of workers.
-+ * @next_cpu_batch:	Counter of how many works letf in the batch before
-+ *			changing to the next CPU. A batch has the size of
-+ *			BLK_MQ_CPU_WORK_BATCH.
-+ *
-+ * @flags:	BLK_MQ_F_* flags. Define the behaviour of the queue.
-+ *
-+ * @sched_data: Data to support schedulers.
-+ * @queue:	Queue of request to be dispatched.
-+ * @fq:		Queue of requests to be flushed from memory to storage.
-+ *
-+ * @driver_data: Device driver specific queue.
-+ *
-+ * @ctx_map:	Bitmap for each software queue. If bit is on, there is a
-+ *		pending request.
-+ *
-+ * @dispatch_from: Queue to be used when there is no scheduler was selected.
-+ * @dispatch_busy: Number used by blk_mq_update_dispatch_busy() to decide
-+ *		   if the hw_queue is busy using Exponential Weighted Moving
-+ *		   Average algorithm.
-+ *
-+ * @type:	HCTX_TYPE_* flags. Type of hardware queue.
-+ * @nr_ctx:	Number of software queues.
-+ * @ctxs:	Array of software queues.
-+ *
-+ * @dispatch_wait_lock: Lock for dispatch_wait queue.
-+ * @dispatch_wait:	Waitqueue for dispatched requests. Request here will
-+ *			be processed when
-+ *			percpu_ref_is_zero(&q->q_usage_counter) evaluates true
-+ *			for q as a request_queue.
-+ * @wait_index:		Index of next wait queue to be used.
-+ *
-+ * @tags:	Request tags.
-+ * @sched_tags:	Request tags for schedulers.
-+ *
-+ * @queued:	Number of queued requests.
-+ * @run:	Number of dispatched requests.
-+ * @dispatched:	Number of dispatch requests by queue.
-+ *
-+ * @numa_node:	NUMA node index of this hardware queue.
-+ * @queue_num:	Index of this hardware queue.
-+ *
-+ * @nr_active:	Number of active tags.
-+ *
-+ * @cpuhp_dead:	List to store request if some CPU die.
-+ * @kobj:	Kernel object for sysfs.
-+ *
-+ * @poll_considered:	Count times blk_poll() was called.
-+ * @poll_invoked:	Count how many requests blk_poll() polled.
-+ * @poll_success:	Count how many polled requests were completed.
-+ *
-+ * @debugfs_dir:	debugfs directory for this hardware queue. Named
-+ *			as cpu<cpu_number>.
-+ * @sched_debugfs_dir:	debugfs directory for the scheduler.
-+ *
-+ * @hctx_list:		List of all hardware queues.
-+ *
-+ * @srcu:	Sleepable RCU. Use as lock when type of the hardware queue is
-+ *		blocking (BLK_MQ_F_BLOCKING). Must be the last member - see
-+ *		also blk_mq_hw_ctx_size().
-  */
- struct blk_mq_hw_ctx {
- 	struct {
- 		spinlock_t		lock;
- 		struct list_head	dispatch;
--		unsigned long		state;		/* BLK_MQ_S_* flags */
-+		unsigned long		state;
- 	} ____cacheline_aligned_in_smp;
- 
- 	struct delayed_work	run_work;
-@@ -24,7 +97,7 @@ struct blk_mq_hw_ctx {
- 	int			next_cpu;
- 	int			next_cpu_batch;
- 
--	unsigned long		flags;		/* BLK_MQ_F_* flags */
-+	unsigned long		flags;
- 
- 	void			*sched_data;
- 	struct request_queue	*queue;
-@@ -72,41 +145,73 @@ struct blk_mq_hw_ctx {
- 
- 	struct list_head	hctx_list;
- 
--	/* Must be the last member - see also blk_mq_hw_ctx_size(). */
- 	struct srcu_struct	srcu[0];
- };
- 
-+/**
-+ * struct blk_mq_queue_map - Map software queues to hardware queues
-+ * @mq_map:		Array mapping sw queues to hw queues.
-+ *			For a given sw queue index, works like this:
-+ *			``mq_map[sw_idx] = hw_idx``
-+ * @nr_queues:		Number of hardware queues.
-+ * @queue_offset:	Memory offset of this struct, relative to the address
-+ *			of struct blk_mq_tag_set.
-+ */
- struct blk_mq_queue_map {
- 	unsigned int *mq_map;
- 	unsigned int nr_queues;
- 	unsigned int queue_offset;
- };
- 
-+/**
-+ * enum hctx_type - Type of hardware queue
-+ * @HCTX_TYPE_DEFAULT:	All I/O not otherwise accounted for.
-+ * @HCTX_TYPE_READ:	Just for READ I/O.
-+ * @HCTX_TYPE_POLL:	Polled I/O of any kind.
-+ * @HCTX_MAX_TYPES:	Number of types of hctx.
-+ */
- enum hctx_type {
--	HCTX_TYPE_DEFAULT,	/* all I/O not otherwise accounted for */
--	HCTX_TYPE_READ,		/* just for READ I/O */
--	HCTX_TYPE_POLL,		/* polled I/O of any kind */
-+	HCTX_TYPE_DEFAULT,
-+	HCTX_TYPE_READ,
-+	HCTX_TYPE_POLL,
- 
- 	HCTX_MAX_TYPES,
- };
- 
-+/**
-+ * struct blk_mq_tag_set - desc
-+ * @map:	Map[] holds ctx -> hctx mappings, one map exists for each type
-+ *		that the driver wishes to support. There are no restrictions on
-+ *		maps being of the same size, and it's perfectly legal to share
-+ *		maps between types.
-+ * @nr_maps:	Number of entries in map[].
-+ * @ops:	Callback functions for blk-mq operations.
-+ * @nr_hw_queues: Number of hardware queues across maps.
-+ * @queue_depth:  Max number of tags supported by a queue.
-+ * @reserved_tags: Number of reserved tags.
-+ * @cmd_size:	Per-request extra data.
-+ * @numa_node:	NUMA node index of this tag set.
-+ * @timeout:	Time to a request expire.
-+ * @flags:	BLK_MQ_F_* flags. Define the behaviour of the queue.
-+ *
-+ * @driver_data: Device driver specific data.
-+ *
-+ * @tags:	Array of tags for hardware queues.
-+ *
-+ * @tag_list_lock: Lock for tag_list.
-+ * @tag_list:      List of struct request_queues.
-+ */
- struct blk_mq_tag_set {
--	/*
--	 * map[] holds ctx -> hctx mappings, one map exists for each type
--	 * that the driver wishes to support. There are no restrictions
--	 * on maps being of the same size, and it's perfectly legal to
--	 * share maps between types.
--	 */
- 	struct blk_mq_queue_map	map[HCTX_MAX_TYPES];
--	unsigned int		nr_maps;	/* nr entries in map[] */
-+	unsigned int		nr_maps;
- 	const struct blk_mq_ops	*ops;
--	unsigned int		nr_hw_queues;	/* nr hw queues across maps */
--	unsigned int		queue_depth;	/* max hw supported */
-+	unsigned int		nr_hw_queues;
-+	unsigned int		queue_depth;
- 	unsigned int		reserved_tags;
--	unsigned int		cmd_size;	/* per-request extra data */
-+	unsigned int		cmd_size;
- 	int			numa_node;
- 	unsigned int		timeout;
--	unsigned int		flags;		/* BLK_MQ_F_* */
-+	unsigned int		flags;
- 	void			*driver_data;
- 
- 	struct blk_mq_tags	**tags;
-@@ -115,6 +220,12 @@ struct blk_mq_tag_set {
- 	struct list_head	tag_list;
- };
- 
-+/**
-+ * struct blk_mq_queue_data - Data about a request inserted in a queue
-+ *
-+ * @rq:   Data about the block IO request.
-+ * @last: If it is the last request in the queue.
-+ */
- struct blk_mq_queue_data {
- 	struct request *rq;
- 	bool last;
-@@ -142,81 +253,100 @@ typedef bool (busy_fn)(struct request_queue *);
- typedef void (complete_fn)(struct request *);
- typedef void (cleanup_rq_fn)(struct request *);
- 
--
-+/**
-+ * struct blk_mq_ops - list of callback functions for blk-mq drivers
-+ */
- struct blk_mq_ops {
--	/*
--	 * Queue request
-+	/**
-+	 * @queue_rq: Queue a new request from block IO.
- 	 */
- 	queue_rq_fn		*queue_rq;
- 
--	/*
--	 * If a driver uses bd->last to judge when to submit requests to
--	 * hardware, it must define this function. In case of errors that
--	 * make us stop issuing further requests, this hook serves the
-+	/**
-+	 * @commit_rqs: If a driver uses bd->last to judge when to submit
-+	 * requests to hardware, it must define this function. In case of errors
-+	 * that make us stop issuing further requests, this hook serves the
- 	 * purpose of kicking the hardware (which the last request otherwise
- 	 * would have done).
- 	 */
- 	commit_rqs_fn		*commit_rqs;
- 
--	/*
--	 * Reserve budget before queue request, once .queue_rq is
-+	/**
-+	 * @get_budget: Reserve budget before queue request, once .queue_rq is
- 	 * run, it is driver's responsibility to release the
- 	 * reserved budget. Also we have to handle failure case
- 	 * of .get_budget for avoiding I/O deadlock.
- 	 */
- 	get_budget_fn		*get_budget;
-+	/**
-+	 * @put_budget: Release the reserved budget.
-+	 */
- 	put_budget_fn		*put_budget;
- 
--	/*
--	 * Called on request timeout
-+	/**
-+	 * @timeout: Called on request timeout.
- 	 */
- 	timeout_fn		*timeout;
- 
--	/*
--	 * Called to poll for completion of a specific tag.
-+	/**
-+	 * @poll: Called to poll for completion of a specific tag.
- 	 */
- 	poll_fn			*poll;
- 
-+	/**
-+	 * @complete: Mark the request as complete.
-+	 */
- 	complete_fn		*complete;
- 
--	/*
--	 * Called when the block layer side of a hardware queue has been
--	 * set up, allowing the driver to allocate/init matching structures.
--	 * Ditto for exit/teardown.
-+	/**
-+	 * @init_hctx: Called when the block layer side of a hardware queue has
-+	 * been set up, allowing the driver to allocate/init matching
-+	 * structures.
- 	 */
- 	init_hctx_fn		*init_hctx;
-+	/**
-+	 * @exit_hctx: Ditto for exit/teardown.
-+	 */
- 	exit_hctx_fn		*exit_hctx;
- 
--	/*
--	 * Called for every command allocated by the block layer to allow
--	 * the driver to set up driver specific data.
-+	/**
-+	 * @init_request: Called for every command allocated by the block layer
-+	 * to allow the driver to set up driver specific data.
- 	 *
- 	 * Tag greater than or equal to queue_depth is for setting up
- 	 * flush request.
--	 *
--	 * Ditto for exit/teardown.
- 	 */
- 	init_request_fn		*init_request;
-+	/**
-+	 * @exit_request: Ditto for exit/teardown.
-+	 */
- 	exit_request_fn		*exit_request;
--	/* Called from inside blk_get_request() */
-+
-+	/**
-+	 * @initialize_rq_fn: Called from inside blk_get_request().
-+	 */
- 	void (*initialize_rq_fn)(struct request *rq);
- 
--	/*
--	 * Called before freeing one request which isn't completed yet,
--	 * and usually for freeing the driver private data
-+	/**
-+	 * @cleanup_rq: Called before freeing one request which isn't completed
-+	 * yet, and usually for freeing the driver private data.
- 	 */
- 	cleanup_rq_fn		*cleanup_rq;
- 
--	/*
--	 * If set, returns whether or not this queue currently is busy
-+	/**
-+	 * @busy: If set, returns whether or not this queue currently is busy.
- 	 */
- 	busy_fn			*busy;
- 
-+	/**
-+	 * @map_queues: This allows drivers specify their own queue mapping by
-+	 * overriding the setup-time function that builds the mq_map.
-+	 */
- 	map_queues_fn		*map_queues;
- 
- #ifdef CONFIG_BLK_DEBUG_FS
--	/*
--	 * Used by the debugfs implementation to show driver-specific
-+	/**
-+	 * @show_rq: Used by the debugfs implementation to show driver-specific
- 	 * information about a request.
- 	 */
- 	void (*show_rq)(struct seq_file *m, struct request *rq);
-@@ -343,14 +473,29 @@ void blk_mq_quiesce_queue_nowait(struct request_queue *q);
- 
- unsigned int blk_mq_rq_cpu(struct request *rq);
- 
--/*
-+/**
-+ * blk_mq_rq_from_pdu - cast a PDU to a request
-+ * @pdu: the PDU (protocol unit request) to be casted
-+ *
-+ * Return: request
-+ *
-  * Driver command data is immediately after the request. So subtract request
-- * size to get back to the original request, add request size to get the PDU.
-+ * size to get back to the original request.
-  */
- static inline struct request *blk_mq_rq_from_pdu(void *pdu)
- {
- 	return pdu - sizeof(struct request);
- }
-+
-+/**
-+ * blk_mq_rq_to_pdu - cast a request to a PDU
-+ * @rq: the request to be casted
-+ *
-+ * Return: pointer to the PDU
-+ *
-+ * Driver command data is immediately after the request. So add request to get
-+ * the PDU.
-+ */
- static inline void *blk_mq_rq_to_pdu(struct request *rq)
- {
- 	return rq + 1;
--- 
-2.23.0
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBcm5kIEJlcmdtYW5uIDxhcm5k
+QGFybmRiLmRlPg0KPiBTZW50OiBNb25kYXksIFNlcHRlbWJlciAzMCwgMjAxOSAxMDoxMiBQTQ0K
+PiBUbzogUGFzY2FsIFZhbiBMZWV1d2VuIDxwdmFubGVldXdlbkB2ZXJpbWF0cml4LmNvbT4NCj4g
+Q2M6IEFudG9pbmUgVGVuYXJ0IDxhbnRvaW5lLnRlbmFydEBib290bGluLmNvbT47IEhlcmJlcnQg
+WHUgPGhlcmJlcnRAZ29uZG9yLmFwYW5hLm9yZy5hdT47DQo+IERhdmlkIFMuIE1pbGxlciA8ZGF2
+ZW1AZGF2ZW1sb2Z0Lm5ldD47IFBhc2NhbCB2YW4gTGVldXdlbiA8cGFzY2FsdmFubEBnbWFpbC5j
+b20+OyBBcmQNCj4gQmllc2hldXZlbCA8YXJkLmJpZXNoZXV2ZWxAbGluYXJvLm9yZz47IEVyaWMg
+QmlnZ2VycyA8ZWJpZ2dlcnNAZ29vZ2xlLmNvbT47IGxpbnV4LQ0KPiBjcnlwdG9Admdlci5rZXJu
+ZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFU
+Q0ggMi8zXSBjcnlwdG86IGluc2lkZS1zZWN1cmUgLSBSZWR1Y2Ugc3RhY2sgdXNhZ2UNCj4gDQo+
+IE9uIE1vbiwgU2VwIDMwLCAyMDE5IGF0IDk6MDQgUE0gUGFzY2FsIFZhbiBMZWV1d2VuDQo+IDxw
+dmFubGVldXdlbkB2ZXJpbWF0cml4LmNvbT4gd3JvdGU6DQo+IA0KPiA+ID4gQWx0ZXJuYXRpdmVs
+eSwgaXQgc2hvdWxkIGJlIHBvc3NpYmxlIHRvIHNocmluayB0aGVzZSBhbGxvY2F0aW9ucw0KPiA+
+ID4gYXMgdGhlIGV4dHJhIGJ1ZmZlcnMgYXBwZWFyIHRvIGJlIGxhcmdlbHkgdW5uZWNlc3Nhcnks
+IGJ1dCBkb2luZw0KPiA+ID4gdGhpcyB3b3VsZCBiZSBhIG11Y2ggbW9yZSBpbnZhc2l2ZSBjaGFu
+Z2UuDQo+ID4gPg0KPiA+IEFjdHVhbGx5LCBmb3IgSE1BQy1TSEE1MTIgeW91IERPIG5lZWQgYWxs
+IHRoYXQgYnVmZmVyIHNwYWNlLg0KPiA+IFlvdSBjb3VsZCBzaHJpbmsgaXQgdG8gMiAqIGN0eC0+
+c3RhdGVfc3ogYnV0IHRoZW4geW91ciBzaW1wbGUgaW5kZXhpbmcNCj4gPiBpcyBubyBsb25nZXIg
+Z29pbmcgdG8gZmx5LiBOb3Qgc3VyZSBpZiB0aGF0IHdvdWxkIGJlIHdvcnRoIHRoZSBlZmZvcnQu
+DQo+IA0KPiBTdGFjayBhbGxvY2F0aW9ucyBjYW4gbm8gbG9uZ2VyIGJlIGR5bmFtaWNhbGx5IHNp
+emVkIGluIHRoZSBrZXJuZWwsDQo+IHNvIHRoYXQgd291bGQgbm90IHdvcmsuDQo+IA0KSSB3YXMg
+YWN0dWFsbHkgcmVmZXJyaW5nIHRvIHlvdXIga3phbGxvYywgbm90IHRvIHRoZSBvcmlnaW5hbCBz
+dGFjaw0KYmFzZWQgaW1wbGVtZW50YXRpb24gLi4uDQoNCj4gV2hhdCBJIG5vdGljZWQgdGhvdWdo
+IGlzIHRoYXQgdGhlIGxhcmdlc3QgcGFydCBvZiBzYWZleGNlbF9haGFzaF9leHBvcnRfc3RhdGUN
+Cj4gaXMgdXNlZCBpbiB0aGUgJ2NhY2hlJyBtZW1iZXIsIGFuZCB0aGlzIGlzIGFwcGFyZW50bHkg
+b25seSByZWZlcmVuY2VkIGluc2lkZSBvZg0KPiBzYWZleGNlbF9obWFjX2luaXRfaXYsIHdoaWNo
+IHlvdSBjYWxsIHR3aWNlLiBJZiB0aGF0IGNhY2hlIGNhbiBiZSBhbGxvY2F0ZWQNCj4gb25seSBv
+bmNlLCB5b3Ugc2F2ZSBTSEE1MTJfQkxPQ0tfU0laRSBieXRlcyBpbiBvbmUgb2YgdGhlIHR3byBw
+YXRocy4NCj4gDQpXZWxsIC4uLiBobW1tIC4uLiAibXkiLi4uIFRoaXMgaXMgbm90IG9yaWdpbmFs
+bHkgIm15IiBjb2RlLiBBbmQgdW50aWwgeW91DQpicm91Z2h0IHRoaXMgdXAsIEkgZGlkIG5vdCBm
+dWxseSByZWFsaXNlIGl0IHdhcyB1c2luZyB0aGlzIGV4cG9ydF9zdGF0ZQ0Kc3RydWN0IHRvIHN0
+b3JlIHRob3NlIGRpZ2VzdHMuIFNlZW1zIHRvIGhhdmUgc29tZXRoaW5nIHRvIGRvIHdpdGggZGly
+ZWN0bHkNCnRha2luZyB0aGUgY3J5cHRvX2FoYXNoX2V4cG9ydCBzdGF0ZSBvdXRwdXQsIHdoaWNo
+IGlzIG11Y2ggbW9yZSB0aGFuIHRoYXQsDQppbiBjYXNlIHlvdSBuZWVkIHRvIGNvbnRpbnVlIHRo
+ZSBoYXNoICh3aGljaCB5b3UgZG9uJ3QgaGVyZSkuDQoNCkkgZ3Vlc3MgeW91IG5lZWQgdG8gImNh
+dGNoIiB0aGF0IG91dHB1dCBzb21ld2hlcmUsIHNvIHByb2JhYmx5IHlvdSBjb3VsZA0Kc2F2ZSBh
+IGJpdCBvZiBtZW1vcnkgYnV0IEkgZG91YnQgaXQgd291bGQgYmUgYSBzaWduaWZpY2FudCBpbXBy
+b3ZlbWVudC4NCg0KPiA+IEkgZG9uJ3QgbGlrZSB0aGUgcGFydCB3aGVyZSB5b3UgZHluYW1pY2Fs
+bHkgYWxsb2NhdGUgdGhlIGNyeXRvX2Flc19jdHgNCj4gPiB0aG91Z2gsIEkgdGhpbmsgdGhhdCB3
+YXMgbm90IG5lY2Vzc2FyeSBjb25zaWRlcmluZyBpdHMgYSBsb3Qgc21hbGxlci4NCj4gDQo+IEkg
+Y291bnQgNDg0IGJ5dGVzIGZvciBpdCwgd2hpY2ggaXMgcmVhbGx5IGxhcmdlLg0KPiANCk1heWJl
+IEkgc2hvdWxkJ3ZlIGNvdW50ZWQgbXlzZWxmIC4uLiB0b3RhbGx5IHVuZXhwZWN0ZWRseSBodWdl
+LiBXaHk/Pw0KQW55d2F5LCBnbGFkIEkgZ290IHJpZCBvZiBpdCBhbHJlYWR5IHRoZW4uDQoNCj4g
+PiBBbmQgaXQgY29uZmxpY3RzIHdpdGggYW5vdGhlciBjaGFuZ2UgSSBoYXZlIHdhaXRpbmcgdGhh
+dCBnZXRzIHJpZCBvZg0KPiA+IGFlc19leHBhbmRrZXkgYW5kIHRoYXQgc3RydWN0IGFsbHRvZ2V0
+aGVyIChzaW5jZSBpdCB3YXMgcmVhbGx5IGp1c3QNCj4gPiBhYnVzZWQgdG8gZG8gYSBrZXkgc2l6
+ZSBjaGVjaywgd2hpY2ggd2FzIHZlcnkgd2FzdGVmdWwgc2luY2UgdGhlDQo+ID4gZnVuY3Rpb24g
+YWN0dWFsbHkgZ2VuZXJhdGVzIGFsbCByb3VuZGtleXMgd2UgZG9uJ3QgbmVlZCBhdCBhbGwgLi4u
+KQ0KPiANCj4gUmlnaHQsIHRoaXMgaXMgd2hhdCBJIG5vdGljZWQgdGhlcmUuIFdpdGggNDgwIG9m
+IHRoZSA0ODQgYnl0ZXMgZ29uZSwNCj4geW91IGFyZSB3ZWxsIGJlbG93IHRoZSB3YXJuaW5nIGxp
+bWl0IGV2ZW4gd2l0aG91dCB0aGUgb3RoZXIgY2hhbmdlLg0KPiANCkFuZCBieSAib3RoZXIgY2hh
+bmdlIiB5b3UgbWVhbiB0aGUgc2FmZXhjZWxfYWhhc2hfZXhwb3J0X3N0YXRlPw0KT2ssIGdvb2Qg
+dG8ga25vd24sIGFsdGhvdWdoIEkgZG8gbGlrZSB0byBpbXByb3ZlIHRoYXQgb25lIGFzIHdlbGws
+DQpidXQgcHJlZmVyYWJseSBieSBub3QgZXhwb3J0aW5nIHRoZSBjYWNoZSBzbyBJIGRvbid0IG5l
+ZWQgdGhlIGZ1bGwNCnN0cnVjdC4NCg0KUmVnYXJkcywNClBhc2NhbCB2YW4gTGVldXdlbg0KU2ls
+aWNvbiBJUCBBcmNoaXRlY3QsIE11bHRpLVByb3RvY29sIEVuZ2luZXMgQCBWZXJpbWF0cml4DQp3
+d3cuaW5zaWRlc2VjdXJlLmNvbQ0KDQo=
