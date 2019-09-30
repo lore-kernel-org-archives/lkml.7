@@ -2,130 +2,117 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A58D4C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA87FC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85597215EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:12:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DF26215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:13:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569856384;
+	bh=cz6rCcn0hmTlID047Viho7FV1ChC9er6z3HVxzfjLkk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Fr9hYVhwMzbWd74dvFQ8XH0z2nQIk9tgLv3pI9DbcCc8zUly0XS3VS95+UH/OCyiq
+	 EnHHq4uOJ+O1D14vBhm7PhqaItaRgNA1M7YrabCeG0dP1mieD1q+lUfr1TE3L5vKmu
+	 If2gCtjZJffila12iQAVwUlkFRJ0N7rDt+RyMUTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731871AbfI3PMj (ORCPT
+        id S1731933AbfI3PND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 11:12:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40412 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731276AbfI3PMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 11:12:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 168C9AF7E;
-        Mon, 30 Sep 2019 15:12:36 +0000 (UTC)
-Date:   Mon, 30 Sep 2019 17:12:34 +0200
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     Mina Almasry <almasrymina@google.com>
-Cc:     Tejun Heo <tj@kernel.org>, Mike Kravetz <mike.kravetz@oracle.com>,
-        Greg Thelen <gthelen@google.com>,
-        David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>, shuah <shuah@kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>,
-        khalid.aziz@oracle.com, cgroups@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v5 0/7] hugetlb_cgroup: Add hugetlb_cgroup reservation
- limits
-Message-ID: <20190930151233.GH6694@blackbody.suse.cz>
-References: <20190919222421.27408-1-almasrymina@google.com>
- <3c73d2b7-f8d0-16bf-b0f0-86673c3e9ce3@oracle.com>
- <CAHS8izOj2AT4tX-+Hcb8LB2TOUKJDHScDtJ80u4M6OWpwktq0g@mail.gmail.com>
- <a8e9c533-1593-35ee-e65d-1f2fc2b0fb48@oracle.com>
- <CAHS8izPfKQA8qTndyzWSm9fR_xJ=X-xmE+4P4K+ZFdxrYNuLBA@mail.gmail.com>
- <alpine.DEB.2.21.1909261220150.39830@chino.kir.corp.google.com>
- <8f7db4f1-9c16-def5-79dc-d38d6b9d150e@oracle.com>
- <CAHS8izM3=ZDNukx5xhWmeJT+78Ekfff9J4s5Vqkqpx-DtH=C-A@mail.gmail.com>
+        Mon, 30 Sep 2019 11:13:03 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39652 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731276AbfI3PND (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 11:13:03 -0400
+Received: by mail-lj1-f193.google.com with SMTP id y3so9898018ljj.6;
+        Mon, 30 Sep 2019 08:13:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3Bfo0rr9vkrHOZNoCbxCpYEVjTK+dS54moPMT8PgtP0=;
+        b=dgLc7SLMxhZ70hz7jiMmM6pvd9H5Olpzoyuhveqobd1dQI0XQfUgNvEcmiIejo1j5p
+         pbtSw5G5V6B+uv01NjmPh8MKj3qpC04EiWunzdKHt0USXTxIMH7x39HB0uGaCztHe3fh
+         3GIi1+Ctti0RRYrdh9fIVvt0twPQ5YRRrKlTOX3R7Lei7gYCQpOgvECoIJjdKYXeeCgg
+         HAWX0WFCWd2BTVCmStgTWEM1f8y+3/TaDxevQrpDkBY5E4j3TZ4JbwxXR31oKWTXbK/i
+         aXvySa0EIcK5WdPmgUwiEI8mEzsI/Vu9oa9L0hO5m7C33AdSglYCrw++HRYymhxMlqFG
+         XHDw==
+X-Gm-Message-State: APjAAAXljj85k6GWKiH8OnS8ef1r5C0GXmHB3OmcBjU/cj1r/RuKWsmH
+        VBqHzeG7TAxyfQkcEAxuGKA=
+X-Google-Smtp-Source: APXvYqwg/FEkVQ/xSlVzbMY3fcdyuxPargpqGNsa//amQHjHrZTEzZ+oIBnQVVZMZ0XsPRnoL1Om3g==
+X-Received: by 2002:a2e:8184:: with SMTP id e4mr12785036ljg.240.1569856381011;
+        Mon, 30 Sep 2019 08:13:01 -0700 (PDT)
+Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
+        by smtp.gmail.com with ESMTPSA id n11sm3292479lfe.59.2019.09.30.08.13.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 30 Sep 2019 08:13:00 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92.2)
+        (envelope-from <johan@xi.terra>)
+        id 1iExMH-0006gf-Pd; Mon, 30 Sep 2019 17:13:06 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH net] hso: fix NULL-deref on tty open
+Date:   Mon, 30 Sep 2019 17:12:41 +0200
+Message-Id: <20190930151241.25646-1-johan@kernel.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="YhFoJY/gx7awiIuK"
-Content-Disposition: inline
-In-Reply-To: <CAHS8izM3=ZDNukx5xhWmeJT+78Ekfff9J4s5Vqkqpx-DtH=C-A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fix NULL-pointer dereference on tty open due to a failure to handle a
+missing interrupt-in endpoint when probing modem ports:
 
---YhFoJY/gx7awiIuK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+	BUG: kernel NULL pointer dereference, address: 0000000000000006
+	...
+	RIP: 0010:tiocmget_submit_urb+0x1c/0xe0 [hso]
+	...
+	Call Trace:
+	hso_start_serial_device+0xdc/0x140 [hso]
+	hso_serial_open+0x118/0x1b0 [hso]
+	tty_open+0xf1/0x490
 
-Hi.
+Fixes: 542f54823614 ("tty: Modem functions for the HSO driver")
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ drivers/net/usb/hso.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-On Thu, Sep 26, 2019 at 05:55:29PM -0700, Mina Almasry <almasrymina@google.com> wrote:
-> My guess is that a new controller needs to support cgroups-v2, which
-> is fine. But can a new controller also support v1? Or is there a
-> requirement that new controllers support *only* v2? I need whatever
-> solution here to work on v1.
-Here is my view of important criteria:
+diff --git a/drivers/net/usb/hso.c b/drivers/net/usb/hso.c
+index ce78714f536f..a505b2ab88b8 100644
+--- a/drivers/net/usb/hso.c
++++ b/drivers/net/usb/hso.c
+@@ -2620,14 +2620,18 @@ static struct hso_device *hso_create_bulk_serial_device(
+ 		 */
+ 		if (serial->tiocmget) {
+ 			tiocmget = serial->tiocmget;
++			tiocmget->endp = hso_get_ep(interface,
++						    USB_ENDPOINT_XFER_INT,
++						    USB_DIR_IN);
++			if (!tiocmget->endp) {
++				dev_err(&interface->dev, "Failed to find INT IN ep\n");
++				goto exit;
++			}
++
+ 			tiocmget->urb = usb_alloc_urb(0, GFP_KERNEL);
+ 			if (tiocmget->urb) {
+ 				mutex_init(&tiocmget->mutex);
+ 				init_waitqueue_head(&tiocmget->waitq);
+-				tiocmget->endp = hso_get_ep(
+-					interface,
+-					USB_ENDPOINT_XFER_INT,
+-					USB_DIR_IN);
+ 			} else
+ 				hso_free_tiomget(serial);
+ 		}
+-- 
+2.23.0
 
-	1) stability, v1 APIs and semantics should not be changed,
-	2) futureproofness, v1 uses should be convertible to v2 uses,
-	3) maintainability, the less (similar) code the better.
-
-And here is my braindump of some approaches:
-
-A) new controller, v2 only
-- 1) ok
-- 2) may be ok
-- 3) separate v1 and v2 implementations
-- exclusion must be ensured on hybrid hierarchies
-
-B) new controller, version oblivious (see e.g. pid)
-- 1) sort of ok
-- 2) partially ok
-- 3) two v1 implementations
-- exclusion must be ensured even on pure v1 hierarchies
-
-C) extending the existing controller, w/out v2 counterpart
-- 1) ok with workarounds (new option switching behavior)
-- 2) not ok
-- 3) likely OK
-
-D) extending the existing controller, with v2 counterpart
-- 1) ok with workarounds (new option switching behavior, see cpuset)
-- 2) may be ok
-- 3) likely OK
-
-AFAIU, the current patchset is variation of C). Personally, I think
-something like D) could work, I'm not convinced about A) and B) based on
-the breakdown above. But it may induce some other ideas.
-
-
-My two cents,
-Michal
-
---YhFoJY/gx7awiIuK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl2SG14ACgkQia1+riC5
-qShedQ/8DyEdvjT0PcRMLE3EjsjDi32g8BDv8aIV1H1UVciQZIM+BFvPycHsjJ9N
-XwYn3bspedb10o6wm1Luj6LhXjVht5dglPSrmhTWp4E5YrLqP2AqKPt8p5ZL4pTq
-L64SrAHXo5qFq85CDnSQkFgYXmuPEkM9NCdLN3Dt30P1/zr6mrt0vhPbLNwJkgdT
-xsTp2UObM12TuEJxsnb2F6nirZLa6RHQ3utUjDZUsLbPOgnb+WbTgLyCNwHFnqUk
-bInSN/vrHcn52yYefxWuHW1VdXXV2vpjqcQG5CdYjXEzpKQxnysI+IiYxpv4kw6Q
-FQpT5nQtCVVr2EHj9LEsk9vgks2Hcfsb87psTIL0rxA4HvxiutPcDHBHqhcs/52o
-2ozl8p7G0WXGYQ+bSeTBJ35O/qtTGibw1YELSkpVhG742SrzMj9SxdhtFO7dsdeY
-uk/HdATsAPl3kAX1fOhUSmIcnOL9ECAO0pgcRnmsyPdXEDUWwaiji0tK9Q0yP6Wu
-jnFTX3MY/Nq5FhJzZ3QYvCUxc1n1LgzW9STMUU5MuTN9NYXC4AlZnZhMqduDH5HK
-l0seBNntlNnaI4lQhbWl2OR0cXTDN88Nv2bF84LBI01F4N2D/NL97p69jCMYxgUx
-5EiC89zRH0RUxb8RX+NeMG/OMd0qxTNFELjONXX1D5fpzLqg5Ao=
-=ksZu
------END PGP SIGNATURE-----
-
---YhFoJY/gx7awiIuK--
