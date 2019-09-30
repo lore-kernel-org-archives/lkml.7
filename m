@@ -2,154 +2,100 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD22C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1578CC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2540224FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:44:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8E6822500
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:45:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="SfDxHizd"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="aKjqbywH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731471AbfI3UoR (ORCPT
+        id S1730827AbfI3UpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 16:44:17 -0400
-Received: from mail-eopbgr1300137.outbound.protection.outlook.com ([40.107.130.137]:5032
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729158AbfI3UoQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 16:44:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=h/CtkMee/6Rj3Hcony3w6FFUBfiTPWnfkrRwRte+LzqBLXwiCdfIter663Je1a/OgUMoADR/m7rzJpKeZ4gU+FTtZgzjK0Rw7bAn57MvD+jYtdKv5kZYDJS3mPu0FByBG6mz4rFvMVDCGY1wiF+GJFHtpe47l/tkVZ32uq17E4ZdYUFCMPMPnjB3HctB9IOuXF7e0XggyirAeX8Ak6IrZFyB6753/WwQxUxJ/iPxJ7s25bZLpB/pWBXp5/Jsvwiw99sDGRMx4gxrbnaxmOChmtB40lYoFSEkHYPvpkR5BicfVBbt0nJkgKJvA3ax2Qc6rReFEDuR9bMlW1E6wYe+HA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y7TT+kyzC8pC5j2sJkhcpA9ZFEYCfHh0UaNuv91qNf4=;
- b=JLzCdqORpfLt21o1/zvptkgbxABHSCbtKW4kb2ag7Nx9CTRANbk6qd0umvYbylXAqMm2rSsyv7ay6AN1hG4SENhCiqzBBd12d/k0lGAUDZ9AWP/ZcXNPu7kWNKYOa690Gxmz/E8wdcrhWyQgxolZNErOEhqvANIYf1Dj30gs3pELBM8FceQvFBjdriI0c10tQFs6WObHOfMEY4inWdud9huGyuhGwhQtQRUZVWRSSK2TOYAMbXf8Mgya4zxDXl1tojpFv7ExZ5M+joX1r+ErRES/zYyqjimBJVFxP1CA5y4Bym22ssCMQuUdwBloIAYnFyRGXPIwqOs+CdsHLcdpVA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y7TT+kyzC8pC5j2sJkhcpA9ZFEYCfHh0UaNuv91qNf4=;
- b=SfDxHizdWUflTqzyYVg6yoVqEFsZMo43YFbP5konigU5RWQVN6UxIXDgzizguKEJ+krZMmt/9rj0SVPMJKNa5FBTeFm2pHysaYkIBtSvOokv/5xqiZmJXOFwdS6R0i47aZgRSZXf59K/6+2JWA96VtWLW15LYdzQdRpHb70Nk4I=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0187.APCP153.PROD.OUTLOOK.COM (10.170.188.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2327.3; Mon, 30 Sep 2019 18:49:33 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::fc44:a784:73e6:c1c2%7]) with mapi id 15.20.2327.009; Mon, 30 Sep 2019
- 18:49:33 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     vkuznets <vkuznets@redhat.com>
-CC:     "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>
-Subject: RE: [PATCH v5 1/3] x86/hyper-v: Suspend/resume the hypercall page for
- hibernation
-Thread-Topic: [PATCH v5 1/3] x86/hyper-v: Suspend/resume the hypercall page
- for hibernation
-Thread-Index: AQHVdFddc0vkIIkGmEOkqRoIHJJIFqc/CHEAgAA0RQCABVkvEA==
-Date:   Mon, 30 Sep 2019 18:49:33 +0000
-Message-ID: <PU1P153MB0169804D32B95E0A145CD0B9BF820@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1567723581-29088-1-git-send-email-decui@microsoft.com>
- <1567723581-29088-2-git-send-email-decui@microsoft.com>
- <87ef0372wv.fsf@vitty.brq.redhat.com>
- <PU1P153MB01695A159E9843B4E1EC13AEBF810@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <877e5u6re3.fsf@vitty.brq.redhat.com>
-In-Reply-To: <877e5u6re3.fsf@vitty.brq.redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-30T18:49:30.9074667Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=d3e7ddcd-9ddb-4e60-9369-b0af671a3cae;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:2:d492:e91a:5e0:dd92]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 178f43f5-62cb-430c-c11f-08d745d6ef61
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: PU1P153MB0187:|PU1P153MB0187:|PU1P153MB0187:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <PU1P153MB0187C0D3EE6EC3B4AB2932DDBF820@PU1P153MB0187.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 01762B0D64
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(396003)(136003)(346002)(39860400002)(366004)(189003)(199004)(316002)(102836004)(476003)(486006)(46003)(7696005)(186003)(6436002)(9686003)(10290500003)(14454004)(76176011)(55016002)(53546011)(6116002)(99286004)(8990500004)(10090500001)(5660300002)(52536014)(22452003)(8936002)(6506007)(6916009)(7416002)(8676002)(71190400001)(81156014)(81166006)(71200400001)(446003)(11346002)(54906003)(86362001)(2906002)(4744005)(256004)(66476007)(66556008)(64756008)(478600001)(33656002)(14444005)(229853002)(107886003)(25786009)(76116006)(66946007)(6246003)(74316002)(305945005)(7736002)(66446008)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0187;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: P1cTnrr60EXWZdug3y36Nrug6T/QeGlYVDK/09Tyj1Pz6dQs+2kk9VjpW5MhnnbjLZGrLRtuuHwlSilC6f5/3XxomitwKJ9MLUfROwXjZeOMSZxZw0M74DoaUe1t1f0/0BydJ0kn7PcAGOBiIO3y+lOc8mAsS9HqQh9NW2XIQawP5vQwFkg6RupOSNgXS28Axr+jjJsofmNiYnV8I1Z9CgMGsM5F1ZtKCEYiklBs7+VycGm9fXMSEFv1/K9IKvs+4C8cmb+eGFEtZjtHX3Mzq0jYWjJvktg7nLZxhAuvHOEvZwQT0D6dfmL6MHrm02AuxjVL5KEaJCycULYdhlWXVT60YP16dwm02NGcaQ8F1c8PlGHLue3siUJ5Nf6Oy0QTCB0piR/mQIVMzjMaxFHb18VcHhucpOPoiNxxY3RBkbE=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 30 Sep 2019 16:45:01 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:41035 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727508AbfI3UpA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 16:45:00 -0400
+Received: by mail-qt1-f195.google.com with SMTP id n1so18799490qtp.8
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 13:45:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1dwBvieRM+vKXZ4KLxwbvrNPVV9nPlESTVr4TgXHT9c=;
+        b=aKjqbywHKeBLuug1dtqF0XkdHMigPjUAxw3BlPnJjAjdAx5lkTdY7/HB6DEFlEzwpg
+         AhdjS/kmkFWrj8YIGf/HcC3mSsAsOSf/Qn0ZfQzBhgZr3BzVaxd6bu1VuiA1PM8LTOHH
+         FqNNFeJmYKO2QIZMxewOPXGVvgW2vbRcZZXn8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1dwBvieRM+vKXZ4KLxwbvrNPVV9nPlESTVr4TgXHT9c=;
+        b=iu/BNvOGq+bOmBFfkayLq6/tNVdM2UGBEwfJE6vaYzt7p5RIID7q1rr6PyxUzyCK9A
+         x834xoXYlS2GLQLc0xJA0qDc0CBCpEXmy7anEsH106RlPpA6XzoVg9XIh6UjNC+cjpwG
+         C0NW9AfIBaaOGUWA14b/20AIKGRAKSgTxk4Ggavm34T5nw78CCBvccIOarnTHEwsa+yx
+         BvE6nQt9BJEsu7VzQY/19XHAtrbcnK1YVvyqBe6xqXnFcbVtFS+iwiTz6IHB8jY4bsgS
+         uj95ZPnIqWx3ffRYNBgF2IXIwyEabAhfv5/eu0q9jOGgiQiHivEs4c85Lzq6M3HpWiVO
+         vNag==
+X-Gm-Message-State: APjAAAWzs9HGNaZm3ozdCRzXJigur2WoirbAzD28d0DTzaviptzVAa9b
+        0QI7Y/nhp40mg1uTICY9P4G8dGH+qBk=
+X-Google-Smtp-Source: APXvYqxk3NZEibZ7+/VO5i5PFtNsFhkXGQFI0W+IiPDN0q29fCBgPUPrtv8hutsjM4/XczJf2Xdn9w==
+X-Received: by 2002:a63:c148:: with SMTP id p8mr26335812pgi.282.1569874374266;
+        Mon, 30 Sep 2019 13:12:54 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id t125sm12921894pfc.80.2019.09.30.13.12.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 13:12:53 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        =?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
+        Christian Brauner <christian@brauner.io>,
+        devel@driverdev.osuosl.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martijn Coenen <maco@android.com>,
+        Todd Kjos <tkjos@android.com>
+Subject: [PATCH] binder: Fix comment headers on binder_alloc_prepare_to_free()
+Date:   Mon, 30 Sep 2019 16:12:50 -0400
+Message-Id: <20190930201250.139554-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.23.0.444.g18eeb5a265-goog
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 178f43f5-62cb-430c-c11f-08d745d6ef61
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2019 18:49:33.3935
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +J46sI8EARYq6eRD+9qksQ7dIPIoEibkNwyiB9dhCePxY39U+nKuWIbPuBJWDp7cuwvDehHE9lwoDcy1OockZA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0187
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Sent: Friday, September 27, 2019 2:05 AM
-> To: Dexuan Cui <decui@microsoft.com>
->=20
-> Dexuan Cui <decui@microsoft.com> writes:
-> ...
-> > So, I'm pretty sure no IPI can happen between hv_suspend() and
-> hv_resume().
-> > self-IPI is not supposed to happen either, since interrupts are disable=
-d.
-> >
-> > IMO TLB flush should not be an issue either, unless the kernel changes =
-page
-> > tables between hv_suspend() and hv_resume(), which is not the case as I
-> > checked the related code, but it looks in theory that might happen, say=
-, in
-> > the future, so if you insist we should save the variable "hv_hypercall_=
-pg"
-> > to a temporary variable and set the "hv_hypercall_pg" to NULL before we
-> > disable the hypercall page
->=20
-> Let's do it as a future proof so we can keep relying on !hv_hypercall_pg
-> everywhere we need. No need to change this patch IMO, a follow-up would
-> do.
-> Vitaly
+binder_alloc_buffer_lookup() doesn't exist and is named
+"binder_alloc_prepare_to_free()". Correct the code comments to reflect
+this.
 
-Now I think it would be better to do it in this patch. :-)
-I'll post a v6 to follow your suggestion.
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-Thanks,
--- Dexuan
+---
+ drivers/android/binder_alloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/android/binder_alloc.c b/drivers/android/binder_alloc.c
+index 6d79a1b0d446..d42a8b2f636a 100644
+--- a/drivers/android/binder_alloc.c
++++ b/drivers/android/binder_alloc.c
+@@ -156,7 +156,7 @@ static struct binder_buffer *binder_alloc_prepare_to_free_locked(
+ }
+ 
+ /**
+- * binder_alloc_buffer_lookup() - get buffer given user ptr
++ * binder_alloc_prepare_to_free() - get buffer given user ptr
+  * @alloc:	binder_alloc for this proc
+  * @user_ptr:	User pointer to buffer data
+  *
+-- 
+2.23.0.444.g18eeb5a265-goog
+
