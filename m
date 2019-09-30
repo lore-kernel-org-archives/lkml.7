@@ -2,117 +2,139 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53719C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38587C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25331218AC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:32:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="Fc/8aLGB"
+	by mail.kernel.org (Postfix) with ESMTP id 185AF216F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:33:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731188AbfI3Nck (ORCPT
+        id S1731242AbfI3Nc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 09:32:40 -0400
-Received: from sonic304-22.consmr.mail.ir2.yahoo.com ([77.238.179.147]:38623
-        "EHLO sonic304-22.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729738AbfI3Nck (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:32:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1569850357; bh=BxjFlLKbyfwD4BKbabhEjF41rLGBsTJMHktjvyywruE=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=Fc/8aLGBGSikJBya/Z0iQ6aV31XZmOdHAhr8S3if90MuGUtTsbLUH/c4uLMvkUc08km/wjyMFpRWd8PCJygJhnLBp38wyM0HwTUrOjLTtdqIpHIiZVYPHgDouwNcprXx3Pi4YHdD1g71cH0eRIrBPLajTKHbJXKuTgkKW3oKAgVcBQU3nIfbDMfc5D3HuNImQeTVrDAhQwnA5e84SlbXtRBM7IQMDrF/6MlnOjS03XipY2kuRrhR+lqEObT6wtOKEr/JTOcPYfw+pFggJySioR3PgqSfyBKLBDTzhw+7RSsBkkGpOlMFg9FidUVITOJUONHzidYEf4nvPFX+omrJ4Q==
-X-YMail-OSG: tL7.wYAVM1lmXJG5K4v4fv6b1XYZnXDiBXdbRGi8FpKEs9aO8eY6BSrYKF8_J0p
- .WSmm81PA_FtiiQb8Nl._FPdFZDKK4.3MZE3poClsouWr1ne7Aisk7gZQXz_Yh5ge6wR_2Q6IzVN
- 3NghMbfJ5FGTASJrc7Ae0x1gMu07SWh9L4mqKXNO.cZhB3nNkR.yTy9qe.ruZZEp5IinU1_heX2a
- kd6LVRV0sqZAXt7y3V_yPs6WtyCCpTqu_5sG4O8mGdHDnNy0Ybs4ryLUnqNmWanyh3xuYqbRWmWp
- Ch5drbdfUni3lxxZ8wXMVQCS95q6ePTOCYG1kfczFmrHrTBhgmKq2dXgFAZGsy_I.2AoiU6umnr1
- smrInCe0GSRvkJStqp.zSvteyvNLhFYnv3qG5rsKy_yggZc2rzYSLIdzsvpBpO_p7bwQIWC7dKyl
- 8A8DnrovFPW1zN2szXVTMArnplCV8k_wQGnkkoMxXSmICECsbCPcqeuik6T9oV06E1klQ4AjHLz_
- XLRPQdTiZrNxbar86XBbLoWP1lI9XcjhEfTTirAi5eE8ZyzxkXjfHiAeGu3t7eyeiBvfSwIJwYEx
- Kv5XjiTJw8A.eWQcRURMJsJ7GRPwrLUOv.XCvRzuLQUS6B1t6AeGztQZoVl7C5rmBiIsVdeftU09
- 3tqpNH1ga7kzeFKF6YxnTWqe1W3vlyekEuzdPZTkya1umCtHzna6zslz73INeJTPQX6O0S1RHs06
- OVX0wzgOcgTZg61pmikvh2m9GFVSqUThah3dDSoep4ZQ.9.lN9WubKg2_s.eVfW7Rast66cQl.2P
- Skq35Zal0PWOs_Y7K59URD2X.CfGbD0HgKTbTFQ235iQYVSCWKDzECn1_fxuTcKfZTXK.EB.gYk.
- UWMz1gnFbl0B5dBIcNsRITS6cRIDJsRr63.Cur031IFm8ynO7C1sgglZlU8TqPyZk0c5mIlZDsAg
- V5_H5nAChlavU5RVs.edHKP.0JSf4m1TMjSKHLRtiQsnl1c8963nELAiB2OjfdMUlMkjeS67MYip
- Oh2EUwhEjHEOaW06tm.z2YMzYdQdjLY_ZAU2Uz.MpOkagrUCh6saANFXZyz442MxAaFmWd._SM9Y
- UXZIYSAYK2U29yAJnjEk1mw_oPmCi1OeOtTNDVCCQ7uS00_ac.u2yInD0pnVKTNsUWuNoqvU3l1V
- omJ6qbi_KphSc75oBGtoltsBBO0Oqa5erylWb1FzQ.6ovN3fJOy7bANknNVqN4mZULU8iG_rjGtH
- xy60WlNZB2L1RF_ZgDSPIBxoV74l.BbCjg43cHIgak1fVv3hvhRy7zGV4HzbctK2DXpo-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic304.consmr.mail.ir2.yahoo.com with HTTP; Mon, 30 Sep 2019 13:32:37 +0000
-Received: by smtp406.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 6d7d90c5e89d60ecb175859a862eb901;
-          Mon, 30 Sep 2019 13:32:33 +0000 (UTC)
-Date:   Mon, 30 Sep 2019 21:32:22 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Mark Brown <broonie@kernel.org>, linux-erofs@lists.ozlabs.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-next@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Miao Xie <miaoxie@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: Re: erofs -next tree inclusion request
-Message-ID: <20190930132925.GA10677@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20190919120110.GA48697@architecture4>
- <20190919121739.GG3642@sirena.co.uk>
- <20190919122328.GA82662@architecture4>
- <20190919143722.GA5363@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190930231439.37295a14@canb.auug.org.au>
+        Mon, 30 Sep 2019 09:32:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55408 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729738AbfI3Nc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 09:32:59 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 20575ADD5;
+        Mon, 30 Sep 2019 13:32:57 +0000 (UTC)
+Message-ID: <95f8dabea99f104336491281b88c04b58d462258.camel@suse.de>
+Subject: Re: [PATCH 05/11] of: Ratify of_dma_configure() interface
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Christoph Hellwig <hch@infradead.org>,
+        Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Oza Pawandeep <oza.oza@broadcom.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Robin Murphy <robin.murphy@arm.com>
+Date:   Mon, 30 Sep 2019 15:32:55 +0200
+In-Reply-To: <20190930125752.GD12051@infradead.org>
+References: <20190927002455.13169-1-robh@kernel.org>
+         <20190927002455.13169-6-robh@kernel.org>
+         <20190930125752.GD12051@infradead.org>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-J2uUUCx3PD1vZZDm+yYn"
+User-Agent: Evolution 3.32.4 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190930231439.37295a14@canb.auug.org.au>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
 
-On Mon, Sep 30, 2019 at 11:14:39PM +1000, Stephen Rothwell wrote:
-> Hi Gao,
-> 
-> On Thu, 19 Sep 2019 22:37:22 +0800 Gao Xiang <hsiangkao@aol.com> wrote:
-> >
-> > The fixes only -fixes branch is
-> > git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git fixes
-> 
-> I have added this from tomorrow (sorry for the drop out today).
+--=-J2uUUCx3PD1vZZDm+yYn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-That is ok, and thanks for your great work.
+On Mon, 2019-09-30 at 05:57 -0700, Christoph Hellwig wrote:
+> On Thu, Sep 26, 2019 at 07:24:49PM -0500, Rob Herring wrote:
+> > -int of_dma_configure(struct device *dev, struct device_node *np, bool
+> > force_dma)
+> > +int of_dma_configure(struct device *dev, struct device_node *parent, b=
+ool
+> > force_dma)
+>=20
+> This creates a > 80 char line.
+>=20
+> >  {
+> >  	u64 dma_addr, paddr, size =3D 0;
+> >  	int ret;
+> >  	bool coherent;
+> >  	unsigned long offset;
+> >  	const struct iommu_ops *iommu;
+> > +	struct device_node *np;
+> >  	u64 mask;
+> > =20
+> > +	np =3D dev->of_node;
+> > +	if (!np)
+> > +		np =3D parent;
+> > +	if (!np)
+> > +		return -ENODEV;
+>=20
+> I have to say I find the older calling convention simpler to understand.
+> If we want to enforce the invariant I'd rather do that explicitly:
+>=20
+> 	if (dev->of_node && np !=3D dev->of_node)
+> 		return -EINVAL;
 
-> 
-> Which address(es) should I use as your contact address(es)?
+As is, this would break Freescale Layerscape fsl-mc bus' dma_configure():
 
-I think xiang@kernel.org is preferred since it can always redirect
-to my workable email address.
+static int fsl_mc_dma_configure(struct device *dev)
+{
+	struct device *dma_dev =3D dev;
 
-> 
-> Thanks for adding your subsystem tree as a participant of linux-next.  As
-> you may know, this is not a judgement of your code.  The purpose of
-> linux-next is for integration testing and to lower the impact of
-> conflicts between subsystems in the next merge window. 
-> 
-> You will need to ensure that the patches/commits in your tree/series have
-> been:
->      * submitted under GPL v2 (or later) and include the Contributor's
->         Signed-off-by,
->      * posted to the relevant mailing list,
->      * reviewed by you (or another maintainer of your subsystem tree),
->      * successfully unit tested, and 
->      * destined for the current or next Linux merge window.
-> 
-> Basically, this should be just what you would send to Linus (or ask him
-> to fetch).  It is allowed to be rebased if you deem it necessary.
+	while (dev_is_fsl_mc(dma_dev))
+		dma_dev =3D dma_dev->parent;
 
-Thanks for the kind reminder :)
+	return of_dma_configure(dev, dma_dev->of_node, 0);
+}
 
-Thanks,
-Gao Xiang
+But I think that with this series, given the fact that we now treat the lac=
+k of
+dma-ranges as a 1:1 mapping instead of an error, we could rewrite the funct=
+ion
+like this:
+
+static int fsl_mc_dma_configure(struct device *dev)
+{
+	return of_dma_configure(dev, false, 0);
+}
+
+If needed I can test this.
+
+Regards,
+Nicolas
+
+
+--=-J2uUUCx3PD1vZZDm+yYn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2SBAcACgkQlfZmHno8
+x/4Nzwf+LG0gvylrOQLw5x/IHv2Kgv6fhZ0lnwVON/shyUQa9M2SJ6AmcGSBXL/D
+poq3K8WHsQdr5e2yEyy2/lT92p6qSNbdIDjOeDyq3YskHZP6SBm/nC2l/dtDU9z6
+fv3/gGTWP7ckQI4v4690kUZ4Txb3ndCWgrf7GXn7JKT7uDaqmIsiefi0S+YU8Y2L
+mr1dudpZ3wAnCI0uA6Za8Db6QQ2lCtGHvchLzv0dC8n4qlMMipuWGFD8y/R6BGw7
+90iinlHnoJrL07DjWy4nVFPqvXnFUADXr5eXAijh+ZQ7kCFOKHwYvEB7Zrh0mEw8
+bdGzfMEbXgkzUdAaLb8mb48VqHBsOg==
+=Byb8
+-----END PGP SIGNATURE-----
+
+--=-J2uUUCx3PD1vZZDm+yYn--
 
