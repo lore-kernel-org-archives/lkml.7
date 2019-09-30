@@ -2,159 +2,520 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 014C2C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3348AC35280
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C59A8206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:06:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC404218DE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:06:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569877572;
-	bh=RglR3ukwElynROQk+l4tg76X5Ve88igj5T4s3Uya3V4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=0KRxBJ9XawwqSlB5yzaw4leS1TdIH7vmemt9tMyBavpG1zcKwSFy0IUM90TLWtDk7
-	 9w4wQwio8YX2bgNBao8p8Y+SEuVXUwMF0h6B3dO+k/qAGpZ8eAP14CHI0p4BGa1vGj
-	 Bq5lhpeQFw+/t+9jpjHCi9A/f2cOocDc0pWTKBTY=
+	s=default; t=1569877576;
+	bh=NhzNl9hqLMEmMBzOvAwioq3fNEGy2ZeQtdpqcgw4dv4=;
+	h=From:Date:Subject:To:List-ID:From;
+	b=NjEvpE9Cdua3m6OMpkRnIqNYCx5jeV/MfiCIM+TaOOETIFHhC0gPf4BFAWvLlepao
+	 DpaHgH4MyeB5pNoCz/q1Pea3FyfejQTEtgpz5irM01nil8V7ulL/Kd2BNHRmNaH71a
+	 O4gLZcHYSXmX8JX0WChht0YqsD+jfQkEP0k71P58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732561AbfI3VGM (ORCPT
+        id S1732569AbfI3VGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 17:06:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44102 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731976AbfI3VFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 17:05:55 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 000C6224F0;
-        Mon, 30 Sep 2019 19:47:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569872852;
-        bh=RglR3ukwElynROQk+l4tg76X5Ve88igj5T4s3Uya3V4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=AyhBGW2BD8aoBuP8uHPkEU0pNoy10LWHB1/Mi7A+TITCzHVAlpX8Lj3Dlm63Y1V34
-         6GGm/gY/wdQwWVAs00lQOhTGcoWnItLl9B2B+/x89Udz2h7QquvnhFoawikAOeCFB2
-         riwbdSExN2h7g1dZIQFBR2OsETDegxL6VHjmzQuI=
-Date:   Mon, 30 Sep 2019 14:47:24 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Denis Efremov <efremov@linux.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-s390@vger.kernel.org,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Subject: Re: [PATCH v3 06/26] s390/pci: Use PCI_STD_NUM_BARS
-Message-ID: <20190930194724.GA188464@google.com>
+        Mon, 30 Sep 2019 17:06:15 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35334 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732169AbfI3VGL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 17:06:11 -0400
+Received: by mail-lj1-f196.google.com with SMTP id m7so11031905lji.2
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 14:06:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=leeoZd1/6vfGVmAmgaRTTSbrNaL7Q9WTzhVbIgYdlws=;
+        b=XAe6onuKNrkNXcy05T8nrcKgTsYPj8C995xf96TbrGmT56s6Gp3xAhgsVtRbEAyTa0
+         H8MHsOw01qpNsS132AXHR2Igvpt9gs3PCEkCNVHgjLAF8PY/U9iOrgN4hQyPqtgKQI7O
+         ka0pmPflmY851nnQt9g4RMwSVrrD3NClHwZmc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=leeoZd1/6vfGVmAmgaRTTSbrNaL7Q9WTzhVbIgYdlws=;
+        b=cOQKBJ8NH1WieTBDfTTUuIFgpa/4eBYUPJg0waCf7mjDbdss8uWKxmRPC8zAqoJQSq
+         RPXQJRYlesEdbQ3QSleFNzl+PWOaEJD0mIrr+uX4yweBSXcIExtqGtVC9zBPB7qdY05L
+         KQ7oe8FQEfFaAWCtT/EgrKKeRLUpfTLOzpWEHdvA33Bo9eEpDmcSnpVg2P/xw0BqDs8P
+         qRv2PijH7ETgw0t9hy3JskFld7bl3qb2XPXO4/3M8djDk8ho8TqSsTE0M+G/pePzuZqO
+         Qd/ZScmOGcIY+Dz5vinJh5L3GrsjyzUW+Et+DAuqP0XNsAMD7K8Pbj7pUbBO3eqPHny7
+         4ZCw==
+X-Gm-Message-State: APjAAAXFR2A97Rdf9zXv857Hmkb7/IBC9+fv1K/hoFl/L3sH+1ao2UaR
+        X846YryGkr4KkPmXSv9+U31My85dLHw=
+X-Google-Smtp-Source: APXvYqzLo5tWqSl5tclmh0kiKW0qAzObvVHxHWnqqM4e/8sqXpeLPleduSja1GwcO7U9BD3VyBHKvQ==
+X-Received: by 2002:a2e:9096:: with SMTP id l22mr12906889ljg.125.1569866665205;
+        Mon, 30 Sep 2019 11:04:25 -0700 (PDT)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id i128sm3477809lji.49.2019.09.30.11.04.23
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Sep 2019 11:04:24 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id y127so7782259lfc.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 11:04:23 -0700 (PDT)
+X-Received: by 2002:a19:7d55:: with SMTP id y82mr12270222lfc.106.1569866663607;
+ Mon, 30 Sep 2019 11:04:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190918085805.GY9720@e119886-lin.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 30 Sep 2019 11:04:07 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgbGJ-SGeevEcgrThhPp+RwYOUUgWoZ3W27cbUpuB3VgA@mail.gmail.com>
+Message-ID: <CAHk-=wgbGJ-SGeevEcgrThhPp+RwYOUUgWoZ3W27cbUpuB3VgA@mail.gmail.com>
+Subject: Linux 5.4-rc1
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 09:58:06AM +0100, Andrew Murray wrote:
-> On Mon, Sep 16, 2019 at 11:41:38PM +0300, Denis Efremov wrote:
-> > Remove local definition PCI_BAR_COUNT for the number of PCI BARs and use
-> > global one PCI_STD_NUM_BARS instead.
-> > 
-> > Acked-by: Sebastian Ott <sebott@linux.ibm.com>
-> > Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-> > Signed-off-by: Denis Efremov <efremov@linux.com>
-> > ---
-> >  arch/s390/include/asm/pci.h     |  5 +----
-> >  arch/s390/include/asm/pci_clp.h |  6 +++---
-> >  arch/s390/pci/pci.c             | 16 ++++++++--------
-> >  arch/s390/pci/pci_clp.c         |  6 +++---
-> >  4 files changed, 15 insertions(+), 18 deletions(-)
-> > 
-> > diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
-> > index a2399eff84ca..3a06c264ea53 100644
-> > --- a/arch/s390/include/asm/pci.h
-> > +++ b/arch/s390/include/asm/pci.h
-> > @@ -2,9 +2,6 @@
-> >  #ifndef __ASM_S390_PCI_H
-> >  #define __ASM_S390_PCI_H
-> >  
-> > -/* must be set before including pci_clp.h */
-> > -#define PCI_BAR_COUNT	6
-> > -
-> >  #include <linux/pci.h>
-> >  #include <linux/mutex.h>
-> >  #include <linux/iommu.h>
-> > @@ -138,7 +135,7 @@ struct zpci_dev {
-> >  
-> >  	char res_name[16];
-> >  	bool mio_capable;
-> > -	struct zpci_bar_struct bars[PCI_BAR_COUNT];
-> > +	struct zpci_bar_struct bars[PCI_STD_NUM_BARS];
-> >  
-> >  	u64		start_dma;	/* Start of available DMA addresses */
-> >  	u64		end_dma;	/* End of available DMA addresses */
-> > diff --git a/arch/s390/include/asm/pci_clp.h b/arch/s390/include/asm/pci_clp.h
-> > index 50359172cc48..bd2cb4ea7d93 100644
-> > --- a/arch/s390/include/asm/pci_clp.h
-> > +++ b/arch/s390/include/asm/pci_clp.h
-> > @@ -77,7 +77,7 @@ struct mio_info {
-> >  	struct {
-> >  		u64 wb;
-> >  		u64 wt;
-> > -	} addr[PCI_BAR_COUNT];
-> > +	} addr[PCI_STD_NUM_BARS];
-> >  	u32 reserved[6];
-> >  } __packed;
-> >  
-> > @@ -98,9 +98,9 @@ struct clp_rsp_query_pci {
-> >  	u16 util_str_avail	:  1;	/* utility string available? */
-> >  	u16 pfgid		:  8;	/* pci function group id */
-> >  	u32 fid;			/* pci function id */
-> > -	u8 bar_size[PCI_BAR_COUNT];
-> > +	u8 bar_size[PCI_STD_NUM_BARS];
-> >  	u16 pchid;
-> > -	__le32 bar[PCI_BAR_COUNT];
-> > +	__le32 bar[PCI_STD_NUM_BARS];
-> >  	u8 pfip[CLP_PFIP_NR_SEGMENTS];	/* pci function internal path */
-> >  	u32			: 16;
-> >  	u8 fmb_len;
-> > diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
-> > index b0e3b9a0e488..aca372c8e34f 100644
-> > --- a/arch/s390/pci/pci.c
-> > +++ b/arch/s390/pci/pci.c
-> > @@ -43,7 +43,7 @@ static DECLARE_BITMAP(zpci_domain, ZPCI_NR_DEVICES);
-> >  static DEFINE_SPINLOCK(zpci_domain_lock);
-> >  
-> >  #define ZPCI_IOMAP_ENTRIES						\
-> > -	min(((unsigned long) ZPCI_NR_DEVICES * PCI_BAR_COUNT / 2),	\
-> > +	min(((unsigned long) ZPCI_NR_DEVICES * PCI_STD_NUM_BARS / 2),	\
-> >  	    ZPCI_IOMAP_MAX_ENTRIES)
-> >  
-> >  static DEFINE_SPINLOCK(zpci_iomap_lock);
-> > @@ -294,7 +294,7 @@ static void __iomem *pci_iomap_range_mio(struct pci_dev *pdev, int bar,
-> >  void __iomem *pci_iomap_range(struct pci_dev *pdev, int bar,
-> >  			      unsigned long offset, unsigned long max)
-> >  {
-> > -	if (!pci_resource_len(pdev, bar) || bar >= PCI_BAR_COUNT)
-> > +	if (bar >= PCI_STD_NUM_BARS || !pci_resource_len(pdev, bar))
-> >  		return NULL;
-> >  
-> >  	if (static_branch_likely(&have_mio))
-> > @@ -324,7 +324,7 @@ static void __iomem *pci_iomap_wc_range_mio(struct pci_dev *pdev, int bar,
-> >  void __iomem *pci_iomap_wc_range(struct pci_dev *pdev, int bar,
-> >  				 unsigned long offset, unsigned long max)
-> >  {
-> > -	if (!pci_resource_len(pdev, bar) || bar >= PCI_BAR_COUNT)
-> > +	if (bar >= PCI_STD_NUM_BARS || !pci_resource_len(pdev, bar))
-> >  		return NULL;
-> 
-> This looks like a latent bug fix here. If 'bar' is out of range we return
-> NULL instead accessing an invalid item of an array. Should this not be
-> a separate patch and tagged as stable?
+I didn't really extend the merge window by a day here, but I gave
+myself an extra day to merge my pending queue. Thus the Monday date
+for the rc1 rather than the usual Sunday afternoon.
 
-Sharp eyes!  I didn't think of this as accessing an invalid item, but
-indeed it does (if 'bar' is out of range).  But I doubt it's worth the
-hassle of a separate patch, since we return failure anyway.
+And it wasn't all _that_ big or painful a merge window, for some
+reason I just didn't get to the end of the queue until fairly late in
+the second week, and continued to get a few more pull requests even
+then. Part of it was just other discussions too happening, so I didn't
+do _just_ merges all the time. But part of it was just that I also
+spent some of Sunday away from the computer, doing some welding
+instead.
+
+Anyway, what I'm saying is that the Monday rc1 isn't really a sign of
+any real trouble or more issues than usual. More just random timing.
+
+Size-wise, 5.4 looks to shape up very regular. It's almost exactly the
+same size as 5.3 was at the same stage, both in commits and in lines
+added (honestly in advertising: 5.3 had more lines removed mainly due
+to some isdn removal). Nothing major stands out, the most notable may
+be the long-pending lockdown patches that weren't all that big, but
+that now finally aren't tied to just EFI secure boot, so you can test
+them out other ways too.
+
+But there's changes all over. The patch is (once again) dominated by
+some AMD DRM register definition header file churn, which is almost
+half of it just by lines. But that's the nature of those beasts, being
+largely autogenerated from hw descriptions, and you should ignore it.
+
+And if you do ignore those (very boring) header file changes, you'll
+see mostly the usual distribution: about 60% driver updates (GPU,
+networking, sound, staging), with the rest being the usual mix of
+architecture updates (ia64 shows up thanks to removal of the odd sn
+platform, but it's otherwise mostly arm[64], powerpc and x86),
+tooling, filesystems, documentation and misc (core networking, code
+kernel and VM, include files etc etc).
+
+Much too many changes to list individually, and over 1500 individual
+developers.  The log below is just my usual "merge log" with who I
+merge from and a oneliner very rough description of the area it
+updates.
+
+Go test, the merge window has now closed,
+
+                Linus
+
+---
+
+Al Viro (8):
+    vfs namei updates
+    d_path fix
+    vfs mount API infrastructure updates
+    misc mount API conversions
+    autofs updates
+    more mount API conversions
+    jffs2 fix
+    more vfs updates
+
+Alex Williamson (1):
+    VFIO updates
+
+Alexandre Belloni (1):
+    RTC updates
+
+Andreas Gruenbacher (1):
+    gfs2 updates
+
+Andrew Morton (2):
+    updates
+    more updates
+
+Andy Shevchenko (2):
+    x86 platform-drivers updates
+    x86 platform-drivers fixes
+
+Anna Schumaker (1):
+    NFS client updates
+
+Arnd Bergmann (7):
+    ARM SoC platform updates
+    ARM SoC driver updates
+    ARM SoC defconfig updates
+    ARM DT updates
+    asm-generic updates
+    y2038 vfs updates
+    ARM SoC late updates
+
+Benson Leung (1):
+    chrome platform updates
+
+Bjorn Andersson (2):
+    remoteproc updates
+    rpmsg updates
+
+Bjorn Helgaas (1):
+    PCI updates
+
+Boris Brezillon (1):
+    i3c updates
+
+Borislav Petkov (2):
+    EDAC updates
+    RAS updates
+
+Bruce Fields (1):
+    nfsd updates
+
+Casey Schaufler (1):
+    smack updates
+
+Christian Brauner (1):
+    pidfd/waitid updates
+
+Christoph Hellwig (2):
+    configfs updates
+    dma-mapping updates
+
+Corey Minyard (1):
+    IPMI updates
+
+Dan Williams (1):
+    libnvdimm updates
+
+Daniel Thompson (1):
+    kgdb updates
+
+Darrick Wong (4):
+    swap access updates
+    xfs updates
+    iomap updates
+    xfs fixes
+
+Dave Airlie (2):
+    drm updates
+    drm fixes
+
+David Howells (1):
+    AFS updates
+
+David Miller (2):
+    networking updates
+    networking fixes
+
+David Rientjes (1):
+    hugepage allocation updates
+
+David Sterba (2):
+    btrfs updates
+    btrfs fixes
+
+Dennis Zhou (1):
+    percpu updates
+
+Dmitry Torokhov (1):
+    input updates
+
+Dominique Martinet (1):
+    9p updates
+
+Eduardo Valentin (1):
+    thermal SoC updates
+
+Eric Biggers (2):
+    fscrypt updates
+    fs-verity support
+
+Geert Uytterhoeven (1):
+    m68k updates
+
+Greg KH (6):
+    USB updates
+    tty/serial driver updates
+    staging and IIO driver updates
+    char/misc driver updates
+    Documentation/process update
+    driver core updates
+
+Greg Ungerer (1):
+    m68knommu fix
+
+Guenter Roeck (1):
+    hwmon updates
+
+Guo Ren (1):
+    csky updates
+
+Helge Deller (1):
+    parisc updates
+
+Herbert Xu (1):
+    crypto updates
+
+Ilya Dryomov (1):
+    ceph updates
+
+Ingo Molnar (21):
+    header documentation fix
+    objtool build fix
+    RCU updates
+    stacktrace fixlet
+    EFI updates
+    locking updates
+    perf updates
+    scheduler updates
+    x86 asm updates
+    x86 boot code cleanup
+    x86 build cleanup
+    x86 cpu-feature updates
+    x86 entry updates
+    x86 mm updates
+    x86 platform update
+    x86 hyperv updates
+    x86 vmware updates
+    more perf updates
+    timer fix
+    scheduler fixes
+    x86 fix
+
+Jacek Anaszewski (1):
+    LED updates
+
+Jaegeuk Kim (1):
+    f2fs updates
+
+James Bottomley (1):
+    SCSI updates
+
+James Morris (1):
+    kernel lockdown mode
+
+Jan Kara (1):
+    ext2, quota, udf fixes and cleanups
+
+Jarkko Sakkinen (2):
+    tpm updates
+    tpm fixes
+
+Jason Gunthorpe (2):
+    hmm updates
+    RDMA subsystem updates
+
+Jassi Brar (1):
+    mailbox updates
+
+Jeff Layton (1):
+    file locking updates
+
+Jens Axboe (7):
+    io_uring updates
+    libata updates
+    block updates
+    more block updates
+    more io_uring updates
+    block fixes
+    more io_uring updates
+
+Jessica Yu (1):
+    modules updates
+
+Jiri Kosina (2):
+    HID updates
+    livepatching fix
+
+Joerg Roedel (2):
+    iommu updates
+    iommu fixes
+
+Jon Mason (1):
+    NTB updates
+
+Jonathan Corbet (1):
+    documentation updates
+
+Juergen Gross (1):
+    xen update
+
+Kees Cook (2):
+    gcc-plugins fix
+    usercopy fix
+
+Lee Jones (2):
+    backlight updates
+    MFD updates
+
+Ley Foon Tan (1):
+    nios2 fix
+
+Linus Walleij (2):
+    GPIO updates
+    pin control updates
+
+Mark Brown (3):
+    regmap updates
+    regulator updates
+    spi updates
+
+Masahiro Yamada (1):
+    Kbuild updates
+
+Mauro Carvalho Chehab (1):
+    media updates
+
+Max Filippov (1):
+    Xtensa updates
+
+Micah Morton (1):
+    SafeSetID fix
+
+Michael Ellerman (2):
+    powerpc updates
+    powerpc fixes
+
+Michal Simek (1):
+    Microblaze updates
+
+Miguel Ojeda (1):
+    asm inline support
+
+Mike Marshall (1):
+    orangefs updates
+
+Mike Snitzer (1):
+    device mapper updates
+
+Miklos Szeredi (3):
+    overlayfs fixes
+    fuse updates
+    fuse virtio-fs support
+
+Mimi Zohar (1):
+    integrity updates
+
+Olof Johansson (1):
+    ARM SoC fixes
+
+Paolo Bonzini (3):
+    KVM fix
+    KVM updates
+    more KVM updates
+
+Paul Burton (1):
+    MIPS updates
+
+Paul Moore (1):
+    selinux updates
+
+Paul Walmsley (2):
+    RISC-V updates
+    more RISC-V updates
+
+Petr Mladek (1):
+    printk updates
+
+Rafael Wysocki (3):
+    power management updates
+    ACPI updates
+    device properties framework updates
+
+Richard Kuo (1):
+    Hexagon maintainership update
+
+Richard Weinberger (3):
+    MTD updates
+    UML updates
+    UBI, UBIFS and JFFS2 updates
+
+Rob Herring (1):
+    Devicetree updates
+
+Russell King (1):
+    ARM updates
+
+Sasha Levin (1):
+    Hyper-V updates
+
+Sebastian Reichel (2):
+    HSI updates
+    power supply and reset updates
+
+Shuah Khan (1):
+    Kselftest updates
+
+Stafford Horne (1):
+    OpenRISC updates
+
+Stephen Boyd (1):
+    clk updates
+
+Steve French (2):
+    cifs updates
+    more cifs updates
+
+Steven Rostedt (3):
+    tracing updates
+    tracing fix
+    tracing fixes
+
+Takashi Iwai (2):
+    sound updates
+    sound fixes
+
+Ted Ts'o (1):
+    ext4 updates
+
+Tejun Heo (1):
+    cgroup updates
+
+Thierry Reding (1):
+    pwm updates
+
+Thomas Gleixner (7):
+    timer fix
+    CPU hotplug updates
+    x86 pti updates
+    x86 interrupt updates
+    core irq updates
+    x86 apic updates
+    core timer updates
+
+Tony Luck (1):
+    ia64 updates
+
+Ulf Hansson (2):
+    MMC updates
+    more MMC updates
+
+Vasily Gorbik (2):
+    s390 updates
+    more s390 updates
+
+Vinod Koul (2):
+    dmaengine updates
+    soundwire updates
+
+Will Deacon (2):
+    arm64 updates
+    arm64 fixes
+
+Wim Van Sebroeck (1):
+    watchdog updates
+
+Wolfram Sang (2):
+    i2c updates
+     more i2c updates
+
+Zhang Rui (1):
+    thermal management updates
