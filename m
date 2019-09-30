@@ -2,135 +2,153 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22647C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D667EC35280
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2450224FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB7C622516
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:58:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="AMPrAM7E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731909AbfI3U6R (ORCPT
+        id S1731953AbfI3U6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 16:58:17 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:54504 "EHLO mx2.mailbox.org"
+        Mon, 30 Sep 2019 16:58:44 -0400
+Received: from mout.gmx.net ([212.227.17.20]:46773 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729366AbfI3U6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 16:58:15 -0400
-Received: from smtp2.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id 526EAA1893;
-        Mon, 30 Sep 2019 20:29:09 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.240])
-        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
-        with ESMTP id ydpASaiTM1cS; Mon, 30 Sep 2019 20:29:06 +0200 (CEST)
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Kees Cook <keescook@chromium.org>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 4/4] perf_event_open: switch to copy_struct_from_user()
-Date:   Tue,  1 Oct 2019 04:28:10 +1000
-Message-Id: <20190930182810.6090-5-cyphar@cyphar.com>
-In-Reply-To: <20190930182810.6090-1-cyphar@cyphar.com>
-References: <20190930182810.6090-1-cyphar@cyphar.com>
+        id S1727720AbfI3U6n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 16:58:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1569877121;
+        bh=YVn0d0IypIL/I8h6vV2cKfUczuH9hqHhzSGumXeWyH0=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=AMPrAM7ELWyCVxZjrXAB/9N5xT8tVG0I/V2NGx4vMQRwJ6o8AnTXeboWVyJh35Hlk
+         m/UWsmb/ycW3lzs3FbfdeQBKSi5HD8CrW81404JR7GNGYxXRJRXua+OvuRHll2aF24
+         AjUrpIxtmirprjRAEcmwA/+txKTK9E1mB2wh6unY=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [80.208.215.36] ([80.208.215.36]) by web-mail.gmx.net
+ (3c-app-gmx-bap76.server.lan [172.19.172.64]) (via HTTP); Mon, 30 Sep 2019
+ 21:44:12 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <trinity-d5c9e092-508c-4db6-8f36-d5917466a750-1569872652621@3c-app-gmx-bap76>
+From:   "Frank Wunderlich" <frank-w@public-files.de>
+To:     "Hsin-hsiung Wang" <hsin-hsiung.wang@mediatek.com>,
+        "Lee Jones" <lee.jones@linaro.org>
+Cc:     "Matthias Brugger" <matthias.bgg@gmail.com>,
+        linux-mediatek@lists.infradead.org,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Alessandro Zummo" <a.zummo@towertech.it>,
+        "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
+        srv_heupstream@mediatek.com, devicetree@vger.kernel.org,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Sean Wang" <sean.wang@mediatek.com>,
+        "Liam Girdwood" <lgirdwood@gmail.com>,
+        "Rob Herring" <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        "Richard Fontana" <rfontana@redhat.com>,
+        "Mark Brown" <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?Q?=22Ren=C3=A9_van_Dorst=22?= <opensource@vdorst.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Eddie Huang" <eddie.huang@mediatek.com>,
+        "Lee Jones" <lee.jones@linaro.org>,
+        "Kate Stewart" <kstewart@linuxfoundation.org>,
+        linux-rtc@vger.kernel.org
+Subject: Aw: Re:  Re: [BUG] [PATCH v5 02/10] mfd: mt6397: extract irq
+ related code from core driver
+Content-Type: text/plain; charset=UTF-8
+Date:   Mon, 30 Sep 2019 21:44:12 +0200
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <1567059876.15320.3.camel@mtksdaap41>
+References: <1566531931-9772-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1566531931-9772-3-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <trinity-1f82bff1-535e-47cd-9a2f-8faccb56e356-1566562433314@3c-app-gmx-bs11>
+ <e8a918ab-3e7a-b487-db77-df28d56518ce@gmail.com>
+ <0A87F427-2D81-412A-9549-09A51A021799@public-files.de>
+ <b5a21908-faee-17d1-ce26-99b941c0fa70@gmail.com>
+ <trinity-a57f08bb-e30e-4e74-911c-c40e335d00da-1566580580817@3c-app-gmx-bs75>
+ <1567059876.15320.3.camel@mtksdaap41>
+Content-Transfer-Encoding: quoted-printable
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:mOl5gwFlxXjAE9+q+U636kiILkcV8ouZYqUdavCDgk4kn81Id6pYOUZvJ59xPd2j9ozHN
+ 8waSlJARwZGU/e+50l22obqu3bIr+fL4TvaYl9BbpYpSPN6sD78VLxIX6iCavbN4CWcQixxp0LcY
+ 5DMu3BAQcL30VwmxUM6nn/+9zZbxJ+jCY8cBjW5TziN0HhvBmsrBmtkIW/5QN9djuXXP1JwXpdK/
+ 5ni345mWrIhAsZlycA0M1+K7mg7469HwJwnFxncOyxiAT1no+CMD4+aeZeHKqIzsg87h4YZ/pSN+
+ 5k=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:eEhx1ooA/04=:yFlthYLfXFmb/8JnXCxFLQ
+ cG572Ry6AOo0ntKRtpi1jnHwc/MifgtiZkrySHAdMEOwN6U4z5WDniyM2c03SYL4B62yLtMa/
+ U19bsTBne7BMQPjUckdu0B6QiZ0aOoGEnogtZ3jkMM2FJ9cfBDeZ4CUM9xrBKWgV9hbYVeYw8
+ ctFPp6ZCNOqhulXKMQIq+18/is4xcSGNMxRZVGEwzEMJx++U8FWWJCXC2qy+OwbZsiU72J1rN
+ m0hRFgWfSdyu7DwPtFdm/ovEci+00L8n2eHp9e7vBYq6McTpBh3Zd/WuDEeZzaxvPnKIy5OVf
+ b6FkzIpwpHNXEv2StcmxkmbpDXuhQmIwZNrLvzNtH0Dy4DR4VWOxCmyD/V4BvyhwngFa5AoUf
+ p+0254Ps+QSAuiZx6/4VolVMGw14K3ZT1m4ZxpEuXrppadOsmVegWD2159755ceTite04Efsy
+ aKgVhK3bCQDnzeo74/tTd4hgr2ySrWoHotVQtsl5aFU0dX2cVt06TH1Vrr0HNAMLhmR/AJQQq
+ 0vxTG/EVGDBwvbGEVSllSOx9YpYL7nCGG5O7NFtVFTceEiRJT6zON3viUDNQX97Gp/gxzhX6g
+ NY/z5hM5Y+1aVY5vxs2Tj7113FlLFIkd5i+3BOcw9/X5mZha9TUWCedWKxOEUpA1LhYQX1jCD
+ Z1RfE1KJ1ZBns7KbOVb5V6YdZR92v3GnYP7c031/xzI5bUKRkkgIrxVsxHjqzVOmNeHM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The change is very straightforward, and helps unify the syscall
-interface for struct-from-userspace syscalls.
+Hi,
 
-Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
----
- kernel/events/core.c | 47 +++++++++-----------------------------------
- 1 file changed, 9 insertions(+), 38 deletions(-)
+bug is still present in 5=2E4-rc1
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 4655adbbae10..3f0cb82e4fbc 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10586,55 +10586,26 @@ static int perf_copy_attr(struct perf_event_attr __user *uattr,
- 	u32 size;
- 	int ret;
- 
--	if (!access_ok(uattr, PERF_ATTR_SIZE_VER0))
--		return -EFAULT;
--
--	/*
--	 * zero the full structure, so that a short copy will be nice.
--	 */
-+	/* Zero the full structure, so that a short copy will be nice. */
- 	memset(attr, 0, sizeof(*attr));
- 
- 	ret = get_user(size, &uattr->size);
- 	if (ret)
- 		return ret;
- 
--	if (size > PAGE_SIZE)	/* silly large */
--		goto err_size;
--
--	if (!size)		/* abi compat */
-+	/* ABI compatibility quirk: */
-+	if (!size)
- 		size = PERF_ATTR_SIZE_VER0;
--
--	if (size < PERF_ATTR_SIZE_VER0)
-+	if (size < PERF_ATTR_SIZE_VER0 || size > PAGE_SIZE)
- 		goto err_size;
- 
--	/*
--	 * If we're handed a bigger struct than we know of,
--	 * ensure all the unknown bits are 0 - i.e. new
--	 * user-space does not rely on any kernel feature
--	 * extensions we dont know about yet.
--	 */
--	if (size > sizeof(*attr)) {
--		unsigned char __user *addr;
--		unsigned char __user *end;
--		unsigned char val;
--
--		addr = (void __user *)uattr + sizeof(*attr);
--		end  = (void __user *)uattr + size;
--
--		for (; addr < end; addr++) {
--			ret = get_user(val, addr);
--			if (ret)
--				return ret;
--			if (val)
--				goto err_size;
--		}
--		size = sizeof(*attr);
-+	ret = copy_struct_from_user(attr, sizeof(*attr), uattr, size);
-+	if (ret) {
-+		if (ret == -E2BIG)
-+			goto err_size;
-+		return ret;
- 	}
- 
--	ret = copy_from_user(attr, uattr, size);
--	if (ret)
--		return -EFAULT;
--
- 	attr->size = size;
- 
- 	if (attr->__reserved_1)
--- 
-2.23.0
+dmesg prints this line and at least switch is not inialized on bananapi-r2
 
+mt6397 1000d000=2Epwrap:mt6323: unsupported chip: 0x0
+
+regards Frank
+
+
+> Gesendet: Donnerstag, 29=2E August 2019 um 08:24 Uhr
+> Von: "Hsin-hsiung Wang" <hsin-hsiung=2Ewang@mediatek=2Ecom>
+> An: "Frank Wunderlich" <frank-w@public-files=2Ede>, "Matthias Brugger" <=
+matthias=2Ebgg@gmail=2Ecom>
+> Cc: linux-mediatek@lists=2Einfradead=2Eorg, "Mark Rutland" <mark=2Erutla=
+nd@arm=2Ecom>, "Alessandro Zummo" <a=2Ezummo@towertech=2Eit>, "Alexandre Be=
+lloni" <alexandre=2Ebelloni@bootlin=2Ecom>, srv_heupstream@mediatek=2Ecom, =
+devicetree@vger=2Ekernel=2Eorg, "Greg Kroah-Hartman" <gregkh@linuxfoundatio=
+n=2Eorg>, "Sean Wang" <sean=2Ewang@mediatek=2Ecom>, "Liam Girdwood" <lgirdw=
+ood@gmail=2Ecom>, "Rob Herring" <robh+dt@kernel=2Eorg>, linux-kernel@vger=
+=2Ekernel=2Eorg, "Richard Fontana" <rfontana@redhat=2Ecom>, "Mark Brown" <b=
+roonie@kernel=2Eorg>, linux-arm-kernel@lists=2Einfradead=2Eorg, "Ren=C3=A9 =
+van Dorst" <opensource@vdorst=2Ecom>, "Thomas Gleixner" <tglx@linutronix=2E=
+de>, "Eddie Huang" <eddie=2Ehuang@mediatek=2Ecom>, "Lee Jones" <lee=2Ejones=
+@linaro=2Eorg>, "Kate Stewart" <kstewart@linuxfoundation=2Eorg>, linux-rtc@=
+vger=2Ekernel=2Eorg
+> Betreff: Re: Aw: Re: [BUG] [PATCH v5 02/10] mfd: mt6397: extract irq rel=
+ated code from core driver
+>
+> Hi Frank/Matthias,
+>=20
+> On Fri, 2019-08-23 at 19:16 +0200, Frank Wunderlich wrote:
+> > > Gesendet: Freitag, 23=2E August 2019 um 17:42 Uhr
+> > > Von: "Matthias Brugger" <matthias=2Ebgg@gmail=2Ecom>
+> >=20
+> > > I suppose that's because 3/10 has code that should be in 2/10 and fo=
+r some
+> > > reason 3/10 was not pushed for linux-next inclusion=2E Although it h=
+as the same
+> > > Acked-for-mfd-by tag=2E
+> > >
+> > > @Frank, can you test if adding 3/10 to your code base fixes the issu=
+e?
+> >=20
+> > adding part 3 [1] seems to fix the issue too
+> >=20
+> > [    4=2E960051] mt6323-regulator mt6323-regulator: Chip ID =3D 0x2023
+> >=20
+> > thanks
+> >=20
+> > [1] https://patchwork=2Ekernel=2Eorg/patch/11110509/
+> Thanks for your comments=2E
+> The root cause seems I didn't split the code well=2E
+> I will fix it in the next version=2E
+>=20
+>
