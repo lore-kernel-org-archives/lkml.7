@@ -2,179 +2,106 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 610F0C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7ACC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42BD02086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:51:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 833B7216F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:53:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569851593;
+	bh=Nhh2vGJB8S4qKF2pVJfJQWMF1IqgVIe1hzK5L13M6BI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GlYf5C1ObI5CfL1g7ZCXk7XWFQY0VCWpajoQ0iItv7GXjYRbOf5/ijw7/EP8Y+OTM
+	 IIVdVooS57EC4dHUc6FvebyArC8eszuUoU9Ozw1+Cjzi+xAsuhhYyS6oeN3SAVi2Uh
+	 lSjsfg7yjVuqFxIoh+ehzDsYoiYEK0zzT01hhaio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731447AbfI3Nvc (ORCPT
+        id S1731306AbfI3NxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 09:51:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40806 "EHLO mx1.redhat.com"
+        Mon, 30 Sep 2019 09:53:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731129AbfI3Nvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:51:31 -0400
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730378AbfI3NxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 09:53:12 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 033B3C049E36
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 13:51:31 +0000 (UTC)
-Received: by mail-wm1-f70.google.com with SMTP id k67so3955474wmf.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 06:51:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KJecfdV4cU2EkR1odbrtXYLFF3/KCfbmiXi5v/OdwmM=;
-        b=DqUUcLYRxc4Usq+pBb1VIuE3MAmyMvEvibYQkVGF2OpudnTFaRxOXYEQfIsfio2QTs
-         VDIh/XKekHvGDBcZLFtdBFwc1bRvtiolHblO/YRGkw+t1Cwu6fAhVKvXGasB1VehU/bo
-         CzJ4W7vS3rxyYuIyBBX+AXeA6t0nLflIuCRf1ODnqvBMzLhuRh0Qjt/izCu2GHcznUhL
-         qkRMC78ZxnH6ny/67rB9aoTDKYOOqRpYdEbQ2MQ2VeaadsVIZZKZgs3A6wnnb2f31kyR
-         Q2ydwzLByAazlpW46kJW5+zvTJMzFF6MRZ28nahkMTNM4f5Gm0u9asdZavGeKwNvpSBS
-         vThg==
-X-Gm-Message-State: APjAAAXOzzngbX4LugP/uBq7CUtwvOJSvRJxc4mzUYhge/G5xk3Lqy0U
-        Rzqp4kVr1haygA2YYFJMU/2BM96w0GK49GnNigHwzC8daEdURFwsvwnjaJGVFMYla+OyGwUSuMi
-        kuviz1btV7uzNzS2rx9kc8SpA
-X-Received: by 2002:a05:600c:238a:: with SMTP id m10mr18590254wma.51.1569851489005;
-        Mon, 30 Sep 2019 06:51:29 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwO29KpzdE/B4PZ3FyZQ0b+zqrWaXagG+JSizcZd8LEziw9BOwffjU331R6jmlmhQgquk4C4Q==
-X-Received: by 2002:a05:600c:238a:: with SMTP id m10mr18590238wma.51.1569851488775;
-        Mon, 30 Sep 2019 06:51:28 -0700 (PDT)
-Received: from steredhat (host174-200-dynamic.52-79-r.retail.telecomitalia.it. [79.52.200.174])
-        by smtp.gmail.com with ESMTPSA id h63sm26377926wmf.15.2019.09.30.06.51.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 06:51:28 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 15:51:25 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "davem@davemloft.net" <davem@davemloft.net>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "deepa.kernel@gmail.com" <deepa.kernel@gmail.com>,
-        "ytht.net@gmail.com" <ytht.net@gmail.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "jhansen@vmware.com" <jhansen@vmware.com>
-Subject: Re: [PATCH net v2] vsock: Fix a lockdep warning in __vsock_release()
-Message-ID: <20190930135125.prztj336splp74wq@steredhat>
-References: <1569460241-57800-1-git-send-email-decui@microsoft.com>
- <20190926074749.sltehhkcgfduu7n2@steredhat.homenet.telecomitalia.it>
- <PU1P153MB01698C46C9348B9762D5E122BF810@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FD282086A;
+        Mon, 30 Sep 2019 13:53:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569851591;
+        bh=Nhh2vGJB8S4qKF2pVJfJQWMF1IqgVIe1hzK5L13M6BI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ayDenw/bCTAHtwhYp4fyI3E0oMsrHlnzfT9mfM6hSRzUHrL4BkakOVzMHBV97Knxc
+         Zlaik0HKfae0TMciZIuhvL7AyGAZ7up6EAMKJ80pazwZceHlMJGjpsVBEOH5cNgU6f
+         dC0uBOswbPP26FOOqAhJkQTYyOU5ppiTWyh0ZRX8=
+Date:   Mon, 30 Sep 2019 14:53:07 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Jookia <166291@gmail.com>
+Cc:     Xogium <contact@xogium.me>, linux-arch@vger.kernel.org,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux@armlinux.org.uk, mingo@redhat.com, bp@alien8.de,
+        tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
+Subject: Re: [breakage] panic() does not halt arm64 systems under certain
+ conditions
+Message-ID: <20190930135306.p5r4sy2bbmq5zxgm@willie-the-truck>
+References: <BX1W47JXPMR8.58IYW53H6M5N@dragonstone>
+ <20190917104518.ovg6ivadyst7h76o@willie-the-truck>
+ <20190920042501.GA5516@novena-choice-citizen-recovery.gateway>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <PU1P153MB01698C46C9348B9762D5E122BF810@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190920042501.GA5516@novena-choice-citizen-recovery.gateway>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 05:37:20AM +0000, Dexuan Cui wrote:
-> > From: linux-hyperv-owner@vger.kernel.org
-> > <linux-hyperv-owner@vger.kernel.org> On Behalf Of Stefano Garzarella
-> > Sent: Thursday, September 26, 2019 12:48 AM
+On Fri, Sep 20, 2019 at 02:25:01PM +1000, Jookia wrote:
+> On Tue, Sep 17, 2019 at 11:45:19AM +0100, Will Deacon wrote:
+> > A straightforward fix is to disable preemption explicitly on the panic()
+> > path (diff below), but I've expanded the cc list to see both what others
+> > think, but also in case smp_send_stop() is supposed to have the side-effect
+> > of disabling interrupt delivery for the local CPU.
 > > 
-> > Hi Dexuan,
+> > diff --git a/kernel/panic.c b/kernel/panic.c
+> > index 057540b6eee9..02d0de31c42d 100644
+> > --- a/kernel/panic.c
+> > +++ b/kernel/panic.c
+> > @@ -179,6 +179,7 @@ void panic(const char *fmt, ...)
+> > 	 * after setting panic_cpu) from invoking panic() again.
+> > 	 */
+> > 	local_irq_disable();
+> > +	preempt_disable_notrace();
+> >  
+> > 	/*
+> > 	 * It's possible to come here directly from a panic-assertion and
 > > 
-> > On Thu, Sep 26, 2019 at 01:11:27AM +0000, Dexuan Cui wrote:
-> > > ...
-> > > NOTE: I only tested the code on Hyper-V. I can not test the code for
-> > > virtio socket, as I don't have a KVM host. :-( Sorry.
-> > >
-> > > @Stefan, @Stefano: please review & test the patch for virtio socket,
-> > > and let me know if the patch breaks anything. Thanks!
-> > 
-> > Comment below, I'll test it ASAP!
+> When you run with panic=... it will send you to a loop earlier in the
+> panic code before local_irq_disable() is hit, working around the bug.
+> A patch like this would make the behaviour the same:
 > 
-> Stefano, Thank you!
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index 4d9f55bf7d38..92abbb5f8d38 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -331,7 +331,6 @@ void panic(const char *fmt, ...)
 > 
-> BTW, this is how I tested the patch:
-> 1. write a socket server program in the guest. The program calls listen()
-> and then calls sleep(10000 seconds). Note: accept() is not called.
-> 
-> 2. create some connections to the server program in the guest.
-> 
-> 3. kill the server program by Ctrl+C, and "dmesg" will show the scary
-> call-trace, if the kernel is built with 
-> 	CONFIG_LOCKDEP=y
-> 	CONFIG_LOCKDEP_SUPPORT=y
-> 
-> 4. Apply the patch, do the same test and we should no longer see the call-trace.
-> 
+>         /* Do not scroll important messages printed above */
+>         suppress_printk = 1;
+> -       local_irq_enable();
+>         for (i = 0; ; i += PANIC_TIMER_STEP) {
+>                 touch_softlockup_watchdog();
+>                 if (i >= i_next) {
 
-Hi Dexuan,
-I tested on virtio socket and it works as expected!
+The reason I kept irqs enabled is because I figured they might be useful
+for magic sysrq keyboard interrupts (e.g. if you wanted to reboot the box).
 
-With your patch applied I don't have issues and call-trace. Without
-the patch I have a very similar call-trace (as expected):
-    ============================================
-    WARNING: possible recursive locking detected
-    5.3.0-vsock #17 Not tainted
-    --------------------------------------------
-    python3/872 is trying to acquire lock:
-    ffff88802b650110 (sk_lock-AF_VSOCK){+.+.}, at: virtio_transport_release+0x34/0x330 [vmw_vsock_virtio_transport_common]
+With 'panic=', the reboot happens automatically, so there's no issue there
+afaict.
 
-    but task is already holding lock:
-    ffff88803597ce10 (sk_lock-AF_VSOCK){+.+.}, at: __vsock_release+0x3f/0x130 [vsock]
-
-    other info that might help us debug this:
-     Possible unsafe locking scenario:
-
-           CPU0
-           ----
-      lock(sk_lock-AF_VSOCK);
-      lock(sk_lock-AF_VSOCK);
-
-     *** DEADLOCK ***
-
-     May be due to missing lock nesting notation
-
-    2 locks held by python3/872:
-     #0: ffff88802c957180 (&sb->s_type->i_mutex_key#8){+.+.}, at: __sock_release+0x2d/0xb0
-     #1: ffff88803597ce10 (sk_lock-AF_VSOCK){+.+.}, at: __vsock_release+0x3f/0x130 [vsock]
-
-    stack backtrace:
-    CPU: 0 PID: 872 Comm: python3 Not tainted 5.3.0-vsock #17
-    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
-    Call Trace:
-     dump_stack+0x85/0xc0
-     __lock_acquire.cold+0xad/0x22b
-     lock_acquire+0xc4/0x1a0
-     ? virtio_transport_release+0x34/0x330 [vmw_vsock_virtio_transport_common]
-     lock_sock_nested+0x5d/0x80
-     ? virtio_transport_release+0x34/0x330 [vmw_vsock_virtio_transport_common]
-     virtio_transport_release+0x34/0x330 [vmw_vsock_virtio_transport_common]
-     ? mark_held_locks+0x49/0x70
-     ? _raw_spin_unlock_irqrestore+0x44/0x60
-     __vsock_release+0x2d/0x130 [vsock]
-     __vsock_release+0xb9/0x130 [vsock]
-     vsock_release+0x12/0x30 [vsock]
-     __sock_release+0x3d/0xb0
-     sock_close+0x14/0x20
-     __fput+0xc1/0x250
-     task_work_run+0x93/0xb0
-     exit_to_usermode_loop+0xd3/0xe0
-     syscall_return_slowpath+0x205/0x310
-     entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-
-Feel free to add:
-
-Tested-by: Stefano Garzarella <sgarzare@redhat.com>
+Will
