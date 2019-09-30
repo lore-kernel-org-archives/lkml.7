@@ -2,115 +2,189 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2E0C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BB4C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCF1521855
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E125C21855
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:32:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="Ke+Nx55i"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bkeGwARc";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MJTnjXOr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730378AbfI3ObH (ORCPT
+        id S1731712AbfI3OcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 10:31:07 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:32901 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730902AbfI3ObG (ORCPT
+        Mon, 30 Sep 2019 10:32:22 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:52578 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbfI3OcW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 10:31:06 -0400
-Received: by mail-lj1-f194.google.com with SMTP id a22so9751788ljd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 07:31:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zBL7epC00p9U9++zGccJDAwUuYYIfHYJAHuYq0NGhKI=;
-        b=Ke+Nx55iXZQfZSHRoqDLY786VnrQjJgoe/GD/uOlYu8+tDQ9EAUgLcqHGlUm6BTKpb
-         WX5654MwqqZ+4GZEY92XR6gll89SPNvhOQD60cXDcMBMQxuvCBnI/oi+9OcSMb9YhvVR
-         U2f3yCuw6i91i3dKrEsYVFk1FGdpYawZKGy0M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zBL7epC00p9U9++zGccJDAwUuYYIfHYJAHuYq0NGhKI=;
-        b=ubSpMFFlPhWu9GKDyHiKxj2bojJeYSAA8XDjsxCsWo4dJ6RakxQp10js/w/9Gb/zEk
-         nqejsFdPMmkpkroevNnxqC/f2N7R/8rNQSDB/yeypueqCwHwapKP7dhV4bg+v8kkxlGl
-         z68/35jHI1l+bfmfI3hLihMfywSOnxWh7n9r7wJgaliHIwUbFMcgzCU2HAKanp9IDoIz
-         nYUoSwnF4I1qTIxO18AphefY8IYMuMW62wZQ6upmYp1j9E7tyWaI30nBN3EJd+LusXai
-         rV/pMmuZCW+lui2y2ibQ+J0Ux+7uIDyd9uLyltBu1wf4zal8ukcaAbhAgeGy/VYQE1fD
-         tAJA==
-X-Gm-Message-State: APjAAAUil/0dNauZS/U/TTCaqVbLdtniIlarkTQAwz2nmCInAaDBLyj3
-        KtW7rElQAy08S9IVL+K9lt5c1Q==
-X-Google-Smtp-Source: APXvYqyIcLy55HB3x/wsB1A7V+gCME1VE6tR84DBLqOOAZkx1QX/h9HdcAKeuQHRVXy8LcRSx7k+/A==
-X-Received: by 2002:a2e:8ec6:: with SMTP id e6mr12257813ljl.231.1569853864490;
-        Mon, 30 Sep 2019 07:31:04 -0700 (PDT)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id q11sm3301932lje.52.2019.09.30.07.31.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 30 Sep 2019 07:31:03 -0700 (PDT)
-Subject: Re: [PATCH v2] lib/string-choice: add yesno(), onoff(),
- enableddisabled(), plural() helpers
-To:     Jani Nikula <jani.nikula@intel.com>, linux-kernel@vger.kernel.org
-Cc:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        intel-gfx@lists.freedesktop.org,
-        Vishal Kulkarni <vishal@chelsio.com>, netdev@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Julia Lawall <julia.lawall@lip6.fr>
-References: <20190930141842.15075-1-jani.nikula@intel.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <8e697984-03b5-44f3-304e-42d303724eaa@rasmusvillemoes.dk>
-Date:   Mon, 30 Sep 2019 16:31:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 30 Sep 2019 10:32:22 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 88C1C61156; Mon, 30 Sep 2019 14:32:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1569853940;
+        bh=27oTolUn8I14Ygh/14k2Slwwxq1tVdhkDg1GGep9/tc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=bkeGwARc9alvIMfafDKup75VaICLhVuLSRWU8zUE+Yc8T8Jz4pVbfUaAShzGrRdG6
+         VVTIbb1TzS6hMLKeh1aXnPboNz7xFtVq0dntOL9cne8PS8uE7JuiyZgsN/ahW1XUbJ
+         GvfxwgyUDc7iJZMlbBq6kuCwZau1sE4mFIn9E23o=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 643506013C;
+        Mon, 30 Sep 2019 14:32:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1569853939;
+        bh=27oTolUn8I14Ygh/14k2Slwwxq1tVdhkDg1GGep9/tc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=MJTnjXOrIVRsa9dWFxeFN+qv8EfRfNsmzuJVe7BTB3q4VuqWZyLUDVU1yZalqTmFO
+         c3D6DHFYggnTQA7veYp6fHPzkYYdx4TPhh7srH0v49nDGBF0CB2sOQd9p9d24QVsMy
+         YJIhQV24Mj7AcAYVcBLjRw39Sxay2frELShTH6fU=
 MIME-Version: 1.0
-In-Reply-To: <20190930141842.15075-1-jani.nikula@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Mon, 30 Sep 2019 20:02:19 +0530
+From:   ppvk@codeaurora.org
+To:     Rob Herring <robh@kernel.org>
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        asutoshd@codeaurora.org, vbadigan@codeaurora.org,
+        stummala@codeaurora.org, sayalil@codeaurora.org,
+        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RFC 2/2] dt-bindings: mmc: sdhci-msm: Add Bus BW vote supported
+ strings
+In-Reply-To: <5d7ba95c.1c69fb81.edf8e.6556@mx.google.com>
+References: <1567774037-2344-1-git-send-email-ppvk@codeaurora.org>
+ <1567774037-2344-3-git-send-email-ppvk@codeaurora.org>
+ <5d7ba95c.1c69fb81.edf8e.6556@mx.google.com>
+Message-ID: <695802ae255fe40ab9ca7750e0bbed91@codeaurora.org>
+X-Sender: ppvk@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/09/2019 16.18, Jani Nikula wrote:
-> The kernel has plenty of ternary operators to choose between constant
-> strings, such as condition ? "yes" : "no", as well as value == 1 ? "" :
-> "s":
+On 2019-09-13 20:06, Rob Herring wrote:
+> On Fri, Sep 06, 2019 at 06:17:17PM +0530, Pradeep P V K wrote:
+>> Add Bus bandwidth voting supported strings for qcom-sdhci controller.
 > 
+> What is bus bandwidth voting?
+
+Controller is connected with its master using NOC and it controls its 
+slaves using another NOC path.
+So,controller have 2 NOC paths as below.
+     a. CPU to Controller, This path is used to access the registers of 
+controllers.
+     b. Controller to DDR, This path is a data path, where data is 
+read/write from/to DDR.
+All data transfer will happen on these NOC's, which is shared between 
+other peripherals.
+In order to achieve required throughput (Data transfer Bandwidth) we put 
+vote on these NOC's to
+scale the NOC clocks to support required bandwidth.
+
+Instantaneous bandwidth (ib) and Arbitrated bandwidth (ab) values are 
+the values calculated (This involves various arch. specific parameters
+like clock plans, voltage corners, etc. which varies from vendor to 
+vendor and target to target)
+to put vote on those noc's to achieve require throughput.
+
 > 
-> ---
+>> 
+>> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+>> ---
+>>  .../devicetree/bindings/mmc/sdhci-msm.txt          | 32 
+>> ++++++++++++++++++++++
+>>  1 file changed, 32 insertions(+)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt 
+>> b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>> index da4edb1..8255d92 100644
+>> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>> @@ -39,6 +39,25 @@ Required properties:
+>>  	"cal"	- reference clock for RCLK delay calibration (optional)
+>>  	"sleep"	- sleep clock for RCLK delay calibration (optional)
+>> 
+>> +Optional Properties:
+>> +* Following bus parameters are required for bus bw voting:
+>> +- interconnects: Pairs of phandles and interconnect provider 
+>> specifier
+>> +		 to denote the edge source and destination ports of
+>> +		 the interconnect path. Please refer to
+>> +		 Documentation/devicetree/bindings/interconnect/
+>> +		 for more details.
+>> +- interconnect-names: List of interconnect path name strings sorted 
+>> in the same
+>> +		order as the interconnects property. Consumers drivers will use
+>> +		interconnect-names to match interconnect paths with interconnect
+>> +		specifiers. Please refer to Documentation/devicetree/bindings/
+>> +		interconnect/ for more details.
 > 
-> v2: add string-choice.[ch] to not clutter kernel.h and to actually save
-> space on string constants.
+> How many? What are the strings?
+
+As this is implemented using interconnect framework, "interconnects" and 
+"interconnect-names" are required
+and below qcom specific properties are required to calculate the ab and 
+ib values.
 > 
-> +EXPORT_SYMBOL(enableddisabled);
-> +
-> +const char *plural(long v)
-> +{
-> +	return v == 1 ? "" : "s";
-> +}
-> +EXPORT_SYMBOL(plural);
+>> +- qcom,msm-bus,name: string describing the bus path
+>> +- qcom,msm-bus,num-cases: number of configurations in which sdhc can 
+>> operate in
+>> +- qcom,msm-bus,num-paths: number of paths to vote for
+>> +- qcom,msm-bus,vectors-KBps: Takes a tuple <ib ab>, <ib ab> (2 tuples 
+>> for 2
 > 
+> ib and ab are what? Didn't we just add interconnect bindings for
+> expressing bandwidth?
 
+Instantaneous bandwidth (ib) is peak bandwidth and Arbitrated bandwidth 
+(ab) is the Average bandwidth.
+There is no interconnect binding node as such for expressing the 
+bandwidth. Hence the reason to use the
+above qcom nodes for parsing and storing the req. bandwidth.
 
-Say what? I'll bet you a beer that this is a net loss: You're adding
-hundreds of bytes of export symbol overhead, plus forcing gcc to emit
-actual calls at the call sites, with all the register saving/restoring
-that implies.
+> 
+>> +				num-paths) The number of these entries *must*
+>> +				be same as num-cases.
+> 
+> Are all these properties SDHCI specific or can we expect to get these
+> for *all* the QCom blocks?
+> 
+As per the current implementation, these are some optional properties 
+and is required
+only when the bus bandwidth support is needed and all these are qcom 
+specific.
 
-Please just do this as static inlines. As I said, the linker is
-perfectly capable of merging string literals across translation units
-(but of course not between vmlinux and modules), so any built-in code
-that uses those helpers (or open-codes them, doesn't matter) will
-automatically share those literals.
-
-Rasmus
-
+>> +
+>>  Example:
+>> 
+>>  	sdhc_1: sdhci@f9824900 {
+>> @@ -56,6 +75,19 @@ Example:
+>> 
+>>  		clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
+>>  		clock-names = "core", "iface";
+>> +		interconnects = <&qnoc 50 &qnoc 512>,
+>> +				<&qnoc 1 &qnoc 544>;
+>> +		interconnect-names = "sdhc-ddr","cpu-sdhc";
+>> +		qcom,msm-bus,name = "sdhc1";
+>> +		qcom,msm-bus,num-cases = <3>;
+>> +		qcom,msm-bus,num-paths = <2>;
+>> +		qcom,msm-bus,vectors-KBps =
+>> +		/* No Vote */
+>> +		<0 0>, <0 0>,
+>> +		/* 50 MB/s */
+>> +		<130718 200000>, <133320 133320>,
+>> +		/* 200 MB/s */
+>> +		<1338562 4096000>, <1338562 4096000>;
+>>  	};
+>> 
+>>  	sdhc_2: sdhci@f98a4900 {
+>> --
+>> 1.9.1
+>> 
