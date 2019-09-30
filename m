@@ -2,104 +2,192 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A057BC35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BAF1C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77A252086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43A302086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:17:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mDQBmKq2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Esb1LBcS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731192AbfI3NRP (ORCPT
+        id S1731210AbfI3NRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 09:17:15 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43373 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbfI3NRP (ORCPT
+        Mon, 30 Sep 2019 09:17:32 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38687 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbfI3NRc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:17:15 -0400
-Received: by mail-pl1-f195.google.com with SMTP id f21so3897157plj.10;
-        Mon, 30 Sep 2019 06:17:15 -0700 (PDT)
+        Mon, 30 Sep 2019 09:17:32 -0400
+Received: by mail-io1-f68.google.com with SMTP id u8so38134942iom.5;
+        Mon, 30 Sep 2019 06:17:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=B4ggzzzVRq7D1/IrWYPZsS6mZyXtJfN7dDcsMNzyKxY=;
-        b=mDQBmKq29AbFtd1CnyEwPK/vZbkcZ7/cSi4rUC6VX2Xyd+TWXE5t9hFSNvgcrmaqCq
-         VjVJcQ8YShs3drchBpCCG2mvNK6A54mf9pPaKx7McgcZKAuXJths5euUNspk26l42Ymr
-         vVmSDhM/rUSnkKNnkHRLZkB2V2I1WcD56J5cYGVwnw0XW9i85pi4rzQ9UCH4IDx/iVR6
-         Bh+gXAywLHOb6x+tev6zVykr2xJrqTXZgES8LI6FxYY3c19qiXffhQzIXVDgl9+8ASEz
-         6cqGUpVMhENeeEiLbb8thoTzdBdwQ2BMUB/qlkx6YbXPS4bZTZQU8BZd1q6sgsqWIipF
-         dTtQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D/dUf5sswmxG7Ik/ZA9Ti5eP9jBNRHm04sZ9l+3RMOo=;
+        b=Esb1LBcSYBp2272bx6tPmIdg+7O+lOUBZIve4xk07BQ6EpDD0IVLJIo0NvNTIw1We/
+         Ydz990SQ5portgdR+F07y5GSo0PAnEkcWccq4aIX5CxfPDUEb1NUAuYnkvGlQP3pa+f/
+         0GUD/T2+WcjdFk5o9Zpjj6PIigsAJG1QK8RKnbkf2RC38Jwi6DxhJc2G4KnLtOLlyPBI
+         1sKKSnwzw5g5ixijtSosb/WLmXJhNYFiruCmKgg7JW5cVlfMM5oY2TClqk8/OUSzjgFh
+         qOPMWovm8M/QaBbreNBuT0HxT6wnIzZke7pZlsR4K04WgSK7sA5lO1w3sGskDKtq0C3q
+         PS9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=B4ggzzzVRq7D1/IrWYPZsS6mZyXtJfN7dDcsMNzyKxY=;
-        b=RtVsBVbyyUBjbgUdMpnoO5H9ZAJc1hbElGF5vctb/yWrdsqX7ItClKROqwILyWQxxU
-         6+1CQ8EgWGwbRseHndy2FAeruRu9GrLgWFiUByTO+e/AOku8iG7K0Y9xftdUiox/oDqd
-         O3jk7lPRBIQi7Le9tbsTGz4oFYYVW4082bvjBXAhiWBeHTwiA3r+RisGKn/8PcUI8ivz
-         kdaKD9jTf6/JOf7iudXvSC2TOcimfU5yppwcjfeqdfRFiLW4k7msl/+8pLRUDBhqvWqs
-         tZPBEE2tgRjX1xx6Ep1hqvwQ9aenmoUArJX7E/dnpvd9wg0DqWLOIKlFgMxzLCmj5XpB
-         Sp8A==
-X-Gm-Message-State: APjAAAVJ6Ra1t4ZsrqgYu4zG0ErVK5Q4llRb7tiHlT99mxWobCxZLRAP
-        k6V1bXiBFO3KDXBOQhqAsh8=
-X-Google-Smtp-Source: APXvYqyORv2gkjwW7rfZFXwSfREuRsSvclviOWTEAU/DB8OGnqKhjK89jVUVsDBYC2vqB77YvAkwqw==
-X-Received: by 2002:a17:902:d685:: with SMTP id v5mr19638281ply.15.1569849434796;
-        Mon, 30 Sep 2019 06:17:14 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id bx18sm11615970pjb.26.2019.09.30.06.17.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 30 Sep 2019 06:17:14 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 06:17:13 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     wim@linux-watchdog.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH 1/3] watchdog: imx2_wdt: Remove unnecessary blank line
-Message-ID: <20190930131713.GA29750@roeck-us.net>
-References: <1569308828-8320-1-git-send-email-Anson.Huang@nxp.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D/dUf5sswmxG7Ik/ZA9Ti5eP9jBNRHm04sZ9l+3RMOo=;
+        b=nDs96JaIah+rH+HTnTCa8mIVViBGnSKHE313zVpuuLZ4WctFD9bzwNwdVcRYUkeKkx
+         YZYYB4mzfOvZvKD1Tyn0jsRTKig1XjpeEJnyxnojHgD/7lnlg21MGVnBb4s+R5lX6QBQ
+         0NaFjaiMWpQ5l7YQ5VE6dAlF4aBZ5IarMne7ZC2O8fFEpHQzPwV99KOQJoZ51ASu0Rd/
+         qYPoiZ4oXd6gi/wSZlxOChqFE4ZXBZES9OB81VULZtGGU1zLpoHfZ59iy0crzv7qrKp6
+         t56ctoujGiIW8GAfiBMgU0zrM15xNnk+4ASPh2xEGfHQ3ztox4preih8R5SS/acTfcVe
+         esrQ==
+X-Gm-Message-State: APjAAAVIILKS/3MXXMPiqx/JfcAWdUVVpAVC6MvsFPa3o6OWmbhatR9a
+        9M3WKy1jVUqHesRQaOdZgTzq/a22pFR0aeWzQRs=
+X-Google-Smtp-Source: APXvYqwT3YGrT/2PUSDdP5kKaoIcZoqNzFy1xP2HiH0fBqRhwszzsg+/afvXrWMIDg3g/eYX+8GK6r9kr+6LuiByW8Y=
+X-Received: by 2002:a6b:8e92:: with SMTP id q140mr1089913iod.205.1569849450788;
+ Mon, 30 Sep 2019 06:17:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1569308828-8320-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190510194229.20628-1-aford173@gmail.com> <af325707-3e42-493d-e858-77878ef06138@ti.com>
+ <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
+ <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com> <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
+ <845055e2-8182-de74-2077-629fdf50ac6c@ti.com> <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
+ <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com> <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
+ <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com> <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
+ <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com> <23eba53a-9304-2ceb-d97e-01891ec0b3ed@ti.com>
+ <cb028b1e-05ca-9b22-be5d-c63f5fd56cc4@ti.com> <CAHCN7xLKL42ib4t0Lte3sJPoJrKX0TPJR9VWi+uW=fZjUg1ssg@mail.gmail.com>
+ <c816d70d-fa5b-a43f-ae7a-6df4589fe484@ti.com>
+In-Reply-To: <c816d70d-fa5b-a43f-ae7a-6df4589fe484@ti.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Mon, 30 Sep 2019 08:17:18 -0500
+Message-ID: <CAHCN7xKKNpQwWZkg-JBncp9=VOcLJFEkcvST=rZqv-i9+5_Q2g@mail.gmail.com>
+Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to dts
+To:     Tero Kristo <t-kristo@ti.com>
+Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 03:07:06PM +0800, Anson Huang wrote:
-> Remove unnecessary blank line.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+On Mon, Sep 30, 2019 at 7:48 AM Tero Kristo <t-kristo@ti.com> wrote:
+>
+> On 30/09/2019 15:41, Adam Ford wrote:
+> > On Mon, Sep 30, 2019 at 3:53 AM Tero Kristo <t-kristo@ti.com> wrote:
+> >>
+> >> On 30/09/2019 09:45, Tomi Valkeinen wrote:
+> >>> Hi,
+> >>>
+> >>> On 27/09/2019 18:47, Tomi Valkeinen wrote:
+> >>>> On 27/09/2019 18:37, Tero Kristo wrote:
+> >>>>
+> >>>>> If you can provide details about what clock framework / driver does
+> >>>>> wrong (sample clk_set_xyz call sequence, expected results via
+> >>>>> clk_get_xyz, and what fails), I can take a look at it. Just reporting
+> >>>>> arbitrary display driver issues I won't be able to debug at all (I
+> >>>>> don't have access to any of the displays, nor do I want to waste time
+> >>>>> debugging them without absolutely no knowledge whatsoever.)
+> >>>>
+> >>>> I used your hack patches to allow changing rates via debugfs. And set
+> >>>> dss1_alwon_fck_3430es2 to 27000000 or 27870967. The end result was
+> >>>> that DSS gets some very high clock from dss1_alwon_fck_3430es2, as the
+> >>>> frame rate jumps to many hundreds fps.
+> >>>>
+> >>>> So, these numbers are not real, but to give the idea what I saw.
+> >>>> Running first with 50 MHz, I can see, say, 40 fps. Then I set the
+> >>>> clock to 30 MHz, and fps dropped to, say, 30fps, as expected with
+> >>>> lower clock. Then I set the clock to 27MHz (or the other one),
+> >>>> expecting a bit lower fps, but instead I saw hundreds of fps.
+> >>>>
+> >>>> I don't know if there's any other way to observe the wrong clock rate
+> >>>> but have the dss enabled and running kmstest or similar. I can help
+> >>>> you set that up next week, should be trivial. You don't need a display
+> >>>> for that.
+> >>>
+> >>> Here's how to reproduce. I have the attached patches. Three of them are
+> >>> the clk-debug ones, and one of mine to make it easy to test without a
+> >>> display, and without underflow flood halting the device. There are on
+> >>> top of v5.3. Kernel config also attached.
+> >>>
+> >>> kmstest is from kms++ project (https://github.com/tomba/kmsxx). It
+> >>> should be straightforward to compile, but kmstest binary is also
+> >>> included in TI's rootfs.
+> >>
+> >> Ok, I ignored all your test code and just fiddled with my trusty clk
+> >> debugfs patches. I don't like debugging with test code I have no
+> >> experience with. :)
+> >>
+> >> Anyways, it seems the dpll4_m4_ck max divider value is wrong, it only
+> >> accepts values upto 16 at least on my board. The setting for this in DT
+> >> is 32, and it is most likely SoC specific what happens if you write an
+> >> invalid value to the divider.
+> >>
+> >> The best action here is probably to drop the max-div value for this
+> >> clock to 16. Can someone check this with their display setup and see
+> >> what happens? Attached patch should do the trick.
+> >
+> > I tried your attached patch on my dm3730 and that seems to make it
+> > somewhat better in that it doesn't hang anymore, so that leads me to
+> > believe that your comment about the divider being only valid on the
+> > omap36 may not be true. I do think it solves the hanging issue that i
+> > was seeing, but I now see a new one now which is dumping a backtrace.
+> >
+> > It looks like it's unhappy that its trying to get one frequency and
+> > getting something different instead.
+> >
+> > [   10.014099] WARNING: CPU: 0 PID: 111 at
+> > drivers/gpu/drm/omapdrm/dss/dss.c:655 dss_set_fck_rate+0x70/0x90
+> > [omapdss]
+> > [   10.014129] clk rate mismatch: 27870968 != 27000000
+>
+> I believe this one is for Tomi to comment, his driver does some magic
+> compares for the requested vs. actual received clock rates. If I am not
+> mistaken, we are only modifying an integer divider here, and thus it is
+> physically impossible to get accurate 27MHz rate to display.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+I didn't expect exactly 27MHz,but the back trace is what concerns me more.
 
-> ---
->  drivers/watchdog/imx2_wdt.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/watchdog/imx2_wdt.c b/drivers/watchdog/imx2_wdt.c
-> index 8d019a9..6711b4e 100644
-> --- a/drivers/watchdog/imx2_wdt.c
-> +++ b/drivers/watchdog/imx2_wdt.c
-> @@ -72,7 +72,6 @@ module_param(nowayout, bool, 0);
->  MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
->  				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
->  
-> -
->  static unsigned timeout;
->  module_param(timeout, uint, 0);
->  MODULE_PARM_DESC(timeout, "Watchdog timeout in seconds (default="
-> -- 
-> 2.7.4
-> 
+However, looking at
+# cat clk/dpll4_ck/clk_rate
+864000000
+
+It seems like 864000000 / 32 would be 27 MHz, but instead we're
+dividing it by 31 yielding 27870968.  I don't know the clocking
+architecture, so I don't know what your patch actually did or how the
+divide by 16 limit worked into this.  If lck cannot divide by 32, it
+would be nice to see if it could divide by 27 to get to 32MHz.  From
+there, the pck could then divide by 4 yielding 9MHz.
+
+adam
+
+>
+> -Tero
+>
+> >
+> > See attached log for the full dump.
+> >
+> > Either way, I think you've identified the main issue.  I just think we
+> > may have uncovered another one in the process.
+> >
+> > For what it's worth, the video looks good.  :-)
+> >
+> > adam
+> >>
+> >> -Tero
+> >>
+> >> --
+>
+> --
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
