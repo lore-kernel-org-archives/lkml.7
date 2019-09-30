@@ -2,271 +2,164 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC794C35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE36FC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76DDA218AC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:18:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sBs8dYRs"
+	by mail.kernel.org (Postfix) with ESMTP id A934721A4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:22:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569846143;
+	bh=cOLOKOmvaYLarF4Qg8rhvW+yROkM8klreFEOrduvdLY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=2Q2L+DLlcu/4G4ccpMMgEPZJklMyZDliXIZ7bT8Ubetq4KdWf1kfqYzz/oE+QoqwC
+	 rX/+WkXTrznpLuKaHSJjX52dH6MYaAoreeY34bHzX9DKKCx39KMPAl+QQ1KNuzUFX9
+	 LKQ03o36bHV1c447GPDUyTp9fLn/QQ41DSvTU6kg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730803AbfI3MSY (ORCPT
+        id S1730315AbfI3MWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 08:18:24 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:45316 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730350AbfI3MSX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 08:18:23 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8UC8lFD186153;
-        Mon, 30 Sep 2019 12:16:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=ok7TwckJtagMaTdSnPLHiT1FwV6KoE8abg0uZFfBZOg=;
- b=sBs8dYRsEv+nvg0WQV7EHqa4qRzaYsTdya87rOdvIgz+nWTixBsisLisrQNMp/SMLFVE
- 3y6uMMCDpD+pxS/5ik5BtI+3nsia283zURAC4N8agXBmaBf4pvSzQE/fhldronXOVcXg
- YZyLQDzEr+WRLYyHUFWhb1vN5IzynQDKmyKQxSnSZn73cHiLr/khEcdbAG82g0bVKrCe
- ijynTO+ofODHNBCGh7wSg7t1vItRi6mTctwLZ1Ue2JFnytbHfPAwRCrcc9Lagm7e1APr
- SDcnCiTF5S0Jv6RF5qWwca+jd6x9ztl0xRiYad/Q6DM6g4KnxC/IohHV38Ty3C+CohF0 aA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2va05reny9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 30 Sep 2019 12:16:36 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8UC8sKj152652;
-        Mon, 30 Sep 2019 12:16:35 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2vahngjd9c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 30 Sep 2019 12:16:35 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8UCGUaX023518;
-        Mon, 30 Sep 2019 12:16:30 GMT
-Received: from z2.cn.oracle.com (/10.182.71.205)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 30 Sep 2019 05:16:29 -0700
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Jonathan Corbet <corbet@lwn.net>,
+        Mon, 30 Sep 2019 08:22:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58170 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726072AbfI3MWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 08:22:22 -0400
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6847B216F4;
+        Mon, 30 Sep 2019 12:22:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569846141;
+        bh=cOLOKOmvaYLarF4Qg8rhvW+yROkM8klreFEOrduvdLY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QES9zpJwh+9KFJX0BeLY3ZWSYSnbZ3YWTvQwlob9ETkCKCo2RonUOPvLwJ8MlS+bx
+         GgUJXK80bRROeCz/eHnG0kop+J8Lv0zFRQ/9plLGDCMNjerGT9WnJtM0nBYX+24gWH
+         Pl51lx60GmdqV7jOfemEjSs2j9NlIF3S6/dKqwYc=
+Received: by mail-qt1-f179.google.com with SMTP id c21so16662224qtj.12;
+        Mon, 30 Sep 2019 05:22:21 -0700 (PDT)
+X-Gm-Message-State: APjAAAVTM5hYqt4ztwjQui1Pyv67xF9IOmYaZbcmfQ3vqGMctXiffRjc
+        RuBqIHPFOohNrXLlR2yd5WwJL4ya10nbg+lgnw==
+X-Google-Smtp-Source: APXvYqzrKI+HW/IJwobAuPoIwDguHXnRcIGXqgXgPSdclcufDbGq0nnxgxQ/qGqHwmh4ZxI6ERNeBADiPKAKMSdQKvY=
+X-Received: by 2002:ac8:444f:: with SMTP id m15mr24312480qtn.110.1569846140534;
+ Mon, 30 Sep 2019 05:22:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190923101513.32719-1-kurt@linutronix.de> <20190923101513.32719-3-kurt@linutronix.de>
+ <20190927161118.GA19333@bogus> <f63da257-95b4-bcb8-9ba4-9786645caf26@prevas.dk>
+In-Reply-To: <f63da257-95b4-bcb8-9ba4-9786645caf26@prevas.dk>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 30 Sep 2019 07:22:08 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKZQXGtrDUiAJj+xMnYowzDdxTdvDOXTbr_n3KWMrL7_w@mail.gmail.com>
+Message-ID: <CAL_JsqKZQXGtrDUiAJj+xMnYowzDdxTdvDOXTbr_n3KWMrL7_w@mail.gmail.com>
+Subject: Re: [PATCH v6 2/2] dt/bindings: Add bindings for Layerscape external irqs
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     Kurt Kanzenbach <kurt@linutronix.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 1/3] KVM: X86: Add "nopvspin" parameter to disable PV spinlocks
-Date:   Sun, 29 Sep 2019 20:21:04 +0800
-Message-Id: <1569759666-26904-2-git-send-email-zhenzhong.duan@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1569759666-26904-1-git-send-email-zhenzhong.duan@oracle.com>
-References: <1569759666-26904-1-git-send-email-zhenzhong.duan@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9395 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909300130
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9395 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909300130
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are cases where a guest tries to switch spinlocks to bare metal
-behavior (e.g. by setting "xen_nopvspin" on XEN platform and
-"hv_nopvspin" on HYPER_V).
+On Fri, Sep 27, 2019 at 4:16 PM Rasmus Villemoes
+<rasmus.villemoes@prevas.dk> wrote:
+>
+> On 27/09/2019 18.11, Rob Herring wrote:
+> > On Mon, Sep 23, 2019 at 12:15:13PM +0200, Kurt Kanzenbach wrote:
+> >> From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+> >>
+> >> This adds Device Tree binding documentation for the external interrupt
+> >> lines with configurable polarity present on some Layerscape SOCs.
+> >>
+> >> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+> >> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
+> >> ---
+> >>
+> >> +* Freescale Layerscape external IRQs
+> >> +
+> >> +Some Layerscape SOCs (LS1021A, LS1043A, LS1046A, LS2088A) support
+> >> +inverting the polarity of certain external interrupt lines.
+> >> +
+> >> +The device node must be a child of the node representing the
+> >> +Supplemental Configuration Unit (SCFG) or the Interrupt Sampling
+> >> +Control (ISC) Unit.
+> >> +
+> >> +Required properties:
+> >> +- compatible: should be "fsl,<soc-name>-extirq", e.g. "fsl,ls1021a-extirq".
+> >> +- interrupt-controller: Identifies the node as an interrupt controller
+> >> +- #interrupt-cells: Must be 2. The first element is the index of the
+> >> +  external interrupt line. The second element is the trigger type.
+> >> +- interrupt-parent: phandle of GIC.
+> >> +- reg: Specifies the Interrupt Polarity Control Register (INTPCR) in the SCFG.
+> >> +- fsl,extirq-map: Specifies the mapping to interrupt numbers in the parent
+> >> +  interrupt controller. Interrupts are mapped one-to-one to parent
+> >> +  interrupts.
+> >
+> > This should be an 'interrupt-map' instead.
+>
+> Rob, thanks for your review comments. I know you said the same thing at
+> v5, and it might seem like they are ignored. However, I asked a couple
+> of followup questions
+> (https://lore.kernel.org/lkml/0bb4533d-c749-d8ff-e1f2-4b08eb724713@prevas.dk/).
+> I'd really appreciate it if you could (a) point to some documentation on
+> how to write that interrupt-map and (b) explain how this is different
+> from the Qualcomm PDC case I tried to copy and which had your Reviewed-By.
 
-That feature is missed on KVM, add a new parameter "nopvspin" to disable
-PV spinlocks for KVM guest.
+https://www.devicetree.org/specifications/
+https://elinux.org/Device_Tree_Usage#Advanced_Interrupt_Mapping
 
-This new parameter is also intended to replace "xen_nopvspin" and
-"hv_nopvspin" in the future.
+For QC PDC, it could be a large number of interrupts to remap which
+interrupt-map doesn't scale to very well. Also, I think it sits in
+parallel to the GIC rather than downstream. The interrupt binding
+doesn't really have a way to express that.
 
-The global variable pvspin isn't defined as __initdata as it's used at
-runtime by XEN guest.
 
-Refactor the print stuff with pr_* which is preferred.
+> >> +Optional properties:
+> >> +- fsl,bit-reverse: This boolean property should be set on the LS1021A
+> >> +  if the SCFGREVCR register has been set to all-ones (which is usually
+> >> +  the case), meaning that all reads and writes of SCFG registers are
+> >> +  implicitly bit-reversed. Other compatible platforms do not have such
+> >> +  a register.
+> >
+> > Couldn't you just read that register and tell?
+>
+> In theory, yes, but as far as I understand (and as I wrote) it's
+> specific to the ls1021a. Of course one can decide whether it's
+> necessary/possible to read it based on the compatible string, but one
+> would also need an extra reg property to have its address - but that
+> register is not really part of the extirq "device" we're trying to
+> describe. So would it need to be represented as its own subnode of scfg?
 
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krcmar <rkrcmar@redhat.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: Wanpeng Li <wanpengli@tencent.com>
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Will Deacon <will@kernel.org>
----
- Documentation/admin-guide/kernel-parameters.txt |  4 ++++
- arch/x86/include/asm/qspinlock.h                |  1 +
- arch/x86/kernel/kvm.c                           | 27 ++++++++++++++++---------
- kernel/locking/qspinlock.c                      |  7 +++++++
- 4 files changed, 30 insertions(+), 9 deletions(-)
+Why? You should know where the register is because you know what chip
+you are on (from the compatible).
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index c7ac2f3..4b956d8 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5330,6 +5330,10 @@
- 			as generic guest with no PV drivers. Currently support
- 			XEN HVM, KVM, HYPER_V and VMWARE guest.
- 
-+	nopvspin	[X86,KVM] Disables the qspinlock slow path
-+			using PV optimizations which allow the hypervisor to
-+			'idle' the guest on lock contention.
-+
- 	xirc2ps_cs=	[NET,PCMCIA]
- 			Format:
- 			<irq>,<irq_mask>,<io>,<full_duplex>,<do_sound>,<lockup_hack>[,<irq2>[,<irq3>[,<irq4>]]]
-diff --git a/arch/x86/include/asm/qspinlock.h b/arch/x86/include/asm/qspinlock.h
-index 444d6fd..34a4484 100644
---- a/arch/x86/include/asm/qspinlock.h
-+++ b/arch/x86/include/asm/qspinlock.h
-@@ -32,6 +32,7 @@ static __always_inline u32 queued_fetch_set_pending_acquire(struct qspinlock *lo
- extern void __pv_init_lock_hash(void);
- extern void __pv_queued_spin_lock_slowpath(struct qspinlock *lock, u32 val);
- extern void __raw_callee_save___pv_queued_spin_unlock(struct qspinlock *lock);
-+extern bool pvspin;
- 
- #define	queued_spin_unlock queued_spin_unlock
- /**
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index e820568..7b8cf0d 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -7,6 +7,8 @@
-  *   Authors: Anthony Liguori <aliguori@us.ibm.com>
-  */
- 
-+#define pr_fmt(fmt) "KVM: " fmt
-+
- #include <linux/context_tracking.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
-@@ -286,7 +288,7 @@ static void kvm_register_steal_time(void)
- 		return;
- 
- 	wrmsrl(MSR_KVM_STEAL_TIME, (slow_virt_to_phys(st) | KVM_MSR_ENABLED));
--	pr_info("kvm-stealtime: cpu %d, msr %llx\n",
-+	pr_info("stealtime: cpu %d, msr %llx\n",
- 		cpu, (unsigned long long) slow_virt_to_phys(st));
- }
- 
-@@ -321,7 +323,7 @@ static void kvm_guest_cpu_init(void)
- 
- 		wrmsrl(MSR_KVM_ASYNC_PF_EN, pa);
- 		__this_cpu_write(apf_reason.enabled, 1);
--		printk(KERN_INFO"KVM setup async PF for cpu %d\n",
-+		pr_info("setup async PF for cpu %d\n",
- 		       smp_processor_id());
- 	}
- 
-@@ -347,7 +349,7 @@ static void kvm_pv_disable_apf(void)
- 	wrmsrl(MSR_KVM_ASYNC_PF_EN, 0);
- 	__this_cpu_write(apf_reason.enabled, 0);
- 
--	printk(KERN_INFO"Unregister pv shared memory for cpu %d\n",
-+	pr_info("Unregister pv shared memory for cpu %d\n",
- 	       smp_processor_id());
- }
- 
-@@ -509,7 +511,7 @@ static void kvm_setup_pv_ipi(void)
- {
- 	apic->send_IPI_mask = kvm_send_ipi_mask;
- 	apic->send_IPI_mask_allbutself = kvm_send_ipi_mask_allbutself;
--	pr_info("KVM setup pv IPIs\n");
-+	pr_info("setup pv IPIs\n");
- }
- 
- static void kvm_smp_send_call_func_ipi(const struct cpumask *mask)
-@@ -639,11 +641,11 @@ static void __init kvm_guest_init(void)
- 	    !kvm_para_has_hint(KVM_HINTS_REALTIME) &&
- 	    kvm_para_has_feature(KVM_FEATURE_STEAL_TIME)) {
- 		smp_ops.send_call_func_ipi = kvm_smp_send_call_func_ipi;
--		pr_info("KVM setup pv sched yield\n");
-+		pr_info("setup pv sched yield\n");
- 	}
- 	if (cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN, "x86/kvm:online",
- 				      kvm_cpu_online, kvm_cpu_down_prepare) < 0)
--		pr_err("kvm_guest: Failed to install cpu hotplug callbacks\n");
-+		pr_err("failed to install cpu hotplug callbacks\n");
- #else
- 	sev_map_percpu_data();
- 	kvm_guest_cpu_init();
-@@ -746,7 +748,7 @@ static __init int kvm_setup_pv_tlb_flush(void)
- 			zalloc_cpumask_var_node(per_cpu_ptr(&__pv_tlb_mask, cpu),
- 				GFP_KERNEL, cpu_to_node(cpu));
- 		}
--		pr_info("KVM setup pv remote TLB flush\n");
-+		pr_info("setup pv remote TLB flush\n");
- 	}
- 
- 	return 0;
-@@ -842,6 +844,13 @@ void __init kvm_spinlock_init(void)
- 	if (num_possible_cpus() == 1)
- 		return;
- 
-+	if (!pvspin) {
-+		pr_info("PV spinlocks disabled\n");
-+		static_branch_disable(&virt_spin_lock_key);
-+		return;
-+	}
-+	pr_info("PV spinlocks enabled\n");
-+
- 	__pv_init_lock_hash();
- 	pv_ops.lock.queued_spin_lock_slowpath = __pv_queued_spin_lock_slowpath;
- 	pv_ops.lock.queued_spin_unlock =
-@@ -872,8 +881,8 @@ static void kvm_enable_host_haltpoll(void *i)
- void arch_haltpoll_enable(unsigned int cpu)
- {
- 	if (!kvm_para_has_feature(KVM_FEATURE_POLL_CONTROL)) {
--		pr_err_once("kvm: host does not support poll control\n");
--		pr_err_once("kvm: host upgrade recommended\n");
-+		pr_err_once("host does not support poll control\n");
-+		pr_err_once("host upgrade recommended\n");
- 		return;
- 	}
- 
-diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
-index 2473f10..945b510 100644
---- a/kernel/locking/qspinlock.c
-+++ b/kernel/locking/qspinlock.c
-@@ -580,4 +580,11 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
- #include "qspinlock_paravirt.h"
- #include "qspinlock.c"
- 
-+bool pvspin = true;
-+static __init int parse_nopvspin(char *arg)
-+{
-+	pvspin = false;
-+	return 0;
-+}
-+early_param("nopvspin", parse_nopvspin);
- #endif
--- 
-1.8.3.1
+>
+> If it is set at all, it's done within the first few instructions after
+> reset (before control is even handed to the bootloader), so I see it as
+> a kind of quirk of the hardware. The data sheet says "SCFG bit reverse
+> (SCFG_SCFGREVCR) must be written 0xFFFF_FFFF as a part of initialization
+> sequence before writing to any other SCFG register." which, taken
+> literally, means we don't need the property at all and can just assume
+> it for the ls1021a (i.e., do it based on compatible string alone) - but
+> I think it should be read as "if you're going to write this register, it
+> must be done first thing".
+>
+> > Does this apply to only the extirq register or all of scfg?
+>
+> All of scfg. It really seems like some accident/bad joke coming out of a
+> discussion between a hardware and software engineer on the enumeration
+> of bits, with the hardware guy ending up saying "alright, have it
+> whichever way you want it", causing even more pain :(
 
+If all of the scfg bits change, then if you have this property, it
+should be in the scfg node. But I prefer you use the compatible
+instead if that works.
+
+Rob
