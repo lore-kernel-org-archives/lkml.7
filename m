@@ -2,135 +2,129 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C78C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C98C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5DC42190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95BC321721
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:23:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569835419;
+	bh=+BHvljykg138ghU0+f5SGdvFQHXUsO4LJsPApKlUrtM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0SxVsDHSCU78Mg3BCyVMZZaefjUgigZXoBS4NRN6wDd3jHsPXKemb7gRLn6pLSYSM
+	 /Y3bRM5sG2FJaJZOtpiAibhYehuLtrLvSn1AxUnW5ja+AUaQhO8cmfLPzoO6rvYVm+
+	 wz2sKZjrR1ELydgMVf6mVZPEldIMspo04jSEchPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730392AbfI3JVA (ORCPT
+        id S1730359AbfI3JXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 05:21:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40298 "EHLO mx1.suse.de"
+        Mon, 30 Sep 2019 05:23:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40786 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727935AbfI3JVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 05:21:00 -0400
+        id S1726008AbfI3JXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 05:23:38 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AF5F1B087;
-        Mon, 30 Sep 2019 09:20:57 +0000 (UTC)
-Message-ID: <202216c6e456bfd1a30f7cdb000aa714e3855e10.camel@suse.de>
-Subject: Re: [PATCH 00/11] of: dma-ranges fixes and improvements
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Oza Pawandeep <oza.oza@broadcom.com>
-Date:   Mon, 30 Sep 2019 11:20:55 +0200
-In-Reply-To: <20190927002455.13169-1-robh@kernel.org>
-References: <20190927002455.13169-1-robh@kernel.org>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-/7Fyj1jMsFE0z7R36gtv"
-User-Agent: Evolution 3.32.4 
+        by mx1.suse.de (Postfix) with ESMTP id 84FC5B161;
+        Mon, 30 Sep 2019 09:23:35 +0000 (UTC)
+Date:   Mon, 30 Sep 2019 11:23:34 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        linux-btrfs@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Subject: Re: [PATCH v2 2/2] mm, sl[aou]b: guarantee natural alignment for
+ kmalloc(power-of-two)
+Message-ID: <20190930092334.GA25306@dhcp22.suse.cz>
+References: <20190826111627.7505-1-vbabka@suse.cz>
+ <20190826111627.7505-3-vbabka@suse.cz>
+ <df8d1cf4-ff8f-1ee1-12fb-cfec39131b32@suse.cz>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <df8d1cf4-ff8f-1ee1-12fb-cfec39131b32@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon 23-09-19 18:36:32, Vlastimil Babka wrote:
+> On 8/26/19 1:16 PM, Vlastimil Babka wrote:
+> > In most configurations, kmalloc() happens to return naturally aligned (i.e.
+> > aligned to the block size itself) blocks for power of two sizes. That means
+> > some kmalloc() users might unknowingly rely on that alignment, until stuff
+> > breaks when the kernel is built with e.g.  CONFIG_SLUB_DEBUG or CONFIG_SLOB,
+> > and blocks stop being aligned. Then developers have to devise workaround such
+> > as own kmem caches with specified alignment [1], which is not always practical,
+> > as recently evidenced in [2].
+> > 
+> > The topic has been discussed at LSF/MM 2019 [3]. Adding a 'kmalloc_aligned()'
+> > variant would not help with code unknowingly relying on the implicit alignment.
+> > For slab implementations it would either require creating more kmalloc caches,
+> > or allocate a larger size and only give back part of it. That would be
+> > wasteful, especially with a generic alignment parameter (in contrast with a
+> > fixed alignment to size).
+> > 
+> > Ideally we should provide to mm users what they need without difficult
+> > workarounds or own reimplementations, so let's make the kmalloc() alignment to
+> > size explicitly guaranteed for power-of-two sizes under all configurations.
+> > What this means for the three available allocators?
+> > 
+> > * SLAB object layout happens to be mostly unchanged by the patch. The
+> >   implicitly provided alignment could be compromised with CONFIG_DEBUG_SLAB due
+> >   to redzoning, however SLAB disables redzoning for caches with alignment
+> >   larger than unsigned long long. Practically on at least x86 this includes
+> >   kmalloc caches as they use cache line alignment, which is larger than that.
+> >   Still, this patch ensures alignment on all arches and cache sizes.
+> > 
+> > * SLUB layout is also unchanged unless redzoning is enabled through
+> >   CONFIG_SLUB_DEBUG and boot parameter for the particular kmalloc cache. With
+> >   this patch, explicit alignment is guaranteed with redzoning as well. This
+> >   will result in more memory being wasted, but that should be acceptable in a
+> >   debugging scenario.
+> > 
+> > * SLOB has no implicit alignment so this patch adds it explicitly for
+> >   kmalloc(). The potential downside is increased fragmentation. While
+> >   pathological allocation scenarios are certainly possible, in my testing,
+> >   after booting a x86_64 kernel+userspace with virtme, around 16MB memory
+> >   was consumed by slab pages both before and after the patch, with difference
+> >   in the noise.
+> > 
+> > [1] https://lore.kernel.org/linux-btrfs/c3157c8e8e0e7588312b40c853f65c02fe6c957a.1566399731.git.christophe.leroy@c-s.fr/
+> > [2] https://lore.kernel.org/linux-fsdevel/20190225040904.5557-1-ming.lei@redhat.com/
+> > [3] https://lwn.net/Articles/787740/
+> > 
+> > Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> 
+> So if anyone thinks this is a good idea, please express it (preferably
+> in a formal way such as Acked-by), otherwise it seems the patch will be
+> dropped (due to a private NACK, apparently).
 
---=-/7Fyj1jMsFE0z7R36gtv
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Sigh.
 
-On Thu, 2019-09-26 at 19:24 -0500, Rob Herring wrote:
-> This series fixes several issues related to 'dma-ranges'. Primarily,
-> 'dma-ranges' in a PCI bridge node does correctly set dma masks for PCI
-> devices not described in the DT. A common case needing dma-ranges is a
-> 32-bit PCIe bridge on a 64-bit system. This affects several platforms
-> including Broadcom, NXP, Renesas, and Arm Juno. There's been several
-> attempts to fix these issues, most recently earlier this week[1].
->=20
-> In the process, I found several bugs in the address translation. It
-> appears that things have happened to work as various DTs happen to use
-> 1:1 addresses.
->=20
-> First 3 patches are just some clean-up. The 4th patch adds a unittest
-> exhibiting the issues. Patches 5-9 rework how of_dma_configure() works
-> making it work on either a struct device child node or a struct
-> device_node parent node so that it works on bus leaf nodes like PCI
-> bridges. Patches 10 and 11 fix 2 issues with address translation for
-> dma-ranges.
->=20
-> My testing on this has been with QEMU virt machine hacked up to set PCI
-> dma-ranges and the unittest. Nicolas reports this series resolves the
-> issues on Rpi4 and NXP Layerscape platforms.
->=20
-> Rob
->=20
-> [1]=20
->=20
-https://lore.kernel.org/linux-arm-kernel/20190924181244.7159-1-nsaenzjulien=
-ne@suse.de/
->=20
-> Rob Herring (5):
->   of: Remove unused of_find_matching_node_by_address()
->   of: Make of_dma_get_range() private
->   of/unittest: Add dma-ranges address translation tests
->   of/address: Translate 'dma-ranges' for parent nodes missing
->     'dma-ranges'
->   of/address: Fix of_pci_range_parser_one translation of DMA addresses
->=20
-> Robin Murphy (6):
->   of: address: Report of_dma_get_range() errors meaningfully
->   of: Ratify of_dma_configure() interface
->   of/address: Introduce of_get_next_dma_parent() helper
->   of: address: Follow DMA parent for "dma-coherent"
->   of: Factor out #{addr,size}-cells parsing
->   of: Make of_dma_get_range() work on bus nodes
+An existing code to workaround the lack of alignment guarantee just show
+that this is necessary. And there wasn't any real technical argument
+against except for a highly theoretical optimizations/new allocator that
+would be tight by the guarantee.
 
-Re-tested the whole series. Verified both the unittests run fine and PCIe's
-behaviour is fixed.
+Therefore
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-Tested-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-
-Also for the whole series:
-
-Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-
-Regards,
-Nicolas
-
-
---=-/7Fyj1jMsFE0z7R36gtv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2RyPcACgkQlfZmHno8
-x/5aaggAjeyCHdUtuhmPYMOr0eHC3qN6bd3dUsbXdN2lP82cn6S6n08OsHIfHaS/
-mKzeb3RK8lHn7v8Pv/nfe7UU93Lxx4Dyq4D4vXXTWyTFNg67C/KxtJswHvKhdQBX
-u/r/OIhCnewJLTEZV9g44OFAko61Zuf8mp8KIwSjj+vfUXORyUc/KLfFYNt6b8Fb
-YQRdgTyuF4Xhy/XYdxn8uCcDKkz0MtQ1Z9yJiao0h1c5p1Hia8Xhilq7uglx6+/3
-w6Izh+0OAiDP30yMBVW+5APyhFPUdfzlP3hdifrkv8LiwCyMsukutfWawrm0r9E6
-Ubrk8jYhhRg1qlpwQQ9V6QeapBjgsA==
-=14/S
------END PGP SIGNATURE-----
-
---=-/7Fyj1jMsFE0z7R36gtv--
-
+-- 
+Michal Hocko
+SUSE Labs
