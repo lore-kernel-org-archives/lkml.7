@@ -2,131 +2,146 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6C5C4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 05:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42020C388F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 05:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFF0C20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 05:24:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="ZH1r+kg1"
+	by mail.kernel.org (Postfix) with ESMTP id 23588218AC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 05:25:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729540AbfI3FYB (ORCPT
+        id S1729556AbfI3FYa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 01:24:01 -0400
-Received: from bgl-iport-1.cisco.com ([72.163.197.25]:64454 "EHLO
-        bgl-iport-1.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbfI3FYB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 01:24:01 -0400
-X-Greylist: delayed 430 seconds by postgrey-1.27 at vger.kernel.org; Mon, 30 Sep 2019 01:24:00 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=cisco.com; i=@cisco.com; l=1841; q=dns/txt; s=iport;
-  t=1569821040; x=1571030640;
-  h=from:to:cc:subject:date:message-id;
-  bh=G+siyYRdHd2n4HbLETGj+hla7mCl53/mKPxeUkMl8FQ=;
-  b=ZH1r+kg1Yvfm7x2IUvxrT3n7yAg/rzGTU+bkkIPUa2+IQ3TxO9mPMaUR
-   c8rYKLkniXtQ96bcnrbj/13lrWd4NaMrIhdBuzROne/HMiq1GukpKR1hm
-   1/+gJNA2/oOSsuTJQIF90C/Z96zXD35mvlhTfQ3/YE0TRvuGglf7/dqHo
-   o=;
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0AsAQA7jpFd/xjFo0hmHAEBAQQBAQwEA?=
- =?us-ascii?q?QGBVAYBAQsBg10gEiqNHoZEBQGBMol5jy+BewkBAQEOLwEBhECDXzUIDgIMAQE?=
- =?us-ascii?q?EAQEBAgEFBG2FOYV5UimBFQsIgyKBdxSqd4F0M4hzgUgUgSABhzSFaYEHjwgEg?=
- =?us-ascii?q?S8BlRyWSwaCJpULAhmZNQEtpzuBUwE2gVhNI4FugU5QEBSBWheOKjkDMJEOAQE?=
-X-IronPort-AV: E=Sophos;i="5.64,565,1559520000"; 
-   d="scan'208";a="119743880"
-Received: from vla196-nat.cisco.com (HELO bgl-core-4.cisco.com) ([72.163.197.24])
-  by bgl-iport-1.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 30 Sep 2019 05:16:45 +0000
-Received: from ubuntuServ16.cisco.com ([10.142.88.17])
-        by bgl-core-4.cisco.com (8.15.2/8.15.2) with ESMTP id x8U5Gih6001012;
-        Mon, 30 Sep 2019 05:16:45 GMT
-From:   Sriram Krishnan <srirakr2@cisco.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     xe-linux-external@cisco.com,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] AF_PACKET doesnt strip VLAN information
-Date:   Sat, 28 Sep 2019 10:28:24 +0530
-Message-Id: <1569646705-10585-1-git-send-email-srirakr2@cisco.com>
-X-Mailer: git-send-email 2.7.4
-X-Auto-Response-Suppress: DR, OOF, AutoReply
-X-Outbound-SMTP-Client: 10.142.88.17, [10.142.88.17]
-X-Outbound-Node: bgl-core-4.cisco.com
+        Mon, 30 Sep 2019 01:24:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:47314 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725767AbfI3FY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 01:24:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1964228;
+        Sun, 29 Sep 2019 22:24:29 -0700 (PDT)
+Received: from [10.162.43.119] (p8cg001049571a15.blr.arm.com [10.162.43.119])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A3D583F739;
+        Sun, 29 Sep 2019 22:27:03 -0700 (PDT)
+Subject: Re: [PATCH v4] arm64: use generic free_initrd_mem()
+To:     Mike Rapoport <rppt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Laura Abbott <labbott@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+References: <1569657746-31672-1-git-send-email-rppt@kernel.org>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <4267bfb4-db55-49a5-634f-7d1b1fce650e@arm.com>
+Date:   Mon, 30 Sep 2019 10:54:45 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <1569657746-31672-1-git-send-email-rppt@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When an application sends with AF_PACKET and places a vlan header on
-the raw packet; then the AF_PACKET needs to move the tag into the skb
-so that it gets processed normally through the rest of the transmit
-path.
 
-This is particularly a problem on Hyper-V where the host only allows
-vlan in the offload info.
+On 09/28/2019 01:32 PM, Mike Rapoport wrote:
+> From: Mike Rapoport <rppt@linux.ibm.com>
+> 
+> arm64 calls memblock_free() for the initrd area in its implementation of
+> free_initrd_mem(), but this call has no actual effect that late in the boot
+> process. By the time initrd is freed, all the reserved memory is managed by
+> the page allocator and the memblock.reserved is unused, so the only purpose
+> of the memblock_free() call is to keep track of initrd memory for debugging
+> and accounting.
 
-Cc: xe-linux-external@cisco.com
----
- net/packet/af_packet.c | 26 ++++++++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+Thats correct. memblock_free_all() gets called before free_initrd_mem().
 
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index e2742b0..cfe0904 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -1849,15 +1849,35 @@ static int packet_rcv_spkt(struct sk_buff *skb, struct net_device *dev,
- 	return 0;
- }
- 
--static void packet_parse_headers(struct sk_buff *skb, struct socket *sock)
-+static int packet_parse_headers(struct sk_buff *skb, struct socket *sock)
- {
- 	if ((!skb->protocol || skb->protocol == htons(ETH_P_ALL)) &&
- 	    sock->type == SOCK_RAW) {
-+		__be16 ethertype;
-+
- 		skb_reset_mac_header(skb);
-+
-+		ethertype = eth_hdr(skb)->h_proto;
-+		/*
-+		 * If Vlan tag is present in the packet
-+		 *  move it to skb
-+		*/
-+		if (eth_type_vlan(ethertype)) {
-+			int err;
-+			__be16 vlan_tci;
-+
-+			err = __skb_vlan_pop(skb, &vlan_tci);
-+			if (unlikely(err))
-+				return err;
-+
-+			__vlan_hwaccel_put_tag(skb, ethertype, vlan_tci);
-+		}
-+
- 		skb->protocol = dev_parse_header_protocol(skb);
- 	}
- 
- 	skb_probe_transport_header(skb);
-+	return 0;
- }
- 
- /*
-@@ -1979,7 +1999,9 @@ static int packet_sendmsg_spkt(struct socket *sock, struct msghdr *msg,
- 	if (unlikely(extra_len == 4))
- 		skb->no_fcs = 1;
- 
--	packet_parse_headers(skb, sock);
-+	err = packet_parse_headers(skb, sock);
-+	if (err)
-+		goto out_unlock;
- 
- 	dev_queue_xmit(skb);
- 	rcu_read_unlock();
--- 
-2.7.4
+> 
+> Without the memblock_free() call the only difference between arm64 and the
+> generic versions of free_initrd_mem() is the memory poisoning.
+> 
+> Move memblock_free() call to the generic code, enable it there
+> for the architectures that define ARCH_KEEP_MEMBLOCK and use the generic
+> implementation of free_initrd_mem() on arm64.
 
+This improves free_initrd_mem() generic implementation for others to use.
+
+> 
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+
+Tested-by: Anshuman Khandual <anshuman.khandual@arm.com>	#arm64
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+
+> ---
+> 
+> v4:
+> * memblock_free() aligned area around the initrd
+> 
+> v3:
+> * fix powerpc build
+> 
+> v2:
+> * add memblock_free() to the generic free_initrd_mem()
+> * rebase on the current upstream
+> 
+> 
+>  arch/arm64/mm/init.c | 12 ------------
+>  init/initramfs.c     |  8 ++++++++
+>  2 files changed, 8 insertions(+), 12 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index 45c00a5..87a0e3b 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -580,18 +580,6 @@ void free_initmem(void)
+>  	unmap_kernel_range((u64)__init_begin, (u64)(__init_end - __init_begin));
+>  }
+>  
+> -#ifdef CONFIG_BLK_DEV_INITRD
+> -void __init free_initrd_mem(unsigned long start, unsigned long end)
+> -{
+> -	unsigned long aligned_start, aligned_end;
+> -
+> -	aligned_start = __virt_to_phys(start) & PAGE_MASK;
+> -	aligned_end = PAGE_ALIGN(__virt_to_phys(end));
+> -	memblock_free(aligned_start, aligned_end - aligned_start);
+> -	free_reserved_area((void *)start, (void *)end, 0, "initrd");
+> -}
+> -#endif
+> -
+>  /*
+>   * Dump out memory limit information on panic.
+>   */
+> diff --git a/init/initramfs.c b/init/initramfs.c
+> index c47dad0..8ec1be4 100644
+> --- a/init/initramfs.c
+> +++ b/init/initramfs.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/syscalls.h>
+>  #include <linux/utime.h>
+>  #include <linux/file.h>
+> +#include <linux/memblock.h>
+>  
+>  static ssize_t __init xwrite(int fd, const char *p, size_t count)
+>  {
+> @@ -529,6 +530,13 @@ extern unsigned long __initramfs_size;
+>  
+>  void __weak free_initrd_mem(unsigned long start, unsigned long end)
+>  {
+> +#ifdef CONFIG_ARCH_KEEP_MEMBLOCK
+> +	unsigned long aligned_start = ALIGN_DOWN(start, PAGE_SIZE);
+> +	unsigned long aligned_end = ALIGN(end, PAGE_SIZE);
+> +
+> +	memblock_free(__pa(aligned_start), aligned_end - aligned_start);
+> +#endif
+> +
+>  	free_reserved_area((void *)start, (void *)end, POISON_FREE_INITMEM,
+>  			"initrd");
+>  }
+> 
