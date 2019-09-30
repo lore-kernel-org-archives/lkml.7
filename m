@@ -2,138 +2,94 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B35C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B87C35280
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC1E20842
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9898D224FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:41:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569876055;
-	bh=Ia/sE7OsRwGmDutroMOdVbd3eXtqQ6ome2j9iwgAtQM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Ui9lleiF5Hue5rJb89UhlWnq9/EU6kwqnr4Rh7glB/h/jrK09FYlGYqvxDUeHvtk3
-	 Z5CHHqk0htvlPWRgovATCMdBy1HwlPxWNAOwM6gM2JqLQCXqV4uCy/G6dmEzzeg213
-	 /Lqh9mQc12nhG2wQpREcY2UyHx9Js3RpRpHnzNvk=
+	s=default; t=1569876098;
+	bh=SgM/g7l8Usf+mjacfbNuYb0aHifT7TkTeGIl4DMx7L8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BQHJviq/MZIAANyK3/DyAjEBPp3kKQAkvsOy8ZcIYUG7gxtIXK2Lf40mISnP67e+y
+	 Ri0rTJuS5MsVhN61nED5tuA1qx1VUQfyaA7VteNy273+HHrVgen2rwD9AM3BpY+2EM
+	 ZrGsHDKLOatR3wGGR+e3K2d9z0mNNoFZdbS5iBS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731446AbfI3Uky (ORCPT
+        id S1731563AbfI3Uli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 16:40:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35636 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729180AbfI3Uky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 16:40:54 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D12E224D2;
-        Mon, 30 Sep 2019 20:34:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569875651;
-        bh=Ia/sE7OsRwGmDutroMOdVbd3eXtqQ6ome2j9iwgAtQM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=W8TiKyqeBZc6pJ4n/x3zNcBQ+zNVfG5Jqyt7GuWexVjswNJ94IS4AZhlWNK6HpKgZ
-         hmJOu7FoPUwtNXAkVc6swG5WbDsCADl2YqGyc0VeWk4EYwJ43MW0EUgjrMfxUZhkUR
-         c7xsmMQIRDIEynQWykeEtOGczMovqRvvNWA8y03E=
-Date:   Mon, 30 Sep 2019 15:34:10 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     George Cherian <george.cherian@marvell.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "shannon.zhao@linux.alibaba.com" <shannon.zhao@linux.alibaba.com>,
-        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
-        George Cherian <gcherian@marvell.com>,
-        Vadim Lomovtsev <Vadim.Lomovtsev@marvell.com>,
-        Manish Jaggi <mjaggi@caviumnetworks.com>
-Subject: Re: [PATCH] PCI: Enhance the ACS quirk for Cavium devices
-Message-ID: <20190930203409.GA195851@google.com>
+        Mon, 30 Sep 2019 16:41:38 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:46300 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730274AbfI3Ulh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 16:41:37 -0400
+Received: by mail-ua1-f66.google.com with SMTP id m21so4662413ual.13;
+        Mon, 30 Sep 2019 13:41:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CLVDSoxV+nCW/wNVcSm6Lk6FDWMUIFr2tLuq/8JsB9M=;
+        b=dS5ouCDGY22jEQnH1tj9bVk5Ucx6Ym9u4zB+OZ2aLucN+8kI5QaTNRPd1vl48+cGit
+         ksRZKyJMCo0yfdy3tTKzYIXixa7O04greZdkEUvi5fOe16JC9bKkhoPaYvypIas2oBLh
+         UntF2hkg8b7J7CBG7nRCpBKI6TZbRieqFYc1SUDL0FvMhDykb1GtJ9w5KRJmRROuU0JV
+         d4mVC+0Y1mriSMMZTHc244t2AY9g6N1Ln1DtXXQIctWYdcbxZ8LqD0pLGp0M3dPyD0nA
+         /NkgBSW4RF0enlCazTPCy6R3NHnsRIrC1t/VxdNqdV0TDBoK077OnEUEQeFlnRtqdzFd
+         GlZA==
+X-Gm-Message-State: APjAAAUWo2e18KnPajGdvtlB+oPP/2FR/OLGFwdNF1vrUbh9s+ipstTZ
+        w9laFhEyYpHCBs3Y2tNhhVoW6jc=
+X-Google-Smtp-Source: APXvYqxG+EbYwn9Iva1qgDgHWXpFLpzmQX/U5QFutEfVET8XKURRtpLNz1vDuLHXIB0GlUwULozv9A==
+X-Received: by 2002:a9d:620e:: with SMTP id g14mr14524629otj.168.1569870646905;
+        Mon, 30 Sep 2019 12:10:46 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id q1sm1302786otn.8.2019.09.30.12.10.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 12:10:46 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 14:10:45 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Cernekee <cernekee@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
+        <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH v2 4/5] dt-bindings: Document brcm,int-fwd-mask property
+ for bcm7038-l1-intc
+Message-ID: <20190930191045.GA8851@bogus>
+References: <20190913191542.9908-1-f.fainelli@gmail.com>
+ <20190913191542.9908-5-f.fainelli@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190919024319.GA8792@dc5-eodlnx05.marvell.com>
+In-Reply-To: <20190913191542.9908-5-f.fainelli@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Vadim, Manish]
-
-On Thu, Sep 19, 2019 at 02:43:34AM +0000, George Cherian wrote:
-> Enhance the ACS quirk for Cavium Processors. Add the root port
-> vendor ID's in an array and use the same in match function.
-> For newer devices add the vendor ID's in the array so that the
-> match function is simpler.
+On Fri, 13 Sep 2019 12:15:41 -0700, Florian Fainelli wrote:
+> Indicate that the brcm,int-fwd-mask property is optional and can be
+> optionaly set on platforms which require to leave specific interrupts
+> untouched from Linux and retain the firmware configuration.
 > 
-> Signed-off-by: George Cherian <george.cherian@marvell.com>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
->  drivers/pci/quirks.c | 28 +++++++++++++++++++---------
->  1 file changed, 19 insertions(+), 9 deletions(-)
+>  .../bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt    | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 44c4ae1abd00..64deeaddd51c 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -4241,17 +4241,27 @@ static int pci_quirk_amd_sb_acs(struct pci_dev *dev, u16 acs_flags)
->  #endif
->  }
->  
-> +static const u16 pci_quirk_cavium_acs_ids[] = {
-> +	/* CN88xx family of devices */
-> +	0xa180, 0xa170,
-> +	/* CN99xx family of devices */
-> +	0xaf84,
-> +	/* CN11xxx family of devices */
-> +	0xb884,
-> +};
-> +
->  static bool pci_quirk_cavium_acs_match(struct pci_dev *dev)
->  {
-> -	/*
-> -	 * Effectively selects all downstream ports for whole ThunderX 1
-> -	 * family by 0xf800 mask (which represents 8 SoCs), while the lower
-> -	 * bits of device ID are used to indicate which subdevice is used
-> -	 * within the SoC.
-> -	 */
-> -	return (pci_is_pcie(dev) &&
-> -		(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) &&
-> -		((dev->device & 0xf800) == 0xa000));
-> +	int i;
-> +
-> +	if (!pci_is_pcie(dev) || pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
-> +		return false;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(pci_quirk_cavium_acs_ids); i++)
-> +		if (pci_quirk_cavium_acs_ids[i] == dev->device)
 
-I'm a little skeptical of this because the previous test:
-
-  (dev->device & 0xf800) == 0xa000
-
-could match *many* devices, but of those, the new code only matches two
-(0xa180, 0xa170).
-
-And the comment says the new code matches the CN99xx and CN11xxx
-*families*, but it only matches a single device ID for each, which
-makes me think there may be more devices to come.
-
-Maybe this is all what you want, but please confirm.
-
-The commit log should be explicit that this adds CN99xx and CN11xxx,
-which previously were not matched.
-
-This looks like stable material?
-
-> +			return true;
-> +
-> +	return false;
->  }
->  
->  static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
-> -- 
-> 2.17.1
-> 
+Acked-by: Rob Herring <robh@kernel.org>
