@@ -2,78 +2,138 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 943BFC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A56B9C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71A71216F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BA60216F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:54:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mYXxmzMj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731468AbfI3Nx5 convert rfc822-to-8bit (ORCPT
+        id S1731438AbfI3Nyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 09:53:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41680 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730378AbfI3Nx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:53:57 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90C6520842;
-        Mon, 30 Sep 2019 13:53:56 +0000 (UTC)
-Date:   Mon, 30 Sep 2019 09:53:54 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Sodagudi Prasad <psodagud@codeaurora.org>
-Cc:     pmladek@suse.com, sergey.senozhatsky@gmail.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: Time stamp value in printk records
-Message-ID: <20190930095354.08fa0d80@gandalf.local.home>
-In-Reply-To: <7d1aee8505b91c460fee347ed4204b9a@codeaurora.org>
-References: <7d1aee8505b91c460fee347ed4204b9a@codeaurora.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 30 Sep 2019 09:54:47 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39252 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729738AbfI3Nyr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 09:54:47 -0400
+Received: by mail-io1-f67.google.com with SMTP id a1so38517098ioc.6;
+        Mon, 30 Sep 2019 06:54:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v/6cTPKdYhCWm4oLn5nnbSZnKAi257wb/KoyfLSpOZ8=;
+        b=mYXxmzMjX2uupScR95FotMBV60td1h7GEI1SE1kqw7gcg+cUuNOF/LlEyv8C8cYA1X
+         TnShjEcS4laWh9uKeWQkPd+sxEBwdg0NvOmq5aditwp160k4/U0uaHpNBeZRqsn/dcYi
+         AZj2GK7NBcSceCOT6GoV88CRKsTOE3cN8ZjVlbofX1UuxXVZdL5zwgLFP4HEwViw9kxS
+         3BSJmRYpS2lOchJETLBBTTzTvmE5YHtS1/u4slG6REkeQdRr7GbQ7I7W+OxT4V8Ocvqg
+         4Q+A7ITlEQ2bYWrN27FnMvn79gJdgsYlFKinQnqGM3Si+CbXnqg+9lS1ajToADw3FA6W
+         vzmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v/6cTPKdYhCWm4oLn5nnbSZnKAi257wb/KoyfLSpOZ8=;
+        b=kL/lTkQOHE8R+9EnheLuFVrxMR7SMqRwbMAK2C/GpfeXXO8AtQZDVXSMkGkVVg7Ubu
+         b68KcPoiHfQOSPxoZphjlz4xBNMO+Zgs0uQ4PpFPKygvDKW9ZBH4n/R65k7bIPOZWicy
+         hWDUguJrK35wJB2bE7cgJNYzKeYuI9vfxQWY7u0wyY4UbWiaN7Gkweq2g0lJOmf8+PHS
+         W5HfCkeZDJ/pUGQKYM938VneoWQCA1/D2TteqlmoL1Vusfdzd56+ijbWOQtKnAFagdr5
+         3kpURxROPXcXuwwyWZykuTe+iyy3DeuWJBpBCV6b0/MF8I5XpXpmRRidK4aju1JtfSH3
+         voHA==
+X-Gm-Message-State: APjAAAVFnIXHClPiEFBUubJI+MXU63z0dKccveUMZiMn5zVu8GUT0W8K
+        aaH0nzdbPMcJjAZa+2A1v+kTWbQTHT+s/75h1W4=
+X-Google-Smtp-Source: APXvYqxbNYGoI0Ebnhewnu+oe0JbB4iIoaKSizxLuOYI/fUvQoO0IBP74yP9CUOWd1hGyNh8HR7NMPqsFmwcwEM4XV0=
+X-Received: by 2002:a5d:9c4c:: with SMTP id 12mr1983384iof.276.1569851686291;
+ Mon, 30 Sep 2019 06:54:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <20190510194229.20628-1-aford173@gmail.com> <af325707-3e42-493d-e858-77878ef06138@ti.com>
+ <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
+ <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com> <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
+ <845055e2-8182-de74-2077-629fdf50ac6c@ti.com> <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
+ <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com> <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
+ <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com> <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
+ <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com> <23eba53a-9304-2ceb-d97e-01891ec0b3ed@ti.com>
+ <cb028b1e-05ca-9b22-be5d-c63f5fd56cc4@ti.com> <F3335195-6EB7-4D44-B884-2F29D9238011@goldelico.com>
+In-Reply-To: <F3335195-6EB7-4D44-B884-2F29D9238011@goldelico.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Mon, 30 Sep 2019 08:54:34 -0500
+Message-ID: <CAHCN7xL9bFxO=2i1DzmRj6A3XwUNdt=DZeJ2a0EZ0f9gcFTy6g@mail.gmail.com>
+Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to dts
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Tero Kristo <t-kristo@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Sep 2019 06:33:42 -0700
-Sodagudi Prasad <psodagud@codeaurora.org> wrote:
+On Mon, Sep 30, 2019 at 8:39 AM H. Nikolaus Schaller <hns@goldelico.com> wrote:
+>
+>
+> > Am 30.09.2019 um 10:53 schrieb Tero Kristo <t-kristo@ti.com>:
+> >
+> > The best action here is probably to drop the max-div value for this clock to 16. Can someone check this with their display setup and see what happens? Attached patch should do the trick.
+>
+> I have checked on GTA04 and OpenPandora (DM3730 resp. OMAP3430) and did not notice a negative effect.
+>
+> (Well, we never see the problem that is discussed here and have built with CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK=0).
 
-> Hi All,
-> 
->  From Qualcomm side, we would like to check with upstream team about 
-> adding Raw time stamp value to printk records. On Qualcomm soc, there 
-> are various DSPs subsystems are there - for example audio, video and 
-> modem DSPs.
-> Adding raw timer value(along with sched_clock()) in the printk record 
-> helps in the following use cases –
-> 1)	To find out which subsystem  crashed first  -  Whether application 
-> processor crashed first or DSP subsystem?
-> 2)	If there are any system stability issues on the DSP side, what is the 
-> activity on the APPS processor side during that time?
-> 
-> Initially during the device boot up, printk shed_clock value can be 
-> matched with timer raw value used on the dsp subsystem, but after APPS 
-> processor suspends several times, we don’t have way to correlate the 
-> time stamp  value on the DSP and APPS processor. All timers(both apps 
-> processor timer and dsp timers) are derived from globally always on 
-> timer on Qualcomm soc, So keeping global timer raw values in printk 
-> records and dsp logs help to correlate the activity of all the 
-> processors in SoC.
-> 
-> It would be great if upstream team adds common solution this problem if 
-> all soc vendors would get benefit by adding raw timer value to  printk 
-> 
+I have never been able to use CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK=0, but
+I assume it's either a function of pck or a combination of pck with
+the resolution.
 
-Hi Prasad,
+Based on Tomi's comment, I assume he's working on the following.  Can
+you also try:
 
-If you or someone you know would like to present patches for exactly
-what you would like to see, that would go a long way.
+diff --git a/drivers/gpu/drm/omapdrm/dss/dss.c
+b/drivers/gpu/drm/omapdrm/dss/dss.c
+index 5711b7a720e6..5e584f32ea6a 100644
+--- a/drivers/gpu/drm/omapdrm/dss/dss.c
++++ b/drivers/gpu/drm/omapdrm/dss/dss.c
+@@ -1090,7 +1090,7 @@ static const struct dss_features omap34xx_dss_feats = {
 
--- Steve
+ static const struct dss_features omap3630_dss_feats = {
+        .model                  =       DSS_MODEL_OMAP3,
+-       .fck_div_max            =       32,
++       .fck_div_max            =       16,
+        .fck_freq_max           =       173000000,
+        .dss_fck_multiplier     =       1,
+        .parent_clk_name        =       "dpll4_ck",
+
+
+Hopefully it doesn't break the 3630 for you, but it fixed my issue
+with no back trace:
+
+[    9.915588] DSS: set fck to 54000000
+[    9.915618] DISPC: lck = 54000000 (1)
+[    9.915649] DISPC: pck = 9000000 (6)
+[    9.917633] DISPC: channel 0 xres 480 yres 272
+[    9.917663] DISPC: pck 9000000
+
+I do wonder, however if there is a divider that is higher than 16, but
+lower than 32.
+I was able to run fck at 36MHz before with divide by 4 to 9MHz, so I
+am hoping that by running at 54MHz / 6 doesn't draw more power.  I was
+reading through the datasheet, but I could not find any reference to
+the max divider.
+
+adam
+>
+> BR,
+> Nikolaus
+>
