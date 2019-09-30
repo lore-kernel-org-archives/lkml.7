@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1724BC35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB8FC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E377F216F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3C06216F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:13:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569859981;
-	bh=1CyUodfL5DN4AO2K+oMMfrsSZCmGt+UR874+U98vD/c=;
+	s=default; t=1569859986;
+	bh=Y6bBCAhnoN+oQaM/xasUAOl9f9CxTcwf2xIOYgxYlZ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tD3uFDZxybTJ3gBAyh1hpBWYNjMP6eZxj5TyhpRfPewhn9crlSFjhil8WNtD7J3is
-	 kwlJCiKQFDK1iwhqPVAdAUn6bmCufTEq+7zb40AgK904/d8B8DC1gaOOsW9fW22cuK
-	 sp0VF0Mr20N0FCyn/YkkXWFwh8njeV5UsHEB728c=
+	b=PaqW4A5dJjva0135ddbFby0kt45IdkSdp1hH4I+9/QGO+Szaj4mf5qu3hK0rvveul
+	 V4iHPUMqHBi5aBmKdgGFoGeAhG60Ey2orcJwvFcTzYzf6vAHxSYtR+3dlW0djGLJe+
+	 PtSTx1VQuXpba6NImltg8vnoSo/hbq9TfRYzu2dE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732236AbfI3QNA (ORCPT
+        id S1732275AbfI3QNF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 12:13:00 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:39211 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731967AbfI3QM6 (ORCPT
+        Mon, 30 Sep 2019 12:13:05 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:37340 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732197AbfI3QNA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 12:12:58 -0400
-Received: by mail-lj1-f195.google.com with SMTP id y3so10117554ljj.6;
-        Mon, 30 Sep 2019 09:12:55 -0700 (PDT)
+        Mon, 30 Sep 2019 12:13:00 -0400
+Received: by mail-lj1-f196.google.com with SMTP id l21so10126667lje.4;
+        Mon, 30 Sep 2019 09:12:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+DoZWEhn4m4mbnXlcooHkZDNyGpeymNebsUFenCg8nY=;
-        b=bJ//A9B7gRYgkD/y6dlzfF470TqJqe1HYJgyAWMC1JHwBuMa20SxDkMyNtgAimxCpl
-         cPHTnMzzlpNkEeK5qfLxjFwrUadgviGGH6RVMLIjKp0ezteBFThZbspaUzX1fRunTWce
-         VAfv8hj/3EgP2XSXDA+GVNzifJgOpflCwilNh9DPicpP+eGcl5C3iW6tbxjqaP7DN6yc
-         rlH6KBzJg1hhnwG7ljJy84zzzYMp44zS0MYk/kZZ4WAcX/h6L1VXK8He4ygTuLgN8Yks
-         nHilWgXO96BgEVN5m2sek8pAvIRP+X12ULii5ComAnFt4jYTDDqW9OvyUnf/i4RGQxxN
-         9Rnw==
-X-Gm-Message-State: APjAAAVJJq1A2H9rD3TAwEoun5/7u33zomoimdNlDyNKFithyq29Yp7P
-        tWnazZ+x7Ybe9ShjcIBkUj3ZSLSn
-X-Google-Smtp-Source: APXvYqwPqTg0nXl80m6KpqMU5ibiF5xslTyhQgpT+xvaF9gdJN16Loa4YWLcxlnzCiV/KQraRuRTlQ==
-X-Received: by 2002:a2e:87cb:: with SMTP id v11mr12777943ljj.31.1569859975176;
+        bh=JUd78FTTvuyVB+HT3mJkVtnKhl3dv/ZLiCCH/pdhHmA=;
+        b=FxJQL6lCkGTG0oUl43mi4YekI03/XjCm5fFn8/M3uXElezfRm2WQnfV9cn4bUXz+Rn
+         +Gba7ZX3I4k1eLrrLWyCb3vXfThBiO0Kl6jQtZe0l1TgKXoJLt08jKskCXplI8kVaNSL
+         UgWji3ez1r4GpKyG4sfL4Qks4wkPaVRHCeZxY43E5wlC0O1jpxNwN5pyg8H5/PFFMusb
+         Q1+hJ9PvTCOgd4dkBhxKLn4de6VplHVafxoaqyH7A9m0UUMgbyHQ+q0+S/tIecUh48B9
+         mCjiimHnyiAeR/7fX6eXRcdg/TT1WjnAbz6XzZy+oXwBSVHNT6OeRPyetTXE0P+avNFA
+         TChg==
+X-Gm-Message-State: APjAAAW9ld9T37Qjjs//KiLkd3U+ZuOOYDHmbAxtKTPEYqKjs/yMHCMq
+        uY01Jc1MCiAgdI1RQqeuRvM=
+X-Google-Smtp-Source: APXvYqyMcyWg8CQU5WiXBG5Yfg/ymiXCJ4rndvXh9ArLihkSuRJk+9BdMWklYGgOcheOVUnTfeII/g==
+X-Received: by 2002:a2e:9185:: with SMTP id f5mr12836712ljg.235.1569859975984;
         Mon, 30 Sep 2019 09:12:55 -0700 (PDT)
 Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id i6sm3208417lfc.37.2019.09.30.09.12.53
+        by smtp.gmail.com with ESMTPSA id n25sm3459850ljc.107.2019.09.30.09.12.53
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
         Mon, 30 Sep 2019 09:12:53 -0700 (PDT)
 Received: from johan by xi.terra with local (Exim 4.92.2)
         (envelope-from <johan@xi.terra>)
-        id 1iEyIG-0004uP-5Y; Mon, 30 Sep 2019 18:13:00 +0200
+        id 1iEyIG-0004uU-8n; Mon, 30 Sep 2019 18:13:00 +0200
 From:   Johan Hovold <johan@kernel.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mauro Carvalho Chehab <mchehab@kernel.org>
@@ -61,9 +61,9 @@ Cc:     Pete Zaitcev <zaitcev@redhat.com>,
         linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
         linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
         stable <stable@vger.kernel.org>
-Subject: [PATCH 1/4] USB: usb-skeleton: fix runtime PM after driver unbind
-Date:   Mon, 30 Sep 2019 18:12:02 +0200
-Message-Id: <20190930161205.18803-2-johan@kernel.org>
+Subject: [PATCH 2/4] USB: usblp: fix runtime PM after driver unbind
+Date:   Mon, 30 Sep 2019 18:12:03 +0200
+Message-Id: <20190930161205.18803-3-johan@kernel.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190930161205.18803-1-johan@kernel.org>
 References: <20190930161205.18803-1-johan@kernel.org>
@@ -86,42 +86,29 @@ Fixes: c2b71462d294 ("USB: core: Fix bug caused by duplicate interface PM usage 
 Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- drivers/usb/usb-skeleton.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/usb/class/usblp.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/usb-skeleton.c b/drivers/usb/usb-skeleton.c
-index f1a5861a0586..93c3fbc2ab1f 100644
---- a/drivers/usb/usb-skeleton.c
-+++ b/drivers/usb/usb-skeleton.c
-@@ -74,6 +74,7 @@ static void skel_delete(struct kref *kref)
- 	struct usb_skel *dev = to_skel_dev(kref);
+diff --git a/drivers/usb/class/usblp.c b/drivers/usb/class/usblp.c
+index 7fea4999d352..fb8bd60c83f4 100644
+--- a/drivers/usb/class/usblp.c
++++ b/drivers/usb/class/usblp.c
+@@ -461,10 +461,12 @@ static int usblp_release(struct inode *inode, struct file *file)
  
- 	usb_free_urb(dev->bulk_in_urb);
-+	usb_put_intf(dev->interface);
- 	usb_put_dev(dev->udev);
- 	kfree(dev->bulk_in_buffer);
- 	kfree(dev);
-@@ -125,10 +126,7 @@ static int skel_release(struct inode *inode, struct file *file)
- 		return -ENODEV;
- 
- 	/* allow the device to be autosuspended */
--	mutex_lock(&dev->io_mutex);
--	if (!dev->disconnected)
--		usb_autopm_put_interface(dev->interface);
--	mutex_unlock(&dev->io_mutex);
-+	usb_autopm_put_interface(dev->interface);
- 
- 	/* decrement the count on our device */
- 	kref_put(&dev->kref, skel_delete);
-@@ -507,7 +505,7 @@ static int skel_probe(struct usb_interface *interface,
- 	init_waitqueue_head(&dev->bulk_in_wait);
- 
- 	dev->udev = usb_get_dev(interface_to_usbdev(interface));
--	dev->interface = interface;
-+	dev->interface = usb_get_intf(interface);
- 
- 	/* set up the endpoint information */
- 	/* use only the first bulk-in and bulk-out endpoints */
+ 	mutex_lock(&usblp_mutex);
+ 	usblp->used = 0;
+-	if (usblp->present) {
++	if (usblp->present)
+ 		usblp_unlink_urbs(usblp);
+-		usb_autopm_put_interface(usblp->intf);
+-	} else		/* finish cleanup from disconnect */
++
++	usb_autopm_put_interface(usblp->intf);
++
++	if (!usblp->present)		/* finish cleanup from disconnect */
+ 		usblp_cleanup(usblp);
+ 	mutex_unlock(&usblp_mutex);
+ 	return 0;
 -- 
 2.23.0
 
