@@ -6,71 +6,94 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 193E0C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F138FC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDCBF207FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF8DF2086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:49:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="DMUnUehI"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="rQYI2urg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732488AbfI3XqU (ORCPT
+        id S1732356AbfI3XtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 19:46:20 -0400
-Received: from onstation.org ([52.200.56.107]:35074 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727535AbfI3XqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 19:46:19 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 0E94C3E89E;
-        Mon, 30 Sep 2019 23:46:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1569887179;
-        bh=mj9vwBsd085w9kLP7AB0YCRyeS221e0uvMfVjjjbr2I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DMUnUehI+MQ+ByR2KVdAgWIOqvtfmWRWp1sfDv7KVs6v6SCj3f3HwBbiR1TdDE0lr
-         8MmdQNDuLIn/GZ2Al+ugjI1Aol49GcxhFN5/zqAMSoKNpRROG8YbzUFva44ak0dyws
-         iaX0qP7L44brX2qR5myEKWNsRd54ZhGrkcl0p5qM=
-Date:   Mon, 30 Sep 2019 19:46:18 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     "David F." <df7729@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: What populates /proc/partitions ?
-Message-ID: <20190930234618.GA5536@onstation.org>
-References: <CAGRSmLsV96jK+7UB6T6k8j9u74oPSHTA+1TPU8F9G2NnOqCDJg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGRSmLsV96jK+7UB6T6k8j9u74oPSHTA+1TPU8F9G2NnOqCDJg@mail.gmail.com>
+        Mon, 30 Sep 2019 19:49:22 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:37701 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730276AbfI3XtV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 19:49:21 -0400
+Received: by mail-qt1-f193.google.com with SMTP id l3so19348608qtr.4
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 16:49:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=FCAEYzwQHp/oK53c+OOeDcXUXegqNanjk+gs1PbOM0c=;
+        b=rQYI2urgnS9QZIhepXn30zrdLl8ujftYDHTVOSnahx36b7E86fxoUgjxMH8D1uWwNq
+         95mOz9imHaOzBymQFaPMIHTm0R+9pm3PqkytCXft0B9zx53T6JEkTpSbgMySdJnj0yuQ
+         pWygoreFNumE8Ylq76eRimWgIIbm/m5pmXcgE0Rtk+kdCE+VGo+W9MWYUxnCEIRuvkpB
+         OAylwMKTk9T+cynvsZUfLCmC5V/QXg/pm1x8h1CI11GIl+5QVup/XVUPYnq5UQKR2DDk
+         SE2YbZ+6nlHm+yBMCtoN8aY8VNFGkUav8HsBjxhStdLqg1Gu/pPSMTyqjdUDBXr3wanv
+         +qCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=FCAEYzwQHp/oK53c+OOeDcXUXegqNanjk+gs1PbOM0c=;
+        b=TwtT+SvStsBiCcY1n7hr2sEOEMIAnC/Ay1XxHICqt8uVYLmTMpkdieV8Z0U96AFJmw
+         UnwdVwZLfBUP47c4K1Ies0PryUHeWlmpUUag7mHDbOtoHdV6wMtFw+4p6PIa+Fd2eSsh
+         kpWLf2wgZPkDUDaLvADjl285DJPHSwurV/wL1aUpPOKjG390a86L1Cq0DE3/++m7+TIb
+         ZadZwzJ3QDj/hWtZvDgZsLYhyOimW6GIbixuIRO3Eo1bL4esAA6fX7Lz39suuL+7z1S2
+         CZMpih+VxIiG0uhKSgPpefVil9Pc6cyowRGvhrQCuUSe8ePsPN0GrICSb1GLIBAS51te
+         vKuQ==
+X-Gm-Message-State: APjAAAUOUVXVBlh2n8T1ko2sGZYdTwzjkyRMdvHYydjvVtuZx0I22564
+        A9NJMUV3zDnXZvhnRV1rRJDxVQ==
+X-Google-Smtp-Source: APXvYqxoJjy4y4RTrdyui1wzZOryEZJsAQIbS3Csd1QSHfDRJJXV7WRxh/RrV57jgJjBo5KQAHF4jw==
+X-Received: by 2002:ac8:74c4:: with SMTP id j4mr12159055qtr.360.1569887360676;
+        Mon, 30 Sep 2019 16:49:20 -0700 (PDT)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id j17sm10884571qta.0.2019.09.30.16.49.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Sep 2019 16:49:19 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v2 2/3] mm, page_owner: decouple freeing stack trace from debug_pagealloc
+Date:   Mon, 30 Sep 2019 19:49:18 -0400
+Message-Id: <731C4866-DF28-4C96-8EEE-5F22359501FE@lca.pw>
+References: <eccee04f-a56e-6f6f-01c6-e94d94bba4c5@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Walter Wu <walter-zh.wu@mediatek.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+In-Reply-To: <eccee04f-a56e-6f6f-01c6-e94d94bba4c5@suse.cz>
+To:     Vlastimil Babka <vbabka@suse.cz>
+X-Mailer: iPhone Mail (17A844)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 03:47:21PM -0700, David F. wrote:
-> Hi,
-> 
-> I want to find out why fd0 is being added to /proc/partitions and stop
-> that for my build.  I've searched "/proc/partitions" and "partitions",
-> not finding anything that matters.
-
-It looks like it is done in block/genhd.c with this function:
-
-static int __init proc_genhd_init(void)
-{
-        proc_create_seq("diskstats", 0, NULL, &diskstats_op);
-        proc_create_seq("partitions", 0, NULL, &partitions_op);
-        return 0;
-}
-module_init(proc_genhd_init);
-
-Brian
 
 
-> 
-> If udev is doing it, what function is it call so I can search on that?
-> 
-> TIA!!
+> On Sep 30, 2019, at 5:43 PM, Vlastimil Babka <vbabka@suse.cz> wrote:
+>=20
+> Well, my use case is shipping production kernels with CONFIG_PAGE_OWNER
+> and CONFIG_DEBUG_PAGEALLOC enabled, and instructing users to boot-time
+> enable only for troubleshooting a crash or memory leak, without a need
+> to install a debug kernel. Things like static keys and page_ext
+> allocations makes this possible without CPU and memory overhead when not
+> boot-time enabled. I don't know too much about KASAN internals, but I
+> assume it's not possible to use it that way on production kernels yet?
+
+In that case, why can=E2=80=99t users just simply enable page_owner=3Don and=
+ debug_pagealloc=3Don for troubleshooting? The later makes the kernel slower=
+, but I am not sure if it is worth optimization by adding a new parameter. T=
+here have already been quite a few MM-related kernel parameters that could t=
+idy up a bit in the future.=
