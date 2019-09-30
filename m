@@ -2,153 +2,109 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D667EC35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5B7C388F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB7C622516
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:58:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="AMPrAM7E"
+	by mail.kernel.org (Postfix) with ESMTP id C028F22501
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:58:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731953AbfI3U6o (ORCPT
+        id S1731987AbfI3U6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 16:58:44 -0400
-Received: from mout.gmx.net ([212.227.17.20]:46773 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727720AbfI3U6n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 16:58:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1569877121;
-        bh=YVn0d0IypIL/I8h6vV2cKfUczuH9hqHhzSGumXeWyH0=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=AMPrAM7ELWyCVxZjrXAB/9N5xT8tVG0I/V2NGx4vMQRwJ6o8AnTXeboWVyJh35Hlk
-         m/UWsmb/ycW3lzs3FbfdeQBKSi5HD8CrW81404JR7GNGYxXRJRXua+OvuRHll2aF24
-         AjUrpIxtmirprjRAEcmwA/+txKTK9E1mB2wh6unY=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [80.208.215.36] ([80.208.215.36]) by web-mail.gmx.net
- (3c-app-gmx-bap76.server.lan [172.19.172.64]) (via HTTP); Mon, 30 Sep 2019
- 21:44:12 +0200
+        Mon, 30 Sep 2019 16:58:47 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:59095 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727720AbfI3U6q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 16:58:46 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 7F4998039B; Mon, 30 Sep 2019 19:22:25 +0200 (CEST)
+Date:   Mon, 30 Sep 2019 19:22:39 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Guru Das Srinagesh <gurus@codeaurora.org>,
+        linux-leds@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+Subject: Re: [PATCH 1/2] leds: Add flag to keep trigger always
+Message-ID: <20190930172239.GA26107@amd>
+References: <1565398367-11811-1-git-send-email-gurus@codeaurora.org>
+ <20190810071322.GA13760@amd>
+ <20190930133902.GA2249614@kroah.com>
 MIME-Version: 1.0
-Message-ID: <trinity-d5c9e092-508c-4db6-8f36-d5917466a750-1569872652621@3c-app-gmx-bap76>
-From:   "Frank Wunderlich" <frank-w@public-files.de>
-To:     "Hsin-hsiung Wang" <hsin-hsiung.wang@mediatek.com>,
-        "Lee Jones" <lee.jones@linaro.org>
-Cc:     "Matthias Brugger" <matthias.bgg@gmail.com>,
-        linux-mediatek@lists.infradead.org,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Alessandro Zummo" <a.zummo@towertech.it>,
-        "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
-        srv_heupstream@mediatek.com, devicetree@vger.kernel.org,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Sean Wang" <sean.wang@mediatek.com>,
-        "Liam Girdwood" <lgirdwood@gmail.com>,
-        "Rob Herring" <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        "Richard Fontana" <rfontana@redhat.com>,
-        "Mark Brown" <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?Q?=22Ren=C3=A9_van_Dorst=22?= <opensource@vdorst.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Eddie Huang" <eddie.huang@mediatek.com>,
-        "Lee Jones" <lee.jones@linaro.org>,
-        "Kate Stewart" <kstewart@linuxfoundation.org>,
-        linux-rtc@vger.kernel.org
-Subject: Aw: Re:  Re: [BUG] [PATCH v5 02/10] mfd: mt6397: extract irq
- related code from core driver
-Content-Type: text/plain; charset=UTF-8
-Date:   Mon, 30 Sep 2019 21:44:12 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <1567059876.15320.3.camel@mtksdaap41>
-References: <1566531931-9772-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1566531931-9772-3-git-send-email-hsin-hsiung.wang@mediatek.com>
- <trinity-1f82bff1-535e-47cd-9a2f-8faccb56e356-1566562433314@3c-app-gmx-bs11>
- <e8a918ab-3e7a-b487-db77-df28d56518ce@gmail.com>
- <0A87F427-2D81-412A-9549-09A51A021799@public-files.de>
- <b5a21908-faee-17d1-ce26-99b941c0fa70@gmail.com>
- <trinity-a57f08bb-e30e-4e74-911c-c40e335d00da-1566580580817@3c-app-gmx-bs75>
- <1567059876.15320.3.camel@mtksdaap41>
-Content-Transfer-Encoding: quoted-printable
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:mOl5gwFlxXjAE9+q+U636kiILkcV8ouZYqUdavCDgk4kn81Id6pYOUZvJ59xPd2j9ozHN
- 8waSlJARwZGU/e+50l22obqu3bIr+fL4TvaYl9BbpYpSPN6sD78VLxIX6iCavbN4CWcQixxp0LcY
- 5DMu3BAQcL30VwmxUM6nn/+9zZbxJ+jCY8cBjW5TziN0HhvBmsrBmtkIW/5QN9djuXXP1JwXpdK/
- 5ni345mWrIhAsZlycA0M1+K7mg7469HwJwnFxncOyxiAT1no+CMD4+aeZeHKqIzsg87h4YZ/pSN+
- 5k=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:eEhx1ooA/04=:yFlthYLfXFmb/8JnXCxFLQ
- cG572Ry6AOo0ntKRtpi1jnHwc/MifgtiZkrySHAdMEOwN6U4z5WDniyM2c03SYL4B62yLtMa/
- U19bsTBne7BMQPjUckdu0B6QiZ0aOoGEnogtZ3jkMM2FJ9cfBDeZ4CUM9xrBKWgV9hbYVeYw8
- ctFPp6ZCNOqhulXKMQIq+18/is4xcSGNMxRZVGEwzEMJx++U8FWWJCXC2qy+OwbZsiU72J1rN
- m0hRFgWfSdyu7DwPtFdm/ovEci+00L8n2eHp9e7vBYq6McTpBh3Zd/WuDEeZzaxvPnKIy5OVf
- b6FkzIpwpHNXEv2StcmxkmbpDXuhQmIwZNrLvzNtH0Dy4DR4VWOxCmyD/V4BvyhwngFa5AoUf
- p+0254Ps+QSAuiZx6/4VolVMGw14K3ZT1m4ZxpEuXrppadOsmVegWD2159755ceTite04Efsy
- aKgVhK3bCQDnzeo74/tTd4hgr2ySrWoHotVQtsl5aFU0dX2cVt06TH1Vrr0HNAMLhmR/AJQQq
- 0vxTG/EVGDBwvbGEVSllSOx9YpYL7nCGG5O7NFtVFTceEiRJT6zON3viUDNQX97Gp/gxzhX6g
- NY/z5hM5Y+1aVY5vxs2Tj7113FlLFIkd5i+3BOcw9/X5mZha9TUWCedWKxOEUpA1LhYQX1jCD
- Z1RfE1KJ1ZBns7KbOVb5V6YdZR92v3GnYP7c031/xzI5bUKRkkgIrxVsxHjqzVOmNeHM=
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="6c2NcOVqGQ03X4Wi"
+Content-Disposition: inline
+In-Reply-To: <20190930133902.GA2249614@kroah.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-bug is still present in 5=2E4-rc1
+--6c2NcOVqGQ03X4Wi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-dmesg prints this line and at least switch is not inialized on bananapi-r2
-
-mt6397 1000d000=2Epwrap:mt6323: unsupported chip: 0x0
-
-regards Frank
-
-
-> Gesendet: Donnerstag, 29=2E August 2019 um 08:24 Uhr
-> Von: "Hsin-hsiung Wang" <hsin-hsiung=2Ewang@mediatek=2Ecom>
-> An: "Frank Wunderlich" <frank-w@public-files=2Ede>, "Matthias Brugger" <=
-matthias=2Ebgg@gmail=2Ecom>
-> Cc: linux-mediatek@lists=2Einfradead=2Eorg, "Mark Rutland" <mark=2Erutla=
-nd@arm=2Ecom>, "Alessandro Zummo" <a=2Ezummo@towertech=2Eit>, "Alexandre Be=
-lloni" <alexandre=2Ebelloni@bootlin=2Ecom>, srv_heupstream@mediatek=2Ecom, =
-devicetree@vger=2Ekernel=2Eorg, "Greg Kroah-Hartman" <gregkh@linuxfoundatio=
-n=2Eorg>, "Sean Wang" <sean=2Ewang@mediatek=2Ecom>, "Liam Girdwood" <lgirdw=
-ood@gmail=2Ecom>, "Rob Herring" <robh+dt@kernel=2Eorg>, linux-kernel@vger=
-=2Ekernel=2Eorg, "Richard Fontana" <rfontana@redhat=2Ecom>, "Mark Brown" <b=
-roonie@kernel=2Eorg>, linux-arm-kernel@lists=2Einfradead=2Eorg, "Ren=C3=A9 =
-van Dorst" <opensource@vdorst=2Ecom>, "Thomas Gleixner" <tglx@linutronix=2E=
-de>, "Eddie Huang" <eddie=2Ehuang@mediatek=2Ecom>, "Lee Jones" <lee=2Ejones=
-@linaro=2Eorg>, "Kate Stewart" <kstewart@linuxfoundation=2Eorg>, linux-rtc@=
-vger=2Ekernel=2Eorg
-> Betreff: Re: Aw: Re: [BUG] [PATCH v5 02/10] mfd: mt6397: extract irq rel=
-ated code from core driver
->
-> Hi Frank/Matthias,
+On Mon 2019-09-30 15:39:02, Greg KH wrote:
+> On Sat, Aug 10, 2019 at 09:13:22AM +0200, Pavel Machek wrote:
+> > On Fri 2019-08-09 17:52:46, Guru Das Srinagesh wrote:
+> > > From: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+> > >=20
+> > > Commit 0013b23d66a2768f5babbb0ea9f03ab067a990d8 ("leds: disable trigg=
+ers
+> > > on brightness set") removes the trigger on an LED class device when
+> > > brightness is set to 0. However, there are some LED class devices whi=
+ch
+> > > need the trigger not to be removed. In a use case like camera flash,
+> > > camera flash driver passes in a trigger device to LED class driver. If
+> > > the trigger is removed when the brightness is set to 0, this will aff=
+ect
+> > > the clients using those triggers. Hence add a flag to always keep the
+> > > trigger even when brightness is set to 0.
+> >=20
+> > No.
+> >=20
+> > Yes, it would affect those clients. Don't do it, then. It is
+> > root-only operation.
 >=20
-> On Fri, 2019-08-23 at 19:16 +0200, Frank Wunderlich wrote:
-> > > Gesendet: Freitag, 23=2E August 2019 um 17:42 Uhr
-> > > Von: "Matthias Brugger" <matthias=2Ebgg@gmail=2Ecom>
-> >=20
-> > > I suppose that's because 3/10 has code that should be in 2/10 and fo=
-r some
-> > > reason 3/10 was not pushed for linux-next inclusion=2E Although it h=
-as the same
-> > > Acked-for-mfd-by tag=2E
-> > >
-> > > @Frank, can you test if adding 3/10 to your code base fixes the issu=
-e?
-> >=20
-> > adding part 3 [1] seems to fix the issue too
-> >=20
-> > [    4=2E960051] mt6323-regulator mt6323-regulator: Chip ID =3D 0x2023
-> >=20
-> > thanks
-> >=20
-> > [1] https://patchwork=2Ekernel=2Eorg/patch/11110509/
-> Thanks for your comments=2E
-> The root cause seems I didn't split the code well=2E
-> I will fix it in the next version=2E
->=20
->
+> I don't understand.  The original commit broke userspace operations.
+> Shouldn't it be reverted, or fixed this way in order to have userspace
+> work properly again?
+
+So, what it is exactly that is not working? :-). Yes, root can
+disconnect LED from v4l2 interface; he can also connect it
+back. Documentation says that happens.
+
+Yes, root can do stupid things.
+
+Commit 0013b23d66a2768f5babbb0ea9f03ab067a990d8 is from 2008. I'd
+prefer we did not apply it in 2008, but...
+
+Best regards,
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--6c2NcOVqGQ03X4Wi
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl2SOd8ACgkQMOfwapXb+vJoOgCdHKr+waTJVpku+UyfUeLaPdZK
+xtUAoI4RZXK+j08cnq5Vo90aQXCmUM3J
+=Styd
+-----END PGP SIGNATURE-----
+
+--6c2NcOVqGQ03X4Wi--
