@@ -2,137 +2,139 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0379C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDC9C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBC2A20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:23:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4DA3207FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:23:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lentin.co.uk header.i=@lentin.co.uk header.b="SPTGolhE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ddO9Zvyg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732523AbfI3VXe (ORCPT
+        id S1732549AbfI3VXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 17:23:34 -0400
-Received: from marmot.wormnet.eu ([188.246.204.87]:42046 "EHLO
-        marmot.wormnet.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726784AbfI3VXd (ORCPT
+        Mon, 30 Sep 2019 17:23:39 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37493 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726784AbfI3VXi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 17:23:33 -0400
-X-Greylist: delayed 1800 seconds by postgrey-1.27 at vger.kernel.org; Mon, 30 Sep 2019 17:23:32 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=lentin.co.uk; s=budgerigar; h=Content-Type:MIME-Version:References:
-        Message-ID:In-Reply-To:Subject:cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=wwO3LKMH46pvv0bC8x8eV217XsJBNp2LC9T/6N0lajk=; b=SPTGolhEBz8cT6g6z06+BIWKo
-        s5GIK38N9GfBmNBfGFXPuuHBKRonTencUPiNWCQeZXIQtNcFcnQwPpoGcxa2ByNfUzSCO0jPnilmj
-        2xoeIKa0bg5jEuljsq/C7QOLv2x9y7fcdLcopucWoexdaLaAT7ZeO0AwLTCu4hqjgaDLs=;
-Received: from [31.146.104.22] (helo=[192.168.0.100])
-        by marmot.wormnet.eu with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92.2)
-        (envelope-from <jm@lentin.co.uk>)
-        id 1iF1ZW-0006jM-GN; Mon, 30 Sep 2019 20:43:02 +0100
-Date:   Mon, 30 Sep 2019 20:42:53 +0100 (BST)
-From:   Jamie Lentin <jm@lentin.co.uk>
-X-X-Sender: lentinj@clifford.vandergast.wormnet.eu
-To:     Andrew Lunn <andrew@lunn.ch>
-cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 0/2] This patch introduces a feature to force gpio-poweroff
- module
-In-Reply-To: <20190930163203.GC15343@lunn.ch>
-Message-ID: <alpine.DEB.2.21.1909301909360.6576@clifford.vandergast.wormnet.eu>
-References: <20190930103531.13764-1-oleksandr.suvorov@toradex.com> <20190930121440.GC13301@lunn.ch> <CAGgjyvEx_F0C2XHDGxf3F0Z8iHF1vQZkoPft3_ZbTswVFv=SJA@mail.gmail.com> <20190930163203.GC15343@lunn.ch>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 30 Sep 2019 17:23:38 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y5so6320197pfo.4
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 14:23:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=GGW5YTXB7k7QAffkQ+fScbfTHXGGFiBFSDibbhauwME=;
+        b=ddO9ZvygJD5jwLI0fO07174NlB0/rckqIoShTN/ebn3GwVz316fFEx2WakWKR5sYT1
+         n1wUwL4TWIuKSmPK7EzKxoWzexpzPb8fvtxG0OWlv1rxrYwzi8mbbujhCqPMVfVfpAGB
+         EiFhgPPdEASb6t7MJLkcrmY9zuDq/76TDIaqI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=GGW5YTXB7k7QAffkQ+fScbfTHXGGFiBFSDibbhauwME=;
+        b=SL9HrrVDXK6qRISQJsueJk74ekcUuYA8AW0YLn88zTdU9qHgEfLCPQXLRF64kwPkIf
+         c2LO5O8RJdG1YFRM96+22gFfNWr1MMy99ngqdOpTO6UfJCHScRDj/RX/5NDFmBhcJn19
+         PowZrJdGkASmEHPBtIxmdKP54l5dICMWy4vWY/kOpVB0037UXmjeEdDloW1fMiFYFVFa
+         nr9ZSfajKsc5hYoG0kiI1eTfiUdjQycqIFxfUFrCG/c3V1Ya5ScCrSsFeDwY6EVSsjHt
+         u71PoeIcG+qIO/kL4ATd+tIQnbkuSi2xL3CmJGPYLa2yvnZyAESc4nUcBGytjLzXkrRd
+         G/1w==
+X-Gm-Message-State: APjAAAUgEar6RqA5n1ESekE8NHsCeDbeBT45x7LpQ7V0od2OMz1twy4R
+        9eH8XzVVY0vNRvWQ/1OKwTO9G/Qel8Y=
+X-Google-Smtp-Source: APXvYqzVvSQuFKi3OxDeHFdYnh9nwIIGKErryn+jU3ze4WyjYrcAVGpbNuJovH6XmCbtnOJ72fI7Mg==
+X-Received: by 2002:a17:90a:ab85:: with SMTP id n5mr629907pjq.117.1569868143340;
+        Mon, 30 Sep 2019 11:29:03 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id u18sm14868888pge.69.2019.09.30.11.29.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 11:29:02 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 11:29:01 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Steve Grubb <sgrubb@redhat.com>
+Cc:     Paul Moore <paul@paul-moore.com>, linux-kernel@vger.kernel.org,
+        =?iso-8859-1?Q?J=E9r=E9mie?= Galarneau 
+        <jeremie.galarneau@efficios.com>, s.mesoraca16@gmail.com,
+        viro@zeniv.linux.org.uk, dan.carpenter@oracle.com,
+        akpm@linux-foundation.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        kernel-hardening@lists.openwall.com, linux-audit@redhat.com,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] audit: Report suspicious O_CREAT usage
+Message-ID: <201909301128.5951C390@keescook>
+References: <201909251348.A1542A52@keescook>
+ <CAHC9VhRNmWw1__-haD1ZEekADTho3EJyXQMd6ETpOv4c8Qn9nw@mail.gmail.com>
+ <2065829.xbNJnTdZ4q@x2>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2065829.xbNJnTdZ4q@x2>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Sep 2019, Andrew Lunn wrote:
+On Mon, Sep 30, 2019 at 09:50:00AM -0400, Steve Grubb wrote:
+> On Thursday, September 26, 2019 11:31:32 AM EDT Paul Moore wrote:
+> > On Wed, Sep 25, 2019 at 5:02 PM Kees Cook <keescook@chromium.org> wrote:
+> > > This renames the very specific audit_log_link_denied() to
+> > > audit_log_path_denied() and adds the AUDIT_* type as an argument. This
+> > > allows for the creation of the new AUDIT_ANOM_CREAT that can be used to
+> > > report the fifo/regular file creation restrictions that were introduced
+> > > in commit 30aba6656f61 ("namei: allow restricted O_CREAT of FIFOs and
+> > > regular files"). Without this change, discovering that the restriction
+> > > is enabled can be very challenging:
+> > > https://lore.kernel.org/lkml/CA+jJMxvkqjXHy3DnV5MVhFTL2RUhg0WQ-XVFW3ngDQO
+> > > dkFq0PA@mail.gmail.com
+> > > 
+> > > Reported-by: Jérémie Galarneau <jeremie.galarneau@efficios.com>
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > ---
+> > > This is not a complete fix because reporting was broken in commit
+> > > 15564ff0a16e ("audit: make ANOM_LINK obey audit_enabled and
+> > > audit_dummy_context")
+> > > which specifically goes against the intention of these records: they
+> > > should _always_ be reported. If auditing isn't enabled, they should be
+> > > ratelimited.
+> > > 
+> > > Instead of using audit, should this just go back to using
+> > > pr_ratelimited()?
+> > 
+> > I'm going to ignore the rename and other aspects of this patch for the
+> > moment so we can focus on the topic of if/when/how these records
+> > should be emitted by the kernel.
+> > 
+> > Unfortunately, people tend to get very upset if audit emits *any*
+> > records when they haven't explicitly enabled audit, the significance
+> > of the record doesn't seem to matter, which is why you see patches
+> > like 15564ff0a16e ("audit: make ANOM_LINK obey audit_enabled and
+> > audit_dummy_context").  We could consider converting some records to
+> > printk()s, rate-limited or not, but we need to balance this with the
+> > various security certifications which audit was created to satisfy.
+> > In some cases a printk() isn't sufficient.
+> > 
+> > Steve is probably the only one who really keeps track of the various
+> > auditing requirements of the different security certifications; what
+> > say you Steve on this issue with ANOM_CREAT records?
+> 
+> Common Criteria and other security standards I track do not call out for 
+> anomoly detection. So, there are no requirements on this. That said, we do 
+> have other anomaly detections because they give early warning that something 
+> strange is happening. I think adding this event is a nice improvement as long 
+> as it obeys audit_enabled before emitting an event - for example, look at the 
+> AUDIT_ANOM_ABEND event.
 
-> On Mon, Sep 30, 2019 at 02:11:59PM +0000, Oleksandr Suvorov wrote:
->> Hi Andrew,
->>
->> On Mon, Sep 30, 2019 at 3:16 PM Andrew Lunn <andrew@lunn.ch> wrote:
->>>
->>> On Mon, Sep 30, 2019 at 10:35:36AM +0000, Oleksandr Suvorov wrote:
->>>> to register its own pm_power_off handler even if someone has registered
->>>> this handler earlier.
->>>> Useful to change a way to power off the system using DT files.
->>>
->>> Hi Oleksandr
->>>
->>> I'm not sure this is a good idea. What happens when there are two
->>> drivers using forced mode? You then get which ever is register last.
->>> Non deterministic behaviour.
->>
->> You're right, we have to handle a case when gpio-poweroff fails to
->> power the system off. Please look at the
->> 2nd version of the patchset.
->>
->> There are 3 only drivers that forcibly register its own pm_power_off
->> handler even if it has been registered before.
->>
->> drivers/firmware/efi/reboot.c - supports chained call of next
->> pm_power_off handler if its own handler fails.
->>
->> arch/x86/platform/iris/iris.c, drivers/char/ipmi/ipmi_poweroff.c -
->> don't support calling of next pm_power_off handler.
->> Looks like these drivers should be fixed too.
->>
->> All other drivers don't change already initialized pm_power_off handler.
->>
->>> What is the other driver which is causing you problems? How is it
->>> getting probed? DT?
->>
->> There are several PMUs, RTCs, watchdogs that register their own pm_power_off.
->> Most of them, probably not all, are probed from DT.
->
-> And which specific one is causing you problems.
->
-> I don't like this forced parameter. No other driver is using it.
->
-> Maybe we should change this driver to support chained pm_power_off
-> handlers?
+Okay, so the patch is good as-is? (The "report things always" issue I
+will deal with separately. For now I'd just like to gain this anomaly
+detection corner case...)
 
-There's still scope for non-deterministic behaviour though, as the 
-chaining would take place depending on the probe ordering. Admittedly if 
-the gpio-poweroff works it's unlikely to be a problem, but still seems 
-messy.
-
-Without knowing specifics, disabling the devices that can't turn the 
-device off seems like a better bet. If they'd be otherwise useful, I see 
-there's a of_device_is_system_power_controller(), see:
-
-/Documentation/devicetree/bindings/power/power-controller.txt
-https://elixir.bootlin.com/linux/latest/source/drivers/mfd/max77620.c#L566
-
-...maybe that can be added to the devices getting in the way?
-
-Cheers,
-
-[0] https://elixir.bootlin.com/linux/latest/source/drivers/watchdog/bcm2835_wdt.c#L152
-(chosen at random)
-
-
->
->   Andrew
->
+Paul, what do you see as next steps here?
 
 -- 
-Jamie Lentin
+Kees Cook
