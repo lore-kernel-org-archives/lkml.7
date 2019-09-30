@@ -2,166 +2,123 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87692C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFFB0C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57F2A20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A617B21855
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:06:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="a1IcMkg7"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eiGf6nnC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730319AbfI3MGU (ORCPT
+        id S1730398AbfI3MGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 08:06:20 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:31243 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728214AbfI3MGT (ORCPT
+        Mon, 30 Sep 2019 08:06:31 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:39970 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728214AbfI3MGa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 08:06:19 -0400
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x8UC5mg4011579;
-        Mon, 30 Sep 2019 21:05:49 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x8UC5mg4011579
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1569845150;
-        bh=DN+I4wpsZvAFccyMFSwXymsfa8keAnBOQLk85QFPIzE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=a1IcMkg7e3F/Lb/SPd8AjuqIs94nfZNAtbzuXBAjUyijbwCpczwfGBEm2/tHc6MOe
-         RilHMU/70eAqFpuvaC3qcIROm77Id9H/rCSRc9SqyJ63HrxTssFLYQC20RWMF+ejOj
-         DXgGPvZ8AXareBeeJTqY+oHxsJgsXi+xBMHOcvhpggBTCgB7f8vnUiFWVhWyPD8dYu
-         YreMIYWY+zHl/c5VmIyixTLs7NlX0K0QCNCLuPphm8UjhOF4mxsWxIdF0D45b/SLzp
-         Xly2/UNYxOjGzsQN+dfNAJPClfSSaI76TO00xobqxcxbm6dKC3ApHKiveOB+XtFQ7t
-         kAbl6gOVBE5nQ==
-X-Nifty-SrcIP: [209.85.221.172]
-Received: by mail-vk1-f172.google.com with SMTP id q192so1296990vka.12;
-        Mon, 30 Sep 2019 05:05:48 -0700 (PDT)
-X-Gm-Message-State: APjAAAVkGo/L7PGljLnALmg4ibIc/pZcRM2Pve8uP7hLVbguMeURHd9I
-        KzUXTGeQb/MNjSKpeFeA0aRIkI2No7T/KoWRyMQ=
-X-Google-Smtp-Source: APXvYqzHTcupPhE7fYtEX+jAQWcOhQ0jzTGnC4NcznjraANJ1alL1Wv6gfBjsFHHPncsy8kWiZUyQovTE/NlKyLzYEg=
-X-Received: by 2002:a1f:60c2:: with SMTP id u185mr8338504vkb.0.1569845147622;
- Mon, 30 Sep 2019 05:05:47 -0700 (PDT)
+        Mon, 30 Sep 2019 08:06:30 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8UC6R0p096091;
+        Mon, 30 Sep 2019 07:06:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569845188;
+        bh=zfTEs4ijJTUqGGuCuLCj2ZRBbvInnJColLZXtXR91xc=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=eiGf6nnC/e6TuIhw9868LrR/8FIVxqvLagovzrJt4K9BXszIvTjvvVH9zL4aLzPu0
+         DDCOylveIYEIVgi99HT51YnvuYDaeTFh1AMvvopJgpju46YA9WMVQL5nc7poYkAc54
+         5EXu7W8oxM6NqfzXZwDZJGQY8CV7SdP6OaPApuuQ=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8UC6R0L052716
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 30 Sep 2019 07:06:27 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 30
+ Sep 2019 07:06:18 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 30 Sep 2019 07:06:18 -0500
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with SMTP id x8UC6R1P026246;
+        Mon, 30 Sep 2019 07:06:27 -0500
+Date:   Mon, 30 Sep 2019 07:08:38 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+CC:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [Patch v4 4/8] media: i2c: ov2659: fix s_stream return value
+Message-ID: <20190930120838.vdmmglkbp226hhfq@ti.com>
+References: <20190927184722.31989-1-bparrot@ti.com>
+ <20190927184722.31989-5-bparrot@ti.com>
+ <CA+V-a8t3h6+2a8QWKWNwROJRz546rGbUyXs5ez9wtH6AQ-euPA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190830034304.24259-1-yamada.masahiro@socionext.com>
- <f5c221f5749e5768c9f0d909175a14910d349456.camel@suse.de> <CAKwvOdk=tr5nqq1CdZnUvRskaVqsUCP0SEciSGonzY5ayXsMXw@mail.gmail.com>
- <CAHk-=wiTy7hrA=LkmApBE9PQtri8qYsSOrf2zbms_crfjgR=Hw@mail.gmail.com> <20190930112636.vx2qxo4hdysvxibl@willie-the-truck>
-In-Reply-To: <20190930112636.vx2qxo4hdysvxibl@willie-the-truck>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Mon, 30 Sep 2019 21:05:11 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASQZ82KSOrQW7+Wq1vFDCg2__maBEAPMLqUDqZMLuj1rA@mail.gmail.com>
-Message-ID: <CAK7LNASQZ82KSOrQW7+Wq1vFDCg2__maBEAPMLqUDqZMLuj1rA@mail.gmail.com>
-Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
-To:     Will Deacon <will@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Kees Cook <keescook@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CA+V-a8t3h6+2a8QWKWNwROJRz546rGbUyXs5ez9wtH6AQ-euPA@mail.gmail.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 8:26 PM Will Deacon <will@kernel.org> wrote:
->
-> On Fri, Sep 27, 2019 at 03:38:44PM -0700, Linus Torvalds wrote:
-> > On Fri, Sep 27, 2019 at 3:08 PM Nick Desaulniers
-> > <ndesaulniers@google.com> wrote:
-> > >
-> > > So get_user() was passed a bad value/pointer from userspace? Do you
-> > > know which of the tree calls to get_user() from sock_setsockopt() is
-> > > failing?  (It's not immediately clear to me how this patch is at
-> > > fault, vs there just being a bug in the source somewhere).
+Lad, Prabhakar <prabhakar.csengg@gmail.com> wrote on Fri [2019-Sep-27 21:33:28 +0100]:
+> Hi Benoit,
+> 
+> thank you for the patch.
+> 
+> On Fri, Sep 27, 2019 at 7:46 PM Benoit Parrot <bparrot@ti.com> wrote:
 > >
-> > Based on the error messages, the SO_PASSCRED ones are almost certainly
-> > from the get_user() in net/core/sock.c: sock_setsockopt(), which just
-> > does
+> > In ov2659_s_stream() return value for invoked function should be checked
+> > and propagated.
 > >
-> >         if (optlen < sizeof(int))
-> >                 return -EINVAL;
+> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > ---
+> >  drivers/media/i2c/ov2659.c | 11 +++++++----
+> >  1 file changed, 7 insertions(+), 4 deletions(-)
 > >
-> >         if (get_user(val, (int __user *)optval))
-> >                 return -EFAULT;
+> > diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
+> > index f77320e8a60d..cd4625432264 100644
+> > --- a/drivers/media/i2c/ov2659.c
+> > +++ b/drivers/media/i2c/ov2659.c
+> > @@ -1187,10 +1187,13 @@ static int ov2659_s_stream(struct v4l2_subdev *sd, int on)
+> >                 goto unlock;
+> >         }
 > >
-> >         valbool = val ? 1 : 0;
+> > -       ov2659_set_pixel_clock(ov2659);
+> > -       ov2659_set_frame_size(ov2659);
+> > -       ov2659_set_format(ov2659);
+> > -       ov2659_set_streaming(ov2659, 1);
+> > +       ret = ov2659_set_pixel_clock(ov2659);
+> > +       if (!ret)
+> > +               ret = ov2659_set_frame_size(ov2659);
+> > +       if (!ret)
+> > +               ret = ov2659_set_format(ov2659);
+> > +       if (!ret)
+> > +               ov2659_set_streaming(ov2659, 1);
+> >         ov2659->streaming = on;
 > >
-> > but it's the other messages imply that a lot of other cases are
-> > failing too (ie the "Failed to bind netlink socket" is, according to
-> > google, a bind() that fails with the same EFAULT error).
+> the "ov2659->streaming = on;" should only be set if above calls
+> succeed, otherwise we might hit -EBUSY during set_fmt.
+
+Thanks, good catch.
+
+Benoit
+
+> 
+> Cheers,
+> --Prabhakar Lad
+> 
+> >  unlock:
+> > --
+> > 2.17.1
 > >
-> > There are probably even more failures that happen elsewhere and just
-> > don't even syslog the fact. I'd guess that all get_user() calls just
-> > fail, and those are the ones that happen to get printed out.
-> >
-> > Now, _why_ it would fail, I have ni idea. There are several inlines in
-> > the arm uaccess.h file, and it depends on other headers like
-> > <asm/domain.h> with more inlines still - eg get/set_domain() etc.
-> >
-> > Soem of that code is pretty subtle. They have fixed register usage
-> > (but the asm macros actually check them). And the inline asms clobber
-> > the link register, but they do seem to clearly _state_ that they
-> > clobber it, so who knows.
-> >
-> > Just based on the EFAULT, I'd _guess_ that it's some interaction with
-> > the domain access control register (so that get/set_domain() thing).
-> > But I'm not even sure that code is enabled for the Rpi2, so who
-> > knows..
->
-> FWIW, we've run into issues with CONFIG_OPTIMIZE_INLINING and local
-> variables marked as 'register' where GCC would do crazy things and end
-> up corrupting data, so I suspect the use of fixed registers in the arm
-> uaccess functions is hitting something similar:
->
-> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91111
-
-
-No. Not similar at all.
-
-
-I fixed it already. See
-https://lore.kernel.org/patchwork/patch/1132459/
-
-
-The problems are fixable by writing correct code.
-
-
-
-
-I think we discussed this already.
-
-- There is nothing arch-specific in CONFIG_OPTIMIZE_INLINING
-
-- 'inline' is just a hint. It does not guarantee function inlining.
-  This is standard.
-
-- The kernel macrofies 'inline' to add __attribute__((__always_inline__))
-  This terrible hack must end.
-
--  __attribute__((__always_inline__)) takes aways compiler's freedom,
-   and prevents it from optimizing the code for -O2, -Os, or whatever.
-
-
-
-
-
-> Although this particular case couldn't be reproduced with GCC 9, prior
-> versions of the compiler get it wrong so I'm very much opposed to enabling
-> CONFIG_OPTIMIZE_INLINING by default on arm/arm64.
->
-> Will
-
-
---
-Best Regards
-Masahiro Yamada
