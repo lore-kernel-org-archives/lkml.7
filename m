@@ -2,115 +2,133 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED20C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE203C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 506D3218DE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:27:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mqAFLfcV"
+	by mail.kernel.org (Postfix) with ESMTP id 9B5F821855
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:29:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731775AbfI3O1R (ORCPT
+        id S1731626AbfI3O3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 10:27:17 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:37168 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbfI3O1R (ORCPT
+        Mon, 30 Sep 2019 10:29:11 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:35473 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbfI3O3K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 10:27:17 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8UER9D4010738;
-        Mon, 30 Sep 2019 09:27:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569853629;
-        bh=19UZeQW7iCMEPJGBu3CVRVx3eQA8RyzMg8BIyoBYUWY=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=mqAFLfcVc72peDTQaVTX3krGNWa4dUGqG37HuzfVHniEjLFEVSOh8YoKdxbgpNypn
-         9JTrY0Nwc+jZwsA4tAyvBkeNUyOL86+NmKHRKznpqBPY2bLbEqdihnIkEZpky/3syV
-         aD/H/j8j0s3Fyh4XLDHzYd3fjjECs/1Fh8fCCAe0=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8UER9qU042622;
-        Mon, 30 Sep 2019 09:27:09 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 30
- Sep 2019 09:27:09 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 30 Sep 2019 09:27:09 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8UER6Ak067205;
-        Mon, 30 Sep 2019 09:27:06 -0500
-Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to
- dts
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-To:     Adam Ford <aford173@gmail.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-CC:     Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190510194229.20628-1-aford173@gmail.com>
- <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
- <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
- <845055e2-8182-de74-2077-629fdf50ac6c@ti.com>
- <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
- <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com>
- <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
- <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com>
- <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
- <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com>
- <23eba53a-9304-2ceb-d97e-01891ec0b3ed@ti.com>
- <cb028b1e-05ca-9b22-be5d-c63f5fd56cc4@ti.com>
- <F3335195-6EB7-4D44-B884-2F29D9238011@goldelico.com>
- <CAHCN7xL9bFxO=2i1DzmRj6A3XwUNdt=DZeJ2a0EZ0f9gcFTy6g@mail.gmail.com>
- <CAHCN7x+vCfPTRE+zzYUwAXdbBzRotTP2hSOgsHB0FdgBhZV5zA@mail.gmail.com>
- <CAHCN7xJDV=R9Ysjhff7=mEXdciwPP_5LQbHwaUT8KvhSkLKw8A@mail.gmail.com>
- <04306a5e-f9be-35a4-1aa1-5795d780e289@ti.com>
-Message-ID: <3777f1b1-2d9a-334b-b9e7-99dfda2ae29b@ti.com>
-Date:   Mon, 30 Sep 2019 17:27:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 30 Sep 2019 10:29:10 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1iEwfl-0006uw-0T; Mon, 30 Sep 2019 16:29:09 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1iEwfj-0006TF-S1; Mon, 30 Sep 2019 16:29:07 +0200
+Date:   Mon, 30 Sep 2019 16:29:07 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Jay Cliburn <jcliburn@gmail.com>,
+        Chris Snook <chris.snook@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v1] net: ag71xx: fix mdio subnode support
+Message-ID: <20190930142907.wo3tahtg7g7mvfmp@pengutronix.de>
+References: <20190930093310.10762-1-o.rempel@pengutronix.de>
+ <20190930134209.GB14745@lunn.ch>
 MIME-Version: 1.0
-In-Reply-To: <04306a5e-f9be-35a4-1aa1-5795d780e289@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190930134209.GB14745@lunn.ch>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 16:18:43 up 135 days, 20:36, 87 users,  load average: 0.00, 0.02,
+ 0.00
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/09/2019 17:20, Tomi Valkeinen wrote:
-
-> Let's see what Tero says, but yeah, something is odd here. I expected 
-> the max divider to be 16 with Tero's patch, but I don't see it having 
-> that effect. I can get the div to 31.
+On Mon, Sep 30, 2019 at 03:42:09PM +0200, Andrew Lunn wrote:
+> On Mon, Sep 30, 2019 at 11:33:10AM +0200, Oleksij Rempel wrote:
+> > The driver was working with fixed phy without any noticeable issues. This bug
+> > was uncovered by introducing dsa ar9331-switch driver.
+> > 
+> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> > ---
+> >  drivers/net/ethernet/atheros/ag71xx.c | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/net/ethernet/atheros/ag71xx.c b/drivers/net/ethernet/atheros/ag71xx.c
+> > index 6703960c7cf5..d1101eea15c2 100644
+> > --- a/drivers/net/ethernet/atheros/ag71xx.c
+> > +++ b/drivers/net/ethernet/atheros/ag71xx.c
+> > @@ -526,7 +526,7 @@ static int ag71xx_mdio_probe(struct ag71xx *ag)
+> >  	struct device *dev = &ag->pdev->dev;
+> >  	struct net_device *ndev = ag->ndev;
+> >  	static struct mii_bus *mii_bus;
+> > -	struct device_node *np;
+> > +	struct device_node *np, *mnp;
+> >  	int err;
+> >  
+> >  	np = dev->of_node;
+> > @@ -571,7 +571,9 @@ static int ag71xx_mdio_probe(struct ag71xx *ag)
+> >  		msleep(200);
+> >  	}
+> >  
+> > -	err = of_mdiobus_register(mii_bus, np);
+> > +	mnp = of_get_child_by_name(np, "mdio");
+> > +	err = of_mdiobus_register(mii_bus, mnp);
+> > +	of_node_put(mnp);
+> >  	if (err)
+> >  		goto mdio_err_put_clk;
 > 
-> You can see this from the clock register 0x48004e40 (CM_CLKSEL_DSS). The 
-> lowest bits are the divider, 5 to 0. The TRM says max div is 32.
+> Hi Oleksij
 > 
-> Tero said for him the dividers > 16 didn't "stick" to the register. I'm 
-> now wondering if he has an old beagleboard with OMAP34xx, which has max 
-> div 16.
+> You need to keep backwards compatibility here. If you find an mdio
+> node, use it, but if not, you need to still register np.
+> 
+> This is also extending the driver binding, so you need to update the
+> binding documentation.
 
-So testing a bit more here, I can see the DSS working fine and fps as 
-expected when I write values directly to CM_CLKSEL_DSS:5:0, with 
-dividers up to 31. With 32, DSS breaks. The TRM (AM/DM37x) says value 32 
-is valid.
+Hi Andrew,
 
-  Tomi
+Normally i would agree. But in this case:
+- this driver is freshly added to the kernel and is different to OpenWrt
+  implementation any way. No users from this side.
+- Devicetree binding says:
+  Documentation/devicetree/bindings/net/qca,ar71xx.txt
+|Optional properties:
+|- phy-handle : phandle to the PHY device connected to this device.
+|- fixed-link : Assume a fixed link. See fixed-link.txt in the same directory.
+|  Use instead of phy-handle.
+|
+|Optional subnodes:
+|- mdio : specifies the mdio bus, used as a container for phy nodes
+|  according to phy.txt in the same directory
 
+So, it is driver bug ...ooOO (my personal bug :D)
+
+I would say: if some one already started to use this driver, didn't used
+documentation and didn't reported this bug, can't really blame any one
+here :)
+
+Regards,
+Oleksij
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
