@@ -2,82 +2,200 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCDFECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C29ECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4CBD21872
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:41:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569933690;
-	bh=s5OBOEVjRDw2Lw4PpgF3rSn+ejWC5tYwc3fcZhoc9Wo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LMgkQst0buNnhuKVcXB7xwwyWv3EVHdNrhLVHbS6QIV2hwEzzdXbYj4m53oQ8moQw
-	 +dbR4l8sOINkHzb1HeeoIjgB2bLl1ngvo+o/4gyGxhOCLZBr22Az7tm3gVKhr0LRcY
-	 JD2REE1RceOctKyK9F5d1odZxXdd4vvSOMAZF59A=
+	by mail.kernel.org (Postfix) with ESMTP id C7EFA21872
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:41:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jRk5rGAA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387967AbfJAMla (ORCPT
+        id S2387984AbfJAMlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 08:41:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38958 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726543AbfJAMl3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 08:41:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E24420842;
-        Tue,  1 Oct 2019 12:41:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569933689;
-        bh=s5OBOEVjRDw2Lw4PpgF3rSn+ejWC5tYwc3fcZhoc9Wo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LVdMOoQ7z0/YBHWZwlv9uMS62KM963MC7n1OqoIOIS9Ypvpv70d5luZEbET0SgtAG
-         OWaROnELFsrK5p/PKPTQbuYz9ERicok3y6OFBbHTU5FBpq7gHNhOPBVQGKZZzMDTh2
-         G1aJK8QmM7HfrRUyIVWmNzGSLwvTLBpoAK9ps/7g=
-Date:   Tue, 1 Oct 2019 14:41:26 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     linux-usb@vger.kernel.org,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Lukas Wunner <lukas@wunner.de>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Mario.Limonciello@dell.com,
-        Anthony Wong <anthony.wong@canonical.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 09/22] thunderbolt: Convert basic adapter register
- names to follow the USB4 spec
-Message-ID: <20191001124126.GD2954373@kroah.com>
-References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
- <20191001113830.13028-10-mika.westerberg@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191001113830.13028-10-mika.westerberg@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Tue, 1 Oct 2019 08:41:35 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:33140 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726543AbfJAMle (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 08:41:34 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91CNqMS145658;
+        Tue, 1 Oct 2019 12:40:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
+ bh=eDTQRxQ6LpMs/7vELk2HTebyriMNj13Xg+/LshFBa30=;
+ b=jRk5rGAApPN5hPnErpFedOHIMMIPiUoWwVPmahZ6ZTUOvPDLW/201zf1JJHdvY6c+5tc
+ VZ7LfTaQIiF/eJT1bQp3hQ3Gi6mj5GhLHik4NzsKTan0VolqPthNwD/dy927fuk50Q6X
+ I8wvpaHCLUv4qCoAR03Xf/VR4rJvIYc9++b22LkEptE+SO1WreR+aKuSbaXifwuVU39P
+ KtO6vhwzWwEH/sfpJzDpefafIlkczcLV0Oc8H9rZ6PlltfaRpatyoifTqAq/oQpo8Pf9
+ kbki31eDc8HT1unhMDI+Q6xdls1miMagLjnmVnwPjWmA/YJhfTpBHLWNHzE0twaSHD4p NA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2v9yfq5gd9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Oct 2019 12:40:04 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91COQ7R039803;
+        Tue, 1 Oct 2019 12:40:04 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2vbqd0sv07-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Oct 2019 12:40:04 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x91Ce3PN005830;
+        Tue, 1 Oct 2019 12:40:03 GMT
+Received: from z2.cn.oracle.com (/10.182.71.205)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 01 Oct 2019 05:40:03 -0700
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     vkuznets@redhat.com, linux-hyperv@vger.kernel.org,
+        kvm@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH v3 2/4] x86/kvm: Change print code to use pr_*() format
+Date:   Mon, 30 Sep 2019 20:44:37 +0800
+Message-Id: <1569847479-13201-3-git-send-email-zhenzhong.duan@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1569847479-13201-1-git-send-email-zhenzhong.duan@oracle.com>
+References: <1569847479-13201-1-git-send-email-zhenzhong.duan@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910010114
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910010114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 02:38:17PM +0300, Mika Westerberg wrote:
-> Now that USB4 spec has names for these basic registers we can use them
-> instead. This makes it easier to match certain register to the spec.
-> 
-> No functional changes.
-> 
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+pr_*() is preferred than printk(KERN_* ...), after change all the print
+in arch/x86/kernel/kvm.c will have "KVM: xxx" style.
 
-This is nice to see, can we add this to the tree now?  :)
+No functional change.
 
-thanks,
+Suggested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krcmar <rkrcmar@redhat.com>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Wanpeng Li <wanpengli@tencent.com>
+Cc: Jim Mattson <jmattson@google.com>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+---
+ arch/x86/kernel/kvm.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-greg k-h
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index a4f108d..ce4f578 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -7,6 +7,8 @@
+  *   Authors: Anthony Liguori <aliguori@us.ibm.com>
+  */
+ 
++#define pr_fmt(fmt) "KVM: " fmt
++
+ #include <linux/context_tracking.h>
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+@@ -286,8 +288,8 @@ static void kvm_register_steal_time(void)
+ 		return;
+ 
+ 	wrmsrl(MSR_KVM_STEAL_TIME, (slow_virt_to_phys(st) | KVM_MSR_ENABLED));
+-	pr_info("kvm-stealtime: cpu %d, msr %llx\n",
+-		cpu, (unsigned long long) slow_virt_to_phys(st));
++	pr_info("stealtime: cpu %d, msr %llx\n", cpu,
++		(unsigned long long) slow_virt_to_phys(st));
+ }
+ 
+ static DEFINE_PER_CPU_DECRYPTED(unsigned long, kvm_apic_eoi) = KVM_PV_EOI_DISABLED;
+@@ -321,8 +323,7 @@ static void kvm_guest_cpu_init(void)
+ 
+ 		wrmsrl(MSR_KVM_ASYNC_PF_EN, pa);
+ 		__this_cpu_write(apf_reason.enabled, 1);
+-		printk(KERN_INFO"KVM setup async PF for cpu %d\n",
+-		       smp_processor_id());
++		pr_info("setup async PF for cpu %d\n", smp_processor_id());
+ 	}
+ 
+ 	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI)) {
+@@ -347,8 +348,7 @@ static void kvm_pv_disable_apf(void)
+ 	wrmsrl(MSR_KVM_ASYNC_PF_EN, 0);
+ 	__this_cpu_write(apf_reason.enabled, 0);
+ 
+-	printk(KERN_INFO"Unregister pv shared memory for cpu %d\n",
+-	       smp_processor_id());
++	pr_info("Unregister pv shared memory for cpu %d\n", smp_processor_id());
+ }
+ 
+ static void kvm_pv_guest_cpu_reboot(void *unused)
+@@ -509,7 +509,7 @@ static void kvm_setup_pv_ipi(void)
+ {
+ 	apic->send_IPI_mask = kvm_send_ipi_mask;
+ 	apic->send_IPI_mask_allbutself = kvm_send_ipi_mask_allbutself;
+-	pr_info("KVM setup pv IPIs\n");
++	pr_info("setup pv IPIs\n");
+ }
+ 
+ static void kvm_smp_send_call_func_ipi(const struct cpumask *mask)
+@@ -639,11 +639,11 @@ static void __init kvm_guest_init(void)
+ 	    !kvm_para_has_hint(KVM_HINTS_REALTIME) &&
+ 	    kvm_para_has_feature(KVM_FEATURE_STEAL_TIME)) {
+ 		smp_ops.send_call_func_ipi = kvm_smp_send_call_func_ipi;
+-		pr_info("KVM setup pv sched yield\n");
++		pr_info("setup pv sched yield\n");
+ 	}
+ 	if (cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN, "x86/kvm:online",
+ 				      kvm_cpu_online, kvm_cpu_down_prepare) < 0)
+-		pr_err("kvm_guest: Failed to install cpu hotplug callbacks\n");
++		pr_err("failed to install cpu hotplug callbacks\n");
+ #else
+ 	sev_map_percpu_data();
+ 	kvm_guest_cpu_init();
+@@ -746,7 +746,7 @@ static __init int kvm_setup_pv_tlb_flush(void)
+ 			zalloc_cpumask_var_node(per_cpu_ptr(&__pv_tlb_mask, cpu),
+ 				GFP_KERNEL, cpu_to_node(cpu));
+ 		}
+-		pr_info("KVM setup pv remote TLB flush\n");
++		pr_info("setup pv remote TLB flush\n");
+ 	}
+ 
+ 	return 0;
+@@ -879,8 +879,8 @@ static void kvm_enable_host_haltpoll(void *i)
+ void arch_haltpoll_enable(unsigned int cpu)
+ {
+ 	if (!kvm_para_has_feature(KVM_FEATURE_POLL_CONTROL)) {
+-		pr_err_once("kvm: host does not support poll control\n");
+-		pr_err_once("kvm: host upgrade recommended\n");
++		pr_err_once("host does not support poll control\n");
++		pr_err_once("host upgrade recommended\n");
+ 		return;
+ 	}
+ 
+-- 
+1.8.3.1
+
