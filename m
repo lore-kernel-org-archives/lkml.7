@@ -2,170 +2,223 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 105F6C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97325C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D63B4215EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63D9B215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:35:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="XRHsgO2l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n9au9sjS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731347AbfI3Nex (ORCPT
+        id S1731384AbfI3NfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 09:34:53 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:42272 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730637AbfI3Nex (ORCPT
+        Mon, 30 Sep 2019 09:35:17 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33126 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730378AbfI3NfR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:34:53 -0400
-Received: by mail-vs1-f68.google.com with SMTP id m22so6745575vsl.9
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 06:34:52 -0700 (PDT)
+        Mon, 30 Sep 2019 09:35:17 -0400
+Received: by mail-wr1-f67.google.com with SMTP id b9so11397790wrs.0;
+        Mon, 30 Sep 2019 06:35:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AMvf0aJLSBw670rdzFO9x6SzJk02/YpUBF290pMe194=;
-        b=XRHsgO2ll4Out3o1wWqMo9/abYElPhYcstVnCjrAX4aJrgfwN3SSOi/aFXRHfmoHHQ
-         KieWKrU3/AlNLArqYMjHIkhyQsWX1bKkMj3Cy05J0In/IglcbWMeOzdgPfEQ0JGXeEoY
-         Ly8MkBlzdNqEkscNPaJWQMwsgNSQlneFvr9c8uj4bdNHLyBOD/RBlbMtEuOazxlROCZB
-         zyRh9eBTf+T5h7F0DsfDbwugnqO2BG3TTeTK3V4q3V4OIwNA9nqI0gB3HUkg38F+hxDJ
-         teov5TcNbR1trLL4uRTSp93QzxHScrbmgI4+kb4NNWtFM76u7MkDK4dHz6hgdWR4Tbys
-         xqmQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rCh9Vg6T3ECTbDQgHWwysJLgIuSC72Toh4hrLGUo0Bk=;
+        b=n9au9sjSarhcP7II2+oFukloZx60NI/ERC8OA8/6fimP7XAipI5S46BL25nzyQEbEN
+         GAKGnuw8oY0tosxi3dW1pZcsgAgUqfHkVDU4sJxAjMa42wl8oPicooJzzQ+9sijsQBYO
+         ntbCzicwOuwQSl9QK9G7pDWOh0FLXg7silYY4Kh4nFbuJreda7TEtnRyF7Tz4SZi6wmC
+         m+oKtTABWR7VfYadfVMqrWYMmFgRUQ3QOTzt72Td0Dmbcd8G43UsCXA2Bh2jVKkqF0TQ
+         0jb5E3s4k0RCPRim4MbLWh9cfTZLYoiBffTs0M72hQAzdwCJ4TGVPnUI99388ZGU5KKv
+         1qwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AMvf0aJLSBw670rdzFO9x6SzJk02/YpUBF290pMe194=;
-        b=OORcb/xdD8/lpXuyb5UYs/KZ0hHDn3ZPCuKvcFTUTiutpbElvDXLLBXOg7IF2rFb74
-         Igg2kCWCo3ogviYjuY1MqepbwSnzyQ/8EHjnr6hNvcmtHvMATMmeQvxWknuoxd1bg2qc
-         E1AA6k86JhRQflXgjtGEs9exkDT5F4miXE3ufBspf1TDa29Xb3rGbAKsbwuScUagEF/s
-         p47/ERFmtaoE7N64a46Y0MXN1IC8G8e4d95zNmp2qF8w3DhUPT7foLlgOolHNLQQmp0D
-         OmPI2WGU/39Q/3gRiGLBmFqJ42JM5AfPqBCE03MRr2tBNVfXVNmiJuwhOUkhAOkNNoH7
-         v85g==
-X-Gm-Message-State: APjAAAXqpjBT2I+jNnXQmapr76fuqpqKIzXOLVnjzOmGHSxuauzEUPel
-        grK9xSh10qrRAIR/BFfDQ44HQA+Bo76dNSVPUVvfPw==
-X-Google-Smtp-Source: APXvYqwFoFBboIPgwzdCmxDRfbxS1fhkFS38SreFnzfJ31NLXbmDoVntXc3bbJ78f872NGqPaK/9xydoPhVnoDLPfKk=
-X-Received: by 2002:a67:f0dd:: with SMTP id j29mr4889144vsl.92.1569850491648;
- Mon, 30 Sep 2019 06:34:51 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rCh9Vg6T3ECTbDQgHWwysJLgIuSC72Toh4hrLGUo0Bk=;
+        b=W5NyYkaASpOlO7bRzCMFJVrpBYnFHGimGnLIJO0dG1PN7Oqk4qBvU0UZUtQMJ24ajj
+         tID8sdiAQwly5XaqzYKz13ym6iTy1RxTdFVheBEZ2ZY5qWlCSuJ0MU7e2s0pslVkNtOB
+         ptvxjMuXkwxiWkKlwdw25rQkGhuCzzbblpsoaYhbdk4uICeUaJGa3x1S9T1IqtcSVO1o
+         aBprbJY4oAG2lgzIcTVYxkaTDKplBH0T9o0im2NHj1FQfMGyxaifV4+/zpp8KCxhrho9
+         m4iN24J3YWEwR8fBRCDctHPDUkpA3VpLmUwyCP4rKVJ9hNbEbAMGOnC/QA+0er5V5qQM
+         tbpA==
+X-Gm-Message-State: APjAAAWqwwgqZqgJZ6NwKXIOdmo8MR69HoW6mEYgSy4dENe55P3YnkfW
+        +z6CQWPXJeN932RzBlOzbKs=
+X-Google-Smtp-Source: APXvYqwCoEkIeUPUex7gm7yypx/Bk+yuJECPCl9vC7K4SCIvaHSR56H/Pse4DnUPKIyEDhRpI7tuDw==
+X-Received: by 2002:a05:6000:1281:: with SMTP id f1mr13741018wrx.247.1569850513451;
+        Mon, 30 Sep 2019 06:35:13 -0700 (PDT)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id v2sm24055733wmf.18.2019.09.30.06.35.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 06:35:11 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 15:35:10 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Oza Pawandeep <oza.oza@broadcom.com>,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 00/11] of: dma-ranges fixes and improvements
+Message-ID: <20190930133510.GA1904140@ulmo>
+References: <20190927002455.13169-1-robh@kernel.org>
+ <CAK8P3a0oct0EOMi5t4BmpgdkiBM+LjC+2pTST4hcvNCa3MGLmw@mail.gmail.com>
+ <20190930082055.GA21971@infradead.org>
+ <20190930085606.GG1518582@ulmo>
+ <89e33aae-bc96-53c3-2a4e-e879e9a3c73e@arm.com>
 MIME-Version: 1.0
-References: <1568822505-19297-1-git-send-email-sagar.kadam@sifive.com>
-In-Reply-To: <1568822505-19297-1-git-send-email-sagar.kadam@sifive.com>
-From:   Sagar Kadam <sagar.kadam@sifive.com>
-Date:   Mon, 30 Sep 2019 19:04:40 +0530
-Message-ID: <CAARK3HkOwyvg=xr7fw1SrP_=B+Gj+waQmtZvgiK4AUpQrbM41Q@mail.gmail.com>
-Subject: Re: [PATCH v9 0/2] mtd: spi-nor: add support for is25wp256 spi-nor flash
-To:     Marek Vasut <marek.vasut@gmail.com>, tudor.ambarus@microchip.com,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="dDRMvlgZJXvWKvBx"
+Content-Disposition: inline
+In-Reply-To: <89e33aae-bc96-53c3-2a4e-e879e9a3c73e@arm.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On Wed, Sep 18, 2019 at 9:32 PM Sagar Shrikant Kadam
-<sagar.kadam@sifive.com> wrote:
->
-> The patch series adds basic support for 32MiB spi-nor is25wp256 present on HiFive
-> Unleashed A00 board. The flash device gets BFPT_DWORD1_ADDRESS_BYTES_3_ONLY
-> from BFPT table for address width, whereas the flash can support 4 byte
-> address width, so the address width is configured by using the post bfpt
-> fixup hook as done for is25lp256 device in
-> commit cf580a924005 ("mtd: spi-nor: fix nor->addr_width when its value
-> configured from SFDP does not match the actual width")
->
-> Patches are based on original work done by Wesley Terpstra and/or
-> Palmer Dabbelt:
-> https://github.com/riscv/riscv-linux/commit/c94e267766d62bc9a669611c3d0c8ed5ea26569b
->
-> Erase/Read/Write operations are verified on HiFive Unleashed board using  mtd and
-> flash utils (v1.5.2):
-> 1. mtd_debug    : Options available are : erase/read/write.
-> 2. flashcp      : Single utility that erases flash, writes a file to flash and verifies the data back.
->
-> The changes are available under branch dev/sagark/spi-nor-v9 at
-> https://github.com/sagsifive/riscv-linux-hifive
->
-> Revision history:
-> V8<->V9:
-> -Rebased this series to mainline v5.3-rc8
-> -Corrected number of sectors in the spi nor id table for is25wp256 device as suggested in the review.
-> -The lock/unlock scheme in the V8 version of this series needs to have a more generic approach.
->  These protection scheme patches are not included in this series, will submit those separately.
->
+--dDRMvlgZJXvWKvBx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-A gentle reminder!!
-Any comments on this series?
+On Mon, Sep 30, 2019 at 10:55:15AM +0100, Robin Murphy wrote:
+> On 2019-09-30 9:56 am, Thierry Reding wrote:
+> > On Mon, Sep 30, 2019 at 01:20:55AM -0700, Christoph Hellwig wrote:
+> > > On Sun, Sep 29, 2019 at 01:16:20PM +0200, Arnd Bergmann wrote:
+> > > > On a semi-related note, Thierry asked about one aspect of the dma-r=
+anges
+> > > > property recently, which is the behavior of dma_set_mask() and rela=
+ted
+> > > > functions when a driver sets a mask that is larger than the memory
+> > > > area in the bus-ranges but smaller than the available physical RAM.
+> > > > As I understood Thierry's problem and the current code, the generic
+> > > > dma_set_mask() will either reject the new mask entirely or override
+> > > > the mask set by of_dma_configure, but it fails to set a correct mask
+> > > > within the limitations of the parent bus in this case.
+> > >=20
+> > > There days dma_set_mask will only reject a mask if it is too small
+> > > to be supported by the hardware.  Larger than required masks are now
+> > > always accepted.
+> >=20
+> > Summarizing why this came up: the memory subsystem on Tegra194 has a
+> > mechanism controlled by bit 39 of physical addresses. This is used to
+> > support two variants of sector ordering for block linear formats. The
+> > GPU uses a slightly different ordering than other MSS clients, so the
+> > drivers have to set this bit depending on who they interoperate with.
+> >=20
+> > I was running into this as I was adding support for IOMMU support for
+> > the Ethernet controller on Tegra194. The controller has a HW feature
+> > register that contains how many address bits it supports. This is 40
+> > for Tegra194, corresponding to the number of address bits to the MSS.
+> > Without IOMMU support that's not a problem because there are no systems
+> > with 40 bits of system memory. However, if we enable IOMMU support, the
+> > DMA/IOMMU code will allocate from the top of a 48-bit (constrained to
+> > 40 bits via the DMA mask) input address space. This causes bit 39 to be
+> > set, which in turn will make the MSS reorder sectors and break network
+> > communications.
+> >=20
+> > Since this reordering takes place at the MSS level, this applies to all
+> > MSS clients. Most of these clients always want bit 39 to be 0, whereas
+> > the clients that can and want to make use of the reordering always want
+> > bit 39 to be under their control, so they can control in a fine-grained
+> > way when to set it.
+> >=20
+> > This means that effectively all MSS clients can only address 39 bits, so
+> > instead of hard-coding that for each driver I thought it'd make sense to
+> > have a central place to configure this, so that all devices by default
+> > are restricted to 39-bit addressing. However, with the current DMA API
+> > implementation this causes a problem because the default 39-bit DMA mask
+> > would get overwritten by the driver (as in the example of the Ethernet
+> > controller setting a 40-bit DMA mask because that's what the hardware
+> > supports).
+> >=20
+> > I realize that this is somewhat exotic. On one hand it is correct for a
+> > driver to say that the hardware supports 40-bit addressing (i.e. the
+> > Ethernet controller can address bit 39), but from a system integration
+> > point of view, using bit 39 is wrong, except in a very restricted set of
+> > cases.
+> >=20
+> > If I understand correctly, describing this with a dma-ranges property is
+> > the right thing to do, but it wouldn't work with the current
+> > implementation because drivers can still override a lower DMA mask with
+> > a higher one.
+>=20
+> But that sounds like exactly the situation for which we introduced
+> bus_dma_mask. If "dma-ranges" is found, then we should initialise that to
+> reflect the limitation. Drivers may subsequently set a larger mask based =
+on
+> what the device is natively capable of, but the DMA API internals should
+> quietly clamp that down to the bus mask wherever it matters.
+>=20
+> Since that change, the initial value of dma_mask and coherent_dma_mask
+> doesn't really matter much, as we expect drivers to reset them anyway (and
+> in general they have to be able to enlarge them from a 32-bit default
+> value).
+>=20
+> As far as I'm aware this has been working fine (albeit in equivalent ACPI
+> form) for at least one SoC with 64-bit device masks, a 48-bit IOMMU, and a
+> 44-bit interconnect in between - indeed if I avoid distraction long enough
+> to set up the big new box under my desk, the sending of future emails will
+> depend on it ;)
 
-Thanks & BR,
-Sagar Kadam
+After applying this series it does indeed seem to be working. The only
+thing I had to do was add a dma-ranges property to the DMA parent. I
+ended up doing that via an interconnects property because the default
+DMA parent on Tegra194 is /cbb which restricts #address-cells =3D <1> and
+#size-cells =3D <1>, so it can't actually translate anything beyond 32
+bits of system memory.
 
-> V7<->V8:
-> -Rebased this series on mainline v5.3-rc4.
-> -Removed remaining func_reg reference from issi_lock as updating OTP region was dropped as part of V6.
-> -Updated Reviewed-By tags to 1st and 2nd patch.
->
-> V6<->V7:
-> -Incorporated review comments from Vignesh.
-> -Used post bfpt fixup hook as suggested by Vignesh.
-> -Introduce SPI_NOR_HAS_BP3 to identify whether the flash has 4th bit protect bit.
-> -Prefix generic flash access functions with spi_nor_xxxx.
->
-> V5<->V6:
-> -Incorporated review comments from Vignesh.
-> -Set addr width based on device size and if SPI_NOR_4B_OPCODES is set.
-> -Added 4th block protect identifier (SPI_NOR_HAS_BP3) to flash_info structure
-> -Changed flash_info: flag from u16 to u32 to accommodate SPI_NOR_HAS_BP3
-> -Prefix newly added function with spi_nor_xxx.
-> -Dropped write_fr function, as updating OTP bit's present in function register doesn't seem to be a good idea.
-> -Set lock/unlock schemes based on whether the ISSI device has locking support and  BP3 bit present.
->
-> V4<->V5:
-> -Rebased to linux version v5.2-rc1.
-> -Updated heading of this cover letter with sub-system, instead of just plain "add support for is25wp256..."
->
-> V3<->V4:
-> -Extracted comman code and renamed few stm functions so that it can be reused for issi lock implementation.
-> -Added function's to read and write FR register, for selecting Top/Bottom area.
->
-> V2<->V3:
-> -Rebased patch to mainline v5.1 from earlier v5.1-rc5.
-> -Updated commit messages, and cover letter with reference to git URL and author information.
-> -Deferred flash_lock mechanism and can go as separate patch.
->
-> V1<-> V2:
-> -Incorporated changes suggested by reviewers regarding patch/cover letter versioning, references of patch.
-> -Updated cover letter with description for flash operations verified with these changes.
-> -Add support for unlocking is25xxxxxx device.
-> -Add support for locking is25xxxxxx device.
->
-> v1:
-> -Add support for is25wp256 device.
->
-> Sagar Shrikant Kadam (2):
->   mtd: spi-nor: add support for is25wp256
->   mtd: spi-nor: fix nor->addr_width for is25wp256
->
->  drivers/mtd/spi-nor/spi-nor.c | 9 ++++++++-
->  include/linux/mtd/spi-nor.h   | 1 +
->  2 files changed, 9 insertions(+), 1 deletion(-)
->
-> --
-> 1.9.1
->
+So I basically ended up making the memory controller an interconnect
+provider, increasing #address-cells =3D <2> and #size-cells =3D <2> again
+and then using a dma-ranges property like this:
+
+	dma-ranges =3D <0x0 0x0 0x0 0x80 0x0>;
+
+to specify that only 39 bits should be used for addressing, leaving the
+special bit 39 up to the driver to set as required.
+
+Coincidentally making the memory controller an interconnect provider is
+something that I was planning to do anyway in order to support memory
+frequency scaling, so this all actually fits together pretty elegantly.
+
+Thierry
+
+--dDRMvlgZJXvWKvBx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2SBIwACgkQ3SOs138+
+s6GQ0w/+M5DX25F5EvacUJzXP9QLMg2vdsP8El3gsecwnqovP1oSoUKnZyz98KUl
+ABB5ViyBPyNXg7XSmlJrrGoeA95AWyZiaXCQANS2ps24cOCd81sJR90NN/mQhQ6b
+WlRDS1XdpSoLYEodeHKXS2chYdSGAIWMDsxouW2JDG/wugk3yCarpm0DQzUmsip/
+FwI2OAKJJP0cJ0l0bFB7RuijyI/Gs/pRG1gNrLuzB5GX0t2dZLzfcKggzY44hi4Q
+MIGxkRcFT2csNs3t+Qp4yy90SjEiDi77zGVqcKNreNa+0J5dcCmn8iXE8alV+9oN
+XLVfb/8/e4Gdjm3hthjKrLQQ8GtZ04RjPujBEe2BFfERdfVb+CM+lIgZa6dI+KIp
+7IYWxp5ehMclUc6u0UfkpRklyBfoK/eBr9+lJfzgd5+5D28RxMYgdpGVlQiTuL++
+r+sS4cUaCD3KDNmj6j7GdxCl98jfxzXgzdJ5hkm3exZRHM3JcyiNSmsf6WoiGAJh
+beh65vgHal5X5xFh38HV05lM2gYjh97GwzKecmY0q3xGw36R0jPxi4tMfKylnuKh
+sp0kdAq2amwxR7Z0FBJ2t26SB41rVlA4Wu6Rc09m3bIblxnW45hgJhHsfqtPLB9A
+dw9MG+gJVyffkh5BaZ3Td4raeptslyoappih5w2nWFYznD2kJQM=
+=5SOJ
+-----END PGP SIGNATURE-----
+
+--dDRMvlgZJXvWKvBx--
