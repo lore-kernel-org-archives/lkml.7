@@ -2,184 +2,265 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FF8C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6537EC4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C90C921855
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22E0821855
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:36:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QRUCa4g9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e876S8J/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730528AbfI3Jgg (ORCPT
+        id S1730542AbfI3Jgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 05:36:36 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53103 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730033AbfI3Jgf (ORCPT
+        Mon, 30 Sep 2019 05:36:41 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:31411 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730033AbfI3Jgj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 05:36:35 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r19so12553380wmh.2;
-        Mon, 30 Sep 2019 02:36:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=T1LYv7Cw2G9QMJi0g/N3eFnKbwYc0qhwvJT0FvyrfHg=;
-        b=QRUCa4g9ZDyX2Sp+/YdFZIMvgXARoceU/ZNW50SsfjmV8SPXRu6voyl1umzlnJvMSk
-         ZkS5Uu8ncytxwNFkvEPCdA/Vj47mzal1E/Wx7pPcbYMqU+s2u3kZwO6Cbq0g0XPjXbUE
-         yOPy0vtloDydAGrWaIMkDBgQG2YDISDDwCKFzW2mt2wIxJiVid9mJkppKaWrh8lSmlal
-         EBj1oO+QFN64p35PkiSe/YDqRKnxQATvtKdhz1z8qFFhZtEl2fzpAmL1nvrXNYz4gRUf
-         iD2ypPuSmwMqVFf3fnphQwwccAfvH7WfkKI3UIldqNCO9NAXGIdg9U9wyua9yRQmbHaH
-         34Aw==
+        Mon, 30 Sep 2019 05:36:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1569836198;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0K7l5E0jT2kU7E4OL4KnInZb6DPLchuZ7JsMiIQYJgc=;
+        b=e876S8J/DyakPLdMGrGqy6zCtIvqNcyxUiIfWY8xubZ8ebaKzR4asVVaX2C+pUbSUKkHwD
+        RlqlZ5zy5PwyqH2UX75Nlp0RvIiMBVELaf+jZ5raL8dqvNewbpk6IC4xGV9mNtB+PNesJa
+        G8nIxZaExpmD6nLgBfzD0uRFSKiozHs=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-228-6fVc47QMNGm_x3N9qsa9uQ-1; Mon, 30 Sep 2019 05:36:36 -0400
+Received: by mail-qk1-f198.google.com with SMTP id b143so10367050qkg.9
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 02:36:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=T1LYv7Cw2G9QMJi0g/N3eFnKbwYc0qhwvJT0FvyrfHg=;
-        b=TkzrBl6+DUnDVks9GKMykWbDL7ngCZUbKX0lqPTBQN+WFxn5rv8ERO8wF8djiuNTO7
-         4Wbt04nN+vDsxm1WsvK2Y3XFMa7Qk5qcuhysH82JfbsLVxJAngF5X+EfRi7hJ3gi1BqP
-         ayJIj/4eD8ZHr0W+RyEqLny20NZVS34dTnCn9GnVRefwuRRMIuhGS7jsaz2+y4gmtYJL
-         By/mg62P3jA24ynKRnzl8Gg5L8oME21pGrTkrmi5fwyDTFvuivNjw47UMZ9REZCujcGo
-         m3FhigA+tApemopvD5rO/Duo0GE5hAQFG2bYL1IGG7NX1J+qV4/R0x8itOMVJfDC+snc
-         CNKA==
-X-Gm-Message-State: APjAAAWBUOQADR5eM88i6hSkw6wJj543qbLUJWQkoJ/yG4lc1x3bTzQU
-        TbGjwNnQVCh2+rdE5PHndZk=
-X-Google-Smtp-Source: APXvYqzTGx/JDVNoS54gEIHC8LNGdB3R9BAxdjDIXvR4vGdykkoeO0LrTBVtHrOC9Vk+2+MO8+Wm0A==
-X-Received: by 2002:a05:600c:2311:: with SMTP id 17mr15980556wmo.39.1569836192580;
-        Mon, 30 Sep 2019 02:36:32 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id d78sm15306624wmd.47.2019.09.30.02.36.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 02:36:31 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 11:36:29 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sam Shih <sam.shih@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v10 08/12] pwm: mediatek: Add MT7629 compatible string
-Message-ID: <20190930093629.GH1518582@ulmo>
-References: <1569421957-20765-1-git-send-email-sam.shih@mediatek.com>
- <1569421957-20765-9-git-send-email-sam.shih@mediatek.com>
- <20190927112831.GA1171568@ulmo>
- <1569833468.32131.4.camel@mtksdccf07>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/FLSITt2UCArtOmIOQcEejRtEdLk44vdWkXXB2cpNlQ=;
+        b=c3tzBji9MNtH7MiDdiGY2EGbjeMOpz9EWh7tgCriHT7m8wqYNt2M4VEXXVNRiStykE
+         +GRaXZv7goi0g828ruDjl4Iw63uhCPZ5aBw/HotYvYEhZ3TZasy1E1M4gddYnCwBZhAa
+         jHbocXlxrcQAI7loos77xxyQhuIbAHVsgQLpQDsbBQ6Q9yyj+eTOwZR33JIzclmX9wby
+         py0hZ+znGtgnePZtlia1vBRsPawEoDnX8XFIkCqyvH1fzO1T81fs1LXZgT0toGLR4UHa
+         hgp7OT9MTjBOZQQMEokW/8f2U7y+j3oD0j3B8u6y8/t0YnrFlAtRzRVgZ0RlQ+Bwxu/C
+         y2TQ==
+X-Gm-Message-State: APjAAAUxjZMFLiWVJTNfnHEGHpmpBGNnRRj8tCeScWOaQo1BGtNB2Vj9
+        Cxm7wQniOU5SM16OSZkvl+xbv5Hhr1GVLsziutADC34kEtokWEzDhOoz3AT7krou8AhHpMH6F4T
+        3qjflee1DOmLNO9JW64rsQcxBBBIPhNZ+9ECD7me6
+X-Received: by 2002:ac8:3059:: with SMTP id g25mr23587245qte.154.1569836195934;
+        Mon, 30 Sep 2019 02:36:35 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxbIXYQ5nToZ03gcL/MhsfLatCHv/lPXCzN/JBTkBDUnPnmdIqAmNgXNah7mRqwloYNXE3LbQulDbjDhXBiSzc=
+X-Received: by 2002:ac8:3059:: with SMTP id g25mr23587233qte.154.1569836195675;
+ Mon, 30 Sep 2019 02:36:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="9jHkwA2TBA/ec6v+"
-Content-Disposition: inline
-In-Reply-To: <1569833468.32131.4.camel@mtksdccf07>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <1569830949-10771-1-git-send-email-candlesea@gmail.com>
+In-Reply-To: <1569830949-10771-1-git-send-email-candlesea@gmail.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Mon, 30 Sep 2019 11:36:23 +0200
+Message-ID: <CAO-hwJLrQTp7qeMpQvF7429a0qisAe-=zLFRtY79ajhLtusdRg@mail.gmail.com>
+Subject: Re: [PATCH] HID: core: add usage_page_preceding flag for hid_concatenate_usage_page()
+To:     Candle Sun <candlesea@gmail.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, chunyan.zhang@unisoc.com,
+        Candle Sun <candle.sun@unisoc.com>,
+        Nianfu Bai <nianfu.bai@unisoc.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+X-MC-Unique: 6fVc47QMNGm_x3N9qsa9uQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---9jHkwA2TBA/ec6v+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[also addingg Nicolas, the author of 58e75155009c]
 
-On Mon, Sep 30, 2019 at 04:51:08PM +0800, Sam Shih wrote:
-> Hi,
->=20
-> On Fri, 2019-09-27 at 13:28 +0200, Thierry Reding wrote:
-> > On Wed, Sep 25, 2019 at 10:32:33PM +0800, Sam Shih wrote:
-> > > This adds pwm support for MT7629, and separate mt7629 compatible stri=
-ng
-> > > from mt7622
-> > >=20
-> > > Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-> > > ---
-> > >  drivers/pwm/pwm-mediatek.c | 6 ++++++
-> > >  1 file changed, 6 insertions(+)
-> >=20
-> > I picked this patch up and made some minor adjustments to make it build
-> > without the num_pwms patches. With that I don't think there's anything
-> > left from this series that you need.
->=20
-> Yes, I think the driver should work once dtsi updated.
-> ("[v10,12/12] arm: dts: mediatek: add mt7629 pwm support")
->=20
-> But, due to we use comaptible string separately for every SoC now,
-> The comaptible string in dt-bindings should be "mediatek,mt7629-pwm".
-> I think we should use "[v10,11/12] dt-bindings: pwm: update bindings=20
-> for MT7629" to replace commit 1c00ad6ebf36aa3b0fa598a48b8ae59782be4121,
-> Or maybe we need a little modification like this ?
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt ...
-> - - "mediatek,mt7629-pwm", "mediatek,mt7622-pwm": found on mt7629 SoC.
-> + - "mediatek,mt7629-pwm": found on mt7629 SoC.
+On Mon, Sep 30, 2019 at 10:10 AM Candle Sun <candlesea@gmail.com> wrote:
+>
+> From: Candle Sun <candle.sun@unisoc.com>
+>
+> Upstream commit 58e75155009c ("HID: core: move Usage Page concatenation
+> to Main item") adds support for Usage Page item following Usage items
+> (such as keyboards manufactured by Primax).
+>
+> Usage Page concatenation in Main item works well for following report
+> descriptor patterns:
+>
+>     USAGE_PAGE (Keyboard)                   05 07
+>     USAGE_MINIMUM (Keyboard LeftControl)    19 E0
+>     USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
+>     LOGICAL_MINIMUM (0)                     15 00
+>     LOGICAL_MAXIMUM (1)                     25 01
+>     REPORT_SIZE (1)                         75 01
+>     REPORT_COUNT (8)                        95 08
+>     INPUT (Data,Var,Abs)                    81 02
+>
+> -------------
+>
+>     USAGE_MINIMUM (Keyboard LeftControl)    19 E0
+>     USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
+>     LOGICAL_MINIMUM (0)                     15 00
+>     LOGICAL_MAXIMUM (1)                     25 01
+>     REPORT_SIZE (1)                         75 01
+>     REPORT_COUNT (8)                        95 08
+>     USAGE_PAGE (Keyboard)                   05 07
+>     INPUT (Data,Var,Abs)                    81 02
+>
+> But it makes the parser act wrong for the following report
+> descriptor pattern(such as some Gamepads):
+>
+>     USAGE_PAGE (Button)                     05 09
+>     USAGE (Button 1)                        09 01
+>     USAGE (Button 2)                        09 02
+>     USAGE (Button 4)                        09 04
+>     USAGE (Button 5)                        09 05
+>     USAGE (Button 7)                        09 07
+>     USAGE (Button 8)                        09 08
+>     USAGE (Button 14)                       09 0E
+>     USAGE (Button 15)                       09 0F
+>     USAGE (Button 13)                       09 0D
+>     USAGE_PAGE (Consumer Devices)           05 0C
+>     USAGE (Back)                            0a 24 02
+>     USAGE (HomePage)                        0a 23 02
+>     LOGICAL_MINIMUM (0)                     15 00
+>     LOGICAL_MAXIMUM (1)                     25 01
+>     REPORT_SIZE (1)                         75 01
+>     REPORT_COUNT (11)                       95 0B
+>     INPUT (Data,Var,Abs)                    81 02
+>
+> With Usage Page concatenation in Main item, parser recognizes all the
+> 11 Usages as consumer keys, it is not the HID device's real intention.
+>
+> This patch adds usage_page_preceding flag to detect the third pattern.
+> Usage Page concatenation is done in both Local and Main parsing.
+> If usage_page_preceding equals 3(the third pattern encountered),
+> hid_concatenate_usage_page() is jumped.
 
-Good catch, I must've taken this from the wrong version of the patch.
+For anything core related (and especially the parsing), I am trying to
+enforce having regression tests.
+See https://gitlab.freedesktop.org/libevdev/hid-tools/merge_requests/37
+for the one related to 58e75155009c.
 
-How about the attached patch?
+So I would like to have a similar-ish MR adding the matching tests so
+I know we won't break this in the future.
 
-Thanks,
-Thierry
---- >8 ---
-=46rom 641b0ee176b139f9edd137ba636ca0cb9c63289a Mon Sep 17 00:00:00 2001
-=46rom: Thierry Reding <thierry.reding@gmail.com>
-Date: Mon, 30 Sep 2019 11:33:31 +0200
-Subject: [PATCH] dt-bindings: pwm: mediatek: Remove gratuitous compatible
- string for MT7629
+Few other comments in the code:
 
-The MT7629 is, in fact, not compatible with the MT7622 because the
-former has a single PWM channel while the former has 6. Remove the
-gratuitous compatible string for MT7629.
+>
+> Signed-off-by: Candle Sun <candle.sun@unisoc.com>
+> Signed-off-by: Nianfu Bai <nianfu.bai@unisoc.com>
+> ---
+>  drivers/hid/hid-core.c | 21 +++++++++++++++++++--
+>  include/linux/hid.h    |  1 +
+>  2 files changed, 20 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+> index 3eaee2c..043a232 100644
+> --- a/drivers/hid/hid-core.c
+> +++ b/drivers/hid/hid-core.c
+> @@ -221,7 +221,15 @@ static int hid_add_usage(struct hid_parser *parser, =
+unsigned usage, u8 size)
+>                 hid_err(parser->device, "usage index exceeded\n");
+>                 return -1;
+>         }
+> -       parser->local.usage[parser->local.usage_index] =3D usage;
+> +       if (!parser->local.usage_index && parser->global.usage_page)
 
-Reported-by: Sam Shih <sam.shih@mediatek.com>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
----
- Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+parser->global.usage_page is never reset, so unless I am misreading,
+it will always be set to a value except for the very first elements.
+I am just raising this in case you rely on global.usage_page being
+null in your algorithm.
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Docum=
-entation/devicetree/bindings/pwm/pwm-mediatek.txt
-index c8501530173c..053e9b5880f1 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-+++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-@@ -6,7 +6,7 @@ Required properties:
-    - "mediatek,mt7622-pwm": found on mt7622 SoC.
-    - "mediatek,mt7623-pwm": found on mt7623 SoC.
-    - "mediatek,mt7628-pwm": found on mt7628 SoC.
--   - "mediatek,mt7629-pwm", "mediatek,mt7622-pwm": found on mt7629 SoC.
-+   - "mediatek,mt7629-pwm": found on mt7629 SoC.
-    - "mediatek,mt8516-pwm": found on mt8516 SoC.
-  - reg: physical base address and length of the controller's registers.
-  - #pwm-cells: must be 2. See pwm.txt in this directory for a description =
-of
---=20
-2.23.0
+> +               parser->local.usage_page_preceding =3D 1;
+> +       if (parser->local.usage_page_preceding =3D=3D 2)
+> +               parser->local.usage_page_preceding =3D 3;
+
+Can't we use an enum at least for those 1, 2, 3 values?
+Unless you are counting the previous items, in which we should rename
+the field .usage_page_preceding with something more explicit IMO.
 
 
---9jHkwA2TBA/ec6v+
-Content-Type: application/pgp-signature; name="signature.asc"
+> +       if (size <=3D 2 && parser->global.usage_page)
+> +               parser->local.usage[parser->local.usage_index] =3D
+> +                       (usage & 0xffff) + (parser->global.usage_page << =
+16);
 
------BEGIN PGP SIGNATURE-----
+we could use a function as this assignment is also reused in
+hid_concatenate_usage_page()
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2RzJoACgkQ3SOs138+
-s6Fu6BAAuRcu3USNLrzJfAKIB1Wgkn0/BdRRi5vnFfGVSQ/CTCPsHwPve+B4ggdD
-KO/QA24iY4G/Jejm6tj2wFt5vw4j12jXaA1oo9Nk2CsfY7JsxhWYLwyB9dn41bxE
-Psooim1/HcwlwzWk2KX3h8kEiBV/xdeppMXog5ab1gXxMMs1j4cxSqEl8Flmal9b
-CwwxZMK21DNl4fZC6R+BUJ/94p7cJ0sOE198wr0Dm87u+faAlPw/VcVeslCOgVLQ
-7G9/NxusfiTjUPSSWrfvJ0vVqXm+bCEAeeONJjr2XqonMr8W2Ch+muv8xB+bsnUY
-8Y2U2nO8TrE9WGRq2WLG8+VOMykfJ2pFSb90rtt7IiGIas6EeEzLEaBrO4KAQeC7
-OzjEA8Q/JywpyKL9IwNCwvDrvbeT4NC5AM7IJmzZ/bZeQwTLi0Zvoju/SqkYb100
-DHZYjV2PcYS6jXQAdo/hMCsQj3MqSzPbNn7j9apiFE/n/Y4SQJiank7jlHleRUmx
-JE58Se7Ge8biW5p2OQzqFk9/4j/4V0aEwdezZFjoS58hIWla+4oGLAU4M4meDnTU
-xPHQZZM2tEg1mrkKhmkd6s+nGSD47bFZP49/+wjRdn1llDxJG9beNUpFiII5HKR9
-3G1y3FsgjCMRWuELFVBXF8hqPC4P/MDk+bUQaSCRzaPwAT7NnwQ=
-=DGcd
------END PGP SIGNATURE-----
+> +       else
+> +               parser->local.usage[parser->local.usage_index] =3D usage;
+>         parser->local.usage_size[parser->local.usage_index] =3D size;
+>         parser->local.collection_index[parser->local.usage_index] =3D
+>                 parser->collection_stack_ptr ?
+> @@ -366,6 +374,8 @@ static int hid_parser_global(struct hid_parser *parse=
+r, struct hid_item *item)
+>
+>         case HID_GLOBAL_ITEM_TAG_USAGE_PAGE:
+>                 parser->global.usage_page =3D item_udata(item);
+> +               if (parser->local.usage_page_preceding =3D=3D 1)
+> +                       parser->local.usage_page_preceding =3D 2;
+>                 return 0;
+>
+>         case HID_GLOBAL_ITEM_TAG_LOGICAL_MINIMUM:
+> @@ -547,9 +557,16 @@ static void hid_concatenate_usage_page(struct hid_pa=
+rser *parser)
+>  {
+>         int i;
+>
+> +       if (parser->local.usage_page_preceding =3D=3D 3) {
+> +               dbg_hid("Using preceding usage page for final usage\n");
+> +               return;
+> +       }
+> +
+>         for (i =3D 0; i < parser->local.usage_index; i++)
+>                 if (parser->local.usage_size[i] <=3D 2)
+> -                       parser->local.usage[i] +=3D parser->global.usage_=
+page << 16;
+> +                       parser->local.usage[i] =3D
+> +                               (parser->global.usage_page << 16)
+> +                               + (parser->local.usage[i] & 0xffff);
 
---9jHkwA2TBA/ec6v+--
+I find the whole logic really hard to follow. I'm not saying you are
+wrong, but if it's hard to get the concepts behind the various states
+and this will make it really prone to future errors.
+
+I wonder if we should not:
+- store the current usage page in the current local item as they come in
+- then in hid_concatenate_usage_page() iterate over the usages in
+reverse order. We should be able to detect if the last usage page was
+given for the whole previous range (i.e. not assigned to any local
+usage) or if it has already been given to a local usage, meaning we
+should just keep things as it is.
+
+Cheers,
+Benjamin
+
+>  }
+>
+>  /*
+> diff --git a/include/linux/hid.h b/include/linux/hid.h
+> index cd41f20..7fb6cf3 100644
+> --- a/include/linux/hid.h
+> +++ b/include/linux/hid.h
+> @@ -412,6 +412,7 @@ struct hid_local {
+>         unsigned usage_minimum;
+>         unsigned delimiter_depth;
+>         unsigned delimiter_branch;
+> +       unsigned int usage_page_preceding;
+>  };
+>
+>  /*
+> --
+> 2.7.4
+>
+
