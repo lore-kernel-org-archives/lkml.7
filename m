@@ -2,102 +2,97 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80473C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A85C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5547821855
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FE3B21927
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:57:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="jWhbup8u"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zxeBRvzt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731499AbfI3VzC (ORCPT
+        id S1731997AbfI3V5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 17:55:02 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:60762 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728470AbfI3VzC (ORCPT
+        Mon, 30 Sep 2019 17:57:04 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40408 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727118AbfI3V5E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 17:55:02 -0400
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190930215459epoutp01c989e6e7fe9cabd5953023b5758008ec~JVf8zsTUo0775207752epoutp01o
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 21:54:59 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190930215459epoutp01c989e6e7fe9cabd5953023b5758008ec~JVf8zsTUo0775207752epoutp01o
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1569880499;
-        bh=cEfjYlLf43o9MBy1ICOhBt1tk62BX/W31Wq/TZFyDqk=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=jWhbup8uktGCb8V5qjynsnImduqSVZbk9h27iZqn4wpePtccHDUeO64s5jBBoDMyb
-         aBHJ1U+EBAOzbGe2I10MGCWKIHQlAV3SLEJCyroPHw3j7FObgLZL176PhtgqWBHza9
-         zbRyaRkNE8gwPa/jzOF1eMXYhRHDkVLfSEYwsnZw=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
-        20190930215458epcas2p165bd52422fc5de33e087b7b8708713ff~JVf750Y1l2313523135epcas2p1E;
-        Mon, 30 Sep 2019 21:54:58 +0000 (GMT)
-Received: from epsmges2p4.samsung.com (unknown [182.195.40.181]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 46hx5Y1NgNzMqYkW; Mon, 30 Sep
-        2019 21:54:57 +0000 (GMT)
-X-AuditID: b6c32a48-415ff70000000fe3-94-5d9279b17242
-Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
-        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A1.6B.04067.1B9729D5; Tue,  1 Oct 2019 06:54:57 +0900 (KST)
-Mime-Version: 1.0
-Subject: Re: [PATCH 1/1] blk-mq: fill header with kernel-doc
-Reply-To: minwoo.im@samsung.com
-From:   Minwoo Im <minwoo.im@samsung.com>
-To:     =?UTF-8?B?QW5kcsOpIEFsbWVpZGE=?= <andrealmeid@collabora.com>
-CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "kernel@collabora.com" <kernel@collabora.com>,
-        "krisman@collabora.com" <krisman@collabora.com>,
-        Minwoo Im <minwoo.im@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <20190930194846.23141-1-andrealmeid@collabora.com>
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20190930215456epcms2p64c66823d97c6ffad3861e750a4145f4b@epcms2p6>
-Date:   Tue, 01 Oct 2019 06:54:56 +0900
-X-CMS-MailID: 20190930215456epcms2p64c66823d97c6ffad3861e750a4145f4b
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupmk+LIzCtJLcpLzFFi42LZdljTQndj5aRYgwsnuSw+zNvFYrH6bj+b
-        xeZzPawWi45eZ7HYe0vb4vKuOWwWz04fYHZg99hxdwmjx+WzpR59W1YxenzeJBfAEpVjk5Ga
-        mJJapJCal5yfkpmXbqvkHRzvHG9qZmCoa2hpYa6kkJeYm2qr5OIToOuWmQO0X0mhLDGnFCgU
-        kFhcrKRvZ1OUX1qSqpCRX1xiq5RakJJTYGhYoFecmFtcmpeul5yfa2VoYGBkClSZkJNx66dO
-        wSrmip/3LjI3MM5l7mLk5JAQMJG43byCqYuRi0NIYAejxJJbV1m7GDk4eAUEJf7uEAapERaw
-        kZjTe5oZJCwkIC/x45UBRFhT4t3uM6wgNpuAukTD1FcsILaIgIPE400vmEFGMgusY5JY8uUE
-        G8QuXokZ7U9ZIGxpie3LtzKC2JwC9hLP+j+zQ8RFJW6ufgtnvz82nxHCFpFovXcW6mZBiQc/
-        d0PFpSR2rD8AdrKEQDOjxB9niHADo8T1+eIQtrnE7/u7we7kFfCVeLhlOdh4FgFViTnbr0KN
-        dJFo7d4OVsMsoC2xbOFrsHeZgX5cv0sfYrqyxJFbLBAVfBIdh/+ywzy1Y94TJghbWeLjoUNQ
-        EyUlll96DfW4h8TWqT/ZIIHcxijx6/EG5gmMCrMQ4TwLyeJZCIsXMDKvYhRLLSjOTU8tNiow
-        QY7ZTYzghKjlsYPxwDmfQ4wCHIxKPLwTXk6MFWJNLCuuzD3EKMHBrCTCK84wIVaINyWxsiq1
-        KD++qDQntfgQoynQ/xOZpUST84HJOq8k3tDUyMzMwNLUwtTMyEJJnHcT980YIYH0xJLU7NTU
-        gtQimD4mDk6pBkZ1Y0uxe1xW+7QTUjedvF3/+cCWK3kTOOo/cZTEuE8NfNp19xVL6K5zR/dE
-        H/jm4nlPWGrLGfkMVpNlv/fnL7zyIGmRdMO6a2z7vuyfmd0TV/gj9+SWzn6vKZ9yf9YkHLTe
-        fOapqFpd5JvDm7UfsPJP3RkUElLpf3KGRV+T/iefYNV0+2DXq5eUWIozEg21mIuKEwFKbnTq
-        ngMAAA==
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190930211400epcas2p4253bdc8cc3630f87d7e955cd23fdf1f2
-References: <20190930194846.23141-1-andrealmeid@collabora.com>
-        <CGME20190930211400epcas2p4253bdc8cc3630f87d7e955cd23fdf1f2@epcms2p6>
+        Mon, 30 Sep 2019 17:57:04 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 7so11113884ljw.7
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 14:57:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4G8UhfmOAU+vf176VW3ixtgHtt4omHWSmMUKQqJYu4I=;
+        b=zxeBRvzt144Q4MDycJBV/iY/2eVJfo8OGtkSJ0SJijBO2SEblZzrVzwlMUbAM+75SS
+         LNt8hYAXph/R13Qlfc4X4Ugg10gDi9uZoyrf3aIEGtHaARdlCMS8W6Hv/Gyg1aA7NhRg
+         +5YcShk/mkdFeO4SABR6+AehSLtFVMI9hV0IZvm+xNaDRU5ri2jxn8wN8+R2531bip9n
+         HWBEiqrzP+T1djmmDaowqv+2jDvWaaqtPXvH9ttR19WAiFNmZfzReUc6pUSYmzdCWlCo
+         SGlbCAYv2DyxRTmvQ2x85hx7Fhc++TSYqMt/xumnFrYkYOJyZ42kIwDm0UDHbqZFiWeX
+         mCfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4G8UhfmOAU+vf176VW3ixtgHtt4omHWSmMUKQqJYu4I=;
+        b=q9W4Cn/p2hyspDYbPt6piTkfpw0yUSL+nr8OaTl1iMy5kSx4atYapcCRXbsl5EDdiJ
+         bEFXrZXMWPSsuMPtLznXTXB3sGhaFqn3adK2Jz8MHji7adFk0HS5VR5xEXWjdTuQs3Io
+         HT93Efti6rOTGLX+WNcaSGqLT0mFAtqQaqveSS4p5tTJDWl8sEZzOPckEUAyRl9J1kSW
+         O/5O5I4S64qVgDgv3RWBrQqt0fFulHgVeK++3fCwdwbDNehcPbkCfxK36FsPeviYS6U0
+         pbhVAK++r0/GJsUy7KlJTUApFxJdCtBs2boDnT5tKRRJ/HYSO98i8lgab8gFVnjVbDAX
+         4j0A==
+X-Gm-Message-State: APjAAAVKTbjTU5W1yaqzezCaz3a7mqV1N8XOn2EMPOBC/rPLpUPbLaDS
+        UjiH/jvdoFxKDPmIAtAqgcwn+23q/w5UrQgPkdxghQ==
+X-Google-Smtp-Source: APXvYqxTMPGQmp2QxQwSjPnSlD2DfIy461Be7tP5jcA0wNeXj15OTh6X0ZFBtVo8y+wCLVjDeIruFT+9xcgMQuaamL4=
+X-Received: by 2002:a2e:b4c4:: with SMTP id r4mr13939072ljm.69.1569880621961;
+ Mon, 30 Sep 2019 14:57:01 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190929070047.2515-1-wenyang@linux.alibaba.com>
+In-Reply-To: <20190929070047.2515-1-wenyang@linux.alibaba.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 30 Sep 2019 23:56:50 +0200
+Message-ID: <CACRpkdY-SnPjocWzoujah6c=Tnj8G7XqBgULXYNwnt6FvED37g@mail.gmail.com>
+Subject: Re: [PATCH] net: dsa: rtl8366rb: add missing of_node_put after
+ calling of_get_child_by_name
+To:     Wen Yang <wenyang@linux.alibaba.com>
+Cc:     xlpang@linux.alibaba.com, zhiche.yy@alibaba-inc.com,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andr=C3=A9,=0D=0A=0D=0A>=20-/*=0D=0A>=20+/**=0D=0A>=20+=20*=20blk_mq_rq_=
-from_pdu=20-=20cast=20a=20PDU=20to=20a=20request=0D=0A>=20+=20*=20=40pdu:=
-=20the=20PDU=20(protocol=20unit=20request)=20to=20be=20casted=0D=0A=0D=0AIt=
-=20makes=20sense,=20but=20it=20looks=20like=20PDU=20stands=20for=20protocol=
-=20unit=20request.=0D=0ACould=20we=20have=20it=20=22PDU(Protocol=20Data=20U=
-nit)=22=20?=0D=0A=0D=0AThanks,=0D=0A
+On Sun, Sep 29, 2019 at 9:01 AM Wen Yang <wenyang@linux.alibaba.com> wrote:
+
+It's nice to see some Alibaba kernel contributions!
+
+> of_node_put needs to be called when the device node which is got
+> from of_get_child_by_name finished using.
+> irq_domain_add_linear() also calls of_node_get() to increase refcount,
+> so irq_domain will not be affected when it is released.
+>
+> fixes: d8652956cf37 ("net: dsa: realtek-smi: Add Realtek SMI driver")
+> Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Vivien Didelot <vivien.didelot@gmail.com>
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: netdev@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
