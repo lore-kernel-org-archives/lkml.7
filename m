@@ -2,211 +2,98 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95FFCC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B76C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59A7E2086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:40:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9E0B2086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:42:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P7Kqtsfg"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="j9AMskwc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731316AbfI3NkM (ORCPT
+        id S1731333AbfI3NmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 09:40:12 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:34492 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731062AbfI3NkM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:40:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1569850809;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MA63hBmJsYzQss5DMknC+P7/1009LduBC7f7Jopycp4=;
-        b=P7Kqtsfg+k+mp9Gjj91EQdh7cuObHG9nWUJ7EPYjvP9xD1fWhp2fsxBazwwzAcYeh0mIeA
-        KP6dosf5Ka9jual+CAafLN/JEj6W7Xe02jn6o+tpm7lt2R502gG1gcAN8WuhZE/W+UZnT4
-        H/CRSqYku85xa58oUZjYtZTyTKZK4V4=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-312-HAXdRCSuPbGeRaAjVhzoBQ-1; Mon, 30 Sep 2019 09:40:07 -0400
-Received: by mail-qt1-f200.google.com with SMTP id i10so13876663qtq.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 06:40:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9rR8tz1aiQ04YMjGa9rh3iMKIseE9DL6jnPV9zEToow=;
-        b=rrUhuee9Glw0coRlbnsN6Hy3C3opjQMBkbtVha49rLPbGhrAXWqvfpzgvgISSK5Qid
-         CeKW8v4h50h14AnJ6FWuFlQP6XzEqoZBudMu78NsJgZZTP+TGzsxRSTksE0usAa3C1dh
-         Z0bkwPlmMIjyhGQiNx9jzNCOf4X+P9ZPHo1iZqQo0wOO43tL4CI+fHAX7IPDnUF393Co
-         f6ORFcUPz3VDsDEJJtgbE8fr0oSgY/LZlVBKv55RsqxwjUCFAhVySJiMUSU45GaMke5Y
-         JIgvhL6xejIVyo+t1wZ370dpZcrEEmcnALQOAUkmWhENfR7m2CvpJkFMdmG3aYcyBEdb
-         bdnQ==
-X-Gm-Message-State: APjAAAWhZ8z2TI3ZVKTsH42uZm84F5k2VMMy6ByFQIPHsyWxsI+/gHyi
-        W4VAlRDb2bj+z9dUCKJL7zmMGwcxf4KInuQ2XZhjTvbbVk6OmPbC9Q7ToITNzraBkEVMwDabOM9
-        K4AABoABdNBvR3Et0u5EnVsLc
-X-Received: by 2002:aed:3168:: with SMTP id 95mr25049142qtg.262.1569850805493;
-        Mon, 30 Sep 2019 06:40:05 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzWTUfTCpm3XDLDndTdu5XFiG42Cb/X1AKodPj29qVz+Sx6vY4nBPTUxX8Y2gnZpbVsV3ZqPg==
-X-Received: by 2002:aed:3168:: with SMTP id 95mr25049095qtg.262.1569850805134;
-        Mon, 30 Sep 2019 06:40:05 -0700 (PDT)
-Received: from ?IPv6:2601:342:8200:6edc::b073? ([2601:342:8200:6edc::b073])
-        by smtp.gmail.com with ESMTPSA id f10sm6611230qtj.3.2019.09.30.06.40.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Sep 2019 06:40:04 -0700 (PDT)
-Subject: Re: [RESEND][PATCH v8 0/5] DMA-BUF Heaps (destaging ION)
-To:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Cc:     Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        dri-devel@lists.freedesktop.org
-References: <20190906184712.91980-1-john.stultz@linaro.org>
-From:   Laura Abbott <labbott@redhat.com>
-Message-ID: <f8db6c29-ede2-e8ca-9433-139e01ae5982@redhat.com>
-Date:   Mon, 30 Sep 2019 09:40:02 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Mon, 30 Sep 2019 09:42:13 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:54470 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730583AbfI3NmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 09:42:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=HM9diPGupOggaNZogOJaICPhhkDGUZeBHQIqFNQhR8Y=; b=j9AMskwcXy85O+T+7/AYyAwa8N
+        0Ga/VHObyYQptEJ7D0G1EEG45cd5EEmNiEMuzTz+ydG2jwdsvhz3wqb7AI6RnWxbVST/FCVvFRZeg
+        k52Of0o3mlMLIFe8Z1oytbIFt1SFjPTb7/lFd15Z3w22UhH/uB7ygK61Oj6nSUyU/q9c=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iEvwH-0003vJ-9h; Mon, 30 Sep 2019 15:42:09 +0200
+Date:   Mon, 30 Sep 2019 15:42:09 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Jay Cliburn <jcliburn@gmail.com>,
+        Chris Snook <chris.snook@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] net: ag71xx: fix mdio subnode support
+Message-ID: <20190930134209.GB14745@lunn.ch>
+References: <20190930093310.10762-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20190906184712.91980-1-john.stultz@linaro.org>
-Content-Language: en-US
-X-MC-Unique: HAXdRCSuPbGeRaAjVhzoBQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190930093310.10762-1-o.rempel@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/6/19 2:47 PM, John Stultz wrote:
-> Here is yet another pass at the dma-buf heaps patchset Andrew
-> and I have been working on which tries to destage a fair chunk
-> of ION functionality.
->=20
-> The patchset implements per-heap devices which can be opened
-> directly and then an ioctl is used to allocate a dmabuf from the
-> heap.
->=20
-> The interface is similar, but much simpler then IONs, only
-> providing an ALLOC ioctl.
->=20
-> Also, I've provided relatively simple system and cma heaps.
->=20
-> I've booted and tested these patches with AOSP on the HiKey960
-> using the kernel tree here:
->    https://git.linaro.org/people/john.stultz/android-dev.git/log/?h=3Ddev=
-/dma-buf-heap
->=20
-> And the userspace changes here:
->    https://android-review.googlesource.com/c/device/linaro/hikey/+/909436
->=20
-> Compared to ION, this patchset is missing the system-contig,
-> carveout and chunk heaps, as I don't have a device that uses
-> those, so I'm unable to do much useful validation there.
-> Additionally we have no upstream users of chunk or carveout,
-> and the system-contig has been deprecated in the common/andoid-*
-> kernels, so this should be ok.
->=20
-> I've also removed the stats accounting, since any such accounting
-> should be implemented by dma-buf core or the heaps themselves.
->=20
-> Most of the changes in this revision are adddressing the more
-> concrete feedback from Christoph (many thanks!). Though I'm not
-> sure if some of the less specific feedback was completely resolved
-> in discussion last time around. Please let me know!
->=20
-> New in v8:
-> * Make struct dma_heap_ops consts (Suggested by Christoph)
-> * Add flush_kernel_vmap_range/invalidate_kernel_vmap_range calls
->    (suggested by Christoph)
-> * Condense dma_heap_buffer and heap_helper_buffer (suggested by
->    Christoph)
-> * Get rid of needless struct system_heap (suggested by Christoph)
-> * Fix indentation by using shorter argument names (suggested by
->    Christoph)
-> * Remove unused private_flags value
-> * Add forgotten include file to fix build issue on x86
-> * Checkpatch whitespace fixups
->=20
-> Thoughts and feedback would be greatly appreciated!
->=20
-> thanks
-> -john
->=20
-> Cc: Laura Abbott <labbott@redhat.com>
-> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> Cc: Sumit Semwal <sumit.semwal@linaro.org>
-> Cc: Liam Mark <lmark@codeaurora.org>
-> Cc: Pratik Patel <pratikp@codeaurora.org>
-> Cc: Brian Starkey <Brian.Starkey@arm.com>
-> Cc: Vincent Donnefort <Vincent.Donnefort@arm.com>
-> Cc: Sudipto Paul <Sudipto.Paul@arm.com>
-> Cc: Andrew F. Davis <afd@ti.com>
-> Cc: Christoph Hellwig <hch@infradead.org>
-> Cc: Chenbo Feng <fengc@google.com>
-> Cc: Alistair Strachan <astrachan@google.com>
-> Cc: Hridya Valsaraju <hridya@google.com>
-> Cc: dri-devel@lists.freedesktop.org
->=20
->=20
-> Andrew F. Davis (1):
->    dma-buf: Add dma-buf heaps framework
->=20
-> John Stultz (4):
->    dma-buf: heaps: Add heap helpers
->    dma-buf: heaps: Add system heap to dmabuf heaps
->    dma-buf: heaps: Add CMA heap to dmabuf heaps
->    kselftests: Add dma-heap test
->=20
->   MAINTAINERS                                   |  18 ++
->   drivers/dma-buf/Kconfig                       |  11 +
->   drivers/dma-buf/Makefile                      |   2 +
->   drivers/dma-buf/dma-heap.c                    | 250 ++++++++++++++++
->   drivers/dma-buf/heaps/Kconfig                 |  14 +
->   drivers/dma-buf/heaps/Makefile                |   4 +
->   drivers/dma-buf/heaps/cma_heap.c              | 164 +++++++++++
->   drivers/dma-buf/heaps/heap-helpers.c          | 269 ++++++++++++++++++
->   drivers/dma-buf/heaps/heap-helpers.h          |  55 ++++
->   drivers/dma-buf/heaps/system_heap.c           | 122 ++++++++
->   include/linux/dma-heap.h                      |  59 ++++
->   include/uapi/linux/dma-heap.h                 |  55 ++++
->   tools/testing/selftests/dmabuf-heaps/Makefile |   9 +
->   .../selftests/dmabuf-heaps/dmabuf-heap.c      | 230 +++++++++++++++
->   14 files changed, 1262 insertions(+)
->   create mode 100644 drivers/dma-buf/dma-heap.c
->   create mode 100644 drivers/dma-buf/heaps/Kconfig
->   create mode 100644 drivers/dma-buf/heaps/Makefile
->   create mode 100644 drivers/dma-buf/heaps/cma_heap.c
->   create mode 100644 drivers/dma-buf/heaps/heap-helpers.c
->   create mode 100644 drivers/dma-buf/heaps/heap-helpers.h
->   create mode 100644 drivers/dma-buf/heaps/system_heap.c
->   create mode 100644 include/linux/dma-heap.h
->   create mode 100644 include/uapi/linux/dma-heap.h
->   create mode 100644 tools/testing/selftests/dmabuf-heaps/Makefile
->   create mode 100644 tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
->=20
+On Mon, Sep 30, 2019 at 11:33:10AM +0200, Oleksij Rempel wrote:
+> The driver was working with fixed phy without any noticeable issues. This bug
+> was uncovered by introducing dsa ar9331-switch driver.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+>  drivers/net/ethernet/atheros/ag71xx.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/atheros/ag71xx.c b/drivers/net/ethernet/atheros/ag71xx.c
+> index 6703960c7cf5..d1101eea15c2 100644
+> --- a/drivers/net/ethernet/atheros/ag71xx.c
+> +++ b/drivers/net/ethernet/atheros/ag71xx.c
+> @@ -526,7 +526,7 @@ static int ag71xx_mdio_probe(struct ag71xx *ag)
+>  	struct device *dev = &ag->pdev->dev;
+>  	struct net_device *ndev = ag->ndev;
+>  	static struct mii_bus *mii_bus;
+> -	struct device_node *np;
+> +	struct device_node *np, *mnp;
+>  	int err;
+>  
+>  	np = dev->of_node;
+> @@ -571,7 +571,9 @@ static int ag71xx_mdio_probe(struct ag71xx *ag)
+>  		msleep(200);
+>  	}
+>  
+> -	err = of_mdiobus_register(mii_bus, np);
+> +	mnp = of_get_child_by_name(np, "mdio");
+> +	err = of_mdiobus_register(mii_bus, mnp);
+> +	of_node_put(mnp);
+>  	if (err)
+>  		goto mdio_err_put_clk;
 
-I've seen a couple of details that need to be fixed and can be
-fixed fairly easily but as far as the overall design goes it looks
-good. Once those are fixed up, you can add
+Hi Oleksij
 
-Acked-by: Laura Abbott <labbott@redhat.com>
+You need to keep backwards compatibility here. If you find an mdio
+node, use it, but if not, you need to still register np.
 
+This is also extending the driver binding, so you need to update the
+binding documentation.
+
+	Andrew
