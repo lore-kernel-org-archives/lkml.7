@@ -2,265 +2,210 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8472AC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E53DFC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C5742075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8085215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:29:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731321AbfI3NZC (ORCPT
+        id S1730929AbfI3N3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 09:25:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52818 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728214AbfI3NZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:25:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E1014AC81;
-        Mon, 30 Sep 2019 13:24:58 +0000 (UTC)
-Message-ID: <ead91241ad2bba8db120d0a5e583184b5cfb22a1.camel@suse.de>
-Subject: Re: [PATCH] HID: core: add usage_page_preceding flag for
- hid_concatenate_usage_page()
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Candle Sun <candlesea@gmail.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, chunyan.zhang@unisoc.com,
-        Candle Sun <candle.sun@unisoc.com>,
-        Nianfu Bai <nianfu.bai@unisoc.com>
-Date:   Mon, 30 Sep 2019 15:24:57 +0200
-In-Reply-To: <CAO-hwJLrQTp7qeMpQvF7429a0qisAe-=zLFRtY79ajhLtusdRg@mail.gmail.com>
-References: <1569830949-10771-1-git-send-email-candlesea@gmail.com>
-         <CAO-hwJLrQTp7qeMpQvF7429a0qisAe-=zLFRtY79ajhLtusdRg@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-x3TYOl9kQALXdVOQfPp6"
-User-Agent: Evolution 3.32.4 
+        Mon, 30 Sep 2019 09:29:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39431 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728214AbfI3N3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 09:29:48 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 54A0D3001BF1;
+        Mon, 30 Sep 2019 13:29:48 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 14FAF10013D9;
+        Mon, 30 Sep 2019 13:29:48 +0000 (UTC)
+Received: from zmail25.collab.prod.int.phx2.redhat.com (zmail25.collab.prod.int.phx2.redhat.com [10.5.83.31])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 8B0211808878;
+        Mon, 30 Sep 2019 13:29:47 +0000 (UTC)
+Date:   Mon, 30 Sep 2019 09:29:47 -0400 (EDT)
+From:   Frediano Ziglio <fziglio@redhat.com>
+To:     Jaak Ristioja <jaak@ristioja.ee>
+Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        Daniel Vetter <daniel@ffwll.ch>,
+        spice-devel@lists.freedesktop.org, Dave Airlie <airlied@redhat.com>
+Message-ID: <1174991123.3693721.1569850187145.JavaMail.zimbra@redhat.com>
+In-Reply-To: <ccafdbaf-7f8e-8616-5543-2a178bd63828@ristioja.ee>
+References: <92785039-0941-4626-610b-f4e3d9613069@ristioja.ee> <20190905071407.47iywqcqomizs3yr@sirius.home.kraxel.org> <e4b7d889-15f3-0c90-3b9f-d395344499c0@ristioja.ee> <ccafdbaf-7f8e-8616-5543-2a178bd63828@ristioja.ee>
+Subject: Re: [Spice-devel] Xorg indefinitely hangs in kernelspace
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.33.32.17, 10.4.195.3]
+Thread-Topic: Xorg indefinitely hangs in kernelspace
+Thread-Index: P6Hw31NHDA5mMI1vf1Z67xvLkTg4/g==
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 30 Sep 2019 13:29:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> 
+> On 05.09.19 15:34, Jaak Ristioja wrote:
+> > On 05.09.19 10:14, Gerd Hoffmann wrote:
+> >> On Tue, Aug 06, 2019 at 09:00:10PM +0300, Jaak Ristioja wrote:
+> >>> Hello!
+> >>>
+> >>> I'm writing to report a crash in the QXL / DRM code in the Linux kernel.
+> >>> I originally filed the issue on LaunchPad and more details can be found
+> >>> there, although I doubt whether these details are useful.
+> >>
+> >> Any change with kernel 5.3-rc7 ?
+> > 
+> > Didn't try. Did you change something? I could try, but I've done so
+> > before and every time this bug manifests itself with MAJOR.MINOR-rc# I
+> > get asked to try version MAJOR.(MINOR+1)-rc# so I guess I could as well
+> > give up?
+> > 
+> > Alright, I'll install 5.3-rc7, but once more it might take some time for
+> > this bug to expose itself.
+> 
+> Just got the issue with 5.3.0-050300rc7-generic:
+> 
+> [124212.547403] INFO: task Xorg:797 blocked for more than 120 seconds.
+> [124212.548639]       Not tainted 5.3.0-050300rc7-generic #201909021831
+> [124212.549839] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+> disables this message.
+> [124212.547403] INFO: task Xorg:797 blocked for more than 120 seconds.
+> [124212.548639]       Not tainted 5.3.0-050300rc7-generic #201909021831
+> [124212.549839] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+> disables this message.
+> [124212.551329] Xorg            D    0   797    773 0x00404004
+> [124212.551331] Call Trace:
+> [124212.551336]  __schedule+0x2b9/0x6c0
+> [124212.551337]  schedule+0x42/0xb0
+> [124212.551338]  schedule_preempt_disabled+0xe/0x10
+> [124212.551340]  __ww_mutex_lock.isra.0+0x261/0x7f0
+> [124212.551345]  ? ttm_bo_init+0x6b/0x100 [ttm]
+> [124212.551346]  __ww_mutex_lock_slowpath+0x16/0x20
+> [124212.551347]  ww_mutex_lock+0x38/0x90
+> [124212.551352]  ttm_eu_reserve_buffers+0x1cc/0x2f0 [ttm]
+> [124212.551371]  qxl_release_reserve_list+0x6d/0x150 [qxl]
+> [124212.551373]  ? qxl_bo_pin+0xf4/0x190 [qxl]
+> [124212.551375]  qxl_cursor_atomic_update+0x1ab/0x2e0 [qxl]
+> [124212.551376]  ? qxl_bo_pin+0xf4/0x190 [qxl]
+> [124212.551384]  drm_atomic_helper_commit_planes+0xd5/0x220 [drm_kms_helper]
+> [124212.551388]  drm_atomic_helper_commit_tail+0x2c/0x70 [drm_kms_helper]
+> [124212.551392]  commit_tail+0x68/0x70 [drm_kms_helper]
+> [124212.551395]  drm_atomic_helper_commit+0x118/0x120 [drm_kms_helper]
+> [124212.551407]  drm_atomic_commit+0x4a/0x50 [drm]
+> [124212.551411]  drm_atomic_helper_update_plane+0xea/0x100 [drm_kms_helper]
+> [124212.551418]  __setplane_atomic+0xcb/0x110 [drm]
+> [124212.551428]  drm_mode_cursor_universal+0x140/0x260 [drm]
+> [124212.551435]  drm_mode_cursor_common+0xcc/0x220 [drm]
+> [124212.551441]  ? drm_mode_cursor_ioctl+0x60/0x60 [drm]
+> [124212.551447]  drm_mode_cursor2_ioctl+0xe/0x10 [drm]
+> [124212.551452]  drm_ioctl_kernel+0xae/0xf0 [drm]
+> [124212.551458]  drm_ioctl+0x234/0x3d0 [drm]
+> [124212.551464]  ? drm_mode_cursor_ioctl+0x60/0x60 [drm]
+> [124212.551466]  ? timerqueue_add+0x5f/0xa0
+> [124212.551469]  ? enqueue_hrtimer+0x3d/0x90
+> [124212.551471]  do_vfs_ioctl+0x407/0x670
+> [124212.551473]  ? fput+0x13/0x20
+> [124212.551475]  ? __sys_recvmsg+0x88/0xa0
+> [124212.551476]  ksys_ioctl+0x67/0x90
+> [124212.551477]  __x64_sys_ioctl+0x1a/0x20
+> [124212.551479]  do_syscall_64+0x5a/0x130
+> [124212.551480]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [124212.551481] RIP: 0033:0x7f07c79ee417
+> [124212.551485] Code: Bad RIP value.
+> [124212.551485] RSP: 002b:00007ffc6b1de1a8 EFLAGS: 00003246 ORIG_RAX:
+> 0000000000000010
+> [124212.551486] RAX: ffffffffffffffda RBX: 00005612f109a610 RCX:
+> 00007f07c79ee417
+> [124212.551487] RDX: 00007ffc6b1de1e0 RSI: 00000000c02464bb RDI:
+> 000000000000000e
+> [124212.551487] RBP: 00007ffc6b1de1e0 R08: 0000000000000040 R09:
+> 0000000000000004
+> [124212.551488] R10: 000000000000003f R11: 0000000000003246 R12:
+> 00000000c02464bb
+> [124212.551488] R13: 000000000000000e R14: 0000000000000000 R15:
+> 00005612f10981d0
+> [124333.376328] INFO: task Xorg:797 blocked for more than 241 seconds.
+> [124333.377474]       Not tainted 5.3.0-050300rc7-generic #201909021831
+> [124333.378609] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+> disables this message.
+> [124333.376328] INFO: task Xorg:797 blocked for more than 241 seconds.
+> [124333.377474]       Not tainted 5.3.0-050300rc7-generic #201909021831
+> [124333.378609] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+> disables this message.
+> [124333.380060] Xorg            D    0   797    773 0x00404004
+> [124333.380062] Call Trace:
+> [124333.380067]  __schedule+0x2b9/0x6c0
+> [124333.380068]  schedule+0x42/0xb0
+> [124333.380069]  schedule_preempt_disabled+0xe/0x10
+> [124333.380070]  __ww_mutex_lock.isra.0+0x261/0x7f0
+> [124333.380076]  ? ttm_bo_init+0x6b/0x100 [ttm]
+> [124333.380077]  __ww_mutex_lock_slowpath+0x16/0x20
+> [124333.380077]  ww_mutex_lock+0x38/0x90
+> [124333.380080]  ttm_eu_reserve_buffers+0x1cc/0x2f0 [ttm]
+> [124333.380083]  qxl_release_reserve_list+0x6d/0x150 [qxl]
+> [124333.380085]  ? qxl_bo_pin+0xf4/0x190 [qxl]
+> [124333.380087]  qxl_cursor_atomic_update+0x1ab/0x2e0 [qxl]
+> [124333.380088]  ? qxl_bo_pin+0xf4/0x190 [qxl]
+> [124333.380096]  drm_atomic_helper_commit_planes+0xd5/0x220 [drm_kms_helper]
+> [124333.380101]  drm_atomic_helper_commit_tail+0x2c/0x70 [drm_kms_helper]
+> [124333.380105]  commit_tail+0x68/0x70 [drm_kms_helper]
+> [124333.380109]  drm_atomic_helper_commit+0x118/0x120 [drm_kms_helper]
+> [124333.380128]  drm_atomic_commit+0x4a/0x50 [drm]
+> [124333.380132]  drm_atomic_helper_update_plane+0xea/0x100 [drm_kms_helper]
+> [124333.380140]  __setplane_atomic+0xcb/0x110 [drm]
+> [124333.380147]  drm_mode_cursor_universal+0x140/0x260 [drm]
+> [124333.380153]  drm_mode_cursor_common+0xcc/0x220 [drm]
+> [124333.380160]  ? drm_mode_cursor_ioctl+0x60/0x60 [drm]
+> [124333.380166]  drm_mode_cursor2_ioctl+0xe/0x10 [drm]
+> [124333.380171]  drm_ioctl_kernel+0xae/0xf0 [drm]
+> [124333.380176]  drm_ioctl+0x234/0x3d0 [drm]
+> [124333.380182]  ? drm_mode_cursor_ioctl+0x60/0x60 [drm]
+> [124333.380184]  ? timerqueue_add+0x5f/0xa0
+> [124333.380186]  ? enqueue_hrtimer+0x3d/0x90
+> [124333.380188]  do_vfs_ioctl+0x407/0x670
+> [124333.380190]  ? fput+0x13/0x20
+> [124333.380192]  ? __sys_recvmsg+0x88/0xa0
+> [124333.380193]  ksys_ioctl+0x67/0x90
+> [124333.380194]  __x64_sys_ioctl+0x1a/0x20
+> [124333.380195]  do_syscall_64+0x5a/0x130
+> [124333.380197]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [124333.380198] RIP: 0033:0x7f07c79ee417
+> [124333.380202] Code: Bad RIP value.
+> [124333.380203] RSP: 002b:00007ffc6b1de1a8 EFLAGS: 00003246 ORIG_RAX:
+> 0000000000000010
+> [124333.380204] RAX: ffffffffffffffda RBX: 00005612f109a610 RCX:
+> 00007f07c79ee417
+> [124333.380204] RDX: 00007ffc6b1de1e0 RSI: 00000000c02464bb RDI:
+> 000000000000000e
+> [124333.380205] RBP: 00007ffc6b1de1e0 R08: 0000000000000040 R09:
+> 0000000000000004
+> [124333.380205] R10: 000000000000003f R11: 0000000000003246 R12:
+> 00000000c02464bb
+> [124333.380206] R13: 000000000000000e R14: 0000000000000000 R15:
+> 00005612f10981d0
+> 
+> 
+> Best regards,
+> J
 
---=-x3TYOl9kQALXdVOQfPp6
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi Jaak,
+  Why didn't you update bug at https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1813620?
+I know it can seem tedious but would help tracking it.
+It seems you are having this issue since quite some time and with
+multiple kernel versions.
+Are you still using Kubuntu? Maybe it happens more with KDE.
+From the Kernel log looks like a dead lock.
 
-On Mon, 2019-09-30 at 11:36 +0200, Benjamin Tissoires wrote:
-> Hi,
->=20
-> [also addingg Nicolas, the author of 58e75155009c]
-
-Thanks!
-
->=20
-> On Mon, Sep 30, 2019 at 10:10 AM Candle Sun <candlesea@gmail.com> wrote:
-> > From: Candle Sun <candle.sun@unisoc.com>
-> >=20
-> > Upstream commit 58e75155009c ("HID: core: move Usage Page concatenation
-> > to Main item") adds support for Usage Page item following Usage items
-> > (such as keyboards manufactured by Primax).
-> >=20
-> > Usage Page concatenation in Main item works well for following report
-> > descriptor patterns:
-> >=20
-> >     USAGE_PAGE (Keyboard)                   05 07
-> >     USAGE_MINIMUM (Keyboard LeftControl)    19 E0
-> >     USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
-> >     LOGICAL_MINIMUM (0)                     15 00
-> >     LOGICAL_MAXIMUM (1)                     25 01
-> >     REPORT_SIZE (1)                         75 01
-> >     REPORT_COUNT (8)                        95 08
-> >     INPUT (Data,Var,Abs)                    81 02
-> >=20
-> > -------------
-> >=20
-> >     USAGE_MINIMUM (Keyboard LeftControl)    19 E0
-> >     USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
-> >     LOGICAL_MINIMUM (0)                     15 00
-> >     LOGICAL_MAXIMUM (1)                     25 01
-> >     REPORT_SIZE (1)                         75 01
-> >     REPORT_COUNT (8)                        95 08
-> >     USAGE_PAGE (Keyboard)                   05 07
-> >     INPUT (Data,Var,Abs)                    81 02
-> >=20
-> > But it makes the parser act wrong for the following report
-> > descriptor pattern(such as some Gamepads):
-> >=20
-> >     USAGE_PAGE (Button)                     05 09
-> >     USAGE (Button 1)                        09 01
-> >     USAGE (Button 2)                        09 02
-> >     USAGE (Button 4)                        09 04
-> >     USAGE (Button 5)                        09 05
-> >     USAGE (Button 7)                        09 07
-> >     USAGE (Button 8)                        09 08
-> >     USAGE (Button 14)                       09 0E
-> >     USAGE (Button 15)                       09 0F
-> >     USAGE (Button 13)                       09 0D
-> >     USAGE_PAGE (Consumer Devices)           05 0C
-> >     USAGE (Back)                            0a 24 02
-> >     USAGE (HomePage)                        0a 23 02
-> >     LOGICAL_MINIMUM (0)                     15 00
-> >     LOGICAL_MAXIMUM (1)                     25 01
-> >     REPORT_SIZE (1)                         75 01
-> >     REPORT_COUNT (11)                       95 0B
-> >     INPUT (Data,Var,Abs)                    81 02
-> >=20
-> > With Usage Page concatenation in Main item, parser recognizes all the
-> > 11 Usages as consumer keys, it is not the HID device's real intention.
-> >=20
-> > This patch adds usage_page_preceding flag to detect the third pattern.
-> > Usage Page concatenation is done in both Local and Main parsing.
-> > If usage_page_preceding equals 3(the third pattern encountered),
-> > hid_concatenate_usage_page() is jumped.
->=20
-> For anything core related (and especially the parsing), I am trying to
-> enforce having regression tests.
-> See https://gitlab.freedesktop.org/libevdev/hid-tools/merge_requests/37
-> for the one related to 58e75155009c.
->=20
-> So I would like to have a similar-ish MR adding the matching tests so
-> I know we won't break this in the future.
->=20
-> Few other comments in the code:
->=20
-> > Signed-off-by: Candle Sun <candle.sun@unisoc.com>
-> > Signed-off-by: Nianfu Bai <nianfu.bai@unisoc.com>
-> > ---
-> >  drivers/hid/hid-core.c | 21 +++++++++++++++++++--
-> >  include/linux/hid.h    |  1 +
-> >  2 files changed, 20 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-> > index 3eaee2c..043a232 100644
-> > --- a/drivers/hid/hid-core.c
-> > +++ b/drivers/hid/hid-core.c
-> > @@ -221,7 +221,15 @@ static int hid_add_usage(struct hid_parser *parser=
-,
-> > unsigned usage, u8 size)
-> >                 hid_err(parser->device, "usage index exceeded\n");
-> >                 return -1;
-> >         }
-> > -       parser->local.usage[parser->local.usage_index] =3D usage;
-> > +       if (!parser->local.usage_index && parser->global.usage_page)
->=20
-> parser->global.usage_page is never reset, so unless I am misreading,
-> it will always be set to a value except for the very first elements.
-> I am just raising this in case you rely on global.usage_page being
-> null in your algorithm.
->=20
-> > +               parser->local.usage_page_preceding =3D 1;
-> > +       if (parser->local.usage_page_preceding =3D=3D 2)
-> > +               parser->local.usage_page_preceding =3D 3;
->=20
-> Can't we use an enum at least for those 1, 2, 3 values?
-> Unless you are counting the previous items, in which we should rename
-> the field .usage_page_preceding with something more explicit IMO.
->=20
->=20
-> > +       if (size <=3D 2 && parser->global.usage_page)
-> > +               parser->local.usage[parser->local.usage_index] =3D
-> > +                       (usage & 0xffff) + (parser->global.usage_page <=
-<
-> > 16);
->=20
-> we could use a function as this assignment is also reused in
-> hid_concatenate_usage_page()
->=20
-> > +       else
-> > +               parser->local.usage[parser->local.usage_index] =3D usag=
-e;
-> >         parser->local.usage_size[parser->local.usage_index] =3D size;
-> >         parser->local.collection_index[parser->local.usage_index] =3D
-> >                 parser->collection_stack_ptr ?
-> > @@ -366,6 +374,8 @@ static int hid_parser_global(struct hid_parser *par=
-ser,
-> > struct hid_item *item)
-> >=20
-> >         case HID_GLOBAL_ITEM_TAG_USAGE_PAGE:
-> >                 parser->global.usage_page =3D item_udata(item);
-> > +               if (parser->local.usage_page_preceding =3D=3D 1)
-> > +                       parser->local.usage_page_preceding =3D 2;
-> >                 return 0;
-> >=20
-> >         case HID_GLOBAL_ITEM_TAG_LOGICAL_MINIMUM:
-> > @@ -547,9 +557,16 @@ static void hid_concatenate_usage_page(struct
-> > hid_parser *parser)
-> >  {
-> >         int i;
-> >=20
-> > +       if (parser->local.usage_page_preceding =3D=3D 3) {
-> > +               dbg_hid("Using preceding usage page for final usage\n")=
-;
-> > +               return;
-> > +       }
-> > +
-> >         for (i =3D 0; i < parser->local.usage_index; i++)
-> >                 if (parser->local.usage_size[i] <=3D 2)
-> > -                       parser->local.usage[i] +=3D parser->global.usag=
-e_page
-> > << 16;
-> > +                       parser->local.usage[i] =3D
-> > +                               (parser->global.usage_page << 16)
-> > +                               + (parser->local.usage[i] & 0xffff);
->=20
-> I find the whole logic really hard to follow. I'm not saying you are
-> wrong, but if it's hard to get the concepts behind the various states
-> and this will make it really prone to future errors.
->=20
-> I wonder if we should not:
-> - store the current usage page in the current local item as they come in
-> - then in hid_concatenate_usage_page() iterate over the usages in
-> reverse order. We should be able to detect if the last usage page was
-> given for the whole previous range (i.e. not assigned to any local
-> usage) or if it has already been given to a local usage, meaning we
-> should just keep things as it is.
-
-I agree this would be simpler to understand. All this would also fix:
-https://lkml.org/lkml/2019/6/14/468
-
-I suggest we agree on a rule of thumb and add it as a code comment. My take=
- on
-it would be:
-
-"Usage pages are always concatenated upon parsing a local usage. If a usage
-page is defined after the local usages ennumeration, we concatenate this us=
-age
-page with all the local usages.
-
-This excludes the case were a usage page is set in between the local usages
-and then another usage page is set just before the main item. That said I d=
-oubt
-we'll ever see that one, as it makes no sense. FWIW we could still detect i=
-t.
-
-Just my two cents,
-regards,
-Nicolas
-
-
---=-x3TYOl9kQALXdVOQfPp6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2SAikACgkQlfZmHno8
-x/7joAf/Sv7mW7YXcc4bnFvFMyotC625VYMI8OTger5MkbmN7HHOPSIQP1Dw7fsi
-WF5VkW7zI4axGy9AKYLihpn0pjAuMxJYtC4mPm5YUhQaiN2BtD+CdOKD7+spz89Q
-8/Tcb8SBXoevGa+Tgk40Q7spvLq57/yNycBgF02vSDpF1G0W7cv2wj078JZDgnoH
-sZWQ+ounxaMQQNoPgiq/2cuDSq8+b02QXX7H2Geh98zwh2DnVQTV03VMm1MI64/p
-vILE99vid6pABXcHz/UpiTBhmC2aL77sdsUBG9t1M1lcpyyarAHpK2r1EanehK4M
-d9kdrBYsyu4RA6Wq5vVIf2x3hN9OHg==
-=NZuG
------END PGP SIGNATURE-----
-
---=-x3TYOl9kQALXdVOQfPp6--
-
+Frediano
