@@ -2,133 +2,84 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CDEC4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E596C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD2DC206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5E5321855
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:20:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="jcbWQmhF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AN6E2r5+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730255AbfI3IUY (ORCPT
+        id S1730260AbfI3IU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 04:20:24 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:46044 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730016AbfI3IT1 (ORCPT
+        Mon, 30 Sep 2019 04:20:58 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43008 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729923AbfI3IU5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 04:19:27 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id C5879C0376;
-        Mon, 30 Sep 2019 08:19:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1569831566; bh=DIrBlnTN+2e2Xshklv4tKK7eG84iI4t6E5yVB8RhCTI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=jcbWQmhFxuQMxnU1sQk3n6K56I5PWCNjR5Uh4r7SwHdYHb8w1HpcaGowIPSzUADj9
-         9IyWhgqLFK7nokgbW+7btXhxG7MBQ1FPvCc2lurXv+f1kT/a2iymj9KoE13qIEPVVD
-         UYHKxLWpZoB4T2ejSt/k1BfyG6oGUvk++nsdjpJDnkx7W/+wdFwMhNES5kH9qghHBU
-         GMa0mIB7qs5U/1MqTbp1dQppzGi68zC6gbfLb9vEeMmCjMtQ6AvR1vafUpGL1tLnO9
-         WzNz9uKXrexZLZ/2OuRWxCztnHTfdeCyXgazx51iPnHMa4tOm8n8He/+t8gaEsBtdx
-         Su4w2LFhWQ20A==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 8366AA0084;
-        Mon, 30 Sep 2019 08:19:23 +0000 (UTC)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 net 6/9] net: stmmac: Do not stop PHY if WoL is enabled
-Date:   Mon, 30 Sep 2019 10:19:10 +0200
-Message-Id: <7f8094c677036ef0600002f683633d39d61242d9.1569831229.git.Jose.Abreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1569831228.git.Jose.Abreu@synopsys.com>
-References: <cover.1569831228.git.Jose.Abreu@synopsys.com>
-In-Reply-To: <cover.1569831228.git.Jose.Abreu@synopsys.com>
-References: <cover.1569831228.git.Jose.Abreu@synopsys.com>
+        Mon, 30 Sep 2019 04:20:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=If3yq1ODv3mmckOcV5bip4UCF3kVbPW2FQhUrotgaDI=; b=AN6E2r5+esnTrZkRBItKdRjse
+        DHWl6KMtx8uvrMrd6Rm3NccrVdj8sgohG5IhvUu7yiSapvzR4zG/bp79mucxPjSJszkOKVpH8j+Tx
+        2LjUq3ltPhxUC0kfPwVvE/2+q38SwH4IotQGcGmUr4Up6EtdRTQiZ0wvN21iKY4deDJKGwH+Nv2Il
+        5HZKNU7KLYBypju4ygZ+GcaHczmiCKoY912aV98rRbc4Dnuh4t7KU3uSDZtsZ0InOTzuzjs+hLISZ
+        5jXl5ucrYxXR2QxMdaSLYGmnw9DWtFeZwFoRF8dgR6/P6gEdioEZk6JQsrYYRYqhTGEevN4Kgr3OW
+        yvuEbI6JA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iEqvP-000835-Nr; Mon, 30 Sep 2019 08:20:55 +0000
+Date:   Mon, 30 Sep 2019 01:20:55 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Rob Herring <robh@kernel.org>, DTML <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Oza Pawandeep <oza.oza@broadcom.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 00/11] of: dma-ranges fixes and improvements
+Message-ID: <20190930082055.GA21971@infradead.org>
+References: <20190927002455.13169-1-robh@kernel.org>
+ <CAK8P3a0oct0EOMi5t4BmpgdkiBM+LjC+2pTST4hcvNCa3MGLmw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a0oct0EOMi5t4BmpgdkiBM+LjC+2pTST4hcvNCa3MGLmw@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If WoL is enabled we can't really stop the PHY, otherwise we will not
-receive the WoL packet. Fix this by telling phylink that only the MAC is
-down and only stop the PHY if WoL is not enabled.
+On Sun, Sep 29, 2019 at 01:16:20PM +0200, Arnd Bergmann wrote:
+> On a semi-related note, Thierry asked about one aspect of the dma-ranges
+> property recently, which is the behavior of dma_set_mask() and related
+> functions when a driver sets a mask that is larger than the memory
+> area in the bus-ranges but smaller than the available physical RAM.
+> As I understood Thierry's problem and the current code, the generic
+> dma_set_mask() will either reject the new mask entirely or override
+> the mask set by of_dma_configure, but it fails to set a correct mask
+> within the limitations of the parent bus in this case.
 
-Fixes: 74371272f97f ("net: stmmac: Convert to phylink and remove phylib logic")
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
-
----
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 31a237ec73bc..843d53e084b7 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -4718,9 +4718,7 @@ int stmmac_suspend(struct device *dev)
- 
- 	mutex_lock(&priv->lock);
- 
--	rtnl_lock();
--	phylink_stop(priv->phylink);
--	rtnl_unlock();
-+	phylink_mac_change(priv->phylink, false);
- 
- 	netif_device_detach(ndev);
- 	stmmac_stop_all_queues(priv);
-@@ -4735,6 +4733,10 @@ int stmmac_suspend(struct device *dev)
- 		stmmac_pmt(priv, priv->hw, priv->wolopts);
- 		priv->irq_wake = 1;
- 	} else {
-+		rtnl_lock();
-+		phylink_stop(priv->phylink);
-+		rtnl_unlock();
-+
- 		stmmac_mac_set(priv, priv->ioaddr, false);
- 		pinctrl_pm_select_sleep_state(priv->device);
- 		/* Disable clock in case of PWM is off */
-@@ -4825,9 +4827,13 @@ int stmmac_resume(struct device *dev)
- 
- 	stmmac_start_all_queues(priv);
- 
--	rtnl_lock();
--	phylink_start(priv->phylink);
--	rtnl_unlock();
-+	if (!device_may_wakeup(priv->device)) {
-+		rtnl_lock();
-+		phylink_start(priv->phylink);
-+		rtnl_unlock();
-+	}
-+
-+	phylink_mac_change(priv->phylink, true);
- 
- 	mutex_unlock(&priv->lock);
- 
--- 
-2.7.4
-
+There days dma_set_mask will only reject a mask if it is too small
+to be supported by the hardware.  Larger than required masks are now
+always accepted.
