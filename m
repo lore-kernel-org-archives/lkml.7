@@ -2,136 +2,79 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3AFC352A9
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 00:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06179C4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 00:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E701A21835
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 00:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDF8F2082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 00:22:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="A0YA+Mbb"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="SMiW6Imf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729222AbfI3ANr (ORCPT
+        id S1729236AbfI3AWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 20:13:47 -0400
-Received: from ozlabs.org ([203.11.71.1]:41793 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726360AbfI3ANr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 20:13:47 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46hND75Gcfz9sP7;
-        Mon, 30 Sep 2019 10:13:43 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1569802424;
-        bh=ogk0hlYIoBCOu2Vho4ZY5MeUcLlebA5N8aJ7TT616wQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=A0YA+Mbbuj4wlaLbzPIug3ttR4qGgEwEOeWOvQD5atl2fLpFGGYtDrX/53W9MurmK
-         6d2q4WWFgULpPva/Tlw+y32hLQvYkDyxfOjjT5L79zvzsTqx94hjVhPTAiZe1WWjo9
-         zXX21AY8MWW/E59EHtDGWZQ00lrkeTuMWnQejMBlPnxBceXG78O5nO0+gSx3xZ5zXI
-         1ecY4ch806DE2vef0wPHjViXSALXH7n8+HazB0z8HGDdXMQvo9eo+8RaFhmry3XeBs
-         L1QlZ709Ojusn0Le22kUbN8+d56iJ7dw5Pb1CEWbY32IBdYfmyyitF1sJWuifFPYjY
-         YX6Tcfx3BYrww==
-Date:   Mon, 30 Sep 2019 10:13:42 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        PowerPC <linuxppc-dev@lists.ozlabs.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>
-Subject: linux-next: build failure after merge of the powerpc tree
-Message-ID: <20190930101342.36c1afa0@canb.auug.org.au>
+        Sun, 29 Sep 2019 20:22:45 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:34778 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729091AbfI3AWp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 20:22:45 -0400
+Received: by mail-qk1-f193.google.com with SMTP id q203so6332009qke.1
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Sep 2019 17:22:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XGwdw6USM6fmVtOR4py7H/FTk388TMG/pxH4fNnR7YQ=;
+        b=SMiW6Imf160HoDD7OIZxz/j458zUAz2dFCa0mZIo1gAP5XTsQDQxGtpiND94fDI04i
+         q7K3c7Od4+9vl7y5Zr6hd7umOAAsr/vRsODisq1i7+sdLtSoXdgZG9GJOT5kF++ogH5Q
+         SF4F9+RdVpYJDy3psGxNKEjz+bJMVJg6mxFCxA7fQ4L9JfGu1brjRfr425SUDcB6t+7/
+         oMxxPZET7P2bPMeadtM3wVu9kc+Og4kNrHMPEFqVxDjtM+r5d48i2p39s4G+tGXMKxqY
+         MBEYEusD/cnIk8g8RrwoouEGjH1bdVGVydg5m0p1WF4fD4GZPLBJO6iCGBKTf5xNm5nV
+         br0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XGwdw6USM6fmVtOR4py7H/FTk388TMG/pxH4fNnR7YQ=;
+        b=oX02qS0dzMBKGwZjOJcgir9CpwhwcfXRHJjei14+7qA7vNJrm1HFPx9dTFqbyAEi+h
+         SLZOosMiD7xcmeyZ2FX66GhYjUqW5A0bOq0PNRJ+b9KTa9PSog2V+y4ESgLdw88kU2f+
+         AG4DCzEhaXGwZDULVjRl1K4kQeDYQYM7/VRxpM10Lyb8u7TxPzENxIcmMRuuu7+llqb5
+         tR97YntP9UmOYViKJZKIW4F7Q1QVboAXuob0Jq96KhOmJNzzcS3vORCvRQvQxg5RfZ1h
+         +WaSS075N7BqbcKLTTi1hoIwwnCwC9eoRd7hCLozptbRRlugpHNA7KUP42+Xqk9eitgh
+         TAHw==
+X-Gm-Message-State: APjAAAUGicn1h3qFX3uEn/B4LWzZIIJwtM/o0QKeitGJdUUtkdJsvD+5
+        pSatymF5T3uiFz4CXCMFuYpeJGn/Xb8kcrNEsx+pzA==
+X-Google-Smtp-Source: APXvYqy3j8uNg+CUEJI8czs3s9DRTMDcdCN0bb3XNnLIQb0jeIVng5zqybz5yWzFCcY8NlU7y0u9BfZCOPRSu9kY7l0=
+X-Received: by 2002:a37:a68e:: with SMTP id p136mr15969911qke.49.1569802962803;
+ Sun, 29 Sep 2019 17:22:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/2k83OivJyP3s+fo16M7TyT4";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <1569199517-5884-1-git-send-email-vincent.chen@sifive.com>
+ <1569199517-5884-3-git-send-email-vincent.chen@sifive.com> <20190927225620.GA26970@infradead.org>
+In-Reply-To: <20190927225620.GA26970@infradead.org>
+From:   Vincent Chen <vincent.chen@sifive.com>
+Date:   Mon, 30 Sep 2019 08:22:31 +0800
+Message-ID: <CABvJ_xgqtY4YydhAtM3ap_Ods1DUHtRE4p3OZpD8_a7iRj+gzQ@mail.gmail.com>
+Subject: Re: [PATCH 2/4] rsicv: avoid sending a SIGTRAP to a user thread
+ trapped in WARN()
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/2k83OivJyP3s+fo16M7TyT4
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sat, Sep 28, 2019 at 6:56 AM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> Oh and s/rsicv/riscv/ in the subject, please.
 
-Hi all,
-
-After merging the powerpc tree, today's linux-next build (powerpc64
-allnoconfig) failed like this:
-
-arch/powerpc/mm/book3s64/pgtable.c: In function 'flush_partition':
-arch/powerpc/mm/book3s64/pgtable.c:216:3: error: implicit declaration of fu=
-nction 'radix__flush_all_lpid_guest'; did you mean 'radix__flush_all_lpid'?=
- [-Werror=3Dimplicit-function-declaration]
-  216 |   radix__flush_all_lpid_guest(lpid);
-      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-      |   radix__flush_all_lpid
-
-Caused by commit
-
-  99161de3a283 ("powerpc/64s/radix: tidy up TLB flushing code")
-
-radix__flush_all_lpid_guest() is only declared for CONFIG_PPC_RADIX_MMU
-which is not set for this build.
-
-I am not sure why this did not show up earlier (maybe a Kconfig
-change?).
-
-I added the following hack for today.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Mon, 30 Sep 2019 10:09:17 +1000
-Subject: [PATCH] powerpc/64s/radix: fix for "tidy up TLB flushing code" and
- !CONFIG_PPC_RADIX_MMU
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- arch/powerpc/include/asm/book3s/64/tlbflush-radix.h | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/powerpc/include/asm/book3s/64/tlbflush-radix.h b/arch/pow=
-erpc/include/asm/book3s/64/tlbflush-radix.h
-index 4ce795d30377..ca8db193ae38 100644
---- a/arch/powerpc/include/asm/book3s/64/tlbflush-radix.h
-+++ b/arch/powerpc/include/asm/book3s/64/tlbflush-radix.h
-@@ -35,6 +35,10 @@ static inline void radix__flush_all_lpid(unsigned int lp=
-id)
- {
- 	WARN_ON(1);
- }
-+static inline void radix__flush_all_lpid_guest(unsigned int lpid)
-+{
-+	WARN_ON(1);
-+}
- #endif
-=20
- extern void radix__flush_hugetlb_tlb_range(struct vm_area_struct *vma,
---=20
-2.23.0.rc1
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/2k83OivJyP3s+fo16M7TyT4
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2RSLYACgkQAVBC80lX
-0GxK5Qf/fRl1qjSxW74ZnbNlM9Qp3qgavwY8JTJA7WHERAFQxwC38n8CoHxMQ+RA
-AIHhKJf9OSJj6gULfJROQDFj7oLYSFKor0gsZBkWsz9hzKlv/l0JnAmmScaxApAM
-LjZJJnLg95JhLgwkjrBK6uoYlGW2gLnI2PxKPUSgGZJ2AO2Ylsg0aMamRNz4p7/H
-6HHxYxk6gN5Idi0333uHjam1KQaa48NBxRisbPSHAv4ZhcxsqWbdaetc/h5FqDbY
-LPqyJz5se9DECd6rxVB0iivvCWYHiTIXLCu54Ga3sHBIUARuTsNEUPurQ2jehn4e
-3VT8pq/g5bo27xFXrrkR7hRDyn08ag==
-=MWB0
------END PGP SIGNATURE-----
-
---Sig_/2k83OivJyP3s+fo16M7TyT4--
+Oh! Thank you for finding this typo.
+I will correct it.
