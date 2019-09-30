@@ -2,120 +2,92 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51FF4C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF360C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 274E9205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:06:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569877613;
-	bh=/VQaup5CuEQUqfJz3MIjQfet3UrLzzEhVMeOPttQQ44=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qXlrG5zwnQRBJ91RvMnZxZtamG7Y2IE4IoUHB8P7XAywEPgL51TOEtRrXRtGfX20V
-	 wYU0jgcYyl3K/37C/+QK9DNax9AuPa9HeD6bNPs2eNmYEADhlyPAqBxa1i+pANk0mQ
-	 qK7nboQOKcbO11jJahC/a1/FRqy49Gu0nEMSCze0=
+	by mail.kernel.org (Postfix) with ESMTP id C16E8205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:07:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o798wUeb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732585AbfI3VGw (ORCPT
+        id S1732586AbfI3VHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 17:06:52 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:37008 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730886AbfI3VGw (ORCPT
+        Mon, 30 Sep 2019 17:07:47 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:40261 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730145AbfI3VHq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 17:06:52 -0400
-Received: by mail-oi1-f194.google.com with SMTP id i16so12457760oie.4;
-        Mon, 30 Sep 2019 14:06:51 -0700 (PDT)
+        Mon, 30 Sep 2019 17:07:46 -0400
+Received: by mail-io1-f66.google.com with SMTP id h144so42077107iof.7;
+        Mon, 30 Sep 2019 14:07:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1JAxk7tyYRwQss6DSI41A5FG1S9HgN+C/lrI/eEfTD4=;
+        b=o798wUebGHzcN0wtUwoqOlAUfWkDAEksR50QXMHXWd73EjFtvIXG/KC6GiyTvVaZpm
+         /1sPRhDr1uNoG7g5tZawkxfz8MQ/xxg5gjrU7BUo1bV73I1PxZtgLbd8GwgsNNRy4/ZB
+         a2Zwwrgd8JFRGXr1+kPBwnp4kZSiKRDcezutk1Tc4uA69z3I1MGIHXjopCehEtqf+6G2
+         QcDnnajtOler9Q/x+KSF1TMyOaLk2OJxzent6r7Yw4rfjK9yglQmcJdC6k+BSgF0Yyin
+         GJQmNtRQQr1jtikZGl+d3798pNuRzJBWQZ2Dfjg5IKIvZiKcmep4162GaMXY/XTQ9u0i
+         7C1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=R+ScOBn956KzGEkg9VCnHI1hFy+s6fYadz+MoOpEicw=;
-        b=pjMhvLmNowUPj7raJGbALN8qwn2QitiKVSbnhv+BIlTh+Rmd/0WCVMGtPBDmoI4sPz
-         aahwHYHCakYIrFFOEND1JFsPVLyPItHuoEYhUg2HQ8RpAmpfYYZABFe+8JPQjWDI+APO
-         Q1KthcPJ7n43F9YoLZTjU52JVkOjUvcErYOxzX0CI6YUMn45XMfv9GjwdEJb4vtUpb+e
-         FJeONc84A3EtJUXFrCZFzLaZgUvmybymJbJf9zQlS/JTWnSQbHQdHHeSxmBLP4EGgHb3
-         NHfz1ki50qt/LP18hQXOSq7p5bIBCxvb6+O8AXa/Iv6RWZmBClHkfvbhzV5ReWwEZ/D4
-         kFKA==
-X-Gm-Message-State: APjAAAWqkvhoApMoy1CGuFKaNYJkkGTzgBbc11R4y74q5tntO9csSean
-        8a/YnCy1LNW52qxrJd0vlF/xeZM=
-X-Google-Smtp-Source: APXvYqxJdj7UgIetkxyOJuuB+3gPijhJfnPX8rakxTFVB90F9LrBkIwQZ2VZisQ5soTIpdHmL7I2rw==
-X-Received: by 2002:aca:50ca:: with SMTP id e193mr643865oib.110.1569870350475;
-        Mon, 30 Sep 2019 12:05:50 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e61sm4090614ote.24.2019.09.30.12.05.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 12:05:49 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 14:05:49 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Cernekee <cernekee@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
-        <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH v2 2/5] dt-bindings: Document brcm,irq-can-wake for
- brcm,bcm7038-l1-intc.txt
-Message-ID: <20190930190549.GA21236@bogus>
-References: <20190913191542.9908-1-f.fainelli@gmail.com>
- <20190913191542.9908-3-f.fainelli@gmail.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1JAxk7tyYRwQss6DSI41A5FG1S9HgN+C/lrI/eEfTD4=;
+        b=LGW73leQVQtTYXcILUBmlxysr743NKmWiqZR78Gqwi68PpQTj/xqIX/eiLMPGLNRcY
+         Lg29nMzDVZb36nyVhjCx3RmxMj0NKO5pjLap+WFNRi4H8TACWVtPYHoSWuGjyEkR4JKG
+         A8MkfTji4k4N+yVtGiYfarjfltyZ8k+Rt9Iwdjtis4kOraWp8vaUD4A/gt2crf7n1A3X
+         TqEYlRkgMCgqvRGbmdhhQgJZN5uKeAsVyRrFlEUNPy3jqdPGTTN0LDVDpSKrPLe9Q20e
+         nWGl0djl7ty5Wxmd/llDcY31TV0ZtFvsBurnkGo9O8+oqsPVsYPAFsRaO64GmJxy8fRx
+         Mtdg==
+X-Gm-Message-State: APjAAAUAmDSabAnFYPHmKan2N4RIiNUuEkuyy98cCDJ6NTrCh9eGuPL2
+        yp3sCAx+/tYR+IeuxZM+hU35hrc5
+X-Google-Smtp-Source: APXvYqx3zk39crf/WzXd7tRYyuOhqC9AdUsXFsTJFLvr8Ko4kbO2VPowWzf4245DIyFZKhN+eI2Qhg==
+X-Received: by 2002:a65:6885:: with SMTP id e5mr5708pgt.27.1569868234691;
+        Mon, 30 Sep 2019 11:30:34 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g202sm17250506pfb.155.2019.09.30.11.30.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 30 Sep 2019 11:30:34 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 11:30:33 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.2 00/45] 5.2.18-stable review
+Message-ID: <20190930183033.GC22096@roeck-us.net>
+References: <20190929135024.387033930@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190913191542.9908-3-f.fainelli@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190929135024.387033930@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 12:15:39PM -0700, Florian Fainelli wrote:
-> The BCM7038 L1 interrupt controller can be used as a wake-up interrupt
-> controller on MIPS and ARM-based systems, document the brcm,irq-can-wake
-> which has been "standardized" across Broadcom interrupt controllers.
-
-Not clear that that got much review...
-
-We have a defined way to indicate wakeup sources (which maybe didn't 
-exist in 2014), why can't that be used? If a device can wakeup the 
-system, I'd think we can just assume that the parent interrupt 
-controller(s) can support that.
-
-In any case, I'm not going to stand in the way of this:
-
-Acked-by: Rob Herring <robh@kernel.org>
-
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  .../bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt   | 5 +++++
->  1 file changed, 5 insertions(+)
+On Sun, Sep 29, 2019 at 03:55:28PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.2.18 release.
+> There are 45 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
-> index 2117d4ac1ae5..4eb043270f5b 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
-> @@ -31,6 +31,11 @@ Required properties:
->  - interrupts: specifies the interrupt line(s) in the interrupt-parent controller
->    node; valid values depend on the type of parent interrupt controller
->  
-> +Optional properties:
-> +
-> +- brcm,irq-can-wake: If present, this means the L1 controller can be used as a
-> +  wakeup source for system suspend/resume.
-> +
->  If multiple reg ranges and interrupt-parent entries are present on an SMP
->  system, the driver will allow IRQ SMP affinity to be set up through the
->  /proc/irq/ interface.  In the simplest possible configuration, only one
-> -- 
-> 2.17.1
+> Responses should be made by Tue 01 Oct 2019 01:47:47 PM UTC.
+> Anything received after that time might be too late.
 > 
+
+Build results:
+	total: 159 pass: 159 fail: 0
+Qemu test results:
+	total: 390 pass: 390 fail: 0
+
+Guenter
