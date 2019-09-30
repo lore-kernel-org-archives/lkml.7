@@ -2,94 +2,162 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 405A1C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A06EC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE9E20842
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:02:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2C50216F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:04:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hEbiamxP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731482AbfI3OCZ (ORCPT
+        id S1731488AbfI3OEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 10:02:25 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33350 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730524AbfI3OCY (ORCPT
+        Mon, 30 Sep 2019 10:04:32 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38170 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731166AbfI3OEc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 10:02:24 -0400
-Received: by mail-wr1-f68.google.com with SMTP id b9so11513358wrs.0;
-        Mon, 30 Sep 2019 07:02:22 -0700 (PDT)
+        Mon, 30 Sep 2019 10:04:32 -0400
+Received: by mail-io1-f66.google.com with SMTP id u8so38569694iom.5;
+        Mon, 30 Sep 2019 07:04:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jw2BmP5yAP0WIosdHUXg7b2dakGh/ZFsEzhCPT0aSTY=;
+        b=hEbiamxPCTcn/ohyF9QMFLMPKiB5S3lXi7jcR41Yh2WGNf3hbnh0ceuN2lJMuOmTpp
+         mndYJHfjEEs3ef8tSbz9USe7+z9BikHN2mkRU4nsN114Es+ntSUJpOb4dwB4yFaIu5gb
+         Qep/mbad6GXN8UZnQn6AHpWL32X3nbNq8xeDIjRjhFAbqOTVH6viJLxsgkrj2mwTsep8
+         w0Cj9CkmegC6rXTJRUohiVwggPN+WQn+gaD7cDVOE9u6mN0vV17XOOXxBrPP265y2aoL
+         0S8oS3lU4GQ/MWDyL4t95nSroNILfMPOeV8hpjSRDF8CPoJdjqt68E4LTHT5/Jl1M2ga
+         GTWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7wr4aVdaxbEMv/UX7nqpmCIH8uVZ65LnsbgEKWRrbhc=;
-        b=RtpRwsDwr1LTPoUq5NUM+nrpO63VDB1OLtLqQP7qiOq+hIhz/UcRSEGmSbXxAtwsjE
-         J3UWgjASH3/BrHk1TMxdacLaOBoktTsDOEtn7Bc3RTkw3otK69yq577gHe5zj2TL3RYl
-         qPjcCJnVjNslaG/FPUKEB17jbDRVyBOJvJ6eCwGa/TPf54WVCKZoEsEFQm1ffBy50sPe
-         SfoEkzVC9OjnUwkRAL+b6XHHa26ITQYP5fkZqK7WtJKYhIKcOj+mRnjZOuAKp58vnEeJ
-         +pfoxMcCxVjb0Y+T0v9tax75iJHH0nftbeEe4ih3Odgw7hvF0lld2FXmxbux0mGEeffJ
-         3Gmg==
-X-Gm-Message-State: APjAAAXE4cLZ2KsXFJtau9qgz9t7dKlbQeZYKtsQGDelB4XIUDB6bY/j
-        DKaP6403EQI4pZfbxk7q7UlpAntC
-X-Google-Smtp-Source: APXvYqxiiFMzv3srbGQK/zZY+ci87zR844eKxu3fL2x+CU3Oy0tDmHDfI0I4XxcXHe1hilTCqog5ug==
-X-Received: by 2002:adf:b648:: with SMTP id i8mr12771912wre.372.1569852142160;
-        Mon, 30 Sep 2019 07:02:22 -0700 (PDT)
-Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
-        by smtp.googlemail.com with ESMTPSA id x129sm20494089wmg.8.2019.09.30.07.02.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 07:02:21 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Denis Efremov <efremov@linux.com>,
-        Pontus Fuchs <pontus.fuchs@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>, stable@vger.kernel.org
-Subject: [PATCH] ar5523: check NULL before memcpy() in ar5523_cmd()
-Date:   Mon, 30 Sep 2019 17:02:07 +0300
-Message-Id: <20190930140207.28638-1-efremov@linux.com>
-X-Mailer: git-send-email 2.21.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jw2BmP5yAP0WIosdHUXg7b2dakGh/ZFsEzhCPT0aSTY=;
+        b=UpPo+f2buI/JOUx1tPzHbDinb0JlF+vdwkEvUdX2nwLeIkQZTX4gSM1L3Gp9yJY81y
+         rtcSrD/hP9rW/o7br93cODNybR0mFN2TQ/SjWDEclan5axgUzGGbpNAoonJZJsnNmpiI
+         Yoad5P07t66JcHKjSW7uUJPTxXP9JOZKfmUZWxDIezEhCJ6W23Zw5XWuwsHoQ43UQoD6
+         ViJis9JA45CGBCIZm/YnWzNZs9Hl89sYGUqLJzCehWM1ZBbS0wJgD30ar2rNgrBiAvMV
+         kt8MIMbYLMB5XzSUtukaxCKVodyOeJU2BVUsv2+G8I2Q/9Y0DaMAEqIvglVxXTqmmD7r
+         YLgg==
+X-Gm-Message-State: APjAAAVTP+W4QJCLFcaEGKaFDiDkoW+BinqCskBQg61PjxujFnOvUd1q
+        mqRGI5Ktg/B4oe2oe7mXgoKdgJR475PzH8hAhJq+PGIfask=
+X-Google-Smtp-Source: APXvYqy5GqHyiuPTz1Bll8seY6c2CREX2eQo4WThC1YG88GiMLmoaGhJGfMPnuan5jClXADZCCq/ma5FNq9RDBtc71Y=
+X-Received: by 2002:a92:3314:: with SMTP id a20mr19714009ilf.276.1569852270674;
+ Mon, 30 Sep 2019 07:04:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190510194229.20628-1-aford173@gmail.com> <af325707-3e42-493d-e858-77878ef06138@ti.com>
+ <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
+ <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com> <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
+ <845055e2-8182-de74-2077-629fdf50ac6c@ti.com> <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
+ <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com> <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
+ <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com> <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
+ <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com> <23eba53a-9304-2ceb-d97e-01891ec0b3ed@ti.com>
+ <cb028b1e-05ca-9b22-be5d-c63f5fd56cc4@ti.com> <F3335195-6EB7-4D44-B884-2F29D9238011@goldelico.com>
+ <CAHCN7xL9bFxO=2i1DzmRj6A3XwUNdt=DZeJ2a0EZ0f9gcFTy6g@mail.gmail.com>
+In-Reply-To: <CAHCN7xL9bFxO=2i1DzmRj6A3XwUNdt=DZeJ2a0EZ0f9gcFTy6g@mail.gmail.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Mon, 30 Sep 2019 09:04:18 -0500
+Message-ID: <CAHCN7x+vCfPTRE+zzYUwAXdbBzRotTP2hSOgsHB0FdgBhZV5zA@mail.gmail.com>
+Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to dts
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Tero Kristo <t-kristo@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-memcpy() call with "idata == NULL && ilen == 0" results in undefined
-behavior in ar5523_cmd(). For example, NULL is passed in callchain
-"ar5523_stat_work() -> ar5523_cmd_write() -> ar5523_cmd()". This patch
-adds idata check before memcpy() call in ar5523_cmd() to prevent an
-undefined behavior.
+On Mon, Sep 30, 2019 at 8:54 AM Adam Ford <aford173@gmail.com> wrote:
+>
+> On Mon, Sep 30, 2019 at 8:39 AM H. Nikolaus Schaller <hns@goldelico.com> wrote:
+> >
+> >
+> > > Am 30.09.2019 um 10:53 schrieb Tero Kristo <t-kristo@ti.com>:
+> > >
+> > > The best action here is probably to drop the max-div value for this clock to 16. Can someone check this with their display setup and see what happens? Attached patch should do the trick.
+> >
+> > I have checked on GTA04 and OpenPandora (DM3730 resp. OMAP3430) and did not notice a negative effect.
+> >
+> > (Well, we never see the problem that is discussed here and have built with CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK=0).
+>
+> I have never been able to use CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK=0, but
+> I assume it's either a function of pck or a combination of pck with
+> the resolution.
+>
+> Based on Tomi's comment, I assume he's working on the following.  Can
+> you also try:
+>
+> diff --git a/drivers/gpu/drm/omapdrm/dss/dss.c
+> b/drivers/gpu/drm/omapdrm/dss/dss.c
+> index 5711b7a720e6..5e584f32ea6a 100644
+> --- a/drivers/gpu/drm/omapdrm/dss/dss.c
+> +++ b/drivers/gpu/drm/omapdrm/dss/dss.c
+> @@ -1090,7 +1090,7 @@ static const struct dss_features omap34xx_dss_feats = {
+>
+>  static const struct dss_features omap3630_dss_feats = {
+>         .model                  =       DSS_MODEL_OMAP3,
+> -       .fck_div_max            =       32,
+> +       .fck_div_max            =       16,
+>         .fck_freq_max           =       173000000,
+>         .dss_fck_multiplier     =       1,
+>         .parent_clk_name        =       "dpll4_ck",
+>
+>
+> Hopefully it doesn't break the 3630 for you, but it fixed my issue
+> with no back trace:
+>
+> [    9.915588] DSS: set fck to 54000000
+> [    9.915618] DISPC: lck = 54000000 (1)
+> [    9.915649] DISPC: pck = 9000000 (6)
+> [    9.917633] DISPC: channel 0 xres 480 yres 272
+> [    9.917663] DISPC: pck 9000000
+>
+> I do wonder, however if there is a divider that is higher than 16, but
+> lower than 32.
+> I was able to run fck at 36MHz before with divide by 4 to 9MHz, so I
+> am hoping that by running at 54MHz / 6 doesn't draw more power.  I was
+> reading through the datasheet, but I could not find any reference to
+> the max divider.
+>
 
-Cc: Pontus Fuchs <pontus.fuchs@gmail.com>
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: stable@vger.kernel.org
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- drivers/net/wireless/ath/ar5523/ar5523.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+For run, I tested a max divider of 27, and I was able to get it
+functional with a slower fck
 
-diff --git a/drivers/net/wireless/ath/ar5523/ar5523.c b/drivers/net/wireless/ath/ar5523/ar5523.c
-index b94759daeacc..f25af5bc5282 100644
---- a/drivers/net/wireless/ath/ar5523/ar5523.c
-+++ b/drivers/net/wireless/ath/ar5523/ar5523.c
-@@ -255,7 +255,8 @@ static int ar5523_cmd(struct ar5523 *ar, u32 code, const void *idata,
- 
- 	if (flags & AR5523_CMD_FLAG_MAGIC)
- 		hdr->magic = cpu_to_be32(1 << 24);
--	memcpy(hdr + 1, idata, ilen);
-+	if (idata)
-+		memcpy(hdr + 1, idata, ilen);
- 
- 	cmd->odata = odata;
- 	cmd->olen = olen;
--- 
-2.21.0
+[    9.939056] DSS: set fck to 36000000
+[    9.939086] DISPC: lck = 36000000 (1)
+[    9.939086] DISPC: pck = 9000000 (4)
+[    9.941314] DISPC: channel 0 xres 480 yres 272
+[    9.941314] DISPC: pck 9000000
+[    9.941314] DISPC: hsync_len 42 hfp 3 hbp 2 vsw 11 vfp 2 vbp 3
+[    9.941314] DISPC: vsync_level 1 hsync_level 1 data_pclk_edge 1
+de_level 1 sync_pclk_edge -1
+[    9.941345] DISPC: hsync 17077Hz, vsync 59Hz
 
+
+I don't know the implications, so if the people from TI say stick with
+16, I'm fine with that, but at least there is some evidence that it
+can be higher than 16, but lower than 32.
+
+adam
+
+> adam
+> >
+> > BR,
+> > Nikolaus
+> >
