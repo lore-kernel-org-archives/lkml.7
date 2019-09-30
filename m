@@ -2,83 +2,137 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1AFC388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0379C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 057D421924
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBC2A20815
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:23:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hXQyVZe6"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lentin.co.uk header.i=@lentin.co.uk header.b="SPTGolhE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732516AbfI3VWU (ORCPT
+        id S1732523AbfI3VXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 17:22:20 -0400
-Received: from ozlabs.org ([203.11.71.1]:46017 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730183AbfI3VWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 17:22:20 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46hwMs3Vh2z9sNF;
-        Tue,  1 Oct 2019 07:22:17 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1569878537;
-        bh=+E6UBVAGUlRHpC9tpa+7aDAC5lzlHWAv40u3WQwxZ88=;
-        h=Date:From:To:Cc:Subject:From;
-        b=hXQyVZe6c8fyLPHlXMFiLRlbr+zTWV7zFXeBFVS6mhpKATTkqf13WBFmft3iYN0yZ
-         oYTKnusjjZs07j53xsWs4KK+FsHwcOhG63CsjxbWYCb9nlJ6kmQ94NNPi/1ZIZaQKC
-         K120TgZWfSi8usCZPs2Ura2ohY4nPIgWBVbIk6cc9UMV6pEpnFLerQTk5LC565ZzEa
-         XQT9obprrZuGX/PQr/Tb/VnD/o8RPTa+CgLI+0HpxYBqQCZSwZeQ+zKxbjB2ETpmQQ
-         A8g2v4F/owcImaJ5A7Rj8mDpVDp3yBF96oFxvI3W0W7VNnvpjz1gQcaHvD9dwlOiey
-         1cOn3ZhDw+xIw==
-Date:   Tue, 1 Oct 2019 07:22:16 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: bad update of the v4l-dvb-next tree
-Message-ID: <20191001072216.473e0eee@canb.auug.org.au>
+        Mon, 30 Sep 2019 17:23:34 -0400
+Received: from marmot.wormnet.eu ([188.246.204.87]:42046 "EHLO
+        marmot.wormnet.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726784AbfI3VXd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 17:23:33 -0400
+X-Greylist: delayed 1800 seconds by postgrey-1.27 at vger.kernel.org; Mon, 30 Sep 2019 17:23:32 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lentin.co.uk; s=budgerigar; h=Content-Type:MIME-Version:References:
+        Message-ID:In-Reply-To:Subject:cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=wwO3LKMH46pvv0bC8x8eV217XsJBNp2LC9T/6N0lajk=; b=SPTGolhEBz8cT6g6z06+BIWKo
+        s5GIK38N9GfBmNBfGFXPuuHBKRonTencUPiNWCQeZXIQtNcFcnQwPpoGcxa2ByNfUzSCO0jPnilmj
+        2xoeIKa0bg5jEuljsq/C7QOLv2x9y7fcdLcopucWoexdaLaAT7ZeO0AwLTCu4hqjgaDLs=;
+Received: from [31.146.104.22] (helo=[192.168.0.100])
+        by marmot.wormnet.eu with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92.2)
+        (envelope-from <jm@lentin.co.uk>)
+        id 1iF1ZW-0006jM-GN; Mon, 30 Sep 2019 20:43:02 +0100
+Date:   Mon, 30 Sep 2019 20:42:53 +0100 (BST)
+From:   Jamie Lentin <jm@lentin.co.uk>
+X-X-Sender: lentinj@clifford.vandergast.wormnet.eu
+To:     Andrew Lunn <andrew@lunn.ch>
+cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 0/2] This patch introduces a feature to force gpio-poweroff
+ module
+In-Reply-To: <20190930163203.GC15343@lunn.ch>
+Message-ID: <alpine.DEB.2.21.1909301909360.6576@clifford.vandergast.wormnet.eu>
+References: <20190930103531.13764-1-oleksandr.suvorov@toradex.com> <20190930121440.GC13301@lunn.ch> <CAGgjyvEx_F0C2XHDGxf3F0Z8iHF1vQZkoPft3_ZbTswVFv=SJA@mail.gmail.com> <20190930163203.GC15343@lunn.ch>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/R5z//8fMhC0wRrxI5SXIcXa";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/R5z//8fMhC0wRrxI5SXIcXa
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, 30 Sep 2019, Andrew Lunn wrote:
 
-Hi all,
+> On Mon, Sep 30, 2019 at 02:11:59PM +0000, Oleksandr Suvorov wrote:
+>> Hi Andrew,
+>>
+>> On Mon, Sep 30, 2019 at 3:16 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>>>
+>>> On Mon, Sep 30, 2019 at 10:35:36AM +0000, Oleksandr Suvorov wrote:
+>>>> to register its own pm_power_off handler even if someone has registered
+>>>> this handler earlier.
+>>>> Useful to change a way to power off the system using DT files.
+>>>
+>>> Hi Oleksandr
+>>>
+>>> I'm not sure this is a good idea. What happens when there are two
+>>> drivers using forced mode? You then get which ever is register last.
+>>> Non deterministic behaviour.
+>>
+>> You're right, we have to handle a case when gpio-poweroff fails to
+>> power the system off. Please look at the
+>> 2nd version of the patchset.
+>>
+>> There are 3 only drivers that forcibly register its own pm_power_off
+>> handler even if it has been registered before.
+>>
+>> drivers/firmware/efi/reboot.c - supports chained call of next
+>> pm_power_off handler if its own handler fails.
+>>
+>> arch/x86/platform/iris/iris.c, drivers/char/ipmi/ipmi_poweroff.c -
+>> don't support calling of next pm_power_off handler.
+>> Looks like these drivers should be fixed too.
+>>
+>> All other drivers don't change already initialized pm_power_off handler.
+>>
+>>> What is the other driver which is causing you problems? How is it
+>>> getting probed? DT?
+>>
+>> There are several PMUs, RTCs, watchdogs that register their own pm_power_off.
+>> Most of them, probably not all, are probed from DT.
+>
+> And which specific one is causing you problems.
+>
+> I don't like this forced parameter. No other driver is using it.
+>
+> Maybe we should change this driver to support chained pm_power_off
+> handlers?
 
-The v4l-dvb-next tree appears to have been reset to point to a commit
-from early 2014 ...
+There's still scope for non-deterministic behaviour though, as the 
+chaining would take place depending on the probe ordering. Admittedly if 
+the gpio-poweroff works it's unlikely to be a problem, but still seems 
+messy.
 
---=20
+Without knowing specifics, disabling the devices that can't turn the 
+device off seems like a better bet. If they'd be otherwise useful, I see 
+there's a of_device_is_system_power_controller(), see:
+
+/Documentation/devicetree/bindings/power/power-controller.txt
+https://elixir.bootlin.com/linux/latest/source/drivers/mfd/max77620.c#L566
+
+...maybe that can be added to the devices getting in the way?
+
 Cheers,
-Stephen Rothwell
 
---Sig_/R5z//8fMhC0wRrxI5SXIcXa
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+[0] https://elixir.bootlin.com/linux/latest/source/drivers/watchdog/bcm2835_wdt.c#L152
+(chosen at random)
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2ScggACgkQAVBC80lX
-0Gw0Dwf/dEn/ewhUH1mYIBk0gF3VnwC5/TxS74S8p1rhns7zSWdn/IWYVEPFNmtN
-/+9MM9FxScONK4GXI5brRdeJdO8IEQxW15CARBNCLNMz8erwJpBhbUqxDP/4/f0v
-5z1EGe+YklblzIPWIA4/zU4qstlnKOzEtyLAANWD7N5+gS1YJSO45Tdbm/zTN+mv
-f8PzMTMgkvRle8Pxk2VHuxflCwmeLQQ4uOHo8h3wI63S/U/2KtPgao24anI+g+Zt
-MJv1g+rsnjAftesigXW1w59SYvsql8LW52lfk56fjCmjnO5XSkDv4MTYToazn1mP
-V1k4LlGOdLsihNaXmQYVOTU0jDjI+Q==
-=XMNv
------END PGP SIGNATURE-----
+>
+>   Andrew
+>
 
---Sig_/R5z//8fMhC0wRrxI5SXIcXa--
+-- 
+Jamie Lentin
