@@ -2,234 +2,135 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C48C4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C61C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D48432190F
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:12:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 228F0218DE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:16:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FOdal9fE"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="gpQp/i7J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729677AbfI3HMp (ORCPT
+        id S1729700AbfI3HQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 03:12:45 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:58719 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729503AbfI3HMp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 03:12:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1569827562;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=W9PtTOzM1rgbNPgKyLzSFcLDf0NZGpY4hCXyEWTHQYw=;
-        b=FOdal9fEPH+IkW5Nd080Kpkc+aCLiv97Y7rDRw3UuAYZRHHkq/2qq9ZGSi5V7zEEuvqH5F
-        wQsjXxuKLSeMQ/gKjIOhvZYvSpaacZw4OFLSXWz2HK19ksD0HlzGIfjCwLDw+6nfXQmKo9
-        v3F2YNPtttZHQ93oZYaN08IFvfbvCjk=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-49-OfI7SKvHM-qqY6JxLsRQlg-1; Mon, 30 Sep 2019 03:12:41 -0400
-Received: by mail-ed1-f72.google.com with SMTP id w12so5686783eda.6
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 00:12:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=vU2fSiERaqwgggzkGOioKrkdDmXRo5o+Ne0c4vAR1CQ=;
-        b=Cv1YVdfelRdpGWbN24oSOLIBHu51AitVlAOi5+YXIoqNIe95M33j7pcZcZllDFrWOW
-         1aSy3to5DGyIg8z63fa12EKB99jJeKCHrMRhyqxVMXaCFw+cAM6av+K2BdbcZsm9NV0V
-         m3XsvmesoEf11uYPYbN1a+yG5WSIBSQi7JZctsSC1MGpzDSc27UVYmyzSxkVCliacws9
-         uJFbcSmkKRYkLqmu81jt8CqCnzLyz0vMPlIw+PbwLSa98HfDqkZZFwKQ+Voxms+Hf0Qt
-         rBmkWXIRGZza3lawtvuvtNmfDEM8+7ijeneUj9QGB67MxANrTK5M9hKh3eaCitZkAYcA
-         t0jw==
-X-Gm-Message-State: APjAAAWB9wK2yv3PdDcvcBnwojqY9vG5mF7YZTtuR6TghF7GT59VxueA
-        GnvKpYkp8WMiUF1BZTGSllIEh4/DCsvXKe3aENl3YlpxlfJlHXc0a0vd77biW7TyUn55E+kn7Rb
-        N9/gJ8jJ5XAT+ECQrLKKaowPq
-X-Received: by 2002:a17:906:7687:: with SMTP id o7mr18089163ejm.213.1569827559958;
-        Mon, 30 Sep 2019 00:12:39 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxNh0+E8XNHpdRQJY652iiF3XmuXIqVPoJcyfixU4Ze8+NVGMKBTjoBRiU+pVoLCHLti8UGUw==
-X-Received: by 2002:a17:906:7687:: with SMTP id o7mr18089139ejm.213.1569827559669;
-        Mon, 30 Sep 2019 00:12:39 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk (borgediget.toke.dk. [85.204.121.218])
-        by smtp.gmail.com with ESMTPSA id ot24sm1368521ejb.59.2019.09.30.00.12.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 00:12:38 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id 4C9D518063D; Mon, 30 Sep 2019 09:12:38 +0200 (CEST)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        Anton Protopopov <a.s.protopopov@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Florent Revest <revest@chromium.org>
-Subject: Re: [PATCH] tools: libbpf: Add bpf_object__open_buffer_xattr
-In-Reply-To: <CAEf4Bzb_8AJS=HLUt9QpdRrt4AzW1ME9tFyL-QTqyu=7fC-dGA@mail.gmail.com>
-References: <20190927130834.18829-1-kpsingh@chromium.org> <CAEf4Bzb_8AJS=HLUt9QpdRrt4AzW1ME9tFyL-QTqyu=7fC-dGA@mail.gmail.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Mon, 30 Sep 2019 09:12:38 +0200
-Message-ID: <87h84uxno9.fsf@toke.dk>
+        Mon, 30 Sep 2019 03:16:38 -0400
+Received: from mout.web.de ([212.227.17.11]:36777 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729232AbfI3HQi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 03:16:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1569827791;
+        bh=gbMOVn8Fn770a2SHIGdp8mDBqRMkfvq1IBv/5EGkKTw=;
+        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
+        b=gpQp/i7JtZhG2At0h3YidtTwMYUP3sKmfBpCCIvpnL6M8Obx4KsNfbMiP7IcaV0wZ
+         0KS74MERJU79ZZpsn5fueTBeLGvudk9o7fXbf9d38h5Cm0D5E7eYXslAybtn1XPLfb
+         Y+QGonh9m2TW4yddSl9wJ6s+CjmcaGduTT3ol9AE=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.97.105]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MPYB3-1iAB5i2BCD-004mVD; Mon, 30
+ Sep 2019 09:16:31 +0200
+Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>,
+        Matias Bjorling <mb@lightnvm.io>, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20190930023415.24171-1-navid.emamdoost@gmail.com>
+Subject: Re: [PATCH] lightnvm: prevent memory leak in nvm_bb_chunk_sense
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        linux-block@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <d44a6dca-006e-5bcc-64b4-2b62cf9a9769@web.de>
+Date:   Mon, 30 Sep 2019 09:16:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-X-MC-Unique: OfI7SKvHM-qqY6JxLsRQlg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
+In-Reply-To: <20190930023415.24171-1-navid.emamdoost@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:/BiU2QFsDIz7Z6Efh886OtMBZ/zWPmQ1Lm4VSlF3Em0WcRxdrGv
+ AHGP7N3VkVcCV7RkHksWdrJLVy3Y7g3z+cnZpCwZybt/XWpvf9tmASR1ndDIFifwMeVgu3K
+ 9sFB+1uV5t1qvok61HCZO8adqu02UR/AqsORjw7RTR7EnILVKqLcfKpApi2MSr7um73PJCq
+ 1/JGMCkBBl7YUdED2pmOQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:FnKkHmUXkZU=:nDkQm5BUAKEvNB7iq/Q74L
+ +7YYKPEoZsuTRBt4aWO5gJXrs6S0uzs5wRasg32AbndC7pqvSO3FlC8xPCwokHiEeg+HvJHxE
+ 3WTnrUjOGfr4UzgI/E6rlfAAjSH8vQIB8g9O9kKoQwQvPBc8SY9LsWI5Jx8ZNUP1CC/70SvNB
+ /83BYGmdBZNiIDLJxSt0fMCsWsrGhgBYXX0V+0IGS51lfs2J4sBKMinWTrbFI95C3TyOVycij
+ UlxvyEgykpMf6qdXeS9Oh0KdFvVMeKOry0n9tzLrxj9gX0MEZHwJLG1QQAf1j8Kf+TPgcHeIc
+ yd7A1+G+e5PrEVG7zldpGNAIn5A1EY/ZShgRlmGXwFJIFz+0IRjKV31BouqwUoiKzchmDT7kQ
+ UA4zmC/e8LABRfrGolg4Y13xKyni9AwRxv2GwJf4n/r1IVyltQBET46uV2Yuk/I9jxaaFTpYG
+ BXeThpLcH77XJjeIQUlfMZWN23rnxhaCBfmM1KNVfITek6TUo1sIVyniwKXXSr+YoN7f1tZxp
+ CsbNRFFavRtfvIS8KoqugwNupOVJVJjEsG9DwkeK7ljvAt4oMuNwHMr1UvVsNvZ9i2av0b8Ey
+ ujrILQCJDejS0rryxxvM9nFCfErQR5QRILfpvUMhv03W3axjREsj/6Hj+g6VmEcwDy7vVdE/v
+ +rJOjLNm8RTH5hbrDZ0A+Fwryt/ZufsbLmhy+ZXInppZKj1rwbFqg9J0krfM9ECrKtvfikikj
+ bL/1UA1ROkHdn+ikHbSgFuWAfjHgIB7B+OlJWFZS4WsuwQAM6psbTbbugO/2C8uFkZatt1LEC
+ 26GxZaJJhhnLttNDInX8B0zWYc1p3CkbGiN6cnMYZBAnCdBmKKZgGIZrffSBM/GW9Ml+W4pBB
+ POdE9b/El/gtaSbT7sUlDsNQARpNGdVuENu9gz33WR++XzzMdIIC9m3yiD4Zz3eL61gp6citv
+ B63nOxNC5r7jjp/V2ByrAXZ2eJnRXjLUnzJUXFdQF/+edhSOK2Wmfp9vgTF7jH2uEnDhO3Mpo
+ aPoeqD/P3lN4gd9yNBDTF9Gp2JQ7UkAaKC9+Nj0nFbrksbfAytg5USvx98stZU7fkRAS79syc
+ ygz4G+JivRlWYxlzuws/16AEHkVXoHCMpzTVYrGsPpMZHdRPkcrYOUf2c3rCLKacMNRTvQeNk
+ 79+IdVQmop0z+bhaTz+GKjWfG28x7YOLIPIt8lwSfQozbePWOcbXLigFdXmXtT71IefwiwAH+
+ cXeQvnFXv9B7tUXTiaaAZ/Yy/vY8gKPZYqSKvL7jV27O/CgNOjejpBNyFdIw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrii Nakryiko <andrii.nakryiko@gmail.com> writes:
+> To fix this issue I moved the __free_page call before error check.
 
-> On Fri, Sep 27, 2019 at 6:11 AM KP Singh <kpsingh@chromium.org> wrote:
->>
->> From: KP Singh <kpsingh@google.com>
->>
->> Introduce struct bpf_object_open_buffer_attr and an API function,
->> bpf_object__open_xattr, as the existing API, bpf_object__open_buffer,
->> doesn't provide a way to specify neither the "needs_kver" nor
->> the "flags" parameter to the internal call to the
->> __bpf_object__open which makes it inconvenient for loading BPF
->> objects that do not require a kernel version from a buffer.
->>
->> The flags attribute in the bpf_object_open_buffer_attr is set
->> to MAPS_RELAX_COMPAT when used in bpf_object__open_buffer to
->> maintain backward compatibility as this was added to load objects
->> with non-compat map definitions in:
->>
->> commit c034a177d3c8 ("bpf: bpftool, add flag to allow non-compat map
->>                       definitions")
->>
->> and bpf_object__open_buffer was called with this flag enabled (as a
->> boolean true value).
->>
->> The existing "bpf_object__open_xattr" cannot be modified to
->> maintain API compatibility.
->>
->> Reported-by: Anton Protopopov <a.s.protopopov@gmail.com>
->> Signed-off-by: KP Singh <kpsingh@google.com>
->> ---
->>  tools/lib/bpf/libbpf.c   | 39 ++++++++++++++++++++++++++++-----------
->>  tools/lib/bpf/libbpf.h   | 10 ++++++++++
->>  tools/lib/bpf/libbpf.map |  5 +++++
->>  3 files changed, 43 insertions(+), 11 deletions(-)
->>
->> This patch is assimilates the feedback from:
->>
->>   https://lore.kernel.org/bpf/20190815000330.12044-1-a.s.protopopov@gmai=
-l.com/
->>
->> I have added a "Reported-by:" tag, but please feel free to update to
->> "Co-developed-by" if it's more appropriate from an attribution perspecti=
-ve.
->>
->> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
->> index 2b57d7ea7836..1f1f2e92832b 100644
->> --- a/tools/lib/bpf/libbpf.c
->> +++ b/tools/lib/bpf/libbpf.c
->> @@ -2752,25 +2752,42 @@ struct bpf_object *bpf_object__open(const char *=
-path)
->>         return bpf_object__open_xattr(&attr);
->>  }
->>
->> -struct bpf_object *bpf_object__open_buffer(void *obj_buf,
->> -                                          size_t obj_buf_sz,
->> -                                          const char *name)
->> +struct bpf_object *
->> +bpf_object__open_buffer_xattr(struct bpf_object_open_buffer_attr *attr)
->
-> I have few concerns w.r.t. adding API in this form and I'm going to
-> use this specific case to discuss more general problem of API design,
-> ABI compatibility, and extending APIs with extra optional arguments.
->
-> 1. In general, I think it would be good for libbpf API usability to
-> use the following pattern consistently (moving forward):
->
-> T1 some_api_function(T2 mandatory_arg1, ..., TN mandatory_arg, struct
-> something_opts *opts)
->
-> So all the mandatory arguments that have to be provides are specified
-> explicitly as function arguments. That makes it very clear what API
-> expects to get always.
-> opts (we use both opts and attrs, but opts seems better because its
-> optional options :), on the other hand, is stuff that might be
-> omitted, so if user doesn't care about tuning behavior of API and
-> wants all-defaults behavior, then providing NULL here should just
-> work.
->
-> So in this case for bpf_object__open_buffer_xattr(), it could look like t=
-his:
->
-> struct bpf_object* bpf_object__open_buffer_opts(void *buf, size_t sz,
-> struct bpf_object_open_opts* opts);
+Would the wording =E2=80=9CMove the __free_page() call before the error ch=
+eck.=E2=80=9D
+be more succinct for the change description?
 
-I like this idea! Sensible defaults that can be selected by just passing
-NULL as opts is a laudable goal.
+Can the following code variant be applied at the end of this function?
 
-> 2. Now, we need to do something with adding new options without
-> breaking ABIs. With all the existing extra attributes, when we need to
-> add new field to that struct, that can break old code that's
-> dynamically linked to newer versions of libbpf, because their
-> attr/opts struct is too short for new code, so that could cause
-> segment violation or can make libbpf read garbage for those newly
-> added fields. There are basically three ways we can go about this:
->
-> a. either provide the size of opts struct as an extra argument to each
-> API that uses options, so:
-> struct bpf_object* bpf_object__open_buffer_opts(void *buf, size_t sz,
-> struct bpf_object_open_opts* opts, size_t opts_sz);
->
-> b. make it mandatory that every option struct has to have as a first
-> field its size, so:
->
-> struct bpf_object_open_opts {
->         size_t sz;
->         /* now we can keep adding attrs */
-> };
->
-> Now, when options are provided, we'll read first sizeof(size_t) bytes,
-> validate it for sanity and then we'll know which fields are there or
-> not.
->
-> Both options have downside of user needing to do extra initialization,
-> but it's not too bad in either case. Especially in case b), if user
-> doesn't care about extra options, then no extra steps are necessary.
-> In case a, we can pass NULL, 0 at the end, so also not a big deal.
->
-> c. Alternatively, we can do symbol versioning similar how xsk.c
-> started doing it, and handle those options struct size differences
-> transparently. But that's a lot of extra boilerplate code in libbpf
-> and I'd like to avoid that, if possible.
+ 	return ret ? ret : rqd.error;
 
-My hunch is that we're kidding ourselves if we think we can avoid the
-symbol versioning. And besides, checking struct sizes needs boilerplate
-code as well, boilerplate that will fail at runtime instead of compile
-time if it's done wrong.
-
-So IMO we're better off just doing symbol version right from the
-beginning.
-
-> 3. Now, the last minor complain is about flags field. It's super
-> generic. Why not have a set of boolean fields in a struct, in this
-> case to allow to specify strict/compat modes. Given we solve struct
-> extensibility issue, adding new bool fields is not an issue at all, so
-> the benefit of flags field are gone. The downside of flags field is
-> that it's very opaque integer, you have to go and read sources to
-> understand all the intended use cases and possible flags, which is
-> certainly not a great user experience.
-
-This I agree with :)
-
--Toke
-
+Regards,
+Markus
