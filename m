@@ -2,164 +2,248 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B26C4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 04:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FEEC388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 04:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFBF12086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 04:25:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="P14Ylkfq"
+	by mail.kernel.org (Postfix) with ESMTP id 7B3AC20815
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 04:36:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbfI3EZU (ORCPT
+        id S1726778AbfI3EgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 00:25:20 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:20739 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725792AbfI3EZT (ORCPT
+        Mon, 30 Sep 2019 00:36:22 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:22101 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725767AbfI3EgW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 00:25:19 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190930042516epoutp029c35f1a36c3b28dab6557ed94b9edb2f~JHLbZ9ic_1303713037epoutp02N
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 04:25:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190930042516epoutp029c35f1a36c3b28dab6557ed94b9edb2f~JHLbZ9ic_1303713037epoutp02N
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1569817516;
-        bh=nVneqrk5OtQyfdwPW2jy83LD/8hRdMLPttKZv89DwO4=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=P14Ylkfquq13esnEC0kOvoCh1oBNVKfnY6gQ5YAZ3c1JjTb4m1JxLJSr5Nly3ZkQ4
-         aNAEvpkdHXp9Zd1AcY1rESZnHdznv9bODLZWSgUPBaJswg1fk0t3GyF0RQdow/UaFT
-         15J24DMn9+BWswsQktVuOqyhe/PZgo8eD9mT/xbQ=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190930042516epcas1p18b18c31dfdfb2227362ca637555ac350~JHLa2H1uo3267932679epcas1p14;
-        Mon, 30 Sep 2019 04:25:16 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.160]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 46hTpL49QtzMqYkl; Mon, 30 Sep
-        2019 04:25:14 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        67.B3.04224.AA3819D5; Mon, 30 Sep 2019 13:25:14 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190930042514epcas1p2c78cc8af0a5010cd8ec4cd163d43f778~JHLZFJc0l1630216302epcas1p2U;
-        Mon, 30 Sep 2019 04:25:14 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190930042514epsmtrp289a4f3a26c19b527615b04d65a847d41~JHLZEaRk40526005260epsmtrp2H;
-        Mon, 30 Sep 2019 04:25:14 +0000 (GMT)
-X-AuditID: b6c32a38-d43ff70000001080-31-5d9183aa41ed
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        B8.02.03889.AA3819D5; Mon, 30 Sep 2019 13:25:14 +0900 (KST)
-Received: from DONAMJAEJEO06 (unknown [10.88.104.63]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190930042514epsmtip124614efe1392bd87f24f39ed4f2e609c~JHLY1lwkx3163431634epsmtip1T;
-        Mon, 30 Sep 2019 04:25:14 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Dan Carpenter'" <dan.carpenter@oracle.com>,
-        "'Greg KH'" <gregkh@linuxfoundation.org>
-Cc:     <devel@driverdev.osuosl.org>, <linkinjeon@gmail.com>,
-        "'Valdis Kletnieks'" <valdis.kletnieks@vt.edu>,
-        "'Sergey Senozhatsky'" <sergey.senozhatsky.work@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <alexander.levin@microsoft.com>,
-        <sergey.senozhatsky@gmail.com>, <linux-fsdevel@vger.kernel.org>,
-        <sj1557.seo@samsung.com>, "'Ju Hyung Park'" <qkrwngud825@gmail.com>
-In-Reply-To: 
-Subject: RE: [PATCH] staging: exfat: add exfat filesystem code to
-Date:   Mon, 30 Sep 2019 13:25:13 +0900
-Message-ID: <042701d57747$0e200320$2a600960$@samsung.com>
+        Mon, 30 Sep 2019 00:36:22 -0400
+X-UUID: e1d300432a7e4615a02e2666ab96cad6-20190930
+X-UUID: e1d300432a7e4615a02e2666ab96cad6-20190930
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1444693639; Mon, 30 Sep 2019 12:36:14 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 30 Sep 2019 12:36:12 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 30 Sep 2019 12:36:12 +0800
+Message-ID: <1569818173.17361.19.camel@mtksdccf07>
+Subject: Re: [PATCH] kasan: fix the missing underflow in memmove and memcpy
+ with CONFIG_KASAN_GENERIC=y
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>
+Date:   Mon, 30 Sep 2019 12:36:13 +0800
+In-Reply-To: <CACT4Y+YuAxhKtL7ho7jpVAPkjG-JcGyczMXmw8qae2iaZjTh_w@mail.gmail.com>
+References: <20190927034338.15813-1-walter-zh.wu@mediatek.com>
+         <CACT4Y+Zxz+R=qQxSMoipXoLjRqyApD3O0eYpK0nyrfGHE4NNPw@mail.gmail.com>
+         <1569594142.9045.24.camel@mtksdccf07>
+         <CACT4Y+YuAxhKtL7ho7jpVAPkjG-JcGyczMXmw8qae2iaZjTh_w@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AQGT5RAmYrUvbIdPV5wSdu6UWeOkRAHEPqcjASg+jxcBWaTXGQHGgTvdAmfpepEChGr/QAIs0XV3AVAC8PIBuUjzQAFD/owypymulmCAEXiQ0A==
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNJsWRmVeSWpSXmKPExsWy7bCmge6q5omxBkduKVjsm/6U2eL1v+ks
-        FnvO/GK3aF68ns3i+t1bzBZ79p5ksbi8aw6bxdHHC9ksHk2YxGSx9vNjdost/46wWlx6/4HF
-        gcfj3r7DLB47Z91l99g/dw27R+uOv+weH5/eYvHo27KK0ePzJjmPQ9vfsAVwROXYZKQmpqQW
-        KaTmJeenZOal2yp5B8c7x5uaGRjqGlpamCsp5CXmptoqufgE6Lpl5gCdq6RQlphTChQKSCwu
-        VtK3synKLy1JVcjILy6xVUotSMkpMDQo0CtOzC0uzUvXS87PtTI0MDAyBapMyMl4vPkje8Fh
-        roqG7k7WBsZFHF2MnBwSAiYSp5q+sXUxcnEICexglLi66QgThPOJUeLo1LksIFVCAt8YJf5d
-        CILp2HtxKitE0V5Gid17zkC1v2KUWLZ/LStIFZuArsS/P/uBEhwcIgIxEl2P3UFqmAW+MklM
-        WDyRHSTOKcArMeGfNUi5sICjxI/LB5hAbBYBVYkN5y6AjeEVsJT4OWs+lC0ocXLmE7CDmAXk
-        Jba/ncMMcZCCxI6zrxlBbBGBOolNB88xQdSISMzubGMG2SshsIld4kzDTEaIBheJv1+7WCFs
-        YYlXx7ewQ9hSEp/f7QW7WUKgWuLjfqj5HYwSL77bQtjGEjfXb2AFKWEW0JRYv0sfIqwosfP3
-        XEaItXwS7772sEJM4ZXoaBOCKFGV6Lt0mAnClpboav/APoFRaRaSx2YheWwWkgdmISxbwMiy
-        ilEstaA4Nz212LDABDmqNzGCE7KWxQ7GPed8DjEKcDAq8fA+YJ4YK8SaWFZcmXuIUYKDWUmE
-        V5xhQqwQb0piZVVqUX58UWlOavEhRlNguE9klhJNzgdmi7ySeENTI2NjYwsTM3MzU2MlcV6P
-        9IZYIYH0xJLU7NTUgtQimD4mDk6pBsYg2bnTclf8itkaF33oliRT2b/vkybV/9R5uv5Gz8dH
-        /AKrlkVXp5WWPp1d9T/HTri17EHxifI65ns75qY5zpxdtXjBinM+0UquL/VFOrd6vzIu2GWl
-        9S+s3MuVy/Kkv83Ho+y+JUGtK89o3/WZeCq1TfDZ/CMhqut2Ct4/xNDd2/ln4xmBXA8lluKM
-        REMt5qLiRADxJUew3gMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKIsWRmVeSWpSXmKPExsWy7bCSnO6q5omxBuu/cljsm/6U2eL1v+ks
-        FnvO/GK3aF68ns3i+t1bzBZ79p5ksbi8aw6bxdHHC9ksHk2YxGSx9vNjdost/46wWlx6/4HF
-        gcfj3r7DLB47Z91l99g/dw27R+uOv+weH5/eYvHo27KK0ePzJjmPQ9vfsAVwRHHZpKTmZJal
-        FunbJXBlPN78kb3gMFdFQ3cnawPjIo4uRk4OCQETib0Xp7J2MXJxCAnsZpS4dvETC0RCWuLY
-        iTPMXYwcQLawxOHDxRA1Lxglnh3azgZSwyagK/Hvz342kBoRgRiJE5cEQGqYBf4ySUzsesQG
-        0TCdRWLn51awIk4BXokJ/6xBeoUFHCV+XD7ABGKzCKhKbDh3gRXE5hWwlPg5az6ULShxcuYT
-        FpBWZgE9ibaNjCBhZgF5ie1v5zBDnKkgsePsa7C4iECdxKaD55ggakQkZne2MU9gFJ6FZNIs
-        hEmzkEyahaRjASPLKkbJ1ILi3PTcYsMCo7zUcr3ixNzi0rx0veT83E2M4MjU0trBeOJE/CFG
-        AQ5GJR7eB8wTY4VYE8uKK3MPMUpwMCuJ8IozTIgV4k1JrKxKLcqPLyrNSS0+xCjNwaIkziuf
-        fyxSSCA9sSQ1OzW1ILUIJsvEwSnVwOgq6miu8ymsejrP7topk/+LTNhRs3BHrGx3+mqNl2fO
-        Xxd/yLhukn1o6DXb4JpLp9nVp+QW5XOs6Ii4aHp/irXenYtvu5ytH715EGMb4rv5n/zZl/fD
-        M58lndyxUanud+aFVA3NeS0dd1xMrDu0TTNCNBm2dJwz+JwVdHnF61e58urFdleZNyuxFGck
-        GmoxFxUnAgCETFiryAIAAA==
-X-CMS-MailID: 20190930042514epcas1p2c78cc8af0a5010cd8ec4cd163d43f778
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190917060433epcas2p4b12d7581d0ac5477d8f26ec74e634f0a
-References: <8998.1568693976@turing-police>
-        <20190917053134.27926-1-qkrwngud825@gmail.com>
-        <20190917054726.GA2058532@kroah.com>
-        <CGME20190917060433epcas2p4b12d7581d0ac5477d8f26ec74e634f0a@epcas2p4.samsung.com>
-        <CAD14+f1adJPRTvk8awgPJwCoHXSngqoKcAze1xbHVVvrhSMGrQ@mail.gmail.com>
-        <004401d56dc9$b00fd7a0$102f86e0$@samsung.com>
-        <20190918061605.GA1832786@kroah.com> <20190918063304.GA8354@jagdpanzerIV>
-        <20190918082658.GA1861850@kroah.com>
-        <CAD14+f24gujg3S41ARYn3CvfCq9_v+M2kot=RR3u7sNsBGte0Q@mail.gmail.com>
-        <20190918092405.GC2959@kadam> 
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-> [..]
-> > Put it in drivers/staging/sdfat/.
+On Fri, 2019-09-27 at 21:41 +0200, Dmitry Vyukov wrote:
+> On Fri, Sep 27, 2019 at 4:22 PM Walter Wu <walter-zh.wu@mediatek.com> wrote:
 > >
-> > But really we want someone from Samsung to say that they will treat
-> > the staging version as upstream.  It doesn't work when people apply
-> > fixes to their version and a year later back port the fixes into
-> > staging.  The staging tree is going to have tons and tons of white space
-> > fixes so backports are a pain.  All development needs to be upstream
-> > first where the staging driver is upstream.  Otherwise we should just
-> > wait for Samsung to get it read to be merged in fs/ and not through the
-> > staging tree.
-> Quite frankly,
-> This whole thing came as a huge-huge surprise to us, we did not initiate
-> upstreaming of exfat/sdfat code and, as of this moment, I'm not exactly
-> sure that we are prepared for any immediate radical changes to our internal
-> development process which people all of a sudden want from us. I need to
-> discuss with related people on internal thread.
-> please wait a while:)
-We decide to contribute sdfat directly and treat upstream exfat.
-Perhaps more time is needed for patch preparation(exfat rename + vfat removal
-+ clean-up) and internal processes. After contributing sdfat v2.2.0 as the base,
-We will also provide change-set of sdfat v2.3.0 later.
-
-Thanks!
+> > On Fri, 2019-09-27 at 15:07 +0200, Dmitry Vyukov wrote:
+> > > On Fri, Sep 27, 2019 at 5:43 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
+> > > >
+> > > > memmove() and memcpy() have missing underflow issues.
+> > > > When -7 <= size < 0, then KASAN will miss to catch the underflow issue.
+> > > > It looks like shadow start address and shadow end address is the same,
+> > > > so it does not actually check anything.
+> > > >
+> > > > The following test is indeed not caught by KASAN:
+> > > >
+> > > >         char *p = kmalloc(64, GFP_KERNEL);
+> > > >         memset((char *)p, 0, 64);
+> > > >         memmove((char *)p, (char *)p + 4, -2);
+> > > >         kfree((char*)p);
+> > > >
+> > > > It should be checked here:
+> > > >
+> > > > void *memmove(void *dest, const void *src, size_t len)
+> > > > {
+> > > >         check_memory_region((unsigned long)src, len, false, _RET_IP_);
+> > > >         check_memory_region((unsigned long)dest, len, true, _RET_IP_);
+> > > >
+> > > >         return __memmove(dest, src, len);
+> > > > }
+> > > >
+> > > > We fix the shadow end address which is calculated, then generic KASAN
+> > > > get the right shadow end address and detect this underflow issue.
+> > > >
+> > > > [1] https://bugzilla.kernel.org/show_bug.cgi?id=199341
+> > > >
+> > > > Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
+> > > > Reported-by: Dmitry Vyukov <dvyukov@google.com>
+> > > > ---
+> > > >  lib/test_kasan.c   | 36 ++++++++++++++++++++++++++++++++++++
+> > > >  mm/kasan/generic.c |  8 ++++++--
+> > > >  2 files changed, 42 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/lib/test_kasan.c b/lib/test_kasan.c
+> > > > index b63b367a94e8..8bd014852556 100644
+> > > > --- a/lib/test_kasan.c
+> > > > +++ b/lib/test_kasan.c
+> > > > @@ -280,6 +280,40 @@ static noinline void __init kmalloc_oob_in_memset(void)
+> > > >         kfree(ptr);
+> > > >  }
+> > > >
+> > > > +static noinline void __init kmalloc_oob_in_memmove_underflow(void)
+> > > > +{
+> > > > +       char *ptr;
+> > > > +       size_t size = 64;
+> > > > +
+> > > > +       pr_info("underflow out-of-bounds in memmove\n");
+> > > > +       ptr = kmalloc(size, GFP_KERNEL);
+> > > > +       if (!ptr) {
+> > > > +               pr_err("Allocation failed\n");
+> > > > +               return;
+> > > > +       }
+> > > > +
+> > > > +       memset((char *)ptr, 0, 64);
+> > > > +       memmove((char *)ptr, (char *)ptr + 4, -2);
+> > > > +       kfree(ptr);
+> > > > +}
+> > > > +
+> > > > +static noinline void __init kmalloc_oob_in_memmove_overflow(void)
+> > > > +{
+> > > > +       char *ptr;
+> > > > +       size_t size = 64;
+> > > > +
+> > > > +       pr_info("overflow out-of-bounds in memmove\n");
+> > > > +       ptr = kmalloc(size, GFP_KERNEL);
+> > > > +       if (!ptr) {
+> > > > +               pr_err("Allocation failed\n");
+> > > > +               return;
+> > > > +       }
+> > > > +
+> > > > +       memset((char *)ptr, 0, 64);
+> > > > +       memmove((char *)ptr + size, (char *)ptr, 2);
+> > > > +       kfree(ptr);
+> > > > +}
+> > > > +
+> > > >  static noinline void __init kmalloc_uaf(void)
+> > > >  {
+> > > >         char *ptr;
+> > > > @@ -734,6 +768,8 @@ static int __init kmalloc_tests_init(void)
+> > > >         kmalloc_oob_memset_4();
+> > > >         kmalloc_oob_memset_8();
+> > > >         kmalloc_oob_memset_16();
+> > > > +       kmalloc_oob_in_memmove_underflow();
+> > > > +       kmalloc_oob_in_memmove_overflow();
+> > > >         kmalloc_uaf();
+> > > >         kmalloc_uaf_memset();
+> > > >         kmalloc_uaf2();
+> > > > diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
+> > > > index 616f9dd82d12..34ca23d59e67 100644
+> > > > --- a/mm/kasan/generic.c
+> > > > +++ b/mm/kasan/generic.c
+> > > > @@ -131,9 +131,13 @@ static __always_inline bool memory_is_poisoned_n(unsigned long addr,
+> > > >                                                 size_t size)
+> > > >  {
+> > > >         unsigned long ret;
+> > > > +       void *shadow_start = kasan_mem_to_shadow((void *)addr);
+> > > > +       void *shadow_end = kasan_mem_to_shadow((void *)addr + size - 1) + 1;
+> > > >
+> > > > -       ret = memory_is_nonzero(kasan_mem_to_shadow((void *)addr),
+> > > > -                       kasan_mem_to_shadow((void *)addr + size - 1) + 1);
+> > > > +       if ((long)size < 0)
+> > > > +               shadow_end = kasan_mem_to_shadow((void *)addr + size);
+> > >
+> > > Hi Walter,
+> > >
+> > > Thanks for working on this.
+> > >
+> > > If size<0, does it make sense to continue at all? We will still check
+> > > 1PB of shadow memory? What happens when we pass such huge range to
+> > > memory_is_nonzero?
+> > > Perhaps it's better to produce an error and bail out immediately if size<0?
+> >
+> > I agree with what you said. when size<0, it is indeed an unreasonable
+> > behavior, it should be blocked from continuing to do.
+> >
+> >
+> > > Also, what's the failure mode of the tests? Didn't they badly corrupt
+> > > memory? We tried to keep tests such that they produce the KASAN
+> > > reports, but don't badly corrupt memory b/c/ we need to run all of
+> > > them.
+> >
+> > Maybe we should first produce KASAN reports and then go to execute
+> > memmove() or do nothing? It looks like it’s doing the following.or?
+> >
+> > void *memmove(void *dest, const void *src, size_t len)
+> >  {
+> > +       if (long(len) <= 0)
 > 
-> Thanks!
+> /\/\/\/\/\/\
+> 
+> This check needs to be inside of check_memory_region, otherwise we
+> will have similar problems in all other places that use
+> check_memory_region.
+Thanks for your reminder.
+
+ bool check_memory_region(unsigned long addr, size_t size, bool write,
+                                unsigned long ret_ip)
+ {
++       if (long(size) < 0) {
++               kasan_report_invalid_size(src, dest, len, _RET_IP_);
++               return false;
++       }
++
+        return check_memory_region_inline(addr, size, write, ret_ip);
+ }
+
+> But check_memory_region already returns a bool, so we could check that
+> bool and return early.
+
+When size<0, we should only show one KASAN report, and should we only
+limit to return when size<0 is true? If yse, then __memmove() will do
+nothing.
+
+
+ void *memmove(void *dest, const void *src, size_t len)
+ {
+-       check_memory_region((unsigned long)src, len, false, _RET_IP_);
++       if(!check_memory_region((unsigned long)src, len, false,
+_RET_IP_)
++               && long(size) < 0)
++               return;
++
+        check_memory_region((unsigned long)dest, len, true, _RET_IP_);
+
+        return __memmove(dest, src, len);
+
+> 
+> 
+> > +               kasan_report_invalid_size(src, dest, len, _RET_IP_);
+> > +
+> >         check_memory_region((unsigned long)src, len, false, _RET_IP_);
+> >         check_memory_region((unsigned long)dest, len, true, _RET_IP_);
 > >
-> > regards,
-> > dan carpenter
+> >
 > >
 
 
