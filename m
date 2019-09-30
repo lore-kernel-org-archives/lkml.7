@@ -2,120 +2,182 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA23FC35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C10C35280
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E79A2075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:45:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F97B2075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:48:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jO6onDot"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="d6t4GmHO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730858AbfI3Mpt (ORCPT
+        id S1730875AbfI3MsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 08:45:49 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46779 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726952AbfI3Mpt (ORCPT
+        Mon, 30 Sep 2019 08:48:05 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:47088 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728214AbfI3MsF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 08:45:49 -0400
-Received: by mail-wr1-f66.google.com with SMTP id o18so11123405wrv.13;
-        Mon, 30 Sep 2019 05:45:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=iI178b6o0qZVFBE5FgkMuuPfgQeMCHtWWim2bH0vxbY=;
-        b=jO6onDotzDWCKXEXFzt5lNj+IXe2cN21TYeChnFaKzRs7HYnmYbsPmIYHIi7enbNF4
-         mQa8u5bgxNDWXpiEFIs5ZU6+ff+9UycRj24TGk9n5RnpNPVRd43/j3BJ78zZDDMf+pRR
-         eB3SrMQ58CgKzB11kCbIOLDU5KRIEutAgyT8dgXTWRj2EJEPHS+ixySzNJTfLBNhxYgJ
-         68AGeSyl39hAgbzMKsNkX2YRRvfBbRGjNjtFunngdVEhPzQuH8b/tBZ6nu3SuLhPiP9g
-         yVX8bBsl9XObGaG++9XSz8OagizFufFlSRWqnFyFk1gq+W34kWd+Y4icip9DcFuwGZCh
-         aNfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=iI178b6o0qZVFBE5FgkMuuPfgQeMCHtWWim2bH0vxbY=;
-        b=gOd8hldZfuQJR756Bl7LrlroILWsaYtF0nWAHjlW///U2de5emWh7j7RaNMRsiM/7Q
-         cACBMVUvUstX6GsVS0di346LYUGsPL3HAKLb5H12zjYX3t89hQvpHvK88ho3+D1U9g1P
-         Dd21NLsI9jfi15949abhVuFUQKzSqprjm7dL33mmuuJKa+P2UuA4BOHozVIFyyLIUxR9
-         313mhwQu2Hy61WO8AxUwGQtl1P4MBHRJ8GK24LfhOwPcfc4VIXqhalJVUGPTlpUHGLOM
-         a17Eq5U8kNKeVI6eZZxLpiHbRP4PJY1lbMX50BQFepuqSO1m8ZyV3mlNbtUZs1DIT6rl
-         SFDw==
-X-Gm-Message-State: APjAAAVptAZn2zmJsUbjAjhBBfE3cenyF5a9kaj3+k5nxAutPPO73QvH
-        KWD6SmV8qB/v25FeiSZ9ams=
-X-Google-Smtp-Source: APXvYqxXqlxnCTWpHdUcHd+CsyWUyx5za3cbr+Ty3uRN7gE1JPrkoUFKktywA+G0M4up4B1gCXbvvA==
-X-Received: by 2002:adf:e951:: with SMTP id m17mr12954736wrn.154.1569847546974;
-        Mon, 30 Sep 2019 05:45:46 -0700 (PDT)
-Received: from [192.168.1.4] (ip-86-49-35-8.net.upcbroadband.cz. [86.49.35.8])
-        by smtp.gmail.com with ESMTPSA id z1sm26014947wre.40.2019.09.30.05.45.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Sep 2019 05:45:46 -0700 (PDT)
-Subject: Re: [PATCH 00/11] of: dma-ranges fixes and improvements
-To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Oza Pawandeep <oza.oza@broadcom.com>
-References: <20190927002455.13169-1-robh@kernel.org>
-From:   Marek Vasut <marek.vasut@gmail.com>
-Message-ID: <106d5b37-5732-204f-4140-8d528256a59b@gmail.com>
-Date:   Mon, 30 Sep 2019 14:40:36 +0200
+        Mon, 30 Sep 2019 08:48:05 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8UClwFS118509;
+        Mon, 30 Sep 2019 07:47:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569847678;
+        bh=MU2IxupzjQxFjETdLI0C8t3D/A7a75NCIfAIo/YLC3A=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=d6t4GmHOHUZhaLi1mgBh5+2uyMRrj9wMIVt4h4QtMin8NiBOL5wVoM600314q9VIk
+         R0Yb2k6rIK8uzNNMQa++8MnWRq0UEWEY6qciw6IYlkB5iR4KQFYolhpNZrHk4RvTRi
+         rXiO03k0BfW1/NQ2PqOs6TstF3fnHNFChDNQNVh4=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8UClwFc108236
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 30 Sep 2019 07:47:58 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 30
+ Sep 2019 07:47:57 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 30 Sep 2019 07:47:58 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8UClrff044162;
+        Mon, 30 Sep 2019 07:47:55 -0500
+Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to
+ dts
+To:     Adam Ford <aford173@gmail.com>
+CC:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190510194229.20628-1-aford173@gmail.com>
+ <af325707-3e42-493d-e858-77878ef06138@ti.com>
+ <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
+ <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
+ <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
+ <845055e2-8182-de74-2077-629fdf50ac6c@ti.com>
+ <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
+ <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com>
+ <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
+ <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com>
+ <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
+ <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com>
+ <23eba53a-9304-2ceb-d97e-01891ec0b3ed@ti.com>
+ <cb028b1e-05ca-9b22-be5d-c63f5fd56cc4@ti.com>
+ <CAHCN7xLKL42ib4t0Lte3sJPoJrKX0TPJR9VWi+uW=fZjUg1ssg@mail.gmail.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <c816d70d-fa5b-a43f-ae7a-6df4589fe484@ti.com>
+Date:   Mon, 30 Sep 2019 15:47:52 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190927002455.13169-1-robh@kernel.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAHCN7xLKL42ib4t0Lte3sJPoJrKX0TPJR9VWi+uW=fZjUg1ssg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/27/19 2:24 AM, Rob Herring wrote:
-> This series fixes several issues related to 'dma-ranges'. Primarily,
-> 'dma-ranges' in a PCI bridge node does correctly set dma masks for PCI
-> devices not described in the DT. A common case needing dma-ranges is a
-> 32-bit PCIe bridge on a 64-bit system. This affects several platforms
-> including Broadcom, NXP, Renesas, and Arm Juno. There's been several
-> attempts to fix these issues, most recently earlier this week[1].
+On 30/09/2019 15:41, Adam Ford wrote:
+> On Mon, Sep 30, 2019 at 3:53 AM Tero Kristo <t-kristo@ti.com> wrote:
+>>
+>> On 30/09/2019 09:45, Tomi Valkeinen wrote:
+>>> Hi,
+>>>
+>>> On 27/09/2019 18:47, Tomi Valkeinen wrote:
+>>>> On 27/09/2019 18:37, Tero Kristo wrote:
+>>>>
+>>>>> If you can provide details about what clock framework / driver does
+>>>>> wrong (sample clk_set_xyz call sequence, expected results via
+>>>>> clk_get_xyz, and what fails), I can take a look at it. Just reporting
+>>>>> arbitrary display driver issues I won't be able to debug at all (I
+>>>>> don't have access to any of the displays, nor do I want to waste time
+>>>>> debugging them without absolutely no knowledge whatsoever.)
+>>>>
+>>>> I used your hack patches to allow changing rates via debugfs. And set
+>>>> dss1_alwon_fck_3430es2 to 27000000 or 27870967. The end result was
+>>>> that DSS gets some very high clock from dss1_alwon_fck_3430es2, as the
+>>>> frame rate jumps to many hundreds fps.
+>>>>
+>>>> So, these numbers are not real, but to give the idea what I saw.
+>>>> Running first with 50 MHz, I can see, say, 40 fps. Then I set the
+>>>> clock to 30 MHz, and fps dropped to, say, 30fps, as expected with
+>>>> lower clock. Then I set the clock to 27MHz (or the other one),
+>>>> expecting a bit lower fps, but instead I saw hundreds of fps.
+>>>>
+>>>> I don't know if there's any other way to observe the wrong clock rate
+>>>> but have the dss enabled and running kmstest or similar. I can help
+>>>> you set that up next week, should be trivial. You don't need a display
+>>>> for that.
+>>>
+>>> Here's how to reproduce. I have the attached patches. Three of them are
+>>> the clk-debug ones, and one of mine to make it easy to test without a
+>>> display, and without underflow flood halting the device. There are on
+>>> top of v5.3. Kernel config also attached.
+>>>
+>>> kmstest is from kms++ project (https://github.com/tomba/kmsxx). It
+>>> should be straightforward to compile, but kmstest binary is also
+>>> included in TI's rootfs.
+>>
+>> Ok, I ignored all your test code and just fiddled with my trusty clk
+>> debugfs patches. I don't like debugging with test code I have no
+>> experience with. :)
+>>
+>> Anyways, it seems the dpll4_m4_ck max divider value is wrong, it only
+>> accepts values upto 16 at least on my board. The setting for this in DT
+>> is 32, and it is most likely SoC specific what happens if you write an
+>> invalid value to the divider.
+>>
+>> The best action here is probably to drop the max-div value for this
+>> clock to 16. Can someone check this with their display setup and see
+>> what happens? Attached patch should do the trick.
 > 
-> In the process, I found several bugs in the address translation. It
-> appears that things have happened to work as various DTs happen to use
-> 1:1 addresses.
+> I tried your attached patch on my dm3730 and that seems to make it
+> somewhat better in that it doesn't hang anymore, so that leads me to
+> believe that your comment about the divider being only valid on the
+> omap36 may not be true. I do think it solves the hanging issue that i
+> was seeing, but I now see a new one now which is dumping a backtrace.
 > 
-> First 3 patches are just some clean-up. The 4th patch adds a unittest
-> exhibiting the issues. Patches 5-9 rework how of_dma_configure() works
-> making it work on either a struct device child node or a struct
-> device_node parent node so that it works on bus leaf nodes like PCI
-> bridges. Patches 10 and 11 fix 2 issues with address translation for
-> dma-ranges.
+> It looks like it's unhappy that its trying to get one frequency and
+> getting something different instead.
 > 
-> My testing on this has been with QEMU virt machine hacked up to set PCI
-> dma-ranges and the unittest. Nicolas reports this series resolves the
-> issues on Rpi4 and NXP Layerscape platforms.
+> [   10.014099] WARNING: CPU: 0 PID: 111 at
+> drivers/gpu/drm/omapdrm/dss/dss.c:655 dss_set_fck_rate+0x70/0x90
+> [omapdss]
+> [   10.014129] clk rate mismatch: 27870968 != 27000000
 
-With the following patches applied:
-      https://patchwork.ozlabs.org/patch/1144870/
-      https://patchwork.ozlabs.org/patch/1144871/
-on R8A7795 Salvator-XS
-Tested-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+I believe this one is for Tomi to comment, his driver does some magic 
+compares for the requested vs. actual received clock rates. If I am not 
+mistaken, we are only modifying an integer divider here, and thus it is 
+physically impossible to get accurate 27MHz rate to display.
 
--- 
-Best regards,
-Marek Vasut
+-Tero
+
+> 
+> See attached log for the full dump.
+> 
+> Either way, I think you've identified the main issue.  I just think we
+> may have uncovered another one in the process.
+> 
+> For what it's worth, the video looks good.  :-)
+> 
+> adam
+>>
+>> -Tero
+>>
+>> --
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
