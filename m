@@ -2,426 +2,504 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFC2C4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D993DC4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08E6A21721
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A12442196E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:53:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="Ki9rlH4P";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="Ki9rlH4P"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="DUxyi5yc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730626AbfI3Jv7 (ORCPT
+        id S1730592AbfI3Jxk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 05:51:59 -0400
-Received: from mail-eopbgr20070.outbound.protection.outlook.com ([40.107.2.70]:55336
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726504AbfI3Jv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 05:51:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CPhTPf5jouzaxkU6CmT9g5wBKpSBXBDjVQlZ7MFikbY=;
- b=Ki9rlH4PcN/R7RalZGwcFOyECLZU7FsAqG49jsjNUt7lKcStGFNqApq8wYgu4/GFTpG3MwnpnomT215MxGL8XN9hOn5SvLuNrPpD4f/X92MNkTkfNM7PFF9nTXkhmx8lKcgDWli+re2OgVtPAMNPHyv8crsRAYCNtdruIBTuKVo=
-Received: from AM6PR08CA0011.eurprd08.prod.outlook.com (2603:10a6:20b:b2::23)
- by AM4PR0802MB2179.eurprd08.prod.outlook.com (2603:10a6:200:5c::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2305.20; Mon, 30 Sep
- 2019 09:51:47 +0000
-Received: from VE1EUR03FT023.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e09::207) by AM6PR08CA0011.outlook.office365.com
- (2603:10a6:20b:b2::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2305.20 via Frontend
- Transport; Mon, 30 Sep 2019 09:51:46 +0000
-Authentication-Results: spf=fail (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
- header.from=arm.com;
-Received-SPF: Fail (protection.outlook.com: domain of arm.com does not
- designate 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT023.mail.protection.outlook.com (10.152.18.133) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2305.15 via Frontend Transport; Mon, 30 Sep 2019 09:51:46 +0000
-Received: ("Tessian outbound 081de437afc7:v33"); Mon, 30 Sep 2019 09:51:43 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: acb176955efe3b9f
-X-CR-MTA-TID: 64aa7808
-Received: from 44bb75865738.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.10.53])
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 1DADCC40-96D0-463B-B9E6-A0F05B3826FE.1;
-        Mon, 30 Sep 2019 09:51:37 +0000
-Received: from EUR03-DB5-obe.outbound.protection.outlook.com (mail-db5eur03lp2053.outbound.protection.outlook.com [104.47.10.53])
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 44bb75865738.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384);
-    Mon, 30 Sep 2019 09:51:37 +0000
+        Mon, 30 Sep 2019 05:53:40 -0400
+Received: from mail1.bemta25.messagelabs.com ([195.245.230.65]:60986 "EHLO
+        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726504AbfI3Jxk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 05:53:40 -0400
+Received: from [46.226.52.200] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-1.bemta.az-b.eu-west-1.aws.symcld.net id 45/99-25256-D90D19D5; Mon, 30 Sep 2019 09:53:33 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLJsWRWlGSWpSXmKPExsWSoc9orjv3wsR
+  Yg2ldjBZTHz5hs5h/5ByrxaqpO1ks7n89ymjx7UoHk8XlXXPYLD7susps0br3CLsDh8fOWXfZ
+  PTat6mTzuHNtD5tH/18Dj8+b5AJYo1gz85LyKxJYM55d2cBUcCKmYsWEqSwNjJ0uXYycHIwCS
+  5kl9j4x6mLkArKPsUgsfr6VBcLZzCjxu/cnG4jDInCCWWLTho2sII6QwFQmiSX7HjBCOI8ZJf
+  Zc38QCMoxNwEJi8okHbCC2iEC8xPG5Z5lBiphB2tcsuMkKkhAWSJTYPP8NE0RRksSvD08ZIex
+  siUWdG8AGsQioSvzu3woW5wWqP/lpIgvEtj5Wif/dp8GKOAVsJXqbrzJBvCEr8aVxNTOIzSwg
+  LnHryXywuISAgMSSPeeZIWxRiZeP/7FC1KdKnGy6wQgR15E4e/0JlK0kMW/uEShbVuLS/G4gm
+  wPI9pV4czoTpnzS2Z1QJRYSS7pbWSBsKYnvjz+yQ5SrSPw7VAkRLpCYvP8WG4StJrH92nmoy2
+  Qk9p1sZJvAaDALydEQto7Egt2f2CBsbYllC18zzwKHhKDEyZlPWBYwsqxiNE8qykzPKMlNzMz
+  RNTQw0DU0NNI1tLTUNTfWS6zSTdJLLdUtTy0u0TXUSywv1iuuzE3OSdHLSy3ZxAhMYykFxz13
+  MN6d9UbvEKMkB5OSKO/c4xNjhfiS8lMqMxKLM+KLSnNSiw8xynBwKEnwqp0DygkWpaanVqRl5
+  gBTKkxagoNHSYR3F0iat7ggMbc4Mx0idYrRmGPCy7mLmDk2z126iFmIJS8/L1VKnHc9SKkASG
+  lGaR7cIFiqv8QoKyXMy8jAwCDEU5BalJtZgir/ilGcg1FJmHfVeaApPJl5JXD7XgGdwgR0ikN
+  qP8gpJYkIKakGJhMzjZC508N8TJ9YzFaLPfU+Jyf4kVrjr+3fEnfwKJ9pXHymz76uyX/RvYlf
+  3zD8fvl0U1q9huWjW54z88o/9an8S0wyV9e79+XJpyvnAo0OrOTqqFW6nFRnZnVxarhY7EsmG
+  UYnh9On5smriX1a0yDKqmq1YrdUzpHIYHu+loBr77hj/x50r75qyXuTpz322u6PP31/V8WZiZ
+  WVNmVovGNrFlm+0OviNtWFv1fkT+G7cG1SFOfa4phewSKl6k4959T+mQdP1Yjf0AysWinA7Rp
+  8fr+K/5LTFi6/ZBebWBl8WFxS8fXdajEuCYc31m4Vu4x1r5+47igpusZ5Q6W4Vz1n8Lfi3ify
+  lRGXeMuUWIozEg21mIuKEwHWdQypcAQAAA==
+X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
+X-Msg-Ref: server-3.tower-288.messagelabs.com!1569837212!348566!1
+X-Originating-IP: [104.47.1.55]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.43.12; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 4391 invoked from network); 30 Sep 2019 09:53:32 -0000
+Received: from mail-ve1eur01lp2055.outbound.protection.outlook.com (HELO EUR01-VE1-obe.outbound.protection.outlook.com) (104.47.1.55)
+  by server-3.tower-288.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 30 Sep 2019 09:53:32 -0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UhhEunOwIzmKRruMDAScDX6Cq2YW0AvO7HkAILs/ZRs/flbewlMd1vHnYcPZROZliDJjIRtreq5HvPOmDtjasgAi50QDE+RCWtYnyGgHViY1mJGkdzWIEQbau4n/oDWi9SqZqbcz9yZ/bXBuqURaHkDeb+/8sMIDXR0QucKdfJvJMJINojcRVLVVFtSZTt2OypUs8inKkYRFn49tOBKhYO6frjBz4vXEX+XPC2P6B6IRvCQCX6GCj+iEix5aeBDL2/5bB2FCBPohIDP6dhQ6UNH0kCQ5nJG5HCvEYy8Vknz8G/glpsSxVhRMBcvtW33jkuk4kI+91owBJ4NERt4r9A==
+ b=UU0izr9ZzrkCb9MZ+38Ujz6DOBGIiUweGuMD0O2qxo2XLZZci82WxDQ83dUWFqW6qGPJ6TCrkH5Lmc19Rb7OVUwgvEIMyDo8xcYdFbat8o06AM2kRZ0doPNDmXHIRf/7O6ZQ+L5VnOolmJ8mxOOB09X71nGVF3N0FKwag6eI43/iEikSVNkJ3hc9bIehUCkW5NJns/z/lsyOHBFoLVIbWCVcpvZU8HDQ4VVpKf4SiP11RpWi+4GU75ZWiTHWq76OG/uhL5n9Fy726HFLamRliNX720Evy20WLhIxSH3SHKhsbQvEIGOs7BLxo2KiGQ5FZU0gAZHu4+W4sA1eHwfYyg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CPhTPf5jouzaxkU6CmT9g5wBKpSBXBDjVQlZ7MFikbY=;
- b=RZIO8CO509tZIImU6U8B40HvrOJRpdBynzfDPl+0Tgt4pF/fsKH41dh3adGyz17wu0zukmpF4p+sGWwnnRFtUYmZ8DLI3JbmjZxtQICgWfKaZFKLGuwB11JqofNIa3yYVCpuztluBJPnIbWDMhBk+elURt/cg51ZMFwdPxhVsdbN6q7QBrRZCjSMPNveqnlIdsUNnqUkFu0V3O7w+UJ8CqSchBZkhA+xwHMOvBZ/0GkxDWLPEN7Zt81gZenTcDJLzTea0ikpQSW0d0hNSy/4OGXoVA7/3/PEjDmmFCj2CON4L+OwzMraljjzbHbmUCk9PYt448kcvQB5j69UR81qAg==
+ bh=uPyybKPC4uF/tyOTRfuqIw5dViBgNQ+o0Hbm7hQwx70=;
+ b=A0aWlwLSFKMLKPv1eeNcvqPcGJ1Ey2wz9JVs/57snafdZZgqwq1c/eyqlPzltORdaYUJESfQ2AuPkniy9LRuSz1Qfj4lmThHRmdCwmzjQcGomhc+qV939t9uYzK8v/QSR/PHtB9NpmQSCZE1/6ebgs/fBITqYKlv/dT1ftaQvgZtO+b40lrgytN2dsFWvYCAY4EHAYrXiCUfka9Tm5JktCevdStpsHe0jO2x3tWenOMpmNomPypiwoQPrpmImfTwGXe3K/GjKDWyMqTOZ8fFjQKbIN1KjOfrNMXKgWsaFOEYWKFdpaPAewB9GuCf/BGUOgY0f529U/xGtlFF2NIUwA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
+ smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
+ dkim=pass header.d=diasemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector2-dialogsemiconductor-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CPhTPf5jouzaxkU6CmT9g5wBKpSBXBDjVQlZ7MFikbY=;
- b=Ki9rlH4PcN/R7RalZGwcFOyECLZU7FsAqG49jsjNUt7lKcStGFNqApq8wYgu4/GFTpG3MwnpnomT215MxGL8XN9hOn5SvLuNrPpD4f/X92MNkTkfNM7PFF9nTXkhmx8lKcgDWli+re2OgVtPAMNPHyv8crsRAYCNtdruIBTuKVo=
-Received: from AM6PR08MB3829.eurprd08.prod.outlook.com (20.178.89.14) by
- AM6PR08MB3958.eurprd08.prod.outlook.com (20.179.1.94) with Microsoft SMTP
+ bh=uPyybKPC4uF/tyOTRfuqIw5dViBgNQ+o0Hbm7hQwx70=;
+ b=DUxyi5ycHJopciTI1EkN0vYSoOO1NYdbgokmOjjAEjVdAHdXZdmw21exmdGmRoWg3pnzHQZAv08/OyWlr/5c33zEFF4Yk9AQ+h78lSU+3Fm0fUnuOD1dc2J6EnCipmeU0cztiqq+tXr1Nokh51Ef9kJykQ7bWC3DCgGFjIzNF4o=
+Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM (10.169.154.136) by
+ AM5PR1001MB1059.EURPRD10.PROD.OUTLOOK.COM (10.169.155.20) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.20; Mon, 30 Sep 2019 09:51:35 +0000
-Received: from AM6PR08MB3829.eurprd08.prod.outlook.com
- ([fe80::3d72:3e6c:cb97:8976]) by AM6PR08MB3829.eurprd08.prod.outlook.com
- ([fe80::3d72:3e6c:cb97:8976%7]) with mapi id 15.20.2284.028; Mon, 30 Sep 2019
- 09:51:35 +0000
-From:   Brian Starkey <Brian.Starkey@arm.com>
-To:     Daniel Vetter <daniel@ffwll.ch>
-CC:     Neil Armstrong <narmstrong@baylibre.com>,
-        Liviu Dudau <Liviu.Dudau@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "sean@poorly.run" <sean@poorly.run>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nd <nd@arm.com>
-Subject: Re: [RFC PATCH] drm:- Add a modifier to denote 'protected'
- framebuffer
-Thread-Topic: [RFC PATCH] drm:- Add a modifier to denote 'protected'
- framebuffer
-Thread-Index: AQHVZxR6T7KOwVbC3kmqPMMH1PUhIKcv34OAgAA2WICAAAJKAIAAFqWAgBPsVgA=
-Date:   Mon, 30 Sep 2019 09:51:35 +0000
-Message-ID: <20190930095134.xjcucw2rrij5f4np@DESKTOP-E1NTVVP.localdomain>
-References: <20190909134241.23297-1-ayan.halder@arm.com>
- <20190917125301.GQ3958@phenom.ffwll.local>
- <20190917160730.hutzlbuqtpmmtdz3@e110455-lin.cambridge.arm.com>
- <11689dc3-6c3e-084b-b66d-e6ccf75cb8fb@baylibre.com>
- <CAKMK7uF7oKV4609Ca4mLj7gYC1rkWnWAV7_hM5Z48Ez1cBoMqA@mail.gmail.com>
-In-Reply-To: <CAKMK7uF7oKV4609Ca4mLj7gYC1rkWnWAV7_hM5Z48Ez1cBoMqA@mail.gmail.com>
+ 15.20.2305.20; Mon, 30 Sep 2019 09:53:22 +0000
+Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::419d:153e:d6ae:681d]) by AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::419d:153e:d6ae:681d%6]) with mapi id 15.20.2305.017; Mon, 30 Sep 2019
+ 09:53:22 +0000
+From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+CC:     "broonie@kernel.org" <broonie@kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        Steve Twiss <stwiss.opensource@diasemi.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 2/5] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Thread-Topic: [PATCH 2/5] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Thread-Index: AQHVbVV1957uISHJUEeJggkt0eobi6c6l9DggAH/z4CAAAcsgIABChoAgAAjQKCAABiIAIAAH5vwgAARNICABfEikA==
+Date:   Mon, 30 Sep 2019 09:53:21 +0000
+Message-ID: <AM5PR1001MB0994316EA8AD903B2943CE2080820@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+References: <20190917124246.11732-1-m.felsch@pengutronix.de>
+ <20190917124246.11732-3-m.felsch@pengutronix.de>
+ <AM5PR1001MB0994ABEF9C32BFB7BEA099B680840@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20190925155151.75uaxfiiei3i23tz@pengutronix.de>
+ <AM5PR1001MB09941810C3AE97110DD82E0F80870@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20190926080956.a3k2z4gf3n6m3n4s@pengutronix.de>
+ <AM5PR1001MB09944C0F9A4F547BF9E175CF80860@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20190926114354.qvv2rs7mc4xh6lkp@pengutronix.de>
+ <AM5PR1001MB099405D4A0C06CD6BF2886E880860@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20190926143835.tjv535h4gnfyystk@pengutronix.de>
+In-Reply-To: <20190926143835.tjv535h4gnfyystk@pengutronix.de>
 Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-user-agent: NeoMutt/20180716-849-147d51-dirty
-x-originating-ip: [217.140.106.49]
-x-clientproxiedby: LNXP123CA0013.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:d2::25) To AM6PR08MB3829.eurprd08.prod.outlook.com
- (2603:10a6:20b:85::14)
-Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=Brian.Starkey@arm.com; 
 x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.225.80.228]
 x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-Correlation-Id: 89cb0eda-133c-482e-56a1-08d7458bced2
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-TrafficTypeDiagnostic: AM6PR08MB3958:|AM6PR08MB3958:|AM4PR0802MB2179:
-X-MS-Exchange-PUrlCount: 3
+x-ms-office365-filtering-correlation-id: 7499e663-9f19-467e-f740-08d7458c07a9
+x-ms-traffictypediagnostic: AM5PR1001MB1059:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-purlcount: 2
 x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <AM4PR0802MB217937671BDC3EA6BD69BDA6F0820@AM4PR0802MB2179.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-x-ms-oob-tlc-oobclassifiers: OLM:10000;OLM:10000;
+x-microsoft-antispam-prvs: <AM5PR1001MB105919F982C59137CBE737F5A7820@AM5PR1001MB1059.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
 x-forefront-prvs: 01762B0D64
-X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(366004)(396003)(376002)(39860400002)(199004)(189003)(6436002)(6486002)(66066001)(229853002)(2906002)(587094005)(14444005)(44832011)(486006)(446003)(11346002)(5024004)(476003)(58126008)(71190400001)(99286004)(71200400001)(54906003)(26005)(102836004)(186003)(52116002)(53546011)(316002)(386003)(6506007)(76176011)(6116002)(256004)(81156014)(5660300002)(1076003)(66446008)(64756008)(66556008)(66476007)(66946007)(81166006)(9686003)(966005)(6306002)(8676002)(14454004)(3846002)(7736002)(8936002)(305945005)(6246003)(86362001)(6916009)(478600001)(4326008)(6512007)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR08MB3958;H:AM6PR08MB3829.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(396003)(376002)(39850400004)(346002)(199004)(189003)(66476007)(7696005)(76176011)(478600001)(7736002)(14454004)(8936002)(30864003)(966005)(71200400001)(71190400001)(5660300002)(256004)(14444005)(99286004)(33656002)(316002)(305945005)(74316002)(66066001)(25786009)(66556008)(2906002)(64756008)(66446008)(66946007)(6246003)(486006)(52536014)(476003)(446003)(11346002)(76116006)(26005)(55016002)(9686003)(86362001)(6306002)(229853002)(53546011)(6506007)(6436002)(102836004)(110136005)(6116002)(3846002)(54906003)(4326008)(8676002)(81156014)(81166006)(55236004)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR1001MB1059;H:AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
  permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: smIWcOVoK2yQEq0GmGhAvwXtAPbfKky0Vh6kuDYIWPUBA0pI6X6mnpSsGp22yOVYRSMnL74YMySCAYXevksI3lO9ovJGtNySrKIQ1JEdyfmjYlOXxH9UVBOFoZhwFMbnWQg9pJuOX3JzKpKB/hADk+EhQiK+jEOvEzT+6RGMGL2mBg/T9VC1nUUYUJPkQr2XMlQaWDlI0hiAHNxptMvMIi6xrW7FnKI5PX7YY2bzI+bU1QuCYBkLrk9H+J7AoJE2aknMEguEYetQt2VXEhmO/bjEw+DUEd7hvTAe4GFEG83Tt+qBn4ubqNr0p8WvzWNIPlFT/jn2Xjz4ZQqudSAiEhcNpSer35yVWfs+VXTL05tblXor1/W1TKLIp/G0WPk6nIjjcJdITzR0XMl7A2VQdmzRYi4k9PjhZ8M4ZiQdyl+mFbGMiK3OlCYY4xYlyMvDjVJa76h08LMaoVPILu09KQ==
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ltDwvHzkZh6uYua0+4T/5kpC9M7NMeqiuSEy5UszIExNlEQrzQ9G5uPmBnf94yo7vEThLkwDpKu0d/fjX9/Sa5k60n5VysJaanvQ/AyycbhA38BLFZ3q1iDOacmwqI6CCsM/KhoqhGqV8+OXZCIqhdaRKVK6jXJaRWYHeVf2RBvEglaijsfZ6sZurVYsMETmr/Olna7rYLsncbLwYnby5dloAj+YSs7QAVP/2GAa4XGDPOX624URt3FZKhYMl0Pj/IbAaFIvcQlJmUx0JxPC5bjvS7kVF8JtQPF76HXJbGJmT/qlH8u6MZH8glW3eArVIiRiBsbHFEeUtuNk9GVzn2nnqD8lHNBM5xTZWM4ETzMB9jp6Y/qf2advHVGiCHTMnbP8nH3vL1cyoZoRzD3qv8LOY4eLiAPULmBp9gNTWMDLYTlWN7E4PMfVifFl3iZCV6S0QnqPcsF9aVc6NHMLCA==
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <6A0EC6A769066D4DB8227B972297CE24@eurprd08.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB3958
-Original-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Brian.Starkey@arm.com; 
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT023.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(39860400002)(136003)(396003)(1110001)(339900001)(199004)(189003)(3846002)(476003)(486006)(8936002)(102836004)(105606002)(14454004)(356004)(2906002)(23726003)(5660300002)(6116002)(47776003)(66066001)(126002)(50466002)(305945005)(8746002)(76176011)(1076003)(966005)(6246003)(81166006)(81156014)(336012)(446003)(6306002)(6862004)(99286004)(9686003)(70586007)(6486002)(76130400001)(53546011)(6506007)(70206006)(22756006)(478600001)(26005)(229853002)(8676002)(26826003)(386003)(7736002)(5024004)(46406003)(11346002)(186003)(97756001)(316002)(14444005)(36906005)(25786009)(587094005)(54906003)(86362001)(4326008)(6512007)(58126008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM4PR0802MB2179;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Fail;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 91b96540-ad21-4fee-d5b1-08d7458bc7d6
-NoDisclaimer: True
-X-Forefront-PRVS: 01762B0D64
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ImRNJ6WuWU3+FbUnJiKo3mpTkeSNS1LMf1iz+gxfkavKdjkFXGY9aQpVbfvghyEG4sj3nFdZWYcNMfkg++KWFpwpK9Zr0DuO4ijm9iqcTJXm0iKMkGYcZ3nV8S/UsDW8wu99kcWDgxrUCWqDH7LF49S+jMoioXDJZoOlWQuTEXkWQgxo+cHUifEtfEKduSB/1Ee0Y1Vh/SKBF6L3HEVUYH3kzFOwpY5+OVC6bpGtcjRJd30x8WZjlqDqQkoE5YTTcnNSo/r+8SRSeeYsCSQIqf8aPpGcibGtk7kGdFYUPvUpnGxOeqnNeG80j8Ooov3kH+81i7tu5KlK2r5VriAqrzgJP+L11YI+m6pzWrzNWggigy179WUqZMAYByjXWY6HFWJyrPucxl/gtiNzz2Wj+yQ+eSTeLeS0vR5UpvOll8dpBC3Rpz6xBuivwNJj7AL6qfc5SElFvdZYq5WmhU0VDQ==
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Sep 2019 09:51:46.7465
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7499e663-9f19-467e-f740-08d7458c07a9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2019 09:53:21.9123
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 89cb0eda-133c-482e-56a1-08d7458bced2
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR0802MB2179
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XS0cb0vtEim+UKNbA9stQccg/SGTvz/BhykI0CnPjYDQNymFs+agLcsAYTVJI9Wi/VBj/vpZoknnJQwv4WVUb43lkge8X7eQ3gS5ULTIqlE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR1001MB1059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 26 September 2019 15:39, Marco Felsch wrote:
 
-On Tue, Sep 17, 2019 at 07:36:45PM +0200, Daniel Vetter wrote:
-> On Tue, Sep 17, 2019 at 6:15 PM Neil Armstrong <narmstrong@baylibre.com> =
-wrote:
+> On 19-09-26 14:04, Adam Thomson wrote:
+> > On 26 September 2019 12:44, Marco Felsch wrote:
 > >
-> > Hi,
+> > > On 19-09-26 10:17, Adam Thomson wrote:
+> > > > On 26 September 2019 09:10, Marco Felsch wrote:
+> > > >
+> > > > > On 19-09-25 16:18, Adam Thomson wrote:
+> > > > > > On 25 September 2019 16:52, Marco Felsch wrote:
+> > > > > >
+> > > > > > > Hi Adam,
+> > > > > > >
+> > > > > > > On 19-09-24 09:23, Adam Thomson wrote:
+> > > > > > > > On 17 September 2019 13:43, Marco Felsch wrote:
+> > > > > > > >
+> > > > > > > > > Add the documentation which describe the voltage selectio=
+n gpio
+> > > > > support.
+> > > > > > > > > This property can be applied to each subnode within the
+> 'regulators'
+> > > > > > > > > node so each regulator can be configured differently.
+> > > > > > > > >
+> > > > > > > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > > > > > > > > ---
+> > > > > > > > >  Documentation/devicetree/bindings/mfd/da9062.txt | 9
+> +++++++++
+> > > > > > > > >  1 file changed, 9 insertions(+)
+> > > > > > > > >
+> > > > > > > > > diff --git a/Documentation/devicetree/bindings/mfd/da9062=
+.txt
+> > > > > > > > > b/Documentation/devicetree/bindings/mfd/da9062.txt
+> > > > > > > > > index edca653a5777..9d9820d8177d 100644
+> > > > > > > > > --- a/Documentation/devicetree/bindings/mfd/da9062.txt
+> > > > > > > > > +++ b/Documentation/devicetree/bindings/mfd/da9062.txt
+> > > > > > > > > @@ -66,6 +66,15 @@ Sub-nodes:
+> > > > > > > > >    details of individual regulator device can be found in=
+:
+> > > > > > > > >    Documentation/devicetree/bindings/regulator/regulator.=
+txt
+> > > > > > > > >
+> > > > > > > > > +  Optional regulator device-specific properties:
+> > > > > > > > > +  - dlg,vsel-sense-gpios : The GPIO reference which shou=
+ld be
+> used
+> > > by
+> > > > > the
+> > > > > > > > > +    regulator to switch the voltage between active/suspe=
+nd
+> voltage
+> > > > > settings.
+> > > > > > > If
+> > > > > > > > > +    the signal is active the active-settings are applied=
+ else the
+> suspend
+> > > > > > > > > +    settings are applied. Attention: Sharing the same gp=
+io for other
+> > > > > purposes
+> > > > > > > > > +    or across multiple regulators is possible but the gp=
+io settings
+> must
+> > > be
+> > > > > the
+> > > > > > > > > +    same. Also the gpio phandle must refer to to the dlg=
+,da9062-
+> gpio
+> > > > > device
+> > > > > > > > > +    other gpios are not allowed and make no sense.
+> > > > > > > > > +
+> > > > > > > >
+> > > > > > > > Should we not use the binding names that are defined in 'gp=
+io-
+> > > > > regulator.yaml'
+> > > > > > > as
+> > > > > > > > these seem to be generic and would probably serve the purpo=
+se
+> here?
+> > > > > > >
+> > > > > > > Hm.. as the description says:
+> > > > > > >
+> > > > > > > 8<--------------------------------------------------
+> > > > > > > gpios:
+> > > > > > >    description: Array of one or more GPIO pins used to select=
+ the
+> > > > > > >    regulator voltage/current listed in "states".
+> > > > > > > 8<--------------------------------------------------
+> > > > > > >
+> > > > > > > But we don't have a "states" property and we can't select bet=
+ween
+> > > > > > > voltage or current.
+> > > > > >
+> > > > > > Yes I think I was at cross purposes when I made this remark. Th=
+e
+> bindings
+> > > there
+> > > > > > describe the GPOs that are used to enable/disable and set
+> voltage/current
+> > > for
+> > > > > > regulators and the supported voltage/current levels that can be
+> configured
+> > > in
+> > > > > > this manner. What you're describing is the GPI for DA9061/2. If=
+ you look
+> at
+> > > > > > GPIO handling in existing regulator drivers I believe they all =
+deal with
+> > > external
+> > > > > > GPOs that are configured to enable/disable and set voltage/curr=
+ent
+> limits
+> > > > > rather
+> > > > > > than the GPI on the PMIC itself. That's why I'm thinking that t=
+he
+> > > configurations
+> > > > > > you're doing here should actually be in a pinctrl or GPIO drive=
+r.
+> > > > >
+> > > > > That's true, the common gpio bindings are from the view of the
+> > > > > processor, e.g. which gpio must the processor drive to enable/swi=
+tch the
+> > > > > regualtor. So one reasone more to use a non-common binding.
+> > > > >
+> > > > > Please take a look on my other comment I made :) I don't use the
+> > > > > gpio-alternative function. I use it as an input.
+> > > >
+> > > > I know in the datasheet this isn't marked as an alternate function =
+specifically
+> > > > but to me having regulator control by the chip's own GPI is an alte=
+rnative
+> > > > function for that GPIO pin, in the same way a specific pin can be u=
+sed for
+> > > > SYS_EN or Watchdog control. It's a dedicated purpose rather than be=
+ing a
+> > > normal
+> > > > GPI.
+> > >
+> > > Nope, SYS_EN or Watchdog is a special/alternate function and not a
+> > > normal input.
 > >
-> > On 17/09/2019 18:07, Liviu Dudau wrote:
-> > > On Tue, Sep 17, 2019 at 02:53:01PM +0200, Daniel Vetter wrote:
-> > >> On Mon, Sep 09, 2019 at 01:42:53PM +0000, Ayan Halder wrote:
-> > >>> Add a modifier 'DRM_FORMAT_MOD_ARM_PROTECTED' which denotes that th=
-e framebuffer
-> > >>> is allocated in a protected system memory.
-> > >>> Essentially, we want to support EGL_EXT_protected_content in our ko=
-meda driver.
-> > >>>
-> > >>> Signed-off-by: Ayan Kumar Halder <ayan.halder@arm.com>
-> > >>>
-> > >>> /-- Note to reviewer
-> > >>> Komeda driver is capable of rendering DRM (Digital Rights Managemen=
-t) protected
-> > >>> content. The DRM content is stored in a framebuffer allocated in sy=
-stem memory
-> > >>> (which needs some special hardware signals for access).
-> > >>>
-> > >>> Let us ignore how the protected system memory is allocated and for =
-the scope of
-> > >>> this discussion, we want to figure out the best way possible for th=
-e userspace
-> > >>> to communicate to the drm driver to turn the protected mode on (for=
- accessing the
-> > >>> framebuffer with the DRM content) or off.
-> > >>>
-> > >>> The possible ways by which the userspace could achieve this is via:=
--
-> > >>>
-> > >>> 1. Modifiers :- This looks to me the best way by which the userspac=
-e can
-> > >>> communicate to the kernel to turn the protected mode on for the kom=
-eda driver
-> > >>> as it is going to access one of the protected framebuffers. The onl=
-y problem is
-> > >>> that the current modifiers describe the tiling/compression format. =
-However, it
-> > >>> does not hurt to extend the meaning of modifiers to denote other at=
-tributes of
-> > >>> the framebuffer as well.
-> > >>>
-> > >>> The other reason is that on Android, we get an info from Gralloc
-> > >>> (GRALLOC_USAGE_PROTECTED) which tells us that the buffer is protect=
-ed. This can
-> > >>> be used to set up the modifier/s (AddFB2) during framebuffer creati=
-on.
-> > >>
-> > >> How does this mesh with other modifiers, like AFBC? That's where I s=
-ee the
-> > >> issue here.
+> > Having spoken with our HW team there's essentially no real difference.
+>
+> So I don't have to configure the gpio to alternate to use it as SYS_EN?
+
+Yes you do, but the effect is much the same as manually configuring the GPI=
+O as
+input, just that the IC does it for you. The regulator control features cou=
+ld
+well have been done in a similar manner. Guess that was a design choice.
+
+>
 > > >
-> > > AFBC modifiers are currently under Arm's namespace, the thought behin=
-d the DRM
-> > > modifiers would be to have it as a "generic" modifier.
->=20
-> But if it's a generic flag, how do you combine that with other
-> modifiers? Like if you have a tiled buffer, but also encrypted? Or
-> afbc compressed, or whatever else. I'd expect for your hw encryption
-> is orthogonal to the buffer/tiling/compression format used?
-
-This bit doesn't overlap with any of the other AFBC modifiers, so as
-you say it'd be orthogonal, and could be set on AFBC buffers (if we
-went that route).
-
->=20
-> > >>> 2. Framebuffer flags :- As of today, this can be one of the two val=
-ues
-> > >>> ie (DRM_MODE_FB_INTERLACED/DRM_MODE_FB_MODIFIERS). Unlike modifiers=
-, the drm
-> > >>> framebuffer flags are generic to the drm subsystem and ideally we s=
-hould not
-> > >>> introduce any driver specific constraint/feature.
-> > >>>
-> > >>> 3. Connector property:- I could see the following properties used f=
-or DRM
-> > >>> protected content:-
-> > >>> DRM_MODE_CONTENT_PROTECTION_DESIRED / ENABLED :- "This property is =
-used by
-> > >>> userspace to request the kernel protect future content communicated=
- over
-> > >>> the link". Clearly, we are not concerned with the protection attrib=
-utes of the
-> > >>> transmitter. So, we cannot use this property for our case.
-> > >>>
-> > >>> 4. DRM plane property:- Again, we want to communicate that the fram=
-ebuffer(which
-> > >>> can be attached to any plane) is protected. So introducing a new pl=
-ane property
-> > >>> does not help.
-> > >>>
-> > >>> 5. DRM crtc property:- For the same reason as above, introducing a =
-new crtc
-> > >>> property does not help.
-> > >>
-> > >> 6. Just track this as part of buffer allocation, i.e. I think it doe=
-s
-> > >> matter how you allocate these protected buffers. We could add a "is
-> > >> protected buffer" flag at the dma_buf level for this.
-
-I also like this approach. The protected-ness is a property of the
-allocation, so makes sense to store it with the allocation IMO.
-
-> > >>
-> > >> So yeah for this stuff here I think we do want the full userspace si=
-de,
-> > >> from allocator to rendering something into this protected buffers (n=
-o need
-> > >> to also have the entire "decode a protected bitstream part" imo, sin=
-ce
-> > >> that will freak people out). Unfortunately, in my experience, that k=
-ills
-> > >> it for upstream :-/ But also in my experience of looking into this f=
-or
-> > >> other gpu's, we really need to have the full picture here to make su=
-re
-> > >> we're not screwing this up.
+> > > > See the following as an example of what I'm suggesting:
+> > > >
+> > > >
 > > >
-> > > Maybe Ayan could've been a bit clearer in his message, but the ask he=
-re is for ideas
-> > > on how userspace "communicates" (stores?) the fact that the buffers a=
-re protected to
-> > > the kernel driver. In our display processor we need to the the hardwa=
-re that the
-> > > buffers are protected before it tries to fetch them so that it can 1)=
- enable the
-> > > additional hardware signaling that sets the protection around the str=
-eam; and 2) read
-> > > the protected buffers in a special mode where there the magic happens=
-.
->=20
-> That was clear, but for the full picture we also need to know how
-> these buffers are produced and where they are allocated. One approach
-> would be to have a dma-buf heap that gives you encrypted buffers back.
-> With that we need to make sure that only encryption-aware drivers
-> allow such buffers to be imported, and the entire problem becomes a
-> kernel-internal one - aside from allocating the right kind of buffer
-> at the right place.
->=20
-
-In our case, we'd be supporting a system like TZMP-1, there's a
-Linaro connect presentation on it here:
-https://connect.linaro.org/resources/hkg18/hkg18-408/
-
-The simplest way to implement this is for firmware to set up a
-carveout which it tells linux is secure. A linux allocator (ion, gem,
-vb2, whatever) can allocate from this carveout, and tag the buffer as
-secure.
-
-In this kind of system, linux doesn't necessarily need to know
-anything about how buffers are protected, or what HW is capable of -
-it only needs to carry around the "is_protected" flag.
-
-Here, the TEE is ultimately responsible for deciding which HW gets
-access to a buffer. I don't see a benefit of having linux decide which
-drivers can or cannot import a buffer, because that decision should be
-handled by the TEE.
-
-For proving out the pipeline, IMO it doesn't matter whether the
-buffers are protected or not. For our DPU, all that matters is that if
-the buffer claims to be protected, we have to set our protected
-control bit. Nothing more. AFAIK it should work the same for other
-TZMP-1 implementations.
-
-> > > So yeah, we know we do want full userspace support, we're prodding th=
-e community on
-> > > answers on how to best let the kernel side know what userspace has do=
-ne.
+> https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/b=
+indin
+> > > gs/pinctrl/pinctrl-palmas.txt
+> > > >
+> > > > You could then pass the pinctrl information to the regulator driver=
+ and use
+> > > > that rather than having device specific bindings for this. That's a=
+t least my
+> > > > current interpretation of this anyway.
+> > >
+> > > For me pinctrl decides which function should be assigned to a pin. So=
+ in
+> > > our case this would be:
+> > >   - alternate
+> > >   - gpo
+> > >   - gpi
+> > >
+> > > In our use-case it is a gpi..
 > >
-> > Actually this is interesting for other multimedia SoCs implementing sec=
-ure video decode
-> > paths where video buffers are allocated and managed by a trusted app.
->=20
-> Yeah I expect there's more than just arm wanting this. I also wonder
-> how that interacts with the secure memory allocator that was bobbing
-> around on dri-devel for a while, but seems to not have gone anywhere.
-> That thing implemented my idea of "secure memory is only allocated by
-> a special entity".
-> -Daniel
+> > It's not being used as a normal GPI as such. It's being used to enable/=
+disable
+> > the regulator so I disagree.
+>
+> This one is used as voltage-selection. What is a "normal" GPI in your
+> point of view?
 
-Like I said, for us all we need is a way to carry around a 1-bit
-"is_protected" flag with a buffer. Could other folks share what's
-needed for their systems so we can reason about something that works
-for all?
+With the voltage selection and enable/disable control the actual work of
+handling the GPI state is all done internally in the IC. There is no contro=
+l
+required from SW other than setting of initial direction. For a normal GPI
+I would expect SW to be involved in the handling of that GPI state, for exa=
+mple
+as part of a bit banging interface.
 
-Thanks!
--Brian
+>
+> > >
+> > > An other reason why pinctrl seems not be the right solution is that t=
+he
+> > > regulator must be configured to use this gpi. This decision can't be
+> > > made globally because each regulator can be configured differently.. =
+For
+> > > me its just a local gpio.
+> >
+> > You'd pass pinctrl information, via DT, to the regulator driver so it c=
+an set
+> > accordingly. At least that's my take here, unless I'm missing something=
+. The
+> > regulator driver would be the consumer and could set the regulator cont=
+rol
+> > accordingly.
+>
+> IMHO this is what I have done. I use the gpi so the regulator is the
+> consumer. Since the gpi can be used by several regulators for voltage
+> selection or enable/disable action this gpi is marked as shared. If I
+> got you right than you would do something like for regulatorX.
+>
+>   pinctrl-node {
+>
+>   	gpio2 {
+> 		func =3D "vsel";
+> 	}
+>   }
+>
+> But the gpi(o)2 can also be used to enable/disable a regulatorY if I
+> understood the datasheet correctly. I other words:
+>
+>
+>
+>          +--> Alternate function
+>       /
+>   ---+   +--> GPI ----> Edge detection ---> more processing
+>    |       |                |
+>    |       |                +-----> Regulator control
+>    |       |                          |
+>    \__  __/ \__________  _______
+>       \/               \/
+>    pinctrl            gpio
+>
+> This is how I understood the pinctrl use-case. I configure the pin as
+> gpio and then the regulator driver consume a gpio.
 
->=20
+How I see it is that you configure the function through pinctrl as
+'regulator_switch' or 'regulator_vsel' (or whatever name is deemed sensible=
+ to
+cover the two types of functionality) and then the pinctrl driver code woul=
+d do
+the work of requesting and configuring the relevant GPIO as input so it's n=
+o
+longer available for use as something else (basically what you do in the
+regulator driver right now).
+
+I believe you can have more than one consumer of a pinctrl pin so it could =
+be
+provided to both regulator X and Y to indicate that this is the chosen
+functionality of that pin and so the regulator can then be marked as being
+controlled by that pin. Using pinctrl also would mean you're using standard
+bindings as well rather than something which is device specific.
+
+>
+> > At the end of the day I'm not the gatekeeper here so I think Mark's inp=
+ut is
+> > necessary as he will likely have a view on how this should be done. I a=
+ppreciate
+> > the work you've done here but I want to be sure we have a generic solut=
+ion
+> > as this would also apply to DA9063 and possibly other devices too.
+>
+> Why should this only apply to da9062 devices? IMHO this property can be
+> used by any other dlg pmic as well if it is supported. Comments and sugge=
+stions
+> are welcome so no worries ;)
+
+You're right. You can do the same for DA9063 and other devices potentially.=
+ I
+would just like to make sure we take the right/agreed approach. Potentially
+this could be used in non-Dialog products as well which have similar
+functionality.
+
+As I say, Mark is really the gatekeeper so his input is also key in this.
+
+>
+> Regards,
+>   Marco
+>
+> > Have added Mark to the 'To' in this e-mail thread so he might see it.
+> > >
+> > > Regards,
+> > >   Marco
+> > >
+> > > > >
+> > > > > Regards,
+> > > > >   Marco
+> > > > >
+> > > > >
+> > > > > > I'd be interested in hearing Mark's view on this though as he h=
+as far
+> more
+> > > > > > experience in this area than I do.
+> > > > > >
+> > > > > > >
+> > > > > > > Regards,
+> > > > > > >   Marco
+> > > > > > >
+> > > > > > > > >  - rtc : This node defines settings required for the Real=
+-Time Clock
+> > > > > associated
+> > > > > > > > >    with the DA9062. There are currently no entries in thi=
+s binding,
+> > > however
+> > > > > > > > >    compatible =3D "dlg,da9062-rtc" should be added if a n=
+ode is
+> created.
+> > > > > > > > > --
+> > > > > > > > > 2.20.1
+> > > > > > > >
+> > > > > > > >
+> > > > > > >
+> > > > > > > --
+> > > > > > > Pengutronix e.K.                           |                 =
+            |
+> > > > > > > Industrial Linux Solutions                 | http://www.pengu=
+tronix.de/  |
+> > > > > > > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-=
+206917-
+> 0
+> > > |
+> > > > > > > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-=
+206917-5555
+> |
+> > > > > >
+> > > > >
+> > > > > --
+> > > > > Pengutronix e.K.                           |                     =
+        |
+> > > > > Industrial Linux Solutions                 | http://www.pengutron=
+ix.de/  |
+> > > > > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-2069=
+17-0
+> |
+> > > > > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-2069=
+17-5555 |
+> > > >
+> > >
+> > > --
+> > > Pengutronix e.K.                           |                         =
+    |
+> > > Industrial Linux Solutions                 | http://www.pengutronix.d=
+e/  |
+> > > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0=
+    |
+> > > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5=
+555 |
 > >
-> > Neil
-> >
-> > >
-> > > Best regards,
-> > > Liviu
-> > >
-> > >
-> > >> -Daniel
-> > >>
-> > >>>
-> > >>> --/
-> > >>>
-> > >>> ---
-> > >>>  include/uapi/drm/drm_fourcc.h | 9 +++++++++
-> > >>>  1 file changed, 9 insertions(+)
-> > >>>
-> > >>> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_f=
-ourcc.h
-> > >>> index 3feeaa3f987a..38e5e81d11fe 100644
-> > >>> --- a/include/uapi/drm/drm_fourcc.h
-> > >>> +++ b/include/uapi/drm/drm_fourcc.h
-> > >>> @@ -742,6 +742,15 @@ extern "C" {
-> > >>>   */
-> > >>>  #define AFBC_FORMAT_MOD_BCH     (1ULL << 11)
-> > >>>
-> > >>> +/*
-> > >>> + * Protected framebuffer
-> > >>> + *
-> > >>> + * The framebuffer is allocated in a protected system memory which=
- can be accessed
-> > >>> + * via some special hardware signals from the dpu. This is used to=
- support
-> > >>> + * 'GRALLOC_USAGE_PROTECTED' in our framebuffer for EGL_EXT_protec=
-ted_content.
-> > >>> + */
-> > >>> +#define DRM_FORMAT_MOD_ARM_PROTECTED       fourcc_mod_code(ARM, (1=
-ULL << 55))
-> > >>> +
-> > >>>  /*
-> > >>>   * Allwinner tiled modifier
-> > >>>   *
-> > >>> --
-> > >>> 2.23.0
-> > >>>
-> > >>
-> > >> --
-> > >> Daniel Vetter
-> > >> Software Engineer, Intel Corporation
-> > >> http://blog.ffwll.ch
-> > >
-> >
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
->=20
->=20
->=20
-> --=20
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
+>
+> --
+> Pengutronix e.K.                           |                             =
+|
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
+|
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    =
+|
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 =
+|
