@@ -2,276 +2,275 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C496EC35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD3DC388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89A81215EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:50:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569855045;
-	bh=5Ca7KsOMPq6U18JHf20q21nMCb2y3yC85xZd2rPm6Co=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ineMyhJxq6xkZhoV+H8q6Qy7gal9UAYttvC0qLTcJxtksMPve/MOvoyO3ix2KPZ2e
-	 k4Ktg0jc5SvF1RVJ+D2rcrY9XqtUPzu1r8xs9RxLKG3w+QKLcAWubhX0yGdf/Sj/+W
-	 QGKjePCKx9XCOtSChajifcAvadQuI4me3M/1ZiXg=
+	by mail.kernel.org (Postfix) with ESMTP id 2E8242168B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:50:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Xg7DnbNB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731826AbfI3Ouo (ORCPT
+        id S1731850AbfI3Out (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 10:50:44 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41088 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730809AbfI3Ouo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 10:50:44 -0400
-Received: by mail-oi1-f193.google.com with SMTP id w17so11339188oiw.8;
-        Mon, 30 Sep 2019 07:50:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nR5Jwg73RW1Z4kze1rphymQfRWGvcGxE51i7zcwab9k=;
-        b=eefR3f92iB5pXXIOnqUopWFjwIbzUBDGaZTDxOxDEOJkZz8kao1h7e5diFjU5kTRPj
-         D1sSx+kQ8oAiJXeb8VZmklflO3tb68ptNTcNbZfvjLJ6jGJEVR6hDmCEntO/2gF/Jbkf
-         02NLiJsw3JhBuBs4KPwXaQziwoZsZLyY1L9zQeDoXYlWfFQQtZ5it9MeQeQe8irVdpFS
-         HyLqoGr/tVBLrY4g68scGKRaRwAZEyikpQJEwy+DDZcOejaFWJAcTdHvgqeDpk/ePypj
-         dsWtAcR/QWKgshAf7MK/6ScuFd5iRDxngKx8G+6cE8CuuvMSNz3RUJKAX5PYQh1aTF8u
-         LBhA==
-X-Gm-Message-State: APjAAAWzmFpm8N/AZeQbs6Ua8o3Q5XNcAUkosqWRCxVbPce6KEnVdQkS
-        qu14dcCBZe515g3ONCpR2w==
-X-Google-Smtp-Source: APXvYqz8/qjSeRO3rEliVHDjsp5N6t03KTRdTo9Jh0fwwBXF5ZO110mfe4yI51XoLBLQS1liaQb6cQ==
-X-Received: by 2002:aca:d408:: with SMTP id l8mr18365364oig.113.1569855043203;
-        Mon, 30 Sep 2019 07:50:43 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k204sm4383299oif.33.2019.09.30.07.50.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 07:50:42 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 09:50:42 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     linus.walleij@linaro.org, mark.rutland@arm.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
-        cheol.yong.kim@intel.com
-Subject: Re: [PATCH v1 2/2] dt-bindings: pinctrl: intel: Add for new SoC
-Message-ID: <20190930145042.GA29258@bogus>
-References: <cover.1568274587.git.rahul.tanwar@linux.intel.com>
- <c53173f380d47e9a5feaef9a35de535c6de9f6cb.1568274587.git.rahul.tanwar@linux.intel.com>
+        Mon, 30 Sep 2019 10:50:49 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:35672 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730809AbfI3Ous (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 10:50:48 -0400
+Received: from zn.tnic (p200300EC2F058B00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f05:8b00:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BCE911EC0982;
+        Mon, 30 Sep 2019 16:50:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1569855047;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=FnN7DQgxKKbUVQ9VZB4DQm/rTtWbZxtoBke2HT0KdQM=;
+        b=Xg7DnbNBRHFAyGpxCZbCd8drgk71sTW7EWTmw3LkaztKE6ifraZjIrc714wogsQleVMzyr
+        FxUmaVwUGve4IAysmE1lPrlqpfU/Oi5oFvE90FSpNkyfuYqFYZ7auULxKmmdFwldZTXYQd
+        0lcCMnhKN+o07QViVoIzfaCqork/P/I=
+Date:   Mon, 30 Sep 2019 16:50:46 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Hanna Hawa <hhhawa@amazon.com>
+Cc:     mchehab@kernel.org, james.morse@arm.com, rrichter@marvell.com,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com,
+        talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com
+Subject: Re: [PATCH v4 1/2] edac: Add an API for edac device to report for
+ multiple errors
+Message-ID: <20190930145046.GH29694@zn.tnic>
+References: <20190923191741.29322-1-hhhawa@amazon.com>
+ <20190923191741.29322-2-hhhawa@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <c53173f380d47e9a5feaef9a35de535c6de9f6cb.1568274587.git.rahul.tanwar@linux.intel.com>
+In-Reply-To: <20190923191741.29322-2-hhhawa@amazon.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 03:59:11PM +0800, Rahul Tanwar wrote:
-> Add dt bindings document & include file for pinmux & GPIO controller driver of
-> Intel Lightning Mountain SoC.
-> 
-> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> ---
->  .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 131 +++++++++++++++++++++
->  include/dt-bindings/pinctrl/intel,equilibrium.h    |  23 ++++
->  2 files changed, 154 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
->  create mode 100644 include/dt-bindings/pinctrl/intel,equilibrium.h
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..1aee42f0057e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-> @@ -0,0 +1,131 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/pinctrl/intel,lgm-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Intel Lightning Mountain SoC pinmux & GPIO controller binding
-> +
-> +maintainers:
-> +  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> +
-> +description: |
-> +  Pinmux & GPIO controller controls pin multiplexing & configuration including
-> +  GPIO function selection & GPIO attributes configuration.
-> +
-> +  Please refer to [1] for details of the common pinctrl bindings used by the
-> +  client devices.
-> +
-> +  [1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> +
-> +properties:
-> +  compatible:
-> +    const: intel,lgm-pinctrl
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +# Client device subnode's properties
-> +patternProperties:
-> +  "^.*@[0-9a-fA-F]+$":
-> +    type: object
-> +    description:
-> +      Pinctrl node's client devices use subnodes for desired pin configuration.
-> +      Client device subnodes use below defined properties.
-> +
-> +    properties:
-> +      intel,function:
-> +        $ref: /schemas/types.yaml#/definitions/string
-> +        description:
-> +          A string containing the name of the function to mux to the group.
-> +
-> +      intel,groups:
-> +        $ref: /schemas/types.yaml#/definitions/string-array
-> +        description:
-> +          An array of strings identifying the list of groups.
-> +
-> +      intel,pins:
-> +        $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        description:
-> +          List of pins to select with this function.
-> +
-> +      intel,mux:
-> +        description: The applicable mux group.
-> +        allOf:
-> +          - $ref: "/schemas/types.yaml#/definitions/uint32"
-> +          - enum:
-> +              # Refer include/dt-bindings/pinctrl/intel,equilibrium.h
-> +              - PINMUX_0 # 0 PINMUX_GPIO
-> +              - PINMUX_1 # 1
-> +              - PINMUX_2 # 2
-> +              - PINMUX_3 # 3
-> +              - PINMUX_4 # 4
-> +
-> +      intel,pullup:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: Specifies pull-up configuration.
-> +
-> +      intel,pulldown:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: Specifies pull-down configuration.
-> +
-> +      intel,drive-current:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: Enables driver-current.
-> +
-> +      intel,slew-rate:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: Enables slew-rate.
-> +
-> +      intel,open-drain:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: Specifies open-drain configuration.
-> +
-> +      intel,output:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: Specifies if the pin is to be configured as output.
+On Mon, Sep 23, 2019 at 08:17:40PM +0100, Hanna Hawa wrote:
+> +void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
+> +			int inst_nr, int block_nr, const char *msg)
+> +{
+> +	__edac_device_handle_ce(edac_dev, 1, inst_nr, block_nr, msg);
+> +}
+> +EXPORT_SYMBOL_GPL(edac_device_handle_ce);
 
-We have a whole slew of standard properties for pinctrl and you aren't 
-using any of them.
+Eww, I don't like that: exporting the function *and* the __ counterpart.
+The user will get confused and that is unnecessary.
 
-Rob
+See below for a better version. This way you solve the whole deal with a
+single patch.
 
-> +
-> +
-> +    required:
-> +      - intel,function
-> +      - intel,groups
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  # Pinmux controller node
-> +  - |
-> +    pinctrl: pinctrl@e2880000 {
-> +          compatible = "intel,lgm-pinctrl";
-> +          reg = <0xe2880000 0x100000>;
-> +    };
-> +
-> +  # Client device node
-> +  - |
+---
+From: Hanna Hawa <hhhawa@amazon.com>
+Date: Mon, 23 Sep 2019 20:17:40 +0100
+Subject: [PATCH] EDAC/device: Rework error logging API
 
-These are not really separate examples.
+Make the main workhorse the "count" functions which can log a @count
+of errors. Have the current APIs edac_device_handle_{ce,ue}() call
+the _count() variants and this way keep the exported symbols number
+unchanged.
 
-> +    asc0: serial@e0a00000 {
-> +          compatible = "intel,lgm-asc";
-> +          reg = <0xe0a00000 0x1000>;
-> +          interrupt-parent = <&ioapic1>;
-> +          interrupts = <128 1>;
-> +          interrupt-names = "asc_irq";
-> +          clocks = <&cgu0 31>, <&cgu0 98>;
-> +          clock-names = "freq", "asc";
-> +          pinctrl-names = "default";
-> +          pinctrl-0 = <&uart0>;
-> +    };
-> +
-> +   # Client device subnode
-> +  - |
-> +    uart0:uart0 {
+ [ bp: Rewrite. ]
 
-This should be a child of pinctrl node.
+Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: benh@amazon.com
+Cc: dwmw@amazon.co.uk
+Cc: hanochu@amazon.com
+Cc: James Morse <james.morse@arm.com>
+Cc: jonnyc@amazon.com
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: ronenk@amazon.com
+Cc: talel@amazon.com
+Cc: Tony Luck <tony.luck@intel.com>
+Link: https://lkml.kernel.org/r/20190923191741.29322-2-hhhawa@amazon.com
+---
+ drivers/edac/edac_device.c | 44 ++++++++++++++++---------------
+ drivers/edac/edac_device.h | 54 ++++++++++++++++++++++++++++++--------
+ 2 files changed, 66 insertions(+), 32 deletions(-)
 
-> +          intel,pins = <64>, /* UART_RX0 */
-> +                       <65>; /* UART_TX0 */
-> +          intel,function = "CONSOLE_UART0";
-> +          intel,mux = <1>,
-> +                      <1>;
-> +          intel,groups = "CONSOLE_UART0";
-> +    };
-> +
-> +
-> +...
-> diff --git a/include/dt-bindings/pinctrl/intel,equilibrium.h b/include/dt-bindings/pinctrl/intel,equilibrium.h
-> new file mode 100644
-> index 000000000000..c37bfbea8ff1
-> --- /dev/null
-> +++ b/include/dt-bindings/pinctrl/intel,equilibrium.h
-> @@ -0,0 +1,23 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +#ifndef __DT_BINDINGS_PINCTRL_INTEL_EQUILIBRIUM_H_
-> +#define __DT_BINDINGS_PINCTRL_INTEL_EQUILIBRIUM_H_
-> +
-> +#define PINCTRL_DRCC_2_MA	0
-> +#define PINCTRL_DRCC_4_MA	1
-> +#define PINCTRL_DRCC_8_MA	2
-> +#define PINCTRL_DRCC_12_MA	3
+diff --git a/drivers/edac/edac_device.c b/drivers/edac/edac_device.c
+index 65cf2b9355c4..d4d8bed5b55d 100644
+--- a/drivers/edac/edac_device.c
++++ b/drivers/edac/edac_device.c
+@@ -555,8 +555,9 @@ static inline int edac_device_get_panic_on_ue(struct edac_device_ctl_info
+ 	return edac_dev->panic_on_ue;
+ }
+ 
+-void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
+-			int inst_nr, int block_nr, const char *msg)
++void edac_device_handle_ce_count(struct edac_device_ctl_info *edac_dev,
++				 unsigned int count, int inst_nr, int block_nr,
++				 const char *msg)
+ {
+ 	struct edac_device_instance *instance;
+ 	struct edac_device_block *block = NULL;
+@@ -582,23 +583,24 @@ void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
+ 
+ 	if (instance->nr_blocks > 0) {
+ 		block = instance->blocks + block_nr;
+-		block->counters.ce_count++;
++		block->counters.ce_count += count;
+ 	}
+ 
+ 	/* Propagate the count up the 'totals' tree */
+-	instance->counters.ce_count++;
+-	edac_dev->counters.ce_count++;
++	instance->counters.ce_count += count;
++	edac_dev->counters.ce_count += count;
+ 
+ 	if (edac_device_get_log_ce(edac_dev))
+ 		edac_device_printk(edac_dev, KERN_WARNING,
+-				"CE: %s instance: %s block: %s '%s'\n",
+-				edac_dev->ctl_name, instance->name,
+-				block ? block->name : "N/A", msg);
++				   "CE: %s instance: %s block: %s count: %d '%s'\n",
++				   edac_dev->ctl_name, instance->name,
++				   block ? block->name : "N/A", count, msg);
+ }
+-EXPORT_SYMBOL_GPL(edac_device_handle_ce);
++EXPORT_SYMBOL_GPL(edac_device_handle_ce_count);
+ 
+-void edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
+-			int inst_nr, int block_nr, const char *msg)
++void edac_device_handle_ue_count(struct edac_device_ctl_info *edac_dev,
++				 unsigned int count, int inst_nr, int block_nr,
++				 const char *msg)
+ {
+ 	struct edac_device_instance *instance;
+ 	struct edac_device_block *block = NULL;
+@@ -624,22 +626,22 @@ void edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
+ 
+ 	if (instance->nr_blocks > 0) {
+ 		block = instance->blocks + block_nr;
+-		block->counters.ue_count++;
++		block->counters.ue_count += count;
+ 	}
+ 
+ 	/* Propagate the count up the 'totals' tree */
+-	instance->counters.ue_count++;
+-	edac_dev->counters.ue_count++;
++	instance->counters.ue_count += count;
++	edac_dev->counters.ue_count += count;
+ 
+ 	if (edac_device_get_log_ue(edac_dev))
+ 		edac_device_printk(edac_dev, KERN_EMERG,
+-				"UE: %s instance: %s block: %s '%s'\n",
+-				edac_dev->ctl_name, instance->name,
+-				block ? block->name : "N/A", msg);
++				   "UE: %s instance: %s block: %s count: %d '%s'\n",
++				   edac_dev->ctl_name, instance->name,
++				   block ? block->name : "N/A", count, msg);
+ 
+ 	if (edac_device_get_panic_on_ue(edac_dev))
+-		panic("EDAC %s: UE instance: %s block %s '%s'\n",
+-			edac_dev->ctl_name, instance->name,
+-			block ? block->name : "N/A", msg);
++		panic("EDAC %s: UE instance: %s block %s count: %d '%s'\n",
++		      edac_dev->ctl_name, instance->name,
++		      block ? block->name : "N/A", count, msg);
+ }
+-EXPORT_SYMBOL_GPL(edac_device_handle_ue);
++EXPORT_SYMBOL_GPL(edac_device_handle_ue_count);
+diff --git a/drivers/edac/edac_device.h b/drivers/edac/edac_device.h
+index 1aaba74ae411..c4c0e0bdce14 100644
+--- a/drivers/edac/edac_device.h
++++ b/drivers/edac/edac_device.h
+@@ -286,27 +286,60 @@ extern int edac_device_add_device(struct edac_device_ctl_info *edac_dev);
+ extern struct edac_device_ctl_info *edac_device_del_device(struct device *dev);
+ 
+ /**
+- * edac_device_handle_ue():
+- *	perform a common output and handling of an 'edac_dev' UE event
++ * Log correctable errors.
+  *
+  * @edac_dev: pointer to struct &edac_device_ctl_info
+- * @inst_nr: number of the instance where the UE error happened
+- * @block_nr: number of the block where the UE error happened
++ * @inst_nr: number of the instance where the CE error happened
++ * @count: Number of errors to log.
++ * @block_nr: number of the block where the CE error happened
++ * @msg: message to be printed
++ */
++void edac_device_handle_ce_count(struct edac_device_ctl_info *edac_dev,
++				 unsigned int count, int inst_nr, int block_nr,
++				 const char *msg);
++
++/**
++ * Log uncorrectable errors.
++ *
++ * @edac_dev: pointer to struct &edac_device_ctl_info
++ * @inst_nr: number of the instance where the CE error happened
++ * @count: Number of errors to log.
++ * @block_nr: number of the block where the CE error happened
+  * @msg: message to be printed
+  */
+-extern void edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
+-				int inst_nr, int block_nr, const char *msg);
++void edac_device_handle_ue_count(struct edac_device_ctl_info *edac_dev,
++				 unsigned int count, int inst_nr, int block_nr,
++				 const char *msg);
++
+ /**
+- * edac_device_handle_ce():
+- *	perform a common output and handling of an 'edac_dev' CE event
++ * edac_device_handle_ce(): Log a single correctable error
+  *
+  * @edac_dev: pointer to struct &edac_device_ctl_info
+  * @inst_nr: number of the instance where the CE error happened
+  * @block_nr: number of the block where the CE error happened
+  * @msg: message to be printed
+  */
+-extern void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
+-				int inst_nr, int block_nr, const char *msg);
++static inline void
++edac_device_handle_ce(struct edac_device_ctl_info *edac_dev, int inst_nr,
++		      int block_nr, const char *msg)
++{
++	edac_device_handle_ce_count(edac_dev, 1, inst_nr, block_nr, msg);
++}
++
++/**
++ * edac_device_handle_ue(): Log a single uncorrectable error
++ *
++ * @edac_dev: pointer to struct &edac_device_ctl_info
++ * @inst_nr: number of the instance where the UE error happened
++ * @block_nr: number of the block where the UE error happened
++ * @msg: message to be printed
++ */
++static inline void
++edac_device_handle_ue(struct edac_device_ctl_info *edac_dev, int inst_nr,
++		      int block_nr, const char *msg)
++{
++	edac_device_handle_ue_count(edac_dev, 1, inst_nr, block_nr, msg);
++}
+ 
+ /**
+  * edac_device_alloc_index: Allocate a unique device index number
+@@ -316,5 +349,4 @@ extern void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
+  */
+ extern int edac_device_alloc_index(void);
+ extern const char *edac_layer_name[];
+-
+ #endif
+-- 
+2.21.0
 
-Use the property that defines drive strength in terms of microamps and 
-convert to register values in the driver.
+-- 
+Regards/Gruss,
+    Boris.
 
-> +
-> +#define PINMUX_0		0
-> +#define PINMUX_1		1
-> +#define PINMUX_2		2
-> +#define PINMUX_3		3
-> +#define PINMUX_4		4
-
-Not useful defines. Just use the numbers directly.
-
-> +#define PINMUX_GPIO		PINMUX_0
-> +
-> +#define PINCTRL_GROUP		"intel,groups"
-> +#define PINCTRL_FUNCTION	"intel,function"
-> +#define PINCTRL_PINS		"intel,pins"
-> +#define PINCTRL_MUX		"intel,mux"
-
-We don't create defines for property names (really for any strings).
-
-> +
-> +#endif /* __DT_BINDINGS_PINCTRL_INTEL_EQUILIBRIUM_H_ */
-> -- 
-> 2.11.0
-> 
+https://people.kernel.org/tglx/notes-about-netiquette
