@@ -2,106 +2,92 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F426C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A57C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F87F2086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:50:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADFF821920
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:50:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731371AbfI3NuS convert rfc822-to-8bit (ORCPT
+        id S1731403AbfI3Nun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 09:50:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58051 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730583AbfI3NuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:50:18 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4AEE33082E10;
-        Mon, 30 Sep 2019 13:50:17 +0000 (UTC)
-Received: from x2.localnet (ovpn-117-72.phx2.redhat.com [10.3.117.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A7D0E261D1;
-        Mon, 30 Sep 2019 13:50:01 +0000 (UTC)
-From:   Steve Grubb <sgrubb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
-        =?ISO-8859-1?Q?J=E9r=E9mie?= Galarneau 
-        <jeremie.galarneau@efficios.com>, s.mesoraca16@gmail.com,
-        viro@zeniv.linux.org.uk, dan.carpenter@oracle.com,
-        akpm@linux-foundation.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        kernel-hardening@lists.openwall.com, linux-audit@redhat.com,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] audit: Report suspicious O_CREAT usage
-Date:   Mon, 30 Sep 2019 09:50:00 -0400
-Message-ID: <2065829.xbNJnTdZ4q@x2>
-Organization: Red Hat
-In-Reply-To: <CAHC9VhRNmWw1__-haD1ZEekADTho3EJyXQMd6ETpOv4c8Qn9nw@mail.gmail.com>
-References: <201909251348.A1542A52@keescook> <CAHC9VhRNmWw1__-haD1ZEekADTho3EJyXQMd6ETpOv4c8Qn9nw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 30 Sep 2019 13:50:17 +0000 (UTC)
+        Mon, 30 Sep 2019 09:50:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36232 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729738AbfI3Nun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 09:50:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7AF41AF7E;
+        Mon, 30 Sep 2019 13:50:41 +0000 (UTC)
+Message-ID: <1569850516.2639.2.camel@suse.com>
+Subject: Re: WARNING in _chaoskey_fill/usb_submit_urb
+From:   Oliver Neukum <oneukum@suse.com>
+To:     syzbot <syzbot+f5349b421c6213d34ce2@syzkaller.appspotmail.com>,
+        gustavo@embeddedor.com, andreyknvl@google.com,
+        syzkaller-bugs@googlegroups.com, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Date:   Mon, 30 Sep 2019 15:35:16 +0200
+In-Reply-To: <000000000000488dd305933945d2@google.com>
+References: <000000000000488dd305933945d2@google.com>
+Content-Type: multipart/mixed; boundary="=-Va0/YDZugknsz+OWYo1m"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, September 26, 2019 11:31:32 AM EDT Paul Moore wrote:
-> On Wed, Sep 25, 2019 at 5:02 PM Kees Cook <keescook@chromium.org> wrote:
-> > This renames the very specific audit_log_link_denied() to
-> > audit_log_path_denied() and adds the AUDIT_* type as an argument. This
-> > allows for the creation of the new AUDIT_ANOM_CREAT that can be used to
-> > report the fifo/regular file creation restrictions that were introduced
-> > in commit 30aba6656f61 ("namei: allow restricted O_CREAT of FIFOs and
-> > regular files"). Without this change, discovering that the restriction
-> > is enabled can be very challenging:
-> > https://lore.kernel.org/lkml/CA+jJMxvkqjXHy3DnV5MVhFTL2RUhg0WQ-XVFW3ngDQO
-> > dkFq0PA@mail.gmail.com
-> > 
-> > Reported-by: Jérémie Galarneau <jeremie.galarneau@efficios.com>
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> > This is not a complete fix because reporting was broken in commit
-> > 15564ff0a16e ("audit: make ANOM_LINK obey audit_enabled and
-> > audit_dummy_context")
-> > which specifically goes against the intention of these records: they
-> > should _always_ be reported. If auditing isn't enabled, they should be
-> > ratelimited.
-> > 
-> > Instead of using audit, should this just go back to using
-> > pr_ratelimited()?
-> 
-> I'm going to ignore the rename and other aspects of this patch for the
-> moment so we can focus on the topic of if/when/how these records
-> should be emitted by the kernel.
-> 
-> Unfortunately, people tend to get very upset if audit emits *any*
-> records when they haven't explicitly enabled audit, the significance
-> of the record doesn't seem to matter, which is why you see patches
-> like 15564ff0a16e ("audit: make ANOM_LINK obey audit_enabled and
-> audit_dummy_context").  We could consider converting some records to
-> printk()s, rate-limited or not, but we need to balance this with the
-> various security certifications which audit was created to satisfy.
-> In some cases a printk() isn't sufficient.
-> 
-> Steve is probably the only one who really keeps track of the various
-> auditing requirements of the different security certifications; what
-> say you Steve on this issue with ANOM_CREAT records?
 
-Common Criteria and other security standards I track do not call out for 
-anomoly detection. So, there are no requirements on this. That said, we do 
-have other anomaly detections because they give early warning that something 
-strange is happening. I think adding this event is a nice improvement as long 
-as it obeys audit_enabled before emitting an event - for example, look at the 
-AUDIT_ANOM_ABEND event.
+--=-Va0/YDZugknsz+OWYo1m
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
--Steve
+Am Montag, den 23.09.2019, 07:31 -0700 schrieb syzbot:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    e0bd8d79 usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1452c6a1600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=8847e5384a16f66a
+> dashboard link: https://syzkaller.appspot.com/bug?extid=f5349b421c6213d34ce2
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16342d45600000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=166769b1600000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+f5349b421c6213d34ce2@syzkaller.appspotmail.com
 
+#syz test: https://github.com/google/kasan.git e0bd8d79
+--=-Va0/YDZugknsz+OWYo1m
+Content-Disposition: attachment; filename="0001-USB-chaoskey-fix-error-case-of-a-timeout.patch"
+Content-Type: text/x-patch; name="0001-USB-chaoskey-fix-error-case-of-a-timeout.patch";
+	charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+RnJvbSAyN2IwMDg1NzY4YjU1ZjJlZDhmYWY0ZjEyNTQwMjNhMDNkYzNlYjI0IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBPbGl2ZXIgTmV1a3VtIDxvbmV1a3VtQHN1c2UuY29tPgpEYXRl
+OiBNb24sIDMwIFNlcCAyMDE5IDE1OjE5OjEzICswMjAwClN1YmplY3Q6IFtQQVRDSF0gVVNCOiBj
+aGFvc2tleTogZml4IGVycm9yIGNhc2Ugb2YgYSB0aW1lb3V0CgpJbiBjYXNlIG9mIGEgdGltZW91
+dCBjb21tdW5pY2F0aW9uIHdpdGggdGhlIGRldmljZSBuZWVkcyB0byBiZSBlbmRlZApmcm9tIHRo
+ZSBob3N0IHNpZGUsIGxlc3Qgd2Ugb3ZlcndyaXRlIGFuIGFjdGl2ZSBVUkIKClNpZ25lZC1vZmYt
+Ynk6IE9saXZlciBOZXVrdW0gPG9uZXVrdW1Ac3VzZS5kZT4KLS0tCiBkcml2ZXJzL3VzYi9taXNj
+L2NoYW9za2V5LmMgfCAyICsrCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCgpkaWZm
+IC0tZ2l0IGEvZHJpdmVycy91c2IvbWlzYy9jaGFvc2tleS5jIGIvZHJpdmVycy91c2IvbWlzYy9j
+aGFvc2tleS5jCmluZGV4IGNmNTgyOGNlOTI3YS4uODUwZjQ2Y2JhY2UyIDEwMDY0NAotLS0gYS9k
+cml2ZXJzL3VzYi9taXNjL2NoYW9za2V5LmMKKysrIGIvZHJpdmVycy91c2IvbWlzYy9jaGFvc2tl
+eS5jCkBAIC0zOTEsNiArMzkxLDggQEAgc3RhdGljIGludCBfY2hhb3NrZXlfZmlsbChzdHJ1Y3Qg
+Y2hhb3NrZXkgKmRldikKIAllbHNlCiAJCXJlc3VsdCA9IGRldi0+dmFsaWQ7CiBvdXQ6CisJLyog
+aW4gY2FzZSBvZiBhIHRpbWVvdXQgKi8KKwl1c2Jfa2lsbF91cmIoZGV2LT51cmIpOyAKIAkvKiBM
+ZXQgdGhlIGRldmljZSBnbyBiYWNrIHRvIHNsZWVwIGV2ZW50dWFsbHkgKi8KIAl1c2JfYXV0b3Bt
+X3B1dF9pbnRlcmZhY2UoZGV2LT5pbnRlcmZhY2UpOwogCi0tIAoyLjE2LjQKCg==
+
+
+--=-Va0/YDZugknsz+OWYo1m--
 
