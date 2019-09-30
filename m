@@ -2,108 +2,145 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA048C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C5CC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B159206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:28:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569842900;
-	bh=OYc4V7Zz9JIHzFyoBcw2dxwCQoBSH1WZjvBOFpr0Mu8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0QcZ9K1Idjr9S9QH+BF2RGDjodoQ1oIDH7VCQF/C8kEWSfaXecRmeTfIA8AUJGoeT
-	 vnoskfRCbX/SPyS8/0bO9yMOFXia0T7p34O+/P9a6SXoChJvTvJXSYecG+JAXA6s/0
-	 qEqvvlrfrSMFhsKWAqFJtegz/2m81qBWS0gVsaak=
+	by mail.kernel.org (Postfix) with ESMTP id 41908206BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:30:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="TyOzhtLL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729754AbfI3L2T (ORCPT
+        id S1729877AbfI3Lae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 07:28:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49452 "EHLO mx1.suse.de"
+        Mon, 30 Sep 2019 07:30:34 -0400
+Received: from mail-eopbgr790044.outbound.protection.outlook.com ([40.107.79.44]:33536
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725767AbfI3L2T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 07:28:19 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C7A39AEAE;
-        Mon, 30 Sep 2019 11:28:17 +0000 (UTC)
-Date:   Mon, 30 Sep 2019 13:28:17 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     David Rientjes <rientjes@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-Subject: Re: [patch for-5.3 0/4] revert immediate fallback to remote hugepages
-Message-ID: <20190930112817.GC15942@dhcp22.suse.cz>
-References: <alpine.DEB.2.21.1909041252230.94813@chino.kir.corp.google.com>
- <20190904205522.GA9871@redhat.com>
- <alpine.DEB.2.21.1909051400380.217933@chino.kir.corp.google.com>
- <20190909193020.GD2063@dhcp22.suse.cz>
- <20190925070817.GH23050@dhcp22.suse.cz>
- <alpine.DEB.2.21.1909261149380.39830@chino.kir.corp.google.com>
- <20190927074803.GB26848@dhcp22.suse.cz>
- <CAHk-=wgba5zOJtGBFCBP3Oc1m4ma+AR+80s=hy=BbvNr3GqEmA@mail.gmail.com>
+        id S1729245AbfI3Lae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 07:30:34 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HtMJLITfct0np3fb7z2CHeNf0jBu6PuYQWX6SjcWKdjUp3Pb58KodT0ND5XogKDokukSc4CQoN9QsuIhg2lCLCV33rmwzBgwpQ6/fK1inECDlF2jBdOx0fxvuYveALwciTWYQuRabyKD4hzJzs51Q0uZC4EuUKzRw9OHuhuJ0yDjmS8kTcuDZsdFwQsyymMaqUmG4UpT36cvccVZbDcNdHUpPYGeLJxotyl1T/6q389mpf9dv5uczB8gjzfFn6/fNT7B3BOb0B6Ubf/4SA3WBUooJhEJ2Hr6QM5lICp0pOn/KnkKodpfsyfRcPIPCnDVD94+BcRYbJm42EDJPKJUvw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RbojN2lfElg6G3HJDuMfvgrgTiNtlII0EBDeJEZ5chk=;
+ b=afrcuyMB1tdSR4IeYcX6a2oOzITBiPjy9sie89om2OQ6K7Zus767FEjOsax9XAHydI2DmOrCAUyRRWOaMxqtgDuL0KpAA+l3QbRh31cucjYhFYMsjvEqHvsVK44Ui1vJsFzc5Wj5hOB4s3avDgzn7tSght9a7mMXYIwV7gnNrUF6kisSPqRP2kEGSuiaQ3Ni7fXutMwtrAXkF5kb19E9RmxvbkzFwYWL27Fkzt+QZN2gVEAyKYr4bhhTtbU1SgtdXhfDxqg3N3QNC3C5BAD4+1IeAMFfVhmFw83RcWoes5gtA+uGaEAoRiJm18Xgqf+XNjlvOLRBlA3Hb75e8OlzsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RbojN2lfElg6G3HJDuMfvgrgTiNtlII0EBDeJEZ5chk=;
+ b=TyOzhtLLqTY4sOucU3tBIFa/KedY/luuYF0vhYfMLRd0RQ1XyTiX+11pcfbAkW7nJhCjeiMw0uEH+Zw5ie/vWY4R40QrgITLyuRtBTPbOl05zvW+O2CKSk5+YF2uwhB+RTUFBzF5Ai6jmIt0/rl4rzxi3mR6HYScggIJX6mdGnA=
+Received: from DM6PR12MB3868.namprd12.prod.outlook.com (10.255.173.213) by
+ DM6PR12MB3610.namprd12.prod.outlook.com (20.178.199.84) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.15; Mon, 30 Sep 2019 11:30:28 +0000
+Received: from DM6PR12MB3868.namprd12.prod.outlook.com
+ ([fe80::64dd:646d:6fa1:15a1]) by DM6PR12MB3868.namprd12.prod.outlook.com
+ ([fe80::64dd:646d:6fa1:15a1%4]) with mapi id 15.20.2305.017; Mon, 30 Sep 2019
+ 11:30:28 +0000
+From:   vishnu <vravulap@amd.com>
+To:     Mark Brown <broonie@kernel.org>,
+        "RAVULAPATI, VISHNU VARDHAN RAO" 
+        <Vishnuvardhanrao.Ravulapati@amd.com>
+CC:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "Mukunda, Vijendar" <Vijendar.Mukunda@amd.com>,
+        Maruthi Srinivas Bayyavarapu <Maruthi.Bayyavarapu@amd.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/5] ASoC: amd: added pmops for pci driver
+Thread-Topic: [PATCH 4/5] ASoC: amd: added pmops for pci driver
+Thread-Index: AQHVdGQibyt3z1lI7UG+S6l0oFutj6c+RpMAgAaL/wA=
+Date:   Mon, 30 Sep 2019 11:30:28 +0000
+Message-ID: <87475117-31f9-ac80-58c6-7db384e805f4@amd.com>
+References: <1569539290-756-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+ <1569539290-756-4-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+ <20190926182448.GE2036@sirena.org.uk>
+In-Reply-To: <20190926182448.GE2036@sirena.org.uk>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MA1PR01CA0164.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:71::34) To DM6PR12MB3868.namprd12.prod.outlook.com
+ (2603:10b6:5:1c8::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Vishnuvardhanrao.Ravulapati@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.159.251]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2fe9a260-faf0-48ae-25e2-08d745999803
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: DM6PR12MB3610:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR12MB361050C60A42F5D112C8F7ADE7820@DM6PR12MB3610.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 01762B0D64
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(396003)(346002)(366004)(39860400002)(189003)(199004)(6116002)(31686004)(4326008)(8676002)(305945005)(6436002)(6506007)(102836004)(6512007)(36756003)(66066001)(386003)(31696002)(6246003)(76176011)(26005)(7736002)(14444005)(99286004)(256004)(6486002)(53546011)(186003)(5660300002)(229853002)(71200400001)(2616005)(25786009)(71190400001)(52116002)(4744005)(486006)(54906003)(66946007)(14454004)(66476007)(66446008)(476003)(66556008)(478600001)(110136005)(64756008)(11346002)(3846002)(8936002)(316002)(81156014)(6636002)(446003)(81166006)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3610;H:DM6PR12MB3868.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: O8E5K04iU3lRbfFLWObxYJ7/whbjkRpMClk7g7zZle3cb0RhzUxHNMCSYsQOtvtiLITmLeM1iyuQ8Ji4C1ibsHQ8+XPzFlAekSGlzIn9/XKBMKmR9iLaUUbjQgr1vre/GblqvP5t7ljKCiWoJuOtR0lGImZwwoc1JBz/jVne4fbIgrtIRC4X7OtKAwvEBHQwi4OgbWqd9l021aIRiyweGT5kgGBNZec6bEkJFw8rjf4MdxjhZILrk870dVAE78T9iyavHxF/13IIMy8um1IrQtbTc0IQU9Ym8RE6P3G8or11dTtsuhYi/amLB/opVqQA1unqjiXDzwLtGE9b9Mv7Zzr7MmahYzKsMMM0AR8Cg5Y/rjrZEPEgqV/TTdjX/WnBAECLQ7YXnsSeN2vTdD3KonW85QILh44LDV5ree+n9aI=
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <FCA37D53D0062E4085B2E2CAC31F818D@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgba5zOJtGBFCBP3Oc1m4ma+AR+80s=hy=BbvNr3GqEmA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2fe9a260-faf0-48ae-25e2-08d745999803
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2019 11:30:28.1658
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nq46/cnMjrPlZhB85GX2dE7HWJWiMx9fCydTJKXwDgOOqJa2F8vat+mT1M4lEyPVyNZ2ujxinGZADDv0lVnQew==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3610
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 28-09-19 13:59:26, Linus Torvalds wrote:
-> On Fri, Sep 27, 2019 at 12:48 AM Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> > -       page = get_page_from_freelist(gfp_mask, order, alloc_flags, ac);
-> > +       if (!order)
-> > +               page = get_page_from_freelist(gfp_mask, order, alloc_flags, ac);
-> >         if (page)
-> >                 goto got_pg;
-> >
-> > The whole point of handling this in the page allocator directly is to
-> > have a unified solutions rather than have each specific caller invent
-> > its own way to achieve higher locality.
-> 
-> The above just looks hacky.
+Hi Mark,
 
-It is and it was meant to help move on when debugging rather than a
-final solution.
- 
-> Why would order-0 be special?
+Thanks for your suggestions.
+Please ignore all the patches.I will address all the inputs shared by=20
+you and resend them.
 
-Ideally it wouldn't be but the current implementation makes it special.
-Why? Because the whole concept of low wmark fast path attempt is based
-on kswapd balancing for a high watermark providing some space. Kcompactd
-doesn't have any notion like that. And I believe that a large part of
-the problem really is there. If I am wrong here then I would appreciate
-to be corrected.
+Thanks,
+Vishnu
 
-If __GFP_THISNODE allows for a better THP utilization on a local node
-then the problem points at kcompactd not being pro-active enough. And
-that was the first diff aiming at.
-
-I also claim that this is not a THP specific problem. You are right
-that lower orders are less likely to hit the problem because the memory
-is usually not fragmented that heavily but fundamentally the over eager
-fallback in the fast path is still there. And that is the reason for me
-to pushback against __GFP_THIS_NODE && fallback allocation opencoded
-outside of the allocator. The allocator knows the context can compact
-so why should we require the caller to be doing that?
-
-Do not get me wrong, but we have a quite a long history of fine tuning
-for THP by adding kludges here and there and they usually turnout to
-break something else. I really want to get to understand the underlying
-problem and base a solution on it rather than "__GFP_THISNODE can cause
-overreclaim so pick up a break out condition and hope for the best".
--- 
-Michal Hocko
-SUSE Labs
+On 26/09/19 11:54 PM, Mark Brown wrote:
+> On Fri, Sep 27, 2019 at 04:37:38AM +0530, Ravulapati Vishnu vardhan rao w=
+rote:
+>=20
+>> +static int  snd_acp3x_suspend(struct device *dev)
+>> +{
+>> +	return 0;
+>> +}
+>> +
+>> +static int  snd_acp3x_resume(struct device *dev)
+>> +{
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct dev_pm_ops acp3x_pm =3D {
+>> +	.runtime_suspend =3D snd_acp3x_suspend,
+>> +	.runtime_resume =3D  snd_acp3x_resume,
+>> +	.resume	=3D	snd_acp3x_resume,
+>> +
+>> +};
+>=20
+> These operations are empty so they should just be removed.
+>=20
