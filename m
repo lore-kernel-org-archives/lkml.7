@@ -2,104 +2,97 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA4CC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6AAC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D3D52086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:05:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RseL+Emd"
+	by mail.kernel.org (Postfix) with ESMTP id BC0312086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:05:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731378AbfI3NF0 (ORCPT
+        id S1731138AbfI3NFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 09:05:26 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:48832 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731105AbfI3NEn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:04:43 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8UD4fSQ122620;
-        Mon, 30 Sep 2019 08:04:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569848681;
-        bh=LCOBGVJtRlLNhGx2p/gJEyJWLNeA6ReZ6lfswiCzNJc=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=RseL+Emd7cWwj3DBwgi3YtqZbIX/Np3Ii4rEHme4ogSoMD2wf5KWtZJqxKA8d9v1c
-         rROClNZLhTinYifv8gFvTVRAQaLX3JgfeI90VaLduIF/MV6PUNE/+b34GRS/jUKQJJ
-         5+oBx6XHSuJtH0E2b01oHQiUM7BSWuJSdtUoclmc=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8UD4fNx084387
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 30 Sep 2019 08:04:41 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 30
- Sep 2019 08:04:31 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 30 Sep 2019 08:04:41 -0500
-Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8UD4Zij115624;
-        Mon, 30 Sep 2019 08:04:41 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v5 4/8] media: i2c: ov2659: fix s_stream return value
-Date:   Mon, 30 Sep 2019 08:06:40 -0500
-Message-ID: <20190930130644.8704-5-bparrot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190930130644.8704-1-bparrot@ti.com>
-References: <20190930130644.8704-1-bparrot@ti.com>
+        Mon, 30 Sep 2019 09:05:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:53902 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729738AbfI3NFr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 09:05:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B17F11000;
+        Mon, 30 Sep 2019 06:05:46 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DD2783F706;
+        Mon, 30 Sep 2019 06:05:44 -0700 (PDT)
+Subject: Re: [PATCH 00/11] of: dma-ranges fixes and improvements
+To:     Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Oza Pawandeep <oza.oza@broadcom.com>
+References: <20190927002455.13169-1-robh@kernel.org>
+ <106d5b37-5732-204f-4140-8d528256a59b@gmail.com>
+ <40bdf7cf-3bb1-24f8-844d-3eefbc761aba@arm.com>
+ <807a4f96-cbda-da4d-a3f1-2bfe5788105b@gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <107d3a83-7448-b5c8-4b38-9b376848a1fa@arm.com>
+Date:   Mon, 30 Sep 2019 14:05:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <807a4f96-cbda-da4d-a3f1-2bfe5788105b@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In ov2659_s_stream() return value for invoked function should be checked
-and propagated.
+On 30/09/2019 13:54, Marek Vasut wrote:
+> On 9/30/19 2:52 PM, Robin Murphy wrote:
+>> On 30/09/2019 13:40, Marek Vasut wrote:
+>>> On 9/27/19 2:24 AM, Rob Herring wrote:
+>>>> This series fixes several issues related to 'dma-ranges'. Primarily,
+>>>> 'dma-ranges' in a PCI bridge node does correctly set dma masks for PCI
+>>>> devices not described in the DT. A common case needing dma-ranges is a
+>>>> 32-bit PCIe bridge on a 64-bit system. This affects several platforms
+>>>> including Broadcom, NXP, Renesas, and Arm Juno. There's been several
+>>>> attempts to fix these issues, most recently earlier this week[1].
+>>>>
+>>>> In the process, I found several bugs in the address translation. It
+>>>> appears that things have happened to work as various DTs happen to use
+>>>> 1:1 addresses.
+>>>>
+>>>> First 3 patches are just some clean-up. The 4th patch adds a unittest
+>>>> exhibiting the issues. Patches 5-9 rework how of_dma_configure() works
+>>>> making it work on either a struct device child node or a struct
+>>>> device_node parent node so that it works on bus leaf nodes like PCI
+>>>> bridges. Patches 10 and 11 fix 2 issues with address translation for
+>>>> dma-ranges.
+>>>>
+>>>> My testing on this has been with QEMU virt machine hacked up to set PCI
+>>>> dma-ranges and the unittest. Nicolas reports this series resolves the
+>>>> issues on Rpi4 and NXP Layerscape platforms.
+>>>
+>>> With the following patches applied:
+>>>         https://patchwork.ozlabs.org/patch/1144870/
+>>>         https://patchwork.ozlabs.org/patch/1144871/
+>>
+>> Can you try it without those additional patches? This series aims to
+>> make the parsing work properly generically, such that we shouldn't need
+>> to add an additional PCI-specific version of almost the same code.
+> 
+> Seems to work even without those.
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
----
- drivers/media/i2c/ov2659.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+Great, thanks for confirming!
 
-diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index f77320e8a60d..da181a13cf44 100644
---- a/drivers/media/i2c/ov2659.c
-+++ b/drivers/media/i2c/ov2659.c
-@@ -1187,11 +1187,15 @@ static int ov2659_s_stream(struct v4l2_subdev *sd, int on)
- 		goto unlock;
- 	}
- 
--	ov2659_set_pixel_clock(ov2659);
--	ov2659_set_frame_size(ov2659);
--	ov2659_set_format(ov2659);
--	ov2659_set_streaming(ov2659, 1);
--	ov2659->streaming = on;
-+	ret = ov2659_set_pixel_clock(ov2659);
-+	if (!ret)
-+		ret = ov2659_set_frame_size(ov2659);
-+	if (!ret)
-+		ret = ov2659_set_format(ov2659);
-+	if (!ret) {
-+		ov2659_set_streaming(ov2659, 1);
-+		ov2659->streaming = on;
-+	}
- 
- unlock:
- 	mutex_unlock(&ov2659->lock);
--- 
-2.17.1
-
+Robin.
