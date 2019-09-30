@@ -2,117 +2,170 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA87FC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F04DEC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DF26215EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:13:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569856384;
-	bh=cz6rCcn0hmTlID047Viho7FV1ChC9er6z3HVxzfjLkk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Fr9hYVhwMzbWd74dvFQ8XH0z2nQIk9tgLv3pI9DbcCc8zUly0XS3VS95+UH/OCyiq
-	 EnHHq4uOJ+O1D14vBhm7PhqaItaRgNA1M7YrabCeG0dP1mieD1q+lUfr1TE3L5vKmu
-	 If2gCtjZJffila12iQAVwUlkFRJ0N7rDt+RyMUTI=
+	by mail.kernel.org (Postfix) with ESMTP id C03C1215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:14:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UyyV4qTw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731933AbfI3PND (ORCPT
+        id S1731935AbfI3POX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 11:13:03 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39652 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731276AbfI3PND (ORCPT
+        Mon, 30 Sep 2019 11:14:23 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46018 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730780AbfI3POW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 11:13:03 -0400
-Received: by mail-lj1-f193.google.com with SMTP id y3so9898018ljj.6;
-        Mon, 30 Sep 2019 08:13:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3Bfo0rr9vkrHOZNoCbxCpYEVjTK+dS54moPMT8PgtP0=;
-        b=dgLc7SLMxhZ70hz7jiMmM6pvd9H5Olpzoyuhveqobd1dQI0XQfUgNvEcmiIejo1j5p
-         pbtSw5G5V6B+uv01NjmPh8MKj3qpC04EiWunzdKHt0USXTxIMH7x39HB0uGaCztHe3fh
-         3GIi1+Ctti0RRYrdh9fIVvt0twPQ5YRRrKlTOX3R7Lei7gYCQpOgvECoIJjdKYXeeCgg
-         HAWX0WFCWd2BTVCmStgTWEM1f8y+3/TaDxevQrpDkBY5E4j3TZ4JbwxXR31oKWTXbK/i
-         aXvySa0EIcK5WdPmgUwiEI8mEzsI/Vu9oa9L0hO5m7C33AdSglYCrw++HRYymhxMlqFG
-         XHDw==
-X-Gm-Message-State: APjAAAXljj85k6GWKiH8OnS8ef1r5C0GXmHB3OmcBjU/cj1r/RuKWsmH
-        VBqHzeG7TAxyfQkcEAxuGKA=
-X-Google-Smtp-Source: APXvYqwg/FEkVQ/xSlVzbMY3fcdyuxPargpqGNsa//amQHjHrZTEzZ+oIBnQVVZMZ0XsPRnoL1Om3g==
-X-Received: by 2002:a2e:8184:: with SMTP id e4mr12785036ljg.240.1569856381011;
-        Mon, 30 Sep 2019 08:13:01 -0700 (PDT)
-Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id n11sm3292479lfe.59.2019.09.30.08.13.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 30 Sep 2019 08:13:00 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.2)
-        (envelope-from <johan@xi.terra>)
-        id 1iExMH-0006gf-Pd; Mon, 30 Sep 2019 17:13:06 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     linux-usb@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH net] hso: fix NULL-deref on tty open
-Date:   Mon, 30 Sep 2019 17:12:41 +0200
-Message-Id: <20190930151241.25646-1-johan@kernel.org>
-X-Mailer: git-send-email 2.23.0
+        Mon, 30 Sep 2019 11:14:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
+        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=5y/dmJ3DJ9NLDMojok3FKYPh6QBxBwOUiuYN5BkP9rQ=; b=UyyV4qTwHrKM6kZtt9P7Z+uca
+        GKNkDiVcEw8O1w1tuQ8fjfQzfPxD9OtoUo0UfunOvwo6Qv8sEsu8gIApDDnfED1US+z2NpCx5bmMA
+        I3Se6QFQPY2gNviJE3c5hhrlmdXTYBm9YmInh1uKQtjpzdhgdweY4gsz2jFEmf+rYd/HCDzr175kR
+        KkyfqWDJ5+pIDHLaGn8+8rrn9IHqpv2ihPYoJsCieUAc2OBxektv/NM/+NhlOItfpQZP0eB0o6D7D
+        r2Eo+kJjWGLxD030FMFlkiIroVhyQiCpfsW/xSN1hw/Wyf37HfzNxPoSDICgL1ePsGxuClnGacFaS
+        00RWspgbQ==;
+Received: from [2601:1c0:6280:3f0::9a1f]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iExNW-0007P0-2b; Mon, 30 Sep 2019 15:14:22 +0000
+Subject: Re: [PATCH] ktest: Fix some typos in sample.conf
+To:     Masanari Iida <standby24x7@gmail.com>, rostedt@goodmis.org,
+        linux-kernel@vger.kernel.org
+References: <20190930124925.20250-1-standby24x7@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <e357165c-abea-34cd-1312-f083468a8981@infradead.org>
+Date:   Mon, 30 Sep 2019 08:14:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190930124925.20250-1-standby24x7@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix NULL-pointer dereference on tty open due to a failure to handle a
-missing interrupt-in endpoint when probing modem ports:
+On 9/30/19 5:49 AM, Masanari Iida wrote:
+> This patch fixes some spelling typo in sample.conf
+> 
+> Signed-off-by: Masanari Iida <standby24x7@gmail.com>
 
-	BUG: kernel NULL pointer dereference, address: 0000000000000006
-	...
-	RIP: 0010:tiocmget_submit_urb+0x1c/0xe0 [hso]
-	...
-	Call Trace:
-	hso_start_serial_device+0xdc/0x140 [hso]
-	hso_serial_open+0x118/0x1b0 [hso]
-	tty_open+0xf1/0x490
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
 
-Fixes: 542f54823614 ("tty: Modem functions for the HSO driver")
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- drivers/net/usb/hso.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+Thanks.
 
-diff --git a/drivers/net/usb/hso.c b/drivers/net/usb/hso.c
-index ce78714f536f..a505b2ab88b8 100644
---- a/drivers/net/usb/hso.c
-+++ b/drivers/net/usb/hso.c
-@@ -2620,14 +2620,18 @@ static struct hso_device *hso_create_bulk_serial_device(
- 		 */
- 		if (serial->tiocmget) {
- 			tiocmget = serial->tiocmget;
-+			tiocmget->endp = hso_get_ep(interface,
-+						    USB_ENDPOINT_XFER_INT,
-+						    USB_DIR_IN);
-+			if (!tiocmget->endp) {
-+				dev_err(&interface->dev, "Failed to find INT IN ep\n");
-+				goto exit;
-+			}
-+
- 			tiocmget->urb = usb_alloc_urb(0, GFP_KERNEL);
- 			if (tiocmget->urb) {
- 				mutex_init(&tiocmget->mutex);
- 				init_waitqueue_head(&tiocmget->waitq);
--				tiocmget->endp = hso_get_ep(
--					interface,
--					USB_ENDPOINT_XFER_INT,
--					USB_DIR_IN);
- 			} else
- 				hso_free_tiomget(serial);
- 		}
+> ---
+>  tools/testing/ktest/sample.conf | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/tools/testing/ktest/sample.conf b/tools/testing/ktest/sample.conf
+> index c3bc933d437b..10af34819642 100644
+> --- a/tools/testing/ktest/sample.conf
+> +++ b/tools/testing/ktest/sample.conf
+> @@ -10,7 +10,7 @@
+>  #
+>  
+>  # Options set in the beginning of the file are considered to be
+> -# default options. These options can be overriden by test specific
+> +# default options. These options can be overridden by test specific
+>  # options, with the following exceptions:
+>  #
+>  #  LOG_FILE
+> @@ -204,7 +204,7 @@
+>  #
+>  # This config file can also contain "config variables".
+>  # These are assigned with ":=" instead of the ktest option
+> -# assigment "=".
+> +# assignment "=".
+>  #
+>  # The difference between ktest options and config variables
+>  # is that config variables can be used multiple times,
+> @@ -263,7 +263,7 @@
+>  #### Using options in other options ####
+>  #
+>  # Options that are defined in the config file may also be used
+> -# by other options. All options are evaulated at time of
+> +# by other options. All options are evaluated at time of
+>  # use (except that config variables are evaluated at config
+>  # processing time).
+>  #
+> @@ -707,7 +707,7 @@
+>  
+>  # Line to define a successful boot up in console output.
+>  # This is what the line contains, not the entire line. If you need
+> -# the entire line to match, then use regural expression syntax like:
+> +# the entire line to match, then use regular expression syntax like:
+>  #  (do not add any quotes around it)
+>  #
+>  #  SUCCESS_LINE = ^MyBox Login:$
+> @@ -839,7 +839,7 @@
+>  # (ignored if POWEROFF_ON_SUCCESS is set)
+>  #REBOOT_ON_SUCCESS = 1
+>  
+> -# In case there are isses with rebooting, you can specify this
+> +# In case there are issues with rebooting, you can specify this
+>  # to always powercycle after this amount of time after calling
+>  # reboot.
+>  # Note, POWERCYCLE_AFTER_REBOOT = 0 does NOT disable it. It just
+> @@ -848,7 +848,7 @@
+>  # (default undefined)
+>  #POWERCYCLE_AFTER_REBOOT = 5
+>  
+> -# In case there's isses with halting, you can specify this
+> +# In case there's issues with halting, you can specify this
+>  # to always poweroff after this amount of time after calling
+>  # halt.
+>  # Note, POWEROFF_AFTER_HALT = 0 does NOT disable it. It just
+> @@ -972,7 +972,7 @@
+>  #
+>  #  PATCHCHECK_START is required and is the first patch to
+>  #   test (the SHA1 of the commit). You may also specify anything
+> -#   that git checkout allows (branch name, tage, HEAD~3).
+> +#   that git checkout allows (branch name, tag, HEAD~3).
+>  #
+>  #  PATCHCHECK_END is the last patch to check (default HEAD)
+>  #
+> @@ -994,7 +994,7 @@
+>  #     IGNORE_WARNINGS is set for the given commit's sha1
+>  #
+>  #   IGNORE_WARNINGS can be used to disable the failure of patchcheck
+> -#     on a particuler commit (SHA1). You can add more than one commit
+> +#     on a particular commit (SHA1). You can add more than one commit
+>  #     by adding a list of SHA1s that are space delimited.
+>  #
+>  #   If BUILD_NOCLEAN is set, then make mrproper will not be run on
+> @@ -1093,7 +1093,7 @@
+>  #   whatever reason. (Can't reboot, want to inspect each iteration)
+>  #   Doing a BISECT_MANUAL will have the test wait for you to
+>  #   tell it if the test passed or failed after each iteration.
+> -#   This is basicall the same as running git bisect yourself
+> +#   This is basically the same as running git bisect yourself
+>  #   but ktest will rebuild and install the kernel for you.
+>  #
+>  # BISECT_CHECK = 1 (optional, default 0)
+> @@ -1239,7 +1239,7 @@
+>  #
+>  # CONFIG_BISECT_EXEC (optional)
+>  #  The config bisect is a separate program that comes with ktest.pl.
+> -#  By befault, it will look for:
+> +#  By default, it will look for:
+>  #    `pwd`/config-bisect.pl # the location ktest.pl was executed from.
+>  #  If it does not find it there, it will look for:
+>  #    `dirname <ktest.pl>`/config-bisect.pl # The directory that holds ktest.pl
+> 
+
+
 -- 
-2.23.0
-
+~Randy
