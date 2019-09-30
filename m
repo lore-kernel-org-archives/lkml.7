@@ -2,88 +2,125 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 338AFC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A69C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC481206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:22:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="o21ctz8b"
+	by mail.kernel.org (Postfix) with ESMTP id A565121A4C
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:26:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569842804;
+	bh=srPqDShwNAxoUEhMeFDiah3VlPzS3gr2KS0cPzlZHB4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oj26Wzq5763N6JcpPbofiWV0MIZgmfSFDspJss0XPdKMHT2XJxaE3R9PGIEwHmW+z
+	 x9c0dNcV2bz+oeGvq/P6B7i+39nRF4KYQkiA1M95TWKPWcRbHkS/Xx8WoAjc1yS3vF
+	 CJov9ZE0+qnO6CusYukad297Rd0oylKTotgqMb2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730792AbfI3LW0 (ORCPT
+        id S1729589AbfI3L0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 07:22:26 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:34969 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727025AbfI3LWZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 07:22:25 -0400
-Received: by mail-qk1-f195.google.com with SMTP id w2so7393988qkf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 04:22:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=5ieeuojKyDrT/avxGciERxdoQctNqsxjZK9jSrXbbU8=;
-        b=o21ctz8b1I6tslPzChmXHPcBpcpFJyKpe0/lmmhyvLVcb7UwzGkfXGjhrDua9V3gh1
-         FYP4yFVpy7iAz80D3V0cVBYf//2m41ycWVHzn4/FsCCzMVJBt0oJej1YYfshIJVwNO7X
-         hNPppzmULBrqLtuOvsEo/s0JT6sMqB0EM2NFp59tZCq1zi/lGR3AajZuXQY0ZU1bJZTR
-         CRDnaLF8wb4q70545d4woEd4SAO+5G5oMt3XbGRsjnBKvEmBFp8YdUanbzPTfdrccIFO
-         CZufxIBlMZ83ix7mSgO5S0QS8O/pQokkHeD9LtQ6GrB3VZp+rekTzhHZvBXCYk+qSeiN
-         kbEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=5ieeuojKyDrT/avxGciERxdoQctNqsxjZK9jSrXbbU8=;
-        b=EsdfFnME5Wod8zmeoLBMOSIJ6OBaiuO9Tq1TbUTJ5JQe/6/AHagSefQTqfi5aeZ5ra
-         vT74b9Hud8VowvKLwsLkq9Clj5sdOTpg8LhjzLFtLCKidnaK3xdYqYI8U4tMwWwOTfMP
-         3iptLRxYkjEsyim/VN2xPQC+XjWPDP8jeXPCzTpo5/hx13Uxg+dl25Nrx1+hN4hIM6kr
-         pmi0aNhjrHi2bijEIMSSb+29/es+epiVRV7MXZHYEMMsTdwmc6pOOY/bWbdLwU6HJDIy
-         c1b/UhqmwI0tJ3GNg/TC2iR9kA/9qk1F8aMCNt98P/dlVEB9yhPLMYhBV5vG+9rG+RHa
-         OcEw==
-X-Gm-Message-State: APjAAAUw1UHO+nXpy0/hUb5G7whx/WOxv3aefQ9BW510f3jglaBS11W1
-        35/i70tpLjZgkdmVJpocOXL/VC5iQAgtRg==
-X-Google-Smtp-Source: APXvYqxoPO0skZH0OTWAmoBjaSWxJOhCffjiIqOU9RQez6VGdZLVY2y9xSrKx+sHcRNhjZHF+RjOZA==
-X-Received: by 2002:a37:883:: with SMTP id 125mr18022177qki.478.1569842544489;
-        Mon, 30 Sep 2019 04:22:24 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id p199sm5506182qke.18.2019.09.30.04.22.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Sep 2019 04:22:23 -0700 (PDT)
+        Mon, 30 Sep 2019 07:26:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34152 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726072AbfI3L0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 07:26:43 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76A30206BB;
+        Mon, 30 Sep 2019 11:26:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569842802;
+        bh=srPqDShwNAxoUEhMeFDiah3VlPzS3gr2KS0cPzlZHB4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OrRkotIWqtU+1P4CM+QDBBZmq5Pz6WxzkeH0RXa8qck41YG2Z+PXSxLa5dLTUsln5
+         JpHAZfEwI5+Yq7ezissogWCmYQX/ffrQGOxrUWf26e+n/6TIsVYx8otHB74XbqQjZw
+         KiqrRsIL0KSugSGQlMAQFxJkEgkNlPLVJAMCcRXQ=
+Date:   Mon, 30 Sep 2019 12:26:37 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Kees Cook <keescook@google.com>
+Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
+Message-ID: <20190930112636.vx2qxo4hdysvxibl@willie-the-truck>
+References: <20190830034304.24259-1-yamada.masahiro@socionext.com>
+ <f5c221f5749e5768c9f0d909175a14910d349456.camel@suse.de>
+ <CAKwvOdk=tr5nqq1CdZnUvRskaVqsUCP0SEciSGonzY5ayXsMXw@mail.gmail.com>
+ <CAHk-=wiTy7hrA=LkmApBE9PQtri8qYsSOrf2zbms_crfjgR=Hw@mail.gmail.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] mm/page_alloc: fix a crash in free_pages_prepare()
-Date:   Mon, 30 Sep 2019 07:22:23 -0400
-Message-Id: <A5AEF8D5-C44F-406C-BCAA-79F32AA41219@lca.pw>
-References: <20190930110434.5k47w7xfvkjcohkp@box>
-Cc:     akpm@linux-foundation.org, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com,
-        linux-s390@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20190930110434.5k47w7xfvkjcohkp@box>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-X-Mailer: iPhone Mail (17A844)
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiTy7hrA=LkmApBE9PQtri8qYsSOrf2zbms_crfjgR=Hw@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Sep 27, 2019 at 03:38:44PM -0700, Linus Torvalds wrote:
+> On Fri, Sep 27, 2019 at 3:08 PM Nick Desaulniers
+> <ndesaulniers@google.com> wrote:
+> >
+> > So get_user() was passed a bad value/pointer from userspace? Do you
+> > know which of the tree calls to get_user() from sock_setsockopt() is
+> > failing?  (It's not immediately clear to me how this patch is at
+> > fault, vs there just being a bug in the source somewhere).
+> 
+> Based on the error messages, the SO_PASSCRED ones are almost certainly
+> from the get_user() in net/core/sock.c: sock_setsockopt(), which just
+> does
+> 
+>         if (optlen < sizeof(int))
+>                 return -EINVAL;
+> 
+>         if (get_user(val, (int __user *)optval))
+>                 return -EFAULT;
+> 
+>         valbool = val ? 1 : 0;
+> 
+> but it's the other messages imply that a lot of other cases are
+> failing too (ie the "Failed to bind netlink socket" is, according to
+> google, a bind() that fails with the same EFAULT error).
+> 
+> There are probably even more failures that happen elsewhere and just
+> don't even syslog the fact. I'd guess that all get_user() calls just
+> fail, and those are the ones that happen to get printed out.
+> 
+> Now, _why_ it would fail, I have ni idea. There are several inlines in
+> the arm uaccess.h file, and it depends on other headers like
+> <asm/domain.h> with more inlines still - eg get/set_domain() etc.
+> 
+> Soem of that code is pretty subtle. They have fixed register usage
+> (but the asm macros actually check them). And the inline asms clobber
+> the link register, but they do seem to clearly _state_ that they
+> clobber it, so who knows.
+> 
+> Just based on the EFAULT, I'd _guess_ that it's some interaction with
+> the domain access control register (so that get/set_domain() thing).
+> But I'm not even sure that code is enabled for the Rpi2, so who
+> knows..
 
+FWIW, we've run into issues with CONFIG_OPTIMIZE_INLINING and local
+variables marked as 'register' where GCC would do crazy things and end
+up corrupting data, so I suspect the use of fixed registers in the arm
+uaccess functions is hitting something similar:
 
-> On Sep 30, 2019, at 7:04 AM, Kirill A. Shutemov <kirill@shutemov.name> wro=
-te:
->=20
-> Looks like Power also uses the hook. Have you check that this patch will
-> not affect Power?
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91111
 
-Yes, I did. Although I did only test radix memory which seems just return im=
-mediately in arch_free_page(), I code-review the non-radix memory path and d=
-id not find anything suspicious. However, if really needed, I could test has=
-h memory config or adding powerpc developers to double-check.=
+Although this particular case couldn't be reproduced with GCC 9, prior
+versions of the compiler get it wrong so I'm very much opposed to enabling
+CONFIG_OPTIMIZE_INLINING by default on arm/arm64.
+
+Will
