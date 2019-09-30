@@ -2,102 +2,94 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
+X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B78C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 405A1C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB7B920842
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:02:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EE9E20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:02:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731440AbfI3OCV (ORCPT
+        id S1731482AbfI3OCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 10:02:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:55002 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730524AbfI3OCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 10:02:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0DDF028;
-        Mon, 30 Sep 2019 07:02:20 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B2C13F706;
-        Mon, 30 Sep 2019 07:02:19 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 15:02:17 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     bhelgaas@google.com, zenglu@loongson.cn, linux-pci@vger.kernel.org,
+        Mon, 30 Sep 2019 10:02:25 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33350 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730524AbfI3OCY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 10:02:24 -0400
+Received: by mail-wr1-f68.google.com with SMTP id b9so11513358wrs.0;
+        Mon, 30 Sep 2019 07:02:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7wr4aVdaxbEMv/UX7nqpmCIH8uVZ65LnsbgEKWRrbhc=;
+        b=RtpRwsDwr1LTPoUq5NUM+nrpO63VDB1OLtLqQP7qiOq+hIhz/UcRSEGmSbXxAtwsjE
+         J3UWgjASH3/BrHk1TMxdacLaOBoktTsDOEtn7Bc3RTkw3otK69yq577gHe5zj2TL3RYl
+         qPjcCJnVjNslaG/FPUKEB17jbDRVyBOJvJ6eCwGa/TPf54WVCKZoEsEFQm1ffBy50sPe
+         SfoEkzVC9OjnUwkRAL+b6XHHa26ITQYP5fkZqK7WtJKYhIKcOj+mRnjZOuAKp58vnEeJ
+         +pfoxMcCxVjb0Y+T0v9tax75iJHH0nftbeEe4ih3Odgw7hvF0lld2FXmxbux0mGEeffJ
+         3Gmg==
+X-Gm-Message-State: APjAAAXE4cLZ2KsXFJtau9qgz9t7dKlbQeZYKtsQGDelB4XIUDB6bY/j
+        DKaP6403EQI4pZfbxk7q7UlpAntC
+X-Google-Smtp-Source: APXvYqxiiFMzv3srbGQK/zZY+ci87zR844eKxu3fL2x+CU3Oy0tDmHDfI0I4XxcXHe1hilTCqog5ug==
+X-Received: by 2002:adf:b648:: with SMTP id i8mr12771912wre.372.1569852142160;
+        Mon, 30 Sep 2019 07:02:22 -0700 (PDT)
+Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
+        by smtp.googlemail.com with ESMTPSA id x129sm20494089wmg.8.2019.09.30.07.02.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 07:02:21 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Add Loongson vendor ID and device IDs
-Message-ID: <20190930140217.GB38576@e119886-lin.cambridge.arm.com>
-References: <279cbe32-a44b-3190-aaf7-a277a1220720@loongson.cn>
+Cc:     Denis Efremov <efremov@linux.com>,
+        Pontus Fuchs <pontus.fuchs@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>, stable@vger.kernel.org
+Subject: [PATCH] ar5523: check NULL before memcpy() in ar5523_cmd()
+Date:   Mon, 30 Sep 2019 17:02:07 +0300
+Message-Id: <20190930140207.28638-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <279cbe32-a44b-3190-aaf7-a277a1220720@loongson.cn>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 12:55:20PM +0800, Tiezhu Yang wrote:
-> Add the Loongson vendor ID and device IDs to pci_ids.h
-> to be used in the future.
-> 
-> The Loongson IDs can be found at the following link:
-> https://git.kernel.org/pub/scm/utils/pciutils/pciutils.git/tree/pci.ids
-> 
-> Co-developed-by: Lu Zeng <zenglu@loongson.cn>
-> Signed-off-by: Lu Zeng <zenglu@loongson.cn>
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  include/linux/pci_ids.h | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 21a5724..119639d 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -3111,4 +3111,23 @@
-> 
->  #define PCI_VENDOR_ID_NCUBE            0x10ff
-> 
-> +#define PCI_VENDOR_ID_LOONGSON                 0x0014
-> +#define PCI_DEVICE_ID_LOONGSON_HT              0x7a00
-> +#define PCI_DEVICE_ID_LOONGSON_APB             0x7a02
-> +#define PCI_DEVICE_ID_LOONGSON_GMAC            0x7a03
-> +#define PCI_DEVICE_ID_LOONGSON_OTG             0x7a04
-> +#define PCI_DEVICE_ID_LOONGSON_GPU_2K1000      0x7a05
-> +#define PCI_DEVICE_ID_LOONGSON_DC              0x7a06
-> +#define PCI_DEVICE_ID_LOONGSON_HDA             0x7a07
-> +#define PCI_DEVICE_ID_LOONGSON_SATA            0x7a08
-> +#define PCI_DEVICE_ID_LOONGSON_PCIE_X1         0x7a09
-> +#define PCI_DEVICE_ID_LOONGSON_SPI             0x7a0b
-> +#define PCI_DEVICE_ID_LOONGSON_LPC             0x7a0c
-> +#define PCI_DEVICE_ID_LOONGSON_DMA             0x7a0f
-> +#define PCI_DEVICE_ID_LOONGSON_EHCI            0x7a14
-> +#define PCI_DEVICE_ID_LOONGSON_GPU_7A1000      0x7a15
-> +#define PCI_DEVICE_ID_LOONGSON_PCIE_X4         0x7a19
-> +#define PCI_DEVICE_ID_LOONGSON_OHCI            0x7a24
-> +#define PCI_DEVICE_ID_LOONGSON_PCIE_X8         0x7a29
+memcpy() call with "idata == NULL && ilen == 0" results in undefined
+behavior in ar5523_cmd(). For example, NULL is passed in callchain
+"ar5523_stat_work() -> ar5523_cmd_write() -> ar5523_cmd()". This patch
+adds idata check before memcpy() call in ar5523_cmd() to prevent an
+undefined behavior.
 
-Hi Tiezhu,
+Cc: Pontus Fuchs <pontus.fuchs@gmail.com>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: stable@vger.kernel.org
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ drivers/net/wireless/ath/ar5523/ar5523.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thanks for the patch - however it is preferred to provide new PCI definitions
-along with the drivers that use them. They don't provide any useful value
-without drivers that use them.
+diff --git a/drivers/net/wireless/ath/ar5523/ar5523.c b/drivers/net/wireless/ath/ar5523/ar5523.c
+index b94759daeacc..f25af5bc5282 100644
+--- a/drivers/net/wireless/ath/ar5523/ar5523.c
++++ b/drivers/net/wireless/ath/ar5523/ar5523.c
+@@ -255,7 +255,8 @@ static int ar5523_cmd(struct ar5523 *ar, u32 code, const void *idata,
+ 
+ 	if (flags & AR5523_CMD_FLAG_MAGIC)
+ 		hdr->magic = cpu_to_be32(1 << 24);
+-	memcpy(hdr + 1, idata, ilen);
++	if (idata)
++		memcpy(hdr + 1, idata, ilen);
+ 
+ 	cmd->odata = odata;
+ 	cmd->olen = olen;
+-- 
+2.21.0
 
-Thanks,
-
-Andrew Murray
-
-> +
->  #endif /* _LINUX_PCI_IDS_H */
-> -- 
-> 2.1.0
-> 
-> 
