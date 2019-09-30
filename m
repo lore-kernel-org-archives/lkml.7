@@ -2,148 +2,100 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 871D4C35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F7EC35280
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5354021D7B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:54:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IALk37nu"
+	by mail.kernel.org (Postfix) with ESMTP id 4778121855
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:56:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730873AbfI3Kyn (ORCPT
+        id S1730882AbfI3K42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 06:54:43 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:58412 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730345AbfI3Kyn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 06:54:43 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8UAsc5W103901;
-        Mon, 30 Sep 2019 05:54:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569840878;
-        bh=zqrEzi3Cd3ZnhOONeBCKzkiICJvCoUyq7dA0p4K5OUo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=IALk37nuw/DtUgbZwsfLfDhhiCjF+f0+s9OqDQPMLrw6evoZQDf0izkq67qQ0Kp7A
-         IQvy98e13OaekZhrxyMFXHGc7VydfeiAq3OkxdWhAFC+VIo0SwEQLw/nmUr9osUw66
-         axVw2uSW/acFrPIlrGtF2m/05MLeo5GISeVVzfhM=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8UAscNL101199
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 30 Sep 2019 05:54:38 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 30
- Sep 2019 05:54:28 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 30 Sep 2019 05:54:29 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8UAsaCA055134;
-        Mon, 30 Sep 2019 05:54:36 -0500
-Subject: Re: [PATCH v3 2/3] dt-bindings: dma: ti-edma: Document
- dma-channel-mask for EDMA
-To:     Rob Herring <robh@kernel.org>
-CC:     <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dan.j.williams@intel.com>,
-        <devicetree@vger.kernel.org>
-References: <20190926111954.9184-1-peter.ujfalusi@ti.com>
- <20190926111954.9184-3-peter.ujfalusi@ti.com> <20190927204854.GA20463@bogus>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <dd88e5a3-eb9b-7ea7-7316-c036dec41fe9@ti.com>
-Date:   Mon, 30 Sep 2019 13:55:23 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 30 Sep 2019 06:56:28 -0400
+Received: from mga09.intel.com ([134.134.136.24]:51423 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730705AbfI3K42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 06:56:28 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Sep 2019 03:56:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,565,1559545200"; 
+   d="scan'208";a="204804555"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 30 Sep 2019 03:56:24 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 30 Sep 2019 13:56:23 +0300
+Date:   Mon, 30 Sep 2019 13:56:23 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Tuowen Zhao <ztuowen@gmail.com>
+Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@linux.intel.com, acelan.kao@canonical.com,
+        bhelgaas@google.com, kai.heng.feng@canonical.com
+Subject: Re: [PATCH] mfd: intel-lpss: use devm_ioremap_uc for mmio
+Message-ID: <20190930105623.GU2714@lahna.fi.intel.com>
+References: <20190927175513.31054-1-ztuowen@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190927204854.GA20463@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190927175513.31054-1-ztuowen@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
+In $subject, use MMIO instead of mmio.
 
-On 27/09/2019 23.48, Rob Herring wrote:
-> On Thu, Sep 26, 2019 at 02:19:53PM +0300, Peter Ujfalusi wrote:
->> Similarly to paRAM slots, channels can be used by other cores.
->>
->> The common dma-channel-mask property can be used for specifying the
->> available channels.
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> ---
->>  Documentation/devicetree/bindings/dma/ti-edma.txt | 8 ++++++++
->>  1 file changed, 8 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
->> index 4bbc94d829c8..014187088020 100644
->> --- a/Documentation/devicetree/bindings/dma/ti-edma.txt
->> +++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
->> @@ -42,6 +42,11 @@ Optional properties:
->>  - ti,edma-reserved-slot-ranges: PaRAM slot ranges which should not be used by
->>  		the driver, they are allocated to be used by for example the
->>  		DSP. See example.
->> +- dma-channel-mask: Mask of usable channels.
->> +		Single uint32 for EDMA with 32 channels, array of two uint32 for
->> +		EDMA with 64 channels. See example and
->> +		Documentation/devicetree/bindings/dma/dma-common.yaml
->> +
->>  
->>  ------------------------------------------------------------------------------
->>  eDMA3 Transfer Controller
->> @@ -91,6 +96,9 @@ edma: edma@49000000 {
->>  	ti,edma-memcpy-channels = <20 21>;
->>  	/* The following PaRAM slots are reserved: 35-44 and 100-109 */
->>  	ti,edma-reserved-slot-ranges = <35 10>, <100 10>;
->> +	/* The following channels are reserved: 35-44 */
->> +	dma-channel-mask = <0xffffffff>, /* Channel 0-31 */
->> +			   <0xffffe007>; /* Channel 32-63 */
+On Fri, Sep 27, 2019 at 11:55:13AM -0600, Tuowen Zhao wrote:
+> Write-combining BAR for intel-lpss-pci in MTRR causes system hangs
+> during boot.
 > 
-> Doesn't matter yet, but you have a mismatch here with the schema. While 
-> the <> around each int or not doesn't matter for the dtb, it does for 
-> the schema.
+> This patch adds devm_ioremap_uc as a new managed wrapper to ioremap_uc
+> and with it forces the use of strongly uncachable mmio in intel-lpss.
 > 
-> dma-channel-mask = <0xffffffff>, <0xffffe007>;
-> minItems: 1
-> maxItems: 255
+> This bahavior is seen on Dell XPS 13 7390 2-in-1:
 > 
-> dma-channel-mask = <0xffffffff 0xffffe007>;
-> items:
->   minItems: 1
->   maxItems: 255
+> [    0.001734]   5 base 4000000000 mask 6000000000 write-combining
+
+I think it is worth mentioning that this is actually a BIOS bug and
+fixed by some vendors via BIOS upgrade.
+
+> 4000000000-7fffffffff : PCI Bus 0000:00
+>   4000000000-400fffffff : 0000:00:02.0 (i915)
+>   4010000000-4010000fff : 0000:00:15.0 (intel-lpss-pci)
 > 
-> I think the latter case is slightly more logical here as you have 1 
-> thing (a mask). If had N of something (like interrupts), then the former 
-> makes sense.
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=203485
+> Signed-off-by: Tuowen Zhao <ztuowen@gmail.com>
+> ---
+>  drivers/mfd/intel-lpss.c |  2 +-
+>  include/linux/io.h       |  2 ++
+>  lib/devres.c             | 19 +++++++++++++++++++
+>  3 files changed, 22 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mfd/intel-lpss.c b/drivers/mfd/intel-lpss.c
+> index 277f48f1cc1c..06106c9320bb 100644
+> --- a/drivers/mfd/intel-lpss.c
+> +++ b/drivers/mfd/intel-lpss.c
+> @@ -395,7 +395,7 @@ int intel_lpss_probe(struct device *dev,
+>  	if (!lpss)
+>  		return -ENOMEM;
+>  
+> -	lpss->priv = devm_ioremap(dev, info->mem->start + LPSS_PRIV_OFFSET,
+> +	lpss->priv = devm_ioremap_uc(dev, info->mem->start + LPSS_PRIV_OFFSET,
+>  				  LPSS_PRIV_SIZE);
 
-So, in dma-common.yaml:
-    allOf:
-      - $ref: /schemas/types.yaml#/definitions/uint32-array
+Can you add a comment here explaining why this particular driver needs
+to use _uc version? Normally drivers call the plain devm_ioremap() and
+expect to get non-cached memory, however ioremap() (which resolves to
+ioremap_nocache()) does not touch x86 PAT configuration which is the
+reason we need to call _uc variant here.
 
-    items:
-      minItems: 1
-      # Should be enough
-      maxItems: 255
-
-and here in the example:
-	dma-channel-mask = <0xffffffff /* Channel 0-31 */
-			    0xffffe007>; /* Channel 32-63 */
-
-I'll send an updated series with these changes.
-
-Thanks,
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Otherwise looks good to me.
