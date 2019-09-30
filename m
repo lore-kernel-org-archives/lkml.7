@@ -7,22 +7,22 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85999C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D204C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53B8E2086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03A5F2086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:29:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730776AbfI3M3c (ORCPT
+        id S1730840AbfI3M3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 08:29:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53876 "EHLO mx1.suse.de"
+        Mon, 30 Sep 2019 08:29:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53808 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730498AbfI3M3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729603AbfI3M3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 30 Sep 2019 08:29:31 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E8F02AFE8;
+        by mx1.suse.de (Postfix) with ESMTP id D4FB9AE0C;
         Mon, 30 Sep 2019 12:29:28 +0000 (UTC)
 From:   Vlastimil Babka <vbabka@suse.cz>
 To:     Andrew Morton <akpm@linux-foundation.org>
@@ -33,12 +33,10 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Mel Gorman <mgorman@techsingularity.net>,
         Michal Hocko <mhocko@kernel.org>,
         Vlastimil Babka <vbabka@suse.cz>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Walter Wu <walter-zh.wu@mediatek.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-Subject: [PATCH v2 2/3] mm, page_owner: decouple freeing stack trace from debug_pagealloc
-Date:   Mon, 30 Sep 2019 14:29:15 +0200
-Message-Id: <20190930122916.14969-3-vbabka@suse.cz>
+        "Kirill A . Shutemov" <kirill@shutemov.name>
+Subject: [PATCH v2 1/3] mm, page_owner: fix off-by-one error in __set_page_owner_handle()
+Date:   Mon, 30 Sep 2019 14:29:14 +0200
+Message-Id: <20190930122916.14969-2-vbabka@suse.cz>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190930122916.14969-1-vbabka@suse.cz>
 References: <20190930122916.14969-1-vbabka@suse.cz>
@@ -49,272 +47,182 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 8974558f49a6 ("mm, page_owner, debug_pagealloc: save and dump
-freeing stack trace") enhanced page_owner to also store freeing stack trace,
-when debug_pagealloc is also enabled. KASAN would also like to do this [1] to
-improve error reports to debug e.g. UAF issues. Kirill has suggested that the
-freeing stack trace saving should be also possible to be enabled separately.
+As noted by Kirill, commit 7e2f2a0cd17c ("mm, page_owner: record page owner for
+each subpage") has introduced an off-by-one error in __set_page_owner_handle()
+when looking up page_ext for subpages. As a result, the head page page_owner
+info is set twice, while for the last tail page, it's not set at all.
 
-This patch therefore introduces a new kernel parameter page_owner_free to
-enable the functionality in addition to the existing page_owner parameter.
-The free stack saving is thus enabled in these cases:
-1) booting with page_owner=on and debug_pagealloc=on
-2) booting a KASAN kernel with page_owner=on
-3) booting with page_owner=on and page_owner_free=on
+Fix this and also make the code more efficient by advancing the page_ext
+pointer we already have, instead of calling lookup_page_ext() for each subpage.
+Since the full size of struct page_ext is not known at compile time, we can't
+use a simple page_ext++ statement, so introduce a page_ext_next() inline
+function for that.
 
-To minimize runtime CPU and memory overhead when not boot-time enabled, the
-patch introduces a new static key and struct page_ext_operations.
-
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=203967
-
-Suggested-by: Dmitry Vyukov <dvyukov@google.com>
-Suggested-by: Walter Wu <walter-zh.wu@mediatek.com>
-Suggested-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Suggested-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Reported-by: Kirill A. Shutemov <kirill@shutemov.name>
+Fixes: 7e2f2a0cd17c ("mm, page_owner: record page owner for each subpage")
 Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- .../admin-guide/kernel-parameters.txt         |  8 ++
- Documentation/dev-tools/kasan.rst             |  3 +
- include/linux/page_owner.h                    |  1 +
- mm/page_ext.c                                 |  1 +
- mm/page_owner.c                               | 90 +++++++++++++------
- 5 files changed, 78 insertions(+), 25 deletions(-)
+ include/linux/page_ext.h |  8 ++++++++
+ mm/page_ext.c            | 23 +++++++++--------------
+ mm/page_owner.c          | 15 +++++++--------
+ 3 files changed, 24 insertions(+), 22 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 944e03e29f65..14dcb66e3457 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3237,6 +3237,14 @@
- 			we can turn it on.
- 			on: enable the feature
+diff --git a/include/linux/page_ext.h b/include/linux/page_ext.h
+index 682fd465df06..5e856512bafb 100644
+--- a/include/linux/page_ext.h
++++ b/include/linux/page_ext.h
+@@ -36,6 +36,7 @@ struct page_ext {
+ 	unsigned long flags;
+ };
  
-+	page_owner_free=
-+			[KNL] When enabled together with page_owner, store also
-+			the stack of who frees a page, for error page dump
-+			purposes. This is also implicitly enabled by
-+			debug_pagealloc=on or KASAN, so only page_owner=on is
-+			sufficient in those cases.
-+			on: enable the feature
++extern unsigned long page_ext_size;
+ extern void pgdat_page_ext_init(struct pglist_data *pgdat);
+ 
+ #ifdef CONFIG_SPARSEMEM
+@@ -52,6 +53,13 @@ static inline void page_ext_init(void)
+ 
+ struct page_ext *lookup_page_ext(const struct page *page);
+ 
++static inline struct page_ext *page_ext_next(struct page_ext *curr)
++{
++	void *next = curr;
++	next += page_ext_size;
++	return next;
++}
 +
- 	page_poison=	[KNL] Boot-time parameter changing the state of
- 			poisoning on the buddy allocator, available with
- 			CONFIG_PAGE_POISONING=y.
-diff --git a/Documentation/dev-tools/kasan.rst b/Documentation/dev-tools/kasan.rst
-index b72d07d70239..525296121d89 100644
---- a/Documentation/dev-tools/kasan.rst
-+++ b/Documentation/dev-tools/kasan.rst
-@@ -41,6 +41,9 @@ smaller binary while the latter is 1.1 - 2 times faster.
- Both KASAN modes work with both SLUB and SLAB memory allocators.
- For better bug detection and nicer reporting, enable CONFIG_STACKTRACE.
+ #else /* !CONFIG_PAGE_EXTENSION */
+ struct page_ext;
  
-+To augment reports with last allocation and freeing stack of the physical page,
-+it is recommended to enable also CONFIG_PAGE_OWNER and boot with page_owner=on.
-+
- To disable instrumentation for specific files or directories, add a line
- similar to the following to the respective kernel Makefile:
- 
-diff --git a/include/linux/page_owner.h b/include/linux/page_owner.h
-index 8679ccd722e8..0888dd70cc61 100644
---- a/include/linux/page_owner.h
-+++ b/include/linux/page_owner.h
-@@ -7,6 +7,7 @@
- #ifdef CONFIG_PAGE_OWNER
- extern struct static_key_false page_owner_inited;
- extern struct page_ext_operations page_owner_ops;
-+extern struct page_ext_operations page_owner_free_ops;
- 
- extern void __reset_page_owner(struct page *page, unsigned int order);
- extern void __set_page_owner(struct page *page,
 diff --git a/mm/page_ext.c b/mm/page_ext.c
-index 4ade843ff588..5724b637939a 100644
+index 5f5769c7db3b..4ade843ff588 100644
 --- a/mm/page_ext.c
 +++ b/mm/page_ext.c
-@@ -61,6 +61,7 @@
- static struct page_ext_operations *page_ext_ops[] = {
- #ifdef CONFIG_PAGE_OWNER
- 	&page_owner_ops,
-+	&page_owner_free_ops,
+@@ -67,8 +67,9 @@ static struct page_ext_operations *page_ext_ops[] = {
  #endif
- #if defined(CONFIG_IDLE_PAGE_TRACKING) && !defined(CONFIG_64BIT)
- 	&page_idle_ops,
-diff --git a/mm/page_owner.c b/mm/page_owner.c
-index d3cf5d336ccf..a668a735b9b6 100644
---- a/mm/page_owner.c
-+++ b/mm/page_owner.c
-@@ -24,13 +24,16 @@ struct page_owner {
- 	short last_migrate_reason;
- 	gfp_t gfp_mask;
- 	depot_stack_handle_t handle;
--#ifdef CONFIG_DEBUG_PAGEALLOC
-+};
-+
-+struct page_owner_free {
- 	depot_stack_handle_t free_handle;
--#endif
  };
  
--static bool page_owner_disabled = true;
-+static bool page_owner_enabled = false;
-+static bool page_owner_free_enabled = false;
- DEFINE_STATIC_KEY_FALSE(page_owner_inited);
-+static DEFINE_STATIC_KEY_FALSE(page_owner_free_stack);
++unsigned long page_ext_size = sizeof(struct page_ext);
++
+ static unsigned long total_usage;
+-static unsigned long extra_mem;
  
- static depot_stack_handle_t dummy_handle;
- static depot_stack_handle_t failure_handle;
-@@ -44,7 +47,7 @@ static int __init early_page_owner_param(char *buf)
- 		return -EINVAL;
+ static bool __init invoke_need_callbacks(void)
+ {
+@@ -78,9 +79,8 @@ static bool __init invoke_need_callbacks(void)
  
- 	if (strcmp(buf, "on") == 0)
--		page_owner_disabled = false;
-+		page_owner_enabled = true;
+ 	for (i = 0; i < entries; i++) {
+ 		if (page_ext_ops[i]->need && page_ext_ops[i]->need()) {
+-			page_ext_ops[i]->offset = sizeof(struct page_ext) +
+-						extra_mem;
+-			extra_mem += page_ext_ops[i]->size;
++			page_ext_ops[i]->offset = page_ext_size;
++			page_ext_size += page_ext_ops[i]->size;
+ 			need = true;
+ 		}
+ 	}
+@@ -99,14 +99,9 @@ static void __init invoke_init_callbacks(void)
+ 	}
+ }
  
+-static unsigned long get_entry_size(void)
+-{
+-	return sizeof(struct page_ext) + extra_mem;
+-}
+-
+ static inline struct page_ext *get_entry(void *base, unsigned long index)
+ {
+-	return base + get_entry_size() * index;
++	return base + page_ext_size * index;
+ }
+ 
+ #if !defined(CONFIG_SPARSEMEM)
+@@ -156,7 +151,7 @@ static int __init alloc_node_page_ext(int nid)
+ 		!IS_ALIGNED(node_end_pfn(nid), MAX_ORDER_NR_PAGES))
+ 		nr_pages += MAX_ORDER_NR_PAGES;
+ 
+-	table_size = get_entry_size() * nr_pages;
++	table_size = page_ext_size * nr_pages;
+ 
+ 	base = memblock_alloc_try_nid(
+ 			table_size, PAGE_SIZE, __pa(MAX_DMA_ADDRESS),
+@@ -234,7 +229,7 @@ static int __meminit init_section_page_ext(unsigned long pfn, int nid)
+ 	if (section->page_ext)
+ 		return 0;
+ 
+-	table_size = get_entry_size() * PAGES_PER_SECTION;
++	table_size = page_ext_size * PAGES_PER_SECTION;
+ 	base = alloc_page_ext(table_size, nid);
+ 
+ 	/*
+@@ -254,7 +249,7 @@ static int __meminit init_section_page_ext(unsigned long pfn, int nid)
+ 	 * we need to apply a mask.
+ 	 */
+ 	pfn &= PAGE_SECTION_MASK;
+-	section->page_ext = (void *)base - get_entry_size() * pfn;
++	section->page_ext = (void *)base - page_ext_size * pfn;
+ 	total_usage += table_size;
  	return 0;
  }
-@@ -52,10 +55,30 @@ early_param("page_owner", early_page_owner_param);
+@@ -267,7 +262,7 @@ static void free_page_ext(void *addr)
+ 		struct page *page = virt_to_page(addr);
+ 		size_t table_size;
  
- static bool need_page_owner(void)
- {
--	if (page_owner_disabled)
-+	return page_owner_enabled;
-+}
-+
-+static int __init early_page_owner_free_param(char *buf)
-+{
-+	if (!buf)
-+		return -EINVAL;
-+
-+	if (strcmp(buf, "on") == 0)
-+		page_owner_free_enabled = true;
-+
-+	return 0;
-+}
-+early_param("page_owner_free", early_page_owner_free_param);
-+
-+static bool need_page_owner_free(void) {
-+
-+	if (!page_owner_enabled)
- 		return false;
+-		table_size = get_entry_size() * PAGES_PER_SECTION;
++		table_size = page_ext_size * PAGES_PER_SECTION;
  
--	return true;
-+	if (IS_ENABLED(CONFIG_KASAN) || debug_pagealloc_enabled())
-+		page_owner_free_enabled = true;
-+
-+	return page_owner_free_enabled;
- }
- 
- static __always_inline depot_stack_handle_t create_dummy_stack(void)
-@@ -84,7 +107,7 @@ static noinline void register_early_stack(void)
- 
- static void init_page_owner(void)
- {
--	if (page_owner_disabled)
-+	if (!page_owner_enabled)
- 		return;
- 
- 	register_dummy_stack();
-@@ -94,17 +117,36 @@ static void init_page_owner(void)
- 	init_early_allocated_pages();
- }
- 
-+static void init_page_owner_free(void)
-+{
-+	if (!page_owner_enabled || !page_owner_free_enabled)
-+		return;
-+
-+	static_branch_enable(&page_owner_free_stack);
-+}
-+
- struct page_ext_operations page_owner_ops = {
- 	.size = sizeof(struct page_owner),
- 	.need = need_page_owner,
- 	.init = init_page_owner,
- };
- 
-+struct page_ext_operations page_owner_free_ops = {
-+	.size = sizeof(struct page_owner_free),
-+	.need = need_page_owner_free,
-+	.init = init_page_owner_free,
-+};
-+
- static inline struct page_owner *get_page_owner(struct page_ext *page_ext)
- {
- 	return (void *)page_ext + page_owner_ops.offset;
- }
- 
-+static inline struct page_owner_free *get_page_owner_free(struct page_ext *page_ext)
-+{
-+	return (void *)page_ext + page_owner_free_ops.offset;
-+}
-+
- static inline bool check_recursive_alloc(unsigned long *entries,
- 					 unsigned int nr_entries,
- 					 unsigned long ip)
-@@ -148,25 +190,21 @@ void __reset_page_owner(struct page *page, unsigned int order)
- {
- 	int i;
- 	struct page_ext *page_ext;
--#ifdef CONFIG_DEBUG_PAGEALLOC
- 	depot_stack_handle_t handle = 0;
--	struct page_owner *page_owner;
-+	struct page_owner_free *page_owner_free;
- 
--	if (debug_pagealloc_enabled())
-+	if (static_branch_unlikely(&page_owner_free_stack))
+ 		BUG_ON(PageReserved(page));
+ 		kmemleak_free(addr);
+diff --git a/mm/page_owner.c b/mm/page_owner.c
+index dee931184788..d3cf5d336ccf 100644
+--- a/mm/page_owner.c
++++ b/mm/page_owner.c
+@@ -156,10 +156,10 @@ void __reset_page_owner(struct page *page, unsigned int order)
  		handle = save_stack(GFP_NOWAIT | __GFP_NOWARN);
--#endif
+ #endif
  
- 	page_ext = lookup_page_ext(page);
++	page_ext = lookup_page_ext(page);
++	if (unlikely(!page_ext))
++		return;
+ 	for (i = 0; i < (1 << order); i++) {
+-		page_ext = lookup_page_ext(page + i);
+-		if (unlikely(!page_ext))
+-			continue;
+ 		__clear_bit(PAGE_EXT_OWNER_ACTIVE, &page_ext->flags);
+ #ifdef CONFIG_DEBUG_PAGEALLOC
+ 		if (debug_pagealloc_enabled()) {
+@@ -167,6 +167,7 @@ void __reset_page_owner(struct page *page, unsigned int order)
+ 			page_owner->free_handle = handle;
+ 		}
+ #endif
++		page_ext = page_ext_next(page_ext);
+ 	}
+ }
+ 
+@@ -186,7 +187,7 @@ static inline void __set_page_owner_handle(struct page *page,
+ 		__set_bit(PAGE_EXT_OWNER, &page_ext->flags);
+ 		__set_bit(PAGE_EXT_OWNER_ACTIVE, &page_ext->flags);
+ 
+-		page_ext = lookup_page_ext(page + i);
++		page_ext = page_ext_next(page_ext);
+ 	}
+ }
+ 
+@@ -224,12 +225,10 @@ void __split_page_owner(struct page *page, unsigned int order)
  	if (unlikely(!page_ext))
  		return;
- 	for (i = 0; i < (1 << order); i++) {
- 		__clear_bit(PAGE_EXT_OWNER_ACTIVE, &page_ext->flags);
--#ifdef CONFIG_DEBUG_PAGEALLOC
--		if (debug_pagealloc_enabled()) {
--			page_owner = get_page_owner(page_ext);
--			page_owner->free_handle = handle;
-+		if (static_branch_unlikely(&page_owner_free_stack)) {
-+			page_owner_free = get_page_owner_free(page_ext);
-+			page_owner_free->free_handle = handle;
- 		}
--#endif
- 		page_ext = page_ext_next(page_ext);
+ 
+-	page_owner = get_page_owner(page_ext);
+-	page_owner->order = 0;
+-	for (i = 1; i < (1 << order); i++) {
+-		page_ext = lookup_page_ext(page + i);
++	for (i = 0; i < (1 << order); i++) {
+ 		page_owner = get_page_owner(page_ext);
+ 		page_owner->order = 0;
++		page_ext = page_ext_next(page_ext);
  	}
  }
-@@ -414,6 +452,7 @@ void __dump_page_owner(struct page *page)
- {
- 	struct page_ext *page_ext = lookup_page_ext(page);
- 	struct page_owner *page_owner;
-+	struct page_owner_free *page_owner_free;
- 	depot_stack_handle_t handle;
- 	unsigned long *entries;
- 	unsigned int nr_entries;
-@@ -450,16 +489,17 @@ void __dump_page_owner(struct page *page)
- 		stack_trace_print(entries, nr_entries, 0);
- 	}
  
--#ifdef CONFIG_DEBUG_PAGEALLOC
--	handle = READ_ONCE(page_owner->free_handle);
--	if (!handle) {
--		pr_alert("page_owner free stack trace missing\n");
--	} else {
--		nr_entries = stack_depot_fetch(handle, &entries);
--		pr_alert("page last free stack trace:\n");
--		stack_trace_print(entries, nr_entries, 0);
-+	if (static_branch_unlikely(&page_owner_free_stack)) {
-+		page_owner_free = get_page_owner_free(page_ext);
-+		handle = READ_ONCE(page_owner_free->free_handle);
-+		if (!handle) {
-+			pr_alert("page_owner free stack trace missing\n");
-+		} else {
-+			nr_entries = stack_depot_fetch(handle, &entries);
-+			pr_alert("page last free stack trace:\n");
-+			stack_trace_print(entries, nr_entries, 0);
-+		}
- 	}
--#endif
- 
- 	if (page_owner->last_migrate_reason != -1)
- 		pr_alert("page has been migrated, last migrate reason: %s\n",
 -- 
 2.23.0
 
