@@ -2,138 +2,131 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C59CEC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A2CFC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 989B42081B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0B112081B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:11:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="T1CYJW//"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HCBY20Mx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732918AbfI3XKo (ORCPT
+        id S1732529AbfI3XLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 19:10:44 -0400
-Received: from mail-eopbgr710105.outbound.protection.outlook.com ([40.107.71.105]:33459
-        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726789AbfI3XIS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 19:08:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gEVR7se2Z3BRLw1jCX+mvLcGES+HhrGHl0NIncYhQooKk8kLVKnO013hlnaRXs93Uc00Oy1oX9/j0ngy9dcpkeXOdJq10oCxc5aJga+LcwxtVFidXJiHtdEYvVUqXuLBQDLgSsDIpoTa1fbQEiDb4LawOVWM8Vl3toVSFqsir/PAQNKa8ha/ceh2EPI51dSPlJM1cajQD6ENmOnmKbKvQhB2cv0Z358JaTbeuuUDHkTFKs4V7sRJ6z3OkmPYD8rBA5iKDrlW2QibQCZzfotDGtbZtqrvRq5FcEYSh+R6FselZM0cPp867HXqLSejiuqKmklEL4IpN9i/Dp97+8R0gA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Bb5CGjJcO9JsblExHKeC5e8gn1nT23BsfTVgf0jISbo=;
- b=GYsqGZzjuY/sCCnvDNDdibjUdtPNA3u3YUCVody05F6Ac5A0ZbDbL4MgcpLI2SZp/u5Om2QtR+h6+Gkhb5axv+GhBCrmgItqTbbl72Hpw+uOuhQxOvDEKk45hYD1IN9L1CsxX5pJa+h35zpXq3Rln4v/xnvN8Pg7H7cIfdU5o6BaiL7wTx0wA/q6zkP7tY0h3yWjuqy8/EGdfvEPUsj7hURpV48eQ5xSJmHnexaJTURUS1fDMQVIrprZxMe9Q89N593WUxzYzZmleg13zOa1rK56gMigT/53wRmR980gvF5FbsaIcM/41BTm/I26LFtShmzy4vmyNVNwwA2rdm7qNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
- dkim=pass header.d=mips.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Bb5CGjJcO9JsblExHKeC5e8gn1nT23BsfTVgf0jISbo=;
- b=T1CYJW//FrS3VdN0ArJeQEePtG2l3Hpz2wOoASaUwgYgcZdYB8JSEWeA3mpW2HAs35c97gSt1/kvxylrb8mNH9SfLKTIxcLi90uceEH8BFYGny/UQSCUdX8hLpsQLfIJl03vGbzoKlatWXUQtrohTBJWNk+nK6Exh3EGDEUHx04=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1709.namprd22.prod.outlook.com (10.164.206.151) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.20; Mon, 30 Sep 2019 23:08:16 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::498b:c2cd:e816:1481]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::498b:c2cd:e816:1481%2]) with mapi id 15.20.2305.017; Mon, 30 Sep 2019
- 23:08:16 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-CC:     Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Paul Burton <pburton@wavecomp.com>
-Subject: [PATCH 02/37] MIPS: Use compact branch for LL/SC loops on MIPSr6+
-Thread-Topic: [PATCH 02/37] MIPS: Use compact branch for LL/SC loops on
- MIPSr6+
-Thread-Index: AQHVd+PwLwYhLPuiu0W9q5wn/sVxdw==
-Date:   Mon, 30 Sep 2019 23:08:16 +0000
-Message-ID: <20190930230806.2940505-3-paul.burton@mips.com>
-References: <20190930230806.2940505-1-paul.burton@mips.com>
-In-Reply-To: <20190930230806.2940505-1-paul.burton@mips.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR21CA0006.namprd21.prod.outlook.com
- (2603:10b6:a03:114::16) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:18::12)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.23.0
-x-originating-ip: [12.94.197.246]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b1826e22-3325-4626-d08f-08d745fb1342
-x-ms-traffictypediagnostic: MWHPR2201MB1709:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR2201MB1709C6554E2470A028EC46F6C1820@MWHPR2201MB1709.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
-x-forefront-prvs: 01762B0D64
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(39840400004)(376002)(346002)(396003)(136003)(199004)(189003)(2351001)(66476007)(66556008)(66946007)(64756008)(66446008)(107886003)(99286004)(6486002)(52116002)(5640700003)(6436002)(25786009)(478600001)(14454004)(76176011)(26005)(6512007)(5660300002)(71200400001)(71190400001)(4744005)(1076003)(4326008)(186003)(42882007)(6506007)(11346002)(256004)(486006)(44832011)(476003)(2616005)(446003)(54906003)(316002)(7736002)(305945005)(6116002)(2906002)(3846002)(81156014)(81166006)(102836004)(50226002)(6916009)(386003)(36756003)(8676002)(8936002)(66066001)(2501003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1709;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: yUkh5+LC15kDahG+S2Q8hBXdcqn6LMMPwJUBuifrNN6TJG1DF/VSMOoirPXUo0TLye4OYn6NKLgDQ5BsVhjiPfoaVS0H/UaeUs+lLLZmltWKrA/1yfHJzIMadOlX8yPlhahzjDrTWinDNXsdky3+/IgKcMGrHxHr4x4YJCvHGJSQqoQHIh+82nTHNrutm74ZagmsDp6q/T9MfbKtBIV5OGxhtPoShkGV8bOQbgyOVV6rGy2HWR4JOtUnQooVUsfUlp0vHPQIIQH9JuxFavpjCZnk7Kd7cQVcXVILkDtLg6mZFznz8oJJQoU2L8ZFpgLj6zQPDK/AkRSF9ozfQ46jL4bRI758zS0m/9CwBUbmp8w/6PyOrlrhzJTGTRUZahk4LHdQG5+xJ/pQxN+VjUVwt6vwz0mW6oKarw+YuwrG+gA=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 30 Sep 2019 19:11:08 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:59566 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730433AbfI3XLH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 19:11:07 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8UNAnGS039746;
+        Mon, 30 Sep 2019 18:10:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569885049;
+        bh=OUHywMUtej7GlrP6k5IHpcQZlK4jvSX03Oy+36G5YdY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=HCBY20MxGKQCMraorRHsqfQFekbPqI8q5nNNbRNw/hjMBrGrYpW8z2HmpPf9J45S9
+         VkpG2EoEL+a/zFdOWbTfybj7JMVz3KRpccnUO5eoUBZbiItl1YbVt21xB9shEmROiO
+         f8GoKfvVKOGm5dErjP11p5aCFYzmAtYSkH4CiY0s=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8UNAnBT005434
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 30 Sep 2019 18:10:49 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 30
+ Sep 2019 18:10:39 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 30 Sep 2019 18:10:39 -0500
+Received: from [10.250.197.80] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8UNAkNV118782;
+        Mon, 30 Sep 2019 18:10:47 -0500
+Subject: Re: [PATCH v2 linux-next 4/4] arm64: configs: defconfig: Change
+ CONFIG_REMOTEPROC from m to y
+To:     Olof Johansson <olof@lixom.net>, Will Deacon <will@kernel.org>
+CC:     Arnd Bergmann <arnd@arndb.de>, Sekhar Nori <nsekhar@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Tony Lindgren <tony@atomide.com>, Suman Anna <s-anna@ti.com>,
+        <hch@lst.de>, Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+References: <20190920075946.13282-1-j-keerthy@ti.com>
+ <20190920075946.13282-5-j-keerthy@ti.com>
+ <20190930134856.umdoeq7k6ukmajij@willie-the-truck>
+ <CAOesGMgs7rKOVnimDwSpeGTAf93Er+Ymzy9-R-mKkQK6MQcF3Q@mail.gmail.com>
+From:   keerthy <j-keerthy@ti.com>
+Message-ID: <0c8dcf78-6f9e-f47f-1175-90b716cdad84@ti.com>
+Date:   Tue, 1 Oct 2019 04:40:47 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b1826e22-3325-4626-d08f-08d745fb1342
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2019 23:08:16.1186
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: g058PfiKJbFDaRdEciRO14mvlGYy10cgJ3Qd7roMqvZAvBu0OaAPYFLIM6TPXxoYQ9JtfQA3qiOhpX+TysnMvA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1709
+In-Reply-To: <CAOesGMgs7rKOVnimDwSpeGTAf93Er+Ymzy9-R-mKkQK6MQcF3Q@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When targeting MIPSr6 or higher make use of a compact branch in LL/SC
-loops, preventing the insertion of a delay slot nop that only serves to
-waste space.
 
-Signed-off-by: Paul Burton <paul.burton@mips.com>
----
 
- arch/mips/include/asm/llsc.h | 4 ++++
- 1 file changed, 4 insertions(+)
+On 10/1/2019 12:16 AM, Olof Johansson wrote:
+> On Mon, Sep 30, 2019 at 6:49 AM Will Deacon <will@kernel.org> wrote:
+>>
+>> On Fri, Sep 20, 2019 at 01:29:46PM +0530, Keerthy wrote:
+>>> Commit 6334150e9a36 ("remoteproc: don't allow modular build")
+>>> changes CONFIG_REMOTEPROC to a boolean from a tristate config
+>>> option which inhibits all defconfigs marking CONFIG_REMOTEPROC as
+>>> a module in compiling the remoteproc and dependent config options.
+>>>
+>>> So fix the defconfig to have CONFIG_REMOTEPROC built in.
+>>>
+>>> Fixes: 6334150e9a36 ("remoteproc: don't allow modular build")
+>>> Signed-off-by: Keerthy <j-keerthy@ti.com>
+>>> ---
+>>>   arch/arm64/configs/defconfig | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+>>> index 8e05c39eab08..c9a867ac32d4 100644
+>>> --- a/arch/arm64/configs/defconfig
+>>> +++ b/arch/arm64/configs/defconfig
+>>> @@ -723,7 +723,7 @@ CONFIG_TEGRA_IOMMU_SMMU=y
+>>>   CONFIG_ARM_SMMU=y
+>>>   CONFIG_ARM_SMMU_V3=y
+>>>   CONFIG_QCOM_IOMMU=y
+>>> -CONFIG_REMOTEPROC=m
+>>> +CONFIG_REMOTEPROC=y
+>>>   CONFIG_QCOM_Q6V5_MSS=m
+>>>   CONFIG_QCOM_Q6V5_PAS=m
+>>>   CONFIG_QCOM_SYSMON=m
+>>
+>> Acked-by: Will Deacon <will@kernel.org>
+>>
+>> This fixes the following annoying warning from "make defconfig" on arm64:
+>>
+>>    arch/arm64/configs/defconfig:726:warning: symbol value 'm' invalid for REMOTEPROC
+>>
+>> I'm assuming the fix will go via arm-soc, but I can take it otherwise
+>> (please just let me know).
+> 
+> Thanks, I'll pick this up, but I'll squash the 4 one-line changes into
+> one commit instead of separate patches.
 
-diff --git a/arch/mips/include/asm/llsc.h b/arch/mips/include/asm/llsc.h
-index 9b19f38562ac..d240a4a2d1c4 100644
---- a/arch/mips/include/asm/llsc.h
-+++ b/arch/mips/include/asm/llsc.h
-@@ -9,6 +9,8 @@
- #ifndef __ASM_LLSC_H
- #define __ASM_LLSC_H
-=20
-+#include <asm/isa-rev.h>
-+
- #if _MIPS_SZLONG =3D=3D 32
- #define SZLONG_LOG 5
- #define SZLONG_MASK 31UL
-@@ -32,6 +34,8 @@
-  */
- #if R10000_LLSC_WAR
- # define __SC_BEQZ "beqzl	"
-+#elif MIPS_ISA_REV >=3D 6
-+# define __SC_BEQZ "beqzc	"
- #else
- # define __SC_BEQZ "beqz	"
- #endif
---=20
-2.23.0
+Thanks Olof.
 
+> 
+> 
+> -Olof
+> 
