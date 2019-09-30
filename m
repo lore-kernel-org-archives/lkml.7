@@ -2,192 +2,75 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 850FAC388F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 637FAC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 659BD20842
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35F4220842
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:17:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731177AbfI3NPU (ORCPT
+        id S1731047AbfI3NRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 09:15:20 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:55538 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbfI3NPU (ORCPT
+        Mon, 30 Sep 2019 09:17:08 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:46250 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726314AbfI3NRI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:15:20 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 524B428D5B5
-Subject: Re: [PATCH 01/13] mfd: cros_ec: Add sensor_count and make
- check_features public
-To:     Gwendal Grignou <gwendal@chromium.org>, jic23@kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        lee.jones@linaro.org, bleung@chromium.org, dianders@chromium.org,
-        groeck@chromium.org, fabien.lahoudere@collabora.com
-Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-References: <20190922175021.53449-1-gwendal@chromium.org>
- <20190922175021.53449-2-gwendal@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <411716b0-818b-9060-7055-8ff9523c0c45@collabora.com>
-Date:   Mon, 30 Sep 2019 15:15:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 30 Sep 2019 09:17:08 -0400
+Received: from callcc.thunk.org (pool-72-93-95-157.bstnma.fios.verizon.net [72.93.95.157])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x8UDGd9A010000
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 30 Sep 2019 09:16:39 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 1C89142014C; Mon, 30 Sep 2019 09:16:39 -0400 (EDT)
+Date:   Mon, 30 Sep 2019 09:16:39 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Nicholas Mc Guire <hofrat@opentech.at>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: x86/random: Speculation to the rescue
+Message-ID: <20190930131639.GF4994@mit.edu>
+References: <alpine.DEB.2.21.1909290010500.2636@nanos.tec.linutronix.de>
+ <CAHk-=wgjC01UaoV35PZvGPnrQ812SRGPoV7Xp63BBFxAsJjvrg@mail.gmail.com>
+ <CAHk-=wi0vxLmwEBn2Xgu7hZ0U8z2kN4sgCax+57ZJMVo3huDaQ@mail.gmail.com>
+ <20190930033706.GD4994@mit.edu>
 MIME-Version: 1.0
-In-Reply-To: <20190922175021.53449-2-gwendal@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190930033706.GD4994@mit.edu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gwendal,
+On Sun, Sep 29, 2019 at 11:37:06PM -0400, Theodore Y. Ts'o wrote:
+> I'm OK with this as a starting point.  If a jitter entropy system
+> allow us to get pass this logjam, let's do it.  At least for the x86
+> architecture, it will be security through obscurity.  And if the
+> alternative is potentially failing where the adversary can attack the
+> CRNG, it's my preference.  It's certainly better than nothing.
 
-Many thanks for the patches.
+Upon rereading this, this came out wrong.  What I was trying to say is
+in the very worst case, it will be security through obscurity, and if
+the alternative "don't block, because blocking is always worse than an
+guessable value being returned through getrandom(0)", it's better than
+nothing.
 
-On 22/9/19 19:50, Gwendal Grignou wrote:
-> Add a new function to return the number of MEMS sensors available in a
-> ChromeOS Embedded Controller.
-> It uses MOTIONSENSE_CMD_DUMP if available or a specific memory map ACPI
-> registers to find out.
-> 
-> Also, make check_features public as it can be useful for other drivers
-> to know whant the Embedded Controller supports.
-> 
-> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-> ---
->  drivers/mfd/cros_ec_dev.c   | 61 ++++++++++++++++++++++++++++++++++++-
->  include/linux/mfd/cros_ec.h | 17 +++++++++++
->  2 files changed, 77 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-> index 6e6dfd6c1871..3be80183ccaa 100644
-> --- a/drivers/mfd/cros_ec_dev.c
-> +++ b/drivers/mfd/cros_ec_dev.c
-> @@ -112,7 +112,7 @@ static const struct mfd_cell cros_ec_vbc_cells[] = {
->  	{ .name = "cros-ec-vbc", }
->  };
->  
-> -static int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
-> +int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
->  {
->  	struct cros_ec_command *msg;
->  	int ret;
-> @@ -143,12 +143,71 @@ static int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
->  
->  	return ec->features[feature / 32] & EC_FEATURE_MASK_0(feature);
->  }
-> +EXPORT_SYMBOL_GPL(cros_ec_check_features);
->  
->  static void cros_ec_class_release(struct device *dev)
->  {
->  	kfree(to_cros_ec_dev(dev));
->  }
->  
-> +int cros_ec_get_sensor_count(struct cros_ec_dev *ec)
-> +{
-> +	/*
-> +	 * Issue a command to get the number of sensor reported.
-> +	 * If not supported, check for legacy mode.
-> +	 */
-> +	int ret, sensor_count;
-> +	struct ec_params_motion_sense *params;
-> +	struct ec_response_motion_sense *resp;
-> +	struct cros_ec_command *msg;
-> +	struct cros_ec_device *ec_dev = ec->ec_dev;
-> +	u8 status;
-> +
-> +	msg = kzalloc(sizeof(struct cros_ec_command) +
-> +			max(sizeof(*params), sizeof(*resp)), GFP_KERNEL);
-> +	if (msg == NULL)
-> +		return -ENOMEM;
-> +
-> +	msg->version = 1;
-> +	msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
-> +	msg->outsize = sizeof(*params);
-> +	msg->insize = sizeof(*resp);
-> +
-> +	params = (struct ec_params_motion_sense *)msg->data;
-> +	params->cmd = MOTIONSENSE_CMD_DUMP;
-> +
-> +	ret = cros_ec_cmd_xfer(ec->ec_dev, msg);
-> +	if (ret < 0) {
-> +		sensor_count = ret;
-> +	} else if (msg->result != EC_RES_SUCCESS) {
-> +		sensor_count = -EPROTO;
-> +	} else {
-> +		resp = (struct ec_response_motion_sense *)msg->data;
-> +		sensor_count = resp->dump.sensor_count;
-> +	}
-> +	kfree(msg);
-> +
-> +	/*
-> +	 * Check legacy mode: Let's find out if sensors are accessible
-> +	 * via LPC interface.
-> +	 */
-> +	if (sensor_count == -EPROTO &&
-> +	    ec->cmd_offset == 0 &&
-> +	    ec_dev->cmd_readmem) {
-> +		ret = ec_dev->cmd_readmem(ec_dev, EC_MEMMAP_ACC_STATUS,
-> +				1, &status);
-> +		if ((ret >= 0) &&
-> +		    (status & EC_MEMMAP_ACC_STATUS_PRESENCE_BIT)) {
-> +			/*
-> +			 * We have 2 sensors, one in the lid, one in the base.
-> +			 */
-> +			sensor_count = 2;
-> +		}
-> +	}
-> +	return sensor_count;
-> +}
-> +EXPORT_SYMBOL_GPL(cros_ec_get_sensor_count);
-> +
->  static void cros_ec_sensors_register(struct cros_ec_dev *ec)
->  {
->  	/*
-> diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
-> index 61c2875c2a40..578e0bbcafdc 100644
-> --- a/include/linux/mfd/cros_ec.h
-> +++ b/include/linux/mfd/cros_ec.h
-> @@ -32,4 +32,21 @@ struct cros_ec_dev {
->  
->  #define to_cros_ec_dev(dev)  container_of(dev, struct cros_ec_dev, class_dev)
->  
-> +/**
-> + * cros_ec_check_features - Test for the presence of EC features
-> + *
-> + * Call this function to test whether the ChromeOS EC supports a feature.
-> + *
-> + * @ec_dev: EC device
-> + * @msg: One of ec_feature_code values
-> + * @return: 1 if supported, 0 if not
-> + */
-> +int cros_ec_check_features(struct cros_ec_dev *ec, int feature);
-> +
-> +/*
-> + * Return the number of MEMS sensors supported.
-> + * Return < 0 in case of error.
-> + */
-> +int cros_ec_get_sensor_count(struct cros_ec_dev *ec);
-> +
+Which is to say, I'm still worried that people with deep access to the
+implementation details of a CPU might be able to reverse engineer what
+a jitter entropy scheme produces.  This is why I'd be curious to see
+the results when someone tries to attack a jitter scheme on a fully
+open, simple architecture such as RISC-V.
 
-I am wondering if we should take this opportunity to move these two functions
-from drivers/mfd/cros_ec_dev to drivers/platform/chrome/cros_ec_proto.c and
-include/linux/platform_data/cros_ec_proto.h
-
-I think this part is more suitable for core part that actually resides in
-platform/chrome than the mfd device itself. What do you think? Do you see any
-problem on doing this?
-
-Thanks,
- Enric
-
->  #endif /* __LINUX_MFD_CROS_EC_H */
-> 
+						- Ted
