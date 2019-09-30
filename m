@@ -2,139 +2,92 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFA7C388F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A25C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DFF22086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABF262086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:51:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730303AbfI3Isc (ORCPT
+        id S1730230AbfI3IvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 04:48:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43098 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730189AbfI3Isb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 04:48:31 -0400
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6CDA558E23
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 08:48:30 +0000 (UTC)
-Received: by mail-wr1-f72.google.com with SMTP id a15so4225902wrq.4
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 01:48:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=z2zHybU21osOisPlhNSom+TBjgJpL+1v6taEXtPzqtg=;
-        b=GiIpqp3AEcKZK8pJTuH48cgCAIRBEBwxehx3wiDju6eUwXUHZ28P6XxWF3v8dLx6Wf
-         Jbdey3yAkean/Zc9fyCjf0fhUVK+QoH88DXHVe1z8g1J826TGRiS3Nz67/oIE2YdSpmV
-         NNyvoU/7aTzBjMADTY6dJd0NemmWIcNvTF2RyZB5XzMYjfOMh8Xsglncy6iNeql101Jt
-         LVRsHvp1ZPpx0TsB4ci2/BiJs+wO7qq4N75wY1ZqNHhQUHmRLB6ITEWRp85+pQJVrqNx
-         2HDTQS1h01MtHrCM0myon02OnwoTQwI0yVKvfzsrc2keBkST3TYcTbk8VniXb0F67yGS
-         xUmw==
-X-Gm-Message-State: APjAAAXhOFRH1K2jtziv++9tm5NRe0Xks4LAxEa132tUh76o8SN1wWIK
-        vZeqFlAgihw5FSW40wkGBksDOmcN19lNRSY5PJ4ueewZv6lAzPzCyjAVcWiEQ1zODlCYCRuWD8L
-        3tuhpi8IT1ptEPIXhAILzMara
-X-Received: by 2002:a7b:c00e:: with SMTP id c14mr15719507wmb.158.1569833308871;
-        Mon, 30 Sep 2019 01:48:28 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzKYydhyPSllr2kw+Hkb3I9DMukpo9Gxj9D4tgxaCb+MomXmOVx1GYs16JH8PvBVPcvxGLJ1A==
-X-Received: by 2002:a7b:c00e:: with SMTP id c14mr15719495wmb.158.1569833308635;
-        Mon, 30 Sep 2019 01:48:28 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id b7sm10175881wrj.28.2019.09.30.01.48.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 01:48:28 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Reto Buerki <reet@codelabs.ch>,
-        Liran Alon <liran.alon@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Subject: Re: [PATCH v2 3/8] KVM: VMX: Consolidate to_vmx() usage in RFLAGS accessors
-In-Reply-To: <20190927214523.3376-4-sean.j.christopherson@intel.com>
-References: <20190927214523.3376-1-sean.j.christopherson@intel.com> <20190927214523.3376-4-sean.j.christopherson@intel.com>
-Date:   Mon, 30 Sep 2019 10:48:27 +0200
-Message-ID: <87pnji41b8.fsf@vitty.brq.redhat.com>
+        Mon, 30 Sep 2019 04:51:17 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:63238 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726008AbfI3IvQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 04:51:16 -0400
+X-UUID: 6f8aa737f23f496cbbcd03217376e47f-20190930
+X-UUID: 6f8aa737f23f496cbbcd03217376e47f-20190930
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <sam.shih@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 249343122; Mon, 30 Sep 2019 16:51:10 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 30 Sep 2019 16:51:06 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 30 Sep 2019 16:51:06 +0800
+Message-ID: <1569833468.32131.4.camel@mtksdccf07>
+Subject: Re: [PATCH v10 08/12] pwm: mediatek: Add MT7629 compatible string
+From:   Sam Shih <sam.shih@mediatek.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Mon, 30 Sep 2019 16:51:08 +0800
+In-Reply-To: <20190927112831.GA1171568@ulmo>
+References: <1569421957-20765-1-git-send-email-sam.shih@mediatek.com>
+         <1569421957-20765-9-git-send-email-sam.shih@mediatek.com>
+         <20190927112831.GA1171568@ulmo>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain
+X-TM-SNTS-SMTP: 117A8A6215936262384F6F70692A074F4A2330135B41FEF58EBF2008F4C56AEB2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+Hi,
 
-> Capture struct vcpu_vmx in a local variable to improve the readability
-> of vmx_{g,s}et_rflags().
->
-> No functional change intended.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/vmx/vmx.c | 20 +++++++++++---------
->  1 file changed, 11 insertions(+), 9 deletions(-)
->
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 0b8dd9c315f8..83fe8b02b732 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -1407,35 +1407,37 @@ static void vmx_decache_cr0_guest_bits(struct kvm_vcpu *vcpu);
->  
->  unsigned long vmx_get_rflags(struct kvm_vcpu *vcpu)
->  {
-> +	struct vcpu_vmx *vmx = to_vmx(vcpu);
->  	unsigned long rflags, save_rflags;
->  
->  	if (!test_bit(VCPU_EXREG_RFLAGS, (ulong *)&vcpu->arch.regs_avail)) {
->  		__set_bit(VCPU_EXREG_RFLAGS, (ulong *)&vcpu->arch.regs_avail);
->  		rflags = vmcs_readl(GUEST_RFLAGS);
-> -		if (to_vmx(vcpu)->rmode.vm86_active) {
-> +		if (vmx->rmode.vm86_active) {
->  			rflags &= RMODE_GUEST_OWNED_EFLAGS_BITS;
-> -			save_rflags = to_vmx(vcpu)->rmode.save_rflags;
-> +			save_rflags = vmx->rmode.save_rflags;
->  			rflags |= save_rflags & ~RMODE_GUEST_OWNED_EFLAGS_BITS;
->  		}
-> -		to_vmx(vcpu)->rflags = rflags;
-> +		vmx->rflags = rflags;
->  	}
-> -	return to_vmx(vcpu)->rflags;
-> +	return vmx->rflags;
->  }
->  
->  void vmx_set_rflags(struct kvm_vcpu *vcpu, unsigned long rflags)
->  {
-> +	struct vcpu_vmx *vmx = to_vmx(vcpu);
->  	unsigned long old_rflags = vmx_get_rflags(vcpu);
->  
->  	__set_bit(VCPU_EXREG_RFLAGS, (ulong *)&vcpu->arch.regs_avail);
-> -	to_vmx(vcpu)->rflags = rflags;
-> -	if (to_vmx(vcpu)->rmode.vm86_active) {
-> -		to_vmx(vcpu)->rmode.save_rflags = rflags;
-> +	vmx->rflags = rflags;
-> +	if (vmx->rmode.vm86_active) {
-> +		vmx->rmode.save_rflags = rflags;
->  		rflags |= X86_EFLAGS_IOPL | X86_EFLAGS_VM;
->  	}
->  	vmcs_writel(GUEST_RFLAGS, rflags);
->  
-> -	if ((old_rflags ^ to_vmx(vcpu)->rflags) & X86_EFLAGS_VM)
-> -		to_vmx(vcpu)->emulation_required = emulation_required(vcpu);
-> +	if ((old_rflags ^ vmx->rflags) & X86_EFLAGS_VM)
-> +		vmx->emulation_required = emulation_required(vcpu);
->  }
->  
->  u32 vmx_get_interrupt_shadow(struct kvm_vcpu *vcpu)
+On Fri, 2019-09-27 at 13:28 +0200, Thierry Reding wrote:
+> On Wed, Sep 25, 2019 at 10:32:33PM +0800, Sam Shih wrote:
+> > This adds pwm support for MT7629, and separate mt7629 compatible string
+> > from mt7622
+> > 
+> > Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> > ---
+> >  drivers/pwm/pwm-mediatek.c | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> 
+> I picked this patch up and made some minor adjustments to make it build
+> without the num_pwms patches. With that I don't think there's anything
+> left from this series that you need.
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Yes, I think the driver should work once dtsi updated.
+("[v10,12/12] arm: dts: mediatek: add mt7629 pwm support")
 
--- 
-Vitaly
+But, due to we use comaptible string separately for every SoC now,
+The comaptible string in dt-bindings should be "mediatek,mt7629-pwm".
+I think we should use "[v10,11/12] dt-bindings: pwm: update bindings 
+for MT7629" to replace commit 1c00ad6ebf36aa3b0fa598a48b8ae59782be4121,
+Or maybe we need a little modification like this ?
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt ...
+- - "mediatek,mt7629-pwm", "mediatek,mt7622-pwm": found on mt7629 SoC.
++ - "mediatek,mt7629-pwm": found on mt7629 SoC.
+
+Thanks,
+Regards, Sam
+
