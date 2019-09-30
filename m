@@ -2,94 +2,57 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C65C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 582A5C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 767C82086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 12:57:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ytnu72k/"
+	by mail.kernel.org (Postfix) with ESMTP id 313B52086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:02:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731042AbfI3M5x (ORCPT
+        id S1731031AbfI3NCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 08:57:53 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55352 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731029AbfI3M5x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 08:57:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=fARuBLyTR4HXeEN5GAQcRLDiqW1FdAZoSRGfWrgXFl0=; b=Ytnu72k/V9UtQKPbqK+bXZ/rC
-        hPlBEZtRwO5KMbdq53efq3EoWOWDdzlnAEzTmTzRPWZqNqS2scAwPoBpOsC5W4lQOBNLGgrEtyDzK
-        ERPuqlt6nM23+LogLxjefgJzSg5jkTQYfNghQ4xb6+6GtOpewBVmCChuKzYFvaZBOgMfK6DeKrOmt
-        CjVTmncnXQELuEjaCVwh29wZDCy9UYncMyV2MGsQMELqzsZp15ZlivvYbqb9uiJsP4/WJvis3Wo/U
-        cI6ryWc4LilQ9scvbdS0zvXJYytusVy4xRSStne/M++GTrfPwI0h/YJdggMOkOgE8J0Imz17qiJnt
-        fz0+Z45Ig==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iEvFQ-0007vv-1U; Mon, 30 Sep 2019 12:57:52 +0000
-Date:   Mon, 30 Sep 2019 05:57:52 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Oza Pawandeep <oza.oza@broadcom.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: Re: [PATCH 05/11] of: Ratify of_dma_configure() interface
-Message-ID: <20190930125752.GD12051@infradead.org>
-References: <20190927002455.13169-1-robh@kernel.org>
- <20190927002455.13169-6-robh@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190927002455.13169-6-robh@kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Mon, 30 Sep 2019 09:02:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40406 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730830AbfI3NCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 09:02:09 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2FBC8AF2B;
+        Mon, 30 Sep 2019 13:02:08 +0000 (UTC)
+Message-ID: <1569847603.2639.0.camel@suse.com>
+Subject: Re: 4f5368b5541a902f6596558b05f5c21a9770dd32 causes regression
+From:   Oliver Neukum <oneukum@suse.com>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     Stefan Dirsch <sndirsch@suse.com>,
+        Thomas Zimmermann <tzimmermann@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Mon, 30 Sep 2019 14:46:43 +0200
+In-Reply-To: <CAKMK7uHicakgeTEUhK63R4yKh+HMHCmy11L_o5PCSJoLG65BYg@mail.gmail.com>
+References: <1569439345.3084.5.camel@suse.com>
+         <CAKMK7uHicakgeTEUhK63R4yKh+HMHCmy11L_o5PCSJoLG65BYg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 07:24:49PM -0500, Rob Herring wrote:
-> -int of_dma_configure(struct device *dev, struct device_node *np, bool force_dma)
-> +int of_dma_configure(struct device *dev, struct device_node *parent, bool force_dma)
+Am Mittwoch, den 25.09.2019, 21:48 +0200 schrieb Daniel Vetter:
+> which undoes any side-effect of the patch you're pointing at. I am
+> rather surprised though that this results in a hard-lookup for you,
+> did you confirm the bisect by reverting that commit on top of latest
+> upstream?
 
-This creates a > 80 char line.
+Hi,
 
->  {
->  	u64 dma_addr, paddr, size = 0;
->  	int ret;
->  	bool coherent;
->  	unsigned long offset;
->  	const struct iommu_ops *iommu;
-> +	struct device_node *np;
->  	u64 mask;
->  
-> +	np = dev->of_node;
-> +	if (!np)
-> +		np = parent;
-> +	if (!np)
-> +		return -ENODEV;
+yes, a straight revert fixes the issue.
 
-I have to say I find the older calling convention simpler to understand.
-If we want to enforce the invariant I'd rather do that explicitly:
+	Regards
+		Oliver
 
-	if (dev->of_node && np != dev->of_node)
-		return -EINVAL;
