@@ -2,141 +2,133 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8069DC35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 912BBC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 563E920640
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62E2D20640
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:26:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="c/g2jkI4"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="0iloPo15"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732307AbfI3QZz (ORCPT
+        id S1732323AbfI3Q0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 12:25:55 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:49572 "EHLO mail.skyhub.de"
+        Mon, 30 Sep 2019 12:26:04 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:54748 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727767AbfI3QZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 12:25:54 -0400
-Received: from zn.tnic (p200300EC2F058B00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f05:8b00:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4890E1EC05A1;
-        Mon, 30 Sep 2019 18:25:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1569860753;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=6QDt9s55OymqHMPI6kw6Cuu+S3BVbgVjYt3QSGWORhc=;
-        b=c/g2jkI4HcwijJ9goKtRTgWFBhdFy+8Skn1j7QXnxOsuMEZJymasodY3oouMlSXFL/RfYq
-        kxx8h+7elqHM8noEQtfkangLVTDCMewnggWE2NzOx8YiA1G3pqQJ23fPRP846HMGe7HwVG
-        zztTvdMu5xYlCqmoGvaKpGaEmZ226nk=
-Date:   Mon, 30 Sep 2019 18:25:51 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-Cc:     tony.luck@intel.com, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, x86@kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yazen.ghannam@amd.com,
-        vishal.l.verma@intel.com, qiuxu.zhuo@intel.com,
-        DavidWang@zhaoxin.com, CooperYan@zhaoxin.com,
-        QiyuanWang@zhaoxin.com, HerryYang@zhaoxin.com
-Subject: Re: [PATCH v4 2/4] x86/mce: Make 3 functions non-static
-Message-ID: <20190930162551.GA31926@zn.tnic>
-References: <1568787573-1297-1-git-send-email-TonyWWang-oc@zhaoxin.com>
- <1568787573-1297-2-git-send-email-TonyWWang-oc@zhaoxin.com>
- <1568787573-1297-3-git-send-email-TonyWWang-oc@zhaoxin.com>
+        id S1727767AbfI3Q0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 12:26:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=UsNG+BJJkiN5f+ZgZFe9likYWxzjLrZI+P2lP6TGLj4=; b=0iloPo15G8c0TSn0HfSecaAjWh
+        +Z1hbpIV0ML425vNA/FRnPOdvyxejzfTpYjTQTBbuN+ied/F2oTZ6nytVsZs6Kx84V6FGohMS9U1I
+        56HiWl3xVU0ceqkqcjcG/ZrlscF0IS9AgaN+3s9tz7qUxLL4qt5UwlNyBZfoq63uR5b0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iEyUn-0004l9-Vz; Mon, 30 Sep 2019 18:25:57 +0200
+Date:   Mon, 30 Sep 2019 18:25:57 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Jay Cliburn <jcliburn@gmail.com>,
+        Chris Snook <chris.snook@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v1] net: ag71xx: fix mdio subnode support
+Message-ID: <20190930162557.GB15343@lunn.ch>
+References: <20190930093310.10762-1-o.rempel@pengutronix.de>
+ <20190930134209.GB14745@lunn.ch>
+ <20190930142907.wo3tahtg7g7mvfmp@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1568787573-1297-3-git-send-email-TonyWWang-oc@zhaoxin.com>
+In-Reply-To: <20190930142907.wo3tahtg7g7mvfmp@pengutronix.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 02:19:31PM +0800, Tony W Wang-oc wrote:
-> These functions are declared static and cannot be used in others
-> .c source file. this commit removes the static attribute and adds
-> the declaration to the header for these functions.
+On Mon, Sep 30, 2019 at 04:29:07PM +0200, Oleksij Rempel wrote:
+> On Mon, Sep 30, 2019 at 03:42:09PM +0200, Andrew Lunn wrote:
+> > On Mon, Sep 30, 2019 at 11:33:10AM +0200, Oleksij Rempel wrote:
+> > > The driver was working with fixed phy without any noticeable issues. This bug
+> > > was uncovered by introducing dsa ar9331-switch driver.
+> > > 
+> > > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> > > ---
+> > >  drivers/net/ethernet/atheros/ag71xx.c | 6 ++++--
+> > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/net/ethernet/atheros/ag71xx.c b/drivers/net/ethernet/atheros/ag71xx.c
+> > > index 6703960c7cf5..d1101eea15c2 100644
+> > > --- a/drivers/net/ethernet/atheros/ag71xx.c
+> > > +++ b/drivers/net/ethernet/atheros/ag71xx.c
+> > > @@ -526,7 +526,7 @@ static int ag71xx_mdio_probe(struct ag71xx *ag)
+> > >  	struct device *dev = &ag->pdev->dev;
+> > >  	struct net_device *ndev = ag->ndev;
+> > >  	static struct mii_bus *mii_bus;
+> > > -	struct device_node *np;
+> > > +	struct device_node *np, *mnp;
+> > >  	int err;
+> > >  
+> > >  	np = dev->of_node;
+> > > @@ -571,7 +571,9 @@ static int ag71xx_mdio_probe(struct ag71xx *ag)
+> > >  		msleep(200);
+> > >  	}
+> > >  
+> > > -	err = of_mdiobus_register(mii_bus, np);
+> > > +	mnp = of_get_child_by_name(np, "mdio");
+> > > +	err = of_mdiobus_register(mii_bus, mnp);
+> > > +	of_node_put(mnp);
+> > >  	if (err)
+> > >  		goto mdio_err_put_clk;
+> > 
+> > Hi Oleksij
+> > 
+> > You need to keep backwards compatibility here. If you find an mdio
+> > node, use it, but if not, you need to still register np.
+> > 
+> > This is also extending the driver binding, so you need to update the
+> > binding documentation.
 > 
-> Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-> ---
->  arch/x86/kernel/cpu/mce/intel.c    | 6 +++---
->  arch/x86/kernel/cpu/mce/internal.h | 6 ++++++
->  2 files changed, 9 insertions(+), 3 deletions(-)
+> Hi Andrew,
 > 
-> diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/intel.c
-> index 88cd959..70799a5 100644
-> --- a/arch/x86/kernel/cpu/mce/intel.c
-> +++ b/arch/x86/kernel/cpu/mce/intel.c
-> @@ -423,7 +423,7 @@ void cmci_disable_bank(int bank)
->  	raw_spin_unlock_irqrestore(&cmci_discover_lock, flags);
->  }
->  
-> -static void intel_init_cmci(void)
-> +void intel_init_cmci(void)
->  {
->  	int banks;
->  
-> @@ -442,7 +442,7 @@ static void intel_init_cmci(void)
->  	cmci_recheck();
->  }
->  
-> -static void intel_init_lmce(void)
-> +void intel_init_lmce(void)
->  {
->  	u64 val;
->  
-> @@ -455,7 +455,7 @@ static void intel_init_lmce(void)
->  		wrmsrl(MSR_IA32_MCG_EXT_CTL, val | MCG_EXT_CTL_LMCE_EN);
->  }
->  
-> -static void intel_clear_lmce(void)
-> +void intel_clear_lmce(void)
->  {
->  	u64 val;
->  
-> diff --git a/arch/x86/kernel/cpu/mce/internal.h b/arch/x86/kernel/cpu/mce/internal.h
-> index 43031db..842b273 100644
-> --- a/arch/x86/kernel/cpu/mce/internal.h
-> +++ b/arch/x86/kernel/cpu/mce/internal.h
-> @@ -45,11 +45,17 @@ unsigned long cmci_intel_adjust_timer(unsigned long interval);
->  bool mce_intel_cmci_poll(void);
->  void mce_intel_hcpu_update(unsigned long cpu);
->  void cmci_disable_bank(int bank);
-> +void intel_init_cmci(void);
-> +void intel_init_lmce(void);
-> +void intel_clear_lmce(void);
->  #else
->  # define cmci_intel_adjust_timer mce_adjust_timer_default
->  static inline bool mce_intel_cmci_poll(void) { return false; }
->  static inline void mce_intel_hcpu_update(unsigned long cpu) { }
->  static inline void cmci_disable_bank(int bank) { }
-> +static inline void intel_init_cmci(void) { }
-> +static inline void intel_init_lmce(void) { }
-> +static inline void intel_clear_lmce(void) { }
->  #endif
->  
->  void mce_timer_kick(unsigned long interval);
-> -- 
+> Normally i would agree. But in this case:
+> - this driver is freshly added to the kernel and is different to OpenWrt
+>   implementation any way. No users from this side.
+> - Devicetree binding says:
+>   Documentation/devicetree/bindings/net/qca,ar71xx.txt
+> |Optional properties:
+> |- phy-handle : phandle to the PHY device connected to this device.
+> |- fixed-link : Assume a fixed link. See fixed-link.txt in the same directory.
+> |  Use instead of phy-handle.
+> |
+> |Optional subnodes:
+> |- mdio : specifies the mdio bus, used as a container for phy nodes
+> |  according to phy.txt in the same directory
+> 
+> So, it is driver bug ...ooOO (my personal bug :D)
 
-I don't think you understood what I meant last time:
+Hi Oleksij
 
-"This can easily be missed because you're exporting them in one patch
-and using them in another. Do the exports in the same patch where you
-use them for the first time."
+Ah, O.K. You should of explained that in the commit message.
 
-Anyway, I dropped this patch and exported the functions in the
-respective patches where you use the functions.
+Is the mdio support just in -rc, or is it older?
 
--- 
-Regards/Gruss,
-    Boris.
+You need to add a Fixes: tag.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+The patch subject should be [PATCH net] to indicate this is a fix to
+the net tree
+
+The patch should be against net, not next-next.
+
+    Andrew
