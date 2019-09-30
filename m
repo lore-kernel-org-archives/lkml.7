@@ -7,55 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8141C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E3DC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1ABA2086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC57A2086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:04:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ePIF9i8B"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="M/QPbPU4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731298AbfI3NEt (ORCPT
+        id S1731311AbfI3NEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 09:04:49 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:46414 "EHLO
+        Mon, 30 Sep 2019 09:04:52 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:46436 "EHLO
         fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731233AbfI3NEo (ORCPT
+        with ESMTP id S1731292AbfI3NEt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:04:44 -0400
+        Mon, 30 Sep 2019 09:04:49 -0400
 Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8UD4cFB110324;
-        Mon, 30 Sep 2019 08:04:38 -0500
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8UD4luP110351;
+        Mon, 30 Sep 2019 08:04:47 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569848678;
-        bh=Xr4HzhjJUkeC5JJjlQ95EiC6/pbo6PahDZ4riJBggtk=;
+        s=ti-com-17Q1; t=1569848687;
+        bh=+DIhuJUBVMkB/IKbsrvnRijTwK4odP2dDYCj3Ruv0Zc=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ePIF9i8Bihsex48yuU/TfyJVX1tAuTUjrzw1jj7vX4NvefKpexCruG0ria2HSXSKX
-         0CRIofmT/IzRoe28DqZgLxTOV1pMoQdTKLtZ3uNppum4+0/78UY6X5WO/zdKIRzTXv
-         BC9LmrnaIUaujT9/eQQD7bNbfVv4vjiKntwlIFWU=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8UD4cZI057422;
-        Mon, 30 Sep 2019 08:04:38 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+        b=M/QPbPU4JJm8QxYBnKMp5C6i115xpQNnyjfO7BTIdwb9Y9kkqCbu6tZEtedwMXTkX
+         ObKaGwOOdeUa6f9Ac2UTukRePJtkPgNUzMpe+FHj2RPxt2Msn5UoiVqEA+vJymP4a9
+         bqzoROIegLwMzuDmUAZr62s45N+ck9ub8d22gZuA=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8UD4l00057577;
+        Mon, 30 Sep 2019 08:04:47 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 30
- Sep 2019 08:04:28 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ Sep 2019 08:04:37 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 30 Sep 2019 08:04:28 -0500
+ Frontend Transport; Mon, 30 Sep 2019 08:04:47 -0500
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8UD4Zih115624;
-        Mon, 30 Sep 2019 08:04:38 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8UD4Zin115624;
+        Mon, 30 Sep 2019 08:04:47 -0500
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>,
         Sakari Ailus <sakari.ailus@linux.intel.com>
 CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>,
-        Jyri Sarha <jsarha@ti.com>
-Subject: [Patch v5 2/8] media: i2c: ov2659: Fix sensor detection to actually fail when device is not present
-Date:   Mon, 30 Sep 2019 08:06:38 -0500
-Message-ID: <20190930130644.8704-3-bparrot@ti.com>
+        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
+Subject: [Patch v5 8/8] media: i2c: ov2659: Switch to SPDX Licensing
+Date:   Mon, 30 Sep 2019 08:06:44 -0500
+Message-ID: <20190930130644.8704-9-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190930130644.8704-1-bparrot@ti.com>
 References: <20190930130644.8704-1-bparrot@ti.com>
@@ -67,36 +66,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make sure that if the expected sensor device id register
-is not recognized properly the failure is propagated
-up so devices are not left partially initialized.
+Switch to SPDX licensing and drop the redundant GPL text.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
 Acked-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
 ---
- drivers/media/i2c/ov2659.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/media/i2c/ov2659.c | 14 +-------------
+ 1 file changed, 1 insertion(+), 13 deletions(-)
 
 diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index 17573257097d..efbe6dc720e2 100644
+index c1e2aa1f952d..42f64175a6df 100644
 --- a/drivers/media/i2c/ov2659.c
 +++ b/drivers/media/i2c/ov2659.c
-@@ -1330,11 +1330,12 @@ static int ov2659_detect(struct v4l2_subdev *sd)
- 		unsigned short id;
+@@ -1,3 +1,4 @@
++// SPDX-License-Identifier: GPL-2.0-only
+ /*
+  * Omnivision OV2659 CMOS Image Sensor driver
+  *
+@@ -5,19 +6,6 @@
+  *
+  * Benoit Parrot <bparrot@ti.com>
+  * Lad, Prabhakar <prabhakar.csengg@gmail.com>
+- *
+- * This program is free software; you may redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+- * SOFTWARE.
+  */
  
- 		id = OV265X_ID(pid, ver);
--		if (id != OV2659_ID)
-+		if (id != OV2659_ID) {
- 			dev_err(&client->dev,
- 				"Sensor detection failed (%04X, %d)\n",
- 				id, ret);
--		else {
-+			ret = -ENODEV;
-+		} else {
- 			dev_info(&client->dev, "Found OV%04X sensor\n", id);
- 			ret = ov2659_init(sd, 0);
- 		}
+ #include <linux/clk.h>
 -- 
 2.17.1
 
