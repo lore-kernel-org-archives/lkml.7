@@ -2,183 +2,171 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA096C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60404C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:12:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79C1520679
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:12:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SRxCdHIK"
+	by mail.kernel.org (Postfix) with ESMTP id 3557320679
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:12:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731517AbfI3OMl (ORCPT
+        id S1731537AbfI3OMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 30 Sep 2019 10:12:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56880 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731381AbfI3OMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 30 Sep 2019 10:12:41 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:35726 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729738AbfI3OMl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 10:12:41 -0400
-Received: by mail-io1-f66.google.com with SMTP id q10so38760441iop.2;
-        Mon, 30 Sep 2019 07:12:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TwbrL/89iwEv92jYm3+TvZslhh9l3A55aKvB6WQE0Aw=;
-        b=SRxCdHIK0riL2quHsjY50cpVIhRrFISodAZa537ifi6d7h07jLLeY4wUb1BpAcwAkj
-         /PrzUswmM/rzM4rc/0QziHmYRfJRbM0sAR5PGPmCrDseIo6laabFzzPkxywUDwdr06eC
-         VYxuyeDUt+2Uj425owP+L2qYUH5v6rxPWSsNoUkFm2t2t3OPEjYfiss73xCadi1J8Bj+
-         b0oiZiG5WYANrMjalqsJfzT5IFOirXaTPfXNnIrM/u+FSbe8+Q3KUH89GrWeU235hIpn
-         kf0sWTELgjeIqEfsUZ2fGb1+Bjyk/wY03XAse6vpmGCwkWdi9xspJrKomVk/qCaNAYar
-         /ODg==
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 296452026F
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 14:12:41 +0000 (UTC)
+Received: by mail-wm1-f70.google.com with SMTP id j125so6007727wmj.6
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 07:12:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TwbrL/89iwEv92jYm3+TvZslhh9l3A55aKvB6WQE0Aw=;
-        b=nxBmTNeyGNvzulYmxidDvK/Q6i522IhaX3RH3NdBourervIW34W47fN/h6lMN4BTHW
-         U/feCP/o8rjy4bxK7PkQxM1mpaZKRNRFjC09UjmrrNlyKWFwmflP6O19dg0rs7Ev4Vjl
-         sbhdGZIBwmgq9XYS+FTlOTN/Uy5CGxShkA0THSS3s8b4pTJfXX/I/o7+otdRJOwzDF9q
-         pWQnliNpPFRK9fpTXd3x2SpRev07gi1XN9/4izXhh5v9xTxqG97wYtuGrj+fPnWFtaQD
-         Mu4exud/qN9W+UOQ0rd+HXOHy9IErf71z5mUtkDP6/hJqApNt/g7vey2SP3DJs9nkxC9
-         vbAw==
-X-Gm-Message-State: APjAAAUrgqqXjQFfjvkKUtrAFwjV53Lhl4bd6X/3VYgljYfrBRYWE0tz
-        eBzdXud6WRC3d+fauWb9ZQIm+gzVgVJNhc4Glwd1aRPhAeo=
-X-Google-Smtp-Source: APXvYqzT4cmcRSDdeDHW9AaSxk6Y6BgQ1h4b2jWej/Uuk9wxv1qZFa5nMO4xL5BbZ4DoqS0rAqEMZmS6f+9SegZrRyk=
-X-Received: by 2002:a5d:9c4c:: with SMTP id 12mr2054950iof.276.1569852758297;
- Mon, 30 Sep 2019 07:12:38 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=U7Vi6scFOY6hhqVA0cemS3cQSEC3brtnkAsLJZs+8us=;
+        b=OLaBSwpeMj4kGzVGTju4jSePbMtYKtGjBlVvPmp0BPajpGdYGPkipH/UoA1GYbEqgh
+         +L1h6NyNHyFarJyNRG5BhM58QBbcaQsOh0Tdmpd5u23R77TgpFZxyZMfy2R4MLErsD1Y
+         3iGFP9EKv9G+xFt3dtUUyc8raJuUsKNb8Zom94Edo475ZMjDSEbb3l0wfe+00546EhVn
+         zke5Y83X1Mm5wrYvjwzJ+QqsLzs4l5hG/PuGGEcnTmdW3Dj9aOO3IIwULPFCekydrTNG
+         chI536ln9RkypJigxxE3FAplOaD2CZhc77n4K4Q3VI/zKvNsRLgSrL/lYDSCasV1zKXw
+         fYdA==
+X-Gm-Message-State: APjAAAVo03c4SHNFCrQE/aYMKcZEKCYj8CrQh4+inGoekWvPYxiJMyrW
+        DUPGTiLvULYvKJyInO4BB5fVbp10OlQXTRD6lPl/7o15lDoKfV3GBlYcsKyEK2IVcR7WFwMfFRd
+        jyH5Ttw7xOxGMOBYTx/kinqcf
+X-Received: by 2002:a5d:4a52:: with SMTP id v18mr12746639wrs.368.1569852759891;
+        Mon, 30 Sep 2019 07:12:39 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyuBZfGK6lRi6GwfXTgTA8HHpv68vhrm6ZMForGt3w+ZiwRNEldTnLZexHFnR0clNvNiDrJgw==
+X-Received: by 2002:a5d:4a52:: with SMTP id v18mr12746617wrs.368.1569852759679;
+        Mon, 30 Sep 2019 07:12:39 -0700 (PDT)
+Received: from steredhat (host174-200-dynamic.52-79-r.retail.telecomitalia.it. [79.52.200.174])
+        by smtp.gmail.com with ESMTPSA id u11sm14385252wmd.32.2019.09.30.07.12.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 07:12:38 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 16:12:36 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Matias Ezequiel Vara Larsen <matiasevara@gmail.com>
+Cc:     stefanha@redhat.com, davem@davemloft.net, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, eric.dumazet@gmail.com
+Subject: Re: [PATCH v2] vsock/virtio: add support for MSG_PEEK
+Message-ID: <20190930141236.lp3nroal33k63vlg@steredhat>
+References: <1569522214-28223-1-git-send-email-matiasevara@gmail.com>
+ <1569602663-16815-1-git-send-email-matiasevara@gmail.com>
 MIME-Version: 1.0
-References: <20190510194229.20628-1-aford173@gmail.com> <af325707-3e42-493d-e858-77878ef06138@ti.com>
- <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
- <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com> <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
- <845055e2-8182-de74-2077-629fdf50ac6c@ti.com> <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
- <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com> <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
- <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com> <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
- <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com> <23eba53a-9304-2ceb-d97e-01891ec0b3ed@ti.com>
- <cb028b1e-05ca-9b22-be5d-c63f5fd56cc4@ti.com> <F3335195-6EB7-4D44-B884-2F29D9238011@goldelico.com>
- <CAHCN7xL9bFxO=2i1DzmRj6A3XwUNdt=DZeJ2a0EZ0f9gcFTy6g@mail.gmail.com> <CAHCN7x+vCfPTRE+zzYUwAXdbBzRotTP2hSOgsHB0FdgBhZV5zA@mail.gmail.com>
-In-Reply-To: <CAHCN7x+vCfPTRE+zzYUwAXdbBzRotTP2hSOgsHB0FdgBhZV5zA@mail.gmail.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Mon, 30 Sep 2019 09:12:26 -0500
-Message-ID: <CAHCN7xJDV=R9Ysjhff7=mEXdciwPP_5LQbHwaUT8KvhSkLKw8A@mail.gmail.com>
-Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to dts
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Tero Kristo <t-kristo@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1569602663-16815-1-git-send-email-matiasevara@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 9:04 AM Adam Ford <aford173@gmail.com> wrote:
->
-> On Mon, Sep 30, 2019 at 8:54 AM Adam Ford <aford173@gmail.com> wrote:
-> >
-> > On Mon, Sep 30, 2019 at 8:39 AM H. Nikolaus Schaller <hns@goldelico.com> wrote:
-> > >
-> > >
-> > > > Am 30.09.2019 um 10:53 schrieb Tero Kristo <t-kristo@ti.com>:
-> > > >
-> > > > The best action here is probably to drop the max-div value for this clock to 16. Can someone check this with their display setup and see what happens? Attached patch should do the trick.
-> > >
-> > > I have checked on GTA04 and OpenPandora (DM3730 resp. OMAP3430) and did not notice a negative effect.
-> > >
-> > > (Well, we never see the problem that is discussed here and have built with CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK=0).
-> >
-> > I have never been able to use CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK=0, but
-> > I assume it's either a function of pck or a combination of pck with
-> > the resolution.
-> >
-> > Based on Tomi's comment, I assume he's working on the following.  Can
-> > you also try:
-> >
-> > diff --git a/drivers/gpu/drm/omapdrm/dss/dss.c
-> > b/drivers/gpu/drm/omapdrm/dss/dss.c
-> > index 5711b7a720e6..5e584f32ea6a 100644
-> > --- a/drivers/gpu/drm/omapdrm/dss/dss.c
-> > +++ b/drivers/gpu/drm/omapdrm/dss/dss.c
-> > @@ -1090,7 +1090,7 @@ static const struct dss_features omap34xx_dss_feats = {
-> >
-> >  static const struct dss_features omap3630_dss_feats = {
-> >         .model                  =       DSS_MODEL_OMAP3,
-> > -       .fck_div_max            =       32,
-> > +       .fck_div_max            =       16,
-> >         .fck_freq_max           =       173000000,
-> >         .dss_fck_multiplier     =       1,
-> >         .parent_clk_name        =       "dpll4_ck",
-> >
-> >
-> > Hopefully it doesn't break the 3630 for you, but it fixed my issue
-> > with no back trace:
-> >
-> > [    9.915588] DSS: set fck to 54000000
-> > [    9.915618] DISPC: lck = 54000000 (1)
-> > [    9.915649] DISPC: pck = 9000000 (6)
-> > [    9.917633] DISPC: channel 0 xres 480 yres 272
-> > [    9.917663] DISPC: pck 9000000
-> >
-> > I do wonder, however if there is a divider that is higher than 16, but
-> > lower than 32.
-> > I was able to run fck at 36MHz before with divide by 4 to 9MHz, so I
-> > am hoping that by running at 54MHz / 6 doesn't draw more power.  I was
-> > reading through the datasheet, but I could not find any reference to
-> > the max divider.
-> >
->
-> For run, I tested a max divider of 27, and I was able to get it
-> functional with a slower fck
->
-> [    9.939056] DSS: set fck to 36000000
-> [    9.939086] DISPC: lck = 36000000 (1)
-> [    9.939086] DISPC: pck = 9000000 (4)
-> [    9.941314] DISPC: channel 0 xres 480 yres 272
-> [    9.941314] DISPC: pck 9000000
-> [    9.941314] DISPC: hsync_len 42 hfp 3 hbp 2 vsw 11 vfp 2 vbp 3
-> [    9.941314] DISPC: vsync_level 1 hsync_level 1 data_pclk_edge 1
-> de_level 1 sync_pclk_edge -1
-> [    9.941345] DISPC: hsync 17077Hz, vsync 59Hz
->
->
-> I don't know the implications, so if the people from TI say stick with
-> 16, I'm fine with that, but at least there is some evidence that it
-> can be higher than 16, but lower than 32.
->
+Hi Matias,
 
-Sorry for all the spam, but I moved both of them to 31 from 32, and it
-also seems to work successfully at 31.
+On Fri, Sep 27, 2019 at 04:44:23PM +0000, Matias Ezequiel Vara Larsen wrote:
+> This patch adds support for MSG_PEEK. In such a case, packets are not
+> removed from the rx_queue and credit updates are not sent.
+> 
+> Signed-off-by: Matias Ezequiel Vara Larsen <matiasevara@gmail.com>
+> ---
+>  net/vmw_vsock/virtio_transport_common.c | 55 +++++++++++++++++++++++++++++++--
+>  1 file changed, 52 insertions(+), 3 deletions(-)
 
-[   26.923004] DSS: set fck to 36000000
-[   26.923034] DISPC: lck = 36000000 (1)
-[   26.923034] DISPC: pck = 9000000 (4)
-[   26.925048] DISPC: channel 0 xres 480 yres 272
-[   26.925048] DISPC: pck 9000000
-[   26.925048] DISPC: hsync_len 42 hfp 3 hbp 2 vsw 11 vfp 2 vbp 3
-[   26.925079] DISPC: vsync_level 1 hsync_level 1 data_pclk_edge 1
-de_level 1 sync_pclk_edge -1
-[   26.925079] DISPC: hsync 17077Hz, vsync 59Hz
-[   27.384613] DISPC: dispc_runtime_put
+The patch LGTM. As David pointed out, this patch should go into net-next.
+Since now net-next is open, you can resend with net-next tag [1] and
+with:
 
-Is it possible to use 31?
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+Tested-by: Stefano Garzarella <sgarzare@redhat.com>
 
-adam
+Thanks,
+Stefano
 
-> adam
->
-> > adam
-> > >
-> > > BR,
-> > > Nikolaus
-> > >
+[1] https://www.kernel.org/doc/Documentation/networking/netdev-FAQ.txt
+> 
+> diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+> index 94cc0fa..cf15751 100644
+> --- a/net/vmw_vsock/virtio_transport_common.c
+> +++ b/net/vmw_vsock/virtio_transport_common.c
+> @@ -264,6 +264,55 @@ static int virtio_transport_send_credit_update(struct vsock_sock *vsk,
+>  }
+>  
+>  static ssize_t
+> +virtio_transport_stream_do_peek(struct vsock_sock *vsk,
+> +				struct msghdr *msg,
+> +				size_t len)
+> +{
+> +	struct virtio_vsock_sock *vvs = vsk->trans;
+> +	struct virtio_vsock_pkt *pkt;
+> +	size_t bytes, total = 0, off;
+> +	int err = -EFAULT;
+> +
+> +	spin_lock_bh(&vvs->rx_lock);
+> +
+> +	list_for_each_entry(pkt, &vvs->rx_queue, list) {
+> +		off = pkt->off;
+> +
+> +		if (total == len)
+> +			break;
+> +
+> +		while (total < len && off < pkt->len) {
+> +			bytes = len - total;
+> +			if (bytes > pkt->len - off)
+> +				bytes = pkt->len - off;
+> +
+> +			/* sk_lock is held by caller so no one else can dequeue.
+> +			 * Unlock rx_lock since memcpy_to_msg() may sleep.
+> +			 */
+> +			spin_unlock_bh(&vvs->rx_lock);
+> +
+> +			err = memcpy_to_msg(msg, pkt->buf + off, bytes);
+> +			if (err)
+> +				goto out;
+> +
+> +			spin_lock_bh(&vvs->rx_lock);
+> +
+> +			total += bytes;
+> +			off += bytes;
+> +		}
+> +	}
+> +
+> +	spin_unlock_bh(&vvs->rx_lock);
+> +
+> +	return total;
+> +
+> +out:
+> +	if (total)
+> +		err = total;
+> +	return err;
+> +}
+> +
+> +static ssize_t
+>  virtio_transport_stream_do_dequeue(struct vsock_sock *vsk,
+>  				   struct msghdr *msg,
+>  				   size_t len)
+> @@ -330,9 +379,9 @@ virtio_transport_stream_dequeue(struct vsock_sock *vsk,
+>  				size_t len, int flags)
+>  {
+>  	if (flags & MSG_PEEK)
+> -		return -EOPNOTSUPP;
+> -
+> -	return virtio_transport_stream_do_dequeue(vsk, msg, len);
+> +		return virtio_transport_stream_do_peek(vsk, msg, len);
+> +	else
+> +		return virtio_transport_stream_do_dequeue(vsk, msg, len);
+>  }
+>  EXPORT_SYMBOL_GPL(virtio_transport_stream_dequeue);
+>  
+> -- 
+> 2.7.4
+> 
+
+-- 
