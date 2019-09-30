@@ -2,297 +2,169 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F78C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA899C4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3B4220679
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:14:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569831300;
-	bh=cel9jAqvL3iaHblZk8ZTRrE2O+n7vZEusm2pERmpmC8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QEvbwfzDgZJLLrXIV4mwVhcaLLB/OGo9bDNTECiFz7aKoOhFI3LJ0FR0jcjBjoKL5
-	 bLGdX3KTvebDk6meu1/XFnJC0NaMOVpflZvoz85svWW2cA8ypaLtyTqhUq3t+omoXh
-	 Hr/aVCwttPrzTQH5Mg1Zdl8114wypoGnlKhnbNuQ=
+	by mail.kernel.org (Postfix) with ESMTP id 81883206BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:17:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="PpgsICO8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729970AbfI3IO7 (ORCPT
+        id S1729944AbfI3IQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 04:14:59 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39313 "EHLO
+        Mon, 30 Sep 2019 04:16:59 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42441 "EHLO
         mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfI3IO7 (ORCPT
+        with ESMTP id S1729232AbfI3IQ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 04:14:59 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r3so10120853wrj.6;
-        Mon, 30 Sep 2019 01:14:56 -0700 (PDT)
+        Mon, 30 Sep 2019 04:16:59 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n14so10091789wrw.9
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 01:16:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=oGL+KVpjDYu5JQqL9adGqVt6dshMee4Ju5jCrtoVE20=;
+        b=PpgsICO8qyiHSSGG9UvsjooaS40NckOJtNzU0O+7IrnF6iGYVMsxbef57nfR8O0rnE
+         NGjdQ2/9pO/WhRxqryFEXZzM32e+TxTfVJo6VJnuvvnZG4/AH/7mjQlo4Le79QOyh0HD
+         nq3/jVYiXFh6/ExBeKYLbQ0E8DIHyNnQjwUar914EELH8gqOE6VQ0IGzh4uKw2IWzcfC
+         QxLQ0PoKTf3IxKUMoaZshsWR3mG4b1QYLXKwwTny5/Z5R6ido9/p10qkugrLb2wCgpJD
+         ilJvnfg6A+OmMegUwcGHwrVl+AZkVuvtinnS3HP3AD1tAwrqvujBSmw2jMd9P6ru31P+
+         vcAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3CTmC1GsXW7IrK97J31Tmt/kV7wvmrOZDcAwkkYqHXE=;
-        b=rKxBO4ANQyjrCebLxTCoUiINFwdhJyfZXJBgm5OYg2r+uPGFcyfOdZRCDRAQUVdEco
-         kwdvCdz4DpN7UKSFyEVNJ6Bj9VIPgI4p8HNRLb2NEULOH3W+zW9TRmldDjAtsTBLqbKl
-         trTYuv+qEJbG9MwV2nb7GZMcxGEbfY4i/n+EnMoFx5orTsJOyQhMfxhHaEPZACqXD3mq
-         qzfm96/CyUKoCW3QTDeIt9iwha3LYV+Ls6j+LqW7YX5MzR8ZRCa6nkC1lVH8oYJ6iHuJ
-         X6Uy1y9A/wbcR+8R4OILpWeQWsg0CqS1JHZmK4MVeiOdsqb8PuDgGXoQnmrhF2ZsjojC
-         fYWA==
-X-Gm-Message-State: APjAAAXXH5e0CUHf2Z/qAmIA6ZfUnKA/jopA5cIS9WjmMqlse8/hGzn4
-        mevDmdNeT8VIxfGC4bTioC0=
-X-Google-Smtp-Source: APXvYqyf7LPtms1O8Jjd41VwHzPvoRICODDhTRieA6rYEiMiQODMkzZphFr+TqX/l6nwc1iXKYA+Wg==
-X-Received: by 2002:adf:ec44:: with SMTP id w4mr11667063wrn.251.1569831295653;
-        Mon, 30 Sep 2019 01:14:55 -0700 (PDT)
-Received: from pi3 ([194.230.155.145])
-        by smtp.googlemail.com with ESMTPSA id x2sm15727586wrn.81.2019.09.30.01.14.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 01:14:54 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 10:14:52 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        Sylwester Nawrocki <snawrocki@kernel.org>
-Subject: Re: [PATCH v4 1/8] dt-bindings: timer: Convert Exynos MCT bindings
- to json-schema
-Message-ID: <20190930081452.GB23709@pi3>
-References: <20190923161411.9236-1-krzk@kernel.org>
- <20190927170701.GA27397@bogus>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=oGL+KVpjDYu5JQqL9adGqVt6dshMee4Ju5jCrtoVE20=;
+        b=JJ3Xz3WVPXfUmXra/AY025d77EiG1ChAUydaYXGY208t0/CuJ20HSt9Bpo1RxXEABH
+         2lY5ELWNndJUkKBOdfqFhY060dwWfJOjJa4Bs3WcFTRdCAt2rgFTnr+UL7fbGz95pKmi
+         zU+GeJZJunEWmjEppMa+HxFX/8VV586TZ/P2jdcbxsMSjPb3atziBJgKmR7TfWG57+QD
+         s2QaF8xQQ6qmRJHCR6Ke7Dl9E6DfHYti32MQmWdfsjFrglnx9U6og4VhC3/wdbZxHoMY
+         UPyYRoyyDafAZyHmPRrYTehVvWa2DpJCHxkA7zRrSG40DjzY6Q2HO9lXkqqovOJGSCy2
+         N57w==
+X-Gm-Message-State: APjAAAVOyn1c4PPO0txFIkhbYzUSoqA8QxPBz2GyOThhuSNEDqNCqhwt
+        e8taVtSniP0TPL4pWySD4aoP0G7mzoCv7w==
+X-Google-Smtp-Source: APXvYqyOSFZeRSc0p67LRKfAeql49g9aRTQp+3+UZeHbD7Q8eGLRjsxpOu0v1xS/1qReu0oVY7EY4g==
+X-Received: by 2002:adf:ee10:: with SMTP id y16mr11700508wrn.47.1569831415148;
+        Mon, 30 Sep 2019 01:16:55 -0700 (PDT)
+Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id a10sm11923438wrm.52.2019.09.30.01.16.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 30 Sep 2019 01:16:54 -0700 (PDT)
+Subject: Re: [PATCH] watchdog: meson: Fix the wrong value of left time
+To:     Xingyu Chen <xingyu.chen@amlogic.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Kevin Hilman <khilman@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Qianggui Song <qianggui.song@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        linux-watchdog@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1569754429-17287-1-git-send-email-xingyu.chen@amlogic.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ mQENBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAG0KE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT6JATsEEwEKACUC
+ GyMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheABQJXDO2CAhkBAAoJEBaat7Gkz/iubGIH/iyk
+ RqvgB62oKOFlgOTYCMkYpm2aAOZZLf6VKHKc7DoVwuUkjHfIRXdslbrxi4pk5VKU6ZP9AKsN
+ NtMZntB8WrBTtkAZfZbTF7850uwd3eU5cN/7N1Q6g0JQihE7w4GlIkEpQ8vwSg5W7hkx3yQ6
+ 2YzrUZh/b7QThXbNZ7xOeSEms014QXazx8+txR7jrGF3dYxBsCkotO/8DNtZ1R+aUvRfpKg5
+ ZgABTC0LmAQnuUUf2PHcKFAHZo5KrdO+tyfL+LgTUXIXkK+tenkLsAJ0cagz1EZ5gntuheLD
+ YJuzS4zN+1Asmb9kVKxhjSQOcIh6g2tw7vaYJgL/OzJtZi6JlIW5AQ0ETVkGzwEIALyKDN/O
+ GURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYpQTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXM
+ coJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hi
+ SvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY4yG6xI99NIPEVE9lNBXBKIlewIyVlkOa
+ YvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoMMtsyw18YoX9BqMFInxqYQQ3j/HpVgTSv
+ mo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUXoUk33HEAEQEAAYkBHwQYAQIACQUCTVkG
+ zwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfnM7IbRuiSZS1unlySUVYu3SD6YBYnNi3G
+ 5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa33eDIHu/zr1HMKErm+2SD6PO9umRef8V8
+ 2o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCSKmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+
+ RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJ
+ C3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTTQbM0WUIBIcGmq38+OgUsMYu4NzLu7uZF
+ Acmp6h8guQINBFYnf6QBEADQ+wBYa+X2n/xIQz/RUoGHf84Jm+yTqRT43t7sO48/cBW9vAn9
+ GNwnJ3HRJWKATW0ZXrCr40ES/JqM1fUTfiFDB3VMdWpEfwOAT1zXS+0rX8yljgsWR1UvqyEP
+ 3xN0M/40Zk+rdmZKaZS8VQaXbveaiWMEmY7sBV3QvgOzB7UF2It1HwoCon5Y+PvyE3CguhBd
+ 9iq5iEampkMIkbA3FFCpQFI5Ai3BywkLzbA3ZtnMXR8Qt9gFZtyXvFQrB+/6hDzEPnBGZOOx
+ zkd/iIX59SxBuS38LMlhPPycbFNmtauOC0DNpXCv9ACgC9tFw3exER/xQgSpDVc4vrL2Cacr
+ wmQp1k9E0W+9pk/l8S1jcHx03hgCxPtQLOIyEu9iIJb27TjcXNjiInd7Uea195NldIrndD+x
+ 58/yU3X70qVY+eWbqzpdlwF1KRm6uV0ZOQhEhbi0FfKKgsYFgBIBchGqSOBsCbL35f9hK/JC
+ 6LnGDtSHeJs+jd9/qJj4WqF3x8i0sncQ/gszSajdhnWrxraG3b7/9ldMLpKo/OoihfLaCxtv
+ xYmtw8TGhlMaiOxjDrohmY1z7f3rf6njskoIXUO0nabun1nPAiV1dpjleg60s3OmVQeEpr3a
+ K7gR1ljkemJzM9NUoRROPaT7nMlNYQL+IwuthJd6XQqwzp1jRTGG26J97wARAQABiQM+BBgB
+ AgAJBQJWJ3+kAhsCAikJEBaat7Gkz/iuwV0gBBkBAgAGBQJWJ3+kAAoJEHfc29rIyEnRk6MQ
+ AJDo0nxsadLpYB26FALZsWlN74rnFXth5dQVQ7SkipmyFWZhFL8fQ9OiIoxWhM6rSg9+C1w+
+ n45eByMg2b8H3mmQmyWztdI95OxSREKwbaXVapCcZnv52JRjlc3DoiiHqTZML5x1Z7lQ1T3F
+ 8o9sKrbFO1WQw1+Nc91+MU0MGN0jtfZ0Tvn/ouEZrSXCE4K3oDGtj3AdC764yZVq6CPigCgs
+ 6Ex80k6QlzCdVP3RKsnPO2xQXXPgyJPJlpD8bHHHW7OLfoR9DaBNympfcbQJeekQrTvyoASw
+ EOTPKE6CVWrcQIztUp0WFTdRGgMK0cZB3Xfe6sOp24PQTHAKGtjTHNP/THomkH24Fum9K3iM
+ /4Wh4V2eqGEgpdeSp5K+LdaNyNgaqzMOtt4HYk86LYLSHfFXywdlbGrY9+TqiJ+ZVW4trmui
+ NIJCOku8SYansq34QzYM0x3UFRwff+45zNBEVzctSnremg1mVgrzOfXU8rt+4N1b2MxorPF8
+ 619aCwVP7U16qNSBaqiAJr4e5SNEnoAq18+1Gp8QsFG0ARY8xp+qaKBByWES7lRi3QbqAKZf
+ yOHS6gmYo9gBmuAhc65/VtHMJtxwjpUeN4Bcs9HUpDMDVHdfeRa73wM+wY5potfQ5zkSp0Jp
+ bxnv/cRBH6+c43stTffprd//4Hgz+nJcCgZKtCYIAPkUxABC85ID2CidzbraErVACmRoizhT
+ KR2OiqSLW2x4xdmSiFNcIWkWJB6Qdri0Fzs2dHe8etD1HYaht1ZhZ810s7QOL7JwypO8dscN
+ KTEkyoTGn6cWj0CX+PeP4xp8AR8ot4d0BhtUY34UPzjE1/xyrQFAdnLd0PP4wXxdIUuRs0+n
+ WLY9Aou/vC1LAdlaGsoTVzJ2gX4fkKQIWhX0WVk41BSFeDKQ3RQ2pnuzwedLO94Bf6X0G48O
+ VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <06f3e719-a6e1-ef70-0c5c-1a07f809905a@baylibre.com>
+Date:   Mon, 30 Sep 2019 10:16:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <1569754429-17287-1-git-send-email-xingyu.chen@amlogic.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190927170701.GA27397@bogus>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 12:07:01PM -0500, Rob Herring wrote:
-> On Mon, Sep 23, 2019 at 06:14:04PM +0200, Krzysztof Kozlowski wrote:
-> > Convert Samsung Exynos Soc Multi Core Timer bindings to DT schema format
-> > using json-schema.
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > 
-> > ---
-> > 
-> > Changes since v3:
-> > 1. Use interrupts-extended instead of interrupts-map.
+On 29/09/2019 12:53, Xingyu Chen wrote:
+> The left time value is wrong when we get it by sysfs. The left time value
+> should be equal to preset timeout value minus elapsed time value. According
+> to the Meson-GXB/GXL datasheets which can be found at [0], the timeout value
+> is saved to BIT[0-15] of the WATCHDOG_TCNT, and elapsed time value is saved
+> to BIT[16-31] of the WATCHDOG_TCNT.
 > 
-> This is a binding change. You should mention it in the commit.
-
-The interrupts-map was never a part of binding. It was only mentioned in
-the example to show how to route interrupts to different controllers.
-
-The bindings are not changed. Only example.
-
+> [0]: http://linux-meson.com
 > 
-> > 
-> > Changes since v1:
-> > 1. Indent example with four spaces (more readable),
-> > 2. Rename nodes in example to timer,
-> > 3. Remove mct-map subnode.
-> > ---
-> >  .../bindings/timer/samsung,exynos4210-mct.txt |  88 ------------
-> >  .../timer/samsung,exynos4210-mct.yaml         | 125 ++++++++++++++++++
-> >  2 files changed, 125 insertions(+), 88 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt
-> >  create mode 100644 Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt b/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt
-> > deleted file mode 100644
-> > index 8f78640ad64c..000000000000
-> > --- a/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt
-> > +++ /dev/null
-> > @@ -1,88 +0,0 @@
-> > -Samsung's Multi Core Timer (MCT)
-> > -
-> > -The Samsung's Multi Core Timer (MCT) module includes two main blocks, the
-> > -global timer and CPU local timers. The global timer is a 64-bit free running
-> > -up-counter and can generate 4 interrupts when the counter reaches one of the
-> > -four preset counter values. The CPU local timers are 32-bit free running
-> > -down-counters and generate an interrupt when the counter expires. There is
-> > -one CPU local timer instantiated in MCT for every CPU in the system.
-> > -
-> > -Required properties:
-> > -
-> > -- compatible: should be "samsung,exynos4210-mct".
-> > -  (a) "samsung,exynos4210-mct", for mct compatible with Exynos4210 mct.
-> > -  (b) "samsung,exynos4412-mct", for mct compatible with Exynos4412 mct.
-> > -
-> > -- reg: base address of the mct controller and length of the address space
-> > -  it occupies.
-> > -
-> > -- interrupts: the list of interrupts generated by the controller. The following
-> > -  should be the order of the interrupts specified. The local timer interrupts
-> > -  should be specified after the four global timer interrupts have been
-> > -  specified.
-> > -
-> > -	0: Global Timer Interrupt 0
-> > -	1: Global Timer Interrupt 1
-> > -	2: Global Timer Interrupt 2
-> > -	3: Global Timer Interrupt 3
-> > -	4: Local Timer Interrupt 0
-> > -	5: Local Timer Interrupt 1
-> > -	6: ..
-> > -	7: ..
-> > -	i: Local Timer Interrupt n
-> > -
-> > -  For MCT block that uses a per-processor interrupt for local timers, such
-> > -  as ones compatible with "samsung,exynos4412-mct", only one local timer
-> > -  interrupt might be specified, meaning that all local timers use the same
-> > -  per processor interrupt.
-> > -
-> > -Example 1: In this example, the IP contains two local timers, using separate
-> > -	   interrupts, so two local timer interrupts have been specified,
-> > -	   in addition to four global timer interrupts.
-> > -
-> > -	mct@10050000 {
-> > -		compatible = "samsung,exynos4210-mct";
-> > -		reg = <0x10050000 0x800>;
-> > -		interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
-> > -			     <0 42 0>, <0 48 0>;
-> > -	};
-> > -
-> > -Example 2: In this example, the timer interrupts are connected to two separate
-> > -	   interrupt controllers. Hence, an interrupt-map is created to map
-> > -	   the interrupts to the respective interrupt controllers.
-> > -
-> > -	mct@101c0000 {
-> > -		compatible = "samsung,exynos4210-mct";
-> > -		reg = <0x101C0000 0x800>;
-> > -		interrupt-parent = <&mct_map>;
-> > -		interrupts = <0>, <1>, <2>, <3>, <4>, <5>;
-> > -
-> > -		mct_map: mct-map {
-> > -			#interrupt-cells = <1>;
-> > -			#address-cells = <0>;
-> > -			#size-cells = <0>;
-> > -			interrupt-map = <0 &gic 0 57 0>,
-> > -					<1 &gic 0 69 0>,
-> > -					<2 &combiner 12 6>,
-> > -					<3 &combiner 12 7>,
-> > -					<4 &gic 0 42 0>,
-> > -					<5 &gic 0 48 0>;
-> > -		};
-> > -	};
-> > -
-> > -Example 3: In this example, the IP contains four local timers, but using
-> > -	   a per-processor interrupt to handle them. Either all the local
-> > -	   timer interrupts can be specified, with the same interrupt specifier
-> > -	   value or just the first one.
-> > -
-> > -	mct@10050000 {
-> > -		compatible = "samsung,exynos4412-mct";
-> > -		reg = <0x10050000 0x800>;
-> > -
-> > -		/* Both ways are possible in this case. Either: */
-> > -		interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
-> > -			     <0 42 0>;
-> > -		/* or: */
-> > -		interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
-> > -			     <0 42 0>, <0 42 0>, <0 42 0>, <0 42 0>;
-> > -	};
-> > diff --git a/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml b/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml
-> > new file mode 100644
-> > index 000000000000..bff3f54a398f
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml
-> > @@ -0,0 +1,125 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/timer/samsung,exynos4210-mct.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Samsung Exynos SoC Multi Core Timer (MCT)
-> > +
-> > +maintainers:
-> > +  - Krzysztof Kozlowski <krzk@kernel.org>
-> > +
-> > +description: |+
-> > +  The Samsung's Multi Core Timer (MCT) module includes two main blocks, the
-> > +  global timer and CPU local timers. The global timer is a 64-bit free running
-> > +  up-counter and can generate 4 interrupts when the counter reaches one of the
-> > +  four preset counter values. The CPU local timers are 32-bit free running
-> > +  down-counters and generate an interrupt when the counter expires. There is
-> > +  one CPU local timer instantiated in MCT for every CPU in the system.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - samsung,exynos4210-mct
-> > +      - samsung,exynos4412-mct
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    description: |
-> > +      Interrupts should be put in specific order. This is, the local timer
-> > +      interrupts should be specified after the four global timer interrupts
-> > +      have been specified:
-> > +      0: Global Timer Interrupt 0
-> > +      1: Global Timer Interrupt 1
-> > +      2: Global Timer Interrupt 2
-> > +      3: Global Timer Interrupt 3
-> > +      4: Local Timer Interrupt 0
-> > +      5: Local Timer Interrupt 1
-> > +      6: ..
-> > +      7: ..
-> > +      i: Local Timer Interrupt n
-> > +      For MCT block that uses a per-processor interrupt for local timers, such
-> > +      as ones compatible with "samsung,exynos4412-mct", only one local timer
-> > +      interrupt might be specified, meaning that all local timers use the same
-> > +      per processor interrupt.
-> > +    minItems: 5               # 4 Global + 1 local
-> > +    maxItems: 20              # 4 Global + 16 local
-> > +
-> > +  interrupts-extended:
+> Fixes: 683fa50f0e18 ("watchdog: Add Meson GXBB Watchdog Driver")
+> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
+> ---
+>  drivers/watchdog/meson_gxbb_wdt.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> No need for this. Just document 'interrupts' and the tooling takes care 
-> of supporting 'interrupts-extended' too.
-
-OK.
-
+> diff --git a/drivers/watchdog/meson_gxbb_wdt.c b/drivers/watchdog/meson_gxbb_wdt.c
+> index d17c1a6..5a9ca10 100644
+> --- a/drivers/watchdog/meson_gxbb_wdt.c
+> +++ b/drivers/watchdog/meson_gxbb_wdt.c
+> @@ -89,8 +89,8 @@ static unsigned int meson_gxbb_wdt_get_timeleft(struct watchdog_device *wdt_dev)
+>  
+>  	reg = readl(data->reg_base + GXBB_WDT_TCNT_REG);
+>  
+> -	return ((reg >> GXBB_WDT_TCNT_CNT_SHIFT) -
+> -		(reg & GXBB_WDT_TCNT_SETUP_MASK)) / 1000;
+> +	return ((reg & GXBB_WDT_TCNT_SETUP_MASK) -
+> +		(reg >> GXBB_WDT_TCNT_CNT_SHIFT)) / 1000;
+>  }
+>  
+>  static const struct watchdog_ops meson_gxbb_wdt_ops = {
 > 
-> > +    description: |
-> > +      If interrupts are coming from different controllers, this property
-> > +      can be used instead of regular "interrupts" property.
-> > +      The format is exactly the same as with "interrupts".
-> > +      Interrupts should be put in specific order. This is, the local timer
-> > +    minItems: 5               # 4 Global + 1 local
-> > +    maxItems: 20              # 4 Global + 16 local
-> > +
-> > +required:
-> > +  - compatible
-> > +  - interrupts
-> > +  - reg
-> > +
-> > +allOf:
-> > +  - if:
-> > +      not:
-> > +        required:
-> > +          - interrupts
-> > +    then:
-> > +      required:
-> > +        - interrupts-extended
-> 
-> And this is taken care of too.
 
-Sure, thanks!
-
-Best regards,
-Krzysztof
-
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
