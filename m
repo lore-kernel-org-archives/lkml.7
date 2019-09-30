@@ -4,24 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD8EC35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD478C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C1A2218DE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:37:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF0E21906
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:37:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731830AbfI3OhG (ORCPT
+        id S1731807AbfI3OhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 10:37:06 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3194 "EHLO huawei.com"
+        Mon, 30 Sep 2019 10:37:03 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:58478 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731803AbfI3OhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 10:37:04 -0400
+        id S1730780AbfI3OhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 10:37:01 -0400
 Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 324169B4856EE48EF227;
+        by Forcepoint Email with ESMTP id 63F89242D57370195736;
         Mon, 30 Sep 2019 22:36:58 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.75) by
  DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
@@ -35,9 +35,9 @@ CC:     <shameerali.kolothum.thodi@huawei.com>,
         <linux-kernel@vger.kernel.org>, <iommu@lists.linux-foundation.org>,
         <rjw@rjwysocki.net>, <lenb@kernel.org>, <nleeder@codeaurora.org>,
         <linuxarm@huawei.com>, John Garry <john.garry@huawei.com>
-Subject: [RFC PATCH 5/6] perf/smmuv3: Match implementation options based on parent SMMU IIDR
-Date:   Mon, 30 Sep 2019 22:33:50 +0800
-Message-ID: <1569854031-237636-6-git-send-email-john.garry@huawei.com>
+Subject: [RFC PATCH 3/6] perf/smmuv3: Retrieve parent SMMUv3 IIDR
+Date:   Mon, 30 Sep 2019 22:33:48 +0800
+Message-ID: <1569854031-237636-4-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1569854031-237636-1-git-send-email-john.garry@huawei.com>
 References: <1569854031-237636-1-git-send-email-john.garry@huawei.com>
@@ -50,48 +50,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently we match the implementation options based on the ACPI PLATFORM
-OEM ID.
-
-Since we can now match based on the parent SMMUv3 IIDR, switch to this
-method.
+To support IMP DEF events per PMCG, retrieve the parent SMMUv3 IIDR. This
+will be used as a lookup for the IMP DEF events supported, under the
+assumption that a PMCG implementation has the same uniqueness as the
+parent SMMUv3. In this, we assume that any PMCG associated with the same
+SMMUv3 will have the same IMP DEF events - otherwise, some other
+secondary matching would need to be done.
 
 Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- drivers/perf/arm_smmuv3_pmu.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+ drivers/perf/arm_smmuv3_pmu.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
-index 11f28ba5fae0..33d1379ae525 100644
+index da71c741cb46..f702898c695d 100644
 --- a/drivers/perf/arm_smmuv3_pmu.c
 +++ b/drivers/perf/arm_smmuv3_pmu.c
-@@ -739,14 +739,10 @@ static void smmu_pmu_reset(struct smmu_pmu *smmu_pmu)
- 		       smmu_pmu->reloc_base + SMMU_PMCG_OVSCLR0);
- }
+@@ -115,6 +115,7 @@ struct smmu_pmu {
+ 	bool global_filter;
+ 	u32 global_filter_span;
+ 	u32 global_filter_sid;
++	u32 parent_iidr;
+ };
  
--static void smmu_pmu_get_acpi_options(struct smmu_pmu *smmu_pmu)
-+static void smmu_pmu_get_implementation_options(struct smmu_pmu *smmu_pmu)
- {
--	u32 model;
--
--	model = *(u32 *)dev_get_platdata(smmu_pmu->dev);
--
--	switch (model) {
--	case IORT_SMMU_V3_PMCG_HISI_HIP08:
-+	switch (smmu_pmu->parent_iidr) {
-+	case PARENT_SMMU_IIDR_HISI_HIP08:
- 		/* HiSilicon Erratum 162001800 */
- 		smmu_pmu->options |= SMMU_PMCG_EVCNTR_RDONLY;
- 		break;
-@@ -844,7 +840,7 @@ static int smmu_pmu_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
+ #define to_smmu_pmu(p) (container_of(p, struct smmu_pmu, pmu))
+@@ -551,6 +552,11 @@ static const struct attribute_group *smmu_pmu_attr_grps[] = {
+ 	NULL
+ };
  
--	smmu_pmu_get_acpi_options(smmu_pmu);
-+	smmu_pmu_get_implementation_options(smmu_pmu);
++static const struct attribute_group **smmu_pmu_lookup_attr_groups(u32 parent_smmu_iidr)
++{
++	return smmu_pmu_attr_grps;
++}
++
+ /*
+  * Generic device handlers
+  */
+@@ -706,11 +712,21 @@ static int smmu_pmu_probe(struct platform_device *pdev)
+ 	int irq, err;
+ 	char *name;
+ 	struct device *dev = &pdev->dev;
++	struct device *parent = dev->parent;
  
- 	/* Pick one CPU to be the preferred one to use */
- 	smmu_pmu->on_cpu = raw_smp_processor_id();
+ 	smmu_pmu = devm_kzalloc(dev, sizeof(*smmu_pmu), GFP_KERNEL);
+ 	if (!smmu_pmu)
+ 		return -ENOMEM;
+ 
++	if (parent) {
++		void *parent_drvdata;
++
++		parent_drvdata = platform_get_drvdata(to_platform_device(parent));
++		if (!parent_drvdata)
++			return -EPROBE_DEFER;
++		smmu_pmu->parent_iidr = *(u32 *)parent_drvdata;
++	}
++
+ 	smmu_pmu->dev = dev;
+ 	platform_set_drvdata(pdev, smmu_pmu);
+ 
+@@ -724,7 +740,7 @@ static int smmu_pmu_probe(struct platform_device *pdev)
+ 		.start		= smmu_pmu_event_start,
+ 		.stop		= smmu_pmu_event_stop,
+ 		.read		= smmu_pmu_event_read,
+-		.attr_groups	= smmu_pmu_attr_grps,
++		.attr_groups	= smmu_pmu_lookup_attr_groups(smmu_pmu->parent_iidr),
+ 		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
+ 	};
+ 
 -- 
 2.17.1
 
