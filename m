@@ -2,133 +2,91 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 912BBC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D0DC35280
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62E2D20640
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D403E216F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:29:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="0iloPo15"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="NwVORxvg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732323AbfI3Q0E (ORCPT
+        id S1732280AbfI3Q3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 12:26:04 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:54748 "EHLO vps0.lunn.ch"
+        Mon, 30 Sep 2019 12:29:09 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:50122 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727767AbfI3Q0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 12:26:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=UsNG+BJJkiN5f+ZgZFe9likYWxzjLrZI+P2lP6TGLj4=; b=0iloPo15G8c0TSn0HfSecaAjWh
-        +Z1hbpIV0ML425vNA/FRnPOdvyxejzfTpYjTQTBbuN+ied/F2oTZ6nytVsZs6Kx84V6FGohMS9U1I
-        56HiWl3xVU0ceqkqcjcG/ZrlscF0IS9AgaN+3s9tz7qUxLL4qt5UwlNyBZfoq63uR5b0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iEyUn-0004l9-Vz; Mon, 30 Sep 2019 18:25:57 +0200
-Date:   Mon, 30 Sep 2019 18:25:57 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Jay Cliburn <jcliburn@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v1] net: ag71xx: fix mdio subnode support
-Message-ID: <20190930162557.GB15343@lunn.ch>
-References: <20190930093310.10762-1-o.rempel@pengutronix.de>
- <20190930134209.GB14745@lunn.ch>
- <20190930142907.wo3tahtg7g7mvfmp@pengutronix.de>
+        id S1732056AbfI3Q3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 12:29:08 -0400
+Received: from zn.tnic (p200300EC2F058B00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f05:8b00:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C36C71EC05A1;
+        Mon, 30 Sep 2019 18:29:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1569860946;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=jzkAFLaCHV29m/fJWef9IzITfqS1NsfHIWmyf8nzRCA=;
+        b=NwVORxvgEnskxgL1hwnDSn7+uvAKGAHnEyl/4bKR9rA40iT/66FCEoXBNC/v06rwEkzJ7W
+        raUj6GsQz4BDeSHoexc9g+vzLtMR8MKPasfbleksFjNT0jXulw5du2jg9kqoPX07vxnCA4
+        jAjRFl5AhGzlHzMbWO7OFXjJShxZNJw=
+Date:   Mon, 30 Sep 2019 18:29:10 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     linux-rdma@vger.kernel.org, Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>, netdev@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: ERROR: "__umoddi3"
+ [drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko] undefined!
+Message-ID: <20190930162910.GI29694@zn.tnic>
+References: <20190930141316.GG29694@zn.tnic>
+ <20190930154535.GC22120@unicorn.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190930142907.wo3tahtg7g7mvfmp@pengutronix.de>
+In-Reply-To: <20190930154535.GC22120@unicorn.suse.cz>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 04:29:07PM +0200, Oleksij Rempel wrote:
-> On Mon, Sep 30, 2019 at 03:42:09PM +0200, Andrew Lunn wrote:
-> > On Mon, Sep 30, 2019 at 11:33:10AM +0200, Oleksij Rempel wrote:
-> > > The driver was working with fixed phy without any noticeable issues. This bug
-> > > was uncovered by introducing dsa ar9331-switch driver.
-> > > 
-> > > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> > > ---
-> > >  drivers/net/ethernet/atheros/ag71xx.c | 6 ++++--
-> > >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/net/ethernet/atheros/ag71xx.c b/drivers/net/ethernet/atheros/ag71xx.c
-> > > index 6703960c7cf5..d1101eea15c2 100644
-> > > --- a/drivers/net/ethernet/atheros/ag71xx.c
-> > > +++ b/drivers/net/ethernet/atheros/ag71xx.c
-> > > @@ -526,7 +526,7 @@ static int ag71xx_mdio_probe(struct ag71xx *ag)
-> > >  	struct device *dev = &ag->pdev->dev;
-> > >  	struct net_device *ndev = ag->ndev;
-> > >  	static struct mii_bus *mii_bus;
-> > > -	struct device_node *np;
-> > > +	struct device_node *np, *mnp;
-> > >  	int err;
-> > >  
-> > >  	np = dev->of_node;
-> > > @@ -571,7 +571,9 @@ static int ag71xx_mdio_probe(struct ag71xx *ag)
-> > >  		msleep(200);
-> > >  	}
-> > >  
-> > > -	err = of_mdiobus_register(mii_bus, np);
-> > > +	mnp = of_get_child_by_name(np, "mdio");
-> > > +	err = of_mdiobus_register(mii_bus, mnp);
-> > > +	of_node_put(mnp);
-> > >  	if (err)
-> > >  		goto mdio_err_put_clk;
+On Mon, Sep 30, 2019 at 05:45:35PM +0200, Michal Kubecek wrote:
+> On Mon, Sep 30, 2019 at 04:13:17PM +0200, Borislav Petkov wrote:
+> > I'm seeing this on i386 allyesconfig builds of current Linus master:
 > > 
-> > Hi Oleksij
-> > 
-> > You need to keep backwards compatibility here. If you find an mdio
-> > node, use it, but if not, you need to still register np.
-> > 
-> > This is also extending the driver binding, so you need to update the
-> > binding documentation.
+> > ERROR: "__umoddi3" [drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko] undefined!
+> > make[1]: *** [__modpost] Error 1
+> > make: *** [modules] Error 2
 > 
-> Hi Andrew,
-> 
-> Normally i would agree. But in this case:
-> - this driver is freshly added to the kernel and is different to OpenWrt
->   implementation any way. No users from this side.
-> - Devicetree binding says:
->   Documentation/devicetree/bindings/net/qca,ar71xx.txt
-> |Optional properties:
-> |- phy-handle : phandle to the PHY device connected to this device.
-> |- fixed-link : Assume a fixed link. See fixed-link.txt in the same directory.
-> |  Use instead of phy-handle.
-> |
-> |Optional subnodes:
-> |- mdio : specifies the mdio bus, used as a container for phy nodes
-> |  according to phy.txt in the same directory
-> 
-> So, it is driver bug ...ooOO (my personal bug :D)
+> This is usually result of dividing (or modulo) by a 64-bit integer. Can
+> you identify where (file and line number) is the __umoddi3() call
+> generated?
 
-Hi Oleksij
+Did another 32-bit allyesconfig build. It said:
 
-Ah, O.K. You should of explained that in the commit message.
+ld: drivers/net/ethernet/mellanox/mlx5/core/steering/dr_icm_pool.o: in function `mlx5dr_icm_alloc_chunk':
+dr_icm_pool.c:(.text+0x733): undefined reference to `__umoddi3'
+make: *** [vmlinux] Error 1
 
-Is the mdio support just in -rc, or is it older?
+The .s file then points to the exact location:
 
-You need to add a Fixes: tag.
+# drivers/net/ethernet/mellanox/mlx5/core/steering/dr_icm_pool.c:140:   align_diff = icm_mr->icm_start_addr % align_base;
+        pushl   %ebx    # align_base
+        pushl   %ecx    # align_base
+        call    __umoddi3       #
+        popl    %edx    #
+        popl    %ecx    #
 
-The patch subject should be [PATCH net] to indicate this is a fix to
-the net tree
+HTH.
 
-The patch should be against net, not next-next.
+-- 
+Regards/Gruss,
+    Boris.
 
-    Andrew
+https://people.kernel.org/tglx/notes-about-netiquette
