@@ -2,133 +2,142 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE203C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2FDC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B5F821855
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6917218DE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:29:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731626AbfI3O3L (ORCPT
+        id S1731778AbfI3O3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 10:29:11 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35473 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbfI3O3K (ORCPT
+        Mon, 30 Sep 2019 10:29:16 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45396 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731686AbfI3O3P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 10:29:10 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1iEwfl-0006uw-0T; Mon, 30 Sep 2019 16:29:09 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1iEwfj-0006TF-S1; Mon, 30 Sep 2019 16:29:07 +0200
-Date:   Mon, 30 Sep 2019 16:29:07 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Jay Cliburn <jcliburn@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v1] net: ag71xx: fix mdio subnode support
-Message-ID: <20190930142907.wo3tahtg7g7mvfmp@pengutronix.de>
-References: <20190930093310.10762-1-o.rempel@pengutronix.de>
- <20190930134209.GB14745@lunn.ch>
+        Mon, 30 Sep 2019 10:29:15 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8UES0XW067295;
+        Mon, 30 Sep 2019 10:28:06 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vbjvysrus-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 30 Sep 2019 10:28:04 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8UENktC053801;
+        Mon, 30 Sep 2019 10:27:18 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vbjvysru8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 30 Sep 2019 10:27:18 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8UEOthJ009512;
+        Mon, 30 Sep 2019 14:27:17 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma04wdc.us.ibm.com with ESMTP id 2v9y57kc4k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 30 Sep 2019 14:27:17 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8UERGfb60031398
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 30 Sep 2019 14:27:16 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 684CCC6055;
+        Mon, 30 Sep 2019 14:27:16 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CBE02C605A;
+        Mon, 30 Sep 2019 14:27:11 +0000 (GMT)
+Received: from leobras.br.ibm.com (unknown [9.18.235.58])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 30 Sep 2019 14:27:11 +0000 (GMT)
+Message-ID: <5d3ad682f5ef3a7f16fdda9bcd30fbf53194b393.camel@linux.ibm.com>
+Subject: Re: [PATCH v4 03/11] mm/gup: Applies counting method to monitor
+ gup_pgd_range
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ganesh Goudar <ganeshgr@linux.ibm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Keith Busch <keith.busch@intel.com>
+Date:   Mon, 30 Sep 2019 11:27:10 -0300
+In-Reply-To: <20190930110927.nanq2wynvfmq7dhc@box>
+References: <20190927234008.11513-1-leonardo@linux.ibm.com>
+         <20190927234008.11513-4-leonardo@linux.ibm.com>
+         <20190930110927.nanq2wynvfmq7dhc@box>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-5QWWSZPLD+oFKjYyk88w"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190930134209.GB14745@lunn.ch>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 16:18:43 up 135 days, 20:36, 87 users,  load average: 0.00, 0.02,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-30_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909300151
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 03:42:09PM +0200, Andrew Lunn wrote:
-> On Mon, Sep 30, 2019 at 11:33:10AM +0200, Oleksij Rempel wrote:
-> > The driver was working with fixed phy without any noticeable issues. This bug
-> > was uncovered by introducing dsa ar9331-switch driver.
-> > 
-> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> > ---
-> >  drivers/net/ethernet/atheros/ag71xx.c | 6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/net/ethernet/atheros/ag71xx.c b/drivers/net/ethernet/atheros/ag71xx.c
-> > index 6703960c7cf5..d1101eea15c2 100644
-> > --- a/drivers/net/ethernet/atheros/ag71xx.c
-> > +++ b/drivers/net/ethernet/atheros/ag71xx.c
-> > @@ -526,7 +526,7 @@ static int ag71xx_mdio_probe(struct ag71xx *ag)
-> >  	struct device *dev = &ag->pdev->dev;
-> >  	struct net_device *ndev = ag->ndev;
-> >  	static struct mii_bus *mii_bus;
-> > -	struct device_node *np;
-> > +	struct device_node *np, *mnp;
-> >  	int err;
-> >  
-> >  	np = dev->of_node;
-> > @@ -571,7 +571,9 @@ static int ag71xx_mdio_probe(struct ag71xx *ag)
-> >  		msleep(200);
-> >  	}
-> >  
-> > -	err = of_mdiobus_register(mii_bus, np);
-> > +	mnp = of_get_child_by_name(np, "mdio");
-> > +	err = of_mdiobus_register(mii_bus, mnp);
-> > +	of_node_put(mnp);
-> >  	if (err)
-> >  		goto mdio_err_put_clk;
-> 
-> Hi Oleksij
-> 
-> You need to keep backwards compatibility here. If you find an mdio
-> node, use it, but if not, you need to still register np.
-> 
-> This is also extending the driver binding, so you need to update the
-> binding documentation.
 
-Hi Andrew,
+--=-5QWWSZPLD+oFKjYyk88w
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Normally i would agree. But in this case:
-- this driver is freshly added to the kernel and is different to OpenWrt
-  implementation any way. No users from this side.
-- Devicetree binding says:
-  Documentation/devicetree/bindings/net/qca,ar71xx.txt
-|Optional properties:
-|- phy-handle : phandle to the PHY device connected to this device.
-|- fixed-link : Assume a fixed link. See fixed-link.txt in the same directory.
-|  Use instead of phy-handle.
-|
-|Optional subnodes:
-|- mdio : specifies the mdio bus, used as a container for phy nodes
-|  according to phy.txt in the same directory
+On Mon, 2019-09-30 at 14:09 +0300, Kirill A. Shutemov wrote:
+> On Fri, Sep 27, 2019 at 08:40:00PM -0300, Leonardo Bras wrote:
+> > As decribed, gup_pgd_range is a lockless pagetable walk. So, in order t=
+o
+>      ^ typo
+>=20
+Fixed, thanks!
 
-So, it is driver bug ...ooOO (my personal bug :D)
+--=-5QWWSZPLD+oFKjYyk88w
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-I would say: if some one already started to use this driver, didn't used
-documentation and didn't reported this bug, can't really blame any one
-here :)
+-----BEGIN PGP SIGNATURE-----
 
-Regards,
-Oleksij
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl2SEL4ACgkQlQYWtz9S
+ttRgkRAAlYimCAeVA9cvc5HGNEVbfibfjFEgDVu7fY/HjI44ZGaauFSEvLDnnTcz
+M4WLEbD8cZ/LBPDP06Q8FuNtSZi1Ov1xVCXB404DodiPDkJG/TyVfO5/E5MsT7tf
+1qvSg8n53RfUxpN2WHNKg2eXLStcVwKmoS0otMxkIOPxTRGFk9PchNJ3F3QEQLYE
+3JwfwBa8q1d79DY19qiJ2VyqQm5nAAojm1i5JcHEUdMcA/INJgamhRpa5R6vx6Ge
+LZHOthO7x+H28Ip32KAmw5ISf8Q0AKEb0rLmIwkCUD0ecO0bp5D7F9KM/J5oBjKO
+pkVyqy61ZSdeArRc1M5HoOdI+evIGKSNtDJglyKckC3/KiUfkALvrjNe/USc9j3s
+DxvgKE2FNP+I6n2z0C2weHITU9EjKdqPSpVRzRBowUE8rw2o1d+oCurRiGI+Tgm8
+z3NEGoIdJFEkmNIvmbDPrRsz6E9viESfOGju8U9Um2Cxr14FJ6xGjGCeGylfgDED
+/L7nMZ12gv4DZoJp9UaLlau8hItsneS9ZVgvIEivPDWW+MmB3nN0SNhWjeP7VlMU
+jfa8kXlgp+gtsUn+jdwqgSrWDmAN4K4QSrtl0QmWN5GjNSQMEWkm5Jdb3Dk2etmx
+JgYiX4UH8m9pdwN6ILWOPT7RnqL1IuV39OvC5Uay30/nlL5roTM=
+=65+f
+-----END PGP SIGNATURE-----
+
+--=-5QWWSZPLD+oFKjYyk88w--
+
