@@ -2,174 +2,135 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B7CC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2655C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F96F21906
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:26:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3CDB21855
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:27:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pJ4X7ZDi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731764AbfI3O0s (ORCPT
+        id S1731773AbfI3O1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 10:26:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:55616 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731276AbfI3O0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 10:26:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 18DD228;
-        Mon, 30 Sep 2019 07:26:47 -0700 (PDT)
-Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9E2FF3F706;
-        Mon, 30 Sep 2019 07:26:45 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 15:26:40 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
-        "andre.przywara@arm.com" <andre.przywara@arm.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH V10 1/2] dt-bindings: mailbox: add binding doc for the
- ARM SMC/HVC mailbox
-Message-ID: <20190930142640.GA24945@bogus>
-References: <1569824287-4263-1-git-send-email-peng.fan@nxp.com>
- <1569824287-4263-2-git-send-email-peng.fan@nxp.com>
+        Mon, 30 Sep 2019 10:27:03 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43481 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731276AbfI3O1C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 10:27:02 -0400
+Received: by mail-pl1-f193.google.com with SMTP id f21so3971225plj.10
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 07:27:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=txZ1VUvm2fYL5KKS8Cpb2n4hdlyJJoHpUG0YxLbY0aM=;
+        b=pJ4X7ZDiEmiNs9lhG5lisVCdC9Ni66n95/gDgTxtvU3n3nsBmHVKgeO5NIRwtiuKYi
+         v5VOEPSpS9YY40/1TDxBHubgTs/0/TAy8L2iuAcU/abld0vM0RN8LtZkmvYk4z61Pmtc
+         9lDxpwCLbocjOCWUf4tWy5+INYVN5GSzMK2wyZxDz2YLuFlq1bNk2JLozmaO6bgiL4+2
+         VIQovS+Tjz6ViZWMEbJjyK8smVlcMkAIMlos0wKjXYvbUOy3mPHPlsFCHnqRBywTaubR
+         VQAoxk6w5543EOInZHHJBk1igJKB/XFo2nspAiv537KikDFixYNwmfM+doa20s+6bYG6
+         FujA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=txZ1VUvm2fYL5KKS8Cpb2n4hdlyJJoHpUG0YxLbY0aM=;
+        b=fkFTejL2QI1jwFf5OlH3KskqdI2WVUv2CPMv6A1Nl0znIKMNAHkAXd5ukhBEPvT6EP
+         3zzhsOMPmEDCBkNMoFdcHg7vwIaIEbA0Kc8Zrk/+F7sqN1Xqzn+qcZUrB4yR/lWRP+Zj
+         ghhIff1LyLKB3q28dzK4w4+EYhnplrhi/B9FYXicOyT8AYsUFR62J7JHcm54Nr7flrRE
+         3OPI9QULD/PiaHPGqjbI31VvF7zo2paMuFZ0tngcuicHBmi6sD/ZsDD7qrzpNPHJIm06
+         9sd1gkxV+i/JN+WdfeYqekY66PvF0YZW0aiDw/yRyLAUtb0HuVFlRiJV9BqNKjHhb7XN
+         h2xQ==
+X-Gm-Message-State: APjAAAWturgoCIRiPQWANno+oU13ED103WgylpfLzEaKFxFvuhuxXnrb
+        EduJAIlZl1C+643dIZwnCi0=
+X-Google-Smtp-Source: APXvYqyHYhEAiq3el5CMjZijDSysZcxfjmO+6pmUZjHTCqkQDq3EyVwiCZt+RMTBKVDPv8wpQi6n/w==
+X-Received: by 2002:a17:902:7d92:: with SMTP id a18mr20467503plm.243.1569853621669;
+        Mon, 30 Sep 2019 07:27:01 -0700 (PDT)
+Received: from Slackware ([103.231.91.38])
+        by smtp.gmail.com with ESMTPSA id r24sm11275940pfh.69.2019.09.30.07.26.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 07:27:00 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 19:56:48 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        akpm@linux-foundation.org, tglx@linutronix.de,
+        viro@zeniv.linux.org.uk
+Subject: Re: [RFC] Makefiles in scripts dir needs to move  one place
+Message-ID: <20190930142648.GA30066@Slackware>
+References: <20190930081041.GA11886@Slackware>
+ <20190930081816.GA2036553@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7AUc2qLy4jB3hD7Z"
 Content-Disposition: inline
-In-Reply-To: <1569824287-4263-2-git-send-email-peng.fan@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190930081816.GA2036553@kroah.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 06:20:09AM +0000, Peng Fan wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> The ARM SMC/HVC mailbox binding describes a firmware interface to trigger
-> actions in software layers running in the EL2 or EL3 exception levels.
-> The term "ARM" here relates to the SMC instruction as part of the ARM
-> instruction set, not as a standard endorsed by ARM Ltd.
-> 
 
-FWIW:
+--7AUc2qLy4jB3hD7Z
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+On 10:18 Mon 30 Sep 2019, Greg KH wrote:
+>On Mon, Sep 30, 2019 at 01:40:41PM +0530, Bhaskar Chowdhury wrote:
+>>
+>> Hey Greg ,
+>>
+>> Absolute trivialities, but might break few scripts, but make things
+>> clean..
+>>
+>> We have so many *Makefile.* cluttering in the top level scripts dir.
+>> Can we please move those in one place, means create a dir and put all
+>> of them in it.
+>
+>Why?  What would that help with?
+>
 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  .../devicetree/bindings/mailbox/arm-smc.yaml       | 96 ++++++++++++++++++++++
->  1 file changed, 96 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.yaml b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
-> new file mode 100644
-> index 000000000000..c165946a64e4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
-> @@ -0,0 +1,96 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mailbox/arm-smc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ARM SMC Mailbox Interface
-> +
-> +maintainers:
-> +  - Peng Fan <peng.fan@nxp.com>
-> +
-> +description: |
-> +  This mailbox uses the ARM smc (secure monitor call) or hvc (hypervisor
-> +  call) instruction to trigger a mailbox-connected activity in firmware,
-> +  executing on the very same core as the caller. The value of r0/w0/x0
-> +  the firmware returns after the smc call is delivered as a received
-> +  message to the mailbox framework, so synchronous communication can be
-> +  established. The exact meaning of the action the mailbox triggers as
-> +  well as the return value is defined by their users and is not subject
-> +  to this binding.
-> +
-> +  One example use case of this mailbox is the SCMI interface, which uses
-> +  shared memory to transfer commands and parameters, and a mailbox to
-> +  trigger a function call. This allows SoCs without a separate management
-> +  processor (or when such a processor is not available or used) to use
-> +  this standardized interface anyway.
-> +
-> +  This binding describes no hardware, but establishes a firmware interface.
-> +  Upon receiving an SMC using the described SMC function identifier, the
-> +  firmware is expected to trigger some mailbox connected functionality.
-> +  The communication follows the ARM SMC calling convention.
-> +  Firmware expects an SMC function identifier in r0 or w0. The supported
-> +  identifier is listed in the the arm,func-id property as described below.
-> +  The firmware can return one value in the first SMC result register,
-> +  it is expected to be an error value, which shall be propagated to the
-> +  mailbox client.
-> +
-> +  Any core which supports the SMC or HVC instruction can be used, as long
-> +  as a firmware component running in EL3 or EL2 is handling these calls.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - description:
-> +          For implementations using ARM SMC instruction.
-> +        const: arm,smc-mbox
-> +
-> +      - description:
-> +          For implementations using ARM HVC instruction.
-> +        const: arm,hvc-mbox
-> +
-> +  "#mbox-cells":
-> +    const: 0
-> +
-> +  arm,func-id:
-> +    description: |
-> +      An single 32-bit value specifying the function ID used by the mailbox.
-> +      The function ID follows the ARM SMC calling convention standard.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +required:
-> +  - compatible
-> +  - "#mbox-cells"
-> +  - arm,func-id
-> +
-> +examples:
-> +  - |
-> +    sram@93f000 {
-> +      compatible = "mmio-sram";
-> +      reg = <0x0 0x93f000 0x0 0x1000>;
-> +      #address-cells = <1>;
-> +      #size-cells = <1>;
-> +      ranges = <0x0 0x93f000 0x1000>;
-> +
-> +      cpu_scp_lpri: scp-shmem@0 {
-> +        compatible = "arm,scmi-shmem";
-> +        reg = <0x0 0x200>;
-> +      };
-> +    };
-> +
-> +    smc_tx_mbox: tx_mbox {
+Cleanliness of that directory. Nothing else,kinda organized way.YMMV
 
-[nit]              ^^^^^^^^^ s/tx_mbox/mailbox/ ?
+>> And call those in the scripts with that dir preceded . Kindly , let me
+>> know how awful that would be.
+>
+>I can not parse these sentances, sorry.
+>
+ :) All , I was trying to say that , the path to the makefile inside the
+ scripts will add that directory to the existing path.=20
 
-mailbox sounds more generic name to use, you can always use what ever
-name in the label. This is not a must change, just thought of mentioning
-as the pattern followed is to use generic names.
+ Say, present is like /foo/bar/hoo that will become /foo/moo/bar/hoo
 
---
-Regards,
-Sudeep
+ that "moo" directory will holds all the makefiles.
+
+ Okay,  as I said ,in top of the mail this is absolute trivialities.=20
+
+
+
+Bhaskar
+
+--7AUc2qLy4jB3hD7Z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl2SEKIACgkQsjqdtxFL
+KRWh7ggApWrB/7M2aXW+L12kaJCRL7uVhh+VCHMqhxzTwjc6yq//sdMTY5aRDGQC
+9qHITsYU4OPHppE8HaDG0olvPl6uiFH7KDS/F1R04it/2cfZbDMUNmBDoRkQC53h
+8ZpJOXOID3onmrm9waYr4VPDHW58HOVK0X4R8PngRXktZPegsCYWET1CFCQjQxcH
+6+2w1pWsaWB4CLVqTZMExapCe88wKRWJP48YnfQsH1Jct2rYs44FTZpn2V0OvS1/
+CIWXV9YDJogEC+TvVNbHyYF7CZC49CRytLZa6WxXSyHg5Woa3AFLqoSXuVZWkSNH
+bZnrj51wiw562bWhPsXWWM0az1IH4g==
+=J2lD
+-----END PGP SIGNATURE-----
+
+--7AUc2qLy4jB3hD7Z--
