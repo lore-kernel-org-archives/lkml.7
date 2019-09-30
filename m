@@ -6,174 +6,257 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C34D9C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE306C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 944D7206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 920C3206BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:44:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730670AbfI3KnC (ORCPT
+        id S1730853AbfI3KoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 06:43:02 -0400
-Received: from mail.codelabs.ch ([109.202.192.35]:53120 "EHLO mail.codelabs.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729870AbfI3KnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 06:43:01 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.codelabs.ch (Postfix) with ESMTP id 0CEF2A0167;
-        Mon, 30 Sep 2019 12:42:57 +0200 (CEST)
-Received: from mail.codelabs.ch ([127.0.0.1])
-        by localhost (fenrir.codelabs.ch [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id MDvV1xvHi7qw; Mon, 30 Sep 2019 12:42:54 +0200 (CEST)
-Received: from [192.168.10.191] (unknown [192.168.10.191])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.codelabs.ch (Postfix) with ESMTPSA id 6675EA0148;
-        Mon, 30 Sep 2019 12:42:54 +0200 (CEST)
-Subject: Re: [PATCH v2 0/8] KVM: x86: nVMX GUEST_CR3 bug fix, and then some...
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Liran Alon <liran.alon@oracle.com>
-References: <20190927214523.3376-1-sean.j.christopherson@intel.com>
-From:   Reto Buerki <reet@codelabs.ch>
-Openpgp: preference=signencrypt
-Autocrypt: addr=reet@codelabs.ch; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <8414d3e8-9a68-e817-de5a-3e9ca6dc85bb@codelabs.ch>
-Date:   Mon, 30 Sep 2019 12:42:53 +0200
+        Mon, 30 Sep 2019 06:44:08 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40886 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730762AbfI3KoH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 06:44:07 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8UAgSVd144193
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 06:44:06 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vbdj9g5yk-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 06:44:06 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
+        Mon, 30 Sep 2019 11:44:03 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 30 Sep 2019 11:43:58 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8UAhveV23396518
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 30 Sep 2019 10:43:57 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9E3F3A4057;
+        Mon, 30 Sep 2019 10:43:57 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1F239A4051;
+        Mon, 30 Sep 2019 10:43:54 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.124.35.136])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 30 Sep 2019 10:43:53 +0000 (GMT)
+From:   Parth Shah <parth@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, patrick.bellasi@matbug.net,
+        tim.c.chen@linux.intel.com, valentin.schneider@arm.com,
+        qais.yousef@arm.com, linux-pm@vger.kernel.org
+Cc:     peterz@infradead.org, vincent.guittot@linaro.org, pavel@ucw.cz,
+        David.Laight@ACULAB.COM, mingo@redhat.com,
+        morten.rasmussen@arm.com, pjt@google.com, dietmar.eggemann@arm.com,
+        tj@kernel.org, rafael.j.wysocki@intel.com,
+        daniel.lezcano@linaro.org, dhaval.giani@oracle.com,
+        quentin.perret@arm.com,
+        subhra mazumdar <subhra.mazumdar@oracle.com>,
+        ggherdovich@suse.cz, viresh.kumar@linaro.org,
+        Doug Smythies <dsmythies@telus.net>
+Subject: [Discussion v2] Usecases for the per-task latency-nice attribute
+Date:   Mon, 30 Sep 2019 16:13:53 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ Thunderbird/60.0
 MIME-Version: 1.0
-In-Reply-To: <20190927214523.3376-1-sean.j.christopherson@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19093010-0012-0000-0000-0000035204E5
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19093010-0013-0000-0000-0000218CA691
+Message-Id: <2bd46086-43ff-f130-8720-8eec694eb55b@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-30_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909300116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/27/19 11:45 PM, Sean Christopherson wrote:
-> *sigh*
-> 
-> v2 was shaping up to be a trivial update, until I started working on
-> Vitaly's suggestion to add a helper to test for register availability.
-> 
-> The primary purpose of this series is to fix a CR3 corruption in L2
-> reported by Reto Buerki when running with HLT interception disabled in L1.
-> On a nested VM-Enter that puts L2 into HLT, KVM never actually enters L2
-> and instead mimics HLT interception by canceling the nested run and
-> pretending that VM-Enter to L2 completed and then exited on HLT (which
-> KVM intercepted).  Because KVM never actually runs L2, KVM skips the
-> pending MMU update for L2 and so leaves a stale value in vmcs02.GUEST_CR3.
-> If the next wake event for L2 triggers a nested VM-Exit, KVM will refresh
-> vmcs12->guest_cr3 from vmcs02.GUEST_CR3 and consume the stale value.
-> 
-> Fix the issue by unconditionally writing vmcs02.GUEST_CR3 during nested
-> VM-Enter instead of deferring the update to vmx_set_cr3(), and skip the
-> update of GUEST_CR3 in vmx_set_cr3() when running L2.  I.e. make the
-> nested code fully responsible for vmcs02.GUEST_CR3.
-> 
-> Patch 02/08 is a minor optimization to skip the GUEST_CR3 update if
-> vmcs01 is already up-to-date.
-> 
-> Patches 03 and beyond are Vitaly's fault ;-).
-> 
-> Patches 03 and 04 are tangentially related cleanup to vmx_set_rflags()
-> that was discovered when working through the avail/dirty testing code.
-> Ideally they'd be sent as a separate series, but they conflict with the
-> avail/dirty helper changes and are themselves minor and straightforward.
-> 
-> Patches 05 and 06 clean up the register caching code so that there is a
-> single enum for all registers which use avail/dirty tracking.  While not
-> a true prerequisite for the avail/dirty helpers, the cleanup allows the
-> new helpers to take an 'enum kvm_reg' instead of a less helpful 'int reg'.
-> 
-> Patch 07 is the helpers themselves, as suggested by Vitaly.
-> 
-> Patch 08 is a truly optional change to ditch decache_cr3() in favor of
-> handling CR3 via cache_reg() like any other avail/dirty register.
-> 
-> 
-> Note, I collected the Reviewed-by and Tested-by tags for patches 01 and 02
-> even though I inverted the boolean from 'skip_cr3' to 'update_guest_cr3'.
-> Please drop the tags if that constitutes a non-trivial functional change.
-> 
-> v2:
->   - Invert skip_cr3 to update_guest_cr3.  [Liran]
->   - Reword the changelog and comment to be more explicit in detailing
->     how/when KVM will process a nested VM-Enter without runnin L2.  [Liran]
->   - Added Reviewed-by and Tested-by tags.
->   - Add a comment in vmx_set_cr3() to explicitly state that nested
->     VM-Enter is responsible for loading vmcs02.GUEST_CR3.  [Jim]
->   - All of the loveliness in patches 03-08. [Vitaly]
-> 
-> Sean Christopherson (8):
->   KVM: nVMX: Always write vmcs02.GUEST_CR3 during nested VM-Enter
->   KVM: VMX: Skip GUEST_CR3 VMREAD+VMWRITE if the VMCS is up-to-date
->   KVM: VMX: Consolidate to_vmx() usage in RFLAGS accessors
->   KVM: VMX: Optimize vmx_set_rflags() for unrestricted guest
->   KVM: x86: Add WARNs to detect out-of-bounds register indices
->   KVM: x86: Fold 'enum kvm_ex_reg' definitions into 'enum kvm_reg'
->   KVM: x86: Add helpers to test/mark reg availability and dirtiness
->   KVM: x86: Fold decache_cr3() into cache_reg()
-> 
->  arch/x86/include/asm/kvm_host.h |  5 +-
->  arch/x86/kvm/kvm_cache_regs.h   | 67 +++++++++++++++++------
->  arch/x86/kvm/svm.c              |  5 --
->  arch/x86/kvm/vmx/nested.c       | 14 ++++-
->  arch/x86/kvm/vmx/vmx.c          | 94 ++++++++++++++++++---------------
->  arch/x86/kvm/x86.c              | 13 ++---
->  arch/x86/kvm/x86.h              |  6 +--
->  7 files changed, 123 insertions(+), 81 deletions(-)
+Hello everyone,
 
-Series:
-Tested-by: Reto Buerki <reet@codelabs.ch>
+This is the v2 of the discussion started for introducing per-task
+latency-nice attribute for providing scheduler hints.
 
-Thanks.
+v1: https://lkml.org/lkml/2019/9/18/555
+
+In brief, we face two challenges with the introduction of such attr.
+
+1. Name:
+==============
+( Should be relevant to all the possible usecases, not confuse end-user and
+reflect the functionality it provides to the scheduler behaviour )
+
+Curated list of proposed names:
+
+1. latency-nice:
+   should have a better understanding based on pre-existing concepts
+
+- But poses two interpretation ambiguity
+  a) -20 (least nice to latency, i.e. sacrifice latency for throughput)
+     +19 (most nice to latency, i.e. sacrifice throughput for latency)
+  b) -20 (least nice to other task in terms of sacrificing latency, i.e.
+	  latency-sensitive)
+     +19 (most nice to other tasks in terms of sacrificing latency, i.e.
+	  latency-forgoing)
+
+2. latency-tolerant:
+   decouples a bit its meaning from the niceness thus giving maybe a bit
+   more freedom in its complete definition and perhaps avoid any
+   possible interpretation confusion
+
+3. latency-nasty
+
+4. latency-sensible
+
+
+
+2. Value(s):
+==============
+( Boolean/Ternary, Range of values, profile tagging )
+
+- Recent discussion plots the range of [-20, 19] to be the most agreed upon.
+
+1. Range:
+- [-20, 19]:
+    Which has similarities with the niceness concept and gives a minimal
+    continuous range. This can be on hand for things like scaling the
+    vruntime normalization [3]
+
+2. Profile tagging:
+- Can be used just like a flag attribute
+  e.g., Background, foreground, latency-sensible, reduce-idle-search, etc.
+
+3. Binary:
+- 0 for: Latency sensitive/sensible/in-tolerant/hungry...
+- 1 for Latency insensitive/insensible/tolerant/nice-to-others/...
+
+  Ternary:
+-  0: no effect
+- -1: require least latency
+- +1: no restrictions in terms of lower/higher latency
+
+
+------------------
+**Usecases**
+-----------------
+
+1> Reduce search scan time for idle Cores
+( -Subhra Mazumadar )
+=====================================
+Currently, CFS makes search across LLC domain to search for idle core which
+is sometimes exhaustive when the core count increases beyond certain count.
+This impacts the latency-sensitive tasks where scheduler spends much of it
+time to search for idle core to wakeup a task. This could potentially be
+solved by limiting the idle core search for the tasks which requires least
+latency. The userland providing hints to the scheduler by tagging such
+tasks is a solution proposed in the community and has shown positive
+results [1].
+
+
+2> TurboSched
+( -Parth Shah )
+====================
+TurboSched [2] tries to minimize the number of active cores in a socket by
+packing an un-important and low-utilization (named jitter) task on an
+already active core and thus refrains from waking up of a new core if
+possible. This requires tagging of tasks from the userspace hinting which
+tasks are un-important and thus waking-up a new core to minimize the
+latency is un-necessary for such tasks.
+As per the discussion on the posted RFC, it will be appropriate to use the
+task latency property where a task with the highest latency-nice value can
+be packed.
+But for this specific use-cases, having just a binary value to know which
+task is latency-sensitive and which not is sufficient enough, but having a
+range is also a good way to go where above some threshold the task can be
+packed.
+
+
+3> Wakeup path tunings
+( -Patrick Bellasi )
+==========================
+Some additional possible use-cases was already discussed in [3]:
+
+ - dynamically tune the policy of a task among SCHED_{OTHER,BATCH,IDLE}
+   depending on crossing certain pre-configured threshold of latency
+   niceness.
+
+ - dynamically bias the vruntime updates we do in place_entity()
+   depending on the actual latency niceness of a task.
+   Tuning the tweaks we already have for:
+	 - START_DEBIT
+	 - GENTLE_FAIR_SLEEPERS
+   a bit more parametric and proportional to the latency-nice of a task.
+
+ - bias the decisions we take in check_preempt_tick() still depending
+   on a relative comparison of the current and wakeup task latency
+   niceness values.
+
+
+4> Load balance tuning
+( -Valentin Schneider )
+======================
+Already mentioned these in [4]:
+- Increase (reduce) nr_balance_failed threshold when trying to active
+  balance a latency-sensitive (non-latency-sensitive) task.
+
+- Increase (decrease) sched_migration_cost factor in task_hot() for
+  latency-sensitive (non-latency-sensitive) tasks.
+
+
+5> Separating AVX512 tasks and latency sensitive tasks on separate cores
+( -Tim Chen )
+===========================================================================
+Another usecase we are considering is to segregate those workload that will
+pull down core cpu frequency (e.g. AVX512) from workload that are latency
+sensitive. There are certain tasks that need to provide a fast response
+time (latency sensitive) and they are best scheduled on cpu that has a
+lighter load and not have other tasks running on the sibling cpu that could
+pull down the cpu core frequency.
+
+Some users are running machine learning batch tasks with AVX512, and have
+observed that these tasks affect the tasks needing a fast response.  They
+have to rely on manual CPU affinity to separate these tasks.  With
+appropriate latency hint on task, the scheduler can be taught to separate them.
+
+
+6> EAS
+( -Qais Yousef )
+====================
+The new knob can help EAS path to switch to spreading behavior when
+latency-nice is set instead of packing tasks on the most energy efficient CPU.
+ie: pick the most energy efficient idle CPU.
+
+
+
+Further doubts requiring community attention
+---------------------------------------------
+1. Who is the intended user for setting this value? (- Qais Yousef)
+   - system admin or application developer ?
+
+
+Thanks everyone for providing your valuable inputs, hence again asking for
+the same. (◠﹏◠)
+
+---------------
+**References**
+---------------
+[1]. https://lkml.org/lkml/2019/8/30/829
+[2]. https://lkml.org/lkml/2019/7/25/296
+[3]. Message-ID: <20190905114709.GM2349@hirez.programming.kicks-ass.net>
+https://lore.kernel.org/lkml/20190905114709.GM2349@hirez.programming.kicks-ass.net/
+[4]. https://lkml.kernel.org/r/3d3306e4-3a78-5322-df69-7665cf01cc43@arm.com
+
