@@ -2,134 +2,120 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.1 required=3.0 tests=DATE_IN_PAST_03_06,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D0FC388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A1AC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CAC422508
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78A8E224FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:36:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="izfFFobe"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="zDPsmRIw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730991AbfI3Ugr (ORCPT
+        id S1731008AbfI3Ug5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 16:36:47 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:43185 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729283AbfI3Ugr (ORCPT
+        Mon, 30 Sep 2019 16:36:57 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43228 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729898AbfI3Ug5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 16:36:47 -0400
-Received: by mail-io1-f67.google.com with SMTP id v2so41810290iob.10
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 13:36:46 -0700 (PDT)
+        Mon, 30 Sep 2019 16:36:57 -0400
+Received: by mail-io1-f65.google.com with SMTP id v2so41811504iob.10
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 13:36:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=lixom-net.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=i3dwIE3HGnY2ji6BL2lgrdHCeKt8hwvNYITijQeMpag=;
-        b=izfFFobeeAuaCN1MYV2cqTTC9SJ2B7X/u+g6CPl+hSPnOUnRbP1/BCohkPY00SKjOS
-         ngbgS5eggV73d5N3fvNsmyx4AdZ9BelpEyLZgIOQWjYZ0H/t1h9hwcopTh8luMLUlkAD
-         UvFLMMtPQWZq9ybp6G3XRQa3ba3kFxGlWt+PhVFEisFiy/ivTvQCpq4WDb2zRJWntAjY
-         RnpfLShbUA0uQ0c6YpBTgnszBbNpKq4tSWd29vid/pr0QWpkPNtc9dlZZOHIWHtbr1I4
-         64grZ5gAZJhw0mPO812L2fmFF+Kgqu62rcwu8tU01ioPJdvJ0r7FYafvOLbDi1a734kX
-         h+0Q==
+        bh=wUaOjIAAKAGaG+nfGl63t9Ipyj1FhR6XnUA53rZZ53s=;
+        b=zDPsmRIwr8UIFX7VPiwHVeFhbT9W6MjyM0cDosaTz6Rj3zolIxdtsVVOrY9z7FM7XG
+         uAU1mKI9zyzUMMFkGYEdYKvs95ONx+ggQ3z4YWqT57peTmyX6l5T0UAPu64/Ap15zr5L
+         RA79HvMK4wUKRBh7sh0vJFG9xuDD0oBULcut5P/nId/bamWyDBfHP5/BaMkAPmcWsbrK
+         +punAMByTro8mAK6qQVtmf/sNn61rZ89cXtgTkj8atxCDXheMXds+FSHGJQZYl93Tnu5
+         GSMApqoi55lWrKNOCG5yhIXhbnj3Owa/bd5XjwGPVK33WbZP59K1UlWpDncsZUyRoWoB
+         gNaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=i3dwIE3HGnY2ji6BL2lgrdHCeKt8hwvNYITijQeMpag=;
-        b=VrVbWC04P1csTQZEFsYRZN3MJNreeu1qHR8ItfcY10wsk6PoxHWnyk9PfQ/NitpgfJ
-         lDd/o7QNYnlcIEbk3lHRs3mBOJZz8j2cfER4cvqxsUIjwqm6CTrUaJH++3n3s+taPaAI
-         E3FdbayGHvDDzKqgK0iGdRFjZdeA+YLPgnlZSuV9iEKZ8PKAPSFQUJiizeXDxMvpicw9
-         vS3A07lUIWnv4n7suiAUTFDC10ODimcyG8bLwYaIfc2XFK6UkIixE5QqJn8qnjtKQOMR
-         iO0majDPzRdk4IA3qym1+TMf8qdGUyCVMTFIV/6a4OfrEFz2u1NxEDl3oc4TDde7aVyK
-         BBnQ==
-X-Gm-Message-State: APjAAAVAsSdR2oTZt3KNY94qzBzijNb/yjWVeJJ6NAy0/WPmnqH56J0E
-        qB9CPsLOM8hnR1DBebeQv7mV8IRrWSS9Mg26IsNLgIBi90zw3w==
-X-Google-Smtp-Source: APXvYqyXj8WDjHDG8Ly151dv7OzUri8sYlz4HJQ8uFbvR+QF/bAefpHZooDpQz+OMMR2j4tK+jKhsia3WuUY762LNpQ=
-X-Received: by 2002:a92:4799:: with SMTP id e25mr22126652ilk.72.1569864912988;
- Mon, 30 Sep 2019 10:35:12 -0700 (PDT)
+        bh=wUaOjIAAKAGaG+nfGl63t9Ipyj1FhR6XnUA53rZZ53s=;
+        b=l6RDXjp5kl/YSiS13z9pon7vU87xuca9Kyu2mXxi1EufluGX38AN5rqMPbJV5xDoVL
+         CTtaljGuEONnLvBc+mVgJhrOYReYWVL7F6MzZXjziR6DEbqefgCpm5KUOy3P7a9WLLcY
+         oPR0aaU8g03aX6pN/zM3LNF+HhdaE9JfPhbv1ZW+1oob+eqDXXRNcaJzFaU5yZU9gg8p
+         aIHjQOOy0pOc7qiR3hzsgVx6JXCOyXwQCeQU2Q/Evdw4vBlz5KxO1OQ/XITA15QSXf0o
+         he/q8yF7c16LIF2h2PhAyj6Jt4CKCHW4HezE5c0vl4jt8P6+jp4M6l8VQBtEOUcY5lEb
+         SvGQ==
+X-Gm-Message-State: APjAAAW/BOyKuKx5cAqWHEOUh0FSkOCOfdscd/xxW/fITHoKUFDwodoH
+        TcTadqDN+N00qQRlpDlnqbvFE/hHOfIoQBeetxLL2sMUUmg=
+X-Google-Smtp-Source: APXvYqx2QQxA7WYK1gg5Log0L74tzLz+6chp+ZbkA5mlSoinDE3QaD6dO1s0HBeusM7BqhVSnDyqgXQvtPF3K4YXyUw=
+X-Received: by 2002:a92:4799:: with SMTP id e25mr22486585ilk.72.1569869194482;
+ Mon, 30 Sep 2019 11:46:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190911183632.4317-1-krzk@kernel.org> <CAK8P3a2pBV+fh0rHitZ30Zz61QNRLfNSD-nhnzq4ZtxSh66F1Q@mail.gmail.com>
- <CAJKOXPcOSvc2DfoN+7Tca=t5dSm3RcKqmm06AfR0PAVBeY=GvQ@mail.gmail.com>
- <20190929175134.fsieffurfdiqhpj2@localhost> <20190930080217.GA23709@pi3>
-In-Reply-To: <20190930080217.GA23709@pi3>
+References: <20190920075946.13282-1-j-keerthy@ti.com> <20190920075946.13282-5-j-keerthy@ti.com>
+ <20190930134856.umdoeq7k6ukmajij@willie-the-truck>
+In-Reply-To: <20190930134856.umdoeq7k6ukmajij@willie-the-truck>
 From:   Olof Johansson <olof@lixom.net>
-Date:   Mon, 30 Sep 2019 10:35:01 -0700
-Message-ID: <CAOesGMi2w9vci+kU=WFHJJBqgz9BM5RJBzqwwrR7k=275w4Tyg@mail.gmail.com>
-Subject: Re: [GIT PULL 1/2] arm64: dts: exynos: Pull for v5.4
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, arm-soc <arm@kernel.org>,
-        SoC Team <soc@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>
+Date:   Mon, 30 Sep 2019 11:46:23 -0700
+Message-ID: <CAOesGMgs7rKOVnimDwSpeGTAf93Er+Ymzy9-R-mKkQK6MQcF3Q@mail.gmail.com>
+Subject: Re: [PATCH v2 linux-next 4/4] arm64: configs: defconfig: Change
+ CONFIG_REMOTEPROC from m to y
+To:     Will Deacon <will@kernel.org>
+Cc:     Keerthy <j-keerthy@ti.com>, Arnd Bergmann <arnd@arndb.de>,
+        Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Tony Lindgren <tony@atomide.com>, Suman Anna <s-anna@ti.com>,
+        hch@lst.de, Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 1:02 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Mon, Sep 30, 2019 at 6:49 AM Will Deacon <will@kernel.org> wrote:
 >
-> On Sun, Sep 29, 2019 at 10:51:34AM -0700, Olof Johansson wrote:
-> > Hi,
+> On Fri, Sep 20, 2019 at 01:29:46PM +0530, Keerthy wrote:
+> > Commit 6334150e9a36 ("remoteproc: don't allow modular build")
+> > changes CONFIG_REMOTEPROC to a boolean from a tristate config
+> > option which inhibits all defconfigs marking CONFIG_REMOTEPROC as
+> > a module in compiling the remoteproc and dependent config options.
 > >
-> > On Thu, Sep 12, 2019 at 08:32:47AM +0200, Krzysztof Kozlowski wrote:
-> > > On Wed, 11 Sep 2019 at 23:07, Arnd Bergmann <arnd@arndb.de> wrote:
-> > > >
-> > > > On Wed, Sep 11, 2019 at 8:36 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > > > >
-> > > > > Hi,
-> > > > >
-> > > > > Unfortunately the patches were applied right after closing the linux-next.
-> > > >
-> > > > Hi Krzysztof,
-> > > >
-> > > > I took a look at these and am not convinced this is right:
-> > > >
-> > > > > 1. Fix boot of Exynos7 due to wrong address/size of memory node,
-> > > >
-> > > > The current state is clearly broken and a fix is needed, but
-> > > > I'm not sure this is the right fix. Why do you have 32-bit physical
-> > > > addressing on a 64-bit chip? I looked at commit ef72171b3621
-> > > > that introduced it, and it seems it would be better to just
-> > > > revert back to 64-bit addresses.
-> > >
-> > > We discussed with Marek Szyprowski that either we can go back to
-> > > 64-bit addressing or stick to 32. There are not known boards with more
-> > > than 4 GB of RAM so from this point of view the choice was irrelevant.
-> > > At the end of discussion I mentioned to stick with other arm64 boards
-> > > (although not all), so revert to have 64 bit address... but Marek
-> > > chosen differently. Since you ask, let's go back with revert.
-> > >
-> > > >
-> > > > > 2. Move GPU under /soc node,
-> > > >
-> > > > No problem
-> > > >
-> > > > > 3. Minor cleanup of #address-cells.
-> > > >
-> > > > IIRC, an interrupt-controller is required to have a #address-cells
-> > > > property, even if that is normally zero. I don't remember the
-> > > > details, but the gic binding lists it as mandatory, and I think
-> > > > the PCI interrupt-map relies on it. I would just drop this patch.
-> > >
-> > > Indeed, binding requires both address and size cells. I'll drop it.
+> > So fix the defconfig to have CONFIG_REMOTEPROC built in.
 > >
-> > Looking through the history of pending material, I didn't see a new pull for
-> > this material. Just checking in to see if there's something we missed?
+> > Fixes: 6334150e9a36 ("remoteproc: don't allow modular build")
+> > Signed-off-by: Keerthy <j-keerthy@ti.com>
+> > ---
+> >  arch/arm64/configs/defconfig | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> > index 8e05c39eab08..c9a867ac32d4 100644
+> > --- a/arch/arm64/configs/defconfig
+> > +++ b/arch/arm64/configs/defconfig
+> > @@ -723,7 +723,7 @@ CONFIG_TEGRA_IOMMU_SMMU=y
+> >  CONFIG_ARM_SMMU=y
+> >  CONFIG_ARM_SMMU_V3=y
+> >  CONFIG_QCOM_IOMMU=y
+> > -CONFIG_REMOTEPROC=m
+> > +CONFIG_REMOTEPROC=y
+> >  CONFIG_QCOM_Q6V5_MSS=m
+> >  CONFIG_QCOM_Q6V5_PAS=m
+> >  CONFIG_QCOM_SYSMON=m
 >
-> No, it's me who forgot to resend. I was sure that I rebased the branch
-> and created new pull request. However it seems I did not. Let's keep it
-> for next merge window... v5.4-rc should be any minute, I guess?
+> Acked-by: Will Deacon <will@kernel.org>
+>
+> This fixes the following annoying warning from "make defconfig" on arm64:
+>
+>   arch/arm64/configs/defconfig:726:warning: symbol value 'm' invalid for REMOTEPROC
+>
+> I'm assuming the fix will go via arm-soc, but I can take it otherwise
+> (please just let me know).
 
-Yeah, we're too late for this merge window but feel free to send it
-for next release.
+Thanks, I'll pick this up, but I'll squash the 4 one-line changes into
+one commit instead of separate patches.
 
 
 -Olof
