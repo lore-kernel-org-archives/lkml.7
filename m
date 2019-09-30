@@ -2,92 +2,95 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF360C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A29EC388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C16E8205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:07:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o798wUeb"
+	by mail.kernel.org (Postfix) with ESMTP id 06B68205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:08:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732586AbfI3VHr (ORCPT
+        id S1732590AbfI3VIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 17:07:47 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40261 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730145AbfI3VHq (ORCPT
+        Mon, 30 Sep 2019 17:08:40 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:40085 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732460AbfI3VIk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 17:07:46 -0400
-Received: by mail-io1-f66.google.com with SMTP id h144so42077107iof.7;
-        Mon, 30 Sep 2019 14:07:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1JAxk7tyYRwQss6DSI41A5FG1S9HgN+C/lrI/eEfTD4=;
-        b=o798wUebGHzcN0wtUwoqOlAUfWkDAEksR50QXMHXWd73EjFtvIXG/KC6GiyTvVaZpm
-         /1sPRhDr1uNoG7g5tZawkxfz8MQ/xxg5gjrU7BUo1bV73I1PxZtgLbd8GwgsNNRy4/ZB
-         a2Zwwrgd8JFRGXr1+kPBwnp4kZSiKRDcezutk1Tc4uA69z3I1MGIHXjopCehEtqf+6G2
-         QcDnnajtOler9Q/x+KSF1TMyOaLk2OJxzent6r7Yw4rfjK9yglQmcJdC6k+BSgF0Yyin
-         GJQmNtRQQr1jtikZGl+d3798pNuRzJBWQZ2Dfjg5IKIvZiKcmep4162GaMXY/XTQ9u0i
-         7C1A==
+        Mon, 30 Sep 2019 17:08:40 -0400
+Received: by mail-qt1-f196.google.com with SMTP id f7so18895418qtq.7;
+        Mon, 30 Sep 2019 14:08:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1JAxk7tyYRwQss6DSI41A5FG1S9HgN+C/lrI/eEfTD4=;
-        b=LGW73leQVQtTYXcILUBmlxysr743NKmWiqZR78Gqwi68PpQTj/xqIX/eiLMPGLNRcY
-         Lg29nMzDVZb36nyVhjCx3RmxMj0NKO5pjLap+WFNRi4H8TACWVtPYHoSWuGjyEkR4JKG
-         A8MkfTji4k4N+yVtGiYfarjfltyZ8k+Rt9Iwdjtis4kOraWp8vaUD4A/gt2crf7n1A3X
-         TqEYlRkgMCgqvRGbmdhhQgJZN5uKeAsVyRrFlEUNPy3jqdPGTTN0LDVDpSKrPLe9Q20e
-         nWGl0djl7ty5Wxmd/llDcY31TV0ZtFvsBurnkGo9O8+oqsPVsYPAFsRaO64GmJxy8fRx
-         Mtdg==
-X-Gm-Message-State: APjAAAUAmDSabAnFYPHmKan2N4RIiNUuEkuyy98cCDJ6NTrCh9eGuPL2
-        yp3sCAx+/tYR+IeuxZM+hU35hrc5
-X-Google-Smtp-Source: APXvYqx3zk39crf/WzXd7tRYyuOhqC9AdUsXFsTJFLvr8Ko4kbO2VPowWzf4245DIyFZKhN+eI2Qhg==
-X-Received: by 2002:a65:6885:: with SMTP id e5mr5708pgt.27.1569868234691;
-        Mon, 30 Sep 2019 11:30:34 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g202sm17250506pfb.155.2019.09.30.11.30.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 30 Sep 2019 11:30:34 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 11:30:33 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.2 00/45] 5.2.18-stable review
-Message-ID: <20190930183033.GC22096@roeck-us.net>
-References: <20190929135024.387033930@linuxfoundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TXd66Ux67DUD83Cxi/B96CIS7DW3JJGOpW6P7nrNIfY=;
+        b=Xo9tMhA607aHD6YjBbjjefMTMex1kMb4E3j1HWB0qYjUm+BVROscNHNDt8GpHSPuZD
+         GGsqfKzW4WAXl/irlZ7mXxl09Gs4eGXfWVGnd2S+1dVssRFViR5o+qMbYCgjTNEtqtnh
+         sPbsMCp3ldYpB4i5q4+l19vFpSiNWAsJ5XKhACtBSs5FLPfE6zscSeVDeZjscswidFyn
+         EnpL9ZLSYuZweVp6FDBwT41ZyH9gua6+ynPC0pz4Aw3BzRxpBvYIqsd56HI/S+9MNUvV
+         eFNSRGhiC/0kr7Cu8RPnY/OhI5XMhLqzMXeHi09LTR4vca+vufIrYL++C9hm8xPf/Cb3
+         lVOQ==
+X-Gm-Message-State: APjAAAVfF+iWAIRWbbh9Jg+6cyDTj7ydLveF6YMmtruGHLjVTrfuuVuS
+        q09M7yo/egmk7pHn/H2ANhzxOkTnIbvL37nywa7aYsDy6nU=
+X-Google-Smtp-Source: APXvYqyv9hVI/3ia+VYvKfauMlajJpx0zE+oAiYNhkz17y2Yqa6FPzLPwf5HaGbquYkI3mnwm9gJkBCtqCGoKYoEKmg=
+X-Received: by 2002:ac8:342a:: with SMTP id u39mr26502728qtb.7.1569874309586;
+ Mon, 30 Sep 2019 13:11:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190929135024.387033930@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190930121520.1388317-1-arnd@arndb.de> <20190930121520.1388317-2-arnd@arndb.de>
+ <CH2PR20MB2968B7855D241C747BEB68B9CA820@CH2PR20MB2968.namprd20.prod.outlook.com>
+In-Reply-To: <CH2PR20MB2968B7855D241C747BEB68B9CA820@CH2PR20MB2968.namprd20.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 30 Sep 2019 22:11:33 +0200
+Message-ID: <CAK8P3a0PeocENP6c=ENVrq2X8x-vinM6qhPRDDi_WEf6y73AOQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] crypto: inside-secure - Reduce stack usage
+To:     Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Pascal van Leeuwen <pascalvanl@gmail.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Eric Biggers <ebiggers@google.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 29, 2019 at 03:55:28PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.2.18 release.
-> There are 45 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Tue 01 Oct 2019 01:47:47 PM UTC.
-> Anything received after that time might be too late.
-> 
+On Mon, Sep 30, 2019 at 9:04 PM Pascal Van Leeuwen
+<pvanleeuwen@verimatrix.com> wrote:
 
-Build results:
-	total: 159 pass: 159 fail: 0
-Qemu test results:
-	total: 390 pass: 390 fail: 0
+> > Alternatively, it should be possible to shrink these allocations
+> > as the extra buffers appear to be largely unnecessary, but doing
+> > this would be a much more invasive change.
+> >
+> Actually, for HMAC-SHA512 you DO need all that buffer space.
+> You could shrink it to 2 * ctx->state_sz but then your simple indexing
+> is no longer going to fly. Not sure if that would be worth the effort.
 
-Guenter
+Stack allocations can no longer be dynamically sized in the kernel,
+so that would not work.
+
+What I noticed though is that the largest part of safexcel_ahash_export_state
+is used in the 'cache' member, and this is apparently only referenced inside of
+safexcel_hmac_init_iv, which you call twice. If that cache can be allocated
+only once, you save SHA512_BLOCK_SIZE bytes in one of the two paths.
+
+> I don't like the part where you dynamically allocate the cryto_aes_ctx
+> though, I think that was not necessary considering its a lot smaller.
+
+I count 484 bytes for it, which is really large.
+
+> And it conflicts with another change I have waiting that gets rid of
+> aes_expandkey and that struct alltogether (since it was really just
+> abused to do a key size check, which was very wasteful since the
+> function actually generates all roundkeys we don't need at all ...)
+
+Right, this is what I noticed there. With 480 of the 484 bytes gone,
+you are well below the warning limit even without the other change.
+
+       Arnd
