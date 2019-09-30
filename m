@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44563C35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C47C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2362321D56
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6BB821D80
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:09:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731067AbfI3NJl (ORCPT
+        id S1731082AbfI3NJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 09:09:41 -0400
-Received: from ms.lwn.net ([45.79.88.28]:48828 "EHLO ms.lwn.net"
+        Mon, 30 Sep 2019 09:09:54 -0400
+Received: from ms.lwn.net ([45.79.88.28]:48838 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730637AbfI3NJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:09:41 -0400
+        id S1730296AbfI3NJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 09:09:53 -0400
 Received: from lwn.net (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 7732555A;
-        Mon, 30 Sep 2019 13:09:40 +0000 (UTC)
-Date:   Mon, 30 Sep 2019 07:09:39 -0600
+        by ms.lwn.net (Postfix) with ESMTPSA id 63129740;
+        Mon, 30 Sep 2019 13:09:53 +0000 (UTC)
+Date:   Mon, 30 Sep 2019 07:09:52 -0600
 From:   Jonathan Corbet <corbet@lwn.net>
 To:     Doug Ledford <dledford@redhat.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
@@ -39,12 +39,13 @@ References: <a9e8e68f34139d5a9abb7f8b7d3fe64ff82c6d96.camel@intel.com>
         <64d13484950cab570e5f2691d7cdeca292882d95.camel@redhat.com>
 Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+Message-ID: <20190930130952.ARi4sfA76QF92aPl3qMH9HcmW24Jmv0vbE7_TFD62dI@z>
 
 On Fri, 27 Sep 2019 15:29:47 -0400
 Doug Ledford <dledford@redhat.com> wrote:
