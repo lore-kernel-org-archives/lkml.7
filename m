@@ -2,218 +2,174 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C776C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62AC3C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 020E82086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DB762081B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 23:08:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kUxflo+b"
+	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="hgevDKvU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731955AbfI3XIK (ORCPT
+        id S1732109AbfI3XIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 19:08:10 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41814 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727118AbfI3XIK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 19:08:10 -0400
-Received: by mail-pl1-f194.google.com with SMTP id t10so4489656plr.8;
-        Mon, 30 Sep 2019 16:08:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=E983INdsI8HZd9F5u40UdgLm7nSL3Xu0oq9O20W1ovM=;
-        b=kUxflo+b7fwRhsVnvWrqhLriEDr+8P3bt3ZJ7+7TvQ977IbX9ezpTONvrjMfgoPvXl
-         ST5g15fZVfiSJ6iLENHd9jfIuDCdXmJCwXdhq/viVlmHDYqMSPMbkW6YEjDONXNd6HHn
-         UxXDM8YcsNfrT51FZKj7KeEclbCoQfbxKFdafiP4R2/l1k6p5dCJMpNxuhqNd30A6wWS
-         Reultuy1M8+f3cJXC676OgDEvVD3IXHxlo+0H88J+9hvHi1u+AJcbvgTHTFQS5DMDany
-         VwzaScZqVP+mD7SnBLgoln4JOstO7ayxm2/T9j7fTRutj5+nxQ3f93v40pNzpNq4UjTp
-         Vw/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=E983INdsI8HZd9F5u40UdgLm7nSL3Xu0oq9O20W1ovM=;
-        b=L3bYXUteZX+Q+grWvmP8tckix8B1V8SK1FwXpiuc3VWy6ga8/57rGKmMpbeC5O1Z9B
-         utRavDv8e36GSj7wdcdcKm3ToApq7TgOg+VpbhDQOHns8hkVenSvherb5RWuccFtPFJy
-         whhbvm26eXNGctj1xghj7zTR4pYvopyCqF7S2Br7cAzqSjoS9esqPyh5hlID2iuPM1I1
-         HUMQKg+o0ZyV6Zp7A4OVGCkE3O9GNO2uG8lbU+YiPRs2sG873G2zW7JnJRtpar08QKya
-         0r5decfovHkGMoNoom+WAdFjJAgvQ8IeBH8MLEN6ws9VXojNnVXSYapDBuhPFHzeGgYm
-         Tb8Q==
-X-Gm-Message-State: APjAAAXPFf55+iLiRMjl9kpWTCw0cy7CNCQ4uELJcTZy0Q2HyFYguhd8
-        HhARDfKSCXt3AAi7fXzBTfw=
-X-Google-Smtp-Source: APXvYqyNdIVMLjKtt7WybLk7W8rhaXw9OFx2WNxakfR9vLhuazCchaVvRrr1LHSnFn/Z4XT9tuC/FA==
-X-Received: by 2002:a17:902:8d81:: with SMTP id v1mr3737145plo.124.1569884888852;
-        Mon, 30 Sep 2019 16:08:08 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id 64sm15434442pfx.31.2019.09.30.16.08.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 16:08:08 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 16:08:06 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, swboyd@chromium.org, mojha@codeaurora.org,
-        linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH] input: touchscreen: imx6ul_tsc: Use 'dev' instead of
- dereferencing it repeatedly
-Message-ID: <20190930230806.GX237523@dtor-ws>
-References: <1569315731-2387-1-git-send-email-Anson.Huang@nxp.com>
+        Mon, 30 Sep 2019 19:08:17 -0400
+Received: from mail-eopbgr710105.outbound.protection.outlook.com ([40.107.71.105]:33459
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726789AbfI3XIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 19:08:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SAEUi2ZkPQCjdlSilF03aQTCH939UzeKmBgw2yYSoDqHcY3EMEfgV6OsGxg2YD6SgogOoS9wkMNhT2/Zgwb8SQ4L+2HE44FAq90xTR4+WFH7L7c58F0+qv/Uz8U06H//Gg56ictsnTuZMf6Z0qPWAoLMNkwdpnXhpZ/b0CVDZo8zedh/w9biQmsSL/lCQNPU/ZXWTXv6465Ftya8z8TNF9rDd1nJa7Fbeo92pGDWbzebfu4HhZxF35Czz39UXhD95S2Yp3GV+2lEGFTnNYpOfe6iTuiKcJ5E8Us3GNClSSPM5EpFN8D92rvAY48Wfq7aPYCQhaycDSRNJW5sJDjLgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FzcRwqso22wo8GmtuXhuPZeYMvaDoB5ncz9aO4CPbP0=;
+ b=biRH0YyO7k5rpXIIGr9+DK2l2qtBll6OF836tbAyomDt+HfoqP4PTfRdwfKTTiy2rQmxBHsiFsurkixt3X/H7xC061rP+MzsmrxS/Gc2CoLYNcwTW0JF/sM1ZuKl/4h3ZxPIxTRfiIgKaLmsMq+ryvAF/hVcsqsWy0ta1NKXDWLYwkxW0nN8F870n2AZpmW5m03smGDhZzPYOb7Ba3bmjhvr2Im8Hch1mpTR3kMqxvDJj6Gyq8rr82MV3tC3BjZ29jKifVgKQdKxZviLJdS+QvIoaQHEXMgNakx2FkhwvuTlweFUH/DvbIrrFdyz0aDjrp6OGLjeJYrkZC5Ayl7pKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
+ dkim=pass header.d=mips.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FzcRwqso22wo8GmtuXhuPZeYMvaDoB5ncz9aO4CPbP0=;
+ b=hgevDKvUcC51tqIzmnbaUHy5vjIfIR/n8aB0bBlZOct67mJCCIq9o01HUh5u0/DRXrkoUR6b45f0PpO98X3EGNhy4mP1QX4T8dve8rSZ5JmFuNp3F86XImZa+swQkeEDBYGDY8QXxuh5lLZ+bIqwkjLqxL8zvoj9fl7PM1XI/PA=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
+ MWHPR2201MB1709.namprd22.prod.outlook.com (10.164.206.151) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.20; Mon, 30 Sep 2019 23:08:14 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::498b:c2cd:e816:1481]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::498b:c2cd:e816:1481%2]) with mapi id 15.20.2305.017; Mon, 30 Sep 2019
+ 23:08:14 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+CC:     Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Paul Burton <pburton@wavecomp.com>
+Subject: [PATCH 00/37] MIPS: barriers & atomics cleanups
+Thread-Topic: [PATCH 00/37] MIPS: barriers & atomics cleanups
+Thread-Index: AQHVd+PvZwdGu3aHzU2TPg04oPQmjw==
+Date:   Mon, 30 Sep 2019 23:08:14 +0000
+Message-ID: <20190930230806.2940505-1-paul.burton@mips.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR21CA0006.namprd21.prod.outlook.com
+ (2603:10b6:a03:114::16) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:18::12)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.23.0
+x-originating-ip: [12.94.197.246]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2c5edb22-1b05-4df5-ac13-08d745fb122f
+x-ms-traffictypediagnostic: MWHPR2201MB1709:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR2201MB1709FA5D059A23A9CA2ED63AC1820@MWHPR2201MB1709.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 01762B0D64
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(39840400004)(376002)(346002)(396003)(136003)(199004)(189003)(2351001)(66476007)(66556008)(66946007)(64756008)(66446008)(107886003)(99286004)(6486002)(52116002)(5640700003)(6436002)(25786009)(478600001)(14454004)(26005)(6512007)(5660300002)(71200400001)(71190400001)(1076003)(4326008)(186003)(42882007)(6506007)(256004)(486006)(44832011)(476003)(2616005)(14444005)(54906003)(316002)(7736002)(305945005)(6116002)(2906002)(3846002)(81156014)(81166006)(102836004)(50226002)(6916009)(386003)(36756003)(8676002)(8936002)(66066001)(2501003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1709;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: WwyME+0ABGiRsfAnjk1Geg3dMcVcG94Fqome3nAM1prOe1ypZ3qk3eedx4hiuf4YqMU8+EAJmTI635HoHDplF1mOcTr0lTUjwuXXCNr+xryoMIgVY2maG0Jv/7p8Fr0sNIgJFGWDp8QHuHd8VmylFRkVuooSp/g7QYXj1Pz74FnlZS8vwURMMJuXdD3Qv2qRA8xjOwdqG9q0NVshdZphWap6/0usG1NoD/XEShB17bHFK0ierR27JIAeCLUOqN14J2TFAeoMIikDSxc+3ePg/4HPwvpPIzGaC3V+i+lH+Mo21WUIkH05Xl5DaH6uHScdx/aDuOoL2tON3p3/iMWh/g3wpJwRT+GjnO+ntxNH89qgEUiX9qfdTcAb2pS8gE4nHsvaOXuaZ+WLAq0pjziZHmVyc3WonLClsOV66p/Ytcw=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1569315731-2387-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2c5edb22-1b05-4df5-ac13-08d745fb122f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2019 23:08:14.2435
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: m0WjEEG/SAAL/6n+aC980ifUuzNwJ6qRuMHtnxu3qyjhsAywbHqLd8T3Yez3CL6pmTD+ZzN8F0XzLK4e2LjC9A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1709
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 05:02:11PM +0800, Anson Huang wrote:
-> Add helper variable dev = &pdev->dev to simply the code.
+This series consists of a bunch of cleanups to the way we handle memory
+barriers (though no changes to the sync instructions we use to implement
+them) & atomic memory accesses. One major goal was to ensure the
+Loongson3 LL/SC errata workarounds are applied in a safe manner from
+within inline-asm & that we can automatically verify the resulting
+kernel binary looks reasonable. Many patches are cleanups found along
+the way.
 
-Do we get any code savings from this?
+Applies atop v5.4-rc1.
 
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  drivers/input/touchscreen/imx6ul_tsc.c | 37 +++++++++++++++++-----------------
->  1 file changed, 19 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/input/touchscreen/imx6ul_tsc.c b/drivers/input/touchscreen/imx6ul_tsc.c
-> index 9ed2588..4555aa9 100644
-> --- a/drivers/input/touchscreen/imx6ul_tsc.c
-> +++ b/drivers/input/touchscreen/imx6ul_tsc.c
-> @@ -361,7 +361,8 @@ static void imx6ul_tsc_close(struct input_dev *input_dev)
->  
->  static int imx6ul_tsc_probe(struct platform_device *pdev)
->  {
-> -	struct device_node *np = pdev->dev.of_node;
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *np = dev->of_node;
->  	struct imx6ul_tsc *tsc;
->  	struct input_dev *input_dev;
->  	int err;
-> @@ -369,11 +370,11 @@ static int imx6ul_tsc_probe(struct platform_device *pdev)
->  	int adc_irq;
->  	u32 average_samples;
->  
-> -	tsc = devm_kzalloc(&pdev->dev, sizeof(*tsc), GFP_KERNEL);
-> +	tsc = devm_kzalloc(dev, sizeof(*tsc), GFP_KERNEL);
->  	if (!tsc)
->  		return -ENOMEM;
->  
-> -	input_dev = devm_input_allocate_device(&pdev->dev);
-> +	input_dev = devm_input_allocate_device(dev);
->  	if (!input_dev)
->  		return -ENOMEM;
->  
-> @@ -389,14 +390,14 @@ static int imx6ul_tsc_probe(struct platform_device *pdev)
->  
->  	input_set_drvdata(input_dev, tsc);
->  
-> -	tsc->dev = &pdev->dev;
-> +	tsc->dev = dev;
->  	tsc->input = input_dev;
->  	init_completion(&tsc->completion);
->  
-> -	tsc->xnur_gpio = devm_gpiod_get(&pdev->dev, "xnur", GPIOD_IN);
-> +	tsc->xnur_gpio = devm_gpiod_get(dev, "xnur", GPIOD_IN);
->  	if (IS_ERR(tsc->xnur_gpio)) {
->  		err = PTR_ERR(tsc->xnur_gpio);
-> -		dev_err(&pdev->dev,
-> +		dev_err(dev,
->  			"failed to request GPIO tsc_X- (xnur): %d\n", err);
->  		return err;
->  	}
-> @@ -404,28 +405,28 @@ static int imx6ul_tsc_probe(struct platform_device *pdev)
->  	tsc->tsc_regs = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(tsc->tsc_regs)) {
->  		err = PTR_ERR(tsc->tsc_regs);
-> -		dev_err(&pdev->dev, "failed to remap tsc memory: %d\n", err);
-> +		dev_err(dev, "failed to remap tsc memory: %d\n", err);
->  		return err;
->  	}
->  
->  	tsc->adc_regs = devm_platform_ioremap_resource(pdev, 1);
->  	if (IS_ERR(tsc->adc_regs)) {
->  		err = PTR_ERR(tsc->adc_regs);
-> -		dev_err(&pdev->dev, "failed to remap adc memory: %d\n", err);
-> +		dev_err(dev, "failed to remap adc memory: %d\n", err);
->  		return err;
->  	}
->  
-> -	tsc->tsc_clk = devm_clk_get(&pdev->dev, "tsc");
-> +	tsc->tsc_clk = devm_clk_get(dev, "tsc");
->  	if (IS_ERR(tsc->tsc_clk)) {
->  		err = PTR_ERR(tsc->tsc_clk);
-> -		dev_err(&pdev->dev, "failed getting tsc clock: %d\n", err);
-> +		dev_err(dev, "failed getting tsc clock: %d\n", err);
->  		return err;
->  	}
->  
-> -	tsc->adc_clk = devm_clk_get(&pdev->dev, "adc");
-> +	tsc->adc_clk = devm_clk_get(dev, "adc");
->  	if (IS_ERR(tsc->adc_clk)) {
->  		err = PTR_ERR(tsc->adc_clk);
-> -		dev_err(&pdev->dev, "failed getting adc clock: %d\n", err);
-> +		dev_err(dev, "failed getting adc clock: %d\n", err);
->  		return err;
->  	}
->  
-> @@ -439,18 +440,18 @@ static int imx6ul_tsc_probe(struct platform_device *pdev)
->  
->  	err = devm_request_threaded_irq(tsc->dev, tsc_irq,
->  					NULL, tsc_irq_fn, IRQF_ONESHOT,
-> -					dev_name(&pdev->dev), tsc);
-> +					dev_name(dev), tsc);
->  	if (err) {
-> -		dev_err(&pdev->dev,
-> +		dev_err(dev,
->  			"failed requesting tsc irq %d: %d\n",
->  			tsc_irq, err);
->  		return err;
->  	}
->  
->  	err = devm_request_irq(tsc->dev, adc_irq, adc_irq_fn, 0,
-> -				dev_name(&pdev->dev), tsc);
-> +				dev_name(dev), tsc);
->  	if (err) {
-> -		dev_err(&pdev->dev,
-> +		dev_err(dev,
->  			"failed requesting adc irq %d: %d\n",
->  			adc_irq, err);
->  		return err;
-> @@ -484,7 +485,7 @@ static int imx6ul_tsc_probe(struct platform_device *pdev)
->  		tsc->average_select = ilog2(average_samples) - 2;
->  		break;
->  	default:
-> -		dev_err(&pdev->dev,
-> +		dev_err(dev,
->  			"touchscreen-average-samples (%u) must be 1, 4, 8, 16 or 32\n",
->  			average_samples);
->  		return -EINVAL;
-> @@ -492,7 +493,7 @@ static int imx6ul_tsc_probe(struct platform_device *pdev)
->  
->  	err = input_register_device(tsc->input);
->  	if (err) {
-> -		dev_err(&pdev->dev,
-> +		dev_err(dev,
->  			"failed to register input device: %d\n", err);
->  		return err;
->  	}
-> -- 
-> 2.7.4
-> 
+Paul Burton (37):
+  MIPS: Unify sc beqz definition
+  MIPS: Use compact branch for LL/SC loops on MIPSr6+
+  MIPS: barrier: Add __SYNC() infrastructure
+  MIPS: barrier: Clean up rmb() & wmb() definitions
+  MIPS: barrier: Clean up __smp_mb() definition
+  MIPS: barrier: Remove fast_mb() Octeon #ifdef'ery
+  MIPS: barrier: Clean up __sync() definition
+  MIPS: barrier: Clean up sync_ginv()
+  MIPS: atomic: Fix whitespace in ATOMIC_OP macros
+  MIPS: atomic: Handle !kernel_uses_llsc first
+  MIPS: atomic: Use one macro to generate 32b & 64b functions
+  MIPS: atomic: Emit Loongson3 sync workarounds within asm
+  MIPS: atomic: Use _atomic barriers in atomic_sub_if_positive()
+  MIPS: atomic: Unify 32b & 64b sub_if_positive
+  MIPS: atomic: Deduplicate 32b & 64b read, set, xchg, cmpxchg
+  MIPS: bitops: Use generic builtin ffs/fls; drop cpu_has_clo_clz
+  MIPS: bitops: Handle !kernel_uses_llsc first
+  MIPS: bitops: Only use ins for bit 16 or higher
+  MIPS: bitops: Use MIPS_ISA_REV, not #ifdefs
+  MIPS: bitops: ins start position is always an immediate
+  MIPS: bitops: Implement test_and_set_bit() in terms of _lock variant
+  MIPS: bitops: Allow immediates in test_and_{set,clear,change}_bit
+  MIPS: bitops: Use the BIT() macro
+  MIPS: bitops: Avoid redundant zero-comparison for non-LLSC
+  MIPS: bitops: Abstract LL/SC loops
+  MIPS: bitops: Use BIT_WORD() & BITS_PER_LONG
+  MIPS: bitops: Emit Loongson3 sync workarounds within asm
+  MIPS: bitops: Use smp_mb__before_atomic in test_* ops
+  MIPS: cmpxchg: Emit Loongson3 sync workarounds within asm
+  MIPS: cmpxchg: Omit redundant barriers for Loongson3
+  MIPS: futex: Emit Loongson3 sync workarounds within asm
+  MIPS: syscall: Emit Loongson3 sync workarounds within asm
+  MIPS: barrier: Remove loongson_llsc_mb()
+  MIPS: barrier: Make __smp_mb__before_atomic() a no-op for Loongson3
+  MIPS: genex: Add Loongson3 LL/SC workaround to ejtag_debug_handler
+  MIPS: genex: Don't reload address unnecessarily
+  MIPS: Check Loongson3 LL/SC errata workaround correctness
 
--- 
-Dmitry
+ arch/mips/Makefile                            |   2 +-
+ arch/mips/Makefile.postlink                   |  10 +-
+ arch/mips/include/asm/atomic.h                | 571 ++++++-----------
+ arch/mips/include/asm/barrier.h               | 215 +------
+ arch/mips/include/asm/bitops.h                | 593 ++++--------------
+ arch/mips/include/asm/cmpxchg.h               |  59 +-
+ arch/mips/include/asm/cpu-features.h          |  10 -
+ arch/mips/include/asm/futex.h                 |   9 +-
+ arch/mips/include/asm/llsc.h                  |  19 +-
+ .../asm/mach-malta/cpu-feature-overrides.h    |   2 -
+ arch/mips/include/asm/sync.h                  | 207 ++++++
+ arch/mips/kernel/genex.S                      |   6 +-
+ arch/mips/kernel/pm-cps.c                     |  20 +-
+ arch/mips/kernel/syscall.c                    |   3 +-
+ arch/mips/lib/bitops.c                        |  57 +-
+ arch/mips/loongson64/Platform                 |   2 +-
+ arch/mips/tools/.gitignore                    |   1 +
+ arch/mips/tools/Makefile                      |   5 +
+ arch/mips/tools/loongson3-llsc-check.c        | 307 +++++++++
+ 19 files changed, 975 insertions(+), 1123 deletions(-)
+ create mode 100644 arch/mips/include/asm/sync.h
+ create mode 100644 arch/mips/tools/loongson3-llsc-check.c
+
+--=20
+2.23.0
+
