@@ -2,72 +2,113 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,PDS_TONAME_EQ_TOLOCAL_SHORT,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B93FEC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C57E3C35280
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB582086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:47:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tDtbmFA+"
+	by mail.kernel.org (Postfix) with ESMTP id 99C2C21920
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:48:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569883723;
+	bh=JcEw7uCIyE5jztsOeNcXfKUFexFxQswUUcMaCxIQGmE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1Lu1TYIKwaG58CB9HRfw3MC/212LikfEOncLee+gS1UipdqdGbDGPPT0pzgKlxzRF
+	 Iu6+M03sF+O7J+e+NNTzgyDY2eOwF/t9YZ+UQyDjqPrgF9dYJRECTrentafxqA5leW
+	 uhMijDGDuOd5U5z2wL1vR2mzj+kkSojGC2/Ac910=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730999AbfI3Wre (ORCPT
+        id S1731515AbfI3Wsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 18:47:34 -0400
-Received: from mail-wr1-f52.google.com ([209.85.221.52]:35442 "EHLO
-        mail-wr1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726350AbfI3Wre (ORCPT
+        Mon, 30 Sep 2019 18:48:43 -0400
+Received: from mail-ot1-f49.google.com ([209.85.210.49]:40683 "EHLO
+        mail-ot1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726350AbfI3Wsm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 18:47:34 -0400
-Received: by mail-wr1-f52.google.com with SMTP id v8so13151000wrt.2
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 15:47:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=vACRy1d50tv2X7tYoBuy2WMfnYzmRtun586RkaFNiGM=;
-        b=tDtbmFA+vGE/kC8Lg1lvDkgL8bos67whQ0/OuZbnWVXp5rlf4k4kGKjS/kWpy7furp
-         7YSYPgW1J/CLfQK/OSgslO+litCWUx/N+iy2zSduiubIntEnjbSkPb71J6Qv6gkKsEXt
-         J+URKlys+oP5JYOtzydpV7vxiwXcl0cYLbUx5sv4HjfVVNpa3VnmovSiEQy+wLvE4JkX
-         VGVkbwEY1cAo6B5MH92whCOWqZo0IXpAC3Mf+eLZjynInbPis1TaZjRNZe5BqLPOVnF/
-         IRrZrjmUTBG3+wNIAXpwtp+ADN5HB29+1y/oDXT07/6kOrBzHIMBf4QPHzvRnC0Q8Oow
-         taVg==
+        Mon, 30 Sep 2019 18:48:42 -0400
+Received: by mail-ot1-f49.google.com with SMTP id y39so9847196ota.7;
+        Mon, 30 Sep 2019 15:48:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=vACRy1d50tv2X7tYoBuy2WMfnYzmRtun586RkaFNiGM=;
-        b=HRd0DXERHBb41oaS9f14pxqOi8XICHZs8umMzuHxVCwWftsTvsxMcygLQnnCqfi1az
-         SQ/m2yXwADnyiQWcWDW5ndn+uA0g114Eef7/zOWi64NAh317xHFhsXyyZ/9Esq0buvXi
-         gcfhPkczQjIkx1lNOH3GBn4VaEYp0QwkvhfTJcQhJ3r4BZVIjKR5L1Y+NiXvcGKjcXmb
-         jnohN8ytP0i5+OW7Kxdau/gFj75W/rHUOq1kgHj5hRjblT0Hok9gdzK6nEF+moERgsqV
-         1Xs+nAcmsHZ97V0GOpQ7xu4hLyQrzFatO23j+Guybxzvig03vFSbdsTuoj37JGGBBzBU
-         6OYA==
-X-Gm-Message-State: APjAAAVOs5rlWMrY0b5wJfVbk8nU5HYCXdsnoYtqAWZv9UpbXZ/SFGjd
-        3MK/1rpZdDLBFhdZ03pb+c8oj/YtRlZG7C4sAr7P1Q==
-X-Google-Smtp-Source: APXvYqzXp18FqD3gNqmWnCe4DCapImeolM/VKTXIf0yx9PedpkM/NKo3v3qJC4v0Z3I0EeP4w4KxsBtjXiaE8g0D6NY=
-X-Received: by 2002:adf:8b13:: with SMTP id n19mr16093705wra.203.1569883652914;
- Mon, 30 Sep 2019 15:47:32 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=D/dD00QphSzV/Ka38bzb5/CeWrEMk8mWwTGoFJZHq3k=;
+        b=bkNxNnuFLSPNJX678qt7qerpWWx0VuFjY3XX6TmDjbNrEPPmzmg13KNb/q8puamy/v
+         tVc96qWyq1utiiZhIlAGnI5U1Lx3cqFfrL7PgXgBwwvUOzR626nIgiaVouZQ59FgOQlT
+         naLYi2N2K0fSbBA7pDeqw9XfCV4IOwxF7LkYtDwliP7j2BpVgpADQM2Sdpsu33wkpgEU
+         27w/AwT1asykLVTr9I64bAlRBaZ/Z1y1wb43UoCxK9GeUUzbHrdk5ATJpgniXn+syytd
+         Rtr0M0BMZuuopWcsAkF/xYWWqvPbMv5xtfuR63NN9q9D2cYLq7iyMG+G1zH3Lukwb/BK
+         tXaw==
+X-Gm-Message-State: APjAAAVWotVatJF3CA8aY+AYwXqyzdgfPOU9YHkXTC4lgnPPeXxhebV5
+        wP9d8BPo0dlys8i/lN+sNQ==
+X-Google-Smtp-Source: APXvYqy8N455WPCAznPZGY3kveDRglG9NszpcGNYi7iZk5py/XeRlVJI8/bg0hebWXyLQwk62+B+0w==
+X-Received: by 2002:a9d:2f09:: with SMTP id h9mr5102050otb.21.1569883720195;
+        Mon, 30 Sep 2019 15:48:40 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id x140sm4772717oix.42.2019.09.30.15.48.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 15:48:39 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 17:48:38 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Biwen Li <biwen.li@nxp.com>
+Cc:     'Geert Uytterhoeven' <geert@linux-m68k.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [EXT] Re: [PATCH] devicetree: property-units: Add kohms unit
+Message-ID: <20190930224838.GA27522@bogus>
+References: <20190917075850.40039-1-biwen.li@nxp.com>
+ <CAMuHMdUWue6-51Za7vejk=QkhV80iBXdc1E+6aTmQsvpB5AP-A@mail.gmail.com>
+ <DB7PR04MB4490DD5F5A87EB796DE2A7A28F8F0@DB7PR04MB4490.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-From:   "David F." <df7729@gmail.com>
-Date:   Mon, 30 Sep 2019 15:47:21 -0700
-Message-ID: <CAGRSmLsV96jK+7UB6T6k8j9u74oPSHTA+1TPU8F9G2NnOqCDJg@mail.gmail.com>
-Subject: What populates /proc/partitions ?
-To:     linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DB7PR04MB4490DD5F5A87EB796DE2A7A28F8F0@DB7PR04MB4490.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Sep 17, 2019 at 08:25:55AM +0000, Biwen Li wrote:
+> > 
+> > Caution: EXT Email
+> > 
+> > Hi Biwen,
+> > 
+> > On Tue, Sep 17, 2019 at 10:09 AM Biwen Li <biwen.li@nxp.com> wrote:
+> > > The patch adds kohms unit
+> > >
+> > > Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> > 
+> > Thanks for your patch!
+> > 
+> > > --- a/Documentation/devicetree/bindings/property-units.txt
+> > > +++ b/Documentation/devicetree/bindings/property-units.txt
+> > > @@ -27,6 +27,7 @@ Electricity
+> > >  -microamp      : microampere
+> > >  -microamp-hours : microampere hour
+> > >  -ohms          : ohm
+> > > +-kohms         : kiloohm
+> > >  -micro-ohms    : microohm
+> > >  -microwatt-hours: microwatt hour
+> > >  -microvolt     : microvolt
+> > 
+> > What's your rationale for adding "kohms"?
+> > Do you need to specify resistance values that do not fit in 32-bit, and thus
+> 32-bit is enough, I have three values, 60 kohm, 100 kohm and 500 kohm
+> > cannot be specified using "ohms"?
+> If replace with ohms, the value is as follows:
+> 60000 ohm, 100000 ohm, 500000 ohm.
+> It's so long for everyone.
 
-I want to find out why fd0 is being added to /proc/partitions and stop
-that for my build.  I've searched "/proc/partitions" and "partitions",
-not finding anything that matters.
+It's not any longer, it's still 32-bits.
 
-If udev is doing it, what function is it call so I can search on that?
+Please stick with '-ohms'.
 
-TIA!!
+Rob
