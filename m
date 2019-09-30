@@ -2,143 +2,127 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB91FC388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E798C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAC9721924
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:22:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569882144;
-	bh=4Iz7kk0XFXIxQxRpuSaLSWqE0u/RrsfFezoOFFrQoWw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qjMj0JiIxq5B8hM7FHcPfu5N/eT8jvkSoflrCzDlP+peaYQp/2ic7Eg0o695lRND8
-	 0TpWMrMtKpwoDDg4ljHVDCgIUWYIsZY0qo/pPvnj7/VJauLkv6v6nFKPUQQ+3LIziR
-	 pnED2WO0kpMa+qt8NtJdeQT5VAukFLRalq5sUxw0=
+	by mail.kernel.org (Postfix) with ESMTP id 1D7A22081B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 22:23:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="Nyv3MjpM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731741AbfI3WWY (ORCPT
+        id S1732060AbfI3WXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 18:22:24 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:41607 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726590AbfI3WWX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 18:22:23 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w17so12608437oiw.8;
-        Mon, 30 Sep 2019 15:22:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3gV+N2q4c7xBEndHGGNd7K/X6ylfrBjCj+XYgXjqaaA=;
-        b=Wns2nT6l/0DkBpdTMWZ6/sMZEVB6orNisApsbrrPoj+xQEfjPDtaxkb1u+pmx6XKk9
-         hH3rPZORYwVqnEx9tIbqCIqEu+rUTPyiQhtGpd6JVllmalf1Sv3vNffOZrAdLtd0OSiI
-         9XqBiFFdHAIJ8DsVS0y8m/qzL0/SXunvevbzNBVSOHzjM0Cm4L12Rlnbi9eLo5r/xjZH
-         3YchIqw5DJXsFqpbqQdFloiMNTybV+yKFgHqjUC9dpqH5ssdCwFN/k9f6BOk2inAo7D2
-         BbRrybKB0b2dgT2qbCNK9NqnspmAkKPHxbhEmW7vbCK0E1Z6g0u6ioDOK9596RBfJohN
-         1RzA==
-X-Gm-Message-State: APjAAAXFT8gBI6t3OByehkaxleBIJa4/T3LhpLd5tXNA1Vsq8Ik+UNzQ
-        1UMjqj5VdNBJ/NOxIHlh2g==
-X-Google-Smtp-Source: APXvYqxVlkZ7EqGOYTrAdHZlOQJmcXo93WrERqOQtRgYQpwCMDU3zVOggGVnVmoHHdYMkoNNmQkgxA==
-X-Received: by 2002:aca:3387:: with SMTP id z129mr1221964oiz.65.1569882142647;
-        Mon, 30 Sep 2019 15:22:22 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t82sm4686884oie.12.2019.09.30.15.22.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 15:22:22 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 17:22:21 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     Zhiqiang.Hou@nxp.com, bhelgaas@google.com, mark.rutland@arm.com,
-        shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com,
-        lorenzo.pieralisi@arm.com, Minghuan.Lian@nxp.com,
-        andrew.murray@arm.com, mingkai.hu@nxp.com,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/6] dt-bindings: Add DT binding for PCIE GEN4 EP of the
- layerscape
-Message-ID: <20190930222221.GA13251@bogus>
-References: <20190916021742.22844-1-xiaowei.bao@nxp.com>
- <20190916021742.22844-3-xiaowei.bao@nxp.com>
+        Mon, 30 Sep 2019 18:23:10 -0400
+Received: from mail-eopbgr770123.outbound.protection.outlook.com ([40.107.77.123]:27602
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726590AbfI3WXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 18:23:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fLiqDNEBYq3sCo6kFtYxM/2HkxFvzkQGKALvwoEEB7pJjjPK9Us3MphcfsGrvRMbyj2t72qB7BKmisxR3I8Vqltpf2flHA6/C5AeAH5gHfxJWhhxnrvVw3q9lWUk86gUjXaaqZ52BVTeWXRiABPW4wNumYscmOX9xnUh/qWLdOE36ChOjYnwCR74uGHimvKKEYV3FZjodGo2HIrBHpduiFS87sDVdrpW8mwgejfpdTzkAMTyFiwgMVdKoUB50X1eBNB3NmrlYbYAB4qWh7wgcZB7cpGWD6ApK1C47AmOqbHbesYk9lFum7l+iIvs0WinlkbKozBkMpRHi4QtyXdf8w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rjIeJqFz0YD2vBhdgldufYFAKwa+c7twIwQ+b6mcOPI=;
+ b=ARnLIzzRovSXRLpCRLQfQgd/V24EqC66EF1EaVOkBI5KiC0AnoWkClBzNVaTquNskDvjuYrE2si7u26nyF6QsQ1g4rnpLQgVnjgdX1rUWuopv5cvVy5uS4JzH86G86GKAieN+AAiTDlCvwjD5naeL/XZ3xPVVT4KDGpYW76S70kn0wQIR7sYxO1jXIuUCJUp6eIY90IyUX+5Xyo2kxnlyD4o9VBIgaQz+EIGhYeFB+l0mXtmrLlgyyX9LZi3MbxGcxFxAuf0D5XK1a345emzgrFb3gRhbkRPDUJ5eQpHG8o1h16Yc+Q9YZSVC2Ov2A9YTD31ZXNMbmcyRRPn8TZRig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
+ dkim=pass header.d=mips.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rjIeJqFz0YD2vBhdgldufYFAKwa+c7twIwQ+b6mcOPI=;
+ b=Nyv3MjpMf1oIvj0vVGgf5VCQEB/GQeiCOEE90bBXw1CRlg2A9WuIo99tkNlhI1FD8IWxAxbTcPVVZq55FnoCx9i98ToIRMr+Amgz2tlSJXgyahg80WMn37JFzidqLxIY1xSoQHjkFctTM775y0mcmGRcijuOe1yOSq3Olz8NHiE=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
+ MWHPR2201MB1168.namprd22.prod.outlook.com (10.174.168.167) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.17; Mon, 30 Sep 2019 22:23:08 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::498b:c2cd:e816:1481]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::498b:c2cd:e816:1481%2]) with mapi id 15.20.2305.017; Mon, 30 Sep 2019
+ 22:23:08 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <pburton@wavecomp.com>,
+        James Hogan <jhogan@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH v1] MIPS: dts: ar9331: fix interrupt-controller size
+Thread-Topic: [PATCH v1] MIPS: dts: ar9331: fix interrupt-controller size
+Thread-Index: AQHVd92icE8wAVdhU0ezG/dYASTkBg==
+Date:   Mon, 30 Sep 2019 22:23:08 +0000
+Message-ID: <MWHPR2201MB12777F4BB53AEC23CDE5B996C1820@MWHPR2201MB1277.namprd22.prod.outlook.com>
+References: <20190930093952.22418-1-o.rempel@pengutronix.de>
+In-Reply-To: <20190930093952.22418-1-o.rempel@pengutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR05CA0080.namprd05.prod.outlook.com
+ (2603:10b6:a03:e0::21) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:18::12)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [12.94.197.246]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bea83fa6-ebad-49b6-e452-08d745f4c54d
+x-ms-traffictypediagnostic: MWHPR2201MB1168:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR2201MB11681BF5591A9B5BC85591ADC1820@MWHPR2201MB1168.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2089;
+x-forefront-prvs: 01762B0D64
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(396003)(39850400004)(136003)(366004)(199004)(189003)(256004)(7736002)(76176011)(74316002)(305945005)(6506007)(386003)(52116002)(42882007)(26005)(55016002)(186003)(6306002)(9686003)(4744005)(102836004)(7696005)(54906003)(99286004)(316002)(44832011)(476003)(6436002)(446003)(486006)(11346002)(5660300002)(6916009)(229853002)(3846002)(6116002)(478600001)(25786009)(71190400001)(52536014)(71200400001)(33656002)(2906002)(66946007)(66446008)(66066001)(64756008)(66556008)(66476007)(6246003)(81156014)(81166006)(966005)(14454004)(4326008)(8676002)(8936002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1168;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: dp809ggupFMy6BHOXmTv+jee4+sWcfLFHQrwLyZf8x64oei8XvL8RdRsNscYYh8guQIrN4asEGHLpB4aG4/xbywnZTholVBSdBn23ol0AArP8MDWch95xAB+rJD6My3oQMNd+pAdkldDuYlL3FNZY+/y/2DfGxV+sB2RrksX3pMfQZ/0+6r28bnb09a+7KIOshUbL/LwwZDn0THyUYhNZRm8TFTYdJcI4PAiJC8Y7AN43N6kuipVKFeZTb4wRoC8q4f+M/O8m5EHZMfP+OPweDKSQX+szXJefzEA1B5Uy6lMwpmvQrdI+xSRp4OGlKZ4/haRrjhLOf9m7psuL5gMUgtdlA70zN4Yjumfx9AejmunPthQmn+A58lfdZPuwCVmqMvsdVh0XExGIEkJzkqRFN3xPVPHshRNTQKJM6guIvs7bPHRUVljw0Odxebt8Ll2WylY295qjKpUZi8qAiLSCA==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190916021742.22844-3-xiaowei.bao@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bea83fa6-ebad-49b6-e452-08d745f4c54d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2019 22:23:08.2516
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: eXx/qlLyw7rF6OO8l6Vwxw03jw+IQdSloGY8z/eoyhAg6eid4KnV+8psviibWMVfsLKnozOPBbdzKhBaXYW6Jg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1168
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 10:17:38AM +0800, Xiaowei Bao wrote:
-> Add the documentation for the Device Tree binding of the layerscape
-> PCIe GEN4 controller with EP mode.
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> ---
->  .../bindings/pci/layerscape-pcie-gen4.txt          | 28 +++++++++++++++++++++-
->  1 file changed, 27 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt b/Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
-> index b40fb5d..414a86c 100644
-> --- a/Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
-> +++ b/Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
-> @@ -3,6 +3,8 @@ NXP Layerscape PCIe Gen4 controller
->  This PCIe controller is based on the Mobiveil PCIe IP and thus inherits all
->  the common properties defined in mobiveil-pcie.txt.
->  
-> +HOST MODE
-> +=========
->  Required properties:
->  - compatible: should contain the platform identifier such as:
->    "fsl,lx2160a-pcie"
-> @@ -23,7 +25,20 @@ Required properties:
->  - msi-parent : See the generic MSI binding described in
->    Documentation/devicetree/bindings/interrupt-controller/msi.txt.
->  
-> -Example:
-> +DEVICE MODE
-> +=========
-> +Required properties:
-> +- compatible: should contain the platform identifier such as:
-> +  "fsl,lx2160a-pcie-ep"
-> +- reg: base addresses and lengths of the PCIe controller register blocks.
-> +  "regs": PCIe controller registers.
-> +  "addr_space" EP device CPU address.
-> +- apio-wins: number of requested apio outbound windows.
-> +
-> +Optional Property:
-> +- max-functions: Maximum number of functions that can be configured (default 1).
-> +
-> +RC Example:
->  
->  	pcie@3400000 {
->  		compatible = "fsl,lx2160a-pcie";
-> @@ -50,3 +65,14 @@ Example:
->  				<0000 0 0 3 &gic 0 0 GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
->  				<0000 0 0 4 &gic 0 0 GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
->  	};
-> +
-> +EP Example:
-> +
-> +	pcie_ep@3400000 {
+Hello,
 
-pcie-endpoint@...
+Oleksij Rempel wrote:
+> It is two registers each of 4 byte.
 
-> +		compatible = "fsl,lx2160a-pcie-ep";
-> +		reg = <0x00 0x03400000 0x0 0x00100000
-> +		       0x80 0x00000000 0x8 0x00000000>;
-> +		reg-names = "regs", "addr_space";
-> +		apio-wins = <8>;
-> +		status = "disabled";
+Applied to mips-fixes.
 
-Don't show status in examples.
+> commit 0889d07f3e4b
+> https://git.kernel.org/mips/c/0889d07f3e4b
+>=20
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> Signed-off-by: Paul Burton <paul.burton@mips.com>
 
-> +	};
-> -- 
-> 2.9.5
-> 
+Thanks,
+    Paul
+
+[ This message was auto-generated; if you believe anything is incorrect
+  then please email paul.burton@mips.com to report it. ]
