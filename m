@@ -2,129 +2,179 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 493C6C35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 610F0C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20A71218DE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:50:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569851447;
-	bh=OIbZsPSF9qroZ0kz/LZxanDyoEYFB6HCUHmhhGKKq8k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cNXfKt5zm59fxfnIFztFYQzJk5o4Gq5KvIJ03DU/7Z4OeJU+18z0bpW5xR6SOD4dp
-	 b/Ei2i7Y6doQ5kIzx5rKjGrkYvR6RfflBOU5vF+PB/PjAZThZyc7EDFIUMBN+4J4ag
-	 4zQDsU3nQk80WdLKcAtGmysCrJX+8wK0Bc/yvrvY=
+	by mail.kernel.org (Postfix) with ESMTP id 42BD02086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:51:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731421AbfI3Nuq (ORCPT
+        id S1731447AbfI3Nvc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 09:50:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40610 "EHLO mail.kernel.org"
+        Mon, 30 Sep 2019 09:51:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40806 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729738AbfI3Nup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:50:45 -0400
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+        id S1731129AbfI3Nvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 09:51:31 -0400
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 377B3218DE;
-        Mon, 30 Sep 2019 13:50:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569851444;
-        bh=OIbZsPSF9qroZ0kz/LZxanDyoEYFB6HCUHmhhGKKq8k=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=J8CyQdV6pCZnRDKG8N78sgAXNG4CxpVQcDB1HXZqdjOl45nFqHuI0N7YyyTmoJO9S
-         enamULt2Px7Uq1qrwglFxrbHnkwlZHmwwwt5s7jxVv63r4FMNyBRu/XQ/ExjSuo8iN
-         gyUxgEeMW9LMI3VHq3OhjuVw3/BvFvEBdk6tXVSw=
-Received: by mail-lf1-f53.google.com with SMTP id u28so7093976lfc.5;
-        Mon, 30 Sep 2019 06:50:44 -0700 (PDT)
-X-Gm-Message-State: APjAAAXQUGBwE3xTED+55GFAip14ZXIaHdkqxrhwKOyzWbdRc4sF5etk
-        CHK1LSenSZU7r7tO2h6nN31aE94PTkewm/1nY4U=
-X-Google-Smtp-Source: APXvYqwVXh3xte/Qq+8kD2of/JzjRnkrT5ai7bQgRPTC8HxeWB5/Vq/4zTEr70WWOxMCWiqzOA7j5K25m/1BgMyTIZ0=
-X-Received: by 2002:ac2:51a7:: with SMTP id f7mr11285925lfk.119.1569851442393;
- Mon, 30 Sep 2019 06:50:42 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id 033B3C049E36
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 13:51:31 +0000 (UTC)
+Received: by mail-wm1-f70.google.com with SMTP id k67so3955474wmf.3
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 06:51:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KJecfdV4cU2EkR1odbrtXYLFF3/KCfbmiXi5v/OdwmM=;
+        b=DqUUcLYRxc4Usq+pBb1VIuE3MAmyMvEvibYQkVGF2OpudnTFaRxOXYEQfIsfio2QTs
+         VDIh/XKekHvGDBcZLFtdBFwc1bRvtiolHblO/YRGkw+t1Cwu6fAhVKvXGasB1VehU/bo
+         CzJ4W7vS3rxyYuIyBBX+AXeA6t0nLflIuCRf1ODnqvBMzLhuRh0Qjt/izCu2GHcznUhL
+         qkRMC78ZxnH6ny/67rB9aoTDKYOOqRpYdEbQ2MQ2VeaadsVIZZKZgs3A6wnnb2f31kyR
+         Q2ydwzLByAazlpW46kJW5+zvTJMzFF6MRZ28nahkMTNM4f5Gm0u9asdZavGeKwNvpSBS
+         vThg==
+X-Gm-Message-State: APjAAAXOzzngbX4LugP/uBq7CUtwvOJSvRJxc4mzUYhge/G5xk3Lqy0U
+        Rzqp4kVr1haygA2YYFJMU/2BM96w0GK49GnNigHwzC8daEdURFwsvwnjaJGVFMYla+OyGwUSuMi
+        kuviz1btV7uzNzS2rx9kc8SpA
+X-Received: by 2002:a05:600c:238a:: with SMTP id m10mr18590254wma.51.1569851489005;
+        Mon, 30 Sep 2019 06:51:29 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwO29KpzdE/B4PZ3FyZQ0b+zqrWaXagG+JSizcZd8LEziw9BOwffjU331R6jmlmhQgquk4C4Q==
+X-Received: by 2002:a05:600c:238a:: with SMTP id m10mr18590238wma.51.1569851488775;
+        Mon, 30 Sep 2019 06:51:28 -0700 (PDT)
+Received: from steredhat (host174-200-dynamic.52-79-r.retail.telecomitalia.it. [79.52.200.174])
+        by smtp.gmail.com with ESMTPSA id h63sm26377926wmf.15.2019.09.30.06.51.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 06:51:28 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 15:51:25 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     "davem@davemloft.net" <davem@davemloft.net>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "stefanha@redhat.com" <stefanha@redhat.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "deepa.kernel@gmail.com" <deepa.kernel@gmail.com>,
+        "ytht.net@gmail.com" <ytht.net@gmail.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "jhansen@vmware.com" <jhansen@vmware.com>
+Subject: Re: [PATCH net v2] vsock: Fix a lockdep warning in __vsock_release()
+Message-ID: <20190930135125.prztj336splp74wq@steredhat>
+References: <1569460241-57800-1-git-send-email-decui@microsoft.com>
+ <20190926074749.sltehhkcgfduu7n2@steredhat.homenet.telecomitalia.it>
+ <PU1P153MB01698C46C9348B9762D5E122BF810@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-References: <20190930101841.19630-1-ribalda@kernel.org> <20190930101841.19630-8-ribalda@kernel.org>
- <aa6ace11-9697-d3d9-907c-83b3398d8f5e@xs4all.nl>
-In-Reply-To: <aa6ace11-9697-d3d9-907c-83b3398d8f5e@xs4all.nl>
-From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
-Date:   Mon, 30 Sep 2019 15:50:25 +0200
-X-Gmail-Original-Message-ID: <CAPybu_3vCpUzc8SxQUuYZpQmf-OrMx9ck=Wj3xv_5C0SzzBgWA@mail.gmail.com>
-Message-ID: <CAPybu_3vCpUzc8SxQUuYZpQmf-OrMx9ck=Wj3xv_5C0SzzBgWA@mail.gmail.com>
-Subject: Re: [PATCH v8 7/8] media: v4l2-ctrl: Add new helper v4l2_ctrl_ptr_from_void
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PU1P153MB01698C46C9348B9762D5E122BF810@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans
+On Fri, Sep 27, 2019 at 05:37:20AM +0000, Dexuan Cui wrote:
+> > From: linux-hyperv-owner@vger.kernel.org
+> > <linux-hyperv-owner@vger.kernel.org> On Behalf Of Stefano Garzarella
+> > Sent: Thursday, September 26, 2019 12:48 AM
+> > 
+> > Hi Dexuan,
+> > 
+> > On Thu, Sep 26, 2019 at 01:11:27AM +0000, Dexuan Cui wrote:
+> > > ...
+> > > NOTE: I only tested the code on Hyper-V. I can not test the code for
+> > > virtio socket, as I don't have a KVM host. :-( Sorry.
+> > >
+> > > @Stefan, @Stefano: please review & test the patch for virtio socket,
+> > > and let me know if the patch breaks anything. Thanks!
+> > 
+> > Comment below, I'll test it ASAP!
+> 
+> Stefano, Thank you!
+> 
+> BTW, this is how I tested the patch:
+> 1. write a socket server program in the guest. The program calls listen()
+> and then calls sleep(10000 seconds). Note: accept() is not called.
+> 
+> 2. create some connections to the server program in the guest.
+> 
+> 3. kill the server program by Ctrl+C, and "dmesg" will show the scary
+> call-trace, if the kernel is built with 
+> 	CONFIG_LOCKDEP=y
+> 	CONFIG_LOCKDEP_SUPPORT=y
+> 
+> 4. Apply the patch, do the same test and we should no longer see the call-trace.
+> 
 
-Thanks for the review
+Hi Dexuan,
+I tested on virtio socket and it works as expected!
 
-On Mon, Sep 30, 2019 at 3:07 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
->
-> On 9/30/19 12:18 PM, Ricardo Ribalda Delgado wrote:
-> > This helper function simplifies the code by not needing a union
-> > v4l2_ctrl_ptr and an assignment every time we need to use
-> > a ctrl_ptr.
-> >
-> > Suggested-by: Hans Verkuil <hverkuil@xs4all.nl>
-> > Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
-> > ---
-> >  include/media/v4l2-ctrls.h | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> >
-> > diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
-> > index c42f164e2c9e..d69cfdffd41d 100644
-> > --- a/include/media/v4l2-ctrls.h
-> > +++ b/include/media/v4l2-ctrls.h
-> > @@ -73,6 +73,17 @@ union v4l2_ctrl_ptr {
-> >       void *p;
-> >  };
-> >
-> > +/**
-> > + * v4l2_ctrl_ptr() - Helper function to return a v4l2_ctrl_ptr from a
-> > + * void pointer
-> > + * @ptr:     The void pointer
-> > + */
-> > +static inline union v4l2_ctrl_ptr v4l2_ctrl_ptr_from_void(void *ptr)
->
-> Mismatch between function name and the comment above.
->
-> But _from_void is not a good name, since it's from a void pointer.
->
-> How about: v4l2_ctrl_ptr_create(void *ptr)
->
-> since you create a v4l2_ctrl_ptr.
->
-> Regards,
->
->         Hans
+With your patch applied I don't have issues and call-trace. Without
+the patch I have a very similar call-trace (as expected):
+    ============================================
+    WARNING: possible recursive locking detected
+    5.3.0-vsock #17 Not tainted
+    --------------------------------------------
+    python3/872 is trying to acquire lock:
+    ffff88802b650110 (sk_lock-AF_VSOCK){+.+.}, at: virtio_transport_release+0x34/0x330 [vmw_vsock_virtio_transport_common]
 
-After talking on IRC:
+    but task is already holding lock:
+    ffff88803597ce10 (sk_lock-AF_VSOCK){+.+.}, at: __vsock_release+0x3f/0x130 [vsock]
 
-Will fix both changes and resend v9 after v5.4-rc1 is merged back into
-the media tree.
+    other info that might help us debug this:
+     Possible unsafe locking scenario:
 
-Thanks again!
+           CPU0
+           ----
+      lock(sk_lock-AF_VSOCK);
+      lock(sk_lock-AF_VSOCK);
 
->
-> > +{
-> > +     BUILD_BUG_ON(sizeof(union v4l2_ctrl_ptr) != sizeof(void *));
-> > +     return (union v4l2_ctrl_ptr) ptr;
-> > +}
-> > +
-> >  /**
-> >   * struct v4l2_ctrl_ops - The control operations that the driver has to provide.
-> >   *
-> >
->
+     *** DEADLOCK ***
+
+     May be due to missing lock nesting notation
+
+    2 locks held by python3/872:
+     #0: ffff88802c957180 (&sb->s_type->i_mutex_key#8){+.+.}, at: __sock_release+0x2d/0xb0
+     #1: ffff88803597ce10 (sk_lock-AF_VSOCK){+.+.}, at: __vsock_release+0x3f/0x130 [vsock]
+
+    stack backtrace:
+    CPU: 0 PID: 872 Comm: python3 Not tainted 5.3.0-vsock #17
+    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
+    Call Trace:
+     dump_stack+0x85/0xc0
+     __lock_acquire.cold+0xad/0x22b
+     lock_acquire+0xc4/0x1a0
+     ? virtio_transport_release+0x34/0x330 [vmw_vsock_virtio_transport_common]
+     lock_sock_nested+0x5d/0x80
+     ? virtio_transport_release+0x34/0x330 [vmw_vsock_virtio_transport_common]
+     virtio_transport_release+0x34/0x330 [vmw_vsock_virtio_transport_common]
+     ? mark_held_locks+0x49/0x70
+     ? _raw_spin_unlock_irqrestore+0x44/0x60
+     __vsock_release+0x2d/0x130 [vsock]
+     __vsock_release+0xb9/0x130 [vsock]
+     vsock_release+0x12/0x30 [vsock]
+     __sock_release+0x3d/0xb0
+     sock_close+0x14/0x20
+     __fput+0xc1/0x250
+     task_work_run+0x93/0xb0
+     exit_to_usermode_loop+0xd3/0xe0
+     syscall_return_slowpath+0x205/0x310
+     entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+
+Feel free to add:
+
+Tested-by: Stefano Garzarella <sgarzare@redhat.com>
