@@ -2,145 +2,114 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C5CC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7E9C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41908206BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:30:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="TyOzhtLL"
+	by mail.kernel.org (Postfix) with ESMTP id EB40D2190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:36:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569843361;
+	bh=9WEhA8JA+UBptPyxfyomZDl3eE0Son1at5a6dFCkZpA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=t2caD1my7wOMw0ok7mKLhqv7JS7TGl73SJdr/wLga8/MDG1Dmeq4uARvMwoPHSvPx
+	 acvi5gIw6m9WphnZYCE15q/pj4NNgRdYgp41lxSepBj90lwGAnRGRYzNwrhOScAogT
+	 DDpOmPf7FdMzOMyWlVx2W6d5HlEv5fFr5UPn/RG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729877AbfI3Lae (ORCPT
+        id S1729913AbfI3LgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 07:30:34 -0400
-Received: from mail-eopbgr790044.outbound.protection.outlook.com ([40.107.79.44]:33536
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729245AbfI3Lae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 07:30:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HtMJLITfct0np3fb7z2CHeNf0jBu6PuYQWX6SjcWKdjUp3Pb58KodT0ND5XogKDokukSc4CQoN9QsuIhg2lCLCV33rmwzBgwpQ6/fK1inECDlF2jBdOx0fxvuYveALwciTWYQuRabyKD4hzJzs51Q0uZC4EuUKzRw9OHuhuJ0yDjmS8kTcuDZsdFwQsyymMaqUmG4UpT36cvccVZbDcNdHUpPYGeLJxotyl1T/6q389mpf9dv5uczB8gjzfFn6/fNT7B3BOb0B6Ubf/4SA3WBUooJhEJ2Hr6QM5lICp0pOn/KnkKodpfsyfRcPIPCnDVD94+BcRYbJm42EDJPKJUvw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RbojN2lfElg6G3HJDuMfvgrgTiNtlII0EBDeJEZ5chk=;
- b=afrcuyMB1tdSR4IeYcX6a2oOzITBiPjy9sie89om2OQ6K7Zus767FEjOsax9XAHydI2DmOrCAUyRRWOaMxqtgDuL0KpAA+l3QbRh31cucjYhFYMsjvEqHvsVK44Ui1vJsFzc5Wj5hOB4s3avDgzn7tSght9a7mMXYIwV7gnNrUF6kisSPqRP2kEGSuiaQ3Ni7fXutMwtrAXkF5kb19E9RmxvbkzFwYWL27Fkzt+QZN2gVEAyKYr4bhhTtbU1SgtdXhfDxqg3N3QNC3C5BAD4+1IeAMFfVhmFw83RcWoes5gtA+uGaEAoRiJm18Xgqf+XNjlvOLRBlA3Hb75e8OlzsQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RbojN2lfElg6G3HJDuMfvgrgTiNtlII0EBDeJEZ5chk=;
- b=TyOzhtLLqTY4sOucU3tBIFa/KedY/luuYF0vhYfMLRd0RQ1XyTiX+11pcfbAkW7nJhCjeiMw0uEH+Zw5ie/vWY4R40QrgITLyuRtBTPbOl05zvW+O2CKSk5+YF2uwhB+RTUFBzF5Ai6jmIt0/rl4rzxi3mR6HYScggIJX6mdGnA=
-Received: from DM6PR12MB3868.namprd12.prod.outlook.com (10.255.173.213) by
- DM6PR12MB3610.namprd12.prod.outlook.com (20.178.199.84) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.15; Mon, 30 Sep 2019 11:30:28 +0000
-Received: from DM6PR12MB3868.namprd12.prod.outlook.com
- ([fe80::64dd:646d:6fa1:15a1]) by DM6PR12MB3868.namprd12.prod.outlook.com
- ([fe80::64dd:646d:6fa1:15a1%4]) with mapi id 15.20.2305.017; Mon, 30 Sep 2019
- 11:30:28 +0000
-From:   vishnu <vravulap@amd.com>
-To:     Mark Brown <broonie@kernel.org>,
-        "RAVULAPATI, VISHNU VARDHAN RAO" 
-        <Vishnuvardhanrao.Ravulapati@amd.com>
-CC:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "Mukunda, Vijendar" <Vijendar.Mukunda@amd.com>,
-        Maruthi Srinivas Bayyavarapu <Maruthi.Bayyavarapu@amd.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/5] ASoC: amd: added pmops for pci driver
-Thread-Topic: [PATCH 4/5] ASoC: amd: added pmops for pci driver
-Thread-Index: AQHVdGQibyt3z1lI7UG+S6l0oFutj6c+RpMAgAaL/wA=
-Date:   Mon, 30 Sep 2019 11:30:28 +0000
-Message-ID: <87475117-31f9-ac80-58c6-7db384e805f4@amd.com>
-References: <1569539290-756-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
- <1569539290-756-4-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
- <20190926182448.GE2036@sirena.org.uk>
-In-Reply-To: <20190926182448.GE2036@sirena.org.uk>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MA1PR01CA0164.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:71::34) To DM6PR12MB3868.namprd12.prod.outlook.com
- (2603:10b6:5:1c8::21)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Vishnuvardhanrao.Ravulapati@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.159.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2fe9a260-faf0-48ae-25e2-08d745999803
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: DM6PR12MB3610:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR12MB361050C60A42F5D112C8F7ADE7820@DM6PR12MB3610.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 01762B0D64
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(396003)(346002)(366004)(39860400002)(189003)(199004)(6116002)(31686004)(4326008)(8676002)(305945005)(6436002)(6506007)(102836004)(6512007)(36756003)(66066001)(386003)(31696002)(6246003)(76176011)(26005)(7736002)(14444005)(99286004)(256004)(6486002)(53546011)(186003)(5660300002)(229853002)(71200400001)(2616005)(25786009)(71190400001)(52116002)(4744005)(486006)(54906003)(66946007)(14454004)(66476007)(66446008)(476003)(66556008)(478600001)(110136005)(64756008)(11346002)(3846002)(8936002)(316002)(81156014)(6636002)(446003)(81166006)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3610;H:DM6PR12MB3868.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: O8E5K04iU3lRbfFLWObxYJ7/whbjkRpMClk7g7zZle3cb0RhzUxHNMCSYsQOtvtiLITmLeM1iyuQ8Ji4C1ibsHQ8+XPzFlAekSGlzIn9/XKBMKmR9iLaUUbjQgr1vre/GblqvP5t7ljKCiWoJuOtR0lGImZwwoc1JBz/jVne4fbIgrtIRC4X7OtKAwvEBHQwi4OgbWqd9l021aIRiyweGT5kgGBNZec6bEkJFw8rjf4MdxjhZILrk870dVAE78T9iyavHxF/13IIMy8um1IrQtbTc0IQU9Ym8RE6P3G8or11dTtsuhYi/amLB/opVqQA1unqjiXDzwLtGE9b9Mv7Zzr7MmahYzKsMMM0AR8Cg5Y/rjrZEPEgqV/TTdjX/WnBAECLQ7YXnsSeN2vTdD3KonW85QILh44LDV5ree+n9aI=
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <FCA37D53D0062E4085B2E2CAC31F818D@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 30 Sep 2019 07:36:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38082 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727215AbfI3Lf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 07:35:59 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4C17206BB;
+        Mon, 30 Sep 2019 11:35:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569843359;
+        bh=9WEhA8JA+UBptPyxfyomZDl3eE0Son1at5a6dFCkZpA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bHxPk2ypvO+UY24J4mkRO/KKATPjdvWvN/rfnLCOSf35scy1gjE532dFE2JC0LvqA
+         BW//GlJwH8DzlwwfXAKUZ8P2Qk6BniW6WeiQHqYIC3UVTnNJlmrBrcLKp88EReX7Z8
+         a+nOWkYgM8MMhS4ZSeRlo4EHQzx/ACsmMpbdINeQ=
+Date:   Mon, 30 Sep 2019 07:35:57 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com,
+        Waiman Long <longman@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will.deacon@arm.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH 4.19 36/63] locking/lockdep: Add debug_locks check in
+ __lock_downgrade()
+Message-ID: <20190930113557.GR8171@sasha-vm>
+References: <20190929135031.382429403@linuxfoundation.org>
+ <20190929135038.482721804@linuxfoundation.org>
+ <801c81d2-ce72-8eb3-a18b-1b0943270fc4@i-love.sakura.ne.jp>
+ <20190930002828.GQ8171@sasha-vm>
+ <b0203141-297f-1138-5988-607e076cbcf0@i-love.sakura.ne.jp>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2fe9a260-faf0-48ae-25e2-08d745999803
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2019 11:30:28.1658
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nq46/cnMjrPlZhB85GX2dE7HWJWiMx9fCydTJKXwDgOOqJa2F8vat+mT1M4lEyPVyNZ2ujxinGZADDv0lVnQew==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3610
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <b0203141-297f-1138-5988-607e076cbcf0@i-love.sakura.ne.jp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+On Mon, Sep 30, 2019 at 10:46:39AM +0900, Tetsuo Handa wrote:
+>On 2019/09/30 9:28, Sasha Levin wrote:
+>> On Sun, Sep 29, 2019 at 11:43:38PM +0900, Tetsuo Handa wrote:
+>>> On 2019/09/29 22:54, Greg Kroah-Hartman wrote:
+>>>> From: Waiman Long <longman@redhat.com>
+>>>>
+>>>> [ Upstream commit 513e1073d52e55b8024b4f238a48de7587c64ccf ]
+>>>>
+>>>> Tetsuo Handa had reported he saw an incorrect "downgrading a read lock"
+>>>> warning right after a previous lockdep warning. It is likely that the
+>>>> previous warning turned off lock debugging causing the lockdep to have
+>>>> inconsistency states leading to the lock downgrade warning.
+>>>>
+>>>> Fix that by add a check for debug_locks at the beginning of
+>>>> __lock_downgrade().
+>>>
+>>> Please drop "[PATCH 4.19 36/63] locking/lockdep: Add debug_locks check in __lock_downgrade()".
+>>> We had a revert patch shown below in the past.
+>>
+>> We had a revert in the stable trees, but that revert was incorrect.
+>>
+>> Take a look at commit 513e1073d52e55 upstream, it patches
+>> __lock_set_class() (even though the subject line says
+>> __lock_downgrade()). So this is not a backporting error as the revert
+>> said it is, but is rather the intended location to be patched.
+>>
+>> If this is actually wrong, then it should be addressed upstream first.
+>>
+>
+>Hmm, upstream has two commits with same author, same date, same subject, different hash, different content.
+>I couldn't find from https://lkml.kernel.org/r/1547093005-26085-1-git-send-email-longman@redhat.com that
+>we want to patch both __lock_set_class() and __lock_downgrade(), but I found that the tip-bot has patched
+>__lock_downgrade() on "2019-01-21 11:29" and __lock_set_class() on "2019-02-04  8:56".
+>Seems that we by error patched both functions, though patching both functions should be harmless...
 
-Thanks for your suggestions.
-Please ignore all the patches.I will address all the inputs shared by=20
-you and resend them.
+Right, there's a lot of confusion between the duplicate subject lines
+and what this patch actually does. My point was that this is an upstream
+issue rather than a stable issue, we're just aligning with upstream
+here.
 
+--
 Thanks,
-Vishnu
-
-On 26/09/19 11:54 PM, Mark Brown wrote:
-> On Fri, Sep 27, 2019 at 04:37:38AM +0530, Ravulapati Vishnu vardhan rao w=
-rote:
->=20
->> +static int  snd_acp3x_suspend(struct device *dev)
->> +{
->> +	return 0;
->> +}
->> +
->> +static int  snd_acp3x_resume(struct device *dev)
->> +{
->> +	return 0;
->> +}
->> +
->> +static const struct dev_pm_ops acp3x_pm =3D {
->> +	.runtime_suspend =3D snd_acp3x_suspend,
->> +	.runtime_resume =3D  snd_acp3x_resume,
->> +	.resume	=3D	snd_acp3x_resume,
->> +
->> +};
->=20
-> These operations are empty so they should just be removed.
->=20
+Sasha
