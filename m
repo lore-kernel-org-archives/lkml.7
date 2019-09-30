@@ -2,149 +2,88 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F9E3C4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 03:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD44C4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 03:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40E8E2086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 03:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA9C22086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 03:37:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729497AbfI3Dfr (ORCPT
+        id S1729514AbfI3Dhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 23:35:47 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:37870 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728853AbfI3Dfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 23:35:44 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4510B1A0453;
-        Mon, 30 Sep 2019 05:35:41 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8F8D71A0C5E;
-        Mon, 30 Sep 2019 05:35:37 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A50554030D;
-        Mon, 30 Sep 2019 11:35:32 +0800 (SGT)
-From:   Biwen Li <biwen.li@nxp.com>
-To:     peda@axentia.se, leoyang.li@nxp.com, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
-Subject: [v2,1/2] i2c: pca954x: Add property to skip disabling PCA954x MUX device
-Date:   Mon, 30 Sep 2019 11:25:02 +0800
-Message-Id: <20190930032503.44425-1-biwen.li@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Sun, 29 Sep 2019 23:37:38 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:39508 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728853AbfI3Dhh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 23:37:37 -0400
+Received: from callcc.thunk.org (pool-72-93-95-157.bstnma.fios.verizon.net [72.93.95.157])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x8U3b6k9005328
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 29 Sep 2019 23:37:07 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id C158C42014C; Sun, 29 Sep 2019 23:37:06 -0400 (EDT)
+Date:   Sun, 29 Sep 2019 23:37:06 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Nicholas Mc Guire <hofrat@opentech.at>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: x86/random: Speculation to the rescue
+Message-ID: <20190930033706.GD4994@mit.edu>
+References: <alpine.DEB.2.21.1909290010500.2636@nanos.tec.linutronix.de>
+ <CAHk-=wgjC01UaoV35PZvGPnrQ812SRGPoV7Xp63BBFxAsJjvrg@mail.gmail.com>
+ <CAHk-=wi0vxLmwEBn2Xgu7hZ0U8z2kN4sgCax+57ZJMVo3huDaQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wi0vxLmwEBn2Xgu7hZ0U8z2kN4sgCax+57ZJMVo3huDaQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On some Layerscape boards like LS2085ARDB and LS2088ARDB,
-input pull-up resistors on PCA954x MUX device are missing on board,
-So, if MUX are disabled after powered-on, input lines will float
-leading to incorrect functionality.
+On Sun, Sep 29, 2019 at 06:16:33PM -0700, Linus Torvalds wrote:
+> 
+>  - or just say "hey, a lot of people find jitter entropy reasonable,
+> so let's just try this".
+> 
 
-Hence, PCA954x MUX device should never be turned-off after
-power-on.
+I'm OK with this as a starting point.  If a jitter entropy system
+allow us to get pass this logjam, let's do it.  At least for the x86
+architecture, it will be security through obscurity.  And if the
+alternative is potentially failing where the adversary can attack the
+CRNG, it's my preference.  It's certainly better than nothing.
 
-Add property to skip disabling PCA954x MUX device
-if device tree contains "i2c-mux-never-disable"
-for PCA954x device node.
+That being said, I'd very much like to see someone do an analysis of
+how well these jitter schemes work on an RISC-V iplementation (you
+know, the ones that were so simplistic and didn't have any speculation
+so they weren't vulnerable to Specture/Meltdown).  If jitter
+approaches turn out not to work that well on RISC-V, perhaps that will
+be a goad for future RISC-V chips to include the crypto extension to
+their ISA.
 
-Errata ID: E-00013 on board LS2085ARDB and LS2088ARDB
-(The hardware bug found on board revision
-Rev.B, Rev.C and Rev.D)
+In the long term (not in time for the 5.4 merge window), I'm convinced
+that we should be trying as many ways of getting entropy as possible.
+If we're using UEFI, we should be trying to get it from UEFI's secure
+random number generator; if there is a TPM, we should be trying to get
+random numbers from the RPM, and mix them in, and so on.
 
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
----
-Change in v2:
-	- update variable name
-	  disable_mux->never_disable
+After all, the reason why lived with getrandom(0) blocking for five
+years was because for the vast majority of x86 platforms, it simply
+wasn't problem in practice.  We need to get back to that place where
+in practice, we've harvested as much uncertainty from hardware as
+possible, so most folks are comfortable that attacking the CRNG is no
+longer the simplest way to crack system security.
 
- drivers/i2c/muxes/i2c-mux-pca954x.c | 37 +++++++++++++++++++++++++----
- 1 file changed, 33 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
-index 923aa3a5a3dc..b4647b033163 100644
---- a/drivers/i2c/muxes/i2c-mux-pca954x.c
-+++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
-@@ -93,6 +93,11 @@ struct pca954x {
- 	struct irq_domain *irq;
- 	unsigned int irq_mask;
- 	raw_spinlock_t lock;
-+	/*
-+	 * never disable value will write to control register of mux
-+	 * to always enable mux
-+	 */
-+	u8 never_disable;
- };
- 
- /* Provide specs for the PCA954x types we know about */
-@@ -258,6 +263,11 @@ static int pca954x_deselect_mux(struct i2c_mux_core *muxc, u32 chan)
- 	struct i2c_client *client = data->client;
- 	s8 idle_state;
- 
-+	if (data->never_disable) {
-+		data->last_chan = data->chip->nchans;
-+		return pca954x_reg_write(muxc->parent, client, data->never_disable);
-+	}
-+
- 	idle_state = READ_ONCE(data->idle_state);
- 	if (idle_state >= 0)
- 		/* Set the mux back to a predetermined channel */
-@@ -462,16 +472,32 @@ static int pca954x_probe(struct i2c_client *client,
- 		}
- 	}
- 
-+	/* Errata ID E-00013 on board LS2088ARDB and LS2088ARDB:
-+	 * The point here is that you must not disable a mux if there
-+	 * are no pullups on the input or you mess up the I2C. This
-+	 * needs to be put into the DTS really as the kernel cannot
-+	 * know this otherwise.
-+	 */
-+
-+	data->never_disable = np &&
-+		of_property_read_bool(np, "i2c-mux-never-disable") &&
-+		data->chip->muxtype == pca954x_ismux ?
-+		data->chip->enable : 0;
-+
- 	/* Write the mux register at addr to verify
- 	 * that the mux is in fact present. This also
- 	 * initializes the mux to disconnected state.
- 	 */
--	if (i2c_smbus_write_byte(client, 0) < 0) {
-+	if (i2c_smbus_write_byte(client, data->never_disable) < 0) {
- 		dev_warn(dev, "probe failed\n");
- 		return -ENODEV;
- 	}
- 
--	data->last_chan = 0;		   /* force the first selection */
-+	if (data->never_disable)
-+		data->last_chan = data->chip->nchans;
-+	else
-+		data->last_chan = 0;               /* force the first selection */
-+
- 	data->idle_state = MUX_IDLE_AS_IS;
- 
- 	idle_disconnect_dt = np &&
-@@ -531,8 +557,11 @@ static int pca954x_resume(struct device *dev)
- 	struct i2c_mux_core *muxc = i2c_get_clientdata(client);
- 	struct pca954x *data = i2c_mux_priv(muxc);
- 
--	data->last_chan = 0;
--	return i2c_smbus_write_byte(client, 0);
-+	if (data->never_disable)
-+		data->last_chan = data->chip->nchans;
-+	else
-+		data->last_chan = 0;
-+	return i2c_smbus_write_byte(client, data->never_disable);
- }
- #endif
- 
--- 
-2.17.1
-
+       	     	     	      	     - Ted
