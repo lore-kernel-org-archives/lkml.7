@@ -2,131 +2,149 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2323C4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5059C4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F25921920
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:02:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569830546;
-	bh=gVWoOt5QIR04LPZZmJQ9F7du8ueLLuh79RcOf2CaaPI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HX03i9B6q95dpl57ZM3ClcMTEPcoO5iSGwCoO14roaak6hQxVulNpKquCHVuANKHN
-	 xNZqNhhQDhJL975oJg/PDZ+ICFYET6uApePkDlVwuIa9z6HaKUwhtTZFDB+v/vAfQ/
-	 4mSY2jdQVkImZ9kSd7BwoUH7Ih8KGRvTzqsotHlw=
+	by mail.kernel.org (Postfix) with ESMTP id AFC9A2190F
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:05:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tku5GvoC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729566AbfI3IC0 (ORCPT
+        id S1729711AbfI3IFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 04:02:26 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55240 "EHLO
+        Mon, 30 Sep 2019 04:05:19 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40311 "EHLO
         mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbfI3ICZ (ORCPT
+        with ESMTP id S1725767AbfI3IFS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 04:02:25 -0400
-Received: by mail-wm1-f65.google.com with SMTP id p7so12217160wmp.4;
-        Mon, 30 Sep 2019 01:02:24 -0700 (PDT)
+        Mon, 30 Sep 2019 04:05:18 -0400
+Received: by mail-wm1-f65.google.com with SMTP id b24so11562968wmj.5;
+        Mon, 30 Sep 2019 01:05:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=iZ0dWjtkkU87tg8tjMyvrTlzm1TZ6zOH1FuVyCPP5js=;
+        b=tku5GvoCac8CgL7RGMTXU7INk87u8sOuwpmY3lag/Yq4KzFoTLiez2kjQCGg1mWQNY
+         L6mDpq0JiB2C6jQZtkDLHdBcGipkHdj8e+iJ2WJD4WpPWRSj8eJQ4UKsGeSfUuZS5RhF
+         RpTyHsRvEd4woeBmQ18sGAmIBEyaswO7gfxsaWSeHSXlnt/poUbZ6LUMwzryy9Cn2Qzc
+         5BoH0pJg8MM2MFNcg4HAr/cDZl+MCGyaP6R/luHsHVQXpD3MCYgtRn5qFVRWbe3knre9
+         KOAXEvg3xeBJ4uKH6uloz6fN4QuQH2Fu+8jh98FgpsJu5okO0cwDkHAsIEP7xP8VLQ6O
+         ON1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fizj4yTUNCuGZAq8TVj3hQISg7yH6mFEeG99CtKC4TE=;
-        b=IKc6hRLUXxyCgDakoy1CeXXtaLXx+BvOQn6YigMioJUI51jgbAfjgottgo0xQkzhto
-         g+3xSP/2RtuwhYwKknS9IFmT+l47ZoOMsGbL98lySFH0E7iWCu7WIkhVLNCX6mRjwhEp
-         aF8t9hbqnbVgdlp5lqg3S9e+MsiHvTlr3u+kPo8Qb53f5Smnng2BpC2gC88+SePD3fWs
-         gOzELo1MimWkNbNwk1tf85bgvffkJ5OVfDo21ZeAtRkNasFsmM/vsVq5J4jekI8uzujI
-         8MJfHu537HQwIfwhGLti1bkp5aBrH2ABqbeoS6oWSk7YfzR04O2k8YC0OjnvWN87ii1T
-         oYiw==
-X-Gm-Message-State: APjAAAWOagBPsKR92SAk5K6bce8YPIIekjnJKUWGgfFk4AjNLZO6oGE5
-        en4zLMUnaGrJlSfbBJxkG9fe5I+q
-X-Google-Smtp-Source: APXvYqxndPqHVxIHe63ZUThkAaMUEXaaoIZyED6YAbYpSbBXh+m6JJ93cT5e3vlVVimUo6YvZaoW2Q==
-X-Received: by 2002:a1c:c1cc:: with SMTP id r195mr16991339wmf.50.1569830543182;
-        Mon, 30 Sep 2019 01:02:23 -0700 (PDT)
-Received: from pi3 ([194.230.155.145])
-        by smtp.googlemail.com with ESMTPSA id a3sm19395536wmc.3.2019.09.30.01.02.21
+        bh=iZ0dWjtkkU87tg8tjMyvrTlzm1TZ6zOH1FuVyCPP5js=;
+        b=uBBT2C6v6ylH39KibEjoahku1esBcobU75781Ef/g1RdYVA96nwv3dWFSqoAYTAygg
+         zcpJ8fypr9F4MPntkIyE1l4enwzUk68K1o5emyTW7KCmSwapMXSYkKEWatmDr09xCVdf
+         VpzRHP2l2S9PGEhQxxISv/zQTpu7XfzArFRABYr20/ETMM2YjrRJxD+wjB4TFKrxpixZ
+         /a2GMzEpKrFH28Ry1AiaHVfK9G9yEWfC1F4pm8t6r2D+AfsIQIxbZ2pL6veroHMK+PsF
+         VJtjzQbFwcNdHcLngPDFgdxLpW3FQAfVF77jynalFspwn6hWWEFpR2wSjS3I4WkpMTlO
+         EfJg==
+X-Gm-Message-State: APjAAAWN3oLcJVLbNY7Pa+EGGOXhNGEy4OTStNblidlSG5OtdKgi76D4
+        lt5nOZXTF0Vs/Vbnaw9S3LjKmy5g
+X-Google-Smtp-Source: APXvYqyJx2zrS3qEH/WgV2w4rKIMHxuLttTRAanwdd3xwtU4F7pO/NBuhvIHg0P4DFk3hHRxdSoDnA==
+X-Received: by 2002:a7b:cb8b:: with SMTP id m11mr16507758wmi.145.1569830714359;
+        Mon, 30 Sep 2019 01:05:14 -0700 (PDT)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id y19sm16771530wmi.13.2019.09.30.01.05.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 01:02:22 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 10:02:17 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>, arm-soc <arm@kernel.org>,
-        SoC Team <soc@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>
-Subject: Re: [GIT PULL 1/2] arm64: dts: exynos: Pull for v5.4
-Message-ID: <20190930080217.GA23709@pi3>
-References: <20190911183632.4317-1-krzk@kernel.org>
- <CAK8P3a2pBV+fh0rHitZ30Zz61QNRLfNSD-nhnzq4ZtxSh66F1Q@mail.gmail.com>
- <CAJKOXPcOSvc2DfoN+7Tca=t5dSm3RcKqmm06AfR0PAVBeY=GvQ@mail.gmail.com>
- <20190929175134.fsieffurfdiqhpj2@localhost>
+        Mon, 30 Sep 2019 01:05:13 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 10:05:11 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 08/14] ARM: tegra: Make outer_disable() open-coded
+Message-ID: <20190930080511.GE1518582@ulmo>
+References: <20190929175952.22690-1-digetx@gmail.com>
+ <20190929175952.22690-9-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4Epv4kl9IRBfg3rk"
 Content-Disposition: inline
-In-Reply-To: <20190929175134.fsieffurfdiqhpj2@localhost>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190929175952.22690-9-digetx@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 29, 2019 at 10:51:34AM -0700, Olof Johansson wrote:
-> Hi,
-> 
-> On Thu, Sep 12, 2019 at 08:32:47AM +0200, Krzysztof Kozlowski wrote:
-> > On Wed, 11 Sep 2019 at 23:07, Arnd Bergmann <arnd@arndb.de> wrote:
-> > >
-> > > On Wed, Sep 11, 2019 at 8:36 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > > >
-> > > > Hi,
-> > > >
-> > > > Unfortunately the patches were applied right after closing the linux-next.
-> > >
-> > > Hi Krzysztof,
-> > >
-> > > I took a look at these and am not convinced this is right:
-> > >
-> > > > 1. Fix boot of Exynos7 due to wrong address/size of memory node,
-> > >
-> > > The current state is clearly broken and a fix is needed, but
-> > > I'm not sure this is the right fix. Why do you have 32-bit physical
-> > > addressing on a 64-bit chip? I looked at commit ef72171b3621
-> > > that introduced it, and it seems it would be better to just
-> > > revert back to 64-bit addresses.
-> > 
-> > We discussed with Marek Szyprowski that either we can go back to
-> > 64-bit addressing or stick to 32. There are not known boards with more
-> > than 4 GB of RAM so from this point of view the choice was irrelevant.
-> > At the end of discussion I mentioned to stick with other arm64 boards
-> > (although not all), so revert to have 64 bit address... but Marek
-> > chosen differently. Since you ask, let's go back with revert.
-> > 
-> > >
-> > > > 2. Move GPU under /soc node,
-> > >
-> > > No problem
-> > >
-> > > > 3. Minor cleanup of #address-cells.
-> > >
-> > > IIRC, an interrupt-controller is required to have a #address-cells
-> > > property, even if that is normally zero. I don't remember the
-> > > details, but the gic binding lists it as mandatory, and I think
-> > > the PCI interrupt-map relies on it. I would just drop this patch.
-> > 
-> > Indeed, binding requires both address and size cells. I'll drop it.
-> 
-> Looking through the history of pending material, I didn't see a new pull for
-> this material. Just checking in to see if there's something we missed?
 
-No, it's me who forgot to resend. I was sure that I rebased the branch
-and created new pull request. However it seems I did not. Let's keep it
-for next merge window... v5.4-rc should be any minute, I guess?
+--4Epv4kl9IRBfg3rk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Krzysztof
+On Sun, Sep 29, 2019 at 08:59:46PM +0300, Dmitry Osipenko wrote:
+> The outer_disable() of Tegra's suspend code is open-coded now since
+> that helper produces spurious warning message about secondary CPUs being
+> online. The secondaries are actually halted by the cpuidle driver on
+> entering into LP2 idle-state. This fixes a storm of warnings once LP2
+> idling state is enabled on Tegra30.
 
+If the cpuidle driver halts the secondaries, shouldn't it set it offline
+then so that outer_disable() can still work correctly?
+
+Thierry
+
+>=20
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  arch/arm/mach-tegra/pm.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/arch/arm/mach-tegra/pm.c b/arch/arm/mach-tegra/pm.c
+> index 7d9ef26e52a7..16a02937d3da 100644
+> --- a/arch/arm/mach-tegra/pm.c
+> +++ b/arch/arm/mach-tegra/pm.c
+> @@ -146,9 +146,10 @@ static int tegra_sleep_cpu(unsigned long v2p)
+>  	 * if any of secondary CPU's is online and this is the LP2-idle
+>  	 * code-path only for Tegra20/30.
+>  	 */
+> -	if (trusted_foundations_registered())
+> -		outer_disable();
+> -
+> +#ifdef CONFIG_OUTER_CACHE
+> +	if (trusted_foundations_registered() && outer_cache.disable)
+> +		outer_cache.disable();
+> +#endif
+>  	/*
+>  	 * Note that besides of setting up CPU reset vector this firmware
+>  	 * call may also do the following, depending on the FW version:
+> --=20
+> 2.23.0
+>=20
+
+--4Epv4kl9IRBfg3rk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2RtzUACgkQ3SOs138+
+s6Eq3RAAq+IM3JsJRvcEWa4zVK9I0xB+MNVeoUFLf4YWngs+qR/ozuEMfUGUf8yr
+Zn/lNHPCFdfG905CuOrhlvK8WAuq3XZl7LsXDeAtwv/6/FAEUTn2ZIsDGOAas716
+tCRbTmo1dU5Krs+Ws8NtbnZKqW1HZEck42lOkImjylj+9na7+BCOQJgkFjzX7M/k
+eSpAmE+C+6HaZfJtmFxP5s8ukCCynw92T2S0w4zrruIwNM8aWSziuDgq4NLctbja
+nLgQuvdOSvCIHbtnqJU0aO8DcezDW4UvpI5LD3DUfVaFP3iPsjtvGWfxhjKBy5oo
+9jODrFIUMHoSzv0KXi86NVXHmcWUZS61Ww+YgRZRgFtRBQaKNzCohPwajiNEyZu2
+Ss3AT5UFGSEhHI2fDFXe7YeaYhgHMh/fCKg+FYrsGAz6PmREkf9GSO7p8PFo7cv3
+GxE8qlRjz2CqQA3voW+O38g7QW4bZYTTSVP9VHgwPjocRY300SM4AD7q7bzUraBx
+RGbleDykkPVuwKRsno3Y85pcD2zANq3kx7VEgarc10llSewh7KLI0O3C7JnhR2C3
+Y5M9jGTAF2LHjIj9X/pVz00/vyXdfSreqTQAIMfQYIFXXdQwsUWAdYtRhwOYrRYq
+Z6QefJ+tE/IVq8Cmj7swr3Kc/zXxj1oAYjQbpwLhZXbEnsYbAsY=
+=ZN/o
+-----END PGP SIGNATURE-----
+
+--4Epv4kl9IRBfg3rk--
