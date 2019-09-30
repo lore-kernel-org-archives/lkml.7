@@ -2,92 +2,129 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A57C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 493C6C35280
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADFF821920
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20A71218DE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:50:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569851447;
+	bh=OIbZsPSF9qroZ0kz/LZxanDyoEYFB6HCUHmhhGKKq8k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=cNXfKt5zm59fxfnIFztFYQzJk5o4Gq5KvIJ03DU/7Z4OeJU+18z0bpW5xR6SOD4dp
+	 b/Ei2i7Y6doQ5kIzx5rKjGrkYvR6RfflBOU5vF+PB/PjAZThZyc7EDFIUMBN+4J4ag
+	 4zQDsU3nQk80WdLKcAtGmysCrJX+8wK0Bc/yvrvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731403AbfI3Nun (ORCPT
+        id S1731421AbfI3Nuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 09:50:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36232 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729738AbfI3Nun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:50:43 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7AF41AF7E;
-        Mon, 30 Sep 2019 13:50:41 +0000 (UTC)
-Message-ID: <1569850516.2639.2.camel@suse.com>
-Subject: Re: WARNING in _chaoskey_fill/usb_submit_urb
-From:   Oliver Neukum <oneukum@suse.com>
-To:     syzbot <syzbot+f5349b421c6213d34ce2@syzkaller.appspotmail.com>,
-        gustavo@embeddedor.com, andreyknvl@google.com,
-        syzkaller-bugs@googlegroups.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Date:   Mon, 30 Sep 2019 15:35:16 +0200
-In-Reply-To: <000000000000488dd305933945d2@google.com>
-References: <000000000000488dd305933945d2@google.com>
-Content-Type: multipart/mixed; boundary="=-Va0/YDZugknsz+OWYo1m"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
+        Mon, 30 Sep 2019 09:50:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40610 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729738AbfI3Nup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 09:50:45 -0400
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 377B3218DE;
+        Mon, 30 Sep 2019 13:50:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569851444;
+        bh=OIbZsPSF9qroZ0kz/LZxanDyoEYFB6HCUHmhhGKKq8k=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=J8CyQdV6pCZnRDKG8N78sgAXNG4CxpVQcDB1HXZqdjOl45nFqHuI0N7YyyTmoJO9S
+         enamULt2Px7Uq1qrwglFxrbHnkwlZHmwwwt5s7jxVv63r4FMNyBRu/XQ/ExjSuo8iN
+         gyUxgEeMW9LMI3VHq3OhjuVw3/BvFvEBdk6tXVSw=
+Received: by mail-lf1-f53.google.com with SMTP id u28so7093976lfc.5;
+        Mon, 30 Sep 2019 06:50:44 -0700 (PDT)
+X-Gm-Message-State: APjAAAXQUGBwE3xTED+55GFAip14ZXIaHdkqxrhwKOyzWbdRc4sF5etk
+        CHK1LSenSZU7r7tO2h6nN31aE94PTkewm/1nY4U=
+X-Google-Smtp-Source: APXvYqwVXh3xte/Qq+8kD2of/JzjRnkrT5ai7bQgRPTC8HxeWB5/Vq/4zTEr70WWOxMCWiqzOA7j5K25m/1BgMyTIZ0=
+X-Received: by 2002:ac2:51a7:: with SMTP id f7mr11285925lfk.119.1569851442393;
+ Mon, 30 Sep 2019 06:50:42 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190930101841.19630-1-ribalda@kernel.org> <20190930101841.19630-8-ribalda@kernel.org>
+ <aa6ace11-9697-d3d9-907c-83b3398d8f5e@xs4all.nl>
+In-Reply-To: <aa6ace11-9697-d3d9-907c-83b3398d8f5e@xs4all.nl>
+From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
+Date:   Mon, 30 Sep 2019 15:50:25 +0200
+X-Gmail-Original-Message-ID: <CAPybu_3vCpUzc8SxQUuYZpQmf-OrMx9ck=Wj3xv_5C0SzzBgWA@mail.gmail.com>
+Message-ID: <CAPybu_3vCpUzc8SxQUuYZpQmf-OrMx9ck=Wj3xv_5C0SzzBgWA@mail.gmail.com>
+Subject: Re: [PATCH v8 7/8] media: v4l2-ctrl: Add new helper v4l2_ctrl_ptr_from_void
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Hans
 
---=-Va0/YDZugknsz+OWYo1m
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Thanks for the review
 
-Am Montag, den 23.09.2019, 07:31 -0700 schrieb syzbot:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    e0bd8d79 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1452c6a1600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=8847e5384a16f66a
-> dashboard link: https://syzkaller.appspot.com/bug?extid=f5349b421c6213d34ce2
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16342d45600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=166769b1600000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+f5349b421c6213d34ce2@syzkaller.appspotmail.com
+On Mon, Sep 30, 2019 at 3:07 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
+>
+> On 9/30/19 12:18 PM, Ricardo Ribalda Delgado wrote:
+> > This helper function simplifies the code by not needing a union
+> > v4l2_ctrl_ptr and an assignment every time we need to use
+> > a ctrl_ptr.
+> >
+> > Suggested-by: Hans Verkuil <hverkuil@xs4all.nl>
+> > Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+> > ---
+> >  include/media/v4l2-ctrls.h | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> >
+> > diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
+> > index c42f164e2c9e..d69cfdffd41d 100644
+> > --- a/include/media/v4l2-ctrls.h
+> > +++ b/include/media/v4l2-ctrls.h
+> > @@ -73,6 +73,17 @@ union v4l2_ctrl_ptr {
+> >       void *p;
+> >  };
+> >
+> > +/**
+> > + * v4l2_ctrl_ptr() - Helper function to return a v4l2_ctrl_ptr from a
+> > + * void pointer
+> > + * @ptr:     The void pointer
+> > + */
+> > +static inline union v4l2_ctrl_ptr v4l2_ctrl_ptr_from_void(void *ptr)
+>
+> Mismatch between function name and the comment above.
+>
+> But _from_void is not a good name, since it's from a void pointer.
+>
+> How about: v4l2_ctrl_ptr_create(void *ptr)
+>
+> since you create a v4l2_ctrl_ptr.
+>
+> Regards,
+>
+>         Hans
 
-#syz test: https://github.com/google/kasan.git e0bd8d79
---=-Va0/YDZugknsz+OWYo1m
-Content-Disposition: attachment; filename="0001-USB-chaoskey-fix-error-case-of-a-timeout.patch"
-Content-Type: text/x-patch; name="0001-USB-chaoskey-fix-error-case-of-a-timeout.patch";
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
+After talking on IRC:
 
-RnJvbSAyN2IwMDg1NzY4YjU1ZjJlZDhmYWY0ZjEyNTQwMjNhMDNkYzNlYjI0IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBPbGl2ZXIgTmV1a3VtIDxvbmV1a3VtQHN1c2UuY29tPgpEYXRl
-OiBNb24sIDMwIFNlcCAyMDE5IDE1OjE5OjEzICswMjAwClN1YmplY3Q6IFtQQVRDSF0gVVNCOiBj
-aGFvc2tleTogZml4IGVycm9yIGNhc2Ugb2YgYSB0aW1lb3V0CgpJbiBjYXNlIG9mIGEgdGltZW91
-dCBjb21tdW5pY2F0aW9uIHdpdGggdGhlIGRldmljZSBuZWVkcyB0byBiZSBlbmRlZApmcm9tIHRo
-ZSBob3N0IHNpZGUsIGxlc3Qgd2Ugb3ZlcndyaXRlIGFuIGFjdGl2ZSBVUkIKClNpZ25lZC1vZmYt
-Ynk6IE9saXZlciBOZXVrdW0gPG9uZXVrdW1Ac3VzZS5kZT4KLS0tCiBkcml2ZXJzL3VzYi9taXNj
-L2NoYW9za2V5LmMgfCAyICsrCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCgpkaWZm
-IC0tZ2l0IGEvZHJpdmVycy91c2IvbWlzYy9jaGFvc2tleS5jIGIvZHJpdmVycy91c2IvbWlzYy9j
-aGFvc2tleS5jCmluZGV4IGNmNTgyOGNlOTI3YS4uODUwZjQ2Y2JhY2UyIDEwMDY0NAotLS0gYS9k
-cml2ZXJzL3VzYi9taXNjL2NoYW9za2V5LmMKKysrIGIvZHJpdmVycy91c2IvbWlzYy9jaGFvc2tl
-eS5jCkBAIC0zOTEsNiArMzkxLDggQEAgc3RhdGljIGludCBfY2hhb3NrZXlfZmlsbChzdHJ1Y3Qg
-Y2hhb3NrZXkgKmRldikKIAllbHNlCiAJCXJlc3VsdCA9IGRldi0+dmFsaWQ7CiBvdXQ6CisJLyog
-aW4gY2FzZSBvZiBhIHRpbWVvdXQgKi8KKwl1c2Jfa2lsbF91cmIoZGV2LT51cmIpOyAKIAkvKiBM
-ZXQgdGhlIGRldmljZSBnbyBiYWNrIHRvIHNsZWVwIGV2ZW50dWFsbHkgKi8KIAl1c2JfYXV0b3Bt
-X3B1dF9pbnRlcmZhY2UoZGV2LT5pbnRlcmZhY2UpOwogCi0tIAoyLjE2LjQKCg==
+Will fix both changes and resend v9 after v5.4-rc1 is merged back into
+the media tree.
 
+Thanks again!
 
---=-Va0/YDZugknsz+OWYo1m--
-
+>
+> > +{
+> > +     BUILD_BUG_ON(sizeof(union v4l2_ctrl_ptr) != sizeof(void *));
+> > +     return (union v4l2_ctrl_ptr) ptr;
+> > +}
+> > +
+> >  /**
+> >   * struct v4l2_ctrl_ops - The control operations that the driver has to provide.
+> >   *
+> >
+>
