@@ -2,128 +2,138 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73747C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BC5C35280
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47BE821906
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:38:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hYj0BxkM"
+	by mail.kernel.org (Postfix) with ESMTP id 88C5021906
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:42:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569854528;
+	bh=P4PufoiPhLsWp3s+Vd1yGyKyRIWv7/KoYOAbcaWqAIQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mG1yhz3xTXwtuohuNhR1N9qYvjgYaG5G/wVzMm7jQZWfIusSA7tQFTi90J7N9n9d7
+	 fcZjoqv/gQjpCxFx9B9fth2S0pba5MtU2/C1YLulBRuIoeB8/7GtQLUuN1J/5uZ9e8
+	 vqqhNnFnQeU9xLy3fCXniIjMJu4n1gkXeZxnZQms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731845AbfI3OiH (ORCPT
+        id S1731653AbfI3OmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 10:38:07 -0400
-Received: from mail-pl1-f178.google.com ([209.85.214.178]:35876 "EHLO
-        mail-pl1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731190AbfI3OiH (ORCPT
+        Mon, 30 Sep 2019 10:42:08 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40422 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731190AbfI3OmH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 10:38:07 -0400
-Received: by mail-pl1-f178.google.com with SMTP id j11so685787plk.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 07:38:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Nrz2IUrj33GgmjR54VOTYEGCWrGtCKIOTHnB+tuTggE=;
-        b=hYj0BxkMzOSWJ9qVG8vivY1DSijQIWTGFXbIQWMbX+pNT41Z5s6jkWEJvrgidKkzvv
-         RNXqHQnayMrkzoofHJMcvvTaOllLoBrxR/h6HyUKAYBi85HWU46baPupGOhXRkjPJHwc
-         T7OEYoKNyYJcBXdI+oDlWOa5Cr47BJGKbdIurNzZrXlvfX3iP0eZGQ5wJz7Tq2iMHB+Y
-         CYL04F8RkQlMKN103zwWEJqiAUZ16IAgmDTuj1v+fOgDvCSde9nSeBnXxW/zn2eVQxAA
-         HdWux0STYn29vaw08s9SjYM3pzigxha9XKRkpmEVvNUDjPs5+2ZqzgONwS+vGFmNN5Rv
-         a/vw==
+        Mon, 30 Sep 2019 10:42:07 -0400
+Received: by mail-oi1-f193.google.com with SMTP id k9so11313632oib.7;
+        Mon, 30 Sep 2019 07:42:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Nrz2IUrj33GgmjR54VOTYEGCWrGtCKIOTHnB+tuTggE=;
-        b=OmT52dCKRxioNo2i/NTpd+4ZM0LxiR7jQ4SJLZUZ75mvVc5Ivja3D46HQbh9n9hRS6
-         u1SAeIhFw2r3G2WZMLr3VV8ez22vGB+PJkgrZnfdHIOacu9fSy993SqiVIpjw/LW6E7I
-         1pECn73CEUWlbdGIBxyKlj4ZxHTE9pomjVjea0R0YDHPRNyZUE6Wc3ACTdjLmc1Oxnkl
-         eMWl2eMeBPeiAOVKrEISu2Iqq2509UvNhlaQMcRRz8Ninsqkh1M00BayTijESyTcj6Y5
-         R3F9TmoQWBOl7tAPSJqYBD6Ue6IEGtOzPC0bAOBxig6ivikAXevpiWhsSlmg84uUb30Z
-         qwUg==
-X-Gm-Message-State: APjAAAXleL1MRYxK0ua2CeSbKN3SEzHj/YpPzuPW5PHJyz/fr0k1EfVb
-        vS3LgEv1TNZQc9KuAZI4JoNZ0K+bwb8=
-X-Google-Smtp-Source: APXvYqxMnYoEle8gh3tPSix9AK1DfPpkhRwiOw/aa3JW9SasNolyTF+mD3FLzd0+Lqg0Cr1/wwHAqg==
-X-Received: by 2002:a17:902:b209:: with SMTP id t9mr5103408plr.116.1569854286323;
-        Mon, 30 Sep 2019 07:38:06 -0700 (PDT)
-Received: from Slackware ([103.231.91.38])
-        by smtp.gmail.com with ESMTPSA id e4sm11103665pff.22.2019.09.30.07.38.02
+        bh=EYSKNqzhWZ5pBYySik+qJ+6jR/qzoTuoas9JM4Wu8F8=;
+        b=pD/WFvJzTeQ75IM0qSoU/zoj0oyNc55V9h2o5gf6+VxQZyvRTpVUIZ5kkCLYLALTdf
+         Jil0VAMrjmjkELoI8H7u0dUiVhHcslE5HaE+lJ96CYlag7/3K2dCpQ37WAWEhDWlcI6I
+         Iso4P0SXDE5SuTKU40gbfeLLruqkxAkrGIa8kjI4hBLZzZm89Vhn2WHDPQiDNY1IXXRt
+         hEHzNcdjCsuR6FTjfvkAjREkHOtq0w3mobpM4RhP7QGmPF55Oc9NDjxLJ33kD5xKBk3m
+         A4FjlI5Bx7eZlo5sfd8bSS6YPz6eQ+4+A7Z81g6a8SR2zULYEMrM5t6/7tmRynJINB/q
+         a41Q==
+X-Gm-Message-State: APjAAAU22yfYSKVMBngCO18ym0VGVibZyPA8UTH9XnoCpszSwo6Z9Ao6
+        92fyubusjCzhHS4BXSuB4w==
+X-Google-Smtp-Source: APXvYqwX8v05lHHK67LEiARr1bwtyadlGwKRScnVJBehvPR1uH/YfAs2RwR6L1jOvqsZkjnT81Z0uA==
+X-Received: by 2002:aca:d9c4:: with SMTP id q187mr18629684oig.45.1569854526386;
+        Mon, 30 Sep 2019 07:42:06 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 34sm3825189otf.55.2019.09.30.07.42.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 07:38:05 -0700 (PDT)
-Date:   Mon, 30 Sep 2019 20:07:56 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     LinuxKernel <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] remove dead mutt url and add active mutt url
-Message-ID: <20190930143756.GB30066@Slackware>
-References: <20190928151300.GA18122@debian>
- <20190930081310.7e3b9c52@lwn.net>
+        Mon, 30 Sep 2019 07:42:05 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 09:42:05 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     edubezval@gmail.com, rui.zhang@intel.com, ulf.hansson@linaro.org,
+        daniel.lezcano@linaro.org, bjorn.andersson@linaro.org,
+        agross@kernel.org, amit.kucheria@verdurent.com,
+        mark.rutland@arm.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] dt-bindings: thermal: Add generic power domain
+ warming device binding
+Message-ID: <20190930144205.GA11539@bogus>
+References: <1568135676-9328-1-git-send-email-thara.gopinath@linaro.org>
+ <1568135676-9328-4-git-send-email-thara.gopinath@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xgyAXRrhYN0wYx8y"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190930081310.7e3b9c52@lwn.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1568135676-9328-4-git-send-email-thara.gopinath@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Sep 10, 2019 at 01:14:34PM -0400, Thara Gopinath wrote:
+> Add binding to define power domains as thermal warming
+> devices.
+> 
+> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> ---
+>  .../bindings/thermal/pwr-domain-warming.txt        | 32 ++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/pwr-domain-warming.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/pwr-domain-warming.txt b/Documentation/devicetree/bindings/thermal/pwr-domain-warming.txt
+> new file mode 100644
+> index 0000000..25fc568
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/pwr-domain-warming.txt
+> @@ -0,0 +1,32 @@
+> +* Generic power domain based thermal warming device.
+> +
+> +This binding describes the power domains that can be used as a
+> +thermal warming device.
 
---xgyAXRrhYN0wYx8y
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+This looks like just a gathering of properties and way to instantiate 
+some driver.
 
-On 08:13 Mon 30 Sep 2019, Jonathan Corbet wrote:
->On Sat, 28 Sep 2019 20:43:03 +0530
->Bhaskar Chowdhury <unixbhaskar@gmail.com> wrote:
->
->> The following changes since commit 4e4327891fe2a2a4db342985bff4d4c48703c707:
->>
->>   replace dead mutt url with active one. (2019-09-28 20:11:00 +0530)
->>
->>   are available in the Git repository at:
->
->Bhaskar, I'm not going to take a pull request for a change like this.  If
->you would like to make this change (and it seems like a useful change to
->make), please send me a patch that is:
->
-> - based on docs-next
-> - properly changelogged
-> - demonstrated to build properly with sphinx
->
+I think this all belongs in the power domain provider. Make it a cooling 
+device and you should know which domains are relevant based on the 
+compatible (though perhaps we could consider a list in DT). If you want 
+to instantiate a separate driver to handle this, then make the power 
+domain driver do that.
 
-Will follow your words, Jon. Hopefully ,next one will be alright.Sorry
-for the bugging.
+Rob
 
-
->Thanks,
->
->jon
-
-Thanks,
-Bhaskar
-
---xgyAXRrhYN0wYx8y
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl2SEz4ACgkQsjqdtxFL
-KRXp1Qf+I8whd598TaGIF5lt7Gb9g3W138oZuA4MJHb31FwC7fKpLozuuh7qtA8f
-E/pnQgKSv3UqXcw3UEfBon6J88dMkxRkxR7D5nLD0XHKvVKgDtK04JTqrfbYuSTE
-REPTvbe8hDRQsLBKF1CSgfsENb0nojAgPFwVZISf6x8lcSGHAl8NuVz0uxtRleLn
-BpFUwjCLiZ7FEwnm9srnXBBfi6VbHz69u8kSBvAql+z+iX96DrYjV9I4h7oeO7gv
-x8ah4674EwAxEcae3nJHSBJd72CiJV2FrZmSApImnc/5+z8TpljL/ZH9W02lVeCJ
-SzIHwvovBu7+3crSl1KHWzVPFPn6lg==
-=affU
------END PGP SIGNATURE-----
-
---xgyAXRrhYN0wYx8y--
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be "thermal-power-domain-wdev"
+> +
+> +- #temp-reg-cells:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: Must be 2
+> +
+> +- power-domains:
+> +	Usage: required
+> +	Value type: <phandle>
+> +	Definition: reference to power-domains that match power-domain-names
+> +
+> +- power-domain-names:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: The power-domains that can behave as warming devices
+> +
+> +Example 1
+> +thermal_wdev: rpmhpd_mx_wdev {
+> +		compatible = "thermal-power-domain-wdev";
+> +		#cooling-cells = <2>;
+> +		power-domains =  <&rpmhpd SDM845_MX>;
+> +		power-domain-names = "mx";
+> +	};
+> -- 
+> 2.1.4
+> 
