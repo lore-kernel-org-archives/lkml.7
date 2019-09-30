@@ -2,213 +2,179 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F95C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 17:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A2B7C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D116F2086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 17:07:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F359224FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:36:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730937AbfI3RHp (ORCPT
+        id S1729373AbfI3Ugq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 13:07:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51540 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729022AbfI3RHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 13:07:44 -0400
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A5D552A09B2
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 17:07:43 +0000 (UTC)
-Received: by mail-wm1-f72.google.com with SMTP id 124so287284wmz.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 10:07:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :mime-version:content-transfer-encoding;
-        bh=cs776fH4erFtXUSzzVn3rAy9fW72VGqJRx6dq549BTs=;
-        b=lqUKRkclITSA5XHLknLGdNhiASdHvDKIA8iY1MB4c06XxQ0liDm8PHtYuVexyJLxhb
-         E8p/1cJlxM5F1wyQhtiLhgDXSJvdljPm4pmDdLQyhmg4oGgGVDirv36xTZcyx/ZrClCj
-         13XdqRC2ZKbfZ7RbQSOrk5tHZw5VQvFHJ5kTWPCOouTmWSYQsVc+TYw/wpNco4l/4l54
-         ukwyF3vaT+5GPTXep2/FY8iIPE1owDUM4q4upKGZZg5Kq49bY/AhmB6UQ5FfJ8+K1cl0
-         nQrYeUwBUERwTXuNwMXZHLJpQa9SU7JjvtagYWav4aikUORN0ldtkH1cYGDhN2/3gVFO
-         51lg==
-X-Gm-Message-State: APjAAAVsg/Wn6mSwO95fRqzgHOKBNjODQo6NUFkXZCLcDL8tgVI+0QlV
-        gMIiAujIft672O85sg9M3vl+7+BtrDvTng7ZT8EifHCibTZOzZuE2VJ64e1gFI5MtilxzuUIwHC
-        dARWLurFt8FXfBKsJEJCufnUf
-X-Received: by 2002:a7b:c4c9:: with SMTP id g9mr199043wmk.150.1569863262035;
-        Mon, 30 Sep 2019 10:07:42 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzb0zH1A2+zMb9dORMy0r94rwSyu0arMgvSfgbq6H2j091sJVKqDUCQszgUPNoaGIR1IOjP4g==
-X-Received: by 2002:a7b:c4c9:: with SMTP id g9mr199015wmk.150.1569863261784;
-        Mon, 30 Sep 2019 10:07:41 -0700 (PDT)
-Received: from kherbst.pingu.com ([2a02:8308:b0be:6900:7db2:cb58:5fb:97a5])
-        by smtp.gmail.com with ESMTPSA id r12sm12077573wrq.88.2019.09.30.10.07.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 10:07:40 -0700 (PDT)
-From:   Karol Herbst <kherbst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Karol Herbst <kherbst@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@intel.com>,
-        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [RFC PATCH] pci: prevent putting pcie devices into lower device states on certain intel bridges
-Date:   Mon, 30 Sep 2019 19:07:38 +0200
-Message-Id: <20190930170738.20162-1-kherbst@redhat.com>
-X-Mailer: git-send-email 2.21.0
-Reply-To: CACO55tuk4SA6-xUtJ-oRePy8MPXYAp2cfmSPxwW3J5nQuX3y2g@mail.gmail.com
+        Mon, 30 Sep 2019 16:36:46 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29744 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727885AbfI3Ugp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 16:36:45 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8UId4Tb128798;
+        Mon, 30 Sep 2019 14:42:54 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vbnbpvx6j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 30 Sep 2019 14:42:54 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8UIdGG7129741;
+        Mon, 30 Sep 2019 14:42:53 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vbnbpvx5w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 30 Sep 2019 14:42:53 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8UIextj010451;
+        Mon, 30 Sep 2019 18:42:52 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma02wdc.us.ibm.com with ESMTP id 2v9y57w08c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 30 Sep 2019 18:42:52 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8UIgpxs59310430
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 30 Sep 2019 18:42:51 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 54C7EBE056;
+        Mon, 30 Sep 2019 18:42:51 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D281EBE04F;
+        Mon, 30 Sep 2019 18:42:46 +0000 (GMT)
+Received: from leobras.br.ibm.com (unknown [9.18.235.58])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 30 Sep 2019 18:42:46 +0000 (GMT)
+Message-ID: <673bcb94b7752e086cc4133fb6cceb24394c02c0.camel@linux.ibm.com>
+Subject: Re: [PATCH v4 01/11] powerpc/mm: Adds counting method to monitor
+ lockless pgtable walks
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     John Hubbard <jhubbard@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Paul Mackerras <paulus@samba.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Allison Randal <allison@lohutok.net>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Ganesh Goudar <ganeshgr@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 30 Sep 2019 15:42:42 -0300
+In-Reply-To: <48bf32ca-5d3e-5d69-4cd1-6720364a0d81@nvidia.com>
+References: <20190927234008.11513-1-leonardo@linux.ibm.com>
+         <20190927234008.11513-2-leonardo@linux.ibm.com>
+         <4ff1e8e8-929b-9cfc-9bf8-ee88e34de888@nvidia.com>
+         <2533a13f226a6e1fab387669b6cced2aa8d2e129.camel@linux.ibm.com>
+         <48bf32ca-5d3e-5d69-4cd1-6720364a0d81@nvidia.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-9k3sG6ksgKhuBdahGQJu"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-30_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909300166
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes state transitions of Nvidia Pascal GPUs from D3cold into higher device
-states.
 
-v2: convert to pci_dev quirk
-    put a proper technical explenation of the issue as a in-code comment
+--=-9k3sG6ksgKhuBdahGQJu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-RFC comment (copied from last sent):
-We are quite sure that there is a higher amount of bridges affected by this,
-but I was only testing it on my own machine for now.
+On Mon, 2019-09-30 at 10:57 -0700, John Hubbard wrote:
+> > As I told before, there are cases where this function is called from
+> > 'real mode' in powerpc, which doesn't disable irqs and may have a
+> > tricky behavior if we do. So, encapsulate the irq disable in this
+> > function can be a bad choice.
+>=20
+> You still haven't explained how this works in that case. So far, the
+> synchronization we've discussed has depended upon interrupt disabling
+> as part of the solution, in order to hold off page splitting and page
+> table freeing.
 
-I've stresstested runpm by doing 5000 runpm cycles with that patch applied
-and never saw it fail.
+The irqs are already disabled by another mechanism (hw): MSR_EE=3D0.
+So, serialize will work as expected.
 
-I mainly wanted to get a discussion going on if that's a feasable workaround
-indeed or if we need something better.
+> Simply skipping that means that an additional mechanism is required...whi=
+ch
+> btw might involve a new, ppc-specific routine, so maybe this is going to =
+end
+> up pretty close to what I pasted in after all...
+> > Of course, if we really need that, we can add a bool parameter to the
+> > function to choose about disabling/enabling irqs.
+> > > * This is really a core mm function, so don't hide it away in arch la=
+yers.
+> > >     (If you're changing mm/ files, that's a big hint.)
+> >=20
+> > My idea here is to let the arch decide on how this 'register' is going
+> > to work, as archs may have different needs (in powerpc for example, we
+> > can't always disable irqs, since we may be in realmode).
+> >=20
+> > Maybe we can create a generic function instead of a dummy, and let it
+> > be replaced in case the arch needs to do so.
+>=20
+> Yes, that might be what we need, if it turns out that ppc can't use this
+> approach (although let's see about that).
+>=20
 
-I am also sure, that the nouveau driver itself isn't at fault as I am able
-to reproduce the same issue by poking into some PCI registers on the PCIe
-bridge to put the GPU into D3cold as it's done in ACPI code.
+I initially used the dummy approach because I did not see anything like
+serialize in other archs.=20
 
-I've written a little python script to reproduce this issue without the need
-of loading nouveau:
-https://raw.githubusercontent.com/karolherbst/pci-stub-runpm/master/nv_runpm_bug_test.py
+I mean, even if I put some generic function here, if there is no
+function to use the 'lockless_pgtbl_walk_count', it becomes only a
+overhead.
 
-Signed-off-by: Karol Herbst <kherbst@redhat.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-Cc: Mika Westerberg <mika.westerberg@intel.com>
-Cc: linux-pci@vger.kernel.org
-Cc: linux-pm@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: nouveau@lists.freedesktop.org
----
- drivers/pci/pci.c    | 11 ++++++++++
- drivers/pci/quirks.c | 50 ++++++++++++++++++++++++++++++++++++++++++++
- include/linux/pci.h  |  1 +
- 3 files changed, 62 insertions(+)
+>=20
+> thanks,
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 088fcdc8d2b4..65516b024ee5 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -799,6 +799,13 @@ static inline bool platform_pci_bridge_d3(struct pci_dev *dev)
- 	return pci_platform_pm ? pci_platform_pm->bridge_d3(dev) : false;
- }
- 
-+static inline bool parent_broken_child_pm(struct pci_dev *dev)
-+{
-+	if (!dev->bus || !dev->bus->self)
-+		return false;
-+	return dev->bus->self->broken_child_pm;
-+}
-+
- /**
-  * pci_raw_set_power_state - Use PCI PM registers to set the power state of
-  *			     given PCI device
-@@ -844,6 +851,10 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
- 	   || (state == PCI_D2 && !dev->d2_support))
- 		return -EIO;
- 
-+	/* check if the bus controller causes issues */
-+	if (state != PCI_D0 && parent_broken_child_pm(dev))
-+		return 0;
-+
- 	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
- 
- 	/*
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 0f16acc323c6..2be0deec2c3d 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5198,3 +5198,53 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
- DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
- 			      PCI_CLASS_DISPLAY_VGA, 8,
- 			      quirk_reset_lenovo_thinkpad_p50_nvgpu);
-+
-+/*
-+ * Some Intel PCIe bridges cause devices to disappear from the PCIe bus after
-+ * those were put into D3cold state if they were put into a non D0 PCI PM
-+ * device state before doing so.
-+ *
-+ * This leads to various issue different issues which all manifest differently,
-+ * but have the same root cause:
-+ *  - AIML code execution hits an infinite loop (as the coe waits on device
-+ *    memory to change).
-+ *  - kernel crashes, as all pci reads return -1, which most code isn't able
-+ *    to handle well enough.
-+ *  - sudden shutdowns, as the kernel identified an unrecoverable error after
-+ *    userspace tries to access the GPU.
-+ *
-+ * In all cases dmesg will contain at least one line like this:
-+ * 'nouveau 0000:01:00.0: Refused to change power state, currently in D3'
-+ * followed by a lot of nouveau timeouts.
-+ *
-+ * ACPI code writes bit 0x80 to the not documented PCI register 0x248 of the
-+ * PCIe bridge controller in order to power down the GPU.
-+ * Nonetheless, there are other code paths inside the ACPI firmware which use
-+ * other registers, which seem to work fine:
-+ *  - 0xbc bit 0x20 (publicly available documentation claims 'reserved')
-+ *  - 0xb0 bit 0x10 (link disable)
-+ * Changing the conditions inside the firmware by poking into the relevant
-+ * addresses does resolve the issue, but it seemed to be ACPI private memory
-+ * and not any device accessible memory at all, so there is no portable way of
-+ * changing the conditions.
-+ *
-+ * The only systems where this behavior can be seen are hybrid graphics laptops
-+ * with a secondary Nvidia Pascal GPU. It cannot be ruled out that this issue
-+ * only occurs in combination with listed Intel PCIe bridge controllers and
-+ * the mentioned GPUs or if it's only a hw bug in the bridge controller.
-+ *
-+ * But because this issue was NOT seen on laptops with an Nvidia Pascal GPU
-+ * and an Intel Coffee Lake SoC, there is a higher chance of there being a bug
-+ * in the bridge controller rather than in the GPU.
-+ *
-+ * This issue was not able to be reproduced on non laptop systems.
-+ */
-+
-+static void quirk_broken_child_pm(struct pci_dev *dev)
-+{
-+	dev->broken_child_pm = 1;
-+	printk("applied broken child pm quirk!\n");
-+}
-+/* kaby lake */
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1901,
-+			quirk_broken_child_pm);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index dd436da7eccc..01eb0a9e6c13 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -413,6 +413,7 @@ struct pci_dev {
- 	unsigned int	__aer_firmware_first_valid:1;
- 	unsigned int	__aer_firmware_first:1;
- 	unsigned int	broken_intx_masking:1;	/* INTx masking can't be used */
-+	unsigned int	broken_child_pm:1;	/* children put into lower PCI PM states won't recover after D3cold transition */
- 	unsigned int	io_window_1k:1;		/* Intel bridge 1K I/O windows */
- 	unsigned int	irq_managed:1;
- 	unsigned int	has_secondary_link:1;
--- 
-2.21.0
+Thank you!
+
+--=-9k3sG6ksgKhuBdahGQJu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl2STKIACgkQlQYWtz9S
+ttSxFg//Uqx1dqwNpWXo7xp/0GswLDO2WKQanbx0Qg4JKCL09MHD8khl2E9vx4IF
+Icd6eXFRwYdzgdFfGKCCUpE9dEBMkT9zPeDS7tk8jhbZ57yJtXC3X3Pcx7j82bEO
+n1x5ZL2jrTEqoWL4oYegJmVi7zzdHiGJi0O31QDIp9YGFdxUn2lPUCNMaypuLs/u
+vejkf6DcmVUXCigXaxmT5NN85fDDUJxbph79+UXyEm6jy9Zuk+PSi3AgfmkCKftk
+RdyU8pmX875qMJQGvoOAIaX/GBavIFVvujG9x7HBeL26G0pdttO0b/1nt5A3thWi
+nx2y4jlfzoDvLhAfw4wsZ+zHQjzIIZlpdM1SaDseb5mNyR1+fpTPoqhsAtqcex6N
++LdR2q+osgMfKpklWyAhSgJVIqvvtViBEqmA5Itg4JOzQD0xJwg27DJjTd0mBv1E
+za5iWYaUxBs4qw8W98gwSbw2lKgIRfKieKynDUwdSmq8GwjCSj7H9Iuvr/aQwGnm
+E8o41KiK7frirDuS6jxdBYPvA3mtUqqVCN3pXZKktEc3CrZSd9C/J7AR5b+UZJOi
+Umdeci9BnKsx2kFvCsrdcl6DEkmKELiVjJ+aDtZBbunKnwKtupCRE2UC4X2UE02y
+Z9Mdw6OCS6VH+s+ArHVohA6MNm8+5OzhJdZV4oHv/EO5esStUTM=
+=VegT
+-----END PGP SIGNATURE-----
+
+--=-9k3sG6ksgKhuBdahGQJu--
 
