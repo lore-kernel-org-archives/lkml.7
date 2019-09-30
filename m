@@ -2,126 +2,117 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6D3C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84AB5C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AB6D2086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 556F42086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 11:57:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gHB7DbQZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730229AbfI3L40 (ORCPT
+        id S1730304AbfI3L5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 07:56:26 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:39291 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727885AbfI3L40 (ORCPT
+        Mon, 30 Sep 2019 07:57:20 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34574 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729686AbfI3L5U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 07:56:26 -0400
-Received: by mail-vk1-f196.google.com with SMTP id u4so2586443vkl.6
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 04:56:25 -0700 (PDT)
+        Mon, 30 Sep 2019 07:57:20 -0400
+Received: by mail-wm1-f67.google.com with SMTP id y135so13967298wmc.1
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 04:57:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/zv5NPFffUTFWq+5VT+kNlcF7WPDHuJF4ydktGZ/WsY=;
+        b=gHB7DbQZToFeCjqdQb9B/zhfxNXQtVeZx4efkZ9xl4iyC3EefN0QLg4S7JDcSdfwNE
+         73M6UDITA0Cv9adQfTZIcXcE79Y4OeCsROVAVoyJbRv9vEpIDImPA7WxKXs++9aQcFxD
+         NEC3RhtXV2/IDtq8BsCZUazqjoBVOBgzJpqpu38PPIZ4mUFiRfF0BAi9TdalNdFEba/7
+         Dzn/Z9OcxYuowjqPJDOz4aEK44P/xUd4IKbQo1fiVUixN/Ydxnqb2BUJnTDd3qlBFnDX
+         uuBUvpQNZp2w0rm+zQ94UlhJgbn+PgAI7aJtaYj8EwfhFjq5gPoH7c3TEhOnGc3J/gUB
+         hG4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XK+Pj//CAf98OmvrIc+Zkz8mL+/Q71gw+jEEwWOAJHE=;
-        b=eSInWx7WCUV6tRFSEM+Mm5SA43u6NL7pTbAwxfddk54eQzWBKylfsgrhgOziQsdOXm
-         IOQ21HBWtwfZJjebGZM3A8zY3tA8PXQjF117U8YkiuqO6rj0XzJkd2x+/060sSoHz04t
-         KIZsxIMH68Sln7KFDklRLcCo5pGWfN5vlF9pCVXv7P4EpSSrLmSpLSGczqDk5lVMxCLy
-         /PO0ouSQQznA0MvOWv7cXrPwDUkgjrjIPU7qLgEcdZO92qODpCSkfcNL6dMyiHv77AMM
-         Zw/8o84MhYkb/QcSlt3OfEf23vJd9DObaWjXCTmwUEA2uHc0nMjFkaadtF83131pcKPK
-         5YWA==
-X-Gm-Message-State: APjAAAUrMpy+5nQBl3v1Y9vuTlj1avDEMnB69Eks/Gyy5kTtzI7DFiTh
-        q2MVRoGjZIJ2tDBZnWz7N8W/dhbZq8BLmMV3kY0=
-X-Google-Smtp-Source: APXvYqyp3oqLhmTa6dfK6tao5pcqoru4TZ3YQ6anF9MveP7plK/oRqyonurgvgfZ4sQelX1+qjAQP5Ngs9QvGZXbQT0=
-X-Received: by 2002:a1f:e387:: with SMTP id a129mr11405vkh.14.1569844585010;
- Mon, 30 Sep 2019 04:56:25 -0700 (PDT)
+        bh=/zv5NPFffUTFWq+5VT+kNlcF7WPDHuJF4ydktGZ/WsY=;
+        b=jssR/8i5PGskzQpBeHVo7bmFx9YvmR8Xvyn8VkkAbsMbIUsow8xYdL0wNl2763pWOR
+         u+jAMvrUOEg27ce2q/Mtc5QcGsoC7EU0vJKugUocFHUPDcyiXMoBe+ASfKA2tVl455Hu
+         M5j7OMEus3aRi5st4XjWyAq6i2+AuAkE+9oOAombl9NeT3IKWdD1zfFHjJ+JsphNSDJr
+         305rk6B2eOXZhDslCCylW+TL1SKSlZwqkhIPCJ+ZB/PbqFgBUuBKcAvbU9W20wZ0u7MI
+         E9LimBdOBOD5laduQt4yLz67d2X4q4OxlGYifPsTwdYbbi6fyk/fRsbL4nDc/WM6oxAb
+         BZ3w==
+X-Gm-Message-State: APjAAAU1bnKibOn8wEf9ophQuGwTEPFmCBLvanB/tMo2hZKa9VAw7Ubg
+        DV+5QycUVqOgDCi5R2utiQLogXPyZ9A1R5EGL023Bw==
+X-Google-Smtp-Source: APXvYqzSjZCzq7vEPClkh//Q7yqVfPQznFE9UwH9Dy4nGFTtlSk7ZP8Mfm+itcx9CqEjryk0wJGf5vg9EJJpSWD3VFU=
+X-Received: by 2002:a7b:cb55:: with SMTP id v21mr17070227wmj.53.1569844638206;
+ Mon, 30 Sep 2019 04:57:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190930045408.8053-1-james.qian.wang@arm.com>
- <20190930045408.8053-3-james.qian.wang@arm.com> <20190930110438.6w7jtw2e5s2ykwnd@DESKTOP-E1NTVVP.localdomain>
-In-Reply-To: <20190930110438.6w7jtw2e5s2ykwnd@DESKTOP-E1NTVVP.localdomain>
-From:   Ilia Mirkin <imirkin@alum.mit.edu>
-Date:   Mon, 30 Sep 2019 07:56:13 -0400
-Message-ID: <CAKb7UviDMLLJWZYV_aW2odJBfmSA8pH7TVuU7T9qpuy1713-EA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] drm/komeda: Add drm_ctm_to_coeffs()
-To:     Brian Starkey <Brian.Starkey@arm.com>
-Cc:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        nd <nd@arm.com>, Ayan Halder <Ayan.Halder@arm.com>,
-        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
-        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
-        Mihail Atanassov <Mihail.Atanassov@arm.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Liviu Dudau <Liviu.Dudau@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
-        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
-        "Thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
-        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        "sean@poorly.run" <sean@poorly.run>, Ben Davis <Ben.Davis@arm.com>
+References: <20190928101428.GA222453@light.dominikbrodowski.net>
+In-Reply-To: <20190928101428.GA222453@light.dominikbrodowski.net>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Mon, 30 Sep 2019 13:57:06 +0200
+Message-ID: <CAKv+Gu9dqjZHfCHcHprh32eHTVinwPar1zOYopyMVfp=zPqELg@mail.gmail.com>
+Subject: Re: [RFC] random: UEFI RNG input is bootloader randomness
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     Hsin-Yi Wang <hsinyi@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Rob Herring <robh@kernel.org>, "Theodore Ts'o" <tytso@mit.edu>,
+        Kees Cook <keescook@chromium.org>,
+        "Lee, Chun-Yi" <joeyli.kernel@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 7:05 AM Brian Starkey <Brian.Starkey@arm.com> wrote:
+On Sat, 28 Sep 2019 at 12:14, Dominik Brodowski
+<linux@dominikbrodowski.net> wrote:
 >
-> Hi James,
+> Depending on RANDOM_TRUST_BOOTLOADER, bootloader-provided randomness
+> is credited as entropy. As the UEFI seeding entropy pool is seeded by
+> the UEFI firmware/bootloader, add its content as bootloader randomness.
 >
-> On Mon, Sep 30, 2019 at 04:54:41AM +0000, james qian wang (Arm Technology China) wrote:
-> > This function is used to convert drm_color_ctm S31.32 sign-magnitude
-> > value to komeda required Q2.12 2's complement
-> >
-> > Signed-off-by: james qian wang (Arm Technology China) <james.qian.wang@arm.com>
-> > ---
-> >  .../arm/display/komeda/komeda_color_mgmt.c    | 27 +++++++++++++++++++
-> >  .../arm/display/komeda/komeda_color_mgmt.h    |  1 +
-> >  2 files changed, 28 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_color_mgmt.c b/drivers/gpu/drm/arm/display/komeda/komeda_color_mgmt.c
-> > index c180ce70c26c..c92c82eebddb 100644
-> > --- a/drivers/gpu/drm/arm/display/komeda/komeda_color_mgmt.c
-> > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_color_mgmt.c
-> > @@ -117,3 +117,30 @@ void drm_lut_to_fgamma_coeffs(struct drm_property_blob *lut_blob, u32 *coeffs)
-> >  {
-> >       drm_lut_to_coeffs(lut_blob, coeffs, sector_tbl, ARRAY_SIZE(sector_tbl));
-> >  }
-> > +
-> > +/* Convert from S31.32 sign-magnitude to HW Q2.12 2's complement */
-> > +static s32 drm_ctm_s31_32_to_q2_12(u64 input)
-> > +{
-> > +     u64 mag = (input & ~BIT_ULL(63)) >> 20;
-> > +     bool negative = !!(input & BIT_ULL(63));
-> > +     u32 val;
-> > +
-> > +     /* the range of signed 2s complement is [-2^n, 2^n - 1] */
-> > +     val = clamp_val(mag, 0, negative ? BIT(14) : BIT(14) - 1);
-> > +
-> > +     return negative ? 0 - val : val;
-> > +}
+> Note that this UEFI (v2.4 or newer) feature is currently only
+> implemented for EFI stub booting on ARM, and further note that
+> RANDOM_TRUST_BOOTLOADER must only be enabled if there indeed is
+> sufficient trust in the bootloader _and_ its source of randomness.
 >
-> This function looks generally useful. Should it be in DRM core
-> (assuming there isn't already one there)?
+> Signed-off-by: Dominik Brodowski <linux@dominikbrodowski.net>
+> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Cc: Hsin-Yi Wang <hsinyi@chromium.org>
+> Cc: Stephen Boyd <swboyd@chromium.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Theodore Ts'o <tytso@mit.edu>
+> Cc: Lee, Chun-Yi <joeyli.kernel@gmail.com>
 >
-> You can use a parameter to determine the number of bits desired in the
-> output.
+> ---
+>
+> Untested patch, as efi_random_get_seed() is only hooked up on ARM,
+> and the firmware on my old x86 laptop only has UEFI v2.31 anyway.
+>
+> Thanks,
+>         Dominik
+>
+> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> index 8f1ab04f6743..db0bffce754e 100644
+> --- a/drivers/firmware/efi/efi.c
+> +++ b/drivers/firmware/efi/efi.c
+> @@ -545,7 +545,7 @@ int __init efi_config_parse_tables(void *config_tables, int count, int sz,
+>                                               sizeof(*seed) + size);
+>                         if (seed != NULL) {
+>                                 pr_notice("seeding entropy pool\n");
+> -                               add_device_randomness(seed->bits, seed->size);
+> +                               add_bootloader_randomness(seed->bits, seed->size);
+>                                 early_memunmap(seed, sizeof(*seed) + size);
+>                         } else {
+>                                 pr_err("Could not map UEFI random seed!\n");
 
-I suspect every driver needs to do something similar. You can see what
-I did for nouveau here:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=88b703527ba70659365d989f29579f1292ebf9c3
-
-(look for csc_drm_to_base)
-
-Would be great to have a common helper which correctly accounts for
-all the variability.
-
-Cheers,
-
-  -ilia
+Thanks, I like this change. I'll get it queued up in efi/next.
