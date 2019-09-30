@@ -2,125 +2,83 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE2FC388F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7038C388F3
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 337DB21920
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:30:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RIUESRFx"
+	by mail.kernel.org (Postfix) with ESMTP id 7DE5221A4A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 07:36:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729661AbfI3HaO (ORCPT
+        id S1729362AbfI3Hg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 03:30:14 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35606 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbfI3HaN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 03:30:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=+RxVhfg/XqKkmLaVbtiYHGOh1FSjmgcY7SoSeeOxLws=; b=RIUESRFxLtDN6yOAeQnqRT2Tl
-        imOaYQBEHlXioRQUhAXw+pEyGz4F5u2Xd9pigFxiSivWCGTMUCoGIYzxyVeMIWpaOQZVML65ZJb6C
-        ZwefEhmPzjdTla9bwPzNMaDGwktKVErqLCxH1FeWc7vaqZ8Lq2LUsEl4RexprH62pddRzCo6Uv4Hu
-        jelEw3faOMfP7i+paWjjWyDnS4IZbf9PHyDhKlqDWzt4zbyzUVAplr6d5tcGTWahipCOzg7QcxRBe
-        c984nCz/UvNNxmzCNIkhw3HPOV+VVaGduUTWtfqTOkd+Lu2L75NBXHYFvOO4lOAfqyP5IGXyJuJdW
-        jDMQWAJTg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iEq7r-00013E-Gb; Mon, 30 Sep 2019 07:29:43 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E24CE301B59;
-        Mon, 30 Sep 2019 09:28:50 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A0F3F2651BB8E; Mon, 30 Sep 2019 09:29:38 +0200 (CEST)
-Date:   Mon, 30 Sep 2019 09:29:38 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     akpm@linux-foundation.org, mingo@redhat.com, will@kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org, gregkh@linuxfoundation.org,
-        jslaby@suse.com, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, intel-gfx@lists.freedesktop.org,
-        tytso@mit.edu, jack@suse.com, linux-ext4@vger.kernel.org,
-        tj@kernel.org, mark@fasheh.com, jlbec@evilplan.or,
-        joseph.qi@linux.alibaba.com, ocfs2-devel@oss.oracle.com,
-        davem@davemloft.net, st@kernel.org, daniel@iogearbox.net,
-        netdev@vger.kernel.org, bpf@vger.kernel.org, duyuyang@gmail.com,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        alexander.levin@microsoft.com
-Subject: Re: [PATCH -next] treewide: remove unused argument in lock_release()
-Message-ID: <20190930072938.GK4553@hirez.programming.kicks-ass.net>
-References: <1568909380-32199-1-git-send-email-cai@lca.pw>
+        Mon, 30 Sep 2019 03:36:26 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:3233 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725940AbfI3HgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 03:36:25 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id EC41A3B0846FBE479BC4;
+        Mon, 30 Sep 2019 15:36:22 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 30 Sep
+ 2019 15:36:17 +0800
+Subject: Re: [PATCH 4.19 53/63] f2fs: fix to do sanity check on segment bitmap
+ of LFS curseg
+To:     Pavel Machek <pavel@ucw.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+References: <20190929135031.382429403@linuxfoundation.org>
+ <20190929135040.450358370@linuxfoundation.org>
+ <20190930072157.GB22914@atrey.karlin.mff.cuni.cz>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <43edc2f2-5b42-0cd7-1573-af77fd9e6678@huawei.com>
+Date:   Mon, 30 Sep 2019 15:36:16 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1568909380-32199-1-git-send-email-cai@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190930072157.GB22914@atrey.karlin.mff.cuni.cz>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 12:09:40PM -0400, Qian Cai wrote:
-> Since the commit b4adfe8e05f1 ("locking/lockdep: Remove unused argument
-> in __lock_release"), @nested is no longer used in lock_release(), so
-> remove it from all lock_release() calls and friends.
+Hello,
 
-Right; I never did this cleanup for not wanting the churn, but as long
-as it applies I'll take it.
+On 2019/9/30 15:21, Pavel Machek wrote:
+> Hi!
+> 
+> 
+>> +		for (blkofs += 1; blkofs < sbi->blocks_per_seg; blkofs++) {
+>> +			if (!f2fs_test_bit(blkofs, se->cur_valid_map))
+>> +				continue;
+>> +out:
+>> +			f2fs_msg(sbi->sb, KERN_ERR,
+>> +				"Current segment's next free block offset is "
+>> +				"inconsistent with bitmap, logtype:%u, "
+>> +				"segno:%u, type:%u, next_blkoff:%u, blkofs:%u",
+>> +				i, curseg->segno, curseg->alloc_type,
+>> +				curseg->next_blkoff, blkofs);
+>> +			return -EINVAL;
+>> +		}
+> 
+> So this is detecting filesystem corruption, right? Should it be
+> -EUCLEAN?
 
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
->  drivers/gpu/drm/drm_connector.c               |  2 +-
->  drivers/gpu/drm/i915/gem/i915_gem_shrinker.c  |  6 +++---
->  drivers/gpu/drm/i915/gt/intel_engine_pm.c     |  2 +-
->  drivers/gpu/drm/i915/i915_request.c           |  2 +-
->  drivers/tty/tty_ldsem.c                       |  8 ++++----
->  fs/dcache.c                                   |  2 +-
->  fs/jbd2/transaction.c                         |  4 ++--
->  fs/kernfs/dir.c                               |  4 ++--
->  fs/ocfs2/dlmglue.c                            |  2 +-
->  include/linux/jbd2.h                          |  2 +-
->  include/linux/lockdep.h                       | 21 ++++++++++-----------
->  include/linux/percpu-rwsem.h                  |  4 ++--
->  include/linux/rcupdate.h                      |  2 +-
->  include/linux/rwlock_api_smp.h                | 16 ++++++++--------
->  include/linux/seqlock.h                       |  4 ++--
->  include/linux/spinlock_api_smp.h              |  8 ++++----
->  include/linux/ww_mutex.h                      |  2 +-
->  include/net/sock.h                            |  2 +-
->  kernel/bpf/stackmap.c                         |  2 +-
->  kernel/cpu.c                                  |  2 +-
->  kernel/locking/lockdep.c                      |  3 +--
->  kernel/locking/mutex.c                        |  4 ++--
->  kernel/locking/rtmutex.c                      |  6 +++---
->  kernel/locking/rwsem.c                        | 10 +++++-----
->  kernel/printk/printk.c                        | 10 +++++-----
->  kernel/sched/core.c                           |  2 +-
->  lib/locking-selftest.c                        | 24 ++++++++++++------------
->  mm/memcontrol.c                               |  2 +-
->  net/core/sock.c                               |  2 +-
->  tools/lib/lockdep/include/liblockdep/common.h |  3 +--
->  tools/lib/lockdep/include/liblockdep/mutex.h  |  2 +-
->  tools/lib/lockdep/include/liblockdep/rwlock.h |  2 +-
->  tools/lib/lockdep/preload.c                   | 16 ++++++++--------
->  33 files changed, 90 insertions(+), 93 deletions(-)
+Was fixed in another commit 10f966bbf521 ("f2fs: use generic
+EFSBADCRC/EFSCORRUPTED"). :)
 
-Thanks!
+Thanks,
+
+> 
+> 									Pavel
+> 
