@@ -2,89 +2,95 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0849DC35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9FEC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C52652086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:24:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kMWr25EA"
+	by mail.kernel.org (Postfix) with ESMTP id AE02C2086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:24:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731487AbfI3OYo (ORCPT
+        id S1731683AbfI3OYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 10:24:44 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:45330 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730378AbfI3OYn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 10:24:43 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8UEOgPs064508;
-        Mon, 30 Sep 2019 09:24:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569853482;
-        bh=Q++4+W+xo4Pr6ly1SOnOWLFFQ+MsIQZKvmW9IrDJ/9g=;
-        h=From:To:CC:Subject:Date;
-        b=kMWr25EA0mJP761xMSptJuMIBZFJNXq32J+QSNRtVrlwn3QtOJKXhtFCsndUN0G1x
-         hs3XEaetjTYgEZEij7C8DjhM5VmsAELJfhMZ+L+L34wRb9NbbP0LYP2qYvLhy0Cunz
-         6Rh5dbf2C5Zg9vgblGRAMIp+pqH9GttIXpUglmYE=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8UEOgY2068175
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 30 Sep 2019 09:24:42 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 30
- Sep 2019 09:24:32 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 30 Sep 2019 09:24:32 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8UEOfP8100297;
-        Mon, 30 Sep 2019 09:24:41 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <sre@kernel.org>, <linux-pm@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH 1/3] power_supply: Add additional health properties to the header
-Date:   Mon, 30 Sep 2019 09:31:35 -0500
-Message-ID: <20190930143137.21624-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
+        Mon, 30 Sep 2019 10:24:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35556 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731030AbfI3OYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 10:24:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A8522B176;
+        Mon, 30 Sep 2019 14:24:52 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id CA8E1DA88C; Mon, 30 Sep 2019 16:25:10 +0200 (CEST)
+From:   David Sterba <dsterba@suse.com>
+To:     torvalds@linux-foundation.org
+Cc:     David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Btrfs fixes for 5.4-rc2
+Date:   Mon, 30 Sep 2019 16:25:08 +0200
+Message-Id: <cover.1569852875.git.dsterba@suse.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
+Hi,
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- include/linux/power_supply.h | 3 +++
- 1 file changed, 3 insertions(+)
+a bunch of fixes that accumulated in recent weeks, mostly material for
+stable.
 
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index 28413f737e7d..bd0d3225f245 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -61,6 +61,9 @@ enum {
- 	POWER_SUPPLY_HEALTH_WATCHDOG_TIMER_EXPIRE,
- 	POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE,
- 	POWER_SUPPLY_HEALTH_OVERCURRENT,
-+	POWER_SUPPLY_HEALTH_WARM,
-+	POWER_SUPPLY_HEALTH_COOL,
-+	POWER_SUPPLY_HEALTH_HOT,
- };
- 
- enum {
--- 
-2.22.0.214.g8dca754b1e
+Summary:
 
+- fix for regression from 5.3 that prevents to use balance convert with
+  single profile
+
+- qgroup fixes: rescan race, accounting leak with multiple writers,
+  potential leak after io failure recovery
+
+- fix for use after free in relocation (reported by KASAN)
+
+- other error handling fixups
+
+Please pull, thanks.
+
+----------------------------------------------------------------
+The following changes since commit 6af112b11a4bc1b560f60a618ac9c1dcefe9836e:
+
+  btrfs: Relinquish CPUs in btrfs_compare_trees (2019-09-09 14:59:20 +0200)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.4-rc1-tag
+
+for you to fetch changes up to d4e204948fe3e0dc8e1fbf3f8f3290c9c2823be3:
+
+  btrfs: qgroup: Fix reserved data space leak if we have multiple reserve calls (2019-09-27 15:24:34 +0200)
+
+----------------------------------------------------------------
+Dennis Zhou (1):
+      btrfs: adjust dirty_metadata_bytes after writeback failure of extent buffer
+
+Filipe Manana (3):
+      Btrfs: fix selftests failure due to uninitialized i_mode in test inodes
+      Btrfs: fix missing error return if writeback for extent buffer never started
+      Btrfs: fix race setting up and completing qgroup rescan workers
+
+Qu Wenruo (4):
+      btrfs: relocation: fix use-after-free on dead relocation roots
+      btrfs: Fix a regression which we can't convert to SINGLE profile
+      btrfs: qgroup: Fix the wrong target io_tree when freeing reserved data space
+      btrfs: qgroup: Fix reserved data space leak if we have multiple reserve calls
+
+ fs/btrfs/extent_io.c         | 13 +++++++++++++
+ fs/btrfs/qgroup.c            | 38 +++++++++++++++++++++++---------------
+ fs/btrfs/relocation.c        |  9 ++++++++-
+ fs/btrfs/tests/btrfs-tests.c |  8 +++++++-
+ fs/btrfs/volumes.c           |  8 +++++++-
+ 5 files changed, 58 insertions(+), 18 deletions(-)
