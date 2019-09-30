@@ -2,116 +2,366 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72ED3C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3BABC4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 530B421721
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA9BD21855
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:32:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730218AbfI3J3j (ORCPT
+        id S1730337AbfI3JcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 05:29:39 -0400
-Received: from mga09.intel.com ([134.134.136.24]:41802 "EHLO mga09.intel.com"
+        Mon, 30 Sep 2019 05:32:10 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:21087 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727469AbfI3J3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 05:29:39 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Sep 2019 02:29:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,565,1559545200"; 
-   d="scan'208";a="204793408"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 30 Sep 2019 02:29:35 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 30 Sep 2019 12:29:34 +0300
-Date:   Mon, 30 Sep 2019 12:29:34 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: Re: [RFC PATCH] pci: prevent putting pcie devices into lower device
- states on certain intel bridges
-Message-ID: <20190930092934.GT2714@lahna.fi.intel.com>
-References: <20190927144421.22608-1-kherbst@redhat.com>
- <20190927214252.GA65801@google.com>
- <CACO55tuaY1jFXpJPeC9M4PoWEDyy547_tE8MpLaTDb+C+ffsbg@mail.gmail.com>
- <20190930080534.GS2714@lahna.fi.intel.com>
- <CACO55tuMo1aAA7meGtEey6J6sOS-ZA0ebZeL52i2zfkWtPqe_g@mail.gmail.com>
+        id S1727469AbfI3JcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 05:32:09 -0400
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 91002C049D7C
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 09:32:08 +0000 (UTC)
+Received: by mail-wm1-f72.google.com with SMTP id n3so5682432wmf.3
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 02:32:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=Q4nd1VqrkexVmRSFg81KtZVU3uZrT/qwjUj46akeywA=;
+        b=FT06DC6RGIBGV23DqR6GRpHlKKXn8ff+NYuBN+RUuhAXPwFzRaZp+bAybZxYe/WWfm
+         BwXEjslt9u356ZVXYjQqrcuwbN8GracFGr62S+TqNzfiY52k0xAT7FSfrw4XQMKWAcGi
+         VqeBGaEJWMrIxMC369WxPjbxLZpthgk38W1igP2/umvdzbXFqD9IX2K0xZBet4HTjlBt
+         m3m4+2iDqMWZpAkv9haq6q/V2t9IXZZt1OpDSljSutLAo/vo/xOGAJJtgPhjKMP1FOiD
+         h6lUwy4Eanc0Z/GUO9M7QB0TSjoQWdK3a/NUeXlgCQtMEsevKtfoCUOHskGQcuxYHGS3
+         /5Mw==
+X-Gm-Message-State: APjAAAWjzQ9HZ4FpLdzvm6VTdzaDCdY8eIP4TdPPcyyEOOwu/Lguqtnh
+        UWY10lbl/BWeLwDituc8LhFK4Bl2jgmLN3I5Lqhl8x9Vzqgah6pgHMeC60nSo7+x6vimQtKh9Yv
+        OXahlX5oPJ732BlRIeC2WQ5Js
+X-Received: by 2002:a1c:c789:: with SMTP id x131mr15947062wmf.20.1569835927234;
+        Mon, 30 Sep 2019 02:32:07 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxMRvwaVSglCh7k1HHTC/fBshrNu99FMxoNh6Q3o9JGUW29VMIvW/NcpH+SRIzTuX/yHmzeEQ==
+X-Received: by 2002:a1c:c789:: with SMTP id x131mr15947044wmf.20.1569835926933;
+        Mon, 30 Sep 2019 02:32:06 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id x5sm10520373wrt.75.2019.09.30.02.32.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 02:32:06 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Reto Buerki <reet@codelabs.ch>,
+        Liran Alon <liran.alon@oracle.com>
+Subject: Re: [PATCH v2 7/8] KVM: x86: Add helpers to test/mark reg availability and dirtiness
+In-Reply-To: <20190927214523.3376-8-sean.j.christopherson@intel.com>
+References: <20190927214523.3376-1-sean.j.christopherson@intel.com> <20190927214523.3376-8-sean.j.christopherson@intel.com>
+Date:   Mon, 30 Sep 2019 11:32:05 +0200
+Message-ID: <87d0fi3zai.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACO55tuMo1aAA7meGtEey6J6sOS-ZA0ebZeL52i2zfkWtPqe_g@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 11:15:48AM +0200, Karol Herbst wrote:
-> On Mon, Sep 30, 2019 at 10:05 AM Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> >
-> > Hi Karol,
-> >
-> > On Fri, Sep 27, 2019 at 11:53:48PM +0200, Karol Herbst wrote:
-> > > > What exactly is the serious issue?  I guess it's that the rescan
-> > > > doesn't detect the GPU, which means it's not responding to config
-> > > > accesses?  Is there any timing component here, e.g., maybe we're
-> > > > missing some delay like the ones Mika is adding to the reset paths?
-> > >
-> > > When I was checking up on some of the PCI registers of the bridge
-> > > controller, the slot detection told me that there is no device
-> > > recognized anymore. I don't know which register it was anymore, though
-> > > I guess one could read it up in the SoC spec document by Intel.
-> > >
-> > > My guess is, that the bridge controller fails to detect the GPU being
-> > > here or actively threw it of the bus or something. But a normal system
-> > > suspend/resume cycle brings the GPU back online (doing a rescan via
-> > > sysfs gets the device detected again)
-> >
-> > Can you elaborate a bit what kind of scenario the issue happens (e.g
-> > steps how it reproduces)? It was not 100% clear from the changelog. Also
-> > what the result when the failure happens?
-> >
-> 
-> yeah, I already have an updated patch in the works which also does the
-> rework Bjorn suggested. Had no time yet to test if I didn't mess it
-> up.
-> 
-> I am also thinking of adding a kernel parameter to enable this
-> workaround on demand, but not quite sure on that one yet.
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-Right, I think it would be good to figure out the root cause before
-adding any workarounds ;-) It might very well be that we are just
-missing something the PCIe spec requires but not implemented in Linux.
+> Add helpers to prettify code that tests and/or marks whether or not a
+> register is available and/or dirty.
+>
+> Suggested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/kvm_cache_regs.h | 45 +++++++++++++++++++++++++----------
+>  arch/x86/kvm/vmx/nested.c     |  4 ++--
+>  arch/x86/kvm/vmx/vmx.c        | 29 ++++++++++------------
+>  arch/x86/kvm/x86.c            | 13 ++++------
+>  4 files changed, 53 insertions(+), 38 deletions(-)
+>
+> diff --git a/arch/x86/kvm/kvm_cache_regs.h b/arch/x86/kvm/kvm_cache_regs.h
+> index b85fc4b4e04f..9c2bc528800b 100644
+> --- a/arch/x86/kvm/kvm_cache_regs.h
+> +++ b/arch/x86/kvm/kvm_cache_regs.h
+> @@ -37,12 +37,37 @@ BUILD_KVM_GPR_ACCESSORS(r14, R14)
+>  BUILD_KVM_GPR_ACCESSORS(r15, R15)
+>  #endif
+>  
+> +static inline bool kvm_register_is_available(struct kvm_vcpu *vcpu,
+> +					     enum kvm_reg reg)
+> +{
+> +	return test_bit(reg, (unsigned long *)&vcpu->arch.regs_avail);
+> +}
+> +
 
-> > I see there is a script that does something but unfortunately I'm not
-> > fluent in Python so can't extract the steps how the issue can be
-> > reproduced ;-)
-> >
-> > One thing that I'm working on is that Linux PCI subsystem misses certain
-> > delays that are needed after D3cold -> D0 transition, otherwise the
-> > device and/or link may not be ready before we access it. What you are
-> > experiencing sounds similar. I wonder if you could try the following
-> > patch and see if it makes any difference?
-> >
-> > https://patchwork.kernel.org/patch/11106611/
-> 
-> I think I already tried this path. The problem isn't that the device
-> isn't accessible too late, but that it seems that the device
-> completely falls off the bus. But I can retest again just to be sure.
+(Interestingly enough, all call sites use !kvm_register_is_available()
+but kvm_register_is_unavailable() sounds weird. So I'd prefer to keep it
+as-is).
 
-Yes, please try it and share full dmesg if/when the failure still happens.
+> +static inline bool kvm_register_is_dirty(struct kvm_vcpu *vcpu,
+> +					 enum kvm_reg reg)
+> +{
+> +	return test_bit(reg, (unsigned long *)&vcpu->arch.regs_dirty);
+> +}
+> +
+> +static inline void kvm_register_mark_available(struct kvm_vcpu *vcpu,
+> +					       enum kvm_reg reg)
+> +{
+> +	__set_bit(reg, (unsigned long *)&vcpu->arch.regs_avail);
+> +}
+> +
+> +static inline void kvm_register_mark_dirty(struct kvm_vcpu *vcpu,
+> +					   enum kvm_reg reg)
+> +{
+> +	__set_bit(reg, (unsigned long *)&vcpu->arch.regs_avail);
+> +	__set_bit(reg, (unsigned long *)&vcpu->arch.regs_dirty);
+> +}
+> +
+
+Personal preference again, but I would've named this
+"kvm_register_mark_avail_dirty" to indicate what we're actually doing
+(and maybe even shortened 'kvm_register_' to 'kvm_reg_' everywhere as I
+can't see how 'reg' could be misread).
+
+>  static inline unsigned long kvm_register_read(struct kvm_vcpu *vcpu, int reg)
+>  {
+>  	if (WARN_ON_ONCE((unsigned int)reg >= NR_VCPU_REGS))
+>  		return 0;
+>  
+> -	if (!test_bit(reg, (unsigned long *)&vcpu->arch.regs_avail))
+> +	if (!kvm_register_is_available(vcpu, reg))
+>  		kvm_x86_ops->cache_reg(vcpu, reg);
+>  
+>  	return vcpu->arch.regs[reg];
+> @@ -55,13 +80,12 @@ static inline void kvm_register_write(struct kvm_vcpu *vcpu, int reg,
+>  		return;
+>  
+>  	vcpu->arch.regs[reg] = val;
+> -	__set_bit(reg, (unsigned long *)&vcpu->arch.regs_dirty);
+> -	__set_bit(reg, (unsigned long *)&vcpu->arch.regs_avail);
+> +	kvm_register_mark_dirty(vcpu, reg);
+>  }
+>  
+>  static inline unsigned long kvm_rip_read(struct kvm_vcpu *vcpu)
+>  {
+> -	if (!test_bit(VCPU_REGS_RIP, (unsigned long *)&vcpu->arch.regs_avail))
+> +	if (!kvm_register_is_available(vcpu, VCPU_REGS_RIP))
+>  		kvm_x86_ops->cache_reg(vcpu, VCPU_REGS_RIP);
+>  
+>  	return vcpu->arch.regs[VCPU_REGS_RIP];
+> @@ -70,13 +94,12 @@ static inline unsigned long kvm_rip_read(struct kvm_vcpu *vcpu)
+>  static inline void kvm_rip_write(struct kvm_vcpu *vcpu, unsigned long val)
+>  {
+>  	vcpu->arch.regs[VCPU_REGS_RIP] = val;
+> -	__set_bit(VCPU_REGS_RIP, (unsigned long *)&vcpu->arch.regs_dirty);
+> -	__set_bit(VCPU_REGS_RIP, (unsigned long *)&vcpu->arch.regs_avail);
+> +	kvm_register_mark_dirty(vcpu, VCPU_REGS_RIP);
+>  }
+>  
+>  static inline unsigned long kvm_rsp_read(struct kvm_vcpu *vcpu)
+>  {
+> -	if (!test_bit(VCPU_REGS_RSP, (unsigned long *)&vcpu->arch.regs_avail))
+> +	if (!kvm_register_is_available(vcpu, VCPU_REGS_RSP))
+>  		kvm_x86_ops->cache_reg(vcpu, VCPU_REGS_RSP);
+>  
+>  	return vcpu->arch.regs[VCPU_REGS_RSP];
+> @@ -85,16 +108,14 @@ static inline unsigned long kvm_rsp_read(struct kvm_vcpu *vcpu)
+>  static inline void kvm_rsp_write(struct kvm_vcpu *vcpu, unsigned long val)
+>  {
+>  	vcpu->arch.regs[VCPU_REGS_RSP] = val;
+> -	__set_bit(VCPU_REGS_RSP, (unsigned long *)&vcpu->arch.regs_dirty);
+> -	__set_bit(VCPU_REGS_RSP, (unsigned long *)&vcpu->arch.regs_avail);
+> +	kvm_register_mark_dirty(vcpu, VCPU_REGS_RSP);
+>  }
+>  
+>  static inline u64 kvm_pdptr_read(struct kvm_vcpu *vcpu, int index)
+>  {
+>  	might_sleep();  /* on svm */
+>  
+> -	if (!test_bit(VCPU_EXREG_PDPTR,
+> -		      (unsigned long *)&vcpu->arch.regs_avail))
+> +	if (!kvm_register_is_available(vcpu, VCPU_EXREG_PDPTR))
+>  		kvm_x86_ops->cache_reg(vcpu, VCPU_EXREG_PDPTR);
+>  
+>  	return vcpu->arch.walk_mmu->pdptrs[index];
+> @@ -123,7 +144,7 @@ static inline ulong kvm_read_cr4_bits(struct kvm_vcpu *vcpu, ulong mask)
+>  
+>  static inline ulong kvm_read_cr3(struct kvm_vcpu *vcpu)
+>  {
+> -	if (!test_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail))
+> +	if (!kvm_register_is_available(vcpu, VCPU_EXREG_CR3))
+>  		kvm_x86_ops->decache_cr3(vcpu);
+>  	return vcpu->arch.cr3;
+>  }
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index b72a00b53e4a..8946f11c574c 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -1012,7 +1012,7 @@ static int nested_vmx_load_cr3(struct kvm_vcpu *vcpu, unsigned long cr3, bool ne
+>  		kvm_mmu_new_cr3(vcpu, cr3, false);
+>  
+>  	vcpu->arch.cr3 = cr3;
+> -	__set_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail);
+> +	kvm_register_mark_available(vcpu, VCPU_EXREG_CR3);
+>  
+>  	kvm_init_mmu(vcpu, false);
+>  
+> @@ -3986,7 +3986,7 @@ static void nested_vmx_restore_host_state(struct kvm_vcpu *vcpu)
+>  
+>  	nested_ept_uninit_mmu_context(vcpu);
+>  	vcpu->arch.cr3 = vmcs_readl(GUEST_CR3);
+> -	__set_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail);
+> +	kvm_register_mark_available(vcpu, VCPU_EXREG_CR3);
+>  
+>  	/*
+>  	 * Use ept_save_pdptrs(vcpu) to load the MMU's cached PDPTRs
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 814d3e6d0264..ed03d0cd1cc8 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -721,8 +721,8 @@ static bool vmx_segment_cache_test_set(struct vcpu_vmx *vmx, unsigned seg,
+>  	bool ret;
+>  	u32 mask = 1 << (seg * SEG_FIELD_NR + field);
+>  
+> -	if (!(vmx->vcpu.arch.regs_avail & (1 << VCPU_EXREG_SEGMENTS))) {
+> -		vmx->vcpu.arch.regs_avail |= (1 << VCPU_EXREG_SEGMENTS);
+> +	if (!kvm_register_is_available(&vmx->vcpu, VCPU_EXREG_SEGMENTS)) {
+> +		kvm_register_mark_available(&vmx->vcpu, VCPU_EXREG_SEGMENTS);
+>  		vmx->segment_cache.bitmask = 0;
+>  	}
+>  	ret = vmx->segment_cache.bitmask & mask;
+> @@ -1410,8 +1410,8 @@ unsigned long vmx_get_rflags(struct kvm_vcpu *vcpu)
+>  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+>  	unsigned long rflags, save_rflags;
+>  
+> -	if (!test_bit(VCPU_EXREG_RFLAGS, (ulong *)&vcpu->arch.regs_avail)) {
+> -		__set_bit(VCPU_EXREG_RFLAGS, (ulong *)&vcpu->arch.regs_avail);
+> +	if (!kvm_register_is_available(vcpu, VCPU_EXREG_RFLAGS)) {
+> +		kvm_register_mark_available(vcpu, VCPU_EXREG_RFLAGS);
+>  		rflags = vmcs_readl(GUEST_RFLAGS);
+>  		if (vmx->rmode.vm86_active) {
+>  			rflags &= RMODE_GUEST_OWNED_EFLAGS_BITS;
+> @@ -1429,7 +1429,7 @@ void vmx_set_rflags(struct kvm_vcpu *vcpu, unsigned long rflags)
+>  	unsigned long old_rflags;
+>  
+>  	if (enable_unrestricted_guest) {
+> -		__set_bit(VCPU_EXREG_RFLAGS, (ulong *)&vcpu->arch.regs_avail);
+> +		kvm_register_mark_available(vcpu, VCPU_EXREG_RFLAGS);
+>  
+>  		vmx->rflags = rflags;
+>  		vmcs_writel(GUEST_RFLAGS, rflags);
+> @@ -2175,7 +2175,8 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  
+>  static void vmx_cache_reg(struct kvm_vcpu *vcpu, enum kvm_reg reg)
+>  {
+> -	__set_bit(reg, (unsigned long *)&vcpu->arch.regs_avail);
+> +	kvm_register_mark_available(vcpu, reg);
+> +
+>  	switch (reg) {
+>  	case VCPU_REGS_RSP:
+>  		vcpu->arch.regs[VCPU_REGS_RSP] = vmcs_readl(GUEST_RSP);
+> @@ -2862,7 +2863,7 @@ static void vmx_decache_cr3(struct kvm_vcpu *vcpu)
+>  {
+>  	if (enable_unrestricted_guest || (enable_ept && is_paging(vcpu)))
+>  		vcpu->arch.cr3 = vmcs_readl(GUEST_CR3);
+> -	__set_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail);
+> +	kvm_register_mark_available(vcpu, VCPU_EXREG_CR3);
+>  }
+>  
+>  static void vmx_decache_cr4_guest_bits(struct kvm_vcpu *vcpu)
+> @@ -2877,8 +2878,7 @@ static void ept_load_pdptrs(struct kvm_vcpu *vcpu)
+>  {
+>  	struct kvm_mmu *mmu = vcpu->arch.walk_mmu;
+>  
+> -	if (!test_bit(VCPU_EXREG_PDPTR,
+> -		      (unsigned long *)&vcpu->arch.regs_dirty))
+> +	if (!kvm_register_is_dirty(vcpu, VCPU_EXREG_PDPTR))
+>  		return;
+>  
+>  	if (is_pae_paging(vcpu)) {
+> @@ -2900,10 +2900,7 @@ void ept_save_pdptrs(struct kvm_vcpu *vcpu)
+>  		mmu->pdptrs[3] = vmcs_read64(GUEST_PDPTR3);
+>  	}
+>  
+> -	__set_bit(VCPU_EXREG_PDPTR,
+> -		  (unsigned long *)&vcpu->arch.regs_avail);
+> -	__set_bit(VCPU_EXREG_PDPTR,
+> -		  (unsigned long *)&vcpu->arch.regs_dirty);
+> +	kvm_register_mark_dirty(vcpu, VCPU_EXREG_PDPTR);
+>  }
+>  
+>  static void ept_update_paging_mode_cr0(unsigned long *hw_cr0,
+> @@ -2912,7 +2909,7 @@ static void ept_update_paging_mode_cr0(unsigned long *hw_cr0,
+>  {
+>  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+>  
+> -	if (!test_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail))
+> +	if (!kvm_register_is_available(vcpu, VCPU_EXREG_CR3))
+>  		vmx_decache_cr3(vcpu);
+>  	if (!(cr0 & X86_CR0_PG)) {
+>  		/* From paging/starting to nonpaging */
+> @@ -6528,9 +6525,9 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+>  	if (vmx->nested.need_vmcs12_to_shadow_sync)
+>  		nested_sync_vmcs12_to_shadow(vcpu);
+>  
+> -	if (test_bit(VCPU_REGS_RSP, (unsigned long *)&vcpu->arch.regs_dirty))
+> +	if (kvm_register_is_dirty(vcpu, VCPU_REGS_RSP))
+>  		vmcs_writel(GUEST_RSP, vcpu->arch.regs[VCPU_REGS_RSP]);
+> -	if (test_bit(VCPU_REGS_RIP, (unsigned long *)&vcpu->arch.regs_dirty))
+> +	if (kvm_register_is_dirty(vcpu, VCPU_REGS_RIP))
+>  		vmcs_writel(GUEST_RIP, vcpu->arch.regs[VCPU_REGS_RIP]);
+>  
+>  	cr3 = __get_current_cr3_fast();
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 0ed07d8d2caa..cd6bd7991c39 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -709,10 +709,8 @@ int load_pdptrs(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu, unsigned long cr3)
+>  	ret = 1;
+>  
+>  	memcpy(mmu->pdptrs, pdpte, sizeof(mmu->pdptrs));
+> -	__set_bit(VCPU_EXREG_PDPTR,
+> -		  (unsigned long *)&vcpu->arch.regs_avail);
+> -	__set_bit(VCPU_EXREG_PDPTR,
+> -		  (unsigned long *)&vcpu->arch.regs_dirty);
+> +	kvm_register_mark_dirty(vcpu, VCPU_EXREG_PDPTR);
+> +
+>  out:
+>  
+>  	return ret;
+> @@ -730,8 +728,7 @@ bool pdptrs_changed(struct kvm_vcpu *vcpu)
+>  	if (!is_pae_paging(vcpu))
+>  		return false;
+>  
+> -	if (!test_bit(VCPU_EXREG_PDPTR,
+> -		      (unsigned long *)&vcpu->arch.regs_avail))
+> +	if (!kvm_register_is_available(vcpu, VCPU_EXREG_PDPTR))
+>  		return true;
+>  
+>  	gfn = (kvm_read_cr3(vcpu) & 0xffffffe0ul) >> PAGE_SHIFT;
+> @@ -976,7 +973,7 @@ int kvm_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
+>  
+>  	kvm_mmu_new_cr3(vcpu, cr3, skip_tlb_flush);
+>  	vcpu->arch.cr3 = cr3;
+> -	__set_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail);
+> +	kvm_register_mark_available(vcpu, VCPU_EXREG_CR3);
+>  
+>  	return 0;
+>  }
+> @@ -8766,7 +8763,7 @@ static int __set_sregs(struct kvm_vcpu *vcpu, struct kvm_sregs *sregs)
+>  	vcpu->arch.cr2 = sregs->cr2;
+>  	mmu_reset_needed |= kvm_read_cr3(vcpu) != sregs->cr3;
+>  	vcpu->arch.cr3 = sregs->cr3;
+> -	__set_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail);
+> +	kvm_register_mark_available(vcpu, VCPU_EXREG_CR3);
+>  
+>  	kvm_set_cr8(vcpu, sregs->cr8);
+
+-- 
+Vitaly
