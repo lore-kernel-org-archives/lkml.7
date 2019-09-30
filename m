@@ -2,140 +2,88 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69498C4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 01:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A0BFC4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 01:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 430032082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 01:47:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D6552082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 01:57:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729324AbfI3BrR (ORCPT
+        id S1729237AbfI3B5y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 21:47:17 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:52450 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbfI3BrR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 21:47:17 -0400
-Received: from fsav107.sakura.ne.jp (fsav107.sakura.ne.jp [27.133.134.234])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x8U1keTx039047;
-        Mon, 30 Sep 2019 10:46:40 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav107.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav107.sakura.ne.jp);
- Mon, 30 Sep 2019 10:46:40 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav107.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x8U1kdAt039043
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Mon, 30 Sep 2019 10:46:40 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH 4.19 36/63] locking/lockdep: Add debug_locks check in
- __lock_downgrade()
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        syzbot+53383ae265fb161ef488@syzkaller.appspotmail.com,
-        Waiman Long <longman@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Sun, 29 Sep 2019 21:57:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:45362 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726360AbfI3B5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Sep 2019 21:57:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3ECE828;
+        Sun, 29 Sep 2019 18:57:53 -0700 (PDT)
+Received: from localhost.localdomain (entos-thunderx2-02.shanghai.arm.com [10.169.40.54])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6F8103F706;
+        Sun, 29 Sep 2019 18:57:49 -0700 (PDT)
+From:   Jia He <justin.he@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Cc:     Punit Agrawal <punitagrawal@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        Ingo Molnar <mingo@kernel.org>
-References: <20190929135031.382429403@linuxfoundation.org>
- <20190929135038.482721804@linuxfoundation.org>
- <801c81d2-ce72-8eb3-a18b-1b0943270fc4@i-love.sakura.ne.jp>
- <20190930002828.GQ8171@sasha-vm>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <b0203141-297f-1138-5988-607e076cbcf0@i-love.sakura.ne.jp>
-Date:   Mon, 30 Sep 2019 10:46:39 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20190930002828.GQ8171@sasha-vm>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Andrew Morton <akpm@linux-foundation.org>, hejianet@gmail.com,
+        Kaly Xin <Kaly.Xin@arm.com>, Jia He <justin.he@arm.com>
+Subject: [PATCH v10 0/3] fix double page fault on arm64
+Date:   Mon, 30 Sep 2019 09:57:37 +0800
+Message-Id: <20190930015740.84362-1-justin.he@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/09/30 9:28, Sasha Levin wrote:
-> On Sun, Sep 29, 2019 at 11:43:38PM +0900, Tetsuo Handa wrote:
->> On 2019/09/29 22:54, Greg Kroah-Hartman wrote:
->>> From: Waiman Long <longman@redhat.com>
->>>
->>> [ Upstream commit 513e1073d52e55b8024b4f238a48de7587c64ccf ]
->>>
->>> Tetsuo Handa had reported he saw an incorrect "downgrading a read lock"
->>> warning right after a previous lockdep warning. It is likely that the
->>> previous warning turned off lock debugging causing the lockdep to have
->>> inconsistency states leading to the lock downgrade warning.
->>>
->>> Fix that by add a check for debug_locks at the beginning of
->>> __lock_downgrade().
->>
->> Please drop "[PATCH 4.19 36/63] locking/lockdep: Add debug_locks check in __lock_downgrade()".
->> We had a revert patch shown below in the past.
-> 
-> We had a revert in the stable trees, but that revert was incorrect.
-> 
-> Take a look at commit 513e1073d52e55 upstream, it patches
-> __lock_set_class() (even though the subject line says
-> __lock_downgrade()). So this is not a backporting error as the revert
-> said it is, but is rather the intended location to be patched.
-> 
-> If this is actually wrong, then it should be addressed upstream first.
-> 
+When we tested pmdk unit test vmmalloc_fork TEST1 in arm64 guest, there
+will be a double page fault in __copy_from_user_inatomic of cow_user_page.
 
-Hmm, upstream has two commits with same author, same date, same subject, different hash, different content.
-I couldn't find from https://lkml.kernel.org/r/1547093005-26085-1-git-send-email-longman@redhat.com that
-we want to patch both __lock_set_class() and __lock_downgrade(), but I found that the tip-bot has patched
-__lock_downgrade() on "2019-01-21 11:29" and __lock_set_class() on "2019-02-04  8:56".
-Seems that we by error patched both functions, though patching both functions should be harmless...
+As told by Catalin: "On arm64 without hardware Access Flag, copying from
+user will fail because the pte is old and cannot be marked young. So we
+always end up with zeroed page after fork() + CoW for pfn mappings. we
+don't always have a hardware-managed access flag on arm64."
 
-64aa348ed kernel/lockdep.c         (Peter Zijlstra            2008-08-11 09:30:21 +0200 4115) static int
-00ef9f734 kernel/lockdep.c         (Peter Zijlstra            2008-12-04 09:00:17 +0100 4116) __lock_set_class(struct lockdep_map *lock, const char *name,
-00ef9f734 kernel/lockdep.c         (Peter Zijlstra            2008-12-04 09:00:17 +0100 4117)            struct lock_class_key *key, unsigned int subclass,
-00ef9f734 kernel/lockdep.c         (Peter Zijlstra            2008-12-04 09:00:17 +0100 4118)            unsigned long ip)
-64aa348ed kernel/lockdep.c         (Peter Zijlstra            2008-08-11 09:30:21 +0200 4119) {
-64aa348ed kernel/lockdep.c         (Peter Zijlstra            2008-08-11 09:30:21 +0200 4120)   struct task_struct *curr = current;
-8c8889d8e kernel/locking/lockdep.c (Imre Deak                 2019-05-24 23:15:08 +0300 4121)   unsigned int depth, merged = 0;
-41c2c5b86 kernel/locking/lockdep.c (J. R. Okajima             2017-02-03 01:38:15 +0900 4122)   struct held_lock *hlock;
-64aa348ed kernel/lockdep.c         (Peter Zijlstra            2008-08-11 09:30:21 +0200 4123)   struct lock_class *class;
-64aa348ed kernel/lockdep.c         (Peter Zijlstra            2008-08-11 09:30:21 +0200 4124)   int i;
-64aa348ed kernel/lockdep.c         (Peter Zijlstra            2008-08-11 09:30:21 +0200 4125)
-513e1073d kernel/locking/lockdep.c (Waiman Long               2019-01-09 23:03:25 -0500 4126)   if (unlikely(!debug_locks))
-513e1073d kernel/locking/lockdep.c (Waiman Long               2019-01-09 23:03:25 -0500 4127)           return 0;
-513e1073d kernel/locking/lockdep.c (Waiman Long               2019-01-09 23:03:25 -0500 4128)
+Changes
+v10:
+    add r-b from Catalin and a-b from Kirill in PATCH 03
+    remoe Reported-by in PATCH 01
+v9: refactor cow_user_page for indention optimization (Catalin)
+    hold the ptl longer (Catalin)
+v8: change cow_user_page's return type (Matthew)
+v7: s/pte_spinlock/pte_offset_map_lock (Kirill)
+v6: fix error case of returning with spinlock taken (Catalin)
+    move kmap_atomic to avoid handling kunmap_atomic
+v5: handle the case correctly when !pte_same
+    fix kbuild test failed
+v4: introduce cpu_has_hw_af (Suzuki)
+    bail out if !pte_same (Kirill)
+v3: add vmf->ptl lock/unlock (Kirill A. Shutemov)
+    add arch_faults_on_old_pte (Matthew, Catalin)
+v2: remove FAULT_FLAG_WRITE when setting pte access flag (Catalin)
 
-6419c4af7 kernel/locking/lockdep.c (J. R. Okajima             2017-02-03 01:38:17 +0900 4162) static int __lock_downgrade(struct lockdep_map *lock, unsigned long ip)
-6419c4af7 kernel/locking/lockdep.c (J. R. Okajima             2017-02-03 01:38:17 +0900 4163) {
-6419c4af7 kernel/locking/lockdep.c (J. R. Okajima             2017-02-03 01:38:17 +0900 4164)   struct task_struct *curr = current;
-8c8889d8e kernel/locking/lockdep.c (Imre Deak                 2019-05-24 23:15:08 +0300 4165)   unsigned int depth, merged = 0;
-6419c4af7 kernel/locking/lockdep.c (J. R. Okajima             2017-02-03 01:38:17 +0900 4166)   struct held_lock *hlock;
-6419c4af7 kernel/locking/lockdep.c (J. R. Okajima             2017-02-03 01:38:17 +0900 4167)   int i;
-6419c4af7 kernel/locking/lockdep.c (J. R. Okajima             2017-02-03 01:38:17 +0900 4168)
-714925805 kernel/locking/lockdep.c (Waiman Long               2019-01-09 23:03:25 -0500 4169)   if (unlikely(!debug_locks))
-714925805 kernel/locking/lockdep.c (Waiman Long               2019-01-09 23:03:25 -0500 4170)           return 0;
-714925805 kernel/locking/lockdep.c (Waiman Long               2019-01-09 23:03:25 -0500 4171)
+Jia He (3):
+  arm64: cpufeature: introduce helper cpu_has_hw_af()
+  arm64: mm: implement arch_faults_on_old_pte() on arm64
+  mm: fix double page fault on arm64 if PTE_AF is cleared
 
-commit 513e1073d52e55b8024b4f238a48de7587c64ccf
-Author: Waiman Long <longman@redhat.com>
-Date:   Wed Jan 9 23:03:25 2019 -0500
+ arch/arm64/include/asm/cpufeature.h | 10 +++
+ arch/arm64/include/asm/pgtable.h    | 14 ++++
+ mm/memory.c                         | 99 ++++++++++++++++++++++++-----
+ 3 files changed, 108 insertions(+), 15 deletions(-)
 
-    locking/lockdep: Add debug_locks check in __lock_downgrade()
-
-commit 71492580571467fb7177aade19c18ce7486267f5
-Author: Waiman Long <longman@redhat.com>
-Date:   Wed Jan 9 23:03:25 2019 -0500
-
-    locking/lockdep: Add debug_locks check in __lock_downgrade()
+-- 
+2.17.1
 
