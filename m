@@ -2,84 +2,97 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A850C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A01A8C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFF9421855
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:34:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569857684;
-	bh=dh8MId5t8DVUeOU3OX/W3m9Vy+7RlrdAA9s6eGZznGs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ELd4hcYwE3FDqDdJvmsa2bYd2C44NmUi4iCESl/cR5yx1hwMm06sLcIBie+zkZsgF
-	 PsmrcR+wrQ85zisB2IOIvJuqw0VnO4zgTGEFqkreOVpy6tEV+D/ixnrTMkenewVKO7
-	 kNNmabCf+N5Yu+wihxWwWneXAQCjPKLRPSi3pvr8=
+	by mail.kernel.org (Postfix) with ESMTP id 77230215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:35:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732068AbfI3Pen (ORCPT
+        id S1732083AbfI3Pfq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 11:34:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44792 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727508AbfI3Pem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 11:34:42 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5AA120815;
-        Mon, 30 Sep 2019 15:34:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569857682;
-        bh=dh8MId5t8DVUeOU3OX/W3m9Vy+7RlrdAA9s6eGZznGs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=N0XqWdQTs246eEuhXf6R0AkLtqFzW8Q3jwlTgxIZiMwTYbQRmB7lbT1+mJpEcZHPK
-         Q/RrotNDuWGCNKuTmZ7HTn0TBmIOUaf568izduqQPXsLMI5Lo4f/lv2WwzU3flEgyx
-         WaVLdCGVNPY1jmzdlQQ1jhzhuMViRq47KKh+27Cw=
-Date:   Mon, 30 Sep 2019 16:34:37 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Candle Sun <candlesea@gmail.com>
-Cc:     mark.rutland@arm.com, linux@armlinux.org.uk,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Candle Sun <candle.sun@unisoc.com>,
-        Nianfu Bai <nianfu.bai@unisoc.com>
-Subject: Re: [RESEND PATCH] ARM/hw_breakpoint: add ARMv8.1/ARMv8.2 debug
- architecutre versions support in enable_monitor_mode()
-Message-ID: <20190930153437.ocatny7u4z3oj7k2@willie-the-truck>
-References: <1569483508-18768-1-git-send-email-candlesea@gmail.com>
+        Mon, 30 Sep 2019 11:35:46 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:20001 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730809AbfI3Pfq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 11:35:46 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-171-6gbYdDGuMiuY3reOFp0ISg-1; Mon, 30 Sep 2019 16:35:43 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 30 Sep 2019 16:35:42 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 30 Sep 2019 16:35:42 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Denis Efremov' <efremov@linux.com>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Pontus Fuchs <pontus.fuchs@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH] ar5523: check NULL before memcpy() in ar5523_cmd()
+Thread-Topic: [PATCH] ar5523: check NULL before memcpy() in ar5523_cmd()
+Thread-Index: AQHVd5eyJR20opeapUCX0TL00aRlGadEWhCg
+Date:   Mon, 30 Sep 2019 15:35:42 +0000
+Message-ID: <230cd4f790544b01a26afa26e4186454@AcuMS.aculab.com>
+References: <20190930140207.28638-1-efremov@linux.com>
+In-Reply-To: <20190930140207.28638-1-efremov@linux.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1569483508-18768-1-git-send-email-candlesea@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-MC-Unique: 6gbYdDGuMiuY3reOFp0ISg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 03:38:28PM +0800, Candle Sun wrote:
-> From: Candle Sun <candle.sun@unisoc.com>
+From: Denis Efremov
+> Sent: 30 September 2019 15:02
 > 
-> When ARMv8.1/ARMv8.2 cores are used in AArch32 mode,
-> arch_hw_breakpoint_init() in arch/arm/kernel/hw_breakpoint.c will be used.
+> memcpy() call with "idata == NULL && ilen == 0" results in undefined
+> behavior in ar5523_cmd(). For example, NULL is passed in callchain
+> "ar5523_stat_work() -> ar5523_cmd_write() -> ar5523_cmd()". This patch
+> adds idata check before memcpy() call in ar5523_cmd() to prevent an
+> undefined behavior.
 > 
-> From ARMv8 specification, different debug architecture versions defined:
-> * 0110 ARMv8, v8 Debug architecture.
-> * 0111 ARMv8.1, v8 Debug architecture, with Virtualization Host Extensions.
-> * 1000 ARMv8.2, v8.2 Debug architecture.
-> 
-> So missing ARMv8.1/ARMv8.2 cases will cause enable_monitor_mode() function
-> returns -ENODEV, and arch_hw_breakpoint_init() will fail.
-> 
-> Signed-off-by: Candle Sun <candle.sun@unisoc.com>
-> Signed-off-by: Nianfu Bai <nianfu.bai@unisoc.com>
+...
+> Signed-off-by: Denis Efremov <efremov@linux.com>
 > ---
->  arch/arm/include/asm/hw_breakpoint.h | 2 ++
->  arch/arm/kernel/hw_breakpoint.c      | 2 ++
->  2 files changed, 4 insertions(+)
+>  drivers/net/wireless/ath/ar5523/ar5523.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/wireless/ath/ar5523/ar5523.c b/drivers/net/wireless/ath/ar5523/ar5523.c
+> index b94759daeacc..f25af5bc5282 100644
+> --- a/drivers/net/wireless/ath/ar5523/ar5523.c
+> +++ b/drivers/net/wireless/ath/ar5523/ar5523.c
+> @@ -255,7 +255,8 @@ static int ar5523_cmd(struct ar5523 *ar, u32 code, const void *idata,
+> 
+>  	if (flags & AR5523_CMD_FLAG_MAGIC)
+>  		hdr->magic = cpu_to_be32(1 << 24);
+> -	memcpy(hdr + 1, idata, ilen);
+> +	if (idata)
+> +		memcpy(hdr + 1, idata, ilen);
 
-How did you test this?
+That would be better as if (ilen) ...
 
-Will
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
