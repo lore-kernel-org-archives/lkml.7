@@ -2,163 +2,145 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F45C35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 545A4C35280
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A768E22500
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2121522500
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 20:45:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=verimatrix.com header.i=@verimatrix.com header.b="sUMnUVh6"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="YygA7twT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731417AbfI3UpS (ORCPT
+        id S1731473AbfI3Up0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 16:45:18 -0400
-Received: from mail-eopbgr810049.outbound.protection.outlook.com ([40.107.81.49]:12860
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727508AbfI3UpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 16:45:17 -0400
+        Mon, 30 Sep 2019 16:45:26 -0400
+Received: from mga12.intel.com ([192.55.52.136]:58620 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726425AbfI3UpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 16:45:25 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Sep 2019 11:23:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,568,1559545200"; 
+   d="scan'208";a="190344117"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by fmsmga008.fm.intel.com with ESMTP; 30 Sep 2019 11:23:53 -0700
+Received: from fmsmsx111.amr.corp.intel.com (10.18.116.5) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 30 Sep 2019 11:23:53 -0700
+Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx111.amr.corp.intel.com (10.18.116.5) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 30 Sep 2019 11:23:52 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.36.55) by
+ edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Mon, 30 Sep 2019 11:23:52 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BBEY8BqneKM/iBwfjZXN25Bz0dua9bv+sHLm2zVrt5P6EJobVVvzwuxNLyYqKfY/g67QitwgmmAlY96WGoCrY1IBHYX+NGr5jrOoweXrZ9CpYZTFEVYNi6BG8flbayjx6Lo4gA0AImLc9xenlSSXih97+CCVUQpEsvr4mWZkGy5O3njTMButrNgsrPTZOEQT33kIPr7O+zVOAdAJV1bmaxSx0NYMalcy56kTJpRCKqSRB2iPta3R+zJKCA+uqzoJD31P6gGgDuDNPu9zklgDxNAZ/5xuKUsebnknPjGEEhe8iXhqbMrKgG6U0nbMMPZhZCv9jqrVwqNiV0BsDU+4fg==
+ b=AbaWJzXg9aoKmRQoBvfrDw3B24XJZ8KLY+3PDuXMgDyITltsyqsYJHiKjYMEzr0vXfOFOUC1UzrlAwf5AK5csdNqa/vOLzYEol1M0G+MCqOLs+NNhUm0M36mNbOarFEdIuLNAk9lKLRDQpzNlkg+o74bcfbUdTR81Bk8Bw+rKV8YANgTyQb6pVtL1xCbNF3UOUh8L+X88pxDYLN/58fxP2k2PHvVi/0f4ysJ9ViHSNVh4Oy1p4cA9VQ/LsXlC8zX9ZVtJf9R+6QnJrdKPoeufMWWCtN7aso7SVsbbXJ1hSKosPlKJjUSMMrMrKYfW49lF8ufIS5j/IrRYyx86yKcMA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vPIbVktKM/JIpADJbjiLRJKgympdn7C6CMrqlVdZTYs=;
- b=RflDtPO9KsbkOl/z1eXK5TbIbSE6sb46qL30xvQhJX4+6VuWEACjSKZV5R6RxNuH2Cr3QXtRsbxrelRLuo+W6C1r55HMlXF4it6Y8YOTvn1ox9OMnItHZe9mWBkDthdrOStcYjlIC/SzNJeZF5m0GC1OcjC+GAjHBe79FpGPrvTR/t9YUQvbMawd0Lbp3CERBn9JOXZNXZ4ivp3EnGl30KlTNxNhIPhJB6UgOFvI9nlVc+LPGXJDTXWtwEjijMxbMrnWQUWNvruzZax2EwiOAtqP8BocDlHltPF2H5LAmUpjf34wX2Wgh+PoSC5lmHq7nNx5PP12y5R3+NFGE2IJhQ==
+ bh=aK4FWLDnfSY9rH1UAZMZ1RyR822IidFk8SoWFAypLCU=;
+ b=f5xARjp0JYkIPYj3rqRt9UXEHxSjtVzgqk3+Lrn8og92x6aoK0O5BPjXEjxwErSpt1/WiWocR1WA6U3MW5u5f17RKB6KM9w2W5Yjh0P6mMZfOmqiCEiTLBLbHMLF4ZrmIFbddsMsg+UPvted3h+IvN0Op4E4Ddt0ZEz4rvyrERq04h/ZR3OTTqQ93pBVmXVHvmdD2GxuBliCZzEnKhsZWXLlP0YY3IVxJlYyjtBHv5Ur9/71tdNlAp3e3lBskfFN3gF0MK55i5ICWHUs+P34ix/0p7qSuW4TvMcdrSXiveqEvGrAFwu/t7NL5YaVI+oZWMigrXoCDHM3znLVwttxng==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=verimatrix.com; dmarc=pass action=none
- header.from=verimatrix.com; dkim=pass header.d=verimatrix.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=verimatrix.com;
- s=selector2;
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vPIbVktKM/JIpADJbjiLRJKgympdn7C6CMrqlVdZTYs=;
- b=sUMnUVh6V+LTQZF1Zqh80tzDqEWzvZe51bYUz+98DMzRmrg+EpDS2cA5P/5jInA8BvfL1UAcVcNkaSfVQ0tz7p7PMDyp0BI0Qp/SpmP2YsEhNlkpjeSmC44scR8VzFBz2VPZ4rNejfYPviF6QqSat6zRtIE7Nx0Jb5TnK3xv1Y8=
-Received: from CH2PR20MB2968.namprd20.prod.outlook.com (10.255.156.33) by
- CH2PR20MB2934.namprd20.prod.outlook.com (10.255.156.91) with Microsoft SMTP
+ bh=aK4FWLDnfSY9rH1UAZMZ1RyR822IidFk8SoWFAypLCU=;
+ b=YygA7twT67LIOMJanEhk9kMllPnuzSdCjhWpL7DkMS/t9sn9MO7NK8LtYVsLJm1zC5msmIh/ec5fsQvCKjvIypoU/wLe1KSm3llSwEUQAAOd9kfqq1XXTMxjrig/EBH0HqE+lA4jDjmgpCn6wIMTr0DkYBIZ+xj0/g7twCrF+cM=
+Received: from BL0PR11MB3170.namprd11.prod.outlook.com (10.167.234.74) by
+ BL0PR11MB3524.namprd11.prod.outlook.com (20.177.146.213) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.20; Mon, 30 Sep 2019 18:50:45 +0000
-Received: from CH2PR20MB2968.namprd20.prod.outlook.com
- ([fe80::e8b0:cb5f:268e:e3ae]) by CH2PR20MB2968.namprd20.prod.outlook.com
- ([fe80::e8b0:cb5f:268e:e3ae%5]) with mapi id 15.20.2305.017; Mon, 30 Sep 2019
- 18:50:44 +0000
-From:   Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     Pascal van Leeuwen <pascalvanl@gmail.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/3] crypto: inside-secure - Fix a maybe-uninitialized
- warning
-Thread-Topic: [PATCH 1/3] crypto: inside-secure - Fix a maybe-uninitialized
- warning
-Thread-Index: AQHVd4jI0FLkks7xkkmieh+BnXbyw6dEj6DA
-Date:   Mon, 30 Sep 2019 18:50:44 +0000
-Message-ID: <CH2PR20MB29689C8C08D524BA05573EE9CA820@CH2PR20MB2968.namprd20.prod.outlook.com>
-References: <20190930121520.1388317-1-arnd@arndb.de>
-In-Reply-To: <20190930121520.1388317-1-arnd@arndb.de>
+ 15.20.2305.20; Mon, 30 Sep 2019 18:23:51 +0000
+Received: from BL0PR11MB3170.namprd11.prod.outlook.com
+ ([fe80::392e:e204:36d0:5351]) by BL0PR11MB3170.namprd11.prod.outlook.com
+ ([fe80::392e:e204:36d0:5351%5]) with mapi id 15.20.2305.017; Mon, 30 Sep 2019
+ 18:23:51 +0000
+From:   "Kammela, Gayatri" <gayatri.kammela@intel.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Prestopine, Charles D" <charles.d.prestopine@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Liang, Kan" <kan.liang@intel.com>,
+        "Box, David E" <david.e.box@intel.com>,
+        "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>
+Subject: RE: [PATCH v1 0/5] Add Tiger Lake/Elkhart Lake support to pmc_core
+ driver
+Thread-Topic: [PATCH v1 0/5] Add Tiger Lake/Elkhart Lake support to pmc_core
+ driver
+Thread-Index: AQHVdJpC9P0UAFBW3ky74xzBGKR04ac/CLOAgAWECKA=
+Date:   Mon, 30 Sep 2019 18:23:50 +0000
+Message-ID: <BL0PR11MB31709BA9A5F4E4F5455D913CF2820@BL0PR11MB3170.namprd11.prod.outlook.com>
+References: <20190926192603.18647-1-gayatri.kammela@intel.com>
+ <CAHp75Vcrp2ffDCE=tm2dwSEhwfPCPWGhb-Nw0v-7ga2y=_dL8w@mail.gmail.com>
+In-Reply-To: <CAHp75Vcrp2ffDCE=tm2dwSEhwfPCPWGhb-Nw0v-7ga2y=_dL8w@mail.gmail.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZDA0MDYzNmItYWRhOC00MmYxLWJkZTAtZmUyYzI2MWVjYzA1IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiM2NcL213ZmpROStyZXA1ZkhKK1BcLzVzRGZRTUtrVlVMOCtJUWpCM0MxT2NpZnRraXpWZUlteWQxb1wvUVBTc05yZiJ9
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+dlp-product: dlpe-windows
+x-ctpclassification: CTP_NT
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pvanleeuwen@verimatrix.com; 
-x-originating-ip: [188.204.2.113]
+ smtp.mailfrom=gayatri.kammela@intel.com; 
+x-originating-ip: [134.134.136.221]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1113a9f0-262c-48a3-e4d7-08d745d719b7
-x-ms-traffictypediagnostic: CH2PR20MB2934:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <CH2PR20MB29340330782B095C36FE17D8CA820@CH2PR20MB2934.namprd20.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:345;
+x-ms-office365-filtering-correlation-id: e8f17c2b-ed38-45fa-38d8-08d745d357df
+x-ms-traffictypediagnostic: BL0PR11MB3524:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BL0PR11MB35247EBDFF02BA236A67C5B4F2820@BL0PR11MB3524.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
 x-forefront-prvs: 01762B0D64
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(346002)(39850400004)(136003)(376002)(13464003)(199004)(189003)(11346002)(102836004)(53546011)(6506007)(6116002)(3846002)(26005)(229853002)(446003)(33656002)(2906002)(5660300002)(99286004)(7736002)(305945005)(486006)(52536014)(54906003)(6436002)(76176011)(186003)(71190400001)(71200400001)(476003)(7696005)(316002)(8936002)(110136005)(55016002)(81166006)(8676002)(9686003)(25786009)(86362001)(81156014)(74316002)(15974865002)(66556008)(66066001)(6246003)(66476007)(256004)(66446008)(14444005)(64756008)(76116006)(478600001)(66946007)(14454004)(4326008)(18886075002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR20MB2934;H:CH2PR20MB2968.namprd20.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: verimatrix.com does not designate
- permitted sender hosts)
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(396003)(376002)(366004)(39850400004)(189003)(199004)(86362001)(7736002)(305945005)(74316002)(476003)(446003)(14444005)(486006)(11346002)(256004)(316002)(54906003)(6916009)(8676002)(81156014)(66066001)(6116002)(2906002)(3846002)(102836004)(8936002)(81166006)(229853002)(53546011)(66476007)(66556008)(66446008)(64756008)(66946007)(76116006)(99286004)(6246003)(26005)(33656002)(5660300002)(71190400001)(52536014)(71200400001)(186003)(6506007)(76176011)(4744005)(4326008)(6436002)(9686003)(55016002)(25786009)(7696005)(14454004)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:BL0PR11MB3524;H:BL0PR11MB3170.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 28l2+VgICUBpCc+RpmlYwHHvFVX61rMs4ghLffNkdJ5OcNFG540Yln6Dpj8uGjezaIof8tS3nB2snGZX6LTdKj9wmp2uAzalMQQrM3hSWWRR1SesDXUpsLVKn3hYdICFI2iOVRdybQy8ILkZuATcwWjCT/wjwZQs+qFx18mnpPcQ/cxMJKw0LWtET2NEx47EWM/J6fbNQZNFLVvMmAMgvo33eo41i+0WRZcFXRTBEnQbESKKXUp0S+AbZ000tUVewOBwz0OPRxb+jYvicZs5mv6qA24Z/IphKVwUWWCMoiebZ0lMTApNFxdy7+8qdE8C+SPKfw4Th4e9jnh9n/+9/2FLUBQ93ZHlv6+bblsqpzRctfSWsrcRSJbhspbCg84Rtuy0E021Z6EmecGg+BwezoblA6lqDGZLCUfnMdLgElk=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: bWMFvdJMn9MDsT+HYbL+n2CfBa7Q/wp+11tvha+wGf6RZ5WlQaEJPhET3cOSbkquU7/sAB+/BS0uPujNHjaQNoS5i0gw0cBCxvWOPe72r/0NYee1/DUt7AHLaqTbeA4ZAPEA5hRPbVkuejicioD4mH2M0TVBCJS75J5tCSlH7LoHhi8E2/2OvdjPD2vBWg3qtEK0ux/c9OHCCs6EZZJqSJGvqOOQPv6l+eJd4mkqDTZUuCKonuXQY4/R3UQYYUNfKM8lMfFXtcnCx3BKur98xOdMl6KU8plKldvvAv8F65TS8101cwnzF7ym0u0Cfomgye8xkffNsmJoI/NKnVMU6SmqxaC25vOOfolwTKj00jHzenHOK3L1/y8MNKeZRSF88ppxEkFWZ4metFWC0xIS1DzI7hBYzjutOGKkigQyIvg=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: verimatrix.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1113a9f0-262c-48a3-e4d7-08d745d719b7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2019 18:50:44.5213
+X-MS-Exchange-CrossTenant-Network-Message-Id: e8f17c2b-ed38-45fa-38d8-08d745d357df
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2019 18:23:50.8698
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: dcb260f9-022d-4495-8602-eae51035a0d0
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BJlPPiBYvaSDO3gnHWC9czdtR8HsWh1t/eFX/0fWTDUuJTj+2HdiXOtUIEdfm95wNlwuhGxkoDZj/hI09zsx3nMVp92vfMMXmnMXllc55XU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR20MB2934
+X-MS-Exchange-CrossTenant-userprincipalname: BPUJm01uT4/u/f/pi0YdWhFYMGJxolBsjMWXcjT5RbS3l+nRT+uWbXqHKkK6oi6cxcUSG21E50au7bWZMmx0zE4zlKh3Vr3PoVlq1SzOqlw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR11MB3524
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Arnd Bergmann <arnd@arndb.de>
-> Sent: Monday, September 30, 2019 2:15 PM
-> To: Antoine Tenart <antoine.tenart@bootlin.com>; Herbert Xu <herbert@gond=
-or.apana.org.au>;
-> David S. Miller <davem@davemloft.net>
-> Cc: Arnd Bergmann <arnd@arndb.de>; Pascal Van Leeuwen <pvanleeuwen@verima=
-trix.com>; Pascal van
-> Leeuwen <pascalvanl@gmail.com>; linux-crypto@vger.kernel.org; linux-kerne=
-l@vger.kernel.org
-> Subject: [PATCH 1/3] crypto: inside-secure - Fix a maybe-uninitialized wa=
-rning
->=20
-> A previous fixup avoided an unused variable warning but replaced
-> it with a slightly scarier warning:
->=20
-> drivers/crypto/inside-secure/safexcel.c:1100:6: error: variable 'irq' is =
-used uninitialized
-> whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
->=20
-> This is harmless as it is impossible to get into this case, but
-> the compiler has no way of knowing that. Add an explicit error
-> handling case to make it obvious to both compilers and humans
-> reading the source.
->=20
-> Fixes: 212ef6f29e5b ("crypto: inside-secure - Fix unused variable warning=
- when CONFIG_PCI=3Dn")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/crypto/inside-secure/safexcel.c | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/drivers/crypto/inside-secure/safexcel.c b/drivers/crypto/ins=
-ide-secure/safexcel.c
-> index 4ab1bde8dd9b..311bf60df39f 100644
-> --- a/drivers/crypto/inside-secure/safexcel.c
-> +++ b/drivers/crypto/inside-secure/safexcel.c
-> @@ -1120,6 +1120,8 @@ static int safexcel_request_ring_irq(void *pdev, in=
-t irqid,
->  				irq_name, irq);
->  			return irq;
->  		}
-> +	} else {
-> +		return -ENXIO;
->  	}
->=20
->  	ret =3D devm_request_threaded_irq(dev, irq, handler,
-> --
-> 2.20.0
-
-Ok, this won't hurt in any way I guess, so fine by me (assuming that error
-code makes sense).
-
-Acked-by: Pascal van Leeuwen <pvanleeuwen@verimatrix.com>
-
-
-Regards,
-Pascal van Leeuwen
-Silicon IP Architect, Multi-Protocol Engines @ Verimatrix
-www.insidesecure.com
-
+PiBPbiBUaHUsIFNlcCAyNiwgMjAxOSBhdCA5OjQzIFBNIEdheWF0cmkgS2FtbWVsYQ0KPiA8Z2F5
+YXRyaS5rYW1tZWxhQGludGVsLmNvbT4gd3JvdGU6DQo+IA0KPiBUaGFuayB5b3UgZm9yIHRoZSBz
+ZXJpZXMsIEknbGwgY29tbWVudCB0aGVtIGxhdGVyLg0KVGhhbmsgeW91IEFuZHkhDQo+IA0KPiBG
+b3Igbm93LCBjaGVjayBob3cgdG8gcHJvcGVybHkgc2V0dXAgcHJlZml4IGZvciBhbGwgcGF0Y2hl
+cy4gVGhlIFRpdGxlIGFsbA0KPiBicm9rZW4uDQpJJ20gc29ycnkgYWJvdXQgdGhhdC4gSSB3aWxs
+IGZpeCBpdCBpbiB2Mg0KPiANCj4gPiBQYXRjaCAxOiBDbGVhbnMgdXAgdGVybWluYXRpb24gbGlu
+ZXMNCj4gPiBQYXRjaCAyOiBSZWZhY3RvciBkcml2ZXIgZm9yIGVhc2Ugb2YgYWRkaW5nIG5ldyBT
+b0NzIFBhdGNoIDM6IFJlZmFjdG9yDQo+ID4gZGVidWdmcyBlbnRyeSBmb3IgUENIIElQcyBwb3dl
+ciBnYXRpbmcgc3RhdHVzIFBhdGNoIDQ6IEFkZCBUaWdlciBMYWtlDQo+ID4gbGVnYWN5IHN1cHBv
+cnQgdG8gcG1jX2NvcmUgUGF0Y2ggNTogQWRkIEVsa2hhcnQgTGFrZSBsZWdhY3kgc3VwcG9ydCB0
+bw0KPiA+IHBtY19jb3JlDQo+ID4NCj4gPiBBbGwgdGhlIGluZm9ybWF0aW9uIHJlZ2FyZGluZyB0
+aGUgUENIIElQcyBhbmQgbmFtZXMgb2YgSVBzIHdpbGwgYmUNCj4gPiBhdmFpbGFibGUgaW4gKmZ1
+dHVyZSogSW50ZWwncyBQbGF0Zm9ybSBDb250cm9sbGVyIEh1YiAoUENIKSBFeHRlcm5hbA0KPiA+
+IERlc2lnbiBTcGVjaWZpY2F0aW9uDQo+ID4gKEVEUykgZG9jdW1lbnQuDQo+IA0KPiBXaGVuPw0K
+SSB3YXMgdG9sZCBpdCB3aWxsIGJlIGF2YWlsYWJsZSBpbiB0aGUgdXBjb21pbmcgcmVsZWFzZSBv
+ZiBFRFMgZG9jdW1lbnQuIEkgYW0gbm90IGF3YXJlIG9mIHRoZSB0aW1lbGluZS4gSSB3aWxsIHVw
+ZGF0ZSB0aGUgdGltZWxpbmUgaW4gdjIuDQoNCg==
