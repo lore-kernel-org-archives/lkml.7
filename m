@@ -2,199 +2,248 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E751EC4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D390FC4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE7F720679
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:10:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hjBvolgA"
+	by mail.kernel.org (Postfix) with ESMTP id A7C632196E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:10:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729847AbfI3IKe (ORCPT
+        id S1729881AbfI3IKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 04:10:34 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44350 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbfI3IKd (ORCPT
+        Mon, 30 Sep 2019 04:10:54 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:23356 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbfI3IKx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 04:10:33 -0400
-Received: by mail-pg1-f193.google.com with SMTP id i14so6926033pgt.11;
-        Mon, 30 Sep 2019 01:10:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=BY/AK+N2g5Gtdi627g4PugnddcbhUUIEgKh0LJ4aymM=;
-        b=hjBvolgAOikZ8KI85AaIjAhrKEjdSJQtJCTGg3n0Dwa8JiuoUdMxviHxsJ9FJT1Qhr
-         z4JQs5k9uUt/r/SXOmYYJsoqR1HZnJtH12Yt18DoTREuLRyW5GKTf9avam8KuCsoVInw
-         2Czgyfz5Mm49cl43LIDDdzKDsgDoBON0tYE3j13mckCzfs8TzjBa572igIbWN9qCwLg6
-         uxvmxjmGmrW1e/XTeEu2Bx9QE8kPTD6QUm1tISAMBnrFSvDQ8D9VTZlZO90sXKO7NjSU
-         EBr2gVbQeE/JuQ/ctn8W59v5xmqTL9RiT1/PvaMN7mkIHHApBxuvUnWLfh782JcY7jQP
-         d8DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=BY/AK+N2g5Gtdi627g4PugnddcbhUUIEgKh0LJ4aymM=;
-        b=ax84nlZdv5YI0b0rx5EiWc8YrbSdASZKs/lWfXXIIBXHTvjeRdLuG4TwjidxJq0Dtx
-         82HjCbg0iOmTTkvz74zhD/O+zkBslqHtMNsAmyO9vG8y2P9ehbjGZNfsflRCt3ftM+vZ
-         DYaCY4HaFU/2eBI8+vMs78VVKSuzPdx5YKTVRWKkEAolvFpJq8r7+U2N+zmP+kJhaB9m
-         llo+ajlS3CneaKOe7sx3SdKpEW37c57P+t90AieDqOtu0ko815sFvKCuQIi4go6jvBl/
-         6NRQfID5cVGaUqA0UykgOLV7fyKc+t2bub63IzYwmqbnsS2rj7+KdMKZ7UCM7gX/zvf0
-         f/Ew==
-X-Gm-Message-State: APjAAAWazkdmAG18eonz9VdH+QeU1zIlw9bxho0Coeyr2zAf8cf9xtwt
-        5/IMDISls8sC7D3JHUJS8Ic=
-X-Google-Smtp-Source: APXvYqxSXY/8FcJbLzD8lYwR4LPA8YS0irks7PX80NuJBfs+E5E+2x2PGXFu+SqhtZVe2OPGGPcWUQ==
-X-Received: by 2002:a63:20d:: with SMTP id 13mr23472009pgc.253.1569831032417;
-        Mon, 30 Sep 2019 01:10:32 -0700 (PDT)
-Received: from bj04616pcu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id z29sm15699911pff.23.2019.09.30.01.10.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 30 Sep 2019 01:10:31 -0700 (PDT)
-From:   Candle Sun <candlesea@gmail.com>
-To:     jikos@kernel.org, benjamin.tissoires@redhat.com
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        chunyan.zhang@unisoc.com, Candle Sun <candle.sun@unisoc.com>,
-        Nianfu Bai <nianfu.bai@unisoc.com>
-Subject: [PATCH] HID: core: add usage_page_preceding flag for hid_concatenate_usage_page()
-Date:   Mon, 30 Sep 2019 16:09:09 +0800
-Message-Id: <1569830949-10771-1-git-send-email-candlesea@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 30 Sep 2019 04:10:53 -0400
+Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
+  Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="Codrin.Ciubotariu@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa1.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: B6uLi4Qbu9FFLFCGSo0DY8CEcMIpWJyexRQUgfJbohKBqupmT9+BGvpbYOCrgdsWvr46fiHjuz
+ 7peqgYEy57fh316Hk1KTWABe1+wro3xJMFrStFgCrBx2QCbi9f9Z0cdvnS8KIfp74Ch0oU/R6G
+ 899haWDs2PHyFzkce9PlX0yLtuD+Mzdi1Mt0QMNatnOzgGwTWrd4Vp8vHbY3nAm/7a/JEEznb+
+ UC9Pxe04J7MkMuWjq5xzgmGTZ0tCm716uyfblLTN1gQ7VMTP1i2RQOBXfJyfvHZbxo3pl7usMw
+ /EA=
+X-IronPort-AV: E=Sophos;i="5.64,565,1559545200"; 
+   d="scan'208";a="52398108"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 30 Sep 2019 01:10:52 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 30 Sep 2019 01:10:52 -0700
+Received: from rob-ult-m19940.microchip.com (10.10.85.251) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Mon, 30 Sep 2019 01:10:48 -0700
+From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+To:     <linux-i2c@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <ludovic.desroches@microchip.com>, <nicolas.ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <wsa@the-dreams.de>,
+        <Claudiu.Beznea@microchip.com>,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Subject: [PATCH v3] i2c: at91: Send bus clear command if SCL or SDA is down
+Date:   Mon, 30 Sep 2019 11:10:36 +0300
+Message-ID: <20190930081036.17803-1-codrin.ciubotariu@microchip.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Candle Sun <candle.sun@unisoc.com>
+After a transfer timeout, some faulty I2C slave devices might hold down
+the SCL or the SDA pins. We can generate a bus clear command, hoping that
+the slave might release the pins.
 
-Upstream commit 58e75155009c ("HID: core: move Usage Page concatenation
-to Main item") adds support for Usage Page item following Usage items
-(such as keyboards manufactured by Primax).
-
-Usage Page concatenation in Main item works well for following report
-descriptor patterns:
-
-    USAGE_PAGE (Keyboard)                   05 07
-    USAGE_MINIMUM (Keyboard LeftControl)    19 E0
-    USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
-    LOGICAL_MINIMUM (0)                     15 00
-    LOGICAL_MAXIMUM (1)                     25 01
-    REPORT_SIZE (1)                         75 01
-    REPORT_COUNT (8)                        95 08
-    INPUT (Data,Var,Abs)                    81 02
-
--------------
-
-    USAGE_MINIMUM (Keyboard LeftControl)    19 E0
-    USAGE_MAXIMUM (Keyboard Right GUI)      29 E7
-    LOGICAL_MINIMUM (0)                     15 00
-    LOGICAL_MAXIMUM (1)                     25 01
-    REPORT_SIZE (1)                         75 01
-    REPORT_COUNT (8)                        95 08
-    USAGE_PAGE (Keyboard)                   05 07
-    INPUT (Data,Var,Abs)                    81 02
-
-But it makes the parser act wrong for the following report
-descriptor pattern(such as some Gamepads):
-
-    USAGE_PAGE (Button)                     05 09
-    USAGE (Button 1)                        09 01
-    USAGE (Button 2)                        09 02
-    USAGE (Button 4)                        09 04
-    USAGE (Button 5)                        09 05
-    USAGE (Button 7)                        09 07
-    USAGE (Button 8)                        09 08
-    USAGE (Button 14)                       09 0E
-    USAGE (Button 15)                       09 0F
-    USAGE (Button 13)                       09 0D
-    USAGE_PAGE (Consumer Devices)           05 0C
-    USAGE (Back)                            0a 24 02
-    USAGE (HomePage)                        0a 23 02
-    LOGICAL_MINIMUM (0)                     15 00
-    LOGICAL_MAXIMUM (1)                     25 01
-    REPORT_SIZE (1)                         75 01
-    REPORT_COUNT (11)                       95 0B
-    INPUT (Data,Var,Abs)                    81 02
-
-With Usage Page concatenation in Main item, parser recognizes all the
-11 Usages as consumer keys, it is not the HID device's real intention.
-
-This patch adds usage_page_preceding flag to detect the third pattern.
-Usage Page concatenation is done in both Local and Main parsing.
-If usage_page_preceding equals 3(the third pattern encountered),
-hid_concatenate_usage_page() is jumped.
-
-Signed-off-by: Candle Sun <candle.sun@unisoc.com>
-Signed-off-by: Nianfu Bai <nianfu.bai@unisoc.com>
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 ---
- drivers/hid/hid-core.c | 21 +++++++++++++++++++--
- include/linux/hid.h    |  1 +
- 2 files changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-index 3eaee2c..043a232 100644
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -221,7 +221,15 @@ static int hid_add_usage(struct hid_parser *parser, unsigned usage, u8 size)
- 		hid_err(parser->device, "usage index exceeded\n");
- 		return -1;
- 	}
--	parser->local.usage[parser->local.usage_index] = usage;
-+	if (!parser->local.usage_index && parser->global.usage_page)
-+		parser->local.usage_page_preceding = 1;
-+	if (parser->local.usage_page_preceding == 2)
-+		parser->local.usage_page_preceding = 3;
-+	if (size <= 2 && parser->global.usage_page)
-+		parser->local.usage[parser->local.usage_index] =
-+			(usage & 0xffff) + (parser->global.usage_page << 16);
-+	else
-+		parser->local.usage[parser->local.usage_index] = usage;
- 	parser->local.usage_size[parser->local.usage_index] = size;
- 	parser->local.collection_index[parser->local.usage_index] =
- 		parser->collection_stack_ptr ?
-@@ -366,6 +374,8 @@ static int hid_parser_global(struct hid_parser *parser, struct hid_item *item)
- 
- 	case HID_GLOBAL_ITEM_TAG_USAGE_PAGE:
- 		parser->global.usage_page = item_udata(item);
-+		if (parser->local.usage_page_preceding == 1)
-+			parser->local.usage_page_preceding = 2;
- 		return 0;
- 
- 	case HID_GLOBAL_ITEM_TAG_LOGICAL_MINIMUM:
-@@ -547,9 +557,16 @@ static void hid_concatenate_usage_page(struct hid_parser *parser)
- {
- 	int i;
- 
-+	if (parser->local.usage_page_preceding == 3) {
-+		dbg_hid("Using preceding usage page for final usage\n");
-+		return;
-+	}
-+
- 	for (i = 0; i < parser->local.usage_index; i++)
- 		if (parser->local.usage_size[i] <= 2)
--			parser->local.usage[i] += parser->global.usage_page << 16;
-+			parser->local.usage[i] =
-+				(parser->global.usage_page << 16)
-+				+ (parser->local.usage[i] & 0xffff);
- }
- 
- /*
-diff --git a/include/linux/hid.h b/include/linux/hid.h
-index cd41f20..7fb6cf3 100644
---- a/include/linux/hid.h
-+++ b/include/linux/hid.h
-@@ -412,6 +412,7 @@ struct hid_local {
- 	unsigned usage_minimum;
- 	unsigned delimiter_depth;
- 	unsigned delimiter_branch;
-+	unsigned int usage_page_preceding;
+Changes in v3:
+ - fixed kbuild warning;
+
+Changes in v2:
+ - added '.has_clear_cmd' struct member to specify which IPs support the
+   clear command; for now, only SAMA5D2 supports it;
+ - added Ludovic's V1 ack since there were no major changes;
+
+ drivers/i2c/busses/i2c-at91-core.c   |  8 ++++++++
+ drivers/i2c/busses/i2c-at91-master.c | 22 ++++++++++++++++++++++
+ drivers/i2c/busses/i2c-at91.h        |  7 ++++++-
+ 3 files changed, 36 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/i2c/busses/i2c-at91-core.c b/drivers/i2c/busses/i2c-at91-core.c
+index 435c7d7377a3..cb07489e698f 100644
+--- a/drivers/i2c/busses/i2c-at91-core.c
++++ b/drivers/i2c/busses/i2c-at91-core.c
+@@ -68,6 +68,7 @@ static struct at91_twi_pdata at91rm9200_config = {
+ 	.has_unre_flag = true,
+ 	.has_alt_cmd = false,
+ 	.has_hold_field = false,
++	.has_clear_cmd = false,
  };
  
- /*
+ static struct at91_twi_pdata at91sam9261_config = {
+@@ -76,6 +77,7 @@ static struct at91_twi_pdata at91sam9261_config = {
+ 	.has_unre_flag = false,
+ 	.has_alt_cmd = false,
+ 	.has_hold_field = false,
++	.has_clear_cmd = false,
+ };
+ 
+ static struct at91_twi_pdata at91sam9260_config = {
+@@ -84,6 +86,7 @@ static struct at91_twi_pdata at91sam9260_config = {
+ 	.has_unre_flag = false,
+ 	.has_alt_cmd = false,
+ 	.has_hold_field = false,
++	.has_clear_cmd = false,
+ };
+ 
+ static struct at91_twi_pdata at91sam9g20_config = {
+@@ -92,6 +95,7 @@ static struct at91_twi_pdata at91sam9g20_config = {
+ 	.has_unre_flag = false,
+ 	.has_alt_cmd = false,
+ 	.has_hold_field = false,
++	.has_clear_cmd = false,
+ };
+ 
+ static struct at91_twi_pdata at91sam9g10_config = {
+@@ -100,6 +104,7 @@ static struct at91_twi_pdata at91sam9g10_config = {
+ 	.has_unre_flag = false,
+ 	.has_alt_cmd = false,
+ 	.has_hold_field = false,
++	.has_clear_cmd = false,
+ };
+ 
+ static const struct platform_device_id at91_twi_devtypes[] = {
+@@ -130,6 +135,7 @@ static struct at91_twi_pdata at91sam9x5_config = {
+ 	.has_unre_flag = false,
+ 	.has_alt_cmd = false,
+ 	.has_hold_field = false,
++	.has_clear_cmd = false,
+ };
+ 
+ static struct at91_twi_pdata sama5d4_config = {
+@@ -138,6 +144,7 @@ static struct at91_twi_pdata sama5d4_config = {
+ 	.has_unre_flag = false,
+ 	.has_alt_cmd = false,
+ 	.has_hold_field = true,
++	.has_clear_cmd = false,
+ };
+ 
+ static struct at91_twi_pdata sama5d2_config = {
+@@ -146,6 +153,7 @@ static struct at91_twi_pdata sama5d2_config = {
+ 	.has_unre_flag = true,
+ 	.has_alt_cmd = true,
+ 	.has_hold_field = true,
++	.has_clear_cmd = true,
+ };
+ 
+ static const struct of_device_id atmel_twi_dt_ids[] = {
+diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-at91-master.c
+index a3fcc35ffd3b..12d4fa946a82 100644
+--- a/drivers/i2c/busses/i2c-at91-master.c
++++ b/drivers/i2c/busses/i2c-at91-master.c
+@@ -440,6 +440,7 @@ static int at91_do_twi_transfer(struct at91_twi_dev *dev)
+ 	unsigned long time_left;
+ 	bool has_unre_flag = dev->pdata->has_unre_flag;
+ 	bool has_alt_cmd = dev->pdata->has_alt_cmd;
++	bool has_clear_cmd = dev->pdata->has_clear_cmd;
+ 
+ 	/*
+ 	 * WARNING: the TXCOMP bit in the Status Register is NOT a clear on
+@@ -599,6 +600,27 @@ static int at91_do_twi_transfer(struct at91_twi_dev *dev)
+ 		at91_twi_write(dev, AT91_TWI_CR,
+ 			       AT91_TWI_THRCLR | AT91_TWI_LOCKCLR);
+ 	}
++
++	/*
++	 * After timeout, some faulty I2C slave devices might hold SCL/SDA down;
++	 * we can send a bus clear command, hoping that the pins will be
++	 * released
++	 */
++	if (has_clear_cmd &&
++	    (!(dev->transfer_status & AT91_TWI_SDA) ||
++	     !(dev->transfer_status & AT91_TWI_SCL))) {
++		dev_dbg(dev->dev,
++			"SDA/SCL are down; sending bus clear command\n");
++		if (dev->use_alt_cmd) {
++			unsigned int acr;
++
++			acr = at91_twi_read(dev, AT91_TWI_ACR);
++			acr &= ~AT91_TWI_ACR_DATAL_MASK;
++			at91_twi_write(dev, AT91_TWI_ACR, acr);
++		}
++		at91_twi_write(dev, AT91_TWI_CR, AT91_TWI_CLEAR);
++	}
++
+ 	return ret;
+ }
+ 
+diff --git a/drivers/i2c/busses/i2c-at91.h b/drivers/i2c/busses/i2c-at91.h
+index 499b506f6128..0827c28a84db 100644
+--- a/drivers/i2c/busses/i2c-at91.h
++++ b/drivers/i2c/busses/i2c-at91.h
+@@ -36,6 +36,7 @@
+ #define	AT91_TWI_SVDIS		BIT(5)	/* Slave Transfer Disable */
+ #define	AT91_TWI_QUICK		BIT(6)	/* SMBus quick command */
+ #define	AT91_TWI_SWRST		BIT(7)	/* Software Reset */
++#define	AT91_TWI_CLEAR		BIT(15) /* Bus clear command */
+ #define	AT91_TWI_ACMEN		BIT(16) /* Alternative Command Mode Enable */
+ #define	AT91_TWI_ACMDIS		BIT(17) /* Alternative Command Mode Disable */
+ #define	AT91_TWI_THRCLR		BIT(24) /* Transmit Holding Register Clear */
+@@ -69,6 +70,8 @@
+ #define	AT91_TWI_NACK		BIT(8)	/* Not Acknowledged */
+ #define	AT91_TWI_EOSACC		BIT(11)	/* End Of Slave Access */
+ #define	AT91_TWI_LOCK		BIT(23) /* TWI Lock due to Frame Errors */
++#define	AT91_TWI_SCL		BIT(24) /* TWI SCL status */
++#define	AT91_TWI_SDA		BIT(25) /* TWI SDA status */
+ 
+ #define	AT91_TWI_INT_MASK \
+ 	(AT91_TWI_TXCOMP | AT91_TWI_RXRDY | AT91_TWI_TXRDY | AT91_TWI_NACK \
+@@ -81,7 +84,8 @@
+ #define	AT91_TWI_THR		0x0034	/* Transmit Holding Register */
+ 
+ #define	AT91_TWI_ACR		0x0040	/* Alternative Command Register */
+-#define	AT91_TWI_ACR_DATAL(len)	((len) & 0xff)
++#define	AT91_TWI_ACR_DATAL_MASK	GENMASK(15, 0)
++#define	AT91_TWI_ACR_DATAL(len)	((len) & AT91_TWI_ACR_DATAL_MASK)
+ #define	AT91_TWI_ACR_DIR	BIT(8)
+ 
+ #define	AT91_TWI_FMR		0x0050	/* FIFO Mode Register */
+@@ -108,6 +112,7 @@ struct at91_twi_pdata {
+ 	bool has_unre_flag;
+ 	bool has_alt_cmd;
+ 	bool has_hold_field;
++	bool has_clear_cmd;
+ 	struct at_dma_slave dma_slave;
+ };
+ 
 -- 
-2.7.4
+2.20.1
 
