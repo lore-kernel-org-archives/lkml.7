@@ -2,180 +2,211 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7522C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 656D8C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74EEB20815
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:34:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="3Bvc/KPT"
+	by mail.kernel.org (Postfix) with ESMTP id 3440520815
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:34:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732049AbfI3PeO (ORCPT
+        id S1732059AbfI3Pe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 11:34:14 -0400
-Received: from mail-eopbgr820079.outbound.protection.outlook.com ([40.107.82.79]:7424
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732010AbfI3PeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 11:34:13 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b8TvRXDhqHNnqfM6/bNCSI11HrCi8R4ZLbNUXKAQAw4nRao+F6cACZkwsfQtCRkPVpYXXOgJsVOU115OaxW8cQwVbe+4aOJ4ZkBQN1n6v3+9SWMiSSG55zh40tp1NzdmRuAMyygVOEJE3uCH6ry6F9J7LYaHimRvGTXNhbAIuIGhV8nJ7vMaYYGI//5TJvm2bjPXuXXKKn0g91EGBL62TBhfL16gmLPdP9adatdsPSgJbSKoLoyIWUeCOHanEfUOuA36zVzrkNO33hNRymZsKy/LxOl12PPCqrI0/oaOQ/3kpZj7ftKfNYuLmPboWNUtPdNXs2U+K1GCiWE0r4699w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=10jqaYodUVx4a1v837RyVdKbnM+ndk/riX2vgy2TnAU=;
- b=bZtHcloup0V0oEiMNt2dtW1niCR1z+y9rBG2RtnpMeH2hqGadO0a+OXJfLP2r1UjrdtZw+7VrXDuW49iVtEx88GOossS9dHZf1Xe8oZEMHfXm3DOZjDSeliX/L+UTPaWADtHd8SJawkQOcBwufZuQtloLx7PVTyDXG8V96vf3vtj/go1ANTn+GAgCh6jzixsVmEn7dMHM+zTU2MH9S8RyjgmfjNj9bblpQ+zqoH0OkDKLCFBSJ8pvDSVyBHYDEFUlDoNmfQ0pn37gCKE/I0qD3j67kZYNeaudHkh3Mo2H/ItSECBDysH6QgLeOW+WitPWvca6mBHg+cWBwrNmTmTWA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=10jqaYodUVx4a1v837RyVdKbnM+ndk/riX2vgy2TnAU=;
- b=3Bvc/KPTYx4O9XzTtspIJGpRZTaXn26s3mFD3qvS8moNMeJcRfnLocCJXfZvahWyqc/b7HZUDvH1qngu1kciUVQSLyCrLg6TVWWx328rPAjYzwO7C1qz1X2rg6CAbpaP4Fl+qAMxoDgx3OL2T9R1WTFPoFZXN01FoUpaXehUgnc=
-Received: from SN6PR12MB2736.namprd12.prod.outlook.com (52.135.107.27) by
- SN6PR12MB2685.namprd12.prod.outlook.com (52.135.103.26) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.20; Mon, 30 Sep 2019 15:34:09 +0000
-Received: from SN6PR12MB2736.namprd12.prod.outlook.com
- ([fe80::b1e3:1867:e650:796c]) by SN6PR12MB2736.namprd12.prod.outlook.com
- ([fe80::b1e3:1867:e650:796c%6]) with mapi id 15.20.2305.017; Mon, 30 Sep 2019
- 15:34:09 +0000
-From:   "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>
-To:     shuah <shuah@kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Thomas Renninger <trenn@suse.com>, Pu Wen <puwen@hygon.com>,
-        Borislav Petkov <bp@suse.de>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>
-Subject: Re: [PATCH 1/2] Modify cpupower to schedule itself on cores it is
- reading MSRs from
-Thread-Topic: [PATCH 1/2] Modify cpupower to schedule itself on cores it is
- reading MSRs from
-Thread-Index: AQHVbj8CzXj8hQvM60aQ8slBTBcq36c/7v4AgAR9goA=
-Date:   Mon, 30 Sep 2019 15:34:09 +0000
-Message-ID: <251f40a6-9dd6-9611-ce77-b8eee4cf8fc8@amd.com>
-References: <20190918163445.129103-1-Janakarajan.Natarajan@amd.com>
- <b90697df-e898-31d2-5149-c223cb11ba5c@kernel.org>
-In-Reply-To: <b90697df-e898-31d2-5149-c223cb11ba5c@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN2PR01CA0071.prod.exchangelabs.com (2603:10b6:800::39) To
- SN6PR12MB2736.namprd12.prod.outlook.com (2603:10b6:805:77::27)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Janakarajan.Natarajan@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.77.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2079ecd0-74fa-433a-b0d4-08d745bba2e3
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: SN6PR12MB2685:|SN6PR12MB2685:
-x-microsoft-antispam-prvs: <SN6PR12MB268500D844DB7411689EBCEBE7820@SN6PR12MB2685.namprd12.prod.outlook.com>
-x-ms-exchange-transport-forked: True
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 01762B0D64
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(366004)(376002)(396003)(346002)(199004)(189003)(5660300002)(31696002)(7416002)(2906002)(8936002)(186003)(86362001)(6116002)(4326008)(25786009)(31686004)(3846002)(2201001)(7736002)(36756003)(305945005)(66066001)(81166006)(8676002)(81156014)(66446008)(316002)(6486002)(229853002)(446003)(11346002)(476003)(66556008)(6246003)(66476007)(64756008)(2501003)(478600001)(486006)(66946007)(2616005)(26005)(53546011)(6506007)(386003)(102836004)(52116002)(99286004)(6512007)(54906003)(6436002)(71190400001)(14454004)(76176011)(71200400001)(256004)(110136005);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2685;H:SN6PR12MB2736.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: c29Inabd1Eiw2+JPAK6AV4MGRVjUxXucknYZaR4/jph4Kqmr3gp0aZEJt4T1ktuBtSJPYmPHCsHblI8QylyqGMztfMv+RFpN4h4fGs7kjVycw0Z4j2ofFmzOLO3y1IGqHwlH/SVQRF/kGShLluuUSh1K7YBWY74rpmOZ4qLN0MbT0p5tDR3JXzkYhT4cLC9nSiXsJbABxL0xD+WmbV9f/Mj2ISRYVYLq97XdqCqWthsPOupua1YUPwddeZnzkMyLMh5z4BB5MiHjmwrLpC4T5OvYITcQE515kJAd/8cNV5VlI72k5PRk7HahgnA36y09mDTiofq8BYhz84FJp0dHoX/BJ1iB6HgRqm8zfZhBiPfrE3izHpvWK1pu91Vf/2mGSaoB9q8C6sgOcMbQTei73cPYPxeV7vkOp/Tpbdi41Wo=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1BE3C2C23CE44943B748B8333A0FA24C@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 30 Sep 2019 11:34:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:57084 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727508AbfI3Pe1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 11:34:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 565E21000;
+        Mon, 30 Sep 2019 08:34:26 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5267A3F706;
+        Mon, 30 Sep 2019 08:34:25 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 16:34:23 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Masayoshi Mizuma <msys.mizuma@gmail.com>
+Cc:     Julien Grall <julien.grall@arm.com>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] arm64/sve: Fix wrong free for task->thread.sve_state
+Message-ID: <20190930153422.GU27757@arm.com>
+References: <20190927153949.29870-1-msys.mizuma@gmail.com>
+ <b3dba44e-216c-f060-be8e-1c44bdc61576@arm.com>
+ <20190930130244.GT27757@arm.com>
+ <20190930142952.7zwbucjvh2wxbzis@gabell>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2079ecd0-74fa-433a-b0d4-08d745bba2e3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2019 15:34:09.1905
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5PDmeYVRIIowbpizNzvbHNManOqZmI0Aw2JhoVgJC26yVgEEB1pONV4mP9wWuWPHYQ7e1sMJC4tI0/OQBvkIjw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2685
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190930142952.7zwbucjvh2wxbzis@gabell>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gOS8yNy8yMDE5IDE6NTkgUE0sIHNodWFoIHdyb3RlOg0KPiBPbiA5LzE4LzE5IDEwOjM0IEFN
-LCBOYXRhcmFqYW4sIEphbmFrYXJhamFuIHdyb3RlOg0KPj4gTW9kaWZ5IGNwdXBvd2VyIHRvIHNj
-aGVkdWxlIGl0c2VsZiBvbiBlYWNoIG9mIHRoZSBjcHVzIGluIHRoZSBzeXN0ZW0gYW5kDQo+PiB0
-aGVuIGdldCB0aGUgQVBFUkYvTVBFUkYgcmVnaXN0ZXIgdmFsdWVzLg0KPj4NCj4+IFRoaXMgaXMg
-YWR2YW50YWdlb3VzIGJlY2F1c2UgYW4gSVBJIGlzIG5vdCBnZW5lcmF0ZWQgd2hlbiBhIA0KPj4g
-cmVhZF9tc3IoKSBpcw0KPj4gZXhlY3V0ZWQgb24gdGhlIGxvY2FsIGxvZ2ljYWwgQ1BVIHRoZXJl
-YnkgcmVkdWNpbmcgdGhlIGNoYW5jZSBvZiBoYXZpbmcNCj4+IEFQRVJGIGFuZCBNUEVSRiBiZWlu
-ZyBvdXQgb2Ygc3luYy4NCj4NCj4gU29tZWhvdyB0aGlzIGRvZXNuJ3QgcmVhZCByaWdodC4gSXMg
-dGhpcyB0aGF0IHlvdSBhcmUgdHJ5aW5nIHRvIGF2b2lkDQo+IEFQRVJGIGFuZCBNUEVSRiBiZWlu
-ZyBvdXQgb2Ygc3luYyB3aXRoIHRoaXMgY2hhbmdlPw0KPg0KPiBUaGlzIGRlc2NyaXB0aW9uIGlz
-IHJhdGhlciBjb25mdXNpbmcuDQoNCg0KV2UgYXJlIHRyeWluZyB0byBhdm9pZCBhIHNlcGFyYXRl
-IElQSSBmb3IgQVBFUkYgYW5kIE1QRVJGLiBXZSBoYXZlIHNlZW4gDQp0aGF0IGEgc2VwYXJhdGUg
-SVBJIGZvcg0KDQplYWNoIGNhbiBjYXVzZSBBUEVSRiBhbmQgTVBFUkYgdG8gZ28gb3V0IG9mIHN5
-bmMuDQoNCg0KSWYgdGhlIGNwdXBvd2VyIGlzIGFscmVhZHkgZXhlY3V0aW5nIG9uIHRoZSBjb3Jl
-IGl0IHdhbnRzIHRvIGdldCB0aGUgDQpBUEVSRi9NUEVSRiBmcm9tLCB0aGVuDQoNCmdlbmVyaWNf
-ZXhlY19zaW5nbGUoKSBkb2VzIG5vdCBnZW5lcmF0ZSB0aGUgSVBJIHRvIGV4ZWN1dGUgdGhlIHJk
-bXNyKCkuIA0KUmF0aGVyIGl0IGp1c3QgZXhlY3V0ZXMNCg0Kb24gdGhlIGN1cnJlbnQgY3B1Lg0K
-DQoNCkkgY2FuIGNoYW5nZSB0aGUgZGVzY3JpcHRpb24gdG8gYWRkIG1vcmUgZGV0YWlsLg0KDQoN
-Cj4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBKYW5ha2FyYWphbiBOYXRhcmFqYW4gPEphbmFrYXJh
-amFuLk5hdGFyYWphbkBhbWQuY29tPg0KPj4gLS0tDQo+PiDCoCAuLi4vdXRpbHMvaWRsZV9tb25p
-dG9yL21wZXJmX21vbml0b3IuY8KgwqDCoMKgwqDCoMKgIHwgMzggKysrKysrKysrKysrKystLS0t
-LQ0KPj4gwqAgMSBmaWxlIGNoYW5nZWQsIDI4IGluc2VydGlvbnMoKyksIDEwIGRlbGV0aW9ucygt
-KQ0KPj4NCj4+IGRpZmYgLS1naXQgYS90b29scy9wb3dlci9jcHVwb3dlci91dGlscy9pZGxlX21v
-bml0b3IvbXBlcmZfbW9uaXRvci5jIA0KPj4gYi90b29scy9wb3dlci9jcHVwb3dlci91dGlscy9p
-ZGxlX21vbml0b3IvbXBlcmZfbW9uaXRvci5jDQo+PiBpbmRleCA0NDgwNmE2ZGFlMTEuLjhiMDcy
-ZTM5Yzg5NyAxMDA2NDQNCj4+IC0tLSBhL3Rvb2xzL3Bvd2VyL2NwdXBvd2VyL3V0aWxzL2lkbGVf
-bW9uaXRvci9tcGVyZl9tb25pdG9yLmMNCj4+ICsrKyBiL3Rvb2xzL3Bvd2VyL2NwdXBvd2VyL3V0
-aWxzL2lkbGVfbW9uaXRvci9tcGVyZl9tb25pdG9yLmMNCj4+IEBAIC0xMCw2ICsxMCw3IEBADQo+
-PiDCoCAjaW5jbHVkZSA8c3RkbGliLmg+DQo+PiDCoCAjaW5jbHVkZSA8c3RyaW5nLmg+DQo+PiDC
-oCAjaW5jbHVkZSA8bGltaXRzLmg+DQo+PiArI2luY2x1ZGUgPHNjaGVkLmg+DQo+PiDCoCDCoCAj
-aW5jbHVkZSA8Y3B1ZnJlcS5oPg0KPj4gwqAgQEAgLTg2LDE1ICs4NywzMyBAQCBzdGF0aWMgaW50
-IG1wZXJmX2dldF90c2ModW5zaWduZWQgbG9uZyBsb25nICp0c2MpDQo+PiDCoMKgwqDCoMKgIHJl
-dHVybiByZXQ7DQo+PiDCoCB9DQo+PiDCoCArc3RhdGljIGludCBnZXRfYXBlcmZfbXBlcmYoaW50
-IGNwdSwgdW5zaWduZWQgbG9uZyBsb25nICphdmFsLA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgdW5zaWduZWQgbG9uZyBsb25nICptdmFsKQ0KPj4gK3sNCj4+ICvCoMKgwqAgY3B1
-X3NldF90IHNldDsNCj4+ICvCoMKgwqAgaW50IHJldDsNCj4+ICsNCj4+ICvCoMKgwqAgQ1BVX1pF
-Uk8oJnNldCk7DQo+PiArwqDCoMKgIENQVV9TRVQoY3B1LCAmc2V0KTsNCj4+ICvCoMKgwqAgaWYg
-KHNjaGVkX3NldGFmZmluaXR5KGdldHBpZCgpLCBzaXplb2Yoc2V0KSwgJnNldCkgPT0gLTEpIHsN
-Cj4+ICvCoMKgwqDCoMKgwqDCoCBkcHJpbnQoIkNvdWxkIG5vdCBtaWdyYXRlIHRvIGNwdTogJWRc
-biIsIGNwdSk7DQo+PiArwqDCoMKgwqDCoMKgwqAgcmV0dXJuIDE7DQo+PiArwqDCoMKgIH0NCj4+
-ICsNCj4+ICvCoMKgwqAgcmV0ID0gcmVhZF9tc3IoY3B1LCBNU1JfQVBFUkYsIGF2YWwpOw0KPj4g
-K8KgwqDCoCByZXQgfD0gcmVhZF9tc3IoY3B1LCBNU1JfTVBFUkYsIG12YWwpOw0KPj4gKw0KPj4g
-K8KgwqDCoCByZXR1cm4gcmV0Ow0KPj4gK30NCj4+ICsNCj4+IMKgIHN0YXRpYyBpbnQgbXBlcmZf
-aW5pdF9zdGF0cyh1bnNpZ25lZCBpbnQgY3B1KQ0KPj4gwqAgew0KPj4gLcKgwqDCoCB1bnNpZ25l
-ZCBsb25nIGxvbmcgdmFsOw0KPj4gK8KgwqDCoCB1bnNpZ25lZCBsb25nIGxvbmcgYXZhbCwgbXZh
-bDsNCj4+IMKgwqDCoMKgwqAgaW50IHJldDsNCj4+IMKgIC3CoMKgwqAgcmV0ID0gcmVhZF9tc3Io
-Y3B1LCBNU1JfQVBFUkYsICZ2YWwpOw0KPj4gLcKgwqDCoCBhcGVyZl9wcmV2aW91c19jb3VudFtj
-cHVdID0gdmFsOw0KPj4gLcKgwqDCoCByZXQgfD0gcmVhZF9tc3IoY3B1LCBNU1JfTVBFUkYsICZ2
-YWwpOw0KPj4gLcKgwqDCoCBtcGVyZl9wcmV2aW91c19jb3VudFtjcHVdID0gdmFsOw0KPj4gK8Kg
-wqDCoCByZXQgPSBnZXRfYXBlcmZfbXBlcmYoY3B1LCAmYXZhbCwgJm12YWwpOw0KPg0KPiBnZXRf
-YXBlcmZfbXBlcmYoKSBjb3VsZCByZXR1cm4gZXJyb3IgcmlnaHQ/IEl0IHJldHVybnMgMSB3aGVu
-DQo+IHNjaGVkX3NldGFmZmluaXR5KCkgZmFpbHMuIFNob3VsZG4ndCB0aGUgcmV0dXJuIHZhbHVl
-IGNoZWNrZWQsDQo+IGluc3RlYWQgb2YgdXNpbmcgYXZhbCBhbmQgbXZhbD8NCg0KDQpXZSBzZXQg
-dGhlIGlzX3ZhbGlkW2NwdV0gdG8gdGhlIHJldHVybiB2YWx1ZS4gTGF0ZXIgb24gdGhlIGlzX3Zh
-bGlkW2NwdV0NCg0KaXMgY2hlY2tlZCBiZWZvcmUgcHJvY2VlZGluZyB0byBjYWxjdWxhdGUgdGhl
-IGVmZmVjdGl2ZSBmcmVxLg0KDQoNClRoYW5rcy4NCg0KDQo+DQo+PiArwqDCoMKgIGFwZXJmX3By
-ZXZpb3VzX2NvdW50W2NwdV0gPSBhdmFsOw0KPj4gK8KgwqDCoCBtcGVyZl9wcmV2aW91c19jb3Vu
-dFtjcHVdID0gbXZhbDsNCj4+IMKgwqDCoMKgwqAgaXNfdmFsaWRbY3B1XSA9ICFyZXQ7DQo+PiDC
-oCDCoMKgwqDCoMKgIHJldHVybiAwOw0KPj4gQEAgLTEwMiwxMyArMTIxLDEyIEBAIHN0YXRpYyBp
-bnQgbXBlcmZfaW5pdF9zdGF0cyh1bnNpZ25lZCBpbnQgY3B1KQ0KPj4gwqAgwqAgc3RhdGljIGlu
-dCBtcGVyZl9tZWFzdXJlX3N0YXRzKHVuc2lnbmVkIGludCBjcHUpDQo+PiDCoCB7DQo+PiAtwqDC
-oMKgIHVuc2lnbmVkIGxvbmcgbG9uZyB2YWw7DQo+PiArwqDCoMKgIHVuc2lnbmVkIGxvbmcgbG9u
-ZyBhdmFsLCBtdmFsOw0KPj4gwqDCoMKgwqDCoCBpbnQgcmV0Ow0KPj4gwqAgLcKgwqDCoCByZXQg
-PSByZWFkX21zcihjcHUsIE1TUl9BUEVSRiwgJnZhbCk7DQo+PiAtwqDCoMKgIGFwZXJmX2N1cnJl
-bnRfY291bnRbY3B1XSA9IHZhbDsNCj4+IC3CoMKgwqAgcmV0IHw9IHJlYWRfbXNyKGNwdSwgTVNS
-X01QRVJGLCAmdmFsKTsNCj4+IC3CoMKgwqAgbXBlcmZfY3VycmVudF9jb3VudFtjcHVdID0gdmFs
-Ow0KPj4gK8KgwqDCoCByZXQgPSBnZXRfYXBlcmZfbXBlcmYoY3B1LCAmYXZhbCwgJm12YWwpOw0K
-Pg0KPiBTYW1lIGNvbW1lbnRzIGFzIGFib3ZlIGhlcmUuDQo+DQo+PiArwqDCoMKgIGFwZXJmX2N1
-cnJlbnRfY291bnRbY3B1XSA9IGF2YWw7DQo+PiArwqDCoMKgIG1wZXJmX2N1cnJlbnRfY291bnRb
-Y3B1XSA9IG12YWw7DQo+PiDCoMKgwqDCoMKgIGlzX3ZhbGlkW2NwdV0gPSAhcmV0Ow0KPj4gwqAg
-wqDCoMKgwqDCoCByZXR1cm4gMDsNCj4+DQo+DQo+IHRoYW5rcywNCj4gLS0gU2h1YWgNCg==
+On Mon, Sep 30, 2019 at 10:29:53AM -0400, Masayoshi Mizuma wrote:
+> Hi Julien and Dave,
+> 
+> On Mon, Sep 30, 2019 at 02:02:46PM +0100, Dave Martin wrote:
+> > On Mon, Sep 30, 2019 at 01:23:18PM +0100, Julien Grall wrote:
+> > > Hi,
+> > > 
+> > > On 27/09/2019 16:39, Masayoshi Mizuma wrote:
+> > > >From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+> > > >
+> > > >The system which has SVE feature crashed because of
+> > > >the memory pointed by task->thread.sve_state was destroyed
+> > > >by someone.
+> > > >
+> > > >That is because sve_state is freed while the forking the
+> > > >child process. The child process has the pointer of sve_state
+> > > >which is same as the parent's because the child's task_struct
+> > > >is copied from the parent's one. If the copy_process()
+> > > >fails as an error on somewhere, for example, copy_creds(),
+> > > >then the sve_state is freed even if the parent is alive.
+> > > >The flow is as follows.
+> > > >
+> > > >copy_process
+> > > >         p = dup_task_struct
+> > > >             => arch_dup_task_struct
+> > > >                 *dst = *src;  // copy the entire region.
+> > > >:
+> > > >         retval = copy_creds
+> > > >         if (retval < 0)
+> > > >                 goto bad_fork_free;
+> > > >:
+> > > >bad_fork_free:
+> > > >...
+> > > >         delayed_free_task(p);
+> > > >           => free_task
+> > > >              => arch_release_task_struct
+> > > >                 => fpsimd_release_task
+> > > >                    => __sve_free
+> > > >                       => kfree(task->thread.sve_state);
+> > > >                          // free the parent's sve_state
+> > > >
+> > > >Move child's sve_state = NULL and clearing TIF_SVE flag
+> > > >to arch_dup_task_struct() so that the child doesn't free the
+> > > >parent's one.
+> > > >
+> > > >Cc: stable@vger.kernel.org
+> > > >Fixes: bc0ee4760364 ("arm64/sve: Core task context handling")
+> > > 
+> > > Looking at the log, it looks like THREAD_INFO_IN_TASK was selected before
+> > > the bc0ee4760364. So it should be fine to backport for all the Linux tree
+> > > contain this commit.
+> 
+> I think this patch is needed for the kernel has SVE support.
+> I'll add the Cc tag as Dave said:
+> 
+> Cc: stable@vger.kernel.org # 4.15+
+
+Based on running git log --grep='stable@vger.*#.*-', the most common
+syntax for this situation seems to be
+
+Cc: <stable@vger.kernel.org> # 4.15.x-
+
+> So, I suppose this patch will be backported to stables 5.3.X,
+> 5.2.X and longterm 4.19.X.
+> Does this make sense?
+
+Yes, I think so.  It's up to the stable maintainers to decide which
+trees the patch actually gets applied too.
+
+> > > >Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+> > > >Reported-by: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
+> > > >Suggested-by: Dave Martin <Dave.Martin@arm.com>
+> > > 
+> > > I have tested the patch and can confirm that double-free disappeared after
+> > > the patch is applied:
+> > > 
+> > > Tested-by: Julien Grall <julien.grall@arm.com>
+> 
+> Thank you so much!
+> 
+> > 
+> > Good to have that confirmed -- thanks for verifying.
+> > 
+> > [...]
+> > 
+> > > >---
+> > > >  arch/arm64/kernel/process.c | 21 ++++-----------------
+> > > >  1 file changed, 4 insertions(+), 17 deletions(-)
+> > > >
+> > > >diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+> > > >index f674f28df..6937f5935 100644
+> > > >--- a/arch/arm64/kernel/process.c
+> > > >+++ b/arch/arm64/kernel/process.c
+> > > >@@ -323,22 +323,16 @@ void arch_release_task_struct(struct task_struct *tsk)
+> > > >  	fpsimd_release_task(tsk);
+> > > >  }
+> > > >-/*
+> > > >- * src and dst may temporarily have aliased sve_state after task_struct
+> > > >- * is copied.  We cannot fix this properly here, because src may have
+> > > >- * live SVE state and dst's thread_info may not exist yet, so tweaking
+> > > >- * either src's or dst's TIF_SVE is not safe.
+> > > >- *
+> > > >- * The unaliasing is done in copy_thread() instead.  This works because
+> > > >- * dst is not schedulable or traceable until both of these functions
+> > > >- * have been called.
+> > > >- */
+> > > 
+> > > It would be good to explain in the commit message why tweaking "dst" in
+> > > arch_dup_task_struct() is fine.
+> > > 
+> > > From my understanding, Arm64 used to have thread_info on the stack. So it
+> > > would not be possible to clear TIF_SVE until the stack is initialized.
+> > > 
+> > > Now that the thread_info is part of the task, it should be valid to modify
+> > > the flag from arch_dup_task_struct().
+> > > 
+> > > Note that technically, TIF_SVE does not need to be cleared from
+> > > arch_dup_task_struct(). It could also be done from copy_thread(). But it is
+> > > easier to keep the both changes together.
+> 
+> Thanks, let me add some comments to the commit log.
+> 
+> > > 
+> > > >  int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
+> > > >  {
+> > > >  	if (current->mm)
+> > > >  		fpsimd_preserve_current_state();
+> > > >  	*dst = *src;
+> > 
+> > Ack, some more explanation would be a good idea here.
+> > 
+> > Maybe the following comments are sufficient?
+> > 
+> > 	/* We rely on the above assingment to initialise dst's thread_flags: */
+> 
+> Thanks, I'll add this comment.
+> 
+> > 
+> > > >+	BUILD_BUG_ON(!IS_ENABLED(CONFIG_THREAD_INFO_IN_TASK));
+> > > 
+> > 
+> > and
+> > 
+> > 	/*
+> > 	 * Detach src's sve_state (if any) from dst so that it does not
+> > 	 * get erroneously used or freed prematurely.  dst's sve_state
+> > 	 * will be allocated on demand later on if dst uses SVE.
+> > 	 * For consistency, also clear TIF_SVE here: this could be done
+> > 	 * later in copy_process(), but to avoid tripping up future
+> > 	 * maintainers it is best not to leave TIF_SVE and sve_state in
+> > 	 * an inconsistent state, even temporarily.
+> > 	 */
+> 
+> I'll add this comments.
+
+OK, if these make sense to you, feel free to add them.
+
+[...]
+
+Cheers
+---Dave
