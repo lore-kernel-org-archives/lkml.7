@@ -2,118 +2,192 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18524C388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 850FAC388F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E341F215EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:14:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NEp7JEfP"
+	by mail.kernel.org (Postfix) with ESMTP id 659BD20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 13:15:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731159AbfI3NOp (ORCPT
+        id S1731177AbfI3NPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 09:14:45 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40481 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726314AbfI3NOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 09:14:45 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46hjYD40R3z9s00;
-        Mon, 30 Sep 2019 23:14:40 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1569849281;
-        bh=yB8msfNke7AKbMgQjP8+jH3mdOiOuN7lBcpyNctMOGM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NEp7JEfPp+ZCKm3b1wUG1W5cDXxF93TLx+8rDqmS1codPvwARVOaN5DDyLWXiAWrT
-         o12pGswJV12lybG9A5PePDDDIR2fPAl7F09ibZWZACvPFBtFvAn4PQwTfJOPgo8tWY
-         CXjKdi6Va718Tss9OgtXhRy3hNoQACFJkCpDJmN5Bn+hzfqnnx2kizGRKo1oq+is80
-         TJNtsnJKcdevQNm8+vuLa88L/GH2yGCPhFCc2HGyIx5stL4EfSpDw9JHedHJD+ijXm
-         NzwPlhuE6Wm5pssKmAhflV57KawO7MNd6Osf8D7ufqr5ujJuD3afccXd8zx279b2n4
-         gx6NjSrgQFG2A==
-Date:   Mon, 30 Sep 2019 23:14:39 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Gao Xiang <hsiangkao@aol.com>
-Cc:     Mark Brown <broonie@kernel.org>, linux-erofs@lists.ozlabs.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-next@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Miao Xie <miaoxie@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: Re: erofs -next tree inclusion request
-Message-ID: <20190930231439.37295a14@canb.auug.org.au>
-In-Reply-To: <20190919143722.GA5363@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <20190919120110.GA48697@architecture4>
-        <20190919121739.GG3642@sirena.co.uk>
-        <20190919122328.GA82662@architecture4>
-        <20190919143722.GA5363@hsiangkao-HP-ZHAN-66-Pro-G1>
+        Mon, 30 Sep 2019 09:15:20 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:55538 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbfI3NPU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 09:15:20 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 524B428D5B5
+Subject: Re: [PATCH 01/13] mfd: cros_ec: Add sensor_count and make
+ check_features public
+To:     Gwendal Grignou <gwendal@chromium.org>, jic23@kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        lee.jones@linaro.org, bleung@chromium.org, dianders@chromium.org,
+        groeck@chromium.org, fabien.lahoudere@collabora.com
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+References: <20190922175021.53449-1-gwendal@chromium.org>
+ <20190922175021.53449-2-gwendal@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <411716b0-818b-9060-7055-8ff9523c0c45@collabora.com>
+Date:   Mon, 30 Sep 2019 15:15:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/cNqd5/Q_VFmQ_+f+Dt5kCcN";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20190922175021.53449-2-gwendal@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/cNqd5/Q_VFmQ_+f+Dt5kCcN
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Gwendal,
 
-Hi Gao,
+Many thanks for the patches.
 
-On Thu, 19 Sep 2019 22:37:22 +0800 Gao Xiang <hsiangkao@aol.com> wrote:
->
-> The fixes only -fixes branch is
-> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git fixes
+On 22/9/19 19:50, Gwendal Grignou wrote:
+> Add a new function to return the number of MEMS sensors available in a
+> ChromeOS Embedded Controller.
+> It uses MOTIONSENSE_CMD_DUMP if available or a specific memory map ACPI
+> registers to find out.
+> 
+> Also, make check_features public as it can be useful for other drivers
+> to know whant the Embedded Controller supports.
+> 
+> Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
+> ---
+>  drivers/mfd/cros_ec_dev.c   | 61 ++++++++++++++++++++++++++++++++++++-
+>  include/linux/mfd/cros_ec.h | 17 +++++++++++
+>  2 files changed, 77 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+> index 6e6dfd6c1871..3be80183ccaa 100644
+> --- a/drivers/mfd/cros_ec_dev.c
+> +++ b/drivers/mfd/cros_ec_dev.c
+> @@ -112,7 +112,7 @@ static const struct mfd_cell cros_ec_vbc_cells[] = {
+>  	{ .name = "cros-ec-vbc", }
+>  };
+>  
+> -static int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
+> +int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
+>  {
+>  	struct cros_ec_command *msg;
+>  	int ret;
+> @@ -143,12 +143,71 @@ static int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
+>  
+>  	return ec->features[feature / 32] & EC_FEATURE_MASK_0(feature);
+>  }
+> +EXPORT_SYMBOL_GPL(cros_ec_check_features);
+>  
+>  static void cros_ec_class_release(struct device *dev)
+>  {
+>  	kfree(to_cros_ec_dev(dev));
+>  }
+>  
+> +int cros_ec_get_sensor_count(struct cros_ec_dev *ec)
+> +{
+> +	/*
+> +	 * Issue a command to get the number of sensor reported.
+> +	 * If not supported, check for legacy mode.
+> +	 */
+> +	int ret, sensor_count;
+> +	struct ec_params_motion_sense *params;
+> +	struct ec_response_motion_sense *resp;
+> +	struct cros_ec_command *msg;
+> +	struct cros_ec_device *ec_dev = ec->ec_dev;
+> +	u8 status;
+> +
+> +	msg = kzalloc(sizeof(struct cros_ec_command) +
+> +			max(sizeof(*params), sizeof(*resp)), GFP_KERNEL);
+> +	if (msg == NULL)
+> +		return -ENOMEM;
+> +
+> +	msg->version = 1;
+> +	msg->command = EC_CMD_MOTION_SENSE_CMD + ec->cmd_offset;
+> +	msg->outsize = sizeof(*params);
+> +	msg->insize = sizeof(*resp);
+> +
+> +	params = (struct ec_params_motion_sense *)msg->data;
+> +	params->cmd = MOTIONSENSE_CMD_DUMP;
+> +
+> +	ret = cros_ec_cmd_xfer(ec->ec_dev, msg);
+> +	if (ret < 0) {
+> +		sensor_count = ret;
+> +	} else if (msg->result != EC_RES_SUCCESS) {
+> +		sensor_count = -EPROTO;
+> +	} else {
+> +		resp = (struct ec_response_motion_sense *)msg->data;
+> +		sensor_count = resp->dump.sensor_count;
+> +	}
+> +	kfree(msg);
+> +
+> +	/*
+> +	 * Check legacy mode: Let's find out if sensors are accessible
+> +	 * via LPC interface.
+> +	 */
+> +	if (sensor_count == -EPROTO &&
+> +	    ec->cmd_offset == 0 &&
+> +	    ec_dev->cmd_readmem) {
+> +		ret = ec_dev->cmd_readmem(ec_dev, EC_MEMMAP_ACC_STATUS,
+> +				1, &status);
+> +		if ((ret >= 0) &&
+> +		    (status & EC_MEMMAP_ACC_STATUS_PRESENCE_BIT)) {
+> +			/*
+> +			 * We have 2 sensors, one in the lid, one in the base.
+> +			 */
+> +			sensor_count = 2;
+> +		}
+> +	}
+> +	return sensor_count;
+> +}
+> +EXPORT_SYMBOL_GPL(cros_ec_get_sensor_count);
+> +
+>  static void cros_ec_sensors_register(struct cros_ec_dev *ec)
+>  {
+>  	/*
+> diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
+> index 61c2875c2a40..578e0bbcafdc 100644
+> --- a/include/linux/mfd/cros_ec.h
+> +++ b/include/linux/mfd/cros_ec.h
+> @@ -32,4 +32,21 @@ struct cros_ec_dev {
+>  
+>  #define to_cros_ec_dev(dev)  container_of(dev, struct cros_ec_dev, class_dev)
+>  
+> +/**
+> + * cros_ec_check_features - Test for the presence of EC features
+> + *
+> + * Call this function to test whether the ChromeOS EC supports a feature.
+> + *
+> + * @ec_dev: EC device
+> + * @msg: One of ec_feature_code values
+> + * @return: 1 if supported, 0 if not
+> + */
+> +int cros_ec_check_features(struct cros_ec_dev *ec, int feature);
+> +
+> +/*
+> + * Return the number of MEMS sensors supported.
+> + * Return < 0 in case of error.
+> + */
+> +int cros_ec_get_sensor_count(struct cros_ec_dev *ec);
+> +
 
-I have added this from tomorrow (sorry for the drop out today).
+I am wondering if we should take this opportunity to move these two functions
+from drivers/mfd/cros_ec_dev to drivers/platform/chrome/cros_ec_proto.c and
+include/linux/platform_data/cros_ec_proto.h
 
-Which address(es) should I use as your contact address(es)?
+I think this part is more suitable for core part that actually resides in
+platform/chrome than the mfd device itself. What do you think? Do you see any
+problem on doing this?
 
-Thanks for adding your subsystem tree as a participant of linux-next.  As
-you may know, this is not a judgement of your code.  The purpose of
-linux-next is for integration testing and to lower the impact of
-conflicts between subsystems in the next merge window.=20
+Thanks,
+ Enric
 
-You will need to ensure that the patches/commits in your tree/series have
-been:
-     * submitted under GPL v2 (or later) and include the Contributor's
-        Signed-off-by,
-     * posted to the relevant mailing list,
-     * reviewed by you (or another maintainer of your subsystem tree),
-     * successfully unit tested, and=20
-     * destined for the current or next Linux merge window.
-
-Basically, this should be just what you would send to Linus (or ask him
-to fetch).  It is allowed to be rebased if you deem it necessary.
-
---=20
-Cheers,
-Stephen Rothwell=20
-sfr@canb.auug.org.au
-
---Sig_/cNqd5/Q_VFmQ_+f+Dt5kCcN
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2R/78ACgkQAVBC80lX
-0GzWAgf/dMM/gcid6gsfajlbbFg/vesZzJ4G8ToYTWy5U4m8IfuJwh8wDyuJcyYl
-U9sDmYSt5aW/uo4S/ZyOJjAEqf3+1aZIDpV0Xkmj9gVBMhDFzNVb8fYZev5qECrb
-xsJ3Ef3+jSYer4pHGxP+fOhoxIiTMqNAUFvKLAMl4C0jluB+Tt1yKYDGI7+aYYBY
-dMl3CcynSJUJei7hHVxwT8mi+FSKcjRIR+ykwui+UmSn4KuhBUStWk1TnnUxXZak
-1IEvGtUFXIQETFpn6SeRaPlhOmLP0fogWuvYEF+To9LBsUjwnF6CBkf/z51AIkeO
-+WXrSZIo8DIuyzc5cEoEvoBTjJXcnQ==
-=Voot
------END PGP SIGNATURE-----
-
---Sig_/cNqd5/Q_VFmQ_+f+Dt5kCcN--
+>  #endif /* __LINUX_MFD_CROS_EC_H */
+> 
