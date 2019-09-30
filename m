@@ -2,138 +2,135 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 404DCC35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E21D3C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16D5121855
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6E17215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:04:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mhk1y/q3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LkB71Mbl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732184AbfI3QCH (ORCPT
+        id S1732202AbfI3QEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 12:02:07 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:58002 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730809AbfI3QCH (ORCPT
+        Mon, 30 Sep 2019 12:04:31 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:49761 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731865AbfI3QEa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 12:02:07 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8UG26aY092231;
-        Mon, 30 Sep 2019 11:02:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569859326;
-        bh=L6LHDRc8VZ8Wou4KtO/agiAjH6PRrtMVtz5JQ4gVyCY=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=mhk1y/q3QLRgs8GgFdjlJkG3KMJcyA39douOu9mrg4X8c73hZ8x8zQMrYHMRQNIkN
-         X81iV3RtzpgQVsTNh+7RjJmS6lh2IkgVfxdqWYS+C/ma+unJvmr7eEOdBkfxqI9pw3
-         zwXQNd+DIwt1h5XZUfgkaC4f1+qiqfIdKfuvNezM=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8UG26nf036515;
-        Mon, 30 Sep 2019 11:02:06 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 30
- Sep 2019 11:01:56 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 30 Sep 2019 11:01:56 -0500
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with SMTP id x8UG26c5110589;
-        Mon, 30 Sep 2019 11:02:06 -0500
-Date:   Mon, 30 Sep 2019 11:04:17 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [Patch 07/16] media: ti-vpe: vpe: fix a v4l2-compliance failure
- causing a kernel panic
-Message-ID: <20190930160417.3vpefsots6i7ge2d@ti.com>
-References: <20190927183650.31345-1-bparrot@ti.com>
- <20190927183650.31345-8-bparrot@ti.com>
- <1a7c5929-15f1-8f04-1212-42f064654742@xs4all.nl>
+        Mon, 30 Sep 2019 12:04:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1569859469;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=fd8RCdIiuKuPAIKnpR2Fl7ZAb8x8CWgSMRglFknIiPs=;
+        b=LkB71Mbllss2uTfblXRf1wpX+YBDN7PC9RTB2dvw/64qR/ipG6eoyMEFhU3l3rbEJg0ePC
+        59SCadDqYG9TyDx/Y2pRIHA+4xQou8TDaZMleBmBWY0LYzV6QzHK+uhP2oAKuqEctSPJQK
+        jCz3gBKkYUyiAHbNmqv7wMUQa0Nvse8=
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
+ [209.85.166.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-351-xtDpy1yLOVyxta937xgY6Q-1; Mon, 30 Sep 2019 12:04:27 -0400
+Received: by mail-io1-f72.google.com with SMTP id g126so31283522iof.3
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 09:04:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=MJ7SI1Xeajmimsl+pPSYeFks4KQPimMlL+Exps8iuEw=;
+        b=jvT4t4R464Evxc7TccecvHeSYcHyF9c2XEpDOqNx5yi/P2sPUEyjTvS6iSrVn2bmyy
+         QhR44RA2OO8zTkT1+cqdxC3tRf6ITWF/Fm9Hu7s4H/vQPcS3N5xeU+QiG78p7Hv87/V/
+         lIvdyvqIG1E2e46mtTPSj/8AdcHS1Ye23yA/PqEz0BaGd91JCpciHmlalHQT7MsxqZvz
+         5VovA3OcgiwoV+xBFNuzKRqcEauUhYRLhK2qRHuBuNT5IEB983Lls0SdrhBwIWp9UDgL
+         sdPEEjE/RrzHeaE4C5uOo5jwcbyvVV6f7DHxQAI08HJIxUOL+KF//+k8zh/Sa+hklvFZ
+         VJgA==
+X-Gm-Message-State: APjAAAWQfSUYm6q/pwikVcLsNjxDr4uOmmVrbGpAMSAoT3R5rZL7rvBR
+        I1Svg9vIdmKQEcoxSvj0AWXNDf1vdWgAvugcyUPc1GI2ssZ/lYPJFBJ59F6W40IAMyiOQBvYkGZ
+        0o0c345XHRN7OOe95xFzBZyP4
+X-Received: by 2002:a6b:c402:: with SMTP id y2mr1074722ioa.136.1569859466685;
+        Mon, 30 Sep 2019 09:04:26 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxpBZOhdcOyM4zFSvj3LJcN+OeR0ytlxUwr+GnrbyPnz+9HcfQfNvuUsXP0YS6X4lWaoA1vWw==
+X-Received: by 2002:a6b:c402:: with SMTP id y2mr1074687ioa.136.1569859466356;
+        Mon, 30 Sep 2019 09:04:26 -0700 (PDT)
+Received: from t460s.bristot.redhat.com (nat-cataldo.sssup.it. [193.205.81.5])
+        by smtp.gmail.com with ESMTPSA id g15sm6266481ile.25.2019.09.30.09.04.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Sep 2019 09:04:25 -0700 (PDT)
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>
+Cc:     adrien.mahieux@gmail.com,
+        Marco Pagani <marco.pagani@santannapisa.it>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Wagner <wagi@monom.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Corbet <corbet@lwn.net>
+From:   Daniel Bristot de Oliveira <bristot@redhat.com>
+Subject: [ANNOUNCE] Real-time Linux Summit 2019: Schedule
+Message-ID: <fd337639-f218-e632-d384-9858405531c9@redhat.com>
+Date:   Mon, 30 Sep 2019 18:04:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <1a7c5929-15f1-8f04-1212-42f064654742@xs4all.nl>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Language: en-US
+X-MC-Unique: xtDpy1yLOVyxta937xgY6Q-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hans Verkuil <hverkuil@xs4all.nl> wrote on Mon [2019-Sep-30 10:35:05 +0200]:
-> On 9/27/19 8:36 PM, Benoit Parrot wrote:
-> > v4l2-compliance fails with this message:
-> > 
-> >    warn: v4l2-test-formats.cpp(717): \
-> >    	TRY_FMT cannot handle an invalid pixelformat.
-> >    test VIDIOC_TRY_FMT: FAIL
-> > 
-> > This causes the following kernel panic:
-> > 
-> > Unable to handle kernel paging request at virtual address 56595561
-> > pgd = ecd80e00
-> > *pgd=00000000
-> > Internal error: Oops: 205 [#1] PREEMPT SMP ARM
-> > ...
-> > CPU: 0 PID: 930 Comm: v4l2-compliance Not tainted \
-> > 	4.14.62-01715-gc8cd67f49a19 #1
-> > Hardware name: Generic DRA72X (Flattened Device Tree)
-> > task: ece44d80 task.stack: ecc6e000
-> > PC is at __vpe_try_fmt+0x18c/0x2a8 [ti_vpe]
-> > LR is at 0x8
-> > 
-> > Because the driver fails to properly check the 'num_planes' values for
-> > proper ranges it ends up accessing out of bound data causing the kernel
-> > panic.
-> > 
-> > Since this driver only handle single or dual plane pixel format, make
-> > sure the provided value does not exceed 2 planes.
-> > 
-> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> > Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> > ---
-> >  drivers/media/platform/ti-vpe/vpe.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-> > index bbbf11174e16..1278d457f753 100644
-> > --- a/drivers/media/platform/ti-vpe/vpe.c
-> > +++ b/drivers/media/platform/ti-vpe/vpe.c
-> > @@ -1650,7 +1650,7 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
-> >  			      &pix->height, MIN_H, MAX_H, H_ALIGN,
-> >  			      S_ALIGN);
-> >  
-> > -	if (!pix->num_planes)
-> > +	if (!pix->num_planes || pix->num_planes > 2)
-> >  		pix->num_planes = fmt->coplanar ? 2 : 1;
-> >  	else if (pix->num_planes > 1 && !fmt->coplanar)
-> >  		pix->num_planes = 1;
-> > 
-> 
-> This looks weird.
-> 
-> Why not just unconditionally do:
-> 
-> 	pix->num_planes = fmt->coplanar ? 2 : 1;
+Hi!
 
-In order to not change the behavior, VPE would assume that NV12 format for
-instance were always sent as 2 separate planes buffers. So for backward
-compatibility this is order to handle both cases where NV12 could be
-handled as both a single plane and a dual plane buffers based on what the
-user space application intent on passing in/out.
+Here is the schedule of the 2019 edition of the Real-time Linux Summit, tha=
+t
+will take place on October 31st, in Lyon - France, along with ELCE 2019!
 
-Benoit
+---------------------------------------------------------------------------=
+----
+9:00 =E2=80=93 9:30=09Opening Talk =E2=80=9CReal-time Linux: what is, what =
+is not and what is
+=09=09next!
+=09=09Daniel Bristot de Oliveira, Red Hat.
+9:30 =E2=80=93 10:15=09Real-time Linux in Financial Markets
+=09=09Adrien Mahieux, Orness.
 
-> 
-> Regards,
-> 
-> 	Hans
+10:10 =E2=80=93 10:30=09Pause
+
+10:30 =E2=80=93 11:15=09Supporting Real-Time Hardware Acceleration on Dynam=
+ically
+=09=09Reconfigurable SoC FPGAs
+=09=09Marco Pagani, Scuola Superiore Sant=E2=80=99Anna =E2=80=93 Universit=
+=C3=A9 de Lille.
+11:15 =E2=80=93 12:00=09Real-time usage in the BeagleBone community
+=09=09Drew Fustini, BeagleBoard.org Foundation.
+
+12:00 =E2=80=93 13:30=09Lunch Pause
+
+13:30 =E2=80=93 14:15=09Maintaining out of tree patches over the long term
+=09=09Daniel Wagner, SuSe.
+14:15 =E2=80=93 15:00=09Synthetic events and basic histograms
+=09=09Steven Rostedt, WMware.
+
+15:00 =E2=80=93 15:15=09Pause
+
+15:15 =E2=80=93 16:00=09State of the PREEMPT_RT
+=09=09Sebastian Andrzej Siewior, Linutronix GmbH.
+16:00 =E2=80=93 16:45=09PREEMPT RT is Upstream! Q&A Session
+=09=09Thomas Gleixner, Linutronix GmbH.
+
+16:45 =E2=80=93 17:00=09Closing
+---------------------------------------------------------------------------=
+----
+
+You can find more about the talks here:
+
+http://bristot.me/real-time-linux-summit-2019-schedule/
+
+-- Daniel
+
