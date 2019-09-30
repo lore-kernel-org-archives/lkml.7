@@ -2,138 +2,91 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F30DC4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E2DC4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE6C32086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:57:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29255218DE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:57:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730272AbfI3I5V (ORCPT
+        id S1730294AbfI3I5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 04:57:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37814 "EHLO mx1.redhat.com"
+        Mon, 30 Sep 2019 04:57:42 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:36058 "EHLO ns.iliad.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729968AbfI3I5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 04:57:21 -0400
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A2A9081F07
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 08:57:20 +0000 (UTC)
-Received: by mail-wm1-f69.google.com with SMTP id c188so3640139wmd.9
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 01:57:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=UcGS+56mom6fO6gLbiJPlRBT9sCimqwfenBjQlqeMP8=;
-        b=phckIGAg3oKto84YG7vw+r2ub5TO/kqKOiGp7b37929S6lT/ZZIMfdlS4aTw2vP4Gt
-         QQdf8ronHyhNADHPkXAvVJGdnXRmJ3StRquf310Sf+o4aa5+y72p9jJkiidCoVtB0Ra5
-         kGBDGGk3NzdvFEyP4F++sYAxUAG+4Qlaa4A/mrjyDBvaS+8ROxAV44+i/NRFTywByGQ2
-         YCiUx9s0Tcr/8WXOCZygUQL3XwsOyDYSvppMYqJker/BspTMRNgtIjw1EJpFa5KMS4zW
-         mLV/QWkJPjx6VU1FfXzd2PVQ2S1jp+6YEE9vy9ds+IH7HTONrcdWx2Z47AeyVQwchQjX
-         4q+w==
-X-Gm-Message-State: APjAAAVjVgHxg31vFShvq2hzMlnf7CWwdpl4Tj6tSV7XnoQiREmaE9WY
-        nxaCnzi2/foDd6LBzbweu5mtPLiL3Hs3GyWzMhZUVAziz6mi72crOjj5W94qnMK4vsXGIzkm/cn
-        mRRd9oy7SI+5DdufrTK8Is8Iv
-X-Received: by 2002:a5d:43d0:: with SMTP id v16mr12498660wrr.390.1569833839415;
-        Mon, 30 Sep 2019 01:57:19 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyqL/jNuwbLiXJECMuYDQFS2oi5pGvfRx0tVhTeQLsW0ZtP4yOYtHzkJVvLfzz5xWcWat0nuQ==
-X-Received: by 2002:a5d:43d0:: with SMTP id v16mr12498621wrr.390.1569833838927;
-        Mon, 30 Sep 2019 01:57:18 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id a14sm16815711wmm.44.2019.09.30.01.57.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2019 01:57:18 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Reto Buerki <reet@codelabs.ch>,
-        Liran Alon <liran.alon@oracle.com>
-Subject: Re: [PATCH v2 4/8] KVM: VMX: Optimize vmx_set_rflags() for unrestricted guest
-In-Reply-To: <20190927214523.3376-5-sean.j.christopherson@intel.com>
-References: <20190927214523.3376-1-sean.j.christopherson@intel.com> <20190927214523.3376-5-sean.j.christopherson@intel.com>
-Date:   Mon, 30 Sep 2019 10:57:17 +0200
-Message-ID: <87muem40wi.fsf@vitty.brq.redhat.com>
+        id S1730274AbfI3I5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 04:57:42 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 5FC0020289;
+        Mon, 30 Sep 2019 10:57:40 +0200 (CEST)
+Received: from [192.168.108.37] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id A431320274;
+        Mon, 30 Sep 2019 10:57:39 +0200 (CEST)
+Subject: Re: [PATCH] kasan: fix the missing underflow in memmove and memcpy
+ with CONFIG_KASAN_GENERIC=y
+To:     Walter Wu <walter-zh.wu@mediatek.com>,
+        Dmitry Vyukov <dvyukov@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Alexander Potapenko <glider@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <20190927034338.15813-1-walter-zh.wu@mediatek.com>
+ <CACT4Y+Zxz+R=qQxSMoipXoLjRqyApD3O0eYpK0nyrfGHE4NNPw@mail.gmail.com>
+ <1569594142.9045.24.camel@mtksdccf07>
+ <CACT4Y+YuAxhKtL7ho7jpVAPkjG-JcGyczMXmw8qae2iaZjTh_w@mail.gmail.com>
+ <1569818173.17361.19.camel@mtksdccf07>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <a3a5e118-e6da-8d6d-5073-931653fa2808@free.fr>
+Date:   Mon, 30 Sep 2019 10:57:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <1569818173.17361.19.camel@mtksdccf07>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Mon Sep 30 10:57:40 2019 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+On 30/09/2019 06:36, Walter Wu wrote:
 
-> Rework vmx_set_rflags() to avoid the extra code need to handle emulation
-> of real mode and invalid state when unrestricted guest is disabled.  The
-> primary reason for doing so is to avoid the call to vmx_get_rflags(),
-> which will incur a VMREAD when RFLAGS is not already available.  When
-> running nested VMs, the majority of calls to vmx_set_rflags() will occur
-> without an associated vmx_get_rflags(), i.e. when stuffing GUEST_RFLAGS
-> during transitions between vmcs01 and vmcs02.
->
-> Note, vmx_get_rflags() guarantees RFLAGS is marked available.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/vmx/vmx.c | 28 ++++++++++++++++++----------
->  1 file changed, 18 insertions(+), 10 deletions(-)
->
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 83fe8b02b732..814d3e6d0264 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -1426,18 +1426,26 @@ unsigned long vmx_get_rflags(struct kvm_vcpu *vcpu)
->  void vmx_set_rflags(struct kvm_vcpu *vcpu, unsigned long rflags)
+>  bool check_memory_region(unsigned long addr, size_t size, bool write,
+>                                 unsigned long ret_ip)
 >  {
->  	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> -	unsigned long old_rflags = vmx_get_rflags(vcpu);
-> +	unsigned long old_rflags;
->  
-> -	__set_bit(VCPU_EXREG_RFLAGS, (ulong *)&vcpu->arch.regs_avail);
-> -	vmx->rflags = rflags;
-> -	if (vmx->rmode.vm86_active) {
-> -		vmx->rmode.save_rflags = rflags;
-> -		rflags |= X86_EFLAGS_IOPL | X86_EFLAGS_VM;
-> +	if (enable_unrestricted_guest) {
-> +		__set_bit(VCPU_EXREG_RFLAGS, (ulong *)&vcpu->arch.regs_avail);
+> +       if (long(size) < 0) {
+> +               kasan_report_invalid_size(src, dest, len, _RET_IP_);
+> +               return false;
+> +       }
 > +
-> +		vmx->rflags = rflags;
-> +		vmcs_writel(GUEST_RFLAGS, rflags);
-> +	} else {
-> +		old_rflags = vmx_get_rflags(vcpu);
-> +
-> +		vmx->rflags = rflags;
-> +		if (vmx->rmode.vm86_active) {
-> +			vmx->rmode.save_rflags = rflags;
-> +			rflags |= X86_EFLAGS_IOPL | X86_EFLAGS_VM;
-> +		}
-> +		vmcs_writel(GUEST_RFLAGS, rflags);
-> +
-> +		if ((old_rflags ^ vmx->rflags) & X86_EFLAGS_VM)
-> +			vmx->emulation_required = emulation_required(vcpu);
->  	}
-> -	vmcs_writel(GUEST_RFLAGS, rflags);
-
-We're doing vmcs_writel() in both branches so it could've stayed here, right?
-
-> -
-> -	if ((old_rflags ^ vmx->rflags) & X86_EFLAGS_VM)
-> -		vmx->emulation_required = emulation_required(vcpu);
+>         return check_memory_region_inline(addr, size, write, ret_ip);
 >  }
->  
->  u32 vmx_get_interrupt_shadow(struct kvm_vcpu *vcpu)
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Is it expected that memcpy/memmove may sometimes (incorrectly) be passed
+a negative value? (It would indeed turn up as a "large" size_t)
 
--- 
-Vitaly
+IMO, casting to long is suspicious.
+
+There seem to be some two implicit assumptions.
+
+1) size >= ULONG_MAX/2 is invalid input
+2) casting a size >= ULONG_MAX/2 to long yields a negative value
+
+1) seems reasonable because we can't copy more than half of memory to
+the other half of memory. I suppose the constraint could be even tighter,
+but it's not clear where to draw the line, especially when considering
+32b vs 64b arches.
+
+2) is implementation-defined, and gcc works "as expected" (clang too
+probably) https://gcc.gnu.org/onlinedocs/gcc/Integers-implementation.html
+
+A comment might be warranted to explain the rationale.
+
+Regards.
