@@ -2,94 +2,83 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C3AC32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB13C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 307B5216F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94D4A215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 10:02:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730517AbfI3KAH (ORCPT
+        id S1730562AbfI3KCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 06:00:07 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:37136 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727025AbfI3KAG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 06:00:06 -0400
-X-UUID: 58f3b47440eb4673a4332262ebe6a910-20190930
-X-UUID: 58f3b47440eb4673a4332262ebe6a910-20190930
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <sam.shih@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1474856802; Mon, 30 Sep 2019 18:00:01 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 30 Sep 2019 17:59:58 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 30 Sep 2019 17:59:57 +0800
-From:   Sam Shih <sam.shih@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Sam Shih <sam.shih@mediatek.com>
-Subject: [PATCH 1/1] arm: dts: mediatek: add mt7629 pwm support
-Date:   Mon, 30 Sep 2019 17:59:45 +0800
-Message-ID: <1569837585-13247-2-git-send-email-sam.shih@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1569837585-13247-1-git-send-email-sam.shih@mediatek.com>
-References: <1569837585-13247-1-git-send-email-sam.shih@mediatek.com>
+        Mon, 30 Sep 2019 06:02:21 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58034 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727025AbfI3KCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 06:02:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 89203B157;
+        Mon, 30 Sep 2019 10:02:19 +0000 (UTC)
+Date:   Mon, 30 Sep 2019 12:02:12 +0200
+From:   Mian Yousaf Kaukab <ykaukab@suse.de>
+To:     Stephen Warren <swarren@wwwdotorg.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        treding@nvidia.com, jonathanh@nvidia.com,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH] arm64: tegra: only map accessible sysram
+Message-ID: <20190930100212.GA21324@suse.de>
+References: <20190929200851.14228-1-ykaukab@suse.de>
+ <5d2e47ec-8304-d648-9c4a-80c7c02050a9@wwwdotorg.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <5d2e47ec-8304-d648-9c4a-80c7c02050a9@wwwdotorg.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds pwm support for MT7629.
-Used:
-https://patchwork.kernel.org/patch/11160851/
+On Sun, Sep 29, 2019 at 11:28:43PM -0600, Stephen Warren wrote:
+> On 9/29/19 2:08 PM, Mian Yousaf Kaukab wrote:
+> > Most of the SysRAM is secure and only accessible by TF-A.
+> > Don't map this inaccessible memory in kernel. Only map pages
+> > used by bpmp driver.
+> 
+> I don't believe this change is correct. The actual patch doesn't
+> implement mapping a subset of the RAM (a software issue), but rather it
+> changes the DT representation of the SYSRAM hardware. The SYSRAM
+> hardware always does start at 0x30000000, even if a subset of the
+> address range is dedicated to a specific purpose. If the kernel must map
+> only part of the RAM, then some additional property should indicate
+> this.[...]
+I agree the hardware description becomes inaccurate with this change.
 
-Signed-off-by: Sam Shih <sam.shih@mediatek.com>
----
- arch/arm/boot/dts/mt7629.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+In the current setup complete 0x3000_0000 to 0x3005_0000 range is being mapped
+as normal memory (MT_NORMAL_NC). Though only 0x3004_E000 to 0x3005_0000 are
+accessible by the kernel. I am seeing an issue where a read access (which I
+believe is speculative) to inaccessible range causes an SError. Another 
+solution for this problem could be to add "no-memory-wc" to SysRAM node so that
+it is mapped as device memory (MT_DEVICE_nGnRE). Would that be acceptable?
 
-diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
-index 9608bc2ccb3f..24375fc5f936 100644
---- a/arch/arm/boot/dts/mt7629.dtsi
-+++ b/arch/arm/boot/dts/mt7629.dtsi
-@@ -241,6 +241,21 @@
- 			status = "disabled";
- 		};
- 
-+		pwm: pwm@11006000 {
-+			compatible = "mediatek,mt7629-pwm";
-+			reg = <0x11006000 0x1000>;
-+			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&topckgen CLK_TOP_PWM_SEL>,
-+				 <&pericfg CLK_PERI_PWM_PD>,
-+				 <&pericfg CLK_PERI_PWM1_PD>;
-+			clock-names = "top", "main", "pwm1";
-+			assigned-clocks = <&topckgen CLK_TOP_PWM_SEL>;
-+			assigned-clock-parents =
-+					<&topckgen CLK_TOP_UNIVPLL2_D4>;
-+			num-pwms = <1>;
-+			status = "disabled";
-+		};
-+
- 		i2c: i2c@11007000 {
- 			compatible = "mediatek,mt7629-i2c",
- 				     "mediatek,mt2712-i2c";
--- 
-2.17.1
+> [...] Also, I believe it's incorrect to hard-code into the kernel's DT
+> the range of addresses used by the secure monitor/OS, since this can
+> vary depending on what the user actually chooses to install as the
+> secure monitor/OS. Any indication of such regions should be filled in at
+> runtime by some boot firmware or the secure monitor/OS itself, or
+> retrieved using some runtime API rather than DT.
+Secure-OS addresses are not of interest here. SysRAM is partitioned
+between secure-OS and BPMP and kernel is only interested in the BPMP
+part. The firmware can update these addresses in the device-tree if it
+wants to. Would you prefer something similar implemented in u-boot so
+that it updates SysRAM node to only expose kernel accessible part of it
+to the kernel?
 
+Can u-boot dynamically figure out the Secure-OS vs BPMP partition?
+
+BR,
+Yousaf
