@@ -2,275 +2,175 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD3DC388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B820C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E8242168B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8FC220815
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:53:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Xg7DnbNB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZTXFjHN2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731850AbfI3Out (ORCPT
+        id S1731853AbfI3Oxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 10:50:49 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:35672 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730809AbfI3Ous (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 10:50:48 -0400
-Received: from zn.tnic (p200300EC2F058B00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f05:8b00:329c:23ff:fea6:a903])
+        Mon, 30 Sep 2019 10:53:33 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:54934 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731190AbfI3Oxd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 10:53:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=mnC3RWrcGpJf9PV0SZrHbzybPrsZM4YAcvJLhRdeBOE=; b=ZTXFjHN2WU1sTnHb3aZxlGKhF
+        axWZPHOXlMW2AEbUO87REhmZA/lfF0odFEpKSTCdM+VJepiekJQXVhFhnq14/P3xe6GbFCAl0EgkI
+        aLWH1fs13cVNmPykcrk4AE18jL7V4QvR2tt/066Ao6a0Vgchm4pNZDMuNmwZkS2IKY72XQ+n/wjjj
+        lpnCDSB/uUOcjlHezjarr+2dLtUL6326yCGuX+nU1ncY6csPATCt4bCLmfwZGEVufuZn3IkYeOnjF
+        xH84AhN2y87o8IrHdxS5kf2b+FiCpdfaf9ncaEZMffxSuLLj2lXBWB3K8b7qRHwsFXiUwlMe56zzs
+        q5PLecqNg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iEx3C-0004a2-Tg; Mon, 30 Sep 2019 14:53:23 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BCE911EC0982;
-        Mon, 30 Sep 2019 16:50:46 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1569855047;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=FnN7DQgxKKbUVQ9VZB4DQm/rTtWbZxtoBke2HT0KdQM=;
-        b=Xg7DnbNBRHFAyGpxCZbCd8drgk71sTW7EWTmw3LkaztKE6ifraZjIrc714wogsQleVMzyr
-        FxUmaVwUGve4IAysmE1lPrlqpfU/Oi5oFvE90FSpNkyfuYqFYZ7auULxKmmdFwldZTXYQd
-        0lcCMnhKN+o07QViVoIzfaCqork/P/I=
-Date:   Mon, 30 Sep 2019 16:50:46 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Hanna Hawa <hhhawa@amazon.com>
-Cc:     mchehab@kernel.org, james.morse@arm.com, rrichter@marvell.com,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com,
-        talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com
-Subject: Re: [PATCH v4 1/2] edac: Add an API for edac device to report for
- multiple errors
-Message-ID: <20190930145046.GH29694@zn.tnic>
-References: <20190923191741.29322-1-hhhawa@amazon.com>
- <20190923191741.29322-2-hhhawa@amazon.com>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9727D3056B6;
+        Mon, 30 Sep 2019 16:52:33 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 938C225D6479E; Mon, 30 Sep 2019 16:53:21 +0200 (CEST)
+Date:   Mon, 30 Sep 2019 16:53:21 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kan.liang@linux.intel.com
+Cc:     acme@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com
+Subject: Re: [PATCH V4 07/14] perf/x86/intel: Support hardware TopDown metrics
+Message-ID: <20190930145321.GF4581@hirez.programming.kicks-ass.net>
+References: <20190916134128.18120-1-kan.liang@linux.intel.com>
+ <20190916134128.18120-8-kan.liang@linux.intel.com>
+ <20190930130615.GN4553@hirez.programming.kicks-ass.net>
+ <20190930140755.GE4581@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190923191741.29322-2-hhhawa@amazon.com>
+In-Reply-To: <20190930140755.GE4581@hirez.programming.kicks-ass.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 08:17:40PM +0100, Hanna Hawa wrote:
-> +void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
-> +			int inst_nr, int block_nr, const char *msg)
-> +{
-> +	__edac_device_handle_ce(edac_dev, 1, inst_nr, block_nr, msg);
-> +}
-> +EXPORT_SYMBOL_GPL(edac_device_handle_ce);
+On Mon, Sep 30, 2019 at 04:07:55PM +0200, Peter Zijlstra wrote:
+> On Mon, Sep 30, 2019 at 03:06:15PM +0200, Peter Zijlstra wrote:
+> > On Mon, Sep 16, 2019 at 06:41:21AM -0700, kan.liang@linux.intel.com wrote:
+> 
+> > > +static bool is_first_topdown_event_in_group(struct perf_event *event)
+> > > +{
+> > > +	struct perf_event *first = NULL;
+> > > +
+> > > +	if (is_topdown_event(event->group_leader))
+> > > +		first = event->group_leader;
+> > > +	else {
+> > > +		for_each_sibling_event(first, event->group_leader)
+> > > +			if (is_topdown_event(first))
+> > > +				break;
+> > > +	}
+> > > +
+> > > +	if (event == first)
+> > > +		return true;
+> > > +
+> > > +	return false;
+> > > +}
+> > 
+> > > +static u64 icl_update_topdown_event(struct perf_event *event)
+> > > +{
+> > > +	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+> > > +	struct perf_event *other;
+> > > +	u64 slots, metrics;
+> > > +	int idx;
+> > > +
+> > > +	/*
+> > > +	 * Only need to update all events for the first
+> > > +	 * slots/metrics event in a group
+> > > +	 */
+> > > +	if (event && !is_first_topdown_event_in_group(event))
+> > > +		return 0;
+> > 
+> > This is pretty crap and approaches O(n^2); let me think if there's
+> > anything saner to do here.
+> 
+> This is also really complicated in the case where we do
+> perf_remove_from_context() in the 'wrong' order.
+> 
+> In that case we get detached events that are not up-to-date (and never
+> will be). It doesn't look like that matters, but it is weird.
 
-Eww, I don't like that: exporting the function *and* the __ counterpart.
-The user will get confused and that is unnecessary.
+So we either get called from the PMI, or read(). In the PMI there is the
+perf_output_read_group() path, and that too appears broken vs the above,
+it assumes perf_event_count() is up-to-date after calling pmu->read(),
+which isn't true.
 
-See below for a better version. This way you solve the whole deal with a
-single patch.
+Now, I'm thinking that is already broken vs TXN_READ, so we should fix
+that a little something like the below (needs to be tested on
+Power-hv-24x7).
 
 ---
-From: Hanna Hawa <hhhawa@amazon.com>
-Date: Mon, 23 Sep 2019 20:17:40 +0100
-Subject: [PATCH] EDAC/device: Rework error logging API
-
-Make the main workhorse the "count" functions which can log a @count
-of errors. Have the current APIs edac_device_handle_{ce,ue}() call
-the _count() variants and this way keep the exported symbols number
-unchanged.
-
- [ bp: Rewrite. ]
-
-Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: benh@amazon.com
-Cc: dwmw@amazon.co.uk
-Cc: hanochu@amazon.com
-Cc: James Morse <james.morse@arm.com>
-Cc: jonnyc@amazon.com
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: ronenk@amazon.com
-Cc: talel@amazon.com
-Cc: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/20190923191741.29322-2-hhhawa@amazon.com
----
- drivers/edac/edac_device.c | 44 ++++++++++++++++---------------
- drivers/edac/edac_device.h | 54 ++++++++++++++++++++++++++++++--------
- 2 files changed, 66 insertions(+), 32 deletions(-)
-
-diff --git a/drivers/edac/edac_device.c b/drivers/edac/edac_device.c
-index 65cf2b9355c4..d4d8bed5b55d 100644
---- a/drivers/edac/edac_device.c
-+++ b/drivers/edac/edac_device.c
-@@ -555,8 +555,9 @@ static inline int edac_device_get_panic_on_ue(struct edac_device_ctl_info
- 	return edac_dev->panic_on_ue;
- }
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6272,10 +6272,22 @@ static void perf_output_read_group(struc
+ 	if (read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
+ 		values[n++] = running;
  
--void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
--			int inst_nr, int block_nr, const char *msg)
-+void edac_device_handle_ce_count(struct edac_device_ctl_info *edac_dev,
-+				 unsigned int count, int inst_nr, int block_nr,
-+				 const char *msg)
- {
- 	struct edac_device_instance *instance;
- 	struct edac_device_block *block = NULL;
-@@ -582,23 +583,24 @@ void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
- 
- 	if (instance->nr_blocks > 0) {
- 		block = instance->blocks + block_nr;
--		block->counters.ce_count++;
-+		block->counters.ce_count += count;
- 	}
- 
- 	/* Propagate the count up the 'totals' tree */
--	instance->counters.ce_count++;
--	edac_dev->counters.ce_count++;
-+	instance->counters.ce_count += count;
-+	edac_dev->counters.ce_count += count;
- 
- 	if (edac_device_get_log_ce(edac_dev))
- 		edac_device_printk(edac_dev, KERN_WARNING,
--				"CE: %s instance: %s block: %s '%s'\n",
--				edac_dev->ctl_name, instance->name,
--				block ? block->name : "N/A", msg);
-+				   "CE: %s instance: %s block: %s count: %d '%s'\n",
-+				   edac_dev->ctl_name, instance->name,
-+				   block ? block->name : "N/A", count, msg);
- }
--EXPORT_SYMBOL_GPL(edac_device_handle_ce);
-+EXPORT_SYMBOL_GPL(edac_device_handle_ce_count);
- 
--void edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
--			int inst_nr, int block_nr, const char *msg)
-+void edac_device_handle_ue_count(struct edac_device_ctl_info *edac_dev,
-+				 unsigned int count, int inst_nr, int block_nr,
-+				 const char *msg)
- {
- 	struct edac_device_instance *instance;
- 	struct edac_device_block *block = NULL;
-@@ -624,22 +626,22 @@ void edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
- 
- 	if (instance->nr_blocks > 0) {
- 		block = instance->blocks + block_nr;
--		block->counters.ue_count++;
-+		block->counters.ue_count += count;
- 	}
- 
- 	/* Propagate the count up the 'totals' tree */
--	instance->counters.ue_count++;
--	edac_dev->counters.ue_count++;
-+	instance->counters.ue_count += count;
-+	edac_dev->counters.ue_count += count;
- 
- 	if (edac_device_get_log_ue(edac_dev))
- 		edac_device_printk(edac_dev, KERN_EMERG,
--				"UE: %s instance: %s block: %s '%s'\n",
--				edac_dev->ctl_name, instance->name,
--				block ? block->name : "N/A", msg);
-+				   "UE: %s instance: %s block: %s count: %d '%s'\n",
-+				   edac_dev->ctl_name, instance->name,
-+				   block ? block->name : "N/A", count, msg);
- 
- 	if (edac_device_get_panic_on_ue(edac_dev))
--		panic("EDAC %s: UE instance: %s block %s '%s'\n",
--			edac_dev->ctl_name, instance->name,
--			block ? block->name : "N/A", msg);
-+		panic("EDAC %s: UE instance: %s block %s count: %d '%s'\n",
-+		      edac_dev->ctl_name, instance->name,
-+		      block ? block->name : "N/A", count, msg);
- }
--EXPORT_SYMBOL_GPL(edac_device_handle_ue);
-+EXPORT_SYMBOL_GPL(edac_device_handle_ue_count);
-diff --git a/drivers/edac/edac_device.h b/drivers/edac/edac_device.h
-index 1aaba74ae411..c4c0e0bdce14 100644
---- a/drivers/edac/edac_device.h
-+++ b/drivers/edac/edac_device.h
-@@ -286,27 +286,60 @@ extern int edac_device_add_device(struct edac_device_ctl_info *edac_dev);
- extern struct edac_device_ctl_info *edac_device_del_device(struct device *dev);
- 
- /**
-- * edac_device_handle_ue():
-- *	perform a common output and handling of an 'edac_dev' UE event
-+ * Log correctable errors.
-  *
-  * @edac_dev: pointer to struct &edac_device_ctl_info
-- * @inst_nr: number of the instance where the UE error happened
-- * @block_nr: number of the block where the UE error happened
-+ * @inst_nr: number of the instance where the CE error happened
-+ * @count: Number of errors to log.
-+ * @block_nr: number of the block where the CE error happened
-+ * @msg: message to be printed
-+ */
-+void edac_device_handle_ce_count(struct edac_device_ctl_info *edac_dev,
-+				 unsigned int count, int inst_nr, int block_nr,
-+				 const char *msg);
++	if (leader->nr_siblings > 1)
++		leader->pmu->start_txn(pmu, PERF_PMU_TXN_READ);
 +
-+/**
-+ * Log uncorrectable errors.
-+ *
-+ * @edac_dev: pointer to struct &edac_device_ctl_info
-+ * @inst_nr: number of the instance where the CE error happened
-+ * @count: Number of errors to log.
-+ * @block_nr: number of the block where the CE error happened
-  * @msg: message to be printed
-  */
--extern void edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
--				int inst_nr, int block_nr, const char *msg);
-+void edac_device_handle_ue_count(struct edac_device_ctl_info *edac_dev,
-+				 unsigned int count, int inst_nr, int block_nr,
-+				 const char *msg);
-+
- /**
-- * edac_device_handle_ce():
-- *	perform a common output and handling of an 'edac_dev' CE event
-+ * edac_device_handle_ce(): Log a single correctable error
-  *
-  * @edac_dev: pointer to struct &edac_device_ctl_info
-  * @inst_nr: number of the instance where the CE error happened
-  * @block_nr: number of the block where the CE error happened
-  * @msg: message to be printed
-  */
--extern void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
--				int inst_nr, int block_nr, const char *msg);
-+static inline void
-+edac_device_handle_ce(struct edac_device_ctl_info *edac_dev, int inst_nr,
-+		      int block_nr, const char *msg)
-+{
-+	edac_device_handle_ce_count(edac_dev, 1, inst_nr, block_nr, msg);
-+}
-+
-+/**
-+ * edac_device_handle_ue(): Log a single uncorrectable error
-+ *
-+ * @edac_dev: pointer to struct &edac_device_ctl_info
-+ * @inst_nr: number of the instance where the UE error happened
-+ * @block_nr: number of the block where the UE error happened
-+ * @msg: message to be printed
-+ */
-+static inline void
-+edac_device_handle_ue(struct edac_device_ctl_info *edac_dev, int inst_nr,
-+		      int block_nr, const char *msg)
-+{
-+	edac_device_handle_ue_count(edac_dev, 1, inst_nr, block_nr, msg);
-+}
+ 	if ((leader != event) &&
+ 	    (leader->state == PERF_EVENT_STATE_ACTIVE))
+ 		leader->pmu->read(leader);
  
- /**
-  * edac_device_alloc_index: Allocate a unique device index number
-@@ -316,5 +349,4 @@ extern void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
-  */
- extern int edac_device_alloc_index(void);
- extern const char *edac_layer_name[];
++	for_each_sibling_event(sub, leader) {
++		if ((sub != event) &&
++		    (sub->state == PERF_EVENT_STATE_ACTIVE))
++			sub->pmu->read(sub);
++	}
++
++	if (leader->nr_siblings > 1)
++		leader->pmu->commit_tx(pmu, PERF_PMU_TXN_READ);
++
+ 	values[n++] = perf_event_count(leader);
+ 	if (read_format & PERF_FORMAT_ID)
+ 		values[n++] = primary_event_id(leader);
+@@ -6285,10 +6297,6 @@ static void perf_output_read_group(struc
+ 	for_each_sibling_event(sub, leader) {
+ 		n = 0;
+ 
+-		if ((sub != event) &&
+-		    (sub->state == PERF_EVENT_STATE_ACTIVE))
+-			sub->pmu->read(sub);
 -
- #endif
--- 
-2.21.0
+ 		values[n++] = perf_event_count(sub);
+ 		if (read_format & PERF_FORMAT_ID)
+ 			values[n++] = primary_event_id(sub);
 
--- 
-Regards/Gruss,
-    Boris.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+After that, I think we can simply do something like:
+
+icl_update_topdown_event(..)
+{
+	int idx = event->hwc.idx;
+
+	if (is_metric_idx(idx))
+		return;
+
+	// must be FIXED_SLOTS
+
+	/* do teh thing and update SLOTS and METRIC together */
+}
+
+Hmmm?
