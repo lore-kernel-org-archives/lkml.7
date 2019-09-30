@@ -2,88 +2,101 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD44C4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 03:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7EFC4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 03:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA9C22086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 03:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E2002086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 03:39:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hQO5OGW4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729514AbfI3Dhi (ORCPT
+        id S1729518AbfI3Djj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 23:37:38 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:39508 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728853AbfI3Dhh (ORCPT
+        Sun, 29 Sep 2019 23:39:39 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33485 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728853AbfI3Djj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 23:37:37 -0400
-Received: from callcc.thunk.org (pool-72-93-95-157.bstnma.fios.verizon.net [72.93.95.157])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x8U3b6k9005328
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 29 Sep 2019 23:37:07 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id C158C42014C; Sun, 29 Sep 2019 23:37:06 -0400 (EDT)
-Date:   Sun, 29 Sep 2019 23:37:06 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nicholas Mc Guire <hofrat@opentech.at>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: x86/random: Speculation to the rescue
-Message-ID: <20190930033706.GD4994@mit.edu>
-References: <alpine.DEB.2.21.1909290010500.2636@nanos.tec.linutronix.de>
- <CAHk-=wgjC01UaoV35PZvGPnrQ812SRGPoV7Xp63BBFxAsJjvrg@mail.gmail.com>
- <CAHk-=wi0vxLmwEBn2Xgu7hZ0U8z2kN4sgCax+57ZJMVo3huDaQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wi0vxLmwEBn2Xgu7hZ0U8z2kN4sgCax+57ZJMVo3huDaQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sun, 29 Sep 2019 23:39:39 -0400
+Received: by mail-io1-f67.google.com with SMTP id z19so34541045ior.0;
+        Sun, 29 Sep 2019 20:39:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=GKn1wKgW/OZ5vAeprIpMZ6UWBk4gaIVL5/4achb09lA=;
+        b=hQO5OGW4OvsIpFhZJlDWH6Y1pLyUhU59qcu4DVBEWOw2brn8C+H5/ZdPHzaYmN2u2h
+         ACOuEkQtbR4AVXOjV7sQ7TpDWvqfXijU8xmhHreE7Ju/NIJB9Lcvaa+gKXjXBdhx3XWL
+         DBe2D3iY1VavwTA7H/22CZli+19Qi550doLVW0pT7gVazUl9bHBCBYyqiGHRV7H45yMh
+         41anjhEFFLBPwkiLudf41BXyq1vGI7WqHayC1wLHnBgSg2Lvw4ARUlaPnVaeU07mK55k
+         0PKOc2qHwD9wQpTZ3zofrA1ZIkxN0dkmbu15utAzrOB8zX6a4yrzsmsgmK2bgLHkgKX0
+         2SKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=GKn1wKgW/OZ5vAeprIpMZ6UWBk4gaIVL5/4achb09lA=;
+        b=m/ffVLe4RWfxpBpbJkLBStNqqF8Wdvkwl9tQsPjVCXxz4BnD7USPyx7Cfjgt8K8xFv
+         eWwcoZl+Gc0PGHTtTmRTXxcRuDBIXNKK7ciDvMOVyT1+jxdaJ+gozTOjQUCCeF8wr2m3
+         KBqg/vOmMh7dMWrq5O+zyLAUqGKAByHI8dA1kSqeOTJrLl7DnfIUbmI9KNeWF54rSX5h
+         hLXDin1OW56tkZyPHLaETS4YF1iBJh8oafKl+vRM7XfN/+VREXoCPUFlzJTykT5H2WuF
+         H+C4WtIAV2Wi77Q4DL+fPYaiCAAEbBWyZ4u0UQ00Lav0WHGiG2J0ouQ4S3aFkwnXChHK
+         OFUQ==
+X-Gm-Message-State: APjAAAU/wmeoXv8AvHUE9u847Bmjn4yUYRpHJiaGZ5XbEUXVi2zHz5Tk
+        4bd6CojGor0iR+1E3K56dK0=
+X-Google-Smtp-Source: APXvYqwGaysazbAVxYT5N7BfNobiY+S92WrMXhSUPP874xbFJFdyP/8io/4Xtw25WAjv4gmlX7eeNQ==
+X-Received: by 2002:a6b:3bc5:: with SMTP id i188mr19917038ioa.113.1569814778317;
+        Sun, 29 Sep 2019 20:39:38 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id q66sm5335776ili.69.2019.09.29.20.39.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Sep 2019 20:39:37 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] spi: gpio: prevent memroy leak in spi_gpio_probe
+Date:   Sun, 29 Sep 2019 22:39:27 -0500
+Message-Id: <20190930033928.32312-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 29, 2019 at 06:16:33PM -0700, Linus Torvalds wrote:
-> 
->  - or just say "hey, a lot of people find jitter entropy reasonable,
-> so let's just try this".
-> 
+In spi_gpio_probe an SPI master is allocated via spi_alloc_master, but
+this controller should be released if devm_add_action_or_reset fails,
+otherwise memory leaks. This commit adds Fixes: spi_contriller_put in
+case of failure for devm_add_action_or_reset.
 
-I'm OK with this as a starting point.  If a jitter entropy system
-allow us to get pass this logjam, let's do it.  At least for the x86
-architecture, it will be security through obscurity.  And if the
-alternative is potentially failing where the adversary can attack the
-CRNG, it's my preference.  It's certainly better than nothing.
+Fixes: 8b797490b4db ("spi: gpio: Make sure spi_master_put() is called in every error path")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/spi/spi-gpio.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-That being said, I'd very much like to see someone do an analysis of
-how well these jitter schemes work on an RISC-V iplementation (you
-know, the ones that were so simplistic and didn't have any speculation
-so they weren't vulnerable to Specture/Meltdown).  If jitter
-approaches turn out not to work that well on RISC-V, perhaps that will
-be a goad for future RISC-V chips to include the crypto extension to
-their ISA.
+diff --git a/drivers/spi/spi-gpio.c b/drivers/spi/spi-gpio.c
+index 1d3e23ec20a6..f9c5bbb74714 100644
+--- a/drivers/spi/spi-gpio.c
++++ b/drivers/spi/spi-gpio.c
+@@ -371,8 +371,10 @@ static int spi_gpio_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	status = devm_add_action_or_reset(&pdev->dev, spi_gpio_put, master);
+-	if (status)
++	if (status) {
++		spi_master_put(master);
+ 		return status;
++	}
+ 
+ 	if (of_id)
+ 		status = spi_gpio_probe_dt(pdev, master);
+-- 
+2.17.1
 
-In the long term (not in time for the 5.4 merge window), I'm convinced
-that we should be trying as many ways of getting entropy as possible.
-If we're using UEFI, we should be trying to get it from UEFI's secure
-random number generator; if there is a TPM, we should be trying to get
-random numbers from the RPM, and mix them in, and so on.
-
-After all, the reason why lived with getrandom(0) blocking for five
-years was because for the vast majority of x86 platforms, it simply
-wasn't problem in practice.  We need to get back to that place where
-in practice, we've harvested as much uncertainty from hardware as
-possible, so most folks are comfortable that attacking the CRNG is no
-longer the simplest way to crack system security.
-
-       	     	     	      	     - Ted
