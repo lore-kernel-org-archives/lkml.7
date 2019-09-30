@@ -2,198 +2,114 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D17C4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF01EC4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36C4B21721
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBC472086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:05:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730311AbfI3JFU (ORCPT
+        id S1730340AbfI3JFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 05:05:20 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:53727 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727885AbfI3JFU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 05:05:20 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id ErcHicx7P9D4hErcLiL5w1; Mon, 30 Sep 2019 11:05:17 +0200
-Subject: Re: [Patch 16/16] media: ti-vpe: vpe: don't rely on colorspace member
- for conversion
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190927183650.31345-1-bparrot@ti.com>
- <20190927183650.31345-17-bparrot@ti.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <263b7b22-b867-3f73-bcaf-8978f9e3b415@xs4all.nl>
-Date:   Mon, 30 Sep 2019 11:05:13 +0200
+        Mon, 30 Sep 2019 05:05:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:32770 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726121AbfI3JFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 05:05:50 -0400
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 792D68553F
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 09:05:50 +0000 (UTC)
+Received: by mail-pl1-f199.google.com with SMTP id d1so4885468plj.9
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 02:05:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=w21r0Zb12wAoVhXzm3M8FXreooAqskSe2A2BpWXrpxY=;
+        b=kM9zgUlJBUt/JNXQ/mr5NBKt2+ClZ49yOKKKPcfblcq7KDCZdISuqAzbcTRgXihco4
+         qUIKT7og2pXVEAgsms9F1gWdDqyq3EXqo/N1Ni7/KQGLJ+O65y8878nwHcrTHwPUrdlP
+         urGPckP08Mz89L+Eljt4v6aURy++dKCgOTpZpAuKjMCeNgky4uqDpdEN6ew5bDA0VNk/
+         RAPDUdsf0XOTBEaPtpQwFOpg+jSHveN9Q4FRr+d5ur3B4+aVR9fbNE5RWqIqqleOMr8F
+         1479VFa3Be7iEzPJaQMMOCuNj/sLt49K33fpxOK3YbCIHJD16XPTt94gzZliZkMKzVhh
+         AKJw==
+X-Gm-Message-State: APjAAAWWtQ7jB2oHJkqN4T8ErTkPwgwUwyVNsbeDMI4wqeCiTGCmhqES
+        5C9Y2AATOnA1Sxv1TyBOUKlK+1j9HcZbk7kSpAlIFnUZBN6DaIvI+QN7bsEF87R43S9cqcJ3RHv
+        BX5UDoEIRnN8+UsD/Aajun6if
+X-Received: by 2002:a17:90a:cb18:: with SMTP id z24mr25005615pjt.108.1569834349793;
+        Mon, 30 Sep 2019 02:05:49 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwYU0VXOKT7nU3DIGlLi/lr9dxOJtQzNphen86nDz5xnGw2xjMfzF1oWem7MIubOvtfXj/f+A==
+X-Received: by 2002:a17:90a:cb18:: with SMTP id z24mr25005591pjt.108.1569834349353;
+        Mon, 30 Sep 2019 02:05:49 -0700 (PDT)
+Received: from [10.76.0.223] ([125.16.200.50])
+        by smtp.gmail.com with ESMTPSA id y7sm12546514pgj.35.2019.09.30.02.05.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Sep 2019 02:05:48 -0700 (PDT)
+Reply-To: mgandhi@redhat.com
+Subject: Re: [PATCH] scsi: core: Log SCSI command age with errors
+To:     Martin Wilck <mwilck@suse.de>,
+        Laurence Oberman <loberman@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
+Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com
+References: <20190923060122.GA9603@machine1>
+ <471732f03049a1528df1d144013d723041f0a419.camel@suse.de>
+ <3a8ee584f9846fba94d98d0e6941fefdcbed5d71.camel@redhat.com>
+ <f2c97e860f895613ba81b69c962660b0c712723a.camel@suse.de>
+From:   "Milan P. Gandhi" <mgandhi@redhat.com>
+Organization: Red Hat
+Message-ID: <31eb5bb6-ca4e-1c6c-3013-7d94ff49623d@redhat.com>
+Date:   Mon, 30 Sep 2019 14:35:45 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190927183650.31345-17-bparrot@ti.com>
+In-Reply-To: <f2c97e860f895613ba81b69c962660b0c712723a.camel@suse.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfLZZOfYKObMr6urVSkPtBD/MbO+Km7BSjMnj5CzysF2i2OpF2Q8YaxQzoGHEXqjOS/jbuu85uULhwQZ24TRaZjMDP6LGR7dG4LhZMG+BkwVH8/+x8oOF
- PocIACD1qnrnb+PdYrN6ssKhNZfgsE47GCLT/29F07JKU6WkM2KFk40gfc1fg0RbMODvAISt23vNS/n6SEOzkG1baDMTT0YJTgaq1AFSf8k3fgBXzM5TYsgN
- 608IfxpkXSmIrFkVMYwP3jQvunQr/24aEeiOD6cZErttAjS54nsq9lZUeEjVgr9o
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/27/19 8:36 PM, Benoit Parrot wrote:
-> Up to now VPE was relying on the colorspace value of struct v4l2_format
-> as an indication to perform color space conversion from YUV to RGB or
-> not.
+On 9/30/19 2:12 PM, Martin Wilck wrote:
+> On Fri, 2019-09-27 at 13:45 -0400, Laurence Oberman wrote:
+>>
+>> Hi Martin
+>>
+>> Agreed about log extraction, but turning that on with a busy workload
+>> in a production environment is not practical. We cant do it with
+>> systems with 1000's of luns and 1000's of IOPS/sec.
+>> Also second resolution is good enough for the debug we want to see.
 > 
-> Instead we should used the source/destination fourcc codes as a more
-> reliable indication to perform color space conversion or not.
-> 
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> ---
->  drivers/media/platform/ti-vpe/vpe.c | 41 ++++++++++++++++++++++-------
->  1 file changed, 32 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-> index e30981cd3e8f..d002adc6263f 100644
-> --- a/drivers/media/platform/ti-vpe/vpe.c
-> +++ b/drivers/media/platform/ti-vpe/vpe.c
-> @@ -353,6 +353,32 @@ enum {
->  	Q_DATA_DST = 1,
->  };
->  
-> +static bool is_fmt_rgb(u32 fourcc)
-> +{
-> +	if (fourcc == V4L2_PIX_FMT_RGB24 ||
-> +	    fourcc == V4L2_PIX_FMT_BGR24 ||
-> +	    fourcc == V4L2_PIX_FMT_RGB32 ||
-> +	    fourcc == V4L2_PIX_FMT_BGR32 ||
-> +	    fourcc == V4L2_PIX_FMT_RGB565 ||
-> +	    fourcc == V4L2_PIX_FMT_RGB555)
-> +		return true;
-> +
-> +	return false;
-> +}
+> I gather that you look at a specific problem where second resolution is
+> sufficient. For upstream, the generic usefulness should be considered,
+> and I don't think we can say today that better-than-second resolution
+> will never be useful, so I still vote for milliseconds.
 
-Why not add a 'bool is_rgb' to struct vpe_fmt?
+Ok, I will change it to ms.
 
-It is all too easy to forget to update this function if a new RGB format is
-added to the vpe_formats array in the future.
+> Wrt the enablement of the option on highly loaded systems, I'm not sure
+> I understand. You need to enable SCSI logging anyway, don't you?
 
-> +
-> +/*
-> + * This helper is only used to setup the color space converter
-> + * the actual value returned is only to broadly differentiate between
-> + * RGB and YUV
-> + */
-> +static enum  v4l2_colorspace fourcc_to_colorspace(u32 fourcc)
+By default we keep the SCSI debug logging disabled or am I missing 
+something?
 
-double space after enum.
+>Is it an issue to have to set 2 sysfs values rather than just one?
 
-> +{
-> +	if (is_fmt_rgb(fourcc))
-> +		return V4L2_COLORSPACE_SRGB;
-> +
-> +	return V4L2_COLORSPACE_SMPTE170M;
-> +}
+The idea here is to capture the above debug data even without 
+any user interventions to change any sysfs entries or to enable 
+debug logging on busy, critical production systems.
 
-This is highly confusing. RGB or YUV conversion does not change the colorspace
-at all.
+Also, we are not changing the existing text in SCSI command error log,
+but we are only adding one single word at the end of message. Ideally
+the user scripts are written to grep specific pattern from the logs.
+Since we are not replacing any existing text from the logs, the 
+scripts should still work with this change as well.
 
-There are four colorimetry related fields: colorspace, xfer_func, ycbcr_enc and
-quantization. Most hardware (including this one AFAICT) have a 3x3 matrix + a
-vector to do the conversion. This only allows you to convert between different
-ycbcr encodings and quantization ranges. The colorspace and xfer_func parameters
-stay unchanged (you need gamma tables and two other 3x3 matrices for that).
-
-So if you want to set up the 3x3 matrix + vector correctly, then you need to
-provide the ycbcr_enc value + quantization value of the source to your function.
-ycbcr_enc is only valid of YUV pixelformats, of course, and you can use
-V4L2_MAP_COLORSPACE_DEFAULT, V4L2_MAP_YCBCR_ENC_DEFAULT and V4L2_MAP_QUANTIZATION_DEFAULT
-if one or more of these values as set by userspace are 0.
-
-Since the V4L2 API does not (yet) support setting ycbcr_enc and quantization for the
-capture queue you have to provide that information yourself:
-
-For RGB ycbcr_enc is of course ignored, and quantization should be full range.
-For YUV it depends: the quantization is always limited range, but for the ycbcr_enc
-you have a choice: if the source was YUV, then you can decide to just copy the
-ycbcr_enc value. Alternatively, you can convert to 601 for SDTV and 709 for anything
-else. The latter is also the recommended choice if the source was RGB.
-
-In any case, please do not use enum v4l2_colorspace in the csc_set_coeff function:
-it's misleading.
-
-https://hverkuil.home.xs4all.nl/spec/uapi/v4l/colorspaces.html and the following two
-sections contain a lot of information about how colorspaces work.
-
-Regards,
-
-	Hans
-
-> +
->  /* find our format description corresponding to the passed v4l2_format */
->  static struct vpe_fmt *__find_format(u32 fourcc)
->  {
-> @@ -764,11 +790,10 @@ static void set_src_registers(struct vpe_ctx *ctx)
->  static void set_dst_registers(struct vpe_ctx *ctx)
->  {
->  	struct vpe_mmr_adb *mmr_adb = ctx->mmr_adb.addr;
-> -	enum v4l2_colorspace clrspc = ctx->q_data[Q_DATA_DST].colorspace;
->  	struct vpe_fmt *fmt = ctx->q_data[Q_DATA_DST].fmt;
->  	u32 val = 0;
->  
-> -	if (clrspc == V4L2_COLORSPACE_SRGB) {
-> +	if (is_fmt_rgb(fmt->fourcc)) {
->  		val |= VPE_RGB_OUT_SELECT;
->  		vpdma_set_bg_color(ctx->dev->vpdma,
->  			(struct vpdma_data_format *)fmt->vpdma_fmt[0], 0xff);
-> @@ -912,7 +937,8 @@ static int set_srcdst_params(struct vpe_ctx *ctx)
->  	set_dei_regs(ctx);
->  
->  	csc_set_coeff(ctx->dev->csc, &mmr_adb->csc_regs[0],
-> -		s_q_data->colorspace, d_q_data->colorspace);
-> +		      fourcc_to_colorspace(s_q_data->fmt->fourcc),
-> +		      fourcc_to_colorspace(d_q_data->fmt->fourcc));
->  
->  	sc_set_hs_coeffs(ctx->dev->sc, ctx->sc_coeff_h.addr, src_w, dst_w);
->  	sc_set_vs_coeffs(ctx->dev->sc, ctx->sc_coeff_v.addr, src_h, dst_h);
-> @@ -1285,7 +1311,7 @@ static void device_run(void *priv)
->  	if (ctx->deinterlacing)
->  		add_out_dtd(ctx, VPE_PORT_MV_OUT);
->  
-> -	if (d_q_data->colorspace == V4L2_COLORSPACE_SRGB) {
-> +	if (is_fmt_rgb(d_q_data->fmt->fourcc)) {
->  		add_out_dtd(ctx, VPE_PORT_RGB_OUT);
->  	} else {
->  		add_out_dtd(ctx, VPE_PORT_LUMA_OUT);
-> @@ -1327,7 +1353,7 @@ static void device_run(void *priv)
->  	}
->  
->  	/* sync on channel control descriptors for output ports */
-> -	if (d_q_data->colorspace == V4L2_COLORSPACE_SRGB) {
-> +	if (is_fmt_rgb(d_q_data->fmt->fourcc)) {
->  		vpdma_add_sync_on_channel_ctd(&ctx->desc_list,
->  			VPE_CHAN_RGB_OUT);
->  	} else {
-> @@ -1682,10 +1708,7 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
->  		height = pix->height;
->  
->  	if (!pix->colorspace) {
-> -		if (fmt->fourcc == V4L2_PIX_FMT_RGB24 ||
-> -				fmt->fourcc == V4L2_PIX_FMT_BGR24 ||
-> -				fmt->fourcc == V4L2_PIX_FMT_RGB32 ||
-> -				fmt->fourcc == V4L2_PIX_FMT_BGR32) {
-> +		if (is_fmt_rgb(fmt->fourcc)) {
->  			pix->colorspace = V4L2_COLORSPACE_SRGB;
->  		} else {
->  			if (height > 1280)	/* HD */
-> 
-
+Thanks,
+Milan.
