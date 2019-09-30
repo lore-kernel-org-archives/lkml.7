@@ -2,89 +2,157 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 873E5C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FE6C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 593D0205C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 957CC205C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 21:11:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="BGeaWwcS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F2+krCW9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732623AbfI3VKH (ORCPT
+        id S1732659AbfI3VLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 17:10:07 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:33286 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729740AbfI3VKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 17:10:07 -0400
-Received: from zn.tnic (p200300EC2F058B00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f05:8b00:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BE3CA1EC0586;
-        Mon, 30 Sep 2019 20:40:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1569868833;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=gjuUURFhig2Mz245AWDhCbYKl1S5jT5FaViGxJ9r5BM=;
-        b=BGeaWwcS2WkEs3PpXGJ+M/oYTYqveWi8TBVzB9Z9QCa9AOXoz0DxVEE+kx/LUm/1PByTBJ
-        Wmgbz0Ek39oXPN97PJD0tNRCehX34b7ht6qypukdtM6ZMS4hjU7D2ceIlaPt3cd0n0KJYF
-        dFdKLlWw1DdAA4JHroy+YjbPf1GTFyk=
-Date:   Mon, 30 Sep 2019 20:40:31 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Stephen Hemminger <stephen@networkplumber.org>
-Cc:     Michal Kubecek <mkubecek@suse.cz>, linux-rdma@vger.kernel.org,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>, netdev@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: ERROR: "__umoddi3"
- [drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko] undefined!
-Message-ID: <20190930184031.GJ29694@zn.tnic>
-References: <20190930141316.GG29694@zn.tnic>
- <20190930154535.GC22120@unicorn.suse.cz>
- <20190930162910.GI29694@zn.tnic>
- <20190930095516.0f55513a@hermes.lan>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190930095516.0f55513a@hermes.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 30 Sep 2019 17:11:08 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41505 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731678AbfI3VLH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 17:11:07 -0400
+Received: by mail-wr1-f68.google.com with SMTP id h7so12939710wrw.8;
+        Mon, 30 Sep 2019 14:11:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Km4VVTEePyhHsFimVMjuG3mAp67V52rIi2SimlK34MU=;
+        b=F2+krCW9h4/vWnl412e0O5+BiYynOmqsu1GTfc8j8T1hPDRh/+RAH2TS+9oShSfFht
+         +DRLSK6QkQUf/q9kVU0q0Wjwa/b7b9EPcbkMCthJ69y2UmK0Q9ohogmqOrjvF3Faovgn
+         +c+DRShui0gK74MGaLgAd+Mf6ouSNMGaMZtUGB974GaAdsw7mHblL4mtYB9yIaygJ98L
+         wHtVcQy0rnKX+4Eg8KQdFXrAf+QZ225nTNmyyTIW9Y+3Tcwls5KigSdvTnen9WScAozr
+         V1YfI0PzPyhC3A2E1YaljJhKI3DQ0gqiXoBGXQvDawlO+2yHbso2owB0J6vnmQjBJ596
+         HWuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Km4VVTEePyhHsFimVMjuG3mAp67V52rIi2SimlK34MU=;
+        b=hdUmpW5NtPz1aEE3eSuI2QLkdaVczahFRDjXhBwb/rUkcdAtjXpRhYxiLPDgnwn2FI
+         OU8hYZxAncPCf1OHFMAlrVAUT2D0ybUl3pacMk0W46ONaJ530s+eSJsSA+3+XA+oFWjN
+         OYHupB1OOnD+iiojEt4elJI0EJvnKHLhY1UCCE3aGzz5jmOfIjFcZY/y3QXc2ta3nmMk
+         5LO1AU4b1KsUz1WqpzwV87IalgNml3xqsI3sYO0JAcrSy6oM434tmvXDyyWGJoNRCyq1
+         t3E+8nqCwJc6PkagwONvC8lSV29Zv91uTPsxLoglBBeKak4cP3sfMIYjkPsQ/UorVJJY
+         sSFw==
+X-Gm-Message-State: APjAAAVrPRZ4XK7Ii0ZU3Cvc68xKIanmjtwhWDx3lW/fE3JPCWxZC8w/
+        43XhK0HOhE8S5cfYzpoIRLgteVmFj/Cm7Q==
+X-Google-Smtp-Source: APXvYqzy7y5NjgWswAUhrWkzobKoCPCU2cj3zemHxu/pZIy6qbKJmrWtc0rOICC1+bZexktMTIyuxA==
+X-Received: by 2002:a5d:4d8c:: with SMTP id b12mr14184701wru.198.1569867973583;
+        Mon, 30 Sep 2019 11:26:13 -0700 (PDT)
+Received: from scw-93ddc8.cloud.online.net ([2001:bc8:4400:2400::302d])
+        by smtp.googlemail.com with ESMTPSA id r20sm15672256wrg.61.2019.09.30.11.26.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 30 Sep 2019 11:26:13 -0700 (PDT)
+From:   Matias Ezequiel Vara Larsen <matiasevara@gmail.com>
+To:     stefanha@redhat.com
+Cc:     davem@davemloft.net, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, matiasevara@gmail.com,
+        sgarzare@redhat.com, eric.dumazet@gmail.com
+Subject: [PATCH net-next v2] vsock/virtio: add support for MSG_PEEK
+Date:   Mon, 30 Sep 2019 18:25:23 +0000
+Message-Id: <1569867923-28200-1-git-send-email-matiasevara@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 09:55:16AM -0700, Stephen Hemminger wrote:
-> Could also us div_u64_rem here?
+This patch adds support for MSG_PEEK. In such a case, packets are not
+removed from the rx_queue and credit updates are not sent.
 
-Yah, the below seems to work and the resulting asm looks sensible to me
-but someone should definitely double-check me as I don't know this code
-at all.
+Signed-off-by: Matias Ezequiel Vara Larsen <matiasevara@gmail.com>
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+Tested-by: Stefano Garzarella <sgarzare@redhat.com>
+---
+ net/vmw_vsock/virtio_transport_common.c | 55 +++++++++++++++++++++++++++++++--
+ 1 file changed, 52 insertions(+), 3 deletions(-)
 
-Thx.
-
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_icm_pool.c b/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_icm_pool.c
-index 913f1e5aaaf2..b4302658e5f8 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_icm_pool.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_icm_pool.c
-@@ -137,7 +137,7 @@ dr_icm_pool_mr_create(struct mlx5dr_icm_pool *pool,
+diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+index 94cc0fa..cf15751 100644
+--- a/net/vmw_vsock/virtio_transport_common.c
++++ b/net/vmw_vsock/virtio_transport_common.c
+@@ -264,6 +264,55 @@ static int virtio_transport_send_credit_update(struct vsock_sock *vsk,
+ }
  
- 	icm_mr->icm_start_addr = icm_mr->dm.addr;
+ static ssize_t
++virtio_transport_stream_do_peek(struct vsock_sock *vsk,
++				struct msghdr *msg,
++				size_t len)
++{
++	struct virtio_vsock_sock *vvs = vsk->trans;
++	struct virtio_vsock_pkt *pkt;
++	size_t bytes, total = 0, off;
++	int err = -EFAULT;
++
++	spin_lock_bh(&vvs->rx_lock);
++
++	list_for_each_entry(pkt, &vvs->rx_queue, list) {
++		off = pkt->off;
++
++		if (total == len)
++			break;
++
++		while (total < len && off < pkt->len) {
++			bytes = len - total;
++			if (bytes > pkt->len - off)
++				bytes = pkt->len - off;
++
++			/* sk_lock is held by caller so no one else can dequeue.
++			 * Unlock rx_lock since memcpy_to_msg() may sleep.
++			 */
++			spin_unlock_bh(&vvs->rx_lock);
++
++			err = memcpy_to_msg(msg, pkt->buf + off, bytes);
++			if (err)
++				goto out;
++
++			spin_lock_bh(&vvs->rx_lock);
++
++			total += bytes;
++			off += bytes;
++		}
++	}
++
++	spin_unlock_bh(&vvs->rx_lock);
++
++	return total;
++
++out:
++	if (total)
++		err = total;
++	return err;
++}
++
++static ssize_t
+ virtio_transport_stream_do_dequeue(struct vsock_sock *vsk,
+ 				   struct msghdr *msg,
+ 				   size_t len)
+@@ -330,9 +379,9 @@ virtio_transport_stream_dequeue(struct vsock_sock *vsk,
+ 				size_t len, int flags)
+ {
+ 	if (flags & MSG_PEEK)
+-		return -EOPNOTSUPP;
+-
+-	return virtio_transport_stream_do_dequeue(vsk, msg, len);
++		return virtio_transport_stream_do_peek(vsk, msg, len);
++	else
++		return virtio_transport_stream_do_dequeue(vsk, msg, len);
+ }
+ EXPORT_SYMBOL_GPL(virtio_transport_stream_dequeue);
  
--	align_diff = icm_mr->icm_start_addr % align_base;
-+	div_u64_rem(icm_mr->icm_start_addr, align_base, &align_diff);
- 	if (align_diff)
- 		icm_mr->used_length = align_base - align_diff;
- 
-
 -- 
-Regards/Gruss,
-    Boris.
+2.7.4
 
-https://people.kernel.org/tglx/notes-about-netiquette
