@@ -2,49 +2,50 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E928C35280
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D2FC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6539321855
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3759620679
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 14:13:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="pZocJZzk"
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="qoV6PRmU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731574AbfI3OMz (ORCPT
+        id S1731725AbfI3OM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 10:12:55 -0400
-Received: from mail-eopbgr150100.outbound.protection.outlook.com ([40.107.15.100]:55622
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        Mon, 30 Sep 2019 10:12:59 -0400
+Received: from mail-eopbgr40092.outbound.protection.outlook.com ([40.107.4.92]:19599
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731549AbfI3OMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 10:12:53 -0400
+        id S1731568AbfI3OM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 10:12:56 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZKsxaKq9T6fKRi5HeWAn5oG5g2JsTmE8/v6RQ9ogy0qUxU7n7G3ZyhUhMvxpehe4PSKFka1/M0Qw6hmYUcpkfYldg328G7qW7tcGCEJrqkd4NTpHZDhpifjHJswXde/OYI3n4RhjeGtBgTiXnBXuWFDgeNh1zqKRd2h31mNAAB+wO5nsCEMgs904VIMXhzn2dYcTOV4n12ZsjdmALJsoTVqcY/f+cuHSLPpZ20DeQWCLyjetMGwNyssJs+go30K4y/ul+s/0zA+gv+F9O2N9CJcuatRz48CQBM3h/AQRkpGDVAK83980si/4C6bFmdqGj/ecdbJncwt4kTVcewFxeg==
+ b=oD22pp6EZ/FKf9JK79A23buRyFnejZ9ZyY95jm7tylZdjoTvzN4huKCzr0GL4/2sNQLTSPzzO3xs2RiIARAx4znhwPQOuclYgjVo+16T5bgErlImzv4fi0LWEIJcnvwFFCv8L2dKJ62xJVBdr3ZdcGv5ObLhaWzR4YVJ+ghQ9MgBl4W7AioPJcNSGvXD2hp1iQvcONo0XIFAoR2SJ4N0QGvuz6/t6BqP4F8WqyQAjwq+rlHUyot2huQVHiGlFR/YKSnQQVP5fv+UyXtupeJ+PKZUR1Nk+aJE87QLT+wok+IcAs7379rghmYJt+i+atv6QpoRaHQq7bIlDamrCHW09g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EdtHPGNui0akt29I+xUOdLi46oAzfIr2lMf9SvGRL4Q=;
- b=MibakMkG+6zWq//xBal6YTAUpNwY0dnHYQwL6hpivDkp9XANuBGD9k4/mNA9xNtguky8bH+v/rQu0Ux3LqT4EUoZq7kMyIjpZcN3sRWV2/6mEcc8jFHIX1NwD4jgb6/wo9o5UhUfDXSwmDc6WzqISYJs39lknrnoyilfIFrDNzhDy/4Wvi0p41DUo+DRDcPNPgDKkrz6Pt7NLFa7NOAO9Ev78A9ptCzSFiRM60VMNRPzNmxeTKiQxrBusZLrOXAdtsJQqDnHfTXcsiZ4xNTax4vh7yRWrNRMYoHux1iwoasyqfjk53ZGR5IZF79nD6z5u4L+Ws2PLS0/7Ik3iLsMOg==
+ bh=riiXxkyy6zJ60qHkPCwUN1/dr6dBAn1/gDEAS+Yk2L4=;
+ b=axlFSczG/8nGmemKed0elbEqx0Zgu4q3jb5/RX7w7yuWeCogtnHocsApxsL/qtOpNEsJ3kb1y0dDyF0ytWg4qTaqrqiTpwUQfAjVXrlYjFif31s6CwQcYhRmXURUYMxefD8HstoK53Is0Oxxx8OR9dcNJQT7JrL50UMx7fjUEk4revkcg3Rc0h2gi9ygZkNyNUHW7Ay7Cz7flk0YOeFCzGB2UQ31cwAlylbdUXjUndeSVtC9W1faRPkE3MZxZ5JaOMO2Xn8IkTGaOrAe3YaqlLXPsH2E58bpwAIvlplibPao70AdSftKq+lgaHOecig9N52l28JgM2dqupnOL0N9IQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
  dkim=pass header.d=toradex.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EdtHPGNui0akt29I+xUOdLi46oAzfIr2lMf9SvGRL4Q=;
- b=pZocJZzkCYomniJ1KP0VkcSa/8xQqImvr+pgDCf3VJdW4LwLmsuTgoHLhPI6RIiezJC8PHPQWXP2fj8ijGdt36LLeZlWjA8JRKx2G3mmUr6M6m6+Clus3sI10QNPzCanYS6GLVReyeyfnbMv72sOKFsC2mycfrWnEYe5J3jS4WA=
+ bh=riiXxkyy6zJ60qHkPCwUN1/dr6dBAn1/gDEAS+Yk2L4=;
+ b=qoV6PRmUsEIIPeNUkt/otWMP0OSNIyKS6Vfp9fR6a7yjMPwJ4JfS9z27SEBJE6cwQKj4YrjybYJFV8AiQEeQUiBhdsox/LUR0Hw2i7izk9T+UkWub5exn4L2u4UQkKap09OJ8r3jh2c57MjQSN52P7rCXPgP0kBUNMkk8ltUFBg=
 Received: from VI1PR05MB6544.eurprd05.prod.outlook.com (20.179.27.210) by
- VI1PR05MB5487.eurprd05.prod.outlook.com (20.177.63.217) with Microsoft SMTP
+ VI1PR05MB5453.eurprd05.prod.outlook.com (20.177.200.216) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.20; Mon, 30 Sep 2019 14:12:49 +0000
+ 15.20.2305.20; Mon, 30 Sep 2019 14:12:53 +0000
 Received: from VI1PR05MB6544.eurprd05.prod.outlook.com
  ([fe80::dcea:1e0a:c05a:22f9]) by VI1PR05MB6544.eurprd05.prod.outlook.com
  ([fe80::dcea:1e0a:c05a:22f9%4]) with mapi id 15.20.2305.017; Mon, 30 Sep 2019
- 14:12:49 +0000
+ 14:12:53 +0000
 From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 CC:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
@@ -57,70 +58,84 @@ CC:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
         Sebastian Reichel <sre@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH v2 0/2] 'force-mode' for gpio-poweroff driver
-Thread-Topic: [PATCH v2 0/2] 'force-mode' for gpio-poweroff driver
-Thread-Index: AQHVd5kj1D/eGcvdoESk1xC4kZu/RA==
-Date:   Mon, 30 Sep 2019 14:12:49 +0000
-Message-ID: <20190930141244.12311-1-oleksandr.suvorov@toradex.com>
+Subject: [PATCH v2 2/2] dt-bindings: power: reset: gpio-poweroff: Add
+ 'force-mode' property
+Thread-Topic: [PATCH v2 2/2] dt-bindings: power: reset: gpio-poweroff: Add
+ 'force-mode' property
+Thread-Index: AQHVd5kmNVbiGB9hFkiQV9KnDe2C0Q==
+Date:   Mon, 30 Sep 2019 14:12:53 +0000
+Message-ID: <20190930141244.12311-3-oleksandr.suvorov@toradex.com>
+References: <20190930141244.12311-1-oleksandr.suvorov@toradex.com>
+In-Reply-To: <20190930141244.12311-1-oleksandr.suvorov@toradex.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: PR0P264CA0141.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:100:1a::33) To VI1PR05MB6544.eurprd05.prod.outlook.com
- (2603:10a6:803:ff::18)
+x-clientproxiedby: MR2P264CA0042.FRAP264.PROD.OUTLOOK.COM (2603:10a6:500::30)
+ To VI1PR05MB6544.eurprd05.prod.outlook.com (2603:10a6:803:ff::18)
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=oleksandr.suvorov@toradex.com; 
 x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.20.1
 x-originating-ip: [194.105.145.90]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: aa3f5e94-a723-435c-aeda-08d745b0462c
-x-ms-traffictypediagnostic: VI1PR05MB5487:
+x-ms-office365-filtering-correlation-id: 92953926-543f-43e9-a218-08d745b04894
+x-ms-traffictypediagnostic: VI1PR05MB5453:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR05MB54871BF507EE8497CDBB982CF9820@VI1PR05MB5487.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-microsoft-antispam-prvs: <VI1PR05MB545301E04DAE31D6E61D8125F9820@VI1PR05MB5453.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
 x-forefront-prvs: 01762B0D64
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(366004)(136003)(396003)(39840400004)(376002)(189003)(199004)(6506007)(186003)(316002)(386003)(26005)(66476007)(66556008)(305945005)(64756008)(2616005)(44832011)(476003)(486006)(25786009)(102836004)(5640700003)(2351001)(66066001)(66446008)(6436002)(6486002)(256004)(5660300002)(6916009)(54906003)(7736002)(71200400001)(71190400001)(36756003)(66946007)(1076003)(4326008)(86362001)(6512007)(4744005)(8936002)(50226002)(14454004)(81166006)(81156014)(3846002)(6116002)(8676002)(478600001)(99286004)(2501003)(2906002)(52116002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR05MB5487;H:VI1PR05MB6544.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(39850400004)(376002)(346002)(396003)(189003)(199004)(4326008)(66066001)(66556008)(66946007)(66476007)(64756008)(66446008)(2501003)(305945005)(71200400001)(6916009)(71190400001)(7736002)(256004)(36756003)(99286004)(1076003)(2351001)(102836004)(6512007)(3846002)(6116002)(8676002)(2906002)(50226002)(25786009)(11346002)(76176011)(81166006)(52116002)(5640700003)(8936002)(486006)(6506007)(26005)(54906003)(316002)(478600001)(6486002)(14454004)(476003)(44832011)(5660300002)(86362001)(186003)(2616005)(6436002)(386003)(446003)(81156014);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR05MB5453;H:VI1PR05MB6544.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: toradex.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Sn/yblA8fjQ5rlM4Mqr7vshrwqECj/04DsVqU0/lUiNBMXrlHzmrWyUaLOed/XO4SsTWw86jk4DqQnqqB6MfzW/+u3zFfyh5k6Ev/i08tmNWcmPbFMEA93Fulqs8adi7Zu52WdckArXcIK29JsiiKwCfwEt3a+6Cl+JEEeLQLdWBcQT0WjYL2IBZUB/vs/78AVPE8AvD+eUw2v2YP9c9e/uo308V7cMt6dNt0NLditAEaSgDB/CJozvQSKxlWS27/qE59/BXO0AApiNX98j0dWmkoZSHsn7sIa8xOuO5sCls1f3SCm4y4fswAyDP8OKu0i+70peVBNJtabnvFVmQgiBWFzmKaz/OfyVgylMM08d6x5XVBreCwmsJniXlIIq76s9aXCjSD62phEQrti2VShT0siqEJAnpqvnDiuQ3+oI=
+x-microsoft-antispam-message-info: gsYbjQuLe+TCZWQBlki9FFQ5vF70/Hzfb+35sKx2CXlrI2CBMvyHvym5NzIoW48fKccm3lV+BFJNiEU9kr3l7tgQJ3G66QSgb7qdQreZoU2614eHYq/5ckY8z55+aNXscWdgE7xXgxBTOqFUTPDhUGeLqQucFdgP8jhECZtZQLwjaVGFzXLN0z/MflXCIuRfr9PP5quOf+eCDoAkQCzZKDs0M7N9df0rRSxaXm2bNeaoV+PJIjS09nN16PVthy6ZO2KP+NgRHBwbn7lug0hta0vVUM++eAw+DTCccNta3emSCZZhkIgloX8idxs0QFiUVICf3OwbbbRplR8Ok+OTPUl4+5LwIPnw5W7THPr39yCikrNIggmk+BrmvL6/ItsQsVWh0Dhz+BKu+cZqKBHQPXesw2krRsBV6K4d8SZlmQg=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: aa3f5e94-a723-435c-aeda-08d745b0462c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2019 14:12:49.1997
+X-MS-Exchange-CrossTenant-Network-Message-Id: 92953926-543f-43e9-a218-08d745b04894
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2019 14:12:53.1964
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pV5sruqmNZQey8VPaGKmZMXZMtaOnByiyBJFkV+OcdQIYK3olm6jYqFe6Z5q3t4L3Q8rmV63qh/z8xjMunl31Iil2Tl7jRmWaC8YOwII9og=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5487
+X-MS-Exchange-CrossTenant-userprincipalname: L80AQiHKd6+czQa2YhRRzrPYntVQ4y/+Z9UrpjDzbfyIjO/hj1T1txcucYcUmPxWDx9Q/M+Jm/3XfTBT/yhRIsrxPoU4JR14RzCxS/RAMRo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5453
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch introduces a feature to force gpio-poweroff module
-to register its own pm_power_off handler even if someone has registered
-this handler earlier.
-Useful to change a way to power off the system using DT files.
+Add 'force-mode' property to allow the driver to load even if
+someone has registered the pm_power_off hook earlier.
 
-Changes in v2:
-Call next pm_power_off handler if the current one
-fails to power system off.
+Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 
-Oleksandr Suvorov (2):
-  power: reset: gpio-poweroff: add force mode
-  dt-bindings: power: reset: gpio-poweroff: Add 'force-mode' property
+---
 
- .../bindings/power/reset/gpio-poweroff.txt    |  3 ++
- drivers/power/reset/gpio-poweroff.c           | 34 +++++++++++++++----
- 2 files changed, 31 insertions(+), 6 deletions(-)
+Changes in v2: None
 
+ .../devicetree/bindings/power/reset/gpio-poweroff.txt          | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/power/reset/gpio-poweroff.tx=
+t b/Documentation/devicetree/bindings/power/reset/gpio-poweroff.txt
+index 3e56c1b34a4c..2056e299a472 100644
+--- a/Documentation/devicetree/bindings/power/reset/gpio-poweroff.txt
++++ b/Documentation/devicetree/bindings/power/reset/gpio-poweroff.txt
+@@ -31,6 +31,9 @@ Optional properties:
+ - inactive-delay-ms: Delay (default 100) to wait after driving gpio inacti=
+ve
+ - timeout-ms: Time to wait before asserting a WARN_ON(1). If nothing is
+               specified, 3000 ms is used.
++- force-mode: Force replacing pm_power_off kernel hook.
++  If this optional property is not specified, the driver will fail to
++  load if someone has registered the pm_power_off hook earlier.
+=20
+ Examples:
+=20
 --=20
 2.20.1
 
