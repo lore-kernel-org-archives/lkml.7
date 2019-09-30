@@ -2,91 +2,72 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 803CFC388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C21CC388F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB182053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:35:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WQQS8HQ8"
+	by mail.kernel.org (Postfix) with ESMTP id 4BA632081B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 08:42:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730137AbfI3Ifw (ORCPT
+        id S1730091AbfI3ImK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 04:35:52 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38022 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbfI3Ifw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 04:35:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=14OWwE+N+A7N6F/kJQk3CvLLeNGvUNaZndJRB3KCdv0=; b=WQQS8HQ895Dl7xDouJGMixNDm
-        +smiP7sIMvuJW28QnxtjBxKa0xNxBenC7acnl6ik0WlwW8Bi9dZmuUs8jSTot1467Tmh1agUiDXHG
-        zp6ToG6ySa/DQkqmcnzLZp+Q58apoqFNP5A19jMvcTUoDEarbeA4yVGTUUtsCwQ7XwdrnCP+Jc7AV
-        ayzsbaAG7dwcMTOwzqaRr1I7bOym2tQXaMMC0DTnzfFOogOQhtmlY4P+vUreaCO/kwWoo3kCBCmaR
-        hCbIK9/cLO4cG03Mdrs6uNfs925Qi+t9p9awY8st6AtQLAmlZj9wsbOJuRhj1fZ/mNqH92vE7kz0j
-        1g/RC4gZQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iEr9r-000817-OL; Mon, 30 Sep 2019 08:35:51 +0000
-Date:   Mon, 30 Sep 2019 01:35:51 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Pavel Begunkov (Silence)" <asml.silence@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] blk-mq: Inline status checkers
-Message-ID: <20190930083551.GB24152@infradead.org>
-References: <1cd320dad54bd78cb6721f7fe8dd2e197b9fbfa2.1569830796.git.asml.silence@gmail.com>
+        Mon, 30 Sep 2019 04:42:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48202 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726121AbfI3ImK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 04:42:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id ECC0AAFD4;
+        Mon, 30 Sep 2019 08:42:08 +0000 (UTC)
+Message-ID: <f2c97e860f895613ba81b69c962660b0c712723a.camel@suse.de>
+Subject: Re: [PATCH] scsi: core: Log SCSI command age with errors
+From:   Martin Wilck <mwilck@suse.de>
+To:     Laurence Oberman <loberman@redhat.com>,
+        "Milan P. Gandhi" <mgandhi@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
+Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com
+Date:   Mon, 30 Sep 2019 10:42:14 +0200
+In-Reply-To: <3a8ee584f9846fba94d98d0e6941fefdcbed5d71.camel@redhat.com>
+References: <20190923060122.GA9603@machine1>
+         <471732f03049a1528df1d144013d723041f0a419.camel@suse.de>
+         <3a8ee584f9846fba94d98d0e6941fefdcbed5d71.camel@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1cd320dad54bd78cb6721f7fe8dd2e197b9fbfa2.1569830796.git.asml.silence@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 11:25:49AM +0300, Pavel Begunkov (Silence) wrote:
-> From: Pavel Begunkov <asml.silence@gmail.com>
+On Fri, 2019-09-27 at 13:45 -0400, Laurence Oberman wrote:
 > 
-> blk_mq_request_completed() and blk_mq_request_started() are
-> short, inline it.
+> Hi Martin
 > 
-> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-> ---
->  block/blk-mq.c         | 12 ------------
->  block/blk-mq.h         |  9 ---------
->  include/linux/blk-mq.h | 20 ++++++++++++++++++--
->  3 files changed, 18 insertions(+), 23 deletions(-)
-> 
-> diff --git a/block/blk-mq.c b/block/blk-mq.c
-> index 279b138a9e50..d97181d9a3ec 100644
-> --- a/block/blk-mq.c
-> +++ b/block/blk-mq.c
-> @@ -647,18 +647,6 @@ bool blk_mq_complete_request(struct request *rq)
->  }
->  EXPORT_SYMBOL(blk_mq_complete_request);
->  
-> -int blk_mq_request_started(struct request *rq)
-> -{
-> -	return blk_mq_rq_state(rq) != MQ_RQ_IDLE;
-> -}
-> -EXPORT_SYMBOL_GPL(blk_mq_request_started);
-> -
-> -int blk_mq_request_completed(struct request *rq)
-> -{
-> -	return blk_mq_rq_state(rq) == MQ_RQ_COMPLETE;
-> -}
-> -EXPORT_SYMBOL_GPL(blk_mq_request_completed);
+> Agreed about log extraction, but turning that on with a busy workload
+> in a production environment is not practical. We cant do it with
+> systems with 1000's of luns and 1000's of IOPS/sec.
+> Also second resolution is good enough for the debug we want to see.
 
-How about just killing these helpers instead?
+I gather that you look at a specific problem where second resolution is
+sufficient. For upstream, the generic usefulness should be considered,
+and I don't think we can say today that better-than-second resolution
+will never be useful, so I still vote for milliseconds.
+
+Wrt the enablement of the option on highly loaded systems, I'm not sure
+I understand. You need to enable SCSI logging anyway, don't you? Is it
+an issue to have to set 2 sysfs values rather than just one?
+
+Regards,
+Martin
+
+> 
+> Regards
+> Laurence
+> 
+
+
