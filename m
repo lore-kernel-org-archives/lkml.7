@@ -2,130 +2,108 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DC4C32792
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F46CC32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE6C921855
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 15:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35E3F215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:01:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="bAy5AL9w"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="Nj72iYc/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732155AbfI3P7j (ORCPT
+        id S1732162AbfI3QBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 11:59:39 -0400
-Received: from vps.xff.cz ([195.181.215.36]:44246 "EHLO vps.xff.cz"
+        Mon, 30 Sep 2019 12:01:25 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:33706 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731790AbfI3P7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 11:59:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1569859177; bh=D2ejaUWp29uDGi/bAvIoPZtXvcgt2U13kUVwsfjN680=;
-        h=Date:From:To:Subject:References:X-My-GPG-KeyId:From;
-        b=bAy5AL9wyR8lQZ/ooSinafOoLY4OVl0wumhpX+V/u5L/fnoADyJ66LTqYnzt8F6uB
-         vuhZu6xxYFeSRRDMUbG9iJKqZfp1uyDTvPWh+PDrHysZujX5/uIsBhfrcle2A/IukU
-         9UgPwq3/qVl2BpEByIhmFriFzhbz8suwyIsUNrqw=
-Date:   Mon, 30 Sep 2019 17:59:37 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Maxime Ripard <mripard@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm: sun8i-ui/vi: Fix layer zpos change/atomic
- modesetting
-Message-ID: <20190930155937.rtvoxprayrkxodxo@core.my.home>
-Mail-Followup-To: Maxime Ripard <mripard@kernel.org>,
-        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190914220337.646719-1-megous@megous.com>
- <20190918141734.kerdbbaynwutrxf6@gilmour>
- <20190918152309.j2dbu63jaru6jn2t@core.my.home>
- <20190918201617.5gwzmshoxbcxbmrx@gilmour>
- <20190919122058.fhpuafogdq7oir2d@core.my.home>
- <20190919131244.35hmnp7jizegltp7@core.my.home>
- <20190920151142.ijistzhtcaenehx6@gilmour>
- <20190924124054.743s3tlw5qirghxo@core.my.home>
+        id S1728424AbfI3QBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 12:01:25 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 46hnCM37HJz2J;
+        Mon, 30 Sep 2019 17:59:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1569859167; bh=UhfU17aR0sNYys0oVRGSuAA/hFA3bzjaPoMdvXhHiSM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Nj72iYc/z5oBFvfSO6J2VcevkkHNftUuYSYYNlPVIFN10KCwA1SZB0EqQB6y2wV24
+         ZQE0AuUJ3IRTvd//lcqlav5r0/bt8Oo4inE1oUcLwcVleeYKI5gxmJzxJ/FZFBTikf
+         zIf3ellGpjWo/FAO4/ejQHvGJMZs4/vKYZFuibQLdE0Odv23S5Qrd1It0rkozCyhcs
+         4ynhVaSIBYql+ybi81PttthYd2oiZhByYXXVQIojI9OzRFFtu1jz/v3J9SPmYoD3QA
+         /GUmo9+K7B4DkDSwiNbw1tGdJcw5nmXgfHhiKBNQ0LdqpbE3jTJx+FMtv3c+KF9tNu
+         LS6q0sL72okdQ==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.101.4 at mail
+Date:   Mon, 30 Sep 2019 18:01:21 +0200
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     codrin.ciubotariu@microchip.com, lgirdwood@gmail.com,
+        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] ASoC: atmel: Fix build error
+Message-ID: <20190930160120.GB32237@qmqm.qmqm.pl>
+References: <20190928081641.44232-1-yuehaibing@huawei.com>
+ <20190930155818.GA32237@qmqm.qmqm.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-2
 Content-Disposition: inline
-In-Reply-To: <20190924124054.743s3tlw5qirghxo@core.my.home>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190930155818.GA32237@qmqm.qmqm.pl>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Tue, Sep 24, 2019 at 02:40:54PM +0200, megous hlavni wrote:
-> > >  On first run of the X server, only the black screen and the layer
-> > >  containing the cursor is visible. Switching to console and back
-> > >  corrects the situation.
-> > >
-> > >  I have dumped registers, and found out this:
-> > >
-> > >  (In both cases there are two enabled planes, plane 1 with zpos 0 and
-> > >  plane 3 with zpos 1).
-> > >
-> > >  1) First Xorg run:
-> > >
-> > >    0x01101000 : 00000201
-> > >    0x01101080 : 00000030
-> > >
-> > >    BLD_FILL_COLOR_CTL: (aka SUN8I_MIXER_BLEND_PIPE_CTL)
-> > >      P1_EN
-> > >
-> > >    BLD_CH_RTCTL: (aka SUN8I_MIXER_BLEND_ROUTE)
-> > >      P0_RTCTL channel0
-> > >      P1_RTCTL channel3
-> > >
-> > >  2) After switch to console and back to Xorg:
-> > >
-> > >  0x01101000 : 00000301
-> > >  0x01101080 : 00000031
-> > >
-> > >    BLD_FILL_COLOR_CTL:
-> > >      P1_EN and P0_EN
-> > >
-> > >    BLD_CH_RTCTL:
-> > >      P0_RTCTL channel1
-> > >      P1_RTCTL channel3
-> > >
-> > >  What happens is that sun8i_ui_layer_enable() function may disable
-> > >  blending pipes even if it is no longer assigned to its layer, because
-> > >  of incorrect state/zpos tracking in the driver.
-> > >
-> > >  In particular, layer 1 is configured to zpos 0 and thus uses pipe 0.
-> > >  When layer 3 is enabled by X server, sun8i_ui_layer_enable() will get
-> > >  called with old_zpos=0 zpos=1, which will lead to disabling of pipe 0.
-> > >
-> > >  In general this issue can happen to any layer during enable or zpos
-> > >  changes on multiple layers at once.
-> > >
-> > >  To correct this we now pass previous enabled/disabled state of the
-> > >  layer, and pass real previous zpos of the layer to
-> > >  sun8i_ui_layer_enable() and rework the sun8i_ui_layer_enable() function
-> > >  to react to the state changes correctly. In order to not complicate
-> > >  the atomic_disable callback with all of the above changes, we simply
-> > >  remove it and implement all the chanes as part of atomic_update, which
-> > >  also reduces the code duplication.
+On Mon, Sep 30, 2019 at 05:58:18PM +0200, Micha³ Miros³aw wrote:
+> On Sat, Sep 28, 2019 at 04:16:41PM +0800, YueHaibing wrote:
+> > when do randbuilding, I got this error:
 > > 
-> > I'm not even sure why we need that old state. Can't we just reset
-> > completely the whole thing and do the configuration all over again?
+> > sound/soc/atmel/atmel_ssc_dai.o: In function `atmel_ssc_set_audio':
+> > (.text+0x12f6): undefined reference to `atmel_pcm_pdc_platform_register'
+> > 
+> > This is because SND_ATMEL_SOC_SSC_DMA=y, SND_ATMEL_SOC_SSC=y,
+> > but SND_ATMEL_SOC_SSC_PDC=m. Fix it bt reintroducing the default Kconfig.
 > 
-> That would be nice from a dev standpoint if we can get a complete state for all
-> planes at once from DRM core, but how? DRM helper gives callbacks
-> for updating individual planes with prev and new state. These individual layer
-> change notifications don't map nicely to how pipes are represented in the mixer
-> registers.
+> Defaults won't forbid the invalid configuration. Can you try following:
 
-If anyone wants to pursue this further, feel free to. I'm not planning to
-pursue this fix further, at the moment.
+Ah, no. This won't fix it - the dependency is the other way around:
+SOC_SSC should depend on _PDC / _DMA.
 
-regards,
-	o.
+> diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
+> index f118c229ed82..461f023c5635 100644
+> --- a/sound/soc/atmel/Kconfig
+> +++ b/sound/soc/atmel/Kconfig
+> @@ -12,10 +12,12 @@ if SND_ATMEL_SOC
+>  config SND_ATMEL_SOC_PDC
+>  	tristate
+>  	depends on HAS_DMA
+> +	select SND_ATMEL_SOC_SSC
+>  
+>  config SND_ATMEL_SOC_DMA
+>  	tristate
+>  	select SND_SOC_GENERIC_DMAENGINE_PCM
+> +	select SND_ATMEL_SOC_SSC
+>  
+>  config SND_ATMEL_SOC_SSC
+>  	tristate
+> @@ -24,7 +26,6 @@ config SND_ATMEL_SOC_SSC_PDC
+>  	tristate "SoC PCM DAI support for AT91 SSC controller using PDC"
+>  	depends on ATMEL_SSC
+>  	select SND_ATMEL_SOC_PDC
+> -	select SND_ATMEL_SOC_SSC
+>  	help
+>  	  Say Y or M if you want to add support for Atmel SSC interface
+>  	  in PDC mode configured using audio-graph-card in device-tree.
+> @@ -33,7 +34,6 @@ config SND_ATMEL_SOC_SSC_DMA
+>  	tristate "SoC PCM DAI support for AT91 SSC controller using DMA"
+>  	depends on ATMEL_SSC
+>  	select SND_ATMEL_SOC_DMA
+> -	select SND_ATMEL_SOC_SSC
+>  	help
+>  	  Say Y or M if you want to add support for Atmel SSC interface
+>  	  in DMA mode configured using audio-graph-card in device-tree.
