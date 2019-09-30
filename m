@@ -2,184 +2,117 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02351C352A9
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 02:28:08 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD3B921835
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD96BC4360C
 	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 02:28:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MdfJvpS4"
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id AAE2D20863
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 02:28:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729413AbfI3CXJ (ORCPT
+        id S1729358AbfI3CWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 22:23:09 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:36055 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbfI3CXI (ORCPT
+        Sun, 29 Sep 2019 22:22:14 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61720 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729010AbfI3CWO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 22:23:08 -0400
-Received: by mail-io1-f68.google.com with SMTP id b136so34106554iof.3
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Sep 2019 19:23:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6d1aTnpV9qgl7UermuKekYZL5z0DnNnEo0ldYVTZofk=;
-        b=MdfJvpS4TFGgkoqxVqVr+F71V8IY7jN7qcoUDam6i6WNdq/mZu8zqiV73DfVSdqJux
-         JdCUBRlQ6Db7Gx4p0YYEoiMhqnoqZNm7bx2tvgXURpJSmlVUEI93W/m/U4lNwN5MfW5J
-         CH5tUxR6v7TNwq04aHp9qSzV4S3lIufruFOBajaXTqU6fd2Pxv3DMWBgCyQ7LoQjMCxz
-         ETjLhgDZqEMCIUDDx3DWVYFroHibHVaHwdO2p9fSl88tlFTQOcbP/p0QZpm+RZeCk7er
-         9QWa1T3AxFxeSlpzPuUS6Bi+uncG9qOBSMUQuiUdWQN1ESZnEzeRh6yRDsJ6K1gTfIAq
-         ZoEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6d1aTnpV9qgl7UermuKekYZL5z0DnNnEo0ldYVTZofk=;
-        b=CGeEiQ6yNcCS13L65tr37wk+Z32dWlAaOmL68OwaH+FTEgNl3ODCWeeIwA6vjziYrg
-         2lE4VkgBgRfFwDXVhexicI3lv/VDGdKHecV9FDJMj5uJeUoEbPjtWekYOLcPAqSHdQIk
-         B8m5/jN+RSXOL4pNIssUNNE2v5kXJTQC/cxh4oachqj2QdxDXcGRbucvvKA8aJnkWvLO
-         2ZOfeUcy4hd/mIox0uWToMyuGIwfDnqB6CZX598WU0poiGKB8vuB1qNt/GgXvuZvQ60p
-         J4IkAffOkKJv3+BIEHViONYXMfYgIg2LMp2FvTOa7rE3w3mlXU4YemjFG6CY0+p8x35v
-         /VeA==
-X-Gm-Message-State: APjAAAW9Rd3vC5CUIAfPgXeY4mdauTy5JeYtSaJAuukJT9bqMnxwRe6u
-        KQng2+d38PUBIkmBte4ZUpLbz+1ycAUazaLEbXk=
-X-Google-Smtp-Source: APXvYqw/lG63dH/Q4k2EQmL3tWXYQO7oUN8aIONoiWlZfmPRTw9dNSHOlrg+Gy/f25trAIawzLcGpOnzXt637Q06GLM=
-X-Received: by 2002:a92:ced0:: with SMTP id z16mr17806215ilq.172.1569810187596;
- Sun, 29 Sep 2019 19:23:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190927230421.20837-1-navid.emamdoost@gmail.com> <3b5913e3-856a-db81-7708-929e62ee53d4@redhat.com>
-In-Reply-To: <3b5913e3-856a-db81-7708-929e62ee53d4@redhat.com>
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Date:   Sun, 29 Sep 2019 21:22:56 -0500
-Message-ID: <CAEkB2ER7xVU3vzK4ohj7f9=b=ZpNx++dyNrtLhOieeDgyeVBDg@mail.gmail.com>
-Subject: Re: [PATCH] virt: vbox: fix memory leak in hgcm_call_preprocess_linaddr
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Navid Emamdoost <emamd001@umn.edu>, kjlu@umn.edu,
-        Stephen McCamant <smccaman@umn.edu>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sun, 29 Sep 2019 22:22:14 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8U2LgC2093947
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Sep 2019 22:22:13 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vb2pbg5ck-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Sep 2019 22:22:13 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Mon, 30 Sep 2019 03:22:10 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 30 Sep 2019 03:22:06 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8U2M5Yp41418830
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 30 Sep 2019 02:22:05 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 853A9AE04D;
+        Mon, 30 Sep 2019 02:22:05 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 322D5AE045;
+        Mon, 30 Sep 2019 02:22:05 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 30 Sep 2019 02:22:05 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 5F45BA018E;
+        Mon, 30 Sep 2019 12:22:03 +1000 (AEST)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     alastair@d-silva.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        David Hildenbrand <david@redhat.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH v5 0/1] Add bounds check for Hotplugged memory
+Date:   Mon, 30 Sep 2019 12:21:50 +1000
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19093002-0028-0000-0000-000003A3D075
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19093002-0029-0000-0000-00002465F798
+Message-Id: <20190930022152.14114-1-alastair@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-30_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909300024
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is a neat fix now, thank you.
+From: Alastair D'Silva <alastair@d-silva.org>
 
+This series adds bounds checks for hotplugged memory, ensuring that
+it is within the physically addressable range (for platforms that
+define MAX_(POSSIBLE_)PHYSMEM_BITS.
 
-On Sat, Sep 28, 2019 at 4:54 AM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi,
->
-> On 28-09-2019 01:04, Navid Emamdoost wrote:
-> > In hgcm_call_preprocess_linaddr memory is allocated for bounce_buf but
-> > is not released if copy_form_user fails. The release is added.
-> >
-> > Fixes: 579db9d45cb4 ("virt: Add vboxguest VMMDEV communication code")
-> >
-> > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
->
-> Thank you for catching this, I agree this is a bug, but I think we
-> can fix it in a cleaner way (see below).
->
-> > ---
-> >   drivers/virt/vboxguest/vboxguest_utils.c | 4 +++-
-> >   1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/virt/vboxguest/vboxguest_utils.c b/drivers/virt/vboxguest/vboxguest_utils.c
-> > index 75fd140b02ff..7965885a50fa 100644
-> > --- a/drivers/virt/vboxguest/vboxguest_utils.c
-> > +++ b/drivers/virt/vboxguest/vboxguest_utils.c
-> > @@ -222,8 +222,10 @@ static int hgcm_call_preprocess_linaddr(
-> >
-> >       if (copy_in) {
-> >               ret = copy_from_user(bounce_buf, (void __user *)buf, len);
-> > -             if (ret)
-> > +             if (ret) {
-> > +                     kvfree(bounce_buf);
-> >                       return -EFAULT;
-> > +             }
-> >       } else {
-> >               memset(bounce_buf, 0, len);
-> >       }
-> >
->
-> First let me quote some more of the function, pre leak fix, for context:
->
->         bounce_buf = kvmalloc(len, GFP_KERNEL);
->         if (!bounce_buf)
->                 return -ENOMEM;
->
->         if (copy_in) {
->                 ret = copy_from_user(bounce_buf, (void __user *)buf, len);
->                 if (ret)
->                         return -EFAULT;
->         } else {
->                 memset(bounce_buf, 0, len);
->         }
->
->         *bounce_buf_ret = bounce_buf;
->
-> This function gets called repeatedly by hgcm_call_preprocess(), and the
-> caller of hgcm_call_preprocess() already takes care of freeing the
-> bounce bufs both on a (later) error and on success:
->
->         ret = hgcm_call_preprocess(parms, parm_count, &bounce_bufs, &size);
->         if (ret) {
->                 /* Even on error bounce bufs may still have been allocated */
->                 goto free_bounce_bufs;
->         }
->
->         ...
->
-> free_bounce_bufs:
->         if (bounce_bufs) {
->                 for (i = 0; i < parm_count; i++)
->                         kvfree(bounce_bufs[i]);
->                 kfree(bounce_bufs);
->         }
->
-> So we are already taking care of freeing bounce-bufs allocated for previous
-> parameters to the call (which me must do anyways), so a cleaner fix would
-> be to store the allocated bounce_buf in the bounce_bufs array before
-> doing the copy_from_user, then if copy_from_user fails it will be cleaned
-> up by the code at the free_bounce_bufs label.
->
-> IOW I believe it is better to fix this by changing the part of
-> hgcm_call_preprocess_linaddr I quoted to:
->
->         bounce_buf = kvmalloc(len, GFP_KERNEL);
->         if (!bounce_buf)
->                 return -ENOMEM;
->
->         *bounce_buf_ret = bounce_buf;
->
->         if (copy_in) {
->                 ret = copy_from_user(bounce_buf, (void __user *)buf, len);
->                 if (ret)
->                         return -EFAULT;
->         } else {
->                 memset(bounce_buf, 0, len);
->         }
->
-> This should also fix the leak in IMHO is a clear way of doing so.
->
-> Regards,
->
-> Hans
->
->
->
->
->
+This allows for early failure, rather than attempting to access
+bogus section numbers.
 
+Changelog:
+ V5:
+   - Factor out calculation into max_allowed var
+   - Declare unchanging vars as const
+   - Use PFN_PHYS macro instead of shifting by PAGE_SHIFT
+ V4:
+   - Relocate call to __add_pages
+   - Add a warning when the addressable check fails
+ V3:
+   - Perform the addressable check before we take the hotplug lock
+ V2:
+   - Don't use MAX_POSSIBLE_PHYSMEM_BITS as it's wider that what
+     may be available
+
+Alastair D'Silva (1):
+  memory_hotplug: Add a bounds check to __add_pages
+
+ mm/memory_hotplug.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
 -- 
-Navid.
+2.21.0
+
