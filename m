@@ -2,274 +2,122 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F15C4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3716C388F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ECB021721
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4BDD21721
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 09:25:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730495AbfI3JYU (ORCPT
+        id S1730496AbfI3JZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 05:24:20 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:37954 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730000AbfI3JX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 05:23:56 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 6AB2A9E785368D6E3BF1;
-        Mon, 30 Sep 2019 17:23:53 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.24) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 30 Sep 2019 17:23:46 +0800
-From:   Zaibo Xu <xuzaibo@huawei.com>
-To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        <linuxarm@huawei.com>, <forest.zhouchang@huawei.com>,
-        Zaibo Xu <xuzaibo@huawei.com>, Hui tang <tanghui20@huawei.com>
-Subject: [PATCH 2/5] crypto: hisilicon - add SRIOV support for HPRE
-Date:   Mon, 30 Sep 2019 17:20:06 +0800
-Message-ID: <1569835209-44326-3-git-send-email-xuzaibo@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1569835209-44326-1-git-send-email-xuzaibo@huawei.com>
-References: <1569835209-44326-1-git-send-email-xuzaibo@huawei.com>
+        Mon, 30 Sep 2019 05:25:31 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44764 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727884AbfI3JZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 05:25:30 -0400
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9E5C4A7F8
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 09:25:29 +0000 (UTC)
+Received: by mail-wr1-f70.google.com with SMTP id i10so4238523wrb.20
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 02:25:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=elleWBjapRv/SRNfStbFm2hrsIA22Dw2zFzlMndtvgA=;
+        b=OWXaUsghD9ym8N1DIpy7bjPbe2uWbv1Mn/FPFzEqlPI7HV9sUl45cqJpf6yrqFZpHc
+         ywM8UCK1rklmIUjDlsWrACWxifPIkxJ/XXaJ+KmQ7itk6yrIj/7qF2XlS2B0SW+6VvMW
+         2FmMUyz1+C45HtrxrcGlXNfBTtUGVWf3NvSwe4w3k1Q3ye9SvXhs+G3qseHiNB3Gsa7d
+         8ULrPKfW7zhxO1bMGnM1Y7VN9W1PBVajrPwaX3M3xUBWow4Np3VFyE9gmYJ0zxh65wbu
+         R/zU+WFkfZzG5r8CUYqtjsWiBUqCoPHap1U8Vmhw3JtdNYf7ma5vmab5F3J8b7uQRQIS
+         pJHg==
+X-Gm-Message-State: APjAAAXO0/j4IOlyc5dHnN0pwtvbE2qZpEJ4zGV4gnQjVUDghMtvb1jZ
+        n331E7kwRV65GxoPXoqQoleamYDpkT0hZNFz7/BrY1SssbDrYoMsyoiLBsbW3648s2lbvuGOnrg
+        1biXk/6b/47nYnmKQ+my8kdnp
+X-Received: by 2002:adf:c504:: with SMTP id q4mr224233wrf.266.1569835528368;
+        Mon, 30 Sep 2019 02:25:28 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxtTJN3vz/8TiV/fTqGWvZo4gzgxPj5c8e5WEjBPH3N2by94rvs8/eTwNjk8z5NFIB7s/377Q==
+X-Received: by 2002:adf:c504:: with SMTP id q4mr224218wrf.266.1569835528170;
+        Mon, 30 Sep 2019 02:25:28 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id b5sm12134886wmj.18.2019.09.30.02.25.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 02:25:27 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Reto Buerki <reet@codelabs.ch>,
+        Liran Alon <liran.alon@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Subject: Re: [PATCH v2 6/8] KVM: x86: Fold 'enum kvm_ex_reg' definitions into 'enum kvm_reg'
+In-Reply-To: <20190927214523.3376-7-sean.j.christopherson@intel.com>
+References: <20190927214523.3376-1-sean.j.christopherson@intel.com> <20190927214523.3376-7-sean.j.christopherson@intel.com>
+Date:   Mon, 30 Sep 2019 11:25:26 +0200
+Message-ID: <87ftke3zll.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.67.165.24]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HiSilicon HPRE engine supports PCI SRIOV. This patch enable
-this feature. User can enable VFs and pass through them to VM,
-same HPRE driver can work in VM to provide RSA and DH algorithms
-by crypto akcipher and kpp interfaces.
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-Signed-off-by: Zaibo Xu <xuzaibo@huawei.com>
-Signed-off-by: Hui tang <tanghui20@huawei.com>
----
- drivers/crypto/hisilicon/hpre/hpre.h      |   1 +
- drivers/crypto/hisilicon/hpre/hpre_main.c | 139 ++++++++++++++++++++++++++++--
- 2 files changed, 133 insertions(+), 7 deletions(-)
+> Now that indexing into arch.regs is either protected by WARN_ON_ONCE or
+> done with hardcoded enums, combine all definitions for registers that
+> are tracked by regs_avail and regs_dirty into 'enum kvm_reg'.  Having a
+> single enum type will simplify additional cleanup related to regs_avail
+> and regs_dirty.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h | 4 +---
+>  arch/x86/kvm/kvm_cache_regs.h   | 2 +-
+>  2 files changed, 2 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 23edf56cf577..a27f7f6b6b7a 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -156,10 +156,8 @@ enum kvm_reg {
+>  	VCPU_REGS_R15 = __VCPU_REGS_R15,
+>  #endif
+>  	VCPU_REGS_RIP,
+> -	NR_VCPU_REGS
+> -};
+> +	NR_VCPU_REGS,
+>  
+> -enum kvm_reg_ex {
+>  	VCPU_EXREG_PDPTR = NR_VCPU_REGS,
 
-diff --git a/drivers/crypto/hisilicon/hpre/hpre.h b/drivers/crypto/hisilicon/hpre/hpre.h
-index d219599..bcf825b 100644
---- a/drivers/crypto/hisilicon/hpre/hpre.h
-+++ b/drivers/crypto/hisilicon/hpre/hpre.h
-@@ -14,6 +14,7 @@
- struct hpre {
- 	struct hisi_qm qm;
- 	struct list_head list;
-+	u32 num_vfs;
- 	unsigned long status;
- };
- 
-diff --git a/drivers/crypto/hisilicon/hpre/hpre_main.c b/drivers/crypto/hisilicon/hpre/hpre_main.c
-index 9cf46e4..31d01d3 100644
---- a/drivers/crypto/hisilicon/hpre/hpre_main.c
-+++ b/drivers/crypto/hisilicon/hpre/hpre_main.c
-@@ -71,6 +71,7 @@
- #define HPRE_REG_RD_TMOUT_US		1000
- #define HPRE_DBGFS_VAL_MAX_LEN		20
- #define HPRE_PCI_DEVICE_ID		0xa258
-+#define HPRE_PCI_VF_DEVICE_ID		0xa259
- #define HPRE_ADDR(qm, offset)		(qm->io_base + (offset))
- #define HPRE_QM_USR_CFG_MASK		0xfffffffe
- #define HPRE_QM_AXI_CFG_MASK		0xffff
-@@ -85,6 +86,7 @@ static DEFINE_MUTEX(hpre_list_lock);
- static const char hpre_name[] = "hisi_hpre";
- static const struct pci_device_id hpre_dev_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, HPRE_PCI_DEVICE_ID) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_HUAWEI, HPRE_PCI_VF_DEVICE_ID) },
- 	{ 0, }
- };
- 
-@@ -318,8 +320,12 @@ static int hpre_qm_pre_init(struct hisi_qm *qm, struct pci_dev *pdev)
- 	qm->ver = rev_id;
- 	qm->sqe_size = HPRE_SQE_SIZE;
- 	qm->dev_name = hpre_name;
--	qm->qp_base = HPRE_PF_DEF_Q_BASE;
--	qm->qp_num = hpre_pf_q_num;
-+	qm->fun_type = (pdev->device == HPRE_PCI_DEVICE_ID) ?
-+		       QM_HW_PF : QM_HW_VF;
-+	if (pdev->is_physfn) {
-+		qm->qp_base = HPRE_PF_DEF_Q_BASE;
-+		qm->qp_num = hpre_pf_q_num;
-+	}
- 	qm->use_dma_api = true;
- 
- 	return 0;
-@@ -369,9 +375,16 @@ static int hpre_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (ret)
- 		return ret;
- 
--	ret = hpre_pf_probe_init(hpre);
--	if (ret)
--		goto err_with_qm_init;
-+	if (pdev->is_physfn) {
-+		ret = hpre_pf_probe_init(hpre);
-+		if (ret)
-+			goto err_with_qm_init;
-+	} else if (qm->fun_type == QM_HW_VF && qm->ver == QM_HW_V2) {
-+		/* v2 starts to support get vft by mailbox */
-+		ret = hisi_qm_get_vft(qm, &qm->qp_base, &qm->qp_num);
-+		if (ret)
-+			goto err_with_qm_init;
-+	}
- 
- 	ret = hisi_qm_start(qm);
- 	if (ret)
-@@ -391,7 +404,8 @@ static int hpre_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	hisi_qm_stop(qm);
- 
- err_with_err_init:
--	hpre_hw_error_disable(hpre);
-+	if (pdev->is_physfn)
-+		hpre_hw_error_disable(hpre);
- 
- err_with_qm_init:
- 	hisi_qm_uninit(qm);
-@@ -399,15 +413,125 @@ static int hpre_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	return ret;
- }
- 
-+static int hpre_vf_q_assign(struct hpre *hpre, int num_vfs)
-+{
-+	struct hisi_qm *qm = &hpre->qm;
-+	u32 qp_num = qm->qp_num;
-+	int q_num, remain_q_num, i;
-+	u32 q_base = qp_num;
-+	int ret;
-+
-+	if (!num_vfs)
-+		return -EINVAL;
-+
-+	remain_q_num = qm->ctrl_qp_num - qp_num;
-+
-+	/* If remaining queues are not enough, return error. */
-+	if (remain_q_num < num_vfs)
-+		return -EINVAL;
-+
-+	q_num = remain_q_num / num_vfs;
-+	for (i = 1; i <= num_vfs; i++) {
-+		if (i == num_vfs)
-+			q_num += remain_q_num % num_vfs;
-+		ret = hisi_qm_set_vft(qm, i, q_base, (u32)q_num);
-+		if (ret)
-+			return ret;
-+		q_base += q_num;
-+	}
-+
-+	return 0;
-+}
-+
-+static int hpre_clear_vft_config(struct hpre *hpre)
-+{
-+	struct hisi_qm *qm = &hpre->qm;
-+	u32 num_vfs = hpre->num_vfs;
-+	int ret;
-+	u32 i;
-+
-+	for (i = 1; i <= num_vfs; i++) {
-+		ret = hisi_qm_set_vft(qm, i, 0, 0);
-+		if (ret)
-+			return ret;
-+	}
-+	hpre->num_vfs = 0;
-+
-+	return 0;
-+}
-+
-+static int hpre_sriov_enable(struct pci_dev *pdev, int max_vfs)
-+{
-+	struct hpre *hpre = pci_get_drvdata(pdev);
-+	int pre_existing_vfs, num_vfs, ret;
-+
-+	pre_existing_vfs = pci_num_vf(pdev);
-+	if (pre_existing_vfs) {
-+		pci_err(pdev,
-+			"Can't enable VF. Please disable pre-enabled VFs!\n");
-+		return 0;
-+	}
-+
-+	num_vfs = min_t(int, max_vfs, HPRE_VF_NUM);
-+	ret = hpre_vf_q_assign(hpre, num_vfs);
-+	if (ret) {
-+		pci_err(pdev, "Can't assign queues for VF!\n");
-+		return ret;
-+	}
-+
-+	hpre->num_vfs = num_vfs;
-+
-+	ret = pci_enable_sriov(pdev, num_vfs);
-+	if (ret) {
-+		pci_err(pdev, "Can't enable VF!\n");
-+		hpre_clear_vft_config(hpre);
-+		return ret;
-+	}
-+
-+	return num_vfs;
-+}
-+
-+static int hpre_sriov_disable(struct pci_dev *pdev)
-+{
-+	struct hpre *hpre = pci_get_drvdata(pdev);
-+
-+	if (pci_vfs_assigned(pdev)) {
-+		pci_err(pdev, "Failed to disable VFs while VFs are assigned!\n");
-+		return -EPERM;
-+	}
-+
-+	/* remove in hpre_pci_driver will be called to free VF resources */
-+	pci_disable_sriov(pdev);
-+
-+	return hpre_clear_vft_config(hpre);
-+}
-+
-+static int hpre_sriov_configure(struct pci_dev *pdev, int num_vfs)
-+{
-+	if (num_vfs)
-+		return hpre_sriov_enable(pdev, num_vfs);
-+	else
-+		return hpre_sriov_disable(pdev);
-+}
-+
- static void hpre_remove(struct pci_dev *pdev)
- {
- 	struct hpre *hpre = pci_get_drvdata(pdev);
- 	struct hisi_qm *qm = &hpre->qm;
-+	int ret;
- 
- 	hpre_algs_unregister();
- 	hpre_remove_from_list(hpre);
-+	if (qm->fun_type == QM_HW_PF && hpre->num_vfs != 0) {
-+		ret = hpre_sriov_disable(pdev);
-+		if (ret) {
-+			pci_err(pdev, "Disable SRIOV fail!\n");
-+			return;
-+		}
-+	}
- 	hisi_qm_stop(qm);
--	hpre_hw_error_disable(hpre);
-+	if (qm->fun_type == QM_HW_PF)
-+		hpre_hw_error_disable(hpre);
- 	hisi_qm_uninit(qm);
- }
- 
-@@ -476,6 +600,7 @@ static struct pci_driver hpre_pci_driver = {
- 	.id_table		= hpre_dev_ids,
- 	.probe			= hpre_probe,
- 	.remove			= hpre_remove,
-+	.sriov_configure	= hpre_sriov_configure,
- 	.err_handler		= &hpre_err_handler,
- };
- 
+(Personally, I would've changed that to NR_VCPU_REGS + 1)
+
+>  	VCPU_EXREG_CR3,
+>  	VCPU_EXREG_RFLAGS,
+> diff --git a/arch/x86/kvm/kvm_cache_regs.h b/arch/x86/kvm/kvm_cache_regs.h
+> index 3972e1b65635..b85fc4b4e04f 100644
+> --- a/arch/x86/kvm/kvm_cache_regs.h
+> +++ b/arch/x86/kvm/kvm_cache_regs.h
+> @@ -95,7 +95,7 @@ static inline u64 kvm_pdptr_read(struct kvm_vcpu *vcpu, int index)
+>  
+>  	if (!test_bit(VCPU_EXREG_PDPTR,
+>  		      (unsigned long *)&vcpu->arch.regs_avail))
+> -		kvm_x86_ops->cache_reg(vcpu, (enum kvm_reg)VCPU_EXREG_PDPTR);
+> +		kvm_x86_ops->cache_reg(vcpu, VCPU_EXREG_PDPTR);
+>  
+>  	return vcpu->arch.walk_mmu->pdptrs[index];
+>  }
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
 -- 
-2.8.1
-
+Vitaly
