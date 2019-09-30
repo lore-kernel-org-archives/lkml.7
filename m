@@ -2,243 +2,191 @@ Return-Path: <SRS0=rUXN=XZ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBFDC388F3
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED28C32792
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 332C8216F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5EAE215EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 16:52:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FeiT7jCV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZKFO2Gko"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732340AbfI3Qus (ORCPT
+        id S1732381AbfI3Qwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 12:50:48 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:43152 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727767AbfI3Qus (ORCPT
+        Mon, 30 Sep 2019 12:52:41 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55050 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726425AbfI3Qwk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 12:50:48 -0400
-Received: by mail-qk1-f194.google.com with SMTP id h126so8368905qke.10;
-        Mon, 30 Sep 2019 09:50:45 -0700 (PDT)
+        Mon, 30 Sep 2019 12:52:40 -0400
+Received: by mail-wm1-f65.google.com with SMTP id p7so238636wmp.4;
+        Mon, 30 Sep 2019 09:52:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=KoXld5A01oSGDgCLY+ILZpasDZh9Ml2uSiGgAsKNG8w=;
-        b=FeiT7jCVx9yzGP5+5VicytREB73495f8wt2wy3rTz0P/An3RtHDcJhDMXwFKiyyxxP
-         NAHO82N7/e1YneU2+qo3xQuXGpCBA6AjslWTc8P3lvSJsQlwj9GT4rKHUUvwbNye3RL3
-         MD62J5Ycq1fQSZTzx/T35RWaEb4b1VbcYOknebObNcgiMs0Dcc1/z/e9G2fvku2KdfR4
-         eLMpfH1sEpBZTzJX1ogP8pTb0+e4Z1tGixO8GspRxNKmDzuF3jPXABgFIR+F3Z3OMl3c
-         /Bn5yKJ4W+1+FEaMq99NhMmY+3hKUig1Neq00qQpeRpspQWg1b7l4HDFBxSPI6GbBuhT
-         qVaw==
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=S4meV0NsaDpqLa7tBEXkvORH5DuiHJR7oObrl4NCVW4=;
+        b=ZKFO2GkolErFUr68Pj8DzLdvfmN6K47nQm/2ypFNwkvAju1BtuE3hjRdgIslfArdCz
+         tcSel3xQCWbcB9PQrXVWPcuH3PEHd/hwfhCl2SuSzh4zQFu09bkn5UKDvsSgV48XA3IQ
+         wTXguVJwJVOrG22nKLayzi1SKn+1HdpDfx2i0URglXV/jfSSRFtVyGVfpdOy0GnJLv/8
+         ojpfSrPFo/YhMqVgCF38LrBx2u/NPItz1UqQK0tl1bDKUayanqN5P+6FDgtaA2HKX/+X
+         XtEYy4zUAt+Z4GNZDpFuC7GDd3hlHw46kI7Ko829sHQc3p9iGotQePXO/DoNFEA0pNyZ
+         Qe2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=KoXld5A01oSGDgCLY+ILZpasDZh9Ml2uSiGgAsKNG8w=;
-        b=lJfUG53KLD30y8MyhScJkIluvV47loFuLtwmMT94VoRhfUUGOCEHuq6Io+ijP1PHc3
-         VIQHuMFn2z31MIq5BY2mMFYE9R/NjKd9mjssOU9gt84tFglH6P3DFJJwKQV21AZ4gMf1
-         PSay/zgAbK8WqAEw6/zzC6yJjZGDC9GMKJtxgk9w3Vb90umQHZ+HVr4rm1njCt6jjBU7
-         gmORxt46goqRDzHDTNVn2svBU+wANQYOooQhr7WXxgClA+X/AhjmA/JJZnCHtPY7Pgoa
-         zSYobdDbYLIVqy8Lw7ov0i22sQ5yJYLnAy2TVhPA0yt3YiG6PLQCgx9hDMecGa9FT4sg
-         kvuA==
-X-Gm-Message-State: APjAAAV0TMt5e6d1avbUtL+rlUWVUEe1EHqf99TmuptHp7p0YAHgsZMJ
-        xt2O3xRrxKSJgZjamqo7yf5nhDU2jPEd8/BLU8M=
-X-Google-Smtp-Source: APXvYqxpZFT6uu3F7zK0gwboh8wqtndVlH7R0FjdalKWDeDHssjvqgoKeHndmEeJ1OzBYHCcBpfVHvVjsi08K5+Mrxs=
-X-Received: by 2002:a37:98f:: with SMTP id 137mr1025607qkj.449.1569862245153;
- Mon, 30 Sep 2019 09:50:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190927130834.18829-1-kpsingh@chromium.org> <CAEf4Bzb_8AJS=HLUt9QpdRrt4AzW1ME9tFyL-QTqyu=7fC-dGA@mail.gmail.com>
- <87h84uxno9.fsf@toke.dk>
-In-Reply-To: <87h84uxno9.fsf@toke.dk>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 30 Sep 2019 09:50:33 -0700
-Message-ID: <CAEf4BzZNWu1e8ryuhyPW5=NqkX_s8NkBaet+akwh5ixxL1AegA@mail.gmail.com>
-Subject: Re: [PATCH] tools: libbpf: Add bpf_object__open_buffer_xattr
-To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
-Cc:     KP Singh <kpsingh@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        Anton Protopopov <a.s.protopopov@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Florent Revest <revest@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=S4meV0NsaDpqLa7tBEXkvORH5DuiHJR7oObrl4NCVW4=;
+        b=An34awI32oh+EqjtLvtVntQq6PYzXZcsjDWTYLbVdcg/qRrvg39u33irWvTA+SShmp
+         SNs9l4sdM/4MjnrpHm5AgzpzgKF17BjctMHY3T+xYiDxkKFQWaEczl41gCxXVpO7+d/P
+         PHPHo0poOAOfmFnk0s7tDZvGSWP7RW+rMYVl/WvcyQWM6XaFKpDr+A0G3SYGqKb+4O+0
+         UkR+EfbpgWFq98caK21xI94Rae7otbamU9KmNa14gg10YWmYfe6rcR4JDo2Oh6No3mHk
+         upBgP1D7t8cVgrCLvCWiS8WD/ppa0PmnEbRS0XAe8QEzk1LZPaNCHeMSu+kOJeSFjdQW
+         eVxg==
+X-Gm-Message-State: APjAAAWASdhu/rXgrXRKEYlHa726Kgdr17VrARdDMHve3yyW/44exLCH
+        JDWwv7aUOMV/ZkNtQZU+6WM6YusH
+X-Google-Smtp-Source: APXvYqzCLsczViMIVb7X3HfOf7obZBubZ1E1KCxx7eCgHu7Vt1z3KtWGQvxR+kz+c/TU/OFIY2h5pw==
+X-Received: by 2002:a7b:c4c9:: with SMTP id g9mr141219wmk.150.1569862355607;
+        Mon, 30 Sep 2019 09:52:35 -0700 (PDT)
+Received: from 640k.localdomain ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id n22sm139924wmk.19.2019.09.30.09.52.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 30 Sep 2019 09:52:34 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     vkuznets@redhat.com, kvm-ppc@vger.kernel.org
+Subject: [PATCH] kvm: x86, powerpc: do not allow clearing largepages debugfs entry
+Date:   Mon, 30 Sep 2019 18:52:31 +0200
+Message-Id: <1569862351-19760-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 12:12 AM Toke H=C3=B8iland-J=C3=B8rgensen <toke@red=
-hat.com> wrote:
->
-> Andrii Nakryiko <andrii.nakryiko@gmail.com> writes:
->
-> > On Fri, Sep 27, 2019 at 6:11 AM KP Singh <kpsingh@chromium.org> wrote:
-> >>
-> >> From: KP Singh <kpsingh@google.com>
-> >>
-> >> Introduce struct bpf_object_open_buffer_attr and an API function,
-> >> bpf_object__open_xattr, as the existing API, bpf_object__open_buffer,
-> >> doesn't provide a way to specify neither the "needs_kver" nor
-> >> the "flags" parameter to the internal call to the
-> >> __bpf_object__open which makes it inconvenient for loading BPF
-> >> objects that do not require a kernel version from a buffer.
-> >>
-> >> The flags attribute in the bpf_object_open_buffer_attr is set
-> >> to MAPS_RELAX_COMPAT when used in bpf_object__open_buffer to
-> >> maintain backward compatibility as this was added to load objects
-> >> with non-compat map definitions in:
-> >>
-> >> commit c034a177d3c8 ("bpf: bpftool, add flag to allow non-compat map
-> >>                       definitions")
-> >>
-> >> and bpf_object__open_buffer was called with this flag enabled (as a
-> >> boolean true value).
-> >>
-> >> The existing "bpf_object__open_xattr" cannot be modified to
-> >> maintain API compatibility.
-> >>
-> >> Reported-by: Anton Protopopov <a.s.protopopov@gmail.com>
-> >> Signed-off-by: KP Singh <kpsingh@google.com>
-> >> ---
-> >>  tools/lib/bpf/libbpf.c   | 39 ++++++++++++++++++++++++++++-----------
-> >>  tools/lib/bpf/libbpf.h   | 10 ++++++++++
-> >>  tools/lib/bpf/libbpf.map |  5 +++++
-> >>  3 files changed, 43 insertions(+), 11 deletions(-)
-> >>
-> >> This patch is assimilates the feedback from:
-> >>
-> >>   https://lore.kernel.org/bpf/20190815000330.12044-1-a.s.protopopov@gm=
-ail.com/
-> >>
-> >> I have added a "Reported-by:" tag, but please feel free to update to
-> >> "Co-developed-by" if it's more appropriate from an attribution perspec=
-tive.
-> >>
-> >> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> >> index 2b57d7ea7836..1f1f2e92832b 100644
-> >> --- a/tools/lib/bpf/libbpf.c
-> >> +++ b/tools/lib/bpf/libbpf.c
-> >> @@ -2752,25 +2752,42 @@ struct bpf_object *bpf_object__open(const char=
- *path)
-> >>         return bpf_object__open_xattr(&attr);
-> >>  }
-> >>
-> >> -struct bpf_object *bpf_object__open_buffer(void *obj_buf,
-> >> -                                          size_t obj_buf_sz,
-> >> -                                          const char *name)
-> >> +struct bpf_object *
-> >> +bpf_object__open_buffer_xattr(struct bpf_object_open_buffer_attr *att=
-r)
-> >
-> > I have few concerns w.r.t. adding API in this form and I'm going to
-> > use this specific case to discuss more general problem of API design,
-> > ABI compatibility, and extending APIs with extra optional arguments.
-> >
-> > 1. In general, I think it would be good for libbpf API usability to
-> > use the following pattern consistently (moving forward):
-> >
-> > T1 some_api_function(T2 mandatory_arg1, ..., TN mandatory_arg, struct
-> > something_opts *opts)
-> >
-> > So all the mandatory arguments that have to be provides are specified
-> > explicitly as function arguments. That makes it very clear what API
-> > expects to get always.
-> > opts (we use both opts and attrs, but opts seems better because its
-> > optional options :), on the other hand, is stuff that might be
-> > omitted, so if user doesn't care about tuning behavior of API and
-> > wants all-defaults behavior, then providing NULL here should just
-> > work.
-> >
-> > So in this case for bpf_object__open_buffer_xattr(), it could look like=
- this:
-> >
-> > struct bpf_object* bpf_object__open_buffer_opts(void *buf, size_t sz,
-> > struct bpf_object_open_opts* opts);
->
-> I like this idea! Sensible defaults that can be selected by just passing
-> NULL as opts is a laudable goal.
+The largepages debugfs entry is incremented/decremented as shadow
+pages are created or destroyed.  Clearing it will result in an
+underflow, which is harmless to KVM but ugly (and could be
+misinterpreted by tools that use debugfs information), so make
+this particular statistic read-only.
 
-Cool, I just sent out RFC w/ what I had in mind and applied that to
-consistent open_mem/open_file APIs, let's discuss further there.
+Cc: kvm-ppc@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/powerpc/kvm/book3s.c |  8 ++++----
+ arch/x86/kvm/x86.c        |  6 +++---
+ include/linux/kvm_host.h  |  2 ++
+ virt/kvm/kvm_main.c       | 10 +++++++---
+ 4 files changed, 16 insertions(+), 10 deletions(-)
 
->
-> > 2. Now, we need to do something with adding new options without
-> > breaking ABIs. With all the existing extra attributes, when we need to
-> > add new field to that struct, that can break old code that's
-> > dynamically linked to newer versions of libbpf, because their
-> > attr/opts struct is too short for new code, so that could cause
-> > segment violation or can make libbpf read garbage for those newly
-> > added fields. There are basically three ways we can go about this:
-> >
-> > a. either provide the size of opts struct as an extra argument to each
-> > API that uses options, so:
-> > struct bpf_object* bpf_object__open_buffer_opts(void *buf, size_t sz,
-> > struct bpf_object_open_opts* opts, size_t opts_sz);
-> >
-> > b. make it mandatory that every option struct has to have as a first
-> > field its size, so:
-> >
-> > struct bpf_object_open_opts {
-> >         size_t sz;
-> >         /* now we can keep adding attrs */
-> > };
-> >
-> > Now, when options are provided, we'll read first sizeof(size_t) bytes,
-> > validate it for sanity and then we'll know which fields are there or
-> > not.
-> >
-> > Both options have downside of user needing to do extra initialization,
-> > but it's not too bad in either case. Especially in case b), if user
-> > doesn't care about extra options, then no extra steps are necessary.
-> > In case a, we can pass NULL, 0 at the end, so also not a big deal.
-> >
-> > c. Alternatively, we can do symbol versioning similar how xsk.c
-> > started doing it, and handle those options struct size differences
-> > transparently. But that's a lot of extra boilerplate code in libbpf
-> > and I'd like to avoid that, if possible.
->
-> My hunch is that we're kidding ourselves if we think we can avoid the
-> symbol versioning. And besides, checking struct sizes needs boilerplate
-> code as well, boilerplate that will fail at runtime instead of compile
-> time if it's done wrong.
->
-> So IMO we're better off just doing symbol version right from the
-> beginning.
+diff --git a/arch/powerpc/kvm/book3s.c b/arch/powerpc/kvm/book3s.c
+index d7fcdfa7fee4..ec2547cc5ecb 100644
+--- a/arch/powerpc/kvm/book3s.c
++++ b/arch/powerpc/kvm/book3s.c
+@@ -36,8 +36,8 @@
+ #include "book3s.h"
+ #include "trace.h"
+ 
+-#define VM_STAT(x) offsetof(struct kvm, stat.x), KVM_STAT_VM
+-#define VCPU_STAT(x) offsetof(struct kvm_vcpu, stat.x), KVM_STAT_VCPU
++#define VM_STAT(x, ...) offsetof(struct kvm, stat.x), KVM_STAT_VM, ## __VA_ARGS__
++#define VCPU_STAT(x, ...) offsetof(struct kvm_vcpu, stat.x), KVM_STAT_VCPU, ## __VA_ARGS__
+ 
+ /* #define EXIT_DEBUG */
+ 
+@@ -69,8 +69,8 @@ struct kvm_stats_debugfs_item debugfs_entries[] = {
+ 	{ "pthru_all",       VCPU_STAT(pthru_all) },
+ 	{ "pthru_host",      VCPU_STAT(pthru_host) },
+ 	{ "pthru_bad_aff",   VCPU_STAT(pthru_bad_aff) },
+-	{ "largepages_2M",    VM_STAT(num_2M_pages) },
+-	{ "largepages_1G",    VM_STAT(num_1G_pages) },
++	{ "largepages_2M",    VM_STAT(num_2M_pages, .mode = 0444) },
++	{ "largepages_1G",    VM_STAT(num_1G_pages, .mode = 0444) },
+ 	{ NULL }
+ };
+ 
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 180c7e88577a..8072acaaf028 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -92,8 +92,8 @@
+ static u64 __read_mostly efer_reserved_bits = ~((u64)EFER_SCE);
+ #endif
+ 
+-#define VM_STAT(x) offsetof(struct kvm, stat.x), KVM_STAT_VM
+-#define VCPU_STAT(x) offsetof(struct kvm_vcpu, stat.x), KVM_STAT_VCPU
++#define VM_STAT(x, ...) offsetof(struct kvm, stat.x), KVM_STAT_VM, ## __VA_ARGS__
++#define VCPU_STAT(x, ...) offsetof(struct kvm_vcpu, stat.x), KVM_STAT_VCPU, ## __VA_ARGS__
+ 
+ #define KVM_X2APIC_API_VALID_FLAGS (KVM_X2APIC_API_USE_32BIT_IDS | \
+                                     KVM_X2APIC_API_DISABLE_BROADCAST_QUIRK)
+@@ -212,7 +212,7 @@ struct kvm_stats_debugfs_item debugfs_entries[] = {
+ 	{ "mmu_cache_miss", VM_STAT(mmu_cache_miss) },
+ 	{ "mmu_unsync", VM_STAT(mmu_unsync) },
+ 	{ "remote_tlb_flush", VM_STAT(remote_tlb_flush) },
+-	{ "largepages", VM_STAT(lpages) },
++	{ "largepages", VM_STAT(lpages, .mode = 0444) },
+ 	{ "max_mmu_page_hash_collisions",
+ 		VM_STAT(max_mmu_page_hash_collisions) },
+ 	{ NULL }
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index fcb46b3374c6..719fc3e15ea4 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -1090,6 +1090,7 @@ enum kvm_stat_kind {
+ 
+ struct kvm_stat_data {
+ 	int offset;
++	int mode;
+ 	struct kvm *kvm;
+ };
+ 
+@@ -1097,6 +1098,7 @@ struct kvm_stats_debugfs_item {
+ 	const char *name;
+ 	int offset;
+ 	enum kvm_stat_kind kind;
++	int mode;
+ };
+ extern struct kvm_stats_debugfs_item debugfs_entries[];
+ extern struct dentry *kvm_debugfs_dir;
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index e6de3159e682..fd68fbe0a75d 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -617,8 +617,9 @@ static int kvm_create_vm_debugfs(struct kvm *kvm, int fd)
+ 
+ 		stat_data->kvm = kvm;
+ 		stat_data->offset = p->offset;
++		stat_data->mode = p->mode ? p->mode : 0644;
+ 		kvm->debugfs_stat_data[p - debugfs_entries] = stat_data;
+-		debugfs_create_file(p->name, 0644, kvm->debugfs_dentry,
++		debugfs_create_file(p->name, stat_data->mode, kvm->debugfs_dentry,
+ 				    stat_data, stat_fops_per_vm[p->kind]);
+ 	}
+ 	return 0;
+@@ -3929,7 +3930,9 @@ static int kvm_debugfs_open(struct inode *inode, struct file *file,
+ 	if (!refcount_inc_not_zero(&stat_data->kvm->users_count))
+ 		return -ENOENT;
+ 
+-	if (simple_attr_open(inode, file, get, set, fmt)) {
++	if (simple_attr_open(inode, file, get,
++			     stat_data->mode & S_IWUGO ? set : NULL,
++			     fmt)) {
+ 		kvm_put_kvm(stat_data->kvm);
+ 		return -ENOMEM;
+ 	}
+@@ -4177,7 +4180,8 @@ static void kvm_init_debug(void)
+ 
+ 	kvm_debugfs_num_entries = 0;
+ 	for (p = debugfs_entries; p->name; ++p, kvm_debugfs_num_entries++) {
+-		debugfs_create_file(p->name, 0644, kvm_debugfs_dir,
++		int mode = p->mode ? p->mode : 0644;
++		debugfs_create_file(p->name, mode, kvm_debugfs_dir,
+ 				    (void *)(long)p->offset,
+ 				    stat_fops[p->kind]);
+ 	}
+-- 
+1.8.3.1
 
-I'm not against symbol versioning, don't get me wrong. Yonghong is
-already fixing one of the problems with symbol versioning and after
-that it should be pretty streamlined to add extra symbol versions. But
-I'd like to avoid create a new symbol version for every minor new
-optional field being added. On libbpf side this will cause lots of
-boilerplate code for each version to "converge" to correct and full
-struct definition and then call into a common implementation that
-expects full struct definition.
-
-With what I'm proposing in the RFC patch I sent out and CC'ed you on
-we should have new symbol version only when there is some nontrivial
-change only, which I think is a good thing to strive for.
-
->
-> > 3. Now, the last minor complain is about flags field. It's super
-> > generic. Why not have a set of boolean fields in a struct, in this
-> > case to allow to specify strict/compat modes. Given we solve struct
-> > extensibility issue, adding new bool fields is not an issue at all, so
-> > the benefit of flags field are gone. The downside of flags field is
-> > that it's very opaque integer, you have to go and read sources to
-> > understand all the intended use cases and possible flags, which is
-> > certainly not a great user experience.
->
-> This I agree with :)
->
-> -Toke
->
