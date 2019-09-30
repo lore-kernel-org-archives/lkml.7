@@ -8,69 +8,66 @@ X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69EC0C4360C
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 03:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9BFC4360C
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 03:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30D102168B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 03:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 985462082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Sep 2019 03:22:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hetnKUgs"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E3oXxSpn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729456AbfI3DKA (ORCPT
+        id S1729461AbfI3DWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Sep 2019 23:10:00 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:35206 "EHLO
+        Sun, 29 Sep 2019 23:22:13 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45338 "EHLO
         mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbfI3DKA (ORCPT
+        with ESMTP id S1726360AbfI3DWN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Sep 2019 23:10:00 -0400
-Received: by mail-io1-f66.google.com with SMTP id q10so34394834iop.2;
-        Sun, 29 Sep 2019 20:09:59 -0700 (PDT)
+        Sun, 29 Sep 2019 23:22:13 -0400
+Received: by mail-io1-f66.google.com with SMTP id c25so34285671iot.12;
+        Sun, 29 Sep 2019 20:22:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=JdWTb1V4IhUUMb47mN6yAdg27zy2bK0W+qF3wp30fYo=;
-        b=hetnKUgsD2zSGDpE7xOLnzeBpXHQYJEYYEqnzJSwcvWeNhdWPsdlC6/Pbtswtb+2tg
-         ReMBVDCg9wXGCrev7wYoFfActSDTXjhCrs0vGHKXQNlzmnTvodwpgC8GReVyUTL0cUH6
-         jPTCtsx6gOP9iFcUzUyy2V77UQAkJPNLpN/9ZFmSxBsi6rCppsNdoC3ciTBBpVHYGV8Z
-         Myyx7ePbg+RWklM9om4+N+eOelSbT4G5BFWA9tPOKtxcimECtmLWNhuAU4sZY3PA7GSi
-         2E2BiHEuooVd+tzXxgBWNKKeiMaqgI0bZFAkItESu2W1K44vsybFpfUDwksMtW2XWFcq
-         p/mg==
+        bh=RTk8o5y2OPdzeM4DZQR03uMoZrvcDTNy01aX7f4t5ng=;
+        b=E3oXxSpn06DltBkGV1TKMJM9wzbTOptdQLKZGVGE8ZilsjoiFCsEqqqpbUK9xQHYF0
+         MmajzeMtnrpQQs0yuQDw/hf+XWqu0ColCwy9SYXZk1vcHbriBUcLZo4t0g6XfHqyUp9q
+         afQgOfXeEXF4pcTbIvEeMCuq0pYZ2hWYUBl+Gf7cdnCNDHtotZEzRG2o65H8Scnjp7ut
+         Iat0yz7mwfeSOkX2m4jCcIWKS7VOWRQdBzd6rxElYdklgvTTON0FwjbqSET4a13ljVJ5
+         nEi4GS+oHQc2P0epmShYmEC/MJNeqG5DWpcW3CBaXgfeyukWvpMYTIe0JUaJIGsZmXLY
+         uH+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=JdWTb1V4IhUUMb47mN6yAdg27zy2bK0W+qF3wp30fYo=;
-        b=qTA1OPG01dk3OU3azeHvSXJuynJuWzybyqS87C0xIBx9iOw1L7ccEs6gKcwAMC+2fR
-         rdFfSav6f2CdYqr33H2BSDB7zCWtUf1gq/xatdozyZ79oixLhBbaX/YF56lYqg6qLgvs
-         gSEc7bhLKfwYPi1shq+GBRZz6b8F8XLB4yCiGGOTsAmnFQXN6sP31bukhioFskm8TdXd
-         AhRmkgLaobATUQG79w4oPjMkdFFe97y0RsMV7JX965F1t2pAPiphN/J59GLHxhLnCK2n
-         5A/vMi22vYjsM4nXYUtDUv1DcNj9gy5xojhUK95nrfLzVYVb07/p77EojqhGCA4yhimI
-         2q4w==
-X-Gm-Message-State: APjAAAWGEH1bitG6HOuvyYajlEkFPJuF99oGanczrPuP1hmHFBpKZBEa
-        CVczJtBMYkbExgcmb6xF9UU=
-X-Google-Smtp-Source: APXvYqw9S4icJAA3Iim6bEKEOhPYCZHJFDUjRkHAKLayY1qZ/8t7tcsSVHOGYMUZdwQB5yUeCahPEQ==
-X-Received: by 2002:a5d:9349:: with SMTP id i9mr3190833ioo.101.1569812999347;
-        Sun, 29 Sep 2019 20:09:59 -0700 (PDT)
+        bh=RTk8o5y2OPdzeM4DZQR03uMoZrvcDTNy01aX7f4t5ng=;
+        b=Iyq5vJKmy2oyxDLEVJDLCnbA6K4O6RgSxS1QC4MHrFDUGnJmw/UnRHTKQms8qTg5+n
+         bmm+VoaCnYEYkCyyscKabYMjNkPlriSnWJusu1J0jHfgdriFuyuQSVmNBAy35PmluKVs
+         fJn05pep2BDVV6IWN7Byi2o+8w6jUBpvzdGBixHMUw82anQ2QwEJ0t/KukvFdfnN9Ka1
+         LS09zDzYMsCLQXj1vh1da59P9ct1YykHR8JDH9wNXdcoSF8qp6iOvEdajrDQfXn7Z2+m
+         WKoRsXVOq3YYWETdz7zLXqmyc9D1teuhTlszR80E4/EaXps7xErcT0r304GuXL8Ambe9
+         plXQ==
+X-Gm-Message-State: APjAAAWKp+4P+YYpo1EczysUi1UTmF3/pTIR2ZmMTqxk2uUypmDDtOn0
+        cP2eV4wPHzHy9EEeTySln/o=
+X-Google-Smtp-Source: APXvYqw0xIH4YEErxHKd1cWTbiTh0e/nyDizgg12MsP8PWV5gRx64ITCSEOYECK+pTn9HF9v+beiFg==
+X-Received: by 2002:a92:9e08:: with SMTP id q8mr18219649ili.263.1569813732351;
+        Sun, 29 Sep 2019 20:22:12 -0700 (PDT)
 Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id r22sm5444086ilb.85.2019.09.29.20.09.58
+        by smtp.googlemail.com with ESMTPSA id s19sm5343826iob.81.2019.09.29.20.22.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Sep 2019 20:09:58 -0700 (PDT)
+        Sun, 29 Sep 2019 20:22:12 -0700 (PDT)
 From:   Navid Emamdoost <navid.emamdoost@gmail.com>
 Cc:     emamd001@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
         Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Bhanusree Pola <bhanusreemahesh@gmail.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        =?UTF-8?q?Jan=20Sebastian=20G=C3=B6tte?= <linux@jaseg.net>,
-        Nishad Kamdar <nishadkamdar@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Staging: fbtft: fix memory leak in fbtft_framebuffer_alloc
-Date:   Sun, 29 Sep 2019 22:09:45 -0500
-Message-Id: <20190930030949.28615-1-navid.emamdoost@gmail.com>
+        David Sterba <dsterba@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] fs: affs: fix a memroy leak in affs_remount
+Date:   Sun, 29 Sep 2019 22:21:57 -0500
+Message-Id: <20190930032200.30474-1-navid.emamdoost@gmail.com>
 X-Mailer: git-send-email 2.17.1
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,48 +75,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In fbtft_framebuffer_alloc the error handling path should take care of
-releasing frame buffer after it is allocated via framebuffer_alloc, too.
-Therefore, in two failure cases the goto destination is changed to
-address this issue.
+In affs_remount if data is provided it is duplicated into new_opts. But
+this is not actually used later! The allocated memory for new_opts is
+only released if pare_options fail. This commit adds release for
+new_opts.
 
-Fixes: c296d5f9957c ("staging: fbtft: core support")
 Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 ---
- drivers/staging/fbtft/fbtft-core.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ fs/affs/super.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/staging/fbtft/fbtft-core.c b/drivers/staging/fbtft/fbtft-core.c
-index cf5700a2ea66..a0a67aa517f0 100644
---- a/drivers/staging/fbtft/fbtft-core.c
-+++ b/drivers/staging/fbtft/fbtft-core.c
-@@ -714,7 +714,7 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
- 	if (par->gamma.curves && gamma) {
- 		if (fbtft_gamma_parse_str(par, par->gamma.curves, gamma,
- 					  strlen(gamma)))
--			goto alloc_fail;
-+			goto release_framebuf;
- 	}
+diff --git a/fs/affs/super.c b/fs/affs/super.c
+index cc463ae47c12..1d38fdbc5148 100644
+--- a/fs/affs/super.c
++++ b/fs/affs/super.c
+@@ -598,6 +598,8 @@ affs_remount(struct super_block *sb, int *flags, char *data)
+ 	memcpy(sbi->s_volume, volume, 32);
+ 	spin_unlock(&sbi->symlink_lock);
  
- 	/* Transmit buffer */
-@@ -731,7 +731,7 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
- 	if (txbuflen > 0) {
- 		txbuf = devm_kzalloc(par->info->device, txbuflen, GFP_KERNEL);
- 		if (!txbuf)
--			goto alloc_fail;
-+			goto release_framebuf;
- 		par->txbuf.buf = txbuf;
- 		par->txbuf.len = txbuflen;
- 	}
-@@ -753,6 +753,9 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
- 
- 	return info;
- 
-+release_framebuf:
-+	framebuffer_release(info);
++	kfree(new_opts);
 +
- alloc_fail:
- 	vfree(vmem);
+ 	if ((bool)(*flags & SB_RDONLY) == sb_rdonly(sb))
+ 		return 0;
  
 -- 
 2.17.1
