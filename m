@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 835D8C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC317ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5053E2168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA5832168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:56:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569949005;
-	bh=RFlFr5ng0YfvJ70nWmeLshEy94Iz1WKXPi6LEh6LIuY=;
+	s=default; t=1569949012;
+	bh=MyDQQmHBYpxiok5wMLlt4ZWNdBVl66/vrF4hYu3W/oA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L+Ihsx2IX7xQj6cfBhmeIu1RQs10+m4oFKRLCKAo6BVpQU2go6ZzTOmk/qiPZPYZd
-	 6nws1+VOzwcNIeNlxqVOTOlr+2J2SwTYdFTtxbAxyEz+vzu+TEzKatao+ELvP9P7Tv
-	 nW4xpwpzxwL/YeNbQN6XrrLnKRTQ8Vtih+SHeyII=
+	b=BYYYDSIV1qY3F998PotA5f+Xq8h0HbDBFs+S2AE8Rlu1tfEtIVgmyhTa7JabmvVto
+	 xEKOQNomMRBjFQse54qS7uT4WgpOYNqLEsSkUmoDb4nyePJ310ITP5paV8Uyl8OzaK
+	 YkAmr0idz65SCvKInNC+xc4jGf1pa1c2D99iLrbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732501AbfJAQ4o (ORCPT
+        id S1731584AbfJAQmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:56:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53822 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:42:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731479AbfJAQmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:42:03 -0400
+        id S1731479AbfJAQlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:41:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7275721920;
-        Tue,  1 Oct 2019 16:42:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EE9A21855;
+        Tue,  1 Oct 2019 16:41:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948122;
-        bh=RFlFr5ng0YfvJ70nWmeLshEy94Iz1WKXPi6LEh6LIuY=;
+        s=default; t=1569948115;
+        bh=MyDQQmHBYpxiok5wMLlt4ZWNdBVl66/vrF4hYu3W/oA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ctBOR35HqljWr0o8ZYwDOD53usHOzVYDe+FwnG4pe8m45D+2nCIQICU2zO2CBMeWH
-         88th1+Y+mpaWr5R7Oj9Wzo5AVhPda1+6ETJ05OKnrbI4+qqRAHcKZP138R9gmW4xym
-         oYp0f6Aqq1IjzqbpZruDhBcd2rs/fYbq8oG1/3fM=
+        b=ZpWBbWTqZu3Y49V/x2lluLsOUn89LaqC6tV7XcUIwS4594dNHExd0KV2ngdASCxJs
+         r8wfwGCWZEriS7Ijh/sHTIZJQmXwWq0dG9yOkgO1H2KOg2DkoChMbZLym4QPiNTi7+
+         ByDdYPmQqQ4D/dK4yID6e5XmNSS3mXSdCybxwEMI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
-        syzbot+618aacd49e8c8b8486bd@syzkaller.appspotmail.com,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        David Ahern <dsahern@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 27/63] net_sched: add max len check for TCA_KIND
-Date:   Tue,  1 Oct 2019 12:40:49 -0400
-Message-Id: <20191001164125.15398-27-sashal@kernel.org>
+Cc:     Trond Myklebust <trondmy@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 21/63] SUNRPC: Don't try to parse incomplete RPC messages
+Date:   Tue,  1 Oct 2019 12:40:43 -0400
+Message-Id: <20191001164125.15398-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164125.15398-1-sashal@kernel.org>
 References: <20191001164125.15398-1-sashal@kernel.org>
@@ -63,42 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Trond Myklebust <trondmy@gmail.com>
 
-[ Upstream commit 62794fc4fbf52f2209dc094ea255eaef760e7d01 ]
+[ Upstream commit 9ba828861c56a21d211d5d10f5643774b1ea330d ]
 
-The TCA_KIND attribute is of NLA_STRING which does not check
-the NUL char. KMSAN reported an uninit-value of TCA_KIND which
-is likely caused by the lack of NUL.
+If the copy of the RPC reply into our buffers did not complete, and
+we could end up with a truncated message. In that case, just resend
+the call.
 
-Change it to NLA_NUL_STRING and add a max len too.
-
-Fixes: 8b4c3cdd9dd8 ("net: sched: Add policy validation for tc attributes")
-Reported-and-tested-by: syzbot+618aacd49e8c8b8486bd@syzkaller.appspotmail.com
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fixes: a0584ee9aed80 ("SUNRPC: Use struct xdr_stream when decoding...")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/sch_api.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/sunrpc/clnt.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/net/sched/sch_api.c b/net/sched/sch_api.c
-index 04faee7ccbce6..dac9f2887694d 100644
---- a/net/sched/sch_api.c
-+++ b/net/sched/sch_api.c
-@@ -1390,7 +1390,8 @@ check_loop_fn(struct Qdisc *q, unsigned long cl, struct qdisc_walker *w)
- }
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 8f32f73614111..866b60313fb12 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -2398,6 +2398,7 @@ call_decode(struct rpc_task *task)
+ 	struct rpc_clnt	*clnt = task->tk_client;
+ 	struct rpc_rqst	*req = task->tk_rqstp;
+ 	struct xdr_stream xdr;
++	int err;
  
- const struct nla_policy rtm_tca_policy[TCA_MAX + 1] = {
--	[TCA_KIND]		= { .type = NLA_STRING },
-+	[TCA_KIND]		= { .type = NLA_NUL_STRING,
-+				    .len = IFNAMSIZ - 1 },
- 	[TCA_RATE]		= { .type = NLA_BINARY,
- 				    .len = sizeof(struct tc_estimator) },
- 	[TCA_STAB]		= { .type = NLA_NESTED },
+ 	dprint_status(task);
+ 
+@@ -2420,6 +2421,15 @@ call_decode(struct rpc_task *task)
+ 	 * before it changed req->rq_reply_bytes_recvd.
+ 	 */
+ 	smp_rmb();
++
++	/*
++	 * Did we ever call xprt_complete_rqst()? If not, we should assume
++	 * the message is incomplete.
++	 */
++	err = -EAGAIN;
++	if (!req->rq_reply_bytes_recvd)
++		goto out;
++
+ 	req->rq_rcv_buf.len = req->rq_private_buf.len;
+ 
+ 	/* Check that the softirq receive buffer is valid */
+@@ -2428,7 +2438,9 @@ call_decode(struct rpc_task *task)
+ 
+ 	xdr_init_decode(&xdr, &req->rq_rcv_buf,
+ 			req->rq_rcv_buf.head[0].iov_base, req);
+-	switch (rpc_decode_header(task, &xdr)) {
++	err = rpc_decode_header(task, &xdr);
++out:
++	switch (err) {
+ 	case 0:
+ 		task->tk_action = rpc_exit_task;
+ 		task->tk_status = rpcauth_unwrap_resp(task, &xdr);
 -- 
 2.20.1
 
