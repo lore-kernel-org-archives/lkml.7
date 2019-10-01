@@ -2,52 +2,52 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 039A1ECDFB6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1F2C388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD50421783
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35D3B21783
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:16:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="E5y1WjKs"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LVpV9EiL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732722AbfJAGQy (ORCPT
+        id S1732741AbfJAGQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 02:16:54 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:57550 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732669AbfJAGQv (ORCPT
+        Tue, 1 Oct 2019 02:16:57 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:47960 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732717AbfJAGQy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 02:16:51 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x916GKn4055655;
-        Tue, 1 Oct 2019 01:16:20 -0500
+        Tue, 1 Oct 2019 02:16:54 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x916GkWm009371;
+        Tue, 1 Oct 2019 01:16:46 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569910580;
-        bh=i+/cBuwEhu+kG72RDawA6zSZdhLrW0nih8sfzn+f6n8=;
-        h=From:To:CC:Subject:Date;
-        b=E5y1WjKsdtzTky4n4XedeGOQjMzWB653ATEultt8/SYRVG/iuI7h16tiW/L3jyaUX
-         oPhlZ+FnpKect5GlO6xeSqxRQKeFxLgY46smEyOlAsbjtKr4PSO14tBTPLl+mxmTwP
-         ZJX8wjI/yCQpt1EwQEIfe1sR4ToYfe24pTfiA/ks=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x916GK55017804
+        s=ti-com-17Q1; t=1569910606;
+        bh=Pgjk77igAROFlh+s9KVYoYfiPSmphJHDbtf3r1cTFqA=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=LVpV9EiLSCRz6kyP8oQa0MpJliySHKFFTPgTswRXLfB9Fk3L8BnHFUZZa3yrzxBNA
+         cTlBUFGoCP1y/jaz0p0l9WeFvtbTfmAXWmiT3mcHz4HjCo8WBNw2BYQLP4NBVHJRdH
+         LbkVH3QjyHPzToUo5IscHNEebt3cIavKVxK4MaoM=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x916GkOY034146
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 1 Oct 2019 01:16:20 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 1 Oct 2019 01:16:46 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 1 Oct
- 2019 01:16:10 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 01:16:35 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 1 Oct 2019 01:16:10 -0500
+ Frontend Transport; Tue, 1 Oct 2019 01:16:45 -0500
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x916GGX5090310;
-        Tue, 1 Oct 2019 01:16:16 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x916GGXC090310;
+        Tue, 1 Oct 2019 01:16:42 -0500
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
         <ssantosh@kernel.org>
@@ -56,10 +56,12 @@ CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
         <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
-Subject: [PATCH v3 00/14] dmaengine/soc: Add Texas Instruments UDMA support
-Date:   Tue, 1 Oct 2019 09:16:50 +0300
-Message-ID: <20191001061704.2399-1-peter.ujfalusi@ti.com>
+Subject: [PATCH v3 07/14] dt-bindings: dma: ti: Add document for K3 UDMA
+Date:   Tue, 1 Oct 2019 09:16:57 +0300
+Message-ID: <20191001061704.2399-8-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191001061704.2399-1-peter.ujfalusi@ti.com>
+References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
@@ -69,218 +71,227 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+New binding document for
+Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P).
 
-Changes since v2
-)https://patchwork.kernel.org/project/linux-dmaengine/list/?series=152609&state=*)
-- Based on 5.4-rc1
-- Support for Flow only data transfer for the glue layer
+UDMA-P is introduced as part of the K3 architecture and can be found in
+AM654 and j721e.
 
-- cppi5 header
- - comments converted to kernel-doc style
- - Remove the excessive WARN_ONs and rely on the user for sanity
- - new macro for checking TearDown Completion Message
-
-- ring accelerator driver
- - fixed up th commit message (SoB, TI-SCI)
- - fixed ring reset
- - CONFIG_TI_K3_RINGACC_DEBUG is removed along with the dbg_write/read functions
-   and use dev_dbg()
- - k3_ringacc_ring_dump() is moved to static
- - step numbering removed from k3_ringacc_ring_reset_dma()
- - Add clarification comment for shared ring usage in k3_ringacc_ring_cfg()
- - Magic shift values in k3_ringacc_ring_cfg_proxy() got defined
- - K3_RINGACC_RING_MODE_QM is removed as it is not supported
-
-- UDMAP DT bindings
- - Fix property prefixing: s/pdma,/ti,pdma-
- - Add ti,notdpkt property to suppress teardown completion message on tchan
- - example updated accordingly
-
-- UDMAP DMAengine driver
- - Change __raw_readl/writel to readl/writel
- - Split up the udma_tisci_channel_config() into m2m, tx and rx tisci
-   configuration functions for clarity
- - DT bindings change: s/pdma,/ti,pdma-
- - Cleanup of udma_tx_status():
-  - residue calculation fix for m2m
-  - no need to read packet counter as it is not used
-  - peer byte counter only available in PDMAs
-  - Proper locking to avoid race with interrupt handler (polled m2m fix)
- - Support for ti,notdpkt
- - RFLOW management rework to support data movement without channel:
-  - the channel is not controlled by Linux but other core and we only have
-    rflows and rings to do the DMA transfers.
-    This mode is only supported by the Glue layer for now.
-
-- UDMAP glue layer
- - Debug print improvements
- - Support for rflow/ring only data movement
-
-Changes since v1
-(https://patchwork.kernel.org/project/linux-dmaengine/list/?series=114105&state=*)
-- Added support for j721e
-- Based on 5.3-rc2
-- dropped ti_sci API patch for RM management as it is already upstream
-- dropped dmadev_get_slave_channel() patch, using __dma_request_channel()
-- Added Rob's Reviewed-by to ringacc DT binding document patch
-- DT bindings changes:
- - linux,udma-mode is gone, I have a simple lookup table in the driver to flag
-   TR channels.
- - Support for j721e
-- Fix bug in of_node_put() handling in xlate function
-
-Changes since RFC (https://patchwork.kernel.org/cover/10612465/):
-- Based on linux-next (20190506) which now have the ti_sci interrupt support
-- The series can be applied and the UDMA via DMAengine API will be functional
-- Included in the series: ti_sci Resource management API, cppi5 header and
-  driver for the ring accelerator.
-- The DMAengine core patches have been updated as per the review comments for
-  earlier submittion.
-- The DMAengine driver patch is artificially split up to 6 smaller patches
-
-The k3-udma driver implements the Data Movement Architecture described in
-AM65x TRM (http://www.ti.com/lit/pdf/spruid7) and
-j721e TRM (http://www.ti.com/lit/pdf/spruil1)
-
-This DMA architecture is a big departure from 'traditional' architecture where
-we had either EDMA or sDMA as system DMA.
-
-Packet DMAs were used as dedicated DMAs to service only networking (Kesytone2)
-or USB (am335x) while other peripherals were serviced by EDMA.
-
-In AM65x/j721e the UDMA (Unified DMA) is used for all data movment within the
-SoC, tasked to service all peripherals (UART, McSPI, McASP, networking, etc). 
-
-The NAVSS/UDMA is built around CPPI5 (Communications Port Programming Interface)
-and it supports Packet mode (similar to CPPI4.1 in Keystone2 for networking) and
-TR mode (similar to EDMA descriptor).
-The data movement is done within a PSI-L fabric, peripherals (including the
-UDMA-P) are not addressed by their I/O register as with traditional DMAs but
-with their PSI-L thread ID.
-
-In AM65x/j721e we have two main type of peripherals:
-Legacy: McASP, McSPI, UART, etc.
- to provide connectivity they are serviced by PDMA (Peripheral DMA)
- PDMA threads are locked to service a given peripheral, for example PSI-L thread
- 0x4400/0xc400 is to service McASP0 rx/tx.
- The PDMa configuration can be done via the UDMA Real Time Peer registers.
-Native: Networking, security accelerator
- these peripherals have native support for PSI-L.
-
-To be able to use the DMA the following generic steps need to be taken:
-- configure a DMA channel (tchan for TX, rchan for RX)
- - channel mode: Packet or TR mode
- - for memcpy a tchan and rchan pair is used.
- - for packet mode RX we also need to configure a receive flow to configure the
-   packet receiption
-- the source and destination threads must be paired
-- at minimum one pair of rings need to be configured:
- - tx: transfer ring and transfer completion ring
- - rx: free descriptor ring and receive ring
-- two interrupts: UDMA-P channel interrupt and ring interrupt for tc_ring/r_ring
- - If the channel is in packet mode or configured to memcpy then we only need
-   one interrupt from the ring, events from UDMAP is not used.
-
-When the channel setup is completed we only interract with the rings:
-- TX: push a descriptor to t_ring and wait for it to be pushed to the tc_ring by
-  the UDMA-P
-- RX: push a descriptor to the fd_ring and waith for UDMA-P to push it back to
-  the r_ring.
-
-Since we have FIFOs in the DMA fabric (UDMA-P, PSI-L and PDMA) which was not the
-case in previous DMAs we need to report the amount of data held in these FIFOs
-to clients (delay calculation for ALSA, UART FIFO flush support).
-
-Metadata support:
-DMAengine user driver was posted upstream based/tested on the v1 of the UDMA
-series: https://lkml.org/lkml/2019/6/28/20
-SA2UL is using the metadata DMAengine API.
-
-Note on the last patch:
-In Keystone2 the networking had dedicated DMA (packet DMA) which is not the case
-anymore and the DMAengine API currently missing support for the features we
-would need to support networking, things like
-- support for receive descriptor 'classification'
- - we need to support several receive queues for a channel.
- - the queues are used for packet priority handling for example, but they can be
-   used to have pools of descriptors for different sizes.
-- out of order completion of descriptors on a channel
- - when we have several queues to handle different priority packets the
-   descriptors will be completed 'out-of-order'
-- NAPI type of operation (polling instead of interrupt driven transfer)
- - without this we can not sustain gigabit speeds and we need to support NAPI
- - not to limit this to networking, but other high performance operations
-
-It is my intention to work on these to be able to remove the 'glue' layer and
-switch to DMAengine API - or have an API aside of DMAengine to have generic way
-to support networking, but given how controversial and not trivial these changes
-are we need something to support networking.
-
-The series (+DT patch to enabled UDMA/PDMA on AM65x) on top of 5.4-rc1 is
-available:
-https://github.com/omap-audio/linux-audio.git peter/udma/series_v3-5.4-rc1
-
-Regards,
-Peter
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
-
-Grygorii Strashko (3):
-  bindings: soc: ti: add documentation for k3 ringacc
-  soc: ti: k3: add navss ringacc driver
-  dmaengine: ti: k3-udma: Add glue layer for non DMAengine users
-
-Peter Ujfalusi (11):
-  dmaengine: doc: Add sections for per descriptor metadata support
-  dmaengine: Add metadata_ops for dma_async_tx_descriptor
-  dmaengine: Add support for reporting DMA cached data amount
-  dmaengine: ti: Add cppi5 header for UDMA
-  dt-bindings: dma: ti: Add document for K3 UDMA
-  dmaengine: ti: New driver for K3 UDMA - split#1: defines, structs, io
-    func
-  dmaengine: ti: New driver for K3 UDMA - split#2: probe/remove, xlate
-    and filter_fn
-  dmaengine: ti: New driver for K3 UDMA - split#3: alloc/free
-    chan_resources
-  dmaengine: ti: New driver for K3 UDMA - split#4: dma_device callbacks
-    1
-  dmaengine: ti: New driver for K3 UDMA - split#5: dma_device callbacks
-    2
-  dmaengine: ti: New driver for K3 UDMA - split#6: Kconfig and Makefile
-
- .../devicetree/bindings/dma/ti/k3-udma.txt    |  185 +
- .../devicetree/bindings/soc/ti/k3-ringacc.txt |   59 +
- Documentation/driver-api/dmaengine/client.rst |   75 +
- .../driver-api/dmaengine/provider.rst         |   46 +
- drivers/dma/dmaengine.c                       |   73 +
- drivers/dma/dmaengine.h                       |    8 +
- drivers/dma/ti/Kconfig                        |   22 +
- drivers/dma/ti/Makefile                       |    2 +
- drivers/dma/ti/k3-udma-glue.c                 | 1225 ++++++
- drivers/dma/ti/k3-udma-private.c              |  141 +
- drivers/dma/ti/k3-udma.c                      | 3525 +++++++++++++++++
- drivers/dma/ti/k3-udma.h                      |  161 +
- drivers/soc/ti/Kconfig                        |   12 +
- drivers/soc/ti/Makefile                       |    1 +
- drivers/soc/ti/k3-ringacc.c                   | 1165 ++++++
- include/dt-bindings/dma/k3-udma.h             |   10 +
- include/linux/dma/k3-udma-glue.h              |  134 +
- include/linux/dma/ti-cppi5.h                  | 1049 +++++
- include/linux/dmaengine.h                     |  110 +
- include/linux/soc/ti/k3-ringacc.h             |  245 ++
- 20 files changed, 8248 insertions(+)
+ .../devicetree/bindings/dma/ti/k3-udma.txt    | 185 ++++++++++++++++++
+ include/dt-bindings/dma/k3-udma.h             |  10 +
+ 2 files changed, 195 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-udma.txt
- create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
- create mode 100644 drivers/dma/ti/k3-udma-glue.c
- create mode 100644 drivers/dma/ti/k3-udma-private.c
- create mode 100644 drivers/dma/ti/k3-udma.c
- create mode 100644 drivers/dma/ti/k3-udma.h
- create mode 100644 drivers/soc/ti/k3-ringacc.c
  create mode 100644 include/dt-bindings/dma/k3-udma.h
- create mode 100644 include/linux/dma/k3-udma-glue.h
- create mode 100644 include/linux/dma/ti-cppi5.h
- create mode 100644 include/linux/soc/ti/k3-ringacc.h
 
+diff --git a/Documentation/devicetree/bindings/dma/ti/k3-udma.txt b/Documentation/devicetree/bindings/dma/ti/k3-udma.txt
+new file mode 100644
+index 000000000000..3a8816ec9ce0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/ti/k3-udma.txt
+@@ -0,0 +1,185 @@
++* Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P)
++
++The UDMA-P is intended to perform similar (but significantly upgraded) functions
++as the packet-oriented DMA used on previous SoC devices. The UDMA-P module
++supports the transmission and reception of various packet types. The UDMA-P is
++architected to facilitate the segmentation and reassembly of SoC DMA data
++structure compliant packets to/from smaller data blocks that are natively
++compatible with the specific requirements of each connected peripheral. Multiple
++Tx and Rx channels are provided within the DMA which allow multiple segmentation
++or reassembly operations to be ongoing. The DMA controller maintains state
++information for each of the channels which allows packet segmentation and
++reassembly operations to be time division multiplexed between channels in order
++to share the underlying DMA hardware. An external DMA scheduler is used to
++control the ordering and rate at which this multiplexing occurs for Transmit
++operations. The ordering and rate of Receive operations is indirectly controlled
++by the order in which blocks are pushed into the DMA on the Rx PSI-L interface.
++
++The UDMA-P also supports acting as both a UTC and UDMA-C for its internal
++channels. Channels in the UDMA-P can be configured to be either Packet-Based or
++Third-Party channels on a channel by channel basis.
++
++All transfers within NAVSS is done between PSI-L source and destination threads.
++The peripherals serviced by UDMA can be PSI-L native (sa2ul, cpsw, etc) or
++legacy, non PSI-L native peripherals. In the later case a special, small PDMA is
++tasked to act as a bridge between the PSI-L fabric and the legacy peripheral.
++
++PDMAs can be configured via UDMAP peer registers to match with the configuration
++of the legacy peripheral.
++
++Required properties:
++--------------------
++- compatible:		Should be
++			"ti,am654-navss-main-udmap" for am654 main NAVSS UDMAP
++			"ti,am654-navss-mcu-udmap" for am654 mcu NAVSS UDMAP
++			"ti,j721e-navss-main-udmap" for j721e main NAVSS UDMAP
++			"ti,j721e-navss-mcu-udmap" for j721e mcu NAVSS UDMAP
++- #dma-cells:		Should be set to <3>.
++			- The first parameter is a phandle to the remote PSI-L
++			  endpoint
++			- The second parameter is the thread offset within the
++			  remote thread ID range
++			- The third parameter is the channel direction.
++- reg:			Memory map of UDMAP
++- reg-names:		"gcfg", "rchanrt", "tchanrt"
++- msi-parent:		phandle for "ti,sci-inta" interrupt controller
++- ti,ringacc:		phandle for the ring accelerator node
++- ti,psil-base:		PSI-L thread ID base of the UDMAP channels
++- ti,sci:		phandle on TI-SCI compatible System controller node
++- ti,sci-dev-id:	TI-SCI device id
++- ti,sci-rm-range-tchan: UDMA tchan resource list in pairs of type and subtype
++- ti,sci-rm-range-rchan: UDMA rchan resource list in pairs of type and subtype
++- ti,sci-rm-range-rflow: UDMA rflow resource list in pairs of type and subtype
++
++For PSI-L thread management the parent NAVSS node must have:
++- ti,sci:		phandle on TI-SCI compatible System controller node
++- ti,sci-dev-id:	TI-SCI device id of the NAVSS instance
++
++Remote PSI-L endpoint
++
++Required properties:
++--------------------
++- ti,psil-base:		PSI-L thread ID base of the endpoint
++
++Within the PSI-L endpoint node thread configuration subnodes must present with:
++psil-configX naming convention, where X is the thread ID offset.
++
++Configuration node Optional properties:
++--------------------
++- ti,pdma-statictr-type:In case the remote endpoint (PDMAs) requires StaticTR
++			configuration:
++			- PSIL_STATIC_TR_XY (1): XY type of StaticTR
++			For endpoints without StaticTR the property is not
++			needed or to be set PSIL_STATIC_TR_NONE (0).
++- ti,pdma-enable-acc32:	Force 32 bit access on peripheral port. Only valid for
++			XY type StaticTR, not supported on am654.
++			Must be enabled for threads servicing McASP with AFIFO
++			bypass mode.
++- ti,pdma-enable-burst:	Enable burst access on peripheral port. Only valid for
++			XY type StaticTR, not supported on am654.
++- ti,channel-tpl:	Channel Throughput level:
++			0 / or not present - normal channel
++			1 - High Throughput channel
++			2 - Ultra High Throughput channel (j721e only)
++- ti,needs-epib:	If the endpoint require EPIB to be present in the
++			descriptor.
++- ti,psd-size:		Size of the Protocol Specific Data section of the
++			descriptor.
++- ti,notdpkt:		The Teardown Completion Message on the thread must be
++			suppressed.
++
++Example:
++
++main_navss: main_navss {
++	compatible = "simple-bus";
++	#address-cells = <2>;
++	#size-cells = <2>;
++	dma-coherent;
++	dma-ranges;
++	ranges;
++
++	ti,sci = <&dmsc>;
++	ti,sci-dev-id = <118>;
++
++	main_udmap: dma-controller@31150000 {
++		compatible = "ti,j721e-navss-main-udmap";
++		reg =	<0x0 0x31150000 0x0 0x100>,
++			<0x0 0x34000000 0x0 0x100000>,
++			<0x0 0x35000000 0x0 0x100000>;
++		reg-names = "gcfg", "rchanrt", "tchanrt";
++		#dma-cells = <3>;
++
++		ti,ringacc = <&main_ringacc>;
++		ti,psil-base = <0x1000>;
++
++		interrupt-parent = <&main_udmass_inta>;
++
++		ti,sci = <&dmsc>;
++		ti,sci-dev-id = <212>;
++
++		ti,sci-rm-range-tchan = <0x0d>, /* TX_CHAN */
++					<0x0f>, /* TX_HCHAN */
++					<0x10>; /* TX_UHCHAN */
++		ti,sci-rm-range-rchan = <0x0a>, /* RX_CHAN */
++					<0x0b>, /* RX_HCHAN */
++					<0x0c>; /* RX_UHCHAN */
++		ti,sci-rm-range-rflow = <0x00>; /* GP RFLOW */
++	};
++};
++
++psilss@340c000 {
++	/* PSILSS1 AASRC */
++	compatible = "ti,j721e-psilss";
++	reg = <0x0 0x0340c000 0x0 0x1000>;
++	reg-names = "config";
++
++	pdma_main_mcasp_g0: pdma_main_mcasp_g0 {
++		/* PDMA6 (PDMA_MCASP_G0) */
++		ti,psil-base = <0x4400>;
++
++		/* psil-config0 */
++		psil-config0 {
++			ti,pdma-statictr-type = <PDMA_STATIC_TR_XY>;
++			ti,pdma-enable-acc32;
++			ti,pdma-enable-burst;
++		};
++	};
++};
++
++mcasp0: mcasp@02B00000 {
++...
++	/* tx: PDMA_MAIN_MCASP_G0-0, rx: PDMA_MAIN_MCASP_G0-0 */
++	dmas = <&main_udmap &pdma_main_mcasp_g0 0 UDMA_DIR_TX>,
++	       <&main_udmap &pdma_main_mcasp_g0 0 UDMA_DIR_RX>;
++	dma-names = "tx", "rx";
++...
++};
++
++crypto: crypto@4E00000 {
++	compatible = "ti,sa2ul-crypto";
++...
++
++	/* tx: crypto_pnp-1, rx: crypto_pnp-1 */
++	dmas = <&main_udmap &crypto 0 UDMA_DIR_TX>,
++	       <&main_udmap &crypto 0 UDMA_DIR_RX>,
++	       <&main_udmap &crypto 1 UDMA_DIR_RX>;
++	dma-names = "tx", "rx1", "rx2";
++...
++	psil-config0 {
++		ti,needs-epib;
++		ti,psd-size = <64>;
++		ti,notdpkt;
++	};
++
++	psil-config1 {
++		ti,needs-epib;
++		ti,psd-size = <64>;
++		ti,notdpkt;
++	};
++
++	psil-config2 {
++		ti,needs-epib;
++		ti,psd-size = <64>;
++		ti,notdpkt;
++	};
++};
+diff --git a/include/dt-bindings/dma/k3-udma.h b/include/dt-bindings/dma/k3-udma.h
+new file mode 100644
+index 000000000000..7479d991a147
+--- /dev/null
++++ b/include/dt-bindings/dma/k3-udma.h
+@@ -0,0 +1,10 @@
++#ifndef __DT_TI_UDMA_H
++#define __DT_TI_UDMA_H
++
++#define UDMA_DIR_TX		0
++#define UDMA_DIR_RX		1
++
++#define PDMA_STATIC_TR_NONE	0
++#define PDMA_STATIC_TR_XY	1
++
++#endif /* __DT_TI_UDMA_H */
 -- 
 Peter
 
