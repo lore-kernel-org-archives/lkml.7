@@ -2,91 +2,89 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB5DC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29411C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AD6E2133F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E90A02133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:19:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m3A8xuj7"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JL7z/R1V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732917AbfJAHT3 (ORCPT
+        id S1732961AbfJAHT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 03:19:29 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46138 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732725AbfJAHT3 (ORCPT
+        Tue, 1 Oct 2019 03:19:58 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:49508 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729457AbfJAHT5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 03:19:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=0S4ysf7rtEXMw/wzlhBR7mecKndwZrv5Pmb3IJaLSgg=; b=m3A8xuj7lSd8uA0UiO7usiyK1
-        lWfWPn18pSufTimJhZhxZ3t462/KQ5tkb4LDSl856RYyURl7AvhZR0gL5ZVxumlT92Mo1NA22oL8x
-        8ZclaWrkh1IR7TyYByKTKoiPDSxSRFuRlKu4t2kjhGauy2eisdedXYFN806TYANNDDPsI0otheNN7
-        rbqHu9jbbH/lj36Gf5f6rCWXWBHxa2JE5W+jO4JzN8foT2rPe5XmCwveyzkjc9SBhP3pUIrXCvbJ7
-        PczCnK+Dg4P060tJ+lnBFIbYTS/K6ksh4nW2PNT+yEBl0tPozZT79AVxMCNSVAyIWZzqGedb8O/zk
-        6n2lK7MRg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iFCRQ-0001vn-Ff; Tue, 01 Oct 2019 07:19:24 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3CD4430477A;
-        Tue,  1 Oct 2019 09:18:33 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7D9B8265261AA; Tue,  1 Oct 2019 09:19:21 +0200 (CEST)
-Date:   Tue, 1 Oct 2019 09:19:21 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@polymtl.ca>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Alistair Delva <adelva@google.com>
-Subject: Re: [GIT PULL] scheduler fixes
-Message-ID: <20191001071921.GJ4519@hirez.programming.kicks-ass.net>
-References: <20190928123905.GA97048@gmail.com>
- <CANcMJZB9UrMaJv6OiScZy2e2UFGFOJsFRar9RZUE9HM-00ZXGg@mail.gmail.com>
+        Tue, 1 Oct 2019 03:19:57 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x917JkaR119868;
+        Tue, 1 Oct 2019 07:19:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=ORd4VcYzRWX4FKCJgAnbXph26RzsmOABl6h16Zn5Ls4=;
+ b=JL7z/R1V2Oq3XRxsokCjdjtI9kGkU3I59Pyx+cJyXw2wM5sVTbV6zmgZ5kw7yObNH2Lp
+ vHnnqzz5ahZvs8UWhhxkqGl4yHr3ihnm5eURgcUTc0r1+IrSxGacmYFfIgF0i2X+mZsS
+ hKwaj45yc6zB3QYBRHwhtowBtIQnc6SWoAbCZr9TZgsEr++buBzZXj2v3x31OaHVpB45
+ oU10VIslc8+C76edXOuyGjUbn69vFSxEUPEhQE/sGCkHzrpaYECIxLiuWC6ltUe2nb+P
+ kuCGDaaKaZf8qqj9foeyff26q9440bLq2XvL1DZ4rH12gGCOGi7OlFDiRRdeXHCZDIHT tg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2v9xxukuar-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Oct 2019 07:19:52 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x917JbmU011669;
+        Tue, 1 Oct 2019 07:19:52 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2vbnqc9e1w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Oct 2019 07:19:52 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x917Jog1019269;
+        Tue, 1 Oct 2019 07:19:51 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 01 Oct 2019 00:19:50 -0700
+Date:   Tue, 1 Oct 2019 10:19:26 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] get_maintainer: Add signatures from Fixes: <badcommit>
+ lines in commit message
+Message-ID: <20191001071926.GJ29696@kadam>
+References: <33605b9fc0e0f711236951ae84185a6218acff4f.camel@perches.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CANcMJZB9UrMaJv6OiScZy2e2UFGFOJsFRar9RZUE9HM-00ZXGg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <33605b9fc0e0f711236951ae84185a6218acff4f.camel@perches.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=929
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910010070
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910010070
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 04:45:49PM -0700, John Stultz wrote:
-> Reverting the following patches:
+Looks good!  Thanks for this, Joe.
 
->   "sched/membarrier: Fix p->mm->membarrier_state racy load"
+regards,
+dan carpenter
 
-ARGH, I fudged it... please try:
-
-
-diff --git a/kernel/sched/membarrier.c b/kernel/sched/membarrier.c
-index a39bed2c784f..168479a7d61b 100644
---- a/kernel/sched/membarrier.c
-+++ b/kernel/sched/membarrier.c
-@@ -174,7 +174,6 @@ static int membarrier_private_expedited(int flags)
- 		 */
- 		if (cpu == raw_smp_processor_id())
- 			continue;
--		rcu_read_lock();
- 		p = rcu_dereference(cpu_rq(cpu)->curr);
- 		if (p && p->mm == mm)
- 			__cpumask_set_cpu(cpu, tmpmask);
