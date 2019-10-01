@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6D2ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC566ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D04020659
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C05322168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:46:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948390;
-	bh=Y3wRWVPaay6QuvW1cMobfgTDZIAE6NDv31DGCGtnnRg=;
+	s=default; t=1569948401;
+	bh=6EyxsEqBJ2oOZtJcJw9OqpnSifZ1fmKpzk8Q4zKakk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xC7Dl45+V7uQIO81KPurulUdtnQnMf0nOJWpHj6DcdKyJL5RgGmFuhB9USfNAwFso
-	 bhpKv8pPEu/Q7rCSFCxNC4uim8oeEAnuKD/MoePO3Juyu2eWgnW/u7TAFkCOadGDov
-	 MrdepBvQ1bJJTgzOi4j/dQARb7NQA9GUt09spbEs=
+	b=nmqHMjTQFnqGpCIE9DWPwbF/yIUXI/Z3PMR5AbW+NKk4rOONpv0XAmtWHIWZ9beoo
+	 W+mGKvei/6dArPRMiEWWPeSm2gzaEQ5BLmeOTo6Rhu5Bxbo0IXdlnq/Hbmo2xLzwkk
+	 ShWhdZ23p0khDvDU4QG9kRa4CJx5nkEeukC7I0vo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388508AbfJAQq3 (ORCPT
+        id S2390371AbfJAQpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:46:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58366 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:45:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388314AbfJAQpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:45:46 -0400
+        id S2390314AbfJAQpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:45:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB11C21A4C;
-        Tue,  1 Oct 2019 16:45:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F3B52190F;
+        Tue,  1 Oct 2019 16:45:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948345;
-        bh=Y3wRWVPaay6QuvW1cMobfgTDZIAE6NDv31DGCGtnnRg=;
+        s=default; t=1569948338;
+        bh=6EyxsEqBJ2oOZtJcJw9OqpnSifZ1fmKpzk8Q4zKakk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VaQMsWFwswkxZEAmYI6ZZVq3XaNCCYinfDCwItwZPFwD5e68uCdXJX4EbOsIuvo3t
-         L9zPbjd72bme56IiIthDGtOzN8ShZ/6q6ZPCXFHevoVJ87Q9jBhKfouMTXsuO8xRkB
-         ZvbtbpLVQOcxZ5v8JrQMFJ+74JPXmOOGGVdu8L30=
+        b=itiD6SMaKXiPA1abaI/s2k+mthGULdGl4IXQpaEkMneQje/YkjWzEgjlQi7rvJv+w
+         XKrC0geL5Ye2zc0o+8Eb/nBfc9/Gpl+LNDwrgo70xaeJ7HwSbM57hrVQvMy9ajle7a
+         owADzBKYmxFsS6UiQkE7Yzx7FIazthLxOy+byK4I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Mamonov <pmamonov@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 09/15] net/phy: fix DP83865 10 Mbps HDX loopback disable function
-Date:   Tue,  1 Oct 2019 12:45:27 -0400
-Message-Id: <20191001164533.16915-9-sashal@kernel.org>
+Cc:     Igor Druzhinin <igor.druzhinin@citrix.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 04/15] xen/pci: reserve MCFG areas earlier
+Date:   Tue,  1 Oct 2019 12:45:22 -0400
+Message-Id: <20191001164533.16915-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164533.16915-1-sashal@kernel.org>
 References: <20191001164533.16915-1-sashal@kernel.org>
@@ -59,48 +59,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Mamonov <pmamonov@gmail.com>
+From: Igor Druzhinin <igor.druzhinin@citrix.com>
 
-[ Upstream commit e47488b2df7f9cb405789c7f5d4c27909fc597ae ]
+[ Upstream commit a4098bc6eed5e31e0391bcc068e61804c98138df ]
 
-According to the DP83865 datasheet "the 10 Mbps HDX loopback can be
-disabled in the expanded memory register 0x1C0.1". The driver erroneously
-used bit 0 instead of bit 1.
+If MCFG area is not reserved in E820, Xen by default will defer its usage
+until Dom0 registers it explicitly after ACPI parser recognizes it as
+a reserved resource in DSDT. Having it reserved in E820 is not
+mandatory according to "PCI Firmware Specification, rev 3.2" (par. 4.1.2)
+and firmware is free to keep a hole in E820 in that place. Xen doesn't know
+what exactly is inside this hole since it lacks full ACPI view of the
+platform therefore it's potentially harmful to access MCFG region
+without additional checks as some machines are known to provide
+inconsistent information on the size of the region.
 
-Fixes: 4621bf129856 ("phy: Add file missed in previous commit.")
-Signed-off-by: Peter Mamonov <pmamonov@gmail.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Now xen_mcfg_late() runs after acpi_init() which is too late as some basic
+PCI enumeration starts exactly there as well. Trying to register a device
+prior to MCFG reservation causes multiple problems with PCIe extended
+capability initializations in Xen (e.g. SR-IOV VF BAR sizing). There are
+no convenient hooks for us to subscribe to so register MCFG areas earlier
+upon the first invocation of xen_add_device(). It should be safe to do once
+since all the boot time buses must have their MCFG areas in MCFG table
+already and we don't support PCI bus hot-plug.
+
+Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/national.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/xen/pci.c | 21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/phy/national.c b/drivers/net/phy/national.c
-index 0a7b9c7f09a29..5c40655ec808b 100644
---- a/drivers/net/phy/national.c
-+++ b/drivers/net/phy/national.c
-@@ -110,14 +110,17 @@ static void ns_giga_speed_fallback(struct phy_device *phydev, int mode)
- 
- static void ns_10_base_t_hdx_loopack(struct phy_device *phydev, int disable)
- {
-+	u16 lb_dis = BIT(1);
+diff --git a/drivers/xen/pci.c b/drivers/xen/pci.c
+index 7494dbeb4409c..db58aaa4dc598 100644
+--- a/drivers/xen/pci.c
++++ b/drivers/xen/pci.c
+@@ -29,6 +29,8 @@
+ #include "../pci/pci.h"
+ #ifdef CONFIG_PCI_MMCONFIG
+ #include <asm/pci_x86.h>
 +
- 	if (disable)
--		ns_exp_write(phydev, 0x1c0, ns_exp_read(phydev, 0x1c0) | 1);
-+		ns_exp_write(phydev, 0x1c0,
-+			     ns_exp_read(phydev, 0x1c0) | lb_dis);
- 	else
- 		ns_exp_write(phydev, 0x1c0,
--			     ns_exp_read(phydev, 0x1c0) & 0xfffe);
-+			     ns_exp_read(phydev, 0x1c0) & ~lb_dis);
++static int xen_mcfg_late(void);
+ #endif
  
- 	pr_debug("10BASE-T HDX loopback %s\n",
--		 (ns_exp_read(phydev, 0x1c0) & 0x0001) ? "off" : "on");
-+		 (ns_exp_read(phydev, 0x1c0) & lb_dis) ? "off" : "on");
+ static bool __read_mostly pci_seg_supported = true;
+@@ -40,7 +42,18 @@ static int xen_add_device(struct device *dev)
+ #ifdef CONFIG_PCI_IOV
+ 	struct pci_dev *physfn = pci_dev->physfn;
+ #endif
+-
++#ifdef CONFIG_PCI_MMCONFIG
++	static bool pci_mcfg_reserved = false;
++	/*
++	 * Reserve MCFG areas in Xen on first invocation due to this being
++	 * potentially called from inside of acpi_init immediately after
++	 * MCFG table has been finally parsed.
++	 */
++	if (!pci_mcfg_reserved) {
++		xen_mcfg_late();
++		pci_mcfg_reserved = true;
++	}
++#endif
+ 	if (pci_seg_supported) {
+ 		struct {
+ 			struct physdev_pci_device_add add;
+@@ -213,7 +226,7 @@ static int __init register_xen_pci_notifier(void)
+ arch_initcall(register_xen_pci_notifier);
+ 
+ #ifdef CONFIG_PCI_MMCONFIG
+-static int __init xen_mcfg_late(void)
++static int xen_mcfg_late(void)
+ {
+ 	struct pci_mmcfg_region *cfg;
+ 	int rc;
+@@ -252,8 +265,4 @@ static int __init xen_mcfg_late(void)
+ 	}
+ 	return 0;
  }
- 
- static int ns_config_init(struct phy_device *phydev)
+-/*
+- * Needs to be done after acpi_init which are subsys_initcall.
+- */
+-subsys_initcall_sync(xen_mcfg_late);
+ #endif
 -- 
 2.20.1
 
