@@ -2,52 +2,56 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91063C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A759C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C3D720B7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAECD20B7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:41:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948061;
-	bh=tIbenjcvZqPaNdBtku31+1LasH3s1munDjqFxyHW7Yw=;
+	s=default; t=1569948065;
+	bh=kgzfr/vRrO0hm5BZsVAdICd2cayTt5lbLSD11QS0AvY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eZK50VwEOMYXp2kKMHT0EXxZqGAjSMBSSqLATaU7ddqCLgEWh4Ei0fP3XuJKhMtr+
-	 /s9bG3tXdp+06YyLGUz6CfSDHHuybh0TWHyQM+lRS0OZOTe75qvzk4bBSHg2UTUtTM
-	 9i3wcy8LrtOsMlvUbO4KxpcsDEvWT5M0HhqbNYgs=
+	b=Zbs9XTlsRWs8QFu58YmvrKa9sBbted8rOENHm9OUASaGS75lFWtR+WdCidqYU693C
+	 PruVVHu5AF73T44LEQ/gkMxAMPHf0j0iJ87y+CEoBMsd5Y0wqRP0ebA/798io39irN
+	 CT+jJzh1ym9nmHAzg9vXqIQ8QZGt5g7N4xFpeNV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730499AbfJAQlA (ORCPT
+        id S1730544AbfJAQlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:41:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52338 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:41:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730416AbfJAQkz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:40:55 -0400
+        id S1730503AbfJAQlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:41:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AD79205C9;
-        Tue,  1 Oct 2019 16:40:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0875205C9;
+        Tue,  1 Oct 2019 16:40:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948054;
-        bh=tIbenjcvZqPaNdBtku31+1LasH3s1munDjqFxyHW7Yw=;
+        s=default; t=1569948060;
+        bh=kgzfr/vRrO0hm5BZsVAdICd2cayTt5lbLSD11QS0AvY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wCoFRTSJcWRTh6BIXDnBWis1naWIMqMZOBr8YPoxRPrgF4QftgxS1V5Z5ozO/j4nn
-         poueld2uU60M0AJtw45ZGYACf2juH8esy7nNukcPu68jyb8j4+2NtpgLSYnOVB+cda
-         Yz2qfz1dw6vrInYaLwv4rmeiQFEu8T40/pW1aub4=
+        b=H0ivQ6sx74z70wmqZ5/5DERn38fIJkPL0OfLTz/gp1y2lLH2D2k9GJo4UzI0dumBq
+         Zd3V/WDe2GLztSwXySitnQQBDpApvFmVhHw2EZw0bdxdWT6tYegLEaGnDs5r5H4jyt
+         DTSpiM3DcgQ81HBCkXvLLDk/ApDKtuOHTy4VZwfk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xin Long <lucien.xin@gmail.com>, Xiumei Mu <xmu@redhat.com>,
-        Fei Liu <feliu@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 56/71] macsec: drop skb sk before calling gro_cells_receive
-Date:   Tue,  1 Oct 2019 12:39:06 -0400
-Message-Id: <20191001163922.14735-56-sashal@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 59/71] perf unwind: Fix libunwind build failure on i386 systems
+Date:   Tue,  1 Oct 2019 12:39:09 -0400
+Message-Id: <20191001163922.14735-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
 References: <20191001163922.14735-1-sashal@kernel.org>
@@ -60,64 +64,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit ba56d8ce38c8252fff5b745db3899cf092578ede ]
+[ Upstream commit 26acf400d2dcc72c7e713e1f55db47ad92010cc2 ]
 
-Fei Liu reported a crash when doing netperf on a topo of macsec
-dev over veth:
+Naresh Kamboju reported, that on the i386 build pr_err()
+doesn't get defined properly due to header ordering:
 
-  [  448.919128] refcount_t: underflow; use-after-free.
-  [  449.090460] Call trace:
-  [  449.092895]  refcount_sub_and_test+0xb4/0xc0
-  [  449.097155]  tcp_wfree+0x2c/0x150
-  [  449.100460]  ip_rcv+0x1d4/0x3a8
-  [  449.103591]  __netif_receive_skb_core+0x554/0xae0
-  [  449.108282]  __netif_receive_skb+0x28/0x78
-  [  449.112366]  netif_receive_skb_internal+0x54/0x100
-  [  449.117144]  napi_gro_complete+0x70/0xc0
-  [  449.121054]  napi_gro_flush+0x6c/0x90
-  [  449.124703]  napi_complete_done+0x50/0x130
-  [  449.128788]  gro_cell_poll+0x8c/0xa8
-  [  449.132351]  net_rx_action+0x16c/0x3f8
-  [  449.136088]  __do_softirq+0x128/0x320
+  perf-in.o: In function `libunwind__x86_reg_id':
+  tools/perf/util/libunwind/../../arch/x86/util/unwind-libunwind.c:109:
+  undefined reference to `pr_err'
 
-The issue was caused by skb's true_size changed without its sk's
-sk_wmem_alloc increased in tcp/skb_gro_receive(). Later when the
-skb is being freed and the skb's truesize is subtracted from its
-sk's sk_wmem_alloc in tcp_wfree(), underflow occurs.
-
-macsec is calling gro_cells_receive() to receive a packet, which
-actually requires skb->sk to be NULL. However when macsec dev is
-over veth, it's possible the skb->sk is still set if the skb was
-not unshared or expanded from the peer veth.
-
-ip_rcv() is calling skb_orphan() to drop the skb's sk for tproxy,
-but it is too late for macsec's calling gro_cells_receive(). So
-fix it by dropping the skb's sk earlier on rx path of macsec.
-
-Fixes: 5491e7c6b1a9 ("macsec: enable GRO and RPS on macsec devices")
-Reported-by: Xiumei Mu <xmu@redhat.com>
-Reported-by: Fei Liu <feliu@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/macsec.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/arch/x86/util/unwind-libunwind.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
-index 8f46aa1ddec01..cb7637364b40d 100644
---- a/drivers/net/macsec.c
-+++ b/drivers/net/macsec.c
-@@ -1235,6 +1235,7 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
- 		macsec_rxsa_put(rx_sa);
- 	macsec_rxsc_put(rx_sc);
+diff --git a/tools/perf/arch/x86/util/unwind-libunwind.c b/tools/perf/arch/x86/util/unwind-libunwind.c
+index 05920e3edf7a7..47357973b55b2 100644
+--- a/tools/perf/arch/x86/util/unwind-libunwind.c
++++ b/tools/perf/arch/x86/util/unwind-libunwind.c
+@@ -1,11 +1,11 @@
+ // SPDX-License-Identifier: GPL-2.0
  
-+	skb_orphan(skb);
- 	ret = gro_cells_receive(&macsec->gro_cells, skb);
- 	if (ret == NET_RX_SUCCESS)
- 		count_rx(dev, skb->len);
+ #include <errno.h>
++#include "../../util/debug.h"
+ #ifndef REMOTE_UNWIND_LIBUNWIND
+ #include <libunwind.h>
+ #include "perf_regs.h"
+ #include "../../util/unwind.h"
+-#include "../../util/debug.h"
+ #endif
+ 
+ #ifdef HAVE_ARCH_X86_64_SUPPORT
 -- 
 2.20.1
 
