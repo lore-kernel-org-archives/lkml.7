@@ -2,110 +2,127 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 962C4C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E95C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DB182168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:08:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569949680;
-	bh=+7NPqfF0AL8UQWDtO4pLPhJnj5AiFgDnAWO65lSZPoM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pMlPUYrLZAnW5Jmt33ibkuKctAVLEnACag03pVRMspq76x0JHXTLzwCbVnO/nyC2l
-	 UFrvSIaaYc3G2tk1X8DJj02frbhpqhDL4s9o4VUVf79FeV69RRbmcIJLPro60ZFSzC
-	 LRnUsvv/JUr+nywRm0hxKPJcF2kmgGk5ArTB3PUM=
+	by mail.kernel.org (Postfix) with ESMTP id 1B65C2086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:10:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="lLeWSWve"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbfJARIA (ORCPT
+        id S1727761AbfJARKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 13:08:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46374 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727367AbfJARH6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 13:07:58 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FB702086A;
-        Tue,  1 Oct 2019 17:07:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569949678;
-        bh=+7NPqfF0AL8UQWDtO4pLPhJnj5AiFgDnAWO65lSZPoM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KkZdnRG3bI+dVB+2pqePndAjg2iozbh+wyK1MCJEIt2uePTa35+wNQ1BxWCjrqNJe
-         7QcoGWCoAKbO0rVskGi8AomqGXuJiFhUNkLH/e58UVpUktGYrP0Rey/SXcOJtSkGTJ
-         PiSAaCZkM7j3B0+psd91J58E0kLKYWm/uvrVJrfA=
-Date:   Tue, 1 Oct 2019 18:07:53 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v3 1/5] arm64: vdso32: Introduce COMPAT_CC_IS_GCC
-Message-ID: <20191001170753.sqmfqt7zf33jgzns@willie-the-truck>
-References: <20190926214342.34608-2-vincenzo.frascino@arm.com>
- <20191001131420.y3fsydlo7pg6ykfs@willie-the-truck>
- <20191001132731.GG41399@arrakis.emea.arm.com>
- <ed7d1465-2d7b-d57c-c1b1-215af1ba7a6f@arm.com>
- <20191001142038.ptwyfbesfrz3kkoz@willie-the-truck>
- <7558914c-fc2d-d05a-ccbe-76ef451670ae@arm.com>
- <20191001144353.5rn3bkcc6eyfclh7@willie-the-truck>
- <20191001153056.GO41399@arrakis.emea.arm.com>
- <20191001164657.l2wz3ghq6icm3lim@willie-the-truck>
- <CAKwvOd=+-PEQXOZBG6rprWdOzHfcQq9ojkGo+Q28vfC4AU=Hwg@mail.gmail.com>
+        Tue, 1 Oct 2019 13:10:03 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33595 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726741AbfJARKD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 13:10:03 -0400
+Received: by mail-lj1-f196.google.com with SMTP id a22so14209761ljd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 10:10:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iP66g09MiSCdy0XNQAORHC/+/yzYTstNbMb+ZKdqlWg=;
+        b=lLeWSWvearlSbNPQ3vT1c8F1vZxuB+G/IN6H7lXXbVUiiYjfglkJc9dzfGfhy1WzUf
+         FYbHY/amFNpMw7IwUtedVOiD6hAIqJMNvNNiYeTftW9BuzqLrd/OG/DaKgjEYhcbdGpm
+         9GAlVWGOHvAuxqaMsyvm0HATklhfeQ4pN/9NdqWmJtrxxt454Fl6L5Hi5Mg31VjkDIKz
+         tbytySXgp8thodhCMMQVGnIfvjleTD9wTWzvDxqrhew8XzTlY4FyWhQ3oDh5rIZKuGem
+         aG5aNo+If5FyRJohSz/+xTFLJSAnKKWlZwWgLZ3ufptRktZaUM6I6ZG1sR2rRVy9DjQb
+         w6fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iP66g09MiSCdy0XNQAORHC/+/yzYTstNbMb+ZKdqlWg=;
+        b=fEZD3kyIobZATT1N/Vl2GsrUwn69SywxjzNaWIHaHFXl3juMfQ7kOHqC8JX5xD7qWZ
+         b3/d+DvOb11QdHekeuQTdRBhCdPXQkwOyi/nAxvDhGXH7YFBsz5RscGbw8pVY/Jdoe1m
+         jVX3/BDNTN/CwyLISI8xzfF3ugvsV61AbIZVFAL9TFF3St5stS9bfwcYmrQPlP1RgaaW
+         q4uHZ+4s0owJHs12XaU3fd9mX17Ll8bNL+oWl9tBkLRUnCL5EKma1AxM5q+2ABZ7JsQk
+         rTnKAwvinqMraiaGigbvs1PSdw+b2UzD81VltG0mIkMTK8Qv/gLGtS7MkmzwDAAbvvoO
+         jvrw==
+X-Gm-Message-State: APjAAAU/97ku36T3qCLOy8AwF2PcfqsDzm2G5aIZlnowkXTe60GIN2bQ
+        qIJPgoCSSR4Qgey1TawKTb//xPtbohbVReelhtuxCB/+AIU=
+X-Google-Smtp-Source: APXvYqzbzA7ZkfH8DhEE7ioodPmEgLrj3L1UwHX0Jt0vwAFi5yQkkBQaT22N+fFn8m4AoxNn9OVuaXHAAbB2PwUjrm0=
+X-Received: by 2002:a2e:a316:: with SMTP id l22mr16644896lje.211.1569949799769;
+ Tue, 01 Oct 2019 10:09:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOd=+-PEQXOZBG6rprWdOzHfcQq9ojkGo+Q28vfC4AU=Hwg@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <1569885755-10947-1-git-send-email-alan.mikhak@sifive.com> <20191001121623.GA22532@ziepe.ca>
+In-Reply-To: <20191001121623.GA22532@ziepe.ca>
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+Date:   Tue, 1 Oct 2019 10:09:48 -0700
+Message-ID: <CABEDWGzsJR+YpX7eDrt_EerT0VEHjpBXSpc6Nzbbmvqc2OiR8Q@mail.gmail.com>
+Subject: Re: [PATCH] scatterlist: Validate page before calling PageSlab()
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-kernel@vger.kernel.org, martin.petersen@oracle.com,
+        alexios.zavras@intel.com, ming.lei@redhat.com,
+        gregkh@linuxfoundation.org, tglx@linutronix.de,
+        christophe.leroy@c-s.fr, Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 09:59:43AM -0700, Nick Desaulniers wrote:
-> On Tue, Oct 1, 2019 at 9:47 AM Will Deacon <will@kernel.org> wrote:
+On Tue, Oct 1, 2019 at 5:16 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+>
+> On Mon, Sep 30, 2019 at 04:22:35PM -0700, Alan Mikhak wrote:
+> > From: Alan Mikhak <alan.mikhak@sifive.com>
 > >
-> > On Tue, Oct 01, 2019 at 04:30:56PM +0100, Catalin Marinas wrote:
-> > > In the long run, I wouldn't mandate CROSS_COMPILE_COMPAT to always be
-> > > set for the compat vDSO since with clang we could use the same compiler
-> > > binary for both native and compat (with different flags). That's once we
-> > > cleaned up the headers.
+> > Modify sg_miter_stop() to validate the page pointer
+> > before calling PageSlab(). This check prevents a crash
+> > that will occur if PageSlab() gets called with a page
+> > pointer that is not backed by page struct.
 > >
-> > But we'll still need it even with clang so that the relevant triple can be
-> > passed to the --target option. The top-level Makefile already does this:
+> > A virtual address obtained from ioremap() for a physical
+> > address in PCI address space can be assigned to a
+> > scatterlist segment using the public scatterlist API
+> > as in the following example:
 > >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Makefile#n544
-> 
-> That's not pulling the cross compiler out of a *config* (as this patch
-> is proposing); rather from an env var.
-
-CROSS_COMPILE_COMPAT is the environment variable, right? If not, then I have
-my terminology mixed up.
-
-> > so I think we should do the same thing for the compat vdso as well, which
-> > would allow us to remove this complexity by requiring that
-> > CROSS_COMPILE_COMPAT identifies the cross-compiler to use in exactly the
-> > same way as CROSS_COMPILE does.
+> > my_sg_set_page(struct scatterlist *sg,
+> >                const void __iomem *ioaddr,
+> >                size_t iosize)
+> > {
+> >       sg_set_page(sg,
+> >               virt_to_page(ioaddr),
+> >               (unsigned int)iosize,
+> >               offset_in_page(ioaddr));
+> >       sg_init_marker(sg, 1);
+> > }
 > >
-> > Am I missing something here?
-> 
-> I think the second paragraph you wrote shows we're all in agreement,
-> but I suspect you may be conflating *how* the toplevel Makefile knows
-> we're doing a cross compile.  It doesn't read a config, this patch
-> would make it so a cross compiler is specified via config, Catalin
-> asked "please no," I agree with Catalin (and I suspect you do too).
+> > If the virtual address obtained from ioremap() is not
+> > backed by a page struct, virt_to_page() returns an
+> > invalid page pointer. However, sg_copy_buffer() can
+> > correctly recover the original virtual address. Such
+> > addresses can successfully be assigned to scatterlist
+> > segments to transfer data across the PCI bus with
+> > sg_copy_buffer() if it were not for the crash in
+> > PageSlab() when called by sg_miter_stop().
+>
+> I thought we already agreed in general that putting things that don't
+> have struct page into the scatter list was not allowed?
+>
+> Jason
 
-Yes, I'm saying let's have an environment variable only and drop the
-CONFIG stuff completely. I think this means that the environment variable
-must always be specified if you want the compat vDSO, but I don't see that
-as a problem.
+Thanks Jason for your comment.
 
-Will
+Cost of adding page structs to a large PCI I/O address range can be
+quite substantial. Allowing PCI I/O pages without page structs may be
+desirable. Perhaps it is worth considering this cost.
+
+Scatterlist has no problem doing its memcpy() from pages without a
+page struct that were obtained from ioremap(). It is only at
+sg_miter_stop() that the call to PageSlab() prevents such use by
+crashing. This seems accidental, not by design. Scatterlist API
+function sg_set_page() allows any page pointer to be assigned even if
+it has no page struct. It doesn't check if the page pointer is valid.
+Its description doesn't say that a page struct is required.
+
+Regards,
+Alan
