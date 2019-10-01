@@ -2,111 +2,104 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E934AC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9697AECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEAB22168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:08:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569960509;
-	bh=uYjcTl7drtwxzzmVd3X+UEiDXfBtSzTArbtfWsMZmVI=;
-	h=Date:From:To:cc:Subject:List-ID:From;
-	b=u0bVbw/ZBMpHvFV8s9QFG1iChPxgpfLW0inwOTCzLOZa3sqqoNyuV+0J+W2kIyzcF
-	 JSF6y7jNX5laN74hkiGKrus2hAvDchjx+UGpUFRAj7vYV/uxd4mxG3RVQ8vazFkLno
-	 YngcGWLP8zZ6EGWrLdyGm6mSxc+JUzWYBTY9iN8U=
+	by mail.kernel.org (Postfix) with ESMTP id 70E082133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:10:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dLk1H9Ob"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbfJAUI3 (ORCPT
+        id S1726967AbfJAUKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 16:08:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33428 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726186AbfJAUI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 16:08:28 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 860652133F;
-        Tue,  1 Oct 2019 20:08:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569960508;
-        bh=uYjcTl7drtwxzzmVd3X+UEiDXfBtSzTArbtfWsMZmVI=;
-        h=Date:From:To:cc:Subject:From;
-        b=i76blzw6W879H/mTIUJvz7MiAfUeMdzqtm79UsbyS8EAArGfR0I8H4l5XVvnXyXsX
-         Vr9dAjUAq2p3qk+GdCe7NLU7nsdbfds5OFQO2Zsagkhf1uGzb8AJWLJdmqlJaUAr3g
-         TPDqJZLnMRspY9k6MvyiZLcn9fj8Nyg2K746sW60=
-Date:   Tue, 1 Oct 2019 22:08:01 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-cc:     linux-s390@vger.kernel.org, Michal Kubecek <mkubecek@suse.cz>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 5.4-rc1 BUILD FIX] s390: mark __cpacf_query() as
- __always_inline
-Message-ID: <nycvar.YFH.7.76.1910012203010.13160@cbobk.fhfr.pm>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Tue, 1 Oct 2019 16:10:52 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:53788 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbfJAUKw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 16:10:52 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x91KAl3Y082677;
+        Tue, 1 Oct 2019 15:10:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569960647;
+        bh=tHzgtqZw4ISfWYUY+AFYJlJ8yHApfyopEUBN88b1i8A=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=dLk1H9ObPJKTBFbDNXDIYw1gkquyYpjOCy/eJRQyP/0uddh5fLH1oSrmLNVqeJ6HZ
+         8toT+6ortm6MXidFp+ZK26SICQJxROwixmprA7rhmZKdsMhTv2tFcPmOIquHMwKr2R
+         xgX9lzgt4pNOXBuOUrVz5dLeAhRoHjgyN3p/hBIE=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x91KAldO050408
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 1 Oct 2019 15:10:47 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 1 Oct
+ 2019 15:10:36 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 1 Oct 2019 15:10:36 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x91KAk4J048809;
+        Tue, 1 Oct 2019 15:10:46 -0500
+Subject: Re: [PATCH 5/5] leds: lm3601x: Convert class registration to device
+ managed
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20191001180439.8312-1-dmurphy@ti.com>
+ <20191001180439.8312-5-dmurphy@ti.com>
+ <66354452-f6f9-416d-0955-63914cb32746@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <b7d7ef26-a163-4ad2-492e-057fc55dc234@ti.com>
+Date:   Tue, 1 Oct 2019 15:11:10 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <66354452-f6f9-416d-0955-63914cb32746@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-arch/s390/kvm/kvm-s390.c calls on several places __cpacf_query() directly, 
-which makes it impossible to meet the "i" constraint for the asm operands 
-(opcode in this case).
+Jacek
 
-As we are now force-enabling CONFIG_OPTIMIZE_INLINING on all 
-architectures, this causes a build failure on s390:
-
-   In file included from arch/s390/kvm/kvm-s390.c:44:
-   ./arch/s390/include/asm/cpacf.h: In function '__cpacf_query':
-   ./arch/s390/include/asm/cpacf.h:179:2: warning: asm operand 3 probably doesn't match constraints
-     179 |  asm volatile(
-         |  ^~~
-   ./arch/s390/include/asm/cpacf.h:179:2: error: impossible constraint in 'asm'
-
-Mark __cpacf_query() as __always_inline in order to fix that, analogically 
-how we fixes __cpacf_check_opcode(), cpacf_query_func() and scpacf_query() 
-already.
-
-Reported-and-tested-by: Michal Kubecek <mkubecek@suse.cz>
-Fixes: d83623c5eab2 ("s390: mark __cpacf_check_opcode() and cpacf_query_func() as __always_inline")
-Fixes: e60fb8bf68d4 ("s390/cpacf: mark scpacf_query() as __always_inline")
-Fixes: ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING forcibly")
-Fixes: 9012d011660e ("compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING")
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
----
-
-I am wondering how is it possible that none of the build-testing 
-infrastructure we have running against linux-next caught this? Not enough 
-non-x86 coverage?
-
- arch/s390/include/asm/cpacf.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/s390/include/asm/cpacf.h b/arch/s390/include/asm/cpacf.h
-index a092f63aac6a..c0f3bfeddcbe 100644
---- a/arch/s390/include/asm/cpacf.h
-+++ b/arch/s390/include/asm/cpacf.h
-@@ -171,7 +171,7 @@ typedef struct { unsigned char bytes[16]; } cpacf_mask_t;
-  *
-  * Returns 1 if @func is available for @opcode, 0 otherwise
-  */
--static inline void __cpacf_query(unsigned int opcode, cpacf_mask_t *mask)
-+static __always_inline void __cpacf_query(unsigned int opcode, cpacf_mask_t *mask)
- {
- 	register unsigned long r0 asm("0") = 0;	/* query function */
- 	register unsigned long r1 asm("1") = (unsigned long) mask;
-
--- 
-Jiri Kosina
-SUSE Labs
-
+On 10/1/19 2:39 PM, Jacek Anaszewski wrote:
+> Hi Dan,
+>
+> Thank you for the patch.
+>
+> On 10/1/19 8:04 PM, Dan Murphy wrote:
+>> Convert LED flash class registration to device managed class
+>> registration API.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   drivers/leds/leds-lm3601x.c | 3 +--
+>>   1 file changed, 1 insertion(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/leds/leds-lm3601x.c b/drivers/leds/leds-lm3601x.c
+>> index b02972f1a341..a68e4f97739c 100644
+>> --- a/drivers/leds/leds-lm3601x.c
+>> +++ b/drivers/leds/leds-lm3601x.c
+>> @@ -350,8 +350,7 @@ static int lm3601x_register_leds(struct lm3601x_led *led,
+>>   	init_data.devicename = led->client->name;
+>>   	init_data.default_label = (led->led_mode == LM3601X_LED_TORCH) ?
+>>   					"torch" : "infrared";
+>> -
+>> -	return led_classdev_flash_register_ext(&led->client->dev,
+>> +	return devm_led_classdev_flash_register_ext(&led->client->dev,
+>>   						&led->fled_cdev, &init_data);
+> You need to remove led_classdev_flash_unregister(&led->fled_cdev) from
+> lm3601x_remove() to complete this improvement.
+>
+Ack.
