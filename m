@@ -2,193 +2,212 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0AB1C35280
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 01:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE9BC32792
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 01:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82B292075C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 01:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BA562087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 01:58:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CQkP+Pn4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731060AbfJABNR (ORCPT
+        id S1729202AbfJAB6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 21:13:17 -0400
-Received: from mga12.intel.com ([192.55.52.136]:64309 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726157AbfJABNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 21:13:17 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Sep 2019 18:13:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,569,1559545200"; 
-   d="scan'208";a="191307813"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP; 30 Sep 2019 18:13:16 -0700
-Received: from [10.226.38.18] (unknown [10.226.38.18])
-        by linux.intel.com (Postfix) with ESMTP id 927655803E4;
-        Mon, 30 Sep 2019 18:13:14 -0700 (PDT)
-Subject: Re: [PATCH v1 1/2] dt-bindings: spi: Add support for cadence-qspi IP
- Intel LGM SoC
-To:     Rob Herring <robh@kernel.org>
-Cc:     broonie@kernel.org, mark.rutland@arm.com,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com
-References: <20190916073843.39618-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190916073843.39618-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190930223640.GA18491@bogus>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <e70c6f98-7e0f-97f2-bede-00de4389f825@linux.intel.com>
-Date:   Tue, 1 Oct 2019 09:13:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 30 Sep 2019 21:58:43 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38730 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727810AbfJAB6m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 21:58:42 -0400
+Received: by mail-pf1-f196.google.com with SMTP id h195so6765938pfe.5
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 18:58:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=V13OWGdOgQZc0p8jcFcksNKGAg1h1vgIDhJUeYe6EjA=;
+        b=CQkP+Pn4SrN43elxLPl3lRSSih8N/K+RJ8mCbFGae73ZgNBdriOIuOQVTRwHPqoBaw
+         2uSWTdQXM4T1vmiSq2j/950XSKLhl7SlHbdYlo8JF2bxpSy6vFSvqeRy94C2Q2QpI4N1
+         fLdAvgmAXRFaGfry1lmfc1QcesO48+B6XIk6A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=V13OWGdOgQZc0p8jcFcksNKGAg1h1vgIDhJUeYe6EjA=;
+        b=qULg7S20t9w6pytr4e+Jk5VMRzstPxXMB8NCX+QmqekdLM9PsDhlEar2ueYpdrvVxT
+         q5tt2gmNPxKqweUkfvypKrL+8Z+LwSxOS9RE9ET1OW/s7h1442M/L4RkxOZIpSJZrQyy
+         3qcF0H3K6CMXbYjbVzvY6GuFl2RXf2c+kB2o7zpT1j6u+par9LH7GL5sg0UG0YbFF0AC
+         2XUDpsV6T07t6mKOR9ngkqHipWwQpYPBzAy6TLAZNmKcsDiK7v6suAoHVS+Z0VsHD4h3
+         DaBe6rskiQVzEN47OrpObobgfQU2YhNOjf8tgBkXwHeFA7BXHRj4HOx3hEWfGbK8uKWo
+         sLeg==
+X-Gm-Message-State: APjAAAXaCE79oPA0StLbxCeQcQLLbp9yX1upDcJh/urYJmlKmwOUV0dy
+        19OOJNVJxnrWXm6o2PK+pnxv3w==
+X-Google-Smtp-Source: APXvYqwfQ7ZP6YE7B7tN65nhMUqu79o93n2Y6H0GpdorOuxDSEdq01lxwsgs9lqlYCV4LblozdDPcw==
+X-Received: by 2002:a62:76d1:: with SMTP id r200mr25943545pfc.27.1569895121675;
+        Mon, 30 Sep 2019 18:58:41 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id l12sm19539490pgs.44.2019.09.30.18.58.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Sep 2019 18:58:40 -0700 (PDT)
+Date:   Mon, 30 Sep 2019 18:58:39 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/4] lib: introduce copy_struct_from_user() helper
+Message-ID: <201909301856.01255535BD@keescook>
+References: <20191001011055.19283-1-cyphar@cyphar.com>
+ <20191001011055.19283-2-cyphar@cyphar.com>
 MIME-Version: 1.0
-In-Reply-To: <20190930223640.GA18491@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191001011055.19283-2-cyphar@cyphar.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Tue, Oct 01, 2019 at 11:10:52AM +1000, Aleksa Sarai wrote:
+> A common pattern for syscall extensions is increasing the size of a
+> struct passed from userspace, such that the zero-value of the new fields
+> result in the old kernel behaviour (allowing for a mix of userspace and
+> kernel vintages to operate on one another in most cases).
+> 
+> While this interface exists for communication in both directions, only
+> one interface is straightforward to have reasonable semantics for
+> (userspace passing a struct to the kernel). For kernel returns to
+> userspace, what the correct semantics are (whether there should be an
+> error if userspace is unaware of a new extension) is very
+> syscall-dependent and thus probably cannot be unified between syscalls
+> (a good example of this problem is [1]).
+> 
+> Previously there was no common lib/ function that implemented
+> the necessary extension-checking semantics (and different syscalls
+> implemented them slightly differently or incompletely[2]). Future
+> patches replace common uses of this pattern to make use of
+> copy_struct_from_user().
+> 
+> Some in-kernel selftests that insure that the handling of alignment and
+> various byte patterns are all handled identically to memchr_inv() usage.
+> 
+> [1]: commit 1251201c0d34 ("sched/core: Fix uclamp ABI bug, clean up and
+>      robustify sched_read_attr() ABI logic and code")
+> 
+> [2]: For instance {sched_setattr,perf_event_open,clone3}(2) all do do
+>      similar checks to copy_struct_from_user() while rt_sigprocmask(2)
+>      always rejects differently-sized struct arguments.
+> 
+> Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+> ---
+>  include/linux/bitops.h  |   7 +++
+>  include/linux/uaccess.h |  70 +++++++++++++++++++++
+>  lib/strnlen_user.c      |   8 +--
+>  lib/test_user_copy.c    | 136 ++++++++++++++++++++++++++++++++++++++--
+>  lib/usercopy.c          |  55 ++++++++++++++++
+>  5 files changed, 263 insertions(+), 13 deletions(-)
+> 
+> diff --git a/include/linux/bitops.h b/include/linux/bitops.h
+> index cf074bce3eb3..c94a9ff9f082 100644
+> --- a/include/linux/bitops.h
+> +++ b/include/linux/bitops.h
+> @@ -4,6 +4,13 @@
+>  #include <asm/types.h>
+>  #include <linux/bits.h>
+>  
+> +/* Set bits in the first 'n' bytes when loaded from memory */
+> +#ifdef __LITTLE_ENDIAN
+> +#  define aligned_byte_mask(n) ((1UL << 8*(n))-1)
+> +#else
+> +#  define aligned_byte_mask(n) (~0xffUL << (BITS_PER_LONG - 8 - 8*(n)))
+> +#endif
+> +
+>  #define BITS_PER_TYPE(type) (sizeof(type) * BITS_PER_BYTE)
+>  #define BITS_TO_LONGS(nr)	DIV_ROUND_UP(nr, BITS_PER_TYPE(long))
+>  
+> diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+> index 70bbdc38dc37..8abbc713f7fb 100644
+> --- a/include/linux/uaccess.h
+> +++ b/include/linux/uaccess.h
+> @@ -231,6 +231,76 @@ __copy_from_user_inatomic_nocache(void *to, const void __user *from,
+>  
+>  #endif		/* ARCH_HAS_NOCACHE_UACCESS */
+>  
+> +extern int check_zeroed_user(const void __user *from, size_t size);
+> +
+> +/**
+> + * copy_struct_from_user: copy a struct from userspace
+> + * @dst:   Destination address, in kernel space. This buffer must be @ksize
+> + *         bytes long.
+> + * @ksize: Size of @dst struct.
+> + * @src:   Source address, in userspace.
+> + * @usize: (Alleged) size of @src struct.
+> + *
+> + * Copies a struct from userspace to kernel space, in a way that guarantees
+> + * backwards-compatibility for struct syscall arguments (as long as future
+> + * struct extensions are made such that all new fields are *appended* to the
+> + * old struct, and zeroed-out new fields have the same meaning as the old
+> + * struct).
+> + *
+> + * @ksize is just sizeof(*dst), and @usize should've been passed by userspace.
+> + * The recommended usage is something like the following:
+> + *
+> + *   SYSCALL_DEFINE2(foobar, const struct foo __user *, uarg, size_t, usize)
+> + *   {
+> + *      int err;
+> + *      struct foo karg = {};
+> + *
+> + *      if (usize > PAGE_SIZE)
+> + *        return -E2BIG;
+> + *      if (usize < FOO_SIZE_VER0)
+> + *        return -EINVAL;
+> + *
+> + *      err = copy_struct_from_user(&karg, sizeof(karg), uarg, usize);
+> + *      if (err)
+> + *        return err;
+> + *
+> + *      // ...
+> + *   }
+> + *
+> + * There are three cases to consider:
+> + *  * If @usize == @ksize, then it's copied verbatim.
+> + *  * If @usize < @ksize, then the userspace has passed an old struct to a
+> + *    newer kernel. The rest of the trailing bytes in @dst (@ksize - @usize)
+> + *    are to be zero-filled.
+> + *  * If @usize > @ksize, then the userspace has passed a new struct to an
+> + *    older kernel. The trailing bytes unknown to the kernel (@usize - @ksize)
+> + *    are checked to ensure they are zeroed, otherwise -E2BIG is returned.
+> + *
+> + * Returns (in all cases, some data may have been copied):
+> + *  * -E2BIG:  (@usize > @ksize) and there are non-zero trailing bytes in @src.
+> + *  * -EFAULT: access to userspace failed.
+> + */
+> +static __always_inline
+> +int copy_struct_from_user(void *dst, size_t ksize,
+> +			  const void __user *src, size_t usize)
 
-    Thank you for the review comments.
+And of course I forgot to realize both this and check_zeroed_user()
+should also have the __must_check attribute. Sorry for forgetting that
+earlier!
 
-On 1/10/2019 6:36 AM, Rob Herring wrote:
-> On Mon, Sep 16, 2019 at 03:38:42PM +0800, Ramuthevar,Vadivel MuruganX wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> On Intel Lightening Mountain(LGM) SoCs QSPI controller support
->> to QSPI-NAND flash. This introduces to device tree binding
->> documentation for Cadence-QSPI controller and spi-nand flash.
->>
->> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> ---
->>   .../devicetree/bindings/spi/cadence,qspi-nand.yaml | 84 ++++++++++++++++++++++
->>   1 file changed, 84 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml b/Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml
->> new file mode 100644
->> index 000000000000..9aae4c1459cc
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml
->> @@ -0,0 +1,84 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/spi/cadence,qspi-nand.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: Cadence QSPI Flash Controller on Intel's SoC
->> +
->> +maintainers:
->> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> +
->> +allOf:
->> +  - $ref: "spi-controller.yaml#"
->> +
->> +description: |
->> +  The Cadence QSPI is a controller optimized for communication with SPI
->> +  FLASH memories, without DMA support on Intel's SoC.
->> +
->> +properties:
->> +  compatible:
->> +    const: cadence,lgm-qspi
-> Vendor here should be 'intel'. Perhaps the binding should be shared too
-> like the driver.
->
-> Plus the vendor prefix for Cadence is cdns.
-Agreed!, will update.
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  fifo-depth:
->> +    maxItems: 1
->> +
-> This is vendor specific, so needs a vendor prefix, type, and
-> description.
-agreed!
->> +  fifo-width:
->> +    maxItems: 1
-> Same
->
->> +
->> +  qspi-phyaddr:
->> +    maxItems: 1
-> Same
->
->> +
->> +  qspi-phymask:
->> +    maxItems: 1
-> Same
-will update all the above.
->> +
->> +  clocks:
->> +    maxItems: 2
-> Need to define what each clock is when there is more than 1.
-Sure, will update.
->> +
->> +  clocks-names:
->> +    maxItems: 2
-> Need to define the strings.
-Noted, will update.
->> +
->> +  resets:
->> +    maxItems: 1
->> +
->> +  reset-names:
->> +    maxItems: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - fifo-depth
->> +  - fifo-width
->> +  - qspi-phyaddr
->> +  - qspi-phymask
->> +  - clocks
->> +  - clock-names
->> +  - resets
->> +  - reset-names
->> +
->> +examples:
->> +  - |
->> +    qspi@ec000000 {
-> spi@...
+With that, please consider it:
 
-Controller is qspi , so that have updated.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-With Best Regards
-Vadivel Murugan R
->> +          compatible = "cadence,qspi-nand";
->> +          reg = <0xec000000 0x100>;
->> +          fifo-depth = <128>;
->> +          fifo-width = <4>;
->> +          qspi-phyaddr = <0xf4000000>;
->> +          qspi-phymask = <0xffffffff>;
->> +          clocks = <&cgu0 LGM_CLK_QSPI>, <&cgu0 LGM_GCLK_QSPI>;
->> +          clock-names = "freq", "qspi";
->> +          resets = <&rcu0 0x10 1>;
->> +          reset-names = "qspi";
->> +          #address-cells = <1>;
->> +          #size-cells = <0>;
->> +
->> +          flash: flash@1 {
->> +              compatible = "spi-nand";
->> +              reg = <1>;
->> +              spi-max-frequency = <10000000>;
->> +          };
->> +    };
->> +
->> -- 
->> 2.11.0
->>
+Thanks for working on this!
+
+-- 
+Kees Cook
