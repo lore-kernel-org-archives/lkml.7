@@ -2,209 +2,216 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7840DC388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 647C5ECDFB6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5055C21855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:05:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569913501;
-	bh=W2B0nz7oJdULryzpKt3T+gxH45sheTNxKJ9Gr4J31Bs=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=l+P1Xkw3j+0B+98fbguxqLcwuPZcmrUZnVSjFny3XKcHb8wXE32CC8Z1RgFGTLDB/
-	 0GzSjmOYmR47ODta/WwbzuQ7isoRs74BYkKsYah4VOMm3NfNPbAUGrrlLR6X2ypLlW
-	 ufJvv4XZAiytuKSy8ce2WzrzY/9zx9+frUZjWmF0=
+	by mail.kernel.org (Postfix) with ESMTP id 450F621855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:05:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732708AbfJAHFA (ORCPT
+        id S1732745AbfJAHFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 03:05:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59570 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725777AbfJAHFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 03:05:00 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2B53215EA;
-        Tue,  1 Oct 2019 07:04:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569913499;
-        bh=W2B0nz7oJdULryzpKt3T+gxH45sheTNxKJ9Gr4J31Bs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=vkj9SHsbOyRRhqFuzvVrQ8WGVW+1gMepRYUFqaaF48sDSfA1HtRVlxNi1rXVi1+W4
-         iAKfIppkruAW8oXXh75lwtOfyAmFJK0MeTgcRW2vocwzrETmlN9UdwTQByct2aJZuR
-         +i0FezyCakB+ekN5qJjhpQMy0lgf+pKOjcUrlsFI=
-Date:   Tue, 1 Oct 2019 09:04:57 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
-Subject: Linux 5.3.2
-Message-ID: <20191001070457.GA2893807@kroah.com>
+        Tue, 1 Oct 2019 03:05:04 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:32781 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725777AbfJAHFE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 03:05:04 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iFCDQ-0003FK-Mn; Tue, 01 Oct 2019 09:04:56 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iFCDK-0006R1-HW; Tue, 01 Oct 2019 09:04:50 +0200
+Date:   Tue, 1 Oct 2019 09:04:50 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     thierry.reding@gmail.com, robh+dt@kernel.org,
+        alexandre.torgue@st.com, mark.rutland@arm.com,
+        mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, benjamin.gaignard@st.com,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH 2/2] pwm: stm32: add power management support
+Message-ID: <20191001070450.4zogfryzo7a5ssbd@pengutronix.de>
+References: <1569857951-20007-1-git-send-email-fabrice.gasnier@st.com>
+ <1569857951-20007-3-git-send-email-fabrice.gasnier@st.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="k1lZvvs/B4yU6o8G"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1569857951-20007-3-git-send-email-fabrice.gasnier@st.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Fabrice,
 
---k1lZvvs/B4yU6o8G
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, Sep 30, 2019 at 05:39:11PM +0200, Fabrice Gasnier wrote:
+> Add suspend/resume PM sleep ops. When going to low power, enforce the PWM
+> channel isn't active. Let the PWM consumers disable it during their own
+> suspend sequence, see [1]. So, perform a check here, and handle the
+> pinctrl states. Also restore the break inputs upon resume, as registers
+> content may be lost when going to low power mode.
+> 
+> [1] https://lkml.org/lkml/2019/2/5/770
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> ---
+>  drivers/pwm/pwm-stm32.c | 82 +++++++++++++++++++++++++++++++++++++------------
+>  1 file changed, 62 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
+> index 740e2de..9bcd73a 100644
+> --- a/drivers/pwm/pwm-stm32.c
+> +++ b/drivers/pwm/pwm-stm32.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/mfd/stm32-timers.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> +#include <linux/pinctrl/consumer.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pwm.h>
+>  
+> @@ -19,6 +20,12 @@
+>  #define CCMR_CHANNEL_MASK  0xFF
+>  #define MAX_BREAKINPUT 2
+>  
+> +struct stm32_breakinput {
+> +	u32 index;
+> +	u32 level;
+> +	u32 filter;
+> +};
+> +
+>  struct stm32_pwm {
+>  	struct pwm_chip chip;
+>  	struct mutex lock; /* protect pwm config/enable */
+> @@ -26,15 +33,11 @@ struct stm32_pwm {
+>  	struct regmap *regmap;
+>  	u32 max_arr;
+>  	bool have_complementary_output;
+> +	struct stm32_breakinput breakinput[MAX_BREAKINPUT];
+> +	unsigned int nbreakinput;
+>  	u32 capture[4] ____cacheline_aligned; /* DMA'able buffer */
+>  };
+>  
+> -struct stm32_breakinput {
+> -	u32 index;
+> -	u32 level;
+> -	u32 filter;
+> -};
+> -
+>  static inline struct stm32_pwm *to_stm32_pwm_dev(struct pwm_chip *chip)
+>  {
+>  	return container_of(chip, struct stm32_pwm, chip);
+> @@ -512,15 +515,27 @@ static int stm32_pwm_set_breakinput(struct stm32_pwm *priv,
+>  	return (bdtr & bke) ? 0 : -EINVAL;
+>  }
+>  
+> -static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv,
+> +static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv)
+> +{
+> +	int i, ret = 0;
+> +
+> +	for (i = 0; i < priv->nbreakinput && !ret; i++) {
+> +		ret = stm32_pwm_set_breakinput(priv,
+> +					       priv->breakinput[i].index,
+> +					       priv->breakinput[i].level,
+> +					       priv->breakinput[i].filter);
+> +	}
+> +
+> +	return ret;
+> +}
 
-I'm announcing the release of the 5.3.2 kernel.
+Can you explain what the effect of this function is? This is something
+that is lost during suspend?
 
-All users of the 5.3 kernel series must upgrade.
+I wonder why the patch is so big. There are some rearrangements that
+should have no effect and I think it would be beneficial for
+reviewability to split this patch in a patch that only does the
+restructuring and than on top of that add the PM stuff.
 
-The updated 5.3.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
-x-5.3.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
-ummary
+> +
+> +static int stm32_pwm_probe_breakinputs(struct stm32_pwm *priv,
+>  				       struct device_node *np)
+>  {
+> -	struct stm32_breakinput breakinput[MAX_BREAKINPUT];
+> -	int nb, ret, i, array_size;
+> +	int nb, ret, array_size;
+>  
+>  	nb = of_property_count_elems_of_size(np, "st,breakinput",
+>  					     sizeof(struct stm32_breakinput));
+> -
+>  	/*
+>  	 * Because "st,breakinput" parameter is optional do not make probe
+>  	 * failed if it doesn't exist.
+> @@ -531,20 +546,14 @@ static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv,
+>  	if (nb > MAX_BREAKINPUT)
+>  		return -EINVAL;
+>  
+> +	priv->nbreakinput = nb;
+>  	array_size = nb * sizeof(struct stm32_breakinput) / sizeof(u32);
+>  	ret = of_property_read_u32_array(np, "st,breakinput",
+> -					 (u32 *)breakinput, array_size);
+> +					 (u32 *)priv->breakinput, array_size);
+>  	if (ret)
+>  		return ret;
+>  
+> -	for (i = 0; i < nb && !ret; i++) {
+> -		ret = stm32_pwm_set_breakinput(priv,
+> -					       breakinput[i].index,
+> -					       breakinput[i].level,
+> -					       breakinput[i].filter);
+> -	}
+> -
+> -	return ret;
+> +	return stm32_pwm_apply_breakinputs(priv);
+>  }
+>  
+>  static void stm32_pwm_detect_complementary(struct stm32_pwm *priv)
+> @@ -614,7 +623,7 @@ static int stm32_pwm_probe(struct platform_device *pdev)
+>  	if (!priv->regmap || !priv->clk)
+>  		return -EINVAL;
+>  
+> -	ret = stm32_pwm_apply_breakinputs(priv, np);
+> +	ret = stm32_pwm_probe_breakinputs(priv, np);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -647,6 +656,38 @@ static int stm32_pwm_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static int __maybe_unused stm32_pwm_suspend(struct device *dev)
+> +{
+> +	struct stm32_pwm *priv = dev_get_drvdata(dev);
+> +	struct pwm_state state;
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < priv->chip.npwm; i++) {
+> +		pwm_get_state(&priv->chip.pwms[i], &state);
 
-thanks,
+pwm_get_state is a function designed to be used by PWM consumers. I
+would prefer to check the hardware registers here instead.
 
-greg k-h
+What if there is no consumer and the PWM just happens to be enabled by
+the bootloader? Or is this too minor an issue to be worth consideration?
 
-------------
+Best regards
+Uwe
 
- Makefile                                          |    2=20
- arch/powerpc/include/asm/opal.h                   |    2=20
- arch/powerpc/platforms/powernv/opal-call.c        |    2=20
- arch/powerpc/sysdev/xive/native.c                 |   11 ++
- drivers/clk/imx/clk-imx8mm.c                      |    4=20
- drivers/clocksource/timer-of.c                    |    6 -
- drivers/clocksource/timer-probe.c                 |    4=20
- drivers/crypto/talitos.c                          |    1=20
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |   56 ++++++++++---
- drivers/gpu/drm/amd/display/dc/calcs/Makefile     |    4=20
- drivers/gpu/drm/amd/display/dc/dcn20/Makefile     |    4=20
- drivers/gpu/drm/amd/display/dc/dml/Makefile       |    4=20
- drivers/gpu/drm/amd/display/dc/dsc/Makefile       |    4=20
- drivers/hid/hid-ids.h                             |    1=20
- drivers/hid/hid-lg.c                              |   10 +-
- drivers/hid/hid-lg4ff.c                           |    1=20
- drivers/hid/hid-logitech-dj.c                     |   10 +-
- drivers/hid/hid-prodikeys.c                       |   12 ++
- drivers/hid/hid-quirks.c                          |    1=20
- drivers/hid/hid-sony.c                            |    2=20
- drivers/hid/hidraw.c                              |    2=20
- drivers/mtd/chips/cfi_cmdset_0002.c               |   18 ++--
- drivers/platform/x86/i2c-multi-instantiate.c      |    2=20
- include/net/netfilter/nf_tables.h                 |    4=20
- mm/z3fold.c                                       |   90 -----------------=
------
- sound/firewire/dice/dice-alesis.c                 |    2=20
- sound/pci/hda/hda_intel.c                         |    3=20
- sound/pci/hda/patch_analog.c                      |    1=20
- sound/usb/quirks.c                                |    2=20
- tools/objtool/Makefile                            |    2=20
- 30 files changed, 129 insertions(+), 138 deletions(-)
-
-Alan Stern (3):
-      HID: prodikeys: Fix general protection fault during probe
-      HID: logitech: Fix general protection fault caused by Logitech driver
-      HID: hidraw: Fix invalid read in hidraw_ioctl
-
-Greg Kroah-Hartman (1):
-      Linux 5.3.2
-
-Greg Kurz (1):
-      powerpc/xive: Fix bogus error code returned by OPAL
-
-Gustavo A. R. Silva (1):
-      crypto: talitos - fix missing break in switch statement
-
-Hans de Goede (1):
-      HID: logitech-dj: Fix crash when initial logi_dj_recv_query_paired_de=
-vices fails
-
-Heikki Krogerus (1):
-      platform/x86: i2c-multi-instantiate: Derive the device name from pare=
-nt
-
-Ilya Pshonkin (1):
-      ALSA: usb-audio: Add Hiby device family to quirks for native DSD supp=
-ort
-
-Jeremy Sowden (1):
-      netfilter: add missing IS_ENABLED(CONFIG_NF_TABLES) check to header-f=
-ile.
-
-Jon Hunter (2):
-      clocksource/drivers/timer-of: Do not warn on deferred probe
-      clocksource/drivers: Do not warn on probe defer
-
-Josh Poimboeuf (1):
-      objtool: Clobber user CFLAGS variable
-
-Jussi Laako (1):
-      ALSA: usb-audio: Add DSD support for EVGA NU Audio
-
-Nicholas Kazlauskas (3):
-      drm/amd/display: Allow cursor async updates for framebuffer swaps
-      drm/amd/display: Skip determining update type for async updates
-      drm/amd/display: Don't replace the dc_state for fast updates
-
-Nick Desaulniers (1):
-      drm/amd/display: readd -msse2 to prevent Clang from emitting libcalls=
- to undefined SW FP routines
-
-Peng Fan (1):
-      clk: imx: imx8mm: fix audio pll setting
-
-Roderick Colenbrander (1):
-      HID: sony: Fix memory corruption issue on cleanup.
-
-Sebastian Parschauer (1):
-      HID: Add quirk for HP X500 PIXART OEM mouse
-
-Shih-Yuan Lee (FourDollars) (1):
-      ALSA: hda - Add laptop imic fixup for ASUS M9V laptop
-
-Takashi Iwai (1):
-      ALSA: hda - Apply AMD controller workaround for Raven platform
-
-Takashi Sakamoto (1):
-      ALSA: dice: fix wrong packet parameter for Alesis iO26
-
-Tokunori Ikegami (1):
-      mtd: cfi_cmdset_0002: Use chip_good() to retry in do_write_oneword()
-
-Vitaly Wool (1):
-      Revert "mm/z3fold.c: fix race between migration and destruction"
-
-
---k1lZvvs/B4yU6o8G
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl2S+pkACgkQONu9yGCS
-aT7+yw//f/EL3s4nJNNICMtm+4/cCVJJkgOtkPTxBdvT8nkSagDPwvYMuEk6I08w
-hsrQK2nd3skok3sCVvc8lusC+sG9Xop0uh5PiHvuQXY0Rq/gBIqmCGQxKmrA0ktK
-2zKq3Gxy0s3bRAZHNXC7U5HmnEr2BN7l7B573WbdMnceVKsg8/bEz27ptDOQWHtq
-74racmRvHl+5nYUoGeM91AHB+dHkPd2yOjabNLOnMbDe8RZOBznYA8k6iJOihztG
-Tsjffdyiw2hdG6Z7cXr4m6XDHUuXKQsZO/6boYQPpWvkl0VX1U1eiQtihp2dyYxu
-3abaQ8qrfEDDHC+IuXYF1UGLkOLRc5C9WnOw/xYKjJ1wfwCiORn+9spABSkvSkqd
-A4bxW8PBfXCZEe/0Sxitgzqy21cvEUZyAuPeCnQ5y65i3MYiMCVZpikKmngoXRXY
-5bwuQwyRYdoNFOxaVMuEE1BqFcbCgHm8hB2voNi6IMf8d8uguWmpgh+isol44Yw0
-Q4fKfCwhuOIT3B618uBOZ9lEWG8HhBLmYzIYI9/MLMYxfzhLAsUrgLFCzVNt9cxh
-9mIf9feiSeKWrz1LJgwWKGZTWc/5NFxdiyi6WmS1bvxMrBzBjY3e52Tl1b6I32aR
-4wcZy0ueDuCbiwQi5+nAxdbaisqdtRZ+H4Sem6B8J/z+SfYPujI=
-=Z0T8
------END PGP SIGNATURE-----
-
---k1lZvvs/B4yU6o8G--
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
