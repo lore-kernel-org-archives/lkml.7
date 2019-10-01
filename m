@@ -2,62 +2,78 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D42BC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B1EECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B9B1205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:28:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="MyI0M5J6"
+	by mail.kernel.org (Postfix) with ESMTP id 8384821920
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:31:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732494AbfJAM2i (ORCPT
+        id S1732862AbfJAMbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 08:28:38 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:55880 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbfJAM2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 08:28:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=XNJhDhnm+k1BnwnI1CC9SFDSWX+IJemCfMgg5iRpkPM=; b=MyI0M5J6Gl87yb7+MYC6igRM5W
-        svqKuK/FPdwG8Szw+sxcaIkGM1zF210G540yp/qUE9FqYqreDW9JcT6bcfDPuygh7sXWzPHd4/p7t
-        pMJWKJUe2Sp0E+9Hxnk22rZdsaYgzR0Wc4HBHgzaNkW5LZ/csG8wkvoqyeG+2lI8qrHg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iFHGd-0000LL-Cn; Tue, 01 Oct 2019 14:28:35 +0200
-Date:   Tue, 1 Oct 2019 14:28:35 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Walter Schweizer <ws.kernel@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Gregory Clement <gregory.clement@bootlin.com>
-Subject: Re: [PATCH] ARM: dts: kirkwood: synology: Fix rs5c372 RTC entry
-Message-ID: <20191001122835.GB869@lunn.ch>
-References: <20190928105344.6788-1-ws.kernel@gmail.com>
+        Tue, 1 Oct 2019 08:31:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52346 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726137AbfJAMbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 08:31:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 96CE5AD95;
+        Tue,  1 Oct 2019 12:31:08 +0000 (UTC)
+Date:   Tue, 1 Oct 2019 14:30:44 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     jikos@kernel.org, jpoimboe@redhat.com, pmladek@suse.com
+cc:     joe.lawrence@redhat.com, nstange@suse.de,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 0/3] livepatch: Clear relocation targets on a
+ module removal
+In-Reply-To: <20190905124514.8944-1-mbenes@suse.cz>
+Message-ID: <alpine.LSU.2.21.1910011428001.6105@pobox.suse.cz>
+References: <20190905124514.8944-1-mbenes@suse.cz>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190928105344.6788-1-ws.kernel@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 28, 2019 at 12:53:44PM +0200, Walter Schweizer wrote:
-> In the rtc-rs5c372.c driver the compatible entry has been renamed
-> from rs5c372 to rs5c372a. Most dts files have been adapted.
-> This patch completes the change.
+On Thu, 5 Sep 2019, Miroslav Benes wrote:
+
+> Updated version with Petr's feedback. It looks a bit different and
+> better now (I would say). Not that it should be considered before we
+> decide what to do with late module patching, but I finished it before
+> the discussion started and someone could be interested.
 > 
-> Signed-off-by: Walter Schweizer <ws.kernel@gmail.com>
+> v1: http://lore.kernel.org/r/20190719122840.15353-1-mbenes@suse.cz
+> 
+> Tested on x86_64, ppc64le and s390x. Cross-compiled on arm64 to verify
+> that nothing is broken.
+> 
+> [1] 20180602161151.apuhs2dygsexmcg2@treble
+> [2] 1561019068-132672-1-git-send-email-cj.chengjian@huawei.com
+> [3] 20180607092949.1706-1-mbenes@suse.cz
+> 
+> Miroslav Benes (3):
+>   livepatch: Clear relocation targets on a module removal
+>   livepatch: Unify functions for writing and clearing object relocations
+>   livepatch: Clean up klp_update_object_relocations() return paths
+> 
+>  arch/powerpc/kernel/module_64.c | 45 +++++++++++++++++++++++++
+>  arch/s390/kernel/module.c       |  8 +++++
+>  arch/x86/kernel/module.c        | 43 ++++++++++++++++++++++++
+>  include/linux/moduleloader.h    |  7 ++++
+>  kernel/livepatch/core.c         | 58 ++++++++++++++++++++++++---------
+>  5 files changed, 146 insertions(+), 15 deletions(-)
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Ping.
 
-    Andrew
+If I remember correctly, we decided to have this as a temporary solution 
+before better late module patching is implemented. Feedback is welcome.
+I'll then resend with arch maintainters CCed.
+
+Thanks
+Miroslav
