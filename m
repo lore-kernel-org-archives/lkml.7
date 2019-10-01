@@ -2,92 +2,94 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D42DDC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9673ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BE9F21855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:18:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569939529;
-	bh=BZoLkO7pPzU3r96BwmjE8Yk+cfOBfvTp6vVFJajgGi0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=s+g+ecUIoffxE/iOhDqLq5B3qlBFGCYnz224C2ecu5Sita54CvX/4zbuDokxPMecT
-	 Ht+eRO0yomI5xGOIwHmUmSPmLhiR2+iCiYgQtKq2MYodRA1GHBatWDySyR/pBUtBeC
-	 IAWxy5khjCVtkFWRr0NxwdyOkCXWBjVSl8w93/Yo=
+	by mail.kernel.org (Postfix) with ESMTP id 919F321906
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:18:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388941AbfJAOSt (ORCPT
+        id S2388930AbfJAOSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 1 Oct 2019 10:18:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33274 "EHLO mail.kernel.org"
+Received: from foss.arm.com ([217.140.110.172]:50656 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727055AbfJAOSs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726554AbfJAOSs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Oct 2019 10:18:48 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F78E2086A;
-        Tue,  1 Oct 2019 14:18:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569939528;
-        bh=BZoLkO7pPzU3r96BwmjE8Yk+cfOBfvTp6vVFJajgGi0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LuvHpqFnQEAf2BjLJouneSSWDpXnphl0go8fxpv4Np+kR/D7JMIYeMixWOcgAGOtR
-         Z4z06rexQ5MhaJ1WtOeaYIX/aSmVcJA3YLsYIAciSbfVbyhs1akYxuTApsNlVSoSCh
-         tSX8x5tbdGjsvyvGROQLF2Ptws9GzIE+lgDBmphs=
-Date:   Tue, 1 Oct 2019 10:18:46 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH AUTOSEL 5.3 034/203] ASoC: meson: g12a-tohdmitx: override
- codec2codec params
-Message-ID: <20191001141846.GU8171@sasha-vm>
-References: <20190922184350.30563-1-sashal@kernel.org>
- <20190922184350.30563-34-sashal@kernel.org>
- <1j7e5ztnoo.fsf@starbuckisacylon.baylibre.com>
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DDD671000;
+        Tue,  1 Oct 2019 07:18:47 -0700 (PDT)
+Received: from [10.37.8.149] (unknown [10.37.8.149])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 24E0F3F71A;
+        Tue,  1 Oct 2019 07:18:45 -0700 (PDT)
+Subject: Re: [PATCH v3 1/5] arm64: vdso32: Introduce COMPAT_CC_IS_GCC
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        ard.biesheuvel@linaro.org, ndesaulniers@google.com,
+        tglx@linutronix.de
+References: <20190920142738.qlsjwguc6bpnez63@willie-the-truck>
+ <20190926214342.34608-1-vincenzo.frascino@arm.com>
+ <20190926214342.34608-2-vincenzo.frascino@arm.com>
+ <20191001131420.y3fsydlo7pg6ykfs@willie-the-truck>
+ <20191001132731.GG41399@arrakis.emea.arm.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <ed7d1465-2d7b-d57c-c1b1-215af1ba7a6f@arm.com>
+Date:   Tue, 1 Oct 2019 15:20:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <1j7e5ztnoo.fsf@starbuckisacylon.baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191001132731.GG41399@arrakis.emea.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 10:35:35AM +0200, Jerome Brunet wrote:
->On Sun 22 Sep 2019 at 14:41, Sasha Levin <sashal@kernel.org> wrote:
->
->> From: Jerome Brunet <jbrunet@baylibre.com>
+On 10/1/19 2:27 PM, Catalin Marinas wrote:
+> On Tue, Oct 01, 2019 at 02:14:23PM +0100, Will Deacon wrote:
+>> On Thu, Sep 26, 2019 at 10:43:38PM +0100, Vincenzo Frascino wrote:
+>>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>>> index 37c610963eee..0e5beb928af5 100644
+>>> --- a/arch/arm64/Kconfig
+>>> +++ b/arch/arm64/Kconfig
+>>> @@ -110,7 +110,7 @@ config ARM64
+>>>  	select GENERIC_STRNLEN_USER
+>>>  	select GENERIC_TIME_VSYSCALL
+>>>  	select GENERIC_GETTIMEOFDAY
+>>> -	select GENERIC_COMPAT_VDSO if (!CPU_BIG_ENDIAN && COMPAT)
+>>> +	select GENERIC_COMPAT_VDSO if (!CPU_BIG_ENDIAN && COMPAT && COMPATCC_IS_ARM_GCC)
+>>>  	select HANDLE_DOMAIN_IRQ
+>>>  	select HARDIRQS_SW_RESEND
+>>>  	select HAVE_PCI
+>>> @@ -313,6 +313,9 @@ config KASAN_SHADOW_OFFSET
+>>>  	default 0xeffffff900000000 if ARM64_VA_BITS_36 && KASAN_SW_TAGS
+>>>  	default 0xffffffffffffffff
+>>>  
+>>> +config COMPATCC_IS_ARM_GCC
+>>> +	def_bool $(success,$(COMPATCC) --version | head -n 1 | grep -q "arm-.*-gcc")
 >>
->> [ Upstream commit 2c4956bc1e9062e5e3c5ea7612294f24e6d4fbdd ]
->>
->> So far, forwarding the hw_params of the input to output relied on the
->> .hw_params() callback of the cpu side of the codec2codec link to be called
->> first. This is a bit weak.
->>
->> Instead, override the stream params of the codec2codec to link to set it up
->> correctly.
->
->Hi Sasha
->
->This change depends on the following series in ASoC:
->https://lore.kernel.org/r/20190725165949.29699-1-jbrunet@baylibre.com
->which has also been merged in this merge window.
->
->With this change, things are done (IMO) in a better way but there was no
->known issue before that.
->
->I don't think it is worth backporting the mentioned ASoC series to
->5.3. I would suggest to just drop this change from stable.
+>> I've seen toolchains where the first part of the tuple is "armv7-", so they
+>> won't get detected here. However, do we really need to detect this? If
+>> somebody passes a duff compiler, then the build will fail in the same way as
+>> if they passed it to CROSS_COMPILE=.
+> 
+> Not sure what happens if we pass an aarch64 compiler. Can we end up with
+> a 64-bit compat vDSO?
+> 
 
-I've dropped it, thank you.
+I agree with Catalin here. The problem is not only when you pass and aarch64
+toolchain but even an x86 and so on.
 
---
-Thanks,
-Sasha
+If the problem is related to armv7- we can change the rule as "arm.*-gcc" which
+should detect them as well. Do you know what is the triple that an armv7-
+toolchain prints?
+
+-- 
+Regards,
+Vincenzo
