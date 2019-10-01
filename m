@@ -2,112 +2,119 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A416C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EF1C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F3AB205F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67C5921906
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:30:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388506AbfJAN3x (ORCPT
+        id S2388491AbfJANaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 09:29:53 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39466 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388414AbfJAN3x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 09:29:53 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x91DR9NW001313
-        for <linux-kernel@vger.kernel.org>; Tue, 1 Oct 2019 09:29:51 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vc71q97b0-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 09:29:49 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
-        Tue, 1 Oct 2019 14:29:33 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 1 Oct 2019 14:29:31 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x91DTTG545088888
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 1 Oct 2019 13:29:29 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 52C934C073;
-        Tue,  1 Oct 2019 13:29:29 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D4D734C075;
-        Tue,  1 Oct 2019 13:29:28 +0000 (GMT)
-Received: from pomme.tls.ibm.com (unknown [9.101.4.33])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  1 Oct 2019 13:29:28 +0000 (GMT)
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-To:     sfr@linux.ibm.com, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, aneesh.kumar@linux.ibm.com, npiggin@gmail.com,
-        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        Tue, 1 Oct 2019 09:30:21 -0400
+Received: from mga18.intel.com ([134.134.136.126]:28518 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726710AbfJANaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 09:30:21 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 06:30:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,571,1559545200"; 
+   d="scan'208";a="205063718"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 01 Oct 2019 06:30:16 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 01 Oct 2019 16:30:16 +0300
+Date:   Tue, 1 Oct 2019 16:30:16 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-usb@vger.kernel.org,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Lukas Wunner <lukas@wunner.de>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Mario.Limonciello@dell.com,
+        Anthony Wong <anthony.wong@canonical.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] powerpc/pseries: Remove confusing warning message.
-Date:   Tue,  1 Oct 2019 15:29:28 +0200
-X-Mailer: git-send-email 2.23.0
+Subject: Re: [RFC PATCH 12/22] thunderbolt: Add Display Port CM handshake for
+ Titan Ridge devices
+Message-ID: <20191001133016.GS2714@lahna.fi.intel.com>
+References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
+ <20191001113830.13028-13-mika.westerberg@linux.intel.com>
+ <20191001124409.GG2954373@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19100113-0008-0000-0000-0000031CC5B7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19100113-0009-0000-0000-00004A3B701D
-Message-Id: <20191001132928.72555-1-ldufour@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-01_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910010122
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191001124409.GG2954373@kroah.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the commit 1211ee61b4a8 ("powerpc/pseries: Read TLB Block Invalidate
-Characteristics"), a warning message is displayed when booting a guest on
-top of KVM:
+On Tue, Oct 01, 2019 at 02:44:09PM +0200, Greg Kroah-Hartman wrote:
+> On Tue, Oct 01, 2019 at 02:38:20PM +0300, Mika Westerberg wrote:
+> > Titan Ridge devices and newer need an additional connection manager
+> > handshake in order to do proper Display Port tunneling so implement it
+> > here.
+> > 
+> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > ---
+> >  drivers/thunderbolt/tb_regs.h |  3 +++
+> >  drivers/thunderbolt/tunnel.c  | 44 +++++++++++++++++++++++++++++++++++
+> >  2 files changed, 47 insertions(+)
+> > 
+> > diff --git a/drivers/thunderbolt/tb_regs.h b/drivers/thunderbolt/tb_regs.h
+> > index 3a39490a954b..8d11b4a2d552 100644
+> > --- a/drivers/thunderbolt/tb_regs.h
+> > +++ b/drivers/thunderbolt/tb_regs.h
+> > @@ -252,6 +252,9 @@ struct tb_regs_port_header {
+> >  #define ADP_DP_CS_3_HDPC			BIT(9)
+> >  #define DP_LOCAL_CAP				0x04
+> >  #define DP_REMOTE_CAP				0x05
+> > +#define DP_STATUS_CTRL				0x06
+> > +#define DP_STATUS_CTRL_CMHS			BIT(25)
+> > +#define DP_STATUS_CTRL_UF			BIT(26)
+> >  
+> >  /* PCIe adapter registers */
+> >  #define ADP_PCIE_CS_0				0x00
+> > diff --git a/drivers/thunderbolt/tunnel.c b/drivers/thunderbolt/tunnel.c
+> > index 3353396e0806..369800110e5e 100644
+> > --- a/drivers/thunderbolt/tunnel.c
+> > +++ b/drivers/thunderbolt/tunnel.c
+> > @@ -6,6 +6,7 @@
+> >   * Copyright (C) 2019, Intel Corporation
+> >   */
+> >  
+> > +#include <linux/delay.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/list.h>
+> >  
+> > @@ -242,6 +243,41 @@ struct tb_tunnel *tb_tunnel_alloc_pci(struct tb *tb, struct tb_port *up,
+> >  	return tunnel;
+> >  }
+> >  
+> > +static int tb_dp_cm_handshake(struct tb_port *in, struct tb_port *out)
+> > +{
+> > +	int timeout = 10;
+> > +	u32 val;
+> > +	int ret;
+> > +
+> > +	/* Both ends need to support this */
+> > +	if (!tb_switch_is_tr(in->sw) || !tb_switch_is_tr(out->sw))
+> > +		return 0;
+> 
+> So if the ends are both "Titan Ridge", matches your changelog text, but
+> where is the "and newer" comment being checked here?
 
-lpar: arch/powerpc/platforms/pseries/lpar.c pseries_lpar_read_hblkrm_characteristics Error calling get-system-parameter (0xfffffffd)
-
-This message is displayed because this hypervisor is not supporting the
-H_BLOCK_REMOVE hcall and thus is not exposing the corresponding feature.
-
-Reading the TLB Block Invalidate Characteristics should not be done if the
-feature is not exposed.
-
-Fixes: 1211ee61b4a8 ("powerpc/pseries: Read TLB Block Invalidate Characteristics")
-Reported-by: Stephen Rothwell <sfr@linux.ibm.com>
-Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
----
- arch/powerpc/platforms/pseries/lpar.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/powerpc/platforms/pseries/lpar.c b/arch/powerpc/platforms/pseries/lpar.c
-index b53359258d99..f87a5c64e24d 100644
---- a/arch/powerpc/platforms/pseries/lpar.c
-+++ b/arch/powerpc/platforms/pseries/lpar.c
-@@ -1419,6 +1419,9 @@ void __init pseries_lpar_read_hblkrm_characteristics(void)
- 	unsigned char local_buffer[SPLPAR_TLB_BIC_MAXLENGTH];
- 	int call_status, len, idx, bpsize;
- 
-+	if (!firmware_has_feature(FW_FEATURE_BLOCK_REMOVE))
-+		return;
-+
- 	spin_lock(&rtas_data_buf_lock);
- 	memset(rtas_data_buf, 0, RTAS_DATA_BUF_SIZE);
- 	call_status = rtas_call(rtas_token("ibm,get-system-parameter"), 3, 1,
--- 
-2.23.0
-
+By "and newer" I mean USB4 devices which are added in patch 17/22. I can
+update the changelog here to mention just Titan Ridge, though.
