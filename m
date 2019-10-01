@@ -2,126 +2,94 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0DD9ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D34C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93E822054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:01:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="dklJ7GAo"
+	by mail.kernel.org (Postfix) with ESMTP id 4FFF82190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:01:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569949277;
+	bh=Vw4I1uOKtDXm4m/EQIyjHXit44q63Ut92gP2vIDrNS0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YWiucNMfMm+tPbeNZLbbiXWdyFPUNSl5wrcfQOpjAY0n7xDDbh0efqjJwqM+M+kBZ
+	 4IBxURXsa8wEby0NFkyYisjiyJ4WFg69cUi1LLMw8VmwnsLW+InSsev+GI2V1jfyGC
+	 xBaVBEvYLTKYPzb3Wd0PZC6xvj/4EEfnKvP+VF0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729952AbfJARBM (ORCPT
+        id S1729922AbfJAQkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 13:01:12 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:39658 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729908AbfJAQkX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Oct 2019 12:40:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1569948023; x=1601484023;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=AbNQ1OO9qC/P3BwiZpTRZ/SDjeyYkXOLrzA/Huj/dlM=;
-  b=dklJ7GAoPEbbCd0GNBKwREbBojt4ThoOuKgodwy/P2AcgmXmO01T4PWh
-   jUHBiFfR/Z5RVFhX2bxZ0k1lhMbGLYDRYUMoThrqChe/9e/gf9FCZsw87
-   qPgiZd6dOtFEKq3w8YhuH4ZxwfUAwXhDktfyqCcpQsdoulZiOA8J2Nw32
-   A=;
-X-IronPort-AV: E=Sophos;i="5.64,571,1559520000"; 
-   d="scan'208";a="425072316"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-62350142.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 01 Oct 2019 16:40:21 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-62350142.us-east-1.amazon.com (Postfix) with ESMTPS id 75C71A24BD;
-        Tue,  1 Oct 2019 16:40:21 +0000 (UTC)
-Received: from EX13D02UWC002.ant.amazon.com (10.43.162.6) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 1 Oct 2019 16:40:21 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
- EX13D02UWC002.ant.amazon.com (10.43.162.6) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 1 Oct 2019 16:40:20 +0000
-Received: from 8c859006a84e.ant.amazon.com (172.26.203.30) by
- mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Tue, 1 Oct 2019 16:40:20 +0000
-From:   Patrick Williams <alpawi@amazon.com>
-CC:     =?UTF-8?q?Bj=C3=B6rn=20Ard=C3=B6?= <bjorn.ardo@axis.com>,
-        Patrick Williams <alpawi@amazon.com>,
-        Patrick Williams <patrick@stwcx.xyz>,
-        Wolfram Sang <wsa@the-dreams.de>, <linux-i2c@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/2] i2c: slave-eeprom: support additional models
-Date:   Tue, 1 Oct 2019 11:40:06 -0500
-Message-ID: <20191001164009.21610-2-alpawi@amazon.com>
-X-Mailer: git-send-email 2.17.2 (Apple Git-113)
-In-Reply-To: <20191001164009.21610-1-alpawi@amazon.com>
-References: <20191001164009.21610-1-alpawi@amazon.com>
+Received: from mail.kernel.org ([198.145.29.99]:51610 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729851AbfJAQkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:40:21 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B57421855;
+        Tue,  1 Oct 2019 16:40:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569948021;
+        bh=Vw4I1uOKtDXm4m/EQIyjHXit44q63Ut92gP2vIDrNS0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iWy/+Od9Dm3fygiipzSRuGFZwRRGzTMvAU5ZGY1Z3eU5SUyyVdz/XyAZ2AazXXx7A
+         1M37cyECPowAvZNsOeTJ4ujZruQGYqEj1qa/lQkGFH+k15q3N1X/HOMZsnYIdOHh96
+         5ZhQhTiEoxvs01Zj+aBux3SwGqd4bYilmfpb1iiY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 41/71] fuse: fix memleak in cuse_channel_open
+Date:   Tue,  1 Oct 2019 12:38:51 -0400
+Message-Id: <20191001163922.14735-41-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
+References: <20191001163922.14735-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-To:     unlisted-recipients:; (no To-header on input)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for emulating the following EEPROMs:
-    * 24c01  - 1024 bit
-    * 24c128 - 128k bit
-    * 24c256 - 256k bit
-    * 24c512 - 512k bit
+From: zhengbin <zhengbin13@huawei.com>
 
-The flag bits in the device id were shifted up 1 bit to make
-room for saving the 24c512's size.  24c512 uses the full 16-bit
-address space of a 2-byte addressable EEPROM.
+[ Upstream commit 9ad09b1976c562061636ff1e01bfc3a57aebe56b ]
 
-Signed-off-by: Patrick Williams <alpawi@amazon.com>
+If cuse_send_init fails, need to fuse_conn_put cc->fc.
+
+cuse_channel_open->fuse_conn_init->refcount_set(&fc->count, 1)
+                 ->fuse_dev_alloc->fuse_conn_get
+                 ->fuse_dev_free->fuse_conn_put
+
+Fixes: cc080e9e9be1 ("fuse: introduce per-instance fuse_dev structure")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/i2c-slave-eeprom.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ fs/fuse/cuse.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/i2c/i2c-slave-eeprom.c b/drivers/i2c/i2c-slave-eeprom.c
-index efee56106251..65419441313b 100644
---- a/drivers/i2c/i2c-slave-eeprom.c
-+++ b/drivers/i2c/i2c-slave-eeprom.c
-@@ -37,9 +37,9 @@ struct eeprom_data {
- 	u8 buffer[];
- };
- 
--#define I2C_SLAVE_BYTELEN GENMASK(15, 0)
--#define I2C_SLAVE_FLAG_ADDR16 BIT(16)
--#define I2C_SLAVE_FLAG_RO BIT(17)
-+#define I2C_SLAVE_BYTELEN GENMASK(16, 0)
-+#define I2C_SLAVE_FLAG_ADDR16 BIT(17)
-+#define I2C_SLAVE_FLAG_RO BIT(18)
- #define I2C_SLAVE_DEVICE_MAGIC(_len, _flags) ((_flags) | (_len))
- 
- static int i2c_slave_eeprom_slave_cb(struct i2c_client *client,
-@@ -171,12 +171,20 @@ static int i2c_slave_eeprom_remove(struct i2c_client *client)
- }
- 
- static const struct i2c_device_id i2c_slave_eeprom_id[] = {
-+	{ "slave-24c01", I2C_SLAVE_DEVICE_MAGIC(1024 / 8,  0) },
-+	{ "slave-24c01ro", I2C_SLAVE_DEVICE_MAGIC(1024 / 8,  I2C_SLAVE_FLAG_RO) },
- 	{ "slave-24c02", I2C_SLAVE_DEVICE_MAGIC(2048 / 8,  0) },
- 	{ "slave-24c02ro", I2C_SLAVE_DEVICE_MAGIC(2048 / 8,  I2C_SLAVE_FLAG_RO) },
- 	{ "slave-24c32", I2C_SLAVE_DEVICE_MAGIC(32768 / 8, I2C_SLAVE_FLAG_ADDR16) },
- 	{ "slave-24c32ro", I2C_SLAVE_DEVICE_MAGIC(32768 / 8, I2C_SLAVE_FLAG_ADDR16 | I2C_SLAVE_FLAG_RO) },
- 	{ "slave-24c64", I2C_SLAVE_DEVICE_MAGIC(65536 / 8, I2C_SLAVE_FLAG_ADDR16) },
- 	{ "slave-24c64ro", I2C_SLAVE_DEVICE_MAGIC(65536 / 8, I2C_SLAVE_FLAG_ADDR16 | I2C_SLAVE_FLAG_RO) },
-+	{ "slave-24c128", I2C_SLAVE_DEVICE_MAGIC(131072 / 8, I2C_SLAVE_FLAG_ADDR16) },
-+	{ "slave-24c128ro", I2C_SLAVE_DEVICE_MAGIC(131072 / 8, I2C_SLAVE_FLAG_ADDR16 | I2C_SLAVE_FLAG_RO) },
-+	{ "slave-24c256", I2C_SLAVE_DEVICE_MAGIC(262144 / 8, I2C_SLAVE_FLAG_ADDR16) },
-+	{ "slave-24c256ro", I2C_SLAVE_DEVICE_MAGIC(262144 / 8, I2C_SLAVE_FLAG_ADDR16 | I2C_SLAVE_FLAG_RO) },
-+	{ "slave-24c512", I2C_SLAVE_DEVICE_MAGIC(524288 / 8, I2C_SLAVE_FLAG_ADDR16) },
-+	{ "slave-24c512ro", I2C_SLAVE_DEVICE_MAGIC(524288 / 8, I2C_SLAVE_FLAG_ADDR16 | I2C_SLAVE_FLAG_RO) },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, i2c_slave_eeprom_id);
+diff --git a/fs/fuse/cuse.c b/fs/fuse/cuse.c
+index bab7a0db81dd4..f3b7208846506 100644
+--- a/fs/fuse/cuse.c
++++ b/fs/fuse/cuse.c
+@@ -519,6 +519,7 @@ static int cuse_channel_open(struct inode *inode, struct file *file)
+ 	rc = cuse_send_init(cc);
+ 	if (rc) {
+ 		fuse_dev_free(fud);
++		fuse_conn_put(&cc->fc);
+ 		return rc;
+ 	}
+ 	file->private_data = fud;
 -- 
-2.17.2 (Apple Git-113)
+2.20.1
 
