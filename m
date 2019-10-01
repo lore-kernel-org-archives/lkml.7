@@ -2,156 +2,143 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5FCC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B1CC388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16E1F21906
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1DBB21920
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:24:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729560AbfJAKUN (ORCPT
+        id S1730627AbfJAKYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 06:20:13 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:54797 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbfJAKUN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 06:20:13 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iFFG9-0007pI-Fs; Tue, 01 Oct 2019 12:19:57 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 159241C03AB;
-        Tue,  1 Oct 2019 12:19:57 +0200 (CEST)
-Date:   Tue, 01 Oct 2019 10:19:56 -0000
-From:   "tip-bot2 for Alexander Kapshuk" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/objtool] x86/insn: Fix awk regexp warnings
-Cc:     kbuild test robot <lkp@intel.com>,
-        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
-        Borislav Petkov <bp@suse.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "x86-ml" <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <20190924044659.3785-1-alexander.kapshuk@gmail.com>
-References: <20190924044659.3785-1-alexander.kapshuk@gmail.com>
+        Tue, 1 Oct 2019 06:24:39 -0400
+Received: from mga14.intel.com ([192.55.52.115]:17390 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726721AbfJAKYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 06:24:38 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 03:24:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,570,1559545200"; 
+   d="asc'?scan'208";a="220954053"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by fmsmga002.fm.intel.com with ESMTP; 01 Oct 2019 03:24:35 -0700
+From:   Felipe Balbi <felipe.balbi@linux.intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Christopher S . Hall" <christopher.s.hall@intel.com>
+Subject: Re: [RFC PATCH 1/5] x86: tsc: add tsc to art helpers
+In-Reply-To: <alpine.DEB.2.21.1908151458560.1923@nanos.tec.linutronix.de>
+References: <20190716072038.8408-1-felipe.balbi@linux.intel.com> <20190716072038.8408-2-felipe.balbi@linux.intel.com> <alpine.DEB.2.21.1907160952040.1767@nanos.tec.linutronix.de> <87y2zvt1hk.fsf@gmail.com> <alpine.DEB.2.21.1908151458560.1923@nanos.tec.linutronix.de>
+Date:   Tue, 01 Oct 2019 13:24:31 +0300
+Message-ID: <87y2y4vk4g.fsf@gmail.com>
 MIME-Version: 1.0
-Message-ID: <156992519684.9978.637485393388419464.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/objtool branch of tip:
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Commit-ID:     700c1018b86d0d4b3f1f2d459708c0cdf42b521d
-Gitweb:        https://git.kernel.org/tip/700c1018b86d0d4b3f1f2d459708c0cdf42b521d
-Author:        Alexander Kapshuk <alexander.kapshuk@gmail.com>
-AuthorDate:    Tue, 24 Sep 2019 07:46:59 +03:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 01 Oct 2019 12:13:16 +02:00
 
-x86/insn: Fix awk regexp warnings
+Hi,
 
-gawk 5.0.1 generates the following regexp warnings:
+(sorry for the long delay, got caught up in other tasks)
 
-  GEN      /home/sasha/torvalds/tools/objtool/arch/x86/lib/inat-tables.c
-  awk: ../arch/x86/tools/gen-insn-attr-x86.awk:260: warning: regexp escape sequence `\:' is not a known regexp operator
-  awk: ../arch/x86/tools/gen-insn-attr-x86.awk:350: (FILENAME=../arch/x86/lib/x86-opcode-map.txt FNR=41) warning: regexp escape sequence `\&' is  not a known regexp operator
+Thomas Gleixner <tglx@linutronix.de> writes:
+> On Thu, 15 Aug 2019, Felipe Balbi wrote:
+>> Thomas Gleixner <tglx@linutronix.de> writes:
+>> > On Tue, 16 Jul 2019, Felipe Balbi wrote:
+>> >
+>> > So some information what those interfaces are used for and why they are
+>> > needed would be really helpful.
+>>=20
+>> Okay, I have some more details about this. The TGPIO device itself uses
+>> ART since TSC is not directly available to anything other than the
+>> CPU. The 'problem' here is that reading ART incurs extra latency which
+>> we would like to avoid. Therefore, we use TSC and scale it to
+>> nanoseconds which, would be the same as ART to ns.
+>
+> Fine. But that's not really correct:
+>
+>       TSC =3D art_to_tsc_offset + ART * scale;
 
-Ealier versions of gawk are not known to generate these warnings. The
-gawk manual referenced below does not list characters ':' and '&' as
-needing escaping, so 'unescape' them. See
+From=20silicon folks I got the equation:
 
-  https://www.gnu.org/software/gawk/manual/html_node/Escape-Sequences.html
+ART =3D ECX * EBX / EAX;
 
-for more info.
+If I'm reading this correctly, that's basically what
+native_calibrate_tsc() does (together with some error checking the safe
+defaults). Couldn't we, instead, just have a single function like below?
 
-Running diff on the output generated by the script before and after
-applying the patch reported no differences.
+u64 convert_tsc_to_art_ns()
+{
+	return x86_platform.calibrate_tsc();
+}
 
- [ bp: Massage commit message. ]
+Another way would be extract the important parts from
+native_calibrate_tsc() into a separate helper. This would safe another
+call to cpuid(0x15,...);
 
-[ Caught the respective tools header discrepancy. ]
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190924044659.3785-1-alexander.kapshuk@gmail.com
----
- arch/x86/tools/gen-insn-attr-x86.awk       | 4 ++--
- tools/arch/x86/tools/gen-insn-attr-x86.awk | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+>> >> +void get_tsc_ns(struct system_counterval_t *tsc_counterval, u64 *tsc=
+_ns)
+>
+> Why is this not returning the result instead of having that pointer
+> indirection?
 
-diff --git a/arch/x86/tools/gen-insn-attr-x86.awk b/arch/x86/tools/gen-insn-attr-x86.awk
-index b02a36b..a42015b 100644
---- a/arch/x86/tools/gen-insn-attr-x86.awk
-+++ b/arch/x86/tools/gen-insn-attr-x86.awk
-@@ -69,7 +69,7 @@ BEGIN {
- 
- 	lprefix1_expr = "\\((66|!F3)\\)"
- 	lprefix2_expr = "\\(F3\\)"
--	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
-+	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
- 	lprefix_expr = "\\((66|F2|F3)\\)"
- 	max_lprefix = 4
- 
-@@ -257,7 +257,7 @@ function convert_operands(count,opnd,       i,j,imm,mod)
- 	return add_flags(imm, mod)
- }
- 
--/^[0-9a-f]+\:/ {
-+/^[0-9a-f]+:/ {
- 	if (NR == 1)
- 		next
- 	# get index
-diff --git a/tools/arch/x86/tools/gen-insn-attr-x86.awk b/tools/arch/x86/tools/gen-insn-attr-x86.awk
-index b02a36b..a42015b 100644
---- a/tools/arch/x86/tools/gen-insn-attr-x86.awk
-+++ b/tools/arch/x86/tools/gen-insn-attr-x86.awk
-@@ -69,7 +69,7 @@ BEGIN {
- 
- 	lprefix1_expr = "\\((66|!F3)\\)"
- 	lprefix2_expr = "\\(F3\\)"
--	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
-+	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
- 	lprefix_expr = "\\((66|F2|F3)\\)"
- 	max_lprefix = 4
- 
-@@ -257,7 +257,7 @@ function convert_operands(count,opnd,       i,j,imm,mod)
- 	return add_flags(imm, mod)
- }
- 
--/^[0-9a-f]+\:/ {
-+/^[0-9a-f]+:/ {
- 	if (NR == 1)
- 		next
- 	# get index
+That can be changed easily, no worries.
+
+>> >> +{
+>> >> +	u64 tmp, res, rem;
+>> >> +	u64 cycles;
+>> >> +
+>> >> +	tsc_counterval->cycles =3D clocksource_tsc.read(NULL);
+>> >> +	cycles =3D tsc_counterval->cycles;
+>> >> +	tsc_counterval->cs =3D art_related_clocksource;
+>
+> So this does more than returning the TSC time converted to nanoseconds. T=
+he
+> function name should reflect this. Plus both functions want kernel-doc
+> explaining what they do.
+
+convert_tsc_to_art_ns()? That would be analogous to convert_art_to_tsc()
+and convert_art_ns_to_tsc().
+
+cheers
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl2TKV8ACgkQzL64meEa
+mQavbw/8DuVOATQnOMj+Ng0sKlu26pZeFznN46wERGArebhbba4GAz4DY55ONSR/
+1tX4bovky6KOmLh7p+rzHlR0IQ66osWP/pl0F1hVAG/zXabH5jya8TiSnmbZEMMG
+s3mAPu8WyEeoPXBT964w/wmnu7fvS/hHnRYhkfLJ16E59/7SiFYz6H6RphKmq6iH
+a+ykrTKt97UNw8HDFyNrfl+cTIfHELOxvzxu2ppBI5soaOjFmYC2Wtiw1SpORWBS
+p4WPOk8kmwVQzCQPf1EqF0nC0nBCcniPKcxzFKz6OjBXbASbarftabp1M1i+COW3
+vwQTKavAbKaCxJs6HfXxSS9f59nkKlZN7Owp1xRCglT/3b9XGwZLmecu8t8Cw9z2
+QNBhBorXsrJwf26Xot+GgxpUYPDhetkSfHAOGoXRe/+ZXSJnceH51cif6PXrCEk1
+x5/BrsK5ATMKeioVpiriHkdRFAg9EdsPaXoVkaEWBvQWMKNLQppdItz8NyNWYM1D
+E/qfICZzZGpAeHkukVIw8rbFFeFgSF8Vr8ARjqW7MNBtDM9P7xg/fyJvbQ+E9KTT
+GoZXc4EsjlgcMzpgFgDWlWkCMvQxf3dtx8PEshEe44LeEJRlw2MaCTlsjoNRHAld
+/NLsiCENtVMLWmaPLIy4wHtNNiP29orf9xVoOyUqFTobx5RVsuk=
+=keGU
+-----END PGP SIGNATURE-----
+--=-=-=--
