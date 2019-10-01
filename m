@@ -7,63 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A42FAC388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2541C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 764FE222CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B87F921920
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569928414;
-	bh=WH6I5t8eoCSjD9gkLayn6DnsGmhlINWQmAEd38zJLoQ=;
+	s=default; t=1569928417;
+	bh=OexZN4oQs5HfxhzlABRCLKxGM6AENf8BWG4B3Z4BhKM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H9O5+eQcUOh50Ir8R1q6WuXg9iICWzHM8afhNVjFrreSriSAO9DCi2ZnfpNHenrRy
-	 G7kiEbqiRuT38JtoKnnEWW89cuCvZ8WXjvpL2/cJK2U2brjnyzChopsq3D9bRFzBQy
-	 34LaJ1V6PvUolt9Eg1rdDUAejBjF+XLd4yXXLo1E=
+	b=TwQoRxpg/T3nes6hMZR8p3jjcsAzAPjvOgD6s794SO3VhZIY80cU9S9HR6n5+7N+g
+	 JXt8EDRn9Dd7Ghnlv/x0qzyyswZesr+pMdlqqHXbRivanSgt/FRooFaGpHPHetFk4r
+	 +ZPQy+yOMgCH+DVV759fLemY4Yj9o4E6zqA9Cv0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731861AbfJALNd (ORCPT
+        id S1731894AbfJALNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 07:13:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35466 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 07:13:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731194AbfJALNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 07:13:33 -0400
+        id S1731194AbfJALNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 07:13:35 -0400
 Received: from quaco.ghostprotocols.net (177.206.223.101.dynamic.adsl.gvt.net.br [177.206.223.101])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 716E621D71;
-        Tue,  1 Oct 2019 11:13:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E01CA222C6;
+        Tue,  1 Oct 2019 11:13:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569928412;
-        bh=WH6I5t8eoCSjD9gkLayn6DnsGmhlINWQmAEd38zJLoQ=;
+        s=default; t=1569928415;
+        bh=OexZN4oQs5HfxhzlABRCLKxGM6AENf8BWG4B3Z4BhKM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zNX8OEJcPMshplnO/Adm3KU/RkcYjCqOyzF9m8QvmVa4OYy5omi8fkiBZ50w/opVi
-         40yvakrpmFeU3tlz4PIxnpaCeWrLhg9gzhp2iRCp5vbtlga7ju/yKiED12GYS1EXs3
-         pFXnao53giUOjJTJQTR0gal2QLwv8v/bWvDXOtpY=
+        b=cgbGRlJbaxl1Yx49NwUKEFMceDR5Sl6j4sNVk51h20/f9PSvZjhoWuYcJgwb9KOhc
+         PLxJV4mlKghFh1q5/oImgtx3Q1NwD980u76bJdrflDz16Av+wZdguv2kDfY+6QbXS4
+         xjJKQL9C1f6SRkM3bJcW/948poNlKFJ/t7DMEmKs=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Steve MacLean <Steve.MacLean@microsoft.com>,
-        Steve MacLean <Steve.MacLean@Microsoft.com>,
-        Stephane Eranian <eranian@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Andi Kleen <ak@linux.intel.com>,
-        Brian Robbins <brianrob@microsoft.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
-        Jiri Olsa <jolsa@redhat.com>, John Keeping <john@metanate.com>,
-        John Salem <josalem@microsoft.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Tom McDonald <thomas.mcdonald@microsoft.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 14/24] perf docs: Correct and clarify jitdump spec
-Date:   Tue,  1 Oct 2019 08:12:06 -0300
-Message-Id: <20191001111216.7208-15-acme@kernel.org>
+Subject: [PATCH 15/24] perf script brstackinsn: Fix recovery from LBR/binary mismatch
+Date:   Tue,  1 Oct 2019 08:12:07 -0300
+Message-Id: <20191001111216.7208-16-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191001111216.7208-1-acme@kernel.org>
 References: <20191001111216.7208-1-acme@kernel.org>
@@ -74,56 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve MacLean <Steve.MacLean@microsoft.com>
+From: Andi Kleen <ak@linux.intel.com>
 
-Specification claims latest version of jitdump file format is 2. Current
-jit dump reading code treats 1 as the latest version.
+When the LBR data and the instructions in a binary do not match the loop
+printing instructions could get confused and print a long stream of
+bogus <bad> instructions.
 
-Correct spec to match code.
+The problem was that if the instruction decoder cannot decode an
+instruction it ilen wasn't initialized, so the loop going through the
+basic block would continue with the previous value.
 
-The original language made it unclear the value to be written in the
-magic field.
+Harden the code to avoid such problems:
 
-Revise language that the writer always writes the same value. Specify
-that the reader uses the value to detect endian mismatches.
+- Make sure ilen is always freshly initialized and is 0 for bad
+  instructions.
 
-Signed-off-by: Steve MacLean <Steve.MacLean@Microsoft.com>
-Acked-by: Stephane Eranian <eranian@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Brian Robbins <brianrob@microsoft.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: John Keeping <john@metanate.com>
-Cc: John Salem <josalem@microsoft.com>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Tom McDonald <thomas.mcdonald@microsoft.com>
-Link: http://lore.kernel.org/lkml/BN8PR21MB1362F63CDE7AC69736FC7F9EF7800@BN8PR21MB1362.namprd21.prod.outlook.com
+- Do not overrun the code buffer while printing instructions
+
+- Print a warning message if the final jump is not on an instruction
+  boundary.
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Link: http://lore.kernel.org/lkml/20190927233546.11533-1-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/jitdump-specification.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/builtin-script.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/Documentation/jitdump-specification.txt b/tools/perf/Documentation/jitdump-specification.txt
-index 4c62b0713651..52152d156ad9 100644
---- a/tools/perf/Documentation/jitdump-specification.txt
-+++ b/tools/perf/Documentation/jitdump-specification.txt
-@@ -36,8 +36,8 @@ III/ Jitdump file header format
- Each jitdump file starts with a fixed size header containing the following fields in order:
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 286fc70d7402..67be8d31afab 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1063,7 +1063,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+ 			continue;
  
+ 		insn = 0;
+-		for (off = 0;; off += ilen) {
++		for (off = 0; off < (unsigned)len; off += ilen) {
+ 			uint64_t ip = start + off;
  
--* uint32_t magic     : a magic number tagging the file type. The value is 4-byte long and represents the string "JiTD" in ASCII form. It is 0x4A695444 or 0x4454694a depending on the endianness. The field can be used to detect the endianness of the file
--* uint32_t version   : a 4-byte value representing the format version. It is currently set to 2
-+* uint32_t magic     : a magic number tagging the file type. The value is 4-byte long and represents the string "JiTD" in ASCII form. It written is as 0x4A695444. The reader will detect an endian mismatch when it reads 0x4454694a.
-+* uint32_t version   : a 4-byte value representing the format version. It is currently set to 1
- * uint32_t total_size: size in bytes of file header
- * uint32_t elf_mach  : ELF architecture encoding (ELF e_machine value as specified in /usr/include/elf.h)
- * uint32_t pad1      : padding. Reserved for future use
+ 			printed += ip__fprintf_sym(ip, thread, x.cpumode, x.cpu, &lastsym, attr, fp);
+@@ -1074,6 +1074,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+ 					printed += print_srccode(thread, x.cpumode, ip);
+ 				break;
+ 			} else {
++				ilen = 0;
+ 				printed += fprintf(fp, "\t%016" PRIx64 "\t%s\n", ip,
+ 						   dump_insn(&x, ip, buffer + off, len - off, &ilen));
+ 				if (ilen == 0)
+@@ -1083,6 +1084,8 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+ 				insn++;
+ 			}
+ 		}
++		if (off != (unsigned)len)
++			printed += fprintf(fp, "\tmismatch of LBR data and executable\n");
+ 	}
+ 
+ 	/*
+@@ -1123,6 +1126,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+ 		goto out;
+ 	}
+ 	for (off = 0; off <= end - start; off += ilen) {
++		ilen = 0;
+ 		printed += fprintf(fp, "\t%016" PRIx64 "\t%s\n", start + off,
+ 				   dump_insn(&x, start + off, buffer + off, len - off, &ilen));
+ 		if (ilen == 0)
 -- 
 2.21.0
 
