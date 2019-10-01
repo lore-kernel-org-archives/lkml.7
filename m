@@ -4,124 +4,117 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BABF9ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DF0C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A9912190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DFDE2190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:22:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389052AbfJAOWR (ORCPT
+        id S2389073AbfJAOWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 10:22:17 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:39417 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388894AbfJAOWP (ORCPT
+        Tue, 1 Oct 2019 10:22:36 -0400
+Received: from cmccmta3.chinamobile.com ([221.176.66.81]:25105 "EHLO
+        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389055AbfJAOWg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 10:22:15 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MfHIb-1hdFVk2Qsl-00gpsk; Tue, 01 Oct 2019 16:21:19 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: atmel: fix atmel_ssc_set_audio link failure
-Date:   Tue,  1 Oct 2019 16:20:55 +0200
-Message-Id: <20191001142116.1172290-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:+NFFLFJ3uAstZ1v7XE2zMOHO+xPwR8CCKuSDvkVLAs/dyvEYV3F
- aaVJU2YkvLHOqLAuS7f9B4FjeRy1ETJZw1B302gdLNKywdIJI+RHoRz829Uot1Xqu5n044o
- QDcIQIsRro/+0s1ix2XUe/LSCIcgkeSVbGW7ySGKqzSalU5mdCbZOP7CNNnpJVyM5u+p3wZ
- otEMA5Wodj9hFYD6bq/gA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:nYhBuPR5Iho=:ywwtGfzj2glibkVf1yv+gi
- 4DmdK8oqUXYdcCXJg3dN4ao1auIJ7AoklVMPqXSk/ASTz2mL0PLYizTJwV7BjfkihoLUh6Rmv
- gRaA29X3chqm9b2h2HCkJAtzoqkI+MdFw+DFakAUqJHjwVKtaD1B5iK4vcwDQSGF3sKKK48Vn
- nBmhc5OwHOrYWL5qaHUF7W4h8K0BGDRQOtzWx0CVAkKdg/I5Xrbd814iywOfdzKxspYPuZ6zw
- 41RjVQdSMCKa7rz/A0bVPGfA6Hb9ksfWfqMJK5Gmzlh8xzisujMCBPGjxkfmWxHgnjDFelVlS
- AHzS0a2B7ClTvXIlZ8Z6h9evppl4mCSjpioDFzzo9tk8yL6peEDWUbTwBABFbZ9vcO4toPwql
- 4JLP5+nRC5qaeDPJhGs2ndvbNJsnRJYdQ/vN0yXQR+BFHcPvN/mg8DFevnbOJLLXDIi1o/nwK
- L6c9geQnbF9WBynAIo26Vzx9XbYDxAhLCwrSMcOfK0eFxxjaT7Igur2ZIsKKzcKGYz03lAz+h
- Drp2B/kIsjfgxR8oVoY7R3rhOKGGTaag7KkeiHTGe6Klv3B2883391qk/m6l8lfnn9YrYSfVD
- ySiKlqfnENrqraZsrxcryA4IpXnirQfUIqZPTUvookUNafdlET8LIFvPhDcGqjr+19Cb1G8Yv
- oOMefwPdLKX6oo8FyfrrobfB25WEL2laYKjxwbmjBmBOP82IZssbaHWSDFUvpH4cuaqhF2Dn+
- UZNAUt0yKZaP4fmpNMt879HOaqhwi3vk63z1kWPYXWueVrqayPKcAbKN7xl2dX2TBXiX5OxON
- xb2I1BdJnYNtZsLCKWtYjIyHK1k6DE5IutltpsdfFQecZkMafzDOFmuBQmD5PURSV2aXgh12e
- V4PLmfYOqg71TeZg6aeQ==
+        Tue, 1 Oct 2019 10:22:36 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.5]) by rmmx-syy-dmz-app11-12011 (RichMail) with SMTP id 2eeb5d936119580-943cf; Tue, 01 Oct 2019 22:22:17 +0800 (CST)
+X-RM-TRANSID: 2eeb5d936119580-943cf
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost (unknown[223.105.0.241])
+        by rmsmtp-syy-appsvr03-12003 (RichMail) with SMTP id 2ee35d936118070-0678c;
+        Tue, 01 Oct 2019 22:22:16 +0800 (CST)
+X-RM-TRANSID: 2ee35d936118070-0678c
+From:   Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+To:     Shuah Khan <shuah@kernel.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Simon Horman <horms@verge.net.au>
+Cc:     Julian Anastasov <ja@ssi.bg>, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, lvs-devel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org,
+        Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
+Subject: [PATCH v3 3/3] selftests: netfilter: add ipvs tunnel test case
+Date:   Tue,  1 Oct 2019 22:19:59 +0800
+Message-Id: <1569939599-1872-4-git-send-email-yanhaishuang@cmss.chinamobile.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1569939599-1872-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
+References: <1569939599-1872-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ssc audio driver can call into both pdc and dma backends.  With the
-latest rework, the logic to do this in a safe way avoiding link errors
-was removed, bringing back link errors that were fixed long ago in commit
-061981ff8cc8 ("ASoC: atmel: properly select dma driver state") such as
+Test virtual server via ipip tunnel.
 
-sound/soc/atmel/atmel_ssc_dai.o: In function `atmel_ssc_set_audio':
-atmel_ssc_dai.c:(.text+0xac): undefined reference to `atmel_pcm_pdc_platform_register'
+Tested:
+# selftests: netfilter: ipvs.sh
+# Testing DR mode...
+# Testing NAT mode...
+# Testing Tunnel mode...
+# ipvs.sh: PASS
+ok 6 selftests: netfilter: ipvs.sh
 
-Fix it this time using Makefile hacks and a comment to prevent this
-from accidentally getting removed again rather than Kconfig hacks.
-
-Fixes: 18291410557f ("ASoC: atmel: enable SOC_SSC_PDC and SOC_SSC_DMA in Kconfig")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
 ---
- sound/soc/atmel/Kconfig  |  4 ++--
- sound/soc/atmel/Makefile | 10 ++++++++--
- 2 files changed, 10 insertions(+), 4 deletions(-)
+v2: optimize test script
+---
+ tools/testing/selftests/netfilter/ipvs.sh | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
-index f118c229ed82..25c31bf64936 100644
---- a/sound/soc/atmel/Kconfig
-+++ b/sound/soc/atmel/Kconfig
-@@ -10,11 +10,11 @@ config SND_ATMEL_SOC
- if SND_ATMEL_SOC
+diff --git a/tools/testing/selftests/netfilter/ipvs.sh b/tools/testing/selftests/netfilter/ipvs.sh
+index 270b5da..a8f6e70 100755
+--- a/tools/testing/selftests/netfilter/ipvs.sh
++++ b/tools/testing/selftests/netfilter/ipvs.sh
+@@ -174,6 +174,30 @@ test_nat() {
+     test_service
+ }
  
- config SND_ATMEL_SOC_PDC
--	tristate
-+	bool
- 	depends on HAS_DMA
++test_tun() {
++    ip netns exec ns0 ip route add ${vip_v4} via ${gip_v4} dev br0
++
++    ip netns exec ns1 modprobe ipip
++    ip netns exec ns1 ip link set tunl0 up
++    ip netns exec ns1 sysctl -qw net.ipv4.ip_forward=0
++    ip netns exec ns1 sysctl -qw net.ipv4.conf.all.send_redirects=0
++    ip netns exec ns1 sysctl -qw net.ipv4.conf.default.send_redirects=0
++    ip netns exec ns1 ipvsadm -A -t ${vip_v4}:${port} -s rr
++    ip netns exec ns1 ipvsadm -a -i -t ${vip_v4}:${port} -r ${rip_v4}:${port}
++    ip netns exec ns1 ip addr add ${vip_v4}/32 dev lo:1
++
++    ip netns exec ns2 modprobe ipip
++    ip netns exec ns2 ip link set tunl0 up
++    ip netns exec ns2 sysctl -qw net.ipv4.conf.all.arp_ignore=1
++    ip netns exec ns2 sysctl -qw net.ipv4.conf.all.arp_announce=2
++    ip netns exec ns2 sysctl -qw net.ipv4.conf.all.rp_filter=0
++    ip netns exec ns2 sysctl -qw net.ipv4.conf.tunl0.rp_filter=0
++    ip netns exec ns2 sysctl -qw net.ipv4.conf.veth21.rp_filter=0
++    ip netns exec ns2 ip addr add ${vip_v4}/32 dev lo:1
++
++    test_service
++}
++
+ run_tests() {
+ 	local errors=
  
- config SND_ATMEL_SOC_DMA
--	tristate
-+	bool
- 	select SND_SOC_GENERIC_DMAENGINE_PCM
+@@ -189,6 +213,12 @@ run_tests() {
+ 	test_nat
+ 	errors=$(( $errors + $? ))
  
- config SND_ATMEL_SOC_SSC
-diff --git a/sound/soc/atmel/Makefile b/sound/soc/atmel/Makefile
-index 1f6890ed3738..c7d2989791be 100644
---- a/sound/soc/atmel/Makefile
-+++ b/sound/soc/atmel/Makefile
-@@ -6,8 +6,14 @@ snd-soc-atmel_ssc_dai-objs := atmel_ssc_dai.o
- snd-soc-atmel-i2s-objs := atmel-i2s.o
- snd-soc-mchp-i2s-mcc-objs := mchp-i2s-mcc.o
++	echo "Testing Tunnel mode..."
++	cleanup
++	setup
++	test_tun
++	errors=$(( $errors + $? ))
++
+ 	return $errors
+ }
  
--obj-$(CONFIG_SND_ATMEL_SOC_PDC) += snd-soc-atmel-pcm-pdc.o
--obj-$(CONFIG_SND_ATMEL_SOC_DMA) += snd-soc-atmel-pcm-dma.o
-+# pdc and dma need to both be built-in if any user of
-+# ssc is built-in.
-+ifdef CONFIG_SND_ATMEL_SOC_PDC
-+obj-$(CONFIG_SND_ATMEL_SOC_SSC) += snd-soc-atmel-pcm-pdc.o
-+endif
-+ifdef CONFIG_SND_ATMEL_SOC_DMA
-+obj-$(CONFIG_SND_ATMEL_SOC_SSC) += snd-soc-atmel-pcm-dma.o
-+endif
- obj-$(CONFIG_SND_ATMEL_SOC_SSC) += snd-soc-atmel_ssc_dai.o
- obj-$(CONFIG_SND_ATMEL_SOC_I2S) += snd-soc-atmel-i2s.o
- obj-$(CONFIG_SND_MCHP_SOC_I2S_MCC) += snd-soc-mchp-i2s-mcc.o
 -- 
-2.20.0
+1.8.3.1
+
+
 
