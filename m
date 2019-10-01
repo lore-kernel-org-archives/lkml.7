@@ -2,165 +2,131 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE120C388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C266AC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B05D2133F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:54:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="WDVVgRNd";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="jFLGmpJR"
+	by mail.kernel.org (Postfix) with ESMTP id 937492133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:54:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731121AbfJAKyB (ORCPT
+        id S1726623AbfJAKys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 06:54:01 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:58688 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725865AbfJAKyB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 06:54:01 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x91AjS8h026757;
-        Tue, 1 Oct 2019 03:53:50 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=+4+40uN+ujtsB26+w80tVd/FyNqFoK+C+410NcR9SQg=;
- b=WDVVgRNdt7j/KSMYWNCJIBgqRMk1iMsGc6o6d8BzutKoxo6ahjYs8a7X9wg7SuGfebqh
- spUbAbkItS8fDxOIr/JicZCMRwDVZWLeCLQUj9tfY2w7zkiMgFhvbQb/0SpRfLB1xuCw
- AljhCPWBHwg9ZjMsxKc7LX09l5Mgwx0PRlKdohMWv/GCwkmtV6vCNF+1c/k9NqWafmAc
- nVmRC5nl/7vTYiFxFrTLuuT22JG+6HWfD9g4IWFbWK9TjlwsdHKVHnt5z4cH36P2nhdL
- 9WaJvS4QTdzMnJjqLyIrChM/mDabeuINRNHiY9BBuB72CWBcWFG/2KZngGkWTpsXyd+C BA== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0a-0016f401.pphosted.com with ESMTP id 2vbur19rjs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 01 Oct 2019 03:53:50 -0700
-Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Tue, 1 Oct
- 2019 03:53:49 -0700
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com (104.47.32.56) by
- SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Tue, 1 Oct 2019 03:53:49 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cCFeNMx9UBTx48pH2p2IAKDvOxSzzIW8azvWHn9b7TPtEVS/pssc7msaJNF07sOTuXH7XSM9Bkfa0TZLlDspZTc54Pfl2FSzErJQC/1/XbYl7fZHq/rhj0oV09JkmOxQ+JXuusyJcwMRuWV0SUnxMI76kC+CpQ/lqrdlJchd87I7ZeOHEf4/0TOAdwBiqWbChK9mEOFB5146BUPUWreLIoArGHSV6aopCfeG6ElI0fprvEZC12NZgUsWVjH4O9jO2egqXRF0hfHUToJcTKWxxx8apo09S4AYCpl6+8F9BVxvaA5/OBZNvGSOzYq2uByujydsbP0UDyQA2qNC93VluQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+4+40uN+ujtsB26+w80tVd/FyNqFoK+C+410NcR9SQg=;
- b=fXotHN1c07Vw4cg74LqQ0JtGHJDvxrJxZ2fY0GufOtoXa09jEYPVTgEVmZJtur4s9ahrCMChqCVKXVxsAVgUr/lrQJkMx9Rhm3vFQV6HzE9msyPh4TRkN7NVaUIyIYHDPefgMjqVWMOMLzNZh27O2HgRcNZ1frL8Y1C6FonaPCUChK9iEkNMmRgUahzwECXtOcxHD6k5xSv4XU5JORcFUKabw4JNlY0op7sccN7hVH6YcpgehH9CazuGIyReU4MayabESIS8TD3VAoczxiLjsP0emJAN1KHxVDQfOCqVwVFJY7aUgBTW7dAG+0Vi9asgSgLFVdPU6eYhRCLXmh5mvg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+4+40uN+ujtsB26+w80tVd/FyNqFoK+C+410NcR9SQg=;
- b=jFLGmpJRctfhvtcmcKp+sWozKZO/kBHOwUfGHP7UPvxL2FYYOwOMBaMHb1He+5oZUjoMetsw5D7h2paC6q+rykE8ywKVRTMIMuGBbnsOSXccWnHeCOfNPs9MOCq31nyV1AWKuK6M5E2R57Yq0nSkv8bDekZ6xrQaThl6x8d+2ss=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.238.217) by
- MN2PR18MB3261.namprd18.prod.outlook.com (10.255.237.86) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.20; Tue, 1 Oct 2019 10:53:48 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::88e4:c340:f520:6b36]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::88e4:c340:f520:6b36%3]) with mapi id 15.20.2305.017; Tue, 1 Oct 2019
- 10:53:48 +0000
-From:   Robert Richter <rrichter@marvell.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     Hanna Hawa <hhhawa@amazon.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dwmw@amazon.co.uk" <dwmw@amazon.co.uk>,
-        "benh@amazon.com" <benh@amazon.com>,
-        "ronenk@amazon.com" <ronenk@amazon.com>,
-        "talel@amazon.com" <talel@amazon.com>,
-        "jonnyc@amazon.com" <jonnyc@amazon.com>,
-        "hanochu@amazon.com" <hanochu@amazon.com>
-Subject: Re: [PATCH v4 1/2] edac: Add an API for edac device to report for
- multiple errors
-Thread-Topic: [PATCH v4 1/2] edac: Add an API for edac device to report for
- multiple errors
-Thread-Index: AQHVeEaAgxYDdzoLUUm+D1Y78e5zpw==
-Date:   Tue, 1 Oct 2019 10:53:47 +0000
-Message-ID: <20191001105339.5tbdw2mrb2uwit6j@rric.localdomain>
-References: <20190923191741.29322-1-hhhawa@amazon.com>
- <20190923191741.29322-2-hhhawa@amazon.com> <20190930145046.GH29694@zn.tnic>
- <20191001065649.a6454bh4ncgdpigf@rric.localdomain>
- <20191001083242.GA5390@zn.tnic>
- <20191001094659.5of5ul2tof6s75px@rric.localdomain>
- <20191001102539.GB5390@zn.tnic>
-In-Reply-To: <20191001102539.GB5390@zn.tnic>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR05CA0321.eurprd05.prod.outlook.com
- (2603:10a6:7:92::16) To MN2PR18MB3408.namprd18.prod.outlook.com
- (2603:10b6:208:16c::25)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [31.208.96.227]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7af98009-8590-4736-9068-08d7465da2f1
-x-ms-traffictypediagnostic: MN2PR18MB3261:
-x-microsoft-antispam-prvs: <MN2PR18MB32618F80BEDEB6900E57939AD99D0@MN2PR18MB3261.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 0177904E6B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(39860400002)(136003)(376002)(366004)(189003)(199004)(186003)(76176011)(229853002)(6486002)(386003)(52116002)(66476007)(2906002)(102836004)(64756008)(66066001)(66556008)(66446008)(66946007)(6512007)(99286004)(26005)(478600001)(9686003)(53546011)(54906003)(25786009)(14454004)(6246003)(316002)(6506007)(3846002)(6116002)(6436002)(4326008)(256004)(7416002)(8936002)(86362001)(305945005)(486006)(6916009)(5660300002)(7736002)(8676002)(446003)(71190400001)(81166006)(71200400001)(11346002)(1076003)(476003)(4744005)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3261;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: kk0MqzBpDenGoQ5gHMDgyv13LSILSIik9cu6ThggC4O4Vgz9ZuWw9Zv9VNl5DIv/gK4Nx/sIm2rmxelQaaNSPQNs/+WQ1nolnQv1vep5DnOMtzt18IezipFgDfy8PvMx0k6t7bVz+dxww+JlSHch4a98s+r/cvd8EeaygOMie5UrZ5ELdo4CQ9V4l2IxzyfaKBuV7IUihISMtemebIzYuN0Xcw0JIA40nJXExbArfnyYiE2X1nN+PHvaGICYZVX9XEHZPA9EkeJEJvH0m7Km9igxv2xdmI8w8OnS9iB6Nkfs9zEbBTP9U2AfDJGoF6JNDbjdOEnqwQRkNLZAyMBdu8NSBCiU/NO378sBAbdoJ+1mtz12B+6XnzvRXdPC8mqoL+dw7RPpl/EIPgOmCTRMFeB2eLE+VNs5yZYpmkarv0o=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <8F39A9DAD79F704DBBF0FC0571D1A1D0@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 1 Oct 2019 06:54:48 -0400
+Received: from enpas.org ([46.38.239.100]:49204 "EHLO mail.enpas.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725865AbfJAKyr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 06:54:47 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        by mail.enpas.org (Postfix) with ESMTPSA id 74A7CFFBCA;
+        Tue,  1 Oct 2019 10:54:44 +0000 (UTC)
+Subject: Re: [PATCH] m68k: defconfig: Update defconfigs for v5.4-rc1
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-m68k@lists.linux-m68k.org
+Cc:     linux-kernel@vger.kernel.org
+References: <20191001073539.4488-1-geert@linux-m68k.org>
+From:   Max Staudt <max@enpas.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=max@enpas.org; prefer-encrypt=mutual; keydata=
+ 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
+ urZIw0nz8zec+73Bv/qF4GHHftLYfA==
+Message-ID: <308e9c11-a5ea-d6e3-95a4-ada9bd8f1b85@enpas.org>
+Date:   Tue, 1 Oct 2019 12:55:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7af98009-8590-4736-9068-08d7465da2f1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Oct 2019 10:53:48.0544
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6pyrwfGd1IhF6UvdX2iA00qVkH/buzO4q4+kmF6idJdtkbrlogBAHkNkvYTAsvs9XMT3YUfowbrufzK3r8fa8g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3261
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-10-01_05:2019-10-01,2019-10-01 signatures=0
+In-Reply-To: <20191001073539.4488-1-geert@linux-m68k.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01.10.19 12:25:39, Borislav Petkov wrote:
-> On Tue, Oct 01, 2019 at 09:47:07AM +0000, Robert Richter wrote:
-> > If you move to static inline for edac_device_handle_{ce,ue} the
-> > symbols vanish and this breaks the abi. That's why the split in two
-> > patches.
->=20
-> ABI issues do not concern upstream. And that coming from me working at a
-> company who dance a lot to make ABI happy.
->=20
-> Also, I'm missing the reasoning why you use the ABI as an argument at
-> all: do you know of a particular case where people are thinking of
-> backporting this or this is all hypothetical.
->=20
-> > Your comment to not have a __ version as a third variant of the
-> > interface makes sense to me. But to keep ABI your patch still needs to
-> > be split.
->=20
-> Not really - normally, when you fix ABI issues with symbols
-> disappearing, all of a sudden, you add dummy ones so that the ABI
-> checker is happy.
+On 10/01/2019 09:35 AM, Geert Uytterhoeven wrote:
+> Should support for ICY and LTC2990 be enabled in amiga_defconfig and/or
+> multi_defconfig?
+> 
+>     +CONFIG_I2C=m
+>     +CONFIG_I2C_CHARDEV=m
+>     +CONFIG_I2C_ICY=m
+> 
+>     +CONFIG_HWMON=m
+>     +CONFIG_SENSORS_LTC2990=m
 
-Let's go with a single patch then and the function naming you
-suggested before.
+Sounds like a good idea to me.
 
-Thanks,
 
--Robert
+Thanks Geert!
+Max
