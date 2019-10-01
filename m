@@ -2,96 +2,91 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A09ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4460FC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5FAE2086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:30:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lUzMjllL"
+	by mail.kernel.org (Postfix) with ESMTP id 0B4E721906
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:30:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569940238;
+	bh=tP7RCvEbzIaJlmJdGGsTmP87zeFxDfN1vsHcqjIyPqk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jSlECp9vJL9meloIU2GX7XUCdn2zne6V8wvwFe7JoyGNSlSPCv5ShiDcE6zYHXGG4
+	 ZM4btsWlRJXcC3K8tZCqWhEyW2k6ygw9rnet9YiM+50hHYaiODtsS2CvBu7oVx530C
+	 jBhkEtyKfed4JKlzXt03RIrWHkE65r13/adEGSZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389016AbfJAOaO (ORCPT
+        id S2389030AbfJAOah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 10:30:14 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:49775 "EHLO ozlabs.org"
+        Tue, 1 Oct 2019 10:30:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727132AbfJAOaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 10:30:13 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S2388891AbfJAOah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 10:30:37 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46jM9v03Vbz9sPJ;
-        Wed,  2 Oct 2019 00:30:10 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1569940211;
-        bh=NYx6qFxbqfP9Fg7Bx0/KHV2C1GIi1O2QrDm1z6ST+EM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=lUzMjllLWSCSdOCU3f/8wV6TXmyYU+HlLRnBvlXVS4GEsSs7w3UV8GSVmsxJO/QKc
-         aqLSEUHqGJT0G9cDm3Bd5S6Nj9dR1U/ctLA0sp+XPVqaSNEPKdVEQ/+FG8e9c/0sdm
-         SRQs3V4RVprjuxFyZ3MIce9GFSaHCk+oZm7YQrkFNmiUCr54RDUWMtdVmcLKr7qeB0
-         +54+zBiI8i02U4Ijo90q6AXA58PgJ60E2l215FW949K2r8e9b5N3P8u4lGbUPrEsbn
-         zU1R/LCAv1SnyNlizTswdbO9hvYxdmY7Mkq1pg3dg443Ic3ioAjrnLFSydkPZNmu6K
-         wJgnCC2ruG/WQ==
-Date:   Wed, 2 Oct 2019 00:30:04 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: linux-next: Fixes tag needs some work in the pinctrl-intel-fixes
- tree
-Message-ID: <20191002003004.16e51eec@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 247152086A;
+        Tue,  1 Oct 2019 14:30:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569940236;
+        bh=tP7RCvEbzIaJlmJdGGsTmP87zeFxDfN1vsHcqjIyPqk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lZvD4CnX8ONT4otE5cDFdiaurTDkXerUxA0fiPduF44DCg0bvnCsjNkGU0XT72XTo
+         /EXwMZyWn45/h+cQ2YPzvsd0SCbbCacA60bopujwzjcpfIa3CyDGyiakSyL1Jzo3CK
+         QG7ozMk8Ux9eVQx6k3v4uxJvXUHc/z3Y4kdVFejc=
+Date:   Tue, 1 Oct 2019 10:30:35 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.3 084/203] media: omap3isp: Don't set streaming
+ state on random subdevs
+Message-ID: <20191001143035.GV8171@sasha-vm>
+References: <20190922184350.30563-1-sashal@kernel.org>
+ <20190922184350.30563-84-sashal@kernel.org>
+ <20190923071942.GJ5525@valkosipuli.retiisi.org.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Ku3CvVoVqNIlxpqPmtYyrca";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190923071942.GJ5525@valkosipuli.retiisi.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Ku3CvVoVqNIlxpqPmtYyrca
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Sep 23, 2019 at 10:19:42AM +0300, Sakari Ailus wrote:
+>Hi Sasha,
+>
+>On Sun, Sep 22, 2019 at 02:41:50PM -0400, Sasha Levin wrote:
+>> From: Sakari Ailus <sakari.ailus@linux.intel.com>
+>>
+>> [ Upstream commit 7ef57be07ac146e70535747797ef4aee0f06e9f9 ]
+>>
+>> The streaming state should be set to the first upstream sub-device only,
+>> not everywhere, for a sub-device driver itself knows how to best control
+>> the streaming state of its own upstream sub-devices.
+>>
+>> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>
+>I don't disagree with this going to the stable trees as well, but in that
+>case it *must* be accompanied by commit e9eb103f0277 ("media: omap3isp: Set
+>device on omap3isp subdevs") or the driver will mostly cease to work.
+>
+>Could you pick that up as well?
 
-Hi all,
+Sure, I've queued it as well, thank you.
 
-In commit
-
-  d21556b6ff04 ("pinctrl: intel: Allocate IRQ chip dynamic")
-
-Fixes tag
-
-  Fixes: ee1a6ca43dba ("Add Intel Broxton pin controller support")
-
-has these problem(s):
-
-  - Subject does not match target commit subject
-    Just use
-	git log -1 --format=3D'Fixes: %h ("%s")'
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Ku3CvVoVqNIlxpqPmtYyrca
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2TYuwACgkQAVBC80lX
-0Gy3swf+Jc3RppQoOyDB4+bcZz6tsNPXgVVd01uwssDZ/uRZpbFcwXsAGgDaRAxP
-cduKdnkgi6z1YdaBKIKMVT9hdWKV1Wj0yql21eKE/2kQjWqLNy55eBKupXwlC5iN
-5WvLEyeTKQDWaOMgsMPot1T1uWGfJdgNtGjQak/OVn01UJtRp/5x8HME5CmfOiA4
-oYSijjB0Pwz+rOG0WL7xqbNb4mLyerf+C+wtFtQiA1W3zKiZP5rf2ZFjt81fTq4S
-vHEOepkTDBkFaZK9aJyMiX5nQlNlaFz3RY0TeWmJwICJiRTR2f7W38enwNFy3IMB
-3TQd6DIxSYQcFNxO6rNKodrjOIUhJA==
-=Rro5
------END PGP SIGNATURE-----
-
---Sig_/Ku3CvVoVqNIlxpqPmtYyrca--
+--
+Thanks,
+Sasha
