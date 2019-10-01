@@ -2,108 +2,75 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C81C388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9551C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32A8C20700
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:08:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E75821855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:10:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569931812;
+	bh=a5cL3S+QFFnwNgeP+e6UL2x9GqPIxmpSZxRvdEhn33E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rdCA3t1s/PfEayXEk/dxn69V7ht2Pl/uMOE8/Xjmc0NQbolD/EHsUI5ar5vJyB+Y2
+	 yz7X3C1yiAscDzeIjTzHwYBUjB0E9HrzBXTgpuKW0vjNYitYR9nKm0gqu5nevd05WG
+	 /DF2re4ASJdtbvZ6KUNGW/dUdriOT8EYXJkISNnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387664AbfJAMIl (ORCPT
+        id S1733236AbfJAMKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 08:08:41 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33088 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbfJAMIl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 08:08:41 -0400
-Received: by mail-wr1-f65.google.com with SMTP id b9so15220403wrs.0;
-        Tue, 01 Oct 2019 05:08:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vDFY4l7ObdzMDLTWvSUTkZyMTjDs2NyWYY8Kts57jhs=;
-        b=LQWkubhsu5JfOHnNRgZxHIVVqCwzlzmLuZ9RHk9QImzDX+0MV/CkXvsOatJ8tZrmXe
-         piAW/kJ612Zz75+s/zPNZ3jGgdtNmrHKAM1JfokLdSUAtFQAhU32AoKvMfarbTjWdPzT
-         SQEMxn+a2+nL4iNSRZbq09+EhJfByQ6UrXxaZnqSMks+OEgjXFSfc6OBquesTes2NQ07
-         XXtnlwoC9mcSE7WTBZ0Wc4mCa8Tl7iMcFslMY65KqGDhNWT055fwAULryP9LZae5dd3I
-         mat6PHk4RoNhs1du92YxKWZnnunloWSOpEJ2+V26Jqr0NWc1ao+HMTW1Z+Evw7XFEXCd
-         kCuQ==
-X-Gm-Message-State: APjAAAXRGfOqKC1GUjsfAFk1rBo27bvu7FrqiRlgpNcgHKyCXKXKHzSU
-        HbztSGXtCP1h6vE50Pxg9cdagF++
-X-Google-Smtp-Source: APXvYqyujIGI2hIGh/lUB8MFy3vCutJPJw+lMg4NWy6Jo7f9gI9ynwIJ+NcNgdPUNqFXXaJHDo5zCQ==
-X-Received: by 2002:a5d:540c:: with SMTP id g12mr17579546wrv.207.1569931718832;
-        Tue, 01 Oct 2019 05:08:38 -0700 (PDT)
-Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
-        by smtp.googlemail.com with ESMTPSA id f18sm2600683wmh.43.2019.10.01.05.08.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 05:08:38 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     linux-wireless@vger.kernel.org
-Cc:     Denis Efremov <efremov@linux.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, wil6210@qti.qualcomm.com,
-        Maya Erez <merez@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>, stable@vger.kernel.org
-Subject: [PATCH] wil6210: check len before memcpy() calls
-Date:   Tue,  1 Oct 2019 15:08:23 +0300
-Message-Id: <20191001120823.29853-1-efremov@linux.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 1 Oct 2019 08:10:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57910 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726279AbfJAMKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 08:10:11 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0512920700;
+        Tue,  1 Oct 2019 12:10:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569931809;
+        bh=a5cL3S+QFFnwNgeP+e6UL2x9GqPIxmpSZxRvdEhn33E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fGA6zBOglwztn3J7HoZxiFsu6z+On/Ji+uYH3LuG+vqPlG1MycYsIFjIPa2kgzmQD
+         ww1LQBMhbt2SoYx0UFETp3V8Y7foXox6PvM9bKzuKCFSvZffGLT/IIkd/BSvjfYTfF
+         d40zKqeRkACVnogc3Ch5vzimOkOFkUKHvz7/77FQ=
+Date:   Tue, 1 Oct 2019 14:10:05 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-usb@vger.kernel.org,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Lukas Wunner <lukas@wunner.de>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Mario.Limonciello@dell.com,
+        Anthony Wong <anthony.wong@canonical.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 01/22] thunderbolt: Introduce tb_switch_is_icm()
+Message-ID: <20191001121005.GA2951658@kroah.com>
+References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
+ <20191001113830.13028-2-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191001113830.13028-2-mika.westerberg@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-memcpy() in wmi_set_ie() and wmi_update_ft_ies() is called with
-src == NULL and len == 0. This is an undefined behavior. Fix it
-by checking "ie_len > 0" before the memcpy() calls.
+On Tue, Oct 01, 2019 at 02:38:09PM +0300, Mika Westerberg wrote:
+> We currently differentiate between SW CM and ICM by looking directly at
 
-As suggested by GCC documentation:
-"The pointers passed to memmove (and similar functions in <string.h>)
-must be non-null even when nbytes==0, so GCC can use that information
-to remove the check after the memmove call." [1]
+You should spell out what "SW CM" and "ICM" means please :)
 
-[1] https://gcc.gnu.org/gcc-4.9/porting_to.html
+thanks,
 
-Cc: Maya Erez <merez@codeaurora.org>
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: stable@vger.kernel.org
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- drivers/net/wireless/ath/wil6210/wmi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/wil6210/wmi.c b/drivers/net/wireless/ath/wil6210/wmi.c
-index 153b84447e40..41389c1eb252 100644
---- a/drivers/net/wireless/ath/wil6210/wmi.c
-+++ b/drivers/net/wireless/ath/wil6210/wmi.c
-@@ -2505,7 +2505,8 @@ int wmi_set_ie(struct wil6210_vif *vif, u8 type, u16 ie_len, const void *ie)
- 	cmd->mgmt_frm_type = type;
- 	/* BUG: FW API define ieLen as u8. Will fix FW */
- 	cmd->ie_len = cpu_to_le16(ie_len);
--	memcpy(cmd->ie_info, ie, ie_len);
-+	if (ie_len)
-+		memcpy(cmd->ie_info, ie, ie_len);
- 	rc = wmi_send(wil, WMI_SET_APPIE_CMDID, vif->mid, cmd, len);
- 	kfree(cmd);
- out:
-@@ -2541,7 +2542,8 @@ int wmi_update_ft_ies(struct wil6210_vif *vif, u16 ie_len, const void *ie)
- 	}
- 
- 	cmd->ie_len = cpu_to_le16(ie_len);
--	memcpy(cmd->ie_info, ie, ie_len);
-+	if (ie_len)
-+		memcpy(cmd->ie_info, ie, ie_len);
- 	rc = wmi_send(wil, WMI_UPDATE_FT_IES_CMDID, vif->mid, cmd, len);
- 	kfree(cmd);
- 
--- 
-2.21.0
-
+greg k-h
