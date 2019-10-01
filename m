@@ -2,122 +2,219 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37195ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE367ECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0607A2168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77F4320679
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:04:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TkwWCU1H"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hVKLXwGq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389428AbfJAPER (ORCPT
+        id S2389463AbfJAPEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 11:04:17 -0400
-Received: from mail-wr1-f41.google.com ([209.85.221.41]:39043 "EHLO
-        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727185AbfJAPER (ORCPT
+        Tue, 1 Oct 2019 11:04:32 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:43570 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727185AbfJAPEc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 11:04:17 -0400
-Received: by mail-wr1-f41.google.com with SMTP id r3so15981843wrj.6;
-        Tue, 01 Oct 2019 08:04:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=82JevLXpiEtGmAc3CHys8cJux4GB+e9q7dCU4OqqwNA=;
-        b=TkwWCU1HOyaEwaiACxq0x15vbDID7pKPA8viZni877Yi7iGnxC6M3I68GDxYNM3sNz
-         PcPkG4SnLTFiLbhFVDUEDlEoZPoF4ksevciAU+w+vCaGCQwVu5E/i64j61Rpa7f9aECf
-         mb1hkU0qY0I8K/PCdkq+1Xru8Npmgh5Bd6YM3KIWI+0yHIbd5RljcJO9LyT8z+JOah3m
-         +yspFda/lKHcs6KogjdvziqrLVSEkWuWOi++6Psil4w4zWbiOcbvw+SLQV0BKPfk9NAC
-         EVK3S85mnLBTpmjt6oOrb+FE1/N8mh6x5qfHSiFkcN3DzmJHU7d1zu1vTdGkrnILJLGd
-         vRhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=82JevLXpiEtGmAc3CHys8cJux4GB+e9q7dCU4OqqwNA=;
-        b=N03ndwjXFM9aKbFMb42swh72wxHGJz3vNDqSoVjqnrbMLRCgV8YJ/MsYpsZhbxs3Np
-         69ryAfhNBoLv7jDHJ6B2FaNG9wdUgdEe7iGKZMtBIsjmHCtjMCj2yK/fVSLacUqI09ay
-         /StPJ53XUSDI6meknq1rDg1KsVMJ7iRQSm+CWaqGCisXGE8BIbEmStbiux0uY4PDPwRe
-         UiL2L7H+96hjniymNp6qKK9xusTJ8nxyuKenuTBslcSwgwYfnVHkusiU5kPBEMK9AnuG
-         xsi2TCeFT/vDQlJ4dFkPBfTGYXNwpU8uxtlLb8Dt5rMEwfSbjuxyMLXgFTLsx/eetPSk
-         Q3Cw==
-X-Gm-Message-State: APjAAAUeDOiMqa8T+rymo+TEGsuI+lEaK/qRb04asitlEyYrabZvK9N1
-        jx8UtF3sE58AIpaqBkn0uRuBv/dz
-X-Google-Smtp-Source: APXvYqysmRZv4fvIeB8npqusjQa8iA0BFIqVmK9AcFOwpTbIHBre6jHhDi8o++Cu1n3PH+aBr679Lw==
-X-Received: by 2002:a5d:4ecf:: with SMTP id s15mr1386728wrv.234.1569942255091;
-        Tue, 01 Oct 2019 08:04:15 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id y13sm25466006wrg.8.2019.10.01.08.04.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 08:04:13 -0700 (PDT)
-Date:   Tue, 1 Oct 2019 17:04:12 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Nagarjuna Kristam <nkristam@nvidia.com>
-Cc:     jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Patch V2] soc/tegra: fuse: Add fuse clock check in
- tegra_fuse_readl
-Message-ID: <20191001150412.GG3566931@ulmo>
-References: <1567508212-1194-1-git-send-email-nkristam@nvidia.com>
+        Tue, 1 Oct 2019 11:04:32 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x91F4IEd018422;
+        Tue, 1 Oct 2019 10:04:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569942258;
+        bh=LXCupkasMNvhfCAMtaSmWJHpvLL+kS4ze7rHxPE7RWs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=hVKLXwGqOEWC0Hj5v31jIjLnX7ONzTRcOEQMzqZvtwJoC4ucoHGns9lktQPlX7qrO
+         ZhNMo5KBYpzW+Qe458j8s6jd7GpcofWWTVwTlYFhXKVcyD4o8C/oHaJ7KrBumccTkf
+         YaY91aSooTZznLi+gD7qCR5gGivbvNXjr6IGIKH0=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x91F4IdV065095
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 1 Oct 2019 10:04:18 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 1 Oct
+ 2019 10:04:08 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 1 Oct 2019 10:04:07 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x91F4HJh112978;
+        Tue, 1 Oct 2019 10:04:17 -0500
+Subject: Re: [PATCH V6 2/8] backlight: qcom-wled: restructure the qcom-wled
+ bindings
+To:     Kiran Gunda <kgunda@codeaurora.org>, <bjorn.andersson@linaro.org>,
+        <jingoohan1@gmail.com>, <lee.jones@linaro.org>,
+        <b.zolnierkie@samsung.com>, <dri-devel@lists.freedesktop.org>,
+        <daniel.thompson@linaro.org>, <jacek.anaszewski@gmail.com>,
+        <pavel@ucw.cz>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <linux-arm-msm@vger.kernel.org>
+References: <1569825553-26039-1-git-send-email-kgunda@codeaurora.org>
+ <1569825553-26039-3-git-send-email-kgunda@codeaurora.org>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <19926a9f-d5d3-02e2-b7d1-ee7cd918f57d@ti.com>
+Date:   Tue, 1 Oct 2019 10:04:36 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="uc35eWnScqDcQrv5"
-Content-Disposition: inline
-In-Reply-To: <1567508212-1194-1-git-send-email-nkristam@nvidia.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <1569825553-26039-3-git-send-email-kgunda@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Kiran
 
---uc35eWnScqDcQrv5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Sep 03, 2019 at 04:26:52PM +0530, Nagarjuna Kristam wrote:
-> tegra_fuse_readl() can be called from drivers at any time. If this API is
-> called before tegra_fuse_probe(), we end up enabling clock before it is
-> registered. Add check for fuse clock in tegra_fuse_readl() and return
-> corresponding error if any.
->=20
-> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+On 9/30/19 1:39 AM, Kiran Gunda wrote:
+> Restructure the qcom-wled bindings for the better readability.
+>
+> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
 > ---
-> V2:
-> 	- Added Null and other error checks for fuse->clk.
-> ---
->  drivers/soc/tegra/fuse/fuse-tegra.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>   .../bindings/leds/backlight/qcom-wled.txt          | 110 ++++++++++++++++-----
 
-Applied to for-5.5/soc, thanks.
+Since you are restructuring would it not be better to convert this to 
+the yaml format?
 
-Thierry
+It looks yamlish so the file extension should be .yaml.
 
---uc35eWnScqDcQrv5
-Content-Type: application/pgp-signature; name="signature.asc"
+Dan
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2TauwACgkQ3SOs138+
-s6EqvQ//QmqQwmW5Ol+MmXGhVIp3l5MIWX0f5l5/D9v1a911yCzm9o9mPKjAlkJy
-RA3+8kZJhAGmxE4GFZ/3aV1V32dqrnvNkJXEgagTnQ+kXaIfr2o67DoW5q220ftV
-JT7USAUONMWTqEJrR90e+EV668kDD9ZtAcLrn40BBjM+0g0K19g+7vLXAvzuLNTb
-CONTgcahroCKIf9x2YG8aUKICAeIbz/JflbaZwLyrV+WBQ8H4mg3RHbd1MPOQIha
-sNv6HunEy9nJeP8kcHopFJfikHMNempXIpcB2mlmU/iubTvdvBFDm+POhivPuuqv
-RCvopwwzqyxN+jyjj3SolNVAVWwzCbYYI96HBMn2j3jD0+2qCGO0WA/TQVx8IMZS
-vBouimwhcWKu8HIHhTj3ZSt59bhIya9jak+1wpfmm9BgX6ifZNB4k082kB336uds
-p6TlDKZAoTHVzKmRVC6nYmSMb46OKDVdqzZP9jn2aNPZio2jIhHzQNg83MPuUofQ
-3jRXU0JifD15pnIG9zkXXM100k0HdnW+2rwzcVbEQRGsxd9YqQvV8gZWjtAQD9J/
-jvzAaF3rcFZM8iMAUaU7VTIc6dzGJlqaqVhAr6q9VuKsrQsNVQFv3j2Z//dVhM8D
-jgMlsySTFvNLZQf6K8bruE0yqY/YCG55L7JU7hJFRfdEBkmqTgs=
-=XLEa
------END PGP SIGNATURE-----
-
---uc35eWnScqDcQrv5--
+>   1 file changed, 85 insertions(+), 25 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+> index fb39e32..14f28f2 100644
+> --- a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+> +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+> @@ -1,30 +1,90 @@
+>   Binding for Qualcomm Technologies, Inc. WLED driver
+>   
+> -Required properties:
+> -- compatible: should be "qcom,pm8941-wled"
+> -- reg: slave address
+> -
+> -Optional properties:
+> -- default-brightness: brightness value on boot, value from: 0-4095
+> -	default: 2048
+> -- label: The name of the backlight device
+> -- qcom,cs-out: bool; enable current sink output
+> -- qcom,cabc: bool; enable content adaptive backlight control
+> -- qcom,ext-gen: bool; use externally generated modulator signal to dim
+> -- qcom,current-limit: mA; per-string current limit; value from 0 to 25
+> -	default: 20mA
+> -- qcom,current-boost-limit: mA; boost current limit; one of:
+> -	105, 385, 525, 805, 980, 1260, 1400, 1680
+> -	default: 805mA
+> -- qcom,switching-freq: kHz; switching frequency; one of:
+> -	600, 640, 685, 738, 800, 872, 960, 1066, 1200, 1371,
+> -	1600, 1920, 2400, 3200, 4800, 9600,
+> -	default: 1600kHz
+> -- qcom,ovp: V; Over-voltage protection limit; one of:
+> -	27, 29, 32, 35
+> -	default: 29V
+> -- qcom,num-strings: #; number of led strings attached; value from 1 to 3
+> -	default: 2
+> +WLED (White Light Emitting Diode) driver is used for controlling display
+> +backlight that is part of PMIC on Qualcomm Technologies, Inc. reference
+> +platforms. The PMIC is connected to the host processor via SPMI bus.
+> +
+> +- compatible
+> +	Usage:        required
+> +	Value type:   <string>
+> +	Definition:   should be one of:
+> +			"qcom,pm8941-wled"
+> +			"qcom,pmi8998-wled"
+> +			"qcom,pm660l-wled"
+> +
+> +- reg
+> +	Usage:        required
+> +	Value type:   <prop encoded array>
+> +	Definition:   Base address of the WLED modules.
+> +
+> +- default-brightness
+> +	Usage:        optional
+> +	Value type:   <u32>
+> +	Definition:   brightness value on boot, value from: 0-4095
+> +		      Default: 2048
+> +
+> +- label
+> +	Usage:        required
+> +	Value type:   <string>
+> +	Definition:   The name of the backlight device
+> +
+> +- qcom,cs-out
+> +	Usage:        optional
+> +	Value type:   <bool>
+> +	Definition:   enable current sink output.
+> +		      This property is supported only for PM8941.
+> +
+> +- qcom,cabc
+> +	Usage:        optional
+> +	Value type:   <bool>
+> +	Definition:   enable content adaptive backlight control.
+> +
+> +- qcom,ext-gen
+> +	Usage:        optional
+> +	Value type:   <bool>
+> +	Definition:   use externally generated modulator signal to dim.
+> +		      This property is supported only for PM8941.
+> +
+> +- qcom,current-limit
+> +	Usage:        optional
+> +	Value type:   <u32>
+> +	Definition:   mA; per-string current limit
+> +		      value: For pm8941: from 0 to 25 with 5 mA step
+> +			     Default 20 mA.
+> +			     For pmi8998: from 0 to 30 with 5 mA step
+> +			     Default 25 mA.
+> +
+> +- qcom,current-boost-limit
+> +	Usage:        optional
+> +	Value type:   <u32>
+> +	Definition:   mA; boost current limit.
+> +		      For pm8941: one of: 105, 385, 525, 805, 980, 1260, 1400,
+> +		      1680. Default: 805 mA
+> +		      For pmi8998: one of: 105, 280, 450, 620, 970, 1150, 1300,
+> +		      1500. Default: 970 mA
+> +
+> +- qcom,switching-freq
+> +	Usage:        optional
+> +	Value type:   <u32>
+> +	 Definition:   kHz; switching frequency; one of: 600, 640, 685, 738,
+> +		       800, 872, 960, 1066, 1200, 1371, 1600, 1920, 2400, 3200,
+> +		       4800, 9600.
+> +		       Default: for pm8941: 1600 kHz
+> +				for pmi8998: 800 kHz
+> +
+> +- qcom,ovp
+> +	Usage:        optional
+> +	Value type:   <u32>
+> +	Definition:   V; Over-voltage protection limit; one of:
+> +		      27, 29, 32, 35. default: 29V
+> +		      This property is supported only for PM8941.
+> +
+> +- qcom,num-strings
+> +	Usage:        optional
+> +	Value type:   <u32>
+> +	Definition:   #; number of led strings attached;
+> +		      value from 1 to 3. default: 2
+> +		      This property is supported only for PM8941.
+>   
+>   Example:
+>   
