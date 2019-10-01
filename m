@@ -2,113 +2,108 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8488EC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9BDDECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 598FF2133F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:30:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569951018;
-	bh=K69iFAnjPBsNGd80jcNgFIDiMKUmvK6sd80+LuyZPWs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FUZZOZERCaSatVNE1dB8dEDCniTINDTAnYnkmS5ELlRTuxvmxbsb+mtaq/FvBINyw
-	 hw1K8VH5w1o3G5PRSiEGxUOUcQhPGps+GPlqPZO9kzmpoKXZhklodZ06eisSzcRSv2
-	 7GB0OzL99OoTF8yJiVWNEvfPy7XXLvK8z5dKZa+0=
+	by mail.kernel.org (Postfix) with ESMTP id 9B0762053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:31:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730557AbfJARaR (ORCPT
+        id S1730778AbfJARbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 13:30:17 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35120 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727721AbfJARaR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 13:30:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=lTpgWj/lyGtni4J5FE3WcdA3ifqDB8F61MancmRFDZg=; b=vUbZIQnOOGi7W7s9lj1TMqWRC
-        yO20baUmYZDsdtuApUVxVzFG5CbwY5MfFgLMA6Qa4kca7r1Ny1PULNyujxF0m2xtRYykLB/ktEWWv
-        etnJvn7TtcqmdIx3UOpgg2Q/fqmt8gNunVeX03s9nTi0yWN4DIpUWzmPc10xDkKf1eO2Y=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iFLy2-0005mV-JZ; Tue, 01 Oct 2019 17:29:42 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 7977927429C0; Tue,  1 Oct 2019 18:29:41 +0100 (BST)
-Date:   Tue, 1 Oct 2019 18:29:41 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     "Deucher, Alexander" <Alexander.Deucher@amd.com>
-Cc:     "RAVULAPATI, VISHNU VARDHAN RAO" 
-        <Vishnuvardhanrao.Ravulapati@amd.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "Mukunda, Vijendar" <Vijendar.Mukunda@amd.com>,
-        Maruthi Srinivas Bayyavarapu <Maruthi.Bayyavarapu@amd.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/7] ASoC: amd: No need PCI-MSI interrupts
-Message-ID: <20191001172941.GC4786@sirena.co.uk>
-References: <1569891524-18875-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
- <BN6PR12MB18093C8EDE60811B3D917DEAF79D0@BN6PR12MB1809.namprd12.prod.outlook.com>
+        Tue, 1 Oct 2019 13:31:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:55214 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727228AbfJARbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 13:31:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B2069337;
+        Tue,  1 Oct 2019 10:31:46 -0700 (PDT)
+Received: from [10.1.197.116] (unknown [10.1.197.116])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A01A13F706;
+        Tue,  1 Oct 2019 10:31:40 -0700 (PDT)
+Subject: Re: [PATCHv9 2/3] arm64: dts: qcom: msm8998: Add Coresight support
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <cover.1564550873.git.saiprakash.ranjan@codeaurora.org>
+ <90114e06825e537c3aafd3de5c78743a9de6fadc.1564550873.git.saiprakash.ranjan@codeaurora.org>
+ <CAOCk7NrK+wY8jfHdS8781NOQtyLm2RRe1NW2Rm3_zeaot0Q99Q@mail.gmail.com>
+ <16212a577339204e901cf4eefa5e82f1@codeaurora.org>
+ <CAOCk7NohO67qeYCnrjy4P0KN9nLUiamphHRvj-bFP++K7khPOw@mail.gmail.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <450756ff-f897-7825-3424-6d5645fa9db9@arm.com>
+Date:   Tue, 1 Oct 2019 18:31:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Y5rl02BVI9TCfPar"
-Content-Disposition: inline
-In-Reply-To: <BN6PR12MB18093C8EDE60811B3D917DEAF79D0@BN6PR12MB1809.namprd12.prod.outlook.com>
-X-Cookie: Keep refrigerated.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAOCk7NohO67qeYCnrjy4P0KN9nLUiamphHRvj-bFP++K7khPOw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---Y5rl02BVI9TCfPar
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Tue, Oct 01, 2019 at 05:23:43PM +0000, Deucher, Alexander wrote:
+On 01/10/2019 18:14, Jeffrey Hugo wrote:
+> On Tue, Oct 1, 2019 at 11:04 AM Sai Prakash Ranjan
+> <saiprakash.ranjan@codeaurora.org> wrote:
+>>
+>> On 2019-10-01 09:13, Jeffrey Hugo wrote:
+>>> Sai,
+>>>
+>>> This patch breaks boot on the 835 laptops.  However, I haven't seen
+>>> the same issue on the MTP.  I wonder, is coresight expected to work
+>>> with production fused devices?  I wonder if thats the difference
+>>> between the laptop and MTP that is causing the issue.
+>>>
+>>> Let me know what I can do to help debug.
+>>>
+>>
+>> I did test on MSM8998 MTP and didn't face any issue. I am guessing this
+>> is the same issue which you reported regarding cpuidle? Coresight ETM
+> 
+> Yes, its the same issue.  Right now, I need both patches reverted to boot.
+> 
+>> and cpuidle do not work well together since ETMs share the same power
+>> domain as CPU and they might get turned off when CPU enters idle states.
+>> Can you try with cpuidle.off=1 cmdline or just remove idle states from
+>> DT to confirm? If this is the issue, then we can try the below patch
+>> from Andrew Murray for ETM save and restore:
+>>
+>> https://patchwork.kernel.org/patch/11097893/
+> 
+> Is there still value in testing this if the idle states are removed,
+> yet the coresight nodes still cause issues?
+> 
+> Funny enough, I'm using the arm64 defconfig which doesn't seem to
+> select CONFIG_CORESIGHT, so I'm not even sure what would be binding to
+> the DT devices...
 
-> > ACP-PCI controller driver does not depends msi interrupts.
-> > So removed msi related pci functions which have no use and does not impact
-> > on existing functionality.
+That looks like potentially missing Power domain support, either in the kernel
+or from the firmware.
 
-> In general, however, aren't MSIs preferred to legacy interrupts?
+The Coresight components are also AMBA devices (with primecell compatible)
+and thus the AMBA bus layer does some probing to check the PIDRx registers
+to match the driver. The AMBA layer does try to get the power to the
+component, but someone is lying that it is powered.
 
-As I understand it.  Or at the very least I'm not aware of any situation
-where they're harmful.  It'd be good to have a clear explanation of why
-we're removing the support.
-
-> Doesn't the driver have to opt into MSI support?  As such, won't
-> removing this code effectively disable MSI support?
-
-Yes.
-
---Y5rl02BVI9TCfPar
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2TjQQACgkQJNaLcl1U
-h9DC/gf8C6vOACPQWvbRJO9LfPWnIyOnAhpmiVNNeGV59bbMmSRSjT3zuIsVNoMe
-6J498TvqIOcb2NxSsGukipQbrWSYomHT7+XmgDjXSQGPGkZ86bgiP95O+ZqKAXqT
-1RjADLkZQpQMsmDSqFeWNJP0dlYrIs9uPmUCuhI+bHdtiF6Sc2cJL9wtiHZDXS3T
-qmFaFOu4+1bGoKNDITbdLBEAsn7mSmLc0GolWCrf9BeymlF4Vuarm9fx6GP3JBlf
-G/UN8F8FEfvNa+3dGj+TyU7D+0uErLvwhy+d0Cm5eiw//fgjQhrNyDp7EbRlvbrr
-v/RCUHZ9c4/5k6QHNr8OUNcCB7rURw==
-=5uDK
------END PGP SIGNATURE-----
-
---Y5rl02BVI9TCfPar--
+Suzuki
