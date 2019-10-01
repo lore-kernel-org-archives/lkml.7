@@ -2,137 +2,126 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7727BECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 220DBC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D69620815
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDA0120815
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:25:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GCImDONA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732251AbfJASYG (ORCPT
+        id S1732268AbfJASZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 14:24:06 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43036 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732116AbfJASYG (ORCPT
+        Tue, 1 Oct 2019 14:25:38 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:41117 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728456AbfJASZh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 14:24:06 -0400
-Received: by mail-oi1-f196.google.com with SMTP id t84so15305191oih.10;
-        Tue, 01 Oct 2019 11:24:04 -0700 (PDT)
+        Tue, 1 Oct 2019 14:25:37 -0400
+Received: by mail-pl1-f195.google.com with SMTP id t10so5903476plr.8
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 11:25:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=m8eYBBkYRVbOtZzQQIEHp8iS4j4fHlbVl2GeuXY9abc=;
+        b=GCImDONAmbUHbQLrQB1XgH5tNRznUrOQk5MeIV9pELjG1VRjWfQ42k1ZyWikYSU8Wc
+         Pjq3OvQ5baNwN33CS4tp1TQP5RACnCeFwaaamkAzAEuoAKTXDv9/l+d8uSIPw6oj6OTA
+         qSy5q/jPfZzw+0cfYrH4F38I8Hg4p/EaDJ8m0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o50ESmIuAdPE+zNHnDtpkityBBSbRZVmr7JwkUQQS2g=;
-        b=cVuM1YQRyhRXbu1zUNk6VvBScNAm7kBV0w9yyTiCNStl/qHPcicuJDnqK+Ia2LFdC2
-         L3kbKFpcgBSLDGmwUYTNpAKwAutstclirsXJxv8yKZfnPigL6dnsmZZOlwLegkqbvIQ/
-         iYBTdfm4HG8TtAx45V2/StFqoVrM1k2QCMOhT/aflC4bMXPaXdAzPFn4CzuOqeyATy9J
-         +jMXUtOcOzfirvLe/bToziYvTGAHl5Hw6ScvPksljjHcMud9vXO+yJQSQs5tLzMZq+p4
-         +TICaejvX9AzVzyvB+po059LJVjTz85WMU5FIYAGgO+Kvk8kz7EZxwVzFRXwP3rdrc0d
-         P0GA==
-X-Gm-Message-State: APjAAAULO62A3BL0DG3Ma41qQ9iE0sK/wD3jUCxqy/ZLmoMDknvL/bq2
-        g20nqR7g071zhrsLzXPC1Mj6dvRap8NarS/OsTg=
-X-Google-Smtp-Source: APXvYqxYvfXEXhp3h2FIAJ1Qf8w8ukHAMINaYApKrNyGLfChbcaqtBSHyTPdD9h5SnOEVKG/wNZIyr9iGMav57+5iao=
-X-Received: by 2002:aca:3908:: with SMTP id g8mr4963165oia.54.1569954243743;
- Tue, 01 Oct 2019 11:24:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190812150452.27983-1-ard.biesheuvel@linaro.org>
- <20190812150452.27983-5-ard.biesheuvel@linaro.org> <CAMuHMdXY5UH4KhcaNVuxa8-+GN-4bjyvCd0wzPYuFBY5Ch=fNA@mail.gmail.com>
- <CAKv+Gu-KPypju6roQaVKP0DHE3aZijVVqLGwNyhiRSNqn1r6-w@mail.gmail.com>
- <CAMuHMdV9m+Dbch46cVNqtn4cyB74qgHa18Qcm=HQv7Wx1rk==w@mail.gmail.com>
- <CAKv+Gu9iLxkJgmxZR+1yvCTj6GiCDuyfN_QiGXEWBHS7uYUbfQ@mail.gmail.com>
- <8446d19dd197447a88eed580601f3c4c@AUSX13MPC105.AMER.DELL.COM> <20191001180133.GA2279@localhost.localdomain>
-In-Reply-To: <20191001180133.GA2279@localhost.localdomain>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 1 Oct 2019 20:23:51 +0200
-Message-ID: <CAMuHMdUMh4mCczCOxFtLn3E0Wu84ixFBsFuXk0p9QVXtg4dmoQ@mail.gmail.com>
-Subject: Re: [PATCH 4/5] efi: Export Runtime Configuration Interface table to sysfs
-To:     Narendra.K@dell.com
-Cc:     Mario.Limonciello@dell.com,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Xiaofei Tan <tanxiaofei@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=m8eYBBkYRVbOtZzQQIEHp8iS4j4fHlbVl2GeuXY9abc=;
+        b=Ct4r/LNWc/gsOHSGVN0R0X4c/C6m3c2afX8ww/PS+IegtpB/ZZFI59j7zRitdOCaFp
+         h9s7MiZu8QrwK+4JLWFkZYAbiRh471/0xAuacFf5LPHFWac/JJsfoxi4gx88JvmyeWsO
+         pMxtRHqqOLO393PhA6tpYrR7TV7YskjlEv+iWEL62rXqSLM3Qjw4SP7p+0P/CMXxEd/p
+         +BXxDX2Vz6MgslnaOZ2udKSWpkl92rHzqMGdEIzF+X2NBry7772OO1o3Ruc+pKxfrdHn
+         tY0hJwFaF+WB36sJiIH3k16wk0zExO8S73BYxX/f17l97T9w9Ai8vtTkYDgO0hUTg9pv
+         kNdA==
+X-Gm-Message-State: APjAAAV3L6qxFVtLK6Hl9HTqcbZl29eqjIPhvIrRmOsvXEV33aJm8/1c
+        pOrojf6mpZ5GEIn/vnePSSvV6Q==
+X-Google-Smtp-Source: APXvYqxZou0NR60fIrMXL0icbnWrdfQ0MFD0ezaaocwIAUDTRdBtukN7GzFfirNw9FhjrJVC3NcSJQ==
+X-Received: by 2002:a17:902:ab82:: with SMTP id f2mr27937294plr.220.1569954337120;
+        Tue, 01 Oct 2019 11:25:37 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k15sm18909204pgt.66.2019.10.01.11.25.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2019 11:25:36 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] docs: Programmatically render MAINTAINERS into ReST
+Date:   Tue,  1 Oct 2019 11:25:30 -0700
+Message-Id: <20191001182532.21538-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Narendra,
+v1: https://lore.kernel.org/lkml/20190924230208.12414-1-keescook@chromium.org
 
-On Tue, Oct 1, 2019 at 8:01 PM <Narendra.K@dell.com> wrote:
-> On Tue, Oct 01, 2019 at 01:20:46PM +0000, Limonciello, Mario wrote:
-> [...]
-> > > > > > > +config EFI_RCI2_TABLE
-> > > > > > > +       bool "EFI Runtime Configuration Interface Table Version 2 Support"
-> > > > > > > +       help
-> > > > > > > +         Displays the content of the Runtime Configuration Interface
-> > > > > > > +         Table version 2 on Dell EMC PowerEdge systems as a binary
-> > > > > > > +         attribute 'rci2' under /sys/firmware/efi/tables directory.
-> > > > > > > +
-> > > > > > > +         RCI2 table contains BIOS HII in XML format and is used to populate
-> > > > > > > +         BIOS setup page in Dell EMC OpenManage Server Administrator tool.
-> > > > > > > +         The BIOS setup page contains BIOS tokens which can be configured.
-> > > > > > > +
-> > > > > > > +         Say Y here for Dell EMC PowerEdge systems.
-> > > > > >
-> > > > > > A quick Google search tells me these are Intel Xeon.
-> > > > > > Are arm/arm64/ia64 variants available, too?
-> > > > > > If not, this should be protected by "depends on x86" ("|| COMPILE_TEST"?).
-> > > > >
-> > > > > The code in question is entirely architecture agnostic, and defaults
-> > > > > to 'n', so I am not convinced this is needed. (It came up in the
-> > > > > review as well)
-> > > >
-> > > > "make oldconfig" still asks me the question on e.g. arm64, where it is
-> > > > irrelevant, until arm64 variants of the hardware show up.
-> > > >
-> > > > So IMHO it should have "depends on X86 || COMPILE_TEST".
-> > > >
-> > >
-> > > Fair enough. I am going to send out a bunch of EFI fixes this week, so
-> > > I'll accept a patch that makes the change above.
-> >
-> > Is it really a problem to just say n?
-> >
-> > I think this seems like a needless change that would slow down adoption of
-> > !x86 if Dell EMC PowerEdge systems did start going that route, especially
-> > when it comes to distributions that move glacially slow with picking up new
-> > kernel code.
->
-> Hi Ard/Geert,
->
-> Any additional thoughts here ?
+v2: fix python2 utf-8 issue thanks to Jonathan Corbet
 
-Sure ;-)
 
-A typical platform-specific sarm/arm64 .config file has almost 3000
-config options
-disabled.  Hence that means I have to say "n" almost 3000 times.
-Fortunately I started doing this several years ago, so I can do this
-incrementally ;-)
+Commit log from Patch 2 repeated here for cover letter:
 
-Perhaps someone should try to remove all lines like "depends on ... ||
-COMPILE_TEST", run "make oldconfig", read all help texts before saying "n",
-and time the whole operation...
+In order to have the MAINTAINERS file visible in the rendered ReST
+output, this makes some small changes to the existing MAINTAINERS file
+to allow for better machine processing, and adds a new Sphinx directive
+"maintainers-include" to perform the rendering.
 
-I hope I managed to convince you of the benefits.
-Thanks!
+Features include:
+- Per-subsystem reference links: subsystem maintainer entries can be
+  trivially linked to both internally and external. For example:
+  https://www.kernel.org/doc/html/latest/process/maintainers.html#secure-computi
+ng
 
-Gr{oetje,eeting}s,
+- Internally referenced .rst files are linked so they can be followed
+  when browsing the resulting rendering. This allows, for example, the
+  future addition of maintainer profiles to be automatically linked.
 
-                        Geert
+- Field name expansion: instead of the short fields (e.g. "M", "F",
+  "K"), use the indicated inline "full names" for the fields (which are
+  marked with "*"s in MAINTAINERS) so that a rendered subsystem entry
+  is more human readable. Email lists are additionally comma-separated.
+  For example:
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+    SECURE COMPUTING
+        Mail:     Kees Cook <keescook@chromium.org>
+        Reviewer: Andy Lutomirski <luto@amacapital.net>,
+                  Will Drewry <wad@chromium.org>
+        SCM:      git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.g
+it seccomp
+        Status:   Supported
+        Files:    kernel/seccomp.c include/uapi/linux/seccomp.h
+                  include/linux/seccomp.h tools/testing/selftests/seccomp/*
+                  tools/testing/selftests/kselftest_harness.h
+                  userspace-api/seccomp_filter
+        Content regex:  \bsecure_computing \bTIF_SECCOMP\b
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+---
+Kees Cook (2):
+  doc-rst: Reduce CSS padding around Field
+  doc-rst: Programmatically render MAINTAINERS into ReST
+
+ Documentation/conf.py                         |   3 +-
+ Documentation/process/index.rst               |   1 +
+ Documentation/process/maintainers.rst         |   1 +
+ .../sphinx-static/theme_overrides.css         |  10 +
+ Documentation/sphinx/maintainers_include.py   | 197 ++++++++++++++++++
+ MAINTAINERS                                   |  62 +++---
+ 6 files changed, 243 insertions(+), 31 deletions(-)
+ create mode 100644 Documentation/process/maintainers.rst
+ create mode 100755 Documentation/sphinx/maintainers_include.py
+
+--
+2.17.1
+
