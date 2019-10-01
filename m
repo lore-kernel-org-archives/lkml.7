@@ -7,54 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3A2C388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5A4C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8648F21D79
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30C2E21D79
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:13:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569928387;
-	bh=mMnBLzmYDQZr8tStqY6EhGbIdOFMamwVDjlacMbjHMw=;
+	s=default; t=1569928391;
+	bh=2qTrljZG4gv/baf3MYyIMPUOlj1gwhYKCnEdAXvSfMU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mPyvs79imjuaAhtoumW/ZZ2irSejk6ia7BazzUB3Ftrg4s+BkQW4SYbDyBsBXU4i6
-	 saQg3GzyENr2CtgWvH+rCtKfRLLdhIEKQ0hn2/ta8kheViYLz5EdzGZ5eno3DkmheV
-	 8k7aYWNjFk6pY8JsNoefL6IbgIM92uRkPemxz/zI=
+	b=SJMmE+C+g6U2CP7E5h2onpO35kppBLMfSqivLYn1bFy3YJZJ3S81CP92Iw1/zvCUy
+	 o74OC1Zu/rr6KqKbTMJZQUA1yYZjNuKRY8D+53cWs1RifkPss10VldgKECg9DFGNau
+	 qem47Hkcw3nNIocHMD4KnRBpvdvbohbB9J0lt4ok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731648AbfJALNG (ORCPT
+        id S1731694AbfJALNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 07:13:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35052 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 07:13:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731480AbfJALNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 07:13:05 -0400
+        id S1731480AbfJALNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 07:13:09 -0400
 Received: from quaco.ghostprotocols.net (177.206.223.101.dynamic.adsl.gvt.net.br [177.206.223.101])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9659021920;
-        Tue,  1 Oct 2019 11:13:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 810AB21D71;
+        Tue,  1 Oct 2019 11:13:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569928385;
-        bh=mMnBLzmYDQZr8tStqY6EhGbIdOFMamwVDjlacMbjHMw=;
+        s=default; t=1569928388;
+        bh=2qTrljZG4gv/baf3MYyIMPUOlj1gwhYKCnEdAXvSfMU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qiSEdPtgLMpWZViDmhe/fMeL8997U5hBDKQaz6dluW6xpZNtZLFFoVmHaHxhzrz/0
-         s3KG0P03aNfH+FW5GTHJgV/D58OvjJAz3RNJ0aC+cCaa5qS9U5znVfjrmm8RIDm3L/
-         ZFlqpTE5Dk756CxsD26hvZy1XVoliCYJzwB+rYF0=
+        b=h0krk+gyQmY0V47ShvTcHLTkuVP/ESfMtFtPdlY/SxrPBuAjlW+Y3gWHwNjEGoJ8r
+         EfdyCcguWdh2r+RQsqkpHY8DfGgUAtciuGR/0kC2UTPTvw5RVgME3LB3QYNrw0tB5m
+         5UTL7fvsuJS5Fo0Ub7Suj7Ee78+BVGXMeh3cwsLc=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Ian Rogers <irogers@google.com>, stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Wang Nan <wangnan0@huawei.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 09/24] perf llvm: Don't access out-of-scope array
-Date:   Tue,  1 Oct 2019 08:12:01 -0300
-Message-Id: <20191001111216.7208-10-acme@kernel.org>
+Subject: [PATCH 10/24] perf vendor events s390: Add JSON transaction for machine type 8561
+Date:   Tue,  1 Oct 2019 08:12:02 -0300
+Message-Id: <20191001111216.7208-11-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191001111216.7208-1-acme@kernel.org>
 References: <20191001111216.7208-1-acme@kernel.org>
@@ -65,54 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-The 'test_dir' variable is assigned to the 'release' array which is
-out-of-scope 3 lines later.
+Add s390 transaction counter definition for machine 8561. This is the
+same file as for the predecessor machine.
 
-Extend the scope of the 'release' array so that an out-of-scope array
-isn't accessed.
-
-Bug detected by clang's address sanitizer.
-
-Fixes: 07bc5c699a3d ("perf tools: Make fetch_kernel_version() publicly available")
-Cc: stable@vger.kernel.org # v4.4+
-Signed-off-by: Ian Rogers <irogers@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lore.kernel.org/lkml/20190926220018.25402-1-irogers@google.com
+Fixes: 6e67d77d673d ("perf vendor events s390: Add JSON files for machine type 8561")
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Link: http://lore.kernel.org/lkml/20190927081147.18345-1-tmricht@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/llvm-utils.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/pmu-events/arch/s390/cf_m8561/transaction.json | 7 +++++++
+ 1 file changed, 7 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/s390/cf_m8561/transaction.json
 
-diff --git a/tools/perf/util/llvm-utils.c b/tools/perf/util/llvm-utils.c
-index 8d04e3d070b1..8b14e4a7f1dc 100644
---- a/tools/perf/util/llvm-utils.c
-+++ b/tools/perf/util/llvm-utils.c
-@@ -233,14 +233,14 @@ static int detect_kbuild_dir(char **kbuild_dir)
- 	const char *prefix_dir = "";
- 	const char *suffix_dir = "";
- 
-+	/* _UTSNAME_LENGTH is 65 */
-+	char release[128];
-+
- 	char *autoconf_path;
- 
- 	int err;
- 
- 	if (!test_dir) {
--		/* _UTSNAME_LENGTH is 65 */
--		char release[128];
--
- 		err = fetch_kernel_version(NULL, release,
- 					   sizeof(release));
- 		if (err)
+diff --git a/tools/perf/pmu-events/arch/s390/cf_m8561/transaction.json b/tools/perf/pmu-events/arch/s390/cf_m8561/transaction.json
+new file mode 100644
+index 000000000000..1a0034f79f73
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/s390/cf_m8561/transaction.json
+@@ -0,0 +1,7 @@
++[
++  {
++    "BriefDescription": "Transaction count",
++    "MetricName": "transaction",
++    "MetricExpr": "TX_C_TEND + TX_NC_TEND + TX_NC_TABORT + TX_C_TABORT_SPECIAL + TX_C_TABORT_NO_SPECIAL"
++  }
++]
 -- 
 2.21.0
 
