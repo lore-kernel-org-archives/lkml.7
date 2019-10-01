@@ -6,74 +6,72 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56204ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D48C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23C0820815
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14E8420815
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:10:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Ghk4OsGG"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Am2icvsC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388782AbfJAOJY (ORCPT
+        id S2388895AbfJAOKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 10:09:24 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45307 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388689AbfJAOJY (ORCPT
+        Tue, 1 Oct 2019 10:10:13 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41936 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731280AbfJAOKN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 10:09:24 -0400
-Received: by mail-io1-f68.google.com with SMTP id c25so48174296iot.12
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 07:09:23 -0700 (PDT)
+        Tue, 1 Oct 2019 10:10:13 -0400
+Received: by mail-io1-f66.google.com with SMTP id n26so19757148ioj.8
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 07:10:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8RatxRyirkC/4rfNMMyrhD+loNoE95qLYi7XTzhLkh0=;
-        b=Ghk4OsGG6Oz7tZ5M6eRx1P6XEdLbmrF2aEY6vccsaJberBmlyClMkjTnCDUvfgSoy8
-         oNi1eKeNRo3+bYcSn0gvIlsZKya2riDbF2MmiNMpb7tr9rGA5cB4bFPRVNLp4ol9yMiW
-         QOU8U5m+QQemvlzF+O/n94HQ8AEX+KydRPxZLaXLyFrOhBDD0qb8JoT7+7HaiAsuSv5X
-         3yeuYt/vsr2NBT/WYeEUw/mYX2/5yk5mfMBYthUynDq3HY2i1hMmJq87rszhxXsnTUL4
-         vfcatmG2SXm3yADHfu0rFgwrswiTFriyhC9Ak6WlppWNDCzwuRW1URjT03nKqaIGOZ8v
-         YlgQ==
+        bh=3YUx0HE7NiysDC7RZVfxopyCJv9liIb6R89MTahPdRA=;
+        b=Am2icvsCpWu9R2jUDF5p07FY8Xh6t9Zk2ZbZUtTvUV4Deh3tXSewk/lOIhmxj7NCVY
+         hwoNwW4X4LHYD40xbyrfVyv+6HfcA9SQDcC5KWQ1hs0OQbcz0koawBX9QQr96Nn/QtOz
+         Cmp9v8GC5RgZaOd96XvdRc06fphYAjIcRrMkKY+0x/kg5at0EUsSiIKTGAHEURxzXh0r
+         knuWvO2YMyL1DMHtoVLR3wW76wouPj+0AJUhbK+/T0U2BqruBULXooT/zjGmLoK+7xh1
+         uXQoJI3xiCWXfVwSqoDbLNuzqL4vftHrJvswGMzCX0AgtofFV/sgrWp3pJ/fSxnkHAfq
+         Mn1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=8RatxRyirkC/4rfNMMyrhD+loNoE95qLYi7XTzhLkh0=;
-        b=h9mihGuWcOUeEziixrHXOWX0EcMqfbJ9NECWK5MoLsqzZ1CkQAybNqzZ54djWaKCXN
-         bW840re4xoAOVjBBfLPDLN5s+LZ+FOiPT+feICHi/lVcedGn2j65Vs+r13G9Eoj2ckej
-         WQw2DwXI1nvrlZPGDOo3XUwqQv8U1xbPNnTZLUqGvHSYRnk9H7befVkimcPnVP3FSUWd
-         7L/SLwYWNiG/KFtDL1t2/NHZ8Ty4H21sWo2JAaSCgVC66czJeXb3YXxXIxPPubE9mIEE
-         KzBPly2iNlpCd/ulMatHsGbz+KAR3KAnQvpGEHvo6dAqZR/aOhG3LnB91abcyH2SPJAf
-         culQ==
-X-Gm-Message-State: APjAAAVXhS0u4BZJzNtYcjy/rDrLnCpe49BP1xrdMuaG/z4kYfueJe97
-        5O0a7M6KifW5QFzJf5g2kp/gUZiKAaYM8Q==
-X-Google-Smtp-Source: APXvYqwIU8KTZ8E+y38iJxYiNYbx3DqPrbV92LcVOROG8LhAavzL5GtuetwG67KAKXV7C4rnKXRPBw==
-X-Received: by 2002:a92:6507:: with SMTP id z7mr23935789ilb.191.1569938961846;
-        Tue, 01 Oct 2019 07:09:21 -0700 (PDT)
+        bh=3YUx0HE7NiysDC7RZVfxopyCJv9liIb6R89MTahPdRA=;
+        b=HAdm6f6Cn3D3i5UWK24LJgExqnoh1FVtmYaP6gCoHGi8RbWZFOqBaA9Wvs505wPEYz
+         +s8PF5J6Mp1seyVQbeymv2ZZSfjJYIkti2pUg35GQdBfFkx1D6yhGcpLHRrkbJg7ZfHT
+         MMfhfqIQL2co+S87cs3WpBczPouk9m/Y72/wFTvOhQigr3ZMUPo5SrSD4CNKdljqQcUI
+         b9KEOz3P8IIkOkYE5taVUEhQ4l3x1Psb1SaAzb9aqKmmf9VyBeGBWONlfaWcr8+1zfOc
+         RN6mC4LLODSGSHwUotKjqCddmrwTHta/x5bGzFYNT+edO2mKKnDGGyqVgr2CP9uKHeRQ
+         LXNw==
+X-Gm-Message-State: APjAAAWRcWtfkuqdHbpivP4LtS02tDm+Nc+2k1DVzTt6ZIRYKmkyG9us
+        G/Uhbf58z7Gi9sd4KWUeEqriaA==
+X-Google-Smtp-Source: APXvYqwyQ78cSYCEY59QpZFzt9hWgZe8cTZEsDwwEpX7/UuXo/5xfiD6Z3upSoLEMYx8IRdazyU8mQ==
+X-Received: by 2002:a6b:8bd8:: with SMTP id n207mr5770851iod.147.1569939012260;
+        Tue, 01 Oct 2019 07:10:12 -0700 (PDT)
 Received: from [192.168.1.50] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id b7sm7177343iod.42.2019.10.01.07.09.20
+        by smtp.gmail.com with ESMTPSA id c8sm7042439ile.9.2019.10.01.07.10.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Oct 2019 07:09:20 -0700 (PDT)
-Subject: Re: [PATCH] io_uring: use __kernel_timespec in timeout ABI
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     y2038@lists.linaro.org, linux-api@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        =?UTF-8?Q?Stefan_B=c3=bchler?= <source@stbuehler.de>,
-        Hannes Reinecke <hare@suse.com>,
-        Jackie Liu <liuyun01@kylinos.cn>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hristo Venev <hristo@venev.name>, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190930202055.1748710-1-arnd@arndb.de>
+        Tue, 01 Oct 2019 07:10:11 -0700 (PDT)
+Subject: Re: [PATCH v2] loop: change queue block size to match when using DIO.
+To:     Martijn Coenen <maco@android.com>, hch@infradead.org,
+        ming.lei@redhat.com
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, kernel-team@android.com,
+        narayan@google.com, dariofreni@google.com, ioffe@google.com,
+        jiyong@google.com, maco@google.com
+References: <20190828103229.191853-1-maco@android.com>
+ <20190904194901.165883-1-maco@android.com>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <8d5d34da-e1f0-1ab5-461e-f3145e52c48a@kernel.dk>
-Date:   Tue, 1 Oct 2019 08:09:19 -0600
+Message-ID: <c65da8b1-755c-57f5-d49d-fb25e8dc809b@kernel.dk>
+Date:   Tue, 1 Oct 2019 08:10:10 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190930202055.1748710-1-arnd@arndb.de>
+In-Reply-To: <20190904194901.165883-1-maco@android.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -82,19 +80,15 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/30/19 2:20 PM, Arnd Bergmann wrote:
-> All system calls use struct __kernel_timespec instead of the old struct
-> timespec, but this one was just added with the old-style ABI. Change it
-> now to enforce the use of __kernel_timespec, avoiding ABI confusion and
-> the need for compat handlers on 32-bit architectures.
-> 
-> Any user space caller will have to use __kernel_timespec now, but this
-> is unambiguous and works for any C library regardless of the time_t
-> definition. A nicer way to specify the timeout would have been a less
-> ambiguous 64-bit nanosecond value, but I suppose it's too late now to
-> change that as this would impact both 32-bit and 64-bit users.
+On 9/4/19 1:49 PM, Martijn Coenen wrote:
+> The loop driver assumes that if the passed in fd is opened with
+> O_DIRECT, the caller wants to use direct I/O on the loop device.
+> However, if the underlying block device has a different block size than
+> the loop block queue, direct I/O can't be enabled. Instead of requiring
+> userspace to manually change the blocksize and re-enable direct I/O,
+> just change the queue block sizes to match, as well as the io_min size.
 
-Thanks for catching that, Arnd. Applied.
+Applied, thanks.
 
 -- 
 Jens Axboe
