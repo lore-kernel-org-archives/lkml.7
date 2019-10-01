@@ -2,131 +2,197 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7273C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CD3C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF6CE21924
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:21:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JJL3Lir4"
+	by mail.kernel.org (Postfix) with ESMTP id C730621906
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:21:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731548AbfJALVt (ORCPT
+        id S1731703AbfJALVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 07:21:49 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:44022 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731303AbfJALVs (ORCPT
+        Tue, 1 Oct 2019 07:21:51 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:54938 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfJALVt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 07:21:48 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91BJMdV134962;
-        Tue, 1 Oct 2019 11:21:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=SZSjO6UNaZjumDTG5dmovcI4DXMpTOl7kZ7b++1MnZg=;
- b=JJL3Lir4saN5IQpMnoz8keJ7VHriQJoQelVTKKtN9O1Utf6j/1ZiDaq31hglj93UzB5a
- 09hZuKZ+bhzI78yUlpeS5JGE489b7tHQcwwiSTXEZh9lq1zBlnM9kjUW4D/7IIpDP096
- lR/4hIUZzNzaoNGdhvz3j33JhgyNcixr9nUXDXuzY7y+/gdi0HxVbv/rxrz+M3BGUltK
- THZKcQMAz6XWAxiiXs1GPXiv+BgcUnTVU0xWV9HHCFsag+gML26Mzj/y0OL5XBfsVN3g
- I+Uk5AdlxbdLMEZzDsH0UA8InM0yI5tGcbJE33ejqNo8nrh2CHli8pQtykJqIYtYRC1q xw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2va05rn1au-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 11:21:29 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91BI8SW046498;
-        Tue, 1 Oct 2019 11:21:29 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2vbnqcq6ht-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 11:21:28 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x91BLR8j014531;
-        Tue, 1 Oct 2019 11:21:27 GMT
-Received: from [192.168.0.110] (/73.243.10.6)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 01 Oct 2019 04:21:27 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3594.4.18\))
-Subject: Re: [PATCH 14/15] mm: Align THP mappings for non-DAX
-From:   William Kucharski <william.kucharski@oracle.com>
-In-Reply-To: <20191001104558.rdcqhjdz7frfuhca@box>
-Date:   Tue, 1 Oct 2019 05:21:26 -0600
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Tue, 1 Oct 2019 07:21:49 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iFGDr-0000H4-Rg; Tue, 01 Oct 2019 13:21:39 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7184C1C03AB;
+        Tue,  1 Oct 2019 13:21:39 +0200 (CEST)
+Date:   Tue, 01 Oct 2019 11:21:39 -0000
+From:   "tip-bot2 for Tony W Wang-oc" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: ras/core] x86/mce: Add Zhaoxin LMCE support
+Cc:     "Tony W Wang-oc" <TonyWWang-oc@zhaoxin.com>,
+        Borislav Petkov <bp@suse.de>, CooperYan@zhaoxin.com,
+        DavidWang@zhaoxin.com, HerryYang@zhaoxin.com,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        "linux-edac" <linux-edac@vger.kernel.org>, QiyuanWang@zhaoxin.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>, "x86-ml" <x86@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A935F599-BB18-40C3-90DD-47B7700743D6@oracle.com>
-References: <20190925005214.27240-1-willy@infradead.org>
- <20190925005214.27240-15-willy@infradead.org>
- <20191001104558.rdcqhjdz7frfuhca@box>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-X-Mailer: Apple Mail (2.3594.4.18)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910010104
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910010104
+In-Reply-To: <1568787573-1297-5-git-send-email-TonyWWang-oc@zhaoxin.com>
+References: <1568787573-1297-5-git-send-email-TonyWWang-oc@zhaoxin.com>
+MIME-Version: 1.0
+Message-ID: <156992889928.9978.12753504403920052831.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the ras/core branch of tip:
 
+Commit-ID:     70f0c230031dfef3c9b3e37b2a8c18d3f7186fb2
+Gitweb:        https://git.kernel.org/tip/70f0c230031dfef3c9b3e37b2a8c18d3f7186fb2
+Author:        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+AuthorDate:    Wed, 18 Sep 2019 14:19:33 +08:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Tue, 01 Oct 2019 12:33:33 +02:00
 
-> On Oct 1, 2019, at 4:45 AM, Kirill A. Shutemov <kirill@shutemov.name> =
-wrote:
->=20
-> On Tue, Sep 24, 2019 at 05:52:13PM -0700, Matthew Wilcox wrote:
->>=20
->> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
->> index cbe7d0619439..670a1780bd2f 100644
->> --- a/mm/huge_memory.c
->> +++ b/mm/huge_memory.c
->> @@ -563,8 +563,6 @@ unsigned long thp_get_unmapped_area(struct file =
-*filp, unsigned long addr,
->>=20
->> 	if (addr)
->> 		goto out;
->> -	if (!IS_DAX(filp->f_mapping->host) || =
-!IS_ENABLED(CONFIG_FS_DAX_PMD))
->> -		goto out;
->>=20
->> 	addr =3D __thp_get_unmapped_area(filp, len, off, flags, =
-PMD_SIZE);
->> 	if (addr)
->=20
-> I think you reducing ASLR without any real indication that THP is =
-relevant
-> for the VMA. We need to know if any huge page allocation will be
-> *attempted* for the VMA or the file.
+x86/mce: Add Zhaoxin LMCE support
 
-Without a properly aligned address the code will never even attempt =
-allocating
-a THP.
+Newer Zhaoxin CPUs support LMCE compatible with Intel. Add support for
+that.
 
-I don't think rounding an address to one that would be properly aligned =
-to map
-to a THP if possible is all that detrimental to ASLR and without the =
-ability to
-pick an aligned address it's rather unlikely anyone would ever map =
-anything to
-a THP unless they explicitly designate an address with MAP_FIXED.
+ [ bp: Export functions and massage. ]
 
-If you do object to the slight reduction of the ASLR address space, what
-alternative would you prefer to see?
+Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: CooperYan@zhaoxin.com
+Cc: DavidWang@zhaoxin.com
+Cc: HerryYang@zhaoxin.com
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: QiyuanWang@zhaoxin.com
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/1568787573-1297-5-git-send-email-TonyWWang-oc@zhaoxin.com
+---
+ arch/x86/kernel/cpu/mce/core.c     | 22 ++++++++++++++++++++--
+ arch/x86/kernel/cpu/mce/intel.c    |  4 ++--
+ arch/x86/kernel/cpu/mce/internal.h |  4 ++++
+ 3 files changed, 26 insertions(+), 4 deletions(-)
 
-    -- Bill=
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index 1e6b8a4..5f42f25 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -1132,6 +1132,12 @@ static bool __mc_check_crashing_cpu(int cpu)
+ 		u64 mcgstatus;
+ 
+ 		mcgstatus = mce_rdmsrl(MSR_IA32_MCG_STATUS);
++
++		if (boot_cpu_data.x86_vendor == X86_VENDOR_ZHAOXIN) {
++			if (mcgstatus & MCG_STATUS_LMCES)
++				return false;
++		}
++
+ 		if (mcgstatus & MCG_STATUS_RIPV) {
+ 			mce_wrmsrl(MSR_IA32_MCG_STATUS, 0);
+ 			return true;
+@@ -1282,9 +1288,10 @@ void do_machine_check(struct pt_regs *regs, long error_code)
+ 
+ 	/*
+ 	 * Check if this MCE is signaled to only this logical processor,
+-	 * on Intel only.
++	 * on Intel, Zhaoxin only.
+ 	 */
+-	if (m.cpuvendor == X86_VENDOR_INTEL)
++	if (m.cpuvendor == X86_VENDOR_INTEL ||
++	    m.cpuvendor == X86_VENDOR_ZHAOXIN)
+ 		lmce = m.mcgstatus & MCG_STATUS_LMCES;
+ 
+ 	/*
+@@ -1797,9 +1804,15 @@ static void mce_zhaoxin_feature_init(struct cpuinfo_x86 *c)
+ 	}
+ 
+ 	intel_init_cmci();
++	intel_init_lmce();
+ 	mce_adjust_timer = cmci_intel_adjust_timer;
+ }
+ 
++static void mce_zhaoxin_feature_clear(struct cpuinfo_x86 *c)
++{
++	intel_clear_lmce();
++}
++
+ static void __mcheck_cpu_init_vendor(struct cpuinfo_x86 *c)
+ {
+ 	switch (c->x86_vendor) {
+@@ -1836,6 +1849,11 @@ static void __mcheck_cpu_clear_vendor(struct cpuinfo_x86 *c)
+ 	case X86_VENDOR_INTEL:
+ 		mce_intel_feature_clear(c);
+ 		break;
++
++	case X86_VENDOR_ZHAOXIN:
++		mce_zhaoxin_feature_clear(c);
++		break;
++
+ 	default:
+ 		break;
+ 	}
+diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/intel.c
+index fb6e990..68a1d25 100644
+--- a/arch/x86/kernel/cpu/mce/intel.c
++++ b/arch/x86/kernel/cpu/mce/intel.c
+@@ -444,7 +444,7 @@ void intel_init_cmci(void)
+ 	cmci_recheck();
+ }
+ 
+-static void intel_init_lmce(void)
++void intel_init_lmce(void)
+ {
+ 	u64 val;
+ 
+@@ -457,7 +457,7 @@ static void intel_init_lmce(void)
+ 		wrmsrl(MSR_IA32_MCG_EXT_CTL, val | MCG_EXT_CTL_LMCE_EN);
+ }
+ 
+-static void intel_clear_lmce(void)
++void intel_clear_lmce(void)
+ {
+ 	u64 val;
+ 
+diff --git a/arch/x86/kernel/cpu/mce/internal.h b/arch/x86/kernel/cpu/mce/internal.h
+index a7ee230..842b273 100644
+--- a/arch/x86/kernel/cpu/mce/internal.h
++++ b/arch/x86/kernel/cpu/mce/internal.h
+@@ -46,12 +46,16 @@ bool mce_intel_cmci_poll(void);
+ void mce_intel_hcpu_update(unsigned long cpu);
+ void cmci_disable_bank(int bank);
+ void intel_init_cmci(void);
++void intel_init_lmce(void);
++void intel_clear_lmce(void);
+ #else
+ # define cmci_intel_adjust_timer mce_adjust_timer_default
+ static inline bool mce_intel_cmci_poll(void) { return false; }
+ static inline void mce_intel_hcpu_update(unsigned long cpu) { }
+ static inline void cmci_disable_bank(int bank) { }
+ static inline void intel_init_cmci(void) { }
++static inline void intel_init_lmce(void) { }
++static inline void intel_clear_lmce(void) { }
+ #endif
+ 
+ void mce_timer_kick(unsigned long interval);
