@@ -2,114 +2,156 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CABC388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5FCC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9345521906
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:17:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16E1F21906
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:20:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730384AbfJAKRp (ORCPT
+        id S1729560AbfJAKUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 06:17:45 -0400
-Received: from mga03.intel.com ([134.134.136.65]:51739 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726109AbfJAKRo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 06:17:44 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 03:17:43 -0700
-X-IronPort-AV: E=Sophos;i="5.64,570,1559545200"; 
-   d="scan'208";a="366286885"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 03:17:39 -0700
-From:   Jani Nikula <jani.nikula@intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-usb@vger.kernel.org, netdev@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-kernel@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>,
-        Vishal Kulkarni <vishal@chelsio.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [Intel-gfx] [PATCH v3] string-choice: add yesno(), onoff(), enableddisabled(), plural() helpers
-In-Reply-To: <20191001095911.GA2945944@kroah.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <8e697984-03b5-44f3-304e-42d303724eaa@rasmusvillemoes.dk> <20191001080739.18513-1-jani.nikula@intel.com> <20191001093849.GA2945163@kroah.com> <87blv0dcol.fsf@intel.com> <20191001095911.GA2945944@kroah.com>
-Date:   Tue, 01 Oct 2019 13:17:36 +0300
-Message-ID: <878sq4db27.fsf@intel.com>
+        Tue, 1 Oct 2019 06:20:13 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:54797 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726190AbfJAKUN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 06:20:13 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iFFG9-0007pI-Fs; Tue, 01 Oct 2019 12:19:57 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 159241C03AB;
+        Tue,  1 Oct 2019 12:19:57 +0200 (CEST)
+Date:   Tue, 01 Oct 2019 10:19:56 -0000
+From:   "tip-bot2 for Alexander Kapshuk" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: core/objtool] x86/insn: Fix awk regexp warnings
+Cc:     kbuild test robot <lkp@intel.com>,
+        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
+        Borislav Petkov <bp@suse.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "x86-ml" <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+In-Reply-To: <20190924044659.3785-1-alexander.kapshuk@gmail.com>
+References: <20190924044659.3785-1-alexander.kapshuk@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Message-ID: <156992519684.9978.637485393388419464.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 01 Oct 2019, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> On Tue, Oct 01, 2019 at 12:42:34PM +0300, Jani Nikula wrote:
->> On Tue, 01 Oct 2019, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
->> > On Tue, Oct 01, 2019 at 11:07:39AM +0300, Jani Nikula wrote:
->> >> The kernel has plenty of ternary operators to choose between constant
->> >> strings, such as condition ? "yes" : "no", as well as value == 1 ? "" :
->> >> "s":
->> >> 
->> >> $ git grep '? "yes" : "no"' | wc -l
->> >> 258
->> >> $ git grep '? "on" : "off"' | wc -l
->> >> 204
->> >> $ git grep '? "enabled" : "disabled"' | wc -l
->> >> 196
->> >> $ git grep '? "" : "s"' | wc -l
->> >> 25
->> >> 
->> >> Additionally, there are some occurences of the same in reverse order,
->> >> split to multiple lines, or otherwise not caught by the simple grep.
->> >> 
->> >> Add helpers to return the constant strings. Remove existing equivalent
->> >> and conflicting functions in i915, cxgb4, and USB core. Further
->> >> conversion can be done incrementally.
->> >> 
->> >> While the main goal here is to abstract recurring patterns, and slightly
->> >> clean up the code base by not open coding the ternary operators, there
->> >> are also some space savings to be had via better string constant
->> >> pooling.
->> >> 
->> >> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
->> >> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
->> >> Cc: intel-gfx@lists.freedesktop.org
->> >> Cc: Vishal Kulkarni <vishal@chelsio.com>
->> >> Cc: netdev@vger.kernel.org
->> >> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> >> Cc: linux-usb@vger.kernel.org
->> >> Cc: Andrew Morton <akpm@linux-foundation.org>
->> >> Cc: linux-kernel@vger.kernel.org
->> >> Cc: Julia Lawall <julia.lawall@lip6.fr>
->> >> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
->> >> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org> # v1
->> >
->> > As this is a totally different version, please drop my reviewed-by as
->> > that's really not true here :(
->> 
->> I did indicate it was for v1. Indeed v2 was different, but care to
->> elaborate what's wrong with v3?
->
-> No idea, but I haven't reviewed it yet, so to put my tag on there isn't
-> the nicest...
+The following commit has been merged into the core/objtool branch of tip:
 
-Apologies, no harm intended.
+Commit-ID:     700c1018b86d0d4b3f1f2d459708c0cdf42b521d
+Gitweb:        https://git.kernel.org/tip/700c1018b86d0d4b3f1f2d459708c0cdf42b521d
+Author:        Alexander Kapshuk <alexander.kapshuk@gmail.com>
+AuthorDate:    Tue, 24 Sep 2019 07:46:59 +03:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Tue, 01 Oct 2019 12:13:16 +02:00
 
-At times, I've seen the "# vN" notation used, I suppose both to indicate
-that the *ideas* presented in the earlier version warranted Reviewed-by
-from so-and-so, though this particular version still needs detailed
-review, and that the approval of the reviewer of the earlier version
-should be sought out before merging a subsequent version.
+x86/insn: Fix awk regexp warnings
 
-BR,
-Jani.
+gawk 5.0.1 generates the following regexp warnings:
 
+  GEN      /home/sasha/torvalds/tools/objtool/arch/x86/lib/inat-tables.c
+  awk: ../arch/x86/tools/gen-insn-attr-x86.awk:260: warning: regexp escape sequence `\:' is not a known regexp operator
+  awk: ../arch/x86/tools/gen-insn-attr-x86.awk:350: (FILENAME=../arch/x86/lib/x86-opcode-map.txt FNR=41) warning: regexp escape sequence `\&' is  not a known regexp operator
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
+Ealier versions of gawk are not known to generate these warnings. The
+gawk manual referenced below does not list characters ':' and '&' as
+needing escaping, so 'unescape' them. See
+
+  https://www.gnu.org/software/gawk/manual/html_node/Escape-Sequences.html
+
+for more info.
+
+Running diff on the output generated by the script before and after
+applying the patch reported no differences.
+
+ [ bp: Massage commit message. ]
+
+[ Caught the respective tools header discrepancy. ]
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190924044659.3785-1-alexander.kapshuk@gmail.com
+---
+ arch/x86/tools/gen-insn-attr-x86.awk       | 4 ++--
+ tools/arch/x86/tools/gen-insn-attr-x86.awk | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/tools/gen-insn-attr-x86.awk b/arch/x86/tools/gen-insn-attr-x86.awk
+index b02a36b..a42015b 100644
+--- a/arch/x86/tools/gen-insn-attr-x86.awk
++++ b/arch/x86/tools/gen-insn-attr-x86.awk
+@@ -69,7 +69,7 @@ BEGIN {
+ 
+ 	lprefix1_expr = "\\((66|!F3)\\)"
+ 	lprefix2_expr = "\\(F3\\)"
+-	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
++	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
+ 	lprefix_expr = "\\((66|F2|F3)\\)"
+ 	max_lprefix = 4
+ 
+@@ -257,7 +257,7 @@ function convert_operands(count,opnd,       i,j,imm,mod)
+ 	return add_flags(imm, mod)
+ }
+ 
+-/^[0-9a-f]+\:/ {
++/^[0-9a-f]+:/ {
+ 	if (NR == 1)
+ 		next
+ 	# get index
+diff --git a/tools/arch/x86/tools/gen-insn-attr-x86.awk b/tools/arch/x86/tools/gen-insn-attr-x86.awk
+index b02a36b..a42015b 100644
+--- a/tools/arch/x86/tools/gen-insn-attr-x86.awk
++++ b/tools/arch/x86/tools/gen-insn-attr-x86.awk
+@@ -69,7 +69,7 @@ BEGIN {
+ 
+ 	lprefix1_expr = "\\((66|!F3)\\)"
+ 	lprefix2_expr = "\\(F3\\)"
+-	lprefix3_expr = "\\((F2|!F3|66\\&F2)\\)"
++	lprefix3_expr = "\\((F2|!F3|66&F2)\\)"
+ 	lprefix_expr = "\\((66|F2|F3)\\)"
+ 	max_lprefix = 4
+ 
+@@ -257,7 +257,7 @@ function convert_operands(count,opnd,       i,j,imm,mod)
+ 	return add_flags(imm, mod)
+ }
+ 
+-/^[0-9a-f]+\:/ {
++/^[0-9a-f]+:/ {
+ 	if (NR == 1)
+ 		next
+ 	# get index
