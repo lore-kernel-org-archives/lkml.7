@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9361BC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CE6C388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68B7621855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD8E221906
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:39:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CdT8HQ33"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RNZoDGRH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733066AbfJAHj0 (ORCPT
+        id S1733079AbfJAHja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 03:39:26 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46732 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725777AbfJAHj0 (ORCPT
+        Tue, 1 Oct 2019 03:39:30 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33372 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725777AbfJAHj3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 03:39:26 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q5so7276013pfg.13;
-        Tue, 01 Oct 2019 00:39:24 -0700 (PDT)
+        Tue, 1 Oct 2019 03:39:29 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q10so7313962pfl.0;
+        Tue, 01 Oct 2019 00:39:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=fNc5aCo2FNNct4zlj4DcbJphk7+e/9lUuXxqxufNkHM=;
-        b=CdT8HQ33dsPzUsXPrl2pUysW+nAUIfYSBw5M/dw2jbw9tTwfuq6w8ox0zRwcNwFPfh
-         3NhFDaeIFn2/nMCZePcYXFKQveCrQAmIANCCb7D1qedvb1mdK5fFIh4TYxpK6OkkrvOw
-         z74bDX8y0nmtWeAXMs+hT+g7PzWnsX+BEjA083HT1S7d9q/znrbZGixkTnHLhuRWDrUp
-         2aJYPGjluhi3+ylADb+R2T7avwkxXhdbuU8rDVvO91rL2VL4mWWcdfW4lbC+258taKey
-         vC/fb0cSxX6bTlVjWHEuJi8zgHk/iIeT2IGeqJmR7TQhMPLJj224om5QQhetW9vdfPRO
-         u3xw==
+        bh=FPppnx0pHg/e5NQNVYHCSHLYJt27O7a0A615YGrLKc8=;
+        b=RNZoDGRHpt/Wdb8dG1PMcaHqUo2VhanExRHm03EBTnxrfHRrlr1pSkkQgLSxVUEUUj
+         Z6vB/F0ywZolrgx5IPX/8yng0MwAwu/DPV1rK3B4nL3+IoLa/eyhI7VjU/KSAMG8BlbP
+         RCpDMtcc4aJ6aXqynVOxr6jaLN8pjcwS8Aq0e1fx4Kq79/y/wTCWyI1BAbAnG814e6QO
+         mHOV8XCaLn4wjFnALqV/WTzNS3w5bP4Gx/jukPlzMZ9IdJmWPUu8r/Pp92GAUVnL+KTL
+         uvstGokKaNAAVqVYsf8vzoGr2P1RkbVDt+Nm5gfzle0pA6YidHLShRRME3soF4usyYRj
+         zRgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=fNc5aCo2FNNct4zlj4DcbJphk7+e/9lUuXxqxufNkHM=;
-        b=Vl9+kRWpNuar6RvnWDXHXS4muY56J6Uw8J3vJFzOHpJClWD8xr6ks/l/U4DTqOu3CY
-         P9VH2Bj8srjPZJEEXMO8dqgTic4eiuqaObZD7qCyiFL/YfXafHoN4TfthcPx7miI91JV
-         2vsKyXCHU7frAFe4E/dXfSs6HSdWS6Pd1tQlYK0I8p/kqjGvbf2ZGuRojx6G4ztGTKC/
-         sM0JzUxih8vkQcgA7ikQPKBboeAX2FX8xS8PDf6O2YhD2OMrq0Tf6FukyYWNjjL8vdRI
-         Dh9cLeS+mX8ixC+uqrtRndo0iQjl9u4TREKvJPgn34EB/YeRVU3XKIUtvwjKb19fiB3s
-         0u3g==
-X-Gm-Message-State: APjAAAVYfptV+MyqL/pZ+QJzSudGOlt7dVyK7B4MZFucGvix8ERoShch
-        tvt7A8Mb2kpbXqekzaWYixWO01dA
-X-Google-Smtp-Source: APXvYqwgtK/7jldY+PAliS3rvplMP8Emk6WfbG3i1Hz6v+88R0MQjrfRwFI6nYy3omOa+rOI8cd5lA==
-X-Received: by 2002:a63:5144:: with SMTP id r4mr5888508pgl.339.1569915564230;
-        Tue, 01 Oct 2019 00:39:24 -0700 (PDT)
+        bh=FPppnx0pHg/e5NQNVYHCSHLYJt27O7a0A615YGrLKc8=;
+        b=araj51OmRlZXWv6mUow0DZmPwJICk8qzfSexey1ymhVOrAJFK6AgQkMdr2totLqxOm
+         rn2GJipiRyoEei80opmPh1jo9JrOlPxkML1fYGaZdC826QXmLjaPXRJsY+iGsGZbuZHo
+         zXH2XlWv5Rrd7bMCQvwGhQnM8G0Px6LquxvUS6uSC4iv6GU9bN1zsveAVP0a/Vs2PglL
+         N0eIf+U11gQOuSC7cr+oSHnJE5D0SWNS8dUILLq/65LXBTjQpsxX1Ep85htwXTS6cPXB
+         L6SdpCRjSekNqUVG4Psjukxg/hEOOxLDUNIVkBAyBXx7fMwMmqXESjq+6OQFqvHQ0P6Z
+         PDsA==
+X-Gm-Message-State: APjAAAXyCRYNOC2+luUCt7C9rztJECIPCjBlr4dJXZa4qglpssGhiZtF
+        mzKw8m0KVDEPF9TciKGNnyE8/GIF
+X-Google-Smtp-Source: APXvYqwf/R8vsuDMrsHPW7AAcObC7akqhTa6ONGQou6OgWL5Xr1mJECAx9MceH6tA5EtUlPFROrz4Q==
+X-Received: by 2002:a63:cf4e:: with SMTP id b14mr29075889pgj.109.1569915567708;
+        Tue, 01 Oct 2019 00:39:27 -0700 (PDT)
 Received: from localhost.localdomain ([103.51.74.191])
-        by smtp.gmail.com with ESMTPSA id g19sm23133024pgm.63.2019.10.01.00.39.20
+        by smtp.gmail.com with ESMTPSA id g19sm23133024pgm.63.2019.10.01.00.39.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 00:39:23 -0700 (PDT)
+        Tue, 01 Oct 2019 00:39:27 -0700 (PDT)
 From:   Anand Moon <linux.amoon@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
@@ -65,9 +65,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         Kevin Hilman <khilman@baylibre.com>
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCHv3 RESEND-next 2/3] arm64: dts: meson: odroid-c2: Add missing regulator linked to VDDIO_AO3V3 regulator
-Date:   Tue,  1 Oct 2019 07:39:00 +0000
-Message-Id: <20191001073901.372-3-linux.amoon@gmail.com>
+Subject: [PATCHv3 RESEND-next 3/3] arm64: dts: meson: odroid-c2: Add missing regulator linked to HDMI supply
+Date:   Tue,  1 Oct 2019 07:39:01 +0000
+Message-Id: <20191001073901.372-4-linux.amoon@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191001073901.372-1-linux.amoon@gmail.com>
 References: <20191001073901.372-1-linux.amoon@gmail.com>
@@ -78,12 +78,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As per schematics TFLASH_VDD, TF_IO, VCC3V3 fixed regulator output which
-is supplied by VDDIO_AO3V3.
-
-While here, move the comment name with the signal name in the
-schematics above the gpio property to make it consistent with other
-regulators.
+As per schematics HDMI_P5V0 is supplied by P5V0 so add missing link.
 
 Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Cc: Jerome Brunet <jbrunet@baylibre.com>
@@ -92,63 +87,43 @@ Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 ---
-changes from previous.
+Changes from previous
 Patchv1
-- Fix the typo.
-- Add the comment as per Martin's suggestion.
-- Added Martin's review tags
+- As per Martin's suggestion added the HDMI_P5V0 fix regulator node.
 Patchv2
-- Added missing Neil's Reviewed-by tags.
+- Added Matrin's and Neil's Reviewed-by.
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index 5adecdf3b175..2fcd512373a3 100644
+index 2fcd512373a3..6ded279c40c8 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
 +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -67,17 +67,19 @@
+@@ -66,6 +66,15 @@
+ 		regulator-always-on;
  	};
  
++	hdmi_p5v0: regulator-hdmi_p5v0 {
++		compatible = "regulator-fixed";
++		regulator-name = "HDMI_P5V0";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		/* AP2331SA-7 */
++		vin-supply = <&p5v0>;
++	};
++
  	tflash_vdd: regulator-tflash_vdd {
--		/*
--		 * signal name from schematics: TFLASH_VDD_EN
--		 */
  		compatible = "regulator-fixed";
  
- 		regulator-name = "TFLASH_VDD";
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
+@@ -220,6 +229,7 @@
+ 	status = "okay";
+ 	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
+ 	pinctrl-names = "default";
++	hdmi-supply = <&hdmi_p5v0>;
+ };
  
-+		/*
-+		 * signal name from schematics: TFLASH_VDD_EN
-+		 */
- 		gpio = <&gpio GPIOY_12 GPIO_ACTIVE_HIGH>;
- 		enable-active-high;
-+		/* U16 RT9179GB */
-+		vin-supply = <&vddio_ao3v3>;
- 	};
- 
- 	tf_io: gpio-regulator-tf_io {
-@@ -95,6 +97,8 @@
- 
- 		states = <3300000 0>,
- 			 <1800000 1>;
-+		/* U12/U13 RT9179GB */
-+		vin-supply = <&vddio_ao3v3>;
- 	};
- 
- 	vcc1v8: regulator-vcc1v8 {
-@@ -102,6 +106,9 @@
- 		regulator-name = "VCC1V8";
- 		regulator-min-microvolt = <1800000>;
- 		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+		/* U18 RT9179GB */
-+		vin-supply = <&vddio_ao3v3>;
- 	};
- 
- 	vcc3v3: regulator-vcc3v3 {
+ &hdmi_tx_tmds_port {
 -- 
 2.23.0
 
