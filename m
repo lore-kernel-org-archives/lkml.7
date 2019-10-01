@@ -2,91 +2,120 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EED51C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FA7C388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6C5020640
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A8E021920
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:54:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="VWfYgiq8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FsAwZFtT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbfJALxM (ORCPT
+        id S1732284AbfJALyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 07:53:12 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:46434 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfJALxL (ORCPT
+        Tue, 1 Oct 2019 07:54:01 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37611 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbfJALyB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 07:53:11 -0400
-Received: by mail-qk1-f196.google.com with SMTP id 201so10837588qkd.13
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 04:53:09 -0700 (PDT)
+        Tue, 1 Oct 2019 07:54:01 -0400
+Received: by mail-pl1-f195.google.com with SMTP id u20so5355525plq.4
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 04:54:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dqwnqVMd7Dh3OIWe4tAKRJ81nrl3lr0HTsA8KBQUJMQ=;
-        b=VWfYgiq8o4TxzI75gqE+97kJ2C7RzILaNdQFTlfC9HvX0NHGTLxEHA4D4XVALs+NFq
-         HOho3Huo099ZkLxTOytzVXOOQ0ICzbhphJlDsRIgVTS2a6eUbd3Lc202l0dgak2MvwRK
-         bNQ5F3XyUdjF+DEdcSAM3y5YQXiGEdvMbldIutIQzwDUaYODw1KWo+CJbUqp3YqhK8Vm
-         dzkrxVBDza6cGphkJHE+sQvmVaNEXQzBnJttxFdPfEaedU2vJb9PN0ryuzCy4VUuTX1t
-         uxBQcqZE7EqfBGNA6Z0dOO/m/1wuRBd+SIEeE/d1ODL7rl5jy/hD7QpQj4152+RL5wDr
-         Deqg==
+         :cc;
+        bh=64JhZwkDAvaFL8oefy3Dlv2PxK4l6sjIBqb8vtnMKK4=;
+        b=FsAwZFtTbM4w3tHIi2kjemmZZb9MFNARVFQbkmLTTM+KBtRRefSY9TD7PMsLPnR+MA
+         K2dvDteLSzcL5PMfivtOgnn0CpAVfivvC0Z518L1eFH2D5tzCavGG2Dy6qaO00N+fWi2
+         B3hn97e4qNV0xeJRMQ+VvhAK+WlnXvAgsqf0pXKOlrBmnNIUj7tsu7sedcbglekADziM
+         EKrF0usaaJgyIvFYGObLpAIwI9+Fw3ALKztiM2CYmyg2CiKYLnDs5bqr58PrmyFeELBJ
+         trkfycHg1STppUj82ww83kYr6QvHQRrjHWQMPZobSwLO4lOq3aQJOVYgCVUvRaXqpC2e
+         YnYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dqwnqVMd7Dh3OIWe4tAKRJ81nrl3lr0HTsA8KBQUJMQ=;
-        b=RxJQa41czAam5P727vX1m63K4E8rSaiDvc4OlR+Z7i7iidJy8nElboRTterV73QTah
-         aia1Yh5Eu+49ftA4F2N76zpB/22IbPpqNieYWa9Ed4xSW2QV7AciOWTtQMhHqtBcbBhM
-         ljGew05UxThwdBHybgKmdKuN2BTH3fueAPc0TD1iLrfxdsoWq9Zog/phj/WyK8Nx21Gv
-         GiWZl+4iiL9hAueUZxoy5204XtYo26dUl6Dw1klJXTM1sfnDxyHVDT3m5+1+rblaJE28
-         CXZqzB5gMezngGQpCGH1vHHh0yAyqp6AK8k1v3EuDp3ANmiOzykNjqRPGdUL5kT20/8E
-         OEHA==
-X-Gm-Message-State: APjAAAXUerrwczUpqnV8CV9eDOoEell+zfBALcoBeCVikgJjyPy2W2L0
-        s9xF/zuMhMeViIWPggP4PUSnXSQXdyUQXEnshTF/lg==
-X-Google-Smtp-Source: APXvYqxP855s+EE2N4Y1fo0EProBOXtvkHBsF3VzoAMrv/RCwrkN37cc1TE0VS1T0HeKDv98emTi1km3cxN1jGfZgNo=
-X-Received: by 2002:a37:4dd0:: with SMTP id a199mr5267390qkb.195.1569930789388;
- Tue, 01 Oct 2019 04:53:09 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=64JhZwkDAvaFL8oefy3Dlv2PxK4l6sjIBqb8vtnMKK4=;
+        b=exxcI0UUk97d2H/dS3/uuKBXREtk3tlVVcvwTCL+GDm1pCvbm4KsnfBXf1v0/1XUOm
+         j1qtNT0SdKubuegD6h924NVwLpw0Jc6lztzJK9jTU2FW1lqmoQken+dlXNtdrGIQiAW3
+         hrmPJdxW25BUMVI9GLQx5PEKq0bpkIwNRK/0EsZcZz+TMvXMkzT4eTpk84IlahsMAxnN
+         yCLNpPhGBD+rBYMMu+v38CjVqImqHogkBzRmWDVB5h9pJOQ1KER5SkrH5KHSt4mz0qPT
+         opun4WZQLJ6j5/3atIKvfee+3RsJ76qAMtrQxSztdP8D/dB0dnYv59CQr/lijIdPD83w
+         ASmQ==
+X-Gm-Message-State: APjAAAX0QaFOweHvMD28jNpC3zcJiZZ40RK8nXW1Fe8P4BXYRvlf6pe9
+        vqSGXDJXS1l4RX2H7OIH/WLYNhYxfihj/4GUhoItDYKnwr7aDw==
+X-Google-Smtp-Source: APXvYqyJ3Lc7ZQwJT/ACH4RnfsrK1gLwn2azs4odvDQ8uIFF8FKln1z8z11y/394MkKXlOL3lk6SBWElOW9Xv/VNjWU=
+X-Received: by 2002:a17:902:9a95:: with SMTP id w21mr25171552plp.336.1569930840195;
+ Tue, 01 Oct 2019 04:54:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190926055128.23434-1-axel.lin@ingics.com> <AM5PR1001MB0994D5D70956F903FDFB989680860@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-In-Reply-To: <AM5PR1001MB0994D5D70956F903FDFB989680860@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-From:   Axel Lin <axel.lin@ingics.com>
-Date:   Tue, 1 Oct 2019 19:52:58 +0800
-Message-ID: <CAFRkauAk6c_nkMh+W5zKJmNttKwzJgqMzsprKdcAyi1v5iouWA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] regulator: da9062: Simplify da9062_buck_set_mode for
- BUCK_MODE_MANUAL case
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <29dd42d5-52e3-e2a2-679f-f0e8648f2b40@infradead.org>
+In-Reply-To: <29dd42d5-52e3-e2a2-679f-f0e8648f2b40@infradead.org>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 1 Oct 2019 13:53:48 +0200
+Message-ID: <CAAeHK+zFuuPb0RgKcb4c2AjgPh3X29faDYU-O+3DQhd0hrOWNw@mail.gmail.com>
+Subject: Re: [PATCH mmotm] sparc64: pgtable_64.h: fix mismatched parens
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adam Thomson <Adam.Thomson.Opensource@diasemi.com> =E6=96=BC 2019=E5=B9=B49=
-=E6=9C=8826=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=885:22=E5=AF=AB=E9=
-=81=93=EF=BC=9A
+On Tue, Oct 1, 2019 at 2:23 AM Randy Dunlap <rdunlap@infradead.org> wrote:
 >
-> On 26 September 2019 06:51, Axel Lin wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
 >
-> > The sleep flag bit decides the mode for BUCK_MODE_MANUAL case, simplify
-> > the logic as the result is the same.
-> >
-> > Signed-off-by: Axel Lin <axel.lin@ingics.com>
+> Fix lib-untag-user-pointers-in-strn_user.patch unmatched left paren.
+> Fixes many of these build errors:
 >
-> This patch will need to be rebased on Marco's update titled:
+> ../mm/gup.c: In function '__get_user_pages':
+> ../mm/gup.c:791:30: error: expected ')' before ';' token
+>   start = untagged_addr(start);
+>                               ^
+> In file included from ../arch/sparc/include/asm/pgtable.h:5,
+>                  from ../include/linux/mm.h:99,
+>                  from ../mm/gup.c:7:
+> ../arch/sparc/include/asm/pgtable_64.h:1102:2: note: to match this '('
+>   ((__typeof__(addr))(__untagged_addr((unsigned long)(addr)))
+>   ^
+> ../mm/gup.c:791:10: note: in expansion of macro 'untagged_addr'
+>   start = untagged_addr(start);
+>           ^~~~~~~~~~~~~
+> ../mm/gup.c:892:21: error: expected ';' before '}' token
 >
->         "regulator: da9062: fix suspend_enable/disable preparation"
-This patch is on top of above commit.
-Should be applied cleanly.
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Andrey Konovalov <andreyknvl@google.com>
+> ---
+>
+> Is this already fixed???
 
-Thanks,
-Axel
+Hi Randy,
+
+Yes, this has been fixed by a22fea94992a2bc5328005e62f368413ede49c14.
+
+Thanks!
+
+>
+>
+>  arch/sparc/include/asm/pgtable_64.h |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> --- mmotm-2019-0925-1810.orig/arch/sparc/include/asm/pgtable_64.h
+> +++ mmotm-2019-0925-1810/arch/sparc/include/asm/pgtable_64.h
+> @@ -1099,7 +1099,7 @@ static inline unsigned long __untagged_a
+>         return start;
+>  }
+>  #define untagged_addr(addr) \
+> -       ((__typeof__(addr))(__untagged_addr((unsigned long)(addr)))
+> +       ((__typeof__(addr))(__untagged_addr((unsigned long)(addr))))
+>
+>  static inline bool pte_access_permitted(pte_t pte, bool write)
+>  {
+>
