@@ -1,193 +1,183 @@
-Return-Path: <SRS0=euz+=X2=domails.com=no_reply@kernel.org>
+Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HTML_MESSAGE,SPF_HELO_NONE,SPF_PASS,TO_IN_SUBJ autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A532C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:46:02 +0000 (UTC)
-X-Greylist: delayed 1803 seconds by postgrey-1.34 at mail.kernel.org; Tue, 01 Oct 2019 11:46:01 UTC
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org A649A21906
-Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=domails.com
-Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=no_reply@domails.com
-Received: from slot0.steelxasfres.ml (unknown [178.156.202.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail.kernel.org (Postfix) with ESMTPS id A649A21906
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:46:01 +0000 (UTC)
-Content-Type: multipart/alternative; boundary="===============0097633981=="
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A43EFC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:46:59 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id 71ADC21906
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:46:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kfciGDgz"
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1732685AbfJALq6 (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 1 Oct 2019 07:46:58 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35842 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfJALq6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 07:46:58 -0400
+Received: by mail-wr1-f66.google.com with SMTP id y19so15124587wrd.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 04:46:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tHjd4gdm3EYFGi3d7rmzjd8b5ATclswBSBj6pNCCuo4=;
+        b=kfciGDgzcbaaC6jbn/MEfpcIelhCq/8Viax15KDJ/dEjFRgs3d6HGdVqnwJ6TP0Nho
+         yEut+/LNh913bWcoyUPFLl4suF6Od4JiwL1grkZnNKZO5JM98REp/0NYVMhmgzsUD/nl
+         Wql9TpKS0HL5O3cuqqI6JEW9qg+QrjmiO44y0nkL60CIr18juoq6MjkocLglse3fDTDr
+         fnz1TKLdHH1lQH8OXSHmWxVZ8cOgvUtjW2hbcFBm3jv0N2E5oLL9KopTlYFU2D0rxgMo
+         JbvmbqiCWEBAY3I0piPM93sixY51FivvPRhfs5GYiiUAc/UF308ADpOu45T41IuSfpSr
+         MEgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tHjd4gdm3EYFGi3d7rmzjd8b5ATclswBSBj6pNCCuo4=;
+        b=q4XTKm6fs5YRc1+oHaJp97wSec7eGtTMu44UVI+MJdLuu/yScwvTBprIh/knTzm4wE
+         CNg27FaJLtwmRM51llYlhgpROHFDiiJZ5R8SXWOf5JPJZn83XdAnHF3AsJKmip1s7KGt
+         nUh4MDZkEvTwpc01JLZy5eh+LaepC6XFSpCfKaM7uBfkJV6kFWeUECY39j3y44lIbbVh
+         O27b+upyXL0H+55n9Sh9U5SRwd3saxVtYySHVdBQuzVaQRlSIsiuGxYyJjO35b1QJ7PT
+         ZTx2x91DvOLs/DSoZ45xAnKfu9wMBtlhFoOJ4wXlY1Hdk6GSwEvejZO+XcSwnme6l1Wi
+         9Qlw==
+X-Gm-Message-State: APjAAAUpOETMzIEjbzAJxw6UW/G0zAU7lq4iASgcq4XzS7mDYAfdQ46s
+        a13VyfrMsoRofh1ejCCot2mskA==
+X-Google-Smtp-Source: APXvYqwQpblTxOj4x6m4JyNap+/jjIVd29LSWRWFw15HFe/EXenxen3aYr8OtGxjzrSlu+M4i3Ezzw==
+X-Received: by 2002:adf:f647:: with SMTP id x7mr16224883wrp.379.1569930415118;
+        Tue, 01 Oct 2019 04:46:55 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
+        by smtp.gmail.com with ESMTPSA id f83sm2546641wmf.43.2019.10.01.04.46.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2019 04:46:54 -0700 (PDT)
+Date:   Tue, 1 Oct 2019 12:46:52 +0100
+From:   Matthias Maennich <maennich@google.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Martijn Coenen <maco@android.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 7/7] nsdeps: make generated patches independent of locale
+Message-ID: <20191001114652.GD253280@google.com>
+References: <20190927093603.9140-1-yamada.masahiro@socionext.com>
+ <20190927093603.9140-8-yamada.masahiro@socionext.com>
+ <20190927132726.GB187147@google.com>
+ <CAK7LNARQZ49jvPOK5Dg3B7Nog7+zHsAn5=1oHH6hz9ZzJ=S+xA@mail.gmail.com>
+ <20190927181414.GB1804168@kroah.com>
+ <CAK7LNAQh12iuAk5aoeHhZ=iGcYraWFfsei-+VqwALbOPrrjWdg@mail.gmail.com>
+ <CAK7LNAR7QwfMRKwc1DwaRQW3GA-tBHhSv=yVq+xR_YkpYAnc6w@mail.gmail.com>
 MIME-Version: 1.0
-Subject: Warning: Your linux-kernel@archiver.kernel.org mailbox will be shutdown
- today!Type a message
-To: linux-kernel@archiver.kernel.org
-From: "Email-Host Service" <no_reply@domails.com>Type a message
-Date: Tue, 01 Oct 2019 04:15:55 -0700
-Message-ID: <0.0.A.2B9.1D578491647497A.0@slot0.steelxasfres.ml>
-List-Id: <linux-kernel.vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAK7LNAR7QwfMRKwc1DwaRQW3GA-tBHhSv=yVq+xR_YkpYAnc6w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: linux-kernel-owner@vger.kernel.org
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
 
-You will not see this in a MIME-aware mail reader.
---===============0097633981==
-Content-Type: text/plain; charset="iso-8859-1"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
+On Sun, Sep 29, 2019 at 10:30:27AM +0900, Masahiro Yamada wrote:
+>On Sun, Sep 29, 2019 at 10:18 AM Masahiro Yamada
+><yamada.masahiro@socionext.com> wrote:
+>>
+>> On Sat, Sep 28, 2019 at 3:14 AM Greg Kroah-Hartman
+>> <gregkh@linuxfoundation.org> wrote:
+>> >
+>> > On Sat, Sep 28, 2019 at 12:42:28AM +0900, Masahiro Yamada wrote:
+>> > > On Fri, Sep 27, 2019 at 10:27 PM Matthias Maennich <maennich@google.com> wrote:
+>> > > >
+>> > > > On Fri, Sep 27, 2019 at 06:36:03PM +0900, Masahiro Yamada wrote:
+>> > > > >scripts/nsdeps automatically generates a patch to add MODULE_IMPORT_NS
+>> > > > >tags, and what is nicer, it sorts the lines alphabetically with the
+>> > > > >"sort" command. However, the output from the "sort" command depends
+>> > > > >on locale.
+>> > > > >
+>> > > > >Especially when namespaces contain underscores, the result is
+>> > > > >different depending on the locale.
+>> > > > >
+>> > > > >For example, I got this:
+>> > > > >
+>> > > > >$ { echo usbcommon; echo usb_common; } | LANG=en_US.UTF-8 sort
+>> > > > >usbcommon
+>> > > > >usb_common
+>> > > > >$ { echo usbcommon; echo usb_common; } | LANG=C sort
+>> > > > >usb_common
+>> > > > >usbcommon
+>> > > > >
+>> > > > >So, this means people might potentially send different patches.
+>> > > > >
+>> > > > >This kind of issue was reported in the past, for example,
+>> > > > >commit f55f2328bb28 ("kbuild: make sorting initramfs contents
+>> > > > >independent of locale").
+>> > > > >
+>> > > > >Adding "LANG=C" is a conventional way of fixing when a deterministic
+>> > > > >result is desirable.
+>> > > > >
+>> > > > >Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>> > > > >---
+>> > > > >
+>> > > > > scripts/nsdeps | 2 +-
+>> > > > > 1 file changed, 1 insertion(+), 1 deletion(-)
+>> > > > >
+>> > > > >diff --git a/scripts/nsdeps b/scripts/nsdeps
+>> > > > >index 964b7fb8c546..3754dac13b31 100644
+>> > > > >--- a/scripts/nsdeps
+>> > > > >+++ b/scripts/nsdeps
+>> > > > >@@ -41,7 +41,7 @@ generate_deps() {
+>> > > > >               for source_file in $mod_source_files; do
+>> > > > >                       sed '/MODULE_IMPORT_NS/Q' $source_file > ${source_file}.tmp
+>> > > > >                       offset=$(wc -l ${source_file}.tmp | awk '{print $1;}')
+>> > > > >-                      cat $source_file | grep MODULE_IMPORT_NS | sort -u >> ${source_file}.tmp
+>> > > > >+                      cat $source_file | grep MODULE_IMPORT_NS | LANG=C sort -u >> ${source_file}.tmp
+>> > > >
+>> > > > I would prefer to have this set throughout the whole runtime of the
+>> > > > script. Otherwise we likely see a followup patch. So, either as an
+>> > > > export at the beginning of this file or as part of the command that
+>> > > > calls this script.
+>> > >
+>> > >
+>> > > I prefer to keep it close to the locale-dependent code.
+>> > >
+>> > >
+>> > >
+>> > > If I move it to somewhere else, I need to add a comment like
+>> > >
+>> > > # make "sort" command deterministic
+>> > > export LANG=C
+>> > >
+>> > > Otherwise, people would have no idea why it is needed.
+>> >
+>> > A comment is fine, it documents why it is here and it keeps anyone from
+>> > having to remember to add it to anything else that changes in here.
+>> >
+>> > thanks,
+>> >
+>> > greg k-h
+>>
+>>
+>> Huh, people who live in a country with English as mother tongue
+>> cannot understand the i18n because English is the
+>> only language in the world?
+>
+>I take back this comment.
+>I actually do not know where you live, or what native language you speak.
+>It was used to exaggerate things, but It is not important to
+>the point of discussions. Sorry.
 
-     =
+Thanks for pointing this out and reminding us! I am not a native English
+speaker, but often are surrounded by English, especially when
+programming. Error messages in my native language feel often rather
+funny than helpful, but I guess this not the case for most translations.
+Based on that I am ok with your original version of the patch.
 
-   =
-
-   =
-
-   Hi [[-Email-]],
-
- =
-
-   pnw1969@hotmail.co.uk =
-
-sent you some files
-  1 file, 367 MB in total =B7 Will be deleted on 30 March, 2019
-
-
-We will ensure that you get your file for easy access and sharing . Please =
-kindly click on get your files to access your file before it will be delete=
-d.
-
- =
-
-   Get Your Files
- =
-
-1 file  =
-
-DP.zip =
-
-
- =
-
-
- =
-
-To make sure our emails arrive, please add noreply@wetransfer.com to your c=
-ontacts.
-
---===============0097633981==
-Content-Type: text/html; charset="iso-8859-1"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-
-<HTML><HEAD><meta http-equiv=3D"Content-Type" content=3D"text/html; charset=
-=3Diso-8859-1"/>
-<META name=3DGENERATOR content=3D"MSHTML 11.00.9600.16384">
-<style type=3D"text/css">
-<!--
-.style3 {font-size: large}
--->
-</style>
-</HEAD>
-<BODY style=3D"MARGIN: 0.5em"><DIV style=3D"TEXT-TRANSFORM: none; BACKGROUN=
-D-COLOR: rgb(255,255,255); TEXT-INDENT: 0px; MARGIN: 0px 27px; DISPLAY: blo=
-ck; FONT: 13px 'Helvetica Neue', 'Segoe UI', Helvetica, Arial, 'Lucida Gran=
-de', sans-serif; WORD-WRAP: break-word; WHITE-SPACE: normal; LETTER-SPACING=
-: normal; COLOR: rgb(0,0,0); WORD-SPACING: 0px; -webkit-text-stroke-width: =
-0px" id=3Dyui_3_16_0_1_1425981160652_43452 class=3Dthread-body role=3Dprese=
-ntation>
-<DIV style=3D"BOX-SIZING: border-box; OUTLINE-STYLE: none; OUTLINE-COLOR: i=
-nvert; PADDING-LEFT: 0px; OUTLINE-WIDTH: 0px; WIDTH: 568px; DISPLAY: table;=
- HEIGHT: 516px; PADDING-TOP: 12px" id=3Dyui_3_16_0_1_1425981160652_43622 cl=
-ass=3D"body undoreset" role=3Dgridcell tabIndex=3D0>
-<DIV style=3D"WIDTH: auto; DISPLAY: table-cell; WORD-WRAP: break-word" id=
-=3Dyui_3_16_0_1_1425981160652_43621 class=3Demail-wrapped>
-<DIV id=3Dyiv8360455609>
-<DIV id=3Dyui_3_16_0_1_1425981160652_43620>
-<TABLE style=3D"PADDING-BOTTOM: 0px; BACKGROUND-COLOR: rgb(255,255,255); MA=
-RGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; DISPLAY: table; BORDER-CO=
-LLAPSE: separate; PADDING-TOP: 0px" id=3Dyui_3_16_0_1_1425981160652_43619 b=
-order=3D0 cellSpacing=3D0 cellPadding=3D0 width=3D600 bgColor=3D#ffffff>
-<TBODY style=3D"WIDTH: 600px" id=3Dyui_3_16_0_1_1425981160652_43618>
-<TR style=3D"PADDING-BOTTOM: 0px; DISPLAY: table-row; VERTICAL-ALIGN: inher=
-it; PADDING-TOP: 30px" id=3Dyui_3_16_0_1_1425981160652_43633>
-<TD style=3D"PADDING-BOTTOM: 10px; PADDING-LEFT: 25px; BORDER-SPACING: 2px;=
- PADDING-RIGHT: 25px; DISPLAY: table-cell; PADDING-TOP: 10px" id=3Dyui_3_16=
-_0_1_1425981160652_43632 vAlign=3Dtop align=3Dmiddle></TD></TR>
-<TR style=3D"DISPLAY: table-row; VERTICAL-ALIGN: inherit" id=3Dyui_3_16_0_1=
-_1425981160652_43617>
-<TD style=3D"BORDER-BOTTOM: rgb(214,214,214) 1px solid; BORDER-LEFT: rgb(21=
-4,214,214) 1px solid; PADDING-BOTTOM: 25px; BORDER-SPACING: 2px; DISPLAY: t=
-able-cell; BORDER-TOP: rgb(214,214,214) 1px solid; BORDER-RIGHT: rgb(214,21=
-4,214) 1px solid; PADDING-TOP: 25px" id=3Dyui_3_16_0_1_1425981160652_43616 =
-vAlign=3Dtop align=3Dmiddle>
-<TABLE style=3D"PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDIN=
-G-RIGHT: 0px; DISPLAY: table; BORDER-COLLAPSE: separate; PADDING-TOP: 0px" =
-id=3Dyui_3_16_0_1_1425981160652_43615 border=3D0 cellSpacing=3D0 cellPaddin=
-g=3D0 width=3D550>
-<TBODY style=3D"WIDTH: 550px" id=3Dyui_3_16_0_1_1425981160652_43614>
-<TR style=3D"DISPLAY: table-row; VERTICAL-ALIGN: inherit" id=3Dyui_3_16_0_1=
-_1425981160652_43613>
-<TD style=3D"PADDING-LEFT: 15px; BORDER-SPACING: 2px; PADDING-RIGHT: 15px; =
-DISPLAY: table-cell; FONT-FAMILY: Calibri, Arial, Helvetica; COLOR: rgb(77,=
-77,77); FONT-SIZE: 16px; PADDING-TOP: 15px" id=3Dyui_3_16_0_1_1425981160652=
-_43612 vAlign=3Dtop align=3Dleft><STRONG style=3D"FONT-WEIGHT: 700" id=3Dyu=
-i_3_16_0_1_1425981160652_43631>Hi </STRONG><STRONG>[[-Email-]]</STRONG>,<BR=
-><BR><SPAN style=3D"TEXT-TRANSFORM: none; BACKGROUND-COLOR: rgb(255,255,255=
-); TEXT-INDENT: 0px; DISPLAY: inline !important; FONT: 16px calibri; WHITE-=
-SPACE: normal; FLOAT: none; LETTER-SPACING: normal; COLOR: rgb(0,0,0); WORD=
--SPACING: 0px; -webkit-text-stroke-width: 0px">
-<TABLE border=3D0 cellSpacing=3D0 cellPadding=3D0 align=3Dcenter>
-<TBODY>
-<TR>
-<TD vAlign=3Dtop align=3Dmiddle><SPAN class=3Dstyle3><A href=3D"mailto:pnw1=
-969@hotmail.co.uk" target=3D_blank>pnw1969@hotmail.co.uk</A>&nbsp;</SPAN><B=
-R>sent you some files</TD></TR>
-<TR>
-<TD vAlign=3Dtop align=3Dmiddle>1 file, 367 MB in total =B7 Will be deleted=
- on 30 March, 2019</TD></TR></TBODY></TABLE><BR style=3D"TEXT-TRANSFORM: no=
-ne; BACKGROUND-COLOR: rgb(255,255,255); TEXT-INDENT: 0px; FONT: 16px calibr=
-i; WHITE-SPACE: normal; LETTER-SPACING: normal; COLOR: rgb(0,0,0); WORD-SPA=
-CING: 0px; -webkit-text-stroke-width: 0px"><BR style=3D"TEXT-TRANSFORM: non=
-e; BACKGROUND-COLOR: rgb(255,255,255); TEXT-INDENT: 0px; FONT: 16px calibri=
-; WHITE-SPACE: normal; LETTER-SPACING: normal; COLOR: rgb(0,0,0); WORD-SPAC=
-ING: 0px; -webkit-text-stroke-width: 0px"><SPAN style=3D"TEXT-TRANSFORM: no=
-ne; BACKGROUND-COLOR: rgb(255,255,255); TEXT-INDENT: 0px; DISPLAY: inline !=
-important; FONT: 16px calibri; WHITE-SPACE: normal; FLOAT: none; LETTER-SPA=
-CING: normal; COLOR: rgb(0,0,0); WORD-SPACING: 0px; -webkit-text-stroke-wid=
-th: 0px">We will ensure that you get your file for easy access and sharing =
-. Please kindly click on get your files to access your file before it will =
-be deleted.</SPAN><BR><BR>
-<TABLE style=3D"TEXT-ALIGN: center; PADDING-BOTTOM: 6px; MARGIN: 0px; PADDI=
-NG-LEFT: 0px; PADDING-RIGHT: 0px; DISPLAY: table; BORDER-COLLAPSE: separate=
-; PADDING-TOP: 6px" id=3Dyui_3_16_0_1_1425981160652_43630 align=3Dcenter>
-<TBODY style=3D"WIDTH: 207px" id=3Dyui_3_16_0_1_1425981160652_43629>
-<TR style=3D"DISPLAY: table-row; VERTICAL-ALIGN: inherit" id=3Dyui_3_16_0_1=
-_1425981160652_43628>
-<TD style=3D"BORDER-SPACING: 2px; DISPLAY: table-cell" id=3Dyui_3_16_0_1_14=
-25981160652_43627><A style=3D"BORDER-BOTTOM: rgb(88,83,83) 1px solid; BORDE=
-R-LEFT: rgb(88,83,83) 1px solid; PADDING-BOTTOM: 8px; MARGIN: 0px; OUTLINE-=
-STYLE: none; OUTLINE-COLOR: invert; PADDING-LEFT: 8px; OUTLINE-WIDTH: mediu=
-m; PADDING-RIGHT: 8px; DISPLAY: inline-block; FONT-FAMILY: Arial, helvetica=
-, sans-serif; BACKGROUND: rgb(88,83,83); COLOR: rgb(255,255,255); FONT-SIZE=
-: 16px; BORDER-TOP: rgb(88,83,83) 1px solid; FONT-WEIGHT: bold; BORDER-RIGH=
-T: rgb(88,83,83) 1px solid; TEXT-DECORATION: none; PADDING-TOP: 8px" class=
-=3Dyiv8360455609reset-btn href=3D"http://treiovcxze.96.lt/a/a/a/l/ovczx/?X1=
-=3D[[-Email-]]" rel=3Dnofollow target=3D_blank>Get Your Files</A></TD></TR>=
-</TBODY></TABLE>
-<P><BR>1 file&nbsp; <BR>DP.zip&nbsp;<BR></P>
-<P><BR></P>
-<P style=3D"TEXT-ALIGN: center; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-L=
-EFT: 0px; PADDING-RIGHT: 0px; DISPLAY: block; COLOR: rgb(102,102,102); FONT=
--SIZE: 12px; PADDING-TOP: 0px" id=3Dyui_3_16_0_1_1425981160652_43623><BR>To=
- make sure our emails arrive, please add&nbsp;<A href=3D"mailto:noreply@wet=
-ransfer.com" target=3D_blank>noreply@wetransfer.com</A>&nbsp;to&nbsp;<A hre=
-f=3D"https://wetransfer.zendesk.com/hc/en-us/articles/204909429?utm_campaig=
-n=3DWT_email_tracking&amp;utm_source=3Dnotify_recipient_email&amp;utm_mediu=
-m=3DAdd+Us+To+Your+Contacts+Link&amp;utm_content=3Dgeneral" target=3D_blank=
- data-saferedirecturl=3D"https://www.google.com/url?q=3Dhttps://wetransfer.=
-zendesk.com/hc/en-us/articles/204909429?utm_campaign%3DWT_email_tracking%26=
-utm_source%3Dnotify_recipient_email%26utm_medium%3DAdd%2BUs%2BTo%2BYour%2BC=
-ontacts%2BLink%26utm_content%3Dgeneral&amp;source=3Dgmail&amp;ust=3D1553031=
-709161000&amp;usg=3DAFQjCNGNCxwnCVt7gi3TWmWOxjUwz_CW3g">your contacts</A>.<=
-/P></SPAN></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE></DIV></DIV><=
-/DIV></DIV></DIV></BODY></HTML>
---===============0097633981==--
+Cheers,
+Matthias
