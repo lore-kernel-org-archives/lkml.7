@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A38ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1735C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41E5C21920
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A697521906
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:42:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948120;
-	bh=BK92aw5ufPqlh3+4BPeXJI9ns5H3UaMHbU4iLLNA4FY=;
+	s=default; t=1569948127;
+	bh=tPnWAe0mpthBXwTVbVe4uSBGjgQbQdtxeBaul5khI9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B45/auubjVR4JxC0FYGXfRq6vvN5/JKHsCzk1mrCNIxYpzkEuAbswan4kDtwtRsG3
-	 WFmX6jakdCByjt1cEruahMGqZDav7fmChI6zLZhHz9iC0ruvhWsGb8xk8k2qIWw+Zg
-	 ZoAVxuLYMDcdzgBOrNWBqEpsyXwqy/tDhzK/qd8Y=
+	b=FBwkb0X8Uk4LdHkWsRti8tx6MIrFWsR/natv7UasBjujv+OM/6G1jUwXXK8KEAV0z
+	 VLCVemg092+QJat/w0wSeRBRRNl9YVspnf9cI5IQT1kYHtzMIRDINyVbMY8rtJKuFW
+	 BDAnJfX5s/v+edFuOVFcWBEQ8vB4WExCqz59UZyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731526AbfJAQl6 (ORCPT
+        id S1731644AbfJAQmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:41:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53578 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:42:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731429AbfJAQlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:41:53 -0400
+        id S1731549AbfJAQmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:42:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 239F8205C9;
-        Tue,  1 Oct 2019 16:41:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F41320B7C;
+        Tue,  1 Oct 2019 16:41:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948112;
-        bh=BK92aw5ufPqlh3+4BPeXJI9ns5H3UaMHbU4iLLNA4FY=;
+        s=default; t=1569948119;
+        bh=tPnWAe0mpthBXwTVbVe4uSBGjgQbQdtxeBaul5khI9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uUYtqKjJYfCIxpcvHGcIhzEhAgDP7TJYVV2/8U8fuqGMP3FMz5xey14wSuBzyybrd
-         /+x8lOchatMaN1ygvS0dQPQWTJUHDkP/agRWiU9g4TYxkR/ys0ptFb/8YxQrGva8wu
-         nTRTJ6dJ+St3d0lnfLzsERZLwoTpw2AS1J+V1+3o=
+        b=BHsaDREhWfmVeTgJX1cGSgJAxGARZjuLH/KqRxwAOWQZ+rMZaw7hO1FarVLCZ77dR
+         A2HA47ob2+d5ZK1FdkWiS6q8euTh++xJXncw3c/ELT85ffRCHSYYCRosIY2z9F76UO
+         WpXZYxOUxYZwR4fEzYHSPmYvyddDQBui4k7Pg6c8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trek <trek00@inbox.ru>, Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 19/63] drm/amdgpu: Check for valid number of registers to read
-Date:   Tue,  1 Oct 2019 12:40:41 -0400
-Message-Id: <20191001164125.15398-19-sashal@kernel.org>
+Cc:     =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 25/63] usbnet: ignore endpoints with invalid wMaxPacketSize
+Date:   Tue,  1 Oct 2019 12:40:47 -0400
+Message-Id: <20191001164125.15398-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164125.15398-1-sashal@kernel.org>
 References: <20191001164125.15398-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,37 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trek <trek00@inbox.ru>
+From: Bjørn Mork <bjorn@mork.no>
 
-[ Upstream commit 73d8e6c7b841d9bf298c8928f228fb433676635c ]
+[ Upstream commit 8d3d7c2029c1b360f1a6b0a2fca470b57eb575c0 ]
 
-Do not try to allocate any amount of memory requested by the user.
-Instead limit it to 128 registers. Actually the longest series of
-consecutive allowed registers are 48, mmGB_TILE_MODE0-31 and
-mmGB_MACROTILE_MODE0-15 (0x2644-0x2673).
+Endpoints with zero wMaxPacketSize are not usable for transferring
+data. Ignore such endpoints when looking for valid in, out and
+status pipes, to make the drivers more robust against invalid and
+meaningless descriptors.
 
-Bug: https://bugs.freedesktop.org/show_bug.cgi?id=111273
-Signed-off-by: Trek <trek00@inbox.ru>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+The wMaxPacketSize of these endpoints are used for memory allocations
+and as divisors in many usbnet minidrivers. Avoiding zero is therefore
+critical.
+
+Signed-off-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/usb/usbnet.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-index b17d0545728ee..a103998f72128 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-@@ -662,6 +662,9 @@ static int amdgpu_info_ioctl(struct drm_device *dev, void *data, struct drm_file
- 		if (sh_num == AMDGPU_INFO_MMR_SH_INDEX_MASK)
- 			sh_num = 0xffffffff;
+diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
+index 72514c46b4786..07c00e378a5cd 100644
+--- a/drivers/net/usb/usbnet.c
++++ b/drivers/net/usb/usbnet.c
+@@ -100,6 +100,11 @@ int usbnet_get_endpoints(struct usbnet *dev, struct usb_interface *intf)
+ 			int				intr = 0;
  
-+		if (info->read_mmr_reg.count > 128)
-+			return -EINVAL;
+ 			e = alt->endpoint + ep;
 +
- 		regs = kmalloc_array(info->read_mmr_reg.count, sizeof(*regs), GFP_KERNEL);
- 		if (!regs)
- 			return -ENOMEM;
++			/* ignore endpoints which cannot transfer data */
++			if (!usb_endpoint_maxp(&e->desc))
++				continue;
++
+ 			switch (e->desc.bmAttributes) {
+ 			case USB_ENDPOINT_XFER_INT:
+ 				if (!usb_endpoint_dir_in(&e->desc))
 -- 
 2.20.1
 
