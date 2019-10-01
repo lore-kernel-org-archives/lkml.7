@@ -2,155 +2,131 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9256FC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A53FC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 658F620842
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:34:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="ezKp9xMq"
+	by mail.kernel.org (Postfix) with ESMTP id 3AC1E2133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:34:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389579AbfJAPeX (ORCPT
+        id S2389628AbfJAPe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 11:34:23 -0400
-Received: from mout.web.de ([212.227.17.11]:53777 "EHLO mout.web.de"
+        Tue, 1 Oct 2019 11:34:28 -0400
+Received: from mga02.intel.com ([134.134.136.20]:62567 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727236AbfJAPeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 11:34:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1569944030;
-        bh=9HXEykuWNUVAsJUWBSQTDK1o1l6WAA2Mg1kowcwpGZ4=;
-        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
-        b=ezKp9xMqqbDPet/e4W/1bc2kZi5UMGrAVXHo7fueXfXvGoKTPNy7ZJ4F21KW8DRxe
-         5OaGKPi6eW7duMb1rJlBKZq3B45tmUko+a4QTS9B7obOLFnHQ/Sa3gbhLEIx8Yhpev
-         4jDEG0L8GAStAzPsV34z101UzTX9ObUdjOz5e6ic=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.188.160]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LgpVS-1hlATb4A2o-00oFtv; Tue, 01
- Oct 2019 17:33:50 +0200
-Cc:     linux-kernel@vger.kernel.org,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Martijn Coenen <maco@android.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>
-References: <20191001125742.GD90796@google.com>
-Subject: Re: [Cocci] [RFC] scripts: Fix coccicheck failed
-To:     Matthias Maennich <maennich@google.com>,
-        Yue Haibing <yuehaibing@huawei.com>,
-        Coccinelle <cocci@systeme.lip6.fr>,
-        kernel-janitors@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
- +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
- mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
- lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
- YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
- GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
- rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
- 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
- jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
- BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
- cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
- Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
- g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
- OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
- CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
- LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
- sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
- kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
- i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
- g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
- q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
- NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
- nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
- 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
- 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
- wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
- riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
- DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
- fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
- 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
- xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
- qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
- Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
- Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
- +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
- hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
- /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
- tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
- qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
- Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
- x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
- pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <15b52ec6-1cb4-f419-351a-07241cdb8674@web.de>
-Date:   Tue, 1 Oct 2019 17:33:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        id S1727236AbfJAPe1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 11:34:27 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 08:32:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,571,1559545200"; 
+   d="scan'208";a="205087932"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 01 Oct 2019 08:32:55 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 01 Oct 2019 18:32:54 +0300
+Date:   Tue, 1 Oct 2019 18:32:54 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Mario.Limonciello@dell.com, linux-usb@vger.kernel.org,
+        andreas.noever@gmail.com, michael.jamet@intel.com,
+        YehezkelShB@gmail.com, rajmohan.mani@intel.com,
+        nicholas.johnson-opensource@outlook.com.au, lukas@wunner.de,
+        stern@rowland.harvard.edu, anthony.wong@canonical.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
+Message-ID: <20191001153254.GD2714@lahna.fi.intel.com>
+References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
+ <20191001113830.13028-18-mika.westerberg@linux.intel.com>
+ <20191001124748.GH2954373@kroah.com>
+ <20191001130905.GO2714@lahna.fi.intel.com>
+ <20191001145354.GA3366714@kroah.com>
+ <924ce4d5862c4d859e238c0e706a3d5b@AUSX13MPC105.AMER.DELL.COM>
+ <20191001152213.GB3450435@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20191001125742.GD90796@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Provags-ID: V03:K1:GepFRLFllb+Ct4JtITS1wHh/sRQuKbLTrXNKcJYaZcueL8tbEIG
- Lr5IeATdKtkKoq3p1XgjvTpibMaGd9HiLQkVWhhT1Dn8LLWdklxCieTXRdVfj5iwp4Gxsyt
- dT65bIRyQzun2V4jMRxAvGdQgJLX8AK9t9xufoyePH35JMkZbSAV1TJ5/KOdLLoPr+velMu
- 4dX3ZYvRLtkmLEp8HcQuw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:tRN22yKu0x4=:aV6vMeHVwg7gL8JCvjUZiR
- qehG5U838fq3BqaFyJqXKAPR2Ad5oPlKiuMQIwQNQwt4587votAQ1H6ctsOzfAmWDyyj/g6Bt
- 7lGWApF9ycNfvoWrrMUMlTZOE1PG2Z4dyUCI9c7JtZ7P2BRdeyMacXzndssC60icxn28cmAYg
- Ok0QRz6SmhK1ca5HQlrY1EVrLan5G8PnwtkpZFnrTCJclve4V74kVVAeHm5Rp6t3fYQxsVtlN
- +5S54sQm13u8o9KR3YfbDS1iCwkG6LnxazF8ayytZmWpFu9A09J1Q43r6hAvxs9d8aLPgcVbC
- hkiPg7DAOOWotlRjwG43qi8vhsz3VObZSg4nu5kLQjsebWlvXYFEVPztp/wyVHnP9iITwzXWm
- FmG4NT6MTivZtosVv94HessO9lJuUhAMHJ8eUn6UNTgBQDwDkg7K5KooUAnElpPCCdmQYcGc7
- Vj4qiuj54m1Pj+uwT23i4UX//T0u2fISiJBi3pK9L2xpaLQmTBoFj/HN0m79NYPfIApw44ZUD
- TxbTm9odEGn5BlTBwDOnObHTPFeAkATRNdlgNLAcqwFTgsB8v5v+z8shgEXeXstLiA3luU1o3
- 2ouJ5JxRrd2JHYuh2n8wfRli1+fVX0/Sawqv5hh/sZ0FxaBOlDg71BYN7YWHWuWbVib7IQaUx
- 5u1hvFwx3cU4AGRyMhNKLRUSFZe39e/bD854yb4EoY3Ulqj9wwLqsEhDOQEUhooFzmllkbR8+
- VOOCjq8tWL5J1Nch5WPidjwPXyfhE976BC0I8fk4HPevg2gxk6U7E7sFqI3oV3Out7tVyJnrj
- 3y0myNl5L6G/le5lmVb19QBTUf9osMVQGV2TSrJ+RCZ9KB94MuWCOKvxyRme7xLhUrP07EM7T
- HxWN5+MGG8+BXU0K0vi0q423p1gfOCewtsSlLNX/fxTVeFkq7RHbwGLMC6ZghxtmbuTtyMAjO
- 926h2V+QxJc1qZwLDAzA3fbDMYEJBOJp2tS0VRkIgl5OmrJ0nEc5dLt5pQbDIV15rUxCOgQ5h
- IoBwJGewG5i/lOSRC4qbEle288uGdcmYOG53mKK0u0rvSbLdg4IXyV4Dkbq77guO4FYt3kouT
- qLHZE4fG163LfK5/UjzD5Cp1FRcaGUaC42UkwEt2VPFuRNUGzE+2rQn8LMarwTjvaMVAKgyF0
- TtcP/iO+w+uaAJoqmcqhjUdRYIhGN12usBoWhTk9BqYUDjLx/0x2/bC5OnRg89/PqTrQnynId
- k1RW9npXLZhIpOqdx1SyPWb+FrYDIJ1mcuyfQcd43BAZ23S3TKJjglfG9+mo=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191001152213.GB3450435@kroah.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> >+virtual report
-> >+
-> > @has_ns_import@
-> > declarer name MODULE_IMPORT_NS;
-> > identifier virtual.ns;
-> >
-> >Adding virtual report make the coccicheck go ahead smoothly.
+On Tue, Oct 01, 2019 at 05:22:13PM +0200, Greg KH wrote:
+> On Tue, Oct 01, 2019 at 02:59:06PM +0000, Mario.Limonciello@dell.com wrote:
+> > 
+> > 
+> > > -----Original Message-----
+> > > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Sent: Tuesday, October 1, 2019 9:54 AM
+> > > To: Mika Westerberg
+> > > Cc: linux-usb@vger.kernel.org; Andreas Noever; Michael Jamet; Yehezkel Bernat;
+> > > Rajmohan Mani; Nicholas Johnson; Lukas Wunner; Alan Stern; Limonciello, Mario;
+> > > Anthony Wong; linux-kernel@vger.kernel.org
+> > > Subject: Re: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
+> > > 
+> > > 
+> > > [EXTERNAL EMAIL]
+> > > 
+> > > On Tue, Oct 01, 2019 at 04:09:05PM +0300, Mika Westerberg wrote:
+> > > > On Tue, Oct 01, 2019 at 02:47:48PM +0200, Greg Kroah-Hartman wrote:
+> > > > > > -	  Thunderbolt Controller driver. This driver is required if you
+> > > > > > -	  want to hotplug Thunderbolt devices on Apple hardware or on PCs
+> > > > > > -	  with Intel Falcon Ridge or newer.
+> > > > > > +	  USB4 (Thunderbolt) driver. USB4 is the public spec based on
+> > > > > > +	  Thunderbolt 3 protocol. This driver is required if you want to
+> > > > > > +	  hotplug Thunderbolt and USB4 compliant devices on Apple
+> > > > > > +	  hardware or on PCs with Intel Falcon Ridge or newer.
+> > > > >
+> > > > > Wait, did "old" thunderbolt just get re-branded as USB4?
+> > > >
+> > > > Not but the driver started supporting USB4 as well :)
+> > > >
+> > > > USB4 is pretty much public spec of Thunderbolt 3 but with some
+> > > > differences in register layouts (this is because Thunderbolt uses some
+> > > > vendor specific capabilities which are now moved to more "standard"
+> > > > places).
+> > > 
+> > > Ok, then we need to rename the Kconfig option as well, otherwise no one
+> > > will "know" that this changed, so they will not be prompted for it.
+> > > 
+> > > > > Because if I have an "old" laptop that needs Thunderbolt support, how am
+> > > > > I going to know it is now called USB4 instead?
+> > > >
+> > > > Well the Kconfig option tries to have both names there:
+> > > >
+> > > >   tristate "USB4 (Thunderbolt) support"
+> > > >
+> > > > and then
+> > > >
+> > > >   USB4 (Thunderbolt) driver. USB4 is the public spec based on
+> > > >   Thunderbolt 3 protocol. This driver is required if you want to hotplug
+> > > >   Thunderbolt and USB4 compliant devices on Apple hardware or on PCs
+> > > >   with Intel Falcon Ridge or newer.
+> > > >
+> > > > and the Kconfig option is still CONFIG_THUNDERBOLT. I know this is
+> > > > confusing but I don't have better ideas how we can advertise both. I
+> > > > borrowed this "format" from firewire.
+> > > 
+> > > CONFIG_USB4 instead?
+> > 
+> > How about CONFIG_USB4_PCIE?
+> > 
+> > I think that will help align that certain aspects of USB4 can be built optionally.
+> 
+> What aspects?  We don't have that here at all.
+> 
+> I guess the parts of USB4 that are not just this "hook up the PCIe
+> lane" that need to still be developed?
 
-Such an adjustment might be an interesting solution.
-
-
-> Thanks for reporting and following up with this issue. I certainly did
-> not expect all scripts in scripts/coccinelle to be automatically called
-> by coccicheck
-
-Did you (or any other contributor) test the collaboration of the added
-small SmPL file with the known call interface?
-
-
-> and I still think scripts/coccinelle is the right location
-> for add_namespace.cocci.
-
-I got additional software development ideas around this view in the meantime.
-Would you like to take any other collateral evolution better into account?
-
-Regards,
-Markus
+Actually PCIe tunneling is already there in the driver. USB4 has one bit
+that is needed to be set before PCIe tunneling can happen (we do that in
+patch 17/22) but other than that the existing PCIe tunneling code in the
+driver works as is.
