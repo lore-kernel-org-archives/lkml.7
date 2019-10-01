@@ -2,32 +2,32 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE0AECDFB6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44876ECE588
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CB4421783
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2683121783
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:08:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732667AbfJAGI1 (ORCPT
+        id S1732682AbfJAGIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 02:08:27 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:60507 "EHLO
+        Tue, 1 Oct 2019 02:08:31 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:39575 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732358AbfJAGIS (ORCPT
+        with ESMTP id S1727848AbfJAGIS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Oct 2019 02:08:18 -0400
 Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ore@pengutronix.de>)
-        id 1iFBKY-0005n2-S5; Tue, 01 Oct 2019 08:08:14 +0200
+        id 1iFBKY-0005n1-S5; Tue, 01 Oct 2019 08:08:14 +0200
 Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ore@pengutronix.de>)
-        id 1iFBKW-0006NL-P1; Tue, 01 Oct 2019 08:08:12 +0200
+        id 1iFBKW-0006NC-O1; Tue, 01 Oct 2019 08:08:12 +0200
 From:   Oleksij Rempel <o.rempel@pengutronix.de>
 To:     Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -36,12 +36,10 @@ Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
         "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/3] net: phy: at803x: use PHY_ID_MATCH_EXACT for IDs
-Date:   Tue,  1 Oct 2019 08:08:09 +0200
-Message-Id: <20191001060811.24291-2-o.rempel@pengutronix.de>
+Subject: [PATCH v2 0/3] net: phy: at803x: add ar9331 support
+Date:   Tue,  1 Oct 2019 08:08:08 +0200
+Message-Id: <20191001060811.24291-1-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191001060811.24291-1-o.rempel@pengutronix.de>
-References: <20191001060811.24291-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
@@ -53,63 +51,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use exact match for all IDs. We have no sanity checks, so we can peek
-a device with no exact ID and different register layout.
+changes v2:
+- use PHY_ID_MATCH_EXACT instead of leaky masking
+- remove probe and struct at803x_priv
 
-Suggested-by: Heiner Kallweit <hkallweit1@gmail.com>
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- drivers/net/phy/at803x.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+Oleksij Rempel (3):
+  net: phy: at803x: use PHY_ID_MATCH_EXACT for IDs
+  net: phy: at803x: add ar9331 support
+  net: phy: at803x: remove probe and struct at803x_priv
 
-diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
-index 6ad8b1c63c34..7895dbe600ac 100644
---- a/drivers/net/phy/at803x.c
-+++ b/drivers/net/phy/at803x.c
-@@ -364,9 +364,8 @@ static int at803x_aneg_done(struct phy_device *phydev)
- static struct phy_driver at803x_driver[] = {
- {
- 	/* ATHEROS 8035 */
--	.phy_id			= ATH8035_PHY_ID,
-+	PHY_ID_MATCH_EXACT(ATH8035_PHY_ID),
- 	.name			= "Atheros 8035 ethernet",
--	.phy_id_mask		= AT803X_PHY_ID_MASK,
- 	.probe			= at803x_probe,
- 	.config_init		= at803x_config_init,
- 	.set_wol		= at803x_set_wol,
-@@ -378,9 +377,8 @@ static struct phy_driver at803x_driver[] = {
- 	.config_intr		= at803x_config_intr,
- }, {
- 	/* ATHEROS 8030 */
--	.phy_id			= ATH8030_PHY_ID,
-+	PHY_ID_MATCH_EXACT(ATH8030_PHY_ID),
- 	.name			= "Atheros 8030 ethernet",
--	.phy_id_mask		= AT803X_PHY_ID_MASK,
- 	.probe			= at803x_probe,
- 	.config_init		= at803x_config_init,
- 	.link_change_notify	= at803x_link_change_notify,
-@@ -393,9 +391,8 @@ static struct phy_driver at803x_driver[] = {
- 	.config_intr		= at803x_config_intr,
- }, {
- 	/* ATHEROS 8031 */
--	.phy_id			= ATH8031_PHY_ID,
-+	PHY_ID_MATCH_EXACT(ATH8031_PHY_ID),
- 	.name			= "Atheros 8031 ethernet",
--	.phy_id_mask		= AT803X_PHY_ID_MASK,
- 	.probe			= at803x_probe,
- 	.config_init		= at803x_config_init,
- 	.set_wol		= at803x_set_wol,
-@@ -411,9 +408,7 @@ static struct phy_driver at803x_driver[] = {
- module_phy_driver(at803x_driver);
- 
- static struct mdio_device_id __maybe_unused atheros_tbl[] = {
--	{ ATH8030_PHY_ID, AT803X_PHY_ID_MASK },
--	{ ATH8031_PHY_ID, AT803X_PHY_ID_MASK },
--	{ ATH8035_PHY_ID, AT803X_PHY_ID_MASK },
-+	{ PHY_ID_MATCH_VENDOR(ATH8030_PHY_ID) },
- 	{ }
- };
- 
+ drivers/net/phy/at803x.c | 45 ++++++++++++++--------------------------
+ 1 file changed, 15 insertions(+), 30 deletions(-)
+
 -- 
 2.23.0
 
