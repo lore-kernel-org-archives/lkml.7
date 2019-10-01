@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1945C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 728F7C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86EB32168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 401DF2168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:50:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948596;
-	bh=gT/n4oqc6OGEqUUO2qysr1qAGttbCYzxG2DAiUEliRU=;
+	s=default; t=1569948600;
+	bh=fs1kXOuMAZDK0RFCV/7w0Tm3PE2ZQmsW58TUgfoIP+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jYcWPBt+51HOEoXMvjc7mVf0wz3xdOnMbGGpmhdfZW0fJKaBamlDseiTvU3Vdd+/L
-	 kVeuYBGDvsGuR6R3OQgX3WubzvJmEX2VWVS5hMRtWBpRNQTHGRVPHgZNLVrBd5dZfv
-	 BKayrWGN1cGc1Y1ly3QiIPwf+7TAx63N6JH5qiU4=
+	b=J3Awr5+cHVqqE9cBuGD7Tic9Y2vIixfq+lzasvJ3DNyopWtbzTMCRicld2UKupi3/
+	 suhOG6fx90DOLjA6P8FM3MUKJQT4bFKEGn9+zPFMDcxHDLWYXyJp1dSnWvycLm6xo2
+	 xyF18nukWFA+pMDP13hbaB1YJoG5/g0vHHmGI+3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390056AbfJAQoo (ORCPT
+        id S2388966AbfJAQt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:44:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56786 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:49:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389860AbfJAQod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:44:33 -0400
+        id S2387963AbfJAQoo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:44:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D9F221855;
-        Tue,  1 Oct 2019 16:44:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00611222BE;
+        Tue,  1 Oct 2019 16:44:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948272;
-        bh=gT/n4oqc6OGEqUUO2qysr1qAGttbCYzxG2DAiUEliRU=;
+        s=default; t=1569948283;
+        bh=fs1kXOuMAZDK0RFCV/7w0Tm3PE2ZQmsW58TUgfoIP+o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wfUud0q3IzpEK800OsiY63wNhA2+5IE1qeBqbZ78AVkozXaLkW1581sVHv2KurdQU
-         9V0vvoVO7GezVAL+/n7PEoP7n0YQxaxy7MIkmnWZxEPoB9MNKiGftYzoCDexH1fdYJ
-         wEou2rTa4zix7GGLOIZ1UkG59kOiwnhAiIfltD7s=
+        b=u+cgwDUaRfLDzG6ya7MGYA+4Ux6iOjcgHj3mhlaBzaoGF17PvgDt7DChlEt++Sf7y
+         +EVluZ6rMWIs0EjkPBAWEv9EHNAjKA696oyfKG1bbmkpCq3Nahacj/6kpG1JdGx5NR
+         pqMkudrf8HLPun/okIlVGfig74LUUsvnUUYQ2gGw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ryan Chen <ryan_chen@aspeedtech.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 08/29] watchdog: aspeed: Add support for AST2600
-Date:   Tue,  1 Oct 2019 12:44:02 -0400
-Message-Id: <20191001164423.16406-8-sashal@kernel.org>
+Cc:     Peter Mamonov <pmamonov@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 16/29] net/phy: fix DP83865 10 Mbps HDX loopback disable function
+Date:   Tue,  1 Oct 2019 12:44:10 -0400
+Message-Id: <20191001164423.16406-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164423.16406-1-sashal@kernel.org>
 References: <20191001164423.16406-1-sashal@kernel.org>
@@ -61,45 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ryan Chen <ryan_chen@aspeedtech.com>
+From: Peter Mamonov <pmamonov@gmail.com>
 
-[ Upstream commit b3528b4874480818e38e4da019d655413c233e6a ]
+[ Upstream commit e47488b2df7f9cb405789c7f5d4c27909fc597ae ]
 
-The ast2600 can be supported by the same code as the ast2500.
+According to the DP83865 datasheet "the 10 Mbps HDX loopback can be
+disabled in the expanded memory register 0x1C0.1". The driver erroneously
+used bit 0 instead of bit 1.
 
-Signed-off-by: Ryan Chen <ryan_chen@aspeedtech.com>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20190819051738.17370-3-joel@jms.id.au
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Fixes: 4621bf129856 ("phy: Add file missed in previous commit.")
+Signed-off-by: Peter Mamonov <pmamonov@gmail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/aspeed_wdt.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/phy/national.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
-index fd91007b4e41b..cee7334b2a000 100644
---- a/drivers/watchdog/aspeed_wdt.c
-+++ b/drivers/watchdog/aspeed_wdt.c
-@@ -38,6 +38,7 @@ static const struct aspeed_wdt_config ast2500_config = {
- static const struct of_device_id aspeed_wdt_of_table[] = {
- 	{ .compatible = "aspeed,ast2400-wdt", .data = &ast2400_config },
- 	{ .compatible = "aspeed,ast2500-wdt", .data = &ast2500_config },
-+	{ .compatible = "aspeed,ast2600-wdt", .data = &ast2500_config },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, aspeed_wdt_of_table);
-@@ -257,7 +258,8 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
- 		set_bit(WDOG_HW_RUNNING, &wdt->wdd.status);
- 	}
+diff --git a/drivers/net/phy/national.c b/drivers/net/phy/national.c
+index 2addf1d3f619e..3aa910b3dc89b 100644
+--- a/drivers/net/phy/national.c
++++ b/drivers/net/phy/national.c
+@@ -110,14 +110,17 @@ static void ns_giga_speed_fallback(struct phy_device *phydev, int mode)
  
--	if (of_device_is_compatible(np, "aspeed,ast2500-wdt")) {
-+	if ((of_device_is_compatible(np, "aspeed,ast2500-wdt")) ||
-+		(of_device_is_compatible(np, "aspeed,ast2600-wdt"))) {
- 		u32 reg = readl(wdt->base + WDT_RESET_WIDTH);
+ static void ns_10_base_t_hdx_loopack(struct phy_device *phydev, int disable)
+ {
++	u16 lb_dis = BIT(1);
++
+ 	if (disable)
+-		ns_exp_write(phydev, 0x1c0, ns_exp_read(phydev, 0x1c0) | 1);
++		ns_exp_write(phydev, 0x1c0,
++			     ns_exp_read(phydev, 0x1c0) | lb_dis);
+ 	else
+ 		ns_exp_write(phydev, 0x1c0,
+-			     ns_exp_read(phydev, 0x1c0) & 0xfffe);
++			     ns_exp_read(phydev, 0x1c0) & ~lb_dis);
  
- 		reg &= config->ext_pulse_width_mask;
+ 	pr_debug("10BASE-T HDX loopback %s\n",
+-		 (ns_exp_read(phydev, 0x1c0) & 0x0001) ? "off" : "on");
++		 (ns_exp_read(phydev, 0x1c0) & lb_dis) ? "off" : "on");
+ }
+ 
+ static int ns_config_init(struct phy_device *phydev)
 -- 
 2.20.1
 
