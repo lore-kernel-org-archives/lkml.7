@@ -2,51 +2,53 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA60ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB89EC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C5C12168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD85E2168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:52:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948729;
-	bh=tmXa0FEQRJPapT/YfBJ9PRkdDGPkucied7VAktKeJSI=;
+	s=default; t=1569948734;
+	bh=Ssy2G1RYYjVy0ZSes0pBTBlvxbNL8z8gD+60zY8RVcY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wzVWOjjmWyoCEvsaagc/YG4lz3GinzCAp8FjBQWn5fRmiZ4emcF6XIqgVBpy+Awhb
-	 +/af1ryxcN0c3LfGm7g9A9dlDOicqPZiT27Z9Hm6viO1V30BCjvLW6oE9o9W2OpGB4
-	 0Nylo6d+UL0XMdP2XSgsv9H3pbVvdE4oMRDzsa64=
+	b=lGYAGfHlX+VWf7jY05ppDLuqjU/wMVR+CXBHqmdioajLaNt0Zxq7O80CLiTOWOm47
+	 GU4iQKzlK0xqDhGis2hSoyHJZFzRWY2Ad+fZMRUOtb2P2PXmUfRFD72/FCIBfgSWup
+	 1ZlbP4ClG+Nbojver0NNU/cft3j2wjW1RCykXhfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733163AbfJAQnz (ORCPT
+        id S1733281AbfJAQwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:43:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55780 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:52:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732865AbfJAQnj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:43:39 -0400
+        id S1733140AbfJAQny (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:43:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6BA12190F;
-        Tue,  1 Oct 2019 16:43:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE3F9205C9;
+        Tue,  1 Oct 2019 16:43:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948218;
-        bh=tmXa0FEQRJPapT/YfBJ9PRkdDGPkucied7VAktKeJSI=;
+        s=default; t=1569948233;
+        bh=Ssy2G1RYYjVy0ZSes0pBTBlvxbNL8z8gD+60zY8RVcY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NddOCQEd0GVsTOw1WnVMll2CJLrS8gwJmbwtDzIR+CA+5733Lw9KuFdrwAzCuYQcj
-         prerDrP2B2bmQBwWj7++w3Ql4XJ48h7ZSdHmYbFkCrUxTRgjf1I1UiLTOkxnpJPJcG
-         TdfQu4/RcQqHsCFr7iJkDSi5must5Z+s7bQmcz+U=
+        b=vQdUnSa8BVN6caz+bFzQy4D9yEgFkvlbmsJfZC5QoG7kWb4s7bJn/d0k8/Yo+qcqZ
+         05ncWgCMNOLFKMpBSq1885wtjS9DIUHkv7FoR5JwebBUrNyxIkleJPINR/gxC6I2hp
+         K7xgha5JaJVaIAcsuvAVIJUCydTfbeXHBhp1RiSg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Mamonov <pmamonov@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 20/43] net/phy: fix DP83865 10 Mbps HDX loopback disable function
-Date:   Tue,  1 Oct 2019 12:42:48 -0400
-Message-Id: <20191001164311.15993-20-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 29/43] libnvdimm/nfit_test: Fix acpi_handle redefinition
+Date:   Tue,  1 Oct 2019 12:42:57 -0400
+Message-Id: <20191001164311.15993-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164311.15993-1-sashal@kernel.org>
 References: <20191001164311.15993-1-sashal@kernel.org>
@@ -59,48 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Mamonov <pmamonov@gmail.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit e47488b2df7f9cb405789c7f5d4c27909fc597ae ]
+[ Upstream commit 59f08896f058a92f03a0041b397a1a227c5e8529 ]
 
-According to the DP83865 datasheet "the 10 Mbps HDX loopback can be
-disabled in the expanded memory register 0x1C0.1". The driver erroneously
-used bit 0 instead of bit 1.
+After commit 62974fc389b3 ("libnvdimm: Enable unit test infrastructure
+compile checks"), clang warns:
 
-Fixes: 4621bf129856 ("phy: Add file missed in previous commit.")
-Signed-off-by: Peter Mamonov <pmamonov@gmail.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+In file included from
+../drivers/nvdimm/../../tools/testing/nvdimm/test/iomap.c:15:
+../drivers/nvdimm/../../tools/testing/nvdimm/test/nfit_test.h:206:15:
+warning: redefinition of typedef 'acpi_handle' is a C11 feature
+[-Wtypedef-redefinition]
+typedef void *acpi_handle;
+              ^
+../include/acpi/actypes.h:424:15: note: previous definition is here
+typedef void *acpi_handle;      /* Actually a ptr to a NS Node */
+              ^
+1 warning generated.
+
+The include chain:
+
+iomap.c ->
+    linux/acpi.h ->
+        acpi/acpi.h ->
+            acpi/actypes.h
+    nfit_test.h
+
+Avoid this by including linux/acpi.h in nfit_test.h, which allows us to
+remove both the typedef and the forward declaration of acpi_object.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/660
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Link: https://lore.kernel.org/r/20190918042148.77553-1-natechancellor@gmail.com
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/national.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ tools/testing/nvdimm/test/nfit_test.h | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/net/phy/national.c b/drivers/net/phy/national.c
-index 2b1e336961f9c..bf4070ef6b84f 100644
---- a/drivers/net/phy/national.c
-+++ b/drivers/net/phy/national.c
-@@ -110,14 +110,17 @@ static void ns_giga_speed_fallback(struct phy_device *phydev, int mode)
+diff --git a/tools/testing/nvdimm/test/nfit_test.h b/tools/testing/nvdimm/test/nfit_test.h
+index 33752e06ff8d0..3de57cc8716b9 100644
+--- a/tools/testing/nvdimm/test/nfit_test.h
++++ b/tools/testing/nvdimm/test/nfit_test.h
+@@ -12,6 +12,7 @@
+  */
+ #ifndef __NFIT_TEST_H__
+ #define __NFIT_TEST_H__
++#include <linux/acpi.h>
+ #include <linux/list.h>
+ #include <linux/uuid.h>
+ #include <linux/ioport.h>
+@@ -234,9 +235,6 @@ struct nd_intel_lss {
+ 	__u32 status;
+ } __packed;
  
- static void ns_10_base_t_hdx_loopack(struct phy_device *phydev, int disable)
- {
-+	u16 lb_dis = BIT(1);
-+
- 	if (disable)
--		ns_exp_write(phydev, 0x1c0, ns_exp_read(phydev, 0x1c0) | 1);
-+		ns_exp_write(phydev, 0x1c0,
-+			     ns_exp_read(phydev, 0x1c0) | lb_dis);
- 	else
- 		ns_exp_write(phydev, 0x1c0,
--			     ns_exp_read(phydev, 0x1c0) & 0xfffe);
-+			     ns_exp_read(phydev, 0x1c0) & ~lb_dis);
- 
- 	pr_debug("10BASE-T HDX loopback %s\n",
--		 (ns_exp_read(phydev, 0x1c0) & 0x0001) ? "off" : "on");
-+		 (ns_exp_read(phydev, 0x1c0) & lb_dis) ? "off" : "on");
- }
- 
- static int ns_config_init(struct phy_device *phydev)
+-union acpi_object;
+-typedef void *acpi_handle;
+-
+ typedef struct nfit_test_resource *(*nfit_test_lookup_fn)(resource_size_t);
+ typedef union acpi_object *(*nfit_test_evaluate_dsm_fn)(acpi_handle handle,
+ 		 const guid_t *guid, u64 rev, u64 func,
 -- 
 2.20.1
 
