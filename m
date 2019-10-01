@@ -7,58 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BDCDC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2565C388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71FED21855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B11A42133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569930082;
-	bh=/M8hhzHzQ7LMuVypgNhNPgB3dAq3VnJEzFH3W8UEoDM=;
+	s=default; t=1569930083;
+	bh=Cwsci49v8dT8I9J7rGEIRkLDATPpF2/ewZwMURoCHnc=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=ZGx+Qe5wkNWRzkfw00PATGfcmqhbEAKj3FPn/pia23O1CVXsGjP0JRXVJw0gxSND7
-	 MI7XRYiNpUFBs5qp/cdxAKmiamN6IYs+ER/u+KoDadjBUnrM1EViXQ8AyO6eldZXlq
-	 +OPk4AxUCYBYZ2c0zjfg4pzLK2ZZDahRfWXVqgTw=
+	b=xmamYAQwNyfiaDGY4JZj/WgrW9A7iiPnxXKbktqSclAiB7vqw/RVqnpNpIrRXPZzp
+	 CTOzWbTgZXtYIo4Frquq/PkBDaKMeWNIJUC3iKxGG4pBUKf83jPB1WlUKNbmfkXDKs
+	 Qy1HKWMnZKuY5XoKrm6K1XvZIFAY2K74rkhLLiIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387705AbfJALlV (ORCPT
+        id S2387694AbfJALlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 07:41:21 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:41282 "EHLO
+        Tue, 1 Oct 2019 07:41:19 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:41242 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387650AbfJALlP (ORCPT
+        with ESMTP id S2387639AbfJALlN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 07:41:15 -0400
+        Tue, 1 Oct 2019 07:41:13 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=z6hLIza3q6cYchvVHYiHKN/ZHrei8SPlYx9ockTASYE=; b=m96scqtLNyc6
-        h7zycSmfCjk8HcAr5pjagGXNgf3F26sVMHXmBbFWwr+7GRl4aFIMGM3zuhSQyFMdNY0gLQVl3qn4B
-        +nq26LmeHKsoxfSx908CLa6DAOK+AdVxbXx9lHUWQC1AnJ/KFoLZt0sXyp6c87LEFTAGZv8ixZjy2
-        9Mp8o=;
+        List-Archive; bh=OCrO7F+Q4EMqWzna+2ATTFpi6NFCoH1Jp9Nac69dYYA=; b=MqTjx+TBlDvZ
+        AMZm/UPkLbInMVYZOxqKEtXkohTw/22y+dNmB0cD32k7kvNPCGnGtZnrYrSngyBpm2bKMDQgc3gUe
+        y+O5Nn93aCHcXk5YOoVf8x8k/QfdYvR+F11+lGW/zMIuZvWdgcXodAAm1RQJFWXV5h6KjI5xTlutC
+        /hx1A=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iFGWg-0004Yg-FL; Tue, 01 Oct 2019 11:41:06 +0000
+        id 1iFGWi-0004ZV-Ma; Tue, 01 Oct 2019 11:41:08 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id EAA1C27429C0; Tue,  1 Oct 2019 12:41:05 +0100 (BST)
+        id 2D26327429C0; Tue,  1 Oct 2019 12:41:08 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Markus Elfring <elfring@users.sourceforge.net>
-Cc:     kernel-janitors@vger.kernel.org,
-        Leilk Liu <leilk.liu@mediatek.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
+To:     Pragnesh Patel <pragnesh.patel@sifive.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-spi@vger.kernel.org,
         Mark Brown <broonie@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Applied "spi: mediatek: Use devm_platform_ioremap_resource() in mtk_spi_slave_probe()" to the spi tree
-In-Reply-To: <225b76ca-a367-4bef-d8ce-42c7af9242a5@web.de>
+        Mark Rutland <mark.rutland@arm.com>, palmer@sifive.com,
+        paul.walmsley@sifive.com, Rob Herring <robh+dt@kernel.org>
+Subject: Applied "spi: dt-bindings: Convert spi-sifive binding to json-schema" to the spi tree
+In-Reply-To: <1568804927-13565-1-git-send-email-pragnesh.patel@sifive.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191001114105.EAA1C27429C0@ypsilon.sirena.org.uk>
-Date:   Tue,  1 Oct 2019 12:41:05 +0100 (BST)
+Message-Id: <20191001114108.2D26327429C0@ypsilon.sirena.org.uk>
+Date:   Tue,  1 Oct 2019 12:41:08 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,7 +64,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: mediatek: Use devm_platform_ioremap_resource() in mtk_spi_slave_probe()
+   spi: dt-bindings: Convert spi-sifive binding to json-schema
 
 has been applied to the spi tree at
 
@@ -91,54 +89,159 @@ to this mail.
 Thanks,
 Mark
 
-From 6cdcb5d394413d906773f1ae2efaa86485d6d6e1 Mon Sep 17 00:00:00 2001
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Sat, 21 Sep 2019 15:12:33 +0200
-Subject: [PATCH] spi: mediatek: Use devm_platform_ioremap_resource() in
- mtk_spi_slave_probe()
+From 9c12e34a3be127454b26054043c3b302bca08fdc Mon Sep 17 00:00:00 2001
+From: Pragnesh Patel <pragnesh.patel@sifive.com>
+Date: Wed, 18 Sep 2019 16:38:39 +0530
+Subject: [PATCH] spi: dt-bindings: Convert spi-sifive binding to json-schema
 
-Simplify this function implementation by using a known wrapper function.
+Convert the spi-sifive binding to DT schema format.
 
-This issue was detected by using the Coccinelle software.
-
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-Link: https://lore.kernel.org/r/225b76ca-a367-4bef-d8ce-42c7af9242a5@web.de
+Signed-off-by: Pragnesh Patel <pragnesh.patel@sifive.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Link: https://lore.kernel.org/r/1568804927-13565-1-git-send-email-pragnesh.patel@sifive.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-slave-mt27xx.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+ .../devicetree/bindings/spi/spi-sifive.txt    | 37 --------
+ .../devicetree/bindings/spi/spi-sifive.yaml   | 86 +++++++++++++++++++
+ 2 files changed, 86 insertions(+), 37 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/spi/spi-sifive.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-sifive.yaml
 
-diff --git a/drivers/spi/spi-slave-mt27xx.c b/drivers/spi/spi-slave-mt27xx.c
-index 61bc43b0fe57..44edaa360405 100644
---- a/drivers/spi/spi-slave-mt27xx.c
-+++ b/drivers/spi/spi-slave-mt27xx.c
-@@ -368,7 +368,6 @@ static int mtk_spi_slave_probe(struct platform_device *pdev)
- {
- 	struct spi_controller *ctlr;
- 	struct mtk_spi_slave *mdata;
--	struct resource *res;
- 	int irq, ret;
- 
- 	ctlr = spi_alloc_slave(&pdev->dev, sizeof(*mdata));
-@@ -392,17 +391,8 @@ static int mtk_spi_slave_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, ctlr);
- 
- 	init_completion(&mdata->xfer_done);
+diff --git a/Documentation/devicetree/bindings/spi/spi-sifive.txt b/Documentation/devicetree/bindings/spi/spi-sifive.txt
+deleted file mode 100644
+index 3f5c6e438972..000000000000
+--- a/Documentation/devicetree/bindings/spi/spi-sifive.txt
++++ /dev/null
+@@ -1,37 +0,0 @@
+-SiFive SPI controller Device Tree Bindings
+-------------------------------------------
 -
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!res) {
--		ret = -ENODEV;
--		dev_err(&pdev->dev, "failed to determine base address\n");
--		goto err_put_ctlr;
--	}
+-Required properties:
+-- compatible		: Should be "sifive,<chip>-spi" and "sifive,spi<version>".
+-			  Supported compatible strings are:
+-			  "sifive,fu540-c000-spi" for the SiFive SPI v0 as integrated
+-			  onto the SiFive FU540 chip, and "sifive,spi0" for the SiFive
+-			  SPI v0 IP block with no chip integration tweaks.
+-			  Please refer to sifive-blocks-ip-versioning.txt for details
+-- reg			: Physical base address and size of SPI registers map
+-			  A second (optional) range can indicate memory mapped flash
+-- interrupts		: Must contain one entry
+-- interrupt-parent	: Must be core interrupt controller
+-- clocks		: Must reference the frequency given to the controller
+-- #address-cells	: Must be '1', indicating which CS to use
+-- #size-cells		: Must be '0'
 -
- 	mdata->dev = &pdev->dev;
+-Optional properties:
+-- sifive,fifo-depth		: Depth of hardware queues; defaults to 8
+-- sifive,max-bits-per-word	: Maximum bits per word; defaults to 8
 -
--	mdata->base = devm_ioremap_resource(&pdev->dev, res);
-+	mdata->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(mdata->base)) {
- 		ret = PTR_ERR(mdata->base);
- 		goto err_put_ctlr;
+-SPI RTL that corresponds to the IP block version numbers can be found here:
+-https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/spi
+-
+-Example:
+-	spi: spi@10040000 {
+-		compatible = "sifive,fu540-c000-spi", "sifive,spi0";
+-		reg = <0x0 0x10040000 0x0 0x1000 0x0 0x20000000 0x0 0x10000000>;
+-		interrupt-parent = <&plic>;
+-		interrupts = <51>;
+-		clocks = <&tlclk>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-		sifive,fifo-depth = <8>;
+-		sifive,max-bits-per-word = <8>;
+-	};
+diff --git a/Documentation/devicetree/bindings/spi/spi-sifive.yaml b/Documentation/devicetree/bindings/spi/spi-sifive.yaml
+new file mode 100644
+index 000000000000..140e4351a19f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/spi-sifive.yaml
+@@ -0,0 +1,86 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/spi/spi-sifive.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: SiFive SPI controller
++
++maintainers:
++  - Pragnesh Patel <pragnesh.patel@sifive.com>
++  - Paul Walmsley  <paul.walmsley@sifive.com>
++  - Palmer Dabbelt <palmer@sifive.com>
++
++allOf:
++  - $ref: "spi-controller.yaml#"
++
++properties:
++  compatible:
++    items:
++      - const: sifive,fu540-c000-spi
++      - const: sifive,spi0
++
++    description:
++      Should be "sifive,<chip>-spi" and "sifive,spi<version>".
++      Supported compatible strings are -
++      "sifive,fu540-c000-spi" for the SiFive SPI v0 as integrated
++      onto the SiFive FU540 chip, and "sifive,spi0" for the SiFive
++      SPI v0 IP block with no chip integration tweaks.
++      Please refer to sifive-blocks-ip-versioning.txt for details
++
++      SPI RTL that corresponds to the IP block version numbers can be found here -
++      https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/spi
++
++  reg:
++    maxItems: 1
++
++    description:
++      Physical base address and size of SPI registers map
++      A second (optional) range can indicate memory mapped flash
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++    description:
++      Must reference the frequency given to the controller
++
++  sifive,fifo-depth:
++    description:
++      Depth of hardware queues; defaults to 8
++    allOf:
++      - $ref: "/schemas/types.yaml#/definitions/uint32"
++      - enum: [ 8 ]
++      - default: 8
++
++  sifive,max-bits-per-word:
++    description:
++      Maximum bits per word; defaults to 8
++    allOf:
++      - $ref: "/schemas/types.yaml#/definitions/uint32"
++      - enum: [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]
++      - default: 8
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++
++examples:
++  - |
++    spi: spi@10040000 {
++      compatible = "sifive,fu540-c000-spi", "sifive,spi0";
++      reg = <0x0 0x10040000 0x0 0x1000 0x0 0x20000000 0x0 0x10000000>;
++      interrupt-parent = <&plic>;
++      interrupts = <51>;
++      clocks = <&tlclk>;
++      #address-cells = <1>;
++      #size-cells = <0>;
++      sifive,fifo-depth = <8>;
++      sifive,max-bits-per-word = <8>;
++    };
++
++...
 -- 
 2.20.1
 
