@@ -2,57 +2,59 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB41DECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33DD3C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FB132168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F268020659
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:48:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948475;
-	bh=jvAHYF044tOe4IyKrq8IstBz4ghDMkwNfGr78ETNkJw=;
+	s=default; t=1569948484;
+	bh=kgzfr/vRrO0hm5BZsVAdICd2cayTt5lbLSD11QS0AvY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SpmOxDelmawpdXEJcbJ/OeEe7qmLd4wq7FglD+hzg/bealUoCZZErDrjEd2CGPDEE
-	 yVJASp3QlFfEQ1xK6QQBtqzQM9J6RbezNUv7aZrLyG6vOg862N2nih5X/t5NN3UGTm
-	 uy8ZYqnFO7/tEh6go/A76TNmyziY/nltTQ0aIPls=
+	b=ekG9nJpLdZzA8CItabk9oSDacNSW0RUpElPoCFb2MXZfCLSR5zDyhUXJ0sJlYVy2y
+	 bmhQH3XJ3Us3xb38gATTantvaxmPZyqu2o05D3WLCvU3hP/QTBXS+U8E4EnuJVt9n7
+	 hAp9T9jnRdTk/M5KeBn+LOtIdMyeYJleuzqWpHf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388728AbfJAQry (ORCPT
+        id S2387517AbfJAQpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:47:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57838 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:45:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390261AbfJAQpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:45:24 -0400
+        id S2388017AbfJAQpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:45:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 764B3205C9;
-        Tue,  1 Oct 2019 16:45:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1360D205C9;
+        Tue,  1 Oct 2019 16:45:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948323;
-        bh=jvAHYF044tOe4IyKrq8IstBz4ghDMkwNfGr78ETNkJw=;
+        s=default; t=1569948302;
+        bh=kgzfr/vRrO0hm5BZsVAdICd2cayTt5lbLSD11QS0AvY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JXkKRx46EFNoe/9OtMMn8DKaJpOUX7pSO09ezymC/BvLW6TeNeV7nULAHd21It6gT
-         4Ox6eX8I4L7pBeqzKh+O8i2WX5wQvt3bqzKfQzEru2cwoU9YsVfiLBNGyvd3Om8Rg8
-         UFeGIDHAk+263gu1/CnANM4yA5bWmrP09i6QZfOQ=
+        b=Z7dm1OTpEHlSwvkjsBsEXZIYXVrouBBn52Y1KrUKZQyP0smZ9WVLXRhcmQmRAnNpT
+         tEYdd/BiNuhPQTLPBFtTzTWYIWKGrx2tyPRV5YtULH8b7Hnl8nAbo13dz+KTZtR1IL
+         wNPYjIpMZcgLGvWHNzHahLjESt3CY9uGvZ1jDO8w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takeshi Misawa <jeliantsurux@gmail.com>,
-        syzbot+d9c8bf24e56416d7ce2c@syzkaller.appspotmail.com,
-        Guillaume Nault <gnault@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-ppp@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 14/19] ppp: Fix memory leak in ppp_write
-Date:   Tue,  1 Oct 2019 12:45:00 -0400
-Message-Id: <20191001164505.16708-14-sashal@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 27/29] perf unwind: Fix libunwind build failure on i386 systems
+Date:   Tue,  1 Oct 2019 12:44:21 -0400
+Message-Id: <20191001164423.16406-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191001164505.16708-1-sashal@kernel.org>
-References: <20191001164505.16708-1-sashal@kernel.org>
+In-Reply-To: <20191001164423.16406-1-sashal@kernel.org>
+References: <20191001164423.16406-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,64 +64,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takeshi Misawa <jeliantsurux@gmail.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit 4c247de564f1ff614d11b3bb5313fb70d7b9598b ]
+[ Upstream commit 26acf400d2dcc72c7e713e1f55db47ad92010cc2 ]
 
-When ppp is closing, __ppp_xmit_process() failed to enqueue skb
-and skb allocated in ppp_write() is leaked.
+Naresh Kamboju reported, that on the i386 build pr_err()
+doesn't get defined properly due to header ordering:
 
-syzbot reported :
-BUG: memory leak
-unreferenced object 0xffff88812a17bc00 (size 224):
-  comm "syz-executor673", pid 6952, jiffies 4294942888 (age 13.040s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000d110fff9>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
-    [<00000000d110fff9>] slab_post_alloc_hook mm/slab.h:522 [inline]
-    [<00000000d110fff9>] slab_alloc_node mm/slab.c:3262 [inline]
-    [<00000000d110fff9>] kmem_cache_alloc_node+0x163/0x2f0 mm/slab.c:3574
-    [<000000002d616113>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:197
-    [<000000000167fc45>] alloc_skb include/linux/skbuff.h:1055 [inline]
-    [<000000000167fc45>] ppp_write+0x48/0x120 drivers/net/ppp/ppp_generic.c:502
-    [<000000009ab42c0b>] __vfs_write+0x43/0xa0 fs/read_write.c:494
-    [<00000000086b2e22>] vfs_write fs/read_write.c:558 [inline]
-    [<00000000086b2e22>] vfs_write+0xee/0x210 fs/read_write.c:542
-    [<00000000a2b70ef9>] ksys_write+0x7c/0x130 fs/read_write.c:611
-    [<00000000ce5e0fdd>] __do_sys_write fs/read_write.c:623 [inline]
-    [<00000000ce5e0fdd>] __se_sys_write fs/read_write.c:620 [inline]
-    [<00000000ce5e0fdd>] __x64_sys_write+0x1e/0x30 fs/read_write.c:620
-    [<00000000d9d7b370>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:296
-    [<0000000006e6d506>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  perf-in.o: In function `libunwind__x86_reg_id':
+  tools/perf/util/libunwind/../../arch/x86/util/unwind-libunwind.c:109:
+  undefined reference to `pr_err'
 
-Fix this by freeing skb, if ppp is closing.
-
-Fixes: 6d066734e9f0 ("ppp: avoid loop in xmit recursion detection code")
-Reported-and-tested-by: syzbot+d9c8bf24e56416d7ce2c@syzkaller.appspotmail.com
-Signed-off-by: Takeshi Misawa <jeliantsurux@gmail.com>
-Reviewed-by: Guillaume Nault <gnault@redhat.com>
-Tested-by: Guillaume Nault <gnault@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ppp/ppp_generic.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/arch/x86/util/unwind-libunwind.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ppp/ppp_generic.c b/drivers/net/ppp/ppp_generic.c
-index 1e4969d90f1a6..801bab5968d04 100644
---- a/drivers/net/ppp/ppp_generic.c
-+++ b/drivers/net/ppp/ppp_generic.c
-@@ -1432,6 +1432,8 @@ static void __ppp_xmit_process(struct ppp *ppp, struct sk_buff *skb)
- 			netif_wake_queue(ppp->dev);
- 		else
- 			netif_stop_queue(ppp->dev);
-+	} else {
-+		kfree_skb(skb);
- 	}
- 	ppp_xmit_unlock(ppp);
- }
+diff --git a/tools/perf/arch/x86/util/unwind-libunwind.c b/tools/perf/arch/x86/util/unwind-libunwind.c
+index 05920e3edf7a7..47357973b55b2 100644
+--- a/tools/perf/arch/x86/util/unwind-libunwind.c
++++ b/tools/perf/arch/x86/util/unwind-libunwind.c
+@@ -1,11 +1,11 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+ #include <errno.h>
++#include "../../util/debug.h"
+ #ifndef REMOTE_UNWIND_LIBUNWIND
+ #include <libunwind.h>
+ #include "perf_regs.h"
+ #include "../../util/unwind.h"
+-#include "../../util/debug.h"
+ #endif
+ 
+ #ifdef HAVE_ARCH_X86_64_SUPPORT
 -- 
 2.20.1
 
