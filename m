@@ -7,51 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFD3C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1885AECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66A4821920
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7EA22168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:44:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948290;
-	bh=bY2jc3nxBIDvZpaERL5o1qwHDvDvHBnQDEO6tckBch0=;
+	s=default; t=1569948296;
+	bh=heI1w7nY6McwTvjkvsOTZmwnaKryPkblh2fn31KdwDI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c+QGgo/fRSATqw9Byhxjta7ok7J0mblufOOqr4TirpyS5S1xiPqAyCzLc8jG02J9u
-	 KsUMm/GX5JQU7zOYqeJiVOQu+3//+3qF1fL5LThqeVDPEYNkT7PPFZ0on7azHUd6yc
-	 W4IY9mHYM++1n4pDB7k4uf4VIBGzx3geIe2MCOYY=
+	b=jM2fF287fuPXnwMPv7bRw7duEV7slypsf11om2vfiFfKwQ5sjAadNJ6T5kQXJHGSE
+	 EXXVNMNp5YRJnrmxAw0Lfa2pckAOMU22rtpbFh3XZDaEUS7f0pNfeIimZuYA56nQw/
+	 D9iplm7r+CH+5TjmlEyEwcuOnshg2GqAL5hMCSPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390082AbfJAQot (ORCPT
+        id S2390114AbfJAQoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:44:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56922 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:44:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390012AbfJAQoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:44:38 -0400
+        id S2390027AbfJAQok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:44:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C54C21906;
-        Tue,  1 Oct 2019 16:44:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C1A721D80;
+        Tue,  1 Oct 2019 16:44:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948278;
-        bh=bY2jc3nxBIDvZpaERL5o1qwHDvDvHBnQDEO6tckBch0=;
+        s=default; t=1569948280;
+        bh=heI1w7nY6McwTvjkvsOTZmwnaKryPkblh2fn31KdwDI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EiE6TBqjpB/wr2mLbiR4dk7QWDZCI/Q6pzEkLl1Lu7HOY+VuQBjt4j9gwQ0IP+nB1
-         xxK3eB/hvz4A07XGSV4XtsHXb+vUlrhYrQJjmLSA21sg9yPciDmcFYfskH3sG4O+j5
-         BHvOhIi5ECk1dplOTy5vu7154JKWsNHMx4AqalEE=
+        b=p3JxL0QehT9RtB9drhPvLC52XGzR9N3YIxQCrJYTh/gbv7r1Gd2bRCuw1GMh9twRL
+         msK9whXgfgtQKZIzzMWwK5fdlfW4VpWKupjZJ54ru5XUZb6CZI+iGrdPv57FVkPB99
+         c13OgzZEKf3jAdKlWZsehMbgzqom34WgojIlJW1E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trondmy@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 11/29] pNFS: Ensure we do clear the return-on-close layout stateid on fatal errors
-Date:   Tue,  1 Oct 2019 12:44:05 -0400
-Message-Id: <20191001164423.16406-11-sashal@kernel.org>
+Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 13/29] pwm: stm32-lp: Add check in case requested period cannot be achieved
+Date:   Tue,  1 Oct 2019 12:44:07 -0400
+Message-Id: <20191001164423.16406-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164423.16406-1-sashal@kernel.org>
 References: <20191001164423.16406-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,45 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
 
-[ Upstream commit 9c47b18cf722184f32148784189fca945a7d0561 ]
+[ Upstream commit c91e3234c6035baf5a79763cb4fcd5d23ce75c2b ]
 
-IF the server rejected our layout return with a state error such as
-NFS4ERR_BAD_STATEID, or even a stale inode error, then we do want
-to clear out all the remaining layout segments and mark that stateid
-as invalid.
+LPTimer can use a 32KHz clock for counting. It depends on clock tree
+configuration. In such a case, PWM output frequency range is limited.
+Although unlikely, nothing prevents user from requesting a PWM frequency
+above counting clock (32KHz for instance):
+- This causes (prd - 1) = 0xffff to be written in ARR register later in
+the apply() routine.
+This results in badly configured PWM period (and also duty_cycle).
+Add a check to report an error is such a case.
 
-Fixes: 1c5bd76d17cca ("pNFS: Enable layoutreturn operation for...")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/pnfs.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/pwm/pwm-stm32-lp.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index 96867fb159bf7..ec04cce31814b 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -1319,10 +1319,15 @@ void pnfs_roc_release(struct nfs4_layoutreturn_args *args,
- 	const nfs4_stateid *res_stateid = NULL;
- 	struct nfs4_xdr_opaque_data *ld_private = args->ld_private;
- 
--	if (ret == 0) {
--		arg_stateid = &args->stateid;
-+	switch (ret) {
-+	case -NFS4ERR_NOMATCHING_LAYOUT:
-+		break;
-+	case 0:
- 		if (res->lrs_present)
- 			res_stateid = &res->stateid;
-+		/* Fallthrough */
-+	default:
-+		arg_stateid = &args->stateid;
- 	}
- 	pnfs_layoutreturn_free_lsegs(lo, arg_stateid, &args->range,
- 			res_stateid);
+diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
+index 9793b296108ff..3f2e4ef695d75 100644
+--- a/drivers/pwm/pwm-stm32-lp.c
++++ b/drivers/pwm/pwm-stm32-lp.c
+@@ -59,6 +59,12 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	/* Calculate the period and prescaler value */
+ 	div = (unsigned long long)clk_get_rate(priv->clk) * state->period;
+ 	do_div(div, NSEC_PER_SEC);
++	if (!div) {
++		/* Clock is too slow to achieve requested period. */
++		dev_dbg(priv->chip.dev, "Can't reach %u ns\n",	state->period);
++		return -EINVAL;
++	}
++
+ 	prd = div;
+ 	while (div > STM32_LPTIM_MAX_ARR) {
+ 		presc++;
 -- 
 2.20.1
 
