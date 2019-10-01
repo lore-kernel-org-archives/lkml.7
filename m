@@ -2,145 +2,279 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B39DFECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 23:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5F0C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 23:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82D4521D7B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 23:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5577E21924
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 23:07:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZTGpaP2g"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TqlVV4aR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfJAXG0 (ORCPT
+        id S1728555AbfJAXHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 19:06:26 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33873 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbfJAXGZ (ORCPT
+        Tue, 1 Oct 2019 19:07:49 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44098 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbfJAXHt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 19:06:25 -0400
-Received: by mail-ot1-f65.google.com with SMTP id m19so13130499otp.1;
-        Tue, 01 Oct 2019 16:06:24 -0700 (PDT)
+        Tue, 1 Oct 2019 19:07:49 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i14so10737456pgt.11
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 16:07:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fytjfeL2hboW36P5ZuUGnqHSPo8QfeVFETfrBcqUG5k=;
-        b=ZTGpaP2g4NMZOIs14s7NeYu98JVG+DdiPC2DrhYdw0NmT1LIaAPI5iTpREmTgsLPdp
-         HGu9TEyjKdC0OTGR1OrigUrTyvZ5dwS6mIPygsz+72Vrr1iyJC0Q9U141rTy1QjqrnTV
-         ydZVxuUx2q9hvwThFYZ2nyl7Yg8+S88jj8j8nl010bU568L6ctG554GKEBw9L03a56ry
-         jHeZVx5qFKacKkog2Kt3adYCp+itsdoXRl3uMai8yuMo0w99IwyBVIk8EEtHe6d97uy5
-         bZgWwweRtHhMoS9lV/N21m/4wYFybZhl1VuN+8gJ56vSV5WYMTO9g1XK/9hjqp8wSPnL
-         Y+Yg==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+Nf7W/69rcbuSCjp3T5cjBQS4Gd3M1DUTau7shEAvBo=;
+        b=TqlVV4aRNdNJI/F4t+UvY1imNZCNpHkFYzdwAZRWjvxazB056mnYe1qHRWC6KUYq+z
+         iSJNy6Os93x9pQOaW/lYUA3GScy2NV3Wlsk6OHQFWvbZS0F1cT0NtKV48S1jve0inqDy
+         3weCrTIfx4rISC/82sP2LHIKHMYbaJANnsEwQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fytjfeL2hboW36P5ZuUGnqHSPo8QfeVFETfrBcqUG5k=;
-        b=UsUF7zUhrMp4CouyCVBvQP4xFE6wD+kxhf5vGtI9vFoen3mPp7ExAU5S2DDQi2xLay
-         ENBwCyzFtUdFnZYOgEQ31Pl/gX+lho1rnXOrsZhrKFBE9IrWVJ4cIhqrybU3UGtQZxb8
-         NiJNdlm3HY3mqR+Y38RShZ6/Notav6O7WFYb9DOBPehO/BnMc0LNncE6dr6wkuTM3+ll
-         d9OQni0/BJ0hpN0aWpzhAnQ2UxB4ygr24B2EN+HleV4B/WDcZg2xNZOTZVVVq83i8qDD
-         SpREdOsxIerllflkpjbQ/lyt52mKTKVcxcQ5khgErHRbR8OekNg8l403oopGrnyu+4dp
-         sR/w==
-X-Gm-Message-State: APjAAAXt1FOgtdTgiKHz4o57TXt2BkvJRvzMPSu2gciAib6tT/xUmAEO
-        tvyfl5UbX+twPuUCfVvJoTL0Fw+hgOESupDqsgM=
-X-Google-Smtp-Source: APXvYqyAPbUlTT2vTBJG8UBvvwFR8eifgmKPhHf1LuKPLyTznT9OARbyY06LozvEjr7X0NWxRQKfFlKkdHazJLzmEy4=
-X-Received: by 2002:a9d:6a59:: with SMTP id h25mr344859otn.324.1569971184510;
- Tue, 01 Oct 2019 16:06:24 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+Nf7W/69rcbuSCjp3T5cjBQS4Gd3M1DUTau7shEAvBo=;
+        b=r7Nwi5gqa/e04D8rj94cdG70dAq+Ur0yOz9bphv99/pxjax9UZMUgGvBgDEvVCOMdi
+         G4wlUaiS8sKIRcZ/EHOuVhiTEDwMSy/1gIbBegyykcgrErMmbYQ/MwEmPRLj41+K2ERn
+         ESXZMBQT+u4baRuVmHJ9UZptkyNTFv15R2yyP3KOgJIf2ie/Nd9SdIuPHM2Fic6zZNG0
+         eg7wA3oP7ZnVEGv3cRwHtGywlpMM4Py1S07yYzVDUhl8GoUThYRshRd5E4esdBsyY1Vw
+         yOcVNWE+h0FTLOp4mZPG4w/+gObwt9B+VTgccHAtxfGvj6v7Gb2qqa693Ssq7uL8f53D
+         kFiw==
+X-Gm-Message-State: APjAAAUe97nS/L4YRC2A+5+YV27eMgISExI1c5qU742hosEtacPHac3t
+        ackvrIvB9x6CLgImYcbykXVAlg==
+X-Google-Smtp-Source: APXvYqwHNpEZQEilkNVmA3O5/XhCn/v8v+BBDw5V7KfhdqV5vHV6BNpopnq9XLH3i0O2OgOBpUpVkw==
+X-Received: by 2002:a17:90a:170e:: with SMTP id z14mr721514pjd.119.1569971268070;
+        Tue, 01 Oct 2019 16:07:48 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id y10sm15879881pfe.148.2019.10.01.16.07.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Oct 2019 16:07:47 -0700 (PDT)
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] ARM: dts: rockchip: Use interpolated brightness tables for veyron
+Date:   Tue,  1 Oct 2019 16:07:43 -0700
+Message-Id: <20191001160735.1.Ic9fd698810ea569c465350154da40b85d24f805b@changeid>
+X-Mailer: git-send-email 2.23.0.444.g18eeb5a265-goog
 MIME-Version: 1.0
-References: <20191001211419.11245-1-stuart.w.hayes@gmail.com>
- <20191001211419.11245-4-stuart.w.hayes@gmail.com> <b37c8640-9f48-8d0d-9e2e-80920c1e19e7@gmail.com>
-In-Reply-To: <b37c8640-9f48-8d0d-9e2e-80920c1e19e7@gmail.com>
-From:   Stuart Hayes <stuart.w.hayes@gmail.com>
-Date:   Tue, 1 Oct 2019 18:06:12 -0500
-Message-ID: <CAL5oW00xbnYk5=nT9v3rS4QTLShGfvzBgQLtsFh7xO2OyZqL3A@mail.gmail.com>
-Subject: Re: [PATCH 3/3] PCI: pciehp: Add dmi table for in-band presence disabled
-To:     "Alex G." <mr.nuke.me@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        lukas@wunner.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 4:36 PM Alex G. <mr.nuke.me@gmail.com> wrote:
->
->
->
-> On 10/1/19 4:14 PM, Stuart Hayes wrote:
-> > Some systems have in-band presence detection disabled for hot-plug PCI slots,
-> > but do not report this in the slot capabilities 2 (SLTCAP2) register.  On
-> > these systems, presence detect can become active well after the link is
-> > reported to be active, which can cause the slots to be disabled after a
-> > device is connected.
-> >
-> > Add a dmi table to flag these systems as having in-band presence disabled.
-> >
-> > Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-> > ---
-> >   drivers/pci/hotplug/pciehp_hpc.c | 14 ++++++++++++++
-> >   1 file changed, 14 insertions(+)
-> >
-> > diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-> > index 1282641c6458..1dd01e752587 100644
-> > --- a/drivers/pci/hotplug/pciehp_hpc.c
-> > +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> > @@ -14,6 +14,7 @@
-> >
-> >   #define dev_fmt(fmt) "pciehp: " fmt
-> >
-> > +#include <linux/dmi.h>
-> >   #include <linux/kernel.h>
-> >   #include <linux/types.h>
-> >   #include <linux/jiffies.h>
-> > @@ -26,6 +27,16 @@
-> >   #include "../pci.h"
-> >   #include "pciehp.h"
-> >
-> > +static const struct dmi_system_id inband_presence_disabled_dmi_table[] = {
-> > +     {
-> > +             .ident = "Dell System",
-> > +             .matches = {
-> > +                     DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc"),
-> > +             },
-> > +     },
-> > +     {}
-> > +};
-> > +
->
-> I'm not sure that all Dell systems that were ever made or will be made
-> have in-band presence disabled on all their hotplug slots.
->
-> This was a problem with the NVMe hot-swap bays on 14G servers. I can't
-> guarantee that any other slot or machine will need this workaround. The
-> best way I found to implement this is to check for the PCI-ID of the
-> switches behind the port.
->
-> Alex
+Use interpolated brightness tables (added by commit 573fe6d1c25
+("backlight: pwm_bl: Linear interpolation between
+brightness-levels") for veyron, instead of specifying every single
+step.
 
-That is definitely true, not all Dell systems actually disable in-band
-presence detect and need this.  However, we have a number of systems
-that need this, and we don't have the PCI IDs for all of these yet, so
-we decided it was preferable to just make all Dell systems wait for
-presence detect to go active.  Since all of our systems support
-presence detect (either in-band or out-of-band), it shouldn't have any
-negative effects--on systems that support in-band presence, it will
-already be active and it won't spend any extra time waiting for it.
-If someone plugs in a device that has hot-plug slots with no support
-for presence detect at all (even though Dell doesn't support any), it
-should still work--it'll just take an extra second for them to come
-up.
+Another option would be to switch to a perceptual brightness curve
+(CIE 1931), with the caveat that it would change the behavior of
+the backlight. Also the concept of a minimum brightness level is
+currently not supported for CIE 1931 curves.
+
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+---
+
+ arch/arm/boot/dts/rk3288-veyron-edp.dtsi   | 35 ++--------------------
+ arch/arm/boot/dts/rk3288-veyron-jaq.dts    | 35 ++--------------------
+ arch/arm/boot/dts/rk3288-veyron-minnie.dts | 35 ++--------------------
+ arch/arm/boot/dts/rk3288-veyron-tiger.dts  | 35 ++--------------------
+ 4 files changed, 8 insertions(+), 132 deletions(-)
+
+diff --git a/arch/arm/boot/dts/rk3288-veyron-edp.dtsi b/arch/arm/boot/dts/rk3288-veyron-edp.dtsi
+index 773bedca872f..e95c89fe0545 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-edp.dtsi
++++ b/arch/arm/boot/dts/rk3288-veyron-edp.dtsi
+@@ -41,39 +41,8 @@
+ 
+ 	backlight: backlight {
+ 		compatible = "pwm-backlight";
+-		brightness-levels = <
+-			  0   1   2   3   4   5   6   7
+-			  8   9  10  11  12  13  14  15
+-			 16  17  18  19  20  21  22  23
+-			 24  25  26  27  28  29  30  31
+-			 32  33  34  35  36  37  38  39
+-			 40  41  42  43  44  45  46  47
+-			 48  49  50  51  52  53  54  55
+-			 56  57  58  59  60  61  62  63
+-			 64  65  66  67  68  69  70  71
+-			 72  73  74  75  76  77  78  79
+-			 80  81  82  83  84  85  86  87
+-			 88  89  90  91  92  93  94  95
+-			 96  97  98  99 100 101 102 103
+-			104 105 106 107 108 109 110 111
+-			112 113 114 115 116 117 118 119
+-			120 121 122 123 124 125 126 127
+-			128 129 130 131 132 133 134 135
+-			136 137 138 139 140 141 142 143
+-			144 145 146 147 148 149 150 151
+-			152 153 154 155 156 157 158 159
+-			160 161 162 163 164 165 166 167
+-			168 169 170 171 172 173 174 175
+-			176 177 178 179 180 181 182 183
+-			184 185 186 187 188 189 190 191
+-			192 193 194 195 196 197 198 199
+-			200 201 202 203 204 205 206 207
+-			208 209 210 211 212 213 214 215
+-			216 217 218 219 220 221 222 223
+-			224 225 226 227 228 229 230 231
+-			232 233 234 235 236 237 238 239
+-			240 241 242 243 244 245 246 247
+-			248 249 250 251 252 253 254 255>;
++		brightness-levels = <0 255>;
++		num-interpolated-steps = <254>;
+ 		default-brightness-level = <128>;
+ 		enable-gpios = <&gpio7 RK_PA2 GPIO_ACTIVE_HIGH>;
+ 		pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/rk3288-veyron-jaq.dts b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
+index 56ad9a43a6c2..5e10cc644875 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-jaq.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
+@@ -21,39 +21,8 @@
+ 
+ &backlight {
+ 	/* Jaq panel PWM must be >= 3%, so start non-zero brightness at 8 */
+-	brightness-levels = <
+-		  0
+-		  8   9  10  11  12  13  14  15
+-		 16  17  18  19  20  21  22  23
+-		 24  25  26  27  28  29  30  31
+-		 32  33  34  35  36  37  38  39
+-		 40  41  42  43  44  45  46  47
+-		 48  49  50  51  52  53  54  55
+-		 56  57  58  59  60  61  62  63
+-		 64  65  66  67  68  69  70  71
+-		 72  73  74  75  76  77  78  79
+-		 80  81  82  83  84  85  86  87
+-		 88  89  90  91  92  93  94  95
+-		 96  97  98  99 100 101 102 103
+-		104 105 106 107 108 109 110 111
+-		112 113 114 115 116 117 118 119
+-		120 121 122 123 124 125 126 127
+-		128 129 130 131 132 133 134 135
+-		136 137 138 139 140 141 142 143
+-		144 145 146 147 148 149 150 151
+-		152 153 154 155 156 157 158 159
+-		160 161 162 163 164 165 166 167
+-		168 169 170 171 172 173 174 175
+-		176 177 178 179 180 181 182 183
+-		184 185 186 187 188 189 190 191
+-		192 193 194 195 196 197 198 199
+-		200 201 202 203 204 205 206 207
+-		208 209 210 211 212 213 214 215
+-		216 217 218 219 220 221 222 223
+-		224 225 226 227 228 229 230 231
+-		232 233 234 235 236 237 238 239
+-		240 241 242 243 244 245 246 247
+-		248 249 250 251 252 253 254 255>;
++	brightness-levels = <8 255>;
++	num-interpolated-steps = <246>;
+ };
+ 
+ &rk808 {
+diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+index 6b0e1cb1f681..503278e60d6b 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+@@ -39,39 +39,8 @@
+ 
+ &backlight {
+ 	/* Minnie panel PWM must be >= 1%, so start non-zero brightness at 3 */
+-	brightness-levels = <
+-			  0   3   4   5   6   7
+-			  8   9  10  11  12  13  14  15
+-			 16  17  18  19  20  21  22  23
+-			 24  25  26  27  28  29  30  31
+-			 32  33  34  35  36  37  38  39
+-			 40  41  42  43  44  45  46  47
+-			 48  49  50  51  52  53  54  55
+-			 56  57  58  59  60  61  62  63
+-			 64  65  66  67  68  69  70  71
+-			 72  73  74  75  76  77  78  79
+-			 80  81  82  83  84  85  86  87
+-			 88  89  90  91  92  93  94  95
+-			 96  97  98  99 100 101 102 103
+-			104 105 106 107 108 109 110 111
+-			112 113 114 115 116 117 118 119
+-			120 121 122 123 124 125 126 127
+-			128 129 130 131 132 133 134 135
+-			136 137 138 139 140 141 142 143
+-			144 145 146 147 148 149 150 151
+-			152 153 154 155 156 157 158 159
+-			160 161 162 163 164 165 166 167
+-			168 169 170 171 172 173 174 175
+-			176 177 178 179 180 181 182 183
+-			184 185 186 187 188 189 190 191
+-			192 193 194 195 196 197 198 199
+-			200 201 202 203 204 205 206 207
+-			208 209 210 211 212 213 214 215
+-			216 217 218 219 220 221 222 223
+-			224 225 226 227 228 229 230 231
+-			232 233 234 235 236 237 238 239
+-			240 241 242 243 244 245 246 247
+-			248 249 250 251 252 253 254 255>;
++	brightness-levels = <3 255>;
++	num-interpolated-steps = <251>;
+ };
+ 
+ &i2c_tunnel {
+diff --git a/arch/arm/boot/dts/rk3288-veyron-tiger.dts b/arch/arm/boot/dts/rk3288-veyron-tiger.dts
+index 27557203ae33..e50367564dc6 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-tiger.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-tiger.dts
+@@ -23,39 +23,8 @@
+ 
+ &backlight {
+ 	/* Tiger panel PWM must be >= 1%, so start non-zero brightness at 3 */
+-	brightness-levels = <
+-		  0   3   4   5   6   7
+-		  8   9  10  11  12  13  14  15
+-		 16  17  18  19  20  21  22  23
+-		 24  25  26  27  28  29  30  31
+-		 32  33  34  35  36  37  38  39
+-		 40  41  42  43  44  45  46  47
+-		 48  49  50  51  52  53  54  55
+-		 56  57  58  59  60  61  62  63
+-		 64  65  66  67  68  69  70  71
+-		 72  73  74  75  76  77  78  79
+-		 80  81  82  83  84  85  86  87
+-		 88  89  90  91  92  93  94  95
+-		 96  97  98  99 100 101 102 103
+-		104 105 106 107 108 109 110 111
+-		112 113 114 115 116 117 118 119
+-		120 121 122 123 124 125 126 127
+-		128 129 130 131 132 133 134 135
+-		136 137 138 139 140 141 142 143
+-		144 145 146 147 148 149 150 151
+-		152 153 154 155 156 157 158 159
+-		160 161 162 163 164 165 166 167
+-		168 169 170 171 172 173 174 175
+-		176 177 178 179 180 181 182 183
+-		184 185 186 187 188 189 190 191
+-		192 193 194 195 196 197 198 199
+-		200 201 202 203 204 205 206 207
+-		208 209 210 211 212 213 214 215
+-		216 217 218 219 220 221 222 223
+-		224 225 226 227 228 229 230 231
+-		232 233 234 235 236 237 238 239
+-		240 241 242 243 244 245 246 247
+-		248 249 250 251 252 253 254 255>;
++	brightness-levels = <3 255>;
++	num-interpolated-steps = <251>;
+ };
+ 
+ &backlight_regulator {
+-- 
+2.23.0.444.g18eeb5a265-goog
+
