@@ -6,91 +6,96 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF89C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C73ECE589
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A2B621924
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91B0F21924
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:19:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OoctPRYo";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="B3KJ+qTX"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VlXmjYoF";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="i/277xzR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731528AbfJALQ4 (ORCPT
+        id S1731583AbfJALTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 07:16:56 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:57610 "EHLO
+        Tue, 1 Oct 2019 07:19:14 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:58570 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731397AbfJALQ4 (ORCPT
+        with ESMTP id S1725900AbfJALTN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 07:16:56 -0400
+        Tue, 1 Oct 2019 07:19:13 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 3E77760A05; Tue,  1 Oct 2019 11:16:55 +0000 (UTC)
+        id A75D36014B; Tue,  1 Oct 2019 11:19:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569928615;
-        bh=7cR0arRKi/SCYXtaaoqTZQnZ5L3q7IfxNdGtWUL6QIU=;
+        s=default; t=1569928752;
+        bh=TBrp107vqvrm5nw0Dhs+vhjDes58fG5CBnoGfgq8iXI=;
         h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=OoctPRYo+kYjnsAKoqb/C8IdV0mcUTqp5j88KB53c82Lmqz/8PFeiAAZ9oj5zyYo4
-         KgSie/TWdJmrXJ/qC9cgoBsHKGFtmK9t3lK23yHe1TH78RtSyGEoFHCNRKUXcWx6Z6
-         DcUZqeMgZiviKO9xm9uwhjTcOzZUpikHj7/bh+Tg=
+        b=VlXmjYoFUICdyB08W+dyJtvJIibcEmbJeznAgp567xSEcSHFhVFqh4kgmyHKDFnZX
+         aapgFOwWYW3SHtISGkJVVB3HA3/CAFoA3a4c3IfiDeOLvaYZUqpX/2pmEcEVxh+h1X
+         mK63UvmTF4CAszgawXTW41g90305LNcpCQHdNRY8=
 Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3F1BC601D4;
-        Tue,  1 Oct 2019 11:16:53 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 18BE8601D4;
+        Tue,  1 Oct 2019 11:19:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569928614;
-        bh=7cR0arRKi/SCYXtaaoqTZQnZ5L3q7IfxNdGtWUL6QIU=;
+        s=default; t=1569928751;
+        bh=TBrp107vqvrm5nw0Dhs+vhjDes58fG5CBnoGfgq8iXI=;
         h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=B3KJ+qTXLRTd5OSU+pQoICBuLgtTxcrv+1kb1ucLMz39WstQdZmU7+xAMb7rkB2X2
-         RpbP25h0hyHaym53L1aRSkp0DqmgShgiiHTHo3XAHGeQmwyJx+if9mdk30aK4VQ0kX
-         cmtWtvGT1gJ8asbRdc+CEJVMuPOrhXXmWsWsCfOw=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3F1BC601D4
+        b=i/277xzREeUwLrLvgJRl7K3i3RaG8xSFWuw2pL4BELv8bKW64Bf5YlJiykvAyIN2v
+         csY63r99jCRCIWjYLYKavWg0j2RJQXAiYWpsw1vnPrxjLI1vwT+3gWPfs2cknQKJKZ
+         +fHDdkV/vJl4LcUyNEfncdNOZ7qKE1/u3eEjedxg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 18BE8601D4
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 2/2] ath10k: switch to ieee80211_tx_dequeue_ni
+Subject: Re: [PATCH] ath9k_hw: fix uninitialized variable data
 From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190617200140.6189-2-erik.stromdahl@gmail.com>
-References: <20190617200140.6189-2-erik.stromdahl@gmail.com>
-To:     Erik Stromdahl <erik.stromdahl@gmail.com>
-Cc:     johannes@sipsolutions.net, davem@davemloft.net,
-        linux-wireless@vger.kernel.org, ath10k@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Erik Stromdahl <erik.stromdahl@gmail.com>
+In-Reply-To: <20190926225604.9342-1-efremov@linux.com>
+References: <20190926225604.9342-1-efremov@linux.com>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     unlisted-recipients:; (no To-header on input)
+        Denis Efremov <efremov@linux.com>,
+        ath9k-devel@qca.qualcomm.com, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rajkumar Manoharan <rmanohar@qca.qualcomm.com>,
+        "John W . Linville" <linville@tuxdriver.com>,
+        "David S. Miller" <davem@davemloft.net>, stable@vger.kernel.org
+Illegal-Object: Syntax error in Cc: address found on vger.kernel.org:
+        Cc:     unlisted-recipients:; (no To-header on input)Denis Efremov <efremov@linux.com>
+                                                                     ^-missing end of address
 User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20191001111655.3E77760A05@smtp.codeaurora.org>
-Date:   Tue,  1 Oct 2019 11:16:55 +0000 (UTC)
+Message-Id: <20191001111912.A75D36014B@smtp.codeaurora.org>
+Date:   Tue,  1 Oct 2019 11:19:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Erik Stromdahl <erik.stromdahl@gmail.com> wrote:
+Denis Efremov <efremov@linux.com> wrote:
 
-> Since ath10k_mac_tx_push_txq() can be called from process context, we
-> must explicitly disable softirqs before the call into mac80211.
+> Currently, data variable in ar9003_hw_thermo_cal_apply() could be
+> uninitialized if ar9300_otp_read_word() will fail to read the value.
+> Initialize data variable with 0 to prevent an undefined behavior. This
+> will be enough to handle error case when ar9300_otp_read_word() fails.
 > 
-> By calling ieee80211_tx_dequeue_ni() instead of ieee80211_tx_dequeue()
-> we make sure softirqs are always disabled even in the case when
-> ath10k_mac_tx_push_txq() is called from process context.
-> 
-> Calling ieee80211_tx_dequeue_ni() with softirq's already disabled
-> (e.g., from softirq context) should be safe as the local_bh_disable()
-> and local_bh_enable() functions (called from ieee80211_tx_dequeue_ni)
-> are fully reentrant.
-> 
-> Signed-off-by: Erik Stromdahl <erik.stromdahl@gmail.com>
+> Fixes: 80fe43f2bbd5 ("ath9k_hw: Read and configure thermocal for AR9462")
+> Cc: Rajkumar Manoharan <rmanohar@qca.qualcomm.com>
+> Cc: John W. Linville <linville@tuxdriver.com>
+> Cc: Kalle Valo <kvalo@codeaurora.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Denis Efremov <efremov@linux.com>
 > Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
 Patch applied to ath-next branch of ath.git, thanks.
 
-306547608c84 ath10k: switch to ieee80211_tx_dequeue_ni
+80e84f36412e ath9k_hw: fix uninitialized variable data
 
 -- 
-https://patchwork.kernel.org/patch/11000363/
+https://patchwork.kernel.org/patch/11163437/
 
 https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
