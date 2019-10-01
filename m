@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 570C5C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35384ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2997C21783
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 033202190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:51:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948701;
-	bh=X3S8WQ7UT0+IkdAe8bBvvWbrx78vCKcUbqkRwP0+dPU=;
+	s=default; t=1569948704;
+	bh=rl7ZIeGi2KWZp1Bkg/Y0Ga7FW5CfX8TJo1HQJxkG2+Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hmG9z+e6OtjSugAJVRs4dVoLe3aFFoczJ+3VM5qUiESbMHjvlJ/zNeN7TO8hGO8cv
-	 1PmmjLPPAdbCULJMtEFr5fdSy1ykpBsclDSO+q7B+jEUhCIklfVg1MpeKeh1GoIJJH
-	 3e+VodsI8BrUijV9gup+m4uDnCQHiswX2TPJroxs=
+	b=02m+5gNVznjT9tmanCXRVSzeQ/x4DOnL56SOq9owQ1QcLcWtcqFTSWvvV+NyImklo
+	 yzSoqlg0PBkB1RndBNK1y5jFddNh7DyQ97vrsYpQLRnDm8AycijalWFcdrPSHpMvNe
+	 12A5xqmGK9ywsEQZDVxquHX8aQaLRaKg/g00PIGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389203AbfJAQvk (ORCPT
+        id S2387477AbfJAQoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:51:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56354 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:44:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733194AbfJAQoH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:44:07 -0400
+        id S1733060AbfJAQnu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:43:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C46F2190F;
-        Tue,  1 Oct 2019 16:44:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EF4621855;
+        Tue,  1 Oct 2019 16:43:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948246;
-        bh=X3S8WQ7UT0+IkdAe8bBvvWbrx78vCKcUbqkRwP0+dPU=;
+        s=default; t=1569948229;
+        bh=rl7ZIeGi2KWZp1Bkg/Y0Ga7FW5CfX8TJo1HQJxkG2+Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CAhyeW6C2ERsXdRg96YOvDY0h9G6drhtS7Xb2yy557GcB8NZGyrzyGdRMJXkdmaxZ
-         1zdgyPIbeZvoX7TWLp1x9h/hzNq48ijO8oIl4kL5ncUwOi2rK+t2NxjKYu0aQEKzjN
-         tdTX6N4zIWB1H9JQ2dVv+JCOCxSu3yPJ6Nb1yGTg=
+        b=fF6/HnCMAeVlm8/nUh3lmFhi6IAc0aOZcoFV6GvDk9mEmt3I5/x4+i3EKoU/IWUy9
+         o4dv+it5AdmIbtc1ophOcIJlOV5kZRt3gizkIfTZ6NXr6dM0iHjSRrM52hhpMTfpu9
+         x+pLvy0S7e9vnL75pg1uHcmUbcRl1cQaT4rmLU/o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, kexec@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 36/43] kexec: bail out upon SIGKILL when allocating memory.
-Date:   Tue,  1 Oct 2019 12:43:04 -0400
-Message-Id: <20191001164311.15993-36-sashal@kernel.org>
+Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 27/43] fuse: fix memleak in cuse_channel_open
+Date:   Tue,  1 Oct 2019 12:42:55 -0400
+Message-Id: <20191001164311.15993-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164311.15993-1-sashal@kernel.org>
 References: <20191001164311.15993-1-sashal@kernel.org>
@@ -62,43 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+From: zhengbin <zhengbin13@huawei.com>
 
-[ Upstream commit 7c3a6aedcd6aae0a32a527e68669f7dd667492d1 ]
+[ Upstream commit 9ad09b1976c562061636ff1e01bfc3a57aebe56b ]
 
-syzbot found that a thread can stall for minutes inside kexec_load() after
-that thread was killed by SIGKILL [1].  It turned out that the reproducer
-was trying to allocate 2408MB of memory using kimage_alloc_page() from
-kimage_load_normal_segment().  Let's check for SIGKILL before doing memory
-allocation.
+If cuse_send_init fails, need to fuse_conn_put cc->fc.
 
-[1] https://syzkaller.appspot.com/bug?id=a0e3436829698d5824231251fad9d8e998f94f5e
+cuse_channel_open->fuse_conn_init->refcount_set(&fc->count, 1)
+                 ->fuse_dev_alloc->fuse_conn_get
+                 ->fuse_dev_free->fuse_conn_put
 
-Link: http://lkml.kernel.org/r/993c9185-d324-2640-d061-bed2dd18b1f7@I-love.SAKURA.ne.jp
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Reported-by: syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: cc080e9e9be1 ("fuse: introduce per-instance fuse_dev structure")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/kexec_core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/fuse/cuse.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 23a83a4da38a1..f50b90d0d1c28 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -301,6 +301,8 @@ static struct page *kimage_alloc_pages(gfp_t gfp_mask, unsigned int order)
- {
- 	struct page *pages;
- 
-+	if (fatal_signal_pending(current))
-+		return NULL;
- 	pages = alloc_pages(gfp_mask & ~__GFP_ZERO, order);
- 	if (pages) {
- 		unsigned int count, i;
+diff --git a/fs/fuse/cuse.c b/fs/fuse/cuse.c
+index 8f68181256c00..f057c213c453a 100644
+--- a/fs/fuse/cuse.c
++++ b/fs/fuse/cuse.c
+@@ -518,6 +518,7 @@ static int cuse_channel_open(struct inode *inode, struct file *file)
+ 	rc = cuse_send_init(cc);
+ 	if (rc) {
+ 		fuse_dev_free(fud);
++		fuse_conn_put(&cc->fc);
+ 		return rc;
+ 	}
+ 	file->private_data = fud;
 -- 
 2.20.1
 
