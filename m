@@ -7,55 +7,59 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F20C388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B123AECE589
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41BFF21855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F765222C7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569930066;
-	bh=W5EcmPM/bJo0JDzbbLUBbLq6kHKKPjVhhfgINoU5apo=;
+	s=default; t=1569930068;
+	bh=KpTC1ixdLBiJqz5fvsnf8pCm5e1oKxW152A2QXmtozY=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=NNt5jPOt3i2A9BxeuEN8fG//v/IYKqjeU0RK+oFFWzNXy9LoPjUNx3bFaDMAxWjZq
-	 SsL4lVmW/3ydVkJE2sxAMa3YzBHtkEgtOJFzZRCF8TWxORf/+kYTeRv6muFxgE/j96
-	 4c86o8JXOK+YAEyOkcv0dSzbqfzJd3hDL30bNHF8=
+	b=oNRpc9V8kJt8WCIpNe/Jv7Cqtj4ygiz4/mIkdDy4/oLoEOf66GF1s+SZj8lmYP0EY
+	 /rtHc0LDLPnla3q6SgdkNVW68q4tNDH9zFI+a0ZbL0AmneXoPALrzVGmusavanmqRZ
+	 Maipj6Sb04lcjv+p6XgCAFIoATz+mg0Z9rgUv64w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387582AbfJALlF (ORCPT
+        id S2387599AbfJALlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 07:41:05 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40814 "EHLO
+        Tue, 1 Oct 2019 07:41:07 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40752 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387557AbfJALlD (ORCPT
+        with ESMTP id S2387538AbfJALlC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 07:41:03 -0400
+        Tue, 1 Oct 2019 07:41:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=VNyirlbo32jI74Gnx32OywMdUtsIIVh9GP/R2nfj/v4=; b=Frr2ZOaaFUYE
-        74AZiv+7tXVoVcLD8SeKaeizv+IwZT9V8NkQbKn9ZhuZdIbgv8afh5XkVA691S0QcK/UyhFYZWl7V
-        /gqm+ZR1ERucCEYN02wfVo/BfigXg+PNU0MuxySHuBf94VWF+oUgTnZVlFfy3Q4r08hhJFTt/y/NY
-        iJALc=;
+        List-Archive; bh=J7yyok7EgwSLFPHzLp/yUCoO3tHmw6Vh5y9GcDVlxFk=; b=FVkhLUQVyayW
+        Kkzu0jN74+INu8rGDPFImqpfPBxjiEtFXRy3dL/VZp7SWaFbIqdRNhKKK10+ivcLX6pqBRVngW/Uo
+        vn0+IO1HnPdIzGNU5Tr8UivXQBicSbAD6ctllvMZE1XLYzVXHzLpW1rc3NSx3UuCbVGkIgRZzGv7G
+        Q1o8o=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iFGWO-0004TJ-O0; Tue, 01 Oct 2019 11:40:48 +0000
+        id 1iFGWL-0004SR-Ty; Tue, 01 Oct 2019 11:40:46 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 3491227429C0; Tue,  1 Oct 2019 12:40:48 +0100 (BST)
+        id 5F1C72742A30; Tue,  1 Oct 2019 12:40:45 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Frank Shi <shifu0704@thundersoft.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org, dmurphy@ti.com,
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        devicetree@vger.kernel.org, festevam@gmail.com, lars@metafoo.de,
         lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, navada@ti.com, perex@perex.cz,
-        robh+dt@kernel.org, tiwai@suse.com
-Subject: Applied "dt-bindings: ASoC: Add tas2770 smart PA dt bindings" to the asoc tree
-In-Reply-To: <1568962709-19185-1-git-send-email-shifu0704@thundersoft.com>
+        linuxppc-dev@lists.ozlabs.org, Mark Brown <broonie@kernel.org>,
+        mark.rutland@arm.com, nicoleotsuka@gmail.com,
+        Nicolin Chen <nicoleotsuka@gmail.com>, perex@perex.cz,
+        robh+dt@kernel.org, timur@kernel.org, tiwai@suse.com,
+        Xiubo.Lee@gmail.com
+Subject: Applied "ASoC: fsl_asrc: Fix error with S24_3LE format bitstream in i.MX8" to the asoc tree
+In-Reply-To: <b6a4de2bbf960ef291ee902afe4388bd0fc1d347.1569493933.git.shengjiu.wang@nxp.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191001114048.3491227429C0@ypsilon.sirena.org.uk>
-Date:   Tue,  1 Oct 2019 12:40:48 +0100 (BST)
+Message-Id: <20191001114045.5F1C72742A30@ypsilon.sirena.org.uk>
+Date:   Tue,  1 Oct 2019 12:40:45 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -63,7 +67,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   dt-bindings: ASoC: Add tas2770 smart PA dt bindings
+   ASoC: fsl_asrc: Fix error with S24_3LE format bitstream in i.MX8
 
 has been applied to the asoc tree at
 
@@ -88,64 +92,165 @@ to this mail.
 Thanks,
 Mark
 
-From 4b7151dadfd450b837b6b28073ad9f19f4a7547c Mon Sep 17 00:00:00 2001
-From: Frank Shi <shifu0704@thundersoft.com>
-Date: Fri, 20 Sep 2019 14:58:28 +0800
-Subject: [PATCH] dt-bindings: ASoC: Add tas2770 smart PA dt bindings
+From 703df4413ff6cf1812922522daa7c0610f087910 Mon Sep 17 00:00:00 2001
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+Date: Fri, 27 Sep 2019 09:46:12 +0800
+Subject: [PATCH] ASoC: fsl_asrc: Fix error with S24_3LE format bitstream in
+ i.MX8
 
-Add tas2770 smart PA dt bindings
+There is error "aplay: pcm_write:2023: write error: Input/output error"
+on i.MX8QM/i.MX8QXP platform for S24_3LE format.
 
-Signed-off-by: Frank Shi <shifu0704@thundersoft.com>
-Link: https://lore.kernel.org/r/1568962709-19185-1-git-send-email-shifu0704@thundersoft.com
+In i.MX8QM/i.MX8QXP, the DMA is EDMA, which don't support 24bit
+sample, but we didn't add any constraint, that cause issues.
+
+So we need to query the caps of dma, then update the hw parameters
+according to the caps.
+
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Link: https://lore.kernel.org/r/b6a4de2bbf960ef291ee902afe4388bd0fc1d347.1569493933.git.shengjiu.wang@nxp.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../devicetree/bindings/sound/tas2770.txt     | 37 +++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/tas2770.txt
+ sound/soc/fsl/fsl_asrc.c     |  4 +--
+ sound/soc/fsl/fsl_asrc.h     |  3 ++
+ sound/soc/fsl/fsl_asrc_dma.c | 64 ++++++++++++++++++++++++++++++++----
+ 3 files changed, 62 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/tas2770.txt b/Documentation/devicetree/bindings/sound/tas2770.txt
-new file mode 100644
-index 000000000000..ede6bb3d9637
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/tas2770.txt
-@@ -0,0 +1,37 @@
-+Texas Instruments TAS2770 Smart PA
+diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
+index 584badf956d2..0bf91a6f54b9 100644
+--- a/sound/soc/fsl/fsl_asrc.c
++++ b/sound/soc/fsl/fsl_asrc.c
+@@ -115,7 +115,7 @@ static void fsl_asrc_sel_proc(int inrate, int outrate,
+  * within range [ANCA, ANCA+ANCB-1], depends on the channels of pair A
+  * while pair A and pair C are comparatively independent.
+  */
+-static int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair)
++int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair)
+ {
+ 	enum asrc_pair_index index = ASRC_INVALID_PAIR;
+ 	struct fsl_asrc *asrc_priv = pair->asrc_priv;
+@@ -158,7 +158,7 @@ static int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair)
+  *
+  * It clears the resource from asrc_priv and releases the occupied channels.
+  */
+-static void fsl_asrc_release_pair(struct fsl_asrc_pair *pair)
++void fsl_asrc_release_pair(struct fsl_asrc_pair *pair)
+ {
+ 	struct fsl_asrc *asrc_priv = pair->asrc_priv;
+ 	enum asrc_pair_index index = pair->index;
+diff --git a/sound/soc/fsl/fsl_asrc.h b/sound/soc/fsl/fsl_asrc.h
+index 38af485bdd22..2b57e8c53728 100644
+--- a/sound/soc/fsl/fsl_asrc.h
++++ b/sound/soc/fsl/fsl_asrc.h
+@@ -462,4 +462,7 @@ struct fsl_asrc {
+ #define DRV_NAME "fsl-asrc-dai"
+ extern struct snd_soc_component_driver fsl_asrc_component;
+ struct dma_chan *fsl_asrc_get_dma_channel(struct fsl_asrc_pair *pair, bool dir);
++int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair);
++void fsl_asrc_release_pair(struct fsl_asrc_pair *pair);
 +
-+The TAS2770 is a mono, digital input Class-D audio amplifier optimized for
-+efficiently driving high peak power into small loudspeakers.
-+Integrated speaker voltage and current sense provides for
-+real time monitoring of loudspeaker behavior.
+ #endif /* _FSL_ASRC_H */
+diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
+index 01052a0808b0..2a60fc6142b1 100644
+--- a/sound/soc/fsl/fsl_asrc_dma.c
++++ b/sound/soc/fsl/fsl_asrc_dma.c
+@@ -16,13 +16,11 @@
+ 
+ #define FSL_ASRC_DMABUF_SIZE	(256 * 1024)
+ 
+-static const struct snd_pcm_hardware snd_imx_hardware = {
++static struct snd_pcm_hardware snd_imx_hardware = {
+ 	.info = SNDRV_PCM_INFO_INTERLEAVED |
+ 		SNDRV_PCM_INFO_BLOCK_TRANSFER |
+ 		SNDRV_PCM_INFO_MMAP |
+-		SNDRV_PCM_INFO_MMAP_VALID |
+-		SNDRV_PCM_INFO_PAUSE |
+-		SNDRV_PCM_INFO_RESUME,
++		SNDRV_PCM_INFO_MMAP_VALID,
+ 	.buffer_bytes_max = FSL_ASRC_DMABUF_SIZE,
+ 	.period_bytes_min = 128,
+ 	.period_bytes_max = 65535, /* Limited by SDMA engine */
+@@ -270,12 +268,25 @@ static int fsl_asrc_dma_hw_free(struct snd_pcm_substream *substream)
+ 
+ static int fsl_asrc_dma_startup(struct snd_pcm_substream *substream)
+ {
++	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
+ 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
+ 	struct snd_pcm_runtime *runtime = substream->runtime;
+ 	struct snd_soc_component *component = snd_soc_rtdcom_lookup(rtd, DRV_NAME);
++	struct snd_dmaengine_dai_dma_data *dma_data;
+ 	struct device *dev = component->dev;
+ 	struct fsl_asrc *asrc_priv = dev_get_drvdata(dev);
+ 	struct fsl_asrc_pair *pair;
++	struct dma_chan *tmp_chan = NULL;
++	u8 dir = tx ? OUT : IN;
++	bool release_pair = true;
++	int ret = 0;
 +
-+Required properties:
++	ret = snd_pcm_hw_constraint_integer(substream->runtime,
++					    SNDRV_PCM_HW_PARAM_PERIODS);
++	if (ret < 0) {
++		dev_err(dev, "failed to set pcm hw params periods\n");
++		return ret;
++	}
+ 
+ 	pair = kzalloc(sizeof(struct fsl_asrc_pair), GFP_KERNEL);
+ 	if (!pair)
+@@ -285,11 +296,50 @@ static int fsl_asrc_dma_startup(struct snd_pcm_substream *substream)
+ 
+ 	runtime->private_data = pair;
+ 
+-	snd_pcm_hw_constraint_integer(substream->runtime,
+-				      SNDRV_PCM_HW_PARAM_PERIODS);
++	/* Request a dummy pair, which will be released later.
++	 * Request pair function needs channel num as input, for this
++	 * dummy pair, we just request "1" channel temporarily.
++	 */
++	ret = fsl_asrc_request_pair(1, pair);
++	if (ret < 0) {
++		dev_err(dev, "failed to request asrc pair\n");
++		goto req_pair_err;
++	}
 +
-+ - compatible:	   - Should contain "ti,tas2770".
-+ - reg:		       - The i2c address. Should contain <0x4c>, <0x4d>,<0x4e>, or <0x4f>.
-+ - #address-cells  - Should be <1>.
-+ - #size-cells     - Should be <0>.
-+ - ti,asi-format:  - Sets TDM RX capture edge. 0->Rising; 1->Falling.
-+ - ti,imon-slot-no:- TDM TX current sense time slot.
-+ - ti,vmon-slot-no:- TDM TX voltage sense time slot.
++	/* Request a dummy dma channel, which will be released later. */
++	tmp_chan = fsl_asrc_get_dma_channel(pair, dir);
++	if (!tmp_chan) {
++		dev_err(dev, "failed to get dma channel\n");
++		ret = -EINVAL;
++		goto dma_chan_err;
++	}
 +
-+Optional properties:
++	dma_data = snd_soc_dai_get_dma_data(rtd->cpu_dai, substream);
 +
-+- interrupt-parent: the phandle to the interrupt controller which provides
-+                     the interrupt.
-+- interrupts: interrupt specification for data-ready.
++	/* Refine the snd_imx_hardware according to caps of DMA. */
++	ret = snd_dmaengine_pcm_refine_runtime_hwparams(substream,
++							dma_data,
++							&snd_imx_hardware,
++							tmp_chan);
++	if (ret < 0) {
++		dev_err(dev, "failed to refine runtime hwparams\n");
++		goto out;
++	}
 +
-+Examples:
++	release_pair = false;
+ 	snd_soc_set_runtime_hwparams(substream, &snd_imx_hardware);
+ 
+-	return 0;
++out:
++	dma_release_channel(tmp_chan);
 +
-+    tas2770@4c {
-+                compatible = "ti,tas2770";
-+                reg = <0x4c>;
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+                interrupt-parent = <&msm_gpio>;
-+                interrupts = <97 0>;
-+                ti,asi-format = <0>;
-+                ti,imon-slot-no = <0>;
-+                ti,vmon-slot-no = <2>;
-+        };
++dma_chan_err:
++	fsl_asrc_release_pair(pair);
 +
++req_pair_err:
++	if (release_pair)
++		kfree(pair);
++
++	return ret;
+ }
+ 
+ static int fsl_asrc_dma_shutdown(struct snd_pcm_substream *substream)
 -- 
 2.20.1
 
