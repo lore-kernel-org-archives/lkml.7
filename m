@@ -2,197 +2,176 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE041ECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B38C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A7A52168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AD1A2168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:01:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Iag3wI95"
+	dkim=pass (1024-bit key) header.d=victronenergy.com header.i=@victronenergy.com header.b="RHyVuaYe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfJAVAA (ORCPT
+        id S1726968AbfJAVBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 17:00:00 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:43984 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726402AbfJAVAA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 17:00:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=OvremvH5B8AyvNHHwXgBILQ+CF0VODoow+40l4kJHXI=; b=Iag3wI95n0QQk7hUYfmsZV/1P
-        FciJvA9JlYjtXtbb0P3AOt4/FN9P15EXiiATbN+zTulY7EjEDAwTOVKvfBaqeCVSrI1r34uuI18gF
-        piB6S7zmhW9I/SA3qLCEgcxT3T4bgLFlaQmyyUyAElEdOnKwVZ9RrjHgw+X8zFclOJk64gp5o3/6w
-        iVyIfaTzRl3UEtxxY8IFYPFry1p2qcu748NEmnPo//8Tt28AfyPOAHmqx0AF9HT2L/yPsC051opPf
-        PAoXRFVZzxp3Sr3sG+nzSf3ymz+HBmRCclKIuci0rPE43WHcskhk4r1ypPH9UEtMsqeztx1hYY3AS
-        JAkYMsOOA==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:46410)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iFPFI-0004dA-85; Tue, 01 Oct 2019 21:59:44 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iFPFC-0008V1-KP; Tue, 01 Oct 2019 21:59:38 +0100
-Date:   Tue, 1 Oct 2019 21:59:38 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Kees Cook <keescook@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
-Message-ID: <20191001205938.GM25745@shell.armlinux.org.uk>
-References: <20190930121803.n34i63scet2ec7ll@willie-the-truck>
- <CAKwvOdnqn=0LndrX+mUrtSAQqoT1JWRMOJCA5t3e=S=T7zkcCQ@mail.gmail.com>
- <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck>
- <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
- <20191001170142.x66orounxuln7zs3@willie-the-truck>
- <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
- <20191001175512.GK25745@shell.armlinux.org.uk>
- <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
- <20191001181438.GL25745@shell.armlinux.org.uk>
- <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
+        Tue, 1 Oct 2019 17:01:24 -0400
+Received: from mail-eopbgr140100.outbound.protection.outlook.com ([40.107.14.100]:29762
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726402AbfJAVBX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 17:01:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=C8DZd2YT7GB345RVPgGQ7Zuap2vHKO16Vu2/+4kSBiS5i/kavwYK55tqC8esSUSC5fGY0BltTMa8rLqaQqVbhYB4AzGpUTeLB5/U51vdspn7qzaD8kmtJFRnid2QzVmv7in/wCmtKkYphSetnVGZFeN2X3yvTiyT84FlsxWM1qU7bc5GyJORXsfLjSUB/ARKqoVa5bUDKz9l5yO4bSsTsuNWtP4Zytc99kqhzuOeQV2nUHFon2poAFbXSvaE6K69VKfwL1QefHpQwVVJWeZy+UwmhYpGRAg7krMYKvjXmkvkjePXxEw7KcUkwEvgULsfDG2Y4C1/ASApw0tUol9VRQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M9jLVWQpzSxz+CW0yxnhVPOgx5RK1JiXzqj3iaI1qCk=;
+ b=dNsSTBfS15LvOu2wq5446u0+58MFyoZ/g5Wfe+Dt2/BZA4Rii2/qLUOm81RXRccGvP8sPqKjJSUkLIpEaxtszu+7ToywTJqNkVRGfiXoXWGquT1WHbx9rWr19p/h4G3KWE4D7zRZRCELFgWTmbJq8loYzUxqEV/S8jyyCf8Demizaluw49XGLHA15tOzXO2hMb/XAfBeiUqbTDtN+0GRQGBLrFMadotDfgw751VtXAaS/c+EGRX5UfSNQ3AVQKgYlP2/B41uJg62DLBoGvxGySojkkxV4Omv2MYtg43YsQqKlPvh9XZl6J86C3WdQZ+4IxIwUJFjQJBUXXKj75uBng==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=victronenergy.com; dmarc=pass action=none
+ header.from=victronenergy.com; dkim=pass header.d=victronenergy.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=victronenergy.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M9jLVWQpzSxz+CW0yxnhVPOgx5RK1JiXzqj3iaI1qCk=;
+ b=RHyVuaYelVcbxD8fDc1e70IhKq/r+5NcSLlhxpxeR1xqAj/neiJdCGI+zdGAAN+T0w3txCDhZYB9JBgVD0PckoAc7GE3qzLA323/2COHnWG5d6uhChz+98wLkMYOFCXmFsip1uxCk2+UxW3FDi9VE5yU8/cqsBwPbg8DTLtZbRQ=
+Received: from VI1PR0701MB2623.eurprd07.prod.outlook.com (10.173.82.19) by
+ VI1PR0701MB2813.eurprd07.prod.outlook.com (10.173.71.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.15; Tue, 1 Oct 2019 21:01:20 +0000
+Received: from VI1PR0701MB2623.eurprd07.prod.outlook.com
+ ([fe80::dc92:2e0d:561a:fbb1]) by VI1PR0701MB2623.eurprd07.prod.outlook.com
+ ([fe80::dc92:2e0d:561a:fbb1%8]) with mapi id 15.20.2305.017; Tue, 1 Oct 2019
+ 21:01:20 +0000
+From:   Jeroen Hofstee <jhofstee@victronenergy.com>
+To:     "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>
+CC:     Jeroen Hofstee <jhofstee@victronenergy.com>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 1/2] can: D_CAN: perform a sofware reset on open
+Thread-Topic: [PATCH v2 1/2] can: D_CAN: perform a sofware reset on open
+Thread-Index: AQHVeJtgUvI7Atix90eiuhnIdlHYLA==
+Date:   Tue, 1 Oct 2019 21:01:20 +0000
+Message-ID: <20191001210054.14588-2-jhofstee@victronenergy.com>
+References: <20191001210054.14588-1-jhofstee@victronenergy.com>
+In-Reply-To: <20191001210054.14588-1-jhofstee@victronenergy.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2001:1c01:3bc5:4e00:5c2:1c3a:9351:514c]
+x-clientproxiedby: AM0PR05CA0028.eurprd05.prod.outlook.com
+ (2603:10a6:208:55::41) To VI1PR0701MB2623.eurprd07.prod.outlook.com
+ (2603:10a6:801:b::19)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jhofstee@victronenergy.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 56c368e7-6c91-452d-f161-08d746b2828c
+x-ms-traffictypediagnostic: VI1PR0701MB2813:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0701MB2813B7C8370188376044083DC09D0@VI1PR0701MB2813.eurprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0177904E6B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(396003)(366004)(39850400004)(136003)(376002)(199004)(189003)(99286004)(316002)(46003)(6436002)(6486002)(386003)(6506007)(6916009)(76176011)(5640700003)(186003)(102836004)(7736002)(54906003)(305945005)(52116002)(86362001)(14454004)(478600001)(966005)(4326008)(6306002)(25786009)(8936002)(6512007)(81166006)(81156014)(8676002)(66446008)(66556008)(66946007)(36756003)(2351001)(50226002)(64756008)(1076003)(66476007)(256004)(446003)(11346002)(2906002)(486006)(5660300002)(476003)(2616005)(71200400001)(2501003)(6116002)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0701MB2813;H:VI1PR0701MB2623.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: victronenergy.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: O16yubd9EIv4R2W9112TOd6PBKFq2/GJTXkqYQfZNUyA+F1Fd0H3AbEBwX8fAJi7BCl3BZezsby5CjdBJKGDkowmevp7ftCh6roI6ng0PmSrlEC1GorFTtc1Iybfcgnq3TTYlENK3KybuUnx6Vdojrf3cuERDbYRYIF5k3TCahNbEy3Ywa4IsUjSaUO47lIdTD7sxt+00IcHrqLu//bdpaCiv8fCw3DYS1GjwqMFGFowmfKUcrNp3a01GUmtajAJ1iVyQkGqkkgwdF/Jw1z4nrNpxSi6JJUH3hap/Q8K2ACXWZ1yMVWXT0Rni3H3g1B04jEX71dObMVZbKf6i/8xjL+i74N3CYZlaQVHq7r7q6OEWBtaaISx6HHhvqg4Xnz4fAb1hFVPiJRNw6KRMMF0rqBxLSZW02SIFkeylAXuLmbHV+9mzNXa/JewBdEUdKHQxOH6wNLYwREDWF3FyUJJpQ==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: victronenergy.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56c368e7-6c91-452d-f161-08d746b2828c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Oct 2019 21:01:20.7361
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 60b95f08-3558-4e94-b0f8-d690c498e225
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: SrgP8tdMRHVRmKiW7h31BUWzmLU2DyXGiuSZxpJqPj1eIciJ5jJDC+u7LKHLYnvw0vwbIXyFjRihnpuBtgrEXr3VBVauzc0d0Clra4uGpo8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0701MB2813
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 01:21:44PM -0700, Nick Desaulniers wrote:
-> On Tue, Oct 1, 2019 at 11:14 AM Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
-> >
-> > On Tue, Oct 01, 2019 at 11:00:11AM -0700, Nick Desaulniers wrote:
-> > > On Tue, Oct 1, 2019 at 10:55 AM Russell King - ARM Linux admin
-> > > <linux@armlinux.org.uk> wrote:
-> > > >
-> > > > On Tue, Oct 01, 2019 at 10:44:43AM -0700, Nick Desaulniers wrote:
-> > > > > I apologize; I don't mean to be difficult.  I would just like to avoid
-> > > > > surprises when code written with the assumption that it will be
-> > > > > inlined is not.  It sounds like we found one issue in arm32 and one in
-> > > > > arm64 related to outlining.  If we fix those two cases, I think we're
-> > > > > close to proceeding with Masahiro's cleanup, which I view as a good
-> > > > > thing for the health of the Linux kernel codebase.
-> > > >
-> > > > Except, using the C preprocessor for this turns the arm32 code into
-> > > > yuck:
-> > > >
-> > > > 1. We'd need to turn get_domain() and set_domain() into multi-line
-> > > >    preprocessor macro definitions, using the GCC ({ }) extension
-> > > >    so that get_domain() can return a value.
-> > > >
-> > > > 2. uaccess_save_and_enable() and uaccess_restore() also need to
-> > > >    become preprocessor macro definitions too.
-> > > >
-> > > > So, we end up with multiple levels of nested preprocessor macros.
-> > > > When something goes wrong, the compiler warning/error message is
-> > > > going to be utterly _horrid_.
-> > >
-> > > That's why I preferred V1 of Masahiro's patch, that fixed the inline
-> > > asm not to make use of caller saved registers before calling a
-> > > function that might not be inlined.
-> >
-> > ... which I objected to based on the fact that this uaccess stuff is
-> > supposed to add protection against the kernel being fooled into
-> > accessing userspace when it shouldn't.  The whole intention there is
-> > that [sg]et_domain(), and uaccess_*() are _always_ inlined as close
-> > as possible to the call site of the accessor touching userspace.
-> 
-> Then use the C preprocessor to force the inlining.  I'm sorry it's not
-> as pretty as static inline functions.
-> 
-> >
-> > Moving it before the assignments mean that the compiler is then free
-> > to issue memory loads/stores to load up those registers, which is
-> > exactly what we want to avoid.
-> >
-> >
-> > In any case, I violently disagree with the idea that stuff we have
-> > in header files should be permitted not to be inlined because we
-> > have soo much that is marked inline.
-> 
-> So there's a very important subtly here.  There's:
-> 1. code that adds `inline` cause "oh maybe it would be nice to inline
-> this, but if it isn't no big deal"
-> 2. code that if not inlined is somehow not correct.
-> 3. avoid ODR violations via `static inline`
-> 
-> I'll posit that "we have soo much that is marked inline [is
-> predominantly case 1 or 3, not case 2]."  Case 2 is a code smell, and
-> requires extra scrutiny.
-> 
-> > Having it moved out of line,
-> > and essentially the same function code appearing in multiple C files
-> > is really not an improvement over the current situation with excessive
-> > use of inlining.  Anyone who has looked at the code resulting from
-> > dma_map_single() will know exactly what I'm talking about, which is
-> > way in excess of the few instructions we have for the uaccess_* stuff
-> > here.
-> >
-> > The right approach is to move stuff out of line - and by that, I
-> > mean _actually_ move the damn code, so that different compilation
-> > units can use the same instructions, and thereby gain from the
-> > whole point of an instruction cache.
-> 
-> And be marked __attribute__((noinline)), otherwise might be inlined via LTO.
-> 
-> >
-> > The whole "let's make inline not really mean inline" is nothing more
-> > than a band-aid to the overuse (and abuse) of "inline".
-> 
-> Let's triple check the ISO C11 draft spec just to be sure:
-> § 6.7.4.6: A function declared with an inline function specifier is an
-> inline function. Making a
-> function an inline function suggests that calls to the function be as
-> fast as possible.
-> The extent to which such suggestions are effective is
-> implementation-defined. 139)
-> 139) For example, an implementation might never perform inline
-> substitution, or might only perform inline
-> substitutions to calls in the scope of an inline declaration.
-> § J.3.8 [Undefined Behavior] Hints: The extent to which suggestions
-> made by using the inline function specifier are effective (6.7.4).
-> 
-> My translation:
-> "Please don't assume inline means anything."
-> 
-> For the unspecified GNU C extension __attribute__((always_inline)), it
-> seems to me like it's meant more for performing inlining (an
-> optimization) at -O0.  Whether the compiler warns or not seems like a
-> nice side effect, but provides no strong guarantee otherwise.
-> 
-> I'm sorry that so much code may have been written with that
-> assumption, and I'm sorry to be the bearer of bad news, but this isn't
-> a recent change.  If code was written under false assumptions, it
-> should be rewritten. Sorry.
+When the C_CAN interface is closed it is put in power down mode, but
+does not reset the error counters / state. So reset the D_CAN on open,
+so the reported state and the actual state match.
 
-You may quote C11, but that is not relevent.  The kernel is coded to
-gnu89 standard - see the -std=gnu89 flag.
+According to [1], the C_CAN module doesn't have the software reset.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+[1] http://www.bosch-semiconductors.com/media/ip_modules/pdf_2/c_can_fd8/us=
+ers_manual_c_can_fd8_r210_1.pdf
+
+Signed-off-by: Jeroen Hofstee <jhofstee@victronenergy.com>
+---
+ drivers/net/can/c_can/c_can.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/drivers/net/can/c_can/c_can.c b/drivers/net/can/c_can/c_can.c
+index 606b7d8ffe13..2332687fa6dc 100644
+--- a/drivers/net/can/c_can/c_can.c
++++ b/drivers/net/can/c_can/c_can.c
+@@ -52,6 +52,7 @@
+ #define CONTROL_EX_PDR		BIT(8)
+=20
+ /* control register */
++#define CONTROL_SWR		BIT(15)
+ #define CONTROL_TEST		BIT(7)
+ #define CONTROL_CCE		BIT(6)
+ #define CONTROL_DISABLE_AR	BIT(5)
+@@ -569,6 +570,26 @@ static void c_can_configure_msg_objects(struct net_dev=
+ice *dev)
+ 				   IF_MCONT_RCV_EOB);
+ }
+=20
++static int c_can_software_reset(struct net_device *dev)
++{
++	struct c_can_priv *priv =3D netdev_priv(dev);
++	int retry =3D 0;
++
++	if (priv->type !=3D BOSCH_D_CAN)
++		return 0;
++
++	priv->write_reg(priv, C_CAN_CTRL_REG, CONTROL_SWR | CONTROL_INIT);
++	while (priv->read_reg(priv, C_CAN_CTRL_REG) & CONTROL_SWR) {
++		msleep(20);
++		if (retry++ > 100) {
++			netdev_err(dev, "CCTRL: software reset failed\n");
++			return -EIO;
++		}
++	}
++
++	return 0;
++}
++
+ /*
+  * Configure C_CAN chip:
+  * - enable/disable auto-retransmission
+@@ -578,6 +599,11 @@ static void c_can_configure_msg_objects(struct net_dev=
+ice *dev)
+ static int c_can_chip_config(struct net_device *dev)
+ {
+ 	struct c_can_priv *priv =3D netdev_priv(dev);
++	int err;
++
++	err =3D c_can_software_reset(dev);
++	if (err)
++		return err;
+=20
+ 	/* enable automatic retransmission */
+ 	priv->write_reg(priv, C_CAN_CTRL_REG, CONTROL_ENABLE_AR);
+--=20
+2.17.1
+
