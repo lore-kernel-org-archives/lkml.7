@@ -2,125 +2,121 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 431ACECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FD1ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A36320842
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:18:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569935895;
-	bh=6m1eUKQJystw0arz/fHU4P2e1y2Llptslw795XGsgR0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JdeqyaulBe1Y102o0wJkqei4p7vNv1N9cZG7q6I5uAWMMQucaIcEz+YXBLPYXsKhh
-	 oE73rnXYYV712zV95C4kxpdH/f6eWs1S9oo0khN8yN0umqsB3PpWFipQ38/Zn/AGRS
-	 A4Qgz9ri7WvO6zODZn4byWAMqW9kQ5yOhQvg1TpE=
+	by mail.kernel.org (Postfix) with ESMTP id 6116920842
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:18:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="lGp6SqYW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388278AbfJANSO (ORCPT
+        id S2388289AbfJANSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 09:18:14 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:50600 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726917AbfJANSO (ORCPT
+        Tue, 1 Oct 2019 09:18:16 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:46879 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726917AbfJANSP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 09:18:14 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 5so3381470wmg.0;
-        Tue, 01 Oct 2019 06:18:12 -0700 (PDT)
+        Tue, 1 Oct 2019 09:18:15 -0400
+Received: by mail-qk1-f196.google.com with SMTP id 201so11111151qkd.13
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 06:18:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wjg5ezOc5p7km8S342IaUr3A38UGT2t2Rxceh2nlfUU=;
+        b=lGp6SqYWxT9IFi+KGl1pHet+QbGKnv9h5fRA3tHQiPKK22pU5UvC0p7Tkp/LVSzNfB
+         oh1GwarLvZcJfIFf6WzcDjApRPlIssJyX5fkvJ1K9zOPCv5gLlb6d4yOko9bEAKYxyny
+         LUTciaMHBRbhSOJM0SLdXM82rrvJArFZnVVVzr+cywYp+Z7dud/o1KtefHReI/KLzX0X
+         R+u2n/TS/gaiuZzcJy2anjMIQFf3IZ3m25aY6O0Fs6tbc+tlCzLm+XhcIQ1y1FDjZcg5
+         bC7kfuyLqGzcpAfPFJrfP90cKr3almQWWlDHDEbn74QfhONlhED3nBcasTNfSxhcm+41
+         ri0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hpSRk5pH5ZfX94ui4Po6gctzu/8HdpWpMgPRUTWIgiY=;
-        b=MrhHfgTtB4RjVbFnJ6YgniZNBkuh9hi0OKISlgGry6z+29FbKkQbABS745yrCQE2TF
-         8/HXLyZ7NNSg2Ah4CK06PM73IRwhEc79dLdIU6C0x5aWfTakf6aD1E9Dfqmai5Zcqoy2
-         J4vwgDsCUIgIpjoexu7fwkuNZcgvJZTOJfm4DzqQoYIin06NhFHeae9Qa+ncGop5R9kC
-         INY9OfJGCVVBluywOLZv0GmYPBPiiHDtZX8/egqWgE6OYRVo2mnHWg8AEpQyU3V52eUA
-         xtTg9lGa6J9e+Ic/qOGulWUjs5IQA/vjStB2efPVTKeJzaUk8/DuPYpknHlGOSvSJl8g
-         OvKg==
-X-Gm-Message-State: APjAAAX9CMUhtt07RmNccHWZQqjHiVeaY5TThHFOWP41Eiuvq4/0QpT1
-        S7hX3iAqrQCQIQcyIxpGI4BcGbji
-X-Google-Smtp-Source: APXvYqxgdnyCxx5oD9tLArvgGVNt21WJpjLWH5T4JaMALPm61yEm4BR5Qt7YiPJMubGHsBapZrlLqA==
-X-Received: by 2002:a1c:7519:: with SMTP id o25mr3603916wmc.16.1569935891213;
-        Tue, 01 Oct 2019 06:18:11 -0700 (PDT)
-Received: from pi3 ([194.230.155.145])
-        by smtp.googlemail.com with ESMTPSA id y5sm3780299wma.14.2019.10.01.06.18.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 06:18:09 -0700 (PDT)
-Date:   Tue, 1 Oct 2019 15:18:07 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Lukasz Luba <l.luba@partner.samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, b.zolnierkie@samsung.com,
-        kgene@kernel.org, mark.rutland@arm.com, cw00.choi@samsung.com,
-        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
-        robh+dt@kernel.org, willy.mh.wolff.ml@gmail.com
-Subject: Re: [PATCH v2 1/4] dt-bindings: memory-controllers: Add Exynos5422
- DMC interrupts description
-Message-ID: <20191001131807.GB30129@pi3>
-References: <20191001125436.24086-1-l.luba@partner.samsung.com>
- <CGME20191001125444eucas1p2e4254acf8434e1fadf0e208dbe62b2d7@eucas1p2.samsung.com>
- <20191001125436.24086-2-l.luba@partner.samsung.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191001125436.24086-2-l.luba@partner.samsung.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wjg5ezOc5p7km8S342IaUr3A38UGT2t2Rxceh2nlfUU=;
+        b=fDX3sZ7eu8CEbkOyWNVghOWutcltyCMxQgv6eY41KWaVGpZygPNsMhIqi1WlRPFo1k
+         +X7YSMSkccJfaUfkhmUtYZ1gQMABZOyAicHwlbVeGJMEHVW/wtAHEszt7G8/UBlIUTdx
+         M4/52m4DJmBvWqTWPS/mNuTUjswcUHUdNQOM5Gc2riUh9ZuF95R9Du0OfYpQcXYG0pZx
+         kfTHKa4pqqk1Wq8+D94o5qbf/SEObrwmgHqkEkaXPbbXbUgSv6Zb3UEF4BCFM0wfFM4x
+         Vvo0PG1VNesuFp+7kRExDnyOu54UWiKCfDPRZHllGDCCANFdiqnwXShifoCNBqspQsHS
+         gS8w==
+X-Gm-Message-State: APjAAAUZWt+I10jK45AyiCw+EoX6JOtBOKJRZjds9jcAja/YvxZPDdbY
+        pmItc/J4kCYZFSMrKAYDcYG7eA==
+X-Google-Smtp-Source: APXvYqyNL9IyO0vyZzASB134qH8CPv466017882cxvJNuyos/hOCFC9v49BtrPBHXe4sgaMMLsantg==
+X-Received: by 2002:a37:4286:: with SMTP id p128mr6108139qka.40.1569935893364;
+        Tue, 01 Oct 2019 06:18:13 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id a190sm8443634qkf.118.2019.10.01.06.18.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 01 Oct 2019 06:18:12 -0700 (PDT)
+Message-ID: <1569935890.5576.255.camel@lca.pw>
+Subject: Re: [PATCH v2 2/3] mm, page_owner: decouple freeing stack trace
+ from debug_pagealloc
+From:   Qian Cai <cai@lca.pw>
+To:     Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Walter Wu <walter-zh.wu@mediatek.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+Date:   Tue, 01 Oct 2019 09:18:10 -0400
+In-Reply-To: <cb02d61c-eeb1-9875-185d-d3dd0e0b2424@suse.cz>
+References: <eccee04f-a56e-6f6f-01c6-e94d94bba4c5@suse.cz>
+         <731C4866-DF28-4C96-8EEE-5F22359501FE@lca.pw>
+         <218f6fa7-a91e-4630-12ea-52abb6762d55@suse.cz>
+         <20191001115114.gnala74q3ydreuii@box> <1569932788.5576.247.camel@lca.pw>
+         <626cd04e-513c-a50b-6787-d79690964088@suse.cz>
+         <cb02d61c-eeb1-9875-185d-d3dd0e0b2424@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 02:54:33PM +0200, Lukasz Luba wrote:
-> Add description for optional interrupt lines. It provides a new operation
-> mode, which uses internal performance counters interrupt when overflow.
-> This is more reliable than using default polling mode implemented in
-> devfreq.
+On Tue, 2019-10-01 at 14:35 +0200, Vlastimil Babka wrote:
+> On 10/1/19 2:32 PM, Vlastimil Babka wrote:
+> > On 10/1/19 2:26 PM, Qian Cai wrote:
+> > > On Tue, 2019-10-01 at 14:51 +0300, Kirill A. Shutemov wrote:
+> > > > On Tue, Oct 01, 2019 at 10:07:44AM +0200, Vlastimil Babka wrote:
+> > > > > On 10/1/19 1:49 AM, Qian Cai wrote:
+> > > > 
+> > > > DEBUG_PAGEALLOC is much more intrusive debug option. Not all architectures
+> > > > support it in an efficient way. Some require hibernation.
+> > > > 
+> > > > I don't see a reason to tie these two option together.
+> > > 
+> > > Make sense. How about page_owner=on will have page_owner_free=on by default?
+> > > That way we don't need the extra parameter.
+> > 
+> >  
+> > There were others that didn't want that overhead (memory+cpu) always. So the
+> > last version is as flexible as we can get, IMHO, before approaching bikeshed
+> > territory. It's just another parameter.
 > 
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  .../bindings/memory-controllers/exynos5422-dmc.txt     | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> index 02aeb3b5a820..afc38aea6b1c 100644
-> --- a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> @@ -31,6 +31,13 @@ Required properties for DMC device for Exynos5422:
->  	The register offsets are in the driver code and specyfic for this SoC
->  	type.
->  
-> +Optional properties for DMC device for Exynos5422:
-> +- interrupt-parent : The parent interrupt controller.
-> +- interrupts : Contains the IRQ line numbers for the DMC internal performance
-> +  event counters. Align with specification of the interrupt line(s) in the
-> +  interrupt-parent controller.
-> +- interrupt-names : List of IRQ names.
+> Or suggest how to replace page_owner=on with something else (page_owner=full?)
+> and I can change that. But I don't want to implement a variant where we store only
+> the freeing stack, though.
 
-Since the names are important (not the order) they are part of the
-bindings and they must be listed here.
+I don't know why you think it is a variant. It sounds to me it is a natural
+extension that belongs to page_owner=on that it could always store freeing stack
+to help with debugging. Then, it could make implementation easier without all
+those different  combinations you mentioned in the patch description that could
+confuse anyone.
 
-Best regards,
-Krzysztof
-
-
-> +
->  Example:
->  
->  	ppmu_dmc0_0: ppmu@10d00000 {
-> @@ -70,4 +77,7 @@ Example:
->  		device-handle = <&samsung_K3QF2F20DB>;
->  		vdd-supply = <&buck1_reg>;
->  		samsung,syscon-clk = <&clock>;
-> +		interrupt-parent = <&combiner>;
-> +		interrupts = <16 0>, <16 1>;
-> +		interrupt-names = "drex_0", "drex_1";
->  	};
-> -- 
-> 2.17.1
-> 
+If someone complains about the overhead introduced to the existing page_owner=on
+users, then I think we should have some number to prove that say how much
+overhead there by storing freeing stack in page_owner=on, 10%, 50%?
