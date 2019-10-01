@@ -2,143 +2,172 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B6CECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E671C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EC1A21924
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:55:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57B6321872
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:57:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="DURd+T4u"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a3Rf8Oxs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388207AbfJAMzH (ORCPT
+        id S2387814AbfJAM5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 08:55:07 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:36797 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388138AbfJAMys (ORCPT
+        Tue, 1 Oct 2019 08:57:48 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37150 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732272AbfJAM5s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 08:54:48 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191001125446euoutp0267db638750c23ad800178d99b3fdd226~JhxkCQjKn2356223562euoutp02n
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Oct 2019 12:54:46 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191001125446euoutp0267db638750c23ad800178d99b3fdd226~JhxkCQjKn2356223562euoutp02n
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1569934486;
-        bh=PpWKyDmydHtOPxqWzMFW/iVCNPUXbzoiAejFA8kjhHM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DURd+T4ui7IDAlN0MsZCENj80/rt892dPP6s000aspUWJIvH3ijxfkEResWPG6Q7U
-         Z0ghPYdO80P4iHved3NyHfvLG8X8uJJVwC8vruhG9lWJ3fgBd4LafhDqEpKY/0GQxr
-         D22M9DVvZ/OWeEMZSYMby/G7YGnCDiGm3Wz+c8io=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20191001125446eucas1p16aee0a57fcdaa144e77435816b0b3f50~JhxjnVzyn2261922619eucas1p1V;
-        Tue,  1 Oct 2019 12:54:46 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 49.E6.04469.69C439D5; Tue,  1
-        Oct 2019 13:54:46 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191001125445eucas1p21ea21a92cec96d660994d8d7f91128e0~JhxjP5Bko2030020300eucas1p2y;
-        Tue,  1 Oct 2019 12:54:45 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191001125445eusmtrp159ce962d55950884ef059f9b8e54fcf3~JhxjPOtSR1469914699eusmtrp1u;
-        Tue,  1 Oct 2019 12:54:45 +0000 (GMT)
-X-AuditID: cbfec7f2-54fff70000001175-9d-5d934c9622ab
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 63.D5.04117.59C439D5; Tue,  1
-        Oct 2019 13:54:45 +0100 (BST)
-Received: from AMDC3778.digital.local (unknown [106.120.51.20]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191001125444eusmtip13eee4dda350294e71d313d53522657ab~JhxidadUa2359723597eusmtip1M;
-        Tue,  1 Oct 2019 12:54:44 +0000 (GMT)
-From:   Lukasz Luba <l.luba@partner.samsung.com>
-To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
-        mark.rutland@arm.com, cw00.choi@samsung.com,
-        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
-        robh+dt@kernel.org, willy.mh.wolff.ml@gmail.com,
-        Lukasz Luba <l.luba@partner.samsung.com>
-Subject: [PATCH v2 2/4] ARM: dts: exynos: Add interrupt to DMC controller in
- Exynos5422
-Date:   Tue,  1 Oct 2019 14:54:34 +0200
-Message-Id: <20191001125436.24086-3-l.luba@partner.samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191001125436.24086-1-l.luba@partner.samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMKsWRmVeSWpSXmKPExsWy7djP87rTfCbHGjyYz2yxccZ6VovrX56z
-        Wsw/co7Vov/xa2aL8+c3sFucbXrDbnGrQcZi0+NrrBaXd81hs/jce4TRYsb5fUwWa4/cZbdY
-        ev0ik8XtxhVsFq17j7BbHH7Tzmrx7cQjRgdBjzXz1jB67Jx1l91j06pONo/NS+o9Dr7bw+TR
-        t2UVo8fnTXIB7FFcNimpOZllqUX6dglcGV+/bmIt+MZeMXPGbpYGxpNsXYycHBICJhI9F5qY
-        uxi5OIQEVjBK7L30lAXC+cIocWLdCSYI5zOjxPdvn4BaOMBani0qgYgvZ5TYuvEfI1zHjAlv
-        WUCK2AT0JHasKgRZISKwmFHi2+EokBpmgW1MEg9WfWMFSQgLREp83PmTHcRmEVCVWNmzCewm
-        XgF7ifPXr7NA3CcvsXrDAWYQm1PAQWLZpa2sIIMkBM6xS/y7/JERoshFYs75l8wQtrDEq+Nb
-        2CFsGYnTk3ugBhVLNPQuhKqvkXjcPxeqxlri8PGLrCBHMwtoSqzfpQ/xpKPEpod8ECafxI23
-        giDFzEDmpG3TmSHCvBIdbUIQMzQktvRcYIKwxSSWr5kGNdtD4unTPmh4TmaUmHR6DvsERvlZ
-        CLsWMDKuYhRPLS3OTU8tNsxLLdcrTswtLs1L10vOz93ECExKp/8d/7SD8eulpEOMAhyMSjy8
-        Fs8nxgqxJpYVV+YeYpTgYFYS4bX5MylWiDclsbIqtSg/vqg0J7X4EKM0B4uSOG81w4NoIYH0
-        xJLU7NTUgtQimCwTB6dUA2PLFJXqz1cW2b5V+yu++PdFjld3Ft3UTaqr0hXQbnM+nJ+oUBsa
-        /WDdi4RU419vFSfFCLnsFlF42Rs61yriYt+b00dv/F2+4XT64aMurwyVJrza9u/g3o1n3+6N
-        kb7v0GC7teKZoeBKJv8tcyO0zB5G+Dgu2bk+3UZ3SWJNGVegZoiehjFH7GQlluKMREMt5qLi
-        RACj95jYRgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOIsWRmVeSWpSXmKPExsVy+t/xu7pTfSbHGvSeUbfYOGM9q8X1L89Z
-        LeYfOcdq0f/4NbPF+fMb2C3ONr1ht7jVIGOx6fE1VovLu+awWXzuPcJoMeP8PiaLtUfuslss
-        vX6RyeJ24wo2i9a9R9gtDr9pZ7X4duIRo4Ogx5p5axg9ds66y+6xaVUnm8fmJfUeB9/tYfLo
-        27KK0ePzJrkA9ig9m6L80pJUhYz84hJbpWhDCyM9Q0sLPSMTSz1DY/NYKyNTJX07m5TUnMyy
-        1CJ9uwS9jK9fN7EWfGOvmDljN0sD40m2LkYODgkBE4lni0q6GLk4hASWMkosmt/D3sXICRQX
-        k5i0bzuULSzx51oXG0TRJ0aJU9fOMII0swnoSexYVQgSFxFYzihxbNVbZhCHWeAIk8TR1dcY
-        QbqFBcIlftw6wARiswioSqzs2cQGYvMK2Eucv36dBWKDvMTqDQeYQWxOAQeJZZe2soLYQkA1
-        U/a9ZpzAyLeAkWEVo0hqaXFuem6xkV5xYm5xaV66XnJ+7iZGYKRsO/Zzyw7GrnfBhxgFOBiV
-        eHgtnk+MFWJNLCuuzD3EKMHBrCTCa/NnUqwQb0piZVVqUX58UWlOavEhRlOgoyYyS4km5wOj
-        OK8k3tDU0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8TB6dUA2Nc++L96eUx/zZF
-        3KxfGlmdfLy6Zdra0Mvh6f96jS9uvpj45p+Ex9Mb7UvjeY+mKopH2N2OfOyXMd1ly8cHAgkK
-        K/a9+6uh69uTfajEZ/qDNYuKHj6QsXyy5tP7xMYupmvrHZeyt0pypsdGNL/jE+DyNP6ZepPR
-        ua3rw6offgZKxXIXHSb2rlZiKc5INNRiLipOBADmPvGqqgIAAA==
-X-CMS-MailID: 20191001125445eucas1p21ea21a92cec96d660994d8d7f91128e0
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191001125445eucas1p21ea21a92cec96d660994d8d7f91128e0
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191001125445eucas1p21ea21a92cec96d660994d8d7f91128e0
-References: <20191001125436.24086-1-l.luba@partner.samsung.com>
-        <CGME20191001125445eucas1p21ea21a92cec96d660994d8d7f91128e0@eucas1p2.samsung.com>
+        Tue, 1 Oct 2019 08:57:48 -0400
+Received: by mail-wr1-f65.google.com with SMTP id i1so15411190wro.4
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 05:57:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MPSSA5yYuwi4+td+wXD52Uwh92a2xR1aiiNotMAMCSE=;
+        b=a3Rf8OxscSifwK0pPutJqQjH17miHaikmrXWHOE/FPTWSW2aOC3KYZ1G+PI+hpTj+A
+         fp3YnJyeqQg713B9PbOqFQ6BLHaC1ZiTowuI9mLH404Gmo1Ma1HcTOqgLeErFNWD1ga5
+         vsnrRm04P2Smbg+E94VKoPJd8aoWCP6oqR60pCQyU+RHjfGHIwKWeF+oZZEtFeEedpay
+         E8T8bo/TX2D7AYPCNFosomlWZTUP93cvmhud2OhFvEsSj63EZW93wBOXtosyeq5PPay3
+         aYaNst+psFNwxtr/2FE+OHh0IP0X9rfT18NU9OzKopbou1VeVAGMc/hg/NxVpqLadS0D
+         aJig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MPSSA5yYuwi4+td+wXD52Uwh92a2xR1aiiNotMAMCSE=;
+        b=tyqWmAyKza07B+iD7+g6hjGvabqdm5s59BHzDnEfCjv8p2L80fgulGzZprdCjIDJBS
+         0bjqc3GDBRsH5/3Uh3I+DYL4URYQ5e93WH4gaLJMvWcV0oTedWmgpwg6xbZYhQ6BtKPF
+         rUF4D7bfHEGnYUWwRNf+VsbibCJ+UDjNGhc2kWr6ZhtWPeDVfOOymdeOtqOs070ZOHf2
+         uEKiKCXvz+jtIoT90H1CLeAxjjU81eLDvM86XmEHPv2ywqaR6Oktib15HvjIZmZl1AdG
+         xW2qM491QRmg7qTgR6PnAWeNiwXNc2c2csic7P2Yjj66kADWg7i2L/iBRTDG7CO13Hzu
+         1NFA==
+X-Gm-Message-State: APjAAAXJuJtfWEA0rykw8C95gZOvgldTkNi7/E/qHLI6azMThdNiGRO0
+        /6EJ3sHVxWRazItEulbaJ3zUNA==
+X-Google-Smtp-Source: APXvYqy7EU9bCTxulCE2P0U9ceV+LdZF+owY0xIwvghTFmWd+5GbnaVwlZM8yo2Kzj/1Bc7sCAsNJQ==
+X-Received: by 2002:adf:f5ca:: with SMTP id k10mr3683712wrp.236.1569934665625;
+        Tue, 01 Oct 2019 05:57:45 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
+        by smtp.gmail.com with ESMTPSA id l9sm2730888wme.45.2019.10.01.05.57.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2019 05:57:44 -0700 (PDT)
+Date:   Tue, 1 Oct 2019 13:57:42 +0100
+From:   Matthias Maennich <maennich@google.com>
+To:     Yuehaibing <yuehaibing@huawei.com>
+Cc:     Julia Lawall <julia.lawall@lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>, nicolas.palix@imag.fr,
+        michal.lkml@markovi.net, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, cocci@systeme.lip6.fr
+Subject: Re: [RFC PATCH] scripts: Fix coccicheck failed
+Message-ID: <20191001125742.GD90796@google.com>
+References: <20190928094245.45696-1-yuehaibing@huawei.com>
+ <alpine.DEB.2.21.1909280542490.2168@hadrien>
+ <2c109d6b-45ad-b3ca-1951-bde4dac91d2a@huawei.com>
+ <alpine.DEB.2.21.1909291810300.3346@hadrien>
+ <ac79cb42-1713-8801-37e4-edde540f101c@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <ac79cb42-1713-8801-37e4-edde540f101c@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add interrupt to Dynamic Memory Controller in Exynos5422 and Odroid
-XU3-family boards. It will be used instead of devfreq polling mode
-governor. The interrupt is connected to performance counters private
-for DMC, which might track utilisation of the memory channels.
+Hi Yuehaibing!
 
-Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
----
- arch/arm/boot/dts/exynos5420.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+On Mon, Sep 30, 2019 at 10:32:18AM +0800, Yuehaibing wrote:
+>On 2019/9/30 0:32, Julia Lawall wrote:
+>>
+>>
+>> On Sun, 29 Sep 2019, Yuehaibing wrote:
+>>
+>>> On 2019/9/28 20:43, Julia Lawall wrote:
+>>>>
+>>>>
+>>>> On Sat, 28 Sep 2019, YueHaibing wrote:
+>>>>
+>>>>> Run make coccicheck, I got this:
+>>>>>
+>>>>> spatch -D patch --no-show-diff --very-quiet --cocci-file
+>>>>>  ./scripts/coccinelle/misc/add_namespace.cocci --dir .
+>>>>>  -I ./arch/x86/include -I ./arch/x86/include/generated
+>>>>>  -I ./include -I ./arch/x86/include/uapi
+>>>>>  -I ./arch/x86/include/generated/uapi -I ./include/uapi
+>>>>>  -I ./include/generated/uapi --include ./include/linux/kconfig.h
+>>>>>  --jobs 192 --chunksize 1
+>>>>>
+>>>>> virtual rule patch not supported
+>>>>> coccicheck failed
+>>>>>
+>>>>> It seems add_namespace.cocci cannot be called in coccicheck.
+>>>>
+>>>> Could you explain the issue better?  Does the current state cause make
+>>>> coccicheck to fail?  Or is it just silently not being called?
+>>>
+>>> Yes, it cause make coccicheck failed like this:
+>>>
+>>> ...
+>>> ./drivers/xen/xenbus/xenbus_comms.c:290:2-8: preceding lock on line 243
+>>> ./fs/fuse/dev.c:1227:2-8: preceding lock on line 1206
+>>> ./fs/fuse/dev.c:1232:3-9: preceding lock on line 1206
+>>> coccicheck failed
+>>> make[1]: *** [coccicheck] Error 255
+>>> make: *** [sub-make] Error 2
+>>
+>> Could you set the verbose options to see what the problem is?  Maybe the
+>> problem would be solved by putting virtual report at the top of the rule.
+>> But it might still fail because nothing can happen without a value for the
+>> virtual metavariable ns.
+>
+>diff --git a/scripts/coccinelle/misc/add_namespace.cocci b/scripts/coccinelle/misc/add_namespace.cocci
+>index c832bb6445a8..99e93a6c2e24 100644
+>--- a/scripts/coccinelle/misc/add_namespace.cocci
+>+++ b/scripts/coccinelle/misc/add_namespace.cocci
+>@@ -6,6 +6,8 @@
+> /// add a missing namespace tag to a module source file.
+> ///
+>
+>+virtual report
+>+
+> @has_ns_import@
+> declarer name MODULE_IMPORT_NS;
+> identifier virtual.ns;
+>
+>
+>
+>Adding virtual report make the coccicheck go ahead smoothly.
 
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index ac49373baae7..45f63cd82e56 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -240,6 +240,9 @@
- 		dmc: memory-controller@10c20000 {
- 			compatible = "samsung,exynos5422-dmc";
- 			reg = <0x10c20000 0x100>, <0x10c30000 0x100>;
-+			interrupt-parent = <&combiner>;
-+			interrupts = <16 0>, <16 1>;
-+			interrupt-names = "drex_0", "drex_1";
- 			clocks = <&clock CLK_FOUT_SPLL>,
- 				 <&clock CLK_MOUT_SCLK_SPLL>,
- 				 <&clock CLK_FF_DOUT_SPLL2>,
--- 
-2.17.1
+Thanks for reporting and following up with this issue. I certainly did
+not expect all scripts in scripts/coccinelle to be automatically called
+by coccicheck and I still think scripts/coccinelle is the right location
+for add_namespace.cocci.
 
+I guess, others might better understand the implications of your two
+lines fix above, but it looks good to me to address the problem.
+
+Thanks!
+
+>>
+>> Should the coccinelle directory be only for things that work with make
+>> coccicheck, or for all Coccinelle scripts?
+
+At least I was not expecting this behaviour. Though scripts/ hosts
+scripts of various languages, I still think putting all coccinelle
+scripts in scripts/coccinelle sounds sensible.
+
+>>
+>> julia
+>>
+>> .
+>>
+>
+
+Cheers,
+Matthias
