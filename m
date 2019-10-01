@@ -2,127 +2,134 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E65C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4771FC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B02D22070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1828E215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:54:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oj2/PZIW";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lTkHXHKu"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="hk7GVMY2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731000AbfJARwT (ORCPT
+        id S1731014AbfJARyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 13:52:19 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:37462 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfJARwR (ORCPT
+        Tue, 1 Oct 2019 13:54:32 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:14255 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728486AbfJARyc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 13:52:17 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 233ED61156; Tue,  1 Oct 2019 17:52:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569952336;
-        bh=EqX6F8UDW8JnIw6Hk7q7L1dvCzSEMNOpUg0sXKY32yA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oj2/PZIWdgJsjvx+7sB/HBZhXwlRP+/bp7ky6LvLjqD4g9BiNDvcglCZ62SjD1tBq
-         QAgX6+g9hprx8wVBP7v9QVjcT7vKvuZQPgA01lEQC46BDaHrF+QmyochFDLUPJwYM0
-         4m7xO8XStOzyEZlV7qC04Ce1g/yklG9gIRkBlQgg=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 104336083C;
-        Tue,  1 Oct 2019 17:52:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569952335;
-        bh=EqX6F8UDW8JnIw6Hk7q7L1dvCzSEMNOpUg0sXKY32yA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lTkHXHKunAsS8EWDCTk+X0f1W5i2eyWsNoTkfA4JrXjUWLAdpwvRUvZwQy/sqsCha
-         kE/4opxhjU4rATlKtRc59y0kRLw3/N3qA8EqPvRggNEEkhrNsP+u2hClns35iEAvhg
-         rCNeqT75U1nPhoOrRrPqkFZOS/g7yYIjD6ij5xpI=
+        Tue, 1 Oct 2019 13:54:32 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d9392df0000>; Tue, 01 Oct 2019 10:54:39 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 01 Oct 2019 10:54:31 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 01 Oct 2019 10:54:31 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 1 Oct
+ 2019 17:54:30 +0000
+Received: from rcampbell-dev.nvidia.com (172.20.13.39) by
+ DRHQMAIL107.nvidia.com (10.27.9.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3; Tue, 1 Oct 2019 17:54:30 +0000
+Subject: Re: [PATCH] mm/thp: make set_huge_zero_page() return void
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190930195528.32553-1-rcampbell@nvidia.com>
+ <20191001115239.dqodyji3r32zjkea@box>
+From:   Ralph Campbell <rcampbell@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <68b384ac-b311-6ea2-81ad-053ff7f3ba64@nvidia.com>
+Date:   Tue, 1 Oct 2019 10:54:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20191001115239.dqodyji3r32zjkea@box>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Tue, 01 Oct 2019 10:52:15 -0700
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCHv9 2/3] arm64: dts: qcom: msm8998: Add Coresight support
-In-Reply-To: <CAOCk7NohO67qeYCnrjy4P0KN9nLUiamphHRvj-bFP++K7khPOw@mail.gmail.com>
-References: <cover.1564550873.git.saiprakash.ranjan@codeaurora.org>
- <90114e06825e537c3aafd3de5c78743a9de6fadc.1564550873.git.saiprakash.ranjan@codeaurora.org>
- <CAOCk7NrK+wY8jfHdS8781NOQtyLm2RRe1NW2Rm3_zeaot0Q99Q@mail.gmail.com>
- <16212a577339204e901cf4eefa5e82f1@codeaurora.org>
- <CAOCk7NohO67qeYCnrjy4P0KN9nLUiamphHRvj-bFP++K7khPOw@mail.gmail.com>
-Message-ID: <fa5a35f0e993f2b604b60d5cead3cf28@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1569952479; bh=BaVcfmO77CbSRF4xJ7ENR7iiC1TjdAOn8cbtscDfEog=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=hk7GVMY2RbARRj+8vRGwRTIBWLlV+9xU34GGzQ5cW09C2Qa5u557QOWPQQhETeelM
+         VLy3eVJ4QwizyOgL08VCQECqRTuxumtTzbHwnYp+af7ROVQBkzB6baK7wctS5Tg+cD
+         u/hPye4SjWz3+DyCUontM8dUS7BGYa/z8mNhUAUtT+SCmljMjehqG3I7S5p2GyiQP2
+         wHZIbWckPspTZIbV7IavKO4Menqj+M36VOOihk8uryvkLu9nhO7uoQj3sXpnL1HyMu
+         059FiPMNyImJ0gNZQs35B0icbqnXkltg3n0W4TJRMdfJtZaubpO8Qqdr6gyUVRLAoa
+         i/FCypcgiro2g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-01 10:14, Jeffrey Hugo wrote:
-> On Tue, Oct 1, 2019 at 11:04 AM Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
->> 
->> On 2019-10-01 09:13, Jeffrey Hugo wrote:
->> > Sai,
->> >
->> > This patch breaks boot on the 835 laptops.  However, I haven't seen
->> > the same issue on the MTP.  I wonder, is coresight expected to work
->> > with production fused devices?  I wonder if thats the difference
->> > between the laptop and MTP that is causing the issue.
->> >
->> > Let me know what I can do to help debug.
->> >
->> 
->> I did test on MSM8998 MTP and didn't face any issue. I am guessing 
->> this
->> is the same issue which you reported regarding cpuidle? Coresight ETM
-> 
-> Yes, its the same issue.  Right now, I need both patches reverted to 
-> boot.
-> 
->> and cpuidle do not work well together since ETMs share the same power
->> domain as CPU and they might get turned off when CPU enters idle 
->> states.
->> Can you try with cpuidle.off=1 cmdline or just remove idle states from
->> DT to confirm? If this is the issue, then we can try the below patch
->> from Andrew Murray for ETM save and restore:
->> 
->> https://patchwork.kernel.org/patch/11097893/
-> 
-> Is there still value in testing this if the idle states are removed,
-> yet the coresight nodes still cause issues?
-> 
-> Funny enough, I'm using the arm64 defconfig which doesn't seem to
-> select CONFIG_CORESIGHT, so I'm not even sure what would be binding to
-> the DT devices...
-> 
 
-Haan then likely it's the firmware issue.
-We should probably disable coresight in soc dtsi and enable only for 
-MTP. For now you can add a status=disabled for all coresight nodes in 
-msm8998.dtsi and I will send the patch doing the same in a day or 
-two(sorry I am travelling currently).
+On 10/1/19 4:52 AM, Kirill A. Shutemov wrote:
+> On Mon, Sep 30, 2019 at 12:55:28PM -0700, Ralph Campbell wrote:
+>> The return value from set_huge_zero_page() is never checked so simplify
+>> the code by making it return void.
+>>
+>> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+>> ---
+>>   mm/huge_memory.c | 6 ++----
+>>   1 file changed, 2 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>> index c5cb6dcd6c69..6cf0ee65538d 100644
+>> --- a/mm/huge_memory.c
+>> +++ b/mm/huge_memory.c
+>> @@ -686,20 +686,18 @@ static inline gfp_t alloc_hugepage_direct_gfpmask(struct vm_area_struct *vma)
+>>   }
+>>   
+>>   /* Caller must hold page table lock. */
+>> -static bool set_huge_zero_page(pgtable_t pgtable, struct mm_struct *mm,
+>> +static void set_huge_zero_page(pgtable_t pgtable, struct mm_struct *mm,
+>>   		struct vm_area_struct *vma, unsigned long haddr, pmd_t *pmd,
+>>   		struct page *zero_page)
+>>   {
+>>   	pmd_t entry;
+>> -	if (!pmd_none(*pmd))
+>> -		return false;
+>> +
+> 
+> Wat? So you just bindly overwrite whatever is there?
+> 
+> NAK.
 
-Thanks,
-Sai
+No, the only two places it is called from are 
+do_huge_pmd_anonymous_page() which has the pmd_lock()
+and already checked pmd_none() is true and
+copy_huge_pmd() where the destination page table
+is being filled in with no other threads accessing it.
+I guess I should have put this analysis in the changelog.
 
+Still, I guess putting a pmd_none() check in copy_huge_pmd()
+as future proofing new callers of copy_huge_pmd() would
+make sense.
+
+>>   	entry = mk_pmd(zero_page, vma->vm_page_prot);
+>>   	entry = pmd_mkhuge(entry);
+>>   	if (pgtable)
+>>   		pgtable_trans_huge_deposit(mm, pmd, pgtable);
+>>   	set_pmd_at(mm, haddr, pmd, entry);
+>>   	mm_inc_nr_ptes(mm);
+>> -	return true;
+>>   }
+>>   
+>>   vm_fault_t do_huge_pmd_anonymous_page(struct vm_fault *vmf)
+>> -- 
+>> 2.20.1
+>>
+>>
+> 
