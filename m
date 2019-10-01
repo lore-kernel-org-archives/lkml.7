@@ -2,76 +2,113 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D48C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7301EECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14E8420815
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:10:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Am2icvsC"
+	by mail.kernel.org (Postfix) with ESMTP id 4B86420815
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:15:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388895AbfJAOKN (ORCPT
+        id S2387622AbfJAOPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 10:10:13 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:41936 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731280AbfJAOKN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 10:10:13 -0400
-Received: by mail-io1-f66.google.com with SMTP id n26so19757148ioj.8
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 07:10:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3YUx0HE7NiysDC7RZVfxopyCJv9liIb6R89MTahPdRA=;
-        b=Am2icvsCpWu9R2jUDF5p07FY8Xh6t9Zk2ZbZUtTvUV4Deh3tXSewk/lOIhmxj7NCVY
-         hwoNwW4X4LHYD40xbyrfVyv+6HfcA9SQDcC5KWQ1hs0OQbcz0koawBX9QQr96Nn/QtOz
-         Cmp9v8GC5RgZaOd96XvdRc06fphYAjIcRrMkKY+0x/kg5at0EUsSiIKTGAHEURxzXh0r
-         knuWvO2YMyL1DMHtoVLR3wW76wouPj+0AJUhbK+/T0U2BqruBULXooT/zjGmLoK+7xh1
-         uXQoJI3xiCWXfVwSqoDbLNuzqL4vftHrJvswGMzCX0AgtofFV/sgrWp3pJ/fSxnkHAfq
-         Mn1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3YUx0HE7NiysDC7RZVfxopyCJv9liIb6R89MTahPdRA=;
-        b=HAdm6f6Cn3D3i5UWK24LJgExqnoh1FVtmYaP6gCoHGi8RbWZFOqBaA9Wvs505wPEYz
-         +s8PF5J6Mp1seyVQbeymv2ZZSfjJYIkti2pUg35GQdBfFkx1D6yhGcpLHRrkbJg7ZfHT
-         MMfhfqIQL2co+S87cs3WpBczPouk9m/Y72/wFTvOhQigr3ZMUPo5SrSD4CNKdljqQcUI
-         b9KEOz3P8IIkOkYE5taVUEhQ4l3x1Psb1SaAzb9aqKmmf9VyBeGBWONlfaWcr8+1zfOc
-         RN6mC4LLODSGSHwUotKjqCddmrwTHta/x5bGzFYNT+edO2mKKnDGGyqVgr2CP9uKHeRQ
-         LXNw==
-X-Gm-Message-State: APjAAAWRcWtfkuqdHbpivP4LtS02tDm+Nc+2k1DVzTt6ZIRYKmkyG9us
-        G/Uhbf58z7Gi9sd4KWUeEqriaA==
-X-Google-Smtp-Source: APXvYqwyQ78cSYCEY59QpZFzt9hWgZe8cTZEsDwwEpX7/UuXo/5xfiD6Z3upSoLEMYx8IRdazyU8mQ==
-X-Received: by 2002:a6b:8bd8:: with SMTP id n207mr5770851iod.147.1569939012260;
-        Tue, 01 Oct 2019 07:10:12 -0700 (PDT)
-Received: from [192.168.1.50] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id c8sm7042439ile.9.2019.10.01.07.10.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Oct 2019 07:10:11 -0700 (PDT)
-Subject: Re: [PATCH v2] loop: change queue block size to match when using DIO.
-To:     Martijn Coenen <maco@android.com>, hch@infradead.org,
-        ming.lei@redhat.com
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, kernel-team@android.com,
-        narayan@google.com, dariofreni@google.com, ioffe@google.com,
-        jiyong@google.com, maco@google.com
-References: <20190828103229.191853-1-maco@android.com>
- <20190904194901.165883-1-maco@android.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <c65da8b1-755c-57f5-d49d-fb25e8dc809b@kernel.dk>
-Date:   Tue, 1 Oct 2019 08:10:10 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 1 Oct 2019 10:15:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33876 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726554AbfJAOPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 10:15:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D0019AFC3;
+        Tue,  1 Oct 2019 14:15:17 +0000 (UTC)
+Subject: Re: [PATCH v2 2/3] mm, page_owner: decouple freeing stack trace from
+ debug_pagealloc
+To:     Qian Cai <cai@lca.pw>, "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Walter Wu <walter-zh.wu@mediatek.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+References: <eccee04f-a56e-6f6f-01c6-e94d94bba4c5@suse.cz>
+ <731C4866-DF28-4C96-8EEE-5F22359501FE@lca.pw>
+ <218f6fa7-a91e-4630-12ea-52abb6762d55@suse.cz>
+ <20191001115114.gnala74q3ydreuii@box> <1569932788.5576.247.camel@lca.pw>
+ <626cd04e-513c-a50b-6787-d79690964088@suse.cz>
+ <cb02d61c-eeb1-9875-185d-d3dd0e0b2424@suse.cz>
+ <1569935890.5576.255.camel@lca.pw>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <cbbb78bd-4719-b9f4-ea5b-0b74675bfce7@suse.cz>
+Date:   Tue, 1 Oct 2019 16:15:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-In-Reply-To: <20190904194901.165883-1-maco@android.com>
+In-Reply-To: <1569935890.5576.255.camel@lca.pw>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -80,16 +117,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/4/19 1:49 PM, Martijn Coenen wrote:
-> The loop driver assumes that if the passed in fd is opened with
-> O_DIRECT, the caller wants to use direct I/O on the loop device.
-> However, if the underlying block device has a different block size than
-> the loop block queue, direct I/O can't be enabled. Instead of requiring
-> userspace to manually change the blocksize and re-enable direct I/O,
-> just change the queue block sizes to match, as well as the io_min size.
+On 10/1/19 3:18 PM, Qian Cai wrote:
+> On Tue, 2019-10-01 at 14:35 +0200, Vlastimil Babka wrote:
+>> On 10/1/19 2:32 PM, Vlastimil Babka wrote:
+>>
+>> Or suggest how to replace page_owner=on with something else (page_owner=full?)
+>> and I can change that. But I don't want to implement a variant where we store only
+>> the freeing stack, though.
+> 
+> I don't know why you think it is a variant. It sounds to me it is a natural
+> extension that belongs to page_owner=on that it could always store freeing stack
+> to help with debugging. Then, it could make implementation easier without all
+> those different  combinations you mentioned in the patch description that could
+> confuse anyone.
+> 
+> If someone complains about the overhead introduced to the existing page_owner=on
+> users, then I think we should have some number to prove that say how much
+> overhead there by storing freeing stack in page_owner=on, 10%, 50%?
 
-Applied, thanks.
-
--- 
-Jens Axboe
+I'll wait a few days for these overhead objections and if there are none I will
+post a version that removes the parameter and stores freeing stack unconditionally.
+ 
 
