@@ -2,118 +2,96 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 240F0C388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 05:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9152AECDFB6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 05:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE1FA21835
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 05:13:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XmkiTIUG"
+	by mail.kernel.org (Postfix) with ESMTP id 6F5C221783
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 05:17:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729329AbfJAFNE (ORCPT
+        id S1730111AbfJAFRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 01:13:04 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:35370 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725777AbfJAFNE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 01:13:04 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x915CnIx005144;
-        Tue, 1 Oct 2019 00:12:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569906769;
-        bh=4AH9Rku5UAfzvf7FCp4zmCl9cmUhkBiAtoPrnnSOE8Q=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=XmkiTIUGZb5Mtvqe2EYoaup70LorYQU7ZYPKDyC+253KGhwPUxoVn4ugNW+j7Abwu
-         aI7jI6X+Aymvl7rOahgoSF1OzuJJhVZPj0fVfIsnZjsxQ+/ZsSdQlUJEVwslyVe7tP
-         Wn6ibrAfw4Hf6HVQxjDTwn0Iemsux3rfEtKbrq68=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x915Cn3X100427;
-        Tue, 1 Oct 2019 00:12:49 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 1 Oct
- 2019 00:12:48 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 1 Oct 2019 00:12:48 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x915CjD7053183;
-        Tue, 1 Oct 2019 00:12:46 -0500
-Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to
- dts
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Adam Ford <aford173@gmail.com>
-CC:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190510194229.20628-1-aford173@gmail.com>
- <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
- <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com>
- <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
- <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com>
- <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
- <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com>
- <23eba53a-9304-2ceb-d97e-01891ec0b3ed@ti.com>
- <cb028b1e-05ca-9b22-be5d-c63f5fd56cc4@ti.com>
- <F3335195-6EB7-4D44-B884-2F29D9238011@goldelico.com>
- <CAHCN7xL9bFxO=2i1DzmRj6A3XwUNdt=DZeJ2a0EZ0f9gcFTy6g@mail.gmail.com>
- <CAHCN7x+vCfPTRE+zzYUwAXdbBzRotTP2hSOgsHB0FdgBhZV5zA@mail.gmail.com>
- <CAHCN7xJDV=R9Ysjhff7=mEXdciwPP_5LQbHwaUT8KvhSkLKw8A@mail.gmail.com>
- <04306a5e-f9be-35a4-1aa1-5795d780e289@ti.com>
- <3777f1b1-2d9a-334b-b9e7-99dfda2ae29b@ti.com>
- <CAHCN7xJNJca8W_yw5nNY3AmKDSPoLzJ8voPmR1HS3bNcU8uQGg@mail.gmail.com>
- <6cd7c9f0-cb26-588b-dfd1-faf462732549@ti.com>
- <ec718740-bb8f-0d31-3622-89a62bd8fede@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <2cff2d77-485d-c9a5-ea9b-a9146a81218e@ti.com>
-Date:   Tue, 1 Oct 2019 08:12:44 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 1 Oct 2019 01:17:05 -0400
+Received: from mx.socionext.com ([202.248.49.38]:20873 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726672AbfJAFRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 01:17:05 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 01 Oct 2019 14:17:02 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 18DC3605F8;
+        Tue,  1 Oct 2019 14:17:03 +0900 (JST)
+Received: from 10.213.24.1 (10.213.24.1) by m-FILTER with ESMTP; Tue, 1 Oct 2019 14:17:03 +0900
+Received: from SOC-EX02V.e01.socionext.com (10.213.24.22) by
+ SOC-EX01V.e01.socionext.com (10.213.24.21) with Microsoft SMTP Server (TLS)
+ id 15.0.995.29; Tue, 1 Oct 2019 14:17:02 +0900
+Received: from SOC-EX02V.e01.socionext.com ([10.213.25.22]) by
+ SOC-EX02V.e01.socionext.com ([10.213.25.22]) with mapi id 15.00.0995.028;
+ Tue, 1 Oct 2019 14:17:02 +0900
+From:   <orito.takao@socionext.com>
+To:     <ulf.hansson@linaro.org>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <adrian.hunter@intel.com>
+CC:     <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <masami.hiramatsu@linaro.org>,
+        <jaswinder.singh@linaro.org>, <sugaya.taichi@socionext.com>,
+        <kasai.kazuhiro@socionext.com>, <kanematsu.shinji@socionext.com>
+Subject: Re: [PATCH v3 0/2] mmc: sdhci-milbeaut: add Milbeaut SD driver
+Thread-Topic: [PATCH v3 0/2] mmc: sdhci-milbeaut: add Milbeaut SD driver
+Thread-Index: AQHVZ3ihYlxK3AfGCE+319PUx3aqu6dEyReA
+Date:   Tue, 1 Oct 2019 05:17:02 +0000
+Message-ID: <20191001141655.C8BE.F0D17A80@socionext.com>
+References: <1568079631-28808-1-git-send-email-orito.takao@socionext.com>
+In-Reply-To: <1568079631-28808-1-git-send-email-orito.takao@socionext.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Becky! ver. 2.74.02 [ja] (Unregistered)
+x-originating-ip: [10.213.24.1]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <AA2CA0E6E0E71E458AE7E083CDEB38D8@socionext.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <ec718740-bb8f-0d31-3622-89a62bd8fede@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/10/2019 08:07, Tomi Valkeinen wrote:
-> On 30/09/2019 20:48, Tero Kristo wrote:
-> 
->> Hmmh, after some testing, it seems there is bad stuff happening with 
->> the divider clock implementation, I am re-working it as of now. 
->> Basically what is wrong is that with a divider max value of say 16, 
->> the driver attempts to craft the max value into a mask, but this ends 
->> up being 0x1f. If the max value is 15, it ends up into 0xf which is 
->> correct.
-> 
-> Ok, that explains the max not working.
-> 
-> It doesn't explain the other issue, where the TRM says the max div is 
-> 32, but it does not work. But taking the max div from the old SoCs, 16, 
-> is not correct either, as it seems that dividers up to 31 work ok.
-
-If someone knows for sure that dividers higher than 16 are fine on 
-omap36xx, we can add this under omap36xx-clocks.dtsi. Anyway, let me fix 
-the broken divider max logic first, that seems to be more pressing issue.
-
--Tero
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+DQpIZWxsbw0KDQpEb2VzIGFueW9uZSBoYXZlIGFueSBjb21tZW50cyBvbiB0aGlzID8NCg0KPiBU
+aGUgZm9sbG93aW5nIHBhdGNoZXMgYWRkIGRyaXZlciBmb3IgU0QgSG9zdCBjb250cm9sbGVyIG9u
+DQo+IFNvY2lvbmV4dCdzIE1pbGJlYXV0IE0xMFYgcGxhdGZvcm1zLg0KPiANCj4gU0QgSG9zdCBj
+b250cm9sbGVyIG9uIE1pbGJlYXV0IGNvbnNpc3RzIG9mIHR3byBjb250cm9sbGVyIHBhcnRzLg0K
+PiBPbmUgaXMgY29yZSBjb250cm9sbGVyIEZfU0RIMzAsIHRoaXMgaXMgc2ltaWxhciB0byBzZGhj
+aS1mdWppdHN1DQo+IGNvbnRyb2xsZXIuDQo+IEFub3RoZXIgaXMgYnJpZGdlIGNvbnRyb2xsZXIu
+IFRoaXMgYnJpZGdlIGNvbnRyb2xsZXIgaXMgbm90IGNvbXBhdGlibGUNCj4gd2l0aCBzZGhjaS1m
+dWppdHN1IGNvbnRyb2xsZXIuIFRoaXMgaXMgc3BlY2lhbCBmb3IgTWlsYmVhdXQgc2VyaWVzLg0K
+PiANCj4gSXQgaGFzIHRoZSBzZXZlcmFsIHBhcnRzLA0KPiAgLSByZXNldCBjb250cm9sDQo+ICAt
+IGNsb2NrIGVuYWJsZSAvIHNlbGVjdCBmb3IgU0RSNTAvMjUvMTINCj4gIC0gaG9sZCBjb250cm9s
+IG9mIERBVEEvQ01EIGxpbmUNCj4gIC0gc2VsZWN0IGNoYXJhY3RlcmlzdGljcyBmb3IgV1AvQ0Qv
+TEVEIGxpbmUNCj4gIC0gUmUtdHVuaW5nIGNvbnRyb2wgZm9yIG1vZGUzDQo+ICAtIENhcGFiaWxp
+dHkgc2V0dGluZw0KPiAgICBUaW1lb3V0IENsb2NrIC8gQmFzZSBDbG9jayAvIFRpbWVyIENvdW50
+IGZvciBSZS1UdW5pbmcgLw0KPiAgICBEZWJvdW5jZSBwZXJpb2QNCj4gVGhlc2UgcmVxdWlyZXMg
+c3BlY2lhbCBwcm9jZWR1cmVzIGF0IHJlc2V0IG9yIGNsb2NrIGVuYWJsZS9jaGFuZ2Ugb3INCj4g
+IGZ1cnRoZXIgdHVuaW5nIG9mIGNsb2NrLg0KPiANCj4gVGFrYW8gT3JpdG8gKDIpOg0KPiAgIGR0
+LWJpbmRpbmdzOiBtbWM6IGFkZCBEVCBiaW5kaW5ncyBmb3IgTWlsYmVhdXQgU0QgY29udHJvbGxl
+cg0KPiAgIG1tYzogc2RoY2ktbWlsYmVhdXQ6IGFkZCBNaWxiZWF1dCBTRCBjb250cm9sbGVyIGRy
+aXZlcg0KPiANCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL21tYy9zZGhjaS1taWxiZWF1dC50
+eHQgICAgIHwgIDMwICsrDQo+ICBkcml2ZXJzL21tYy9ob3N0L0tjb25maWcgICAgICAgICAgICAg
+ICAgICAgICAgICAgICB8ICAxMSArDQo+ICBkcml2ZXJzL21tYy9ob3N0L01ha2VmaWxlICAgICAg
+ICAgICAgICAgICAgICAgICAgICB8ICAgMSArDQo+ICBkcml2ZXJzL21tYy9ob3N0L3NkaGNpLW1p
+bGJlYXV0LmMgICAgICAgICAgICAgICAgICB8IDM2MiArKysrKysrKysrKysrKysrKysrKysNCj4g
+IGRyaXZlcnMvbW1jL2hvc3Qvc2RoY2lfZl9zZGgzMC5jICAgICAgICAgICAgICAgICAgIHwgIDI2
+ICstDQo+ICBkcml2ZXJzL21tYy9ob3N0L3NkaGNpX2Zfc2RoMzAuaCAgICAgICAgICAgICAgICAg
+ICB8ICAzMiArKw0KPiAgNiBmaWxlcyBjaGFuZ2VkLCA0MzcgaW5zZXJ0aW9ucygrKSwgMjUgZGVs
+ZXRpb25zKC0pDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL21tYy9zZGhjaS1taWxiZWF1dC50eHQNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
+cml2ZXJzL21tYy9ob3N0L3NkaGNpLW1pbGJlYXV0LmMNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
+cml2ZXJzL21tYy9ob3N0L3NkaGNpX2Zfc2RoMzAuaA0KPiANCj4gLS0gDQo+IDEuOS4xDQo+IA0K
+DQpUaGFua3MNCk9yaXRvDQoNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQpUYWthbyBPcml0bw0KU29jaW9uZXh0IEluYy4N
+CkUtbWFpbDpvcml0by50YWthb0Bzb2Npb25leHQuY29tDQpUZWw6KzgxLTgwLTk4MTUtMTQ2MA0K
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0NCg==
