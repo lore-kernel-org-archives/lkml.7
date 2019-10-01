@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5C9ECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA883ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73A062054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 913AB2054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:01:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569949289;
-	bh=QX3Uw/g/qNvjxcndCvrLA2SLcuboyt6nJO2FgrcqYSI=;
+	s=default; t=1569949293;
+	bh=6Bnatj/5Ub1pWlIo0rzxCNeZp/xLiby1b8UPWU8/Gvs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZPLe0+NfZE7AW8MCr926fTqfW+6t88idJBPFJEhJK0XVTuZ2tz5pZA1upP7hlBhJt
-	 uYHCnwygqFBD2jOaSqAauhdC3JKGpNy3B9LKRTLh7a3jObxUSqZUimJSSG58LwmgJQ
-	 KEgXDu4MO0o64njllK0MHAhVPLt6FsqWVFAEJrEY=
+	b=pD1RU9mINkQkB/CysVR+R50ioC5AENkar8d45aROPCJYqK88lJXj4SOWgw62o0H0j
+	 XGQqJ9l2xvei2ujZq51kKizKN1CL03yHL94ADvdmxF4SSHs2v69WUhEhseLj2uqWn+
+	 m5KypW58LirGMFXQs3HIXp3i9u6bOA2v6Xe5M2Lc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729799AbfJAQkS (ORCPT
+        id S1726233AbfJARBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:40:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51460 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 13:01:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729709AbfJAQkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:40:15 -0400
+        id S1729772AbfJAQkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:40:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 740A421920;
-        Tue,  1 Oct 2019 16:40:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5FCE21855;
+        Tue,  1 Oct 2019 16:40:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948015;
-        bh=QX3Uw/g/qNvjxcndCvrLA2SLcuboyt6nJO2FgrcqYSI=;
+        s=default; t=1569948017;
+        bh=6Bnatj/5Ub1pWlIo0rzxCNeZp/xLiby1b8UPWU8/Gvs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P3Y7Mr9s/MtOtv01V0csO4fMlxsD7Od6UitBURJ/j+oCYnV5S79N792d0hMvaDDI0
-         LfJ5wOWwCux9UY3ArRk/jWY3qRa9lkHsHqpAejjqafEQHsT5daBkwrVgnrlRFlNFyj
-         Rbo7eK9gfxa03t9lRkIdfUcxq7z8FkfkaLd05u+M=
+        b=SjAMadA0znV+DjNJevRy+h/Jp/wlKY5htH7a/lE9TzX8rwRyo5Ws1sdjAADvkKwOl
+         uLKA4oj7X0Yld8DMDUfh5yWb5C9mdG5SzexRBrPb6KQsEoAMQQi3RMc3qo0rxBpqBM
+         N2z+7bRWEX5MbEIzCSGZ9jFRuVsGF2SxgZOWbUcs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org
-Subject: [PATCH AUTOSEL 5.3 36/71] libnvdimm/region: Initialize bad block for volatile namespaces
-Date:   Tue,  1 Oct 2019 12:38:46 -0400
-Message-Id: <20191001163922.14735-36-sashal@kernel.org>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 38/71] net/mlx5e: Fix traffic duplication in ethtool steering
+Date:   Tue,  1 Oct 2019 12:38:48 -0400
+Message-Id: <20191001163922.14735-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
 References: <20191001163922.14735-1-sashal@kernel.org>
@@ -59,108 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+From: Saeed Mahameed <saeedm@mellanox.com>
 
-[ Upstream commit c42adf87e4e7ed77f6ffe288dc90f980d07d68df ]
+[ Upstream commit d22fcc806b84b9818de08b32e494f3c05dd236c7 ]
 
-We do check for a bad block during namespace init and that use
-region bad block list. We need to initialize the bad block
-for volatile regions for this to work. We also observe a lockdep
-warning as below because the lock is not initialized correctly
-since we skip bad block init for volatile regions.
+Before this patch, when adding multiple ethtool steering rules with
+identical classification, the driver used to append the new destination
+to the already existing hw rule, which caused the hw to forward the
+traffic to all destinations (rx queues).
 
- INFO: trying to register non-static key.
- the code is fine but needs lockdep annotation.
- turning off the locking correctness validator.
- CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.3.0-rc1-15699-g3dee241c937e #149
- Call Trace:
- [c0000000f95cb250] [c00000000147dd84] dump_stack+0xe8/0x164 (unreliable)
- [c0000000f95cb2a0] [c00000000022ccd8] register_lock_class+0x308/0xa60
- [c0000000f95cb3a0] [c000000000229cc0] __lock_acquire+0x170/0x1ff0
- [c0000000f95cb4c0] [c00000000022c740] lock_acquire+0x220/0x270
- [c0000000f95cb580] [c000000000a93230] badblocks_check+0xc0/0x290
- [c0000000f95cb5f0] [c000000000d97540] nd_pfn_validate+0x5c0/0x7f0
- [c0000000f95cb6d0] [c000000000d98300] nd_dax_probe+0xd0/0x1f0
- [c0000000f95cb760] [c000000000d9b66c] nd_pmem_probe+0x10c/0x160
- [c0000000f95cb790] [c000000000d7f5ec] nvdimm_bus_probe+0x10c/0x240
- [c0000000f95cb820] [c000000000d0f844] really_probe+0x254/0x4e0
- [c0000000f95cb8b0] [c000000000d0fdfc] driver_probe_device+0x16c/0x1e0
- [c0000000f95cb930] [c000000000d10238] device_driver_attach+0x68/0xa0
- [c0000000f95cb970] [c000000000d1040c] __driver_attach+0x19c/0x1c0
- [c0000000f95cb9f0] [c000000000d0c4c4] bus_for_each_dev+0x94/0x130
- [c0000000f95cba50] [c000000000d0f014] driver_attach+0x34/0x50
- [c0000000f95cba70] [c000000000d0e208] bus_add_driver+0x178/0x2f0
- [c0000000f95cbb00] [c000000000d117c8] driver_register+0x108/0x170
- [c0000000f95cbb70] [c000000000d7edb0] __nd_driver_register+0xe0/0x100
- [c0000000f95cbbd0] [c000000001a6baa4] nd_pmem_driver_init+0x34/0x48
- [c0000000f95cbbf0] [c0000000000106f4] do_one_initcall+0x1d4/0x4b0
- [c0000000f95cbcd0] [c0000000019f499c] kernel_init_freeable+0x544/0x65c
- [c0000000f95cbdb0] [c000000000010d6c] kernel_init+0x2c/0x180
- [c0000000f95cbe20] [c00000000000b954] ret_from_kernel_thread+0x5c/0x68
+Here we avoid this by setting the "no append" mlx5 fs core flag when
+adding a new ethtool rule.
 
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Link: https://lore.kernel.org/r/20190919083355.26340-1-aneesh.kumar@linux.ibm.com
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Fixes: 6dc6071cfcde ("net/mlx5e: Add ethtool flow steering support")
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvdimm/bus.c         | 2 +-
- drivers/nvdimm/region.c      | 4 ++--
- drivers/nvdimm/region_devs.c | 4 ++--
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_fs_ethtool.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
-index 798c5c4aea9ca..bb3f20ebc276d 100644
---- a/drivers/nvdimm/bus.c
-+++ b/drivers/nvdimm/bus.c
-@@ -182,7 +182,7 @@ static int nvdimm_clear_badblocks_region(struct device *dev, void *data)
- 	sector_t sector;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_fs_ethtool.c b/drivers/net/ethernet/mellanox/mlx5/core/en_fs_ethtool.c
+index 94304abc49e98..39e90b8733192 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_fs_ethtool.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_fs_ethtool.c
+@@ -399,10 +399,10 @@ add_ethtool_flow_rule(struct mlx5e_priv *priv,
+ 		      struct mlx5_flow_table *ft,
+ 		      struct ethtool_rx_flow_spec *fs)
+ {
++	struct mlx5_flow_act flow_act = { .flags = FLOW_ACT_NO_APPEND };
+ 	struct mlx5_flow_destination *dst = NULL;
+-	struct mlx5_flow_act flow_act = {0};
+-	struct mlx5_flow_spec *spec;
+ 	struct mlx5_flow_handle *rule;
++	struct mlx5_flow_spec *spec;
+ 	int err = 0;
  
- 	/* make sure device is a region */
--	if (!is_nd_pmem(dev))
-+	if (!is_memory(dev))
- 		return 0;
- 
- 	nd_region = to_nd_region(dev);
-diff --git a/drivers/nvdimm/region.c b/drivers/nvdimm/region.c
-index 37bf8719a2a44..0f6978e72e7cd 100644
---- a/drivers/nvdimm/region.c
-+++ b/drivers/nvdimm/region.c
-@@ -34,7 +34,7 @@ static int nd_region_probe(struct device *dev)
- 	if (rc)
- 		return rc;
- 
--	if (is_nd_pmem(&nd_region->dev)) {
-+	if (is_memory(&nd_region->dev)) {
- 		struct resource ndr_res;
- 
- 		if (devm_init_badblocks(dev, &nd_region->bb))
-@@ -123,7 +123,7 @@ static void nd_region_notify(struct device *dev, enum nvdimm_event event)
- 		struct nd_region *nd_region = to_nd_region(dev);
- 		struct resource res;
- 
--		if (is_nd_pmem(&nd_region->dev)) {
-+		if (is_memory(&nd_region->dev)) {
- 			res.start = nd_region->ndr_start;
- 			res.end = nd_region->ndr_start +
- 				nd_region->ndr_size - 1;
-diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
-index af30cbe7a8ea2..47b48800fb758 100644
---- a/drivers/nvdimm/region_devs.c
-+++ b/drivers/nvdimm/region_devs.c
-@@ -632,11 +632,11 @@ static umode_t region_visible(struct kobject *kobj, struct attribute *a, int n)
- 	if (!is_memory(dev) && a == &dev_attr_dax_seed.attr)
- 		return 0;
- 
--	if (!is_nd_pmem(dev) && a == &dev_attr_badblocks.attr)
-+	if (!is_memory(dev) && a == &dev_attr_badblocks.attr)
- 		return 0;
- 
- 	if (a == &dev_attr_resource.attr) {
--		if (is_nd_pmem(dev))
-+		if (is_memory(dev))
- 			return 0400;
- 		else
- 			return 0;
+ 	spec = kvzalloc(sizeof(*spec), GFP_KERNEL);
 -- 
 2.20.1
 
