@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E535BECE58B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 533A4ECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB95C21783
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F10C20659
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:48:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948498;
-	bh=aMYMszbyV6LpeIhYhtf7nTC8zBEf+25fE5is7feSnPk=;
+	s=default; t=1569948505;
+	bh=YMjtigfnoF5xGSheDx+1AzgXp73xGeYEPv/dv5tU79g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jtsDu36iK3WDCx3S+RqNewdRMWvoBf3Myv0jtQN3v3aOae8tZlEKKLz0X+MqFE1+1
-	 yIm10IKuECHjlvW5PrWV4y4/eZIJVTqnwJWALC3kHEowza0SW8ocGzPUpWFOB83ytI
-	 qc+QUnhkyNNZzroo292czX/HPiTpCHpBYnsOCcLU=
+	b=0kGyHBSlFdzfk0t24tkK1S6fOFhcCaF6Qgz64JJ2XXA0IxfWT5ewt1+obSvYZ8nQR
+	 sW3VFNn+TlcKwZTbjKKzUgYrWaVWiLnGXSoVGa7DeTapRu9DdfhJsNoe5j1a8HmQp2
+	 hFcjFBIh7BBRCb4+E6rty9HJWHstU2l03umCFSGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390235AbfJAQpT (ORCPT
+        id S2388531AbfJAQsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:45:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57344 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:48:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390133AbfJAQpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:45:00 -0400
+        id S2390226AbfJAQpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:45:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61B4A21920;
-        Tue,  1 Oct 2019 16:44:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E57E0222C7;
+        Tue,  1 Oct 2019 16:45:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948299;
-        bh=aMYMszbyV6LpeIhYhtf7nTC8zBEf+25fE5is7feSnPk=;
+        s=default; t=1569948318;
+        bh=YMjtigfnoF5xGSheDx+1AzgXp73xGeYEPv/dv5tU79g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oxQyiIiUO5MNcW2mzlOdK9kQWdy4CBKu2tpK98xYMHrDQHrJtQGoA8Rgs3r5Yfw1O
-         s0lBgwmnK5WevVN7qeI9gSDGz581XsxW4+E20aPR60hxxuARE1czEAV290dFJVuZUH
-         I7CgxGJZJhGFDzFR71wfQE2ElszL5p0hvyCrBYow=
+        b=RXCjmRybISxbFlktQzlkneRHRheQ61QGdWfiiy7J7qkxsWBlLZ/cNSFwZeKO0Fjaq
+         Aop01Eh7TcUoRWfmoOhEuVZHDF4upbtCfHKrZFPmLImKzBXXiqhnTbG+nCWcBvPbrC
+         Mf2IogiBThVMs6JUfi/C164Sa5FG6uZ9RMPhLn/w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xin Long <lucien.xin@gmail.com>, Xiumei Mu <xmu@redhat.com>,
-        Fei Liu <feliu@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Peter Mamonov <pmamonov@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 26/29] macsec: drop skb sk before calling gro_cells_receive
-Date:   Tue,  1 Oct 2019 12:44:20 -0400
-Message-Id: <20191001164423.16406-26-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 10/19] net/phy: fix DP83865 10 Mbps HDX loopback disable function
+Date:   Tue,  1 Oct 2019 12:44:56 -0400
+Message-Id: <20191001164505.16708-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191001164423.16406-1-sashal@kernel.org>
-References: <20191001164423.16406-1-sashal@kernel.org>
+In-Reply-To: <20191001164505.16708-1-sashal@kernel.org>
+References: <20191001164505.16708-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,64 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Peter Mamonov <pmamonov@gmail.com>
 
-[ Upstream commit ba56d8ce38c8252fff5b745db3899cf092578ede ]
+[ Upstream commit e47488b2df7f9cb405789c7f5d4c27909fc597ae ]
 
-Fei Liu reported a crash when doing netperf on a topo of macsec
-dev over veth:
+According to the DP83865 datasheet "the 10 Mbps HDX loopback can be
+disabled in the expanded memory register 0x1C0.1". The driver erroneously
+used bit 0 instead of bit 1.
 
-  [  448.919128] refcount_t: underflow; use-after-free.
-  [  449.090460] Call trace:
-  [  449.092895]  refcount_sub_and_test+0xb4/0xc0
-  [  449.097155]  tcp_wfree+0x2c/0x150
-  [  449.100460]  ip_rcv+0x1d4/0x3a8
-  [  449.103591]  __netif_receive_skb_core+0x554/0xae0
-  [  449.108282]  __netif_receive_skb+0x28/0x78
-  [  449.112366]  netif_receive_skb_internal+0x54/0x100
-  [  449.117144]  napi_gro_complete+0x70/0xc0
-  [  449.121054]  napi_gro_flush+0x6c/0x90
-  [  449.124703]  napi_complete_done+0x50/0x130
-  [  449.128788]  gro_cell_poll+0x8c/0xa8
-  [  449.132351]  net_rx_action+0x16c/0x3f8
-  [  449.136088]  __do_softirq+0x128/0x320
-
-The issue was caused by skb's true_size changed without its sk's
-sk_wmem_alloc increased in tcp/skb_gro_receive(). Later when the
-skb is being freed and the skb's truesize is subtracted from its
-sk's sk_wmem_alloc in tcp_wfree(), underflow occurs.
-
-macsec is calling gro_cells_receive() to receive a packet, which
-actually requires skb->sk to be NULL. However when macsec dev is
-over veth, it's possible the skb->sk is still set if the skb was
-not unshared or expanded from the peer veth.
-
-ip_rcv() is calling skb_orphan() to drop the skb's sk for tproxy,
-but it is too late for macsec's calling gro_cells_receive(). So
-fix it by dropping the skb's sk earlier on rx path of macsec.
-
-Fixes: 5491e7c6b1a9 ("macsec: enable GRO and RPS on macsec devices")
-Reported-by: Xiumei Mu <xmu@redhat.com>
-Reported-by: Fei Liu <feliu@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 4621bf129856 ("phy: Add file missed in previous commit.")
+Signed-off-by: Peter Mamonov <pmamonov@gmail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/macsec.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/phy/national.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
-index 0c69dfbd28efa..aa204c98af79c 100644
---- a/drivers/net/macsec.c
-+++ b/drivers/net/macsec.c
-@@ -1234,6 +1234,7 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
- 		macsec_rxsa_put(rx_sa);
- 	macsec_rxsc_put(rx_sc);
+diff --git a/drivers/net/phy/national.c b/drivers/net/phy/national.c
+index 2a1b490bc5871..718cd3c59e92c 100644
+--- a/drivers/net/phy/national.c
++++ b/drivers/net/phy/national.c
+@@ -110,14 +110,17 @@ static void ns_giga_speed_fallback(struct phy_device *phydev, int mode)
  
-+	skb_orphan(skb);
- 	ret = gro_cells_receive(&macsec->gro_cells, skb);
- 	if (ret == NET_RX_SUCCESS)
- 		count_rx(dev, skb->len);
+ static void ns_10_base_t_hdx_loopack(struct phy_device *phydev, int disable)
+ {
++	u16 lb_dis = BIT(1);
++
+ 	if (disable)
+-		ns_exp_write(phydev, 0x1c0, ns_exp_read(phydev, 0x1c0) | 1);
++		ns_exp_write(phydev, 0x1c0,
++			     ns_exp_read(phydev, 0x1c0) | lb_dis);
+ 	else
+ 		ns_exp_write(phydev, 0x1c0,
+-			     ns_exp_read(phydev, 0x1c0) & 0xfffe);
++			     ns_exp_read(phydev, 0x1c0) & ~lb_dis);
+ 
+ 	pr_debug("10BASE-T HDX loopback %s\n",
+-		 (ns_exp_read(phydev, 0x1c0) & 0x0001) ? "off" : "on");
++		 (ns_exp_read(phydev, 0x1c0) & lb_dis) ? "off" : "on");
+ }
+ 
+ static int ns_config_init(struct phy_device *phydev)
 -- 
 2.20.1
 
