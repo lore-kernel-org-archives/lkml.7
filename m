@@ -7,98 +7,111 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFA9C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 23:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E47AECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 23:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6430E2086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 23:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D7BB2086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 23:14:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vQiZmVfa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QcfsGbCG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728937AbfJAXNG (ORCPT
+        id S1728961AbfJAXOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 19:13:06 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:39753 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbfJAXNG (ORCPT
+        Tue, 1 Oct 2019 19:14:36 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33358 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726971AbfJAXOg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 19:13:06 -0400
-Received: by mail-qk1-f196.google.com with SMTP id 4so13021850qki.6;
-        Tue, 01 Oct 2019 16:13:05 -0700 (PDT)
+        Tue, 1 Oct 2019 19:14:36 -0400
+Received: by mail-io1-f68.google.com with SMTP id z19so52636379ior.0;
+        Tue, 01 Oct 2019 16:14:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9ILA22R+FzAOleL+j0MeMARy0l6+g6H9hVfWW1tX4jE=;
-        b=vQiZmVfaJdfSh01WnpPmrO3ZzAZWT569tlLyWt6abiOLUTpkRl0Z4lKkINtwXAacRo
-         ii0e39RXHCH1BodaZQ+SPTVyWbd5FP66oiaqTr8aq8aD+MuhurzjFIf2R3uZaOcm/QbF
-         WCYVQPuhUYsPIX/AmmCjDYCaPW5Kg+eH1Xxowaqko6Dg7WVo1l2ZHZqQ9saCpKGeYut/
-         jCI+LP5W6PRNcU3Orit1siH90oBE3po/tX+oSqIPEL1SMIHh/qjlW02d05nSmsnxhb9v
-         vJ/+GGkkQOvg59kKAPWyzgyvDO83ZI8rz0NQEhszenwsOv0aMDQQ/HggYCW7VuBZc2qM
-         44EQ==
+        bh=z7GZGFrE8g4aFYCkd/kn56E+LCqap8x+Hr8ty1XtTJs=;
+        b=QcfsGbCG77Zjj1kd5g92af79DfUtzh3+m/pwY0IW8M/2aVjSNAiJC9FSL5g1QgVekO
+         tEgcCY+Jt56bkOiK4NfI6N3L0ngJpskmWLEPjNDw61h4v+a1gqLeIMOp0Fzs6BwgUoSF
+         cI8GWVUrzXoJ3dgQWbdwSdu4+TnxHFjYLh+dx+p6380fUrJdPwjjK76YyP61cpl3Xd+A
+         1GqeFC/hewmNbFowgdVxT/w74orEK23UUqtsyPP/TPfUaF+mgo3eKzJlq1Zhj+WWLRUX
+         /DR10Q+shHL2a9lfqZrQ9rtn9UGyfjHyjeprm+wZfn0Aq8c0bcEaB0UNEdhtMKLE1s66
+         2grQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9ILA22R+FzAOleL+j0MeMARy0l6+g6H9hVfWW1tX4jE=;
-        b=M9Le4Shj8wSuId31KyDSfmH2wHHLjdlP4WFhv/ebFxQCHDCD774xWw0uH4U5f+/BUP
-         17Lo5m2jUrzAlEzWnDGATtX27mVQ7WPp40sc6PG7mFryRklOw9G4+bgVnaUBFBzuDq2d
-         o567/DM83Q9QQvIMYZ5SMXHtnrJ3WYVRAVKB936OtoEy/bz4tUtMAGY2HGumjfzhMnMC
-         Ke2z++SSTtY+6g4JzcOCJR5oKO+crpG0M9tJFHy7yL3oyPImAzoUnduRbjkCPU9Veu/i
-         03QP2B7CTrgQHGgyybAfpBft4sFWczoBbwxAGPwOD8mcvwZW3pRTEBKqshI5IbKlI0rJ
-         LKuQ==
-X-Gm-Message-State: APjAAAVfpLvdYcdoIviPjJ1G+/40bLGxrhUsTiZFJuiE/WSwEve8kRkX
-        zfAj8BVp+X3iefbr2EVOOqKKy62+3A7uzTg8/lU=
-X-Google-Smtp-Source: APXvYqzFXNFI+cFNgRHC/Q6m+0b30EcRiOsi7zFCHkbZ4Zpo8M60YLKQI0GwEbgrpmLgpRkqA2cEg7ngWYJAPIyVhnQ=
-X-Received: by 2002:a05:620a:49b:: with SMTP id 27mr681985qkr.89.1569971585019;
- Tue, 01 Oct 2019 16:13:05 -0700 (PDT)
+        bh=z7GZGFrE8g4aFYCkd/kn56E+LCqap8x+Hr8ty1XtTJs=;
+        b=BcszLCXOyuan9mAlzb6CdhVt4AO9uA6eVSkKyeSMnXXvqybVoRoMcsWk2PKcWdGuy2
+         d7WG9Zm5YdtE/xeXmtzO2u7UCWPtpKiUswg9RsB7QnykuiKm4Sat+TRxrCPxqPQ2M1gF
+         7dufkPYWuqOpODWs647HHCHoTOsYsiYdRcDWva8ZpTd8ZVuUd0Af47TVC8ibrfrzgkGL
+         z4mWQu9ZZ83/l6XgEXil6EXtKPG2P2wJEmukg2IwNE6U65LAgmd0NrZARTWTD6BWFlWp
+         /pQgetP+Qyg55wtFlHvokvxzd60f231lEILaj6vBklZmV37w5pm34TE3EzEq3dVawrt3
+         ul6A==
+X-Gm-Message-State: APjAAAWPH95UXslVdKJwdM9RpxK6KwVINq/3ssoCQ6FdqyOvVS86yh1c
+        niYadK/mUxtXKn1jJwC6aeMDCdHsqeqhtf/uJRs=
+X-Google-Smtp-Source: APXvYqxMU7/5uW0MyUvmt2lUjkWPCdcEqtXmk3Hydlb7ge1HQ9ZIH506P7RA7yyl2Wl+ZJmONkOHelpAd9zdlk6uSrI=
+X-Received: by 2002:a92:15c4:: with SMTP id 65mr664464ilv.173.1569971675391;
+ Tue, 01 Oct 2019 16:14:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1568994791.git.esyr@redhat.com>
-In-Reply-To: <cover.1568994791.git.esyr@redhat.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Tue, 1 Oct 2019 16:12:53 -0700
-Message-ID: <CAPhsuW5CvJNRP5OO_M6XVd9q0x-CH9eADWR5oqdJP20eFScCFw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] Fix typo in RWH_WRITE_LIFE_NOT_SET constant name
-To:     Eugene Syromiatnikov <esyr@redhat.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Shaohua Li <shli@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        linux-raid <linux-raid@vger.kernel.org>,
-        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>
+References: <CAH2r5mspD=iMnO-CuyHMf3jmS0zm7fbqNOXe0cqMcKsXfLAu-Q@mail.gmail.com>
+ <20191001231017.67txq4dhrvhyzbu5@desk.local>
+In-Reply-To: <20191001231017.67txq4dhrvhyzbu5@desk.local>
+From:   Steve French <smfrench@gmail.com>
+Date:   Tue, 1 Oct 2019 18:14:23 -0500
+Message-ID: <CAH2r5mvnYtmfpHY+jeUbN4JehQwY1XfBWYVNSLO+wx1wkAA6gA@mail.gmail.com>
+Subject: Re: Many unexpected warnings with current sparse
+To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, sparse@vger.kernel.org,
+        linux-sparse@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 8:58 AM Eugene Syromiatnikov <esyr@redhat.com> wrote:
->
-> Hello.
->
-> This is a small fix of a typo (or, more specifically, some remnant of
-> the old patch version spelling) in RWH_WRITE_LIFE_NOT_SET constant,
-> which is named as RWF_WRITE_LIFE_NOT_SET currently.  Since the name
-> with "H" is used in man page and everywhere else, it's probably worth
-> to make the name used in the fcntl.h UAPI header in line with it.
-> The two follow-up patches update usage sites of this constant in kernel
-> to use the new spelling.
->
-> The old name is retained as it is part of UAPI now.
->
-> Changes since v2[1]:
->  * Updated RWF_WRITE_LIFE_NOT_SET constant usage
->    in drivers/md/raid5-ppl.c:ppl_init_log().
->
-> Changes since v1[2]:
->  * Changed format of the commit ID in the commit message of the first patch.
->  * Removed bogus Signed-off-by that snuck into the resend of the series.
+It may be related to the following sparse make warning:
 
-Applied to md-next.
+No rule to make target
+'/usr/include/x86_64-linux-gnu/bits/huge_val.h', needed by
+'sparse-llvm.o'
 
+I don't see huge_val.h in the Ubuntu 19 version of libc6-dev
+
+Will send you the kernel config - but I am using the default one from
+the Ubuntu mainline download of 5.4-rc1
+
+On Tue, Oct 1, 2019 at 6:10 PM Luc Van Oostenryck
+<luc.vanoostenryck@gmail.com> wrote:
+>
+> On Tue, Oct 01, 2019 at 11:28:16AM -0500, Steve French wrote:
+> > Updated sparse to get rid of some unneeded kernel sparse check
+> > warnings but now get many more
+> >
+> > I get 100s of warnings similar to
+> >
+> > ./include/linux/quota.h:114:17: error: Expected ( after asm
+> > ./include/linux/quota.h:114:17: error: got __inline
+> >
+> > but that is simply
+> >         default:
+> >                 BUG();
+>
+> Hi,
+>
+> I don't see this on v5.4-rc1 with defconfig or allyesconfig and
+> sparse's current version. Any sparse's version since roughly
+> mid-December should give the same result.
+>
+> If you're using an older version of sparse, please upgrade.
+> Otherwise, please send me your config so that I can take a look at it.
+>
+>
+> Best regards,
+> -- Luc Van Oostenryck
+
+
+
+-- 
 Thanks,
-Song
+
+Steve
