@@ -2,190 +2,144 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23525C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F55C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF01C20673
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:06:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="T2zDujtl"
+	by mail.kernel.org (Postfix) with ESMTP id 4438820700
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:08:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569931710;
+	bh=XCHUW0sFiehsHWOdWkwoD3qJu53YikewXF18yEas9ow=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sD7YmagL13Zk5rqQlQYC45s5pKHlDIpg3aOlKr68NLSPtFPGeOEI9kjxdXHV+wFN0
+	 PNEdsN56LrbRQWNLVWW2q1GJg2f49j2DqfvDUtT6msP+pZRnBaVNaUT22rNvfRQVAI
+	 4i3w1A3Np4Akm/rti5Z5iNXXlgJIpV2Umh/WY+R0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387661AbfJAMGQ (ORCPT
+        id S1732902AbfJAMI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 08:06:16 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:41434 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbfJAMGQ (ORCPT
+        Tue, 1 Oct 2019 08:08:29 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44997 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbfJAMI3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 08:06:16 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91C4U42173251;
-        Tue, 1 Oct 2019 12:04:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=ZJU7loQMKeSoP/RlUzFVBDI3b7KBQRKdPz3cE8BrKSw=;
- b=T2zDujtlnzNEZAYBTPrGPAsOXWfBF6J7caNaZ02j+TqHsWBEoYzS5/wAyc3zLwG2v7mk
- N19xuaEd3V13gCBlu/Wmi9JrpdhRzFMGt+/EqS1Tdzk+j0aVzmcbERWHG6+YVc335j33
- LgR9iLITnZtpx29J88n3ws3ekSo+rsosSRmIMrRlIoSl77gPgr6aoB8SzSWVWcSlKoHg
- Nf2y6UAbxYZ+E/rWmigk+D8dSZifiOn/6nk0+wO2yL0QCMqEW6et8F9EYHtG04c9d6wO
- T7hF6gR5mt9nJb2yfxqYs8wDFuh+sLoczaCE5CZZfICNNPBjspTTvuoU5g2pb8an92Di sA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2v9xxunbsc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 12:04:33 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91C465w188345;
-        Tue, 1 Oct 2019 12:04:32 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2vbqd0rcfx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 12:04:32 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x91C4GJF017650;
-        Tue, 1 Oct 2019 12:04:16 GMT
-Received: from z2.cn.oracle.com (/10.182.71.205)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 01 Oct 2019 05:04:16 -0700
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     vkuznets@redhat.com, linux-hyperv@vger.kernel.org,
-        kvm@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH v2 1/4] x86/kvm: Add "nopvspin" parameter to disable PV spinlocks
-Date:   Mon, 30 Sep 2019 20:08:57 +0800
-Message-Id: <1569845340-11884-2-git-send-email-zhenzhong.duan@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1569845340-11884-1-git-send-email-zhenzhong.duan@oracle.com>
-References: <1569845340-11884-1-git-send-email-zhenzhong.duan@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910010112
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910010112
+        Tue, 1 Oct 2019 08:08:29 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 21so11262884otj.11;
+        Tue, 01 Oct 2019 05:08:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bsKuMui1/xIoRg9sgW3QW1zBNcxnt/Bx1wXQKc1PEYw=;
+        b=K+DuMYxe5AFY6jMyR9GF4N/ICs9VhMRnq90JOIv0ry1NQuDP5Ayj4xOjHkoVivOlyY
+         Oxj0TJH6/durEsLzVzRDEqgvrlZb8YddkZXJXJnzWmHf2RUWUkqsA9o4PEp9yKvp6tsS
+         tEMWPwVcVACb0CS4L6k/eqiCep7ru4vL/yizEyYvqdcYe+B1077pQJK8KdcQdl4UwaBF
+         mC67LbPi4VeWKjI/5XW4pqaErKDkmQs0K4dILmLACEpigDyYYR55uaF26dUJV0wLkJyu
+         qC52oP2fstIIn9RXK6kqxaXJ8dWisNCZ8p4zawx+DASRS6FHuHf9U9UzHDF4Su7wNty/
+         RShQ==
+X-Gm-Message-State: APjAAAUuIhQMEEVrv0F8q1940zeVBau+oBy30eD8ThrmPYsokqQVYYZl
+        nOVfk1BIbx34+YUeJARbWw==
+X-Google-Smtp-Source: APXvYqzmhKuiodn2k2rjYHtIY+sxnIt9AOC3JK/zLBpGlQPeOA32z0qruE+A+HepzhYskR0Jx1n7iw==
+X-Received: by 2002:a9d:19a8:: with SMTP id k37mr17930702otk.172.1569931708065;
+        Tue, 01 Oct 2019 05:08:28 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id z3sm2524158otk.45.2019.10.01.05.08.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2019 05:08:27 -0700 (PDT)
+Date:   Tue, 1 Oct 2019 07:08:26 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, jejb@linux.ibm.com,
+        Martin K Petersen <martin.petersen@oracle.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        Janek Kotas <jank@cadence.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        nsekhar@ti.com
+Subject: Re: [PATCH 1/2] dt-bindings: ufs: ti,j721e-ufs.yaml: Add binding for
+ TI UFS wrapper
+Message-ID: <20191001120826.GA4214@bogus>
+References: <20190918133921.25844-1-vigneshr@ti.com>
+ <20190918133921.25844-2-vigneshr@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190918133921.25844-2-vigneshr@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are cases where a guest tries to switch spinlocks to bare metal
-behavior (e.g. by setting "xen_nopvspin" on XEN platform and
-"hv_nopvspin" on HYPER_V).
+On Wed, Sep 18, 2019 at 07:09:20PM +0530, Vignesh Raghavendra wrote:
+> Add binding documentation of TI wrapper for Cadence UFS Controller.
+> 
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+> ---
+>  .../devicetree/bindings/ufs/ti,j721e-ufs.yaml | 45 +++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml b/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
+> new file mode 100644
+> index 000000000000..dabd7c795fbe
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
+> @@ -0,0 +1,45 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/ufs/ti,j721e-ufs.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: TI J721e UFS Host Controller Glue Driver
+> +
+> +maintainers:
+> +  - Vignesh Raghavendra <vigneshr@ti.com>
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: ti,j721e-ufs
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: address of TI UFS glue registers
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description: phandle to the M-PHY clock
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - power-domains
+> +
+> +examples:
+> +  - |
+> +    ufs_wrapper: ufs-wrapper@4e80000 {
+> +       compatible = "ti,j721e-ufs";
+> +       reg = <0x0 0x4e80000 0x0 0x100>;
+> +       power-domains = <&k3_pds 277>;
+> +       clocks = <&k3_clks 277 1>;
+> +       assigned-clocks = <&k3_clks 277 1>;
+> +       assigned-clock-parents = <&k3_clks 277 4>;
+> +       #address-cells = <2>;
+> +       #size-cells = <2>;
 
-That feature is missed on KVM, add a new parameter "nopvspin" to disable
-PV spinlocks for KVM guest.
+Based on the driver you expect to have a child node here with the UFS 
+controller? You need to show that and have a schema for it.
 
-This new parameter is also used to replace "xen_nopvspin" and
-"hv_nopvspin".
-
-The global variable pvspin isn't defined as __initdata as it's used at
-runtime by XEN guest.
-
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krcmar <rkrcmar@redhat.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: Wanpeng Li <wanpengli@tencent.com>
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Will Deacon <will@kernel.org>
----
- Documentation/admin-guide/kernel-parameters.txt | 4 ++++
- arch/x86/include/asm/qspinlock.h                | 1 +
- arch/x86/kernel/kvm.c                           | 7 +++++++
- kernel/locking/qspinlock.c                      | 7 +++++++
- 4 files changed, 19 insertions(+)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index c7ac2f3..4b956d8 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -5330,6 +5330,10 @@
- 			as generic guest with no PV drivers. Currently support
- 			XEN HVM, KVM, HYPER_V and VMWARE guest.
- 
-+	nopvspin	[X86,KVM] Disables the qspinlock slow path
-+			using PV optimizations which allow the hypervisor to
-+			'idle' the guest on lock contention.
-+
- 	xirc2ps_cs=	[NET,PCMCIA]
- 			Format:
- 			<irq>,<irq_mask>,<io>,<full_duplex>,<do_sound>,<lockup_hack>[,<irq2>[,<irq3>[,<irq4>]]]
-diff --git a/arch/x86/include/asm/qspinlock.h b/arch/x86/include/asm/qspinlock.h
-index 444d6fd..34a4484 100644
---- a/arch/x86/include/asm/qspinlock.h
-+++ b/arch/x86/include/asm/qspinlock.h
-@@ -32,6 +32,7 @@ static __always_inline u32 queued_fetch_set_pending_acquire(struct qspinlock *lo
- extern void __pv_init_lock_hash(void);
- extern void __pv_queued_spin_lock_slowpath(struct qspinlock *lock, u32 val);
- extern void __raw_callee_save___pv_queued_spin_unlock(struct qspinlock *lock);
-+extern bool pvspin;
- 
- #define	queued_spin_unlock queued_spin_unlock
- /**
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index e820568..a4f108d 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -842,6 +842,13 @@ void __init kvm_spinlock_init(void)
- 	if (num_possible_cpus() == 1)
- 		return;
- 
-+	if (!pvspin) {
-+		pr_info("PV spinlocks disabled\n");
-+		static_branch_disable(&virt_spin_lock_key);
-+		return;
-+	}
-+	pr_info("PV spinlocks enabled\n");
-+
- 	__pv_init_lock_hash();
- 	pv_ops.lock.queued_spin_lock_slowpath = __pv_queued_spin_lock_slowpath;
- 	pv_ops.lock.queued_spin_unlock =
-diff --git a/kernel/locking/qspinlock.c b/kernel/locking/qspinlock.c
-index 2473f10..945b510 100644
---- a/kernel/locking/qspinlock.c
-+++ b/kernel/locking/qspinlock.c
-@@ -580,4 +580,11 @@ void queued_spin_lock_slowpath(struct qspinlock *lock, u32 val)
- #include "qspinlock_paravirt.h"
- #include "qspinlock.c"
- 
-+bool pvspin = true;
-+static __init int parse_nopvspin(char *arg)
-+{
-+	pvspin = false;
-+	return 0;
-+}
-+early_param("nopvspin", parse_nopvspin);
- #endif
--- 
-1.8.3.1
-
+> +    };
+> -- 
+> 2.23.0
+> 
