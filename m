@@ -7,57 +7,56 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3098ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53213ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A00C2133F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CB372133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:55:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="ltRIJU7g"
+	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="Kuc5VAuL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbfJAVxP (ORCPT
+        id S1728594AbfJAVzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 17:53:15 -0400
-Received: from mail-eopbgr730120.outbound.protection.outlook.com ([40.107.73.120]:2512
+        Tue, 1 Oct 2019 17:55:23 -0400
+Received: from mail-eopbgr730127.outbound.protection.outlook.com ([40.107.73.127]:55809
         "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728009AbfJAVxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 17:53:12 -0400
+        id S1728033AbfJAVxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 17:53:15 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VWndTvRWe5nLMIb6lb3jh6G6dRQTu087WbnJAf6YGQqLAajloQwLbfk4PL2BzN79ItA46wDncSknfdyhJ1ZuwsUo1W26wIS6lyO/t/2Ep324IB+lL/Mxu6DQefMZEPw/Ve/1B/a7ce/QVuwFA+xR6IrQEHtmLU/tM/0i+92JHkNeKR+dM/jbs9NDDusj2uOl+orDzVfl45mlzE0BvkD1YxpYT9uPne7d4QC6q+V/e/+BitnQgGtvDDlQMWSmppOR8v47W65zRgeeviyFx9VHUgpfXiBptK9ov9W1w8kKXaAS+UamaWFAoAN0DwtUkntQH+hD87WBZgXtU98K6VG9mg==
+ b=SowhO0dinLJzxPD7NCevQwJHs87NN1cs58/YNOk7S3UJheI6Unm7CCaf/mMfndC2UjU1EorT3n6rIdRuVhZ6Z7ff3wiTvV1GsbM6yma3MK6vfRlwPzprBPCzK8H+U1XphfXUEUNIBarf6bg+mdPiOdFvYYK9xl9zFZyivZGRvzdzfVQuOudG+85EwWa8fVeYSFfmX6rwBegpdzq1qKeI7KO3VEOzmwYla0n/gKj6beXpv7nEeYCfGtAQH9peXL1rrVqPZ8Y5jVt0sMqHIMiWYJS4FcdHRiwk/mBfhDpYkbr22KSgbEc7Lnj/xIKnn8rrXRMNIrzjJoZf6irnEOTK5A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NNUO8WeJjpFVl6pijXSPOS4DqYCVTGhmAbqOX/Q9qoM=;
- b=NdMM0kaq+bhJ8xDkXzuasf+eq871xcbvTuPz2FYRMhOaasrlGSTNU2L/oW4YyZ4WyGHGJW/QZrvKBwA+7wAB9wBBhbhG4mZXwLeVqdjEp8cx5eloTRI5y7jnYPsymoZApyZjZznJ8OteCjJB0EyjTrBPABAxyY+EO2CgoTItOezki1WMohzft+lWwv7HZ+p6GlQ1jQkWx8nmY2bsBXPm/3IieDb+bmuzafT1K4yajCoaypWXu7uv5tf8vN194C4mW2Rd3Inoqz58MsQM8z/YKOpoJioQOKPscmW4+1TXAxJhm6Ln1AU5jVmCptm7tueMrT3KTJIygvHoipuHwTqA/g==
+ bh=npxfvJbix+azbh5wI9YeQRTK16AogeGdIvvTh4ZSUuE=;
+ b=AXzpY9bOEMMhQgoTBw5DY0B3OvxCJj3901n/hhHdh/wDXlGo6E3zCS6ditQkWOhSAO09t7X2G6XwrSn4XpuJQuYaztpryBCeIcqy5IQA/hrW7wSAVxyAnZrTBa2SUpdx2Idxu/2K95Zy748VGc0LLc1JFCNBlij4yLNOKJxhX+g/PNxl/qC5JrY7uUWjqJVz2BbnXM1tH0LWt6U91KTk5DAvBpncs1x83OPBGuXMLCO+SqDpOV+L8irTBNVkqNXjlxyS7KNG46VH4YH9yeHgmkLSmEQfLO9nYPDzkZYnVWSUaGlcyTuw4NM/YjOeE9BQkS9oT9dacIUeQ+PB4A4UAQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
  dkim=pass header.d=mips.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NNUO8WeJjpFVl6pijXSPOS4DqYCVTGhmAbqOX/Q9qoM=;
- b=ltRIJU7ghz2bXFNUWhVwp/+5BS96ydNkfVhcJazS/QlKHGwFUZ/S7Dqlehyo3E1aIXoyr3Sxa10FAXNKaHB9NfjnNi/e+Xd4de0RsFpA0KUXfwrmecUxPlAlQt59d/fCnZ6hW/x02zMZ5QhHpsa8eYWs/NaS7lvGSFOopSjiS4U=
+ bh=npxfvJbix+azbh5wI9YeQRTK16AogeGdIvvTh4ZSUuE=;
+ b=Kuc5VAuLygiqCZmb+XBqdE7Eia8Wn3uURYYX6dmsRGbku1R6LIF8f2LUu36Nfo6XfDIkru9Gi732k8mqW0hWXLS8edU4+EWmnDLnZ2gGHXpt6PW3X9tPEl5Iy2anKU8dISgRQeiPnqn//rcahTJTMG7ngAn8/xlwNUx8v916UdY=
 Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1213.namprd22.prod.outlook.com (10.172.61.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.20; Tue, 1 Oct 2019 21:53:07 +0000
+ MWHPR2201MB1439.namprd22.prod.outlook.com (10.174.169.166) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.20; Tue, 1 Oct 2019 21:53:13 +0000
 Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
  ([fe80::498b:c2cd:e816:1481]) by MWHPR2201MB1277.namprd22.prod.outlook.com
  ([fe80::498b:c2cd:e816:1481%2]) with mapi id 15.20.2305.022; Tue, 1 Oct 2019
- 21:53:07 +0000
+ 21:53:13 +0000
 From:   Paul Burton <paul.burton@mips.com>
 To:     "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
 CC:     Huacai Chen <chenhc@lemote.com>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Paul Burton <pburton@wavecomp.com>
-Subject: [PATCH v2 02/36] MIPS: Use compact branch for LL/SC loops on MIPSr6+
-Thread-Topic: [PATCH v2 02/36] MIPS: Use compact branch for LL/SC loops on
- MIPSr6+
-Thread-Index: AQHVeKKb9mKJgp21ekqbovI5ofLUZw==
-Date:   Tue, 1 Oct 2019 21:53:06 +0000
-Message-ID: <20191001215249.4157062-3-paul.burton@mips.com>
+Subject: [PATCH v2 07/36] MIPS: barrier: Clean up __sync() definition
+Thread-Topic: [PATCH v2 07/36] MIPS: barrier: Clean up __sync() definition
+Thread-Index: AQHVeKKfcgi1tDGHuEGmrvUl70AtLw==
+Date:   Tue, 1 Oct 2019 21:53:13 +0000
+Message-ID: <20191001215249.4157062-8-paul.burton@mips.com>
 References: <20191001215249.4157062-1-paul.burton@mips.com>
 In-Reply-To: <20191001215249.4157062-1-paul.burton@mips.com>
 Accept-Language: en-US
@@ -73,69 +72,79 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.23.0
 x-originating-ip: [12.94.197.246]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 864ad0ae-5e78-49d9-52f4-08d746b9be09
-x-ms-traffictypediagnostic: MWHPR2201MB1213:
+x-ms-office365-filtering-correlation-id: aff50c2e-5e22-4610-195f-08d746b9c1cb
+x-ms-traffictypediagnostic: MWHPR2201MB1439:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR2201MB12136B685401CA676877870BC19D0@MWHPR2201MB1213.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-microsoft-antispam-prvs: <MWHPR2201MB1439C8D6305E573D0237C2AFC19D0@MWHPR2201MB1439.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
 x-forefront-prvs: 0177904E6B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(366004)(376002)(136003)(39840400004)(199004)(189003)(6512007)(5640700003)(54906003)(2501003)(4744005)(3846002)(6486002)(5660300002)(6436002)(66066001)(6116002)(1076003)(50226002)(2906002)(76176011)(52116002)(6506007)(107886003)(2351001)(4326008)(6916009)(102836004)(71190400001)(8936002)(386003)(25786009)(36756003)(44832011)(8676002)(71200400001)(81166006)(81156014)(186003)(256004)(11346002)(2616005)(7736002)(316002)(42882007)(305945005)(99286004)(66446008)(64756008)(66556008)(478600001)(66946007)(66476007)(486006)(446003)(476003)(14454004)(26005);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1213;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39840400004)(366004)(346002)(136003)(376002)(199004)(189003)(43544003)(186003)(11346002)(6512007)(1076003)(486006)(66066001)(26005)(6486002)(316002)(2906002)(5640700003)(6436002)(44832011)(42882007)(25786009)(446003)(6916009)(386003)(6506007)(76176011)(478600001)(52116002)(2616005)(102836004)(476003)(5660300002)(305945005)(64756008)(66446008)(2351001)(7736002)(99286004)(54906003)(14454004)(71190400001)(71200400001)(66946007)(66556008)(66476007)(36756003)(3846002)(6116002)(107886003)(4326008)(50226002)(81166006)(81156014)(8676002)(2501003)(8936002)(256004);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1439;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: wavecomp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WxNXCvplV5lKm3I0atZNFXktHkQ6yyiy2NYXGJZI4o+TvkWFpsZwqrVr/iKeF4B7ItR0B/Bgx2YXNk56HH7CxN7CKbIXonUu5J+sfmEVoduRmrlZ2wQB9qDftIor1y+VimWKJP5QQA+K/TMD5BJf4oXwkSyD2xwOXaX78u7mfvNaECkprpQshWyu59ZajBzeO2SNZp8IOUVmJZSj2cIGbd1sMez/S2SBwTsF2MkhmJwOin86LZNTgfvlylhYAFl+aiaslkp2c/se5bMP20y6nP8gZvtEi9vHGqxUKP4SsvvETwsHaXKRBe+kJifR489tlR833MjjOhoFsQRT6nNxH4/q1jsSg8TfPkXb0ggWg7Rj/6OAsrU2XAL5xqAZteWMRr9ehEROU3XIXwjgtOvsNsDa26oUUMUT6kppG7+PyVY=
+x-microsoft-antispam-message-info: Ihd+JeTVdMlc5S8OM7tq7GWLDo++5uSwu+UeTrHk8FQZuORS5qjelJaPbC6Rz3fFoQPE5qlqN2KhuYSnkjelo8WiRqFCDSG3YC94A+HZ4bywxegQTazyKdvVSyTHp6spuoWCExCL6pd63mOp8+59P5HY6JNUFeOTwiurU7Wo78TDFzsQb9AjnJ3Wt26+SWNdVLjsJ5dHvKavTdcgvpahJFHWltdH97WVI9l0BevcR2PPX2SFV+R+YM04+J5yCKvAQbm+WWbWy/71G3b8i8Di0q6duyfBo8M8Uh5eOW6NNbSAE5IWRVjMECcVxkpHTWxjZaOvIWzAJZf7KrxTBdoh8SScqyRSZu6dUBsLLA8IPHJ4CgcJLAvECyv7xPBBOUcKIX4d77LWCoVlaj0Xu37wN9je7LVUSC9aYyuD6Xdu4ps=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 864ad0ae-5e78-49d9-52f4-08d746b9be09
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Oct 2019 21:53:06.9079
+X-MS-Exchange-CrossTenant-Network-Message-Id: aff50c2e-5e22-4610-195f-08d746b9c1cb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Oct 2019 21:53:13.2130
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ke5PqEn2hiVAAOymUP4pDXc9Xqddg46Ch+uFeQsoyvZunaT9LKcAUXyuCCCQbKMqF2op0RpOpWi20w4h4rkDow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1213
+X-MS-Exchange-CrossTenant-userprincipalname: OlH20ZiEk46gHlE5jOmgKg8OsUx+JQ3LBJL8aO5s/lxEWiNQd5FVwTh1RFGSTaeALY/o1xIjQ+HFr+/5ndL5vQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1439
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When targeting MIPSr6 or higher make use of a compact branch in LL/SC
-loops, preventing the insertion of a delay slot nop that only serves to
-waste space.
+Implement __sync() using the new __SYNC() infrastructure, which will
+take care of not emitting an instruction for old R3k CPUs that don't
+support it. The only behavioral difference is that __sync() will now
+provide a compiler barrier on these old CPUs, but that seems like
+reasonable behavior anyway.
 
 Signed-off-by: Paul Burton <paul.burton@mips.com>
 ---
 
 Changes in v2: None
 
- arch/mips/include/asm/llsc.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/mips/include/asm/barrier.h | 18 ++++--------------
+ 1 file changed, 4 insertions(+), 14 deletions(-)
 
-diff --git a/arch/mips/include/asm/llsc.h b/arch/mips/include/asm/llsc.h
-index 9b19f38562ac..d240a4a2d1c4 100644
---- a/arch/mips/include/asm/llsc.h
-+++ b/arch/mips/include/asm/llsc.h
-@@ -9,6 +9,8 @@
- #ifndef __ASM_LLSC_H
- #define __ASM_LLSC_H
+diff --git a/arch/mips/include/asm/barrier.h b/arch/mips/include/asm/barrie=
+r.h
+index 657ec01120a4..a117c6d95038 100644
+--- a/arch/mips/include/asm/barrier.h
++++ b/arch/mips/include/asm/barrier.h
+@@ -11,20 +11,10 @@
+ #include <asm/addrspace.h>
+ #include <asm/sync.h>
 =20
-+#include <asm/isa-rev.h>
-+
- #if _MIPS_SZLONG =3D=3D 32
- #define SZLONG_LOG 5
- #define SZLONG_MASK 31UL
-@@ -32,6 +34,8 @@
-  */
- #if R10000_LLSC_WAR
- # define __SC_BEQZ "beqzl	"
-+#elif MIPS_ISA_REV >=3D 6
-+# define __SC_BEQZ "beqzc	"
- #else
- # define __SC_BEQZ "beqz	"
- #endif
+-#ifdef CONFIG_CPU_HAS_SYNC
+-#define __sync()				\
+-	__asm__ __volatile__(			\
+-		".set	push\n\t"		\
+-		".set	noreorder\n\t"		\
+-		".set	mips2\n\t"		\
+-		"sync\n\t"			\
+-		".set	pop"			\
+-		: /* no output */		\
+-		: /* no input */		\
+-		: "memory")
+-#else
+-#define __sync()	do { } while(0)
+-#endif
++static inline void __sync(void)
++{
++	asm volatile(__SYNC(full, always) ::: "memory");
++}
+=20
+ static inline void rmb(void)
+ {
 --=20
 2.23.0
 
