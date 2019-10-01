@@ -2,107 +2,166 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CEEECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE85ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A77A2070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9AFE2070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:49:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Gk/m5lFU"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Vl5WOhqB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389728AbfJAPsY (ORCPT
+        id S2389754AbfJAPts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 11:48:24 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:40256 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727313AbfJAPsY (ORCPT
+        Tue, 1 Oct 2019 11:49:48 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:8025 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727268AbfJAPts (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 11:48:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=mAjemN3zoy4NN/OBz00OSEPUQdbEoX+3LDmfYoCmeRg=; b=Gk/m5lFU3nP7Hb76nAnEXfpG/
-        dxdlqhJPiM95K+QzKvDxeTGznCqoXLGQOgaRflUKryN7ErAQNMNa3j0Vax41fBSawXUHGkAXr+OQE
-        hcQ8mgwp4+zl2JxMgNmsyAiEyHyzEjZyTT4KLL/sFmEr01psCAYCXX0QfTg5r33URgFedNK3QqvL4
-        xTTSLlw2Adqb7JYYIinG34bhO6BFMBiaUyxG4zAY6k8fVsJGMgytobhwpxvl5X5ZuXaAAfy1DK/jf
-        DSiCtENdKYVFx9qm98QjpskmMu5LWhofGMWzGiVw/7y8BRpl6ftbIrWMggt7QnheeZpl+WmzNxhay
-        O8MZt9plQ==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:46324)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iFKNs-0003Iy-Ob; Tue, 01 Oct 2019 16:48:16 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iFKNq-0008KL-A1; Tue, 01 Oct 2019 16:48:14 +0100
-Date:   Tue, 1 Oct 2019 16:48:14 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: Re: [PATCH] Partially revert "compiler: enable
- CONFIG_OPTIMIZE_INLINING forcibly"
-Message-ID: <20191001154814.GJ25745@shell.armlinux.org.uk>
-References: <20190930114540.27498-1-will@kernel.org>
- <CAK7LNARWkQ-z02RYv3XQ69KkWdmEVaZge07qiYC8_kyMrFzCTg@mail.gmail.com>
- <20191001104253.fci7s3sn5ov3h56d@willie-the-truck>
- <20191001114129.GL42880@e119886-lin.cambridge.arm.com>
- <20191001143626.GI25745@shell.armlinux.org.uk>
- <20191001152826.GM42880@e119886-lin.cambridge.arm.com>
+        Tue, 1 Oct 2019 11:49:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1569944988; x=1601480988;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=PgZ9aytk0j+S8TWOd0mGQ2grSS4ZIPx/rutqBSNX9jI=;
+  b=Vl5WOhqBnUarXg7QtiEDzMy7b+wfCE3iVKhM353m6fzubxfbvObwITFd
+   tF7gkSzIXEfzGCtsYalShBQ+tRs7X6YXP+siFgZjn7oe8sqjL8hypdRjz
+   XrQscHSWQMkjvE43AglTAezjFHcDmAuFfetlxEW40YcmdEXS/yljWf9ML
+   A=;
+X-IronPort-AV: E=Sophos;i="5.64,571,1559520000"; 
+   d="scan'208";a="838434598"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2c-2225282c.us-west-2.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 01 Oct 2019 15:47:16 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2c-2225282c.us-west-2.amazon.com (Postfix) with ESMTPS id 4D0D9A1EF5;
+        Tue,  1 Oct 2019 15:46:56 +0000 (UTC)
+Received: from EX13D02UWC004.ant.amazon.com (10.43.162.236) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 1 Oct 2019 15:46:56 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
+ EX13D02UWC004.ant.amazon.com (10.43.162.236) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 1 Oct 2019 15:46:56 +0000
+Received: from 8c859006a84e.ant.amazon.com (172.26.203.30) by
+ mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP Server id
+ 15.0.1367.3 via Frontend Transport; Tue, 1 Oct 2019 15:46:55 +0000
+From:   Patrick Williams <alpawi@amazon.com>
+CC:     Patrick Williams <alpawi@amazon.com>,
+        Patrick Williams <patrick@stwcx.xyz>, <stable@vger.kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] pinctrl: armada-37xx: fix control of pins 32 and up
+Date:   Tue, 1 Oct 2019 10:46:31 -0500
+Message-ID: <20191001154634.96165-1-alpawi@amazon.com>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
+In-Reply-To: <20190618160105.26343-3-alpawi@amazon.com>
+References: <20190618160105.26343-3-alpawi@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191001152826.GM42880@e119886-lin.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 04:28:27PM +0100, Andrew Murray wrote:
-> I hadn't noticed the use of __OPTIMIZE__ - indeed if __compiletime_assert
-> is no-op'd and you reach it then you won't have a build error - but you
-> may get uninitialised values instead.
-> 
-> Presumably the purpose of __OPTIMIZE__ in this case is to prevent getting
-> an undefined function error for the __compiletime_assert line, even though
-> it doesn't get called (when using a compiler that doesn't optimize out the
-> call to the unused function).
-> 
-> Why is the call to __get_user_bad not guarded in this way for when
-> __OPTIMIZE__ isn't set, i.e. why doesn't it suffer from the issue
-> that the following fixes?
+The 37xx configuration registers are only 32 bits long, so
+pins 32-35 spill over into the next register.  The calculation
+for the register address was done, but the bitmask was not, so
+any configuration to pin 32 or above resulted in a bitmask that
+overflowed and performed no action.
 
-Officially, the kernel does not support building with -O0.  To start
-with, the top level makefile has:
+Fix the register / offset calculation to also adjust the offset.
 
-ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
-KBUILD_CFLAGS   += -Os
-else
-KBUILD_CFLAGS   += -O2
-endif
+Fixes: 5715092a458c ("pinctrl: armada-37xx: Add gpio support")
+Signed-off-by: Patrick Williams <alpawi@amazon.com>
+Acked-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: <stable@vger.kernel.org>
+---
+ drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-and we've said for years that the kernel relies upon the compiler
-optimiser to build correctly.  You may be lucky if you pass it via
-some method to 'make' but that's going to rely on the argument order
-to the compiler, and the order in which the compiler processes its
-arguments, and whether it (for example) correctly disables all
-optimisations if it encounters -O0 somewhere.
-
+diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+index 6462d3ca7ceb..34c1fee52cbe 100644
+--- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
++++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+@@ -221,11 +221,11 @@ static const struct armada_37xx_pin_data armada_37xx_pin_sb = {
+ };
+ 
+ static inline void armada_37xx_update_reg(unsigned int *reg,
+-					  unsigned int offset)
++					  unsigned int *offset)
+ {
+ 	/* We never have more than 2 registers */
+-	if (offset >= GPIO_PER_REG) {
+-		offset -= GPIO_PER_REG;
++	if (*offset >= GPIO_PER_REG) {
++		*offset -= GPIO_PER_REG;
+ 		*reg += sizeof(u32);
+ 	}
+ }
+@@ -376,7 +376,7 @@ static inline void armada_37xx_irq_update_reg(unsigned int *reg,
+ {
+ 	int offset = irqd_to_hwirq(d);
+ 
+-	armada_37xx_update_reg(reg, offset);
++	armada_37xx_update_reg(reg, &offset);
+ }
+ 
+ static int armada_37xx_gpio_direction_input(struct gpio_chip *chip,
+@@ -386,7 +386,7 @@ static int armada_37xx_gpio_direction_input(struct gpio_chip *chip,
+ 	unsigned int reg = OUTPUT_EN;
+ 	unsigned int mask;
+ 
+-	armada_37xx_update_reg(&reg, offset);
++	armada_37xx_update_reg(&reg, &offset);
+ 	mask = BIT(offset);
+ 
+ 	return regmap_update_bits(info->regmap, reg, mask, 0);
+@@ -399,7 +399,7 @@ static int armada_37xx_gpio_get_direction(struct gpio_chip *chip,
+ 	unsigned int reg = OUTPUT_EN;
+ 	unsigned int val, mask;
+ 
+-	armada_37xx_update_reg(&reg, offset);
++	armada_37xx_update_reg(&reg, &offset);
+ 	mask = BIT(offset);
+ 	regmap_read(info->regmap, reg, &val);
+ 
+@@ -413,7 +413,7 @@ static int armada_37xx_gpio_direction_output(struct gpio_chip *chip,
+ 	unsigned int reg = OUTPUT_EN;
+ 	unsigned int mask, val, ret;
+ 
+-	armada_37xx_update_reg(&reg, offset);
++	armada_37xx_update_reg(&reg, &offset);
+ 	mask = BIT(offset);
+ 
+ 	ret = regmap_update_bits(info->regmap, reg, mask, mask);
+@@ -434,7 +434,7 @@ static int armada_37xx_gpio_get(struct gpio_chip *chip, unsigned int offset)
+ 	unsigned int reg = INPUT_VAL;
+ 	unsigned int val, mask;
+ 
+-	armada_37xx_update_reg(&reg, offset);
++	armada_37xx_update_reg(&reg, &offset);
+ 	mask = BIT(offset);
+ 
+ 	regmap_read(info->regmap, reg, &val);
+@@ -449,7 +449,7 @@ static void armada_37xx_gpio_set(struct gpio_chip *chip, unsigned int offset,
+ 	unsigned int reg = OUTPUT_VAL;
+ 	unsigned int mask, val;
+ 
+-	armada_37xx_update_reg(&reg, offset);
++	armada_37xx_update_reg(&reg, &offset);
+ 	mask = BIT(offset);
+ 	val = value ? mask : 0;
+ 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.17.2 (Apple Git-113)
+
