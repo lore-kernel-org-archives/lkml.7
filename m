@@ -2,870 +2,530 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF300FA373A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 571BCFA373A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95D4521924
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:12:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05F0C2133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:14:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PeGCNBOY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e2YGNk/n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732954AbfJAIMd (ORCPT
+        id S1732907AbfJAIOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 04:12:33 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:45736 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727218AbfJAIMd (ORCPT
+        Tue, 1 Oct 2019 04:14:53 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33514 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbfJAIOw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 04:12:33 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x918CGLX087648;
-        Tue, 1 Oct 2019 03:12:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569917536;
-        bh=aTd4roGIDcjFhwqb1RrwuZcI3FSaT+bMYigAks2TStw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=PeGCNBOYFzs7FFkXm9QqEOKX/k7lVMlf0vl2NOa9Bnf4PggXHblN/uR+CdHoIxbrR
-         GVnEBQuskOuynQ5OnzOlguYNQXoc7v7tuwymPYbQULIE2inpkPDV3iPv8ah5H84erw
-         ZE53sLt7I2e9tR6ZoC0TuQ8r7HTHYjfQ+pR6ZKHs=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x918CGEb005529
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 1 Oct 2019 03:12:16 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 1 Oct
- 2019 03:12:15 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 1 Oct 2019 03:12:05 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x918CAVj072277;
-        Tue, 1 Oct 2019 03:12:11 -0500
-Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to
- dts
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Adam Ford <aford173@gmail.com>
-CC:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford <adam.ford@logicpd.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190510194229.20628-1-aford173@gmail.com>
- <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
- <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com>
- <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
- <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com>
- <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
- <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com>
- <23eba53a-9304-2ceb-d97e-01891ec0b3ed@ti.com>
- <cb028b1e-05ca-9b22-be5d-c63f5fd56cc4@ti.com>
- <F3335195-6EB7-4D44-B884-2F29D9238011@goldelico.com>
- <CAHCN7xL9bFxO=2i1DzmRj6A3XwUNdt=DZeJ2a0EZ0f9gcFTy6g@mail.gmail.com>
- <CAHCN7x+vCfPTRE+zzYUwAXdbBzRotTP2hSOgsHB0FdgBhZV5zA@mail.gmail.com>
- <CAHCN7xJDV=R9Ysjhff7=mEXdciwPP_5LQbHwaUT8KvhSkLKw8A@mail.gmail.com>
- <04306a5e-f9be-35a4-1aa1-5795d780e289@ti.com>
- <3777f1b1-2d9a-334b-b9e7-99dfda2ae29b@ti.com>
- <CAHCN7xJNJca8W_yw5nNY3AmKDSPoLzJ8voPmR1HS3bNcU8uQGg@mail.gmail.com>
- <6cd7c9f0-cb26-588b-dfd1-faf462732549@ti.com>
- <ec718740-bb8f-0d31-3622-89a62bd8fede@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <202ae3b3-f72c-5b5b-4344-be22c8368cc7@ti.com>
-Date:   Tue, 1 Oct 2019 11:12:10 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 1 Oct 2019 04:14:52 -0400
+Received: by mail-lj1-f195.google.com with SMTP id a22so12360440ljd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 01:14:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DsUSuE3Qc+IMGBPI5d8q+lZCRyzeVNpX4WC6Zn5QQOM=;
+        b=e2YGNk/nBrz23ecZzwBu2s5Lb13qiDOcBFfwu8HyI3nPHb9l8eQmKjxV/ZyvNJyOX+
+         ub2+y8YKsjp81oEpJ+gP0QzEnziglqH35XcUsK6ET276zf3HvtyqHHjL6uxkPFniZEgy
+         VgJUez+ObmIWXrTQW4EJN1Fr59jZJZDbNOqqNL8QrVqc2GGsWHyQXfKTZg/QYMpcGsQZ
+         D7YZJPxPYp6YddWdWSL7q9q/SuxRYRjRhlOyhRCcRAAbltDXGsZ24/wzAEngyucpYjbl
+         iEZk2oSDmpGE8PyXFnpnSdvTKhonZmBjMYXpGzdnGfcJ5Xo3H+riFrcbuluL4nU1IJPb
+         6BKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DsUSuE3Qc+IMGBPI5d8q+lZCRyzeVNpX4WC6Zn5QQOM=;
+        b=dPjssspLfGnkE7g5Sr5FbCGWSFDVSjv1fshVi7tU9OXDcWYhAjlPPa54uKONoGT0CH
+         wrfq8iAz9NwNi8KYWZlgDG2lwIc5x/MsTDx0NgAWUbF7tuMdIK9+r9snWDjtV25mSsIB
+         UKto1beI4IxXIBqDqYmj8Vml+XrZMw8M4U+c12rMh9xdu7Y10HrOaXYmucAVeS2pzn2y
+         yVyqimhm5lgPzmMVDVDcnbC1Bzqn0sQaFWBceJYPPT3BRjfhBXgPpmoMFb6IE1+3pEXi
+         LnULufZFUXazwWWZYurK+EmwS+qLcRzYhFo8QXgAgjUCgJjhtJXUyIQjIXCM2k8g3+Kg
+         Wsqw==
+X-Gm-Message-State: APjAAAWEFqXy9iUQ76I1+lLiK3RV5pVNL3IbfGD4D8tngJcBFw83iqrZ
+        uo+fvAHObiCO3P0PXlw4eSa3NRDMUbzbDVcl+rBluA==
+X-Google-Smtp-Source: APXvYqzE7qsdZ6NiXHyEtnFKGKE5b2JS+4b1t36fhqpAop3GH9BgCU8cNHUmRkt86Rh7QuQiY229fsM2NWxYCpsL6OI=
+X-Received: by 2002:a2e:8107:: with SMTP id d7mr15200540ljg.2.1569917688283;
+ Tue, 01 Oct 2019 01:14:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <ec718740-bb8f-0d31-3622-89a62bd8fede@ti.com>
-Content-Type: multipart/mixed;
-        boundary="------------7177A182B47F5D946B1AB305"
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1568878421-12301-1-git-send-email-vincent.guittot@linaro.org>
+ <1568878421-12301-5-git-send-email-vincent.guittot@linaro.org> <9bfb3252-c268-8c0c-9c72-65f872e9c8b2@arm.com>
+In-Reply-To: <9bfb3252-c268-8c0c-9c72-65f872e9c8b2@arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Tue, 1 Oct 2019 10:14:36 +0200
+Message-ID: <CAKfTPtDUFMFnD+RZndx0+8A+V9HV9Hv0TN+p=mAge0VsqS6xmA@mail.gmail.com>
+Subject: Re: [PATCH v3 04/10] sched/fair: rework load_balance
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---------------7177A182B47F5D946B1AB305
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+On Mon, 30 Sep 2019 at 18:24, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>
+> Hi Vincent,
+>
+> On 19/09/2019 09:33, Vincent Guittot wrote:
+>
+> these are just some comments & questions based on a code study. Haven't
+> run any tests with it yet.
+>
+> [...]
+>
+> > The type of sched_group has been extended to better reflect the type of
+> > imbalance. We now have :
+> >         group_has_spare
+> >         group_fully_busy
+> >         group_misfit_task
+> >         group_asym_capacity
+>
+> s/group_asym_capacity/group_asym_packing
 
-On 01/10/2019 08:07, Tomi Valkeinen wrote:
-> On 30/09/2019 20:48, Tero Kristo wrote:
-> 
->> Hmmh, after some testing, it seems there is bad stuff happening with 
->> the divider clock implementation, I am re-working it as of now. 
->> Basically what is wrong is that with a divider max value of say 16, 
->> the driver attempts to craft the max value into a mask, but this ends 
->> up being 0x1f. If the max value is 15, it ends up into 0xf which is 
->> correct.
-> 
-> Ok, that explains the max not working.
-> 
-> It doesn't explain the other issue, where the TRM says the max div is 
-> 32, but it does not work. But taking the max div from the old SoCs, 16, 
-> is not correct either, as it seems that dividers up to 31 work ok.
-> 
->   Tomi
-> 
+Yes, I forgot to change the commit message and the comments
 
-Ok, attached a series that hopefully fixes it, any testing feedback 
-welcome before I post this properly.
+>
+> >         group_imbalanced
+> >         group_overloaded
+> >
+> > Based on the type fo sched_group, load_balance now sets what it wants to
+>
+> s/fo/for
 
-This also supports omap36xx dpll4_m4_ck divider up-to 31, other omap3 
-family is limited to 16.
+s/fo/of/
 
--Tero
+>
+> > move in order to fix the imbalance. It can be some load as before but also
+> > some utilization, a number of task or a type of task:
+> >         migrate_task
+> >         migrate_util
+> >         migrate_load
+> >         migrate_misfit
+> >
+> > This new load_balance algorithm fixes several pending wrong tasks
+> > placement:
+> > - the 1 task per CPU case with asymmetrics system
+>
+> s/asymmetrics/asymmetric
 
+yes
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
---------------7177A182B47F5D946B1AB305
-Content-Type: text/x-patch;
-	name="0002-clk-ti-divider-cleanup-ti_clk_parse_divider_data-API.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename*0="0002-clk-ti-divider-cleanup-ti_clk_parse_divider_data-API.pa";
-	filename*1="tch"
+>
+> This stands for ASYM_CPUCAPACITY and ASYM_PACKING, right?
 
-From ac5652cc42860344c8daf00259a85debf5320763 Mon Sep 17 00:00:00 2001
-From: Tero Kristo <t-kristo@ti.com>
-Date: Mon, 30 Sep 2019 20:59:29 +0300
-Subject: [PATCH 2/4] clk: ti: divider: cleanup ti_clk_parse_divider_data API
+yes
 
-Cleanup the ti_clk_parse_divider_data to pass the divider data struct
-directly instead of individual values of it. This makes it easier
-to modify the implementation later on.
+>
+> [...]
+>
+> >   #define LBF_ALL_PINNED       0x01
+> > @@ -7115,7 +7130,7 @@ struct lb_env {
+> >         unsigned int            loop_max;
+> >
+> >         enum fbq_type           fbq_type;
+> > -     enum group_type         src_grp_type;
+> > +     enum migration_type     balance_type;
+>
+> Minor thing:
+>
+> Why not
+>      enum migration_type migration_type;
+> or
+>      enum balance_type balance_type;
+>
+> We do the same for other enums like fbq_type or group_type.
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
----
- drivers/clk/ti/clkctrl.c |  2 +-
- drivers/clk/ti/clock.h   |  3 +--
- drivers/clk/ti/divider.c | 18 +++++++-----------
- 3 files changed, 9 insertions(+), 14 deletions(-)
+yes, I can align
 
-diff --git a/drivers/clk/ti/clkctrl.c b/drivers/clk/ti/clkctrl.c
-index 975995eea15c..665dfc5e309a 100644
---- a/drivers/clk/ti/clkctrl.c
-+++ b/drivers/clk/ti/clkctrl.c
-@@ -380,7 +380,7 @@ _ti_clkctrl_setup_div(struct omap_clkctrl_provider *provider,
- 
- 	if (ti_clk_parse_divider_data((int *)div_data->dividers, 0,
- 				      div_data->max_div, div_flags,
--				      &div->width, &div->table)) {
-+				      div)) {
- 		pr_err("%s: Data parsing for %pOF:%04x:%d failed\n", __func__,
- 		       node, offset, data->bit);
- 		kfree(div);
-diff --git a/drivers/clk/ti/clock.h b/drivers/clk/ti/clock.h
-index e4b8392ff63c..f6b6876dfdee 100644
---- a/drivers/clk/ti/clock.h
-+++ b/drivers/clk/ti/clock.h
-@@ -220,8 +220,7 @@ void ti_clk_latch(struct clk_omap_reg *reg, s8 shift);
- struct clk_hw *ti_clk_build_component_mux(struct ti_clk_mux *setup);
- 
- int ti_clk_parse_divider_data(int *div_table, int num_dividers, int max_div,
--			      u8 flags, u8 *width,
--			      const struct clk_div_table **table);
-+			      u8 flags, struct clk_omap_divider *div);
- 
- int ti_clk_get_reg_addr(struct device_node *node, int index,
- 			struct clk_omap_reg *reg);
-diff --git a/drivers/clk/ti/divider.c b/drivers/clk/ti/divider.c
-index d9f7dc94e2a6..39e890204156 100644
---- a/drivers/clk/ti/divider.c
-+++ b/drivers/clk/ti/divider.c
-@@ -338,8 +338,7 @@ static struct clk *_register_divider(struct device_node *node,
- }
- 
- int ti_clk_parse_divider_data(int *div_table, int num_dividers, int max_div,
--			      u8 flags, u8 *width,
--			      const struct clk_div_table **table)
-+			      u8 flags, struct clk_omap_divider *divider)
- {
- 	int valid_div = 0;
- 	u32 val;
-@@ -363,8 +362,7 @@ int ti_clk_parse_divider_data(int *div_table, int num_dividers, int max_div,
- 			val++;
- 		}
- 
--		*width = fls(val);
--		*table = NULL;
-+		divider->width = fls(val);
- 
- 		return 0;
- 	}
-@@ -382,24 +380,22 @@ int ti_clk_parse_divider_data(int *div_table, int num_dividers, int max_div,
- 	num_dividers = i;
- 
- 	tmp = kcalloc(valid_div + 1, sizeof(*tmp), GFP_KERNEL);
--	if (!tmp) {
--		*table = ERR_PTR(-ENOMEM);
-+	if (!tmp)
- 		return -ENOMEM;
--	}
- 
- 	valid_div = 0;
--	*width = 0;
-+	divider->width = 0;
- 
- 	for (i = 0; i < num_dividers; i++)
- 		if (div_table[i] > 0) {
- 			tmp[valid_div].div = div_table[i];
- 			tmp[valid_div].val = i;
- 			valid_div++;
--			*width = i;
-+			divider->width = i;
- 		}
- 
--	*width = fls(*width);
--	*table = tmp;
-+	divider->width = fls(divider->width);
-+	divider->table = tmp;
- 
- 	return 0;
- }
--- 
-2.17.1
+>
+> >         struct list_head        tasks;
+> >   };
+> >
+>
+> The detach_tasks() comment still mentions only runnable load.
 
+ok
 
---------------7177A182B47F5D946B1AB305
-Content-Type: text/x-patch;
-	name="0003-clk-ti-divider-convert-to-use-min-max-mask-instead-o.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename*0="0003-clk-ti-divider-convert-to-use-min-max-mask-instead-o.pa";
-	filename*1="tch"
+>
+> > @@ -7347,7 +7362,7 @@ static int detach_tasks(struct lb_env *env)
+> >   {
+> >         struct list_head *tasks = &env->src_rq->cfs_tasks;
+> >         struct task_struct *p;
+> > -     unsigned long load;
+> > +     unsigned long util, load;
+>
+> Minor: Order by length or reduce scope to while loop ?
 
-From 7f62f45d12cec77fd006ac37ab5e8a840274fc0f Mon Sep 17 00:00:00 2001
-From: Tero Kristo <t-kristo@ti.com>
-Date: Tue, 1 Oct 2019 10:56:31 +0300
-Subject: [PATCH 3/4] clk: ti: divider: convert to use min,max,mask instead of
- width
+I don't get your point here
 
-The existing width field used to check divider validity does not provide
-enough protection against bad values. For example, if max divider value
-is 4, the smallest all-1 bitmask that can hold this value is 7, which
-allows values higher than 4 to be used. This typically causes
-unpredictable results with hardware. So far this issue hasn't been
-noticed as most of the dividers actually have maximum values which fit
-the whole bitfield, but there are certain clocks for which this is a
-problem, like dpll4_m4 divider on omap3 devices.
+>
+> >         int detached = 0;
+> >
+> >         lockdep_assert_held(&env->src_rq->lock);
+> > @@ -7380,19 +7395,53 @@ static int detach_tasks(struct lb_env *env)
+> >                 if (!can_migrate_task(p, env))
+> >                         goto next;
+> >
+> > -             load = task_h_load(p);
+> > +             switch (env->balance_type) {
+> > +             case migrate_load:
+> > +                     load = task_h_load(p);
+> >
+> > -             if (sched_feat(LB_MIN) && load < 16 && !env->sd->nr_balance_failed)
+> > -                     goto next;
+> > +                     if (sched_feat(LB_MIN) &&
+> > +                         load < 16 && !env->sd->nr_balance_failed)
+> > +                             goto next;
+> >
+> > -             if ((load / 2) > env->imbalance)
+> > -                     goto next;
+> > +                     if ((load / 2) > env->imbalance)
+> > +                             goto next;
+> > +
+> > +                     env->imbalance -= load;
+> > +                     break;
+> > +
+> > +             case migrate_util:
+> > +                     util = task_util_est(p);
+> > +
+> > +                     if (util > env->imbalance)
+> > +                             goto next;
+> > +
+> > +                     env->imbalance -= util;
+> > +                     break;
+> > +
+> > +             case migrate_task:
+> > +                     /* Migrate task */
+>
+> Minor: IMHO, this comment is not necessary.
 
-Thus, convert the whole validity logic to use min,max and mask values
-for determining if a specific divider is valid or not. This prevents
-the odd cases where bad value would otherwise be written to a divider
-config register.
+yes
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
----
- drivers/clk/ti/clock.h   |   4 +-
- drivers/clk/ti/divider.c | 151 ++++++++++++++++-----------------------
- 2 files changed, 64 insertions(+), 91 deletions(-)
+>
+> > +                     env->imbalance--;
+> > +                     break;
+> > +
+> > +             case migrate_misfit:
+> > +                     load = task_h_load(p);
+> > +
+> > +                     /*
+> > +                      * utilization of misfit task might decrease a bit
+>
+> This patch still uses load. IMHO this comments becomes true only with 08/10.
 
-diff --git a/drivers/clk/ti/clock.h b/drivers/clk/ti/clock.h
-index f6b6876dfdee..e6995c04001e 100644
---- a/drivers/clk/ti/clock.h
-+++ b/drivers/clk/ti/clock.h
-@@ -20,9 +20,11 @@ struct clk_omap_divider {
- 	struct clk_hw		hw;
- 	struct clk_omap_reg	reg;
- 	u8			shift;
--	u8			width;
- 	u8			flags;
- 	s8			latch;
-+	u16			min;
-+	u16			max;
-+	u16			mask;
- 	const struct clk_div_table	*table;
- 	u32		context;
- };
-diff --git a/drivers/clk/ti/divider.c b/drivers/clk/ti/divider.c
-index 39e890204156..c75cc54772f6 100644
---- a/drivers/clk/ti/divider.c
-+++ b/drivers/clk/ti/divider.c
-@@ -26,30 +26,6 @@
- #undef pr_fmt
- #define pr_fmt(fmt) "%s: " fmt, __func__
- 
--#define div_mask(d)	((1 << ((d)->width)) - 1)
--
--static unsigned int _get_table_maxdiv(const struct clk_div_table *table)
--{
--	unsigned int maxdiv = 0;
--	const struct clk_div_table *clkt;
--
--	for (clkt = table; clkt->div; clkt++)
--		if (clkt->div > maxdiv)
--			maxdiv = clkt->div;
--	return maxdiv;
--}
--
--static unsigned int _get_maxdiv(struct clk_omap_divider *divider)
--{
--	if (divider->flags & CLK_DIVIDER_ONE_BASED)
--		return div_mask(divider);
--	if (divider->flags & CLK_DIVIDER_POWER_OF_TWO)
--		return 1 << div_mask(divider);
--	if (divider->table)
--		return _get_table_maxdiv(divider->table);
--	return div_mask(divider) + 1;
--}
--
- static unsigned int _get_table_div(const struct clk_div_table *table,
- 				   unsigned int val)
- {
-@@ -61,6 +37,24 @@ static unsigned int _get_table_div(const struct clk_div_table *table,
- 	return 0;
- }
- 
-+static void _setup_mask(struct clk_omap_divider *divider)
-+{
-+	u16 mask;
-+	u32 max_val;
-+
-+	max_val = divider->max;
-+
-+	if (!(divider->flags & CLK_DIVIDER_ONE_BASED))
-+		max_val--;
-+
-+	if (divider->flags & CLK_DIVIDER_POWER_OF_TWO)
-+		mask = fls(max_val) - 1;
-+	else
-+		mask = max_val;
-+
-+	divider->mask = (1 << fls(mask)) - 1;
-+}
-+
- static unsigned int _get_div(struct clk_omap_divider *divider, unsigned int val)
- {
- 	if (divider->flags & CLK_DIVIDER_ONE_BASED)
-@@ -101,7 +95,7 @@ static unsigned long ti_clk_divider_recalc_rate(struct clk_hw *hw,
- 	unsigned int div, val;
- 
- 	val = ti_clk_ll_ops->clk_readl(&divider->reg) >> divider->shift;
--	val &= div_mask(divider);
-+	val &= divider->mask;
- 
- 	div = _get_div(divider, val);
- 	if (!div) {
-@@ -180,7 +174,7 @@ static int ti_clk_divider_bestdiv(struct clk_hw *hw, unsigned long rate,
- 	if (!rate)
- 		rate = 1;
- 
--	maxdiv = _get_maxdiv(divider);
-+	maxdiv = divider->max;
- 
- 	if (!(clk_hw_get_flags(hw) & CLK_SET_RATE_PARENT)) {
- 		parent_rate = *best_parent_rate;
-@@ -219,7 +213,7 @@ static int ti_clk_divider_bestdiv(struct clk_hw *hw, unsigned long rate,
- 	}
- 
- 	if (!bestdiv) {
--		bestdiv = _get_maxdiv(divider);
-+		bestdiv = divider->max;
- 		*best_parent_rate =
- 			clk_hw_round_rate(clk_hw_get_parent(hw), 1);
- 	}
-@@ -249,17 +243,16 @@ static int ti_clk_divider_set_rate(struct clk_hw *hw, unsigned long rate,
- 	divider = to_clk_omap_divider(hw);
- 
- 	div = DIV_ROUND_UP(parent_rate, rate);
--	value = _get_val(divider, div);
- 
--	if (value > div_mask(divider))
--		value = div_mask(divider);
-+	if (div > divider->max)
-+		div = divider->max;
-+	if (div < divider->min)
-+		div = divider->min;
- 
--	if (divider->flags & CLK_DIVIDER_HIWORD_MASK) {
--		val = div_mask(divider) << (divider->shift + 16);
--	} else {
--		val = ti_clk_ll_ops->clk_readl(&divider->reg);
--		val &= ~(div_mask(divider) << divider->shift);
--	}
-+	value = _get_val(divider, div);
-+
-+	val = ti_clk_ll_ops->clk_readl(&divider->reg);
-+	val &= ~(divider->mask << divider->shift);
- 	val |= value << divider->shift;
- 	ti_clk_ll_ops->clk_writel(val, &divider->reg);
- 
-@@ -280,7 +273,7 @@ static int clk_divider_save_context(struct clk_hw *hw)
- 	u32 val;
- 
- 	val = ti_clk_ll_ops->clk_readl(&divider->reg) >> divider->shift;
--	divider->context = val & div_mask(divider);
-+	divider->context = val & divider->mask;
- 
- 	return 0;
- }
-@@ -297,7 +290,7 @@ static void clk_divider_restore_context(struct clk_hw *hw)
- 	u32 val;
- 
- 	val = ti_clk_ll_ops->clk_readl(&divider->reg);
--	val &= ~(div_mask(divider) << divider->shift);
-+	val &= ~(divider->mask << divider->shift);
- 	val |= divider->context << divider->shift;
- 	ti_clk_ll_ops->clk_writel(val, &divider->reg);
- }
-@@ -341,29 +334,14 @@ int ti_clk_parse_divider_data(int *div_table, int num_dividers, int max_div,
- 			      u8 flags, struct clk_omap_divider *divider)
- {
- 	int valid_div = 0;
--	u32 val;
--	int div;
- 	int i;
- 	struct clk_div_table *tmp;
-+	u16 min_div = 0;
- 
- 	if (!div_table) {
--		if (flags & CLKF_INDEX_STARTS_AT_ONE)
--			val = 1;
--		else
--			val = 0;
--
--		div = 1;
--
--		while (div < max_div) {
--			if (flags & CLKF_INDEX_POWER_OF_TWO)
--				div <<= 1;
--			else
--				div++;
--			val++;
--		}
--
--		divider->width = fls(val);
--
-+		divider->min = 1;
-+		divider->max = max_div;
-+		_setup_mask(divider);
- 		return 0;
- 	}
- 
-@@ -384,17 +362,21 @@ int ti_clk_parse_divider_data(int *div_table, int num_dividers, int max_div,
- 		return -ENOMEM;
- 
- 	valid_div = 0;
--	divider->width = 0;
- 
- 	for (i = 0; i < num_dividers; i++)
- 		if (div_table[i] > 0) {
- 			tmp[valid_div].div = div_table[i];
- 			tmp[valid_div].val = i;
- 			valid_div++;
--			divider->width = i;
-+			if (tmp[valid_div].div > max_div)
-+				max_div = tmp[valid_div].div;
-+			if (!min_div || tmp[valid_div].div < min_div)
-+				min_div = tmp[valid_div].div;
- 		}
- 
--	divider->width = fls(divider->width);
-+	divider->min = min_div;
-+	divider->max = max_div;
-+	_setup_mask(divider);
- 	divider->table = tmp;
- 
- 	return 0;
-@@ -451,16 +433,15 @@ static int __init ti_clk_get_div_table(struct device_node *node,
- 	return 0;
- }
- 
--static int _get_divider_width(struct device_node *node,
--			      const struct clk_div_table *table,
--			      u8 flags)
-+static int _populate_divider_min_max(struct device_node *node,
-+				     struct clk_omap_divider *divider)
- {
--	u32 min_div;
--	u32 max_div;
--	u32 val = 0;
--	u32 div;
-+	u32 min_div = 0;
-+	u32 max_div = 0;
-+	u32 val;
-+	const struct clk_div_table *clkt;
- 
--	if (!table) {
-+	if (!divider->table) {
- 		/* Clk divider table not provided, determine min/max divs */
- 		if (of_property_read_u32(node, "ti,min-div", &min_div))
- 			min_div = 1;
-@@ -469,30 +450,22 @@ static int _get_divider_width(struct device_node *node,
- 			pr_err("no max-div for %pOFn!\n", node);
- 			return -EINVAL;
- 		}
--
--		/* Determine bit width for the field */
--		if (flags & CLK_DIVIDER_ONE_BASED)
--			val = 1;
--
--		div = min_div;
--
--		while (div < max_div) {
--			if (flags & CLK_DIVIDER_POWER_OF_TWO)
--				div <<= 1;
--			else
--				div++;
--			val++;
--		}
- 	} else {
--		div = 0;
- 
--		while (table[div].div) {
--			val = table[div].val;
--			div++;
-+		for (clkt = divider->table; clkt->div; clkt++) {
-+			val = clkt->div;
-+			if (val > max_div)
-+				max_div = val;
-+			if (!min_div || val < min_div)
-+				min_div = val;
- 		}
- 	}
- 
--	return fls(val);
-+	divider->min = min_div;
-+	divider->max = max_div;
-+	_setup_mask(divider);
-+
-+	return 0;
- }
- 
- static int __init ti_clk_divider_populate(struct device_node *node,
-@@ -532,9 +505,7 @@ static int __init ti_clk_divider_populate(struct device_node *node,
- 	if (ret)
- 		return ret;
- 
--	div->width = _get_divider_width(node, div->table, div->flags);
--
--	return 0;
-+	return _populate_divider_min_max(node, div);
- }
- 
- /**
--- 
-2.17.1
+even with 8/10 it's not correct and it has been removed.
+I'm going to remove it.
 
+>
+> [...]
+>
+> > @@ -7707,13 +7755,11 @@ static inline void init_sd_lb_stats(struct sd_lb_stats *sds)
+> >         *sds = (struct sd_lb_stats){
+> >                 .busiest = NULL,
+> >                 .local = NULL,
+> > -             .total_running = 0UL,
+> >                 .total_load = 0UL,
+> >                 .total_capacity = 0UL,
+> >                 .busiest_stat = {
+> > -                     .avg_load = 0UL,
+>
+> There is a sentence in the comment above explaining why avg_load has to
+> be cleared. And IMHO local group isn't cleared anymore but set/initialized.
 
---------------7177A182B47F5D946B1AB305
-Content-Type: text/x-patch;
-	name="0004-ARM-dts-omap3-fix-DPLL4-M4-divider-max-value.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename="0004-ARM-dts-omap3-fix-DPLL4-M4-divider-max-value.patch"
+Yes, I have to update it
 
-From 39a54036c7e653ab86384466803f78320332b1b5 Mon Sep 17 00:00:00 2001
-From: Tero Kristo <t-kristo@ti.com>
-Date: Mon, 30 Sep 2019 11:49:39 +0300
-Subject: [PATCH 4/4] ARM: dts: omap3: fix DPLL4 M4 divider max value
+>
+> > -                     .sum_h_nr_running = 0,
+> > -                     .group_type = group_other,
+> > +                     .idle_cpus = UINT_MAX,
+> > +                     .group_type = group_has_spare,
+> >                 },
+> >         };
+> >   }
+>
+> [...]
+>
+> > @@ -8042,14 +8104,24 @@ static inline void update_sg_lb_stats(struct lb_env *env,
+> >                 }
+> >         }
+> >
+> > -     /* Adjust by relative CPU capacity of the group */
+> > +     /* Check if dst cpu is idle and preferred to this group */
+>
+> s/preferred to/preferred by ? or the preferred CPU of this group ?
 
-The maximum divider value for DPLL4 M4 divider appears wrong. For most
-OMAP3 family SoCs this is 16, but it is defined as 32, which is maybe
-only valid for omap36xx. To avoid any overflows in trying to write this
-register, set the max to 16 for all omap3 family, except omap36xx. For
-omap36xx the maximum is set to 31, as it appears value 32 is not working
-properly.
+dst cpu doesn't belong to this group. We compare asym_prefer_cpu of
+this group vs dst_cpu which belongs to another group
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
----
- arch/arm/boot/dts/omap36xx-clocks.dtsi | 4 ++++
- arch/arm/boot/dts/omap3xxx-clocks.dtsi | 2 +-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+>
+> [...]
+>
+> > @@ -8283,69 +8363,133 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
+> >    */
+> >   static inline void calculate_imbalance(struct lb_env *env, struct
+> sd_lb_stats *sds)
+> >   {
+> > -     unsigned long max_pull, load_above_capacity = ~0UL;
+> >         struct sg_lb_stats *local, *busiest;
+> >
+> >         local = &sds->local_stat;
+> >         busiest = &sds->busiest_stat;
+> >
+> > -     if (busiest->group_asym_packing) {
+> > +     if (busiest->group_type == group_misfit_task) {
+> > +             /* Set imbalance to allow misfit task to be balanced. */
+> > +             env->balance_type = migrate_misfit;
+> > +             env->imbalance = busiest->group_misfit_task_load;
+> > +             return;
+> > +     }
+> > +
+> > +     if (busiest->group_type == group_asym_packing) {
+> > +             /*
+> > +              * In case of asym capacity, we will try to migrate all load to
+>
+> Does asym capacity stands for asym packing or asym cpu capacity?
 
-diff --git a/arch/arm/boot/dts/omap36xx-clocks.dtsi b/arch/arm/boot/dts/omap36xx-clocks.dtsi
-index e66fc57ec35d..4e9cc9003594 100644
---- a/arch/arm/boot/dts/omap36xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/omap36xx-clocks.dtsi
-@@ -105,3 +105,7 @@
- 			 <&mcbsp4_ick>, <&uart4_fck>;
- 	};
- };
-+
-+&dpll4_m4_ck {
-+	ti,max-div = <31>;
-+};
-diff --git a/arch/arm/boot/dts/omap3xxx-clocks.dtsi b/arch/arm/boot/dts/omap3xxx-clocks.dtsi
-index 685c82a9d03e..0656c32439d2 100644
---- a/arch/arm/boot/dts/omap3xxx-clocks.dtsi
-+++ b/arch/arm/boot/dts/omap3xxx-clocks.dtsi
-@@ -416,7 +416,7 @@
- 		#clock-cells = <0>;
- 		compatible = "ti,divider-clock";
- 		clocks = <&dpll4_ck>;
--		ti,max-div = <32>;
-+		ti,max-div = <16>;
- 		reg = <0x0e40>;
- 		ti,index-starts-at-one;
- 	};
--- 
-2.17.1
+busiest->group_type == group_asym_packing
 
+will fix it
 
---------------7177A182B47F5D946B1AB305
-Content-Type: text/x-patch;
-	name="0001-clk-ti-divider-cleanup-_register_divider-and-ti_clk_.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename*0="0001-clk-ti-divider-cleanup-_register_divider-and-ti_clk_.pa";
-	filename*1="tch"
+>
+> > +              * the preferred CPU.
+> > +              */
+> > +             env->balance_type = migrate_load;
+> >                 env->imbalance = busiest->group_load;
+> >                 return;
+> >         }
+> >
+> > +     if (busiest->group_type == group_imbalanced) {
+> > +             /*
+> > +              * In the group_imb case we cannot rely on group-wide averages
+> > +              * to ensure CPU-load equilibrium, try to move any task to fix
+> > +              * the imbalance. The next load balance will take care of
+> > +              * balancing back the system.
+>
+> balancing back ?
 
-From 9171eba432a7d8677eb89ebed1f37c00ad9d8852 Mon Sep 17 00:00:00 2001
-From: Tero Kristo <t-kristo@ti.com>
-Date: Mon, 30 Sep 2019 20:50:24 +0300
-Subject: [PATCH 1/4] clk: ti: divider: cleanup _register_divider and
- ti_clk_get_div_table
+In case of imbalance, we don't try to balance the system but only try
+to get rid of the pinned tasks problem. The system will still be
+unbalanced after the migration and the next load balance will take
+care of balancing the system
 
-Cleanup couple of TI divider clock internal APIs. These currently pass
-huge amount of parameters, which makes it difficult to track what is
-going on. Abstract most of these under struct clk_omap_div which gets
-passed over the APIs.
+>
+> > +              */
+> > +             env->balance_type = migrate_task;
+> > +             env->imbalance = 1;
+> > +             return;
+> > +     }
+> > +
+> >         /*
+> > -      * Avg load of busiest sg can be less and avg load of local sg can
+> > -      * be greater than avg load across all sgs of sd because avg load
+> > -      * factors in sg capacity and sgs with smaller group_type are
+> > -      * skipped when updating the busiest sg:
+> > +      * Try to use spare capacity of local group without overloading it or
+> > +      * emptying busiest
+> >          */
+> > -     if (busiest->group_type != group_misfit_task &&
+> > -         (busiest->avg_load <= sds->avg_load ||
+> > -          local->avg_load >= sds->avg_load)) {
+> > -             env->imbalance = 0;
+> > +     if (local->group_type == group_has_spare) {
+> > +             if (busiest->group_type > group_fully_busy) {
+>
+> So this could be 'busiest->group_type == group_overloaded' here to match
+> the comment below? Since you handle group_misfit_task,
+> group_asym_packing, group_imbalanced above and return.
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
----
- drivers/clk/ti/divider.c | 113 ++++++++++++++-------------------------
- 1 file changed, 41 insertions(+), 72 deletions(-)
+This is just to be more robust in case some new states are added later
 
-diff --git a/drivers/clk/ti/divider.c b/drivers/clk/ti/divider.c
-index 6cb863c13648..d9f7dc94e2a6 100644
---- a/drivers/clk/ti/divider.c
-+++ b/drivers/clk/ti/divider.c
-@@ -310,47 +310,26 @@ const struct clk_ops ti_clk_divider_ops = {
- 	.restore_context = clk_divider_restore_context,
- };
- 
--static struct clk *_register_divider(struct device *dev, const char *name,
--				     const char *parent_name,
--				     unsigned long flags,
--				     struct clk_omap_reg *reg,
--				     u8 shift, u8 width, s8 latch,
--				     u8 clk_divider_flags,
--				     const struct clk_div_table *table)
-+static struct clk *_register_divider(struct device_node *node,
-+				     u32 flags,
-+				     struct clk_omap_divider *div)
- {
--	struct clk_omap_divider *div;
- 	struct clk *clk;
- 	struct clk_init_data init;
-+	const char *parent_name;
- 
--	if (clk_divider_flags & CLK_DIVIDER_HIWORD_MASK) {
--		if (width + shift > 16) {
--			pr_warn("divider value exceeds LOWORD field\n");
--			return ERR_PTR(-EINVAL);
--		}
--	}
--
--	/* allocate the divider */
--	div = kzalloc(sizeof(*div), GFP_KERNEL);
--	if (!div)
--		return ERR_PTR(-ENOMEM);
-+	parent_name = of_clk_get_parent_name(node, 0);
- 
--	init.name = name;
-+	init.name = node->name;
- 	init.ops = &ti_clk_divider_ops;
- 	init.flags = flags;
- 	init.parent_names = (parent_name ? &parent_name : NULL);
- 	init.num_parents = (parent_name ? 1 : 0);
- 
--	/* struct clk_divider assignments */
--	memcpy(&div->reg, reg, sizeof(*reg));
--	div->shift = shift;
--	div->width = width;
--	div->latch = latch;
--	div->flags = clk_divider_flags;
- 	div->hw.init = &init;
--	div->table = table;
- 
- 	/* register the clock */
--	clk = ti_clk_register(dev, &div->hw, name);
-+	clk = ti_clk_register(NULL, &div->hw, node->name);
- 
- 	if (IS_ERR(clk))
- 		kfree(div);
-@@ -425,8 +404,8 @@ int ti_clk_parse_divider_data(int *div_table, int num_dividers, int max_div,
- 	return 0;
- }
- 
--static struct clk_div_table *
--__init ti_clk_get_div_table(struct device_node *node)
-+static int __init ti_clk_get_div_table(struct device_node *node,
-+				       struct clk_omap_divider *div)
- {
- 	struct clk_div_table *table;
- 	const __be32 *divspec;
-@@ -438,7 +417,7 @@ __init ti_clk_get_div_table(struct device_node *node)
- 	divspec = of_get_property(node, "ti,dividers", &num_div);
- 
- 	if (!divspec)
--		return NULL;
-+		return 0;
- 
- 	num_div /= 4;
- 
-@@ -453,13 +432,12 @@ __init ti_clk_get_div_table(struct device_node *node)
- 
- 	if (!valid_div) {
- 		pr_err("no valid dividers for %pOFn table\n", node);
--		return ERR_PTR(-EINVAL);
-+		return -EINVAL;
- 	}
- 
- 	table = kcalloc(valid_div + 1, sizeof(*table), GFP_KERNEL);
--
- 	if (!table)
--		return ERR_PTR(-ENOMEM);
-+		return -ENOMEM;
- 
- 	valid_div = 0;
- 
-@@ -472,7 +450,9 @@ __init ti_clk_get_div_table(struct device_node *node)
- 		}
- 	}
- 
--	return table;
-+	div->table = table;
-+
-+	return 0;
- }
- 
- static int _get_divider_width(struct device_node *node,
-@@ -520,46 +500,43 @@ static int _get_divider_width(struct device_node *node,
- }
- 
- static int __init ti_clk_divider_populate(struct device_node *node,
--	struct clk_omap_reg *reg, const struct clk_div_table **table,
--	u32 *flags, u8 *div_flags, u8 *width, u8 *shift, s8 *latch)
-+					  struct clk_omap_divider *div,
-+					  u32 *flags)
- {
- 	u32 val;
- 	int ret;
- 
--	ret = ti_clk_get_reg_addr(node, 0, reg);
-+	ret = ti_clk_get_reg_addr(node, 0, &div->reg);
- 	if (ret)
- 		return ret;
- 
- 	if (!of_property_read_u32(node, "ti,bit-shift", &val))
--		*shift = val;
-+		div->shift = val;
- 	else
--		*shift = 0;
-+		div->shift = 0;
- 
--	if (latch) {
--		if (!of_property_read_u32(node, "ti,latch-bit", &val))
--			*latch = val;
--		else
--			*latch = -EINVAL;
--	}
-+	if (!of_property_read_u32(node, "ti,latch-bit", &val))
-+		div->latch = val;
-+	else
-+		div->latch = -EINVAL;
- 
- 	*flags = 0;
--	*div_flags = 0;
-+	div->flags = 0;
- 
- 	if (of_property_read_bool(node, "ti,index-starts-at-one"))
--		*div_flags |= CLK_DIVIDER_ONE_BASED;
-+		div->flags |= CLK_DIVIDER_ONE_BASED;
- 
- 	if (of_property_read_bool(node, "ti,index-power-of-two"))
--		*div_flags |= CLK_DIVIDER_POWER_OF_TWO;
-+		div->flags |= CLK_DIVIDER_POWER_OF_TWO;
- 
- 	if (of_property_read_bool(node, "ti,set-rate-parent"))
- 		*flags |= CLK_SET_RATE_PARENT;
- 
--	*table = ti_clk_get_div_table(node);
--
--	if (IS_ERR(*table))
--		return PTR_ERR(*table);
-+	ret = ti_clk_get_div_table(node, div);
-+	if (ret)
-+		return ret;
- 
--	*width = _get_divider_width(node, *table, *div_flags);
-+	div->width = _get_divider_width(node, div->table, div->flags);
- 
- 	return 0;
- }
-@@ -573,24 +550,17 @@ static int __init ti_clk_divider_populate(struct device_node *node,
- static void __init of_ti_divider_clk_setup(struct device_node *node)
- {
- 	struct clk *clk;
--	const char *parent_name;
--	struct clk_omap_reg reg;
--	u8 clk_divider_flags = 0;
--	u8 width = 0;
--	u8 shift = 0;
--	s8 latch = -EINVAL;
--	const struct clk_div_table *table = NULL;
- 	u32 flags = 0;
-+	struct clk_omap_divider *div;
- 
--	parent_name = of_clk_get_parent_name(node, 0);
-+	div = kzalloc(sizeof(*div), GFP_KERNEL);
-+	if (!div)
-+		return;
- 
--	if (ti_clk_divider_populate(node, &reg, &table, &flags,
--				    &clk_divider_flags, &width, &shift, &latch))
-+	if (ti_clk_divider_populate(node, div, &flags))
- 		goto cleanup;
- 
--	clk = _register_divider(NULL, node->name, parent_name, flags, &reg,
--				shift, width, latch, clk_divider_flags, table);
--
-+	clk = _register_divider(node, flags, div);
- 	if (!IS_ERR(clk)) {
- 		of_clk_add_provider(node, of_clk_src_simple_get, clk);
- 		of_ti_clk_autoidle_setup(node);
-@@ -598,22 +568,21 @@ static void __init of_ti_divider_clk_setup(struct device_node *node)
- 	}
- 
- cleanup:
--	kfree(table);
-+	kfree(div->table);
-+	kfree(div);
- }
- CLK_OF_DECLARE(divider_clk, "ti,divider-clock", of_ti_divider_clk_setup);
- 
- static void __init of_ti_composite_divider_clk_setup(struct device_node *node)
- {
- 	struct clk_omap_divider *div;
--	u32 val;
-+	u32 tmp;
- 
- 	div = kzalloc(sizeof(*div), GFP_KERNEL);
- 	if (!div)
- 		return;
- 
--	if (ti_clk_divider_populate(node, &div->reg, &div->table, &val,
--				    &div->flags, &div->width, &div->shift,
--				    NULL) < 0)
-+	if (ti_clk_divider_populate(node, div, &tmp))
- 		goto cleanup;
- 
- 	if (!ti_clk_add_component(node, &div->hw, CLK_COMPONENT_TYPE_DIVIDER))
--- 
-2.17.1
+>
+> > +                     /*
+> > +                      * If busiest is overloaded, try to fill spare
+> > +                      * capacity. This might end up creating spare capacity
+> > +                      * in busiest or busiest still being overloaded but
+> > +                      * there is no simple way to directly compute the
+> > +                      * amount of load to migrate in order to balance the
+> > +                      * system.
+> > +                      */
+> > +                     env->balance_type = migrate_util;
+> > +                     env->imbalance = max(local->group_capacity, local->group_util) -
+> > +                                 local->group_util;
+> > +                     return;
+> > +             }
+> > +
+> > +             if (busiest->group_weight == 1 || sds->prefer_sibling) {
+> > +                     /*
+> > +                      * When prefer sibling, evenly spread running tasks on
+> > +                      * groups.
+> > +                      */
+> > +                     env->balance_type = migrate_task;
+> > +                     env->imbalance = (busiest->sum_h_nr_running - local->sum_h_nr_running) >> 1;
+> > +                     return;
+> > +             }
+> > +
+> > +             /*
+> > +              * If there is no overload, we just want to even the number of
+> > +              * idle cpus.
+> > +              */
+> > +             env->balance_type = migrate_task;
+> > +             env->imbalance = max_t(long, 0, (local->idle_cpus - busiest->idle_cpus) >> 1);
+>
+> Why do we need a max_t(long, 0, ...) here and not for the 'if
+> (busiest->group_weight == 1 || sds->prefer_sibling)' case?
 
+For env->imbalance = (busiest->sum_h_nr_running - local->sum_h_nr_running) >> 1;
 
---------------7177A182B47F5D946B1AB305--
+either we have sds->prefer_sibling && busiest->sum_nr_running >
+local->sum_nr_running + 1
+
+or busiest->group_weight == 1 and env->idle != CPU_NOT_IDLE so local
+cpu is idle or newly idle
+
+>
+> >                 return;
+> >         }
+> >
+> >         /*
+> > -      * If there aren't any idle CPUs, avoid creating some.
+> > +      * Local is fully busy but have to take more load to relieve the
+>
+> s/have/has
+>
+> > +      * busiest group
+> >          */
+>
+> I thought that 'local->group_type == group_imbalanced' is allowed as
+> well? So 'if (local->group_type < group_overloaded)' (further down)
+> could include that?
+
+yes.
+Imbalance state is not very useful for local group but only reflects
+that the group is not overloaded so either fully busy or has spare
+capacity.
+In this case we assume the worst : fully_busy
+
+>
+> > -     if (busiest->group_type == group_overloaded &&
+> > -         local->group_type   == group_overloaded) {
+> > -             load_above_capacity = busiest->sum_h_nr_running * SCHED_CAPACITY_SCALE;
+> > -             if (load_above_capacity > busiest->group_capacity) {
+> > -                     load_above_capacity -= busiest->group_capacity;
+> > -                     load_above_capacity *= scale_load_down(NICE_0_LOAD);
+> > -                     load_above_capacity /= busiest->group_capacity;
+> > -             } else
+> > -                     load_above_capacity = ~0UL;
+> > +     if (local->group_type < group_overloaded) {
+> > +             /*
+> > +              * Local will become overloaded so the avg_load metrics are
+> > +              * finally needed.
+> > +              */
+>
+> How does this relate to the decision_matrix[local, busiest] (dm[])? E.g.
+> dm[overload, overload] == avg_load or dm[fully_busy, overload] == force.
+> It would be nice to be able to match all allowed fields of dm to code sections.
+
+decision_matrix describes how it decides between balanced or unbalanced.
+In case of dm[overload, overload], we use the avg_load to decide if it
+is balanced or not
+In case of dm[fully_busy, overload], the groups are unbalanced because
+fully_busy < overload and we force the balance. Then
+calculate_imbalance() uses the avg_load to decide how much will be
+moved
+
+dm[overload, overload]=force means that we force the balance and we
+will compute later the imbalance. avg_load may be used to calculate
+the imbalance
+dm[overload, overload]=avg_load means that we compare the avg_load to
+decide whether we need to balance load between groups
+dm[overload, overload]=nr_idle means that we compare the number of
+idle cpus to decide whether we need to balance.  In fact this is no
+more true with patch 7 because we also take into account the number of
+nr_h_running when weight =1
+
+>
+> [...]
+>
+> >   /******* find_busiest_group() helpers end here *********************/
+> >
+> > +/*
+> > + * Decision matrix according to the local and busiest group state
+>
+> Minor s/state/type ?
+
+ok
+
+>
+> > + *
+> > + * busiest \ local has_spare fully_busy misfit asym imbalanced overloaded
+> > + * has_spare        nr_idle   balanced   N/A    N/A  balanced   balanced
+> > + * fully_busy       nr_idle   nr_idle    N/A    N/A  balanced   balanced
+> > + * misfit_task      force     N/A        N/A    N/A  force      force
+> > + * asym_capacity    force     force      N/A    N/A  force      force
+>
+> s/asym_capacity/asym_packing
+
+yes
+
+>
+> > + * imbalanced       force     force      N/A    N/A  force      force
+> > + * overloaded       force     force      N/A    N/A  force      avg_load
+> > + *
+> > + * N/A :      Not Applicable because already filtered while updating
+> > + *            statistics.
+> > + * balanced : The system is balanced for these 2 groups.
+> > + * force :    Calculate the imbalance as load migration is probably needed.
+> > + * avg_load : Only if imbalance is significant enough.
+> > + * nr_idle :  dst_cpu is not busy and the number of idle cpus is quite
+> > + *            different in groups.
+> > + */
+> > +
+> >   /**
+> >    * find_busiest_group - Returns the busiest group within the sched_domain
+> >    * if there is an imbalance.
+> > @@ -8380,17 +8524,17 @@ static struct sched_group *find_busiest_group(struct lb_env *env)
+> >         local = &sds.local_stat;
+> >         busiest = &sds.busiest_stat;
+> >
+> > -     /* ASYM feature bypasses nice load balance check */
+> > -     if (busiest->group_asym_packing)
+> > -             goto force_balance;
+> > -
+> >         /* There is no busy sibling group to pull tasks from */
+> > -     if (!sds.busiest || busiest->sum_h_nr_running == 0)
+> > +     if (!sds.busiest)
+> >                 goto out_balanced;
+> >
+> > -     /* XXX broken for overlapping NUMA groups */
+> > -     sds.avg_load = (SCHED_CAPACITY_SCALE * sds.total_load)
+> > -                                             / sds.total_capacity;
+> > +     /* Misfit tasks should be dealt with regardless of the avg load */
+> > +     if (busiest->group_type == group_misfit_task)
+> > +             goto force_balance;
+> > +
+> > +     /* ASYM feature bypasses nice load balance check */
+>
+> Minor: s/ASYM feature/ASYM_PACKING ... to distinguish clearly from
+> ASYM_CPUCAPACITY.
+
+yes
+
+>
+> > +     if (busiest->group_type == group_asym_packing)
+> > +             goto force_balance;
+>
+> [...]
+>
