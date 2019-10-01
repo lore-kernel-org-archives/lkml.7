@@ -2,116 +2,74 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7B0ECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E68D0ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECF7E21855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:42:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EC5x3JwI"
+	by mail.kernel.org (Postfix) with ESMTP id BAA54215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:42:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569955361;
+	bh=5vQyiBW7N80kC2WfeV1Zs8ny3axRA860TQ7AJAkm2LA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GUPdMO2imd8IVRai2G/chLWKmi/SfdszWVG3vSzVwS9KHUqLbNbTIfOP3bageHzQM
+	 5WqAYU50YFJx4EWfP1/1x0iwt+ZHtSc+Y37tspPKk6lZbaiOmZEJs6FnvckxOvyI3X
+	 0RAZcAS7bayMCVJpT2out/+0TVmxAoSU8FijvJEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbfJASmd (ORCPT
+        id S1727033AbfJASmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 1 Oct 2019 14:42:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33932 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726922AbfJASmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Oct 2019 14:42:33 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45945 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbfJASl5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 14:41:57 -0400
-Received: by mail-wr1-f68.google.com with SMTP id r5so16713445wrm.12;
-        Tue, 01 Oct 2019 11:41:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Xi1PY45A9Lda1Y/IC4dXlxysdfAnSBFMqs5iPhi/26s=;
-        b=EC5x3JwIylYQhvAu+JOamaLobk+oW0aExLC799Z4z9fPyYJ89gDZcisO9TRmBbVBp+
-         lI5Z7V6JScNpSW299UlXWnqWlz6F9bKr2r/n+I2K/WS439+NUIath3JX28iqz+gVU0CF
-         7kaNoALlmdHAxkEpYeGIjYQlTmPSmAmRERSpUGlZwTmLFWvC+ygvBuP1ueVBdU2+Bgny
-         mRPFoNrfDF9ddT1Rpzdw6TtGD1GFaI/tqK32mb6o/DOnxSV+KnoW9YzZsAJlR3XZAL4v
-         /o8DqYg3q7PUDpOyEauSFQTt6IvqR0Mi96MUSSi/pcsvjgW+JsaSikrHcqyrdVrU9SMZ
-         pL5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Xi1PY45A9Lda1Y/IC4dXlxysdfAnSBFMqs5iPhi/26s=;
-        b=t+tz38zSs5E9G8ckxAU3Zpy3cyPIXYNMKOuvGtdqBh3GKOsLj/WzaVya1Vz62qKrWX
-         AFQd184wglGF6ZSF5SlcKz5ue54gLCt2Wms7JuOaCE6ReuFxmBs7F4TOgfa8m7RFgare
-         TwaFJnhqPrC2bHhiYRTL9nz9NIM+V0aoYM/7IkXZL0YrBbPRWx6+U/ejR5D3Gon4X47V
-         KK1wD+1Kxb2cBgh4v6rfRpu52dU8zOYnzt1cBPpIJTdPhTnZd1ACH0Dud9pNieI5+CzZ
-         OC/gfcm7JQX1RaZ49V8rgpl4WybHRTXW/yTGCQ7j7ACl0qPCdu9CqDBaRwftg2xN3Gtg
-         Rn0Q==
-X-Gm-Message-State: APjAAAU3LsodZo/i95BtwdGcVZJy70iSeyMHb1YuDR/Qcb/RUi2SD28z
-        sa385YcZU7DPWlNS1HtahLw=
-X-Google-Smtp-Source: APXvYqxY9Qp528krfwvGQD1zr1FhtrsC61+CpRlyWYj7vK188LT443AuVK7BAKzKWr+dGgHXn1T8ug==
-X-Received: by 2002:adf:e9c5:: with SMTP id l5mr18834973wrn.40.1569955314989;
-        Tue, 01 Oct 2019 11:41:54 -0700 (PDT)
-Received: from Red.localdomain ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id n8sm6788987wma.7.2019.10.01.11.41.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Oct 2019 11:41:54 -0700 (PDT)
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     catalin.marinas@arm.com, davem@davemloft.net,
-        herbert@gondor.apana.org.au, linux@armlinux.org.uk,
-        mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
-        wens@csie.org, will@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com,
-        Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH v2 05/11] ARM: dts: sun8i: H3: Add Crypto Engine node
-Date:   Tue,  1 Oct 2019 20:41:35 +0200
-Message-Id: <20191001184141.27956-6-clabbe.montjoie@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191001184141.27956-1-clabbe.montjoie@gmail.com>
-References: <20191001184141.27956-1-clabbe.montjoie@gmail.com>
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 344FD2190F;
+        Tue,  1 Oct 2019 18:42:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569955352;
+        bh=5vQyiBW7N80kC2WfeV1Zs8ny3axRA860TQ7AJAkm2LA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MIUjrdp2SYeUvBdnC7UyrFPY67F/naWfSSURodByEzeV+nui3EV3FrXzjtceUD1eD
+         YaOdwLLsP+8VY0ssg5LXYoES8zRVOtCW6xLr3G1ddpnzVffqbCOFqswxjqgz7g+FjP
+         UzfcHXQQjKpHMjD35pPDyn/VKuG6VjwsdLDj+Sns=
+Date:   Tue, 1 Oct 2019 14:42:31 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: Re: [PATCH v2] hv_sock: Add the support of hibernation
+Message-ID: <20191001184231.GD8171@sasha-vm>
+References: <1569447243-27433-1-git-send-email-decui@microsoft.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <1569447243-27433-1-git-send-email-decui@microsoft.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Crypto Engine is a hardware cryptographic accelerator that supports
-many algorithms.
-It could be found on most Allwinner SoCs.
+On Wed, Sep 25, 2019 at 09:34:13PM +0000, Dexuan Cui wrote:
+>Add the necessary dummy callbacks for hibernation.
+>
+>Signed-off-by: Dexuan Cui <decui@microsoft.com>
+>Acked-by: David S. Miller <davem@davemloft.net>
 
-This patch enables the Crypto Engine on the Allwinner H3 SoC Device-tree.
+Queued up for hyperv-next, thanks!
 
-Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
----
- arch/arm/boot/dts/sun8i-h3.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index e37c30e811d3..778a23a794c9 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -153,6 +153,17 @@
- 			allwinner,sram = <&ve_sram 1>;
- 		};
- 
-+		crypto: crypto@1c15000 {
-+			compatible = "allwinner,sun8i-h3-crypto";
-+			reg = <0x01c15000 0x1000>;
-+			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "ce_ns";
-+			resets = <&ccu RST_BUS_CE>;
-+			reset-names = "bus";
-+			clocks = <&ccu CLK_BUS_CE>, <&ccu CLK_CE>;
-+			clock-names = "bus", "mod";
-+		};
-+
- 		mali: gpu@1c40000 {
- 			compatible = "allwinner,sun8i-h3-mali", "arm,mali-400";
- 			reg = <0x01c40000 0x10000>;
--- 
-2.21.0
-
+--
+Thanks,
+Sasha
