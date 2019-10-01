@@ -2,194 +2,121 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEAE4C32792
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 00:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4212C32792
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 00:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9384C205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 00:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B655A20815
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 00:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731221AbfJAAky (ORCPT
+        id S1727903AbfJAAqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 20:40:54 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:12442 "EHLO mx2.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726157AbfJAAkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 20:40:53 -0400
-Received: from smtp2.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        Mon, 30 Sep 2019 20:46:37 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30992 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726858AbfJAAqh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 20:46:37 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x910gbHr083494
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 20:46:35 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vbrv8wwdb-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 20:46:35 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Tue, 1 Oct 2019 01:46:33 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 1 Oct 2019 01:46:30 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x910k1Jv37224860
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 1 Oct 2019 00:46:01 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F1CA342041;
+        Tue,  1 Oct 2019 00:46:29 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9DAE74203F;
+        Tue,  1 Oct 2019 00:46:29 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  1 Oct 2019 00:46:29 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id E4B4FA2044;
-        Tue,  1 Oct 2019 02:40:50 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.240])
-        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
-        with ESMTP id 9PZF1t-ogI4m; Tue,  1 Oct 2019 02:40:47 +0200 (CEST)
-Date:   Tue, 1 Oct 2019 10:40:19 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Aleksa Sarai <asarai@suse.de>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id E989EA00F8;
+        Tue,  1 Oct 2019 10:46:25 +1000 (AEST)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     alastair@d-silva.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        David Hildenbrand <david@redhat.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v3 2/4] clone3: switch to copy_struct_from_user()
-Message-ID: <20191001004019.bnjtligwhdbl7vij@yavin.dot.cyphar.com>
-References: <20190930191526.19544-1-asarai@suse.de>
- <20190930191526.19544-3-asarai@suse.de>
- <201909301640.4FC92294FF@keescook>
+Subject: [PATCH v7 0/1] Add bounds check for Hotplugged memory
+Date:   Tue,  1 Oct 2019 10:46:14 +1000
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4cdmb4s5xhqgzz3m"
-Content-Disposition: inline
-In-Reply-To: <201909301640.4FC92294FF@keescook>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19100100-0020-0000-0000-00000373345C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19100100-0021-0000-0000-000021C91151
+Message-Id: <20191001004617.7536-1-alastair@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-30_14:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910010006
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Alastair D'Silva <alastair@d-silva.org>
 
---4cdmb4s5xhqgzz3m
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This series adds bounds checks for hotplugged memory, ensuring that
+it is within the physically addressable range (for platforms that
+define MAX_(POSSIBLE_)PHYSMEM_BITS.
 
-On 2019-09-30, Kees Cook <keescook@chromium.org> wrote:
-> On Tue, Oct 01, 2019 at 05:15:24AM +1000, Aleksa Sarai wrote:
-> > From: Aleksa Sarai <cyphar@cyphar.com>
-> >=20
-> > The change is very straightforward, and helps unify the syscall
-> > interface for struct-from-userspace syscalls. Additionally, explicitly
-> > define CLONE_ARGS_SIZE_VER0 to match the other users of the
-> > struct-extension pattern.
-> >=20
-> > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
-> > ---
-> >  include/uapi/linux/sched.h |  2 ++
-> >  kernel/fork.c              | 34 +++++++---------------------------
-> >  2 files changed, 9 insertions(+), 27 deletions(-)
-> >=20
-> > diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
-> > index b3105ac1381a..0945805982b4 100644
-> > --- a/include/uapi/linux/sched.h
-> > +++ b/include/uapi/linux/sched.h
-> > @@ -47,6 +47,8 @@ struct clone_args {
-> >  	__aligned_u64 tls;
-> >  };
-> > =20
-> > +#define CLONE_ARGS_SIZE_VER0 64 /* sizeof first published struct */
-> > +
-> >  /*
-> >   * Scheduling policies
-> >   */
-> > diff --git a/kernel/fork.c b/kernel/fork.c
-> > index f9572f416126..2ef529869c64 100644
-> > --- a/kernel/fork.c
-> > +++ b/kernel/fork.c
-> > @@ -2525,39 +2525,19 @@ SYSCALL_DEFINE5(clone, unsigned long, clone_fla=
-gs, unsigned long, newsp,
-> >  #ifdef __ARCH_WANT_SYS_CLONE3
-> >  noinline static int copy_clone_args_from_user(struct kernel_clone_args=
- *kargs,
-> >  					      struct clone_args __user *uargs,
-> > -					      size_t size)
-> > +					      size_t usize)
-> >  {
-> > +	int err;
-> >  	struct clone_args args;
-> > =20
-> > -	if (unlikely(size > PAGE_SIZE))
-> > +	if (unlikely(usize > PAGE_SIZE))
-> >  		return -E2BIG;
->=20
-> I quickly looked through the earlier threads and couldn't find it, but
-> I have a memory of some discussion about moving this test into the
-> copy_struct_from_user() function itself? That would seems like a
-> reasonable idea? ("4k should be enough for any structure!")
+This allows for early failure, rather than attempting to access
+bogus section numbers.
 
-Yes (and this also seemed the most reasonable way to do it to me), but
-the main counter-arguments which swayed me were:
+Changelog:
+ V7:
+   - Cast PFN_PHYS as u64 since it's type is platform dependant
+ V6:
+   - Fix printf formats
+ V5:
+   - Factor out calculation into max_allowed var
+   - Declare unchanging vars as const
+   - Use PFN_PHYS macro instead of shifting by PAGE_SHIFT
+ V4:
+   - Relocate call to __add_pages
+   - Add a warning when the addressable check fails
+ V3:
+   - Perform the addressable check before we take the hotplug lock
+ V2:
+   - Don't use MAX_POSSIBLE_PHYSMEM_BITS as it's wider that what
+     may be available
 
- 1. Putting it in the hands of the caller allows them to decide if they
-    want to have a limit, because if you institute a limit in one kernel
-    vintage then expanding it later will be less-than-ideally-smooth.
+Alastair D'Silva (1):
+  memory_hotplug: Add a bounds check to __add_pages
 
- 2. There is no amplification, so doing copy_struct_from_user() for a
-    really big usize boils down to the userspace program blocking for
-    the kernel to check if some of your memory is zeroed. Thus there
-    doesn't seem to be much DoS potential.
+ mm/memory_hotplug.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-Not to mention that users of copy_struct_from_user() will end up doing
-some kind of usize comparison anyway (to check if it's smaller than
-the version-0 size).
+-- 
+2.21.0
 
-> Either way:
->=20
-> Reviewed-by: Kees Cook <keescook@chromium.org>
->=20
->=20
-> > -
-> > -	if (unlikely(size < sizeof(struct clone_args)))
-> > +	if (unlikely(usize < CLONE_ARGS_SIZE_VER0))
-> >  		return -EINVAL;
-> > =20
-> > -	if (unlikely(!access_ok(uargs, size)))
-> > -		return -EFAULT;
-> > -
-> > -	if (size > sizeof(struct clone_args)) {
-> > -		unsigned char __user *addr;
-> > -		unsigned char __user *end;
-> > -		unsigned char val;
-> > -
-> > -		addr =3D (void __user *)uargs + sizeof(struct clone_args);
-> > -		end =3D (void __user *)uargs + size;
-> > -
-> > -		for (; addr < end; addr++) {
-> > -			if (get_user(val, addr))
-> > -				return -EFAULT;
-> > -			if (val)
-> > -				return -E2BIG;
-> > -		}
-> > -
-> > -		size =3D sizeof(struct clone_args);
-> > -	}
-> > -
-> > -	if (copy_from_user(&args, uargs, size))
-> > -		return -EFAULT;
-> > +	err =3D copy_struct_from_user(&args, sizeof(args), uargs, usize);
-> > +	if (err)
-> > +		return err;
-> > =20
-> >  	/*
-> >  	 * Verify that higher 32bits of exit_signal are unset and that
-> > --=20
-> > 2.23.0
-> >=20
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---4cdmb4s5xhqgzz3m
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXZKgcAAKCRCdlLljIbnQ
-EoJiAPsG4itrHQ5XO5zjlOeiD57T+Nb6ZfG9WzbCSY1LDI0wcAD+MPCUZzs1cNNE
-KlkERzCb82aGD3s6EZipjiBQo04rRQ4=
-=eLT6
------END PGP SIGNATURE-----
-
---4cdmb4s5xhqgzz3m--
