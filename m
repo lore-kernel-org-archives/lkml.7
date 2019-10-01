@@ -2,157 +2,536 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B91C32792
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 00:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6224C32792
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 00:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C098C20673
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 00:23:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="HaZLz1ag"
+	by mail.kernel.org (Postfix) with ESMTP id 7F7502086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 00:26:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732644AbfJAAXq (ORCPT
+        id S1732597AbfJAA0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 20:23:46 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:35659 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727473AbfJAAXp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 20:23:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1569889426; x=1601425426;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=j/bjglqWF/oGbWlxsWj+tvbJ6Bessty1AA1xECR1Vog=;
-  b=HaZLz1ag6vvs/QqafT253BFnVExYlSPELkZNkuKvQ0M645ZOBO4cSyWZ
-   HqXfapkl1IUumuclH/jUibmoFkI/5LokzY1Z/zmeohyH+2zFq0/392WuX
-   Y2b0vDhqpw9kzaZtGp/wz9/PnE9uYbqUspkwGUZV9zHIM43d8Bp68TwMt
-   XxmFq00UWdkaKMkbDQMNbgRDNIItP3eVx0FLAozmcTDsP/Mop71ORACgo
-   HrT6REzmgTsndbB+pRCngQxXEmZRycliekG4EeB6E7Y38CW82mH53A3T1
-   VPFKKTP/VNKLXjRjl0uvzNgrFgVi6z24YfbLwIWVpx17XHyCftZXsUWI7
-   A==;
-IronPort-SDR: kYf20uN/v8FApQddjS4xLV1QwnUF6iympFQG0G/gTacpgDCnJ6N2mehPAA9crrJbE37rGJbqyT
- /mWMgaLPa9Qq+w+iBR0jzJN1170PkLJ0lH67UlrdxmT95OaTIwWbDICqRz5gBvdXgRfj8Whdp0
- j9/XqLPWmNCzVlUgcdXiI2oN3UoENtYMultQ8O9txM5MdZOg6ctSEqgDT7+CbSwVOTG5Eirvp3
- QLfNmyeIP0EWHFjLvLP2GzgNeNP6VSJkFNtW2jrjctt5jIjJT+Ha+7i6aGoPhv+uMax3l2Ap/m
- FcY=
-X-IronPort-AV: E=Sophos;i="5.64,569,1559491200"; 
-   d="scan'208";a="120256450"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 01 Oct 2019 08:23:45 +0800
-IronPort-SDR: kO+/oaLgvdvxyHw2ykguk5wmVNR8jXvQ5ih8nPGLQiMs5SkZTOVYIpfvb1HoDrtT+hfn+qIe7G
- uogbOuD5EICPpNh8dk+hTrfHngzJsIS7voG0586ORKs443CRBDzWE1tyLtOvJtp0R3xvHcM7H9
- JGNgIannE8SvD7Pd2CS+ScpRED56mcJRn3jIeHsl9XTrHhlLTYNFjUg1Y6bvvRx0JcaPdhUxPS
- q7AgN0ZqZCyZhvBEvMYa9MoqG2K8WdApTAM64fDZLeLXxKxhfT7IV5vOboCCYZfoKamTTHGQzM
- wbCXlVD17xqV+EVCYLQ4vtT8
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2019 17:19:58 -0700
-IronPort-SDR: Enpz6ImGLYlKOaKEwe6Rbmc3lpN5MHdhtg9jzP56tbwwu7o/wCSsI6NznTgoDyXW5JR6DdBbtK
- R6bq130Vc/KfWJvdEGEd98JWn0oidKKoIMOVn5RpLcv9ZqpRTROCFyw6/d81DrnzuP4Dcb9jXB
- IQX8Hhbpk1BM92zQhRP1D9hKEgNxm23tY90YbREGxWOlyORjvfGAdkxrPuqqSXME/PofiaZeK1
- UrcBJkdK+yG9Eb1k1PLq1QGQw8M8SeNs/r9r/dkXETQyYfrcxed4V6oeE2OzbAH9ntc+jHEcV+
- 9/4=
-WDCIronportException: Internal
-Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
-  by uls-op-cesaip02.wdc.com with ESMTP; 30 Sep 2019 17:23:45 -0700
-From:   Atish Patra <atish.patra@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>,
-        Johan Hovold <johan@kernel.org>,
-        linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>, hch@infradead.org
-Subject: [v6 PATCH] RISC-V: Remove unsupported isa string info print
-Date:   Mon, 30 Sep 2019 17:23:18 -0700
-Message-Id: <20191001002318.7515-1-atish.patra@wdc.com>
-X-Mailer: git-send-email 2.21.0
+        Mon, 30 Sep 2019 20:26:48 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:35180 "EHLO mx2.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726425AbfJAA0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 20:26:47 -0400
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2.mailbox.org (Postfix) with ESMTPS id 95AAFA1FF2;
+        Tue,  1 Oct 2019 02:26:44 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
+        with ESMTP id OqSFqd3gxv0h; Tue,  1 Oct 2019 02:26:37 +0200 (CEST)
+Date:   Tue, 1 Oct 2019 10:26:13 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Aleksa Sarai <asarai@suse.de>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v3 1/4] lib: introduce copy_struct_from_user()
+ helper
+Message-ID: <20191001002613.r3j7atz5pxas7ary@yavin.dot.cyphar.com>
+References: <20190930191526.19544-1-asarai@suse.de>
+ <20190930191526.19544-2-asarai@suse.de>
+ <201909301622.90B70079@keescook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="szzqvqqqxiiljkez"
+Content-Disposition: inline
+In-Reply-To: <201909301622.90B70079@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-/proc/cpuinfo should just print all the isa string as an information
-instead of determining what is supported or not. ELF hwcap can be
-used by the userspace to figure out that.
 
-Simplify the isa string printing by removing the unsupported isa string
-print and all related code.
+--szzqvqqqxiiljkez
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The relevant discussion can be found at
-http://lists.infradead.org/pipermail/linux-riscv/2019-September/006702.html
+On 2019-09-30, Kees Cook <keescook@chromium.org> wrote:
+> On Tue, Oct 01, 2019 at 05:15:23AM +1000, Aleksa Sarai wrote:
+> > From: Aleksa Sarai <cyphar@cyphar.com>
+> >=20
+> > A common pattern for syscall extensions is increasing the size of a
+> > struct passed from userspace, such that the zero-value of the new fields
+> > result in the old kernel behaviour (allowing for a mix of userspace and
+> > kernel vintages to operate on one another in most cases).
+> >=20
+> > While this interface exists for communication in both directions, only
+> > one interface is straightforward to have reasonable semantics for
+> > (userspace passing a struct to the kernel). For kernel returns to
+> > userspace, what the correct semantics are (whether there should be an
+> > error if userspace is unaware of a new extension) is very
+> > syscall-dependent and thus probably cannot be unified between syscalls
+> > (a good example of this problem is [1]).
+> >=20
+> > Previously there was no common lib/ function that implemented
+> > the necessary extension-checking semantics (and different syscalls
+> > implemented them slightly differently or incompletely[2]). Future
+> > patches replace common uses of this pattern to make use of
+> > copy_struct_from_user().
+> >=20
+> > Some in-kernel selftests that insure that the handling of alignment and
+> > various byte patterns are all handled identically to memchr_inv() usage.
+> >=20
+> > [1]: commit 1251201c0d34 ("sched/core: Fix uclamp ABI bug, clean up and
+> >      robustify sched_read_attr() ABI logic and code")
+> >=20
+> > [2]: For instance {sched_setattr,perf_event_open,clone3}(2) all do do
+> >      similar checks to copy_struct_from_user() while rt_sigprocmask(2)
+> >      always rejects differently-sized struct arguments.
+> >=20
+> > Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+> > ---
+> >  include/linux/bitops.h  |   7 +++
+> >  include/linux/uaccess.h |   4 ++
+> >  lib/strnlen_user.c      |   8 +--
+> >  lib/test_user_copy.c    | 133 ++++++++++++++++++++++++++++++++++++++--
+> >  lib/usercopy.c          | 123 +++++++++++++++++++++++++++++++++++++
+> >  5 files changed, 262 insertions(+), 13 deletions(-)
+> >=20
+> > diff --git a/include/linux/bitops.h b/include/linux/bitops.h
+> > index cf074bce3eb3..c94a9ff9f082 100644
+> > --- a/include/linux/bitops.h
+> > +++ b/include/linux/bitops.h
+> > @@ -4,6 +4,13 @@
+> >  #include <asm/types.h>
+> >  #include <linux/bits.h>
+> > =20
+> > +/* Set bits in the first 'n' bytes when loaded from memory */
+> > +#ifdef __LITTLE_ENDIAN
+> > +#  define aligned_byte_mask(n) ((1UL << 8*(n))-1)
+> > +#else
+> > +#  define aligned_byte_mask(n) (~0xffUL << (BITS_PER_LONG - 8 - 8*(n)))
+> > +#endif
+> > +
+> >  #define BITS_PER_TYPE(type) (sizeof(type) * BITS_PER_BYTE)
+> >  #define BITS_TO_LONGS(nr)	DIV_ROUND_UP(nr, BITS_PER_TYPE(long))
+> > =20
+> > diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+> > index 70bbdc38dc37..94f20e6ec6ab 100644
+> > --- a/include/linux/uaccess.h
+> > +++ b/include/linux/uaccess.h
+> > @@ -231,6 +231,10 @@ __copy_from_user_inatomic_nocache(void *to, const =
+void __user *from,
+> > =20
+> >  #endif		/* ARCH_HAS_NOCACHE_UACCESS */
+> > =20
+> > +extern int check_zeroed_user(const void __user *from, size_t size);
+> > +extern int copy_struct_from_user(void *dst, size_t ksize,
+> > +				 const void __user *src, size_t usize);
+> > +
+> >  /*
+> >   * probe_kernel_read(): safely attempt to read from a location
+> >   * @dst: pointer to the buffer that shall take the data
+> > diff --git a/lib/strnlen_user.c b/lib/strnlen_user.c
+> > index 28ff554a1be8..6c0005d5dd5c 100644
+> > --- a/lib/strnlen_user.c
+> > +++ b/lib/strnlen_user.c
+> > @@ -3,16 +3,10 @@
+> >  #include <linux/export.h>
+> >  #include <linux/uaccess.h>
+> >  #include <linux/mm.h>
+> > +#include <linux/bitops.h>
+> > =20
+> >  #include <asm/word-at-a-time.h>
+> > =20
+> > -/* Set bits in the first 'n' bytes when loaded from memory */
+> > -#ifdef __LITTLE_ENDIAN
+> > -#  define aligned_byte_mask(n) ((1ul << 8*(n))-1)
+> > -#else
+> > -#  define aligned_byte_mask(n) (~0xfful << (BITS_PER_LONG - 8 - 8*(n)))
+> > -#endif
+> > -
+> >  /*
+> >   * Do a strnlen, return length of string *with* final '\0'.
+> >   * 'count' is the user-supplied count, while 'max' is the
+> > diff --git a/lib/test_user_copy.c b/lib/test_user_copy.c
+> > index 67bcd5dfd847..3a17f71029bb 100644
+> > --- a/lib/test_user_copy.c
+> > +++ b/lib/test_user_copy.c
+> > @@ -16,6 +16,7 @@
+> >  #include <linux/slab.h>
+> >  #include <linux/uaccess.h>
+> >  #include <linux/vmalloc.h>
+> > +#include <linux/random.h>
+> > =20
+> >  /*
+> >   * Several 32-bit architectures support 64-bit {get,put}_user() calls.
+> > @@ -31,14 +32,129 @@
+> >  # define TEST_U64
+> >  #endif
+> > =20
+> > -#define test(condition, msg)		\
+> > -({					\
+> > -	int cond =3D (condition);		\
+> > -	if (cond)			\
+> > -		pr_warn("%s\n", msg);	\
+> > -	cond;				\
+> > +#define test(condition, msg, ...)					\
+> > +({									\
+> > +	int cond =3D (condition);						\
+> > +	if (cond)							\
+> > +		pr_warn("[%d] " msg "\n", __LINE__, ##__VA_ARGS__);	\
+> > +	cond;								\
+> >  })
+> > =20
+> > +static bool is_zeroed(void *from, size_t size)
+> > +{
+> > +	return memchr_inv(from, 0x0, size) =3D=3D NULL;
+> > +}
+> > +
+> > +static int test_check_nonzero_user(char *kmem, char __user *umem, size=
+_t size)
+> > +{
+> > +	int ret =3D 0;
+> > +	size_t start, end, i;
+> > +	size_t zero_start =3D size / 4;
+> > +	size_t zero_end =3D size - zero_start;
+> > +
+> > +	/*
+> > +	 * We conduct a series of check_nonzero_user() tests on a block of me=
+mory
+> > +	 * with the following byte-pattern (trying every possible [start,end]
+> > +	 * pair):
+> > +	 *
+> > +	 *   [ 00 ff 00 ff ... 00 00 00 00 ... ff 00 ff 00 ]
+> > +	 *
+> > +	 * And we verify that check_nonzero_user() acts identically to memchr=
+_inv().
+> > +	 */
+> > +
+> > +	memset(kmem, 0x0, size);
+> > +	for (i =3D 1; i < zero_start; i +=3D 2)
+> > +		kmem[i] =3D 0xff;
+> > +	for (i =3D zero_end; i < size; i +=3D 2)
+> > +		kmem[i] =3D 0xff;
+> > +
+> > +	ret |=3D test(copy_to_user(umem, kmem, size),
+> > +		    "legitimate copy_to_user failed");
+> > +
+> > +	for (start =3D 0; start <=3D size; start++) {
+> > +		for (end =3D start; end <=3D size; end++) {
+> > +			size_t len =3D end - start;
+> > +			int retval =3D check_zeroed_user(umem + start, len);
+> > +			int expected =3D is_zeroed(kmem + start, len);
+> > +
+> > +			ret |=3D test(retval !=3D expected,
+> > +				    "check_nonzero_user(=3D%d) !=3D memchr_inv(=3D%d) mismatch (st=
+art=3D%zu, end=3D%zu)",
+> > +				    retval, expected, start, end);
+> > +		}
+> > +	}
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static int test_copy_struct_from_user(char *kmem, char __user *umem,
+> > +				      size_t size)
+> > +{
+> > +	int ret =3D 0;
+> > +	char *rand =3D NULL, *expected =3D NULL;
+> > +	size_t ksize, usize;
+> > +
+> > +	rand =3D kmalloc(size, GFP_KERNEL);
+> > +	if (ret |=3D test(rand =3D=3D NULL, "kmalloc failed"))
+> > +		goto out_free;
+> > +
+> > +	expected =3D kmalloc(size, GFP_KERNEL);
+> > +	if (ret |=3D test(expected =3D=3D NULL, "kmalloc failed"))
+> > +		goto out_free;
+> > +
+> > +	/* Fill umem with random bytes. */
+> > +	memset(kmem, 0x0, size);
+> > +	prandom_bytes(rand, size);
+>=20
+> I don't really like using random() in tests on the chance that we get
+> failures we can't reproduced. If you want to do this (instead of using a
+> byte-fill pattern), you need to dump the entire state of the memory
+> region. Why not just memset(rand, 0xff, ...)? (And obviously rename
+> "rand")
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
----
- arch/riscv/kernel/cpu.c | 35 ++++-------------------------------
- 1 file changed, 4 insertions(+), 31 deletions(-)
+Fair enough.
 
-diff --git a/arch/riscv/kernel/cpu.c b/arch/riscv/kernel/cpu.c
-index 7da3c6a93abd..9486c426af86 100644
---- a/arch/riscv/kernel/cpu.c
-+++ b/arch/riscv/kernel/cpu.c
-@@ -48,49 +48,22 @@ int riscv_of_processor_hartid(struct device_node *node)
- 
- static void print_isa(struct seq_file *f, const char *orig_isa)
- {
--	static const char *ext = "mafdcsu";
--	const char *isa = orig_isa;
--	const char *e;
--
- 	/*
- 	 * Linux doesn't support rv32e or rv128i, and we only support booting
- 	 * kernels on harts with the same ISA that the kernel is compiled for.
- 	 */
- #if defined(CONFIG_32BIT)
--	if (strncmp(isa, "rv32i", 5) != 0)
-+	if (strncmp(orig_isa, "rv32i", 5) != 0)
- 		return;
- #elif defined(CONFIG_64BIT)
--	if (strncmp(isa, "rv64i", 5) != 0)
-+	if (strncmp(orig_isa, "rv64i", 5) != 0)
- 		return;
- #endif
- 
--	/* Print the base ISA, as we already know it's legal. */
-+	/* Print the entire ISA as it is */
- 	seq_puts(f, "isa\t\t: ");
--	seq_write(f, isa, 5);
--	isa += 5;
--
--	/*
--	 * Check the rest of the ISA string for valid extensions, printing those
--	 * we find.  RISC-V ISA strings define an order, so we only print the
--	 * extension bits when they're in order. Hide the supervisor (S)
--	 * extension from userspace as it's not accessible from there.
--	 */
--	for (e = ext; *e != '\0'; ++e) {
--		if (isa[0] == e[0]) {
--			if (isa[0] != 's')
--				seq_write(f, isa, 1);
--
--			isa++;
--		}
--	}
-+	seq_write(f, orig_isa, strlen(orig_isa));
- 	seq_puts(f, "\n");
--
--	/*
--	 * If we were given an unsupported ISA in the device tree then print
--	 * a bit of info describing what went wrong.
--	 */
--	if (isa[0] != '\0')
--		pr_info("unsupported ISA \"%s\" in device tree\n", orig_isa);
- }
- 
- static void print_mmu(struct seq_file *f, const char *mmu_type)
--- 
-2.21.0
+> > +	ret |=3D test(copy_to_user(umem, rand, size),
+> > +		    "legitimate copy_to_user failed");
+> > +
+> > +	/* Check basic case -- (usize =3D=3D ksize). */
+> > +	ksize =3D size;
+> > +	usize =3D size;
+>=20
+> I'd move the memset(kmem, 0x0, size); down to here.
+>=20
+> > +	memcpy(expected, rand, ksize);
+> > +
+> > +	ret |=3D test(copy_struct_from_user(kmem, ksize, umem, usize),
+> > +		    "copy_struct_from_user(usize =3D=3D ksize) failed");
+> > +	ret |=3D test(memcmp(kmem, expected, ksize),
+> > +		    "copy_struct_from_user(usize =3D=3D ksize) gives unexpected copy=
+");
+> > +
+> > +	/* Old userspace case -- (usize < ksize). */
+> > +	ksize =3D size;
+> > +	usize =3D ksize / 2;
+> > +
+>=20
+> I would expect memset(kmem, 0x0, size); again here since a new test of
+> that region is starting.
+>=20
+> > +	memcpy(expected, rand, usize);
+> > +	memset(expected + usize, 0x0, ksize - usize);
+> > +
+> > +	ret |=3D test(copy_struct_from_user(kmem, ksize, umem, usize),
+> > +		    "copy_struct_from_user(usize < ksize) failed");
+> > +	ret |=3D test(memcmp(kmem, expected, ksize),
+> > +		    "copy_struct_from_user(usize < ksize) gives unexpected copy");
+> > +
+> > +	/* New userspace (-E2BIG) case -- (usize > ksize). */
+> > +	usize =3D size;
+> > +	ksize =3D usize / 2;
+>=20
+> and here?
+>=20
+> > +
+> > +	ret |=3D test(copy_struct_from_user(kmem, ksize, umem, usize) !=3D -E=
+2BIG,
+> > +		    "copy_struct_from_user(usize > ksize) didn't give E2BIG");
+> > +
+> > +	/* New userspace (success) case -- (usize > ksize). */
+> > +	usize =3D size;
+> > +	ksize =3D usize / 2;
+> > +
+>=20
+> and here?
 
+Will do all of the above.
+
+> > +	memcpy(expected, rand, ksize);
+> > +
+> > +	ret |=3D test(clear_user(umem + ksize, usize - ksize),
+> > +		    "legitimate clear_user failed");
+> > +	ret |=3D test(copy_struct_from_user(kmem, ksize, umem, usize),
+> > +		    "copy_struct_from_user(usize > ksize) failed");
+> > +	ret |=3D test(memcmp(kmem, expected, ksize),
+> > +		    "copy_struct_from_user(usize > ksize) gives unexpected copy");
+> > +
+> > +out_free:
+> > +	kfree(expected);
+> > +	kfree(rand);
+> > +	return ret;
+> > +}
+> > +
+> >  static int __init test_user_copy_init(void)
+> >  {
+> >  	int ret =3D 0;
+> > @@ -106,6 +222,11 @@ static int __init test_user_copy_init(void)
+> >  #endif
+> >  #undef test_legit
+> > =20
+> > +	/* Test usage of check_nonzero_user(). */
+> > +	ret |=3D test_check_nonzero_user(kmem, usermem, 2 * PAGE_SIZE);
+> > +	/* Test usage of copy_struct_from_user(). */
+> > +	ret |=3D test_copy_struct_from_user(kmem, usermem, 2 * PAGE_SIZE);
+> > +
+> >  	/*
+> >  	 * Invalid usage: none of these copies should succeed.
+> >  	 */
+> > diff --git a/lib/usercopy.c b/lib/usercopy.c
+> > index c2bfbcaeb3dc..cf7f854ed9c8 100644
+> > --- a/lib/usercopy.c
+> > +++ b/lib/usercopy.c
+> > @@ -1,5 +1,6 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> >  #include <linux/uaccess.h>
+> > +#include <linux/bitops.h>
+> > =20
+> >  /* out-of-line parts */
+> > =20
+> > @@ -31,3 +32,125 @@ unsigned long _copy_to_user(void __user *to, const =
+void *from, unsigned long n)
+> >  }
+> >  EXPORT_SYMBOL(_copy_to_user);
+> >  #endif
+> > +
+> > +/**
+> > + * check_zeroed_user: check if a userspace buffer only contains zero b=
+ytes
+> > + * @from: Source address, in userspace.
+> > + * @size: Size of buffer.
+> > + *
+> > + * This is effectively shorthand for "memchr_inv(from, 0, size) =3D=3D=
+ NULL" for
+> > + * userspace addresses (and is more efficient because we don't care wh=
+ere the
+> > + * first non-zero byte is).
+> > + *
+> > + * Returns:
+> > + *  * 0: There were non-zero bytes present in the buffer.
+> > + *  * 1: The buffer was full of zero bytes.
+> > + *  * -EFAULT: access to userspace failed.
+> > + */
+> > +int check_zeroed_user(const void __user *from, size_t size)
+> > +{
+> > +	unsigned long val;
+> > +	uintptr_t align =3D (uintptr_t) from % sizeof(unsigned long);
+> > +
+> > +	if (unlikely(size =3D=3D 0))
+> > +		return 1;
+> > +
+> > +	from -=3D align;
+> > +	size +=3D align;
+> > +
+> > +	if (!user_access_begin(from, size))
+> > +		return -EFAULT;
+> > +
+> > +	unsafe_get_user(val, (unsigned long __user *) from, err_fault);
+> > +	if (align)
+> > +		val &=3D ~aligned_byte_mask(align);
+> > +
+> > +	while (size > sizeof(unsigned long)) {
+> > +		if (unlikely(val))
+> > +			goto done;
+> > +
+> > +		from +=3D sizeof(unsigned long);
+> > +		size -=3D sizeof(unsigned long);
+> > +
+> > +		unsafe_get_user(val, (unsigned long __user *) from, err_fault);
+> > +	}
+> > +
+> > +	if (size < sizeof(unsigned long))
+> > +		val &=3D aligned_byte_mask(size);
+> > +
+> > +done:
+> > +	user_access_end();
+> > +	return (val =3D=3D 0);
+> > +err_fault:
+> > +	user_access_end();
+> > +	return -EFAULT;
+> > +}
+> > +EXPORT_SYMBOL(check_zeroed_user);
+> > +
+> > +/**
+> > + * copy_struct_from_user: copy a struct from userspace
+> > + * @dst:   Destination address, in kernel space. This buffer must be @=
+ksize
+> > + *         bytes long.
+> > + * @ksize: Size of @dst struct.
+> > + * @src:   Source address, in userspace.
+> > + * @usize: (Alleged) size of @src struct.
+> > + *
+> > + * Copies a struct from userspace to kernel space, in a way that guara=
+ntees
+> > + * backwards-compatibility for struct syscall arguments (as long as fu=
+ture
+> > + * struct extensions are made such that all new fields are *appended* =
+to the
+> > + * old struct, and zeroed-out new fields have the same meaning as the =
+old
+> > + * struct).
+> > + *
+> > + * @ksize is just sizeof(*dst), and @usize should've been passed by us=
+erspace.
+> > + * The recommended usage is something like the following:
+> > + *
+> > + *   SYSCALL_DEFINE2(foobar, const struct foo __user *, uarg, size_t, =
+usize)
+> > + *   {
+> > + *      int err;
+> > + *      struct foo karg =3D {};
+> > + *
+> > + *      if (usize > PAGE_SIZE)
+> > + *        return -E2BIG;
+> > + *      if (usize < FOO_SIZE_VER0)
+> > + *        return -EINVAL;
+> > + *
+> > + *      err =3D copy_struct_from_user(&karg, sizeof(karg), uarg, usize=
+);
+> > + *      if (err)
+> > + *        return err;
+> > + *
+> > + *      // ...
+> > + *   }
+> > + *
+> > + * There are three cases to consider:
+> > + *  * If @usize =3D=3D @ksize, then it's copied verbatim.
+> > + *  * If @usize < @ksize, then the userspace has passed an old struct =
+to a
+> > + *    newer kernel. The rest of the trailing bytes in @dst (@ksize - @=
+usize)
+> > + *    are to be zero-filled.
+> > + *  * If @usize > @ksize, then the userspace has passed a new struct t=
+o an
+> > + *    older kernel. The trailing bytes unknown to the kernel (@usize -=
+ @ksize)
+> > + *    are checked to ensure they are zeroed, otherwise -E2BIG is retur=
+ned.
+> > + *
+> > + * Returns (in all cases, some data may have been copied):
+> > + *  * -E2BIG:  (@usize > @ksize) and there are non-zero trailing bytes=
+ in @src.
+> > + *  * -EFAULT: access to userspace failed.
+> > + */
+> > +int copy_struct_from_user(void *dst, size_t ksize,
+> > +			  const void __user *src, size_t usize)
+>=20
+> I'd like to see this be marked __always_inline so the dst type is known
+> to the compiler during the copy_from_user() size sanity checks, etc.
+
+Sure, will do. I'll put it in uaccess.h.
+
+> > +{
+> > +	size_t size =3D min(ksize, usize);
+> > +	size_t rest =3D max(ksize, usize) - size;
+> > +
+> > +	/* Deal with trailing bytes. */
+> > +	if (usize < ksize) {
+> > +		memset(dst + size, 0, rest);
+> > +	} else if (usize > ksize) {
+> > +		int ret =3D check_zeroed_user(src + size, rest);
+> > +		if (ret <=3D 0)
+> > +			return ret ?: -E2BIG;
+> > +	}
+> > +	/* Copy the interoperable parts of the struct. */
+> > +	if (copy_from_user(dst, src, size))
+> > +		return -EFAULT;
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL(copy_struct_from_user);
+> > --=20
+> > 2.23.0
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--szzqvqqqxiiljkez
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXZKdIgAKCRCdlLljIbnQ
+EvSDAQCPiK+1MciPgIXXNuWdtukjcD1Xp7gQVC6xs8ZsZd37fQD/ZLRSz5fhQDFY
+F0mnJsoby5JBzFLyacQKg6O6LQGXlQM=
+=+pTM
+-----END PGP SIGNATURE-----
+
+--szzqvqqqxiiljkez--
