@@ -2,98 +2,99 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4ACC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 22:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1DAECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 22:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69DD02086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 22:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44C1421A4A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 22:29:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="fMp/yGTi"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="S0XyS+Lz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbfJAW2d (ORCPT
+        id S1728727AbfJAW3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 18:28:33 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:34273 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725843AbfJAW2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 18:28:33 -0400
-Received: from carbon-x1.hos.anvin.org ([IPv6:2601:646:8600:3281:e7ea:4585:74bd:2ff0])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x91MS6XO1104263
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Tue, 1 Oct 2019 15:28:07 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com x91MS6XO1104263
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019091901; t=1569968888;
-        bh=CVmGy/DI0hNYE3HWVWXwpZgLbbxVbvXXwcCGt+QPGBQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=fMp/yGTiGygKC6+gmuSH52zZzbetdudCo2N9mAJbvn2+gRPMaMz9ceW2PchS/GwaL
-         AEN/AWuv4IOf8rN4DFdg5kDMg34A8eEssbtu8XBVqaOC2a0+upR+Dakam53xErg3us
-         QRsRUqnQpspoT+pYt1524iewwNh6vwA8qR0kWl1ek4/UvY03vsRKVUNGFKh7S8v5/L
-         Mw1/D/Vy11zP9C9eS8rQiFeu+PPcboqEWeiRHf+D7dNy1+CtyvyzQ6edfznbqFpO4j
-         XwDb8LtgTeEiipL7zQoixZ+4MQ/RnkRdPGSnjpdiT3HisogFUYQ+ilvVnjjvx7hVr7
-         26q/UZgCO9wzw==
-Subject: Re: [PATCH v2 1/3] x86/boot: Introduce the kernel_info
-To:     Daniel Kiper <daniel.kiper@oracle.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, bp@alien8.de, corbet@lwn.net,
-        dpsmith@apertussolutions.com, eric.snowberg@oracle.com,
-        kanth.ghatraju@oracle.com, konrad.wilk@oracle.com,
-        mingo@redhat.com, ross.philipson@oracle.com, tglx@linutronix.de
-References: <20190704163612.14311-1-daniel.kiper@oracle.com>
- <20190704163612.14311-2-daniel.kiper@oracle.com>
- <5633066F-01BE-437D-A564-150FD48B6D92@zytor.com>
- <20190930150110.ekir52wu3w67v2fk@tomti.i.net-space.pl>
- <c9eb5a39-ced5-b35d-616d-6ffbe15c1396@zytor.com>
- <20191001114133.xy5nuhepzzixhuh4@tomti.i.net-space.pl>
-From:   "H. Peter Anvin" <hpa@zytor.com>
-Message-ID: <dda802de-2efe-3d22-7816-6da36bf9ebf8@zytor.com>
-Date:   Tue, 1 Oct 2019 15:28:01 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Tue, 1 Oct 2019 18:29:07 -0400
+Received: from ozlabs.org ([203.11.71.1]:37911 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725843AbfJAW3H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 18:29:07 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46jYpS5LW0z9sPc;
+        Wed,  2 Oct 2019 08:29:04 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1569968945;
+        bh=usJg1r0Zs+lz/t189a4Z4/qDI/3oA8sjybfAXfcJeDg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=S0XyS+Lz+uoAGzZS/FP89FfNQMFhKIv+e8WGEACbhsSNBull1zyWMsBllMtFdDLsz
+         8OQ6vzs6/nFBiod5a2tQFM6OVV9AqiAlBqeDYpY3vBUt8T6oSMybXqfpDQ3axCLR0L
+         gFnVgKDP6nXMuid60ShCgfSc3bAJoqTta2B0nBcrwxBJRS8wjVvkZ+Ufuuxef7ilht
+         BWnjuf4MsDL6GxQHCXOhPskZEt4k4VDM+380AATCHR5WhOlxXX8ioe8WOWV1g3NEJy
+         CryYuEeRDyMVmMfhn3PXjVwRmqnADGK92w1q1eXOcybb8VUs/u+DcVFHO/6vE6YEYB
+         w64S0W08kR2Zg==
+Date:   Wed, 2 Oct 2019 08:29:04 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: linux-next: Fixes tag needs some work in the sound-asoc-fixes tree
+Message-ID: <20191002082904.4eef7f15@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20191001114133.xy5nuhepzzixhuh4@tomti.i.net-space.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/SNTMeSBNh1=ZcjfHd6YToBQ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-01 04:41, Daniel Kiper wrote:
-> 
-> OK, so, this is more or less what I had in my v3 patch before sending
-> this email. So, it looks that I am on good track. Great! Though I am not
-> sure that we should have magic for chunked objects. If yes could you
-> explain why? I would just leave len for chunked objects.
-> 
+--Sig_/SNTMeSBNh1=ZcjfHd6YToBQ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-It makes it easier to validate the contents (bugs happen...), and would allow
-for multiple chunks that could come from different object files if it ever
-becomes necessary for some reason.
+Hi all,
 
-We could also just say that dynamic chunks don't even have pointers, and let
-the boot loader just walk the list.
+In commit
 
->> Also "InfO" is a pretty hideous magic. In general, all-ASCII magics have much
->> higher risk of collision than *RANDOM* binary numbers. However, for a chunked
->> architecture they do have the advantage that they can be used also as a human
->> name or file name for the chunk, e.,g. in sysfs, so maybe something like
->> "LnuX" or even "LToP" for the top-level chunk might make sense.
->>
->> How does that sound?
-> 
-> Well, your proposals are more cryptic, especially the second one, than
-> mine but I tend to agree that more *RANDOM* magics are better. So,
-> I would choose "LToP" if you decipher it for me. Linux Top?
-> 
+  e66e52c5b742 ("ASoC: SOF: pcm: fix resource leak in hw_free")
 
-Yes, Linux top [structure].
+Fixes tag
 
-	-hpa
+  Fixes: c29d96c3b9b4 ("ASoC: SOF: reset DMA state in prepare")
 
+has these problem(s):
+
+  - Target SHA1 does not exist
+
+Did you mean
+
+Fixes: 04c8027764bc ("ASoC: SOF: reset DMA state in prepare")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/SNTMeSBNh1=ZcjfHd6YToBQ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2T0zAACgkQAVBC80lX
+0GyCIQgAnPGjji+k5tzcRPM7+6L0NoDPu+Kn8Fa1Jx/FshBjZpP3bczPG2mazuqs
+Q2/RB8o9QX9uNnHwrWtLS52//5gQhFTFE9ASMS5IXqaFR83zzD5yRvTjsJahS6JA
+rYa0J8IEJuhEcklI5lK3FiuDz/mOaexuDGi2eckwP7sMP6VWTVwojtAMg0ezlK8s
+fEZwaVvPEih+Ik5/2fjgGkzLFvuV8A61QkVhGYdtTef8uSQH3ormnLJEZdw440bH
+CI0ymM72MdOZiRW99TP3Ekz346kMiokXSW0LkK1GLbkL55m1vxNlTfmc4i+E4FPz
+SlvxHe60lE5utAHKQvgH2GMXGyeGQg==
+=u0Fc
+-----END PGP SIGNATURE-----
+
+--Sig_/SNTMeSBNh1=ZcjfHd6YToBQ--
