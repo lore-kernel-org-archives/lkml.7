@@ -2,138 +2,108 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A22ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9F3C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F7262168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:12:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="cnvMiLlr"
+	by mail.kernel.org (Postfix) with ESMTP id 7D9F82086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:12:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728420AbfJARMX (ORCPT
+        id S1728536AbfJARM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 13:12:23 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:32977 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725792AbfJARMW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 13:12:22 -0400
-Received: by mail-qt1-f193.google.com with SMTP id r5so22600882qtd.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 10:12:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=J6dBLTJUr1ayorS1X/wuqaZamfgYcdnHpuqJt5uSLPg=;
-        b=cnvMiLlrbSLAifWEHOvBwxzT/fH3OP1qfY0QYVJqjT7CBvTdigVRkukRjuB8NkrLNZ
-         8KYD+X2WgyhuliBIf8/T1cQ0Xmlo/FKfQZtQIJKMuQ5vFWTYbCy+WTKAtTSNgDT0LhEx
-         /t9qYP+L3X32XiOMlIXFWAPWWTASSOp/duXjDQktUr9lbAMx86p3OLeqSdruGLsC9Y3t
-         7neZ7EXhN1DvxRNFajaGMt5Rg5GNucsHob5c8rmbGeG6Ymmp/rS9yQ6LNrWgSPXJ7xWE
-         3cbVNJuTqgFTUwTlAy+nQHcEptUmtJH6P55Hb5sPVJ8AWU26EJHikwwKQ8XqiM7RSYpu
-         BIhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=J6dBLTJUr1ayorS1X/wuqaZamfgYcdnHpuqJt5uSLPg=;
-        b=AIn6HinkYcgsc0IhwZ9dHdse1DOsopudlfYbgUYG4rym8td3c3y+rlgkbvXzdhjeVt
-         T/AowArI5GTWfI9Uxueb3z1jJeLLXkuL6dUbsv1Uugu2bATeTFrAIQCw/ejQUYDuPjBO
-         f7wA9uVIyxmZgkc9j3WcaKHOe9RtY6BMeKS1wfJVNHhPjoy+K3dM6Jc8oiO0FTv782mj
-         Jj7vgm4e4VFj5gql027P3HZxA3hLO2CKwMeNxmNxAHPondmJ5s+juFzNQqdxaJCFLokJ
-         dl/ydp+s9tO9SgkWe1PsjZKVoOQMElgY0GlHf11aCneFTw8kCmBzAvhCrfWMFnDctytz
-         AJpw==
-X-Gm-Message-State: APjAAAU0K3Wq57uZtbklTIWrZeK35Pv5yuzOsDrrHvcmiOWwrimCMcFf
-        hM8ZriAqSORkbFfXJPv7XA9TNg==
-X-Google-Smtp-Source: APXvYqzE8t0dE2/+XQYl8bJ0ClQGr14JtntknULxHWzbTIzvKJt3iHFjG+VHI3AZrKyQ6yDnK/Poqg==
-X-Received: by 2002:ac8:134c:: with SMTP id f12mr1701472qtj.162.1569949941698;
-        Tue, 01 Oct 2019 10:12:21 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
-        by smtp.gmail.com with ESMTPSA id v7sm8755483qte.29.2019.10.01.10.12.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 01 Oct 2019 10:12:21 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1iFLhE-0003Fi-QM; Tue, 01 Oct 2019 14:12:20 -0300
-Date:   Tue, 1 Oct 2019 14:12:20 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Alan Mikhak <alan.mikhak@sifive.com>
-Cc:     linux-kernel@vger.kernel.org, martin.petersen@oracle.com,
-        alexios.zavras@intel.com, ming.lei@redhat.com,
-        gregkh@linuxfoundation.org, tglx@linutronix.de,
-        christophe.leroy@c-s.fr, Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH] scatterlist: Validate page before calling PageSlab()
-Message-ID: <20191001171220.GF22532@ziepe.ca>
-References: <1569885755-10947-1-git-send-email-alan.mikhak@sifive.com>
- <20191001121623.GA22532@ziepe.ca>
- <CABEDWGzsJR+YpX7eDrt_EerT0VEHjpBXSpc6Nzbbmvqc2OiR8Q@mail.gmail.com>
+        Tue, 1 Oct 2019 13:12:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:54798 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725792AbfJARM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 13:12:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 483B4337;
+        Tue,  1 Oct 2019 10:12:28 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0E5283F706;
+        Tue,  1 Oct 2019 10:12:26 -0700 (PDT)
+Subject: Re: [PATCH v3 08/10] sched/fair: use utilization to select misfit
+ task
+To:     Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org, mingo@redhat.com,
+        peterz@infradead.org
+Cc:     pauld@redhat.com, srikar@linux.vnet.ibm.com,
+        quentin.perret@arm.com, dietmar.eggemann@arm.com,
+        Morten.Rasmussen@arm.com, hdanton@sina.com
+References: <1568878421-12301-1-git-send-email-vincent.guittot@linaro.org>
+ <1568878421-12301-9-git-send-email-vincent.guittot@linaro.org>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <e395537d-2292-ab5e-dd11-f2d39293667e@arm.com>
+Date:   Tue, 1 Oct 2019 18:12:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABEDWGzsJR+YpX7eDrt_EerT0VEHjpBXSpc6Nzbbmvqc2OiR8Q@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1568878421-12301-9-git-send-email-vincent.guittot@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 10:09:48AM -0700, Alan Mikhak wrote:
-> On Tue, Oct 1, 2019 at 5:16 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> >
-> > On Mon, Sep 30, 2019 at 04:22:35PM -0700, Alan Mikhak wrote:
-> > > From: Alan Mikhak <alan.mikhak@sifive.com>
-> > >
-> > > Modify sg_miter_stop() to validate the page pointer
-> > > before calling PageSlab(). This check prevents a crash
-> > > that will occur if PageSlab() gets called with a page
-> > > pointer that is not backed by page struct.
-> > >
-> > > A virtual address obtained from ioremap() for a physical
-> > > address in PCI address space can be assigned to a
-> > > scatterlist segment using the public scatterlist API
-> > > as in the following example:
-> > >
-> > > my_sg_set_page(struct scatterlist *sg,
-> > >                const void __iomem *ioaddr,
-> > >                size_t iosize)
-> > > {
-> > >       sg_set_page(sg,
-> > >               virt_to_page(ioaddr),
-> > >               (unsigned int)iosize,
-> > >               offset_in_page(ioaddr));
-> > >       sg_init_marker(sg, 1);
-> > > }
-> > >
-> > > If the virtual address obtained from ioremap() is not
-> > > backed by a page struct, virt_to_page() returns an
-> > > invalid page pointer. However, sg_copy_buffer() can
-> > > correctly recover the original virtual address. Such
-> > > addresses can successfully be assigned to scatterlist
-> > > segments to transfer data across the PCI bus with
-> > > sg_copy_buffer() if it were not for the crash in
-> > > PageSlab() when called by sg_miter_stop().
-> >
-> > I thought we already agreed in general that putting things that don't
-> > have struct page into the scatter list was not allowed?
-> >
-> > Jason
+On 19/09/2019 08:33, Vincent Guittot wrote:
+> utilization is used to detect a misfit task but the load is then used to
+> select the task on the CPU which can lead to select a small task with
+> high weight instead of the task that triggered the misfit migration.
 > 
-> Thanks Jason for your comment.
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> Acked-by: Valentin Schneider <valentin.schneider@arm.com>
+> ---
+>  kernel/sched/fair.c | 10 ++--------
+>  1 file changed, 2 insertions(+), 8 deletions(-)
 > 
-> Cost of adding page structs to a large PCI I/O address range can be
-> quite substantial. Allowing PCI I/O pages without page structs may be
-> desirable. Perhaps it is worth considering this cost.
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index a7c8ee6..acca869 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -7429,14 +7429,8 @@ static int detach_tasks(struct lb_env *env)
+>  			break;
+>  
+>  		case migrate_misfit:
+> -			load = task_h_load(p);
+> -
+> -			/*
+> -			 * utilization of misfit task might decrease a bit
+> -			 * since it has been recorded. Be conservative in the
+> -			 * condition.
+> -			 */
+> -			if (load < env->imbalance)
+> +			/* This is not a misfit task */
+> +			if (task_fits_capacity(p, capacity_of(env->src_cpu)))
+>  				goto next;
+>  
+>  			env->imbalance = 0;
+> 
 
-This is generally agreed, but nobody has figured out a solution.
+Following my comment in [1], if you can't squash that in patch 04 then
+perhaps you could add that to this change:
 
-> Scatterlist has no problem doing its memcpy() from pages without a
-> page struct that were obtained from ioremap(). It is only at
+---
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 1fac444a4831..d09ce304161d 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -8343,7 +8343,7 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
+ 	if (busiest->group_type == group_misfit_task) {
+ 		/* Set imbalance to allow misfit task to be balanced. */
+ 		env->balance_type = migrate_misfit;
+-		env->imbalance = busiest->group_misfit_task_load;
++		env->imbalance = 1;
+ 		return;
+ 	}
+ 
+---
 
-Calling memcpy on pointers from ioremap is very much not allowed. Code
-has to use the iomem safe memcpy.
+Reason being we don't care about the load (anymore), we just want a nonzero
+imbalance value, so might as well assign something static.
 
-Jason
+[1]: https://lore.kernel.org/r/74bb33d7-3ba4-aabe-c7a2-3865d5759281@arm.com
