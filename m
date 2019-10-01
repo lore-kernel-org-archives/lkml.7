@@ -2,117 +2,107 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33645C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E019EECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07B1C20815
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:23:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Qq2uF8Z4"
+	by mail.kernel.org (Postfix) with ESMTP id B34F920842
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:26:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569936406;
+	bh=8AYODUkLIhWgx1CLwLKwmalHpwZd+Q1qNbypTTN8BA0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tpMhIySVrDkgnmUyMh2eaKUUqeMLiuxnaVWlm/hPRYmNW+mB5/Hf3gLFeTgr1tKfJ
+	 rEO1gyqlW6tesINqmSoWRz6W5nV85rzBRz5kn6A2s+YePuryzAcKfga1gWTzRjBfSI
+	 wEYeZ7YYDJUnyGetR2a5Ebuc0hpHudp+2VWelmwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388400AbfJANX4 (ORCPT
+        id S2388386AbfJAN0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 09:23:56 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46383 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388360AbfJANXs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 09:23:48 -0400
-Received: by mail-wr1-f68.google.com with SMTP id o18so15477012wrv.13
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 06:23:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3UXwphbefxoaNIa3BWF+ZDcJIqlBkv2JNP3hYy5Lkdg=;
-        b=Qq2uF8Z4L27uDSCEXrRA+mqw/EEYd7dJPlm3iWU9fq7yyhv2OXMdvhnqAeWCSfsyMl
-         2H6I6pT6rRwrA9Qf4jNQduD6NJ6UI1eDWRsgxB0V0buAUaIsX87eFjaLgT1Eaf+62Jx4
-         HgzBlQ9OnWgK37zKc7e9Ca5v3261eNGhHWdZap5De244frCEJkBY/ORUuGmdcubJBZ3R
-         ohxVyEI+XnfdXiAACAnXCpFB5JDu77LF3PgzPMT/ZnAaKYLNay/eSrEQJ6qC9bCBphcJ
-         BpER6vm+n6G2/0TSUg/h41avtO+8jBEg9cVPqG3plSmJW+qUHUn5KfBrZqBOdPFueBDQ
-         0zAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3UXwphbefxoaNIa3BWF+ZDcJIqlBkv2JNP3hYy5Lkdg=;
-        b=sixd5l0sNY1yXTEfA9pWZPTyEu+g88lkBpUCUCzc3hSgmpjQCbHda0/pnr2EP9wStI
-         r8z5G8e/qV4SeGVWlv1azw+FvdjJDTQAgFzF91NF+6beKnKp2Zv0u9NLEaaDjf8CcktQ
-         BVxYquDb8HZphp3Qu6bLte3DvEKa/6IIuWwfFi+jWkJgn9YVx4bfaCdMcNnYFIvqihnO
-         A31SJBXmPb8hAqavN6ym/RuYA8EFTh8D/vtS6r8HWMwa/3NVO+kgI082dLVQMWgi2ZMn
-         Ug/BVZZvIw7GgF/bG7I3O0F4cSyHqI3ZLleNXUpsxRXzIw1ERlr+pk6IoEn/SRLVb66l
-         OrAQ==
-X-Gm-Message-State: APjAAAXAKIYu32kMgTd4u+Mnc/GfKGNz7otQzQ4d3F6dCoCxH931uLbp
-        UExObYcToYg6dQApOnGu5rlL0w==
-X-Google-Smtp-Source: APXvYqwPIVOEtxMwDTuDgBXmP6KdpZSgvSoDSeHMC6aZMZXAjqNPoKCPrhHyDyfQ+hRhwa9Y0StEiA==
-X-Received: by 2002:adf:f801:: with SMTP id s1mr2138136wrp.293.1569936226128;
-        Tue, 01 Oct 2019 06:23:46 -0700 (PDT)
-Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
-        by smtp.gmail.com with ESMTPSA id o22sm41847990wra.96.2019.10.01.06.23.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 06:23:45 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        JC Kuo <jckuo@nvidia.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-ide@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 2/3] phy: tegra: use regulator_bulk_set_supply_names()
-Date:   Tue,  1 Oct 2019 15:23:32 +0200
-Message-Id: <20191001132333.20146-3-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191001132333.20146-1-brgl@bgdev.pl>
-References: <20191001132333.20146-1-brgl@bgdev.pl>
+        Tue, 1 Oct 2019 09:26:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57042 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388261AbfJAN0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 09:26:45 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9840D205F4;
+        Tue,  1 Oct 2019 13:26:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569936405;
+        bh=8AYODUkLIhWgx1CLwLKwmalHpwZd+Q1qNbypTTN8BA0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UXd0w/I5aELR21rcXWrbb71PaZrP98X1Anl3gA8DKH6zugoz0yNvo54azsQLSY/tg
+         s7tggAZBvV8cfVt1IpjNFUUW3hGD8J4DUZ7gi3ZVQnyYnVx0l32rbxn0XfDYY3LIzZ
+         z/K8THG6o5F+HXl8uDRmBicNsWl2C45WcZstVkig=
+Date:   Tue, 1 Oct 2019 14:26:40 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        ard.biesheuvel@linaro.org, ndesaulniers@google.com,
+        catalin.marinas@arm.com, tglx@linutronix.de
+Subject: Re: [PATCH v3 2/5] arm64: vdso32: Detect binutils support for dmb
+ ishld
+Message-ID: <20191001132640.plowjzi5nmajs72x@willie-the-truck>
+References: <20190920142738.qlsjwguc6bpnez63@willie-the-truck>
+ <20190926214342.34608-1-vincenzo.frascino@arm.com>
+ <20190926214342.34608-3-vincenzo.frascino@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190926214342.34608-3-vincenzo.frascino@arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Thu, Sep 26, 2019 at 10:43:39PM +0100, Vincenzo Frascino wrote:
+> As reported by Will Deacon, older versions of binutils that do not
+> support certain types of memory barriers can cause build failure of the
+> vdso32 library.
+> 
+> Add a compilation time mechanism that detects if binutils supports those
+> instructions and configure the kernel accordingly.
+> 
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> ---
+>  arch/arm64/include/asm/vdso/compat_barrier.h | 2 +-
+>  arch/arm64/kernel/vdso32/Makefile            | 9 +++++++++
+>  2 files changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/include/asm/vdso/compat_barrier.h b/arch/arm64/include/asm/vdso/compat_barrier.h
+> index fb60a88b5ed4..3fd8fd6d8fc2 100644
+> --- a/arch/arm64/include/asm/vdso/compat_barrier.h
+> +++ b/arch/arm64/include/asm/vdso/compat_barrier.h
+> @@ -20,7 +20,7 @@
+>  
+>  #define dmb(option) __asm__ __volatile__ ("dmb " #option : : : "memory")
+>  
+> -#if __LINUX_ARM_ARCH__ >= 8
+> +#if __LINUX_ARM_ARCH__ >= 8 && defined(CONFIG_AS_DMB_ISHLD)
+>  #define aarch32_smp_mb()	dmb(ish)
+>  #define aarch32_smp_rmb()	dmb(ishld)
+>  #define aarch32_smp_wmb()	dmb(ishst)
+> diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
+> index 19e0d3115ffe..77aa61340374 100644
+> --- a/arch/arm64/kernel/vdso32/Makefile
+> +++ b/arch/arm64/kernel/vdso32/Makefile
+> @@ -15,6 +15,8 @@ cc32-disable-warning = $(call try-run,\
+>  	$(COMPATCC) -W$(strip $(1)) -c -x c /dev/null -o "$$TMP",-Wno-$(strip $(1)))
+>  cc32-ldoption = $(call try-run,\
+>          $(COMPATCC) $(1) -nostdlib -x c /dev/null -o "$$TMP",$(1),$(2))
+> +cc32-as-instr = $(call try-run,\
+> +	printf "%b\n" "$(1)" | $(COMPATCC) $(VDSO_AFLAGS) -c -x assembler -o "$$TMP" -,$(2),$(3))
 
-Use the new regulator helper instead of a for loop.
+It's a shame that we have to duplicate the logic from scripts/Kbuild.include
+here. Is there a way to reuse those helpers by temporarily overriding things
+like CC and KBUILD_AFLAGS? If not, no bother, but thought I'd better ask.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/phy/tegra/xusb.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
-index 2ea8497af82a..faf1137d1432 100644
---- a/drivers/phy/tegra/xusb.c
-+++ b/drivers/phy/tegra/xusb.c
-@@ -862,7 +862,6 @@ static int tegra_xusb_padctl_probe(struct platform_device *pdev)
- 	struct tegra_xusb_padctl *padctl;
- 	const struct of_device_id *match;
- 	struct resource *res;
--	unsigned int i;
- 	int err;
- 
- 	/* for backwards compatibility with old device trees */
-@@ -907,8 +906,9 @@ static int tegra_xusb_padctl_probe(struct platform_device *pdev)
- 		goto remove;
- 	}
- 
--	for (i = 0; i < padctl->soc->num_supplies; i++)
--		padctl->supplies[i].supply = padctl->soc->supply_names[i];
-+	regulator_bulk_set_supply_names(padctl->supplies,
-+					padctl->soc->supply_names,
-+					padctl->soc->num_supplies);
- 
- 	err = devm_regulator_bulk_get(&pdev->dev, padctl->soc->num_supplies,
- 				      padctl->supplies);
--- 
-2.23.0
-
+Will
