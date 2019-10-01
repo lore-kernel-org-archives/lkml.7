@@ -4,83 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5001FC388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1132EC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D9642133F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6DA92133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:14:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J7AYTjPq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SCWeuwoj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730387AbfJAKME (ORCPT
+        id S1730268AbfJAKO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 06:12:04 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54375 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730328AbfJAKMD (ORCPT
+        Tue, 1 Oct 2019 06:14:56 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36944 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728579AbfJAKOz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 06:12:03 -0400
-Received: by mail-wm1-f68.google.com with SMTP id p7so2658574wmp.4
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 03:12:00 -0700 (PDT)
+        Tue, 1 Oct 2019 06:14:55 -0400
+Received: by mail-wr1-f68.google.com with SMTP id i1so14773171wro.4
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 03:14:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=8hy45pyP7kv6EXfVxQmzNrFK2VbFBW1Lka/Gmb0X5J0=;
-        b=J7AYTjPqD5jXOPq7aic9RA8CQUOWh4TzXM79Ki6WY5pV+NU0lcnsopzWRK734enmtS
-         aIN8K2zIIsNuDNokBRn5ANOCSDxrJASgmDumtnQiAFlKDHCYPR9QLokvRL1+7pI+r5eG
-         EgGd8Zbkw0NIMKrY90aFXTCqcOLlhj0wWeSYELbaGGKRRS1HeVoTBbyueR2JdfkEsQ8r
-         6x2jjpafrgoFux01vRuGQqxDlqebtdUR0AK8nda/osYxrW+JA9rma3mZbCbek0UG6lT1
-         jg0Gi4EF4iTC25c+QTBfhRILf7Zc2pdnFte2FmXGPfpyRrxO8+pWrfYewQD8hrKfCeH9
-         f29w==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TqnRymZHVB3nETq43Yyx3kDj0Su1WqRmQVreGP9eeAM=;
+        b=SCWeuwojpC5yiuVk+b45PdbihMNriak/36ZsCE0jmeSduzCjq/s51e80vXGAJkh3DO
+         qOHqQtqPLCXcoR4SCjvUPn8599enHuL8DaInPPRnMJAbE2OX+R0at2cRImMnVa8lvkz6
+         jJLXpTtZ+/tu1Jrrb9ZyWKHK4a5AWtizXLSU8Lo7W8GJOifGv04j8JitEpzXburg3asJ
+         H8BysylFgjcP+/1rpYynNTj+oSnqnD5KCDSpcibbNkz+BvguDi/xyTPScY0gm2itHv4+
+         Z/d/4nB2wk4CLERLmyyDDWuXNXMBDhYOSOJug9IVfhrxKJoEn+AqHdio2hy9ClO0BK1b
+         p40w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=8hy45pyP7kv6EXfVxQmzNrFK2VbFBW1Lka/Gmb0X5J0=;
-        b=A2H4Nsgdi4zm69LHHgetJbY7+rnj2oucjAMI1nz5wpjeJoJOCLK7P7+JfznoXlW55h
-         phJC83bJz2t2RREzNRSlxGJRvT5YogF80Wo/4nGfyTSMtx9lOXTqE8bC1ZPcr/Cpkg2i
-         dzYar9QaMdqP50b0FL4tNeqz4CwS21tmA4GAfBUc8/8GBDY6cExmuSMnzvg5h4i9KTEG
-         DYS66z0UGxMhPzCHsYwNB11Kt0tNIeIqKnh3claFmuZcPmnpnERNCTTmdJbJpHcaa017
-         wg2CHZpIoV17kHm7sGJcxU2jroXQExK9rDZG/DrN5qbRB34QB6if7W85fRFdXtxAQSDG
-         2rzQ==
-X-Gm-Message-State: APjAAAWMWeZh20HAoDbDp8h3Cv/rJ8htyyy+zbNXKRPkaUdVSImeDl5y
-        Naw1QKLXwI3dDg+bfBevoPUOfA==
-X-Google-Smtp-Source: APXvYqyce6kLiNa02VTrU6yr/ckelEv9Vwx7Pd1FX7YNYnZ2gxLu2G+aiD+MbyaODltXlPmlKz4Vqg==
-X-Received: by 2002:a7b:cf12:: with SMTP id l18mr3198121wmg.25.1569924720081;
-        Tue, 01 Oct 2019 03:12:00 -0700 (PDT)
+        bh=TqnRymZHVB3nETq43Yyx3kDj0Su1WqRmQVreGP9eeAM=;
+        b=m8aevu/Oeustdc6M5yWh2vXGQsGOyQdPmLO9cpDX2QWLde8U1H3/JfnS1YCH/w1qvH
+         xYGv6MID4ImbiuH+gYpKjvzuDjQYczOg2yS3ihV/Io9BJV/8qBuM/BXkae1rtwYqMfB+
+         dH0+qkdRw+VdmS5fhk392yXfs4RyEUgk1RQ8sgHzFqybepWGKg69yUsaUEOjPOVKbaSR
+         GqegHSrS5WJpRMsww6HWB2EoPa0yeurAKFAwJFnH5N9qptEssU2pjmx9IwZ8cDKwsI5X
+         X6PRXPCQCO2kNeiSw50oj09CJQ1Lnkt/XlDm+tR1uR8s/fy+rj7mUqov1YfYSV428bJD
+         2snQ==
+X-Gm-Message-State: APjAAAVRrLgg0xsAb6KeN5V5t3TmsUe367F7t7YOiuUG+KbCrA/sSQB/
+        7q+Mmq3PutjXbSO2pAR5JJuOnA473CE=
+X-Google-Smtp-Source: APXvYqzF+PTKz9urDrKppbUD/aENMJ4pxtaMLYaIAnlz/3ezqaTV4JEnelkNmPMCMeGl5wJhux3KWw==
+X-Received: by 2002:a05:6000:162e:: with SMTP id v14mr17736905wrb.112.1569924892368;
+        Tue, 01 Oct 2019 03:14:52 -0700 (PDT)
 Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id r2sm4155309wma.1.2019.10.01.03.11.58
+        by smtp.googlemail.com with ESMTPSA id t13sm33081133wra.70.2019.10.01.03.14.51
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Oct 2019 03:11:59 -0700 (PDT)
-Subject: Re: [PATCH v6 1/4] nvmem: core: add nvmem_device_find
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org
-References: <20190923114636.6748-1-tbogendoerfer@suse.de>
- <20190923114636.6748-2-tbogendoerfer@suse.de>
+        Tue, 01 Oct 2019 03:14:51 -0700 (PDT)
+Subject: Re: [PATCH V2 1/2] nvmem: imx: scu: support hole region check
+To:     Peng Fan <peng.fan@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Cc:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>
+References: <1569550913-10176-1-git-send-email-peng.fan@nxp.com>
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <ce44c762-f9a6-b4ef-fa8a-19ee4a6d391f@linaro.org>
-Date:   Tue, 1 Oct 2019 11:11:58 +0100
+Message-ID: <48bc66d5-684a-cfdb-67dd-722dbf80edbf@linaro.org>
+Date:   Tue, 1 Oct 2019 11:14:50 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190923114636.6748-2-tbogendoerfer@suse.de>
+In-Reply-To: <1569550913-10176-1-git-send-email-peng.fan@nxp.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -91,185 +86,107 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 23/09/2019 12:46, Thomas Bogendoerfer wrote:
-> nvmem_device_find provides a way to search for nvmem devices with
-> the help of a match function simlair to bus_find_device.
+On 27/09/2019 03:23, Peng Fan wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+> Introduce HOLE/ECC_REGION flag and in_hole helper to ease the check
+> of hole region. The ECC_REGION is also introduced here which is
+> preparing for programming support. ECC_REGION could only be programmed
+> once, so need take care.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > ---
+> 
+> V2:
+>   Rebased on latest linux-next
+> 
+>   drivers/nvmem/imx-ocotp-scu.c | 47 ++++++++++++++++++++++++++++++++++++++-----
+>   1 file changed, 42 insertions(+), 5 deletions(-)
 
-
-Thanks for the patch,
-This patch looks good for me.
-
-Do you know which tree is going to pick this series up?
-
-I can either apply this patch to nvmem tree
-
-or here is my Ack for this patch to take it via other trees.
-
-Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-
+thanks, applied both.
 
 --srini
->   Documentation/driver-api/nvmem.rst |  2 ++
->   drivers/nvmem/core.c               | 61 +++++++++++++++++---------------------
->   include/linux/nvmem-consumer.h     |  9 ++++++
->   3 files changed, 38 insertions(+), 34 deletions(-)
 > 
-> diff --git a/Documentation/driver-api/nvmem.rst b/Documentation/driver-api/nvmem.rst
-> index d9d958d5c824..287e86819640 100644
-> --- a/Documentation/driver-api/nvmem.rst
-> +++ b/Documentation/driver-api/nvmem.rst
-> @@ -129,6 +129,8 @@ To facilitate such consumers NVMEM framework provides below apis::
->     struct nvmem_device *nvmem_device_get(struct device *dev, const char *name);
->     struct nvmem_device *devm_nvmem_device_get(struct device *dev,
->   					   const char *name);
-> +  struct nvmem_device *nvmem_device_find(void *data,
-> +			int (*match)(struct device *dev, const void *data));
->     void nvmem_device_put(struct nvmem_device *nvmem);
->     int nvmem_device_read(struct nvmem_device *nvmem, unsigned int offset,
->   		      size_t bytes, void *buf);
-> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-> index 057d1ff87d5d..9f1ee9c766ec 100644
-> --- a/drivers/nvmem/core.c
-> +++ b/drivers/nvmem/core.c
-> @@ -76,33 +76,6 @@ static struct bus_type nvmem_bus_type = {
->   	.name		= "nvmem",
+> diff --git a/drivers/nvmem/imx-ocotp-scu.c b/drivers/nvmem/imx-ocotp-scu.c
+> index 61a17f943f47..030e27ba4dfb 100644
+> --- a/drivers/nvmem/imx-ocotp-scu.c
+> +++ b/drivers/nvmem/imx-ocotp-scu.c
+> @@ -19,9 +19,20 @@ enum ocotp_devtype {
+>   	IMX8QM,
 >   };
 >   
-> -static struct nvmem_device *of_nvmem_find(struct device_node *nvmem_np)
-> -{
-> -	struct device *d;
-> -
-> -	if (!nvmem_np)
-> -		return NULL;
-> -
-> -	d = bus_find_device_by_of_node(&nvmem_bus_type, nvmem_np);
-> -
-> -	if (!d)
-> -		return NULL;
-> -
-> -	return to_nvmem_device(d);
-> -}
-> -
-> -static struct nvmem_device *nvmem_find(const char *name)
-> -{
-> -	struct device *d;
-> -
-> -	d = bus_find_device_by_name(&nvmem_bus_type, NULL, name);
-> -
-> -	if (!d)
-> -		return NULL;
-> -
-> -	return to_nvmem_device(d);
-> -}
-> -
->   static void nvmem_cell_drop(struct nvmem_cell *cell)
->   {
->   	blocking_notifier_call_chain(&nvmem_notifier, NVMEM_CELL_REMOVE, cell);
-> @@ -532,13 +505,16 @@ int devm_nvmem_unregister(struct device *dev, struct nvmem_device *nvmem)
->   }
->   EXPORT_SYMBOL(devm_nvmem_unregister);
->   
-> -static struct nvmem_device *__nvmem_device_get(struct device_node *np,
-> -					       const char *nvmem_name)
-> +static struct nvmem_device *__nvmem_device_get(void *data,
-> +			int (*match)(struct device *dev, const void *data))
->   {
->   	struct nvmem_device *nvmem = NULL;
-> +	struct device *dev;
->   
->   	mutex_lock(&nvmem_mutex);
-> -	nvmem = np ? of_nvmem_find(np) : nvmem_find(nvmem_name);
-> +	dev = bus_find_device(&nvmem_bus_type, NULL, data, match);
-> +	if (dev)
-> +		nvmem = to_nvmem_device(dev);
->   	mutex_unlock(&nvmem_mutex);
->   	if (!nvmem)
->   		return ERR_PTR(-EPROBE_DEFER);
-> @@ -587,7 +563,7 @@ struct nvmem_device *of_nvmem_device_get(struct device_node *np, const char *id)
->   	if (!nvmem_np)
->   		return ERR_PTR(-ENOENT);
->   
-> -	return __nvmem_device_get(nvmem_np, NULL);
-> +	return __nvmem_device_get(nvmem_np, device_match_of_node);
->   }
->   EXPORT_SYMBOL_GPL(of_nvmem_device_get);
->   #endif
-> @@ -613,10 +589,26 @@ struct nvmem_device *nvmem_device_get(struct device *dev, const char *dev_name)
->   
->   	}
->   
-> -	return __nvmem_device_get(NULL, dev_name);
-> +	return __nvmem_device_get((void *)dev_name, device_match_name);
->   }
->   EXPORT_SYMBOL_GPL(nvmem_device_get);
->   
-> +/**
-> + * nvmem_device_find() - Find nvmem device with matching function
-> + *
-> + * @data: Data to pass to match function
-> + * @match: Callback function to check device
-> + *
-> + * Return: ERR_PTR() on error or a valid pointer to a struct nvmem_device
-> + * on success.
-> + */
-> +struct nvmem_device *nvmem_device_find(void *data,
-> +			int (*match)(struct device *dev, const void *data))
-> +{
-> +	return __nvmem_device_get(data, match);
-> +}
-> +EXPORT_SYMBOL_GPL(nvmem_device_find);
+> +#define ECC_REGION	BIT(0)
+> +#define HOLE_REGION	BIT(1)
 > +
->   static int devm_nvmem_device_match(struct device *dev, void *res, void *data)
->   {
->   	struct nvmem_device **nvmem = res;
-> @@ -710,7 +702,8 @@ nvmem_cell_get_from_lookup(struct device *dev, const char *con_id)
->   		if ((strcmp(lookup->dev_id, dev_id) == 0) &&
->   		    (strcmp(lookup->con_id, con_id) == 0)) {
->   			/* This is the right entry. */
-> -			nvmem = __nvmem_device_get(NULL, lookup->nvmem_name);
-> +			nvmem = __nvmem_device_get((void *)lookup->nvmem_name,
-> +						   device_match_name);
->   			if (IS_ERR(nvmem)) {
->   				/* Provider may not be registered yet. */
->   				cell = ERR_CAST(nvmem);
-> @@ -780,7 +773,7 @@ struct nvmem_cell *of_nvmem_cell_get(struct device_node *np, const char *id)
->   	if (!nvmem_np)
->   		return ERR_PTR(-EINVAL);
->   
-> -	nvmem = __nvmem_device_get(nvmem_np, NULL);
-> +	nvmem = __nvmem_device_get(nvmem_np, device_match_of_node);
->   	of_node_put(nvmem_np);
->   	if (IS_ERR(nvmem))
->   		return ERR_CAST(nvmem);
-> diff --git a/include/linux/nvmem-consumer.h b/include/linux/nvmem-consumer.h
-> index 8f8be5b00060..02dc4aa992b2 100644
-> --- a/include/linux/nvmem-consumer.h
-> +++ b/include/linux/nvmem-consumer.h
-> @@ -89,6 +89,9 @@ void nvmem_del_cell_lookups(struct nvmem_cell_lookup *entries,
->   int nvmem_register_notifier(struct notifier_block *nb);
->   int nvmem_unregister_notifier(struct notifier_block *nb);
->   
-> +struct nvmem_device *nvmem_device_find(void *data,
-> +			int (*match)(struct device *dev, const void *data));
+> +struct ocotp_region {
+> +	u32 start;
+> +	u32 end;
+> +	u32 flag;
+> +};
 > +
->   #else
+>   struct ocotp_devtype_data {
+>   	int devtype;
+>   	int nregs;
+> +	u32 num_region;
+> +	struct ocotp_region region[];
+>   };
 >   
->   static inline struct nvmem_cell *nvmem_cell_get(struct device *dev,
-> @@ -204,6 +207,12 @@ static inline int nvmem_unregister_notifier(struct notifier_block *nb)
->   	return -EOPNOTSUPP;
->   }
+>   struct ocotp_priv {
+> @@ -38,13 +49,41 @@ struct imx_sc_msg_misc_fuse_read {
+>   static struct ocotp_devtype_data imx8qxp_data = {
+>   	.devtype = IMX8QXP,
+>   	.nregs = 800,
+> +	.num_region = 3,
+> +	.region = {
+> +		{0x10, 0x10f, ECC_REGION},
+> +		{0x110, 0x21F, HOLE_REGION},
+> +		{0x220, 0x31F, ECC_REGION},
+> +	},
+>   };
 >   
-> +static inline struct nvmem_device *nvmem_device_find(void *data,
-> +			int (*match)(struct device *dev, const void *data))
+>   static struct ocotp_devtype_data imx8qm_data = {
+>   	.devtype = IMX8QM,
+>   	.nregs = 800,
+> +	.num_region = 2,
+> +	.region = {
+> +		{0x10, 0x10f, ECC_REGION},
+> +		{0x1a0, 0x1ff, ECC_REGION},
+> +	},
+>   };
+>   
+> +static bool in_hole(void *context, u32 index)
 > +{
-> +	return NULL;
+> +	struct ocotp_priv *priv = context;
+> +	const struct ocotp_devtype_data *data = priv->data;
+> +	int i;
+> +
+> +	for (i = 0; i < data->num_region; i++) {
+> +		if (data->region[i].flag & HOLE_REGION) {
+> +			if ((index >= data->region[i].start) &&
+> +			    (index <= data->region[i].end))
+> +				return true;
+> +		}
+> +	}
+> +
+> +	return false;
 > +}
 > +
->   #endif /* CONFIG_NVMEM */
+>   static int imx_sc_misc_otp_fuse_read(struct imx_sc_ipc *ipc, u32 word,
+>   				     u32 *val)
+>   {
+> @@ -91,11 +130,9 @@ static int imx_scu_ocotp_read(void *context, unsigned int offset,
+>   	buf = p;
 >   
->   #if IS_ENABLED(CONFIG_NVMEM) && IS_ENABLED(CONFIG_OF)
+>   	for (i = index; i < (index + count); i++) {
+> -		if (priv->data->devtype == IMX8QXP) {
+> -			if ((i > 271) && (i < 544)) {
+> -				*buf++ = 0;
+> -				continue;
+> -			}
+> +		if (in_hole(context, i)) {
+> +			*buf++ = 0;
+> +			continue;
+>   		}
+>   
+>   		ret = imx_sc_misc_otp_fuse_read(priv->nvmem_ipc, i, buf);
 > 
