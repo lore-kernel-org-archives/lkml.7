@@ -2,131 +2,210 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 044A5C388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C3CC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D00C1218DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:54:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uFyk/p3b"
+	by mail.kernel.org (Postfix) with ESMTP id D18C221855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:55:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733145AbfJAIy6 (ORCPT
+        id S1733178AbfJAIzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 04:54:58 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39363 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbfJAIyz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 04:54:55 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v17so2270386wml.4
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 01:54:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tCMVcJHTL1rAZzsr8sC7UBxH5shgJjc8cOwozajIRmU=;
-        b=uFyk/p3bEIkTDdel/ZCSZdqV7nMh2YBxg0Lzcp/K0V07uZvkv3pN1YJJebLzjgYd6N
-         tDj/bBmdRRq5q6K9i4BXzb2dJ8F7RLKA4oORNy5o6+C/yWJ8RUTubCLj7vkrserUvACl
-         GoGIG3aFLT4z1twhfPXk8SacX1BseglsI64eXx7wB9gM9KcXXxhjay3OEvMfdD4MBtEK
-         8susq8F32cbzP+8K1Lik32U0pvsgDZO2NXxOhfzjetU6kBU7//fz+k354MP9Q1UlfvIG
-         kEUEUc2WcKPHQp0bIfoHYl+YEjNy6SKIC43iwR9+Sg0n0F1pJVtvQZXJ/xB5IlWpwELK
-         CszA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tCMVcJHTL1rAZzsr8sC7UBxH5shgJjc8cOwozajIRmU=;
-        b=NgNmXmhjCWKMypLjx4qF08MLMEWm8hkRCZKbsQ9Ezkzw4Lm1b7Vz5XgtAvbDaQ0cPr
-         jYAJ+MmsoZmUGgf7GBr+hcdVHbHCKmNvtnvHWT0nqnsVzATtksqKdkyWZQrG7uSMigA5
-         7x1CkKbWsMKvga2BvrbRVO7KA64F7QVVRjtbxDwdCB0c+5iYDN3Ru/duZ10qFAGDNn92
-         nk/kwpnKQp3xPIb0O9QqspgrSY1GEH4wXYws5JRon+UF2NeLZdXbhp+GxLZ77NxWDhUw
-         ZrNZPaLFv6ZmwN5YX9SP3c5ahiFOPnOI+IVddPipaOyXmWQk8otGHUhGY7oVyT+/h6eb
-         r2HA==
-X-Gm-Message-State: APjAAAUbpBljTkaufv++yQmDl/C6m0moeGfJyKSmNo2eWZSW5qYxZkav
-        e5PGVNU8mCXkjPXkSoWAYOlG3hbam0UgSSjSPYtMYe86j9E=
-X-Google-Smtp-Source: APXvYqyKcvl41Sw5NIkOgDT2b+yl0RkNvIrnfAAemKqyZcpgreGVpLtLWgKKUHFHIcLTVadVs6hMX38D1RSVozLO5Ls=
-X-Received: by 2002:a1c:3cc3:: with SMTP id j186mr2551070wma.119.1569920093430;
- Tue, 01 Oct 2019 01:54:53 -0700 (PDT)
+        Tue, 1 Oct 2019 04:55:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39740 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726148AbfJAIzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 04:55:20 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9E890C049D7C;
+        Tue,  1 Oct 2019 08:55:18 +0000 (UTC)
+Received: from krava (ovpn-204-21.brq.redhat.com [10.40.204.21])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 0BE265D9D5;
+        Tue,  1 Oct 2019 08:55:12 +0000 (UTC)
+Date:   Tue, 1 Oct 2019 10:55:11 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Steve MacLean <Steve.MacLean@microsoft.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
+        John Keeping <john@metanate.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Leo Yan <leo.yan@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Brian Robbins <brianrob@microsoft.com>,
+        Tom McDonald <Thomas.McDonald@microsoft.com>,
+        John Salem <josalem@microsoft.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 3/4 RESEND] perf inject --jit: Remove //anon mmap events
+Message-ID: <20191001085511.GB30823@krava>
+References: <BN8PR21MB13622159D33A3EBCADDF4B2FF7820@BN8PR21MB1362.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-References: <20190812150452.27983-1-ard.biesheuvel@linaro.org>
- <20190812150452.27983-5-ard.biesheuvel@linaro.org> <CAMuHMdXY5UH4KhcaNVuxa8-+GN-4bjyvCd0wzPYuFBY5Ch=fNA@mail.gmail.com>
-In-Reply-To: <CAMuHMdXY5UH4KhcaNVuxa8-+GN-4bjyvCd0wzPYuFBY5Ch=fNA@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Tue, 1 Oct 2019 10:54:40 +0200
-Message-ID: <CAKv+Gu-KPypju6roQaVKP0DHE3aZijVVqLGwNyhiRSNqn1r6-w@mail.gmail.com>
-Subject: Re: [PATCH 4/5] efi: Export Runtime Configuration Interface table to sysfs
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Narendra K <Narendra.K@dell.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Xiaofei Tan <tanxiaofei@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BN8PR21MB13622159D33A3EBCADDF4B2FF7820@BN8PR21MB1362.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 01 Oct 2019 08:55:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 1 Oct 2019 at 10:51, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Ard, Narendra,
->
-> On Mon, Aug 12, 2019 at 5:07 PM Ard Biesheuvel
-> <ard.biesheuvel@linaro.org> wrote:
-> > From: Narendra K <Narendra.K@dell.com>
-> >
-> > System firmware advertises the address of the 'Runtime
-> > Configuration Interface table version 2 (RCI2)' via
-> > an EFI Configuration Table entry. This code retrieves the RCI2
-> > table from the address and exports it to sysfs as a binary
-> > attribute 'rci2' under /sys/firmware/efi/tables directory.
-> > The approach adopted is similar to the attribute 'DMI' under
-> > /sys/firmware/dmi/tables.
-> >
-> > RCI2 table contains BIOS HII in XML format and is used to populate
-> > BIOS setup page in Dell EMC OpenManage Server Administrator tool.
-> > The BIOS setup page contains BIOS tokens which can be configured.
-> >
-> > Signed-off-by: Narendra K <Narendra.K@dell.com>
-> > Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
-> > Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
->
-> Thanks, this is now commit 1c5fecb61255aa12 ("efi: Export Runtime
-> Configuration Interface table to sysfs").
->
-> > --- a/drivers/firmware/efi/Kconfig
-> > +++ b/drivers/firmware/efi/Kconfig
-> > @@ -180,6 +180,19 @@ config RESET_ATTACK_MITIGATION
-> >           have been evicted, since otherwise it will trigger even on clean
-> >           reboots.
-> >
-> > +config EFI_RCI2_TABLE
-> > +       bool "EFI Runtime Configuration Interface Table Version 2 Support"
-> > +       help
-> > +         Displays the content of the Runtime Configuration Interface
-> > +         Table version 2 on Dell EMC PowerEdge systems as a binary
-> > +         attribute 'rci2' under /sys/firmware/efi/tables directory.
-> > +
-> > +         RCI2 table contains BIOS HII in XML format and is used to populate
-> > +         BIOS setup page in Dell EMC OpenManage Server Administrator tool.
-> > +         The BIOS setup page contains BIOS tokens which can be configured.
-> > +
-> > +         Say Y here for Dell EMC PowerEdge systems.
->
-> A quick Google search tells me these are Intel Xeon.
-> Are arm/arm64/ia64 variants available, too?
-> If not, this should be protected by "depends on x86" ("|| COMPILE_TEST"?).
->
+On Mon, Sep 30, 2019 at 09:00:01PM +0000, Steve MacLean wrote:
+> While a JIT is jitting code it will eventually need to commit more pages and
+> change these pages to executable permissions.
+> 
+> Typically the JIT will want these collocated to minimize branch displacements.
+> 
+> The kernel will coalesce these anonymous mapping with identical permissions
+> before sending an mmap event for the new pages. This means the mmap event for
+> the new pages will include the older pages.
+> 
+> These anonymous mmap events will obscure the jitdump injected pseudo events.
+> This means that the jitdump generated symbols, machine code, debugging info,
+> and unwind info will no longer be used.
+> 
+> Observations:
+> 
+> When a process emits a jit dump marker and a jitdump file, the perf-xxx.map
+> file represents inferior information which has been superseded by the
+> jitdump jit-xxx.dump file.
+> 
+> Further the '//anon*' mmap events are only required for the legacy
+> perf-xxx.map mapping.
+> 
+> Summary:
+> 
+> Add rbtree to track which pids have successfully injected a jitdump file.
+> 
+> During "perf inject --jit", discard "//anon*" mmap events for any pid which
+> has successfully processed a jitdump file.
+> 
+> Committer testing:
+> 
+> // jitdump case
+> perf record <app with jitdump>
+> perf inject --jit --input perf.data --output perfjit.data
+> 
+> // verify mmap "//anon" events present initially
+> perf script --input perf.data --show-mmap-events | grep '//anon'
+> // verify mmap "//anon" events removed
+> perf script --input perfjit.data --show-mmap-events | grep '//anon'
+> 
+> // no jitdump case
+> perf record <app without jitdump>
+> perf inject --jit --input perf.data --output perfjit.data
+> 
+> // verify mmap "//anon" events present initially
+> perf script --input perf.data --show-mmap-events | grep '//anon'
+> // verify mmap "//anon" events not removed
+> perf script --input perfjit.data --show-mmap-events | grep '//anon'
+> 
+> Repro:
+> 
+> This issue was discovered while testing the initial CoreCLR jitdump
+> implementation. https://github.com/dotnet/coreclr/pull/26897.
+> 
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Stephane Eranian <eranian@google.com>
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Steve MacLean <Steve.MacLean@Microsoft.com>
+> ---
+> tools/perf/builtin-inject.c |  4 +--
+>  tools/perf/util/jitdump.c   | 63 +++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 65 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> index c14f40b8..4c921e0 100644
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
+> @@ -261,7 +261,7 @@ static int perf_event__jit_repipe_mmap(struct perf_tool *tool,
+>          * if jit marker, then inject jit mmaps and generate ELF images
+>          */
+>         ret = jit_process(inject->session, &inject->output, machine,
+> -                         event->mmap.filename, sample->pid, &n);
+> +                         event->mmap.filename, event->mmap.pid, &n);
+>         if (ret < 0)
+>                 return ret;
+>         if (ret) {
+> @@ -299,7 +299,7 @@ static int perf_event__jit_repipe_mmap2(struct perf_tool *tool,
+>          * if jit marker, then inject jit mmaps and generate ELF images
+>          */
+>         ret = jit_process(inject->session, &inject->output, machine,
+> -                         event->mmap2.filename, sample->pid, &n);
+> +                         event->mmap2.filename, event->mmap2.pid, &n);
+>         if (ret < 0)
+>                 return ret;
+>         if (ret) {
+> diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
+> index 22d09c4..6a1563f 100644
+> --- a/tools/perf/util/jitdump.c
+> +++ b/tools/perf/util/jitdump.c
+> @@ -751,6 +751,59 @@ jit_detect(char *mmap_name, pid_t pid)
+>         return 0;
+>  }
+>  
+> +struct pid_rbtree
+> +{
+> +       struct rb_node node;
+> +       pid_t pid;
+> +};
+> +
+> +static void jit_add_pid(struct rb_root *root, pid_t pid)
+> +{
+> +       struct rb_node **new = &(root->rb_node), *parent = NULL;
+> +       struct pid_rbtree* data = NULL;
+> +
+> +       /* Figure out where to put new node */
+> +       while (*new) {
+> +               struct pid_rbtree *this = container_of(*new, struct pid_rbtree, node);
+> +               pid_t nodePid = this->pid;
 
-Hello Geert,
+looks like Andi is right, I'm still getting malformed patch error
 
-The code in question is entirely architecture agnostic, and defaults
-to 'n', so I am not convinced this is needed. (It came up in the
-review as well)
+the patch has extra characters '=20' and broken lines, like:
+
+
+	--- a/tools/perf/util/jitdump.c
+	+++ b/tools/perf/util/jitdump.c
+	@@ -751,6 +751,59 @@ jit_detect(char *mmap_name, pid_t pid)
+		return 0;
+	 }
+	=20
+	+struct pid_rbtree
+	+{
+	+       struct rb_node node;
+	+       pid_t pid;
+	+};
+	+
+	+static void jit_add_pid(struct rb_root *root, pid_t pid)
+	+{
+	+       struct rb_node **new =3D &(root->rb_node), *parent =3D NULL;
+	+       struct pid_rbtree* data =3D NULL;
+	+
+	+       /* Figure out where to put new node */
+	+       while (*new) {
+	+               struct pid_rbtree *this =3D container_of(*new, struct pid_r=
+	btree, node);
+	+               pid_t nodePid =3D this->pid;
+
+
+jirka
