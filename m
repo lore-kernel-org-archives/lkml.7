@@ -2,143 +2,105 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 053D4ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC7BECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C549F21906
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:14:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CF7E20B7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:15:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="xkPaWta5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jT6aYSk+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732004AbfJASOw (ORCPT
+        id S1732113AbfJASPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 14:14:52 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:42066 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727012AbfJASOv (ORCPT
+        Tue, 1 Oct 2019 14:15:15 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43965 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727012AbfJASPO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 14:14:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=w+T1a8PNiMrEGlMgZvzDIbmdQ/0XfekRvvWFfZpowuQ=; b=xkPaWta5X24XMC5QwKitp/bpH
-        /NN+CAbcvl4+3mfj3dRutfLjv1WrsrPUKv89jKoibs6xbo8LuOIPc0ep0grD8FzYnWAm1Vjoup9Mo
-        BMdBWurQvLS1c9SF/OrVS8tZGaTtzPcruXTHc3cPJYd1bxkDUpCvOdKcHeHNeswKNWWMlyOzuP1U3
-        K7S6t1a9PDNQ7cwC1IYOlUBijcJ1wyoxWwNW5LD7E/3ubWnqpArBIP6huXj5NfoX2X0fPQ9cJ+U8L
-        62+qTsLAtRiWlgpCKbOUEYi4x142ss2cmwl/u60WWTjUaSWEIYyfTMq+dUl1MfAmxnpqcOQgsci/t
-        8WT9EV7lw==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:38854)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iFMfX-0003xe-Tn; Tue, 01 Oct 2019 19:14:40 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iFMfW-0008Pf-5T; Tue, 01 Oct 2019 19:14:38 +0100
-Date:   Tue, 1 Oct 2019 19:14:38 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Kees Cook <keescook@google.com>
-Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
-Message-ID: <20191001181438.GL25745@shell.armlinux.org.uk>
-References: <20190930112636.vx2qxo4hdysvxibl@willie-the-truck>
- <CAK7LNASQZ82KSOrQW7+Wq1vFDCg2__maBEAPMLqUDqZMLuj1rA@mail.gmail.com>
- <20190930121803.n34i63scet2ec7ll@willie-the-truck>
- <CAKwvOdnqn=0LndrX+mUrtSAQqoT1JWRMOJCA5t3e=S=T7zkcCQ@mail.gmail.com>
- <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck>
- <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
- <20191001170142.x66orounxuln7zs3@willie-the-truck>
- <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
- <20191001175512.GK25745@shell.armlinux.org.uk>
- <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
+        Tue, 1 Oct 2019 14:15:14 -0400
+Received: by mail-wr1-f68.google.com with SMTP id q17so16672170wrx.10
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 11:15:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YgJCteJu2BcK46pwUgWjXEExK/YmgMP+ugfQEXB9MmU=;
+        b=jT6aYSk+jwGRAiSBelGcOX1Hrdn93yDj1/lfZzRxeykwZggAXTFeMq3c/+HPhrYvf2
+         zvOdnLS4BlOCJR458+IIiSWNr/dxPJd98W32wZ+i7HDNRWFYPsgdIULTvruamcI10VHd
+         qKuE3elC5DgnLGe3EjB8i8BldmbM73xm4XfVAHbCIFV/UbXupvr5G7WUUHTN8KqjICwo
+         AYIrp3AMWqbFkFMp3qg5GModhNJt0jMXx6KS63g9txBTJ+oJAon4/iqpzV0+Vxxn6rZl
+         ntZ1Kcp3eoD8YHGo5umSyJwutTN24cO3uLR5JjsMtmxNlJG5Y4yKivznhJDxm5leYH7S
+         6FbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YgJCteJu2BcK46pwUgWjXEExK/YmgMP+ugfQEXB9MmU=;
+        b=O8niBRi8w1j+rOgG5goOUbmVRSr+v2muceSJApmyHM9CiEhD8Tyfd0UH2lQOw/E15X
+         xiOA6+H/EZgpTMeMQOA0qN7Kf1V43d+MUddEDgpSQddAPgeW47cJBQjhe3dbPYAhZ/Ab
+         t9DjWZosEfr2LjmNGq8Z1NvKz3sJb8GKoLkikNNmWNIWzYosugUyeiAV9Helcnxz73NH
+         b0ZG0Clh98wGfwWF2ia/e4yQ5ztW6AE2M77DHeJTvkYZKPE5XqYvgvEuNq3HtGh18WiI
+         1hYPzQ3BXmNKbbbBr1w0i/ozHjkW2oZLKuaf/dVgIs6gx5WZa5L3KPNWAmwU9jPF2ffO
+         442g==
+X-Gm-Message-State: APjAAAXZpl/DpZwtuE4c2Rx0Jx3QUurToh1ifA/jQ1WQvBx+S2JDoRcw
+        4+AyAMTDmLyYWVhUPo9CX1fhxaFVSPbYID+4XEuDmA==
+X-Google-Smtp-Source: APXvYqzcqO5Pq3kgDizzsdzSixi6NQ83JHy7bqSusFNzosiGFQnYz2xTI+ymA+EZ8oo/TrC+bHz00N1swRHz2cWlepE=
+X-Received: by 2002:adf:d08b:: with SMTP id y11mr19827984wrh.50.1569953712760;
+ Tue, 01 Oct 2019 11:15:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190928123905.GA97048@gmail.com> <CANcMJZB9UrMaJv6OiScZy2e2UFGFOJsFRar9RZUE9HM-00ZXGg@mail.gmail.com>
+ <20191001071921.GJ4519@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191001071921.GJ4519@hirez.programming.kicks-ass.net>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Tue, 1 Oct 2019 11:15:01 -0700
+Message-ID: <CALAqxLUHj8DdiKauwfobS4LzPphhmZdG=GP51zcQMQdmZf=rFg@mail.gmail.com>
+Subject: Re: [GIT PULL] scheduler fixes
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@polymtl.ca>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Alistair Delva <adelva@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 11:00:11AM -0700, Nick Desaulniers wrote:
-> On Tue, Oct 1, 2019 at 10:55 AM Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
-> >
-> > On Tue, Oct 01, 2019 at 10:44:43AM -0700, Nick Desaulniers wrote:
-> > > I apologize; I don't mean to be difficult.  I would just like to avoid
-> > > surprises when code written with the assumption that it will be
-> > > inlined is not.  It sounds like we found one issue in arm32 and one in
-> > > arm64 related to outlining.  If we fix those two cases, I think we're
-> > > close to proceeding with Masahiro's cleanup, which I view as a good
-> > > thing for the health of the Linux kernel codebase.
-> >
-> > Except, using the C preprocessor for this turns the arm32 code into
-> > yuck:
-> >
-> > 1. We'd need to turn get_domain() and set_domain() into multi-line
-> >    preprocessor macro definitions, using the GCC ({ }) extension
-> >    so that get_domain() can return a value.
-> >
-> > 2. uaccess_save_and_enable() and uaccess_restore() also need to
-> >    become preprocessor macro definitions too.
-> >
-> > So, we end up with multiple levels of nested preprocessor macros.
-> > When something goes wrong, the compiler warning/error message is
-> > going to be utterly _horrid_.
-> 
-> That's why I preferred V1 of Masahiro's patch, that fixed the inline
-> asm not to make use of caller saved registers before calling a
-> function that might not be inlined.
-
-... which I objected to based on the fact that this uaccess stuff is
-supposed to add protection against the kernel being fooled into
-accessing userspace when it shouldn't.  The whole intention there is
-that [sg]et_domain(), and uaccess_*() are _always_ inlined as close
-as possible to the call site of the accessor touching userspace.
-
-Moving it before the assignments mean that the compiler is then free
-to issue memory loads/stores to load up those registers, which is
-exactly what we want to avoid.
+On Tue, Oct 1, 2019 at 12:19 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Mon, Sep 30, 2019 at 04:45:49PM -0700, John Stultz wrote:
+> > Reverting the following patches:
+>
+> >   "sched/membarrier: Fix p->mm->membarrier_state racy load"
+>
+> ARGH, I fudged it... please try:
+>
+>
+> diff --git a/kernel/sched/membarrier.c b/kernel/sched/membarrier.c
+> index a39bed2c784f..168479a7d61b 100644
+> --- a/kernel/sched/membarrier.c
+> +++ b/kernel/sched/membarrier.c
+> @@ -174,7 +174,6 @@ static int membarrier_private_expedited(int flags)
+>                  */
+>                 if (cpu == raw_smp_processor_id())
+>                         continue;
+> -               rcu_read_lock();
+>                 p = rcu_dereference(cpu_rq(cpu)->curr);
+>                 if (p && p->mm == mm)
+>                         __cpumask_set_cpu(cpu, tmpmask);
 
 
-In any case, I violently disagree with the idea that stuff we have
-in header files should be permitted not to be inlined because we
-have soo much that is marked inline.  Having it moved out of line,
-and essentially the same function code appearing in multiple C files
-is really not an improvement over the current situation with excessive
-use of inlining.  Anyone who has looked at the code resulting from
-dma_map_single() will know exactly what I'm talking about, which is
-way in excess of the few instructions we have for the uaccess_* stuff
-here.
+Yep. Looks like that solves it!
+Tested-by: John Stultz <john.stultz@linaro.org>
 
-The right approach is to move stuff out of line - and by that, I
-mean _actually_ move the damn code, so that different compilation
-units can use the same instructions, and thereby gain from the
-whole point of an instruction cache.
-
-The whole "let's make inline not really mean inline" is nothing more
-than a band-aid to the overuse (and abuse) of "inline".
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Thanks so much for the quick turnaround!
+-john
