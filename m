@@ -2,105 +2,92 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E10C388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30019C388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2EEC21D7B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:11:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="BRRmeqMS";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="m4F53Vc1"
+	by mail.kernel.org (Postfix) with ESMTP id 0EAD921924
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:12:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387655AbfJAMLo (ORCPT
+        id S2387673AbfJAMMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 08:11:44 -0400
-Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:38735 "EHLO
-        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726219AbfJAMLn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 08:11:43 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id 9D00259C;
-        Tue,  1 Oct 2019 08:11:42 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Tue, 01 Oct 2019 08:11:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=XtuBm0192lhG7hi45n9D7uzxRhq
-        rxQ1fyKMCdr40/hQ=; b=BRRmeqMSr6cJDaEVMx7gD+IPkqzCYb4ZApJcGwsmMuk
-        1qA9REFmAJfxo0OEScu+iMLauy6ZxF0HApQQJ2ayyEKvJtLI6mOgKkCwBZmwwdxC
-        905F2jQrdZKM9+fZ0hzwxBu8bNj1CwR4TG+HDntAtYUUXkdmhGTqX590EnnywfLt
-        rM2P26zJP33YzCOj0SqwLRtSBiY7AMSS+NprM8CVQrBV+U1MP2u1sUNXRUe0qp8w
-        YqnpyTdhvA1UVJlKA/xpCD2TJSiyWnBx7Wbf1mg1+vzfRQrpyP6eo0rNJw8Ux8LM
-        xGvWMkRpwUil8vNcNGYG1qe41z9JngLpEINrvFOH0ww==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=XtuBm0
-        192lhG7hi45n9D7uzxRhqrxQ1fyKMCdr40/hQ=; b=m4F53Vc1YIbEFIjvQyVpOe
-        V7ZyIRLT+ZC8j/zJwhxsXQZ0gdf3XuCuwH4UYN4WnX8Ba8B48S31RFHGP7OREm5o
-        LAk6KLO8iHtg+bJicee3e7jCAdJj6mv1thinm99aJsxbJME/q8MDQ/P15/deo3MS
-        7wMojTYzuL/v38+jZAfRLDCcHHj1+uv4p/ulsoTFWZHURBsD/fkvd8pWY//KgUIZ
-        MEzCUVn9CNEDjVf4Baonh0M0XkTbg5nwY6OiINX7klomVuYGNpQppdKKNrs03gT1
-        ngFbqVJykQ7Cbhf5EAvpzEffvHhIU74sVx/1/2JBLQPL8raerju2C24BcLE/3cHg
-        ==
-X-ME-Sender: <xms:fkKTXZTW63qWgcL4JHKFrAJ5gj7OvOku2nzAB-ruQvuAGZb8HIChrQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrgeeggdegjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjfgesthdtre
-    dttdervdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheq
-    necuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepkeefrdekiedrkeelrddutd
-    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
-    lhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:fkKTXTPITZUD_3ffvAXxwrr44Gjp7oQEYiDMaCf7Us1kT4NA323yKw>
-    <xmx:fkKTXel_450NoxN4yR9nWeqmc91ZKPiD3w8cPiyhSdmZZbvUhYVkWA>
-    <xmx:fkKTXdabJu4XZDZ7HGo2ENjRW9cXYN5ZGzFm8aK4HxcfY6PKGXiXtg>
-    <xmx:fkKTXZpUHexZ3gh5H2bQYQjAzMzx-ZOuAqTIeww0B9TKjkxGgdhKIg>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id AC19BD60066;
-        Tue,  1 Oct 2019 08:11:41 -0400 (EDT)
-Date:   Tue, 1 Oct 2019 14:11:37 +0200
-From:   Greg KH <greg@kroah.com>
-To:     netman3d <netman3d@gmail.com>
-Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: iwlwifi regression patch for stable kernel 5.3.x
-Message-ID: <20191001121137.GB2951658@kroah.com>
-References: <CAEtwUJ8t6TfVXaEkEiGwUS=CQz6SQSijX8aPC+bxpTwWO7YXtg@mail.gmail.com>
+        Tue, 1 Oct 2019 08:12:01 -0400
+Received: from mga07.intel.com ([134.134.136.100]:51896 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726131AbfJAMMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 08:12:00 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 05:11:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,571,1559545200"; 
+   d="scan'208";a="366310897"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga005.jf.intel.com with ESMTP; 01 Oct 2019 05:11:56 -0700
+Received: from andy by smile with local (Exim 4.92.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iFH0U-0008Ta-Oi; Tue, 01 Oct 2019 15:11:54 +0300
+Date:   Tue, 1 Oct 2019 15:11:54 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v1 1/4] lib/vsprintf: Print time64_t in human readable
+ format
+Message-ID: <20191001121154.GL32742@smile.fi.intel.com>
+References: <20190104193009.30907-1-andriy.shevchenko@linux.intel.com>
+ <20190108152528.utr3a5huran52gsf@pathway.suse.cz>
+ <20190110215858.GG2362@piout.net>
+ <20190726132037.GX9224@smile.fi.intel.com>
+ <20190930200809.GK3913@piout.net>
+ <20191001113655.GI32742@smile.fi.intel.com>
+ <20191001114816.GA4106@piout.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAEtwUJ8t6TfVXaEkEiGwUS=CQz6SQSijX8aPC+bxpTwWO7YXtg@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191001114816.GA4106@piout.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 12:11:00PM +0200, netman3d wrote:
-> Hi,
+On Tue, Oct 01, 2019 at 01:48:16PM +0200, Alexandre Belloni wrote:
+> On 01/10/2019 14:36:55+0300, Andy Shevchenko wrote:
+> > On Mon, Sep 30, 2019 at 10:08:09PM +0200, Alexandre Belloni wrote:
+> > > > > Maybe be rtc_str should take a struct tm instead of an rtc_time so
+> > > > > time64_to_rtc_time always uses time64_to_tm.
+> > > > 
+> > > > Because this one, while sounding plausible, maybe too invasive on current
+> > > > state of affairs.
+> > > 
+> > > Well, if the kernel struct tm had an int tm_year instead of long
+> > > tm_year, then you could simply cast a struct rtc_time to a struct tm.
+> > 
+> > I don't think so. It will be error prone from endianess prospective on
+> > 64-bit platforms.
+> > 
 > 
-> the following patch to fix a regression in the iwlwifi modul is
-> currently not in the pipeline for the stable kernel 5.3.x?
-> 
-> https://patchwork.kernel.org/patch/11158395/
-> 
-> Checked Kernel:
-> 5.3.1
-> 
-> Card:
-> 03:00.0 Network controller: Intel Corporation Wireless 8260 (rev 3a)
-> 
-> Current Firmware:
-> iwlwifi-8000C-36.ucode release/core33::77d01142
+> I don't get why, as long as the first members of both structs are the
+> same, this should work.
 
-Give me a chance, that patch just showed up in a released kernel a few
-hours ago.  I had to wait until that happened before I can put it in a
-stable kernel release.  So give me a week or so please.
+On BE 64-bit we will always get tm_year == 0, won't we?
 
-thanks,
+-- 
+With Best Regards,
+Andy Shevchenko
 
-greg k-h
+
