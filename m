@@ -2,182 +2,131 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D48C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7273C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77A2921A4A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF6CE21924
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:21:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JJL3Lir4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731627AbfJALUJ convert rfc822-to-8bit (ORCPT
+        id S1731548AbfJALVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 07:20:09 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:59752 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730506AbfJALUI (ORCPT
+        Tue, 1 Oct 2019 07:21:49 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:44022 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731303AbfJALVs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 07:20:08 -0400
-Received: from mail-pg1-f199.google.com ([209.85.215.199])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1iFGCM-0005Ot-9a
-        for linux-kernel@vger.kernel.org; Tue, 01 Oct 2019 11:20:06 +0000
-Received: by mail-pg1-f199.google.com with SMTP id a31so11007381pgm.20
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 04:20:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=8p03PIW0mfMY9KmkRItRfLHi9HckdQkm+AoAxesOob4=;
-        b=Ys6ET8r0crNBT0pRwOAbygbCrgHhU/aT79TWf99YYXi+5wm6SsHWhTzHVZ7SRgHBpJ
-         KKRW25NGtHibIFd0tEgPBHeGxQqmBU+i29Z5d4pC30r5cakZlcF5bOJ2O5/Rnc1j6tdb
-         YQkHNWtZomV3rVUBThSFSDH9AXCLjkWxPqOoHeJI/byMcC3Zfq2gSIquQIZ1wA/ZT0tJ
-         RLkpOXS6WS2mCqmNFjTJxEcCIxgr8ixsvayNIC9lnZLX+WMTi5fcEt4EzEyhgJHTR0LL
-         Ujd7hPc2A2JvkO6PJ6uMlXkq8hgCaRz+URg3uzTLjeQUkeKVJd+ztK5FzMHHvAGqJYl2
-         F8Ew==
-X-Gm-Message-State: APjAAAVxD0bW6dW36dp0sSGge8UIizCsRIJAFM6r4e/4ZsRn4kd7/92N
-        sZreYWWjm5c+rwPNk78OLLFEfEa5WqZSzUJfSlkZYAt+PupxBo00iOvaYQLcXCatpA1i20Ugjva
-        cgRtd9mRhMJ3ui+DQ8j3E+pQ8ysERfNsadDy84rVzRg==
-X-Received: by 2002:a17:90a:6547:: with SMTP id f7mr4766186pjs.13.1569928804787;
-        Tue, 01 Oct 2019 04:20:04 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqw1AsmTP8jYinyq6QqtsHpMsdxz1vsrrqa9ulpv52JUBiGqYjrxzi8cYoHpEx+4BJrLsVZCUg==
-X-Received: by 2002:a17:90a:6547:: with SMTP id f7mr4766156pjs.13.1569928804391;
-        Tue, 01 Oct 2019 04:20:04 -0700 (PDT)
-Received: from 2001-b011-380f-3c42-1844-8b0c-6a55-1ec2.dynamic-ip6.hinet.net (2001-b011-380f-3c42-1844-8b0c-6a55-1ec2.dynamic-ip6.hinet.net. [2001:b011:380f:3c42:1844:8b0c:6a55:1ec2])
-        by smtp.gmail.com with ESMTPSA id w11sm17024335pfd.116.2019.10.01.04.20.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Oct 2019 04:20:03 -0700 (PDT)
+        Tue, 1 Oct 2019 07:21:48 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91BJMdV134962;
+        Tue, 1 Oct 2019 11:21:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=SZSjO6UNaZjumDTG5dmovcI4DXMpTOl7kZ7b++1MnZg=;
+ b=JJL3Lir4saN5IQpMnoz8keJ7VHriQJoQelVTKKtN9O1Utf6j/1ZiDaq31hglj93UzB5a
+ 09hZuKZ+bhzI78yUlpeS5JGE489b7tHQcwwiSTXEZh9lq1zBlnM9kjUW4D/7IIpDP096
+ lR/4hIUZzNzaoNGdhvz3j33JhgyNcixr9nUXDXuzY7y+/gdi0HxVbv/rxrz+M3BGUltK
+ THZKcQMAz6XWAxiiXs1GPXiv+BgcUnTVU0xWV9HHCFsag+gML26Mzj/y0OL5XBfsVN3g
+ I+Uk5AdlxbdLMEZzDsH0UA8InM0yI5tGcbJE33ejqNo8nrh2CHli8pQtykJqIYtYRC1q xw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2va05rn1au-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Oct 2019 11:21:29 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91BI8SW046498;
+        Tue, 1 Oct 2019 11:21:29 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2vbnqcq6ht-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Oct 2019 11:21:28 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x91BLR8j014531;
+        Tue, 1 Oct 2019 11:21:27 GMT
+Received: from [192.168.0.110] (/73.243.10.6)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 01 Oct 2019 04:21:27 -0700
 Content-Type: text/plain;
         charset=us-ascii
 Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3594.4.18\))
-Subject: Re: [PATCH] Revert "Input: elantech - enable SMBus on new (2018+)
- systems"
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <20191001070845.9720-1-kai.heng.feng@canonical.com>
-Date:   Tue, 1 Oct 2019 19:20:01 +0800
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <9EF87E3C-6CE0-4AD2-B2F9-C7FF9D978AFD@canonical.com>
-References: <20191001070845.9720-1-kai.heng.feng@canonical.com>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: Re: [PATCH 14/15] mm: Align THP mappings for non-DAX
+From:   William Kucharski <william.kucharski@oracle.com>
+In-Reply-To: <20191001104558.rdcqhjdz7frfuhca@box>
+Date:   Tue, 1 Oct 2019 05:21:26 -0600
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <A935F599-BB18-40C3-90DD-47B7700743D6@oracle.com>
+References: <20190925005214.27240-1-willy@infradead.org>
+ <20190925005214.27240-15-willy@infradead.org>
+ <20191001104558.rdcqhjdz7frfuhca@box>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
 X-Mailer: Apple Mail (2.3594.4.18)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910010104
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910010104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benjamin,
 
-> On Oct 1, 2019, at 15:08, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
-> 
-> This reverts commit 883a2a80f79ca5c0c105605fafabd1f3df99b34c.
-> 
-> Apparently use dmi_get_bios_year() as manufacturing date isn't accurate
-> and this breaks older laptops with new BIOS update.
-> 
-> So let's revert this patch.
-> 
-> There are still new HP laptops still need to use SMBus to support all
-> features, but it'll be enabled via a whitelist.
 
-Before I make a manifest of devices, do you have any idea of the uniqueness of PNP IDs?
-Or should I use DMI strings in this case?
+> On Oct 1, 2019, at 4:45 AM, Kirill A. Shutemov <kirill@shutemov.name> =
+wrote:
+>=20
+> On Tue, Sep 24, 2019 at 05:52:13PM -0700, Matthew Wilcox wrote:
+>>=20
+>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>> index cbe7d0619439..670a1780bd2f 100644
+>> --- a/mm/huge_memory.c
+>> +++ b/mm/huge_memory.c
+>> @@ -563,8 +563,6 @@ unsigned long thp_get_unmapped_area(struct file =
+*filp, unsigned long addr,
+>>=20
+>> 	if (addr)
+>> 		goto out;
+>> -	if (!IS_DAX(filp->f_mapping->host) || =
+!IS_ENABLED(CONFIG_FS_DAX_PMD))
+>> -		goto out;
+>>=20
+>> 	addr =3D __thp_get_unmapped_area(filp, len, off, flags, =
+PMD_SIZE);
+>> 	if (addr)
+>=20
+> I think you reducing ASLR without any real indication that THP is =
+relevant
+> for the VMA. We need to know if any huge page allocation will be
+> *attempted* for the VMA or the file.
 
-Kai-Heng
+Without a properly aligned address the code will never even attempt =
+allocating
+a THP.
 
-> 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
-> drivers/input/mouse/elantech.c | 55 ++++++++++++++++++----------------
-> 1 file changed, 29 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/input/mouse/elantech.c b/drivers/input/mouse/elantech.c
-> index 04fe43440a3c..2d8434b7b623 100644
-> --- a/drivers/input/mouse/elantech.c
-> +++ b/drivers/input/mouse/elantech.c
-> @@ -1827,31 +1827,6 @@ static int elantech_create_smbus(struct psmouse *psmouse,
-> 				  leave_breadcrumbs);
-> }
-> 
-> -static bool elantech_use_host_notify(struct psmouse *psmouse,
-> -				     struct elantech_device_info *info)
-> -{
-> -	if (ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version))
-> -		return true;
-> -
-> -	switch (info->bus) {
-> -	case ETP_BUS_PS2_ONLY:
-> -		/* expected case */
-> -		break;
-> -	case ETP_BUS_SMB_HST_NTFY_ONLY:
-> -	case ETP_BUS_PS2_SMB_HST_NTFY:
-> -		/* SMbus implementation is stable since 2018 */
-> -		if (dmi_get_bios_year() >= 2018)
-> -			return true;
-> -		/* fall through */
-> -	default:
-> -		psmouse_dbg(psmouse,
-> -			    "Ignoring SMBus bus provider %d\n", info->bus);
-> -		break;
-> -	}
-> -
-> -	return false;
-> -}
-> -
-> /**
->  * elantech_setup_smbus - called once the PS/2 devices are enumerated
->  * and decides to instantiate a SMBus InterTouch device.
-> @@ -1871,7 +1846,7 @@ static int elantech_setup_smbus(struct psmouse *psmouse,
-> 		 * i2c_blacklist_pnp_ids.
-> 		 * Old ICs are up to the user to decide.
-> 		 */
-> -		if (!elantech_use_host_notify(psmouse, info) ||
-> +		if (!ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version) ||
-> 		    psmouse_matches_pnp_id(psmouse, i2c_blacklist_pnp_ids))
-> 			return -ENXIO;
-> 	}
-> @@ -1891,6 +1866,34 @@ static int elantech_setup_smbus(struct psmouse *psmouse,
-> 	return 0;
-> }
-> 
-> +static bool elantech_use_host_notify(struct psmouse *psmouse,
-> +				     struct elantech_device_info *info)
-> +{
-> +	if (ETP_NEW_IC_SMBUS_HOST_NOTIFY(info->fw_version))
-> +		return true;
-> +
-> +	switch (info->bus) {
-> +	case ETP_BUS_PS2_ONLY:
-> +		/* expected case */
-> +		break;
-> +	case ETP_BUS_SMB_ALERT_ONLY:
-> +		/* fall-through  */
-> +	case ETP_BUS_PS2_SMB_ALERT:
-> +		psmouse_dbg(psmouse, "Ignoring SMBus provider through alert protocol.\n");
-> +		break;
-> +	case ETP_BUS_SMB_HST_NTFY_ONLY:
-> +		/* fall-through  */
-> +	case ETP_BUS_PS2_SMB_HST_NTFY:
-> +		return true;
-> +	default:
-> +		psmouse_dbg(psmouse,
-> +			    "Ignoring SMBus bus provider %d.\n",
-> +			    info->bus);
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> int elantech_init_smbus(struct psmouse *psmouse)
-> {
-> 	struct elantech_device_info info;
-> -- 
-> 2.17.1
-> 
+I don't think rounding an address to one that would be properly aligned =
+to map
+to a THP if possible is all that detrimental to ASLR and without the =
+ability to
+pick an aligned address it's rather unlikely anyone would ever map =
+anything to
+a THP unless they explicitly designate an address with MAP_FIXED.
 
+If you do object to the slight reduction of the ASLR address space, what
+alternative would you prefer to see?
+
+    -- Bill=
