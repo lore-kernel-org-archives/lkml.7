@@ -2,122 +2,101 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD827ECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D63ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A356521906
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:14:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vK3LWLU7"
+	by mail.kernel.org (Postfix) with ESMTP id 6681221A4A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:14:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569950060;
+	bh=BMjXR4T+qkoSlH2Amx5Z9s9cKJvcuI0C+ADO/cAk58g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RxUZ8sSejN4FyG2wVSGGiGVZujkN3Mw/8dROLrNDnLvtDlXcroik/qk3zjOF1nqN+
+	 bQMFNJCQI+mAUPUu/loCrA8aNVV0TpBjWtCscNt0EHyDaD6ZP7xpyTLRafq5y5Q3/J
+	 Oh4DfhKX6bMEz/5fJhxkfJDBSAECbSSiKAeOJjCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729592AbfJAROQ (ORCPT
+        id S1729681AbfJAROT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 13:14:16 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38622 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727532AbfJAROP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 13:14:15 -0400
-Received: by mail-io1-f68.google.com with SMTP id u8so49915314iom.5;
-        Tue, 01 Oct 2019 10:14:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XyW5421FuW5ERt/Ce918IFZBepV74zAfugKBY/uP7Sg=;
-        b=vK3LWLU7yuz8B7Zud46nqKCjNTu81dzKhZrSHYSXRvB/IgwKwR6w1i5/fCVhXRbbt5
-         4k41JFWg6X8g3p3uDJ07Wq91J7n/TR2bFueBJLFbc/dZY3xpRhkn99yDcuJ1JmDQ8Ou/
-         KDvshQLRVZzp4Ldk+vJyVLnaApjyqx+YWWCiz4bwBtLZ1trdoblGfg0JF8rPin+2oqBb
-         GgyMRoYqGvOnb30gxZMNrYKyn9xzJJXpuZsf0A4h6vsfKrwh/PCR108f6YmocjA6ftRF
-         RvKDbiG3AaYk5Ee+tO+fc4r+Nc6+vhF9gg6z1agcVtrk/oeAna/4XWZfDKy0+JeAT5Xf
-         3Gew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XyW5421FuW5ERt/Ce918IFZBepV74zAfugKBY/uP7Sg=;
-        b=a4E3Ds8qNrh/kQNawlZTu/iTCBSoMUh+jlFX8G7tVFrnmjyTS7U6s8Lf6TlyNBBlRe
-         iVdFcnEZ4d9+Tqa/kD64jTuKz4xJv4Sax8hq3jEtJwOZfiXYdWBrAozwKPLVPwGWNfSh
-         PAj5FR+TiJ/qPHnE5KGdHqoOmTcl9LYEUcNY4c/7Nx85SiFfBnGEbgNpF/rsgf9M4qRO
-         2jSA6urZuUEmKtBUVSLtmqhhaMC4PC4bdUZGt6iwNTR97wjCE1Fmw8CYTRiiCVVpr7el
-         FLllvq7r41SHd3KQUDeRqCc9SPg1wmEPzxjZ3zTiRVDLd1h2pJdd98LE0NSvRqziPK9m
-         qCDg==
-X-Gm-Message-State: APjAAAVvN/TgBif8mDC33dFrpqj+LVUC1yT4epvkRy8zdTIBCSWFLquK
-        gfQttfEF1Ihga3S9O+VtfTe+Zqzr+TPCphX9hKA=
-X-Google-Smtp-Source: APXvYqyhUoMGDelw2H4alAIycEnclkAErTmS481biaJKBo0W4fbZxP1K4s6I7iegwA83GAipXqeecDL2qPXmAAwsEPo=
-X-Received: by 2002:a6b:da06:: with SMTP id x6mr3828288iob.42.1569950055032;
- Tue, 01 Oct 2019 10:14:15 -0700 (PDT)
+        Tue, 1 Oct 2019 13:14:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48566 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726764AbfJAROS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 13:14:18 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF4412086A;
+        Tue,  1 Oct 2019 17:14:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569950058;
+        bh=BMjXR4T+qkoSlH2Amx5Z9s9cKJvcuI0C+ADO/cAk58g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=asouqCp7zIPE1TNjf/pN7/BLGNttFAYePIXHMrZuxZYhn4M/UVbKW7LLoKXgDD+qm
+         zEq8vYsUusPtOZlINj3C8pwNGBkgHiUHhOGncoI/YuHHVBdh0t0lb036fSiI3BUofZ
+         4l+Pz/VI2abPe1Jhyhz0fyc3AezIdu87tBB1TmrA=
+Date:   Tue, 1 Oct 2019 18:14:13 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v3 1/5] arm64: vdso32: Introduce COMPAT_CC_IS_GCC
+Message-ID: <20191001171413.2idy6t7c3bi7rb5l@willie-the-truck>
+References: <20191001132731.GG41399@arrakis.emea.arm.com>
+ <ed7d1465-2d7b-d57c-c1b1-215af1ba7a6f@arm.com>
+ <20191001142038.ptwyfbesfrz3kkoz@willie-the-truck>
+ <7558914c-fc2d-d05a-ccbe-76ef451670ae@arm.com>
+ <20191001144353.5rn3bkcc6eyfclh7@willie-the-truck>
+ <20191001153056.GO41399@arrakis.emea.arm.com>
+ <20191001164657.l2wz3ghq6icm3lim@willie-the-truck>
+ <CAKwvOd=+-PEQXOZBG6rprWdOzHfcQq9ojkGo+Q28vfC4AU=Hwg@mail.gmail.com>
+ <20191001170753.sqmfqt7zf33jgzns@willie-the-truck>
+ <CAKwvOdm3E=Gp1XYfs6tcNObkJXA+VwvtLZt81mQ-mbo2gtyTaw@mail.gmail.com>
 MIME-Version: 1.0
-References: <cover.1564550873.git.saiprakash.ranjan@codeaurora.org>
- <90114e06825e537c3aafd3de5c78743a9de6fadc.1564550873.git.saiprakash.ranjan@codeaurora.org>
- <CAOCk7NrK+wY8jfHdS8781NOQtyLm2RRe1NW2Rm3_zeaot0Q99Q@mail.gmail.com> <16212a577339204e901cf4eefa5e82f1@codeaurora.org>
-In-Reply-To: <16212a577339204e901cf4eefa5e82f1@codeaurora.org>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Tue, 1 Oct 2019 11:14:03 -0600
-Message-ID: <CAOCk7NohO67qeYCnrjy4P0KN9nLUiamphHRvj-bFP++K7khPOw@mail.gmail.com>
-Subject: Re: [PATCHv9 2/3] arm64: dts: qcom: msm8998: Add Coresight support
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdm3E=Gp1XYfs6tcNObkJXA+VwvtLZt81mQ-mbo2gtyTaw@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 11:04 AM Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
->
-> On 2019-10-01 09:13, Jeffrey Hugo wrote:
-> > Sai,
+On Tue, Oct 01, 2019 at 10:12:59AM -0700, Nick Desaulniers wrote:
+> On Tue, Oct 1, 2019 at 10:08 AM Will Deacon <will@kernel.org> wrote:
 > >
-> > This patch breaks boot on the 835 laptops.  However, I haven't seen
-> > the same issue on the MTP.  I wonder, is coresight expected to work
-> > with production fused devices?  I wonder if thats the difference
-> > between the laptop and MTP that is causing the issue.
+> > On Tue, Oct 01, 2019 at 09:59:43AM -0700, Nick Desaulniers wrote:
+> > > On Tue, Oct 1, 2019 at 9:47 AM Will Deacon <will@kernel.org> wrote:
+> > > >
+> > > > On Tue, Oct 01, 2019 at 04:30:56PM +0100, Catalin Marinas wrote:
+> > > > > In the long run, I wouldn't mandate CROSS_COMPILE_COMPAT to always be
+> > > > > set for the compat vDSO since with clang we could use the same compiler
+> > > > > binary for both native and compat (with different flags). That's once we
+> > > > > cleaned up the headers.
+> > > >
+> > > > But we'll still need it even with clang so that the relevant triple can be
+> > > > passed to the --target option. The top-level Makefile already does this:
+> > > >
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Makefile#n544
+> > >
+> > > That's not pulling the cross compiler out of a *config* (as this patch
+> > > is proposing); rather from an env var.
 > >
-> > Let me know what I can do to help debug.
-> >
->
-> I did test on MSM8998 MTP and didn't face any issue. I am guessing this
-> is the same issue which you reported regarding cpuidle? Coresight ETM
+> > CROSS_COMPILE_COMPAT is the environment variable, right? If not, then I have
+> > my terminology mixed up.
+> 
+> Ah, sorry, I'm the one misreading the patch.  I thought the commit
+> message was showing what the new process would be. I see now that it's
+> describing the issue pre-patch.  My mistake.
 
-Yes, its the same issue.  Right now, I need both patches reverted to boot.
+Thanks. Thought I was losing the plot for a moment there!
 
-> and cpuidle do not work well together since ETMs share the same power
-> domain as CPU and they might get turned off when CPU enters idle states.
-> Can you try with cpuidle.off=1 cmdline or just remove idle states from
-> DT to confirm? If this is the issue, then we can try the below patch
-> from Andrew Murray for ETM save and restore:
->
-> https://patchwork.kernel.org/patch/11097893/
-
-Is there still value in testing this if the idle states are removed,
-yet the coresight nodes still cause issues?
-
-Funny enough, I'm using the arm64 defconfig which doesn't seem to
-select CONFIG_CORESIGHT, so I'm not even sure what would be binding to
-the DT devices...
-
->
-> It is not merged yet. They would appreciate your tested by ;)
->
-> Thanks,
-> Sai
+Will
