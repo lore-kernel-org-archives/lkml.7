@@ -2,161 +2,117 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D671C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF12CC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20E9F20815
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:45:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ulyr0khH"
+	by mail.kernel.org (Postfix) with ESMTP id 9BA0320815
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:47:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389297AbfJAOpw (ORCPT
+        id S2389303AbfJAOrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 10:45:52 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:18710 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388953AbfJAOpw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 10:45:52 -0400
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x91Ejjxr024273
-        for <linux-kernel@vger.kernel.org>; Tue, 1 Oct 2019 23:45:45 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x91Ejjxr024273
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1569941145;
-        bh=7Bvi5CB0Y/ucWirAJcxGpfKhycv9MrI86dSeJ1hyRV8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ulyr0khHHe36KPGJCJrnxu8e9T8xzFpB1O00oAj36lfn4CUt3QcjhRrB9O/quF70h
-         GU0U2qYbhlR9QGlWcmSbd3SyDCJYHJuLbHmNQCSfTqU5Tr4YqL+ZMpurdarZI46wk9
-         tt3AeCrLDrLqQB+A6JEYHFOCn9sbXfuthFGALkFXKprHA2hTTzrTjKst8wCODA/nMl
-         B64fmZtzxuOm+pPgQon20stGHrbGKj89oMRaVeeVJRnxG3uO6lML3eZz/Xqj9uboHQ
-         OoMTUyMW3LsOC3M8CBdhlnx7C4b+GHYf6gtnu1XA61YAP7VHFFupW+OLofSCD6XkSS
-         4HZ+2v6rfisCg==
-X-Nifty-SrcIP: [209.85.222.174]
-Received: by mail-qk1-f174.google.com with SMTP id y189so11485832qkc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 07:45:45 -0700 (PDT)
-X-Gm-Message-State: APjAAAWzHEBDSZh69LKo/Kue13FUZlnqUcy4mAiDt2ryutux77jZSrzM
-        2CmDDurMezuCMh/SghDd75pkLmiJXPphiVL2JKo=
-X-Google-Smtp-Source: APXvYqw0Ehg1E2Ssjw+hMDuLH3p9aLYQPiEv56ONeJimQdzQeXmDt6AGsA2prDioWim1q9bSODZXnTNt61n5WoZxtlA=
-X-Received: by 2002:a05:620a:6b6:: with SMTP id i22mr6449417qkh.477.1569941144328;
- Tue, 01 Oct 2019 07:45:44 -0700 (PDT)
+        Tue, 1 Oct 2019 10:47:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:51536 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389029AbfJAOrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 10:47:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C4491000;
+        Tue,  1 Oct 2019 07:46:59 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1298E3F71A;
+        Tue,  1 Oct 2019 07:46:57 -0700 (PDT)
+Date:   Tue, 1 Oct 2019 15:46:50 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Julien Grall <julien.grall@arm.com>,
+        Stefano Stabellini <sstabellini@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Denis Efremov <efremov@linux.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        xen-devel <xen-devel@lists.xenproject.org>,
+        Will Deacon <will@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [Xen-devel] [PATCH] ARM: xen: unexport HYPERVISOR_platform_op
+ function
+Message-ID: <20191001144650.GA22655@lakrids.cambridge.arm.com>
+References: <20190906153948.2160342-1-arnd@arndb.de>
+ <7abad95e-ea47-c068-d91c-ba503f2530b9@citrix.com>
+ <CAK8P3a1qkMLW_Wnn-N0seUw4N5bPwTU7Dy7CwOWxzS6NTnTmiQ@mail.gmail.com>
+ <bda2a05b-e2d0-feee-761b-88deeeac2449@citrix.com>
+ <95dbd972-fe78-d0ca-f7b4-1a6bdd418eab@arm.com>
+ <20191001143334.GA46651@lakrids.cambridge.arm.com>
+ <9e04485f-2d4a-81a2-c7e1-e50dd888930f@arm.com>
 MIME-Version: 1.0
-References: <20191001121724.23886-1-yamada.masahiro@socionext.com> <CAMuHMdUFMC0hbv68Ggsu4q2A+OyHwS1kMsgjjRvxZ7qnqqov7A@mail.gmail.com>
-In-Reply-To: <CAMuHMdUFMC0hbv68Ggsu4q2A+OyHwS1kMsgjjRvxZ7qnqqov7A@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 1 Oct 2019 23:45:07 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARRAOk4YxFxdCvjF_eQd84nted1rhsqGhX5-UK5WKaDvA@mail.gmail.com>
-Message-ID: <CAK7LNARRAOk4YxFxdCvjF_eQd84nted1rhsqGhX5-UK5WKaDvA@mail.gmail.com>
-Subject: Re: [PATCH] scripts/setlocalversion: clear local varaible to make it
- work for sh
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9e04485f-2d4a-81a2-c7e1-e50dd888930f@arm.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+On Tue, Oct 01, 2019 at 03:39:41PM +0100, Julien Grall wrote:
+> On 01/10/2019 15:33, Mark Rutland wrote:
+> > On Sat, Sep 07, 2019 at 11:05:45AM +0100, Julien Grall wrote:
+> > > On 9/6/19 6:20 PM, Andrew Cooper wrote:
+> > > > On 06/09/2019 17:00, Arnd Bergmann wrote:
+> > > > > On Fri, Sep 6, 2019 at 5:55 PM Andrew Cooper <andrew.cooper3@citrix.com> wrote:
+> > > > > > On 06/09/2019 16:39, Arnd Bergmann wrote:
+> > > > > > > HYPERVISOR_platform_op() is an inline function and should not
+> > > > > > > be exported. Since commit 15bfc2348d54 ("modpost: check for
+> > > > > > > static EXPORT_SYMBOL* functions"), this causes a warning:
+> > > > > > > 
+> > > > > > > WARNING: "HYPERVISOR_platform_op" [vmlinux] is a static EXPORT_SYMBOL_GPL
+> > > > > > > 
+> > > > > > > Remove the extraneous export.
+> > > > > > > 
+> > > > > > > Fixes: 15bfc2348d54 ("modpost: check for static EXPORT_SYMBOL* functions")
+> > > > > > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-On Tue, Oct 1, 2019 at 10:20 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Yamada-san,
->
-> s/varaible/variable/ in subject.
->
-> On Tue, Oct 1, 2019 at 2:17 PM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> > Geert Uytterhoeven reports a strange side-effect of commit 858805b336be
-> > ("kbuild: add $(BASH) to run scripts with bash-extension"), which
-> > inserts the contents of a localversion file in the build directory twice.
-> >
-> > [Steps to Reproduce]
-> >   $ echo bar > localversion
-> >   $ mkdir build
-> >   $ cd build/
-> >   $ echo foo > localversion
-> >   $ make -s -f ../Makefile defconfig include/config/kernel.release
-> >   $ cat include/config/kernel.release
-> >   5.4.0-rc1foofoobar
-> >
-> > This comes down to the behavior change of 'local' variables.
-> >
-> > The 'man sh' on my Ubuntu machine, where sh is an alias to dash,
-> > explains as follows:
-> >   When a variable is made local, it inherits the initial value and
-> >   exported and readonly flags from the variable with the same name
-> >   in the surrounding scope, if there is one. Otherwise, the variable
-> >   is initially unset.
-> >
-> > [Test Code]
-> >
-> >   foo ()
-> >   {
-> >           local res
-> >           echo "res: $res"
-> >   }
-> >
-> >   res=1
-> >   foo
-> >
-> > [Result]
-> >
-> >   $ sh test.sh
-> >   res: 1
-> >   $ bash test.sh
-> >   res:
-> >
-> > So, scripts/setlocalversion correctly works only for bash in spite of
-> > its hashbang being #!/bin/sh. Nobody had noticed it before because
-> > CONFIG_SHELL was previously set to sh only when bash is missing, which
-> > is very unlikely to happen.
-> >
-> > The benefit of commit 858805b336be is to make people write portable and
-> > correct code. I gave it the Fixes tag since it uncovered the issue for
-> > most of people.
-> >
-> > Clear the variable 'res' in collect_files() to make it work for sh
-> > (and it also works on distributions where sh is an alias to bash).
-> >
-> > Fixes: commit 858805b336be ("kbuild: add $(BASH) to run scripts with bash-extension")
-> > Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
->
-> Can you please use
->
->     Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> instead?
+[...]
 
-OK, I will.
+> > > While looking at the code, I also realized that the implementation of
+> > > HYPERCALL_dm_op might be incorrect for Arm32. Similarly do privcmd call, I
+> > > think dm_op call should enable user access as they will be used by
+> > > userspace.
+> > > 
+> > > We don't use dm_op on Arm so far, hence why I think this was unnoticed. I
+> > > will see if I can reproduce it and send a patch.
+> > 
+> > I'm seeing this when building arm64 defconfig v5.4-rc1:
+> > 
+> > | [mark@lakrids:~/src/linux]% usekorg 8.1.0  make ARCH=arm64 CROSS_COMPILE=aarch64-linux- -j56 -s
+> > | arch/arm64/Makefile:62: CROSS_COMPILE_COMPAT not defined or empty, the compat vDSO will not be built
+> > | WARNING: "HYPERVISOR_platform_op" [vmlinux] is a static EXPORT_SYMBOL_GPL
+> > | WARNING: "HYPERVISOR_platform_op" [vmlinux] is a static EXPORT_SYMBOL_GPL
+> > 
+> > I couldn't see a follow-up; do you have a patch for this?
+> 
+> The first e-mail of the thread should contain a patch to address the warning
+> (see [1]). But it is still waiting on an Ack from Stefano so it can get
+> merged.
 
-Thanks.
+Ah, sorry. I misunderstood what you were planning to send a patch for,
+and assumed you were going to propose an alternative to Arnd's patch.
 
+Stefano, do you see any problem with Arnd's patch? If not, it would be
+good to get this merged soon.
 
+Thanks,
+Mark.
 
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
->
-> Thanks, that fixes the issue for me!
->
-> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+> 
+> Cheers,
+> 
+> [1] https://patchwork.kernel.org/patch/11135601/
+> 
+> -- 
+> Julien Grall
