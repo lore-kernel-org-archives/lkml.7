@@ -7,53 +7,54 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C00ECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2152CC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C35032168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB1E62168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:56:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vwcfcPJ5"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WoNQGnZ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389367AbfJAO4K (ORCPT
+        id S2389489AbfJAO4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 10:56:10 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50116 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389278AbfJAO4J (ORCPT
+        Tue, 1 Oct 2019 10:56:46 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:44974 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389361AbfJAO4K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 10:56:09 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x91Eu5H1007758;
-        Tue, 1 Oct 2019 09:56:05 -0500
+        Tue, 1 Oct 2019 10:56:10 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x91Eu8Fs123841;
+        Tue, 1 Oct 2019 09:56:08 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1569941765;
-        bh=vNLixCA7rV3r89geVpDyZT2afzJln66pkNhtKdigswM=;
+        s=ti-com-17Q1; t=1569941768;
+        bh=oK4HRSNfmRH4Eic+dLGHWWE/yj5s+hx6sK8hLWYxbNg=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=vwcfcPJ5GjUniCRUN25l5Qtz+OFPZE9gvl7ubhA99gNT/whzeK6Eg5wHKut1vQVNB
-         yAbmYw0G3B+cikNY/YnR4mvJXFk2gFnlX4K64XLpBQEzzLrnXO2OImo7xYdxTX4HMx
-         GSDPXiEOmrSwZe0Hq64eMnWlxVWCA5Kv3SyUDC44=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x91Eu58E063970;
-        Tue, 1 Oct 2019 09:56:05 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+        b=WoNQGnZ62aYs179fjqqXXhhp2TRm3iTNq6zbgCW3kWRVps0IXENk4kDDzcwK9bZlM
+         jiywlAl+0YOFTLmPnEUhDEyWZeDxbRgDf6s6TMKgV4b8ttLFpdL1pbzTPKaPAVasdG
+         P56A3akOTeiZ182C4MzJs3xAyqx2HWgacFEW6IUU=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x91Eu7C0041392
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 1 Oct 2019 09:56:08 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 1 Oct
- 2019 09:55:54 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 09:56:07 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 1 Oct 2019 09:56:04 -0500
+ Frontend Transport; Tue, 1 Oct 2019 09:56:07 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x91Eu4O8044661;
-        Tue, 1 Oct 2019 09:56:04 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x91Eu7dt044750;
+        Tue, 1 Oct 2019 09:56:07 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
 CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v10 03/16] leds: Add multicolor ID to the color ID list
-Date:   Tue, 1 Oct 2019 09:56:07 -0500
-Message-ID: <20191001145620.11123-4-dmurphy@ti.com>
+Subject: [PATCH v10 15/16] leds: lp55xx: Fix checkpatch file permissions issues
+Date:   Tue, 1 Oct 2019 09:56:19 -0500
+Message-ID: <20191001145620.11123-16-dmurphy@ti.com>
 X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
 In-Reply-To: <20191001145620.11123-1-dmurphy@ti.com>
 References: <20191001145620.11123-1-dmurphy@ti.com>
@@ -66,27 +67,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a new color ID that is declared as MULTICOLOR as with the
-multicolor framework declaring a definitive color is not accurate
-as the node can contain multiple colors.
+Fix the checkpatch warnings for the use of the file permission macros.
+In converting the file permissions to the DEVICE_ATTR_XX macros the
+call back function names needed to be updated within the code.
+
+This means that the lp55xx_ needed to be dropped in the name to keep in
+harmony with the ABI documentation.
 
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- drivers/leds/led-core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/leds/leds-lp55xx-common.c | 22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-index f1f718dbe0f8..846248a0693d 100644
---- a/drivers/leds/led-core.c
-+++ b/drivers/leds/led-core.c
-@@ -34,6 +34,7 @@ const char * const led_colors[LED_COLOR_ID_MAX] = {
- 	[LED_COLOR_ID_VIOLET] = "violet",
- 	[LED_COLOR_ID_YELLOW] = "yellow",
- 	[LED_COLOR_ID_IR] = "ir",
-+	[LED_COLOR_ID_MULTI] = "multicolor",
- };
- EXPORT_SYMBOL_GPL(led_colors);
+diff --git a/drivers/leds/leds-lp55xx-common.c b/drivers/leds/leds-lp55xx-common.c
+index 5de4f1789a44..87bf25795c87 100644
+--- a/drivers/leds/leds-lp55xx-common.c
++++ b/drivers/leds/leds-lp55xx-common.c
+@@ -78,7 +78,7 @@ static int lp55xx_post_init_device(struct lp55xx_chip *chip)
+ 	return cfg->post_init_device(chip);
+ }
  
+-static ssize_t lp55xx_show_current(struct device *dev,
++static ssize_t led_current_show(struct device *dev,
+ 			    struct device_attribute *attr,
+ 			    char *buf)
+ {
+@@ -87,7 +87,7 @@ static ssize_t lp55xx_show_current(struct device *dev,
+ 	return scnprintf(buf, PAGE_SIZE, "%d\n", led->led_current);
+ }
+ 
+-static ssize_t lp55xx_store_current(struct device *dev,
++static ssize_t led_current_store(struct device *dev,
+ 			     struct device_attribute *attr,
+ 			     const char *buf, size_t len)
+ {
+@@ -111,7 +111,7 @@ static ssize_t lp55xx_store_current(struct device *dev,
+ 	return len;
+ }
+ 
+-static ssize_t lp55xx_show_max_current(struct device *dev,
++static ssize_t max_current_show(struct device *dev,
+ 			    struct device_attribute *attr,
+ 			    char *buf)
+ {
+@@ -120,9 +120,8 @@ static ssize_t lp55xx_show_max_current(struct device *dev,
+ 	return scnprintf(buf, PAGE_SIZE, "%d\n", led->max_current);
+ }
+ 
+-static DEVICE_ATTR(led_current, S_IRUGO | S_IWUSR, lp55xx_show_current,
+-		lp55xx_store_current);
+-static DEVICE_ATTR(max_current, S_IRUGO , lp55xx_show_max_current, NULL);
++static DEVICE_ATTR_RW(led_current);
++static DEVICE_ATTR_RO(max_current);
+ 
+ static struct attribute *lp55xx_led_attrs[] = {
+ 	&dev_attr_led_current.attr,
+@@ -281,7 +280,7 @@ static int lp55xx_request_firmware(struct lp55xx_chip *chip)
+ 				GFP_KERNEL, chip, lp55xx_firmware_loaded);
+ }
+ 
+-static ssize_t lp55xx_show_engine_select(struct device *dev,
++static ssize_t select_engine_show(struct device *dev,
+ 			    struct device_attribute *attr,
+ 			    char *buf)
+ {
+@@ -291,7 +290,7 @@ static ssize_t lp55xx_show_engine_select(struct device *dev,
+ 	return sprintf(buf, "%d\n", chip->engine_idx);
+ }
+ 
+-static ssize_t lp55xx_store_engine_select(struct device *dev,
++static ssize_t select_engine_store(struct device *dev,
+ 			     struct device_attribute *attr,
+ 			     const char *buf, size_t len)
+ {
+@@ -333,7 +332,7 @@ static inline void lp55xx_run_engine(struct lp55xx_chip *chip, bool start)
+ 		chip->cfg->run_engine(chip, start);
+ }
+ 
+-static ssize_t lp55xx_store_engine_run(struct device *dev,
++static ssize_t run_engine_store(struct device *dev,
+ 			     struct device_attribute *attr,
+ 			     const char *buf, size_t len)
+ {
+@@ -358,9 +357,8 @@ static ssize_t lp55xx_store_engine_run(struct device *dev,
+ 	return len;
+ }
+ 
+-static DEVICE_ATTR(select_engine, S_IRUGO | S_IWUSR,
+-		   lp55xx_show_engine_select, lp55xx_store_engine_select);
+-static DEVICE_ATTR(run_engine, S_IWUSR, NULL, lp55xx_store_engine_run);
++static DEVICE_ATTR_RW(select_engine);
++static DEVICE_ATTR_WO(run_engine);
+ 
+ static struct attribute *lp55xx_engine_attributes[] = {
+ 	&dev_attr_select_engine.attr,
 -- 
 2.22.0.214.g8dca754b1e
 
