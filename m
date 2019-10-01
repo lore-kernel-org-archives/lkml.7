@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55457C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 626ECC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EFE221783
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EAB8206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:56:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948973;
-	bh=exn8/8HVHvf9LiSHvgAZu2X9qfOa7LTrMXz2TMoMPxA=;
+	s=default; t=1569948977;
+	bh=a2MGscU/Bb+I5eSQfmvlq8/dgcZNCypX6u8kDBlQeqo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MxHysQ7iQsnh9diPEAQRihQeITU1goJBwuOZDv78cNTw9iAnvn4EGtIC0zlvKCG68
-	 qdTMBlszt4JfcVDN205kNkwygClg2nwn5J2K7UBcAr22VygpvPVTCEbaK19HgUzZXn
-	 Jzk4dTfbYITCtQHf1cyl9Qrjr/wapcxc5jFgSVn4=
+	b=TSsR4CtQeOrFxBnjG7UPiNLNP6aTrS96yXFMujC5BXFV7UAYuEoetxrjgvueF5SrH
+	 VA/8vLPXqkLWhOnZQg7drgxHAyYk70FTslRpwB6qavb8JcTphTWxiNhTxkkfpld1lN
+	 ecuDppLJKX3sG9H04MhYqAtJrMEXH2c/1ijO2AFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731795AbfJAQmP (ORCPT
+        id S1728381AbfJAQ4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:42:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53964 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:56:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731678AbfJAQmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:42:11 -0400
+        id S1731768AbfJAQmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:42:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45C552190F;
-        Tue,  1 Oct 2019 16:42:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F32D205C9;
+        Tue,  1 Oct 2019 16:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948130;
-        bh=exn8/8HVHvf9LiSHvgAZu2X9qfOa7LTrMXz2TMoMPxA=;
+        s=default; t=1569948134;
+        bh=a2MGscU/Bb+I5eSQfmvlq8/dgcZNCypX6u8kDBlQeqo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bFz5BVBunS4ZYS5ZP7DE5tG95Um5Klngu6GcoxS52vQ5qggRK1Sq1PFzLMB7zpu+H
-         ZMrHQ+VIK96pC97K57YWohsC7WrZOlonSI6RY+C28A7/MTV5im/W4s3GrhGCFLiCJW
-         ATxJ4gwbg9Y3hIt0lCvQLig4T9H7boRzgPup5q0k=
+        b=NvlgAk5NDIhTvK2bFhVrRMhT0AoZXhZSM6Ib5QyU3bwWY2u/k29b/eL+CmHf6LM5Q
+         naTYwW/Xo+OX/kRLFFq9tV3p3UdtHrUBec0FjdTRf7wCYQACRucXwqPVkkoCOkoOfZ
+         bT3ZZMCBVD3L70FT7/4Cp6U1HIxBeX/NxiYYr+3M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ido Schimmel <idosch@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 30/63] thermal: Fix use-after-free when unregistering thermal zone device
-Date:   Tue,  1 Oct 2019 12:40:52 -0400
-Message-Id: <20191001164125.15398-30-sashal@kernel.org>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 34/63] net/mlx5e: Fix traffic duplication in ethtool steering
+Date:   Tue,  1 Oct 2019 12:40:56 -0400
+Message-Id: <20191001164125.15398-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164125.15398-1-sashal@kernel.org>
 References: <20191001164125.15398-1-sashal@kernel.org>
@@ -59,132 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Saeed Mahameed <saeedm@mellanox.com>
 
-[ Upstream commit 1851799e1d2978f68eea5d9dff322e121dcf59c1 ]
+[ Upstream commit d22fcc806b84b9818de08b32e494f3c05dd236c7 ]
 
-thermal_zone_device_unregister() cancels the delayed work that polls the
-thermal zone, but it does not wait for it to finish. This is racy with
-respect to the freeing of the thermal zone device, which can result in a
-use-after-free [1].
+Before this patch, when adding multiple ethtool steering rules with
+identical classification, the driver used to append the new destination
+to the already existing hw rule, which caused the hw to forward the
+traffic to all destinations (rx queues).
 
-Fix this by waiting for the delayed work to finish before freeing the
-thermal zone device. Note that thermal_zone_device_set_polling() is
-never invoked from an atomic context, so it is safe to call
-cancel_delayed_work_sync() that can block.
+Here we avoid this by setting the "no append" mlx5 fs core flag when
+adding a new ethtool rule.
 
-[1]
-[  +0.002221] ==================================================================
-[  +0.000064] BUG: KASAN: use-after-free in __mutex_lock+0x1076/0x11c0
-[  +0.000016] Read of size 8 at addr ffff8881e48e0450 by task kworker/1:0/17
-
-[  +0.000023] CPU: 1 PID: 17 Comm: kworker/1:0 Not tainted 5.2.0-rc6-custom-02495-g8e73ca3be4af #1701
-[  +0.000010] Hardware name: Mellanox Technologies Ltd. MSN2100-CB2FO/SA001017, BIOS 5.6.5 06/07/2016
-[  +0.000016] Workqueue: events_freezable_power_ thermal_zone_device_check
-[  +0.000012] Call Trace:
-[  +0.000021]  dump_stack+0xa9/0x10e
-[  +0.000020]  print_address_description.cold.2+0x9/0x25e
-[  +0.000018]  __kasan_report.cold.3+0x78/0x9d
-[  +0.000016]  kasan_report+0xe/0x20
-[  +0.000016]  __mutex_lock+0x1076/0x11c0
-[  +0.000014]  step_wise_throttle+0x72/0x150
-[  +0.000018]  handle_thermal_trip+0x167/0x760
-[  +0.000019]  thermal_zone_device_update+0x19e/0x5f0
-[  +0.000019]  process_one_work+0x969/0x16f0
-[  +0.000017]  worker_thread+0x91/0xc40
-[  +0.000014]  kthread+0x33d/0x400
-[  +0.000015]  ret_from_fork+0x3a/0x50
-
-[  +0.000020] Allocated by task 1:
-[  +0.000015]  save_stack+0x19/0x80
-[  +0.000015]  __kasan_kmalloc.constprop.4+0xc1/0xd0
-[  +0.000014]  kmem_cache_alloc_trace+0x152/0x320
-[  +0.000015]  thermal_zone_device_register+0x1b4/0x13a0
-[  +0.000015]  mlxsw_thermal_init+0xc92/0x23d0
-[  +0.000014]  __mlxsw_core_bus_device_register+0x659/0x11b0
-[  +0.000013]  mlxsw_core_bus_device_register+0x3d/0x90
-[  +0.000013]  mlxsw_pci_probe+0x355/0x4b0
-[  +0.000014]  local_pci_probe+0xc3/0x150
-[  +0.000013]  pci_device_probe+0x280/0x410
-[  +0.000013]  really_probe+0x26a/0xbb0
-[  +0.000013]  driver_probe_device+0x208/0x2e0
-[  +0.000013]  device_driver_attach+0xfe/0x140
-[  +0.000013]  __driver_attach+0x110/0x310
-[  +0.000013]  bus_for_each_dev+0x14b/0x1d0
-[  +0.000013]  driver_register+0x1c0/0x400
-[  +0.000015]  mlxsw_sp_module_init+0x5d/0xd3
-[  +0.000014]  do_one_initcall+0x239/0x4dd
-[  +0.000013]  kernel_init_freeable+0x42b/0x4e8
-[  +0.000012]  kernel_init+0x11/0x18b
-[  +0.000013]  ret_from_fork+0x3a/0x50
-
-[  +0.000015] Freed by task 581:
-[  +0.000013]  save_stack+0x19/0x80
-[  +0.000014]  __kasan_slab_free+0x125/0x170
-[  +0.000013]  kfree+0xf3/0x310
-[  +0.000013]  thermal_release+0xc7/0xf0
-[  +0.000014]  device_release+0x77/0x200
-[  +0.000014]  kobject_put+0x1a8/0x4c0
-[  +0.000014]  device_unregister+0x38/0xc0
-[  +0.000014]  thermal_zone_device_unregister+0x54e/0x6a0
-[  +0.000014]  mlxsw_thermal_fini+0x184/0x35a
-[  +0.000014]  mlxsw_core_bus_device_unregister+0x10a/0x640
-[  +0.000013]  mlxsw_devlink_core_bus_device_reload+0x92/0x210
-[  +0.000015]  devlink_nl_cmd_reload+0x113/0x1f0
-[  +0.000014]  genl_family_rcv_msg+0x700/0xee0
-[  +0.000013]  genl_rcv_msg+0xca/0x170
-[  +0.000013]  netlink_rcv_skb+0x137/0x3a0
-[  +0.000012]  genl_rcv+0x29/0x40
-[  +0.000013]  netlink_unicast+0x49b/0x660
-[  +0.000013]  netlink_sendmsg+0x755/0xc90
-[  +0.000013]  __sys_sendto+0x3de/0x430
-[  +0.000013]  __x64_sys_sendto+0xe2/0x1b0
-[  +0.000013]  do_syscall_64+0xa4/0x4d0
-[  +0.000013]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-[  +0.000017] The buggy address belongs to the object at ffff8881e48e0008
-               which belongs to the cache kmalloc-2k of size 2048
-[  +0.000012] The buggy address is located 1096 bytes inside of
-               2048-byte region [ffff8881e48e0008, ffff8881e48e0808)
-[  +0.000007] The buggy address belongs to the page:
-[  +0.000012] page:ffffea0007923800 refcount:1 mapcount:0 mapping:ffff88823680d0c0 index:0x0 compound_mapcount: 0
-[  +0.000020] flags: 0x200000000010200(slab|head)
-[  +0.000019] raw: 0200000000010200 ffffea0007682008 ffffea00076ab808 ffff88823680d0c0
-[  +0.000016] raw: 0000000000000000 00000000000d000d 00000001ffffffff 0000000000000000
-[  +0.000007] page dumped because: kasan: bad access detected
-
-[  +0.000012] Memory state around the buggy address:
-[  +0.000012]  ffff8881e48e0300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  +0.000012]  ffff8881e48e0380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  +0.000012] >ffff8881e48e0400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  +0.000008]                                                  ^
-[  +0.000012]  ffff8881e48e0480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  +0.000012]  ffff8881e48e0500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  +0.000007] ==================================================================
-
-Fixes: b1569e99c795 ("ACPI: move thermal trip handling to generic thermal layer")
-Reported-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Fixes: 6dc6071cfcde ("net/mlx5e: Add ethtool flow steering support")
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/thermal_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_fs_ethtool.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-index 46cfb7de4eb28..f87f462c60c19 100644
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -298,7 +298,7 @@ static void thermal_zone_device_set_polling(struct thermal_zone_device *tz,
- 				 &tz->poll_queue,
- 				 msecs_to_jiffies(delay));
- 	else
--		cancel_delayed_work(&tz->poll_queue);
-+		cancel_delayed_work_sync(&tz->poll_queue);
- }
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_fs_ethtool.c b/drivers/net/ethernet/mellanox/mlx5/core/en_fs_ethtool.c
+index 4421c10f58ae5..baed9e93794ff 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_fs_ethtool.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_fs_ethtool.c
+@@ -397,10 +397,10 @@ add_ethtool_flow_rule(struct mlx5e_priv *priv,
+ 		      struct mlx5_flow_table *ft,
+ 		      struct ethtool_rx_flow_spec *fs)
+ {
++	struct mlx5_flow_act flow_act = { .flags = FLOW_ACT_NO_APPEND };
+ 	struct mlx5_flow_destination *dst = NULL;
+-	struct mlx5_flow_act flow_act = {0};
+-	struct mlx5_flow_spec *spec;
+ 	struct mlx5_flow_handle *rule;
++	struct mlx5_flow_spec *spec;
+ 	int err = 0;
  
- static void monitor_thermal_zone(struct thermal_zone_device *tz)
+ 	spec = kvzalloc(sizeof(*spec), GFP_KERNEL);
 -- 
 2.20.1
 
