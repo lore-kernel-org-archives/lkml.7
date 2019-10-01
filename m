@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BFEECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0EDBC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8247C21855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8839D21855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:57:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569949064;
-	bh=oSN9Cn1zQHdh/Pl1gG+9mshtPat0ykifj8O0qi2zwvE=;
+	s=default; t=1569949067;
+	bh=Wmk2nFhDp2+8jCV07diTlQn1EA/r5Bpio5yf57OjGyI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U679yrIq+2XIO1S9QfJ0/go2Lc5I27bBDv9s0TtmOefWnyyop7VLJi/HZaYhE3IhO
-	 7TyQttkgSHdxRaBzmMMHlD0YSclSPKJxlYtIUqt2D3ijf5/sQdItaENNWL/r9xCYcl
-	 4J/ght2HRj5pOqw2VayT5mlCOFto5D7VrrUGLAuM=
+	b=EzqPtSGiJs/aOM3q5xIiR7r1j1s1ULfUA36tfzyG2FV1WhVBFtobGBM9RcLp1pxRz
+	 G2dLxfivpA8vc6OGwWU5RDqOOSl9N4UBO45t5xTSX37KowGnNsnVIJq1+tQn775vOn
+	 sCtVYM2n/ElKa3nKXiJXhvOyebyHW+UleqgHrDyw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731413AbfJAQlw (ORCPT
+        id S1731385AbfJAQlu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:41:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53372 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:41:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731270AbfJAQln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:41:43 -0400
+        id S1731218AbfJAQll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:41:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 787A721906;
-        Tue,  1 Oct 2019 16:41:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26CB72190F;
+        Tue,  1 Oct 2019 16:41:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948103;
-        bh=oSN9Cn1zQHdh/Pl1gG+9mshtPat0ykifj8O0qi2zwvE=;
+        s=default; t=1569948100;
+        bh=Wmk2nFhDp2+8jCV07diTlQn1EA/r5Bpio5yf57OjGyI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iEt6lSFvBVTJeAvWxCRv7ruAH4RHbyCTjEjXZoffrDRXFf6ZiVVIM+9mzjin8fu8l
-         w0WHZXp3TjPjR2wsAcQQIa13lXKGzwuGSzdgTjJjAZWF45uESRhP9XbalU3n4Yu+1Q
-         lJR2pfg5kThcZBef0xvXg2YPc0upEH9k8AARYRyI=
+        b=eXizrT+X5SMU3x/Wtb1fWvRPR5ozu92G7XUa7ICA6oyctHrmLEdMuF8itmsd5ZDu9
+         grt4k82xDrK09L0NH1zb0ZBYMqlgBrKo4nSGtjIewmj07DjIAU7DBPVWIQCYQtR4Cm
+         tPeQHg3yzPXuGe2hHlf/U5jSnhHaR7DiNZSY2dGQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dongsheng Yang <dongsheng.yang@easystack.cn>,
+Cc:     Jeff Layton <jlayton@kernel.org>, "Yan, Zheng" <zyan@redhat.com>,
         Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 14/63] rbd: fix response length parameter for encoded strings
-Date:   Tue,  1 Oct 2019 12:40:36 -0400
-Message-Id: <20191001164125.15398-14-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 12/63] ceph: fetch cap_gen under spinlock in ceph_add_cap
+Date:   Tue,  1 Oct 2019 12:40:34 -0400
+Message-Id: <20191001164125.15398-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164125.15398-1-sashal@kernel.org>
 References: <20191001164125.15398-1-sashal@kernel.org>
@@ -60,66 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongsheng Yang <dongsheng.yang@easystack.cn>
+From: Jeff Layton <jlayton@kernel.org>
 
-[ Upstream commit 5435d2069503e2aa89c34a94154f4f2fa4a0c9c4 ]
+[ Upstream commit 606d102327a45a49d293557527802ee7fbfd7af1 ]
 
-rbd_dev_image_id() allocates space for length but passes a smaller
-value to rbd_obj_method_sync().  rbd_dev_v2_object_prefix() doesn't
-allocate space for length.  Fix both to be consistent.
+It's protected by the s_gen_ttl_lock, so we should fetch under it
+and ensure that we're using the same generation in both places.
 
-Signed-off-by: Dongsheng Yang <dongsheng.yang@easystack.cn>
-Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
 Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/rbd.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ fs/ceph/caps.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-index e5009a34f9c26..e78794bfcbbef 100644
---- a/drivers/block/rbd.c
-+++ b/drivers/block/rbd.c
-@@ -4696,17 +4696,20 @@ static int rbd_dev_v2_image_size(struct rbd_device *rbd_dev)
+diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+index 622467e47cde8..07ac2de542eb3 100644
+--- a/fs/ceph/caps.c
++++ b/fs/ceph/caps.c
+@@ -644,6 +644,7 @@ void ceph_add_cap(struct inode *inode,
+ 	struct ceph_cap *cap;
+ 	int mds = session->s_mds;
+ 	int actual_wanted;
++	u32 gen;
  
- static int rbd_dev_v2_object_prefix(struct rbd_device *rbd_dev)
- {
-+	size_t size;
- 	void *reply_buf;
- 	int ret;
- 	void *p;
+ 	dout("add_cap %p mds%d cap %llx %s seq %d\n", inode,
+ 	     session->s_mds, cap_id, ceph_cap_string(issued), seq);
+@@ -655,6 +656,10 @@ void ceph_add_cap(struct inode *inode,
+ 	if (fmode >= 0)
+ 		wanted |= ceph_caps_for_mode(fmode);
  
--	reply_buf = kzalloc(RBD_OBJ_PREFIX_LEN_MAX, GFP_KERNEL);
-+	/* Response will be an encoded string, which includes a length */
-+	size = sizeof(__le32) + RBD_OBJ_PREFIX_LEN_MAX;
-+	reply_buf = kzalloc(size, GFP_KERNEL);
- 	if (!reply_buf)
- 		return -ENOMEM;
++	spin_lock(&session->s_gen_ttl_lock);
++	gen = session->s_cap_gen;
++	spin_unlock(&session->s_gen_ttl_lock);
++
+ 	cap = __get_cap_for_mds(ci, mds);
+ 	if (!cap) {
+ 		cap = *new_cap;
+@@ -680,7 +685,7 @@ void ceph_add_cap(struct inode *inode,
+ 		list_move_tail(&cap->session_caps, &session->s_caps);
+ 		spin_unlock(&session->s_cap_lock);
  
- 	ret = rbd_obj_method_sync(rbd_dev, &rbd_dev->header_oid,
- 				  &rbd_dev->header_oloc, "get_object_prefix",
--				  NULL, 0, reply_buf, RBD_OBJ_PREFIX_LEN_MAX);
-+				  NULL, 0, reply_buf, size);
- 	dout("%s: rbd_obj_method_sync returned %d\n", __func__, ret);
- 	if (ret < 0)
- 		goto out;
-@@ -5676,7 +5679,6 @@ static int rbd_dev_image_id(struct rbd_device *rbd_dev)
- 	dout("rbd id object name is %s\n", oid.name);
+-		if (cap->cap_gen < session->s_cap_gen)
++		if (cap->cap_gen < gen)
+ 			cap->issued = cap->implemented = CEPH_CAP_PIN;
  
- 	/* Response will be an encoded string, which includes a length */
--
- 	size = sizeof (__le32) + RBD_IMAGE_ID_LEN_MAX;
- 	response = kzalloc(size, GFP_NOIO);
- 	if (!response) {
-@@ -5688,7 +5690,7 @@ static int rbd_dev_image_id(struct rbd_device *rbd_dev)
+ 		/*
+@@ -774,7 +779,7 @@ void ceph_add_cap(struct inode *inode,
+ 	cap->seq = seq;
+ 	cap->issue_seq = seq;
+ 	cap->mseq = mseq;
+-	cap->cap_gen = session->s_cap_gen;
++	cap->cap_gen = gen;
  
- 	ret = rbd_obj_method_sync(rbd_dev, &oid, &rbd_dev->header_oloc,
- 				  "get_id", NULL, 0,
--				  response, RBD_IMAGE_ID_LEN_MAX);
-+				  response, size);
- 	dout("%s: rbd_obj_method_sync returned %d\n", __func__, ret);
- 	if (ret == -ENOENT) {
- 		image_id = kstrdup("", GFP_KERNEL);
+ 	if (fmode >= 0)
+ 		__ceph_get_fmode(ci, fmode);
 -- 
 2.20.1
 
