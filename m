@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B6BECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E6FEECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 983892168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:55:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08C9E2168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:55:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948902;
-	bh=+n3gJ1VrqbqNkcBk7vhlCR91tUTb6AximTmpMzZNXhQ=;
+	s=default; t=1569948907;
+	bh=H1nrnkt44PLeur88B5tlQvgD/Hp4H1avEpbWadrLVH0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tSlPWaQEjNqx8LdslR9U52qdgHJZXwKZKD0R1D4zAam9usAcG45fioKGDaMjH9fus
-	 Lr8GoelkJlm6eYIkHgkMm7bvMpjH0BP8s3WInU7OoN1oxHnq+PJ5we6dWw0H0iCnGW
-	 xivoZijlnIBqyHaIpEk46Blpu7Z1Ay3oSTCEvpwg=
+	b=X/pDAdYgUn1gGA7F8W3aFD9a2YknPd8HJtzuV9N+qb2WZcdMBvzdGpd9JNtyX4/Z8
+	 bh2XSTDETQIf5i8PWPx02e//JTfpp2DjNx9Ye/2k/L4DK8Y8opHIghQ+aGvrvFAlmk
+	 mM/oGFOSNLdGG1NjxFTI9mWooWs3b9+g4mjY/TFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732233AbfJAQmx (ORCPT
+        id S1733019AbfJAQzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:42:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54630 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:55:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732073AbfJAQmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:42:39 -0400
+        id S1732206AbfJAQmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:42:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E49321D82;
-        Tue,  1 Oct 2019 16:42:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 179C4205C9;
+        Tue,  1 Oct 2019 16:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948159;
-        bh=+n3gJ1VrqbqNkcBk7vhlCR91tUTb6AximTmpMzZNXhQ=;
+        s=default; t=1569948170;
+        bh=H1nrnkt44PLeur88B5tlQvgD/Hp4H1avEpbWadrLVH0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DO1DrFphJfrg20WyNzAHO84ZNCoAouP7RhpahnK0fICjv1c3ZqqC8r2suMbVH4OLj
-         R6+XsZJMGfFu6BnTobks3wyWS0hReWIDPULDX2D5fOZh4QlJNYb/lHJqQTolGD60cp
-         /tm8FKVb2k8ZsnCGz0VNICVf94EHRTQ58BqR76ws=
+        b=KvwOBnvrT74z3slJ+GypY5ecab5PDk3VvsbRTb/zfrq264MQPVb+wO5Nk7z/4xmM7
+         17K8FeXPFnc90Hm4vRJwZOslJTwqje3C1K7JEG2pKOxKdQWTW/gVMkHybg35dKEUDT
+         DFWPKNUSB5/0X+kmT/49jBvOVw2uX5+qyzg1gqDs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ming Lei <ming.lei@redhat.com>,
-        syzbot+da3b7677bb913dc1b737@syzkaller.appspotmail.com,
-        Bart Van Assche <bvanassche@acm.org>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 48/63] blk-mq: move lockdep_assert_held() into elevator_exit
-Date:   Tue,  1 Oct 2019 12:41:10 -0400
-Message-Id: <20191001164125.15398-48-sashal@kernel.org>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, oss-drivers@netronome.com,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 53/63] nfp: flower: fix memory leak in nfp_flower_spawn_vnic_reprs
+Date:   Tue,  1 Oct 2019 12:41:15 -0400
+Message-Id: <20191001164125.15398-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164125.15398-1-sashal@kernel.org>
 References: <20191001164125.15398-1-sashal@kernel.org>
@@ -62,65 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 284b94be1925dbe035ce5218d8b5c197321262c7 ]
+[ Upstream commit 8ce39eb5a67aee25d9f05b40b673c95b23502e3e ]
 
-Commit c48dac137a62 ("block: don't hold q->sysfs_lock in elevator_init_mq")
-removes q->sysfs_lock from elevator_init_mq(), but forgot to deal with
-lockdep_assert_held() called in blk_mq_sched_free_requests() which is
-run in failure path of elevator_init_mq().
+In nfp_flower_spawn_vnic_reprs in the loop if initialization or the
+allocations fail memory is leaked. Appropriate releases are added.
 
-blk_mq_sched_free_requests() is called in the following 3 functions:
-
-	elevator_init_mq()
-	elevator_exit()
-	blk_cleanup_queue()
-
-In blk_cleanup_queue(), blk_mq_sched_free_requests() is followed exactly
-by 'mutex_lock(&q->sysfs_lock)'.
-
-So moving the lockdep_assert_held() from blk_mq_sched_free_requests()
-into elevator_exit() for fixing the report by syzbot.
-
-Reported-by: syzbot+da3b7677bb913dc1b737@syzkaller.appspotmail.com
-Fixed: c48dac137a62 ("block: don't hold q->sysfs_lock in elevator_init_mq")
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: b94524529741 ("nfp: flower: add per repr private data for LAG offload")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-mq-sched.c | 2 --
- block/blk.h          | 2 ++
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/netronome/nfp/flower/main.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-index 2766066a15dbf..3cf555f127006 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -554,8 +554,6 @@ void blk_mq_sched_free_requests(struct request_queue *q)
- 	struct blk_mq_hw_ctx *hctx;
- 	int i;
+diff --git a/drivers/net/ethernet/netronome/nfp/flower/main.c b/drivers/net/ethernet/netronome/nfp/flower/main.c
+index eb846133943b2..5331e01f373e0 100644
+--- a/drivers/net/ethernet/netronome/nfp/flower/main.c
++++ b/drivers/net/ethernet/netronome/nfp/flower/main.c
+@@ -400,6 +400,7 @@ nfp_flower_spawn_vnic_reprs(struct nfp_app *app,
+ 		repr_priv = kzalloc(sizeof(*repr_priv), GFP_KERNEL);
+ 		if (!repr_priv) {
+ 			err = -ENOMEM;
++			nfp_repr_free(repr);
+ 			goto err_reprs_clean;
+ 		}
  
--	lockdep_assert_held(&q->sysfs_lock);
--
- 	queue_for_each_hw_ctx(q, hctx, i) {
- 		if (hctx->sched_tags)
- 			blk_mq_free_rqs(q->tag_set, hctx->sched_tags, i);
-diff --git a/block/blk.h b/block/blk.h
-index 7814aa207153c..38938125ab729 100644
---- a/block/blk.h
-+++ b/block/blk.h
-@@ -184,6 +184,8 @@ void elv_unregister_queue(struct request_queue *q);
- static inline void elevator_exit(struct request_queue *q,
- 		struct elevator_queue *e)
- {
-+	lockdep_assert_held(&q->sysfs_lock);
-+
- 	blk_mq_sched_free_requests(q);
- 	__elevator_exit(q, e);
- }
+@@ -413,6 +414,7 @@ nfp_flower_spawn_vnic_reprs(struct nfp_app *app,
+ 		port = nfp_port_alloc(app, port_type, repr);
+ 		if (IS_ERR(port)) {
+ 			err = PTR_ERR(port);
++			kfree(repr_priv);
+ 			nfp_repr_free(repr);
+ 			goto err_reprs_clean;
+ 		}
+@@ -433,6 +435,7 @@ nfp_flower_spawn_vnic_reprs(struct nfp_app *app,
+ 		err = nfp_repr_init(app, repr,
+ 				    port_id, port, priv->nn->dp.netdev);
+ 		if (err) {
++			kfree(repr_priv);
+ 			nfp_port_free(port);
+ 			nfp_repr_free(repr);
+ 			goto err_reprs_clean;
 -- 
 2.20.1
 
