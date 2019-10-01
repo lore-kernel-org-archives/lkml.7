@@ -2,96 +2,46 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1175C388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5ABECDFB6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97CC02133F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B17521783
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 06:43:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732690AbfJAGl4 (ORCPT
+        id S1732696AbfJAGnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 02:41:56 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:45975 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725777AbfJAGly (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 02:41:54 -0400
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1iFBr5-0001Sm-4O; Tue, 01 Oct 2019 08:41:51 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1iFBr3-0006A0-Db; Tue, 01 Oct 2019 08:41:49 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Jay Cliburn <jcliburn@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net v2] net: ag71xx: fix mdio subnode support
-Date:   Tue,  1 Oct 2019 08:41:47 +0200
-Message-Id: <20191001064147.23633-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.23.0
+        Tue, 1 Oct 2019 02:43:45 -0400
+Received: from verein.lst.de ([213.95.11.211]:42743 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725777AbfJAGnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 02:43:45 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 5558A68B20; Tue,  1 Oct 2019 08:43:40 +0200 (CEST)
+Date:   Tue, 1 Oct 2019 08:43:39 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Qian Cai <cai@lca.pw>
+Cc:     hch@lst.de, m.szyprowski@samsung.com, robin.murphy@arm.com,
+        vladimir.murzin@arm.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dma/coherent: remove unused dma_get_device_base()
+Message-ID: <20191001064339.GA8582@lst.de>
+References: <1568725242-2433-1-git-send-email-cai@lca.pw> <1569444877.5576.232.camel@lca.pw>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1569444877.5576.232.camel@lca.pw>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is syncing driver with actual devicetree documentation:
-Documentation/devicetree/bindings/net/qca,ar71xx.txt
-|Optional subnodes:
-|- mdio : specifies the mdio bus, used as a container for phy nodes
-|  according to phy.txt in the same directory
+On Wed, Sep 25, 2019 at 04:54:37PM -0400, Qian Cai wrote:
+> Ping. Please take a look at this trivial patch.
 
-The driver was working with fixed phy without any noticeable issues. This bug
-was uncovered by introducing dsa ar9331-switch driver.
-Since no one reported this bug until now, I assume no body is using it
-and this patch should not brake existing system.
-
-Fixes: d51b6ce441d3 ("net: ethernet: add ag71xx driver")
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- drivers/net/ethernet/atheros/ag71xx.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/atheros/ag71xx.c b/drivers/net/ethernet/atheros/ag71xx.c
-index 6703960c7cf5..d1101eea15c2 100644
---- a/drivers/net/ethernet/atheros/ag71xx.c
-+++ b/drivers/net/ethernet/atheros/ag71xx.c
-@@ -526,7 +526,7 @@ static int ag71xx_mdio_probe(struct ag71xx *ag)
- 	struct device *dev = &ag->pdev->dev;
- 	struct net_device *ndev = ag->ndev;
- 	static struct mii_bus *mii_bus;
--	struct device_node *np;
-+	struct device_node *np, *mnp;
- 	int err;
- 
- 	np = dev->of_node;
-@@ -571,7 +571,9 @@ static int ag71xx_mdio_probe(struct ag71xx *ag)
- 		msleep(200);
- 	}
- 
--	err = of_mdiobus_register(mii_bus, np);
-+	mnp = of_get_child_by_name(np, "mdio");
-+	err = of_mdiobus_register(mii_bus, mnp);
-+	of_node_put(mnp);
- 	if (err)
- 		goto mdio_err_put_clk;
- 
--- 
-2.23.0
-
+No need to rush.  We just had the 5.4 merge window closing.  I'll
+queue this up in the dma-mapping for-next tree for 5.5 once I open it.
