@@ -2,205 +2,127 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1D3ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E65C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7625E2070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B02D22070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:52:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g0oP86PS"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oj2/PZIW";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lTkHXHKu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729455AbfJARvx (ORCPT
+        id S1731000AbfJARwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 13:51:53 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:41233 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfJARvx (ORCPT
+        Tue, 1 Oct 2019 13:52:19 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:37462 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbfJARwR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 13:51:53 -0400
-Received: by mail-io1-f66.google.com with SMTP id n26so21738508ioj.8
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 10:51:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mGX7BVQOaWHiIMnos0xmrZKS+XQD/Jo055hvHQSrq70=;
-        b=g0oP86PSCeSRoSbO5M5pvy0ob6eWOEV08YRCTBwTnM6ZfYx6dOyoVHvsZFz+9aEUrr
-         CF+S9zX0AKzVI6JUCzhqUE+yQjWuEKyDvjRuCH4aVpinF5Y75ES9IP4pxM9iihus/r7Y
-         1nEavDlo+aXh6SFxFMdNu2uhxDDIZhefkYMsYejV6nGHTpFda0Bg4PWaGMqCMm/A4odi
-         s+4jS36igSFnsnR3oFRA2tREwD3XZ7X3l5PNz3mwbxjoDWJZhfef61Kdo/GE9Q09s9QS
-         64HIRK5oW5DN4aePFjXWgl6w0HLpDj/plBfFY1lMCSPz7cqTp+X4epyWAPdSDViOBiEE
-         GXvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mGX7BVQOaWHiIMnos0xmrZKS+XQD/Jo055hvHQSrq70=;
-        b=F8VN3DtwJgy29kLULWcnCS5MYiaphx57ric8QK8GEt2xFudeYF5ZPJZbByX24hLltn
-         oBh47NIMMk1m68F8YrEqqiIcBaZR4rHIbX+dmdLjXp9zsg0muZEX/S487GncsvlvrWDR
-         U1t3wsfLiMJKsp2PcMJJ6bKVtsjU1pcw18rk87vEJIyC47J5TvL4P7n1SPyMwMLmGkhh
-         tvOdHgcQ8FjVHX3Y7iXchzQrb4TJC0vhZaEXZGPGv7WjgCmzphTPDTe/gCflSFYbIl9p
-         YMNVzhmIMZFwlS5w2f46VjvKzKslwhawXuJJTzwpELi04S1H1pVibXIxgS1NgfXJTXMa
-         d/Qg==
-X-Gm-Message-State: APjAAAWa2FQimA2/1AVYSjJfT0jt0kAU5SCxkJyddDAyKSkkR71B3pzg
-        8ySdKsmdohd73Vwo89ejIu+3NEeQfEKIe14Z8EI=
-X-Google-Smtp-Source: APXvYqxKcMcUxJrDplQXptLyOKp2Zs8I7B8ewWRZZ263va6wQEGJwfSkkyy/uNesJ6f1l8o/vr7I5Jxw0WYGytEjiNc=
-X-Received: by 2002:a05:6638:3a5:: with SMTP id z5mr2574450jap.95.1569952312092;
- Tue, 01 Oct 2019 10:51:52 -0700 (PDT)
+        Tue, 1 Oct 2019 13:52:17 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 233ED61156; Tue,  1 Oct 2019 17:52:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1569952336;
+        bh=EqX6F8UDW8JnIw6Hk7q7L1dvCzSEMNOpUg0sXKY32yA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=oj2/PZIWdgJsjvx+7sB/HBZhXwlRP+/bp7ky6LvLjqD4g9BiNDvcglCZ62SjD1tBq
+         QAgX6+g9hprx8wVBP7v9QVjcT7vKvuZQPgA01lEQC46BDaHrF+QmyochFDLUPJwYM0
+         4m7xO8XStOzyEZlV7qC04Ce1g/yklG9gIRkBlQgg=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 104336083C;
+        Tue,  1 Oct 2019 17:52:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1569952335;
+        bh=EqX6F8UDW8JnIw6Hk7q7L1dvCzSEMNOpUg0sXKY32yA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lTkHXHKunAsS8EWDCTk+X0f1W5i2eyWsNoTkfA4JrXjUWLAdpwvRUvZwQy/sqsCha
+         kE/4opxhjU4rATlKtRc59y0kRLw3/N3qA8EqPvRggNEEkhrNsP+u2hClns35iEAvhg
+         rCNeqT75U1nPhoOrRrPqkFZOS/g7yYIjD6ij5xpI=
 MIME-Version: 1.0
-References: <20190917032106.32342-1-navid.emamdoost@gmail.com>
-In-Reply-To: <20190917032106.32342-1-navid.emamdoost@gmail.com>
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Date:   Tue, 1 Oct 2019 12:51:41 -0500
-Message-ID: <CAEkB2ETM9zAnUMkx1GYJmGz2X_QYhkJEmr4Qi5xNV2AX=Qcb-Q@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: memory leak
-To:     Harry Wentland <harry.wentland@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Nikola Cornij <nikola.cornij@amd.com>
-Cc:     Navid Emamdoost <emamd001@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Tony Cheng <Tony.Cheng@amd.com>,
-        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        Eric Yang <Eric.Yang2@amd.com>, Jun Lei <Jun.Lei@amd.com>,
-        Wesley Chalmers <Wesley.Chalmers@amd.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Ken Chalmers <ken.chalmers@amd.com>,
-        Eric Bernstein <Eric.Bernstein@amd.com>,
-        Roman Li <Roman.Li@amd.com>, Thomas Lim <Thomas.Lim@amd.com>,
-        hersen wu <hersenxs.wu@amd.com>,
-        Charlene Liu <Charlene.Liu@amd.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 01 Oct 2019 10:52:15 -0700
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCHv9 2/3] arm64: dts: qcom: msm8998: Add Coresight support
+In-Reply-To: <CAOCk7NohO67qeYCnrjy4P0KN9nLUiamphHRvj-bFP++K7khPOw@mail.gmail.com>
+References: <cover.1564550873.git.saiprakash.ranjan@codeaurora.org>
+ <90114e06825e537c3aafd3de5c78743a9de6fadc.1564550873.git.saiprakash.ranjan@codeaurora.org>
+ <CAOCk7NrK+wY8jfHdS8781NOQtyLm2RRe1NW2Rm3_zeaot0Q99Q@mail.gmail.com>
+ <16212a577339204e901cf4eefa5e82f1@codeaurora.org>
+ <CAOCk7NohO67qeYCnrjy4P0KN9nLUiamphHRvj-bFP++K7khPOw@mail.gmail.com>
+Message-ID: <fa5a35f0e993f2b604b60d5cead3cf28@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Would you please review this patch?
+On 2019-10-01 10:14, Jeffrey Hugo wrote:
+> On Tue, Oct 1, 2019 at 11:04 AM Sai Prakash Ranjan
+> <saiprakash.ranjan@codeaurora.org> wrote:
+>> 
+>> On 2019-10-01 09:13, Jeffrey Hugo wrote:
+>> > Sai,
+>> >
+>> > This patch breaks boot on the 835 laptops.  However, I haven't seen
+>> > the same issue on the MTP.  I wonder, is coresight expected to work
+>> > with production fused devices?  I wonder if thats the difference
+>> > between the laptop and MTP that is causing the issue.
+>> >
+>> > Let me know what I can do to help debug.
+>> >
+>> 
+>> I did test on MSM8998 MTP and didn't face any issue. I am guessing 
+>> this
+>> is the same issue which you reported regarding cpuidle? Coresight ETM
+> 
+> Yes, its the same issue.  Right now, I need both patches reverted to 
+> boot.
+> 
+>> and cpuidle do not work well together since ETMs share the same power
+>> domain as CPU and they might get turned off when CPU enters idle 
+>> states.
+>> Can you try with cpuidle.off=1 cmdline or just remove idle states from
+>> DT to confirm? If this is the issue, then we can try the below patch
+>> from Andrew Murray for ETM save and restore:
+>> 
+>> https://patchwork.kernel.org/patch/11097893/
+> 
+> Is there still value in testing this if the idle states are removed,
+> yet the coresight nodes still cause issues?
+> 
+> Funny enough, I'm using the arm64 defconfig which doesn't seem to
+> select CONFIG_CORESIGHT, so I'm not even sure what would be binding to
+> the DT devices...
+> 
 
+Haan then likely it's the firmware issue.
+We should probably disable coresight in soc dtsi and enable only for 
+MTP. For now you can add a status=disabled for all coresight nodes in 
+msm8998.dtsi and I will send the patch doing the same in a day or 
+two(sorry I am travelling currently).
 
 Thanks,
-Navid.
+Sai
 
-On Mon, Sep 16, 2019 at 10:21 PM Navid Emamdoost
-<navid.emamdoost@gmail.com> wrote:
->
-> In dcn*_clock_source_create when dcn20_clk_src_construct fails allocated
-> clk_src needs release.
->
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> ---
->  drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c | 3 ++-
->  drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c | 1 +
->  drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c | 1 +
->  drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c | 1 +
->  drivers/gpu/drm/amd/display/dc/dce80/dce80_resource.c   | 1 +
->  drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c   | 1 +
->  drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c   | 1 +
->  7 files changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c b/drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c
-> index 6248c8455314..21de230b303a 100644
-> --- a/drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c
-> +++ b/drivers/gpu/drm/amd/display/dc/dce100/dce100_resource.c
-> @@ -667,7 +667,8 @@ struct clock_source *dce100_clock_source_create(
->                 clk_src->base.dp_clk_src = dp_clk_src;
->                 return &clk_src->base;
->         }
-> -
-> +
-> +       kfree(clk_src);
->         BREAK_TO_DEBUGGER();
->         return NULL;
->  }
-> diff --git a/drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c b/drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c
-> index 764329264c3b..0cb83b0e0e1e 100644
-> --- a/drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c
-> +++ b/drivers/gpu/drm/amd/display/dc/dce110/dce110_resource.c
-> @@ -714,6 +714,7 @@ struct clock_source *dce110_clock_source_create(
->                 return &clk_src->base;
->         }
->
-> +       kfree(clk_src);
->         BREAK_TO_DEBUGGER();
->         return NULL;
->  }
-> diff --git a/drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c b/drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c
-> index c6136e0ed1a4..147d77173e2b 100644
-> --- a/drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c
-> +++ b/drivers/gpu/drm/amd/display/dc/dce112/dce112_resource.c
-> @@ -687,6 +687,7 @@ struct clock_source *dce112_clock_source_create(
->                 return &clk_src->base;
->         }
->
-> +       kfree(clk_src);
->         BREAK_TO_DEBUGGER();
->         return NULL;
->  }
-> diff --git a/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c b/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c
-> index 4a6ba3173a5a..0b5eeff17d00 100644
-> --- a/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c
-> +++ b/drivers/gpu/drm/amd/display/dc/dce120/dce120_resource.c
-> @@ -500,6 +500,7 @@ static struct clock_source *dce120_clock_source_create(
->                 return &clk_src->base;
->         }
->
-> +       kfree(clk_src);
->         BREAK_TO_DEBUGGER();
->         return NULL;
->  }
-> diff --git a/drivers/gpu/drm/amd/display/dc/dce80/dce80_resource.c b/drivers/gpu/drm/amd/display/dc/dce80/dce80_resource.c
-> index 860a524ebcfa..952440893fbb 100644
-> --- a/drivers/gpu/drm/amd/display/dc/dce80/dce80_resource.c
-> +++ b/drivers/gpu/drm/amd/display/dc/dce80/dce80_resource.c
-> @@ -701,6 +701,7 @@ struct clock_source *dce80_clock_source_create(
->                 return &clk_src->base;
->         }
->
-> +       kfree(clk_src);
->         BREAK_TO_DEBUGGER();
->         return NULL;
->  }
-> diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c
-> index a12530a3ab9c..3f25e8da5396 100644
-> --- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c
-> +++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c
-> @@ -786,6 +786,7 @@ struct clock_source *dcn10_clock_source_create(
->                 return &clk_src->base;
->         }
->
-> +       kfree(clk_src);
->         BREAK_TO_DEBUGGER();
->         return NULL;
->  }
-> diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-> index b949e202d6cb..418fdcf1f492 100644
-> --- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-> +++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-> @@ -955,6 +955,7 @@ struct clock_source *dcn20_clock_source_create(
->                 return &clk_src->base;
->         }
->
-> +       kfree(clk_src)
->         BREAK_TO_DEBUGGER();
->         return NULL;
->  }
-> --
-> 2.17.1
->
-
-
--- 
-Navid.
