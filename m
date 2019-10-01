@@ -2,116 +2,139 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D2AECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5D2ECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5006521855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 335BE21906
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:01:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tP7kQ9mF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rEjkaQmY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731128AbfJASAY (ORCPT
+        id S1731335AbfJASBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 14:00:24 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33167 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726554AbfJASAY (ORCPT
+        Tue, 1 Oct 2019 14:01:23 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35925 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbfJASBX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 14:00:24 -0400
-Received: by mail-pg1-f195.google.com with SMTP id q1so2172269pgb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 11:00:23 -0700 (PDT)
+        Tue, 1 Oct 2019 14:01:23 -0400
+Received: by mail-io1-f65.google.com with SMTP id b136so50314150iof.3;
+        Tue, 01 Oct 2019 11:01:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=yrPCibXZ8aAVlYeWu3qzUI+I4f/2IsCgC/T/cZwtUTk=;
-        b=tP7kQ9mFk9GH83DD4Wn7w8bkC2bvSljjKeU02a8Ws9I/OYWSsc6I77CXb3DX8fKZ3Y
-         uSiRydgZIuYa5+LNm0P/n1NC/j3RE9nl3yFtR3evY8dySp4mAv8FZHaVm03nLvysHSRw
-         +S8bnOuLMJdRsQwaDpcvGUhY6rQo8oKkgT6pNIL8I3CrSef8L19AJraS9IWX/wr03g19
-         Z8h6MQLFqYMCz6v/A4QO6EDDSwfq8sq1ZkFQAoQVWhRd4/7MRaBv3BByYgeyEdxwVB0o
-         S8+cVyjvrip1SyEKNjzCZgx3HNFJCcHvrc8CTFr5GQEAa3ljNPfZ94BpEmNhIPLuJViz
-         VyEw==
+        bh=e3ZpzW2TyFiOL+UNzjwCdjiPvcI1e9f1za2Ko3AAr0s=;
+        b=rEjkaQmYsYDQCb6ctDX5gQepVnjXhbo4zSgtC17Bwz2P4Q/3UWeESJs9t+DbKzJRkE
+         h2icO+Bym55hSufk12IbuzwRuxR4xcF824kYTgNkdTUMu7rukY0cRYSmcS5ev/sjJKCu
+         JI1zgWFNKorMTLZ/lV97yJnIzK6nOEUVzkF5vKeCHEsiOPbEodIM5IFTDcKIa7xYbP9Z
+         L0NRlgr6Pnm/4sQrFdn0EUSZRxmN51s6WWAqmyfAdrz+pCxscd6ct7HHWopSfH+rfTz6
+         Wj+yPETwqLPP9IqU2DERuq2e/QvlWjFsEOdq/lRm2uFEwZS8ryDRF2Qimn7qTQD8JFsg
+         liRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yrPCibXZ8aAVlYeWu3qzUI+I4f/2IsCgC/T/cZwtUTk=;
-        b=GJmCaSqE19uWe2zll5WDKWqG60+elqs+Lpybfrj0mpmzG82G8ZXMomrOy6UVrPWowP
-         cnUIrNO8uVphaBf74n1hjLTn379u1C8QhqafOk00HALZRy1D6votI8IjmIpbNvZKjqBb
-         VBvM+ZtbxT/nQeCQV2xXONZ+iDR/o6cuILsI2cqmyNPRPut3uD1bYxY6Mo3jboF17T+p
-         15z+QyHMRxft3TRImRFRXbmf2HX7jBXDK6radJKXqx48Fp1eBFjjSBNAzDlV7bKjTmTf
-         BNA1txGVByTHE8rqvMjHffIGIl9Vkj7j1WrwkCORWUuTmaQMZ5/nYX8VFztiUqr5RPoa
-         7d8A==
-X-Gm-Message-State: APjAAAWzPh4+bGcTYtzydr0SyR+RFnrD7Q8jnnTKloUXbLozfb6Kh/M9
-        EpwuRaVOACqQ8woBQiM+0Z8dRnsk2KI/pnMGsRrrYw==
-X-Google-Smtp-Source: APXvYqwYNCvEPHPmb+tyytchKsZjMGzhL9IBjNboIg7WvPbiYbOhSRJ0ENEMO+ep9ULQ6v9Zpf55jzuTzQTkRZD7kEo=
-X-Received: by 2002:a63:2f45:: with SMTP id v66mr7764492pgv.263.1569952822500;
- Tue, 01 Oct 2019 11:00:22 -0700 (PDT)
+        bh=e3ZpzW2TyFiOL+UNzjwCdjiPvcI1e9f1za2Ko3AAr0s=;
+        b=XB5rUR6ZmnbwPKw5kZrD9MtockLkRn42LryiPtRZinpnxAiWGRoAn3Y/1c538NTWmv
+         YSTRpK4otr3qHvpNdGoS7xbDql+iVR8+C0cXoLQoolK5NgeIQkaJTUXBP/sMZwxJ1k0O
+         kmk3wK9WezdqXIfTGlZg86t9VLTVBoD9DzgLVzSvHieFc3p3F3JJcz2BFeuyJRzq41r5
+         ClTz+C7oRTzJQ4tOgCX57gIvEr7bsloZuwQmg3++1QdDppN2+tawJU2DVqi7s9iONkth
+         sL0TxiSGG9B+jjKTHHphqO14uIAlQmHJUmBoBhZGtnLm64AULNkT7n2SHuttF+dAWjWB
+         +7tA==
+X-Gm-Message-State: APjAAAXByuKfniOBwnDO6XZQ7OtKdI5IS947VntNwmQNEBKPzGQV6d+O
+        cUp0n+CpHLQb0HYYgBUeocgIQeY4lyqKoAh1aRw=
+X-Google-Smtp-Source: APXvYqxotoq/8hGS9XgSO6JelXixa5l0w10bNwBRyvjvkP91TkYP1WblQo3zRuYvlhJRnSm4XrDvkt4p1Lkv3X5Q30g=
+X-Received: by 2002:a6b:90c4:: with SMTP id s187mr6632690iod.178.1569952882448;
+ Tue, 01 Oct 2019 11:01:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAKwvOdk=tr5nqq1CdZnUvRskaVqsUCP0SEciSGonzY5ayXsMXw@mail.gmail.com>
- <CAHk-=wiTy7hrA=LkmApBE9PQtri8qYsSOrf2zbms_crfjgR=Hw@mail.gmail.com>
- <20190930112636.vx2qxo4hdysvxibl@willie-the-truck> <CAK7LNASQZ82KSOrQW7+Wq1vFDCg2__maBEAPMLqUDqZMLuj1rA@mail.gmail.com>
- <20190930121803.n34i63scet2ec7ll@willie-the-truck> <CAKwvOdnqn=0LndrX+mUrtSAQqoT1JWRMOJCA5t3e=S=T7zkcCQ@mail.gmail.com>
- <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck> <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
- <20191001170142.x66orounxuln7zs3@willie-the-truck> <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
- <20191001175512.GK25745@shell.armlinux.org.uk>
-In-Reply-To: <20191001175512.GK25745@shell.armlinux.org.uk>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 1 Oct 2019 11:00:11 -0700
-Message-ID: <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
-Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Will Deacon <will@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Kees Cook <keescook@google.com>
+References: <cover.1564550873.git.saiprakash.ranjan@codeaurora.org>
+ <90114e06825e537c3aafd3de5c78743a9de6fadc.1564550873.git.saiprakash.ranjan@codeaurora.org>
+ <CAOCk7NrK+wY8jfHdS8781NOQtyLm2RRe1NW2Rm3_zeaot0Q99Q@mail.gmail.com>
+ <16212a577339204e901cf4eefa5e82f1@codeaurora.org> <CAOCk7NohO67qeYCnrjy4P0KN9nLUiamphHRvj-bFP++K7khPOw@mail.gmail.com>
+ <fa5a35f0e993f2b604b60d5cead3cf28@codeaurora.org>
+In-Reply-To: <fa5a35f0e993f2b604b60d5cead3cf28@codeaurora.org>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Tue, 1 Oct 2019 12:01:11 -0600
+Message-ID: <CAOCk7NodWtC__W3=AQfXcjF-W9Az_NNUN0r8w5WmqJMziCcvig@mail.gmail.com>
+Subject: Re: [PATCHv9 2/3] arm64: dts: qcom: msm8998: Add Coresight support
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 10:55 AM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
+On Tue, Oct 1, 2019 at 11:52 AM Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
 >
-> On Tue, Oct 01, 2019 at 10:44:43AM -0700, Nick Desaulniers wrote:
-> > I apologize; I don't mean to be difficult.  I would just like to avoid
-> > surprises when code written with the assumption that it will be
-> > inlined is not.  It sounds like we found one issue in arm32 and one in
-> > arm64 related to outlining.  If we fix those two cases, I think we're
-> > close to proceeding with Masahiro's cleanup, which I view as a good
-> > thing for the health of the Linux kernel codebase.
+> On 2019-10-01 10:14, Jeffrey Hugo wrote:
+> > On Tue, Oct 1, 2019 at 11:04 AM Sai Prakash Ranjan
+> > <saiprakash.ranjan@codeaurora.org> wrote:
+> >>
+> >> On 2019-10-01 09:13, Jeffrey Hugo wrote:
+> >> > Sai,
+> >> >
+> >> > This patch breaks boot on the 835 laptops.  However, I haven't seen
+> >> > the same issue on the MTP.  I wonder, is coresight expected to work
+> >> > with production fused devices?  I wonder if thats the difference
+> >> > between the laptop and MTP that is causing the issue.
+> >> >
+> >> > Let me know what I can do to help debug.
+> >> >
+> >>
+> >> I did test on MSM8998 MTP and didn't face any issue. I am guessing
+> >> this
+> >> is the same issue which you reported regarding cpuidle? Coresight ETM
+> >
+> > Yes, its the same issue.  Right now, I need both patches reverted to
+> > boot.
+> >
+> >> and cpuidle do not work well together since ETMs share the same power
+> >> domain as CPU and they might get turned off when CPU enters idle
+> >> states.
+> >> Can you try with cpuidle.off=1 cmdline or just remove idle states from
+> >> DT to confirm? If this is the issue, then we can try the below patch
+> >> from Andrew Murray for ETM save and restore:
+> >>
+> >> https://patchwork.kernel.org/patch/11097893/
+> >
+> > Is there still value in testing this if the idle states are removed,
+> > yet the coresight nodes still cause issues?
+> >
+> > Funny enough, I'm using the arm64 defconfig which doesn't seem to
+> > select CONFIG_CORESIGHT, so I'm not even sure what would be binding to
+> > the DT devices...
+> >
 >
-> Except, using the C preprocessor for this turns the arm32 code into
-> yuck:
->
-> 1. We'd need to turn get_domain() and set_domain() into multi-line
->    preprocessor macro definitions, using the GCC ({ }) extension
->    so that get_domain() can return a value.
->
-> 2. uaccess_save_and_enable() and uaccess_restore() also need to
->    become preprocessor macro definitions too.
->
-> So, we end up with multiple levels of nested preprocessor macros.
-> When something goes wrong, the compiler warning/error message is
-> going to be utterly _horrid_.
+> Haan then likely it's the firmware issue.
+> We should probably disable coresight in soc dtsi and enable only for
+> MTP. For now you can add a status=disabled for all coresight nodes in
+> msm8998.dtsi and I will send the patch doing the same in a day or
+> two(sorry I am travelling currently).
 
-That's why I preferred V1 of Masahiro's patch, that fixed the inline
-asm not to make use of caller saved registers before calling a
-function that might not be inlined.
--- 
-Thanks,
-~Nick Desaulniers
+This sounds sane to me (and is what I did while bisecting the issue).
+When you do create the patch, feel free to add the following tags as
+you see fit.
+
+Reported-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Tested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
