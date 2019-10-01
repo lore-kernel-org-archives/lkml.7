@@ -6,108 +6,136 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB92FECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 939B9ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB7A1206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:13:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 716AB206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:13:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389470AbfJAPN0 (ORCPT
+        id S2389503AbfJAPNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 11:13:26 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:36252 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727179AbfJAPNZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 11:13:25 -0400
-Received: by mail-ed1-f65.google.com with SMTP id h2so12277732edn.3;
-        Tue, 01 Oct 2019 08:13:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=N2FlzG+PxQCjT3jm2D3Aa1IldYkDzjEnGNfZ4YLjVII=;
-        b=GTLlE36emsyfwlCmg5/qd+JCYVMMKgASzsy4gmL+XPeskYqSSSuJISrQ3A6dDD7t+9
-         F+V7XPh7bQttfJku/JHEpVwBQdsQQK174lSegpomZrTGIBleXS809G6+RrucB2/3PzNO
-         cCYYCOnMZsOQT9+5ORElE7x4qrE9o8Bn37g1s63AU426pysTPJUrGDbwBlITeZVQer3j
-         FYTPzJ90dbeNq4eySZ/SgEs+CBE5/r0k9F77oFU1jHeGvMYp5Vw+93okzSpvVVdLJPPU
-         7VcncYpfqwPxiELEb/1orqM2ZE866YdWQhnd4MEt4FXsly+RE1c4W6iJvHb7xo7D7/JR
-         1ToA==
-X-Gm-Message-State: APjAAAUN0a3/RbdDZc9uQhr0wn9Sq3kAP9A7+8fUdt5/EMCoCjUzo1gd
-        87ZBNk48IMxh1PLYBoO+8TA=
-X-Google-Smtp-Source: APXvYqxyVJmic1F+7fZfFZQAxNcXMB5Z/ocNdDnPHOVjj8h1tH2nOU0MyL/PgaJMMnw3AF2+JFzzgw==
-X-Received: by 2002:a17:906:7802:: with SMTP id u2mr15475439ejm.3.1569942803627;
-        Tue, 01 Oct 2019 08:13:23 -0700 (PDT)
-Received: from [10.10.2.174] (bran.ispras.ru. [83.149.199.196])
-        by smtp.gmail.com with ESMTPSA id gl4sm1878601ejb.6.2019.10.01.08.13.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Oct 2019 08:13:23 -0700 (PDT)
-Reply-To: efremov@linux.com
-Subject: Re: [PATCH] staging: rtl8723bs: hal: Fix memcpy calls
-To:     David Laight <David.Laight@ACULAB.COM>,
-        'Dan Carpenter' <dan.carpenter@oracle.com>
-Cc:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        Jes Sorensen <jes.sorensen@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>
-References: <20190930110141.29271-1-efremov@linux.com>
- <37b195b700394e95aa8329afc9f60431@AcuMS.aculab.com>
- <e4051dcb-10dc-ff17-ec0b-6f51dccdb5bf@linux.com>
- <20191001135649.GH22609@kadam>
- <8d2e8196cae74ec4ae20e9c23e898207@AcuMS.aculab.com>
-From:   Denis Efremov <efremov@linux.com>
-Message-ID: <a7c002f7-c6f2-a9ed-0100-acfbafea65c5@linux.com>
-Date:   Tue, 1 Oct 2019 18:13:21 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Tue, 1 Oct 2019 11:13:42 -0400
+Received: from mga02.intel.com ([134.134.136.20]:60254 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389129AbfJAPNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 11:13:42 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 08:13:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,571,1559545200"; 
+   d="scan'208";a="205082435"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 01 Oct 2019 08:13:26 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 01 Oct 2019 18:13:26 +0300
+Date:   Tue, 1 Oct 2019 18:13:26 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Mario.Limonciello@dell.com
+Cc:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+        andreas.noever@gmail.com, michael.jamet@intel.com,
+        YehezkelShB@gmail.com, rajmohan.mani@intel.com,
+        nicholas.johnson-opensource@outlook.com.au, lukas@wunner.de,
+        stern@rowland.harvard.edu, anthony.wong@canonical.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
+Message-ID: <20191001151326.GB2714@lahna.fi.intel.com>
+References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
+ <20191001113830.13028-18-mika.westerberg@linux.intel.com>
+ <20191001124748.GH2954373@kroah.com>
+ <20191001130905.GO2714@lahna.fi.intel.com>
+ <20191001145354.GA3366714@kroah.com>
+ <924ce4d5862c4d859e238c0e706a3d5b@AUSX13MPC105.AMER.DELL.COM>
 MIME-Version: 1.0
-In-Reply-To: <8d2e8196cae74ec4ae20e9c23e898207@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <924ce4d5862c4d859e238c0e706a3d5b@AUSX13MPC105.AMER.DELL.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/1/19 5:36 PM, David Laight wrote:
->> From: Dan Carpenter
->> Sent: 01 October 2019 14:57
->> Subject: Re: [PATCH] staging: rtl8723bs: hal: Fix memcpy calls
-> ...
->> That's true for glibc memcpy() but not for the kernel memcpy().  In the
->> kernel there are lots of places which do a zero size memcpy().
+On Tue, Oct 01, 2019 at 02:59:06PM +0000, Mario.Limonciello@dell.com wrote:
 > 
-> And probably from NULL (or even garbage) pointers.
 > 
-> After all a pointer to the end of an array (a + ARRAY_SIZE(a)) is valid
-> but must not be dereferenced - so memcpy() can't dereference it's
-> source address when the length is zero.
+> > -----Original Message-----
+> > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Sent: Tuesday, October 1, 2019 9:54 AM
+> > To: Mika Westerberg
+> > Cc: linux-usb@vger.kernel.org; Andreas Noever; Michael Jamet; Yehezkel Bernat;
+> > Rajmohan Mani; Nicholas Johnson; Lukas Wunner; Alan Stern; Limonciello, Mario;
+> > Anthony Wong; linux-kernel@vger.kernel.org
+> > Subject: Re: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
+> > 
+> > 
+> > [EXTERNAL EMAIL]
+> > 
+> > On Tue, Oct 01, 2019 at 04:09:05PM +0300, Mika Westerberg wrote:
+> > > On Tue, Oct 01, 2019 at 02:47:48PM +0200, Greg Kroah-Hartman wrote:
+> > > > > -	  Thunderbolt Controller driver. This driver is required if you
+> > > > > -	  want to hotplug Thunderbolt devices on Apple hardware or on PCs
+> > > > > -	  with Intel Falcon Ridge or newer.
+> > > > > +	  USB4 (Thunderbolt) driver. USB4 is the public spec based on
+> > > > > +	  Thunderbolt 3 protocol. This driver is required if you want to
+> > > > > +	  hotplug Thunderbolt and USB4 compliant devices on Apple
+> > > > > +	  hardware or on PCs with Intel Falcon Ridge or newer.
+> > > >
+> > > > Wait, did "old" thunderbolt just get re-branded as USB4?
+> > >
+> > > Not but the driver started supporting USB4 as well :)
+> > >
+> > > USB4 is pretty much public spec of Thunderbolt 3 but with some
+> > > differences in register layouts (this is because Thunderbolt uses some
+> > > vendor specific capabilities which are now moved to more "standard"
+> > > places).
+> > 
+> > Ok, then we need to rename the Kconfig option as well, otherwise no one
+> > will "know" that this changed, so they will not be prompted for it.
+> > 
+> > > > Because if I have an "old" laptop that needs Thunderbolt support, how am
+> > > > I going to know it is now called USB4 instead?
+> > >
+> > > Well the Kconfig option tries to have both names there:
+> > >
+> > >   tristate "USB4 (Thunderbolt) support"
+> > >
+> > > and then
+> > >
+> > >   USB4 (Thunderbolt) driver. USB4 is the public spec based on
+> > >   Thunderbolt 3 protocol. This driver is required if you want to hotplug
+> > >   Thunderbolt and USB4 compliant devices on Apple hardware or on PCs
+> > >   with Intel Falcon Ridge or newer.
+> > >
+> > > and the Kconfig option is still CONFIG_THUNDERBOLT. I know this is
+> > > confusing but I don't have better ideas how we can advertise both. I
+> > > borrowed this "format" from firewire.
+> > 
+> > CONFIG_USB4 instead?
 > 
->> The glibc attitude is "the standard allows us to put knives here" so
->> let's put knives everywhere in the path.  And the GCC attitude is let's
->> silently remove NULL checks instead of just printing a warning that the
->> NULL check isn't required...  It could really make someone despondent.
+> How about CONFIG_USB4_PCIE?
 > 
-> gcc is the one that add knives...
-> 
+> I think that will help align that certain aspects of USB4 can be built optionally.
 
-Just found an official documentation to this issue:
-https://gcc.gnu.org/gcc-4.9/porting_to.html
-"Null pointer checks may be optimized away more aggressively
-...
-The pointers passed to memmove (and similar functions in <string.h>) must be non-null
-even when nbytes==0, so GCC can use that information to remove the check after the
-memmove call. Calling copy(p, NULL, 0) can therefore deference a null pointer and crash."
+But this is not about PCIe - it is just one type of a tunnel that is
+optional with USB4.
 
-But again, I would say that the bug in this code is because the if condition was copy-pasted
-and it should be inverted.
+> > > > Shouldn't there just be a new USB4 option that only enables/builds the
+> > > > USB4 stuff if selected?  Why would I want all of this additional code on
+> > > > my old system if it's not going to do anything at all?
+> > >
+> > > USB4 devices are backward compatible with Thunderbolt 3 so you should be
+> > > able to plug in USB4 device to your old Thunderbolt 3 laptop for
+> > > example. It goes the other way as well. Some things are optional but for
+> > > example USB4 hubs must support also Thunderbolt 3.
+> > >
+> 
+> If PCIe tunnels are an optional feature in USB4, how can it be mandatory to support
+> Thunderbolt 3?
 
-Thanks,
-Denis
+It is mandatory for USB4 hubs. For peripheral devices and hosts
+Thunderbolt 3 support is optional. So for example you could have USB4
+host that does not enter Thunderbolt 3 alternate mode at all so it only
+supports USB4 devices.
