@@ -6,120 +6,121 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E95ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D4EC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EDA821A4C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8CA321A4C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:21:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389965AbfJAQVm (ORCPT
+        id S2389981AbfJAQVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:21:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:26094 "EHLO mx1.redhat.com"
+        Tue, 1 Oct 2019 12:21:49 -0400
+Received: from mga06.intel.com ([134.134.136.31]:35793 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389941AbfJAQVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:21:41 -0400
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DD11A37E79
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Oct 2019 16:21:40 +0000 (UTC)
-Received: by mail-io1-f72.google.com with SMTP id r20so39382067ioh.7
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 09:21:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x9XepyaA218QJeUBfPQdn3QeV/2Cs13v78OcqROetO0=;
-        b=aeCO8v91lPtXaWJGz1zd1vGsRdVjNvMCt6G7Om/gm1ki0zSGLhBmA98uR918fi2rJh
-         hxYrf1brKQkpqXOznORrQAVFa8qFEplS3PIoMsMKcmYWvsDHq8H1g7KMBCqrcePlKPPa
-         F6nFkrBohCSA9mPGJfwzerspZOoNTFdRRt4cIID93wrc7g0jlJ12O7iF1TPuqupid+9u
-         y2VYffWqjmCzoiCAETEP8ZAqFZg1T9cb+b0zw9FW1+yIW/OKn2ax4aIDiYBWLJx5Q3aT
-         Pp4uV2iSAqd8IdB45h28XVmTQ9wvECIlOxW/bDZg6kL9aa1+DRczOQtY7G+Dx2hDQzez
-         S5cw==
-X-Gm-Message-State: APjAAAWoagm9mz08v3Yjo1nW4opBZGNGx8/uj4QET/Pzo9j9ajUwzJ8z
-        +0p13CWIMnkCg8AH/z+KaPJgze48WIzXOAS+FVBFCfKxV+hyywkAj2uptEcMX3lOoTht85YdnxI
-        z3KmefnbSWvoc0ZE/40qk97ic8l1Zvcu8SU3OvczC
-X-Received: by 2002:a92:ca84:: with SMTP id t4mr27014694ilo.171.1569946900250;
-        Tue, 01 Oct 2019 09:21:40 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwtlqLpKQEmRbFAQajrYSquBKr2bsxZFd6EKkYBXsFWdm96/QShaGDSjfsdotkX0LJVFp9IEOIgc19NwrFhxQE=
-X-Received: by 2002:a92:ca84:: with SMTP id t4mr27014658ilo.171.1569946899958;
- Tue, 01 Oct 2019 09:21:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <CACO55tuk4SA6-xUtJ-oRePy8MPXYAp2cfmSPxwW3J5nQuX3y2g@mail.gmail.com>
- <20191001132721.GA46491@google.com>
-In-Reply-To: <20191001132721.GA46491@google.com>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Tue, 1 Oct 2019 18:21:28 +0200
-Message-ID: <CACO55tvjFPAMgz6DMGmJQ3adtJBX6yYnFRO9gVBEpMVTEBu0og@mail.gmail.com>
-Subject: Re: [RFC PATCH] pci: prevent putting pcie devices into lower device
- states on certain intel bridges
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>
+        id S2389966AbfJAQVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:21:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 09:21:46 -0700
+X-IronPort-AV: E=Sophos;i="5.64,571,1559545200"; 
+   d="scan'208";a="181738489"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 09:21:46 -0700
+Message-ID: <1ea1a4e11617291062db81f65745b9c95fd0bb30.camel@linux.intel.com>
+Subject: Re: [PATCH v11 0/6] mm / virtio: Provide support for unused page
+ reporting
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     David Hildenbrand <david@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        virtio-dev@lists.oasis-open.org, kvm@vger.kernel.org,
+        mst@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, willy@infradead.org,
+        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, vbabka@suse.cz, osalvador@suse.de
+Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com,
+        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com
+Date:   Tue, 01 Oct 2019 09:21:46 -0700
+In-Reply-To: <7233498c-2f64-d661-4981-707b59c78fd5@redhat.com>
+References: <20191001152441.27008.99285.stgit@localhost.localdomain>
+         <7233498c-2f64-d661-4981-707b59c78fd5@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 3:27 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Mon, Sep 30, 2019 at 06:36:12PM +0200, Karol Herbst wrote:
-> > On Mon, Sep 30, 2019 at 6:30 PM Mika Westerberg
-> > <mika.westerberg@linux.intel.com> wrote:
-> > >
-> > > On Mon, Sep 30, 2019 at 06:05:14PM +0200, Karol Herbst wrote:
-> > > > still happens with your patch applied. The machine simply gets shut down.
-> > > >
-> > > > dmesg can be found here:
-> > > > https://gist.githubusercontent.com/karolherbst/40eb091c7b7b33ef993525de660f1a3b/raw/2380e31f566e93e5ba7c87ef545420965d4c492c/gistfile1.txt
-> > >
-> > > Looking your dmesg:
-> > >
-> > > Sep 30 17:24:27 kernel: nouveau 0000:01:00.0: DRM: DCB version 4.1
-> > > Sep 30 17:24:27 kernel: nouveau 0000:01:00.0: DRM: MM: using COPY for buffer copies
-> > > Sep 30 17:24:27 kernel: [drm] Initialized nouveau 1.3.1 20120801 for 0000:01:00.0 on minor 1
-> > >
-> > > I would assume it runtime suspends here. Then it wakes up because of PCI
-> > > access from userspace:
-> > >
-> > > Sep 30 17:24:42 kernel: pci_raw_set_power_state: 56 callbacks suppressed
-> > >
-> > > and for some reason it does not get resumed properly. There are also few
-> > > warnings from ACPI that might be relevant:
-> > >
-> > > Sep 30 17:24:27 kernel: ACPI Warning: \_SB.PCI0.GFX0._DSM: Argument #4 type mismatch - Found [Buffer], ACPI requires [Package] (20190509/nsarguments-59)
-> > > Sep 30 17:24:27 kernel: ACPI Warning: \_SB.PCI0.PEG0.PEGP._DSM: Argument #4 type mismatch - Found [Buffer], ACPI requires [Package] (20190509/nsarguments-59)
-> >
-> > afaik this is the case for essentially every laptop out there.
->
-> I think we should look into this a little bit.
-> acpi_ns_check_argument_types() checks the argument type and prints
-> this message, but AFAICT it doesn't actually fix anything or prevent
-> execution of the method, so I have no idea what happens when we
-> actually execute the _DSM.
->
+On Tue, 2019-10-01 at 17:35 +0200, David Hildenbrand wrote:
+> On 01.10.19 17:29, Alexander Duyck wrote:
+> > This series provides an asynchronous means of reporting to a hypervisor
+> > that a guest page is no longer in use and can have the data associated
+> > with it dropped. To do this I have implemented functionality that allows
+> > for what I am referring to as unused page reporting. The advantage of
+> > unused page reporting is that we can support a significant amount of
+> > memory over-commit with improved performance as we can avoid having to
+> > write/read memory from swap as the VM will instead actively participate
+> > in freeing unused memory so it doesn't have to be written.
+> > 
+> > The functionality for this is fairly simple. When enabled it will allocate
+> > statistics to track the number of reported pages in a given free area.
+> > When the number of free pages exceeds this value plus a high water value,
+> > currently 32, it will begin performing page reporting which consists of
+> > pulling non-reported pages off of the free lists of a given zone and
+> > placing them into a scatterlist. The scatterlist is then given to the page
+> > reporting device and it will perform the required action to make the pages
+> > "reported", in the case of virtio-balloon this results in the pages being
+> > madvised as MADV_DONTNEED. After this they are placed back on their
+> > original free list. If they are not merged in freeing an additional bit is
+> > set indicating that they are a "reported" buddy page instead of a standard
+> > buddy page. The cycle then repeats with additional non-reported pages
+> > being pulled until the free areas all consist of reported pages.
+> > 
+> > In order to try and keep the time needed to find a non-reported page to
+> > a minimum we maintain a "reported_boundary" pointer. This pointer is used
+> > by the get_unreported_pages iterator to determine at what point it should
+> > resume searching for non-reported pages. In order to guarantee pages do
+> > not get past the scan I have modified add_to_free_list_tail so that it
+> > will not insert pages behind the reported_boundary. Doing this allows us
+> > to keep the overhead to a minimum as re-walking the list without the
+> > boundary will result in as much as 18% additional overhead on a 32G VM.
+> > 
+> > 
 
-I can assure you that this warning happens on every single laptop out
-there with dual Nvidia graphics and it's essentially just a firmware
-bug. And it never caused any issues on any of the older laptops (or
-newest one for that matter).
+<snip>
 
-> If we execute this _DSM as part of power management, and the _DSM
-> doesn't work right, it would be no surprise that we have problems.
->
-> Maybe we could learn something by turning on ACPI_DB_PARSE output (see
-> Documentation/firmware-guide/acpi/debug.rst).
->
-> You must have an acpidump already from all your investigation.  Can
-> you put it somewhere, e.g., bugzilla.kernel.org, and include a URL?
+> > As far as possible regressions I have focused on cases where performing
+> > the hinting would be non-optimal, such as cases where the code isn't
+> > needed as memory is not over-committed, or the functionality is not in
+> > use. I have been using the will-it-scale/page_fault1 test running with 16
+> > vcpus and have modified it to use Transparent Huge Pages. With this I see
+> > almost no difference with the patches applied and the feature disabled.
+> > Likewise I see almost no difference with the feature enabled, but the
+> > madvise disabled in the hypervisor due to a device being assigned. With
+> > the feature fully enabled in both guest and hypervisor I see a regression
+> > between -1.86% and -8.84% versus the baseline. I found that most of the
+> > overhead was due to the page faulting/zeroing that comes as a result of
+> > the pages having been evicted from the guest.
+> 
+> I think Michal asked for a performance comparison against Nitesh's
+> approach, to evaluate if keeping the reported state + tracking inside
+> the buddy is really worth it. Do you have any such numbers already? (or
+> did my tired eyes miss them in this cover letter? :/)
+> 
 
-Will do so later, right now I am traveling to XDC and will have more
-time for that then.
+I thought what Michal was asking for was what was the benefit of using the
+boundary pointer. I added a bit up above and to the description for patch
+3 as on a 32G VM it adds up to about a 18% difference without factoring in
+the page faulting and zeroing logic that occurs when we actually do the
+madvise.
+
+Do we have a working patch set for Nitesh's code? The last time I tried
+running his patch set I ran into issues with kernel panics. If we have a
+known working/stable patch set I can give it a try.
+
+- Alex
+
