@@ -7,53 +7,54 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CA6ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4863C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E208320B7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89AA321924
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:57:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569952621;
-	bh=4xVtMspTTwuG8tdPkCWzc+croVH5UbxupUzCcUeuMag=;
+	s=default; t=1569952623;
+	bh=+UAQcsuPkgHp4/EgGQDvPMJm7y4eaiFHdIQbJylvblE=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=vLzNsvyjefySBakAaUsaz15PRxycJX/xLRlIIEAkpmb19utBO3BFQ3xjlMxHWK5wC
-	 1O3cDmWNd13PcvHeVIt2l7Kvhp26yKJdPy2/UJnC47oAp3XX6mtZSww5errNaZi+vq
-	 X/GaHAqrUplaiZvH9MIQGWJygaaqAH9LOImmwcxE=
+	b=GqDjVk3HuZAK1mbVNTVTlPSp0EkzZk4FaZ1eMsTA2XJPPo9HXWrX3Kw1hA7wQklvq
+	 JpDxZ+mY9/QVPHOoiuzRTPes1/AL3PTs+IeINP5LLMOiKRD8wCxbF+UbE5CsTJ82ll
+	 yWZ9G56DsjNG/x4FwjjeEXu2/w4r+LsR3weQDPx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731269AbfJAR5A (ORCPT
+        id S1731361AbfJAR5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 13:57:00 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52000 "EHLO
+        Tue, 1 Oct 2019 13:57:02 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52034 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725951AbfJAR47 (ORCPT
+        with ESMTP id S1725951AbfJAR5B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 13:56:59 -0400
+        Tue, 1 Oct 2019 13:57:01 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=A9NXcxONWzpkY7EVknteVVyY6INRrwaQt7ZlwSZ2Peg=; b=vfz1qphHJ2oj
-        Sd6DqyVHWYYFEaWQMt5RtcdNX37MT1URP3fDfqY4Pz4sKyO8XXM9uOmMF9MjkKjSoYJf2x8Flgttx
-        YxyVrLE3MTG8UcdVLVpgqHkD/WPkrEpllPE/6Nna9O8NQSlTbth0UQKAcdPkC5Ps/N7qVY5ZjUzUk
-        hrcvw=;
+        List-Archive; bh=D7ujo6plX3S7fzgUrhxaeYkQb7VKPy3SwTAx2uSQ3KM=; b=CCWsaypF77Y2
+        7ClPseKxCqhJU+6yH7KHErlf21R3L01IFTurfFfPBN+VSADdS60p3ZY7mc0YXY/5aWfNpIKOKwfNS
+        /rccFu9gzudbc6iQ6do+M6G78tod677hwmHjEwuxzWwNn+DBUy5mAekWgweYGA8NcVRPHKE6XFFgN
+        pCi4w=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iFMOO-0005uj-CN; Tue, 01 Oct 2019 17:56:56 +0000
+        id 1iFMOO-0005ui-1a; Tue, 01 Oct 2019 17:56:56 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id CA01E2742A31; Tue,  1 Oct 2019 18:56:55 +0100 (BST)
+        id 888452742A10; Tue,  1 Oct 2019 18:56:55 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     broonie@kernel.org, lgirdwood@gmail.com,
+To:     Yizhuo <yzhai003@ucr.edu>
+Cc:     "Cc:"@sirena.co.uk, "Cc:"@sirena.co.uk, csong@cs.ucr.edu,
+        Liam Girdwood <lgirdwood@gmail.com>,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        patches@opensource.cirrus.com
-Subject: Applied "regulator: lochnagar: Add on_off_delay for VDDCORE" to the regulator tree
-In-Reply-To: <20191001132017.1785-1-ckeepax@opensource.cirrus.com>
+        zhiyunq@cs.ucr.edu
+Subject: Applied "regulator: pfuze100-regulator: Variable "val" in pfuze100_regulator_probe() could be uninitialized" to the regulator tree
+In-Reply-To: <20190929170957.14775-1-yzhai003@ucr.edu>
 X-Patchwork-Hint: ignore
-Message-Id: <20191001175655.CA01E2742A31@ypsilon.sirena.org.uk>
+Message-Id: <20191001175655.888452742A10@ypsilon.sirena.org.uk>
 Date:   Tue,  1 Oct 2019 18:56:55 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -62,7 +63,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: lochnagar: Add on_off_delay for VDDCORE
+   regulator: pfuze100-regulator: Variable "val" in pfuze100_regulator_probe() could be uninitialized
 
 has been applied to the regulator tree at
 
@@ -87,34 +88,43 @@ to this mail.
 Thanks,
 Mark
 
-From f75841aa3b4bf02fcc7941af2d3e00ff74a93bdb Mon Sep 17 00:00:00 2001
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Date: Tue, 1 Oct 2019 14:20:17 +0100
-Subject: [PATCH] regulator: lochnagar: Add on_off_delay for VDDCORE
+From 1252b283141f03c3dffd139292c862cae10e174d Mon Sep 17 00:00:00 2001
+From: Yizhuo <yzhai003@ucr.edu>
+Date: Sun, 29 Sep 2019 10:09:57 -0700
+Subject: [PATCH] regulator: pfuze100-regulator: Variable "val" in
+ pfuze100_regulator_probe() could be uninitialized
 
-The VDDCORE regulator takes a good length of time to discharge down, so
-add an on_off_delay to ensure DCVDD is removed before it is powered on
-again.
+In function pfuze100_regulator_probe(), variable "val" could be
+initialized if regmap_read() fails. However, "val" is used to
+decide the control flow later in the if statement, which is
+potentially unsafe.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20191001132017.1785-1-ckeepax@opensource.cirrus.com
+Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+Link: https://lore.kernel.org/r/20190929170957.14775-1-yzhai003@ucr.edu
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/lochnagar-regulator.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/regulator/pfuze100-regulator.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/lochnagar-regulator.c b/drivers/regulator/lochnagar-regulator.c
-index ff97cc50f2eb..9b05e03ba830 100644
---- a/drivers/regulator/lochnagar-regulator.c
-+++ b/drivers/regulator/lochnagar-regulator.c
-@@ -210,6 +210,7 @@ static const struct regulator_desc lochnagar_regulators[] = {
+diff --git a/drivers/regulator/pfuze100-regulator.c b/drivers/regulator/pfuze100-regulator.c
+index df5df1c495ad..689537927f6f 100644
+--- a/drivers/regulator/pfuze100-regulator.c
++++ b/drivers/regulator/pfuze100-regulator.c
+@@ -788,7 +788,13 @@ static int pfuze100_regulator_probe(struct i2c_client *client,
  
- 		.enable_time = 3000,
- 		.ramp_delay = 1000,
-+		.off_on_delay = 15000,
- 
- 		.owner = THIS_MODULE,
- 	},
+ 		/* SW2~SW4 high bit check and modify the voltage value table */
+ 		if (i >= sw_check_start && i <= sw_check_end) {
+-			regmap_read(pfuze_chip->regmap, desc->vsel_reg, &val);
++			ret = regmap_read(pfuze_chip->regmap,
++						desc->vsel_reg, &val);
++			if (ret) {
++				dev_err(&client->dev, "Fails to read from the register.\n");
++				return ret;
++			}
++
+ 			if (val & sw_hi) {
+ 				if (pfuze_chip->chip_id == PFUZE3000 ||
+ 					pfuze_chip->chip_id == PFUZE3001) {
 -- 
 2.20.1
 
