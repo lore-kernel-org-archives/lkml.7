@@ -2,131 +2,132 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D2DECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4129ECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 171C82190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABF4921920
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:50:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569934199;
-	bh=tGW212EaZmrIn29aaNmsRxwukQPltuKjXALvxdLiSqs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=t1UhsbjzEeEm385dMFQzvo50JkewNBBFjRHwNJjoYIrkEhAZ48CebatmIyQKJsmGm
-	 gRyPvF18yNhdY2P4Nhyn1rPTyvjpaPE3IcPMdQwvlPhlP1aHFJcqUlB+naTSDwTH85
-	 TPQ3apsRuQ8Oh6E/xKqLvsx3XTWh55TBihCHi49o=
+	s=default; t=1569934213;
+	bh=/fWs0Dn9H5ufh6uVeJFS5qzH9dfJHbHa3AsDZ9j3174=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=p6c2R6P+ieIXShJpR6Q9dUqsbBcDdPUPhYwc0JHFtSfomFvctQZXjGHewF5fiyMdP
+	 GRBSHAZIb7x3YBgG1qNzJnDYkYC9ZHJP3IYxl1KYJFm1N5XFX4+XzzKRRCFE8xj0Fx
+	 gOThHMLweivPFGrgcvG/GYEm6yx/Va06+KSGjwPc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388056AbfJAMt6 (ORCPT
+        id S2388062AbfJAMuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 08:49:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42196 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 08:50:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbfJAMt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 08:49:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1725821AbfJAMuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 08:50:12 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7160C21872;
-        Tue,  1 Oct 2019 12:49:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E5192190F;
+        Tue,  1 Oct 2019 12:50:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569934197;
-        bh=tGW212EaZmrIn29aaNmsRxwukQPltuKjXALvxdLiSqs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qMuMSnOFckB43S5qaHlnoK/36P6/h3jdTZTwaFWd3frHjaQGai/xTS/gzELxjtUk2
-         Rpu1UjpzbrecweumHflFu49IPS6+ih3Xnjkdt4mK9lJHvkbCkvMl2QRxd/ldD1kmef
-         7OCHDEgtKzSsCuItX8L5/YHlSEPeygv67jfLkQRE=
-Date:   Tue, 1 Oct 2019 14:49:54 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     linux-usb@vger.kernel.org,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Lukas Wunner <lukas@wunner.de>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Mario.Limonciello@dell.com,
-        Anthony Wong <anthony.wong@canonical.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 00/22] thunderbolt: Add support for USB4
-Message-ID: <20191001124954.GI2954373@kroah.com>
-References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
+        s=default; t=1569934211;
+        bh=/fWs0Dn9H5ufh6uVeJFS5qzH9dfJHbHa3AsDZ9j3174=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=nKYjehPUKg3g4VuLaS02T4X7cS2ykVhYOWudr134ZsfhvjqoOu+BaEcs1d5tHta4+
+         hxzx34lRga0pnp12ZYb++KbuAeSDjoFqO67Rz7OpRozH0VdSLf8/6uZwzF58Ltb7R7
+         LUd4puYZrupigG9yimYXFv7YLnTUoOLIdQl/WDLI=
+Date:   Tue, 1 Oct 2019 07:50:10 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Andrew Murray <andrew.murray@arm.com>, zenglu@loongson.cn,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Add Loongson vendor ID and device IDs
+Message-ID: <20191001125010.GA38575@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <d3cde609-7918-6b1c-940d-29ecaf7e5cbb@loongson.cn>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 02:38:08PM +0300, Mika Westerberg wrote:
-> Hi all,
+On Tue, Oct 01, 2019 at 10:53:44AM +0800, Tiezhu Yang wrote:
+> On 09/30/2019 10:02 PM, Andrew Murray wrote:
+> > On Mon, Sep 30, 2019 at 12:55:20PM +0800, Tiezhu Yang wrote:
+> > > Add the Loongson vendor ID and device IDs to pci_ids.h
+> > > to be used in the future.
+> > > 
+> > > The Loongson IDs can be found at the following link:
+> > > https://git.kernel.org/pub/scm/utils/pciutils/pciutils.git/tree/pci.ids
+> > > 
+> > > Co-developed-by: Lu Zeng <zenglu@loongson.cn>
+> > > Signed-off-by: Lu Zeng <zenglu@loongson.cn>
+> > > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> > > ---
+> > >   include/linux/pci_ids.h | 19 +++++++++++++++++++
+> > >   1 file changed, 19 insertions(+)
+> > > 
+> > > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> > > index 21a5724..119639d 100644
+> > > --- a/include/linux/pci_ids.h
+> > > +++ b/include/linux/pci_ids.h
+> > > @@ -3111,4 +3111,23 @@
+> > > 
+> > >   #define PCI_VENDOR_ID_NCUBE            0x10ff
+> > > 
+> > > +#define PCI_VENDOR_ID_LOONGSON                 0x0014
+> > > +#define PCI_DEVICE_ID_LOONGSON_HT              0x7a00
+> > > +#define PCI_DEVICE_ID_LOONGSON_APB             0x7a02
+> > > +#define PCI_DEVICE_ID_LOONGSON_GMAC            0x7a03
+> > > +#define PCI_DEVICE_ID_LOONGSON_OTG             0x7a04
+> > > +#define PCI_DEVICE_ID_LOONGSON_GPU_2K1000      0x7a05
+> > > +#define PCI_DEVICE_ID_LOONGSON_DC              0x7a06
+> > > +#define PCI_DEVICE_ID_LOONGSON_HDA             0x7a07
+> > > +#define PCI_DEVICE_ID_LOONGSON_SATA            0x7a08
+> > > +#define PCI_DEVICE_ID_LOONGSON_PCIE_X1         0x7a09
+> > > +#define PCI_DEVICE_ID_LOONGSON_SPI             0x7a0b
+> > > +#define PCI_DEVICE_ID_LOONGSON_LPC             0x7a0c
+> > > +#define PCI_DEVICE_ID_LOONGSON_DMA             0x7a0f
+> > > +#define PCI_DEVICE_ID_LOONGSON_EHCI            0x7a14
+> > > +#define PCI_DEVICE_ID_LOONGSON_GPU_7A1000      0x7a15
+> > > +#define PCI_DEVICE_ID_LOONGSON_PCIE_X4         0x7a19
+> > > +#define PCI_DEVICE_ID_LOONGSON_OHCI            0x7a24
+> > > +#define PCI_DEVICE_ID_LOONGSON_PCIE_X8         0x7a29
+> > Hi Tiezhu,
+> > 
+> > Thanks for the patch - however it is preferred to provide new PCI
+> > definitions along with the drivers that use them. They don't
+> > provide any useful value without drivers that use them.
 > 
-> I'm sending this as RFC because the series is still missing important
-> features such as power management so not ready for merging. However, I
-> think it is good to get any early feedback from the community. We are
-> working to add support for the missing features.
-> 
-> USB4 is the public specification of Thunderbolt 3 protocol and can be
-> downloaded here:
-> 
->   https://www.usb.org/sites/default/files/USB4%20Specification_1.zip
-> 
-> USB4 is about tunneling different protocols over a single cable (in the
-> same way as Thunderbolt). The current USB4 spec supports PCIe, Display Port
-> and USB 3.x, and also software based protocols such as networking between
-> domains (hosts).
-> 
-> So far PCs have been using firmware based Connection Manager and Apple
-> systems have been using software based one. A Connection Manager is the
-> entity that handles creation of different tunnel types through the USB4
-> (and Thunderbolt) fabric. With USB4 the plan is to have software based
-> Connection Manager everywhere but some early systems will also support
-> firmware to allow OS downgrade for example.
-> 
-> Current Linux Thunderbolt driver supports both "modes" and can detect which
-> one to use dynamically.
-> 
-> This series first adds support for Thunderbolt 3 devices to the software
-> connection manager and then extends that to support USB4 compliant hosts
-> and devices (this applies to both firmware and software based connection
-> managers). With this series the following features are supported also for
-> USB4 compliant devices:
-> 
->   - PCIe tunneling
->   - Display Port tunneling
->   - USB 3.x tunneling
->   - P2P networking (implemented in drivers/net/thunderbolt.c)
->   - Host and device NVM firmware upgrade
-> 
-> We also add two new sysfs attributes under each device that expose link
-> speed and width to userspace. The rest of the userspace ABI stays the same.
-> 
-> I'm including Linux USB folks as well because USB4 is officially coming
-> from USB-IF which puts us on same boat now.
-> 
-> While I changed the user visible Kconfig string to mention "USB4" (the
-> Kconfig option is still CONFIG_THUNDERBOLT), I'm wondering whether we
-> should move the whole Thunderbolt driver under drivers/usb/thunderbolt as
-> well? 
+> Thanks for your reply. This is the first step of the Loongson kernel
+> team, we will submit other related individual driver patches step by
+> step in the near future, these small patches make an easily
+> understood change that can be verified by reviewers.
 
-Looks "interesting", nice work!
+There are two opposing goals here:
 
-I stopped at patch "Add initial support for USB4" as I don't think we
-want to add USB4 code to a system that we know does not have it, right?
+  1) The "publish early, publish often" idea that posting small things
+  early helps get useful feedback.
 
-Everything up to then is just "normal" thunderbolt, and with the
-exception of a few minor comments, all look fine to me.
+  2) The idea of waiting until things can be published in logical
+  units so readers can see context and how things fit together.
 
-I didn't actually read the USB4 patch just yet, as I figured we needed
-to argue about that some more :)
+I think Andrew's point (which I agree with) is that an individual
+trivial patch like this is not enough to give meaningful feedback.  I
+think you'll get better feedback if you wait and collect things until
+you can post a series that actually fixes a bug or adds a small
+feature.  It also makes it easier for me to track patches if I can
+deal with a whole series at once instead of trying to figure out which
+individual patches are related.
 
-thanks,
+So I'd encourage you to think in terms of a series of 3-10 patches
+that are all related and together produce something useful.  That's
+easier for readers to digest than the same patches posted
+incrementally over several days or weeks.
 
-greg k-h
+Bjorn
