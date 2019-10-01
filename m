@@ -2,101 +2,120 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7F4C388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FEBC388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29FA121D82
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46AB32190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:55:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729879AbfJAJyU (ORCPT
+        id S1729553AbfJAJzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 05:54:20 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:34398 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729792AbfJAJyU (ORCPT
+        Tue, 1 Oct 2019 05:55:36 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44232 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbfJAJzg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 05:54:20 -0400
-Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id 665AB25BDFF;
-        Tue,  1 Oct 2019 19:54:17 +1000 (AEST)
-Received: by reginn.horms.nl (Postfix, from userid 7100)
-        id 5EC7094046A; Tue,  1 Oct 2019 11:54:15 +0200 (CEST)
-Date:   Tue, 1 Oct 2019 11:54:15 +0200
-From:   Simon Horman <horms@verge.net.au>
-To:     Julian Anastasov <ja@ssi.bg>
-Cc:     Haishuang Yan <yanhaishuang@cmss.chinamobile.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        netdev@vger.kernel.org, lvs-devel@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] ipvs: speedup ipvs netns dismantle
-Message-ID: <20191001095415.fari4ntiszkbkgxr@verge.net.au>
-References: <1569560091-20553-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
- <alpine.LFD.2.21.1909302205360.2706@ja.home.ssi.bg>
+        Tue, 1 Oct 2019 05:55:36 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 21so10964305otj.11;
+        Tue, 01 Oct 2019 02:55:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=57em5qMaUxgwixlimVtXQoiZ7hrM6q9JADm0XwFiAhc=;
+        b=BzrQaC8wAz9ITg8/sUMrMPLf1/jLoq7naXuzZwY3mBKZY1sHIeV9qTIOn97IpcWHuq
+         F9KwVQ3kLEZn0AdVrtFhzNiGCJPGNclh/GkZq79yuyHmuq3772oJ+Vv0VoJATZYpAuRQ
+         e18RfxeXzesFOTM87vi+95JHh/X1X2VxZ2N23+medtSYT8RjVz0Umdm80yk8fcWsYNft
+         Oi7IYpMioMWRHzEx387Z80C3mYBne7R4jaC8dPfC55LT5QBHlZCCyWxunxPgSBArD2tG
+         ZnL2jbIWFE0G5/h/dOuiQT6gW4SJOjGhKsi1Wausii/qs2NrqtH0FHdd7Yos4DifFC2M
+         SAZw==
+X-Gm-Message-State: APjAAAV7FBTV3ynrOiU7J3vFMUN5v7AzLU0SD1+GwkOCv4xsaZy+cpmo
+        Db8jvBZOvdIrzxlfGpWSooH1h4QiebUAUua/dN8=
+X-Google-Smtp-Source: APXvYqzkX7Thn6lNSJ3o+XYEkPg62CV4JuLydhxM+5dLjGbLepbTswGotKWTi798Ipt1p/7DrWarF7USre4jhr1ywek=
+X-Received: by 2002:a9d:7311:: with SMTP id e17mr1477724otk.107.1569923735203;
+ Tue, 01 Oct 2019 02:55:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.21.1909302205360.2706@ja.home.ssi.bg>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20190825132837.13873-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190825132837.13873-1-yamada.masahiro@socionext.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 1 Oct 2019 11:55:24 +0200
+Message-ID: <CAMuHMdWad4QnmXVr82isawC055GwDE5vbERdpYRR2KmD2rX1tQ@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: add $(BASH) to run scripts with bash-extension
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 10:08:23PM +0300, Julian Anastasov wrote:
-> 
-> 	Hello,
-> 
-> On Fri, 27 Sep 2019, Haishuang Yan wrote:
-> 
-> > Implement exit_batch() method to dismantle more ipvs netns
-> > per round.
-> > 
-> > Tested:
-> > $  cat add_del_unshare.sh
-> > #!/bin/bash
-> > 
-> > for i in `seq 1 100`
-> >     do
-> >      (for j in `seq 1 40` ; do  unshare -n ipvsadm -A -t 172.16.$i.$j:80 >/dev/null ; done) &
-> >     done
-> > wait; grep net_namespace /proc/slabinfo
-> > 
-> > Befor patch:
-> > $  time sh add_del_unshare.sh
-> > net_namespace       4020   4020   4736    6    8 : tunables    0    0    0 : slabdata    670    670      0
-> > 
-> > real    0m8.086s
-> > user    0m2.025s
-> > sys     0m36.956s
-> > 
-> > After patch:
-> > $  time sh add_del_unshare.sh
-> > net_namespace       4020   4020   4736    6    8 : tunables    0    0    0 : slabdata    670    670      0
-> > 
-> > real    0m7.623s
-> > user    0m2.003s
-> > sys     0m32.935s
-> > 
-> > Haishuang Yan (2):
-> >   ipvs: batch __ip_vs_cleanup
-> >   ipvs: batch __ip_vs_dev_cleanup
-> > 
-> >  include/net/ip_vs.h             |  2 +-
-> >  net/netfilter/ipvs/ip_vs_core.c | 47 ++++++++++++++++++++++++-----------------
-> >  net/netfilter/ipvs/ip_vs_ctl.c  | 12 ++++++++---
-> >  3 files changed, 38 insertions(+), 23 deletions(-)
-> 
-> 	Both patches in v2 look good to me, thanks!
-> 
-> Acked-by: Julian Anastasov <ja@ssi.bg>
-> 
-> 	This is for the -next kernels...
+Hi Yamada-san,
 
-Thanks, applied to ipvs-next.
+On Sun, Aug 25, 2019 at 3:29 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> CONFIG_SHELL falls back to sh when bash is not installed on the system,
+> but nobody is testing such a case since bash is usually installed.
+> That is, shell scripts invoked by CONFIG_SHELL are only tested with
+> bash.
+>
+> It makes it difficult to test whether the hashbang #!/bin/sh is real.
+> In fact, I saw some patches trying to add bash-extension to #!/bin/sh
+> script.
+>
+> Besides, some shell scripts invoked by CONFIG_SHELL use bash-extension
+> and #!/bin/bash is specified as the hashbang, while CONFIG_SHELL may
+> not always be set to bash.
+>
+> Probably, the right thing to do is to introduce BASH that is bash by
+> default, and always set CONFIG_SHELL to sh. Replace $(CONFIG_SHELL)
+> with $(BASH) for #!/bin/bash scripts.
+>
+> If somebody tries to add bash-extension to a #!/bin/sh script, it will
+> be caught by somebody because /bin/sh is a symlink to dash on some
+> major distributions.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+
+This is now commit 858805b336be1cab ("kbuild: add $(BASH) to run scripts
+with bash-extension").
+
+This commit has the strange side-effect of inserting the contents of a
+localversion file in the build directory twice.
+
+Steps to reproduce:
+
+    src-dir$ echo src > localversion
+    build-dir$ echo build > localversion
+    build-dir$ make defconfig; make include/generated/utsrelease.h;
+cat include/generated/utsrelease.h
+    ...
+    #define UTS_RELEASE "5.3.0-rc4buildbuildsrc+"
+
+Building in the source directory is OK.
+
+    src-dir$ make defconfig; make include/generated/utsrelease.h; cat
+include/generated/utsrelease.h
+    ...
+    #define UTS_RELEASE "5.3.0-rc4src+"
+
+Changing scripts/setlocalversion to use /bin/bash does not fix the issue.
+
+Do you have a clue?
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
