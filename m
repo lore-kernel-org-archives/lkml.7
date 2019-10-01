@@ -2,105 +2,107 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEF2C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F09ECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D792421D7B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:05:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TBbLytlC";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BIv8NlU8"
+	by mail.kernel.org (Postfix) with ESMTP id 3EDCD206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:05:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731750AbfJASFd (ORCPT
+        id S1731813AbfJASFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 14:05:33 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:44428 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727269AbfJASFd (ORCPT
+        Tue, 1 Oct 2019 14:05:55 -0400
+Received: from baptiste.telenet-ops.be ([195.130.132.51]:48676 "EHLO
+        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727269AbfJASFz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 14:05:33 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 633A36119F; Tue,  1 Oct 2019 18:05:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569953132;
-        bh=kh+Qvfp+Bv7MXpGjaYCIgO1OxAjGfyr1gezkgUNBZRA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=TBbLytlCWNIC7AHixNIcvge6LvSQH1v8jJUko2JcnQ5pBGH4OMLFS1yIm+UzbC7Io
-         8EpPWHBYjMAchb5x4VZ+68+qKgirovCQZ9TVvckBNtqaYYIKNWHLhMffJ67yF2pmkV
-         lkrGy/hsNIUB9G+00gBhJSXVOMD/6u96Avt43nRM=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id EEBA86076C;
-        Tue,  1 Oct 2019 18:05:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569953131;
-        bh=kh+Qvfp+Bv7MXpGjaYCIgO1OxAjGfyr1gezkgUNBZRA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BIv8NlU83WI675KZxJSjdebxayagKrHZlQvgxIT8ATxuQh3w/zLnh1/wrmbba+LwQ
-         V0+qCkhYEDPSP+phz+JcbvMQInj4gIunYiLXPr63yaLBNKDRja/AQTx9KHhixjer/O
-         +yt8sqgyzteoRnI7ngWXWyE37WTrwu0ZMBa+2X4k=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 01 Oct 2019 11:05:30 -0700
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCHv9 2/3] arm64: dts: qcom: msm8998: Add Coresight support
-In-Reply-To: <CAOCk7NodWtC__W3=AQfXcjF-W9Az_NNUN0r8w5WmqJMziCcvig@mail.gmail.com>
-References: <cover.1564550873.git.saiprakash.ranjan@codeaurora.org>
- <90114e06825e537c3aafd3de5c78743a9de6fadc.1564550873.git.saiprakash.ranjan@codeaurora.org>
- <CAOCk7NrK+wY8jfHdS8781NOQtyLm2RRe1NW2Rm3_zeaot0Q99Q@mail.gmail.com>
- <16212a577339204e901cf4eefa5e82f1@codeaurora.org>
- <CAOCk7NohO67qeYCnrjy4P0KN9nLUiamphHRvj-bFP++K7khPOw@mail.gmail.com>
- <fa5a35f0e993f2b604b60d5cead3cf28@codeaurora.org>
- <CAOCk7NodWtC__W3=AQfXcjF-W9Az_NNUN0r8w5WmqJMziCcvig@mail.gmail.com>
-Message-ID: <5b8835905a704fb813714694a792df54@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+        Tue, 1 Oct 2019 14:05:55 -0400
+Received: from ramsan ([84.194.98.4])
+        by baptiste.telenet-ops.be with bizsmtp
+        id 8J5t2100E05gfCL01J5th0; Tue, 01 Oct 2019 20:05:53 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iFMX3-0008KP-4V; Tue, 01 Oct 2019 20:05:53 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iFMX3-0000CZ-1z; Tue, 01 Oct 2019 20:05:53 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] pinctrl: sh-pfc: Do not use platform_get_irq() to count interrupts
+Date:   Tue,  1 Oct 2019 20:05:47 +0200
+Message-Id: <20191001180547.734-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-10-01 11:01, Jeffrey Hugo wrote:
-> On Tue, Oct 1, 2019 at 11:52 AM Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
->> 
->> 
->> Haan then likely it's the firmware issue.
->> We should probably disable coresight in soc dtsi and enable only for
->> MTP. For now you can add a status=disabled for all coresight nodes in
->> msm8998.dtsi and I will send the patch doing the same in a day or
->> two(sorry I am travelling currently).
-> 
-> This sounds sane to me (and is what I did while bisecting the issue).
-> When you do create the patch, feel free to add the following tags as
-> you see fit.
-> 
-> Reported-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> Tested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+As platform_get_irq() now prints an error when the interrupt does not
+exist, counting interrupts by looping until failure causes the printing
+of scary messages like:
 
-Thanks Jeffrey, I will add them.
-Hope Mathieu and Suzuki are OK with this.
+    sh-pfc e6060000.pin-controller: IRQ index 0 not found
 
-Thanks,
-Sai
+Fix this by using the platform_irq_count() helper instead.
+
+Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to platform_get_irq*()")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+This is a fix for v5.4-rc1.
+---
+ drivers/pinctrl/sh-pfc/core.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/pinctrl/sh-pfc/core.c b/drivers/pinctrl/sh-pfc/core.c
+index b8640ad41bef26be..ce983247c9e28bfe 100644
+--- a/drivers/pinctrl/sh-pfc/core.c
++++ b/drivers/pinctrl/sh-pfc/core.c
+@@ -29,12 +29,12 @@
+ static int sh_pfc_map_resources(struct sh_pfc *pfc,
+ 				struct platform_device *pdev)
+ {
+-	unsigned int num_windows, num_irqs;
+ 	struct sh_pfc_window *windows;
+ 	unsigned int *irqs = NULL;
++	unsigned int num_windows;
+ 	struct resource *res;
+ 	unsigned int i;
+-	int irq;
++	int num_irqs;
+ 
+ 	/* Count the MEM and IRQ resources. */
+ 	for (num_windows = 0;; num_windows++) {
+@@ -42,17 +42,13 @@ static int sh_pfc_map_resources(struct sh_pfc *pfc,
+ 		if (!res)
+ 			break;
+ 	}
+-	for (num_irqs = 0;; num_irqs++) {
+-		irq = platform_get_irq(pdev, num_irqs);
+-		if (irq == -EPROBE_DEFER)
+-			return irq;
+-		if (irq < 0)
+-			break;
+-	}
+-
+ 	if (num_windows == 0)
+ 		return -EINVAL;
+ 
++	num_irqs = platform_irq_count(pdev);
++	if (num_irqs < 0)
++		return num_irqs;
++
+ 	/* Allocate memory windows and IRQs arrays. */
+ 	windows = devm_kcalloc(pfc->dev, num_windows, sizeof(*windows),
+ 			       GFP_KERNEL);
+-- 
+2.17.1
+
