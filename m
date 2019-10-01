@@ -2,249 +2,180 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE26BECE589
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4BEC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 948FB2133F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60DD821783
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 07:31:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Pjrbklwz";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="H+OqlqOh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733016AbfJAH2h (ORCPT
+        id S1733024AbfJAHbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 03:28:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59668 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732905AbfJAH2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 03:28:37 -0400
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 46E6CC057F20
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Oct 2019 07:28:36 +0000 (UTC)
-Received: by mail-wm1-f72.google.com with SMTP id m16so525670wmg.8
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 00:28:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rGxRLfEJC1VYNtKSX6kyfg0tMas1+rSvzHhUE5eK6q4=;
-        b=XXoqgVu5gn3RcHatSTW+YeegfwvtVmAizhspwlrGs+dgtU0vwKGqxTIwA2MGqkXUBZ
-         TogOidO2yLG+zmNdQ5SJvhPvoQG40duHa+6IIoEl8fnF+f/LWntLKJwrfJQuLm/lIrPx
-         43DVouD2oVn+lUTdPxX1qCAcFoby63IdJ04tX87gbWPpM/DPtcvpgDlZ9/ed8f7A9Wg4
-         Y/KRhF+LjP3Du6AFNVDprF+jj4GK5EqBMiq6d+LiQ5dkW/48r6Z4b/oF2V2VWElM1R24
-         nGK3Z1iYcyPdhw2NUf0Cv4nAYr/07Yr4PRli+mH2aCV1mTUbuo+dBLiF4yboRLadHOI9
-         jSuQ==
-X-Gm-Message-State: APjAAAU9WaiV0fbGMyB6exrIb565vPE0Kq2V9vza8wKEyJqdOFyC1qkY
-        zGRg43y7AAdSO4oSpOsVKCTZje2k73wcr1cZXLaSE6w+crIeVJCnncaPUmdVHaBOOkWTPbY25TX
-        lEHWcCZPWUOTO3BvB8M5dNzXw
-X-Received: by 2002:a5d:5231:: with SMTP id i17mr16517845wra.142.1569914914943;
-        Tue, 01 Oct 2019 00:28:34 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwzfP3jzsJGYljEi7cfS5kj/VjiNXOMN2jPKXfvjeLCGNRNerLEOfzcw+u+tiV4YVMMyE9GAQ==
-X-Received: by 2002:a5d:5231:: with SMTP id i17mr16517808wra.142.1569914914666;
-        Tue, 01 Oct 2019 00:28:34 -0700 (PDT)
-Received: from steredhat.homenet.telecomitalia.it (host174-200-dynamic.52-79-r.retail.telecomitalia.it. [79.52.200.174])
-        by smtp.gmail.com with ESMTPSA id a71sm1892939wme.11.2019.10.01.00.28.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 00:28:34 -0700 (PDT)
-Date:   Tue, 1 Oct 2019 09:28:31 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "davem@davemloft.net" <davem@davemloft.net>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
+        Tue, 1 Oct 2019 03:31:12 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:44371 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732905AbfJAHbM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 03:31:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1569915071; x=1601451071;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=JsOIRtKVEobbstGQwgENrnkW3F6tkvwiKE1dlIe5aYk=;
+  b=PjrbklwzokOkdNOhB/NB0LVEweLCSkUbsFe0M+lj9r1oFeg0WuUp9qtq
+   lwTv9BGPHdnb4vT31DYNBCrAzWj5QWQYMOXGsWp9CAARnrsiJvBzOgCGv
+   9PScGKg67nrAeJ9usnlZARwqQOcYeciBDsQPXdtUv9A4YwSBHIJ7eU8lu
+   9nmZmQ6zamdNY/5W2ZfaWcV09VkXAq0gRmwGx5jPEO8AeMhVHCJW9qQmq
+   ngGvBSIj14tRoA4mafTr8La6wc98nqC/x13/OPIiKb8+RFrnRKhXPDqJd
+   eUlEEo1EUSyZn/tW7qPfFKyVhJF0PeLRK0P53g7c1/VDhuyT6kR8J6Op+
+   w==;
+IronPort-SDR: JFJ5tS+xZrfR8Az5XxwzZHI7+h67ddLy10OK+DUqHn0M7NDI3xBNiLA+FOx7pLVkbWb98eYik1
+ 0pjnF3MXFfyX4cekPg9IwqGU1CQxHumk5XEq5AFXxRceQ/I05ycnTyzoTnPRQmy1Q8PicxeCqi
+ SVa6vaafUIsLk8klaj7tEHN3q9gt6uhyBrfRAS+xo3rax+JrVe99Anzh/Xe4fVl+WmDPj2vOcg
+ FYCeBdE5hCGI6981r1+TP0zACKMLgEehFAQCDSmIu+7QywcE0MB/2OJMb+Q8VPzg+4Nm7/ycsQ
+ 85E=
+X-IronPort-AV: E=Sophos;i="5.64,570,1559491200"; 
+   d="scan'208";a="119507794"
+Received: from mail-cys01nam02lp2054.outbound.protection.outlook.com (HELO NAM02-CY1-obe.outbound.protection.outlook.com) ([104.47.37.54])
+  by ob1.hgst.iphmx.com with ESMTP; 01 Oct 2019 15:31:10 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aa2d59LszCBGEr/1voxAg/TGhCyUY6ru/vtxjlZ/i547dvQPJtncayEMKpdwKByKKASIWYA7xFjU0C5nO5dehXxRrubg+xO0hC6puBWmmWqHUozt8XL6KpTBfoc6AOrdWBbayzF2KgLF9QErwkTFBLheX04ApqYyzlxVfFVzBgkWR+DRmW5MoymD3ZiHta+oz5Q9sD1gsttWEhyzQyT+ksntnD0oS84YlZSef/k/0d/g0QzLC61CqEFoZa63fR4lz8nRVtbxQxMhBgNO3oBS0l8Boj2tOXSugANpvR6gbs6fggdBO+EWBubtZEROWsUvVnCdGZfxCyMrcR6e5M7Yeg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JsOIRtKVEobbstGQwgENrnkW3F6tkvwiKE1dlIe5aYk=;
+ b=JcoGVNn7LHr2VRC1K/RWZ0Fl/KaHj48mJ19NhciaIAZc7aqK73lEjgUSh2NAltS927CP3l2ZQhKbs905LtFFxVZohbMoYrkTGwIC2QGhNHQPSKIN2cZVRpslCyRZdWvTwHJzvcHYgGhbbcwNWbhZKyJXNQoiz25JSjEdSmg0GH0YVMTGPIfFVIuQG24tbyXpBkqjgXq3YYkPwyKcWDq2MNqobmDQ7DABUyKxGQPMkfhPm5T5YcAkgAtTR/sDLlFFp818ckITgLFG+fYzIAGHQn20TMlaLzBTYsuvujQedOpKf4W62W6VvA5vZRQFOCBa4TbAy4gOmmSetifPLM4KDw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JsOIRtKVEobbstGQwgENrnkW3F6tkvwiKE1dlIe5aYk=;
+ b=H+OqlqOhA5LKDFnfBTsSZKBOWnJDAWl9boWkv64lod0PcJu39YqtKWc9njxiR1WJUm5dMz5vSiEYmerkHYkLP/ZxBDiqTE8mVKyzxw4Yj0Gs58wSomevyeemBYg9os1bAzigh4mDcaxgQnIRcMO/wlNUcgdDov6H3yCKM56p6l0=
+Received: from BYAPR04MB3990.namprd04.prod.outlook.com (52.135.215.29) by
+ BYAPR04MB4085.namprd04.prod.outlook.com (52.135.214.31) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.20; Tue, 1 Oct 2019 07:31:09 +0000
+Received: from BYAPR04MB3990.namprd04.prod.outlook.com
+ ([fe80::a50d:40a0:cd7b:acbc]) by BYAPR04MB3990.namprd04.prod.outlook.com
+ ([fe80::a50d:40a0:cd7b:acbc%5]) with mapi id 15.20.2305.022; Tue, 1 Oct 2019
+ 07:31:08 +0000
+From:   Atish Patra <Atish.Patra@wdc.com>
+To:     "alankao@andestech.com" <alankao@andestech.com>
+CC:     "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
         "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "deepa.kernel@gmail.com" <deepa.kernel@gmail.com>,
-        "ytht.net@gmail.com" <ytht.net@gmail.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "gary@garyguo.net" <gary@garyguo.net>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "hch@infradead.org" <hch@infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "jhansen@vmware.com" <jhansen@vmware.com>
-Subject: Re: [PATCH net v3] vsock: Fix a lockdep warning in __vsock_release()
-Message-ID: <20191001072831.msry462b7l32fhsw@steredhat.homenet.telecomitalia.it>
-References: <1569868998-56603-1-git-send-email-decui@microsoft.com>
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "anup@brainfault.org" <anup@brainfault.org>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        "allison@lohutok.net" <allison@lohutok.net>
+Subject: Re: [PATCH v2 0/3] Add support for SBI v0.2
+Thread-Topic: [PATCH v2 0/3] Add support for SBI v0.2
+Thread-Index: AQHVdMfWU3eO8hvHu0yu+KSplvbFjqdAGZ+AgAAKwwCABRu6AIAAKrMA
+Date:   Tue, 1 Oct 2019 07:31:08 +0000
+Message-ID: <ea8b0ec60fad631716beea27118fb2c4e18644a6.camel@wdc.com>
+References: <20190927000915.31781-1-atish.patra@wdc.com>
+         <20190927221913.GA4700@infradead.org>
+         <8683f51f26708a468bcdf16a48db1cffac6c28d8.camel@wdc.com>
+         <20191001045815.GA6572@andestech.com>
+In-Reply-To: <20191001045815.GA6572@andestech.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Atish.Patra@wdc.com; 
+x-originating-ip: [73.162.108.221]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a9c6fbc0-b726-452e-0d34-08d74641538d
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: BYAPR04MB4085:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <BYAPR04MB40851F8227E937E6F20DD54FFA9D0@BYAPR04MB4085.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0177904E6B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(346002)(396003)(366004)(136003)(376002)(199004)(189003)(54906003)(6486002)(7416002)(6116002)(3846002)(316002)(4326008)(6512007)(2906002)(305945005)(6436002)(7736002)(118296001)(229853002)(25786009)(6306002)(6916009)(36756003)(86362001)(2501003)(6246003)(5640700003)(5660300002)(14454004)(66066001)(478600001)(64756008)(66446008)(476003)(2351001)(966005)(71190400001)(71200400001)(11346002)(26005)(446003)(8936002)(2616005)(256004)(1730700003)(486006)(81156014)(66556008)(102836004)(81166006)(76176011)(6506007)(99286004)(76116006)(66476007)(8676002)(14444005)(186003)(66946007);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB4085;H:BYAPR04MB3990.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: WjjNWJuR3HzI1qtfHh7lYg4YlsouMsSn5p2BX6PCU20ZMcDoxvpPX2dJH4N3Ch8i73C0rMDwbUgPCScFxJmn6XHLz8SpvOmxcvpW3f5xFPvuzlUDvsqZbedgBqpWEow3n+rnePQxY/FuF3O3GzmNUkuVaFCXFrEuw4T/GOEEOupeoiVfjc6fxOoedLUJY0ahteZYJ0yLO4DD4oVqYNa1h++75dUDFpX6gWCNB2S08yIS1jV4K6rdMTqXc1Fbxh+BkGfPlNZCdh0+CZYqJGVX0y8g4yGcR9jGk1BbEiqSnUfgLUm8zyla7NvetsgJD00kcDH0lqWY60GWBM6SBw8Vmr9vpSSEYqwi5RWFEuNNaUKNbyuWPM+pbkhBBOle1YFMTAg3db5BeU99ABWa39tV9+NqkhVnhYR61tJJ+fktmrl3cTYQX0RewHcCewzwldxIyHxjGL2oFtBjV02lByOguw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <7F6740829601FE409E071CFA2AD3C18D@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1569868998-56603-1-git-send-email-decui@microsoft.com>
-User-Agent: NeoMutt/20180716
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a9c6fbc0-b726-452e-0d34-08d74641538d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Oct 2019 07:31:08.0528
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: S0b4aPXe/C7yTSjPp5D5sQHimMlWS2hjf4MdvzcuLtobpPEcFAR0wa63Ev7EgF/xKRLlffbCezXJJ7QBXfkCmw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4085
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 06:43:50PM +0000, Dexuan Cui wrote:
-> Lockdep is unhappy if two locks from the same class are held.
-> 
-> Fix the below warning for hyperv and virtio sockets (vmci socket code
-> doesn't have the issue) by using lock_sock_nested() when __vsock_release()
-> is called recursively:
-> 
-> ============================================
-> WARNING: possible recursive locking detected
-> 5.3.0+ #1 Not tainted
-> --------------------------------------------
-> server/1795 is trying to acquire lock:
-> ffff8880c5158990 (sk_lock-AF_VSOCK){+.+.}, at: hvs_release+0x10/0x120 [hv_sock]
-> 
-> but task is already holding lock:
-> ffff8880c5158150 (sk_lock-AF_VSOCK){+.+.}, at: __vsock_release+0x2e/0xf0 [vsock]
-> 
-> other info that might help us debug this:
->  Possible unsafe locking scenario:
-> 
->        CPU0
->        ----
->   lock(sk_lock-AF_VSOCK);
->   lock(sk_lock-AF_VSOCK);
-> 
->  *** DEADLOCK ***
-> 
->  May be due to missing lock nesting notation
-> 
-> 2 locks held by server/1795:
->  #0: ffff8880c5d05ff8 (&sb->s_type->i_mutex_key#10){+.+.}, at: __sock_release+0x2d/0xa0
->  #1: ffff8880c5158150 (sk_lock-AF_VSOCK){+.+.}, at: __vsock_release+0x2e/0xf0 [vsock]
-> 
-> stack backtrace:
-> CPU: 5 PID: 1795 Comm: server Not tainted 5.3.0+ #1
-> Call Trace:
->  dump_stack+0x67/0x90
->  __lock_acquire.cold.67+0xd2/0x20b
->  lock_acquire+0xb5/0x1c0
->  lock_sock_nested+0x6d/0x90
->  hvs_release+0x10/0x120 [hv_sock]
->  __vsock_release+0x24/0xf0 [vsock]
->  __vsock_release+0xa0/0xf0 [vsock]
->  vsock_release+0x12/0x30 [vsock]
->  __sock_release+0x37/0xa0
->  sock_close+0x14/0x20
->  __fput+0xc1/0x250
->  task_work_run+0x98/0xc0
->  do_exit+0x344/0xc60
->  do_group_exit+0x47/0xb0
->  get_signal+0x15c/0xc50
->  do_signal+0x30/0x720
->  exit_to_usermode_loop+0x50/0xa0
->  do_syscall_64+0x24e/0x270
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x7f4184e85f31
-> 
-> Tested-by: Stefano Garzarella <sgarzare@redhat.com>
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
-
-The patch LGTM and and functionally it's the same as the v2 that I tested, so:
-
-Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
-
-Thanks,
-Stefano
-
-> 
-> Changes in v2:
->   Avoid the duplication of code in v1.
->   Also fix virtio socket code.
-> 
-> 
-> Changes in v3:
->   Use "lock_sock_nested(sk, level);" -- suggested by Stefano.
->   Add Stefano's Tested-by.
-> 
->  net/vmw_vsock/af_vsock.c                | 16 ++++++++++++----
->  net/vmw_vsock/hyperv_transport.c        |  2 +-
->  net/vmw_vsock/virtio_transport_common.c |  2 +-
->  3 files changed, 14 insertions(+), 6 deletions(-)
-> 
-> diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
-> index ab47bf3ab66e..2ab43b2bba31 100644
-> --- a/net/vmw_vsock/af_vsock.c
-> +++ b/net/vmw_vsock/af_vsock.c
-> @@ -638,7 +638,7 @@ struct sock *__vsock_create(struct net *net,
->  }
->  EXPORT_SYMBOL_GPL(__vsock_create);
->  
-> -static void __vsock_release(struct sock *sk)
-> +static void __vsock_release(struct sock *sk, int level)
->  {
->  	if (sk) {
->  		struct sk_buff *skb;
-> @@ -648,9 +648,17 @@ static void __vsock_release(struct sock *sk)
->  		vsk = vsock_sk(sk);
->  		pending = NULL;	/* Compiler warning. */
->  
-> +		/* The release call is supposed to use lock_sock_nested()
-> +		 * rather than lock_sock(), if a sock lock should be acquired.
-> +		 */
->  		transport->release(vsk);
->  
-> -		lock_sock(sk);
-> +		/* When "level" is SINGLE_DEPTH_NESTING, use the nested
-> +		 * version to avoid the warning "possible recursive locking
-> +		 * detected". When "level" is 0, lock_sock_nested(sk, level)
-> +		 * is the same as lock_sock(sk).
-> +		 */
-> +		lock_sock_nested(sk, level);
->  		sock_orphan(sk);
->  		sk->sk_shutdown = SHUTDOWN_MASK;
->  
-> @@ -659,7 +667,7 @@ static void __vsock_release(struct sock *sk)
->  
->  		/* Clean up any sockets that never were accepted. */
->  		while ((pending = vsock_dequeue_accept(sk)) != NULL) {
-> -			__vsock_release(pending);
-> +			__vsock_release(pending, SINGLE_DEPTH_NESTING);
->  			sock_put(pending);
->  		}
->  
-> @@ -708,7 +716,7 @@ EXPORT_SYMBOL_GPL(vsock_stream_has_space);
->  
->  static int vsock_release(struct socket *sock)
->  {
-> -	__vsock_release(sock->sk);
-> +	__vsock_release(sock->sk, 0);
->  	sock->sk = NULL;
->  	sock->state = SS_FREE;
->  
-> diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transport.c
-> index 261521d286d6..c443db7af8d4 100644
-> --- a/net/vmw_vsock/hyperv_transport.c
-> +++ b/net/vmw_vsock/hyperv_transport.c
-> @@ -559,7 +559,7 @@ static void hvs_release(struct vsock_sock *vsk)
->  	struct sock *sk = sk_vsock(vsk);
->  	bool remove_sock;
->  
-> -	lock_sock(sk);
-> +	lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
->  	remove_sock = hvs_close_lock_held(vsk);
->  	release_sock(sk);
->  	if (remove_sock)
-> diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
-> index 5bb70c692b1e..a666ef8fc54e 100644
-> --- a/net/vmw_vsock/virtio_transport_common.c
-> +++ b/net/vmw_vsock/virtio_transport_common.c
-> @@ -820,7 +820,7 @@ void virtio_transport_release(struct vsock_sock *vsk)
->  	struct sock *sk = &vsk->sk;
->  	bool remove_sock = true;
->  
-> -	lock_sock(sk);
-> +	lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
->  	if (sk->sk_type == SOCK_STREAM)
->  		remove_sock = virtio_transport_close(vsk);
->  
-> -- 
-> 2.19.1
-> 
-
--- 
+T24gVHVlLCAyMDE5LTEwLTAxIGF0IDEyOjU4ICswODAwLCBBbGFuIEthbyB3cm90ZToNCj4gT24g
+RnJpLCBTZXAgMjcsIDIwMTkgYXQgMTA6NTc6NDVQTSArMDAwMCwgQXRpc2ggUGF0cmEgd3JvdGU6
+DQo+ID4gT24gRnJpLCAyMDE5LTA5LTI3IGF0IDE1OjE5IC0wNzAwLCBDaHJpc3RvcGggSGVsbHdp
+ZyB3cm90ZToNCj4gPiA+IE9uIFRodSwgU2VwIDI2LCAyMDE5IGF0IDA1OjA5OjEyUE0gLTA3MDAs
+IEF0aXNoIFBhdHJhIHdyb3RlOg0KPiA+ID4gPiBUaGUgU3VwZXJ2aXNvciBCaW5hcnkgSW50ZXJm
+YWNlKFNCSSkgc3BlY2lmaWNhdGlvblsxXSBub3cNCj4gPiA+ID4gZGVmaW5lcyBhDQo+ID4gPiA+
+IGJhc2UgZXh0ZW5zaW9uIHRoYXQgcHJvdmlkZXMgZXh0ZW5kYWJpbGl0eSB0byBhZGQgZnV0dXJl
+DQo+ID4gPiA+IGV4dGVuc2lvbnMNCj4gPiA+ID4gd2hpbGUgbWFpbnRhaW5pbmcgYmFja3dhcmQg
+Y29tcGF0aWJpbGl0eSB3aXRoIHByZXZpb3VzDQo+ID4gPiA+IHZlcnNpb25zLg0KPiA+ID4gPiBU
+aGUgbmV3IHZlcnNpb24gaXMgZGVmaW5lZCBhcyAwLjIgYW5kIG9sZGVyIHZlcnNpb24gaXMgbWFy
+a2VkDQo+ID4gPiA+IGFzDQo+ID4gPiA+IDAuMS4NCj4gPiA+ID4gDQo+ID4gPiA+IFRoaXMgc2Vy
+aWVzIGFkZHMgc3VwcG9ydCB2MC4yIGFuZCBhIHVuaWZpZWQgY2FsbGluZyBjb252ZW50aW9uDQo+
+ID4gPiA+IGltcGxlbWVudGF0aW9uIGJldHdlZW4gMC4xIGFuZCAwLjIuIEl0IGFsc28gYWRkcyBt
+aW5pbWFsIFNCSQ0KPiA+ID4gPiBmdW5jdGlvbnMNCj4gPiA+ID4gZnJvbSAwLjIgYXMgd2VsbCB0
+byBrZWVwIHRoZSBzZXJpZXMgbGVhbi4gDQo+ID4gPiANCj4gPiA+IFNvIGJlZm9yZSB3ZSBkbyB0
+aGlzIGdhbWUgY2FuIGJlIHBsZWFzZSBtYWtlIHN1cmUgd2UgaGF2ZSBhIGNsZWFuDQo+ID4gPiAw
+LjINCj4gPiA+IGVudmlyb25tZW50IHRoYXQgbmV2ZXIgdXNlcyB0aGUgbGVnYWN5IGV4dGVuc2lv
+bnMgYXMgZGlzY3Vzc2VkDQo+ID4gPiBiZWZvcmU/DQo+ID4gPiBXaXRob3V0IHRoYXQgYWxsIHRo
+aXMgd29yayBpcyByYXRoZXIgZnV0aWxlLg0KPiA+ID4gDQo+ID4gDQo+ID4gQXMgcGVyIG91ciBk
+aXNjdXNzaW9uIG9mZmxpbmUsIGhlcmUgYXJlIHRoaW5ncyBuZWVkIHRvIGJlIGRvbmUgdG8NCj4g
+PiBhY2hpZXZlIHRoYXQuDQo+ID4gDQo+ID4gMS4gUmVwbGFjZSB0aW1lciwgc2ZlbmNlIGFuZCBp
+cGkgd2l0aCBiZXR0ZXIgYWx0ZXJuYXRpdmUgQVBJcw0KPiA+IAktIHNiaV9zZXRfdGltZXIgd2ls
+bCBiZSBzYW1lIGJ1dCB3aXRoIG5ldyBjYWxsaW5nIGNvbnZlbnRpb24NCj4gPiAJLSBzZW5kX2lw
+aSBhbmQgc2ZlbmNlXyogYXBpcyBjYW4gYmUgbW9kaWZpZWQgaW4gc3VjaCBhIHdheSB0aGF0DQo+
+ID4gCQktIHdlIGRvbid0IGhhdmUgdG8gdXNlIHVucHJpdmlsZWdlZCBsb2FkIGFueW1vcmUNCj4g
+PiAJCS0gTWFrZSBpdCBzY2FsYWJsZQ0KPiA+IA0KPiA+IDIuIERyb3AgY2xlYXJfaXBpLCBjb25z
+b2xlLCBhbmQgc2h1dGRvd24gaW4gMC4yLg0KPiA+IA0KPiA+IFdlIHdpbGwgaGF2ZSBhIG5ldyBr
+ZXJuZWwgY29uZmlnIChMRUdBQ1lfU0JJKSB0aGF0IGNhbiBiZSBtYW51YWxseQ0KPiA+IGVuYWJs
+ZWQgaWYgb2xkZXIgZmlybXdhcmUgbmVlZCB0byBiZSB1c2VkLiBCeSBkZWZhdWx0LCBMRUdBQ1lf
+U0JJDQo+ID4gd2lsbA0KPiA+IGJlIGRpc2FibGVkIGFuZCBrZXJuZWwgd2l0aCBuZXcgU0JJIHdp
+bGwgYmUgYnVpbHQuIFdlIHdpbGwgaGF2ZSB0bw0KPiA+IHNldA0KPiA+IGEgZmxhZyBkYXkgaW4g
+YSB5ZWFyIG9yIHNvIHdoZW4gd2UgY2FuIHJlbW92ZSB0aGUgTEVHQUNZX1NCSQ0KPiA+IGNvbXBs
+ZXRlbHkuDQo+ID4gDQo+ID4gTGV0IHVzIGtub3cgaWYgaXQgaXMgbm90IGFuIGFjY2VwdGFibGUg
+YXBwcm9hY2ggdG8gYW55Ym9keS4NCj4gPiBJIHdpbGwgcG9zdCBhIFJGQyBwYXRjaCB3aXRoIG5l
+dyBhbHRlcm5hdGUgdjAuMiBBUElzIHNvbWV0aW1lIG5leHQNCj4gPiB3ZWVrLg0KPiA+IA0KPiAN
+Cj4gV2lsbCB0aGlzIGxlZ2FjeSBvcHRpb24gYmUgY29tcGF0aWJsZSB3aWxsIGJibD8gIHNheXMs
+IHZlcnNpb24gMS4wLjANCj4gb3INCj4gYW55IGVhcmxpZXIgb25lcz8NCj4gDQoNClllcy4gVGhl
+IGNvbmZpZyBvcHRpb24gd2lsbCBqdXN0IG5lZWQgdG8gYmUgZW5hYmxlZCBpbiBrZXJuZWwgdG8g
+bWFrZQ0KaXQgY29tcGF0aWJsZSB3aXRoIGJibCBvciBvbGRlciBvcGVuc2JpIHZlcnNpb25zLg0K
+DQpFdmVudHVhbGx5LCB3ZSB3aWxsIGdldCByaWQgb2YgdGhlIGxlZ2FjeSBvbmVzIHNvbWV0aW1l
+IGluIGZ1dHVyZSB3aGVuDQpldmVyeWJvZHkgaGFzIG1pZ3JhdGVkIHRvIHVwZGF0ZWQgY29tcGF0
+aWJsZSB2ZXJzaW9uIChhdCBsZWFzdCBhIHllYXINCm9yIHNvKS4NCg0KPiA+ID4gX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCj4gPiA+IGxpbnV4LXJpc2N2
+IG1haWxpbmcgbGlzdA0KPiA+ID4gbGludXgtcmlzY3ZAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiA+
+ID4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1yaXNj
+dg0KPiA+IA0KPiA+IC0tIA0KPiA+IFJlZ2FyZHMsDQo+ID4gQXRpc2gNCg0KLS0gDQpSZWdhcmRz
+LA0KQXRpc2gNCg==
