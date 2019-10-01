@@ -2,84 +2,110 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C8FECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A4FC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B13A21D7B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:22:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="aAazoFhE"
+	by mail.kernel.org (Postfix) with ESMTP id 0DD7021906
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:24:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569929070;
+	bh=Frz8qPKvvEBlv46YsbYUQlsXXKOfMBSRk3FpsgnCx34=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=zo5OBGQdpAbLJsdipgo/rDyUee12RRQ0DDthW5xiMiKNpcEMkYFVoiceTBAp1jcql
+	 nUjgaH3N2ITgzLpRmNgZEnqmCFSUrRP5sFaLzQBiaoO8DgbP5D+dt1wcQUdzEo1REJ
+	 b0eyyAJA36jFbNMuZ/O74nlwCJOj1N2FQcZVp/x4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731912AbfJALWj (ORCPT
+        id S1731599AbfJALY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 07:22:39 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:33287 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731463AbfJALWj (ORCPT
+        Tue, 1 Oct 2019 07:24:29 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39023 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726847AbfJALY2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 07:22:39 -0400
-Received: by mail-qk1-f196.google.com with SMTP id x134so10825150qkb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 04:22:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=578rfGpVaJDuxC7snTS+bLfPo9Z4aZMc584mEk6xZzI=;
-        b=aAazoFhEBUkb7a6kc6EBK5vZNyU/QPd7g1wPK851hNd9PXll71/QWjYAgy++c1NDZ7
-         5DF+2K3uojCL8x1eHMPNexjaGyTSquSVzkmG0O6tCQHxOEQZb1zR1CE9D2vpN7ajtqEJ
-         2EJOir37LtuYm6D3yZKn7RT0D6nz3+tg6GoXQz0MOztWr/xV06lYFIfkcO22NKcZNhXI
-         MEq2ZrK8HJoIKwMyebM7MZItqpvd2oFTSxv8whGeqHp57RUexNp7ti8i7R81djfx0cgd
-         OWYRHf7v5lYl5Lxt7QoG+0yYpwfU5Moy8VIby2CsVYpz9Tzdj+xnbCAFnFWdpacdyD8Y
-         lVcg==
+        Tue, 1 Oct 2019 07:24:28 -0400
+Received: by mail-lf1-f66.google.com with SMTP id 72so9554563lfh.6;
+        Tue, 01 Oct 2019 04:24:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=578rfGpVaJDuxC7snTS+bLfPo9Z4aZMc584mEk6xZzI=;
-        b=f7KBn4GZove3TTPop5xsquASQz20hQ4tiaYYd85UQ0RqbjisZ6rayBAHzlJuCaOzD9
-         pBiEugCUZwbsQZk4gvmPVbFHApup5str7LqFIhIaIB9++R6Q7Xan+1HORvM4gUt76ooi
-         vCziP/ORNj21nWuJ2NSoQSoLBWlSyDwKIfb1judTqUKlYconxemmisL3wkiuaPba8F6n
-         p05yXfHOyTBridAmZrCwJtHAwlojxBv4UFCmQ9MhJLiMHmxqpKlAzilpGHaKIpsMiT2f
-         j9pHh3bje7/+Ai8jBG8p3oCPRQ+RnoH0RDVsh//jSFVFvI7VlMc4v5gElAq91b46zVZb
-         Q2vw==
-X-Gm-Message-State: APjAAAXNL5kXr++o/OX9tmT0SpNr22R4QTkb5TWMGgBntSP4QAxqUxht
-        PacAUsXFzGpWS/qIWe6JveXmv78jwLyQLg==
-X-Google-Smtp-Source: APXvYqzxrY7nn7ntisLcAagwMn1bJEGRlpPNksCY18M6m16px0m+JLCH0gfU5Jzkh9Y+W0+6TUiKhQ==
-X-Received: by 2002:a37:dcc1:: with SMTP id v184mr5444834qki.258.1569928957812;
-        Tue, 01 Oct 2019 04:22:37 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id 22sm7619884qkj.0.2019.10.01.04.22.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Oct 2019 04:22:37 -0700 (PDT)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] sched: Avoid spurious lock dependencies
-Date:   Tue, 1 Oct 2019 07:22:36 -0400
-Message-Id: <AA43245E-9049-49DB-A961-1AFC4A47F68D@lca.pw>
-References: <20191001091837.GK4536@hirez.programming.kicks-ass.net>
-Cc:     akpm@linux-foundation.org, bigeasy@linutronix.de,
-        tglx@linutronix.de, thgarnie@google.com, tytso@mit.edu,
-        cl@linux.com, penberg@kernel.org, rientjes@google.com,
-        mingo@redhat.com, will@kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, keescook@chromium.org
-In-Reply-To: <20191001091837.GK4536@hirez.programming.kicks-ass.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-X-Mailer: iPhone Mail (17A844)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bJlmEo9iub6gJcCMPackNCrhwDWuJREIy8LLjVw+0kU=;
+        b=YqYZ1fdsgUNEo1R9a5uX7Ji2iML+iJt8eDyAsmBQxxBr2Ti+y0QiZtTBslxhv4mzlS
+         +hUhW5MZQDWtlWewsMLrgNbx8kkzNVsJ/c7imciTUxEC4GOu/RySm2j6Rjx7a/IzBtn8
+         PRv4V6hYC75q6PRmDWySLfKWLc0wFyxBWNDdU3hRsuXfGr/GWvUn8v79VtAH1Z+dcsYj
+         dZ0iuJECo8P34WxjNMuIvM9ATfFO7d5jxZ9XXJMua+EhuoLofJwqQ9Qk1OC3ZAMH2Bir
+         wTqOl9tk0crkXXmjnuEtTHI4crgZkJLjbMg5vPHWyDtQGNVb8jMoS3zK695l1hPUmKU1
+         +AKQ==
+X-Gm-Message-State: APjAAAVMOzilQykMNCiYkJEbNnW5PvhKnrvnoxhEVmClqi7P15DCdThw
+        xh7NiodeB1Jtx9FHDZmyWLUz/znk5gc=
+X-Google-Smtp-Source: APXvYqy4+xGC6JXuul1nT6uPpEBybkfSopWGqgt+ZIllXgMTSJOMX9DnyDL5uoWl6xmK3RV3Ux9YXQ==
+X-Received: by 2002:ac2:48af:: with SMTP id u15mr15019232lfg.75.1569929065439;
+        Tue, 01 Oct 2019 04:24:25 -0700 (PDT)
+Received: from neopili.qtec.com (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net. [80.197.57.18])
+        by smtp.gmail.com with ESMTPSA id 3sm3853894ljs.20.2019.10.01.04.24.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2019 04:24:24 -0700 (PDT)
+From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Jacopo Mondi <jacopo@jmondi.org>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Ricardo Ribalda Delgado <ribalda@kernel.org>
+Subject: [PATCH v9 0/8] Implement UNIT_CELL_SIZE control
+Date:   Tue,  1 Oct 2019 13:24:13 +0200
+Message-Id: <20191001112421.2778-1-ribalda@kernel.org>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+UNIT_CELL_SIZE is a control that represents the size of a cell (pixel).
+We required a bit of boilerplate to add this control :)
+- New way to init compount controls
+- New control type
 
+Thanks to Hans, Jacopo and Philipp for your help.
 
-> On Oct 1, 2019, at 5:18 AM, Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> Does the below adequately describe the situation?
+You might want to see the series at my github repository if needed.
 
-Yes, looks fine.
+https://github.com/ribalda/linux/tree/unit-size-v9
+
+v9: Rename helper to v4l2_ctrl_ptr_create
+
+v8: Fix my email on some patches (sorry for the mess)
+
+v7: Add new helper v4l2_ctrl_ptr_from_void
+
+v4, v5 of this patchset never reached the mailing list.
+
+Ricardo Ribalda Delgado (8):
+  media: v4l2-core: Implement v4l2_ctrl_new_std_compound
+  Documentation: v4l2_ctrl_new_std_compound
+  media: add V4L2_CTRL_TYPE_AREA control type
+  Documentation: media: Document V4L2_CTRL_TYPE_AREA
+  media: add V4L2_CID_UNIT_CELL_SIZE control
+  Documentation: media: Describe V4L2_CID_UNIT_CELL_SIZE
+  media: v4l2-ctrl: Add new helper v4l2_ctrl_ptr_create
+  media: imx214: Add new control with V4L2_CID_UNIT_CELL_SIZE
+
+ Documentation/media/kapi/v4l2-controls.rst    |  9 +++
+ .../media/uapi/v4l/ext-ctrls-image-source.rst |  9 +++
+ .../media/uapi/v4l/vidioc-queryctrl.rst       |  6 ++
+ drivers/media/i2c/imx214.c                    |  9 +++
+ drivers/media/v4l2-core/v4l2-ctrls.c          | 76 +++++++++++++++++--
+ include/media/v4l2-ctrls.h                    | 75 ++++++++++++++++++
+ include/uapi/linux/v4l2-controls.h            |  1 +
+ include/uapi/linux/videodev2.h                |  6 ++
+ 8 files changed, 184 insertions(+), 7 deletions(-)
+
+-- 
+2.23.0
+
