@@ -2,133 +2,189 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50628ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B635ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 244742086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EE522054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569949315;
-	bh=bJnGJ3RhjW/8aLO07qPZQmJNbpODR84+mvK448XA88o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1vM9nJi246tNnimSA5ruwGF7VWSn/zMIGlAwU9y75tlhWKHTQV0MoJF+VGfskddwU
-	 dKS16DAQgiQarfVsAyh/NYlXue3sNGYVuooI0kFMhw58tcaPwtnde14rw5QMB0a4M5
-	 4M9B0v/b4teqrHW4npoVdga5wO3RrDnLjXm0fpEw=
+	s=default; t=1569949321;
+	bh=/n46VuHn3MHAirIi9Ut1lmygK+vYYE4YXCV+AJaFwRI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IgLAOdxsQkRVDyPsjMIVLTfEr5PWQY9mjbEQ4DHC0VwnUS+3ut10505q3u6Gcz19m
+	 jMpVz1VU7A9ZlQYEpQbrlYBTqSRbo6fZ/bcYzGLHDm2DGRZMXukwSnHZ9OoRaBG4fw
+	 1taQneSt/VyuKJtQRoMjmRi//K7uj9GP++fPAouI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731913AbfJARBy (ORCPT
+        id S1731464AbfJARB7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 13:01:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43210 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 13:01:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729317AbfJARBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 13:01:50 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729672AbfJAQkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:40:12 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71D082054F;
-        Tue,  1 Oct 2019 17:01:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4904C21920;
+        Tue,  1 Oct 2019 16:40:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569949308;
-        bh=bJnGJ3RhjW/8aLO07qPZQmJNbpODR84+mvK448XA88o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yaOg32kjz9hD653NvILZdRQ7X/HdYptJmBc184vQlyHSvp23BmDSe5R8zcFK9i0hE
-         qw+CdI6NHge3cdjg2NYe1TegjwR7ZTfcmqezNpCBsNxmpCQ//W7UMwX3qgDgVsOAbK
-         ID0YrKYPlGuec6Xu+XKji1EYG4cwCBfmgTBjbRjw=
-Date:   Tue, 1 Oct 2019 18:01:43 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Kees Cook <keescook@google.com>
-Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
-Message-ID: <20191001170142.x66orounxuln7zs3@willie-the-truck>
-References: <20190830034304.24259-1-yamada.masahiro@socionext.com>
- <f5c221f5749e5768c9f0d909175a14910d349456.camel@suse.de>
- <CAKwvOdk=tr5nqq1CdZnUvRskaVqsUCP0SEciSGonzY5ayXsMXw@mail.gmail.com>
- <CAHk-=wiTy7hrA=LkmApBE9PQtri8qYsSOrf2zbms_crfjgR=Hw@mail.gmail.com>
- <20190930112636.vx2qxo4hdysvxibl@willie-the-truck>
- <CAK7LNASQZ82KSOrQW7+Wq1vFDCg2__maBEAPMLqUDqZMLuj1rA@mail.gmail.com>
- <20190930121803.n34i63scet2ec7ll@willie-the-truck>
- <CAKwvOdnqn=0LndrX+mUrtSAQqoT1JWRMOJCA5t3e=S=T7zkcCQ@mail.gmail.com>
- <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck>
- <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
+        s=default; t=1569948012;
+        bh=/n46VuHn3MHAirIi9Ut1lmygK+vYYE4YXCV+AJaFwRI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0iViJQBnQs4Dqzbud8iNuAND8lsqRyrxkNosVNoaJUTwh4Ovas5WvaV5hZBFdI9vF
+         HjLpPhf9ViT5N6FUIPX7jJjrugO9WYeCjNiY3mHYttmH318T7x+hDab+X1z2IUTRJt
+         GThcxvMF19+6ruzFROa8CvL8Q+5ug0qwDBW30K5o=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Ido Schimmel <idosch@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 33/71] thermal: Fix use-after-free when unregistering thermal zone device
+Date:   Tue,  1 Oct 2019 12:38:43 -0400
+Message-Id: <20191001163922.14735-33-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
+References: <20191001163922.14735-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 09:32:25AM -0700, Nick Desaulniers wrote:
-> On Tue, Oct 1, 2019 at 2:28 AM Will Deacon <will@kernel.org> wrote:
-> > On Mon, Sep 30, 2019 at 02:50:10PM -0700, Nick Desaulniers wrote:
-> > > In this case, if there's a known codegen bug in a particular compiler
-> > > or certain versions of it, I recommend the use of either the C
-> > > preprocessor or __attribute__((no_inline)) to get the desired behavior
-> > > localized to the function in question, and for us to proceed with
-> > > Masahiro's cleanup.
-> >
-> > Hmm, I don't see how that would help. The problem occurs when things
-> > are moved out of line by the compiler (see below).
-> 
-> It's being moved out of line because __attribute__((always_inline)) or
-> just inline provide no guarantees that outlining does not occur.  It
-> would help to make functions that need to be inlined macros, because
-> the C preprocessor doesn't have that issue.
+From: Ido Schimmel <idosch@mellanox.com>
 
-Hmm, let me try to put it another way: enabling CONFIG_OPTIMIZE_INLINING
-has been shown to cause miscompilation with many versions of GCC on arm64
-because the compiler moves things out of line that it otherwise doesn't
-appear to do. I don't see how __attribute__((no_inline)) helps with that,
-and replacing static functions with macros isn't great for type-checking
-and argument evaluation.
+[ Upstream commit 1851799e1d2978f68eea5d9dff322e121dcf59c1 ]
 
-> > > The comment above the use of CONFIG_OPTIMIZE_INLINING in
-> > > include/linux/compiler_types.h says:
-> > >   * Force always-inline if the user requests it so via the .config.
-> > > Which makes me grimace (__attribute__((always_inline)) doesn't *force*
-> > > anything as per above), and the idea that forcing things marked inline
-> > > to also be __attribute__((always_inline)) is an "optimization" (re:
-> > > the name of the config; CONFIG_OPTIMIZE_INLINING) is also highly
-> > > suspect.  Aggressive inlining leads to image size bloat, instruction
-> > > cache and register pressure; it is not exclusively an optimization.
-> >
-> > Agreed on all of this, but the fact remains that GCC has been shown to
-> > *miscompile* the arm64 kernel with CONFIG_OPTIMIZE_INLINING=y. Please,
-> > look at this thread:
-> >
-> >         https://www.spinics.net/lists/arm-kernel/msg730329.html
-> >         https://www.spinics.net/lists/arm-kernel/msg730512.html
-> >
-> > GCC decides to pull an atomic operation out-of-line and, in doing so,
-> 
-> If the function is incorrect unless inlined, use a macro.
+thermal_zone_device_unregister() cancels the delayed work that polls the
+thermal zone, but it does not wait for it to finish. This is racy with
+respect to the freeing of the thermal zone device, which can result in a
+use-after-free [1].
 
-The function is correct per the GCC documentation regarding register
-variables and inline asm.
+Fix this by waiting for the delayed work to finish before freeing the
+thermal zone device. Note that thermal_zone_device_set_polling() is
+never invoked from an atomic context, so it is safe to call
+cancel_delayed_work_sync() that can block.
 
-> > Reducing the instruction cache footprint is great, but not if the
-> > resulting code is broken!
-> 
-> You don't have to convince compiler folks about correctness. ;)
-> Correctness trumps all, especially performance.
+[1]
+[  +0.002221] ==================================================================
+[  +0.000064] BUG: KASAN: use-after-free in __mutex_lock+0x1076/0x11c0
+[  +0.000016] Read of size 8 at addr ffff8881e48e0450 by task kworker/1:0/17
 
-Then why is this conversation so difficult? :(
+[  +0.000023] CPU: 1 PID: 17 Comm: kworker/1:0 Not tainted 5.2.0-rc6-custom-02495-g8e73ca3be4af #1701
+[  +0.000010] Hardware name: Mellanox Technologies Ltd. MSN2100-CB2FO/SA001017, BIOS 5.6.5 06/07/2016
+[  +0.000016] Workqueue: events_freezable_power_ thermal_zone_device_check
+[  +0.000012] Call Trace:
+[  +0.000021]  dump_stack+0xa9/0x10e
+[  +0.000020]  print_address_description.cold.2+0x9/0x25e
+[  +0.000018]  __kasan_report.cold.3+0x78/0x9d
+[  +0.000016]  kasan_report+0xe/0x20
+[  +0.000016]  __mutex_lock+0x1076/0x11c0
+[  +0.000014]  step_wise_throttle+0x72/0x150
+[  +0.000018]  handle_thermal_trip+0x167/0x760
+[  +0.000019]  thermal_zone_device_update+0x19e/0x5f0
+[  +0.000019]  process_one_work+0x969/0x16f0
+[  +0.000017]  worker_thread+0x91/0xc40
+[  +0.000014]  kthread+0x33d/0x400
+[  +0.000015]  ret_from_fork+0x3a/0x50
 
-Will
+[  +0.000020] Allocated by task 1:
+[  +0.000015]  save_stack+0x19/0x80
+[  +0.000015]  __kasan_kmalloc.constprop.4+0xc1/0xd0
+[  +0.000014]  kmem_cache_alloc_trace+0x152/0x320
+[  +0.000015]  thermal_zone_device_register+0x1b4/0x13a0
+[  +0.000015]  mlxsw_thermal_init+0xc92/0x23d0
+[  +0.000014]  __mlxsw_core_bus_device_register+0x659/0x11b0
+[  +0.000013]  mlxsw_core_bus_device_register+0x3d/0x90
+[  +0.000013]  mlxsw_pci_probe+0x355/0x4b0
+[  +0.000014]  local_pci_probe+0xc3/0x150
+[  +0.000013]  pci_device_probe+0x280/0x410
+[  +0.000013]  really_probe+0x26a/0xbb0
+[  +0.000013]  driver_probe_device+0x208/0x2e0
+[  +0.000013]  device_driver_attach+0xfe/0x140
+[  +0.000013]  __driver_attach+0x110/0x310
+[  +0.000013]  bus_for_each_dev+0x14b/0x1d0
+[  +0.000013]  driver_register+0x1c0/0x400
+[  +0.000015]  mlxsw_sp_module_init+0x5d/0xd3
+[  +0.000014]  do_one_initcall+0x239/0x4dd
+[  +0.000013]  kernel_init_freeable+0x42b/0x4e8
+[  +0.000012]  kernel_init+0x11/0x18b
+[  +0.000013]  ret_from_fork+0x3a/0x50
+
+[  +0.000015] Freed by task 581:
+[  +0.000013]  save_stack+0x19/0x80
+[  +0.000014]  __kasan_slab_free+0x125/0x170
+[  +0.000013]  kfree+0xf3/0x310
+[  +0.000013]  thermal_release+0xc7/0xf0
+[  +0.000014]  device_release+0x77/0x200
+[  +0.000014]  kobject_put+0x1a8/0x4c0
+[  +0.000014]  device_unregister+0x38/0xc0
+[  +0.000014]  thermal_zone_device_unregister+0x54e/0x6a0
+[  +0.000014]  mlxsw_thermal_fini+0x184/0x35a
+[  +0.000014]  mlxsw_core_bus_device_unregister+0x10a/0x640
+[  +0.000013]  mlxsw_devlink_core_bus_device_reload+0x92/0x210
+[  +0.000015]  devlink_nl_cmd_reload+0x113/0x1f0
+[  +0.000014]  genl_family_rcv_msg+0x700/0xee0
+[  +0.000013]  genl_rcv_msg+0xca/0x170
+[  +0.000013]  netlink_rcv_skb+0x137/0x3a0
+[  +0.000012]  genl_rcv+0x29/0x40
+[  +0.000013]  netlink_unicast+0x49b/0x660
+[  +0.000013]  netlink_sendmsg+0x755/0xc90
+[  +0.000013]  __sys_sendto+0x3de/0x430
+[  +0.000013]  __x64_sys_sendto+0xe2/0x1b0
+[  +0.000013]  do_syscall_64+0xa4/0x4d0
+[  +0.000013]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+[  +0.000017] The buggy address belongs to the object at ffff8881e48e0008
+               which belongs to the cache kmalloc-2k of size 2048
+[  +0.000012] The buggy address is located 1096 bytes inside of
+               2048-byte region [ffff8881e48e0008, ffff8881e48e0808)
+[  +0.000007] The buggy address belongs to the page:
+[  +0.000012] page:ffffea0007923800 refcount:1 mapcount:0 mapping:ffff88823680d0c0 index:0x0 compound_mapcount: 0
+[  +0.000020] flags: 0x200000000010200(slab|head)
+[  +0.000019] raw: 0200000000010200 ffffea0007682008 ffffea00076ab808 ffff88823680d0c0
+[  +0.000016] raw: 0000000000000000 00000000000d000d 00000001ffffffff 0000000000000000
+[  +0.000007] page dumped because: kasan: bad access detected
+
+[  +0.000012] Memory state around the buggy address:
+[  +0.000012]  ffff8881e48e0300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  +0.000012]  ffff8881e48e0380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  +0.000012] >ffff8881e48e0400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  +0.000008]                                                  ^
+[  +0.000012]  ffff8881e48e0480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  +0.000012]  ffff8881e48e0500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+[  +0.000007] ==================================================================
+
+Fixes: b1569e99c795 ("ACPI: move thermal trip handling to generic thermal layer")
+Reported-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/thermal/thermal_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+index 6bab66e84eb58..ebe15f2cf7fc3 100644
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -304,7 +304,7 @@ static void thermal_zone_device_set_polling(struct thermal_zone_device *tz,
+ 				 &tz->poll_queue,
+ 				 msecs_to_jiffies(delay));
+ 	else
+-		cancel_delayed_work(&tz->poll_queue);
++		cancel_delayed_work_sync(&tz->poll_queue);
+ }
+ 
+ static void monitor_thermal_zone(struct thermal_zone_device *tz)
+-- 
+2.20.1
+
