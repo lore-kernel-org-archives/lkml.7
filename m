@@ -2,121 +2,76 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 649E7C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C364C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3790D20842
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:39:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="uuREGNPf"
+	by mail.kernel.org (Postfix) with ESMTP id 53CB920842
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:40:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbfJAUj0 (ORCPT
+        id S1727314AbfJAUkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 16:39:26 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36481 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbfJAUj0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 16:39:26 -0400
-Received: by mail-pg1-f194.google.com with SMTP id 23so1987921pgk.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 13:39:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ViiaaE4a8Q+hVhCBRqc18xl1Y3nut+5NVwTRaFqcP9g=;
-        b=uuREGNPfzv4asyA+Z0PZxvx180n4lZwtC8NsKSH5G8me6FyOhde0ZH3f02DFgoLeaU
-         gc8c0SB4FTSOSEfD/Blj3oYg1A9UECj2idyAi/N8W2S3LklqbVZ7eD4TLSBzjcXgmrpo
-         UI2VG402Vpbg6zoTxAQo+cBr9PlEa6dT9tNzM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ViiaaE4a8Q+hVhCBRqc18xl1Y3nut+5NVwTRaFqcP9g=;
-        b=dnqTd3ZM1G2ZlCWQJDCpovmsPmjC/z2ZGqo127wlWXI5/6vUSwGdsa/J/aT6B+HruS
-         V//HrT6a7sgj9nmHFwMn0wpYu+PqtjIB3aC7Rsd/WhvOndX/7oXj762I3FZq9utyyD/6
-         QyxYiSDOSsc/FWTLJ9hZuy3KMzK1ac4UH7YIW6xqQ6TlK5hpiH1FOLFWPu/a63ZhidbQ
-         RgaVsYPOGouIfnmAerlzkiwBtL+lbI/5FySK/Yz8wtqZFuoNIZhUkvcZ6OirutGIlx6G
-         BE4aqF/AkOnAgEioHiUT8CphHY++RZdRKVmOrCRe/LMVgXx3N/XbMe/KTSTBxCrezb9L
-         IkfA==
-X-Gm-Message-State: APjAAAX43wQHGrw1RdoxQml6sG6hpTRNwqKXSLCfqdtCR6hCPiHGBZYB
-        sxUcsI/vwJBdqQ/TPGG3kM6LLQ==
-X-Google-Smtp-Source: APXvYqyNocYdkY90GUy/OUwen6Lg6tDZndvES8R7ndPcCMoxA2F/oJqgIQ/0HkQ+lBBDc7dzg7DLhQ==
-X-Received: by 2002:aa7:870a:: with SMTP id b10mr218519pfo.5.1569962363777;
-        Tue, 01 Oct 2019 13:39:23 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id g4sm17142639pfo.33.2019.10.01.13.39.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 13:39:23 -0700 (PDT)
-Date:   Tue, 1 Oct 2019 16:39:22 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@polymtl.ca>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Alistair Delva <adelva@google.com>
-Subject: Re: [GIT PULL] scheduler fixes
-Message-ID: <20191001203922.GA35550@google.com>
-References: <20190928123905.GA97048@gmail.com>
- <CANcMJZB9UrMaJv6OiScZy2e2UFGFOJsFRar9RZUE9HM-00ZXGg@mail.gmail.com>
- <20191001071921.GJ4519@hirez.programming.kicks-ass.net>
- <CALAqxLUHj8DdiKauwfobS4LzPphhmZdG=GP51zcQMQdmZf=rFg@mail.gmail.com>
+        Tue, 1 Oct 2019 16:40:04 -0400
+Received: from mga18.intel.com ([134.134.136.126]:5881 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726469AbfJAUkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 16:40:04 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 13:40:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,571,1559545200"; 
+   d="scan'208";a="185301599"
+Received: from nbaca1-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.37.57])
+  by orsmga008.jf.intel.com with ESMTP; 01 Oct 2019 13:39:54 -0700
+Date:   Tue, 1 Oct 2019 23:39:52 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com
+Subject: Re: [PATCH v22 06/24] x86/sgx: Add SGX microarchitectural data
+ structures
+Message-ID: <20191001203740.GE12699@linux.intel.com>
+References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
+ <20190903142655.21943-7-jarkko.sakkinen@linux.intel.com>
+ <20190927162735.GC23002@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALAqxLUHj8DdiKauwfobS4LzPphhmZdG=GP51zcQMQdmZf=rFg@mail.gmail.com>
+In-Reply-To: <20190927162735.GC23002@zn.tnic>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 11:15:01AM -0700, John Stultz wrote:
-> On Tue, Oct 1, 2019 at 12:19 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Mon, Sep 30, 2019 at 04:45:49PM -0700, John Stultz wrote:
-> > > Reverting the following patches:
-> >
-> > >   "sched/membarrier: Fix p->mm->membarrier_state racy load"
-> >
-> > ARGH, I fudged it... please try:
-> >
-> >
-> > diff --git a/kernel/sched/membarrier.c b/kernel/sched/membarrier.c
-> > index a39bed2c784f..168479a7d61b 100644
-> > --- a/kernel/sched/membarrier.c
-> > +++ b/kernel/sched/membarrier.c
-> > @@ -174,7 +174,6 @@ static int membarrier_private_expedited(int flags)
-> >                  */
-> >                 if (cpu == raw_smp_processor_id())
-> >                         continue;
-> > -               rcu_read_lock();
-> >                 p = rcu_dereference(cpu_rq(cpu)->curr);
-> >                 if (p && p->mm == mm)
-> >                         __cpumask_set_cpu(cpu, tmpmask);
+On Fri, Sep 27, 2019 at 06:27:35PM +0200, Borislav Petkov wrote:
+> > +#define SGX_ATTR_RESERVED_MASK	(BIT_ULL(3) | BIT_ULL(7) | GENMASK_ULL(63, 8))
 > 
+> Looking how bit 7 is part of the reserved mask but you have it above
+> as SGX_ATTR_KSS too. Bit 6, OTOH, is not mentioned anywhere and it
+> very much looks like you need to have BIT_ULL(6) above as part of the
+> reserved mask instead of bit 7.
 > 
-> Yep. Looks like that solves it!
-> Tested-by: John Stultz <john.stultz@linaro.org>
+> Hmmm?
 
-Makes sense.
+Correct. This a regression. The reserved bit really should be 6 as
+stated in:
 
-And here I was wondering yesterday why I was seeing bug reports with
-t->read_lock_nesting as non-zero when the task was interrupted in user mode ;-)
+  Table 37-3.  Layout of ATTRIBUTES Structure
 
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Thank you.
 
-thanks,
-
- - Joel
-
+/Jarkko
