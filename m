@@ -2,64 +2,99 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD5FC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F00ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C33720679
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:29:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A1C021783
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:29:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389989AbfJAQ3Z (ORCPT
+        id S2390001AbfJAQ3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:29:25 -0400
-Received: from mga17.intel.com ([192.55.52.151]:55629 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728536AbfJAQ3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:29:23 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 09:29:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,571,1559545200"; 
-   d="scan'208";a="221062600"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002.fm.intel.com with ESMTP; 01 Oct 2019 09:29:16 -0700
-Received: from andy by smile with local (Exim 4.92.2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iFL1V-0002p6-Sv; Tue, 01 Oct 2019 19:29:13 +0300
-Date:   Tue, 1 Oct 2019 19:29:13 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Patrick Williams <alpawi@amazon.com>
-Cc:     Patrick Williams <patrick@stwcx.xyz>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Jean Delvare <jdelvare@suse.de>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Max Staudt <max@enpas.org>,
-        Juergen Fitschen <jfi@ssv-embedded.de>,
-        Elie Morisse <syniurge@gmail.com>,
-        Ajay Gupta <ajayg@nvidia.com>, Stefan Roese <sr@denx.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Enrico Weigelt <info@metux.net>,
-        Allison Randal <allison@lohutok.net>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] i2c: pxa: migrate to new i2c_slave APIs
-Message-ID: <20191001162913.GR32742@smile.fi.intel.com>
-References: <20191001160001.2388-1-alpawi@amazon.com>
- <20191001160001.2388-2-alpawi@amazon.com>
+        Tue, 1 Oct 2019 12:29:43 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58656 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729782AbfJAQ3n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:29:43 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x91GDcPI084473;
+        Tue, 1 Oct 2019 12:29:13 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vc9bgahr1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Oct 2019 12:29:13 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x91GFibZ104327;
+        Tue, 1 Oct 2019 12:29:12 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vc9bgahqc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Oct 2019 12:29:12 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x91GQQLN009749;
+        Tue, 1 Oct 2019 16:29:11 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma02dal.us.ibm.com with ESMTP id 2v9y57m06g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Oct 2019 16:29:11 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x91GT9Vl45351412
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 1 Oct 2019 16:29:09 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C01F2BE053;
+        Tue,  1 Oct 2019 16:29:09 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C6EE9BE056;
+        Tue,  1 Oct 2019 16:29:06 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.80.224.222])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue,  1 Oct 2019 16:29:06 +0000 (GMT)
+Subject: Re: [PATCH v6 1/9] dt-bindings: ibm,secureboot: secure boot specific
+ properties for PowerNV
+To:     Rob Herring <robh@kernel.org>, Nayna Jain <nayna@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
+        linux-integrity@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>
+References: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com>
+ <1569594360-7141-2-git-send-email-nayna@linux.ibm.com>
+ <20191001133330.GA29810@bogus>
+From:   Nayna <nayna@linux.vnet.ibm.com>
+Message-ID: <e0575a28-5bd9-1f5b-c09d-ed86cb715165@linux.vnet.ibm.com>
+Date:   Tue, 1 Oct 2019 12:29:06 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191001160001.2388-2-alpawi@amazon.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191001133330.GA29810@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-01_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910010140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -67,43 +102,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On Tue, Oct 01, 2019 at 10:59:59AM -0500, Patrick Williams wrote:
-> The i2c subsystem was enhanced circa 2015 to support operating as
-> an i2c-slave device.  Prior to that, the i2c-pxa driver supported
-> an i2c-slave but had its own APIs.  There are no existing in-kernel
-> drivers or platforms that utilize the i2c-pxa APIs.
-> 
-> Migrate the i2c-pxa driver to the general i2c-slave APIs so that
-> existing drivers, such as the i2c-slave-eeprom, can be used.
-> 
-> This has been tested with a Marvell EspressoBin, using i2c-pxa and
-> i2c-slave-eeprom, acting as a slave, and a RaspeberryPi 3, using the
-> at24 driver, acting as a master.
+On 10/01/2019 09:33 AM, Rob Herring wrote:
+> On Fri, Sep 27, 2019 at 10:25:52AM -0400, Nayna Jain wrote:
+>> PowerNV represents both the firmware and Host OS secureboot state of the
+>> system via device tree. This patch adds the documentation to give
+>> the definition of the nodes and the properties.
+>>
+>> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+>> ---
+>>   .../bindings/powerpc/ibm,secureboot.rst       | 76 ++++++++++++++++
+>>   .../devicetree/bindings/powerpc/secvar.rst    | 89 +++++++++++++++++++
+>>   2 files changed, 165 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/powerpc/ibm,secureboot.rst
+>>   create mode 100644 Documentation/devicetree/bindings/powerpc/secvar.rst
+>>
+>> diff --git a/Documentation/devicetree/bindings/powerpc/ibm,secureboot.rst b/Documentation/devicetree/bindings/powerpc/ibm,secureboot.rst
+>> new file mode 100644
+>> index 000000000000..03d32099d2eb
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/powerpc/ibm,secureboot.rst
+>> @@ -0,0 +1,76 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+> Not the right form for reST files.
+>
+>> +*** NOTE ***
+>> +This document is copied from OPAL firmware
+>> +(skiboot/doc/device-tree/ibm,secureboot.rst)
+> Why copy into the kernel?
 
-There are quite a few people in the Cc list. I'm not sure they all are
-interested in this. I deliberately dropped few names, sorry, if I was mistaken.
+Do you mean we do not need the device-tree documentation in the kernel 
+when it already exists in the skiboot tree ?
 
-> +		if (isr & ISR_RWM) {
-> +			u8 byte = 0;
-> +
-> +			i2c_slave_event(i2c->slave, I2C_SLAVE_READ_REQUESTED,
-> +					&byte);
-> +			writel(byte, _IDBR(i2c));
-> +		} else {
-> +			i2c_slave_event(i2c->slave, I2C_SLAVE_WRITE_REQUESTED,
-> +					NULL);
-> +		}
+I think I am ok with that. Michael, what do you think ?
 
-Hmm... Perhaps
-
-		u8 byte = 0;
-
-		i2c_slave_event(i2c->slave, I2C_SLAVE_READ_REQUESTED, &byte);
-		if (isr & ISR_RWM)
-			writel(byte, _IDBR(i2c));
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks & Regards,
+      - Nayna
