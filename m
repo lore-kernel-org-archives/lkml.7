@@ -2,91 +2,123 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2070C388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89CA7C388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91D1D21920
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:15:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="T1QhCF9I";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TG9dmkNV"
+	by mail.kernel.org (Postfix) with ESMTP id 65F6121920
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:15:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387486AbfJAJPF (ORCPT
+        id S2387498AbfJAJP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 05:15:05 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:37752 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387465AbfJAJPF (ORCPT
+        Tue, 1 Oct 2019 05:15:29 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39965 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733274AbfJAJP2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 05:15:05 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id A489B60AD9; Tue,  1 Oct 2019 09:15:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569921304;
-        bh=wvvOSSjNKpd2qndbx85vEEgnBWI9oz8By+twyKlLrgY=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=T1QhCF9I22KD9MbLPPs+RC8GizrAs7SR/tBz7nYDi1tFhzVeGkhPX3tyiVQU8DZ8a
-         XQB+BZVye8f7sJ/rYr1tpCQJjJ+UKnwC3Kql8Et/GM6KAbme/KsOPR8SSIXejMfIVN
-         TzFUhy1DBqOpGpXIKspJxmoSxcUkvW6MHaBrHwl8=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 83F8460112;
-        Tue,  1 Oct 2019 09:15:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569921304;
-        bh=wvvOSSjNKpd2qndbx85vEEgnBWI9oz8By+twyKlLrgY=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=TG9dmkNVIjuOKo1GXTyssktZASsgtjINbmVj+0ZCJ6fY8dW/H2uccnIkI8rG8ZWb0
-         GjLtnaS9IydaLqjGnVmRXhR9Mbw4mqJm9C6OLwfv9r3f/WMCLvGqiIO2wfxQPSgMXP
-         TvmsA1GSmeMqIJixl6GALbPeySgKWbzGTMdoeHUU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 83F8460112
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 1 Oct 2019 05:15:28 -0400
+Received: by mail-ot1-f66.google.com with SMTP id y39so10901143ota.7;
+        Tue, 01 Oct 2019 02:15:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/icWJGEb8mzT5dGk0n3CZD6I5aQgqmHlkE413k8oPWE=;
+        b=eD1HbmPWdSkHCunVONDNge7u0nJ1lYramhT/VJv1U5bJxxIttZWNgfyIUNRaCffY+u
+         RrZNDheqyDq4pKZOjD2R313fL6wboFO1PdYqyKEyx9SPjTe0viFu6KwszMAwRaEsLBl/
+         VD8y7AIfkn7cOmD2XjA1AESrX7gLvGQf88XSIX55bto6EhkaLk6Y9fsApM3+UYgyU2yf
+         ITg3R93l3STJqy3vpTRgDkTNHIvjX4TuE2/BHXmfBXgWQcVs8yqyvIcKEfjDpY6k52s3
+         7j1bx3AHTjT8TFpqR4IIgyDjpsasx3C81LqsJfxz0T8ZDHX7oNJGKr+xU4JE5I2CPRi1
+         fcXg==
+X-Gm-Message-State: APjAAAXAIrTjMKl0LheAWkkRlvmopK1MZC2ZCBKKJuCl51yPP6o/73oC
+        VZiAEDkSTSg2hlfVqSwXK2w2pu47+3PcREDtbpw=
+X-Google-Smtp-Source: APXvYqxrnOLn/FOpZNAEw2K6rnx/WFik/O4j9sVWfQ7FunXXut3/cO7/6JJ4UzlffC/xfEbknNZ9HgKmXXXipYZLISs=
+X-Received: by 2002:a9d:730d:: with SMTP id e13mr16379131otk.145.1569921328021;
+ Tue, 01 Oct 2019 02:15:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] brcmsmac: remove duplicated if condition
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190925203152.21548-1-efremov@linux.com>
-References: <20190925203152.21548-1-efremov@linux.com>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Denis Efremov <efremov@linux.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20191001091504.A489B60AD9@smtp.codeaurora.org>
-Date:   Tue,  1 Oct 2019 09:15:04 +0000 (UTC)
+References: <20191001090657.25721-1-lukma@denx.de>
+In-Reply-To: <20191001090657.25721-1-lukma@denx.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 1 Oct 2019 11:15:16 +0200
+Message-ID: <CAMuHMdWHTaPkzTdzz-j1rFeT=aAEG+J46fgKiPYrXoAR_DTvtQ@mail.gmail.com>
+Subject: Re: [PATCH] spi: Avoid calling spi_slave_abort() with kfreed spidev
+To:     Lukasz Majewski <lukma@denx.de>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kbuild test robot <lkp@intel.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Denis Efremov <efremov@linux.com> wrote:
+Hi Lukasz,
 
-> The nested 'li_mimo == &locale_bn' check is excessive and always
-> true. Thus it can be safely removed.
-> 
-> Signed-off-by: Denis Efremov <efremov@linux.com>
+On Tue, Oct 1, 2019 at 11:07 AM Lukasz Majewski <lukma@denx.de> wrote:
+> Call spi_slave_abort() only when the spidev->spi is !NULL and the
+> structure hasn't already been kfreed.
+>
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Signed-off-by: Lukasz Majewski <lukma@denx.de>
 
-Patch applied to wireless-drivers-next.git, thanks.
+Thanks for your patch!
 
-fa38b4fddc7c brcmsmac: remove duplicated if condition
+> --- a/drivers/spi/spidev.c
+> +++ b/drivers/spi/spidev.c
+> @@ -600,15 +600,16 @@ static int spidev_open(struct inode *inode, struct file *filp)
+>  static int spidev_release(struct inode *inode, struct file *filp)
+>  {
+>         struct spidev_data      *spidev;
+> +       int dofree;
+
+bool?
+
+>
+>         mutex_lock(&device_list_lock);
+>         spidev = filp->private_data;
+>         filp->private_data = NULL;
+> +       dofree = 0;
+
+Why not initialize it at declaration time?
+
+>
+>         /* last close? */
+>         spidev->users--;
+>         if (!spidev->users) {
+> -               int             dofree;
+>
+>                 kfree(spidev->tx_buffer);
+>                 spidev->tx_buffer = NULL;
+> @@ -628,7 +629,8 @@ static int spidev_release(struct inode *inode, struct file *filp)
+>                         kfree(spidev);
+>         }
+>  #ifdef CONFIG_SPI_SLAVE
+> -       spi_slave_abort(spidev->spi);
+> +       if (!dofree)
+> +               spi_slave_abort(spidev->spi);
+
+Can spidev->spi be NULL, if spidev->users != 0?
+
+>  #endif
+>         mutex_unlock(&device_list_lock);
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-https://patchwork.kernel.org/patch/11161343/
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
