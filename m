@@ -6,282 +6,257 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DC7C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D39F6C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 937442190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB55621855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:51:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729680AbfJAJuj (ORCPT
+        id S1729690AbfJAJv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 05:50:39 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:34152 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbfJAJuj (ORCPT
+        Tue, 1 Oct 2019 05:51:27 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:52397 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbfJAJv0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 05:50:39 -0400
-Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id 5E92D25B7D2;
-        Tue,  1 Oct 2019 19:50:35 +1000 (AEST)
-Received: by reginn.horms.nl (Postfix, from userid 7100)
-        id 24F8094046A; Tue,  1 Oct 2019 11:50:33 +0200 (CEST)
-Date:   Tue, 1 Oct 2019 11:50:33 +0200
-From:   Simon Horman <horms@verge.net.au>
-To:     Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
-Cc:     Shuah Khan <shuah@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Julian Anastasov <ja@ssi.bg>, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, lvs-devel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] selftests: netfilter: add ipvs test script
-Message-ID: <20191001095032.4uxaw3k45afvyp4j@verge.net.au>
-References: <1569565266-31566-1-git-send-email-yanhaishuang@cmss.chinamobile.com>
- <1569565266-31566-2-git-send-email-yanhaishuang@cmss.chinamobile.com>
+        Tue, 1 Oct 2019 05:51:26 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iFEoT-0003zO-DF; Tue, 01 Oct 2019 11:51:21 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iFEoR-0003uQ-P8; Tue, 01 Oct 2019 11:51:19 +0200
+Date:   Tue, 1 Oct 2019 11:51:19 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     thierry.reding@gmail.com, robh+dt@kernel.org,
+        alexandre.torgue@st.com, mark.rutland@arm.com,
+        mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, benjamin.gaignard@st.com,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH 2/2] pwm: stm32: add power management support
+Message-ID: <20191001095119.ws36f7liwgvbokem@pengutronix.de>
+References: <1569857951-20007-1-git-send-email-fabrice.gasnier@st.com>
+ <1569857951-20007-3-git-send-email-fabrice.gasnier@st.com>
+ <20191001070450.4zogfryzo7a5ssbd@pengutronix.de>
+ <3c6e551b-98a2-a418-c4ee-002077e46f31@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1569565266-31566-2-git-send-email-yanhaishuang@cmss.chinamobile.com>
-Organisation: Horms Solutions BV
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3c6e551b-98a2-a418-c4ee-002077e46f31@st.com>
 User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 02:21:04PM +0800, Haishuang Yan wrote:
-> Test virutal server via directing routing for IPv4.
-> 
-> Tested:
-> 
-> # selftests: netfilter: ipvs.sh
-> # Testing DR mode...
-> # ipvs.sh: PASS
-> ok 6 selftests: netfilter: ipvs.sh
-> 
-> Signed-off-by: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
-> ---
-> v2: optimize test script
-> ---
->  tools/testing/selftests/netfilter/Makefile |   2 +-
->  tools/testing/selftests/netfilter/ipvs.sh  | 184 +++++++++++++++++++++++++++++
->  2 files changed, 185 insertions(+), 1 deletion(-)
->  create mode 100755 tools/testing/selftests/netfilter/ipvs.sh
-> 
-> diff --git a/tools/testing/selftests/netfilter/Makefile b/tools/testing/selftests/netfilter/Makefile
-> index 4144984..de1032b 100644
-> --- a/tools/testing/selftests/netfilter/Makefile
-> +++ b/tools/testing/selftests/netfilter/Makefile
-> @@ -2,6 +2,6 @@
->  # Makefile for netfilter selftests
->  
->  TEST_PROGS := nft_trans_stress.sh nft_nat.sh bridge_brouter.sh \
-> -	conntrack_icmp_related.sh nft_flowtable.sh
-> +	conntrack_icmp_related.sh nft_flowtable.sh ipvs.sh
->  
->  include ../lib.mk
-> diff --git a/tools/testing/selftests/netfilter/ipvs.sh b/tools/testing/selftests/netfilter/ipvs.sh
-> new file mode 100755
-> index 0000000..658c06b
-> --- /dev/null
-> +++ b/tools/testing/selftests/netfilter/ipvs.sh
-> @@ -0,0 +1,184 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +#
-> +# End-to-end ipvs test suite
-> +# Topology:
-> +#--------------------------------------------------------------+
-> +#                      |                                       |
-> +#         ns0          |         ns1                           |
-> +#      -----------     |     -----------    -----------        |
-> +#      | veth01  | --------- | veth10  |    | veth12  |        |
-> +#      -----------    peer   -----------    -----------        |
-> +#           |          |                        |              |
-> +#      -----------     |                        |              |
-> +#      |  br0    |     |-----------------  peer |--------------|
-> +#      -----------     |                        |              |
-> +#           |          |                        |              |
-> +#      ----------     peer   ----------      -----------       |
-> +#      |  veth02 | --------- |  veth20 |     | veth21  |       |
-> +#      ----------      |     ----------      -----------       |
-> +#                      |         ns2                           |
-> +#                      |                                       |
-> +#--------------------------------------------------------------+
-> +#
-> +# We assume that all network driver are loaded
-> +#
-> +
-> +# Kselftest framework requirement - SKIP code is 4.
-> +ksft_skip=4
-> +ret=0
-> +GREEN='\033[0;92m'
-> +RED='\033[0;31m'
-> +NC='\033[0m' # No Color
-> +
-> +readonly port=8080
-> +
-> +readonly vip_v4=207.175.44.110
-> +readonly cip_v4=10.0.0.2
-> +readonly gip_v4=10.0.0.1
-> +readonly dip_v4=172.16.0.1
-> +readonly rip_v4=172.16.0.2
-> +readonly sip_v4=10.0.0.3
-> +
-> +readonly infile="$(mktemp)"
-> +readonly outfile="$(mktemp)"
-> +
-> +sysipvsnet=/proc/sys/net/ipv4/vs/
-> +if [ ! -d /proc/sys/net/ipv4/vs/ ]; then
-> +    modprobe -q ip_vs
-> +    if [ $? -ne 0 ]; then
-> +        echo "SKIP: Could not run test without ipvs module"
-> +    	exit $ksft_skip
-> +    fi
-> +fi
-> +
-> +ip -Version > /dev/null 2>&1
-> +if [ $? -ne 0 ]; then
-> +	echo "SKIP: Could not run test without ip tool"
-> +	exit $ksft_skip
-> +fi
-> +
-> +ipvsadm -v > /dev/null 2>&1
-> +if [ $? -ne 0 ]; then
-> +	echo "SKIP: Could not run test without ipvsadm"
-> +	exit $ksft_skip
-> +fi
-> +
-> +nc --version > /dev/null 2>&1
-> +if [ $? -ne 0 ]; then
-> +	echo "SKIP: Could not run test without ncat"
-> +	exit $ksft_skip
-> +fi
-> +
-> +setup() {
-> +    ip netns add ns0
-> +    ip netns add ns1
-> +    ip netns add ns2
-> +
-> +    ip link add veth01 netns ns0 type veth peer name veth10 netns ns1
-> +    ip link add veth02 netns ns0 type veth peer name veth20 netns ns2
-> +    ip link add veth12 netns ns1 type veth peer name veth21 netns ns2
-> +
-> +    ip netns exec ns0 ip link set veth01 up
-> +    ip netns exec ns0 ip link set veth02 up
-> +    ip netns exec ns0 ip link add br0 type bridge
-> +    ip netns exec ns0 ip link set veth01 master br0
-> +    ip netns exec ns0 ip link set veth02 master br0
-> +    ip netns exec ns0 ip link set br0 up
-> +    ip netns exec ns0 ip addr add ${cip_v4}/24 dev br0
-> +
-> +    ip netns exec ns1 ip link set lo up
-> +    ip netns exec ns1 ip link set veth10 up
-> +    ip netns exec ns1 ip addr add ${gip_v4}/24 dev veth10
-> +    ip netns exec ns1 ip link set veth12 up
-> +    ip netns exec ns1 ip addr add ${dip_v4}/24 dev veth12
-> +
-> +    ip netns exec ns2 ip link set lo up
-> +    ip netns exec ns2 ip link set veth21 up
-> +    ip netns exec ns2 ip addr add ${rip_v4}/24 dev veth21
-> +    ip netns exec ns2 ip link set veth20 up
-> +    ip netns exec ns2 ip addr add ${sip_v4}/24 dev veth20
-> +}
-> +
-> +cleanup() {
-> +    for i in 0 1 2
-> +    do
-> +	ip netns del ns$i > /dev/null 2>&1
-> +    done
-> +    pkill nc
-> +}
-> +
-> +server_listen() {
-> +	ip netns exec ns2 nc -l -p 8080 > "${outfile}" &
-> +	server_pid=$!
-> +	sleep 0.2
-> +}
-> +
-> +client_connect() {
-> +	ip netns exec ns0 timeout 2 nc -w 1 ${vip_v4} ${port} < "${infile}"
-> +}
-> +
-> +verify_data() {
-> +	wait "${server_pid}"
-> +	# sha1sum returns two fields [sha1] [filepath]
-> +	# convert to bash array and access first elem
-> +	insum=($(sha1sum ${infile}))
+Hello Fabrice,
 
-When /bin/sh is dash the line above results in an error
-
-./ipvs.sh: 125: ./ipvs.sh: Syntax error: "(" unexpected (expecting "}")
-
-Could you work on making the script free of bashisms.
-Or, if that proves to be an exceisive burden, use #!/bin/bash
-
-Thanks!
-
-> +	outsum=($(sha1sum ${outfile}))
-> +	if [[ "${insum[0]}" != "${outsum[0]}" ]]; then
-> +		echo "data mismatch"
-> +		exit 1
-> +	fi
-> +}
-> +
-> +test_service() {
-> +    server_listen
-> +    client_connect
-> +    ret=$?
-> +    if [ $ret -ne 0 ]; then
-> +	return $ret
-> +    fi
-> +    verify_data
-> +}
-> +
-> +
-> +test_dr() {
-> +    ip netns exec ns0 ip route add ${vip_v4} via ${gip_v4} dev br0
-> +
-> +    ip netns exec ns1 sysctl -qw net.ipv4.ip_forward=1
-> +    ip netns exec ns1 ipvsadm -A -t ${vip_v4}:${port} -s rr
-> +    ip netns exec ns1 ipvsadm -a -t ${vip_v4}:${port} -r ${rip_v4}:${port}
-> +    ip netns exec ns1 ip addr add ${vip_v4}/32 dev lo:1
-> +
-> +    # avoid incorrect arp response
-> +    ip netns exec ns2 sysctl -qw net.ipv4.conf.all.arp_ignore=1
-> +    ip netns exec ns2 sysctl -qw net.ipv4.conf.all.arp_announce=2
-> +    # avoid reverse route lookup
-> +    ip netns exec ns2 sysctl -qw  net.ipv4.conf.all.rp_filter=0
-> +    ip netns exec ns2 sysctl -qw  net.ipv4.conf.veth21.rp_filter=0
-> +    ip netns exec ns2 ip addr add ${vip_v4}/32 dev lo:1
-> +
-> +    test_service
-> +}
-> +
-> +run_tests() {
-> +	local errors=
-> +
-> +	echo "Testing DR mode..."
-> +	setup
-> +	test_dr
-> +	errors=$(( $errors + $? ))
-> +
-> +	return $errors
-> +}
-> +
-> +trap cleanup EXIT
-> +
-> +cleanup
-> +run_tests
-> +
-> +if [ $? -ne 0 ]; then
-> +	echo -e "$(basename $0): ${RED}FAIL${NC}"
-> +	exit 1
-> +fi
-> +echo -e "$(basename $0): ${GREEN}PASS${NC}"
-> +exit 0
-> -- 
-> 1.8.3.1
+On Tue, Oct 01, 2019 at 10:18:31AM +0200, Fabrice Gasnier wrote:
+> On 10/1/19 9:04 AM, Uwe Kleine-König wrote:
+> > On Mon, Sep 30, 2019 at 05:39:11PM +0200, Fabrice Gasnier wrote:
+> >> Add suspend/resume PM sleep ops. When going to low power, enforce the PWM
+> >> channel isn't active. Let the PWM consumers disable it during their own
+> >> suspend sequence, see [1]. So, perform a check here, and handle the
+> >> pinctrl states. Also restore the break inputs upon resume, as registers
+> >> content may be lost when going to low power mode.
+> >>
+> >> [1] https://lkml.org/lkml/2019/2/5/770
+> >>
+> >> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> >> ---
+> >>  drivers/pwm/pwm-stm32.c | 82 +++++++++++++++++++++++++++++++++++++------------
+> >>  1 file changed, 62 insertions(+), 20 deletions(-)
+> >>
+> >> diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
+> >> index 740e2de..9bcd73a 100644
+> >> --- a/drivers/pwm/pwm-stm32.c
+> >> +++ b/drivers/pwm/pwm-stm32.c
+> >> @@ -12,6 +12,7 @@
+> >>  #include <linux/mfd/stm32-timers.h>
+> >>  #include <linux/module.h>
+> >>  #include <linux/of.h>
+> >> +#include <linux/pinctrl/consumer.h>
+> >>  #include <linux/platform_device.h>
+> >>  #include <linux/pwm.h>
+> >>  
+> >> @@ -19,6 +20,12 @@
+> >>  #define CCMR_CHANNEL_MASK  0xFF
+> >>  #define MAX_BREAKINPUT 2
+> >>  
+> >> +struct stm32_breakinput {
+> >> +	u32 index;
+> >> +	u32 level;
+> >> +	u32 filter;
+> >> +};
+> >> +
+> >>  struct stm32_pwm {
+> >>  	struct pwm_chip chip;
+> >>  	struct mutex lock; /* protect pwm config/enable */
+> >> @@ -26,15 +33,11 @@ struct stm32_pwm {
+> >>  	struct regmap *regmap;
+> >>  	u32 max_arr;
+> >>  	bool have_complementary_output;
+> >> +	struct stm32_breakinput breakinput[MAX_BREAKINPUT];
+> >> +	unsigned int nbreakinput;
+> >>  	u32 capture[4] ____cacheline_aligned; /* DMA'able buffer */
+> >>  };
+> >>  
+> >> -struct stm32_breakinput {
+> >> -	u32 index;
+> >> -	u32 level;
+> >> -	u32 filter;
+> >> -};
+> >> -
+> >>  static inline struct stm32_pwm *to_stm32_pwm_dev(struct pwm_chip *chip)
+> >>  {
+> >>  	return container_of(chip, struct stm32_pwm, chip);
+> >> @@ -512,15 +515,27 @@ static int stm32_pwm_set_breakinput(struct stm32_pwm *priv,
+> >>  	return (bdtr & bke) ? 0 : -EINVAL;
+> >>  }
+> >>  
+> >> -static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv,
+> >> +static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv)
+> >> +{
+> >> +	int i, ret = 0;
+> >> +
+> >> +	for (i = 0; i < priv->nbreakinput && !ret; i++) {
+> >> +		ret = stm32_pwm_set_breakinput(priv,
+> >> +					       priv->breakinput[i].index,
+> >> +					       priv->breakinput[i].level,
+> >> +					       priv->breakinput[i].filter);
+> >> +	}
+> >> +
+> >> +	return ret;
+> >> +}
+> > 
+> > Can you explain what the effect of this function is? This is something
+> > that is lost during suspend?
 > 
+> Yes, that's what I explain in the commit message: ...registers content
+> may be lost when going to low power mode.
+> Do you think I need to rephrase ?
+
+Ah, right I missed it in the commit log. It might be worth adding that
+to a code comment. Also having the purpose of this function described
+would be great. Does it configure some electrical characteristics? Or
+has it to do with pinmuxing? Why is an input relevant for a PWM?
+
+> > I wonder why the patch is so big. There are some rearrangements that
+> > should have no effect and I think it would be beneficial for
+> > reviewability to split this patch in a patch that only does the
+> > restructuring and than on top of that add the PM stuff.
 > 
+> I can split this to ease the review.
+> > 
+> >> +
+> >> +static int stm32_pwm_probe_breakinputs(struct stm32_pwm *priv,
+> >>  				       struct device_node *np)
+> >>  {
+> >> -	struct stm32_breakinput breakinput[MAX_BREAKINPUT];
+> >> -	int nb, ret, i, array_size;
+> >> +	int nb, ret, array_size;
+> >>  
+> >>  	nb = of_property_count_elems_of_size(np, "st,breakinput",
+> >>  					     sizeof(struct stm32_breakinput));
+> >> -
+> >>  	/*
+> >>  	 * Because "st,breakinput" parameter is optional do not make probe
+> >>  	 * failed if it doesn't exist.
+> >> @@ -531,20 +546,14 @@ static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv,
+> >>  	if (nb > MAX_BREAKINPUT)
+> >>  		return -EINVAL;
+> >>  
+> >> +	priv->nbreakinput = nb;
+> >>  	array_size = nb * sizeof(struct stm32_breakinput) / sizeof(u32);
+> >>  	ret = of_property_read_u32_array(np, "st,breakinput",
+> >> -					 (u32 *)breakinput, array_size);
+> >> +					 (u32 *)priv->breakinput, array_size);
+> >>  	if (ret)
+> >>  		return ret;
+> >>  
+> >> -	for (i = 0; i < nb && !ret; i++) {
+> >> -		ret = stm32_pwm_set_breakinput(priv,
+> >> -					       breakinput[i].index,
+> >> -					       breakinput[i].level,
+> >> -					       breakinput[i].filter);
+> >> -	}
+> >> -
+> >> -	return ret;
+> >> +	return stm32_pwm_apply_breakinputs(priv);
+> >>  }
+> >>  
+> >>  static void stm32_pwm_detect_complementary(struct stm32_pwm *priv)
+> >> @@ -614,7 +623,7 @@ static int stm32_pwm_probe(struct platform_device *pdev)
+> >>  	if (!priv->regmap || !priv->clk)
+> >>  		return -EINVAL;
+> >>  
+> >> -	ret = stm32_pwm_apply_breakinputs(priv, np);
+> >> +	ret = stm32_pwm_probe_breakinputs(priv, np);
+> >>  	if (ret)
+> >>  		return ret;
+> >>  
+> >> @@ -647,6 +656,38 @@ static int stm32_pwm_remove(struct platform_device *pdev)
+> >>  	return 0;
+> >>  }
+> >>  
+> >> +static int __maybe_unused stm32_pwm_suspend(struct device *dev)
+> >> +{
+> >> +	struct stm32_pwm *priv = dev_get_drvdata(dev);
+> >> +	struct pwm_state state;
+> >> +	unsigned int i;
+> >> +
+> >> +	for (i = 0; i < priv->chip.npwm; i++) {
+> >> +		pwm_get_state(&priv->chip.pwms[i], &state);
+> > 
+> > pwm_get_state is a function designed to be used by PWM consumers. I
+> > would prefer to check the hardware registers here instead.
 > 
+> It's also useful for PWM provider: This PWM driver is part of a MFD that
+
+I don't doubt "useful". But still you should only call it if you called
+pwm_get (or a similar function) to get a PWM handle.
+
+> also take care of IIO trigger (can be used simultaneously). Simply
+> reading a register doesn't tell us that the timer is used/configured as
+> a PWM here. That's the reason to use this helper to read pwm->state.
+
+How can the pwm driver be bound and the hardware not be used a PWM?
+
+> Do you wish I add a comment to clarify this here ?
+
+No, I wish you inspect the hardware to determine what you need to know :-)
+
+> > What if there is no consumer and the PWM just happens to be enabled by
+> > the bootloader? Or is this too minor an issue to be worth consideration?
+> 
+> That's the purpose of returning -EBUSY: "PWM should not stop if the PWM
+> user didn't call pwm_disable()" ... "to avoid situation where the PWM is
+> actually suspended before the user". This has been enforced in later
+> series with the device_link_add(). See our previous discussions here:
+> https://lkml.org/lkml/2019/2/5/770
+> So, I guess this would point exactly a lack for a PWM user to manage it
+> after the boot stage, in the kernel.
+> 
+> Could you please clarify, provide an example here ?
+
+This is something different than I asked for. Not having a consumer
+isn't an error. Still the pwm might be running (for a good reason or
+not). (This is more a question that affects how a driver should behave
+in general, it is not specific to the stm32 driver here.)
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
