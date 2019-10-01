@@ -2,89 +2,92 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE444ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C92EECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCC9020B7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 133F921924
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:08:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731971AbfJASIh (ORCPT
+        id S1731999AbfJASIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 14:08:37 -0400
-Received: from baptiste.telenet-ops.be ([195.130.132.51]:54090 "EHLO
-        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729420AbfJASIg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 14:08:36 -0400
-Received: from ramsan ([84.194.98.4])
-        by baptiste.telenet-ops.be with bizsmtp
-        id 8J8b2100305gfCL01J8bCc; Tue, 01 Oct 2019 20:08:35 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iFMZf-0008LA-0r; Tue, 01 Oct 2019 20:08:35 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iFMZe-0000JZ-Vp; Tue, 01 Oct 2019 20:08:34 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jiri Slaby <jslaby@suse.com>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Tue, 1 Oct 2019 14:08:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51324 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727594AbfJASIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 14:08:49 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E5AA215EA;
+        Tue,  1 Oct 2019 18:08:47 +0000 (UTC)
+Date:   Tue, 1 Oct 2019 14:08:46 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-renesas-soc@vger.kernel.org, linux-mmc@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-pm@vger.kernel.org, Amit Kucheria <amit.kucheria@linaro.org>,
         linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] mmc: sh_mmcif: Use platform_get_irq_optional() for optional interrupt
-Date:   Tue,  1 Oct 2019 20:08:34 +0200
-Message-Id: <20191001180834.1158-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>
+Subject: Re: [PATCH v1] PM / Domains: Add tracepoints
+Message-ID: <20191001140846.65d7866c@gandalf.local.home>
+In-Reply-To: <20191001174235.GC87296@google.com>
+References: <20190926150406.v1.1.I07a769ad7b00376777c9815fb169322cde7b9171@changeid>
+        <20190927044239.589e7c4c@oasis.local.home>
+        <20191001163542.GB87296@google.com>
+        <20191001130343.4480afe3@gandalf.local.home>
+        <20191001174235.GC87296@google.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As platform_get_irq() now prints an error when the interrupt does not
-exist, a scary warning may be printed for an optional interrupt:
+On Tue, 1 Oct 2019 10:42:35 -0700
+Matthias Kaehlcke <mka@chromium.org> wrote:
 
-    sh_mmcif ee200000.mmc: IRQ index 1 not found
+> On Tue, Oct 01, 2019 at 01:03:43PM -0400, Steven Rostedt wrote:
+> > On Tue, 1 Oct 2019 09:35:42 -0700
+> > Matthias Kaehlcke <mka@chromium.org> wrote:
+> >   
+> > > How about this instead:
+> > > 
+> > >   Add tracepoints for genpd_power_on, genpd_power_off and
+> > >   genpd_set_performance_state. The tracepoints can help with
+> > >   understanding power domain behavior of a given device, which
+> > >   may be particularly interesting for battery powered devices
+> > >   and suspend/resume.  
+> > 
+> > Do you have a use case example to present?  
+> 
+> TBH I'm not looking into a specific use case right now. While
+> peeking around in /sys/kernel/debug/tracing/events to learn more
+> about existing tracepoints that might be relevant for my work
+> I noticed the absence of genpd ones and it seemed a good idea to
+> add them preemptively. Conceptually they seem similar to the
+> existing regulator_enable/disable and cpu_idle tracepoints.
+> 
+> As an abstract use case I could see power analysis on battery
+> powered devices during suspend. genpd_power_on/off allow to see
+> which power domains remain on during suspend, and might give
+> insights for possible power saving options. Examples could be that
+> a power domain stays unexpectedly on due to a misconfiguration, or
+> two power domains remain on when it could be only one if you just
+> moved that one pin/port over to the other domain in the next
+> hardware revision.
 
-Fix this by calling platform_get_irq_optional() instead for the second
-interrupt, which is optional.
+If the power management maintainers have no issues with adding these,
+then neither do I ;-)  It would be them who would pull them in anyway.
 
-Remove the now superfluous error printing for the first interrupt, which
-is mandatory.
-
-Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to platform_get_irq*()")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-This is a fix for v5.4-rc1.
----
- drivers/mmc/host/sh_mmcif.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/mmc/host/sh_mmcif.c b/drivers/mmc/host/sh_mmcif.c
-index 81bd9afb0980525e..98c575de43c755ed 100644
---- a/drivers/mmc/host/sh_mmcif.c
-+++ b/drivers/mmc/host/sh_mmcif.c
-@@ -1393,11 +1393,9 @@ static int sh_mmcif_probe(struct platform_device *pdev)
- 	const char *name;
- 
- 	irq[0] = platform_get_irq(pdev, 0);
--	irq[1] = platform_get_irq(pdev, 1);
--	if (irq[0] < 0) {
--		dev_err(dev, "Get irq error\n");
-+	irq[1] = platform_get_irq_optional(pdev, 1);
-+	if (irq[0] < 0)
- 		return -ENXIO;
--	}
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	reg = devm_ioremap_resource(dev, res);
--- 
-2.17.1
-
+-- Steve
