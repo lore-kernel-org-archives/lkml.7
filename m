@@ -2,197 +2,196 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C5F5C388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE13C388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E260521920
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:06:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="B3cyGJ0q";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="B3cyGJ0q"
+	by mail.kernel.org (Postfix) with ESMTP id 32A9D21920
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:07:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731173AbfJALGm (ORCPT
+        id S1731223AbfJALH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 07:06:42 -0400
-Received: from mail-eopbgr150072.outbound.protection.outlook.com ([40.107.15.72]:62821
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725900AbfJALGm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 07:06:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gPbdsl91p57gKwQNkVs94dzoFvXrmXL0I73f3wh5vOU=;
- b=B3cyGJ0qUjhjK76e2OiD9F43bSvNHFiwfgXCZtKHgqlun6yr23NgOUiIf29M1OF2lV+47Gq/UL3mc6LCjCJwSGvS899JcDYJIyRbE9b4wVhpvitB6tUriYAZV63FcVAdAWYgPuzmjkaJ5uIzXEwqqE77j8YvLd3l7rFgbwkmThU=
-Received: from VE1PR08CA0035.eurprd08.prod.outlook.com (2603:10a6:803:104::48)
- by AM0PR08MB3697.eurprd08.prod.outlook.com (2603:10a6:208:103::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2305.20; Tue, 1 Oct
- 2019 11:06:36 +0000
-Received: from DB5EUR03FT062.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e0a::200) by VE1PR08CA0035.outlook.office365.com
- (2603:10a6:803:104::48) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2305.20 via Frontend
- Transport; Tue, 1 Oct 2019 11:06:36 +0000
-Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
- header.from=arm.com;
-Received-SPF: TempError (protection.outlook.com: error in processing during
- lookup of arm.com: DNS Timeout)
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5EUR03FT062.mail.protection.outlook.com (10.152.20.197) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.15 via Frontend Transport; Tue, 1 Oct 2019 11:06:35 +0000
-Received: ("Tessian outbound 927f2cdd66cc:v33"); Tue, 01 Oct 2019 11:06:32 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 79718c682a6069bf
-X-CR-MTA-TID: 64aa7808
-Received: from 523e2a29ea3a.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.2.54])
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 9A716C71-C38C-402E-8493-B1C51E1EFC45.1;
-        Tue, 01 Oct 2019 11:06:27 +0000
-Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-db5eur01lp2054.outbound.protection.outlook.com [104.47.2.54])
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 523e2a29ea3a.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Tue, 01 Oct 2019 11:06:27 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VoX7g6S2lY2ZHueVmL3RU6tf4g7Afhz8/9iEpXeTAlm16zySGlgjD3GqoCVqS8Hcg+bu8wPleyYi9xoeMLHy0kN787Nu3IdHjY6UNABhrGwKK/2MPNHTv0ouBuDv+qgPLuaeedpV0AB0SYWKTxskDJd70ygO0TWrz7yFyl4c/NImaexbXLSJLm6m7OJXdIDSzbFrucVE0mkANuFmBiAKYwi64lJPpJcjTxcCDIXwWYJHcCvJhfNzc//AV0kcXxcMsszZGHz4maitbhRgmiEygPpFrzMyqAA5aYUfCEuNzbCyaTCY2dk9xFv56bIJlYE03oYkHhKZAcZM9/z06Gaq+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gPbdsl91p57gKwQNkVs94dzoFvXrmXL0I73f3wh5vOU=;
- b=KqlnUAQBlmkY603D2+iv4PZQc/gyM3VH85JizWvn9WQ7E+WO+k3imdKRaNwQbWfELbOPExam171IV6g7JcfcAmiwwvT7r2L/6qPtZVOwXaf+wLpr/VoHqlQIhJ+yZGRpkYxMNCiuC3luvvypt/gVV4LdKWCICOKJuI+vHoF5HdUKxP9iIZMJlJrBJ7f2/qImjSFe6ip+HU8kJAFZeFGGRaEW2sy04g/xMzLzKP/B0tvP1nlvoXKSwisNGXXRSoapPuZevLfOKplM9QeyQXgbXz1XkwnRQVSPTAhrpStdwUEDMEUWlUtpHqb/A1YGYeBLg9OC5LaQ9Am2n7OqzOe2kQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gPbdsl91p57gKwQNkVs94dzoFvXrmXL0I73f3wh5vOU=;
- b=B3cyGJ0qUjhjK76e2OiD9F43bSvNHFiwfgXCZtKHgqlun6yr23NgOUiIf29M1OF2lV+47Gq/UL3mc6LCjCJwSGvS899JcDYJIyRbE9b4wVhpvitB6tUriYAZV63FcVAdAWYgPuzmjkaJ5uIzXEwqqE77j8YvLd3l7rFgbwkmThU=
-Received: from AM7PR08MB5352.eurprd08.prod.outlook.com (10.141.172.139) by
- AM7PR08MB5509.eurprd08.prod.outlook.com (10.141.175.80) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.17; Tue, 1 Oct 2019 11:06:26 +0000
-Received: from AM7PR08MB5352.eurprd08.prod.outlook.com
- ([fe80::1c78:bb51:3634:9cf0]) by AM7PR08MB5352.eurprd08.prod.outlook.com
- ([fe80::1c78:bb51:3634:9cf0%2]) with mapi id 15.20.2305.022; Tue, 1 Oct 2019
- 11:06:25 +0000
-From:   Ayan Halder <Ayan.Halder@arm.com>
-To:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-CC:     Mihail Atanassov <Mihail.Atanassov@arm.com>,
-        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        David Airlie <airlied@linux.ie>,
-        Liviu Dudau <Liviu.Dudau@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        nd <nd@arm.com>
-Subject: Re: [PATCH] drm/komeda: Use IRQ_RETVAL shorthand in d71_irq_handler
-Thread-Topic: [PATCH] drm/komeda: Use IRQ_RETVAL shorthand in d71_irq_handler
-Thread-Index: AQHVb8XpefZcvGvZNkuWrwlyThjxiKc4kUoAgA0fsoA=
-Date:   Tue, 1 Oct 2019 11:06:25 +0000
-Message-ID: <20191001110624.GA5422@arm.com>
-References: <20190920151247.25128-1-mihail.atanassov@arm.com>
- <20190923024136.GB24909@jamwan02-TSP300>
-In-Reply-To: <20190923024136.GB24909@jamwan02-TSP300>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0105.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:c::21) To AM7PR08MB5352.eurprd08.prod.outlook.com
- (2603:10a6:20b:106::11)
-Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=Ayan.Halder@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [217.140.106.50]
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-Correlation-Id: 9ceb4ad6-a7c2-43f3-ea38-08d7465f6c83
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-TrafficTypeDiagnostic: AM7PR08MB5509:|AM7PR08MB5509:|AM0PR08MB3697:
-X-MS-Exchange-PUrlCount: 1
-x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR08MB36975EC4E4272D325E8FCD46E49D0@AM0PR08MB3697.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-x-ms-oob-tlc-oobclassifiers: OLM:5797;OLM:5797;
-x-forefront-prvs: 0177904E6B
-X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(366004)(396003)(346002)(136003)(189003)(199004)(64756008)(305945005)(6116002)(2906002)(81156014)(8936002)(229853002)(3846002)(66946007)(476003)(66476007)(66556008)(36756003)(81166006)(8676002)(76176011)(11346002)(25786009)(66066001)(5660300002)(99286004)(2616005)(6512007)(446003)(486006)(478600001)(966005)(66446008)(6306002)(256004)(14444005)(102836004)(6862004)(6246003)(52116002)(6636002)(71190400001)(4326008)(316002)(386003)(186003)(71200400001)(14454004)(37006003)(54906003)(1076003)(6486002)(86362001)(26005)(6436002)(7736002)(33656002)(6506007)(44832011);DIR:OUT;SFP:1101;SCL:1;SRVR:AM7PR08MB5509;H:AM7PR08MB5352.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: CRW5dQhSX44aSYN/21hZsJ4G08SWJ93cGjg/Xih7YuUzGcFvy8XmNtGtN9U66Pyj/ieMP2YFMT9TYI6+MA3FNiX6njq0QhnrI/7wXFRk2okw2Bya6NGslcx760zBsESQv91uFr+h3VNGhigoEKygAeJ1p3Jj77ccy+2arYLuizMgk9KG3JHlRe290pvG1FpwUwPME2XfG2YE3BeP9l9sjJ1Qft2TgnybRV9q6yQrCrybZwOgHjdaCNdOzP7vdf4QcRStw5ATY9G9w5SIL81P5oyJamwSbWLXbYILGV9KXR7US1IFgLiwYWAaSXFZ8TZm/pQ0wgaMqNLcbV/VeqqYqjHXGQyL3T9rKU/mMeB5F8ZqQJFJt1TvQasmnCjVkna2e+9kK0n+dMO4LDhFyFgbl8SJM+nSHW20xfZq0fGWgisnf9MWpbW6auqBfBppQaFUCfzqvtDGiKq62/oQbfai5g==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3C705ACD005EF445A19252DD78E49E98@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 1 Oct 2019 07:07:26 -0400
+Received: from mail-out.m-online.net ([212.18.0.10]:44334 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730506AbfJALH0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 07:07:26 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 46jGgs6lMMz1rhsg;
+        Tue,  1 Oct 2019 13:07:21 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 46jGgs5ZDDz1qql3;
+        Tue,  1 Oct 2019 13:07:21 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id FEVJJvJNUS56; Tue,  1 Oct 2019 13:07:19 +0200 (CEST)
+X-Auth-Info: 93MR/orNrEe2jhKJjzkEZxd48FBIEA3YGLYZuH1w+pY=
+Received: from jawa (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Tue,  1 Oct 2019 13:07:19 +0200 (CEST)
+Date:   Tue, 1 Oct 2019 13:07:13 +0200
+From:   Lukasz Majewski <lukma@denx.de>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kbuild test robot <lkp@intel.com>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH] spi: Avoid calling spi_slave_abort() with kfreed spidev
+Message-ID: <20191001130713.6eafb728@jawa>
+In-Reply-To: <CAMuHMdWh7xPZqp4J1qG22dXk_g=Q1WtQ9Xu-r3wiFOL3kW+WBg@mail.gmail.com>
+References: <20191001090657.25721-1-lukma@denx.de>
+        <CAMuHMdWHTaPkzTdzz-j1rFeT=aAEG+J46fgKiPYrXoAR_DTvtQ@mail.gmail.com>
+        <20191001113420.032dbfef@jawa>
+        <CAMuHMdWh7xPZqp4J1qG22dXk_g=Q1WtQ9Xu-r3wiFOL3kW+WBg@mail.gmail.com>
+Organization: denx.de
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR08MB5509
-Original-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Ayan.Halder@arm.com; 
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT062.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(136003)(396003)(376002)(189003)(199004)(478600001)(37006003)(6246003)(70206006)(6306002)(336012)(33656002)(316002)(486006)(6486002)(229853002)(11346002)(446003)(476003)(126002)(70586007)(2616005)(356004)(966005)(1076003)(63350400001)(14454004)(54906003)(76176011)(102836004)(386003)(26005)(14444005)(6506007)(99286004)(26826003)(6512007)(50466002)(6862004)(6116002)(4326008)(76130400001)(25786009)(86362001)(3846002)(97756001)(23726003)(6636002)(22756006)(8936002)(5660300002)(2906002)(186003)(81166006)(8676002)(47776003)(8746002)(66066001)(81156014)(36756003)(46406003)(7736002)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR08MB3697;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;MX:1;A:1;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 662f1e4d-1361-4c4e-45f4-08d7465f66b6
-NoDisclaimer: True
-X-Forefront-PRVS: 0177904E6B
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: YUPfaooL53FZ1bKOP4pl0yjfaYFdWFQjdJIHNdB+3T/0Q6Y3u3CaTcVwpmiqm89VFxcfNFbrY6B7EcwfDGT9Vpp0A4MEiP0oV2Z2uuKknBXH5qpv9plpINkn6HC85sqElKnX4XcR5Iq0WiCbIkwbfP3R/u1daAdM+lp8uNz2fMPTopsK+2jIgdt68P9wpUmszb1MmExasTWXuw3r9VcelSROvWOp31t4jeqG8+acXA1gth/kEcpOgI73WDo4sKKvBuuCIe6ALYYDm4mEP00V04ScDK5Z9q+7Zm4lCmgoIToLZnNvn9hQ2qr6YrXkNRdQ3kCjqPswZ7LVcUTuzIiUlnAi+HNlYSMEGs7E0uA36mgTpCmeyxE+xaooJ/pykI1GC9eL4vejPIkQC81jJYjNSm0QCVOcCd63CdF1RtmLngpdJ8iv42jDSVq5iDDAm5dOZ1i5oA7yT6vzBv7Q/bZDkQ==
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Oct 2019 11:06:35.2055
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9ceb4ad6-a7c2-43f3-ea38-08d7465f6c83
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3697
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ boundary="Sig_/BmcV7SX+cE.Huey1lpa1dZL"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 02:41:44AM +0000, james qian wang (Arm Technology C=
-hina) wrote:
-> On Fri, Sep 20, 2019 at 03:13:08PM +0000, Mihail Atanassov wrote:
-> > No change in behaviour; IRQ_RETVAL is about twice as popular as
-> > manually writing out the ternary.
-> >=20
-> > Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
-> > ---
-> >  drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c b/drivers=
-/gpu/drm/arm/display/komeda/d71/d71_dev.c
-> > index d567ab7ed314..1b42095969e7 100644
-> > --- a/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c
-> > +++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c
-> > @@ -195,7 +195,7 @@ d71_irq_handler(struct komeda_dev *mdev, struct kom=
-eda_events *evts)
-> >  	if (gcu_status & GLB_IRQ_STATUS_PIPE1)
-> >  		evts->pipes[1] |=3D get_pipeline_event(d71->pipes[1], gcu_status);
-> > =20
-> > -	return gcu_status ? IRQ_HANDLED : IRQ_NONE;
-> > +	return IRQ_RETVAL(gcu_status);
->=20
-> Hi Mihail:
->=20
-> Thank you for the patch.
->=20
-> Reviewed-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.=
-com>
+--Sig_/BmcV7SX+cE.Huey1lpa1dZL
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Pushed to drm-misc-next - 4b39582a8fb3c749f0fa96ec920d138f61bf00d6
+Hi Geert,
+
+> Hi Lukasz,
 >=20
-> >  }
-> > =20
-> >  #define ENABLED_GCU_IRQS	(GCU_IRQ_CVAL0 | GCU_IRQ_CVAL1 | \
-> > --=20
-> > 2.23.0
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> On Tue, Oct 1, 2019 at 11:34 AM Lukasz Majewski <lukma@denx.de> wrote:
+> > > On Tue, Oct 1, 2019 at 11:07 AM Lukasz Majewski <lukma@denx.de>
+> > > wrote: =20
+> > > > Call spi_slave_abort() only when the spidev->spi is !NULL and
+> > > > the structure hasn't already been kfreed.
+> > > >
+> > > > Reported-by: kbuild test robot <lkp@intel.com>
+> > > > Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+> > > > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > > > Signed-off-by: Lukasz Majewski <lukma@denx.de> =20
+>=20
+> > > > --- a/drivers/spi/spidev.c
+> > > > +++ b/drivers/spi/spidev.c
+> > > > @@ -600,15 +600,16 @@ static int spidev_open(struct inode
+> > > > *inode, struct file *filp) static int spidev_release(struct
+> > > > inode *inode, struct file *filp) {
+> > > >         struct spidev_data      *spidev;
+> > > > +       int dofree;
+> > > >
+> > > >         mutex_lock(&device_list_lock);
+> > > >         spidev =3D filp->private_data;
+> > > >         filp->private_data =3D NULL;
+> > > > +       dofree =3D 0;
+> > > >
+> > > >         /* last close? */
+> > > >         spidev->users--;
+> > > >         if (!spidev->users) {
+> > > > -               int             dofree;
+> > > >
+> > > >                 kfree(spidev->tx_buffer);
+> > > >                 spidev->tx_buffer =3D NULL;
+> > > > @@ -628,7 +629,8 @@ static int spidev_release(struct inode
+> > > > *inode, struct file *filp) kfree(spidev);
+> > > >         }
+> > > >  #ifdef CONFIG_SPI_SLAVE
+> > > > -       spi_slave_abort(spidev->spi);
+> > > > +       if (!dofree)
+> > > > +               spi_slave_abort(spidev->spi); =20
+> > >
+> > > Can spidev->spi be NULL, if spidev->users !=3D 0? =20
+> >
+> > No, it shouldn't be.
+> >
+> > The "dofree" is only set to true (the spidev->spi =3D=3D NULL condition
+> > is checked) if there are no references (spidev->users =3D=3D 0).
+> >
+> > The if (!dofree) prevents from calling spi_slave_abort() when
+> > spidev->spi =3D=3D NULL and spidev is kfree'd. =20
+>=20
+> If spidev->users !=3D 0, the block checking spidev->spi =3D=3D NULL is ne=
+ver
+> executed, and spi_slave_abort() will be called.
+
+Yes, this is correct. My other patch [1] clears the FIFOs in SPI IP
+block and ends (if there are any stalled) DMA transactions.
+
+>=20
+> I'm wondering if spidev->spi can be NULL if spidev->users is still
+> positive.
+
+I think that it cannot.
+
+=46rom my tests [2] - when I do enter spi_slave_abort() function the state
+of
+spidev->users: 0 dofree: 0 spidev->spi: 0x51337072
+
+So it is possible to call the spidev_release without previously setting
+spidev->spi to NULL (which is done in spidev_remove() function).
+
+IMHO the above behavior also seems to be correct, as during distortion
+the slave losts synchronization from master.
+
+The spidev_remove() callback is part of spi_device struct and is
+called when the device is removed (rmmod spi_fsl_dspi).
+
+=46rom my tests the spidev_release() is NOT called after spidev_remove(),
+so the code in former seems to be a dead one.
+
+Or maybe there is an use case which causes calling spidev_release()
+after spidev_remove()?
+
+>=20
+> Gr{oetje,eeting}s,
+>=20
+>                         Geert
+>=20
+
+Note:
+
+[1] - https://lkml.org/lkml/2019/9/24/245
+[2] -
+https://github.com/lmajewski/tests-spi/blob/master/tests/spi/spi_tests.sh
+
+HW setup:  HW loopback with two /dev/spidevX.Y devices used
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/BmcV7SX+cE.Huey1lpa1dZL
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAl2TM2EACgkQAR8vZIA0
+zr22NQf/R5mfFd/b6MTcfGxaoSiilulAObqBQ/0HBVTAQFbBK0EFU2/b3Jgoy0Nu
+NaGoOOT/hHUAmVf9oZR1h5FsdV0rzSG/jbSkOMA+uN+7QlhlwqaBg4BWanrPcSEi
+xpP7gsbTPj+yiDDtdRoUDxz5P+TMvaf/DrLPn6fkau+YpPAzGTy1AYkdXbDp19SY
+EoJjxBet0qDfK4/r7hssANNvT2iAeF4jInswxhtjFR8+WN8tT69kOP1n+skXN7eH
+hbNn7ghgjNsos+iT+kWLOvdr6vdjR6eh1fCEdZwYhKbyyoMHgnZAicC1tA5TDWqR
+70fH/6TXos2MgYjiLYpq2GgzAQUgSg==
+=JhoH
+-----END PGP SIGNATURE-----
+
+--Sig_/BmcV7SX+cE.Huey1lpa1dZL--
