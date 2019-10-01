@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A934AECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB41DECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B6252168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FB132168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:47:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948466;
-	bh=jYz5oUqCE18ieT1oHlpEVCAMa+wW+EEj3bFuc0XHBrw=;
+	s=default; t=1569948475;
+	bh=jvAHYF044tOe4IyKrq8IstBz4ghDMkwNfGr78ETNkJw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rrbS73OBaAcvfKTEUuekkYYiOKxOnEoqlwN8HE9A51T5TkGqR7f5AvTpAG4qvAtg/
-	 mpvxWkEMofSldm7XiwQmG4JiNvmTmjBJGR6ab0wwg+n6cWANleyRFMoy6jgThS6Suz
-	 xMsLF3ATg8jwLTzpFhOjJ+QW2jDKi4HJ0NVgTXdE=
+	b=SpmOxDelmawpdXEJcbJ/OeEe7qmLd4wq7FglD+hzg/bealUoCZZErDrjEd2CGPDEE
+	 yVJASp3QlFfEQ1xK6QQBtqzQM9J6RbezNUv7aZrLyG6vOg862N2nih5X/t5NN3UGTm
+	 uy8ZYqnFO7/tEh6go/A76TNmyziY/nltTQ0aIPls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388657AbfJAQrq (ORCPT
+        id S2388728AbfJAQry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:47:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57856 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:47:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390270AbfJAQpZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:45:25 -0400
+        id S2390261AbfJAQpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:45:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBEC221924;
-        Tue,  1 Oct 2019 16:45:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 764B3205C9;
+        Tue,  1 Oct 2019 16:45:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948324;
-        bh=jYz5oUqCE18ieT1oHlpEVCAMa+wW+EEj3bFuc0XHBrw=;
+        s=default; t=1569948323;
+        bh=jvAHYF044tOe4IyKrq8IstBz4ghDMkwNfGr78ETNkJw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ohLoj9i05P31Cm36WvvbY5a4lM2oQuju24IHdwTN1+4NJAOL5trykm0IDmWawsLkr
-         gkSAzl2ManeZZPZhpSsun7wGSjAGRcjmpbvjbx2TqAXM21E3SQpKya6Islql6FRGsp
-         rGlB1qV1Eq+185ZH0rgsopXYf1NbVSj0AqkDmg5A=
+        b=JXkKRx46EFNoe/9OtMMn8DKaJpOUX7pSO09ezymC/BvLW6TeNeV7nULAHd21It6gT
+         4Ox6eX8I4L7pBeqzKh+O8i2WX5wQvt3bqzKfQzEru2cwoU9YsVfiLBNGyvd3Om8Rg8
+         UFeGIDHAk+263gu1/CnANM4yA5bWmrP09i6QZfOQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     KeMeng Shi <shikemeng@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 15/19] sched/core: Fix migration to invalid CPU in __set_cpus_allowed_ptr()
-Date:   Tue,  1 Oct 2019 12:45:01 -0400
-Message-Id: <20191001164505.16708-15-sashal@kernel.org>
+Cc:     Takeshi Misawa <jeliantsurux@gmail.com>,
+        syzbot+d9c8bf24e56416d7ce2c@syzkaller.appspotmail.com,
+        Guillaume Nault <gnault@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-ppp@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 14/19] ppp: Fix memory leak in ppp_write
+Date:   Tue,  1 Oct 2019 12:45:00 -0400
+Message-Id: <20191001164505.16708-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164505.16708-1-sashal@kernel.org>
 References: <20191001164505.16708-1-sashal@kernel.org>
@@ -62,83 +62,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KeMeng Shi <shikemeng@huawei.com>
+From: Takeshi Misawa <jeliantsurux@gmail.com>
 
-[ Upstream commit 714e501e16cd473538b609b3e351b2cc9f7f09ed ]
+[ Upstream commit 4c247de564f1ff614d11b3bb5313fb70d7b9598b ]
 
-An oops can be triggered in the scheduler when running qemu on arm64:
+When ppp is closing, __ppp_xmit_process() failed to enqueue skb
+and skb allocated in ppp_write() is leaked.
 
- Unable to handle kernel paging request at virtual address ffff000008effe40
- Internal error: Oops: 96000007 [#1] SMP
- Process migration/0 (pid: 12, stack limit = 0x00000000084e3736)
- pstate: 20000085 (nzCv daIf -PAN -UAO)
- pc : __ll_sc___cmpxchg_case_acq_4+0x4/0x20
- lr : move_queued_task.isra.21+0x124/0x298
- ...
- Call trace:
-  __ll_sc___cmpxchg_case_acq_4+0x4/0x20
-  __migrate_task+0xc8/0xe0
-  migration_cpu_stop+0x170/0x180
-  cpu_stopper_thread+0xec/0x178
-  smpboot_thread_fn+0x1ac/0x1e8
-  kthread+0x134/0x138
-  ret_from_fork+0x10/0x18
+syzbot reported :
+BUG: memory leak
+unreferenced object 0xffff88812a17bc00 (size 224):
+  comm "syz-executor673", pid 6952, jiffies 4294942888 (age 13.040s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<00000000d110fff9>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
+    [<00000000d110fff9>] slab_post_alloc_hook mm/slab.h:522 [inline]
+    [<00000000d110fff9>] slab_alloc_node mm/slab.c:3262 [inline]
+    [<00000000d110fff9>] kmem_cache_alloc_node+0x163/0x2f0 mm/slab.c:3574
+    [<000000002d616113>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:197
+    [<000000000167fc45>] alloc_skb include/linux/skbuff.h:1055 [inline]
+    [<000000000167fc45>] ppp_write+0x48/0x120 drivers/net/ppp/ppp_generic.c:502
+    [<000000009ab42c0b>] __vfs_write+0x43/0xa0 fs/read_write.c:494
+    [<00000000086b2e22>] vfs_write fs/read_write.c:558 [inline]
+    [<00000000086b2e22>] vfs_write+0xee/0x210 fs/read_write.c:542
+    [<00000000a2b70ef9>] ksys_write+0x7c/0x130 fs/read_write.c:611
+    [<00000000ce5e0fdd>] __do_sys_write fs/read_write.c:623 [inline]
+    [<00000000ce5e0fdd>] __se_sys_write fs/read_write.c:620 [inline]
+    [<00000000ce5e0fdd>] __x64_sys_write+0x1e/0x30 fs/read_write.c:620
+    [<00000000d9d7b370>] do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:296
+    [<0000000006e6d506>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-__set_cpus_allowed_ptr() will choose an active dest_cpu in affinity mask to
-migrage the process if process is not currently running on any one of the
-CPUs specified in affinity mask. __set_cpus_allowed_ptr() will choose an
-invalid dest_cpu (dest_cpu >= nr_cpu_ids, 1024 in my virtual machine) if
-CPUS in an affinity mask are deactived by cpu_down after cpumask_intersects
-check. cpumask_test_cpu() of dest_cpu afterwards is overflown and may pass if
-corresponding bit is coincidentally set. As a consequence, kernel will
-access an invalid rq address associate with the invalid CPU in
-migration_cpu_stop->__migrate_task->move_queued_task and the Oops occurs.
+Fix this by freeing skb, if ppp is closing.
 
-The reproduce the crash:
-
-  1) A process repeatedly binds itself to cpu0 and cpu1 in turn by calling
-  sched_setaffinity.
-
-  2) A shell script repeatedly does "echo 0 > /sys/devices/system/cpu/cpu1/online"
-  and "echo 1 > /sys/devices/system/cpu/cpu1/online" in turn.
-
-  3) Oops appears if the invalid CPU is set in memory after tested cpumask.
-
-Signed-off-by: KeMeng Shi <shikemeng@huawei.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1568616808-16808-1-git-send-email-shikemeng@huawei.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 6d066734e9f0 ("ppp: avoid loop in xmit recursion detection code")
+Reported-and-tested-by: syzbot+d9c8bf24e56416d7ce2c@syzkaller.appspotmail.com
+Signed-off-by: Takeshi Misawa <jeliantsurux@gmail.com>
+Reviewed-by: Guillaume Nault <gnault@redhat.com>
+Tested-by: Guillaume Nault <gnault@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ppp/ppp_generic.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 3861dd6da91e7..bbaf094a48400 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1162,7 +1162,8 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
- 	if (cpumask_equal(&p->cpus_allowed, new_mask))
- 		goto out;
- 
--	if (!cpumask_intersects(new_mask, cpu_valid_mask)) {
-+	dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
-+	if (dest_cpu >= nr_cpu_ids) {
- 		ret = -EINVAL;
- 		goto out;
+diff --git a/drivers/net/ppp/ppp_generic.c b/drivers/net/ppp/ppp_generic.c
+index 1e4969d90f1a6..801bab5968d04 100644
+--- a/drivers/net/ppp/ppp_generic.c
++++ b/drivers/net/ppp/ppp_generic.c
+@@ -1432,6 +1432,8 @@ static void __ppp_xmit_process(struct ppp *ppp, struct sk_buff *skb)
+ 			netif_wake_queue(ppp->dev);
+ 		else
+ 			netif_stop_queue(ppp->dev);
++	} else {
++		kfree_skb(skb);
  	}
-@@ -1183,7 +1184,6 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
- 	if (cpumask_test_cpu(task_cpu(p), new_mask))
- 		goto out;
- 
--	dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
- 	if (task_running(rq, p) || p->state == TASK_WAKING) {
- 		struct migration_arg arg = { p, dest_cpu };
- 		/* Need help from migration thread: drop lock and wait. */
+ 	ppp_xmit_unlock(ppp);
+ }
 -- 
 2.20.1
 
