@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4E6ECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1F3C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAC422054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B53732054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:02:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569949348;
-	bh=hWFw/mm/IjB//DvfFJsOpdoICftIKYGQelaXG5osxR0=;
+	s=default; t=1569949353;
+	bh=tPnWAe0mpthBXwTVbVe4uSBGjgQbQdtxeBaul5khI9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vZjKOzIlVVqiFuP/oSVWXOR1Ljmu3+h2PeYjkB0dMMO0hgzZ63SE4/biJ19y0lvwW
-	 zU9TyiwZyItocM89wB3KGJ9J2pXHoQgjOeHNqEhC2rMXLByZvelVkpCHmH0dxw6TjT
-	 X6hrBeEiJZ2HpA1lnECImP0qh6jt24ScoltPVgsM=
+	b=ZhpeQPrwqHLqwu9n64XmMaL8sqD+mQ0ANPQXcMTk6HTjFa7VaZgc2C7NC2vrBJVZj
+	 aJnWWICQNojmIqA4iyv6aqMSnuIkHTdlZJOac4H5TyBhM3x/RMOK2WIv2f+hfcxdjX
+	 fOlC98ayy3aOnBY8FdbD/rEuwBITHMjQFBW0Wq7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729467AbfJAQkD (ORCPT
+        id S1732528AbfJARCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:40:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51098 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 13:02:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728879AbfJAQj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:39:58 -0400
+        id S1729383AbfJAQkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:40:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79F25222C3;
-        Tue,  1 Oct 2019 16:39:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D38F21855;
+        Tue,  1 Oct 2019 16:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569947997;
-        bh=hWFw/mm/IjB//DvfFJsOpdoICftIKYGQelaXG5osxR0=;
+        s=default; t=1569948001;
+        bh=tPnWAe0mpthBXwTVbVe4uSBGjgQbQdtxeBaul5khI9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E8sm2+wBGCvobQTuZNtL0uZokilV4a0A8eNwLY6FVOM3JanrYTNhi44DMfLut5l7j
-         rzwSyimhfP/3iWCqv8b4m/89tyOfUbVcNLAPCXyOfg+ragQglFrAXKBENM5Ke/JtCu
-         rPyytnaZ0pzThZhj+H5BzQOyETsFuiLbArl9pus4=
+        b=OeYkVOEHqcOwB1QgkMfP7FBspa0yj0+j8ReXQ8FldOtQqMvfdfop/GaS+an0GTcIw
+         EbPOycWpNhGWZkxWTqefY6E5RaW9Rd/5hFCFn2CwRpq9aw4ykWPPRD+fBsECN46MJ0
+         hX8T9OZMgbCipdNMnKvZtcmADf6IJpBxKWHIlTfw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trondmy@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 23/71] SUNRPC: Don't try to parse incomplete RPC messages
-Date:   Tue,  1 Oct 2019 12:38:33 -0400
-Message-Id: <20191001163922.14735-23-sashal@kernel.org>
+Cc:     =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 27/71] usbnet: ignore endpoints with invalid wMaxPacketSize
+Date:   Tue,  1 Oct 2019 12:38:37 -0400
+Message-Id: <20191001163922.14735-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
 References: <20191001163922.14735-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,61 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Bjørn Mork <bjorn@mork.no>
 
-[ Upstream commit 9ba828861c56a21d211d5d10f5643774b1ea330d ]
+[ Upstream commit 8d3d7c2029c1b360f1a6b0a2fca470b57eb575c0 ]
 
-If the copy of the RPC reply into our buffers did not complete, and
-we could end up with a truncated message. In that case, just resend
-the call.
+Endpoints with zero wMaxPacketSize are not usable for transferring
+data. Ignore such endpoints when looking for valid in, out and
+status pipes, to make the drivers more robust against invalid and
+meaningless descriptors.
 
-Fixes: a0584ee9aed80 ("SUNRPC: Use struct xdr_stream when decoding...")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+The wMaxPacketSize of these endpoints are used for memory allocations
+and as divisors in many usbnet minidrivers. Avoiding zero is therefore
+critical.
+
+Signed-off-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/clnt.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ drivers/net/usb/usbnet.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 76e745ff78138..d8136b829804f 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -2479,6 +2479,7 @@ call_decode(struct rpc_task *task)
- 	struct rpc_clnt	*clnt = task->tk_client;
- 	struct rpc_rqst	*req = task->tk_rqstp;
- 	struct xdr_stream xdr;
-+	int err;
+diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
+index 72514c46b4786..07c00e378a5cd 100644
+--- a/drivers/net/usb/usbnet.c
++++ b/drivers/net/usb/usbnet.c
+@@ -100,6 +100,11 @@ int usbnet_get_endpoints(struct usbnet *dev, struct usb_interface *intf)
+ 			int				intr = 0;
  
- 	dprint_status(task);
- 
-@@ -2501,6 +2502,15 @@ call_decode(struct rpc_task *task)
- 	 * before it changed req->rq_reply_bytes_recvd.
- 	 */
- 	smp_rmb();
+ 			e = alt->endpoint + ep;
 +
-+	/*
-+	 * Did we ever call xprt_complete_rqst()? If not, we should assume
-+	 * the message is incomplete.
-+	 */
-+	err = -EAGAIN;
-+	if (!req->rq_reply_bytes_recvd)
-+		goto out;
++			/* ignore endpoints which cannot transfer data */
++			if (!usb_endpoint_maxp(&e->desc))
++				continue;
 +
- 	req->rq_rcv_buf.len = req->rq_private_buf.len;
- 
- 	/* Check that the softirq receive buffer is valid */
-@@ -2509,7 +2519,9 @@ call_decode(struct rpc_task *task)
- 
- 	xdr_init_decode(&xdr, &req->rq_rcv_buf,
- 			req->rq_rcv_buf.head[0].iov_base, req);
--	switch (rpc_decode_header(task, &xdr)) {
-+	err = rpc_decode_header(task, &xdr);
-+out:
-+	switch (err) {
- 	case 0:
- 		task->tk_action = rpc_exit_task;
- 		task->tk_status = rpcauth_unwrap_resp(task, &xdr);
+ 			switch (e->desc.bmAttributes) {
+ 			case USB_ENDPOINT_XFER_INT:
+ 				if (!usb_endpoint_dir_in(&e->desc))
 -- 
 2.20.1
 
