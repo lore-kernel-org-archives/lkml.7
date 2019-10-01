@@ -4,53 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 533A4ECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E02ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F10C20659
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6A4920659
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:48:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948505;
-	bh=YMjtigfnoF5xGSheDx+1AzgXp73xGeYEPv/dv5tU79g=;
+	s=default; t=1569948518;
+	bh=9mMIkBZPeq4VbAZVxocW/1TTx4JVNHnDdhE/8JTQTNY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0kGyHBSlFdzfk0t24tkK1S6fOFhcCaF6Qgz64JJ2XXA0IxfWT5ewt1+obSvYZ8nQR
-	 sW3VFNn+TlcKwZTbjKKzUgYrWaVWiLnGXSoVGa7DeTapRu9DdfhJsNoe5j1a8HmQp2
-	 hFcjFBIh7BBRCb4+E6rty9HJWHstU2l03umCFSGc=
+	b=H2lC3aCDkcrsEGk409tVBa/veePmFePHp8659Nowo3ckbcdaD8YMLS0jZ9vlIczrB
+	 nvfeeJjZXzGtvY9880UbR/BqwJb0q/Z7TBVoHVGib4qEJuldtjznwum1+fs+czCdns
+	 4R8rxOpvqVUEVx+TxHDbKI06CK9chdINsC7ibGtk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388531AbfJAQsY (ORCPT
+        id S2388781AbfJAQsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:48:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57788 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:48:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390226AbfJAQpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:45:19 -0400
+        id S2390219AbfJAQpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:45:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E57E0222C7;
-        Tue,  1 Oct 2019 16:45:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 945AF21920;
+        Tue,  1 Oct 2019 16:45:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948318;
-        bh=YMjtigfnoF5xGSheDx+1AzgXp73xGeYEPv/dv5tU79g=;
+        s=default; t=1569948316;
+        bh=9mMIkBZPeq4VbAZVxocW/1TTx4JVNHnDdhE/8JTQTNY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RXCjmRybISxbFlktQzlkneRHRheQ61QGdWfiiy7J7qkxsWBlLZ/cNSFwZeKO0Fjaq
-         Aop01Eh7TcUoRWfmoOhEuVZHDF4upbtCfHKrZFPmLImKzBXXiqhnTbG+nCWcBvPbrC
-         Mf2IogiBThVMs6JUfi/C164Sa5FG6uZ9RMPhLn/w=
+        b=Q94CmLpx2qwtE2yEb69MkmVFmW5wjPPSpF4v0v6YjrA+APloZWtxXmoTcPnHODchQ
+         +uqMQnSSxisMOdZaWMYT67s0YXLcXeDD4ZlSmF49FjyoiUKACJjheg4LriBCm/oxe4
+         pUblBokgHJ3e64hI2TVzxDdL12SMGb6md1pH8Hrk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Mamonov <pmamonov@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+Cc:     =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        syzbot+ce366e2b8296e25d84f5@syzkaller.appspotmail.com,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 10/19] net/phy: fix DP83865 10 Mbps HDX loopback disable function
-Date:   Tue,  1 Oct 2019 12:44:56 -0400
-Message-Id: <20191001164505.16708-10-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 08/19] cdc_ncm: fix divide-by-zero caused by invalid wMaxPacketSize
+Date:   Tue,  1 Oct 2019 12:44:54 -0400
+Message-Id: <20191001164505.16708-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164505.16708-1-sashal@kernel.org>
 References: <20191001164505.16708-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,48 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Mamonov <pmamonov@gmail.com>
+From: Bjørn Mork <bjorn@mork.no>
 
-[ Upstream commit e47488b2df7f9cb405789c7f5d4c27909fc597ae ]
+[ Upstream commit 3fe4b3351301660653a2bc73f2226da0ebd2b95e ]
 
-According to the DP83865 datasheet "the 10 Mbps HDX loopback can be
-disabled in the expanded memory register 0x1C0.1". The driver erroneously
-used bit 0 instead of bit 1.
+Endpoints with zero wMaxPacketSize are not usable for transferring
+data. Ignore such endpoints when looking for valid in, out and
+status pipes, to make the driver more robust against invalid and
+meaningless descriptors.
 
-Fixes: 4621bf129856 ("phy: Add file missed in previous commit.")
-Signed-off-by: Peter Mamonov <pmamonov@gmail.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+The wMaxPacketSize of the out pipe is used as divisor. So this change
+fixes a divide-by-zero bug.
+
+Reported-by: syzbot+ce366e2b8296e25d84f5@syzkaller.appspotmail.com
+Signed-off-by: Bjørn Mork <bjorn@mork.no>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/national.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/net/usb/cdc_ncm.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/phy/national.c b/drivers/net/phy/national.c
-index 2a1b490bc5871..718cd3c59e92c 100644
---- a/drivers/net/phy/national.c
-+++ b/drivers/net/phy/national.c
-@@ -110,14 +110,17 @@ static void ns_giga_speed_fallback(struct phy_device *phydev, int mode)
+diff --git a/drivers/net/usb/cdc_ncm.c b/drivers/net/usb/cdc_ncm.c
+index 7b158674ceeda..43e28d2b0de7f 100644
+--- a/drivers/net/usb/cdc_ncm.c
++++ b/drivers/net/usb/cdc_ncm.c
+@@ -679,8 +679,12 @@ cdc_ncm_find_endpoints(struct usbnet *dev, struct usb_interface *intf)
+ 	u8 ep;
  
- static void ns_10_base_t_hdx_loopack(struct phy_device *phydev, int disable)
- {
-+	u16 lb_dis = BIT(1);
+ 	for (ep = 0; ep < intf->cur_altsetting->desc.bNumEndpoints; ep++) {
+-
+ 		e = intf->cur_altsetting->endpoint + ep;
 +
- 	if (disable)
--		ns_exp_write(phydev, 0x1c0, ns_exp_read(phydev, 0x1c0) | 1);
-+		ns_exp_write(phydev, 0x1c0,
-+			     ns_exp_read(phydev, 0x1c0) | lb_dis);
- 	else
- 		ns_exp_write(phydev, 0x1c0,
--			     ns_exp_read(phydev, 0x1c0) & 0xfffe);
-+			     ns_exp_read(phydev, 0x1c0) & ~lb_dis);
- 
- 	pr_debug("10BASE-T HDX loopback %s\n",
--		 (ns_exp_read(phydev, 0x1c0) & 0x0001) ? "off" : "on");
-+		 (ns_exp_read(phydev, 0x1c0) & lb_dis) ? "off" : "on");
- }
- 
- static int ns_config_init(struct phy_device *phydev)
++		/* ignore endpoints which cannot transfer data */
++		if (!usb_endpoint_maxp(&e->desc))
++			continue;
++
+ 		switch (e->desc.bmAttributes & USB_ENDPOINT_XFERTYPE_MASK) {
+ 		case USB_ENDPOINT_XFER_INT:
+ 			if (usb_endpoint_dir_in(&e->desc)) {
 -- 
 2.20.1
 
