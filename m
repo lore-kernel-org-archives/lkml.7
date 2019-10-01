@@ -2,168 +2,128 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00615C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58ECBECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C55A22086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:44:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="aaXHJnyI"
+	by mail.kernel.org (Postfix) with ESMTP id 3328E2070B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:47:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726086AbfJAPoh (ORCPT
+        id S2389678AbfJAPrR convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 11:44:37 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42871 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726309AbfJAPoh (ORCPT
+        Tue, 1 Oct 2019 11:47:17 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:42414 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726309AbfJAPrR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 11:44:37 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q12so8268847pff.9
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 08:44:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3RxnDGRr7B1XTJFunDM7ZNbXmbQskGnoRCYVHzPDhjY=;
-        b=aaXHJnyItKtapP/eT7bgV/RWcyFHwp4VhYihtj48vumdyUhczhQsttZcV7NVVOnK/G
-         bA0s4p9tepc1VmsRkQQ5CQML0vT+xCOsgbuaWoLtVVaFijXVrlx1DMR1wGOCjdFdgdrc
-         ZgvEtbd23AuEK8wDpfL/qIoLrUUGbeMRcwenVT+WV8JqrWPao1UWc8J6T1QjmQof0Ue7
-         pC2pPoOxrWe6FNsXNsRVMzR3O1osZ6JF9B98kOxXht0KlPseHc2BedqgSnEqmIK+Wfg0
-         v6qkpF5ICEM8hJgvHXeS85jUZ1gtI97Ll1NkBXbp9Vjxs0FtyJ+wtWhnMuDTboj/IaSY
-         KwXw==
+        Tue, 1 Oct 2019 11:47:17 -0400
+Received: from mail-pl1-f197.google.com ([209.85.214.197])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1iFKMs-0007gU-T7
+        for linux-kernel@vger.kernel.org; Tue, 01 Oct 2019 15:47:15 +0000
+Received: by mail-pl1-f197.google.com with SMTP id q3so6825078pll.8
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 08:47:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3RxnDGRr7B1XTJFunDM7ZNbXmbQskGnoRCYVHzPDhjY=;
-        b=VD9/yMbUTCr+5PdIHfr8/I7uNqM9Iz2dTe+ovFQNDpLUraqhpVN+h/lYOtPG+4sxOM
-         okv+Gxhjplwk7xCh9iFhQ5hllDcP4DSbQ5B40f0ty8ySBkjXOgTW8ZB0cukfatfHmdBR
-         EOIlfDD+Nrt7FpWmFJPGFwXiHzqZTSlSwpRimSp1/gPuF1sVnqjcmww6W4BAzC78jNl2
-         QIGo1qR3OpWqCk8ThFm3TfB4lTxz3n1uPhEJbkCzhPllYuCv/tVA3CB586GQq2/r3qpU
-         XDTL/+mvzH51y/tvDC7R46rCLNeep2BBbHoTcOZJy3tnVFmnEoHjTFjCIQdYn+jzwk5N
-         +Ntw==
-X-Gm-Message-State: APjAAAWvyOAwelixNKz0V9ggZ6vizhFDS3tdaOuF48JvzzAjtVKAoGBL
-        KK1Pk1Gmki7bC0Pd62jjq23oEuk8Lut4eA==
-X-Google-Smtp-Source: APXvYqwVhM/EntPxs94ONszYZE1mKQBE9G5wS7fcs2w8cMG3BAuOlnjqb0PYFYz8fL7WJ+yQjl16nA==
-X-Received: by 2002:a63:350f:: with SMTP id c15mr27311143pga.225.1569944674989;
-        Tue, 01 Oct 2019 08:44:34 -0700 (PDT)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id p88sm5938164pjp.22.2019.10.01.08.44.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 08:44:34 -0700 (PDT)
-Date:   Tue, 1 Oct 2019 08:44:27 -0700
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc:     Sriram Krishnan <srirakr2@cisco.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        xe-linux-external@cisco.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] AF_PACKET doesnt strip VLAN information
-Message-ID: <20191001084427.73f130c0@hermes.lan>
-In-Reply-To: <CA+FuTSfN5=xkYUKiafM3uKF37kV6mg0Cn5WGv2QF887Pyw5A5g@mail.gmail.com>
-References: <1569646705-10585-1-git-send-email-srirakr2@cisco.com>
-        <CA+FuTSfN5=xkYUKiafM3uKF37kV6mg0Cn5WGv2QF887Pyw5A5g@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=RGtmeDaWQ2PLOrLjjSWHp10RVFNcjpR+uy+qIs5ilhg=;
+        b=n/48/qaXI4SZHkLqQXulSG11XfHOvBTTvHoCoQQV6ou80/EF3LUU3KALg8N+g1m6xK
+         GxnaY+E06tbCMaxeGFXIQl4Hc29BIWuvSnmQYE2wAcpn4R0A5xKFLyeA86rFKMlpDZDp
+         yPr3jSbJN93M3JtlE9MN24y5cQhAjmd08bsl1SoSgqZLfnQNZFDzg2imzALAt8BsYVmA
+         OTHL88p5lDk5mwIVlG4SvbTms7nghsDz66YXGhhvvwO6BudX1cpyn2RYC0DMI/02tYaz
+         dTCYbtQtcWpyTDzckvLTWtat0ib4mE3luZjtlaoLAzkeZmxPgkayVEa3/XQ/VxPP/4Wn
+         OKTA==
+X-Gm-Message-State: APjAAAWik4KFy9QPWCDZWK6YJ2GzAANnsVNXYna2K9uToezPQ4dXhIkf
+        e496FEemCnb6xaMpnMkYQ+sadR7GgUZME3Vvq4Wyt0cTMJS9V+9nZGo1dl6hi7vLLpH7F3Q7rON
+        cAR4XtqfpZ+CFF9N+Hs+iq9pOlOTm+7g/yu0Ir7JgYw==
+X-Received: by 2002:a17:902:2e:: with SMTP id 43mr25665308pla.55.1569944833597;
+        Tue, 01 Oct 2019 08:47:13 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzzTmBDzmDD5Gq/M0Nmo1P95MkWgmVx0tHs01qpaU8vuAmvr5uRPm8Pme+CeE8oxEIlpGWsSA==
+X-Received: by 2002:a17:902:2e:: with SMTP id 43mr25665282pla.55.1569944833294;
+        Tue, 01 Oct 2019 08:47:13 -0700 (PDT)
+Received: from 2001-b011-380f-3c42-1844-8b0c-6a55-1ec2.dynamic-ip6.hinet.net (2001-b011-380f-3c42-1844-8b0c-6a55-1ec2.dynamic-ip6.hinet.net. [2001:b011:380f:3c42:1844:8b0c:6a55:1ec2])
+        by smtp.gmail.com with ESMTPSA id 127sm20201005pfy.56.2019.10.01.08.47.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 01 Oct 2019 08:47:12 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3594.4.18\))
+Subject: Re: [PATCH] x86/hpet: Disable HPET on Intel Coffe Lake
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <alpine.DEB.2.21.1908292143300.1938@nanos.tec.linutronix.de>
+Date:   Tue, 1 Oct 2019 23:47:09 +0800
+Cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, harry.pan@intel.com,
+        x86@kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <A863DF08-2275-4FEA-9A0D-44C5D4807458@canonical.com>
+References: <20190829091232.15065-1-kai.heng.feng@canonical.com>
+ <alpine.DEB.2.21.1908291351510.1938@nanos.tec.linutronix.de>
+ <793CCD4F-35E0-46B9-B5D4-3D3233BA5D35@canonical.com>
+ <alpine.DEB.2.21.1908292143300.1938@nanos.tec.linutronix.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+X-Mailer: Apple Mail (2.3594.4.18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Sep 2019 11:16:14 -0400
-Willem de Bruijn <willemdebruijn.kernel@gmail.com> wrote:
+Hi Thomas,
 
-> On Mon, Sep 30, 2019 at 1:24 AM Sriram Krishnan <srirakr2@cisco.com> wrote:
-> >
-> > When an application sends with AF_PACKET and places a vlan header on
-> > the raw packet; then the AF_PACKET needs to move the tag into the skb
-> > so that it gets processed normally through the rest of the transmit
-> > path.
-> >
-> > This is particularly a problem on Hyper-V where the host only allows
-> > vlan in the offload info.  
+> On Aug 30, 2019, at 03:45, Thomas Gleixner <tglx@linutronix.de> wrote:
 > 
-> This sounds like behavior that needs to be addressed in the driver, instead?
+> On Thu, 29 Aug 2019, Kai-Heng Feng wrote:
+>> at 20:13, Thomas Gleixner <tglx@linutronix.de> wrote:
+>>> On Thu, 29 Aug 2019, Kai-Heng Feng wrote:
+>>> 
+>>>> Some Coffee Lake platforms have skewed HPET timer once the SoCs entered
+>>>> PC10, and marked TSC as unstable clocksource as result.
+>>> 
+>>> So here you talk about Coffee Lake and in the patch you use KABYLAKE.
+>> 
+>> Coffeelake has the same model number as Kabylake.
+> 
+> Yeah, just a bit more text explaining that would be helpful.
+> 
+>>>> +static const struct x86_cpu_id hpet_blacklist[] __initconst = {
+>>>> +	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_KABYLAKE_MOBILE },
+>>>> +	{ X86_VENDOR_INTEL, 6, INTEL_FAM6_KABYLAKE_DESKTOP },
+>>> 
+>>> So this disables HPET on all Kaby Lake variants not just on the affected
+>>> Coffee Lakes. I know that I rejected the initial patch with the random
+>>> stepping cutoff...
+>>> 
+>>> https://lore.kernel.org/lkml/alpine.DEB.2.21.1904081403220.1748@nanos.tec.linutronix.de
+>>> 
+>>> In the other attempt to 'fix' this I asked for clarification, but silence
+>>> from Intel after this:
+>>> 
+>>> https://lore.kernel.org/lkml/alpine.DEB.2.21.1905182015320.3019@nanos.tec.linutronix.de
+>>> 
+>>> Can Intel please provide some useful information about this finally?
+>> 
+>> Hopefully Intel can provide more info.
+>> 
+>> I know we should find the root cause rather than stopping at "it’s a firmware
+>> bug”, but users are already affected by this issue [1].
+>> Is there any better short-term workaround?
+> 
+> Not really. And if Intel stays silent, I'm just going to apply it as is
+> along with a stable tag.
 
-This was what we did first, but the problem was more general.
-For example, many filtering functions assume that vlan tag is in
-skb meta data, not the packet data itself. Therefore AF_PACKET would
-get around any filter rules.
+Seems like there's still no updates from Intel. Can we have this patch in v5.4?
 
-> 
-> > Cc: xe-linux-external@cisco.com
-> > ---
-> >  net/packet/af_packet.c | 26 ++++++++++++++++++++++++--
-> >  1 file changed, 24 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-> > index e2742b0..cfe0904 100644
-> > --- a/net/packet/af_packet.c
-> > +++ b/net/packet/af_packet.c
-> > @@ -1849,15 +1849,35 @@ static int packet_rcv_spkt(struct sk_buff *skb, struct net_device *dev,
-> >         return 0;
-> >  }
-> >
-> > -static void packet_parse_headers(struct sk_buff *skb, struct socket *sock)
-> > +static int packet_parse_headers(struct sk_buff *skb, struct socket *sock)
-> >  {
-> >         if ((!skb->protocol || skb->protocol == htons(ETH_P_ALL)) &&
-> >             sock->type == SOCK_RAW) {  
-> 
-> If inside this branch, may miss packets with skb->protocol set to one
-> of the VLAN Ethertypes.
-> 
-> > +               __be16 ethertype;
-> > +
-> >                 skb_reset_mac_header(skb);
-> > +
-> > +               ethertype = eth_hdr(skb)->h_proto;
-> > +               /*
-> > +                * If Vlan tag is present in the packet
-> > +                *  move it to skb
-> > +               */
-> > +               if (eth_type_vlan(ethertype)) {
-> > +                       int err;
-> > +                       __be16 vlan_tci;
-> > +
-> > +                       err = __skb_vlan_pop(skb, &vlan_tci);
-> > +                       if (unlikely(err))
-> > +                               return err;
-> > +
-> > +                       __vlan_hwaccel_put_tag(skb, ethertype, vlan_tci);  
-> 
-> What happens with multiple tags (QinQ)?
-
-Same as multiple tags in a normal sent packet. The second tag is in
-the packet itself.
+Kai-Heng
 
 > 
-> > +               }
-> > +
-> >                 skb->protocol = dev_parse_header_protocol(skb);
-> >         }
-> >
-> >         skb_probe_transport_header(skb);
-> > +       return 0;
-> >  }
-> >
-> >  /*
-> > @@ -1979,7 +1999,9 @@ static int packet_sendmsg_spkt(struct socket *sock, struct msghdr *msg,
-> >         if (unlikely(extra_len == 4))
-> >                 skb->no_fcs = 1;
-> >
-> > -       packet_parse_headers(skb, sock);
-> > +       err = packet_parse_headers(skb, sock);
-> > +       if (err)
-> > +               goto out_unlock;  
+> Thanks,
 > 
-> This only tests the new return value in one of three callers of
-> packet_sendmsg_spkt.
+> 	tglx
 
