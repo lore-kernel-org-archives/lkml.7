@@ -2,124 +2,200 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F7BECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B571EC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C9022070B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80ACF215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:21:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LxyFxDLx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727139AbfJAUTA (ORCPT
+        id S1727186AbfJAUV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 16:19:00 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56880 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbfJAUS7 (ORCPT
+        Tue, 1 Oct 2019 16:21:58 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41386 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbfJAUV5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 16:18:59 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iFObe-0004Og-KL; Tue, 01 Oct 2019 22:18:46 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 328C41C03AB;
-        Tue,  1 Oct 2019 22:18:46 +0200 (CEST)
-Date:   Tue, 01 Oct 2019 20:18:45 -0000
-From:   "tip-bot2 for Nick Desaulniers" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/boot] x86/realmode: Explicitly set entry point via ENTRY in
- linker script
-Cc:     Sedat Dilek <sedat.dilek@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Smith <Peter.Smith@arm.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        clang-built-linux@googlegroups.com, grimar@accesssoftek.com,
-        Ingo Molnar <mingo@redhat.com>, maskray@google.com,
-        ruiu@google.com, Thomas Gleixner <tglx@linutronix.de>,
-        "x86-ml" <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20190925180908.54260-1-ndesaulniers@google.com>
-References: <20190925180908.54260-1-ndesaulniers@google.com>
+        Tue, 1 Oct 2019 16:21:57 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q7so8879098pfh.8
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 13:21:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=O3nprpczOYxtdd8ScPY3MhrdWBir8yiSGFH+vgNdqwU=;
+        b=LxyFxDLxC6BLWinXmves+Z2YK6aEpy6qut/yqGVCOSexQI9Ci9PHEqqWR7oApv/VA6
+         dVM13D7WP9ceBYycuYU498kaNVL1DrhlEWIAPTbV3mNg7VhCIvIjlTOMmfeHzaCC4YFG
+         LTQsWsQnmGTBbG3vsQ9oxIOzCGRJldbZPo2R45nMtWz34BXnTMqz6mAsyZvoxRQYE1Hu
+         pO5tJ3U1svzF/RwAccOjxUZOsvYfUdNaiq6sskVew4U7vgGbDzk5VGMHC0OK/5NCnDRN
+         KozbchRrEFc2YDL+WhAuGrJbjYRjpRj+G/Zq9y82ojBzXCLnW3dM11JgD8AAM541VXR7
+         /eBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=O3nprpczOYxtdd8ScPY3MhrdWBir8yiSGFH+vgNdqwU=;
+        b=P8Kwcd3oEEBmojD0zLMtEcfZVbxpkEamm5WAdfqG5VLUi2eBKDAOHnVTszg59UQgrf
+         Bs184JeOH3SstaroNlHnUf4ook7Cq8a9ou8nz8p6ENASk3x9OH4HXh1+Pxn9SlqGrq30
+         JVa6dO0N5fuSU9CWuSaUZUXj+JZZL9MLvBxSvvfVsTjs28fXT2oeiMpQZLuOcOSOlgrl
+         qJy140vYmB870wrspXGNQ/JG2o3s+OGhRpg/uIr06ACD15IR3m//ljkkBrW1GT5bMuQF
+         1nSnCKqgYzlRCh4bWrg4iLI92t5Ou5UeAVQjpClJjJEw0sVKDCmW3SNb1qU3KezeZ6DB
+         6a4w==
+X-Gm-Message-State: APjAAAWqlSKUFd6++QF9TybzigV44Y17mOxcC46yxz3ngGJvVLpRYHnf
+        MPsHBj4wlOs6k9RcUgovT5V45W8LW05dESfI12bqfw==
+X-Google-Smtp-Source: APXvYqyCV5SYUmFWQFUGtDllbVt+Rao8Kq65DjTW+hovP1CgxL0tquouUsm2OgxtNjsTUrlcGBdipv3seffo86hPp3A=
+X-Received: by 2002:a63:7153:: with SMTP id b19mr31503598pgn.10.1569961316418;
+ Tue, 01 Oct 2019 13:21:56 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <156996112595.9978.10016104223665574360.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20190930112636.vx2qxo4hdysvxibl@willie-the-truck>
+ <CAK7LNASQZ82KSOrQW7+Wq1vFDCg2__maBEAPMLqUDqZMLuj1rA@mail.gmail.com>
+ <20190930121803.n34i63scet2ec7ll@willie-the-truck> <CAKwvOdnqn=0LndrX+mUrtSAQqoT1JWRMOJCA5t3e=S=T7zkcCQ@mail.gmail.com>
+ <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck> <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
+ <20191001170142.x66orounxuln7zs3@willie-the-truck> <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
+ <20191001175512.GK25745@shell.armlinux.org.uk> <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
+ <20191001181438.GL25745@shell.armlinux.org.uk>
+In-Reply-To: <20191001181438.GL25745@shell.armlinux.org.uk>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 1 Oct 2019 13:21:44 -0700
+Message-ID: <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
+Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Will Deacon <will@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Kees Cook <keescook@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/boot branch of tip:
+On Tue, Oct 1, 2019 at 11:14 AM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Tue, Oct 01, 2019 at 11:00:11AM -0700, Nick Desaulniers wrote:
+> > On Tue, Oct 1, 2019 at 10:55 AM Russell King - ARM Linux admin
+> > <linux@armlinux.org.uk> wrote:
+> > >
+> > > On Tue, Oct 01, 2019 at 10:44:43AM -0700, Nick Desaulniers wrote:
+> > > > I apologize; I don't mean to be difficult.  I would just like to av=
+oid
+> > > > surprises when code written with the assumption that it will be
+> > > > inlined is not.  It sounds like we found one issue in arm32 and one=
+ in
+> > > > arm64 related to outlining.  If we fix those two cases, I think we'=
+re
+> > > > close to proceeding with Masahiro's cleanup, which I view as a good
+> > > > thing for the health of the Linux kernel codebase.
+> > >
+> > > Except, using the C preprocessor for this turns the arm32 code into
+> > > yuck:
+> > >
+> > > 1. We'd need to turn get_domain() and set_domain() into multi-line
+> > >    preprocessor macro definitions, using the GCC ({ }) extension
+> > >    so that get_domain() can return a value.
+> > >
+> > > 2. uaccess_save_and_enable() and uaccess_restore() also need to
+> > >    become preprocessor macro definitions too.
+> > >
+> > > So, we end up with multiple levels of nested preprocessor macros.
+> > > When something goes wrong, the compiler warning/error message is
+> > > going to be utterly _horrid_.
+> >
+> > That's why I preferred V1 of Masahiro's patch, that fixed the inline
+> > asm not to make use of caller saved registers before calling a
+> > function that might not be inlined.
+>
+> ... which I objected to based on the fact that this uaccess stuff is
+> supposed to add protection against the kernel being fooled into
+> accessing userspace when it shouldn't.  The whole intention there is
+> that [sg]et_domain(), and uaccess_*() are _always_ inlined as close
+> as possible to the call site of the accessor touching userspace.
 
-Commit-ID:     6a181e333954a26f46596b36f82abd14743570fd
-Gitweb:        https://git.kernel.org/tip/6a181e333954a26f46596b36f82abd14743570fd
-Author:        Nick Desaulniers <ndesaulniers@google.com>
-AuthorDate:    Wed, 25 Sep 2019 11:09:06 -07:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 01 Oct 2019 22:13:17 +02:00
+Then use the C preprocessor to force the inlining.  I'm sorry it's not
+as pretty as static inline functions.
 
-x86/realmode: Explicitly set entry point via ENTRY in linker script
+>
+> Moving it before the assignments mean that the compiler is then free
+> to issue memory loads/stores to load up those registers, which is
+> exactly what we want to avoid.
+>
+>
+> In any case, I violently disagree with the idea that stuff we have
+> in header files should be permitted not to be inlined because we
+> have soo much that is marked inline.
 
-Linking with ld.lld via
+So there's a very important subtly here.  There's:
+1. code that adds `inline` cause "oh maybe it would be nice to inline
+this, but if it isn't no big deal"
+2. code that if not inlined is somehow not correct.
+3. avoid ODR violations via `static inline`
 
-$ make LD=ld.lld
+I'll posit that "we have soo much that is marked inline [is
+predominantly case 1 or 3, not case 2]."  Case 2 is a code smell, and
+requires extra scrutiny.
 
-produces the warning:
+> Having it moved out of line,
+> and essentially the same function code appearing in multiple C files
+> is really not an improvement over the current situation with excessive
+> use of inlining.  Anyone who has looked at the code resulting from
+> dma_map_single() will know exactly what I'm talking about, which is
+> way in excess of the few instructions we have for the uaccess_* stuff
+> here.
+>
+> The right approach is to move stuff out of line - and by that, I
+> mean _actually_ move the damn code, so that different compilation
+> units can use the same instructions, and thereby gain from the
+> whole point of an instruction cache.
 
-  ld.lld: warning: cannot find entry symbol _start; defaulting to 0x1000
+And be marked __attribute__((noinline)), otherwise might be inlined via LTO=
+.
 
-Linking with ld.bfd shows the default entry is 0x1000:
+>
+> The whole "let's make inline not really mean inline" is nothing more
+> than a band-aid to the overuse (and abuse) of "inline".
 
-$ readelf -h arch/x86/realmode/rm/realmode.elf | grep Entry
-  Entry point address:               0x1000
+Let's triple check the ISO C11 draft spec just to be sure:
+=C2=A7 6.7.4.6: A function declared with an inline function specifier is an
+inline function. Making a
+function an inline function suggests that calls to the function be as
+fast as possible.
+The extent to which such suggestions are effective is
+implementation-defined. 139)
+139) For example, an implementation might never perform inline
+substitution, or might only perform inline
+substitutions to calls in the scope of an inline declaration.
+=C2=A7 J.3.8 [Undefined Behavior] Hints: The extent to which suggestions
+made by using the inline function specifier are effective (6.7.4).
 
-While ld.lld is being pedantic, just set the entry point explicitly,
-instead of depending on the implicit default. The symbol pa_text_start
-refers to the start of the .text section, which may not be at 0x1000 if
-the preceding sections listed in arch/x86/realmode/rm/realmode.lds.S
-were large enough. This matches behavior in arch/x86/boot/setup.ld.
+My translation:
+"Please don't assume inline means anything."
 
-Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-Suggested-by: Borislav Petkov <bp@alien8.de>
-Suggested-by: Peter Smith <Peter.Smith@arm.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: clang-built-linux@googlegroups.com
-Cc: grimar@accesssoftek.com
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: maskray@google.com
-Cc: ruiu@google.com
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190925180908.54260-1-ndesaulniers@google.com
-Link: https://github.com/ClangBuiltLinux/linux/issues/216
----
- arch/x86/realmode/rm/realmode.lds.S | 1 +
- 1 file changed, 1 insertion(+)
+For the unspecified GNU C extension __attribute__((always_inline)), it
+seems to me like it's meant more for performing inlining (an
+optimization) at -O0.  Whether the compiler warns or not seems like a
+nice side effect, but provides no strong guarantee otherwise.
 
-diff --git a/arch/x86/realmode/rm/realmode.lds.S b/arch/x86/realmode/rm/realmode.lds.S
-index 3bb9808..64d135d 100644
---- a/arch/x86/realmode/rm/realmode.lds.S
-+++ b/arch/x86/realmode/rm/realmode.lds.S
-@@ -11,6 +11,7 @@
- 
- OUTPUT_FORMAT("elf32-i386")
- OUTPUT_ARCH(i386)
-+ENTRY(pa_text_start)
- 
- SECTIONS
- {
+I'm sorry that so much code may have been written with that
+assumption, and I'm sorry to be the bearer of bad news, but this isn't
+a recent change.  If code was written under false assumptions, it
+should be rewritten. Sorry.
+--=20
+Thanks,
+~Nick Desaulniers
