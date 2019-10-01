@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56677C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 918BAC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AFA921D81
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A0062168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:42:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948137;
-	bh=M+E//PlUJpUU80qohtiS2iSxUUk/eSlGO32hiEW5ZzI=;
+	s=default; t=1569948143;
+	bh=Vw4I1uOKtDXm4m/EQIyjHXit44q63Ut92gP2vIDrNS0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mV81EC5xofzwD9S0aTFWK5nDfSZl0hU0hcakyT7byqTlCqqcEp8muMoiP8jxiXXvY
-	 uMxpXHRGsq+71vjkhzoTiT6XHXC57xsqNGJONGiodibn5LXKwTQS4+5Tq2WcFZbRGg
-	 jwZobNvV1FA1rddmLKYYZbtndIgBMwRfCInHMzkU=
+	b=OokZLbx843tjWkFOP5SpA1PAzDGuHXyvvAsYEJcodD1mxF3HYvKyKpSFyvoAFlQwh
+	 HC+grmKWLGRPvaiCK90xXd8dCOIfHt/nemm4XrFg3YXwy2MQsf7OPdDbn05FT+zLit
+	 CiQnh8j2MF6F7e28wfUDvxa2RWMva8ajghjEsSqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731831AbfJAQmQ (ORCPT
+        id S1731898AbfJAQmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:42:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53998 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:42:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731734AbfJAQmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:42:12 -0400
+        id S1731834AbfJAQmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:42:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6865921855;
-        Tue,  1 Oct 2019 16:42:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0640120B7C;
+        Tue,  1 Oct 2019 16:42:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948132;
-        bh=M+E//PlUJpUU80qohtiS2iSxUUk/eSlGO32hiEW5ZzI=;
+        s=default; t=1569948137;
+        bh=Vw4I1uOKtDXm4m/EQIyjHXit44q63Ut92gP2vIDrNS0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ny0hVqavjzCVgBZ80Dy+sVGDhF8mxs2Lq+e1Ga64SzBhR1y1DRQ1u3GNSYcPhF1cK
-         klj3d33dkSedbLf0tlOXKP2zV7QoKeTicaXtChujZ+HDFxvHaMu7nn2mR5Ej1pCjYi
-         MWsG3oYGE6xwXVKbFh2r7elZUGNljxl2CuzUt3LU=
+        b=BSaLzsLQ/15Tbz1sUSPIMZFzs9oNth0moX56AbUB2PLQ+68Jpu2g2yCxKVQsNjzCh
+         sX98pDoX37sZJfr4UjkI6JfNgt53Bdst30vMbEyYrhT/E+0/eRf58MeJBUPeawxZ67
+         hjV80g7+dM1tSPIgimuZLi4k5G1k7GdOZKgUQCk8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrei Dulea <adulea@amazon.de>, Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.2 32/63] iommu/amd: Fix downgrading default page-sizes in alloc_pte()
-Date:   Tue,  1 Oct 2019 12:40:54 -0400
-Message-Id: <20191001164125.15398-32-sashal@kernel.org>
+Cc:     zhengbin <zhengbin13@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 37/63] fuse: fix memleak in cuse_channel_open
+Date:   Tue,  1 Oct 2019 12:40:59 -0400
+Message-Id: <20191001164125.15398-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164125.15398-1-sashal@kernel.org>
 References: <20191001164125.15398-1-sashal@kernel.org>
@@ -58,48 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Dulea <adulea@amazon.de>
+From: zhengbin <zhengbin13@huawei.com>
 
-[ Upstream commit 6ccb72f8374e17d60b58a7bfd5570496332c54e2 ]
+[ Upstream commit 9ad09b1976c562061636ff1e01bfc3a57aebe56b ]
 
-Downgrading an existing large mapping to a mapping using smaller
-page-sizes works only for the mappings created with page-mode 7 (i.e.
-non-default page size).
+If cuse_send_init fails, need to fuse_conn_put cc->fc.
 
-Treat large mappings created with page-mode 0 (i.e. default page size)
-like a non-present mapping and allow to overwrite it in alloc_pte().
+cuse_channel_open->fuse_conn_init->refcount_set(&fc->count, 1)
+                 ->fuse_dev_alloc->fuse_conn_get
+                 ->fuse_dev_free->fuse_conn_put
 
-While around, make sure that we flush the TLB only if we change an
-existing mapping, otherwise we might end up acting on garbage PTEs.
-
-Fixes: 6d568ef9a622 ("iommu/amd: Allow downgrading page-sizes in alloc_pte()")
-Signed-off-by: Andrei Dulea <adulea@amazon.de>
+Fixes: cc080e9e9be1 ("fuse: introduce per-instance fuse_dev structure")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/fuse/cuse.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 3e687f18b203a..f0fdc598f64dc 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -1480,6 +1480,7 @@ static u64 *alloc_pte(struct protection_domain *domain,
- 		pte_level = PM_PTE_LEVEL(__pte);
- 
- 		if (!IOMMU_PTE_PRESENT(__pte) ||
-+		    pte_level == PAGE_MODE_NONE ||
- 		    pte_level == PAGE_MODE_7_LEVEL) {
- 			page = (u64 *)get_zeroed_page(gfp);
- 			if (!page)
-@@ -1490,7 +1491,7 @@ static u64 *alloc_pte(struct protection_domain *domain,
- 			/* pte could have been changed somewhere. */
- 			if (cmpxchg64(pte, __pte, __npte) != __pte)
- 				free_page((unsigned long)page);
--			else if (pte_level == PAGE_MODE_7_LEVEL)
-+			else if (IOMMU_PTE_PRESENT(__pte))
- 				domain->updated = true;
- 
- 			continue;
+diff --git a/fs/fuse/cuse.c b/fs/fuse/cuse.c
+index bab7a0db81dd4..f3b7208846506 100644
+--- a/fs/fuse/cuse.c
++++ b/fs/fuse/cuse.c
+@@ -519,6 +519,7 @@ static int cuse_channel_open(struct inode *inode, struct file *file)
+ 	rc = cuse_send_init(cc);
+ 	if (rc) {
+ 		fuse_dev_free(fud);
++		fuse_conn_put(&cc->fc);
+ 		return rc;
+ 	}
+ 	file->private_data = fud;
 -- 
 2.20.1
 
