@@ -2,111 +2,80 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C440CECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 19:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 454F6ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF0420842
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 19:58:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Mb7rCdU3";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mzCEuFjR"
+	by mail.kernel.org (Postfix) with ESMTP id 1EB7821855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:07:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfJAT6m (ORCPT
+        id S1726793AbfJAUHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 15:58:42 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58268 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbfJAT6l (ORCPT
+        Tue, 1 Oct 2019 16:07:06 -0400
+Received: from mailoutvs11.siol.net ([185.57.226.202]:49809 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726186AbfJAUHG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 15:58:41 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 2041461213; Tue,  1 Oct 2019 19:58:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569959921;
-        bh=Q8hGpRCd/lEiN/IVWHT2uI3mEQRZrM84LGRa872iir4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mb7rCdU3D7HNlFo6yStvhjdFnCRE4IrcHzZWb2r2KhOiSvGGuKsk1I2beiIYkjDnR
-         l48s1OkW2V7EtBWjR30zTpPdXux+FWXJi61GvINWsx2tifcs3SPYM4BRM62bpHTYEO
-         rqbgvlA0GpcF4KchBtfE6raPaBAAs7mCjXP4dHJk=
-Received: from jhugo-perf-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A69716013C;
-        Tue,  1 Oct 2019 19:58:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569959920;
-        bh=Q8hGpRCd/lEiN/IVWHT2uI3mEQRZrM84LGRa872iir4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mzCEuFjRFWiduoiOTTJcHo2yX4KIya4Aa4bLsSXVKvHUHoOXDLuPHhGnJdW4kPySK
-         FjqajuAvDCTykcndSimO8+1fsCuf6fXasRCvNLrC462znq4Ot5PBAedcnh5l5brcoJ
-         q5IpGlMHs9CmmrbpycceZtztj0Yf2gqGQlyr6e0g=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A69716013C
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-To:     bjorn.andersson@linaro.org
-Cc:     agross@kernel.org, marc.w.gonzalez@free.fr,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: [PATCH v6 6/6] arm64: dts: qcom: msm8998: Add mmcc node
-Date:   Tue,  1 Oct 2019 13:58:29 -0600
-Message-Id: <1569959909-14282-1-git-send-email-jhugo@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1569959656-5202-1-git-send-email-jhugo@codeaurora.org>
-References: <1569959656-5202-1-git-send-email-jhugo@codeaurora.org>
+        Tue, 1 Oct 2019 16:07:06 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 6FBE452312C;
+        Tue,  1 Oct 2019 22:07:03 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id isMDxlO-iXu6; Tue,  1 Oct 2019 22:07:03 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 2708D52314C;
+        Tue,  1 Oct 2019 22:07:03 +0200 (CEST)
+Received: from localhost.localdomain (cpe-86-58-59-25.static.triera.net [86.58.59.25])
+        (Authenticated sender: 031275009)
+        by mail.siol.net (Postfix) with ESMTPSA id 7632F52312C;
+        Tue,  1 Oct 2019 22:07:01 +0200 (CEST)
+From:   Jernej Skrabec <jernej.skrabec@siol.net>
+To:     mripard@kernel.org, wens@csie.org
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] clk: sunxi-ng: h6: Allow GPU to change parent rate
+Date:   Tue,  1 Oct 2019 22:06:56 +0200
+Message-Id: <20191001200656.730198-1-jernej.skrabec@siol.net>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add MSM8998 Multimedia Clock Controller DT node.
+GPU PLL was designed with dynamic frequency switching in mind so driver
+can adjust rate based on the GPU load.
 
-Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Allow GPU clock to change parent rate (GPU PLL is the only possible
+parent of GPU clock).
+
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 ---
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/clk/sunxi-ng/ccu-sun50i-h6.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index c926122566ae..5a9efd749fa6 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -3,6 +3,7 @@
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,gcc-msm8998.h>
-+#include <dt-bindings/clock/qcom,mmcc-msm8998.h>
- #include <dt-bindings/clock/qcom,rpmcc.h>
- #include <dt-bindings/power/qcom-rpmpd.h>
- #include <dt-bindings/gpio/gpio.h>
-@@ -1263,6 +1264,19 @@
- 			#size-cells = <0>;
- 		};
- 
-+		mmcc: clock-controller@c8c0000 {
-+			compatible = "qcom,mmcc-msm8998";
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <1>;
-+			reg = <0x0c8c0000 0x40000>;
-+
-+			clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>,
-+				 <&gcc GPLL0_OUT_MAIN>;
-+			clock-names = "xo",
-+				      "gpll0";
-+		};
-+
- 		apcs_glb: mailbox@17911000 {
- 			compatible = "qcom,msm8998-apcs-hmss-global";
- 			reg = <0x17911000 0x1000>;
--- 
-2.17.1
+diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c b/drivers/clk/sunxi-ng/=
+ccu-sun50i-h6.c
+index d89353a3cdec..e254c06c8621 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
++++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
+@@ -290,7 +290,7 @@ static SUNXI_CCU_M_WITH_MUX_GATE(gpu_clk, "gpu", gpu_=
+parents, 0x670,
+ 				       0, 3,	/* M */
+ 				       24, 1,	/* mux */
+ 				       BIT(31),	/* gate */
+-				       0);
++				       CLK_SET_RATE_PARENT);
+=20
+ static SUNXI_CCU_GATE(bus_gpu_clk, "bus-gpu", "psi-ahb1-ahb2",
+ 		      0x67c, BIT(0), 0);
+--=20
+2.23.0
 
