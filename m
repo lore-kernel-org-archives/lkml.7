@@ -2,103 +2,120 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AFBEC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B01ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E3DC20815
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:55:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j4yDI2nT"
+	by mail.kernel.org (Postfix) with ESMTP id 5A78820842
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:56:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389323AbfJAOz0 (ORCPT
+        id S2389340AbfJAO4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 10:55:26 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33999 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726987AbfJAOz0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 10:55:26 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b128so8200368pfa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 07:55:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=Sn9Zfn+XhULxHVCD81RfCVoZrivT06JVI9E5/FBOWiM=;
-        b=j4yDI2nTwT2Cgc79IjkCT0/2mH4FjvELE85s/xf0MfVHY3aisg4o85vfihFmdM4e10
-         zb6aKwrfsrEpu3HFEJ/AfK2R2Qp24gh432aljuykgZbcLHX0vINWSW/CfPx2JXLV34BC
-         MK2Tm93cZxSNwwKu2+i9nMXoF+i8NvjwYtLYHOhnrFxzIbKuFuAMOdPm9qZlCyLrT08v
-         tAip/I4DUATMO6N0p1IoF2WpYHX2RTZNffK0cGF82KlC3ElUe21UdGu+ylop2XiqSe4B
-         268oFTLJREkZUaEc6eBxzYcKsWpt9cU/c74x4c3h0ETfKn+bl5QtMOaIwPR32ZQT0307
-         PbiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Sn9Zfn+XhULxHVCD81RfCVoZrivT06JVI9E5/FBOWiM=;
-        b=s0QgBpDutEjQp79lLf0BwLLAjFTNfjLzxWS0qC3qXuvDhufIfjbtx39jKMwUDxszNh
-         n1UwLDsYzJfaBhWjk411KUqcLvRuxeTi60fpGxy2t7OCHNAjJHJ6IMF/YlnZTAzVbs+x
-         VgNxhApgIKzEPugOZhBrC7tq4Q6LvO47brpIbJJzBpKn3tc/uXP0qymabbgN0EdvtK16
-         7PIAZ4gS6jo0dyzv1Zzf3OApA7fZ4sLCg3r3dMnKiYCZquLtqmst4llMLshA6kcR3oA+
-         XQ7z8wK7jPoOV2vomPxH9L6B/IBg3HeCAjymtA/BwvgcibJRFjHQGioxJmrN0JLmqjXn
-         2OGg==
-X-Gm-Message-State: APjAAAW5LTkEWnV3JLQ0GnvMa9ObC2I6pjNHRiB2tunbsp/6jzBn+Lvh
-        l1YPrfeJzkFnwrKq8YSiMi7G
-X-Google-Smtp-Source: APXvYqytjxnXlEfgN5g4cVgsr0bfkseqn3HCY4tDoIp5KYTwVSF2SrMY3ghvmweQ/gXi+bqtz9EKug==
-X-Received: by 2002:a63:8c52:: with SMTP id q18mr4520549pgn.284.1569941723896;
-        Tue, 01 Oct 2019 07:55:23 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:631a:1d56:6a:8714:31a4:1f8])
-        by smtp.gmail.com with ESMTPSA id k93sm3333433pjh.3.2019.10.01.07.55.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 07:55:22 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     jacopo+renesas@jmondi.org, kieran.bingham+renesas@ideasonboard.com,
-        laurent.pinchart+renesas@ideasonboard.com,
-        niklas.soderlund+renesas@ragnatech.se, mchehab@kernel.org
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH] media: i2c: max9286: Pass default bus type when parsing fwnode endpoint
-Date:   Tue,  1 Oct 2019 20:25:03 +0530
-Message-Id: <20191001145503.5170-1-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 1 Oct 2019 10:56:02 -0400
+Received: from mga17.intel.com ([192.55.52.151]:45896 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726987AbfJAO4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 10:56:02 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 07:56:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,571,1559545200"; 
+   d="scan'208";a="203254365"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by orsmga002.jf.intel.com with SMTP; 01 Oct 2019 07:55:57 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Tue, 01 Oct 2019 17:55:56 +0300
+Date:   Tue, 1 Oct 2019 17:55:56 +0300
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Jacopo Mondi <jacopo@jmondi.org>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Sean Paul <seanpaul@chromium.org>, kernel@collabora.com
+Subject: Re: [PATCH v3 5/5] RFC: drm/atomic-helper: Reapply color
+ transformation after resume
+Message-ID: <20191001145556.GP1208@intel.com>
+References: <20190930222802.32088-1-ezequiel@collabora.com>
+ <20190930222802.32088-6-ezequiel@collabora.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190930222802.32088-6-ezequiel@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The caller of v4l2_fwnode_endpoint_alloc_parse() is expected to pass a
-valid bus_type parameter for proper working of this API. Hence, pass
-V4L2_MBUS_CSI2_DPHY as the bus_type parameter as this driver only supports
-MIPI CSI2 for now. Without this commit, the API fails on 96Boards
-Dragonboard410c connected to MAX9286 deserializer.
+On Mon, Sep 30, 2019 at 07:28:02PM -0300, Ezequiel Garcia wrote:
+> Some platforms are not able to maintain the color transformation
+> state after a system suspend/resume cycle.
+> 
+> Set the colog_mgmt_changed flag so that CMM on the CRTCs in
+> the suspend state are reapplied after system resume.
+> 
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> ---
+> This is an RFC, and it's mostly based on Jacopo Mondi's work https://lkml.org/lkml/2019/9/6/498.
+> 
+> Changes from v2:
+> * New patch.
+> ---
+>  drivers/gpu/drm/drm_atomic_helper.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+> index e41db0f202ca..518488125575 100644
+> --- a/drivers/gpu/drm/drm_atomic_helper.c
+> +++ b/drivers/gpu/drm/drm_atomic_helper.c
+> @@ -3234,8 +3234,20 @@ int drm_atomic_helper_resume(struct drm_device *dev,
+>  			     struct drm_atomic_state *state)
+>  {
+>  	struct drm_modeset_acquire_ctx ctx;
+> +	struct drm_crtc_state *crtc_state;
+> +	struct drm_crtc *crtc;
+> +	unsigned int i;
+>  	int err;
+>  
+> +	for_each_new_crtc_in_state(state, crtc, crtc_state, i) {
+> +		/*
+> +		 * Force re-enablement of CMM after system resume if any
+> +		 * of the DRM color transformation properties was set in
+> +		 * the state saved at system suspend time.
+> +		 */
+> +		if (crtc_state->gamma_lut)
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
+You say "any" but you check the one?
 
-This patch depends on the latest "MAX9286 GMSL Support" series posted
-by Kieran Bingham.
+> +			crtc_state->color_mgmt_changed = true;
 
- drivers/media/i2c/max9286.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+But I'm not convinced this is the best way to go about it. 
+I would generally expect that you repgrogram everything
+when doing a full modeset since the state was possibly
+lost while the crtc was disabled.
 
-diff --git a/drivers/media/i2c/max9286.c b/drivers/media/i2c/max9286.c
-index 9390edf5ad9c..6e1299f15493 100644
---- a/drivers/media/i2c/max9286.c
-+++ b/drivers/media/i2c/max9286.c
-@@ -976,7 +976,9 @@ static int max9286_parse_dt(struct max9286_device *max9286)
- 
- 		/* For the source endpoint just parse the bus configuration. */
- 		if (ep.port == MAX9286_SRC_PAD) {
--			struct v4l2_fwnode_endpoint vep;
-+			struct v4l2_fwnode_endpoint vep = {
-+				.bus_type = V4L2_MBUS_CSI2_DPHY
-+			};
- 			int ret;
- 
- 			ret = v4l2_fwnode_endpoint_alloc_parse(
+> +	}
+>  	drm_mode_config_reset(dev);
+>  
+>  	DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, 0, err);
+> -- 
+> 2.22.0
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
 -- 
-2.17.1
-
+Ville Syrjälä
+Intel
