@@ -2,192 +2,183 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B96C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 034CAECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D0642168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:38:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pkov2Bae"
+	by mail.kernel.org (Postfix) with ESMTP id C82712190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:39:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569947966;
+	bh=sdWjKc7950Ix1oAlzn3Bdm8pbL63ww+3W/0cLP/FqRI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=SH8kWM5W+NXeYOt+HY/toHP8B0C61h10PgFwB/ZvgTxJ/1CZI9ZSJG6gObMHbuaMb
+	 ki/i6gVs9r4UWJFFbBbZ3UY7gCsFZa30t8A2akcVJizGqGUx9J7SX27iKLmDHLzzc9
+	 5ranTJSCGz+nSR5N5rOH1MXLvi0YwUzg+B09Q+jo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727545AbfJAQil (ORCPT
+        id S1727637AbfJAQjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:38:41 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45273 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfJAQik (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:38:40 -0400
-Received: by mail-pl1-f193.google.com with SMTP id u12so5724548pls.12
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 09:38:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LjRIVUxaXCrSIxbGWJHGoDo4fLkBBHBHnXAVTmZ8aiM=;
-        b=pkov2Bae5sU8YuIgY8uJoQV4kwxMA7X91SEV+EZx5im6cV/hwcBusbygW5iFP0CFhG
-         6JNhqQ5bRG5r5LbS9TqMxAlKrn8S9a5rlib4GMZnWgByWSGsI59MF+6PwKfD58U92lIh
-         EtYILnQa/rAVy96wa11Wroc5mx5AYydcV+Fvo67FYlsw3XCGNB5fWMWMELDn8l4dYVNp
-         27JcQqctRlUIJW2+lA23IvJObR8JwLDbsMhRnQBBcd3sbU1RqRy1nTrWtfLVkmHsmnkt
-         kTs33yx3gpcJlJEWut7Gv6J9QcBaDWK0kvR4hoJqfek3/bDpvgJsnh5rvckwZh6Ibwip
-         i6aA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LjRIVUxaXCrSIxbGWJHGoDo4fLkBBHBHnXAVTmZ8aiM=;
-        b=BbKU++WNae5nY7U7xF4VyRYeRPts0chQpselftShItMC8ls+PxPBiLlBCNLIgBb1ID
-         8KSjjSGPPWj3lgsTOceN0u1Z0BMaa43qN7QsL4y+dyLl1PES0c6ZbISbq2W2l1gp4BZ6
-         05xuF9T+4gXn1jrSi44aMq/sHbc2kD4Sz9IbGmmXzvijIwm3XgLTHtjCzU9iMXrej+pr
-         GNHRGqV8B04UjrmhxQaxr7U97T1ubk7SLg2Vg7ug8FyDkIeWQpxTBN55NkbbWqioVHN0
-         aGd1MkmArH+6mAisnhefooqEnlE9+ahI3DRemF5HW5b7jRUkewrZKx25MPJEpb13FA94
-         pWfg==
-X-Gm-Message-State: APjAAAUB3X3yHmqw9y9z0CvHJt2lkmvcHAY3PnWlaXkvAm+mVFceh0Yy
-        IYvVJTfAOweI6ATVjLkAtkT3Pkstj9Dwf5mQiB85fw==
-X-Google-Smtp-Source: APXvYqz8eA2+nkdXATdhm4snuqQqiXDwm1582VhK4FDolzAbqXRskHKauQMej1AdrKCRUJihCPH7hQCMph3opm/hl9I=
-X-Received: by 2002:a17:902:9a95:: with SMTP id w21mr26520522plp.336.1569947919398;
- Tue, 01 Oct 2019 09:38:39 -0700 (PDT)
+        Tue, 1 Oct 2019 12:39:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50294 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725747AbfJAQjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:39:25 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58B532168B;
+        Tue,  1 Oct 2019 16:39:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569947964;
+        bh=sdWjKc7950Ix1oAlzn3Bdm8pbL63ww+3W/0cLP/FqRI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=lcMSEn1iwSYiXpzEX/NXKetKJPHm1YTvbJ/HdTCfJnJ5kJbveV4SsHzjVEZQppWg7
+         yvMf48oSC1BomSPh+Ksi4NTScQRl8Fz/99VlSMP94QeWtiQ8LqfnIKWnpPLj6YPvfb
+         R254JFg47OUEZzBEYC5fS/9UwYb4HPSvQ1Ihu1rQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 01/71] drivers: thermal: qcom: tsens: Fix memory leak from qfprom read
+Date:   Tue,  1 Oct 2019 12:38:11 -0400
+Message-Id: <20191001163922.14735-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <0000000000008e825105865615e3@google.com>
-In-Reply-To: <0000000000008e825105865615e3@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 1 Oct 2019 18:38:28 +0200
-Message-ID: <CAAeHK+zagOE8PZAOkyq6B3-7s1DquTkJ4K8GwPbywbvpXdFSfw@mail.gmail.com>
-Subject: Re: general protection fault in ath6kl_usb_alloc_urb_from_pipe
-To:     syzbot <syzbot+ead4037ec793e025e66f@syzkaller.appspotmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        linux-wireless@vger.kernel.org, netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 4:26 PM syzbot
-<syzbot+ead4037ec793e025e66f@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan/tree/usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=12405cd3200000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
-> dashboard link: https://syzkaller.appspot.com/bug?extid=ead4037ec793e025e66f
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11acc1af200000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1344acd3200000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+ead4037ec793e025e66f@syzkaller.appspotmail.com
->
-> usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-> usb 1-1: config 0 descriptor??
-> usb 1-1: string descriptor 0 read error: -71
-> kasan: CONFIG_KASAN_INLINE enabled
-> kasan: GPF could be caused by NULL-ptr deref or user memory access
-> general protection fault: 0000 [#1] SMP KASAN PTI
-> CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Workqueue: usb_hub_wq hub_event
-> RIP: 0010:__lock_acquire+0xadc/0x37c0 kernel/locking/lockdep.c:3573
-> Code: 00 0f 85 c1 1d 00 00 48 81 c4 10 01 00 00 5b 5d 41 5c 41 5d 41 5e 41
-> 5f c3 48 b8 00 00 00 00 00 fc ff df 4c 89 ea 48 c1 ea 03 <80> 3c 02 00 0f
-> 85 35 1e 00 00 49 81 7d 00 40 39 01 96 0f 84 e8 f5
-> RSP: 0018:ffff8880a84b6f78 EFLAGS: 00010006
-> RAX: dffffc0000000000 RBX: ffff8880a849c980 RCX: 0000000000000000
-> RDX: 0000000000000003 RSI: 0000000000000000 RDI: 0000000000000001
-> RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000001
-> R10: 0000000000000000 R11: ffff8880a849c980 R12: 0000000000000000
-> R13: 0000000000000018 R14: 0000000000000001 R15: 0000000000000001
-> FS:  0000000000000000(0000) GS:ffff8880ad000000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00000000004c6768 CR3: 000000009b83e000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->   lock_acquire+0x10d/0x2f0 kernel/locking/lockdep.c:4211
->   __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
->   _raw_spin_lock_irqsave+0x44/0x60 kernel/locking/spinlock.c:152
->   ath6kl_usb_alloc_urb_from_pipe+0x49/0x2b0
-> drivers/net/wireless/ath/ath6kl/usb.c:135
->   ath6kl_usb_post_recv_transfers.constprop.0+0x233/0x400
-> drivers/net/wireless/ath/ath6kl/usb.c:410
->   ath6kl_usb_start_recv_pipes drivers/net/wireless/ath/ath6kl/usb.c:484
-> [inline]
->   hif_start drivers/net/wireless/ath/ath6kl/usb.c:682 [inline]
->   ath6kl_usb_power_on+0x8d/0x120 drivers/net/wireless/ath/ath6kl/usb.c:1041
->   ath6kl_hif_power_on drivers/net/wireless/ath/ath6kl/hif-ops.h:136 [inline]
->   ath6kl_core_init drivers/net/wireless/ath/ath6kl/core.c:97 [inline]
->   ath6kl_core_init+0x1b8/0x1060 drivers/net/wireless/ath/ath6kl/core.c:66
->   ath6kl_usb_probe+0xc7f/0x1180 drivers/net/wireless/ath/ath6kl/usb.c:1147
->   usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
->   really_probe+0x2da/0xb10 drivers/base/dd.c:509
->   driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
->   __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
->   bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x223/0x3a0 drivers/base/dd.c:844
->   bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
->   device_add+0xad2/0x16e0 drivers/base/core.c:2106
->   usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
->   generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
->   usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
->   really_probe+0x2da/0xb10 drivers/base/dd.c:509
->   driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
->   __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
->   bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x223/0x3a0 drivers/base/dd.c:844
->   bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
->   device_add+0xad2/0x16e0 drivers/base/core.c:2106
->   usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
->   hub_port_connect drivers/usb/core/hub.c:5089 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
->   port_event drivers/usb/core/hub.c:5350 [inline]
->   hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
->   process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
->   worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
->   kthread+0x313/0x420 kernel/kthread.c:253
->   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-> Modules linked in:
-> ---[ end trace 4efca44223c9b0b0 ]---
-> RIP: 0010:__lock_acquire+0xadc/0x37c0 kernel/locking/lockdep.c:3573
-> Code: 00 0f 85 c1 1d 00 00 48 81 c4 10 01 00 00 5b 5d 41 5c 41 5d 41 5e 41
-> 5f c3 48 b8 00 00 00 00 00 fc ff df 4c 89 ea 48 c1 ea 03 <80> 3c 02 00 0f
-> 85 35 1e 00 00 49 81 7d 00 40 39 01 96 0f 84 e8 f5
-> RSP: 0018:ffff8880a84b6f78 EFLAGS: 00010006
-> RAX: dffffc0000000000 RBX: ffff8880a849c980 RCX: 0000000000000000
-> RDX: 0000000000000003 RSI: 0000000000000000 RDI: 0000000000000001
-> RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000001
-> R10: 0000000000000000 R11: ffff8880a849c980 R12: 0000000000000000
-> R13: 0000000000000018 R14: 0000000000000001 R15: 0000000000000001
-> FS:  0000000000000000(0000) GS:ffff8880ad000000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00000000004c6768 CR3: 000000009b83e000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-#syz fix: ath6kl: fix a NULL-ptr-deref bug in ath6kl_usb_alloc_urb_from_pipe()
+[ Upstream commit 6b8249abb093551ef173d13a25ed0044d5dd33e0 ]
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=39d170b3cb62ba98567f5c4f40c27b5864b304e5
+memory returned as part of nvmem_read via qfprom_read should be
+freed by the consumer once done.
+Existing code is not doing it so fix it.
+
+Below memory leak detected by kmemleak
+   [<ffffff80088b7658>] kmemleak_alloc+0x50/0x84
+    [<ffffff80081df120>] __kmalloc+0xe8/0x168
+    [<ffffff80086db350>] nvmem_cell_read+0x30/0x80
+    [<ffffff8008632790>] qfprom_read+0x4c/0x7c
+    [<ffffff80086335a4>] calibrate_v1+0x34/0x204
+    [<ffffff8008632518>] tsens_probe+0x164/0x258
+    [<ffffff80084e0a1c>] platform_drv_probe+0x80/0xa0
+    [<ffffff80084de4f4>] really_probe+0x208/0x248
+    [<ffffff80084de2c4>] driver_probe_device+0x98/0xc0
+    [<ffffff80084dec54>] __device_attach_driver+0x9c/0xac
+    [<ffffff80084dca74>] bus_for_each_drv+0x60/0x8c
+    [<ffffff80084de634>] __device_attach+0x8c/0x100
+    [<ffffff80084de6c8>] device_initial_probe+0x20/0x28
+    [<ffffff80084dcbb8>] bus_probe_device+0x34/0x7c
+    [<ffffff80084deb08>] deferred_probe_work_func+0x6c/0x98
+    [<ffffff80080c3da8>] process_one_work+0x160/0x2f8
+
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Acked-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/thermal/qcom/tsens-8960.c |  2 ++
+ drivers/thermal/qcom/tsens-v0_1.c | 12 ++++++++++--
+ drivers/thermal/qcom/tsens-v1.c   |  1 +
+ drivers/thermal/qcom/tsens.h      |  1 +
+ 4 files changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/thermal/qcom/tsens-8960.c b/drivers/thermal/qcom/tsens-8960.c
+index 8d9b721dadb65..e46a4e3f25c42 100644
+--- a/drivers/thermal/qcom/tsens-8960.c
++++ b/drivers/thermal/qcom/tsens-8960.c
+@@ -229,6 +229,8 @@ static int calibrate_8960(struct tsens_priv *priv)
+ 	for (i = 0; i < num_read; i++, s++)
+ 		s->offset = data[i];
+ 
++	kfree(data);
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/thermal/qcom/tsens-v0_1.c b/drivers/thermal/qcom/tsens-v0_1.c
+index 6f26fadf4c279..055647bcee67d 100644
+--- a/drivers/thermal/qcom/tsens-v0_1.c
++++ b/drivers/thermal/qcom/tsens-v0_1.c
+@@ -145,8 +145,10 @@ static int calibrate_8916(struct tsens_priv *priv)
+ 		return PTR_ERR(qfprom_cdata);
+ 
+ 	qfprom_csel = (u32 *)qfprom_read(priv->dev, "calib_sel");
+-	if (IS_ERR(qfprom_csel))
++	if (IS_ERR(qfprom_csel)) {
++		kfree(qfprom_cdata);
+ 		return PTR_ERR(qfprom_csel);
++	}
+ 
+ 	mode = (qfprom_csel[0] & MSM8916_CAL_SEL_MASK) >> MSM8916_CAL_SEL_SHIFT;
+ 	dev_dbg(priv->dev, "calibration mode is %d\n", mode);
+@@ -181,6 +183,8 @@ static int calibrate_8916(struct tsens_priv *priv)
+ 	}
+ 
+ 	compute_intercept_slope(priv, p1, p2, mode);
++	kfree(qfprom_cdata);
++	kfree(qfprom_csel);
+ 
+ 	return 0;
+ }
+@@ -198,8 +202,10 @@ static int calibrate_8974(struct tsens_priv *priv)
+ 		return PTR_ERR(calib);
+ 
+ 	bkp = (u32 *)qfprom_read(priv->dev, "calib_backup");
+-	if (IS_ERR(bkp))
++	if (IS_ERR(bkp)) {
++		kfree(calib);
+ 		return PTR_ERR(bkp);
++	}
+ 
+ 	calib_redun_sel =  bkp[1] & BKP_REDUN_SEL;
+ 	calib_redun_sel >>= BKP_REDUN_SHIFT;
+@@ -313,6 +319,8 @@ static int calibrate_8974(struct tsens_priv *priv)
+ 	}
+ 
+ 	compute_intercept_slope(priv, p1, p2, mode);
++	kfree(calib);
++	kfree(bkp);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/thermal/qcom/tsens-v1.c b/drivers/thermal/qcom/tsens-v1.c
+index 10b595d4f6199..870f502f2cb6c 100644
+--- a/drivers/thermal/qcom/tsens-v1.c
++++ b/drivers/thermal/qcom/tsens-v1.c
+@@ -138,6 +138,7 @@ static int calibrate_v1(struct tsens_priv *priv)
+ 	}
+ 
+ 	compute_intercept_slope(priv, p1, p2, mode);
++	kfree(qfprom_cdata);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
+index 2fd94997245bf..b89083b61c383 100644
+--- a/drivers/thermal/qcom/tsens.h
++++ b/drivers/thermal/qcom/tsens.h
+@@ -17,6 +17,7 @@
+ 
+ #include <linux/thermal.h>
+ #include <linux/regmap.h>
++#include <linux/slab.h>
+ 
+ struct tsens_priv;
+ 
+-- 
+2.20.1
+
