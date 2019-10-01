@@ -2,128 +2,97 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EAD2C35280
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 02:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99934C32792
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 02:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 763EC2087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 02:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68A9520842
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 02:55:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WvJzPJQ4"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UwpO9R7w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732042AbfJACy3 (ORCPT
+        id S1732415AbfJACzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 22:54:29 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45774 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727669AbfJACy3 (ORCPT
+        Mon, 30 Sep 2019 22:55:02 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:48784 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727669AbfJACzC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 22:54:29 -0400
-Received: by mail-pg1-f195.google.com with SMTP id q7so8562351pgi.12;
-        Mon, 30 Sep 2019 19:54:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=sxdXfiuNl2yFvJ36iDY38onydEuHSgA4zj8cf4BOews=;
-        b=WvJzPJQ4MYk59SYfnZ7pFb5nQLIKzWCZoHIr570P6ZkrSfBi7YIQrtO7bVjG7iOzK9
-         BBbTlJV9h1dsHl2dsEOZ5l8jcawQ2ktzMNogtNU14kUrJzxKKo1LwA/GIdcTJTVuZH3Z
-         W1IGGYIzyyvMOXGW96LgoUgv6hP24vuuiOOKAn6+j+vR1vD5ydjA2/wa3pbRoTwrQp2S
-         1YlEodj+7RI5QCpw1uaOyLAqkTlKggU21qOrC0oIJuGOvgmupfh7tMG1Qr1adBaUHCp7
-         Cd0cpGr98ddYeeFpPl5nWq2/y4JPiYdMXoGR/7hfinHVKJ4wPcJQx1kuhQ8srAqHKIyj
-         WZow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sxdXfiuNl2yFvJ36iDY38onydEuHSgA4zj8cf4BOews=;
-        b=O0y2O372+yDIKqm/70WTqa8r+B50Zzhpkrf7QJrD38jYvvuCxbyURkW7YWUyYKrTUm
-         b/Uz1HBrCwuvPOcyl+6ZlNVSr7FONkkxLG9ueNo2X82gwLAUrpqNDMvaiWIeuOV8nqVL
-         kWuArZiwNyPyRUOYzO2+aq2ALM2kyzPZ9UTFTNKWRkDa/MqnqsUmSrybPInEIS2Dem1E
-         WCzp4iXXajfq/iYxd91e3SYX24Cj5j5xlIFNpiSyzjMjsWAGl3wyhp3gvnx2eiWa0lC4
-         BrxN6mQYmAi1gah0i6xqdnDUoSiTmzvNHlIObCdO2T+Smg15XfGox219CZkrjdYrB33b
-         TiKA==
-X-Gm-Message-State: APjAAAWbqIGltwcdLbMFcRWK5Hi+9JmeEXwvhNCTpBEjrgTIc9k5FrZj
-        hBA1AW1qu0HzlskPJVfFIa9tQMTg
-X-Google-Smtp-Source: APXvYqziA8ujixxzDMRL/C5XU0l8zVQ8tUDosVuZXzauorvclA9c5mKPQjTamNyOJXRQJ+YAD+lh/Q==
-X-Received: by 2002:a62:4dc5:: with SMTP id a188mr234181pfb.250.1569898468601;
-        Mon, 30 Sep 2019 19:54:28 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id d76sm18347397pga.80.2019.09.30.19.54.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Sep 2019 19:54:28 -0700 (PDT)
-Subject: Re: Problem sharing interrupts between gpioa and uart0 on Broadcom
- Hurricane 2 (iProc)
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "rayagonda.kokatanur@broadcom.com" <rayagonda.kokatanur@broadcom.com>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "li.jin@broadcom.com" <li.jin@broadcom.com>,
-        "sbranden@broadcom.com" <sbranden@broadcom.com>,
-        "rjui@broadcom.com" <rjui@broadcom.com>
-Cc:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-References: <32c3d1dfe61a656e3250438d887e5ba91bd880d0.camel@alliedtelesis.co.nz>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <d72a965a-e4e1-ba5d-cd62-b31939e75e44@gmail.com>
-Date:   Mon, 30 Sep 2019 19:54:28 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Mon, 30 Sep 2019 22:55:02 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x912sukG122995;
+        Tue, 1 Oct 2019 02:54:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=oUxaSTBomihR1YtYfZj38KE2aeIXjpEiC37YHJQvq0A=;
+ b=UwpO9R7waAYCH40YOILclnjcEGr5PHJqDNmWEEsmlXa1txsV5AIU53oF4uHonjKw1c6A
+ liAZVmkz9r+DOp8SmWfjXwCf2tjqgDGL/GpKu2a0L/k9xYsnpcZ+EPy5z8MPK/gTzNeE
+ /uNA7Bob74Zfrh9WD3/F82wOw/P+A2drAH3AyRwLe4v0hskJ3UnX/ZvMFtw4IwHLaCW7
+ VqS6b0AId7tQpK1NjOh6mHtpzEk8QpU/N9MerJWJhYnMiy1aDIG6LwUvAGoHLB6AAapQ
+ 2XfeMCwE5aT6BXhcDaKdb6EmB60CghKSnafIxdYoBk8+D1DzQNhvQM7iwvwWH9Bbx3Ow RQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2v9xxujvy6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Oct 2019 02:54:56 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x912mw7x026439;
+        Tue, 1 Oct 2019 02:54:55 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2vbmpxh868-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Oct 2019 02:54:55 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x912sp8D028073;
+        Tue, 1 Oct 2019 02:54:54 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 30 Sep 2019 19:54:51 -0700
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
+        Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: bfa: release allocated memory in case of error
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190910234417.22151-1-navid.emamdoost@gmail.com>
+Date:   Mon, 30 Sep 2019 22:54:48 -0400
+In-Reply-To: <20190910234417.22151-1-navid.emamdoost@gmail.com> (Navid
+        Emamdoost's message of "Tue, 10 Sep 2019 18:44:15 -0500")
+Message-ID: <yq1wodpxjif.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <32c3d1dfe61a656e3250438d887e5ba91bd880d0.camel@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=931
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910010028
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910010029
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+Navid,
 
-On 9/30/2019 7:33 PM, Chris Packham wrote:
-> Hi,
-> 
-> We have a platform using the BCM53344 integrated switch/CPU. This is
-> part of the Hurricane 2 (technically Wolfhound) family of devices.
-> 
-> Currently we're using pieces of Broadcom's "iProc" SDK based on an out
-> of date kernel and we'd very much like to be running as close to
-> upstream as possible. The fact that the Ubiquiti UniFi Switch 8 is
-> upstream gives me some hope.
+> In bfad_im_get_stats if bfa_port_get_stats fails, allocated memory
+> needs to be released.
 
-FYI, I could not get enough information from the iProc SDK to port (or
-not) the clock driver, so if nothing else, that is an area that may
-require immediate work (though sometimes fixed-clocks would do just fine).
+Applied to 5.5/scsi-queue, thanks!
 
-> 
-> My current problem is the fact that the uart0 interrupt is shared with
-> the Chip Common A gpio block. When I have and interrupt node on the
-> gpio in the device tree I get an init exit at startup. If I remove the
-> interrupt node the system will boot (except I don't get cascaded
-> interrupts from the GPIOs).
-> 
-> Looking at the pinctrl-nsp-gpio.c it looks as though I might be able to
-> make this work if I can convince the gpio code to return IRQ_HANDLED or
-> IRQ_NONE but I'm struggling against the fact that the pinctrl-iproc-
-> gpio.c defers it's interrupt handing to the gpio core.
-
-Not sure I follow you here, what part is being handed to gpiolib? The
-top interrupt handler under nsp_gpio_irq_handler() will try to do
-exactly as you described. In fact, there are other iProc designs where
-"gpio-a" and another interrupt, arch/arm/boot/dts/bcm-nsp.dtsi is one
-such example and I never had problems with that part of NSP.
-
-> 
-> Is there any way I can get the gpio core to deal with the shared
-> interrupt?
 -- 
-Florian
+Martin K. Petersen	Oracle Linux Engineering
