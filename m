@@ -2,119 +2,163 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EF1C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 267B7C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67C5921906
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED34521872
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:31:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nIPiPzVK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388491AbfJANaV (ORCPT
+        id S2388524AbfJANbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 09:30:21 -0400
-Received: from mga18.intel.com ([134.134.136.126]:28518 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726710AbfJANaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 09:30:21 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 06:30:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,571,1559545200"; 
-   d="scan'208";a="205063718"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 01 Oct 2019 06:30:16 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 01 Oct 2019 16:30:16 +0300
-Date:   Tue, 1 Oct 2019 16:30:16 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-usb@vger.kernel.org,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Lukas Wunner <lukas@wunner.de>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Mario.Limonciello@dell.com,
-        Anthony Wong <anthony.wong@canonical.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 12/22] thunderbolt: Add Display Port CM handshake for
- Titan Ridge devices
-Message-ID: <20191001133016.GS2714@lahna.fi.intel.com>
-References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
- <20191001113830.13028-13-mika.westerberg@linux.intel.com>
- <20191001124409.GG2954373@kroah.com>
+        Tue, 1 Oct 2019 09:31:03 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40840 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726764AbfJANbC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 09:31:02 -0400
+Received: by mail-wm1-f68.google.com with SMTP id b24so3247591wmj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 06:31:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TMOiK/ong3gVzdDTe/F2NxVHI4YyPekmJVpFma1NZ2M=;
+        b=nIPiPzVKnQAkILb7/EzPHhsDF2+v4bXcalvcQXJeQKOA4N+jVzjyDbK8NjlW95n28s
+         8vKsmhY90Zl/B9XBeYtrjSVB5jTOkdXb+ZOPjiHMB+XqmlGxqH2ujiWh9wEZJ45nm09s
+         SL81/457W5tfseotqUjFqDaiV70issdDlAQsoMIGe1DZVlPhwDwxCAo1C/JY+VPqZMcg
+         QsnkWPQEwC/5fvSZpf+PIqIk550RAIctKBBwcwIWfBWWLGfG7dLVsgRmYk3XTDj5fY+y
+         wWJDXygEKf01xhUjPWDudr7hFAYNLsclJ9XMTZgQpx1kZXa8MNplXsYbXoaAbZ3Oo9WL
+         XORg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TMOiK/ong3gVzdDTe/F2NxVHI4YyPekmJVpFma1NZ2M=;
+        b=Wqu5tUZvoq9csTR5n9TZfSTD1f+3847bCVujaSA+GRRw1Tc0HoGJHn/okXBJvAK38p
+         cEVmXeDFrzETTviW4K5Eacu+j8GpUDIHyh5gFXNjkrh77YlATfJP0jfODGkMNmSsrtfU
+         5kQ1uzWMEpK2MBGgLf7IiuYKJTGTJLjEIIcxXNs6vG51bRsqnCBN6yOCJ9GP6gXhgtKc
+         KYU4tFWNbnkKCpHdp07gaJX7K03BwBD9iJiSWhQsEILtzJBjbBXyCPOJUtQcncJEFn5U
+         kD6lpHmWTfgvjYn4dc9VAbC7aKgZ3P13GkYG/a6Xajg1adNO3Z7OyEurtI4KjTzwrQAQ
+         tnNQ==
+X-Gm-Message-State: APjAAAXsgDBjmIVSXG0zv2qKDWlm6Kr/2xxqOp4GgSQVnTg8dyvo8OuA
+        WkcavIHYzLeUBYn5OjalTX0=
+X-Google-Smtp-Source: APXvYqzKO+rBSIj5aqRA7kJeiKI+PdbSFr6ErDjtCUo5sN87MBRsM85wjYbIa3xE6uFSyaFSWxQ3rw==
+X-Received: by 2002:a1c:4c12:: with SMTP id z18mr3702146wmf.45.1569936659185;
+        Tue, 01 Oct 2019 06:30:59 -0700 (PDT)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id o9sm40313990wrh.46.2019.10.01.06.30.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2019 06:30:57 -0700 (PDT)
+Date:   Tue, 1 Oct 2019 15:30:55 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH v1 4/4] usb: host: xhci-tegra: Switch to use %ptT
+Message-ID: <20191001133055.GA3563296@ulmo>
+References: <20190104193009.30907-1-andriy.shevchenko@linux.intel.com>
+ <20190104193009.30907-4-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="WIyZ46R2i8wDzkSu"
 Content-Disposition: inline
-In-Reply-To: <20191001124409.GG2954373@kroah.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190104193009.30907-4-andriy.shevchenko@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 02:44:09PM +0200, Greg Kroah-Hartman wrote:
-> On Tue, Oct 01, 2019 at 02:38:20PM +0300, Mika Westerberg wrote:
-> > Titan Ridge devices and newer need an additional connection manager
-> > handshake in order to do proper Display Port tunneling so implement it
-> > here.
-> > 
-> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > ---
-> >  drivers/thunderbolt/tb_regs.h |  3 +++
-> >  drivers/thunderbolt/tunnel.c  | 44 +++++++++++++++++++++++++++++++++++
-> >  2 files changed, 47 insertions(+)
-> > 
-> > diff --git a/drivers/thunderbolt/tb_regs.h b/drivers/thunderbolt/tb_regs.h
-> > index 3a39490a954b..8d11b4a2d552 100644
-> > --- a/drivers/thunderbolt/tb_regs.h
-> > +++ b/drivers/thunderbolt/tb_regs.h
-> > @@ -252,6 +252,9 @@ struct tb_regs_port_header {
-> >  #define ADP_DP_CS_3_HDPC			BIT(9)
-> >  #define DP_LOCAL_CAP				0x04
-> >  #define DP_REMOTE_CAP				0x05
-> > +#define DP_STATUS_CTRL				0x06
-> > +#define DP_STATUS_CTRL_CMHS			BIT(25)
-> > +#define DP_STATUS_CTRL_UF			BIT(26)
-> >  
-> >  /* PCIe adapter registers */
-> >  #define ADP_PCIE_CS_0				0x00
-> > diff --git a/drivers/thunderbolt/tunnel.c b/drivers/thunderbolt/tunnel.c
-> > index 3353396e0806..369800110e5e 100644
-> > --- a/drivers/thunderbolt/tunnel.c
-> > +++ b/drivers/thunderbolt/tunnel.c
-> > @@ -6,6 +6,7 @@
-> >   * Copyright (C) 2019, Intel Corporation
-> >   */
-> >  
-> > +#include <linux/delay.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/list.h>
-> >  
-> > @@ -242,6 +243,41 @@ struct tb_tunnel *tb_tunnel_alloc_pci(struct tb *tb, struct tb_port *up,
-> >  	return tunnel;
-> >  }
-> >  
-> > +static int tb_dp_cm_handshake(struct tb_port *in, struct tb_port *out)
-> > +{
-> > +	int timeout = 10;
-> > +	u32 val;
-> > +	int ret;
-> > +
-> > +	/* Both ends need to support this */
-> > +	if (!tb_switch_is_tr(in->sw) || !tb_switch_is_tr(out->sw))
-> > +		return 0;
-> 
-> So if the ends are both "Titan Ridge", matches your changelog text, but
-> where is the "and newer" comment being checked here?
 
-By "and newer" I mean USB4 devices which are added in patch 17/22. I can
-update the changelog here to mention just Titan Ridge, though.
+--WIyZ46R2i8wDzkSu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Jan 04, 2019 at 09:30:09PM +0200, Andy Shevchenko wrote:
+> Use %ptT instead of open coded variant to print content of
+> time64_t type in human readable format.
+>=20
+> Cc: Mathias Nyman <mathias.nyman@intel.com>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Jonathan Hunter <jonathanh@nvidia.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/usb/host/xhci-tegra.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/usb/host/xhci-tegra.c b/drivers/usb/host/xhci-tegra.c
+> index 938ff06c0349..ed3eea3876e2 100644
+> --- a/drivers/usb/host/xhci-tegra.c
+> +++ b/drivers/usb/host/xhci-tegra.c
+> @@ -820,7 +820,6 @@ static int tegra_xusb_load_firmware(struct tegra_xusb=
+ *tegra)
+>  	const struct firmware *fw;
+>  	unsigned long timeout;
+>  	time64_t timestamp;
+> -	struct tm time;
+>  	u64 address;
+>  	u32 value;
+>  	int err;
+> @@ -925,11 +924,8 @@ static int tegra_xusb_load_firmware(struct tegra_xus=
+b *tegra)
+>  	}
+> =20
+>  	timestamp =3D le32_to_cpu(header->fwimg_created_time);
+> -	time64_to_tm(timestamp, 0, &time);
+> =20
+> -	dev_info(dev, "Firmware timestamp: %ld-%02d-%02d %02d:%02d:%02d UTC\n",
+> -		 time.tm_year + 1900, time.tm_mon + 1, time.tm_mday,
+> -		 time.tm_hour, time.tm_min, time.tm_sec);
+> +	dev_info(dev, "Firmware timestamp: %ptT UTC\n", &timestamp);
+
+If I understand correctly, this will now print:
+
+	Firmware timestamp: YYYY-mm-ddTHH:MM:SS UTC
+
+whereas it earlier printed:
+
+	Firmware timestamp: YYYY-mm-dd HH:MM:SS UTC
+
+So the 'T' character is different now. Could we make this something
+along the lines of:
+
+	dev_info(dev, "Firmware timestamp: %ptTd %ptTt UTC\n", &timestamp,
+		 &timestamp);
+
+To keep the output identical? It's possible that there are some scripts
+that parse the log to find out which firmware was loaded.
+
+Thierry
+
+--WIyZ46R2i8wDzkSu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2TVQwACgkQ3SOs138+
+s6FHsw/8C8TdckQdLtcvasjLL642TQY/rkVk+I9v1mPG28VZD8cEECNuIMM6nHRP
+IMLX4zk6KcizU4UqKGsc6dtI0NwjrpEU8yXaZj98gBZxDy4xY6fSoreFV5AtbRgz
+5VyS244I3weK88MhFbb5IDwF+GcNu7RxIohs8gpipCpUfSDsV4QsxQtWc/AS9G6P
+p5o+BgPGPcPS4wkpWyBDyi0WBg5aw/p+AQ74SW1/phVmypVfyEiStTixzicrEAu3
+v2W95xU+JH9UOc5RlIiyC/Ni72wCUGMz1uKyjpvOhh7ih8fOyGHpRfIssjko589c
+ojJk4MfDTQA6ghRBShPU6LyeUTmnjR8SejdjtNZOXSNygWCGkhRbtN6tXcQzkd8D
+NtTqmkXbl3PPDLwrFNp+5QFfBsftnyK/Pnsk0/G+Y6Mb0n1CuAneOUI6YueXDgGv
+T4K59RylicPuTFc3RIB+eVcnfvYloDoLYJDekSPAy2LeDyRYFgrG84WsZn/4lWZC
+GYaJbPZ3NCR9MxWSIzKvqXJCeDl/e/zziYDhIiqpAjBbWEZNaZOGol4lR6pT+IK9
+gRxvqglWXsHhAZ3+mfw4f7TqEpDkDGa4Mr6mCckSXVAaxZ1QLSR2En2GO3Vp3+5P
+iihHaXYEJBzqc0Lqn2iHexLj+gydqmov9WcwWirOlWQeWPftU5Q=
+=5ex1
+-----END PGP SIGNATURE-----
+
+--WIyZ46R2i8wDzkSu--
