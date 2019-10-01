@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5E5ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25740ECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35D8E21A4A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7CE021906
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948132;
-	bh=DNNfLFjNLJirXZGKKwbJVR1o9YeP0aSn2OSCE44mIxM=;
+	s=default; t=1569948134;
+	bh=lLf2g9KCQK5PoHP2qYZDVggikNw887AYHXv+3PO2oMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2vvmBaaSIz9I84mjouL++yf9mjSxylpvPTIzUimQja5JLfupFuipAj/mvuoKkjZKX
-	 TAz5gzMwy8esSx75ZyA5WN1tTMGXSjK1uYCwXOlR4x56YudYHi+/ncXAp/mr7CARDr
-	 kaHIzLWX6oGlqTHA16EsO8aiL5xF7Jy7gkU1fZxs=
+	b=GNABW6nnaIJ/C7CfM9Qutf7entzXoSFhl8tirn/dIv3Ju3MuR9Rt0rTrM1exvExCX
+	 pzfr+uXW9Ss5oumWPlOluZ4thSoUwpBIzicDeExRzTYUvmh2d/DDtA1Vwjbm5usFd2
+	 VQmc4g4ZqzvmG+AONCTojnICd9oLQ9/XmrgS2h2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731701AbfJAQmL (ORCPT
+        id S1731756AbfJAQmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:42:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53920 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:42:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726521AbfJAQmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:42:09 -0400
+        id S1731692AbfJAQmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:42:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26A4420B7C;
-        Tue,  1 Oct 2019 16:42:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6282C20B7C;
+        Tue,  1 Oct 2019 16:42:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948128;
-        bh=DNNfLFjNLJirXZGKKwbJVR1o9YeP0aSn2OSCE44mIxM=;
+        s=default; t=1569948131;
+        bh=lLf2g9KCQK5PoHP2qYZDVggikNw887AYHXv+3PO2oMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yBOCxhwaKDjQ4DrAMPNCYrBEN9FcCAQJ2i2kTFYOV4vvrB1zG//moeqUPyG9lS5Er
-         1I95Y0k4DUjLxARH+Q0tXLEe7pGl3z2/9d+oUWppCnd7yY7nfwS7zmYiboiaDfLDgc
-         1YaKAudzmGWDwhzJwb5sXu9SGXMEbpv9A/4ds9Jc=
+        b=exMS1+0doRtSYnFDzacdeWaWwur0wlM3kSRb9jQ2tp4QF2PCTR3cyfh8fhdH91C07
+         Noxc9e61WRUmf3mzL9vDf/aQjIg8eZipxxwpGGcDGyPfM5e4XwhYGWGX9EUXbVMDdL
+         s1Ae06Y9JeNtnZq+dlG9q04QLyOPu5Cp6k5/ZPeM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sanjay R Mehta <sanju.mehta@amd.com>, Jon Mason <jdmason@kudzu.us>,
-        Sasha Levin <sashal@kernel.org>, linux-ntb@googlegroups.com
-Subject: [PATCH AUTOSEL 5.2 29/63] ntb: point to right memory window index
-Date:   Tue,  1 Oct 2019 12:40:51 -0400
-Message-Id: <20191001164125.15398-29-sashal@kernel.org>
+Cc:     Stefan Mavrodiev <stefan@olimex.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 31/63] thermal_hwmon: Sanitize thermal_zone type
+Date:   Tue,  1 Oct 2019 12:40:53 -0400
+Message-Id: <20191001164125.15398-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164125.15398-1-sashal@kernel.org>
 References: <20191001164125.15398-1-sashal@kernel.org>
@@ -58,51 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sanjay R Mehta <sanju.mehta@amd.com>
+From: Stefan Mavrodiev <stefan@olimex.com>
 
-[ Upstream commit ae89339b08f3fe02457ec9edd512ddc3d246d0f8 ]
+[ Upstream commit 8c7aa184281c01fc26f319059efb94725012921d ]
 
-second parameter of ntb_peer_mw_get_addr is pointing to wrong memory
-window index by passing "peer gidx" instead of "local gidx".
+When calling thermal_add_hwmon_sysfs(), the device type is sanitized by
+replacing '-' with '_'. However tz->type remains unsanitized. Thus
+calling thermal_hwmon_lookup_by_type() returns no device. And if there is
+no device, thermal_remove_hwmon_sysfs() fails with "hwmon device lookup
+failed!".
 
-For ex, "local gidx" value is '0' and "peer gidx" value is '1', then
+The result is unregisted hwmon devices in the sysfs.
 
-on peer side ntb_mw_set_trans() api is used as below with gidx pointing to
-local side gidx which is '0', so memroy window '0' is chosen and XLAT '0'
-will be programmed by peer side.
+Fixes: 409ef0bacacf ("thermal_hwmon: Sanitize attribute name passed to hwmon")
 
-    ntb_mw_set_trans(perf->ntb, peer->pidx, peer->gidx, peer->inbuf_xlat,
-                    peer->inbuf_size);
-
-Now, on local side ntb_peer_mw_get_addr() is been used as below with gidx
-pointing to "peer gidx" which is '1', so pointing to memory window '1'
-instead of memory window '0'.
-
-    ntb_peer_mw_get_addr(perf->ntb,  peer->gidx, &phys_addr,
-                        &peer->outbuf_size);
-
-So this patch pass "local gidx" as parameter to ntb_peer_mw_get_addr().
-
-Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
+Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/test/ntb_perf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/thermal/thermal_hwmon.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/ntb/test/ntb_perf.c b/drivers/ntb/test/ntb_perf.c
-index 11a6cd3740049..c6a1dee3c429b 100644
---- a/drivers/ntb/test/ntb_perf.c
-+++ b/drivers/ntb/test/ntb_perf.c
-@@ -1370,7 +1370,7 @@ static int perf_setup_peer_mw(struct perf_peer *peer)
- 	int ret;
+diff --git a/drivers/thermal/thermal_hwmon.c b/drivers/thermal/thermal_hwmon.c
+index 40c69a533b240..dd5d8ee379287 100644
+--- a/drivers/thermal/thermal_hwmon.c
++++ b/drivers/thermal/thermal_hwmon.c
+@@ -87,13 +87,17 @@ static struct thermal_hwmon_device *
+ thermal_hwmon_lookup_by_type(const struct thermal_zone_device *tz)
+ {
+ 	struct thermal_hwmon_device *hwmon;
++	char type[THERMAL_NAME_LENGTH];
  
- 	/* Get outbound MW parameters and map it */
--	ret = ntb_peer_mw_get_addr(perf->ntb, peer->gidx, &phys_addr,
-+	ret = ntb_peer_mw_get_addr(perf->ntb, perf->gidx, &phys_addr,
- 				   &peer->outbuf_size);
- 	if (ret)
- 		return ret;
+ 	mutex_lock(&thermal_hwmon_list_lock);
+-	list_for_each_entry(hwmon, &thermal_hwmon_list, node)
+-		if (!strcmp(hwmon->type, tz->type)) {
++	list_for_each_entry(hwmon, &thermal_hwmon_list, node) {
++		strcpy(type, tz->type);
++		strreplace(type, '-', '_');
++		if (!strcmp(hwmon->type, type)) {
+ 			mutex_unlock(&thermal_hwmon_list_lock);
+ 			return hwmon;
+ 		}
++	}
+ 	mutex_unlock(&thermal_hwmon_list_lock);
+ 
+ 	return NULL;
 -- 
 2.20.1
 
