@@ -2,97 +2,87 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9448ECE58B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 19:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 227D0ECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 19:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89749222BE
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 19:09:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=deutnet.info header.i=@deutnet.info header.b="ujWAewN8"
+	by mail.kernel.org (Postfix) with ESMTP id EF2CB215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 19:10:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbfJATJx (ORCPT
+        id S1726946AbfJATKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 15:09:53 -0400
-Received: from srv1.deutnet.info ([116.203.153.70]:55206 "EHLO
-        srv1.deutnet.info" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725991AbfJATJx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 15:09:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deutnet.info; s=default; h=In-Reply-To:Message-ID:Subject:Cc:To:From:Date;
-         bh=/BP8hOWE8SJ76SRf1RmiWyLqtKvXhcXYW4oao3LZWlU=; b=ujWAewN8qvEhfRACKz/cHB94/
-        E9/AEznd+AcWQtBdLzH1qfQtwblimz2V8UIchzsBt/jfGjTWMfNlnf77/nXzSvhF2j5+1PmQptQKd
-        2RS3Xt10R4ubq714D4mkofKoYd5nfTD9RSuQYS7ACBgg1JRpg4OTkjepOfVurTxG8evOC7oGXHrwM
-        EMB/CPv3O+r+myMLLcZvUL0+7VuWKAolYu6GPK8YCE1r0SkpM4Z5W7n6gU9Jy9FpDZqe4N6se0sCg
-        pfB+ySTNIYOb/ohv8Y+y0AqtV6tdL77iMiy6zGlN/Vflh2cvP8qxSWbjjf+yS/7J9F5rYJUKIoXaS
-        IXIH8RRgQ==;
-Received: from [2001:bc8:3dc9::1] (helo=localhost)
-        by srv1.deutnet.info with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <agriveaux@deutnet.info>)
-        id 1iFNWv-0000qa-0E; Tue, 01 Oct 2019 21:09:49 +0200
-Received: from agriveaux by localhost with local (Exim 4.92)
-        (envelope-from <agriveaux@deutnet.info>)
-        id 1iFNWu-00BgOM-Kk; Tue, 01 Oct 2019 21:09:48 +0200
-Date:   Tue, 1 Oct 2019 21:09:48 +0200
-From:   Alexandre GRIVEAUX <agriveaux@deutnet.info>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org,
-        paul.burton@mips.com, jhogan@kernel.org, agriveaux@deutnet.info
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH v2 5/5] MIPS: JZ4780: DTS: Add CPU nodes
-Message-ID: <0dbd1986be4ee50bdd9f45c140aded7c49fddb8a.1569955865.git.agriveaux@deutnet.info>
-References: <cover.1569955865.git.agriveaux@deutnet.info>
+        Tue, 1 Oct 2019 15:10:30 -0400
+Received: from mga02.intel.com ([134.134.136.20]:19499 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725991AbfJATK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 15:10:29 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 12:10:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,571,1559545200"; 
+   d="scan'208";a="205130764"
+Received: from yexing-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.37.57])
+  by fmsmga001.fm.intel.com with ESMTP; 01 Oct 2019 12:10:20 -0700
+Date:   Tue, 1 Oct 2019 22:10:14 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com
+Subject: Re: [PATCH v22 06/24] x86/sgx: Add SGX microarchitectural data
+ structures
+Message-ID: <20191001191014.GA12699@linux.intel.com>
+References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
+ <20190903142655.21943-7-jarkko.sakkinen@linux.intel.com>
+ <20190927162735.GC23002@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <cover.1569955865.git.agriveaux@deutnet.info>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190927162735.GC23002@zn.tnic>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The JZ4780 have 2 core, adding to DT.
+On Fri, Sep 27, 2019 at 06:27:35PM +0200, Borislav Petkov wrote:
+> On Tue, Sep 03, 2019 at 05:26:37PM +0300, Jarkko Sakkinen wrote:
+> > Define the SGX microarchitectural data structures used by various SGX
+> > opcodes. This is not an exhaustive representation of all SGX data
+> > structures but only those needed by the kernel.
+> > 
+> > [1] Intel SDM: 37.6 INTEL® SGX DATA STRUCTURES OVERVIEW
+> 
+> That footnote is not being referred to. Just make it a sentence.
 
-Signed-off-by: Alexandre GRIVEAUX <agriveaux@deutnet.info>
----
- arch/mips/boot/dts/ingenic/jz4780.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Sure!
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-index f928329b034b..9c7346724f1f 100644
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -7,6 +7,23 @@
- 	#size-cells = <1>;
- 	compatible = "ingenic,jz4780";
- 
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			compatible = "ingenic,jz4780";
-+			device_type = "cpu";
-+			reg = <0>;
-+		};
-+
-+		cpu@1 {
-+			compatible = "ingenic,jz4780";
-+			device_type = "cpu";
-+			reg = <1>;
-+		};
-+	};
-+
- 	cpuintc: interrupt-controller {
- 		#address-cells = <0>;
- 		#interrupt-cells = <1>;
--- 
-2.20.1
+> Btw, you could tell your SDM folks to fix formulations like:
+> 
+> "The use of EAX is implied implicitly by the ENCLS, ENCLU, and ENCLV
+> 		   ^^^^^^^^^^^^^^^^^^^
+> 
+> instructions.... The use of additional registers does not use ModR/M
+> encoding and is implied implicitly by the respective leaf function
+> 		^^^^^^^^^^^^^^^^^^^
+> 
+> index."
+> 
+> "implied" alone wasn't enough I guess. :)
 
+I'd guess have make it a double :-)
+
+/Jarkko
