@@ -2,93 +2,101 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB841C388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF4EC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C222620700
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:04:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ro25Eb2C"
+	by mail.kernel.org (Postfix) with ESMTP id 1FD3721D71
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:04:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733136AbfJAMET (ORCPT
+        id S1733294AbfJAME3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 08:04:19 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:36838 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbfJAMES (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 08:04:18 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91C43p9171527;
-        Tue, 1 Oct 2019 12:04:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2019-08-05;
- bh=tgOBFZObT23SyNVVIgjHtEVR3Av80X15fH43kUobLu8=;
- b=ro25Eb2C5gb4RNQdAjQkaP92uhpi+c7yOPLkyY4qWDW6FlcnFWTiQSzJiQsyeUewKT7T
- xv/FU7CliTpaPNK/aaqEyJjDXQ5VPb+yaviO2qsCzvVEJe+iok31aMR2VoxDLHZ03Pa/
- 9i7aB5SFJAW+DE/CVYcMnYulFm5tgXq3CnYalVS7hyMpJ/bOPDFlJd4ec2yO45XOD+7/
- 8jC4ISozo4Y/V3VOmwjOU/Jqr7dCH1VJVGpjMbsvRecCX8+MjM4Q3ICCtybLWlpposT3
- wniKDbf7kI5d2oNL2JyX+I8y9g14cNqoaL31/gITFk24WDDKNSCNXehekdRFv36MRvfU qw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2va05rn82s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 12:04:13 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91C3NUm157467;
-        Tue, 1 Oct 2019 12:04:12 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2vbnqcs96x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 12:04:12 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x91C4B9G017612;
-        Tue, 1 Oct 2019 12:04:11 GMT
-Received: from z2.cn.oracle.com (/10.182.71.205)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 01 Oct 2019 05:04:11 -0700
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     vkuznets@redhat.com, linux-hyperv@vger.kernel.org,
-        kvm@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Subject: [PATCH v2 0/3] Add a unified parameter "nopvspin"
-Date:   Mon, 30 Sep 2019 20:08:56 +0800
-Message-Id: <1569845340-11884-1-git-send-email-zhenzhong.duan@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910010112
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910010112
+        Tue, 1 Oct 2019 08:04:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37522 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725821AbfJAME3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 08:04:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B00D5B149;
+        Tue,  1 Oct 2019 12:04:26 +0000 (UTC)
+Date:   Tue, 1 Oct 2019 14:04:23 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sodagudi Prasad <psodagud@codeaurora.org>
+Cc:     sergey.senozhatsky@gmail.com, rostedt@goodmis.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Time stamp value in printk records
+Message-ID: <20191001120423.ann2i2cvkojy6hcb@pathway.suse.cz>
+References: <7d1aee8505b91c460fee347ed4204b9a@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7d1aee8505b91c460fee347ed4204b9a@codeaurora.org>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are cases folks want to disable spinlock optimization for
-debug/test purpose. Xen and hyperv already have parameters "xen_nopvspin"
-and "hv_nopvspin" to support that, but kvm doesn't.
+On Mon 2019-09-30 06:33:42, Sodagudi Prasad wrote:
+> Hi All,
+> 
+> From Qualcomm side, we would like to check with upstream team about adding
+> Raw time stamp value to printk records. On Qualcomm soc, there are various
+> DSPs subsystems are there - for example audio, video and modem DSPs.
+> Adding raw timer value(along with sched_clock()) in the printk record helps
+> in the following use cases –
+> 1)	To find out which subsystem  crashed first  -  Whether application
+> processor crashed first or DSP subsystem?
+> 2)	If there are any system stability issues on the DSP side, what is the
+> activity on the APPS processor side during that time?
+> 
+> Initially during the device boot up, printk shed_clock value can be matched
+> with timer raw value used on the dsp subsystem, but after APPS processor
+> suspends several times, we don’t have way to correlate the time stamp  value
+> on the DSP and APPS processor. All timers(both apps processor timer and dsp
+> timers) are derived from globally always on timer on Qualcomm soc, So
+> keeping global timer raw values in printk records and dsp logs help to
+> correlate the activity of all the processors in SoC.
+> 
+> It would be great if upstream team adds common solution this problem if all
+> soc vendors would get benefit by adding raw timer value to  printk records.
 
-The first patch adds that feature to KVM guest with "nopvspin".
+There were some proposals in the past. IMHO, the most comprehensive
+discussion can be found at
+https://lore.kernel.org/lkml/alpine.DEB.2.20.1711131023170.1851@nanos/
 
-For compatibility reason original parameters "xen_nopvspin" and
-"hv_nopvspin" are retained and marked obsolete.
+The main requirement is:
 
-v2:
-PATCH1: pick the print code change into seperate PATCH2,
-        updated patch description             [Vitaly Kuznetsov]
-PATCH2: new patch with print code change      [Vitaly Kuznetsov]
-PATCH3: add Reviewed-by                       [Juergen Gross]
+   + The main timestamp must have the same semantic on all systems
 
-Thanks
-Zhenzhong
+   + User space parses the timestamp. We must not break the format
+     and semantic.
+
+  + printk() need to get the timestamp a lockless way
+
+
+Now, different people wanted different clocks in the past. Which
+brings several problems:
+
+   + configuration
+   + storing
+   + output format so that people/tools know what they read
+
+There is a huge risk that it will get over engineered. Also
+there is a risk that some userspace tools might parse it
+and we would need to maintain compatibility forever.
+
+IMHO, the most acceptable idea was to print a line with "all"
+possible clocks every now and then. It can be done regularly
+(once a hour/day) or on event (resume).
+
+These are hints and pointers. Feel free to send patches so
+that we could discuss them.
+
+Best Regards,
+Petr
