@@ -2,92 +2,93 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D881AC388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CFB1C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF55B2133F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:22:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FTBPbRkn";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QGFoZi/6"
+	by mail.kernel.org (Postfix) with ESMTP id 63DA22133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:23:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387609AbfJAJW6 (ORCPT
+        id S1728760AbfJAJXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 05:22:58 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:44292 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727659AbfJAJW5 (ORCPT
+        Tue, 1 Oct 2019 05:23:53 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:54630 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbfJAJXx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 05:22:57 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id F2CB961213; Tue,  1 Oct 2019 09:22:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569921777;
-        bh=2GPCgxJFWvTJTBPLUO3sxHcM0k0BS4pT6uBGryxTSbw=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=FTBPbRknR6o7hA5YoX1CeFViiVzHB6ao7Lc7Dl7X4XOtw09yumFxrbAWuhR8Fw8WW
-         iOZ17MpRbJj8eQ8kVTl2CIKPUcxv81FPRKXGwTMnoc3E9aDjaUyfaPqoVnDicnKaBW
-         tehd7isHX38QiB8zDNt7XNXod7tG9ZJe7zG/ONnQ=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AAFAE60A30;
-        Tue,  1 Oct 2019 09:22:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569921775;
-        bh=2GPCgxJFWvTJTBPLUO3sxHcM0k0BS4pT6uBGryxTSbw=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=QGFoZi/6RYJGw5XxKUbERfLtUV5LdNv8hURkks8M8gLVwp+kUnxg53D7Bive5xG2c
-         ytZbamstYfXea9rObKBHSMyySK2OTPZ2jCHkCvcze6P6BgvmExcTGL4Xx8XxSscyaZ
-         Dj2wBXq8JZFT9r+YL6UDg/EKTAQ2ug7JgD30YY/s=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AAFAE60A30
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 1 Oct 2019 05:23:53 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iFENn-0006fc-IQ; Tue, 01 Oct 2019 11:23:47 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 28EAD1C03AB;
+        Tue,  1 Oct 2019 11:23:47 +0200 (CEST)
+Date:   Tue, 01 Oct 2019 09:23:46 -0000
+From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cleanups] x86/nmi: Remove stale EDAC include leftover
+Cc:     Borislav Petkov <bp@suse.de>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20190923193807.30896-1-bp@alien8.de>
+References: <20190923193807.30896-1-bp@alien8.de>
 MIME-Version: 1.0
+Message-ID: <156992182699.9978.3620777237467343344.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 2/2] mwifiex: use 'total_ie_len' in
- mwifiex_update_bss_desc_with_ie()
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190615001321.241808-2-briannorris@chromium.org>
-References: <20190615001321.241808-2-briannorris@chromium.org>
-To:     Brian Norris <briannorris@chromium.org>
-Cc:     Ganapathi Bhat <gbhat@marvell.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        <linux-kernel@vger.kernel.org>, linux-wireless@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Brian Norris <briannorris@chromium.org>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20191001092256.F2CB961213@smtp.codeaurora.org>
-Date:   Tue,  1 Oct 2019 09:22:56 +0000 (UTC)
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Brian Norris <briannorris@chromium.org> wrote:
+The following commit has been merged into the x86/cleanups branch of tip:
 
-> This is clearer than copy/pasting the magic number '+ 2' around, and it
-> even saves the need for one existing comment.
-> 
-> Cc: Takashi Iwai <tiwai@suse.de>
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> Reviewed-by: Takashi Iwai <tiwai@suse.de>
+Commit-ID:     abaebe11dd07adf51b53bb7c56ba35eab267654d
+Gitweb:        https://git.kernel.org/tip/abaebe11dd07adf51b53bb7c56ba35eab267654d
+Author:        Borislav Petkov <bp@suse.de>
+AuthorDate:    Thu, 16 Aug 2018 09:14:04 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Tue, 01 Oct 2019 11:11:11 +02:00
 
-Patch applied to wireless-drivers-next.git, thanks.
+x86/nmi: Remove stale EDAC include leftover
 
-0a3ce169476f mwifiex: use 'total_ie_len' in mwifiex_update_bss_desc_with_ie()
+db47d5f85646 ("x86/nmi, EDAC: Get rid of DRAM error reporting thru PCI SERR NMI")
 
--- 
-https://patchwork.kernel.org/patch/10996893/
+forgot to remove it. Drop it.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190923193807.30896-1-bp@alien8.de
+---
+ arch/x86/kernel/traps.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 4bb0f84..c903121 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -37,11 +37,6 @@
+ #include <linux/mm.h>
+ #include <linux/smp.h>
+ #include <linux/io.h>
+-
+-#if defined(CONFIG_EDAC)
+-#include <linux/edac.h>
+-#endif
+-
+ #include <asm/stacktrace.h>
+ #include <asm/processor.h>
+ #include <asm/debugreg.h>
