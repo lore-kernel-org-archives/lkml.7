@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F49C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A7EECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3913D2168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF4C921855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:47:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948417;
-	bh=AAKQlzbvTxzLTVQbz11o7zrn12sb1NA0ge1J0S9RcAM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NgH1KDHNC3s2YnFq046lJcecavWqzfVmYu/vG757CFptx9L8DH9Om3Q4isZ3PRY0j
-	 gOHztvBBz99r4G7DRK/AWaD37GdRHUHmGgrVbFA9kViXRcY9uhxAOsE9bOTpqCg41b
-	 sNfqB/tCnJLsdDqxk/cmFbxYqrjlYGzKDEsubuGA=
+	s=default; t=1569948423;
+	bh=nc5ULy0TFrTcGfOM1GDNpdTbbJKQWQYLHky46hqyIBk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=LLtzJbjyypYiAA8+n18792FINXLFrnzbeuDNcCWrxrF2EhtfhTEELw+DlGDaouO7N
+	 JcIoDyFtKMrTDcImaG60/VrygahuUtiBzHdHkhKYv9Unz7woZSFc6E4Zh3nAiNuwbY
+	 zJxKKlBHdT1Z+TikV6hT8q1a/NqOkcJO3SRQXjuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388388AbfJAQq4 (ORCPT
+        id S2388493AbfJAQrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:46:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58204 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:47:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388126AbfJAQph (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:45:37 -0400
+        id S2390334AbfJAQpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:45:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 658BF222BE;
-        Tue,  1 Oct 2019 16:45:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42AA4205C9;
+        Tue,  1 Oct 2019 16:45:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948337;
-        bh=AAKQlzbvTxzLTVQbz11o7zrn12sb1NA0ge1J0S9RcAM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=THuaXncchIX79RIwL8ucVpClO9tdgMhCiesdAKBnB63w+qMKDbAd8nsxM6XCFSoV3
-         Vnp147QZxHV8wOSABdzcXQLwAlxDYVSSfuGMa0Ak5SvuLpFPRhGgScSCh3jv74DDCl
-         5DbzVNXKDA/9Vqm0jqY2MWEmjDhmE6FqDaRX7E5U=
+        s=default; t=1569948335;
+        bh=nc5ULy0TFrTcGfOM1GDNpdTbbJKQWQYLHky46hqyIBk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RrKFp3HGKwMAeOeTcQVCvCaWUqb0qA+w6uZs/RFucHh1gMy5TnUcaSyOqL5cS2sfC
+         Tg1LlQgKczfmQAEXviAksVo8OxuE0sZRkQ9R4n+F+5yCY5sGIgx70QykL/uXtS/tuS
+         00Uy77CwgPyH/bscHxSF1/En3ySD61CDTBgnrEbc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chengguang Xu <cgxu519@zoho.com.cn>,
-        Dominique Martinet <dominique.martinet@cea.fr>,
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>,
-        v9fs-developer@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.4 03/15] 9p: avoid attaching writeback_fid on mmap with type PRIVATE
-Date:   Tue,  1 Oct 2019 12:45:21 -0400
-Message-Id: <20191001164533.16915-3-sashal@kernel.org>
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 01/15] ima: always return negative code for error
+Date:   Tue,  1 Oct 2019 12:45:19 -0400
+Message-Id: <20191001164533.16915-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191001164533.16915-1-sashal@kernel.org>
-References: <20191001164533.16915-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,45 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chengguang Xu <cgxu519@zoho.com.cn>
+From: Sascha Hauer <s.hauer@pengutronix.de>
 
-[ Upstream commit c87a37ebd40b889178664c2c09cc187334146292 ]
+[ Upstream commit f5e1040196dbfe14c77ce3dfe3b7b08d2d961e88 ]
 
-Currently on mmap cache policy, we always attach writeback_fid
-whether mmap type is SHARED or PRIVATE. However, in the use case
-of kata-container which combines 9p(Guest OS) with overlayfs(Host OS),
-this behavior will trigger overlayfs' copy-up when excute command
-inside container.
+integrity_kernel_read() returns the number of bytes read. If this is
+a short read then this positive value is returned from
+ima_calc_file_hash_atfm(). Currently this is only indirectly called from
+ima_calc_file_hash() and this function only tests for the return value
+being zero or nonzero and also doesn't forward the return value.
+Nevertheless there's no point in returning a positive value as an error,
+so translate a short read into -EINVAL.
 
-Link: http://lkml.kernel.org/r/20190820100325.10313-1-cgxu519@zoho.com.cn
-Signed-off-by: Chengguang Xu <cgxu519@zoho.com.cn>
-Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/9p/vfs_file.c | 3 +++
- 1 file changed, 3 insertions(+)
+ security/integrity/ima/ima_crypto.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/fs/9p/vfs_file.c b/fs/9p/vfs_file.c
-index 373cc50544e91..9dbf371471261 100644
---- a/fs/9p/vfs_file.c
-+++ b/fs/9p/vfs_file.c
-@@ -528,6 +528,7 @@ v9fs_mmap_file_mmap(struct file *filp, struct vm_area_struct *vma)
- 	v9inode = V9FS_I(inode);
- 	mutex_lock(&v9inode->v_mutex);
- 	if (!v9inode->writeback_fid &&
-+	    (vma->vm_flags & VM_SHARED) &&
- 	    (vma->vm_flags & VM_WRITE)) {
- 		/*
- 		 * clone a fid and add it to writeback_fid
-@@ -629,6 +630,8 @@ static void v9fs_mmap_vm_close(struct vm_area_struct *vma)
- 			(vma->vm_end - vma->vm_start - 1),
- 	};
+diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+index a29209fa56746..5c87baaefafb6 100644
+--- a/security/integrity/ima/ima_crypto.c
++++ b/security/integrity/ima/ima_crypto.c
+@@ -298,8 +298,11 @@ static int ima_calc_file_hash_atfm(struct file *file,
+ 		rbuf_len = min_t(loff_t, i_size - offset, rbuf_size[active]);
+ 		rc = integrity_kernel_read(file, offset, rbuf[active],
+ 					   rbuf_len);
+-		if (rc != rbuf_len)
++		if (rc != rbuf_len) {
++			if (rc >= 0)
++				rc = -EINVAL;
+ 			goto out3;
++		}
  
-+	if (!(vma->vm_flags & VM_SHARED))
-+		return;
- 
- 	p9_debug(P9_DEBUG_VFS, "9p VMA close, %p, flushing", vma);
- 
+ 		if (rbuf[1] && offset) {
+ 			/* Using two buffers, and it is not the first
 -- 
 2.20.1
 
