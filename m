@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C259CECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B445ECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8963020659
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 077062190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:49:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948559;
-	bh=/IYo5roa4Q+ctDC9Bvv7wMlZDgCr48KRYi1cp/Ua1hs=;
+	s=default; t=1569948575;
+	bh=/BkX1duVV7CS5C0o/QWskCQ6Z70Aa83HUMWYRNnqQ1Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yxkqR3dN3s+XIffS8n6A9eDACWmhnjcAaRMJ3Z9AcsYYbX+C4JXXG6L9wGa3So1RP
-	 bpnUV9fC5ehuJ+WS0YfKlizYSzChLn0OwvTMA6pppYdLROGL3QaKsP5oiIJD+K1kEz
-	 qIo+tXvIN6A9JcbZYC8tTnmNVibOkfDtpegMz4mA=
+	b=TpX33CYFDfSdhYGyh3P/jMe7kst6zVLdphZeh8PcPMKGSI4oxvAahGfeuM41MLUNg
+	 rzWJgx5+4ub0VsmDOVWiEzQTy2oRC5wwmj9KFoIIe9svJz6+8DGmaeXV3iOgXm3e2W
+	 J+4OCTdbzZSG3PpqrWtiEQyfu6LCemJgWMyKEMys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388902AbfJAQtS (ORCPT
+        id S2388155AbfJAQow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:49:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57506 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:44:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390158AbfJAQpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:45:05 -0400
+        id S2390022AbfJAQok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:44:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C620621906;
-        Tue,  1 Oct 2019 16:45:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59A44222C2;
+        Tue,  1 Oct 2019 16:44:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948304;
-        bh=/IYo5roa4Q+ctDC9Bvv7wMlZDgCr48KRYi1cp/Ua1hs=;
+        s=default; t=1569948279;
+        bh=/BkX1duVV7CS5C0o/QWskCQ6Z70Aa83HUMWYRNnqQ1Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rX2HMuWYVpnpc6EVoTXV3qtuHUqdZY6k2/ISmyy0+BLxPPXXj8CzFIoEs0fQBkCrC
-         7ezhLT9jCnPdH9bYY6XGoV8gDQuBgMFM9dYChi4BkIU+5Quwn3g1veBVq65hJb1mIh
-         nQrFOClJQmziPwD/L+hRLBjJPr/4y4W9/cj9fU0U=
+        b=JzWw6H/7c2aynCpNXTJMShA7d2uLLxjM2heEuKgjOxrdJCp4bknHXP2E1PDRg7jGV
+         wjXWqPhrUv+Jt2r98H4bN+QwpRmXgEDaAsSQutBjmDp0+lF1i0C7R7Wk56tt5H3xmW
+         DA+Au0KM/+WqZz/9OAC77KgD8n6qu4muHMc0im+w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+Cc:     Davide Caratti <dcaratti@redhat.com>,
+        Yotam Gigi <yotam.gi@gmail.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 29/29] sch_netem: fix a divide by zero in tabledist()
-Date:   Tue,  1 Oct 2019 12:44:23 -0400
-Message-Id: <20191001164423.16406-29-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 12/29] net/sched: act_sample: don't push mac header on ip6gre ingress
+Date:   Tue,  1 Oct 2019 12:44:06 -0400
+Message-Id: <20191001164423.16406-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164423.16406-1-sashal@kernel.org>
 References: <20191001164423.16406-1-sashal@kernel.org>
@@ -60,39 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Davide Caratti <dcaratti@redhat.com>
 
-[ Upstream commit b41d936b5ecfdb3a4abc525ce6402a6c49cffddc ]
+[ Upstream commit 92974a1d006ad8b30d53047c70974c9e065eb7df ]
 
-syzbot managed to crash the kernel in tabledist() loading
-an empty distribution table.
+current 'sample' action doesn't push the mac header of ingress packets if
+they are received by a layer 3 tunnel (like gre or sit); but it forgot to
+check for gre over ipv6, so the following script:
 
-	t = dist->table[rnd % dist->size];
+ # tc q a dev $d clsact
+ # tc f a dev $d ingress protocol ip flower ip_proto icmp action sample \
+ > group 100 rate 1
+ # psample -v -g 100
 
-Simply return an error when such load is attempted.
+dumps everything, including outer header and mac, when $d is a gre tunnel
+over ipv6. Fix this adding a missing label for ARPHRD_IP6GRE devices.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Fixes: 5c5670fae430 ("net/sched: Introduce sample tc action")
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+Reviewed-by: Yotam Gigi <yotam.gi@gmail.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/sch_netem.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sched/act_sample.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/sched/sch_netem.c b/net/sched/sch_netem.c
-index 3d5654333d497..787aa52e5991c 100644
---- a/net/sched/sch_netem.c
-+++ b/net/sched/sch_netem.c
-@@ -708,7 +708,7 @@ static int get_dist_table(struct Qdisc *sch, const struct nlattr *attr)
- 	struct disttable *d;
- 	int i;
- 
--	if (n > NETEM_DIST_MAX)
-+	if (!n || n > NETEM_DIST_MAX)
- 		return -EINVAL;
- 
- 	d = kvmalloc(sizeof(struct disttable) + n * sizeof(s16), GFP_KERNEL);
+diff --git a/net/sched/act_sample.c b/net/sched/act_sample.c
+index 489db1064d5bc..9d92eac019580 100644
+--- a/net/sched/act_sample.c
++++ b/net/sched/act_sample.c
+@@ -132,6 +132,7 @@ static bool tcf_sample_dev_ok_push(struct net_device *dev)
+ 	case ARPHRD_TUNNEL6:
+ 	case ARPHRD_SIT:
+ 	case ARPHRD_IPGRE:
++	case ARPHRD_IP6GRE:
+ 	case ARPHRD_VOID:
+ 	case ARPHRD_NONE:
+ 		return false;
 -- 
 2.20.1
 
