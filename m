@@ -2,180 +2,155 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A690C388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 05:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AC9C388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 05:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAD3020640
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 05:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9138B2168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 05:31:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="azESaA0r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731266AbfJAF1G (ORCPT
+        id S1729736AbfJAFbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 01:27:06 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:45803 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729406AbfJAF1F (ORCPT
+        Tue, 1 Oct 2019 01:31:34 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:37975 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbfJAFbe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 01:27:05 -0400
-X-IronPort-AV: E=Sophos;i="5.64,570,1559512800"; 
-   d="scan'208";a="404095827"
-Received: from 81-65-53-202.rev.numericable.fr (HELO hadrien) ([81.65.53.202])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 07:27:01 +0200
-Date:   Tue, 1 Oct 2019 07:27:01 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Sam Ravnborg <sam@ravnborg.org>
-cc:     Inki Dae <inki.dae@samsung.com>, linux-kernel@vger.kernel.org,
-        kbuild-all@01.org
-Subject: drivers/gpu/drm/exynos/exynos_drm_dsi.c:1796:2-9: line 1796 is
- redundant because platform_get_irq() already prints an error (fwd)
-Message-ID: <alpine.DEB.2.21.1910010726101.4150@hadrien>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 1 Oct 2019 01:31:34 -0400
+Received: by mail-lf1-f66.google.com with SMTP id u28so8827190lfc.5
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 22:31:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=SaFoYhmwuNCCe0dxD4a30Zl6Go0ZxpMOGqzzubMUHdw=;
+        b=azESaA0rdcy9GMB3FE8I4/zNalw7ysfkd8tfzjgj0RmnGawU5l6mzRJjHXNAt4IEyV
+         wy9qVNdmmcOgGESFc3PXu9o5lOAVD8PNRdHmmwtMPqkOCowpNOH1ZwnKZ4cMbCKxzWFk
+         32kbYx/D+sDYwixF1TtIg0L2ChdH/rsPBcJuO4AlNhlaigIWk68u0LZ4GJiHi35pEaV3
+         yUXj0FmfrNF7QeT/p4m119G4iN4IhZq3+oylQ55x8rv4IxA/iKr+DPFlVc5zlSLoU1TJ
+         wWeja5LAMc/L+1lHON5BZkGiXmIridIuk4ZepjpHGQpgE85tvZp5HOTo5c8QL0/opDhu
+         Bv1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=SaFoYhmwuNCCe0dxD4a30Zl6Go0ZxpMOGqzzubMUHdw=;
+        b=SuFkOALrJfWxOqz62AKi6utv0R656pxjf4JpiFazB3QFBChA56hXM7W7C2GD+qYn81
+         HTAPQqDzMrSX1yotJKJT7s4nCN+JAm29zCbpQ18DlbJSfDu9QfOkvW4lz16NZGAoF/YX
+         pC/yqTEtgEazpqTm0BwMKGeG5IQeiGTG8vjvpcfvNJYxc/d0adb83OBepg6YdHF8+uWt
+         GM6WZ571+39HwgE4VGxjy5e69wK+71VP466kqsIZ4p2UU6CzVf/t1Y4wW081rPn8bgRA
+         7d6WCl98vbsTNGpg9UJpjKF6ymZpCX+PzM7LI0wV6fu1bREbJA42iSUP2kTZg0A7ZCeu
+         X2eg==
+X-Gm-Message-State: APjAAAWb1vZoZsdMV2c86kD7aL3+tW1mYkr67EAw14kbEgIofi6VDC6y
+        qDgmcQgnLhGPcuaCa8KFVJDU699FYxVotW/uWsfE
+X-Google-Smtp-Source: APXvYqxzu/y3a+l/E1zfJ1GOYAu4oXQyAYURFEX7eRMkz3mjRmcinntM7JzqNurwlxoUk87hd8Bu9ZzmdAjySpJiO8k=
+X-Received: by 2002:a05:6512:202:: with SMTP id a2mr13379491lfo.175.1569907890668;
+ Mon, 30 Sep 2019 22:31:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <201909251348.A1542A52@keescook> <CAHC9VhRNmWw1__-haD1ZEekADTho3EJyXQMd6ETpOv4c8Qn9nw@mail.gmail.com>
+ <2065829.xbNJnTdZ4q@x2> <201909301128.5951C390@keescook>
+In-Reply-To: <201909301128.5951C390@keescook>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 1 Oct 2019 01:31:19 -0400
+Message-ID: <CAHC9VhR-3CkARf7mVOCW1vLDgygjspcw_JEcteBBrdpxpdBY7g@mail.gmail.com>
+Subject: Re: [PATCH] audit: Report suspicious O_CREAT usage
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Steve Grubb <sgrubb@redhat.com>, linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?J=C3=A9r=C3=A9mie_Galarneau?= 
+        <jeremie.galarneau@efficios.com>, s.mesoraca16@gmail.com,
+        viro@zeniv.linux.org.uk, dan.carpenter@oracle.com,
+        akpm@linux-foundation.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        kernel-hardening@lists.openwall.com, linux-audit@redhat.com,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Sep 30, 2019 at 2:29 PM Kees Cook <keescook@chromium.org> wrote:
+> On Mon, Sep 30, 2019 at 09:50:00AM -0400, Steve Grubb wrote:
+> > On Thursday, September 26, 2019 11:31:32 AM EDT Paul Moore wrote:
+> > > On Wed, Sep 25, 2019 at 5:02 PM Kees Cook <keescook@chromium.org> wro=
+te:
+> > > > This renames the very specific audit_log_link_denied() to
+> > > > audit_log_path_denied() and adds the AUDIT_* type as an argument. T=
+his
+> > > > allows for the creation of the new AUDIT_ANOM_CREAT that can be use=
+d to
+> > > > report the fifo/regular file creation restrictions that were introd=
+uced
+> > > > in commit 30aba6656f61 ("namei: allow restricted O_CREAT of FIFOs a=
+nd
+> > > > regular files"). Without this change, discovering that the restrict=
+ion
+> > > > is enabled can be very challenging:
+> > > > https://lore.kernel.org/lkml/CA+jJMxvkqjXHy3DnV5MVhFTL2RUhg0WQ-XVFW=
+3ngDQO
+> > > > dkFq0PA@mail.gmail.com
+> > > >
+> > > > Reported-by: J=C3=A9r=C3=A9mie Galarneau <jeremie.galarneau@efficio=
+s.com>
+> > > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > > ---
+> > > > This is not a complete fix because reporting was broken in commit
+> > > > 15564ff0a16e ("audit: make ANOM_LINK obey audit_enabled and
+> > > > audit_dummy_context")
+> > > > which specifically goes against the intention of these records: the=
+y
+> > > > should _always_ be reported. If auditing isn't enabled, they should=
+ be
+> > > > ratelimited.
+> > > >
+> > > > Instead of using audit, should this just go back to using
+> > > > pr_ratelimited()?
+> > >
+> > > I'm going to ignore the rename and other aspects of this patch for th=
+e
+> > > moment so we can focus on the topic of if/when/how these records
+> > > should be emitted by the kernel.
+> > >
+> > > Unfortunately, people tend to get very upset if audit emits *any*
+> > > records when they haven't explicitly enabled audit, the significance
+> > > of the record doesn't seem to matter, which is why you see patches
+> > > like 15564ff0a16e ("audit: make ANOM_LINK obey audit_enabled and
+> > > audit_dummy_context").  We could consider converting some records to
+> > > printk()s, rate-limited or not, but we need to balance this with the
+> > > various security certifications which audit was created to satisfy.
+> > > In some cases a printk() isn't sufficient.
+> > >
+> > > Steve is probably the only one who really keeps track of the various
+> > > auditing requirements of the different security certifications; what
+> > > say you Steve on this issue with ANOM_CREAT records?
+> >
+> > Common Criteria and other security standards I track do not call out fo=
+r
+> > anomoly detection. So, there are no requirements on this. That said, we=
+ do
+> > have other anomaly detections because they give early warning that some=
+thing
+> > strange is happening. I think adding this event is a nice improvement a=
+s long
+> > as it obeys audit_enabled before emitting an event - for example, look =
+at the
+> > AUDIT_ANOM_ABEND event.
+>
+> Okay, so the patch is good as-is? (The "report things always" issue I
+> will deal with separately. For now I'd just like to gain this anomaly
+> detection corner case...)
+>
+> Paul, what do you see as next steps here?
 
+I'll reply back on the original post so I can more easily comment on
+the details of patch.
 
----------- Forwarded message ----------
-Date: Tue, 1 Oct 2019 10:47:40 +0800
-From: kbuild test robot <lkp@intel.com>
-To: kbuild@01.org
-Cc: Julia Lawall <julia.lawall@lip6.fr>
-Subject: drivers/gpu/drm/exynos/exynos_drm_dsi.c:1796:2-9: line 1796 is
-    redundant because platform_get_irq() already prints an error
-
-CC: kbuild-all@01.org
-CC: linux-kernel@vger.kernel.org
-TO: Sam Ravnborg <sam@ravnborg.org>
-CC: Inki Dae <inki.dae@samsung.com>
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c
-commit: 156bdac99061b4013c8e47799c6e574f7f84e9f4 drm/exynos: trigger build of all modules
-date:   3 months ago
-:::::: branch date: 9 hours ago
-:::::: commit date: 3 months ago
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Julia Lawall <julia.lawall@lip6.fr>
-
->> drivers/gpu/drm/exynos/exynos_drm_dsi.c:1796:2-9: line 1796 is redundant because platform_get_irq() already prints an error
-
-# https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=156bdac99061b4013c8e47799c6e574f7f84e9f4
-git remote add linus https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-git remote update linus
-git checkout 156bdac99061b4013c8e47799c6e574f7f84e9f4
-vim +1796 drivers/gpu/drm/exynos/exynos_drm_dsi.c
-
-f37cd5e8098441 Inki Dae         2014-05-09  1722
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1723  static int exynos_dsi_probe(struct platform_device *pdev)
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1724  {
-2900c69c52079a Andrzej Hajda    2014-10-07  1725  	struct device *dev = &pdev->dev;
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1726  	struct resource *res;
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1727  	struct exynos_dsi *dsi;
-0ff03fd164a4f2 Hyungwon Hwang   2015-06-12  1728  	int ret, i;
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1729
-2900c69c52079a Andrzej Hajda    2014-10-07  1730  	dsi = devm_kzalloc(dev, sizeof(*dsi), GFP_KERNEL);
-2900c69c52079a Andrzej Hajda    2014-10-07  1731  	if (!dsi)
-2900c69c52079a Andrzej Hajda    2014-10-07  1732  		return -ENOMEM;
-2900c69c52079a Andrzej Hajda    2014-10-07  1733
-e17ddecc3aa519 YoungJun Cho     2014-07-22  1734  	/* To be checked as invalid one */
-e17ddecc3aa519 YoungJun Cho     2014-07-22  1735  	dsi->te_gpio = -ENOENT;
-e17ddecc3aa519 YoungJun Cho     2014-07-22  1736
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1737  	init_completion(&dsi->completed);
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1738  	spin_lock_init(&dsi->transfer_lock);
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1739  	INIT_LIST_HEAD(&dsi->transfer_list);
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1740
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1741  	dsi->dsi_host.ops = &exynos_dsi_ops;
-e2d2a1e0a26472 Andrzej Hajda    2014-10-07  1742  	dsi->dsi_host.dev = dev;
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1743
-e2d2a1e0a26472 Andrzej Hajda    2014-10-07  1744  	dsi->dev = dev;
-2154ac9229c10f Marek Szyprowski 2016-04-19  1745  	dsi->driver_data = of_device_get_match_data(dev);
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1746
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1747  	ret = exynos_dsi_parse_dt(dsi);
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1748  	if (ret)
-8665040850e3cb Andrzej Hajda    2015-06-11  1749  		return ret;
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1750
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1751  	dsi->supplies[0].supply = "vddcore";
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1752  	dsi->supplies[1].supply = "vddio";
-e2d2a1e0a26472 Andrzej Hajda    2014-10-07  1753  	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(dsi->supplies),
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1754  				      dsi->supplies);
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1755  	if (ret) {
-e2d2a1e0a26472 Andrzej Hajda    2014-10-07  1756  		dev_info(dev, "failed to get regulators: %d\n", ret);
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1757  		return -EPROBE_DEFER;
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1758  	}
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1759
-a86854d0c599b3 Kees Cook        2018-06-12  1760  	dsi->clks = devm_kcalloc(dev,
-a86854d0c599b3 Kees Cook        2018-06-12  1761  			dsi->driver_data->num_clks, sizeof(*dsi->clks),
-0ff03fd164a4f2 Hyungwon Hwang   2015-06-12  1762  			GFP_KERNEL);
-e6f988a4585762 Hyungwon Hwang   2015-06-12  1763  	if (!dsi->clks)
-e6f988a4585762 Hyungwon Hwang   2015-06-12  1764  		return -ENOMEM;
-e6f988a4585762 Hyungwon Hwang   2015-06-12  1765
-0ff03fd164a4f2 Hyungwon Hwang   2015-06-12  1766  	for (i = 0; i < dsi->driver_data->num_clks; i++) {
-0ff03fd164a4f2 Hyungwon Hwang   2015-06-12  1767  		dsi->clks[i] = devm_clk_get(dev, clk_names[i]);
-0ff03fd164a4f2 Hyungwon Hwang   2015-06-12  1768  		if (IS_ERR(dsi->clks[i])) {
-0ff03fd164a4f2 Hyungwon Hwang   2015-06-12  1769  			if (strcmp(clk_names[i], "sclk_mipi") == 0) {
-0ff03fd164a4f2 Hyungwon Hwang   2015-06-12  1770  				strcpy(clk_names[i], OLD_SCLK_MIPI_CLK_NAME);
-0ff03fd164a4f2 Hyungwon Hwang   2015-06-12  1771  				i--;
-0ff03fd164a4f2 Hyungwon Hwang   2015-06-12  1772  				continue;
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1773  			}
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1774
-0ff03fd164a4f2 Hyungwon Hwang   2015-06-12  1775  			dev_info(dev, "failed to get the clock: %s\n",
-0ff03fd164a4f2 Hyungwon Hwang   2015-06-12  1776  					clk_names[i]);
-0ff03fd164a4f2 Hyungwon Hwang   2015-06-12  1777  			return PTR_ERR(dsi->clks[i]);
-0ff03fd164a4f2 Hyungwon Hwang   2015-06-12  1778  		}
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1779  	}
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1780
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1781  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-e2d2a1e0a26472 Andrzej Hajda    2014-10-07  1782  	dsi->reg_base = devm_ioremap_resource(dev, res);
-293d3f6a707046 Jingoo Han       2014-04-17  1783  	if (IS_ERR(dsi->reg_base)) {
-e2d2a1e0a26472 Andrzej Hajda    2014-10-07  1784  		dev_err(dev, "failed to remap io region\n");
-8665040850e3cb Andrzej Hajda    2015-06-11  1785  		return PTR_ERR(dsi->reg_base);
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1786  	}
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1787
-e2d2a1e0a26472 Andrzej Hajda    2014-10-07  1788  	dsi->phy = devm_phy_get(dev, "dsim");
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1789  	if (IS_ERR(dsi->phy)) {
-e2d2a1e0a26472 Andrzej Hajda    2014-10-07  1790  		dev_info(dev, "failed to get dsim phy\n");
-8665040850e3cb Andrzej Hajda    2015-06-11  1791  		return PTR_ERR(dsi->phy);
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1792  	}
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1793
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1794  	dsi->irq = platform_get_irq(pdev, 0);
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1795  	if (dsi->irq < 0) {
-e2d2a1e0a26472 Andrzej Hajda    2014-10-07 @1796  		dev_err(dev, "failed to request dsi irq resource\n");
-8665040850e3cb Andrzej Hajda    2015-06-11  1797  		return dsi->irq;
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1798  	}
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1799
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1800  	irq_set_status_flags(dsi->irq, IRQ_NOAUTOEN);
-e2d2a1e0a26472 Andrzej Hajda    2014-10-07  1801  	ret = devm_request_threaded_irq(dev, dsi->irq, NULL,
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1802  					exynos_dsi_irq, IRQF_ONESHOT,
-e2d2a1e0a26472 Andrzej Hajda    2014-10-07  1803  					dev_name(dev), dsi);
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1804  	if (ret) {
-e2d2a1e0a26472 Andrzej Hajda    2014-10-07  1805  		dev_err(dev, "failed to request dsi irq\n");
-8665040850e3cb Andrzej Hajda    2015-06-11  1806  		return ret;
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1807  	}
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1808
-cf67cc9a29ac19 Gustavo Padovan  2015-08-11  1809  	platform_set_drvdata(pdev, &dsi->encoder);
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1810
-ba6e47795d836e Inki Dae         2015-11-16  1811  	pm_runtime_enable(dev);
-ba6e47795d836e Inki Dae         2015-11-16  1812
-8665040850e3cb Andrzej Hajda    2015-06-11  1813  	return component_add(dev, &exynos_dsi_component_ops);
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1814  }
-7eb8f069be8a03 Andrzej Hajda    2014-04-04  1815
-
-:::::: The code at line 1796 was first introduced by commit
-:::::: e2d2a1e0a264725fd0a62b91422d33ba2263a341 drm/exynos: dsi: simplify device pointer evaluation
-
-:::::: TO: Andrzej Hajda <a.hajda@samsung.com>
-:::::: CC: Inki Dae <inki.dae@samsung.com>
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+--=20
+paul moore
+www.paul-moore.com
