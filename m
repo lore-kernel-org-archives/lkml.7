@@ -2,122 +2,113 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F55C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82576ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3116C21872
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 550B621872
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:58:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WXRQ0P8/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389577AbfJAO6D (ORCPT
+        id S2389391AbfJAO6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 10:58:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:51790 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389029AbfJAO6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 10:58:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B41E1000;
-        Tue,  1 Oct 2019 07:58:02 -0700 (PDT)
-Received: from [10.37.8.149] (unknown [10.37.8.149])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BE5A73F71A;
-        Tue,  1 Oct 2019 07:58:00 -0700 (PDT)
-Subject: Re: [PATCH v3 1/5] arm64: vdso32: Introduce COMPAT_CC_IS_GCC
-To:     Will Deacon <will@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        ard.biesheuvel@linaro.org, ndesaulniers@google.com,
-        tglx@linutronix.de
-References: <20190920142738.qlsjwguc6bpnez63@willie-the-truck>
- <20190926214342.34608-1-vincenzo.frascino@arm.com>
- <20190926214342.34608-2-vincenzo.frascino@arm.com>
- <20191001131420.y3fsydlo7pg6ykfs@willie-the-truck>
- <20191001132731.GG41399@arrakis.emea.arm.com>
- <ed7d1465-2d7b-d57c-c1b1-215af1ba7a6f@arm.com>
- <20191001142038.ptwyfbesfrz3kkoz@willie-the-truck>
- <7558914c-fc2d-d05a-ccbe-76ef451670ae@arm.com>
- <20191001144353.5rn3bkcc6eyfclh7@willie-the-truck>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <7306ead0-a9b6-98d0-e775-c677eeeb55a5@arm.com>
-Date:   Tue, 1 Oct 2019 15:59:51 +0100
+        Tue, 1 Oct 2019 10:58:23 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:14202 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731547AbfJAO6W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 10:58:22 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d9369960000>; Tue, 01 Oct 2019 07:58:30 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 01 Oct 2019 07:58:22 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 01 Oct 2019 07:58:22 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 1 Oct
+ 2019 14:58:21 +0000
+Received: from [10.21.133.51] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 1 Oct 2019
+ 14:58:19 +0000
+Subject: Re: [PATCH 4.19 00/63] 4.19.76-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20190929135031.382429403@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <90fc5da5-40f1-03da-785a-2c2c6ce45702@nvidia.com>
+Date:   Tue, 1 Oct 2019 15:58:17 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191001144353.5rn3bkcc6eyfclh7@willie-the-truck>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190929135031.382429403@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1569941910; bh=OAyFu/sXs+v97VxHorpaWaVf/KV7sAEw5I17l/FRu/M=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=WXRQ0P8/xZrGiD5GUkRSOLPYyVJIJZ7SHSWXMdn8HguqgKcidbhmUDVGV5PvE6UX7
+         A2tzEIke3pmdgHFrsXMI8JpvbYt9spO+ROZo1XZlqMzZ+qrUttLSQ2WVynCkne0z0P
+         1TSLVnJ11tFNZimXvFUmzBQh0Z1vGoE3lj0X7P8X5GEV7p6c9ZQiBXq7q1E2J8C4He
+         /HThNke+YyTPnK2RYRhCDRytKkeeAH6EjBUHhsH72vRGmr7n2Xq8vVBUqMvo4cd7LW
+         MBsQuZZpdP1Ii+WSFWyhYpSA6VNWrxibnNwvTVgLoEsDmhRIJDq7dAuBgCEHpVXSbK
+         HhQ7dkHEQtHMg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/1/19 3:43 PM, Will Deacon wrote:
-> On Tue, Oct 01, 2019 at 03:37:49PM +0100, Vincenzo Frascino wrote:
->> On 10/1/19 3:20 PM, Will Deacon wrote:
->>> On Tue, Oct 01, 2019 at 03:20:35PM +0100, Vincenzo Frascino wrote:
->>>> On 10/1/19 2:27 PM, Catalin Marinas wrote:
->>>>> On Tue, Oct 01, 2019 at 02:14:23PM +0100, Will Deacon wrote:
->>>>>> On Thu, Sep 26, 2019 at 10:43:38PM +0100, Vincenzo Frascino wrote:
->>>>>>> +config COMPATCC_IS_ARM_GCC
->>>>>>> +	def_bool $(success,$(COMPATCC) --version | head -n 1 | grep -q "arm-.*-gcc")
->>>>>>
->>>>>> I've seen toolchains where the first part of the tuple is "armv7-", so they
->>>>>> won't get detected here. However, do we really need to detect this? If
->>>>>> somebody passes a duff compiler, then the build will fail in the same way as
->>>>>> if they passed it to CROSS_COMPILE=.
->>>>>
->>>>> Not sure what happens if we pass an aarch64 compiler. Can we end up with
->>>>> a 64-bit compat vDSO?
->>>>>
->>>>
->>>> I agree with Catalin here. The problem is not only when you pass and aarch64
->>>> toolchain but even an x86 and so on.
->>>
->>> I disagree. What happens if you do:
->>>
->>> $ make ARCH=arm64 CROSS_COMPILE=x86_64-linux-gnu-
->>>
->>> on your x86 box?
->>>
->>
->> The kernel compilation breaks as follows:
->>
->> x86_64-linux-gnu-gcc: error: unrecognized command line option ‘-mlittle-endian’;
->> did you mean ‘-fconvert=little-endian’?
->> /data1/Projects/LinuxKernel/linux/scripts/Makefile.build:265: recipe for target
->> 'scripts/mod/empty.o' failed
->> make[2]: *** [scripts/mod/empty.o] Error 1
->> /data1/Projects/LinuxKernel/linux/Makefile:1128: recipe for target 'prepare0' failed
->> make[1]: *** [prepare0] Error 2
->> make[1]: Leaving directory '/data1/Projects/LinuxKernel/linux-out'
->> Makefile:179: recipe for target 'sub-make' failed
->> make: *** [sub-make] Error 2
->>
->> Similar issue in the compat vdso library compilation if I do (without the check):
->>
->> $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-
->> CROSS_COMPILE_COMPAT=x86_64-linux-gnu-
->>
->> With this check the compilation completes correctly but the compat vdso does not
->> get built (unless my environment is playing me tricks ;) ).
+
+On 29/09/2019 14:53, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.76 release.
+> There are 63 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> My point was that we don't attempt to sanitise the compiler passed via
-> CROSS_COMPILE, so I don't think we should do anything special for COMPATCC
-> either.
->
-
-I agree on this, but the point I was trying to make is that the kernel should
-still be able to build even if the compiler for compat vdso is not correct.
-
-I do not have a strong opinion though.
-
-> Will
+> Responses should be made by Tue 01 Oct 2019 01:47:47 PM UTC.
+> Anything received after that time might be too late.
 > 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.76-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+
+
+All tests are passing for Tegra ...
+
+Test results for stable-v4.19:
+    12 builds:	12 pass, 0 fail
+    22 boots:	22 pass, 0 fail
+    32 tests:	32 pass, 0 fail
+
+Linux version:	4.19.76-g555161ee1b7a
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
+
+Cheers
+Jon
 
 -- 
-Regards,
-Vincenzo
+nvpublic
