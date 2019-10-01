@@ -2,284 +2,179 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71868ECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD53C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CF4521924
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:32:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="NbJgxJgb"
+	by mail.kernel.org (Postfix) with ESMTP id 5C9452190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 10:33:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731080AbfJAKcu (ORCPT
+        id S1731088AbfJAKdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 06:32:50 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:46633 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730547AbfJAKct (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 06:32:49 -0400
-Received: by mail-ed1-f67.google.com with SMTP id t3so11388139edw.13
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 03:32:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Hkj8XVJ/JUK9saNg13tQ3faYHAWqr5mxxbpKyWY+/lk=;
-        b=NbJgxJgb2fDhq/gnPWMIPrPM/oV+fS4TBXJvQAXcqmX50zg8TaU+J9jp6/owm8xdTO
-         77d7jWEAwC9B88ER83cuQjSkF0gKE34LfPv2slmWytVuVJNOI2fqpyoQ8W3mkMywStFB
-         zYqPlSb4r1fqYURb1Oq3HfaDWTiSfxUoJ/tK2DeO4krnh1Yso3P1WQ2XG5tRuC1HDl06
-         b2CcPsJ3vq912hJH77+m5oxVY0W2Zby2DH/cwYspL6cQxatIpDNPiGtpKWtpLx3QA5sT
-         uM9fF5EAZ2poz03M6z6QHx4WLxWskE/JrelAPO1DQbyldqxFEbq3j2Rr99D6IC1/IP7h
-         /N9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Hkj8XVJ/JUK9saNg13tQ3faYHAWqr5mxxbpKyWY+/lk=;
-        b=Pt/PafpVwxRan1LQRx6yDsJomuNpqZOkSJS3/f6ZMknFPGmK/JwAbqNcPvHCCM9L9s
-         NmnIlmwlREKSEr5ugzVei55HVLsnIJyJ8e2ktvNTekp2elM8HWoNkF5b6wMbDQAw9NyA
-         DooIG31SFL0lFaG0vkToohrHCnc7H8l/V+qocttm05vuNmET87gU58eQhk5nEz6gKp0l
-         jd00wIXdOwcVZ5BNvO48Nw1L5q5h1iyBW6udetr0Lq66mJ6E9MVq0lpGE6CIk1XxNU6W
-         40U2WdjnjoVuWeaZs0yEp6javW9Tn7DkFX0OHyCHgFPdmKuMZFwBATyOXgtvWYKHN+Im
-         CL3A==
-X-Gm-Message-State: APjAAAVRtGPbItHmAp5vwCxH4asMeqdY1YpmMDG3P0/LSbwqG6B6ahjw
-        O9lG76jzPi6zYJZpTmMtWiV7XQ==
-X-Google-Smtp-Source: APXvYqwJKL8NZI0rPzJBtmIdStjGyQsB05mczE+qkf3OKCLP9xcEDXlOu63DS9N0WrWNB+DqyKJtYw==
-X-Received: by 2002:a05:6402:1adc:: with SMTP id ba28mr25451063edb.103.1569925966479;
-        Tue, 01 Oct 2019 03:32:46 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id r18sm3052121edx.94.2019.10.01.03.32.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Oct 2019 03:32:45 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id E6139102FB8; Tue,  1 Oct 2019 13:32:45 +0300 (+03)
-Date:   Tue, 1 Oct 2019 13:32:45 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Tue, 1 Oct 2019 06:33:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:46278 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729675AbfJAKdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 06:33:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81F3A1000;
+        Tue,  1 Oct 2019 03:33:23 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E8923F739;
+        Tue,  1 Oct 2019 03:33:22 -0700 (PDT)
+Date:   Tue, 1 Oct 2019 11:33:20 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Masayoshi Mizuma <msys.mizuma@gmail.com>
+Cc:     Julien Grall <julien.grall@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/15] mm: Allow find_get_page to be used for large pages
-Message-ID: <20191001103245.zmgbtoer4f7ytxg2@box>
-References: <20190925005214.27240-1-willy@infradead.org>
- <20190925005214.27240-11-willy@infradead.org>
+Subject: Re: [PATCH v3] arm64/sve: Fix wrong free for task->thread.sve_state
+Message-ID: <20191001103317.GV27757@arm.com>
+References: <20190930205600.25542-1-msys.mizuma@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190925005214.27240-11-willy@infradead.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190930205600.25542-1-msys.mizuma@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 05:52:09PM -0700, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On Mon, Sep 30, 2019 at 04:56:00PM -0400, Masayoshi Mizuma wrote:
+> From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 > 
-> Add FGP_PMD to indicate that we're trying to find-or-create a page that
-> is at least PMD_ORDER in size.  The internal 'conflict' entry usage
-> is modelled after that in DAX, but the implementations are different
-> due to DAX using multi-order entries and the page cache using multiple
-> order-0 entries.
+> The system which has SVE feature crashed because of
+> the memory pointed by task->thread.sve_state was destroyed
+> by someone.
 > 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> That is because sve_state is freed while the forking the
+> child process. The child process has the pointer of sve_state
+> which is same as the parent's because the child's task_struct
+> is copied from the parent's one. If the copy_process()
+> fails as an error on somewhere, for example, copy_creds(),
+> then the sve_state is freed even if the parent is alive.
+> The flow is as follows.
+> 
+> copy_process
+>         p = dup_task_struct
+>             => arch_dup_task_struct
+>                 *dst = *src;  // copy the entire region.
+> :
+>         retval = copy_creds
+>         if (retval < 0)
+>                 goto bad_fork_free;
+> :
+> bad_fork_free:
+> ...
+>         delayed_free_task(p);
+>           => free_task
+>              => arch_release_task_struct
+>                 => fpsimd_release_task
+>                    => __sve_free
+>                       => kfree(task->thread.sve_state);
+>                          // free the parent's sve_state
+> 
+> Move child's sve_state = NULL and clearing TIF_SVE flag
+> to arch_dup_task_struct() so that the child doesn't free the
+> parent's one.
+> There is no need to wait until copy_process() to clear TIF_SVE for
+> dst, because the thread flags for dst are initialized already by
+> copying the src task_struct.
+> This change simplifies the code, so get rid of comments that are no
+> longer needed.
+> 
+> As a note, arm64 used to have thread_info on the stack. So it
+> would not be possible to clear TIF_SVE until the stack is initialized.
+> From commit c02433dd6de3 ("arm64: split thread_info from task stack"),
+> the thread_info is part of the task, so it should be valid to modify
+> the flag from arch_dup_task_struct().
+> 
+> Cc: stable@vger.kernel.org # 4.15.x-
+> Fixes: bc0ee4760364 ("arm64/sve: Core task context handling")
+> Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+> Reported-by: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
+> Suggested-by: Dave Martin <Dave.Martin@arm.com>
+> Tested-by: Julien Grall <julien.grall@arm.com>
+
+Looks OK to me:
+
+Reviewed-by: Dave Martin <Dave.Martin@arm.com>
+
+Cheers
+---Dave
+
 > ---
->  include/linux/pagemap.h | 13 ++++++
->  mm/filemap.c            | 99 +++++++++++++++++++++++++++++++++++------
->  2 files changed, 99 insertions(+), 13 deletions(-)
+>  arch/arm64/kernel/process.c | 32 +++++++++++++++-----------------
+>  1 file changed, 15 insertions(+), 17 deletions(-)
 > 
-> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-> index d610a49be571..d6d97f9fb762 100644
-> --- a/include/linux/pagemap.h
-> +++ b/include/linux/pagemap.h
-> @@ -248,6 +248,19 @@ pgoff_t page_cache_prev_miss(struct address_space *mapping,
->  #define FGP_NOFS		0x00000010
->  #define FGP_NOWAIT		0x00000020
->  #define FGP_FOR_MMAP		0x00000040
-> +/*
-> + * If you add more flags, increment FGP_ORDER_SHIFT (no further than 25).
-> + * Do not insert flags above the FGP order bits.
-> + */
-> +#define FGP_ORDER_SHIFT		7
-> +#define FGP_PMD			((PMD_SHIFT - PAGE_SHIFT) << FGP_ORDER_SHIFT)
-> +#define FGP_PUD			((PUD_SHIFT - PAGE_SHIFT) << FGP_ORDER_SHIFT)
-> +
-> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> +#define fgp_order(fgp)		((fgp) >> FGP_ORDER_SHIFT)
-> +#else
-> +#define fgp_order(fgp)		0
-> +#endif
->  
->  struct page *pagecache_get_page(struct address_space *mapping, pgoff_t offset,
->  		int fgp_flags, gfp_t cache_gfp_mask);
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index afe8f5d95810..8eca91547e40 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -1576,7 +1576,71 @@ struct page *find_get_entry(struct address_space *mapping, pgoff_t offset)
->  
->  	return page;
+> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+> index a47462def04b..ef7aa909bfda 100644
+> --- a/arch/arm64/kernel/process.c
+> +++ b/arch/arm64/kernel/process.c
+> @@ -332,22 +332,27 @@ void arch_release_task_struct(struct task_struct *tsk)
+>  	fpsimd_release_task(tsk);
 >  }
-> -EXPORT_SYMBOL(find_get_entry);
-> +
-> +static bool pagecache_is_conflict(struct page *page)
-> +{
-> +	return page == XA_RETRY_ENTRY;
-> +}
-> +
-> +/**
-> + * __find_get_page - Find and get a page cache entry.
-> + * @mapping: The address_space to search.
-> + * @offset: The page cache index.
-> + * @order: The minimum order of the entry to return.
-> + *
-> + * Looks up the page cache entries at @mapping between @offset and
-> + * @offset + 2^@order.  If there is a page cache page, it is returned with
-> + * an increased refcount unless it is smaller than @order.
-> + *
-> + * If the slot holds a shadow entry of a previously evicted page, or a
-> + * swap entry from shmem/tmpfs, it is returned.
-> + *
-> + * Return: the found page, a value indicating a conflicting page or %NULL if
-> + * there are no pages in this range.
-> + */
-> +static struct page *__find_get_page(struct address_space *mapping,
-> +		unsigned long offset, unsigned int order)
-> +{
-> +	XA_STATE(xas, &mapping->i_pages, offset);
-> +	struct page *page;
-> +
-> +	rcu_read_lock();
-> +repeat:
-> +	xas_reset(&xas);
-> +	page = xas_find(&xas, offset | ((1UL << order) - 1));
-> +	if (xas_retry(&xas, page))
-> +		goto repeat;
-> +	/*
-> +	 * A shadow entry of a recently evicted page, or a swap entry from
-> +	 * shmem/tmpfs.  Skip it; keep looking for pages.
-> +	 */
-> +	if (xa_is_value(page))
-> +		goto repeat;
-> +	if (!page)
-> +		goto out;
-> +	if (compound_order(page) < order) {
-> +		page = XA_RETRY_ENTRY;
-> +		goto out;
-> +	}
-> +
-> +	if (!page_cache_get_speculative(page))
-> +		goto repeat;
-> +
-> +	/*
-> +	 * Has the page moved or been split?
-> +	 * This is part of the lockless pagecache protocol. See
-> +	 * include/linux/pagemap.h for details.
-> +	 */
-> +	if (unlikely(page != xas_reload(&xas))) {
-> +		put_page(page);
-> +		goto repeat;
-> +	}
-
-You need to re-check compound_order() after obtaining reference to the
-page. Otherwise the page could be split under you.
-
-> +	page = find_subpage(page, offset);
-> +out:
-> +	rcu_read_unlock();
-> +
-> +	return page;
-> +}
 >  
->  /**
->   * find_lock_entry - locate, pin and lock a page cache entry
-> @@ -1618,12 +1682,12 @@ EXPORT_SYMBOL(find_lock_entry);
->   * pagecache_get_page - find and get a page reference
->   * @mapping: the address_space to search
->   * @offset: the page index
-> - * @fgp_flags: PCG flags
-> + * @fgp_flags: FGP flags
->   * @gfp_mask: gfp mask to use for the page cache data page allocation
->   *
->   * Looks up the page cache slot at @mapping & @offset.
->   *
-> - * PCG flags modify how the page is returned.
-> + * FGP flags modify how the page is returned.
->   *
->   * @fgp_flags can be:
->   *
-> @@ -1636,6 +1700,10 @@ EXPORT_SYMBOL(find_lock_entry);
->   * - FGP_FOR_MMAP: Similar to FGP_CREAT, only we want to allow the caller to do
->   *   its own locking dance if the page is already in cache, or unlock the page
->   *   before returning if we had to add the page to pagecache.
-> + * - FGP_PMD: We're only interested in pages at PMD granularity.  If there
-> + *   is no page here (and FGP_CREATE is set), we'll create one large enough.
-> + *   If there is a smaller page in the cache that overlaps the PMD page, we
-> + *   return %NULL and do not attempt to create a page.
-
-I still think it's suboptimal interface. It's okay to ask for PMD page,
-but there's small page already caller should deal with it. Otherwise the
-caller will do one additional lookup in xarray for fallback path for no
-real reason.
-
->   *
->   * If FGP_LOCK or FGP_CREAT are specified then the function may sleep even
->   * if the GFP flags specified for FGP_CREAT are atomic.
-> @@ -1649,10 +1717,11 @@ struct page *pagecache_get_page(struct address_space *mapping, pgoff_t offset,
+> -/*
+> - * src and dst may temporarily have aliased sve_state after task_struct
+> - * is copied.  We cannot fix this properly here, because src may have
+> - * live SVE state and dst's thread_info may not exist yet, so tweaking
+> - * either src's or dst's TIF_SVE is not safe.
+> - *
+> - * The unaliasing is done in copy_thread() instead.  This works because
+> - * dst is not schedulable or traceable until both of these functions
+> - * have been called.
+> - */
+>  int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
 >  {
->  	struct page *page;
+>  	if (current->mm)
+>  		fpsimd_preserve_current_state();
+>  	*dst = *src;
 >  
-> +	BUILD_BUG_ON(((63 << FGP_ORDER_SHIFT) >> FGP_ORDER_SHIFT) != 63);
->  repeat:
-> -	page = find_get_entry(mapping, offset);
-> -	if (xa_is_value(page))
-> -		page = NULL;
-> +	page = __find_get_page(mapping, offset, fgp_order(fgp_flags));
-> +	if (pagecache_is_conflict(page))
-> +		return NULL;
->  	if (!page)
->  		goto no_page;
+> +	/* We rely on the above assignment to initialize dst's thread_flags: */
+> +	BUILD_BUG_ON(!IS_ENABLED(CONFIG_THREAD_INFO_IN_TASK));
+> +
+> +	/*
+> +	 * Detach src's sve_state (if any) from dst so that it does not
+> +	 * get erroneously used or freed prematurely.  dst's sve_state
+> +	 * will be allocated on demand later on if dst uses SVE.
+> +	 * For consistency, also clear TIF_SVE here: this could be done
+> +	 * later in copy_process(), but to avoid tripping up future
+> +	 * maintainers it is best not to leave TIF_SVE and sve_state in
+> +	 * an inconsistent state, even temporarily.
+> +	 */
+> +	dst->thread.sve_state = NULL;
+> +	clear_tsk_thread_flag(dst, TIF_SVE);
+> +
+>  	return 0;
+>  }
 >  
-> @@ -1686,7 +1755,7 @@ struct page *pagecache_get_page(struct address_space *mapping, pgoff_t offset,
->  		if (fgp_flags & FGP_NOFS)
->  			gfp_mask &= ~__GFP_FS;
+> @@ -360,13 +365,6 @@ int copy_thread(unsigned long clone_flags, unsigned long stack_start,
 >  
-> -		page = __page_cache_alloc(gfp_mask);
-> +		page = __page_cache_alloc_order(gfp_mask, fgp_order(fgp_flags));
->  		if (!page)
->  			return NULL;
+>  	memset(&p->thread.cpu_context, 0, sizeof(struct cpu_context));
 >  
-> @@ -1704,13 +1773,17 @@ struct page *pagecache_get_page(struct address_space *mapping, pgoff_t offset,
->  			if (err == -EEXIST)
->  				goto repeat;
->  		}
-> +		if (page) {
-> +			if (fgp_order(fgp_flags))
-> +				count_vm_event(THP_FILE_ALLOC);
->  
-> -		/*
-> -		 * add_to_page_cache_lru locks the page, and for mmap we expect
-> -		 * an unlocked page.
-> -		 */
-> -		if (page && (fgp_flags & FGP_FOR_MMAP))
-> -			unlock_page(page);
-> +			/*
-> +			 * add_to_page_cache_lru locks the page, and
-> +			 * for mmap we expect an unlocked page.
-> +			 */
-> +			if (fgp_flags & FGP_FOR_MMAP)
-> +				unlock_page(page);
-> +		}
->  	}
->  
->  	return page;
+> -	/*
+> -	 * Unalias p->thread.sve_state (if any) from the parent task
+> -	 * and disable discard SVE state for p:
+> -	 */
+> -	clear_tsk_thread_flag(p, TIF_SVE);
+> -	p->thread.sve_state = NULL;
+> -
+>  	/*
+>  	 * In case p was allocated the same task_struct pointer as some
+>  	 * other recently-exited task, make sure p is disassociated from
 > -- 
-> 2.23.0
+> 2.18.1
 > 
-
--- 
- Kirill A. Shutemov
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
