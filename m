@@ -2,112 +2,147 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8610ECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 020CFC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B003820842
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:58:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cxVTVFNP"
+	by mail.kernel.org (Postfix) with ESMTP id D5F08215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:58:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389344AbfJAO6w (ORCPT
+        id S2389407AbfJAO64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 10:58:52 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:16916 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726987AbfJAO6w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 10:58:52 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d9369ae0000>; Tue, 01 Oct 2019 07:58:54 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 01 Oct 2019 07:58:51 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 01 Oct 2019 07:58:51 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 1 Oct
- 2019 14:58:51 +0000
-Received: from [10.21.133.51] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 1 Oct 2019
- 14:58:49 +0000
-Subject: Re: [PATCH 5.2 00/45] 5.2.18-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>
-References: <20190929135024.387033930@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <3841dea1-0fc2-66df-99c6-a37e17215766@nvidia.com>
-Date:   Tue, 1 Oct 2019 15:58:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 1 Oct 2019 10:58:56 -0400
+Received: from mga05.intel.com ([192.55.52.43]:32208 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727194AbfJAO6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 10:58:55 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 07:58:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,571,1559545200"; 
+   d="scan'208";a="205077193"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 01 Oct 2019 07:58:51 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 01 Oct 2019 17:58:50 +0300
+Date:   Tue, 1 Oct 2019 17:58:50 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Mario.Limonciello@dell.com
+Cc:     linux-usb@vger.kernel.org, andreas.noever@gmail.com,
+        michael.jamet@intel.com, YehezkelShB@gmail.com,
+        rajmohan.mani@intel.com,
+        nicholas.johnson-opensource@outlook.com.au, lukas@wunner.de,
+        gregkh@linuxfoundation.org, stern@rowland.harvard.edu,
+        anthony.wong@canonical.com, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 22/22] thunderbolt: Do not start firmware unless
+ asked by the user
+Message-ID: <20191001145850.GZ2714@lahna.fi.intel.com>
+References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
+ <20191001113830.13028-23-mika.westerberg@linux.intel.com>
+ <10cccc5a8d1a43fd9769ab6c4b53aeba@AUSX13MPC105.AMER.DELL.COM>
 MIME-Version: 1.0
-In-Reply-To: <20190929135024.387033930@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1569941934; bh=xFLoy4PKqm1WbfymWpWgFLMy2raMdPXf+fsv+MdDWDA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=cxVTVFNPH08u/zaIIieuib8+xnjaZ77TsAOj0LLLPD8xtr2XYVftoob/0c/d+KMDT
-         17nIpX9ZDu2IeF1KHpfRtFtiiiNSex747cmjJMBFNrGKYZCCffyNRuCLWP/HNqeEpD
-         Qrlp7yiZjAAGtMHcEGG7PX7+cFDpy6h/E4UE0JXIsjfXSMeT/+oY1kRoBlzndGUka0
-         B5u5Z+rJojDDDt8v92t+09vgQnXdjb1bzrRakxwksIgmcZ+i4XnOp4HlKytTKzT3FM
-         C8FUbx1wNLGj9vFGUVkjxbfvvOBIPr0ToJ4Nzc+/K4Jjz/iDK+tPmKKAoZ4RYHwe1V
-         TJd0OTzAkEb0g==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <10cccc5a8d1a43fd9769ab6c4b53aeba@AUSX13MPC105.AMER.DELL.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 29/09/2019 14:55, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.2.18 release.
-> There are 45 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Tue, Oct 01, 2019 at 02:43:15PM +0000, Mario.Limonciello@dell.com wrote:
+> > -----Original Message-----
+> > From: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Sent: Tuesday, October 1, 2019 6:39 AM
+> > To: linux-usb@vger.kernel.org
+> > Cc: Andreas Noever; Michael Jamet; Mika Westerberg; Yehezkel Bernat; Rajmohan
+> > Mani; Nicholas Johnson; Lukas Wunner; Greg Kroah-Hartman; Alan Stern;
+> > Limonciello, Mario; Anthony Wong; linux-kernel@vger.kernel.org
+> > Subject: [RFC PATCH 22/22] thunderbolt: Do not start firmware unless asked by the
+> > user
+> > 
+> > 
+> > [EXTERNAL EMAIL]
+> > 
+> > Since now we can do pretty much the same thing in the software
+> > connection manager than the firmware would do, there is no point
+> > starting it by default. Instead we can just continue using the software
+> > connection manager.
+> > 
+> > Make it possible for user to switch between the two by adding a module
+> > pararameter (start_icm) which is by default false. Having this ability
+> > to enable the firmware may be useful at least when debugging possible
+> > issues with the software connection manager implementation.
 > 
-> Responses should be made by Tue 01 Oct 2019 01:47:47 PM UTC.
-> Anything received after that time might be too late.
+> If the host system firmware didn't start the ICM, does that mean SW connection
+> manager would just take over even on systems with discrete AR/TR controllers?
+
+Yes. This is pretty much the case with Apple systems now.
+
+> > 
+> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > ---
+> >  drivers/thunderbolt/icm.c | 14 +++++++++++---
+> >  drivers/thunderbolt/tb.c  |  4 ----
+> >  2 files changed, 11 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/drivers/thunderbolt/icm.c b/drivers/thunderbolt/icm.c
+> > index 9c9c6ea2b790..c4a2de0f2a44 100644
+> > --- a/drivers/thunderbolt/icm.c
+> > +++ b/drivers/thunderbolt/icm.c
+> > @@ -11,6 +11,7 @@
+> > 
+> >  #include <linux/delay.h>
+> >  #include <linux/mutex.h>
+> > +#include <linux/moduleparam.h>
+> >  #include <linux/pci.h>
+> >  #include <linux/pm_runtime.h>
+> >  #include <linux/platform_data/x86/apple.h>
+> > @@ -43,6 +44,10 @@
+> >  #define ICM_APPROVE_TIMEOUT		10000	/* ms */
+> >  #define ICM_MAX_LINK			4
+> > 
+> > +static bool start_icm;
+> > +module_param(start_icm, bool, 0444);
+> > +MODULE_PARM_DESC(start_icm, "start ICM firmware if it is not running (default:
+> > false)");
+> > +
+> >  /**
+> >   * struct icm - Internal connection manager private data
+> >   * @request_lock: Makes sure only one message is send to ICM at time
+> > @@ -1353,13 +1358,16 @@ static bool icm_ar_is_supported(struct tb *tb)
+> >  {
+> >  	struct pci_dev *upstream_port;
+> >  	struct icm *icm = tb_priv(tb);
+> > +	u32 val;
+> > 
+> >  	/*
+> >  	 * Starting from Alpine Ridge we can use ICM on Apple machines
+> >  	 * as well. We just need to reset and re-enable it first.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.18-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
-> and the diffstat can be found below.
+> This comment doesn't really seem as relevant anymore.  The meaning of it
+> has nothing to do with Apple anymore.
+
+Actually it is still relevant. For USB4 the intent is to have FW/SW CM
+switch in ACPI spec instead. But that is still under discussion.
+
+> > +	 * However, only start it if explicitly asked by the user.
+> >  	 */
+> > -	if (!x86_apple_machine)
+> > -		return true;
+> > +	val = ioread32(tb->nhi->iobase + REG_FW_STS);
+> > +	if (!(val & REG_FW_STS_ICM_EN) && !start_icm)
+> > +		return false;
 > 
-> thanks,
+> This code is already in icm_firmware_start.  Maybe split it to a small function
+> So you can just have the more readable
 > 
-> greg k-h
+> If (!icm_firmware_running(tb) && !start_icm))
 
-All tests are passing for Tegra ...
-
-Test results for stable-v5.2:
-    12 builds:	12 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    38 tests:	38 pass, 0 fail
-
-Linux version:	5.2.18-rc1-g70cc0b99b90f
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers
-Jon
-
--- 
-nvpublic
+Good point. I'll do that.
