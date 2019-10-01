@@ -2,118 +2,170 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6121DC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C46C6C388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 439AD215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92D95215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:39:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="p91ffoOa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729407AbfJAIjJ (ORCPT
+        id S1733097AbfJAIjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 04:39:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:62806 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727274AbfJAIjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 04:39:09 -0400
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8FEF188302
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Oct 2019 08:39:08 +0000 (UTC)
-Received: by mail-wr1-f71.google.com with SMTP id a15so5714503wrq.4
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 01:39:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=V0oWnMG5UzeuD4QEm5neHsBPW9FV4K2Mbr76uGM5/zI=;
-        b=EeSn2yQHuMSccWh+e5ERTIk4TR6CDgAXq5/o9aVt8j1Vbv5vq6qpESqs+01cktyEgA
-         Deg5XbB1TQAuJx62vDQpGStpQiwS44Zm0m//QBORMRI8zTYzNayr0661dnb6nzl734g1
-         NAMz2MkW/Sd6Hm2g0pcwzLhyWhmcsUcY/ptv5LqyQofcVFTTBBzVDcIudJFeh4DmI5n0
-         WHWYIMqmpOOdL5rcsot6WRTD/ALmoN4iJeJymyO6O58ZPriXiGkAWnBUZAzzGQS0RsDv
-         7WH9p0tavn1V9Ih3xEPpG/cdEw+cm7DSIVGerzLMX2kJTNKFtBQ7Q1ds5zfVZjqz+tFt
-         BoHw==
-X-Gm-Message-State: APjAAAWEhSucRW25CLQCa6Mql0RJsZ7BkpflmGPUnaZ+nEZPTAI4FDcl
-        tCWmda2CVF7x9dc46TGqW0oGCGzba9/C+0aFokF9ky/AxgsSFOigaVYaSKmHpmrfgkMTotIVfxx
-        xGuVTZDdpb3d7EbblgV6qZUfK
-X-Received: by 2002:adf:94c2:: with SMTP id 60mr1392650wrr.357.1569919146899;
-        Tue, 01 Oct 2019 01:39:06 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyQkp8qJFCtpc/jzZ7GBhcO9xjJt5CEQmZ7NIVGjuCO/nB4ek1cLFqBaknBX+bsLTR5KpD9bA==
-X-Received: by 2002:adf:94c2:: with SMTP id 60mr1392632wrr.357.1569919146650;
-        Tue, 01 Oct 2019 01:39:06 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id w12sm24653712wrg.47.2019.10.01.01.39.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 01:39:05 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Tue, 1 Oct 2019 04:39:39 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:21926 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727274AbfJAIji (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 04:39:38 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id x918bGRK010166;
+        Tue, 1 Oct 2019 17:37:16 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x918bGRK010166
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1569919038;
+        bh=5vgn6LNEnRoez/oiB48qIZvraN4rGfguB7nlITyUZnQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=p91ffoOa2E/AqaszRIYAKxH64lj7JJFDmZ79GZ/o3VRI/mwetxYYTQsnMaUw14GmA
+         ZVm6pzze0VUYtB3hV7bLkjiHP+ofi+YmdztVAuitDJ3kA93dhWnhTO8TVLFTz6Dl7g
+         XvOobdLSRmBFYm3F1wliVdaWSZMBm6GoDv/aBdFWMv2Rmxw2+0ZeUdVRufx3OS7r0P
+         Hs72Fd2OSDGs662tuHHS+kUJnTYqsSs2+cjjh4jfgQUE+jKBtvSnylC86v6Zs0O5G6
+         WF0bdsK1XFHCIBi6PJrD9ZiZqjOv17oQVq7jZI87bIrFBpbYdHV9ykA61Q81Qo8YXo
+         +B0Gs6PCTXyTQ==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-arm-kernel@lists.infradead.org,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Allison Randal <allison@lohutok.net>,
+        Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Stefan Agner <stefan@agner.ch>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH 1/3] KVM: X86: Add "nopvspin" parameter to disable PV spinlocks
-In-Reply-To: <aae59646-be5f-6455-a033-ed29861107ce@oracle.com>
-References: <1569759666-26904-1-git-send-email-zhenzhong.duan@oracle.com> <1569759666-26904-2-git-send-email-zhenzhong.duan@oracle.com> <87pnjh3i6i.fsf@vitty.brq.redhat.com> <aae59646-be5f-6455-a033-ed29861107ce@oracle.com>
-Date:   Tue, 01 Oct 2019 10:39:05 +0200
-Message-ID: <87eezw3lna.fsf@vitty.brq.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] ARM: add __always_inline to functions called from __get_user_check()
+Date:   Tue,  1 Oct 2019 17:37:01 +0900
+Message-Id: <20191001083701.27207-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Zhenzhong Duan <zhenzhong.duan@oracle.com> writes:
+KernelCI reports that bcm2835_defconfig is no longer booting since
+commit ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING
+forcibly") (https://lkml.org/lkml/2019/9/26/825).
 
-> On 2019/9/30 23:41, Vitaly Kuznetsov wrote:
->> Zhenzhong Duan<zhenzhong.duan@oracle.com>  writes:
->>
->>> There are cases where a guest tries to switch spinlocks to bare metal
->>> behavior (e.g. by setting "xen_nopvspin" on XEN platform and
->>> "hv_nopvspin" on HYPER_V).
->>>
->>> That feature is missed on KVM, add a new parameter "nopvspin" to disable
->>> PV spinlocks for KVM guest.
->>>
->>> This new parameter is also intended to replace "xen_nopvspin" and
->>> "hv_nopvspin" in the future.
->> Any reason to not do it right now? We will probably need to have compat
->> code to support xen_nopvspin/hv_nopvspin too but emit a 'is deprecated'
->> warning.
->
-> Sorry the description isn't clear, I'll fix it.
->
-> I did the compat work in the other two patches.
-> [PATCH 2/3] xen: Mark "xen_nopvspin" parameter obsolete and map it to "nopvspin"
-> [PATCH 3/3] x86/hyperv: Mark "hv_nopvspin" parameter obsolete and map it to "nopvspin"
->
+I also received a regression report from Nicolas Saenz Julienne
+(https://lkml.org/lkml/2019/9/27/263).
 
-For some reason I got CCed only on the first one and moreover, I don't
-see e.g PATCH3 on 'linux-hyperv' mailing list.
+This problem has cropped up on bcm2835_defconfig because it enables
+CONFIG_CC_OPTIMIZE_FOR_SIZE. The compiler tends to prefer not inlining
+functions with -Os. I was able to reproduce it with other boards and
+defconfig files by manually enabling CONFIG_CC_OPTIMIZE_FOR_SIZE.
 
->>
->>> The global variable pvspin isn't defined as __initdata as it's used at
->>> runtime by XEN guest.
->>>
->>> Refactor the print stuff with pr_* which is preferred.
->> Please do it in a separate patch.
->
-> Ok, I'll do that in v2. Thanks for review.
+The __get_user_check() specifically uses r0, r1, r2 registers.
+So, uaccess_save_and_enable() and uaccess_restore() must be inlined.
+Otherwise, those register assignments would be entirely dropped,
+according to my analysis of the disassembly.
 
-Thanks!
+Prior to commit 9012d011660e ("compiler: allow all arches to enable
+CONFIG_OPTIMIZE_INLINING"), the 'inline' marker was always enough for
+inlining functions, except on x86.
 
+Since that commit, all architectures can enable CONFIG_OPTIMIZE_INLINING.
+So, __always_inline is now the only guaranteed way of forcible inlining.
+
+I also added __always_inline to 4 functions in the call-graph from the
+__get_user_check() macro.
+
+Fixes: 9012d011660e ("compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING")
+Reported-by: "kernelci.org bot" <bot@kernelci.org>
+Reported-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+Changes in v2:
+  - Use __always_inline instead of changing the function call places
+     (per Russell King)
+  - The previous submission is: https://lore.kernel.org/patchwork/patch/1132459/
+
+ arch/arm/include/asm/domain.h  | 8 ++++----
+ arch/arm/include/asm/uaccess.h | 4 ++--
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm/include/asm/domain.h b/arch/arm/include/asm/domain.h
+index 567dbede4785..f1d0a7807cd0 100644
+--- a/arch/arm/include/asm/domain.h
++++ b/arch/arm/include/asm/domain.h
+@@ -82,7 +82,7 @@
+ #ifndef __ASSEMBLY__
+ 
+ #ifdef CONFIG_CPU_CP15_MMU
+-static inline unsigned int get_domain(void)
++static __always_inline unsigned int get_domain(void)
+ {
+ 	unsigned int domain;
+ 
+@@ -94,7 +94,7 @@ static inline unsigned int get_domain(void)
+ 	return domain;
+ }
+ 
+-static inline void set_domain(unsigned val)
++static __always_inline void set_domain(unsigned int val)
+ {
+ 	asm volatile(
+ 	"mcr	p15, 0, %0, c3, c0	@ set domain"
+@@ -102,12 +102,12 @@ static inline void set_domain(unsigned val)
+ 	isb();
+ }
+ #else
+-static inline unsigned int get_domain(void)
++static __always_inline unsigned int get_domain(void)
+ {
+ 	return 0;
+ }
+ 
+-static inline void set_domain(unsigned val)
++static __always_inline void set_domain(unsigned int val)
+ {
+ }
+ #endif
+diff --git a/arch/arm/include/asm/uaccess.h b/arch/arm/include/asm/uaccess.h
+index 303248e5b990..98c6b91be4a8 100644
+--- a/arch/arm/include/asm/uaccess.h
++++ b/arch/arm/include/asm/uaccess.h
+@@ -22,7 +22,7 @@
+  * perform such accesses (eg, via list poison values) which could then
+  * be exploited for priviledge escalation.
+  */
+-static inline unsigned int uaccess_save_and_enable(void)
++static __always_inline unsigned int uaccess_save_and_enable(void)
+ {
+ #ifdef CONFIG_CPU_SW_DOMAIN_PAN
+ 	unsigned int old_domain = get_domain();
+@@ -37,7 +37,7 @@ static inline unsigned int uaccess_save_and_enable(void)
+ #endif
+ }
+ 
+-static inline void uaccess_restore(unsigned int flags)
++static __always_inline void uaccess_restore(unsigned int flags)
+ {
+ #ifdef CONFIG_CPU_SW_DOMAIN_PAN
+ 	/* Restore the user access mask */
 -- 
-Vitaly
+2.17.1
+
