@@ -2,136 +2,109 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F77C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B528DC388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CA9D20700
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:01:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IvKL0V3M"
+	by mail.kernel.org (Postfix) with ESMTP id 8CE6820700
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:02:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569931326;
+	bh=Q/SkJbsfVEUiMWw/SLdFSNoeD+kL7c//N+7waOzF4t0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CwNwqdt7Whd80/rzwpvpc+G+eyXjEYdONYy6WK+8WZCpoNVZmNBGZjodFv6+dsLFj
+	 MJpk0BRQSq2bYMnMZuZ/B65WxJ1o6QiDKFCmlezyG+iP7kbXcIl8hhl+4OOfumkKI9
+	 4QovsjvZFz7F5SfbXSF/s5n8ggTfuEq6Co89DBh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732423AbfJAMBT (ORCPT
+        id S1732749AbfJAMCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 08:01:19 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:60590 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbfJAMBT (ORCPT
+        Tue, 1 Oct 2019 08:02:06 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41021 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbfJAMCF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 08:01:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=LKr1dzgOhzScC3c310Ljy2SZqBkMLUgSVZmu3N0da8g=; b=IvKL0V3MvVcllb7C/EJZnXh0E0
-        9tkkl0R8F+nCHkI/+Gv4GE/IDRgB5UH7bGvA/lUTmtZ29BhxDGndMxcnvSHuEusEIaVBnt7W6jwKs
-        pE79SCg/WkMK8NlnBBdE65s7/dcW6Nc9+VGdiFu9kRTZb0e7fPJ8O83UVIefcQ1CnDmQ0i7iZyt02
-        fGI5A8SWsPUKVUu+pSNyyy81/9BcKY3s7ioNyUlbCXBFL17We9QlrO/jER9y8Aogx1+vg6KEK+bAm
-        aUeXMZNFRyY/5YtJh7D5yQW/aX68lK1FUm5RCv4H8R7wFilOprU7HfJkHJUO4cFjahab+U+cdKpw2
-        weOLj7sg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iFGpP-00061z-9X; Tue, 01 Oct 2019 12:00:28 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6300C30477A;
-        Tue,  1 Oct 2019 13:59:35 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B3DE8202CF69B; Tue,  1 Oct 2019 14:00:23 +0200 (CEST)
-Date:   Tue, 1 Oct 2019 14:00:23 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Nadav Amit <namit@vmware.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Borislav Petkov <bp@alien8.de>,
-        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Edward Cree <ecree@solarflare.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>
-Subject: Re: [PATCH 11/15] static_call: Add inline static call infrastructure
-Message-ID: <20191001120023.GQ4519@hirez.programming.kicks-ass.net>
-References: <20190605130753.327195108@infradead.org>
- <20190605131945.193241464@infradead.org>
- <37CFAEC1-6D36-4A6D-8C44-F85FCFA053AA@vmware.com>
- <20190607083756.GW3419@hirez.programming.kicks-ass.net>
- <20190610171929.3xemvsykvkswcvya@treble>
+        Tue, 1 Oct 2019 08:02:05 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w65so1321201oiw.8;
+        Tue, 01 Oct 2019 05:02:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0vk+axt7MtTNP8zJtVF1vqgIMglVNkEgAAeax/JHomA=;
+        b=cxtL3eRK0KTlOEbxnGbKqPRIUPCtWzG8nKLAIHuVSo1ujzhpWDpUf7Iq0ZyI6zpl1i
+         g8b555vEtyHWd9rrUMen5AEFAHGoUYpI0ufvveoy8AcqgGMOI0oeLG6scSXSyDO7hzu3
+         OLyObYxibjGK1HFZ9B62wtv2vEUmm7L34inTWTrrmYBAl4WVOnnCKB7oksoDJukp45CU
+         nDY7yVcvzVMFD8afU0Cmds0gi5LjI4bMeaJUwpNOj+CX9jrp6JkVaTEsZZEtKYBLiLsN
+         NKTBl/OTJgCjj+TaAIPYaS+o3SdWYzMs+Qnd0iSKmHhVssZt6F2m45eRBDB34dPsxXuu
+         nlrg==
+X-Gm-Message-State: APjAAAX6hxKf9vl9pGsRl2XaHMD4szJr+Nz8JVFohyAvacpss60oO0Db
+        zPUs2eDCfoxXGVmUIrTZiA==
+X-Google-Smtp-Source: APXvYqwlEUzV4nhqIYSd1t2SDaN/XUENGs6M0vVKo9abXPpm7/8BdWeJ6O50/RLsD2OVG+1YY8VqFA==
+X-Received: by 2002:aca:32d5:: with SMTP id y204mr3465772oiy.59.1569931324623;
+        Tue, 01 Oct 2019 05:02:04 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n17sm4575249otk.5.2019.10.01.05.02.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2019 05:02:04 -0700 (PDT)
+Date:   Tue, 1 Oct 2019 07:02:03 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Gareth Williams <gareth.williams.jx@renesas.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] dt-bindings: snps,dw-apb-ssi: Add optional clock
+ domain information
+Message-ID: <20191001120203.GA28106@bogus>
+References: <1568793876-9009-1-git-send-email-gareth.williams.jx@renesas.com>
+ <1568793876-9009-3-git-send-email-gareth.williams.jx@renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190610171929.3xemvsykvkswcvya@treble>
+In-Reply-To: <1568793876-9009-3-git-send-email-gareth.williams.jx@renesas.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 12:19:29PM -0500, Josh Poimboeuf wrote:
-> On Fri, Jun 07, 2019 at 10:37:56AM +0200, Peter Zijlstra wrote:
-> > > > +}
-> > > > +
-> > > > +static int static_call_module_notify(struct notifier_block *nb,
-> > > > +				     unsigned long val, void *data)
-> > > > +{
-> > > > +	struct module *mod = data;
-> > > > +	int ret = 0;
-> > > > +
-> > > > +	cpus_read_lock();
-> > > > +	static_call_lock();
-> > > > +
-> > > > +	switch (val) {
-> > > > +	case MODULE_STATE_COMING:
-> > > > +		module_disable_ro(mod);
-> > > > +		ret = static_call_add_module(mod);
-> > > > +		module_enable_ro(mod, false);
-> > > 
-> > > Doesn’t it cause some pages to be W+X ?
+On Wed, Sep 18, 2019 at 09:04:34AM +0100, Gareth Williams wrote:
+> Note in the bindings documentation that pclk should be renamed if a clock
+> domain is used to enable the optional bus clock.
 > 
-> How so?
-
-This is after complete_formation() which does RO,X. If we then disable
-RO we end up with W+X pages, which is bad.
-
-That said, alternatives, ftrace, dynamic_debug all run before
-complete_formation() specifically such that they can directly poke text.
-
-Possibly we should add a notifier callback for MODULE_STATE_UNFORMED,
-but that is for another day.
-
-> >> Can it be avoided?
-> > 
-> > I don't know why it does this, jump_labels doesn't seem to need this,
-> > and I'm not seeing what static_call needs differently.
+> Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
+> ---
+> v2: Introduced this patch.
+> ---
+>  Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> I forgot why I did this, but it's probably for the case where there's a
-> static call site in module init code.  It deserves a comment.
-> 
-> Theoretically, jump labels need this to.
-> 
-> BTW, there's a change coming that will require the text_mutex before
-> calling module_{disable,enable}_ro().
+> diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+> index f54c8c3..3ed08ee 100644
+> --- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+> +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+> @@ -16,7 +16,8 @@ Required properties:
+>  Optional properties:
+>  - clock-names : Contains the names of the clocks:
+>      "ssi_clk", for the core clock used to generate the external SPI clock.
+> -    "pclk", the interface clock, required for register access.
+> +    "pclk", the interface clock, required for register access. If a clock domain
+> +     used to enable this clock then it should be named "pclk_clkdomain".
 
-I can't find why it would need this (and I'm going to remove it).
-Specifically complete_formation() does enable_ro(.after_init=false),
-which leaves .ro_after_init writable so
-{jump_label,static_call}_sort_entries() will work.
+What's a clock domain?
 
-But both jump_label and static_call then use the full text_poke(), not
-text_poke_early(), for modules.
+Unless this is a h/w difference in the IP block, then this change 
+doesn't make sense.
+
+>  - cs-gpios : Specifies the gpio pins to be used for chipselects.
+>  - num-cs : The number of chipselects. If omitted, this will default to 4.
+>  - reg-io-width : The I/O register width (in bytes) implemented by this
+> -- 
+> 2.7.4
+> 
