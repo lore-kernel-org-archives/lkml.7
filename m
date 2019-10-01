@@ -2,261 +2,148 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3454FC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7CFC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1FB0215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CBF82190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:57:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="beDXTU69"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ohbZDLnh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbfJAS5F (ORCPT
+        id S1726565AbfJAS5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 14:57:05 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35279 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfJAS5E (ORCPT
+        Tue, 1 Oct 2019 14:57:51 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:37176 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726214AbfJAS5v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 14:57:04 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 205so8730756pfw.2;
-        Tue, 01 Oct 2019 11:57:04 -0700 (PDT)
+        Tue, 1 Oct 2019 14:57:51 -0400
+Received: by mail-qt1-f193.google.com with SMTP id l3so23008045qtr.4;
+        Tue, 01 Oct 2019 11:57:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=QMuIShGrKhL+NfsiUAQoYc53XQ6eTBiB5py/hpqNtNU=;
-        b=beDXTU69EMupXgVLcmBXNn8h7M4HfzlMU3Gqu2gbhpfFd9AO+8PBBYfnfy7UQJ1BRa
-         IdBmKkxIL/YfvkY1500G185pp+LFfW899HZmgZGjFyMOx1GeT3bHyJ1NFsxehzltgY4E
-         6DjCKlW7SFFFcUflKh9T3rRdHDAJIbGs2T0ffSXL7Piy2gFOygThZITBuqa9cPWXlC3g
-         Ja1U+F2GekrA/ve37501N1w+MSZDL+Z6R91TnczxQLYX+TpJNyso+W8k1ehMcUpx+QaK
-         WB6CfC5hr4PqrQqt+y17Dtbmy1t0pI39j73cUqpguGjhuaB8UxG80DynqH+OyHpiwXle
-         RsaQ==
+        h=from:date:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=C0CqVlj1moGxN14sdD84N2iUwftu1KTuF6RkzEs7mEA=;
+        b=ohbZDLnhGAaE4PepoC2SCPmETAfQNU7dtFJRcr4GnU4kvBYFzPbKcsmkgZwNxkMlkE
+         qdZS2H6uqE1n3l9GectESztY2xm6U/x8H3g7jihAZxie4UQz9/jE7MilYu7a7AWwakMs
+         3CuX8j1/crlg/8sVQv9h+1q2nDWcx7MBFdIIJSQ/iFn8K2vdYaaB+WmNubyoYB244Ltm
+         zP5LfCPw5nZXGn36qC2eXh/xM+l4b7UsKcN5fuZh0o+vSVJztNCfT39Wc3UiD2qkZEBX
+         dErfm3TGVsguF8B7n7lGNkbWiUp3tMZKXB2eNgQKmTLmVa2FhSH5FWOJdfTJzd0RJdSM
+         RnNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=QMuIShGrKhL+NfsiUAQoYc53XQ6eTBiB5py/hpqNtNU=;
-        b=YCPcj3aOo2A/Qfa/C1xiFwmE/kWJuPuZdMvFlsshSXLqV2Nv8Slxa2FkFHbWAwy0Qa
-         GaJt7RjsjeLIIv8p7ktQnk8Y3TImLL0a6tNdzX2HR5tuXSIGIjC+kMjejG0DPSKBHOe1
-         ciRkImkKFAk6NiAZlX12l6b1wsSQ8efSo/WzrxVNYCZs7Dvv5M0eCd+XFla24UFv2vG4
-         MM+CbnnjO7Z5pf2LvbRrgLmzS0RSGvx6O/5+dd8L4ywlPCDY3Df2m/cZvci82D43raAn
-         Siqnwm6+EFCDzn0BEU2APAfXTICPIAnxXwxogncY+RbzNRUQfhLals43nToL8kgvZIs+
-         vSfA==
-X-Gm-Message-State: APjAAAXhRyiGyzF/M6kvxsZ+DwDSE+UTt+8c76A6KR2LgicGz2TbzdGP
-        UV9xSE4COZRK60LRMLrLrbU=
-X-Google-Smtp-Source: APXvYqyjmj7cP3FSgWUgZFrcbJCTWbfH6ozD+0ThDxLqB2tuKfrLahHyUT4heqIV1AD5dmOLHJK/zQ==
-X-Received: by 2002:aa7:92d9:: with SMTP id k25mr29621355pfa.155.1569956223628;
-        Tue, 01 Oct 2019 11:57:03 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id k15sm18949969pgt.66.2019.10.01.11.57.02
+        h=x-gm-message-state:from:date:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=C0CqVlj1moGxN14sdD84N2iUwftu1KTuF6RkzEs7mEA=;
+        b=UcgWWOnVqFGn5bGeBa9TK+C2iQH/oOpvz0MbJA8Fg4vfrLw71wjT7L53HcdOG9iBzm
+         4G0BVm7h+x9r+2ZDCfuyHrN2SVNMWbGGAF1p3ObpFQD+ZcCe03n5Lo0YgQQnxZ+QesB4
+         FZzuvztJd+3qpYCsR4cJsk4P8zfOj76zvaPmMb0tGl+8tWDMz/qR5PFITi5mCSrwhsP5
+         zybcRD3w+UbOLFRfjanm6rvMFeF0BDb6dM0+ZFi4I0NwXT2uHUw4AYAaj7b7JjyxalKD
+         BImIB/yKr6x/QMm5DjbyyNlbowA64bqOmLse/EODm6Ax3YnJNMbd9Pxs8RXMzKOgDZVz
+         rZww==
+X-Gm-Message-State: APjAAAUuIL2eLqqMRK9S77BcAlvpgTkXhYHK3uZkCf8HOSaUvOfjkSzp
+        fAF6JT6s9syMmvpoWYWIGoI=
+X-Google-Smtp-Source: APXvYqwIS2icBZtYJocvs58tna7l7EPUt9hjWWfLAE3/CcvgwSctz1yfo703HgfSL3Wiy5WJJJWaEQ==
+X-Received: by 2002:ac8:342a:: with SMTP id u39mr32044971qtb.7.1569956268754;
+        Tue, 01 Oct 2019 11:57:48 -0700 (PDT)
+Received: from quaco.ghostprotocols.net (179-240-185-49.3g.claro.net.br. [179.240.185.49])
+        by smtp.gmail.com with ESMTPSA id 63sm8248631qkh.82.2019.10.01.11.57.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 11:57:02 -0700 (PDT)
-Date:   Tue, 1 Oct 2019 11:57:00 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     Corentin Chary <corentin.chary@gmail.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        acpi4asus-user@lists.sourceforge.net
-Subject: [PATCH v2] platform/x86: asus-laptop: switch to using polled mode of
- input devices
-Message-ID: <20191001185700.GA46611@dtor-ws>
+        Tue, 01 Oct 2019 11:57:46 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 67F4A40DA4; Tue,  1 Oct 2019 15:57:41 -0300 (-03)
+Date:   Tue, 1 Oct 2019 15:57:41 -0300
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH 07/24] tools headers uapi: Sync linux/fs.h with the
+ kernel sources
+Message-ID: <20191001185741.GD13904@kernel.org>
+References: <20191001111216.7208-1-acme@kernel.org>
+ <20191001111216.7208-8-acme@kernel.org>
+ <20191001184521.GA15756@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191001184521.GA15756@google.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have added polled mode to the normal input devices with the intent of
-retiring input_polled_dev. This converts Asus laptop driver to use the
-polling mode of standard input devices and removes dependency on
-INPUT_POLLDEV.
+Em Tue, Oct 01, 2019 at 11:45:21AM -0700, Eric Biggers escreveu:
+> On Tue, Oct 01, 2019 at 08:11:59AM -0300, Arnaldo Carvalho de Melo wrote:
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > 
+> > To pick the changes from:
+> > 
+> >   78a1b96bcf7a ("fscrypt: add FS_IOC_REMOVE_ENCRYPTION_KEY_ALL_USERS ioctl")
+> >   23c688b54016 ("fscrypt: allow unprivileged users to add/remove keys for v2 policies")
+> >   5dae460c2292 ("fscrypt: v2 encryption policy support")
+> >   5a7e29924dac ("fscrypt: add FS_IOC_GET_ENCRYPTION_KEY_STATUS ioctl")
+> >   b1c0ec3599f4 ("fscrypt: add FS_IOC_REMOVE_ENCRYPTION_KEY ioctl")
+> >   22d94f493bfb ("fscrypt: add FS_IOC_ADD_ENCRYPTION_KEY ioctl")
+> >   3b6df59bc4d2 ("fscrypt: use FSCRYPT_* definitions, not FS_*")
+> >   2336d0deb2d4 ("fscrypt: use FSCRYPT_ prefix for uapi constants")
+> >   7af0ab0d3aab ("fs, fscrypt: move uapi definitions to new header <linux/fscrypt.h>")
+> > 
+> > That don't trigger any changes in tooling, as it so far is used only
+> > for:
+> > 
+> >   $ grep -l 'fs\.h' tools/perf/trace/beauty/*.sh | xargs grep regex=
+> >   tools/perf/trace/beauty/rename_flags.sh:regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+RENAME_([[:alnum:]_]+)[[:space:]]+\(1[[:space:]]*<<[[:space:]]*([[:xdigit:]]+)[[:space:]]*\)[[:space:]]*.*'
+> >   tools/perf/trace/beauty/sync_file_range.sh:regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+SYNC_FILE_RANGE_([[:alnum:]_]+)[[:space:]]+([[:xdigit:]]+)[[:space:]]*.*'
+> >   tools/perf/trace/beauty/usbdevfs_ioctl.sh:regex="^#[[:space:]]*define[[:space:]]+USBDEVFS_(\w+)(\(\w+\))?[[:space:]]+_IO[CWR]{0,2}\([[:space:]]*(_IOC_\w+,[[:space:]]*)?'U'[[:space:]]*,[[:space:]]*([[:digit:]]+).*"
+> >   tools/perf/trace/beauty/usbdevfs_ioctl.sh:regex="^#[[:space:]]*define[[:space:]]+USBDEVFS_(\w+)[[:space:]]+_IO[WR]{0,2}\([[:space:]]*'U'[[:space:]]*,[[:space:]]*([[:digit:]]+).*"
+> >   $
+> > 
+> > This silences this perf build warning:
+> > 
+> >   Warning: Kernel ABI header at 'tools/include/uapi/linux/fs.h' differs from latest version at 'include/uapi/linux/fs.h'
+> >   diff -u tools/include/uapi/linux/fs.h include/uapi/linux/fs.h
+> > 
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Eric Biggers <ebiggers@google.com>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Link: https://lkml.kernel.org/n/tip-44g48exl9br9ba0t64chqb4i@git.kernel.org
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> What's the reason why you don't just use the include/uapi/ headers directly?
 
-Also removed no longed needed set_bit(EV_ABS, ...) as
-input_set_abs_oarams() does it for us.
+We can't use anything from outside tools/perf/ to build it, sometimes
+things get changed by kernel developers and tooling breaks.
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
+Another reason is that we want to be able to do:
 
-v2: removed input-polldev.h include
+[acme@quaco perf]$ make help | grep perf
+  perf-tar-src-pkg    - Build perf-5.3.0.tar source tarball
+  perf-targz-src-pkg  - Build perf-5.3.0.tar.gz source tarball
+  perf-tarbz2-src-pkg - Build perf-5.3.0.tar.bz2 source tarball
+  perf-tarxz-src-pkg  - Build perf-5.3.0.tar.xz source tarball
+[acme@quaco perf]$
 
- drivers/platform/x86/Kconfig       |  1 -
- drivers/platform/x86/asus-laptop.c | 71 +++++++++++++++---------------
- 2 files changed, 35 insertions(+), 37 deletions(-)
+Take that tarball, transfer it to an older system and still have it
+building and working.
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 1b67bb578f9f..f0a93f630455 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -94,7 +94,6 @@ config ASUS_LAPTOP
- 	depends on RFKILL || RFKILL = n
- 	depends on ACPI_VIDEO || ACPI_VIDEO = n
- 	select INPUT_SPARSEKMAP
--	select INPUT_POLLDEV
- 	---help---
- 	  This is a driver for Asus laptops, Lenovo SL and the Pegatron
- 	  Lucid tablet. It may also support some MEDION, JVC or VICTOR
-diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
-index 472af7edf0af..fc6446209854 100644
---- a/drivers/platform/x86/asus-laptop.c
-+++ b/drivers/platform/x86/asus-laptop.c
-@@ -34,7 +34,6 @@
- #include <linux/uaccess.h>
- #include <linux/input.h>
- #include <linux/input/sparse-keymap.h>
--#include <linux/input-polldev.h>
- #include <linux/rfkill.h>
- #include <linux/slab.h>
- #include <linux/dmi.h>
-@@ -244,7 +243,7 @@ struct asus_laptop {
- 
- 	struct input_dev *inputdev;
- 	struct key_entry *keymap;
--	struct input_polled_dev *pega_accel_poll;
-+	struct input_dev *pega_accel_poll;
- 
- 	struct asus_led wled;
- 	struct asus_led bled;
-@@ -446,9 +445,9 @@ static int pega_acc_axis(struct asus_laptop *asus, int curr, char *method)
- 	return clamp_val((short)val, -PEGA_ACC_CLAMP, PEGA_ACC_CLAMP);
- }
- 
--static void pega_accel_poll(struct input_polled_dev *ipd)
-+static void pega_accel_poll(struct input_dev *input)
- {
--	struct device *parent = ipd->input->dev.parent;
-+	struct device *parent = input->dev.parent;
- 	struct asus_laptop *asus = dev_get_drvdata(parent);
- 
- 	/* In some cases, the very first call to poll causes a
-@@ -457,10 +456,10 @@ static void pega_accel_poll(struct input_polled_dev *ipd)
- 	 * device, and perhaps a firmware bug. Fake the first report. */
- 	if (!asus->pega_acc_live) {
- 		asus->pega_acc_live = true;
--		input_report_abs(ipd->input, ABS_X, 0);
--		input_report_abs(ipd->input, ABS_Y, 0);
--		input_report_abs(ipd->input, ABS_Z, 0);
--		input_sync(ipd->input);
-+		input_report_abs(input, ABS_X, 0);
-+		input_report_abs(input, ABS_Y, 0);
-+		input_report_abs(input, ABS_Z, 0);
-+		input_sync(input);
- 		return;
- 	}
- 
-@@ -471,25 +470,24 @@ static void pega_accel_poll(struct input_polled_dev *ipd)
- 	/* Note transform, convert to "right/up/out" in the native
- 	 * landscape orientation (i.e. the vector is the direction of
- 	 * "real up" in the device's cartiesian coordinates). */
--	input_report_abs(ipd->input, ABS_X, -asus->pega_acc_x);
--	input_report_abs(ipd->input, ABS_Y, -asus->pega_acc_y);
--	input_report_abs(ipd->input, ABS_Z,  asus->pega_acc_z);
--	input_sync(ipd->input);
-+	input_report_abs(input, ABS_X, -asus->pega_acc_x);
-+	input_report_abs(input, ABS_Y, -asus->pega_acc_y);
-+	input_report_abs(input, ABS_Z,  asus->pega_acc_z);
-+	input_sync(input);
- }
- 
- static void pega_accel_exit(struct asus_laptop *asus)
- {
- 	if (asus->pega_accel_poll) {
--		input_unregister_polled_device(asus->pega_accel_poll);
--		input_free_polled_device(asus->pega_accel_poll);
-+		input_unregister_device(asus->pega_accel_poll);
-+		asus->pega_accel_poll = NULL;
- 	}
--	asus->pega_accel_poll = NULL;
- }
- 
- static int pega_accel_init(struct asus_laptop *asus)
- {
- 	int err;
--	struct input_polled_dev *ipd;
-+	struct input_dev *input;
- 
- 	if (!asus->is_pega_lucid)
- 		return -ENODEV;
-@@ -499,37 +497,39 @@ static int pega_accel_init(struct asus_laptop *asus)
- 	    acpi_check_handle(asus->handle, METHOD_XLRZ, NULL))
- 		return -ENODEV;
- 
--	ipd = input_allocate_polled_device();
--	if (!ipd)
-+	input = input_allocate_device();
-+	if (!input)
- 		return -ENOMEM;
- 
--	ipd->poll = pega_accel_poll;
--	ipd->poll_interval = 125;
--	ipd->poll_interval_min = 50;
--	ipd->poll_interval_max = 2000;
--
--	ipd->input->name = PEGA_ACCEL_DESC;
--	ipd->input->phys = PEGA_ACCEL_NAME "/input0";
--	ipd->input->dev.parent = &asus->platform_device->dev;
--	ipd->input->id.bustype = BUS_HOST;
-+	input->name = PEGA_ACCEL_DESC;
-+	input->phys = PEGA_ACCEL_NAME "/input0";
-+	input->dev.parent = &asus->platform_device->dev;
-+	input->id.bustype = BUS_HOST;
- 
--	set_bit(EV_ABS, ipd->input->evbit);
--	input_set_abs_params(ipd->input, ABS_X,
-+	input_set_abs_params(input, ABS_X,
- 			     -PEGA_ACC_CLAMP, PEGA_ACC_CLAMP, 0, 0);
--	input_set_abs_params(ipd->input, ABS_Y,
-+	input_set_abs_params(input, ABS_Y,
- 			     -PEGA_ACC_CLAMP, PEGA_ACC_CLAMP, 0, 0);
--	input_set_abs_params(ipd->input, ABS_Z,
-+	input_set_abs_params(input, ABS_Z,
- 			     -PEGA_ACC_CLAMP, PEGA_ACC_CLAMP, 0, 0);
- 
--	err = input_register_polled_device(ipd);
-+	err = input_setup_polling(input, pega_accel_poll);
- 	if (err)
- 		goto exit;
- 
--	asus->pega_accel_poll = ipd;
-+	input_set_poll_interval(input, 125);
-+	input_set_min_poll_interval(input, 50);
-+	input_set_max_poll_interval(input, 2000);
-+
-+	err = input_register_device(input);
-+	if (err)
-+		goto exit;
-+
-+	asus->pega_accel_poll = input;
- 	return 0;
- 
- exit:
--	input_free_polled_device(ipd);
-+	input_free_device(input);
- 	return err;
- }
- 
-@@ -1550,8 +1550,7 @@ static void asus_acpi_notify(struct acpi_device *device, u32 event)
- 
- 	/* Accelerometer "coarse orientation change" event */
- 	if (asus->pega_accel_poll && event == 0xEA) {
--		kobject_uevent(&asus->pega_accel_poll->input->dev.kobj,
--			       KOBJ_CHANGE);
-+		kobject_uevent(&asus->pega_accel_poll->dev.kobj, KOBJ_CHANGE);
- 		return ;
- 	}
- 
--- 
-2.23.0.444.g18eeb5a265-goog
+We also use the build warnings as hints that something needs to be
+changed in tooling to pick up new kernel features, such as new ioctls,
+syscall arguments to handle in 'perf trace', etc.
 
-
--- 
-Dmitry
+- Arnaldo
