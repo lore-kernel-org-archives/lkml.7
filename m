@@ -2,46 +2,37 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2868ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6716C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A21D521872
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:47:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569934074;
-	bh=SCN9/i8SfJeDG79Gpd/McMsedKDykRm4Mu7A1hinUZc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aYOK0A5DCW45WM5RMfUefKKK/ej+LtCpzcvafJKFRkvvkpiqAEbtO/vXedgU6YxCW
-	 aIBFErcqDS8saySoUYJItF7stP2qJyTjHrau2R0vq5B10FH2JPRFo0SJSTO5hiNQSa
-	 E4oDjXiCPM/KD/zpglBwvIjHiSULloD/0znqwJ6U=
+	by mail.kernel.org (Postfix) with ESMTP id 7858321872
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:48:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388045AbfJAMry (ORCPT
+        id S2388025AbfJAMsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 08:47:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41720 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 08:48:46 -0400
+Received: from mga01.intel.com ([192.55.52.88]:56151 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387892AbfJAMrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 08:47:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0C4921872;
-        Tue,  1 Oct 2019 12:47:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569934071;
-        bh=SCN9/i8SfJeDG79Gpd/McMsedKDykRm4Mu7A1hinUZc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tmcIniEihFeq1sr8uAw8U4Bp2GqnCyF1SHx1AAtTb30LNdgGy7ZXZops7swz2tADq
-         zSEd0I80fsoKVh6RnL9I2Oj8hjA31+s+RuJuiPgzxCL2+M7vXycWDT5DS05yxGil/d
-         Qe85N72KS7wTl2C91II+JxyHWhJaH986kEdiqVng=
-Date:   Tue, 1 Oct 2019 14:47:48 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+        id S1726181AbfJAMsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 08:48:46 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 05:48:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,571,1559545200"; 
+   d="scan'208";a="205057860"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 01 Oct 2019 05:48:42 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 01 Oct 2019 15:48:41 +0300
+Date:   Tue, 1 Oct 2019 15:48:41 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linux-usb@vger.kernel.org,
         Andreas Noever <andreas.noever@gmail.com>,
         Michael Jamet <michael.jamet@intel.com>,
@@ -53,99 +44,55 @@ Cc:     linux-usb@vger.kernel.org,
         Mario.Limonciello@dell.com,
         Anthony Wong <anthony.wong@canonical.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
-Message-ID: <20191001124748.GH2954373@kroah.com>
+Subject: Re: [RFC PATCH 03/22] thunderbolt: Log warning if adding switch fails
+Message-ID: <20191001124841.GM2714@lahna.fi.intel.com>
 References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
- <20191001113830.13028-18-mika.westerberg@linux.intel.com>
+ <20191001113830.13028-4-mika.westerberg@linux.intel.com>
+ <20191001121804.GC2951658@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191001113830.13028-18-mika.westerberg@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191001121804.GC2951658@kroah.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 02:38:25PM +0300, Mika Westerberg wrote:
-> USB4 is a public spec based on Thunderbolt protocol. There are some
-> differences in register layouts and flows. In addition to PCIe and DP
-> tunneling, USB4 supports tunneling of USB 3.x. USB4 is also backward
-> compatible with Thunderbolt 3 (and older generations but the spec only
-> talks about 3rd generation). USB4 compliant devices can be identified by
-> checking USB4 version field in router configuration space.
+On Tue, Oct 01, 2019 at 02:18:04PM +0200, Greg Kroah-Hartman wrote:
+> On Tue, Oct 01, 2019 at 02:38:11PM +0300, Mika Westerberg wrote:
+> > If we fail to add a switch for some reason log a warning with the error
+> > code. This is useful for debugging.
+> > 
+> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > ---
+> >  drivers/thunderbolt/tb.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
+> > index 1f7a9e1cc09c..541295be9bfc 100644
+> > --- a/drivers/thunderbolt/tb.c
+> > +++ b/drivers/thunderbolt/tb.c
+> > @@ -143,6 +143,7 @@ static void tb_scan_port(struct tb_port *port)
+> >  	struct tb_cm *tcm = tb_priv(port->sw->tb);
+> >  	struct tb_port *upstream_port;
+> >  	struct tb_switch *sw;
+> > +	int ret;
+> >  
+> >  	if (tb_is_upstream_port(port))
+> >  		return;
+> > @@ -203,7 +204,9 @@ static void tb_scan_port(struct tb_port *port)
+> >  	if (!tcm->hotplug_active)
+> >  		dev_set_uevent_suppress(&sw->dev, true);
+> >  
+> > -	if (tb_switch_add(sw)) {
+> > +	ret = tb_switch_add(sw);
+> > +	if (ret) {
+> > +		dev_warn(&sw->dev, "failed to register switch: %d\n", ret);
 > 
-> This patch adds initial support for USB4 compliant hosts and devices
-> which enables following features provided by the existing functionality
-> in the driver:
-> 
->   - PCIe tunneling
->   - Display Port tunneling
->   - Host and device NVM firmware upgrade
->   - P2P networking
-> 
-> This brings the USB4 support to the same level that we already have for
-> Thunderbolt 1, 2 and 3 devices.
-> 
-> Note the spec talks about host and device "routers" but in the driver we
-> still use term "switch" in most places. Both can be used interchangeably.
-> 
-> This also updates the Kconfig entry accordingly.
-> 
-> Co-developed-by: Rajmohan Mani <rajmohan.mani@intel.com>
-> Signed-off-by: Rajmohan Mani <rajmohan.mani@intel.com>
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> ---
->  drivers/thunderbolt/Kconfig   |   9 +-
->  drivers/thunderbolt/Makefile  |   2 +-
->  drivers/thunderbolt/eeprom.c  |  53 ++-
->  drivers/thunderbolt/nhi.c     |   3 +
->  drivers/thunderbolt/nhi.h     |   2 +
->  drivers/thunderbolt/switch.c  | 384 +++++++++++++-----
->  drivers/thunderbolt/tb.c      |  20 +-
->  drivers/thunderbolt/tb.h      |  36 ++
->  drivers/thunderbolt/tb_regs.h |  36 +-
->  drivers/thunderbolt/tunnel.c  |  10 +-
->  drivers/thunderbolt/usb4.c    | 722 ++++++++++++++++++++++++++++++++++
->  drivers/thunderbolt/xdomain.c |   6 +
->  12 files changed, 1162 insertions(+), 121 deletions(-)
->  create mode 100644 drivers/thunderbolt/usb4.c
-> 
-> diff --git a/drivers/thunderbolt/Kconfig b/drivers/thunderbolt/Kconfig
-> index fd9adca898ff..8193ec310bae 100644
-> --- a/drivers/thunderbolt/Kconfig
-> +++ b/drivers/thunderbolt/Kconfig
-> @@ -1,6 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  menuconfig THUNDERBOLT
-> -	tristate "Thunderbolt support"
-> +	tristate "USB4 (Thunderbolt) support"
->  	depends on PCI
->  	depends on X86 || COMPILE_TEST
->  	select APPLE_PROPERTIES if EFI_STUB && X86
-> @@ -9,9 +9,10 @@ menuconfig THUNDERBOLT
->  	select CRYPTO_HASH
->  	select NVMEM
->  	help
-> -	  Thunderbolt Controller driver. This driver is required if you
-> -	  want to hotplug Thunderbolt devices on Apple hardware or on PCs
-> -	  with Intel Falcon Ridge or newer.
-> +	  USB4 (Thunderbolt) driver. USB4 is the public spec based on
-> +	  Thunderbolt 3 protocol. This driver is required if you want to
-> +	  hotplug Thunderbolt and USB4 compliant devices on Apple
-> +	  hardware or on PCs with Intel Falcon Ridge or newer.
+> Shouldn't tb_switch_add() do the error reporting instead?  That way it
+> makes it easier to call functions and not always have to print failure
+> messages :)
 
-Wait, did "old" thunderbolt just get re-branded as USB4?
-
-Because if I have an "old" laptop that needs Thunderbolt support, how am
-I going to know it is now called USB4 instead?
-
-Shouldn't there just be a new USB4 option that only enables/builds the
-USB4 stuff if selected?  Why would I want all of this additional code on
-my old system if it's not going to do anything at all?
-
-Or am I confused?
-
-thanks,
-
-greg k-h
+Yes, that's better - I'll move it there.
