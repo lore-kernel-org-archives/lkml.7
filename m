@@ -2,246 +2,113 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D01BBECDFB6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 05:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2608C388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 05:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A934720842
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 05:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 890D621783
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 05:07:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wYQnXQJ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729758AbfJAFHH (ORCPT
+        id S1731123AbfJAFH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 01:07:07 -0400
-Received: from mga17.intel.com ([192.55.52.151]:16783 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbfJAFHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 01:07:06 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Sep 2019 22:07:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,569,1559545200"; 
-   d="scan'208";a="190474561"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga008.fm.intel.com with ESMTP; 30 Sep 2019 22:06:56 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iFANE-000IpB-8f; Tue, 01 Oct 2019 13:06:56 +0800
-Date:   Tue, 1 Oct 2019 13:06:23 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     kbuild-all@01.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        sparclinux@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>,
-        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
-        Tycho Andersen <tycho@tycho.ws>, Aleksa Sarai <asarai@suse.de>,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, linuxppc-dev@lists.ozlabs.org,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        David Drysdale <drysdale@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        libc-alpha@sourceware.org, linux-parisc@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-api@vger.kernel.org,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        linux-alpha@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org
-Subject: Re: [PATCH v13 7/9] open: openat2(2) syscall
-Message-ID: <201910011326.iTYOtJYo%lkp@intel.com>
-References: <20190930183316.10190-8-cyphar@cyphar.com>
+        Tue, 1 Oct 2019 01:07:29 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:40510 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbfJAFH2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 01:07:28 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x91579HI123814;
+        Tue, 1 Oct 2019 00:07:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1569906429;
+        bh=noXDxeYUUM74ghwgtc9meLrez0A25pS+/YPUPz/R6GQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=wYQnXQJ1eGweNGaMBSOsoiMDDRVJa0dl8PX5hIgjA78oyr9y01o+foZcUytgIR6G+
+         Gqu+OLpn9+63PkP8MyCfSPkYjMM0Lgfuy3Hds71AQWTN11mZOigA02FCpmgy0TiqsG
+         3k8w56MIoTbRq9/mR3yL2ZmtlRm4jaOQXOFbQ0dc=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x91579E2057589
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 1 Oct 2019 00:07:09 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 1 Oct
+ 2019 00:06:58 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 1 Oct 2019 00:06:58 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x91576QY023304;
+        Tue, 1 Oct 2019 00:07:06 -0500
+Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to
+ dts
+To:     Tero Kristo <t-kristo@ti.com>, Adam Ford <aford173@gmail.com>
+CC:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190510194229.20628-1-aford173@gmail.com>
+ <845055e2-8182-de74-2077-629fdf50ac6c@ti.com>
+ <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
+ <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com>
+ <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
+ <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com>
+ <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
+ <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com>
+ <23eba53a-9304-2ceb-d97e-01891ec0b3ed@ti.com>
+ <cb028b1e-05ca-9b22-be5d-c63f5fd56cc4@ti.com>
+ <F3335195-6EB7-4D44-B884-2F29D9238011@goldelico.com>
+ <CAHCN7xL9bFxO=2i1DzmRj6A3XwUNdt=DZeJ2a0EZ0f9gcFTy6g@mail.gmail.com>
+ <CAHCN7x+vCfPTRE+zzYUwAXdbBzRotTP2hSOgsHB0FdgBhZV5zA@mail.gmail.com>
+ <CAHCN7xJDV=R9Ysjhff7=mEXdciwPP_5LQbHwaUT8KvhSkLKw8A@mail.gmail.com>
+ <04306a5e-f9be-35a4-1aa1-5795d780e289@ti.com>
+ <3777f1b1-2d9a-334b-b9e7-99dfda2ae29b@ti.com>
+ <CAHCN7xJNJca8W_yw5nNY3AmKDSPoLzJ8voPmR1HS3bNcU8uQGg@mail.gmail.com>
+ <6cd7c9f0-cb26-588b-dfd1-faf462732549@ti.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <ec718740-bb8f-0d31-3622-89a62bd8fede@ti.com>
+Date:   Tue, 1 Oct 2019 08:07:05 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190930183316.10190-8-cyphar@cyphar.com>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <6cd7c9f0-cb26-588b-dfd1-faf462732549@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Aleksa,
+On 30/09/2019 20:48, Tero Kristo wrote:
 
-Thank you for the patch! Perhaps something to improve:
+> Hmmh, after some testing, it seems there is bad stuff happening with the 
+> divider clock implementation, I am re-working it as of now. Basically 
+> what is wrong is that with a divider max value of say 16, the driver 
+> attempts to craft the max value into a mask, but this ends up being 
+> 0x1f. If the max value is 15, it ends up into 0xf which is correct.
 
-[auto build test WARNING on linus/master]
-[cannot apply to v5.4-rc1 next-20191001]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+Ok, that explains the max not working.
 
-url:    https://github.com/0day-ci/linux/commits/Aleksa-Sarai/namei-openat2-2-path-resolution-restrictions/20191001-025628
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-rc1-37-gd466a02-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+It doesn't explain the other issue, where the TRM says the max div is 
+32, but it does not work. But taking the max div from the old SoCs, 16, 
+is not correct either, as it seems that dividers up to 31 work ok.
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+  Tomi
 
-
-sparse warnings: (new ones prefixed by >>)
-
-   fs/open.c:757:13: sparse: sparse: restricted fmode_t degrades to integer
-   fs/open.c:983:18: sparse: sparse: restricted fmode_t degrades to integer
->> fs/open.c:1011:36: sparse: sparse: invalid assignment: |=
->> fs/open.c:1011:36: sparse:    left side has type int
->> fs/open.c:1011:36: sparse:    right side has type restricted fmode_t
-   fs/open.c:1013:36: sparse: sparse: invalid assignment: |=
-   fs/open.c:1013:36: sparse:    left side has type int
-   fs/open.c:1013:36: sparse:    right side has type restricted fmode_t
->> fs/open.c:1029:24: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted fmode_t [usertype] opath_mask @@    got pe] opath_mask @@
->> fs/open.c:1029:24: sparse:    expected restricted fmode_t [usertype] opath_mask
->> fs/open.c:1029:24: sparse:    got int opath_mask
->> fs/open.c:1011:36: sparse: sparse: invalid assignment: |=
->> fs/open.c:1011:36: sparse:    left side has type int
->> fs/open.c:1011:36: sparse:    right side has type restricted fmode_t
-   fs/open.c:1013:36: sparse: sparse: invalid assignment: |=
-   fs/open.c:1013:36: sparse:    left side has type int
-   fs/open.c:1013:36: sparse:    right side has type restricted fmode_t
->> fs/open.c:1029:24: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted fmode_t [usertype] opath_mask @@    got pe] opath_mask @@
->> fs/open.c:1029:24: sparse:    expected restricted fmode_t [usertype] opath_mask
->> fs/open.c:1029:24: sparse:    got int opath_mask
->> fs/open.c:1011:36: sparse: sparse: invalid assignment: |=
->> fs/open.c:1011:36: sparse:    left side has type int
->> fs/open.c:1011:36: sparse:    right side has type restricted fmode_t
-   fs/open.c:1013:36: sparse: sparse: invalid assignment: |=
-   fs/open.c:1013:36: sparse:    left side has type int
-   fs/open.c:1013:36: sparse:    right side has type restricted fmode_t
->> fs/open.c:1029:24: sparse: sparse: incorrect type in assignment (different base types) @@    expected restricted fmode_t [usertype] opath_mask @@    got pe] opath_mask @@
->> fs/open.c:1029:24: sparse:    expected restricted fmode_t [usertype] opath_mask
->> fs/open.c:1029:24: sparse:    got int opath_mask
-   fs/open.c:1173:15: sparse: sparse: undefined identifier 'copy_struct_from_user'
-
-vim +1011 fs/open.c
-
-   957	
-   958	static inline int build_open_flags(const struct open_how *how,
-   959					   struct open_flags *op)
-   960	{
-   961		int flags = how->flags;
-   962		int lookup_flags = 0;
-   963		int opath_mask = 0;
-   964		int acc_mode = ACC_MODE(flags);
-   965	
-   966		/*
-   967		 * Older syscalls still clear these bits before calling
-   968		 * build_open_flags(), but openat2(2) checks all its arguments.
-   969		 */
-   970		if (flags & ~VALID_OPEN_FLAGS)
-   971			return -EINVAL;
-   972		if (how->resolve & ~VALID_RESOLVE_FLAGS)
-   973			return -EINVAL;
-   974		if (!(how->flags & (O_PATH | O_CREAT | __O_TMPFILE)) && how->mode != 0)
-   975			return -EINVAL;
-   976	
-   977		if (flags & (O_CREAT | __O_TMPFILE))
-   978			op->mode = (how->mode & S_IALLUGO) | S_IFREG;
-   979		else
-   980			op->mode = 0;
-   981	
-   982		/* Must never be set by userspace */
- > 983		flags &= ~FMODE_NONOTIFY & ~O_CLOEXEC;
-   984	
-   985		/*
-   986		 * O_SYNC is implemented as __O_SYNC|O_DSYNC.  As many places only
-   987		 * check for O_DSYNC if the need any syncing at all we enforce it's
-   988		 * always set instead of having to deal with possibly weird behaviour
-   989		 * for malicious applications setting only __O_SYNC.
-   990		 */
-   991		if (flags & __O_SYNC)
-   992			flags |= O_DSYNC;
-   993	
-   994		if (flags & __O_TMPFILE) {
-   995			if ((flags & O_TMPFILE_MASK) != O_TMPFILE)
-   996				return -EINVAL;
-   997			if (!(acc_mode & MAY_WRITE))
-   998				return -EINVAL;
-   999		} else if (flags & O_PATH) {
-  1000			/*
-  1001			 * If we have O_PATH in the open flag. Then we
-  1002			 * cannot have anything other than the below set of flags
-  1003			 */
-  1004			flags &= O_DIRECTORY | O_NOFOLLOW | O_PATH;
-  1005			acc_mode = 0;
-  1006	
-  1007			/* Allow userspace to restrict the re-opening of O_PATH fds. */
-  1008			if (how->upgrade_mask & ~VALID_UPGRADE_FLAGS)
-  1009				return -EINVAL;
-  1010			if (!(how->upgrade_mask & UPGRADE_NOREAD))
-> 1011				opath_mask |= FMODE_PATH_READ;
-  1012			if (!(how->upgrade_mask & UPGRADE_NOWRITE))
-  1013				opath_mask |= FMODE_PATH_WRITE;
-  1014		}
-  1015	
-  1016		op->open_flag = flags;
-  1017	
-  1018		/* O_TRUNC implies we need access checks for write permissions */
-  1019		if (flags & O_TRUNC)
-  1020			acc_mode |= MAY_WRITE;
-  1021	
-  1022		/* Allow the LSM permission hook to distinguish append
-  1023		   access from general write access. */
-  1024		if (flags & O_APPEND)
-  1025			acc_mode |= MAY_APPEND;
-  1026	
-  1027		op->acc_mode = acc_mode;
-  1028		op->intent = flags & O_PATH ? 0 : LOOKUP_OPEN;
-> 1029		op->opath_mask = opath_mask;
-  1030	
-  1031		if (flags & O_CREAT) {
-  1032			op->intent |= LOOKUP_CREATE;
-  1033			if (flags & O_EXCL)
-  1034				op->intent |= LOOKUP_EXCL;
-  1035		}
-  1036	
-  1037		if (flags & O_DIRECTORY)
-  1038			lookup_flags |= LOOKUP_DIRECTORY;
-  1039		if (!(flags & O_NOFOLLOW))
-  1040			lookup_flags |= LOOKUP_FOLLOW;
-  1041		if (flags & O_EMPTYPATH)
-  1042			lookup_flags |= LOOKUP_EMPTY;
-  1043	
-  1044		if (how->resolve & RESOLVE_NO_XDEV)
-  1045			lookup_flags |= LOOKUP_NO_XDEV;
-  1046		if (how->resolve & RESOLVE_NO_MAGICLINKS)
-  1047			lookup_flags |= LOOKUP_NO_MAGICLINKS;
-  1048		if (how->resolve & RESOLVE_NO_SYMLINKS)
-  1049			lookup_flags |= LOOKUP_NO_SYMLINKS;
-  1050		if (how->resolve & RESOLVE_BENEATH)
-  1051			lookup_flags |= LOOKUP_BENEATH;
-  1052		if (how->resolve & RESOLVE_IN_ROOT)
-  1053			lookup_flags |= LOOKUP_IN_ROOT;
-  1054	
-  1055		op->lookup_flags = lookup_flags;
-  1056		return 0;
-  1057	}
-  1058	
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
