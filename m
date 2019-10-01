@@ -2,150 +2,97 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B15C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA97ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8414B20B7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:53:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="wGRDtu2q"
+	by mail.kernel.org (Postfix) with ESMTP id 5400B20B7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:53:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbfJASxL (ORCPT
+        id S1726396AbfJASx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 14:53:11 -0400
-Received: from mail-eopbgr770049.outbound.protection.outlook.com ([40.107.77.49]:5119
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725875AbfJASxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 14:53:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=B4IlWOc47EiryaXyKH+qUrPuRvUZmoEz+AM/rQJTl3G8O11tNQkPnPItNXeTEJibL1WJebTYRDKchun/3fPtarrg57mo/E+y3tBXhM2hyDQhHhFol9mnOYLidpHM8FXeY8wZsITjk5m3xnCWDun6pkSEJW5GuQ/lab3Ijp4F41+gK1GjNk+z9r8AIHX/h4DVuVfizPYhHCd0htCpfx8MOiHyasrZdTgHOy5rO9JaHdbvxnOsa2TaEblEsdZoR1707MQ697pkT/bZMqwgCv0Ytx1wEPhEfbDVVUf/KJe5TAPuUFQIIriVEGzpwBp0gEKQnPIRlVzNlYvyU1zzldYCDQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=man0Je8iTGKTI5Md+rkb25uKgQPFDTfiH1vpR4XIBpk=;
- b=luctrPjg8PvIi7EY6qsR/K69EsfSZX6lR8OPIqu2AzkXPbfarGvUnamIosvOJfkVoSU+OG/zKiprTkacH4TjCV+o/pDdoCYBkgr9Ctc17WrQj03qO5vTc/7pb+5vnOWYUEA/BGaCvMpSuffc6U9V2Qh27oQU+oWrWwaNeYNH50wlGYkM9avv/uEkdWkBmnECp5iGm2JIACjar62YI4NuTLpUyZ0SlDllI5lBi8kyLcSazl6bezwjwf5J9v9SKIE0rTObJEwhlYcEpjI/oT0mnjBuq3lX+YZY/RTLtVQgN9iXhqc5lNq2Q7QQ8Bha4+pgDQRSo/Y2EPTzdVGswN3Xzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=man0Je8iTGKTI5Md+rkb25uKgQPFDTfiH1vpR4XIBpk=;
- b=wGRDtu2q3/o19W/5eKIbVXPPCvn/NcYkN1Jq8IvWZ8gD4fLHBNkMpYdzQJYYqq61HQBJbgMySFWfvNUYyWx9Ya/oWboYN7luOVlkIpReh7am16GBL5QljWVPze1NLNkWZvD72+hjGHgIp+oxgm8gXDLR6qO5A2KNTXfYChioIXw=
-Received: from BN6PR12MB1809.namprd12.prod.outlook.com (10.175.101.17) by
- BN6PR12MB1491.namprd12.prod.outlook.com (10.172.18.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.20; Tue, 1 Oct 2019 18:53:08 +0000
-Received: from BN6PR12MB1809.namprd12.prod.outlook.com
- ([fe80::418d:e764:3c12:f961]) by BN6PR12MB1809.namprd12.prod.outlook.com
- ([fe80::418d:e764:3c12:f961%10]) with mapi id 15.20.2305.017; Tue, 1 Oct 2019
- 18:53:08 +0000
-From:   "Deucher, Alexander" <Alexander.Deucher@amd.com>
-To:     Lee Jones <lee.jones@linaro.org>,
-        "RAVULAPATI, VISHNU VARDHAN RAO" 
-        <Vishnuvardhanrao.Ravulapati@amd.com>
-CC:     "RAVULAPATI, VISHNU VARDHAN RAO" 
-        <Vishnuvardhanrao.Ravulapati@amd.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "Mukunda, Vijendar" <Vijendar.Mukunda@amd.com>,
-        Maruthi Srinivas Bayyavarapu <Maruthi.Bayyavarapu@amd.com>,
-        "Mehta, Sanju" <Sanju.Mehta@amd.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 2/7] ASoC: amd: Registering device endpoints using MFD
- framework
-Thread-Topic: [PATCH 2/7] ASoC: amd: Registering device endpoints using MFD
- framework
-Thread-Index: AQHVd5gywJvnY+WwrkWUotR2w3skaqdFWHuAgAA2g4CAACFpAIAAct1A
-Date:   Tue, 1 Oct 2019 18:53:08 +0000
-Message-ID: <BN6PR12MB180930BD7D03FD7DEB14D7C1F79D0@BN6PR12MB1809.namprd12.prod.outlook.com>
-References: <1569891524-18875-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
- <1569891524-18875-2-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
- <20191001064539.GB11769@dell> <2ff13a61-a346-4d49-ab3a-da5d2126727c@amd.com>
- <20191001120020.GC11769@dell>
-In-Reply-To: <20191001120020.GC11769@dell>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Alexander.Deucher@amd.com; 
-x-originating-ip: [71.219.73.178]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 65c4ea8b-b829-44e4-7b8d-08d746a099b1
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: BN6PR12MB1491:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN6PR12MB149173EC1462E540F4C44A69F79D0@BN6PR12MB1491.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 0177904E6B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(39860400002)(346002)(366004)(136003)(13464003)(199004)(189003)(2906002)(6116002)(26005)(256004)(3846002)(53546011)(7696005)(6506007)(99286004)(102836004)(52536014)(81166006)(81156014)(486006)(71190400001)(5660300002)(8676002)(71200400001)(6636002)(446003)(186003)(476003)(76176011)(11346002)(110136005)(229853002)(33656002)(55016002)(66476007)(66556008)(64756008)(66446008)(6436002)(9686003)(478600001)(316002)(76116006)(86362001)(4326008)(66066001)(305945005)(74316002)(7736002)(6246003)(8936002)(14454004)(66946007)(25786009)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR12MB1491;H:BN6PR12MB1809.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3P78y0yGAfn6tB88wJu4/g/jR4sBE4ORkybpod4KDxV2pXzftqsWwRq4SdXNSf0fpDfYDR5HseR984o4M68pfIYBe5MIwVneYFyezLi18vTxMrG05WLdzrAoE0gUF5jQrwnlefcHrp79Ax9/2K/3ti1RBNtS4lQJ2jbSpDTXpkiNaF3uMo0mL0CYGoRZlQnJBaHS8hcYoexPQWdtCEi7AVornGB/n9Hiiez3uGySQfIxTYIG1JuyONU3phJkx33DxU0LtMrXUBOAFBFfITnjuqnH7fRP69qgM0fWjgiGkGHwl16hNBeZpRkkV/n3+Ombs9QkQj2VPMxUA02M6L4s+u0Y/LZEFARb3h7JVC6CQBnDAsR3uzeIYkRDGIK6+U77SBz40Egi3HJFe+rmEh3vtcDNNRqhm7cICQK9BFqc+dM=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 1 Oct 2019 14:53:57 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38778 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfJASx5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 14:53:57 -0400
+Received: by mail-qt1-f196.google.com with SMTP id j31so22999549qta.5
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 11:53:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AMheytGVabcyJn3FNgJ/7coP4hV/9kpO+I6Es2EfVJ8=;
+        b=CdgH7ngm4y78v6w5p11RyCrqEclFfEDETjZ1mmpgGVx19OLBuOSBQOnZmSMrQoFs47
+         i2DSu/puicqMJUSDw13iSJ7DsqghAAqIC3hT2bkwPKufRQY69ZXgbey4DRwrKkKnRHRW
+         X3P4sPn6q4ZrGtFOS13g3wSmfPOsmSrs3042SMZ2sl5NgstsWJisREi4aGtPGoz74rTD
+         D/EcL2HBtjUGv8pDT2XAsqyYUq2m36LgwiXQ89gKbU1EASkTQifV7tGFlrMSitF4EMyH
+         3fFQ4QlXM2SnAFZoPUB8n6q9ppVtTNagsFAF9qE/xWlcUi/n0JvflOOSti2+eKfeGktA
+         VLCQ==
+X-Gm-Message-State: APjAAAXRA6/XXY5JYUm4H4/+6TZKxLOSYwOBzndJkEiqeR5tVkRbhKaU
+        ItgegSE0wBZIxwC8sB9MeCKIOSn9KrQbcziL8zS+wY3VOog=
+X-Google-Smtp-Source: APXvYqzO/m/ctV2NVfB6dhoF3yXr2H2qJOxbJ0sAOXM2f57fgm3iu0I+vXtPdjc+9u3wEsu9hIMuBM8V266k4GJXy40=
+X-Received: by 2002:a0c:b386:: with SMTP id t6mr26513220qve.62.1569956036105;
+ Tue, 01 Oct 2019 11:53:56 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 65c4ea8b-b829-44e4-7b8d-08d746a099b1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Oct 2019 18:53:08.1412
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ijaI5jejFDhKpH+N5roxOL8QC0t/frtv1VqbEhNVc8iKFA7EKD28H/JTPiGb+tzrFM14G6itsBRBUA7TF4mxIg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1491
+References: <201908251609.ADAD5CAAC1@keescook> <CAK8P3a3_sarrMKij5=sp-o16dXERfWkHhUr0fE49Xv8BvXDfaw@mail.gmail.com>
+ <201909301611.1363980D7@keescook>
+In-Reply-To: <201909301611.1363980D7@keescook>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 1 Oct 2019 20:53:39 +0200
+Message-ID: <CAK8P3a28gyC6KQfAKf1CG6CGL=7y_pj2VkbuNTb3YvTi7+8+YA@mail.gmail.com>
+Subject: Re: [PATCH] uaccess: Add missing __must_check attributes
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMZWUgSm9uZXMgPGxlZS5qb25l
-c0BsaW5hcm8ub3JnPg0KPiBTZW50OiBUdWVzZGF5LCBPY3RvYmVyIDEsIDIwMTkgODowMCBBTQ0K
-PiBUbzogUkFWVUxBUEFUSSwgVklTSE5VIFZBUkRIQU4gUkFPDQo+IDxWaXNobnV2YXJkaGFucmFv
-LlJhdnVsYXBhdGlAYW1kLmNvbT4NCj4gQ2M6IFJBVlVMQVBBVEksIFZJU0hOVSBWQVJESEFOIFJB
-Tw0KPiA8VmlzaG51dmFyZGhhbnJhby5SYXZ1bGFwYXRpQGFtZC5jb20+OyBEZXVjaGVyLCBBbGV4
-YW5kZXINCj4gPEFsZXhhbmRlci5EZXVjaGVyQGFtZC5jb20+OyBMaWFtIEdpcmR3b29kIDxsZ2ly
-ZHdvb2RAZ21haWwuY29tPjsNCj4gTWFyayBCcm93biA8YnJvb25pZUBrZXJuZWwub3JnPjsgSmFy
-b3NsYXYgS3lzZWxhIDxwZXJleEBwZXJleC5jej47DQo+IFRha2FzaGkgSXdhaSA8dGl3YWlAc3Vz
-ZS5jb20+OyBNdWt1bmRhLCBWaWplbmRhcg0KPiA8VmlqZW5kYXIuTXVrdW5kYUBhbWQuY29tPjsg
-TWFydXRoaSBTcmluaXZhcyBCYXl5YXZhcmFwdQ0KPiA8TWFydXRoaS5CYXl5YXZhcmFwdUBhbWQu
-Y29tPjsgTWVodGEsIFNhbmp1DQo+IDxTYW5qdS5NZWh0YUBhbWQuY29tPjsgQ29saW4gSWFuIEtp
-bmcgPGNvbGluLmtpbmdAY2Fub25pY2FsLmNvbT47IERhbg0KPiBDYXJwZW50ZXIgPGRhbi5jYXJw
-ZW50ZXJAb3JhY2xlLmNvbT47IG1vZGVyYXRlZCBsaXN0OlNPVU5EIC0gU09DIExBWUVSDQo+IC8g
-RFlOQU1JQyBBVURJTyBQT1dFUiBNQU5BR0VNLi4uIDxhbHNhLWRldmVsQGFsc2EtcHJvamVjdC5v
-cmc+Ow0KPiBvcGVuIGxpc3QgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+DQo+IFN1Ympl
-Y3Q6IFJlOiBbUEFUQ0ggMi83XSBBU29DOiBhbWQ6IFJlZ2lzdGVyaW5nIGRldmljZSBlbmRwb2lu
-dHMgdXNpbmcgTUZEDQo+IGZyYW1ld29yaw0KPiANCj4gT24gVHVlLCAwMSBPY3QgMjAxOSwgdmlz
-aG51IHdyb3RlOg0KPiANCj4gPiBIaSBKb25lcywNCj4gPg0KPiA+IEkgYW0gdmVyeSBUaGFua2Z1
-bCB0byB5b3VyIHJldmlldyBjb21tZW50cy4NCj4gPg0KPiA+IEFjdHVhbGx5IFRoZSBkcml2ZXIg
-aXMgbm90IHRvdGFsbHkgYmFzZWQgb24gTUZELiBJdCBqdXN0IHVzZXMNCj4gPiBtZmRfYWRkX2hv
-dHBsdWdfZGV2aWNlcygpIGFuZCBtZmRfcmVtb3ZlX2RldmljZXMoKSBmb3IgYWRkaW5nIHRoZQ0K
-PiA+IGRldmljZXMgYXV0b21hdGljYWxseS4NCj4gPg0KPiA+IFJlbWFpbmluZyBjb2RlIGhhcyBu
-b3RoaW5nIHRvIGRvIHdpdGggTUZEIGZyYW1ld29yay4NCj4gPg0KPiA+IFNvIEkgdGhvdWdodCBJ
-dCB3b3VsZCBub3QgYnJlYWsgdGhlIGNvZGluZyBzdHlsZSBhbmQgbW92ZWQgYWhlYWQgYnkNCj4g
-PiB1c2luZyB0aGUgTUZEIEFQSSBieSBhZGRpbmcgaXRzIGhlYWRlciBmaWxlLg0KPiA+DQo+ID4g
-SWYgaXQgaXMgYW55IHZpb2xhdGlvbiBvZiBjb2Rpbmcgc3RhbmRhcmQgdGhlbiBJIGNhbiBtb3Zl
-IGl0IHRvDQo+ID4gZHJpdmVycy9tZmQuDQo+ID4NCj4gPiBUaGlzIHBhdGNoIGNvdWxkIGJlIGEg
-c2hvdyBzdG9wcGVyIGZvciB1cy5QbGVhc2Ugc3VnZ2VzdCB1cyBob3cgY2FuIHdlDQo+ID4gbW92
-ZSBhaGVhZCBBU0FQLg0KPiANCj4gRWl0aGVyIG1vdmUgdGhlIE1GRCBwYXJ0cyB0byBkcml2ZXJz
-L21mZCwgb3Igc3RvcCB1c2luZyB0aGUgTUZEIEFQSS4NCg0KVGhlcmUgYXJlIG1vcmUgZHJpdmVy
-cyBvdXRzaWRlIG9mIGRyaXZlcnMvbWZkIHVzaW5nIHRoaXMgQVBJIHRoYW4gZHJpdmVycyBpbiBk
-cml2ZXJzL21mZC4gIEluIGEgbG90IG9mIGNhc2VzIGl0IGRvZXNuJ3QgbWFrZSBzZW5zZSB0byBt
-b3ZlIHRoZSBkcml2ZXIgdG8gZHJpdmVycy9tZmQuDQoNCkFsZXgNCg0KPiANCj4gLS0NCj4gTGVl
-IEpvbmVzIFvmnY7nkLzmlq9dDQo+IExpbmFybyBTZXJ2aWNlcyBUZWNobmljYWwgTGVhZA0KPiBM
-aW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MgRm9sbG93IExp
-bmFybzogRmFjZWJvb2sgfA0KPiBUd2l0dGVyIHwgQmxvZw0K
+On Tue, Oct 1, 2019 at 1:17 AM Kees Cook <keescook@chromium.org> wrote:
+> On Mon, Sep 30, 2019 at 12:33:19PM +0200, Arnd Bergmann wrote:
+> > On Wed, Aug 28, 2019 at 7:38 PM Kees Cook <keescook@chromium.org> wrote:
+> > arch/x86/math-emu/reg_ld_str.c:88:2: error: ignoring return value of
+> > function declared with 'warn_unused_result' attribute
+> > [-Werror,-Wunused-result]
+> >         __copy_from_user(sti_ptr, s, 10);
+> >         ^~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~
+> > arch/x86/math-emu/reg_ld_str.c:1129:2: error: ignoring return value of
+> > function declared with 'warn_unused_result' attribute
+> > [-Werror,-Wunused-result]
+> >         __copy_from_user(register_base + offset, s, other);
+> >         ^~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > arch/x86/math-emu/reg_ld_str.c:1131:3: error: ignoring return value of
+> > function declared with 'warn_unused_result' attribute
+> > [-Werror,-Wunused-result]
+> >                 __copy_from_user(register_base, s + other, offset);
+> >                 ^~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>
+> What was the CONFIG for this? I didn't hit these in my build tests.
+
+I saw three randconfig builds trigger it in one day, so not that common.
+https://pastebin.com/mUhbNEVR is one of them.
+
+> > Moreover, the same code also ignores the return value from most
+> > get_user()/put_user()/FPU_get_user()/FPU_put_user() calls,
+> > which have no warn_unused_result annotation (they are macros,
+> > but I think something could be done if we want to have that
+> > annotation to catch some of the other such users).
+>
+> It would certainly make sense to mark those as __must_check too... now
+> tracking this here for anyone that wants to take a stab at it:
+> https://github.com/KSPP/linux/issues/16
+
+FWIW, I have not come up with a way to add the warning, but I
+did send a fix for the instances in the math-emu code:
+https://lore.kernel.org/lkml/20191001142344.1274185-1-arnd@arndb.de/
+
+      Arnd
