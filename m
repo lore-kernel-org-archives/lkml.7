@@ -2,136 +2,193 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB19C32792
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 01:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0AB1C35280
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 01:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 024B321783
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 01:12:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82B292075C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 01:13:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730917AbfJABMr (ORCPT
+        id S1731060AbfJABNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 21:12:47 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:40258 "EHLO mx2.mailbox.org"
+        Mon, 30 Sep 2019 21:13:17 -0400
+Received: from mga12.intel.com ([192.55.52.136]:64309 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726590AbfJABMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 21:12:47 -0400
-Received: from smtp2.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id 54365A221F;
-        Tue,  1 Oct 2019 03:12:44 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.240])
-        by spamfilter01.heinlein-hosting.de (spamfilter01.heinlein-hosting.de [80.241.56.115]) (amavisd-new, port 10030)
-        with ESMTP id eZZ-U1uKCHAI; Tue,  1 Oct 2019 03:12:41 +0200 (CEST)
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Kees Cook <keescook@chromium.org>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 4/4] perf_event_open: switch to copy_struct_from_user()
-Date:   Tue,  1 Oct 2019 11:10:55 +1000
-Message-Id: <20191001011055.19283-5-cyphar@cyphar.com>
-In-Reply-To: <20191001011055.19283-1-cyphar@cyphar.com>
-References: <20191001011055.19283-1-cyphar@cyphar.com>
+        id S1726157AbfJABNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Sep 2019 21:13:17 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Sep 2019 18:13:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,569,1559545200"; 
+   d="scan'208";a="191307813"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 30 Sep 2019 18:13:16 -0700
+Received: from [10.226.38.18] (unknown [10.226.38.18])
+        by linux.intel.com (Postfix) with ESMTP id 927655803E4;
+        Mon, 30 Sep 2019 18:13:14 -0700 (PDT)
+Subject: Re: [PATCH v1 1/2] dt-bindings: spi: Add support for cadence-qspi IP
+ Intel LGM SoC
+To:     Rob Herring <robh@kernel.org>
+Cc:     broonie@kernel.org, mark.rutland@arm.com,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com
+References: <20190916073843.39618-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190916073843.39618-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190930223640.GA18491@bogus>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <e70c6f98-7e0f-97f2-bede-00de4389f825@linux.intel.com>
+Date:   Tue, 1 Oct 2019 09:13:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20190930223640.GA18491@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The change is very straightforward, and helps unify the syscall
-interface for struct-from-userspace syscalls.
+Hi Rob,
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
----
- kernel/events/core.c | 47 +++++++++-----------------------------------
- 1 file changed, 9 insertions(+), 38 deletions(-)
+    Thank you for the review comments.
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 4655adbbae10..3f0cb82e4fbc 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10586,55 +10586,26 @@ static int perf_copy_attr(struct perf_event_attr __user *uattr,
- 	u32 size;
- 	int ret;
- 
--	if (!access_ok(uattr, PERF_ATTR_SIZE_VER0))
--		return -EFAULT;
--
--	/*
--	 * zero the full structure, so that a short copy will be nice.
--	 */
-+	/* Zero the full structure, so that a short copy will be nice. */
- 	memset(attr, 0, sizeof(*attr));
- 
- 	ret = get_user(size, &uattr->size);
- 	if (ret)
- 		return ret;
- 
--	if (size > PAGE_SIZE)	/* silly large */
--		goto err_size;
--
--	if (!size)		/* abi compat */
-+	/* ABI compatibility quirk: */
-+	if (!size)
- 		size = PERF_ATTR_SIZE_VER0;
--
--	if (size < PERF_ATTR_SIZE_VER0)
-+	if (size < PERF_ATTR_SIZE_VER0 || size > PAGE_SIZE)
- 		goto err_size;
- 
--	/*
--	 * If we're handed a bigger struct than we know of,
--	 * ensure all the unknown bits are 0 - i.e. new
--	 * user-space does not rely on any kernel feature
--	 * extensions we dont know about yet.
--	 */
--	if (size > sizeof(*attr)) {
--		unsigned char __user *addr;
--		unsigned char __user *end;
--		unsigned char val;
--
--		addr = (void __user *)uattr + sizeof(*attr);
--		end  = (void __user *)uattr + size;
--
--		for (; addr < end; addr++) {
--			ret = get_user(val, addr);
--			if (ret)
--				return ret;
--			if (val)
--				goto err_size;
--		}
--		size = sizeof(*attr);
-+	ret = copy_struct_from_user(attr, sizeof(*attr), uattr, size);
-+	if (ret) {
-+		if (ret == -E2BIG)
-+			goto err_size;
-+		return ret;
- 	}
- 
--	ret = copy_from_user(attr, uattr, size);
--	if (ret)
--		return -EFAULT;
--
- 	attr->size = size;
- 
- 	if (attr->__reserved_1)
--- 
-2.23.0
+On 1/10/2019 6:36 AM, Rob Herring wrote:
+> On Mon, Sep 16, 2019 at 03:38:42PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> On Intel Lightening Mountain(LGM) SoCs QSPI controller support
+>> to QSPI-NAND flash. This introduces to device tree binding
+>> documentation for Cadence-QSPI controller and spi-nand flash.
+>>
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> ---
+>>   .../devicetree/bindings/spi/cadence,qspi-nand.yaml | 84 ++++++++++++++++++++++
+>>   1 file changed, 84 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml b/Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml
+>> new file mode 100644
+>> index 000000000000..9aae4c1459cc
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml
+>> @@ -0,0 +1,84 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/spi/cadence,qspi-nand.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: Cadence QSPI Flash Controller on Intel's SoC
+>> +
+>> +maintainers:
+>> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> +
+>> +allOf:
+>> +  - $ref: "spi-controller.yaml#"
+>> +
+>> +description: |
+>> +  The Cadence QSPI is a controller optimized for communication with SPI
+>> +  FLASH memories, without DMA support on Intel's SoC.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: cadence,lgm-qspi
+> Vendor here should be 'intel'. Perhaps the binding should be shared too
+> like the driver.
+>
+> Plus the vendor prefix for Cadence is cdns.
+Agreed!, will update.
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  fifo-depth:
+>> +    maxItems: 1
+>> +
+> This is vendor specific, so needs a vendor prefix, type, and
+> description.
+agreed!
+>> +  fifo-width:
+>> +    maxItems: 1
+> Same
+>
+>> +
+>> +  qspi-phyaddr:
+>> +    maxItems: 1
+> Same
+>
+>> +
+>> +  qspi-phymask:
+>> +    maxItems: 1
+> Same
+will update all the above.
+>> +
+>> +  clocks:
+>> +    maxItems: 2
+> Need to define what each clock is when there is more than 1.
+Sure, will update.
+>> +
+>> +  clocks-names:
+>> +    maxItems: 2
+> Need to define the strings.
+Noted, will update.
+>> +
+>> +  resets:
+>> +    maxItems: 1
+>> +
+>> +  reset-names:
+>> +    maxItems: 1
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - fifo-depth
+>> +  - fifo-width
+>> +  - qspi-phyaddr
+>> +  - qspi-phymask
+>> +  - clocks
+>> +  - clock-names
+>> +  - resets
+>> +  - reset-names
+>> +
+>> +examples:
+>> +  - |
+>> +    qspi@ec000000 {
+> spi@...
 
+Controller is qspi , so that have updated.
+
+With Best Regards
+Vadivel Murugan R
+>> +          compatible = "cadence,qspi-nand";
+>> +          reg = <0xec000000 0x100>;
+>> +          fifo-depth = <128>;
+>> +          fifo-width = <4>;
+>> +          qspi-phyaddr = <0xf4000000>;
+>> +          qspi-phymask = <0xffffffff>;
+>> +          clocks = <&cgu0 LGM_CLK_QSPI>, <&cgu0 LGM_GCLK_QSPI>;
+>> +          clock-names = "freq", "qspi";
+>> +          resets = <&rcu0 0x10 1>;
+>> +          reset-names = "qspi";
+>> +          #address-cells = <1>;
+>> +          #size-cells = <0>;
+>> +
+>> +          flash: flash@1 {
+>> +              compatible = "spi-nand";
+>> +              reg = <1>;
+>> +              spi-max-frequency = <10000000>;
+>> +          };
+>> +    };
+>> +
+>> -- 
+>> 2.11.0
+>>
