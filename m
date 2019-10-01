@@ -2,333 +2,158 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF27C388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F96ECE589
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E706C21855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38F9321855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:44:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569919447;
-	bh=r0+WZu1njzJ4yUatFF10Sz7m/V9UmgsgaTaMt2erY38=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=T3iqhzYt+HOsRgD+nX+jUkGzH7UwD94Gd+2tdOWajnr1FTJGxCus4xXpwAouy99G5
-	 W8+vzKLUtsPxMaPYV0FJJ8+SV+T6+ALQF05b3/0uFz111ZAn6pYhpHYcHHYFD7lhLB
-	 yUoNvpIRdWbTeBG5Ju6xuXQf04Ih2VTSdBy/DUUQ=
+	s=default; t=1569919452;
+	bh=kG8VWB5S4eyjcS1JBhJuQtUp+VkgX2w/qBlFQEPWX4g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xGAhHsbP6S3qzSF2XQ0RG7KNPBtd0qkEgLV6UdY3ejKZAB8JCkQRtvIiuOaMljpBD
+	 f5ITaDXeEvFubGbe7Vpvv4zyohIlxxCxiUjB7osnSldqJzXICjpzCGpJF6CYoQzrGQ
+	 EWnqmhD1G+E5t9XZmqoc4OlOyehoj1pLmkMdlCeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733111AbfJAIoG (ORCPT
+        id S1733122AbfJAIoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 04:44:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58830 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727615AbfJAIoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 04:44:06 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B5B9215EA;
-        Tue,  1 Oct 2019 08:44:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569919444;
-        bh=r0+WZu1njzJ4yUatFF10Sz7m/V9UmgsgaTaMt2erY38=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WejM8JGefkfqN3gtu1vBd3fLTozGlI+60X2pcoEvKMETilAgXKV9atO+lPSotM2Pd
-         pWwWU+zDKkqkl1QU2KbPQUBjdkrVBY/uycruOc2eGN4jukazfy7L0gu+B/4l0Mn8/8
-         4mVR56b0ntkWAKftbhcRDH/kRD0Q2smXcpLDxe8w=
-Date:   Tue, 1 Oct 2019 09:43:55 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Yizhuo <yzhai003@ucr.edu>
-Cc:     csong@cs.ucr.edu, zhiyunq@cs.ucr.edu,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        linux-iio@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: trigger: stm32-timer: fix the usage of
- uninitialized variables
-Message-ID: <20191001094355.65d873a3@archlinux>
-In-Reply-To: <20190930204451.28614-1-yzhai003@ucr.edu>
-References: <20190930204451.28614-1-yzhai003@ucr.edu>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 1 Oct 2019 04:44:11 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46229 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733089AbfJAIoK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 04:44:10 -0400
+Received: by mail-wr1-f67.google.com with SMTP id o18so14351660wrv.13;
+        Tue, 01 Oct 2019 01:44:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SdwQsb3+JNLacsbpDuz5D32yWpg1tCJ/fPIbG+myM0k=;
+        b=HdLePNBPoqDcKEnbiodeM2y0/VHWwbTm0K4gcAPzQG5RyacfWV8WdQ7aANdu6YFRld
+         4gvhFaEjdKU/VKuqkXc8uDdEDLc718tTTK4psrEo7DArxtyyC7EmhUGc12rCtxIu76U+
+         F+h6qIAos0aLbpED271AqnIXBF2AzkfGl90a/0noS3z3/3BZmuHmGcfFEXoHeV3CINSS
+         M4iq2zgCvOisAC4VLxU2FtoTyvVTIMJcrwGbbERl4h+5A1XWMD9liYf6GxbcH24Em7pg
+         qlKC4xx1ylqwLmTdHmJeCP/Ys8XMdMh1id+lz9nz0OGRcJoGSbtgMFQH+DUURXYTVto8
+         6E3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SdwQsb3+JNLacsbpDuz5D32yWpg1tCJ/fPIbG+myM0k=;
+        b=KhLOFEuBFULxBIBzIfn7eHXwW5ocF9xC/IhjoAoR3jvEVY+vIqM4vyqW/CcKBgEcPZ
+         a74OWYuGavUyaL2tl3rs2HmYXPN/DndzeUl2wXX0JibYoyAf6D8qTEGeWVU3aGjJpMbV
+         LkPLLvKLbo7IRcBN15DUoGyEIlLCob3fS5/8lkPcLE1exii8CRR4z396C9jt1UHEMtkO
+         JEGY2qgorluX+Wg4srBu6l/ECGD3NrZ0xU4NwCNnFgKG3QxhK+1DcPKLMYQYWy0LAiZr
+         cOu09JChvAV+oaCj6XP7jhES4n12o4E8NS8vBnL0N8JGAgzcRpTvP57WOr85Su7ayTjv
+         DQdQ==
+X-Gm-Message-State: APjAAAUz8j4gK5iBfHIeqRy2gfTvawTWplEAMsvIs8wF5jt++L7FwooA
+        eKbpZGGCy0uKa+NHnJePypRNvOYE
+X-Google-Smtp-Source: APXvYqxEOTjQwvwYhtdzjfmAg55crVPh5QvTjltvq9e7dUT8IARmTGB+GkEbovvl0gxcy+nDXVx6Zg==
+X-Received: by 2002:adf:f341:: with SMTP id e1mr16367215wrp.1.1569919448565;
+        Tue, 01 Oct 2019 01:44:08 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id d10sm2307155wma.42.2019.10.01.01.44.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2019 01:44:07 -0700 (PDT)
+Date:   Tue, 1 Oct 2019 10:44:05 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-tip-commits@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Christoph Lameter <cl@linux.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [tip: sched/urgent] sched/membarrier: Fix
+ p->mm->membarrier_state racy load
+Message-ID: <20191001084405.GA115089@gmail.com>
+References: <20190919173705.2181-5-mathieu.desnoyers@efficios.com>
+ <156957184332.9866.1795367595934026999.tip-bot2@tip-bot2>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156957184332.9866.1795367595934026999.tip-bot2@tip-bot2>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Sep 2019 13:44:49 -0700
-Yizhuo <yzhai003@ucr.edu> wrote:
 
-> Several functions in this file are trying to use regmap_read() to
-> initialize the specific variable, however, if regmap_read() fails,
-> the variable could be uninitialized but used directly, which is
-> potentially unsafe. The return value of regmap_read() should be
-> checked and handled. This patch fixes most of the uninitialized
-> variables, but those in function stm32_tt_read_frequency() are
-> hard to handle and need extra effot.
->=20
-> Signed-off-by: Yizhuo <yzhai003@ucr.edu>
+* tip-bot2 for Mathieu Desnoyers <tip-bot2@linutronix.de> wrote:
 
-Hi Yizhuo,
+> The following commit has been merged into the sched/urgent branch of tip:
+> 
+> Commit-ID:     227a4aadc75ba22fcb6c4e1c078817b8cbaae4ce
+> Gitweb:        https://git.kernel.org/tip/227a4aadc75ba22fcb6c4e1c078817b8cbaae4ce
+> Author:        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> AuthorDate:    Thu, 19 Sep 2019 13:37:02 -04:00
+> Committer:     Ingo Molnar <mingo@kernel.org>
+> CommitterDate: Wed, 25 Sep 2019 17:42:30 +02:00
+> 
+> sched/membarrier: Fix p->mm->membarrier_state racy load
 
-This is a slightly interesting case.
+> +	rcu_read_unlock();
+>  	if (!fallback) {
+>  		preempt_disable();
+>  		smp_call_function_many(tmpmask, ipi_mb, NULL, 1);
+> @@ -136,6 +178,7 @@ static int membarrier_private_expedited(int flags)
+>  	}
+>  
+>  	cpus_read_lock();
+> +	rcu_read_lock();
+>  	for_each_online_cpu(cpu) {
+>  		struct task_struct *p;
+>  
+> @@ -157,8 +200,8 @@ static int membarrier_private_expedited(int flags)
+>  			else
+>  				smp_call_function_single(cpu, ipi_mb, NULL, 1);
+>  		}
+> -		rcu_read_unlock();
+>  	}
+> +	rcu_read_unlock();
 
-=46rom an 'obviously' correct point of view, it makes sense to
-always handle the errors and avoid the potentially uninitialised
-cases.
+I noticed this too late, but the locking in this part is now bogus:
 
-=46rom the point of view of a 'fix' we need to show if these can
-actually happen.  These calls are regmap-mmio so the error
-path is in clock enable / disable if there is a clock provided.
-Looking at mfd/stm-timers.c there is a clock called "int" provided.
-Now it's possible that clock enable can never fail, but that is
-getting too hard to chase down.
+	rcu_read_lock();
+	for_each_online_cpu(cpu) {
+		struct task_struct *p;
 
-As such, I think this fix is worthwhile, but I'm not going to
-mark it for stable without a report of it actually being
-possible to trigger it.
+		/*
+		 * Skipping the current CPU is OK even through we can be
+		 * migrated at any point. The current CPU, at the point
+		 * where we read raw_smp_processor_id(), is ensured to
+		 * be in program order with respect to the caller
+		 * thread. Therefore, we can skip this CPU from the
+		 * iteration.
+		 */
+		if (cpu == raw_smp_processor_id())
+			continue;
+		rcu_read_lock();
+		p = rcu_dereference(cpu_rq(cpu)->curr);
+		if (p && p->mm == mm)
+			__cpumask_set_cpu(cpu, tmpmask);
+	}
+	rcu_read_unlock();
 
-I'll leave this on the list for a little longer though as I'd definitely
-like an ack from Benjamin or someone else more familiar with the driver
-than I am.
+Note the double rcu_read_lock() ....
+
+This bug is now upstream, so requires an urgent fix, as it should be 
+trivial to trigger with pretty much any membarrier user.
 
 Thanks,
 
-Jonathan
-
-> ---
->  drivers/iio/trigger/stm32-timer-trigger.c | 98 ++++++++++++++++++++---
->  1 file changed, 85 insertions(+), 13 deletions(-)
->=20
-> diff --git a/drivers/iio/trigger/stm32-timer-trigger.c b/drivers/iio/trig=
-ger/stm32-timer-trigger.c
-> index a5dfe65cd9b9..f8ea7bcbb739 100644
-> --- a/drivers/iio/trigger/stm32-timer-trigger.c
-> +++ b/drivers/iio/trigger/stm32-timer-trigger.c
-> @@ -107,6 +107,7 @@ static int stm32_timer_start(struct stm32_timer_trigg=
-er *priv,
->  	unsigned long long prd, div;
->  	int prescaler =3D 0;
->  	u32 ccer, cr1;
-> +	int ret;
-> =20
->  	/* Period and prescaler values depends of clock rate */
->  	div =3D (unsigned long long)clk_get_rate(priv->clk);
-> @@ -132,11 +133,21 @@ static int stm32_timer_start(struct stm32_timer_tri=
-gger *priv,
->  	}
-> =20
->  	/* Check if nobody else use the timer */
-> -	regmap_read(priv->regmap, TIM_CCER, &ccer);
-> +	ret =3D regmap_read(priv->regmap, TIM_CCER, &ccer);
-> +	if (ret) {
-> +		dev_err(priv->dev, "fail to read TIM_CCER.\n");
-> +		return ret;
-> +	}
-> +
->  	if (ccer & TIM_CCER_CCXE)
->  		return -EBUSY;
-> =20
-> -	regmap_read(priv->regmap, TIM_CR1, &cr1);
-> +	ret =3D regmap_read(priv->regmap, TIM_CR1, &cr1);
-> +	if (ret) {
-> +		dev_err(priv->dev, "fail to read TIM_CR1.\n");
-> +		return ret;
-> +	}
-> +
->  	if (!(cr1 & TIM_CR1_CEN))
->  		clk_enable(priv->clk);
-> =20
-> @@ -164,12 +175,23 @@ static int stm32_timer_start(struct stm32_timer_tri=
-gger *priv,
->  static void stm32_timer_stop(struct stm32_timer_trigger *priv)
->  {
->  	u32 ccer, cr1;
-> +	int ret;
-> +
-> +	ret =3D regmap_read(priv->regmap, TIM_CCER, &ccer);
-> +	if (ret) {
-> +		dev_err(priv->dev, "Fail to read TIM_CCER.\n");
-> +		return;
-> +	}
-> =20
-> -	regmap_read(priv->regmap, TIM_CCER, &ccer);
->  	if (ccer & TIM_CCER_CCXE)
->  		return;
-> =20
-> -	regmap_read(priv->regmap, TIM_CR1, &cr1);
-> +	ret =3D regmap_read(priv->regmap, TIM_CR1, &cr1);
-> +	if (ret) {
-> +		dev_err(priv->dev, "Fail to read TIM_CR1.\n");
-> +		return;
-> +	}
-> +
->  	if (cr1 & TIM_CR1_CEN)
->  		clk_disable(priv->clk);
-> =20
-> @@ -403,20 +425,36 @@ static int stm32_counter_read_raw(struct iio_dev *i=
-ndio_dev,
->  {
->  	struct stm32_timer_trigger *priv =3D iio_priv(indio_dev);
->  	u32 dat;
-> +	int ret;
-> =20
->  	switch (mask) {
->  	case IIO_CHAN_INFO_RAW:
-> -		regmap_read(priv->regmap, TIM_CNT, &dat);
-> +		ret =3D regmap_read(priv->regmap, TIM_CNT, &dat);
-> +		if (ret) {
-> +			dev_err(priv->dev, "fail to read TIM_CNT.\n");
-> +			return ret;
-> +		}
-> +
->  		*val =3D dat;
->  		return IIO_VAL_INT;
-> =20
->  	case IIO_CHAN_INFO_ENABLE:
-> -		regmap_read(priv->regmap, TIM_CR1, &dat);
-> +		ret =3D regmap_read(priv->regmap, TIM_CR1, &dat);
-> +		if (ret) {
-> +			dev_err(priv->dev, "fail to read TIM_CR1.\n");
-> +			return ret;
-> +		}
-> +
->  		*val =3D (dat & TIM_CR1_CEN) ? 1 : 0;
->  		return IIO_VAL_INT;
-> =20
->  	case IIO_CHAN_INFO_SCALE:
-> -		regmap_read(priv->regmap, TIM_SMCR, &dat);
-> +		ret =3D regmap_read(priv->regmap, TIM_SMCR, &dat);
-> +		if (ret) {
-> +			dev_err(priv->dev, "fail to read TIM_SMCR.\n");
-> +			return ret;
-> +		}
-> +
->  		dat &=3D TIM_SMCR_SMS;
-> =20
->  		*val =3D 1;
-> @@ -438,6 +476,7 @@ static int stm32_counter_write_raw(struct iio_dev *in=
-dio_dev,
->  {
->  	struct stm32_timer_trigger *priv =3D iio_priv(indio_dev);
->  	u32 dat;
-> +	int ret;
-> =20
->  	switch (mask) {
->  	case IIO_CHAN_INFO_RAW:
-> @@ -449,13 +488,23 @@ static int stm32_counter_write_raw(struct iio_dev *=
-indio_dev,
-> =20
->  	case IIO_CHAN_INFO_ENABLE:
->  		if (val) {
-> -			regmap_read(priv->regmap, TIM_CR1, &dat);
-> +			ret =3D regmap_read(priv->regmap, TIM_CR1, &dat);
-> +			if (ret) {
-> +				dev_err(priv->dev, "fail to read TIM_CR1.\n");
-> +				return ret;
-> +			}
-> +
->  			if (!(dat & TIM_CR1_CEN))
->  				clk_enable(priv->clk);
->  			regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN,
->  					   TIM_CR1_CEN);
->  		} else {
-> -			regmap_read(priv->regmap, TIM_CR1, &dat);
-> +			ret =3D regmap_read(priv->regmap, TIM_CR1, &dat);
-> +			if (ret) {
-> +				dev_err(priv->dev, "fail to read TIM_CR1.\n");
-> +				return ret;
-> +			}
-> +
->  			regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN,
->  					   0);
->  			if (dat & TIM_CR1_CEN)
-> @@ -517,8 +566,13 @@ static int stm32_get_trigger_mode(struct iio_dev *in=
-dio_dev,
->  {
->  	struct stm32_timer_trigger *priv =3D iio_priv(indio_dev);
->  	u32 smcr;
-> +	int ret;
-> =20
-> -	regmap_read(priv->regmap, TIM_SMCR, &smcr);
-> +	ret =3D regmap_read(priv->regmap, TIM_SMCR, &smcr);
-> +	if (ret) {
-> +		dev_err(priv->dev, "fail to read TIM_SMCR.\n");
-> +		return ret;
-> +	}
-> =20
->  	return (smcr & TIM_SMCR_SMS) =3D=3D TIM_SMCR_SMS ? 0 : -EINVAL;
->  }
-> @@ -557,6 +611,7 @@ static int stm32_set_enable_mode(struct iio_dev *indi=
-o_dev,
->  	struct stm32_timer_trigger *priv =3D iio_priv(indio_dev);
->  	int sms =3D stm32_enable_mode2sms(mode);
->  	u32 val;
-> +	int ret;
-> =20
->  	if (sms < 0)
->  		return sms;
-> @@ -565,7 +620,12 @@ static int stm32_set_enable_mode(struct iio_dev *ind=
-io_dev,
->  	 * enable counter clock, so it can use it. Keeps it in sync with CEN.
->  	 */
->  	if (sms =3D=3D 6) {
-> -		regmap_read(priv->regmap, TIM_CR1, &val);
-> +		ret =3D regmap_read(priv->regmap, TIM_CR1, &val);
-> +		if (ret) {
-> +			dev_err(priv->dev, "fail to read TIM_CR1.\n");
-> +			return ret;
-> +		}
-> +
->  		if (!(val & TIM_CR1_CEN))
->  			clk_enable(priv->clk);
->  	}
-> @@ -594,8 +654,14 @@ static int stm32_get_enable_mode(struct iio_dev *ind=
-io_dev,
->  {
->  	struct stm32_timer_trigger *priv =3D iio_priv(indio_dev);
->  	u32 smcr;
-> +	int ret;
-> +
-> +	ret =3D regmap_read(priv->regmap, TIM_SMCR, &smcr);
-> +	if (ret) {
-> +		dev_err(priv->dev, "fail to read TIM_SMCR.\n");
-> +		return ret;
-> +	}
-> =20
-> -	regmap_read(priv->regmap, TIM_SMCR, &smcr);
->  	smcr &=3D TIM_SMCR_SMS;
-> =20
->  	return stm32_sms2enable_mode(smcr);
-> @@ -706,13 +772,19 @@ EXPORT_SYMBOL(is_stm32_timer_trigger);
->  static void stm32_timer_detect_trgo2(struct stm32_timer_trigger *priv)
->  {
->  	u32 val;
-> +	int ret;
-> =20
->  	/*
->  	 * Master mode selection 2 bits can only be written and read back when
->  	 * timer supports it.
->  	 */
->  	regmap_update_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS2, TIM_CR2_MMS2);
-> -	regmap_read(priv->regmap, TIM_CR2, &val);
-> +	ret =3D regmap_read(priv->regmap, TIM_CR2, &val);
-> +	if (ret) {
-> +		dev_err(priv->dev, "fail to read TIM_CR2.\n");
-> +		return;
-> +	}
-> +
->  	regmap_update_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS2, 0);
->  	priv->has_trgo2 =3D !!val;
->  }
-
+	Ingo
