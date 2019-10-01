@@ -2,142 +2,171 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC4AECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FBAECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 310D22086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7665D21A4A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:19:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iqfxY8re"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BvviHFuv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389884AbfJAQQo (ORCPT
+        id S2389751AbfJAQTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:16:44 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39571 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731362AbfJAQQn (ORCPT
+        Tue, 1 Oct 2019 12:19:31 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39046 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727399AbfJAQTb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:16:43 -0400
-Received: by mail-pf1-f193.google.com with SMTP id v4so8339733pff.6
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 09:16:43 -0700 (PDT)
+        Tue, 1 Oct 2019 12:19:31 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r3so16296428wrj.6
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 09:19:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=UhjXWLcrDBB4q1kRn5CmPKgAtAED5RXVbe7dFH6WH6M=;
-        b=iqfxY8re2/JcoP9Rrux4Kwx3ipOsfachdXe+PQpwqxOdY9n+iJVAPX1GYRMPn23Cs3
-         CLpPqQi6529bZUK+21JLeYjcOSnQDHo9ocHxmpYw7ok/ZS7dsqs9Bei6kfvbRhRHm2P3
-         O2e44nV46w+eG/TQ6NQXHypWJ2Ohljg/TXf2o=
+         :content-disposition:in-reply-to:user-agent;
+        bh=olW9g7ZJ1YdKje93pPyqYLV/2GhovO1OgxzrOxQyECE=;
+        b=BvviHFuvKJ8tu5f6ZYQhFExw9xJYWYErknsa9Npz5HWq7rufaDPABP32en6lqfUEGH
+         qhp9tWCEKzDVTgk3wpnp73erc9W3PPFFcRg7+XgbBNzdXv0HVQB5ZPEPu0TxKgj/rie5
+         9+GICPTEeO6nuq2Y6Gjm6Un3AgbWzrgA11UFJD7j5waM171hkrn62x2xv1l0tu9Jz2eN
+         jOpyGDTfK9Wo2en9rKm4XLzlTHxp5irN1vkVUIlSI4YVdYVyi2StxDYNZG8GiCuYdXUL
+         3B8D8VVUNgsc3zLx9l6vQo7YD9wTB9gk37dYwjFrXjOO/cR3gJOIzp9rnGg1VfeIPtvL
+         y2eA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UhjXWLcrDBB4q1kRn5CmPKgAtAED5RXVbe7dFH6WH6M=;
-        b=IFznS5SOLsuizVbeXLHCWBxyh6+FYF30GmPfFBTyBOUHAJl6dlbJITeS80rqBz/7D1
-         ge9va0Vjr+X28SKN5a8YSpLe+t3L68HFKMAD1iLFTGNFokvg2teNt5lCVzMgPbxTDP4q
-         uDJuy5v4Ck0bWvaXdKa0g2tPrfzqDMqabHQ0bxPDyhCy7SO7tWZQawLRpzzNfrNtTlSW
-         BrArleK1I04Mqg6PdR2dtqq7h7G2Jp0rSTkS3sNcGeXlIAQx49IcQREtYCBZWnFRA5n4
-         IRWm7lnPkP5BrgNfQoMOSbtSm+CBcx/FS46eAZJFIAxKm38qASKHj0qmNCTFyHr2Gvvm
-         nh6g==
-X-Gm-Message-State: APjAAAW0/K551GUEKnm5QAMIY2/pARcUQRmCmC3Fs5NWJvnphje1HR+t
-        JJJjKOxj+qvT84JLN7vbg882v4aMKLU=
-X-Google-Smtp-Source: APXvYqzS/kRySDG61Dg6N8vbAGXwkgW5aM6BwLwX9OnIgD6RXQWjnSwru7bU9RUwiA+1/v4+1DT+Xw==
-X-Received: by 2002:a63:1c65:: with SMTP id c37mr30721017pgm.31.1569946603223;
-        Tue, 01 Oct 2019 09:16:43 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z5sm2740527pgi.19.2019.10.01.09.16.42
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=olW9g7ZJ1YdKje93pPyqYLV/2GhovO1OgxzrOxQyECE=;
+        b=MG1eHdwN6XV6JxN31fzhTu38rCC/S8dfhQTXsbfr6MUmvVxR7dmyklPfJRUZAkZThP
+         z1y7AJDXFLV0MvpWCTH62FBXItP3H1EUR3y+Hn7lMDlaVzHOdva69eqvhFjJHx7914Pc
+         8zC0M6BEv9n0IFU2VvCFTADc9KlYseOazlmIKupaVxMJjyIiAp+roPyLdtHWo3NMog4k
+         Xkq6umaUZZGTCmq3/7iXkxB/HhR5AO+j1Gy1nVm8rtW/VcnVOmBPhMxEVNeOlUA86zCR
+         q03DXWTpZTHMyRoNYV26t76uFtUnkTchaSrRScRipRcDa/skcCBkl1bieK1+O2sxwRu3
+         AcgA==
+X-Gm-Message-State: APjAAAWu+42/LXP/f83eL+8MFcyyRX+z9p1mJyzZjtUU+B0bA57G12+j
+        ySqlSQ6VOjmAfIm05tVHurboj3tssT8RmA==
+X-Google-Smtp-Source: APXvYqxMEx7sw497JP7p3C1ijxZVtn0IzGNXlcqhPjHzNhGlYVIGtqR4n0Oo0+KB2UYJrwDs5nc5xg==
+X-Received: by 2002:adf:b3d2:: with SMTP id x18mr3891320wrd.264.1569946767617;
+        Tue, 01 Oct 2019 09:19:27 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
+        by smtp.gmail.com with ESMTPSA id e6sm14665069wrp.91.2019.10.01.09.19.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 09:16:42 -0700 (PDT)
-Date:   Tue, 1 Oct 2019 09:16:41 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] docs: Programmatically render MAINTAINERS into ReST
-Message-ID: <201910010913.2BAAC8A@keescook>
-References: <20190924230208.12414-1-keescook@chromium.org>
- <20191001083147.3a1b513f@lwn.net>
- <20191001120930.5d388839@coco.lan>
+        Tue, 01 Oct 2019 09:19:26 -0700 (PDT)
+Date:   Tue, 1 Oct 2019 17:19:23 +0100
+From:   Matthias Maennich <maennich@google.com>
+To:     Shaun Ruffell <sruffell@sruffell.net>
+Cc:     linux-kernel@vger.kernel.org, Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH] modpost: Copy namespace string into 'struct symbol'
+Message-ID: <20191001161923.GH90796@google.com>
+References: <20190906103235.197072-5-maennich@google.com>
+ <20190926222446.30510-1-sruffell@sruffell.net>
+ <20190927080346.GC90796@google.com>
+ <20190930212046.rhtqmnueoffe7dnr@sruffell.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20191001120930.5d388839@coco.lan>
+In-Reply-To: <20190930212046.rhtqmnueoffe7dnr@sruffell.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 12:09:30PM -0300, Mauro Carvalho Chehab wrote:
-> Em Tue, 1 Oct 2019 08:31:47 -0600
-> Jonathan Corbet <corbet@lwn.net> escreveu:
-> 
-> > On Tue, 24 Sep 2019 16:02:06 -0700
-> > Kees Cook <keescook@chromium.org> wrote:
-> > 
-> > > Commit log from Patch 2 repeated here for cover letter:
-> > > 
-> > > In order to have the MAINTAINERS file visible in the rendered ReST
-> > > output, this makes some small changes to the existing MAINTAINERS file
-> > > to allow for better machine processing, and adds a new Sphinx directive
-> > > "maintainers-include" to perform the rendering.  
-> > 
-> > I finally got around to trying this out.  After the usual warnings, the
-> > build comes to a screeching halt with this:
-> > 
-> >   Sphinx parallel build error:
-> >   UnicodeDecodeError: 'ascii' codec can't decode byte 0xc3 in position 8: ordinal not in range(128)
-> > 
-> > For extra fun, the build process simply hangs, requiring a ^C to blow it
-> > away.  You've managed to get new behavior out of Sphinx that I've not seen
-> > before, congratulations :)
-> > 
-> > This almost certainly has to do with the fact that I'm (intentionally)
-> > running the Python2 Sphinx build here.  Something's not doing unicode that
-> > should be.
+On Mon, Sep 30, 2019 at 04:20:46PM -0500, Shaun Ruffell wrote:
+>On Fri, Sep 27, 2019 at 09:03:46AM +0100, Matthias Maennich wrote:
+>> On Thu, Sep 26, 2019 at 05:24:46PM -0500, Shaun Ruffell wrote:
+>> > When building an out-of-tree module I was receiving many warnings from
+>> > modpost like:
+>> >
+>> >  WARNING: module dahdi_vpmadt032_loader uses symbol __kmalloc from namespace ts/dahdi-linux/drivers/dahdi/dahdi-version.o: ..., but does not import it.
+>> >  WARNING: module dahdi_vpmadt032_loader uses symbol vpmadtreg_register from namespace linux/drivers/dahdi/dahdi-version.o: ..., but does not import it.
+>> >  WARNING: module dahdi_vpmadt032_loader uses symbol param_ops_int from namespace ahdi-linux/drivers/dahdi/dahdi-version.o: ..., but does not import it.
+>> >  WARNING: module dahdi_vpmadt032_loader uses symbol __init_waitqueue_head from namespace ux/drivers/dahdi/dahdi-version.o: ..., but does not import it.
+>> >  ...
+>> >
+>> > The fundamental issue appears to be that read_dump() is passing a
+>> > pointer to a statically allocated buffer for the namespace which is
+>> > reused as the file is parsed.
+>>
+>> Hi Shaun,
+>>
+>> Thanks for working on this. I think you are right about the root cause
+>> of this. I will have a closer look at your fix later today.
+>
+>Thanks Matthias.
 
-Given this would be for v5.5, and python2 is EOL in 2 months[1], I don't
-think it's unreasonable to deprecate it. Especially considering there
-are already explicit "python3" shebangs in existing code in the sphinx/
-directory.
+In the meantime, Masahiro came up with an alternative approach to
+address this problem:
+https://lore.kernel.org/lkml/20190927093603.9140-2-yamada.masahiro@socionext.com/
+How do you think about it? It ignores the memory allocation problem that
+you addressed as modpost is a host tool after all. As part of the patch
+series, an alternative format for the namespace ksymtab entry is
+suggested that also changes the way modpost has to deal with it.
 
-[1] https://pythonclock.org/
+>> > @@ -672,7 +696,6 @@ static void handle_modversions(struct module *mod, struct elf_info *info,
+>> > 	unsigned int crc;
+>> > 	enum export export;
+>> > 	bool is_crc = false;
+>> > -	const char *name, *namespace;
+>> >
+>> > 	if ((!is_vmlinux(mod->name) || mod->is_dot_o) &&
+>> > 	    strstarts(symname, "__ksymtab"))
+>> > @@ -744,9 +767,13 @@ static void handle_modversions(struct module *mod, struct elf_info *info,
+>> > 	default:
+>> > 		/* All exported symbols */
+>> > 		if (strstarts(symname, "__ksymtab_")) {
+>> > +			const char *name, *namespace;
+>> > +
+>> > 			name = symname + strlen("__ksymtab_");
+>> > 			namespace = sym_extract_namespace(&name);
+>> > 			sym_add_exported(name, namespace, mod, export);
+>> > +			if (namespace)
+>> > +				free((char *)name);
+>>
+>> This probably should free namespace instead.
+>
+>Given the implementation of sym_extract_namespace below, I believe
+>free((char *)name) is correct.
 
-> > I would suggest that we might just want to repair this before merging this
-> > feature.  Either that, or we bite the bullet and deprecate the use of
-> > Python 2 entirely - something that's probably not too far into our future
-> > regardless.  Anybody have thoughts on that matter?
-> 
-> I'm almost sure we got this already. If I'm not mistaken, the solution
-> is to add the encoding line after shebang. Looking at 
-> Documentation/sphinx/maintainers_include.py (patch 2/2), the script
-> starts with:
-> 
-> 	#!/usr/bin/env python
-> 	# SPDX-License-Identifier: GPL-2.0
-> 	# -*- coding: utf-8; mode: python -*-
-> 	# pylint: disable=R0903, C0330, R0914, R0912, E0401
-> 
-> But, as I pointed before, the SPDX header at the wrong place is causing the 
-> crash, as the encoding line should be the second line, not the third one,
-> e. g.:
-> 
-> 	#!/usr/bin/env python
-> 	# -*- coding: utf-8; mode: python -*-
-> 	# SPDX-License-Identifier: GPL-2.0
-> 	# pylint: disable=R0903, C0330, R0914, R0912, E0401
-> 
-> I also suspect that this would happen even with python3, depending on
-> how LC_ALL, LANG, ... are set on the distro you use.
+Yeah, you are right. I was just noticing the inconsistency and thought
+it was obviously wrong. So, I was wrong. Sorry and thanks for the
+explanation.
 
-Oh that's a delightful bug. :P I haven't been able to reproduce this
-failure (maybe all my LANG junk is accidentally correct)?
+>
+>  static const char *sym_extract_namespace(const char **symname)
+>  {
+>  	size_t n;
+>  	char *dupsymname;
+>
+>  	n = strcspn(*symname, ".");
+>  	if (n < strlen(*symname) - 1) {
+>  		dupsymname = NOFAIL(strdup(*symname));
+>  		dupsymname[n] = '\0';
+>  		*symname = dupsymname;
+>  		return dupsymname + n + 1;
+>  	}
+>
+>  	return NULL;
+>  }
+>
+>I agree that freeing name instead of namespace is a little surprising
+>unless you know the implementation of sym_extract_namespace.
+>
+>I thought about changing the the signature of sym_extract_namespace() to
+>make it clear when the symname is used to return a new allocation or
+>not, and given your comment, perhaps I should have.
 
-Jon, if this fixes it for you, should I respin the patches?
+I would rather follow-up with Masahiro's approach for now. What do you
+think?
 
--- 
-Kees Cook
+Cheers,
+Matthias
+
