@@ -7,58 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69044C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE13CC388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B34E21D79
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A027C2133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569930113;
-	bh=a08RRME0q1SB+hyxmVml8QZG1Px998i+mwgk/EWo60c=;
+	s=default; t=1569930117;
+	bh=G9rIVAFtSIYsUVi7s2B4FVqhGW5htkXpGKKRYQDt4eU=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=WacA35yxxv4nB0GK6Qz7QZD7H8i/jhyAkEkemtjbjDqZwdrjVVg7eCWoAJ90IqqpA
-	 QO4pScLTNV/UkRRryN3QXYKTxCWJj0hSjhlo17F19wnr9+hK3CEJo1wntoaB0lCKh1
-	 /gfsJ82DT63DuDH5P9mIo61KoInlideqZQGrx3Bk=
+	b=neLF6N/1SDwRNuzeqLHxoEKs/QTDFmEEqoy517JGiAHLFg+P2b83mHlY4kexBzkJL
+	 CMJ+zZuKL+l1GEZznAPcOukD4tO1/1I9EYzWBAoRwzN8bZmcqPodhuIoqBs79kxgCQ
+	 nLvbFuckzvKInyMPGGMYaIwF8Hkl9IZG3roAa22k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387761AbfJALlw (ORCPT
+        id S1732871AbfJALl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 07:41:52 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:41204 "EHLO
+        Tue, 1 Oct 2019 07:41:57 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:41208 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387633AbfJALlN (ORCPT
+        with ESMTP id S2387636AbfJALlM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 07:41:13 -0400
+        Tue, 1 Oct 2019 07:41:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=CX+gGn0ulj8a8xwxiDkqA33F/I+QW8zBsiOoBhNf9xY=; b=RuAYOK3rUhXn
-        IzkI03E9zhw4HUdJ2iRpLTMz/cGsSgFpZPpp/4vSs0VpxgIGnyWxOQYCbA9qctKpj9MihunuLRcH4
-        yfkarbQl0M6VTb864ffF6xv/sdPSpwjJ5ugpgVMYZ+KkJgbypu0hnHCEwWJxcXD42JLow2XanvIbG
-        5uOUQ=;
+        List-Archive; bh=yaTBvOc4ub9EBgFT0t4N5VA/W6AvqgGon1ddgd0Obko=; b=asOmVkcdJioS
+        gwHRains2VilIGctACLH36Kwc3Q+tnLzkeg5IUKwlCN2sYyF9wwtqNX0lbrEiqDhI2loS/KSvxxYG
+        2nZdX2IfAvhp+m4CW/p3IClasB4s/BSSrYEVlujiYCGrPGsszbSrwMV5Jm8qdBagCN/+pd7DcBNMo
+        HcYhU=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iFGWi-0004ZF-8E; Tue, 01 Oct 2019 11:41:08 +0000
+        id 1iFGWg-0004Yo-Vi; Tue, 01 Oct 2019 11:41:07 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id ACF3F2742A10; Tue,  1 Oct 2019 12:41:07 +0100 (BST)
+        id 6CD7D2742A30; Tue,  1 Oct 2019 12:41:06 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Gareth Williams <gareth.williams.jx@renesas.com>
-Cc:     devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Applied "dt-bindings: snps,dw-apb-ssi: Add optional clock domain information" to the spi tree
-In-Reply-To: <1568793876-9009-3-git-send-email-gareth.williams.jx@renesas.com>
+To:     Markus Elfring <elfring@users.sourceforge.net>
+Cc:     Daniel Schwierzeck <daniel.schwierzeck@gmail.com>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        kernel-janitors@vger.kernel.org, linux-spi@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: lantiq-ssc: Use devm_platform_ioremap_resource() in lantiq_ssc_probe()" to the spi tree
+In-Reply-To: <230495a7-b754-bc6a-05e0-059a6b6c643d@web.de>
 X-Patchwork-Hint: ignore
-Message-Id: <20191001114107.ACF3F2742A10@ypsilon.sirena.org.uk>
-Date:   Tue,  1 Oct 2019 12:41:07 +0100 (BST)
+Message-Id: <20191001114106.6CD7D2742A30@ypsilon.sirena.org.uk>
+Date:   Tue,  1 Oct 2019 12:41:06 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,7 +64,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   dt-bindings: snps,dw-apb-ssi: Add optional clock domain information
+   spi: lantiq-ssc: Use devm_platform_ioremap_resource() in lantiq_ssc_probe()
 
 has been applied to the spi tree at
 
@@ -91,36 +89,58 @@ to this mail.
 Thanks,
 Mark
 
-From 47cf13bc763c891c6192184c5e5aa8c1b331b2ff Mon Sep 17 00:00:00 2001
-From: Gareth Williams <gareth.williams.jx@renesas.com>
-Date: Wed, 18 Sep 2019 09:04:34 +0100
-Subject: [PATCH] dt-bindings: snps,dw-apb-ssi: Add optional clock domain
- information
+From 22262695f46b68659ba98a12e275df388c74968c Mon Sep 17 00:00:00 2001
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Sat, 21 Sep 2019 14:16:49 +0200
+Subject: [PATCH] spi: lantiq-ssc: Use devm_platform_ioremap_resource() in
+ lantiq_ssc_probe()
 
-Note in the bindings documentation that pclk should be renamed if a clock
-domain is used to enable the optional bus clock.
+Simplify this function implementation by using a known wrapper function.
 
-Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
-Link: https://lore.kernel.org/r/1568793876-9009-3-git-send-email-gareth.williams.jx@renesas.com
+This issue was detected by using the Coccinelle software.
+
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+Link: https://lore.kernel.org/r/230495a7-b754-bc6a-05e0-059a6b6c643d@web.de
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/spi/spi-lantiq-ssc.c | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-index f54c8c36395e..3ed08ee9feba 100644
---- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-+++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-@@ -16,7 +16,8 @@ Required properties:
- Optional properties:
- - clock-names : Contains the names of the clocks:
-     "ssi_clk", for the core clock used to generate the external SPI clock.
--    "pclk", the interface clock, required for register access.
-+    "pclk", the interface clock, required for register access. If a clock domain
-+     used to enable this clock then it should be named "pclk_clkdomain".
- - cs-gpios : Specifies the gpio pins to be used for chipselects.
- - num-cs : The number of chipselects. If omitted, this will default to 4.
- - reg-io-width : The I/O register width (in bytes) implemented by this
+diff --git a/drivers/spi/spi-lantiq-ssc.c b/drivers/spi/spi-lantiq-ssc.c
+index 9dfe8b04e688..1fd7ee53d451 100644
+--- a/drivers/spi/spi-lantiq-ssc.c
++++ b/drivers/spi/spi-lantiq-ssc.c
+@@ -797,7 +797,6 @@ static int lantiq_ssc_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct spi_master *master;
+-	struct resource *res;
+ 	struct lantiq_ssc_spi *spi;
+ 	const struct lantiq_ssc_hwcfg *hwcfg;
+ 	const struct of_device_id *match;
+@@ -812,12 +811,6 @@ static int lantiq_ssc_probe(struct platform_device *pdev)
+ 	}
+ 	hwcfg = match->data;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!res) {
+-		dev_err(dev, "failed to get resources\n");
+-		return -ENXIO;
+-	}
+-
+ 	rx_irq = platform_get_irq_byname(pdev, LTQ_SPI_RX_IRQ_NAME);
+ 	if (rx_irq < 0)
+ 		return -ENXIO;
+@@ -839,8 +832,7 @@ static int lantiq_ssc_probe(struct platform_device *pdev)
+ 	spi->dev = dev;
+ 	spi->hwcfg = hwcfg;
+ 	platform_set_drvdata(pdev, spi);
+-
+-	spi->regbase = devm_ioremap_resource(dev, res);
++	spi->regbase = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(spi->regbase)) {
+ 		err = PTR_ERR(spi->regbase);
+ 		goto err_master_put;
 -- 
 2.20.1
 
