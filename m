@@ -2,96 +2,111 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC846ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D2DC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4116215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:53:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 285CA21924
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 20:54:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbfJAUxg (ORCPT
+        id S1727487AbfJAUx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 16:53:36 -0400
-Received: from mga18.intel.com ([134.134.136.126]:7154 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726166AbfJAUxf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 16:53:35 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 13:53:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,571,1559545200"; 
-   d="scan'208";a="275119559"
-Received: from nbaca1-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.37.57])
-  by orsmga001.jf.intel.com with ESMTP; 01 Oct 2019 13:53:32 -0700
-Date:   Tue, 1 Oct 2019 23:53:31 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexey Klimov <aklimov@redhat.com>,
-        Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>
-Subject: Re: [PATCH v4 0/4] tpm: add update_durations class op to allow
- override of chip supplied values
-Message-ID: <20191001205331.GB26709@linux.intel.com>
-References: <20190902142735.6280-1-jsnitsel@redhat.com>
- <20190928174543.6msskzuyhirtjxwe@cantor>
+        Tue, 1 Oct 2019 16:53:59 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:46989 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfJAUx7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 16:53:59 -0400
+Received: by mail-qk1-f194.google.com with SMTP id 201so12679589qkd.13;
+        Tue, 01 Oct 2019 13:53:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v7MUChZMPK1zb+gMXHU9XAGkO5pYjaFnqTcVSPFdTOk=;
+        b=c7F0xiJipaPPKQhVLUiiwGsk7nbi53P01pVjsfR5Oh0x37OhzjUv3MVVQbleiEgRto
+         MxT9q0mBQpA2HByGtCTZajKYhNG5fNHZIuam6bN4LDqDrBNshfnhlXLAWd6Wh6SaADYG
+         W+2RkhYQ0Ngyn0vl2yGxCv3S5BTSvo4G/oYw07TttSWVY9BKRJ0ZflKLtPxzDmMoatF1
+         NKN/TlXN+zo+cPckiQBng+jRTxMTZPqQwEcr522ZaCnPEnFMVzjYisflxf1xrBpJbE27
+         fAdbWgpnuQ7xn0/dCuqvMR+MkDYoPRc59AlNoI62Pc+iZRqtlt3t2OrRxrpVeK0/SVwa
+         9+4A==
+X-Gm-Message-State: APjAAAV6L+b6yKh0IJIMmfsszF3NJJPoTdsemhW6DF6cOS0JIay/dZDY
+        D+A+gESzpYBOGUapKnEqeD6EZPHE1WAb69FI8HA=
+X-Google-Smtp-Source: APXvYqwAAPH4OmvY2XCe1/doK1g9oWOdcEyrG1wCz0XnGY6yC21KGfyPKMEejKGP/IUydW6XAfSyzIaF1jEoGuvJHxY=
+X-Received: by 2002:a37:a858:: with SMTP id r85mr72574qke.394.1569963237942;
+ Tue, 01 Oct 2019 13:53:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190928174543.6msskzuyhirtjxwe@cantor>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190930112636.vx2qxo4hdysvxibl@willie-the-truck>
+ <CAK7LNASQZ82KSOrQW7+Wq1vFDCg2__maBEAPMLqUDqZMLuj1rA@mail.gmail.com>
+ <20190930121803.n34i63scet2ec7ll@willie-the-truck> <CAKwvOdnqn=0LndrX+mUrtSAQqoT1JWRMOJCA5t3e=S=T7zkcCQ@mail.gmail.com>
+ <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck> <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
+ <20191001170142.x66orounxuln7zs3@willie-the-truck> <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
+ <20191001175512.GK25745@shell.armlinux.org.uk> <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
+ <20191001181438.GL25745@shell.armlinux.org.uk> <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
+In-Reply-To: <CAKwvOdmBnBVU7F-a6DqPU6QM-BRc8LNn6YRmhTsuGLauCWKUOg@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 1 Oct 2019 22:53:41 +0200
+Message-ID: <CAK8P3a0eKOyJRjp1P8HWfSLWO=d6Y3befy3kQBgTPVX+g_2q4A@mail.gmail.com>
+Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Will Deacon <will@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Kees Cook <keescook@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 28, 2019 at 10:45:43AM -0700, Jerry Snitselaar wrote:
-> On Mon Sep 02 19, Jerry Snitselaar wrote:
-> > We've run into a case where a customer has an STM TPM 1.2 chip
-> > (version 1.2.8.28), that is getting into an inconsistent state and
-> > they end up getting tpm transmit errors.  In really old tpm code this
-> > wasn't seen because the code that grabbed the duration values from the
-> > chip could fail silently, and would proceed to just use default values
-> > and move forward. More recent code though successfully gets the
-> > duration values from the chip, and using those values this particular
-> > chip version gets into the state seen by the customer.
-> > 
-> > The idea with this patchset is to provide a facility like the
-> > update_timeouts operation to allow the override of chip supplied
-> > values.
-> > 
-> > changes from v3:
-> >    * Assign value to version when tpm1_getcap is successful for TPM 1.1 device
-> >      not when it fails.
-> > 
-> > changes from v2:
-> >    * Added patch 1/3
-> >    * Rework tpm_tis_update_durations to make use of new version structs
-> >      and pull tpm1_getcap calls out of loop.
-> > 
-> > changes from v1:
-> >    * Remove unneeded newline
-> >    * Formatting cleanups
-> >    * Change tpm_tis_update_durations to be a void function, and
-> >      use chip->duration_adjusted to track whether adjustment was
-> >      made.
-> > 
-> > Jarkko Sakkinen (1):
-> >      tpm: Remove duplicate code from caps_show() in tpm-sysfs.c
-> > 
-> > Jerry Snitselaar (2):
-> >      tpm: provide a way to override the chip returned durations
-> >      tpm_tis: override durations for STM tpm with firmware 1.2.8.28
-> > 
-> > 
-> 
-> Anyone else have any feedback on this patchset?
+On Tue, Oct 1, 2019 at 10:21 PM 'Nick Desaulniers' via Clang Built
+Linux <clang-built-linux@googlegroups.com> wrote:
+> On Tue, Oct 1, 2019 at 11:14 AM Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+> >
+> > On Tue, Oct 01, 2019 at 11:00:11AM -0700, Nick Desaulniers wrote:
+> > > On Tue, Oct 1, 2019 at 10:55 AM Russell King - ARM Linux admin
+> > > <linux@armlinux.org.uk> wrote:
+> > In any case, I violently disagree with the idea that stuff we have
+> > in header files should be permitted not to be inlined because we
+> > have soo much that is marked inline.
+>
+> So there's a very important subtly here.  There's:
+> 1. code that adds `inline` cause "oh maybe it would be nice to inline
+> this, but if it isn't no big deal"
+> 2. code that if not inlined is somehow not correct.
+> 3. avoid ODR violations via `static inline`
+>
+> I'll posit that "we have soo much that is marked inline [is
+> predominantly case 1 or 3, not case 2]."  Case 2 is a code smell, and
+> requires extra scrutiny.
 
-Thanks for reminding. I'll put this to my master soonish.
+1. is clearly the most common case, but there is also
 
-/Jarkko
+4. Some compiler version (possibly long gone, possibly still current)
+makes bad inlining decisions that result in horrible but functionally
+correct object code for a particular function, and forcing a function to
+be inlined results in what we had expected the compiler to do already.
+
+The problem with 2. is that they are largely not documented, and often
+unintentional. This also affects functions that are simply 'static'
+rather than 'static inline' but are broken when not being inlined.
+E.g. we've had a number of kernel bugs with 'static __init' functions
+that gcc always inlined into a non-__init caller, but that produced an
+invalid call into a discarded function when clang decided to leave
+them out of line.
+
+      Arnd
