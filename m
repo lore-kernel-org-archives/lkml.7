@@ -2,217 +2,160 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32487C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3F6ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E84B121924
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D0D22133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:46:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="enQ4Pvcr"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ZXYSzQFl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbfJAVn5 (ORCPT
+        id S1727967AbfJAVqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 17:43:57 -0400
-Received: from gateway32.websitewelcome.com ([192.185.145.12]:29422 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726152AbfJAVn4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 17:43:56 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id 78D6915AB61
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Oct 2019 16:43:55 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id FPw3iRYP4OdBHFPw3ivvu9; Tue, 01 Oct 2019 16:43:55 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=99YDnFG3RPp2fz/cpqdmcqqkI7Lefj451p2z13miQxA=; b=enQ4PvcrEcKyKjKFjpXYnuD36Q
-        GEdrv/TxaWLzO5KeEdljF9+45OnVKh5uE5Ukna/4IAfRRKhJXnu/7atwCSH4LoHBh8IG+kTc71HX1
-        vf3JkpyxEwoMOeSsVT4BjZYqjCKTeC+EQ8PULQWcvbRVa9fAaPVhm9EoUl/hsc5ljYqIGP1Wm3HRw
-        uTlv6U5Nx5HpX3DT768zU/2nqU2EXbzPXj/0Rj1KWJnO07Z8P2tc8bgX8jvM11DT9YHA2wPyhOHt8
-        aRFsJdqcdD1UAZ0T5Aq594/fU6TzfQBUY3CNLYZGeIWAhk1tTxUydX6Yb8+ZjD+8xlMMMxzJUlK01
-        H4Jq2d+g==;
-Received: from [187.192.22.73] (port=35562 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1iFPw3-000xrh-0P; Tue, 01 Oct 2019 16:43:55 -0500
-Subject: Re: [PATCH] drm/amdgpu: fix structurally dead code vcn_v2_5_hw_init
-To:     "Liu, Leo" <Leo.Liu@amd.com>,
+        Tue, 1 Oct 2019 17:46:30 -0400
+Received: from mail-eopbgr730053.outbound.protection.outlook.com ([40.107.73.53]:32848
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726681AbfJAVqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 17:46:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mr+1uGa6iEmVyQN+uli7nXvK4RaxPbtF7bpPZo1Zi2DEE2QpZekzjTzvDY/759h9PScO8OTx/Rw+J7oQGe5sHv6QevItXhdNy4vFl0F9n0abadZcbrUHzko2BBh9wQAXORd1MFCOYWD+HuwZYmPbgGN0GpoTsB3DJi22hGznHXCsyQX0zO0jy1bim7LvrkSSXsU1vIPFJf34TRROjv8qNhSqTlQu856ihrxaVAuAR7tji4icpU+FyCVMi80p+dlg5Hbpanp5C6QCvFU/rSPV9LDDa5s+Jz33c0ZkKQSTQOCGwlyv8eW2Y/qf+8vrngLzjug98Ufi5Ne7c6mNw6cruA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RjMRicUdyrLleIH+8oTNMP1q6VQJnNWPq2tJou1gvIs=;
+ b=nzf7u3STjHORxjfp8duO+mJnebXawCz7N3a0722Rr8Pk/hltDhHn4nJ6ugEwVLiHGo4SEfKukHADnKzQFpLl+Csh5RNB9r5s59MhGth4imsO00sT3R9W0XDdsaNv8eLINkZrXspbMW3tOPYFFop07DpPZCzczZCR9KhKw7ZPTtrDTslhCu9ojckWmnFvDH4F4NY8s/bnmORmsfgBzH7c5ztF+zPjH5ytiHJiZ3klIsbKGJnXdiBW5nbJ8ip92Ah+Wa015pZSv4LbS0XdF8InOptebAmY/j2wJr50iPREcGIiPawrx2oN6zUhJR9WKHRYvNb5n1dPMCaeAyEx1J9p9Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RjMRicUdyrLleIH+8oTNMP1q6VQJnNWPq2tJou1gvIs=;
+ b=ZXYSzQFlvZDIqzNvU/cadFdu55qBiCzNBYNib/mrkoGjD91iYqv3P9/QPz+xeF04kO+BueXmRllxrfMwT4UX5hivqIz27bowFHKVTYYclizk54gSjXz8jub8sSgsadFcNlqcoTfNkBwzjtDOu43WoKdGo/WCuNxwUzRIBzqNuuI=
+Received: from DM5PR12MB2456.namprd12.prod.outlook.com (52.132.141.37) by
+ DM5PR12MB1564.namprd12.prod.outlook.com (10.172.39.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2305.20; Tue, 1 Oct 2019 21:46:26 +0000
+Received: from DM5PR12MB2456.namprd12.prod.outlook.com
+ ([fe80::3449:def:4457:5b72]) by DM5PR12MB2456.namprd12.prod.outlook.com
+ ([fe80::3449:def:4457:5b72%3]) with mapi id 15.20.2305.022; Tue, 1 Oct 2019
+ 21:46:26 +0000
+From:   "Liu, Leo" <Leo.Liu@amd.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         "Deucher, Alexander" <Alexander.Deucher@amd.com>,
         "Koenig, Christian" <Christian.Koenig@amd.com>,
         "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>
-Cc:     "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+CC:     "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
         "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/amdgpu: fix structurally dead code vcn_v2_5_hw_init
+Thread-Topic: [PATCH] drm/amdgpu: fix structurally dead code vcn_v2_5_hw_init
+Thread-Index: AQHVeHwU+1a8umxE5EyQDrqeTbYcDKdGTaMAgAAD4ACAAADbAA==
+Date:   Tue, 1 Oct 2019 21:46:26 +0000
+Message-ID: <dc76a52b-09a2-7ab9-b53e-52500f4f8669@amd.com>
 References: <20191001171635.GA17306@embeddedor>
  <192815d9-5ecb-09a7-4624-5fd36126890d@amd.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <823b10a3-fe0e-2e8c-02c3-534944dbe6d2@embeddedor.com>
-Date:   Tue, 1 Oct 2019 16:43:20 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <192815d9-5ecb-09a7-4624-5fd36126890d@amd.com>
-Content-Type: text/plain; charset=utf-8
+ <823b10a3-fe0e-2e8c-02c3-534944dbe6d2@embeddedor.com>
+In-Reply-To: <823b10a3-fe0e-2e8c-02c3-534944dbe6d2@embeddedor.com>
+Accept-Language: en-CA, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.22.73
-X-Source-L: No
-X-Exim-ID: 1iFPw3-000xrh-0P
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [187.192.22.73]:35562
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 9
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-originating-ip: [165.204.55.251]
+x-clientproxiedby: YTXPR0101CA0004.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00::17) To DM5PR12MB2456.namprd12.prod.outlook.com
+ (2603:10b6:4:b4::37)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Leo.Liu@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 687ec132-4d8a-4f2e-05a6-08d746b8cf3c
+x-ms-office365-filtering-ht: Tenant
+x-ms-traffictypediagnostic: DM5PR12MB1564:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR12MB1564DB11D00F02748A426462E59D0@DM5PR12MB1564.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0177904E6B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(346002)(376002)(396003)(136003)(199004)(189003)(476003)(305945005)(6486002)(486006)(186003)(81166006)(8936002)(8676002)(81156014)(7736002)(2906002)(65806001)(229853002)(26005)(66066001)(25786009)(14454004)(3846002)(65956001)(6436002)(478600001)(6116002)(66556008)(66446008)(6246003)(99286004)(386003)(53546011)(31696002)(6512007)(76176011)(66946007)(58126008)(64756008)(4326008)(71190400001)(110136005)(5660300002)(102836004)(11346002)(52116002)(71200400001)(54906003)(66476007)(36756003)(6506007)(316002)(31686004)(256004)(86362001)(2616005)(446003)(14444005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1564;H:DM5PR12MB2456.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /6KY2wcxSUKqD2jrxKgv1I3gf7WjmhTG2OwxZmAKY6NGo2KGCuZ2JeAook0okxrzZEMm6s3y8Xv/PzIiPUGiZZT0XfH08vH0z8X8mTLy3KszqBhOGEQxdPIUqrsiycE+8L6vzNcPpyUHsiTCOoyJZmLu9XbEQE9mZ0CZC96hLEr9v3g+Sts9n6mJ/50qDQWKnPrnIDawEKlyky/6Ay6+lP+PPyl4mBYqnca59pUa/jMgwaWhv9mlN9EkO5NgI5CSlp0pnIlD+hdJyFdcWck5wEhJDDNK5UwPrQKxkweuNc2rZcQ4S6W1y7tQKGcPsnnUqPWRU2GcX+EslhJgbXSiI5DTwO1jBVFWjn0mAsNzZtBsFhO9x2Ryz4Jvi2JCnHsYOADc/4M5WfbYM7sEaJoNIF182t2MUfu9PugFWlVnPrE=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1FC97F3F91534145A5FB569298E79834@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 687ec132-4d8a-4f2e-05a6-08d746b8cf3c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Oct 2019 21:46:26.2327
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BzT9F6K/FCrAXSt2Gs9FkVWfOnoy1KShzmMMMvRIhAv4KzwUBau3urXOjn7X+5Cf
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1564
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 10/1/19 16:29, Liu, Leo wrote:
-> 
-> On 2019-10-01 1:16 p.m., Gustavo A. R. Silva wrote:
->> Notice that there is a *continue* statement in the middle of the
->> for loop and that prevents the code below from ever being reached:
->>
->> 	r = amdgpu_ring_test_ring(ring);
->> 	if (r) {
->> 		ring->sched.ready = false;
->> 		goto done;
->> 	}
->>
->> Fix this by removing the continue statement and updating ring->sched.ready
->> to true before calling amdgpu_ring_test_ring(ring).
->>
->> Notice that this fix is based on
->> commit 1b61de45dfaf ("drm/amdgpu: add initial VCN2.0 support (v2)")
->>
->> Addresses-Coverity-ID 1485608 ("Structurally dead code")
->> Fixes: 28c17d72072b ("drm/amdgpu: add VCN2.5 basic supports")
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->> ---
->>
->> Any feedback is greatly appreciated.
->>
->>   drivers/gpu/drm/amd/amdgpu/vcn_v2_5.c | 5 +++--
->>   1 file changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/amd/amdgpu/vcn_v2_5.c b/drivers/gpu/drm/amd/amdgpu/vcn_v2_5.c
->> index 395c2259f979..47b0dcd59e13 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/vcn_v2_5.c
->> +++ b/drivers/gpu/drm/amd/amdgpu/vcn_v2_5.c
->> @@ -258,6 +258,7 @@ static int vcn_v2_5_hw_init(void *handle)
->>   		adev->nbio_funcs->vcn_doorbell_range(adev, ring->use_doorbell,
->>   						     ring->doorbell_index, j);
->>   
->> +		ring->sched.ready = true;
-> 
-> This is redundant. all the sched->ready is initialized as true, please 
-> refer to drm_sched_init()
-> 
-
-I see... so in the following commit 1b61de45dfaf ("drm/amdgpu: add initial VCN2.0 support (v2)")
-that line is also redundant?
-
-> 
->>   		r = amdgpu_ring_test_ring(ring);
->>   		if (r) {
->>   			ring->sched.ready = false;
->> @@ -266,8 +267,7 @@ static int vcn_v2_5_hw_init(void *handle)
->>   
->>   		for (i = 0; i < adev->vcn.num_enc_rings; ++i) {
->>   			ring = &adev->vcn.inst[j].ring_enc[i];
->> -			ring->sched.ready = false;
->> -			continue;
->> +			ring->sched.ready = true;
-> 
-> Because the VCN 2.5 FW still has issue for encode, so we have it 
-> disabled here.
-> 
-
-OK. So, maybe we can add a comment pointing that out?
-
-Thanks
---
-Gustavo
-
-> 
->>   			r = amdgpu_ring_test_ring(ring);
->>   			if (r) {
->>   				ring->sched.ready = false;
->> @@ -276,6 +276,7 @@ static int vcn_v2_5_hw_init(void *handle)
->>   		}
->>   
->>   		ring = &adev->vcn.inst[j].ring_jpeg;
->> +		ring->sched.ready = true;
->>   		r = amdgpu_ring_test_ring(ring);
->>   		if (r) {
->>   			ring->sched.ready = false;
+DQpPbiAyMDE5LTEwLTAxIDU6NDMgcC5tLiwgR3VzdGF2byBBLiBSLiBTaWx2YSB3cm90ZToNCj4g
+SGksDQo+DQo+IE9uIDEwLzEvMTkgMTY6MjksIExpdSwgTGVvIHdyb3RlOg0KPj4gT24gMjAxOS0x
+MC0wMSAxOjE2IHAubS4sIEd1c3Rhdm8gQS4gUi4gU2lsdmEgd3JvdGU6DQo+Pj4gTm90aWNlIHRo
+YXQgdGhlcmUgaXMgYSAqY29udGludWUqIHN0YXRlbWVudCBpbiB0aGUgbWlkZGxlIG9mIHRoZQ0K
+Pj4+IGZvciBsb29wIGFuZCB0aGF0IHByZXZlbnRzIHRoZSBjb2RlIGJlbG93IGZyb20gZXZlciBi
+ZWluZyByZWFjaGVkOg0KPj4+DQo+Pj4gCXIgPSBhbWRncHVfcmluZ190ZXN0X3JpbmcocmluZyk7
+DQo+Pj4gCWlmIChyKSB7DQo+Pj4gCQlyaW5nLT5zY2hlZC5yZWFkeSA9IGZhbHNlOw0KPj4+IAkJ
+Z290byBkb25lOw0KPj4+IAl9DQo+Pj4NCj4+PiBGaXggdGhpcyBieSByZW1vdmluZyB0aGUgY29u
+dGludWUgc3RhdGVtZW50IGFuZCB1cGRhdGluZyByaW5nLT5zY2hlZC5yZWFkeQ0KPj4+IHRvIHRy
+dWUgYmVmb3JlIGNhbGxpbmcgYW1kZ3B1X3JpbmdfdGVzdF9yaW5nKHJpbmcpLg0KPj4+DQo+Pj4g
+Tm90aWNlIHRoYXQgdGhpcyBmaXggaXMgYmFzZWQgb24NCj4+PiBjb21taXQgMWI2MWRlNDVkZmFm
+ICgiZHJtL2FtZGdwdTogYWRkIGluaXRpYWwgVkNOMi4wIHN1cHBvcnQgKHYyKSIpDQo+Pj4NCj4+
+PiBBZGRyZXNzZXMtQ292ZXJpdHktSUQgMTQ4NTYwOCAoIlN0cnVjdHVyYWxseSBkZWFkIGNvZGUi
+KQ0KPj4+IEZpeGVzOiAyOGMxN2Q3MjA3MmIgKCJkcm0vYW1kZ3B1OiBhZGQgVkNOMi41IGJhc2lj
+IHN1cHBvcnRzIikNCj4+PiBTaWduZWQtb2ZmLWJ5OiBHdXN0YXZvIEEuIFIuIFNpbHZhIDxndXN0
+YXZvQGVtYmVkZGVkb3IuY29tPg0KPj4+IC0tLQ0KPj4+DQo+Pj4gQW55IGZlZWRiYWNrIGlzIGdy
+ZWF0bHkgYXBwcmVjaWF0ZWQuDQo+Pj4NCj4+PiAgICBkcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdw
+dS92Y25fdjJfNS5jIHwgNSArKystLQ0KPj4+ICAgIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlv
+bnMoKyksIDIgZGVsZXRpb25zKC0pDQo+Pj4NCj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
+ZHJtL2FtZC9hbWRncHUvdmNuX3YyXzUuYyBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L3Zj
+bl92Ml81LmMNCj4+PiBpbmRleCAzOTVjMjI1OWY5NzkuLjQ3YjBkY2Q1OWUxMyAxMDA2NDQNCj4+
+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS92Y25fdjJfNS5jDQo+Pj4gKysrIGIv
+ZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvdmNuX3YyXzUuYw0KPj4+IEBAIC0yNTgsNiArMjU4
+LDcgQEAgc3RhdGljIGludCB2Y25fdjJfNV9od19pbml0KHZvaWQgKmhhbmRsZSkNCj4+PiAgICAJ
+CWFkZXYtPm5iaW9fZnVuY3MtPnZjbl9kb29yYmVsbF9yYW5nZShhZGV2LCByaW5nLT51c2VfZG9v
+cmJlbGwsDQo+Pj4gICAgCQkJCQkJICAgICByaW5nLT5kb29yYmVsbF9pbmRleCwgaik7DQo+Pj4g
+ICAgDQo+Pj4gKwkJcmluZy0+c2NoZWQucmVhZHkgPSB0cnVlOw0KPj4gVGhpcyBpcyByZWR1bmRh
+bnQuIGFsbCB0aGUgc2NoZWQtPnJlYWR5IGlzIGluaXRpYWxpemVkIGFzIHRydWUsIHBsZWFzZQ0K
+Pj4gcmVmZXIgdG8gZHJtX3NjaGVkX2luaXQoKQ0KPj4NCj4gSSBzZWUuLi4gc28gaW4gdGhlIGZv
+bGxvd2luZyBjb21taXQgMWI2MWRlNDVkZmFmICgiZHJtL2FtZGdwdTogYWRkIGluaXRpYWwgVkNO
+Mi4wIHN1cHBvcnQgKHYyKSIpDQo+IHRoYXQgbGluZSBpcyBhbHNvIHJlZHVuZGFudD8NCg0KWWVz
+Lg0KDQoNCj4+PiAgICAJCXIgPSBhbWRncHVfcmluZ190ZXN0X3JpbmcocmluZyk7DQo+Pj4gICAg
+CQlpZiAocikgew0KPj4+ICAgIAkJCXJpbmctPnNjaGVkLnJlYWR5ID0gZmFsc2U7DQo+Pj4gQEAg
+LTI2Niw4ICsyNjcsNyBAQCBzdGF0aWMgaW50IHZjbl92Ml81X2h3X2luaXQodm9pZCAqaGFuZGxl
+KQ0KPj4+ICAgIA0KPj4+ICAgIAkJZm9yIChpID0gMDsgaSA8IGFkZXYtPnZjbi5udW1fZW5jX3Jp
+bmdzOyArK2kpIHsNCj4+PiAgICAJCQlyaW5nID0gJmFkZXYtPnZjbi5pbnN0W2pdLnJpbmdfZW5j
+W2ldOw0KPj4+IC0JCQlyaW5nLT5zY2hlZC5yZWFkeSA9IGZhbHNlOw0KPj4+IC0JCQljb250aW51
+ZTsNCj4+PiArCQkJcmluZy0+c2NoZWQucmVhZHkgPSB0cnVlOw0KPj4gQmVjYXVzZSB0aGUgVkNO
+IDIuNSBGVyBzdGlsbCBoYXMgaXNzdWUgZm9yIGVuY29kZSwgc28gd2UgaGF2ZSBpdA0KPj4gZGlz
+YWJsZWQgaGVyZS4NCj4+DQo+IE9LLiBTbywgbWF5YmUgd2UgY2FuIGFkZCBhIGNvbW1lbnQgcG9p
+bnRpbmcgdGhhdCBvdXQ/DQoNClRoYXQgY291bGQgYmUgYmV0dGVyLg0KDQpUaGFua3MsDQpMZW8N
+Cg0KDQo+DQo+IFRoYW5rcw0KPiAtLQ0KPiBHdXN0YXZvDQo+DQo+Pj4gICAgCQkJciA9IGFtZGdw
+dV9yaW5nX3Rlc3RfcmluZyhyaW5nKTsNCj4+PiAgICAJCQlpZiAocikgew0KPj4+ICAgIAkJCQly
+aW5nLT5zY2hlZC5yZWFkeSA9IGZhbHNlOw0KPj4+IEBAIC0yNzYsNiArMjc2LDcgQEAgc3RhdGlj
+IGludCB2Y25fdjJfNV9od19pbml0KHZvaWQgKmhhbmRsZSkNCj4+PiAgICAJCX0NCj4+PiAgICAN
+Cj4+PiAgICAJCXJpbmcgPSAmYWRldi0+dmNuLmluc3Rbal0ucmluZ19qcGVnOw0KPj4+ICsJCXJp
+bmctPnNjaGVkLnJlYWR5ID0gdHJ1ZTsNCj4+PiAgICAJCXIgPSBhbWRncHVfcmluZ190ZXN0X3Jp
+bmcocmluZyk7DQo+Pj4gICAgCQlpZiAocikgew0KPj4+ICAgIAkJCXJpbmctPnNjaGVkLnJlYWR5
+ID0gZmFsc2U7DQo=
