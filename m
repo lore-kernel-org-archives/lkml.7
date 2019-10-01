@@ -2,102 +2,89 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7787FC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B129ECE589
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E09D21855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB6F721855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:46:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728698AbfJAJqf (ORCPT
+        id S1729409AbfJAJqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 05:46:35 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:54690 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbfJAJqf (ORCPT
+        Tue, 1 Oct 2019 05:46:39 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:58372 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728883AbfJAJqi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 05:46:35 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iFEjm-00071I-Mt; Tue, 01 Oct 2019 11:46:30 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4D8671C03AB;
-        Tue,  1 Oct 2019 11:46:30 +0200 (CEST)
-Date:   Tue, 01 Oct 2019 09:46:30 -0000
-From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/microcode] x86/microcode/amd: Fix two
- -Wunused-but-set-variable warnings
-Cc:     Borislav Petkov <bp@suse.de>, x86@kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Tue, 1 Oct 2019 05:46:38 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.92.2)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1iFEjb-0004K9-6w; Tue, 01 Oct 2019 11:46:19 +0200
+Message-ID: <46cce48de455acf073ad0582565d1fe34253f823.camel@sipsolutions.net>
+Subject: Re: [PATCH v5.1-rc] iwlwifi: make locking in iwl_mvm_tx_mpdu()
+ BH-safe
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20190928162559.26294-1-bp@alien8.de>
-References: <20190928162559.26294-1-bp@alien8.de>
+Date:   Tue, 01 Oct 2019 11:46:17 +0200
+In-Reply-To: <nycvar.YFH.7.76.1909111238470.473@cbobk.fhfr.pm>
+References: <nycvar.YFH.7.76.1904151300160.9803@cbobk.fhfr.pm>
+          <24e05607b902e811d1142e3bd345af021fd3d077.camel@sipsolutions.net>
+          <nycvar.YFH.7.76.1904151328270.9803@cbobk.fhfr.pm>
+         <01d55c5cf513554d9cbdee0b14f9360a8df859c8.camel@sipsolutions.net>
+         <nycvar.YFH.7.76.1909111238470.473@cbobk.fhfr.pm>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Message-ID: <156992319017.9978.9822954444615674815.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/microcode branch of tip:
+Hi Jiri,
 
-Commit-ID:     2b730952066cd022d1f46e801f06ca6ca9878823
-Gitweb:        https://git.kernel.org/tip/2b730952066cd022d1f46e801f06ca6ca9878823
-Author:        Borislav Petkov <bp@suse.de>
-AuthorDate:    Sat, 28 Sep 2019 16:53:56 +02:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 01 Oct 2019 11:36:09 +02:00
+Sorry for the long delay.
 
-x86/microcode/amd: Fix two -Wunused-but-set-variable warnings
+>  CPU: 1 PID: 28401 Comm: kworker/u8:2 Tainted: G        W         5.3.0-rc8 #3
+>  Hardware name: LENOVO 20K5S22R00/20K5S22R00, BIOS R0IET38W (1.16 ) 05/31/2017
+>  Workqueue: phy0 ieee80211_beacon_connection_loss_work [mac80211]
+>  Call Trace:
+>   dump_stack+0x78/0xb3
+>   mark_lock+0x28a/0x2a0
+>   __lock_acquire+0x568/0x1020
+>   ? iwl_mvm_set_tx_cmd+0x1c5/0x400 [iwlmvm]
+>   lock_acquire+0xbd/0x1e0
+>   ? iwl_mvm_tx_mpdu+0xae/0x600 [iwlmvm]
+>   _raw_spin_lock+0x35/0x50
+>   ? iwl_mvm_tx_mpdu+0xae/0x600 [iwlmvm]
+>   iwl_mvm_tx_mpdu+0xae/0x600 [iwlmvm]
+>   ? ieee80211_tx_h_select_key+0xf1/0x4a0 [mac80211]
+>   iwl_mvm_tx_skb+0x1f8/0x460 [iwlmvm]
+>   iwl_mvm_mac_itxq_xmit+0xcc/0x200 [iwlmvm]
+>   ? iwl_mvm_mac_itxq_xmit+0x55/0x200 [iwlmvm]
+>   _ieee80211_wake_txqs+0x2cf/0x660 [mac80211]
+>   ? _ieee80211_wake_txqs+0x5/0x660 [mac80211]
+>   ? __ieee80211_wake_queue+0x219/0x340 [mac80211]
+>   ieee80211_wake_queues_by_reason+0x64/0xa0 [mac80211]
+> 
 
-The dummy variable is the high part of the microcode revision MSR which
-is defined as reserved. Mark it unused so that W=1 builds don't trigger
-the above warning.
+I'm a bit confused by this.
 
-No functional changes.
+ieee80211_wake_queues_by_reason() does
+spin_lock_irqsave()/spin_unlock_irqrestore() - why is that "{SOFTIRQ-ON-
+W} usage"?
 
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: x86@kernel.org
-Link: https://lkml.kernel.org/r/20190928162559.26294-1-bp@alien8.de
----
- arch/x86/kernel/cpu/microcode/amd.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Or what did you snip?
 
-diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
-index a0e52bd..3f6b137 100644
---- a/arch/x86/kernel/cpu/microcode/amd.c
-+++ b/arch/x86/kernel/cpu/microcode/amd.c
-@@ -567,7 +567,7 @@ int __init save_microcode_in_initrd_amd(unsigned int cpuid_1_eax)
- void reload_ucode_amd(void)
- {
- 	struct microcode_amd *mc;
--	u32 rev, dummy;
-+	u32 rev, dummy __always_unused;
- 
- 	mc = (struct microcode_amd *)amd_ucode_patch;
- 
-@@ -673,7 +673,7 @@ static enum ucode_state apply_microcode_amd(int cpu)
- 	struct ucode_cpu_info *uci;
- 	struct ucode_patch *p;
- 	enum ucode_state ret;
--	u32 rev, dummy;
-+	u32 rev, dummy __always_unused;
- 
- 	BUG_ON(raw_smp_processor_id() != cpu);
- 
+johannes
+
