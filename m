@@ -2,198 +2,146 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D77C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5D6C388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:21:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B7ED2053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF3402053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:21:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RbZZF6Rk";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lvExq41q"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="v9Fe1geB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387816AbfJAMUx (ORCPT
+        id S2387836AbfJAMVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 08:20:53 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:60658 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726188AbfJAMUw (ORCPT
+        Tue, 1 Oct 2019 08:21:33 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:8692 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726371AbfJAMVc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 08:20:52 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 4A1F46034D; Tue,  1 Oct 2019 12:20:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569932451;
-        bh=lp5RfcJ7QOMHh//lUV03XTYmhcqbXMbwWSVbR7ckkS8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=RbZZF6RkorD85xRj5KASghXa7/ojak9WzQuxbkaE7OyPTDMg64YCoDi+Zk6jfs7T0
-         V9p0hzMHVfI7ukNn03QZUGIFxCI6p+hzjE4adCB3eHUh0aA2CNAF1cdS2HYnAtKGsG
-         TZTpAxLhRK3WP38bI2qqK/7tqVK9x8Uo4rjtgnRI=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id F3C166034D;
-        Tue,  1 Oct 2019 12:20:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1569932450;
-        bh=lp5RfcJ7QOMHh//lUV03XTYmhcqbXMbwWSVbR7ckkS8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lvExq41qsZhsJtjPYClvoajbSAD3zlG1PM/tpzugpdGpVjm3+8GBjRcOQyGVcINoa
-         l03xiLzMRytM3WYSp3fyBrrN7L8xhHZVZPsg7hpMEeY/GgTg/ij+NoUXWi3WR3nvv8
-         w7gx0fPPmTeHNxWok46S/tBwwk4wB85MrFJ7fCsA=
+        Tue, 1 Oct 2019 08:21:32 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x91CB7xo015582;
+        Tue, 1 Oct 2019 14:21:22 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=tvexJDp1NN/llsuNXSSQPqtCEvUEQbZ/KwTA58G95MM=;
+ b=v9Fe1geBnD6K0l1sI3luj4DJvxLLqPKPdaFOfsxRZOeeGKJxA0fMMcpK+qH/PmXs84V6
+ gjGDI77UandspB5v5RGn7WqinW8tvrZRIhG3ZcF3rWUk4Bxn4b2S6oDV5fsJjB2hd4Ap
+ KME0saXzMG7Ku9jwo49puaNhXOHqoMnyGiVzqbszIeMB8abAphOLiJ18h7H1el37MGd2
+ 96qsfAG0UB+wvtT1d8LuS9hlMEMKfWau1T45B5eiq9Bsc3wTZlDaviMB8MZ3NG0y1TeO
+ ugXIdo05KCXvOMsqBZHtpoldskyjYfiWrUubRhzeh2xLfNp+zrL5d7HDby6/kRHHD6sI 9Q== 
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2v9w010upc-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 01 Oct 2019 14:21:22 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id B72B54B;
+        Tue,  1 Oct 2019 12:21:18 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1F8D72BEC6E;
+        Tue,  1 Oct 2019 14:21:18 +0200 (CEST)
+Received: from [10.48.1.171] (10.75.127.49) by SFHDAG5NODE2.st.com
+ (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 1 Oct
+ 2019 14:21:17 +0200
+Subject: Re: [PATCH] i2c: i2c-stm32f7: fix a race in slave mode with
+ arbitration loss irq
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>, <wsa@the-dreams.de>
+CC:     <alain.volmat@st.com>, <alexandre.torgue@st.com>,
+        <linux-i2c@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1569919869-3218-1-git-send-email-fabrice.gasnier@st.com>
+From:   Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Message-ID: <e30de80a-6ecd-a2a6-8742-8dcdd1c3253c@st.com>
+Date:   Tue, 1 Oct 2019 14:21:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <1569919869-3218-1-git-send-email-fabrice.gasnier@st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Tue, 01 Oct 2019 17:50:49 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     robh+dt@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mark.rutland@arm.com,
-        evgreen@chromium.org, daidavid1@codeaurora.org,
-        saravanak@google.com, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: interconnect: Add OSM L3 DT bindings
-In-Reply-To: <53e76100-b7c9-1069-b571-b17271fe41c5@linaro.org>
-References: <20190821091132.14994-1-sibis@codeaurora.org>
- <20190821091132.14994-2-sibis@codeaurora.org>
- <53e76100-b7c9-1069-b571-b17271fe41c5@linaro.org>
-Message-ID: <e163cb4ff67b312c39c3eef543d7c62b@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG5NODE2.st.com
+ (10.75.127.14)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-10-01_06:2019-10-01,2019-10-01 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Georgi,
+Hi
 
-On 2019-09-27 04:46, Georgi Djakov wrote:
-> Hi Sibi,
-> 
-> On 8/21/19 02:11, Sibi Sankar wrote:
->> Add bindings for Operating State Manager (OSM) L3 interconnect 
->> provider
->> on SDM845 SoCs.
->> 
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
->>  .../bindings/interconnect/qcom,osm-l3.yaml    | 56 
->> +++++++++++++++++++
->>  .../dt-bindings/interconnect/qcom,osm-l3.h    | 12 ++++
->>  2 files changed, 68 insertions(+)
->>  create mode 100644 
->> Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
->>  create mode 100644 include/dt-bindings/interconnect/qcom,osm-l3.h
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml 
->> b/Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
->> new file mode 100644
->> index 0000000000000..dab2b6875ab27
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
->> @@ -0,0 +1,56 @@
->> +# SPDX-License-Identifier: BSD-2-Clause
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/interconnect/qcom,osm-l3.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm Operating State Manager (OSM) L3 Interconnect 
->> Provider
->> +
->> +maintainers:
->> +  - Sibi Sankar <sibis@codeaurora.org>
->> +
->> +description:
->> +  L3 cache bandwidth requirements on Qualcomm SoCs is serviced by the 
->> OSM.
->> +  The OSM L3 interconnect provider aggregates the L3 bandwidth 
->> requests
->> +  from CPU/GPU and relays it to the OSM.
->> +
->> +properties:
->> +  compatible:
->> +    const: "qcom,sdm845-osm-l3"
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    items:
->> +      - description: xo clock
->> +      - description: alternate clock
->> +
->> +  clock-names:
->> +    items:
->> +      - const: xo
->> +      - const: alternate
->> +
->> +  '#interconnect-cells':
->> +    const: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - clock-names
->> +  - '#interconnect-cells'
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    osm_l3: interconnect@17d41000 {
->> +      compatible = "qcom,sdm845-osm-l3";
->> +      reg = <0x17d41000 0x1400>;
->> +
->> +      clocks = <&rpmhcc 0>, <&gcc 165>;
->> +      clock-names = "xo", "alternate";
->> +
->> +      #interconnect-cells = <1>;
->> +    };
-> 
-> Are we going to do the bandwidth scaling from some cpufreq driver? 
-> Under which
-> DT node will we put the "interconnects" property?
+Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 
-Its still undecided :( unfortunately.
-Using Saravana's series means that
-bandwidth scaling will be done from
-the cpufreq driver. The property
-will be a part of the cpu-nodes. But
-the part of adding the bw opp-tables
-also to cpufreq driver or nodes doesn't
-seem correct to me.
+Thx
 
+On 10/1/19 10:51 AM, Fabrice Gasnier wrote:
+> When in slave mode, an arbitration loss (ARLO) may be detected before the
+> slave had a chance to detect the stop condition (STOPF in ISR).
+> This is seen when two master + slave adapters switch their roles. It
+> provokes the i2c bus to be stuck, busy as SCL line is stretched.
+> - the I2C_SLAVE_STOP event is never generated due to STOPF flag is set but
+>   don't generate an irq (race with ARLO irq, STOPIE is masked). STOPF flag
+>   remains set until next master xfer (e.g. when STOPIE irq get unmasked).
+>   In this case, completion is generated too early: immediately upon new
+>   transfer request (then it doesn't send all data).
+> - Some data get stuck in TXDR register. As a consequence, the controller
+>   stretches the SCL line: the bus gets busy until a future master transfer
+>   triggers the bus busy / recovery mechanism (this can take time... and
+>   may never happen at all)
 > 
-> Thanks,
-> Georgi
+> So choice is to let the STOPF being detected by the slave isr handler,
+> to properly handle this stop condition. E.g. don't mask IRQs in error
+> handler, when the slave is running.
 > 
->> diff --git a/include/dt-bindings/interconnect/qcom,osm-l3.h 
->> b/include/dt-bindings/interconnect/qcom,osm-l3.h
->> new file mode 100644
->> index 0000000000000..54858ff7674d7
->> --- /dev/null
->> +++ b/include/dt-bindings/interconnect/qcom,osm-l3.h
->> @@ -0,0 +1,12 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * Copyright (C) 2019 The Linux Foundation. All rights reserved.
->> + */
->> +
->> +#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_OSM_L3_H
->> +#define __DT_BINDINGS_INTERCONNECT_QCOM_OSM_L3_H
->> +
->> +#define MASTER_OSM_L3_APPS	0
->> +#define SLAVE_OSM_L3		1
->> +
->> +#endif
->> 
-
--- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+> Fixes: 60d609f30de2 ("i2c: i2c-stm32f7: Add slave support")
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> ---
+>  drivers/i2c/busses/i2c-stm32f7.c | 17 ++++++++++-------
+>  1 file changed, 10 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+> index 266d1c2..3a8ab0c 100644
+> --- a/drivers/i2c/busses/i2c-stm32f7.c
+> +++ b/drivers/i2c/busses/i2c-stm32f7.c
+> @@ -1501,7 +1501,7 @@ static irqreturn_t stm32f7_i2c_isr_error(int irq, void *data)
+>  	void __iomem *base = i2c_dev->base;
+>  	struct device *dev = i2c_dev->dev;
+>  	struct stm32_i2c_dma *dma = i2c_dev->dma;
+> -	u32 mask, status;
+> +	u32 status;
+>  
+>  	status = readl_relaxed(i2c_dev->base + STM32F7_I2C_ISR);
+>  
+> @@ -1526,12 +1526,15 @@ static irqreturn_t stm32f7_i2c_isr_error(int irq, void *data)
+>  		f7_msg->result = -EINVAL;
+>  	}
+>  
+> -	/* Disable interrupts */
+> -	if (stm32f7_i2c_is_slave_registered(i2c_dev))
+> -		mask = STM32F7_I2C_XFER_IRQ_MASK;
+> -	else
+> -		mask = STM32F7_I2C_ALL_IRQ_MASK;
+> -	stm32f7_i2c_disable_irq(i2c_dev, mask);
+> +	if (!i2c_dev->slave_running) {
+> +		u32 mask;
+> +		/* Disable interrupts */
+> +		if (stm32f7_i2c_is_slave_registered(i2c_dev))
+> +			mask = STM32F7_I2C_XFER_IRQ_MASK;
+> +		else
+> +			mask = STM32F7_I2C_ALL_IRQ_MASK;
+> +		stm32f7_i2c_disable_irq(i2c_dev, mask);
+> +	}
+>  
+>  	/* Disable dma */
+>  	if (i2c_dev->use_dma) {
+> 
