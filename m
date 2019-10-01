@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D2FC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 727A5C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20A802168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49E3021855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569947989;
-	bh=pj9nPbu8OCxceS12YwPlHpb0aSqTImsM0akfpQMHB4I=;
+	s=default; t=1569947992;
+	bh=VS50HS4GAI4UbJUyzF+xJ0UN7GNEKsohNTeuNnlWgOw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MZpb2lN6O0j7lSfS8tXtxnwYWSop/vGdUPh+z15360ED8hokuZQkjpFrMV1A0bxTW
-	 RZ7I+GQ+70OU7AmrsfrJiwL6POPATaRRolqgqnq/TBXCVWMDGkPfD+2e3RTIQRaQrh
-	 mTJBPMXfcM/Rfya45eRSbHOrgy5GmWBxprWXcRXE=
+	b=dIvs+w+8G4f5wS2F2sz/63vMPzOFfylLQJwD9AT6KCI5//HBWe+xfnD++uAxEZdUx
+	 WWeBdsDWWiU+zPKyz1OZ8hAQqptheNSe0Vx/qNlIGaGUx7MxxNJK8uHsDW2ToG/COU
+	 FDj9pcOfbebOICq98ksqxVHs0ZkmFSTPmqY9OvY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728448AbfJAQjr (ORCPT
+        id S1728517AbfJAQjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:39:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50766 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:39:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728316AbfJAQjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:39:44 -0400
+        id S1728397AbfJAQjs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:39:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7D7C21924;
-        Tue,  1 Oct 2019 16:39:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A35A21872;
+        Tue,  1 Oct 2019 16:39:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569947983;
-        bh=pj9nPbu8OCxceS12YwPlHpb0aSqTImsM0akfpQMHB4I=;
+        s=default; t=1569947987;
+        bh=VS50HS4GAI4UbJUyzF+xJ0UN7GNEKsohNTeuNnlWgOw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CWDbhJ0u6IkW7v/133VA4CUF+J0uonSCLr58Ut5y0VwSSr37v7vWIGVlvffXfybad
-         H5xvHJexIwlMMbUenkVUbpw+DE/EMoW8Euj8HrG6P75fxZdW64OVJqrJjMQCUQHl/2
-         jyxJE/Y7mpdfTCDBz5MVQfL9AzfosXCwD/qCkXTc=
+        b=GIkpckC8EjiyZvwC0G+RTSxgq62HBDPmI/zmdM+k97Z86ZUFDSmP5tLDmkcsj5Toh
+         fBisFNjVF+hTQtR3M+Y/h3U2kIguf2PnwDncVDxwmbweNzgBVcUnGMTi4muqOUfXsi
+         iksJHqcHUcg71xz85iNSZ7OxCPynjz7ypXiH/IUo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dongsheng Yang <dongsheng.yang@easystack.cn>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 15/71] rbd: fix response length parameter for encoded strings
-Date:   Tue,  1 Oct 2019 12:38:25 -0400
-Message-Id: <20191001163922.14735-15-sashal@kernel.org>
+Cc:     Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 18/71] netfilter: nf_tables: allow lookups in dynamic sets
+Date:   Tue,  1 Oct 2019 12:38:28 -0400
+Message-Id: <20191001163922.14735-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
 References: <20191001163922.14735-1-sashal@kernel.org>
@@ -60,66 +61,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongsheng Yang <dongsheng.yang@easystack.cn>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit 5435d2069503e2aa89c34a94154f4f2fa4a0c9c4 ]
+[ Upstream commit acab713177377d9e0889c46bac7ff0cfb9a90c4d ]
 
-rbd_dev_image_id() allocates space for length but passes a smaller
-value to rbd_obj_method_sync().  rbd_dev_v2_object_prefix() doesn't
-allocate space for length.  Fix both to be consistent.
+This un-breaks lookups in sets that have the 'dynamic' flag set.
+Given this active example configuration:
 
-Signed-off-by: Dongsheng Yang <dongsheng.yang@easystack.cn>
-Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+table filter {
+  set set1 {
+    type ipv4_addr
+    size 64
+    flags dynamic,timeout
+    timeout 1m
+  }
+
+  chain input {
+     type filter hook input priority 0; policy accept;
+  }
+}
+
+... this works:
+nft add rule ip filter input add @set1 { ip saddr }
+
+-> whenever rule is triggered, the source ip address is inserted
+into the set (if it did not exist).
+
+This won't work:
+nft add rule ip filter input ip saddr @set1 counter
+Error: Could not process rule: Operation not supported
+
+In other words, we can add entries to the set, but then can't make
+matching decision based on that set.
+
+That is just wrong -- all set backends support lookups (else they would
+not be very useful).
+The failure comes from an explicit rejection in nft_lookup.c.
+
+Looking at the history, it seems like NFT_SET_EVAL used to mean
+'set contains expressions' (aka. "is a meter"), for instance something like
+
+ nft add rule ip filter input meter example { ip saddr limit rate 10/second }
+ or
+ nft add rule ip filter input meter example { ip saddr counter }
+
+The actual meaning of NFT_SET_EVAL however, is
+'set can be updated from the packet path'.
+
+'meters' and packet-path insertions into sets, such as
+'add @set { ip saddr }' use exactly the same kernel code (nft_dynset.c)
+and thus require a set backend that provides the ->update() function.
+
+The only set that provides this also is the only one that has the
+NFT_SET_EVAL feature flag.
+
+Removing the wrong check makes the above example work.
+While at it, also fix the flag check during set instantiation to
+allow supported combinations only.
+
+Fixes: 8aeff920dcc9b3f ("netfilter: nf_tables: add stateful object reference to set elements")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/rbd.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ net/netfilter/nf_tables_api.c | 7 +++++--
+ net/netfilter/nft_lookup.c    | 3 ---
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-index c8fb886aebd4e..69db7385c8df5 100644
---- a/drivers/block/rbd.c
-+++ b/drivers/block/rbd.c
-@@ -5669,17 +5669,20 @@ static int rbd_dev_v2_image_size(struct rbd_device *rbd_dev)
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index d47469f824a10..3b81323fa0171 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -3562,8 +3562,11 @@ static int nf_tables_newset(struct net *net, struct sock *nlsk,
+ 			      NFT_SET_OBJECT))
+ 			return -EINVAL;
+ 		/* Only one of these operations is supported */
+-		if ((flags & (NFT_SET_MAP | NFT_SET_EVAL | NFT_SET_OBJECT)) ==
+-			     (NFT_SET_MAP | NFT_SET_EVAL | NFT_SET_OBJECT))
++		if ((flags & (NFT_SET_MAP | NFT_SET_OBJECT)) ==
++			     (NFT_SET_MAP | NFT_SET_OBJECT))
++			return -EOPNOTSUPP;
++		if ((flags & (NFT_SET_EVAL | NFT_SET_OBJECT)) ==
++			     (NFT_SET_EVAL | NFT_SET_OBJECT))
+ 			return -EOPNOTSUPP;
+ 	}
  
- static int rbd_dev_v2_object_prefix(struct rbd_device *rbd_dev)
- {
-+	size_t size;
- 	void *reply_buf;
- 	int ret;
- 	void *p;
+diff --git a/net/netfilter/nft_lookup.c b/net/netfilter/nft_lookup.c
+index c0560bf3c31bd..660bad688e2bc 100644
+--- a/net/netfilter/nft_lookup.c
++++ b/net/netfilter/nft_lookup.c
+@@ -73,9 +73,6 @@ static int nft_lookup_init(const struct nft_ctx *ctx,
+ 	if (IS_ERR(set))
+ 		return PTR_ERR(set);
  
--	reply_buf = kzalloc(RBD_OBJ_PREFIX_LEN_MAX, GFP_KERNEL);
-+	/* Response will be an encoded string, which includes a length */
-+	size = sizeof(__le32) + RBD_OBJ_PREFIX_LEN_MAX;
-+	reply_buf = kzalloc(size, GFP_KERNEL);
- 	if (!reply_buf)
- 		return -ENOMEM;
- 
- 	ret = rbd_obj_method_sync(rbd_dev, &rbd_dev->header_oid,
- 				  &rbd_dev->header_oloc, "get_object_prefix",
--				  NULL, 0, reply_buf, RBD_OBJ_PREFIX_LEN_MAX);
-+				  NULL, 0, reply_buf, size);
- 	dout("%s: rbd_obj_method_sync returned %d\n", __func__, ret);
- 	if (ret < 0)
- 		goto out;
-@@ -6696,7 +6699,6 @@ static int rbd_dev_image_id(struct rbd_device *rbd_dev)
- 	dout("rbd id object name is %s\n", oid.name);
- 
- 	/* Response will be an encoded string, which includes a length */
+-	if (set->flags & NFT_SET_EVAL)
+-		return -EOPNOTSUPP;
 -
- 	size = sizeof (__le32) + RBD_IMAGE_ID_LEN_MAX;
- 	response = kzalloc(size, GFP_NOIO);
- 	if (!response) {
-@@ -6708,7 +6710,7 @@ static int rbd_dev_image_id(struct rbd_device *rbd_dev)
- 
- 	ret = rbd_obj_method_sync(rbd_dev, &oid, &rbd_dev->header_oloc,
- 				  "get_id", NULL, 0,
--				  response, RBD_IMAGE_ID_LEN_MAX);
-+				  response, size);
- 	dout("%s: rbd_obj_method_sync returned %d\n", __func__, ret);
- 	if (ret == -ENOENT) {
- 		image_id = kstrdup("", GFP_KERNEL);
+ 	priv->sreg = nft_parse_register(tb[NFTA_LOOKUP_SREG]);
+ 	err = nft_validate_register_load(priv->sreg, set->klen);
+ 	if (err < 0)
 -- 
 2.20.1
 
