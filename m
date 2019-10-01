@@ -7,56 +7,54 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26823ECE589
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B6EC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED5D42133F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A75E921906
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:42:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569930140;
-	bh=juamc3+AGmTCn8Q8tKKnCnQEi3EBQYZReXaNqfWyZuM=;
+	s=default; t=1569930145;
+	bh=/ef27RpNwHaWO+tTlRFd8TIwv6KBVND2aLpxJdM38xI=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=YZlA/eUkVzBaWF8DhbrsZXSEKB2peDABBh62li8lz/OGyhYHbQTPvE9Y+h658mf/L
-	 sUHy3nD29zMG8HirwlhPUnFtbUa0d9MuVm9WgYnwydBqZaCxtzqGUBVs4SN9arab/B
-	 fjxncJZ7ua4/MSqpKiGKHf0qZVI2hh4E60MgZwXs=
+	b=DM8YA7BsHNhnLffyadXoKJ0DyfLk4CH5E+fFXgzvsSpV1WerJRX5jLomJQD2cRg8c
+	 isHbWf0GDTOdSNoDsR/KZNa1RrAx+kHSPlSwc4wrM4Ngy9dwgB8R3VwBzl8UStnVhS
+	 Sg0Hj79hdTjMSutZSmbSunWWDgnZkK5jm0I2+vqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387797AbfJALmP (ORCPT
+        id S2387812AbfJALmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 07:42:15 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40812 "EHLO
+        Tue, 1 Oct 2019 07:42:25 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40772 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387556AbfJALlE (ORCPT
+        with ESMTP id S2387543AbfJALlC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 07:41:04 -0400
+        Tue, 1 Oct 2019 07:41:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=63zJTbVH7lS8Trv4HBQFjRzzllGgjJHymJTri8Knfv4=; b=InsjyvrDB7a8
-        RFjRE4bIxMfpFVjx3QH+g91DtnW5nDUH5JTC67RBn6bGDf28mhkCru3Vn06T/Fx45LzlDMIamXWiB
-        rPReFf9xM32KmdgL+EwUhWBm+32q+g9eNJwdRY1AL5qqS/BzZqMED/d4zpRrK/i0TezB+E6RsfPdt
-        3twz4=;
+        List-Archive; bh=zDFxt27zzlk0hzRbhmXUl19BWWqNe/+DnvGIxSIWc9g=; b=mYkGoHq8NgmU
+        9pVQiw6NgNCyHPIFIt2Hv28ojukPlv69pn4XY1GqDXxx1KhGvT5VRl9KNMfXqbXPv/E9//WSBw4t0
+        k81Ow7+2Vr3g2Gj24DqOlRhB0QDIc+mtRbQQqe3e+L2TVvXTKKRwPhMvH5GrkATvVw9qCqWKMCPng
+        qnD6Q=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iFGWZ-0004Xc-UK; Tue, 01 Oct 2019 11:40:59 +0000
+        id 1iFGWZ-0004XF-0Y; Tue, 01 Oct 2019 11:40:59 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 6B0572742A30; Tue,  1 Oct 2019 12:40:59 +0100 (BST)
+        id 767032742A10; Tue,  1 Oct 2019 12:40:58 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Pragnesh Patel <pragnesh.patel@sifive.com>
-Cc:     broonie@kernel.org, devicetree@vger.kernel.org,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>
-Subject: Applied "fixed-regulator: dt-bindings: Fixed building error for compatible property" to the regulator tree
-In-Reply-To: <1568875145-2864-1-git-send-email-pragnesh.patel@sifive.com>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Balaji T K <balajitk@ti.com>, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Ravikumar Kattekola <rk@ti.com>
+Subject: Applied "regulator: pbias: Use of_device_get_match_data" to the regulator tree
+In-Reply-To: <20190925101256.19030-1-axel.lin@ingics.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191001114059.6B0572742A30@ypsilon.sirena.org.uk>
-Date:   Tue,  1 Oct 2019 12:40:59 +0100 (BST)
+Message-Id: <20191001114058.767032742A10@ypsilon.sirena.org.uk>
+Date:   Tue,  1 Oct 2019 12:40:58 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,7 +62,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   fixed-regulator: dt-bindings: Fixed building error for compatible property
+   regulator: pbias: Use of_device_get_match_data
 
 has been applied to the regulator tree at
 
@@ -89,38 +87,44 @@ to this mail.
 Thanks,
 Mark
 
-From 04a99ce605a780c275e2e9d2547d43fbba3f4d24 Mon Sep 17 00:00:00 2001
-From: Pragnesh Patel <pragnesh.patel@sifive.com>
-Date: Thu, 19 Sep 2019 12:09:04 +0530
-Subject: [PATCH] fixed-regulator: dt-bindings: Fixed building error for
- compatible property
+From 41145b980e3f4c7c26763fae0379f1cb8f336868 Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Wed, 25 Sep 2019 18:12:56 +0800
+Subject: [PATCH] regulator: pbias: Use of_device_get_match_data
 
-Compatible property is not of type 'string', so remove const:
-from it.
+Use of_device_get_match_data to simplify the code a bit.
 
-Signed-off-by: Pragnesh Patel <pragnesh.patel@sifive.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/1568875145-2864-1-git-send-email-pragnesh.patel@sifive.com
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Link: https://lore.kernel.org/r/20190925101256.19030-1-axel.lin@ingics.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../devicetree/bindings/regulator/fixed-regulator.yaml        | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/regulator/pbias-regulator.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-index a78150c47aa2..f32416968197 100644
---- a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-+++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-@@ -30,8 +30,8 @@ if:
- properties:
-   compatible:
-     enum:
--      - const: regulator-fixed
--      - const: regulator-fixed-clock
-+      - regulator-fixed
-+      - regulator-fixed-clock
+diff --git a/drivers/regulator/pbias-regulator.c b/drivers/regulator/pbias-regulator.c
+index 92b41a6a4dc2..a59811060bdc 100644
+--- a/drivers/regulator/pbias-regulator.c
++++ b/drivers/regulator/pbias-regulator.c
+@@ -164,7 +164,6 @@ static int pbias_regulator_probe(struct platform_device *pdev)
+ 	const struct pbias_reg_info *info;
+ 	int ret = 0;
+ 	int count, idx, data_idx = 0;
+-	const struct of_device_id *match;
+ 	const struct pbias_of_data *data;
+ 	unsigned int offset;
  
-   regulator-name: true
+@@ -183,9 +182,8 @@ static int pbias_regulator_probe(struct platform_device *pdev)
+ 	if (IS_ERR(syscon))
+ 		return PTR_ERR(syscon);
  
+-	match = of_match_device(of_match_ptr(pbias_of_match), &pdev->dev);
+-	if (match && match->data) {
+-		data = match->data;
++	data = of_device_get_match_data(&pdev->dev);
++	if (data) {
+ 		offset = data->offset;
+ 	} else {
+ 		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 -- 
 2.20.1
 
