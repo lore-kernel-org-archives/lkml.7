@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3816ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7580C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79E6B20B7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84426205C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:43:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948170;
-	bh=ri0y+tcaOShXS+LvXq26MlFByM5jdC+qr44td80hKS4=;
+	s=default; t=1569948180;
+	bh=+/GPWSjFANCOmijUlq3Ycvx8UhI7FFqWIqqYSVoJUU4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HCJ8uKndXtZEIwjZIQoYM0sjhu3cWXgp9WHesXNT1wB59ipTpX6o7G6sMzX321Qkx
-	 BePz4uqxhvif7wtuBRjHANWT5vbnhkhg4+BWdVuft/kU0Tvwyd3QVOBhxKqy7ebWg7
-	 Rj0ivd5M9QfQtYLlhO3nNieBrjI0h9tLEpXhNVhw=
+	b=AUcm/KzXZW0SqulrB64p2MPAlBN30D744GTrAtfRZovQX45KmZ8jEbScP2qh4NlP6
+	 JDKEJZCeP9I2mvBjgjDdyMs8tBES6zj7ZBRWbCPlVr0yl66SdcFaTI4LSyu/JS5piN
+	 FKtenptKwtnudOE7Ia//UIwFxwmHwMeuUTtxuHcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732194AbfJAQmt (ORCPT
+        id S1732335AbfJAQm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:42:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54616 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:42:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732056AbfJAQmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:42:38 -0400
+        id S1732218AbfJAQmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:42:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18F27222C2;
-        Tue,  1 Oct 2019 16:42:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5538221A4C;
+        Tue,  1 Oct 2019 16:42:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948158;
-        bh=ri0y+tcaOShXS+LvXq26MlFByM5jdC+qr44td80hKS4=;
+        s=default; t=1569948172;
+        bh=+/GPWSjFANCOmijUlq3Ycvx8UhI7FFqWIqqYSVoJUU4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KVbs8aD4A/S096lFMtGeJ9GSAqSKc5KFaWxldQ7IxjH6grMeuQZAhUVzW8t9FPezk
-         ETfQurHu736i236YdstWJsYQlptkXhuq7HVvoYoLR5nQwPiMANvl0z0Czir4QsTJRD
-         FRSRfONrkWAaMLP5AVt9oICARp7pf0gP4qvSdPg8=
+        b=ylzttj7+OsxWgFlDISFDAzahNtRpiE3kU/bKRsIAPw7nFGaKW9bd8QaVZSRVERWNe
+         ns9Pa2X/QBpttQ0doxDVil0DRdbj2Syh2DYKrNayXAAybAru1D/ruDibbSjtYXD0aH
+         C1c2EevuFNy5sHdwmNckZTWk2LxIx9UD5LVZNFW8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, kexec@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 47/63] kexec: bail out upon SIGKILL when allocating memory.
-Date:   Tue,  1 Oct 2019 12:41:09 -0400
-Message-Id: <20191001164125.15398-47-sashal@kernel.org>
+Cc:     Hans Andersson <hans.andersson@cellavision.se>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 54/63] net: phy: micrel: add Asym Pause workaround for KSZ9021
+Date:   Tue,  1 Oct 2019 12:41:16 -0400
+Message-Id: <20191001164125.15398-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164125.15398-1-sashal@kernel.org>
 References: <20191001164125.15398-1-sashal@kernel.org>
@@ -62,43 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+From: Hans Andersson <hans.andersson@cellavision.se>
 
-[ Upstream commit 7c3a6aedcd6aae0a32a527e68669f7dd667492d1 ]
+[ Upstream commit 407d8098cb1ab338199f4753162799a488d87d23 ]
 
-syzbot found that a thread can stall for minutes inside kexec_load() after
-that thread was killed by SIGKILL [1].  It turned out that the reproducer
-was trying to allocate 2408MB of memory using kimage_alloc_page() from
-kimage_load_normal_segment().  Let's check for SIGKILL before doing memory
-allocation.
+The Micrel KSZ9031 PHY may fail to establish a link when the Asymmetric
+Pause capability is set. This issue is described in a Silicon Errata
+(DS80000691D or DS80000692D), which advises to always disable the
+capability.
 
-[1] https://syzkaller.appspot.com/bug?id=a0e3436829698d5824231251fad9d8e998f94f5e
+Micrel KSZ9021 has no errata, but has the same issue with Asymmetric Pause.
+This patch apply the same workaround as the one for KSZ9031.
 
-Link: http://lkml.kernel.org/r/993c9185-d324-2640-d061-bed2dd18b1f7@I-love.SAKURA.ne.jp
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Reported-by: syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 3aed3e2a143c ("net: phy: micrel: add Asym Pause workaround")
+Signed-off-by: Hans Andersson <hans.andersson@cellavision.se>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/kexec_core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/phy/micrel.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index d5870723b8ada..15d70a90b50dc 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -300,6 +300,8 @@ static struct page *kimage_alloc_pages(gfp_t gfp_mask, unsigned int order)
- {
- 	struct page *pages;
- 
-+	if (fatal_signal_pending(current))
-+		return NULL;
- 	pages = alloc_pages(gfp_mask & ~__GFP_ZERO, order);
- 	if (pages) {
- 		unsigned int count, i;
+diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+index 3c8186f269f9e..2fea5541c35a8 100644
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -763,6 +763,8 @@ static int ksz9031_get_features(struct phy_device *phydev)
+ 	 * Whenever the device's Asymmetric Pause capability is set to 1,
+ 	 * link-up may fail after a link-up to link-down transition.
+ 	 *
++	 * The Errata Sheet is for ksz9031, but ksz9021 has the same issue
++	 *
+ 	 * Workaround:
+ 	 * Do not enable the Asymmetric Pause capability bit.
+ 	 */
+@@ -1076,6 +1078,7 @@ static struct phy_driver ksphy_driver[] = {
+ 	/* PHY_GBIT_FEATURES */
+ 	.driver_data	= &ksz9021_type,
+ 	.probe		= kszphy_probe,
++	.get_features	= ksz9031_get_features,
+ 	.config_init	= ksz9021_config_init,
+ 	.ack_interrupt	= kszphy_ack_interrupt,
+ 	.config_intr	= kszphy_config_intr,
 -- 
 2.20.1
 
