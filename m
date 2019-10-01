@@ -2,106 +2,81 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D507ECE58B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F92ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04BC820815
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:27:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569936445;
-	bh=hvuSU/zgSxL7X5McKtfL/85CgXAWQjA1PQjtADmotiw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=sd5BvWn1HWzdTXVjxnWd8oiDwUlidkNYbUE1TG9wcJD2FkjptVB2YikUipl6n0tZ8
-	 ubOdbG/KgzC8BoCZDp/vVz5KglBdfkhJZta9D4D/7jSIvexbXoxsh4ZD0P8LO9rq+c
-	 eHtRHht/zizLGJfGqEYGJ4cWKEle748h6G9ZJtuc=
+	by mail.kernel.org (Postfix) with ESMTP id 0F57820842
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:27:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388440AbfJAN1X (ORCPT
+        id S2388451AbfJAN1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 09:27:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57580 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 09:27:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:49660 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388261AbfJAN1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 09:27:23 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74D8A205F4;
-        Tue,  1 Oct 2019 13:27:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569936442;
-        bh=hvuSU/zgSxL7X5McKtfL/85CgXAWQjA1PQjtADmotiw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=PVl8ichgRH2Kry9emAcsBbZ3LVJ+BXT3BKBgqVD7LlciVOm0Yy/aHX7MX1Rjp1MC+
-         txtKjbJ6YDnqZQPdw+SBr8J/Hw6rzAM1gCdbOzNkFgzG9wKOHKa064QGC0f4zR5Mq/
-         gohadmur2spYz1z4zJEil6lV6/IG6t4VzozqcEAA=
-Date:   Tue, 1 Oct 2019 08:27:21 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: Re: [RFC PATCH] pci: prevent putting pcie devices into lower device
- states on certain intel bridges
-Message-ID: <20191001132721.GA46491@google.com>
+        id S2388337AbfJAN1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 09:27:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6D2B91000;
+        Tue,  1 Oct 2019 06:27:34 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A3973F534;
+        Tue,  1 Oct 2019 06:27:33 -0700 (PDT)
+Date:   Tue, 1 Oct 2019 14:27:31 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        ard.biesheuvel@linaro.org, ndesaulniers@google.com,
+        tglx@linutronix.de
+Subject: Re: [PATCH v3 1/5] arm64: vdso32: Introduce COMPAT_CC_IS_GCC
+Message-ID: <20191001132731.GG41399@arrakis.emea.arm.com>
+References: <20190920142738.qlsjwguc6bpnez63@willie-the-truck>
+ <20190926214342.34608-1-vincenzo.frascino@arm.com>
+ <20190926214342.34608-2-vincenzo.frascino@arm.com>
+ <20191001131420.y3fsydlo7pg6ykfs@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACO55tuk4SA6-xUtJ-oRePy8MPXYAp2cfmSPxwW3J5nQuX3y2g@mail.gmail.com>
+In-Reply-To: <20191001131420.y3fsydlo7pg6ykfs@willie-the-truck>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 06:36:12PM +0200, Karol Herbst wrote:
-> On Mon, Sep 30, 2019 at 6:30 PM Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> >
-> > On Mon, Sep 30, 2019 at 06:05:14PM +0200, Karol Herbst wrote:
-> > > still happens with your patch applied. The machine simply gets shut down.
-> > >
-> > > dmesg can be found here:
-> > > https://gist.githubusercontent.com/karolherbst/40eb091c7b7b33ef993525de660f1a3b/raw/2380e31f566e93e5ba7c87ef545420965d4c492c/gistfile1.txt
-> >
-> > Looking your dmesg:
-> >
-> > Sep 30 17:24:27 kernel: nouveau 0000:01:00.0: DRM: DCB version 4.1
-> > Sep 30 17:24:27 kernel: nouveau 0000:01:00.0: DRM: MM: using COPY for buffer copies
-> > Sep 30 17:24:27 kernel: [drm] Initialized nouveau 1.3.1 20120801 for 0000:01:00.0 on minor 1
-> >
-> > I would assume it runtime suspends here. Then it wakes up because of PCI
-> > access from userspace:
-> >
-> > Sep 30 17:24:42 kernel: pci_raw_set_power_state: 56 callbacks suppressed
-> >
-> > and for some reason it does not get resumed properly. There are also few
-> > warnings from ACPI that might be relevant:
-> >
-> > Sep 30 17:24:27 kernel: ACPI Warning: \_SB.PCI0.GFX0._DSM: Argument #4 type mismatch - Found [Buffer], ACPI requires [Package] (20190509/nsarguments-59)
-> > Sep 30 17:24:27 kernel: ACPI Warning: \_SB.PCI0.PEG0.PEGP._DSM: Argument #4 type mismatch - Found [Buffer], ACPI requires [Package] (20190509/nsarguments-59)
+On Tue, Oct 01, 2019 at 02:14:23PM +0100, Will Deacon wrote:
+> On Thu, Sep 26, 2019 at 10:43:38PM +0100, Vincenzo Frascino wrote:
+> > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> > index 37c610963eee..0e5beb928af5 100644
+> > --- a/arch/arm64/Kconfig
+> > +++ b/arch/arm64/Kconfig
+> > @@ -110,7 +110,7 @@ config ARM64
+> >  	select GENERIC_STRNLEN_USER
+> >  	select GENERIC_TIME_VSYSCALL
+> >  	select GENERIC_GETTIMEOFDAY
+> > -	select GENERIC_COMPAT_VDSO if (!CPU_BIG_ENDIAN && COMPAT)
+> > +	select GENERIC_COMPAT_VDSO if (!CPU_BIG_ENDIAN && COMPAT && COMPATCC_IS_ARM_GCC)
+> >  	select HANDLE_DOMAIN_IRQ
+> >  	select HARDIRQS_SW_RESEND
+> >  	select HAVE_PCI
+> > @@ -313,6 +313,9 @@ config KASAN_SHADOW_OFFSET
+> >  	default 0xeffffff900000000 if ARM64_VA_BITS_36 && KASAN_SW_TAGS
+> >  	default 0xffffffffffffffff
+> >  
+> > +config COMPATCC_IS_ARM_GCC
+> > +	def_bool $(success,$(COMPATCC) --version | head -n 1 | grep -q "arm-.*-gcc")
 > 
-> afaik this is the case for essentially every laptop out there.
+> I've seen toolchains where the first part of the tuple is "armv7-", so they
+> won't get detected here. However, do we really need to detect this? If
+> somebody passes a duff compiler, then the build will fail in the same way as
+> if they passed it to CROSS_COMPILE=.
 
-I think we should look into this a little bit.
-acpi_ns_check_argument_types() checks the argument type and prints
-this message, but AFAICT it doesn't actually fix anything or prevent
-execution of the method, so I have no idea what happens when we
-actually execute the _DSM.
+Not sure what happens if we pass an aarch64 compiler. Can we end up with
+a 64-bit compat vDSO?
 
-If we execute this _DSM as part of power management, and the _DSM
-doesn't work right, it would be no surprise that we have problems.
-
-Maybe we could learn something by turning on ACPI_DB_PARSE output (see
-Documentation/firmware-guide/acpi/debug.rst).
-
-You must have an acpidump already from all your investigation.  Can
-you put it somewhere, e.g., bugzilla.kernel.org, and include a URL?
+-- 
+Catalin
