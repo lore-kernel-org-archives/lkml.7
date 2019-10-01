@@ -2,57 +2,59 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06588ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D129C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCC062054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:01:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74B322054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:01:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569949266;
-	bh=LsS3cLKEpGqy9ebVuNqcBko7hWdPP6FRJnuapa640F0=;
+	s=default; t=1569949270;
+	bh=8s8v0yNQxp/azENEIyJoN93RtdmY35h4AqfX90LSP/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bFEeLfr6gsfgnOER5FSTAEoEgZ+T1IXHafPapXFpw4562cROxEGxsUOJK+bqJ7CiL
-	 EfkhoZ+MO18XV7uCF3E086uaE1PBPyWnO3cn/W8uyT9IUM84XrBFUaPvnh4hFMLHf4
-	 PuMQU/arvQehGeL+dxKDfrwWhXgT/02ch35T2gkM=
+	b=AhyhjigJgQXlOl+KBolrjRglQrzkvdIIkVsJ7uyl0T5S3OpHq75WXnjWgW1l/eOy+
+	 xu8EgNlm5qXkbs0YzjI0iQ41xpzWGe6MvnEw63Z8d6biwrqNNRH/qrfgJTIhm+9g/5
+	 3p4VbY2NqhgQ6c5+OGvrDd09yYTedyd+0BofPnOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbfJARBG (ORCPT
+        id S1729951AbfJAQkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 13:01:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51670 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:40:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729952AbfJAQkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:40:25 -0400
+        id S1729837AbfJAQkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:40:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D25A921906;
-        Tue,  1 Oct 2019 16:40:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F301121D79;
+        Tue,  1 Oct 2019 16:40:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948024;
-        bh=LsS3cLKEpGqy9ebVuNqcBko7hWdPP6FRJnuapa640F0=;
+        s=default; t=1569948018;
+        bh=8s8v0yNQxp/azENEIyJoN93RtdmY35h4AqfX90LSP/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b0szmmoC189EYWABRee7b2x4Axd8Bso7h+51fUfAOfK05Ai3YOh/53N9COGnSu23L
-         ksdrAV/O/avuQYEXzA7KCX7zvStq8YlgNEMFyI9aCcxiaSoWTSKrfFhc/WQtijh2ng
-         hNtRySjfvokLaSsOdyL+zrQUurfAc29AZWMZ5XpU=
+        b=UdtVQ9sSOclMBFocvgMDygixh8d9jNniGEWLGngStQYdQadiQZ9Gw9pJYT8npzaz4
+         z7ctlHkT3d6zLM/CqS4dFudLp2ptm/Bc3Uz4az5bRio6wWLY58dwgBnEQwMgyFnly2
+         z1EfWAcpyZwOxE4bZTT+ruKLhQ0Uzo98jXBXoFOk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.3 43/71] libnvdimm/nfit_test: Fix acpi_handle redefinition
-Date:   Tue,  1 Oct 2019 12:38:53 -0400
-Message-Id: <20191001163922.14735-43-sashal@kernel.org>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        syzbot+dff25ee91f0c7d5c1695@syzkaller.appspotmail.com,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 39/71] KVM: hyperv: Fix Direct Synthetic timers assert an interrupt w/o lapic_in_kernel
+Date:   Tue,  1 Oct 2019 12:38:49 -0400
+Message-Id: <20191001163922.14735-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
 References: <20191001163922.14735-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,68 +63,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Wanpeng Li <wanpengli@tencent.com>
 
-[ Upstream commit 59f08896f058a92f03a0041b397a1a227c5e8529 ]
+[ Upstream commit a073d7e3ad687a7ef32b65affe80faa7ce89bf92 ]
 
-After commit 62974fc389b3 ("libnvdimm: Enable unit test infrastructure
-compile checks"), clang warns:
+Reported by syzkaller:
 
-In file included from
-../drivers/nvdimm/../../tools/testing/nvdimm/test/iomap.c:15:
-../drivers/nvdimm/../../tools/testing/nvdimm/test/nfit_test.h:206:15:
-warning: redefinition of typedef 'acpi_handle' is a C11 feature
-[-Wtypedef-redefinition]
-typedef void *acpi_handle;
-              ^
-../include/acpi/actypes.h:424:15: note: previous definition is here
-typedef void *acpi_handle;      /* Actually a ptr to a NS Node */
-              ^
-1 warning generated.
+	kasan: GPF could be caused by NULL-ptr deref or user memory access
+	general protection fault: 0000 [#1] PREEMPT SMP KASAN
+	RIP: 0010:__apic_accept_irq+0x46/0x740 arch/x86/kvm/lapic.c:1029
+	Call Trace:
+	kvm_apic_set_irq+0xb4/0x140 arch/x86/kvm/lapic.c:558
+	stimer_notify_direct arch/x86/kvm/hyperv.c:648 [inline]
+	stimer_expiration arch/x86/kvm/hyperv.c:659 [inline]
+	kvm_hv_process_stimers+0x594/0x1650 arch/x86/kvm/hyperv.c:686
+	vcpu_enter_guest+0x2b2a/0x54b0 arch/x86/kvm/x86.c:7896
+	vcpu_run+0x393/0xd40 arch/x86/kvm/x86.c:8152
+	kvm_arch_vcpu_ioctl_run+0x636/0x900 arch/x86/kvm/x86.c:8360
+	kvm_vcpu_ioctl+0x6cf/0xaf0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2765
 
-The include chain:
+The testcase programs HV_X64_MSR_STIMERn_CONFIG/HV_X64_MSR_STIMERn_COUNT,
+in addition, there is no lapic in the kernel, the counters value are small
+enough in order that kvm_hv_process_stimers() inject this already-expired
+timer interrupt into the guest through lapic in the kernel which triggers
+the NULL deferencing. This patch fixes it by don't advertise direct mode
+synthetic timers and discarding the inject when lapic is not in kernel.
 
-iomap.c ->
-    linux/acpi.h ->
-        acpi/acpi.h ->
-            acpi/actypes.h
-    nfit_test.h
+syzkaller source: https://syzkaller.appspot.com/x/repro.c?x=1752fe0a600000
 
-Avoid this by including linux/acpi.h in nfit_test.h, which allows us to
-remove both the typedef and the forward declaration of acpi_object.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/660
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-Link: https://lore.kernel.org/r/20190918042148.77553-1-natechancellor@gmail.com
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Reported-by: syzbot+dff25ee91f0c7d5c1695@syzkaller.appspotmail.com
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/nvdimm/test/nfit_test.h | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/x86/kvm/hyperv.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/nvdimm/test/nfit_test.h b/tools/testing/nvdimm/test/nfit_test.h
-index 448d686da8b13..0bf5640f1f071 100644
---- a/tools/testing/nvdimm/test/nfit_test.h
-+++ b/tools/testing/nvdimm/test/nfit_test.h
-@@ -4,6 +4,7 @@
-  */
- #ifndef __NFIT_TEST_H__
- #define __NFIT_TEST_H__
-+#include <linux/acpi.h>
- #include <linux/list.h>
- #include <linux/uuid.h>
- #include <linux/ioport.h>
-@@ -202,9 +203,6 @@ struct nd_intel_lss {
- 	__u32 status;
- } __packed;
+diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+index fff790a3f4ee9..c0867b0aae3ec 100644
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -645,7 +645,9 @@ static int stimer_notify_direct(struct kvm_vcpu_hv_stimer *stimer)
+ 		.vector = stimer->config.apic_vector
+ 	};
  
--union acpi_object;
--typedef void *acpi_handle;
--
- typedef struct nfit_test_resource *(*nfit_test_lookup_fn)(resource_size_t);
- typedef union acpi_object *(*nfit_test_evaluate_dsm_fn)(acpi_handle handle,
- 		 const guid_t *guid, u64 rev, u64 func,
+-	return !kvm_apic_set_irq(vcpu, &irq, NULL);
++	if (lapic_in_kernel(vcpu))
++		return !kvm_apic_set_irq(vcpu, &irq, NULL);
++	return 0;
+ }
+ 
+ static void stimer_expiration(struct kvm_vcpu_hv_stimer *stimer)
+@@ -1852,7 +1854,13 @@ int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
+ 
+ 			ent->edx |= HV_FEATURE_FREQUENCY_MSRS_AVAILABLE;
+ 			ent->edx |= HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE;
+-			ent->edx |= HV_STIMER_DIRECT_MODE_AVAILABLE;
++
++			/*
++			 * Direct Synthetic timers only make sense with in-kernel
++			 * LAPIC
++			 */
++			if (lapic_in_kernel(vcpu))
++				ent->edx |= HV_STIMER_DIRECT_MODE_AVAILABLE;
+ 
+ 			break;
+ 
 -- 
 2.20.1
 
