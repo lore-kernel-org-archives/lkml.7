@@ -2,120 +2,110 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F433C388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D3FC388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7AA320640
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AE7421A4A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:52:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="AKJTyjYW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j/KpykF8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbfJALvR (ORCPT
+        id S1726599AbfJALw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 07:51:17 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:45116 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfJALvQ (ORCPT
+        Tue, 1 Oct 2019 07:52:27 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:42753 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbfJALw0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 07:51:16 -0400
-Received: by mail-ed1-f68.google.com with SMTP id h33so11587329edh.12
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 04:51:15 -0700 (PDT)
+        Tue, 1 Oct 2019 07:52:26 -0400
+Received: by mail-ed1-f66.google.com with SMTP id y91so11584003ede.9
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 04:52:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=WwRvxBteqT86BHeeOqI/ZRhly3cYrwnuA1zRjDpe2Bw=;
-        b=AKJTyjYWQ780+va38hELwk915ZrVX8Czx4v0JlPi0ArAKGbq12iiBTtVn8Hs+PWnoq
-         TbbW29cKSRm5TRz+w4UYwHAyU+dQdFpyPtRds27cBqVYl6tJ6rIA22iLwa7JxAqjHYoo
-         fSD9o0w8n4C6dBV3VgVT7bvFGZxJ5FDNqjFRL8gBnrO61363iInKUw8Oi3c8ehTUqflr
-         pAhZsEco5QURGIn+n2yxxNFrsKme9luUOgPC8N+o7u6CbuNQXtWzSOGV5Z9+TgPWxeph
-         4Ji7DH0zSeBs+sg143ASUjgxS+hMHm+TOFlR/l82xeolHCLFEfOMRLccCPDPe/fW5Q3n
-         UTEQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=map1rpU0/cD9gXOET53DgrlZNojNxK6aWgK6fvWXqpc=;
+        b=j/KpykF8HK1HAPP3YK3Ga0rxbpyRdC1zKFDmYZpXHHgonsQfvXw5g6lmmkbCEVsmWT
+         9xBLqyMGFmGewgPTWFdoTcsjlEKf7QTqLMUIIl3GgA0uMS6ERIM/WJM6hf0hd+EQ4cr1
+         luGD+T4vEWDN+oIF4yWdrHgobbP9gugLCo/DNqCtrknl0g+Vs5Rrez0IVbmIfVqmlUGA
+         4JFPdp3zaTkqQ8A5Zgv0AUb3XolHJOiOUNlNBshuXKSN95MJv4YmRvZTg9wtJo2XJCty
+         K2NZMbK4pgr4B2SxKYRXKzPjYh+YRwqIqVggAlOdWLCDNwU2S8CA5JX33ioS3/7OMqjH
+         a9vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=WwRvxBteqT86BHeeOqI/ZRhly3cYrwnuA1zRjDpe2Bw=;
-        b=lKnVbVjh2dRXEBB/GyhZ02CGIuwxnNkHgVjosOZzTUShkZT58SNr7XtlrNX4qkIM2S
-         OUp8MTP/O4KWoq9iOAjF1WtMQXUit5xjoHZU11GdZoCXvemG2rw0S58dZuL7bwwIBrHH
-         Y/Nm6cTb8AiIyBoZBEhwGM8QPfMlw2G9T5vZAPcqKVnfsOD1BW2FNLvEeOeIlHO/No7m
-         SHoGHSPAJsCLtabZQub7//XZtnvANxi166zZH426JPK6lK5jxtvDMEa+8bzd8a4ZIfSI
-         tco6VL7mxhQ5TQOy1W9xZyUVzsIZ6BYGs00IQhVqf4FO7P38iiShnmQX8iGXORx+JqMO
-         Hntg==
-X-Gm-Message-State: APjAAAXhGO2KagO+XAm1Df1I2FAliNET+4v0xIjIFBQ3HCftTMsavO5R
-        mgOdBRs5DPEGYpmPO3+B33cHKA==
-X-Google-Smtp-Source: APXvYqz+GamY3Ru0CdQT/sU/Q/oDdsj7Hh5ho70H8ToYhwfIqDdI2ZoB+7fverkSDvUFbvgRau2yEA==
-X-Received: by 2002:a17:907:40bc:: with SMTP id nu20mr23547119ejb.309.1569930674891;
-        Tue, 01 Oct 2019 04:51:14 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id z24sm1818728ejr.83.2019.10.01.04.51.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Oct 2019 04:51:14 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id A87D7102FB8; Tue,  1 Oct 2019 14:51:14 +0300 (+03)
-Date:   Tue, 1 Oct 2019 14:51:14 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Walter Wu <walter-zh.wu@mediatek.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-Subject: Re: [PATCH v2 2/3] mm, page_owner: decouple freeing stack trace from
- debug_pagealloc
-Message-ID: <20191001115114.gnala74q3ydreuii@box>
-References: <eccee04f-a56e-6f6f-01c6-e94d94bba4c5@suse.cz>
- <731C4866-DF28-4C96-8EEE-5F22359501FE@lca.pw>
- <218f6fa7-a91e-4630-12ea-52abb6762d55@suse.cz>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=map1rpU0/cD9gXOET53DgrlZNojNxK6aWgK6fvWXqpc=;
+        b=EcaUBJQq8JEyjGG3/X20hywal8bmvQ2gT706LJMJ9LxRNVOOzgXHgN9VjsQfSR6S5V
+         /IO8Y0zg5r5PuwuUJQVMz4XUHeUH+ZeM6TgIVJo3J2R5MuNW7x1G4McoKDBbM8nYSXts
+         wF6UPxUdlwntUrjsLwmq85FPpRISboTcqSF0+JxKIuOv8Aj5wQtVjDA0oSiguuIBo7j3
+         S4Us+5Fp1K9+XbvaRupdUE21fFunP+9lcBSLUKnx0PTSkGHnFWbhfMx/pCHb5bw0Ok89
+         n5hqBhBNnhSfuqBmCdx23XnpU8+BLoh6uGl78omQ19aVLcdLqBgbwj09pcWFOZ2WCawc
+         85lQ==
+X-Gm-Message-State: APjAAAUtHs3KKkKb38FEvuKTOVAoeOw1h3y4YhdRgrcX8d1YB0skO27F
+        RIPo2ii1NijquqYAKHsgj6U=
+X-Google-Smtp-Source: APXvYqwjH3pc5NC1W6yESS7isGkfsKjk3Dndlk89YH/u0lAjuNWt9DJtP30SByQHzwK9IBwh1ySjOg==
+X-Received: by 2002:a17:906:2cc8:: with SMTP id r8mr23357659ejr.197.1569930744998;
+        Tue, 01 Oct 2019 04:52:24 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id d13sm3095529edb.14.2019.10.01.04.52.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 01 Oct 2019 04:52:24 -0700 (PDT)
+Date:   Tue, 1 Oct 2019 11:52:23 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     Hao Lee <haolee.swjtu@gmail.com>
+Cc:     akpm@linux-foundation.org, vbabka@suse.cz,
+        dan.j.williams@intel.com, mhocko@suse.com,
+        mgorman@techsingularity.net, richard.weiyang@gmail.com,
+        hannes@cmpxchg.org, arunks@codeaurora.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: fix struct member name in function comments
+Message-ID: <20191001115223.tqalvsgu6wjm36sb@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20190927144049.GA29622@haolee.github.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <218f6fa7-a91e-4630-12ea-52abb6762d55@suse.cz>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190927144049.GA29622@haolee.github.io>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 10:07:44AM +0200, Vlastimil Babka wrote:
-> On 10/1/19 1:49 AM, Qian Cai wrote:
-> > 
-> > 
-> >> On Sep 30, 2019, at 5:43 PM, Vlastimil Babka <vbabka@suse.cz> wrote:
-> >>
-> >> Well, my use case is shipping production kernels with CONFIG_PAGE_OWNER
-> >> and CONFIG_DEBUG_PAGEALLOC enabled, and instructing users to boot-time
-> >> enable only for troubleshooting a crash or memory leak, without a need
-> >> to install a debug kernel. Things like static keys and page_ext
-> >> allocations makes this possible without CPU and memory overhead when not
-> >> boot-time enabled. I don't know too much about KASAN internals, but I
-> >> assume it's not possible to use it that way on production kernels yet?
-> > 
-> > In that case, why can’t users just simply enable page_owner=on and
-> > debug_pagealloc=on for troubleshooting? The later makes the kernel
-> > slower, but I am not sure if it is worth optimization by adding a new
-> > parameter. There have already been quite a few MM-related kernel
-> > parameters that could tidy up a bit in the future.
-> 
-> They can do that and it was intention, yes. The extra parameter was
-> requested by Kirill, so I'll defer the answer to him :)
+On Fri, Sep 27, 2019 at 02:40:49PM +0000, Hao Lee wrote:
+>The member in struct zonelist is _zonerefs instead of zones.
+>
+>Signed-off-by: Hao Lee <haolee.swjtu@gmail.com>
 
-DEBUG_PAGEALLOC is much more intrusive debug option. Not all architectures
-support it in an efficient way. Some require hibernation.
+Reviewed-by: Wei Yang <richardw.yang@linux.intel.com>
 
-I don't see a reason to tie these two option together.
+>---
+> include/linux/mmzone.h | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>
+>diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+>index 3f38c30d2f13..6d44a49b3f29 100644
+>--- a/include/linux/mmzone.h
+>+++ b/include/linux/mmzone.h
+>@@ -1064,7 +1064,7 @@ static inline struct zoneref *first_zones_zonelist(struct zonelist *zonelist,
+> /**
+>  * for_each_zone_zonelist_nodemask - helper macro to iterate over valid zones in a zonelist at or below a given zone index and within a nodemask
+>  * @zone - The current zone in the iterator
+>- * @z - The current pointer within zonelist->zones being iterated
+>+ * @z - The current pointer within zonelist->_zonerefs being iterated
+>  * @zlist - The zonelist being iterated
+>  * @highidx - The zone index of the highest zone to return
+>  * @nodemask - Nodemask allowed by the allocator
+>-- 
+>2.14.5
 
 -- 
- Kirill A. Shutemov
+Wei Yang
+Help you, Help me
