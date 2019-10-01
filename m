@@ -2,156 +2,247 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6DCC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B89FFECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3197D21A4A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:50:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="GYdxGg3K"
+	by mail.kernel.org (Postfix) with ESMTP id 853342190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:50:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388834AbfJANu0 (ORCPT
+        id S2388845AbfJANub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 09:50:26 -0400
-Received: from mail-eopbgr1300110.outbound.protection.outlook.com ([40.107.130.110]:60489
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        Tue, 1 Oct 2019 09:50:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43366 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726554AbfJANu0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 09:50:26 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=S2aak5mf3P0qnjxx1gSYCkTh+I4mfnYno7ecHM60sxsz1JG+pR7U+GG3kYwxeagUouNJcYKd7pte6DrOBsMj67LtwFMxry9txNzjcc+u3Cc4gjovQsppyQ43ipohnAV2SjQUqCqC5l56scvkUmmy6+CWaA5xt4e8W74qne7J+5UlAOeY6wLng9vkjF8U7lkh5LVTHLY/YjyqeeTIf2wRxqYmmQE26RmaBk2pXOVzI8q9awLXJsOmljhehUHPKUsuvLMeYpWm8CaFXfN/P9waxr/LyIS71szTKL9pMhnYuQvXCAcz9AKIVGROmzdZusEpW86lRK7Km7bkJR+x2LlflQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=D/YlrwRcjyC0w3GW3Pbu5Zm6LRG5sEcVGqfZJJExpdE=;
- b=kkY1bsCy9Pdm9+PEcTFdo2P5lXrpb/2U8YMua9hE46G++OKByk7wJAAO/cT+OoQp7PqMFwkhcMiXYWqLdp51o8Xbt0ni4ZO1oB4/6vDr7rVETfN10PmZhg24X5Fcr5J+oTsyY6zI8STfHFbGXzS91S5jZK2pIteO4kosX6PFvvOmcbwjPJW9VP0c8+aWxknFyzJ6K7wbVvJIpds9Y8bkxiopAVYGg9gF5okRf7YjsmEqEm5DRpDUcg7rkM3qjlQR8UcpTBi4bmOBlY37XeatZL3ZmN8dfi97oVOcpqcYxWjQBzaJfTAS7xw7AoegBaBHdBm4K0SefmVuwA7fYYwWoQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=D/YlrwRcjyC0w3GW3Pbu5Zm6LRG5sEcVGqfZJJExpdE=;
- b=GYdxGg3KvuL442fmW5gxYgr8e61tWoA0/bA0OMhjvBG76qZ/gw9d7hqVP37NAcJtAfcgNmcshVXZTi6NxkwZPiyBwoxEhJZvm8BHH2UmGtXETRy3KODr8aX9BhHX2K6i7bi/qL30biuFurSb6F8Xh/anLVX8S8Guv7O/QwhXdcc=
-Received: from TY2PR01MB2924.jpnprd01.prod.outlook.com (20.177.98.81) by
- TY2PR01MB3754.jpnprd01.prod.outlook.com (20.178.132.212) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.20; Tue, 1 Oct 2019 13:50:20 +0000
-Received: from TY2PR01MB2924.jpnprd01.prod.outlook.com
- ([fe80::50a2:2971:5d46:aa50]) by TY2PR01MB2924.jpnprd01.prod.outlook.com
- ([fe80::50a2:2971:5d46:aa50%3]) with mapi id 15.20.2305.017; Tue, 1 Oct 2019
- 13:50:20 +0000
-From:   Gareth Williams <gareth.williams.jx@renesas.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 2/4] dt-bindings: snps,dw-apb-ssi: Add optional clock
- domain information
-Thread-Topic: [PATCH v2 2/4] dt-bindings: snps,dw-apb-ssi: Add optional clock
- domain information
-Thread-Index: AQHVbffPFybnaZeN90q5ZOF0l55acqdFxCOAgAAdrsA=
-Date:   Tue, 1 Oct 2019 13:50:19 +0000
-Message-ID: <TY2PR01MB292460F29AE0664CFFD70EFDDF9D0@TY2PR01MB2924.jpnprd01.prod.outlook.com>
-References: <1568793876-9009-1-git-send-email-gareth.williams.jx@renesas.com>
- <1568793876-9009-3-git-send-email-gareth.williams.jx@renesas.com>
- <20191001120203.GA28106@bogus>
-In-Reply-To: <20191001120203.GA28106@bogus>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=gareth.williams.jx@renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d122c35b-8ac3-43c3-9d5e-08d746764cec
-x-ms-office365-filtering-ht: Tenant
-x-ms-traffictypediagnostic: TY2PR01MB3754:|TY2PR01MB3754:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TY2PR01MB3754B6CD0479A6E099F3926CDF9D0@TY2PR01MB3754.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
-x-forefront-prvs: 0177904E6B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(39860400002)(346002)(376002)(396003)(189003)(199004)(64756008)(66946007)(52536014)(66446008)(8936002)(71200400001)(71190400001)(966005)(5660300002)(478600001)(66066001)(99286004)(81166006)(486006)(81156014)(8676002)(14454004)(6506007)(76176011)(66556008)(7696005)(102836004)(476003)(66476007)(76116006)(11346002)(256004)(14444005)(26005)(446003)(186003)(316002)(6116002)(3846002)(6436002)(55016002)(54906003)(4326008)(6916009)(33656002)(86362001)(305945005)(9686003)(2906002)(6306002)(229853002)(25786009)(7736002)(74316002)(6246003)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:TY2PR01MB3754;H:TY2PR01MB2924.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KLdWpChwDCAEIb8cp58WR8z3lr4wq9tcTeGOjD6Bgmzs9pA9hiFfd6iujEyewzxFRW8zN4Q081NQvM4wQ2i3zp6h83qCbRvEjlCKWoDStB5F9hfkg/mBSpg+y100HSZuOx8SS4VMqC/oivrnMWs/uOKvRXNTeZcseIWJzwGPnoC9Tv7U0YR3S9NGhr2fSVFXkGRV+AMm6NkcVgN3gjOjeFeSJ5X3oFg2dZNRQx4vK6kCdxK02e9OwDSYVn6l7CBrBZ+ixG3hlzyuuhgc108wJjLhAQo3W9kytIGAobMKP4LxJXuA0sjUyj8fwU1A7SM8QBVvbI8HttnlRa7hirbc6Q+47kBO43sCkd9PK7Iep/m1D62Q5aydElxmvStUA47GZ5hYQ/uSmGAdLCrQH2YdlD6l3ux0c3N0XFM3gxAQSJNdGAiAlSREPwpryCbhV3LxAexCPcePOWO6uhfhn6KkZQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1726554AbfJANub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 09:50:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E7CA8AE0C;
+        Tue,  1 Oct 2019 13:50:27 +0000 (UTC)
+Subject: Re: [patch for-5.3 0/4] revert immediate fallback to remote hugepages
+To:     Michal Hocko <mhocko@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     David Rientjes <rientjes@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+References: <alpine.DEB.2.21.1909041252230.94813@chino.kir.corp.google.com>
+ <20190904205522.GA9871@redhat.com>
+ <alpine.DEB.2.21.1909051400380.217933@chino.kir.corp.google.com>
+ <20190909193020.GD2063@dhcp22.suse.cz>
+ <20190925070817.GH23050@dhcp22.suse.cz>
+ <alpine.DEB.2.21.1909261149380.39830@chino.kir.corp.google.com>
+ <20190927074803.GB26848@dhcp22.suse.cz>
+ <CAHk-=wgba5zOJtGBFCBP3Oc1m4ma+AR+80s=hy=BbvNr3GqEmA@mail.gmail.com>
+ <20190930112817.GC15942@dhcp22.suse.cz>
+ <20191001054343.GA15624@dhcp22.suse.cz>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <fac13297-424f-33b0-e01d-d72b949a73fe@suse.cz>
+Date:   Tue, 1 Oct 2019 15:50:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d122c35b-8ac3-43c3-9d5e-08d746764cec
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Oct 2019 13:50:20.5725
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QhWlF2Xm2cXyGRdn3EvAF4awnfHJi23JDIZIJYzmyw2AhQ6e3CJDM31u2fQmp3KQbyYyE6HTnFaljc6EGA/JrHpQlrnWECON3XmVYr5dLWo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB3754
+In-Reply-To: <20191001054343.GA15624@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On 10/1/19 7:43 AM, Michal Hocko wrote:
+> so we do not get more that 12 huge pages which is really poor. Although
+> hugetlb pages tend to be allocated early after the boot they are still
+> an explicit admin request and having less than 5% success rate is really
+> bad. If anything the __GFP_RETRY_MAYFAIL needs to be reflected in the
+> code.
 
-On Tue, Oct 01, 2019 at 13:02:34AM +0100, Rob Herring wrote:
-> On Wed, Sep 18, 2019 at 09:04:34AM +0100, Gareth Williams wrote:
-> > Note in the bindings documentation that pclk should be renamed if a
-> > clock domain is used to enable the optional bus clock.
-> >
-> > Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
-> > ---
-> > v2: Introduced this patch.
-> > ---
-> >  Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-> > b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-> > index f54c8c3..3ed08ee 100644
-> > --- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-> > +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-> > @@ -16,7 +16,8 @@ Required properties:
-> >  Optional properties:
-> >  - clock-names : Contains the names of the clocks:
-> >      "ssi_clk", for the core clock used to generate the external SPI cl=
-ock.
-> > -    "pclk", the interface clock, required for register access.
-> > +    "pclk", the interface clock, required for register access. If a cl=
-ock domain
-> > +     used to enable this clock then it should be named "pclk_clkdomain=
-".
->=20
-> What's a clock domain?
->=20
-> Unless this is a h/w difference in the IP block, then this change doesn't=
- make
-> sense.
-This is a reference to the use of clock domains that are implemented throug=
-h
-generic power domains. The domain is implemented in=20
-drivers/clk/renesas/r9a06g032-clocks.c and general details of clock domains
-can be found at=20
-https://elinux.org/images/1/14/Last_One_Out%2C_Turn_Off_The_Lights.pdf
+Yeah it's roughly what I expected, thanks for the testing. How about this
+patch on top?
 
->=20
-> >  - cs-gpios : Specifies the gpio pins to be used for chipselects.
-> >  - num-cs : The number of chipselects. If omitted, this will default to=
- 4.
-> >  - reg-io-width : The I/O register width (in bytes) implemented by
-> > this
-> > --
-> > 2.7.4
-> >
+---8<---
+From 3ae67ab2274626c276ff2dd58794215a8461f045 Mon Sep 17 00:00:00 2001
+From: Vlastimil Babka <vbabka@suse.cz>
+Date: Tue, 1 Oct 2019 14:20:58 +0200
+Subject: [RFC] mm, thp: tweak reclaim/compaction effort of local-only and
+ all-node allocations
+
+THP page faults now attempt a __GFP_THISNODE allocation first, which should
+only compact existing free memory, followed by another attempt that can
+allocate from any node using reclaim/compaction effort specified by global
+defrag setting and madvise.
+
+This patch makes the following changes to the scheme:
+
+- before the patch, the first allocation relies on a check for pageblock order
+  and __GFP_IO. This however affects also the second attempt, and also hugetlb
+  allocations and other allocations of whole pageblock. Instead of that, reuse
+  the existing check for costly order __GFP_NORETRY allocations, and make sure
+  the first THP attempt uses __GFP_NORETRY. As a side-effect, all costly order
+  __GFP_NORETRY allocations will bail out if compaction needs reclaim, while
+  previously they only bailed out when compaction was deferred due to previous
+  failures. This should be still acceptable within the __GFP_NORETRY semantics.
+
+- before the patch, the second allocation attempt (on all nodes) was passing
+  __GFP_NORETRY. This is redundant as the check for pageblock order (discussed
+  above) was stronger. It's also contrary to madvise(MADV_HUGEPAGE) which means
+  some effort to allocate THP is requested. After this patch, the second
+  attempt doesn't pass __GFP_THISNODE nor __GFP_NORETRY.
+
+To sum up, THP page faults now try the following attempt:
+
+1. local node only THP allocation with no reclaim, just compaction.
+2. THP allocation from any node with effort determined by global defrag setting
+   and VMA madvise
+3. fallback to base pages on any node
+
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+---
+ mm/mempolicy.c  | 16 +++++++++-------
+ mm/page_alloc.c | 23 +++++------------------
+ 2 files changed, 14 insertions(+), 25 deletions(-)
+
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index 4ae967bcf954..2c48146f3ee2 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -2129,18 +2129,20 @@ alloc_pages_vma(gfp_t gfp, int order, struct vm_area_struct *vma,
+ 		nmask = policy_nodemask(gfp, pol);
+ 		if (!nmask || node_isset(hpage_node, *nmask)) {
+ 			mpol_cond_put(pol);
++			/*
++			 * First, try to allocate THP only on local node, but
++			 * don't reclaim unnecessarily, just compact.
++			 */
+ 			page = __alloc_pages_node(hpage_node,
+-						gfp | __GFP_THISNODE, order);
++				gfp | __GFP_THISNODE | __GFP_NORETRY, order);
+ 
+ 			/*
+-			 * If hugepage allocations are configured to always
+-			 * synchronous compact or the vma has been madvised
+-			 * to prefer hugepage backing, retry allowing remote
+-			 * memory as well.
++			 * If that fails, allow both compaction and reclaim,
++			 * but on all nodes.
+ 			 */
+-			if (!page && (gfp & __GFP_DIRECT_RECLAIM))
++			if (!page)
+ 				page = __alloc_pages_node(hpage_node,
+-						gfp | __GFP_NORETRY, order);
++								gfp, order);
+ 
+ 			goto out;
+ 		}
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 15c2050c629b..da9075d4cdf6 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -4467,7 +4467,11 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
+ 		if (page)
+ 			goto got_pg;
+ 
+-		 if (order >= pageblock_order && (gfp_mask & __GFP_IO)) {
++		/*
++		 * Checks for costly allocations with __GFP_NORETRY, which
++		 * includes some THP page fault allocations
++		 */
++		if (costly_order && (gfp_mask & __GFP_NORETRY)) {
+ 			/*
+ 			 * If allocating entire pageblock(s) and compaction
+ 			 * failed because all zones are below low watermarks
+@@ -4487,23 +4491,6 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
+ 			if (compact_result == COMPACT_SKIPPED ||
+ 			    compact_result == COMPACT_DEFERRED)
+ 				goto nopage;
+-		}
+-
+-		/*
+-		 * Checks for costly allocations with __GFP_NORETRY, which
+-		 * includes THP page fault allocations
+-		 */
+-		if (costly_order && (gfp_mask & __GFP_NORETRY)) {
+-			/*
+-			 * If compaction is deferred for high-order allocations,
+-			 * it is because sync compaction recently failed. If
+-			 * this is the case and the caller requested a THP
+-			 * allocation, we do not want to heavily disrupt the
+-			 * system, so we fail the allocation instead of entering
+-			 * direct reclaim.
+-			 */
+-			if (compact_result == COMPACT_DEFERRED)
+-				goto nopage;
+ 
+ 			/*
+ 			 * Looks like reclaim/compaction is worth trying, but
+-- 
+2.23.0
+
