@@ -2,240 +2,209 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B35C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B0EECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38FE221855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:28:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64D662133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:29:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iRXjxotr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389520AbfJAP2a (ORCPT
+        id S2389598AbfJAP3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 11:28:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:52306 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727312AbfJAP2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 11:28:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 677061000;
-        Tue,  1 Oct 2019 08:28:29 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C6A2E3F71A;
-        Tue,  1 Oct 2019 08:28:28 -0700 (PDT)
-Date:   Tue, 1 Oct 2019 16:28:27 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Will Deacon <will@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: Re: [PATCH] Partially revert "compiler: enable
- CONFIG_OPTIMIZE_INLINING forcibly"
-Message-ID: <20191001152826.GM42880@e119886-lin.cambridge.arm.com>
-References: <20190930114540.27498-1-will@kernel.org>
- <CAK7LNARWkQ-z02RYv3XQ69KkWdmEVaZge07qiYC8_kyMrFzCTg@mail.gmail.com>
- <20191001104253.fci7s3sn5ov3h56d@willie-the-truck>
- <20191001114129.GL42880@e119886-lin.cambridge.arm.com>
- <20191001143626.GI25745@shell.armlinux.org.uk>
+        Tue, 1 Oct 2019 11:29:18 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35958 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389528AbfJAP3S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 11:29:18 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y22so8255291pfr.3;
+        Tue, 01 Oct 2019 08:29:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=7IVtwir5rJCl/l+meHu5GdAZZYvG0EyeZNBbmna3l+s=;
+        b=iRXjxotrgfUGFawrkMu5c5MHLo0jOWciV9xYLegj7/skijRl18LOSviHWG3D0kwwpq
+         a7pf3LGFeK62QGv0NpnwVpbDj2sLhcjEKV/9QQkg+OcLGtTi44RrD6tvmBfc9NFNe1ZH
+         2w0ZKJy1GpXdszfS7jqFersSuYcJCnjRVeTMxsjKoC9SSFpzy1GR/TR/W44A94i9Pf8l
+         JyVt0GRy2BcdSX4fjVi1JXhelTVQN1+ER3S08n8zjQRMq/Mv3/A5S3BnEZxM3Aflwi2l
+         R0GdZ1EetgjZYXenpxg7qyq9IXoCEWrVEt+dMu4fz/vw/hJ/nK4RYDOTtepQIi66TOV4
+         omZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:date:message-id:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=7IVtwir5rJCl/l+meHu5GdAZZYvG0EyeZNBbmna3l+s=;
+        b=H2S6NDxy2s5cCdzydOct+6gzEYE6kCtvabHgS2Wc+6DD349XrCzne/NUgamyh3pT9L
+         P4rqNkSzOx/usM0QgcyFjkUQ393/vU3UfcaER/MoPEYEqcaHK3IyduuDumj3hCEIcyCV
+         VU8kbRGIjNb22w/oy8ag6s609UrTCdD7xpAqHXE13QnSA7FI+j63ZrKkZ5CTFnXiQOD7
+         CaDnkHcTVkOJ6czrd0LeTAvW6djJWethLERw65EzRLQsAT91wgXESQwUdlNZujd8Zu1m
+         ddXTTb/X6oe6otF7cFzfatBCIX9x89BpnLBIaGLzq01dcR22WbMtlvTldl9OoHhTYIV5
+         BRSA==
+X-Gm-Message-State: APjAAAWIFM9S52ZM01mY/PZqN82xHj1A3qjJ+ygPsf/Ho1ldA/ld2VGE
+        y9mR2MOBXXFbqZaK7CyvFUk=
+X-Google-Smtp-Source: APXvYqw+igPOQgS5RyPXPG7xdSwHmMKAA0Hr0JZYWjNlVUght/lJ3ipL4t7XF++SFxirihSTMtDWqQ==
+X-Received: by 2002:a65:68d3:: with SMTP id k19mr30947812pgt.149.1569943756735;
+        Tue, 01 Oct 2019 08:29:16 -0700 (PDT)
+Received: from localhost.localdomain ([2001:470:b:9c3:9e5c:8eff:fe4f:f2d0])
+        by smtp.gmail.com with ESMTPSA id b5sm18552586pfp.38.2019.10.01.08.29.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 01 Oct 2019 08:29:15 -0700 (PDT)
+Subject: [PATCH v11 0/6] mm / virtio: Provide support for unused page
+ reporting
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+To:     virtio-dev@lists.oasis-open.org, kvm@vger.kernel.org,
+        mst@redhat.com, david@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, willy@infradead.org,
+        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, vbabka@suse.cz, osalvador@suse.de
+Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com,
+        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com,
+        alexander.h.duyck@linux.intel.com
+Date:   Tue, 01 Oct 2019 08:29:14 -0700
+Message-ID: <20191001152441.27008.99285.stgit@localhost.localdomain>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191001143626.GI25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 03:36:26PM +0100, Russell King - ARM Linux admin wrote:
-> On Tue, Oct 01, 2019 at 12:41:30PM +0100, Andrew Murray wrote:
-> > On Tue, Oct 01, 2019 at 11:42:54AM +0100, Will Deacon wrote:
-> > > On Tue, Oct 01, 2019 at 06:40:26PM +0900, Masahiro Yamada wrote:
-> > > > On Mon, Sep 30, 2019 at 8:45 PM Will Deacon <will@kernel.org> wrote:
-> > > > > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> > > > > index 93d97f9b0157..c37c72adaeff 100644
-> > > > > --- a/lib/Kconfig.debug
-> > > > > +++ b/lib/Kconfig.debug
-> > > > > @@ -312,6 +312,7 @@ config HEADERS_CHECK
-> > > > >
-> > > > >  config OPTIMIZE_INLINING
-> > > > >         def_bool y
-> > > > > +       depends on !(ARM || ARM64) # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91111
-> > > > 
-> > > > 
-> > > > This is a too big hammer.
-> > > 
-> > > It matches the previous default behaviour!
-> > > 
-> > > > For ARM, it is not a compiler bug, so I am trying to fix the kernel code.
-> > > > 
-> > > > For ARM64, even if it is a compiler bug, you can add __always_inline
-> > > > to the functions in question.
-> > > > (arch_atomic64_dec_if_positive in this case).
-> > > > 
-> > > > You do not need to force __always_inline globally.
-> > > 
-> > > So you'd prefer I do something like the diff below? I mean, it's a start,
-> > > but I do worry that we're hanging arch/arm/ out to dry.
-> > 
-> > If I've understood one part of this issue correctly - and using the
-> > c2p_unsupported build failure as an example [1], there are instances in
-> > the kernel where it is assumed that the compiler will optimise out a call
-> > to an undefined function, and also assumed that the compiler will know
-> > at compile time that the function will never get called. It's common to
-> > satisfy this assumption when the calling function is inlined.
-> > 
-> > But I suspect there may be other cases similar to c2p_unsupported which
-> > are still lurking.
-> > 
-> > For example the following functions are called but non-existent, and thus
-> > may be an area worth investigating:
-> > 
-> > __buggy_use_of_MTHCA_PUT, __put_dbe_unknown, __cmpxchg_wrong_size,
-> > __bad_percpu_size, __put_user_bad, __get_user_unknown,
-> > __bad_unaligned_access_size, __bad_xchg
-> > 
-> > But more generally, as this is a common pattern - isn't there a benefit
-> > here for changing all of these to BUILD_BUG? (So they can be found easily).
-> 
-> Precisely, what is your suggestion?
-> 
-> If you think that replacing the call to __get_user_bad with BUILD_BUG(),
-> BUILD_BUG() becomes a no-op when __OPTIMIZE__ is not defined (see the
-> definition of __compiletime_assert() in linux/compiler.h); this means
-> such places will be reachable, which leads to uninitialised variables.
+This series provides an asynchronous means of reporting to a hypervisor
+that a guest page is no longer in use and can have the data associated
+with it dropped. To do this I have implemented functionality that allows
+for what I am referring to as unused page reporting. The advantage of
+unused page reporting is that we can support a significant amount of
+memory over-commit with improved performance as we can avoid having to
+write/read memory from swap as the VM will instead actively participate
+in freeing unused memory so it doesn't have to be written.
 
-I hadn't noticed the use of __OPTIMIZE__ - indeed if __compiletime_assert
-is no-op'd and you reach it then you won't have a build error - but you
-may get uninitialised values instead.
+The functionality for this is fairly simple. When enabled it will allocate
+statistics to track the number of reported pages in a given free area.
+When the number of free pages exceeds this value plus a high water value,
+currently 32, it will begin performing page reporting which consists of
+pulling non-reported pages off of the free lists of a given zone and
+placing them into a scatterlist. The scatterlist is then given to the page
+reporting device and it will perform the required action to make the pages
+"reported", in the case of virtio-balloon this results in the pages being
+madvised as MADV_DONTNEED. After this they are placed back on their
+original free list. If they are not merged in freeing an additional bit is
+set indicating that they are a "reported" buddy page instead of a standard
+buddy page. The cycle then repeats with additional non-reported pages
+being pulled until the free areas all consist of reported pages.
 
-Presumably the purpose of __OPTIMIZE__ in this case is to prevent getting
-an undefined function error for the __compiletime_assert line, even though
-it doesn't get called (when using a compiler that doesn't optimize out the
-call to the unused function).
+In order to try and keep the time needed to find a non-reported page to
+a minimum we maintain a "reported_boundary" pointer. This pointer is used
+by the get_unreported_pages iterator to determine at what point it should
+resume searching for non-reported pages. In order to guarantee pages do
+not get past the scan I have modified add_to_free_list_tail so that it
+will not insert pages behind the reported_boundary. Doing this allows us
+to keep the overhead to a minimum as re-walking the list without the
+boundary will result in as much as 18% additional overhead on a 32G VM.
 
-Why is the call to __get_user_bad not guarded in this way for when
-__OPTIMIZE__ isn't set, i.e. why doesn't it suffer from the issue
-that the following fixes?
+If another process needs to perform a massive manipulation of the free
+list, such as compaction, it can either reset a given individual boundary
+which will push the boundary back to the list_head, or it can clear the
+bit indicating the zone is actively processing which will result in the
+reporting process resetting all of the boundaries for a given zone.
 
-c03567a8e8d5 ("include/linux/compiler.h: don't perform compiletime_assert with -O0")
+I am leaving a number of things hard-coded such as limiting the lowest
+order processed to pageblock_order, and have left it up to the guest to
+determine what the limit is on how many pages it wants to allocate to
+process the hints. The upper limit for this is based on the size of the
+queue used to store the scatterlist.
+
+I wanted to avoid gaming the performance testing for this. As far as
+possible gain a significant performance improvement should be visible in
+cases where guests are forced to write/read from swap. As such, testing
+it would be more of a benchmark of copying a page from swap versus just
+allocating a zero page. I have been verifying that the memory is being
+freed using memhog to allocate all the memory on the guest, and then
+watching /proc/meminfo to verify the host sees the memory returned after
+the test completes.
+
+As far as possible regressions I have focused on cases where performing
+the hinting would be non-optimal, such as cases where the code isn't
+needed as memory is not over-committed, or the functionality is not in
+use. I have been using the will-it-scale/page_fault1 test running with 16
+vcpus and have modified it to use Transparent Huge Pages. With this I see
+almost no difference with the patches applied and the feature disabled.
+Likewise I see almost no difference with the feature enabled, but the
+madvise disabled in the hypervisor due to a device being assigned. With
+the feature fully enabled in both guest and hypervisor I see a regression
+between -1.86% and -8.84% versus the baseline. I found that most of the
+overhead was due to the page faulting/zeroing that comes as a result of
+the pages having been evicted from the guest.
+
+For info on earlier versions you will need to follow the links provided
+with the respective versions.
+
+Changes from v9:
+https://lore.kernel.org/lkml/20190907172225.10910.34302.stgit@localhost.localdomain/
+Updated cover page
+Dropped per-cpu page randomization entropy patch
+Added "to_tail" boolean value to __free_one_page to improve readability
+Renamed __shuffle_pick_tail to shuffle_pick_tail, avoiding extra inline function
+Dropped arm64 HUGLE_TLB_ORDER movement patch since it is no longer needed
+Significant rewrite of page reporting functionality
+  Updated logic to support interruptions from compaction
+  get_unreported_page will now walk through reported sections
+  Moved free_list manipulators out of mmzone.h and into page_alloc.c
+  Removed page_reporting.h include from mmzone.h
+  Split page_reporting.h between include/linux/ and mm/
+  Added #include <asm/pgtable.h>" to mm/page_reporting.h
+  Renamed page_reporting_startup/shutdown to page_reporting_register/unregister
+Updated comments related to virtio page poison tracking feature
+
+Changes from v10:
+https://lore.kernel.org/lkml/20190918175109.23474.67039.stgit@localhost.localdomain/
+Rebased on "Add linux-next specific files for 20190930"
+Added page_is_reported() macro to prevent unneeded testing of PageReported bit
+Fixed several spots where comments referred to older aeration naming
+Set upper limit for phdev->capacity to page reporting high water mark
+Updated virtio page poison detection logic to also cover init_on_free
+Tweaked page_reporting_notify_free to reduce code size
+Removed dead code in non-reporting path
+
+---
+
+Alexander Duyck (6):
+      mm: Adjust shuffle code to allow for future coalescing
+      mm: Use zone and order instead of free area in free_list manipulators
+      mm: Introduce Reported pages
+      mm: Add device side and notifier for unused page reporting
+      virtio-balloon: Pull page poisoning config out of free page hinting
+      virtio-balloon: Add support for providing unused page reports to host
 
 
-> 
-> > Or to avoid this class of issues, change them to BUG or unreachable - but
-> > lose the benefit of compile time detection?
-> 
-> I think you ought to read the GCC manual wrt __builtin_unreachable().
-> "If control flow reaches the point of the `__builtin_unreachable',
->  the program is undefined.  It is useful in situations where the
->  compiler cannot deduce the unreachability of the code."
+ drivers/virtio/Kconfig              |    1 
+ drivers/virtio/virtio_balloon.c     |   88 ++++++++-
+ include/linux/mmzone.h              |   60 ++----
+ include/linux/page-flags.h          |   11 +
+ include/linux/page_reporting.h      |   31 +++
+ include/uapi/linux/virtio_balloon.h |    1 
+ mm/Kconfig                          |   11 +
+ mm/Makefile                         |    1 
+ mm/compaction.c                     |    5 +
+ mm/memory_hotplug.c                 |    2 
+ mm/page_alloc.c                     |  194 +++++++++++++++----
+ mm/page_reporting.c                 |  350 +++++++++++++++++++++++++++++++++++
+ mm/page_reporting.h                 |  225 +++++++++++++++++++++++
+ mm/shuffle.c                        |   12 +
+ mm/shuffle.h                        |    6 +
+ 15 files changed, 896 insertions(+), 102 deletions(-)
+ create mode 100644 include/linux/page_reporting.h
+ create mode 100644 mm/page_reporting.c
+ create mode 100644 mm/page_reporting.h
 
-Thanks, I've now read it. My suggestion arose from looking at existing
-uses in the kernel - e.g. drivers/spi/spi-rockchip.c,
-drivers/pinctrl/pinctrl-ingenic.c, etc. I guess these types of uses
-should use BUG or similar instead right?
-
-> 
-> I have seen cases where the instructions following an unreachable
-> code section have been the literal pool for the function - which,
-> if reached, would be quite confusing to debug.  If you're lucky, you
-> might get an undefined instruction exception.  If not, you could
-> continue and start executing another part of the function, leading
-> to possibly no crash at all - but unexpected results (which may end
-> up leaking sensitive data.)
-> 
-> For example, in our BUG() implementation on 32-bit ARM, we use
-> unreachable() after the asm() statement creating the bug table
-> entry and inserting the undefined instruction into the text.
-> Here's the resulting disassembly:
-> 
->      278:       ebfffffe        bl      0 <page_mapped>
->                         278: R_ARM_CALL page_mapped
->      27c:       e3500000        cmp     r0, #0
->      280:       1a00006c        bne     438 <invalidate_inode_pages2_range+0x3ac>
-> ...
->      2d4:       ebfffffe        bl      0 <_raw_spin_lock_irqsave>
->                         2d4: R_ARM_CALL _raw_spin_lock_irqsave
->      2d8:       e5943008        ldr     r3, [r4, #8]
->      2dc:       e3130001        tst     r3, #1
->      2e0:       e1a02000        mov     r2, r0
->      2e4:       1a000054        bne     43c <invalidate_inode_pages2_range+0x3b0>
-> ...
->      438:       e7f001f2        .word   0xe7f001f2
->      43c:       e2433001        sub     r3, r3, #1
->      440:       eaffffa9        b       2ec <invalidate_inode_pages2_range+0x260>
-> 
-> Now, consider what unreachable() actually gets you here - it tells
-> the compiler that we do not expect to reach this point (that being
-> the point between 438 and 43c.)  If we were to reach that point, we
-> would continue executing the code at 43c.
-> 
-> In this case, it would be like...
-> 
-> 	if (BUG_ON(page_mapped(page)))
-> 	    goto random-location-in-xa_lock_irqsave()-inside-invalidate_complete_page2();
-> 
-> So no.  unreachable() is not an option.
-
-Thanks for the example.
-
-> 
-> We really do want these places to be compile-time detected - relying
-> on triggering them at runtime is just not good enough IMHO (think
-> about how much testing the kernel would require to discover one of
-> these suckers buried in the depths of the code.)
-> 
-> Here's the question to ask: do we want to reliably detect issues
-> that we know are bad, which can lead to:
-> - unreliable kernel operation,
-> - user exploitable crashes,
-> or do we want to hide them for the sake of allowing -O0 compilation?
-> 
-> Given that the kernel as a general rule has very poor run-time test
-> coverage at the moment, I don't think this is the time to consider
-> giving up the protection that we have against this badness.
-> 
-> We've had several instances where these checks have triggered in the
-> user access code, and people have noticed when doing build tests.
-> They probably don't have the ability to do run-time testing on every
-> arch.
-> 
-> So, the existing facility of detecting these at build time is, IMHO,
-> an absolute must.
-> 
-> It would be different if the kernel community as a whole had the
-> ability to run-test every code path through the kernel source on
-> every arch, but I don't see that's a remotely realistic prospect.
-
-I completely agree.
-
-> 
-> If we want -O0 to work, but still want to preserve the ability to
-> detect these adequately, I think the easiest solution to that would
-> be to provide these dummy functions only when building with -O0,
-> making them all BUG().
-
-Though please note that this issue isn't limited to -O0, it relates to
-building without CONFIG_OPTIMIZE_INLINING - resulting in functions
-marked as inline not always being inlined.
-
-I'm interested to determine if there is a benefit for all the functions
-I mentioned (there are more) to have the same name which may be something
-other than BUILD_BUG.
-
-Thanks,
-
-Andrew Murray
-
-> 
-> -- 
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-> According to speedtest.net: 11.9Mbps down 500kbps up
+--
