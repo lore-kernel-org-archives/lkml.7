@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD52C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08056ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4DFD2168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8B022168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:52:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948763;
-	bh=M7+co5HVBiqXroq2dACj6cTPbT2VmZL3OswBLvkmA8I=;
+	s=default; t=1569948769;
+	bh=+DuzRebULHDIvNsak8ePy67Juc3WVmR5apIXYtucy5w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u49XA7FsoFONk422rrJvd7ipzKz2n+yW5eKZMD5a5ypywuTGjslnwLYNCu80fGaBW
-	 SxYm90kYhHk9rYlbXxMeHY95UNRvBw704eOG8zwCh4CUTNhhJmTW4aQyJVMtsO3qMh
-	 NK1hyED78ggml4FTecQXrHlzyrI3qjoyjuG7maC4=
+	b=2PZWP7JUDYjQ9iBF3Rw6lGVyuxbWunxnBSTjVvZlZyYW76tREVVowAL9UAG12tFMv
+	 dHAZR8EQiC+5hWfd3O53S/jwuqQm+fLuT/UqGS0uUvy715Gb0764KwQfdTbelxFnRJ
+	 pIO3uW56gWsxAk6fwyg7Un1XBJ0ROLTvgLCm5c8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389318AbfJAQwm (ORCPT
+        id S1732889AbfJAQnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:52:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55796 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:43:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732891AbfJAQnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:43:40 -0400
+        id S1726621AbfJAQnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:43:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F321B21920;
-        Tue,  1 Oct 2019 16:43:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6CD321906;
+        Tue,  1 Oct 2019 16:43:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948220;
-        bh=M7+co5HVBiqXroq2dACj6cTPbT2VmZL3OswBLvkmA8I=;
+        s=default; t=1569948211;
+        bh=+DuzRebULHDIvNsak8ePy67Juc3WVmR5apIXYtucy5w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jsd0uoHYLeBY96NSZRo4v9pZL9EDBntTiUlto1CyFncs+Hof3MsnzerJ5TGFpj7cE
-         NnG9AhwI6WmnVnpEdwzV3+cQ1r4xf3bp3ruk/eMPHshDpSaejgF/p1HACR6AH+cHH3
-         //AVQ0gsr2VkUOWrpIUmeE81fz/ks2tvO1Gg98Dw=
+        b=ZAh0N3vPt4vGPEibB6Vv0li8CJhW5JtI/MhQophDyuGblSD+TdDL73UOlGawb1VxE
+         W6OO9WZNkiRMSR5i6gAMJh7o3NIlJ4guAtDuVm77VsmJNHKvyxZv2QO30S4UV+BIRh
+         3PBzALIbvnaihJryTVuY0JYzUZbmXOKQxwHuFW0w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
-        syzbot+618aacd49e8c8b8486bd@syzkaller.appspotmail.com,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        David Ahern <dsahern@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 21/43] net_sched: add max len check for TCA_KIND
-Date:   Tue,  1 Oct 2019 12:42:49 -0400
-Message-Id: <20191001164311.15993-21-sashal@kernel.org>
+Cc:     Trek <trek00@inbox.ru>, Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 14/43] drm/amdgpu: Check for valid number of registers to read
+Date:   Tue,  1 Oct 2019 12:42:42 -0400
+Message-Id: <20191001164311.15993-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164311.15993-1-sashal@kernel.org>
 References: <20191001164311.15993-1-sashal@kernel.org>
@@ -63,42 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Trek <trek00@inbox.ru>
 
-[ Upstream commit 62794fc4fbf52f2209dc094ea255eaef760e7d01 ]
+[ Upstream commit 73d8e6c7b841d9bf298c8928f228fb433676635c ]
 
-The TCA_KIND attribute is of NLA_STRING which does not check
-the NUL char. KMSAN reported an uninit-value of TCA_KIND which
-is likely caused by the lack of NUL.
+Do not try to allocate any amount of memory requested by the user.
+Instead limit it to 128 registers. Actually the longest series of
+consecutive allowed registers are 48, mmGB_TILE_MODE0-31 and
+mmGB_MACROTILE_MODE0-15 (0x2644-0x2673).
 
-Change it to NLA_NUL_STRING and add a max len too.
-
-Fixes: 8b4c3cdd9dd8 ("net: sched: Add policy validation for tc attributes")
-Reported-and-tested-by: syzbot+618aacd49e8c8b8486bd@syzkaller.appspotmail.com
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Bug: https://bugs.freedesktop.org/show_bug.cgi?id=111273
+Signed-off-by: Trek <trek00@inbox.ru>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/sch_api.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/net/sched/sch_api.c b/net/sched/sch_api.c
-index be7cd140b2a38..b5dd4f61e42ec 100644
---- a/net/sched/sch_api.c
-+++ b/net/sched/sch_api.c
-@@ -1308,7 +1308,8 @@ check_loop_fn(struct Qdisc *q, unsigned long cl, struct qdisc_walker *w)
- }
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+index c0396e83f3526..fc93b103f7778 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+@@ -562,6 +562,9 @@ static int amdgpu_info_ioctl(struct drm_device *dev, void *data, struct drm_file
+ 		if (sh_num == AMDGPU_INFO_MMR_SH_INDEX_MASK)
+ 			sh_num = 0xffffffff;
  
- const struct nla_policy rtm_tca_policy[TCA_MAX + 1] = {
--	[TCA_KIND]		= { .type = NLA_STRING },
-+	[TCA_KIND]		= { .type = NLA_NUL_STRING,
-+				    .len = IFNAMSIZ - 1 },
- 	[TCA_RATE]		= { .type = NLA_BINARY,
- 				    .len = sizeof(struct tc_estimator) },
- 	[TCA_STAB]		= { .type = NLA_NESTED },
++		if (info->read_mmr_reg.count > 128)
++			return -EINVAL;
++
+ 		regs = kmalloc_array(info->read_mmr_reg.count, sizeof(*regs), GFP_KERNEL);
+ 		if (!regs)
+ 			return -ENOMEM;
 -- 
 2.20.1
 
