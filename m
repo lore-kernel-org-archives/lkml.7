@@ -2,97 +2,126 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA97ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D679C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5400B20B7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 168C0215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:54:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="IVRg4ziD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbfJASx5 (ORCPT
+        id S1726455AbfJASyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 14:53:57 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:38778 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfJASx5 (ORCPT
+        Tue, 1 Oct 2019 14:54:13 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44230 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfJASyN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 14:53:57 -0400
-Received: by mail-qt1-f196.google.com with SMTP id j31so22999549qta.5
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 11:53:56 -0700 (PDT)
+        Tue, 1 Oct 2019 14:54:13 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 21so12484282otj.11;
+        Tue, 01 Oct 2019 11:54:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=57yXlV8OeF+0A0WSjdRw1RAKAtRQrYraqmnbKpxC2+Y=;
+        b=IVRg4ziD4+m3AGA84oC1PB6cVSjQE841td4dJj4H4TiI3uRrXjHOY9tPNPttnsefSC
+         O/wQGnPrIVk5CYD/e2mKINg3Q9+Yy0hbKRD0kBjE/FWb0Js9aQWEhYi8cLeZE+aj7NQl
+         POude1xddiy+mipI/Z8vyxQ2Ci0pft9aGW0k8y+xS9rO7CiKlVYoHiVaVYvpjUkT1EFr
+         sjZzKdCsSP34UG2KoUoAMGSvdzPdAY8JNUJKcWxRaeW1HICJNne7GtoR0XM0XGTuBYc5
+         RXprE73Olm5ge/vMWloiBAjGfX8Yqgz/h6BiG3uuZQDIP202qRtjoFHMRgtBQPYPRMgw
+         0FRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=AMheytGVabcyJn3FNgJ/7coP4hV/9kpO+I6Es2EfVJ8=;
-        b=CdgH7ngm4y78v6w5p11RyCrqEclFfEDETjZ1mmpgGVx19OLBuOSBQOnZmSMrQoFs47
-         i2DSu/puicqMJUSDw13iSJ7DsqghAAqIC3hT2bkwPKufRQY69ZXgbey4DRwrKkKnRHRW
-         X3P4sPn6q4ZrGtFOS13g3wSmfPOsmSrs3042SMZ2sl5NgstsWJisREi4aGtPGoz74rTD
-         D/EcL2HBtjUGv8pDT2XAsqyYUq2m36LgwiXQ89gKbU1EASkTQifV7tGFlrMSitF4EMyH
-         3fFQ4QlXM2SnAFZoPUB8n6q9ppVtTNagsFAF9qE/xWlcUi/n0JvflOOSti2+eKfeGktA
-         VLCQ==
-X-Gm-Message-State: APjAAAXRA6/XXY5JYUm4H4/+6TZKxLOSYwOBzndJkEiqeR5tVkRbhKaU
-        ItgegSE0wBZIxwC8sB9MeCKIOSn9KrQbcziL8zS+wY3VOog=
-X-Google-Smtp-Source: APXvYqzO/m/ctV2NVfB6dhoF3yXr2H2qJOxbJ0sAOXM2f57fgm3iu0I+vXtPdjc+9u3wEsu9hIMuBM8V266k4GJXy40=
-X-Received: by 2002:a0c:b386:: with SMTP id t6mr26513220qve.62.1569956036105;
- Tue, 01 Oct 2019 11:53:56 -0700 (PDT)
+        bh=57yXlV8OeF+0A0WSjdRw1RAKAtRQrYraqmnbKpxC2+Y=;
+        b=py/tU6jJ+wE6pKHe9lNJaHr5fhNTv10cd+MT2wL8U1F0n9pkMRAFI027Z/Qy0+sMnG
+         XzkF9/bjV68uRaME6zxttu+tcQY9h0kAQY3TdiGvBuWQgN9NeZYOuBhLQ6JuOtTO1pIG
+         Qo7YXQQ2dsiZwF7+BDPugmT3gc5j146pLaK1x4U3icaTFkWvtqn0BN0WaFoCOzTOk2N+
+         sHXsf5Yz7yJTCTP4o2ZHZLldyuWF+jSDTP/LTdYa44MaIC0eQMKRIUQ0qMmgEIlHkwDu
+         g8HygdtyUNVPSGOVdEPtDy7bY23gJ+eA2yKiklwpl4XFa7OfhCmL4XqUNYG/yb7C5iE7
+         pRhw==
+X-Gm-Message-State: APjAAAW3QGEkIo8osOtJ4t25374dKMHN5Eur6CN7m8BS1S7rtaMneGfp
+        VZDEg34gyu8/MI7G/FHy9ryd3G9azdPAI9A+6kAujbdB
+X-Google-Smtp-Source: APXvYqxLEQLgzH4uct9tKZ1G7O2LATrGxjQXO5VcuOdLMA8/sRylhq0Z66fDA037/nvoHjZZHwt1o+5IEgjEjGZQuWM=
+X-Received: by 2002:a05:6830:150d:: with SMTP id k13mr11986095otp.98.1569956050467;
+ Tue, 01 Oct 2019 11:54:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <201908251609.ADAD5CAAC1@keescook> <CAK8P3a3_sarrMKij5=sp-o16dXERfWkHhUr0fE49Xv8BvXDfaw@mail.gmail.com>
- <201909301611.1363980D7@keescook>
-In-Reply-To: <201909301611.1363980D7@keescook>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 1 Oct 2019 20:53:39 +0200
-Message-ID: <CAK8P3a28gyC6KQfAKf1CG6CGL=7y_pj2VkbuNTb3YvTi7+8+YA@mail.gmail.com>
-Subject: Re: [PATCH] uaccess: Add missing __must_check attributes
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190921151835.770263-1-martin.blumenstingl@googlemail.com>
+ <20190921151835.770263-3-martin.blumenstingl@googlemail.com> <1jftkcr3uy.fsf@starbuckisacylon.baylibre.com>
+In-Reply-To: <1jftkcr3uy.fsf@starbuckisacylon.baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Tue, 1 Oct 2019 20:53:59 +0200
+Message-ID: <CAFBinCCED4YWYkdtrfrC80C8WLE=fyMJdjTa3wFNMJgC1OsoOA@mail.gmail.com>
+Subject: Re: [PATCH 2/6] clk: meson: add a driver for the Meson8/8b/8m2 DDR
+ clock controller
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        khilman@baylibre.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 1, 2019 at 1:17 AM Kees Cook <keescook@chromium.org> wrote:
-> On Mon, Sep 30, 2019 at 12:33:19PM +0200, Arnd Bergmann wrote:
-> > On Wed, Aug 28, 2019 at 7:38 PM Kees Cook <keescook@chromium.org> wrote:
-> > arch/x86/math-emu/reg_ld_str.c:88:2: error: ignoring return value of
-> > function declared with 'warn_unused_result' attribute
-> > [-Werror,-Wunused-result]
-> >         __copy_from_user(sti_ptr, s, 10);
-> >         ^~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~
-> > arch/x86/math-emu/reg_ld_str.c:1129:2: error: ignoring return value of
-> > function declared with 'warn_unused_result' attribute
-> > [-Werror,-Wunused-result]
-> >         __copy_from_user(register_base + offset, s, other);
-> >         ^~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > arch/x86/math-emu/reg_ld_str.c:1131:3: error: ignoring return value of
-> > function declared with 'warn_unused_result' attribute
-> > [-Werror,-Wunused-result]
-> >                 __copy_from_user(register_base, s + other, offset);
-> >                 ^~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Hi Jerome,
+
+thank you for taking the time to go through this!
+
+On Tue, Oct 1, 2019 at 3:29 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
+[...]
+> > +#include <linux/platform_device.h>
+> > +#include <linux/mfd/syscon.h>
 >
-> What was the CONFIG for this? I didn't hit these in my build tests.
+> syscon is not used in the driver
+oops, good catch - thank you
 
-I saw three randconfig builds trigger it in one day, so not that common.
-https://pastebin.com/mUhbNEVR is one of them.
-
-> > Moreover, the same code also ignores the return value from most
-> > get_user()/put_user()/FPU_get_user()/FPU_put_user() calls,
-> > which have no warn_unused_result annotation (they are macros,
-> > but I think something could be done if we want to have that
-> > annotation to catch some of the other such users).
+[...]
+> > +static struct clk_hw_onecell_data meson8_ddr_clk_hw_onecell_data = {
+> > +     .hws = {
+> > +             [DDR_CLKID_DDR_PLL_DCO]         = &meson8_ddr_pll_dco.hw,
+> > +             [DDR_CLKID_DDR_PLL]             = &meson8_ddr_pll.hw,
 >
-> It would certainly make sense to mark those as __must_check too... now
-> tracking this here for anyone that wants to take a stab at it:
-> https://github.com/KSPP/linux/issues/16
+> I wonder if onecell is not overkill for this driver. We won't expose the
+> DCO, so only the post divider remains
+>
+> Do you expect this provider to have more than one leaf clock ?
+> If not, maybe you could use of_clk_hw_simple_get() instead ?
+there's some more clock bits in DDR_CLK_CNTL - the public A311D
+datasheet has a description for these bits but I'm not sure they do
+the same on Meson8/Meson8b/Meson8m2
+all I know is that some magic bytes are written to DDR_CLK_CNTL in the
+old u-boot code
 
-FWIW, I have not come up with a way to add the warning, but I
-did send a fix for the instances in the math-emu code:
-https://lore.kernel.org/lkml/20191001142344.1274185-1-arnd@arndb.de/
+that's why I don't want to make any assumptions and play safe here (by
+using a onecell clock provider)
 
-      Arnd
+> > +     },
+> > +     .num = 2,
+> > +};
+> > +
+> > +static struct clk_regmap *const meson8_ddr_clk_regmaps[] = {
+> > +     &meson8_ddr_pll_dco,
+> > +     &meson8_ddr_pll,
+> > +};
+> > +
+> > +static const struct regmap_config meson8_ddr_clkc_regmap_config = {
+> > +     .reg_bits = 8,
+> > +     .val_bits = 32,
+> > +     .reg_stride = 4,
+> > +     .fast_io = true,
+>
+> I think fast_io will default to true with memory based register.
+> Setting the max_register would be nice
+good point - I'll take care of this when sending v2
+
+
+Martin
