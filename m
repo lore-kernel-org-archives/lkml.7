@@ -2,134 +2,206 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BE8C32792
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 01:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17012C32792
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 01:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE07820815
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 01:00:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="epI3ugdy"
+	by mail.kernel.org (Postfix) with ESMTP id D8DA62075C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 01:05:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbfJABAe (ORCPT
+        id S1728761AbfJABFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 21:00:34 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44083 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbfJABAe (ORCPT
+        Mon, 30 Sep 2019 21:05:41 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14768 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727320AbfJABFk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 21:00:34 -0400
-Received: by mail-pg1-f193.google.com with SMTP id i14so8381908pgt.11
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 18:00:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=E6c31Z8bqLagiMFjesWQuytu80YEed1XWODDuNsW24s=;
-        b=epI3ugdyCvOb4zVNWfia360x2V+v1fm0AgFUCheJyZoUPJVy8ggRSIGIk4NaAVbcs8
-         glkEUdVmFN63+q25+HfwPVyF7/WpBLgRjU2E3olV+ADe28YhCAQg+TX6TAKvCx31/fjd
-         mDk4bYpvHaWJVnZyiYSSnbKK3bGoR5ynIr//c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=E6c31Z8bqLagiMFjesWQuytu80YEed1XWODDuNsW24s=;
-        b=KK2syX0QxL3m2kGbcfbvKOaSp7FiVczS4iEzXXL6DCYGx7xLS65YzN5dSnh0UV56OP
-         0cDvGUo4+8RLOTN6KY7PsqzIOkOeuVSVNvWKcD2M9JlexNXBqNZJVCX0xNVI7oQpfh4P
-         e7w7dp4Y0HXWS91r2MKqSO0850LkPnPZNHg0D1W32Xf7fDLAcv1RPKwRnPllPj8zdGet
-         1gWWLquHVjkeW/knbPdCIqtC138skrE/WtO0UjUrbv2xFZjNffZYnXT3Ccwb4+Ju46dR
-         cJ/QcwCo4khFxp5UKIIm0GJ8JzeHSpBNUTGD5ZlyXOCFLAcLwUukm2OJyigidBALx7lN
-         lAUA==
-X-Gm-Message-State: APjAAAU1r2zLr3tPAweIHFAvyUZeQ0MnoulXOK4Sif0OIn8c9ybgfTHI
-        iQw52F9kju1UskutwCsSlhLK9MO1wYQ=
-X-Google-Smtp-Source: APXvYqxIwQ/Z/NG15bD/vJSTi2QXMxa4a8imVSlOMCNDTKdY/6Mm2LE1FlsEyH4TWT/43exPRAlWBQ==
-X-Received: by 2002:a63:1950:: with SMTP id 16mr28046453pgz.213.1569891631964;
-        Mon, 30 Sep 2019 18:00:31 -0700 (PDT)
-Received: from localhost ([2401:fa00:1:10:79b4:bd83:e4a5:a720])
-        by smtp.gmail.com with ESMTPSA id 62sm13146047pfg.164.2019.09.30.18.00.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Sep 2019 18:00:31 -0700 (PDT)
-From:   Cheng-Yi Chiang <cychiang@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        dianders@chromium.org, dgreid@chromium.org, tzungbi@chromium.org,
-        alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        Daniel Kurtz <djkurtz@chromium.org>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Yakir Yang <ykk@rock-chips.com>
-Subject: [PATCH] drm/bridge: dw-hdmi: Restore audio when setting a mode
-Date:   Tue,  1 Oct 2019 09:00:20 +0800
-Message-Id: <20191001010020.122134-1-cychiang@chromium.org>
-X-Mailer: git-send-email 2.23.0.444.g18eeb5a265-goog
+        Mon, 30 Sep 2019 21:05:40 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9112B0t102786;
+        Mon, 30 Sep 2019 21:05:02 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vbsx9cd52-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 30 Sep 2019 21:05:02 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x9113SJm105324;
+        Mon, 30 Sep 2019 21:05:01 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vbsx9cd4n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 30 Sep 2019 21:05:01 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x9113370014972;
+        Tue, 1 Oct 2019 01:05:00 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma02dal.us.ibm.com with ESMTP id 2v9y57d0gq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Oct 2019 01:05:00 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9114wdU55968128
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 1 Oct 2019 01:04:58 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 31406C6057;
+        Tue,  1 Oct 2019 01:04:58 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1F9F3C605A;
+        Tue,  1 Oct 2019 01:04:53 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.85.220.184])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Tue,  1 Oct 2019 01:04:52 +0000 (GMT)
+References: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com> <1569594360-7141-4-git-send-email-nayna@linux.ibm.com>
+User-agent: mu4e 1.2.0; emacs 26.2
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Nayna Jain <nayna@linux.ibm.com>
+Cc:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
+        linux-integrity@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v6 3/9] powerpc: add support to initialize ima policy rules
+In-reply-to: <1569594360-7141-4-git-send-email-nayna@linux.ibm.com>
+Date:   Mon, 30 Sep 2019 22:04:48 -0300
+Message-ID: <877e5pwa1b.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-30_14:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910010009
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Kurtz <djkurtz@chromium.org>
 
-When setting a new display mode, dw_hdmi_setup() calls
-dw_hdmi_enable_video_path(), which disables all hdmi clocks, including
-the audio clock.
+Hello,
 
-We should only (re-)enable the audio clock if audio was already enabled
-when setting the new mode.
+Nayna Jain <nayna@linux.ibm.com> writes:
 
-Without this patch, on RK3288, there will be HDMI audio on some monitors
-if i2s was played to headphone when the monitor was plugged.
-ACER H277HU and ASUS PB278 are two of the monitors showing this issue.
+> PowerNV systems uses kernel based bootloader, thus its secure boot
+> implementation uses kernel IMA security subsystem to verify the kernel
+> before kexec. Since the verification policy might differ based on the
+> secure boot mode of the system, the policies are defined at runtime.
+>
+> This patch implements the arch-specific support to define the IMA policy
+> rules based on the runtime secure boot mode of the system.
+>
+> This patch provides arch-specific IMA policies if PPC_SECURE_BOOT
+> config is enabled.
+>
+> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+> ---
+>  arch/powerpc/Kconfig           |  2 ++
+>  arch/powerpc/kernel/Makefile   |  2 +-
+>  arch/powerpc/kernel/ima_arch.c | 33 +++++++++++++++++++++++++++++++++
+>  include/linux/ima.h            |  3 ++-
+>  4 files changed, 38 insertions(+), 2 deletions(-)
+>  create mode 100644 arch/powerpc/kernel/ima_arch.c
+>
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 2c54beb29f1a..54eda07c74e5 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -916,6 +916,8 @@ config PPC_SECURE_BOOT
+>  	prompt "Enable secure boot support"
+>  	bool
+>  	depends on PPC_POWERNV
+> +	depends on IMA
+> +	depends on IMA_ARCH_POLICY
+>  	help
+>  	  Systems with firmware secure boot enabled needs to define security
+>  	  policies to extend secure boot to the OS. This config allows user
+> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+> index 875b0785a20e..7156ac1fc956 100644
+> --- a/arch/powerpc/kernel/Makefile
+> +++ b/arch/powerpc/kernel/Makefile
+> @@ -157,7 +157,7 @@ endif
+>  obj-$(CONFIG_EPAPR_PARAVIRT)	+= epapr_paravirt.o epapr_hcalls.o
+>  obj-$(CONFIG_KVM_GUEST)		+= kvm.o kvm_emul.o
+>
+> -obj-$(CONFIG_PPC_SECURE_BOOT)	+= secure_boot.o
+> +obj-$(CONFIG_PPC_SECURE_BOOT)	+= secure_boot.o ima_arch.o
+>
+>  # Disable GCOV, KCOV & sanitizers in odd or sensitive code
+>  GCOV_PROFILE_prom_init.o := n
+> diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
+> new file mode 100644
+> index 000000000000..39401b67f19e
+> --- /dev/null
+> +++ b/arch/powerpc/kernel/ima_arch.c
+> @@ -0,0 +1,33 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2019 IBM Corporation
+> + * Author: Nayna Jain
+> + */
+> +
+> +#include <linux/ima.h>
+> +#include <asm/secure_boot.h>
+> +
+> +bool arch_ima_get_secureboot(void)
+> +{
+> +	return is_powerpc_os_secureboot_enabled();
+> +}
+> +
+> +/* Defines IMA appraise rules for secureboot */
+> +static const char *const arch_rules[] = {
+> +	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
+> +#if !IS_ENABLED(CONFIG_MODULE_SIG)
+> +	"appraise func=MODULE_CHECK appraise_type=imasig|modsig",
+> +#endif
+> +	NULL
+> +};
+> +
+> +/*
+> + * Returns the relevant IMA arch policies based on the system secureboot state.
+> + */
+> +const char *const *arch_get_ima_policy(void)
+> +{
+> +	if (is_powerpc_os_secureboot_enabled())
+> +		return arch_rules;
+> +
+> +	return NULL;
+> +}
 
-Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
-Signed-off-by: Yakir Yang <ykk@rock-chips.com>
----
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+If CONFIG_MODULE_SIG is enabled but module signatures aren't enforced,
+then IMA won't enforce module signature either. x86's
+arch_get_ima_policy() calls set_module_sig_enforced(). Doesn't the
+powerpc version need to do that as well?
 
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index aa7efd4da1c8..c60e951122c9 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -1982,6 +1982,15 @@ static void hdmi_disable_overflow_interrupts(struct dw_hdmi *hdmi)
- 		    HDMI_IH_MUTE_FC_STAT2);
- }
- 
-+static void dw_hdmi_audio_restore(struct dw_hdmi *hdmi)
-+{
-+	mutex_lock(&hdmi->audio_mutex);
-+
-+	hdmi_enable_audio_clk(hdmi, hdmi->audio_enable);
-+
-+	mutex_unlock(&hdmi->audio_mutex);
-+}
-+
- static int dw_hdmi_setup(struct dw_hdmi *hdmi, struct drm_display_mode *mode)
- {
- 	int ret;
-@@ -2045,7 +2054,7 @@ static int dw_hdmi_setup(struct dw_hdmi *hdmi, struct drm_display_mode *mode)
- 
- 		/* HDMI Initialization Step E - Configure audio */
- 		hdmi_clk_regenerator_update_pixel_clock(hdmi);
--		hdmi_enable_audio_clk(hdmi, true);
-+		dw_hdmi_audio_restore(hdmi);
- 	}
- 
- 	/* not for DVI mode */
--- 
-2.23.0.444.g18eeb5a265-goog
+On the flip side, if module signatures are enforced by the module
+subsystem then IMA will verify the signature a second time since there's
+no sharing of signature verification results between the module
+subsystem and IMA (this was observed by Mimi).
 
+IMHO this is a minor issue, since module loading isn't a hot path and
+the duplicate work shouldn't impact anything. But it could be avoided by
+having a NULL entry in arch_rules, which arch_get_ima_policy() would
+dynamically update with the "appraise func=MODULE_CHECK" rule if
+is_module_sig_enforced() is true.
+
+--
+Thiago Jung Bauermann
+IBM Linux Technology Center
