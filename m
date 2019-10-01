@@ -2,108 +2,152 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65167C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 509C1C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 397382133F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 288F12133F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569930087;
-	bh=kHKiQuRfYHGJAypJz7LFWDhrbubzIuK7gPG1SlNxsAw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fmpWDkaXbc9PmNNNoqTNlqmwTtyq6L6qWajeJNt+FHack0TO739HGYFeqd7TK7XNa
-	 21j0WnOuNu6MibS7BQs8hKMG/AzA94YIyfSk2Q68xrr0Eafs/IZc3JF4rR2sL71R33
-	 jNrhVp5xjUJAvrubtuOUz8tdZM3eIKwKRztHPC34=
+	s=default; t=1569930089;
+	bh=SEfY5S91F0JeIOnUZUJXucvUzuxTfOG1ROc4i5GMNdE=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=vXoPiPMMj71z8PyWfZDFvOV/t4s0LJWx2pTECaGVFjcWI9oHVQz+36cCKQxi23s1u
+	 qa18zxMy3pNBA1JWetQKvpVXMPsAYFDIYjCf9bh0qX5henDJu92UAZdWYtQS2HOzUT
+	 V/Yis41fHcJmYVe7tEk+B+TMtalZ7MAPA81bSNso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732826AbfJALl0 (ORCPT
+        id S2387683AbfJALlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 07:41:26 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:41432 "EHLO
+        Tue, 1 Oct 2019 07:41:18 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:41152 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387681AbfJALlT (ORCPT
+        with ESMTP id S2387627AbfJALlL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 07:41:19 -0400
+        Tue, 1 Oct 2019 07:41:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=y1E3R8dLROwbz+u7OaMfdoIIhxQX9FooeMJGxRhUgSc=; b=xwRDywKyS94HRdedy8s646tUp
-        27khmRCQ2coohEPGb5rQxVNMszzyodgQm8jAM01Z7xkR1ljJVRJ3hNnHnP/INxE7b3OiGvMpH2ZnK
-        O/oEznclYQx5CkNUgSfBSXElIZxFphEfBZ6eyiLPl9DW/NENZnQfGAw0nHL9XhDuqf+ac=;
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=IFeB5ECHHyQUSd0qbFzo9VI7arD5hh/X+75w2dLv8rE=; b=XlziAkRb2VbZ
+        vGGcuzALH1pTD0p3EXQkSqfNZBHIJkZzUlAmT9zWtLsFMBcH9N2vRdWgj4PnRMlUsD0+eHsK1BKej
+        AJEWzNlRG9de5fceemRshTItVBIPCaCvpz41ENz90CS0gd5dLMGWiGKgK/mkQNarD3HS4QZP9m0qI
+        ePjN8=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iFGWi-0004Zb-UE; Tue, 01 Oct 2019 11:41:08 +0000
+        id 1iFGWi-0004ZB-1M; Tue, 01 Oct 2019 11:41:08 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 62C2E2742A31; Tue,  1 Oct 2019 12:41:08 +0100 (BST)
-Date:   Tue, 1 Oct 2019 12:41:08 +0100
+        id 79E5727429C0; Tue,  1 Oct 2019 12:41:07 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lukasz Majewski <lukma@denx.de>,
-        Colin Ian King <colin.king@canonical.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kbuild test robot <lkp@intel.com>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH] spi: Avoid calling spi_slave_abort() with kfreed spidev
-Message-ID: <20191001114108.GA4786@sirena.co.uk>
-References: <20191001090657.25721-1-lukma@denx.de>
- <CAMuHMdWHTaPkzTdzz-j1rFeT=aAEG+J46fgKiPYrXoAR_DTvtQ@mail.gmail.com>
- <20191001113420.032dbfef@jawa>
- <CAMuHMdWh7xPZqp4J1qG22dXk_g=Q1WtQ9Xu-r3wiFOL3kW+WBg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWh7xPZqp4J1qG22dXk_g=Q1WtQ9Xu-r3wiFOL3kW+WBg@mail.gmail.com>
-X-Cookie: Keep refrigerated.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+To:     Phil Edworthy <phil.edworthy@renesas.com>
+Cc:     Gareth Williams <gareth.williams.jx@renesas.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: dw: Add basic runtime PM support" to the spi tree
+In-Reply-To: <1568793876-9009-4-git-send-email-gareth.williams.jx@renesas.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20191001114107.79E5727429C0@ypsilon.sirena.org.uk>
+Date:   Tue,  1 Oct 2019 12:41:07 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The patch
 
---LZvS9be/3tNcYl/X
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+   spi: dw: Add basic runtime PM support
 
-On Tue, Oct 01, 2019 at 12:00:07PM +0200, Geert Uytterhoeven wrote:
-> On Tue, Oct 1, 2019 at 11:34 AM Lukasz Majewski <lukma@denx.de> wrote:
-> > > On Tue, Oct 1, 2019 at 11:07 AM Lukasz Majewski <lukma@denx.de> wrote:
+has been applied to the spi tree at
 
-> > The if (!dofree) prevents from calling spi_slave_abort() when
-> > spidev->spi == NULL and spidev is kfree'd.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
 
-> If spidev->users != 0, the block checking spidev->spi == NULL is never
-> executed, and spi_slave_abort() will be called.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-> I'm wondering if spidev->spi can be NULL if spidev->users is still positive.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-It *shouldn't* be.  I think we have other problems if it is.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
---LZvS9be/3tNcYl/X
-Content-Type: application/pgp-signature; name="signature.asc"
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
------BEGIN PGP SIGNATURE-----
+Thanks,
+Mark
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2TO1MACgkQJNaLcl1U
-h9Co+gf9EMfuNyB92VOoFo9okqWdMzDPwyTkYJyk6HSgVicME9grYfHDe81a7GjJ
-9Dph4fdIVAcDkIFL/MbVPi3hsJCKFy+8QV1htiKYl32T9J3fKWROCKUD67c+PDwb
-6LV+0EZCb5He4bdw3/CbrMsLhDTMedQL0/smyCNVcfj9WNeRBX64tv+48sE6lCaZ
-bIGvhUppBJfIjDUU9hmKBweOp7XdMvGQE8SZmhruhgVEl/XICBkL73hYrHyW0QnJ
-6FTJmaYLaW8nTDsk9XEiCM/AV8yC+hGdQhlEg4VxiGJ+1sm3QfXvyqYVQo7umAkV
-hNXIGjDoZ61XFt7E/0SnzKLru/taCg==
-=mQ+T
------END PGP SIGNATURE-----
+From 1e695983251029dc0b0fc516290077539df400ff Mon Sep 17 00:00:00 2001
+From: Phil Edworthy <phil.edworthy@renesas.com>
+Date: Wed, 18 Sep 2019 09:04:35 +0100
+Subject: [PATCH] spi: dw: Add basic runtime PM support
 
---LZvS9be/3tNcYl/X--
+Enable runtime PM so that the clock used to access the registers in the
+peripheral is turned on using a clock domain.
+
+Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
+Link: https://lore.kernel.org/r/1568793876-9009-4-git-send-email-gareth.williams.jx@renesas.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/spi/spi-dw.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index 9a49e073e8b7..54ed6eb3e252 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -10,6 +10,7 @@
+ #include <linux/module.h>
+ #include <linux/highmem.h>
+ #include <linux/delay.h>
++#include <linux/pm_runtime.h>
+ #include <linux/slab.h>
+ #include <linux/spi/spi.h>
+ 
+@@ -493,10 +494,13 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
+ 	master->dev.of_node = dev->of_node;
+ 	master->dev.fwnode = dev->fwnode;
+ 	master->flags = SPI_MASTER_GPIO_SS;
++	master->auto_runtime_pm = true;
+ 
+ 	if (dws->set_cs)
+ 		master->set_cs = dws->set_cs;
+ 
++	pm_runtime_enable(dev);
++
+ 	/* Basic HW init */
+ 	spi_hw_init(dev, dws);
+ 
+@@ -525,6 +529,7 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
+ 	spi_enable_chip(dws, 0);
+ 	free_irq(dws->irq, master);
+ err_free_master:
++	pm_runtime_disable(dev);
+ 	spi_controller_put(master);
+ 	return ret;
+ }
+@@ -539,6 +544,9 @@ void dw_spi_remove_host(struct dw_spi *dws)
+ 
+ 	spi_shutdown_chip(dws);
+ 
++	if (dws->master)
++		pm_runtime_disable(&dws->master->dev);
++
+ 	free_irq(dws->irq, dws->master);
+ }
+ EXPORT_SYMBOL_GPL(dw_spi_remove_host);
+-- 
+2.20.1
+
