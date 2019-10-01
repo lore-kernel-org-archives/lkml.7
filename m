@@ -2,102 +2,83 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D70AEECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43615C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE2EF20815
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:25:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C35D20815
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:26:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Eel1qi18"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g5QA2RQo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732435AbfJASZw (ORCPT
+        id S1732478AbfJAS0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 14:25:52 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44641 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732394AbfJASZv (ORCPT
+        Tue, 1 Oct 2019 14:26:07 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37066 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731034AbfJAS0H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 14:25:51 -0400
-Received: by mail-pl1-f195.google.com with SMTP id q15so5888392pll.11
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 11:25:51 -0700 (PDT)
+        Tue, 1 Oct 2019 14:26:07 -0400
+Received: by mail-pg1-f196.google.com with SMTP id c17so10262859pgg.4
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 11:26:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=LzScokAJUZmfEzLyRgkBYA98Mp75br3n/i2JbQ8ioSU=;
-        b=Eel1qi18Au+svdpZ7+XVj5a8bXyXORVjJPkq8MNCvHpEEiT0X2QJpv0kweG5dD01GT
-         8jF1xfb3pML4lkci+3Mcza2vkDMURS9/pP2cU58heb6uUg/4zu/y8GXSNmzMXfFdp8f4
-         oxBUb9ko7sRM7Sla0Mom37zphpvPzi7WrsMN68t3kNuqSBtu6BhkR1Kyzib3fILZYHAm
-         I6BZSGvfJ6gJj8MER91eVYp2ty+rsdUeqYv1LEoiuoQl71QzvREzakFiQr1mwgVc2fyL
-         9oYQ8mc6zZ6+SvhjeVy/wzaC7MRqeT4RvsidhvkAMDET1tVK6Y0ExYfznNAMET8JrzSD
-         wbIw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zqsAipJBT/+l6hHcipqnKpFpMM4A80W4tvsIakuG5CE=;
+        b=g5QA2RQoe+ZqGhmmwzTRV8KB6BVTAuTsSyf3gaXExsBraZ1sXNs+w6QTQFAeTULPBP
+         PaoUbh+njFeHRfH8CiwTrxIdbQPqR7Sm1kxQgXUltqo/Oa61SemzAOELrxcRBHfJ6cvi
+         fWpNairMz6FZah2H/4t2m/96PvOOjygR4rPyI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=LzScokAJUZmfEzLyRgkBYA98Mp75br3n/i2JbQ8ioSU=;
-        b=KHqkFxEnoU5449qOvt1OxYVMF7Surs+XYO8n5FomZj4VLpUB2+JT/yHJ6GhA41lzdI
-         LzTQBTcyEme11FDJpUnWdcd7YvvCKmn35cR8bz18GcdYG3zJBrIbeSUVpARQc3LzAV5N
-         tInyjoEgmwjDobRShkIC1UcvQ2NqdUiK8NZziqmKFFUn6oAspKKoxu2iHkVDJlgMNCpu
-         oLXZ+HMZQdowusFLG7G6x6xegz7dPfeRUBVPH2/9UF/d+3nZKfQbw0Gf4BCjoqjdX/wa
-         BchsRUcf8NtJNIg5F8pGKVIaadqfY42PEWP+AvQf8lzBiJx++b6M/qLupejxDZjniaBv
-         woag==
-X-Gm-Message-State: APjAAAVUvGLU4zlGlFA+Vw5vlUvs1Fbt5mhjTBOtxjDEKgpLYaxMtf9J
-        iuQenj42+rYj0XHtQHPihwBMmok/BIo=
-X-Google-Smtp-Source: APXvYqy/JN5Tukl6e1s+uskah3wczLS0qKNm1HHwfv24GZ0gm9S3ONW3SZg0fKBQSIEgdXHSBoByrA==
-X-Received: by 2002:a17:902:fe86:: with SMTP id x6mr27652483plm.28.1569954350285;
-        Tue, 01 Oct 2019 11:25:50 -0700 (PDT)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id e14sm3095996pjt.8.2019.10.01.11.25.48
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zqsAipJBT/+l6hHcipqnKpFpMM4A80W4tvsIakuG5CE=;
+        b=dPEf5B7CAmoqmIbZKRiBfhBH4Eong8OneFsnhMrbRe+mwceReROoVGmqk93OIQgg1l
+         alQzmmn9VNJM9590Ht2w++zJwPC+RPsbtcI3Sf3CoJhFGU+iCGZKWu6ZJPRtoiIRaa1C
+         Q99YVoYs7D+SrX5k0FEI7P7bM1yCbF5Us4M6iWzarfeECtVyKtrM9KBAcwdh6/N0rEbL
+         zwi77EE0vSZ6C7hWPygiUq5tFzHAGIpAoqa65pOfXepqIBNAY3/UiXxBqPC3WpJ++rV4
+         yXNL/eN6LhknFtf8ZByhRUjnaG68lg5s9ieBMwMWeOyE1oHU36AtFL5aQPz6qi9xlcVo
+         VQrw==
+X-Gm-Message-State: APjAAAVohQ9PeGJbj9TXXpcXrVRjwfBZ2yY+DLxG+SWlPJj8CMX8scJa
+        am/pC6d8IemyPGTRJlrFclM4Ug==
+X-Google-Smtp-Source: APXvYqyIpgN6OMZZun5BSeRfWkyvMJAYXr0Kg9rgz1eEcJUaLgX3ig+qYOn4DUrT3tL82rBWIejrOg==
+X-Received: by 2002:a17:90a:28c5:: with SMTP id f63mr7051535pjd.67.1569954366452;
+        Tue, 01 Oct 2019 11:26:06 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c8sm16082912pfi.117.2019.10.01.11.26.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 11:25:49 -0700 (PDT)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     Peter Griffin <peter.griffin@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        linux-clk@vger.kernel.org, John Stultz <john.stultz@linaro.org>
-Subject: [PATCH] clk: hi6220: use CLK_OF_DECLARE_DRIVER
-Date:   Tue,  1 Oct 2019 18:25:46 +0000
-Message-Id: <20191001182546.70090-1-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 01 Oct 2019 11:26:05 -0700 (PDT)
+Date:   Tue, 1 Oct 2019 11:26:04 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] docs: Programmatically render MAINTAINERS into ReST
+Message-ID: <201910011125.AF5245230@keescook>
+References: <20190924230208.12414-1-keescook@chromium.org>
+ <20191001083147.3a1b513f@lwn.net>
+ <20191001120930.5d388839@coco.lan>
+ <20191001113506.12720205@lwn.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191001113506.12720205@lwn.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Griffin <peter.griffin@linaro.org>
+On Tue, Oct 01, 2019 at 11:35:06AM -0600, Jonathan Corbet wrote:
+>          for line in open(path):
+> +            if sys.version_info.major == 2:
+> +                line = unicode(line, 'utf-8')
 
-As now we also need to probe in the reset driver as well.
+Ah-ha! Thanks. I've sent v2 now. :)
 
-Cc: Michael Turquette <mturquette@baylibre.com>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: Allison Randal <allison@lohutok.net>
-Cc: Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-clk@vger.kernel.org
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
- drivers/clk/hisilicon/clk-hi6220.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/clk/hisilicon/clk-hi6220.c b/drivers/clk/hisilicon/clk-hi6220.c
-index b2c5b6bbb1c1..63a94e1b6785 100644
---- a/drivers/clk/hisilicon/clk-hi6220.c
-+++ b/drivers/clk/hisilicon/clk-hi6220.c
-@@ -86,7 +86,7 @@ static void __init hi6220_clk_ao_init(struct device_node *np)
- 	hisi_clk_register_gate_sep(hi6220_separated_gate_clks_ao,
- 				ARRAY_SIZE(hi6220_separated_gate_clks_ao), clk_data_ao);
- }
--CLK_OF_DECLARE(hi6220_clk_ao, "hisilicon,hi6220-aoctrl", hi6220_clk_ao_init);
-+CLK_OF_DECLARE_DRIVER(hi6220_clk_ao, "hisilicon,hi6220-aoctrl", hi6220_clk_ao_init);
- 
- 
- /* clocks in sysctrl */
 -- 
-2.17.1
-
+Kees Cook
