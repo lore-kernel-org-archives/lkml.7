@@ -2,184 +2,89 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B45C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 22:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BA5C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 22:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 668C821906
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 22:09:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569967757;
-	bh=kvUsD8GcpfLIC1e/TKjW9nlamKwQ+7lns1KyuR0e2bQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=V0ZDtEzx2aGhxgd7pvv6FIv3DuxXrnSgVse9D7ZGefwm357/tFVE8R7dTnBKiCbia
-	 /T8HGoVWGunmR3DsEJlMsHVhs/QLgoCHPAjMejS4ixZ1AnoC94edIvMDLgqx97FY3N
-	 5sK8u0d8db9cNzpvBPZlGgxXMO+aQVCfhgQBQc0w=
+	by mail.kernel.org (Postfix) with ESMTP id B65842054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 22:16:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728743AbfJAWJQ (ORCPT
+        id S1728463AbfJAWQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 18:09:16 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:41822 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728710AbfJAWJP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 18:09:15 -0400
-Received: by mail-io1-f67.google.com with SMTP id n26so23642972ioj.8;
-        Tue, 01 Oct 2019 15:09:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:subject:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nlWjCK4JfoFwVHPd1CXSJz1uB7s9TlzfcEVekMEDvj4=;
-        b=bTVUKo9SipbtKo0Zec4iG3wm79rG6S1xFjxhZ9y6nP7YYoSgOkgxdDS3Qp2HPxPMgZ
-         OJLYEUiwImTjlkFoUYUs8Z6gwAjrU+lDypdWLXgUfo2lIppczGnKDSSSM/pOz4fG4020
-         QZxIdhL9y9DHQXBccSobsU89j/vrc8dcC5lin9wacS3Dxxr5p3Pnbnhjm9snIRrT38S0
-         MRm8v3O+8vhc8LAmI29XNAhj4EQSiMDA5wG+ldl8Ls7kCOvrCAjXKSur5X1ozApSN6v+
-         nOsm4MJw0JY2xMfhjDKEBvGlJPXtkIEhyfU3eIoMyXWTc42eoGYggHyAO7wpT1dMUO92
-         aL/g==
-X-Gm-Message-State: APjAAAWZ4kr9xcivejLCn+rgm3Rd06wXJVKNJkiQogT9/f59mSGfPhy9
-        b24DfLiUVQdFAjpE+5sIPeCRHgA=
-X-Google-Smtp-Source: APXvYqytMSqnPmc36JxDmrc1RBCCTAHoyzL0pSQngsbJL0iWzc3ScR5eVrCWnvbFN9m04ret5bw0yg==
-X-Received: by 2002:a92:3bca:: with SMTP id n71mr380086ilh.104.1569967752751;
-        Tue, 01 Oct 2019 15:09:12 -0700 (PDT)
-Received: from localhost ([2607:fb90:1780:6fbf:9c38:e932:436b:4079])
-        by smtp.gmail.com with ESMTPSA id o187sm6921932ila.13.2019.10.01.15.09.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 15:09:12 -0700 (PDT)
-Message-ID: <5d93ce88.1c69fb81.aec64.6b1b@mx.google.com>
-Date:   Tue, 01 Oct 2019 17:09:09 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Jianxin Pan <jianxin.pan@amlogic.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        Zhiqiang Liang <zhiqiang.liang@amlogic.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: Re: [PATCH 1/3] dt-bindings: power: add Amlogic secure power domains
- bindings
-References: <1568895064-4116-1-git-send-email-jianxin.pan@amlogic.com>
- <1568895064-4116-2-git-send-email-jianxin.pan@amlogic.com>
+        Tue, 1 Oct 2019 18:16:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59484 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728254AbfJAWQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 18:16:48 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8B879B2DC4;
+        Tue,  1 Oct 2019 22:16:48 +0000 (UTC)
+Received: from localhost (ovpn-116-88.gru2.redhat.com [10.97.116.88])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 161E660619;
+        Tue,  1 Oct 2019 22:16:47 +0000 (UTC)
+Date:   Tue, 1 Oct 2019 19:16:46 -0300
+From:   Eduardo Habkost <ehabkost@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Jim Mattson <jmattson@google.com>, konrad.wilk@oracle.com
+Subject: Re: [PATCH 2/3] KVM: x86: always expose VIRT_SSBD to guests
+Message-ID: <20191001221646.GN4084@habkost.net>
+References: <1566376002-17121-1-git-send-email-pbonzini@redhat.com>
+ <1566376002-17121-3-git-send-email-pbonzini@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1568895064-4116-2-git-send-email-jianxin.pan@amlogic.com>
-X-Mutt-References: <1568895064-4116-2-git-send-email-jianxin.pan@amlogic.com>
+In-Reply-To: <1566376002-17121-3-git-send-email-pbonzini@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 01 Oct 2019 22:16:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 08:11:02AM -0400, Jianxin Pan wrote:
-> Add the bindings for the Amlogic Secure power domains, controlling the
-> secure power domains.
+On Wed, Aug 21, 2019 at 10:26:41AM +0200, Paolo Bonzini wrote:
+> Even though it is preferrable to use SPEC_CTRL (represented by
+> X86_FEATURE_AMD_SSBD) instead of VIRT_SPEC, VIRT_SPEC is always
+> supported anyway because otherwise it would be impossible to
+> migrate from old to new CPUs.  Make this apparent in the
+> result of KVM_GET_SUPPORTED_CPUID as well.
 > 
-> The bindings targets the Amlogic A1 and C1 compatible SoCs, in which the
-> power domain registers are in secure world.
+> While at it, reuse X86_FEATURE_* constants for the SVM leaf too.
 > 
-> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-> Signed-off-by: Zhiqiang Liang <zhiqiang.liang@amlogic.com>
+> However, we need to hide the bit on Intel processors, so move
+> the setting to svm_set_supported_cpuid.
+> 
+> Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+> Reported-by: Eduardo Habkost <ehabkost@redhat.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 > ---
->  .../bindings/power/amlogic,meson-sec-pwrc.yaml     | 32 ++++++++++++++++++++++
->  include/dt-bindings/power/meson-a1-power.h         | 32 ++++++++++++++++++++++
->  2 files changed, 64 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
->  create mode 100644 include/dt-bindings/power/meson-a1-power.h
-> 
-> diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
-> new file mode 100644
-> index 00000000..327e0d9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
-> @@ -0,0 +1,32 @@
-> +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +# Copyright (c) 2019 Amlogic, Inc
-> +# Author: Jianxin Pan <jianxin.pan@amlogic.com>
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/power/amlogic,meson-sec-pwrc.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Amlogic Meson Secure Power Domains
-> +
-> +maintainers:
-> +  - Jianxin Pan <jianxin.pan@amlogic.com>
-> +
-> +description: |+
-> +  A1/C1 series The Secure Power Domains node should be the child of a syscon
-> +  node with the required property.
+[...]
+> @@ -5944,6 +5944,11 @@ static void svm_set_supported_cpuid(u32 func, struct kvm_cpuid_entry2 *entry)
+>  		if (nested)
+>  			entry->ecx |= (1 << 2); /* Set SVM bit */
+>  		break;
+> +	case 0x80000008:
+> +		if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
+> +		     boot_cpu_has(X86_FEATURE_AMD_SSBD))
+> +			entry->ebx |= F(VIRT_SSBD);
+> +		break;
 
-'a syscon node' is not specific enough. It must be a specific node.
+Wasn't the old code at arch/x86/kvm/cpuid.c:__do_cpuid_func()
+supposed to be deleted?
 
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - amlogic,meson-a1-pwrc
-> +
-> +required:
-> +  - compatible
-> +
-> +examples:
-> +  - |
-> +    pwrc: power-controller {
-> +          compatible = "amlogic,meson-a1-pwrc";
+               /*
+                * The preference is to use SPEC CTRL MSR instead of the
+                * VIRT_SPEC MSR.
+                */
+               if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) &&
+                   !boot_cpu_has(X86_FEATURE_AMD_SSBD))
+                       entry->ebx |= F(VIRT_SSBD);
 
-But why do you need this node? It has no resources.
 
-#power-domain-cells needed?
-
-> +    };
-> +
-> +
-> diff --git a/include/dt-bindings/power/meson-a1-power.h b/include/dt-bindings/power/meson-a1-power.h
-> new file mode 100644
-> index 00000000..6cf50bf
-> --- /dev/null
-> +++ b/include/dt-bindings/power/meson-a1-power.h
-> @@ -0,0 +1,32 @@
-> +/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
-> +/*
-> + * Copyright (c) 2019 Amlogic, Inc.
-> + * Author: Jianxin Pan <jianxin.pan@amlogic.com>
-> + */
-> +
-> +#ifndef _DT_BINDINGS_MESON_A1_POWER_H
-> +#define _DT_BINDINGS_MESON_A1_POWER_H
-> +
-> +#define PWRC_DSPA_ID	8
-> +#define PWRC_DSPB_ID	9
-> +#define PWRC_UART_ID	10
-> +#define PWRC_DMC_ID	11
-> +#define PWRC_I2C_ID	12
-> +#define PWRC_PSRAM_ID	13
-> +#define PWRC_ACODEC_ID	14
-> +#define PWRC_AUDIO_ID	15
-> +#define PWRC_OTP_ID	16
-> +#define PWRC_DMA_ID	17
-> +#define PWRC_SD_EMMC_ID	18
-> +#define PWRC_RAMA_ID	19
-> +#define PWRC_RAMB_ID	20
-> +#define PWRC_IR_ID	21
-> +#define PWRC_SPICC_ID	22
-> +#define PWRC_SPIFC_ID	23
-> +#define PWRC_USB_ID	24
-> +#define PWRC_NIC_ID	25
-> +#define PWRC_PDMIN_ID	26
-> +#define PWRC_RSA_ID	27
-> +#define PWRC_MAX_ID	28
-> +
-> +#endif
-> -- 
-> 2.7.4
-> 
-
+-- 
+Eduardo
