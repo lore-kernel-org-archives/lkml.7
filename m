@@ -2,230 +2,201 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BBA5C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B907ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53DDC2168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:57:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23EE320B7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:57:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569952629;
+	bh=g/a5kBTQyx+LGXpeaRatXo7usiiO86eq7/4QyqZVTAM=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=EGBenhjnt+qJIgzCqoXe9AP1KzT+uEeRFL+Cw6X3B0bOphc9hk8ZiDziM8irtoKDS
+	 rjp5m95F1xfHWb4vHEoeHd7ar24q1ze9SRWTfXYxL5K9ldy51jba+lsNip3nwqIRGs
+	 7Rj2zqIJu3duEB6v6NSog7jqbcAtSlSQ/FtWkCno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731512AbfJAR5F (ORCPT
+        id S1731561AbfJAR5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 13:57:05 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18508 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725951AbfJAR5E (ORCPT
+        Tue, 1 Oct 2019 13:57:08 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52130 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731366AbfJAR5E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Oct 2019 13:57:04 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x91HqXqS091810;
-        Tue, 1 Oct 2019 13:56:35 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vc9bgd7m5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Oct 2019 13:56:35 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x91HrgD1102759;
-        Tue, 1 Oct 2019 13:56:34 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vc9bgd7kt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Oct 2019 13:56:34 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x91Hsvcl006471;
-        Tue, 1 Oct 2019 17:56:33 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma01dal.us.ibm.com with ESMTP id 2v9y59cnss-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Oct 2019 17:56:33 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x91HuW1h53674482
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 1 Oct 2019 17:56:32 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 525DEAC05B;
-        Tue,  1 Oct 2019 17:56:32 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 83046AC059;
-        Tue,  1 Oct 2019 17:56:28 +0000 (GMT)
-Received: from leobras.br.ibm.com (unknown [9.18.235.47])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  1 Oct 2019 17:56:28 +0000 (GMT)
-Message-ID: <2cebe169221ae9270963d4bc4fd8e43066745f98.camel@linux.ibm.com>
-Subject: Re: [PATCH v4 03/11] mm/gup: Applies counting method to monitor
- gup_pgd_range
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     John Hubbard <jhubbard@nvidia.com>, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org
-Cc:     Keith Busch <keith.busch@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Paul Mackerras <paulus@samba.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Ganesh Goudar <ganeshgr@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Allison Randal <allison@lohutok.net>
-Date:   Tue, 01 Oct 2019 14:56:19 -0300
-In-Reply-To: <ce0a4110-9f83-36db-dc85-6a727d30d030@nvidia.com>
-References: <20190927234008.11513-1-leonardo@linux.ibm.com>
-         <20190927234008.11513-4-leonardo@linux.ibm.com>
-         <ce0a4110-9f83-36db-dc85-6a727d30d030@nvidia.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-WOdEGhITyKTGCaqMIiwf"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-01_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910010145
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=Ggd1P49h2EUQkS+lUMRH5weWWVt+i3gl+KDEAKJEot4=; b=enL8NzmqAmUs
+        2VlLh3r6C92Dq+CsP5i2XlgZ2Zaby5HDzJ8Fwr8LCe71MG7Cfz4wS9chPpvp3SE5uiJvIfTl2EbWk
+        3+LkPZ9B/7ef/5bXWgsDGgP2ekAUiiUzaeFCgab/AbplbViYKaMfTbOtQJb10uo2RtKBGZAYZ6x6U
+        6W3W8=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iFMOT-0005v4-KR; Tue, 01 Oct 2019 17:57:01 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 2E5512742A10; Tue,  1 Oct 2019 18:57:01 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Kuldeep Singh <kuldeep.singh@nxp.com>
+Cc:     broonie@kernel.org, han.xu@nxp.com, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Suresh Gupta <suresh.gupta@nxp.com>
+Subject: Applied "spi: spi-fsl-qspi: Introduce variable to fix different invalid master Id" to the spi tree
+In-Reply-To: <1569920356-8953-1-git-send-email-kuldeep.singh@nxp.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20191001175701.2E5512742A10@ypsilon.sirena.org.uk>
+Date:   Tue,  1 Oct 2019 18:57:01 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The patch
 
---=-WOdEGhITyKTGCaqMIiwf
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+   spi: spi-fsl-qspi: Introduce variable to fix different invalid master Id
 
-On Mon, 2019-09-30 at 14:51 -0700, John Hubbard wrote:
-> On 9/27/19 4:40 PM, Leonardo Bras wrote:
-> > As decribed, gup_pgd_range is a lockless pagetable walk. So, in order t=
-o
-> > monitor against THP split/collapse with the couting method, it's necess=
-ary
->=20
-> s/couting/counting/
->=20
+has been applied to the spi tree at
 
-Thanks, fixed for v5.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
 
-> > to bound it with {start,end}_lockless_pgtbl_walk.
-> >=20
-> > There are dummy functions, so it is not going to add any overhead on ar=
-chs
-> > that don't use this method.
-> >=20
-> > Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
-> > ---
-> >  mm/gup.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >=20
-> > diff --git a/mm/gup.c b/mm/gup.c
-> > index 98f13ab37bac..7105c829cf44 100644
-> > --- a/mm/gup.c
-> > +++ b/mm/gup.c
-> > @@ -2325,6 +2325,7 @@ static bool gup_fast_permitted(unsigned long star=
-t, unsigned long end)
-> >  int __get_user_pages_fast(unsigned long start, int nr_pages, int write=
-,
-> >  			  struct page **pages)
-> >  {
-> > +	struct mm_struct *mm;
->=20
-> I don't think that this local variable adds any value, so let's not use i=
-t.
-> Similar point in a few other patches too.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-It avoids 1 deference of current->mm, it's a little performance gain.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
->=20
-> >  	unsigned long len, end;
-> >  	unsigned long flags;
-> >  	int nr =3D 0;
-> > @@ -2352,9 +2353,12 @@ int __get_user_pages_fast(unsigned long start, i=
-nt nr_pages, int write,
-> > =20
-> >  	if (IS_ENABLED(CONFIG_HAVE_FAST_GUP) &&
-> >  	    gup_fast_permitted(start, end)) {
-> > +		mm =3D current->mm;
-> > +		start_lockless_pgtbl_walk(mm);
-> >  		local_irq_save(flags);
-> >  		gup_pgd_range(start, end, write ? FOLL_WRITE : 0, pages, &nr);
-> >  		local_irq_restore(flags);
-> > +		end_lockless_pgtbl_walk(mm);
-> >  	}
-> > =20
-> >  	return nr;
-> > @@ -2404,6 +2408,7 @@ int get_user_pages_fast(unsigned long start, int =
-nr_pages,
-> >  			unsigned int gup_flags, struct page **pages)
-> >  {
-> >  	unsigned long addr, len, end;
-> > +	struct mm_struct *mm;
->=20
-> Same here.
->=20
-> >  	int nr =3D 0, ret =3D 0;
-> > =20
-> >  	if (WARN_ON_ONCE(gup_flags & ~(FOLL_WRITE | FOLL_LONGTERM)))
-> > @@ -2421,9 +2426,12 @@ int get_user_pages_fast(unsigned long start, int=
- nr_pages,
-> > =20
-> >  	if (IS_ENABLED(CONFIG_HAVE_FAST_GUP) &&
-> >  	    gup_fast_permitted(start, end)) {
-> > +		mm =3D current->mm;
-> > +		start_lockless_pgtbl_walk(mm);
->=20
-> Minor: I'd like to rename this register_lockless_pgtable_walker().
->=20
-> >  		local_irq_disable();
-> >  		gup_pgd_range(addr, end, gup_flags, pages, &nr);
-> >  		local_irq_enable();
-> > +		end_lockless_pgtbl_walk(mm);
->=20
-> ...and deregister_lockless_pgtable_walker().
->=20
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-I have no problem changing the name, but I don't register/deregister
-are good terms for this.=20
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-I would rather use start/finish, begin/end, and so on. Register sounds
-like something more complicated than what we are trying to achieve
-here.=20
+Thanks,
+Mark
 
->=20
-> thanks,
+From 16c3e058036a6f5be542962e487d428518edcb45 Mon Sep 17 00:00:00 2001
+From: Kuldeep Singh <kuldeep.singh@nxp.com>
+Date: Tue, 1 Oct 2019 14:29:16 +0530
+Subject: [PATCH] spi: spi-fsl-qspi: Introduce variable to fix different
+ invalid master Id
 
-Thank you!
+Different platforms have different Master with different SourceID on
+AHB bus. The 0X0E Master ID is used by cluster 3 in case of LS2088A.
+So, patch introduce an invalid master id variable to fix invalid
+mastered on different platforms.
 
---=-WOdEGhITyKTGCaqMIiwf
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+Signed-off-by: Suresh Gupta <suresh.gupta@nxp.com>
+Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
+Link: https://lore.kernel.org/r/1569920356-8953-1-git-send-email-kuldeep.singh@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/spi/spi-fsl-qspi.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl2Tk0MACgkQlQYWtz9S
-ttSDXw//YSv3GiwCNDmsVJYOkdVFcj9OsgYOCNmhsQY5guIaKQj+/1//EG97F9yt
-PVnM+822c/fwYhTZgA9SQQRA0BYZ4LwU4eBiSjPemSX10vLznjt32E9JvACZkvFN
-mhkmdooGndyVd4pEJsYjJ8bMwGYHf4BXliXCOgGR0GfbXBvIe/GWV+pYRsrd9jnx
-Q1R8k4bCO9O2FKwtEOpCPNFQPn/4D+mxLwcOuKliFMe/XHCUjv7RIrJMV41N3epk
-H3O5S7ML1m7A4i496+vDJvWb3zBFdWb0nqHQ7sp4gM5x2RzIZODtayIBRFs8Dgvy
-602F5XVDxsSY3irS27+OTtRGhV2aE3lhdZeWIeJMWY7b00vZJASO8fZd9mkatBeS
-Dj56JTFDmKVtqh//4kJwSDZKz5+y3LRfqONXgeIL5M0Rthc5tm+3XRztOxSDKZw/
-N9wxJBmeVOonSR1ngdQVnKu3B5gyQDNrJCQdCBcqLTOVIVCMjHjyf6l/jZu7VNH5
-wESlZ/gwBZ2iJ4CG0YeF6ObMC7/UjsjVRdvH39oA+KwErMOWjMZi6CbdEdzUnFI9
-Jo4f1nZ3/1bVGbCxlaaDoQxtfThRPCk9CJiMoyTG19HB2T0mUImtOt0VIH5Y/bQu
-T7wDnek8r9G1HwB++kVRFYELvmzfP4YSiUPAEDTNPlHFup2phZQ=
-=JHbX
------END PGP SIGNATURE-----
-
---=-WOdEGhITyKTGCaqMIiwf--
+diff --git a/drivers/spi/spi-fsl-qspi.c b/drivers/spi/spi-fsl-qspi.c
+index c02e24c01136..51385b0927e3 100644
+--- a/drivers/spi/spi-fsl-qspi.c
++++ b/drivers/spi/spi-fsl-qspi.c
+@@ -63,6 +63,11 @@
+ #define QUADSPI_IPCR			0x08
+ #define QUADSPI_IPCR_SEQID(x)		((x) << 24)
+ 
++#define QUADSPI_BUF0CR                  0x10
++#define QUADSPI_BUF1CR                  0x14
++#define QUADSPI_BUF2CR                  0x18
++#define QUADSPI_BUFXCR_INVALID_MSTRID   0xe
++
+ #define QUADSPI_BUF3CR			0x1c
+ #define QUADSPI_BUF3CR_ALLMST_MASK	BIT(31)
+ #define QUADSPI_BUF3CR_ADATSZ(x)	((x) << 8)
+@@ -184,6 +189,7 @@
+ struct fsl_qspi_devtype_data {
+ 	unsigned int rxfifo;
+ 	unsigned int txfifo;
++	int invalid_mstrid;
+ 	unsigned int ahb_buf_size;
+ 	unsigned int quirks;
+ 	bool little_endian;
+@@ -192,6 +198,7 @@ struct fsl_qspi_devtype_data {
+ static const struct fsl_qspi_devtype_data vybrid_data = {
+ 	.rxfifo = SZ_128,
+ 	.txfifo = SZ_64,
++	.invalid_mstrid = QUADSPI_BUFXCR_INVALID_MSTRID,
+ 	.ahb_buf_size = SZ_1K,
+ 	.quirks = QUADSPI_QUIRK_SWAP_ENDIAN,
+ 	.little_endian = true,
+@@ -200,6 +207,7 @@ static const struct fsl_qspi_devtype_data vybrid_data = {
+ static const struct fsl_qspi_devtype_data imx6sx_data = {
+ 	.rxfifo = SZ_128,
+ 	.txfifo = SZ_512,
++	.invalid_mstrid = QUADSPI_BUFXCR_INVALID_MSTRID,
+ 	.ahb_buf_size = SZ_1K,
+ 	.quirks = QUADSPI_QUIRK_4X_INT_CLK | QUADSPI_QUIRK_TKT245618,
+ 	.little_endian = true,
+@@ -208,6 +216,7 @@ static const struct fsl_qspi_devtype_data imx6sx_data = {
+ static const struct fsl_qspi_devtype_data imx7d_data = {
+ 	.rxfifo = SZ_128,
+ 	.txfifo = SZ_512,
++	.invalid_mstrid = QUADSPI_BUFXCR_INVALID_MSTRID,
+ 	.ahb_buf_size = SZ_1K,
+ 	.quirks = QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_4X_INT_CLK,
+ 	.little_endian = true,
+@@ -216,6 +225,7 @@ static const struct fsl_qspi_devtype_data imx7d_data = {
+ static const struct fsl_qspi_devtype_data imx6ul_data = {
+ 	.rxfifo = SZ_128,
+ 	.txfifo = SZ_512,
++	.invalid_mstrid = QUADSPI_BUFXCR_INVALID_MSTRID,
+ 	.ahb_buf_size = SZ_1K,
+ 	.quirks = QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_4X_INT_CLK,
+ 	.little_endian = true,
+@@ -224,6 +234,7 @@ static const struct fsl_qspi_devtype_data imx6ul_data = {
+ static const struct fsl_qspi_devtype_data ls1021a_data = {
+ 	.rxfifo = SZ_128,
+ 	.txfifo = SZ_64,
++	.invalid_mstrid = QUADSPI_BUFXCR_INVALID_MSTRID,
+ 	.ahb_buf_size = SZ_1K,
+ 	.quirks = 0,
+ 	.little_endian = false,
+@@ -233,6 +244,7 @@ static const struct fsl_qspi_devtype_data ls2080a_data = {
+ 	.rxfifo = SZ_128,
+ 	.txfifo = SZ_64,
+ 	.ahb_buf_size = SZ_1K,
++	.invalid_mstrid = 0x0,
+ 	.quirks = QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_BASE_INTERNAL,
+ 	.little_endian = true,
+ };
+@@ -615,6 +627,7 @@ static int fsl_qspi_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
+ 	void __iomem *base = q->iobase;
+ 	u32 addr_offset = 0;
+ 	int err = 0;
++	int invalid_mstrid = q->devtype_data->invalid_mstrid;
+ 
+ 	mutex_lock(&q->lock);
+ 
+@@ -638,6 +651,10 @@ static int fsl_qspi_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
+ 	qspi_writel(q, QUADSPI_SPTRCLR_BFPTRC | QUADSPI_SPTRCLR_IPPTRC,
+ 		    base + QUADSPI_SPTRCLR);
+ 
++	qspi_writel(q, invalid_mstrid, base + QUADSPI_BUF0CR);
++	qspi_writel(q, invalid_mstrid, base + QUADSPI_BUF1CR);
++	qspi_writel(q, invalid_mstrid, base + QUADSPI_BUF2CR);
++
+ 	fsl_qspi_prepare_lut(q, op);
+ 
+ 	/*
+-- 
+2.20.1
 
