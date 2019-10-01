@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B445ECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBE8C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 077062190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:49:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4770C2168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:49:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948575;
-	bh=/BkX1duVV7CS5C0o/QWskCQ6Z70Aa83HUMWYRNnqQ1Q=;
+	s=default; t=1569948580;
+	bh=/TEnXecOTQCkGMs7b+BXqGxzanTDzA/OEU2U2Aw2j8I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TpX33CYFDfSdhYGyh3P/jMe7kst6zVLdphZeh8PcPMKGSI4oxvAahGfeuM41MLUNg
-	 rzWJgx5+4ub0VsmDOVWiEzQTy2oRC5wwmj9KFoIIe9svJz6+8DGmaeXV3iOgXm3e2W
-	 J+4OCTdbzZSG3PpqrWtiEQyfu6LCemJgWMyKEMys=
+	b=Fy6fhQXg+Pt5172Naylm35XZfmtBVAxFZ85OFBeC/ucsaeOVrB5s3WmjCp4RRO+U5
+	 d+bS2XodXHY/1st99xvGnlP9Vuywb8jFJs4YCbjf0+4mwuckG4z6yASFUNLcQdxIQl
+	 +3pxJRPKa4ts5vp4TLyRwvIqjvohZzYO7sF7TEBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388155AbfJAQow (ORCPT
+        id S2388908AbfJAQtj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:44:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56952 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:49:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390022AbfJAQok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:44:40 -0400
+        id S2390098AbfJAQow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:44:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59A44222C2;
-        Tue,  1 Oct 2019 16:44:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A38021906;
+        Tue,  1 Oct 2019 16:44:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948279;
-        bh=/BkX1duVV7CS5C0o/QWskCQ6Z70Aa83HUMWYRNnqQ1Q=;
+        s=default; t=1569948291;
+        bh=/TEnXecOTQCkGMs7b+BXqGxzanTDzA/OEU2U2Aw2j8I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JzWw6H/7c2aynCpNXTJMShA7d2uLLxjM2heEuKgjOxrdJCp4bknHXP2E1PDRg7jGV
-         wjXWqPhrUv+Jt2r98H4bN+QwpRmXgEDaAsSQutBjmDp0+lF1i0C7R7Wk56tt5H3xmW
-         DA+Au0KM/+WqZz/9OAC77KgD8n6qu4muHMc0im+w=
+        b=sN6FWxUeHXZpZRpfDZFx4pxdHM5yUSajiwDYClS0hQl7H2uAIP+aboPKVfuACJu5D
+         uYE4b1eQlih66Xw4W0MfCMWuNUYrRzd4cQ8kHxZXPcpboGdm6N6mKQ6tjzGKQ3uLzf
+         waqZa8x8nRH7r1jaEGwfPHcmnR581Rwy3EC/eqXE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Davide Caratti <dcaratti@redhat.com>,
-        Yotam Gigi <yotam.gi@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 12/29] net/sched: act_sample: don't push mac header on ip6gre ingress
-Date:   Tue,  1 Oct 2019 12:44:06 -0400
-Message-Id: <20191001164423.16406-12-sashal@kernel.org>
+Cc:     KeMeng Shi <shikemeng@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 22/29] sched/core: Fix migration to invalid CPU in __set_cpus_allowed_ptr()
+Date:   Tue,  1 Oct 2019 12:44:16 -0400
+Message-Id: <20191001164423.16406-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164423.16406-1-sashal@kernel.org>
 References: <20191001164423.16406-1-sashal@kernel.org>
@@ -60,43 +62,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Davide Caratti <dcaratti@redhat.com>
+From: KeMeng Shi <shikemeng@huawei.com>
 
-[ Upstream commit 92974a1d006ad8b30d53047c70974c9e065eb7df ]
+[ Upstream commit 714e501e16cd473538b609b3e351b2cc9f7f09ed ]
 
-current 'sample' action doesn't push the mac header of ingress packets if
-they are received by a layer 3 tunnel (like gre or sit); but it forgot to
-check for gre over ipv6, so the following script:
+An oops can be triggered in the scheduler when running qemu on arm64:
 
- # tc q a dev $d clsact
- # tc f a dev $d ingress protocol ip flower ip_proto icmp action sample \
- > group 100 rate 1
- # psample -v -g 100
+ Unable to handle kernel paging request at virtual address ffff000008effe40
+ Internal error: Oops: 96000007 [#1] SMP
+ Process migration/0 (pid: 12, stack limit = 0x00000000084e3736)
+ pstate: 20000085 (nzCv daIf -PAN -UAO)
+ pc : __ll_sc___cmpxchg_case_acq_4+0x4/0x20
+ lr : move_queued_task.isra.21+0x124/0x298
+ ...
+ Call trace:
+  __ll_sc___cmpxchg_case_acq_4+0x4/0x20
+  __migrate_task+0xc8/0xe0
+  migration_cpu_stop+0x170/0x180
+  cpu_stopper_thread+0xec/0x178
+  smpboot_thread_fn+0x1ac/0x1e8
+  kthread+0x134/0x138
+  ret_from_fork+0x10/0x18
 
-dumps everything, including outer header and mac, when $d is a gre tunnel
-over ipv6. Fix this adding a missing label for ARPHRD_IP6GRE devices.
+__set_cpus_allowed_ptr() will choose an active dest_cpu in affinity mask to
+migrage the process if process is not currently running on any one of the
+CPUs specified in affinity mask. __set_cpus_allowed_ptr() will choose an
+invalid dest_cpu (dest_cpu >= nr_cpu_ids, 1024 in my virtual machine) if
+CPUS in an affinity mask are deactived by cpu_down after cpumask_intersects
+check. cpumask_test_cpu() of dest_cpu afterwards is overflown and may pass if
+corresponding bit is coincidentally set. As a consequence, kernel will
+access an invalid rq address associate with the invalid CPU in
+migration_cpu_stop->__migrate_task->move_queued_task and the Oops occurs.
 
-Fixes: 5c5670fae430 ("net/sched: Introduce sample tc action")
-Signed-off-by: Davide Caratti <dcaratti@redhat.com>
-Reviewed-by: Yotam Gigi <yotam.gi@gmail.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+The reproduce the crash:
+
+  1) A process repeatedly binds itself to cpu0 and cpu1 in turn by calling
+  sched_setaffinity.
+
+  2) A shell script repeatedly does "echo 0 > /sys/devices/system/cpu/cpu1/online"
+  and "echo 1 > /sys/devices/system/cpu/cpu1/online" in turn.
+
+  3) Oops appears if the invalid CPU is set in memory after tested cpumask.
+
+Signed-off-by: KeMeng Shi <shikemeng@huawei.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1568616808-16808-1-git-send-email-shikemeng@huawei.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/act_sample.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/sched/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/sched/act_sample.c b/net/sched/act_sample.c
-index 489db1064d5bc..9d92eac019580 100644
---- a/net/sched/act_sample.c
-+++ b/net/sched/act_sample.c
-@@ -132,6 +132,7 @@ static bool tcf_sample_dev_ok_push(struct net_device *dev)
- 	case ARPHRD_TUNNEL6:
- 	case ARPHRD_SIT:
- 	case ARPHRD_IPGRE:
-+	case ARPHRD_IP6GRE:
- 	case ARPHRD_VOID:
- 	case ARPHRD_NONE:
- 		return false;
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index ff128e281d1c6..11916d8c3331f 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1111,7 +1111,8 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
+ 	if (cpumask_equal(&p->cpus_allowed, new_mask))
+ 		goto out;
+ 
+-	if (!cpumask_intersects(new_mask, cpu_valid_mask)) {
++	dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
++	if (dest_cpu >= nr_cpu_ids) {
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
+@@ -1132,7 +1133,6 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
+ 	if (cpumask_test_cpu(task_cpu(p), new_mask))
+ 		goto out;
+ 
+-	dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
+ 	if (task_running(rq, p) || p->state == TASK_WAKING) {
+ 		struct migration_arg arg = { p, dest_cpu };
+ 		/* Need help from migration thread: drop lock and wait. */
 -- 
 2.20.1
 
