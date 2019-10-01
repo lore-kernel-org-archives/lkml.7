@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC202C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DAD2C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F37D2168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37F6F2168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:58:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569949119;
-	bh=K4JtO4D3ApZQ4fgFUps0vrNW1aXpYkqjHX4RDmNYVX8=;
+	s=default; t=1569949128;
+	bh=cr6YBvpS3grHwJzik1Udnyg6TBccoNN3YeaiSRYHI9k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DZ+XVNZApZT3OlCySqQmC/U+CaIPNWISOrT+v3WyJegLNgDTUvJGn+8XUrBZxFHVH
-	 ZJcsfHYgDSZq6Xaov00TMZH6AkFxmfeR86DwvHdbdod0RHe4q6jIKNwFI9VShHa91o
-	 1TJfJrsOHw/2QVvaWjcImYbz6yKl538kIcHNvj7M=
+	b=W1SkHGQ0vVRklyT8mfcq90x4PC2c9EanEKubAb2+kCeHwjjAo625A0pj061OrrQB0
+	 nAJ5zAjQzTG11Al+Py/yZB1ubs5oqHlwQu+gVcQhRt3MmjogwnCw/MAEFDL3re6e51
+	 MvlpzA41A95bFhQrTqP6nfM8FiEE2D/mVhjr8TEQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387678AbfJAQ6h (ORCPT
+        id S1731099AbfJAQle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:58:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53178 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:41:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731100AbfJAQlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:41:35 -0400
+        id S1731048AbfJAQlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:41:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C244421A4C;
-        Tue,  1 Oct 2019 16:41:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 244672190F;
+        Tue,  1 Oct 2019 16:41:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948094;
-        bh=K4JtO4D3ApZQ4fgFUps0vrNW1aXpYkqjHX4RDmNYVX8=;
+        s=default; t=1569948090;
+        bh=cr6YBvpS3grHwJzik1Udnyg6TBccoNN3YeaiSRYHI9k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wD/i9c0UgH0h5w+XTdpQxRN9WF1e3D6AGQ04d57RQLw6hdaP20cPW5xczGZESQzh8
-         G2zngSYj1J7DCXIPZ1vwcn84/7Zy6/i+KCKNgL0kewOITHggUNnNMBkCLdKcYtt0Xt
-         QLIbBOplORGZAGZnejAL9keASTe7ipKCbNjloiDg=
+        b=HCyHiPXOHsrzk6EANLSr/zDce8R7VB6EDjb3FbbLkdbySB1zno0ig1GfcuJaogrvo
+         /Hx1G0QS2LxHauQIOrVKoKmpAzGAKYU0P2kUz5/KXxzXGVXQJ4/SQKniC4IUqowk/R
+         PNun7qu9JZ//0I1m1g8FAyJqTUf+D7HQ9OVWMa0Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lu Shuaibing <shuaibinglu@126.com>,
-        Dominique Martinet <dominique.martinet@cea.fr>,
-        Sasha Levin <sashal@kernel.org>,
-        v9fs-developer@lists.sourceforge.net, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 06/63] 9p: Transport error uninitialized
-Date:   Tue,  1 Oct 2019 12:40:28 -0400
-Message-Id: <20191001164125.15398-6-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 04/63] fs: nfs: Fix possible null-pointer dereferences in encode_attrs()
+Date:   Tue,  1 Oct 2019 12:40:26 -0400
+Message-Id: <20191001164125.15398-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164125.15398-1-sashal@kernel.org>
 References: <20191001164125.15398-1-sashal@kernel.org>
@@ -60,89 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Shuaibing <shuaibinglu@126.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 0ce772fe79b68f83df40f07f28207b292785c677 ]
+[ Upstream commit e2751463eaa6f9fec8fea80abbdc62dbc487b3c5 ]
 
-The p9_tag_alloc() does not initialize the transport error t_err field.
-The struct p9_req_t *req is allocated and stored in a struct p9_client
-variable. The field t_err is never initialized before p9_conn_cancel()
-checks its value.
+In encode_attrs(), there is an if statement on line 1145 to check
+whether label is NULL:
+    if (label && (attrmask[2] & FATTR4_WORD2_SECURITY_LABEL))
 
-KUMSAN(KernelUninitializedMemorySantizer, a new error detection tool)
-reports this bug.
+When label is NULL, it is used on lines 1178-1181:
+    *p++ = cpu_to_be32(label->lfs);
+    *p++ = cpu_to_be32(label->pi);
+    *p++ = cpu_to_be32(label->len);
+    p = xdr_encode_opaque_fixed(p, label->label, label->len);
 
-==================================================================
-BUG: KUMSAN: use of uninitialized memory in p9_conn_cancel+0x2d9/0x3b0
-Read of size 4 at addr ffff88805f9b600c by task kworker/1:2/1216
+To fix these bugs, label is checked before being used.
 
-CPU: 1 PID: 1216 Comm: kworker/1:2 Not tainted 5.2.0-rc4+ #28
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
-Workqueue: events p9_write_work
-Call Trace:
- dump_stack+0x75/0xae
- __kumsan_report+0x17c/0x3e6
- kumsan_report+0xe/0x20
- p9_conn_cancel+0x2d9/0x3b0
- p9_write_work+0x183/0x4a0
- process_one_work+0x4d1/0x8c0
- worker_thread+0x6e/0x780
- kthread+0x1ca/0x1f0
- ret_from_fork+0x35/0x40
+These bugs are found by a static analysis tool STCheck written by us.
 
-Allocated by task 1979:
- save_stack+0x19/0x80
- __kumsan_kmalloc.constprop.3+0xbc/0x120
- kmem_cache_alloc+0xa7/0x170
- p9_client_prepare_req.part.9+0x3b/0x380
- p9_client_rpc+0x15e/0x880
- p9_client_create+0x3d0/0xac0
- v9fs_session_init+0x192/0xc80
- v9fs_mount+0x67/0x470
- legacy_get_tree+0x70/0xd0
- vfs_get_tree+0x4a/0x1c0
- do_mount+0xba9/0xf90
- ksys_mount+0xa8/0x120
- __x64_sys_mount+0x62/0x70
- do_syscall_64+0x6d/0x1e0
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Freed by task 0:
-(stack is not available)
-
-The buggy address belongs to the object at ffff88805f9b6008
- which belongs to the cache p9_req_t of size 144
-The buggy address is located 4 bytes inside of
- 144-byte region [ffff88805f9b6008, ffff88805f9b6098)
-The buggy address belongs to the page:
-page:ffffea00017e6d80 refcount:1 mapcount:0 mapping:ffff888068b63740 index:0xffff88805f9b7d90 compound_mapcount: 0
-flags: 0x100000000010200(slab|head)
-raw: 0100000000010200 ffff888068b66450 ffff888068b66450 ffff888068b63740
-raw: ffff88805f9b7d90 0000000000100001 00000001ffffffff 0000000000000000
-page dumped because: kumsan: bad access detected
-==================================================================
-
-Link: http://lkml.kernel.org/r/20190613070854.10434-1-shuaibinglu@126.com
-Signed-off-by: Lu Shuaibing <shuaibinglu@126.com>
-[dominique.martinet@cea.fr: grouped the added init with the others]
-Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/9p/client.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/nfs/nfs4xdr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/9p/client.c b/net/9p/client.c
-index 9622f3e469f67..1d48afc7033ca 100644
---- a/net/9p/client.c
-+++ b/net/9p/client.c
-@@ -281,6 +281,7 @@ p9_tag_alloc(struct p9_client *c, int8_t type, unsigned int max_size)
- 
- 	p9pdu_reset(&req->tc);
- 	p9pdu_reset(&req->rc);
-+	req->t_err = 0;
- 	req->status = REQ_STATUS_ALLOC;
- 	init_waitqueue_head(&req->wq);
- 	INIT_LIST_HEAD(&req->req_list);
+diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+index 602446158bfb5..ff06820b9efbf 100644
+--- a/fs/nfs/nfs4xdr.c
++++ b/fs/nfs/nfs4xdr.c
+@@ -1172,7 +1172,7 @@ static void encode_attrs(struct xdr_stream *xdr, const struct iattr *iap,
+ 		} else
+ 			*p++ = cpu_to_be32(NFS4_SET_TO_SERVER_TIME);
+ 	}
+-	if (bmval[2] & FATTR4_WORD2_SECURITY_LABEL) {
++	if (label && (bmval[2] & FATTR4_WORD2_SECURITY_LABEL)) {
+ 		*p++ = cpu_to_be32(label->lfs);
+ 		*p++ = cpu_to_be32(label->pi);
+ 		*p++ = cpu_to_be32(label->len);
 -- 
 2.20.1
 
