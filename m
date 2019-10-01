@@ -2,123 +2,94 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DA5ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 19:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C26ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 19:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30F3021A4C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 19:34:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569958471;
-	bh=X0ODSdcm/NVAagYO7ccY+UsMr3yH1nYd7QAe62Cvk1s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=t0tLHlj06uPC/Sr0FZZ9KRHaro/P8rmz3i5bQEVI9OWzdPp7j/V0ucTiZfXZsqgTD
-	 o6W3td1T4OB3OngBdQsO79trcswrBGqtnbpjrO0HdJCg8cm8Q4gC9KdUAY6L2xS+QW
-	 uuP1K/J+bqf9mG6wGFiqR2Y2RPK9m9d598hBdbAs=
+	by mail.kernel.org (Postfix) with ESMTP id 10FAA20B7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 19:34:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfJATea (ORCPT
+        id S1727082AbfJATel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 15:34:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53834 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 15:34:41 -0400
+Received: from mga01.intel.com ([192.55.52.88]:31492 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726240AbfJATea (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 15:34:30 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EB7020B7C;
-        Tue,  1 Oct 2019 19:34:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569958469;
-        bh=X0ODSdcm/NVAagYO7ccY+UsMr3yH1nYd7QAe62Cvk1s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=g55px0NQzX8MpOTtfvfb2etHfMWOg3sxn8w/FHf64rDOsoeZP9nBWtFbiC8JWfXmA
-         B6U37pYseJdyozoirhZjl0l6K9O2pJSUV+k2BLC+nFKaRvlbZnNTgawggYkrFslod+
-         oDZFmAwT0dHjVmduL4xiAnV/WWz1VDYFx31vJTCY=
-Date:   Tue, 1 Oct 2019 14:34:27 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: Re: [RFC PATCH] pci: prevent putting pcie devices into lower device
- states on certain intel bridges
-Message-ID: <20191001193427.GA59137@google.com>
+        id S1726240AbfJATel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 15:34:41 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 12:34:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,571,1559545200"; 
+   d="scan'208";a="205134393"
+Received: from yexing-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.37.57])
+  by fmsmga001.fm.intel.com with ESMTP; 01 Oct 2019 12:34:34 -0700
+Date:   Tue, 1 Oct 2019 22:34:26 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com
+Subject: Re: [PATCH v22 24/24] docs: x86/sgx: Document kernel internals
+Message-ID: <20191001193307.GB12699@linux.intel.com>
+References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
+ <20190903142655.21943-25-jarkko.sakkinen@linux.intel.com>
+ <97dbd2a8-f1e5-a3f9-dac7-f1f4d6b6cd4c@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACO55tvjFPAMgz6DMGmJQ3adtJBX6yYnFRO9gVBEpMVTEBu0og@mail.gmail.com>
+In-Reply-To: <97dbd2a8-f1e5-a3f9-dac7-f1f4d6b6cd4c@infradead.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 06:21:28PM +0200, Karol Herbst wrote:
-> On Tue, Oct 1, 2019 at 3:27 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Mon, Sep 30, 2019 at 06:36:12PM +0200, Karol Herbst wrote:
-> > > On Mon, Sep 30, 2019 at 6:30 PM Mika Westerberg
-> > > <mika.westerberg@linux.intel.com> wrote:
-> > > >
-> > > > On Mon, Sep 30, 2019 at 06:05:14PM +0200, Karol Herbst wrote:
-> > > > > still happens with your patch applied. The machine simply gets shut down.
-> > > > >
-> > > > > dmesg can be found here:
-> > > > > https://gist.githubusercontent.com/karolherbst/40eb091c7b7b33ef993525de660f1a3b/raw/2380e31f566e93e5ba7c87ef545420965d4c492c/gistfile1.txt
-> > > >
-> > > > Looking your dmesg:
-> > > >
-> > > > Sep 30 17:24:27 kernel: nouveau 0000:01:00.0: DRM: DCB version 4.1
-> > > > Sep 30 17:24:27 kernel: nouveau 0000:01:00.0: DRM: MM: using COPY for buffer copies
-> > > > Sep 30 17:24:27 kernel: [drm] Initialized nouveau 1.3.1 20120801 for 0000:01:00.0 on minor 1
-> > > >
-> > > > I would assume it runtime suspends here. Then it wakes up because of PCI
-> > > > access from userspace:
-> > > >
-> > > > Sep 30 17:24:42 kernel: pci_raw_set_power_state: 56 callbacks suppressed
-> > > >
-> > > > and for some reason it does not get resumed properly. There are also few
-> > > > warnings from ACPI that might be relevant:
-> > > >
-> > > > Sep 30 17:24:27 kernel: ACPI Warning: \_SB.PCI0.GFX0._DSM: Argument #4 type mismatch - Found [Buffer], ACPI requires [Package] (20190509/nsarguments-59)
-> > > > Sep 30 17:24:27 kernel: ACPI Warning: \_SB.PCI0.PEG0.PEGP._DSM: Argument #4 type mismatch - Found [Buffer], ACPI requires [Package] (20190509/nsarguments-59)
-> > >
-> > > afaik this is the case for essentially every laptop out there.
-> >
-> > I think we should look into this a little bit.
-> > acpi_ns_check_argument_types() checks the argument type and prints
-> > this message, but AFAICT it doesn't actually fix anything or prevent
-> > execution of the method, so I have no idea what happens when we
-> > actually execute the _DSM.
+On Fri, Sep 27, 2019 at 10:07:10AM -0700, Randy Dunlap wrote:
+> On 9/3/19 7:26 AM, Jarkko Sakkinen wrote:
+> > From: Sean Christopherson <sean.j.christopherson@intel.com>
+> > 
+> > Document some of the more tricky parts of the kernel implementation
+> > internals.
+> > 
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > Co-developed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 > 
-> I can assure you that this warning happens on every single laptop out
-> there with dual Nvidia graphics and it's essentially just a firmware
-> bug. And it never caused any issues on any of the older laptops (or
-> newest one for that matter).
+> Hi,
+> Some edits for you to consider.
 
-Rafael, do you know anything about this?  If ACPI has some sort of
-workaround so it can execute the method correctly anyway, maybe we
-should remove or reword the warning?
+Thank you, great comments!
 
-Or if this does prevent execution of the method, maybe we need to add
-a workaround since the problem is so prevalent in the field?
-
-> > If we execute this _DSM as part of power management, and the _DSM
-> > doesn't work right, it would be no surprise that we have problems.
-> >
-> > Maybe we could learn something by turning on ACPI_DB_PARSE output (see
-> > Documentation/firmware-guide/acpi/debug.rst).
-> >
-> > You must have an acpidump already from all your investigation.  Can
-> > you put it somewhere, e.g., bugzilla.kernel.org, and include a URL?
+> > +ultimately all the launch decisions token are not needed for anything.  We
 > 
-> Will do so later, right now I am traveling to XDC and will have more
-> time for that then.
+>    ultimately makes all the launch decisions, tokens are not
+
+Here I rephrased the whole sentence as tokens are only single purpose.
+The current form implies as if they were multipurpose. Also the last
+sentence was just the first sentence rephrased differently.
+
+I also more information about the launch and I ended up with this:
+
+"The current kernel implementation supports only writable MSRs. The launch is
+performed by setting the MSRs to the hash of the public key modulus of the
+enclave signer and a token with the valid bit set to zero.
+
+If the MSRs were read-only, the platform would need to provide a launch enclave
+(LE), which would be signed with the key matching the MSRs. The LE creates
+cryptographic tokens for other enclaves that they can pass together with their
+signature to the ENCLS(EINIT) opcode, which is used to initialize enclaves."
+
+/Jarkko
