@@ -2,132 +2,128 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A51C35280
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 02:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EAD2C35280
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 02:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47D2C2087F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 02:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 763EC2087F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 02:54:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WvJzPJQ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731989AbfJACx5 (ORCPT
+        id S1732042AbfJACy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 22:53:57 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:43163 "EHLO
-        mail.loongson.cn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727669AbfJACx5 (ORCPT
+        Mon, 30 Sep 2019 22:54:29 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45774 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727669AbfJACy3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 22:53:57 -0400
-Received: from [10.20.41.27] (unknown [10.20.41.27])
-        by mail (Coremail) with SMTP id QMiowPDxP2K4v5JdEbcFAA--.183S3;
-        Tue, 01 Oct 2019 10:53:44 +0800 (CST)
-Subject: Re: [PATCH] PCI: Add Loongson vendor ID and device IDs
-To:     Andrew Murray <andrew.murray@arm.com>
-References: <279cbe32-a44b-3190-aaf7-a277a1220720@loongson.cn>
- <20190930140217.GB38576@e119886-lin.cambridge.arm.com>
-Cc:     bhelgaas@google.com, zenglu@loongson.cn, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <d3cde609-7918-6b1c-940d-29ecaf7e5cbb@loongson.cn>
-Date:   Tue, 1 Oct 2019 10:53:44 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Mon, 30 Sep 2019 22:54:29 -0400
+Received: by mail-pg1-f195.google.com with SMTP id q7so8562351pgi.12;
+        Mon, 30 Sep 2019 19:54:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=sxdXfiuNl2yFvJ36iDY38onydEuHSgA4zj8cf4BOews=;
+        b=WvJzPJQ4MYk59SYfnZ7pFb5nQLIKzWCZoHIr570P6ZkrSfBi7YIQrtO7bVjG7iOzK9
+         BBbTlJV9h1dsHl2dsEOZ5l8jcawQ2ktzMNogtNU14kUrJzxKKo1LwA/GIdcTJTVuZH3Z
+         W1IGGYIzyyvMOXGW96LgoUgv6hP24vuuiOOKAn6+j+vR1vD5ydjA2/wa3pbRoTwrQp2S
+         1YlEodj+7RI5QCpw1uaOyLAqkTlKggU21qOrC0oIJuGOvgmupfh7tMG1Qr1adBaUHCp7
+         Cd0cpGr98ddYeeFpPl5nWq2/y4JPiYdMXoGR/7hfinHVKJ4wPcJQx1kuhQ8srAqHKIyj
+         WZow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sxdXfiuNl2yFvJ36iDY38onydEuHSgA4zj8cf4BOews=;
+        b=O0y2O372+yDIKqm/70WTqa8r+B50Zzhpkrf7QJrD38jYvvuCxbyURkW7YWUyYKrTUm
+         b/Uz1HBrCwuvPOcyl+6ZlNVSr7FONkkxLG9ueNo2X82gwLAUrpqNDMvaiWIeuOV8nqVL
+         kWuArZiwNyPyRUOYzO2+aq2ALM2kyzPZ9UTFTNKWRkDa/MqnqsUmSrybPInEIS2Dem1E
+         WCzp4iXXajfq/iYxd91e3SYX24Cj5j5xlIFNpiSyzjMjsWAGl3wyhp3gvnx2eiWa0lC4
+         BrxN6mQYmAi1gah0i6xqdnDUoSiTmzvNHlIObCdO2T+Smg15XfGox219CZkrjdYrB33b
+         TiKA==
+X-Gm-Message-State: APjAAAWbqIGltwcdLbMFcRWK5Hi+9JmeEXwvhNCTpBEjrgTIc9k5FrZj
+        hBA1AW1qu0HzlskPJVfFIa9tQMTg
+X-Google-Smtp-Source: APXvYqziA8ujixxzDMRL/C5XU0l8zVQ8tUDosVuZXzauorvclA9c5mKPQjTamNyOJXRQJ+YAD+lh/Q==
+X-Received: by 2002:a62:4dc5:: with SMTP id a188mr234181pfb.250.1569898468601;
+        Mon, 30 Sep 2019 19:54:28 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id d76sm18347397pga.80.2019.09.30.19.54.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Sep 2019 19:54:28 -0700 (PDT)
+Subject: Re: Problem sharing interrupts between gpioa and uart0 on Broadcom
+ Hurricane 2 (iProc)
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "rayagonda.kokatanur@broadcom.com" <rayagonda.kokatanur@broadcom.com>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "li.jin@broadcom.com" <li.jin@broadcom.com>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "rjui@broadcom.com" <rjui@broadcom.com>
+Cc:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+References: <32c3d1dfe61a656e3250438d887e5ba91bd880d0.camel@alliedtelesis.co.nz>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <d72a965a-e4e1-ba5d-cd62-b31939e75e44@gmail.com>
+Date:   Mon, 30 Sep 2019 19:54:28 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20190930140217.GB38576@e119886-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <32c3d1dfe61a656e3250438d887e5ba91bd880d0.camel@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: QMiowPDxP2K4v5JdEbcFAA--.183S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7uF4rWr47Cr4ruF43Ww1ftFb_yoW8KF4Dpr
-        18ZFW3KFs7trW7Wwn2qwn8Gry3AanayryUuFy3Wr4jqF13Xw1rGr1qvr45ZrW2qrn5X34I
-        vF4DC3y5CFsrt37anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkqb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I
-        8E87Iv6xkF7I0E14v26r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr0_Cr
-        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l
-        42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
-        WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAK
-        I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
-        4UMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAI
-        cVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8ZNVDUUUUU==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/30/2019 10:02 PM, Andrew Murray wrote:
-> On Mon, Sep 30, 2019 at 12:55:20PM +0800, Tiezhu Yang wrote:
->> Add the Loongson vendor ID and device IDs to pci_ids.h
->> to be used in the future.
->>
->> The Loongson IDs can be found at the following link:
->> https://git.kernel.org/pub/scm/utils/pciutils/pciutils.git/tree/pci.ids
->>
->> Co-developed-by: Lu Zeng <zenglu@loongson.cn>
->> Signed-off-by: Lu Zeng <zenglu@loongson.cn>
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->> ---
->>   include/linux/pci_ids.h | 19 +++++++++++++++++++
->>   1 file changed, 19 insertions(+)
->>
->> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
->> index 21a5724..119639d 100644
->> --- a/include/linux/pci_ids.h
->> +++ b/include/linux/pci_ids.h
->> @@ -3111,4 +3111,23 @@
->>
->>   #define PCI_VENDOR_ID_NCUBE            0x10ff
->>
->> +#define PCI_VENDOR_ID_LOONGSON                 0x0014
->> +#define PCI_DEVICE_ID_LOONGSON_HT              0x7a00
->> +#define PCI_DEVICE_ID_LOONGSON_APB             0x7a02
->> +#define PCI_DEVICE_ID_LOONGSON_GMAC            0x7a03
->> +#define PCI_DEVICE_ID_LOONGSON_OTG             0x7a04
->> +#define PCI_DEVICE_ID_LOONGSON_GPU_2K1000      0x7a05
->> +#define PCI_DEVICE_ID_LOONGSON_DC              0x7a06
->> +#define PCI_DEVICE_ID_LOONGSON_HDA             0x7a07
->> +#define PCI_DEVICE_ID_LOONGSON_SATA            0x7a08
->> +#define PCI_DEVICE_ID_LOONGSON_PCIE_X1         0x7a09
->> +#define PCI_DEVICE_ID_LOONGSON_SPI             0x7a0b
->> +#define PCI_DEVICE_ID_LOONGSON_LPC             0x7a0c
->> +#define PCI_DEVICE_ID_LOONGSON_DMA             0x7a0f
->> +#define PCI_DEVICE_ID_LOONGSON_EHCI            0x7a14
->> +#define PCI_DEVICE_ID_LOONGSON_GPU_7A1000      0x7a15
->> +#define PCI_DEVICE_ID_LOONGSON_PCIE_X4         0x7a19
->> +#define PCI_DEVICE_ID_LOONGSON_OHCI            0x7a24
->> +#define PCI_DEVICE_ID_LOONGSON_PCIE_X8         0x7a29
-> Hi Tiezhu,
->
-> Thanks for the patch - however it is preferred to provide new PCI definitions
-> along with the drivers that use them. They don't provide any useful value
-> without drivers that use them.
 
-Hi Andrew,
 
-Thanks for your reply. This is the first step of the Loongson kernel team,
-we will submit other related individual driver patches step by step in the
-near future, these small patches make an easily understood change that can
-be verified by reviewers.
+On 9/30/2019 7:33 PM, Chris Packham wrote:
+> Hi,
+> 
+> We have a platform using the BCM53344 integrated switch/CPU. This is
+> part of the Hurricane 2 (technically Wolfhound) family of devices.
+> 
+> Currently we're using pieces of Broadcom's "iProc" SDK based on an out
+> of date kernel and we'd very much like to be running as close to
+> upstream as possible. The fact that the Ubiquiti UniFi Switch 8 is
+> upstream gives me some hope.
 
-Thanks,
+FYI, I could not get enough information from the iProc SDK to port (or
+not) the clock driver, so if nothing else, that is an area that may
+require immediate work (though sometimes fixed-clocks would do just fine).
 
-Tiezhu Yang
+> 
+> My current problem is the fact that the uart0 interrupt is shared with
+> the Chip Common A gpio block. When I have and interrupt node on the
+> gpio in the device tree I get an init exit at startup. If I remove the
+> interrupt node the system will boot (except I don't get cascaded
+> interrupts from the GPIOs).
+> 
+> Looking at the pinctrl-nsp-gpio.c it looks as though I might be able to
+> make this work if I can convince the gpio code to return IRQ_HANDLED or
+> IRQ_NONE but I'm struggling against the fact that the pinctrl-iproc-
+> gpio.c defers it's interrupt handing to the gpio core.
 
->
-> Thanks,
->
-> Andrew Murray
->
->> +
->>   #endif /* _LINUX_PCI_IDS_H */
->> -- 
->> 2.1.0
->>
->>
+Not sure I follow you here, what part is being handed to gpiolib? The
+top interrupt handler under nsp_gpio_irq_handler() will try to do
+exactly as you described. In fact, there are other iProc designs where
+"gpio-a" and another interrupt, arch/arm/boot/dts/bcm-nsp.dtsi is one
+such example and I never had problems with that part of NSP.
 
+> 
+> Is there any way I can get the gpio core to deal with the shared
+> interrupt?
+-- 
+Florian
