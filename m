@@ -2,140 +2,92 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 939B9ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DDECC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 716AB206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 774BB2168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 15:14:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389503AbfJAPNm (ORCPT
+        id S2389532AbfJAPOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 11:13:42 -0400
-Received: from mga02.intel.com ([134.134.136.20]:60254 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389129AbfJAPNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 11:13:42 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Oct 2019 08:13:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,571,1559545200"; 
-   d="scan'208";a="205082435"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 01 Oct 2019 08:13:26 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 01 Oct 2019 18:13:26 +0300
-Date:   Tue, 1 Oct 2019 18:13:26 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Mario.Limonciello@dell.com
-Cc:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-        andreas.noever@gmail.com, michael.jamet@intel.com,
-        YehezkelShB@gmail.com, rajmohan.mani@intel.com,
-        nicholas.johnson-opensource@outlook.com.au, lukas@wunner.de,
-        stern@rowland.harvard.edu, anthony.wong@canonical.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
-Message-ID: <20191001151326.GB2714@lahna.fi.intel.com>
-References: <20191001113830.13028-1-mika.westerberg@linux.intel.com>
- <20191001113830.13028-18-mika.westerberg@linux.intel.com>
- <20191001124748.GH2954373@kroah.com>
- <20191001130905.GO2714@lahna.fi.intel.com>
- <20191001145354.GA3366714@kroah.com>
- <924ce4d5862c4d859e238c0e706a3d5b@AUSX13MPC105.AMER.DELL.COM>
+        Tue, 1 Oct 2019 11:14:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42270 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389129AbfJAPOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 11:14:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 71301AFC6;
+        Tue,  1 Oct 2019 15:14:40 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id E9E8FE0083; Tue,  1 Oct 2019 17:14:39 +0200 (CEST)
+Date:   Tue, 1 Oct 2019 17:14:39 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Borislav Petkov <bp@alien8.de>, Alex Vesker <valex@mellanox.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-rdma@vger.kernel.org, Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: ERROR: "__umoddi3"
+ [drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.ko] undefined!
+Message-ID: <20191001151439.GA24815@unicorn.suse.cz>
+References: <20190930141316.GG29694@zn.tnic>
+ <20190930154535.GC22120@unicorn.suse.cz>
+ <20190930162910.GI29694@zn.tnic>
+ <20190930095516.0f55513a@hermes.lan>
+ <20190930184031.GJ29694@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <924ce4d5862c4d859e238c0e706a3d5b@AUSX13MPC105.AMER.DELL.COM>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190930184031.GJ29694@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 02:59:06PM +0000, Mario.Limonciello@dell.com wrote:
+On Mon, Sep 30, 2019 at 08:40:31PM +0200, Borislav Petkov wrote:
+> On Mon, Sep 30, 2019 at 09:55:16AM -0700, Stephen Hemminger wrote:
+> > Could also us div_u64_rem here?
 > 
+> Yah, the below seems to work and the resulting asm looks sensible to me
+> but someone should definitely double-check me as I don't know this code
+> at all.
 > 
-> > -----Original Message-----
-> > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Sent: Tuesday, October 1, 2019 9:54 AM
-> > To: Mika Westerberg
-> > Cc: linux-usb@vger.kernel.org; Andreas Noever; Michael Jamet; Yehezkel Bernat;
-> > Rajmohan Mani; Nicholas Johnson; Lukas Wunner; Alan Stern; Limonciello, Mario;
-> > Anthony Wong; linux-kernel@vger.kernel.org
-> > Subject: Re: [RFC PATCH 17/22] thunderbolt: Add initial support for USB4
-> > 
-> > 
-> > [EXTERNAL EMAIL]
-> > 
-> > On Tue, Oct 01, 2019 at 04:09:05PM +0300, Mika Westerberg wrote:
-> > > On Tue, Oct 01, 2019 at 02:47:48PM +0200, Greg Kroah-Hartman wrote:
-> > > > > -	  Thunderbolt Controller driver. This driver is required if you
-> > > > > -	  want to hotplug Thunderbolt devices on Apple hardware or on PCs
-> > > > > -	  with Intel Falcon Ridge or newer.
-> > > > > +	  USB4 (Thunderbolt) driver. USB4 is the public spec based on
-> > > > > +	  Thunderbolt 3 protocol. This driver is required if you want to
-> > > > > +	  hotplug Thunderbolt and USB4 compliant devices on Apple
-> > > > > +	  hardware or on PCs with Intel Falcon Ridge or newer.
-> > > >
-> > > > Wait, did "old" thunderbolt just get re-branded as USB4?
-> > >
-> > > Not but the driver started supporting USB4 as well :)
-> > >
-> > > USB4 is pretty much public spec of Thunderbolt 3 but with some
-> > > differences in register layouts (this is because Thunderbolt uses some
-> > > vendor specific capabilities which are now moved to more "standard"
-> > > places).
-> > 
-> > Ok, then we need to rename the Kconfig option as well, otherwise no one
-> > will "know" that this changed, so they will not be prompted for it.
-> > 
-> > > > Because if I have an "old" laptop that needs Thunderbolt support, how am
-> > > > I going to know it is now called USB4 instead?
-> > >
-> > > Well the Kconfig option tries to have both names there:
-> > >
-> > >   tristate "USB4 (Thunderbolt) support"
-> > >
-> > > and then
-> > >
-> > >   USB4 (Thunderbolt) driver. USB4 is the public spec based on
-> > >   Thunderbolt 3 protocol. This driver is required if you want to hotplug
-> > >   Thunderbolt and USB4 compliant devices on Apple hardware or on PCs
-> > >   with Intel Falcon Ridge or newer.
-> > >
-> > > and the Kconfig option is still CONFIG_THUNDERBOLT. I know this is
-> > > confusing but I don't have better ideas how we can advertise both. I
-> > > borrowed this "format" from firewire.
-> > 
-> > CONFIG_USB4 instead?
+> Thx.
 > 
-> How about CONFIG_USB4_PCIE?
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_icm_pool.c b/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_icm_pool.c
+> index 913f1e5aaaf2..b4302658e5f8 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_icm_pool.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_icm_pool.c
+> @@ -137,7 +137,7 @@ dr_icm_pool_mr_create(struct mlx5dr_icm_pool *pool,
+>  
+>  	icm_mr->icm_start_addr = icm_mr->dm.addr;
+>  
+> -	align_diff = icm_mr->icm_start_addr % align_base;
+> +	div_u64_rem(icm_mr->icm_start_addr, align_base, &align_diff);
+>  	if (align_diff)
+>  		icm_mr->used_length = align_base - align_diff;
+>  
 > 
-> I think that will help align that certain aspects of USB4 can be built optionally.
 
-But this is not about PCIe - it is just one type of a tunnel that is
-optional with USB4.
+While this fixes 32-bit builds, it breaks 64-bit ones as align_diff is
+64-bit and div_u64_rem expects pointer to u32. :-(
 
-> > > > Shouldn't there just be a new USB4 option that only enables/builds the
-> > > > USB4 stuff if selected?  Why would I want all of this additional code on
-> > > > my old system if it's not going to do anything at all?
-> > >
-> > > USB4 devices are backward compatible with Thunderbolt 3 so you should be
-> > > able to plug in USB4 device to your old Thunderbolt 3 laptop for
-> > > example. It goes the other way as well. Some things are optional but for
-> > > example USB4 hubs must support also Thunderbolt 3.
-> > >
-> 
-> If PCIe tunnels are an optional feature in USB4, how can it be mandatory to support
-> Thunderbolt 3?
+I checked that align_base is always a power of two so that we could get
+away with
 
-It is mandatory for USB4 hubs. For peripheral devices and hosts
-Thunderbolt 3 support is optional. So for example you could have USB4
-host that does not enter Thunderbolt 3 alternate mode at all so it only
-supports USB4 devices.
+	align_diff = icm_mr->icm_start_addr & (align_base - 1)
+
+I'm not sure, however, if it's safe to assume align_base will always
+have to be a power of two or if we should add a check for safety.
+
+(Cc-ing also author of commit 29cf8febd185 ("net/mlx5: DR, ICM pool
+memory allocator").)
+
+Michal
