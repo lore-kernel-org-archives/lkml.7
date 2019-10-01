@@ -2,126 +2,116 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D3BECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D2AECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE8A20B7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:57:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569952635;
-	bh=MAa/93Ml5RG/NXQg6lPPNBwwJf2wUnaCtVQFE3tEc70=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=eb8ttjijRUISweipiJgCq8DKSFa6hT1Y6ulejO63aWsx9lZmG2z35DF+3cnwnDlzP
-	 o6/8xX8LU5qdosHSzwZJejip5B5aJKB0W99yMNdKobRcUk69OsBTvNzCxrGxbkikSX
-	 /Lv0A/fFfyLMEMqBocxE5znBcv5Ck6kyao53E3hs=
+	by mail.kernel.org (Postfix) with ESMTP id 5006521855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:00:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tP7kQ9mF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731652AbfJAR5O (ORCPT
+        id S1731128AbfJASAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 13:57:14 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52212 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731374AbfJAR5G (ORCPT
+        Tue, 1 Oct 2019 14:00:24 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33167 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726554AbfJASAY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 13:57:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=TEqrWJlydl/LJ/NEbAy7qWhWY6Kvs3fyXEgyW+lKv6Q=; b=szJMXQiwligC
-        rrKJgYaWPIHn2NmrRg4bVyJr10GIQqsMlErQZIgPnCIwMJbcHWm7yTpJYJVAxxW5gjI4ep1MbCcvH
-        cKHQEk6YDwOod5nYjou2Wxp9KBuXSI+DrVrq/CqR4VBHWOrkxpraDQC05XyqK71gjVuXe2jkfZlL6
-        c5lj4=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iFMOU-0005vC-49; Tue, 01 Oct 2019 17:57:02 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id A2CF127429C0; Tue,  1 Oct 2019 18:57:01 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     "Cc:"@sirena.co.uk, "Cc:"@sirena.co.uk, emamd001@umn.edu,
-        kjlu@umn.edu, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        smccaman@umn.edu
-Subject: Applied "spi: gpio: prevent memory leak in spi_gpio_probe" to the spi tree
-In-Reply-To: <20190930205241.5483-1-navid.emamdoost@gmail.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20191001175701.A2CF127429C0@ypsilon.sirena.org.uk>
-Date:   Tue,  1 Oct 2019 18:57:01 +0100 (BST)
+        Tue, 1 Oct 2019 14:00:24 -0400
+Received: by mail-pg1-f195.google.com with SMTP id q1so2172269pgb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 11:00:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yrPCibXZ8aAVlYeWu3qzUI+I4f/2IsCgC/T/cZwtUTk=;
+        b=tP7kQ9mFk9GH83DD4Wn7w8bkC2bvSljjKeU02a8Ws9I/OYWSsc6I77CXb3DX8fKZ3Y
+         uSiRydgZIuYa5+LNm0P/n1NC/j3RE9nl3yFtR3evY8dySp4mAv8FZHaVm03nLvysHSRw
+         +S8bnOuLMJdRsQwaDpcvGUhY6rQo8oKkgT6pNIL8I3CrSef8L19AJraS9IWX/wr03g19
+         Z8h6MQLFqYMCz6v/A4QO6EDDSwfq8sq1ZkFQAoQVWhRd4/7MRaBv3BByYgeyEdxwVB0o
+         S8+cVyjvrip1SyEKNjzCZgx3HNFJCcHvrc8CTFr5GQEAa3ljNPfZ94BpEmNhIPLuJViz
+         VyEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yrPCibXZ8aAVlYeWu3qzUI+I4f/2IsCgC/T/cZwtUTk=;
+        b=GJmCaSqE19uWe2zll5WDKWqG60+elqs+Lpybfrj0mpmzG82G8ZXMomrOy6UVrPWowP
+         cnUIrNO8uVphaBf74n1hjLTn379u1C8QhqafOk00HALZRy1D6votI8IjmIpbNvZKjqBb
+         VBvM+ZtbxT/nQeCQV2xXONZ+iDR/o6cuILsI2cqmyNPRPut3uD1bYxY6Mo3jboF17T+p
+         15z+QyHMRxft3TRImRFRXbmf2HX7jBXDK6radJKXqx48Fp1eBFjjSBNAzDlV7bKjTmTf
+         BNA1txGVByTHE8rqvMjHffIGIl9Vkj7j1WrwkCORWUuTmaQMZ5/nYX8VFztiUqr5RPoa
+         7d8A==
+X-Gm-Message-State: APjAAAWzPh4+bGcTYtzydr0SyR+RFnrD7Q8jnnTKloUXbLozfb6Kh/M9
+        EpwuRaVOACqQ8woBQiM+0Z8dRnsk2KI/pnMGsRrrYw==
+X-Google-Smtp-Source: APXvYqwYNCvEPHPmb+tyytchKsZjMGzhL9IBjNboIg7WvPbiYbOhSRJ0ENEMO+ep9ULQ6v9Zpf55jzuTzQTkRZD7kEo=
+X-Received: by 2002:a63:2f45:: with SMTP id v66mr7764492pgv.263.1569952822500;
+ Tue, 01 Oct 2019 11:00:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAKwvOdk=tr5nqq1CdZnUvRskaVqsUCP0SEciSGonzY5ayXsMXw@mail.gmail.com>
+ <CAHk-=wiTy7hrA=LkmApBE9PQtri8qYsSOrf2zbms_crfjgR=Hw@mail.gmail.com>
+ <20190930112636.vx2qxo4hdysvxibl@willie-the-truck> <CAK7LNASQZ82KSOrQW7+Wq1vFDCg2__maBEAPMLqUDqZMLuj1rA@mail.gmail.com>
+ <20190930121803.n34i63scet2ec7ll@willie-the-truck> <CAKwvOdnqn=0LndrX+mUrtSAQqoT1JWRMOJCA5t3e=S=T7zkcCQ@mail.gmail.com>
+ <20191001092823.z4zhlbwvtwnlotwc@willie-the-truck> <CAKwvOdk0h2A6=fb7Yepf+oKbZfq_tqwpGq8EBmHVu1j4mo-a-A@mail.gmail.com>
+ <20191001170142.x66orounxuln7zs3@willie-the-truck> <CAKwvOdnFJqipp+G5xLDRBcOrQRcvMQmn+n8fufWyzyt2QL_QkA@mail.gmail.com>
+ <20191001175512.GK25745@shell.armlinux.org.uk>
+In-Reply-To: <20191001175512.GK25745@shell.armlinux.org.uk>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 1 Oct 2019 11:00:11 -0700
+Message-ID: <CAKwvOdmw_xmTGZLeK8-+Q4nUpjs-UypJjHWks-3jHA670Dxa1A@mail.gmail.com>
+Subject: Re: [PATCH] compiler: enable CONFIG_OPTIMIZE_INLINING forcibly
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Will Deacon <will@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Kees Cook <keescook@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Tue, Oct 1, 2019 at 10:55 AM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Tue, Oct 01, 2019 at 10:44:43AM -0700, Nick Desaulniers wrote:
+> > I apologize; I don't mean to be difficult.  I would just like to avoid
+> > surprises when code written with the assumption that it will be
+> > inlined is not.  It sounds like we found one issue in arm32 and one in
+> > arm64 related to outlining.  If we fix those two cases, I think we're
+> > close to proceeding with Masahiro's cleanup, which I view as a good
+> > thing for the health of the Linux kernel codebase.
+>
+> Except, using the C preprocessor for this turns the arm32 code into
+> yuck:
+>
+> 1. We'd need to turn get_domain() and set_domain() into multi-line
+>    preprocessor macro definitions, using the GCC ({ }) extension
+>    so that get_domain() can return a value.
+>
+> 2. uaccess_save_and_enable() and uaccess_restore() also need to
+>    become preprocessor macro definitions too.
+>
+> So, we end up with multiple levels of nested preprocessor macros.
+> When something goes wrong, the compiler warning/error message is
+> going to be utterly _horrid_.
 
-   spi: gpio: prevent memory leak in spi_gpio_probe
-
-has been applied to the spi tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From d3b0ffa1d75d5305ebe34735598993afbb8a869d Mon Sep 17 00:00:00 2001
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
-Date: Mon, 30 Sep 2019 15:52:40 -0500
-Subject: [PATCH] spi: gpio: prevent memory leak in spi_gpio_probe
-
-In spi_gpio_probe an SPI master is allocated via spi_alloc_master, but
-this controller should be released if devm_add_action_or_reset fails,
-otherwise memory leaks. In order to avoid leak spi_contriller_put must
-be called in case of failure for devm_add_action_or_reset.
-
-Fixes: 8b797490b4db ("spi: gpio: Make sure spi_master_put() is called in every error path")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Link: https://lore.kernel.org/r/20190930205241.5483-1-navid.emamdoost@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-gpio.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/spi/spi-gpio.c b/drivers/spi/spi-gpio.c
-index 1d3e23ec20a6..f9c5bbb74714 100644
---- a/drivers/spi/spi-gpio.c
-+++ b/drivers/spi/spi-gpio.c
-@@ -371,8 +371,10 @@ static int spi_gpio_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	status = devm_add_action_or_reset(&pdev->dev, spi_gpio_put, master);
--	if (status)
-+	if (status) {
-+		spi_master_put(master);
- 		return status;
-+	}
- 
- 	if (of_id)
- 		status = spi_gpio_probe_dt(pdev, master);
+That's why I preferred V1 of Masahiro's patch, that fixed the inline
+asm not to make use of caller saved registers before calling a
+function that might not be inlined.
 -- 
-2.20.1
-
+Thanks,
+~Nick Desaulniers
