@@ -2,142 +2,98 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FADECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 555B9C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3340215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26DCE215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:47:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=fomichev-me.20150623.gappssmtp.com header.i=@fomichev-me.20150623.gappssmtp.com header.b="Gt56L8w1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730364AbfJARrP (ORCPT
+        id S1730462AbfJARry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 13:47:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:55472 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726096AbfJARrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 13:47:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C032337;
-        Tue,  1 Oct 2019 10:47:14 -0700 (PDT)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 009113F706;
-        Tue,  1 Oct 2019 10:47:12 -0700 (PDT)
-Subject: Re: [PATCH v3 04/10] sched/fair: rework load_balance
-To:     Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org
-Cc:     pauld@redhat.com, srikar@linux.vnet.ibm.com,
-        quentin.perret@arm.com, dietmar.eggemann@arm.com,
-        Morten.Rasmussen@arm.com, hdanton@sina.com
-References: <1568878421-12301-1-git-send-email-vincent.guittot@linaro.org>
- <1568878421-12301-5-git-send-email-vincent.guittot@linaro.org>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <c752dd1a-731e-aae3-6a2c-aecf88901ac0@arm.com>
-Date:   Tue, 1 Oct 2019 18:47:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 1 Oct 2019 13:47:54 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34829 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbfJARry (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 13:47:54 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 205so8564958pfw.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 10:47:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fomichev-me.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SoOSPipuE33jULe97DufiIcM26KAvulqtCWdOasdfOc=;
+        b=Gt56L8w1v5zwU157k7mYgChNAKCLkkvgOLzG56/nYZ8pK5jDXgA0tfvBAzl4lW51oL
+         uO+NU+Y33bGvOo3xDJxVhEHTmkmLRtyl/1MK0XaqabPoExaiQmE3WtL93fkjUtqOJpbP
+         nS14jOdTR8VA2fAmxsyPy+Y9VPWTceINwAYyGx3tXbzXmCoHd6Wj4/3o192nsMY5CKRm
+         +hDIhYWw+4Zb73iaRsO4pX4wG6R1oVB3IAMaSxIvzex3svPTK5Z1CfhQtW2Yu3bSgtDn
+         TK5RRfG4856AMFq4SOAx+sFby9HihmUjJvGi8pfg5XdAFXfaH0uQV6h0Z1dmoFuvxoX9
+         UFdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SoOSPipuE33jULe97DufiIcM26KAvulqtCWdOasdfOc=;
+        b=E5eqypJ5l1jgj2MgsIbF+82aP4W7Ywjnlq5R9DSScWdneNn6oCaGZOnFc50Db8Ajh2
+         kHmY2LJggk1Oegr6Cnpj1TGanMs1OdBZq3BMSIWq2IRaUhtPPWmb5uIVmqG5L7Z5R/Ng
+         Jg2/PTGZe4UbcnZ4e5Q1+mDlzltAG0cDqR+MnOlUXDUwvknzSSXephWw2dpu1w3GPPoD
+         u+5Eg+nLHIPyWKgNJyV7fTDCw+GP8Dc7pKXdweuFU/myBTSxLKvMGm/UoQoZergr1UGS
+         xYXXxOObXPLOLanCiQW8614PNqD7KuHE/a0pCDPThTTUm87vdXcQ8v5vDL1ChRXEp94X
+         XfVg==
+X-Gm-Message-State: APjAAAUbzpcsMzJqFcsfsG9NvyM6rkxTFcql2PJ9VKMc3dJhm0wT0HvU
+        FN0z++bm2b65FYq7PDLDlSrVvO1CO2s=
+X-Google-Smtp-Source: APXvYqyakcnmqkudv3y2xd4f1EkwDl0BTY3KUNGODhaZa8QBXhCiE73fXWyT+f7Q5kYz+rtdOTz61Q==
+X-Received: by 2002:a63:6e4c:: with SMTP id j73mr31127847pgc.452.1569952073325;
+        Tue, 01 Oct 2019 10:47:53 -0700 (PDT)
+Received: from localhost ([2601:646:8f00:18d9:d0fa:7a4b:764f:de48])
+        by smtp.gmail.com with ESMTPSA id b24sm16963529pgs.15.2019.10.01.10.47.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2019 10:47:52 -0700 (PDT)
+Date:   Tue, 1 Oct 2019 10:47:52 -0700
+From:   Stanislav Fomichev <sdf@fomichev.me>
+To:     Brian Vazquez <brianvv@google.com>
+Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH bpf 0/2] selftests/bpf: test_progs: don't leak fd in bpf
+Message-ID: <20191001174752.GA3223377@mini-arch>
+References: <20191001173728.149786-1-brianvv@google.com>
 MIME-Version: 1.0
-In-Reply-To: <1568878421-12301-5-git-send-email-vincent.guittot@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191001173728.149786-1-brianvv@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/09/2019 08:33, Vincent Guittot wrote:
+On 10/01, Brian Vazquez wrote:
+> This patch series fixes some fd leaks in tcp_rtt and
+> test_sockopt_inherit bpf prof_tests.
+Thanks! For the series:
 
-[...]
+Reviewed-by: Stanislav Fomichev <sdf@google.com>
 
-> @@ -8283,69 +8363,133 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
->   */
->  static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *sds)
->  {
-> -	unsigned long max_pull, load_above_capacity = ~0UL;
->  	struct sg_lb_stats *local, *busiest;
->  
->  	local = &sds->local_stat;
->  	busiest = &sds->busiest_stat;
->  
-> -	if (busiest->group_asym_packing) {
-> +	if (busiest->group_type == group_misfit_task) {
-> +		/* Set imbalance to allow misfit task to be balanced. */
-> +		env->balance_type = migrate_misfit;
-> +		env->imbalance = busiest->group_misfit_task_load;
-> +		return;
-> +	}
-> +
-> +	if (busiest->group_type == group_asym_packing) {
-> +		/*
-> +		 * In case of asym capacity, we will try to migrate all load to
-> +		 * the preferred CPU.
-> +		 */
-> +		env->balance_type = migrate_load;
->  		env->imbalance = busiest->group_load;
->  		return;
->  	}
->  
-> +	if (busiest->group_type == group_imbalanced) {
-> +		/*
-> +		 * In the group_imb case we cannot rely on group-wide averages
-> +		 * to ensure CPU-load equilibrium, try to move any task to fix
-> +		 * the imbalance. The next load balance will take care of
-> +		 * balancing back the system.
-> +		 */
-> +		env->balance_type = migrate_task;
-> +		env->imbalance = 1;
-> +		return;
-> +	}
-> +
->  	/*
-> -	 * Avg load of busiest sg can be less and avg load of local sg can
-> -	 * be greater than avg load across all sgs of sd because avg load
-> -	 * factors in sg capacity and sgs with smaller group_type are
-> -	 * skipped when updating the busiest sg:
-> +	 * Try to use spare capacity of local group without overloading it or
-> +	 * emptying busiest
->  	 */
-> -	if (busiest->group_type != group_misfit_task &&
-> -	    (busiest->avg_load <= sds->avg_load ||
-> -	     local->avg_load >= sds->avg_load)) {
-> -		env->imbalance = 0;
-> +	if (local->group_type == group_has_spare) {
-> +		if (busiest->group_type > group_fully_busy) {
-> +			/*
-> +			 * If busiest is overloaded, try to fill spare
-> +			 * capacity. This might end up creating spare capacity
-> +			 * in busiest or busiest still being overloaded but
-> +			 * there is no simple way to directly compute the
-> +			 * amount of load to migrate in order to balance the
-> +			 * system.
-> +			 */
-> +			env->balance_type = migrate_util;
-> +			env->imbalance = max(local->group_capacity, local->group_util) -
-> +				    local->group_util;
-> +			return;
-> +		}
-> +
-> +		if (busiest->group_weight == 1 || sds->prefer_sibling) {
-> +			/*
-> +			 * When prefer sibling, evenly spread running tasks on
-> +			 * groups.
-> +			 */
-> +			env->balance_type = migrate_task;
-> +			env->imbalance = (busiest->sum_h_nr_running - local->sum_h_nr_running) >> 1;
-
-Isn't that one somewhat risky?
-
-Say both groups are classified group_has_spare and we do prefer_sibling.
-We'd select busiest as the one with the maximum number of busy CPUs, but it
-could be so that busiest.sum_h_nr_running < local.sum_h_nr_running (because
-pinned tasks or wakeup failed to properly spread stuff).
-
-The thing should be unsigned so at least we save ourselves from right
-shifting a negative value, but we still end up with a gygornous imbalance
-(which we then store into env.imbalance which *is* signed... Urgh).
-
-[...]
+> Brian Vazquez (2):
+>   selftests/bpf: test_progs: don't leak server_fd in tcp_rtt
+>   selftests/bpf: test_progs: don't leak server_fd in
+>     test_sockopt_inherit
+> 
+>  tools/testing/selftests/bpf/prog_tests/sockopt_inherit.c | 2 +-
+>  tools/testing/selftests/bpf/prog_tests/tcp_rtt.c         | 3 ++-
+>  2 files changed, 3 insertions(+), 2 deletions(-)
+> 
+> -- 
+> 2.23.0.444.g18eeb5a265-goog
+> 
