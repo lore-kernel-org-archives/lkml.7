@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 156F9ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F881ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4A7720659
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15B5520659
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:46:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948405;
-	bh=gOxfJOCLf60/pIqvNXNUkBT5bw2/Po247341M7g2E6k=;
+	s=default; t=1569948412;
+	bh=uiHsB3meyPILAAZDTjLvMiCCFNR9pJuupii+/uI5/FA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VN0+kSLmQexQ+uvPPWJMXHSZ3A/1VB3LsBygiNPDzga0uEy84v5S0rbNn+CyQ2z0i
-	 +PpmklJ1tmwGy11/bLi/9+IMOZp8HzEaIbz29B7kB7bxDIRJ6UneM6rjV9bYgf1V6O
-	 U3stxsmese6HJ05G4zzVYNWSOdeMJTRe7ZjSjKk8=
+	b=RiOA4HrVyhaD35ZTYXHpcxXpbpaR0LUl/4XvKFUiptSotdc4A8PYPhLgCit+46kf2
+	 tLLQeVvRBG9O8hHFJOpJ/5T7Xxg73ntL4kcXPtMZKVqSSMpttkxsaea+Jxxa2bryDe
+	 QNU5iMYSscpNtGvIYTXnMCQ5JJdnE9ivUUK4bD08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733176AbfJAQqo (ORCPT
+        id S2390348AbfJAQpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:46:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58280 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:45:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390370AbfJAQpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:45:42 -0400
+        id S2390314AbfJAQpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:45:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D10220B7C;
-        Tue,  1 Oct 2019 16:45:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1EA72190F;
+        Tue,  1 Oct 2019 16:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948341;
-        bh=gOxfJOCLf60/pIqvNXNUkBT5bw2/Po247341M7g2E6k=;
+        s=default; t=1569948332;
+        bh=uiHsB3meyPILAAZDTjLvMiCCFNR9pJuupii+/uI5/FA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZgMm5IH5eLW4pnGxmdgJTNAL6UqmHEnyJLbWs8Pp307w6Wk4B6K1Cqu5Ko4EXxOqe
-         1IsNraRHE/4acnkJ9yGs0WCGBNb/N6xzQ3CyA8Lu/AaU4H589KEh/G5/h5vnNk33Ky
-         Y284QML/ZNImaHFqLapEJcGJItVm+ZfhW8fy2oTM=
+        b=CDzP/xyOYUJMPuoOUmg9ZRaO2Dw7K3TVjzTWi/NnV0Y0Se5PmHEHyTiV4WK7W9xF1
+         ybqkGjK8Oz5p/l+u7dzMTm5PAErKb7Xu0HK5wh08arbJ1GHC4FTtmUvVnbNkBQGKyW
+         SDFNV6AUjfINaUqYaliZ5pZOsu/Kgupx6bA/csb4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trek <trek00@inbox.ru>, Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.4 06/15] drm/amdgpu: Check for valid number of registers to read
-Date:   Tue,  1 Oct 2019 12:45:24 -0400
-Message-Id: <20191001164533.16915-6-sashal@kernel.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 19/19] sch_netem: fix a divide by zero in tabledist()
+Date:   Tue,  1 Oct 2019 12:45:05 -0400
+Message-Id: <20191001164505.16708-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191001164533.16915-1-sashal@kernel.org>
-References: <20191001164533.16915-1-sashal@kernel.org>
+In-Reply-To: <20191001164505.16708-1-sashal@kernel.org>
+References: <20191001164505.16708-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,37 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trek <trek00@inbox.ru>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 73d8e6c7b841d9bf298c8928f228fb433676635c ]
+[ Upstream commit b41d936b5ecfdb3a4abc525ce6402a6c49cffddc ]
 
-Do not try to allocate any amount of memory requested by the user.
-Instead limit it to 128 registers. Actually the longest series of
-consecutive allowed registers are 48, mmGB_TILE_MODE0-31 and
-mmGB_MACROTILE_MODE0-15 (0x2644-0x2673).
+syzbot managed to crash the kernel in tabledist() loading
+an empty distribution table.
 
-Bug: https://bugs.freedesktop.org/show_bug.cgi?id=111273
-Signed-off-by: Trek <trek00@inbox.ru>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+	t = dist->table[rnd % dist->size];
+
+Simply return an error when such load is attempted.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c | 3 +++
- 1 file changed, 3 insertions(+)
+ net/sched/sch_netem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-index a5c8240784726..e35e603710b4d 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-@@ -406,6 +406,9 @@ static int amdgpu_info_ioctl(struct drm_device *dev, void *data, struct drm_file
- 		if (sh_num == AMDGPU_INFO_MMR_SH_INDEX_MASK)
- 			sh_num = 0xffffffff;
+diff --git a/net/sched/sch_netem.c b/net/sched/sch_netem.c
+index e9812e21dbc9b..12e3ae09c4ba1 100644
+--- a/net/sched/sch_netem.c
++++ b/net/sched/sch_netem.c
+@@ -711,7 +711,7 @@ static int get_dist_table(struct Qdisc *sch, const struct nlattr *attr)
+ 	int i;
+ 	size_t s;
  
-+		if (info->read_mmr_reg.count > 128)
-+			return -EINVAL;
-+
- 		regs = kmalloc_array(info->read_mmr_reg.count, sizeof(*regs), GFP_KERNEL);
- 		if (!regs)
- 			return -ENOMEM;
+-	if (n > NETEM_DIST_MAX)
++	if (!n || n > NETEM_DIST_MAX)
+ 		return -EINVAL;
+ 
+ 	s = sizeof(struct disttable) + n * sizeof(s16);
 -- 
 2.20.1
 
