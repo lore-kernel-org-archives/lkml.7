@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3E3C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BDCDC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1E162133F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71FED21855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569930075;
-	bh=57P8vmITrF9S12OTM7wSJudxJneeUacMbb86OwTFwkY=;
+	s=default; t=1569930082;
+	bh=/M8hhzHzQ7LMuVypgNhNPgB3dAq3VnJEzFH3W8UEoDM=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=scYF8v+2W9jH1fnUMOxsZ1PYUlUWX+w1jxYtBi7iGY3sMUx10d9oG7ZuVXfe38pZs
-	 bnYgHH4ySH2ADpb/ge3IFNzVaPaHNpaHI2m9aTjacOToJXRX75xI3ZflnR7CWfzqbM
-	 oP3zcTZn/J02px+o7oNJKxFiFjaO2DOf34aIO+5s=
+	b=ZGx+Qe5wkNWRzkfw00PATGfcmqhbEAKj3FPn/pia23O1CVXsGjP0JRXVJw0gxSND7
+	 MI7XRYiNpUFBs5qp/cdxAKmiamN6IYs+ER/u+KoDadjBUnrM1EViXQ8AyO6eldZXlq
+	 +OPk4AxUCYBYZ2c0zjfg4pzLK2ZZDahRfWXVqgTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387660AbfJALlO (ORCPT
+        id S2387705AbfJALlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 07:41:14 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:41188 "EHLO
+        Tue, 1 Oct 2019 07:41:21 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:41282 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387631AbfJALlM (ORCPT
+        with ESMTP id S2387650AbfJALlP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 07:41:12 -0400
+        Tue, 1 Oct 2019 07:41:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=ZTdDCrXMNUBiChoI6oHj9PmGOmxRxT7bGSqcEkIkOhg=; b=Desj934jLs9n
-        b6NTwMYJL2lNLWqb72TTR6WgoNEXVEBMH9PhRxU9RhyTLyb1qz1Ns9tF9A3DTYGBrtymaSDq+pk8/
-        Ul5TNRWCVLcy5cxum3JmNHPd69UxntLXfbKbzUcX0XQKTPjUZ4T5iRBsux+i57HG8hj3iqj6i3oB3
-        cHDxc=;
+        List-Archive; bh=z6hLIza3q6cYchvVHYiHKN/ZHrei8SPlYx9ockTASYE=; b=m96scqtLNyc6
+        h7zycSmfCjk8HcAr5pjagGXNgf3F26sVMHXmBbFWwr+7GRl4aFIMGM3zuhSQyFMdNY0gLQVl3qn4B
+        +nq26LmeHKsoxfSx908CLa6DAOK+AdVxbXx9lHUWQC1AnJ/KFoLZt0sXyp6c87LEFTAGZv8ixZjy2
+        9Mp8o=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iFGWi-0004ZM-F9; Tue, 01 Oct 2019 11:41:08 +0000
+        id 1iFGWg-0004Yg-FL; Tue, 01 Oct 2019 11:41:06 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id EA2CF2742A30; Tue,  1 Oct 2019 12:41:07 +0100 (BST)
+        id EAA1C27429C0; Tue,  1 Oct 2019 12:41:05 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Phil Edworthy <phil.edworthy@renesas.com>
-Cc:     devicetree@vger.kernel.org,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+To:     Markus Elfring <elfring@users.sourceforge.net>
+Cc:     kernel-janitors@vger.kernel.org,
+        Leilk Liu <leilk.liu@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
         Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Applied "dt: spi: Add Renesas RZ/N1 binding documentation" to the spi tree
-In-Reply-To: <1568793876-9009-2-git-send-email-gareth.williams.jx@renesas.com>
+        Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Applied "spi: mediatek: Use devm_platform_ioremap_resource() in mtk_spi_slave_probe()" to the spi tree
+In-Reply-To: <225b76ca-a367-4bef-d8ce-42c7af9242a5@web.de>
 X-Patchwork-Hint: ignore
-Message-Id: <20191001114107.EA2CF2742A30@ypsilon.sirena.org.uk>
-Date:   Tue,  1 Oct 2019 12:41:07 +0100 (BST)
+Message-Id: <20191001114105.EAA1C27429C0@ypsilon.sirena.org.uk>
+Date:   Tue,  1 Oct 2019 12:41:05 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,7 +66,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   dt: spi: Add Renesas RZ/N1 binding documentation
+   spi: mediatek: Use devm_platform_ioremap_resource() in mtk_spi_slave_probe()
 
 has been applied to the spi tree at
 
@@ -91,46 +91,54 @@ to this mail.
 Thanks,
 Mark
 
-From da182a61fce01dbd7c4a78c68a34af110f00e36f Mon Sep 17 00:00:00 2001
-From: Phil Edworthy <phil.edworthy@renesas.com>
-Date: Wed, 18 Sep 2019 09:04:33 +0100
-Subject: [PATCH] dt: spi: Add Renesas RZ/N1 binding documentation
+From 6cdcb5d394413d906773f1ae2efaa86485d6d6e1 Mon Sep 17 00:00:00 2001
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Sat, 21 Sep 2019 15:12:33 +0200
+Subject: [PATCH] spi: mediatek: Use devm_platform_ioremap_resource() in
+ mtk_spi_slave_probe()
 
-The Renesas RZ/N1 SPI Controller is based on the Synopsys DW SSI, but has
-additional registers for software CS control and DMA. This patch does not
-address the changes required for DMA support, it simply adds the compatible
-string. The CS functionality is not very useful and also not needed as
-Linux can use gpios for the CS signals.
+Simplify this function implementation by using a known wrapper function.
 
-Add a compatible string to handle any unforeseen issues that may arise, and
-pave the way for DMA support.
+This issue was detected by using the Coccinelle software.
 
-Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
-Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-Link: https://lore.kernel.org/r/1568793876-9009-2-git-send-email-gareth.williams.jx@renesas.com
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+Link: https://lore.kernel.org/r/225b76ca-a367-4bef-d8ce-42c7af9242a5@web.de
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../devicetree/bindings/spi/renesas,rzn1-spi.txt      | 11 +++++++++++
- 1 file changed, 11 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/renesas,rzn1-spi.txt
+ drivers/spi/spi-slave-mt27xx.c | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/spi/renesas,rzn1-spi.txt b/Documentation/devicetree/bindings/spi/renesas,rzn1-spi.txt
-new file mode 100644
-index 000000000000..fb1a6728638d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/renesas,rzn1-spi.txt
-@@ -0,0 +1,11 @@
-+Renesas RZ/N1 SPI Controller
-+
-+This controller is based on the Synopsys DW Synchronous Serial Interface and
-+inherits all properties defined in snps,dw-apb-ssi.txt except for the
-+compatible property.
-+
-+Required properties:
-+- compatible : The device specific string followed by the generic RZ/N1 string.
-+   Therefore it must be one of:
-+   "renesas,r9a06g032-spi", "renesas,rzn1-spi"
-+   "renesas,r9a06g033-spi", "renesas,rzn1-spi"
+diff --git a/drivers/spi/spi-slave-mt27xx.c b/drivers/spi/spi-slave-mt27xx.c
+index 61bc43b0fe57..44edaa360405 100644
+--- a/drivers/spi/spi-slave-mt27xx.c
++++ b/drivers/spi/spi-slave-mt27xx.c
+@@ -368,7 +368,6 @@ static int mtk_spi_slave_probe(struct platform_device *pdev)
+ {
+ 	struct spi_controller *ctlr;
+ 	struct mtk_spi_slave *mdata;
+-	struct resource *res;
+ 	int irq, ret;
+ 
+ 	ctlr = spi_alloc_slave(&pdev->dev, sizeof(*mdata));
+@@ -392,17 +391,8 @@ static int mtk_spi_slave_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, ctlr);
+ 
+ 	init_completion(&mdata->xfer_done);
+-
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!res) {
+-		ret = -ENODEV;
+-		dev_err(&pdev->dev, "failed to determine base address\n");
+-		goto err_put_ctlr;
+-	}
+-
+ 	mdata->dev = &pdev->dev;
+-
+-	mdata->base = devm_ioremap_resource(&pdev->dev, res);
++	mdata->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(mdata->base)) {
+ 		ret = PTR_ERR(mdata->base);
+ 		goto err_put_ctlr;
 -- 
 2.20.1
 
