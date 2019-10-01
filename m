@@ -2,55 +2,63 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4259C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2CAECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB01921D79
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C48021872
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:40:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948041;
-	bh=TL5VNSrOH9sU1p+lbWLVJM3knuc/7lE8kUQH1zlcJFQ=;
+	s=default; t=1569948045;
+	bh=iUtZ+ozD5ageHYgBSvJsnHAVqbiyiKVeoNsJQ9ir0oE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W7+9Bm6qjL3UELOB54SPIpE6k9k+/w7xOtBqL32b0ouCQRRP8HGK0fnAJV9HFjff/
-	 RnBV38h5FArIHN1W1YpvsOw2l+rBpY3JAJll55BQXIZqFHQ7eoG4IfFoPiMoc0BMZr
-	 65OgsOcgKV4rp7Gj+vvwDEvo6XeWdRgBNAjHtY2g=
+	b=eGUtwioQUZgmvasr3vAHoQYOMpCy5aSeY7PpgoyOMbLIxekspzOfv+JnaIkvSc3Nt
+	 ENLus0zG1c/ibqy5UZQgWf89JOKtRbLfbaMkV78b7HQDF1XPJO2gA9ntP6R281UgON
+	 1O1elqXAvwGVOUzSYvjl5yi7op7nT8FCk9DXETCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730203AbfJAQkk (ORCPT
+        id S1730251AbfJAQko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:40:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51890 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:40:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730115AbfJAQke (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:40:34 -0400
+        id S1730170AbfJAQkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:40:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 210EF21D80;
-        Tue,  1 Oct 2019 16:40:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EDD721924;
+        Tue,  1 Oct 2019 16:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948034;
-        bh=TL5VNSrOH9sU1p+lbWLVJM3knuc/7lE8kUQH1zlcJFQ=;
+        s=default; t=1569948038;
+        bh=iUtZ+ozD5ageHYgBSvJsnHAVqbiyiKVeoNsJQ9ir0oE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g8T2PopS+DkuYIH8QC2MDhiJ0rXJ72bRY70ozGdOrKhH6BgB55u7Bm1M9Mru0Xt5S
-         0lhAzThppo7mwXajpuF+8rBDHf6N8MHdyfg4d9aRbNycmF0jUuWUFHumes61UK51Jy
-         g3XMJ0yX8dPMgAaONY1kRV3P+RzU5bvVzeZ6wSW4=
+        b=vnMdopcaURKB/m/eGuGJ5S65bBnplATkLH4URGUMkNSN7lkKLL5y8w36GnPJq3qeh
+         eUTwHf5znaTHspjOFhHedjjCiX2dmpp4yDzIC5S9ma8nWCTCxgXK8Vq5YLDuF7Bo9g
+         1nwDkOFdnF1grN5gF33E2Z2pZBkFgJI6EC/i8ITM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        Andreas Krebbel <krebbel@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+Cc:     Qian Cai <cai@lca.pw>, Jan Kara <jack@suse.cz>,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Jens Axboe <axboe@kernel.dk>, Joe Perches <joe@perches.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Nitin Gote <nitin.r.gote@intel.com>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Stephen Kitt <steve@sk2.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 48/71] perf build: Add detection of java-11-openjdk-devel package
-Date:   Tue,  1 Oct 2019 12:38:58 -0400
-Message-Id: <20191001163922.14735-48-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 49/71] include/trace/events/writeback.h: fix -Wstringop-truncation warnings
+Date:   Tue,  1 Oct 2019 12:38:59 -0400
+Message-Id: <20191001163922.14735-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
 References: <20191001163922.14735-1-sashal@kernel.org>
@@ -63,60 +71,189 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 815c1560bf8fd522b8d93a1d727868b910c1cc24 ]
+[ Upstream commit d1a445d3b86c9341ce7a0954c23be0edb5c9bec5 ]
 
-With Java 11 there is no seperate JRE anymore.
+There are many of those warnings.
 
-Details:
+In file included from ./arch/powerpc/include/asm/paca.h:15,
+                 from ./arch/powerpc/include/asm/current.h:13,
+                 from ./include/linux/thread_info.h:21,
+                 from ./include/asm-generic/preempt.h:5,
+                 from ./arch/powerpc/include/generated/asm/preempt.h:1,
+                 from ./include/linux/preempt.h:78,
+                 from ./include/linux/spinlock.h:51,
+                 from fs/fs-writeback.c:19:
+In function 'strncpy',
+    inlined from 'perf_trace_writeback_page_template' at
+./include/trace/events/writeback.h:56:1:
+./include/linux/string.h:260:9: warning: '__builtin_strncpy' specified
+bound 32 equals destination size [-Wstringop-truncation]
+  return __builtin_strncpy(p, q, size);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  https://coderanch.com/t/701603/java/JRE-JDK
+Fix it by using the new strscpy_pad() which was introduced in "lib/string:
+Add strscpy_pad() function" and will always be NUL-terminated instead of
+strncpy().  Also, change strlcpy() to use strscpy_pad() in this file for
+consistency.
 
-Therefore the detection of the JRE needs to be adapted.
-
-This change works for s390 and x86.  I have not tested other platforms.
-
-Committer testing:
-
-Continues to work with the OpenJDK 8:
-
-  $ rm -f ~acme/lib64/libperf-jvmti.so
-  $ rpm -qa | grep jdk-devel
-  java-1.8.0-openjdk-devel-1.8.0.222.b10-0.fc30.x86_64
-  $ git log --oneline -1
-  a51937170f33 (HEAD -> perf/core) perf build: Add detection of java-11-openjdk-devel package
-  $ rm -rf /tmp/build/perf ; mkdir -p /tmp/build/perf ; make -C tools/perf O=/tmp/build/perf install > /dev/null 2>1
-  $ ls -la ~acme/lib64/libperf-jvmti.so
-  -rwxr-xr-x. 1 acme acme 230744 Sep 24 16:46 /home/acme/lib64/libperf-jvmti.so
-  $
-
-Suggested-by: Andreas Krebbel <krebbel@linux.ibm.com>
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Link: http://lore.kernel.org/lkml/20190909114116.50469-4-tmricht@linux.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Link: http://lkml.kernel.org/r/1564075099-27750-1-git-send-email-cai@lca.pw
+Fixes: 455b2864686d ("writeback: Initial tracing support")
+Fixes: 028c2dd184c0 ("writeback: Add tracing to balance_dirty_pages")
+Fixes: e84d0a4f8e39 ("writeback: trace event writeback_queue_io")
+Fixes: b48c104d2211 ("writeback: trace event bdi_dirty_ratelimit")
+Fixes: cc1676d917f3 ("writeback: Move requeueing when I_SYNC set to writeback_sb_inodes()")
+Fixes: 9fb0a7da0c52 ("writeback: add more tracepoints")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: Tobin C. Harding <tobin@kernel.org>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Dave Chinner <dchinner@redhat.com>
+Cc: Fengguang Wu <fengguang.wu@intel.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Joe Perches <joe@perches.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Jann Horn <jannh@google.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Nitin Gote <nitin.r.gote@intel.com>
+Cc: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc: Stephen Kitt <steve@sk2.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/Makefile.config | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/trace/events/writeback.h | 38 +++++++++++++++++---------------
+ 1 file changed, 20 insertions(+), 18 deletions(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 89ac5a1f1550e..3da3749118527 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -908,7 +908,7 @@ ifndef NO_JVMTI
-     JDIR=$(shell /usr/sbin/update-java-alternatives -l | head -1 | awk '{print $$3}')
-   else
-     ifneq (,$(wildcard /usr/sbin/alternatives))
--      JDIR=$(shell /usr/sbin/alternatives --display java | tail -1 | cut -d' ' -f 5 | sed 's%/jre/bin/java.%%g')
-+      JDIR=$(shell /usr/sbin/alternatives --display java | tail -1 | cut -d' ' -f 5 | sed -e 's%/jre/bin/java.%%g' -e 's%/bin/java.%%g')
-     endif
-   endif
-   ifndef JDIR
+diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
+index aa7f3aeac7408..79095434c1be3 100644
+--- a/include/trace/events/writeback.h
++++ b/include/trace/events/writeback.h
+@@ -66,8 +66,9 @@ DECLARE_EVENT_CLASS(writeback_page_template,
+ 	),
+ 
+ 	TP_fast_assign(
+-		strncpy(__entry->name,
+-			mapping ? dev_name(inode_to_bdi(mapping->host)->dev) : "(unknown)", 32);
++		strscpy_pad(__entry->name,
++			    mapping ? dev_name(inode_to_bdi(mapping->host)->dev) : "(unknown)",
++			    32);
+ 		__entry->ino = mapping ? mapping->host->i_ino : 0;
+ 		__entry->index = page->index;
+ 	),
+@@ -110,8 +111,8 @@ DECLARE_EVENT_CLASS(writeback_dirty_inode_template,
+ 		struct backing_dev_info *bdi = inode_to_bdi(inode);
+ 
+ 		/* may be called for files on pseudo FSes w/ unregistered bdi */
+-		strncpy(__entry->name,
+-			bdi->dev ? dev_name(bdi->dev) : "(unknown)", 32);
++		strscpy_pad(__entry->name,
++			    bdi->dev ? dev_name(bdi->dev) : "(unknown)", 32);
+ 		__entry->ino		= inode->i_ino;
+ 		__entry->state		= inode->i_state;
+ 		__entry->flags		= flags;
+@@ -190,8 +191,8 @@ DECLARE_EVENT_CLASS(writeback_write_inode_template,
+ 	),
+ 
+ 	TP_fast_assign(
+-		strncpy(__entry->name,
+-			dev_name(inode_to_bdi(inode)->dev), 32);
++		strscpy_pad(__entry->name,
++			    dev_name(inode_to_bdi(inode)->dev), 32);
+ 		__entry->ino		= inode->i_ino;
+ 		__entry->sync_mode	= wbc->sync_mode;
+ 		__entry->cgroup_ino	= __trace_wbc_assign_cgroup(wbc);
+@@ -234,8 +235,9 @@ DECLARE_EVENT_CLASS(writeback_work_class,
+ 		__field(unsigned int, cgroup_ino)
+ 	),
+ 	TP_fast_assign(
+-		strncpy(__entry->name,
+-			wb->bdi->dev ? dev_name(wb->bdi->dev) : "(unknown)", 32);
++		strscpy_pad(__entry->name,
++			    wb->bdi->dev ? dev_name(wb->bdi->dev) :
++			    "(unknown)", 32);
+ 		__entry->nr_pages = work->nr_pages;
+ 		__entry->sb_dev = work->sb ? work->sb->s_dev : 0;
+ 		__entry->sync_mode = work->sync_mode;
+@@ -288,7 +290,7 @@ DECLARE_EVENT_CLASS(writeback_class,
+ 		__field(unsigned int, cgroup_ino)
+ 	),
+ 	TP_fast_assign(
+-		strncpy(__entry->name, dev_name(wb->bdi->dev), 32);
++		strscpy_pad(__entry->name, dev_name(wb->bdi->dev), 32);
+ 		__entry->cgroup_ino = __trace_wb_assign_cgroup(wb);
+ 	),
+ 	TP_printk("bdi %s: cgroup_ino=%u",
+@@ -310,7 +312,7 @@ TRACE_EVENT(writeback_bdi_register,
+ 		__array(char, name, 32)
+ 	),
+ 	TP_fast_assign(
+-		strncpy(__entry->name, dev_name(bdi->dev), 32);
++		strscpy_pad(__entry->name, dev_name(bdi->dev), 32);
+ 	),
+ 	TP_printk("bdi %s",
+ 		__entry->name
+@@ -335,7 +337,7 @@ DECLARE_EVENT_CLASS(wbc_class,
+ 	),
+ 
+ 	TP_fast_assign(
+-		strncpy(__entry->name, dev_name(bdi->dev), 32);
++		strscpy_pad(__entry->name, dev_name(bdi->dev), 32);
+ 		__entry->nr_to_write	= wbc->nr_to_write;
+ 		__entry->pages_skipped	= wbc->pages_skipped;
+ 		__entry->sync_mode	= wbc->sync_mode;
+@@ -386,7 +388,7 @@ TRACE_EVENT(writeback_queue_io,
+ 	),
+ 	TP_fast_assign(
+ 		unsigned long *older_than_this = work->older_than_this;
+-		strncpy(__entry->name, dev_name(wb->bdi->dev), 32);
++		strscpy_pad(__entry->name, dev_name(wb->bdi->dev), 32);
+ 		__entry->older	= older_than_this ?  *older_than_this : 0;
+ 		__entry->age	= older_than_this ?
+ 				  (jiffies - *older_than_this) * 1000 / HZ : -1;
+@@ -472,7 +474,7 @@ TRACE_EVENT(bdi_dirty_ratelimit,
+ 	),
+ 
+ 	TP_fast_assign(
+-		strlcpy(__entry->bdi, dev_name(wb->bdi->dev), 32);
++		strscpy_pad(__entry->bdi, dev_name(wb->bdi->dev), 32);
+ 		__entry->write_bw	= KBps(wb->write_bandwidth);
+ 		__entry->avg_write_bw	= KBps(wb->avg_write_bandwidth);
+ 		__entry->dirty_rate	= KBps(dirty_rate);
+@@ -537,7 +539,7 @@ TRACE_EVENT(balance_dirty_pages,
+ 
+ 	TP_fast_assign(
+ 		unsigned long freerun = (thresh + bg_thresh) / 2;
+-		strlcpy(__entry->bdi, dev_name(wb->bdi->dev), 32);
++		strscpy_pad(__entry->bdi, dev_name(wb->bdi->dev), 32);
+ 
+ 		__entry->limit		= global_wb_domain.dirty_limit;
+ 		__entry->setpoint	= (global_wb_domain.dirty_limit +
+@@ -597,8 +599,8 @@ TRACE_EVENT(writeback_sb_inodes_requeue,
+ 	),
+ 
+ 	TP_fast_assign(
+-		strncpy(__entry->name,
+-		        dev_name(inode_to_bdi(inode)->dev), 32);
++		strscpy_pad(__entry->name,
++			    dev_name(inode_to_bdi(inode)->dev), 32);
+ 		__entry->ino		= inode->i_ino;
+ 		__entry->state		= inode->i_state;
+ 		__entry->dirtied_when	= inode->dirtied_when;
+@@ -671,8 +673,8 @@ DECLARE_EVENT_CLASS(writeback_single_inode_template,
+ 	),
+ 
+ 	TP_fast_assign(
+-		strncpy(__entry->name,
+-			dev_name(inode_to_bdi(inode)->dev), 32);
++		strscpy_pad(__entry->name,
++			    dev_name(inode_to_bdi(inode)->dev), 32);
+ 		__entry->ino		= inode->i_ino;
+ 		__entry->state		= inode->i_state;
+ 		__entry->dirtied_when	= inode->dirtied_when;
 -- 
 2.20.1
 
