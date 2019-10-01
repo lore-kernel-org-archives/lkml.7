@@ -2,155 +2,131 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3537C388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 044A5C388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B9C4215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:54:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569920095;
-	bh=szecxbNIyt9fQKdI3mGXWWqH6xc6Il8EeHjy2q22MmE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=HxZN3MnDiwROtBbxgEM61VUscSpuMRl5+/uu0Z+JmFAJ6KHCMo/ipdKVAo6HSJQd9
-	 GhzZsQU8i+2PQJKPt/dFmHsbsJf1hN3SKfvaMcRBetN6f8HDgrPQEKOBH6pLNXAkiJ
-	 euCWAldYsb+tRblRK31YLXukJKmeECZ6qqLQeXq0=
+	by mail.kernel.org (Postfix) with ESMTP id D00C1218DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:54:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uFyk/p3b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733067AbfJAIyz (ORCPT
+        id S1733145AbfJAIy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 1 Oct 2019 04:54:58 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39363 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbfJAIyz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Oct 2019 04:54:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36484 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726568AbfJAIyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 04:54:54 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4E4F2133F;
-        Tue,  1 Oct 2019 08:54:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569920093;
-        bh=szecxbNIyt9fQKdI3mGXWWqH6xc6Il8EeHjy2q22MmE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Dw4H4ZgGHfx/ZI6u+yBi43GwHZD0pDN+dtBIoa/0toBp0bJaCpdYHjNkGLCFAI9sf
-         p885axzz4B5SVa572ab3PX675xVLqnNifp3CrsKEnCpiFERdRAknYwkpPY5g2i7kq1
-         M36qcriDMmumSxbNIUz0jbiLSTvWluo3nA59W9Xg=
-Date:   Tue, 1 Oct 2019 09:54:46 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Yizhuo <yzhai003@ucr.edu>, csong@cs.ucr.edu,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Fabio Estevam <festevam@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>, zhiyunq@cs.ucr.edu,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] iio: adc: imx25-gcq: Variable could be uninitialized if
- regmap_read() fails
-Message-ID: <20191001095446.17bc9cd8@archlinux>
-In-Reply-To: <20190930074412.up4k6zdus4y7u4xb@pengutronix.de>
-References: <20190928002852.28329-1-yzhai003@ucr.edu>
-        <20190930074412.up4k6zdus4y7u4xb@pengutronix.de>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Received: by mail-wm1-f68.google.com with SMTP id v17so2270386wml.4
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 01:54:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tCMVcJHTL1rAZzsr8sC7UBxH5shgJjc8cOwozajIRmU=;
+        b=uFyk/p3bEIkTDdel/ZCSZdqV7nMh2YBxg0Lzcp/K0V07uZvkv3pN1YJJebLzjgYd6N
+         tDj/bBmdRRq5q6K9i4BXzb2dJ8F7RLKA4oORNy5o6+C/yWJ8RUTubCLj7vkrserUvACl
+         GoGIG3aFLT4z1twhfPXk8SacX1BseglsI64eXx7wB9gM9KcXXxhjay3OEvMfdD4MBtEK
+         8susq8F32cbzP+8K1Lik32U0pvsgDZO2NXxOhfzjetU6kBU7//fz+k354MP9Q1UlfvIG
+         kEUEUc2WcKPHQp0bIfoHYl+YEjNy6SKIC43iwR9+Sg0n0F1pJVtvQZXJ/xB5IlWpwELK
+         CszA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tCMVcJHTL1rAZzsr8sC7UBxH5shgJjc8cOwozajIRmU=;
+        b=NgNmXmhjCWKMypLjx4qF08MLMEWm8hkRCZKbsQ9Ezkzw4Lm1b7Vz5XgtAvbDaQ0cPr
+         jYAJ+MmsoZmUGgf7GBr+hcdVHbHCKmNvtnvHWT0nqnsVzATtksqKdkyWZQrG7uSMigA5
+         7x1CkKbWsMKvga2BvrbRVO7KA64F7QVVRjtbxDwdCB0c+5iYDN3Ru/duZ10qFAGDNn92
+         nk/kwpnKQp3xPIb0O9QqspgrSY1GEH4wXYws5JRon+UF2NeLZdXbhp+GxLZ77NxWDhUw
+         ZrNZPaLFv6ZmwN5YX9SP3c5ahiFOPnOI+IVddPipaOyXmWQk8otGHUhGY7oVyT+/h6eb
+         r2HA==
+X-Gm-Message-State: APjAAAUbpBljTkaufv++yQmDl/C6m0moeGfJyKSmNo2eWZSW5qYxZkav
+        e5PGVNU8mCXkjPXkSoWAYOlG3hbam0UgSSjSPYtMYe86j9E=
+X-Google-Smtp-Source: APXvYqyKcvl41Sw5NIkOgDT2b+yl0RkNvIrnfAAemKqyZcpgreGVpLtLWgKKUHFHIcLTVadVs6hMX38D1RSVozLO5Ls=
+X-Received: by 2002:a1c:3cc3:: with SMTP id j186mr2551070wma.119.1569920093430;
+ Tue, 01 Oct 2019 01:54:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190812150452.27983-1-ard.biesheuvel@linaro.org>
+ <20190812150452.27983-5-ard.biesheuvel@linaro.org> <CAMuHMdXY5UH4KhcaNVuxa8-+GN-4bjyvCd0wzPYuFBY5Ch=fNA@mail.gmail.com>
+In-Reply-To: <CAMuHMdXY5UH4KhcaNVuxa8-+GN-4bjyvCd0wzPYuFBY5Ch=fNA@mail.gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Tue, 1 Oct 2019 10:54:40 +0200
+Message-ID: <CAKv+Gu-KPypju6roQaVKP0DHE3aZijVVqLGwNyhiRSNqn1r6-w@mail.gmail.com>
+Subject: Re: [PATCH 4/5] efi: Export Runtime Configuration Interface table to sysfs
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Narendra K <Narendra.K@dell.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Xiaofei Tan <tanxiaofei@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Sep 2019 09:44:12 +0200
-Marco Felsch <m.felsch@pengutronix.de> wrote:
-
-> Hi Yizhuo,
-> 
-> thanks for your patch.
-> 
-> On 19-09-27 17:28, Yizhuo wrote:
-> > In function mx25_gcq_irq(), local variable "stats" could
-> > be uninitialized if function regmap_read() returns -EINVAL.
-> > However, this value is used in if statement, which is
-> > potentially unsafe. The same case applied to the variable
-> > "data" in function mx25_gcq_get_raw_value() in the same file.  
-> 
-> IMHO the commit header should be something like: "iio: adc: imx25-gcq:
-> fix uninitialized variable usage"...
-> 
-> and please add a fixes tag.
-As with the others, before adding a fixes tag, please verify there
-is an actual path to trigger this.
-
-In this case it's an mmio regmap with no clock. For those, I'm not sure
-if there is a failure path.
-
-Still a worthwhile hardening / cleanup patch, but shouldn't be called
-a fix or marked with a fixes tag because we don't want people to think
-it is necessary to backport it.
-
-Thanks,
-
-Jonathan
-
-
-> 
-> > 
-> > Signed-off-by: Yizhuo <yzhai003@ucr.edu>
-> > ---
-> >  drivers/iio/adc/fsl-imx25-gcq.c | 10 ++++++++--
-> >  1 file changed, 8 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/iio/adc/fsl-imx25-gcq.c b/drivers/iio/adc/fsl-imx25-gcq.c
-> > index df19ecae52f7..dbf3e8e85aba 100644
-> > --- a/drivers/iio/adc/fsl-imx25-gcq.c
-> > +++ b/drivers/iio/adc/fsl-imx25-gcq.c
-> > @@ -74,7 +74,10 @@ static irqreturn_t mx25_gcq_irq(int irq, void *data)
-> >  	struct mx25_gcq_priv *priv = data;
-> >  	u32 stats;
-> >  
-> > -	regmap_read(priv->regs, MX25_ADCQ_SR, &stats);
-> > +	int ret = regmap_read(priv->regs, MX25_ADCQ_SR, &stats);  
-> 
-> Please don't do this. First declare the variable and then use it.
-> 
-> Regards,
->   Marco
-> 
+On Tue, 1 Oct 2019 at 10:51, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Ard, Narendra,
+>
+> On Mon, Aug 12, 2019 at 5:07 PM Ard Biesheuvel
+> <ard.biesheuvel@linaro.org> wrote:
+> > From: Narendra K <Narendra.K@dell.com>
+> >
+> > System firmware advertises the address of the 'Runtime
+> > Configuration Interface table version 2 (RCI2)' via
+> > an EFI Configuration Table entry. This code retrieves the RCI2
+> > table from the address and exports it to sysfs as a binary
+> > attribute 'rci2' under /sys/firmware/efi/tables directory.
+> > The approach adopted is similar to the attribute 'DMI' under
+> > /sys/firmware/dmi/tables.
+> >
+> > RCI2 table contains BIOS HII in XML format and is used to populate
+> > BIOS setup page in Dell EMC OpenManage Server Administrator tool.
+> > The BIOS setup page contains BIOS tokens which can be configured.
+> >
+> > Signed-off-by: Narendra K <Narendra.K@dell.com>
+> > Reviewed-by: Mario Limonciello <mario.limonciello@dell.com>
+> > Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+>
+> Thanks, this is now commit 1c5fecb61255aa12 ("efi: Export Runtime
+> Configuration Interface table to sysfs").
+>
+> > --- a/drivers/firmware/efi/Kconfig
+> > +++ b/drivers/firmware/efi/Kconfig
+> > @@ -180,6 +180,19 @@ config RESET_ATTACK_MITIGATION
+> >           have been evicted, since otherwise it will trigger even on clean
+> >           reboots.
+> >
+> > +config EFI_RCI2_TABLE
+> > +       bool "EFI Runtime Configuration Interface Table Version 2 Support"
+> > +       help
+> > +         Displays the content of the Runtime Configuration Interface
+> > +         Table version 2 on Dell EMC PowerEdge systems as a binary
+> > +         attribute 'rci2' under /sys/firmware/efi/tables directory.
 > > +
-> > +	if (ret)
-> > +		return ret;
-> >  
-> >  	if (stats & MX25_ADCQ_SR_EOQ) {
-> >  		regmap_update_bits(priv->regs, MX25_ADCQ_MR,
-> > @@ -121,7 +124,10 @@ static int mx25_gcq_get_raw_value(struct device *dev,
-> >  		return -ETIMEDOUT;
-> >  	}
-> >  
-> > -	regmap_read(priv->regs, MX25_ADCQ_FIFO, &data);
-> > +	int ret = regmap_read(priv->regs, MX25_ADCQ_FIFO, &data);
+> > +         RCI2 table contains BIOS HII in XML format and is used to populate
+> > +         BIOS setup page in Dell EMC OpenManage Server Administrator tool.
+> > +         The BIOS setup page contains BIOS tokens which can be configured.
 > > +
-> > +	if (ret)
-> > +		return ret;
-> >  
-> >  	*val = MX25_ADCQ_FIFO_DATA(data);
-> >  
-> > -- 
-> > 2.17.1
-> > 
-> > 
-> >   
-> 
+> > +         Say Y here for Dell EMC PowerEdge systems.
+>
+> A quick Google search tells me these are Intel Xeon.
+> Are arm/arm64/ia64 variants available, too?
+> If not, this should be protected by "depends on x86" ("|| COMPILE_TEST"?).
+>
 
+Hello Geert,
+
+The code in question is entirely architecture agnostic, and defaults
+to 'n', so I am not convinced this is needed. (It came up in the
+review as well)
