@@ -2,81 +2,186 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8FCECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADD5ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDF462190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:20:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569939618;
-	bh=UBnUQs50xSOkAzYN97eAZdHXL9k0XEWd0kn+PTRxajU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=PYEM06mURRSK2PpOlPHCYkxnelCVqkp2lnuG+DtBXg1kCL6l2MEZE+WukMjCVgDJt
-	 8VFs59IHMVLd0Ucct9kN8YHtpxhdezj7vcsko1TDp6J3onmpqvhGuVk9FLSzeiRqEq
-	 JJ+NpakaB7b/UJCc1q/Jl9Lru22kLri4LWImhkNw=
+	by mail.kernel.org (Postfix) with ESMTP id 2D0652190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 14:20:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="saWObvKZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388956AbfJAOUS (ORCPT
+        id S2388970AbfJAOUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 10:20:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34336 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727055AbfJAOUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 10:20:17 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F2332086A;
-        Tue,  1 Oct 2019 14:20:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569939617;
-        bh=UBnUQs50xSOkAzYN97eAZdHXL9k0XEWd0kn+PTRxajU=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=prT1Fl0YizlgUboDPPxpvbZVV3SIGE00+dMlBtgmbgqP2s4Y36KEsx6rGTtadGOQy
-         wKEwLgLclodCRs1bQzLK2lTFrNTfTrz8axTBqpJujYH8suF7TejEbyvBtq6fAdqGJJ
-         5rgpw0aRNPnRhd4yp/6vJ7feBYTNdsFNcX1x2N+Q=
-Date:   Tue, 1 Oct 2019 16:19:50 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     =?ISO-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-cc:     linux-input@vger.kernel.org,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Tue, 1 Oct 2019 10:20:22 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:38887 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727055AbfJAOUU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 10:20:20 -0400
+Received: by mail-ed1-f68.google.com with SMTP id l21so12074245edr.5
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 07:20:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jW7eXDdGpzoPqCGQ/N/Pe4qVEBLi12b1nAQpyDAd19Q=;
+        b=saWObvKZ+2SD8KboWxSXVO4qJxtT2dlC90wePqcBMjuIQ16RhK1fhrPTLJrwlldyQf
+         ELqbo5Zcx/a0uGVlJDOC7M9+6tIvOz1d5MOefIkpGNakWSPKTla9TB8saKYRQnnpsA0k
+         OTl9mp1bToCTT2Za3zOjdzA+aS61WXFprYGqtObLzk3dRe7tS/P7H88cYkXApEwLVksm
+         5ADB2qQWBR1fp7sgE35A6Fo9GOvEuxEmzQx8wUyUj+RyAxAww7KG3kXgmWywMS3YDcpy
+         qIZTVPd/WYVKU2OIHHdS284uCNknaakxIFU/AFUYPUueVMfJqrn/zhKTp+9AiBmtPGca
+         jBjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jW7eXDdGpzoPqCGQ/N/Pe4qVEBLi12b1nAQpyDAd19Q=;
+        b=BxnbN39Zz1ZMGpkyOl5RTpNnnU+dwBzrkOtxUkSbG0s0gGoW0UcbugrbXmRucXUeb0
+         RUY5Q5GaodaH+te3S++HVqNLfinE2oDkTUS11VD08YK6pTlKfKMfSRAApB/8veFxaSPt
+         8I49G3CyfjaOdn0fdTFEHBBgADHnx+3LHT2zc07WoBenb9mEh0LbK7/GlqJdF3Bg0yMi
+         aSbzS+LHHHvESbQd/tUSJyLeEL2Nbx7vMHIgWUVuOTdNLHUU8Doe5K1Ih2995nQEizsw
+         CljdPpifhIhMgr0z4xuGH7Wx8flFHvZqZtH6ClwqZJClLbYFRpbdQcq9qgjtl1fQ05C8
+         BnZw==
+X-Gm-Message-State: APjAAAXYBgB8ACAiIdIDYqekBSJBbiIqmsyphI9GQxUR1f3KZdGCi40C
+        4eOEmkWxPsyVP204nUfLu/I/3g==
+X-Google-Smtp-Source: APXvYqxMumpbaDDZhfyPxjux2WynqitCyDnI8AW4aNzJk7qqt9bGOvfbWjUKvhnOcREwF/sAhreYKA==
+X-Received: by 2002:aa7:dc55:: with SMTP id g21mr25526019edu.210.1569939618577;
+        Tue, 01 Oct 2019 07:20:18 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id o26sm3143696edi.23.2019.10.01.07.20.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 01 Oct 2019 07:20:17 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 51D61102FB8; Tue,  1 Oct 2019 17:20:18 +0300 (+03)
+Date:   Tue, 1 Oct 2019 17:20:18 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     William Kucharski <william.kucharski@oracle.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] HID: fix error message in hid_open_report()
-In-Reply-To: <5866b49b330a750b44003ebd9f532541dcb13f18.1566587656.git.mirq-linux@rere.qmqm.pl>
-Message-ID: <nycvar.YFH.7.76.1910011619280.13160@cbobk.fhfr.pm>
-References: <5866b49b330a750b44003ebd9f532541dcb13f18.1566587656.git.mirq-linux@rere.qmqm.pl>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+Subject: Re: [PATCH 14/15] mm: Align THP mappings for non-DAX
+Message-ID: <20191001142018.wpordswdkadac6kt@box>
+References: <20190925005214.27240-1-willy@infradead.org>
+ <20190925005214.27240-15-willy@infradead.org>
+ <20191001104558.rdcqhjdz7frfuhca@box>
+ <A935F599-BB18-40C3-90DD-47B7700743D6@oracle.com>
+ <20191001113216.3qbrkqmb2b2xtwkd@box>
+ <5dc7b5c1-6d7d-90ee-9423-6eda9ecb005c@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5dc7b5c1-6d7d-90ee-9423-6eda9ecb005c@oracle.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 23 Aug 2019, Michał Mirosław wrote:
+On Tue, Oct 01, 2019 at 06:18:28AM -0600, William Kucharski wrote:
+> 
+> 
+> On 10/1/19 5:32 AM, Kirill A. Shutemov wrote:
+> > On Tue, Oct 01, 2019 at 05:21:26AM -0600, William Kucharski wrote:
+> > > 
+> > > 
+> > > > On Oct 1, 2019, at 4:45 AM, Kirill A. Shutemov <kirill@shutemov.name> wrote:
+> > > > 
+> > > > On Tue, Sep 24, 2019 at 05:52:13PM -0700, Matthew Wilcox wrote:
+> > > > > 
+> > > > > diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> > > > > index cbe7d0619439..670a1780bd2f 100644
+> > > > > --- a/mm/huge_memory.c
+> > > > > +++ b/mm/huge_memory.c
+> > > > > @@ -563,8 +563,6 @@ unsigned long thp_get_unmapped_area(struct file *filp, unsigned long addr,
+> > > > > 
+> > > > > 	if (addr)
+> > > > > 		goto out;
+> > > > > -	if (!IS_DAX(filp->f_mapping->host) || !IS_ENABLED(CONFIG_FS_DAX_PMD))
+> > > > > -		goto out;
+> > > > > 
+> > > > > 	addr = __thp_get_unmapped_area(filp, len, off, flags, PMD_SIZE);
+> > > > > 	if (addr)
+> > > > 
+> > > > I think you reducing ASLR without any real indication that THP is relevant
+> > > > for the VMA. We need to know if any huge page allocation will be
+> > > > *attempted* for the VMA or the file.
+> > > 
+> > > Without a properly aligned address the code will never even attempt allocating
+> > > a THP.
+> > > 
+> > > I don't think rounding an address to one that would be properly aligned to map
+> > > to a THP if possible is all that detrimental to ASLR and without the ability to
+> > > pick an aligned address it's rather unlikely anyone would ever map anything to
+> > > a THP unless they explicitly designate an address with MAP_FIXED.
+> > > 
+> > > If you do object to the slight reduction of the ASLR address space, what
+> > > alternative would you prefer to see?
+> > 
+> > We need to know by the time if THP is allowed for this
+> > file/VMA/process/whatever. Meaning that we do not give up ASLR entropy for
+> > nothing.
+> > 
+> > For instance, if THP is disabled globally, there is no reason to align the
+> > VMA to the THP requirements.
+> 
+> I understand, but this code is in thp_get_unmapped_area(), which is only called
+> if THP is configured and the VMA can support it.
+> 
+> I don't see it in Matthew's patchset, so I'm not sure if it was inadvertently
+> missed in his merge or if he has other ideas for how it would eventually be
+> called, but in my last patch revision the code calling it in do_mmap()
+> looked like this:
+> 
+> #ifdef CONFIG_RO_EXEC_FILEMAP_HUGE_FAULT_THP
+>         /*
+>          * If THP is enabled, it's a read-only executable that is
+>          * MAP_PRIVATE mapped, the length is larger than a PMD page
+>          * and either it's not a MAP_FIXED mapping or the passed address is
+>          * properly aligned for a PMD page, attempt to get an appropriate
+>          * address at which to map a PMD-sized THP page, otherwise call the
+>          * normal routine.
+>          */
+>         if ((prot & PROT_READ) && (prot & PROT_EXEC) &&
+>                 (!(prot & PROT_WRITE)) && (flags & MAP_PRIVATE) &&
+>                 (!(flags & MAP_FIXED)) && len >= HPAGE_PMD_SIZE) {
 
-> On HID report descriptor parsing error the code displays bogus
-> pointer instead of error offset (subtracts start=NULL from end).
-> Make the message more useful by displaying correct error offset
-> and include total buffer size for reference.
-> 
-> This was carried over from ancient times - "Fixed" commit just
-> promoted the message from DEBUG to ERROR.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 8c3d52fc393b ("HID: make parser more verbose about parsing errors by default")
-> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> 
-> ---
-> v2: fixed printf() warning spotted by Jiri Kosina <jikos@kernel.org>
+len and MAP_FIXED is already handled by thp_get_unmapped_area().
 
-Applied, thank you.
+	if (prot & (PROT_READ|PROT_WRITE|PROT_READ) == (PROT_READ|PROT_EXEC) &&
+		(flags & MAP_PRIVATE)) {
+
+
+>                 addr = thp_get_unmapped_area(file, addr, len, pgoff, flags);
+> 
+>                 if (addr && (!(addr & ~HPAGE_PMD_MASK))) {
+
+This check is broken.
+
+For instance, if pgoff is one, (addr & ~HPAGE_PMD_MASK) has to be equal to
+PAGE_SIZE to have chance to get a huge page in the mapping.
+
+>                         /*
+>                          * If we got a suitable THP mapping address, shut off
+>                          * VM_MAYWRITE for the region, since it's never what
+>                          * we would want.
+>                          */
+>                         vm_maywrite = 0;
+
+Wouldn't it break uprobe, for instance?
+
+>                 } else
+>                         addr = get_unmapped_area(file, addr, len, pgoff, flags);
+>         } else {
+> #endif
+> 
+> So I think that meets your expectations regarding ASLR.
+> 
+>    -- Bill
 
 -- 
-Jiri Kosina
-SUSE Labs
-
+ Kirill A. Shutemov
