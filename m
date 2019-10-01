@@ -2,105 +2,126 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2044EECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E787ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E67BC21855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:53:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948833;
-	bh=VjSn938QRLv57GpTAjv7KIg/qL0quZPYIO5YgChVJQE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tihVrkBtCg6WHi0RFdy4MtjlhpDwjX1+i145lyFgY7eqs34zUD8zkCIOP4MTVEYM+
-	 TMVtpmHelNwnO2GRDku1gsASp8MX0x4ak4p0u4witrxoDz70Lu/SvHQboUXYLGoO02
-	 6nLmKIp0DeUIbX+S77pktqD4UNGDh5v1rC7RnbfQ=
+	by mail.kernel.org (Postfix) with ESMTP id 52A8021855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:53:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WG8m/x9u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389512AbfJAQxw (ORCPT
+        id S1732556AbfJAQnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:53:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55356 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732592AbfJAQnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:43:19 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42CCB2190F;
-        Tue,  1 Oct 2019 16:43:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948199;
-        bh=VjSn938QRLv57GpTAjv7KIg/qL0quZPYIO5YgChVJQE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MVD3rH8Ou1Hw+M/oO5RWuPS8GVZukwoMaR22I3+jnv3bLZvMycOBHriNXTpgbB936
-         R4BlG7ZadXnSPztP01UqM8aSOzE+kl92FYLFntfku7NVGYgV4yYqF3VBR3XtPGKFi2
-         NWsQnJ2H3SWOAO3PSIMuEyXBMjrHsgv6zKBJog+Q=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bharath Vedartham <linux.bhar@gmail.com>,
-        syzbot+3a030a73b6c1e9833815@syzkaller.appspotmail.com,
-        Dominique Martinet <dominique.martinet@cea.fr>,
-        Sasha Levin <sashal@kernel.org>,
-        v9fs-developer@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.19 06/43] 9p/cache.c: Fix memory leak in v9fs_cache_session_get_cookie
-Date:   Tue,  1 Oct 2019 12:42:34 -0400
-Message-Id: <20191001164311.15993-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191001164311.15993-1-sashal@kernel.org>
-References: <20191001164311.15993-1-sashal@kernel.org>
+        Tue, 1 Oct 2019 12:43:18 -0400
+Received: from mail-yw1-f49.google.com ([209.85.161.49]:45515 "EHLO
+        mail-yw1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732484AbfJAQnL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:43:11 -0400
+Received: by mail-yw1-f49.google.com with SMTP id x65so5039728ywf.12
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 09:43:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tdLG/r7+P2Ngh8ZWtcYEEBy7N3f+Jkee88RnUZ/onlY=;
+        b=WG8m/x9u6EkqT3rbeISwibZR7wgr+y475s8ZYI+aKyhwk79T6y6VPB35Cs3YbjtDOu
+         DMmMM05x8SATtUB1NF3jvKOnIBm+Ma+zsUa1igpmoXAVCEj36LiGlKAZn8XriduTz/+X
+         lXFMHVYW3vWZlla1cL3hfo+Ya47QiCoBw+zgqJ17l477sI6j+qm6bmUNF9e2cC+Xekee
+         RcWy0oOSfg3sY79agjSWAuQSmKt8Mwf5LSDuwLv3fISsnvpixqEd0RHOkYvTTRNwzJZQ
+         JPt/3eSuKe93B93Vts+/m6/wQLLYAFHappRoIYpDavTNDUoJf1WUg1G+EJ56VfVcT672
+         4/lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tdLG/r7+P2Ngh8ZWtcYEEBy7N3f+Jkee88RnUZ/onlY=;
+        b=GiTTr3Bt9z5q6OmRzvsiXf4zWtFKAY03MM57ibR+HU3FuG2TkJXmHLT180ff2/pU3C
+         VWGhTv//Rj2k48mD+RCPEEaK+tu2nkKNY91Kkj4OqK03sXrMr+mF2GKFr/IauUVcsnfR
+         oMARTosj+oiRi4JbjJwqUlFRVcyDsvyA0eX3frUZEyAQXtkGm7l+h2pVqOARYolI4QNt
+         cQ1P+ZXDOifr2hb1ovnvDyt+aVvVZ0Gw80gFfvPuGZbUc5LnI1LlThbln1IAmbt7TBvP
+         ncB9gaOskK1aejV1ppBdRDX5Ygozr+en1wJulPeA1esNRc5N7TE6+MymL4tAnB/yyJGu
+         ij3g==
+X-Gm-Message-State: APjAAAXehrc+KiRdV8CemQpnLUntPi5u1tbREj4OdnY+tB+nzjbV+oU4
+        Y8sEufyuQ4DlCCyWApv4QJC66jZtvW6BvTqlJqJ/iPbr38bKtQ==
+X-Google-Smtp-Source: APXvYqw8ExU/R+uf06q48A3Wc10DKEkfY9elTc4ZQLBRVAtnt6bXMEPjFlsfSkkw9RUm1qqJ4HjtU5LK9JF/fO1AX6o=
+X-Received: by 2002:a81:a144:: with SMTP id y65mr16843887ywg.437.1569948189853;
+ Tue, 01 Oct 2019 09:43:09 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <CAL_quvRknSSVvXN3q_Se0hrziw2oTNS3ENNoeHYhvciCRq9Yww@mail.gmail.com>
+ <20191001162710.GB3526634@kroah.com>
+In-Reply-To: <20191001162710.GB3526634@kroah.com>
+From:   Mat King <mathewk@google.com>
+Date:   Tue, 1 Oct 2019 10:42:58 -0600
+Message-ID: <CAL_quvS4o7rqpjPL2hcJ_-cJWUVNfgaLzzMoymHrswshxYYwKg@mail.gmail.com>
+Subject: Re: New sysfs interface for privacy screens
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        rafael@kernel.org, Ross Zwisler <zwisler@google.com>,
+        Rajat Jain <rajatja@google.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bharath Vedartham <linux.bhar@gmail.com>
+On Tue, Oct 1, 2019 at 10:27 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Oct 01, 2019 at 10:09:46AM -0600, Mat King wrote:
+> > Resending in plain text mode
+> >
+> > I have been looking into adding Linux support for electronic privacy
+> > screens which is a feature on some new laptops which is built into the
+> > display and allows users to turn it on instead of needing to use a
+> > physical privacy filter. In discussions with my colleagues the idea of
+> > using either /sys/class/backlight or /sys/class/leds but this new
+> > feature does not seem to quite fit into either of those classes.
+> >
+> > I am proposing adding a class called "privacy_screen" to interface
+> > with these devices. The initial API would be simple just a single
+> > property called "privacy_state" which when set to 1 would mean that
+> > privacy is enabled and 0 when privacy is disabled.
+> >
+> > Current known use cases will use ACPI _DSM in order to interface with
+> > the privacy screens, but this class would allow device driver authors
+> > to use other interfaces as well.
+> >
+> > Example:
+> >
+> > # get privacy screen state
+> > cat /sys/class/privacy_screen/cros_privacy/privacy_state # 1: privacy
+> > enabled 0: privacy disabled
+> >
+> > # set privacy enabled
+> > echo 1 > /sys/class/privacy_screen/cros_privacy/privacy_state
+>
+> What is "cros_privacy" here?
 
-[ Upstream commit 962a991c5de18452d6c429d99f3039387cf5cbb0 ]
+This would be set by the device driver. This example would be for a
+Chrome OS privacy screen device, but the driver would set the name
+just like in the backlight class.
 
-v9fs_cache_session_get_cookie assigns a random cachetag to v9ses->cachetag,
-if the cachetag is not assigned previously.
+>
+> >  Does this approach seem to be reasonable?
+>
+> Seems sane to me, do you have any code that implements this so we can
+> see it?
 
-v9fs_random_cachetag allocates memory to v9ses->cachetag with kmalloc and uses
-scnprintf to fill it up with a cachetag.
+It is still early in the implementation so there is no code quite yet.
+I wanted to get some general feedback on the approach first. As soon
+as I have code to share I will post it.
 
-But if scnprintf fails, v9ses->cachetag is not freed in the current
-code causing a memory leak.
+>
+> thanks,
+>
+> greg k-h
 
-Fix this by freeing v9ses->cachetag it v9fs_random_cachetag fails.
-
-This was reported by syzbot, the link to the report is below:
-https://syzkaller.appspot.com/bug?id=f012bdf297a7a4c860c38a88b44fbee43fd9bbf3
-
-Link: http://lkml.kernel.org/r/20190522194519.GA5313@bharath12345-Inspiron-5559
-Reported-by: syzbot+3a030a73b6c1e9833815@syzkaller.appspotmail.com
-Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
-Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/9p/cache.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/fs/9p/cache.c b/fs/9p/cache.c
-index 9eb34701a566c..a43a8d2436db5 100644
---- a/fs/9p/cache.c
-+++ b/fs/9p/cache.c
-@@ -66,6 +66,8 @@ void v9fs_cache_session_get_cookie(struct v9fs_session_info *v9ses)
- 	if (!v9ses->cachetag) {
- 		if (v9fs_random_cachetag(v9ses) < 0) {
- 			v9ses->fscache = NULL;
-+			kfree(v9ses->cachetag);
-+			v9ses->cachetag = NULL;
- 			return;
- 		}
- 	}
--- 
-2.20.1
-
+Thank you for the feedback.
