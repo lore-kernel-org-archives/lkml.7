@@ -4,66 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB27C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F20C388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92B3021906
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41BFF21855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:41:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569930063;
-	bh=cMjijrUVCSfMlVYSJ7SXFyQuD4UI6lIOTggP2kq1Mdg=;
+	s=default; t=1569930066;
+	bh=W5EcmPM/bJo0JDzbbLUBbLq6kHKKPjVhhfgINoU5apo=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=JRr0qaslCe4dWch702RRqfMnXCvRaqykSHuabvkmY/MTOnFKzDEv8r+fbieeNTu58
-	 ueR35gfz+QXs/p9F267dmpwhGlpGqZ61Ncdj4wH2hd0I1on/OOX4yDeErQxgpNez1z
-	 y0B9XUAzwbYDuaK0dZX047mgSKDYcvNUIKKj0jV4=
+	b=NNt5jPOt3i2A9BxeuEN8fG//v/IYKqjeU0RK+oFFWzNXy9LoPjUNx3bFaDMAxWjZq
+	 SsL4lVmW/3ydVkJE2sxAMa3YzBHtkEgtOJFzZRCF8TWxORf/+kYTeRv6muFxgE/j96
+	 4c86o8JXOK+YAEyOkcv0dSzbqfzJd3hDL30bNHF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387565AbfJALlC (ORCPT
+        id S2387582AbfJALlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 07:41:02 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40646 "EHLO
+        Tue, 1 Oct 2019 07:41:05 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40814 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387513AbfJALlA (ORCPT
+        with ESMTP id S2387557AbfJALlD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 07:41:00 -0400
+        Tue, 1 Oct 2019 07:41:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=tYidPqV9evGITvFKkefYkx+MVPV/Xz9CUR8kqXFz+Ew=; b=h2gfqiL6AL84
-        v6pwTjwDOv2ZAoIuZcIr5WwnVFaft1ll5i3RA+foapZDUGA+mjAxOsw0uEF+imR5a1vdpRVCipmGO
-        44SROcKViRDJOcju0+nsHcUyYWin4kYqXBHMFP0P7G1iLSGBHgJlWfdDQPKsJlg9A4o5h0dvp+REV
-        Ypmn4=;
+        List-Archive; bh=VNyirlbo32jI74Gnx32OywMdUtsIIVh9GP/R2nfj/v4=; b=Frr2ZOaaFUYE
+        74AZiv+7tXVoVcLD8SeKaeizv+IwZT9V8NkQbKn9ZhuZdIbgv8afh5XkVA691S0QcK/UyhFYZWl7V
+        /gqm+ZR1ERucCEYN02wfVo/BfigXg+PNU0MuxySHuBf94VWF+oUgTnZVlFfy3Q4r08hhJFTt/y/NY
+        iJALc=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iFGWN-0004Ss-NL; Tue, 01 Oct 2019 11:40:47 +0000
+        id 1iFGWO-0004TJ-O0; Tue, 01 Oct 2019 11:40:48 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 2F9722742A30; Tue,  1 Oct 2019 12:40:47 +0100 (BST)
+        id 3491227429C0; Tue,  1 Oct 2019 12:40:48 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
-        alsa-devel@alsa-project.org,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        kernel-janitors@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Olivier Moysan <olivier.moysan@st.com>,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: stm32: sai: clean up indentation issue" to the asoc tree
-In-Reply-To: <20190925112621.9312-1-colin.king@canonical.com>
+To:     Frank Shi <shifu0704@thundersoft.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org, dmurphy@ti.com,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, navada@ti.com, perex@perex.cz,
+        robh+dt@kernel.org, tiwai@suse.com
+Subject: Applied "dt-bindings: ASoC: Add tas2770 smart PA dt bindings" to the asoc tree
+In-Reply-To: <1568962709-19185-1-git-send-email-shifu0704@thundersoft.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191001114047.2F9722742A30@ypsilon.sirena.org.uk>
-Date:   Tue,  1 Oct 2019 12:40:47 +0100 (BST)
+Message-Id: <20191001114048.3491227429C0@ypsilon.sirena.org.uk>
+Date:   Tue,  1 Oct 2019 12:40:48 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -71,7 +63,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: stm32: sai: clean up indentation issue
+   dt-bindings: ASoC: Add tas2770 smart PA dt bindings
 
 has been applied to the asoc tree at
 
@@ -96,34 +88,64 @@ to this mail.
 Thanks,
 Mark
 
-From 423013f824ab0590c229a107f21c54ac6596c4e1 Mon Sep 17 00:00:00 2001
-From: Colin Ian King <colin.king@canonical.com>
-Date: Wed, 25 Sep 2019 12:26:21 +0100
-Subject: [PATCH] ASoC: stm32: sai: clean up indentation issue
+From 4b7151dadfd450b837b6b28073ad9f19f4a7547c Mon Sep 17 00:00:00 2001
+From: Frank Shi <shifu0704@thundersoft.com>
+Date: Fri, 20 Sep 2019 14:58:28 +0800
+Subject: [PATCH] dt-bindings: ASoC: Add tas2770 smart PA dt bindings
 
-There is a statement that is indented one level too deeply,
-remove the extraneous tab.
+Add tas2770 smart PA dt bindings
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Link: https://lore.kernel.org/r/20190925112621.9312-1-colin.king@canonical.com
+Signed-off-by: Frank Shi <shifu0704@thundersoft.com>
+Link: https://lore.kernel.org/r/1568962709-19185-1-git-send-email-shifu0704@thundersoft.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/stm/stm32_sai.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../devicetree/bindings/sound/tas2770.txt     | 37 +++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/tas2770.txt
 
-diff --git a/sound/soc/stm/stm32_sai.c b/sound/soc/stm/stm32_sai.c
-index ef4273361d0d..e20267504b16 100644
---- a/sound/soc/stm/stm32_sai.c
-+++ b/sound/soc/stm/stm32_sai.c
-@@ -100,7 +100,7 @@ static int stm32_sai_sync_conf_provider(struct stm32_sai_data *sai, int synco)
- 		dev_err(&sai->pdev->dev, "%pOFn%s already set as sync provider\n",
- 			sai->pdev->dev.of_node,
- 			prev_synco == STM_SAI_SYNC_OUT_A ? "A" : "B");
--			stm32_sai_pclk_disable(&sai->pdev->dev);
-+		stm32_sai_pclk_disable(&sai->pdev->dev);
- 		return -EINVAL;
- 	}
- 
+diff --git a/Documentation/devicetree/bindings/sound/tas2770.txt b/Documentation/devicetree/bindings/sound/tas2770.txt
+new file mode 100644
+index 000000000000..ede6bb3d9637
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/tas2770.txt
+@@ -0,0 +1,37 @@
++Texas Instruments TAS2770 Smart PA
++
++The TAS2770 is a mono, digital input Class-D audio amplifier optimized for
++efficiently driving high peak power into small loudspeakers.
++Integrated speaker voltage and current sense provides for
++real time monitoring of loudspeaker behavior.
++
++Required properties:
++
++ - compatible:	   - Should contain "ti,tas2770".
++ - reg:		       - The i2c address. Should contain <0x4c>, <0x4d>,<0x4e>, or <0x4f>.
++ - #address-cells  - Should be <1>.
++ - #size-cells     - Should be <0>.
++ - ti,asi-format:  - Sets TDM RX capture edge. 0->Rising; 1->Falling.
++ - ti,imon-slot-no:- TDM TX current sense time slot.
++ - ti,vmon-slot-no:- TDM TX voltage sense time slot.
++
++Optional properties:
++
++- interrupt-parent: the phandle to the interrupt controller which provides
++                     the interrupt.
++- interrupts: interrupt specification for data-ready.
++
++Examples:
++
++    tas2770@4c {
++                compatible = "ti,tas2770";
++                reg = <0x4c>;
++                #address-cells = <1>;
++                #size-cells = <0>;
++                interrupt-parent = <&msm_gpio>;
++                interrupts = <97 0>;
++                ti,asi-format = <0>;
++                ti,imon-slot-no = <0>;
++                ti,vmon-slot-no = <2>;
++        };
++
 -- 
 2.20.1
 
