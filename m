@@ -2,112 +2,124 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C00EC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E2EECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E2C62053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:42:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EuM4Q0z1"
+	by mail.kernel.org (Postfix) with ESMTP id 818CE2053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:43:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbfJARmi (ORCPT
+        id S1727481AbfJARni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 13:42:38 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:47076 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfJARmi (ORCPT
+        Tue, 1 Oct 2019 13:43:38 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56054 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbfJARni (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 13:42:38 -0400
-Received: by mail-pl1-f194.google.com with SMTP id q24so5821641plr.13
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 10:42:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YFxRATsNQaGZQ2KW4IdFsbHZlAeW0PIeqLRycQhx35w=;
-        b=EuM4Q0z1OahXXHkGjQfyNSGZ1+CO/NpKjlblsrTfRm5BrRkcK+aVXim9KLPIKlID18
-         b3H3pHd4q+mjbkN5ppIOULKrRFEUmV4ipMxiTo5nKspuWP2TFReXJsfG0FRf7OvxXTeM
-         4hhMDgrk8tPcJNfqBpMeWTWEdCC0yuzU25BFg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YFxRATsNQaGZQ2KW4IdFsbHZlAeW0PIeqLRycQhx35w=;
-        b=iKrZUhdB4HzE7gAeGvprXTL2Xju1x/4Z8DT+gTjgoZ09fwjcu7wrC0MmQ2jeaa6NNi
-         1zCSAIqBVnVjHWEicdp+uMo6XgWVtiuTRqKzXoTdFm+Nm1Y/FmHg3Oro4ktcYn2+cZj+
-         yrcYQJf0CPiQ8o5OwZRrUHEGZkX6snyf8gDSdUOT06nNyy1woF1xGmF1bgRTpW15DmQ+
-         6Nrv11+w7X9LKZC6u7EK2u3vHvjb+KfMnCppsgRLG9iErUnMqT3FDmvdQhV+zA9RJoAE
-         e62Y4qlPBK37llYt7n/rrUzW4Wv97dYiH2e5RF8d8Cer6EY8F8VzsORwzvu+gvloynjR
-         TQPQ==
-X-Gm-Message-State: APjAAAUBuKvmQbA9eaZx2Qt9lZ2ncjFfERTZgOHyBJjjh0LlA0zDEWAn
-        /U61i3pjLtvQugHq9f8AqxgiNQ==
-X-Google-Smtp-Source: APXvYqyisXQ1TNjFshaU4wTjOi7PUBwRw4IyhoZPQeAeY44k/fmfqYg+kNWQ337Jxz2KS1UwCR7Lnw==
-X-Received: by 2002:a17:902:9346:: with SMTP id g6mr27688893plp.0.1569951757581;
-        Tue, 01 Oct 2019 10:42:37 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id g24sm27852167pgn.90.2019.10.01.10.42.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Oct 2019 10:42:36 -0700 (PDT)
-Date:   Tue, 1 Oct 2019 10:42:35 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-pm@vger.kernel.org, Amit Kucheria <amit.kucheria@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Ravi Chandra Sadineni <ravisadineni@chromium.org>
-Subject: Re: [PATCH v1] PM / Domains: Add tracepoints
-Message-ID: <20191001174235.GC87296@google.com>
-References: <20190926150406.v1.1.I07a769ad7b00376777c9815fb169322cde7b9171@changeid>
- <20190927044239.589e7c4c@oasis.local.home>
- <20191001163542.GB87296@google.com>
- <20191001130343.4480afe3@gandalf.local.home>
+        Tue, 1 Oct 2019 13:43:38 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iFMBE-0000rD-WA; Tue, 01 Oct 2019 19:43:21 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 820C91C03AB;
+        Tue,  1 Oct 2019 19:43:20 +0200 (CEST)
+Date:   Tue, 01 Oct 2019 17:43:20 -0000
+From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/microcode] x86/microcode/intel: Issue the revision updated
+ message only on the BSP
+Cc:     Borislav Petkov <bp@suse.de>, Ashok Raj <ashok.raj@intel.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jon Grimm <Jon.Grimm@amd.com>, kanth.ghatraju@oracle.com,
+        konrad.wilk@oracle.com, Mihai Carabas <mihai.carabas@oracle.com>,
+        patrick.colp@oracle.com, Thomas Gleixner <tglx@linutronix.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "x86-ml" <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+In-Reply-To: <20190824085341.GC16813@zn.tnic>
+References: <20190824085341.GC16813@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191001130343.4480afe3@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <156995180039.9978.4399431172812014164.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 01:03:43PM -0400, Steven Rostedt wrote:
-> On Tue, 1 Oct 2019 09:35:42 -0700
-> Matthias Kaehlcke <mka@chromium.org> wrote:
-> 
-> > How about this instead:
-> > 
-> >   Add tracepoints for genpd_power_on, genpd_power_off and
-> >   genpd_set_performance_state. The tracepoints can help with
-> >   understanding power domain behavior of a given device, which
-> >   may be particularly interesting for battery powered devices
-> >   and suspend/resume.
-> 
-> Do you have a use case example to present?
+The following commit has been merged into the x86/microcode branch of tip:
 
-TBH I'm not looking into a specific use case right now. While
-peeking around in /sys/kernel/debug/tracing/events to learn more
-about existing tracepoints that might be relevant for my work
-I noticed the absence of genpd ones and it seemed a good idea to
-add them preemptively. Conceptually they seem similar to the
-existing regulator_enable/disable and cpu_idle tracepoints.
+Commit-ID:     811ae8ba6dca6b91a3ceccf9d40b98818cc4f400
+Gitweb:        https://git.kernel.org/tip/811ae8ba6dca6b91a3ceccf9d40b98818cc4f400
+Author:        Borislav Petkov <bp@suse.de>
+AuthorDate:    Sat, 24 Aug 2019 10:01:53 +02:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Tue, 01 Oct 2019 16:06:35 +02:00
 
-As an abstract use case I could see power analysis on battery
-powered devices during suspend. genpd_power_on/off allow to see
-which power domains remain on during suspend, and might give
-insights for possible power saving options. Examples could be that
-a power domain stays unexpectedly on due to a misconfiguration, or
-two power domains remain on when it could be only one if you just
-moved that one pin/port over to the other domain in the next
-hardware revision.
+x86/microcode/intel: Issue the revision updated message only on the BSP
+
+... in order to not pollute dmesg with a line for each updated microcode
+engine.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jon Grimm <Jon.Grimm@amd.com>
+Cc: kanth.ghatraju@oracle.com
+Cc: konrad.wilk@oracle.com
+Cc: Mihai Carabas <mihai.carabas@oracle.com>
+Cc: patrick.colp@oracle.com
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190824085341.GC16813@zn.tnic
+---
+ arch/x86/kernel/cpu/microcode/intel.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/microcode/intel.c b/arch/x86/kernel/cpu/microcode/intel.c
+index ce799cf..6a99535 100644
+--- a/arch/x86/kernel/cpu/microcode/intel.c
++++ b/arch/x86/kernel/cpu/microcode/intel.c
+@@ -791,6 +791,7 @@ static enum ucode_state apply_microcode_intel(int cpu)
+ {
+ 	struct ucode_cpu_info *uci = ucode_cpu_info + cpu;
+ 	struct cpuinfo_x86 *c = &cpu_data(cpu);
++	bool bsp = c->cpu_index == boot_cpu_data.cpu_index;
+ 	struct microcode_intel *mc;
+ 	enum ucode_state ret;
+ 	static int prev_rev;
+@@ -836,7 +837,7 @@ static enum ucode_state apply_microcode_intel(int cpu)
+ 		return UCODE_ERROR;
+ 	}
+ 
+-	if (rev != prev_rev) {
++	if (bsp && rev != prev_rev) {
+ 		pr_info("updated to revision 0x%x, date = %04x-%02x-%02x\n",
+ 			rev,
+ 			mc->hdr.date & 0xffff,
+@@ -852,7 +853,7 @@ out:
+ 	c->microcode	 = rev;
+ 
+ 	/* Update boot_cpu_data's revision too, if we're on the BSP: */
+-	if (c->cpu_index == boot_cpu_data.cpu_index)
++	if (bsp)
+ 		boot_cpu_data.microcode = rev;
+ 
+ 	return ret;
