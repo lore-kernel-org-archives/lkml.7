@@ -4,48 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4262EC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD52C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 140182168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:52:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4DFD2168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948755;
-	bh=dnGqd1ObimZ3Tr3PDaMcwB52h2ie1S30jPgAz+CwwGI=;
+	s=default; t=1569948763;
+	bh=M7+co5HVBiqXroq2dACj6cTPbT2VmZL3OswBLvkmA8I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B7ue2YgxK7qH5e8XBdPuPDBQTJ7qyz69loBqeH+vGEP+4y7iFXOdRUz1epq9WAIqo
-	 RcUZ87O7XvszPpEGKXJRMlkWfIA5j1CWH27SWPC6B3jvRkKLHqxG2+pEi1qRwfyC88
-	 Jz1fnG0k6/fB5BU8hq/b3ZmqoH/DqNF+zU0vOebg=
+	b=u49XA7FsoFONk422rrJvd7ipzKz2n+yW5eKZMD5a5ypywuTGjslnwLYNCu80fGaBW
+	 SxYm90kYhHk9rYlbXxMeHY95UNRvBw704eOG8zwCh4CUTNhhJmTW4aQyJVMtsO3qMh
+	 NK1hyED78ggml4FTecQXrHlzyrI3qjoyjuG7maC4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbfJAQw3 (ORCPT
+        id S2389318AbfJAQwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:52:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55912 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:52:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732963AbfJAQnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:43:45 -0400
+        id S1732891AbfJAQnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:43:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B03BF2168B;
-        Tue,  1 Oct 2019 16:43:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F321B21920;
+        Tue,  1 Oct 2019 16:43:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948225;
-        bh=dnGqd1ObimZ3Tr3PDaMcwB52h2ie1S30jPgAz+CwwGI=;
+        s=default; t=1569948220;
+        bh=M7+co5HVBiqXroq2dACj6cTPbT2VmZL3OswBLvkmA8I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mMepMnnKf+MT70MUts71jEwUrmtWpwHl01fJ62mnM5FKm0VCybO+1ebwr4uZUvz4X
-         qnjJQF3M54fdRHme5N/Ig5x2iTbLJbzf2LaOKTcev/i8j4HPQV96WwmLMuijmIalnv
-         PPT+AKdbW3hcIIg5IJooMhVyXpAptel2pM2Wo5f8=
+        b=jsd0uoHYLeBY96NSZRo4v9pZL9EDBntTiUlto1CyFncs+Hof3MsnzerJ5TGFpj7cE
+         NnG9AhwI6WmnVnpEdwzV3+cQ1r4xf3bp3ruk/eMPHshDpSaejgF/p1HACR6AH+cHH3
+         //AVQ0gsr2VkUOWrpIUmeE81fz/ks2tvO1Gg98Dw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sanjay R Mehta <sanju.mehta@amd.com>, Jon Mason <jdmason@kudzu.us>,
-        Sasha Levin <sashal@kernel.org>, linux-ntb@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 23/43] ntb: point to right memory window index
-Date:   Tue,  1 Oct 2019 12:42:51 -0400
-Message-Id: <20191001164311.15993-23-sashal@kernel.org>
+Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
+        syzbot+618aacd49e8c8b8486bd@syzkaller.appspotmail.com,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        David Ahern <dsahern@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 21/43] net_sched: add max len check for TCA_KIND
+Date:   Tue,  1 Oct 2019 12:42:49 -0400
+Message-Id: <20191001164311.15993-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001164311.15993-1-sashal@kernel.org>
 References: <20191001164311.15993-1-sashal@kernel.org>
@@ -58,51 +63,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sanjay R Mehta <sanju.mehta@amd.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit ae89339b08f3fe02457ec9edd512ddc3d246d0f8 ]
+[ Upstream commit 62794fc4fbf52f2209dc094ea255eaef760e7d01 ]
 
-second parameter of ntb_peer_mw_get_addr is pointing to wrong memory
-window index by passing "peer gidx" instead of "local gidx".
+The TCA_KIND attribute is of NLA_STRING which does not check
+the NUL char. KMSAN reported an uninit-value of TCA_KIND which
+is likely caused by the lack of NUL.
 
-For ex, "local gidx" value is '0' and "peer gidx" value is '1', then
+Change it to NLA_NUL_STRING and add a max len too.
 
-on peer side ntb_mw_set_trans() api is used as below with gidx pointing to
-local side gidx which is '0', so memroy window '0' is chosen and XLAT '0'
-will be programmed by peer side.
-
-    ntb_mw_set_trans(perf->ntb, peer->pidx, peer->gidx, peer->inbuf_xlat,
-                    peer->inbuf_size);
-
-Now, on local side ntb_peer_mw_get_addr() is been used as below with gidx
-pointing to "peer gidx" which is '1', so pointing to memory window '1'
-instead of memory window '0'.
-
-    ntb_peer_mw_get_addr(perf->ntb,  peer->gidx, &phys_addr,
-                        &peer->outbuf_size);
-
-So this patch pass "local gidx" as parameter to ntb_peer_mw_get_addr().
-
-Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
+Fixes: 8b4c3cdd9dd8 ("net: sched: Add policy validation for tc attributes")
+Reported-and-tested-by: syzbot+618aacd49e8c8b8486bd@syzkaller.appspotmail.com
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ntb/test/ntb_perf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sched/sch_api.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/ntb/test/ntb_perf.c b/drivers/ntb/test/ntb_perf.c
-index 2a9d6b0d1f193..80508da3c8b5c 100644
---- a/drivers/ntb/test/ntb_perf.c
-+++ b/drivers/ntb/test/ntb_perf.c
-@@ -1373,7 +1373,7 @@ static int perf_setup_peer_mw(struct perf_peer *peer)
- 	int ret;
+diff --git a/net/sched/sch_api.c b/net/sched/sch_api.c
+index be7cd140b2a38..b5dd4f61e42ec 100644
+--- a/net/sched/sch_api.c
++++ b/net/sched/sch_api.c
+@@ -1308,7 +1308,8 @@ check_loop_fn(struct Qdisc *q, unsigned long cl, struct qdisc_walker *w)
+ }
  
- 	/* Get outbound MW parameters and map it */
--	ret = ntb_peer_mw_get_addr(perf->ntb, peer->gidx, &phys_addr,
-+	ret = ntb_peer_mw_get_addr(perf->ntb, perf->gidx, &phys_addr,
- 				   &peer->outbuf_size);
- 	if (ret)
- 		return ret;
+ const struct nla_policy rtm_tca_policy[TCA_MAX + 1] = {
+-	[TCA_KIND]		= { .type = NLA_STRING },
++	[TCA_KIND]		= { .type = NLA_NUL_STRING,
++				    .len = IFNAMSIZ - 1 },
+ 	[TCA_RATE]		= { .type = NLA_BINARY,
+ 				    .len = sizeof(struct tc_estimator) },
+ 	[TCA_STAB]		= { .type = NLA_NESTED },
 -- 
 2.20.1
 
