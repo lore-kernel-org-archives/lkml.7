@@ -2,133 +2,97 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E24B1C32793
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 03:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6170C32793
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 03:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF0AB20842
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 03:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B1B020815
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 03:54:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fN+KwSQ+"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TcbLcixz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729131AbfJADjE (ORCPT
+        id S1729356AbfJADyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Sep 2019 23:39:04 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51074 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726784AbfJADjE (ORCPT
+        Mon, 30 Sep 2019 23:54:45 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50682 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726691AbfJADyp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Sep 2019 23:39:04 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 5so1558310wmg.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Sep 2019 20:39:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WaM61durTUCJ9gtJy39A13xkdum8vegyHiHhxWy1wpw=;
-        b=fN+KwSQ+Gj8YtzgTeMTjKXgzvhO6+3j1XBLCHXwQNRn8nDl6XSI0dpvomx6JXkMRm/
-         yh70SDobdSJpEXxViJhWwsb6Ppe9/FdPikTRFEAzdtQC+hvhkEBUqdhm/qZ32Y7oG3oa
-         W9ZLTucqFcsWxRBQAQEOWmr2HpitVzb8QmwsoKY2gJRYdoO0WTj5hSHclA4IyeI2Dn1Y
-         9ZmC9sWNitf4VPbhSS6J79/YPSsIm+wLFyrx9sxEeVTYdyLNXyEVfOwD1WZgSHIWjadn
-         YPfntraaAashQqLbtM47hNuQGD5zW4f3HU4kAQvM5t0XYPDn8FswCrR7dD+GMeZ5/Bhv
-         VpMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WaM61durTUCJ9gtJy39A13xkdum8vegyHiHhxWy1wpw=;
-        b=WVGEW89QKikzf/4t6hfzYUiDoFWXpHOVI9uO+4DWro6nHVH6i3XnGZXXXS2K6TcrAZ
-         0BpMr8Hcjdr9VYkLLsNQKE6bdU45KzdvjL3CGLYPJZ4V2dRj5mCBZuD9oEiiFAc8rgV5
-         2T4ZYoYxLMVeYDEnAiM7pzCizji5Wpo71FmPEXCkgx/Cf7BiV7kk3urO2rvZSUVvKgnB
-         R2G0VGlCSBvpY8PL6iAaQXyE8Rgj4PahK6RdsX8UNUitz7GqVn90NSRP8LlMOLXG3z+L
-         HmapJ1L4iGabxRjEMsIlb8Ibp32iqnjt2jI6NaPt8q/l5cyhuB44DfZRVFDL8l/YOb44
-         jWjg==
-X-Gm-Message-State: APjAAAUM2Mf7jSzvGYE2y6aqQzj2mh8l9S823U6hSTxWjlMSaPa8V6Ik
-        HUfS4uSzsOCPFlPNvks81GLWHXj+DHOQgWzrObitgg==
-X-Google-Smtp-Source: APXvYqwE6PScBlXhMbPdxsTSf6LsbJHqsVwiJa+e9xBd3bpqcXGscHlk0/zTftcSxUtn27TgULYLHYv2zi2tAxCYuv4=
-X-Received: by 2002:a1c:2d85:: with SMTP id t127mr1832686wmt.81.1569901142201;
- Mon, 30 Sep 2019 20:39:02 -0700 (PDT)
+        Mon, 30 Sep 2019 23:54:45 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x913sMDe162027;
+        Tue, 1 Oct 2019 03:54:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=P0SIhqwVwF4KrzRiTFbotP1NB2jWE6iKzbCzwOdMV9w=;
+ b=TcbLcixzA7OH5HESl/IOX243jp3sSpZuV0g1ttZW8ERoUfAVl7QJ7CuMeqWFstA/fP5l
+ JgQDHPj9H3nOmbfDAHGeFQ/3Cd2NcIlNviX4XtuYrvfhiUSz7AxjmLSN2d0m1mhlbVUk
+ 4G8tz2Pk5VKAs/AEwHfLOI67ecrFBPz7pN+qDhQCM0rrGhPZ68zIhA/LAtNaF38lWqyu
+ /3AxkZzkWhaxEkWdEsw38G5GK+kqdbnfIfnJ09X0475oELtIqp3F+yL0tyo2GVYRzv7f
+ vFuzPkUZWEonA6fW2GOA/KR46i5NeyXUziB2f/GGnCIxbtpKbfl/hJtdAcxf3fgjffNc Rw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2v9xxuk1qs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Oct 2019 03:54:35 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x913mw3q005632;
+        Tue, 1 Oct 2019 03:54:34 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2vbqd03hjp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Oct 2019 03:54:34 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x913sVuK026024;
+        Tue, 1 Oct 2019 03:54:33 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 30 Sep 2019 20:54:30 -0700
+To:     Daniel Wagner <dwagner@suse.de>
+Cc:     qla2xxx-upstream@qlogic.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH v2] scsi: qla2xxx: Remove WARN_ON_ONCE in qla2x00_status_cont_entry()
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190927073031.62296-1-dwagner@suse.de>
+Date:   Mon, 30 Sep 2019 23:54:28 -0400
+In-Reply-To: <20190927073031.62296-1-dwagner@suse.de> (Daniel Wagner's message
+        of "Fri, 27 Sep 2019 09:30:31 +0200")
+Message-ID: <yq18sq5w26j.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-References: <CAGRSmLsV96jK+7UB6T6k8j9u74oPSHTA+1TPU8F9G2NnOqCDJg@mail.gmail.com>
- <c0d9d434-1f47-66a0-1129-5003f2f2eb5c@infradead.org> <CAGRSmLv-9dtPWmANMD64E7Lv++L4_y5anJ2SPWsw9J1kiDuegw@mail.gmail.com>
-In-Reply-To: <CAGRSmLv-9dtPWmANMD64E7Lv++L4_y5anJ2SPWsw9J1kiDuegw@mail.gmail.com>
-From:   "David F." <df7729@gmail.com>
-Date:   Mon, 30 Sep 2019 20:38:50 -0700
-Message-ID: <CAGRSmLuChjV8nXuOvu54kY9ejSZT1akGo_axAzD2mn++zHJXWw@mail.gmail.com>
-Subject: Re: What populates /proc/partitions ?
-To:     Randy Dunlap <rdunlap@infradead.org>, masneyb@onstation.org
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910010037
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910010038
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Well, it's not straightforward.  No direct calls, it must be somehow
-when kmod is used to load the module.  The only difference I see in
-the udevadm output is the old system has attribute differences
-capability new==11, old==1, event_poll_msec new=2000, old=-1.  I
-figured if i could set the "hidden" attribute to 1 then it looks like
-/proc/partitions won't list it (already "removable"attribute), but
-udev doesn't seem to allow changing the attributes, only referencing
-them. unless I'm missing something?
 
-On Mon, Sep 30, 2019 at 5:13 PM David F. <df7729@gmail.com> wrote:
->
-> Thanks for the replies.   I'll see if I can figure this out.   I know
-> with the same kernel and older udev version in use that it didn't add
-> it, but with the new udev (eudev) it does (one big difference is the
-> new one requires and uses devtmpfs and the old one didn't).
->
-> I tried making the floppy a module but it still loads on vmware player
-> and the physical test system I'm using that doesn't have one but
-> reports it as existing (vmware doesn't hang, just adds fd0 read errors
-> to log, but physical system does hang while fdisk -l, mdadm --scan
-> runs, etc..).
->
-> As far as the log, debugging udev output, it's close to the same, the
-> message log (busybox) not much in there to say what's up.   I even
-> tried the old .rules that were being used with the old udev version,
-> but made no difference.
->
-> On Mon, Sep 30, 2019 at 4:49 PM Randy Dunlap <rdunlap@infradead.org> wrote:
-> >
-> > On 9/30/19 3:47 PM, David F. wrote:
-> > > Hi,
-> > >
-> > > I want to find out why fd0 is being added to /proc/partitions and stop
-> > > that for my build.  I've searched "/proc/partitions" and "partitions",
-> > > not finding anything that matters.
-> >
-> > /proc/partitions is produced on demand by causing a read of it.
-> > That is done by these functions (pointers) in block/genhd.c:
-> >
-> > static const struct seq_operations partitions_op = {
-> >         .start  = show_partition_start,
-> >         .next   = disk_seqf_next,
-> >         .stop   = disk_seqf_stop,
-> >         .show   = show_partition
-> > };
-> >
-> > in particular, show_partition().  In turn, that function uses data that was
-> > produced upon block device discovery, also in block/genhd.c.
-> > See functions disk_get_part(), disk_part_iter_init(), disk_part_iter_next(),
-> > disk_part_iter_exit(), __device_add_disk(), and get_gendisk().
-> >
-> > > If udev is doing it, what function is it call so I can search on that?
-> >
-> > I don't know about that.  I guess in the kernel it is about "uevents".
-> > E.g., in block/genhd.c, there are some calls to kobject_uevent() or variants
-> > of it.
-> >
-> > > TIA!!
-> >
-> > There should be something in your boot log about "fd" or "fd0" or floppy.
-> > eh?
-> >
-> > --
-> > ~Randy
+Daniel,
+
+> Commit 88263208dd23 ("scsi: qla2xxx: Complain if sp->done() is not
+> called from the completion path") introduced the WARN_ON_ONCE in
+> qla2x00_status_cont_entry(). The assumption was that there is only one
+> status continuations element. According to the firmware documentation
+> it is possible that multiple status continuations are emitted by the
+> firmware.
+
+Applied to 5.4/scsi-fixes. Thanks!
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
