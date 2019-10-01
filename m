@@ -7,55 +7,57 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FA9C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA7FC388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 528A6222C7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF27021D7B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 11:40:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569930055;
-	bh=gWLGKFAVaPVUPdR7wZMSfqjVF5L9izPGWIc1RsW7g9Q=;
+	s=default; t=1569930058;
+	bh=f0J6qcvtU9iSpteLu2LpvokFxn+0lcMUGtFry7XbDAY=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=DA4/TYbWkSNFucoD4tTubB+QLIgS3J8icMwpYIlwLK1PwaX67UwURvdkbr0fNPgyb
-	 ysTTCcjJOBPbR19c7daDt2o1qH+GkWngPm9IWjKfs8W25Pg4QjfOGeHeWwZ5tqlx8l
-	 aIEJ+HU+POxRzdiI43xGCZ/vpAKnW8A35YySPl/s=
+	b=H6dp6AHgoHd/Ng7iHNXDrxfU/nuPda2MibLqHIm8LqUkx1xK/mI78aqu8SHi63eXe
+	 YVb05foPJLN46LLJdmPSh7UwNzvTtIvFajzwjV+7NYvpp8RO7L5euj6gKQb/eTdhTl
+	 r4p4929xOLTKYmS/LSY7qp/fAnKQjBtLrq9oGDGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387440AbfJALky (ORCPT
+        id S2387473AbfJALk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 07:40:54 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40296 "EHLO
+        Tue, 1 Oct 2019 07:40:57 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40404 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731469AbfJALky (ORCPT
+        with ESMTP id S1731469AbfJALkz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 07:40:54 -0400
+        Tue, 1 Oct 2019 07:40:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=+gqFQySrShV/ToSh8YGHlEnWI1hCCq31xeGoKbe2xP8=; b=W6+VhIelim16
-        88zCkz/rOj4zN0jeG1fTJB2sQdqgKIRWUbskh8rnG2yZOw3/dzTeSqk3/AkE03V52p9H5WIc2T32r
-        zbQTwiI49zMC75YmcNFGM73DgP5pKKXqv0qI/H4cM7CfKlYsi6blQdfAPmFZjTg1qOthqj0ce+ZVv
-        JEDPc=;
+        List-Archive; bh=Pm5Wzk3cyK4n7/BtFOzOjGj6C3W93IFmNChDWB7dwI4=; b=uXNWd2PIwgpR
+        hgkZkcPTAFdL9w9SWVnGl7urBvpK8OVyoFjjJCt1GgT2bdc3na6aA4sGbeL5bxDj16hVs52E2AuED
+        sebSZceCiLS90t0hRKJcyTTlqw24tX/TIY3Euj/LpHrdbLelziRXNwgfyOR1eyXrHBD3cGYXGwrS9
+        YlS0A=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iFGWN-0004Sl-FO; Tue, 01 Oct 2019 11:40:47 +0000
+        id 1iFGWO-0004TF-GP; Tue, 01 Oct 2019 11:40:48 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id E68622742A10; Tue,  1 Oct 2019 12:40:46 +0100 (BST)
+        id E96E82742A30; Tue,  1 Oct 2019 12:40:47 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Daniel Baluta <daniel.baluta@nxp.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        lgirdwood@gmail.com, linux-imx@nxp.com,
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>,
+        kernel-janitors@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        pierre-louis.bossart@intel.com, ranjani.sridharan@intel.com
-Subject: Applied "ASoC: core: Clarify usage of ignore_machine" to the asoc tree
-In-Reply-To: <20190925183358.11955-1-daniel.baluta@nxp.com>
+        Takashi Iwai <tiwai@suse.com>,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+Subject: Applied "ASoC: amd: acp3x: clean up indentation issue" to the asoc tree
+In-Reply-To: <20190925094545.19941-1-colin.king@canonical.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191001114046.E68622742A10@ypsilon.sirena.org.uk>
-Date:   Tue,  1 Oct 2019 12:40:46 +0100 (BST)
+Message-Id: <20191001114047.E96E82742A30@ypsilon.sirena.org.uk>
+Date:   Tue,  1 Oct 2019 12:40:47 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -63,7 +65,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: core: Clarify usage of ignore_machine
+   ASoC: amd: acp3x: clean up indentation issue
 
 has been applied to the asoc tree at
 
@@ -88,46 +90,34 @@ to this mail.
 Thanks,
 Mark
 
-From 49f9c4f2e83cf562f1a6e3f62eafa4ede5343e4a Mon Sep 17 00:00:00 2001
-From: Daniel Baluta <daniel.baluta@nxp.com>
-Date: Wed, 25 Sep 2019 21:33:58 +0300
-Subject: [PATCH] ASoC: core: Clarify usage of ignore_machine
+From 67f798c78242ef3051bf6bf304ddb8a09514e1c5 Mon Sep 17 00:00:00 2001
+From: Colin Ian King <colin.king@canonical.com>
+Date: Wed, 25 Sep 2019 10:45:45 +0100
+Subject: [PATCH] ASoC: amd: acp3x: clean up indentation issue
 
-For a sound card ignore_machine means that existing FEs links should be
-ignored and existing BEs links should be overridden with some information
-from the matching component driver.
+There is a statement that is indented one level too deeply,
+remove the extraneous tab.
 
-Current code make some confusions about this so fix it!
-
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Link: https://lore.kernel.org/r/20190925183358.11955-1-daniel.baluta@nxp.com
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20190925094545.19941-1-colin.king@canonical.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/soc-core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/amd/raven/acp3x-pcm-dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index d2842a383846..4a47ba94559f 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -1859,7 +1859,7 @@ static void soc_check_tplg_fes(struct snd_soc_card *card)
+diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
+index bc4dfafdfcd1..ea57088d50ce 100644
+--- a/sound/soc/amd/raven/acp3x-pcm-dma.c
++++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
+@@ -631,7 +631,7 @@ static int acp3x_audio_probe(struct platform_device *pdev)
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!res) {
+ 		dev_err(&pdev->dev, "IORESOURCE_IRQ FAILED\n");
+-			return -ENODEV;
++		return -ENODEV;
+ 	}
  
- 	for_each_component(component) {
- 
--		/* does this component override FEs ? */
-+		/* does this component override BEs ? */
- 		if (!component->driver->ignore_machine)
- 			continue;
- 
-@@ -1880,7 +1880,7 @@ static void soc_check_tplg_fes(struct snd_soc_card *card)
- 				continue;
- 			}
- 
--			dev_info(card->dev, "info: override FE DAI link %s\n",
-+			dev_info(card->dev, "info: override BE DAI link %s\n",
- 				 card->dai_link[i].name);
- 
- 			/* override platform component */
+ 	adata = devm_kzalloc(&pdev->dev, sizeof(*adata), GFP_KERNEL);
 -- 
 2.20.1
 
