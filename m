@@ -2,173 +2,261 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCF4C352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3454FC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52DBF20B7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1FB0215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:57:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="beDXTU69"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbfJAS4b (ORCPT
+        id S1726558AbfJAS5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 14:56:31 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33382 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726043AbfJAS4b (ORCPT
+        Tue, 1 Oct 2019 14:57:05 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35279 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfJAS5E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 14:56:31 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x91IpkHO037151;
-        Tue, 1 Oct 2019 14:55:55 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vcc22rwxw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Oct 2019 14:55:55 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x91IqCau038177;
-        Tue, 1 Oct 2019 14:55:54 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vcc22rwxr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Oct 2019 14:55:54 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x91IrRcc005347;
-        Tue, 1 Oct 2019 18:55:54 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma02wdc.us.ibm.com with ESMTP id 2v9y585qkv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Oct 2019 18:55:54 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x91ItqbP60031400
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 1 Oct 2019 18:55:52 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8B22EBE04F;
-        Tue,  1 Oct 2019 18:55:52 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 41B77BE051;
-        Tue,  1 Oct 2019 18:55:50 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.80.224.222])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue,  1 Oct 2019 18:55:49 +0000 (GMT)
-Subject: Re: [PATCH] sysfs: add BIN_ATTR_WO() macro
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-efi@vger.kernel.org,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        linuxppc-dev@ozlabs.org, Paul Mackerras <paulus@samba.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        linux-integrity@vger.kernel.org,
-        George Wilson <gcwilson@linux.ibm.com>
-References: <1566825818-9731-1-git-send-email-nayna@linux.ibm.com>
- <1566825818-9731-3-git-send-email-nayna@linux.ibm.com>
- <20190826140131.GA15270@kroah.com>
- <ff9674e1-1b27-783a-38f3-4fd725353186@linux.vnet.ibm.com>
- <20190826150153.GD18418@kroah.com>
- <7546990b-8060-9451-129a-19aaa856d2e1@linux.vnet.ibm.com>
- <20191001181601.GA3705194@kroah.com>
-From:   Nayna <nayna@linux.vnet.ibm.com>
-Message-ID: <30330438-bd1d-000f-a9ec-57fd993eb569@linux.vnet.ibm.com>
-Date:   Tue, 1 Oct 2019 14:55:49 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 1 Oct 2019 14:57:04 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 205so8730756pfw.2;
+        Tue, 01 Oct 2019 11:57:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=QMuIShGrKhL+NfsiUAQoYc53XQ6eTBiB5py/hpqNtNU=;
+        b=beDXTU69EMupXgVLcmBXNn8h7M4HfzlMU3Gqu2gbhpfFd9AO+8PBBYfnfy7UQJ1BRa
+         IdBmKkxIL/YfvkY1500G185pp+LFfW899HZmgZGjFyMOx1GeT3bHyJ1NFsxehzltgY4E
+         6DjCKlW7SFFFcUflKh9T3rRdHDAJIbGs2T0ffSXL7Piy2gFOygThZITBuqa9cPWXlC3g
+         Ja1U+F2GekrA/ve37501N1w+MSZDL+Z6R91TnczxQLYX+TpJNyso+W8k1ehMcUpx+QaK
+         WB6CfC5hr4PqrQqt+y17Dtbmy1t0pI39j73cUqpguGjhuaB8UxG80DynqH+OyHpiwXle
+         RsaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=QMuIShGrKhL+NfsiUAQoYc53XQ6eTBiB5py/hpqNtNU=;
+        b=YCPcj3aOo2A/Qfa/C1xiFwmE/kWJuPuZdMvFlsshSXLqV2Nv8Slxa2FkFHbWAwy0Qa
+         GaJt7RjsjeLIIv8p7ktQnk8Y3TImLL0a6tNdzX2HR5tuXSIGIjC+kMjejG0DPSKBHOe1
+         ciRkImkKFAk6NiAZlX12l6b1wsSQ8efSo/WzrxVNYCZs7Dvv5M0eCd+XFla24UFv2vG4
+         MM+CbnnjO7Z5pf2LvbRrgLmzS0RSGvx6O/5+dd8L4ywlPCDY3Df2m/cZvci82D43raAn
+         Siqnwm6+EFCDzn0BEU2APAfXTICPIAnxXwxogncY+RbzNRUQfhLals43nToL8kgvZIs+
+         vSfA==
+X-Gm-Message-State: APjAAAXhRyiGyzF/M6kvxsZ+DwDSE+UTt+8c76A6KR2LgicGz2TbzdGP
+        UV9xSE4COZRK60LRMLrLrbU=
+X-Google-Smtp-Source: APXvYqyjmj7cP3FSgWUgZFrcbJCTWbfH6ozD+0ThDxLqB2tuKfrLahHyUT4heqIV1AD5dmOLHJK/zQ==
+X-Received: by 2002:aa7:92d9:: with SMTP id k25mr29621355pfa.155.1569956223628;
+        Tue, 01 Oct 2019 11:57:03 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id k15sm18949969pgt.66.2019.10.01.11.57.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2019 11:57:02 -0700 (PDT)
+Date:   Tue, 1 Oct 2019 11:57:00 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     Corentin Chary <corentin.chary@gmail.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        acpi4asus-user@lists.sourceforge.net
+Subject: [PATCH v2] platform/x86: asus-laptop: switch to using polled mode of
+ input devices
+Message-ID: <20191001185700.GA46611@dtor-ws>
 MIME-Version: 1.0
-In-Reply-To: <20191001181601.GA3705194@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-01_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=933 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910010151
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+We have added polled mode to the normal input devices with the intent of
+retiring input_polled_dev. This converts Asus laptop driver to use the
+polling mode of standard input devices and removes dependency on
+INPUT_POLLDEV.
+
+Also removed no longed needed set_bit(EV_ABS, ...) as
+input_set_abs_oarams() does it for us.
+
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+
+v2: removed input-polldev.h include
+
+ drivers/platform/x86/Kconfig       |  1 -
+ drivers/platform/x86/asus-laptop.c | 71 +++++++++++++++---------------
+ 2 files changed, 35 insertions(+), 37 deletions(-)
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 1b67bb578f9f..f0a93f630455 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -94,7 +94,6 @@ config ASUS_LAPTOP
+ 	depends on RFKILL || RFKILL = n
+ 	depends on ACPI_VIDEO || ACPI_VIDEO = n
+ 	select INPUT_SPARSEKMAP
+-	select INPUT_POLLDEV
+ 	---help---
+ 	  This is a driver for Asus laptops, Lenovo SL and the Pegatron
+ 	  Lucid tablet. It may also support some MEDION, JVC or VICTOR
+diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
+index 472af7edf0af..fc6446209854 100644
+--- a/drivers/platform/x86/asus-laptop.c
++++ b/drivers/platform/x86/asus-laptop.c
+@@ -34,7 +34,6 @@
+ #include <linux/uaccess.h>
+ #include <linux/input.h>
+ #include <linux/input/sparse-keymap.h>
+-#include <linux/input-polldev.h>
+ #include <linux/rfkill.h>
+ #include <linux/slab.h>
+ #include <linux/dmi.h>
+@@ -244,7 +243,7 @@ struct asus_laptop {
+ 
+ 	struct input_dev *inputdev;
+ 	struct key_entry *keymap;
+-	struct input_polled_dev *pega_accel_poll;
++	struct input_dev *pega_accel_poll;
+ 
+ 	struct asus_led wled;
+ 	struct asus_led bled;
+@@ -446,9 +445,9 @@ static int pega_acc_axis(struct asus_laptop *asus, int curr, char *method)
+ 	return clamp_val((short)val, -PEGA_ACC_CLAMP, PEGA_ACC_CLAMP);
+ }
+ 
+-static void pega_accel_poll(struct input_polled_dev *ipd)
++static void pega_accel_poll(struct input_dev *input)
+ {
+-	struct device *parent = ipd->input->dev.parent;
++	struct device *parent = input->dev.parent;
+ 	struct asus_laptop *asus = dev_get_drvdata(parent);
+ 
+ 	/* In some cases, the very first call to poll causes a
+@@ -457,10 +456,10 @@ static void pega_accel_poll(struct input_polled_dev *ipd)
+ 	 * device, and perhaps a firmware bug. Fake the first report. */
+ 	if (!asus->pega_acc_live) {
+ 		asus->pega_acc_live = true;
+-		input_report_abs(ipd->input, ABS_X, 0);
+-		input_report_abs(ipd->input, ABS_Y, 0);
+-		input_report_abs(ipd->input, ABS_Z, 0);
+-		input_sync(ipd->input);
++		input_report_abs(input, ABS_X, 0);
++		input_report_abs(input, ABS_Y, 0);
++		input_report_abs(input, ABS_Z, 0);
++		input_sync(input);
+ 		return;
+ 	}
+ 
+@@ -471,25 +470,24 @@ static void pega_accel_poll(struct input_polled_dev *ipd)
+ 	/* Note transform, convert to "right/up/out" in the native
+ 	 * landscape orientation (i.e. the vector is the direction of
+ 	 * "real up" in the device's cartiesian coordinates). */
+-	input_report_abs(ipd->input, ABS_X, -asus->pega_acc_x);
+-	input_report_abs(ipd->input, ABS_Y, -asus->pega_acc_y);
+-	input_report_abs(ipd->input, ABS_Z,  asus->pega_acc_z);
+-	input_sync(ipd->input);
++	input_report_abs(input, ABS_X, -asus->pega_acc_x);
++	input_report_abs(input, ABS_Y, -asus->pega_acc_y);
++	input_report_abs(input, ABS_Z,  asus->pega_acc_z);
++	input_sync(input);
+ }
+ 
+ static void pega_accel_exit(struct asus_laptop *asus)
+ {
+ 	if (asus->pega_accel_poll) {
+-		input_unregister_polled_device(asus->pega_accel_poll);
+-		input_free_polled_device(asus->pega_accel_poll);
++		input_unregister_device(asus->pega_accel_poll);
++		asus->pega_accel_poll = NULL;
+ 	}
+-	asus->pega_accel_poll = NULL;
+ }
+ 
+ static int pega_accel_init(struct asus_laptop *asus)
+ {
+ 	int err;
+-	struct input_polled_dev *ipd;
++	struct input_dev *input;
+ 
+ 	if (!asus->is_pega_lucid)
+ 		return -ENODEV;
+@@ -499,37 +497,39 @@ static int pega_accel_init(struct asus_laptop *asus)
+ 	    acpi_check_handle(asus->handle, METHOD_XLRZ, NULL))
+ 		return -ENODEV;
+ 
+-	ipd = input_allocate_polled_device();
+-	if (!ipd)
++	input = input_allocate_device();
++	if (!input)
+ 		return -ENOMEM;
+ 
+-	ipd->poll = pega_accel_poll;
+-	ipd->poll_interval = 125;
+-	ipd->poll_interval_min = 50;
+-	ipd->poll_interval_max = 2000;
+-
+-	ipd->input->name = PEGA_ACCEL_DESC;
+-	ipd->input->phys = PEGA_ACCEL_NAME "/input0";
+-	ipd->input->dev.parent = &asus->platform_device->dev;
+-	ipd->input->id.bustype = BUS_HOST;
++	input->name = PEGA_ACCEL_DESC;
++	input->phys = PEGA_ACCEL_NAME "/input0";
++	input->dev.parent = &asus->platform_device->dev;
++	input->id.bustype = BUS_HOST;
+ 
+-	set_bit(EV_ABS, ipd->input->evbit);
+-	input_set_abs_params(ipd->input, ABS_X,
++	input_set_abs_params(input, ABS_X,
+ 			     -PEGA_ACC_CLAMP, PEGA_ACC_CLAMP, 0, 0);
+-	input_set_abs_params(ipd->input, ABS_Y,
++	input_set_abs_params(input, ABS_Y,
+ 			     -PEGA_ACC_CLAMP, PEGA_ACC_CLAMP, 0, 0);
+-	input_set_abs_params(ipd->input, ABS_Z,
++	input_set_abs_params(input, ABS_Z,
+ 			     -PEGA_ACC_CLAMP, PEGA_ACC_CLAMP, 0, 0);
+ 
+-	err = input_register_polled_device(ipd);
++	err = input_setup_polling(input, pega_accel_poll);
+ 	if (err)
+ 		goto exit;
+ 
+-	asus->pega_accel_poll = ipd;
++	input_set_poll_interval(input, 125);
++	input_set_min_poll_interval(input, 50);
++	input_set_max_poll_interval(input, 2000);
++
++	err = input_register_device(input);
++	if (err)
++		goto exit;
++
++	asus->pega_accel_poll = input;
+ 	return 0;
+ 
+ exit:
+-	input_free_polled_device(ipd);
++	input_free_device(input);
+ 	return err;
+ }
+ 
+@@ -1550,8 +1550,7 @@ static void asus_acpi_notify(struct acpi_device *device, u32 event)
+ 
+ 	/* Accelerometer "coarse orientation change" event */
+ 	if (asus->pega_accel_poll && event == 0xEA) {
+-		kobject_uevent(&asus->pega_accel_poll->input->dev.kobj,
+-			       KOBJ_CHANGE);
++		kobject_uevent(&asus->pega_accel_poll->dev.kobj, KOBJ_CHANGE);
+ 		return ;
+ 	}
+ 
+-- 
+2.23.0.444.g18eeb5a265-goog
 
 
-On 10/01/2019 02:16 PM, Greg Kroah-Hartman wrote:
-> On Tue, Oct 01, 2019 at 02:08:53PM -0400, Nayna wrote:
->> Hi Greg,
->>
->>
->> On 08/26/2019 11:01 AM, Greg Kroah-Hartman wrote:
->>> This variant was missing from sysfs.h, I guess no one noticed it before.
->>>
->>> Turns out the powerpc secure variable code can use it, so add it to the
->>> tree for it, and potentially others to take advantage of, instead of
->>> open-coding it.
->>>
->>> Reported-by: Nayna Jain <nayna@linux.ibm.com>
->>> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>> ---
->>>
->>> I'll queue this up to my tree for 5.4-rc1, but if you want to take this
->>> in your tree earlier, feel free to do so.
->>>
->>>    include/linux/sysfs.h | 9 +++++++++
->>>    1 file changed, 9 insertions(+)
->>>
->>> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
->>> index 965236795750..5420817ed317 100644
->>> --- a/include/linux/sysfs.h
->>> +++ b/include/linux/sysfs.h
->>> @@ -196,6 +196,12 @@ struct bin_attribute {
->>>    	.size	= _size,						\
->>>    }
->>> +#define __BIN_ATTR_WO(_name) {						\
->>> +	.attr	= { .name = __stringify(_name), .mode = 0200 },		\
->>> +	.store	= _name##_store,					\
->>> +	.size	= _size,						\
->>> +}
->>> +
->>>    #define __BIN_ATTR_RW(_name, _size)					\
->>>    	__BIN_ATTR(_name, 0644, _name##_read, _name##_write, _size)
->>> @@ -208,6 +214,9 @@ struct bin_attribute bin_attr_##_name = __BIN_ATTR(_name, _mode, _read,	\
->>>    #define BIN_ATTR_RO(_name, _size)					\
->>>    struct bin_attribute bin_attr_##_name = __BIN_ATTR_RO(_name, _size)
->>> +#define BIN_ATTR_WO(_name, _size)					\
->>> +struct bin_attribute bin_attr_##_name = __BIN_ATTR_WO(_name, _size)
->>> +
->>>    #define BIN_ATTR_RW(_name, _size)					\
->>>    struct bin_attribute bin_attr_##_name = __BIN_ATTR_RW(_name, _size)
->> I am sorry. I didn't notice it via inspection but there is a bug in this
->> macro. When I actually try using it, compilation fails. Here's a likely
->> patch:
->>
->> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
->> index 5420817ed317..fa7ee503fb76 100644
->> --- a/include/linux/sysfs.h
->> +++ b/include/linux/sysfs.h
->> @@ -196,9 +196,9 @@ struct bin_attribute {
->>          .size   = _size,                                                \
->>   }
->> -#define __BIN_ATTR_WO(_name) {                                         \
->> +#define __BIN_ATTR_WO(_name, _size) {                                  \
->>          .attr   = { .name = __stringify(_name), .mode = 0200 },         \
->> -       .store  = _name##_store,                                        \
->> +       .write  = _name##_write,                                        \
->>          .size   = _size,                                                \
->>   }
->>
-> Heh, good catch.  Can you send a real patch for this that I can apply to
-> give you the proper credit for finding and fixing this?
-
-Sure.. Thanks Greg !!
-
-Thanks & Regards,
-       - Nayna
+-- 
+Dmitry
