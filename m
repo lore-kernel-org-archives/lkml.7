@@ -2,118 +2,290 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8C1ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5954ECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE79E20815
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:33:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ReaAukld"
+	by mail.kernel.org (Postfix) with ESMTP id BE2ED20700
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 13:33:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569936814;
+	bh=aW2S98REigQaM5aNtTZjte4WpRyT+1CBD6iPAZRr9kU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=V2zr3PHQMCe8KN/ybb3fNdOBqD3xEzi6MeyfI2nStQH5xvD1wXojqQunWUK3IXk9E
+	 skOa+4coKrTp8sfOA15wAQM/huTnggL4Cueol2qg+wE99fuOXJ7DxxHZH8F9DtmxSw
+	 4OtG5eRyRUQzM5Yig0HWny67jzHKDY/xdIqvP/HM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388501AbfJANdN (ORCPT
+        id S2388552AbfJANde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 09:33:13 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35531 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726710AbfJANdL (ORCPT
+        Tue, 1 Oct 2019 09:33:34 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37468 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388539AbfJANdd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 09:33:11 -0400
-Received: by mail-wr1-f67.google.com with SMTP id v8so15585966wrt.2;
-        Tue, 01 Oct 2019 06:33:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=c4RlMElRapjcKytoDFpBCb3LWrmJDVBw/FZtdDDpZ7M=;
-        b=ReaAukldOTH7DgxKYY1FpLm0deK+WPWVtPBXFNwMoZpHBlAqxrnJ5iwa7AlOltDiad
-         ci5R/iWReKZ9jPh2M+b2zSrcl9Go4kGDztbpvC5uanP73qT5bxyQvH7Qw3BmkpwxkY4f
-         6Uj8n9CEhlSSRKftU1ZwCUUtnu/mLjH/2+rrcbMKMcq+Swp2CVy9mWXEtocmMWwKK9YO
-         204nTn+MhW9F5ogSr8xns5C/GiwxN5vuMLl+9g1ud1cpdFLLGssKcOmtrSUw5Z/+yamj
-         pdL1zRC1GUCNHNQpsx6/gYnhMIjm0pgjL5hyWLa5lCAwpF6X7+9QzIIBtecfrgI2bnPW
-         Kr5g==
+        Tue, 1 Oct 2019 09:33:33 -0400
+Received: by mail-ot1-f68.google.com with SMTP id k32so11520938otc.4;
+        Tue, 01 Oct 2019 06:33:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=c4RlMElRapjcKytoDFpBCb3LWrmJDVBw/FZtdDDpZ7M=;
-        b=iWPrQdhb+TDU+DPPBV5b3f39Wfv/FVtQnDthLEOOw3HA0YR5T23996lwvKg0e+bv3j
-         6IwRWEtPrk6p7OutmjO5KQb1r1xrn0f4iql1PcbwqNWd3Xzv1WlwRI0bT7Wo4ZXJ3yp6
-         0nhxpS/Tj3g3Yd/vxih1oREUhWJOzfSmCzFnFcFjkYOO3/25DF01HOGZy+hHsJ41euvR
-         Ylexd9V4a1JYUnNu2AvEbC40IyZB5fzkZ2P3Jc0Maq5nG7PhaJAQYUlkiFvtQlwnlx0g
-         3awJKkc+Sml/vluI+PPuNAWNeaWJ6q2z6TegLXHCRIHKAX2/ylq/aoSrgkSLGdCARsi+
-         tdoA==
-X-Gm-Message-State: APjAAAXxbzWij6oKK7ItzCClv5VVUKiz6m8qOp2UgUy4jYIlchiRWQBk
-        eoM5L5c2lA+duaTFeNyaitTZT4TG
-X-Google-Smtp-Source: APXvYqwC2c5XZwSfhL82+feZqCE+1GNRkJYO4+W95yyUGIENFaeaJrv0VmZlL3HZmbAfB6VThUyFMg==
-X-Received: by 2002:adf:828d:: with SMTP id 13mr18346412wrc.115.1569936789559;
-        Tue, 01 Oct 2019 06:33:09 -0700 (PDT)
-Received: from 640k.localdomain ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id u25sm3091302wml.4.2019.10.01.06.33.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Oct 2019 06:33:08 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     vkuznets@redhat.com, Jim Mattson <jamttson@google.com>
-Subject: [PATCH] KVM: x86: omit "impossible" pmu MSRs from MSR list
-Date:   Tue,  1 Oct 2019 15:33:07 +0200
-Message-Id: <1569936787-56615-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=7bROK01xwlSENl9kjp9ya1aE8CkURZg+8d3OKCgxRA8=;
+        b=mDy+i079Ssotn3SQm/uGN3RuLfuizPXrvhT/58AbERMeJziy50Pbl/FwDM/cG2j9uF
+         ywryFtSu2mR6gpeXo/dYSFXDPxmIFd4kiZmQZlt7Pm6k1e3HxRDkBbYzTjupW4bQCOTW
+         0/D9MZCI9xdi+bQ5AVq+NlE2BcW5XtJV3uO3+VkPfnmdPJP45QtikZYussbP39Rs+IW4
+         p65boe32QTHAUVsIUiEz+J1za3J9Q+2XIyZ6UvlE6zztHMrC+FmSPGhl74N2obbcTyH/
+         aFh5AQZtt5By0dTN52hAPrzUVuw4LgYneckOwL2SmWuG9QJZ5LCcs6dPizktviAyDROP
+         KoWg==
+X-Gm-Message-State: APjAAAV+Rwl1oNBHMmFqqmWqp/TLuvmJ5YwbpUjlX23BiSn79j1YnZHD
+        u1ECkNt7FcqZr2npT9mD3KrYp7/pAg==
+X-Google-Smtp-Source: APXvYqwIiJRyPystWgh+WNFIkcDPblkPZi2wdKX63/SEIRNl5QsnwNA7OXltollpd2UZcOwwiOoXqw==
+X-Received: by 2002:a05:6830:17cd:: with SMTP id p13mr18719757ota.161.1569936812049;
+        Tue, 01 Oct 2019 06:33:32 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id e5sm4877949otr.81.2019.10.01.06.33.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2019 06:33:31 -0700 (PDT)
+Date:   Tue, 1 Oct 2019 08:33:30 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Nayna Jain <nayna@linux.ibm.com>
+Cc:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
+        linux-integrity@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v6 1/9] dt-bindings: ibm,secureboot: secure boot specific
+ properties for PowerNV
+Message-ID: <20191001133330.GA29810@bogus>
+References: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com>
+ <1569594360-7141-2-git-send-email-nayna@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1569594360-7141-2-git-send-email-nayna@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-INTEL_PMC_MAX_GENERIC is currently 32, which exceeds the 18
-contiguous MSR indices reserved by Intel for event selectors.
-Since some machines actually have MSRs past the reserved range,
-these may survive the filtering of msrs_to_save array and would
-be rejected by KVM_GET/SET_MSR.  Cut the list to 18 entries to
-avoid this.
+On Fri, Sep 27, 2019 at 10:25:52AM -0400, Nayna Jain wrote:
+> PowerNV represents both the firmware and Host OS secureboot state of the
+> system via device tree. This patch adds the documentation to give
+> the definition of the nodes and the properties.
+> 
+> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+> ---
+>  .../bindings/powerpc/ibm,secureboot.rst       | 76 ++++++++++++++++
+>  .../devicetree/bindings/powerpc/secvar.rst    | 89 +++++++++++++++++++
+>  2 files changed, 165 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/powerpc/ibm,secureboot.rst
+>  create mode 100644 Documentation/devicetree/bindings/powerpc/secvar.rst
+> 
+> diff --git a/Documentation/devicetree/bindings/powerpc/ibm,secureboot.rst b/Documentation/devicetree/bindings/powerpc/ibm,secureboot.rst
+> new file mode 100644
+> index 000000000000..03d32099d2eb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/powerpc/ibm,secureboot.rst
+> @@ -0,0 +1,76 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-Reported-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Suggested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: Jim Mattson <jamttson@google.com>
-Fixes: e2ada66ec418 ("kvm: x86: Add Intel PMU MSRs to msrs_to_save[]", 2019-08-21)
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/x86.c | 14 --------------
- 1 file changed, 14 deletions(-)
+Not the right form for reST files.
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 8072acaaf028..e6b5cfe3c345 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1169,13 +1169,6 @@ bool kvm_rdpmc(struct kvm_vcpu *vcpu)
- 	MSR_ARCH_PERFMON_PERFCTR0 + 12, MSR_ARCH_PERFMON_PERFCTR0 + 13,
- 	MSR_ARCH_PERFMON_PERFCTR0 + 14, MSR_ARCH_PERFMON_PERFCTR0 + 15,
- 	MSR_ARCH_PERFMON_PERFCTR0 + 16, MSR_ARCH_PERFMON_PERFCTR0 + 17,
--	MSR_ARCH_PERFMON_PERFCTR0 + 18, MSR_ARCH_PERFMON_PERFCTR0 + 19,
--	MSR_ARCH_PERFMON_PERFCTR0 + 20, MSR_ARCH_PERFMON_PERFCTR0 + 21,
--	MSR_ARCH_PERFMON_PERFCTR0 + 22, MSR_ARCH_PERFMON_PERFCTR0 + 23,
--	MSR_ARCH_PERFMON_PERFCTR0 + 24, MSR_ARCH_PERFMON_PERFCTR0 + 25,
--	MSR_ARCH_PERFMON_PERFCTR0 + 26, MSR_ARCH_PERFMON_PERFCTR0 + 27,
--	MSR_ARCH_PERFMON_PERFCTR0 + 28, MSR_ARCH_PERFMON_PERFCTR0 + 29,
--	MSR_ARCH_PERFMON_PERFCTR0 + 30, MSR_ARCH_PERFMON_PERFCTR0 + 31,
- 	MSR_ARCH_PERFMON_EVENTSEL0, MSR_ARCH_PERFMON_EVENTSEL1,
- 	MSR_ARCH_PERFMON_EVENTSEL0 + 2, MSR_ARCH_PERFMON_EVENTSEL0 + 3,
- 	MSR_ARCH_PERFMON_EVENTSEL0 + 4, MSR_ARCH_PERFMON_EVENTSEL0 + 5,
-@@ -1185,13 +1178,6 @@ bool kvm_rdpmc(struct kvm_vcpu *vcpu)
- 	MSR_ARCH_PERFMON_EVENTSEL0 + 12, MSR_ARCH_PERFMON_EVENTSEL0 + 13,
- 	MSR_ARCH_PERFMON_EVENTSEL0 + 14, MSR_ARCH_PERFMON_EVENTSEL0 + 15,
- 	MSR_ARCH_PERFMON_EVENTSEL0 + 16, MSR_ARCH_PERFMON_EVENTSEL0 + 17,
--	MSR_ARCH_PERFMON_EVENTSEL0 + 18, MSR_ARCH_PERFMON_EVENTSEL0 + 19,
--	MSR_ARCH_PERFMON_EVENTSEL0 + 20, MSR_ARCH_PERFMON_EVENTSEL0 + 21,
--	MSR_ARCH_PERFMON_EVENTSEL0 + 22, MSR_ARCH_PERFMON_EVENTSEL0 + 23,
--	MSR_ARCH_PERFMON_EVENTSEL0 + 24, MSR_ARCH_PERFMON_EVENTSEL0 + 25,
--	MSR_ARCH_PERFMON_EVENTSEL0 + 26, MSR_ARCH_PERFMON_EVENTSEL0 + 27,
--	MSR_ARCH_PERFMON_EVENTSEL0 + 28, MSR_ARCH_PERFMON_EVENTSEL0 + 29,
--	MSR_ARCH_PERFMON_EVENTSEL0 + 30, MSR_ARCH_PERFMON_EVENTSEL0 + 31,
- };
- 
- static unsigned num_msrs_to_save;
--- 
-1.8.3.1
+> +*** NOTE ***
+> +This document is copied from OPAL firmware
+> +(skiboot/doc/device-tree/ibm,secureboot.rst)
 
+Why copy into the kernel?
+
+Plus, the bindings are in the process of being converted to schema. What 
+would I do with these files?
+
+> +************
+> +.. _device-tree/ibm,secureboot:
+> +
+> +ibm,secureboot
+> +==============
+> +
+> +The ``ìbm,secureboot`` node provides secure boot and trusted boot information
+> +up to the target OS. Further information can be found in :ref:`stb-overview`.
+> +
+> +Required properties
+> +-------------------
+> +
+> +.. code-block:: none
+> +
+> +    compatible:         Either one of the following values:
+> +
+> +                        ibm,secureboot-v1  :  The container-verification-code
+> +                                              is stored in a secure ROM memory.
+> +
+> +                        ibm,secureboot-v2  :  The container-verification-code
+> +                                              is stored in a reserved memory.
+> +                                              It described by the ibm,cvc child
+> +                                              node.
+> +
+> +                        ibm,secureboot-v3  :  The container-verification-code
+> +                                              is stored in a reserved memory.
+> +                                              It described by the ibm,cvc child
+> +                                              node. Secure variables are
+> +                                              supported. `secvar` node should
+> +                                              be created.
+> +
+> +    secure-enabled:     this property exists when the firmware stack is booting
+> +                        in secure mode (hardware secure boot jumper asserted).
+> +
+> +    trusted-enabled:    this property exists when the firmware stack is booting
+> +                        in trusted mode.
+> +
+> +    hw-key-hash:        hash of the three hardware public keys trusted by the
+> +                        platformw owner. This is used to verify if a firmware
+> +                        code is signed with trusted keys.
+> +
+> +    hw-key-hash-size:   hw-key-hash size
+> +
+> +    secvar:             this node is created if the platform supports secure
+> +                        variables. Contains information about the current
+> +                        secvar status, see 'secvar.rst'.
+> +
+> +Obsolete properties
+> +-------------------
+> +
+> +.. code-block:: none
+> +
+> +    hash-algo:          Superseded by the hw-key-hash-size property in
+> +                        'ibm,secureboot-v2'.
+> +
+> +Example
+> +-------
+> +
+> +.. code-block:: dts
+> +
+> +    ibm,secureboot {
+> +        compatible = "ibm,secureboot-v2";
+> +        secure-enabled;
+> +        trusted-enabled;
+> +        hw-key-hash-size = <0x40>;
+> +        hw-key-hash = <0x40d487ff 0x7380ed6a 0xd54775d5 0x795fea0d 0xe2f541fe
+> +                       0xa9db06b8 0x466a42a3 0x20e65f75 0xb4866546 0x0017d907
+> +                       0x515dc2a5 0xf9fc5095 0x4d6ee0c9 0xb67d219d 0xfb708535
+> +                       0x1d01d6d1>;
+> +        phandle = <0x100000fd>;
+> +        linux,phandle = <0x100000fd>;
+> +    };
+> diff --git a/Documentation/devicetree/bindings/powerpc/secvar.rst b/Documentation/devicetree/bindings/powerpc/secvar.rst
+> new file mode 100644
+> index 000000000000..47793ab9c2a7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/powerpc/secvar.rst
+> @@ -0,0 +1,89 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +*** NOTE ***
+> +This document is copied from OPAL firmware
+> +(skiboot/doc/device-tree/secvar.rst)
+> +************
+> +.. _device-tree/ibm,secureboot/secvar:
+> +
+> +secvar
+> +======
+> +
+> +The ``secvar`` node provides secure variable information for the secure
+> +boot of the target OS.
+> +
+> +Required properties
+> +-------------------
+> +
+> +.. code-block:: none
+> +
+> +    compatible:         this property is set based on the current secure
+> +                        variable scheme as set by the platform.
+> +
+> +    status:             set to "fail" if the secure variables could not
+> +                        be initialized, validated, or some other
+> +                        catastrophic failure.
+> +
+> +    update-status:      contains the return code of the update queue
+> +                        process run during initialization. Signifies if
+> +                        updates were processed or not, and if there was
+> +                        an error. See table below
+> +
+> +    secure-mode:        a u64 bitfield set by the backend to determine
+> +                        what secure mode we should be in, and if host
+> +                        secure boot should be enforced.
+> +
+> +Example
+> +-------
+> +
+> +.. code-block:: dts
+> +
+> +    secvar {
+> +        compatible = "ibm,edk2-compat-v1";
+> +        status = "okay";
+> +        secure-mode = "1";
+> +    };
+> +
+> +Update Status
+> +-------------
+> +
+> +The update status property should be set by the backend driver to a value
+> +that best fits its error condtion. The following table defines the
+> +general intent of each error code, check backend specific documentation
+> +for more detail.
+> +
+> ++-----------------+-----------------------------------------------+
+> +| update-status   | Generic Reason                                |
+> ++-----------------|-----------------------------------------------+
+> +| OPAL_SUCCESS    | Updates were found and processed successfully |
+> ++-----------------|-----------------------------------------------+
+> +| OPAL_EMPTY      | No updates were found, none processed         |
+> ++-----------------|-----------------------------------------------+
+> +| OPAL_PARAMETER  | Unable to parse data in the update section    |
+> ++-----------------|-----------------------------------------------+
+> +| OPAL_PERMISSION | Update failed to apply, possible auth failure |
+> ++-----------------|-----------------------------------------------+
+> +| OPAL_HARDWARE   | Misc. storage-related error                   |
+> ++-----------------|-----------------------------------------------+
+> +| OPAL_RESOURCE   | Out of space (somewhere)                      |
+> ++-----------------|-----------------------------------------------+
+> +| OPAL_NO_MEM     | Out of memory                                 |
+> ++-----------------+-----------------------------------------------+
+> +
+> +Secure Mode
+> +-----------
+> +
+> ++-----------------------+------------------------+
+> +| backend specific-bits |      generic mode bits |
+> ++-----------------------+------------------------+
+> +64                     32                        0
+> +
+> +The secure mode property should be set by the backend driver. The least
+> +significant 32 bits are reserved for generic modes, shared across all
+> +possible backends. The other 32 bits are open for backends to determine
+> +their own modes. Any kernel must be made aware of any custom modes.
+> +
+> +At the moment, only one general-purpose bit is defined:
+> +
+> +``#define SECVAR_SECURE_MODE_ENFORCING  0x1``
+> +
+> +which signals that a kernel should enforce host secure boot.
+> -- 
+> 2.20.1
+> 
