@@ -2,190 +2,121 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62EE3ECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85251C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D03921A4A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:42:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DED621783
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 18:43:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NuBENbdQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HRefi9sb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfJASms (ORCPT
+        id S1727073AbfJASnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 14:42:48 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37629 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfJASly (ORCPT
+        Tue, 1 Oct 2019 14:43:19 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36886 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbfJASnT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 14:41:54 -0400
-Received: by mail-wr1-f68.google.com with SMTP id i1so16770840wro.4;
-        Tue, 01 Oct 2019 11:41:53 -0700 (PDT)
+        Tue, 1 Oct 2019 14:43:19 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y5so8689872pfo.4
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 11:43:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8RScTeZ75nbsv+9yuHpXGe/wKnF3vqAqsp9h8uoT4tg=;
-        b=NuBENbdQZE/kGoNM/ITTDYe0seZt25Z/StnqSpTqFTqOJLYyBQPRgFuEQKDx+XwY5L
-         7GqQXtj/ljrrOYwr/DkyMdZQVOSZqkhHZJVwoDVwxxYEDziI+ybMoriQ0b6UiYd1wH7P
-         cZIJWztP75HNY+1CF8hAOErWwmeU7uxrkrqFomHn7Bq9Be2BUHwF6CshloZturj/8lRa
-         QL1/ZYuFm7eYqojQCbVKKMGXZ7jzvlM2AUken0svzCpSooNPO2egcuupUQViLt4obCuq
-         /fSOWun8DA2un0vB4yxq2gyFlrEeuE6rSjYUDnj/Lyh8DXxXOvOzqBb4R2Ff02jzqEkm
-         zLFA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wOlYko7NkoTZki/CziEJgME03XS7kkXPkXPHoWO1dek=;
+        b=HRefi9sbT2b8lKM1WA3enIvk00lwiNRmnkNkKSSjyabgnBjMrPgZ5KhzSXRskxRsKd
+         QPiV6aRNC/atiPa5n4nqYGou7cgzn1B+N2aCxqv4Ffq+jtGGeoZoretuydUH967g8Pj2
+         yL5S/SJ34sS0JfgIGx00jUUmcACqxYwQ8nTgE0U6LGDKhGzYfYoFqx+AfKd/seDQZENB
+         a6xEN5oxCFehW8GtdPFZwuRF+LDNLGrqfg3C8JSUhM357Kg8XNh9Vl4w2fMZmDZI+i4y
+         yQCRbVcp65ztpPn81L6u4KxYTwdenOBjLvmYHG/3tCRwGM3uT9VgEtnrQCo8+3dy0Gpn
+         6ASw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8RScTeZ75nbsv+9yuHpXGe/wKnF3vqAqsp9h8uoT4tg=;
-        b=pFhaoFz8u2Vnq6SRO8X3hnboqtqetSsZxgBdsA6jW4ds15ho9uXtpwe50RRD7RAVhM
-         3KCChdLc4rYG9lZDa8dnQgKIhIZR5RRWAyiTgPJUSQUthkcGLiBTzpNqJJjjjwL4yCSh
-         Ne9LOYqMVP3NE22m3tOca/Z+itIjJwiAr3O7Z7tqI2v4nHFiwNnE2/9kyTjruUZyENWw
-         PP2MnDHYjBpN5YjcCM/xoLM0woeQ1XygU80UqmtEaurlxE+CCf93Qq68sVuKAO0jIwBp
-         eXWb8IsXXrRIe9fUAiFO9ZHwepCotTvYgulFX0bfcXRiAQFwI+JzPYEHnpbz/mh9NglI
-         eAeg==
-X-Gm-Message-State: APjAAAVuyWWen9tNActXeth7hUulmH42g1XG7P5S+Y4gfH2nLMepHOV3
-        qxD2wUPVl4mMWKyjOBnockg=
-X-Google-Smtp-Source: APXvYqx5lPO7Frbw7k5tcVmreN/iCtnJ+oksNmprbbANmrVQpyFpzY5b+DiGfDoIO3YAxy9ctRCcLg==
-X-Received: by 2002:a05:6000:186:: with SMTP id p6mr17729145wrx.136.1569955312419;
-        Tue, 01 Oct 2019 11:41:52 -0700 (PDT)
-Received: from Red.localdomain ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id n8sm6788987wma.7.2019.10.01.11.41.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Oct 2019 11:41:51 -0700 (PDT)
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     catalin.marinas@arm.com, davem@davemloft.net,
-        herbert@gondor.apana.org.au, linux@armlinux.org.uk,
-        mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
-        wens@csie.org, will@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com,
-        Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH v2 03/11] dt-bindings: crypto: Add DT bindings documentation for sun8i-ce Crypto Engine
-Date:   Tue,  1 Oct 2019 20:41:33 +0200
-Message-Id: <20191001184141.27956-4-clabbe.montjoie@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191001184141.27956-1-clabbe.montjoie@gmail.com>
-References: <20191001184141.27956-1-clabbe.montjoie@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wOlYko7NkoTZki/CziEJgME03XS7kkXPkXPHoWO1dek=;
+        b=b+5bcOd0YumJvY7pkzZ7G2uK6rf7WgeKFHZS8TtDQF7D6CvJrKsBET6pQJqsFQrEAi
+         HlEg/09eoOIiz3aHjBkDiXIiH7EgWwuP1I6K7PYj0RVPuS/rJJDMOqR9nBrvjKwX6a6e
+         kvzc7jwug6d2gQXaug0FdMLpRG4EPoFjgqFS3G7muvrY3kPn/H1o91ZJVlSwgHZITJpG
+         bVBWuPvJqiAt89jy9lvVfN65TDTSBEsqJnjmcwYiIFMA61MolFxpnhk3Liaauid/iEVl
+         SPFpZeaAPIR2AAs3s18yBwxs9o5Wc3cEdLXaaEw6fkGZG4rwndY1plx26sisC0iBqdmq
+         yLyg==
+X-Gm-Message-State: APjAAAXc8DI1BzRQk3ndVtvpZjxfUCkVjINkooffNYkZA/bkikjFVl8z
+        Aapb+T7nczb4wh5OiW6EXTo3
+X-Google-Smtp-Source: APXvYqwLF+mpra8npi1MtsuyWuY9HY6bRBWMk0uyodiiNMMhRMbM1EYftY19y+KeALm5cn5na/b0Qg==
+X-Received: by 2002:a17:90a:1150:: with SMTP id d16mr7411913pje.2.1569955398457;
+        Tue, 01 Oct 2019 11:43:18 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:631a:1d56:6a:8714:31a4:1f8])
+        by smtp.gmail.com with ESMTPSA id q33sm13274538pgm.50.2019.10.01.11.43.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 01 Oct 2019 11:43:17 -0700 (PDT)
+Date:   Wed, 2 Oct 2019 00:13:09 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     mchehab@kernel.org, robh+dt@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        c.barrett@framos.com, a.brela@framos.com
+Subject: Re: [PATCH v3 3/3] MAINTAINERS: Add entry for IMX290 CMOS image
+ sensor driver
+Message-ID: <20191001184309.GB7739@Mani-XPS-13-9360>
+References: <20190830091943.22646-1-manivannan.sadhasivam@linaro.org>
+ <20190830091943.22646-4-manivannan.sadhasivam@linaro.org>
+ <20190923090752.GK5525@valkosipuli.retiisi.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190923090752.GK5525@valkosipuli.retiisi.org.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds documentation for Device-Tree bindings for the
-Crypto Engine cryptographic accelerator driver.
+On Mon, Sep 23, 2019 at 12:07:52PM +0300, Sakari Ailus wrote:
+> On Fri, Aug 30, 2019 at 02:49:43PM +0530, Manivannan Sadhasivam wrote:
+> > Add MAINTAINERS entry for Sony IMX290 CMOS image sensor driver.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  MAINTAINERS | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index f7c84004187d..0ee261fca602 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -14962,6 +14962,14 @@ S:	Maintained
+> >  F:	drivers/media/i2c/imx274.c
+> >  F:	Documentation/devicetree/bindings/media/i2c/imx274.txt
+> >  
+> > +SONY IMX290 SENSOR DRIVER
+> > +M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > +L:	linux-media@vger.kernel.org
+> > +T:	git git://linuxtv.org/media_tree.git
+> > +S:	Maintained
+> > +F:	drivers/media/i2c/imx290.c
+> > +F:	Documentation/devicetree/bindings/media/i2c/imx290.txt
+> > +
+> >  SONY IMX319 SENSOR DRIVER
+> >  M:	Bingbu Cao <bingbu.cao@intel.com>
+> >  L:	linux-media@vger.kernel.org
+> 
+> Please squash this change to the first patch.
+> 
 
-Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
----
- .../bindings/crypto/allwinner,sun8i-ce.yaml   | 92 +++++++++++++++++++
- 1 file changed, 92 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml
+Oops, looks like you already said this in previous review as well. Will
+do.
 
-diff --git a/Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml b/Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml
-new file mode 100644
-index 000000000000..9bd26a2eff33
---- /dev/null
-+++ b/Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml
-@@ -0,0 +1,92 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/crypto/allwinner,sun8i-ce.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner Crypto Engine driver
-+
-+maintainers:
-+  - Corentin Labbe <clabbe.montjoie@gmail.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - allwinner,sun8i-h3-crypto
-+      - allwinner,sun8i-r40-crypto
-+      - allwinner,sun50i-a64-crypto
-+      - allwinner,sun50i-h5-crypto
-+      - allwinner,sun50i-h6-crypto
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: Bus clock
-+      - description: Module clock
-+      - description: MBus clock
-+    minItems: 2
-+    maxItems: 3
-+
-+  clock-names:
-+    items:
-+      - const: bus
-+      - const: mod
-+      - const: ram
-+    minItems: 2
-+    maxItems: 3
-+
-+  resets:
-+    maxItems: 1
-+
-+  reset-names:
-+    const: bus
-+
-+if:
-+  properties:
-+    compatible:
-+      items:
-+        const: allwinner,sun50i-h6-crypto
-+then:
-+  properties:
-+      clocks:
-+        minItems: 3
-+      clock-names:
-+        minItems: 3
-+else:
-+  properties:
-+      clocks:
-+        maxItems: 2
-+      clock-names:
-+        maxItems: 2
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - resets
-+
-+additionalProperties: true
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/sun50i-a64-ccu.h>
-+    #include <dt-bindings/reset/sun50i-a64-ccu.h>
-+
-+    crypto: crypto@1c15000 {
-+      compatible = "allwinner,sun8i-h3-crypto";
-+      reg = <0x01c15000 0x1000>;
-+      interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-+      clocks = <&ccu CLK_BUS_CE>, <&ccu CLK_CE>;
-+      clock-names = "bus", "mod";
-+      resets = <&ccu RST_BUS_CE>;
-+      reset-names = "bus";
-+    };
-+
--- 
-2.21.0
+Thanks,
+Mani
 
+> -- 
+> Sakari Ailus
