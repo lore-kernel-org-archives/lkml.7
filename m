@@ -4,56 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE3CC352AA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 895F8ECE587
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B614D20659
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B8A220659
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:49:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948536;
-	bh=6FO32yOtCVloDZBsqif4npnbRKdAuNoJFjki84pFNh8=;
+	s=default; t=1569948541;
+	bh=6EyxsEqBJ2oOZtJcJw9OqpnSifZ1fmKpzk8Q4zKakk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O9rB19fmhuiFpWrv3ZrNenVtrwM+kkpYExEGt8BBJ4jm9qHlCR/Z6j1a6K5CAw4r8
-	 l7FvS/0u6mlDxJLOtahaPd6KblsSSN06n8mdMoBZ8/jAL8m/VsBq9sCrY/LjEyOh8s
-	 4a6RP6so60IKW/YCKnu4WTFk9aOhK0oFk2DhusBA=
+	b=z6XFkwNcOz5Ly4/12N1I7dHh1VoVOWQxiYJvNR7jo+zYUiRPAYhhtlvZPtwPngTTo
+	 wHOCl3ztki5tlhsn1TluGlOU12lU6ro0EV8GMJ7MjqR1NAu+ft/+1VVHpSZDuIJAW9
+	 ihrRZrya9dgAbNqAvGOwhaUdE2hlF646bRXQpI1g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390199AbfJAQpL (ORCPT
+        id S2388872AbfJAQtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:45:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57236 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:49:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390103AbfJAQox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:44:53 -0400
+        id S2390191AbfJAQpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:45:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB34A21A4C;
-        Tue,  1 Oct 2019 16:44:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85CCB21920;
+        Tue,  1 Oct 2019 16:45:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948292;
-        bh=6FO32yOtCVloDZBsqif4npnbRKdAuNoJFjki84pFNh8=;
+        s=default; t=1569948310;
+        bh=6EyxsEqBJ2oOZtJcJw9OqpnSifZ1fmKpzk8Q4zKakk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IsqEvIhdTxj7hKPbL+Hwih00Wbo+9awHOAK4fJl3/0Li08gWW5zcvTbD4OHYaVGQi
-         l3NQXm/vAajDyNlhvRvyhVRJemGSJ4wFqqK2C3ckH96O0R7upuIosOCM77vrdNzXDO
-         hvdhB7gEE8sYS5Lu8e8H9zzThIlOvpayLBN3gq3E=
+        b=Jh/nGozf2xZ+3bl8px80Nen5boAH4hf5hBxkiWiLeBC0lYNaIZthEa6+1Q6oysM/d
+         AEto7HSYSjrUw6fJW4ZK63y3YJ6qhKh/RZ9Xobx61IzDOYaMih/GXGZR2a/WcxMWSJ
+         3CQ4cq3c7NjyuJdFvYcoAR7pUZ97WlzH5PKrLx4I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        Andreas Krebbel <krebbel@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+Cc:     Igor Druzhinin <igor.druzhinin@citrix.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 23/29] perf build: Add detection of java-11-openjdk-devel package
-Date:   Tue,  1 Oct 2019 12:44:17 -0400
-Message-Id: <20191001164423.16406-23-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 04/19] xen/pci: reserve MCFG areas earlier
+Date:   Tue,  1 Oct 2019 12:44:50 -0400
+Message-Id: <20191001164505.16708-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191001164423.16406-1-sashal@kernel.org>
-References: <20191001164423.16406-1-sashal@kernel.org>
+In-Reply-To: <20191001164505.16708-1-sashal@kernel.org>
+References: <20191001164505.16708-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -63,60 +59,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Igor Druzhinin <igor.druzhinin@citrix.com>
 
-[ Upstream commit 815c1560bf8fd522b8d93a1d727868b910c1cc24 ]
+[ Upstream commit a4098bc6eed5e31e0391bcc068e61804c98138df ]
 
-With Java 11 there is no seperate JRE anymore.
+If MCFG area is not reserved in E820, Xen by default will defer its usage
+until Dom0 registers it explicitly after ACPI parser recognizes it as
+a reserved resource in DSDT. Having it reserved in E820 is not
+mandatory according to "PCI Firmware Specification, rev 3.2" (par. 4.1.2)
+and firmware is free to keep a hole in E820 in that place. Xen doesn't know
+what exactly is inside this hole since it lacks full ACPI view of the
+platform therefore it's potentially harmful to access MCFG region
+without additional checks as some machines are known to provide
+inconsistent information on the size of the region.
 
-Details:
+Now xen_mcfg_late() runs after acpi_init() which is too late as some basic
+PCI enumeration starts exactly there as well. Trying to register a device
+prior to MCFG reservation causes multiple problems with PCIe extended
+capability initializations in Xen (e.g. SR-IOV VF BAR sizing). There are
+no convenient hooks for us to subscribe to so register MCFG areas earlier
+upon the first invocation of xen_add_device(). It should be safe to do once
+since all the boot time buses must have their MCFG areas in MCFG table
+already and we don't support PCI bus hot-plug.
 
-  https://coderanch.com/t/701603/java/JRE-JDK
-
-Therefore the detection of the JRE needs to be adapted.
-
-This change works for s390 and x86.  I have not tested other platforms.
-
-Committer testing:
-
-Continues to work with the OpenJDK 8:
-
-  $ rm -f ~acme/lib64/libperf-jvmti.so
-  $ rpm -qa | grep jdk-devel
-  java-1.8.0-openjdk-devel-1.8.0.222.b10-0.fc30.x86_64
-  $ git log --oneline -1
-  a51937170f33 (HEAD -> perf/core) perf build: Add detection of java-11-openjdk-devel package
-  $ rm -rf /tmp/build/perf ; mkdir -p /tmp/build/perf ; make -C tools/perf O=/tmp/build/perf install > /dev/null 2>1
-  $ ls -la ~acme/lib64/libperf-jvmti.so
-  -rwxr-xr-x. 1 acme acme 230744 Sep 24 16:46 /home/acme/lib64/libperf-jvmti.so
-  $
-
-Suggested-by: Andreas Krebbel <krebbel@linux.ibm.com>
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Link: http://lore.kernel.org/lkml/20190909114116.50469-4-tmricht@linux.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/Makefile.config | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/xen/pci.c | 21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index f362ee46506ad..b97e31498ff76 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -795,7 +795,7 @@ ifndef NO_JVMTI
-     JDIR=$(shell /usr/sbin/update-java-alternatives -l | head -1 | awk '{print $$3}')
-   else
-     ifneq (,$(wildcard /usr/sbin/alternatives))
--      JDIR=$(shell /usr/sbin/alternatives --display java | tail -1 | cut -d' ' -f 5 | sed 's%/jre/bin/java.%%g')
-+      JDIR=$(shell /usr/sbin/alternatives --display java | tail -1 | cut -d' ' -f 5 | sed -e 's%/jre/bin/java.%%g' -e 's%/bin/java.%%g')
-     endif
-   endif
-   ifndef JDIR
+diff --git a/drivers/xen/pci.c b/drivers/xen/pci.c
+index 7494dbeb4409c..db58aaa4dc598 100644
+--- a/drivers/xen/pci.c
++++ b/drivers/xen/pci.c
+@@ -29,6 +29,8 @@
+ #include "../pci/pci.h"
+ #ifdef CONFIG_PCI_MMCONFIG
+ #include <asm/pci_x86.h>
++
++static int xen_mcfg_late(void);
+ #endif
+ 
+ static bool __read_mostly pci_seg_supported = true;
+@@ -40,7 +42,18 @@ static int xen_add_device(struct device *dev)
+ #ifdef CONFIG_PCI_IOV
+ 	struct pci_dev *physfn = pci_dev->physfn;
+ #endif
+-
++#ifdef CONFIG_PCI_MMCONFIG
++	static bool pci_mcfg_reserved = false;
++	/*
++	 * Reserve MCFG areas in Xen on first invocation due to this being
++	 * potentially called from inside of acpi_init immediately after
++	 * MCFG table has been finally parsed.
++	 */
++	if (!pci_mcfg_reserved) {
++		xen_mcfg_late();
++		pci_mcfg_reserved = true;
++	}
++#endif
+ 	if (pci_seg_supported) {
+ 		struct {
+ 			struct physdev_pci_device_add add;
+@@ -213,7 +226,7 @@ static int __init register_xen_pci_notifier(void)
+ arch_initcall(register_xen_pci_notifier);
+ 
+ #ifdef CONFIG_PCI_MMCONFIG
+-static int __init xen_mcfg_late(void)
++static int xen_mcfg_late(void)
+ {
+ 	struct pci_mmcfg_region *cfg;
+ 	int rc;
+@@ -252,8 +265,4 @@ static int __init xen_mcfg_late(void)
+ 	}
+ 	return 0;
+ }
+-/*
+- * Needs to be done after acpi_init which are subsys_initcall.
+- */
+-subsys_initcall_sync(xen_mcfg_late);
+ #endif
 -- 
 2.20.1
 
