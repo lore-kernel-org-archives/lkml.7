@@ -2,140 +2,88 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09014ECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E04A5C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0BAB21920
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:36:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KeYi0UB+"
+	by mail.kernel.org (Postfix) with ESMTP id AEA2721A4A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 21:40:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1569966038;
+	bh=EXOOfmyP72S6DF4GjcNc343Kct+Ec+psa0RkkWegYg8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=xJ60SfsCwGjUkOmWnuc+L+ehxQrHiRtG4eZHWBpaQsQNqf7jpkYOpTmPq5mgQPNLV
+	 zGHmHkcEL9YYnR3t5pZz65pJfCk8/1eerkJ5WNTv0Dzxwr6H88s8rXFmOQpzJDS9yj
+	 YjGgvxfZsBHcQqjMSwVKQGLl54976oH8WuK4KxXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbfJAVg0 (ORCPT
+        id S1727939AbfJAVkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 17:36:26 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42068 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727454AbfJAVgZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 17:36:25 -0400
-Received: by mail-ot1-f65.google.com with SMTP id c10so12904293otd.9;
-        Tue, 01 Oct 2019 14:36:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DScLBuYNMomTfF9E2WDmfHDBerwYWf96njCU9HqGGhc=;
-        b=KeYi0UB+7u6MHCFYw50DUyqf9p9mDNKVS+aEk8I+bFgEulqJFetnll9VvodCCnrhkh
-         RLz7wkaNQEfT3kK7ZVMfGViD9DDhgRU2gVffvAdukn6OVgbEitR+tRq2IGJcltcG1VeW
-         Y/xMm0DeY7vASciZswqo1rweSC8alJpcGrAG0ZN1FdFJ97cjVuieVOMd0riPNUY4CyIS
-         3CgUpx6Pnj3zcB+bf3dD/Fws8eK91zphXjyO8XAnvH6LX5KedRXnHQE9ydSlpGUje4n4
-         5nHv5cFT4VCk4TXpdLcGv9pYEMEz0LMsH07vDc6nTBIfxnccUi0y29QYLKjvClcPSuhD
-         lp+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DScLBuYNMomTfF9E2WDmfHDBerwYWf96njCU9HqGGhc=;
-        b=a6L3+cJdUvbn31VOElde7tT8oj+Ldq0qmlT7PEEW42aWsojatoKkbtB3E1KoQtnXQD
-         vFrYfN0eOszbQIAC0s0uUXiX3fa/TA3R5A32fkcVDsMj8SFaSnVxNSHpB/fGJVZJ0Ito
-         j4xiY2eZngCj54kAkWExvYBWtbv4p2wQGOJJZVSBgX+YgaVYI1hpqeuJu1uGej8JMF6h
-         yL5s0NER+WPFNy4mHKD0tLjh2EAR1Rl0D4TK0AnWDTm2MiVVsOKRArvK1a8d4W8Dzs4X
-         Ys3pMDTLqkrDWRJYjs4G15cUz0k5icGhn5uQ5g0NV+cAw6iZOn1Lu/f1EJ3g/IYaZ5Bi
-         lgZw==
-X-Gm-Message-State: APjAAAVhzjidbu1U6UamnT+39uSnzlyXrZvxvumu/JT0UjWGaqrMx/lS
-        EQ2DhPXtF3AR/uW+2UuXJdA=
-X-Google-Smtp-Source: APXvYqxqMmACY4eAFBh69a1f1ZhgR8xIEWVojxC+3odUJ51o+BwxIDlpNdwx8dtgJvFNu+z1Fh5FSw==
-X-Received: by 2002:a9d:6642:: with SMTP id q2mr87331otm.250.1569965784571;
-        Tue, 01 Oct 2019 14:36:24 -0700 (PDT)
-Received: from nuclearis2-1.gtech (c-98-195-139-126.hsd1.tx.comcast.net. [98.195.139.126])
-        by smtp.gmail.com with ESMTPSA id i47sm5337543ota.1.2019.10.01.14.36.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Oct 2019 14:36:23 -0700 (PDT)
-Subject: Re: [PATCH 3/3] PCI: pciehp: Add dmi table for in-band presence
- disabled
-To:     Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lukas@wunner.de
-References: <20191001211419.11245-1-stuart.w.hayes@gmail.com>
- <20191001211419.11245-4-stuart.w.hayes@gmail.com>
-From:   "Alex G." <mr.nuke.me@gmail.com>
-Message-ID: <b37c8640-9f48-8d0d-9e2e-80920c1e19e7@gmail.com>
-Date:   Tue, 1 Oct 2019 16:36:22 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 1 Oct 2019 17:40:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60616 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727898AbfJAVkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 17:40:37 -0400
+Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63B0021855;
+        Tue,  1 Oct 2019 21:40:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569966037;
+        bh=EXOOfmyP72S6DF4GjcNc343Kct+Ec+psa0RkkWegYg8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=H6yDzxYiIrz42md3od0CYGxSqQx7lSzoEfsymyaa+JYKVjmCENfiWBLZnlf/1grQT
+         MWgbYWJVRkRRKqYWD/g0xkm5GA6SzrTJz2PFQmN/6XGKZXXul4F0Dihq2llPSob87U
+         RBQK5eElaBFzxadA/etQIIPNxFJF5pg+/kCYoOSY=
+From:   Dinh Nguyen <dinguyen@kernel.org>
+To:     linux@armlinux.org.uk
+Cc:     dinguyen@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
+        p.zabel@pengutronix.de, thor.thayer@linux.intel.com
+Subject: [PATCH] ARM: drivers/amba: release the resource to allow for deferred probe
+Date:   Tue,  1 Oct 2019 16:40:26 -0500
+Message-Id: <20191001214026.21718-1-dinguyen@kernel.org>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <20191001211419.11245-4-stuart.w.hayes@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+With commit "79bdcb202a35 ARM: 8906/1: drivers/amba: add reset control to
+amba bus probe", the amba bus driver needs to be deferred probe because the
+reset driver is probed later than the amba bus. However with a deferred
+probe, the call to request_resource() in the driver returns -EBUSY. The
+reason is the driver has not released the resource from the previous probe
+attempt.
 
+This patch releases the resource when amba_device_try_add() returns
+-EPROBE_DEFER. This allows the deferred probe to continue.
 
-On 10/1/19 4:14 PM, Stuart Hayes wrote:
-> Some systems have in-band presence detection disabled for hot-plug PCI slots,
-> but do not report this in the slot capabilities 2 (SLTCAP2) register.  On
-> these systems, presence detect can become active well after the link is
-> reported to be active, which can cause the slots to be disabled after a
-> device is connected.
-> 
-> Add a dmi table to flag these systems as having in-band presence disabled.
-> 
-> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-> ---
->   drivers/pci/hotplug/pciehp_hpc.c | 14 ++++++++++++++
->   1 file changed, 14 insertions(+)
-> 
-> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-> index 1282641c6458..1dd01e752587 100644
-> --- a/drivers/pci/hotplug/pciehp_hpc.c
-> +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> @@ -14,6 +14,7 @@
->   
->   #define dev_fmt(fmt) "pciehp: " fmt
->   
-> +#include <linux/dmi.h>
->   #include <linux/kernel.h>
->   #include <linux/types.h>
->   #include <linux/jiffies.h>
-> @@ -26,6 +27,16 @@
->   #include "../pci.h"
->   #include "pciehp.h"
->   
-> +static const struct dmi_system_id inband_presence_disabled_dmi_table[] = {
-> +	{
-> +		.ident = "Dell System",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc"),
-> +		},
-> +	},
-> +	{}
-> +};
-> +
+Fixes: 79bdcb202a35 ("ARM: 8906/1: drivers/amba: add reset control to
+amba bus probe")
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+---
+ drivers/amba/bus.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I'm not sure that all Dell systems that were ever made or will be made 
-have in-band presence disabled on all their hotplug slots.
+diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
+index f39f075abff9..f246b847c991 100644
+--- a/drivers/amba/bus.c
++++ b/drivers/amba/bus.c
+@@ -535,6 +535,7 @@ int amba_device_add(struct amba_device *dev, struct resource *parent)
+ 
+ 	if (ret == -EPROBE_DEFER) {
+ 		struct deferred_device *ddev;
++		release_resource(&dev->res);
+ 
+ 		ddev = kmalloc(sizeof(*ddev), GFP_KERNEL);
+ 		if (!ddev)
+-- 
+2.20.0
 
-This was a problem with the NVMe hot-swap bays on 14G servers. I can't 
-guarantee that any other slot or machine will need this workaround. The 
-best way I found to implement this is to check for the PCI-ID of the 
-switches behind the port.
-
-Alex
