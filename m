@@ -7,54 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E60E4ECE587
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54684C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2B872168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B1A5222BE
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 16:40:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1569948020;
-	bh=2py4yvsg+8cjdkDAYD5Lyx1lM4YYJQqh+WS9ZrdrzDQ=;
+	s=default; t=1569948026;
+	bh=POELVahFGz2TRENm/GYsKvf3/fYvIuvcaqdZ7Lh4NPo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WuZAr9G1vkNF+0afj/+1QzrN2m7DoRb2yGvTZvOyWomvZEIO83WIRxKE6GH0kdp6x
-	 cuppZzxyu8F3cVd3SK3LIMo62xHGgkwc5XXFwR6E4n7LpsPsPdgc0YYp9hhF+z9miF
-	 09U5CRFyFLSc3AiEO6TzCai+AVivJHhqilad/JyI=
+	b=c1zMN0vdK9Jr+qQzORO0cU/Pyt6ZMZ/CfI7EmseOXHej1budMys7kZyk/zYcVVC1H
+	 b+a0g+Dm+tUVeAGTo9M/Z1piASljIYi2eiKUMdXrszM7YZtAhJCOwB6L/pDDfAy37e
+	 Q/L2MbsFmzSSVpIpbZSh4NO7Ww7MBAB4JM2uXh8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729850AbfJAQkT (ORCPT
+        id S1729999AbfJAQkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 12:40:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51476 "EHLO mail.kernel.org"
+        Tue, 1 Oct 2019 12:40:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729738AbfJAQkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 12:40:18 -0400
+        id S1729738AbfJAQkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 12:40:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7963B21906;
-        Tue,  1 Oct 2019 16:40:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DA7921906;
+        Tue,  1 Oct 2019 16:40:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569948016;
-        bh=2py4yvsg+8cjdkDAYD5Lyx1lM4YYJQqh+WS9ZrdrzDQ=;
+        s=default; t=1569948020;
+        bh=POELVahFGz2TRENm/GYsKvf3/fYvIuvcaqdZ7Lh4NPo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kf7X3A7d+1R0/ic7D3dZEXm74gT0VmprhZOoXrN4ln3MiEsKmL/mIA0Wridp5soxz
-         a/0FFFYlouZlBhPUYsCedepffjJ4YNCpyCoa2LSdf5Rt5/Ko1t0utZBciWE962LmIr
-         Qv7SU/PQBAL0iONAiTClDdq2BPMKhPI5W3xoqEwc=
+        b=BHBtlBIZH2n5tdeXqHZM46iPrOq2idH/KAen6VAwRyw0G3M8fHdC8JfCa16Wo1KTv
+         OKPFsR28ZCQn3TM2n7Xbpb+B+KDSUDok2+Z1CHaxBrhB93aLZkiCi2UxjEU1xVqRQH
+         5p18BaQMYbLOVMCGif3zMPBYkynWKcV9B7ubjL7E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmytro Linkin <dmitrolin@mellanox.com>,
-        Vlad Buslov <vladbu@mellanox.com>,
-        Eli Britstein <elibr@mellanox.com>,
-        Roi Dayan <roid@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 37/71] net/mlx5e: Fix matching on tunnel addresses type
-Date:   Tue,  1 Oct 2019 12:38:47 -0400
-Message-Id: <20191001163922.14735-37-sashal@kernel.org>
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org
+Subject: [PATCH AUTOSEL 5.3 40/71] =?UTF-8?q?libnvdimm:=20Fix=20endian=20c?= =?UTF-8?q?onversion=20issues=C2=A0?=
+Date:   Tue,  1 Oct 2019 12:38:50 -0400
+Message-Id: <20191001163922.14735-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191001163922.14735-1-sashal@kernel.org>
 References: <20191001163922.14735-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,134 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmytro Linkin <dmitrolin@mellanox.com>
+From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit fe1587a7de94912ed75ba5ddbfabf0741f9f8239 ]
+[ Upstream commit 86aa66687442ef45909ff9814b82b4d2bb892294 ]
 
-In mlx5 parse_tunnel_attr() function dispatch on encap IP address type
-is performed by directly checking flow_rule_match_key() on
-FLOW_DISSECTOR_KEY_ENC_IPV4_ADDRS, and then on
-FLOW_DISSECTOR_KEY_ENC_IPV6_ADDRS. However, since those are stored in
-union, first check is always true if any type of encap address is set,
-which leads to IPv6 tunnel encap address being parsed as IPv4 by mlx5.
-Determine correct IP address type by checking control key first and if
-it set, take address type from match.key->addr_type.
+nd_label->dpa issue was observed when trying to enable the namespace created
+with little-endian kernel on a big-endian kernel. That made me run
+`sparse` on the rest of the code and other changes are the result of that.
 
-Fixes: d1bda7eecd88 ("net/mlx5e: Allow matching only enc_key_id/enc_dst_port for decapsulation action")
-Signed-off-by: Dmytro Linkin <dmitrolin@mellanox.com>
-Reviewed-by: Vlad Buslov <vladbu@mellanox.com>
-Reviewed-by: Eli Britstein <elibr@mellanox.com>
-Reviewed-by: Roi Dayan <roid@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: d9b83c756953 ("libnvdimm, btt: rework error clearing")
+Fixes: 9dedc73a4658 ("libnvdimm/btt: Fix LBA masking during 'free list' population")
+Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Link: https://lore.kernel.org/r/20190809074726.27815-1-aneesh.kumar@linux.ibm.com
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/mellanox/mlx5/core/en_tc.c   | 89 +++++++++++--------
- 1 file changed, 53 insertions(+), 36 deletions(-)
+ drivers/nvdimm/btt.c            | 8 ++++----
+ drivers/nvdimm/namespace_devs.c | 7 ++++---
+ 2 files changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-index 00b2d4a86159f..98be5fe336743 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-@@ -1369,46 +1369,63 @@ static int parse_tunnel_attr(struct mlx5e_priv *priv,
- 		return err;
- 	}
+diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
+index a8d56887ec881..3e9f45aec8d18 100644
+--- a/drivers/nvdimm/btt.c
++++ b/drivers/nvdimm/btt.c
+@@ -392,9 +392,9 @@ static int btt_flog_write(struct arena_info *arena, u32 lane, u32 sub,
+ 	arena->freelist[lane].sub = 1 - arena->freelist[lane].sub;
+ 	if (++(arena->freelist[lane].seq) == 4)
+ 		arena->freelist[lane].seq = 1;
+-	if (ent_e_flag(ent->old_map))
++	if (ent_e_flag(le32_to_cpu(ent->old_map)))
+ 		arena->freelist[lane].has_err = 1;
+-	arena->freelist[lane].block = le32_to_cpu(ent_lba(ent->old_map));
++	arena->freelist[lane].block = ent_lba(le32_to_cpu(ent->old_map));
  
--	if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_ENC_IPV4_ADDRS)) {
--		struct flow_match_ipv4_addrs match;
-+	if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_ENC_CONTROL)) {
-+		struct flow_match_control match;
-+		u16 addr_type;
+ 	return ret;
+ }
+@@ -560,8 +560,8 @@ static int btt_freelist_init(struct arena_info *arena)
+ 		 * FIXME: if error clearing fails during init, we want to make
+ 		 * the BTT read-only
+ 		 */
+-		if (ent_e_flag(log_new.old_map) &&
+-				!ent_normal(log_new.old_map)) {
++		if (ent_e_flag(le32_to_cpu(log_new.old_map)) &&
++		    !ent_normal(le32_to_cpu(log_new.old_map))) {
+ 			arena->freelist[i].has_err = 1;
+ 			ret = arena_clear_freelist_error(arena, i);
+ 			if (ret)
+diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
+index a16e52251a305..102c9d5141ee8 100644
+--- a/drivers/nvdimm/namespace_devs.c
++++ b/drivers/nvdimm/namespace_devs.c
+@@ -1987,7 +1987,7 @@ static struct device *create_namespace_pmem(struct nd_region *nd_region,
+ 		nd_mapping = &nd_region->mapping[i];
+ 		label_ent = list_first_entry_or_null(&nd_mapping->labels,
+ 				typeof(*label_ent), list);
+-		label0 = label_ent ? label_ent->label : 0;
++		label0 = label_ent ? label_ent->label : NULL;
  
--		flow_rule_match_enc_ipv4_addrs(rule, &match);
--		MLX5_SET(fte_match_set_lyr_2_4, headers_c,
--			 src_ipv4_src_ipv6.ipv4_layout.ipv4,
--			 ntohl(match.mask->src));
--		MLX5_SET(fte_match_set_lyr_2_4, headers_v,
--			 src_ipv4_src_ipv6.ipv4_layout.ipv4,
--			 ntohl(match.key->src));
--
--		MLX5_SET(fte_match_set_lyr_2_4, headers_c,
--			 dst_ipv4_dst_ipv6.ipv4_layout.ipv4,
--			 ntohl(match.mask->dst));
--		MLX5_SET(fte_match_set_lyr_2_4, headers_v,
--			 dst_ipv4_dst_ipv6.ipv4_layout.ipv4,
--			 ntohl(match.key->dst));
--
--		MLX5_SET_TO_ONES(fte_match_set_lyr_2_4, headers_c, ethertype);
--		MLX5_SET(fte_match_set_lyr_2_4, headers_v, ethertype, ETH_P_IP);
--	} else if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_ENC_IPV6_ADDRS)) {
--		struct flow_match_ipv6_addrs match;
-+		flow_rule_match_enc_control(rule, &match);
-+		addr_type = match.key->addr_type;
+ 		if (!label0) {
+ 			WARN_ON(1);
+@@ -2322,8 +2322,9 @@ static struct device **scan_labels(struct nd_region *nd_region)
+ 			continue;
  
--		flow_rule_match_enc_ipv6_addrs(rule, &match);
--		memcpy(MLX5_ADDR_OF(fte_match_set_lyr_2_4, headers_c,
--				    src_ipv4_src_ipv6.ipv6_layout.ipv6),
--		       &match.mask->src, MLX5_FLD_SZ_BYTES(ipv6_layout, ipv6));
--		memcpy(MLX5_ADDR_OF(fte_match_set_lyr_2_4, headers_v,
--				    src_ipv4_src_ipv6.ipv6_layout.ipv6),
--		       &match.key->src, MLX5_FLD_SZ_BYTES(ipv6_layout, ipv6));
-+		/* For tunnel addr_type used same key id`s as for non-tunnel */
-+		if (addr_type == FLOW_DISSECTOR_KEY_IPV4_ADDRS) {
-+			struct flow_match_ipv4_addrs match;
+ 		/* skip labels that describe extents outside of the region */
+-		if (nd_label->dpa < nd_mapping->start || nd_label->dpa > map_end)
+-			continue;
++		if (__le64_to_cpu(nd_label->dpa) < nd_mapping->start ||
++		    __le64_to_cpu(nd_label->dpa) > map_end)
++				continue;
  
--		memcpy(MLX5_ADDR_OF(fte_match_set_lyr_2_4, headers_c,
--				    dst_ipv4_dst_ipv6.ipv6_layout.ipv6),
--		       &match.mask->dst, MLX5_FLD_SZ_BYTES(ipv6_layout, ipv6));
--		memcpy(MLX5_ADDR_OF(fte_match_set_lyr_2_4, headers_v,
--				    dst_ipv4_dst_ipv6.ipv6_layout.ipv6),
--		       &match.key->dst, MLX5_FLD_SZ_BYTES(ipv6_layout, ipv6));
-+			flow_rule_match_enc_ipv4_addrs(rule, &match);
-+			MLX5_SET(fte_match_set_lyr_2_4, headers_c,
-+				 src_ipv4_src_ipv6.ipv4_layout.ipv4,
-+				 ntohl(match.mask->src));
-+			MLX5_SET(fte_match_set_lyr_2_4, headers_v,
-+				 src_ipv4_src_ipv6.ipv4_layout.ipv4,
-+				 ntohl(match.key->src));
- 
--		MLX5_SET_TO_ONES(fte_match_set_lyr_2_4, headers_c, ethertype);
--		MLX5_SET(fte_match_set_lyr_2_4, headers_v, ethertype, ETH_P_IPV6);
-+			MLX5_SET(fte_match_set_lyr_2_4, headers_c,
-+				 dst_ipv4_dst_ipv6.ipv4_layout.ipv4,
-+				 ntohl(match.mask->dst));
-+			MLX5_SET(fte_match_set_lyr_2_4, headers_v,
-+				 dst_ipv4_dst_ipv6.ipv4_layout.ipv4,
-+				 ntohl(match.key->dst));
-+
-+			MLX5_SET_TO_ONES(fte_match_set_lyr_2_4, headers_c,
-+					 ethertype);
-+			MLX5_SET(fte_match_set_lyr_2_4, headers_v, ethertype,
-+				 ETH_P_IP);
-+		} else if (addr_type == FLOW_DISSECTOR_KEY_IPV6_ADDRS) {
-+			struct flow_match_ipv6_addrs match;
-+
-+			flow_rule_match_enc_ipv6_addrs(rule, &match);
-+			memcpy(MLX5_ADDR_OF(fte_match_set_lyr_2_4, headers_c,
-+					    src_ipv4_src_ipv6.ipv6_layout.ipv6),
-+			       &match.mask->src, MLX5_FLD_SZ_BYTES(ipv6_layout,
-+								   ipv6));
-+			memcpy(MLX5_ADDR_OF(fte_match_set_lyr_2_4, headers_v,
-+					    src_ipv4_src_ipv6.ipv6_layout.ipv6),
-+			       &match.key->src, MLX5_FLD_SZ_BYTES(ipv6_layout,
-+								  ipv6));
-+
-+			memcpy(MLX5_ADDR_OF(fte_match_set_lyr_2_4, headers_c,
-+					    dst_ipv4_dst_ipv6.ipv6_layout.ipv6),
-+			       &match.mask->dst, MLX5_FLD_SZ_BYTES(ipv6_layout,
-+								   ipv6));
-+			memcpy(MLX5_ADDR_OF(fte_match_set_lyr_2_4, headers_v,
-+					    dst_ipv4_dst_ipv6.ipv6_layout.ipv6),
-+			       &match.key->dst, MLX5_FLD_SZ_BYTES(ipv6_layout,
-+								  ipv6));
-+
-+			MLX5_SET_TO_ONES(fte_match_set_lyr_2_4, headers_c,
-+					 ethertype);
-+			MLX5_SET(fte_match_set_lyr_2_4, headers_v, ethertype,
-+				 ETH_P_IPV6);
-+		}
- 	}
- 
- 	if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_ENC_IP)) {
+ 		i = add_namespace_resource(nd_region, nd_label, devs, count);
+ 		if (i < 0)
 -- 
 2.20.1
 
