@@ -2,413 +2,159 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 071FAC388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8AABC352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCE5E21783
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FED621783
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 08:27:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="xHIO6PTo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733015AbfJAIZl (ORCPT
+        id S1733027AbfJAI1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 04:25:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58684 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726148AbfJAIZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 04:25:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D0FC3AF9F;
-        Tue,  1 Oct 2019 08:25:36 +0000 (UTC)
-From:   Juergen Gross <jgross@suse.com>
-To:     xen-devel@lists.xenproject.org, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Tue, 1 Oct 2019 04:27:19 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:59334 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbfJAI1T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 04:27:19 -0400
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x918REXh004109
+        for <linux-kernel@vger.kernel.org>; Tue, 1 Oct 2019 17:27:15 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x918REXh004109
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1569918435;
+        bh=NTKx0xB9QLkRSTJJgxF9CkFFxM/Hw6/XWymFcoefPgo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=xHIO6PToKh8HStqdGTKKiwVU5/yWuKLzrG5Vjt7XN4dEueUCPLVedcPtxhjqBD0Wa
+         0afoxJyKitPb06woYCQugANA6BTIt4VU2yZOEaZKy5wjOgGfu3oaEGJQIU9ESnWGV8
+         Wa3QqWCzPDb0qe/CRPIacggdClsRXponVJD7HNsveec65KSk5uTHdlHyjeUDqCfILI
+         eiJwsME65DxsyVboxd1/w94iMYr2h1QyDQhz/AGfYxWWr1aDjBFstCAJ2JU9/IKWB0
+         h1BFXLOO6uTq3riXaqrXo33tlwDK+7+KvJZH1YO2/wYwTQXfcd3JMpue5PMIHuM3Cj
+         gxycpTjXDEV5g==
+X-Nifty-SrcIP: [209.85.221.178]
+Received: by mail-vk1-f178.google.com with SMTP id w3so3303991vkm.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 01:27:15 -0700 (PDT)
+X-Gm-Message-State: APjAAAXcFXZPmO6HUszrotYbVoYH8l/nn6RJEgPSMHikzACN3ojTDg2s
+        jx3hLqiz5s4y90rytFxaN6KV7DbrDeHFHZyQioY=
+X-Google-Smtp-Source: APXvYqyiSCioWKRLdsi5vTtLFl0O+IRnkrPUciETyrvHuFQkqEcvD1cMecSdku0rISUlgI0fA7A1/xDzTMxf83f1/j0=
+X-Received: by 2002:a1f:2343:: with SMTP id j64mr6852228vkj.84.1569918433967;
+ Tue, 01 Oct 2019 01:27:13 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190930055925.25842-1-yamada.masahiro@socionext.com> <20190930175009.GH25745@shell.armlinux.org.uk>
+In-Reply-To: <20190930175009.GH25745@shell.armlinux.org.uk>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 1 Oct 2019 17:26:37 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATYXUrzNFLZpzAN2U1Ep+RvYccEsqSXUhhF2k9ONwJN1g@mail.gmail.com>
+Message-ID: <CAK7LNATYXUrzNFLZpzAN2U1Ep+RvYccEsqSXUhhF2k9ONwJN1g@mail.gmail.com>
+Subject: Re: [PATCH] ARM: fix __get_user_check() in case uaccess_* calls are
+ not inlined
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Olof Johansson <olof@lixom.net>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH] xen/efi: have a common runtime setup function
-Date:   Tue,  1 Oct 2019 10:25:34 +0200
-Message-Id: <20191001082534.12067-1-jgross@suse.com>
-X-Mailer: git-send-email 2.16.4
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Today the EFI runtime functions are setup in architecture specific
-code (x86 and arm), with the functions themselves living in drivers/xen
-as they are not architecture dependent.
+Hi Russell,
 
-As the setup is exactly the same for arm and x86 move the setup to
-drivers/xen, too. This at once removes the need to make the single
-functions global visible.
+On Tue, Oct 1, 2019 at 2:50 AM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Mon, Sep 30, 2019 at 02:59:25PM +0900, Masahiro Yamada wrote:
+> > KernelCI reports that bcm2835_defconfig is no longer booting since
+> > commit ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING
+> > forcibly"):
+> >
+> >   https://lkml.org/lkml/2019/9/26/825
+> >
+> > I also received a regression report from Nicolas Saenz Julienne:
+> >
+> >   https://lkml.org/lkml/2019/9/27/263
+> >
+> > This problem has cropped up on arch/arm/config/bcm2835_defconfig
+> > because it enables CONFIG_CC_OPTIMIZE_FOR_SIZE. The compiler tends
+> > to prefer not inlining functions with -Os. I was able to reproduce
+> > it with other boards and defconfig files by manually enabling
+> > CONFIG_CC_OPTIMIZE_FOR_SIZE.
+> >
+> > The __get_user_check() specifically uses r0, r1, r2 registers.
+> > So, uaccess_save_and_enable() and uaccess_restore() must be inlined
+> > in order to avoid those registers being overwritten in the callees.
+> >
+> > Prior to commit 9012d011660e ("compiler: allow all arches to enable
+> > CONFIG_OPTIMIZE_INLINING"), the 'inline' marker was always enough for
+> > inlining functions, except on x86.
+> >
+> > Since that commit, all architectures can enable CONFIG_OPTIMIZE_INLINING.
+> > So, __always_inline is now the only guaranteed way of forcible inlining.
+> >
+> > I want to keep as much compiler's freedom as possible about the inlining
+> > decision. So, I changed the function call order instead of adding
+> > __always_inline around.
+> >
+> > Call uaccess_save_and_enable() before assigning the __p ("r0"), and
+> > uaccess_restore() after evacuating the __e ("r0").
+> >
+> > Fixes: 9012d011660e ("compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING")
+> > Reported-by: "kernelci.org bot" <bot@kernelci.org>
+> > Reported-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > ---
+> >
+> >  arch/arm/include/asm/uaccess.h | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/arch/arm/include/asm/uaccess.h b/arch/arm/include/asm/uaccess.h
+> > index 303248e5b990..559f252d7e3c 100644
+> > --- a/arch/arm/include/asm/uaccess.h
+> > +++ b/arch/arm/include/asm/uaccess.h
+> > @@ -191,11 +191,12 @@ extern int __get_user_64t_4(void *);
+> >  #define __get_user_check(x, p)                                               \
+> >       ({                                                              \
+> >               unsigned long __limit = current_thread_info()->addr_limit - 1; \
+> > +             unsigned int __ua_flags = uaccess_save_and_enable();    \
+>
+> If the compiler is moving uaccess_save_and_enable(), that's something
+> we really don't want
 
-Signed-off-by: Juergen Gross <jgross@suse.com>
----
- arch/arm/include/asm/xen/xen-ops.h   |  6 ---
- arch/arm/xen/Makefile                |  1 -
- arch/arm/xen/efi.c                   | 30 -------------
- arch/arm/xen/enlighten.c             |  1 -
- arch/arm64/include/asm/xen/xen-ops.h |  7 ---
- arch/arm64/xen/Makefile              |  1 -
- arch/x86/xen/efi.c                   | 16 +------
- drivers/xen/efi.c                    | 85 ++++++++++++++++++++----------------
- include/xen/xen-ops.h                | 25 +----------
- 9 files changed, 50 insertions(+), 122 deletions(-)
- delete mode 100644 arch/arm/include/asm/xen/xen-ops.h
- delete mode 100644 arch/arm/xen/efi.c
- delete mode 100644 arch/arm64/include/asm/xen/xen-ops.h
+Hmm, based on my poor knowledge about compilers,
+I do not know if this re-arrangement happens...
 
-diff --git a/arch/arm/include/asm/xen/xen-ops.h b/arch/arm/include/asm/xen/xen-ops.h
-deleted file mode 100644
-index ec154e719b11..000000000000
---- a/arch/arm/include/asm/xen/xen-ops.h
-+++ /dev/null
-@@ -1,6 +0,0 @@
--#ifndef _ASM_XEN_OPS_H
--#define _ASM_XEN_OPS_H
--
--void xen_efi_runtime_setup(void);
--
--#endif /* _ASM_XEN_OPS_H */
-diff --git a/arch/arm/xen/Makefile b/arch/arm/xen/Makefile
-index 7ed28982c4c3..c32d04713ba0 100644
---- a/arch/arm/xen/Makefile
-+++ b/arch/arm/xen/Makefile
-@@ -1,3 +1,2 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-y		:= enlighten.o hypercall.o grant-table.o p2m.o mm.o
--obj-$(CONFIG_XEN_EFI) += efi.o
-diff --git a/arch/arm/xen/efi.c b/arch/arm/xen/efi.c
-deleted file mode 100644
-index cb2aaf98e243..000000000000
---- a/arch/arm/xen/efi.c
-+++ /dev/null
-@@ -1,30 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--/*
-- * Copyright (c) 2015, Linaro Limited, Shannon Zhao
-- */
--
--#include <linux/efi.h>
--#include <xen/xen-ops.h>
--#include <asm/xen/xen-ops.h>
--
--/* Set XEN EFI runtime services function pointers. Other fields of struct efi,
-- * e.g. efi.systab, will be set like normal EFI.
-- */
--void __init xen_efi_runtime_setup(void)
--{
--	efi.get_time                 = xen_efi_get_time;
--	efi.set_time                 = xen_efi_set_time;
--	efi.get_wakeup_time          = xen_efi_get_wakeup_time;
--	efi.set_wakeup_time          = xen_efi_set_wakeup_time;
--	efi.get_variable             = xen_efi_get_variable;
--	efi.get_next_variable        = xen_efi_get_next_variable;
--	efi.set_variable             = xen_efi_set_variable;
--	efi.set_variable_nonblocking = xen_efi_set_variable;
--	efi.query_variable_info      = xen_efi_query_variable_info;
--	efi.query_variable_info_nonblocking = xen_efi_query_variable_info;
--	efi.update_capsule           = xen_efi_update_capsule;
--	efi.query_capsule_caps       = xen_efi_query_capsule_caps;
--	efi.get_next_high_mono_count = xen_efi_get_next_high_mono_count;
--	efi.reset_system             = xen_efi_reset_system;
--}
--EXPORT_SYMBOL_GPL(xen_efi_runtime_setup);
-diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
-index 1e57692552d9..99f955a5b694 100644
---- a/arch/arm/xen/enlighten.c
-+++ b/arch/arm/xen/enlighten.c
-@@ -15,7 +15,6 @@
- #include <xen/xen-ops.h>
- #include <asm/xen/hypervisor.h>
- #include <asm/xen/hypercall.h>
--#include <asm/xen/xen-ops.h>
- #include <asm/system_misc.h>
- #include <asm/efi.h>
- #include <linux/interrupt.h>
-diff --git a/arch/arm64/include/asm/xen/xen-ops.h b/arch/arm64/include/asm/xen/xen-ops.h
-deleted file mode 100644
-index e6e784051932..000000000000
---- a/arch/arm64/include/asm/xen/xen-ops.h
-+++ /dev/null
-@@ -1,7 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef _ASM_XEN_OPS_H
--#define _ASM_XEN_OPS_H
--
--void xen_efi_runtime_setup(void);
--
--#endif /* _ASM_XEN_OPS_H */
-diff --git a/arch/arm64/xen/Makefile b/arch/arm64/xen/Makefile
-index a4fc65f3928d..b66215e8658e 100644
---- a/arch/arm64/xen/Makefile
-+++ b/arch/arm64/xen/Makefile
-@@ -1,4 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0-only
- xen-arm-y	+= $(addprefix ../../arm/xen/, enlighten.o grant-table.o p2m.o mm.o)
- obj-y		:= xen-arm.o hypercall.o
--obj-$(CONFIG_XEN_EFI) += $(addprefix ../../arm/xen/, efi.o)
-diff --git a/arch/x86/xen/efi.c b/arch/x86/xen/efi.c
-index 7e3eb70f411a..a04551ee5568 100644
---- a/arch/x86/xen/efi.c
-+++ b/arch/x86/xen/efi.c
-@@ -57,21 +57,7 @@ static efi_system_table_t __init *xen_efi_probe(void)
- 		return NULL;
- 
- 	/* Here we know that Xen runs on EFI platform. */
--
--	efi.get_time                 = xen_efi_get_time;
--	efi.set_time                 = xen_efi_set_time;
--	efi.get_wakeup_time          = xen_efi_get_wakeup_time;
--	efi.set_wakeup_time          = xen_efi_set_wakeup_time;
--	efi.get_variable             = xen_efi_get_variable;
--	efi.get_next_variable        = xen_efi_get_next_variable;
--	efi.set_variable             = xen_efi_set_variable;
--	efi.set_variable_nonblocking = xen_efi_set_variable;
--	efi.query_variable_info      = xen_efi_query_variable_info;
--	efi.query_variable_info_nonblocking = xen_efi_query_variable_info;
--	efi.update_capsule           = xen_efi_update_capsule;
--	efi.query_capsule_caps       = xen_efi_query_capsule_caps;
--	efi.get_next_high_mono_count = xen_efi_get_next_high_mono_count;
--	efi.reset_system             = xen_efi_reset_system;
-+	xen_efi_runtime_setup();
- 
- 	efi_systab_xen.tables = info->cfg.addr;
- 	efi_systab_xen.nr_tables = info->cfg.nent;
-diff --git a/drivers/xen/efi.c b/drivers/xen/efi.c
-index 89d60f8e3c18..ffbdaa9f4a45 100644
---- a/drivers/xen/efi.c
-+++ b/drivers/xen/efi.c
-@@ -40,7 +40,7 @@
- 
- #define efi_data(op)	(op.u.efi_runtime_call)
- 
--efi_status_t xen_efi_get_time(efi_time_t *tm, efi_time_cap_t *tc)
-+static efi_status_t xen_efi_get_time(efi_time_t *tm, efi_time_cap_t *tc)
- {
- 	struct xen_platform_op op = INIT_EFI_OP(get_time);
- 
-@@ -61,9 +61,8 @@ efi_status_t xen_efi_get_time(efi_time_t *tm, efi_time_cap_t *tc)
- 
- 	return efi_data(op).status;
- }
--EXPORT_SYMBOL_GPL(xen_efi_get_time);
- 
--efi_status_t xen_efi_set_time(efi_time_t *tm)
-+static efi_status_t xen_efi_set_time(efi_time_t *tm)
- {
- 	struct xen_platform_op op = INIT_EFI_OP(set_time);
- 
-@@ -75,10 +74,10 @@ efi_status_t xen_efi_set_time(efi_time_t *tm)
- 
- 	return efi_data(op).status;
- }
--EXPORT_SYMBOL_GPL(xen_efi_set_time);
- 
--efi_status_t xen_efi_get_wakeup_time(efi_bool_t *enabled, efi_bool_t *pending,
--				     efi_time_t *tm)
-+static efi_status_t xen_efi_get_wakeup_time(efi_bool_t *enabled,
-+					    efi_bool_t *pending,
-+					    efi_time_t *tm)
- {
- 	struct xen_platform_op op = INIT_EFI_OP(get_wakeup_time);
- 
-@@ -98,9 +97,8 @@ efi_status_t xen_efi_get_wakeup_time(efi_bool_t *enabled, efi_bool_t *pending,
- 
- 	return efi_data(op).status;
- }
--EXPORT_SYMBOL_GPL(xen_efi_get_wakeup_time);
- 
--efi_status_t xen_efi_set_wakeup_time(efi_bool_t enabled, efi_time_t *tm)
-+static efi_status_t xen_efi_set_wakeup_time(efi_bool_t enabled, efi_time_t *tm)
- {
- 	struct xen_platform_op op = INIT_EFI_OP(set_wakeup_time);
- 
-@@ -117,11 +115,10 @@ efi_status_t xen_efi_set_wakeup_time(efi_bool_t enabled, efi_time_t *tm)
- 
- 	return efi_data(op).status;
- }
--EXPORT_SYMBOL_GPL(xen_efi_set_wakeup_time);
- 
--efi_status_t xen_efi_get_variable(efi_char16_t *name, efi_guid_t *vendor,
--				  u32 *attr, unsigned long *data_size,
--				  void *data)
-+static efi_status_t xen_efi_get_variable(efi_char16_t *name, efi_guid_t *vendor,
-+					 u32 *attr, unsigned long *data_size,
-+					 void *data)
- {
- 	struct xen_platform_op op = INIT_EFI_OP(get_variable);
- 
-@@ -141,11 +138,10 @@ efi_status_t xen_efi_get_variable(efi_char16_t *name, efi_guid_t *vendor,
- 
- 	return efi_data(op).status;
- }
--EXPORT_SYMBOL_GPL(xen_efi_get_variable);
- 
--efi_status_t xen_efi_get_next_variable(unsigned long *name_size,
--				       efi_char16_t *name,
--				       efi_guid_t *vendor)
-+static efi_status_t xen_efi_get_next_variable(unsigned long *name_size,
-+					      efi_char16_t *name,
-+					      efi_guid_t *vendor)
- {
- 	struct xen_platform_op op = INIT_EFI_OP(get_next_variable_name);
- 
-@@ -165,11 +161,10 @@ efi_status_t xen_efi_get_next_variable(unsigned long *name_size,
- 
- 	return efi_data(op).status;
- }
--EXPORT_SYMBOL_GPL(xen_efi_get_next_variable);
- 
--efi_status_t xen_efi_set_variable(efi_char16_t *name, efi_guid_t *vendor,
--				 u32 attr, unsigned long data_size,
--				 void *data)
-+static efi_status_t xen_efi_set_variable(efi_char16_t *name, efi_guid_t *vendor,
-+					 u32 attr, unsigned long data_size,
-+					 void *data)
- {
- 	struct xen_platform_op op = INIT_EFI_OP(set_variable);
- 
-@@ -186,11 +181,10 @@ efi_status_t xen_efi_set_variable(efi_char16_t *name, efi_guid_t *vendor,
- 
- 	return efi_data(op).status;
- }
--EXPORT_SYMBOL_GPL(xen_efi_set_variable);
- 
--efi_status_t xen_efi_query_variable_info(u32 attr, u64 *storage_space,
--					 u64 *remaining_space,
--					 u64 *max_variable_size)
-+static efi_status_t xen_efi_query_variable_info(u32 attr, u64 *storage_space,
-+						u64 *remaining_space,
-+						u64 *max_variable_size)
- {
- 	struct xen_platform_op op = INIT_EFI_OP(query_variable_info);
- 
-@@ -208,9 +202,8 @@ efi_status_t xen_efi_query_variable_info(u32 attr, u64 *storage_space,
- 
- 	return efi_data(op).status;
- }
--EXPORT_SYMBOL_GPL(xen_efi_query_variable_info);
- 
--efi_status_t xen_efi_get_next_high_mono_count(u32 *count)
-+static efi_status_t xen_efi_get_next_high_mono_count(u32 *count)
- {
- 	struct xen_platform_op op = INIT_EFI_OP(get_next_high_monotonic_count);
- 
-@@ -221,10 +214,9 @@ efi_status_t xen_efi_get_next_high_mono_count(u32 *count)
- 
- 	return efi_data(op).status;
- }
--EXPORT_SYMBOL_GPL(xen_efi_get_next_high_mono_count);
- 
--efi_status_t xen_efi_update_capsule(efi_capsule_header_t **capsules,
--				    unsigned long count, unsigned long sg_list)
-+static efi_status_t xen_efi_update_capsule(efi_capsule_header_t **capsules,
-+				unsigned long count, unsigned long sg_list)
- {
- 	struct xen_platform_op op = INIT_EFI_OP(update_capsule);
- 
-@@ -241,11 +233,9 @@ efi_status_t xen_efi_update_capsule(efi_capsule_header_t **capsules,
- 
- 	return efi_data(op).status;
- }
--EXPORT_SYMBOL_GPL(xen_efi_update_capsule);
- 
--efi_status_t xen_efi_query_capsule_caps(efi_capsule_header_t **capsules,
--					unsigned long count, u64 *max_size,
--					int *reset_type)
-+static efi_status_t xen_efi_query_capsule_caps(efi_capsule_header_t **capsules,
-+			unsigned long count, u64 *max_size, int *reset_type)
- {
- 	struct xen_platform_op op = INIT_EFI_OP(query_capsule_capabilities);
- 
-@@ -264,10 +254,9 @@ efi_status_t xen_efi_query_capsule_caps(efi_capsule_header_t **capsules,
- 
- 	return efi_data(op).status;
- }
--EXPORT_SYMBOL_GPL(xen_efi_query_capsule_caps);
- 
--void xen_efi_reset_system(int reset_type, efi_status_t status,
--			  unsigned long data_size, efi_char16_t *data)
-+static void xen_efi_reset_system(int reset_type, efi_status_t status,
-+				 unsigned long data_size, efi_char16_t *data)
- {
- 	switch (reset_type) {
- 	case EFI_RESET_COLD:
-@@ -281,4 +270,26 @@ void xen_efi_reset_system(int reset_type, efi_status_t status,
- 		BUG();
- 	}
- }
--EXPORT_SYMBOL_GPL(xen_efi_reset_system);
-+
-+/*
-+ * Set XEN EFI runtime services function pointers. Other fields of struct efi,
-+ * e.g. efi.systab, will be set like normal EFI.
-+ */
-+void __init xen_efi_runtime_setup(void)
-+{
-+	efi.get_time			= xen_efi_get_time;
-+	efi.set_time			= xen_efi_set_time;
-+	efi.get_wakeup_time		= xen_efi_get_wakeup_time;
-+	efi.set_wakeup_time		= xen_efi_set_wakeup_time;
-+	efi.get_variable		= xen_efi_get_variable;
-+	efi.get_next_variable		= xen_efi_get_next_variable;
-+	efi.set_variable		= xen_efi_set_variable;
-+	efi.set_variable_nonblocking	= xen_efi_set_variable;
-+	efi.query_variable_info		= xen_efi_query_variable_info;
-+	efi.query_variable_info_nonblocking = xen_efi_query_variable_info;
-+	efi.update_capsule		= xen_efi_update_capsule;
-+	efi.query_capsule_caps		= xen_efi_query_capsule_caps;
-+	efi.get_next_high_mono_count	= xen_efi_get_next_high_mono_count;
-+	efi.reset_system		= xen_efi_reset_system;
-+}
-+EXPORT_SYMBOL_GPL(xen_efi_runtime_setup);
-diff --git a/include/xen/xen-ops.h b/include/xen/xen-ops.h
-index 98b30c1613b2..d89969aa9942 100644
---- a/include/xen/xen-ops.h
-+++ b/include/xen/xen-ops.h
-@@ -212,30 +212,7 @@ int xen_xlate_map_ballooned_pages(xen_pfn_t **pfns, void **vaddr,
- 
- bool xen_running_on_version_or_later(unsigned int major, unsigned int minor);
- 
--efi_status_t xen_efi_get_time(efi_time_t *tm, efi_time_cap_t *tc);
--efi_status_t xen_efi_set_time(efi_time_t *tm);
--efi_status_t xen_efi_get_wakeup_time(efi_bool_t *enabled, efi_bool_t *pending,
--				     efi_time_t *tm);
--efi_status_t xen_efi_set_wakeup_time(efi_bool_t enabled, efi_time_t *tm);
--efi_status_t xen_efi_get_variable(efi_char16_t *name, efi_guid_t *vendor,
--				  u32 *attr, unsigned long *data_size,
--				  void *data);
--efi_status_t xen_efi_get_next_variable(unsigned long *name_size,
--				       efi_char16_t *name, efi_guid_t *vendor);
--efi_status_t xen_efi_set_variable(efi_char16_t *name, efi_guid_t *vendor,
--				  u32 attr, unsigned long data_size,
--				  void *data);
--efi_status_t xen_efi_query_variable_info(u32 attr, u64 *storage_space,
--					 u64 *remaining_space,
--					 u64 *max_variable_size);
--efi_status_t xen_efi_get_next_high_mono_count(u32 *count);
--efi_status_t xen_efi_update_capsule(efi_capsule_header_t **capsules,
--				    unsigned long count, unsigned long sg_list);
--efi_status_t xen_efi_query_capsule_caps(efi_capsule_header_t **capsules,
--					unsigned long count, u64 *max_size,
--					int *reset_type);
--void xen_efi_reset_system(int reset_type, efi_status_t status,
--			  unsigned long data_size, efi_char16_t *data);
-+void xen_efi_runtime_setup(void);
- 
- 
- #ifdef CONFIG_PREEMPT
+> - the idea is to _minimise_ the number of kernel
+> memory accesses between enabling userspace access and performing the
+> actual access.
+>
+> Fixing it in this way widens the window for the kernel to be doing
+> something it shoulding in userspace.
+>
+> So, the right solution is to ensure that the compiler always inlines
+> the uaccess_*() helpers - which should be nothing more than four
+> instructions for uaccess_save_and_enable() and two for the
+> restore.
+>
+
+OK, I will use __always_inline to avoid
+any potential behavior change.
+
+Thanks.
+
+
 -- 
-2.16.4
-
+Best Regards
+Masahiro Yamada
