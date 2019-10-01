@@ -2,142 +2,177 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8000C388F3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B55D5C388F3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78F7721855
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:49:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ABhSqkzj"
+	by mail.kernel.org (Postfix) with ESMTP id 86B4E21855
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 09:49:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729490AbfJAJtI (ORCPT
+        id S1729613AbfJAJtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 05:49:08 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:44584 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbfJAJtI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 05:49:08 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x919hx45060644;
-        Tue, 1 Oct 2019 09:47:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=QPjvS7pz5tIQQU5cF/g5uMUHXnY7G8jmZ86TF4PFwxk=;
- b=ABhSqkzjBzS9+njIAWGggtOpAULaed8C76pb2qwtInbR4d0D4jeQQs83IKqUWgjX7thH
- IkMhNfx7+b9z7nSQEOHyvmGKgYsjLuJY5Fak45e17OdWAJzIoAYh/x22lLXADsWwLT3x
- AJcQQSHr+ZeRD3TiUoQnF8HOcgCkoXmQt+y8yUyVxTxVGLygQ4TBNCCTGpBYzaF3XKaT
- WWFncl219f7rnDgtaVnNxqF/FSoVleIOLkASDXMUma1W2uyZZ3WcJa9YtvUkJhlKLc5/
- XfP19fuxIboczDc405i7OsmivKhJKNbjBuAA8igPh4+vEEZOIn/IkxsIy4qGltIazRVy mA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2v9xxumq7t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 09:47:11 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x919i0iA021658;
-        Tue, 1 Oct 2019 09:47:10 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2vbnqcjbhd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 09:47:10 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x919l7WS019913;
-        Tue, 1 Oct 2019 09:47:07 GMT
-Received: from [10.191.2.232] (/10.191.2.232)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 01 Oct 2019 02:47:06 -0700
-Subject: Re: [PATCH 1/3] KVM: X86: Add "nopvspin" parameter to disable PV
- spinlocks
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Tue, 1 Oct 2019 05:49:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48566 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726461AbfJAJtv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Oct 2019 05:49:51 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 96A5659465;
+        Tue,  1 Oct 2019 09:49:50 +0000 (UTC)
+Received: from [10.36.117.182] (ovpn-117-182.ams2.redhat.com [10.36.117.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A5AF560CD0;
+        Tue,  1 Oct 2019 09:49:48 +0000 (UTC)
+Subject: Re: [PATCH v7 1/1] memory_hotplug: Add a bounds check to __add_pages
+To:     Alastair D'Silva <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-References: <1569759666-26904-1-git-send-email-zhenzhong.duan@oracle.com>
- <1569759666-26904-2-git-send-email-zhenzhong.duan@oracle.com>
- <87pnjh3i6i.fsf@vitty.brq.redhat.com>
- <aae59646-be5f-6455-a033-ed29861107ce@oracle.com>
- <87eezw3lna.fsf@vitty.brq.redhat.com>
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <fdd14f28-74e9-5cf9-2f5a-09c884c55110@oracle.com>
-Date:   Tue, 1 Oct 2019 17:47:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+References: <20191001004617.7536-1-alastair@au1.ibm.com>
+ <20191001004617.7536-2-alastair@au1.ibm.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <01def17b-1df8-a63a-4cfc-91e99614a2f0@redhat.com>
+Date:   Tue, 1 Oct 2019 11:49:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <87eezw3lna.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191001004617.7536-2-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910010093
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910010093
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Tue, 01 Oct 2019 09:49:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 01.10.19 02:46, Alastair D'Silva wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
+> 
+> On PowerPC, the address ranges allocated to OpenCAPI LPC memory
+> are allocated from firmware. These address ranges may be higher
+> than what older kernels permit, as we increased the maximum
+> permissable address in commit 4ffe713b7587
+> ("powerpc/mm: Increase the max addressable memory to 2PB"). It is
+> possible that the addressable range may change again in the
+> future.
+> 
+> In this scenario, we end up with a bogus section returned from
+> __section_nr (see the discussion on the thread "mm: Trigger bug on
+> if a section is not found in __section_nr").
+> 
+> Adding a check here means that we fail early and have an
+> opportunity to handle the error gracefully, rather than rumbling
+> on and potentially accessing an incorrect section.
+> 
+> Further discussion is also on the thread ("powerpc: Perform a bounds
+> check in arch_add_memory")
+> http://lkml.kernel.org/r/20190827052047.31547-1-alastair@au1.ibm.com
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> ---
+>  mm/memory_hotplug.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index c73f09913165..5af9f4466ad1 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -278,6 +278,22 @@ static int check_pfn_span(unsigned long pfn, unsigned long nr_pages,
+>  	return 0;
+>  }
+>  
+> +static int check_hotplug_memory_addressable(unsigned long pfn,
+> +					    unsigned long nr_pages)
+> +{
+> +	const u64 max_addr = PFN_PHYS(pfn + nr_pages) - 1;
+> +
+> +	if (max_addr >> MAX_PHYSMEM_BITS) {
+> +		const u64 max_allowed = (1ull << (MAX_PHYSMEM_BITS + 1)) - 1;
+> +		WARN(1,
+> +		     "Hotplugged memory exceeds maximum addressable address, range=%#llx-%#llx, maximum=%#llx\n",
+> +		     (u64)PFN_PHYS(pfn), max_addr, max_allowed);
+> +		return -E2BIG;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  /*
+>   * Reasonably generic function for adding memory.  It is
+>   * expected that archs that support memory hotplug will
+> @@ -291,6 +307,10 @@ int __ref __add_pages(int nid, unsigned long pfn, unsigned long nr_pages,
+>  	unsigned long nr, start_sec, end_sec;
+>  	struct vmem_altmap *altmap = restrictions->altmap;
+>  
+> +	err = check_hotplug_memory_addressable(pfn, nr_pages);
+> +	if (err)
+> +		return err;
+> +
+>  	if (altmap) {
+>  		/*
+>  		 * Validate altmap is within bounds of the total request
+> 
 
-On 2019/10/1 16:39, Vitaly Kuznetsov wrote:
-> Zhenzhong Duan<zhenzhong.duan@oracle.com>  writes:
->
->> On 2019/9/30 23:41, Vitaly Kuznetsov wrote:
->>> Zhenzhong Duan<zhenzhong.duan@oracle.com>   writes:
->>>
->>>> There are cases where a guest tries to switch spinlocks to bare metal
->>>> behavior (e.g. by setting "xen_nopvspin" on XEN platform and
->>>> "hv_nopvspin" on HYPER_V).
->>>>
->>>> That feature is missed on KVM, add a new parameter "nopvspin" to disable
->>>> PV spinlocks for KVM guest.
->>>>
->>>> This new parameter is also intended to replace "xen_nopvspin" and
->>>> "hv_nopvspin" in the future.
->>> Any reason to not do it right now? We will probably need to have compat
->>> code to support xen_nopvspin/hv_nopvspin too but emit a 'is deprecated'
->>> warning.
->> Sorry the description isn't clear, I'll fix it.
->>
->> I did the compat work in the other two patches.
->> [PATCH 2/3] xen: Mark "xen_nopvspin" parameter obsolete and map it to "nopvspin"
->> [PATCH 3/3] x86/hyperv: Mark "hv_nopvspin" parameter obsolete and map it to "nopvspin"
->>
-> For some reason I got CCed only on the first one and moreover,
+I actually wanted to give my RB to v7, not v6 :)
 
-The three patches have different maintainers/reviewers by get_maintainer.pl, I added
-"Cc: maintainers/reviewers" to each patch then git-sendemail picked them automaticly.
-I meaned to not disturb maintainers with the field they aren't in charge of. It looks
-I'm wrong.
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
-So what's the correct way dealing with this? Should I send the whole patchset to all
-the maintainers/reviewers related to all the patches?
+-- 
 
-> I don't see e.g PATCH3 on 'linux-hyperv' mailing list.
+Thanks,
 
-Thanks for point out, I'll add it.
-
-Zhenzhong
-
+David / dhildenb
