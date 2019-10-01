@@ -2,111 +2,122 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A83ECE58A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD827ECE58A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 189E22086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A356521906
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 17:14:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=eero.com header.i=@eero.com header.b="LtLBRh3a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vK3LWLU7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729428AbfJARNm (ORCPT
+        id S1729592AbfJAROQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 13:13:42 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44990 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbfJARNl (ORCPT
+        Tue, 1 Oct 2019 13:14:16 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38622 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727532AbfJAROP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 13:13:41 -0400
-Received: by mail-pg1-f196.google.com with SMTP id i14so10062934pgt.11
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Oct 2019 10:13:41 -0700 (PDT)
+        Tue, 1 Oct 2019 13:14:15 -0400
+Received: by mail-io1-f68.google.com with SMTP id u8so49915314iom.5;
+        Tue, 01 Oct 2019 10:14:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=eero.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=AQENXz9W3lh6tp8zW2p3ipcz3DJsc45NsjiOFfnhUaM=;
-        b=LtLBRh3au2KYlosRYEUIS/BLjCPifqRNJvzEEBjoueuyoSvPrzX+6ClaP7Tlybi3Bq
-         vCP+DmjTQoFR4cOZpdWzGCwjjK+PrIPniBez+Pip1Cx/A0QfNH2y2DceTBpVlCVz5aWy
-         DErC04jImUmW+FXm+FrMpt855FkvPH4d51LtA=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XyW5421FuW5ERt/Ce918IFZBepV74zAfugKBY/uP7Sg=;
+        b=vK3LWLU7yuz8B7Zud46nqKCjNTu81dzKhZrSHYSXRvB/IgwKwR6w1i5/fCVhXRbbt5
+         4k41JFWg6X8g3p3uDJ07Wq91J7n/TR2bFueBJLFbc/dZY3xpRhkn99yDcuJ1JmDQ8Ou/
+         KDvshQLRVZzp4Ldk+vJyVLnaApjyqx+YWWCiz4bwBtLZ1trdoblGfg0JF8rPin+2oqBb
+         GgyMRoYqGvOnb30gxZMNrYKyn9xzJJXpuZsf0A4h6vsfKrwh/PCR108f6YmocjA6ftRF
+         RvKDbiG3AaYk5Ee+tO+fc4r+Nc6+vhF9gg6z1agcVtrk/oeAna/4XWZfDKy0+JeAT5Xf
+         3Gew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=AQENXz9W3lh6tp8zW2p3ipcz3DJsc45NsjiOFfnhUaM=;
-        b=YNXxe0u1w8p4kdF/dz82j3CN2YejYPZgvg9RNCegapRcocNgWKVcjWn7TXpSQ+7THB
-         26V+uetFquBf7HtIGfWGihq7eKGJylJHyS2nvoKgrfVWWLGisLKZSndbA58opg5AFxB/
-         Cxw7n7MCcifR/i8zMTc5HPbbEnJeF6lKNC6qflUzWmp4DNQH3LKaJXz3TfdT2Umik2vA
-         qzpnwSPhjTE2Qd7QW8ZjqF0t8ZT8f2i8g5yFMx6LvoB3RuuTxazxTtyiLiE53PXvYTzk
-         GoSvsBYVafx66NVYX2WDGsVqtjJQbhIwchfYfGoNRllFxe5BzvH8IqfKKXNttcgXQUrF
-         wZmg==
-X-Gm-Message-State: APjAAAW1EQbWPsl11ma0JpcQng9xvs9lzS1Sz7IdVC0FAzPJ5lqetUcU
-        lFIhlMuQoqgluadsNMqsc4X2M/bcUDY=
-X-Google-Smtp-Source: APXvYqwf0p5tJ29zKh4vSxVhDfuTNgdsfsk3N1ESFTW3/VZ0HnDwJmd6IwK0GPgB7wRx6rMfLlKsPQ==
-X-Received: by 2002:a63:6988:: with SMTP id e130mr32071818pgc.203.1569950020378;
-        Tue, 01 Oct 2019 10:13:40 -0700 (PDT)
-Received: from [10.0.2.15] (c-98-234-217-115.hsd1.ca.comcast.net. [98.234.217.115])
-        by smtp.gmail.com with ESMTPSA id y7sm16188954pfn.142.2019.10.01.10.13.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Oct 2019 10:13:39 -0700 (PDT)
-Subject: Re: [PATCH 2/2] ath10k: switch to ieee80211_tx_dequeue_ni
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        Erik Stromdahl <erik.stromdahl@gmail.com>
-Cc:     johannes@sipsolutions.net, davem@davemloft.net,
-        linux-wireless@vger.kernel.org, ath10k@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20190617200140.6189-1-erik.stromdahl@gmail.com>
- <20190617200140.6189-2-erik.stromdahl@gmail.com>
- <87eezw660r.fsf@kamboji.qca.qualcomm.com>
-From:   Peter Oh <peter.oh@eero.com>
-Message-ID: <19f8023a-1943-9bf5-9a59-a7643f7692bf@eero.com>
-Date:   Tue, 1 Oct 2019 10:13:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XyW5421FuW5ERt/Ce918IFZBepV74zAfugKBY/uP7Sg=;
+        b=a4E3Ds8qNrh/kQNawlZTu/iTCBSoMUh+jlFX8G7tVFrnmjyTS7U6s8Lf6TlyNBBlRe
+         iVdFcnEZ4d9+Tqa/kD64jTuKz4xJv4Sax8hq3jEtJwOZfiXYdWBrAozwKPLVPwGWNfSh
+         PAj5FR+TiJ/qPHnE5KGdHqoOmTcl9LYEUcNY4c/7Nx85SiFfBnGEbgNpF/rsgf9M4qRO
+         2jSA6urZuUEmKtBUVSLtmqhhaMC4PC4bdUZGt6iwNTR97wjCE1Fmw8CYTRiiCVVpr7el
+         FLllvq7r41SHd3KQUDeRqCc9SPg1wmEPzxjZ3zTiRVDLd1h2pJdd98LE0NSvRqziPK9m
+         qCDg==
+X-Gm-Message-State: APjAAAVvN/TgBif8mDC33dFrpqj+LVUC1yT4epvkRy8zdTIBCSWFLquK
+        gfQttfEF1Ihga3S9O+VtfTe+Zqzr+TPCphX9hKA=
+X-Google-Smtp-Source: APXvYqyhUoMGDelw2H4alAIycEnclkAErTmS481biaJKBo0W4fbZxP1K4s6I7iegwA83GAipXqeecDL2qPXmAAwsEPo=
+X-Received: by 2002:a6b:da06:: with SMTP id x6mr3828288iob.42.1569950055032;
+ Tue, 01 Oct 2019 10:14:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <87eezw660r.fsf@kamboji.qca.qualcomm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <cover.1564550873.git.saiprakash.ranjan@codeaurora.org>
+ <90114e06825e537c3aafd3de5c78743a9de6fadc.1564550873.git.saiprakash.ranjan@codeaurora.org>
+ <CAOCk7NrK+wY8jfHdS8781NOQtyLm2RRe1NW2Rm3_zeaot0Q99Q@mail.gmail.com> <16212a577339204e901cf4eefa5e82f1@codeaurora.org>
+In-Reply-To: <16212a577339204e901cf4eefa5e82f1@codeaurora.org>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Tue, 1 Oct 2019 11:14:03 -0600
+Message-ID: <CAOCk7NohO67qeYCnrjy4P0KN9nLUiamphHRvj-bFP++K7khPOw@mail.gmail.com>
+Subject: Re: [PATCHv9 2/3] arm64: dts: qcom: msm8998: Add Coresight support
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 10/1/19 4:48 AM, Kalle Valo wrote:
-> Erik Stromdahl <erik.stromdahl@gmail.com> writes:
+On Tue, Oct 1, 2019 at 11:04 AM Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
 >
->> Since ath10k_mac_tx_push_txq() can be called from process context, we
->> must explicitly disable softirqs before the call into mac80211.
->>
->> By calling ieee80211_tx_dequeue_ni() instead of ieee80211_tx_dequeue()
->> we make sure softirqs are always disabled even in the case when
->> ath10k_mac_tx_push_txq() is called from process context.
->>
->> Calling ieee80211_tx_dequeue_ni() with softirq's already disabled
->> (e.g., from softirq context) should be safe as the local_bh_disable()
->> and local_bh_enable() functions (called from ieee80211_tx_dequeue_ni)
->> are fully reentrant.
->>
->> Signed-off-by: Erik Stromdahl <erik.stromdahl@gmail.com>
-> I already applied this, but I still want to check _why_ you are changing
-> this? Is it that you want to call ath10k_mac_tx_push_pending() from a
-> workqueue in sdio.c in a future patch, or what? Because at the moment me
-> and Johannes were not able to find where this is called in process
-> context.
+> On 2019-10-01 09:13, Jeffrey Hugo wrote:
+> > Sai,
+> >
+> > This patch breaks boot on the 835 laptops.  However, I haven't seen
+> > the same issue on the MTP.  I wonder, is coresight expected to work
+> > with production fused devices?  I wonder if thats the difference
+> > between the laptop and MTP that is causing the issue.
+> >
+> > Let me know what I can do to help debug.
+> >
 >
-It seems Johannes wants to fix it in mac80211.
+> I did test on MSM8998 MTP and didn't face any issue. I am guessing this
+> is the same issue which you reported regarding cpuidle? Coresight ETM
 
-[PATCH v2] mac80211: keep BHs disabled while calling drv_tx_wake_queue()
+Yes, its the same issue.  Right now, I need both patches reverted to boot.
 
-Drivers typically expect this, as it's the case for almost all cases
-where this is called (i.e. from the TX path). Also, the code in mac80211
-itself (if the driver calls ieee80211_tx_dequeue()) expects this as it
-uses this_cpu_ptr() without additional protection.
+> and cpuidle do not work well together since ETMs share the same power
+> domain as CPU and they might get turned off when CPU enters idle states.
+> Can you try with cpuidle.off=1 cmdline or just remove idle states from
+> DT to confirm? If this is the issue, then we can try the below patch
+> from Andrew Murray for ETM save and restore:
+>
+> https://patchwork.kernel.org/patch/11097893/
 
+Is there still value in testing this if the idle states are removed,
+yet the coresight nodes still cause issues?
+
+Funny enough, I'm using the arm64 defconfig which doesn't seem to
+select CONFIG_CORESIGHT, so I'm not even sure what would be binding to
+the DT devices...
+
+>
+> It is not merged yet. They would appreciate your tested by ;)
+>
+> Thanks,
+> Sai
