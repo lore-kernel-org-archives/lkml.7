@@ -2,107 +2,198 @@ Return-Path: <SRS0=YRFP=X2=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCA9ECE589
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D77C352AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 460D820700
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B7ED2053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Oct 2019 12:20:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="asLkTs8R"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RbZZF6Rk";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lvExq41q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387801AbfJAMUH (ORCPT
+        id S2387816AbfJAMUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Oct 2019 08:20:07 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:58886 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbfJAMUH (ORCPT
+        Tue, 1 Oct 2019 08:20:53 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:60658 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726188AbfJAMUw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Oct 2019 08:20:07 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91C8wwt176445;
-        Tue, 1 Oct 2019 12:19:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=XqKYBH2rj49VsUv2rjzzQD9a0buLWcIjZyuAld412dg=;
- b=asLkTs8RqJIa5YzwrclG2A/BoEvcUNDek9oT48r54xUIVDOF5FcLu5m8yiiQuEn3QfGw
- 1NadgCYCz+X5UJWgpadKCjI0dTXmlXzrGImAeR4RJgiEICXzKO+SK386PXFBKkm/PaL/
- MGyeywX/AzIK/u9e2CJY/Pkdhk2yCDAgTV7HD9JpbzTA5bWC3PoeNrqOmKtXAIMlh0Y9
- e3CKSar1xs866ICs7pWvfTlYaBbqmo3wKNGXPIG3/kv+P4BOQMN6kB/MM6VzhwxmxYvI
- RFVTFbfF7RW3vRdhJ5y0Ybfx+0h/EBRoq9X3npnrGnGs2giRqSPSFS5Ez3LZa1tBdxdL TA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2v9xxunea4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 12:19:56 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91C8xJn157645;
-        Tue, 1 Oct 2019 12:19:56 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2vbmpyf59p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 12:19:55 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x91CJsBZ020088;
-        Tue, 1 Oct 2019 12:19:54 GMT
-Received: from [10.191.21.54] (/10.191.21.54)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 01 Oct 2019 05:19:54 -0700
-Subject: Re: [PATCH v2 0/3] Add a unified parameter "nopvspin"
-To:     linux-kernel@vger.kernel.org
-Cc:     vkuznets@redhat.com, linux-hyperv@vger.kernel.org,
-        kvm@vger.kernel.org
-References: <1569845340-11884-1-git-send-email-zhenzhong.duan@oracle.com>
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <099f544b-8ff5-d9ba-1af5-2042075e1e6d@oracle.com>
-Date:   Tue, 1 Oct 2019 20:19:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 1 Oct 2019 08:20:52 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 4A1F46034D; Tue,  1 Oct 2019 12:20:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1569932451;
+        bh=lp5RfcJ7QOMHh//lUV03XTYmhcqbXMbwWSVbR7ckkS8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=RbZZF6RkorD85xRj5KASghXa7/ojak9WzQuxbkaE7OyPTDMg64YCoDi+Zk6jfs7T0
+         V9p0hzMHVfI7ukNn03QZUGIFxCI6p+hzjE4adCB3eHUh0aA2CNAF1cdS2HYnAtKGsG
+         TZTpAxLhRK3WP38bI2qqK/7tqVK9x8Uo4rjtgnRI=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id F3C166034D;
+        Tue,  1 Oct 2019 12:20:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1569932450;
+        bh=lp5RfcJ7QOMHh//lUV03XTYmhcqbXMbwWSVbR7ckkS8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lvExq41qsZhsJtjPYClvoajbSAD3zlG1PM/tpzugpdGpVjm3+8GBjRcOQyGVcINoa
+         l03xiLzMRytM3WYSp3fyBrrN7L8xhHZVZPsg7hpMEeY/GgTg/ij+NoUXWi3WR3nvv8
+         w7gx0fPPmTeHNxWok46S/tBwwk4wB85MrFJ7fCsA=
 MIME-Version: 1.0
-In-Reply-To: <1569845340-11884-1-git-send-email-zhenzhong.duan@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910010113
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9396 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910010113
+Date:   Tue, 01 Oct 2019 17:50:49 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     robh+dt@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, mark.rutland@arm.com,
+        evgreen@chromium.org, daidavid1@codeaurora.org,
+        saravanak@google.com, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: interconnect: Add OSM L3 DT bindings
+In-Reply-To: <53e76100-b7c9-1069-b571-b17271fe41c5@linaro.org>
+References: <20190821091132.14994-1-sibis@codeaurora.org>
+ <20190821091132.14994-2-sibis@codeaurora.org>
+ <53e76100-b7c9-1069-b571-b17271fe41c5@linaro.org>
+Message-ID: <e163cb4ff67b312c39c3eef543d7c62b@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/30 20:08, Zhenzhong Duan wrote:
-> There are cases folks want to disable spinlock optimization for
-> debug/test purpose. Xen and hyperv already have parameters "xen_nopvspin"
-> and "hv_nopvspin" to support that, but kvm doesn't.
->
-> The first patch adds that feature to KVM guest with "nopvspin".
->
-> For compatibility reason original parameters "xen_nopvspin" and
-> "hv_nopvspin" are retained and marked obsolete.
->
-> v2:
-> PATCH1: pick the print code change into seperate PATCH2,
->          updated patch description             [Vitaly Kuznetsov]
-> PATCH2: new patch with print code change      [Vitaly Kuznetsov]
+Hey Georgi,
 
-Sorry, please ignore this mail thread, just found the indentation in 
-PATCH2 is wrong. I'll send a v3 later.
+On 2019-09-27 04:46, Georgi Djakov wrote:
+> Hi Sibi,
+> 
+> On 8/21/19 02:11, Sibi Sankar wrote:
+>> Add bindings for Operating State Manager (OSM) L3 interconnect 
+>> provider
+>> on SDM845 SoCs.
+>> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>>  .../bindings/interconnect/qcom,osm-l3.yaml    | 56 
+>> +++++++++++++++++++
+>>  .../dt-bindings/interconnect/qcom,osm-l3.h    | 12 ++++
+>>  2 files changed, 68 insertions(+)
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
+>>  create mode 100644 include/dt-bindings/interconnect/qcom,osm-l3.h
+>> 
+>> diff --git 
+>> a/Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml 
+>> b/Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
+>> new file mode 100644
+>> index 0000000000000..dab2b6875ab27
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
+>> @@ -0,0 +1,56 @@
+>> +# SPDX-License-Identifier: BSD-2-Clause
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/interconnect/qcom,osm-l3.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Qualcomm Operating State Manager (OSM) L3 Interconnect 
+>> Provider
+>> +
+>> +maintainers:
+>> +  - Sibi Sankar <sibis@codeaurora.org>
+>> +
+>> +description:
+>> +  L3 cache bandwidth requirements on Qualcomm SoCs is serviced by the 
+>> OSM.
+>> +  The OSM L3 interconnect provider aggregates the L3 bandwidth 
+>> requests
+>> +  from CPU/GPU and relays it to the OSM.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: "qcom,sdm845-osm-l3"
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    items:
+>> +      - description: xo clock
+>> +      - description: alternate clock
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: xo
+>> +      - const: alternate
+>> +
+>> +  '#interconnect-cells':
+>> +    const: 1
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +  - clock-names
+>> +  - '#interconnect-cells'
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    osm_l3: interconnect@17d41000 {
+>> +      compatible = "qcom,sdm845-osm-l3";
+>> +      reg = <0x17d41000 0x1400>;
+>> +
+>> +      clocks = <&rpmhcc 0>, <&gcc 165>;
+>> +      clock-names = "xo", "alternate";
+>> +
+>> +      #interconnect-cells = <1>;
+>> +    };
+> 
+> Are we going to do the bandwidth scaling from some cpufreq driver? 
+> Under which
+> DT node will we put the "interconnects" property?
 
-Thanks
+Its still undecided :( unfortunately.
+Using Saravana's series means that
+bandwidth scaling will be done from
+the cpufreq driver. The property
+will be a part of the cpu-nodes. But
+the part of adding the bw opp-tables
+also to cpufreq driver or nodes doesn't
+seem correct to me.
 
-Zhenzhong
+> 
+> Thanks,
+> Georgi
+> 
+>> diff --git a/include/dt-bindings/interconnect/qcom,osm-l3.h 
+>> b/include/dt-bindings/interconnect/qcom,osm-l3.h
+>> new file mode 100644
+>> index 0000000000000..54858ff7674d7
+>> --- /dev/null
+>> +++ b/include/dt-bindings/interconnect/qcom,osm-l3.h
+>> @@ -0,0 +1,12 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/*
+>> + * Copyright (C) 2019 The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_OSM_L3_H
+>> +#define __DT_BINDINGS_INTERCONNECT_QCOM_OSM_L3_H
+>> +
+>> +#define MASTER_OSM_L3_APPS	0
+>> +#define SLAVE_OSM_L3		1
+>> +
+>> +#endif
+>> 
 
+-- 
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
